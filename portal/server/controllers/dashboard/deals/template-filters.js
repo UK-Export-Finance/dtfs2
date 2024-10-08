@@ -1,13 +1,8 @@
+const { FIELD_NAMES, PRODUCT, STATUS } = require('../../../constants');
 const {
-  FIELD_NAMES,
-  PRODUCT,
-  STATUS,
-} = require('../../../constants');
-const { DASHBOARD_FILTERS: { BESPOKE_FILTER_VALUES } } = require('../../../content-strings');
-const {
-  generateFiltersArray,
-  submissionTypeFilters,
-} = require('../filters/generate-template-filters');
+  DASHBOARD_FILTERS: { BESPOKE_FILTER_VALUES },
+} = require('../../../content-strings');
+const { generateFiltersArray, submissionTypeFilters } = require('../filters/generate-template-filters');
 
 const createdByYouFilter = (submittedFilters) => {
   const fieldName = FIELD_NAMES.DEAL.CREATED_BY;
@@ -101,10 +96,7 @@ const statusFilters = (submittedFilters) => {
 const dealsTemplateFilters = (submittedFilters = {}) => ({
   createdBy: createdByYouFilter(submittedFilters),
   dealType: dealTypeFilters(submittedFilters),
-  submissionType: submissionTypeFilters(
-    FIELD_NAMES.DEAL.SUBMISSION_TYPE,
-    submittedFilters,
-  ),
+  submissionType: submissionTypeFilters(FIELD_NAMES.DEAL.SUBMISSION_TYPE, submittedFilters),
   status: statusFilters(submittedFilters),
 });
 

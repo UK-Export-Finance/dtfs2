@@ -47,7 +47,11 @@ describe('dealStage', () => {
     const result = dealStage(status, submissionType);
 
     expect(result).toBe(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
-    expect(console.info).toHaveBeenCalledWith('Invalid deal stage with status %s and submission type %s, setting status to Application', status, submissionType);
+    expect(console.info).toHaveBeenCalledWith(
+      'Invalid deal stage with status %s and submission type %s, setting status to Application',
+      status,
+      submissionType,
+    );
   });
 
   it('should return `Application` when status is null', () => {

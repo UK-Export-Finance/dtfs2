@@ -5,6 +5,7 @@ class EligibilityCriteria {
     this.isInDraft = req.isInDraft;
     this.criteria = req.criteria;
     this.createdAt = req.createdAt;
+    this.auditRecord = req.auditRecord;
   }
 }
 

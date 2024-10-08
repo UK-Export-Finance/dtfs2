@@ -1,4 +1,13 @@
+const { ObjectId } = require('mongodb');
+const { MONGO_DB_COLLECTIONS, getCurrentGefDealVersion } = require('@ukef/dtfs2-common');
 const { format, fromUnixTime } = require('date-fns');
+const {
+  generateParsedMockPortalUserAuditDatabaseRecord,
+  generateMockPortalUserAuditDatabaseRecord,
+  withDeleteOneTests,
+  withDeleteManyTests,
+  expectAnyPortalUserAuditDatabaseRecord,
+} = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
@@ -7,7 +16,7 @@ const { withClientAuthenticationTests } = require('../../common-tests/client-aut
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
 
-const { as, get } = require('../../api')(app);
+const { as, get, remove } = require('../../api')(app);
 const { expectMongoId } = require('../../expectMongoIds');
 
 const { exporterStatus } = require('../../../src/v1/gef/controllers/validation/exporter');
@@ -62,6 +71,8 @@ describe(baseUrl, () => {
     testUsers = await testUserCache.initialise(app);
     aMaker = testUsers().withRole(MAKER).one();
     aChecker = testUsers().withRole(CHECKER).one();
+
+    await databaseHelper.wipe(DB_COLLECTIONS.DEALS);
   });
 
   beforeEach(async () => {
@@ -74,6 +85,10 @@ describe(baseUrl, () => {
     jest.clearAllMocks();
   });
 
+  afterAll(() => {
+    jest.resetAllMocks();
+  });
+
   describe(`GET ${baseUrl}`, () => {
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(baseUrl),
@@ -83,7 +98,6 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(baseUrl),
       successStatusCode: 200,
     });
@@ -126,6 +140,7 @@ describe(baseUrl, () => {
               ...criterion,
               answer: null,
             })),
+            auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
           },
           editedBy: expect.any(Array),
           createdAt: expect.any(Number),
@@ -139,6 +154,8 @@ describe(baseUrl, () => {
           ukefDealId: null,
           checkerId: null,
           portalActivities: [],
+          auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aMaker._id),
+          version: getCurrentGefDealVersion(),
         })),
       };
 
@@ -165,7 +182,6 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(oneApplicationUrl),
       successStatusCode: 200,
     });
@@ -190,6 +206,7 @@ describe(baseUrl, () => {
             answer: null,
           })),
           status: CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED,
+          auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
         },
         status: CONSTANTS.DEAL.DEAL_STATUS.DRAFT,
         editedBy: expect.any(Array),
@@ -205,6 +222,8 @@ describe(baseUrl, () => {
         ukefDealId: null,
         checkerId: null,
         portalActivities: [],
+        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aMaker._id),
+        version: getCurrentGefDealVersion(),
       };
       expect(body).toEqual(expectMongoId(expected));
     });
@@ -233,7 +252,6 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(oneApplicationStatusUrl),
       successStatusCode: 200,
     });
@@ -277,6 +295,7 @@ describe(baseUrl, () => {
         ukefDealId: null,
         checkerId: null,
         portalActivities: [],
+        version: getCurrentGefDealVersion(),
         eligibility: {
           version: expect.any(Number),
           _id: expect.any(String),
@@ -287,6 +306,7 @@ describe(baseUrl, () => {
             ...criterion,
             answer: null,
           })),
+          auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
         },
       };
       expect(body).toEqual({
@@ -296,6 +316,7 @@ describe(baseUrl, () => {
           status: expect.any(String),
           updatedAt: expect.any(Number),
         },
+        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aMaker._id),
       });
 
       expect(body.maker.token).toBeUndefined();
@@ -680,6 +701,7 @@ describe(baseUrl, () => {
           timezone: aChecker.timezone,
           lastLogin: expect.any(String),
           'user-status': STATUS.ACTIVE,
+          isTrusted: aChecker.isTrusted,
         };
 
         expect(tfmDealSubmitSpy.mock.calls[0][0]).toEqual(dealId);
@@ -729,21 +751,59 @@ describe(baseUrl, () => {
   });
 
   describe(`DELETE ${baseUrl}/:id`, () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().remove(`${baseUrl}/1`);
-      expect(status).toEqual(401);
-    });
+    let applicationToDeleteId;
+    let facilitiesToDeleteIds;
 
-    it('accepts requests that present a valid Authorization token with "maker" role', async () => {
+    beforeEach(async () => {
       const { body } = await as(aMaker).post(mockApplications[0]).to(`${baseUrl}`);
-      const { status } = await as(aMaker).remove(`${baseUrl}/${String(body._id)}`);
-      expect(status).toEqual(200);
-      expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
+      applicationToDeleteId = new ObjectId(body._id);
+
+      const {
+        body: { details: facility0 },
+      } = await as(aMaker)
+        .post({ ...mockFacilities[0], dealId: applicationToDeleteId })
+        .to(facilitiesUrl);
+      const {
+        body: { details: facility1 },
+      } = await as(aMaker)
+        .post({ ...mockFacilities[1], dealId: applicationToDeleteId })
+        .to(facilitiesUrl);
+
+      facilitiesToDeleteIds = [new ObjectId(facility0._id), new ObjectId(facility1._id)];
     });
 
-    it('returns a 204 - "No Content" if there are no records', async () => {
-      const { status } = await as(aMaker).remove(`${baseUrl}/doesnotexist`);
-      expect(status).toEqual(204);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => remove(`${baseUrl}/${applicationToDeleteId}`),
+      makeRequestWithAuthHeader: (authHeader) => remove(`${baseUrl}/${applicationToDeleteId}`, { headers: { Authorization: authHeader } }),
+    });
+
+    withRoleAuthorisationTests({
+      allowedRoles: [MAKER],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).remove(`${baseUrl}/${applicationToDeleteId}`),
+      successStatusCode: 200,
+    });
+
+    withDeleteOneTests({
+      makeRequest: () => as(aMaker).remove(`${baseUrl}/${applicationToDeleteId}`),
+      collectionName: MONGO_DB_COLLECTIONS.DEALS,
+      auditRecord: {
+        ...generateMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
+        lastUpdatedByPortalUserId: expect.anything(),
+      },
+      getDeletedDocumentId: () => applicationToDeleteId,
+    });
+
+    withDeleteManyTests({
+      makeRequest: () => as(aMaker).remove(`${baseUrl}/${applicationToDeleteId}`),
+      collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
+      auditRecord: {
+        ...generateMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
+        lastUpdatedByPortalUserId: expect.anything(),
+      },
+      getDeletedDocumentIds: () => facilitiesToDeleteIds,
+      expectedSuccessResponseBody: { acknowledged: true, deletedCount: 1 },
     });
   });
 });

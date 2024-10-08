@@ -1,6 +1,7 @@
+const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { requestApprovalValidation } = require('./validation/amendmentRequestApproval.validate');
-const { AMENDMENT_STATUS, SUBMISSION_TYPE } = require('../../../constants/amendments');
+const { SUBMISSION_TYPE } = require('../../../constants/amendments');
 
 const getAmendmentRequestApproval = async (req, res) => {
   try {
@@ -23,7 +24,7 @@ const getAmendmentRequestApproval = async (req, res) => {
       user: req.session.user,
     });
   } catch (error) {
-    console.error('Unable to get the amendment approval page %s', error);
+    console.error('Unable to get the amendment approval page %o', error);
     return res.redirect('/not-found');
   }
 };
@@ -65,7 +66,7 @@ const postAmendmentRequestApproval = async (req, res) => {
     console.error('Unable to update the amendment request approval');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/request-approval`);
   } catch (error) {
-    console.error('There was a problem creating the amendment approval %s', error);
+    console.error('There was a problem creating the amendment approval %o', error);
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   }
 };

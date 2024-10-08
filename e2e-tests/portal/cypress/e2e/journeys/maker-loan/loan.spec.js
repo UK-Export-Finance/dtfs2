@@ -1,3 +1,5 @@
+import { GUARANTEE_DETAILS } from './loan-form-values';
+
 const pages = require('../../pages');
 const partials = require('../../partials');
 const LOAN_FORM_VALUES = require('./loan-form-values');
@@ -6,7 +8,6 @@ const fillLoanForm = require('./fill-loan-forms');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
-import { GUARANTEE_DETAILS } from './loan-form-values';
 
 const MOCK_DEAL = {
   bankInternalRefName: 'someDealId',
@@ -23,8 +24,9 @@ context('Add a Loan to a Deal', () => {
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1)
-      .then((insertedDeal) => { deal = insertedDeal; });
+    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   it('should allow a user to create a Deal, pass Red Line and add a Loan to the deal', () => {
@@ -80,34 +82,52 @@ context('Add a Loan to a Deal', () => {
 
       const row = pages.contract.loansTransactionsTable.row(loanId);
 
-      row.nameLink().invoke('text').then((text) => {
-        expect(text.trim()).equal(LOAN_FORM_VALUES.GUARANTEE_DETAILS.name);
-      });
+      row
+        .nameLink()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).equal(LOAN_FORM_VALUES.GUARANTEE_DETAILS.name);
+        });
 
-      row.loanStatus().invoke('text').then((text) => {
-        expect(text.trim()).equal('Completed');
-      });
+      row
+        .loanStatus()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).equal('Completed');
+        });
 
-      row.facilityValue().invoke('text').then((text) => {
-        const expectedValue = `${deal.submissionDetails.supplyContractCurrency.id} ${LOAN_FORM_VALUES.FINANCIAL_DETAILS.value}`;
+      row
+        .facilityValue()
+        .invoke('text')
+        .then((text) => {
+          const expectedValue = `${deal.submissionDetails.supplyContractCurrency.id} ${LOAN_FORM_VALUES.FINANCIAL_DETAILS.value}`;
 
-        expect(text.trim()).equal(expectedValue);
-      });
+          expect(text.trim()).equal(expectedValue);
+        });
 
-      row.facilityStage().invoke('text').then((text) => {
-        expect(text.trim()).equal('Unconditional');
-      });
+      row
+        .facilityStage()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).equal('Unconditional');
+        });
 
-      row.requestedCoverStartDate().invoke('text').then((text) => {
-        const coverStartDate = `${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateDay}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateMonth}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateYear}`;
+      row
+        .requestedCoverStartDate()
+        .invoke('text')
+        .then((text) => {
+          const coverStartDate = `${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateDay}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateMonth}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateYear}`;
 
-        expect(text.trim()).equal(coverStartDate);
-      });
+          expect(text.trim()).equal(coverStartDate);
+        });
 
-      row.coverEndDate().invoke('text').then((text) => {
-        const expectedDate = `${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateDay}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateMonth}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateYear}`;
-        expect(text.trim()).equal(expectedDate);
-      });
+      row
+        .coverEndDate()
+        .invoke('text')
+        .then((text) => {
+          const expectedDate = `${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateDay}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateMonth}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateYear}`;
+          expect(text.trim()).equal(expectedDate);
+        });
     });
   });
 
@@ -134,9 +154,12 @@ context('Add a Loan to a Deal', () => {
 
         const row = pages.contract.loansTransactionsTable.row(loanId);
 
-        row.loanStatus().invoke('text').then((text) => {
-          expect(text.trim()).equal('Incomplete');
-        });
+        row
+          .loanStatus()
+          .invoke('text')
+          .then((text) => {
+            expect(text.trim()).equal('Incomplete');
+          });
 
         // check has has generic message on name and delete as name not set
         row.nameLink().contains('Loan’s reference number not entered');

@@ -43,17 +43,14 @@ describe('GET underwriting - loss given default', () => {
       };
 
       await lossGivenDefaultController.getUnderWritingLossGivenDefault(req, res);
-      expect(res.render).toHaveBeenCalledWith(
-        'case/underwriting/pricing-and-risk/loss-given-default.njk',
-        {
-          activePrimaryNavigation: 'manage work',
-          activeSubNavigation: 'underwriting',
-          deal: mockDeal.dealSnapshot,
-          tfm: mockDeal.tfm,
-          dealId: mockDeal.dealSnapshot._id,
-          user: session.user,
-        },
-      );
+      expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/loss-given-default.njk', {
+        activePrimaryNavigation: 'manage work',
+        activeSubNavigation: 'underwriting',
+        deal: mockDeal.dealSnapshot,
+        tfm: mockDeal.tfm,
+        dealId: mockDeal.dealSnapshot._id,
+        user: session.user,
+      });
     });
   });
 
@@ -77,9 +74,11 @@ describe('GET underwriting - loss given default', () => {
 });
 
 describe('POST underwriting - loss given default', () => {
-  const apiUpdateSpy = jest.fn(() => Promise.resolve({
-    lossGivenDefault: 45,
-  }));
+  const apiUpdateSpy = jest.fn(() =>
+    Promise.resolve({
+      lossGivenDefault: 45,
+    }),
+  );
 
   describe('when deal exists', () => {
     const mockDeal = {
@@ -114,11 +113,7 @@ describe('POST underwriting - loss given default', () => {
 
       await lossGivenDefaultController.postUnderWritingLossGivenDefault(req, res);
 
-      expect(apiUpdateSpy).toHaveBeenCalledWith(
-        mockDeal._id,
-        { lossGivenDefault: Number(req.body.lossGivenDefault) },
-        undefined,
-      );
+      expect(apiUpdateSpy).toHaveBeenCalledWith(mockDeal._id, { lossGivenDefault: Number(req.body.lossGivenDefault) }, undefined);
 
       expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting`);
     });
@@ -145,27 +140,26 @@ describe('POST underwriting - loss given default', () => {
               order: '1',
             },
           },
-          summary: [{
-            text: 'Enter a loss given default',
-            href: '#lossGivenDefault',
-          }],
+          summary: [
+            {
+              text: 'Enter a loss given default',
+              href: '#lossGivenDefault',
+            },
+          ],
         };
 
-        expect(res.render).toHaveBeenCalledWith(
-          'case/underwriting/pricing-and-risk/loss-given-default.njk',
-          {
-            activePrimaryNavigation: 'manage work',
-            activeSubNavigation: 'underwriting',
-            deal: mockDeal.dealSnapshot,
-            tfm: {
-              ...mockDeal.tfm,
-              ...req.body,
-            },
-            dealId: mockDeal.dealSnapshot._id,
-            user: session.user,
-            validationErrors: expectedValidationErrors,
+        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/loss-given-default.njk', {
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'underwriting',
+          deal: mockDeal.dealSnapshot,
+          tfm: {
+            ...mockDeal.tfm,
+            ...req.body,
           },
-        );
+          dealId: mockDeal.dealSnapshot._id,
+          user: session.user,
+          validationErrors: expectedValidationErrors,
+        });
       });
     });
 
@@ -191,27 +185,26 @@ describe('POST underwriting - loss given default', () => {
               order: '1',
             },
           },
-          summary: [{
-            text: 'Enter a value between 1 - 100',
-            href: '#lossGivenDefault',
-          }],
+          summary: [
+            {
+              text: 'Enter a value between 1 - 100',
+              href: '#lossGivenDefault',
+            },
+          ],
         };
 
-        expect(res.render).toHaveBeenCalledWith(
-          'case/underwriting/pricing-and-risk/loss-given-default.njk',
-          {
-            activePrimaryNavigation: 'manage work',
-            activeSubNavigation: 'underwriting',
-            deal: mockDeal.dealSnapshot,
-            tfm: {
-              ...mockDeal.tfm,
-              lossGivenDefault: req.body.lossGivenDefault,
-            },
-            dealId: mockDeal.dealSnapshot._id,
-            user: session.user,
-            validationErrors: expectedValidationErrors,
+        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/loss-given-default.njk', {
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'underwriting',
+          deal: mockDeal.dealSnapshot,
+          tfm: {
+            ...mockDeal.tfm,
+            lossGivenDefault: req.body.lossGivenDefault,
           },
-        );
+          dealId: mockDeal.dealSnapshot._id,
+          user: session.user,
+          validationErrors: expectedValidationErrors,
+        });
       });
     });
 
@@ -237,27 +230,26 @@ describe('POST underwriting - loss given default', () => {
               order: '1',
             },
           },
-          summary: [{
-            text: 'Enter a value between 1 - 100',
-            href: '#lossGivenDefault',
-          }],
+          summary: [
+            {
+              text: 'Enter a value between 1 - 100',
+              href: '#lossGivenDefault',
+            },
+          ],
         };
 
-        expect(res.render).toHaveBeenCalledWith(
-          'case/underwriting/pricing-and-risk/loss-given-default.njk',
-          {
-            activePrimaryNavigation: 'manage work',
-            activeSubNavigation: 'underwriting',
-            deal: mockDeal.dealSnapshot,
-            tfm: {
-              ...mockDeal.tfm,
-              lossGivenDefault: req.body.lossGivenDefault,
-            },
-            dealId: mockDeal.dealSnapshot._id,
-            user: session.user,
-            validationErrors: expectedValidationErrors,
+        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/loss-given-default.njk', {
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'underwriting',
+          deal: mockDeal.dealSnapshot,
+          tfm: {
+            ...mockDeal.tfm,
+            lossGivenDefault: req.body.lossGivenDefault,
           },
-        );
+          dealId: mockDeal.dealSnapshot._id,
+          user: session.user,
+          validationErrors: expectedValidationErrors,
+        });
       });
     });
 
@@ -283,27 +275,26 @@ describe('POST underwriting - loss given default', () => {
               order: '1',
             },
           },
-          summary: [{
-            text: 'Enter a value between 1 - 100',
-            href: '#lossGivenDefault',
-          }],
+          summary: [
+            {
+              text: 'Enter a value between 1 - 100',
+              href: '#lossGivenDefault',
+            },
+          ],
         };
 
-        expect(res.render).toHaveBeenCalledWith(
-          'case/underwriting/pricing-and-risk/loss-given-default.njk',
-          {
-            activePrimaryNavigation: 'manage work',
-            activeSubNavigation: 'underwriting',
-            deal: mockDeal.dealSnapshot,
-            tfm: {
-              ...mockDeal.tfm,
-              lossGivenDefault: req.body.lossGivenDefault,
-            },
-            dealId: mockDeal.dealSnapshot._id,
-            user: session.user,
-            validationErrors: expectedValidationErrors,
+        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/loss-given-default.njk', {
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'underwriting',
+          deal: mockDeal.dealSnapshot,
+          tfm: {
+            ...mockDeal.tfm,
+            lossGivenDefault: req.body.lossGivenDefault,
           },
-        );
+          dealId: mockDeal.dealSnapshot._id,
+          user: session.user,
+          validationErrors: expectedValidationErrors,
+        });
       });
     });
   });

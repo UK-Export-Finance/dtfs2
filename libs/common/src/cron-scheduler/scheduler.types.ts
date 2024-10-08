@@ -1,10 +1,14 @@
-import cron from 'node-cron';
+import * as cron from 'node-cron';
 
 export type CronScheduleFunc = Parameters<typeof cron.schedule>[1];
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type CronScheduleFuncParameters = Parameters<Extract<CronScheduleFunc, Function>>[0];
 
+/**
+ * The `now` parameter is provided here as
+ * node-cron's schedule function expects tasks to take this parameter.
+ */
 export type CronSchedulerJobTask = (now: CronScheduleFuncParameters) => void | Promise<void>;
 
 export type CronSchedulerJob = {

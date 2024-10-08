@@ -1,52 +1,74 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
-const db = require('../../../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const { findOneDeal } = require('./get-deal.controller');
 
-const addDealComment = async (_id, commentType, comment) => {
+const addDealComment = async (_id, commentType, comment, auditDetails) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
-  if (ObjectId.isValid(_id)) {
-    const findAndUpdateResponse = await collection.findOneAndUpdate(
-      { _id: { $eq: ObjectId(_id) } },
-      {
-        $push: {
-          [commentType]: {
-            $each: [{
+  if (!ObjectId.isValid(_id)) {
+    return { status: 400, message: 'Invalid Deal Id' };
+  }
+
+  const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
+
+  const findAndUpdateResponse = await collection.findOneAndUpdate(
+    { _id: { $eq: ObjectId(_id) } },
+    {
+      $push: {
+        [commentType]: {
+          $each: [
+            {
               ...comment,
               timestamp: Date.now(),
-            }],
-            $position: 0,
-          },
+            },
+          ],
+          $position: 0,
         },
       },
-      { returnNewDocument: true, returnDocument: 'after' }
-    );
+      $set: {
+        auditRecord,
+      },
+    },
+    { returnNewDocument: true, returnDocument: 'after' },
+  );
 
-    const { value } = findAndUpdateResponse;
+  const { value } = findAndUpdateResponse;
 
-    return value;
-  }
-  return { status: 400, message: 'Invalid Deal Id' };
+  return value;
 };
-exports.addDealComment = addDealComment;
 
 exports.addDealCommentPost = async (req, res) => {
-  if (ObjectId.isValid(req.params.id)) {
-    const dealId = req.params.id;
+  const {
+    params: { id: dealId },
+    body: { commentType, comment, auditDetails },
+  } = req;
 
-    await findOneDeal(dealId, async (deal) => {
-      if (!deal) res.status(404).send({ status: 400, message: 'Deal not found' });
-
-      if (deal) {
-        const { commentType, comment } = req.body;
-
-        const updatedDeal = await addDealComment(dealId, commentType, comment);
-
-        res.status(200).json(updatedDeal);
-      }
-    });
-  } else {
+  if (!ObjectId.isValid(dealId)) {
     res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
+
+  try {
+    validateAuditDetails(auditDetails);
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: error.message,
+        code: error.code,
+      });
+    }
+    return res.status(500).send({ status: 500, error });
+  }
+
+  return findOneDeal(dealId, async (deal) => {
+    if (!deal) {
+      return res.status(404).send({ status: 400, message: 'Deal not found' });
+    }
+
+    const updatedDeal = await addDealComment(dealId, commentType, comment, auditDetails);
+
+    return res.status(200).json(updatedDeal);
+  });
 };

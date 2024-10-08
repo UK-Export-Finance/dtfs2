@@ -1,19 +1,21 @@
 const { utilisationReportUpload, confirmAndSend, confirmation, problemWithService } = require('../../../pages');
-const MOCK_USERS = require('../../../../../../e2e-fixtures');
+const { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../e2e-fixtures');
 const relativeURL = require('../../../relativeURL');
 const { february2023ReportDetails } = require('../../../../fixtures/mockUtilisationReportDetails');
 
-const { BANK1_PAYMENT_REPORT_OFFICER1 } = MOCK_USERS;
-
 context('Confirmation', () => {
+  before(() => {
+    cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
+  });
+
   after(() => {
-    cy.removeAllUtilisationReports();
+    cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
   });
 
   describe('After logging in, submitting a file and clicking the confirm and send button', () => {
     beforeEach(() => {
-      cy.removeAllUtilisationReports();
-      cy.insertUtilisationReports(february2023ReportDetails);
+      cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+      cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [february2023ReportDetails]);
 
       cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
       cy.visit(relativeURL('/utilisation-report-upload'));
@@ -21,7 +23,7 @@ context('Confirmation', () => {
       utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-February_2023_monthly.xlsx');
       utilisationReportUpload.continueButton().click();
       confirmAndSend.confirmAndSendButton().click();
-      
+
       problemWithService.heading().should('not.exist');
     });
 
@@ -39,8 +41,8 @@ context('Confirmation', () => {
 
   describe('After logging in but not submitting a file', () => {
     before(() => {
-      cy.removeAllUtilisationReports();
-      cy.insertUtilisationReports(february2023ReportDetails);
+      cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+      cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [february2023ReportDetails]);
     });
 
     it('Should route to the Upload Report page when you try and access the confirm and send page directly', () => {

@@ -1,25 +1,28 @@
+const { isValid, parseISO } = require('date-fns');
+const { isFacilityEndDateEnabledOnGefVersion, DealVersionError, InvalidParameterError, InvalidPayloadError } = require('@ukef/dtfs2-common');
+
 const { ObjectId } = require('mongodb');
 const convertToTimestamp = require('../../helpers/convertToTimestamp');
 
 const checkType = (type) => {
-  if (type) {
-    switch (type) {
-      case 'Cash':
-      case 'Contingent':
-        return type;
-      default:
-        return null;
-    }
-  } else {
-    return null;
+  if (type === 'Cash' || type === 'Contingent') {
+    return type;
   }
+  return null;
 };
 
 class Facility {
-  constructor(req) {
+  /**
+   * @param {object} req - The facility properties to create/update
+   * @param {number | undefined} dealVersion
+   * @throws {import('@ukef/dtfs2-common').ApiError} - if facility end date parameters are invalid
+   * @throws {InvalidParameterError} - if `facilityEndDate` is defined & is not a ISO-8601 date string
+   * @throws {InvalidParameterError} - if `bankReviewDate` is defined & is not a ISO-8601 date string
+   */
+  constructor(req, dealVersion) {
     if (req.dealId) {
       // new facility
-      this.dealId = req.dealId ? ObjectId(req.dealId) : null;
+      this.dealId = ObjectId(req.dealId);
       this.type = checkType(req.type);
       this.hasBeenIssued = null;
       if (req.hasBeenIssued != null) {
@@ -63,6 +66,13 @@ class Facility {
       }
       // used to store the user details of maker who changed unissued facility to issued
       this.unissuedToIssuedByMaker = Object(req.unissuedToIssuedByMaker) || null;
+
+      this.#validateAndSetFacilityEndDateValues(req, dealVersion);
+      if (isFacilityEndDateEnabledOnGefVersion(dealVersion)) {
+        this.isUsingFacilityEndDate = this.isUsingFacilityEndDate ?? null;
+        this.bankReviewDate = this.bankReviewDate ?? null;
+        this.facilityEndDate = this.facilityEndDate ?? null;
+      }
     } else {
       // update facility
       if (req.hasBeenIssued != null) {
@@ -188,7 +198,77 @@ class Facility {
         this.specialIssuePermission = Object(req.specialIssuePermission);
       }
 
+      this.#validateAndSetFacilityEndDateValues(req, dealVersion);
+
       this.updatedAt = Date.now();
+    }
+    this.auditRecord = req.auditRecord;
+  }
+
+  #validateAndSetFacilityEndDateValues(req, dealVersion) {
+    if (!isFacilityEndDateEnabledOnGefVersion(dealVersion)) {
+      const reqContainsFacilityEndDateFields = 'isUsingFacilityEndDate' in req || 'facilityEndDate' in req || 'bankReviewDate' in req;
+
+      if (reqContainsFacilityEndDateFields) {
+        throw new DealVersionError(`Cannot add facility end date to deal version ${dealVersion}`);
+      }
+
+      return;
+    }
+
+    if ('isUsingFacilityEndDate' in req && typeof req.isUsingFacilityEndDate !== 'boolean') {
+      throw new InvalidParameterError('isUsingFacilityEndDate', req.isUsingFacilityEndDate);
+    }
+
+    if (req.facilityEndDate && req.bankReviewDate) {
+      throw new InvalidPayloadError('A facility cannot have both a facilityEndDate and bankReviewDate');
+    }
+
+    if (req.isUsingFacilityEndDate === true && req.bankReviewDate) {
+      throw new InvalidParameterError('bankReviewDate', req.bankReviewDate);
+    }
+
+    if (req.isUsingFacilityEndDate === false && req.facilityEndDate) {
+      throw new InvalidParameterError('facilityEndDate', req.facilityEndDate);
+    }
+
+    if ('isUsingFacilityEndDate' in req) {
+      this.isUsingFacilityEndDate = req.isUsingFacilityEndDate;
+      if (req.isUsingFacilityEndDate) {
+        this.bankReviewDate = null;
+      } else {
+        this.facilityEndDate = null;
+      }
+    }
+
+    if ('bankReviewDate' in req) {
+      if (req.bankReviewDate === null) {
+        this.bankReviewDate = null;
+      } else {
+        const bankReviewDate = parseISO(req.bankReviewDate);
+        if (!isValid(bankReviewDate)) {
+          throw new InvalidParameterError('bankReviewDate', req.bankReviewDate);
+        }
+
+        this.bankReviewDate = bankReviewDate;
+        this.isUsingFacilityEndDate = false;
+        this.facilityEndDate = null;
+      }
+    }
+
+    if ('facilityEndDate' in req) {
+      if (req.facilityEndDate === null) {
+        this.facilityEndDate = null;
+      } else {
+        const facilityEndDate = parseISO(req.facilityEndDate);
+        if (!isValid(facilityEndDate)) {
+          throw new InvalidParameterError('facilityEndDate', req.facilityEndDate);
+        }
+
+        this.facilityEndDate = facilityEndDate;
+        this.isUsingFacilityEndDate = true;
+        this.bankReviewDate = null;
+      }
     }
   }
 }

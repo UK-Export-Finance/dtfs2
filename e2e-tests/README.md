@@ -25,28 +25,34 @@ To run the end-to-end tests locally, follow these steps:
 npm run start
 ```
 
-2. In a second terminal, navigate to the respective folder for the service you want to test (e.g. `./gef`, `./portal`, `./tfm`, `./ukef`).
+2. In a second terminal, navigate to the `e2e-tests` folder
+3. Make sure you have a copy of your `.env` file within the folder for the service you want to test. (e.g. if you want to test the `gef` service, copy your top level `.env` file into the `./gef` directory)
+4. Run one of the following commands to start Cypress:
 
-3. Run one of the following commands to start Cypress:
+### **Running the E2E tests using the GUI**
 
-### **Run an E2E test suite**
+To run a suite the tests using the Cypress GUI (graphical user interface), where you see the tests happen real-time on a browser window, use:
 
 ```shell
-npx cypress run --config video=false
+npx cypress open --project ./{service name}
 ```
 
-### **Run a single E2E test**
+e.g. `npx cypress open --project ./gef`
+
+This mode is helpful for live debugging.
+
+### **Running the E2E tests in headless mode**
+
+To run a suite in headless mode (without displaying the GUI) use:
+
+```shell
+npx cypress run --project ./{service name}
+```
 
 If you want to run a specific E2E test file, you can use the following command by specifying the path to the test file:
 
 ```shell
-npx cypress run --spec "cypress/e2e/**/my-test.spec.js" --config video=false
-```
-
-### **For live debugging, open the GUI and select the test:**
-
-```shell
-npx cypress open .
+npx cypress run --spec "cypress/e2e/**/my-test.spec.js"
 ```
 
 ## Cypress configuration ⚙️

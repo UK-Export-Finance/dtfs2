@@ -21,38 +21,53 @@ context('Portal GOVUK header displays correctly', () => {
   describe('portal GOVUK header when logged in', () => {
     it('displays the header homelink correctly', () => {
       page.homeLink().contains('GOV.UK');
-      page.homeLink().invoke('attr', 'href').then((href) => {
-        expect(href).to.equal('https://www.gov.uk');
-      });
-      page.homeLink().invoke('attr', 'title').then((href) => {
-        expect(href).to.equal('Go to the GOV.UK homepage');
-      });
+      page
+        .homeLink()
+        .invoke('attr', 'href')
+        .then((href) => {
+          expect(href).to.equal('https://www.gov.uk');
+        });
+      page
+        .homeLink()
+        .invoke('attr', 'title')
+        .then((href) => {
+          expect(href).to.equal('Go to the GOV.UK homepage');
+        });
       page.crownLogoTitle().contains('GOVUK logo');
     });
 
     it('displays the serviceName correctly', () => {
       page.serviceNameLink().contains('Get a guarantee for export finance');
-      page.serviceNameLink().invoke('attr', 'href').then((href) => {
-        expect(href).to.equal('/dashboard');
-      });
+      page
+        .serviceNameLink()
+        .invoke('attr', 'href')
+        .then((href) => {
+          expect(href).to.equal('/dashboard');
+        });
     });
 
     it('displays the navigation correctly', () => {
       page.userNameLink().contains(`${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
       page.profileLink().contains('Profile');
       page.logoutLink().contains('Sign out');
-      page.logoutLink().invoke('attr', 'href').then((href) => {
-        expect(href).to.equal('/logout');
-      });
+      page
+        .logoutLink()
+        .invoke('attr', 'href')
+        .then((href) => {
+          expect(href).to.equal('/logout');
+        });
     });
 
     it('displays the beta banner correctly', () => {
       page.betaBanner().contains('This is a new service – your feedback will help us to improve it.');
       page.betaBanner().contains('beta');
       page.betaBannerHref().contains('feedback');
-      page.betaBannerHref().invoke('attr', 'href').then((href) => {
-        expect(href).to.equal('/feedback');
-      });
+      page
+        .betaBannerHref()
+        .invoke('attr', 'href')
+        .then((href) => {
+          expect(href).to.equal('/feedback');
+        });
     });
   });
 
@@ -63,20 +78,29 @@ context('Portal GOVUK header displays correctly', () => {
 
     it('displays the header homelink correctly', () => {
       page.homeLink().contains('GOV.UK');
-      page.homeLink().invoke('attr', 'href').then((href) => {
-        expect(href).to.equal('https://www.gov.uk');
-      });
-      page.homeLink().invoke('attr', 'title').then((href) => {
-        expect(href).to.equal('Go to the GOV.UK homepage');
-      });
+      page
+        .homeLink()
+        .invoke('attr', 'href')
+        .then((href) => {
+          expect(href).to.equal('https://www.gov.uk');
+        });
+      page
+        .homeLink()
+        .invoke('attr', 'title')
+        .then((href) => {
+          expect(href).to.equal('Go to the GOV.UK homepage');
+        });
       page.crownLogoTitle().contains('GOVUK logo');
     });
 
     it('displays the serviceName correctly', () => {
       page.serviceNameLink().contains('Get a guarantee for export finance');
-      page.serviceNameLink().invoke('attr', 'href').then((href) => {
-        expect(href).to.equal('/dashboard');
-      });
+      page
+        .serviceNameLink()
+        .invoke('attr', 'href')
+        .then((href) => {
+          expect(href).to.equal('/dashboard');
+        });
     });
 
     it('displays the navigation correctly', () => {
@@ -90,9 +114,12 @@ context('Portal GOVUK header displays correctly', () => {
       page.betaBanner().contains('This is a new service – your feedback will help us to improve it.');
       page.betaBanner().contains('beta');
       page.betaBannerHref().contains('feedback');
-      page.betaBannerHref().invoke('attr', 'href').then((href) => {
-        expect(href).to.equal('/feedback');
-      });
+      page
+        .betaBannerHref()
+        .invoke('attr', 'href')
+        .then((href) => {
+          expect(href).to.equal('/feedback');
+        });
     });
   });
 });

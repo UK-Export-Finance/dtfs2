@@ -1,12 +1,8 @@
 const calculateDealSummary = require('.');
-const {
-  roundNumber,
-  formattedNumber,
-} = require('../../utils/number');
+const { roundNumber, formattedNumber } = require('../../utils/number');
 
 describe('deal-summary', () => {
-  const calculateUkefExposure = (value, coveredPercentage) =>
-    String(Number(value) * (Number(coveredPercentage) / 100));
+  const calculateUkefExposure = (value, coveredPercentage) => String(Number(value) * (Number(coveredPercentage) / 100));
 
   const mockCompletedBonds = [
     {
@@ -61,15 +57,10 @@ describe('deal-summary', () => {
           supplyContractConversionRateToGBP: '',
         },
         bondTransactions: {
-          items: [
-            { status: 'Completed' },
-          ],
+          items: [{ status: 'Completed' }],
         },
         loanTransactions: {
-          items: [
-            { status: 'Completed' },
-            { status: 'Completed' },
-          ],
+          items: [{ status: 'Completed' }, { status: 'Completed' }],
         },
       };
       expect(calculateDealSummary(mockDeal)).toEqual({});
@@ -81,18 +72,13 @@ describe('deal-summary', () => {
       const mockDeal = {
         submissionDetails: {
           supplyContractConversionRateToGBP: '50',
-          supplyContractCurrency: { id: '' }
+          supplyContractCurrency: { id: '' },
         },
         bondTransactions: {
-          items: [
-            { status: 'Completed' },
-          ],
+          items: [{ status: 'Completed' }],
         },
         loanTransactions: {
-          items: [
-            { status: 'Completed' },
-            { status: 'Completed' },
-          ],
+          items: [{ status: 'Completed' }, { status: 'Completed' }],
         },
       };
       expect(calculateDealSummary(mockDeal)).toEqual({});
@@ -109,10 +95,7 @@ describe('deal-summary', () => {
           items: [],
         },
         loanTransactions: {
-          items: [
-            { status: 'Incomplete' },
-            { status: 'Incomplete' },
-          ],
+          items: [{ status: 'Incomplete' }, { status: 'Incomplete' }],
         },
       };
       expect(calculateDealSummary(mockDeal)).toEqual({});
@@ -129,10 +112,7 @@ describe('deal-summary', () => {
           items: [],
         },
         loanTransactions: {
-          items: [
-            { status: 'Not started' },
-            { status: 'Not started' },
-          ],
+          items: [{ status: 'Not started' }, { status: 'Not started' }],
         },
       };
       expect(calculateDealSummary(mockDeal)).toEqual({});
@@ -150,11 +130,9 @@ describe('deal-summary', () => {
             },
           },
           bondTransactions: {
-            items: [
-              { status: null, submittedAsIssuedDate: true },
-            ],
+            items: [{ status: null, submittedAsIssuedDate: true }],
           },
-          loanTransactions: { items: [] }
+          loanTransactions: { items: [] },
         };
         expect(calculateDealSummary(mockDeal).totalValue).toBeDefined();
         expect(calculateDealSummary(mockDeal).totalUkefExposure).toBeDefined();
@@ -172,9 +150,7 @@ describe('deal-summary', () => {
           },
           bondTransactions: { items: [] },
           loanTransactions: {
-            items: [
-              { status: null, submittedAsIssuedDate: true },
-            ],
+            items: [{ status: null, submittedAsIssuedDate: true }],
           },
         };
         expect(calculateDealSummary(mockDeal).totalValue).toBeDefined();
@@ -240,9 +216,9 @@ describe('deal-summary', () => {
         });
 
         it('should have correct, formatted dealInGbp calculation', () => {
-          const bondsInGbp = (totalAllBonds / Number(mockDeal.submissionDetails.supplyContractConversionRateToGBP));
-          const loansInGbp = (totalAllLoans / Number(mockDeal.submissionDetails.supplyContractConversionRateToGBP));
-          const calculation = (bondsInGbp + loansInGbp);
+          const bondsInGbp = totalAllBonds / Number(mockDeal.submissionDetails.supplyContractConversionRateToGBP);
+          const loansInGbp = totalAllLoans / Number(mockDeal.submissionDetails.supplyContractConversionRateToGBP);
+          const calculation = bondsInGbp + loansInGbp;
           const expected = formattedNumber(roundNumber(calculation), 2);
           expect(result.totalValue.dealInGbp).toEqual(expected);
         });
@@ -254,7 +230,7 @@ describe('deal-summary', () => {
         });
 
         it('should have correct, formatted bondsInGbp calculation', () => {
-          const calculation = (totalAllBonds / Number(mockDeal.submissionDetails.supplyContractConversionRateToGBP));
+          const calculation = totalAllBonds / Number(mockDeal.submissionDetails.supplyContractConversionRateToGBP);
           const expected = formattedNumber(roundNumber(calculation), 2);
           expect(result.totalValue.bondsInGbp).toEqual(expected);
         });
@@ -266,7 +242,7 @@ describe('deal-summary', () => {
         });
 
         it('should have correct, formatted loansInGbp calculation', () => {
-          const calculation = (totalAllLoans / Number(mockDeal.submissionDetails.supplyContractConversionRateToGBP));
+          const calculation = totalAllLoans / Number(mockDeal.submissionDetails.supplyContractConversionRateToGBP);
           const expected = formattedNumber(roundNumber(calculation), 2);
           expect(result.totalValue.loansInGbp).toEqual(expected);
         });
@@ -324,7 +300,7 @@ describe('deal-summary', () => {
                 loanTransactions: { items: [] },
               });
 
-              calculation = (calculateTotalAllBonds(mockBondTransactions) / mockDeal.submissionDetails.supplyContractConversionRateToGBP);
+              calculation = calculateTotalAllBonds(mockBondTransactions) / mockDeal.submissionDetails.supplyContractConversionRateToGBP;
               expected = formattedNumber(roundNumber(calculation), 2);
             });
 
@@ -349,7 +325,7 @@ describe('deal-summary', () => {
                 bondTransactions: { items: [] },
                 loanTransactions: mockLoanTransactions,
               });
-              calculation = (calculateTotalAllLoans(mockLoanTransactions) / mockDeal.submissionDetails.supplyContractConversionRateToGBP);
+              calculation = calculateTotalAllLoans(mockLoanTransactions) / mockDeal.submissionDetails.supplyContractConversionRateToGBP;
               expected = formattedNumber(roundNumber(calculation), 2);
             });
 
@@ -373,8 +349,8 @@ describe('deal-summary', () => {
                 loanTransactions: mockLoanTransactions,
               });
 
-              const totalBondsAndLoans = (calculateTotalAllBonds(mockBondTransactions) + calculateTotalAllLoans(mockLoanTransactions));
-              const calculation = (totalBondsAndLoans / mockDeal.submissionDetails.supplyContractConversionRateToGBP);
+              const totalBondsAndLoans = calculateTotalAllBonds(mockBondTransactions) + calculateTotalAllLoans(mockLoanTransactions);
+              const calculation = totalBondsAndLoans / mockDeal.submissionDetails.supplyContractConversionRateToGBP;
               const expected = formattedNumber(roundNumber(calculation), 2);
 
               expect(result.totalValue.dealInGbp).toEqual(expected);
@@ -430,7 +406,7 @@ describe('deal-summary', () => {
         });
 
         it('should have correct, formatted bondsInGbp calculation', () => {
-          const calculation = (totalAllBonds / Number(mockDeal.submissionDetails.supplyContractConversionRateToGBP));
+          const calculation = totalAllBonds / Number(mockDeal.submissionDetails.supplyContractConversionRateToGBP);
           const expected = formattedNumber(roundNumber(calculation), 2);
           expect(result.totalUkefExposure.bondsInGbp).toEqual(expected);
         });
@@ -442,7 +418,7 @@ describe('deal-summary', () => {
         });
 
         it('should have correct, formatted loansInGbp calculation', () => {
-          const calculation = (totalAllLoans / Number(mockDeal.submissionDetails.supplyContractConversionRateToGBP));
+          const calculation = totalAllLoans / Number(mockDeal.submissionDetails.supplyContractConversionRateToGBP);
           const expected = formattedNumber(roundNumber(calculation), 2);
           expect(result.totalUkefExposure.loansInGbp).toEqual(expected);
         });

@@ -1,9 +1,6 @@
 const { cloneDeep } = require('lodash');
 const { dateHasAllValues } = require('../validation/fields/date');
-const {
-  getDateAsEpochMillisecondString,
-  getStartOfDateFromDayMonthYearStringsReplicatingMoment
-} = require('../helpers/date');
+const { getDateAsEpochMillisecondString, getStartOfDateFromDayMonthYearStringsReplicatingMoment } = require('../helpers/date');
 
 const hasAllRequestedCoverStartDateValues = (facility) => {
   const {
@@ -21,8 +18,8 @@ exports.hasAllRequestedCoverStartDateValues = hasAllRequestedCoverStartDateValue
 /**
  * Returns facility object with added requestedCoverStartDate property, if the day
  * month, year are given. This is stored as a UTC timestamp
- * @param {Object} facility
- * @returns {Object}
+ * @param {object} facility
+ * @returns {object}
  *
  * This function has odd behaviour inherited from moment js
  *  - If the month is invalid set requestedCoverStartDate to NaN
@@ -39,11 +36,7 @@ exports.updateRequestedCoverStartDate = (facility) => {
     } = facility;
 
     modifiedFacility.requestedCoverStartDate = getDateAsEpochMillisecondString(
-      getStartOfDateFromDayMonthYearStringsReplicatingMoment(
-        requestedCoverStartDateDay,
-        requestedCoverStartDateMonth,
-        requestedCoverStartDateYear,
-      )
+      getStartOfDateFromDayMonthYearStringsReplicatingMoment(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear),
     );
     modifiedFacility.coverDateConfirmed = true;
   }

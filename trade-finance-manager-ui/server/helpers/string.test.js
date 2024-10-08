@@ -1,8 +1,4 @@
-const {
-  isEmptyString,
-  hasValue,
-  containsNumber,
-} = require('./string');
+const { isEmptyString, hasValue, containsNumber } = require('./string');
 
 describe('helpers - string', () => {
   describe('isEmptyString', () => {

@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const { produce } = require('immer');
 const { cloneDeep } = require('lodash');
 const { UserService } = require('./user.service');

@@ -18,7 +18,7 @@
     </h1>
     {% if validationErrors %}
         <div class="govuk-form-group govuk-form-group--error govuk-!-margin-top-7">
-            <h2 class="govuk-heading-m" id="validation-errors-table">Errors found in {{ filename }}</h2>
+            <h2 class="govuk-heading-m" id="validation-errors-table" tabindex="-1">Errors found in {{ filename }}</h2>
             <p class="govuk-error-message">
                 <span class="govuk-visually-hidden">Error:</span>
                 You must correct these errors before you can upload the report
@@ -38,21 +38,21 @@
                     {% for item in validationErrors %}
                         <tr class="govuk-table__row" data-cy="validation-errors-table-row">
                             <td class="govuk-table__cell">
-                                {% if item.exporter !== null %}
+                                {% if item.exporter !== null and item.exporter !== undefined %}
                                     {{ item.exporter }}
                                 {% else %}
                                     -
                                 {% endif %}
                             </td>
                             <td class="govuk-table__cell">
-                                {% if item.row !== null %}
+                                {% if item.row !== null and item.row !== undefined %}
                                     {{ item.row }}
                                 {% else %}
                                     -
                                 {% endif %}
                             </td>
                             <td class="govuk-table__cell">
-                                {% if item.column !== null %}
+                                {% if item.column !== null and item.column !== undefined %}
                                     {{ item.column }}
                                 {% else %}
                                     -

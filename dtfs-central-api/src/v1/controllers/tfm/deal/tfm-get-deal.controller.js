@@ -1,7 +1,8 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
-const db = require('../../../../drivers/db-client').default;
-const CONSTANTS = require('../../../../constants');
+const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { mongoDbClient: db } = require('../../../../drivers/db-client');
+const { DEALS } = require('../../../../constants');
+const { TfmFacilitiesRepo } = require('../../../../repositories/tfm-facilities-repo');
 
 const findOneDeal = async (_id, callback) => {
   if (!ObjectId.isValid(_id)) {
@@ -9,13 +10,12 @@ const findOneDeal = async (_id, callback) => {
   }
 
   const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
-  const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
 
   const deal = await dealsCollection.findOne({ _id: { $eq: ObjectId(_id) } });
   let returnDeal = deal;
 
   if (deal) {
-    if (deal.dealSnapshot.dealType && deal.dealSnapshot.dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+    if (deal.dealSnapshot.dealType && deal.dealSnapshot.dealType === DEALS.DEAL_TYPE.GEF) {
       returnDeal = {
         ...deal,
         dealSnapshot: deal.dealSnapshot,
@@ -27,11 +27,7 @@ const findOneDeal = async (_id, callback) => {
         const mappedDeal = deal.dealSnapshot;
         const mappedBonds = [];
         const mappedLoans = [];
-        const facilities = await facilitiesCollection.find({
-          _id: {
-            $in: facilityIds,
-          },
-        }).toArray();
+        const facilities = await TfmFacilitiesRepo.findByIds(facilityIds);
 
         facilityIds.forEach((id) => {
           const { facilitySnapshot } = facilities.find((f) => f._id.toHexString() === id.toHexString());
@@ -39,11 +35,11 @@ const findOneDeal = async (_id, callback) => {
           if (facilitySnapshot) {
             const { type } = facilitySnapshot;
 
-            if (type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
+            if (type === FACILITY_TYPE.BOND) {
               mappedBonds.push(facilitySnapshot);
             }
 
-            if (type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
+            if (type === FACILITY_TYPE.LOAN) {
               mappedLoans.push(facilitySnapshot);
             }
           }
@@ -85,5 +81,6 @@ exports.findOneDealGet = async (req, res) => {
 
     return res.status(404).send({ status: 404, message: 'Deal not found' });
   }
+
   return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
 };

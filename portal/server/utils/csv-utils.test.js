@@ -109,7 +109,7 @@ describe('csv-utils', () => {
           '20001371-A2,Exporter 1-B2,GBP-C2,3938753.8-D2',
           '20004872-A3,Exporter 2-B3,EUR-C3,761579.37-D3',
           '20004873-A4,Exporter 3-B4,USD-C4,123.456789-D4',
-          '20004874-A5,Exporter 4-B5,GBP-C5,987654321.120001-D5'
+          '20004874-A5,Exporter 4-B5,GBP-C5,987654321.120001-D5',
         ],
       };
 
@@ -323,5 +323,39 @@ describe('csv-utils', () => {
     it.each(['123.456', null, undefined])('should throw TypeError for non-number input %o', (input) => {
       expect(() => handleFloatingPointRoundingErrors(input)).toThrow(TypeError);
     });
-   });
+  });
+
+  describe('handleFloatingPointRoundingErrors', () => {
+    it.each([
+      { input: 761579.3699999999, expected: 761579.37 },
+      { input: 3938753.8000000007, expected: 3938753.8 },
+      { input: 9999.9999999999, expected: 10000 },
+      { input: 987654321.1200005, expected: 987654321.12 },
+      { input: 987654321.1200006, expected: 987654321.120001 },
+    ])('should return $expected for $input', ({ input, expected }) => {
+      expect(handleFloatingPointRoundingErrors(input)).toBe(expected);
+    });
+
+    it.each([123.456, 0.1, 1.230001])('should return %f unchanged (already rounded to required decimal places)', (value) => {
+      expect(handleFloatingPointRoundingErrors(value)).toBe(value);
+    });
+
+    it.each([456, 1234567, Number.MAX_SAFE_INTEGER])('should return integer %d unchanged', (value) => {
+      expect(handleFloatingPointRoundingErrors(value)).toBe(value);
+    });
+
+    it.each([
+      { input: -761579.3699999999, expected: -761579.37 },
+      { input: -3938753.8000000007, expected: -3938753.8 },
+      { input: -123.456, expected: -123.456 },
+      { input: -987654321.1200006, expected: -987654321.120001 },
+      { input: Number.MIN_SAFE_INTEGER, expected: Number.MIN_SAFE_INTEGER },
+    ])('should return $expected for negative number $input', ({ input, expected }) => {
+      expect(handleFloatingPointRoundingErrors(input)).toBe(expected);
+    });
+
+    it.each(['123.456', null, undefined])('should throw TypeError for non-number input %o', (input) => {
+      expect(() => handleFloatingPointRoundingErrors(input)).toThrow(TypeError);
+    });
+  });
 });

@@ -1,12 +1,7 @@
 const feeFrequencyField = (bondBody, existingBond) => {
   const modifiedBond = bondBody;
 
-  const {
-    feeType,
-    feeFrequency,
-    inAdvanceFeeFrequency,
-    inArrearFeeFrequency,
-  } = modifiedBond;
+  const { feeType, feeFrequency, inAdvanceFeeFrequency, inArrearFeeFrequency } = modifiedBond;
 
   const feeFrequencyValue = () => {
     if (feeType === 'In advance') {

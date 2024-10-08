@@ -1,0 +1,20 @@
+{% macro render() %}
+  <div class="govuk-checkboxes govuk-checkboxes--small">
+    <div class="govuk-checkboxes__item select-all-table-cell-checkbox">
+      <input
+        class="govuk-checkboxes__input govuk-!-top-0 table-cell-checkbox-input"
+        id="select-all-checkbox"
+        data-cy="table-cell-checkbox--select-all"
+        name="select-all"
+        type="checkbox"
+        aria-label="Select all"
+      />
+      <label
+        class="govuk-label govuk-checkboxes__label govuk-!-padding-0 table-cell-checkbox-label"
+        id="select-all-checkbox-label"
+        for="select-all-checkbox"
+      >
+      </label>
+    </div>
+  </div>
+{% endmacro %}

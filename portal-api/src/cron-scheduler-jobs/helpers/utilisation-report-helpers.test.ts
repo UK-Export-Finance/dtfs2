@@ -19,14 +19,13 @@ jest.mock('../../external-api/api');
 jest.mock('../../v1/api');
 
 console.error = jest.fn();
-console.warn = jest.fn();
 console.info = jest.fn();
 
-const originalProcessEnv = process.env;
+const originalProcessEnv = { ...process.env };
 
 describe('utilisation-report-helpers', () => {
   afterEach(() => {
-    process.env = { ...originalProcessEnv };
+    process.env = originalProcessEnv;
     jest.resetAllMocks();
     jest.useRealTimers();
   });
@@ -280,9 +279,13 @@ describe('utilisation-report-helpers', () => {
         },
       };
       jest.mocked(externalApi.bankHolidays.getBankHolidayDatesForRegion).mockResolvedValue([]);
-      jest
-        .mocked(api.getAllBanks)
-        .mockResolvedValue([{ ...aBank(), isVisibleInTfmUtilisationReports: true, utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule() }]);
+      jest.mocked(api.getAllBanks).mockResolvedValue([
+        {
+          ...aBank(),
+          isVisibleInTfmUtilisationReports: true,
+          utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule(),
+        },
+      ]);
       jest.mocked(api.getUtilisationReports).mockResolvedValue([existingReport]);
 
       const sendEmailCallback = jest.fn();
@@ -320,7 +323,7 @@ describe('utilisation-report-helpers', () => {
 
       // Assert
       expect(sendEmailCallback).not.toHaveBeenCalled();
-      expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('paymentOfficerTeam.emails property against bank is not an array or is empty'));
+      expect(console.info).toHaveBeenCalledWith(expect.stringContaining('paymentOfficerTeam.emails property against bank is not an array or is empty'));
     });
 
     it('does not send an email when the bank has an invalid payment officer team email', async () => {
@@ -389,7 +392,7 @@ describe('utilisation-report-helpers', () => {
       });
 
       // Assert
-      expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('missing a payment officer team name'));
+      expect(console.info).toHaveBeenCalledWith(expect.stringContaining('missing a payment officer team name'));
 
       expect(sendEmailCallback).toHaveBeenCalledTimes(1);
       expect(sendEmailCallback).toHaveBeenCalledWith(validEmail, 'Team', 'October 2023');
@@ -486,7 +489,11 @@ describe('utilisation-report-helpers', () => {
         { startMonth: 6, endMonth: 8 },
         { startMonth: 9, endMonth: 11 },
       ];
-      const bank: BankResponse = { ...aBank(), isVisibleInTfmUtilisationReports: true, utilisationReportPeriodSchedule: quarterlyReportingSchedule };
+      const bank: BankResponse = {
+        ...aBank(),
+        isVisibleInTfmUtilisationReports: true,
+        utilisationReportPeriodSchedule: quarterlyReportingSchedule,
+      };
       jest.mocked(api.getAllBanks).mockResolvedValue([bank]);
 
       const sendEmailCallback = jest.fn();

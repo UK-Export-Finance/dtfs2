@@ -2,8 +2,8 @@ const CONSTANTS = require('../../../constants');
 
 /**
  * Formats an amount with trailing two decimal points integer
- * @param {Integer} amount Amount with or without decimal points integers
- * @returns {Integer} Two decimal points formatted integer
+ * @param {number} amount Amount with or without decimal points integers
+ * @returns {number} Two decimal points formatted integer
  */
 const decimalPoint = (amount) => {
   if (amount) {

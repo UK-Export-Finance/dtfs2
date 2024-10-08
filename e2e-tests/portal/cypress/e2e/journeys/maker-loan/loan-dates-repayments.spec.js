@@ -36,8 +36,9 @@ context('Loan Dates and Repayments', () => {
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1)
-      .then((insertedDeal) => { deal = insertedDeal; });
+    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   describe('Loan Dates and Repayments title', () => {
@@ -132,15 +133,21 @@ context('Loan Dates and Repayments', () => {
       pages.loanDatesRepayments.submit().click();
       cy.url().should('include', '/check-your-answers');
 
-      partials.taskListHeader.itemStatus('dates-and-repayments').invoke('text').then((text) => {
-        expect(text.trim()).equal('Completed');
-      });
+      partials.taskListHeader
+        .itemStatus('dates-and-repayments')
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).equal('Completed');
+        });
       partials.taskListHeader.itemLink('dates-and-repayments').click();
 
       cy.url().should('include', '/dates-repayments');
-      partials.taskListHeader.itemStatus('dates-and-repayments').invoke('text').then((text) => {
-        expect(text.trim()).equal('Completed');
-      });
+      partials.taskListHeader
+        .itemStatus('dates-and-repayments')
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).equal('Completed');
+        });
     });
   });
 

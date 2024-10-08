@@ -6,6 +6,7 @@
   {% set facility = params.facility %}
   {% set user = params.user %}
   {% set facilityTfm = params.facilityTfm %}
+  {% set showFacilityEndDate = params.showFacilityEndDate %}
 
   <div class="govuk-grid-row" data-cy="facility-overview">
 
@@ -109,6 +110,21 @@
 
         <dt class="govuk-grid-column-one-quarter govuk-body-s">Cover end date</dt>
         <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-cover-end-date">{{ facility.dates.coverEndDate | dashIfEmpty }}</dd>
+
+        {% if showFacilityEndDate %}
+          <dt class="govuk-grid-column-one-quarter govuk-body-s">Bank has provided a facility end date</dt>
+          <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="is-using-facility-end-date">{{ facility.dates.isUsingFacilityEndDate | formatBooleanAsString }}</dd>
+
+          {% if (facility.dates.isUsingFacilityEndDate === false) %}
+            <dt class="govuk-grid-column-one-quarter govuk-body-s">Bank review date</dt>
+            <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="bank-review-date">{{ facility.dates.bankReviewDate | formatIsoDateString("d MMMM yyyy") | dashIfEmpty }}</dd>
+
+          {% else %}
+            <dt class="govuk-grid-column-one-quarter govuk-body-s">Facility end date</dt>
+            <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-end-date">{{ facility.dates.facilityEndDate | formatIsoDateString("d MMMM yyyy") | dashIfEmpty }}</dd>
+
+          {% endif %}
+        {% endif %}
 
         <dt class="govuk-grid-column-one-quarter govuk-body-s">Tenor</dt>
         <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-tenor">{{ facility.dates.tenor | dashIfEmpty }}</dd>

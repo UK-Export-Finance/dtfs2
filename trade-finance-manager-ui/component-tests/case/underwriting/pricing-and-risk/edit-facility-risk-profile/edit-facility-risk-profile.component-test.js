@@ -1,4 +1,4 @@
-const pageRenderer = require('../../../../pageRenderer');
+const { pageRenderer } = require('../../../../pageRenderer');
 
 const page = '../templates/case/underwriting/pricing-and-risk/edit-facility-risk-profile/edit-facility-risk-profile.njk';
 
@@ -44,11 +44,7 @@ describe(page, () => {
     });
 
     it('should render cancel link', () => {
-      wrapper.expectLink('[data-cy="cancel-link"]')
-        .toLinkTo(
-          `/case/${params.dealId}/underwriting`,
-          'Cancel',
-        );
+      wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo(`/case/${params.dealId}/underwriting`, 'Cancel');
     });
   });
 });

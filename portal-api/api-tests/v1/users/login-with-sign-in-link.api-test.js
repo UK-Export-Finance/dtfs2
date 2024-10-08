@@ -1,10 +1,11 @@
+const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const app = require('../../../src/createApp');
-const { getCollection } = require('../../../src/drivers/db-client');
+const { mongoDbClient: db } = require('../../../src/drivers/db-client');
 const { Hasher } = require('../../../src/crypto/hasher');
 const { Pbkdf2Sha512HashStrategy } = require('../../../src/crypto/pbkdf2-sha512-hash-strategy');
 const { CryptographicallyStrongGenerator } = require('../../../src/crypto/cryptographically-strong-generator');
 const { as } = require('../../api')(app);
-const { LOGIN_STATUSES, SIGN_IN_LINK, USER, HTTP_ERROR_CAUSES } = require('../../../src/constants');
+const { SIGN_IN_LINK, USER, HTTP_ERROR_CAUSES } = require('../../../src/constants');
 const users = require('./test-data');
 const { setUpApiTestUser } = require('../../api-test-users');
 const databaseHelper = require('../../database-helper');
@@ -39,7 +40,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
   const loginWithSignInLink = ({ userId, signInToken, userToken }) =>
     as({ token: userToken }).post().to(`/v1/users/${userId}/sign-in-link/${signInToken}/login`);
 
-  const usersCollection = () => getCollection('users');
+  const usersCollection = () => db.getCollection('users');
 
   beforeAll(async () => {
     // Not faking next tick is required for database interaction to work
@@ -61,7 +62,10 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
       username: userToCreateAsPartiallyLoggedIn.username,
       properties: ['signInLinkSendCount', 'signInLinkSendDate', 'signInTokens', 'disabled'],
     });
-    await databaseHelper.setUserProperties({ username: userToCreateAsPartiallyLoggedIn.username, update: { 'user-status': USER.STATUS.ACTIVE } });
+    await databaseHelper.setUserProperties({
+      username: userToCreateAsPartiallyLoggedIn.username,
+      update: { 'user-status': USER.STATUS.ACTIVE },
+    });
 
     jest.resetAllMocks();
   });
@@ -73,7 +77,11 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
 
   describe('validation', () => {
     it('returns a 400 error if userId is not a valid ObjectID', async () => {
-      const { status, body } = await loginWithSignInLink({ userId: invalidUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
+      const { status, body } = await loginWithSignInLink({
+        userId: invalidUserId,
+        signInToken: validSignInToken,
+        userToken: partiallyLoggedInUserToken,
+      });
 
       expect(status).toBe(400);
       expect(body).toStrictEqual({
@@ -446,20 +454,24 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
               userToken: partiallyLoggedInUserToken,
             });
             // lastLogin is removed as this will be the login prior to this login (in tests, this is undefined)
-            const { lastLogin, ...expectedSanitisedUser } = sanitizeUser(await databaseHelper.getUserById(partiallyLoggedInUserId));
+            const { lastLogin: _lastLogin, ...expectedSanitisedUser } = sanitizeUser(await databaseHelper.getUserById(partiallyLoggedInUserId));
 
             expect(status).toEqual(200);
             expect(body).toStrictEqual({
               success: true,
               token: expect.any(String),
               user: JSON.parse(JSON.stringify(expectedSanitisedUser)),
-              loginStatus: LOGIN_STATUSES.VALID_2FA,
+              loginStatus: PORTAL_LOGIN_STATUS.VALID_2FA,
               expiresIn: '12h',
             });
           });
 
           it('deletes the saved sign in token for the user', async () => {
-            await loginWithSignInLink({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
+            await loginWithSignInLink({
+              userId: partiallyLoggedInUserId,
+              signInToken: validSignInToken,
+              userToken: partiallyLoggedInUserToken,
+            });
 
             const testUserInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
             expect(testUserInDb.signInTokens).toBe(undefined);

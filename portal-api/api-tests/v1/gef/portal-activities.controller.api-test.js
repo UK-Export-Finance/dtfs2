@@ -1,5 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
-const db = require('../../../src/drivers/db-client');
+const { mongoDbClient: db } = require('../../../src/drivers/db-client');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -142,7 +142,7 @@ describe('facilityChangePortalActivity()', () => {
       surname: maker.surname,
       _id: maker._id,
       email: maker.email,
-      roles: maker.roles
+      roles: maker.roles,
     };
     MOCK_APPLICATION_FACILITIES.maker = makerToInsert;
 
@@ -177,7 +177,7 @@ describe('facilityChangePortalActivity()', () => {
     const checkerInObject = {
       firstname: checker.firstname,
       surname: checker.surname,
-      _id: JSON.stringify(checker._id)
+      _id: JSON.stringify(checker._id),
     };
 
     expect(portalActivityObject.checker.firstname).toEqual(checkerInObject.firstname);
@@ -221,7 +221,7 @@ describe('facilityChangePortalActivity()', () => {
       surname: maker.surname,
       _id: maker._id,
       email: maker.email,
-      roles: maker.roles
+      roles: maker.roles,
     };
     MOCK_APPLICATION_FACILITIES.maker = makerToInsert;
 

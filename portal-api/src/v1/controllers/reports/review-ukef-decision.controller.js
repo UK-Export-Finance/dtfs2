@@ -1,5 +1,5 @@
 const { format, differenceInBusinessDays, addBusinessDays } = require('date-fns');
-const db = require('../../../drivers/db-client');
+const { mongoDbClient: db } = require('../../../drivers/db-client');
 const CONSTANTS = require('../../../constants');
 
 // helper function to retrieve the unissued facilities for MIN/AIN deals
@@ -17,58 +17,60 @@ const getUkefDecision = async (decision, bankId) => {
   //    dealType: "GEF"
   //    submissionDateEpoch: "1642762644833"
   // }]
-  const deals = await queryDb.aggregate([
-    { $unwind: '$ukefDecision' },
-    { $match: { 'ukefDecision.decision': { $eq: decision }, 'bank.id': { $eq: bankId } } },
-    {
-      $project: {
-        _id: false,
-        status: '$status',
-        dealId: '$_id',
-        bankInternalRefName: '$bankInternalRefName',
-        dealType: '$dealType',
-        companyName: '$exporter.companyName',
-        dateCreatedEpoch: {
-          $switch: {
-            branches: [
-              {
-                case: { $eq: ['$dealType', 'GEF'] },
-                then: '$createdAt'
-              },
-              {
-                case: { $eq: ['$dealType', 'BSS/EWCS'] },
-                then: '$details.created'
-              },
-            ],
+  const deals = await queryDb
+    .aggregate([
+      { $unwind: '$ukefDecision' },
+      { $match: { 'ukefDecision.decision': { $eq: decision }, 'bank.id': { $eq: bankId } } },
+      {
+        $project: {
+          _id: false,
+          status: '$status',
+          dealId: '$_id',
+          bankInternalRefName: '$bankInternalRefName',
+          dealType: '$dealType',
+          companyName: '$exporter.companyName',
+          dateCreatedEpoch: {
+            $switch: {
+              branches: [
+                {
+                  case: { $eq: ['$dealType', 'GEF'] },
+                  then: '$createdAt',
+                },
+                {
+                  case: { $eq: ['$dealType', 'BSS/EWCS'] },
+                  then: '$details.created',
+                },
+              ],
+            },
           },
-        },
-        dateOfApprovalEpoch: '$ukefDecision.timestamp',
-        submissionDateEpoch: {
-          $switch: {
-            branches: [
-              {
-                case: { $eq: ['$dealType', 'GEF'] },
-                then: '$submissionDate'
-              },
-              {
-                case: { $eq: ['$dealType', 'BSS/EWCS'] },
-                then: '$details.submissionDate'
-              },
-            ],
+          dateOfApprovalEpoch: '$ukefDecision.timestamp',
+          submissionDateEpoch: {
+            $switch: {
+              branches: [
+                {
+                  case: { $eq: ['$dealType', 'GEF'] },
+                  then: '$submissionDate',
+                },
+                {
+                  case: { $eq: ['$dealType', 'BSS/EWCS'] },
+                  then: '$details.submissionDate',
+                },
+              ],
+            },
           },
-        },
-      }
-    },
-    {
-      $match: {
-        // show only deals that have the `UKEF_APPROVED_WITHOUT_CONDITIONS` and `UKEF_APPROVED_WITH_CONDITIONS` status
-        status: {
-          $in: [CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS, CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS],
         },
       },
-    },
-    { $sort: { dateOfApprovalEpoch: 1 } }
-  ]).toArray();
+      {
+        $match: {
+          // show only deals that have the `UKEF_APPROVED_WITHOUT_CONDITIONS` and `UKEF_APPROVED_WITH_CONDITIONS` status
+          status: {
+            $in: [CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS, CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS],
+          },
+        },
+      },
+      { $sort: { dateOfApprovalEpoch: 1 } },
+    ])
+    .toArray();
   return deals;
 };
 
@@ -83,8 +85,10 @@ exports.reviewUkefDecisionReports = async (req, res) => {
     const ukefDecision = req.body.ukefDecision || req.query.ukefDecision || '';
     const ukefDecisions = [];
 
-    if (ukefDecision === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
-     || ukefDecision === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS) {
+    if (
+      ukefDecision === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS ||
+      ukefDecision === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS
+    ) {
       // ensure that the API call is performed only if a bankId is provided
       const deals = bankId ? await getUkefDecision(ukefDecision, bankId) : [];
       // check to see if there are any decisions waiting to be reviewed
@@ -100,31 +104,31 @@ exports.reviewUkefDecisionReports = async (req, res) => {
 
           // check if the date created is not null
           defaultDate = item.dateCreatedEpoch || '';
-          setDateToMidnight = (new Date(parseInt(defaultDate, 10))).setHours(2, 0, 1, 0);
+          setDateToMidnight = new Date(parseInt(defaultDate, 10)).setHours(2, 0, 1, 0);
           // format the date DD LLL YYYY (i.e. 18 April 2022)
           deal.dateCreated = deal.dateCreatedEpoch ? format(setDateToMidnight, 'dd LLL yyyy') : '';
 
           // check if the submission date is not null
           defaultDate = item.submissionDateEpoch || '';
-          setDateToMidnight = (new Date(parseInt(defaultDate, 10))).setHours(2, 0, 1, 0);
+          setDateToMidnight = new Date(parseInt(defaultDate, 10)).setHours(2, 0, 1, 0);
           // format the date DD LLL YYYY (i.e. 18 April 2022)
           deal.submissionDate = deal.submissionDateEpoch ? format(setDateToMidnight, 'dd LLL yyyy') : '';
 
           // check if the date of approval is not null
           defaultDate = item.dateOfApprovalEpoch || '';
-          setDateToMidnight = (new Date(parseInt(defaultDate, 10))).setHours(2, 0, 1, 0);
+          setDateToMidnight = new Date(parseInt(defaultDate, 10)).setHours(2, 0, 1, 0);
           // format the date DD LLL YYYY (i.e. 18 April 2022)
           deal.dateOfApproval = deal.dateOfApprovalEpoch ? format(setDateToMidnight, 'dd LLL yyyy') : '';
 
           if (ukefDecision === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS) {
-          // add `10 business days` to the date of approval if the deal is approved without conditions - as per ticket
+            // add `10 business days` to the date of approval if the deal is approved without conditions - as per ticket
             dateOfApproval = addBusinessDays(setDateToMidnight, 10);
           } else if (ukefDecision === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS) {
-          // add `20 business days` to the date of approval if the deal is approved with conditions - as per ticket
+            // add `20 business days` to the date of approval if the deal is approved with conditions - as per ticket
             dateOfApproval = addBusinessDays(setDateToMidnight, 20);
           }
 
-          deal.daysToReview = defaultDate ? (differenceInBusinessDays(todaysDate, dateOfApproval) * -1 + 0) : 0; // +0 will cancel out negative zeros
+          deal.daysToReview = defaultDate ? differenceInBusinessDays(todaysDate, dateOfApproval) * -1 + 0 : 0; // +0 will cancel out negative zeros
 
           ukefDecisions.push(deal);
           setDateToMidnight = '';
@@ -134,7 +138,7 @@ exports.reviewUkefDecisionReports = async (req, res) => {
 
     res.status(200).send(ukefDecisions);
   } catch (error) {
-    console.error('Unable to retrieve ukef\'s decision %s', error);
+    console.error("Unable to retrieve ukef's decision %o", error);
   }
   res.status(200).send();
 };

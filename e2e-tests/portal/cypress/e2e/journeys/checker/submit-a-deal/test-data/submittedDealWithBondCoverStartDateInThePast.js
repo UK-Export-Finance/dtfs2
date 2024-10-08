@@ -11,9 +11,9 @@ module.exports = () => {
 
   deal.bondTransactions.items[0].requestedCoverStartDate = coverStartDateBeforeDealSubmissionDate;
 
-  deal.bondTransactions.items[0]['coverEndDate-day'] = (dateConstants.oneMonthDay).toString();
-  deal.bondTransactions.items[0]['coverEndDate-month'] = (dateConstants.oneMonthMonth).toString();
-  deal.bondTransactions.items[0]['coverEndDate-year'] = (dateConstants.oneMonthYear).toString();
+  deal.bondTransactions.items[0]['coverEndDate-day'] = dateConstants.oneMonthDay.toString();
+  deal.bondTransactions.items[0]['coverEndDate-month'] = dateConstants.oneMonthMonth.toString();
+  deal.bondTransactions.items[0]['coverEndDate-year'] = dateConstants.oneMonthYear.toString();
   deal.bondTransactions.items[0].facilityStage = 'Issued';
   deal.bondTransactions.items[0].name = '1234';
 

@@ -1,3 +1,4 @@
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../../constants');
 
 const dealProduct = (deal) => {
@@ -10,8 +11,8 @@ const dealProduct = (deal) => {
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     const { facilities } = deal;
 
-    const bonds = facilities.filter((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
-    const loans = facilities.filter((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+    const bonds = facilities.filter((f) => f.type === FACILITY_TYPE.BOND);
+    const loans = facilities.filter((f) => f.type === FACILITY_TYPE.LOAN);
 
     const hasBonds = bonds.length > 0;
     const hasLoans = loans.length > 0;

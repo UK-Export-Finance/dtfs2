@@ -1,132 +1,146 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../../wipeDB');
-const app = require('../../../../src/createApp');
-const api = require('../../../api')(app);
-const {
-  newDeal,
-  createAndSubmitDeals,
-  updateDealsTfm,
-} = require('./tfm-deals-get.api-test');
+const { testApi } = require('../../../test-api');
+const { newDeal, createAndSubmitDeals, updateDealsTfm } = require('./tfm-deals-get.api-test');
+const getObjectPropertyValueFromStringPath = require('../../../../src/utils/getObjectPropertyValueFromStringPath');
+const setObjectPropertyValueFromStringPath = require('../../../helpers/set-object-property-value-from-string-path');
+const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {
-    await wipeDB.wipe([
-      MONGO_DB_COLLECTIONS.DEALS,
-      MONGO_DB_COLLECTIONS.FACILITIES,
-      MONGO_DB_COLLECTIONS.TFM_DEALS,
-      MONGO_DB_COLLECTIONS.TFM_FACILITIES,
-    ]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
   });
 
   describe('GET /v1/tfm/deals', () => {
-    describe('sorting', () => {
-      describe('ukefDealId', () => {
-        it('returns deals sorted by ukefDealId - ascending', async () => {
-          const deal1 = newDeal({
-            details: {
-              ukefDealId: '1',
-            },
-          });
+    describe('sorts deals correctly', () => {
+      describe.each([
+        {
+          fieldPathForNonBssDeal: 'dealSnapshot.ukefDealId',
+          fieldPathForBssDeal: 'dealSnapshot.details.ukefDealId',
+          fieldValuesInAscendingOrder: [null, '10000002', '10000003', '10000004'],
+        },
+        {
+          fieldPathForNonBssDeal: 'dealSnapshot.exporter.companyName',
+          fieldPathForBssDeal: 'dealSnapshot.submissionDetails.supplier-name',
+          fieldValuesInAscendingOrder: [null, null, 'C Company', 'D Company'],
+        },
+        {
+          fieldPathForNonBssDeal: 'dealSnapshot.buyer.companyName',
+          fieldPathForBssDeal: 'dealSnapshot.submissionDetails.buyer-name',
+          fieldValuesInAscendingOrder: ['A Company', 'B Company', 'C Company', 'D Company'],
+        },
+        {
+          fieldPathForNonBssDeal: 'dealSnapshot.additionalRefName',
+          fieldPathForBssDeal: 'dealSnapshot.additionalRefName',
+          fieldValuesInAscendingOrder: ['A Ref Name', 'B Ref Name', 'C Ref Name', 'D Ref Name'],
+        },
+      ])('by $fieldPathForNonBssDeal', ({ fieldPathForNonBssDeal: nonBssPath, fieldPathForBssDeal: bssPath, fieldValuesInAscendingOrder: values }) => {
+        let nonBssPathExcludingDealSnapshot = nonBssPath;
+        if (nonBssPath.slice(0, 12) === 'dealSnapshot') {
+          nonBssPathExcludingDealSnapshot = nonBssPath.slice(13);
+        }
 
-          const deal2 = newDeal({
-            details: {
-              ukefDealId: '2',
-            },
-          });
+        let bssPathExcludingDealSnapshot = bssPath;
+        if (bssPath.slice(0, 12) === 'dealSnapshot') {
+          bssPathExcludingDealSnapshot = bssPath.slice(13);
+        }
 
-          const deal3 = newDeal({
-            details: {
-              ukefDealId: '3',
-            },
-          });
+        const gefDeal1Data = { dealType: 'GEF' };
+        setObjectPropertyValueFromStringPath(gefDeal1Data, nonBssPathExcludingDealSnapshot, values[0]);
+        const gefDeal1 = newDeal(gefDeal1Data);
 
-          const submittedDeals = await createAndSubmitDeals([
-            deal1,
-            deal3,
-            deal2,
-          ]);
+        const gefDeal2Data = { dealType: 'GEF' };
+        setObjectPropertyValueFromStringPath(gefDeal2Data, nonBssPathExcludingDealSnapshot, values[2]);
+        const gefDeal2 = newDeal(gefDeal2Data);
 
-          const mockReqBody = {
-            queryParams: {
-              sortBy: {
-                field: 'dealSnapshot.details.ukefDealId',
-                order: 'ascending',
-              },
-            },
-          };
+        const bssDeal1Data = {};
+        setObjectPropertyValueFromStringPath(bssDeal1Data, bssPathExcludingDealSnapshot, values[1]);
+        const bssDeal1 = newDeal(bssDeal1Data);
 
-          const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+        const bssDeal2Data = {};
+        setObjectPropertyValueFromStringPath(bssDeal2Data, bssPathExcludingDealSnapshot, values[3]);
+        const bssDeal2 = newDeal(bssDeal2Data);
 
-          expect(status).toEqual(200);
-
-          const submittedDeal1 = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1');
-          const submittedDeal2 = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '2');
-          const submittedDeal3 = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '3');
-
-          const expectedDeals = [
-            submittedDeal1,
-            submittedDeal2,
-            submittedDeal3,
-          ];
-
-          expect(body.deals.length).toEqual(expectedDeals.length);
-
-          expect(body.deals).toEqual(expectedDeals);
+        beforeEach(async () => {
+          await createAndSubmitDeals([gefDeal1, gefDeal2, bssDeal1, bssDeal2]);
         });
 
-        it('returns deals sorted by ukefDealId - descending', async () => {
-          const deal1 = newDeal({
-            details: {
-              ukefDealId: '1',
-            },
+        describe.each(['ascending', 'descending'])('in %s order', (order) => {
+          const urlWithoutPagination = `/v1/tfm/deals?sortBy[order]=${order}&sortBy[field]=${nonBssPath}`;
+
+          it('without pagination', async () => {
+            const { status, body } = await testApi.get(urlWithoutPagination);
+
+            expect(status).toEqual(200);
+            expect(body.deals.length).toEqual(4);
+            expect(body.pagination.totalItems).toEqual(4);
+            expect(body.pagination.currentPage).toEqual(0);
+            expect(body.pagination.totalPages).toEqual(1);
+
+            for (let i = 0; i < 4; i += 1) {
+              const firstPart = body.deals[order === 'ascending' ? i : 3 - i];
+              const secondPart = i % 2 === 0 ? nonBssPath : bssPath;
+              const fieldValue = getObjectPropertyValueFromStringPath(firstPart, secondPart);
+
+              const expectedFieldValue = values[i];
+
+              expect(fieldValue).toEqual(expectedFieldValue);
+            }
           });
-          const deal2 = newDeal({
-            details: {
-              ukefDealId: '2',
-            },
+
+          it('with pagination', async () => {
+            const pagesize = 2;
+
+            const urlWithPagination = (page) => `${urlWithoutPagination}&pagesize=${pagesize}&page=${page}`;
+
+            const { status: page1Status, body: page1Body } = await testApi.get(urlWithPagination(0));
+
+            expect(page1Status).toEqual(200);
+            expect(page1Body.deals.length).toEqual(2);
+            expect(page1Body.pagination.totalItems).toEqual(4);
+            expect(page1Body.pagination.currentPage).toEqual(0);
+            expect(page1Body.pagination.totalPages).toEqual(2);
+
+            if (order === 'ascending') {
+              const firstFieldValue = getObjectPropertyValueFromStringPath(page1Body.deals[0], nonBssPath);
+              expect(firstFieldValue).toEqual(values[0]);
+
+              const secondFieldValue = getObjectPropertyValueFromStringPath(page1Body.deals[1], bssPath);
+              expect(secondFieldValue).toEqual(values[1]);
+            } else {
+              const firstFieldValue = getObjectPropertyValueFromStringPath(page1Body.deals[0], bssPath);
+              expect(firstFieldValue).toEqual(values[3]);
+
+              const secondFieldValue = getObjectPropertyValueFromStringPath(page1Body.deals[1], nonBssPath);
+              expect(secondFieldValue).toEqual(values[2]);
+            }
+
+            const { status: page2Status, body: page2Body } = await testApi.get(urlWithPagination(1));
+
+            expect(page2Status).toEqual(200);
+            expect(page2Body.deals.length).toEqual(2);
+            expect(page2Body.pagination.totalItems).toEqual(4);
+            expect(page2Body.pagination.currentPage).toEqual(1);
+            expect(page2Body.pagination.totalPages).toEqual(2);
+
+            if (order === 'ascending') {
+              const firstFieldValue = getObjectPropertyValueFromStringPath(page2Body.deals[0], nonBssPath);
+              expect(firstFieldValue).toEqual(values[2]);
+
+              const secondFieldValue = getObjectPropertyValueFromStringPath(page2Body.deals[1], bssPath);
+              expect(secondFieldValue).toEqual(values[3]);
+            } else {
+              const firstFieldValue = getObjectPropertyValueFromStringPath(page2Body.deals[0], bssPath);
+              expect(firstFieldValue).toEqual(values[1]);
+
+              const secondFieldValue = getObjectPropertyValueFromStringPath(page2Body.deals[1], nonBssPath);
+              expect(secondFieldValue).toEqual(values[0]);
+            }
           });
-          const deal3 = newDeal({
-            details: {
-              ukefDealId: '3',
-            },
-          });
-
-          const submittedDeals = await createAndSubmitDeals([
-            deal1,
-            deal3,
-            deal2,
-          ]);
-
-          const mockReqBody = {
-            queryParams: {
-              sortBy: {
-                field: 'dealSnapshot.details.ukefDealId',
-                order: 'descending',
-              },
-            },
-          };
-
-          const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
-
-          expect(status).toEqual(200);
-
-          const submittedDeal1 = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1');
-          const submittedDeal2 = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '2');
-          const submittedDeal3 = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '3');
-
-          const expectedDeals = [
-            submittedDeal3,
-            submittedDeal2,
-            submittedDeal1,
-          ];
-
-          expect(body.deals.length).toEqual(expectedDeals.length);
-
-          expect(body.deals).toEqual(expectedDeals);
         });
       });
 
-      describe('tfm.product', () => {
+      describe('by tfm.product', () => {
         // NOTE: deal.tfm is only generated when we update a deal, after deal submission.
         // Therefore we need to do the following in order to test sorting on fields inside deal.tfm:
         // 1) create deals
@@ -148,90 +162,104 @@ describe('/v1/tfm/deals', () => {
         const deal3TfmUpdate = { product: 'BSS & EWCS' };
 
         beforeEach(async () => {
-          submittedDeals = await createAndSubmitDeals([
-            deal1,
-            deal3,
-            deal2,
-          ]);
+          submittedDeals = await createAndSubmitDeals([deal1, deal3, deal2]);
 
           submittedDealWith1Bond = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1-BOND');
           submittedDealWith1Loan = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1-LOAN');
           submittedDealWithBondAndLoans = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1-BOND-1-LOAN');
 
-          await updateDealsTfm([
-            {
-              _id: submittedDealWith1Bond._id,
-              tfm: deal1TfmUpdate,
-            },
-            {
-              _id: submittedDealWith1Loan._id,
-              tfm: deal2TfmUpdate,
-            },
-            {
-              _id: submittedDealWithBondAndLoans._id,
-              tfm: deal3TfmUpdate,
-            },
-          ]);
+          await updateDealsTfm(
+            [
+              {
+                _id: submittedDealWith1Bond._id,
+                tfm: deal1TfmUpdate,
+              },
+              {
+                _id: submittedDealWith1Loan._id,
+                tfm: deal2TfmUpdate,
+              },
+              {
+                _id: submittedDealWithBondAndLoans._id,
+                tfm: deal3TfmUpdate,
+              },
+            ],
+            MOCK_TFM_USER,
+          );
         });
 
-        it('returns deals sorted by tfm.product - ascending', async () => {
-          const mockReqBody = {
-            queryParams: {
-              sortBy: {
-                field: 'tfm.product',
-                order: 'ascending',
-              },
-            },
-          };
+        describe.each(['ascending', 'descending'])('in %s order', (order) => {
+          const urlWithoutPagination = `/v1/tfm/deals?sortBy[field]=tfm.product&sortBy[order]=${order}`;
 
-          const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+          it('without pagination', async () => {
+            const expectedDeals = [{ _id: submittedDealWith1Bond?._id }, { _id: submittedDealWithBondAndLoans?._id }, { _id: submittedDealWith1Loan?._id }];
 
-          expect(status).toEqual(200);
+            const { status, body } = await testApi.get(urlWithoutPagination);
 
-          // assert deals ordering based on mock id we create. Simpler than mapping/filtering deals again.
-          const expectedDeals = [
-            { _id: submittedDealWith1Bond._id },
-            { _id: submittedDealWithBondAndLoans._id },
-            { _id: submittedDealWith1Loan._id },
-          ];
+            expect(status).toEqual(200);
+            expect(body.pagination.totalItems).toEqual(3);
+            expect(body.pagination.currentPage).toEqual(0);
+            expect(body.pagination.totalPages).toEqual(1);
 
-          const getDealsOnlyIds = body.deals.map((d) => ({
-            _id: d._id,
-          }));
+            const getDealsOnlyIds = body.deals.map((d) => ({
+              _id: d._id,
+            }));
 
-          expect(getDealsOnlyIds.length).toEqual(expectedDeals.length);
+            expect(getDealsOnlyIds.length).toEqual(expectedDeals.length);
 
-          expect(getDealsOnlyIds).toEqual(expectedDeals);
-        });
+            if (order === 'ascending') {
+              expect(getDealsOnlyIds).toEqual(expectedDeals);
+            } else {
+              expect(getDealsOnlyIds).toEqual(JSON.parse(JSON.stringify(expectedDeals)).reverse());
+            }
+          });
 
-        it('returns deals sorted by tfm.product - descending', async () => {
-          const mockReqBody = {
-            queryParams: {
-              sortBy: {
-                field: 'tfm.product',
-                order: 'descending',
-              },
-            },
-          };
+          it('with pagination', async () => {
+            const pagesize = 2;
 
-          const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+            const urlWithPagination = (page) => `${urlWithoutPagination}&pagesize=${pagesize}&page=${page}`;
 
-          expect(status).toEqual(200);
+            const expectedDeals = [{ _id: submittedDealWith1Bond?._id }, { _id: submittedDealWithBondAndLoans?._id }, { _id: submittedDealWith1Loan?._id }];
 
-          // assert deals ordering based on mock id we create. Simpler than mapping/filtering deals again.
-          const expectedDeals = [
-            { _id: submittedDealWith1Loan._id },
-            { _id: submittedDealWithBondAndLoans._id },
-            { _id: submittedDealWith1Bond._id },
-          ];
+            const { status: page1Status, body: page1Body } = await testApi.get(urlWithPagination(0));
 
-          const getDealsOnlyIds = body.deals.map((d) => ({
-            _id: d._id,
-          }));
+            expect(page1Status).toEqual(200);
+            expect(page1Body.deals.length).toEqual(2);
+            expect(page1Body.pagination.totalItems).toEqual(3);
+            expect(page1Body.pagination.currentPage).toEqual(0);
+            expect(page1Body.pagination.totalPages).toEqual(2);
 
-          expect(getDealsOnlyIds.length).toEqual(expectedDeals.length);
+            const getDealsPage1OnlyIds = page1Body.deals.map((d) => ({
+              _id: d._id,
+            }));
 
-          expect(getDealsOnlyIds).toEqual(expectedDeals);
+            expect(getDealsPage1OnlyIds.length).toEqual(2);
+
+            if (order === 'ascending') {
+              expect(getDealsPage1OnlyIds).toEqual(expectedDeals.slice(0, 2));
+            } else {
+              expect(getDealsPage1OnlyIds).toEqual(JSON.parse(JSON.stringify(expectedDeals)).reverse().slice(0, 2));
+            }
+
+            const { status: page2Status, body: page2Body } = await testApi.get(urlWithPagination(1));
+
+            expect(page2Status).toEqual(200);
+            expect(page2Body.deals.length).toEqual(1);
+            expect(page2Body.pagination.totalItems).toEqual(3);
+            expect(page2Body.pagination.currentPage).toEqual(1);
+            expect(page2Body.pagination.totalPages).toEqual(2);
+
+            const getDealsPage2OnlyIds = page2Body.deals.map((d) => ({
+              _id: d._id,
+            }));
+
+            expect(getDealsPage2OnlyIds.length).toEqual(1);
+
+            if (order === 'ascending') {
+              expect(getDealsPage2OnlyIds).toEqual(expectedDeals.slice(2));
+            } else {
+              expect(getDealsPage2OnlyIds).toEqual(JSON.parse(JSON.stringify(expectedDeals)).reverse().slice(2));
+            }
+          });
         });
       });
     });

@@ -6,10 +6,7 @@ const ROLE = {
   CHECKER: 'checker',
 };
 
-const ACCEPTED_ENDPOINTS = [
-  'deal',
-  'facility',
-];
+const ACCEPTED_ENDPOINTS = ['deal', 'facility'];
 
 module.exports = {
   TYPE,

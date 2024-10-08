@@ -9,6 +9,7 @@ const createUserController = require('../controllers/user/create-user.controller
  * @openapi
  * /user:
  *   post:
+ *     deprecated: true
  *     summary: Create a user in users collection
  *     tags: [User]
  *     description: Create a user in users collection
@@ -27,10 +28,7 @@ const createUserController = require('../controllers/user/create-user.controller
  *             example:
  *               _id: '123456abc'
  */
-userRouter.route('/')
-  .post(
-    createUserController.createUserPost,
-  );
+userRouter.route('/').post(createUserController.createUserPost);
 
 /**
  * @openapi
@@ -61,14 +59,8 @@ userRouter.route('/')
  *       404:
  *         description: Not found
  */
-userRouter.route('/:id')
-  .get(
-    getUserController.findOneUserGet,
-  );
+userRouter.route('/:id').get(getUserController.findOneUserGet);
 
-userRouter.route('/')
-  .get(
-    getUserController.list,
-  );
+userRouter.route('/').get(getUserController.list);
 
 module.exports = userRouter;

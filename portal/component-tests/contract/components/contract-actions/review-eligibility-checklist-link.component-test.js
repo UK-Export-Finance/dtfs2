@@ -1,4 +1,6 @@
-const { ROLES: { CHECKER, MAKER } } = require('@ukef/dtfs2-common');
+const {
+  ROLES: { CHECKER, MAKER },
+} = require('@ukef/dtfs2-common');
 const { NON_MAKER_OR_CHECKER_ROLES } = require('../../../../test-helpers/common-role-lists');
 const componentRenderer = require('../../../componentRenderer');
 

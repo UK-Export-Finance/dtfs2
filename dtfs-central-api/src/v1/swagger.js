@@ -1,4 +1,5 @@
 const swaggerJsdoc = require('swagger-jsdoc');
+const path = require('path');
 
 const swaggerDefinition = {
   openapi: '3.0.0',
@@ -28,15 +29,16 @@ const swaggerDefinition = {
       name: 'User',
       description: 'Get and create Portal (BSS/GEF) users. This is only used in the central API.',
     },
+    {
+      name: 'Utilisation Report',
+      description: 'Get, create and update utilisation reports. Consumed by PORTAL and TFM.',
+    },
   ],
 };
+
 const swaggerSpec = swaggerJsdoc({
-  swaggerDefinition,
-  apis: [
-    './src/v1/swagger-definitions/*.js',
-    './src/v1/swagger-definitions/*/*.js',
-    './src/v1/routes/*.js',
-  ],
+  definition: swaggerDefinition,
+  apis: [path.join(__dirname, 'swagger-definitions/**/*.js'), path.join(__dirname, 'routes/*.js')],
 });
 
 const swaggerUiOptions = {

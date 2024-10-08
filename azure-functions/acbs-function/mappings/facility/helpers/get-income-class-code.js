@@ -3,8 +3,8 @@ const CONSTANTS = require('../../../constants');
 /**
  * Return facility income class code as per
  * facility type. Same is used for reconciliation with CODA.
- * @param {String} facility Facility object
- * @returns {String} Facility income class code or `null` upon a failure.
+ * @param {string} facility Facility object
+ * @returns {string} Facility income class code or `null` upon a failure.
  */
 const getIncomeClassCode = (facility) => {
   if (facility.facilitySnapshot) {

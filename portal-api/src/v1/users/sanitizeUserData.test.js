@@ -1,29 +1,9 @@
-const { ObjectId } = require('mongodb');
-const { ROLES } = require('@ukef/dtfs2-common');
 const { sanitizeUser } = require('./sanitizeUserData');
-const { STATUS } = require('../../constants/user');
+const { TEST_USER_SANITISED_FOR_FRONTEND } = require('../../../test-helpers/unit-test-mocks/mock-user');
 
 describe('sanitizeUserData', () => {
   describe('sanitizeUser', () => {
-    const user = {
-      _id: new ObjectId(),
-      username: 'HSBC-maker-1',
-      firstname: 'Mister',
-      surname: 'One',
-      email: 'one@email.com',
-      timezone: 'Europe/London',
-      roles: [ROLES.MAKER],
-      bank: {
-        id: '961',
-        name: 'HSBC',
-        emails: ['maker1@ukexportfinance.gov.uk', 'maker2@ukexportfinance.gov.uk'],
-      },
-      lastLogin: new Date().getTime(),
-      'user-status': STATUS.BLOCKED,
-      disabled: true,
-      signInLinkSendDate: new Date().getTime(),
-      signInLinkSendCount: 1,
-    };
+    const user = TEST_USER_SANITISED_FOR_FRONTEND;
 
     const userWithExtraField = {
       ...user,

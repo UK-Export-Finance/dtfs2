@@ -1,7 +1,5 @@
 import { uploadAndSaveToDeal, removeFileFromDeal } from './fileUtils';
-import {
-  uploadFile, deleteFile, updateApplication, updateSupportingInformation,
-} from '../services/api';
+import { uploadFile, deleteFile, updateApplication, updateSupportingInformation } from '../services/api';
 import Application from '../models/application';
 import { MAKER } from '../constants/roles';
 
@@ -42,7 +40,7 @@ describe('utils/fileUtils', () => {
     it('returns file with error if only problem files uploaded', async () => {
       uploadFile.mockResolvedValueOnce([{ ...mockFile, error: 'mock-error' }]);
 
-      const response = await (uploadAndSaveToDeal([mockFile], mockField, mockDealId, mockToken, mockUser, mockDocumentPath));
+      const response = await uploadAndSaveToDeal([mockFile], mockField, mockDealId, mockToken, mockUser, mockDocumentPath);
 
       expect(updateApplication).not.toHaveBeenCalled();
       expect(response).toEqual([{ ...mockFile, error: 'mock-error' }]);
@@ -51,10 +49,14 @@ describe('utils/fileUtils', () => {
     it('adds files to the deal if upload successful', async () => {
       uploadFile.mockResolvedValueOnce([{ ...mockFile, _id: 'mock-file-id' }]);
 
-      const response = await (uploadAndSaveToDeal([mockFile], mockField, mockDealId, mockToken, mockUser, mockFileSize, mockDocumentPath));
+      const response = await uploadAndSaveToDeal([mockFile], mockField, mockDealId, mockToken, mockUser, mockFileSize, mockDocumentPath);
 
       expect(updateSupportingInformation).toHaveBeenCalledWith({
-        dealId: 'mock-id', application: { ...mockFile, _id: 'mock-file-id' }, field: mockField, user: mockUser, userToken: mockToken,
+        dealId: 'mock-id',
+        application: { ...mockFile, _id: 'mock-file-id' },
+        field: mockField,
+        user: mockUser,
+        userToken: mockToken,
       });
       expect(response).toEqual([{ ...mockFile, _id: 'mock-file-id' }]);
     });
@@ -89,7 +91,11 @@ describe('utils/fileUtils', () => {
     it('deletes the file and removes it from application if it has been uploaded (has an ID)', async () => {
       await removeFileFromDeal(mockFile.filename, mockField, mockDeal, mockToken, mockUser);
 
-      expect(deleteFile).toHaveBeenCalledWith({ fileId: 'mock-file-id', userToken: mockToken, documentPath: mockField });
+      expect(deleteFile).toHaveBeenCalledWith({
+        fileId: 'mock-file-id',
+        userToken: mockToken,
+        documentPath: mockField,
+      });
       expect(updateApplication).toHaveBeenCalledWith({
         dealId: mockDeal._id,
         application: {

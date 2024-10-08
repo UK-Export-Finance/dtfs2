@@ -20,19 +20,22 @@
   "scripts": {
     "api-test": "jest --coverage --verbose --runInBand --forceExit --config=api-test.jest.config.js",
     "api-test-dev": "jest --verbose --runInBand --forceExit --config=api-test.jest.config.js",
-    "lint": "eslint ./src ./api-tests && npm run type-check",
-    "lint:fix": "eslint ./src ./api-tests --fix",
+    "lint": "eslint --color **/*.{ts,js} --ignore-path ../.eslintignore",
+    "lint:fix": "eslint --fix --color **/*.{ts,js}",
+    "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js} --ignore-path ../.prettierignore",
+    "prettier:fix": "prettier --write **/*.{ts,js} --ignore-path ../.prettierignore",
     "start": "npx ts-node src/index.ts",
-    "type-check": "tsc --noEmit",
+    "type-check": "tsc --noEmit --pretty",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
-    "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
+    "unit-test-dev": "jest --verbose --config=unit.jest.config.js",
+    "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
     "@azure/storage-file-share": "12.14.0",
     "@babel/plugin-transform-runtime": "7.23.6",
     "@babel/preset-env": "7.23.6",
     "@ukef/dtfs2-common": "1.0.0",
-    "axios": "^1.6.8",
+    "axios": "^1.7.4",
     "bson": "^4.7.2",
     "comma-number": "^2.1.0",
     "compression": "^1.7.4",
@@ -40,24 +43,24 @@
     "crypto": "^1.0.1",
     "date-fns": "^2.30.0",
     "dotenv": "16.0.3",
-    "express": "4.18.2",
+    "express": "^4.20.0",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.11.2",
     "express-validator": "7.0.1",
     "is-port-reachable": "^3.1.0",
-    "joi": "^17.12.3",
+    "joi": "^17.13.1",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "mongo-dot-notation": "^3.1.0",
-    "mongodb": "4.17.0",
+    "mongodb": "4.17.2",
     "passport": "0.6.0",
     "passport-jwt": "^4.0.1",
     "sanitize-html": "^2.13.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.3",
     "ts-node": "^10.9.2",
-    "tslib": "^2.6.2",
-    "validator": "^13.11.0"
+    "tslib": "^2.6.3",
+    "validator": "^13.12.0"
   },
   "devDependencies": {
     "@types/compression": "^1.7.5",
@@ -75,8 +78,8 @@
     "jest-when": "^3.6.0",
     "node-mocks-http": "^1.14.1",
     "supertest": "^6.3.4",
-    "ts-jest": "^29.1.2",
-    "typescript": "^5.4.3"
+    "ts-jest": "^29.1.4",
+    "typescript": "^5.4.5"
   },
   "engines": {
     "node": ">=20",

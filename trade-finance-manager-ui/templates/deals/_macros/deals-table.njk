@@ -1,5 +1,5 @@
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
-{% import './deals-table-heading.njk' as tableHeading %}
+{% import '../../_macros/table-heading.njk' as tableHeading %}
 
 {% macro render(params) %}
   {% set deals = params.deals %}
@@ -20,6 +20,7 @@
         <tr>
 
           {{tableHeading.render({
+            tableName: 'deals',
             fieldName: 'ukefDealId',
             buttonText: 'Deal ID',
             buttonValue: 'dealSnapshot.ukefDealId',
@@ -29,6 +30,7 @@
           })}}
 
           {{tableHeading.render({
+            tableName: 'deals',
             fieldName: 'product',
             buttonText: 'Product',
             buttonValue: 'tfm.product',
@@ -40,6 +42,7 @@
           <th class="govuk-table__header" data-cy="deals-table-heading-type">Type</th>
 
           {{tableHeading.render({
+            tableName: 'deals',
             fieldName: 'exporter',
             buttonText: 'Exporter',
             buttonValue: 'dealSnapshot.exporter.companyName',
@@ -49,6 +52,7 @@
           })}}
 
           {{tableHeading.render({
+            tableName: 'deals',
             fieldName: 'buyer',
             buttonText: 'Buyer',
             buttonValue: 'dealSnapshot.buyer.companyName',
@@ -58,6 +62,7 @@
           })}}
 
           {{tableHeading.render({
+            tableName: 'deals',
             fieldName: 'bank',
             buttonText: 'Bank',
             buttonValue: 'dealSnapshot.bank.name',
@@ -67,6 +72,7 @@
           })}}
 
           {{tableHeading.render({
+            tableName: 'deals',
             fieldName: 'stage',
             buttonText: 'Stage',
             buttonValue: 'tfm.stage',
@@ -76,6 +82,7 @@
           })}}
 
           {{tableHeading.render({
+            tableName: 'deals',
             fieldName: 'dateReceived',
             buttonText: 'Date received',
             buttonValue: 'tfm.dateReceivedTimestamp',

@@ -1,4 +1,6 @@
-const { ROLES: { ADMIN, READ_ONLY } } = require('@ukef/dtfs2-common');
+const {
+  ROLES: { ADMIN, READ_ONLY },
+} = require('@ukef/dtfs2-common');
 const validateBank = require('.');
 const { ALL_BANKS_ID } = require('../../../constants');
 

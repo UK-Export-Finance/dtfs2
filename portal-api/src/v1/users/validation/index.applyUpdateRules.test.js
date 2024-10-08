@@ -48,7 +48,10 @@ describe('user validation', () => {
   describe('applyUpdateRules', () => {
     const baseExistingUser = {};
     const baseUpdateUserRequestWithoutCurrentPassword = {};
-    const updateUserRequestWithPassword = { ...baseUpdateUserRequestWithoutCurrentPassword, currentPassword: 'currentPassword' };
+    const updateUserRequestWithPassword = {
+      ...baseUpdateUserRequestWithoutCurrentPassword,
+      currentPassword: 'currentPassword',
+    };
 
     const testCases = [
       {

@@ -18,6 +18,7 @@ const validationErrorHandler = require('./validationErrorHandler');
 const constructPayload = require('./constructPayload');
 const { getBusinessDayOfMonth } = require('./getBusinessDayOfMonth');
 const { getNowAsEpoch } = require('./date');
+const { convertUserFormDataToRequest } = require('./convertUserFormDataToRequest');
 
 module.exports = {
   isEveryDealFormComplete,
@@ -41,4 +42,5 @@ module.exports = {
   constructPayload,
   getBusinessDayOfMonth,
   getNowAsEpoch,
+  convertUserFormDataToRequest,
 };

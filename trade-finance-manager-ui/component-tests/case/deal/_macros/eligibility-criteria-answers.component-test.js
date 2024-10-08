@@ -1,4 +1,4 @@
-const componentRenderer = require('../../../componentRenderer');
+const { componentRenderer } = require('../../../componentRenderer');
 
 const component = '../templates/case/deal/_macros/eligibility-criteria-answers.njk';
 
@@ -11,20 +11,14 @@ describe(component, () => {
       {
         id: 11,
         text: 'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve agents and the Bank is not aware that any of the information contained within it is inaccurate.',
-        textList: [
-          '11 test',
-          '11 testing',
-        ],
+        textList: ['11 test', '11 testing'],
         answer: true,
       },
       {
         id: 12,
         text: 'The period between the Cover Start Date and the Cover End Date does not exceed: for a Bond, the Bond Maximum Cover Period; and for a Loan, the Loan Maximum Cover Period.',
         answer: true,
-        textList: [
-          '12 test',
-          '12 testing',
-        ],
+        textList: ['12 test', '12 testing'],
       },
       {
         id: 13,
@@ -36,10 +30,7 @@ describe(component, () => {
         id: 14,
         text: 'For a bond Transaction, the bond has not yet been issued or, where the bond has been issued, this was done no more than 3 months prior to the submission of this Inclusion Notice. For a loan Transaction, the loan has not yet been advanced.',
         answer: true,
-        textList: [
-          '14 test',
-          '14 testing',
-        ],
+        textList: ['14 test', '14 testing'],
       },
       {
         id: 15,
@@ -51,10 +42,7 @@ describe(component, () => {
         id: 16,
         text: 'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve any of the following Controlled Sectors: sharp arms defence, nuclear, radiological, biological, human cloning, pornography, tobacco, gambling, coal, oil, gas or fossil fuel energy and the Bank is not aware that any of the information contained within it is inaccurate.',
         answer: true,
-        textList: [
-          '16 test',
-          '16 testing',
-        ],
+        textList: ['16 test', '16 testing'],
       },
       {
         id: 17,
@@ -64,12 +52,9 @@ describe(component, () => {
       },
       {
         id: 18,
-        text: 'Any applicable fees, interest rate and/or Risk Margin Fee apply to the whole Cover Period of the Covered Transaction, and have been set in accordance with the Bank\'s normal pricing policies and include, if any, overall pricing requirements notified by UKEF.',
+        text: "Any applicable fees, interest rate and/or Risk Margin Fee apply to the whole Cover Period of the Covered Transaction, and have been set in accordance with the Bank's normal pricing policies and include, if any, overall pricing requirements notified by UKEF.",
         answer: true,
-        textList: [
-          '18 test',
-          '18 testing',
-        ],
+        textList: ['18 test', '18 testing'],
       },
     ],
   };

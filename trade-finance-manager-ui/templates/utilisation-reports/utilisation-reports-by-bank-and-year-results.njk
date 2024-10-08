@@ -1,0 +1,26 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% import './_macros/search-reports-table.njk' as searchReportsTable %}
+{% set backLink = { href: "/utilisation-reports/find-reports-by-year" } %}
+{% extends "index.njk" %}
+{% block pageTitle %}{{ bankName }} {{ year }} reports{% endblock %}
+{% block content %}
+
+  <div class="govuk-grid-row govuk-!-padding-top-7">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-6" data-cy="utilisation-reports-by-bank-and-year-heading">
+        {{bankName}} {{year}} reports
+      </h1>
+
+      {% if not reports.length %}
+        <p class="govuk-body" data-cy="utilisation-reports-by-bank-and-year-text">No reports found. <a class="govuk-link govuk-link--no-visited-state" href="/utilisation-reports/find-reports-by-year">Try again.</a></p>
+      {% else %}
+        {{ searchReportsTable.render({
+          user: user,
+          reports: reports,
+          isTfmPaymentReconciliationFeatureFlagEnabled: isTfmPaymentReconciliationFeatureFlagEnabled
+        }) }}
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
+{% block sub_content %}{% endblock %}

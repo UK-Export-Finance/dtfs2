@@ -1,0 +1,120 @@
+{% extends "index.njk" %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% block pageTitle -%}
+  When is the bank review date?
+{%- endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      },
+      classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+    }) }}
+  {% endif %}
+
+  {% if status !== 'change' %}
+    {{ govukBackLink({
+      text: "Back",
+      href: previousPage,
+      attributes: {
+        'data-cy': 'back-link'
+      }
+    }) }}
+  {% endif %}
+
+  <header>
+    <span class="govuk-caption-xl" data-cy="heading-caption">
+      Add a facility
+    </span>
+  </header>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <div class="govuk-grid-column-three-quarters">
+      <form method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        {{ govukDateInput({
+          id: "bankReviewDate",
+          namePrefix: "bank-review-date",
+          fieldset: {
+            legend: {
+              text: "When is the bank review date?",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--xl"
+            }
+          },
+          hint: {
+            text: "For example, 13 09 2024"
+          },
+          errorMessage: errors and errors.fieldErrors.bankReviewDate and {
+            text: errors.fieldErrors.bankReviewDate.text,
+            attributes: {
+              'data-cy': 'bank-review-date-inline-error'
+            }
+          },
+          items: [
+            {
+              classes: (errors.fieldErrors['bankReviewDate-day'] and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
+              name: "day",
+              value: bankReviewDate.day,
+              attributes: {
+                'data-cy': 'bank-review-date-day'
+              }            
+            },
+            {
+              classes: (errors.fieldErrors['bankReviewDate-month'] and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
+              name: "month",
+              value: bankReviewDate.month,
+              attributes: {
+                'data-cy': 'bank-review-date-month'
+              }   
+            },
+            {
+              classes: (errors.fieldErrors['bankReviewDate-year'] and "govuk-input--width-4 govuk-input--error") or "govuk-input--width-4",
+              name: "year",
+              value: bankReviewDate.year,
+              attributes: {
+                'data-cy': 'bank-review-date-year'
+              }   
+            }
+          ]
+        }) }}
+
+        {{ govukDetails({
+          summaryText: "What is a bank review date",
+          text: "The bank review date is when you decide in accordance with your usual policies and procedures for such facilities whether to continue or terminate the facility based on the borrower's needs and circumstances.",
+          attributes: {
+            'data-cy': 'bank-review-date-details'
+          }   
+        }) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            attributes: {
+              'data-cy': 'continue-button'
+            }
+          }) }}
+
+          {{ govukButton({
+            text: "Save and return",
+            classes: "govuk-button--secondary",
+            attributes: {
+              formaction: "?saveAndReturn=true",
+              'data-cy': 'save-and-return-button'
+            }
+          }) }}
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

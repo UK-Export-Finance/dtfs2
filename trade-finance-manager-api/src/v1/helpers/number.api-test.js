@@ -1,7 +1,4 @@
-const {
-  decimalsCount,
-  roundNumber,
-} = require('./number');
+const { decimalsCount, roundNumber } = require('./number');
 
 describe('number', () => {
   describe('decimalsCount', () => {

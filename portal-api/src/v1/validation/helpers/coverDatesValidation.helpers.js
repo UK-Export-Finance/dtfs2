@@ -12,7 +12,7 @@ const coverDatesValidation = (day, month, year) => {
       },
       coverDayValidation: {
         error: '',
-      }
+      },
     };
   }
   // schema to validate that the year is 4 digits long and only numbers
@@ -26,7 +26,7 @@ const coverDatesValidation = (day, month, year) => {
   return {
     coverYearValidation,
     coverMonthValidation,
-    coverDayValidation
+    coverDayValidation,
   };
 };
 

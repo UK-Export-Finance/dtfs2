@@ -15,7 +15,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
     submissionType: 'Manual Inclusion Notice',
     additionalRefName: 'mock name',
     bankInternalRefName: 'mock id',
-    status: 'Ready for Checker\'s approval',
+    status: "Ready for Checker's approval",
     details: {
       submissionDate: sub(nowDate, { days: 1 }).valueOf(),
     },
@@ -25,9 +25,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
       },
     },
     eligibility: {
-      criteria: [
-        { id: 15, answer: true },
-      ],
+      criteria: [{ id: 15, answer: true }],
     },
   });
 
@@ -52,7 +50,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
     feeType: 'test',
     feeFrequency: 'test',
     dayCountBasis: '365',
-    status: 'Ready for check'
+    status: 'Ready for check',
   };
 
   const issueFacilityBody = {
@@ -116,10 +114,12 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
 
     it('should return 403 when bond cannot be issued', async () => {
       // put deal into a state that doesn't allow facility issuance
-      await as(aSuperuser).put({
-        comments: 'test',
-        status: 'Abandoned'
-      }).to(`/v1/deals/${dealId}/status`);
+      await as(aSuperuser)
+        .put({
+          comments: 'test',
+          status: 'Abandoned',
+        })
+        .to(`/v1/deals/${dealId}/status`);
 
       const { status } = await putIssueFacility(dealId, bondId, {});
       expect(status).toEqual(403);

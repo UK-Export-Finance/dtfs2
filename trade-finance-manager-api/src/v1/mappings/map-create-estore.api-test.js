@@ -171,7 +171,6 @@ describe('mapCreateEstore', () => {
         destinationMarket: mockBssDeal.destinationOfGoodsAndServices.name,
         riskMarket: mockBssDeal.buyer.country.name,
         facilityIdentifiers: [mockBssDeal.facilities[0].ukefFacilityId, mockBssDeal.facilities[1].ukefFacilityId],
-        dealType: mockBssDeal.dealType,
         supportingInformation: [
           {
             parentId: '6221ee3e14a7efbadb431798',
@@ -228,7 +227,6 @@ describe('mapCreateEstore', () => {
         destinationMarket: 'United Kingdom',
         riskMarket: 'United Kingdom',
         facilityIdentifiers: [mockGefDeal.facilities[0].ukefFacilityId, mockGefDeal.facilities[1].ukefFacilityId],
-        dealType: mockGefDeal.dealType,
         supportingInformation: [
           {
             parentId: '6221edcff154ec00136fcfef',

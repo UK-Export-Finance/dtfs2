@@ -1,6 +1,6 @@
+const { CURRENCY, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const mapTotals = require('./mapTotals');
 const { formattedNumber } = require('../../../../utils/number');
-const { CURRENCY } = require('../../../../constants/currency.constant');
 
 describe('mapTotals', () => {
   const mockAmendmentValueResponse = {
@@ -17,7 +17,7 @@ describe('mapTotals', () => {
         coverPercentage: 25,
       },
       tfm: {
-        ukefExposure: 80000.00,
+        ukefExposure: 80000.0,
         facilityValueInGBP: 2117.4290881821,
       },
       amendments: [{ ...mockAmendmentValueResponse }],
@@ -29,7 +29,7 @@ describe('mapTotals', () => {
         coverPercentage: 25,
       },
       tfm: {
-        ukefExposure: 23000.00,
+        ukefExposure: 23000.0,
         facilityValueInGBP: 1034.7800881821,
       },
       amendments: [{ ...mockAmendmentValueResponse }],
@@ -41,7 +41,7 @@ describe('mapTotals', () => {
         coverPercentage: 25,
       },
       tfm: {
-        ukefExposure: 8000.00,
+        ukefExposure: 8000.0,
         facilityValueInGBP: 3200.567,
       },
       amendments: [{ ...mockAmendmentValueResponse }],
@@ -55,7 +55,7 @@ describe('mapTotals', () => {
         coverPercentage: 25,
       },
       tfm: {
-        ukefExposure: 9000.00,
+        ukefExposure: 9000.0,
       },
       amendments: [{ ...mockAmendmentValueResponse }],
     },
@@ -103,10 +103,11 @@ describe('mapTotals', () => {
     it('should return formatted total of all facility values', () => {
       const result = mapTotals(mockBondAndLoanFacilities);
 
-      const totalValue = Number(mockBondAndLoanFacilities[0].tfm.facilityValueInGBP)
-        + Number(mockBondAndLoanFacilities[1].tfm.facilityValueInGBP)
-        + Number(mockBondAndLoanFacilities[2].tfm.facilityValueInGBP)
-        + Number(mockBondAndLoanFacilities[3].facilitySnapshot.value);
+      const totalValue =
+        Number(mockBondAndLoanFacilities[0].tfm.facilityValueInGBP) +
+        Number(mockBondAndLoanFacilities[1].tfm.facilityValueInGBP) +
+        Number(mockBondAndLoanFacilities[2].tfm.facilityValueInGBP) +
+        Number(mockBondAndLoanFacilities[3].facilitySnapshot.value);
 
       const expected = `${CURRENCY.GBP} ${formattedNumber(totalValue)}`;
       expect(result.facilitiesValueInGBP).toEqual(expected);
@@ -115,10 +116,11 @@ describe('mapTotals', () => {
     it('should return formatted total of all facility values when amendment not complete', () => {
       const result = mapTotals(mockBondAndLoanFacilities);
 
-      const totalValue = Number(mockBondAndLoanFacilities[0].tfm.facilityValueInGBP)
-        + Number(mockBondAndLoanFacilities[1].tfm.facilityValueInGBP)
-        + Number(mockBondAndLoanFacilities[2].tfm.facilityValueInGBP)
-        + Number(mockBondAndLoanFacilities[3].facilitySnapshot.value);
+      const totalValue =
+        Number(mockBondAndLoanFacilities[0].tfm.facilityValueInGBP) +
+        Number(mockBondAndLoanFacilities[1].tfm.facilityValueInGBP) +
+        Number(mockBondAndLoanFacilities[2].tfm.facilityValueInGBP) +
+        Number(mockBondAndLoanFacilities[3].facilitySnapshot.value);
 
       const expected = `${CURRENCY.GBP} ${formattedNumber(totalValue)}`;
       expect(result.facilitiesValueInGBP).toEqual(expected);
@@ -128,18 +130,22 @@ describe('mapTotals', () => {
       mockBondAndLoanFacilities.map((facility) => {
         const facilityMapped = { ...facility };
 
-        facilityMapped.amendments[0].tfm = {
-          value: { ...mockAmendmentValueResponse },
+        facilityMapped.amendments[0] = {
+          status: AMENDMENT_STATUS.COMPLETED,
+          tfm: {
+            value: { ...mockAmendmentValueResponse },
+          },
         };
         return facilityMapped;
       });
 
       const result = mapTotals(mockBondAndLoanFacilities);
 
-      const totalValue = Number(mockBondAndLoanFacilities[0].tfm.facilityValueInGBP)
-        + Number(mockBondAndLoanFacilities[1].tfm.facilityValueInGBP)
-        + Number(mockBondAndLoanFacilities[2].tfm.facilityValueInGBP)
-        + Number(mockBondAndLoanFacilities[3].facilitySnapshot.value);
+      const totalValue =
+        Number(mockBondAndLoanFacilities[0].tfm.facilityValueInGBP) +
+        Number(mockBondAndLoanFacilities[1].tfm.facilityValueInGBP) +
+        Number(mockBondAndLoanFacilities[2].tfm.facilityValueInGBP) +
+        Number(mockBondAndLoanFacilities[3].facilitySnapshot.value);
 
       const notExpected = `${CURRENCY.GBP} ${formattedNumber(totalValue)}`;
       expect(result.facilitiesValueInGBP).not.toEqual(notExpected);
@@ -154,9 +160,10 @@ describe('mapTotals', () => {
     it('should return formatted total of all facility values', () => {
       const result = mapTotals(mockCashAndContingentFacilities);
 
-      const totalValue = Number(mockCashAndContingentFacilities[0].facilitySnapshot.value)
-        + Number(mockCashAndContingentFacilities[1].facilitySnapshot.value)
-        + Number(mockCashAndContingentFacilities[2].tfm.facilityValueInGBP);
+      const totalValue =
+        Number(mockCashAndContingentFacilities[0].facilitySnapshot.value) +
+        Number(mockCashAndContingentFacilities[1].facilitySnapshot.value) +
+        Number(mockCashAndContingentFacilities[2].tfm.facilityValueInGBP);
 
       const expected = `${CURRENCY.GBP} ${formattedNumber(totalValue)}`;
       expect(result.facilitiesValueInGBP).toEqual(expected);
@@ -165,9 +172,10 @@ describe('mapTotals', () => {
     it('should return formatted total of all facility values when amendment not complete', () => {
       const result = mapTotals(mockCashAndContingentFacilities);
 
-      const totalValue = Number(mockCashAndContingentFacilities[0].facilitySnapshot.value)
-        + Number(mockCashAndContingentFacilities[1].facilitySnapshot.value)
-        + Number(mockCashAndContingentFacilities[2].tfm.facilityValueInGBP);
+      const totalValue =
+        Number(mockCashAndContingentFacilities[0].facilitySnapshot.value) +
+        Number(mockCashAndContingentFacilities[1].facilitySnapshot.value) +
+        Number(mockCashAndContingentFacilities[2].tfm.facilityValueInGBP);
 
       const expected = `${CURRENCY.GBP} ${formattedNumber(totalValue)}`;
       expect(result.facilitiesValueInGBP).toEqual(expected);
@@ -177,16 +185,20 @@ describe('mapTotals', () => {
       mockCashAndContingentFacilities.map((facility) => {
         const facilityMapped = { ...facility };
 
-        facilityMapped.amendments[0].tfm = {
-          value: { ...mockAmendmentValueResponse },
+        facilityMapped.amendments[0] = {
+          status: AMENDMENT_STATUS.COMPLETED,
+          tfm: {
+            value: { ...mockAmendmentValueResponse },
+          },
         };
         return facilityMapped;
       });
       const result = mapTotals(mockCashAndContingentFacilities);
 
-      const totalValue = Number(mockCashAndContingentFacilities[0].facilitySnapshot.value)
-        + Number(mockCashAndContingentFacilities[1].facilitySnapshot.value)
-        + Number(mockCashAndContingentFacilities[2].tfm.facilityValueInGBP);
+      const totalValue =
+        Number(mockCashAndContingentFacilities[0].facilitySnapshot.value) +
+        Number(mockCashAndContingentFacilities[1].facilitySnapshot.value) +
+        Number(mockCashAndContingentFacilities[2].tfm.facilityValueInGBP);
 
       const notExpected = `${CURRENCY.GBP} ${formattedNumber(totalValue)}`;
       expect(result.facilitiesValueInGBP).not.toEqual(notExpected);
@@ -202,17 +214,18 @@ describe('mapTotals', () => {
       const facilityMapped = { ...facility };
 
       facilityMapped.amendments[0].tfm = {
-        value: { },
+        value: {},
       };
       return facilityMapped;
     });
 
     const result = mapTotals(mockBondAndLoanFacilities);
 
-    const totalUkefExposure = mockBondAndLoanFacilities[0].tfm.ukefExposure
-      + mockBondAndLoanFacilities[1].tfm.ukefExposure
-      + mockBondAndLoanFacilities[2].tfm.ukefExposure
-      + mockBondAndLoanFacilities[3].tfm.ukefExposure;
+    const totalUkefExposure =
+      mockBondAndLoanFacilities[0].tfm.ukefExposure +
+      mockBondAndLoanFacilities[1].tfm.ukefExposure +
+      mockBondAndLoanFacilities[2].tfm.ukefExposure +
+      mockBondAndLoanFacilities[3].tfm.ukefExposure;
 
     const expected = `${CURRENCY.GBP} ${formattedNumber(totalUkefExposure)}`;
     expect(result.facilitiesUkefExposure).toEqual(expected);
@@ -221,10 +234,11 @@ describe('mapTotals', () => {
   it('should return formatted total of all facilities ukefExposure when amendment not complete', () => {
     const result = mapTotals(mockBondAndLoanFacilities);
 
-    const totalUkefExposure = mockBondAndLoanFacilities[0].tfm.ukefExposure
-      + mockBondAndLoanFacilities[1].tfm.ukefExposure
-      + mockBondAndLoanFacilities[2].tfm.ukefExposure
-      + mockBondAndLoanFacilities[3].tfm.ukefExposure;
+    const totalUkefExposure =
+      mockBondAndLoanFacilities[0].tfm.ukefExposure +
+      mockBondAndLoanFacilities[1].tfm.ukefExposure +
+      mockBondAndLoanFacilities[2].tfm.ukefExposure +
+      mockBondAndLoanFacilities[3].tfm.ukefExposure;
 
     const expected = `${CURRENCY.GBP} ${formattedNumber(totalUkefExposure)}`;
     expect(result.facilitiesUkefExposure).toEqual(expected);

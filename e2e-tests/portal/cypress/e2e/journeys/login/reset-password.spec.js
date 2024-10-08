@@ -1,6 +1,4 @@
-const {
-  resetPassword, changePassword, header, userProfile,
-} = require('../../pages');
+const { resetPassword, changePassword, header, userProfile } = require('../../pages');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const { TEST_EMAIL_NO_GOV_NOTIFY } = require('../../../../../e2e-fixtures/portal-users.fixture');
@@ -32,9 +30,7 @@ context('Password management screens', () => {
       resetPassword.submit().click();
 
       resetPassword.emailInputError().should('exist');
-      resetPassword
-        .emailInputError()
-        .contains('Enter an email address in the correct format, for example, name@example.com');
+      resetPassword.emailInputError().contains('Enter an email address in the correct format, for example, name@example.com');
     });
 
     it('should redirect to login page when a non-existant email is used', () => {

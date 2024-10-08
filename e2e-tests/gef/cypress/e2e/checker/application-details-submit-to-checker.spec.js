@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { backLink, cancelLink, errorSummary, submitButton } from '../partials';
 import applicationSubmission from '../pages/application-submission';
 import applicationDetails from '../pages/application-details';
 import applicationPreview from '../pages/application-preview';
@@ -35,43 +36,43 @@ context('Application Details Submission', () => {
     const longComment = 'a'.repeat(401);
     it('gives the page as expected', () => {
       applicationSubmission.applicationSubmissionPage();
-      applicationSubmission.backLink();
+      backLink();
       applicationSubmission.commentsField();
-      applicationSubmission.submitButton();
-      applicationSubmission.cancelLink();
+      submitButton();
+      cancelLink();
     });
 
     it('allows submission without comments', () => {
-      applicationSubmission.submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
     });
 
     it('allows submission with comments', () => {
       applicationSubmission.commentsField().type('test');
-      applicationSubmission.submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
     });
 
     it('shows error when comments are too long', () => {
       applicationSubmission.commentsField().type(longComment);
-      applicationSubmission.submitButton().click();
-      applicationSubmission.errorSummary();
+      cy.clickSubmitButton();
+      errorSummary();
     });
 
     it('takes user back to application details page if cancel link clicked', () => {
       applicationSubmission.commentsField().type('test');
-      applicationSubmission.cancelLink().click();
+      cy.clickCancelLink();
       applicationPreview.applicationPreviewPage();
     });
 
     it('takes user back to application details page if back link clicked', () => {
       applicationSubmission.commentsField().type('test');
-      applicationSubmission.backLink().click();
+      cy.clickBackLink();
       applicationPreview.applicationPreviewPage();
     });
 
     it('takes user back to dashboard if they click the link in the confirmation page', () => {
-      applicationSubmission.submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
       // Just asserting the link is there as the error on dashboard page causes test to fail
       applicationSubmission.backToDashboardLink();
@@ -85,7 +86,7 @@ context('Application Details Submission', () => {
 
     it('no longer shows the "edit" links on the application details page', () => {
       applicationDetails.submitHeading().should('not.exist');
-      applicationDetails.submitButton().should('not.exist');
+      submitButton().should('not.exist');
       applicationDetails.exporterDetailsLink().should('not.exist');
       applicationDetails.automaticCoverDetailsLink().should('not.exist');
       applicationDetails.addCashFacilityButton().should('not.exist');
@@ -100,7 +101,7 @@ context('Application Details Submission', () => {
     });
 
     it('updates status in application banner', () => {
-      statusBanner.bannerStatus().contains('Ready for Checker\'s approval');
+      statusBanner.bannerStatus().contains("Ready for Checker's approval");
       statusBanner.bannerCreatedBy().should('have.text', `${maker.firstname} ${maker.surname}`);
     });
   });

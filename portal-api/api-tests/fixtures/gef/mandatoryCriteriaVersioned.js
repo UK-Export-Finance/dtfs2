@@ -6,9 +6,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
     isInDraft: false,
     title: 'test 1',
     introText: 'Test intro 1',
-    criteria: [
-      { id: '1', body: 'Test is a mock test' },
-    ],
+    criteria: [{ id: '1', body: 'Test is a mock test' }],
   },
   {
     version: 1.1,
@@ -16,9 +14,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
     updatedAt: null,
     isInDraft: false,
     title: 'test 2',
-    criteria: [
-      { id: '1', body: 'Test is a mock test' },
-    ],
+    criteria: [{ id: '1', body: 'Test is a mock test' }],
   },
   {
     version: 2,
@@ -38,11 +34,11 @@ const MANDATORY_CRITERIA_VERSIONED = [
       },
       {
         id: '3',
-        body: 'The exporter and its parent obligor(if any) is an eligible person.',
+        body: 'The exporter and its parent obligor (if any) is an eligible person.',
       },
       {
         id: '4',
-        body: 'Neither the exporter nor its UK parent obligor(if any) is an affected person.',
+        body: 'Neither the exporter nor its UK parent obligor (if any) is an affected person.',
       },
       {
         id: '5',
@@ -54,19 +50,19 @@ const MANDATORY_CRITERIA_VERSIONED = [
       },
       {
         id: '7.a',
-        body: 'The bank has not made any disposals(other than a permitted disposal)  of its right, title and interest in the facility or any utilisation thereunder;',
+        body: 'The bank has not made any disposals (other than a permitted disposal)  of its right, title and interest in the facility or any utilisation thereunder;',
       },
       {
         id: '7.b',
-        body: 'The bank has not made any risk transfer(other than a permitted risk transfer) to any person in relation to the facility or any utilisation thereunder.',
+        body: 'The bank has not made any risk transfer (other than a permitted risk transfer) to any person in relation to the facility or any utilisation thereunder.',
       },
       {
         id: '8',
-        body: 'The bank\'s right, title and interest in and to the facility, and any utilisation thereunder(including any indebtedness, obligation or liability of each obligor) is both:',
+        body: "The bank's right, title and interest in and to the facility, and any utilisation thereunder(including any indebtedness, obligation or liability of each obligor) is both:",
         childList: [
           'free and clear of any security or quasi-security (other than permitted security)',
           'freely assignable by the bank without the need to obtain the consent of any obligor or other person',
-        ]
+        ],
       },
       {
         id: '9',
@@ -92,9 +88,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
     updatedAt: null,
     isInDraft: false,
     title: 'test 4 (old version)',
-    criteria: [
-      { id: '1', body: 'Test is a mock test' },
-    ],
+    criteria: [{ id: '1', body: 'Test is a mock test' }],
   },
   {
     version: 3.4,
@@ -102,9 +96,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
     updatedAt: null,
     isInDraft: true,
     title: 'test 5 (draft)',
-    criteria: [
-      { id: '1', body: 'Test is a mock test' },
-    ],
+    criteria: [{ id: '1', body: 'Test is a mock test' }],
   },
 ];
 

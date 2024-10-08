@@ -1,11 +1,5 @@
-const {
-  calculateGuaranteeFee,
-  calculateUkefExposure,
-} = require('.');
-const {
-  roundNumber,
-  formattedNumber,
-} = require('../../utils/number');
+const { calculateGuaranteeFee, calculateUkefExposure } = require('.');
+const { roundNumber, formattedNumber } = require('../../utils/number');
 
 describe('section-calculations', () => {
   describe('calculateGuaranteeFee', () => {

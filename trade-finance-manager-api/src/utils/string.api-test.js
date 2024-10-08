@@ -1,10 +1,4 @@
-const {
-  isEmptyString,
-  hasValue,
-  stripCommas,
-  capitalizeFirstLetter,
-  lowercaseFirstLetter,
-} = require('./string');
+const { isEmptyString, hasValue, stripCommas, capitalizeFirstLetter, lowercaseFirstLetter } = require('./string');
 
 describe('utils - string', () => {
   describe('isEmptyString', () => {
@@ -66,7 +60,7 @@ describe('utils - string', () => {
     });
 
     it('Number to String typecasting, should return as a string', () => {
-      const result = capitalizeFirstLetter(123.00);
+      const result = capitalizeFirstLetter(123.0);
       expect(result).toEqual('123');
     });
 

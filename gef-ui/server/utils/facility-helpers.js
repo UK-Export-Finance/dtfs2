@@ -21,57 +21,40 @@ const facilitiesChangedToIssuedAsArray = (application) => {
 };
 
 const summaryIssuedChangedToIssued = (params) => {
-  const {
-    acceptableStatus,
-    acceptableRole,
-    app,
-    data,
-    user,
-  } = params;
+  const { acceptableStatus, acceptableRole, app, data, user } = params;
 
-  return acceptableStatus.includes(app.status)
-   && user.roles.some((role) => acceptableRole.includes(role))
-   && Boolean(data.details.canResubmitIssuedFacilities);
+  return acceptableStatus.includes(app.status) && user.roles.some((role) => acceptableRole.includes(role)) && Boolean(data.details.canResubmitIssuedFacilities);
 };
 
 const summaryIssuedUnchanged = (params) => {
-  const {
-    acceptableStatus,
-    acceptableRole,
-    facilitiesChanged,
-    app,
-    data,
-    user,
-  } = params;
-  return acceptableStatus.includes(app.status)
-   && user.roles.some((role) => acceptableRole.includes(role))
-   && Boolean(!data.details.hasBeenIssued)
-   && facilitiesChanged.length !== 0;
+  const { acceptableStatus, acceptableRole, facilitiesChanged, app, data, user } = params;
+  return (
+    acceptableStatus.includes(app.status) &&
+    user.roles.some((role) => acceptableRole.includes(role)) &&
+    Boolean(!data.details.hasBeenIssued) &&
+    facilitiesChanged.length !== 0
+  );
 };
 
 /**
-   * this function checks that the deal is an AIN or MIN
-   * checks that it has been submitted to UKEF
-   * if any unissued facilities
-   * if changes required add to application type and status
-* */
+ * this function checks that the deal is an AIN or MIN
+ * checks that it has been submitted to UKEF
+ * if any unissued facilities
+ * if changes required add to application type and status
+ * */
 const areUnissuedFacilitiesPresent = (application) => {
-  const acceptableStatuses = [
+  const ACCEPTABLE_STATUSES = [
     CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
     CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
     CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
     CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED,
   ];
-  const acceptableApplicationType = [
-    CONSTANTS.DEAL_SUBMISSION_TYPE.AIN,
-    CONSTANTS.DEAL_SUBMISSION_TYPE.MIN,
-    CONSTANTS.DEAL_SUBMISSION_TYPE.MIA,
-  ];
+  const acceptableApplicationType = [CONSTANTS.DEAL_SUBMISSION_TYPE.AIN, CONSTANTS.DEAL_SUBMISSION_TYPE.MIN, CONSTANTS.DEAL_SUBMISSION_TYPE.MIA];
 
   if (!acceptableApplicationType.includes(application.submissionType)) {
     return false;
   }
-  if (!acceptableStatuses.includes(application.status)) {
+  if (!ACCEPTABLE_STATUSES.includes(application.status)) {
     return false;
   }
   /**
@@ -155,19 +138,21 @@ const getUnissuedFacilitiesAsArray = (facilities, application) =>
  * This is a bespoke govUkTable mapping function which
  * returns an array of all the facilities specifically
  * for the cover-start-date.njk template.
- * @param {Object} facilities
+ * @param {object} facilities
  * @returns {Array}
  */
 const getIssuedFacilitiesAsArray = (facilities) => {
   if (facilities.items) {
-    return facilities.items.filter(({ details }) => !details.coverDateConfirmed && details.hasBeenIssued)
-      .map(({ details }, index) =>
-        [
-          { text: details?.name },
-          { text: details?.ukefFacilityId },
-          { text: `${details?.currency?.id} ${details.value?.toLocaleString('en', { minimumFractionDigits: 2 })}` },
-          { html: `<a href = '/gef/application-details/${details?.dealId}/${details?._id}/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0' data-cy='update-coverStartDate-button-${index}'>Update</a>` },
-        ]);
+    return facilities.items
+      .filter(({ details }) => !details.coverDateConfirmed && details.hasBeenIssued)
+      .map(({ details }, index) => [
+        { text: details?.name },
+        { text: details?.ukefFacilityId },
+        { text: `${details?.currency?.id} ${details.value?.toLocaleString('en', { minimumFractionDigits: 2 })}` },
+        {
+          html: `<a href = '/gef/application-details/${details?.dealId}/${details?._id}/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0' data-cy='update-coverStartDate-button-${index}'>Update</a>`,
+        },
+      ]);
   }
   return [];
 };
@@ -183,8 +168,9 @@ const getFacilityCoverStartDate = (facility) => {
 
 const coverDatesConfirmed = (facilities) => {
   if (facilities.items.filter(({ details }) => details.hasBeenIssued).length > 0) {
-    return facilities.items.filter(({ details }) => details.hasBeenIssued).length
-   === facilities.items.filter(({ details }) => details.coverDateConfirmed).length;
+    return (
+      facilities.items.filter(({ details }) => details.hasBeenIssued).length === facilities.items.filter(({ details }) => details.coverDateConfirmed).length
+    );
   }
   return false;
 };
@@ -203,15 +189,14 @@ const facilitiesChangedPresent = (application) => facilitiesChangedToIssuedAsArr
 /**
  * Helper function ascertain whether the facility confirmation message should appear or not.
  * It takes into account recent issuance of a facility, submission type to be MIN.
- * @param {Object} application Application object with facilities
- * @returns {Boolean} Boolean value
+ * @param {object} application Application object with facilities
+ * @returns {boolean} Boolean value
  */
 const issuedFacilityConfirmation = (application) => {
   const hasUnissuedToIssued = hasChangedToIssued(application);
   const { submissionType } = application;
 
-  return hasUnissuedToIssued
-  && (submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIN || submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
+  return hasUnissuedToIssued && (submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIN || submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
 };
 
 const facilityTypeStringGenerator = (facilityType) => {

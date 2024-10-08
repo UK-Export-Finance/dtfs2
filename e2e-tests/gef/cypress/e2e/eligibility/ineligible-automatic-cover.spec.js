@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { mainHeading, continueButton } from '../partials';
 import ineligibleAutomaticCover from '../pages/ineligible-automatic-cover';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
@@ -25,15 +26,15 @@ context('Ineligible Automatic Cover Page', () => {
 
   describe('Visiting page', () => {
     it('displays the correct elements', () => {
-      ineligibleAutomaticCover.mainHeading();
+      mainHeading();
       ineligibleAutomaticCover.content();
-      ineligibleAutomaticCover.continueButton();
+      continueButton();
     });
   });
 
   describe('Clicking on Continue button', () => {
     it('redirects user to Manual Application Page', () => {
-      ineligibleAutomaticCover.continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
     });
   });

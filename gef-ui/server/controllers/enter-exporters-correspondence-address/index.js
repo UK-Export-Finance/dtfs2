@@ -44,7 +44,7 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
       backUrl,
     });
   } catch (error) {
-    console.error('GEF-UI - Error getting exporter\'s correspondence address page %s', error);
+    console.error("GEF-UI - Error getting exporter's correspondence address page %o", error);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -52,9 +52,7 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
 const validateEnterExportersCorrespondenceAddress = async (req, res) => {
   delete req.body._csrf;
 
-  const {
-    params, body, query, session,
-  } = req;
+  const { params, body, query, session } = req;
   const { saveAndReturn, status } = query;
   const { dealId } = params;
   const { user, userToken } = session;
@@ -97,14 +95,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
   try {
     const { exporter } = await api.getApplication({ dealId, userToken });
 
-    const correspondenceAddressFields = [
-      'addressLine1',
-      'addressLine2',
-      'addressLine3',
-      'locality',
-      'postalCode',
-      'country',
-    ];
+    const correspondenceAddressFields = ['addressLine1', 'addressLine2', 'addressLine3', 'locality', 'postalCode', 'country'];
     const sanitizedBody = constructPayload(body, correspondenceAddressFields);
 
     const applicationExporterUpdate = {
@@ -123,7 +114,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
     }
     return res.redirect(`/gef/application-details/${dealId}/about-exporter`);
   } catch (error) {
-    console.error('Error validating exporter\'s correspondence address %s', error);
+    console.error("Error validating exporter's correspondence address %o", error);
     return res.render('partials/problem-with-service.njk');
   }
 };

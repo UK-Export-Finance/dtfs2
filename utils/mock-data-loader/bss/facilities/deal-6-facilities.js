@@ -1,6 +1,4 @@
-const {
-  nowTimestamp, twoMonths, twoMonthsTimestamp, threeMonths,
-} = require('../dates');
+const { nowTimestamp, twoMonths, twoMonthsTimestamp, threeMonths } = require('../dates');
 
 module.exports = [
   {

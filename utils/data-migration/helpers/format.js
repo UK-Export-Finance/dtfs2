@@ -3,12 +3,12 @@
  */
 
 /**
-    * Strips commas and return UKEF exposure
-    * as number.
-    * @param {String} string Raw string with commas
-    * @param {Boolean} Number Whether output should be a `Number`
-    * @returns {Integer} Formatted value
-    */
+ * Strips commas and return UKEF exposure
+ * as number.
+ * @param {string} string Raw string with commas
+ * @param {boolean} Number Whether output should be a `Number`
+ * @returns {number} Formatted value
+ */
 const stripCommas = (string, number = false) => {
   if (string) {
     return number ? Number(string.toString().replace(/,/g, '')) : string.replace(/,/g, '');
@@ -17,26 +17,24 @@ const stripCommas = (string, number = false) => {
 };
 
 /**
-     * Returns deal's total maximum liability in GBP.
-     * @param {Array} facilities Array of facilities
-     * @returns {Integer} Total of deal's maximum liability in GBP
-     */
+ * Returns deal's total maximum liability in GBP.
+ * @param {Array} facilities Array of facilities
+ * @returns {number} Total of deal's maximum liability in GBP
+ */
 const getMaximumLiability = (facilities) => {
   if (facilities) {
-    return facilities
-      .map((f) => stripCommas(f.ukefExposure, true) ?? 0)
-      .reduce((p, c) => p + c, 0);
+    return facilities.map((f) => stripCommas(f.ukefExposure, true) ?? 0).reduce((p, c) => p + c, 0);
   }
 
   return 0;
 };
 
 /**
-   * Returns filtered task as per `taskName`
-   * @param {Object} tfm Deal TFM Object
-   * @param {String} taskName Interested task name from `Approvals` task group
-   * @returns {Array} Filtered task
-   */
+ * Returns filtered task as per `taskName`
+ * @param {object} tfm Deal TFM Object
+ * @param {string} taskName Interested task name from `Approvals` task group
+ * @returns {Array} Filtered task
+ */
 const filterTask = (tfm, taskName) => {
   if (tfm && taskName) {
     return tfm.tasks

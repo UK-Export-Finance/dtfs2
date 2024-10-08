@@ -6,7 +6,8 @@
         "component-tests",
         "scripts",
         "./*.jest.config.js/",
-        ".eslintrc.js"
+        ".eslintrc.js",
+        "test-helpers",
     ],
     "exclude": []
 }

@@ -10,21 +10,16 @@ const { mapBssEwcsFacility } = require('../mappings/map-submitted-deal/map-bss-e
  * 2. Premium Schedule (BSS/EWCS) / Fixed Fee (GEF) (tfm.premiumSchedule / tfm.feeRecord)
  * 3. Exposure period (tfm.exposurePeriodInMonths)
  * 4. UKEF Exposure (tfm.ukefExposure / tfm.ukefExposureCalculationTimestamp)
- * @param {Object} amendment Amendment object
- * @param {Object} facility Facility object
- * @param {Object} deal TFM deal object
- * @returns {Boolean} Boolean upon execution
+ * @param {object} amendment Amendment object
+ * @param {object} facility Facility object
+ * @param {object} deal TFM deal object
+ * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - details of the user making the request
+ * @returns {Promise<boolean>} Boolean upon execution
  */
-const amendIssuedFacility = async (amendment, facility, deal) => {
+const amendIssuedFacility = async (amendment, facility, deal, auditDetails) => {
   try {
     if (amendment && facility && deal) {
-      const {
-        changeCoverEndDate,
-        changeFacilityValue,
-        coverEndDate,
-        value,
-        tfm: amendmentTfm,
-      } = amendment;
+      const { changeCoverEndDate, changeFacilityValue, coverEndDate, value, tfm: amendmentTfm } = amendment;
       const { dealType } = deal.dealSnapshot;
       let submissionDate;
       const { facilitySnapshot, tfm } = facility;
@@ -111,7 +106,7 @@ const amendIssuedFacility = async (amendment, facility, deal) => {
         }
 
         if (changeCoverEndDate) {
-        // facility.tfm.facilityGuaranteeDates
+          // facility.tfm.facilityGuaranteeDates
           facilityGuaranteeDates = getGuaranteeDates(amendedFacility, submissionDate);
           facilityTfmUpdate = {
             ...facilityTfmUpdate,
@@ -130,7 +125,7 @@ const amendIssuedFacility = async (amendment, facility, deal) => {
         };
 
         // Updated `facility.tfm` property
-        await api.updateFacility(facility._id, facilityTfmUpdate);
+        await api.updateFacility({ facilityId: facility._id, tfmUpdate: facilityTfmUpdate, auditDetails });
       }
 
       return true;
@@ -138,7 +133,7 @@ const amendIssuedFacility = async (amendment, facility, deal) => {
 
     throw new Error('Amend issued facility - Invalid argument sets provided');
   } catch (error) {
-    console.error('Error amending issued facility TFM properties: %s', error);
+    console.error('Error amending issued facility TFM properties %o', error);
     return false;
   }
 };

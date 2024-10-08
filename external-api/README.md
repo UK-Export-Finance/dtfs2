@@ -30,10 +30,6 @@ headers: {
 
 This endpoint is used for fetching CS entity data.
 
-### 3. OS (Ordnance Survey)
-
-This service interacts with the Places API from Ordnance Survey.
-
 The service also hosts some external APIs for countries, currencies, and industry sectors. However, these should be removed and obtained through APIM API calls for better organization and consistency.
 
 ## Why

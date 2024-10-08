@@ -1,5 +1,6 @@
+const { DEAL_TYPE } = require('@ukef/dtfs2-common');
 const { validationErrorHandler, stringToBoolean } = require('../../utils/helpers');
-const { DEAL_SUBMISSION_TYPE, DEAL_TYPE } = require('../../constants');
+const { DEAL_SUBMISSION_TYPE } = require('../../constants');
 const { getValidationErrors, deriveCoverType } = require('./helpers');
 
 const api = require('../../services/api');
@@ -22,19 +23,14 @@ const automaticCover = async (req, res) => {
       dealId,
     });
   } catch (error) {
-    console.error('GEF-UI - Error getting automatic cover page %s', error);
+    console.error('GEF-UI - Error getting automatic cover page %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
 
 const validateAutomaticCover = async (req, res, next) => {
   try {
-    const {
-      body,
-      params,
-      query,
-      session,
-    } = req;
+    const { body, params, query, session } = req;
     const { dealId } = params;
     const { saveAndReturn } = query;
     const { user, userToken } = session;
@@ -94,19 +90,15 @@ const validateAutomaticCover = async (req, res, next) => {
     }
 
     if (coverType === DEAL_SUBMISSION_TYPE.MIA) {
-      return res.redirect(
-        `/gef/application-details/${dealId}/ineligible-automatic-cover`,
-      );
+      return res.redirect(`/gef/application-details/${dealId}/ineligible-automatic-cover`);
     }
     if (coverType === DEAL_SUBMISSION_TYPE.AIN) {
-      return res.redirect(
-        `/gef/application-details/${dealId}/eligible-automatic-cover`,
-      );
+      return res.redirect(`/gef/application-details/${dealId}/eligible-automatic-cover`);
     }
 
     return res.redirect(`/gef/application-details/${dealId}`);
   } catch (error) {
-    console.error('GEF-UI - Error validating automatic cover %s', error);
+    console.error('GEF-UI - Error validating automatic cover %o', error);
     return next(error);
   }
 };

@@ -1,5 +1,5 @@
 const { addBusinessDays, isSameDay, isWeekend, startOfMonth, format } = require('date-fns');
-const { isValidIsoMonth } = require('@ukef/dtfs2-common');
+const { isValidIsoMonth, isValidIsoYear } = require('@ukef/dtfs2-common');
 
 /**
  * @param {Date} date
@@ -90,8 +90,21 @@ const assertValidIsoMonth = (value) => {
   }
 };
 
+/**
+ * @param {unknown} value - the value to assert on
+ * @throws {Error} - error thrown if the provided value is not an ISO year
+ *   string in format 'yyyy'
+ */
+const assertValidIsoYear = (value) => {
+  if (!isValidIsoYear(value)) {
+    throw new Error(`Invalid ISO year '${value}' - expected a string in format 'yyyy'`);
+  }
+};
+
 module.exports = {
   getBusinessDayOfMonth,
   getIsoMonth,
+  isValidIsoMonth,
   assertValidIsoMonth,
+  assertValidIsoYear,
 };

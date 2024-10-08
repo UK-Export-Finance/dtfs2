@@ -1,5 +1,5 @@
 const { when } = require('jest-when');
-const { ROLES } = require('@ukef/dtfs2-common');
+const { ROLES, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const { loginWithSignInLink } = require('./login-with-sign-in-link');
 const CONSTANTS = require('../../constants');
 
@@ -11,7 +11,7 @@ describe('loginWithSignInLink', () => {
   const signInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
   const loginResponseUserToken = 'a token';
   const a2faToken = 'aToken';
-  const loginStatus = CONSTANTS.LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD;
+  const loginStatus = PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD;
   const userEmail = 'an-email@example.com';
   const user = {
     _id: userId,
@@ -31,11 +31,13 @@ describe('loginWithSignInLink', () => {
   });
 
   const mockSuccessfulLoginApiCall = (opts) => {
-    when(api.loginWithSignInLink).calledWith({ token: a2faToken, userId, signInToken }).mockResolvedValueOnce({
-      token: loginResponseUserToken,
-      loginStatus,
-      user: { ...user, roles: opts?.userRoles ?? []},
-    });
+    when(api.loginWithSignInLink)
+      .calledWith({ token: a2faToken, userId, signInToken })
+      .mockResolvedValueOnce({
+        token: loginResponseUserToken,
+        loginStatus,
+        user: { ...user, roles: opts?.userRoles ?? [] },
+      });
   };
 
   const mockLoginApiCallToRejectWith = (error) => {
@@ -70,7 +72,7 @@ describe('loginWithSignInLink', () => {
   });
 
   it.each`
-    role                                      | redirectUrl
+    role                            | redirectUrl
     ${ROLES.ADMIN}                  | ${CONSTANTS.LANDING_PAGES.DEFAULT}
     ${ROLES.CHECKER}                | ${CONSTANTS.LANDING_PAGES.DEFAULT}
     ${ROLES.MAKER}                  | ${CONSTANTS.LANDING_PAGES.DEFAULT}
@@ -88,7 +90,9 @@ describe('loginWithSignInLink', () => {
   });
 
   it('returns a redirect to the sign in link expired page if the login attempt returns a token expired 403 error', async () => {
-    mockLoginApiCallToRejectWith({ response: { status: 403, data: { errors: [{ cause: CONSTANTS.HTTP_ERROR_CAUSES.TOKEN_EXPIRED }] } } });
+    mockLoginApiCallToRejectWith({
+      response: { status: 403, data: { errors: [{ cause: CONSTANTS.HTTP_ERROR_CAUSES.TOKEN_EXPIRED }] } },
+    });
 
     await loginWithSignInLink(req, res);
 
@@ -96,7 +100,9 @@ describe('loginWithSignInLink', () => {
   });
 
   it('returns a redirect to the account suspended page if the login attempt returns a user blocked 403 error', async () => {
-    mockLoginApiCallToRejectWith({ response: { status: 403, data: { errors: [{ cause: CONSTANTS.HTTP_ERROR_CAUSES.USER_BLOCKED }] } } });
+    mockLoginApiCallToRejectWith({
+      response: { status: 403, data: { errors: [{ cause: CONSTANTS.HTTP_ERROR_CAUSES.USER_BLOCKED }] } },
+    });
 
     await loginWithSignInLink(req, res);
 

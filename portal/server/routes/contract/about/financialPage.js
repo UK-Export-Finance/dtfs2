@@ -1,18 +1,12 @@
 const express = require('express');
-const { CURRENCY, ROLES: { MAKER } } = require('@ukef/dtfs2-common');
+const {
+  CURRENCY,
+  ROLES: { MAKER },
+} = require('@ukef/dtfs2-common');
 const api = require('../../../api');
-const {
-  requestParams,
-  mapCurrencies,
-  errorHref,
-  generateErrorSummary,
-  sanitizeCurrency,
-  constructPayload,
-} = require('../../../helpers');
+const { requestParams, mapCurrencies, errorHref, generateErrorSummary, sanitizeCurrency, constructPayload } = require('../../../helpers');
 
-const {
-  provide, DEAL, CURRENCIES,
-} = require('../../api-data-provider');
+const { provide, DEAL, CURRENCIES } = require('../../api-data-provider');
 
 const updateSubmissionDetails = require('./updateSubmissionDetails');
 const calculateStatusOfEachPage = require('./navStatusCalculations');
@@ -29,10 +23,7 @@ router.get('/contract/:_id/about/financial', [validateRole({ role: [MAKER] }), p
   const { deal, currencies } = req.apiData;
 
   const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
-  const errorSummary = generateErrorSummary(
-    validationErrors,
-    errorHref,
-  );
+  const errorSummary = generateErrorSummary(validationErrors, errorHref);
 
   const completedForms = calculateStatusOfEachPage(Object.keys(errorSummary.errorList));
 
@@ -55,7 +46,7 @@ const financialSubmissionDetailsProperties = [
 ];
 
 const filterFinancialSubmissionDetailsPayload = (body) => {
-  const payload = constructPayload(body, financialSubmissionDetailsProperties);
+  const payload = constructPayload(body, financialSubmissionDetailsProperties, true);
 
   if (payload.supplyContractCurrency === CURRENCY.GBP) {
     delete payload.supplyContractConversionRateToGBP;
@@ -93,7 +84,7 @@ router.post('/contract/:_id/about/financial/save-go-back', provide([DEAL]), asyn
   // to check if something has changed, only use the currency code.
   const mappedOriginalData = {
     ...deal.submissionDetails,
-    supplyContractCurrency: (supplyContractCurrency && supplyContractCurrency.id) ? supplyContractCurrency.id : '',
+    supplyContractCurrency: supplyContractCurrency && supplyContractCurrency.id ? supplyContractCurrency.id : '',
   };
 
   if (!formDataMatchesOriginalData(mappedFormDataForMatchCheck, mappedOriginalData)) {

@@ -1,23 +1,36 @@
-const {
-  add, format, isAfter, isBefore, isEqual, set,
-} = require('date-fns');
-const Joi = require('joi');
+const { format, set, isSameDay } = require('date-fns');
+const { isFacilityEndDateEnabledOnGefVersion, parseDealVersion, zBooleanStrictCoerce } = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
 const { FACILITY_TYPE, DATE_FORMAT, DEAL_SUBMISSION_TYPE } = require('../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
+const { validateAboutFacility } = require('./validation');
+const { getNextPage } = require('./get-next-page-helper');
 
 const aboutFacility = async (req, res) => {
-  const { params, query, session: { userToken } } = req;
+  const {
+    params,
+    query,
+    session: { userToken },
+  } = req;
   const { dealId, facilityId } = params;
   const { status } = query;
 
   try {
     const { details } = await api.getFacility({ facilityId, userToken });
+    const deal = await api.getApplication({ dealId, userToken });
     const facilityTypeString = FACILITY_TYPE[details.type.toUpperCase()].toLowerCase();
     const shouldCoverStartOnSubmission = JSON.stringify(details.shouldCoverStartOnSubmission);
     const coverStartDate = details.coverStartDate ? new Date(details.coverStartDate) : null;
     const coverEndDate = details.coverEndDate ? new Date(details.coverEndDate) : null;
     const monthsOfCover = JSON.stringify(details.monthsOfCover);
+
+    let isUsingFacilityEndDate;
+    if (details.isUsingFacilityEndDate === true) {
+      isUsingFacilityEndDate = 'true';
+    }
+    if (details.isUsingFacilityEndDate === false) {
+      isUsingFacilityEndDate = 'false';
+    }
 
     return res.render('partials/about-facility.njk', {
       facilityType: FACILITY_TYPE[details.type.toUpperCase()],
@@ -35,317 +48,98 @@ const aboutFacility = async (req, res) => {
       dealId,
       facilityId,
       status,
+      isFacilityEndDateEnabled: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)),
+      isUsingFacilityEndDate,
     });
   } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
 };
 
-// TODO: split this function up as too long
-const validateAboutFacility = async (req, res) => {
+/**
+ * @param {number} year
+ * @param {number} month
+ * @param {number} date
+ * @returns the start of the date
+ */
+const calculateDateFromYearMonthDate = (year, month, date) => {
+  const dateFullyComplete = date && month && year;
+
+  return dateFullyComplete
+    ? set(new Date(), {
+        year,
+        month: month - 1,
+        date,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+      })
+    : null;
+};
+
+const validateAndUpdateAboutFacility = async (req, res) => {
   const {
-    body, query, params, session,
+    body: {
+      facilityType,
+      hasBeenIssued,
+      'cover-start-date-day': coverStartDateDay,
+      'cover-start-date-month': coverStartDateMonth,
+      'cover-start-date-year': coverStartDateYear,
+      'cover-end-date-day': coverEndDateDay,
+      'cover-end-date-month': coverEndDateMonth,
+      'cover-end-date-year': coverEndDateYear,
+      monthsOfCover,
+      facilityName,
+      shouldCoverStartOnSubmission,
+      isUsingFacilityEndDate: isUsingFacilityEndDateString,
+    },
+    query: { saveAndReturn, status },
+    params: { dealId, facilityId },
+    session: {
+      user: { _id: editorId },
+      userToken,
+    },
   } = req;
-  const { facilityType, hasBeenIssued } = body;
   const facilityTypeString = facilityType.toLowerCase();
-  const { saveAndReturn, status } = query;
-  const { dealId, facilityId } = params;
-  const { user, userToken } = session;
-  const { _id: editorId } = user;
 
-  const aboutFacilityErrors = [];
-  const coverStartDateDay = body['cover-start-date-day'];
-  const coverStartDateMonth = body['cover-start-date-month'];
-  const coverStartDateYear = body['cover-start-date-year'];
+  const isUsingFacilityEndDate = zBooleanStrictCoerce.optional().parse(isUsingFacilityEndDateString);
+
+  const deal = await api.getApplication({ dealId, userToken });
+
   const coverStartDateIsFullyComplete = coverStartDateDay && coverStartDateMonth && coverStartDateYear;
-  const coverStartDateIsPartiallyComplete = !coverStartDateIsFullyComplete
-    && (coverStartDateDay || coverStartDateMonth || coverStartDateYear);
-  const coverStartDateIsBlank = !coverStartDateDay && !coverStartDateMonth && !coverStartDateYear;
-  const coverEndDateDay = body['cover-end-date-day'];
-  const coverEndDateMonth = body['cover-end-date-month'];
-  const coverEndDateYear = body['cover-end-date-year'];
   const coverEndDateIsFullyComplete = coverEndDateDay && coverEndDateMonth && coverEndDateYear;
-  const coverEndDateIsPartiallyComplete = !coverEndDateIsFullyComplete
-    && (coverEndDateDay || coverEndDateMonth || coverEndDateYear);
-  const coverEndDateIsBlank = !coverEndDateDay && !coverEndDateMonth && !coverEndDateYear;
 
-  let coverStartDate = null;
-  let coverEndDate = null;
-  let coverEndDateValid = true;
+  const coverStartDate = calculateDateFromYearMonthDate(coverStartDateYear, coverStartDateMonth, coverStartDateDay);
+  const coverEndDate = calculateDateFromYearMonthDate(coverEndDateYear, coverEndDateMonth, coverEndDateDay);
 
-  if (isTrueSet(body.hasBeenIssued)) {
-    // Only validate facility name if hasBeenIssued is set to Yes
-    if (!saveAndReturn && !body.facilityName) {
-      aboutFacilityErrors.push({
-        errRef: 'facilityName',
-        errMsg: `Enter a name for this ${facilityTypeString} facility`,
-      });
-    }
-
-    if (!body.shouldCoverStartOnSubmission && !saveAndReturn) {
-      aboutFacilityErrors.push({
-        errRef: 'shouldCoverStartOnSubmission',
-        errMsg: 'Select if you want UKEF cover to start on the day you submit the automatic inclusion notice',
-      });
-    }
-
-    if (body.shouldCoverStartOnSubmission === 'false') {
-      if (coverStartDateIsBlank) {
-        if (!saveAndReturn) {
-          aboutFacilityErrors.push({
-            errRef: 'coverStartDate',
-            errMsg: 'Enter a cover start date',
-          });
-        }
-      } else if (coverStartDateIsPartiallyComplete) {
-        let msg = 'Cover start date must include a ';
-        const dateFieldsInError = [];
-        if (!coverStartDateDay) {
-          msg += 'day ';
-          dateFieldsInError.push('coverStartDate-day');
-        }
-        if (!coverStartDateMonth) {
-          msg += !coverStartDateDay ? ' and month ' : 'month ';
-          dateFieldsInError.push('coverStartDate-month');
-        }
-        if (!coverStartDateYear) {
-          msg += !coverStartDateDay || !coverStartDateMonth ? 'and year' : 'year';
-          dateFieldsInError.push('coverStartDate-year');
-        }
-
-        aboutFacilityErrors.push({
-          errRef: 'coverStartDate',
-          errMsg: msg,
-          subFieldErrorRefs: dateFieldsInError,
-        });
-      } else if (coverStartDateIsFullyComplete) {
-        let hasFormattingError = false;
-        const now = new Date();
-        const threeMonthsFromNow = add(now, { months: 3 });
-        // schema which ensures that coverStartDate year only contains 4 numbers
-        const yearSchema = Joi.string().length(4).pattern(/^\d+$/).required();
-        const yearValidation = yearSchema.validate(coverStartDateYear);
-
-        // schema which ensures that coverStart month and day is only numbers and of length 1 or 2
-        const coverDayMonthSchema = Joi.string().min(1).max(2).pattern(/^\d+$/);
-        const coverStartMonthValidation = coverDayMonthSchema.validate(coverStartDateMonth);
-        const coverStartDayValidation = coverDayMonthSchema.validate(coverStartDateDay);
-
-        // if coverStartDate day has validation error
-        if (coverStartDayValidation.error) {
-          hasFormattingError = true;
-          aboutFacilityErrors.push({
-            errRef: 'coverStartDate',
-            errMsg: 'The day for the cover start date must include 1 or 2 numbers',
-          });
-        }
-        // if coverStartDate month has validation error
-        if (coverStartMonthValidation.error) {
-          hasFormattingError = true;
-          aboutFacilityErrors.push({
-            errRef: 'coverStartDate',
-            errMsg: 'The month for the cover start date must include 1 or 2 numbers',
-          });
-        }
-        // if coverStartDate year has validation error
-        if (yearValidation.error) {
-          hasFormattingError = true;
-          aboutFacilityErrors.push({
-            errRef: 'coverStartDate',
-            errMsg: 'The year for the cover start date must include 4 numbers',
-          });
-        }
-
-        const startDate = set(
-          new Date(),
-          { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay },
-        );
-
-        if (isBefore(startDate, now) && !hasFormattingError) {
-          aboutFacilityErrors.push({
-            errRef: 'coverStartDate',
-            errMsg: 'Cover start date cannot be before today',
-          });
-        }
-
-        if (isAfter(startDate, threeMonthsFromNow) && !hasFormattingError) {
-          aboutFacilityErrors.push({
-            errRef: 'coverStartDate',
-            errMsg: 'Cover start date cannot be more than 3 months from now',
-          });
-        }
-      }
-    }
-
-    if (coverEndDateIsBlank) {
-      if (!saveAndReturn) {
-        aboutFacilityErrors.push({
-          errRef: 'coverEndDate',
-          errMsg: 'Enter a cover end date',
-        });
-      }
-    } else if (coverEndDateIsPartiallyComplete) {
-      let msg = 'Cover end date must include a ';
-      const dateFieldsInError = [];
-      if (!coverEndDateDay) {
-        msg += 'day ';
-        dateFieldsInError.push('coverEndDate-day');
-      }
-      if (!coverEndDateMonth) {
-        msg += !coverEndDateDay ? ' and month ' : 'month ';
-        dateFieldsInError.push('coverEndDate-month');
-      }
-      if (!coverEndDateYear) {
-        msg += !coverEndDateDay || !coverEndDateMonth ? 'and year' : 'year';
-        dateFieldsInError.push('coverEndDate-year');
-      }
-
-      aboutFacilityErrors.push({
-        errRef: 'coverEndDate',
-        errMsg: msg,
-        subFieldErrorRefs: dateFieldsInError,
-      });
-    }
-  }
-  // Only validate months of cover if hasBeenIssued is set to No
-  if (!saveAndReturn && !isTrueSet(body.hasBeenIssued) && !body.monthsOfCover) {
-    aboutFacilityErrors.push({
-      errRef: 'monthsOfCover',
-      errMsg: 'Enter the number of months you\'ll need UKEF cover for',
-    });
-  }
-
-  if (body.facilityName && body.facilityName.length > 30) {
-    aboutFacilityErrors.push({
-      errRef: 'facilityName',
-      errMsg: 'Facility name cannot be more than 30 characters in length',
-    });
-  }
-
-  if (/[^A-Za-z0-9 .,:;'-]/.test(body.facilityName)) {
-    aboutFacilityErrors.push({
-      errRef: 'facilityName',
-      errMsg: 'Facility name must only include letters a to z, full stops, commas, colons, semi-colons, hyphens, spaces and apostrophes',
-    });
-  }
-
-  if (coverStartDateIsFullyComplete) {
-    coverStartDate = set(
-      new Date(),
-      {
-        year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay, hours: 0, minutes: 0, seconds: 0, milliseconds: 0,
-      },
-    );
-  }
-
-  if (coverEndDateIsFullyComplete) {
-    // schema which ensures that coverEndDate year only contains 4 numbers
-    const yearSchema = Joi.string().length(4).pattern(/^\d+$/).required();
-    const yearValidation = yearSchema.validate(coverEndDateYear);
-
-    // schema which ensures that coverEnd month and day is only numbers and of length 1 or 2
-    const coverDayMonthSchema = Joi.string().min(1).max(2).pattern(/^\d+$/);
-    const coverEndMonthValidation = coverDayMonthSchema.validate(coverEndDateMonth);
-    const coverEndDayValidation = coverDayMonthSchema.validate(coverEndDateDay);
-
-    // if coverEndDate day has validation error
-    if (coverEndDayValidation.error) {
-      coverEndDateValid = false;
-      aboutFacilityErrors.push({
-        errRef: 'coverEndDate',
-        errMsg: 'The day for the cover end date must include 1 or 2 numbers',
-      });
-    }
-    // if coverEndDate month has validation error
-    if (coverEndMonthValidation.error) {
-      coverEndDateValid = false;
-      aboutFacilityErrors.push({
-        errRef: 'coverEndDate',
-        errMsg: 'The month for the cover end date must include 1 or 2 numbers',
-      });
-    }
-    // if coverEndDate year has validation error
-    if (yearValidation.error) {
-      coverEndDateValid = false;
-      aboutFacilityErrors.push({
-        errRef: 'coverEndDate',
-        errMsg: 'The year for the cover end date must include 4 numbers',
-      });
-    }
-
-    coverEndDate = set(
-      new Date(),
-      {
-        year: coverEndDateYear, month: coverEndDateMonth - 1, date: coverEndDateDay, hours: 0, minutes: 0, seconds: 0, milliseconds: 0,
-      },
-    );
-  }
-
-  if (coverStartDateIsFullyComplete && coverEndDateIsFullyComplete) {
-    if ((coverEndDate < coverStartDate) && coverEndDateValid) {
-      aboutFacilityErrors.push({
-        errRef: 'coverEndDate',
-        errMsg: 'Cover end date cannot be before cover start date',
-      });
-    }
-
-    // if coverEndDate is the same as the coverStartDate
-    if (isEqual(coverStartDate, coverEndDate) && coverEndDateValid) {
-      aboutFacilityErrors.push({
-        errRef: 'coverEndDate',
-        errMsg: 'The cover end date must be after the cover start date',
-      });
-    }
-  }
-
-  // validation if should start on submission - no coverStartDate to check against
-  if (body.shouldCoverStartOnSubmission && coverEndDateIsFullyComplete) {
-    // temporarily set coverStartDate to now
-    const coverStartNow = set(
-      new Date(),
-      {
-        hours: 0, minutes: 0, seconds: 0, milliseconds: 0,
-      },
-    );
-
-    if ((coverEndDate < coverStartNow) && coverEndDateValid) {
-      aboutFacilityErrors.push({
-        errRef: 'coverEndDate',
-        errMsg: 'Cover end date cannot be before cover start date',
-      });
-    }
-
-    if (isEqual(coverStartNow, coverEndDate) && coverEndDateValid) {
-      aboutFacilityErrors.push({
-        errRef: 'coverEndDate',
-        errMsg: 'The cover end date must be after the cover start date',
-      });
-    }
-  }
-
-  // Regex tests to see if value is a number only
-  const digitsRegex = /^[0-9]*$/;
-  if (body.monthsOfCover) {
-    if (!digitsRegex.test(body.monthsOfCover)) {
-      aboutFacilityErrors.push({
-        errRef: 'monthsOfCover',
-        errMsg: 'You can only enter numbers',
-      });
-    }
-    if (body.monthsOfCover > 999) {
-      aboutFacilityErrors.push({
-        errRef: 'monthsOfCover',
-        errMsg: 'You can only enter a maximum of 999 months cover',
-      });
-    }
-  }
+  const aboutFacilityErrors = validateAboutFacility({
+    coverStartDateDay,
+    coverStartDateMonth,
+    coverStartDateYear,
+    coverStartDateIsFullyComplete,
+    coverEndDateDay,
+    coverEndDateMonth,
+    coverEndDateYear,
+    coverEndDateIsFullyComplete,
+    facilityTypeString,
+    saveAndReturn,
+    coverStartDate,
+    coverEndDate,
+    hasBeenIssued,
+    monthsOfCover,
+    facilityName,
+    shouldCoverStartOnSubmission,
+    isUsingFacilityEndDate,
+    isFacilityEndDateEnabled: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)),
+  });
 
   if (aboutFacilityErrors.length > 0) {
     return res.render('partials/about-facility.njk', {
       errors: validationErrorHandler(aboutFacilityErrors),
-      facilityName: body.facilityName,
-      shouldCoverStartOnSubmission: body.shouldCoverStartOnSubmission,
-      monthsOfCover: body.monthsOfCover,
+      facilityName,
+      shouldCoverStartOnSubmission,
+      monthsOfCover,
       hasBeenIssued: isTrueSet(hasBeenIssued),
       coverStartDateDay,
       coverStartDateMonth,
@@ -358,23 +152,38 @@ const validateAboutFacility = async (req, res) => {
       dealId,
       facilityId,
       status,
+      isFacilityEndDateEnabled: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)),
+      isUsingFacilityEndDate: isUsingFacilityEndDateString,
     });
   }
 
+  const facilityUpdate = {
+    name: facilityName,
+    shouldCoverStartOnSubmission: isTrueSet(shouldCoverStartOnSubmission),
+    monthsOfCover: monthsOfCover || null,
+    coverStartDate: coverStartDate ? format(coverStartDate, DATE_FORMAT.COVER) : null,
+    coverEndDate: coverEndDate ? format(coverEndDate, DATE_FORMAT.COVER) : null,
+    coverDateConfirmed: deal.submissionType === DEAL_SUBMISSION_TYPE.AIN ? true : null,
+  };
+
+  if (isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version))) {
+    facilityUpdate.isUsingFacilityEndDate = isUsingFacilityEndDate;
+
+    const { details: existingFacility } = await api.getFacility({ facilityId, userToken });
+    const existingCoverStartDate = existingFacility.coverStartDate ? new Date(existingFacility.coverStartDate) : null;
+
+    const coverStartDateHasChanged = coverStartDate && existingCoverStartDate && !isSameDay(existingCoverStartDate, coverStartDate);
+
+    if (coverStartDateHasChanged) {
+      facilityUpdate.facilityEndDate = null;
+      facilityUpdate.bankReviewDate = null;
+    }
+  }
+
   try {
-    const deal = await api.getApplication({ dealId, userToken });
     await api.updateFacility({
       facilityId,
-      payload: {
-        name: body.facilityName,
-        shouldCoverStartOnSubmission: isTrueSet(body.shouldCoverStartOnSubmission),
-        monthsOfCover: body.monthsOfCover || null,
-        coverStartDate: coverStartDate ? format(coverStartDate, DATE_FORMAT.COVER) : null,
-        coverEndDate: coverEndDate ? format(coverEndDate, DATE_FORMAT.COVER) : null,
-        coverDateConfirmed: deal.submissionType === DEAL_SUBMISSION_TYPE.AIN
-          ? true
-          : null,
-      },
+      payload: facilityUpdate,
       userToken,
     });
 
@@ -388,7 +197,7 @@ const validateAboutFacility = async (req, res) => {
       return res.redirect(`/gef/application-details/${dealId}`);
     }
 
-    return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/provided-facility`);
+    return res.redirect(getNextPage({ dealId, facilityId, dealVersion: deal.version, isUsingFacilityEndDate }));
   } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
@@ -396,5 +205,5 @@ const validateAboutFacility = async (req, res) => {
 
 module.exports = {
   aboutFacility,
-  validateAboutFacility,
+  validateAndUpdateAboutFacility,
 };

@@ -36,7 +36,7 @@ const mapDealFiles = async (portalDealId, v1Deal) => {
       fileshare.setConfig(AZURE_WORKFLOW_FILESHARE_CONFIG);
       const fileshareConfig = fileshare.getConfig();
 
-      const fileBuffer = await fileshare.readFile(from).catch((err) => console.info({ err }));
+      const fileBuffer = await fileshare.readFile(from).catch((error) => console.info({ error }));
 
       if (fileBuffer.error) {
         logError(`File not found: ${fileshareConfig.STORAGE_ACCOUNT}::${fileshareConfig.FILESHARE_NAME}::${from.folder}/${from.filename}`);
@@ -61,25 +61,23 @@ const mapDealFiles = async (portalDealId, v1Deal) => {
     fileshare.setConfig(AZURE_WORKFLOW_FILESHARE_CONFIG);
   };
 
-  const v2SingleDealFile = (filename, type) => (
-    {
-      type,
-      fullPath: `portalStorage/${portalDealId}/${filename}`,
-      filename,
-    }
-  );
+  const v2SingleDealFile = (filename, type) => ({
+    type,
+    fullPath: `portalStorage/${portalDealId}/${filename}`,
+    filename,
+  });
 
   const v2DealFile = async (value, type) => {
-    const v2DealFiles = Array.isArray(value)
-      ? value.map((filename) => v2SingleDealFile(filename, type))
-      : [v2SingleDealFile(value, type)];
+    const v2DealFiles = Array.isArray(value) ? value.map((filename) => v2SingleDealFile(filename, type)) : [v2SingleDealFile(value, type)];
 
     await copyDealFile(v2DealFiles);
 
     return v2DealFiles;
   };
 
-  const { Deal_information: { Exporter_and_indemnifier: exporterInfo } } = v1Deal;
+  const {
+    Deal_information: { Exporter_and_indemnifier: exporterInfo },
+  } = v1Deal;
 
   const {
     Deal_files: {
@@ -120,10 +118,7 @@ const mapDealFiles = async (portalDealId, v1Deal) => {
     supportingInformation.corporateStructure = await v2DealFile(v1CorporateStructure, 'general_correspondence');
   }
 
-  return [
-    supportingInformation,
-    hasError,
-  ];
+  return [supportingInformation, hasError];
 };
 
 module.exports = mapDealFiles;

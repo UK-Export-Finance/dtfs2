@@ -1,5 +1,5 @@
 /**
- * @param {String} time
+ * @param {string} time
  * @returns {Date} timestamp
  * Helper function to take time as String (eg July 19, 2022)
  * Converts to utc timestamp by getting year date and month and setting hours to midnight

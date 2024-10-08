@@ -21,13 +21,8 @@ module.exports = (facility, errorList, deal) => {
       conversionRateDateYear,
     );
 
-
     if (dateHasAllValues(conversionRateDateDay, conversionRateDateMonth, conversionRateDateYear)) {
-      const conversionRateDateStartOfDay = getStartOfDateFromDayMonthYearStrings(
-        conversionRateDateDay,
-        conversionRateDateMonth,
-        conversionRateDateYear,
-      )
+      const conversionRateDateStartOfDay = getStartOfDateFromDayMonthYearStrings(conversionRateDateDay, conversionRateDateMonth, conversionRateDateYear);
       const startOfToday = startOfDay(new Date());
 
       if (isAfter(conversionRateDateStartOfDay, startOfToday) && !v1ExtraInfo) {
@@ -48,12 +43,7 @@ module.exports = (facility, errorList, deal) => {
       }
     } else {
       newErrorList.conversionRateDate = {
-        text: dateValidationText(
-          'Conversion rate date',
-          conversionRateDateDay,
-          conversionRateDateMonth,
-          conversionRateDateYear,
-        ),
+        text: dateValidationText('Conversion rate date', conversionRateDateDay, conversionRateDateMonth, conversionRateDateYear),
         order: orderNumber(newErrorList),
       };
     }

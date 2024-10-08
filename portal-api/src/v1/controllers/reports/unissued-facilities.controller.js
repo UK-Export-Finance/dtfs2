@@ -1,6 +1,6 @@
 const { format, add, differenceInCalendarDays } = require('date-fns');
 const commaNumber = require('comma-number');
-const db = require('../../../drivers/db-client');
+const { mongoDbClient: db } = require('../../../drivers/db-client');
 const CONSTANTS = require('../../../constants');
 
 // helper function to retrieve the unissued facilities for MIN/AIN deals
@@ -147,6 +147,6 @@ exports.findUnissuedFacilitiesReports = async (req, res) => {
     unissuedFacilities.sort((a, b) => (a.daysLeftToIssue > b.daysLeftToIssue ? 1 : -1));
     res.status(200).send(unissuedFacilities);
   } catch (error) {
-    console.error('Unable to retrieve unissued facilities %s', error);
+    console.error('Unable to retrieve unissued facilities %o', error);
   }
 };

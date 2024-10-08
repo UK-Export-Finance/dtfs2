@@ -5,8 +5,9 @@ const deleteGefFacilities = (facilities, token) => {
   facilities.forEach((facility) => deleteGefFacility(token, facility));
 };
 
-module.exports = (dealId, opts) => logIn(opts).then((token) => {
-  listGefFacilities(token, dealId).then(async (facilities) => {
-    await deleteGefFacilities(facilities, token);
+module.exports = (dealId, opts) =>
+  logIn(opts).then((token) => {
+    listGefFacilities(token, dealId).then(async (facilities) => {
+      await deleteGefFacilities(facilities, token);
+    });
   });
-});

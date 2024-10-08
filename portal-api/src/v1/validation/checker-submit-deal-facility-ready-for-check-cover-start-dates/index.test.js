@@ -8,7 +8,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
   const today = new Date();
   const yesterday = sub(today, { days: 1 });
   const twoDaysAgo = sub(today, { days: 2 });
-  const threeDaysAgo = sub(today, {days: 3});
+  const threeDaysAgo = sub(today, { days: 3 });
   const fourDaysAgo = sub(today, { days: 4 });
 
   describe('AIN', () => {
@@ -20,7 +20,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
 
       const deal = {
         details: {},
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
       };
 
       const errors = checkCoverStartDate(deal, facility);
@@ -36,7 +36,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
 
       const deal = {
         details: {},
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
       };
 
       const errors = checkCoverStartDate(deal, facility);
@@ -54,7 +54,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
         details: {
           submissionDate: twoDaysAgo.valueOf(),
         },
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
       };
 
       const errors = checkCoverStartDate(deal, facility);
@@ -72,7 +72,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
         details: {
           submissionDate: twoDaysAgo.valueOf(),
         },
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
       };
 
       const errors = checkCoverStartDate(deal, facility);
@@ -90,7 +90,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
 
       const deal = {
         details: {},
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA,
       };
 
       const errors = checkCoverStartDate(deal, facility);
@@ -106,7 +106,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
 
       const deal = {
         details: {},
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA,
       };
 
       const errors = checkCoverStartDate(deal, facility);
@@ -125,7 +125,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
           submissionDate: fourDaysAgo.valueOf(),
           manualInclusionApplicationSubmissionDate: twoDaysAgo.valueOf(),
         },
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA,
       };
 
       const errors = checkCoverStartDate(deal, facility);
@@ -144,7 +144,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
           submissionDate: fourDaysAgo.valueOf(),
           manualInclusionApplicationSubmissionDate: twoDaysAgo.valueOf(),
         },
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA,
       };
 
       const errors = checkCoverStartDate(deal, facility);
@@ -162,7 +162,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
 
       const deal = {
         details: {},
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
       };
 
       const errors = checkCoverStartDate(deal, facility);
@@ -182,7 +182,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
           manualInclusionApplicationSubmissionDate: fourDaysAgo.valueOf(),
           manualInclusionNoticeSubmissionDate: twoDaysAgo.valueOf(),
         },
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
       };
 
       const errors = checkCoverStartDate(deal, facility);
@@ -202,7 +202,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
           manualInclusionApplicationSubmissionDate: fourDaysAgo.valueOf(),
           manualInclusionNoticeSubmissionDate: twoDaysAgo.valueOf(),
         },
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
       };
 
       const errors = checkCoverStartDate(deal, facility);

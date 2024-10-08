@@ -1,4 +1,4 @@
-const pageRenderer = require('../pageRenderer');
+const { pageRenderer } = require('../pageRenderer');
 
 const page = '../templates/deals/deals.njk';
 const render = pageRenderer(page);
@@ -10,6 +10,11 @@ describe(page, () => {
     deals: [],
     user: {
       teams: [],
+    },
+    pages: {
+      totalPages: 2,
+      currentPage: 0,
+      totalItems: 40,
     },
   };
 
@@ -28,5 +33,9 @@ describe(page, () => {
 
   it('should render deals table component', () => {
     wrapper.expectElement('[data-cy="deals-table"]').toExist();
+  });
+
+  it('should render pagination component', () => {
+    wrapper.expectElement('[data-cy="pagination"]').toExist();
   });
 });

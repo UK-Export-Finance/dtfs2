@@ -6,9 +6,9 @@ const { CELL_ADDRESS_REGEX } = require('../constants/regex');
 
 /**
  * @typedef {import('exceljs').Worksheet} Worksheet
- * @typedef {Object} ParsedXlsxDataResponse
- * @property {Object} csvData - array representing csv data from the worksheet
- * @property {Object} csvDataWithCellAddresses - array representing csv data from the worksheet with cell addresses included
+ * @typedef {object} ParsedXlsxDataResponse
+ * @property {object} csvData - array representing csv data from the worksheet
+ * @property {object} csvDataWithCellAddresses - array representing csv data from the worksheet with cell addresses included
  */
 
 /**
@@ -59,7 +59,7 @@ const handleFloatingPointRoundingErrors = (number) => {
 
 /**
  * Extracts the value in the cell of an excel cell and removes any new lines or commas so that it doesn't affect parsing as a csv.
- * @param {Object} cell - excel cell.
+ * @param {object} cell - excel cell.
  * @returns {string | number} - cell value.
  */
 const extractCellValue = (cell) => {
@@ -132,6 +132,14 @@ const parseXlsxToCsvArrays = (worksheet) => {
   return { csvData: csvData.join('\n'), csvDataWithCellAddresses };
 };
 
+/**
+ * Extracts csv data with cell addresses from xlsx based csv file
+ * @param {string[]} csvDataWithCellAddresses - Array of comma separated lines of csv file, with values followed by cell location
+ * @returns {Record<string, { value: string | null; column: string; row: string }>} The data from the file with
+ * - The header of the column as the key
+ * - The contents of the cell as value
+ * - The location data of the cell within the spreadsheet (column is using alphabet, rows are numbers as strings)
+ */
 const xlsxBasedCsvToJsonPromise = async (csvDataWithCellAddresses) => {
   const csvStream = new Readable({
     read() {
@@ -188,12 +196,7 @@ const csvBasedCsvToJsonPromise = async (csvBuffer) => {
       csvStream
         .pipe(
           csv({
-            mapHeaders: ({ header }) =>
-              header
-                .toLowerCase()
-                .replace(/\s/g, ' ')
-                .replace(nonPrintableAsciiCharacterRegex, ' ')
-                .trim(),
+            mapHeaders: ({ header }) => header.toLowerCase().replace(/\s/g, ' ').replace(nonPrintableAsciiCharacterRegex, ' ').trim(),
             mapValues: ({ index, value }) => ({ value, column: columnIndexToExcelColumn(index), row: null }),
           }),
         )
@@ -252,7 +255,7 @@ const extractCsvData = async (file) => {
 
     return { csvJson, fileBuffer, error: false };
   } catch (error) {
-    console.error('Error extracting data from csv/xlsx file: %O', error);
+    console.error('Error extracting data from csv/xlsx file %o', error);
     return { csvJson: null, fileBuffer: null, error: true };
   }
 };

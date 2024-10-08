@@ -1,14 +1,17 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { expect, jest } from '@jest/globals';
-import {
-  get,
-  post,
-} from '../../test-mocks/router-mock';
+import { TEAM_IDS } from '@ukef/dtfs2-common';
+import { get, post } from '../../test-mocks/router-mock';
 import caseController from '../../controllers/case';
 import partiesController from '../../controllers/case/parties';
 import underwritingController from '../../controllers/case/underwriting';
 import activityController from '../../controllers/case/activity';
 import amendmentsController from '../../controllers/case/amendments';
+import { validateUserTeam } from '../../middleware';
+
+jest.mock('../../middleware', () => ({
+  validateUserTeam: jest.fn(),
+}));
 
 describe('routes - case', () => {
   afterEach(() => {
@@ -19,7 +22,7 @@ describe('routes - case', () => {
     require('./index'); // eslint-disable-line global-require
 
     // GET routes
-    expect(get).toHaveBeenCalledTimes(44);
+    expect(get).toHaveBeenCalledTimes(47);
 
     expect(get).toHaveBeenCalledWith('/:_id/deal', caseController.getCaseDeal);
 
@@ -65,7 +68,10 @@ describe('routes - case', () => {
 
     expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/probability-of-default', underwritingController.getUnderWritingProbabilityOfDefault);
 
-    expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile', underwritingController.getUnderWritingFacilityRiskProfileEdit);
+    expect(get).toHaveBeenCalledWith(
+      '/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile',
+      underwritingController.getUnderWritingFacilityRiskProfileEdit,
+    );
 
     expect(get).toHaveBeenCalledWith('/:_id/underwriting/lead-underwriter/assign', underwritingController.getAssignLeadUnderwriter);
 
@@ -78,18 +84,66 @@ describe('routes - case', () => {
     expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/request-date', amendmentsController.getAmendmentRequestDate);
     expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/request-approval', amendmentsController.getAmendmentRequestApproval);
     expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-options', amendmentsController.getAmendmentOptions);
-    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effective-date', amendmentsController.getAmendmentEffectiveDate);
-    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter', amendmentsController.getAssignAmendmentLeadUnderwriter);
-    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date/managers-decision', amendmentsController.getAmendmentAddUnderwriterManagersDecisionCoverEndDate);
-    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value/managers-decision', amendmentsController.getAmendmentAddUnderwriterManagersFacilityValue);
+    expect(get).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effective-date',
+      amendmentsController.getAmendmentEffectiveDate,
+    );
+
+    expect(get).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date',
+      validateUserTeam([TEAM_IDS.PIM]),
+      amendmentsController.getAmendCoverEndDate,
+    );
+    expect(get).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/is-using-facility-end-date',
+      validateUserTeam([TEAM_IDS.PIM]),
+      amendmentsController.getAmendmentIsUsingFacilityEndDate,
+    );
+    expect(get).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/facility-end-date',
+      validateUserTeam([TEAM_IDS.PIM]),
+      amendmentsController.getAmendmentFacilityEndDate,
+    );
+    expect(get).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/bank-review-date',
+      validateUserTeam([TEAM_IDS.PIM]),
+      amendmentsController.getAmendmentBankReviewDate,
+    );
+    expect(get).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/facility-value',
+      validateUserTeam([TEAM_IDS.PIM]),
+      amendmentsController.getAmendFacilityValue,
+    );
+
+    expect(get).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter',
+      amendmentsController.getAssignAmendmentLeadUnderwriter,
+    );
+    expect(get).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date/managers-decision',
+      amendmentsController.getAmendmentAddUnderwriterManagersDecisionCoverEndDate,
+    );
+    expect(get).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/facility-value/managers-decision',
+      amendmentsController.getAmendmentAddUnderwriterManagersFacilityValue,
+    );
     expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision', amendmentsController.getAmendmentBankDecisionChoice);
-    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/received-date', amendmentsController.getAmendmentBankDecisionReceivedDate);
-    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/effective-date', amendmentsController.getAmendmentBankDecisionEffectiveDate);
-    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/check-answers', amendmentsController.getAmendmentBankDecisionAnswers);
+    expect(get).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/received-date',
+      amendmentsController.getAmendmentBankDecisionReceivedDate,
+    );
+    expect(get).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/effective-date',
+      amendmentsController.getAmendmentBankDecisionEffectiveDate,
+    );
+    expect(get).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/check-answers',
+      amendmentsController.getAmendmentBankDecisionAnswers,
+    );
     expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/task/:taskId/group/:groupId', amendmentsController.getAmendmentTask);
 
     // POST routes
-    expect(post).toHaveBeenCalledTimes(40);
+    expect(post).toHaveBeenCalledTimes(43);
 
     expect(post).toHaveBeenCalledWith('/:_id/tasks', caseController.filterCaseTasks);
 
@@ -123,9 +177,15 @@ describe('routes - case', () => {
 
     expect(post).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/loss-given-default', underwritingController.postUnderWritingLossGivenDefault);
 
-    expect(post).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/probability-of-default', underwritingController.postUnderWritingProbabilityOfDefault);
+    expect(post).toHaveBeenCalledWith(
+      '/:_id/underwriting/pricing-and-risk/probability-of-default',
+      underwritingController.postUnderWritingProbabilityOfDefault,
+    );
 
-    expect(post).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile', underwritingController.postUnderWritingFacilityRiskProfileEdit);
+    expect(post).toHaveBeenCalledWith(
+      '/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile',
+      underwritingController.postUnderWritingFacilityRiskProfileEdit,
+    );
 
     expect(post).toHaveBeenCalledWith('/:_id/underwriting/lead-underwriter/assign', underwritingController.postAssignLeadUnderwriter);
 
@@ -138,14 +198,62 @@ describe('routes - case', () => {
     expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/request-date', amendmentsController.postAmendmentRequestDate);
     expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/request-approval', amendmentsController.postAmendmentRequestApproval);
     expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-options', amendmentsController.postAmendmentOptions);
-    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effective-date', amendmentsController.postAmendmentEffectiveDate);
-    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter', amendmentsController.postAssignAmendmentLeadUnderwriter);
-    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date/managers-decision', amendmentsController.postAmendmentAddUnderwriterManagersDecisionCoverEndDate);
-    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value/managers-decision', amendmentsController.postAmendmentAddUnderwriterManagersFacilityValue);
+    expect(post).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effective-date',
+      amendmentsController.postAmendmentEffectiveDate,
+    );
+    expect(post).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter',
+      amendmentsController.postAssignAmendmentLeadUnderwriter,
+    );
+    expect(post).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date/managers-decision',
+      amendmentsController.postAmendmentAddUnderwriterManagersDecisionCoverEndDate,
+    );
+    expect(post).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/facility-value/managers-decision',
+      amendmentsController.postAmendmentAddUnderwriterManagersFacilityValue,
+    );
+
+    expect(post).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date',
+      validateUserTeam([TEAM_IDS.PIM]),
+      amendmentsController.postAmendCoverEndDate,
+    );
+    expect(post).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/is-using-facility-end-date',
+      validateUserTeam([TEAM_IDS.PIM]),
+      amendmentsController.postAmendmentIsUsingFacilityEndDate,
+    );
+    expect(post).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/facility-end-date',
+      validateUserTeam([TEAM_IDS.PIM]),
+      amendmentsController.postAmendmentFacilityEndDate,
+    );
+    expect(post).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/bank-review-date',
+      validateUserTeam([TEAM_IDS.PIM]),
+      amendmentsController.postAmendmentBankReviewDate,
+    );
+    expect(post).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/facility-value',
+      validateUserTeam([TEAM_IDS.PIM]),
+      amendmentsController.postAmendFacilityValue,
+    );
+
     expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision', amendmentsController.postAmendmentBankDecisionChoice);
-    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/received-date', amendmentsController.postAmendmentBankDecisionReceivedDate);
-    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/effective-date', amendmentsController.postAmendmentBankDecisionEffectiveDate);
-    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/check-answers', amendmentsController.postAmendmentBankDecisionAnswers);
+    expect(post).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/received-date',
+      amendmentsController.postAmendmentBankDecisionReceivedDate,
+    );
+    expect(post).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/effective-date',
+      amendmentsController.postAmendmentBankDecisionEffectiveDate,
+    );
+    expect(post).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/check-answers',
+      amendmentsController.postAmendmentBankDecisionAnswers,
+    );
     expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/task/:taskId/group/:groupId', amendmentsController.postAmendmentTask);
   });
 });

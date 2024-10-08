@@ -1,0 +1,15 @@
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% macro render() %}
+
+{{
+    govukDetails({
+        summaryText: "What is a Facility End Date",
+        text: "The facility end date is the deadline for a committed loan to be repaid at which point the contract will be terminated.",
+        attributes: {
+          'data-cy': 'amendment--facility-end-date-details'
+        }
+    })
+}}
+
+{% endmacro %}

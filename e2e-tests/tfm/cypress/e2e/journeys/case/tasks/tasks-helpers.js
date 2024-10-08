@@ -1,8 +1,7 @@
 const MOCK_MIA_TASKS = require('../../../../fixtures/tasks-MIA');
 const pages = require('../../../pages');
 
-const getGroup = (groupId) =>
-  MOCK_MIA_TASKS.find((g) => g.id === groupId);
+const getGroup = (groupId) => MOCK_MIA_TASKS.find((g) => g.id === groupId);
 
 const MIA_TASKS_STRUCTURE = {
   1: {
@@ -65,15 +64,21 @@ const assertCompleteTask = (groupId, taskId) => {
 
   row.link().should('not.exist');
 
-  row.status().invoke('text').then((text) => {
-    expect(text.trim()).to.equal('Done');
-  });
+  row
+    .status()
+    .invoke('text')
+    .then((text) => {
+      expect(text.trim()).to.equal('Done');
+    });
 };
 
 const assertTaskStatus = (row, expectedStatus) => {
-  row.status().invoke('text').then((text) => {
-    expect(text.trim()).to.equal(expectedStatus);
-  });
+  row
+    .status()
+    .invoke('text')
+    .then((text) => {
+      expect(text.trim()).to.equal(expectedStatus);
+    });
 };
 
 const assertTaskLinkExists = (row) => {
@@ -103,18 +108,24 @@ const assertNextTaskStatus = (currentGroupId, currentTaskId) => {
 
     const nextGroupFirstTaskRow = pages.tasksPage.tasks.row(nextGroupId, 1);
 
-    nextGroupFirstTaskRow.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('To do');
-    });
+    nextGroupFirstTaskRow
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('To do');
+      });
   } else if (!isLastTaskInGroup && !isLastGroup) {
     // check the next task in current group
     const nextTaskId = currentTaskId + 1;
 
     const nextTaskRow = pages.tasksPage.tasks.row(currentGroupId, nextTaskId);
 
-    nextTaskRow.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('To do');
-    });
+    nextTaskRow
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('To do');
+      });
   }
 };
 
@@ -131,9 +142,12 @@ const assertCannotClickNextTask = (currentGroupId, currentTaskId) => {
 
     nextGroupFirstTaskRow.link().should('not.exist');
 
-    nextGroupFirstTaskRow.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Cannot start yet');
-    });
+    nextGroupFirstTaskRow
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Cannot start yet');
+      });
   } else if (!isLastTaskInGroup && !isLastGroup) {
     // check the next task in current group
     const nextTaskId = currentTaskId + 1;
@@ -142,9 +156,12 @@ const assertCannotClickNextTask = (currentGroupId, currentTaskId) => {
 
     nextTaskRow.link().should('not.exist');
 
-    nextTaskRow.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Cannot start yet');
-    });
+    nextTaskRow
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Cannot start yet');
+      });
   }
 };
 

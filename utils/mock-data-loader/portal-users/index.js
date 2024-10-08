@@ -15,6 +15,7 @@ const MOCK_USERS = {
     timezone: 'Europe/London',
     roles: [ROLES.MAKER],
     bank: UKEF_TEST_BANK_1,
+    isTrusted: true,
   },
   BANK1_MAKER2: {
     username: 'maker2@ukexportfinance.gov.uk',
@@ -25,6 +26,7 @@ const MOCK_USERS = {
     timezone: 'Europe/London',
     roles: [ROLES.MAKER],
     bank: UKEF_TEST_BANK_1,
+    isTrusted: false,
   },
   BANK1_MAKER3: {
     username: 'maker33@ukexportfinance.gov.uk',
@@ -35,6 +37,7 @@ const MOCK_USERS = {
     timezone: 'Europe/London',
     roles: [ROLES.MAKER],
     bank: UKEF_TEST_BANK_1,
+    isTrusted: false,
   },
   BANK1_READ_ONLY1: {
     username: 'readOnly1@ukexportfinance.gov.uk',
@@ -45,6 +48,7 @@ const MOCK_USERS = {
     timezone: 'Europe/London',
     roles: [ROLES.READ_ONLY],
     bank: UKEF_TEST_BANK_1,
+    isTrusted: false,
   },
   BANK3_GEF_MAKER1: {
     username: 'maker3@ukexportfinance.gov.uk',
@@ -55,6 +59,7 @@ const MOCK_USERS = {
     timezone: 'Europe/London',
     roles: [ROLES.MAKER],
     bank: UKEF_GEF_ONLY_BANK,
+    isTrusted: false,
   },
   BANK3_GEF_CHECKER1: {
     username: 'maker4@ukexportfinance.gov.uk',
@@ -65,6 +70,7 @@ const MOCK_USERS = {
     timezone: 'Europe/London',
     roles: [ROLES.CHECKER],
     bank: UKEF_GEF_ONLY_BANK,
+    isTrusted: false,
   },
   BANK1_CHECKER1: {
     username: 'checker1@ukexportfinance.gov.uk',
@@ -75,6 +81,7 @@ const MOCK_USERS = {
     timezone: 'Europe/London',
     roles: [ROLES.CHECKER],
     bank: UKEF_TEST_BANK_1,
+    isTrusted: false,
   },
   BANK1_MAKER_CHECKER1: {
     username: 'checker2@ukexportfinance.gov.uk',
@@ -85,6 +92,7 @@ const MOCK_USERS = {
     timezone: 'Europe/London',
     roles: [ROLES.MAKER, ROLES.CHECKER],
     bank: UKEF_TEST_BANK_1,
+    isTrusted: false,
   },
   BANK1_MAKER_CHECKER2: {
     username: 'checker3@ukexportfinance.gov.uk',
@@ -95,6 +103,7 @@ const MOCK_USERS = {
     timezone: 'Europe/London',
     roles: [ROLES.MAKER, ROLES.CHECKER],
     bank: UKEF_TEST_BANK_1,
+    isTrusted: false,
   },
   BANK1_PAYMENT_REPORT_OFFICER1: {
     username: 'payment-officer1@ukexportfinance.gov.uk',
@@ -105,6 +114,7 @@ const MOCK_USERS = {
     timezone: 'Europe/London',
     roles: [ROLES.PAYMENT_REPORT_OFFICER],
     bank: UKEF_TEST_BANK_1,
+    isTrusted: false,
   },
   BANK1_MAKER_PAYMENT_REPORT_OFFICER1: {
     username: 'payment-officer2@ukexportfinance.gov.uk',
@@ -115,6 +125,7 @@ const MOCK_USERS = {
     timezone: 'Europe/London',
     roles: [ROLES.MAKER, ROLES.PAYMENT_REPORT_OFFICER],
     bank: UKEF_TEST_BANK_1,
+    isTrusted: false,
   },
   BANK2_PAYMENT_REPORT_OFFICER1: {
     username: 'payment-officer3@ukexportfinance.gov.uk',
@@ -125,6 +136,7 @@ const MOCK_USERS = {
     timezone: 'Europe/London',
     roles: [ROLES.PAYMENT_REPORT_OFFICER],
     bank: UKEF_TEST_BANK_2,
+    isTrusted: false,
   },
   BANK2_MAKER2: {
     username: 'maker5@ukexportfinance.gov.uk',
@@ -135,6 +147,7 @@ const MOCK_USERS = {
     timezone: 'Europe/London',
     roles: [ROLES.MAKER],
     bank: UKEF_TEST_BANK_2,
+    isTrusted: false,
   },
   BANK2_MAKER1: {
     username: 'maker6@ukexportfinance.gov.uk',
@@ -145,6 +158,7 @@ const MOCK_USERS = {
     timezone: 'Europe/London',
     roles: [ROLES.MAKER],
     bank: UKEF_TEST_BANK_2,
+    isTrusted: false,
   },
   BANK2_CHECKER1: {
     username: 'checker4@ukexportfinance.gov.uk',
@@ -155,6 +169,7 @@ const MOCK_USERS = {
     timezone: 'Europe/London',
     roles: [ROLES.CHECKER],
     bank: UKEF_TEST_BANK_2,
+    isTrusted: false,
   },
   BANK2_READ_ONLY1: {
     username: 'readonly2@ukexportfinance.gov.uk',
@@ -165,16 +180,7 @@ const MOCK_USERS = {
     timezone: 'Europe/London',
     roles: [ROLES.READ_ONLY],
     bank: UKEF_TEST_BANK_2,
-  },
-  NOBODY: {
-    username: 'test1@ukexportfinance.gov.uk',
-    password: 'AbC!2345',
-    firstname: 'first',
-    surname: 'Spang',
-    email: 'test1@ukexportfinance.gov.uk',
-    timezone: 'Europe/London',
-    roles: [],
-    bank: UKEF_TEST_BANK_1,
+    isTrusted: false,
   },
   ADMIN: {
     username: 'test2@ukexportfinance.gov.uk',
@@ -187,6 +193,7 @@ const MOCK_USERS = {
     bank: {
       id: '*',
     },
+    isTrusted: false,
   },
   READ_ONLY: {
     username: 'readonly@ukexportfinance.gov.uk',
@@ -199,6 +206,7 @@ const MOCK_USERS = {
     bank: {
       id: '*',
     },
+    isTrusted: false,
   },
   ADMINNOMAKER: {
     username: 'adminnomaker@ukexportfinance.gov.uk',
@@ -211,6 +219,7 @@ const MOCK_USERS = {
     bank: {
       id: '*',
     },
+    isTrusted: false,
   },
   TEST_EMAIL_NO_GOV_NOTIFY: {
     username: 'test_no_notify@ukexportfinance.gov.uk',
@@ -223,6 +232,7 @@ const MOCK_USERS = {
     bank: {
       id: '*',
     },
+    isTrusted: false,
   },
 };
 

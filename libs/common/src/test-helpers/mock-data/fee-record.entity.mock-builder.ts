@@ -1,5 +1,25 @@
-import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity } from '../../sql-db-entities';
-import { Currency } from '../../types';
+import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity, FacilityUtilisationDataEntity, PaymentEntity } from '../../sql-db-entities';
+import { Currency, FeeRecordStatus, ReportPeriod } from '../../types';
+import { FacilityUtilisationDataEntityMockBuilder } from './facility-utilisation-data.entity.mock-builder';
+
+/**
+ * Gets the previous report period based on a monthly reporting
+ * schedule. This is used because the attached facility utilisation
+ * data entity should normally be referencing the previous report
+ * period (where the attached report report period is the current
+ * report period)
+ * @param reportPeriod - The current report period
+ * @returns The previous report period
+ */
+const getPreviousMonthlyReportPeriod = (reportPeriod: ReportPeriod): ReportPeriod => {
+  const previousReportPeriodIsInPreviousYear = reportPeriod.start.month === 1;
+  const previousReportPeriodMonth = previousReportPeriodIsInPreviousYear ? 12 : reportPeriod.start.month - 1;
+  const previousReportPeriodYear = previousReportPeriodIsInPreviousYear ? reportPeriod.start.year - 1 : reportPeriod.start.year;
+  return {
+    start: { month: previousReportPeriodMonth, year: previousReportPeriodYear },
+    end: { month: previousReportPeriodMonth, year: previousReportPeriodYear },
+  };
+};
 
 export class FeeRecordEntityMockBuilder {
   private readonly feeRecord: FeeRecordEntity;
@@ -17,7 +37,10 @@ export class FeeRecordEntityMockBuilder {
     };
 
     data.id = 1;
-    data.facilityId = '123456789';
+    data.facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('12345678')
+      .withReportPeriod(getPreviousMonthlyReportPeriod(report.reportPeriod))
+      .build();
+    data.facilityId = '12345678';
     data.report = report;
     data.exporter = 'test exporter';
     data.baseCurrency = 'GBP';
@@ -29,6 +52,12 @@ export class FeeRecordEntityMockBuilder {
     data.feesPaidToUkefForThePeriodCurrency = 'GBP';
     data.paymentCurrency = 'GBP';
     data.paymentExchangeRate = 1;
+    data.status = 'TO_DO';
+    data.payments = [];
+    data.fixedFeeAdjustment = null;
+    data.principalBalanceAdjustment = null;
+    data.reconciledByUserId = null;
+    data.dateReconciled = null;
     data.updateLastUpdatedBy(requestSource);
     return new FeeRecordEntityMockBuilder(data);
   }
@@ -40,6 +69,13 @@ export class FeeRecordEntityMockBuilder {
 
   public withFacilityId(facilityId: string): FeeRecordEntityMockBuilder {
     this.feeRecord.facilityId = facilityId;
+    this.feeRecord.facilityUtilisationData.id = facilityId;
+    return this;
+  }
+
+  public withFacilityUtilisationData(facilityUtilisationData: FacilityUtilisationDataEntity): FeeRecordEntityMockBuilder {
+    this.feeRecord.facilityUtilisationData = facilityUtilisationData;
+    this.feeRecord.facilityId = facilityUtilisationData.id;
     return this;
   }
 
@@ -90,6 +126,51 @@ export class FeeRecordEntityMockBuilder {
 
   public withPaymentExchangeRate(exchangeRate: number): FeeRecordEntityMockBuilder {
     this.feeRecord.paymentExchangeRate = exchangeRate;
+    return this;
+  }
+
+  public withStatus(status: FeeRecordStatus): FeeRecordEntityMockBuilder {
+    this.feeRecord.status = status;
+    return this;
+  }
+
+  public withPayments(payments: PaymentEntity[]): FeeRecordEntityMockBuilder {
+    this.feeRecord.payments = payments;
+    return this;
+  }
+
+  public withFixedFeeAdjustment(fixedFeeAdjustment: number | null): FeeRecordEntityMockBuilder {
+    this.feeRecord.fixedFeeAdjustment = fixedFeeAdjustment;
+    return this;
+  }
+
+  public withPrincipalBalanceAdjustment(principalBalanceAdjustment: number | null): FeeRecordEntityMockBuilder {
+    this.feeRecord.principalBalanceAdjustment = principalBalanceAdjustment;
+    return this;
+  }
+
+  public withReconciledByUserId(reconciledByUserId: string | null): FeeRecordEntityMockBuilder {
+    this.feeRecord.reconciledByUserId = reconciledByUserId;
+    return this;
+  }
+
+  public withDateReconciled(dateReconciled: Date | null): FeeRecordEntityMockBuilder {
+    this.feeRecord.dateReconciled = dateReconciled;
+    return this;
+  }
+
+  public withLastUpdatedByIsSystemUser(isSystemUser: boolean): FeeRecordEntityMockBuilder {
+    this.feeRecord.lastUpdatedByIsSystemUser = isSystemUser;
+    return this;
+  }
+
+  public withLastUpdatedByPortalUserId(userId: string | null): FeeRecordEntityMockBuilder {
+    this.feeRecord.lastUpdatedByPortalUserId = userId;
+    return this;
+  }
+
+  public withLastUpdatedByTfmUserId(userId: string | null): FeeRecordEntityMockBuilder {
+    this.feeRecord.lastUpdatedByTfmUserId = userId;
     return this;
   }
 

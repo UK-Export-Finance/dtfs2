@@ -1,13 +1,10 @@
+import { FACILITY_TYPE } from '@ukef/dtfs2-common';
 import {
   generateSelectedFiltersObject,
   generateSelectedFiltersObjectWithMappedValues,
   selectedSubmissionTypeFilters,
 } from '../filters/generate-selected-filters';
-import {
-  mapIssuedValueToText,
-  selectedHasBeenIssuedFilters,
-  selectedFilters,
-} from './selected-filters';
+import { mapIssuedValueToText, selectedHasBeenIssuedFilters, selectedFilters } from './selected-filters';
 import CONTENT_STRINGS from '../../../content-strings';
 import CONSTANTS from '../../../constants';
 
@@ -36,27 +33,16 @@ describe('controllers/dashboard/facilities - selected-filters', () => {
     it('should return result of generateSelectedFiltersObject with mapped hasBeenIssuedValues', () => {
       const mockHeading = CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.FACILITY_STAGE;
       const mockFieldName = CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED;
-      const mockSubmittedFieldFilters = [
-        'true',
-        'false',
-      ];
+      const mockSubmittedFieldFilters = ['true', 'false'];
 
-      const result = selectedHasBeenIssuedFilters(
-        mockHeading,
-        mockFieldName,
-        mockSubmittedFieldFilters,
-      );
+      const result = selectedHasBeenIssuedFilters(mockHeading, mockFieldName, mockSubmittedFieldFilters);
 
       const mappedSubmittedFieldFilters = mockSubmittedFieldFilters.map((value) => ({
         value,
         mappedValue: mapIssuedValueToText(value),
       }));
 
-      const expected = generateSelectedFiltersObjectWithMappedValues(
-        mockHeading,
-        mockFieldName,
-        mappedSubmittedFieldFilters,
-      );
+      const expected = generateSelectedFiltersObjectWithMappedValues(mockHeading, mockFieldName, mappedSubmittedFieldFilters);
 
       expect(result).toEqual(expected);
     });
@@ -66,7 +52,7 @@ describe('controllers/dashboard/facilities - selected-filters', () => {
     it('should return an array of objects for all selected/submitted filters', () => {
       const mockSubmittedFilters = {
         keyword: ['Testing'],
-        type: [CONSTANTS.FACILITY_TYPE.BOND, CONSTANTS.FACILITY_TYPE.LOAN],
+        type: [FACILITY_TYPE.BOND, FACILITY_TYPE.LOAN],
         'deal.submissionType': [CONSTANTS.SUBMISSION_TYPE.AIN],
         hasBeenIssued: ['true'],
       };

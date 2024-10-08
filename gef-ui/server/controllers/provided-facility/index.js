@@ -1,16 +1,30 @@
+const { FACILITY_PROVIDED_DETAILS } = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
-const { FACILITY_TYPE, FACILITY_PROVIDED_DETAILS } = require('../../constants');
+const { FACILITY_TYPE } = require('../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
+const { getPreviousPage } = require('./get-previous-page-helper');
 
 const providedFacility = async (req, res) => {
-  const { params, query, session: { userToken } } = req;
+  const {
+    params,
+    query,
+    session: { userToken },
+  } = req;
   const { dealId, facilityId } = params;
   const { status } = query;
 
   try {
     const { details } = await api.getFacility({ facilityId, userToken });
+    const deal = await api.getApplication({ dealId, userToken });
     const facilityTypeConst = FACILITY_TYPE[details.type.toUpperCase()];
     const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
+
+    const previousPage = getPreviousPage({
+      dealId,
+      facilityId,
+      dealVersion: deal.version,
+      isUsingFacilityEndDate: details.isUsingFacilityEndDate,
+    });
 
     return res.render('partials/provided-facility.njk', {
       facilityType: FACILITY_TYPE[details.type.toUpperCase()],
@@ -20,6 +34,7 @@ const providedFacility = async (req, res) => {
       dealId,
       facilityId,
       status,
+      previousPage,
     });
   } catch (error) {
     return res.render('partials/problem-with-service.njk');
@@ -27,11 +42,9 @@ const providedFacility = async (req, res) => {
 };
 
 const validateProvidedFacility = async (req, res) => {
-  const {
-    params, body, query, session,
-  } = req;
+  const { params, body, query, session } = req;
   const { dealId, facilityId } = params;
-  const { facilityType, detailsOther } = body;
+  const { facilityType, detailsOther, previousPage } = body;
   const { saveAndReturn, status } = query;
   const { user, userToken } = session;
   const { _id: editorId } = user;
@@ -66,6 +79,7 @@ const validateProvidedFacility = async (req, res) => {
       dealId,
       facilityId,
       status,
+      previousPage,
     });
   }
 

@@ -1,4 +1,4 @@
-const componentRenderer = require('../../../../../../componentRenderer');
+const { componentRenderer } = require('../../../../../../componentRenderer');
 
 const component = '../templates/case/underwriting/pricing-and-risk/_macros/section-exporter/exporter-table.njk';
 
@@ -89,10 +89,12 @@ describe(component, () => {
 
         wrapper = render(params);
 
-        wrapper.expectLink('[data-cy="exporter-table-change-loss-given-default-link"]')
+        wrapper
+          .expectLink('[data-cy="exporter-table-change-loss-given-default-link"]')
           .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/loss-given-default`, 'Change loss given default');
 
-        wrapper.expectLink('[data-cy="exporter-table-change-probability-of-default-link"]')
+        wrapper
+          .expectLink('[data-cy="exporter-table-change-probability-of-default-link"]')
           .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/probability-of-default`, 'Change probability of default');
       });
     });

@@ -1,4 +1,4 @@
-import { PortalSessionUser } from '../types/portal-session-user';
+import { PortalSessionUser } from '@ukef/dtfs2-common';
 
 export const MOCK_PORTAL_SESSION_USER: PortalSessionUser = {
   _id: '65954cc526d3899694cafff2',
@@ -18,11 +18,12 @@ export const MOCK_PORTAL_SESSION_USER: PortalSessionUser = {
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
       teamName: 'team',
-      emails: ['payment@testing.com']
+      emails: ['payment@testing.com'],
     },
     utilisationReportPeriodSchedule: [],
     isVisibleInTfmUtilisationReports: true,
   },
   timezone: 'Europe/London',
   'user-status': 'active',
+  isTrusted: false,
 };

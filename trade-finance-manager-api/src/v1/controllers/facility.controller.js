@@ -1,5 +1,6 @@
 const { format, getUnixTime } = require('date-fns');
 const commaNumber = require('comma-number');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../api');
 const { findOneTfmDeal } = require('./deal.controller');
 const facilityMapper = require('../rest-mappings/facility');
@@ -19,10 +20,10 @@ const getFacility = async (req, res) => {
     const tfmFacility = facilityMapper(facility, dealSnapshot, dealTfm);
 
     return res.status(200).send({
-      facility: tfmFacility
+      facility: tfmFacility,
     });
   } catch (error) {
-    console.error('Error fetching facility %O', error);
+    console.error('Error fetching facility %o', error);
     return res.status(500).send(error.message);
   }
 };
@@ -35,7 +36,7 @@ const getFacilities = async (req, res) => {
       return res.status(400).send();
     }
 
-    const dbFacilities = await api.getAllFacilities(queryParams);
+    const { facilities: dbFacilities, pagination } = await api.getAllFacilities({ queryParams });
 
     const facilities = dbFacilities.map((dbFacility) => {
       const { tfmFacilities: facility } = dbFacility;
@@ -44,7 +45,7 @@ const getFacilities = async (req, res) => {
         facility.ukefFacilityId = '-';
       }
 
-      const latestCompletedAmendment = findLatestCompletedAmendment(dbFacility?.amendments);
+      const { value: latestAmendmentValue, coverEndDate: latestAmendmentCoverEndDate } = findLatestCompletedAmendment(dbFacility?.amendments);
       let facilityCoverEndDate = '';
       let facilityCoverEndDateEpoch = '';
 
@@ -57,18 +58,17 @@ const getFacilities = async (req, res) => {
       let facilityCurrencyAndValue = `${facility.currency} ${commaNumber(facility.value)}`;
       let facilityValue = parseInt(facility.value, 10);
 
-      if (latestCompletedAmendment?.value) {
-        const { value, currency } = latestCompletedAmendment.value;
+      if (latestAmendmentValue) {
+        const { value, currency } = latestAmendmentValue;
         const formattedFacilityValue = formatFacilityValue(value);
         facilityCurrencyAndValue = `${currency} ${commaNumber(formattedFacilityValue)}`;
         facilityValue = parseInt(value, 10);
       }
 
-      if (latestCompletedAmendment?.coverEndDate) {
-        const { coverEndDate } = latestCompletedAmendment;
+      if (latestAmendmentCoverEndDate) {
         // * 1000 to convert to ms epoch time format so can be correctly formatted by template
-        facilityCoverEndDate = format(new Date(coverEndDate * 1000), 'dd MMM yyyy');
-        facilityCoverEndDateEpoch = coverEndDate;
+        facilityCoverEndDate = format(new Date(latestAmendmentCoverEndDate * 1000), 'dd MMM yyyy');
+        facilityCoverEndDateEpoch = latestAmendmentCoverEndDate;
       }
 
       facility.coverEndDate = facilityCoverEndDate;
@@ -80,9 +80,9 @@ const getFacilities = async (req, res) => {
       return facility;
     });
 
-    return res.status(200).send({ tfmFacilities: facilities });
+    return res.status(200).send({ facilities, pagination });
   } catch (error) {
-    console.error('Error fetching facilities %O', error);
+    console.error('Error fetching facilities %o', error);
     return res.status(500).send(error.message);
   }
 };
@@ -91,12 +91,16 @@ const updateFacility = async (req, res) => {
   const { facilityId } = req.params;
   const facilityUpdate = req.body;
   try {
-    const updatedFacility = await api.updateFacility(facilityId, facilityUpdate);
+    const updatedFacility = await api.updateFacility({
+      facilityId,
+      tfmUpdate: facilityUpdate,
+      auditDetails: generateTfmAuditDetails(req.user._id),
+    });
     return res.status(200).send({
-      updateFacility: updatedFacility.tfm
+      updateFacility: updatedFacility.tfm,
     });
   } catch (error) {
-    console.error('Unable to update facility: %O', error);
+    console.error('Unable to update facility %o', error);
     return res.status(500).send({ data: 'Unable to update facility' });
   }
 };
@@ -111,22 +115,10 @@ const getAllFacilities = async (searchString) => {
   return allFacilities;
 };
 
-const updateTfmFacility = async (facilityId, tfmUpdate) => {
-  const updatedFacility = await api.updateFacility(facilityId, tfmUpdate);
-  return updatedFacility.tfm;
-};
-
-const updateTfmFacilityRiskProfile = async (facilityId, tfmUpdate) => {
-  const updatedFacility = await api.updateFacility(facilityId, tfmUpdate);
-  return updatedFacility.tfm;
-};
-
 module.exports = {
   getFacility,
   getFacilities,
   updateFacility,
   getAllFacilities,
   findOneFacility,
-  updateTfmFacility,
-  updateTfmFacilityRiskProfile,
 };

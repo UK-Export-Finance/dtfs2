@@ -31,7 +31,7 @@ const getReportDueDate = async (userToken, reportPeriodEndDate = subMonths(new D
  * the year and the report period with format 'MMMM yyyy'
  * @param {string} userToken - Token to validate session
  * @param {string} bankId - ID of the bank
- * @returns {Promise<{ month: number, year: number, formattedReportPeriod: string }[]>}
+ * @returns {Promise<{ start: {month: number, year: number}, end: {month: number, year: number}, formattedReportPeriod: string }[]>}
  */
 const getDueReportPeriodsByBankId = async (userToken, bankId) => {
   const dueReportPeriods = await api.getDueReportPeriodsByBankId(userToken, bankId);

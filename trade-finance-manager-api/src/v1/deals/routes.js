@@ -27,25 +27,20 @@ const dealsOpenRouter = express.Router();
  *                 type: string
  *               dealType:
  *                 type: string
- *               checker:
+ *               auditDetails:
  *                 type: object
  *                 properties:
- *                   _id:
+ *                   userType:
  *                     type: string
- *                   username:
- *                     type: string
- *                   firstname:
- *                     type: string
- *                   surname:
+ *                     enum: [portal]
+ *                   id:
  *                     type: string
  *             example:
  *               dealId: 123abc
  *               dealType: BSS/EWCS
- *               checker:
- *                 _id: 123abc
- *                 username: BANK1_CHECKER1
- *                 firstname: Joe
- *                 surname: Bloggs
+ *               auditDetails:
+ *                 id: 1234567890abcdef12345678
+ *                 userType: portal
  *     responses:
  *       200:
  *         description: OK
@@ -90,59 +85,55 @@ dealsAuthRouter
   .put(validation.dealIdValidation, handleExpressValidatorResult, dealController.updateLeadUnderwriter);
 
 /**
-* @openapi
-* /deals/{dealId}/underwriting/managers-decision:
-*   put:
-*     summary: Update the underwriter manager's decision for the deal.
-*     description: |
-*       Update the underwriter manager's decision for the deal with the given dealId.
-*       This also updates the deal status in Portal and adds a comment to the deal in Portal.
-*       For MIA deals, the bank and PIM are notified of the decision.
-*     tags: [Deals]
-*     parameters:
-*       - in: path
-*         name: dealId
-*         required: true
-*         schema:
-*           type: string
-*         description: The ID of the deal.
-*     requestBody:
-*       description: The new underwriter manager's decision for the deal.
-*       required: true
-*       content:
-*         application/json:
-*           schema:
-*             type: object
-*             properties:
-*                   decision:
-*                     type: string
-*                     enum:
-*                       - Approved (without conditions)
-*                       - Approved (with conditions)
-*                       - Declined
-*                     required: true
-*                   comments:
-*                     type: string
-*                     required: false
-*                   internalComments:
-*                     type: string
-*                     required: false
-*                   userFullName:
-*                     type: string
-*                     required: true
-*     responses:
-*       200:
-*         description: The underwriter manager's decision for the deal has been updated successfully.
-*       400:
-*         description: Bad Request.
-*/
+ * @openapi
+ * /deals/{dealId}/underwriting/managers-decision:
+ *   put:
+ *     summary: Update the underwriter manager's decision for the deal.
+ *     description: |
+ *       Update the underwriter manager's decision for the deal with the given dealId.
+ *       This also updates the deal status in Portal and adds a comment to the deal in Portal.
+ *       For MIA deals, the bank and PIM are notified of the decision.
+ *     tags: [Deals]
+ *     parameters:
+ *       - in: path
+ *         name: dealId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the deal.
+ *     requestBody:
+ *       description: The new underwriter manager's decision for the deal.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *                   decision:
+ *                     type: string
+ *                     enum:
+ *                       - Approved (without conditions)
+ *                       - Approved (with conditions)
+ *                       - Declined
+ *                     required: true
+ *                   comments:
+ *                     type: string
+ *                     required: false
+ *                   internalComments:
+ *                     type: string
+ *                     required: false
+ *                   userFullName:
+ *                     type: string
+ *                     required: true
+ *     responses:
+ *       200:
+ *         description: The underwriter manager's decision for the deal has been updated successfully.
+ *       400:
+ *         description: Bad Request.
+ */
 dealsAuthRouter
   .route('/deals/:dealId/underwriting/managers-decision')
-  .put(
-    validation.dealIdValidation,
-    handleExpressValidatorResult,
-    dealUnderwriterManagersDecisionController.updateUnderwriterManagersDecision,
-  );
+  .put(validation.dealIdValidation, handleExpressValidatorResult, dealUnderwriterManagersDecisionController.updateUnderwriterManagersDecision);
 
 module.exports = {
   dealsOpenRouter,

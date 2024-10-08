@@ -1,9 +1,13 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const db = require('../../../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../../../drivers/db-client');
 
 const getLatestGefMandatoryCriteria = async (req, res) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.GEF_MANDATORY_CRITERIA_VERSIONED);
-  const [criteria] = await collection.find({ isInDraft: { $eq: false } }).sort({ version: -1 }).limit(1).toArray();
+  const [criteria] = await collection
+    .find({ isInDraft: { $eq: false } })
+    .sort({ version: -1 })
+    .limit(1)
+    .toArray();
   if (criteria) {
     return res.status(200).send(criteria);
   }

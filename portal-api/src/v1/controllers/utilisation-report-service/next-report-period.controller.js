@@ -1,9 +1,9 @@
 const api = require('../../api');
 
 /**
-* Calls the DTFS Central API to get a banks utilisation report schedule and
-* returns the next report period which will be due
-*/
+ * Calls the DTFS Central API to get a banks utilisation report schedule and
+ * returns the next report period which will be due
+ */
 const getNextReportPeriodByBankId = async (req, res) => {
   try {
     const { bankId } = req.params;

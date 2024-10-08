@@ -1,16 +1,21 @@
 const axios = require('axios');
 const { when } = require('jest-when');
+const { HEADERS, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const api = require('./api');
-const { LOGIN_STATUS } = require('./constants');
 
 jest.mock('axios');
-const { PORTAL_API_URL } = process.env;
+const { PORTAL_API_URL, PORTAL_API_KEY } = process.env;
+
+const headers = {
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+  'x-api-key': PORTAL_API_KEY,
+};
 
 describe('api.login', () => {
   const username = 'a username';
   const password = 'a password';
   const token = 'a token';
-  const loginStatus = LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD;
+  const loginStatus = PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD;
   const user = {
     email: 'an-email@example.com',
   };
@@ -20,9 +25,7 @@ describe('api.login', () => {
       .calledWith({
         method: 'post',
         url: `${PORTAL_API_URL}/v1/login`,
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         data: { username, password },
       })
       .mockResolvedValueOnce({ data: { token, loginStatus, user } });
@@ -52,7 +55,7 @@ describe('api.loginWithSignInLink', () => {
   const token2fa = 'a 2fa token';
   const tokenFromPortalApi = 'a token from portal api';
 
-  const loginStatus = LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD;
+  const loginStatus = PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD;
   const user = {
     email: 'an-email@example.com',
   };
@@ -63,7 +66,7 @@ describe('api.loginWithSignInLink', () => {
         method: 'post',
         url: `${PORTAL_API_URL}/v1/users/${userId}/sign-in-link/${signInToken}/login`,
         headers: {
-          'Content-Type': 'application/json',
+          [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
           Authorization: token2fa,
         },
       })

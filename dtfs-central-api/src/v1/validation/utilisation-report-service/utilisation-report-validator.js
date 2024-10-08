@@ -1,19 +1,5 @@
 const { isMongoId } = require('validator');
-const { UTILISATION_REPORT_HEADERS } = require('@ukef/dtfs2-common');
-const REGEXES = require('../../../constants/regex');
-const {
-  validateUkefId,
-  validateExporter,
-  validateBaseCurrency,
-  validateFacilityUtilisation,
-  validateTotalFeesAccrued,
-  validateTotalFeesAccruedCurrency,
-  validateTotalFeesAccruedExchangeRate,
-  validateMonthlyFeesPaid,
-  validateMonthlyFeesPaidCurrency,
-  validatePaymentCurrency,
-  validatePaymentExchangeRate,
-} = require('./utilisation-data-validator');
+const { REGEX } = require('../../../constants');
 
 /**
  * Validate the ID of a utilisation report
@@ -38,7 +24,7 @@ const validateMonth = (month, propertyName = 'Month') => {
   if (!month && month !== 0) {
     return `${propertyName} is required`;
   }
-  if (!REGEXES.INTEGER_REGEX.test(month) || month < 1 || month > 12) {
+  if (!REGEX.INTEGER_REGEX.test(month) || month < 1 || month > 12) {
     return `${propertyName} must be between 1 and 12`;
   }
   return null;
@@ -54,7 +40,7 @@ const validateYear = (year, propertyName = 'Year') => {
   if (!year && year !== 0) {
     return `${propertyName} is required`;
   }
-  if (!REGEXES.INTEGER_REGEX.test(year) || year < 2020 || year > 2100) {
+  if (!REGEX.INTEGER_REGEX.test(year) || year < 2020 || year > 2100) {
     return `${propertyName} must be between 2020 and 2100`;
   }
   return null;
@@ -101,58 +87,6 @@ const validateFileInfo = (fileInfo) => {
 };
 
 /**
- * Validates the utilisation report data. Returns an array of error messages.
- * @param {unknown} utilisationReportData - array of json objects representing utilisation report data.
- * @returns {import('./utilisation-data-validator.types').UtilisationDataValidatorError[]} - Array of error objects.
- */
-const validateUtilisationReportData = (utilisationReportData) => {
-  if (!Array.isArray(utilisationReportData)) {
-    const errors = ['utilisationReportData must be an array'];
-    return errors;
-  }
-
-  const errors = utilisationReportData.flatMap((utilisationReportDataEntry, index) => {
-    const facilityIdValidationError = validateUkefId(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID], index);
-    const exporterValidationError = validateExporter(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.EXPORTER], index);
-    const baseCurrencyValidationError = validateBaseCurrency(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.BASE_CURRENCY], index);
-    const facilityUtilisationValidationError = validateFacilityUtilisation(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION], index);
-    const totalFeesAccruedValidationError = validateTotalFeesAccrued(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED], index);
-    const totalFeesAccruedCurrencyValidationError = validateTotalFeesAccruedCurrency(
-      utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY],
-      index,
-    );
-    const totalFeesAccruedExchangeRateValidationError = validateTotalFeesAccruedExchangeRate(
-      utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE],
-      index,
-    );
-    const monthlyFeesPaidValidationError = validateMonthlyFeesPaid(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD], index);
-    const monthlyFeesPaidCurrencyValidationError = validateMonthlyFeesPaidCurrency(
-      utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY],
-      index,
-    );
-    const paymentCurrencyValidationError = validatePaymentCurrency(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY], index);
-    const paymentExchangeRateValidationError = validatePaymentExchangeRate(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE], index);
-
-    const validationErrors = [
-      facilityIdValidationError,
-      exporterValidationError,
-      baseCurrencyValidationError,
-      facilityUtilisationValidationError,
-      totalFeesAccruedValidationError,
-      totalFeesAccruedCurrencyValidationError,
-      totalFeesAccruedExchangeRateValidationError,
-      monthlyFeesPaidValidationError,
-      monthlyFeesPaidCurrencyValidationError,
-      paymentCurrencyValidationError,
-      paymentExchangeRateValidationError,
-    ].filter((error) => error);
-
-    return validationErrors;
-  });
-  return errors;
-};
-
-/**
  * Validates the user associated with a utilisation report
  * @param {unknown} user - the user
  * @returns {string[]} - an array of errors or an empty array if valid.
@@ -182,7 +116,6 @@ const validateReportUser = (user) => {
 
 module.exports = {
   validateReportId,
-  validateUtilisationReportData,
   validateMonth,
   validateYear,
   validateFileInfo,

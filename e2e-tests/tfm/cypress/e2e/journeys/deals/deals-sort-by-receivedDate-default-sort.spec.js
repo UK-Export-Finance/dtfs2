@@ -28,26 +28,17 @@ context('User can view and sort deals', () => {
     },
   });
 
-  const MOCK_DEALS = [
-    DEAL_NOT_RECENT,
-    DEAL_MOST_RECENT,
-  ];
+  const MOCK_DEALS = [DEAL_NOT_RECENT, DEAL_MOST_RECENT];
 
   before(() => {
     cy.deleteTfmDeals();
 
     cy.insertManyDeals(MOCK_DEALS, BANK1_MAKER1).then((insertedDeals) => {
       insertedDeals.forEach((deal) => {
-        const {
-          _id: dealId,
-          mockFacilities,
-        } = deal;
+        const { _id: dealId, mockFacilities } = deal;
 
         cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((facilities) => {
-          ALL_FACILITIES = [
-            ...ALL_FACILITIES,
-            ...facilities,
-          ];
+          ALL_FACILITIES = [...ALL_FACILITIES, ...facilities];
         });
       });
 
@@ -55,18 +46,16 @@ context('User can view and sort deals', () => {
       cy.get(aliasSelector(ALIAS_KEY.SUBMIT_MANY_DEALS)).then((submittedDeals) => {
         ALL_SUBMITTED_DEALS = submittedDeals;
 
-        dealMostRecent = ALL_SUBMITTED_DEALS.find((deal) =>
-          deal.dealSnapshot.details.submissionDate === DEAL_MOST_RECENT.details.submissionDate);
+        dealMostRecent = ALL_SUBMITTED_DEALS.find((deal) => deal.dealSnapshot.details.submissionDate === DEAL_MOST_RECENT.details.submissionDate);
 
-        dealNotRecent = ALL_SUBMITTED_DEALS.find((deal) =>
-          deal.dealSnapshot.details.submissionDate === DEAL_NOT_RECENT.details.submissionDate);
+        dealNotRecent = ALL_SUBMITTED_DEALS.find((deal) => deal.dealSnapshot.details.submissionDate === DEAL_NOT_RECENT.details.submissionDate);
       });
     });
   });
 
   beforeEach(() => {
     cy.login(T1_USER_1);
-    cy.url().should('eq', relative('/deals'));
+    cy.url().should('eq', relative('/deals/0'));
   });
 
   after(() => {

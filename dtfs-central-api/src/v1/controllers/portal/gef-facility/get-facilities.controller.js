@@ -1,6 +1,6 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
-const db = require('../../../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../../../drivers/db-client');
 
 const facilitiesCollection = MONGO_DB_COLLECTIONS.FACILITIES;
 const findAllGefFacilitiesByDealId = async (dealId) => {
@@ -19,6 +19,7 @@ exports.findAllGet = async (req, res) => {
     const facilities = await findAllGefFacilitiesByDealId(req.params.id);
     return res.status(200).send(facilities);
   }
+
   return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
 };
 

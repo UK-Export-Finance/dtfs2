@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { cancelLink, errorSummary, mainHeading, submitButton } from '../partials';
 import returnToMaker from '../pages/return-to-maker';
 import { BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
@@ -22,7 +23,7 @@ context('Return to Maker', () => {
     cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {
-        cy.apiSetApplicationStatus(dealIds[2], token, 'Ready for Checker\'s approval');
+        cy.apiSetApplicationStatus(dealIds[2], token, "Ready for Checker's approval");
       });
 
     cy.login(BANK1_CHECKER1);
@@ -31,25 +32,25 @@ context('Return to Maker', () => {
 
   describe('Return to maker', () => {
     it('displays the page as expected', () => {
-      returnToMaker.mainHeading();
+      mainHeading();
       returnToMaker.comment();
-      returnToMaker.submitButton();
-      returnToMaker.cancelLink();
+      submitButton();
+      cancelLink();
     });
 
-    it('does not display for applications that aren\'t in checking state', () => {
+    it("does not display for applications that aren't in checking state", () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0]}/return-to-maker`));
       cy.location('pathname').should('contain', 'dashboard');
     });
 
     it('submits without comments ', () => {
-      returnToMaker.submitButton().click();
+      cy.clickSubmitButton();
       cy.location('pathname').should('contain', 'dashboard');
     });
 
     it('submits with comments', () => {
       returnToMaker.comment().type('Test comment');
-      returnToMaker.submitButton().click();
+      cy.clickSubmitButton();
       cy.location('pathname').should('contain', 'dashboard');
     });
 
@@ -57,13 +58,13 @@ context('Return to Maker', () => {
       const longComment = 'a'.repeat(401);
 
       returnToMaker.comment().type(longComment);
-      returnToMaker.submitButton().click();
-      returnToMaker.errorSummary();
+      cy.clickSubmitButton();
+      errorSummary();
     });
 
     it('takes checker back to application preview page when cancelled', () => {
       returnToMaker.comment().type('Some comments here ....');
-      returnToMaker.cancelLink().click();
+      cy.clickCancelLink();
       cy.location('pathname').should('eq', `/gef/application-details/${dealIds[2]}`);
     });
   });

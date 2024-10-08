@@ -7,10 +7,12 @@ $govuk-new-link-styles: true;
 @import "./moj-sub-navigation.scss";
 @import "./moj-primary-navigation.scss";
 
+@import "./pagination.scss";
 @import "./buttons.scss";
 
 @import "./typography.scss";
 
+@import "./accordion.scss";
 @import "./layout.scss";
 @import "./icons";
 @import "./table.scss";
@@ -30,6 +32,8 @@ $govuk-new-link-styles: true;
 
 @import "./accessibility.scss";
 @import "./footer.scss";
+
+@import "./utilisation-reports.scss";
 
 .js-enabled .js-hidden {
   display: none;

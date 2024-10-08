@@ -24,18 +24,20 @@ describe('passwords cannot be reused', () => {
       ],
     };
 
-    const expectedResult = [{
-      password: {
-        order: '6',
-        text: 'You cannot re-use old passwords.',
+    const expectedResult = [
+      {
+        password: {
+          order: '6',
+          text: 'You cannot re-use old passwords.',
+        },
       },
-    }];
+    ];
 
     const matchTest = passwordsCannotBeReused(blockedUser, change);
     expect(matchTest).toEqual(expectedResult);
   });
 
-  it('should not return error for passwords that haven\'t been previously used', () => {
+  it("should not return error for passwords that haven't been previously used", () => {
     const change = {
       password: 'AAAA',
     };

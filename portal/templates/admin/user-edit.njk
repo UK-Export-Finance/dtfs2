@@ -39,7 +39,11 @@
     classes: "govuk-!-width-one-third",
     id: "firstname",
     name: "firstname",
-    value: displayedUser.firstname
+    value: displayedUser.firstname,
+    errorMessage: validationErrors.errorList.firstname and {
+      text: validationErrors.errorList.firstname.text,
+      attributes: { "data-cy": "firstname-error-message" }
+    }
   }) }}
 
   {{ govukInput({
@@ -51,96 +55,132 @@
     classes: "govuk-!-width-one-third",
     id: "surname",
     name: "surname",
-    value: displayedUser.surname
+    value: displayedUser.surname,
+    errorMessage: validationErrors.errorList.surname and {
+      text: validationErrors.errorList.surname.text,
+      attributes: { "data-cy": "surname-error-message" }
+    }
   }) }}
 
-    {{ govukCheckboxes({
-      idPrefix: "roles",
-      name: "roles",
-      fieldset: {
-        legend: {
-          text: "Roles",
-          classes: "govuk-fieldset__legend--s"
-        }
+  {{ govukRadios({
+    fieldset: {
+      legend: {
+        text: "Trusted user",
+        classes: "govuk-fieldset__legend--s"
+      }
+    },
+    hint: {
+      text: "A trusted user is a primary contact at the organisation and they can provide approvals and information to UKEF"
+    },
+    name: "isTrusted",
+    classes: "govuk-radios--inline",
+    items: [
+      {
+        value: "true",
+        text: "Yes",
+        attributes: {
+          "data-cy": "is-trusted-true"
+        },
+        checked: displayedUser['isTrusted'] === true
+      },
+      {
+        value: "false",
+        text: "No",
+        attributes: {
+          "data-cy": "is-trusted-false"
+        },
+        checked: displayedUser['isTrusted'] !== true
+      }
+    ]
+  }) }}
+
+  {{ govukCheckboxes({
+    idPrefix: "roles",
+    name: "roles",
+    fieldset: {
+      legend: {
+        text: "Roles",
+        classes: "govuk-fieldset__legend--s"
+      }
+    },
+    hint: {
+      text: "Select the role or multiple roles of the person you’re adding as a user"
+    },
+    errorMessage: validationErrors and validationErrors.errorList and validationErrors.errorList.roles and {
+      text: validationErrors.errorList.roles.text,
+      attributes: { "data-cy": "roles-error-message" }
+    },
+    items: [
+      {
+        value: "maker",
+        text: "Maker",
+        hint: { text: "Creates the UKEF application on behalf of the bank" },
+        checked: displayedUser.roles.includes("maker"),
+        attributes: {"data-cy": "role-maker"}
+      },
+      {
+        value: "checker",
+        text: "Checker",
+        hint: { text: "Independently reviews applications" },
+        checked: displayedUser.roles.includes("checker"),
+        attributes: {"data-cy": "role-checker"}
+      },
+      {
+        value: "payment-report-officer",
+        text: "Payment Report Officer",
+        hint: { text: "Report on GEF utilisation and fees" },
+        checked: displayedUser.roles.includes("payment-report-officer"),
+        attributes: {"data-cy": "role-payment-report-officer"}
+      },
+      {
+        value: "admin",
+        text: "Admin",
+        hint: { text: "Creates, updates, and removes user accounts" },
+        checked: displayedUser.roles.includes("admin"),
+        attributes: {"data-cy": "role-admin"}
+      },
+      {
+        divider: 'or'
+      },
+      {
+        value: "read-only",
+        text: "Read-only",
+        hint: { text: "Views applications but cannot make edits" },
+        behaviour: "exclusive",
+        checked: displayedUser.roles.includes("read-only"),
+        attributes: {"data-cy": "role-read-only"}
+      }
+    ]
+  }) }}
+
+
+  {% if _id %}
+    <p class="govuk-body">Email<br/>{{ displayedUser.email }}</p>
+    <p class="govuk-body">Display name<br/>{{ displayedUser.username }}</p>
+  {% else %}
+    {{ govukInput({
+      attributes: {
+        "data-cy": "username",
+        "autocapitalize": "off"
+      },
+      label: {
+        text: "Email address",
+        classes: "govuk-label--s"
       },
       hint: {
-        text: "Select the role or multiple roles of the person you’re adding as a user"
+        text: "Enter a valid email address. All emails from the system will be sent to this address. The email address is not made public and will only be used for emailing users the link to set or reset their password, or if they wish to receive certain news or notifications by email"
       },
-      errorMessage: validationErrors and validationErrors.errorList and validationErrors.errorList.roles and {
-        text: validationErrors.errorList.roles.text,
-        attributes: { "data-cy": "roles-error-message" }
-      },
-      items: [
-        {
-          value: "maker",
-          text: "Maker",
-          hint: { text: "Creates the UKEF application on behalf of the bank" },
-          checked: displayedUser.roles.includes("maker"),
-          attributes: {"data-cy": "role-maker"}
-        },
-        {
-          value: "checker",
-          text: "Checker",
-          hint: { text: "Independently reviews applications" },
-          checked: displayedUser.roles.includes("checker"),
-          attributes: {"data-cy": "role-checker"}
-        },
-        {
-          value: "payment-report-officer",
-          text: "Payment Report Officer",
-          hint: { text: "Report on GEF utilisation and fees" },
-          checked: displayedUser.roles.includes("payment-report-officer"),
-          attributes: {"data-cy": "role-payment-report-officer"}
-        },
-        {
-          value: "admin",
-          text: "Admin",
-          hint: { text: "Creates, updates, and removes user accounts" },
-          checked: displayedUser.roles.includes("admin"),
-          attributes: {"data-cy": "role-admin"}
-        },
-        {
-          divider: 'or'
-        },
-        {
-          value: "read-only",
-          text: "Read-only",
-          hint: { text: "Views applications but cannot make edits" },
-          behaviour: "exclusive",
-          checked: displayedUser.roles.includes("read-only"),
-          attributes: {"data-cy": "role-read-only"}
-        }
-      ]
+      classes: "govuk-!-width-one-third",
+      id: "email",
+      name: "email",
+      spellcheck: false,
+      type: "email",
+      autocomplete: "email",
+      value: displayedUser.username,
+      errorMessage: validationErrors.errorList.email
     }) }}
 
-
-    {% if _id %}
-      <p class="govuk-body">Email<br/>{{ displayedUser.email }}</p>
-      <p class="govuk-body">Display name<br/>{{ displayedUser.username }}</p>
-    {% else %}
-      {{ govukInput({
-        attributes: {
-          "data-cy": "username",
-          "autocapitalize": "off"
-        },
-        label: {
-          text: "Email address",
-          classes: "govuk-label--s"
-        },
-        hint: {
-          text: "Enter a valid email address. All emails from the system will be sent to this address. The email address is not made public and will only be used for emailing users the link to set or reset their password, or if they wish to receive certain news or notifications by email"
-        },
-        classes: "govuk-!-width-one-third",
-        id: "email",
-        name: "email",
-        spellcheck: false,
-        type: "email",
-        autocomplete: "email",
-        value: displayedUser.username,
-        errorMessage: validationErrors.errorList.email
-      }) }}
-
-    {% endif %}
+  {% endif %}
 
   {{ govukRadios({
     fieldset: {
@@ -176,8 +216,14 @@
 
     {% set banksList = [
       {
+            value: "",
+            text: "Please select a bank",
+            selected: displayedUser.bank === ""
+      },
+      {
             value: "all",
-            text: "All"
+            text: "All",
+            selected: displayedUser.bank === "all"
       }
     ] %}
     {% for bank in banks %}
@@ -203,6 +249,10 @@
       },
       hint: {
         text: "Applicable for Bank Staff users only"
+      },
+      errorMessage: validationErrors.errorList.bank and {
+        text: validationErrors.errorList.bank.text,
+        attributes: { "data-cy": "bank-error-message" }
       },
       attributes: {
         "data-cy": "bank"

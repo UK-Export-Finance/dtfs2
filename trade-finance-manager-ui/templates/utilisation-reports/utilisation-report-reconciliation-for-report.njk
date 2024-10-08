@@ -1,0 +1,238 @@
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% import "./_macros/premium-payments-table.njk" as premiumPaymentsTable %}
+{% import "./_macros/keying-sheet-table.njk" as keyingSheetTable %}
+{% import "./_macros/payment-details-table.njk" as paymentDetailsTable %}
+
+{% extends "index.njk" %}
+
+{% set userCanEdit = user | userIsInTeam(['PDC_RECONCILE']) %}
+
+{% block pageTitle %}
+  {{ bank.name }}, {{ formattedReportPeriod }}
+{% endblock %}
+
+{% set premiumPaymentsHtml %}
+  {% if tableDataError or filterError %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: [tableDataError, filterError],
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  {% set clearButtonHref %}
+      /utilisation-reports/{{ reportId }}
+  {% endset %}
+    <h2 class="govuk-heading-l" data-cy="premium-payments-heading">Premium payments</h2>
+
+    <div class="govuk-grid-row premium-payments-description-filter-container">
+      <div class="govuk-grid-column-one-half premium-payments-description-container">
+        <p class="govuk-body">Enter received payments against reported fees by selecting them and then selecting the 'Add a payment' button.</p>
+
+        <p class="govuk-body">
+          When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when you select the 'Generate keying data' button.
+        </p>
+      </div>
+
+      <div class="govuk-grid-column-one-half govuk-!-text-align-right premium-payments-filter-container">
+        <form method="GET" data-cy="facility-filter-form">
+          <div class="govuk-!-text-align-left govuk-!-display-inline-block premium-payments-filter-control">
+            {{ govukInput({
+              label: {
+                text: "Filter by facility ID",
+                classes: "govuk-label govuk-!-font-weight-bold"
+              },
+              id: "facility-id-filter",
+              name: "facilityIdQuery",
+              value: facilityIdQuery,
+              errorMessage: filterError and {
+                text: filterError.text
+              },
+              attributes: {'data-cy': 'facility-filter-input'}
+            }) }}
+          </div>
+          <div class="govuk-!-display-inline-block">
+            <div class="govuk-!-display-inline-block">
+              {{ govukButton({
+                text: "Filter",
+                classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2 premium-payments-filter-control",
+                id: "facility-id-filter-button",
+                attributes: {'data-cy': 'facility-filter-submit-button'}
+              }) }}
+            </div>
+            <div class="govuk-!-display-inline-block">
+              {{ govukButton({
+                text: "Clear filter",
+                classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2 premium-payments-filter-control",
+                id: "facility-id-clear-button",
+                href: clearButtonHref,
+                attributes: {'data-cy': 'facility-filter-clear-button'}
+              }) }}
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  {% if tableDataError %}
+    <div class="govuk-form-group--error">
+  {% endif %}
+  {% if userCanEdit %}
+    <form method="post" data-cy="premium-payments-form">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+      <div class="govuk-button-group">
+        <input
+          class="govuk-button govuk-!-margin-right-3"
+          formaction="/utilisation-reports/{{ reportId }}/add-payment"
+          value="Add a payment"
+          data-module="govuk-button"
+          type="submit"
+          data-cy="add-a-payment-button"/>
+        <input
+          class="govuk-button govuk-button--secondary govuk-!-margin-right-3"
+          formaction="/utilisation-reports/{{ reportId }}/check-keying-data"
+          value="Generate keying data"
+          data-module="govuk-button"
+          type="submit"
+          data-cy="generate-keying-data-button"/>
+      </div>
+  {% endif %}
+  {{ premiumPaymentsTable.render({
+    reportId: reportId,
+    feeRecordPaymentGroups: feeRecordPaymentGroups,
+    enablePaymentsReceivedSorting: enablePaymentsReceivedSorting,
+    userCanEdit: userCanEdit
+  }) }}
+  {% if userCanEdit %}
+    </form>
+  {% endif %}
+  {% if tableDataError %}
+    </div>
+  {% endif %}
+{% endset %}
+
+{% set keyingSheetHtml %}
+  <h2 class="govuk-heading-l" data-cy="keying-sheet-heading">Keying sheet</h2>
+
+  <p class="govuk-body">Select payments and mark as done when the adjustments have been keyed into ACBS.</p>
+
+  <p class="govuk-body">Payments on the premium payments tab will show as reconciled when they have been marked as done here.</p>
+
+  <form method="post" data-cy="keying-sheet-form">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+    {% if userCanEdit %}
+      <div class="govuk-button-group">
+        <input
+          class="govuk-button govuk-!-margin-right-3"
+          formaction="/utilisation-reports/{{ reportId }}/keying-data/mark-as-done"
+          value="Mark as done"
+          data-module="govuk-button"
+          type="submit"
+          data-cy="keying-sheet-mark-as-done-button"/>
+        <input
+          class="govuk-button govuk-button--secondary"
+          formaction="/utilisation-reports/{{ reportId }}/keying-data/mark-as-to-do"
+          value="Mark as to do"
+          data-module="govuk-button"
+          type="submit"
+          data-cy="keying-sheet-mark-as-to-do-button"/>
+      </div>
+    {% endif %}
+
+    {{ keyingSheetTable.render({
+      keyingSheet: keyingSheet,
+      userCanEdit: userCanEdit
+    }) }}
+  </form>
+{% endset %}
+
+{% set paymentDetailsHtml %}
+  <h2 class="govuk-heading-l" data-cy="payment-details-heading">Payment details</h2>
+
+  {% if paymentDetails.length === 0 %}
+    <p class="govuk-body">Payment details will be displayed when payments have been entered on the premium payments tab.</p>
+  {% else %}
+    {{ govukButton({
+      text: "Show filter",
+      classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2",
+      id: "payment-details-show-filter-button",
+      attributes: {'data-cy': 'payment-details-show-filter-button'}
+    }) }}
+
+    {{ paymentDetailsTable.render({
+      reportId: reportId,
+      paymentDetails: paymentDetails,
+      userCanEdit: userCanEdit
+    }) }}
+  {% endif %}
+{% endset %}
+
+{% set utilisationHtml %}
+  <div></div>
+{% endset %}
+
+{% block content %}
+  <div class="govuk-grid-row govuk-!-padding-top-7">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-6" data-cy="utilisation-report-reconciliation-for-report-heading">
+        {{ bank.name }}
+      </h1>
+      <h2 class="govuk-heading-l" data-cy="report-period-heading">{{ formattedReportPeriod }}</h2>
+
+      <div class="ukef-tabs--no-border">
+        {{ govukTabs({
+          items: [
+            {
+              label: "Premium payments",
+              id: "premium-payments",
+              panel: {
+                html: premiumPaymentsHtml | safe
+              },
+              attributes: {
+                'data-cy': 'bank-report-tab-premium-payments'
+              }
+            },
+            {
+              label: "Keying sheet",
+              id: "keying-sheet",
+              panel: {
+                html: keyingSheetHtml | safe
+              },
+              attributes: {
+                'data-cy': 'bank-report-tab-keying-sheet'
+              }
+            },
+            {
+              label: "Payment details",
+              id: "payment-details",
+              panel: {
+                html: paymentDetailsHtml | safe
+              },
+              attributes: {
+                'data-cy': 'bank-report-tab-payment-details'
+              }
+            },
+            {
+              label: "Utilisation",
+              id: "utilisation",
+              panel: {
+                html: utilisationHtml | safe
+              },
+              attributes: {
+                'data-cy': 'bank-report-tab-utilisation'
+              }
+            }
+          ]
+        }) }}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block sub_content %}{% endblock %}

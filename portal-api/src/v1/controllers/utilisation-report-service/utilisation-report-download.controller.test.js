@@ -49,7 +49,10 @@ describe('controllers/utilisation-report-service/utilisation-report-download', (
     it('returns an error response when the reports details do not contain the mimetype', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
-      api.getUtilisationReportById.mockResolvedValue({ bankId: mockBankIdParam, azureFileInfo: { filename: 'report.csv' } });
+      api.getUtilisationReportById.mockResolvedValue({
+        bankId: mockBankIdParam,
+        azureFileInfo: { filename: 'report.csv' },
+      });
 
       // Act
       await getReportDownload(req, res);

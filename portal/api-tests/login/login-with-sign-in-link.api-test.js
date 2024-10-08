@@ -11,16 +11,17 @@ jest.mock('../../server/api', () => ({
 }));
 
 const { when } = require('jest-when');
+const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const app = require('../../server/createApp');
 const { get } = require('../create-api').createApi(app);
 const api = require('../../server/api');
-const { LOGIN_STATUS, HTTP_ERROR_CAUSES } = require('../../server/constants');
+const { HTTP_ERROR_CAUSES } = require('../../server/constants');
 
 describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
   const validSignInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
   const validUserId = '65626dc0bda51f77a78b86ae';
   const userToken = 'a token';
-  const loginStatus = LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD;
+  const loginStatus = PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD;
   const userEmail = 'an-email@example.com';
   const user = {
     email: userEmail,
@@ -41,7 +42,9 @@ describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
   it('redirects to /login/sign-in-link-expired if the login API request fails with a token expired 403', async () => {
     when(api.loginWithSignInLink)
       .calledWith({ signInToken: validSignInToken, userId: validUserId })
-      .mockRejectedValueOnce({ response: { status: 403, data: { errors: [{ cause: HTTP_ERROR_CAUSES.TOKEN_EXPIRED }] } } });
+      .mockRejectedValueOnce({
+        response: { status: 403, data: { errors: [{ cause: HTTP_ERROR_CAUSES.TOKEN_EXPIRED }] } },
+      });
 
     const { status, headers } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
 
@@ -52,7 +55,9 @@ describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
   it('redirects to /login/sign-in-link-expired if the login API request fails with a user blocked 403', async () => {
     when(api.loginWithSignInLink)
       .calledWith({ signInToken: validSignInToken, userId: validUserId })
-      .mockRejectedValueOnce({ response: { status: 403, data: { errors: [{ cause: HTTP_ERROR_CAUSES.USER_BLOCKED }] } } });
+      .mockRejectedValueOnce({
+        response: { status: 403, data: { errors: [{ cause: HTTP_ERROR_CAUSES.USER_BLOCKED }] } },
+      });
 
     const { status, text } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
 

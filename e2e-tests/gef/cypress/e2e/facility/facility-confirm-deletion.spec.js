@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { mainHeading } from '../partials';
 import facilityConfirmDeletion from '../pages/facility-confirm-deletion';
 import applicationDetails from '../pages/application-details';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
@@ -16,13 +17,12 @@ context('Facility Confirm Deletion Page', () => {
       .then(() => cy.apiFetchAllGefApplications(token))
       .then(({ body }) => {
         body.items.forEach((item) => {
-          cy.apiFetchAllFacilities(item._id, token)
-            .then((res) => {
-              applications.push({
-                id: item._id,
-                facilities: res.body.items.filter((it) => it.details.dealId === item._id),
-              });
+          cy.apiFetchAllFacilities(item._id, token).then((res) => {
+            applications.push({
+              id: item._id,
+              facilities: res.body.items.filter((it) => it.details.dealId === item._id),
             });
+          });
         });
       });
     cy.login(BANK1_MAKER1);
@@ -36,14 +36,18 @@ context('Facility Confirm Deletion Page', () => {
     it('delete facility link contains an aria-label with facility name', () => {
       cy.visit(relative(`/gef/application-details/${applications[2].id}`));
       applicationDetails.deleteFacilityLink().first().contains('Delete facility');
-      applicationDetails.deleteFacilityLink().first().invoke('attr', 'aria-label').then((label) => {
-        expect(label).to.equal(`Delete facility ${applications[2].facilities[3].details.name}`);
-      });
+      applicationDetails
+        .deleteFacilityLink()
+        .first()
+        .invoke('attr', 'aria-label')
+        .then((label) => {
+          expect(label).to.equal(`Delete facility ${applications[2].facilities[3].details.name}`);
+        });
     });
 
     it('displays the correct elements', () => {
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/confirm-deletion`));
-      facilityConfirmDeletion.mainHeading().should('contain', 'Cash');
+      mainHeading().should('contain', 'Cash');
       facilityConfirmDeletion.content();
       facilityConfirmDeletion.deleteButton();
       facilityConfirmDeletion.keepButton();
@@ -65,7 +69,7 @@ context('Facility Confirm Deletion Page', () => {
   describe('Visiting page as contingent facility', () => {
     it('displays the correct elements', () => {
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[3].details._id}/confirm-deletion`));
-      facilityConfirmDeletion.mainHeading().should('contain', 'Contingent');
+      mainHeading().should('contain', 'Contingent');
       facilityConfirmDeletion.content();
       facilityConfirmDeletion.deleteButton();
       facilityConfirmDeletion.keepButton();

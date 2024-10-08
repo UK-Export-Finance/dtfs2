@@ -23,7 +23,7 @@ describe('deal submit - add TFM data - deal pricing and risk', () => {
   });
 
   describe('when dealType is GEF', () => {
-    it('should use probabilityOfDefault from the deal\'s exporter', async () => {
+    it("should use probabilityOfDefault from the deal's exporter", async () => {
       const deal = await mapSubmittedDeal({ dealSnapshot: MOCK_GEF_DEAL });
       const result = dealPricingAndRisk(deal);
 

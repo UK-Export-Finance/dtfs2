@@ -11,14 +11,10 @@ const hasCoverEndDate = (day, month, year) => {
 };
 
 const mapCoverEndDate = (facility) => {
-  const {
-    'coverEndDate-day': day,
-    'coverEndDate-month': month,
-    'coverEndDate-year': year,
-  } = facility;
+  const { 'coverEndDate-day': day, 'coverEndDate-month': month, 'coverEndDate-year': year } = facility;
 
   if (hasCoverEndDate(day, month, year)) {
-    return set( new Date(), {
+    return set(new Date(), {
       date: Number(day),
       month: Number(month) - 1, // months are zero indexed
       year: Number(year),

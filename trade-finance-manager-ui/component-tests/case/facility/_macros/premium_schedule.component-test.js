@@ -1,9 +1,9 @@
-const pageRenderer = require('../../../componentRenderer');
+const { componentRenderer } = require('../../../componentRenderer');
 const formatAsCurrencyFilter = require('../../../../server/nunjucks-configuration/filter-formatAsCurrency');
 
 const page = '../templates/case/facility/_macros/premium_schedule.njk';
 
-const render = pageRenderer(page);
+const render = componentRenderer(page);
 
 describe(page, () => {
   let wrapper;

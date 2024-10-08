@@ -1,5 +1,5 @@
 const fs = require('fs');
-const componentRenderer = require('../../componentRenderer');
+const { componentRenderer } = require('../../componentRenderer');
 
 const component = '../templates/case/_macros/case-summary-ndb.njk';
 
@@ -107,10 +107,12 @@ describe(component, () => {
 
   describe('when there is no date received', () => {
     beforeEach(() => {
-      params = JSON.parse(JSON.stringify({
-        deal: params.deal,
-        user: params.user,
-      }));
+      params = JSON.parse(
+        JSON.stringify({
+          deal: params.deal,
+          user: params.user,
+        }),
+      );
 
       wrapper = render(params);
     });

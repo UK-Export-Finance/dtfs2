@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 const request = require('supertest');
 const dotenv = require('dotenv');
 
@@ -12,8 +11,7 @@ const authHeaders = (token) => ({
 });
 
 const postMultipartForm = (app, { url, data, files, headers }) => {
-  const requestInProgress = request(app)
-    .post(url);
+  const requestInProgress = request(app).post(url);
 
   if (headers) {
     requestInProgress.set(headers);
@@ -33,15 +31,12 @@ const postMultipartForm = (app, { url, data, files, headers }) => {
 
 module.exports = (app) => ({
   as: (user) => {
-    const token = (user && user.token) ? user.token : '';
+    const token = user && user.token ? user.token : '';
     const headers = authHeaders(token);
 
     return {
       post: (data) => ({
-        to: async (url) => request(app)
-          .post(url)
-          .set(headers)
-          .send(data),
+        to: async (url) => request(app).post(url).set(headers).send(data),
       }),
 
       postMultipartForm: (data, files = []) => ({
@@ -50,27 +45,19 @@ module.exports = (app) => ({
 
       postEach: (list) => ({
         to: async (url) => {
-          const results = list.map((data) => request(app)
-            .post(url)
-            .set(headers)
-            .send(data));
+          const results = list.map((data) => request(app).post(url).set(headers).send(data));
 
           return Promise.all(results);
         },
       }),
 
       put: (data) => ({
-        to: async (url) => request(app)
-          .put(url)
-          .set(headers)
-          .send(data),
+        to: async (url) => request(app).put(url).set(headers).send(data),
       }),
 
       putMultipartForm: (data, files = []) => ({
         to: async (url) => {
-          const apiRequest = request(app)
-            .put(url)
-            .set(headers);
+          const apiRequest = request(app).put(url).set(headers);
 
           if (files.length) {
             files.forEach((file) => apiRequest.attach(file.fieldname, file.filepath));
@@ -84,15 +71,9 @@ module.exports = (app) => ({
         },
       }),
 
-      get: async (url, query = {}) => request(app)
-        .get(url)
-        .set(headers)
-        .query(query),
+      get: async (url, query = {}) => request(app).get(url).set(headers).query(query),
 
-      remove: async (url) => request(app)
-        .delete(url)
-        .set(headers)
-        .send(),
+      remove: async (url) => request(app).delete(url).set(headers).send(),
     };
   },
   get: (url, { headers, query } = {}) => {

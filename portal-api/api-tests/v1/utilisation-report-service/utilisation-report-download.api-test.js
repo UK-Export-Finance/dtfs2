@@ -14,7 +14,6 @@ jest.mock('../../../src/drivers/fileshare', () => ({
 }));
 
 describe('/v1/banks/:bankId/utilisation-report-download/:_id', () => {
-  let noRoles;
   let testUsers;
   let barclaysBank;
   let hsbcBank;
@@ -23,13 +22,15 @@ describe('/v1/banks/:bankId/utilisation-report-download/:_id', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    noRoles = testUsers().withoutAnyRoles().one();
     aBarclaysPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).withBankName('Barclays Bank').one();
     aHsbcPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).withBankName('HSBC').one();
     barclaysBank = aBarclaysPaymentReportOfficer.bank;
     hsbcBank = aHsbcPaymentReportOfficer.bank;
     const getUtilisationSpy = jest.spyOn(api, 'getUtilisationReportById');
-    getUtilisationSpy.mockImplementation(() => ({ azureFileInfo: { filename: 'test-file.csv', mimetype: 'text/csv' }, bankId: barclaysBank.id }));
+    getUtilisationSpy.mockImplementation(() => ({
+      azureFileInfo: { filename: 'test-file.csv', mimetype: 'text/csv' },
+      bankId: barclaysBank.id,
+    }));
   });
 
   beforeEach(async () => {
@@ -41,14 +42,12 @@ describe('/v1/banks/:bankId/utilisation-report-download/:_id', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(getUrl({ bankId: barclaysBank.id, reportId: '10' })),
-      makeRequestWithAuthHeader: (authHeader) =>
-        get(getUrl({ bankId: barclaysBank.id, reportId: '10' }), { headers: { Authorization: authHeader } }),
+      makeRequestWithAuthHeader: (authHeader) => get(getUrl({ bankId: barclaysBank.id, reportId: '10' }), { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [PAYMENT_REPORT_OFFICER],
       getUserWithRole: (role) => testUsers().withRole(role).withBankName(barclaysBank.name).one(),
-      getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).get(getUrl({ bankId: barclaysBank.id, reportId: '10' })),
       successStatusCode: 200,
     });

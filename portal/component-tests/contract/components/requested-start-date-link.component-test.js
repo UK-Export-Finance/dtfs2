@@ -1,4 +1,6 @@
-const { ROLES: { MAKER } } = require('@ukef/dtfs2-common');
+const {
+  ROLES: { MAKER },
+} = require('@ukef/dtfs2-common');
 const { NON_MAKER_ROLES } = require('../../../test-helpers/common-role-lists');
 
 const componentRenderer = require('../../componentRenderer');
@@ -66,9 +68,7 @@ describe(component, () => {
           hasConfirmedCoverStartDate,
         });
 
-        wrapper
-          .expectText(`[data-cy="${facilityName}-change-or-confirm-cover-start-date-${facility._id}"]`)
-          .toRead('Start date confirmed');
+        wrapper.expectText(`[data-cy="${facilityName}-change-or-confirm-cover-start-date-${facility._id}"]`).toRead('Start date confirmed');
       });
     });
 
@@ -84,9 +84,7 @@ describe(component, () => {
           hasConfirmedCoverStartDate,
         });
 
-        wrapper
-          .expectText(`[data-cy="${facilityName}-change-or-confirm-cover-start-date-${facility._id}"]`)
-          .toRead('Start date not confirmed');
+        wrapper.expectText(`[data-cy="${facilityName}-change-or-confirm-cover-start-date-${facility._id}"]`).toRead('Start date not confirmed');
       });
     });
   });

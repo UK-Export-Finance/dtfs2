@@ -1,4 +1,4 @@
-const componentRenderer = require('../../componentRenderer');
+const { componentRenderer } = require('../../componentRenderer');
 const { formatDateString } = require('../../../server/nunjucks-configuration/filter-formatDateString');
 
 const component = '../templates/deals/_macros/deals-table.njk';
@@ -128,10 +128,7 @@ describe(component, () => {
       params.deals.forEach((deal) => {
         const selector = `[data-cy="deal-${deal._id}-ukef-deal-id-link"]`;
 
-        wrapper.expectLink(selector).toLinkTo(
-          `/case/${deal._id}/deal`,
-          `View deal ${deal.dealSnapshot.details.ukefDealId} details`,
-        );
+        wrapper.expectLink(selector).toLinkTo(`/case/${deal._id}/deal`, `View deal ${deal.dealSnapshot.details.ukefDealId} details`);
       });
     });
 

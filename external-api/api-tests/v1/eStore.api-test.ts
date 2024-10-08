@@ -1,41 +1,47 @@
+import MockAdapter from 'axios-mock-adapter';
+import axios, { HttpStatusCode } from 'axios';
 import { app } from '../../src/createApp';
 import { api } from '../api';
-import { createBuyerFolder, createDealFolder, createFacilityFolder, uploadSupportingDocuments } from '../../src/v1/controllers/estore/eStoreApi';
+import { UKEF_ID, ESTORE_CRON_STATUS } from '../../src/constants';
+import { Estore, EstoreAxiosResponse } from '../../src/interfaces';
 
 const { post } = api(app);
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
-import { UKEF_ID } from '../../src/constants';
 
 const { APIM_ESTORE_URL } = process.env;
+
+const payload: Estore = {
+  dealId: '6597dffeb5ef5ff4267e5044',
+  siteId: 'ukef',
+  facilityIdentifiers: [1234567890, 1234567891],
+  supportingInformation: [
+    {
+      documentType: 'test',
+      fileName: 'test.docx',
+      fileLocationPath: 'directory/',
+      parentId: 'abc',
+    },
+  ],
+  exporterName: 'testName',
+  buyerName: 'testBuyer',
+  dealIdentifier: '1234567890',
+  destinationMarket: 'UK',
+  riskMarket: '1',
+};
+
+const axiosMock = new MockAdapter(axios);
 
 const mockInsertOne = jest.fn();
 const mockFindOne = jest.fn();
 const mockUpdateOne = jest.fn();
-const mockFindOneAndUpdate = jest.fn();
 
-// mocks mongodb calls
+// Mock MongoDB calls
 jest.mock('../../src/database/mongo-client', () => ({
   getCollection: jest.fn(() => ({
-    insertOne: mockInsertOne,
+    insertOne: mockInsertOne.mockResolvedValue({ insertedId: '6597dffeb5ef5ff4267e5043' }),
     findOne: mockFindOne,
     updateOne: mockUpdateOne,
   })),
 }));
-
-// mocks various cronJob database calls
-jest.mock('../../src/cronJobs', () => ({
-  eStoreCronJobManager: jest.fn(() => ({
-    insertOne: mockInsertOne,
-    onComplete: mockInsertOne,
-  })),
-  eStoreTermStoreAndBuyerFolder: jest.fn(() => ({
-    findOneAndUpdate: mockFindOneAndUpdate,
-  })),
-}));
-
-const mock = new MockAdapter(axios);
-jest.mock('axios', () => jest.requireActual('axios'));
 
 const mockExporterResponse = {
   siteId: 'test',
@@ -43,178 +49,134 @@ const mockExporterResponse = {
 };
 
 const mockApiResponse = {
-  status: 200,
+  status: HttpStatusCode.Ok,
 };
 
 // mocks test for estore if exists
-mock.onPost(`${APIM_ESTORE_URL}/site/sites?exporterName=testName`).reply(200, mockExporterResponse);
-const estoreSitesRegex = new RegExp(`${APIM_ESTORE_URL}/sites/.+`);
-mock.onPost(estoreSitesRegex).reply(200, mockApiResponse);
+axiosMock.onPost(`${APIM_ESTORE_URL}site/sites?exporterName=testName`).reply(HttpStatusCode.Ok, mockExporterResponse);
+const estoreSitesRegex = new RegExp(`${APIM_ESTORE_URL}sites/.+`);
+axiosMock.onPost(estoreSitesRegex).reply(HttpStatusCode.Ok, mockApiResponse);
 
 describe('/estore', () => {
-  const payload = {
-    dealId: '12345',
-    siteId: 'ukef',
-    facilityIdentifiers: '99999',
-    supportingInformation: 'test',
-    exporterName: 'testName',
-    buyerName: 'testBuyer',
-    dealIdentifier: '12345',
-    destinationMarket: 'UK',
-    riskMarket: '1',
-  };
+  describe('Empty payload', () => {
+    it('should return a status of 400 and an invalid request message', async () => {
+      const { status, body } = (await post().to('/estore')) as EstoreAxiosResponse;
 
-  describe('when the body is empty', () => {
-    it('should return a status of 200 and an empty data response', async () => {
-      const { status, body } = await post().to('/estore');
-
-      expect(status).toEqual(200);
-      expect(body).toEqual({});
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+      expect(body.message).toEqual('Invalid request');
     });
   });
 
-  describe('when the input is not valid - dealIdentifier contains 0010000000', () => {
-    it('should return a status of 200 and an empty data response', async () => {
-      const { status, body } = await post({ ...payload, dealIdentifier: UKEF_ID.TEST }).to('/estore');
+  describe('When the deal ID with is not valid', () => {
+    it('should return a status of 400 with Invalid IDs error message when ID is `0010000000`', async () => {
+      const invalidPayload = {
+        ...payload,
+        dealIdentifier: UKEF_ID.TEST,
+      };
+      const { status, body } = (await post(invalidPayload).to('/estore')) as EstoreAxiosResponse;
 
-      expect(status).toEqual(200);
-      expect(body).toEqual({});
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+      expect(body.message).toEqual('Invalid IDs');
+    });
+
+    it('should return a status of 400 with Invalid IDs error message when ID is `Pending`', async () => {
+      const invalidPayload = {
+        ...payload,
+        dealIdentifier: UKEF_ID.PENDING,
+      };
+
+      const { status, body } = (await post(invalidPayload).to('/estore')) as EstoreAxiosResponse;
+
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+      expect(body.message).toEqual('Invalid IDs');
     });
   });
 
-  describe(`when the input is not valid - facilityIdentifiers contains ${UKEF_ID.PENDING}`, () => {
-    it('should return a status of 200 and an empty data response', async () => {
-      const { status, body } = await post({ ...payload, facilityIdentifiers: UKEF_ID.PENDING }).to('/estore');
+  describe('When the facility ID with is not valid', () => {
+    it('should return a status of 400 with Invalid IDs error message when ID is `0010000000`', async () => {
+      const invalidPayload = {
+        ...payload,
+        facilityIdentifiers: [UKEF_ID.TEST],
+      };
+      const { status, body } = (await post(invalidPayload).to('/estore')) as EstoreAxiosResponse;
 
-      expect(status).toEqual(200);
-      expect(body).toEqual({});
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+      expect(body.message).toEqual('Invalid IDs');
+    });
+
+    it('should return a status of 400 with Invalid IDs error message when ID is `Pending`', async () => {
+      const invalidPayload = {
+        ...payload,
+        facilityIdentifiers: [UKEF_ID.PENDING],
+      };
+
+      const { status, body } = (await post(invalidPayload).to('/estore')) as EstoreAxiosResponse;
+
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+      expect(body.message).toEqual('Invalid IDs');
     });
   });
 
-  describe(`api.createBuyerFolder`, () => {
-    it('should return an error response if siteId is invalid', async () => {
-      const response = await createBuyerFolder('../../etc', { buyerName: 'testBuyer', exporterName: 'testName' });
+  describe('When the Mongo deal ID is not a valid Mongo ObjectID', () => {
+    const invalidObjectIds = [[], {}, '', 'invalid', '!"£'];
+    it.each(invalidObjectIds)('Should return 400 for a %s string which is neither 12 bytes nor 24 bytes hex characters or an integer', async (dealId) => {
+      const invalidPayload = {
+        ...payload,
+        dealId,
+      };
 
-      expect(response.status).toEqual(400);
-    });
+      const { status, body } = (await post(invalidPayload).to('/estore')) as EstoreAxiosResponse;
 
-    it('should return an ok response if siteId is valid', async () => {
-      const response = await createBuyerFolder('00738459', { buyerName: 'testBuyer', exporterName: 'testName' });
-
-      expect(response.status).toEqual(200);
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+      expect(body.message).toEqual('Invalid deal ObjectId');
     });
   });
 
-  describe(`api.createDealFolder`, () => {
-    it('should return an error response if siteId is invalid', async () => {
-      const createDealFolderPayload = {
-        dealIdentifier: 'testDeal',
-        exporterName: 'testName',
-        buyerName: 'testBuyer',
-        destinationMarket: 'UK',
-        riskMarket: '1',
-      };
-      const response = await createDealFolder('../../etc', createDealFolderPayload);
-
-      expect(response.status).toEqual(400);
+  describe('eStore CRON jobs', () => {
+    beforeEach(() => {
+      mockFindOne.mockReset();
+      mockInsertOne.mockReset();
     });
 
-    it('should return an ok response if siteId is valid', async () => {
-      const createDealFolderPayload = {
-        dealIdentifier: 'testDeal',
-        exporterName: 'testName',
-        buyerName: 'testBuyer',
-        destinationMarket: 'UK',
-        riskMarket: '1',
-      };
-      const response = await createDealFolder('00748375', createDealFolderPayload);
+    it('Should return 201 for a new deal payload', async () => {
+      const { status } = await post(payload).to('/estore');
 
-      expect(response.status).toEqual(200);
-    });
-  });
-
-  describe(`api.createFacilityFolder`, () => {
-    it('should return an error response if siteId is invalid', async () => {
-      const createFacilityFolderPayload = {
-        dealIdentifier: 'testDeal',
-        facilityIdentifier: 'testFacility',
-        exporterName: 'testName',
-        buyerName: 'testBuyer',
-        destinationMarket: 'UK',
-        riskMarket: '1',
-      };
-
-      const response = await createFacilityFolder('../../etc', '0071029412', createFacilityFolderPayload);
-
-      expect(response.status).toEqual(400);
+      expect(status).toEqual(HttpStatusCode.Created);
     });
 
-    it('should return an error response if dealIdentifier is invalid', async () => {
-      const createFacilityFolderPayload = {
-        dealIdentifier: 'testDeal',
-        facilityIdentifier: 'testFacility',
-        exporterName: 'testName',
-        buyerName: 'testBuyer',
-        destinationMarket: 'UK',
-        riskMarket: '1',
-      };
+    it('Should create a new entry cron-job-logs collection for a new payload', async () => {
+      await post(payload).to('/estore');
 
-      const response = await createFacilityFolder('00329453', '../../etc', createFacilityFolderPayload);
+      // Look up for the deal ID in the collection
+      expect(mockFindOne).toHaveBeenCalledTimes(1);
+      expect(mockFindOne).toHaveBeenCalledWith({ 'payload.dealId': { $eq: payload.dealId } });
 
-      expect(response.status).toEqual(400);
+      // Insert a new entry in the collection
+      expect(mockInsertOne).toHaveBeenCalledTimes(1);
+      expect(mockInsertOne).toHaveBeenCalledWith({
+        payload,
+        timestamp: expect.any(Number) as number,
+        cron: {
+          site: { status: ESTORE_CRON_STATUS.PENDING },
+          term: { status: ESTORE_CRON_STATUS.PENDING },
+          buyer: { status: ESTORE_CRON_STATUS.PENDING },
+          deal: { status: ESTORE_CRON_STATUS.PENDING },
+          facility: { status: ESTORE_CRON_STATUS.PENDING },
+          document: { status: ESTORE_CRON_STATUS.PENDING },
+        },
+      });
     });
 
-    it('should return an ok response if siteId and dealIdentifier are valid', async () => {
-      const createFacilityFolderPayload = {
-        dealIdentifier: 'testDeal',
-        facilityIdentifier: 'testFacility',
-        exporterName: 'testName',
-        buyerName: 'testBuyer',
-        destinationMarket: 'UK',
-        riskMarket: '1',
-      };
+    it('Should not create a new entry cron-job-logs collection for an existing payload', async () => {
+      mockFindOne.mockResolvedValueOnce({ payload });
 
-      const response = await createFacilityFolder('00329453', '0071029412', createFacilityFolderPayload);
+      await post(payload).to('/estore');
 
-      expect(response.status).toEqual(200);
-    });
-  });
+      // Look up for the deal ID in the collection
+      expect(mockFindOne).toHaveBeenCalledWith({ 'payload.dealId': { $eq: payload.dealId } });
 
-  describe(`api.uploadSupportingDocuments`, () => {
-    it('should return an error response if siteId is invalid', async () => {
-      const uploadSupportingDocumentsPayload = {
-        buyerName: 'testBuyer',
-        documentType: 'testType',
-        fileName: 'testFile',
-        fileLocationPath: 'testLocation',
-      };
-      const response = await uploadSupportingDocuments('../../etc', '0071029412', uploadSupportingDocumentsPayload);
-
-      expect(response.status).toEqual(400);
-    });
-
-    it('should return an error response if dealIdentifier is invalid', async () => {
-      const uploadSupportingDocumentsPayload = {
-        buyerName: 'testBuyer',
-        documentType: 'testType',
-        fileName: 'testFile',
-        fileLocationPath: 'testLocation',
-      };
-      const response = await uploadSupportingDocuments('00329453', '../../etc', uploadSupportingDocumentsPayload);
-
-      expect(response.status).toEqual(400);
-    });
-
-    it('should return an error response if dealIdentifier is invalid', async () => {
-      const uploadSupportingDocumentsPayload = {
-        buyerName: 'testBuyer',
-        documentType: 'testType',
-        fileName: 'testFile',
-        fileLocationPath: 'testLocation',
-      };
-      const response = await uploadSupportingDocuments('00329453', '0071029412', uploadSupportingDocumentsPayload);
-
-      expect(response.status).toEqual(200);
+      // Insert a new entry in the collection
+      expect(mockInsertOne).not.toHaveBeenCalled();
     });
   });
 });

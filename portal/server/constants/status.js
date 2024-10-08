@@ -15,7 +15,7 @@ const FACILITY = {
   COMPLETED: 'Completed',
   INCOMPLETE: 'Incomplete',
   NOT_STARTED: 'Not started',
-}
+};
 
 const SECTION = {
   COMPLETED: 'Completed',

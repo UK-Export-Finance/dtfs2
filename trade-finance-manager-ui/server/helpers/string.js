@@ -1,4 +1,4 @@
-const { isString } = require("@ukef/dtfs2-common");
+const { isString } = require('@ukef/dtfs2-common');
 
 const isEmptyString = (str) => {
   if (!str || (isString(str) && !str.trim().length)) {

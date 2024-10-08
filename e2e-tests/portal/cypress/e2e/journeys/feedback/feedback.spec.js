@@ -1,9 +1,6 @@
 import relative from '../../relativeURL';
 
-const {
-  feedbackPage,
-  header,
-} = require('../../pages');
+const { feedbackPage, header } = require('../../pages');
 
 context('User submit feedback on portal', () => {
   beforeEach(() => {
@@ -77,6 +74,10 @@ context('User submit feedback on portal', () => {
     cy.url().should('eq', relative('/thank-you-feedback'));
 
     feedbackPage.thankYouPageHeading().contains('Feedback');
-    feedbackPage.thankYouPageText().contains('Thank you for your feedback. We will use your feedback for future improvement. Do let us know if there is anything else we need to know to improve this area of concern.');
+    feedbackPage
+      .thankYouPageText()
+      .contains(
+        'Thank you for your feedback. We will use your feedback for future improvement. Do let us know if there is anything else we need to know to improve this area of concern.',
+      );
   });
 });

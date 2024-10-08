@@ -77,7 +77,7 @@ Portal has a login process that requires a user to check their emails to success
 
   - **Portal UI** redirects the user to the `check-your-email` page ² ³
 
-- **user** clicks on login link ²
+- **user** clicks on login link
   - **Portal UI** checks login link with **Portal API**
     - **Portal API** checks this login link against the database login link for validity (including it has been clicked half an hour of being issued)
     - **Portal API** issues a new token to **Portal UI** with `loginStatus: 'Valid 2FA'`, and includes some additional user information ⁴

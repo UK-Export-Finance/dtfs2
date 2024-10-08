@@ -4,9 +4,9 @@ const amendmentYearValidation = require('./amendmentYearValidation.validate');
 
 /**
  *
- * @param {Object} body
- * @param {Object} facility
- * @returns {Object} containing errors and amendment date
+ * @param {object} body
+ * @param {object} facility
+ * @returns {object} containing errors and amendment date
  * function to validate the amendment effective date
  * checks if in future or before submission date
  */
@@ -20,8 +20,7 @@ const effectiveDateValidation = (body) => {
   const effectiveDateErrors = [];
 
   const amendmentEffectiveIsFullyComplete = effectiveDateDay && effectiveDateMonth && effectiveDateYear;
-  const amendmentEffectiveIsPartiallyComplete = !amendmentEffectiveIsFullyComplete
-    && (effectiveDateDay || effectiveDateMonth || effectiveDateYear);
+  const amendmentEffectiveIsPartiallyComplete = !amendmentEffectiveIsFullyComplete && (effectiveDateDay || effectiveDateMonth || effectiveDateYear);
   const amendmentEffectiveIsBlank = !effectiveDateDay && !effectiveDateMonth && !effectiveDateYear;
 
   let effectiveDate = null;

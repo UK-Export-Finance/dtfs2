@@ -1,6 +1,6 @@
 {
   "name": "dtfs",
-  "version": "1.2.1",
+  "version": "2.2.0",
   "description": "DTFS",
   "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
   "bugs": {
@@ -11,7 +11,7 @@
     "url": "git+https://github.com/UK-Export-Finance/dtfs2.git"
   },
   "license": "MIT",
-  "author": "",
+  "author": "UK Export Finance",
   "workspaces": [
     "azure-functions/*",
     "dtfs-central-api",
@@ -23,51 +23,64 @@
     "portal-api",
     "trade-finance-manager-api",
     "trade-finance-manager-ui",
-    "utils/*"
+    "utils"
   ],
   "scripts": {
-    "audit:all": "npm audit --if-present",
     "audit:fix:all": "npm audit --fix --if-present",
-    "ci:all": "npm ci --if-present",
-    "housekeeping": "npm run update:all && npm run install:all && npm run lint:fix:all && npm run audit:fix:all && npm run spellcheck",
-    "postinstall": "husky install",
-    "install:all": "npm install --if-present",
+    "env:copy": "(cd utils && npm run env:copy)",
+    "housekeeping": "npm update --save && npm i && npm run prettier:fix:all && npm run lint:fix:all && npm run validate:yml && npm run audit:fix:all && npm run spellcheck",
     "lint:all": "npm run lint --workspaces --if-present",
-    "lint:fix:all": "npm run lint --fix --workspaces --if-present",
-    "load": "ts-node utils/mock-data-loader/re-insert-mocks.js",
-    "spellcheck": "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color '**/*'",
-    "start": "docker compose up --build",
+    "lint:fix:all": "npm run lint --workspaces --if-present -- --fix",
+    "load": "(cd utils && npm run load)",
+    "prettier:all": "npm run prettier --workspaces --if-present",
+    "prettier:fix:all": "npm run prettier:fix --workspaces --if-present",
+    "spellcheck": "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color **/*",
+    "start": "docker compose up",
+    "start:build": "npm run start -- --build",
+    "start:build:detach": "npm run start:build -- --detach",
     "start:detach": "npm run start -- --detach",
     "stop": "docker compose down",
     "type-check:all": "npm run type-check --workspaces --if-present",
-    "update:all": "npm update --save --if-present"
+    "validate:all": "npm run lint:all && npm run prettier:all && npm run type-check:all && npm run validate:yml",
+    "validate:yml": "npx yaml-lint **/*.yml --ignore=**/node_modules --ignore=dtfs-mongo-volume-dtfs-submissions"
   },
   "lint-staged": {
     "**/package.json": "sort-package-json",
-    "**/*.js": "eslint --fix",
-    "**/*.ts": "eslint --fix",
+    "**/*.{js,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "**/*.md": [
+      "prettier --write"
+    ],
+    "**/*.yml": [
+      "npm run validate:yml"
+    ],
     "**/*": [
       "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color"
     ]
   },
   "dependencies": {
-    "axios": "^1.6.8"
+    "axios": "^1.7.4",
+    "express": "^4.20.0",
+    "release-please": "^16.10.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.8.1",
     "@commitlint/config-conventional": "^17.8.1",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
-    "cspell": "^7.3.9",
+    "cspell": "^8.8.4",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-prettier": "^5.1.3",
-    "husky": "^8.0.3",
-    "lint-staged": "^14.0.1",
+    "husky": "^9.1.4",
+    "lint-staged": "^15.2.10",
     "prettier": "3.0.3",
-    "sort-package-json": "^2.10.0"
+    "sort-package-json": "^2.10.0",
+    "yaml-lint": "^1.7.0"
   },
   "engines": {
     "node": ">=20",

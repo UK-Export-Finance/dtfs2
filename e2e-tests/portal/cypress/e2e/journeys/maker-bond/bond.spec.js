@@ -1,3 +1,5 @@
+import { DETAILS } from './bond-form-values';
+
 const pages = require('../../pages');
 const partials = require('../../partials');
 const BOND_FORM_VALUES = require('./bond-form-values');
@@ -5,7 +7,6 @@ const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
-import { DETAILS } from './bond-form-values';
 
 const MOCK_DEAL = {
   bankInternalRefName: 'someDealId',
@@ -22,8 +23,9 @@ context('Add a Bond to a Deal', () => {
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1)
-      .then((insertedDeal) => { deal = insertedDeal; });
+    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   it('should allow a user to create a Deal, pass Red Line and add a Bond to the deal', () => {
@@ -94,9 +96,12 @@ context('Add a Bond to a Deal', () => {
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
-        row.bondStatus().invoke('text').then((text) => {
-          expect(text.trim()).equal('Incomplete');
-        });
+        row
+          .bondStatus()
+          .invoke('text')
+          .then((text) => {
+            expect(text.trim()).equal('Incomplete');
+          });
         row.uniqueNumberLink().contains('Bond’s reference number not entered');
         row.deleteLink().contains('Delete bond');
       });
@@ -158,23 +163,35 @@ context('Add a Bond to a Deal', () => {
       cy.addBondToDeal();
       cy.url().should('include', '/check-your-answers');
 
-      partials.taskListHeader.itemStatus('bond-details').invoke('text').then((text) => {
-        expect(text.trim()).equal('Completed');
-      });
+      partials.taskListHeader
+        .itemStatus('bond-details')
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).equal('Completed');
+        });
 
-      partials.taskListHeader.itemStatus('financial-details').invoke('text').then((text) => {
-        expect(text.trim()).equal('Completed');
-      });
+      partials.taskListHeader
+        .itemStatus('financial-details')
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).equal('Completed');
+        });
 
-      partials.taskListHeader.itemStatus('fee-details').invoke('text').then((text) => {
-        expect(text.trim()).equal('Completed');
-      });
+      partials.taskListHeader
+        .itemStatus('fee-details')
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).equal('Completed');
+        });
 
       partials.taskListHeader.checkYourAnswersLink().should('be.visible');
 
-      partials.taskListHeader.checkYourAnswersLink().invoke('text').then((text) => {
-        expect(text.trim()).equal('Check your answers');
-      });
+      partials.taskListHeader
+        .checkYourAnswersLink()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).equal('Check your answers');
+        });
     });
 
     it('should populate Deal page with the submitted bond, display `Completed` status and link to `Bond Details` page', () => {
@@ -192,33 +209,51 @@ context('Add a Bond to a Deal', () => {
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
-        row.uniqueNumberLink().invoke('text').then((text) => {
-          expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.name);
-        });
+        row
+          .uniqueNumberLink()
+          .invoke('text')
+          .then((text) => {
+            expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.name);
+          });
 
-        row.bondStatus().invoke('text').then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
+        row
+          .bondStatus()
+          .invoke('text')
+          .then((text) => {
+            expect(text.trim()).equal('Completed');
+          });
 
-        row.facilityValue().invoke('text').then((text) => {
-          const expectedValue = `${deal.submissionDetails.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`;
-          expect(text.trim()).equal(expectedValue);
-        });
+        row
+          .facilityValue()
+          .invoke('text')
+          .then((text) => {
+            const expectedValue = `${deal.submissionDetails.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`;
+            expect(text.trim()).equal(expectedValue);
+          });
 
-        row.facilityStage().invoke('text').then((text) => {
-          expect(text.trim()).equal('Issued');
-        });
+        row
+          .facilityStage()
+          .invoke('text')
+          .then((text) => {
+            expect(text.trim()).equal('Issued');
+          });
 
-        row.requestedCoverStartDate().invoke('text').then((text) => {
-          const coverStartDate = `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}`;
+        row
+          .requestedCoverStartDate()
+          .invoke('text')
+          .then((text) => {
+            const coverStartDate = `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}`;
 
-          expect(text.trim()).equal(coverStartDate);
-        });
+            expect(text.trim()).equal(coverStartDate);
+          });
 
-        row.coverEndDate().invoke('text').then((text) => {
-          const expectedDate = `${BOND_FORM_VALUES.DETAILS.coverEndDateDay}/${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}/${BOND_FORM_VALUES.DETAILS.coverEndDateYear}`;
-          expect(text.trim()).equal(expectedDate);
-        });
+        row
+          .coverEndDate()
+          .invoke('text')
+          .then((text) => {
+            const expectedDate = `${BOND_FORM_VALUES.DETAILS.coverEndDateDay}/${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}/${BOND_FORM_VALUES.DETAILS.coverEndDateYear}`;
+            expect(text.trim()).equal(expectedDate);
+          });
 
         // assert that clicking the `unique number` link progresses to the Bond Details page
         row.uniqueNumberLink().click();

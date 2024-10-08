@@ -74,5 +74,4 @@ module.exports = {
   updatedECCriteria11WithExtraInfo,
   criteria11ExtraInfo,
   criteria11ExtraInfoEmpty,
-
 };

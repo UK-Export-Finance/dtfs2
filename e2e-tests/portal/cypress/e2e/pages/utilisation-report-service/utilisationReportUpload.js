@@ -13,6 +13,8 @@ const page = {
     this.utilisationReportFileInput().should('exist');
     this.continueButton().should('exist');
   },
+  overdueListItem: (reportPeriodStartMonth, reportPeriodStartYear) =>
+    cy.get(`[data-cy="list-item-${reportPeriodStartMonth}-${reportPeriodStartYear}__overdue"]`),
 };
 
 module.exports = page;

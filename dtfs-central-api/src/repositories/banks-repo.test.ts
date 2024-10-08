@@ -1,6 +1,6 @@
 import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
-import db from '../drivers/db-client';
-import { getAllBanks, getBankNameById } from './banks-repo';
+import { mongoDbClient as db } from '../drivers/db-client';
+import { getAllBanks, getBankNameById, getBankById } from './banks-repo';
 import { MOCK_BANKS } from '../../api-tests/mocks/banks';
 
 describe('banks-repo', () => {
@@ -83,6 +83,64 @@ describe('banks-repo', () => {
 
       // Assert
       expect(bankName).toBeUndefined();
+    });
+  });
+
+  describe('getBankById', () => {
+    const findOneMock = jest.fn();
+    const getCollectionMock = jest.fn();
+
+    beforeEach(() => {
+      getCollectionMock.mockResolvedValue({
+        findOne: findOneMock,
+      });
+      jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
+    });
+
+    it('calls the mongo collection with the correct name', async () => {
+      // Arrange
+      const bankId = '';
+
+      // Act
+      await getBankById(bankId);
+
+      // Assert
+      expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.BANKS);
+    });
+
+    it('calls the findOne function with the correct id', async () => {
+      // Arrange
+      const bankId = 'test';
+
+      // Act
+      await getBankById(bankId);
+
+      // Assert
+      expect(findOneMock).toHaveBeenLastCalledWith({ id: { $eq: bankId } });
+    });
+
+    it('returns the bank for the bank with the matching id', async () => {
+      // Arrange
+      const bankId = MOCK_BANKS.HSBC.id;
+      findOneMock.mockResolvedValue(MOCK_BANKS.HSBC);
+
+      // Act
+      const bank = await getBankById(bankId);
+
+      // Assert
+      expect(bank).toEqual(MOCK_BANKS.HSBC);
+    });
+
+    it('returns null if a bank with the supplied id does not exist', async () => {
+      // Arrange
+      const bankId = '';
+      findOneMock.mockResolvedValue(null);
+
+      // Act
+      const bank = await getBankById(bankId);
+
+      // Assert
+      expect(bank).toBeNull();
     });
   });
 });

@@ -3,9 +3,7 @@ import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
-import {
-  PIM_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN,
-} from '../../../../../e2e-fixtures';
+import { PIM_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import pages from '../../pages';
 
 context('Amendments - should not allow amendments to have same coverEndDate/value if previously submitted', () => {
@@ -78,10 +76,10 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     amendmentsPage.continueAmendment().click();
 
     cy.url().should('contain', 'facility-value');
-    amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
-    amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
 
+    amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
     amendmentsPage.continueAmendment().click();
+
     cy.url().should('contain', 'check-answers');
     amendmentsPage.continueAmendment().click();
   });
@@ -196,7 +194,7 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     amendmentsPage.continueAmendment().click();
 
     cy.url().should('contain', '/banks-decision/check-answers');
-    amendmentsPage.underWritingSubmitButton().click();
+    amendmentsPage.assignLeadUnderwriterSaveButton().click();
   });
 
   it('should throw an error if keeping the same facility value.  should submit amendment if same coverEndDate but different facility value', () => {
@@ -232,9 +230,9 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', 'cover-end-date');
 
-    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.threeDaysDay);
-    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.threeDaysMonth);
-    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.threeDaysYear);
+    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.threeYearsDay);
+    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.threeYearsMonth);
+    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.threeYearsYear);
     amendmentsPage.continueAmendment().click();
 
     cy.url().should('contain', 'facility-value');
@@ -294,7 +292,7 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     amendmentsPage.continueAmendment().click();
 
     cy.url().should('contain', '/banks-decision/check-answers');
-    amendmentsPage.underWritingSubmitButton().click();
+    amendmentsPage.assignLeadUnderwriterSaveButton().click();
   });
 
   it('should submit an amendment without errors with same values as last request as was withdrawn by bank', () => {
@@ -337,7 +335,7 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
 
     cy.url().should('contain', 'facility-value');
 
-    amendmentsPage.amendmentFacilityValueInput().clear().focused().type('12345');
+    amendmentsPage.amendmentFacilityValueInput().clear().focused().type('1234');
 
     amendmentsPage.continueAmendment().click();
 

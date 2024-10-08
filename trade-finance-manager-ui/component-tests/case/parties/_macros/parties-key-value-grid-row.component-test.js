@@ -1,7 +1,7 @@
-const pageRenderer = require('../../../componentRenderer');
+const { componentRenderer } = require('../../../componentRenderer');
 
 const page = '../templates/case/parties/_macros/parties-key-value-grid-row.njk';
-const render = pageRenderer(page);
+const render = componentRenderer(page);
 
 describe(page, () => {
   let wrapper;

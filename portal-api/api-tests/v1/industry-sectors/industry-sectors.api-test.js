@@ -5,7 +5,6 @@
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const { withNoRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 
 const { as, get } = require('../../api')(app);
 const { MAKER } = require('../../../src/v1/roles/roles');
@@ -15,13 +14,13 @@ jest.unmock('../../../src/external-api/api');
 const mockIndustrySectorCode = '1008';
 
 describe('/v1/industry-sectors', () => {
-  let noRoles;
   let aBarclaysMaker;
   let testUsers;
+  let testUser;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    noRoles = testUsers().withoutAnyRoles().one();
+    testUser = testUsers().one();
     aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
   });
 
@@ -30,14 +29,7 @@ describe('/v1/industry-sectors', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(industrySectorsUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(industrySectorsUrl, { headers: { Authorization: authHeader } })
-    });
-
-    withNoRoleAuthorisationTests({
-      getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-      makeRequestAsUser: (user) => as(user).get(industrySectorsUrl),
-      successStatusCode: 200,
+      makeRequestWithAuthHeader: (authHeader) => get(industrySectorsUrl, { headers: { Authorization: authHeader } }),
     });
 
     it('returns a list of industry-sectors', async () => {
@@ -59,18 +51,11 @@ describe('/v1/industry-sectors', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(mockIndustrySectorUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(mockIndustrySectorUrl, { headers: { Authorization: authHeader } })
-    });
-
-    withNoRoleAuthorisationTests({
-      getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-      makeRequestAsUser: (user) => as(user).get(mockIndustrySectorUrl),
-      successStatusCode: 200,
+      makeRequestWithAuthHeader: (authHeader) => get(mockIndustrySectorUrl, { headers: { Authorization: authHeader } }),
     });
 
     it('returns an industry sector', async () => {
-      const { status, body } = await as(noRoles).get(`/v1/industry-sectors/${mockIndustrySectorCode}`);
+      const { status, body } = await as(testUser).get(`/v1/industry-sectors/${mockIndustrySectorCode}`);
 
       expect(status).toEqual(200);
       expect(body.code).toBeDefined();
@@ -78,7 +63,7 @@ describe('/v1/industry-sectors', () => {
       expect(body.classes.length).toBeGreaterThan(0);
     });
 
-    it('returns 404 when industry sector doesn\'t exist', async () => {
+    it("returns 404 when industry sector doesn't exist", async () => {
       const { status } = await as(aBarclaysMaker).get('/v1/industry-sectors/11');
 
       expect(status).toEqual(404);

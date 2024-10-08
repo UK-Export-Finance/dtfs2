@@ -1,8 +1,8 @@
-const CONSTANTS = require('../../../src/constants');
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 
 const FACILITIES = [
   {
-    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+    type: FACILITY_TYPE.CASH,
     hasBeenIssued: true,
     name: null,
     shouldCoverStartOnSubmission: null,
@@ -18,7 +18,7 @@ const FACILITIES = [
     paymentType: null,
   },
   {
-    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+    type: FACILITY_TYPE.CASH,
     hasBeenIssued: true,
     name: null,
     shouldCoverStartOnSubmission: true,
@@ -33,8 +33,9 @@ const FACILITIES = [
     interestPercentage: null,
     paymentType: null,
     canResubmitIssuedFacilities: null,
-  }, {
-    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+  },
+  {
+    type: FACILITY_TYPE.CASH,
     hasBeenIssued: false,
     name: null,
     shouldCoverStartOnSubmission: null,
@@ -48,8 +49,9 @@ const FACILITIES = [
     coverPercentage: null,
     interestPercentage: null,
     paymentType: null,
-  }, {
-    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
+  },
+  {
+    type: FACILITY_TYPE.CONTINGENT,
     hasBeenIssued: true,
     name: null,
     shouldCoverStartOnSubmission: null,
@@ -63,8 +65,9 @@ const FACILITIES = [
     coverPercentage: null,
     interestPercentage: null,
     paymentType: null,
-  }, {
-    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
+  },
+  {
+    type: FACILITY_TYPE.CONTINGENT,
     hasBeenIssued: true,
     name: null,
     shouldCoverStartOnSubmission: true,
@@ -85,7 +88,7 @@ const FACILITIES = [
       firstname: 'Mister',
       surname: 'One',
       _id: '61e567d7db41bd65b00bd47a',
-    }
+    },
   },
   {
     type: 'Cash',
@@ -109,8 +112,8 @@ const FACILITIES = [
       firstname: 'Mister',
       surname: 'Two',
       _id: '61e567d7db41bd65b00bd47b',
-    }
-  }
+    },
+  },
 ];
 
 module.exports = FACILITIES;

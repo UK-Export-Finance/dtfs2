@@ -1,5 +1,5 @@
+const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
-const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 const { amendFacilityValueValidation } = require('./validation/amendFacilityValue.validate');
 const { formattedNumber } = require('../../../helpers/number');
 
@@ -90,7 +90,7 @@ const postAmendFacilityValue = async (req, res) => {
     console.error('Unable to update the facility value');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
   } catch (error) {
-    console.error('There was a problem creating the amendment approval %s', error);
+    console.error('There was a problem creating the amendment approval %o', error);
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   }
 };

@@ -1,3 +1,6 @@
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+
 const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
@@ -37,16 +40,12 @@ describe('deal comments controller', () => {
   });
 
   it('should update a comment', async () => {
-    const addedComment = await dealCommentsController.addComment(dealId, myComment, user);
+    const auditDetails = generatePortalAuditDetails(aBarclaysMaker._id);
+    const expectedAuditRecord = generateParsedMockAuditDatabaseRecord(auditDetails);
+    const addedComment = await dealCommentsController.addComment(dealId, myComment, user, auditDetails);
 
     expect(addedComment.comments[0].text).toEqual(myComment);
     expect(addedComment.comments[0].user.username).toEqual(user.username);
-  });
-
-  it('should update a special condition', async () => {
-    const addedComment = await dealCommentsController.addUkefDecision(dealId, myComment, user);
-
-    expect(addedComment.ukefDecision[0].text).toEqual(myComment);
-    expect(addedComment.ukefDecision[0].user.username).toEqual(user.username);
+    expect(addedComment.auditRecord).toEqual(expectedAuditRecord);
   });
 });

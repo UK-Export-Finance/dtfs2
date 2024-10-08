@@ -7,9 +7,9 @@ const { userIsInTeam } = require('../../../helpers/user');
 const { sortArrayOfObjectsAlphabetically } = require('../../../helpers/array');
 
 /**
- * @param {Object} amendment
- * @param {Object} user
- * @returns {Object}
+ * @param {object} amendment
+ * @param {object} user
+ * @returns {object}
  * checks if leadUnderwriter already set and returns an object with currentLeadUnderwriter if set
  */
 const getAmendmentLeadUnderwriter = async (amendment, user, token) => {
@@ -115,7 +115,7 @@ const postAssignAmendmentLeadUnderwriter = async (req, res) => {
 
     await api.updateAmendment(facilityId, amendmentId, update, userToken);
   } catch (error) {
-    console.error('TFM-UI- postAssignAmendmentLeadUnderwriter - error updating leadUnderwriter %s', error);
+    console.error('TFM-UI- postAssignAmendmentLeadUnderwriter - error updating leadUnderwriter %o', error);
   }
 
   return res.redirect(`/case/${dealId}/underwriting`);

@@ -3,8 +3,7 @@ const { getInclusiveMonthDifference, validDateFormats } = require('./date');
 
 describe('getInclusiveMonthDifference', () => {
   beforeAll(() => {
-    jest.useFakeTimers()
-      .setSystemTime(1809632593030); // Thu May 06 2027 20:43:13 GMT+0100
+    jest.useFakeTimers().setSystemTime(1809632593030); // Thu May 06 2027 20:43:13 GMT+0100
   });
 
   afterAll(() => {

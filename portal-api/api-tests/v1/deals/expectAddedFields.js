@@ -1,8 +1,9 @@
+const { addAuditRecordToExpectedResponse } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const CONSTANTS = require('../../../src/constants');
 const { expectMongoId } = require('../../expectMongoIds');
 
-const expectAddedFields = (obj) => {
-  const expectation = expectMongoId({
+const addBaseFields = (baseDeal) => {
+  return expectMongoId({
     dealType: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
     status: 'Draft',
     eligibility: {
@@ -12,7 +13,8 @@ const expectAddedFields = (obj) => {
       createdAt: expect.any(Number),
       criteria: expect.any(Array),
       isInDraft: expect.any(Boolean),
-      status: expect.any(String)
+      status: expect.any(String),
+      auditRecord: expect.any(Object),
     },
     submissionDetails: {
       status: 'Not started',
@@ -26,19 +28,24 @@ const expectAddedFields = (obj) => {
     },
     summary: {},
     comments: [],
-    ...obj,
+    ...baseDeal,
     maker: expect.any(Object),
     bank: expect.any(Object),
     details: {
-      ...obj.details,
+      ...baseDeal.details,
       created: expect.any(Number),
     },
     editedBy: [],
     exporter: expect.any(Object),
     updatedAt: expect.any(Number),
   });
+};
 
-  return expectation;
+const expectAddedFields = ({ baseDeal, auditDetails }) => {
+  const expectation = addBaseFields(baseDeal);
+  const expectationWithAuditRecord = addAuditRecordToExpectedResponse({ baseResponse: expectation, auditDetails });
+
+  return expectationWithAuditRecord;
 };
 
 const expectedEditedByObject = (user) => ({
@@ -49,22 +56,21 @@ const expectedEditedByObject = (user) => ({
   userId: user._id,
 });
 
-const expectAddedFieldsWithEditedBy = (obj, user, numberOfUpdates = 1) => {
+const expectAddedFieldsWithEditedBy = ({ baseDeal, user, auditDetails, numberOfUpdates = 1 }) => {
   const expectedEditedByArray = new Array(numberOfUpdates);
   expectedEditedByArray.fill(expectedEditedByObject(user));
 
   const expectation = expectMongoId({
-    ...expectAddedFields(obj),
+    ...addBaseFields(baseDeal),
     editedBy: expectedEditedByArray,
   });
 
-  return expectation;
-};
+  const expectationWithAuditRecord = addAuditRecordToExpectedResponse({ baseResponse: expectation, auditDetails });
 
-const expectAllAddedFields = (list) => list.map(expectAddedFields);
+  return expectationWithAuditRecord;
+};
 
 module.exports = {
   expectAddedFields,
-  expectAllAddedFields,
   expectAddedFieldsWithEditedBy,
 };

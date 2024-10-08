@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { backLink, errorSummary, headingCaption, mainHeading, form, continueButton, saveAndReturnButton } from '../partials';
 import enterExportersCorAddress from '../pages/enter-exporters-corr-address';
 import applicationDetails from '../pages/application-details';
 import exportersAddress from '../pages/exporters-address';
@@ -26,26 +27,28 @@ context('Enter Exporters Correspondence Address Page', () => {
 
   beforeEach(() => {
     cy.saveSession();
-    cy.visit(relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address`), { headers: { Referer: relative(`/gef/application-details/${dealIds[0].id}`) } });
+    cy.visit(relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address`), {
+      headers: { Referer: relative(`/gef/application-details/${dealIds[0].id}`) },
+    });
   });
 
   describe('Visiting page', () => {
     it('displays the correct elements', () => {
-      enterExportersCorAddress.backLink();
-      enterExportersCorAddress.headingCaption();
-      enterExportersCorAddress.mainHeading();
-      enterExportersCorAddress.form();
+      backLink();
+      headingCaption();
+      mainHeading();
+      form();
       enterExportersCorAddress.addressLine1();
       enterExportersCorAddress.addressLine2();
       enterExportersCorAddress.addressLine3();
       enterExportersCorAddress.locality();
       enterExportersCorAddress.postcode();
-      enterExportersCorAddress.continueButton();
-      enterExportersCorAddress.saveAndReturnButton();
+      continueButton();
+      saveAndReturnButton();
     });
 
     it('redirects user to select exporters address page when clicking on `Back` Link', () => {
-      enterExportersCorAddress.backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}`));
     });
 
@@ -53,11 +56,11 @@ context('Enter Exporters Correspondence Address Page', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0].id}/exporters-address`));
       exportersAddress.yesRadioButton().click();
       exportersAddress.correspondenceAddress().type(POSTCODE.INVALID);
-      exportersAddress.continueButton().click();
+      cy.clickContinueButton();
       exportersAddress.postcodeError();
       exportersAddress.manualAddressEntryLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address`));
-      enterExportersCorAddress.backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}`));
     });
 
@@ -98,8 +101,8 @@ context('Enter Exporters Correspondence Address Page', () => {
   describe('Clicking on Continue button', () => {
     it('shows error message if no address has been selected from dropdown', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address`));
-      enterExportersCorAddress.continueButton().click();
-      enterExportersCorAddress.errorSummary();
+      cy.clickContinueButton();
+      errorSummary();
       enterExportersCorAddress.addressLine1Error();
       enterExportersCorAddress.postcodeError();
     });
@@ -111,7 +114,7 @@ context('Enter Exporters Correspondence Address Page', () => {
         enterExportersCorAddress.addressLine3().type('Line 3');
         enterExportersCorAddress.locality().type('Locality');
         enterExportersCorAddress.postcode().type('Postcode');
-        enterExportersCorAddress.continueButton().click();
+        cy.clickContinueButton();
         cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}/about-exporter`));
       });
 
@@ -125,7 +128,7 @@ context('Enter Exporters Correspondence Address Page', () => {
   describe('Clicking on Save and return button', () => {
     it('bypasses validation and takes user back to application details page', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address`));
-      enterExportersCorAddress.saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}`));
     });
   });
@@ -133,12 +136,12 @@ context('Enter Exporters Correspondence Address Page', () => {
   describe('Status query is set to `change`', () => {
     it('hides `back button`', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address?status=change`));
-      enterExportersCorAddress.backLink().should('not.exist');
+      backLink().should('not.exist');
     });
 
     it('redirects user back to application details page when clicking on `Continue` button', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address?status=change`));
-      enterExportersCorAddress.continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}`));
     });
   });

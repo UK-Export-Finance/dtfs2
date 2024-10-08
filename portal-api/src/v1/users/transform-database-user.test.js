@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const { produce } = require('immer');
 const { TEST_DATABASE_USER } = require('../../../test-helpers/unit-test-mocks/mock-user');
 const { transformDatabaseUser } = require('./transform-database-user');

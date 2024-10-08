@@ -7,6 +7,7 @@ class MandatoryCriteria {
     this.criteria = req.criteria;
     this.createdAt = Date.now();
     this.updatedAt = null;
+    this.auditRecord = req.auditRecord;
   }
 }
 

@@ -11,10 +11,7 @@ import mockResponse from '../../../helpers/responseMock';
 import { getFlashSuccessMessage } from '../../../helpers';
 import api from '../../../api';
 import { dashboardFacilitiesFiltersQuery } from './facilities-filters-query';
-import {
-  submittedFiltersArray,
-  submittedFiltersObject,
-} from '../filters/helpers';
+import { submittedFiltersArray, submittedFiltersObject } from '../filters/helpers';
 import { removeSessionFilter } from '../filters/remove-filter-from-session';
 import { facilitiesTemplateFilters as templateFilters } from './template-filters';
 import { selectedFilters } from './selected-filters';
@@ -27,10 +24,7 @@ jest.mock('../../../api', () => ({
   allFacilities: jest.fn(),
 }));
 
-const mockFacilities = [
-  { _id: 'mockFacility' },
-  { _id: 'mockFacility2' },
-];
+const mockFacilities = [{ _id: 'mockFacility' }, { _id: 'mockFacility2' }];
 
 jest.mock('../../../helpers', () => ({
   __esModule: true,
@@ -68,43 +62,21 @@ describe('controllers/dashboard/facilities', () => {
 
   describe('getAllFacilitiesData', () => {
     it('should calls api.allFacilities with filters query', async () => {
-      await getAllFacilitiesData(
-        'mock-token',
-        mockReq.session.user,
-        mockReq.session.dashboardFilters,
-        mockReq.params.page,
-        CONSTANTS.SORT_BY.DEFAULT,
-        mockRes,
-      );
+      await getAllFacilitiesData('mock-token', mockReq.session.user, mockReq.session.dashboardFilters, mockReq.params.page, CONSTANTS.SORT_BY.DEFAULT, mockRes);
 
-      expect(api.allFacilities).toBeCalledTimes(1);
+      expect(api.allFacilities).toHaveBeenCalledTimes(1);
 
       const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
 
-      const expectedFilters = dashboardFacilitiesFiltersQuery(
-        filtersArray,
-        mockReq.session.user,
-      );
+      const expectedFilters = dashboardFacilitiesFiltersQuery(filtersArray, mockReq.session.user);
 
       const sortQuery = {};
 
-      expect(api.allFacilities).toHaveBeenCalledWith(
-        CONSTANTS.DASHBOARD.PAGE_SIZE,
-        CONSTANTS.DASHBOARD.PAGE_SIZE,
-        expectedFilters,
-        'mock-token',
-        sortQuery,
-      );
+      expect(api.allFacilities).toHaveBeenCalledWith(CONSTANTS.DASHBOARD.PAGE_SIZE, CONSTANTS.DASHBOARD.PAGE_SIZE, expectedFilters, 'mock-token', sortQuery);
     });
 
     it('should return an object', async () => {
-      const result = await getAllFacilitiesData(
-        'mock-token',
-        mockReq.session.user,
-        mockReq.session.dashboardFilters,
-        mockReq.params.page,
-        mockRes,
-      );
+      const result = await getAllFacilitiesData('mock-token', mockReq.session.user, mockReq.session.dashboardFilters, mockReq.params.page, mockRes);
 
       const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
 
@@ -216,7 +188,6 @@ describe('controllers/dashboard/facilities', () => {
         successMessage: getFlashSuccessMessage(mockReq),
         selectedFiltersString: 'Filters selected: none',
         activeSortByOrder: CONSTANTS.SORT_BY.DEFAULT,
-
       });
     });
   });

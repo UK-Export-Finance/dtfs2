@@ -1,4 +1,4 @@
-const componentRenderer = require('./componentRenderer');
+const { componentRenderer } = require('./componentRenderer');
 
 const component = '../templates/_macros/table-cell-checkbox.njk';
 
@@ -14,7 +14,7 @@ describe(component, () => {
 
     // Act
     const wrapper = render(params);
-  
+
     // Assert
     wrapper.expectElement('div.govuk-checkboxes').toExist();
     wrapper.expectElement('input.govuk-checkboxes__input').toHaveAttribute('id', 'abc123');

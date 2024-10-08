@@ -1,5 +1,5 @@
+const { InvalidEnvironmentVariableError } = require('@ukef/dtfs2-common');
 const createRateLimit = require('.');
-const InvalidEnvironmentVariableError = require('../../errors/invalid-environment-variable.error');
 
 describe('createRateLimit', () => {
   let originalProcessEnv;
@@ -16,11 +16,7 @@ describe('createRateLimit', () => {
     { value: 'NaN', description: 'NaN' },
   ];
 
-  const validThresholds = [
-    '1',
-    '5',
-    '100',
-  ];
+  const validThresholds = ['1', '5', '100'];
 
   const setRateLimitThresholdEnvVariableTo = (value) => {
     process.env = { RATE_LIMIT_THRESHOLD: value };

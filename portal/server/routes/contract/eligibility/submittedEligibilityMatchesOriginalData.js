@@ -30,10 +30,7 @@ const originalCriteriaAnswersAsStrings = (criteria) => {
 // flatten the original data we need into simple object
 // check if this object has any differences against api data.
 const submittedEligibilityMatchesOriginalData = (formData, originalData) => {
-  const flattenedOriginalData = flattenOriginalData(
-    originalData,
-    originalCriteriaAnswersAsStrings(originalData.criteria),
-  );
+  const flattenedOriginalData = flattenOriginalData(originalData, originalCriteriaAnswersAsStrings(originalData.criteria));
 
   if (formDataMatchesOriginalData(formData, flattenedOriginalData)) {
     return true;

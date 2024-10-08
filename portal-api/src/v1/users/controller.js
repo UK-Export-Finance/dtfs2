@@ -1,22 +1,25 @@
+const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
+const { PORTAL_USER } = require('@ukef/dtfs2-common/schemas');
+const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const { ObjectId } = require('mongodb');
+const { generateAuditDatabaseRecordFromAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
 const { getNowAsEpochMillisecondString } = require('../helpers/date');
-const db = require('../../drivers/db-client');
+const { mongoDbClient: db } = require('../../drivers/db-client');
 const sendEmail = require('../email');
 const businessRules = require('../../config/businessRules');
 const { sanitizeUser } = require('./sanitizeUserData');
 const utils = require('../../crypto/utils');
 const CONSTANTS = require('../../constants');
 const { isValidEmail } = require('../../utils/string');
-const { USER, PAYLOAD } = require('../../constants');
-const payloadVerification = require('../helpers/payload');
+const { USER } = require('../../constants');
 const { InvalidUserIdError, InvalidEmailAddressError, UserNotFoundError } = require('../errors');
 const InvalidSessionIdentifierError = require('../errors/invalid-session-identifier.error');
 const { transformDatabaseUser } = require('./transform-database-user');
 
 /**
  * Send a password update confirmation email with update timestamp.
- * @param {String} emailAddress User email address
- * @param {String} timestamp Password update timestamp
+ * @param {string} emailAddress User email address
+ * @param {string} timestamp Password update timestamp
  */
 const sendPasswordUpdateEmail = async (emailAddress, timestamp) => {
   const formattedTimestamp = new Date(Number(timestamp)).toLocaleDateString('en-GB', {
@@ -36,12 +39,12 @@ const sendPasswordUpdateEmail = async (emailAddress, timestamp) => {
 };
 exports.sendPasswordUpdateEmail = sendPasswordUpdateEmail;
 
-const createPasswordToken = async (email, userService) => {
+const createPasswordToken = async (email, userService, auditDetails) => {
   if (typeof email !== 'string') {
     throw new Error('Invalid Email');
   }
 
-  const collection = await db.getCollection('users');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
 
   const user = await collection.findOne({ email: { $eq: email } }, { collation: { locale: 'en', strength: 2 } });
 
@@ -55,6 +58,7 @@ const createPasswordToken = async (email, userService) => {
   const userUpdate = {
     resetPwdToken: hash,
     resetPwdTimestamp: `${Date.now()}`,
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
   if (!ObjectId.isValid(user._id)) {
@@ -93,7 +97,7 @@ const sendNewAccountEmail = async (user, resetToken) => {
 };
 
 exports.list = async (callback) => {
-  const collection = await db.getCollection('users');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
 
   collection.find().toArray(callback);
 };
@@ -106,7 +110,7 @@ exports.findOne = async (_id, callback) => {
     throw new InvalidUserIdError(_id);
   }
 
-  const collection = await db.getCollection('users');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
 
   collection.findOne({ _id: { $eq: ObjectId(_id) } }, callback);
 };
@@ -119,7 +123,7 @@ exports.findByUsername = async (username, callback) => {
     throw new Error('Invalid Username');
   }
 
-  const collection = await db.getCollection('users');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
   collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
@@ -127,7 +131,7 @@ exports.findByEmail = async (email) => {
   if (!isValidEmail(email)) {
     throw new InvalidEmailAddressError(email);
   }
-  const collection = await db.getCollection('users');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
   const user = await collection.findOne({ email: { $eq: email } });
 
   if (!user) {
@@ -137,48 +141,49 @@ exports.findByEmail = async (email) => {
   return transformDatabaseUser(user);
 };
 
-exports.create = async (user, userService, callback) => {
+exports.create = async (user, userService, auditDetails, callback) => {
   const insert = {
     'user-status': USER.STATUS.ACTIVE,
     timezone: USER.TIMEZONE.DEFAULT,
     ...user,
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
   delete insert?.autoCreatePassword;
   delete insert?.password;
   delete insert?.passwordConfirm;
 
-  if (payloadVerification(insert, PAYLOAD.PORTAL.USER)) {
-    const collection = await db.getCollection('users');
-    const createUserResult = await collection.insertOne(insert);
-
-    const { insertedId: userId } = createUserResult;
-
-    if (!ObjectId.isValid(userId)) {
-      throw new InvalidUserIdError(userId);
-    }
-
-    const createdUser = await collection.findOne({ _id: { $eq: userId } });
-
-    const sanitizedUser = sanitizeUser(createdUser);
-
-    const resetPasswordToken = await createPasswordToken(sanitizedUser.email, userService);
-    await sendNewAccountEmail(sanitizedUser, resetPasswordToken);
-
-    return callback(null, sanitizedUser);
+  if (!isVerifiedPayload({ payload: insert, template: PORTAL_USER.CREATE })) {
+    return callback('Invalid user payload', user);
   }
 
-  return callback('Invalid user payload', user);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
+  const createUserResult = await collection.insertOne(insert);
+
+  const { insertedId: userId } = createUserResult;
+
+  if (!ObjectId.isValid(userId)) {
+    throw new InvalidUserIdError(userId);
+  }
+
+  const createdUser = await collection.findOne({ _id: { $eq: userId } });
+
+  const sanitizedUser = sanitizeUser(createdUser);
+
+  const resetPasswordToken = await createPasswordToken(sanitizedUser.email, userService, auditDetails);
+  await sendNewAccountEmail(sanitizedUser, resetPasswordToken);
+
+  return callback(null, sanitizedUser);
 };
 
-exports.update = async (_id, update, callback) => {
+exports.update = async (_id, update, auditDetails, callback) => {
   if (!ObjectId.isValid(_id)) {
     throw new InvalidUserIdError(_id);
   }
 
   const userSetUpdate = { ...update };
   let userUnsetUpdate;
-  const collection = await db.getCollection('users');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
 
   collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => {
     if (existingUser['user-status'] !== USER.STATUS.BLOCKED && userSetUpdate['user-status'] === USER.STATUS.BLOCKED) {
@@ -228,16 +233,29 @@ exports.update = async (_id, update, callback) => {
     delete userSetUpdate.passwordConfirm;
     delete userSetUpdate.currentPassword;
 
+    if (
+      !isVerifiedPayload({
+        payload: userSetUpdate,
+        template: PORTAL_USER.UPDATE,
+      })
+    ) {
+      return callback('Invalid user payload', update);
+    }
+
+    userSetUpdate.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
+
     const userUpdate = { $set: userSetUpdate };
     if (userUnsetUpdate) {
       userUpdate.$unset = userUnsetUpdate;
     }
-    const updatedUser = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(_id) } }, userUpdate, { returnDocument: 'after' });
-    callback(null, updatedUser);
+    const updatedUser = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(_id) } }, userUpdate, {
+      returnDocument: 'after',
+    });
+    return callback(null, updatedUser);
   });
 };
 
-exports.updateSessionIdentifier = async (user, sessionIdentifier, callback) => {
+exports.updateSessionIdentifier = async (user, sessionIdentifier, auditDetails, callback) => {
   if (!ObjectId.isValid(user._id)) {
     throw new InvalidUserIdError(user._id);
   }
@@ -246,9 +264,10 @@ exports.updateSessionIdentifier = async (user, sessionIdentifier, callback) => {
     throw new InvalidSessionIdentifierError(sessionIdentifier);
   }
 
-  const collection = await db.getCollection('users');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
   const update = {
     sessionIdentifier,
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
@@ -256,31 +275,11 @@ exports.updateSessionIdentifier = async (user, sessionIdentifier, callback) => {
   callback();
 };
 
-exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, callback = () => {}) => {
+exports.incrementFailedLoginCount = async (user, auditDetails) => {
   if (!ObjectId.isValid(user._id)) {
     throw new InvalidUserIdError(user._id);
   }
-
-  if (!sessionIdentifier) {
-    throw new InvalidSessionIdentifierError(sessionIdentifier);
-  }
-
-  const collection = await db.getCollection('users');
-  const update = {
-    lastLogin: getNowAsEpochMillisecondString(),
-    loginFailureCount: 0,
-    sessionIdentifier,
-  };
-  await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
-
-  callback();
-};
-
-exports.incrementFailedLoginCount = async (user) => {
-  if (!ObjectId.isValid(user._id)) {
-    throw new InvalidUserIdError(user._id);
-  }
-  const collection = await db.getCollection('users');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
 
   const failureCount = user.loginFailureCount ? user.loginFailureCount + 1 : 1;
   const thresholdReached = failureCount >= businessRules.loginFailureCount_Limit;
@@ -289,10 +288,12 @@ exports.incrementFailedLoginCount = async (user) => {
     ? {
         'user-status': USER.STATUS.BLOCKED,
         blockedStatusReason: USER.STATUS_BLOCKED_REASON.INVALID_PASSWORD,
+        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
       }
     : {
         loginFailureCount: failureCount,
         lastLoginFailure: getNowAsEpochMillisecondString(),
+        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
       };
 
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
@@ -302,14 +303,15 @@ exports.incrementFailedLoginCount = async (user) => {
   }
 };
 
-exports.disable = async (_id, callback) => {
+exports.disable = async (_id, auditDetails, callback) => {
   if (!ObjectId.isValid(_id)) {
     throw new InvalidUserIdError(_id);
   }
 
-  const collection = await db.getCollection('users');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
   const userUpdate = {
     disabled: true,
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
   const status = await collection.updateOne({ _id: { $eq: ObjectId(_id) } }, { $set: userUpdate }, {});
@@ -317,13 +319,25 @@ exports.disable = async (_id, callback) => {
   callback(null, status);
 };
 
-exports.remove = async (_id, callback) => {
-  if (ObjectId.isValid(_id)) {
-    const collection = await db.getCollection('users');
-    const status = await collection.deleteOne({ _id: { $eq: ObjectId(_id) } });
-
-    return callback(null, status);
+exports.remove = async (_id, auditDetails, callback) => {
+  if (!ObjectId.isValid(_id)) {
+    return callback('Invalid portal user id', 400);
   }
 
-  return callback('Invalid portal user id', 400);
+  try {
+    await deleteOne({
+      documentId: new ObjectId(_id),
+      collectionName: MONGO_DB_COLLECTIONS.USERS,
+      db,
+      auditDetails,
+    });
+
+    return callback(null, 200);
+  } catch (error) {
+    if (error instanceof DocumentNotDeletedError) {
+      return callback(error, 404);
+    }
+    console.error('Deleting a user threw an error %o', error);
+    return callback(error, 500);
+  }
 };

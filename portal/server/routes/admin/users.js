@@ -1,12 +1,6 @@
 const express = require('express');
 const api = require('../../api');
-const {
-  getApiData,
-  requestParams,
-  errorHref,
-  generateErrorSummary,
-  constructPayload,
-} = require('../../helpers');
+const { getApiData, requestParams, errorHref, generateErrorSummary, constructPayload, convertUserFormDataToRequest } = require('../../helpers');
 const { ALL_BANKS_ID, PRIMARY_NAV_KEY } = require('../../constants');
 
 const router = express.Router();
@@ -57,63 +51,42 @@ router.get('/users/create', async (req, res) => {
   });
 });
 
-// roles are fed in = require(checkboxes, so we either get a string or an array.).
-// -so if we don't get an array, put it into an array..
-const handleRoles = (roles) => (Array.isArray(roles)
-  ? [...roles]
-  : [roles]);
-
 // Admin - user create
 router.post('/users/create', async (req, res) => {
-  const {
-    firstname,
-    surname,
-    roles,
-    email,
-    bank,
-  } = req.body;
+  const { bank } = req.body;
 
-  if (firstname && surname && roles && bank) {
-    const { userToken } = requestParams(req);
-    const user = {
-      ...req.body,
-      username: email,
-      roles: handleRoles(req.body.roles),
+  const { userToken } = requestParams(req);
+  const user = convertUserFormDataToRequest(req.body);
+
+  // inflate the bank object
+  const banks = await getApiData(api.banks(userToken), res);
+
+  if (bank === 'all') {
+    user.bank = {
+      id: ALL_BANKS_ID,
+      name: 'All',
+      hasGefAccessOnly: false,
     };
-
-    // inflate the bank object
-    const banks = await getApiData(api.banks(userToken), res);
-
-    // `fi` stands for `financial institution`
-    if (bank === 'all') {
-      user.bank = {
-        id: ALL_BANKS_ID,
-        name: 'All',
-        hasGefAccessOnly: false,
-      };
-    } else {
-      const selectedBank = banks.find((fi) => fi.id === user.bank);
-      user.bank = selectedBank;
-    }
-
-    const { status, data } = await api.createUser(user, userToken);
-
-    if (status === 200) {
-      return res.redirect('/admin/users/');
-    }
-
-    const formattedValidationErrors = generateErrorSummary(data.errors, errorHref);
-
-    return res.render('admin/user-edit.njk', {
-      primaryNav: PRIMARY_NAV_KEY.USERS,
-      banks: banks.sort((bank1, bank2) => bank1.name < bank2.name),
-      user: req.session.user,
-      displayedUser: user,
-      validationErrors: formattedValidationErrors,
-    });
+  } else {
+    const selectedBank = banks.find((financialInstitution) => financialInstitution.id === user.bank);
+    user.bank = selectedBank;
   }
 
-  return res.redirect('/admin/users/create');
+  const { status, data } = await api.createUser(user, userToken);
+
+  if (status === 200) {
+    return res.redirect('/admin/users/');
+  }
+
+  const formattedValidationErrors = generateErrorSummary(data.errors, errorHref);
+
+  return res.render('admin/user-edit.njk', {
+    primaryNav: PRIMARY_NAV_KEY.USERS,
+    banks: banks.sort((bank1, bank2) => bank1.name < bank2.name),
+    user: req.session.user,
+    displayedUser: user,
+    validationErrors: formattedValidationErrors,
+  });
 });
 
 // Admin - user edit
@@ -125,19 +98,11 @@ router.get('/users/edit/:_id', async (req, res) => {
 
 // Admin - user edit
 router.post('/users/edit/:_id', async (req, res) => {
-  const payloadProperties = [
-    'firstname',
-    'surname',
-    'user-status',
-    'roles',
-  ];
+  const payloadProperties = ['firstname', 'surname', 'user-status', 'roles', 'isTrusted'];
   const payload = constructPayload(req.body, payloadProperties);
   const { _id, userToken } = requestParams(req);
 
-  const update = {
-    ...payload,
-    roles: handleRoles(payload.roles),
-  };
+  const update = convertUserFormDataToRequest(payload);
 
   const { status, data } = await api.updateUser(_id, update, userToken);
 
@@ -199,10 +164,7 @@ router.get('/users/change-password/:_id', async (req, res) => {
 
 // Admin - Change user password
 router.post('/users/change-password/:_id', async (req, res) => {
-  const payloadProperties = [
-    'password',
-    'passwordConfirm',
-  ];
+  const payloadProperties = ['password', 'passwordConfirm'];
   const payload = constructPayload(req.body, payloadProperties);
   const { _id, userToken } = requestParams(req);
 

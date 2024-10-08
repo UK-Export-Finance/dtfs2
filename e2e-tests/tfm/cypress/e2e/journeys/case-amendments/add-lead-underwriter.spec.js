@@ -3,10 +3,10 @@ import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
-import {
-  PIM_USER_1, T1_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN,
-} from '../../../../../e2e-fixtures';
+import { PIM_USER_1, T1_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import pages from '../../pages';
+import { commonTestUnderwriterTasksAssignedToUser } from '../../common-tests/assessmentTasksAssignedTo';
+import { TASKS } from '../../../fixtures/constants';
 
 context('Amendments underwriting - add lead underwriter', () => {
   describe('Amendments add lead underwriter', () => {
@@ -87,9 +87,9 @@ context('Amendments underwriting - add lead underwriter', () => {
 
       const { _id } = dealFacilities[0];
 
-      pages.underwritingPage.assignAmendmentLeadUnderwriterButton().contains('Add underwriter');
+      pages.underwritingPage.amendmentAddLeadUnderwriterLink().contains('Add underwriter');
 
-      pages.underwritingPage.assignAmendmentLeadUnderwriterButton().click({ force: true });
+      pages.underwritingPage.amendmentAddLeadUnderwriterLink().click({ force: true });
 
       cy.url().should('contain', `case/${dealId}/facility/${_id}/amendment`);
       cy.url().should('contain', '/lead-underwriter');
@@ -99,58 +99,96 @@ context('Amendments underwriting - add lead underwriter', () => {
       pages.amendmentsPage.assignedToSelectInputOption();
       pages.amendmentsPage.assignedToSelectInputSelectedOption();
 
-      pages.amendmentsPage.underWritingSubmitButton();
-      pages.amendmentsPage.underWritingCancelLink();
+      pages.amendmentsPage.assignLeadUnderwriterSaveButton();
+      pages.amendmentsPage.assignLeadUnderwriterCancelLink();
     });
 
     it('should still show add lead underwriter button if press cancel on assign page', () => {
       cy.login(UNDERWRITER_MANAGER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
-      pages.underwritingPage.assignAmendmentLeadUnderwriterButton().contains('Add underwriter');
+      pages.underwritingPage.amendmentAddLeadUnderwriterLink().contains('Add underwriter');
 
-      pages.underwritingPage.assignAmendmentLeadUnderwriterButton().click({ force: true });
+      pages.underwritingPage.amendmentAddLeadUnderwriterLink().click({ force: true });
 
-      pages.amendmentsPage.underWritingCancelLink().click();
+      pages.amendmentsPage.assignLeadUnderwriterCancelLink().click();
 
-      pages.underwritingPage.assignAmendmentLeadUnderwriterButton().contains('Add underwriter');
+      pages.underwritingPage.amendmentAddLeadUnderwriterLink().contains('Add underwriter');
     });
 
     it('should show details of assigned lead underwriter details on assigning an underwriter and a change links which takes back to assign lead underwriter page', () => {
       cy.login(UNDERWRITER_MANAGER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
-      pages.underwritingPage.assignAmendmentLeadUnderwriterButton().contains('Add underwriter');
+      pages.underwritingPage.amendmentAddLeadUnderwriterLink().contains('Add underwriter');
 
-      pages.underwritingPage.assignAmendmentLeadUnderwriterButton().click({ force: true });
+      commonTestUnderwriterTasksAssignedToUser(dealId, TASKS.UNASSIGNED);
 
-      pages.amendmentsPage.underWritingSubmitButton(0).click();
+      pages.underwritingPage.amendmentAddLeadUnderwriterLink().click({ force: true });
 
-      pages.underwritingPage.assignAmendmentLeadUnderwriterButton().should('not.exist');
-
-      pages.underwritingPage.amendmentLeadUnderwriterEmail().contains(`${UNDERWRITER_MANAGER_1.email}`);
-      pages.underwritingPage.amendmentChangeLeadUnderwriterLink().contains('Change');
-
-      pages.underwritingPage.amendmentChangeLeadUnderwriterLink().click({ force: true });
-
-      const { _id } = dealFacilities[0];
-
-      cy.url().should('contain', `case/${dealId}/facility/${_id}/amendment`);
+      // Assert url format for lead underwriter assignment/modification.
+      cy.url().should('contain', `case/${dealId}/facility/${dealFacilities[0]._id}/amendment`);
       cy.url().should('contain', '/lead-underwriter');
+
+      // Lead Underwriter will be assigned on save, because select input was auto selected to current user.
+      pages.amendmentsPage.assignLeadUnderwriterSaveButton(0).click();
+
+      pages.underwritingPage.amendmentAddLeadUnderwriterLink().should('not.exist');
+
+      // Assert active lead underwritter by fullname
+      pages.underwritingPage.amendmentLeadUnderwriterFullName().contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
+      // Assert active lead underwritter by email, even if all emails are identical.
+      pages.underwritingPage.amendmentLeadUnderwriterEmail().contains(`${UNDERWRITER_MANAGER_1.email}`);
+
+      commonTestUnderwriterTasksAssignedToUser(dealId, UNDERWRITER_MANAGER_1);
     });
 
     it('should not show change link when logged in as T1_USER or PIM user', () => {
       cy.login(PIM_USER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
-      pages.underwritingPage.amendmentLeadUnderwriterEmail().contains(`${UNDERWRITER_MANAGER_1.email}`);
+      pages.underwritingPage.amendmentLeadUnderwriterFullName().contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
       pages.underwritingPage.amendmentChangeLeadUnderwriterLink().should('not.exist');
 
       cy.login(T1_USER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
-      pages.underwritingPage.amendmentLeadUnderwriterEmail().contains(`${UNDERWRITER_MANAGER_1.email}`);
+      pages.underwritingPage.amendmentLeadUnderwriterFullName().contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
       pages.underwritingPage.amendmentChangeLeadUnderwriterLink().should('not.exist');
+    });
+
+    it('should allow changing lead underwriter', () => {
+      cy.login(UNDERWRITER_MANAGER_1);
+      cy.visit(relative(`/case/${dealId}/underwriting`));
+
+      pages.underwritingPage.amendmentChangeLeadUnderwriterLink().contains('Change');
+      pages.underwritingPage.amendmentChangeLeadUnderwriterLink().click({ force: true });
+
+      pages.underwritingPage.amendmentLeadUnderwriterSelectInput().select(`${UNDERWRITER_1.firstName} ${UNDERWRITER_1.lastName}`);
+
+      pages.amendmentsPage.assignLeadUnderwriterSaveButton(0).click();
+
+      // Assert active lead underwritter, better to use name because all emails are same.
+      pages.underwritingPage.amendmentLeadUnderwriterFullName().contains(`${UNDERWRITER_1.firstName} ${UNDERWRITER_1.lastName}`);
+
+      commonTestUnderwriterTasksAssignedToUser(dealId, UNDERWRITER_1);
+    });
+
+    it('should allow unassigning lead underwriter', () => {
+      cy.login(UNDERWRITER_MANAGER_1);
+      cy.visit(relative(`/case/${dealId}/underwriting`));
+
+      pages.underwritingPage.amendmentChangeLeadUnderwriterLink().contains('Change');
+      pages.underwritingPage.amendmentChangeLeadUnderwriterLink().click({ force: true });
+
+      pages.underwritingPage.amendmentLeadUnderwriterSelectInput().select(TASKS.UNASSIGNED);
+
+      pages.amendmentsPage.assignLeadUnderwriterSaveButton(0).click();
+
+      pages.underwritingPage.amendmentLeadUnderwriterFullName().should('not.exist');
+      pages.underwritingPage.amendmentAddLeadUnderwriterLink().contains('Add underwriter');
+
+      commonTestUnderwriterTasksAssignedToUser(dealId, TASKS.UNASSIGNED);
     });
   });
 });

@@ -1,6 +1,8 @@
 const { format, getUnixTime, fromUnixTime } = require('date-fns');
 const sanitizeHtml = require('sanitize-html');
-const db = require('../../drivers/db-client');
+const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
+const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { mongoDbClient: db } = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
 const sendTfmEmail = require('./send-tfm-email');
 
@@ -27,7 +29,21 @@ exports.create = async (req, res) => {
     howCanWeImprove,
     emailAddress,
     submittedBy,
+    // Because this is on the open router, information about the user cannot be inferred from req.user
+    auditDetails,
   } = req.body;
+
+  try {
+    validateAuditDetails(auditDetails);
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: `Invalid auditDetails: ${error.message}`,
+      });
+    }
+    return res.status(500).send({ status: 500, error });
+  }
 
   const modifiedFeedback = {
     role,
@@ -38,7 +54,8 @@ exports.create = async (req, res) => {
     howCanWeImprove,
     emailAddress,
     submittedBy,
-    created: getUnixTime(new Date())
+    created: getUnixTime(new Date()),
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
   const collection = await db.getCollection('tfm-feedback');
@@ -67,13 +84,9 @@ exports.create = async (req, res) => {
   const EMAIL_RECIPIENT = process.env.GOV_NOTIFY_EMAIL_RECIPIENT;
 
   try {
-    await sendTfmEmail(
-      EMAIL_TEMPLATE_ID,
-      EMAIL_RECIPIENT,
-      emailVariables,
-    );
+    await sendTfmEmail(EMAIL_TEMPLATE_ID, EMAIL_RECIPIENT, emailVariables);
   } catch (error) {
-    console.error('TFM-API feedback controller - error sending email %s', error);
+    console.error('TFM-API feedback controller - error sending email %o', error);
   }
 
   return res.status(200).send({ _id: createdFeedback.insertedId });

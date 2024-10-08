@@ -1,9 +1,15 @@
+const { FACILITY_PROVIDED_DETAILS } = require('@ukef/dtfs2-common');
 const httpError = require('http-errors');
 const lodashIsEmpty = require('lodash/isEmpty');
 const commaNumber = require('comma-number');
 const cleanDeep = require('clean-deep');
 const { format } = require('date-fns');
 const CONSTANTS = require('../constants');
+
+const ACTION_TEXT = {
+  CHANGE: 'Change',
+  ADD: 'Add',
+};
 
 const {
   facilitiesChangedToIssuedAsArray,
@@ -25,9 +31,7 @@ const userToken = (req) => {
 const isObject = (el) => typeof el === 'object' && el !== null && !(el instanceof Array);
 
 const isMIAWithoutChangedToIssuedFacilities = (app) =>
-  app.status === CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED
-  && app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIA
-  && app.submissionCount > 0;
+  app.status === CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED && app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIA && app.submissionCount > 0;
 
 // Converts Api errors into more manageable objects
 const apiErrorHandler = ({ code, response }) => {
@@ -58,20 +62,21 @@ const ErrorMessagesMap = {
   },
 };
 
-/*
-  Maps through validation errors = require( the server and returns i)t
-  so both Summary Error component and field component
-  can display the error messages correctly.
-*/
+/**
+ * Maps validation errors so both Summary Error component and field component display the error messages correctly.
+ * @param {import('../types/validation-error').ValidationError[] | import('../types/validation-error').ValidationError} errs - errors to be mapped
+ * @param {string} href - the current page URL
+ * @returns {import('../types/view-models/view-model-errors').ViewModelErrors | null}
+ */
 const validationErrorHandler = (errs, href = '') => {
   const errorSummary = [];
   const fieldErrors = {};
 
   if (!errs) {
-    return false;
+    return null;
   }
 
-  const errors = isObject(errs) ? [errs] : errs;
+  const errors = Array.isArray(errs) ? errs : [errs];
 
   errors.forEach((el) => {
     const errorsForReference = ErrorMessagesMap[el.errRef];
@@ -105,49 +110,60 @@ const validationErrorHandler = (errs, href = '') => {
 const isEmpty = (value) => lodashIsEmpty(cleanDeep(value));
 
 // for which rows in the facility tables should show change when facilities changed to issued post submission
-const changedToIssuedKeys = (id) =>
-  id === 'name' || id === 'coverStartDate' || id === 'coverEndDate' || id === 'issueDate' || id === 'hasBeenIssued';
+const calculateShouldDisplayChangeLinkOnceIssued = (id) => {
+  const fieldsThatAllowChangeLink = [
+    'name',
+    'coverStartDate',
+    'coverEndDate',
+    'issueDate',
+    'hasBeenIssued',
+    'isUsingFacilityEndDate',
+    'facilityEndDate',
+    'bankReviewDate',
+  ];
+  return fieldsThatAllowChangeLink.includes(id);
+};
 
 const returnToMakerNoFacilitiesChanged = (app, hasChangedFacilities) => {
-  const acceptableStatus = [
-    CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED,
-  ];
+  const acceptableStatus = [CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED];
 
-  return ((app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN) || (app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIN))
-    && acceptableStatus.includes(app.status) && !hasChangedFacilities && app.submissionCount > 0;
+  return (
+    (app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN || app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIN) &&
+    acceptableStatus.includes(app.status) &&
+    !hasChangedFacilities &&
+    app.submissionCount > 0
+  );
 };
+/**
+ * @param {object} params
+ * @param {string} params.href - the URL to navigate to
+ * @param {string} params.visuallyHiddenText - the visually hidden label to make it clear to a screen reader what the link is changing
+ * @param {string | undefined} params.text - the text to display, component has class display-none if falsy
+ * @param {string} params.id - the row id, used in the data-cy
+ * @returns an array containing the action button to render
+ */
+const generateActionsArrayForItem = ({ href, visuallyHiddenText, text, id }) => {
+  const attributes = {
+    'data-cy': `${id}-action`,
+  };
 
-// summary items for application details page
-const detailsSummaryItems = (href, keys, item, value) => {
-  const summaryItems = [
-    ...(href
-      ? [
-        {
-          href,
-          text: `${keys || !isEmpty(value) ? 'Change' : 'Add'}`,
-          visuallyHiddenText: item.label,
-        },
-      ]
-      : []),
+  if (!text) {
+    return [
+      {
+        attributes,
+        classes: 'govuk-!-display-none',
+      },
+    ];
+  }
+
+  return [
+    {
+      href,
+      text,
+      visuallyHiddenText,
+      attributes,
+    },
   ];
-  return summaryItems;
-};
-
-// produces summary items array for application preview page
-const previewSummaryItems = (href, keys, item) => {
-  const summaryItems = [
-    ...(href
-      ? [
-        {
-          href,
-          text: `${keys ? 'Change' : ''}`,
-          visuallyHiddenText: item.label,
-        },
-      ]
-      : []),
-  ];
-
-  return summaryItems;
 };
 
 /*
@@ -155,30 +171,15 @@ const previewSummaryItems = (href, keys, item) => {
   returns array with rows with relevant change or add links
 */
 const previewItemConditions = (previewParams) => {
-  const {
-    issuedHref,
-    unissuedHref,
-    issuedToUnissuedHref,
-    changedToIssueShow,
-    unissuedShow,
-    item,
-    app,
-  } = previewParams;
+  const { issuedHref, unissuedHref, issuedToUnissuedHref, shouldDisplayChangeLinkIfIssued, shouldDisplayChangeLinkIfUnissued, item, app } = previewParams;
   let summaryItems = [];
-  const statusMIA = [
-    CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL,
-    CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF,
-  ];
-  const statusAIN = [
-    ...statusMIA,
-    CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
-    CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF,
-    CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED,
-  ];
+  const statusMIA = [CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF];
+  const statusAIN = [...statusMIA, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF, CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED];
 
-  const validStatus = app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN
-    ? !statusAIN.includes(app.status)
-    : !statusMIA.includes(app.status) && app.submissionType !== CONSTANTS.DEAL_SUBMISSION_TYPE.MIN;
+  const validStatus =
+    app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN
+      ? !statusAIN.includes(app.status)
+      : !statusMIA.includes(app.status) && app.submissionType !== CONSTANTS.DEAL_SUBMISSION_TYPE.MIN;
   const ukefDecisionAccepted = app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN || Boolean(app.ukefDecisionAccepted);
 
   if (summaryIssuedChangedToIssued(previewParams)) {
@@ -188,25 +189,45 @@ const previewItemConditions = (previewParams) => {
      * creates change link with different href to change to unissued again for the stage row
      */
     if (item.id === 'hasBeenIssued') {
-      summaryItems = previewSummaryItems(issuedToUnissuedHref, changedToIssueShow, item);
+      summaryItems = generateActionsArrayForItem({
+        href: issuedToUnissuedHref,
+        visuallyHiddenText: item.label,
+        text: shouldDisplayChangeLinkIfIssued && ACTION_TEXT.CHANGE,
+        id: item.id,
+      });
     } else {
-    /**
-     * If submitted to UKEF or FURTHER MAKER'S INPUT REQUIRED && logged in as maker && facility changed to issued
-     * can change name, coverStartDate and coverEndDate column
-     * change link displayed taking to unissued-facility-change change page
-     */
-      summaryItems = previewSummaryItems(unissuedHref, changedToIssueShow, item);
+      /**
+       * If submitted to UKEF or FURTHER MAKER'S INPUT REQUIRED && logged in as maker && facility changed to issued
+       * can change name, coverStartDate and coverEndDate column
+       * change link displayed taking to unissued-facility-change change page
+       */
+      summaryItems = generateActionsArrayForItem({
+        href: unissuedHref,
+        visuallyHiddenText: item.label,
+        text: shouldDisplayChangeLinkIfIssued && ACTION_TEXT.CHANGE,
+        id: item.id,
+      });
     }
   } else if (summaryIssuedUnchanged(previewParams)) {
     /**
      * If submitted to UKEF or FURTHER MAKER'S INPUT REQUIRED && logged in as maker && facility still unissued
      * only shows if other facilities have been changed to issued
      * changes to issued
-     * add link displayed taking to unissued-facility-change change page
+     * add link displayed taking to unissued-facility-change change page, overwriting existing value for isFacilityEndDateProvided
      */
-    summaryItems = previewSummaryItems(unissuedHref, unissuedShow, item);
+    summaryItems = generateActionsArrayForItem({
+      href: `${unissuedHref}`,
+      visuallyHiddenText: item.label,
+      text: shouldDisplayChangeLinkIfUnissued && ACTION_TEXT.CHANGE,
+      id: item.id,
+    });
   } else if (ukefDecisionAccepted && item.id === 'coverStartDate' && validStatus) {
-    summaryItems = previewSummaryItems(issuedHref, ukefDecisionAccepted, item);
+    summaryItems = generateActionsArrayForItem({
+      href: issuedHref,
+      visuallyHiddenText: item.label,
+      text: ukefDecisionAccepted && ACTION_TEXT.CHANGE,
+      id: item.id,
+    });
   }
 
   return summaryItems;
@@ -217,16 +238,11 @@ const previewItemConditions = (previewParams) => {
   return to maker loads application details page and if has facilities canResubmitIssuedFacilities then only makes certain fields clickable
 */
 const detailItemConditions = (params) => {
-  const {
-    hasChangedFacilities,
-    href,
-    isCoverStartOnSubmission,
-    item,
-    value,
-    app,
-  } = params;
+  const { hasChangedFacilities, href, isCoverStartOnSubmission, item, value, app } = params;
 
   let summaryItems = [];
+
+  const fieldsProvidedByCompaniesHouse = ['companyName', 'registeredAddress', 'selectedIndustry'];
 
   // if facilities have been canResubmitIssuedFacilities (when returning to maker)
   if (hasChangedFacilities) {
@@ -239,9 +255,22 @@ const detailItemConditions = (params) => {
     summaryItems = previewItemConditions(params);
   } else if (returnToMakerNoFacilitiesChanged(app, hasChangedFacilities)) {
     summaryItems = previewItemConditions(params);
+  } else if (fieldsProvidedByCompaniesHouse.includes(item.id)) {
+    summaryItems = generateActionsArrayForItem({
+      href,
+      visuallyHiddenText: item.label,
+      id: item.id,
+    });
   } else {
     // for all other application details page
-    summaryItems = detailsSummaryItems(href, isCoverStartOnSubmission, item, value);
+    const linkText = isCoverStartOnSubmission || !isEmpty(value) ? ACTION_TEXT.CHANGE : ACTION_TEXT.ADD;
+
+    summaryItems = generateActionsArrayForItem({
+      href,
+      visuallyHiddenText: item.label,
+      text: linkText,
+      id: item.id,
+    });
   }
 
   return summaryItems;
@@ -253,35 +282,32 @@ const detailItemConditions = (params) => {
    and given personalised href.
 */
 const summaryItemsConditions = (summaryItemsObj) => {
-  const {
-    preview,
-    item,
-    details,
-    app,
-    user,
-    data,
-    hasChangedFacilities,
-  } = summaryItemsObj;
+  const { preview, item, details, app, user, data, hasChangedFacilities } = summaryItemsObj;
   const acceptableStatus = [
     CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
     CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED,
     CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
     CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
   ];
-  const acceptableRole = [
-    MAKER,
-  ];
+  const acceptableRole = [MAKER];
   const { id, href, shouldCoverStartOnSubmission } = item;
   const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
   const isCoverStartOnSubmission = id === 'coverStartDate' && shouldCoverStartOnSubmission;
-  // column keys to display change if facility has been changed to issued
-  const changedToIssueShow = changedToIssuedKeys(id);
-  // column key to display add if facility not yet issued
-  const unissuedShow = id === 'hasBeenIssued';
+  // should display `change` action when facility has been changed to issued
+  const shouldDisplayChangeLinkIfIssued = calculateShouldDisplayChangeLinkOnceIssued(id);
+  // should display `change` action when facility is not yet issued
+  const shouldDisplayChangeLinkIfUnissued = id === 'hasBeenIssued';
   // Issued facility change link (post confirmation)
   const issuedHref = `/gef/application-details/${app._id}/${data.details._id}/confirm-cover-start-date`;
   // personalised href for facility to change to issued (once submitted to UKEF)
-  const unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/change`;
+  let unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/change`;
+  if (id === 'facilityEndDate') {
+    // personalised href to change facility end date (once submitted to UKEF)
+    unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/facility-end-date/change`;
+  } else if (id === 'bankReviewDate') {
+    // personalised href to change bank review date (once submitted to UKEF)
+    unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/bank-review-date/change`;
+  }
   // personalised href for facility to change to unissued from issued (once submitted to UKEF and changed to issued)
   const issuedToUnissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/change-to-unissued`;
   // array of facilities which have been changed to issued
@@ -298,8 +324,8 @@ const summaryItemsConditions = (summaryItemsObj) => {
     unissuedHref,
     issuedToUnissuedHref,
     isCoverStartOnSubmission,
-    changedToIssueShow,
-    unissuedShow,
+    shouldDisplayChangeLinkIfIssued,
+    shouldDisplayChangeLinkIfUnissued,
     item,
     value,
     acceptableStatus,
@@ -315,15 +341,11 @@ const summaryItemsConditions = (summaryItemsObj) => {
     // maps and shows relevant change/add links for application preview
     summaryItems = previewItemConditions(params);
   }
-  return summaryItems;
+  return summaryItems.length ? summaryItems : generateActionsArrayForItem({ id: item.id });
 };
 
 const mapSummaryList = (data, itemsToShow, mapSummaryParams, preview = false) => {
-  const {
-    app,
-    user,
-    hasChangedFacilities,
-  } = mapSummaryParams;
+  const { app, user, hasChangedFacilities } = mapSummaryParams;
 
   if (!data || lodashIsEmpty(data)) {
     return [];
@@ -358,7 +380,7 @@ const mapSummaryList = (data, itemsToShow, mapSummaryParams, preview = false) =>
       Object.values(val).forEach((value) => {
         if (value) {
           if (options.isDetails) {
-            if (value === CONSTANTS.FACILITY_PROVIDED_DETAILS.OTHER) {
+            if (value === FACILITY_PROVIDED_DETAILS.OTHER) {
               list.push(`<li>${value} ${detailsOther ? `- ${detailsOther}` : '-'}</li>`);
             } else {
               list.push(`<li>${value}</li>`);
@@ -382,9 +404,7 @@ const mapSummaryList = (data, itemsToShow, mapSummaryParams, preview = false) =>
   };
 
   return itemsToShow.map((item) => {
-    const {
-      label, prefix, suffix, method, isCurrency, isIndustry, isDetails, isHidden, shouldCoverStartOnSubmission, issueDate,
-    } = item;
+    const { label, prefix, suffix, method, isCurrency, isIndustry, isDetails, isHidden, shouldCoverStartOnSubmission, issueDate } = item;
 
     // If value is a number, convert to String as 0 can also become falsey
     const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
@@ -479,7 +499,7 @@ const displayTaskComments = (app) => {
   const unissuedFacilitiesPresent = areUnissuedFacilitiesPresent(app);
   const facilitiesChanged = facilitiesChangedPresent(app);
   const appCommentsPresent = commentsPresent(app);
-  return (ukefReviewAvailable || unissuedFacilitiesPresent || facilitiesChanged || appCommentsPresent);
+  return ukefReviewAvailable || unissuedFacilitiesPresent || facilitiesChanged || appCommentsPresent;
 };
 
 const pastDate = ({ day, month, year }) => {
@@ -523,9 +543,9 @@ const getCurrentTimePlusMinutes = (minutesToAdd = 0) => new Date(new Date().getT
  * used to display supporting info change or add links
  * should be hidden if checker/MIA/AIN and returning to maker
  * logic done in nunjucks template so needs this function
- * @param {Object} application
- * @param {Boolean} preview
- * @returns {Boolean}
+ * @param {object} application
+ * @param {boolean} preview
+ * @returns {boolean}
  */
 const displayChangeSupportingInfo = (application, preview) => {
   if (preview || application.submissionCount > 0) {

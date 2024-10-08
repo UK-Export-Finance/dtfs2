@@ -2,25 +2,26 @@ const { fromUnixTime } = require('date-fns');
 const { getApplication, getUserDetails } = require('../../services/api');
 
 // maps portalActivities array to create array in correct format for mojTimeline
-const mapPortalActivities = (portalActivities) => portalActivities.map((portalActivity) => ({
-  label: {
-    text: portalActivity.label,
-  },
-  text: portalActivity.text,
-  datetime: {
-    timestamp: fromUnixTime(new Date(portalActivity.timestamp)),
-    type: 'datetime',
-  },
-  byline: {
-    text: `${portalActivity.author.firstName} ${portalActivity.author.lastName}`,
-  },
-  html: portalActivity.html,
-  facilityType: portalActivity.facilityType,
-  ukefFacilityId: portalActivity.ukefFacilityId,
-  facilityId: portalActivity.facilityId,
-  maker: portalActivity.maker,
-  checker: portalActivity.checker,
-}));
+const mapPortalActivities = (portalActivities) =>
+  portalActivities.map((portalActivity) => ({
+    label: {
+      text: portalActivity.label,
+    },
+    text: portalActivity.text,
+    datetime: {
+      timestamp: fromUnixTime(new Date(portalActivity.timestamp)),
+      type: 'datetime',
+    },
+    byline: {
+      text: `${portalActivity.author.firstName} ${portalActivity.author.lastName}`,
+    },
+    html: portalActivity.html,
+    facilityType: portalActivity.facilityType,
+    ukefFacilityId: portalActivity.ukefFacilityId,
+    facilityId: portalActivity.facilityId,
+    maker: portalActivity.maker,
+    checker: portalActivity.checker,
+  }));
 
 const getPortalActivities = async (req, res) => {
   const { params, session } = req;

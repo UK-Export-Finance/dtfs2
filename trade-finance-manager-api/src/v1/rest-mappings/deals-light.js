@@ -40,12 +40,7 @@ const mapGefDeal = (deal) => {
   return mapped;
 };
 
-const dealsLightReducer = (deals) =>
-  mapDeals(
-    deals,
-    mapBssDeal,
-    mapGefDeal,
-  );
+const dealsLightReducer = (deals) => mapDeals(deals, mapBssDeal, mapGefDeal);
 
 module.exports = {
   mapBssDeal,

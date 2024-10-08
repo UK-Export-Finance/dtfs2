@@ -4,7 +4,9 @@ const nunjucks = require('nunjucks');
 let mojFilters = require('@ministryofjustice/frontend/moj/filters/all')();
 const { localiseTimestamp } = require('./filter-localiseTimestamp');
 const { formatDateString } = require('./filter-formatDateString');
+const { formatIsoDateString } = require('./filter-formatIsoDateString');
 const dashIfEmpty = require('./filter-dashIfEmpty');
+const formatBooleanAsString = require('./filter-formatOptionalBooleanAsString');
 const displayName = require('./filter-displayName');
 const formatAsCurrency = require('./filter-formatAsCurrency');
 const countriesWithEmptyInitialOption = require('./filter-countriesWithEmptyInitialOption');
@@ -17,6 +19,11 @@ const { userIsInTeam, userIsOnlyInTeams } = require('../helpers/user');
 
 dotenv.config();
 
+/**
+ *
+ * @param {nunjucks.ConfigureOptions} opts - The configuration options
+ * @returns {nunjucks.Environment}
+ */
 const configureNunjucks = (opts) => {
   const { CONTACT_US_SELF_SERVICE_PORTAL_URL, CONTACT_US_EMAIL_ADDRESS } = process.env;
 
@@ -34,7 +41,9 @@ const configureNunjucks = (opts) => {
 
   nunjucksEnvironment.addFilter('localiseTimestamp', localiseTimestamp);
   nunjucksEnvironment.addFilter('formatDateString', formatDateString);
+  nunjucksEnvironment.addFilter('formatIsoDateString', formatIsoDateString);
   nunjucksEnvironment.addFilter('dashIfEmpty', dashIfEmpty);
+  nunjucksEnvironment.addFilter('formatBooleanAsString', formatBooleanAsString);
   nunjucksEnvironment.addFilter('displayName', displayName);
   nunjucksEnvironment.addFilter('formatAsCurrency', formatAsCurrency);
   nunjucksEnvironment.addFilter('countriesWithEmptyInitialOption', countriesWithEmptyInitialOption);

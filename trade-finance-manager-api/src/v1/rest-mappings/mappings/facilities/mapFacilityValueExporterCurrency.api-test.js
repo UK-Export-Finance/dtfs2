@@ -1,5 +1,5 @@
+const { CURRENCY, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const mapFacilityValueExportCurrency = require('./mapFacilityValueExportCurrency');
-const { CURRENCY } = require('../../../../constants/currency.constant');
 
 describe('mapFacilityValueExportCurrency()', () => {
   const mockFacility = {
@@ -31,11 +31,14 @@ describe('mapFacilityValueExportCurrency()', () => {
   });
 
   it('should return the new amendment value when latest amendment is complete', () => {
-    mockFacility.amendments = [{
-      tfm: {
-        value: { ...mockAmendmentValueResponse },
+    mockFacility.amendments = [
+      {
+        status: AMENDMENT_STATUS.COMPLETED,
+        tfm: {
+          value: { ...mockAmendmentValueResponse },
+        },
       },
-    }];
+    ];
 
     const result = mapFacilityValueExportCurrency(mockFacility);
     const expected = `${CURRENCY.GBP} 4,000.00`;

@@ -1,7 +1,7 @@
-const pageRenderer = require('../../../componentRenderer');
+const { componentRenderer } = require('../../../componentRenderer');
 
 const page = '../templates/case/parties/_macros/parties-bond-issuer-edit.njk';
-const render = pageRenderer(page);
+const render = componentRenderer(page);
 
 describe(page, () => {
   let wrapper;
@@ -29,15 +29,11 @@ describe(page, () => {
     });
 
     it('should render bond issuer name', () => {
-      wrapper
-        .expectText('[data-cy="bond-issuer-name"]')
-        .toContain(params.bond.facilitySnapshot.bondIssuer);
+      wrapper.expectText('[data-cy="bond-issuer-name"]').toContain(params.bond.facilitySnapshot.bondIssuer);
     });
 
     it('should render bond issuer urn input', () => {
-      wrapper
-        .expectInput('[data-cy="urn-input-1"]')
-        .toHaveValue(params.bond.tfm.bondIssuerPartyUrn);
+      wrapper.expectInput('[data-cy="urn-input-1"]').toHaveValue(params.bond.tfm.bondIssuerPartyUrn);
     });
   });
 });

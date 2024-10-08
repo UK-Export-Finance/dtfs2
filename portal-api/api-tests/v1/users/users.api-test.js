@@ -1,3 +1,6 @@
+const { ObjectId } = require('mongodb');
+const { withDeleteOneTests, expectAnyPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { MONGO_DB_COLLECTIONS, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const testUserCache = require('../../api-test-users');
 
@@ -6,13 +9,16 @@ const { as } = require('../../api')(app);
 
 const users = require('./test-data');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
-const { LOGIN_STATUSES } = require('../../../src/constants');
 const { createPartiallyLoggedInUserSession, createLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
 const { ADMIN } = require('../../../src/v1/roles/roles');
 const { STATUS } = require('../../../src/constants/user');
 
 const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
-const MOCK_USER = { ...users.barclaysBankMaker1, username: temporaryUsernameAndEmail, email: temporaryUsernameAndEmail };
+const MOCK_USER = {
+  ...users.barclaysBankMaker1,
+  username: temporaryUsernameAndEmail,
+  email: temporaryUsernameAndEmail,
+};
 
 describe('a user', () => {
   let aNonAdmin;
@@ -32,16 +38,18 @@ describe('a user', () => {
   });
 
   describe('DELETE /v1/users/:userId', () => {
-    it('a user can be deleted', async () => {
+    let userToDeleteId;
+
+    beforeEach(async () => {
       const response = await createUser(MOCK_USER);
-      const createdUser = response.body.user;
+      userToDeleteId = new ObjectId(response.body.user._id);
+    });
 
-      await as(aNonAdmin).remove(`/v1/users/${createdUser._id}`);
-
-      const { status, body } = await as(aNonAdmin).get(`/v1/users/${createdUser._id}`);
-
-      expect(status).toEqual(200);
-      expect(body).toMatchObject({});
+    withDeleteOneTests({
+      makeRequest: () => as(aNonAdmin).remove(`/v1/users/${userToDeleteId}`),
+      collectionName: MONGO_DB_COLLECTIONS.USERS,
+      auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
+      getDeletedDocumentId: () => userToDeleteId,
     });
   });
 
@@ -112,7 +120,7 @@ describe('a user', () => {
         success: true,
         token: expect.any(String),
         user: { email: MOCK_USER.email },
-        loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
+        loginStatus: PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD,
         expiresIn: '105m',
       });
     });
@@ -213,7 +221,7 @@ describe('a user', () => {
         success: true,
         token: expect.any(String),
         user: { email: MOCK_USER.email },
-        loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
+        loginStatus: PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD,
         expiresIn: '105m',
       });
     });

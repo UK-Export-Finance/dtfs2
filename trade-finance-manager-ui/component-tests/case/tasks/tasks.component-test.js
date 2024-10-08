@@ -1,4 +1,4 @@
-const pageRenderer = require('../../pageRenderer');
+const { pageRenderer } = require('../../pageRenderer');
 
 const page = '../templates/case/tasks/tasks.njk';
 const render = pageRenderer(page);

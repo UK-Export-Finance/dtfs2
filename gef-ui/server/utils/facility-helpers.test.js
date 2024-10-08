@@ -26,16 +26,9 @@ import {
   MOCK_APPLICATION_GENERATOR_SUBCOUNT,
 } from './mocks/mock_applications';
 
-import {
-  MOCK_ISSUED_FACILITY,
-  MOCK_FACILITY,
-  MOCK_ISSUED_FACILITY_UNCHANGED,
-  MOCK_UNISSUED_FACILITY,
-} from './mocks/mock_facilities';
+import { MOCK_ISSUED_FACILITY, MOCK_FACILITY, MOCK_ISSUED_FACILITY_UNCHANGED, MOCK_UNISSUED_FACILITY } from './mocks/mock_facilities';
 
-import {
-  MOCK_REQUEST, MOCK_REQUEST_CHECKER,
-} from './mocks/mock_requests';
+import { MOCK_REQUEST, MOCK_REQUEST_CHECKER } from './mocks/mock_requests';
 import { MAKER } from '../constants/roles';
 
 const CONSTANTS = require('../constants');
@@ -46,9 +39,7 @@ const acceptableStatus = [
   CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
   CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
 ];
-const acceptableRole = [
-  MAKER,
-];
+const acceptableRole = [MAKER];
 const mockParam = {
   acceptableStatus,
   acceptableRole,
@@ -62,7 +53,9 @@ describe('getIssuedFacilitiesAsArray', () => {
         { text: 'Facility one' },
         { text: '0030113306' },
         { text: 'GBP 1,000.00' },
-        { html: "<a href = '/gef/application-details/61a7710b2ae62b0013dae687/61a7714f2ae62b0013dae689/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0' data-cy='update-coverStartDate-button-0'>Update</a>" },
+        {
+          html: "<a href = '/gef/application-details/61a7710b2ae62b0013dae687/61a7714f2ae62b0013dae689/confirm-cover-start-date' class = 'govuk-button govuk-button--secondary govuk-!-margin-0' data-cy='update-coverStartDate-button-0'>Update</a>",
+        },
       ],
     ];
     expect(getIssuedFacilitiesAsArray(MOCK_FACILITY)).toEqual(expected);
@@ -76,7 +69,7 @@ describe('getIssuedFacilitiesAsArray', () => {
 });
 
 describe('coverDatesConfirmed', () => {
-  it('Should return FALSE as one of the facility\'s cover date has not been confirmed', () => {
+  it("Should return FALSE as one of the facility's cover date has not been confirmed", () => {
     MOCK_FACILITY.items[0].details.hasBeenIssued = true;
     expect(coverDatesConfirmed(MOCK_FACILITY)).toEqual(false);
   });
@@ -139,85 +132,57 @@ describe('areUnissuedFacilitiesPresent', () => {
   });
 
   it('should return false if only unissued and issued facilities and not UKEF_ACKNOWLEDGED, UKEF_APPROVED_WITHOUT_CONDITIONS and UKEF_APPROVED_WITH_CONDITIONS', () => {
-    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(CONSTANTS.DEAL_STATUS.DRAFT, CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)))
-      .toEqual(false);
+    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(CONSTANTS.DEAL_STATUS.DRAFT, CONSTANTS.DEAL_SUBMISSION_TYPE.AIN))).toEqual(false);
 
-    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(
-      CONSTANTS.DEAL_STATUS.UKEF_REFUSED,
-      CONSTANTS.DEAL_SUBMISSION_TYPE.AIN,
-    )))
-      .toEqual(false);
+    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(CONSTANTS.DEAL_STATUS.UKEF_REFUSED, CONSTANTS.DEAL_SUBMISSION_TYPE.AIN))).toEqual(false);
 
-    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(
-      CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF,
-      CONSTANTS.DEAL_SUBMISSION_TYPE.AIN,
-    )))
-      .toEqual(false);
+    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF, CONSTANTS.DEAL_SUBMISSION_TYPE.AIN))).toEqual(
+      false,
+    );
 
-    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(
-      CONSTANTS.DEAL_STATUS.IN_PROGRESS_BY_UKEF,
-      CONSTANTS.DEAL_SUBMISSION_TYPE.AIN,
-    )))
-      .toEqual(false);
+    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(CONSTANTS.DEAL_STATUS.IN_PROGRESS_BY_UKEF, CONSTANTS.DEAL_SUBMISSION_TYPE.AIN))).toEqual(
+      false,
+    );
 
-    expect(areUnissuedFacilitiesPresent(MOCK_APPLICATION_GENERATOR_SUBCOUNT(
-      CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED,
-      CONSTANTS.DEAL_SUBMISSION_TYPE.AIN,
-      0,
-    )))
-      .toEqual(false);
+    expect(
+      areUnissuedFacilitiesPresent(MOCK_APPLICATION_GENERATOR_SUBCOUNT(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, CONSTANTS.DEAL_SUBMISSION_TYPE.AIN, 0)),
+    ).toEqual(false);
   });
 
   it('should return `TRUE` application status is either CHANGES_REQUIRED and is MIA with submission count 1', () => {
-    expect(areUnissuedFacilitiesPresent(MOCK_APPLICATION_GENERATOR_SUBCOUNT(
-      CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED,
-      CONSTANTS.DEAL_SUBMISSION_TYPE.MIA,
-      1,
-    )))
-      .toEqual(true);
+    expect(
+      areUnissuedFacilitiesPresent(MOCK_APPLICATION_GENERATOR_SUBCOUNT(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, CONSTANTS.DEAL_SUBMISSION_TYPE.MIA, 1)),
+    ).toEqual(true);
   });
 
   it('should return `FALSE` application status is either CHANGES_REQUIRED and is MIA with submission count 0', () => {
-    expect(areUnissuedFacilitiesPresent(MOCK_APPLICATION_GENERATOR_SUBCOUNT(
-      CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED,
-      CONSTANTS.DEAL_SUBMISSION_TYPE.MIA,
-      0,
-    )))
-      .toEqual(false);
+    expect(
+      areUnissuedFacilitiesPresent(MOCK_APPLICATION_GENERATOR_SUBCOUNT(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, CONSTANTS.DEAL_SUBMISSION_TYPE.MIA, 0)),
+    ).toEqual(false);
   });
 
   it('should return `TRUE` application status is either UKEF_ACKNOWLEDGED, UKEF_APPROVED_WITHOUT_CONDITIONS and UKEF_APPROVED_WITH_CONDITIONS and is MIA', () => {
-    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(
-      CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
-      CONSTANTS.DEAL_SUBMISSION_TYPE.MIA,
-    )))
-      .toEqual(true);
+    expect(
+      areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS, CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)),
+    ).toEqual(true);
 
-    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(
-      CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
-      CONSTANTS.DEAL_SUBMISSION_TYPE.MIA,
-    )))
-      .toEqual(true);
+    expect(
+      areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS, CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)),
+    ).toEqual(true);
   });
 
   it('should return true if only unissued and issued facilities and not MIN, MIA and AIN', () => {
-    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(
-      CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
-      CONSTANTS.DEAL_SUBMISSION_TYPE.MIA,
-    )))
-      .toEqual(true);
+    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED, CONSTANTS.DEAL_SUBMISSION_TYPE.MIA))).toEqual(
+      true,
+    );
 
-    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(
-      CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
-      CONSTANTS.DEAL_SUBMISSION_TYPE.AIN,
-    )))
-      .toEqual(true);
+    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED, CONSTANTS.DEAL_SUBMISSION_TYPE.AIN))).toEqual(
+      true,
+    );
 
-    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(
-      CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
-      CONSTANTS.DEAL_SUBMISSION_TYPE.MIN,
-    )))
-      .toEqual(true);
+    expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED, CONSTANTS.DEAL_SUBMISSION_TYPE.MIN))).toEqual(
+      true,
+    );
   });
 });
 

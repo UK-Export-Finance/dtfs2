@@ -1,8 +1,10 @@
+import './trade-finance-manager-api';
+import './ui';
+
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
 
-// commands used to interact directly with TFM UI
-Cypress.Commands.add('login', require('./ui/logIn'));
+Cypress.Commands.add('getInputByLabelText', require('./utils/getInputByLabelText'));
 
 // commands used to interact directly with Deal API
 // NOTE: this will eventually become TFM API, that calls Deal API.
@@ -24,9 +26,3 @@ Cypress.Commands.add('deleteFacility', require('./central-api/deleteFacility'));
 Cypress.Commands.add('deleteTfmDeals', require('./central-api/deleteTfmDeals'));
 
 Cypress.Commands.add('updateTFMDeal', require('./central-api/updateTFMDeal'));
-
-Cypress.Commands.add('submitDeal', require('./trade-finance-manager-api/submitDeal'));
-Cypress.Commands.add('submitManyDeals', require('./trade-finance-manager-api/submitManyDeals'));
-Cypress.Commands.add('getUser', require('./trade-finance-manager-api/getUser'));
-
-Cypress.Commands.add('typeWithoutDelay', { prevSubject: true }, require('./ui/type-without-delay'));

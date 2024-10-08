@@ -6,11 +6,9 @@ const name = require('./name');
 
 module.exports = (bond, errorList, deal) => {
   let newErrorList = { ...errorList };
-  const {
-    facilityStage,
-  } = bond;
+  const { facilityStage } = bond;
 
-  const isIssued = (hasValue(facilityStage) && facilityStage === 'Issued');
+  const isIssued = hasValue(facilityStage) && facilityStage === 'Issued';
 
   if (isIssued) {
     newErrorList = requestedCoverStartDate(bond, deal, newErrorList);

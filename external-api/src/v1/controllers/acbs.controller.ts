@@ -1,9 +1,20 @@
+/* eslint-disable @typescript-eslint/unbound-method */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable no-param-reassign */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+
 import axios from 'axios';
 import * as dotenv from 'dotenv';
+import { HEADERS } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
 import { Amendment } from '../../interfaces';
 import { ENTITY_TYPE, UNDERWRITER_MANAGER_DECISIONS } from '../../constants';
-import { validUkefId } from '../../utils/validUkefId';
+import { validUkefId } from '../../helpers';
 
 dotenv.config();
 
@@ -11,7 +22,7 @@ const apimUrl = process.env.APIM_TFS_URL;
 const acbsUrl = process.env.AZURE_ACBS_FUNCTION_URL;
 
 const headers = {
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
 };
 
 export const checkDealId = async (dealId: any) => {
@@ -78,14 +89,14 @@ export const findOne = async (req: Request, res: Response) => {
 
   if (entityType === ENTITY_TYPE.DEAL) {
     const dealIdStatus = await checkDealId(id);
-    console.info('Checked dealId %s with ACBS API: %s', id, dealIdStatus);
+    console.info('Checked dealId %s with ACBS API %s', id, dealIdStatus);
 
     return res.status(dealIdStatus).send();
   }
 
   if (entityType === ENTITY_TYPE.FACILITY) {
     const facilityIdStatus = await checkFacilityId(id);
-    console.info('Checked facilityId %s with ACBS API: %s', id, facilityIdStatus);
+    console.info('Checked facilityId %s with ACBS API %s', id, facilityIdStatus);
 
     return res.status(facilityIdStatus).send();
   }
@@ -109,9 +120,9 @@ const createAcbsRecord = async (deal: any, bank: any) => {
         deal,
         bank,
       },
-    }).catch((e: any) => {
-      console.error('Error creating ACBS record: %O', e);
-      return e;
+    }).catch((error: any) => {
+      console.error('Error creating ACBS record %o', error);
+      return error;
     });
 
     if (response.status) {
@@ -137,8 +148,8 @@ export const createAcbsRecordPOST = async (req: Request, res: Response) => {
       const { status, data } = response;
       return res.status(status).send(data);
     }
-  } catch (error: any) {
-    console.error('ACBS create POST failed %s', error);
+  } catch (error: unknown) {
+    console.error('ACBS create POST failed %o', error);
     return res.status(400).send();
   }
 
@@ -164,9 +175,9 @@ const issueAcbsFacility = async (id: any, facility: object, deal: object) => {
         facility,
         deal,
       },
-    }).catch((e) => {
-      console.error('ACBS issue facility POST failed %O', e);
-      return e;
+    }).catch((error) => {
+      console.error('ACBS issue facility POST failed %o', error);
+      return error;
     });
 
     if (response.status) {
@@ -194,7 +205,7 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
       return res.status(status).send(data);
     }
   } catch (error) {
-    console.error('Error during ACBS facility issue POST: %s', error);
+    console.error('Error during ACBS facility issue POST %o', error);
     return res.status(400).send();
   }
 
@@ -204,8 +215,8 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
 
 /**
  * Invoked Azure DOF using HTTP `POST` method.
- * @param {Object} amendment Amendment object comprising facility ID and amends. A amendment at a time is processed.
- * @returns {Object} DOF Response
+ * @param {object} amendment Amendment object comprising facility ID and amends. A amendment at a time is processed.
+ * @returns {Promise<object | null>} DOF Response
  */
 const amendAcbsFacility = async (amendment: Amendment) => {
   const hasAmendment = amendment.coverEndDate || amendment.amount;
@@ -218,9 +229,9 @@ const amendAcbsFacility = async (amendment: Amendment) => {
       data: {
         amendment,
       },
-    }).catch((e: any) => {
-      console.error('Error amending ACBS facility: %O', e);
-      return e;
+    }).catch((error: any) => {
+      console.error('Error amending ACBS facility %o', error);
+      return error;
     });
 
     if (response.status) {
@@ -234,9 +245,9 @@ const amendAcbsFacility = async (amendment: Amendment) => {
 /**
  * ACBS facility amendment entry function.
  * Constructs acceptable payload by DOF.
- * @param {Object} req Request
- * @param {Object} res Response
- * @return {Object} Response object with HTTP code as `status` and response as `data`.
+ * @param {object} req Request
+ * @param {object} res Response
+ * @returns {Promise<object>} Response object with HTTP code as `status` and response as `data`.
  */
 export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
   try {
@@ -275,7 +286,7 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
       return res.status(status).send(data);
     }
   } catch (error) {
-    console.error('Error executing ACBS Facility POST: %s', error);
+    console.error('Error executing ACBS Facility POST %o', error);
     return res.status(400).send();
   }
 

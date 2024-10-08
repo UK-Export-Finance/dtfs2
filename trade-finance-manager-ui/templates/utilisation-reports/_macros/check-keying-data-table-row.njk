@@ -1,0 +1,56 @@
+{% import "./fee-record-status.njk" as feeRecordStatus %}
+{% import "../../_macros/table-cell-checkbox.njk" as tableCellCheckbox %}
+
+{% macro render(params) %}
+  {% set feeRecord = params.feeRecord %}
+
+  {% set facilityId = feeRecord.facilityId %}
+  {% set exporter = feeRecord.exporter %}
+  {% set reportedFees = feeRecord.reportedFees %}
+  {% set reportedPayments = feeRecord.reportedPayments %}
+  {% set paymentsReceived = feeRecord.paymentsReceived %}
+  {% set status = feeRecord.status %}
+  {% set displayStatus = feeRecord.displayStatus %}
+
+  <tr
+    class="govuk-table__row"
+    data-cy="check-keying-data-table-row--feeRecordId-{{ feeRecord.id }}"
+  >
+    <th
+      scope="row"
+      class="govuk-table__header govuk-!-font-weight-regular"
+    >
+      {{ facilityId }}
+    </th>
+    <td class="govuk-table__cell">
+      {{ exporter }}
+    </td>
+    <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ reportedFees.dataSortValue }}">
+      {{ reportedFees.formattedCurrencyAndAmount }}
+    </td>
+    <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ reportedPayments.dataSortValue }}">
+      {{ reportedPayments.formattedCurrencyAndAmount }}
+    </td>
+
+    <td class="govuk-table__cell govuk-table__cell--numeric">
+      {% if paymentsReceived.length === 1 %}
+        {{ paymentsReceived[0] }}
+      {% else %}
+        <ul class="payments-list">
+          {% for paymentReceived in paymentsReceived %}
+            <li class="payments-list-item">
+              {{ paymentReceived }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </td>
+
+    <td class="govuk-table__cell" data-sort-value="{{ displayStatus }}">
+      {{ feeRecordStatus.render({
+        status: status,
+        displayStatus: displayStatus
+      }) }}
+    </td>
+  </tr>
+{% endmacro %}

@@ -4,9 +4,9 @@ const amendmentYearValidation = require('./amendmentYearValidation.validate');
 
 /**
  *
- * @param {Object} body
- * @param {Object} facility
- * @returns {Object} containing errors and amendment date
+ * @param {object} body
+ * @param {object} facility
+ * @returns {object} containing errors and amendment date
  * function to validate the amendment request date
  * checks if in future or before submission date
  */
@@ -20,8 +20,8 @@ const amendmentRequestDateValidation = (body, facility) => {
   const amendmentRequestDateErrors = [];
 
   const amendmentRequestIsFullyComplete = amendmentRequestDateDay && amendmentRequestDateMonth && amendmentRequestDateYear;
-  const amendmentRequestIsPartiallyComplete = !amendmentRequestIsFullyComplete
-    && (amendmentRequestDateDay || amendmentRequestDateMonth || amendmentRequestDateYear);
+  const amendmentRequestIsPartiallyComplete =
+    !amendmentRequestIsFullyComplete && (amendmentRequestDateDay || amendmentRequestDateMonth || amendmentRequestDateYear);
   const amendmentRequestIsBlank = !amendmentRequestDateDay && !amendmentRequestDateMonth && !amendmentRequestDateYear;
 
   let amendmentRequestDate = null;
@@ -56,7 +56,11 @@ const amendmentRequestDateValidation = (body, facility) => {
     // set to midnight to stop mismatch if date in past so set to midnight
     const submissionDate = new Date(Number(facility.facilitySnapshot.dates.inclusionNoticeReceived)).setHours(2, 2, 2, 2);
     const today = new Date();
-    let requestDateSet = set(new Date(), { year: amendmentRequestDateYear, month: amendmentRequestDateMonth - 1, date: amendmentRequestDateDay });
+    let requestDateSet = set(new Date(), {
+      year: amendmentRequestDateYear,
+      month: amendmentRequestDateMonth - 1,
+      date: amendmentRequestDateDay,
+    });
     requestDateSet = requestDateSet.setHours(2, 2, 2, 2);
     let yearCorrectFormat = true;
 
@@ -70,7 +74,7 @@ const amendmentRequestDateValidation = (body, facility) => {
     }
 
     if (yearCorrectFormat) {
-    // checks amendment date not in the future
+      // checks amendment date not in the future
       if (isAfter(requestDateSet, today)) {
         amendmentRequestDateErrors.push({
           errRef: 'amendmentRequestDate',

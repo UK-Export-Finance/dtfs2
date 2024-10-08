@@ -1,4 +1,4 @@
-const componentRenderer = require('../../../../../../componentRenderer');
+const { componentRenderer } = require('../../../../../../componentRenderer');
 
 const component = '../templates/case/underwriting/pricing-and-risk/edit-facility-risk-profile/_macros/legend-html.njk';
 
@@ -18,10 +18,7 @@ describe(component, () => {
 
     const selector = '[data-cy="edit-facility-risk-profile-legend-link"]';
 
-    wrapper.expectLink(selector).toLinkTo(
-      `/case/${params.caseId}/facility/${params.facilityId}`,
-      params.ukefFacilityId,
-    );
+    wrapper.expectLink(selector).toLinkTo(`/case/${params.caseId}/facility/${params.facilityId}`, params.ukefFacilityId);
   });
 
   it('should render text with type', () => {

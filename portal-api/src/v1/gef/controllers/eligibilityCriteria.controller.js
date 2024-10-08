@@ -1,8 +1,10 @@
+const { ObjectId } = require('mongodb');
+const { PAYLOAD_VERIFICATION, MONGO_DB_COLLECTIONS, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
+const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
+const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
 const { EligibilityCriteria } = require('../models/eligibilityCriteria');
-const db = require('../../../drivers/db-client');
-const utils = require('../utils.service');
-const { PAYLOAD, DEAL } = require('../../../constants');
-const payloadVerification = require('../../helpers/payload');
+const { mongoDbClient: db } = require('../../../drivers/db-client');
+const { DEAL } = require('../../../constants');
 
 const sortByVersion = (arr, callback) => {
   const sortedArray = arr.sort((a, b) => Number(a.version) - Number(b.version));
@@ -29,7 +31,9 @@ exports.getByVersion = async (req, res) => {
   }
 
   const collection = await db.getCollection('eligibilityCriteria');
-  const item = await collection.findOne({ $and: [{ version: { $eq: Number(version) } }, { product: { $eq: DEAL.DEAL_TYPE.GEF } }] });
+  const item = await collection.findOne({
+    $and: [{ version: { $eq: Number(version) } }, { product: { $eq: DEAL.DEAL_TYPE.GEF } }],
+  });
 
   return item ? res.status(200).send(item) : res.status(404).send();
 };
@@ -39,7 +43,7 @@ exports.getByVersion = async (req, res) => {
  * criteria document from the 'eligibilityCriteria' collection.
  * EC is returned as an array for mapping.
  *
- * @returns {Object} The latest eligibility criteria document.
+ * @returns {Promise<object>} The latest eligibility criteria document.
  */
 const getLatestEligibilityCriteria = async () => {
   const collection = await db.getCollection('eligibilityCriteria');
@@ -61,18 +65,41 @@ exports.getLatest = async (req, res) => {
 
 exports.create = async (req, res) => {
   const collection = await db.getCollection('eligibilityCriteria');
-  const criteria = req?.body;
-
-  if (payloadVerification(criteria, PAYLOAD.CRITERIA.ELIGIBILITY)) {
-    const result = await collection.insertOne(new EligibilityCriteria(criteria));
-    return res.status(201).send({ _id: result.insertedId });
+  if (!isVerifiedPayload({ payload: req.body, template: PAYLOAD_VERIFICATION.CRITERIA.ELIGIBILITY })) {
+    return res.status(400).send({ status: 400, message: 'Invalid GEF eligibility criteria payload' });
   }
 
-  return res.status(400).send({ status: 400, message: 'Invalid GEF eligibility criteria payload' });
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+
+  const criteria = { ...req?.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
+  const result = await collection.insertOne(new EligibilityCriteria(criteria));
+  return res.status(201).send({ _id: result.insertedId });
 };
 
 exports.delete = async (req, res) => {
-  const collection = await db.getCollection('eligibilityCriteria');
-  const response = await collection.findOneAndDelete({ version: { $eq: Number(req.params.version) } });
-  res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA);
+  const criteria = await collection.findOne({ version: { $eq: Number(req.params.version) } });
+
+  if (!criteria) {
+    return res.status(404).send({ status: 404, message: 'Eligibility criteria not found' });
+  }
+
+  try {
+    const deleteResponse = await deleteOne({
+      documentId: new ObjectId(criteria._id),
+      collectionName: MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA,
+      db,
+      auditDetails,
+    });
+
+    return res.status(200).send(deleteResponse);
+  } catch (error) {
+    if (error instanceof DocumentNotDeletedError) {
+      return res.status(404).send({ status: 404, message: 'Eligibility criteria not found' });
+    }
+    console.error(error);
+    return res.status(500).send({ status: 500, error });
+  }
 };

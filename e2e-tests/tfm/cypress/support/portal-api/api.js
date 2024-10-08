@@ -1,8 +1,14 @@
+const { HEADERS } = require('@ukef/dtfs2-common');
 const { SIGN_IN_TOKENS } = require('../../../../portal/cypress/fixtures/constants');
 
 const api = () => {
   const url = `${Cypress.config('dealApiProtocol')}${Cypress.config('dealApiHost')}:${Cypress.config('dealApiPort')}`;
   return url;
+};
+
+const headers = {
+  'x-api-key': Cypress.config('apiKey'),
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
 };
 
 const completeLoginWithSignInLink = ({ token2fa, username }) => {
@@ -14,14 +20,15 @@ const completeLoginWithSignInLink = ({ token2fa, username }) => {
         url: `${api()}/v1/users/${userId}/sign-in-link/${signInToken}/login`,
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          ...headers,
           Authorization: token2fa,
         },
       })
       .then((signInLinkResponse) => {
         expect(signInLinkResponse.status).to.equal(200);
         return signInLinkResponse.body.token;
-      }));
+      }),
+  );
 };
 module.exports.logIn = (opts) => {
   const { username, password } = opts;
@@ -31,9 +38,7 @@ module.exports.logIn = (opts) => {
       url: `${api()}/v1/login`,
       method: 'POST',
       body: { username, password },
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
     })
     .then((loginResponse) => {
       expect(loginResponse.status).to.equal(200);
@@ -50,7 +55,7 @@ module.exports.deleteDeal = (token, dealId) =>
     url: `${api()}/v1/deals/${dealId}`,
     method: 'DELETE',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Authorization: token,
     },
     failOnStatusCode: false,
@@ -63,7 +68,7 @@ module.exports.insertDeal = (deal, token) =>
       method: 'POST',
       body: deal,
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -80,7 +85,7 @@ module.exports.insertGefDeal = (deal, userDetails, token) =>
       body: deal,
       user: userDetails,
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -96,7 +101,7 @@ module.exports.updateGefDeal = (dealId, update, token) =>
       method: 'PUT',
       body: update,
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -111,7 +116,7 @@ module.exports.getDeal = (dealId, token) =>
       url: `${api()}/v1/deals/${dealId}`,
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -123,7 +128,7 @@ module.exports.getGefDeal = (dealId, token) =>
       url: `${api()}/v1/gef/application/${dealId}`,
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -140,7 +145,7 @@ module.exports.createFacilities = (dealId, facilities, user, token) =>
         user,
       },
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -161,7 +166,7 @@ module.exports.createGefFacilities = (dealId, facility, type, user, token) =>
         type,
       },
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -177,7 +182,7 @@ module.exports.updateGefFacilities = (facilityId, facility, token) =>
       method: 'PUT',
       body: facility,
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })

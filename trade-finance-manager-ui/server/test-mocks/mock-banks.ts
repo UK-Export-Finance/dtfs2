@@ -13,7 +13,7 @@ const MONTHLY_REPORT_PERIOD_SCHEDULE = [
   { startMonth: 12, endMonth: 12 },
 ];
 
-const MOCK_BANKS = {
+export const MOCK_BANKS = {
   BARCLAYS: {
     id: '956',
     name: 'Barclays Bank',
@@ -27,6 +27,7 @@ const MOCK_BANKS = {
       emails: ['payment-officer4@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
+    isVisibleInTfmUtilisationReports: true,
   },
   HSBC: {
     id: '961',
@@ -41,6 +42,7 @@ const MOCK_BANKS = {
       emails: ['payment-officer4@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
+    isVisibleInTfmUtilisationReports: true,
   },
   NEWABLE: {
     id: '5213',
@@ -55,6 +57,7 @@ const MOCK_BANKS = {
       emails: ['payment-officer4@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
+    isVisibleInTfmUtilisationReports: true,
   },
   LLOYDS: {
     id: '964',
@@ -74,7 +77,6 @@ const MOCK_BANKS = {
       { startMonth: 6, endMonth: 8 },
       { startMonth: 9, endMonth: 11 },
     ],
+    isVisibleInTfmUtilisationReports: true,
   },
 } as const;
-
-export default MOCK_BANKS;

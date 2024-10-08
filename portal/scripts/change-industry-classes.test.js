@@ -1,9 +1,4 @@
-import {
-  industryClassElement,
-  appendSelectOption,
-  getIndustryClassesFromSectorCode,
-  changeIndustryClasses,
-} from './change-industry-classes';
+import { industryClassElement, appendSelectOption, getIndustryClassesFromSectorCode, changeIndustryClasses } from './change-industry-classes';
 
 describe('changeIndustryClasses', () => {
   const sector100Class12 = { code: '12', name: 'Hotels and similar accommodation' };
@@ -13,17 +8,11 @@ describe('changeIndustryClasses', () => {
   const mockSectors = [
     {
       code: '100',
-      classes: [
-        sector100Class12,
-        sector100Class34,
-      ],
+      classes: [sector100Class12, sector100Class34],
     },
     {
       code: '200',
-      classes: [
-        sector200Class12,
-        sector200Class34,
-      ],
+      classes: [sector200Class12, sector200Class34],
     },
   ];
 
@@ -31,9 +20,7 @@ describe('changeIndustryClasses', () => {
   const maliciousOptionValue = '"></select><img src=no onerror=alert(1)>';
 
   beforeEach(() => {
-    document.body.innerHTML = '<select id="industry-class">'
-      + '  <option value="1">test</option>'
-      + '</select>';
+    document.body.innerHTML = '<select id="industry-class"><option value="1">test</option></select>';
   });
 
   describe('appendSelectOption', () => {

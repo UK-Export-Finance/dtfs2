@@ -1,5 +1,6 @@
 {% import './_macros/deals-table.njk' as dealsTable %}
-{% import './_macros/deals-table-search-form.njk' as dealsTableSearchForm %}
+{% import '_macros/table-search-form.njk' as tableSearchForm %}
+{% import '_macros/pagination.njk' as pagination %}
 
 {% extends "index.njk" %}
 
@@ -15,7 +16,12 @@
     </div>
 
     <div class="govuk-grid-column-one-quarter govuk-!-padding-top-7">
-      {{ dealsTableSearchForm.render(csrfToken) }}
+      {{ tableSearchForm.render(
+        {
+          tableName: 'deals',
+          csrfToken: csrfToken
+        }
+      ) }}
     </div>
 
   </div>
@@ -33,6 +39,14 @@
       } %}
 
       {{ dealsTable.render(componentData) }}
+
+      {{ pagination.render({
+        totalPages: pages.totalPages,
+        currentPage: pages.currentPage,
+        totalItems: pages.totalItems,
+        paginationRoute: '/deals',
+        queryString: queryString
+      })}}
 
     </div>
   </div>

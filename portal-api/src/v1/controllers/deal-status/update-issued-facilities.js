@@ -1,3 +1,4 @@
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../../constants');
 const issuedDateValidationRules = require('../../validation/fields/issued-date');
 const facilitiesController = require('../facilities.controller');
@@ -9,11 +10,7 @@ const facilityHasValidIssuedDate = (facility, deal) => {
     return false;
   }
 
-  const issuedDateValidationErrors = issuedDateValidationRules(
-    facility,
-    emptyErrorList,
-    deal,
-  );
+  const issuedDateValidationErrors = issuedDateValidationRules(facility, emptyErrorList, deal);
 
   if (!issuedDateValidationErrors.issuedDate) {
     return true;
@@ -22,25 +19,27 @@ const facilityHasValidIssuedDate = (facility, deal) => {
   return false;
 };
 
-const isLoanFacility = (type) =>
-  type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN;
+const isLoanFacility = (type) => type === FACILITY_TYPE.LOAN;
 
-const isBondFacility = (type) =>
-  type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND;
+const isBondFacility = (type) => type === FACILITY_TYPE.BOND;
 
 const loanHasBeenPreviouslyIssued = (facilityStage, previousFacilityStage) => {
-  if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
-      && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL
-        || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL)) {
+  if (
+    facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL &&
+    (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL ||
+      previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL)
+  ) {
     return true;
   }
   return false;
 };
 
 const bondHasBeenPreviouslyIssued = (facilityStage, previousFacilityStage) => {
-  if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
-    && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
-      || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED)) {
+  if (
+    facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED &&
+    (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED ||
+      previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED)
+  ) {
     return true;
   }
 
@@ -51,15 +50,13 @@ const shouldUpdateFacility = (facility) => {
   const { type, facilityStage, previousFacilityStage } = facility;
 
   if (isLoanFacility(type)) {
-    if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL
-      || loanHasBeenPreviouslyIssued(facilityStage, previousFacilityStage)) {
+    if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL || loanHasBeenPreviouslyIssued(facilityStage, previousFacilityStage)) {
       return true;
     }
   }
 
   if (isBondFacility(type)) {
-    if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
-      || bondHasBeenPreviouslyIssued(facilityStage, previousFacilityStage)) {
+    if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED || bondHasBeenPreviouslyIssued(facilityStage, previousFacilityStage)) {
       return true;
     }
   }
@@ -67,15 +64,9 @@ const shouldUpdateFacility = (facility) => {
   return false;
 };
 
-const updateIssuedFacilities = async (
-  user,
-  fromStatus,
-  deal,
-  canUpdateIssuedFacilitiesCoverStartDates,
-  newStatus,
-) => {
-  const fromStatusIsApprovedStatus = (fromStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
-                                      || fromStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS);
+const updateIssuedFacilities = async (user, fromStatus, deal, canUpdateIssuedFacilitiesCoverStartDates, newStatus, auditDetails) => {
+  const fromStatusIsApprovedStatus =
+    fromStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS || fromStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
 
   const isMIAdeal = deal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
   const isMINdeal = deal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
@@ -91,11 +82,13 @@ const updateIssuedFacilities = async (
 
         const { facilityStage } = facility;
 
-        const shouldUpdateStatus = (facility.issueFacilityDetailsStarted
-                                    && facility.issueFacilityDetailsProvided
-                                    && fromStatus !== CONSTANTS.DEAL.DEAL_STATUS.DRAFT
-                                    && facility.status !== CONSTANTS.FACILITIES.DEAL_STATUS.ACKNOWLEDGED
-                                    && (newStatus && newStatus.length > 0));
+        const shouldUpdateStatus =
+          facility.issueFacilityDetailsStarted &&
+          facility.issueFacilityDetailsProvided &&
+          fromStatus !== CONSTANTS.DEAL.DEAL_STATUS.DRAFT &&
+          facility.status !== CONSTANTS.FACILITIES.DEAL_STATUS.ACKNOWLEDGED &&
+          newStatus &&
+          newStatus.length > 0;
 
         if (shouldUpdateFacility(facility)) {
           shouldUpdateCount += 1;
@@ -115,9 +108,7 @@ const updateIssuedFacilities = async (
             facility.updatedAt = Date.now();
           }
 
-          if (canUpdateIssuedFacilitiesCoverStartDates
-            && !facility.issueFacilityDetailsSubmitted
-            && !facility.requestedCoverStartDate) {
+          if (canUpdateIssuedFacilitiesCoverStartDates && !facility.issueFacilityDetailsSubmitted && !facility.requestedCoverStartDate) {
             if (fromStatusIsApprovedStatus && isMINdeal) {
               facility.updatedAt = Date.now();
               facility.requestedCoverStartDate = deal.details.manualInclusionNoticeSubmissionDate;
@@ -131,12 +122,7 @@ const updateIssuedFacilities = async (
             }
           }
 
-          await facilitiesController.update(
-            deal._id,
-            facilityId,
-            facility,
-            user,
-          );
+          await facilitiesController.update(deal._id, facilityId, facility, user, auditDetails);
 
           updatedCount += 1;
         }

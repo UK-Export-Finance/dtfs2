@@ -1,8 +1,4 @@
-import {
-  getSecurityDetails,
-  postSecurityDetails,
-  MAX_INPUT_LENGTH,
-} from '.';
+import { getSecurityDetails, postSecurityDetails, MAX_INPUT_LENGTH } from '.';
 import { MAKER } from '../../../constants/roles';
 import Application from '../../../models/application';
 import { updateApplication } from '../../../services/api';
@@ -114,16 +110,19 @@ describe('controllers/supporting-information/security-details', () => {
 
       expect(mockResponse.redirect).not.toHaveBeenCalled();
       expect(mockResponse.sendStatus).not.toHaveBeenCalled();
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/security-details.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([
-            { href: '#exporterSecurity', text: expect.any(String) },
-            { href: '#facilitySecurity', text: expect.any(String) },
-          ]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/security-details.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([
+              { href: '#exporterSecurity', text: expect.any(String) },
+              { href: '#facilitySecurity', text: expect.any(String) },
+            ]),
+          }),
+          dealId: 'mock-id',
+          inputMaxLength: MAX_INPUT_LENGTH,
         }),
-        dealId: 'mock-id',
-        inputMaxLength: MAX_INPUT_LENGTH,
-      }));
+      );
     });
 
     it('renders the page showing error if inputs are too long', async () => {
@@ -138,16 +137,19 @@ describe('controllers/supporting-information/security-details', () => {
 
       expect(mockResponse.redirect).not.toHaveBeenCalled();
       expect(mockResponse.sendStatus).not.toHaveBeenCalled();
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/security-details.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([
-            { href: '#exporterSecurity', text: expect.any(String) },
-            { href: '#facilitySecurity', text: expect.any(String) },
-          ]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/security-details.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([
+              { href: '#exporterSecurity', text: expect.any(String) },
+              { href: '#facilitySecurity', text: expect.any(String) },
+            ]),
+          }),
+          exporterSecurity: longString,
+          facilitySecurity: longString,
         }),
-        exporterSecurity: longString,
-        facilitySecurity: longString,
-      }));
+      );
     });
 
     it('renders the page showing error if input has invalid content', async () => {
@@ -162,16 +164,19 @@ describe('controllers/supporting-information/security-details', () => {
 
       expect(mockResponse.redirect).not.toHaveBeenCalled();
       expect(mockResponse.sendStatus).not.toHaveBeenCalled();
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/security-details.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([
-            { href: '#exporterSecurity', text: expect.any(String) },
-            { href: '#facilitySecurity', text: expect.any(String) },
-          ]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/security-details.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([
+              { href: '#exporterSecurity', text: expect.any(String) },
+              { href: '#facilitySecurity', text: expect.any(String) },
+            ]),
+          }),
+          exporterSecurity: invalidString,
+          facilitySecurity: invalidString,
         }),
-        exporterSecurity: invalidString,
-        facilitySecurity: invalidString,
-      }));
+      );
     });
 
     it('returns 404 if user not authorised to access resource', async () => {

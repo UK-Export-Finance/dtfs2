@@ -1,3 +1,5 @@
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const DEFAULTS = require('../defaults');
 const { findLatestMandatoryCriteria } = require('./mandatoryCriteria.controller');
 const { findOneDeal, createDeal, createDealEligibility } = require('./deal.controller');
@@ -54,14 +56,18 @@ const stripTransaction = (transaction, allowedFields) => {
 };
 
 exports.clone = async (req, res) => {
-  await findOneDeal(req.params.id, async (existingDeal) => {
+  const {
+    params: { id: dealIdToClone },
+    body: { bankInternalRefName, additionalRefName, cloneTransactions },
+    user,
+  } = req;
+
+  await findOneDeal(dealIdToClone, async (existingDeal) => {
     if (!existingDeal) {
       return res.status(404).send();
     }
 
-    const { bankInternalRefName, additionalRefName, cloneTransactions } = req.body;
-
-    const { _id, previousStatus, tfm, ...existingDealWithoutCertainFields } = existingDeal;
+    const { _id, previousStatus: _previousStatus, tfm: _tfm, ...existingDealWithoutCertainFields } = existingDeal;
     delete existingDealWithoutCertainFields.dataMigration;
     if (existingDealWithoutCertainFields?.submissionDetails?.v1Status) {
       delete existingDealWithoutCertainFields.submissionDetails.v1Status;
@@ -79,7 +85,7 @@ exports.clone = async (req, res) => {
       additionalRefName,
       bank: existingDeal.bank,
       details: {
-        maker: req.user,
+        maker: user,
       },
       mandatoryCriteria: await findLatestMandatoryCriteria(),
       eligibility: await createDealEligibility(),
@@ -107,7 +113,9 @@ exports.clone = async (req, res) => {
       });
     }
 
-    const { data: createdDeal } = await createDeal(modifiedDeal, req.user);
+    const auditDetails = generatePortalAuditDetails(user._id);
+
+    const { data: createdDeal } = await createDeal(modifiedDeal, user, auditDetails);
 
     const createdDealId = createdDeal._id;
 
@@ -119,17 +127,17 @@ exports.clone = async (req, res) => {
         const facilities = [...existingDeal.bondTransactions.items, ...existingDeal.loanTransactions.items];
 
         const strippedFacilities = facilities.map((facility) => {
-          if (facility.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
+          if (facility.type === FACILITY_TYPE.BOND) {
             return stripTransaction(facility, CLONE_BOND_FIELDS);
           }
 
-          if (facility.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
+          if (facility.type === FACILITY_TYPE.LOAN) {
             return stripTransaction(facility, CLONE_LOAN_FIELDS);
           }
           return facility;
         });
 
-        await facilitiesController.createMultipleFacilities(strippedFacilities, createdDealId, req.user);
+        await facilitiesController.createMultipleFacilities(strippedFacilities, createdDealId, user, auditDetails);
       }
     }
 

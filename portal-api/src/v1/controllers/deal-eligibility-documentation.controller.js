@@ -1,3 +1,4 @@
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const stream = require('stream');
 const filesize = require('filesize');
 
@@ -30,34 +31,38 @@ const removeDeletedFiles = (supportingInformation, deletedFilesList) => {
 
   Object.keys(supportingInformation).forEach((fieldname) => {
     if (Array.isArray(supportingInformation[fieldname])) {
-      updatedDealFiles[fieldname] = supportingInformation[fieldname].filter(
-        ({ filename }) => deletedFilesList.indexOf(filename) === -1,
-      );
+      updatedDealFiles[fieldname] = supportingInformation[fieldname].filter(({ filename }) => deletedFilesList.indexOf(filename) === -1);
     }
   });
   return updatedDealFiles;
 };
 
 exports.update = async (req, res) => {
-  const uploadErrors = req.filesNotAllowed ? req.filesNotAllowed : [];
+  const {
+    params: { id: dealId },
+    body,
+    user,
+    filesNotAllowed,
+    files,
+  } = req;
+  const uploadErrors = filesNotAllowed || [];
+  const auditDetails = generatePortalAuditDetails(user._id);
 
-  await findOneDeal(req.params.id, async (deal) => {
-    if (!userHasAccessTo(req.user, deal)) {
+  await findOneDeal(dealId, async (deal) => {
+    if (!userHasAccessTo(user, deal)) {
       res.status(401).send();
       return;
     }
 
-    const deletePromises = fileshare.deleteMultipleFiles(FILESHARES.PORTAL, `${EXPORT_FOLDER}/${req.params.id}`, req.body.deleteFile);
+    const deletePromises = fileshare.deleteMultipleFiles(FILESHARES.PORTAL, `${EXPORT_FOLDER}/${dealId}`, body.deleteFile);
 
-    const uploadPromises = req.files.map(async (file) => {
-      const {
-        fieldname, originalname, buffer, size, mimetype,
-      } = file;
+    const uploadPromises = files.map(async (file) => {
+      const { fieldname, originalname, buffer, size, mimetype } = file;
 
       if (size <= FILE_UPLOAD.MAX_FILE_SIZE) {
         const fileInfo = await fileshare.uploadFile({
           fileshare: FILESHARES.PORTAL,
-          folder: `${EXPORT_FOLDER}/${req.params.id}`,
+          folder: `${EXPORT_FOLDER}/${dealId}`,
           filename: formatFilenameForSharepoint(originalname),
           buffer,
         });
@@ -72,14 +77,14 @@ exports.update = async (req, res) => {
         }
 
         return {
-          parentId: req.params.id,
+          parentId: dealId,
           fieldname,
           type: getFileType(fieldname),
           fullPath: fileInfo.fullPath,
           filename: fileInfo.filename,
           folder: `${fileInfo.folder}`,
           mimetype,
-          size: filesize(size, { round: 0 })
+          size: filesize(size, { round: 0 }),
         };
       }
 
@@ -95,7 +100,7 @@ exports.update = async (req, res) => {
     const uploadedDealFiles = await Promise.all(uploadPromises, deletePromises);
 
     const supportingInformation = {
-      ...removeDeletedFiles(deal.supportingInformation, req.body.deleteFile),
+      ...removeDeletedFiles(deal.supportingInformation, body.deleteFile),
     };
 
     uploadedDealFiles.forEach(({ fieldname, ...rest }) => {
@@ -109,11 +114,7 @@ exports.update = async (req, res) => {
       }
     });
 
-    const { validationErrors, validationUploadErrors } = getDocumentationErrors(
-      deal.submissionType,
-      supportingInformation,
-      uploadErrors,
-    );
+    const { validationErrors, validationUploadErrors } = getDocumentationErrors(deal.submissionType, supportingInformation, uploadErrors);
 
     const status = getEligibilityStatus({
       criteriaComplete: Boolean(deal.submissionType),
@@ -132,21 +133,19 @@ exports.update = async (req, res) => {
       supportingInformation: {
         ...supportingInformation,
         securityDetails: {
-          exporter: req.body.security,
+          exporter: body.security,
         },
         validationErrors,
       },
     };
 
-    const updatedDeal = await updateDeal(
-      deal._id,
-      updatedDealData,
-      req.user,
-    );
+    const updatedDeal = await updateDeal({ dealId: deal._id, dealUpdate: updatedDealData, user, auditDetails });
 
     // Don't want to save upload errors to db, only display on this request
     Object.entries(validationUploadErrors.errorList).forEach(([key, value]) => {
-      if (!value) { delete (validationUploadErrors.errorList[key]); }
+      if (!value) {
+        delete validationUploadErrors.errorList[key];
+      }
     });
 
     const errorList = {

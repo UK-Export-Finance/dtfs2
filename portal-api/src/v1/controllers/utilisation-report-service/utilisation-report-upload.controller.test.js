@@ -1,12 +1,21 @@
-const { when } = require('jest-when');
-const { saveFileToAzure } = require('./utilisation-report-upload.controller');
-const { uploadFile } = require('../../../drivers/fileshare');
-const { MOCK_FILE_INFO } = require('../../../../test-helpers/mock-azure-file-info');
+const { HttpStatusCode } = require('axios');
+const httpMocks = require('node-mocks-http');
+const events = require('events');
+const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
+const { aUtilisationReportResponse, aNotReceivedUtilisationReportResponse } = require('../../../../test-helpers/test-data/utilisation-report');
+const { saveUtilisationReportFileToAzure } = require('../../services/utilisation-report/azure-file-service');
+const {
+  sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam,
+  sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam,
+} = require('../../services/utilisation-report/email-service');
+const { uploadReportAndSendNotification } = require('.');
+const { saveUtilisationReport, getUtilisationReports } = require('../../api');
 
+jest.mock('../../services/utilisation-report/email-service');
+jest.mock('../../services/utilisation-report/azure-file-service');
+jest.mock('../../api');
 console.error = jest.fn();
 console.info = jest.fn();
-
-jest.mock('../../../drivers/fileshare', () => ({ uploadFile: jest.fn() }));
 
 describe('controllers/utilisation-report-service/utilisation-report-upload', () => {
   const file = {
@@ -14,49 +23,131 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
     buffer: Buffer.from('test'),
   };
 
-  const bankId = '111';
+  const PARSED_REPORT_DATA = [];
+  const PARSED_USER = { firstname: 'first', surname: 'last', bank: { id: '123' } };
 
-  describe('saveFileToAzure', () => {
-    it('should return file info when azure file upload does not error', async () => {
-      // Arrange
-      when(uploadFile)
-        .calledWith(expect.anything())
-        .mockImplementationOnce(() => MOCK_FILE_INFO);
+  const getHttpMocks = () =>
+    httpMocks.createMocks(
+      {
+        file,
+        body: {
+          formattedReportPeriod: 'June 2024',
+          reportData: '[]',
+          reportPeriod: '{ "start": { "month": 6, "year": 2026 }, "end": { "month": 6, "year": 2026 }}',
+          user: '{ "firstname": "first", "surname": "last", "bank": { "id": "123" } }',
+        },
+      },
+      { eventEmitter: events.EventEmitter },
+    );
 
-      // Act
-      const fileInfo = await saveFileToAzure(file, bankId);
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 
-      // Assert
-      expect(fileInfo).toEqual(MOCK_FILE_INFO);
-    });
+  it('returns a 400 if no file is provided', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    req.file = undefined;
 
-    it('should throw an error when the uploadFile response is false', async () => {
-      // Arrange
-      when(uploadFile).calledWith(expect.anything()).mockResolvedValueOnce(false);
+    // Act
+    await uploadReportAndSendNotification(req, res);
 
-      // Act / Assert
-      await expect(saveFileToAzure(file, bankId)).rejects.toThrow('Failed to save utilisation report to Azure - cause unknown');
-    });
+    // Assert
+    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+  });
 
-    it('should throw an error when the uploadFile response is an error object', async () => {
-      // Arrange
-      const errorObject = {
-        errorCount: 1,
-        error: { errorCode: 'SOME_ERROR', message: 'invalid file' },
-      };
-      when(uploadFile).calledWith(expect.anything()).mockResolvedValueOnce(errorObject);
+  it('does not upload report and returns a 500 if there are no reports for period', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    jest.mocked(getUtilisationReports).mockResolvedValue([]);
 
-      // Act / Assert
-      await expect(saveFileToAzure(file, bankId)).rejects.toThrow(`Failed to save utilisation report to Azure - ${errorObject.error.message}`);
-    });
+    // Act
+    await uploadReportAndSendNotification(req, res);
 
-    it('should rethrow the error when uploadFile throws', async () => {
-      // Arrange
-      const uploadFileError = new Error('File is invalid');
-      when(uploadFile).calledWith(expect.anything()).mockRejectedValueOnce(uploadFileError);
+    // Assert
+    expect(saveUtilisationReportFileToAzure).not.toHaveBeenCalled();
+    expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+  });
 
-      // Act / Assert
-      await expect(saveFileToAzure(file, bankId)).rejects.toThrow(uploadFileError);
-    });
+  it('does not upload report and returns a 500 if there are more than one reports for period', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    jest.mocked(getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse(), aNotReceivedUtilisationReportResponse()]);
+
+    // Act
+    await uploadReportAndSendNotification(req, res);
+
+    // Assert
+    expect(saveUtilisationReportFileToAzure).not.toHaveBeenCalled();
+    expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+  });
+
+  it('does not upload report and returns a 500 with error message if report has already been received', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    jest.mocked(getUtilisationReports).mockResolvedValue([{ ...aUtilisationReportResponse(), status: 'PENDING_RECONCILIATION' }]);
+
+    // Act
+    await uploadReportAndSendNotification(req, res);
+
+    // Assert
+    expect(saveUtilisationReportFileToAzure).not.toHaveBeenCalled();
+    expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+    expect(res._getData()).toBe(
+      `Expected report to be in '${UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED}' state (was actually in '${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}' state)`,
+    );
+  });
+
+  it('uploads report and sends notification emails', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    const report = aNotReceivedUtilisationReportResponse();
+    const fileInfo = { folder: 'folder', filename: 'info', fullPath: 'folder/path', url: 'url', mimetype: 'text/csv' };
+    jest.mocked(getUtilisationReports).mockResolvedValue([report]);
+    jest.mocked(saveUtilisationReportFileToAzure).mockResolvedValue(fileInfo);
+    jest.mocked(saveUtilisationReport).mockResolvedValue({ dateUploaded: '2024-12-21' });
+
+    // Act
+    await uploadReportAndSendNotification(req, res);
+
+    // Assert
+    expect(saveUtilisationReportFileToAzure).toHaveBeenCalledTimes(1);
+    expect(saveUtilisationReport).toHaveBeenCalledTimes(1);
+    expect(saveUtilisationReport).toHaveBeenCalledWith(report.id, PARSED_REPORT_DATA, PARSED_USER, fileInfo);
+    expect(sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam).toHaveBeenCalledTimes(1);
+    expect(sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam).toHaveBeenCalledTimes(1);
+  });
+
+  it('responds with a 200 and the bank team recipient emails when uploading is successful', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    jest.mocked(getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse()]);
+    jest.mocked(saveUtilisationReportFileToAzure).mockResolvedValue({ folder: 'folder', filename: 'info', fullPath: 'folder/path', url: 'url' });
+    jest.mocked(saveUtilisationReport).mockResolvedValue({ dateUploaded: '2024-12-21' });
+    jest.mocked(sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam).mockResolvedValue({ paymentOfficerEmails: ['email'] });
+
+    // Act
+    await uploadReportAndSendNotification(req, res);
+
+    // Assert
+    expect(res._getStatusCode()).toBe(HttpStatusCode.Created);
+    expect(res._getData()).toEqual({ paymentOfficerEmails: ['email'] });
+  });
+
+  it('uploads report and returns a 200 if sending report upload notification email to gef reporting team fails', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    jest.mocked(getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse()]);
+    jest.mocked(saveUtilisationReportFileToAzure).mockResolvedValue({ folder: 'folder', filename: 'info', fullPath: 'folder/path', url: 'url' });
+    jest.mocked(saveUtilisationReport).mockResolvedValue({ dateUploaded: '2024-12-21' });
+    jest.mocked(sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam).mockRejectedValue(new Error('Failed to send email'));
+    jest.mocked(sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam).mockResolvedValue({ paymentOfficerEmails: ['email'] });
+
+    // Act
+    await uploadReportAndSendNotification(req, res);
+
+    // Assert
+    expect(res._getStatusCode()).toBe(HttpStatusCode.Created);
+    expect(res._getData()).toEqual({ paymentOfficerEmails: ['email'] });
   });
 });

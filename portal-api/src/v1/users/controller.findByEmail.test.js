@@ -2,7 +2,7 @@ const { resetAllWhenMocks, when } = require('jest-when');
 const { InvalidEmailAddressError, UserNotFoundError } = require('../errors');
 const { findByEmail } = require('./controller');
 const { TEST_DATABASE_USER, TEST_USER_TRANSFORMED_FROM_DATABASE } = require('../../../test-helpers/unit-test-mocks/mock-user');
-const db = require('../../drivers/db-client');
+const { mongoDbClient: db } = require('../../drivers/db-client');
 const { transformDatabaseUser } = require('./transform-database-user');
 const { isValidEmail } = require('../../utils/string');
 

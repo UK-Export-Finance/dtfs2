@@ -1,3 +1,4 @@
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
@@ -20,7 +21,6 @@ describe('/v1/deals/:id/status', () => {
   const dealStatusUrl = (dealId) => `/v1/deals/${dealId}/status`;
   const dealStatusUrlForUnknownDealId = dealStatusUrl('620a1aa095a618b12da38c7b');
 
-  let noRoles;
   let aBarclaysMaker;
   let anHSBCMaker;
   let aBarclaysChecker;
@@ -30,7 +30,6 @@ describe('/v1/deals/:id/status', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    noRoles = testUsers().withoutAnyRoles().one();
     const barclaysMakers = testUsers().withRole(MAKER).withBankName('Barclays Bank').all();
     [aBarclaysMaker] = barclaysMakers;
     anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
@@ -46,20 +45,21 @@ describe('/v1/deals/:id/status', () => {
     let urlToGetDealStatus;
 
     beforeAll(async () => {
-      const { body: { _id: createdDealId } } = await as(aBarclaysMaker).post(completedDeal).to('/v1/deals');
+      const {
+        body: { _id: createdDealId },
+      } = await as(aBarclaysMaker).post(completedDeal).to('/v1/deals');
       dealId = createdDealId;
       urlToGetDealStatus = dealStatusUrl(dealId);
     });
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(urlToGetDealStatus),
-      makeRequestWithAuthHeader: (authHeader) => get(urlToGetDealStatus, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(urlToGetDealStatus, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).withBankName('Barclays Bank').one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().withBankName('Barclays Bank').one(),
       makeRequestAsUser: (user) => as(user).get(urlToGetDealStatus),
       successStatusCode: 200,
     });
@@ -103,7 +103,9 @@ describe('/v1/deals/:id/status', () => {
 
       api.tfmDealSubmit = () => Promise.resolve();
 
-      const { body: { _id: createdDealId } } = await as(aBarclaysMaker).post(completedDeal).to('/v1/deals');
+      const {
+        body: { _id: createdDealId },
+      } = await as(aBarclaysMaker).post(completedDeal).to('/v1/deals');
       dealId = createdDealId;
       urlForDealStatus = dealStatusUrl(dealId);
       urlForDeal = `/v1/deals/${dealId}`;
@@ -117,13 +119,12 @@ describe('/v1/deals/:id/status', () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER],
       getUserWithRole: (role) => testUsers().withRole(role).withBankName('Barclays Bank').one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().withBankName('Barclays Bank').one(),
       makeRequestAsUser: (user) => as(user).put(completedDeal).to(urlForDealStatus),
       successStatusCode: 200,
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).put(completedDeal).to(dealStatusUrlForUnknownDealId);
+      const { status } = await as(testUsers).put(completedDeal).to(dealStatusUrlForUnknownDealId);
 
       expect(status).toEqual(401);
     });
@@ -241,8 +242,21 @@ describe('/v1/deals/:id/status', () => {
           surname: aBarclaysMaker.surname,
           timezone: 'Europe/London',
           'user-status': STATUS.ACTIVE,
+          isTrusted: aBarclaysMaker.isTrusted,
         },
       });
+    });
+
+    it('updates the audit record', async () => {
+      const statusUpdate = {
+        comments: 'Flee!',
+        status: 'Abandoned',
+      };
+
+      await as(aBarclaysMaker).put(statusUpdate).to(urlForDealStatus);
+
+      const { body } = await as(aBarclaysMaker).get(urlForDeal);
+      expect(body.deal.auditRecord).toEqual(generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysMaker._id));
     });
 
     it('adds the user to `editedBy` array', async () => {
@@ -282,7 +296,7 @@ describe('/v1/deals/:id/status', () => {
     it('does NOT add the user to `editedBy` array if a checker changes status to "Further Maker\'s input required"', async () => {
       const statusUpdate = {
         comments: 'Flee!',
-        status: 'Further Maker\'s input required',
+        status: "Further Maker's input required",
       };
 
       await as(aBarclaysChecker).put(statusUpdate).to(urlForDealStatus);

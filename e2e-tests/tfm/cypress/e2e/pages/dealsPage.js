@@ -3,6 +3,7 @@ const dealsPage = {
   searchFormInput: () => cy.get('[data-cy="search-input"]'),
   searchFormSubmitButton: () => cy.get('[data-cy="submit-button"]'),
   dealsTableRows: () => cy.get('[data-cy="deals-table"] tbody tr'),
+  dealIdCell: (rowNumber) => cy.get('[data-cy="deals-table"] tbody tr').eq(rowNumber).children('td').eq(0),
   dealsTable: {
     headings: {
       ukefDealId: () => cy.get('[data-cy="deals-table-heading-ukefDealId"]'),
@@ -35,7 +36,13 @@ const dealsPage = {
       };
     },
   },
-
+  pagination: {
+    next: () => cy.get('[data-cy="Next"]'),
+    last: () => cy.get('[data-cy="Last"]'),
+    previous: () => cy.get('[data-cy="Previous"]'),
+    first: () => cy.get('[data-cy="First"]'),
+    page: (number) => cy.get(`[data-cy="Page_${number}"]`),
+  },
 };
 
 module.exports = dealsPage;

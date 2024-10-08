@@ -15,7 +15,7 @@ const url = process.env.MONGODB_URI;
 
 /**
  * Initiates MongoDB connection
- * @returns {Object} Connection
+ * @returns {Promise<object>} Connection
  */
 const connect = async () => {
   client = await MongoClient.connect(url);
@@ -29,9 +29,9 @@ const disconnect = async () => {
 
 /**
  * Retrieves complete collection
- * @param {String} name Collection name
- * @param {Object} filter Search filter, default to `null`
- * @returns {Object} Collection rows
+ * @param {string} name Collection name
+ * @param {object} filter Search filter, default to `null`
+ * @returns {Promise<object>} Collection rows
  */
 const getCollection = async (name, filter = null, raw = null) => {
   if (!connection) await connect();
@@ -54,8 +54,8 @@ const getCollection = async (name, filter = null, raw = null) => {
 
 /**
  * Portal - Updates collection property(ies)
- * @param {String} ukefDealId UKEF Deal ID
- * @param {Object} updates Properties to update
+ * @param {string} ukefDealId UKEF Deal ID
+ * @param {object} updates Properties to update
  * @returns {Promise} Resolved as `true` when updated successfully, otherwise Reject error.
  */
 const portalDealUpdate = async (id, updates) => {
@@ -83,8 +83,8 @@ const portalDealUpdate = async (id, updates) => {
 
 /**
  * Portal facilities - Updates portal facility collection
- * @param {String} facilityId facility ID
- * @param {Object} updates Properties to update
+ * @param {string} facilityId facility ID
+ * @param {object} updates Properties to update
  * @returns {Promise} Resolved as `true` when updated successfully, otherwise Reject error.
  */
 const portalFacilityUpdate = async (id, updates) => {
@@ -112,7 +112,7 @@ const portalFacilityUpdate = async (id, updates) => {
 
 /**
  * TFM - Updates collection property(ies)
- * @param {Object} updates Properties to update
+ * @param {object} updates Properties to update
  * @returns {Promise} Resolved as `true` when updated successfully, otherwise Reject error.
  */
 const tfmDealUpdate = async (updatedDeal) => {
@@ -131,7 +131,7 @@ const tfmDealUpdate = async (updatedDeal) => {
     const response = await connection
       .collection(CONSTANTS.DATABASE.TABLES.TFM_DEAL)
       .updateOne({ _id: { $eq: ObjectId(idAsString) } }, { $set: updatedDeal }, { returnNewDocument: true, returnDocument: 'after' })
-      .catch((e) => new Error(e));
+      .catch((error) => new Error(error));
 
     return response.acknowledged ? Promise.resolve(true) : Promise.reject(response);
   } catch (error) {
@@ -142,7 +142,7 @@ const tfmDealUpdate = async (updatedDeal) => {
 
 /**
  * Update TFM Facility
- * @param {Object} updatedFacility Updated facility payload
+ * @param {object} updatedFacility Updated facility payload
  * @returns {Promise} Resolve if successful otherwise reject.
  */
 const tfmFacilityUpdate = async (updatedFacility) => {
@@ -154,7 +154,6 @@ const tfmFacilityUpdate = async (updatedFacility) => {
     delete updatedFacility._id;
 
     if (!connection) await connect();
-
     const response = await connection
       .collection(CONSTANTS.DATABASE.TABLES.TFM_FACILITIES)
       .updateOne(
@@ -165,7 +164,7 @@ const tfmFacilityUpdate = async (updatedFacility) => {
           },
         },
       )
-      .catch((e) => new Error(e));
+      .catch((error) => new Error(error));
 
     return response.acknowledged ? Promise.resolve(true) : Promise.reject(response);
   } catch (error) {

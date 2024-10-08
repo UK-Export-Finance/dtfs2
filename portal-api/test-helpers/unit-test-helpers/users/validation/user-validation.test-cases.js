@@ -40,7 +40,10 @@ const itThrowsAnError = ({ makeApplyRulesCall, expectedRulesTestCases, mockAllRu
 const itReturnsAllErrors = ({ makeApplyRulesCall, expectedErrors }) => {
   it('returns all errors', async () => {
     const result = await makeApplyRulesCall();
-    expect(result).toEqual(expectedErrors);
+
+    // The following is used as order is not important and varies
+    expect(result).toHaveLength(expectedErrors.length);
+    expect(result).toEqual(expect.arrayContaining(expectedErrors));
   });
 };
 
@@ -79,8 +82,14 @@ const whenNoRulesReturnAnErrorItReturnsAnEmptyArray = ({ makeApplyRulesCall, all
 
   describe('when no rules return an error', () => {
     describe.each([
-      { description: 'synchronous', mockAllRulesToNotReturnAnError: () => mockRulesToNotReturnAnErrorSynchronously({ rules: allRules }) },
-      { description: 'asynchronous', mockAllRulesToNotReturnAnError: () => mockRulesToNotReturnAnErrorAsynchronously({ rules: allRules }) },
+      {
+        description: 'synchronous',
+        mockAllRulesToNotReturnAnError: () => mockRulesToNotReturnAnErrorSynchronously({ rules: allRules }),
+      },
+      {
+        description: 'asynchronous',
+        mockAllRulesToNotReturnAnError: () => mockRulesToNotReturnAnErrorAsynchronously({ rules: allRules }),
+      },
     ])('when the failing rule is $description', ({ mockAllRulesToNotReturnAnError }) => {
       beforeEach(() => {
         mockAllRulesToNotReturnAnError();

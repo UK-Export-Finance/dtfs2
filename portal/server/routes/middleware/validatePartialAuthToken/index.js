@@ -2,9 +2,9 @@ const destroySessionAndRedirectToStart = require('../../../utils/destroy-session
 const api = require('../../../api');
 /**
  * Validate the session contains a userToken for partial 2FA
- * @param {Object} req Request object
- * @param {Object} res Response object
- * @param {Object} next Next object
+ * @param {object} req Request object
+ * @param {object} res Response object
+ * @param {object} next Next object
  */
 const validatePartialAuthToken = async (req, res, next) => {
   try {
@@ -26,7 +26,7 @@ const validatePartialAuthToken = async (req, res, next) => {
     await api.validatePartialAuthToken(userToken);
     return next();
   } catch (error) {
-    console.error('Partial auth token is not valid, destroying the session: %s', error);
+    console.error('Partial auth token is not valid, destroying the session %o', error);
     return destroySessionAndRedirectToStart(req, res);
   }
 };

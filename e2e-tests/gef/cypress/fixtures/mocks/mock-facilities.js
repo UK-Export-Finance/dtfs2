@@ -1,7 +1,24 @@
 const CONSTANTS = require('../constants');
 const dateConstants = require('../../../../e2e-fixtures/dateConstants');
 
+const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
+
+/**
+ * Gets facility end date properties if enabled on default deal version
+ * @returns {Pick<import('@ukef/dtfs2-common').Facility,'isUsingFacilityEndDate' | 'facilityEndDate'> | {} } mock facility end date properties if enabled, or empty object if not
+ */
+const getFacilityEndDateProperties = () => {
+  if (facilityEndDateEnabled) {
+    return {
+      isUsingFacilityEndDate: true,
+      facilityEndDate: new Date(1830297600000),
+    };
+  }
+  return {};
+};
+
 exports.MOCK_FACILITY_ONE = {
+  ...getFacilityEndDateProperties(),
   type: CONSTANTS.FACILITY_TYPE.CASH,
   hasBeenIssued: false,
   name: 'Facility one',
@@ -9,7 +26,15 @@ exports.MOCK_FACILITY_ONE = {
   coverStartDate: 1638403200000,
   coverEndDate: '2030-01-01T00:00:00.000Z',
   monthsOfCover: 20,
-  details: ['Term basis', 'Revolving or renewing basis', 'Committed basis', 'Uncommitted basis', 'On demand or overdraft basis', 'Factoring on a  with-recourse basis', 'Other'],
+  details: [
+    'Term basis',
+    'Revolving or renewing basis',
+    'Committed basis',
+    'Uncommitted basis',
+    'On demand or overdraft basis',
+    'Factoring on a  with-recourse basis',
+    'Other',
+  ],
   detailsOther: 'Other',
   currency: 'GBP',
   value: 2000,
@@ -30,6 +55,7 @@ exports.MOCK_FACILITY_ONE = {
 };
 
 exports.MOCK_FACILITY_TWO = {
+  ...getFacilityEndDateProperties(),
   type: CONSTANTS.FACILITY_TYPE.CASH,
   hasBeenIssued: true,
   name: 'Facility two',
@@ -37,7 +63,15 @@ exports.MOCK_FACILITY_TWO = {
   coverStartDate: 1638403200000,
   coverEndDate: '2030-01-01T00:00:00.000Z',
   monthsOfCover: null,
-  details: ['Term basis', 'Revolving or renewing basis', 'Committed basis', 'Uncommitted basis', 'On demand or overdraft basis', 'Factoring on a  with-recourse basis', 'Other'],
+  details: [
+    'Term basis',
+    'Revolving or renewing basis',
+    'Committed basis',
+    'Uncommitted basis',
+    'On demand or overdraft basis',
+    'Factoring on a  with-recourse basis',
+    'Other',
+  ],
   detailsOther: 'Other',
   currency: 'GBP',
   value: 2000,
@@ -58,6 +92,7 @@ exports.MOCK_FACILITY_TWO = {
 };
 
 exports.MOCK_FACILITY_TWO_NULL_MIA = {
+  ...getFacilityEndDateProperties(),
   type: CONSTANTS.FACILITY_TYPE.CASH,
   hasBeenIssued: true,
   name: 'Facility two',
@@ -65,7 +100,15 @@ exports.MOCK_FACILITY_TWO_NULL_MIA = {
   coverStartDate: 1638403200000,
   coverEndDate: dateConstants.tomorrow,
   monthsOfCover: null,
-  details: ['Term basis', 'Revolving or renewing basis', 'Committed basis', 'Uncommitted basis', 'On demand or overdraft basis', 'Factoring on a  with-recourse basis', 'Other'],
+  details: [
+    'Term basis',
+    'Revolving or renewing basis',
+    'Committed basis',
+    'Uncommitted basis',
+    'On demand or overdraft basis',
+    'Factoring on a  with-recourse basis',
+    'Other',
+  ],
   detailsOther: 'Other',
   currency: 'GBP',
   value: 2000,
@@ -86,6 +129,7 @@ exports.MOCK_FACILITY_TWO_NULL_MIA = {
 };
 
 exports.MOCK_FACILITY_THREE = {
+  ...getFacilityEndDateProperties(),
   type: CONSTANTS.FACILITY_TYPE.CONTINGENT,
   hasBeenIssued: false,
   name: 'Facility three',
@@ -93,7 +137,15 @@ exports.MOCK_FACILITY_THREE = {
   coverStartDate: 1638403200000,
   coverEndDate: '2030-01-01T00:00:00.000Z',
   monthsOfCover: 30,
-  details: ['Term basis', 'Revolving or renewing basis', 'Committed basis', 'Uncommitted basis', 'On demand or overdraft basis', 'Factoring on a  with-recourse basis', 'Other'],
+  details: [
+    'Term basis',
+    'Revolving or renewing basis',
+    'Committed basis',
+    'Uncommitted basis',
+    'On demand or overdraft basis',
+    'Factoring on a  with-recourse basis',
+    'Other',
+  ],
   detailsOther: 'Other',
   currency: 'GBP',
   value: 2000,
@@ -114,6 +166,7 @@ exports.MOCK_FACILITY_THREE = {
 };
 
 exports.MOCK_FACILITY_FOUR = {
+  ...getFacilityEndDateProperties(),
   type: CONSTANTS.FACILITY_TYPE.CASH,
   hasBeenIssued: false,
   name: 'Facility four',
@@ -121,7 +174,15 @@ exports.MOCK_FACILITY_FOUR = {
   coverStartDate: 1638403200000,
   coverEndDate: '2030-01-01T00:00:00.000Z',
   monthsOfCover: 6,
-  details: ['Term basis', 'Revolving or renewing basis', 'Committed basis', 'Uncommitted basis', 'On demand or overdraft basis', 'Factoring on a  with-recourse basis', 'Other'],
+  details: [
+    'Term basis',
+    'Revolving or renewing basis',
+    'Committed basis',
+    'Uncommitted basis',
+    'On demand or overdraft basis',
+    'Factoring on a  with-recourse basis',
+    'Other',
+  ],
   detailsOther: 'Other',
   currency: 'GBP',
   value: 2000,

@@ -1,6 +1,8 @@
-const {
-  DEAL_TYPE, DEAL_STATUS, SUBMISSION_TYPE: DEAL_SUBMISSION_TYPE, FACILITY_TYPE,
-} = require('../../../e2e-fixtures/constants.fixture');
+const { DEAL_TYPE, DEAL_STATUS, SUBMISSION_TYPE: DEAL_SUBMISSION_TYPE, FACILITY_TYPE } = require('../../../e2e-fixtures/constants.fixture');
+
+const TASKS = {
+  UNASSIGNED: 'Unassigned',
+};
 
 const DEAL_STAGE_TFM = {
   CONFIRMED: 'Confirmed',
@@ -43,6 +45,12 @@ const DISPLAY_USER_TEAMS = {
   PDC_READ: 'PDC read',
 };
 
+const DATE_FORMATS = {
+  FULL: 'dd MMMM yyyy', // 01 January 2024
+  SHORT: 'dd MMM yyyy', // 01 Jan 2024
+  SINGLE_DIGIT_DAY_LONG: 'd MMMM yyyy', // 1 January 2024
+};
+
 /**
  * Stores the alias keys which should be used to access
  * the values yielded from custom commands
@@ -54,6 +62,7 @@ const ALIAS_KEY = {
 };
 
 module.exports = {
+  TASKS,
   DEAL_TYPE,
   DEAL_SUBMISSION_TYPE,
   DEAL_STATUS,
@@ -63,5 +72,6 @@ module.exports = {
   NOT_ADDED,
   PARTY_URN,
   PARTIES,
+  DATE_FORMATS,
   ALIAS_KEY,
 };

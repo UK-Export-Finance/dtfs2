@@ -1,5 +1,5 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const { formattedNumber } = require('../../../../../utils/number');
-const { CURRENCY } = require('../../../../../constants/currency.constant');
 
 const mapSupplyContractValueInGBP = (supplyContractValueInGBP) => {
   if (supplyContractValueInGBP) {

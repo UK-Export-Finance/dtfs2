@@ -1,8 +1,10 @@
 const { ObjectId } = require('mongodb');
-const db = require('../../../drivers/db-client');
-const payloadVerification = require('./helpers/payload');
+const { generateAuditDatabaseRecordFromAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
+const { PAYLOAD_VERIFICATION, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
+const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
+const { mongoDbClient: db } = require('../../../drivers/db-client');
 const { mapUserData } = require('./helpers/mapUserData.helper');
-const { USER, PAYLOAD } = require('../../../constants');
+const { USER } = require('../../../constants');
 const utils = require('../../../utils/crypto.util');
 
 const businessRules = { loginFailureCount: 5 };
@@ -26,17 +28,24 @@ exports.findByUsername = async (username, callback) => {
   collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
-exports.create = async (user, callback) => {
+/**
+ * @param {object} user to create
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - logged in user
+ * @param {(error: string | null, createdUser: object) => void} callback
+ * @returns
+ */
+exports.create = async (user, auditDetails, callback) => {
   const collection = await db.getCollection('tfm-users');
   const tfmUser = {
     ...user,
     status: USER.STATUS.ACTIVE,
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
   delete tfmUser.token;
   delete tfmUser.password;
 
-  if (payloadVerification(tfmUser, PAYLOAD.TFM.USER)) {
+  if (isVerifiedPayload({ payload: tfmUser, template: PAYLOAD_VERIFICATION.TFM.USER })) {
     const createUserResult = await collection.insertOne(tfmUser);
 
     const { insertedId: userId } = createUserResult;
@@ -54,12 +63,21 @@ exports.create = async (user, callback) => {
   return callback('Invalid TFM user payload', user);
 };
 
-exports.update = async (_id, update, callback) => {
+/**
+ * @param {string} _id of the user to update
+ * @param {object} update to make to the user
+ * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - logged in user
+ * @param {(error: string | null, updatedUser: object) => void} callback
+ */
+exports.update = async (_id, update, auditDetails, callback) => {
   if (!ObjectId.isValid(_id)) {
     throw new Error('Invalid User Id');
   }
 
-  const userUpdate = { ...update };
+  const userUpdate = {
+    ...update,
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+  };
   const collection = await db.getCollection('tfm-users');
 
   collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => {
@@ -88,7 +106,7 @@ exports.update = async (_id, update, callback) => {
   });
 };
 
-exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, callback) => {
+exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, auditDetails, callback) => {
   if (!ObjectId.isValid(user._id)) {
     throw new Error('Invalid User Id');
   }
@@ -98,41 +116,49 @@ exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, call
     lastLogin: Date.now(),
     loginFailureCount: 0,
     sessionIdentifier,
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
 
   callback();
 };
 
-exports.incrementFailedLoginCount = async (user) => {
+exports.incrementFailedLoginCount = async (user, auditDetails) => {
   if (!ObjectId.isValid(user._id)) {
     throw new Error('Invalid User Id');
   }
 
   const failureCount = user.loginFailureCount ? user.loginFailureCount + 1 : 1;
-  const thresholdReached = (failureCount >= businessRules.loginFailureCount);
+  const thresholdReached = failureCount >= businessRules.loginFailureCount;
 
   const collection = await db.getCollection('tfm-users');
   const update = {
     loginFailureCount: failureCount,
     lastLoginFailure: Date.now(),
     status: thresholdReached ? USER.STATUS.BLOCKED : user.status,
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
-  await collection.updateOne(
-    { _id: { $eq: ObjectId(user._id) } },
-    { $set: update },
-    {},
-  );
+  await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
 };
 
-exports.removeTfmUserById = async (_id, callback) => {
-  if (ObjectId.isValid(_id)) {
-    const collection = await db.getCollection('tfm-users');
-    const status = await collection.deleteOne({ _id: { $eq: ObjectId(_id) } });
-
-    return callback(null, status);
+exports.removeTfmUserById = async (_id, auditDetails, callback) => {
+  if (!ObjectId.isValid(_id)) {
+    return callback('Invalid TFM user id', 400);
   }
 
-  return callback('Invalid TFM user id', 400);
+  try {
+    await deleteOne({
+      documentId: new ObjectId(_id),
+      collectionName: 'tfm-users',
+      db,
+      auditDetails,
+    });
+    return callback(null, 200);
+  } catch (error) {
+    if (error instanceof DocumentNotDeletedError) {
+      return callback(error, 404);
+    }
+    return callback(error, 500);
+  }
 };

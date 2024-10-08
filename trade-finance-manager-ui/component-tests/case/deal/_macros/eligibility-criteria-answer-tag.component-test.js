@@ -1,4 +1,4 @@
-const componentRenderer = require('../../../componentRenderer');
+const { componentRenderer } = require('../../../componentRenderer');
 
 const component = '../templates/case/deal/_macros/eligibility-criteria-answer-tag.njk';
 const render = componentRenderer(component);

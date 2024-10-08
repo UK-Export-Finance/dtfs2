@@ -1,10 +1,3 @@
-const FACILITY_TYPE = {
-  BOND: 'Bond',
-  LOAN: 'Loan',
-  CASH: 'Cash',
-  CONTINGENT: 'Contingent'
-};
-
 const FEE_TYPE = {
   ADVANCE: 'In advance',
   ARREAR: 'In arrear',
@@ -16,16 +9,6 @@ const FEE_FREQUENCY = {
   QUARTERLY: 'Quarterly',
   SEMI_ANNUALLY: 'Semi-annually',
   ANNUALLY: 'Annually',
-};
-
-const GEF_FACILITY_PROVIDED_DETAILS = {
-  TERM: 'Term basis',
-  RESOLVING: 'Revolving or renewing basis',
-  COMMITTED: 'Committed basis',
-  UNCOMMITTED: 'Uncommitted basis',
-  ON_DEMAND: 'On demand or overdraft basis',
-  FACTORING: 'Factoring on a  with-recourse basis',
-  OTHER: 'Other',
 };
 
 const DAY_COUNT_BASIS = {
@@ -65,10 +48,8 @@ const TYPE = {
 };
 
 module.exports = {
-  FACILITY_TYPE,
   FEE_TYPE,
   FEE_FREQUENCY,
-  GEF_FACILITY_PROVIDED_DETAILS,
   DAY_COUNT_BASIS,
   FACILITIES_STAGE,
   TYPE,

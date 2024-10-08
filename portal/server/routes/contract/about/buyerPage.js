@@ -1,17 +1,11 @@
 const express = require('express');
-const { ROLES: { MAKER } } = require('@ukef/dtfs2-common');
+const {
+  ROLES: { MAKER },
+} = require('@ukef/dtfs2-common');
 const api = require('../../../api');
-const {
-  requestParams,
-  mapCountries,
-  errorHref,
-  generateErrorSummary,
-  constructPayload,
-} = require('../../../helpers');
+const { requestParams, mapCountries, errorHref, generateErrorSummary, constructPayload } = require('../../../helpers');
 
-const {
-  provide, DEAL, COUNTRIES,
-} = require('../../api-data-provider');
+const { provide, DEAL, COUNTRIES } = require('../../api-data-provider');
 
 const updateSubmissionDetails = require('./updateSubmissionDetails');
 const aboutTaskList = require('./aboutTaskList');
@@ -28,16 +22,13 @@ router.get('/contract/:_id/about/buyer', [validateRole({ role: [MAKER] }), provi
   const { deal, countries } = req.apiData;
 
   const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
-  const errorSummary = generateErrorSummary(
-    validationErrors,
-    errorHref,
-  );
+  const errorSummary = generateErrorSummary(validationErrors, errorHref);
 
   const completedForms = calculateStatusOfEachPage(Object.keys(errorSummary.errorList));
 
   const buyerAddressCountryCode = deal.submissionDetails['buyer-address-country'] && deal.submissionDetails['buyer-address-country'].code;
-  const destinationOfGoodsAndServicesCountryCode = deal.submissionDetails.destinationOfGoodsAndServices
-                                                   && deal.submissionDetails.destinationOfGoodsAndServices.code;
+  const destinationOfGoodsAndServicesCountryCode =
+    deal.submissionDetails.destinationOfGoodsAndServices && deal.submissionDetails.destinationOfGoodsAndServices.code;
 
   const mappedCountries = {
     'buyer-address-country': mapCountries(countries, buyerAddressCountryCode),
@@ -66,7 +57,7 @@ const buyerSubmissionDetailsProperties = [
 router.post('/contract/:_id/about/buyer', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
-  const submissionDetailsPayload = constructPayload(req.body, buyerSubmissionDetailsProperties);
+  const submissionDetailsPayload = constructPayload(req.body, buyerSubmissionDetailsProperties, true);
 
   await updateSubmissionDetails(req.apiData[DEAL], submissionDetailsPayload, userToken);
 
@@ -78,22 +69,19 @@ router.post('/contract/:_id/about/buyer/save-go-back', provide([DEAL]), async (r
   const deal = req.apiData[DEAL];
   const { _id, userToken } = requestParams(req);
 
-  const {
-    'buyer-address-country': buyerAddressCountry,
-    destinationOfGoodsAndServices,
-  } = deal.submissionDetails;
+  const { 'buyer-address-country': buyerAddressCountry, destinationOfGoodsAndServices } = deal.submissionDetails;
 
   // UI form submit only has the country code. API has a country object.
   // to check if something has changed, only use the country code.
-  const destinationOfGoodsAndServicesCode = (destinationOfGoodsAndServices && destinationOfGoodsAndServices.code) ? destinationOfGoodsAndServices.code : '';
+  const destinationOfGoodsAndServicesCode = destinationOfGoodsAndServices && destinationOfGoodsAndServices.code ? destinationOfGoodsAndServices.code : '';
 
   const mappedOriginalData = {
     ...deal.submissionDetails,
-    'buyer-address-country': (buyerAddressCountry && buyerAddressCountry.code) ? buyerAddressCountry.code : '',
+    'buyer-address-country': buyerAddressCountry && buyerAddressCountry.code ? buyerAddressCountry.code : '',
     destinationOfGoodsAndServices: destinationOfGoodsAndServicesCode,
   };
 
-  const submissionDetailsPayload = constructPayload(req.body, buyerSubmissionDetailsProperties);
+  const submissionDetailsPayload = constructPayload(req.body, buyerSubmissionDetailsProperties, true);
 
   if (!formDataMatchesOriginalData(submissionDetailsPayload, mappedOriginalData)) {
     await updateSubmissionDetails(deal, submissionDetailsPayload, userToken);

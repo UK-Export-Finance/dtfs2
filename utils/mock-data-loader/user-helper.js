@@ -13,6 +13,7 @@ const mockDataLoaderUser = {
   email: 're-insert-mocks-data-loader@ukexportfinance.gov.uk',
   bank: { id: '*' },
   timezone: 'Europe/London',
+  isTrusted: false,
 };
 
 const mockDataLoaderTFMUser = {
@@ -53,7 +54,10 @@ const createAndLogInAsInitialTfmUser = async () => {
     const token = await api.loginTfmUser(mockDataLoaderTFMUser);
 
     if (!token) {
-      throw new FailedToCreateLoggedInUserSessionError({ username: mockDataLoaderTFMUser.username, cause: 'No token was present on response' });
+      throw new FailedToCreateLoggedInUserSessionError({
+        username: mockDataLoaderTFMUser.username,
+        cause: 'No token was present on response',
+      });
     }
 
     return token;

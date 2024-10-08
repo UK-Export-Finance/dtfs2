@@ -1,16 +1,11 @@
 const DEAL_TYPE = 'GEF';
 
-const FACILITY_TYPE = {
-  CASH: 'Cash',
-  CONTINGENT: 'Contingent',
-};
-
 const DEAL_STATUS = {
   DRAFT: 'Draft',
   NOT_STARTED: 'Not started',
   IN_PROGRESS: 'In progress',
   COMPLETED: 'Completed',
-  READY_FOR_APPROVAL: 'Ready for Checker\'s approval',
+  READY_FOR_APPROVAL: "Ready for Checker's approval",
   CHANGES_REQUIRED: "Further Maker's input required",
   ABANDONED: 'Abandoned',
   SUBMITTED_TO_UKEF: 'Submitted',
@@ -32,35 +27,15 @@ const ERROR = {
   FIELD_TOO_LONG: 'FIELD_TOO_LONG',
 };
 
-const FACILITY_PROVIDED_DETAILS = {
-  TERM: 'Term basis',
-  RESOLVING: 'Revolving or renewing basis',
-  COMMITTED: 'Committed basis',
-  UNCOMMITTED: 'Uncommitted basis',
-  ON_DEMAND: 'On demand or overdraft basis',
-  FACTORING: 'Factoring on a  with-recourse basis',
-  OTHER: 'Other',
-};
-
 const FACILITY_PAYMENT_TYPE = {
   IN_ADVANCE: 'In advance',
   IN_ARREARS: 'In arrears',
   AT_MATURITY: 'At maturity',
 };
 
-const CURRENCY = {
-  GBP: 'GBP',
-  EUR: 'EUR',
-  USD: 'USD',
-  YEN: 'JPY',
-};
-
 module.exports = {
   DEAL_TYPE,
-  FACILITY_TYPE,
   DEAL_STATUS,
   ERROR,
-  FACILITY_PROVIDED_DETAILS,
   FACILITY_PAYMENT_TYPE,
-  CURRENCY,
 };

@@ -3,8 +3,7 @@ const { getYearAndMmdd, validDateFormats } = require('./date');
 
 describe('getYearAndMmdd', () => {
   beforeAll(() => {
-    jest.useFakeTimers()
-      .setSystemTime(1669852800000); // Thu Dec 01 2022 00:00:00 GMT+0000
+    jest.useFakeTimers().setSystemTime(1669852800000); // Thu Dec 01 2022 00:00:00 GMT+0000
   });
   afterAll(() => {
     jest.useRealTimers();

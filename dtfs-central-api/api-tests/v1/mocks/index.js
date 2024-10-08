@@ -22,5 +22,5 @@ module.exports = {
   mockReq,
   mockRes,
   mockNext,
-  mockReqWithCsrf
+  mockReqWithCsrf,
 };

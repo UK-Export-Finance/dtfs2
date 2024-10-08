@@ -18,28 +18,63 @@ const incompleteFacilities = {
 
 const acknowledgedFacilities = {
   items: [
-    { _id: '12345678911', status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, requestedCoverStartDate: 123, coverDateConfirmed: true },
-    { _id: '12345678912', status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, requestedCoverStartDate: 123, coverDateConfirmed: true },
+    {
+      _id: '12345678911',
+      status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED,
+      requestedCoverStartDate: 123,
+      coverDateConfirmed: true,
+    },
+    {
+      _id: '12345678912',
+      status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED,
+      requestedCoverStartDate: 123,
+      coverDateConfirmed: true,
+    },
   ],
 };
 
 const submittedLoans = {
   items: [
-    { _id: '12345678910', status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF, requestedCoverStartDate: 123, coverDateConfirmed: true },
-    { _id: '12345678911', status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF, requestedCoverStartDate: 123, coverDateConfirmed: true },
+    {
+      _id: '12345678910',
+      status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF,
+      requestedCoverStartDate: 123,
+      coverDateConfirmed: true,
+    },
+    {
+      _id: '12345678911',
+      status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF,
+      requestedCoverStartDate: 123,
+      coverDateConfirmed: true,
+    },
   ],
 };
 
 const submittedBonds = {
   items: [
-    { _id: '12345678912', status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF, requestedCoverStartDate: 123, coverDateConfirmed: true },
-    { _id: '12345678913', status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF, requestedCoverStartDate: 123, coverDateConfirmed: true },
+    {
+      _id: '12345678912',
+      status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF,
+      requestedCoverStartDate: 123,
+      coverDateConfirmed: true,
+    },
+    {
+      _id: '12345678913',
+      status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF,
+      requestedCoverStartDate: 123,
+      coverDateConfirmed: true,
+    },
   ],
 };
 
 const submittedBondsWithMissingProperties = {
   items: [
-    { _id: '12345678910', status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF, requestedCoverStartDate: 123, coverDateConfirmed: true },
+    {
+      _id: '12345678910',
+      status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF,
+      requestedCoverStartDate: 123,
+      coverDateConfirmed: true,
+    },
     { _id: '12345678911', status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF },
   ],
 };
@@ -47,7 +82,12 @@ const submittedBondsWithMissingProperties = {
 const submittedLoansWithMissingProperties = {
   items: [
     { _id: '12345678912', status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF },
-    { _id: '12345678913', status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF, requestedCoverStartDate: 123, coverDateConfirmed: true },
+    {
+      _id: '12345678913',
+      status: CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF,
+      requestedCoverStartDate: 123,
+      coverDateConfirmed: true,
+    },
   ],
 };
 
@@ -176,7 +216,12 @@ describe('isEveryDealFormComplete', () => {
       ...acknowledgedLoans,
       items: [
         { _id: '12345678911', status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, requestedCoverStartDate: null },
-        { _id: '12345678912', status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, requestedCoverStartDate: 123, coverDateConfirmed: true },
+        {
+          _id: '12345678912',
+          status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED,
+          requestedCoverStartDate: 123,
+          coverDateConfirmed: true,
+        },
       ],
     };
 
@@ -222,7 +267,12 @@ describe('isEveryDealFormComplete', () => {
       ...acknowledgedBonds,
       items: [
         { _id: '12345678911', status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, requestedCoverStartDate: null },
-        { _id: '12345678912', status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, requestedCoverStartDate: 123, coverDateConfirmed: true },
+        {
+          _id: '12345678912',
+          status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED,
+          requestedCoverStartDate: 123,
+          coverDateConfirmed: true,
+        },
       ],
     };
 
@@ -360,16 +410,36 @@ describe('isEveryDealFormComplete', () => {
     const completeAcknowledgedLoan = {
       ...acknowledgedLoans,
       items: [
-        { _id: '12345678911', status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, requestedCoverStartDate: 123, coverDateConfirmed: true },
-        { _id: '12345678912', status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, requestedCoverStartDate: 123, coverDateConfirmed: true },
+        {
+          _id: '12345678911',
+          status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED,
+          requestedCoverStartDate: 123,
+          coverDateConfirmed: true,
+        },
+        {
+          _id: '12345678912',
+          status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED,
+          requestedCoverStartDate: 123,
+          coverDateConfirmed: true,
+        },
       ],
     };
 
     const completeAcknowledgedBond = {
       ...acknowledgedBonds,
       items: [
-        { _id: '12345678911', status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, requestedCoverStartDate: 123, coverDateConfirmed: true },
-        { _id: '12345678912', status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, requestedCoverStartDate: 123, coverDateConfirmed: true },
+        {
+          _id: '12345678911',
+          status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED,
+          requestedCoverStartDate: 123,
+          coverDateConfirmed: true,
+        },
+        {
+          _id: '12345678912',
+          status: CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED,
+          requestedCoverStartDate: 123,
+          coverDateConfirmed: true,
+        },
       ],
     };
 

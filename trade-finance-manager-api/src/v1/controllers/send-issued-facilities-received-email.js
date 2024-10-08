@@ -26,9 +26,7 @@ const sendIssuedFacilitiesReceivedEmail = async (deal, updatedFacilities) => {
   try {
     const { bankInternalRefName, ukefDealId: ukefDealID, exporter, submissionType, maker } = deal;
 
-    const shouldSendEmail = (
-      submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
-    || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN);
+    const shouldSendEmail = submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;
 
     if (shouldSendEmail) {
       const bankId = maker.bank.id;
@@ -57,7 +55,7 @@ const sendIssuedFacilitiesReceivedEmail = async (deal, updatedFacilities) => {
       return { makerEmailResponse, pimEmailResponse, bankResponse };
     }
   } catch (error) {
-    console.error('TFM-API Error in sendIssuedFacilitiesReceivedEmail %s', error);
+    console.error('TFM-API Error in sendIssuedFacilitiesReceivedEmail %o', error);
   }
 
   return null;

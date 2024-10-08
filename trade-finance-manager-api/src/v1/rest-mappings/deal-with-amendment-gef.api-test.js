@@ -1,7 +1,7 @@
 const { fromUnixTime, format } = require('date-fns');
+const { CURRENCY, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const dealReducer = require('./deal');
 const mapGefDeal = require('./mappings/gef-deal/mapGefDeal');
-const { CURRENCY } = require('../../constants/currency.constant');
 
 const MOCK_GEF_DEAL = require('../__mocks__/mock-gef-deal');
 const MOCK_CASH_CONTINGENT_FACILITIES = require('../__mocks__/mock-cash-contingent-facilities');
@@ -10,12 +10,14 @@ describe('gef deal with amendments', () => {
   const coverEndDateUnix = 1658403289;
 
   const mockAmendmentValueResponse = {
+    status: AMENDMENT_STATUS.COMPLETED,
     value: 5000,
     currency: CURRENCY.GBP,
     amendmentId: '1234',
   };
 
   const mockAmendmentDateResponse = {
+    status: AMENDMENT_STATUS.COMPLETED,
     coverEndDate: coverEndDateUnix,
     amendmentId: '1234',
   };
@@ -112,9 +114,11 @@ describe('gef deal with amendments', () => {
     expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.value).toEqual(amendedValue);
     expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.dates.coverEndDate).not.toEqual(amendedCoverEndDate);
     expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.dates.tenor).not.toEqual(amendedTenor);
-    expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.dates.coverEndDate)
-      .toEqual(originalResult.dealSnapshot.facilities[0].facilitySnapshot.dates.coverEndDate);
-    expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.dates.tenor)
-      .toEqual(originalResult.dealSnapshot.facilities[0].facilitySnapshot.dates.tenor);
+    expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.dates.coverEndDate).toEqual(
+      originalResult.dealSnapshot.facilities[0].facilitySnapshot.dates.coverEndDate,
+    );
+    expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.dates.tenor).toEqual(
+      originalResult.dealSnapshot.facilities[0].facilitySnapshot.dates.tenor,
+    );
   });
 });

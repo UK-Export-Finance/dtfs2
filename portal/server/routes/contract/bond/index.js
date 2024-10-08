@@ -1,19 +1,12 @@
 const express = require('express');
 const { isBefore, set, startOfDay } = require('date-fns');
-const { ROLES: { MAKER } } = require('@ukef/dtfs2-common');
+const {
+  ROLES: { MAKER },
+} = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../../constants');
 const api = require('../../../api');
 const { provide, BOND, DEAL, CURRENCIES } = require('../../api-data-provider');
-const {
-  getApiData,
-  requestParams,
-  errorHref,
-  postToApi,
-  mapCurrencies,
-  generateErrorSummary,
-  constructPayload,
-  getNowAsEpoch,
-} = require('../../../helpers');
+const { getApiData, requestParams, errorHref, postToApi, mapCurrencies, generateErrorSummary, constructPayload, getNowAsEpoch } = require('../../../helpers');
 const {
   bondDetailsValidationErrors,
   bondFinancialDetailsValidationErrors,
@@ -91,7 +84,7 @@ const bondDetailsPayloadProperties = [
 ];
 
 const filterBondDetailsPayload = (body) => {
-  const payload = constructPayload(body, bondDetailsPayloadProperties);
+  const payload = constructPayload(body, bondDetailsPayloadProperties, true);
   if (payload.facilityStage === 'Unissued') {
     delete payload['requestedCoverStartDate-day'];
     delete payload['requestedCoverStartDate-month'];
@@ -118,7 +111,7 @@ router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
 });
 
 router.post('/contract/:_id/bond/:bondId/details/save-go-back', provide([BOND]), async (req, res) => {
-  const bondPayload = constructPayload(req.body, bondDetailsPayloadProperties);
+  const bondPayload = constructPayload(req.body, bondDetailsPayloadProperties, true);
   const filteredBondPayload = filterBondDetailsPayload(bondPayload);
   return saveFacilityAndGoBackToDeal(req, res, filteredBondPayload);
 });
@@ -162,7 +155,7 @@ const bondFinancialDetailsPayloadProperties = [
 ];
 
 const filterBondFinancialDetailsPayload = (body) => {
-  const sanitizedPayload = constructPayload(body, bondFinancialDetailsPayloadProperties);
+  const sanitizedPayload = constructPayload(body, bondFinancialDetailsPayloadProperties, true);
 
   if (sanitizedPayload.currencySameAsSupplyContractCurrency === 'true') {
     delete sanitizedPayload.conversionRate;
@@ -215,7 +208,7 @@ const bondFeeDetailsPayloadProperties = ['feeFrequency', 'feeType', 'inAdvanceFe
 
 router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
-  const sanitizedBody = constructPayload(req.body, bondFeeDetailsPayloadProperties);
+  const sanitizedBody = constructPayload(req.body, bondFeeDetailsPayloadProperties, true);
   const modifiedBody = feeFrequencyField(sanitizedBody);
 
   await postToApi(api.updateBond(dealId, bondId, modifiedBody, userToken), errorHref);
@@ -225,7 +218,7 @@ router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
 });
 
 router.post('/contract/:_id/bond/:bondId/fee-details/save-go-back', provide([BOND]), async (req, res) => {
-  const sanitizedBody = constructPayload(req.body, bondFeeDetailsPayloadProperties);
+  const sanitizedBody = constructPayload(req.body, bondFeeDetailsPayloadProperties, true);
   const modifiedBody = feeFrequencyField(sanitizedBody);
   return saveFacilityAndGoBackToDeal(req, res, modifiedBody);
 });
@@ -248,7 +241,7 @@ router.get('/contract/:_id/bond/:bondId/check-your-answers', validateRole({ role
   // When we GET a facility/bond, the status is dynamically added (it's not in the DB)
   // here, in the preview screen, we need to extract the status from the POST
   // otherwise the status will be added to the DB and not dynamically added.
-  const { status, ...bondWithoutStatus } = bond;
+  const { status: _status, ...bondWithoutStatus } = bond;
 
   const updatedBond = {
     ...bondWithoutStatus,
@@ -308,7 +301,7 @@ router.post('/contract/:_id/bond/:bondId/issue-facility', async (req, res) => {
   ];
 
   /**
-   * Add `coverDateConfirmed: true` property to the bond.
+   * Add coverDateConfirmed: true property to the bond.
    * This flag will allow Maker to further the application.
    */
   const payloadValues = {
@@ -316,7 +309,7 @@ router.post('/contract/:_id/bond/:bondId/issue-facility', async (req, res) => {
     coverDateConfirmed: true,
   };
 
-  const payload = constructPayload(payloadValues, payloadProperties);
+  const payload = constructPayload(payloadValues, payloadProperties, true);
 
   const { validationErrors, bond } = await postToApi(api.updateBondIssueFacility(dealId, bondId, payload, userToken), errorHref);
 
@@ -407,7 +400,7 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
         'requestedCoverStartDate-year',
         'needToChangeRequestedCoverStartDate',
       ];
-      const newRequestedCoverStartDate = constructPayload(req.body, payloadProperties);
+      const newRequestedCoverStartDate = constructPayload(req.body, payloadProperties, true);
 
       const newBondDetails = {
         ...newRequestedCoverStartDate,
@@ -445,7 +438,7 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
   }
 
   /**
-   * Add `coverDateConfirmed: true` property to the bond.
+   * Add coverDateConfirmed: true property to the bond.
    * This flag will allow Maker to further the application.
    */
   const updatedBond = {

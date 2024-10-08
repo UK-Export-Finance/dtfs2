@@ -7,116 +7,112 @@ const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
 const { calculateGefFacilityFeeRecord } = require('../helpers/calculate-gef-facility-fee-record');
 const CONSTANTS = require('../../constants');
 
-const updateFacilities = async (deal) => {
+const updateFacilities = async (deal, auditDetails) => {
   // Create deep clone
+  // Note this has the side effect of converting dates to strings
   const modifiedDeal = JSON.parse(JSON.stringify(deal));
 
-  const {
-    dealType,
-    submissionDate: dealSubmissionDate,
-    submissionType,
-  } = modifiedDeal;
+  const { dealType, submissionDate: dealSubmissionDate, submissionType } = modifiedDeal;
 
-  modifiedDeal.facilities = await Promise.all(modifiedDeal.facilities.map(async (f) => {
-    const facility = f;
+  modifiedDeal.facilities = await Promise.all(
+    modifiedDeal.facilities.map(async (f) => {
+      const facility = f;
 
-    const {
-      _id: facilityId,
-      hasBeenIssued,
-    } = facility;
+      const { _id: facilityId, hasBeenIssued } = facility;
 
-    let facilityUpdate;
-    let facilityPremiumSchedule;
-    let feeRecord;
+      let facilityUpdate;
+      let facilityPremiumSchedule;
+      let feeRecord;
 
-    /**
-     * If facility hasBeenIssued
-     * Check if gef or bss
-     * Adds hasBeenIssuedAndAcknowledged and/or hasBeenAcknowledged parameter
-     * Updates the facility collection with flags and tfm facilities collection
-    */
-    if (hasBeenIssued) {
-      const portalFacilityUpdate = {
-        hasBeenIssuedAndAcknowledged: true,
-      };
-
-      if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-        // only changes flag if AIN or MIA
-        if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-          // updates GEF facility collection
-          const updatedPortalFacility = await api.updateGefFacility(facilityId, portalFacilityUpdate);
-
-          facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
-        }
-      } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-        const facilityStatusUpdate = CONSTANTS.FACILITIES.FACILITY_STATUS_PORTAL.ACKNOWLEDGED;
-
-        await api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate);
-
-        portalFacilityUpdate.hasBeenAcknowledged = true;
-
-        // updates BSS facility collection
-        const updatedPortalFacility = await api.updatePortalFacility(facilityId, portalFacilityUpdate);
-
-        facility.hasBeenAcknowledged = updatedPortalFacility.hasBeenAcknowledged;
-        facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
-        facility.status = facilityStatusUpdate;
-      }
-
-      facilityUpdate = {
-        ...facilityUpdate,
-        ...portalFacilityUpdate,
-      };
-    }
-
-    const facilityGuaranteeDates = getGuaranteeDates(facility, dealSubmissionDate);
-    const facilityCurrencyConversion = await convertFacilityCurrency(facility, dealSubmissionDate);
-
-    try {
-      const facilityExposurePeriod = await getFacilityExposurePeriod(facility);
-
-      // Premium Schedule is only valid for non-GEF facilities
-      if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-        facilityPremiumSchedule = await getFacilityPremiumSchedule(
-          facility,
-          facilityExposurePeriod,
-          facilityGuaranteeDates,
-        );
-        facilityUpdate = {
-          premiumSchedule: facilityPremiumSchedule,
+      /**
+       * If facility hasBeenIssued
+       * Check if gef or bss
+       * Adds hasBeenIssuedAndAcknowledged and/or hasBeenAcknowledged parameter
+       * Updates the facility collection with flags and tfm facilities collection
+       */
+      if (hasBeenIssued) {
+        const portalFacilityUpdate = {
+          hasBeenIssuedAndAcknowledged: true,
         };
-      } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-      // Fee record is only valid for GEF facilities
-        if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-          feeRecord = calculateGefFacilityFeeRecord(facility);
-          facilityUpdate = {
-            ...facilityUpdate,
-            feeRecord,
-          };
+
+        if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+          // only changes flag if AIN or MIA
+          if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
+            // updates GEF facility collection
+            const updatedPortalFacility = await api.updateGefFacility({ facilityId, facilityUpdate: portalFacilityUpdate, auditDetails });
+
+            facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
+          }
+        } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+          const facilityStatusUpdate = CONSTANTS.FACILITIES.FACILITY_STATUS_PORTAL.ACKNOWLEDGED;
+
+          await api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate, auditDetails);
+
+          portalFacilityUpdate.hasBeenAcknowledged = true;
+
+          // updates BSS facility collection
+          const updatedPortalFacility = await api.updatePortalFacility(facilityId, portalFacilityUpdate, auditDetails);
+
+          facility.hasBeenAcknowledged = updatedPortalFacility.hasBeenAcknowledged;
+          facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
+          facility.status = facilityStatusUpdate;
         }
+
+        facilityUpdate = {
+          ...facilityUpdate,
+          ...portalFacilityUpdate,
+        };
       }
 
-      facilityUpdate = {
-        ...facilityUpdate,
-        ...facilityCurrencyConversion,
-        ...facilityExposurePeriod,
-        facilityGuaranteeDates,
-        riskProfile: DEFAULTS.FACILITY_RISK_PROFILE,
-      };
+      const facilityGuaranteeDates = getGuaranteeDates(facility, dealSubmissionDate);
+      const facilityCurrencyConversion = await convertFacilityCurrency(facility, dealSubmissionDate);
 
-      const updateFacilityResponse = await api.updateFacility(facilityId, facilityUpdate);
+      try {
+        const facilityExposurePeriod = await getFacilityExposurePeriod(facility);
 
-      // add the updated tfm object to returned facility.
-      // if we return updateFacilityResponse, we'll get facilitySnapshot
-      // - therefore losing the flat, generic facility mapping used in deal submission calls.
-      facility.tfm = updateFacilityResponse.tfm;
+        // Premium Schedule is only valid for non-GEF facilities
+        if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+          facilityPremiumSchedule = await getFacilityPremiumSchedule(facility, facilityExposurePeriod, facilityGuaranteeDates);
+          facilityUpdate = {
+            premiumSchedule: facilityPremiumSchedule,
+          };
+        } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+          // Fee record is only valid for GEF facilities
+          if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
+            feeRecord = calculateGefFacilityFeeRecord(facility);
+            facilityUpdate = {
+              ...facilityUpdate,
+              feeRecord,
+            };
+          }
+        }
 
-      return facility;
-    } catch (error) {
-      console.error('TFM-API - error in update-facilities.js %s', error);
-      return facility;
-    }
-  }));
+        facilityUpdate = {
+          ...facilityUpdate,
+          ...facilityCurrencyConversion,
+          ...facilityExposurePeriod,
+          facilityGuaranteeDates,
+          riskProfile: DEFAULTS.FACILITY_RISK_PROFILE,
+        };
+
+        const updateFacilityResponse = await api.updateFacility({
+          facilityId,
+          tfmUpdate: facilityUpdate,
+          auditDetails,
+        });
+
+        // add the updated tfm object to returned facility.
+        // if we return updateFacilityResponse, we'll get facilitySnapshot
+        // - therefore losing the flat, generic facility mapping used in deal submission calls.
+        facility.tfm = updateFacilityResponse.tfm;
+
+        return facility;
+      } catch (error) {
+        console.error('TFM-API - error in update-facilities.js %o', error);
+        return facility;
+      }
+    }),
+  );
 
   return modifiedDeal;
 };

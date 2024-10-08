@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { backLink, errorSummary, form, headingCaption, mainHeading, saveAndReturnButton } from '../partials';
 import aboutExporter from '../pages/about-exporter';
 import applicationDetails from '../pages/application-details';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
@@ -23,17 +24,13 @@ context('About Exporter Page', () => {
           dealIds.push(item._id);
         });
 
-        dealWithNoExporterIndustries = body.items.find((deal) =>
-          deal.exporter?.industries?.length === 0);
+        dealWithNoExporterIndustries = body.items.find((deal) => deal.exporter?.industries?.length === 0);
 
-        dealWithExporterIndustries = body.items.find((deal) =>
-          deal.exporter?.industries?.length);
+        dealWithExporterIndustries = body.items.find((deal) => deal.exporter?.industries?.length);
 
-        dealWithEmptyExporter = body.items.find((deal) =>
-          deal.exporter.status === 'Not started');
+        dealWithEmptyExporter = body.items.find((deal) => deal.exporter.status === 'Not started');
 
-        dealWithCompletedExporter = body.items.find((deal) =>
-          deal.exporter.status === 'Completed');
+        dealWithCompletedExporter = body.items.find((deal) => deal.exporter.status === 'Completed');
       });
     cy.login(BANK1_MAKER1);
   });
@@ -53,10 +50,10 @@ context('About Exporter Page', () => {
     it('displays the correct elements', () => {
       cy.visit(relative(`/gef/application-details/${dealWithNoExporterIndustries._id}/about-exporter`));
 
-      aboutExporter.backLink().should('exist');
-      aboutExporter.headingCaption();
-      aboutExporter.mainHeading();
-      aboutExporter.form();
+      backLink().should('exist');
+      headingCaption();
+      mainHeading();
+      form();
       aboutExporter.industryTitle();
       aboutExporter.microRadioButton();
       aboutExporter.smallRadioButton();
@@ -66,12 +63,12 @@ context('About Exporter Page', () => {
       aboutExporter.isFinancingIncreasingRadioYes();
       aboutExporter.isFinancingIncreasingRadioNo();
       aboutExporter.doneButton();
-      aboutExporter.saveAndReturnButton();
+      saveAndReturnButton();
     });
 
     it('redirects user to enter exporters address page when clicking on `Back` Link', () => {
       cy.visit(relative(`/gef/application-details/${dealWithNoExporterIndustries._id}/about-exporter`));
-      aboutExporter.backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealWithNoExporterIndustries._id}/exporters-address`));
     });
 
@@ -97,7 +94,7 @@ context('About Exporter Page', () => {
     it('validates form', () => {
       cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}/about-exporter`));
       aboutExporter.doneButton().click();
-      aboutExporter.errorSummary();
+      errorSummary();
       aboutExporter.probabilityOfDefaultError();
       aboutExporter.isFinancingIncreasingError();
     });
@@ -116,7 +113,7 @@ context('About Exporter Page', () => {
   describe('Clicking on Save and return, bypasses validation and takes user back to application details page', () => {
     it('validates form', () => {
       cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}/about-exporter`));
-      aboutExporter.saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
     });
   });

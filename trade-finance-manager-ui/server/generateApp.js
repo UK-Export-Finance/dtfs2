@@ -44,34 +44,36 @@ const generateApp = () => {
     watch: true,
   });
 
-  app.use(session({
-    ...sessionConfiguration,
-    cookie,
-  }));
+  app.use(
+    session({
+      ...sessionConfiguration,
+      cookie,
+    }),
+  );
   app.use(compression());
 
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
   app.use('/', feedbackRoutes);
-  app.use(csrf({
-    cookie: {
-      ...cookie,
-      maxAge: 43200, // 12 hours
-    },
-  }));
+  app.use(
+    csrf({
+      cookie: {
+        ...cookie,
+        maxAge: 43200, // 12 hours
+      },
+    }),
+  );
   app.use(csrfToken());
   app.use(sanitizeXss());
 
-  app.use(morgan('dev', {
-    skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
-  }));
-
   app.use(
-    '/assets',
-    express.static('node_modules/govuk-frontend/govuk/assets'),
-    express.static(path.join(__dirname, '..', 'public')),
+    morgan('dev', {
+      skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
+    }),
   );
+
+  app.use('/assets', express.static('node_modules/govuk-frontend/govuk/assets'), express.static(path.join(__dirname, '..', 'public')));
 
   app.use(createRateLimit());
   app.use(healthcheck);
@@ -81,7 +83,7 @@ const generateApp = () => {
   // error handler
   app.use((error, req, res, next) => {
     if (error.code === 'EBADCSRFTOKEN') {
-    // handle CSRF token errors here
+      // handle CSRF token errors here
       res.status(error.statusCode || 500);
       res.redirect('/');
     } else {

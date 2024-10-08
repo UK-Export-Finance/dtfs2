@@ -1,20 +1,11 @@
 const express = require('express');
-const { ROLES: { MAKER } } = require('@ukef/dtfs2-common');
+const {
+  ROLES: { MAKER },
+  isValidCompanyRegistrationNumber,
+} = require('@ukef/dtfs2-common');
 const api = require('../../../api');
-const {
-  requestParams,
-  mapCountries,
-  mapIndustrySectors,
-  mapIndustryClasses,
-  errorHref,
-  generateErrorSummary,
-  constructPayload,
-} = require('../../../helpers');
-
-const {
-  provide, DEAL, INDUSTRY_SECTORS, COUNTRIES,
-} = require('../../api-data-provider');
-
+const { requestParams, mapCountries, mapIndustrySectors, mapIndustryClasses, errorHref, generateErrorSummary, constructPayload } = require('../../../helpers');
+const { provide, DEAL, INDUSTRY_SECTORS, COUNTRIES } = require('../../api-data-provider');
 const updateSubmissionDetails = require('./updateSubmissionDetails');
 const calculateStatusOfEachPage = require('./navStatusCalculations');
 const aboutTaskList = require('./aboutTaskList');
@@ -30,9 +21,7 @@ router.get('/contract/:_id/about/supplier', [validateRole({ role: [MAKER] }), pr
   let { deal } = req.apiData;
 
   const { _id, userToken } = requestParams(req);
-
   const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
-
   // if companies house submit button was pressed and there are validation errors,
   // combine with existing deal validation errors.
   if (req.session.companiesHouseSearchValidationErrors) {
@@ -41,7 +30,6 @@ router.get('/contract/:_id/about/supplier', [validateRole({ role: [MAKER] }), pr
       ...validationErrors.errorList,
       ...req.session.companiesHouseSearchValidationErrors.errorList,
     };
-
     delete req.session.companiesHouseSearchValidationErrors;
   }
 
@@ -58,14 +46,27 @@ router.get('/contract/:_id/about/supplier', [validateRole({ role: [MAKER] }), pr
     };
     req.session.aboutSupplierFormData = null;
   }
-
+  if (deal.submissionDetails['supplier-companies-house-registration-number']) {
+    if (!isValidCompanyRegistrationNumber(deal.submissionDetails['supplier-companies-house-registration-number'])) {
+      validationErrors.count += 1;
+      validationErrors.errorList = {
+        ...validationErrors.errorList,
+        'supplier-companies-house-registration-number': {
+          order: '1',
+          text: 'Enter a valid Companies House registration number',
+        },
+      };
+    }
+  }
   const mappedIndustrySectors = mapIndustrySectors(industrySectors, deal.submissionDetails['industry-sector']);
   const mappedIndustryClasses = mapIndustryClasses(industrySectors, deal.submissionDetails['industry-sector'], deal.submissionDetails['industry-class']);
 
   const supplierAddressCountryCode = deal.submissionDetails['supplier-address-country'] && deal.submissionDetails['supplier-address-country'].code;
-  const supplierCorrespondenceAddressCountryCode = deal.submissionDetails['supplier-correspondence-address-country'] && deal.submissionDetails['supplier-correspondence-address-country'].code;
+  const supplierCorrespondenceAddressCountryCode =
+    deal.submissionDetails['supplier-correspondence-address-country'] && deal.submissionDetails['supplier-correspondence-address-country'].code;
   const indemnifierAddressCountryCode = deal.submissionDetails['indemnifier-address-country'] && deal.submissionDetails['indemnifier-address-country'].code;
-  const indemnifierCorrespondenceAddressCountryCode = deal.submissionDetails['indemnifier-correspondence-address-country'] && deal.submissionDetails['indemnifier-correspondence-address-country'].code;
+  const indemnifierCorrespondenceAddressCountryCode =
+    deal.submissionDetails['indemnifier-correspondence-address-country'] && deal.submissionDetails['indemnifier-correspondence-address-country'].code;
 
   const mappedCountries = {
     'supplier-address-country': mapCountries(countries, supplierAddressCountryCode),
@@ -73,7 +74,6 @@ router.get('/contract/:_id/about/supplier', [validateRole({ role: [MAKER] }), pr
     'indemnifier-address-country': mapCountries(countries, indemnifierAddressCountryCode),
     'indemnifier-correspondence-address-country': mapCountries(countries, indemnifierCorrespondenceAddressCountryCode),
   };
-
   return res.render('contract/about/about-supplier.njk', {
     deal,
     validationErrors: supplierValidationErrors(validationErrors, deal.submissionDetails),
@@ -128,7 +128,7 @@ const supplierSubmissionDetailsFields = [
 router.post('/contract/:_id/about/supplier', provide([INDUSTRY_SECTORS]), async (req, res) => {
   const { industrySectors } = req.apiData;
   const { _id, userToken } = requestParams(req);
-  let submissionDetails = constructPayload(req.body, supplierSubmissionDetailsFields);
+  let submissionDetails = constructPayload(req.body, supplierSubmissionDetailsFields, true);
 
   if (submissionDetails['supplier-correspondence-address-is-different'] === 'false') {
     // clear supplier correspondence address fields:
@@ -193,13 +193,15 @@ router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL, INDUSTR
   // to check if something has changed, only use the country code.
   const mappedOriginalData = {
     ...deal.submissionDetails,
-    'supplier-address-country': (supplierAddressCountry && supplierAddressCountry.code) ? supplierAddressCountry.code : '',
-    'supplier-correspondence-address-country': (supplierCorrespondenceAddressCountry && supplierCorrespondenceAddressCountry.code) ? supplierCorrespondenceAddressCountry.code : '',
-    'indemnifier-address-country': (indemnifierAddressCountry && indemnifierAddressCountry.code) ? indemnifierAddressCountry.code : '',
-    'indemnifier-correspondence-address-country': (indemnifierCorrespondenceAddressCountry && indemnifierCorrespondenceAddressCountry.code) ? indemnifierCorrespondenceAddressCountry.code : '',
+    'supplier-address-country': supplierAddressCountry && supplierAddressCountry.code ? supplierAddressCountry.code : '',
+    'supplier-correspondence-address-country':
+      supplierCorrespondenceAddressCountry && supplierCorrespondenceAddressCountry.code ? supplierCorrespondenceAddressCountry.code : '',
+    'indemnifier-address-country': indemnifierAddressCountry && indemnifierAddressCountry.code ? indemnifierAddressCountry.code : '',
+    'indemnifier-correspondence-address-country':
+      indemnifierCorrespondenceAddressCountry && indemnifierCorrespondenceAddressCountry.code ? indemnifierCorrespondenceAddressCountry.code : '',
   };
 
-  let submissionDetails = constructPayload(req.body, supplierSubmissionDetailsFields);
+  let submissionDetails = constructPayload(req.body, supplierSubmissionDetailsFields, true);
 
   if (submissionDetails['supplier-correspondence-address-is-different'] === 'false') {
     // clear supplier correspondence address fields:
@@ -241,7 +243,6 @@ router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL, INDUSTR
   }
 
   submissionDetails = industryFields(submissionDetails, industrySectors);
-
   if (!formDataMatchesOriginalData(submissionDetails, mappedOriginalData)) {
     await updateSubmissionDetails(deal, submissionDetails, userToken);
   }

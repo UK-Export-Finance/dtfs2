@@ -1,64 +1,86 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const {
+  MONGO_DB_COLLECTIONS,
+  InvalidAuditDetailsError,
+  FacilityNotFoundError,
+  InvalidDealIdError,
+  InvalidFacilityIdError,
+  ApiError,
+} = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
-const db = require('../../../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../../../drivers/db-client');
 
-const updateFacility = async (id, updateBody) => {
-  if (!ObjectId.isValid(id)) {
-    return { status: 400, message: 'Invalid Facility Id' };
+const updateFacility = async ({ facilityId, facilityUpdate, auditDetails }) => {
+  if (!ObjectId.isValid(facilityId)) {
+    throw new InvalidFacilityIdError(facilityId);
   }
 
   try {
     const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
     const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+    const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
-    let updatedFacility;
+    const existingFacility = await facilitiesCollection.findOne({ _id: { $eq: ObjectId(facilityId) } });
 
-    const existingFacility = await facilitiesCollection.findOne({ _id: { $eq: ObjectId(id) } });
-
-    if (existingFacility) {
-      const { dealId } = existingFacility;
-
-      if (dealId !== undefined && !ObjectId.isValid(dealId)) {
-        throw new Error('Invalid Deal Id');
-      }
-
-      updatedFacility = await facilitiesCollection.findOneAndUpdate(
-        { _id: { $eq: ObjectId(id) } },
-        { $set: updateBody },
-        { returnNewDocument: true, returnDocument: 'after' }
-      );
-
-      if (updatedFacility) {
-        // update facilitiesUpdated timestamp in the deal
-        const dealUpdateObj = { facilitiesUpdated: new Date().valueOf() };
-
-        await dealsCollection.updateOne(
-          { _id: { $eq: ObjectId(dealId) } },
-          { $set: dealUpdateObj },
-        );
-      }
+    if (!existingFacility) {
+      throw new FacilityNotFoundError(facilityId);
     }
 
-    return updatedFacility;
+    const { dealId } = existingFacility;
+
+    if (dealId !== undefined && !ObjectId.isValid(dealId)) {
+      throw new InvalidDealIdError(dealId);
+    }
+
+    const facilityUpdateWithAuditRecord = { ...facilityUpdate, auditRecord };
+
+    const updatedFacilityResponse = await facilitiesCollection.findOneAndUpdate(
+      { _id: { $eq: ObjectId(facilityId) } },
+      { $set: facilityUpdateWithAuditRecord },
+      { returnNewDocument: true, returnDocument: 'after' },
+    );
+
+    // update facilitiesUpdated timestamp in the deal
+    const dealUpdateObj = { facilitiesUpdated: new Date().valueOf(), auditRecord };
+
+    await dealsCollection.updateOne({ _id: { $eq: ObjectId(dealId) } }, { $set: dealUpdateObj });
+
+    return updatedFacilityResponse;
   } catch (error) {
-    console.error('Unable to update the facility %s', error);
-    return {};
+    console.error('Unable to update the facility %o', error);
+    throw error;
   }
 };
 exports.updateFacility = updateFacility;
 
 exports.updateFacilityPut = async (req, res) => {
-  if (ObjectId.isValid(req.params.id)) {
-    const facilityId = req.params.id;
-    const facilityUpdate = req.body;
+  const {
+    params: { id: facilityId },
+    body: { facilityUpdate, auditDetails },
+  } = req;
 
-    const updatedFacility = await updateFacility(facilityId, facilityUpdate);
-
-    if (updatedFacility) {
-      return res.status(200).json(updatedFacility);
+  try {
+    if (!ObjectId.isValid(facilityId)) {
+      throw new InvalidFacilityIdError(facilityId);
     }
 
-    return res.status(404).send({ status: 404, message: 'The facility ID doesn\'t exist' });
+    validateAuditDetails(auditDetails);
+
+    const updatedFacility = await updateFacility({ facilityId, facilityUpdate, auditDetails });
+    return res.status(200).json(updatedFacility);
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: error.message,
+        code: error.code,
+      });
+    }
+
+    if (error instanceof ApiError) {
+      return res.status(error.status).send({ status: error.status, message: error.message });
+    }
+
+    return res.status(500).send({ status: 500, error });
   }
-  return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
 };

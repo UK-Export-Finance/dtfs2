@@ -12,6 +12,9 @@
 
 require('dotenv').config();
 const axios = require('axios');
+const {
+  REQUEST: { HEADERS },
+} = require('./constants');
 
 // Domain
 const apim = {
@@ -22,11 +25,11 @@ const apim = {
 // Headers declaration
 const tfs = {
   [String(process.env.APIM_TFS_KEY)]: process.env.APIM_TFS_VALUE,
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
 };
 const mdm = {
   [String(process.env.APIM_MDM_KEY)]: process.env.APIM_MDM_VALUE,
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
 };
 
 const badRequest = {
@@ -38,8 +41,8 @@ const badRequest = {
 
 /**
  * Invokes TFS GET endpoint
- * @param {String} endpoint TFS endpoint
- * @returns {Object} API response object
+ * @param {string} endpoint TFS endpoint
+ * @returns {Promise<object>} API response object
  */
 const get = async (endpoint) => {
   if (endpoint) {
@@ -62,9 +65,9 @@ const get = async (endpoint) => {
 
 /**
  * Invokes TFS POST endpoint
- * @param {String} endpoint TFS endpoint
- * @param {Object} payload Payload object
- * @returns {Object} API response object
+ * @param {string} endpoint TFS endpoint
+ * @param {object} payload Payload object
+ * @returns {Promise<object>} API response object
  */
 const post = async (endpoint, payload) => {
   if (endpoint && payload) {
@@ -88,9 +91,9 @@ const post = async (endpoint, payload) => {
 
 /**
  * Invokes MDM POST endpoint
- * @param {String} endpoint MDM endpoint
- * @param {Object} payload Payload object
- * @returns {Object} API response object
+ * @param {string} endpoint MDM endpoint
+ * @param {object} payload Payload object
+ * @returns {Promise<object>} API response object
  */
 const postMdm = async (endpoint, payload) => {
   if (endpoint && payload) {
@@ -114,17 +117,17 @@ const postMdm = async (endpoint, payload) => {
 
 /**
  * Invokes TFS PUT endpoint
- * @param {String} endpoint TFS endpoint
- * @param {Object} payload Payload object
- * @param {String} etag Entity tag
- * @returns {Object} API response object
+ * @param {string} endpoint TFS endpoint
+ * @param {object} payload Payload object
+ * @param {string} etag Entity tag
+ * @returns {Promise<object>} API response object
  */
 const put = async (endpoint, payload, etag) => {
   if (endpoint && payload) {
     const additionalHeader = etag
       ? {
-        'If-Match': etag,
-      }
+          'If-Match': etag,
+        }
       : null;
 
     return axios({
@@ -150,17 +153,17 @@ const put = async (endpoint, payload, etag) => {
 
 /**
  * Invokes TFS PATCH endpoint
- * @param {String} endpoint TFS endpoint
- * @param {Object} payload Payload object
- * @param {String} etag Entity tag
- * @returns {Object} API response object
+ * @param {string} endpoint TFS endpoint
+ * @param {object} payload Payload object
+ * @param {string} etag Entity tag
+ * @returns {Promise<object>} API response object
  */
 const patch = async (endpoint, payload, eTag) => {
   if (endpoint && payload) {
     const additionalHeader = eTag
       ? {
-        'If-Match': eTag,
-      }
+          'If-Match': eTag,
+        }
       : null;
 
     return axios({

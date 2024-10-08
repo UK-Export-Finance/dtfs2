@@ -20,9 +20,9 @@ const virusScanUpload = async (req, res, next) => {
           },
           preference: 'clamdscan', // If clamdscan is found and active, it will be used by default
         })
-        .catch((err) => {
+        .catch((error) => {
           res.locals.virusScanFailed = true;
-          console.error('Could not connect to clamav server, %O', err);
+          console.error('Could not connect to clamav server, %o', error);
           return next();
         });
       // can't do clamscan.scanstream when hitting remote server due to https://github.com/kylefarris/clamscan/issues/101
@@ -40,7 +40,7 @@ const virusScanUpload = async (req, res, next) => {
             }
           })
           .on('error', (error) => {
-            console.error('Clamav virus scan errored with: %O', error);
+            console.error('Clamav virus scan errored with %o', error);
             reject(error);
           })
           .on('timeout', (error) => {

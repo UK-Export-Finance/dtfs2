@@ -1,8 +1,4 @@
-import {
-  submittedEligibilityMatchesOriginalData,
-  flattenOriginalData,
-  originalCriteriaAnswersAsStrings,
-} from './submittedEligibilityMatchesOriginalData';
+import { submittedEligibilityMatchesOriginalData, flattenOriginalData, originalCriteriaAnswersAsStrings } from './submittedEligibilityMatchesOriginalData';
 
 describe('submittedEligibilityMatchesOriginalData', () => {
   describe('flattenOriginalData', () => {
@@ -10,10 +6,7 @@ describe('submittedEligibilityMatchesOriginalData', () => {
       const originalData = {
         'criterion-1': 'true',
         'criterion-2': 'false',
-        criteria: [
-          { answer: true },
-          { answer: false },
-        ],
+        criteria: [{ answer: true }, { answer: false }],
         status: 'Incomplete',
         validationErrors: {},
       };

@@ -1,12 +1,7 @@
 const premiumFrequencyField = (loanBody, existingLoan) => {
   const modifiedLoan = loanBody;
 
-  const {
-    premiumType,
-    premiumFrequency,
-    inAdvancePremiumFrequency,
-    inArrearPremiumFrequency,
-  } = modifiedLoan;
+  const { premiumType, premiumFrequency, inAdvancePremiumFrequency, inArrearPremiumFrequency } = modifiedLoan;
 
   const premiumFrequencyValue = () => {
     if (premiumType === 'In advance') {

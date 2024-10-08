@@ -24,7 +24,7 @@ export const formatYear = (year: string | number) => (Number(year) < 1000 ? (200
  * @param date
  * @returns date formatted as `yyyy-MM-dd` or 'Invalid date' if not a valid format
  */
-export const formatDate = (date: Date): IsoDayStamp => isValid(date) ? format(date, 'yyyy-MM-dd') : 'Invalid date'
+export const formatDate = (date: Date): IsoDayStamp => (isValid(date) ? format(date, 'yyyy-MM-dd') : 'Invalid date');
 
 /**
  * @param dateStr Unix timestamp representing number of milliseconds between this date and 1st January 1970 (UTC),

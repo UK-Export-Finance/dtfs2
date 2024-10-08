@@ -1,0 +1,76 @@
+{% import "./fee-record-status.njk" as feeRecordStatus %}
+{% import "../../_macros/table-cell-checkbox.njk" as tableCellCheckbox %}
+{% macro render(params) %}
+  {% set reportId = params.reportId %}
+  {% set feeRecordPaymentGroup = params.feeRecordPaymentGroup %}
+  {% set userCanEdit = params.userCanEdit %}
+  {% set feeRecords = feeRecordPaymentGroup.feeRecords %}
+  {% set totalReportedPayments = feeRecordPaymentGroup.totalReportedPayments %}
+  {% set paymentsReceived = feeRecordPaymentGroup.paymentsReceived %}
+  {% set totalPaymentsReceived = feeRecordPaymentGroup.totalPaymentsReceived %}
+  {% set status = feeRecordPaymentGroup.status %}
+  {% set displayStatus = feeRecordPaymentGroup.displayStatus %}
+  {% set checkboxId = feeRecordPaymentGroup.checkboxId %}
+  {% set isChecked = feeRecordPaymentGroup.isChecked %}
+  {% set checkboxAriaLabel = feeRecordPaymentGroup.checkboxAriaLabel %}
+  {% for feeRecord in feeRecords %}
+    {% set isFirstFeeRecordInGroup = loop.index === 1 %}
+    {% set isLastFeeRecordInGroup = loop.index === feeRecords.length %}
+    <tr class="govuk-table__row" data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }}">
+      <th scope="row" class="govuk-table__header govuk-!-font-weight-regular{{ " no-border" if not isLastFeeRecordInGroup }}">
+        {{ feeRecord.facilityId }}
+      </th>
+      <td class="govuk-table__cell{{ " no-border" if not isLastFeeRecordInGroup }}">
+        {{ feeRecord.exporter }}
+      </td>
+      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}">
+        {{ feeRecord.reportedFees }}
+      </td>
+      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}">
+        {{ feeRecord.reportedPayments }}
+      </td>
+      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}" data-sort-value="{{ totalReportedPayments.dataSortValue }}">
+        {{ totalReportedPayments.formattedCurrencyAndAmount if isFirstFeeRecordInGroup else "" }}
+      </td>
+      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}">
+        {% if isFirstFeeRecordInGroup and paymentsReceived %}
+          <ul class="payments-list">
+            {% for paymentReceived in paymentsReceived %}
+              <li class="payments-list-item">
+                {% if userCanEdit and (status === 'MATCH' or status === 'DOES_NOT_MATCH') %}
+                  <a
+                    href="/utilisation-reports/{{ reportId }}/edit-payment/{{ paymentReceived.id }}"
+                    data-cy="edit-payment-link--paymentId-{{ paymentReceived.id }}">
+                    {{ paymentReceived.formattedCurrencyAndAmount }}
+                  </a>
+                {% else %}
+                  {{ paymentReceived.formattedCurrencyAndAmount }}
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </td>
+      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}" data-sort-value="{{ totalPaymentsReceived.dataSortValue }}">
+        {{ totalPaymentsReceived.formattedCurrencyAndAmount if isFirstFeeRecordInGroup else "" }}
+      </td>
+      <td class="govuk-table__cell{{ " no-border" if not isLastFeeRecordInGroup }}" data-sort-value="{{ displayStatus }}" data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }}-status">
+        {{ feeRecordStatus.render({
+          status: status,
+          displayStatus: displayStatus
+        }) if isFirstFeeRecordInGroup else "" }}
+      </td>
+      {% if userCanEdit %}
+        <td class="govuk-table__cell{{ " no-border" if not isLastFeeRecordInGroup }}">
+          {% if status === 'TO_DO' or status === 'DOES_NOT_MATCH' %}
+            {{ tableCellCheckbox.render({
+              checkboxId: checkboxId,
+              checked: isChecked,
+              ariaLabel: checkboxAriaLabel
+            }) if isFirstFeeRecordInGroup }}
+          {% endif %}
+        </td>
+      {% endif %}
+    </tr>
+  {% endfor %}
+{% endmacro %}

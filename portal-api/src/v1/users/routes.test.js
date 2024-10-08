@@ -2,7 +2,7 @@ const mockSignInLinkControllerLoginWithSignInLink = jest.fn();
 jest.mock('./sign-in-link.controller', () => ({
   SignInLinkController: jest.fn().mockImplementation(() => ({ loginWithSignInLink: mockSignInLinkControllerLoginWithSignInLink })),
 }));
-const mockUserControllerUpdateUser = jest.fn((_id, user, callback) => {
+const mockUserControllerUpdateUser = jest.fn((_id, user, auditDetails, callback) => {
   const mockUser = { ...user, _id };
   callback(null, mockUser);
 });
@@ -19,8 +19,9 @@ jest.mock('./validation', () => ({
 
 const { ObjectId } = require('mongodb');
 const { when } = require('jest-when');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { getUserByPasswordToken } = require('./reset-password.controller');
-const { update } = require('./controller');
 const { resetPasswordWithToken, loginWithSignInLink, updateById } = require('./routes');
 const utils = require('../../crypto/utils');
 const { ADMIN } = require('../roles/roles');
@@ -75,7 +76,7 @@ describe('users routes', () => {
     it("updates the user's password and reset password details", async () => {
       await resetPasswordWithToken(req, res, next);
 
-      expect(update).toHaveBeenCalledWith(
+      expect(mockUserControllerUpdateUser).toHaveBeenCalledWith(
         user._id,
         {
           password: newPassword,
@@ -85,7 +86,9 @@ describe('users routes', () => {
           currentPassword: '',
           loginFailureCount: 0,
           passwordUpdatedAt: expect.any(String),
+          auditRecord: generateMockPortalUserAuditDatabaseRecord(user._id),
         },
+        generatePortalAuditDetails(user._id),
         expect.any(Function),
       );
     });
@@ -93,7 +96,7 @@ describe('users routes', () => {
     it('ignores unexpected fields supplied in the request body', async () => {
       await resetPasswordWithToken(reqWithExtraFieldsInBody, res, next);
 
-      expect(update).toHaveBeenCalledWith(
+      expect(mockUserControllerUpdateUser).toHaveBeenCalledWith(
         user._id,
         {
           password: newPassword,
@@ -103,7 +106,9 @@ describe('users routes', () => {
           currentPassword: '',
           loginFailureCount: 0,
           passwordUpdatedAt: expect.any(String),
+          auditRecord: generateMockPortalUserAuditDatabaseRecord(user._id),
         },
+        generatePortalAuditDetails(user._id),
         expect.any(Function),
       );
     });
@@ -152,7 +157,7 @@ describe('users routes', () => {
       await updateById(req, res);
 
       expect(mockUserControllerFindOne).toHaveBeenCalledWith(req.params._id, expect.any(Function));
-      expect(mockUserControllerUpdateUser).toHaveBeenCalledWith(req.params._id, req.body, expect.any(Function));
+      expect(mockUserControllerUpdateUser).toHaveBeenCalledWith(req.params._id, req.body, generatePortalAuditDetails(req.user._id), expect.any(Function));
       expect(res.status).toHaveBeenCalledWith(200);
     });
 
@@ -194,7 +199,7 @@ describe('users routes', () => {
       await updateById(req, res);
 
       expect(mockUserControllerFindOne).toHaveBeenCalledWith(req.params._id, expect.any(Function));
-      expect(mockUserControllerUpdateUser).toHaveBeenCalledWith(req.params._id, req.body, expect.any(Function));
+      expect(mockUserControllerUpdateUser).toHaveBeenCalledWith(req.params._id, req.body, generatePortalAuditDetails(req.user._id), expect.any(Function));
       expect(res.status).toHaveBeenCalledWith(200);
     });
 

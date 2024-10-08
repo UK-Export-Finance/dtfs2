@@ -1,7 +1,8 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
+const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 
 const api = require('../../../api');
-const { AMENDMENT_STATUS, AMENDMENT_BANK_DECISION } = require('../../../constants/amendments');
+const { AMENDMENT_BANK_DECISION } = require('../../../constants/amendments');
 
 const { userCanEditBankDecision } = require('../../helpers');
 const { amendmentBankDecisionValidation } = require('./validation/amendmentBanksDecisionChoice.validate');
@@ -64,10 +65,10 @@ const postAmendmentBankDecisionChoice = async (req, res) => {
       return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/banks-decision/received-date`);
     }
 
-    console.error('Unable to add the bank\'s decision');
+    console.error("Unable to add the bank's decision");
     return res.redirect(`/case/${dealId}/underwriting`);
   } catch (error) {
-    console.error('There was a problem adding the bank\'s decision %s', error?.response?.data);
+    console.error("There was a problem adding the bank's decision %o", error?.response?.data);
     return res.redirect(`/case/${dealId}/underwriting`);
   }
 };
@@ -116,7 +117,7 @@ const postAmendmentBankDecisionReceivedDate = async (req, res) => {
 
   // type for id of date input on form and error message
   const type = 'bankDecisionDate';
-  const message = 'Enter the date UKEF received the bank\'s decision';
+  const message = "Enter the date UKEF received the bank's decision";
 
   const { errorsObject, amendmentBankDecisionDateErrors, amendmentBankRequestDate } = await amendmentBankDecisionDateValidation(body, type, message);
 
@@ -150,10 +151,10 @@ const postAmendmentBankDecisionReceivedDate = async (req, res) => {
       return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/banks-decision/check-answers`);
     }
 
-    console.error('Unable to add the bank\'s decision received date');
+    console.error("Unable to add the bank's decision received date");
     return res.redirect(`/case/${dealId}/underwriting`);
   } catch (error) {
-    console.error('There was a problem adding the bank\'s decision received date %s', error?.response?.data);
+    console.error("There was a problem adding the bank's decision received date %o", error?.response?.data);
     return res.redirect(`/case/${dealId}/underwriting`);
   }
 };
@@ -203,9 +204,11 @@ const postAmendmentBankDecisionEffectiveDate = async (req, res) => {
   const type = 'bankDecisionDate';
   const message = 'Enter the date the amendment will be effective from';
 
-  const { errorsObject,
+  const {
+    errorsObject,
     amendmentBankDecisionDateErrors,
-    amendmentBankRequestDate: amendmentBankEffectiveDate } = await amendmentBankDecisionDateValidation(body, type, message);
+    amendmentBankRequestDate: amendmentBankEffectiveDate,
+  } = await amendmentBankDecisionDateValidation(body, type, message);
 
   if (amendmentBankDecisionDateErrors.length) {
     return res.render('case/amendments/amendment-add-banks-decision-effective-date.njk', {
@@ -228,10 +231,10 @@ const postAmendmentBankDecisionEffectiveDate = async (req, res) => {
       return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/banks-decision/check-answers`);
     }
 
-    console.error('Unable to add the bank\'s decision effective date');
+    console.error("Unable to add the bank's decision effective date");
     return res.redirect(`/case/${dealId}/underwriting`);
   } catch (error) {
-    console.error('There was a problem adding the bank\'s decision effective date %s', error?.response?.data);
+    console.error("There was a problem adding the bank's decision effective date %o", error?.response?.data);
     return res.redirect(`/case/${dealId}/underwriting`);
   }
 };
@@ -296,7 +299,7 @@ const postAmendmentBankDecisionAnswers = async (req, res) => {
 
     return res.redirect(`/case/${dealId}/underwriting`);
   } catch (error) {
-    console.error('There was a problem submitting the bank\'s decision %s', error?.response?.data);
+    console.error("There was a problem submitting the bank's decision %o", error?.response?.data);
     return res.redirect(`/case/${dealId}/underwriting`);
   }
 };
