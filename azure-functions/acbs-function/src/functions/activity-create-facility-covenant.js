@@ -1,25 +1,27 @@
 const df = require('durable-functions');
-const { getNowAsIsoString } = require('../../helpers/date');
 const api = require('../../api');
 const mdm = require('../../apim-mdm');
 const CONSTANTS = require('../../constants');
+const { getNowAsIsoString } = require('../../helpers/date');
 const { isHttpErrorStatus } = require('../../helpers/http');
 const { findMissingMandatory } = require('../../helpers/mandatoryFields');
 
-const mandatoryFields = ['covenantIdentifier', 'covenantType', 'maximumLiability', 'currency', 'guaranteeExpiryDate', 'effectiveDate'];
-
 /**
- * This function is used to create a facility covenant record. It first checks if the payload is valid.
- * If the payload is valid, it generates a covenant ID using the number generator and replaces the ISO currency with the ACBS currency code.
- * It then checks for missing mandatory fields in the acbsFacilityCovenantInput object.
- * If the payload is not valid, it throws an error.
- * If the API request to generate the covenant ID fails, it throws an error with details about the request and the error.
- * If the API request to get the ACBS currency code fails, it defaults the currency code to GBP.
+ * Handles the creation of a facility covenant record in the ACBS system.
  *
- * @param {Object} payload - The payload containing the facilityIdentifier and acbsFacilityCovenantInput.
+ * This function performs the following operations:
+ * 1. Validates the input payload.
+ * 2. Generates a covenant ID using the number generator.
+ * 3. Replaces the ISO currency code with the ACBS currency code.
+ * 4. Checks for missing mandatory fields in the ACBS facility covenant input.
+ * 5. Submits the creation request to the ACBS system.
+ * 6. Handles the response from the ACBS system and returns the result.
+ *
+ * @param {Object} payload - The input payload containing the facility identifier and ACBS facility covenant input.
  * @param {string} payload.facilityIdentifier - The identifier of the facility.
- * @param {Object} payload.acbsFacilityCovenantInput - The acbsFacilityCovenantInput object containing the covenant details.
- * @throws {Error} - Throws an error if the payload is invalid, if the API request to generate the covenant ID fails, or if any other error occurs.
+ * @param {Object} payload.acbsFacilityCovenantInput - The ACBS facility covenant input details.
+ * @returns {Object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API, or an object with the missing mandatory fields.
+ * @throws {Error} - Throws an error if the payload is invalid, if the API request fails, or if any other error occurs.
  */
 const handler = async (payload) => {
   try {
@@ -67,6 +69,7 @@ const handler = async (payload) => {
       currencyReq.status === 200 && currencyReq.data.length > 1 ? currencyReq.data[0].acbsCode : CONSTANTS.FACILITY.ACBS_CURRENCY_CODE.DEFAULT;
 
     // Check for mandatory fields
+    const mandatoryFields = ['covenantIdentifier', 'covenantType', 'maximumLiability', 'currency', 'guaranteeExpiryDate', 'effectiveDate'];
     const missingMandatory = findMissingMandatory(acbsFacilityCovenantInput, mandatoryFields);
 
     if (missingMandatory.length) {

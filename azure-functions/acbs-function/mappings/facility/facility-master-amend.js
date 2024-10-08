@@ -30,14 +30,24 @@ const helpers = require('./helpers');
 const { formatDate } = require('../../helpers/date');
 
 /**
- * FMR amendment mapping function.
- * Only following properties are eligible for amendments:
- * 1. Facility amount
- * 2. Facility cover end date
- * @param {Object} fmr Facility Master Record
- * @param {Object} amendments Facility amendment(s)
- * @param {Object} deal Deal object
- * @returns {Object} Facility Master Record (FMR) amended
+ * Constructs the amended facility master record for a given deal and amendments.
+ *
+ * This function performs the following operations:
+ * 1. Constructs the base facility master record using the provided facility master record (fmr) and deal details.
+ * 2. Checks for amendments and updates the facility master record accordingly.
+ * 3. Updates the maximum liability if the amendment includes an amount.
+ * 4. Updates the guarantee expiry date and exposure period if the amendment includes a cover end date.
+ *
+ * @param {Object} fmr - The facility master record to be amended.
+ * @param {Object} amendments - The amendments to be applied to the facility master record.
+ * @param {Object} amendments.amendment - The specific amendment details.
+ * @param {number} [amendments.amendment.amount] - The amended amount for the facility.
+ * @param {string} [amendments.amendment.coverEndDate] - The amended cover end date for the facility.
+ * @param {Object} deal - The deal object containing deal details.
+ * @param {Object} deal.dealSnapshot - The snapshot of the deal details.
+ * @param {string} deal.dealSnapshot.dealType - The type of the deal (e.g., GEF, BSS_EWCS).
+ * @returns {Object} - The amended facility master record, including updated maximum liability and guarantee expiry date if applicable.
+ * @throws {Error} - Logs the error and returns the original facility master record if any error occurs during the amendment process.
  */
 const facilityMasterAmend = (fmr, amendments, deal) => {
   try {

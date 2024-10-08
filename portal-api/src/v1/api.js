@@ -384,7 +384,7 @@ const getUtilisationReportById = async (id) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to get utilisation report with id %s: %O', id, error);
+    console.error('Unable to get utilisation report with id %s: %o', id, error);
     throw error;
   }
 };
