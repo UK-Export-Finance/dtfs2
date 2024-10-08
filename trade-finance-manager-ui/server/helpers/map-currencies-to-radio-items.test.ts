@@ -102,7 +102,7 @@ describe('map currencies to radio items helper', () => {
         const currencyRadioItems = mapCurrenciesToRadioItems(checkedCurrency);
 
         // Assert
-        expect(currencyRadioItems.every((currency) => !currency.checked)).toBe(true);
+        expect(currencyRadioItems.every((currency) => !currency.checked)).toEqual(true);
       });
     });
   });
