@@ -42,21 +42,19 @@ export const getPremiumPayments = (feeRecordPaymentEntityGroups: FeeRecordPaymen
 export const getPaymentDetails = async (feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[], filters: ValidatedPaymentDetailsFilters) => {
   const { facilityId: facilityIdFilter, paymentCurrency: paymentCurrencyFilter, paymentReference: paymentReferenceFilter } = filters;
 
-  let feeRecords = feeRecordPaymentEntityGroups;
+  // Flatten groups to apply filters to individual payments rather than entire groups.
+  let paymentsWithFeeRecords = feeRecordPaymentEntityGroups.flatMap((group) =>
+    group.payments.map((payment) => ({
+      payments: [payment],
+      feeRecords: group.feeRecords,
+    })),
+  );
 
   if (facilityIdFilter || paymentCurrencyFilter || paymentReferenceFilter) {
-    // Flatten groups to apply filters to individual payments rather than entire groups.
-    const paymentsWithFeeRecords = feeRecords.flatMap((group) =>
-      group.payments.map((payment) => ({
-        payments: [payment],
-        feeRecords: group.feeRecords,
-      })),
-    );
-
-    feeRecords = filterFeeRecordPaymentEntityGroups(paymentsWithFeeRecords, filters);
+    paymentsWithFeeRecords = filterFeeRecordPaymentEntityGroups(paymentsWithFeeRecords, filters);
   }
 
-  return await mapToPaymentDetails(feeRecords);
+  return await mapToPaymentDetails(paymentsWithFeeRecords);
 };
 
 /**

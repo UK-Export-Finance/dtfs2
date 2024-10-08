@@ -19,6 +19,7 @@ import { getKeyingSheetForReportId } from './get-keying-sheet-for-report-id';
 import * as getUtilisationReportReconciliationDetailsModule from './get-utilisation-report-reconciliation-details';
 import { getPaymentDetails, getPremiumPayments, getUtilisationReportReconciliationDetails } from './get-utilisation-report-reconciliation-details';
 import { mapToPremiumPaymentsGroups } from './map-to-premium-payments-groups';
+import * as mapToPaymentDetailsModule from './map-to-payment-details';
 
 console.error = jest.fn();
 
@@ -263,60 +264,79 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       });
     });
 
-    describe('when there are fee record payment groups with multiple payments and payment details filters are defined', () => {
-      it('should flatten the payments', async () => {
-        // Arrange
-        filterFeeRecordSpy.mockReturnValue([]);
+    // TODO FN-2311: Add test case for no filters defined, multiple payments, should flatten these
 
-        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).withBankId(bankId).build();
+    describe('when there are fee record payment groups with multiple payments', () => {
+      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).withBankId(bankId).build();
 
-        const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(uploadedReport).withId(1).withStatus(FEE_RECORD_STATUS.TO_DO).build();
-        const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(uploadedReport).withId(2).withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH).build();
-        const thirdFeeRecord = FeeRecordEntityMockBuilder.forReport(uploadedReport).withId(3).withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH).build();
+      const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(uploadedReport).withId(1).withStatus(FEE_RECORD_STATUS.TO_DO).build();
+      const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(uploadedReport).withId(2).withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH).build();
+      const thirdFeeRecord = FeeRecordEntityMockBuilder.forReport(uploadedReport).withId(3).withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH).build();
 
-        const firstPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(10).build();
-        const secondPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(11).build();
-        const thirdPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(12).build();
+      const firstPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(10).build();
+      const secondPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(11).build();
+      const thirdPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(12).build();
 
-        const groups: FeeRecordPaymentEntityGroup[] = [
-          {
-            feeRecords: [firstFeeRecord],
-            payments: [firstPayment],
-          },
-          {
-            feeRecords: [secondFeeRecord],
-            payments: [secondPayment, thirdPayment],
-          },
-          {
-            feeRecords: [thirdFeeRecord],
-            payments: [],
-          },
-        ];
+      const groups: FeeRecordPaymentEntityGroup[] = [
+        {
+          feeRecords: [firstFeeRecord],
+          payments: [firstPayment],
+        },
+        {
+          feeRecords: [secondFeeRecord],
+          payments: [secondPayment, thirdPayment],
+        },
+        {
+          feeRecords: [thirdFeeRecord],
+          payments: [],
+        },
+      ];
 
-        const paymentDetailsFilters = {
-          facilityId: '12345678',
-        };
+      const expectedFlattenedGroups: FeeRecordPaymentEntityGroup[] = [
+        {
+          feeRecords: [firstFeeRecord],
+          payments: [firstPayment],
+        },
+        {
+          feeRecords: [secondFeeRecord],
+          payments: [secondPayment],
+        },
+        {
+          feeRecords: [secondFeeRecord],
+          payments: [thirdPayment],
+        },
+      ];
 
-        const expectedFlattenedGroups: FeeRecordPaymentEntityGroup[] = [
-          {
-            feeRecords: [firstFeeRecord],
-            payments: [firstPayment],
-          },
-          {
-            feeRecords: [secondFeeRecord],
-            payments: [secondPayment],
-          },
-          {
-            feeRecords: [secondFeeRecord],
-            payments: [thirdPayment],
-          },
-        ];
+      describe('and no payment details filters are defined', () => {
+        it('should flatten the payments', async () => {
+          // Arrange
+          const mapToPaymentDetailsSpy = jest.spyOn(mapToPaymentDetailsModule, 'mapToPaymentDetails').mockResolvedValue([]);
 
-        // Act
-        await getPaymentDetails(groups, paymentDetailsFilters);
+          const paymentDetailsFilters = {};
 
-        // Assert
-        expect(filterFeeRecordSpy).toHaveBeenCalledWith(expectedFlattenedGroups, paymentDetailsFilters);
+          // Act
+          await getPaymentDetails(groups, paymentDetailsFilters);
+
+          // Assert
+          expect(mapToPaymentDetailsSpy).toHaveBeenCalledWith(expectedFlattenedGroups);
+        });
+      });
+
+      describe('and payment details filters are defined', () => {
+        it('should flatten the payments', async () => {
+          // Arrange
+          filterFeeRecordSpy.mockReturnValue([]);
+
+          const paymentDetailsFilters = {
+            facilityId: '12345678',
+          };
+
+          // Act
+          await getPaymentDetails(groups, paymentDetailsFilters);
+
+          // Assert
+          expect(filterFeeRecordSpy).toHaveBeenCalledWith(expectedFlattenedGroups, paymentDetailsFilters);
+        });
       });
     });
 
