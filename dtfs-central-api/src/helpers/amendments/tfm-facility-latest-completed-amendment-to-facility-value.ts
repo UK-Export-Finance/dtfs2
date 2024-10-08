@@ -5,17 +5,21 @@ import { filterCompletedAmendments } from './filter-completed-amendments';
 /**
  * Get the latest completed facility value amendment
  * @param tfmFacility - The tfm facility
- * @returns The latest completed facility value amendment
+ * @returns The latest completed facility value amendment or null if there aren't any
  */
-export const getLatestCompletedAmendmentToFacilityValue = (tfmFacility: TfmFacility): number | undefined => {
+export const getLatestCompletedAmendmentToFacilityValue = (tfmFacility: TfmFacility): number | null => {
   const { amendments } = tfmFacility;
   if (!amendments) {
-    return undefined;
+    return null;
   }
 
   const completedAmendments = filterCompletedAmendments(amendments);
 
-  const latestAmendmentWithFacilityValue = orderBy(completedAmendments, ['updatedAt'], ['desc']).find(({ value }) => value);
+  const latestAmendmentWithFacilityValue = orderBy(completedAmendments, ['updatedAt'], ['desc']).find(({ value }) => value !== undefined && value !== null);
 
-  return latestAmendmentWithFacilityValue?.value ?? undefined;
+  if (latestAmendmentWithFacilityValue?.value !== undefined && latestAmendmentWithFacilityValue?.value !== null) {
+    return latestAmendmentWithFacilityValue.value;
+  }
+
+  return null;
 };

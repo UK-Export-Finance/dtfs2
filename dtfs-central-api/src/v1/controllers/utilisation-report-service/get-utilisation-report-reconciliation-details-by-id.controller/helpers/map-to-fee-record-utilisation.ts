@@ -30,14 +30,15 @@ export const mapToFeeRecordUtilisation = (feeRecord: FeeRecordEntity, tfmFacilit
     feesPaidToUkefForThePeriod,
     feesPaidToUkefForThePeriodCurrency,
   } = feeRecord;
-  const { value, coverPercentage } = tfmFacility.facilitySnapshot;
+  const { value: facilitySnapshotValue, coverPercentage } = tfmFacility.facilitySnapshot;
   const amendedValue = getLatestCompletedAmendmentToFacilityValue(tfmFacility);
+  const value = amendedValue === null ? facilitySnapshotValue : amendedValue;
 
   return {
     facilityId,
     exporter,
     baseCurrency,
-    value: amendedValue ?? value,
+    value,
     utilisation,
     coverPercentage,
     exposure: calculateExposure(utilisation, coverPercentage),

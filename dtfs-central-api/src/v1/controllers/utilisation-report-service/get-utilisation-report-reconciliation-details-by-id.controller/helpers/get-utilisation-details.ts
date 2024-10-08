@@ -10,24 +10,33 @@ import { mapToFeeRecordUtilisation } from './map-to-fee-record-utilisation';
  * @returns Utilisation data for each fee record
  */
 export const getUtilisationDetails = async (feeRecords: FeeRecordEntity[]): Promise<FeeRecordUtilisation[]> => {
-  const allFacilityIds = feeRecords.map((feeRecord) => feeRecord.facilityId);
-  const tfmFacilities = await TfmFacilitiesRepo.findByUkefFacilityIds(allFacilityIds);
-  const tfmFacilitiesRecord: Record<string, TfmFacility> = {};
-  tfmFacilities.forEach((tfmFacility) => {
-    const { ukefFacilityId } = tfmFacility.facilitySnapshot;
-    if (ukefFacilityId) {
-      tfmFacilitiesRecord[ukefFacilityId] = tfmFacility;
-    }
-  });
+  try {
+    const allFacilityIds = feeRecords.map((feeRecord) => feeRecord.facilityId);
 
-  return feeRecords.map((feeRecord) => {
-    const { facilityId } = feeRecord;
-    const tfmFacility = tfmFacilitiesRecord[facilityId];
+    const tfmFacilities = await TfmFacilitiesRepo.findByUkefFacilityIds(allFacilityIds);
 
-    if (!tfmFacility) {
-      throw new NotFoundError(`Failed to find a tfm facility with ukef facility id '${facilityId}'`);
-    }
+    const tfmFacilitiesRecord: Record<string, TfmFacility> = {};
 
-    return mapToFeeRecordUtilisation(feeRecord, tfmFacility);
-  });
+    tfmFacilities.forEach((tfmFacility) => {
+      const { ukefFacilityId } = tfmFacility.facilitySnapshot;
+      if (ukefFacilityId) {
+        tfmFacilitiesRecord[ukefFacilityId] = tfmFacility;
+      }
+    });
+
+    return feeRecords.map((feeRecord) => {
+      const { facilityId } = feeRecord;
+
+      const tfmFacility = tfmFacilitiesRecord[facilityId];
+
+      if (!tfmFacility) {
+        throw new NotFoundError(`Failed to find a tfm facility with ukef facility id '${facilityId}'`);
+      }
+
+      return mapToFeeRecordUtilisation(feeRecord, tfmFacility);
+    });
+  } catch (error) {
+    console.error('Failed to get utilisation details %o', error);
+    throw error;
+  }
 };

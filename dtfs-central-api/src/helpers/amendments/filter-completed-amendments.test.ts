@@ -2,7 +2,7 @@ import { AMENDMENT_STATUS, TfmFacilityAmendment } from '@ukef/dtfs2-common';
 import { aTfmFacilityAmendment } from '../../../test-helpers';
 import { filterCompletedAmendments } from './filter-completed-amendments';
 
-describe('completed-amendments', () => {
+describe('filter-completed-amendments', () => {
   describe('filterCompletedAmendments', () => {
     it('should return all completed amendments', () => {
       // Arrange

@@ -68,7 +68,7 @@ describe('map-to-fee-record-utilisation', () => {
       tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
       tfmFacility.facilitySnapshot.value = value;
 
-      const getLatestCompletedAmendmentFacilityValueSpy = jest.spyOn(helpers, 'getLatestCompletedAmendmentToFacilityValue').mockReturnValue(undefined);
+      const getLatestCompletedAmendmentFacilityValueSpy = jest.spyOn(helpers, 'getLatestCompletedAmendmentToFacilityValue').mockReturnValue(null);
 
       // Act
       const feeRecordUtilisation = mapToFeeRecordUtilisation(feeRecord, tfmFacility);
@@ -79,7 +79,7 @@ describe('map-to-fee-record-utilisation', () => {
       expect(feeRecordUtilisation.value).toEqual(value);
     });
 
-    it('should set the value to the latest amended value when there is an amendement to the value', () => {
+    it('should set the value to the latest amended value when there is an amendment to the value', () => {
       // Arrange
       const originalValue = 200000;
       const amendedValue = 300000;
