@@ -8,11 +8,22 @@ import { validateEffectiveFromDate } from './validation/validate-effective-from-
 import { canSubmissionTypeBeCancelled } from '../../helpers/deal-cancellation-enabled.helper';
 import api from '../../../api';
 
-export type GetEffectiveFromDateRequest = CustomExpressRequest<{ params: { _id: string } }>;
+export type GetEffectiveFromDateRequest = CustomExpressRequest<{ params: { _id: string }; query: { status?: string } }>;
 export type PostEffectiveFromDateRequest = CustomExpressRequest<{
   params: { _id: string };
+  query: { status?: string };
   reqBody: { 'effective-from-date-day': string; 'effective-from-date-month': string; 'effective-from-date-year': string };
 }>;
+
+/**
+ * Gets the previous page URL to pass into the back link
+ *
+ * @param dealId - The deal ID
+ * @param status - 'change' if user comes from the check answers page, otherwise undefined
+ */
+const getPreviousPage = (dealId: string, status?: string): string => {
+  return status === 'change' ? `/case/${dealId}/cancellation/check-details` : `/case/${dealId}/cancellation/bank-request-date`;
+};
 
 /**
  * controller to get the effective from date page
@@ -52,7 +63,7 @@ export const getEffectiveFromDate = async (req: GetEffectiveFromDateRequest, res
       day,
       month,
       year,
-      previousPage: status === 'change' ? `/case/${_id}/cancellation/check-details` : `/case/${_id}/cancellation/bank-request-date`,
+      previousPage: getPreviousPage(_id, status),
     };
     return res.render('case/cancellation/effective-from-date.njk', effectiveFromDateViewModel);
   } catch (error) {
@@ -96,7 +107,7 @@ export const postEffectiveFromDate = async (req: PostEffectiveFromDateRequest, r
         month,
         year,
         errors: validationErrors,
-        previousPage: status === 'change' ? `/case/${_id}/cancellation/check-details` : `/case/${_id}/cancellation/bank-request-date`,
+        previousPage: getPreviousPage(_id, status),
       };
 
       return res.render('case/cancellation/effective-from-date.njk', effectiveFromDateViewModel);
