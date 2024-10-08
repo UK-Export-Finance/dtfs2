@@ -9,17 +9,17 @@ const {
 const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('Issue Loan Form - Submit issued loan with inserted element on page', () => {
-  let deal;
   let dealId;
+
   const dealFacilities = {
-    bonds: [],
     loans: [],
   };
 
   before(() => {
-    cy.insertOneDeal(dealWithNotStartedFacilityStatuses, BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
-      dealId = deal._id;
+    cy.createBssEwcsDeal({});
+
+    cy.getDealIdFromUrl().then((id) => {
+      dealId = id;
 
       const { mockFacilities } = dealWithNotStartedFacilityStatuses;
 
@@ -38,8 +38,9 @@ context('Issue Loan Form - Submit issued loan with inserted element on page', ()
   });
 
   it("should not insert created element's data into the loan", () => {
-    cy.login(BANK1_MAKER1);
-    pages.contract.visit(deal);
+    pages.dashboardDeals.visit();
+    cy.clickDashboardDealLink();
+
     pages.contract.proceedToReview().should('not.exist');
 
     const loanId = dealFacilities.loans[0]._id;
@@ -52,7 +53,7 @@ context('Issue Loan Form - Submit issued loan with inserted element on page', ()
     // fills out and submits the rest of form
     fillAndSubmitIssueLoanFacilityFormWithoutRequestedCoverStartDate();
 
-    cy.getFacility(deal._id, loanId, BANK1_MAKER1).then((loan) => {
+    cy.getFacility(dealId, loanId, BANK1_MAKER1).then((loan) => {
       // check the loan does not include inserted field
       expect(loan.intruder).to.be.an('undefined');
     });

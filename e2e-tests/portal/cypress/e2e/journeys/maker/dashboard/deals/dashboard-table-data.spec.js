@@ -65,9 +65,8 @@ context('View dashboard deals as a maker', () => {
 
   it('BSS and GEF deals render on the dashboard with correct values', () => {
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
 
-    const { exporter, bankRef, product, status, type, updated } = dashboardDeals.row;
+    const { exporter, bankRef, product, status, type, updated } = dashboardDeals.rowIndex;
 
     // should see all deals in the maker's bank
     cy.assertText(dashboardDeals.totalItems(), `(${ALL_BANK1_DEALS.length} items)`);
@@ -76,17 +75,15 @@ context('View dashboard deals as a maker', () => {
     // first deal should be the most recently updated (with our test data - GEF)
     //---------------------------------------------------------------
 
-    cy.get('table tr').eq(1).as('firstRow').find(`[data-cy="deal__status--${gefDeal._id}"]`).should('exist');
+    cy.assertText(dashboardDeals.rowIndex.link(), GEF_DEAL_BANK_2_MAKER_2.exporter.companyName);
 
-    cy.assertText(exporter(gefDealId), gefDeal.exporter.companyName);
+    cy.assertText(bankRef(), gefDeal.bankInternalRefName);
 
-    cy.assertText(bankRef(gefDealId), gefDeal.bankInternalRefName);
+    cy.assertText(dashboardDeals.rowIndex.product(), CONSTANTS.DEALS.DEAL_TYPE.GEF);
 
-    cy.assertText(product(gefDealId), gefDeal.dealType);
+    cy.assertText(type(), '-');
 
-    cy.assertText(type(gefDealId), '-');
-
-    cy.assertText(status(gefDealId), gefDeal.status);
+    cy.assertText(status(), gefDeal.status);
 
     updated(gefDealId)
       .invoke('text')
@@ -118,7 +115,6 @@ context('View dashboard deals as a maker', () => {
 
   it('deal links go to correct deal page/URL depending on dealType', () => {
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
 
     // GEF link
     dashboardDeals.row.link(gefDealId).click();
@@ -135,7 +131,6 @@ context('View dashboard deals as a maker', () => {
   // TODO: DTFS2-5372 - fix.
   it('should not show deals created by other banks', () => {
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
 
     cy.assertText(dashboardDeals.totalItems(), `(${ALL_BANK1_DEALS.length} items)`);
 

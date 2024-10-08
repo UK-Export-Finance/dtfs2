@@ -18,6 +18,7 @@ Cypress.Commands.add(
 Cypress.Commands.add('getUserByUsername', require('./commands/portal/getUserByUsername'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./commands/portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('enterUsernameAndPassword', require('./commands/portal/enterUsernameAndPassword'));
+Cypress.Commands.add('getDealIdFromUrl', require('./commands/portal/getDealIdFromUrl'));
 
 Cypress.Commands.add('uploadFile', require('./commands/uploadFile'));
 Cypress.Commands.add('insertElement', require('./commands/insertElement'));

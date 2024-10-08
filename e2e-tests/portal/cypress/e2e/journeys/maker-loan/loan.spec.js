@@ -3,39 +3,19 @@ import { GUARANTEE_DETAILS } from './loan-form-values';
 const pages = require('../../pages');
 const partials = require('../../partials');
 const LOAN_FORM_VALUES = require('./loan-form-values');
-const relative = require('../../relativeURL');
 const fillLoanForm = require('./fill-loan-forms');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
+const { submissionDetails } = require('../../../fixtures/deal');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
-const MOCK_DEAL = {
-  bankInternalRefName: 'someDealId',
-  additionalRefName: 'someDealName',
-  submissionDetails: {
-    supplyContractCurrency: {
-      id: 'GBP',
-    },
-  },
-};
-
 context('Add a Loan to a Deal', () => {
-  let deal;
-
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
-    });
+    cy.createBssEwcsDeal({});
   });
 
   it('should allow a user to create a Deal, pass Red Line and add a Loan to the deal', () => {
-    cy.createADeal({
-      username: BANK1_MAKER1.username,
-      password: BANK1_MAKER1.password,
-      bankDealId: MOCK_DEAL.bankInternalRefName,
-      bankDealName: MOCK_DEAL.additionalRefName,
-    });
     cy.addLoanToDeal();
 
     cy.url().should('include', '/check-your-answers');
@@ -46,12 +26,6 @@ context('Add a Loan to a Deal', () => {
   });
 
   it('should show relevant details on application details page', () => {
-    cy.createADeal({
-      username: BANK1_MAKER1.username,
-      password: BANK1_MAKER1.password,
-      bankDealId: MOCK_DEAL.bankInternalRefName,
-      bankDealName: MOCK_DEAL.additionalRefName,
-    });
     cy.addLoanToDeal();
 
     partials.taskListHeader.loanId().then((loanIdHiddenInput) => {
@@ -66,7 +40,7 @@ context('Add a Loan to a Deal', () => {
   });
 
   it('should populate Deal page with the submitted loan, with `Completed` status and link to `Loan Guarantee Details` page', () => {
-    cy.loginGoToDealPage(BANK1_MAKER1, deal);
+    cy.loginGoToDealPage(BANK1_MAKER1);
     cy.clickAddLoanButton();
     fillLoanForm.unconditionalWithCurrencySameAsSupplyContractCurrency();
     fillLoanForm.datesRepayments.inAdvanceAnnually();
@@ -78,7 +52,7 @@ context('Add a Loan to a Deal', () => {
       const loanId = loanIdHiddenInput[0].value;
 
       cy.clickSaveGoBackButton();
-      cy.url().should('eq', relative(`/contract/${deal._id}`));
+      cy.url().should('include', '/contract');
 
       const row = pages.contract.loansTransactionsTable.row(loanId);
 
@@ -86,7 +60,7 @@ context('Add a Loan to a Deal', () => {
 
       cy.assertText(row.loanStatus(), 'Completed');
 
-      cy.assertText(row.facilityValue(), `${deal.submissionDetails.supplyContractCurrency.id} ${LOAN_FORM_VALUES.FINANCIAL_DETAILS.value}`);
+      cy.assertText(row.facilityValue(), `${submissionDetails.supplyContractCurrency.id} ${LOAN_FORM_VALUES.FINANCIAL_DETAILS.value}`);
 
       cy.assertText(row.facilityStage(), 'Unconditional');
 
@@ -104,7 +78,7 @@ context('Add a Loan to a Deal', () => {
 
   describe('when a user submits Loan forms without completing required fields', () => {
     it('loan should display all validation errors in `Loan Preview` page and `Incomplete` status in Deal page', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal);
+      cy.loginGoToDealPage(BANK1_MAKER1);
       cy.clickAddLoanButton();
 
       cy.clickSubmitButton();

@@ -4,32 +4,31 @@ const CONSTANTS = require('../../../../../fixtures/constants');
 const CONTENT_STRINGS = require('../../../../../fixtures/content-strings');
 const { dashboardDeals } = require('../../../../pages');
 const { dashboardFilters } = require('../../../../partials');
-const { BSS_DEAL_READY_FOR_CHECK, GEF_DEAL_DRAFT } = require('../../fixtures');
+const { GEF_DEAL_DRAFT } = require('../../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
-context('Dashboard Deals filters - filter by status', () => {
-  const ALL_DEALS = [];
+const EXPECTED_DEALS_LENGTH = {
+  DRAFT: 2,
+  READY_FOR_CHECK: 1,
+  ALL_STATUSES: 3,
+};
 
+context('Dashboard Deals filters - filter by status', () => {
   before(() => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.insertOneDeal(BSS_DEAL_READY_FOR_CHECK, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.createBssEwcsDeal({});
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1);
   });
 
   describe('Draft', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
-      dashboardDeals.visit();
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
@@ -78,19 +77,16 @@ context('Dashboard Deals filters - filter by status', () => {
     });
 
     it('renders only draft deals', () => {
-      const ALL_DRAFT_DEALS = ALL_DEALS.filter(({ status }) => status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT);
-      dashboardDeals.rows().should('have.length', ALL_DRAFT_DEALS.length);
+      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.DRAFT);
 
-      const firstDraftDeal = ALL_DRAFT_DEALS[0];
-
-      dashboardDeals.row.status(firstDraftDeal._id).should('have.text', CONSTANTS.DEALS.DEAL_STATUS.DRAFT);
+      dashboardDeals.rowIndex.status().should('have.text', CONSTANTS.DEALS.DEAL_STATUS.DRAFT);
     });
   });
 
   describe('Ready for checker', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
-      dashboardDeals.visit();
+      cy.createBssEwcsDeal({ readyForCheck: true });
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
@@ -139,19 +135,15 @@ context('Dashboard Deals filters - filter by status', () => {
     });
 
     it('renders only Ready for Check deals', () => {
-      const ALL_READY_FOR_CHECK_DEALS = ALL_DEALS.filter(({ status }) => status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
-      dashboardDeals.rows().should('have.length', ALL_READY_FOR_CHECK_DEALS.length);
+      dashboardDeals.rowIndex.status().should('have.length', EXPECTED_DEALS_LENGTH.READY_FOR_CHECK);
 
-      const firstReadyToCheckDeal = ALL_READY_FOR_CHECK_DEALS[0];
-
-      dashboardDeals.row.status(firstReadyToCheckDeal._id).should('have.text', CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
+      cy.assertText(dashboardDeals.rowIndex.status(), CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
     });
   });
 
   describe('All statuses', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
-      dashboardDeals.visit();
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
@@ -200,7 +192,7 @@ context('Dashboard Deals filters - filter by status', () => {
     });
 
     it('renders all deals regardless of status', () => {
-      dashboardDeals.rows().should('have.length', ALL_DEALS.length);
+      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.ALL_STATUSES);
     });
   });
 });

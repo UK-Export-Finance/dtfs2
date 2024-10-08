@@ -2,43 +2,25 @@ const { MOCK_COMPANY_REGISTRATION_NUMBERS } = require('@ukef/dtfs2-common');
 const { contract, contractAboutSupplier } = require('../../pages');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../fixtures/constants');
-const twentyOneDeals = require('../../../fixtures/deal-dashboard-data');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
-const { INDUSTRY_SECTOR_CODES, DEALS } = CONSTANTS;
+const { INDUSTRY_SECTOR_CODES } = CONSTANTS;
 
 context('Supply contract form - create element and check if inserted into deal', () => {
-  let deal;
+  let dealId;
 
   before(() => {
-    const aDealWithAboutSupplyContractInStatus = (status) => {
-      const candidates = twentyOneDeals.filter(
-        (aDeal) =>
-          aDeal.submissionDetails &&
-          status === aDeal.submissionDetails.status &&
-          aDeal.status === DEALS.DEAL_STATUS.DRAFT &&
-          (!aDeal.details || !aDeal.details.submissionDate),
-      );
-
-      const aDeal = candidates[0];
-      if (!aDeal) {
-        throw new Error('no suitable test data found');
-      } else {
-        return aDeal;
-      }
-    };
-
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(aDealWithAboutSupplyContractInStatus('Not started'), BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
+
+    cy.createBssEwcsDeal({});
+
+    cy.getDealIdFromUrl().then((id) => {
+      dealId = id;
     });
   });
 
   it("should not insert created element's data in the feedback", () => {
-    cy.login(BANK1_MAKER1);
-
-    // go the long way for the first test- actually clicking via the contract page to prove the link..
-    contract.visit(deal);
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
     contract.aboutSupplierDetailsLink().click();
 
@@ -64,7 +46,7 @@ context('Supply contract form - create element and check if inserted into deal',
 
     contractAboutSupplier.nextPage().click();
 
-    cy.getDeal(deal._id, BANK1_MAKER1).then((updatedDeal) => {
+    cy.getDeal(dealId, BANK1_MAKER1).then((updatedDeal) => {
       // ensure the updated deal does not contain additional intruder field
       expect(updatedDeal.submissionDetails.intruder).to.be.an('undefined');
     });

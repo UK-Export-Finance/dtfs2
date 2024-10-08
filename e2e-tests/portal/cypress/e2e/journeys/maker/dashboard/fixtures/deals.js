@@ -38,6 +38,10 @@ const GEF_DEAL_MAKER_2 = {
 
 const GEF_DEAL_BANK_2_MAKER_2 = {
   ...GEF_DEAL,
+  exporter: {
+    ...GEF_DEAL.exporter,
+    companyName: 'Mock company name Bank 2 Maker 2',
+  },
   bank: { id: BANK2_MAKER2.bank.id },
   bankInternalRefName: 'Draft GEF Bank 2 Maker 2',
 };
