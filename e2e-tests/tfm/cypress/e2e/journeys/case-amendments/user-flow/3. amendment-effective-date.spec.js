@@ -4,6 +4,7 @@ import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
+import { yearWithZeroLetter } from '../../../../../../e2e-fixtures/dateConstants';
 
 context('Amendments - Effective date', () => {
   let dealId;
@@ -104,7 +105,7 @@ context('Amendments - Effective date', () => {
     errorSummary().contains('The year for the effective date must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year for the effective date must include 4 numbers');
 
-    cy.completeDateFormFields({ idPrefix: 'amendment--effective-date', year: '2O22' });
+    cy.completeDateFormFields({ idPrefix: 'amendment--effective-date', year: yearWithZeroLetter });
 
     cy.clickContinueButton();
 

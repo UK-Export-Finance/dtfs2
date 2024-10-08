@@ -159,6 +159,12 @@ const tomorrowUnix = getUnixTime(tomorrow).toString();
 const todayFormattedTimeHours = format(today, 'h');
 const todayFormattedTimeAmPm = format(today, 'aaa');
 
+/**
+ * Some tests check that validation errors appear,
+ * If a year is entered with zero as a letter. I.e, O, instead of 0.
+ */
+const yearWithZeroLetter = '2O22';
+
 module.exports = {
   shortDayFormat,
   longDayFormat,
@@ -285,4 +291,5 @@ module.exports = {
   twelveMonthsOneDayAgoDay,
   twelveMonthsOneDayAgoMonth,
   twelveMonthsOneDayAgoYear,
+  yearWithZeroLetter,
 };

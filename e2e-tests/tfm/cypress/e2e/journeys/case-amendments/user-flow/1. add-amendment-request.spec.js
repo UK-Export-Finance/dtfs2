@@ -4,7 +4,7 @@ import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
-import { threeMonths } from '../../../../../../e2e-fixtures/dateConstants';
+import { threeMonths, yearWithZeroLetter } from '../../../../../../e2e-fixtures/dateConstants';
 
 context('Amendments - Request date', () => {
   let dealId;
@@ -115,7 +115,7 @@ context('Amendments - Request date', () => {
     errorSummary().contains('The year for the amendment request date must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
 
-    cy.completeDateFormFields({ idPrefix: 'amendment--request-date', year: '2O22' });
+    cy.completeDateFormFields({ idPrefix: 'amendment--request-date', year: yearWithZeroLetter });
 
     cy.clickContinueButton();
 

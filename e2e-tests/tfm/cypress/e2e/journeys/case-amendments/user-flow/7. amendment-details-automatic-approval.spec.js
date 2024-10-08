@@ -16,6 +16,7 @@ import {
   twoMonthsFormatted,
   twoMonthsFormattedFull,
   twoMonthsFormattedTable,
+  yearWithZeroLetter,
 } from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN, CURRENCY } from '../../../../../../e2e-fixtures';
 
@@ -96,7 +97,7 @@ context('Amendments - automatic approval journey', () => {
       errorSummary().contains('The year for the amendment request date must include 4 numbers');
       amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
 
-      cy.completeDateFormFields({ idPrefix: 'amendment--request-date', year: '2O22' });
+      cy.completeDateFormFields({ idPrefix: 'amendment--request-date', year: yearWithZeroLetter });
 
       cy.clickContinueButton();
 
@@ -134,7 +135,7 @@ context('Amendments - automatic approval journey', () => {
       errorSummary().contains('The year for the effective date must include 4 numbers');
       amendmentsPage.errorMessage().contains('The year for the effective date must include 4 numbers');
 
-      cy.completeDateFormFields({ idPrefix: 'amendment--effective-date', year: '2O22' });
+      cy.completeDateFormFields({ idPrefix: 'amendment--effective-date', year: yearWithZeroLetter });
 
       cy.clickContinueButton();
 

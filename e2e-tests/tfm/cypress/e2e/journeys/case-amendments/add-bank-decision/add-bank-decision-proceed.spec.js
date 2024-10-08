@@ -5,7 +5,14 @@ import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import caseDealPage from '../../../pages/caseDealPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import { oneMonthFormattedTable, tomorrow, tomorrowDay, oneMonthFormattedFull, tomorrowFormattedFull } from '../../../../../../e2e-fixtures/dateConstants';
+import {
+  oneMonthFormattedTable,
+  tomorrow,
+  tomorrowDay,
+  oneMonthFormattedFull,
+  tomorrowFormattedFull,
+  yearWithZeroLetter,
+} from '../../../../../../e2e-fixtures/dateConstants';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS } from '../../../../../../e2e-fixtures';
 import pages from '../../../pages';
 import { CURRENCY } from '../../../../../../e2e-fixtures/constants.fixture';
@@ -353,7 +360,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     errorSummary().contains('The year must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year must include 4 numbers');
 
-    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '2O22' });
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: yearWithZeroLetter });
 
     cy.clickContinueButton();
 

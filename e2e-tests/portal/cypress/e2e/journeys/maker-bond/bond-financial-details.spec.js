@@ -6,6 +6,7 @@ const BOND_FORM_VALUES = require('./bond-form-values');
 const relative = require('../../relativeURL');
 const { calculateExpectedGuaranteeFee, calculateExpectedUkefExposure } = require('../../../support/portal/sectionCalculations');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
+const { yearWithZeroLetter } = require('../../../../../e2e-fixtures/dateConstants');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
@@ -229,7 +230,7 @@ context('Bond Financial Details', () => {
         partials.taskListHeader.itemLink('financial-details').click();
         pages.bondFinancialDetails.conversionRateDateInputErrorMessage().contains('The month for the conversion rate must include 1 or 2 numbers');
 
-        cy.completeDateFormFields({ idPrefix: 'conversionRateDate', day: '22', month: '02', year: '2O22' });
+        cy.completeDateFormFields({ idPrefix: 'conversionRateDate', day: '22', month: '02', year: yearWithZeroLetter });
 
         cy.clickSubmitButton();
         partials.taskListHeader.itemLink('financial-details').click();

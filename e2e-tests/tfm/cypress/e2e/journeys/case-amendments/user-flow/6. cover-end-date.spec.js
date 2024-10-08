@@ -3,7 +3,7 @@ import { errorSummary } from '../../../partials';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import { oneMonth, oneMonthFormattedFull, todayDay } from '../../../../../../e2e-fixtures/dateConstants';
+import { oneMonth, oneMonthFormattedFull, todayDay, yearWithZeroLetter } from '../../../../../../e2e-fixtures/dateConstants';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1 } from '../../../../../../e2e-fixtures';
 
 context('Amendments - Cover End Date', () => {
@@ -84,7 +84,7 @@ context('Amendments - Cover End Date', () => {
     cy.clickContinueButton();
     errorSummary().contains('The year for the amendment cover end date must include 4 numbers');
 
-    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', day: '20', month: '10', year: '2O22' });
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', day: '20', month: '10', year: yearWithZeroLetter });
 
     cy.clickContinueButton();
     errorSummary().contains('The year for the amendment cover end date must include 4 numbers');
