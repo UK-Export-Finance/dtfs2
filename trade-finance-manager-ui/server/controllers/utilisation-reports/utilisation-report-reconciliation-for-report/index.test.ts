@@ -5,8 +5,8 @@ import api from '../../../api';
 import { getUtilisationReportReconciliationByReportId } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { aFeeRecordPaymentGroup, aUtilisationReportReconciliationDetailsResponse, aPayment, aFeeRecord } from '../../../../test-helpers';
-import { FeeRecordPaymentGroup, UtilisationReportReconciliationDetailsResponseBody } from '../../../api-response-types';
+import { aPremiumPaymentsGroup, aUtilisationReportReconciliationDetailsResponse, aPayment, aFeeRecord, aPaymentDetails } from '../../../../test-helpers';
+import { PaymentDetails, PremiumPaymentsGroup, UtilisationReportReconciliationDetailsResponseBody } from '../../../api-response-types';
 import { PremiumPaymentsViewModelItem, PaymentDetailsViewModel, UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 
 jest.mock('../../../api');
@@ -81,7 +81,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         id: '123',
         name: 'Test bank',
       };
-      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
+      const premiumPaymentsGroups: PremiumPaymentsGroup[] = [
         {
           feeRecords: [
             {
@@ -96,6 +96,21 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
           paymentsReceived: [{ id: 1, currency: 'GBP', amount: 100, dateReceived: new Date('2024-01-01').toISOString() }],
           totalPaymentsReceived: { currency: 'GBP', amount: 100 },
           status: FEE_RECORD_STATUS.MATCH,
+        },
+      ];
+      const paymentDetailsGroups: PaymentDetails[] = [
+        {
+          feeRecords: [
+            {
+              id: 1,
+              facilityId: '12345678',
+              exporter: 'Test exporter',
+              reportedFees: { currency: 'GBP', amount: 100 },
+              reportedPayments: { currency: 'GBP', amount: 100 },
+            },
+          ],
+          payment: { id: 1, currency: 'GBP', amount: 100, dateReceived: new Date('2024-01-01').toISOString() },
+          status: FEE_RECORD_STATUS.MATCH,
           reconciledByUser: undefined,
           dateReconciled: undefined,
         },
@@ -107,8 +122,8 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
           start: { month: 1, year: 2024 },
           end: { month: 1, year: 2024 },
         },
-        premiumPayments: feeRecordPaymentGroups,
-        paymentDetails: feeRecordPaymentGroups,
+        premiumPayments: premiumPaymentsGroups,
+        paymentDetails: paymentDetailsGroups,
       };
       const formattedReportPeriod = 'January 2024';
 
@@ -242,11 +257,13 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       };
       const { req, res } = getHttpMocksWithSessionData(sessionData);
 
-      const feeRecordPaymentGroups = [aFeeRecordPaymentGroup()];
+      const premiumPaymentsGroups = [aPremiumPaymentsGroup()];
+      const paymentDetailsGroups = [aPaymentDetails()];
+
       const utilisationReportReconciliationDetails: UtilisationReportReconciliationDetailsResponseBody = {
         ...aUtilisationReportReconciliationDetailsResponse(),
-        premiumPayments: feeRecordPaymentGroups,
-        paymentDetails: feeRecordPaymentGroups,
+        premiumPayments: premiumPaymentsGroups,
+        paymentDetails: paymentDetailsGroups,
       };
 
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
@@ -267,18 +284,20 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
-        aFeeRecordPaymentGroupWithoutReceivedPayments(),
+      const premiumPaymentsGroups: PremiumPaymentsGroup[] = [
+        aPremiumPaymentsGroupWithoutReceivedPayments(),
         {
-          ...aFeeRecordPaymentGroup(),
+          ...aPremiumPaymentsGroup(),
           paymentsReceived: [{ ...aPayment(), id: 1, currency: 'GBP', amount: 100 }],
           totalPaymentsReceived: { currency: 'GBP', amount: 100 },
         },
       ];
+      const paymentDetailsGroups = [aPaymentDetails()];
+
       const utilisationReportReconciliationDetails: UtilisationReportReconciliationDetailsResponseBody = {
         ...aUtilisationReportReconciliationDetailsResponse(),
-        premiumPayments: feeRecordPaymentGroups,
-        paymentDetails: feeRecordPaymentGroups,
+        premiumPayments: premiumPaymentsGroups,
+        paymentDetails: paymentDetailsGroups,
       };
 
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
@@ -296,11 +315,11 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const feeRecordPaymentGroups = [aFeeRecordPaymentGroupWithoutReceivedPayments(), aFeeRecordPaymentGroupWithoutReceivedPayments()];
+      const premiumPaymentsGroups = [aPremiumPaymentsGroupWithoutReceivedPayments(), aPremiumPaymentsGroupWithoutReceivedPayments()];
       const utilisationReportReconciliationDetails: UtilisationReportReconciliationDetailsResponseBody = {
         ...aUtilisationReportReconciliationDetailsResponse(),
-        premiumPayments: feeRecordPaymentGroups,
-        paymentDetails: feeRecordPaymentGroups,
+        premiumPayments: premiumPaymentsGroups,
+        paymentDetails: [],
       };
 
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
@@ -328,11 +347,11 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         originalUrl: '?premiumPaymentsFacilityId',
       });
 
-      const feeRecordPaymentGroups = [aFeeRecordPaymentGroupWithoutReceivedPayments(), aFeeRecordPaymentGroupWithoutReceivedPayments()];
+      const premiumPaymentsGroups = [aPremiumPaymentsGroupWithoutReceivedPayments(), aPremiumPaymentsGroupWithoutReceivedPayments()];
       const utilisationReportReconciliationDetails: UtilisationReportReconciliationDetailsResponseBody = {
         ...aUtilisationReportReconciliationDetailsResponse(),
-        premiumPayments: feeRecordPaymentGroups,
-        paymentDetails: feeRecordPaymentGroups,
+        premiumPayments: premiumPaymentsGroups,
+        paymentDetails: [],
       };
 
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
@@ -362,11 +381,11 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         originalUrl: '?paymentDetailsFacilityId',
       });
 
-      const feeRecordPaymentGroups = [aFeeRecordPaymentGroupWithoutReceivedPayments(), aFeeRecordPaymentGroupWithoutReceivedPayments()];
+      const premiumPaymentsGroups = [aPremiumPaymentsGroupWithoutReceivedPayments(), aPremiumPaymentsGroupWithoutReceivedPayments()];
       const utilisationReportReconciliationDetails: UtilisationReportReconciliationDetailsResponseBody = {
         ...aUtilisationReportReconciliationDetailsResponse(),
-        premiumPayments: feeRecordPaymentGroups,
-        paymentDetails: feeRecordPaymentGroups,
+        premiumPayments: premiumPaymentsGroups,
+        paymentDetails: [],
       };
 
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
@@ -395,27 +414,27 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         originalUrl,
       });
 
-      const feeRecordPaymentGroups = [
+      const premiumPaymentsGroups = [
         {
-          ...aFeeRecordPaymentGroup(),
+          ...aPremiumPaymentsGroup(),
           feeRecords: [
             { ...aFeeRecord(), id: 1 },
             { ...aFeeRecord(), id: 2 },
           ],
         },
         {
-          ...aFeeRecordPaymentGroup(),
+          ...aPremiumPaymentsGroup(),
           feeRecords: [{ ...aFeeRecord(), id: 3 }],
         },
         {
-          ...aFeeRecordPaymentGroup(),
+          ...aPremiumPaymentsGroup(),
           feeRecords: [{ ...aFeeRecord(), id: 4 }],
         },
       ];
       const utilisationReportReconciliationDetails: UtilisationReportReconciliationDetailsResponseBody = {
         ...aUtilisationReportReconciliationDetailsResponse(),
-        premiumPayments: feeRecordPaymentGroups,
-        paymentDetails: feeRecordPaymentGroups,
+        premiumPayments: premiumPaymentsGroups,
+        paymentDetails: [],
       };
 
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
@@ -452,9 +471,9 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(req.session.generateKeyingDataErrorKey).toBeUndefined();
     });
 
-    function aFeeRecordPaymentGroupWithoutReceivedPayments(): FeeRecordPaymentGroup {
+    function aPremiumPaymentsGroupWithoutReceivedPayments(): PremiumPaymentsGroup {
       return {
-        ...aFeeRecordPaymentGroup(),
+        ...aPremiumPaymentsGroup(),
         paymentsReceived: null,
         totalPaymentsReceived: null,
       };

@@ -4,13 +4,13 @@ import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import {
-  mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems,
-  mapFeeRecordPaymentGroupsToPaymentDetailsViewModel,
+  mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems,
+  mapPaymentDetailsGroupsToPaymentDetailsViewModel,
   mapKeyingSheetToKeyingSheetViewModel,
   mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel,
 } from '../helpers';
 import { UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
-import { FeeRecordPaymentGroup } from '../../../api-response-types';
+import { PremiumPaymentsGroup } from '../../../api-response-types';
 import { extractQueryAndSessionData } from './extract-query-and-session-data';
 
 export type GetUtilisationReportReconciliationRequest = CustomExpressRequest<{
@@ -23,8 +23,8 @@ export type GetUtilisationReportReconciliationRequest = CustomExpressRequest<{
   };
 }>;
 
-const feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): boolean =>
-  feeRecordPaymentGroups.some(({ paymentsReceived }) => paymentsReceived !== null);
+const premiumPaymentsGroupsHaveAtLeastOnePaymentReceived = (premiumPaymentsGroups: PremiumPaymentsGroup[]): boolean =>
+  premiumPaymentsGroups.some(({ paymentsReceived }) => paymentsReceived !== null);
 
 const renderUtilisationReportReconciliationForReport = (res: Response, viewModel: UtilisationReportReconciliationForReportViewModel) =>
   res.render('utilisation-reports/utilisation-report-reconciliation-for-report.njk', viewModel);
@@ -86,13 +86,13 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
 
     const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(reportPeriod);
 
-    const enablePaymentsReceivedSorting = feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived(premiumPayments);
+    const enablePaymentsReceivedSorting = premiumPaymentsGroupsHaveAtLeastOnePaymentReceived(premiumPayments);
 
-    const premiumPaymentsViewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(premiumPayments, isCheckboxChecked);
+    const premiumPaymentsViewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPayments, isCheckboxChecked);
 
     const keyingSheetViewModel = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
 
-    const paymentDetailsViewModel = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel(paymentDetails);
+    const paymentDetailsViewModel = mapPaymentDetailsGroupsToPaymentDetailsViewModel(paymentDetails);
 
     const paymentDetailsFiltersViewModel = mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel(paymentDetailsFilters);
 

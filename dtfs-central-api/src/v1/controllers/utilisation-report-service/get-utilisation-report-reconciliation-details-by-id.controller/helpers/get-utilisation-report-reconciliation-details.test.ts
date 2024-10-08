@@ -27,8 +27,6 @@ jest.mock('../../../../../helpers');
 jest.mock('./get-keying-sheet-for-report-id');
 jest.mock('./map-to-premium-payments-groups');
 
-// TODO FN-2311: Need to add additional tests here to test mapping to PD.
-
 describe('get-utilisation-report-reconciliation-details-by-id.controller helpers', () => {
   const reportId = 1;
 

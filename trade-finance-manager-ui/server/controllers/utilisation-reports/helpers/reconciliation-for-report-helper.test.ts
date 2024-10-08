@@ -3,17 +3,17 @@ import { CURRENCY, Currency, CurrencyAndAmount, FeeRecordStatus } from '@ukef/dt
 import {
   getFormattedDateReconciled,
   getFormattedReconciledByUser,
-  mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems,
-  mapFeeRecordPaymentGroupsToPaymentDetailsViewModel,
+  mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems,
+  mapPaymentDetailsGroupsToPaymentDetailsViewModel,
   mapKeyingSheetToKeyingSheetViewModel,
   mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel,
 } from './reconciliation-for-report-helper';
-import { FeeRecord, FeeRecordPaymentGroup, KeyingSheet, KeyingSheetRow, Payment } from '../../../api-response-types';
-import { aFeeRecordPaymentGroup, aFeeRecord, aPayment } from '../../../../test-helpers';
+import { FeeRecord, KeyingSheet, KeyingSheetRow, Payment, PaymentDetails, PremiumPaymentsGroup } from '../../../api-response-types';
+import { aPremiumPaymentsGroup, aFeeRecord, aPayment, aPaymentDetails } from '../../../../test-helpers';
 import * as mapCurrenciesToRadioItems from '../../../helpers/map-currencies-to-radio-items';
 
 describe('reconciliation-for-report-helper', () => {
-  describe('mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems', () => {
+  describe('mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems', () => {
     const DEFAULT_IS_CHECKBOX_SELECTED = () => false;
 
     it('maps the group feeRecords id to the view model feeRecords id', () => {
@@ -24,15 +24,15 @@ describe('reconciliation-for-report-helper', () => {
       const secondFeeRecordId = 30;
       const secondFeeRecord: FeeRecord = { ...aFeeRecord(), id: secondFeeRecordId };
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
+      const premiumPaymentGroups: PremiumPaymentsGroup[] = [
         {
-          ...aFeeRecordPaymentGroup(),
+          ...aPremiumPaymentsGroup(),
           feeRecords: [firstFeeRecord, secondFeeRecord],
         },
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -49,15 +49,15 @@ describe('reconciliation-for-report-helper', () => {
       const secondFeeRecordFacilityId = '87654321';
       const secondFeeRecord: FeeRecord = { ...aFeeRecord(), facilityId: secondFeeRecordFacilityId };
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
+      const premiumPaymentGroups: PremiumPaymentsGroup[] = [
         {
-          ...aFeeRecordPaymentGroup(),
+          ...aPremiumPaymentsGroup(),
           feeRecords: [firstFeeRecord, secondFeeRecord],
         },
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -74,15 +74,15 @@ describe('reconciliation-for-report-helper', () => {
       const secondFeeRecordExporter = 'Test exporter 2';
       const secondFeeRecord: FeeRecord = { ...aFeeRecord(), exporter: secondFeeRecordExporter };
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
+      const premiumPaymentGroups: PremiumPaymentsGroup[] = [
         {
-          ...aFeeRecordPaymentGroup(),
+          ...aPremiumPaymentsGroup(),
           feeRecords: [firstFeeRecord, secondFeeRecord],
         },
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -101,15 +101,15 @@ describe('reconciliation-for-report-helper', () => {
       const secondFeeRecord: FeeRecord = { ...aFeeRecord(), reportedFees: secondFeeRecordReportedFees };
       const secondFeeRecordFormattedReportedFees = 'EUR 314.59';
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
+      const premiumPaymentGroups: PremiumPaymentsGroup[] = [
         {
-          ...aFeeRecordPaymentGroup(),
+          ...aPremiumPaymentsGroup(),
           feeRecords: [firstFeeRecord, secondFeeRecord],
         },
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -128,15 +128,15 @@ describe('reconciliation-for-report-helper', () => {
       const secondFeeRecord: FeeRecord = { ...aFeeRecord(), reportedPayments: secondFeeRecordReportedPayments };
       const secondFeeRecordFormattedReportedPayments = 'GBP 100.00';
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
+      const premiumPaymentGroups: PremiumPaymentsGroup[] = [
         {
-          ...aFeeRecordPaymentGroup(),
+          ...aPremiumPaymentsGroup(),
           feeRecords: [firstFeeRecord, secondFeeRecord],
         },
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -155,15 +155,15 @@ describe('reconciliation-for-report-helper', () => {
         { ...aFeeRecord(), reportedPayments: { currency: 'GBP', amount: 500 } }, // after sorting: 'GBP 500.00' at index 2
       ];
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
+      const premiumPaymentGroups: PremiumPaymentsGroup[] = [
         {
-          ...aFeeRecordPaymentGroup(),
+          ...aPremiumPaymentsGroup(),
           feeRecords: unsortedFeeRecords,
         },
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel[0].feeRecords[0].reportedPayments).toEqual('EUR 100.00');
@@ -178,15 +178,15 @@ describe('reconciliation-for-report-helper', () => {
       const totalReportedPayments: CurrencyAndAmount = { currency: 'GBP', amount: 100 };
       const totalReportedPaymentsFormattedCurrencyAndAmount = 'GBP 100.00';
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
+      const premiumPaymentGroups: PremiumPaymentsGroup[] = [
         {
-          ...aFeeRecordPaymentGroup(),
+          ...aPremiumPaymentsGroup(),
           totalReportedPayments,
         },
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -200,15 +200,15 @@ describe('reconciliation-for-report-helper', () => {
       const thirdTotalReportedPayments: CurrencyAndAmount = { currency: 'GBP', amount: 200 }; // dataSortValue = 3
       const fourthTotalReportedPayments: CurrencyAndAmount = { currency: 'EUR', amount: 50 }; // dataSortValue = 0
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
-        { ...aFeeRecordPaymentGroup(), totalReportedPayments: firstTotalReportedPayments },
-        { ...aFeeRecordPaymentGroup(), totalReportedPayments: secondTotalReportedPayments },
-        { ...aFeeRecordPaymentGroup(), totalReportedPayments: thirdTotalReportedPayments },
-        { ...aFeeRecordPaymentGroup(), totalReportedPayments: fourthTotalReportedPayments },
+      const premiumPaymentGroups: PremiumPaymentsGroup[] = [
+        { ...aPremiumPaymentsGroup(), totalReportedPayments: firstTotalReportedPayments },
+        { ...aPremiumPaymentsGroup(), totalReportedPayments: secondTotalReportedPayments },
+        { ...aPremiumPaymentsGroup(), totalReportedPayments: thirdTotalReportedPayments },
+        { ...aPremiumPaymentsGroup(), totalReportedPayments: fourthTotalReportedPayments },
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(4);
@@ -220,10 +220,10 @@ describe('reconciliation-for-report-helper', () => {
 
     it('sets the view model paymentsReceived to undefined when the group paymentsReceived is null', () => {
       // Arrange
-      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), paymentsReceived: null }];
+      const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), paymentsReceived: null }];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -235,15 +235,15 @@ describe('reconciliation-for-report-helper', () => {
       const paymentsReceived: Payment[] = [{ ...aPayment(), id: 1, currency: 'GBP', amount: 314.59 }];
       const paymentsReceivedFormattedCurrencyAndAmount = 'GBP 314.59';
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
+      const premiumPaymentGroups: PremiumPaymentsGroup[] = [
         {
-          ...aFeeRecordPaymentGroup(),
+          ...aPremiumPaymentsGroup(),
           paymentsReceived,
         },
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel[0].paymentsReceived).toHaveLength(1);
@@ -254,15 +254,15 @@ describe('reconciliation-for-report-helper', () => {
       // Arrange
       const paymentsReceived: Payment[] = [{ ...aPayment(), id: 1, currency: 'GBP', amount: 100 }];
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
+      const premiumPaymentGroups: PremiumPaymentsGroup[] = [
         {
-          ...aFeeRecordPaymentGroup(),
+          ...aPremiumPaymentsGroup(),
           paymentsReceived,
         },
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel[0].paymentsReceived).toHaveLength(1);
@@ -271,15 +271,15 @@ describe('reconciliation-for-report-helper', () => {
 
     it('sets the view model totalPaymentsReceived formattedCurrencyAndAmount to undefined when the group totalPaymentsReceived is null', () => {
       // Arrange
-      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
+      const premiumPaymentGroups: PremiumPaymentsGroup[] = [
         {
-          ...aFeeRecordPaymentGroup(),
+          ...aPremiumPaymentsGroup(),
           totalPaymentsReceived: null,
         },
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -291,15 +291,15 @@ describe('reconciliation-for-report-helper', () => {
       const totalPaymentsReceived: CurrencyAndAmount = { currency: 'GBP', amount: 100 };
       const totalPaymentsReceivedFormattedCurrencyAndAmount = 'GBP 100.00';
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
+      const premiumPaymentGroups: PremiumPaymentsGroup[] = [
         {
-          ...aFeeRecordPaymentGroup(),
+          ...aPremiumPaymentsGroup(),
           totalPaymentsReceived,
         },
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -313,15 +313,15 @@ describe('reconciliation-for-report-helper', () => {
       const thirdTotalPaymentsReceived: CurrencyAndAmount = { currency: 'GBP', amount: 200 }; // dataSortValue = 3
       const fourthTotalPaymentsReceived: CurrencyAndAmount = { currency: 'EUR', amount: 50 }; // dataSortValue = 0
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
-        { ...aFeeRecordPaymentGroup(), totalPaymentsReceived: firstTotalPaymentsReceived },
-        { ...aFeeRecordPaymentGroup(), totalPaymentsReceived: secondTotalPaymentsReceived },
-        { ...aFeeRecordPaymentGroup(), totalPaymentsReceived: thirdTotalPaymentsReceived },
-        { ...aFeeRecordPaymentGroup(), totalPaymentsReceived: fourthTotalPaymentsReceived },
+      const premiumPaymentGroups: PremiumPaymentsGroup[] = [
+        { ...aPremiumPaymentsGroup(), totalPaymentsReceived: firstTotalPaymentsReceived },
+        { ...aPremiumPaymentsGroup(), totalPaymentsReceived: secondTotalPaymentsReceived },
+        { ...aPremiumPaymentsGroup(), totalPaymentsReceived: thirdTotalPaymentsReceived },
+        { ...aPremiumPaymentsGroup(), totalPaymentsReceived: fourthTotalPaymentsReceived },
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(4);
@@ -334,10 +334,10 @@ describe('reconciliation-for-report-helper', () => {
     it('maps the group status to the view model status', () => {
       // Arrange
       const status: FeeRecordStatus = 'TO_DO';
-      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), status }];
+      const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), status }];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -354,10 +354,10 @@ describe('reconciliation-for-report-helper', () => {
       "maps the fee record status '$feeRecordStatus' to the view model display status '$feeRecordDisplayStatus'",
       ({ feeRecordStatus, feeRecordDisplayStatus }) => {
         // Arrange
-        const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), status: feeRecordStatus }];
+        const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), status: feeRecordStatus }];
 
         // Act
-        const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+        const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
         // Assert
         expect(viewModel[0].displayStatus).toEqual(feeRecordDisplayStatus);
@@ -391,12 +391,12 @@ describe('reconciliation-for-report-helper', () => {
 
       const groupStatus: FeeRecordStatus = 'TO_DO';
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), feeRecords, status: groupStatus }];
+      const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), feeRecords, status: groupStatus }];
 
       const checkboxId = `feeRecordIds-${feeRecordIds.join(',')}-reportedPaymentsCurrency-${firstFeeRecordReportedPaymentsCurrency}-status-${groupStatus}`;
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel[0].checkboxId).toEqual(checkboxId);
@@ -417,13 +417,13 @@ describe('reconciliation-for-report-helper', () => {
 
       const status: FeeRecordStatus = 'DOES_NOT_MATCH';
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), feeRecords: [feeRecord], status }];
+      const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), feeRecords: [feeRecord], status }];
 
       const isCheckboxChecked = jest.fn().mockReturnValue(false);
       when(isCheckboxChecked).calledWith([feeRecordId]).mockReturnValue(true);
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);
+      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, isCheckboxChecked);
 
       // Assert
       expect(viewModel[0].isChecked).toEqual(true);
@@ -445,13 +445,13 @@ describe('reconciliation-for-report-helper', () => {
 
       const status: FeeRecordStatus = 'DOES_NOT_MATCH';
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), feeRecords: [feeRecord], status }];
+      const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), feeRecords: [feeRecord], status }];
 
       const isCheckboxChecked = jest.fn().mockReturnValue(false);
       when(isCheckboxChecked).calledWith([nonMatchingFeeRecordId]).mockReturnValue(true);
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);
+      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, isCheckboxChecked);
 
       // Assert
       expect(viewModel[0].isChecked).toEqual(false);
@@ -471,10 +471,10 @@ describe('reconciliation-for-report-helper', () => {
 
       const feeRecords = [firstFeeRecord, secondFeeRecord];
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), feeRecords }];
+      const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), feeRecords }];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel[0].checkboxAriaLabel).toEqual('Select 123 456');
@@ -645,41 +645,47 @@ describe('reconciliation-for-report-helper', () => {
     });
   });
 
-  describe('mapFeeRecordPaymentGroupsToPaymentDetailsViewModel', () => {
-    it('creates a list item for each distinct payment in the supplied groups', () => {
+  describe('mapPaymentDetailsGroupsToPaymentDetailsViewModel', () => {
+    it('creates a list item for each of the supplied groups', () => {
       // Arrange
-      const firstGroup: FeeRecordPaymentGroup = {
-        ...aFeeRecordPaymentGroup(),
+      const firstGroup: PaymentDetails = {
+        ...aPaymentDetails(),
         feeRecords: [aFeeRecord(), aFeeRecord()],
-        paymentsReceived: [aPayment(), aPayment()],
+        payment: aPayment(),
       };
-      const secondGroup: FeeRecordPaymentGroup = {
-        ...aFeeRecordPaymentGroup(),
+      const secondGroup: PaymentDetails = {
+        ...aPaymentDetails(),
         feeRecords: [aFeeRecord(), aFeeRecord(), aFeeRecord()],
-        paymentsReceived: [aPayment()],
+        payment: aPayment(),
       };
 
       // Act
-      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([firstGroup, secondGroup]);
+      const result = mapPaymentDetailsGroupsToPaymentDetailsViewModel([firstGroup, secondGroup]);
 
       // Assert
-      expect(result).toHaveLength(3);
+      expect(result).toHaveLength(2);
     });
 
     it('maps the payment id and reference to the payment details view model reference', () => {
       // Arrange
-      const group: FeeRecordPaymentGroup = {
-        ...aFeeRecordPaymentGroup(),
+      const firstGroup: PaymentDetails = {
+        ...aPaymentDetails(),
         feeRecords: [aFeeRecord()],
-        paymentsReceived: [
-          { ...aPayment(), id: 123, reference: 'First reference' },
-          { ...aPayment(), id: 456, reference: 'Second reference' },
-          { ...aPayment(), id: 789, reference: undefined },
-        ],
+        payment: { ...aPayment(), id: 123, reference: 'First reference' },
+      };
+      const secondGroup: PaymentDetails = {
+        ...aPaymentDetails(),
+        feeRecords: [aFeeRecord()],
+        payment: { ...aPayment(), id: 456, reference: 'Second reference' },
+      };
+      const thirdGroup: PaymentDetails = {
+        ...aPaymentDetails(),
+        feeRecords: [aFeeRecord()],
+        payment: { ...aPayment(), id: 789, reference: undefined },
       };
 
       // Act
-      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([group]);
+      const result = mapPaymentDetailsGroupsToPaymentDetailsViewModel([firstGroup, secondGroup, thirdGroup]);
 
       // Assert
       expect(result).toHaveLength(3);
@@ -693,19 +699,19 @@ describe('reconciliation-for-report-helper', () => {
 
     it('maps the fee records to an array of facility ids and exporters linked to the payment in the same group', () => {
       // Arrange
-      const firstGroup: FeeRecordPaymentGroup = {
-        ...aFeeRecordPaymentGroup(),
+      const firstGroup: PaymentDetails = {
+        ...aPaymentDetails(),
         feeRecords: [{ ...aFeeRecord(), id: 1, facilityId: '11111111', exporter: 'Test exporter 1' }],
-        paymentsReceived: [aPayment()],
+        payment: aPayment(),
       };
-      const secondGroup: FeeRecordPaymentGroup = {
-        ...aFeeRecordPaymentGroup(),
+      const secondGroup: PaymentDetails = {
+        ...aPaymentDetails(),
         feeRecords: [{ ...aFeeRecord(), id: 2, facilityId: '22222222', exporter: 'Test exporter 2' }],
-        paymentsReceived: [aPayment()],
+        payment: aPayment(),
       };
 
       // Act
-      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([firstGroup, secondGroup]);
+      const result = mapPaymentDetailsGroupsToPaymentDetailsViewModel([firstGroup, secondGroup]);
 
       // Assert
       expect(result).toHaveLength(2);
@@ -717,18 +723,18 @@ describe('reconciliation-for-report-helper', () => {
 
     it('maps the fee records in the group to an array of facility ids and exporters when a payment has multiple fee records', () => {
       // Arrange
-      const group: FeeRecordPaymentGroup = {
-        ...aFeeRecordPaymentGroup(),
+      const group: PaymentDetails = {
+        ...aPaymentDetails(),
         feeRecords: [
           { ...aFeeRecord(), id: 1, facilityId: '11111111', exporter: 'Test exporter 1' },
           { ...aFeeRecord(), id: 2, facilityId: '22222222', exporter: 'Test exporter 2' },
           { ...aFeeRecord(), id: 3, facilityId: '33333333', exporter: 'Test exporter 3' },
         ],
-        paymentsReceived: [aPayment()],
+        payment: aPayment(),
       };
 
       // Act
-      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([group]);
+      const result = mapPaymentDetailsGroupsToPaymentDetailsViewModel([group]);
 
       // Assert
       expect(result).toHaveLength(1);
@@ -738,52 +744,62 @@ describe('reconciliation-for-report-helper', () => {
       expect(result[0].feeRecords[2]).toEqual({ id: 3, facilityId: '33333333', exporter: 'Test exporter 3' });
     });
 
-    it('maps the fee records to an array of facility ids and exporters for each payment in the group when a group has multiple fee records and payments', () => {
+    it('maps the fee records to an array of facility ids and exporters when a group has multiple fee records', () => {
       // Arrange
-      const group: FeeRecordPaymentGroup = {
-        ...aFeeRecordPaymentGroup(),
+      const group: PaymentDetails = {
+        ...aPaymentDetails(),
         feeRecords: [
           { ...aFeeRecord(), id: 1, facilityId: '11111111', exporter: 'Test exporter 1' },
           { ...aFeeRecord(), id: 2, facilityId: '22222222', exporter: 'Test exporter 2' },
           { ...aFeeRecord(), id: 3, facilityId: '33333333', exporter: 'Test exporter 3' },
         ],
-        paymentsReceived: [aPayment(), aPayment()],
+        payment: aPayment(),
       };
 
       // Act
-      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([group]);
+      const result = mapPaymentDetailsGroupsToPaymentDetailsViewModel([group]);
 
       // Assert
-      expect(result).toHaveLength(2);
+      expect(result).toHaveLength(1);
 
       expect(result[0].feeRecords).toHaveLength(3);
       expect(result[0].feeRecords[0]).toEqual({ id: 1, facilityId: '11111111', exporter: 'Test exporter 1' });
       expect(result[0].feeRecords[1]).toEqual({ id: 2, facilityId: '22222222', exporter: 'Test exporter 2' });
       expect(result[0].feeRecords[2]).toEqual({ id: 3, facilityId: '33333333', exporter: 'Test exporter 3' });
-
-      expect(result[1].feeRecords).toHaveLength(3);
-      expect(result[1].feeRecords[0]).toEqual({ id: 1, facilityId: '11111111', exporter: 'Test exporter 1' });
-      expect(result[1].feeRecords[1]).toEqual({ id: 2, facilityId: '22222222', exporter: 'Test exporter 2' });
-      expect(result[1].feeRecords[2]).toEqual({ id: 3, facilityId: '33333333', exporter: 'Test exporter 3' });
     });
 
     it('maps the payment to a formatted currency and amount sorted first by currency alphabetically and second by amount ascending', () => {
       // Arrange
-      const payments: Payment[] = [
-        { ...aPayment(), id: 1, currency: 'GBP', amount: 200 }, // 'GBP 200.00', dataSortValue = 2
-        { ...aPayment(), id: 2, currency: 'USD', amount: 50 }, // 'USD 50.00', dataSortValue = 4
-        { ...aPayment(), id: 3, currency: 'GBP', amount: 100 }, // 'GBP 100.00', dataSortValue = 1
-        { ...aPayment(), id: 4, currency: 'EUR', amount: 200 }, // 'EUR 200.00', dataSortValue = 0
-        { ...aPayment(), id: 5, currency: 'GBP', amount: 300 }, // 'GBP 300.00', dataSortValue = 3
+      const groups: PaymentDetails[] = [
+        {
+          ...aPaymentDetails(),
+          feeRecords: [aFeeRecord()],
+          payment: { ...aPayment(), id: 1, currency: 'GBP', amount: 200 }, // 'GBP 200.00', dataSortValue = 2
+        },
+        {
+          ...aPaymentDetails(),
+          feeRecords: [aFeeRecord()],
+          payment: { ...aPayment(), id: 2, currency: 'USD', amount: 50 }, // 'USD 50.00', dataSortValue = 4
+        },
+        {
+          ...aPaymentDetails(),
+          feeRecords: [aFeeRecord()],
+          payment: { ...aPayment(), id: 3, currency: 'GBP', amount: 100 }, // 'GBP 100.00', dataSortValue = 1
+        },
+        {
+          ...aPaymentDetails(),
+          feeRecords: [aFeeRecord()],
+          payment: { ...aPayment(), id: 4, currency: 'EUR', amount: 200 }, // 'EUR 200.00', dataSortValue = 0
+        },
+        {
+          ...aPaymentDetails(),
+          feeRecords: [aFeeRecord()],
+          payment: { ...aPayment(), id: 5, currency: 'GBP', amount: 300 }, // 'GBP 300.00', dataSortValue = 3
+        },
       ];
-      const group: FeeRecordPaymentGroup = {
-        ...aFeeRecordPaymentGroup(),
-        feeRecords: [aFeeRecord()],
-        paymentsReceived: payments,
-      };
 
       // Act
-      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([group]);
+      const result = mapPaymentDetailsGroupsToPaymentDetailsViewModel(groups);
 
       // Assert
       expect(result).toHaveLength(5);
@@ -798,21 +814,36 @@ describe('reconciliation-for-report-helper', () => {
 
     it('maps the payment to a formatted date received sorted by date ascending', () => {
       // Arrange
-      const payments: Payment[] = [
-        { ...aPayment(), id: 1, dateReceived: new Date('2024-06-01').toISOString() }, // '1 Jun 2024', dataSortValue = 3
-        { ...aPayment(), id: 2, dateReceived: new Date('2024-07-01').toISOString() }, // '1 Jul 2024', dataSortValue = 4
-        { ...aPayment(), id: 3, dateReceived: new Date('2024-03-01').toISOString() }, // '1 Mar 2024', dataSortValue = 0
-        { ...aPayment(), id: 4, dateReceived: new Date('2024-05-01').toISOString() }, // '1 May 2024', dataSortValue = 2
-        { ...aPayment(), id: 5, dateReceived: new Date('2024-04-01').toISOString() }, // '1 Apr 2024', dataSortValue = 1
+      const groups: PaymentDetails[] = [
+        {
+          ...aPaymentDetails(),
+          feeRecords: [aFeeRecord()],
+          payment: { ...aPayment(), id: 1, dateReceived: new Date('2024-06-01').toISOString() }, // '1 Jun 2024', dataSortValue = 3
+        },
+        {
+          ...aPaymentDetails(),
+          feeRecords: [aFeeRecord()],
+          payment: { ...aPayment(), id: 2, dateReceived: new Date('2024-07-01').toISOString() }, // '1 Jul 2024', dataSortValue = 4
+        },
+        {
+          ...aPaymentDetails(),
+          feeRecords: [aFeeRecord()],
+          payment: { ...aPayment(), id: 3, dateReceived: new Date('2024-03-01').toISOString() }, // '1 Mar 2024', dataSortValue = 0
+        },
+        {
+          ...aPaymentDetails(),
+          feeRecords: [aFeeRecord()],
+          payment: { ...aPayment(), id: 4, dateReceived: new Date('2024-05-01').toISOString() }, // '1 May 2024', dataSortValue = 2
+        },
+        {
+          ...aPaymentDetails(),
+          feeRecords: [aFeeRecord()],
+          payment: { ...aPayment(), id: 5, dateReceived: new Date('2024-04-01').toISOString() }, // '1 Apr 2024', dataSortValue = 1
+        },
       ];
-      const group: FeeRecordPaymentGroup = {
-        ...aFeeRecordPaymentGroup(),
-        feeRecords: [aFeeRecord()],
-        paymentsReceived: payments,
-      };
 
       // Act
-      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([group]);
+      const result = mapPaymentDetailsGroupsToPaymentDetailsViewModel(groups);
 
       // Assert
       expect(result).toHaveLength(5);
@@ -827,15 +858,15 @@ describe('reconciliation-for-report-helper', () => {
 
     it('maps the reconciledByUser to the payment details reconciledBy field with value "-" when the reconciledByUser is undefined', () => {
       // Arrange
-      const group: FeeRecordPaymentGroup = {
-        ...aFeeRecordPaymentGroup(),
+      const group: PaymentDetails = {
+        ...aPaymentDetails(),
         feeRecords: [aFeeRecord()],
-        paymentsReceived: [aPayment()],
+        payment: aPayment(),
         reconciledByUser: undefined,
       };
 
       // Act
-      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([group]);
+      const result = mapPaymentDetailsGroupsToPaymentDetailsViewModel([group]);
 
       // Assert
       expect(result).toHaveLength(1);
@@ -844,15 +875,13 @@ describe('reconciliation-for-report-helper', () => {
 
     it('maps the reconciledByUser to the payment details reconciledBy field', () => {
       // Arrange
-      const group: FeeRecordPaymentGroup = {
-        ...aFeeRecordPaymentGroup(),
-        feeRecords: [aFeeRecord()],
-        paymentsReceived: [aPayment()],
+      const group: PaymentDetails = {
+        ...aPaymentDetails(),
         reconciledByUser: { firstName: 'John', lastName: 'Smith' },
       };
 
       // Act
-      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([group]);
+      const result = mapPaymentDetailsGroupsToPaymentDetailsViewModel([group]);
 
       // Assert
       expect(result).toHaveLength(1);
@@ -861,15 +890,13 @@ describe('reconciliation-for-report-helper', () => {
 
     it('maps the dateReconciled to the payment details dateReconciled field with value "-" when the dateReconciled is undefined', () => {
       // Arrange
-      const group: FeeRecordPaymentGroup = {
-        ...aFeeRecordPaymentGroup(),
-        feeRecords: [aFeeRecord()],
-        paymentsReceived: [aPayment()],
+      const group: PaymentDetails = {
+        ...aPaymentDetails(),
         dateReconciled: undefined,
       };
 
       // Act
-      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([group]);
+      const result = mapPaymentDetailsGroupsToPaymentDetailsViewModel([group]);
 
       // Assert
       expect(result).toHaveLength(1);
@@ -881,15 +908,13 @@ describe('reconciliation-for-report-helper', () => {
       { dateReconciled: '2024-12-01T10:30:00.000', formattedDate: '1 Dec 2024 at 10:30am' },
     ])("maps a dateReconciled value of '$dateReconciled' to the formatted date '$formattedDate'", ({ dateReconciled, formattedDate }) => {
       // Arrange
-      const group: FeeRecordPaymentGroup = {
-        ...aFeeRecordPaymentGroup(),
-        feeRecords: [aFeeRecord()],
-        paymentsReceived: [aPayment()],
+      const group: PaymentDetails = {
+        ...aPaymentDetails(),
         dateReconciled,
       };
 
       // Act
-      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([group]);
+      const result = mapPaymentDetailsGroupsToPaymentDetailsViewModel([group]);
 
       // Assert
       expect(result).toHaveLength(1);
@@ -898,40 +923,32 @@ describe('reconciliation-for-report-helper', () => {
 
     it('sorts the dateReconciled by date ascending with undefined dates being at the start of the sorted list', () => {
       // Arrange
-      const firstGroup: FeeRecordPaymentGroup = {
-        ...aFeeRecordPaymentGroup(),
-        paymentsReceived: [
-          { ...aPayment(), id: 0 }, // dataSortValue = 3
-          { ...aPayment(), id: 3 }, // dataSortValue = 4
-        ],
-        dateReconciled: '2024-01-01T03:00:00.000',
+      const firstGroup: PaymentDetails = {
+        ...aPaymentDetails(),
+        payment: { ...aPayment(), id: 0 }, // dataSortValue = 0
+        dateReconciled: '2024-01-01T03:00:00.000', // dataSortValue = 2,
       };
 
-      const secondGroup: FeeRecordPaymentGroup = {
-        ...aFeeRecordPaymentGroup(),
-        paymentsReceived: [{ ...aPayment(), id: 4 }], // dataSortValue = 2
-        dateReconciled: '2024-01-01T00:00:00.000',
+      const secondGroup: PaymentDetails = {
+        ...aPaymentDetails(),
+        payment: { ...aPayment(), id: 2 }, // dataSortValue = 1
+        dateReconciled: '2024-01-01T00:00:00.000', // dataSortValue = 1
       };
 
-      const thirdGroup: FeeRecordPaymentGroup = {
-        ...aFeeRecordPaymentGroup(),
-        paymentsReceived: [
-          { ...aPayment(), id: 2 }, // dataSortValue = 0
-          { ...aPayment(), id: 1 }, // dataSortValue = 1
-        ],
-        dateReconciled: undefined,
+      const thirdGroup: PaymentDetails = {
+        ...aPaymentDetails(),
+        payment: { ...aPayment(), id: 1 }, // dataSortValue = 2,
+        dateReconciled: undefined, // dataSortValue = 0
       };
 
       // Act
-      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([firstGroup, secondGroup, thirdGroup]);
+      const result = mapPaymentDetailsGroupsToPaymentDetailsViewModel([firstGroup, secondGroup, thirdGroup]);
 
       // Assert
-      expect(result).toHaveLength(5);
-      expect(result[0].dateReconciled.dataSortValue).toEqual(3);
-      expect(result[1].dateReconciled.dataSortValue).toEqual(4);
-      expect(result[2].dateReconciled.dataSortValue).toEqual(2);
-      expect(result[3].dateReconciled.dataSortValue).toEqual(0);
-      expect(result[4].dateReconciled.dataSortValue).toEqual(1);
+      expect(result).toHaveLength(3);
+      expect(result[0].dateReconciled.dataSortValue).toEqual(2);
+      expect(result[1].dateReconciled.dataSortValue).toEqual(1);
+      expect(result[2].dateReconciled.dataSortValue).toEqual(0);
     });
   });
 
