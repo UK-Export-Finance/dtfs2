@@ -21,7 +21,7 @@ export const lookup = async (req: Request, res: Response) => {
 
   const response: { status: number; data: unknown } = await axios({
     method: 'get',
-    url: `${APIM_MDM_URL}customers?companyReg=${companyReg}`,
+    url: `${APIM_MDM_URL}customers/direct?companyRegistrationNumber=${companyReg}`,
     headers,
   }).catch((error: AxiosError) => {
     console.error('Error calling Party DB API %o', error);
