@@ -164,7 +164,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
             reference: undefined,
           },
           feeRecords: [{ id: 1, facilityId: '12345678', exporter: 'Test exporter' }],
-          feeRecordPaymentGroupStatus: FEE_RECORD_STATUS.MATCH,
+          paymentDetailsGroupStatus: FEE_RECORD_STATUS.MATCH,
           reconciledBy: '-',
           dateReconciled: { formattedDateReconciled: '-', dataSortValue: 0 },
         },

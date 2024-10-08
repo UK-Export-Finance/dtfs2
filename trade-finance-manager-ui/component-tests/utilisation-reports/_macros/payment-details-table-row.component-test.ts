@@ -24,7 +24,7 @@ describe(component, () => {
   });
 
   const aPaymentDetailsTableRow = (): PaymentDetailsTableRow => ({
-    feeRecordPaymentGroupStatus: FEE_RECORD_STATUS.TO_DO,
+    paymentDetailsGroupStatus: FEE_RECORD_STATUS.TO_DO,
     payment: aPaymentDetailsPayment(),
     feeRecords: [{ id: 1, facilityId: '12345678', exporter: 'Test exporter' }],
     reconciledBy: '-',
@@ -100,7 +100,7 @@ describe(component, () => {
       (status) => {
         const paymentDetailsRow: PaymentDetailsTableRow = {
           ...aPaymentDetailsTableRow(),
-          feeRecordPaymentGroupStatus: status,
+          paymentDetailsGroupStatus: status,
           payment: {
             ...aPaymentDetailsPayment(),
             amount: { formattedCurrencyAndAmount: 'GBP 123.45', dataSortValue: 0 },
@@ -118,7 +118,7 @@ describe(component, () => {
       (status) => {
         const paymentDetailsRow: PaymentDetailsTableRow = {
           ...aPaymentDetailsTableRow(),
-          feeRecordPaymentGroupStatus: status,
+          paymentDetailsGroupStatus: status,
           payment: {
             ...aPaymentDetailsPayment(),
             id: 24,
@@ -141,7 +141,7 @@ describe(component, () => {
     it.each(Object.values(FEE_RECORD_STATUS))('renders the payment amount as plain text when the fee record status is %s', (status) => {
       const paymentDetailsRow: PaymentDetailsTableRow = {
         ...aPaymentDetailsTableRow(),
-        feeRecordPaymentGroupStatus: status,
+        paymentDetailsGroupStatus: status,
         payment: {
           ...aPaymentDetailsPayment(),
           amount: { formattedCurrencyAndAmount: 'GBP 123.45', dataSortValue: 0 },

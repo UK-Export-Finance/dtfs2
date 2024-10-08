@@ -72,7 +72,7 @@ export type PaymentDetailsPaymentViewModel = {
 };
 
 export type PaymentDetailsViewModel = {
-  feeRecordPaymentGroupStatus: FeeRecordStatus;
+  paymentDetailsGroupStatus: FeeRecordStatus;
   payment: PaymentDetailsPaymentViewModel;
   feeRecords: {
     id: number;

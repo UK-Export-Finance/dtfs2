@@ -283,8 +283,7 @@ export const mapPaymentDetailsGroupsToPaymentDetailsViewModel = (paymentDetailsG
     return [
       ...paymentDetails,
       {
-        // TODO FN-2311: Rename this to paymentDetailsGroupStatus after main changes committed.
-        feeRecordPaymentGroupStatus: paymentDetailsGroupStatus,
+        paymentDetailsGroupStatus,
         payment: mapPaymentToPaymentDetailsPaymentViewModel(
           payment,
           paymentIdToAmountDataSortValueMap[payment.id],
