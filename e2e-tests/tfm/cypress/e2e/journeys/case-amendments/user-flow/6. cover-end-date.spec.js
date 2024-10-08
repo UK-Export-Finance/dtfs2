@@ -74,7 +74,7 @@ context('Amendments - Cover End Date', () => {
     cy.url().should('contain', 'cover-end-date');
     amendmentsPage.amendmentCurrentCoverEndDate().should('contain', oneMonthFormattedFull);
 
-    cy.completeDateFormFields({ idPrefix: 'amendment--request-date', date: oneMonth });
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: oneMonth });
 
     cy.clickContinueButton();
     errorSummary().contains('The new cover end date cannot be the same as the current cover end date');

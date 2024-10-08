@@ -122,7 +122,7 @@ context('Amendments deal stage - amendment in progress and in progress amendment
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date-day', day: tomorrowDay });
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', day: tomorrowDay });
 
     cy.clickContinueButton();
 

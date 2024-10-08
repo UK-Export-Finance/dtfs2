@@ -4,7 +4,7 @@ import aboutFacility from '../../../pages/about-facility';
 import bankReviewDate from '../../../pages/bank-review-date';
 import facilityEndDate from '../../../pages/facility-end-date';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import { today, todayDay, todayMonth, todayYear, twoDays, twoDaysAgo, tomorrow, tomorrowYear, yesterday } from '../../../../../../e2e-fixtures/dateConstants';
+import { today, todayDay, todayMonth, todayYear, twoDays, tomorrow, tomorrowYear, yesterday } from '../../../../../../e2e-fixtures/dateConstants';
 
 const applications = [];
 let token;
@@ -170,7 +170,7 @@ context('About Facility Page  - feature flag enabled', () => {
 
       cy.completeDateFormFields({ idPrefix: 'cover-start-date' });
 
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: twoDaysAgo });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: twoDays });
 
       aboutFacility.isUsingFacilityEndDateYes().click();
 

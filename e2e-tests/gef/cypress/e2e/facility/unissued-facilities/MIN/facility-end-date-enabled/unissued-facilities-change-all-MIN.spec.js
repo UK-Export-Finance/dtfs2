@@ -123,8 +123,6 @@ context('Unissued Facilities MIN - change all to issued from unissued table - fe
 
       cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: threeMonths });
 
-      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo });
-
       cy.clickContinueButton();
 
       unissuedFacilityTable.rows().should('have.length', 0);
