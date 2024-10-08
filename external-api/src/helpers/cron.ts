@@ -9,6 +9,7 @@ import {
   eStoreBuyerDirectoryCreationJob,
   eStoreDealDirectoryCreationJob,
   eStoreFacilityDirectoryCreationJob,
+  eStoreDocumentsCreationJob,
 } from '../cron';
 
 dotenv.config();
@@ -33,6 +34,8 @@ const onTick = async (eStoreData: Estore, category: Category) => {
       return eStoreDealDirectoryCreationJob(eStoreData);
     case ENDPOINT.FACILITY:
       return eStoreFacilityDirectoryCreationJob(eStoreData);
+    case ENDPOINT.DOCUMENT:
+      return eStoreDocumentsCreationJob(eStoreData);
     default:
       return undefined;
   }
@@ -85,6 +88,10 @@ export const cron = (eStoreCronJob: EstoreCronJob): boolean => {
   // Stop the CRON job
   if (kill) {
     const job = jobs.get(id) as CronJob;
+
+    if (!job) {
+      return false;
+    }
 
     console.info('❌ eStore %s CRON %s has been stopped for deal %s.', category, id, data.dealIdentifier);
 

@@ -1,5 +1,5 @@
 import { pageRenderer } from '../pageRenderer';
-import { anAddToAnExistingPaymentViewModel } from '../../test-helpers/test-data/add-to-an-existing-payment-view-model';
+import { anAddToAnExistingPaymentViewModel } from '../../test-helpers/test-data/view-models';
 import { AddToAnExistingPaymentViewModel } from '../../server/types/view-models';
 
 const page = '../templates/utilisation-reports/add-to-an-existing-payment.njk';

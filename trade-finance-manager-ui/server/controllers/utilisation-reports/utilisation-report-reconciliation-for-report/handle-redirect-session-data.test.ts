@@ -14,7 +14,7 @@ describe('handleRedirectSessionData', () => {
     checkedCheckboxIds,
   });
 
-  it('returns an undefined tableDataError when the session error keys are undefined', () => {
+  it('returns an undefined premiumPaymentsTableDataError when the session error keys are undefined', () => {
     // Arrange
     const sessionData = getSessionData({
       addPaymentErrorKey: undefined,
@@ -22,10 +22,10 @@ describe('handleRedirectSessionData', () => {
     });
 
     // Act
-    const { tableDataError } = handleRedirectSessionData(sessionData);
+    const { premiumPaymentsTableDataError } = handleRedirectSessionData(sessionData);
 
     // Assert
-    expect(tableDataError).toBeUndefined();
+    expect(premiumPaymentsTableDataError).toBeUndefined();
   });
 
   it('returns an empty selectedFeeRecordIds set when the session error keys are undefined', () => {
@@ -54,7 +54,7 @@ describe('handleRedirectSessionData', () => {
     expect(() => handleRedirectSessionData(sessionData)).toThrow(Error);
   });
 
-  it("returns the tableDataError when the generateKeyingDataErrorKey is 'no-matching-fee-records'", () => {
+  it("returns the premiumPaymentsTableDataError when the generateKeyingDataErrorKey is 'no-matching-fee-records'", () => {
     // Arrange
     const sessionData = getSessionData({
       addPaymentErrorKey: undefined,
@@ -62,11 +62,11 @@ describe('handleRedirectSessionData', () => {
     });
 
     // Act
-    const { tableDataError } = handleRedirectSessionData(sessionData);
+    const { premiumPaymentsTableDataError } = handleRedirectSessionData(sessionData);
 
     // Assert
-    expect(tableDataError?.text).toBeDefined();
-    expect(tableDataError?.href).toBeDefined();
+    expect(premiumPaymentsTableDataError?.text).toBeDefined();
+    expect(premiumPaymentsTableDataError?.href).toBeDefined();
   });
 
   it('throws an error if the session addPaymentErrorKey is not recognised', () => {
@@ -86,7 +86,7 @@ describe('handleRedirectSessionData', () => {
     'multiple-does-not-match-selected',
     'no-fee-records-selected',
     'different-fee-record-payment-currencies',
-  ])("returns the tableDataError when the addPaymentErrorKey is '%s'", (addPaymentErrorKey) => {
+  ])("returns the premiumPaymentsTableDataError when the addPaymentErrorKey is '%s'", (addPaymentErrorKey) => {
     // Arrange
     const sessionData = getSessionData({
       addPaymentErrorKey,
@@ -95,11 +95,11 @@ describe('handleRedirectSessionData', () => {
     });
 
     // Act
-    const { tableDataError } = handleRedirectSessionData(sessionData);
+    const { premiumPaymentsTableDataError } = handleRedirectSessionData(sessionData);
 
     // Assert
-    expect(tableDataError?.text).toBeDefined();
-    expect(tableDataError?.href).toBeDefined();
+    expect(premiumPaymentsTableDataError?.text).toBeDefined();
+    expect(premiumPaymentsTableDataError?.href).toBeDefined();
   });
 
   it('returns a set of fee record ids for checked checkbox ids defined in the sessions checkedCheckboxIds', () => {
