@@ -107,7 +107,7 @@
  *     properties:
  *       facilityId:
  *         type: string
- *   PaymentDetailsFilters
+ *   PaymentDetailsFilters:
  *     type: object
  *     properties:
  *       facilityId:
