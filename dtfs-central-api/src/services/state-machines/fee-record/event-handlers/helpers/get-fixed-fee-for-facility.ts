@@ -50,11 +50,10 @@ const getLatestTfmFacilityValues = async (
  * @returns The fixed fee for the supplied report period
  */
 export const getFixedFeeForFacility = async (facilityId: string, utilisation: number, reportPeriod: ReportPeriod) => {
-  const { coverEndDate, coverStartDate, dayCountBasis, interestPercentage } = await getLatestTfmFacilityValues(facilityId);
+  const { coverEndDate, dayCountBasis, interestPercentage } = await getLatestTfmFacilityValues(facilityId);
   return calculateFixedFee({
     utilisation,
     reportPeriod,
-    coverStartDate,
     coverEndDate,
     interestPercentage,
     dayCountBasis,

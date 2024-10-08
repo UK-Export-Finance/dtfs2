@@ -123,7 +123,6 @@ describe('getFixedFeeForFacility', () => {
     expect(calculateFixedFee).toHaveBeenCalledWith<[CalculateFixedFeeParams]>({
       utilisation,
       reportPeriod,
-      coverStartDate: coverStartDateAfterReportPeriod,
       coverEndDate,
       interestPercentage,
       dayCountBasis,
@@ -164,7 +163,6 @@ describe('getFixedFeeForFacility', () => {
     expect(calculateFixedFee).toHaveBeenCalledWith<[CalculateFixedFeeParams]>({
       utilisation,
       reportPeriod,
-      coverStartDate,
       coverEndDate,
       interestPercentage,
       dayCountBasis,
@@ -209,7 +207,6 @@ describe('getFixedFeeForFacility', () => {
     expect(calculateFixedFee).toHaveBeenCalledWith<[CalculateFixedFeeParams]>({
       utilisation,
       reportPeriod,
-      coverStartDate,
       coverEndDate: amendedCoverEndDate,
       interestPercentage,
       dayCountBasis,
