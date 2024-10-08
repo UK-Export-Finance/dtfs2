@@ -23,7 +23,7 @@ export const getNumberOfDaysInCoverPeriod = (coverStartDate: Date, coverEndDate:
  * @param dayCountBasis - The facility day count basis
  * @returns The fixed fee for the current report period
  */
-export const calculateFixedFee = ({
+export const calculateInitialFixedFee = ({
   utilisation,
   coverStartDate,
   coverEndDate,

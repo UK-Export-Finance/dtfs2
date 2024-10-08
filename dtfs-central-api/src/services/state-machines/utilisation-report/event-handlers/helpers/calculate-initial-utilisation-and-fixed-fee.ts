@@ -1,6 +1,6 @@
 import { calculateInitialUtilisation, isValidDate } from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
-import { calculateFixedFee } from './calculate-fixed-fee';
+import { calculateInitialFixedFee } from './calculate-initial-fixed-fee';
 
 export type RequiredParams = {
   value?: number | null;
@@ -8,6 +8,19 @@ export type RequiredParams = {
   dayCountBasis?: number | null;
   coverStartDate?: string | Date | null;
   coverEndDate?: string | Date | null;
+};
+
+/**
+ * parses date to the correct format
+ * date could be passed as string or different type of timestamp
+ * @param date
+ * @returns parsed date in correct format
+ */
+export const parseDate = (date: string | Date | number | null): Date => {
+  if (!date) {
+    throw new Error('Invalid date');
+  }
+  return new Date(date);
 };
 
 /**
@@ -54,10 +67,10 @@ export const calculateInitialUtilisationAndFixedFee = async (facilityId: string)
   }
 
   const utilisation = calculateInitialUtilisation(value);
-  const fixedFee = calculateFixedFee({
+  const fixedFee = calculateInitialFixedFee({
     utilisation,
-    coverStartDate: coverStartDate as Date,
-    coverEndDate: coverEndDate as Date,
+    coverStartDate: parseDate(coverStartDate),
+    coverEndDate: parseDate(coverEndDate),
     interestPercentage,
     dayCountBasis,
   });

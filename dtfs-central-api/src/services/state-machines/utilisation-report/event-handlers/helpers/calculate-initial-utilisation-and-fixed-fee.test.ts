@@ -1,10 +1,50 @@
 import { calculateInitialUtilisation } from '@ukef/dtfs2-common';
-import { calculateInitialUtilisationAndFixedFee, hasRequiredValues } from './calculate-initial-utilisation-and-fixed-fee';
+import { calculateInitialUtilisationAndFixedFee, parseDate, hasRequiredValues } from './calculate-initial-utilisation-and-fixed-fee';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { aTfmFacility } from '../../../../../../test-helpers';
-import { calculateFixedFee } from './calculate-fixed-fee';
+import { calculateInitialFixedFee } from './calculate-initial-fixed-fee';
 
 describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
+  describe('parseDate', () => {
+    describe('date passed as null', () => {
+      it('should return an error', () => {
+        expect(() => parseDate(null)).toThrow('Invalid date');
+      });
+    });
+
+    describe('date passed in a correct format', () => {
+      it('should return the formatted date', () => {
+        const date = new Date();
+
+        const result = parseDate(date);
+
+        expect(result).toEqual(date);
+      });
+    });
+
+    describe('date passed as a string', () => {
+      it('should return the formatted date', () => {
+        const date = new Date().toString();
+
+        const result = parseDate(date);
+        const expected = new Date(date);
+
+        expect(result).toEqual(expected);
+      });
+    });
+
+    describe('date passed in EPOCH', () => {
+      it('should return the formatted date', () => {
+        const date = new Date().getTime();
+
+        const result = parseDate(date);
+        const expected = new Date(date);
+
+        expect(result).toEqual(expected);
+      });
+    });
+  });
+
   describe('hasRequiredValues', () => {
     it('should return true if all values are present', () => {
       const params = {
@@ -161,10 +201,10 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
 
         const utilisation = calculateInitialUtilisation(value);
         const expected = {
-          fixedFee: calculateFixedFee({
+          fixedFee: calculateInitialFixedFee({
             utilisation,
-            coverStartDate: coverStartDate as Date,
-            coverEndDate: coverEndDate as Date,
+            coverStartDate: parseDate(coverStartDate),
+            coverEndDate: parseDate(coverEndDate),
             interestPercentage,
             dayCountBasis,
           }),

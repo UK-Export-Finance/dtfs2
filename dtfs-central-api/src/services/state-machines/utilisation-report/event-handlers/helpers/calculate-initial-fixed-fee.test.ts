@@ -1,5 +1,5 @@
 import { addDays } from 'date-fns';
-import { calculateFixedFee, getNumberOfDaysInCoverPeriod } from './calculate-fixed-fee';
+import { calculateInitialFixedFee, getNumberOfDaysInCoverPeriod } from './calculate-initial-fixed-fee';
 import { calculateFixedFeeFromDaysRemaining } from '../../../../../helpers/calculate-fixed-fee-from-days-remaining';
 
 describe('helpers/calculate-fixed-fee', () => {
@@ -24,7 +24,7 @@ describe('helpers/calculate-fixed-fee', () => {
       const coverStartDate = new Date();
       const coverEndDate = addDays(coverStartDate, 1);
 
-      const result = calculateFixedFee({
+      const result = calculateInitialFixedFee({
         utilisation,
         interestPercentage,
         dayCountBasis,

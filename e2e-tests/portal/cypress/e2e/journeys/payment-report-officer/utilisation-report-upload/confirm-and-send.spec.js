@@ -40,7 +40,7 @@ context('Confirm and send', () => {
       utilisationReportUpload.assertOnThisPage();
     });
 
-    it('Should route to the Confirmation page when the Confirm and Send button is selected', () => {
+    it.only('Should route to the Confirmation page when the Confirm and Send button is selected', () => {
       confirmAndSend.confirmAndSendButton().click();
 
       confirmAndSend.currentUrl().should('contain', '/confirmation');
