@@ -140,7 +140,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         },
       ];
 
-      const paymentDetailsViewModel: PaymentDetailsViewModel = [
+      const expectedPaymentDetailsViewModel: PaymentDetailsViewModel = [
         {
           payment: {
             id: 1,
@@ -165,7 +165,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         paymentReference: paymentDetailsPaymentReference,
       };
 
-      const paymentDetailsFiltersViewModel = {
+      const expectedPaymentDetailsFiltersViewModel = {
         ...paymentDetailsFilters,
         paymentCurrency: [
           {
@@ -224,11 +224,11 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         reportId: '1',
         premiumPayments,
         premiumPaymentsFilters,
-        paymentDetailsFilters: paymentDetailsFiltersViewModel,
-        keyingSheet: [],
-        paymentDetails: paymentDetailsViewModel,
+        paymentDetails: expectedPaymentDetailsViewModel,
+        paymentDetailsFilters: expectedPaymentDetailsFiltersViewModel,
         paymentDetailsFilterErrors,
         isPaymentDetailsFilterActive: true,
+        keyingSheet: [],
       });
     });
 
