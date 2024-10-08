@@ -1,4 +1,5 @@
 import {
+  AMENDMENT_STATUS,
   CURRENCY,
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
@@ -33,6 +34,12 @@ context('Users can view utilisation', () => {
         coverPercentage: 85,
         value: 200000,
       },
+      amendments: [
+        {
+          value: 300000,
+          status: AMENDMENT_STATUS.COMPLETED,
+        },
+      ],
     };
 
     cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, [tfmFacilityOne, tfmFacilityTwo]);
@@ -103,7 +110,7 @@ context('Users can view utilisation', () => {
       cy.assertText(cy.get('[data-cy="facility-id"]'), FACILITY_ID_TWO);
       cy.assertText(cy.get('[data-cy="exporter"]'), 'Exporter 2');
       cy.assertText(cy.get('[data-cy="base-currency"]'), CURRENCY.GBP);
-      cy.assertText(cy.get('[data-cy="value"]'), '200,000.00');
+      cy.assertText(cy.get('[data-cy="value"]'), '300,000.00');
       cy.assertText(cy.get('[data-cy="utilisation"]'), '199,999.99');
       cy.assertText(cy.get('[data-cy="cover-percentage"]'), '85%');
       // 85% of 199,999.99 is 169,999.9915
