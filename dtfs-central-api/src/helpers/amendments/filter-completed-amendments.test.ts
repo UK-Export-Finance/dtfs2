@@ -1,9 +1,9 @@
 import { AMENDMENT_STATUS, TfmFacilityAmendment } from '@ukef/dtfs2-common';
 import { aTfmFacilityAmendment } from '../../../test-helpers';
-import { getCompletedAmendments } from './completed-amendments';
+import { filterCompletedAmendments } from './filter-completed-amendments';
 
 describe('completed-amendments', () => {
-  describe('getCompletedAmendments', () => {
+  describe('filterCompletedAmendments', () => {
     it('should return all completed amendments', () => {
       // Arrange
       const aCompletedAmendment = { ...aTfmFacilityAmendment(), status: AMENDMENT_STATUS.COMPLETED };
@@ -14,14 +14,13 @@ describe('completed-amendments', () => {
         { ...aTfmFacilityAmendment(), status: AMENDMENT_STATUS.NOT_STARTED },
         anotherCompletedAmendment,
       ];
+      const expected = [aCompletedAmendment, anotherCompletedAmendment];
 
       // Act
-      const result = getCompletedAmendments(amendments);
+      const result = filterCompletedAmendments(amendments);
 
       // Assert
-      expect(result.length).toBe(2);
-      expect(result[0]).toBe(aCompletedAmendment);
-      expect(result[1]).toBe(anotherCompletedAmendment);
+      expect(result).toEqual(expected);
     });
   });
 });

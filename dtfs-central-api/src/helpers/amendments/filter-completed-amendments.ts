@@ -5,5 +5,5 @@ import { AMENDMENT_STATUS, TfmFacilityAmendment } from '@ukef/dtfs2-common';
  * @param tfmFacilityAmendments - amendments to filter
  * @returns completed amendments
  */
-export const getCompletedAmendments = (tfmFacilityAmendments: TfmFacilityAmendment[]): TfmFacilityAmendment[] =>
+export const filterCompletedAmendments = (tfmFacilityAmendments: TfmFacilityAmendment[]): TfmFacilityAmendment[] =>
   tfmFacilityAmendments.filter(({ status }) => status === AMENDMENT_STATUS.COMPLETED);

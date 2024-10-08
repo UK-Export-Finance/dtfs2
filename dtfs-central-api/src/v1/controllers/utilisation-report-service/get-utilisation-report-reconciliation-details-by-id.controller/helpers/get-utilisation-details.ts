@@ -1,19 +1,8 @@
 import { FeeRecordEntity, TfmFacility } from '@ukef/dtfs2-common';
-import Big from 'big.js';
 import { FeeRecordUtilisation } from '../../../../../types/fee-records';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../../../../../errors';
-import { getLatestCompletedAmendmentToFacilityValue } from '../../../../../helpers';
-
-/**
- * Calculates the exposure based on the current utilisation
- * @param utilisation - The current utilisation of the facility
- * @param coverPercentage - The cover percentage of the facility
- * @returns The exposure
- */
-export const calculateExposure = (utilisation: number, coverPercentage: number) => {
-  return new Big(utilisation).mul(coverPercentage).div(100).round(2).toNumber();
-};
+import { mapToFeeRecordUtilisation } from './map-to-fee-record-utilisation';
 
 /**
  * Retrieves and constructs utilisation data for the given fee records
@@ -31,37 +20,14 @@ export const getUtilisationDetails = async (feeRecords: FeeRecordEntity[]): Prom
     }
   });
 
-  return feeRecords.map(
-    ({
-      facilityId,
-      baseCurrency,
-      exporter,
-      facilityUtilisation: utilisation,
-      totalFeesAccruedForThePeriod,
-      totalFeesAccruedForThePeriodCurrency,
-      feesPaidToUkefForThePeriod,
-      feesPaidToUkefForThePeriodCurrency,
-    }) => {
-      const tfmFacility = tfmFacilitiesRecord[facilityId];
+  return feeRecords.map((feeRecord) => {
+    const { facilityId } = feeRecord;
+    const tfmFacility = tfmFacilitiesRecord[facilityId];
 
-      if (!tfmFacility) {
-        throw new NotFoundError(`Failed to find a tfm facility with ukef facility id '${facilityId}'`);
-      }
+    if (!tfmFacility) {
+      throw new NotFoundError(`Failed to find a tfm facility with ukef facility id '${facilityId}'`);
+    }
 
-      const { value, coverPercentage } = tfmFacility.facilitySnapshot;
-      const amendedValue = getLatestCompletedAmendmentToFacilityValue(tfmFacility);
-
-      return {
-        facilityId,
-        exporter,
-        baseCurrency,
-        value: amendedValue ?? value,
-        utilisation,
-        coverPercentage,
-        exposure: calculateExposure(utilisation, coverPercentage),
-        feesAccrued: { currency: totalFeesAccruedForThePeriodCurrency, amount: totalFeesAccruedForThePeriod },
-        feesPayable: { currency: feesPaidToUkefForThePeriodCurrency, amount: feesPaidToUkefForThePeriod },
-      };
-    },
-  );
+    return mapToFeeRecordUtilisation(feeRecord, tfmFacility);
+  });
 };

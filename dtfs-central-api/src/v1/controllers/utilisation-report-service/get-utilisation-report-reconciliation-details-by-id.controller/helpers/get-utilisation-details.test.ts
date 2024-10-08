@@ -1,47 +1,22 @@
 import { CURRENCY, FeeRecordEntityMockBuilder } from '@ukef/dtfs2-common';
-import { calculateExposure, getUtilisationDetails } from './get-utilisation-details';
+import { when } from 'jest-when';
+import { getUtilisationDetails } from './get-utilisation-details';
 import { aTfmFacility, aUtilisationReport } from '../../../../../../test-helpers';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../../../../../errors';
-import * as helpers from '../../../../../helpers';
+import { mapToFeeRecordUtilisation } from './map-to-fee-record-utilisation';
+import { FeeRecordUtilisation } from '../../../../../types/fee-records';
 
 jest.mock('../../../../../repositories/tfm-facilities-repo');
 jest.mock('../../../../../helpers');
+jest.mock('./map-to-fee-record-utilisation');
 
 describe('get-utilisation-details', () => {
-  describe('calculateExposure', () => {
-    it('returns the utilisation multiplied by the cover percentage as a decimal', () => {
-      // Arrange
-      const utilisation = 200;
-      const coverPercentage = 80;
-
-      // Act
-      const exposure = calculateExposure(utilisation, coverPercentage);
-
-      // Assert
-      // 200 * 80 / 100 = 160
-      expect(exposure).toEqual(160);
-    });
-
-    it('rounds the exposure to two decimal places', () => {
-      // Arrange
-      const utilisation = 500000.99;
-      const coverPercentage = 85.55;
-
-      // Act
-      const exposure = calculateExposure(utilisation, coverPercentage);
-
-      // Assert
-      // 500000.99 * 85.55 / 100 = 427750.8469... = 427750.85 to 2.d.p
-      expect(exposure).toEqual(427750.85);
-    });
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 
   describe('getUtilisationDetails', () => {
-    afterEach(() => {
-      jest.resetAllMocks();
-    });
-
     it('throws if no tfm facility is found for one of the fee records', async () => {
       // Arrange
       const facilityId = '12345678';
@@ -54,181 +29,53 @@ describe('get-utilisation-details', () => {
       );
     });
 
-    it('retrieves the cover percentage from the facility snapshot', async () => {
+    it('should map each fee record a utilisation details item', async () => {
       // Arrange
-      const coverPercentage = 80;
-      const facilityId = '12345678';
+      const firstFacilityId = '11111111';
+      const secondFacilityId = '22222222';
+      const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withId(1).withFacilityId(firstFacilityId).build();
+      const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withId(2).withFacilityId(secondFacilityId).build();
 
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFacilityId(facilityId).build();
+      const firstTfmFacility = aTfmFacility();
+      firstTfmFacility.facilitySnapshot.ukefFacilityId = firstFacilityId;
+      const secondTfmFacility = aTfmFacility();
+      secondTfmFacility.facilitySnapshot.ukefFacilityId = secondFacilityId;
 
-      const tfmFacility = aTfmFacility();
-      tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
-      tfmFacility.facilitySnapshot.coverPercentage = coverPercentage;
+      jest.spyOn(TfmFacilitiesRepo, 'findByUkefFacilityIds').mockResolvedValue([firstTfmFacility, secondTfmFacility]);
 
-      const findByUkefFacilityIdsSpy = jest.spyOn(TfmFacilitiesRepo, 'findByUkefFacilityIds').mockResolvedValue([tfmFacility]);
+      const expected: FeeRecordUtilisation[] = [
+        {
+          facilityId: '12345',
+          exporter: 'first exporter',
+          baseCurrency: CURRENCY.GBP,
+          value: 100,
+          utilisation: 200,
+          exposure: 300,
+          coverPercentage: 80,
+          feesAccrued: { currency: CURRENCY.EUR, amount: 500 },
+          feesPayable: { currency: CURRENCY.JPY, amount: 600 },
+        },
+        {
+          facilityId: '678910',
+          exporter: 'second exporter',
+          baseCurrency: CURRENCY.USD,
+          value: 1000,
+          utilisation: 2000,
+          exposure: 3000,
+          coverPercentage: 85,
+          feesAccrued: { currency: CURRENCY.USD, amount: 5000 },
+          feesPayable: { currency: CURRENCY.USD, amount: 6000 },
+        },
+      ];
+      when(mapToFeeRecordUtilisation).calledWith(firstFeeRecord, firstTfmFacility).mockReturnValue(expected[0]);
+      when(mapToFeeRecordUtilisation).calledWith(secondFeeRecord, secondTfmFacility).mockReturnValue(expected[1]);
 
       // Act
-      const utilisationDetails = await getUtilisationDetails([feeRecord]);
+      const utilisationDetails = await getUtilisationDetails([firstFeeRecord, secondFeeRecord]);
 
       // Assert
-      expect(findByUkefFacilityIdsSpy).toHaveBeenCalledTimes(1);
-      expect(findByUkefFacilityIdsSpy).toHaveBeenCalledWith([facilityId]);
-      expect(utilisationDetails.at(0)?.coverPercentage).toEqual(coverPercentage);
+      expect(utilisationDetails).toHaveLength(2);
+      expect(utilisationDetails).toEqual(expected);
     });
-
-    it('retrieves the value from the facility snapshot when there are no amendments to the value', async () => {
-      // Arrange
-      const value = 200000;
-      const facilityId = '12345678';
-
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFacilityId(facilityId).build();
-
-      const tfmFacility = aTfmFacility();
-      tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
-      tfmFacility.facilitySnapshot.value = value;
-
-      const findByUkefFacilityIdsSpy = jest.spyOn(TfmFacilitiesRepo, 'findByUkefFacilityIds').mockResolvedValue([tfmFacility]);
-      const getLatestCompletedAmendmentFacilityValueSpy = jest.spyOn(helpers, 'getLatestCompletedAmendmentToFacilityValue').mockReturnValue(undefined);
-
-      // Act
-      const utilisationDetails = await getUtilisationDetails([feeRecord]);
-
-      // Assert
-      expect(findByUkefFacilityIdsSpy).toHaveBeenCalledTimes(1);
-      expect(findByUkefFacilityIdsSpy).toHaveBeenCalledWith([facilityId]);
-      expect(getLatestCompletedAmendmentFacilityValueSpy).toHaveBeenCalledTimes(1);
-      expect(getLatestCompletedAmendmentFacilityValueSpy).toHaveBeenCalledWith(tfmFacility);
-      expect(utilisationDetails.at(0)?.value).toEqual(value);
-    });
-
-    it('retrieves the value from the facility snapshot when there is an amendement to the value', async () => {
-      // Arrange
-      const originalValue = 200000;
-      const amendedValue = 300000;
-      const facilityId = '12345678';
-
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFacilityId(facilityId).build();
-
-      const tfmFacility = aTfmFacility();
-      tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
-      tfmFacility.facilitySnapshot.value = originalValue;
-
-      const findByUkefFacilityIdsSpy = jest.spyOn(TfmFacilitiesRepo, 'findByUkefFacilityIds').mockResolvedValue([tfmFacility]);
-      const getLatestCompletedAmendmentFacilityValueSpy = jest.spyOn(helpers, 'getLatestCompletedAmendmentToFacilityValue').mockReturnValue(amendedValue);
-
-      // Act
-      const utilisationDetails = await getUtilisationDetails([feeRecord]);
-
-      // Assert
-      expect(findByUkefFacilityIdsSpy).toHaveBeenCalledTimes(1);
-      expect(findByUkefFacilityIdsSpy).toHaveBeenCalledWith([facilityId]);
-      expect(getLatestCompletedAmendmentFacilityValueSpy).toHaveBeenCalledTimes(1);
-      expect(getLatestCompletedAmendmentFacilityValueSpy).toHaveBeenCalledWith(tfmFacility);
-      expect(utilisationDetails.at(0)?.value).toEqual(amendedValue);
-    });
-
-    it('calculates the exposure from the utilisation and cover percentage', async () => {
-      // Arrange
-      const facilityId = '12345678';
-      const utilisation = 1000;
-      const coverPercentage = 60;
-      // The expected exposure = 1000 * 60 / 100 = 600
-      const expectedExposure = 600;
-
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFacilityId(facilityId).withFacilityUtilisation(utilisation).build();
-
-      const tfmFacility = aTfmFacility();
-      tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
-      tfmFacility.facilitySnapshot.coverPercentage = coverPercentage;
-
-      jest.spyOn(TfmFacilitiesRepo, 'findByUkefFacilityIds').mockResolvedValue([tfmFacility]);
-
-      // Act
-      const utilisationDetails = await getUtilisationDetails([feeRecord]);
-
-      // Assert
-      expect(utilisationDetails.at(0)?.exposure).toEqual(expectedExposure);
-    });
-
-    it('sets the facility id, exporter, base currency and utilisation to the corresponding fields on the fee record', async () => {
-      // Arrange
-      const facilityId = '12345678';
-      const exporter = 'Company';
-      const baseCurrency = CURRENCY.EUR;
-      const utilisation = 1000;
-
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-        .withFacilityId(facilityId)
-        .withFacilityUtilisation(utilisation)
-        .withBaseCurrency(baseCurrency)
-        .withExporter(exporter)
-        .build();
-
-      const tfmFacility = aTfmFacility();
-      tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
-
-      jest.spyOn(TfmFacilitiesRepo, 'findByUkefFacilityIds').mockResolvedValue([tfmFacility]);
-
-      // Act
-      const utilisationDetails = await getUtilisationDetails([feeRecord]);
-
-      // Assert
-      expect(utilisationDetails.at(0)?.facilityId).toEqual(facilityId);
-      expect(utilisationDetails.at(0)?.exporter).toEqual(exporter);
-      expect(utilisationDetails.at(0)?.baseCurrency).toEqual(baseCurrency);
-      expect(utilisationDetails.at(0)?.utilisation).toEqual(utilisation);
-    });
-
-    it("sets fees accrued to the fee record's total fees accrued for the period", async () => {
-      // Arrange
-      const facilityId = '12345678';
-      const totalFeesAccruedForThePeriod = 123.45;
-      const totalFeesAccruedForThePeriodCurrency = CURRENCY.EUR;
-
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-        .withFacilityId(facilityId)
-        .withTotalFeesAccruedForThePeriod(totalFeesAccruedForThePeriod)
-        .withTotalFeesAccruedForThePeriodCurrency(totalFeesAccruedForThePeriodCurrency)
-        .withBaseCurrency(CURRENCY.GBP)
-        .build();
-
-      const tfmFacility = aTfmFacility();
-      tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
-
-      jest.spyOn(TfmFacilitiesRepo, 'findByUkefFacilityIds').mockResolvedValue([tfmFacility]);
-
-      // Act
-      const utilisationDetails = await getUtilisationDetails([feeRecord]);
-
-      // Assert
-      expect(utilisationDetails.at(0)?.feesAccrued).toEqual({ currency: totalFeesAccruedForThePeriodCurrency, amount: totalFeesAccruedForThePeriod });
-    });
-
-    it("sets fees payable to the fee record's fees paid to ukef for the period", async () => {
-      // Arrange
-      const facilityId = '12345678';
-      const feesPaidToUkefForThePeriod = 4444.44;
-      const feesPaidToUkefForThePeriodCurrency = CURRENCY.JPY;
-
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-        .withFacilityId(facilityId)
-        .withFeesPaidToUkefForThePeriod(feesPaidToUkefForThePeriod)
-        .withFeesPaidToUkefForThePeriodCurrency(feesPaidToUkefForThePeriodCurrency)
-        .withBaseCurrency(CURRENCY.GBP)
-        .build();
-
-      const tfmFacility = aTfmFacility();
-      tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
-
-      jest.spyOn(TfmFacilitiesRepo, 'findByUkefFacilityIds').mockResolvedValue([tfmFacility]);
-
-      // Act
-      const utilisationDetails = await getUtilisationDetails([feeRecord]);
-
-      // Assert
-      expect(utilisationDetails.at(0)?.feesPayable).toEqual({ currency: feesPaidToUkefForThePeriodCurrency, amount: feesPaidToUkefForThePeriod });
-    });
-
-    it('returns one utilisation data object for each fee record', () => {});
   });
 });

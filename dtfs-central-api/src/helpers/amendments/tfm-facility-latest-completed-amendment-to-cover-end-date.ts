@@ -1,7 +1,7 @@
 import { TfmFacility } from '@ukef/dtfs2-common';
 import orderBy from 'lodash.orderby';
 import { convertTimestampToDate } from '../convert-timestamp-to-date';
-import { getCompletedAmendments } from './completed-amendments';
+import { filterCompletedAmendments } from './filter-completed-amendments';
 
 /**
  * Get the latest completed amendment cover end date
@@ -14,7 +14,7 @@ export const getLatestCompletedAmendmentCoverEndDate = (tfmFacility: TfmFacility
     return undefined;
   }
 
-  const completedAmendments = getCompletedAmendments(amendments);
+  const completedAmendments = filterCompletedAmendments(amendments);
 
   const latestAmendmentWithDefinedCoverEndDate = orderBy(completedAmendments, ['updatedAt'], ['desc']).find(({ coverEndDate }) => coverEndDate);
 

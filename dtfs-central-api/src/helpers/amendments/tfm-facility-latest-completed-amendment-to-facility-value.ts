@@ -1,6 +1,6 @@
 import { TfmFacility } from '@ukef/dtfs2-common';
 import orderBy from 'lodash.orderby';
-import { getCompletedAmendments } from './completed-amendments';
+import { filterCompletedAmendments } from './filter-completed-amendments';
 
 /**
  * Get the latest completed facility value amendment
@@ -13,9 +13,9 @@ export const getLatestCompletedAmendmentToFacilityValue = (tfmFacility: TfmFacil
     return undefined;
   }
 
-  const completedAmendments = getCompletedAmendments(amendments);
+  const completedAmendments = filterCompletedAmendments(amendments);
 
-  const latestAmendmentWithDefinedFacilityValue = orderBy(completedAmendments, ['updatedAt'], ['desc']).find(({ value }) => value);
+  const latestAmendmentWithFacilityValue = orderBy(completedAmendments, ['updatedAt'], ['desc']).find(({ value }) => value);
 
-  return latestAmendmentWithDefinedFacilityValue?.value ?? undefined;
+  return latestAmendmentWithFacilityValue?.value ?? undefined;
 };
