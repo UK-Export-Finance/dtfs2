@@ -40,7 +40,7 @@ export const getReasonForCancelling = async (req: GetReasonForCancellingRequest,
       ukefDealId: deal.dealSnapshot.details.ukefDealId,
       dealId: _id,
       reasonForCancelling: cancellation?.reason,
-      backUrl: status === 'change' ? `/case/${_id}/cancellation/check-details` : `/case/${_id}/deal`,
+      previousPage: status === 'change' ? `/case/${_id}/cancellation/check-details` : `/case/${_id}/deal`,
     };
     return res.render('case/cancellation/reason-for-cancelling.njk', reasonForCancellingViewModel);
   } catch (error) {
@@ -84,7 +84,7 @@ export const postReasonForCancelling = async (req: PostReasonForCancellingReques
         dealId: _id,
         errors: validationErrors,
         reasonForCancelling: reason,
-        backUrl: status === 'change' ? `/case/${_id}/cancellation/check-details` : `/case/${_id}/deal`,
+        previousPage: status === 'change' ? `/case/${_id}/cancellation/check-details` : `/case/${_id}/deal`,
       };
 
       return res.render('case/cancellation/reason-for-cancelling.njk', reasonForCancellingViewModel);

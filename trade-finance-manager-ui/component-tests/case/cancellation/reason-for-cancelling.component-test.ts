@@ -32,14 +32,14 @@ describe(page, () => {
   it('should render back link button with the passed in URL', () => {
     // Arrange
     const dealId = 'dealId';
-    const backUrl = 'testUrl';
-    const reasonForCancellingViewModel: ReasonForCancellingViewModel = { ...aReasonForCancellingViewModel(), dealId, backUrl };
+    const previousPage = 'testUrl';
+    const reasonForCancellingViewModel: ReasonForCancellingViewModel = { ...aReasonForCancellingViewModel(), dealId, previousPage };
     // Act
     const wrapper = render(reasonForCancellingViewModel);
 
     // Assert
     wrapper.expectElement('[data-cy="back-link"]').toExist();
-    wrapper.expectLink('[data-cy="back-link"]').toLinkTo(backUrl, 'Back');
+    wrapper.expectLink('[data-cy="back-link"]').toLinkTo(previousPage, 'Back');
   });
 
   it('should not render error summary when no errors', () => {

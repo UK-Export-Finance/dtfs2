@@ -104,7 +104,7 @@ describe('getReasonForCancelling', () => {
         ukefDealId,
         dealId,
         reasonForCancelling: reason,
-        backUrl: defaultBackUrl,
+        previousPage: defaultBackUrl,
       });
     });
 
@@ -134,7 +134,7 @@ describe('getReasonForCancelling', () => {
         ukefDealId,
         dealId,
         reasonForCancelling: reason,
-        backUrl: `/case/${dealId}/cancellation/check-details`,
+        previousPage: `/case/${dealId}/cancellation/check-details`,
       });
     });
   });

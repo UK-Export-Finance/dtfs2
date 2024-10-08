@@ -14,7 +14,7 @@ export type BankRequestDateValidationViewModel = {
 export type BankRequestDateViewModel = BaseViewModel & {
   ukefDealId: string;
   dealId: string;
-  backUrl: string;
+  previousPage: string;
   day?: string;
   month?: string;
   year?: string;

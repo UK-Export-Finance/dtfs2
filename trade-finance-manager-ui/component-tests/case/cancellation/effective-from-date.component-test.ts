@@ -34,15 +34,15 @@ describe(page, () => {
   it('should render back link button with the passed in URL', () => {
     // Arrange
     const dealId = 'dealId';
-    const backUrl = 'testUrl';
-    const effectiveFromDateViewModel: EffectiveFromDateViewModel = { ...aEffectiveFromDateViewModel(), dealId, backUrl };
+    const previousPage = 'testUrl';
+    const effectiveFromDateViewModel: EffectiveFromDateViewModel = { ...aEffectiveFromDateViewModel(), dealId, previousPage };
 
     // Act
     const wrapper = render(effectiveFromDateViewModel);
 
     // Assert
     wrapper.expectElement('[data-cy="back-link"]').toExist();
-    wrapper.expectLink('[data-cy="back-link"]').toLinkTo(backUrl, 'Back');
+    wrapper.expectLink('[data-cy="back-link"]').toLinkTo(previousPage, 'Back');
   });
 
   it('should render date input fields', () => {

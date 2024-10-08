@@ -106,7 +106,7 @@ describe('getBankRequestDate', () => {
         day: '',
         month: '',
         year: '',
-        backUrl: defaultBackUrl,
+        previousPage: defaultBackUrl,
       });
     });
 
@@ -137,7 +137,7 @@ describe('getBankRequestDate', () => {
         day: format(existingBankRequestDate, 'd'),
         month: format(existingBankRequestDate, 'M'),
         year: format(existingBankRequestDate, 'yyyy'),
-        backUrl: defaultBackUrl,
+        previousPage: defaultBackUrl,
       });
     });
 
@@ -169,7 +169,7 @@ describe('getBankRequestDate', () => {
         day: format(existingBankRequestDate, 'd'),
         month: format(existingBankRequestDate, 'M'),
         year: format(existingBankRequestDate, 'yyyy'),
-        backUrl: `/case/${dealId}/cancellation/check-details`,
+        previousPage: `/case/${dealId}/cancellation/check-details`,
       });
     });
   });

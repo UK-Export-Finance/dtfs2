@@ -7,5 +7,5 @@ export const aBankRequestDateViewModel = (): BankRequestDateViewModel => ({
   activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
   ukefDealId: 'testUkefId',
   dealId: 'testId',
-  backUrl: 'testBackUrl',
+  previousPage: 'testBackUrl',
 });

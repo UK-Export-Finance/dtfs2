@@ -52,7 +52,7 @@ export const getEffectiveFromDate = async (req: GetEffectiveFromDateRequest, res
       day,
       month,
       year,
-      backUrl: status === 'change' ? `/case/${_id}/cancellation/check-details` : `/case/${_id}/cancellation/bank-request-date`,
+      previousPage: status === 'change' ? `/case/${_id}/cancellation/check-details` : `/case/${_id}/cancellation/bank-request-date`,
     };
     return res.render('case/cancellation/effective-from-date.njk', effectiveFromDateViewModel);
   } catch (error) {
@@ -96,7 +96,7 @@ export const postEffectiveFromDate = async (req: PostEffectiveFromDateRequest, r
         month,
         year,
         errors: validationErrors,
-        backUrl: status === 'change' ? `/case/${_id}/cancellation/check-details` : `/case/${_id}/cancellation/bank-request-date`,
+        previousPage: status === 'change' ? `/case/${_id}/cancellation/check-details` : `/case/${_id}/cancellation/bank-request-date`,
       };
 
       return res.render('case/cancellation/effective-from-date.njk', effectiveFromDateViewModel);

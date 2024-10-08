@@ -106,7 +106,7 @@ describe('getEffectiveFromDate', () => {
         day: '',
         month: '',
         year: '',
-        backUrl: defaultBackUrl,
+        previousPage: defaultBackUrl,
       });
     });
 
@@ -137,7 +137,7 @@ describe('getEffectiveFromDate', () => {
         day: format(existingEffectiveFromDate, 'd'),
         month: format(existingEffectiveFromDate, 'M'),
         year: format(existingEffectiveFromDate, 'yyyy'),
-        backUrl: defaultBackUrl,
+        previousPage: defaultBackUrl,
       });
     });
 
@@ -169,7 +169,7 @@ describe('getEffectiveFromDate', () => {
         day: format(existingEffectiveFromDate, 'd'),
         month: format(existingEffectiveFromDate, 'M'),
         year: format(existingEffectiveFromDate, 'yyyy'),
-        backUrl: `/case/${dealId}/cancellation/check-details`,
+        previousPage: `/case/${dealId}/cancellation/check-details`,
       });
     });
   });

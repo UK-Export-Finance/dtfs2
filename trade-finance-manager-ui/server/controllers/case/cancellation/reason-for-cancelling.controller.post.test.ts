@@ -157,7 +157,7 @@ describe('postReasonForCancelling', () => {
           dealId,
           errors: validationErrors,
           reasonForCancelling,
-          backUrl: defaultBackUrl,
+          previousPage: defaultBackUrl,
         });
       });
 
@@ -188,7 +188,7 @@ describe('postReasonForCancelling', () => {
           dealId,
           errors: validationErrors,
           reasonForCancelling,
-          backUrl: `/case/${dealId}/cancellation/check-details`,
+          previousPage: `/case/${dealId}/cancellation/check-details`,
         });
       });
 

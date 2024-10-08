@@ -34,15 +34,15 @@ describe(page, () => {
   it('should render back link button linking to the passed in URL', () => {
     // Arrange
     const dealId = 'dealId';
-    const backUrl = 'testUrl';
-    const bankRequestDateViewModel: BankRequestDateViewModel = { ...aBankRequestDateViewModel(), backUrl, dealId };
+    const previousPage = 'testUrl';
+    const bankRequestDateViewModel: BankRequestDateViewModel = { ...aBankRequestDateViewModel(), previousPage, dealId };
 
     // Act
     const wrapper = render(bankRequestDateViewModel);
 
     // Assert
     wrapper.expectElement('[data-cy="back-link"]').toExist();
-    wrapper.expectLink('[data-cy="back-link"]').toLinkTo(backUrl, 'Back');
+    wrapper.expectLink('[data-cy="back-link"]').toLinkTo(previousPage, 'Back');
   });
 
   it('should render date input fields', () => {

@@ -52,7 +52,7 @@ export const getBankRequestDate = async (req: GetBankRequestDateRequest, res: Re
       day,
       month,
       year,
-      backUrl: status === 'change' ? `/case/${_id}/cancellation/check-details` : `/case/${_id}/cancellation/reason`,
+      previousPage: status === 'change' ? `/case/${_id}/cancellation/check-details` : `/case/${_id}/cancellation/reason`,
     };
     return res.render('case/cancellation/bank-request-date.njk', bankRequestDateViewModel);
   } catch (error) {
@@ -96,7 +96,7 @@ export const postBankRequestDate = async (req: PostBankRequestDateRequest, res: 
         month,
         year,
         errors: validationErrors,
-        backUrl: status === 'change' ? `/case/${_id}/cancellation/check-details` : `/case/${_id}/cancellation/reason`,
+        previousPage: status === 'change' ? `/case/${_id}/cancellation/check-details` : `/case/${_id}/cancellation/reason`,
       };
       return res.render('case/cancellation/bank-request-date.njk', bankRequestDateViewModel);
     }

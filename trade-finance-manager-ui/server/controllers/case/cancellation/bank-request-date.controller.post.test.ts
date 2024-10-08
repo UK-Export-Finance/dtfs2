@@ -152,7 +152,7 @@ describe('postBankRequestDate', () => {
           day,
           month,
           year,
-          backUrl: defaultBackUrl,
+          previousPage: defaultBackUrl,
         });
       });
 
@@ -182,7 +182,7 @@ describe('postBankRequestDate', () => {
           day,
           month,
           year,
-          backUrl: `/case/${dealId}/cancellation/check-details`,
+          previousPage: `/case/${dealId}/cancellation/check-details`,
         });
       });
 
