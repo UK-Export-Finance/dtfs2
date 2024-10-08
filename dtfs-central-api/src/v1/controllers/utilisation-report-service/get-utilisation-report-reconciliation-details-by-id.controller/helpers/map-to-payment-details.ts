@@ -1,4 +1,4 @@
-import { getFeeRecordPaymentEntityGroupReconciliationData } from '../../../../../helpers';
+import { getFeeRecordPaymentEntityGroupReconciliationData, getFeeRecordPaymentEntityGroupStatus } from '../../../../../helpers';
 import { mapPaymentEntityToPayment } from '../../../../../mapping/payment-mapper';
 import { mapFeeRecordEntityToFeeRecord } from '../../../../../mapping/fee-record-mapper';
 import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-payment-entity-group';
@@ -22,6 +22,8 @@ export const mapToPaymentDetails = async (feeRecordPaymentEntityGroups: FeeRecor
         throw new Error('Each fee record payment entity group must have at most one payment.');
       }
 
+      const groupStatus = getFeeRecordPaymentEntityGroupStatus(group);
+
       const groupReconciliationData = await getFeeRecordPaymentEntityGroupReconciliationData(group);
 
       const feeRecords = group.feeRecords.map(mapFeeRecordEntityToFeeRecord);
@@ -32,6 +34,7 @@ export const mapToPaymentDetails = async (feeRecordPaymentEntityGroups: FeeRecor
         ...groupReconciliationData,
         feeRecords,
         payment,
+        status: groupStatus,
       };
     }),
   );

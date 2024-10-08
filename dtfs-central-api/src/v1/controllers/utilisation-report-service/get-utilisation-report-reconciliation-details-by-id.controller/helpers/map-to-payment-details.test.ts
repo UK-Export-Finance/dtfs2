@@ -14,6 +14,7 @@ import { mapToPaymentDetails } from './map-to-payment-details';
 
 describe('mapToPaymentDetails', () => {
   const findTfmUserSpy = jest.spyOn(TfmUsersRepo, 'findOneUserById');
+  const getFeeRecordPaymentEntityGroupStatusSpy = jest.spyOn(helpersModule, 'getFeeRecordPaymentEntityGroupStatus');
   const getFeeRecordPaymentEntityGroupReconciliationDataSpy = jest.spyOn(helpersModule, 'getFeeRecordPaymentEntityGroupReconciliationData');
 
   beforeEach(() => {
@@ -23,6 +24,36 @@ describe('mapToPaymentDetails', () => {
 
   afterEach(() => {
     jest.resetAllMocks();
+  });
+
+  it('populates each of the groups with their respective group status', async () => {
+    // Arrange
+    const firstGroup: FeeRecordPaymentEntityGroup = {
+      feeRecords: [FeeRecordEntityMockBuilder.forReport(utilisationReport()).withStatus(FEE_RECORD_STATUS.TO_DO).build()],
+      payments: [PaymentEntityMockBuilder.forCurrency('GBP').build()],
+    };
+    const secondGroup: FeeRecordPaymentEntityGroup = {
+      feeRecords: [FeeRecordEntityMockBuilder.forReport(utilisationReport()).withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH).build()],
+      payments: [PaymentEntityMockBuilder.forCurrency('GBP').build()],
+    };
+    const thirdGroup: FeeRecordPaymentEntityGroup = {
+      feeRecords: [FeeRecordEntityMockBuilder.forReport(utilisationReport()).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build()],
+      payments: [PaymentEntityMockBuilder.forCurrency('GBP').build()],
+    };
+    const groups = [firstGroup, secondGroup, thirdGroup];
+
+    when(getFeeRecordPaymentEntityGroupStatusSpy).calledWith(firstGroup).mockReturnValue(FEE_RECORD_STATUS.TO_DO);
+    when(getFeeRecordPaymentEntityGroupStatusSpy).calledWith(secondGroup).mockReturnValue(FEE_RECORD_STATUS.DOES_NOT_MATCH);
+    when(getFeeRecordPaymentEntityGroupStatusSpy).calledWith(thirdGroup).mockReturnValue(FEE_RECORD_STATUS.READY_TO_KEY);
+
+    // Act
+    const result = await mapToPaymentDetails(groups);
+
+    // Assert
+    expect(result).toHaveLength(3);
+    expect(result[0].status).toEqual(FEE_RECORD_STATUS.TO_DO);
+    expect(result[1].status).toEqual(FEE_RECORD_STATUS.DOES_NOT_MATCH);
+    expect(result[2].status).toEqual(FEE_RECORD_STATUS.READY_TO_KEY);
   });
 
   describe('when a group has one payment and a multiple fee records', () => {

@@ -72,6 +72,7 @@ export type PremiumPaymentsGroup = {
 export type PaymentDetails = {
   feeRecords: FeeRecord[];
   payment: Payment;
+  status: FeeRecordStatus;
   reconciledByUser?: FeeRecordReconciledByUser;
   dateReconciled?: Date;
 };

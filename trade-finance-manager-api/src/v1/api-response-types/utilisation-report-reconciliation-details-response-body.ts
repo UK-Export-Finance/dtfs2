@@ -22,6 +22,7 @@ type PremiumPaymentsGroup = {
 type PaymentDetails = {
   feeRecords: FeeRecord[];
   payment: Payment;
+  status: FeeRecordStatus;
   reconciledByUser?: {
     firstName: string;
     lastName: string;
