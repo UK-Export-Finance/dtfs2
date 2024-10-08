@@ -5,7 +5,7 @@ import { REGEX } from '../../../constants';
 /**
  * Selector for the premium payments facility ID filter input element
  */
-const FACILITY_ID_INPUT_ID = '#premium-payments-facility-id-filter';
+export const FACILITY_ID_INPUT_ID = '#premium-payments-facility-id-filter';
 
 /**
  * Validates the premium payments facility ID query parameter.

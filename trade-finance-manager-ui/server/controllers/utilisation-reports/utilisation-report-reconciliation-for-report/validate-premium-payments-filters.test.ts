@@ -1,4 +1,4 @@
-import { validateFacilityIdQuery } from './validate-premium-payments-filters';
+import { FACILITY_ID_INPUT_ID, validateFacilityIdQuery } from './validate-premium-payments-filters';
 
 describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-report/validate-premium-payments-filters', () => {
   describe('validate-facility-id-query', () => {
@@ -34,7 +34,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Assert
       expect(filterError).toEqual({
         text: 'Enter a facility ID',
-        href: '#premium-payments-facility-id-filter',
+        href: FACILITY_ID_INPUT_ID,
       });
     });
 
@@ -45,7 +45,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Assert
       expect(filterError).toEqual({
         text: 'Facility ID must be a number',
-        href: '#premium-payments-facility-id-filter',
+        href: FACILITY_ID_INPUT_ID,
       });
     });
 
@@ -56,7 +56,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Assert
       expect(filterError).toEqual({
         text: 'Facility ID must be between 4 and 10 characters',
-        href: '#premium-payments-facility-id-filter',
+        href: FACILITY_ID_INPUT_ID,
       });
     });
 
