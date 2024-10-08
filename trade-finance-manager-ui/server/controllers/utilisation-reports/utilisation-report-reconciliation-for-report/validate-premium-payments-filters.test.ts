@@ -1,6 +1,6 @@
-import { validateFacilityIdQuery } from './validate-facility-id-query';
+import { validateFacilityIdQuery } from './validate-premium-payments-filters';
 
-describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-report/validate-facility-id-query', () => {
+describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-report/validate-premium-payments-filters', () => {
   describe('validate-facility-id-query', () => {
     it('returns no error when no query params in original URL', () => {
       // Arrange
@@ -27,7 +27,6 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
     it('returns error when facilityIdQuery param provided with empty value', () => {
       // Arrange
       const facilityIdQuery = undefined;
-      const facilityIdInputId = '#premium-payments-facility-id-filter';
 
       // Act
       const filterError = validateFacilityIdQuery('?premiumPaymentsFacilityId=', facilityIdQuery);
@@ -35,35 +34,29 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Assert
       expect(filterError).toEqual({
         text: 'Enter a facility ID',
-        href: facilityIdInputId,
+        href: '#premium-payments-facility-id-filter',
       });
     });
 
     it.each(['abcd', 'c3c3c', '?????'])('returns error when facilityIdQuery %p is not a number', (facilityIdQuery) => {
-      // Arrange
-      const facilityIdInputId = '#premium-payments-facility-id-filter';
-
       // Act
       const filterError = validateFacilityIdQuery('?premiumPaymentsFacilityId', facilityIdQuery);
 
       // Assert
       expect(filterError).toEqual({
         text: 'Facility ID must be a number',
-        href: facilityIdInputId,
+        href: '#premium-payments-facility-id-filter',
       });
     });
 
     it.each(['123', '12345678901'])('returns error when facilityIdQuery %p is not within 4 and 10 characters', (facilityIdQuery) => {
-      // Arrange
-      const facilityIdInputId = '#premium-payments-facility-id-filter';
-
       // Act
       const filterError = validateFacilityIdQuery('?premiumPaymentsFacilityId', facilityIdQuery);
 
       // Assert
       expect(filterError).toEqual({
         text: 'Facility ID must be between 4 and 10 characters',
-        href: facilityIdInputId,
+        href: '#premium-payments-facility-id-filter',
       });
     });
 

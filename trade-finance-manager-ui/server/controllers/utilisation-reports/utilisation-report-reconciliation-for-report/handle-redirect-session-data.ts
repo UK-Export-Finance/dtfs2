@@ -40,6 +40,7 @@ export const handleRedirectSessionData = ({
 
   if (!addPaymentErrorKey) {
     return {
+      premiumPaymentsTableDataError: undefined,
       selectedFeeRecordIds: new Set(),
     };
   }

@@ -6,13 +6,14 @@ import {
   ReportPeriod,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
+  ValidatedPaymentDetailsFilters,
 } from '@ukef/dtfs2-common';
 import { when } from 'jest-when';
 import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-payment-entity-group';
 import { NotFoundError } from '../../../../../errors';
 import { getFeeRecordPaymentEntityGroups } from '../../../../../helpers';
 import { getBankNameById } from '../../../../../repositories/banks-repo';
-import { UtilisationReportReconciliationDetails, ValidatedPaymentDetailsFilters } from '../../../../../types/utilisation-reports';
+import { UtilisationReportReconciliationDetails } from '../../../../../types/utilisation-reports';
 import * as filterFeeRecordsModule from './filter-fee-record-payment-entity-groups';
 import { getKeyingSheetForReportId } from './get-keying-sheet-for-report-id';
 import * as getUtilisationReportReconciliationDetailsModule from './get-utilisation-report-reconciliation-details';
@@ -252,7 +253,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
 
         const paymentDetailsFilters: ValidatedPaymentDetailsFilters = {
           facilityId: '12345678',
-          paymentCurrency: 'GBP',
+          paymentCurrency: CURRENCY.GBP,
           paymentReference: 'REF123',
         };
 

@@ -160,39 +160,57 @@
 {% endset %}
 
 {% set paymentDetailsHtml %}
+  {% if paymentDetailsFilterErrors.errorSummary | length %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: paymentDetailsFilterErrors.errorSummary,
+      attributes: {
+        'data-cy': 'payment-details-error-summary'
+      }
+    }) }}
+  {% endif %}
+
   <h2 class="govuk-heading-l" data-cy="payment-details-heading">Payment details</h2>
 
-  {% if paymentDetails.length === 0 %}
-    <p class="govuk-body">Payment details will be displayed when payments have been entered on the premium payments tab.</p>
+  {% if paymentDetails.length === 0 and isPaymentDetailsFilterActive === false %}
+    <p class="govuk-body" data-cy="payment-details-no-payments-text">Payment details will be displayed when payments have been entered on the premium payments tab.</p>
   {% else %}
     <div class="moj-filter-layout">
 
       {{ paymentDetailsFiltersPanel.render({
-        filters: filters,
-        selectedFilters: selectedFilters,
-        paymentReference: paymentReference,
-        facilityId: facilityId
+        filters: paymentDetailsFilters,
+        selectedFilters: paymentDetailsSelectedFilters,
+        errors: paymentDetailsFilterErrors,
+        reportId: reportId
       }) }}
 
       <div class="moj-filter-layout__content">
 
         {{ paymentDetailsFiltersActionBar.render({
-          selectedFilters: selectedFilters
+          selectedFilters: paymentDetailsSelectedFilters
         }) }}
 
-        <div class="moj-scrollable-pane">
+        {% if paymentDetails.length === 0 and isPaymentDetailsFilterActive === true %}
 
-          <div class="moj-scrollable-pane__wrapper">
+          <p class="govuk-body" data-cy="payment-details-no-records-matching-filters-text">There are no records matching the search criteria</p>
 
-            {{ paymentDetailsTable.render({
-              reportId: reportId,
-              paymentDetails: paymentDetails,
-              userCanEdit: userCanEdit
-            }) }}
+        {% else %}
+
+          <div class="moj-scrollable-pane">
+
+            <div class="moj-scrollable-pane__wrapper">
+
+              {{ paymentDetailsTable.render({
+                reportId: reportId,
+                paymentDetails: paymentDetails,
+                userCanEdit: userCanEdit
+              }) }}
+
+            </div>
 
           </div>
 
-        </div>
+        {% endif %}
 
       </div>
 

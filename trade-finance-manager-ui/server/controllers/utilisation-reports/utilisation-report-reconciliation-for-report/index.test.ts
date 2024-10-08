@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { SessionData } from 'express-session';
-import { FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
+import { CURRENCY, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { getUtilisationReportReconciliationByReportId } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
@@ -25,8 +25,11 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
     const session = { userToken, user };
 
     const reportId = '1';
-    const premiumPaymentsFacilityId = '1234';
-    const originalUrl = '?premiumPaymentsFacilityId';
+    const premiumPaymentsFacilityId = '11111111';
+    const paymentDetailsFacilityId = '22222222';
+    const paymentDetailsPaymentCurrency = CURRENCY.GBP;
+    const paymentDetailsPaymentReference = 'some-payment-reference';
+    const originalUrl = `?premiumPaymentsFacilityId=11111111&paymentDetailsFacilityId=22222222&paymentDetailsPaymentCurrency=${CURRENCY.GBP}&paymentDetailsPaymentReference=some-payment-reference`;
 
     const getHttpMocksWithSessionData = (sessionData: Partial<SessionData>) =>
       httpMocks.createMocks({
@@ -36,6 +39,9 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         },
         query: {
           premiumPaymentsFacilityId,
+          paymentDetailsFacilityId,
+          paymentDetailsPaymentCurrency,
+          paymentDetailsPaymentReference,
         },
         originalUrl,
       });
@@ -50,13 +56,19 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         facilityId: premiumPaymentsFacilityId,
       };
 
+      const paymentDetailsFilters = {
+        facilityId: paymentDetailsFacilityId,
+        paymentCurrency: paymentDetailsPaymentCurrency,
+        paymentReference: paymentDetailsPaymentReference,
+      };
+
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockRejectedValue(new Error('Some error'));
 
       // Act
       await getUtilisationReportReconciliationByReportId(req, res);
 
       // Assert
-      expect(api.getUtilisationReportReconciliationDetailsById).toHaveBeenCalledWith(reportId, premiumPaymentsFilters, userToken);
+      expect(api.getUtilisationReportReconciliationDetailsById).toHaveBeenCalledWith(reportId, premiumPaymentsFilters, paymentDetailsFilters, userToken);
       expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
       expect(res._getRenderData()).toEqual({ user });
     });
@@ -147,13 +159,61 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         facilityId: premiumPaymentsFacilityId,
       };
 
+      const paymentDetailsFilters = {
+        facilityId: paymentDetailsFacilityId,
+        paymentCurrency: paymentDetailsPaymentCurrency,
+        paymentReference: paymentDetailsPaymentReference,
+      };
+
+      const paymentDetailsFiltersViewModel = {
+        ...paymentDetailsFilters,
+        paymentCurrency: [
+          {
+            text: CURRENCY.GBP,
+            value: CURRENCY.GBP,
+            checked: true,
+            attributes: {
+              'data-cy': 'currency-GBP',
+            },
+          },
+          {
+            text: CURRENCY.EUR,
+            value: CURRENCY.EUR,
+            checked: false,
+            attributes: {
+              'data-cy': 'currency-EUR',
+            },
+          },
+          {
+            text: CURRENCY.USD,
+            value: CURRENCY.USD,
+            checked: false,
+            attributes: {
+              'data-cy': 'currency-USD',
+            },
+          },
+          {
+            text: CURRENCY.JPY,
+            value: CURRENCY.JPY,
+            checked: false,
+            attributes: {
+              'data-cy': 'currency-JPY',
+            },
+          },
+        ],
+      };
+
+      const paymentDetailsFilterErrors = {
+        errorSummary: [],
+      };
+
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
 
       // Act
       await getUtilisationReportReconciliationByReportId(req, res);
 
       // Assert
-      expect(api.getUtilisationReportReconciliationDetailsById).toHaveBeenCalledWith(reportId, premiumPaymentsFilters, userToken);
+      expect(api.getUtilisationReportReconciliationDetailsById).toHaveBeenCalledWith(reportId, premiumPaymentsFilters, paymentDetailsFilters, userToken);
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       expect(res._getRenderData()).toEqual<UtilisationReportReconciliationForReportViewModel>({
         user: MOCK_TFM_SESSION_USER,
@@ -164,8 +224,11 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         reportId: '1',
         premiumPayments,
         premiumPaymentsFilters,
+        paymentDetailsFilters: paymentDetailsFiltersViewModel,
         keyingSheet: [],
         paymentDetails: paymentDetailsViewModel,
+        paymentDetailsFilterErrors,
+        isPaymentDetailsFilterActive: true,
       });
     });
 
@@ -251,7 +314,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(viewModel.enablePaymentsReceivedSorting).toBe(false);
     });
 
-    it('sets facility ID query error when invalid facility ID query value used', async () => {
+    it('sets premium payments filter error when invalid premium payments facility ID query value used', async () => {
       // Arrange
       const premiumPaymentsFacilityIdParam = 'abc';
       const { req, res } = httpMocks.createMocks({
@@ -262,7 +325,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         query: {
           premiumPaymentsFacilityId: premiumPaymentsFacilityIdParam,
         },
-        originalUrl,
+        originalUrl: '?premiumPaymentsFacilityId',
       });
 
       const feeRecordPaymentGroups = [aFeeRecordPaymentGroupWithoutReceivedPayments(), aFeeRecordPaymentGroupWithoutReceivedPayments()];
@@ -283,6 +346,40 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(viewModel.premiumPaymentsFilterError).toBeDefined();
       expect(viewModel.premiumPaymentsFilterError?.href).toBe('#premium-payments-facility-id-filter');
       expect(viewModel.premiumPaymentsFilterError?.text).toBe('Facility ID must be a number');
+    });
+
+    it('sets payment details filter error when invalid payment details facility ID query value used', async () => {
+      // Arrange
+      const paymentDetailsFacilityIdParam = 'abc';
+      const { req, res } = httpMocks.createMocks({
+        session,
+        params: {
+          reportId,
+        },
+        query: {
+          paymentDetailsFacilityId: paymentDetailsFacilityIdParam,
+        },
+        originalUrl: '?paymentDetailsFacilityId',
+      });
+
+      const feeRecordPaymentGroups = [aFeeRecordPaymentGroupWithoutReceivedPayments(), aFeeRecordPaymentGroupWithoutReceivedPayments()];
+      const utilisationReportReconciliationDetails: UtilisationReportReconciliationDetailsResponseBody = {
+        ...aUtilisationReportReconciliationDetailsResponse(),
+        premiumPayments: feeRecordPaymentGroups,
+        paymentDetails: feeRecordPaymentGroups,
+      };
+
+      jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
+
+      // Act
+      await getUtilisationReportReconciliationByReportId(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
+      const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
+      expect(viewModel.paymentDetailsFilterErrors.errorSummary).toHaveLength(1);
+      expect(viewModel.paymentDetailsFilterErrors.errorSummary[0].href).toBe('#payment-details-facility-id-filter');
+      expect(viewModel.paymentDetailsFilterErrors.errorSummary[0].text).toBe('Facility ID must be blank or contain between 4 and 10 numbers');
     });
 
     it('checks selected checkboxes when selected fee record ids query param defined', async () => {

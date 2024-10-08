@@ -1,6 +1,12 @@
-import { Currency, CURRENCY_REGEX, isPaymentReferenceOverFiftyCharacters, PaymentDetailsFilters, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
+import {
+  Currency,
+  CURRENCY_REGEX,
+  isPaymentReferenceOverFiftyCharacters,
+  PaymentDetailsFilters,
+  PremiumPaymentsFilters,
+  ValidatedPaymentDetailsFilters,
+} from '@ukef/dtfs2-common';
 import { REGEX } from '../../../../../constants';
-import { ValidatedPaymentDetailsFilters } from '../../../../../types/utilisation-reports';
 
 /**
  * Checks if the payment reference is between 4 and 50 characters long.

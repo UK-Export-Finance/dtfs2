@@ -96,9 +96,3 @@ export type NewPaymentDetails = {
   dateReceived: Date;
   reference?: string;
 };
-
-export type ValidatedPaymentDetailsFilters = {
-  facilityId?: string;
-  paymentCurrency?: Currency;
-  paymentReference?: string;
-};
