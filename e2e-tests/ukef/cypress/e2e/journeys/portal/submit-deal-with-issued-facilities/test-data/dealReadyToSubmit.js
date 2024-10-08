@@ -4,12 +4,12 @@ const dealThatJustNeedsDates = require('./dealThatJustNeedsDates.json');
 module.exports = () => {
   const now = new Date();
 
-  const nowDay = (dateConstants.todayDay).toString();
-  const nowMonth = (dateConstants.todayMonth).toString();
-  const nowYear = (dateConstants.todayYear).toString();
-  const nowPlusMonthDay = (dateConstants.oneMonthDay).toString();
-  const nowPlusMonthMonth = (dateConstants.oneMonthMonth).toString();
-  const nowPlusMonthYear = (dateConstants.oneMonthYear).toString();
+  const nowDay = dateConstants.todayDay.toString();
+  const nowMonth = dateConstants.todayMonth.toString();
+  const nowYear = dateConstants.todayYear.toString();
+  const nowPlusMonthDay = dateConstants.oneMonthDay.toString();
+  const nowPlusMonthMonth = dateConstants.oneMonthMonth.toString();
+  const nowPlusMonthYear = dateConstants.oneMonthYear.toString();
 
   const deal = { ...dealThatJustNeedsDates };
 

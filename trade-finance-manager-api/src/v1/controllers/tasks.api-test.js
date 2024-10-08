@@ -1,3 +1,4 @@
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { createUpdatedTask, createAllUpdatedTasks, updateTfmTask } = require('./tasks.controller');
 const { handleTaskEditFlagAndStatus } = require('../tasks/tasks-edit-logic');
 const mapTaskObject = require('../tasks/map-task-object');
@@ -343,7 +344,13 @@ describe('tasks controller', () => {
     };
 
     it('should return the updated task', async () => {
-      const result = await updateTfmTask({ dealId: updatableTaskDealId, groupId, taskId: updatableTaskId, taskUpdate: updatableTaskUpdateDone });
+      const result = await updateTfmTask({
+        dealId: updatableTaskDealId,
+        groupId,
+        taskId: updatableTaskId,
+        taskUpdate: updatableTaskUpdateDone,
+        auditDetails: generateTfmAuditDetails(MOCK_USERS[0]._id),
+      });
 
       const expectedUpdatedTask = {
         id: updatableTaskId,
@@ -371,7 +378,13 @@ describe('tasks controller', () => {
         api.findOneDeal = findOneDealMock;
 
         await expect(
-          updateTfmTask({ dealId: updatableTaskDealId, groupId, taskId: updatableTaskId, taskUpdate: updatableTaskUpdateToDo }),
+          updateTfmTask({
+            dealId: updatableTaskDealId,
+            groupId,
+            taskId: updatableTaskId,
+            taskUpdate: updatableTaskUpdateToDo,
+            auditDetails: generateTfmAuditDetails(MOCK_USERS[0]._id),
+          }),
         ).rejects.toThrowError(`Deal not found ${updatableTaskDealId}`);
       });
     });
@@ -381,7 +394,13 @@ describe('tasks controller', () => {
         const nonExistantGroupId = 567;
 
         await expect(
-          updateTfmTask({ dealId: updatableTaskDealId, groupId: nonExistantGroupId, taskId: updatableTaskId, taskUpdate: updatableTaskUpdateToDo }),
+          updateTfmTask({
+            dealId: updatableTaskDealId,
+            groupId: nonExistantGroupId,
+            taskId: updatableTaskId,
+            taskUpdate: updatableTaskUpdateToDo,
+            auditDetails: generateTfmAuditDetails(MOCK_USERS[0]._id),
+          }),
         ).rejects.toThrowError(`Group not found ${nonExistantGroupId}`);
       });
     });
@@ -391,14 +410,26 @@ describe('tasks controller', () => {
         const nonExistantTaskId = 789;
 
         await expect(
-          updateTfmTask({ dealId: updatableTaskDealId, groupId, taskId: nonExistantTaskId, taskUpdate: updatableTaskUpdateToDo }),
+          updateTfmTask({
+            dealId: updatableTaskDealId,
+            groupId,
+            taskId: nonExistantTaskId,
+            taskUpdate: updatableTaskUpdateToDo,
+            auditDetails: generateTfmAuditDetails(MOCK_USERS[0]._id),
+          }),
         ).rejects.toThrowError(`Task not found ${nonExistantTaskId}`);
       });
     });
 
     describe('when task cannot be updated', () => {
       it('should return the original task', async () => {
-        const result = await updateTfmTask({ dealId: unUpdateableTaskDealId, groupId, taskId: unUpdateableTaskId, taskUpdate: unUpdateableTaskUpdate });
+        const result = await updateTfmTask({
+          dealId: unUpdateableTaskDealId,
+          groupId,
+          taskId: unUpdateableTaskId,
+          taskUpdate: unUpdateableTaskUpdate,
+          auditDetails: generateTfmAuditDetails(MOCK_USERS[0]._id),
+        });
 
         expect(result).toEqual(unUpdateableTask);
       });
@@ -406,7 +437,13 @@ describe('tasks controller', () => {
 
     describe('when an MIA deal has the first task in the first group completed immediately', () => {
       it('should update deal.tfm.stage to `In progress`', async () => {
-        await updateTfmTask({ dealId: updatableTaskDealId, groupId, taskId: updatableTaskId, taskUpdate: updatableTaskUpdateDone });
+        await updateTfmTask({
+          dealId: updatableTaskDealId,
+          groupId,
+          taskId: updatableTaskId,
+          taskUpdate: updatableTaskUpdateDone,
+          auditDetails: generateTfmAuditDetails(MOCK_USERS[0]._id),
+        });
 
         const deal = await api.findOneDeal(updatableTaskDealId);
 
@@ -416,7 +453,13 @@ describe('tasks controller', () => {
 
     describe('when an MIA deal has the first task in the first group completed after being `In progress`', () => {
       it('should update deal.tfm.stage to `In progress`', async () => {
-        await updateTfmTask({ dealId: updatableTaskDealId, groupId, taskId: updatableTaskId, taskUpdate: updatableTaskUpdateToDo });
+        await updateTfmTask({
+          dealId: updatableTaskDealId,
+          groupId,
+          taskId: updatableTaskId,
+          taskUpdate: updatableTaskUpdateToDo,
+          auditDetails: generateTfmAuditDetails(MOCK_USERS[0]._id),
+        });
 
         await api.resetDealForApiTest(updatableTaskDealId);
 
@@ -424,13 +467,25 @@ describe('tasks controller', () => {
 
         expect(initialDeal.tfm.stage).toBeUndefined();
 
-        await updateTfmTask({ dealId: updatableTaskDealId, groupId, taskId: updatableTaskId, taskUpdate: updatableTaskUpdateInProgress });
+        await updateTfmTask({
+          dealId: updatableTaskDealId,
+          groupId,
+          taskId: updatableTaskId,
+          taskUpdate: updatableTaskUpdateInProgress,
+          auditDetails: generateTfmAuditDetails(MOCK_USERS[0]._id),
+        });
 
         const dealAfterFirstUpdate = await api.findOneDeal(updatableTaskDealId);
 
         expect(dealAfterFirstUpdate.tfm.stage).toEqual('In progress');
 
-        await updateTfmTask({ dealId: updatableTaskDealId, groupId, taskId: updatableTaskId, taskUpdate: updatableTaskUpdateDone });
+        await updateTfmTask({
+          dealId: updatableTaskDealId,
+          groupId,
+          taskId: updatableTaskId,
+          taskUpdate: updatableTaskUpdateDone,
+          auditDetails: generateTfmAuditDetails(MOCK_USERS[0]._id),
+        });
 
         const dealAfterSecondUpdate = await api.findOneDeal(updatableTaskDealId);
 
@@ -452,16 +507,22 @@ describe('tasks controller', () => {
 
         const tfmTaskUpdate = createTaskUpdateObj(1, 1);
 
-        await updateTfmTask({ dealId, groupId: tfmTaskUpdate.groupId, taskId: tfmTaskUpdate.id, taskUpdate: tfmTaskUpdate });
+        await updateTfmTask({
+          dealId,
+          groupId: tfmTaskUpdate.groupId,
+          taskId: tfmTaskUpdate.id,
+          taskUpdate: tfmTaskUpdate,
+          auditDetails: generateTfmAuditDetails(MOCK_USERS[0]._id),
+        });
 
         const mappedTaskObj = await mapTaskObject(MOCK_AIN_TASKS[0].groupTasks[0], tfmTaskUpdate);
 
         expect(updateDealSpy).toHaveBeenCalled();
 
-        expect(updateDealSpy.mock.calls[0][0]).toEqual(dealId);
+        expect(updateDealSpy.mock.calls[0][0].dealId).toEqual(dealId);
 
         // check first task in tasks array
-        const firstTaskSentToUpdateDealSpy = updateDealSpy.mock.calls[0][1].tfm.tasks[0].groupTasks[0];
+        const firstTaskSentToUpdateDealSpy = updateDealSpy.mock.calls[0][0].dealUpdate.tfm.tasks[0].groupTasks[0];
 
         expect(firstTaskSentToUpdateDealSpy.id).toEqual(mappedTaskObj.id);
         expect(firstTaskSentToUpdateDealSpy.groupId).toEqual(mappedTaskObj.groupId);

@@ -1,4 +1,5 @@
 const startCase = require('lodash/startCase');
+const { DEAL_TYPE } = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
 const { canUpdateUnissuedFacilitiesCheck } = require('./canUpdateUnissuedFacilitiesCheck');
 const {
@@ -20,7 +21,7 @@ const {
 const { isUkefReviewAvailable, isUkefReviewPositive, makerCanReSubmit } = require('../../utils/deal-helpers');
 const { exporterItems, facilityItems } = require('../../utils/display-items');
 const getUserAuthorisationLevelsToApplication = require('../../utils/user-authorisation-level');
-const { FACILITY_TYPE, AUTHORISATION_LEVEL, DEAL_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE } = require('../../constants');
+const { FACILITY_TYPE, AUTHORISATION_LEVEL, DEAL_STATUS, DEAL_SUBMISSION_TYPE } = require('../../constants');
 const Application = require('../../models/application');
 const { MAKER } = require('../../constants/roles');
 
@@ -77,7 +78,7 @@ function buildBody(app, previewMode, user) {
     exporter: {
       status: app.exporterStatus,
       rows: mapSummaryList(
-        { details: app.exporter }, // wrap in details because mapSummaryList relies this.
+        { details: app.exporter }, // wrap in details because mapSummaryList relies on this.
         exporterItems(exporterUrl, {
           showIndustryChangeLink: app.exporter?.industries?.length > 1,
           correspondenceAddressLink: !app.exporter.correspondenceAddress,
@@ -94,7 +95,7 @@ function buildBody(app, previewMode, user) {
       data: app.facilities.items
         .map((item) => ({
           heading: startCase(FACILITY_TYPE[item.details.type.toUpperCase()].toLowerCase()),
-          rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details), mapSummaryParams, previewMode),
+          rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details, app.version), mapSummaryParams, previewMode),
           createdAt: item.details.createdAt,
           facilityId: item.details._id,
           // facilityName added for aria-label for accessibility
@@ -261,7 +262,7 @@ const applicationDetails = async (req, res, next) => {
 
     return res.render(`partials/${partial}.njk`, params);
   } catch (error) {
-    console.error('Unable to build application view %s', error);
+    console.error('Unable to build application view %o', error);
     return next(error);
   }
 };

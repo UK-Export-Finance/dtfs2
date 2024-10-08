@@ -1,55 +1,69 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { ObjectId } = require('mongodb');
+const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
 const wipeDB = require('../../wipeDB');
-const app = require('../../../src/createApp');
-const api = require('../../api')(app);
-const CONSTANTS = require('../../../src/constants');
+const { testApi } = require('../../test-api');
+const { DEALS } = require('../../../src/constants');
+const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 
 describe('/v1/portal/gef/deals/:id', () => {
-  beforeAll(async () => {
-    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
-  });
-
-  const newDeal = {
-    dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-    status: 'Draft',
-  };
-
-  const mockUser = {
-    _id: '123456789',
-    username: 'temp',
-    password: '',
-    roles: [],
-    bank: {
-      id: '956',
-      name: 'Barclays Bank',
-    },
-  };
-
   // Update GEF deal
   describe('PUT /v1/portal/gef/deals/:id', () => {
+    const newDeal = {
+      dealType: DEALS.DEAL_TYPE.GEF,
+      status: 'Draft',
+    };
+
+    const updatedDeal = {
+      ...newDeal,
+      dealType: 'GEF',
+      additionalRefName: 'change this field',
+      eligibility: {
+        ...newDeal.eligibility,
+        mockNewField: true,
+      },
+    };
+
+    const auditDetails = generatePortalAuditDetails(new ObjectId());
+
+    const anUpdateDealRequest = {
+      dealUpdate: updatedDeal,
+      user: MOCK_PORTAL_USER,
+      auditDetails,
+    };
+
+    let dealId;
+    beforeEach(async () => {
+      await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
+      ({
+        body: { _id: dealId },
+      } = await testApi.post(newDeal).to('/v1/portal/gef/deals'));
+    });
+
+    withValidateAuditDetailsTests({
+      makeRequest: (auditDetailsToUse) => {
+        return testApi.put({ dealUpdate: updatedDeal, auditDetails: auditDetailsToUse }).to(`/v1/portal/gef/deals/${dealId}`);
+      },
+    });
+
+    it('should return audit record', async () => {
+      const { status, body } = await testApi.put(anUpdateDealRequest).to(`/v1/portal/gef/deals/${dealId}`);
+
+      expect(status).toEqual(200);
+      expect(body.auditRecord).toEqual(generateParsedMockAuditDatabaseRecord(auditDetails));
+    });
+
     it('Returns 404 when the deal does not exist ', async () => {
       const invalidDealId = '123456789f0ffe00219319c1';
-      const { status } = await api.put({}).to(`/v1/portal/gef/deals/${invalidDealId} `);
+      const { status } = await testApi.put(anUpdateDealRequest).to(`/v1/portal/gef/deals/${invalidDealId}`);
 
       expect(status).toEqual(404);
     });
 
     it('Return and update the GEF deal', async () => {
-      const postResult = await api.post(newDeal).to('/v1/portal/gef/deals');
-      const createdDeal = postResult.body;
-      const dealId = createdDeal._id;
-
-      const updatedDeal = {
-        ...newDeal,
-        dealType: 'GEF',
-        additionalRefName: 'change this field',
-        eligibility: {
-          ...newDeal.eligibility,
-          mockNewField: true,
-        },
-      };
-
-      const { status, body } = await api.put({ dealUpdate: updatedDeal, user: mockUser }).to(`/v1/portal/gef/deals/${dealId}`);
+      const { status, body } = await testApi.put(anUpdateDealRequest).to(`/v1/portal/gef/deals/${dealId}`);
 
       expect(status).toEqual(200);
 

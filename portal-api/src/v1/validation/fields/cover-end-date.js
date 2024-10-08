@@ -15,11 +15,7 @@ module.exports = (submittedValues, deal, errorList) => {
   } = submittedValues;
 
   if (isReadyForValidation(deal, submittedValues)) {
-    const { coverDayValidation, coverMonthValidation, coverYearValidation } = coverDatesValidation(
-      coverEndDateDay,
-      coverEndDateMonth,
-      coverEndDateYear,
-    );
+    const { coverDayValidation, coverMonthValidation, coverYearValidation } = coverDatesValidation(coverEndDateDay, coverEndDateMonth, coverEndDateYear);
 
     if (dateHasAllValues(coverEndDateDay, coverEndDateMonth, coverEndDateYear)) {
       const coverEndDate = getStartOfDateFromDayMonthYearStrings(coverEndDateDay, coverEndDateMonth, coverEndDateYear);

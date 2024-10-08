@@ -1,5 +1,5 @@
 const { param } = require('express-validator');
-const { isValidIsoMonth } = require('@ukef/dtfs2-common');
+const { isValidIsoMonth, isValidIsoYear } = require('@ukef/dtfs2-common');
 const { updateReportStatusPayloadValidation } = require('./update-report-status-payload-validation');
 
 const userParamEscapingSanitization = param('user').isString('User ID must be a string').escape();
@@ -33,6 +33,11 @@ const isoMonthValidation = (fields) =>
     .custom(isValidIsoMonth)
     .withMessage((value, { path }) => `'${path}' parameter must be an ISO month string (format 'yyyy-MM')`);
 
+const isoYearValidation = (paramName) =>
+  param(paramName)
+    .custom(isValidIsoYear)
+    .withMessage((value, { path }) => `'${path}' parameter must be an ISO year string (format 'yyyy')`);
+
 exports.userIdEscapingSanitization = [userParamEscapingSanitization];
 
 exports.userIdValidation = [userParamValidation];
@@ -63,3 +68,10 @@ exports.updateReportStatusPayloadValidation = updateReportStatusPayloadValidatio
  * @return {import('express-validator').ValidationChain[]}
  */
 exports.isoMonthValidation = (fields) => [isoMonthValidation(fields)];
+
+/**
+ * Validates that specified route or query parameters are strings in ISO year format 'yyyy'
+ * @param {string} field - the field name to validate
+ * @return {import('express-validator').ValidationChain[]}
+ */
+exports.isoYearValidation = (fields) => [isoYearValidation(fields)];

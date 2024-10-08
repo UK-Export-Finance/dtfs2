@@ -104,25 +104,37 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // Portal deal status should be updated
     //---------------------------------------------------------------
-    portalPages.contract.previousStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('In progress by UKEF');
-    });
+    portalPages.contract
+      .previousStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('In progress by UKEF');
+      });
 
-    portalPages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Accepted by UKEF (with conditions)');
-    });
+    portalPages.contract
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Accepted by UKEF (with conditions)');
+      });
 
     //---------------------------------------------------------------
     // Portal deal comments/conditions should be displayed
     //---------------------------------------------------------------
     portalPages.contract.commentsTab().click();
 
-    portalPartials.ukefComments.ukefDecision.title().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Special Conditions:');
-    });
+    portalPartials.ukefComments.ukefDecision
+      .title()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Special Conditions:');
+      });
 
-    portalPartials.ukefComments.ukefDecision.text().invoke('text').then((text) => {
-      expect(text.trim()).to.equal(MOCK_COMMENTS);
-    });
+    portalPartials.ukefComments.ukefDecision
+      .text()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal(MOCK_COMMENTS);
+      });
   });
 });

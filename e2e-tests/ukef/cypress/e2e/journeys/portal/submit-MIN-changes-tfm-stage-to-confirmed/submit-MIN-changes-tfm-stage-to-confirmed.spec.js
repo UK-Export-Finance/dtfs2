@@ -8,9 +8,9 @@ import CONSTANTS from '../../../../../../tfm/cypress/fixtures/constants';
 import MOCK_USERS from '../../../../../../e2e-fixtures/portal-users.fixture';
 import MOCK_MIN_DEAL_READY_TO_SUBMIT from '../test-data/MIN-deal/dealReadyToSubmit';
 
-const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
-
 import { UNDERWRITER_MANAGER_1, TFM_URL } from '../../../../../../e2e-fixtures';
+
+const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 context('Portal to TFM deal submission - MIN changes TFM deal stage to Confirmed', () => {
   let deal;
@@ -61,9 +61,12 @@ context('Portal to TFM deal submission - MIN changes TFM deal stage to Confirmed
     cy.login(BANK1_CHECKER1);
     portalPages.contract.visit(deal);
 
-    portalPages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL);
-    });
+    portalPages.contract
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL);
+      });
 
     portalPages.contract.proceedToSubmit().click();
 

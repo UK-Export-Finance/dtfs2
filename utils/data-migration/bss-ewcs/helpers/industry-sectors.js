@@ -20,8 +20,7 @@ const getIndustrySectorByCode = (code = '', logError) => {
 };
 
 const getIndustryClassByCode = (industrySectorClasses, code = '', logError) => {
-  const industryClass = industrySectorClasses.find((sourceClass) =>
-    sourceClass.code === code);
+  const industryClass = industrySectorClasses.find((sourceClass) => sourceClass.code === code);
 
   if (!industryClass) {
     logError(`Industry Class Code: ${code} did not map to v2`);

@@ -11,12 +11,14 @@ describe('at least 1 special character', () => {
       password: 'aaaaa',
     };
 
-    const expectedResult = [{
-      password: {
-        order: '4',
-        text: 'Your password must contain at least one special character.',
+    const expectedResult = [
+      {
+        password: {
+          order: '4',
+          text: 'Your password must contain at least one special character.',
+        },
       },
-    }];
+    ];
 
     const matchTest = passwordAtLeastOneSpecialCharacter(user, change);
     expect(matchTest).toEqual(expectedResult);

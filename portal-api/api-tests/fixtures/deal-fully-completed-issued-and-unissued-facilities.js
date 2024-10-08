@@ -1,16 +1,16 @@
 const { add, format, sub } = require('date-fns');
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const dealFullyCompleted = require('./deal-fully-completed');
-const CONSTANTS = require('../../src/constants');
 
-const nowDate = new Date()
-const nowPlusOneMonth = add(nowDate, { months: 1 })
-const yesterday = sub(nowDate, { days: 1 })
+const nowDate = new Date();
+const nowPlusOneMonth = add(nowDate, { months: 1 });
+const yesterday = sub(nowDate, { days: 1 });
 
 const deal = {
   ...dealFullyCompleted,
   mockFacilities: [
     {
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+      type: FACILITY_TYPE.BOND,
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Unissued',
@@ -36,7 +36,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
     },
     {
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+      type: FACILITY_TYPE.BOND,
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Unissued',
@@ -61,7 +61,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
     },
     {
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+      type: FACILITY_TYPE.BOND,
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Issued',
@@ -88,7 +88,7 @@ const deal = {
       status: 'Ready for check',
     },
     {
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+      type: FACILITY_TYPE.LOAN,
       facilityStage: 'Conditional',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -117,7 +117,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
     },
     {
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+      type: FACILITY_TYPE.LOAN,
       facilityStage: 'Conditional',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -145,7 +145,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
     },
     {
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+      type: FACILITY_TYPE.LOAN,
       facilityStage: 'Unconditional',
       hasBeenIssued: true,
       previousFacilityStage: 'Conditional',

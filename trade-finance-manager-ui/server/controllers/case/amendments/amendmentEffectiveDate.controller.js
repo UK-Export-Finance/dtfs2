@@ -1,7 +1,7 @@
 const { format, fromUnixTime } = require('date-fns');
+const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { effectiveDateValidation } = require('./validation/amendmentEffectiveDate.validate');
-const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 
 const getAmendmentEffectiveDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
@@ -66,7 +66,7 @@ const postAmendmentEffectiveDate = async (req, res) => {
     console.error('Unable to update the amendment effective date');
     return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-effective-date`);
   } catch (error) {
-    console.error('There was a problem adding the amendment effective date %s', error);
+    console.error('There was a problem adding the amendment effective date %o', error);
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   }
 };

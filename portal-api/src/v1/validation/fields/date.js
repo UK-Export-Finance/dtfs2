@@ -11,7 +11,7 @@ exports.dateHasAllValues = (day, month, year) => {
   const hasMonth = hasValue(month);
   const hasYear = hasValue(year);
 
-  const hasValues = (hasDay && hasMonth && hasYear);
+  const hasValues = hasDay && hasMonth && hasYear;
   return hasValues;
 };
 
@@ -26,7 +26,7 @@ exports.dateHasSomeValues = (day, month, year) => {
   const hasMonth = hasValue(month);
   const hasYear = hasValue(year);
 
-  const hasSomeValues = (hasDay || hasMonth || hasYear);
+  const hasSomeValues = hasDay || hasMonth || hasYear;
   return hasSomeValues;
 };
 

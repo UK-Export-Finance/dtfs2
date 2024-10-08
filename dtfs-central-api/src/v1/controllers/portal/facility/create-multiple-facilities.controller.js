@@ -1,11 +1,12 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
-const db = require('../../../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const { findOneDeal } = require('../deal/get-deal.controller');
 const { updateDeal } = require('../deal/update-deal.controller');
 const { isNumber } = require('../../../../helpers');
 
-const createFacilities = async (facilities, dealId) => {
+const createFacilities = async (facilities, dealId, auditDetails) => {
   try {
     if (!ObjectId.isValid(dealId)) {
       return { status: 400, message: 'Invalid Deal Id' };
@@ -13,15 +14,18 @@ const createFacilities = async (facilities, dealId) => {
 
     const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
 
-    const facilitiesWithId = await Promise.all(facilities.map(async (f) => {
+    const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
+
+    const facilitiesWithId = facilities.map((f) => {
       const facility = f;
 
       facility._id = new ObjectId(facility._id);
       facility.createdDate = Date.now();
       facility.updatedAt = Date.now();
       facility.dealId = new ObjectId(dealId);
+      facility.auditRecord = auditRecord;
       return facility;
-    }));
+    });
 
     const idsArray = [];
     facilitiesWithId.forEach((f) => {
@@ -34,10 +38,7 @@ const createFacilities = async (facilities, dealId) => {
       facilities: idsArray,
     };
 
-    const response = await updateDeal(
-      dealId,
-      dealUpdate,
-    );
+    const response = await updateDeal({ dealId, dealUpdate, auditDetails });
 
     const status = isNumber(response?.status, 3);
 
@@ -52,31 +53,39 @@ const createFacilities = async (facilities, dealId) => {
 
     return flattenedIds;
   } catch (error) {
-    console.error('Unable to create the facility for deal %s %s', dealId, error);
+    console.error('Unable to create the facility for deal %s %o', dealId, error);
     return { status: 500, message: error };
   }
 };
 
 exports.createMultipleFacilitiesPost = async (req, res) => {
-  const {
-    facilities,
-    dealId,
-    user,
-  } = req.body;
+  const { facilities, dealId, user, auditDetails } = req.body;
 
   if (!user) {
-    return res.status(404).send();
+    return res.sendStatus(404);
+  }
+
+  try {
+    validateAuditDetails(auditDetails);
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: error.message,
+        code: error.code,
+      });
+    }
+    return res.status(500).send({ status: 500, error });
   }
 
   return findOneDeal(dealId, async (deal) => {
-    if (deal) {
-      const response = await createFacilities(facilities, dealId);
-      const status = isNumber(response?.status, 3);
-      const code = status ? response.status : 200;
-
-      return res.status(code).send(response);
+    if (!deal) {
+      return res.status(404).send('Deal not found');
     }
+    const response = await createFacilities(facilities, dealId, auditDetails);
+    const status = isNumber(response?.status, 3);
+    const code = status ? response.status : 200;
 
-    return res.status(404).send('Deal not found');
+    return res.status(code).send(response);
   });
 };

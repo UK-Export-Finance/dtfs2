@@ -1,57 +1,40 @@
-import { Seeder } from 'typeorm-extension';
 import { DataSource } from 'typeorm';
-import { UtilisationReportEntity, getCurrentReportPeriodForBankSchedule } from '@ukef/dtfs2-common';
-import { createNotReceivedReport, createMarkedAsCompletedReport, createUploadedReport } from './utilisation-report.helper';
-import { getAllBanksFromMongoDb, getUsersFromMongoDbOrFail } from '../helpers';
+import { getCurrentReportPeriodForBankSchedule, getPreviousReportPeriodForBankScheduleByMonth } from '@ukef/dtfs2-common';
+import { UtilisationReportSeeder } from './utilisation-report.seeder';
+import { MongoDbDataLoader } from '../mongo-db-client';
 
-export default class UtilisationReportSeeder implements Seeder {
-  /**
-   * Track seeder execution.
-   *
-   * Default: true
-   */
-  track = true;
+export const seedUtilisationReports = async (dataSource: DataSource): Promise<void> => {
+  const banks = (await MongoDbDataLoader.getAllBanks()).filter((bank) => bank.isVisibleInTfmUtilisationReports);
+  const bankIdsWithReportPeriod = banks.map(({ id, utilisationReportPeriodSchedule }) => ({
+    bankId: id,
+    reportPeriod: getCurrentReportPeriodForBankSchedule(utilisationReportPeriodSchedule),
+  }));
+  const bankIdAndReportPeriodForPastManuallyCompletedReport = {
+    bankId: banks[0].id,
+    reportPeriod: getPreviousReportPeriodForBankScheduleByMonth(banks[0].utilisationReportPeriodSchedule, '2024-04'),
+  };
 
-  public async run(dataSource: DataSource): Promise<void> {
-    const { paymentReportOfficer, pdcReconcileUser } = await getUsersFromMongoDbOrFail({
-      paymentReportOfficerUsername: 'payment-officer1@ukexportfinance.gov.uk',
-      pdcReconcileUserUsername: 'PDC_RECONCILE',
-    });
+  const paymentReportOfficer = await MongoDbDataLoader.getPaymentReportOfficerWithUsernameOrFail('payment-officer1@ukexportfinance.gov.uk');
+  const uploadedByUserId = paymentReportOfficer._id.toString();
 
-    const banksVisibleInTfm = (await getAllBanksFromMongoDb()).filter((bank) => bank.isVisibleInTfmUtilisationReports);
+  const [pendingReconciliationBankIdWithReportPeriod, reconciliationInProgressBankIdWithReportPeriod, ...notReceivedBankIdsWithReportPeriod] =
+    bankIdsWithReportPeriod;
 
-    const paymentReportOfficerBank = banksVisibleInTfm.find((bank) => bank.id === paymentReportOfficer.bank.id);
-    if (!paymentReportOfficerBank) {
-      throw new Error(`Failed to find a bank for portal user with username '${paymentReportOfficer.username}'`);
-    }
-    const uploadedReportReportPeriod = getCurrentReportPeriodForBankSchedule(paymentReportOfficerBank.utilisationReportPeriodSchedule);
-    const uploadedReport = createUploadedReport(paymentReportOfficer, uploadedReportReportPeriod, 'PENDING_RECONCILIATION');
+  await UtilisationReportSeeder.forBankIdAndReportPeriod(bankIdAndReportPeriodForPastManuallyCompletedReport)
+    .withUploadedByUserId(uploadedByUserId)
+    .saveWithStatus('RECONCILIATION_COMPLETED', dataSource);
 
-    const [bankToCreateMarkedAsCompletedReportFor, ...banksToCreateNotReceivedReportsFor] = banksVisibleInTfm.filter(
-      (bank) => bank.id !== paymentReportOfficer.bank.id,
-    );
-    if (!bankToCreateMarkedAsCompletedReportFor || banksToCreateNotReceivedReportsFor.length === 0) {
-      throw new Error(`Expected there to be at least 3 banks to create reports for (found ${banksVisibleInTfm.length})`);
-    }
+  await UtilisationReportSeeder.forBankIdAndReportPeriod(pendingReconciliationBankIdWithReportPeriod)
+    .withUploadedByUserId(uploadedByUserId)
+    .saveWithStatus('PENDING_RECONCILIATION', dataSource);
 
-    const markedAsCompletedReportReportPeriod = getCurrentReportPeriodForBankSchedule(bankToCreateMarkedAsCompletedReportFor.utilisationReportPeriodSchedule);
-    const markedAsCompletedReport = createMarkedAsCompletedReport(
-      bankToCreateMarkedAsCompletedReportFor.id,
-      pdcReconcileUser,
-      markedAsCompletedReportReportPeriod,
-      'RECONCILIATION_COMPLETED',
-    );
+  await UtilisationReportSeeder.forBankIdAndReportPeriod(reconciliationInProgressBankIdWithReportPeriod)
+    .withUploadedByUserId(uploadedByUserId)
+    .saveWithStatus('RECONCILIATION_IN_PROGRESS', dataSource);
 
-    const notReceivedReports = banksToCreateNotReceivedReportsFor.map((bank) => {
-      const reportPeriod = getCurrentReportPeriodForBankSchedule(bank.utilisationReportPeriodSchedule);
-      return createNotReceivedReport(bank.id, reportPeriod);
-    });
-
-    const reportsToInsert: UtilisationReportEntity[] = [uploadedReport, markedAsCompletedReport, ...notReceivedReports];
-
-    const utilisationReportRepository = dataSource.getRepository(UtilisationReportEntity);
-    for (const reportToInsert of reportsToInsert) {
-      await utilisationReportRepository.save(reportToInsert);
-    }
-  }
-}
+  await Promise.all(
+    notReceivedBankIdsWithReportPeriod.map((bankIdWithReportPeriod) =>
+      UtilisationReportSeeder.forBankIdAndReportPeriod(bankIdWithReportPeriod).saveWithStatus('REPORT_NOT_RECEIVED', dataSource),
+    ),
+  );
+};

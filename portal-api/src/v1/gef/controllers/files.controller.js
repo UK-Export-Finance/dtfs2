@@ -1,9 +1,9 @@
 const stream = require('stream');
 const { ObjectId } = require('mongodb');
 const filesize = require('filesize');
-
-const db = require('../../../drivers/db-client');
-const utils = require('../utils.service');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
+const { mongoDbClient: db } = require('../../../drivers/db-client');
 const File = require('../models/files');
 const { userHasAccess } = require('../utils.service');
 const fileshare = require('../../../drivers/fileshare');
@@ -15,9 +15,6 @@ const FILESHARE = FILESHARES.PORTAL;
 const { EXPORT_FOLDER } = fileshare.getConfig(FILESHARE);
 
 const DEFAULT_UNITS = ['KiB', 'B', 'kbit'];
-
-const filesCollection = 'files';
-const dealCollectionName = 'deals';
 
 const fileError = (file) => {
   let error;
@@ -62,7 +59,7 @@ exports.create = async (req, res) => {
   if (!files?.length) return res.status(400).send('missing files');
 
   // Check deal exists
-  const dealCollection = await db.getCollection(dealCollectionName);
+  const dealCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
   const deal = await dealCollection.findOne({ _id: { $eq: ObjectId(String(parentId)) } });
   if (!deal) return res.status(422).send('Parent deal not found');
 
@@ -88,8 +85,10 @@ exports.create = async (req, res) => {
 
         const fileObject = { ...file, documentPath };
 
-        const collection = await db.getCollection(filesCollection);
-        const insertedFile = await collection.insertOne(new File(fileObject, parentId));
+        const auditDetails = generatePortalAuditDetails(req.user._id);
+
+        const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FILES);
+        const insertedFile = await collection.insertOne(new File(fileObject, parentId, generateAuditDatabaseRecordFromAuditDetails(auditDetails)));
         const insertedId = String(insertedFile.insertedId);
 
         if (!ObjectId.isValid(insertedId)) {
@@ -108,7 +107,7 @@ exports.create = async (req, res) => {
 
     return res.status(status).send(processedFiles);
   } catch (error) {
-    console.error('Error uploading file(s): %s', error);
+    console.error('Error uploading file(s) %o', error);
     return res.status(500).send('An error occurred while uploading the file');
   }
 };
@@ -118,7 +117,7 @@ const getFile = async (id) => {
     throw new Error('Invalid File Id');
   }
 
-  const collection = await db.getCollection(filesCollection);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FILES);
   const file = await collection.findOne({ _id: { $eq: ObjectId(String(id)) } });
   let deal;
 
@@ -127,7 +126,7 @@ const getFile = async (id) => {
       throw new Error('Invalid File Parent Id');
     }
 
-    const dealCollection = await db.getCollection(dealCollectionName);
+    const dealCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
     deal = await dealCollection.findOne({ _id: { $eq: ObjectId(String(file.parentId)) } });
   }
 
@@ -174,33 +173,48 @@ exports.downloadFile = async (req, res) => {
 
     return readStream.pipe(res);
   } catch (error) {
-    console.error('Error downloading file: %s', error);
+    console.error('Error downloading file %o', error);
     return res.status(error?.code || 500).send('An error occurred while downloading the file');
   }
 };
 
 exports.delete = async (req, res) => {
   try {
-    const [file, deal] = await getFile(req.params.id);
+    const {
+      params: { id },
+      body: { documentPath },
+      user,
+    } = req;
+    const auditDetails = generatePortalAuditDetails(user._id);
 
-    // Check file exists
-    if (!file) return res.status(404).send();
-
-    if (!ObjectId.isValid(file._id)) {
+    if (!ObjectId.isValid(id)) {
       return res.status(400).send({ status: 400, message: 'Invalid File Id' });
     }
 
-    // Check user has rights to access this file
-    if (!userHasAccess(req.user, deal)) return res.sendStatus(401);
+    const [file, deal] = await getFile(id);
 
-    const { documentPath } = req.body;
+    // Check file exists
+    if (!file) {
+      return res.sendStatus(404);
+    }
+
+    // Check user has rights to access this file
+    if (!userHasAccess(user, deal)) {
+      return res.sendStatus(401);
+    }
+
     await fileshare.deleteFile(FILESHARE, `${EXPORT_FOLDER}/${deal._id}/${documentPath}/${file.filename}`);
 
-    const collection = await db.getCollection(filesCollection);
-    const response = await collection.findOneAndDelete({ _id: { $eq: ObjectId(file._id) } });
-    return res.status(utils.mongoStatus(response)).send(response.value);
+    const deleteResult = await deleteOne({
+      documentId: new ObjectId(file._id),
+      collectionName: MONGO_DB_COLLECTIONS.FILES,
+      db,
+      auditDetails,
+    });
+
+    return res.status(200).send(deleteResult);
   } catch (error) {
-    console.error('Error deleting file: %s', error);
-    return res.status(error?.code || 500).send('An error occurred while deleting the file');
+    console.error('Error deleting file %o', error);
+    return res.status(error?.code ?? 500).send('An error occurred while deleting the file');
   }
 };

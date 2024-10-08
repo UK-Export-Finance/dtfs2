@@ -16,8 +16,8 @@ const router = express.Router();
  * Checks that the session uploadCsrf token matches the query uploadCsrf token
  * If the token is valid move to the next middleware
  * If it is invalid return an error response
- * @param {Object} req
- * @param {Object} res
+ * @param {object} req
+ * @param {object} res
  * @param {Function} next
  */
 const validateUploadCsrfToken = (req, res, next) => {
@@ -26,7 +26,9 @@ const validateUploadCsrfToken = (req, res, next) => {
   }
   // The MOJ multi-file-upload component expects a 200 response when the request is not valid
   // It will only display the error messages when the response is 200.
-  return res.status(200).send({ error: { message: 'File upload session expired. Please refresh your browser to upload or delete the files.' } });
+  return res.status(200).send({
+    error: { message: 'File upload session expired. Please refresh your browser to upload or delete the files.' },
+  });
 };
 
 const uploadSingle = multer({ limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE }, fileFilter: multerFilter }).single('documents');
@@ -43,7 +45,9 @@ router.post(
       // The MOJ multi-file-upload expects a 200 response when the request is not valid
       // It will only display the error messages when the response is 200.
       if (error.code === 'LIMIT_FILE_SIZE') {
-        return res.status(200).send({ error: { message: `File too large, must be smaller than ${formatBytes(FILE_UPLOAD.MAX_FILE_SIZE)}` } });
+        return res.status(200).send({
+          error: { message: `File too large, must be smaller than ${formatBytes(FILE_UPLOAD.MAX_FILE_SIZE)}` },
+        });
       }
       return res.status(200).send({ file: error.file, error: { message: error.message } });
     });

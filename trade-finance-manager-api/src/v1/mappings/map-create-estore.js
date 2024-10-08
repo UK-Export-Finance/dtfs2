@@ -1,50 +1,40 @@
 const { formatNameForSharepoint, formatExporterNameForSharepoint } = require('../helpers/formatNameForSharepoint');
+const { mapEstoreFiles } = require('./map-ukef-documents-to-estore');
 const CONSTANTS = require('../../constants');
-const { mapUKEFDocumentsToEstore } = require('./map-ukef-documents-to-estore');
 
+/**
+ * Creates eStore API input object
+ * @param {object} deal Deal object
+ * @returns {object} Mapped eStore object
+ */
 const mapCreateEstore = (deal) => {
-  const {
-    dealType,
-    ukefDealId,
-    facilities,
-    exporter,
-    buyer,
-    destinationOfGoodsAndServices,
-    supportingInformation,
-  } = deal;
+  // Destructure relevant properties
+  const { ukefDealId, facilities, exporter, buyer, destinationOfGoodsAndServices, supportingInformation } = deal;
 
-  let buyerName;
-  let destinationMarket;
-  let riskMarket;
+  /**
+   * Set value as per deal type.
+   * `buyer` can be undefined.
+   */
+  const buyerName = buyer?.name ? formatNameForSharepoint(buyer.name) : CONSTANTS.DEALS.DEAL_TYPE.GEF;
+  const destinationMarket = destinationOfGoodsAndServices?.name ?? CONSTANTS.DEALS.DEFAULT_COUNTRY;
+  const riskMarket = buyer?.country ? buyer.country.name : CONSTANTS.DEALS.DEFAULT_COUNTRY;
+  // Uploaded documents
   let files = [];
 
-  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-    // default values for GEF. GEF does not have this data.
-    buyerName = CONSTANTS.DEALS.DEAL_TYPE.GEF;
-    destinationMarket = 'United Kingdom';
-    riskMarket = 'United Kingdom';
-  }
-
-  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-    buyerName = formatNameForSharepoint(buyer.name);
-    destinationMarket = destinationOfGoodsAndServices.name;
-    riskMarket = buyer.country.name;
-  }
-
   if (supportingInformation) {
-    files = mapUKEFDocumentsToEstore(supportingInformation);
+    files = mapEstoreFiles(supportingInformation);
   }
 
   return {
     dealId: deal._id,
-    dealType,
-    exporterName: (exporter && exporter.companyName) ? formatExporterNameForSharepoint(exporter.companyName) : '',
-    buyerName,
     dealIdentifier: ukefDealId,
+    facilityIdentifiers: facilities.map((facility) => facility.ukefFacilityId),
+    buyerName,
+    exporterName: exporter?.companyName ? formatExporterNameForSharepoint(exporter.companyName) : '',
     destinationMarket,
     riskMarket,
-    facilityIdentifiers: facilities.map((facility) => facility.ukefFacilityId),
     supportingInformation: files,
   };
 };
+
 module.exports = mapCreateEstore;

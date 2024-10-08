@@ -1,17 +1,20 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import axios from 'axios';
 import { Request, Response } from 'express';
 import * as dotenv from 'dotenv';
-import { FACILITY_TYPE, PRODUCT_GROUP } from '../../constants';
-import { isValidDate } from '../../utils/inputValidations';
+import { HEADERS, FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { PRODUCT_GROUP } from '../../constants';
+import { isValidDate } from '../../helpers';
+
 dotenv.config();
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
 const headers = {
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
 };
 
-const mapProductGroup = (facilityType: any) => {
+const mapProductGroup = (facilityType: string) => {
   if (facilityType === FACILITY_TYPE.BOND) {
     return PRODUCT_GROUP.BOND;
   }
@@ -76,12 +79,12 @@ export const getExposurePeriod = async (req: Request, res: Response) => {
   const { startDate, endDate, facilityType } = req.params;
 
   if (!isValidDate(startDate)) {
-    console.error('Invalid start date provided: %s', startDate);
+    console.error('Invalid start date provided %s', startDate);
     return res.status(400).send({ status: 400, data: 'Invalid date provided' });
   }
 
   if (!isValidDate(endDate)) {
-    console.error('Invalid end date provided: %s', endDate);
+    console.error('Invalid end date provided %s', endDate);
     return res.status(400).send({ status: 400, data: 'Invalid date provided' });
   }
 
@@ -107,7 +110,7 @@ export const getExposurePeriod = async (req: Request, res: Response) => {
       exposurePeriodInMonths: exposurePeriod,
     });
   } catch (error) {
-    console.error('Error calling Exposure Period API %s', error);
+    console.error('Error calling Exposure Period API %o', error);
     return res.status(400).send({});
   }
 };

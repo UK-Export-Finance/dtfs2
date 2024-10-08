@@ -2,12 +2,7 @@ import { RandomValueGenerator } from '../../../../../../support/random-value-gen
 
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { dashboardFacilities } = require('../../../pages');
-const {
-  BSS_DEAL_DRAFT,
-  GEF_DEAL_DRAFT,
-  GEF_FACILITY_CASH,
-  BSS_FACILITY_LOAN,
-} = require('../fixtures');
+const { BSS_DEAL_DRAFT, GEF_DEAL_DRAFT, GEF_FACILITY_CASH, BSS_FACILITY_LOAN } = require('../fixtures');
 const { dashboardFilters } = require('../../../partials');
 
 const filters = dashboardFilters;
@@ -28,16 +23,18 @@ context('Dashboard facilities - filtering facility on wrong pagination page from
     manyBssDeals.map((deal) => {
       cy.insertOneDeal(deal, BANK1_MAKER1).then(({ _id }) => {
         const companyName = randomValueGenerator.companyName();
-        cy.updateDeal(_id, {
-          exporter: {
-            companyName,
+        cy.updateDeal(
+          _id,
+          {
+            exporter: {
+              companyName,
+            },
+            // adds company name to array
           },
-          // adds company name to array
-        }, BANK1_MAKER1).then((insertedDeal) => exporterNames.unshift(insertedDeal.exporter.companyName));
+          BANK1_MAKER1,
+        ).then((insertedDeal) => exporterNames.unshift(insertedDeal.exporter.companyName));
 
-        const facilities = [
-          BSS_FACILITY_LOAN,
-        ];
+        const facilities = [BSS_FACILITY_LOAN];
 
         cy.createFacilities(_id, facilities, BANK1_MAKER1);
       });
@@ -48,12 +45,16 @@ context('Dashboard facilities - filtering facility on wrong pagination page from
     const manyGefDeals = Array.from(Array(15), () => GEF_DEAL_DRAFT);
     manyGefDeals.map((deal) => {
       cy.insertOneGefApplication(deal, BANK1_MAKER1).then(({ _id }) => {
-        cy.updateGefApplication(_id, {
-          exporter: {
-            companyName: randomValueGenerator.companyName(),
+        cy.updateGefApplication(
+          _id,
+          {
+            exporter: {
+              companyName: randomValueGenerator.companyName(),
+            },
+            // adds company name to array
           },
-          // adds company name to array
-        }, BANK1_MAKER1).then((insertedDeal) => exporterNames.unshift(insertedDeal.exporter.companyName));
+          BANK1_MAKER1,
+        ).then((insertedDeal) => exporterNames.unshift(insertedDeal.exporter.companyName));
         GEF_FACILITY_CASH.dealId = _id;
         cy.insertOneGefFacility(GEF_FACILITY_CASH, BANK1_MAKER1);
       });
@@ -76,7 +77,6 @@ context('Dashboard facilities - filtering facility on wrong pagination page from
 
     dashboardFacilities.rows().should('have.length', 1);
 
-    dashboardFacilities.rows().eq(0).find('td').eq(0)
-      .contains(facilityToSearch);
+    dashboardFacilities.rows().eq(0).find('td').eq(0).contains(facilityToSearch);
   });
 });

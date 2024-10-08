@@ -83,14 +83,14 @@ const validateReportPeriodScheduleCoversTheYearChronologically = (reportPeriodSc
  * Throws an error if schedule is not valid
  */
 export const validateUtilisationReportPeriodSchedule = (reportPeriodSchedule: unknown): void => {
-    if (!reportPeriodSchedule || !Array.isArray(reportPeriodSchedule)) {
-      throw new InvalidReportPeriodScheduleError('Utilisation report period schedule is missing or the incorrect format');
-    }
+  if (!reportPeriodSchedule || !Array.isArray(reportPeriodSchedule)) {
+    throw new InvalidReportPeriodScheduleError('Utilisation report period schedule is missing or the incorrect format');
+  }
 
-    if (!isOfTypeBankReportPeriodSchedule(reportPeriodSchedule)) {
-      throw new InvalidReportPeriodScheduleError('Utilisation report period schedule is not in the correct format');
-    }
+  if (!isOfTypeBankReportPeriodSchedule(reportPeriodSchedule)) {
+    throw new InvalidReportPeriodScheduleError('Utilisation report period schedule is not in the correct format');
+  }
 
-    validateFirstPeriodCoversStartOfYear(reportPeriodSchedule);
-    validateReportPeriodScheduleCoversTheYearChronologically(reportPeriodSchedule);
+  validateFirstPeriodCoversStartOfYear(reportPeriodSchedule);
+  validateReportPeriodScheduleCoversTheYearChronologically(reportPeriodSchedule);
 };

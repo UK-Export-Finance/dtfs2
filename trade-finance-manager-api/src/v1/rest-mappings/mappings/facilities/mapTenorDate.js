@@ -2,7 +2,7 @@
  * Evaluates whether to return `month` or `months` based
  * on number of months provided.
  * @param {Integer} period Number of months
- * @returns {String} Singular or plural `month` string
+ * @returns {string} Singular or plural `month` string
  */
 const monthString = (period) => (Number(period) === 1 ? 'month' : 'months');
 
@@ -11,12 +11,9 @@ const monthString = (period) => (Number(period) === 1 ? 'month' : 'months');
  * or plural `months` text.
  * @param {Integer} months Number of cover months
  * @param {Integer} exposurePeriodMonths Exposure period in months
- * @returns {String} Tenor dates with `month(s)` appended, otherwise null
+ * @returns {string} Tenor dates with `month(s)` appended, otherwise null
  */
-const mapTenorDate = (
-  months,
-  exposurePeriodMonths,
-) => {
+const mapTenorDate = (months, exposurePeriodMonths) => {
   // If issued
   if (exposurePeriodMonths) {
     return `${exposurePeriodMonths} ${monthString(exposurePeriodMonths)}`;

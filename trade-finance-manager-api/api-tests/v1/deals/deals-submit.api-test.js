@@ -2,19 +2,10 @@ jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
   issueAcbsFacilities: jest.fn(),
 }));
 
-jest.mock('../../../src/v1/controllers/deal.controller', () => ({
-  ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
-  submitACBSIfAllPartiesHaveUrn: jest.fn(),
-}));
-
-jest.mock('../../../src/v1/controllers/deal.controller', () => ({
-  ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
-  canDealBeSubmittedToACBS: jest.fn(),
-}));
-
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
-const submitDeal = require('../utils/submitDeal');
+const { submitDeal, createSubmitBody } = require('../utils/submitDeal');
 const mapSubmittedDeal = require('../../../src/v1/mappings/map-submitted-deal');
 const addTfmDealData = require('../../../src/v1/controllers/deal-add-tfm-data');
 const { createDealTasks } = require('../../../src/v1/controllers/deal.tasks');
@@ -35,6 +26,7 @@ const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notif
 const MOCK_GEF_DEAL_AIN = require('../../../src/v1/__mocks__/mock-gef-deal');
 const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
 const MOCK_GEF_DEAL_MIN = require('../../../src/v1/__mocks__/mock-gef-deal-MIN');
+const { MOCK_PORTAL_USERS } = require('../../../src/v1/__mocks__/mock-portal-users');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
@@ -43,15 +35,15 @@ const updatePortalGefDealStatusSpy = jest.fn(() => Promise.resolve({}));
 const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
 const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
 
-const createSubmitBody = (mockDeal) => ({
-  dealId: mockDeal._id,
-  dealType: mockDeal.dealType,
-});
-
 const updateGefFacilitySpy = jest.fn(() => Promise.resolve({}));
 
 const getGefMandatoryCriteriaByVersion = jest.fn(() => Promise.resolve([]));
 api.getGefMandatoryCriteriaByVersion = getGefMandatoryCriteriaByVersion;
+
+jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
+  issueAcbsFacilities: jest.fn(),
+  createACBS: jest.fn(),
+}));
 
 describe('/v1/deals', () => {
   beforeEach(() => {
@@ -83,9 +75,18 @@ describe('/v1/deals', () => {
     mockUpdateDeal();
   });
 
+  const mockChecker = MOCK_PORTAL_USERS[0];
+  const auditDetails = generatePortalAuditDetails(mockChecker._id);
+
   describe('PUT /v1/deals/:dealId/submit', () => {
+    it('400s submission for invalid checker id', async () => {
+      const { status } = await submitDeal({ checker: { _id: '12345678910' } });
+
+      expect(status).toEqual(400);
+    });
+
     it('404s submission for unknown id', async () => {
-      const { status } = await submitDeal({ dealId: '12345678910' });
+      const { status } = await submitDeal({ dealId: '12345678910', checker: mockChecker });
 
       expect(status).toEqual(404);
     });
@@ -94,7 +95,7 @@ describe('/v1/deals', () => {
       const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED));
 
       const mappedDeal = await mapSubmittedDeal(body);
-      const tfmDataObject = await addTfmDealData(mappedDeal);
+      const tfmDataObject = await addTfmDealData(mappedDeal, generatePortalAuditDetails(mockChecker._id));
 
       // parties object is added further down the line.
       // addTfmDealData returns empty parties object.
@@ -111,7 +112,7 @@ describe('/v1/deals', () => {
     it('returns the requested resource if no companies house no given', async () => {
       const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_NO_COMPANIES_HOUSE));
       // Remove bonds & loans as they are returned mutated so will not match
-      const { bondTransactions, loanTransactions, ...mockDealWithoutFacilities } = MOCK_DEAL_NO_COMPANIES_HOUSE;
+      const { bondTransactions: _bondTransaction, loanTransactions: _loanTransaction, ...mockDealWithoutFacilities } = MOCK_DEAL_NO_COMPANIES_HOUSE;
 
       const tfmDeal = {
         dealSnapshot: mockDealWithoutFacilities,
@@ -121,7 +122,7 @@ describe('/v1/deals', () => {
               partyUrn: '',
             },
           },
-          tasks: createDealTasks(body),
+          tasks: createDealTasks(body, auditDetails),
         },
       };
 
@@ -132,7 +133,7 @@ describe('/v1/deals', () => {
     it('returns the requested resource without partyUrn if not matched', async () => {
       const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_NO_PARTY_DB));
       // Remove bonds & loans as they are returned mutated so will not match
-      const { bondTransactions, loanTransactions, ...mockDealWithoutFacilities } = MOCK_DEAL_NO_PARTY_DB;
+      const { bondTransactions: _bondTransaction, loanTransactions: _loanTransaction, ...mockDealWithoutFacilities } = MOCK_DEAL_NO_PARTY_DB;
 
       const tfmDeal = {
         dealSnapshot: mockDealWithoutFacilities,
@@ -142,7 +143,7 @@ describe('/v1/deals', () => {
               partyUrn: '',
             },
           },
-          tasks: createDealTasks(body),
+          tasks: createDealTasks(body, auditDetails),
         },
       };
 
@@ -154,7 +155,7 @@ describe('/v1/deals', () => {
       const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL));
 
       // Remove bonds & loans as they are returned mutated so will not match
-      const { bondTransactions, loanTransactions, ...mockDealWithoutFacilities } = MOCK_DEAL;
+      const { bondTransactions: _bondTransaction, loanTransactions: _loanTransaction, ...mockDealWithoutFacilities } = MOCK_DEAL;
 
       const tfmDeal = {
         dealSnapshot: mockDealWithoutFacilities,
@@ -164,7 +165,7 @@ describe('/v1/deals', () => {
               partyUrn: 'testPartyUrn',
             },
           },
-          tasks: createDealTasks(body),
+          tasks: createDealTasks(body, auditDetails),
         },
       };
 
@@ -230,17 +231,6 @@ describe('/v1/deals', () => {
       expect(body.tfm.dateReceivedTimestamp).toBeDefined();
     });
 
-    describe('eStore', () => {
-      describe('when deal is AIN', () => {
-        it('adds estore object to the deal', async () => {
-          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED));
-
-          expect(status).toEqual(200);
-          expect(body.tfm.estore).toBeDefined();
-        });
-      });
-    });
-
     describe('when dealType is `GEF`', () => {
       it('should return 200', async () => {
         const { status } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_AIN));
@@ -252,8 +242,12 @@ describe('/v1/deals', () => {
 
         const facilityId = body.facilities.find((f) => f.hasBeenIssued === true)._id;
 
-        expect(updateGefFacilitySpy).toHaveBeenCalledWith(facilityId, {
-          hasBeenIssuedAndAcknowledged: true,
+        expect(updateGefFacilitySpy).toHaveBeenCalledWith({
+          auditDetails,
+          facilityId,
+          facilityUpdate: {
+            hasBeenIssuedAndAcknowledged: true,
+          },
         });
       });
     });
@@ -263,7 +257,11 @@ describe('/v1/deals', () => {
         it('should call externalApis.updatePortalDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_DEAL));
 
-          expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(MOCK_DEAL._id, CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED);
+          expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith({
+            dealId: MOCK_DEAL._id,
+            status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
+            auditDetails,
+          });
         });
       });
 
@@ -271,7 +269,11 @@ describe('/v1/deals', () => {
         it('should call externalApis.updatePortalDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_DEAL_MIN));
 
-          expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(MOCK_DEAL_MIN._id, CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED);
+          expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith({
+            dealId: MOCK_DEAL_MIN._id,
+            status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
+            auditDetails,
+          });
         });
       });
 
@@ -279,7 +281,11 @@ describe('/v1/deals', () => {
         it('should call externalApis.updatePortalDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_DEAL_MIA));
 
-          expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(MOCK_DEAL_MIA._id, CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF);
+          expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith({
+            dealId: MOCK_DEAL_MIA._id,
+            status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF,
+            auditDetails,
+          });
         });
       });
 
@@ -287,7 +293,11 @@ describe('/v1/deals', () => {
         it('should call externalApis.updateGefDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_GEF_DEAL_AIN));
 
-          expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(MOCK_GEF_DEAL_AIN._id, CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED);
+          expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith({
+            dealId: MOCK_GEF_DEAL_AIN._id,
+            status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
+            auditDetails,
+          });
         });
       });
 
@@ -295,7 +305,11 @@ describe('/v1/deals', () => {
         it('should call externalApis.updateGefDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIN));
 
-          expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(MOCK_GEF_DEAL_MIN._id, CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED);
+          expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith({
+            dealId: MOCK_GEF_DEAL_MIN._id,
+            status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
+            auditDetails,
+          });
         });
       });
 
@@ -303,7 +317,11 @@ describe('/v1/deals', () => {
         it('should call externalApis.updateGefDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIA));
 
-          expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(MOCK_GEF_DEAL_MIA._id, CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF);
+          expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith({
+            dealId: MOCK_GEF_DEAL_MIA._id,
+            status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF,
+            auditDetails,
+          });
         });
       });
     });

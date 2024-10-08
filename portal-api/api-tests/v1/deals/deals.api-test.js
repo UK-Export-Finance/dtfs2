@@ -1,39 +1,42 @@
-const databaseHelper = require('../../database-helper');
-const aDeal = require('./deal-builder');
-const app = require('../../../src/createApp');
-const testUserCache = require('../../api-test-users');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
+const { expectAddedFields, expectAddedFieldsWithEditedBy } = require('./expectAddedFields');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
+const databaseHelper = require('../../database-helper');
+const aDeal = require('./deal-builder');
+const testUserCache = require('../../api-test-users');
 const dealWithAboutComplete = require('../../fixtures/deal-with-complete-about-section.json');
 const dealWithAboutIncomplete = require('../../fixtures/deal-with-incomplete-about-section.json');
-const { as, get } = require('../../api')(app);
-const { expectAddedFields, expectAddedFieldsWithEditedBy } = require('./expectAddedFields');
 const calculateDealSummary = require('../../../src/v1/deal-summary');
-const { DB_COLLECTIONS } = require('../../fixtures/constants');
+const app = require('../../../src/createApp');
+const { as, get } = require('../../api')(app);
 
 const newDeal = aDeal({
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
-  comments: [{
-    username: 'bananaman',
-    timestamp: '1984/12/25 00:00:00:001',
-    text: 'Merry Christmas from the 80s',
-  }, {
-    username: 'supergran',
-    timestamp: '1982/12/25 00:00:00:001',
-    text: 'Also Merry Christmas from the 80s',
-  }],
+  comments: [
+    {
+      username: 'bananaman',
+      timestamp: '1984/12/25 00:00:00:001',
+      text: 'Merry Christmas from the 80s',
+    },
+    {
+      username: 'supergran',
+      timestamp: '1982/12/25 00:00:00:001',
+      text: 'Also Merry Christmas from the 80s',
+    },
+  ],
   editedBy: [],
   supportingInformation: {
     securityDetails: {
       exporter: null,
-    }
-  }
+    },
+  },
 });
 
 describe('/v1/deals', () => {
-  let noRoles;
   let anHSBCMaker;
   let aBarclaysMaker;
   let aSuperuser;
@@ -41,7 +44,6 @@ describe('/v1/deals', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    noRoles = testUsers().withoutAnyRoles().one();
     aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
@@ -57,13 +59,12 @@ describe('/v1/deals', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(dealsUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(dealsUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(dealsUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).get(dealsUrl),
       successStatusCode: 200,
     });
@@ -73,19 +74,20 @@ describe('/v1/deals', () => {
     let aDealUrl;
 
     beforeEach(async () => {
-      const { body: { _id: dealId } } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const {
+        body: { _id: dealId },
+      } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       aDealUrl = `/v1/deals/${dealId}`;
     });
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(aDealUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(aDealUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(aDealUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withBankName('Barclays Bank').withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withBankName('Barclays Bank').withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(aDealUrl),
       successStatusCode: 200,
     });
@@ -116,9 +118,8 @@ describe('/v1/deals', () => {
 
     it('returns the requested resource', async () => {
       const { status, body } = await as(aBarclaysMaker).get(aDealUrl);
-
       expect(status).toEqual(200);
-      expect(body.deal).toEqual(expectAddedFields(newDeal));
+      expect(body.deal).toEqual(expectAddedFields({ baseDeal: newDeal, auditDetails: generatePortalAuditDetails(aBarclaysMaker._id) }));
     });
 
     it('calculates deal.submissionDetails.status = Incomplete if there are validation failures', async () => {
@@ -160,7 +161,7 @@ describe('/v1/deals', () => {
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).put(newDeal).to('/v1/deals/620a1aa095a618b12da38c7b');
+      const { status } = await as(testUsers).put(newDeal).to('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(401);
     });
@@ -211,7 +212,9 @@ describe('/v1/deals', () => {
 
       expect(status).toEqual(200);
 
-      expect(body).toMatchObject(expectAddedFieldsWithEditedBy(updatedDeal, anHSBCMaker));
+      expect(body).toMatchObject(
+        expectAddedFieldsWithEditedBy({ baseDeal: updatedDeal, user: anHSBCMaker, auditDetails: generatePortalAuditDetails(anHSBCMaker._id) }),
+      );
     });
 
     it('handles partial updates', async () => {
@@ -240,7 +243,9 @@ describe('/v1/deals', () => {
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body.deal).toMatchObject(expectAddedFieldsWithEditedBy(expectedDataIncludingUpdate, anHSBCMaker));
+      expect(body.deal).toMatchObject(
+        expectAddedFieldsWithEditedBy({ baseDeal: expectedDataIncludingUpdate, user: anHSBCMaker, auditDetails: generatePortalAuditDetails(anHSBCMaker._id) }),
+      );
     });
 
     it('updates the deal', async () => {
@@ -261,7 +266,9 @@ describe('/v1/deals', () => {
       const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
-      expect(body.deal).toMatchObject(expectAddedFieldsWithEditedBy(updatedDeal, anHSBCMaker));
+      expect(body.deal).toMatchObject(
+        expectAddedFieldsWithEditedBy({ baseDeal: updatedDeal, user: anHSBCMaker, auditDetails: generatePortalAuditDetails(anHSBCMaker._id) }),
+      );
     });
 
     it('adds updates and retains `editedBy` array with req.user data', async () => {
@@ -292,8 +299,22 @@ describe('/v1/deals', () => {
       const dealAfterSecondUpdate = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
       expect(dealAfterSecondUpdate.status).toEqual(200);
       expect(dealAfterSecondUpdate.body.deal.editedBy.length).toEqual(2);
-      expect(dealAfterSecondUpdate.body.deal.editedBy[0]).toEqual(expectAddedFieldsWithEditedBy(secondUpdate, anHSBCMaker, 1).editedBy[0]);
-      expect(dealAfterSecondUpdate.body.deal.editedBy[1]).toEqual(expectAddedFieldsWithEditedBy(secondUpdate, anHSBCMaker, 2).editedBy[1]);
+      expect(dealAfterSecondUpdate.body.deal.editedBy[0]).toEqual(
+        expectAddedFieldsWithEditedBy({
+          baseDeal: secondUpdate,
+          user: anHSBCMaker,
+          numberOfUpdates: 1,
+          auditDetails: generatePortalAuditDetails(anHSBCMaker._id),
+        }).editedBy[0],
+      );
+      expect(dealAfterSecondUpdate.body.deal.editedBy[1]).toEqual(
+        expectAddedFieldsWithEditedBy({
+          baseDeal: secondUpdate,
+          user: anHSBCMaker,
+          numberOfUpdates: 2,
+          auditDetails: generatePortalAuditDetails(anHSBCMaker._id),
+        }).editedBy[1],
+      );
     });
   });
 
@@ -305,7 +326,7 @@ describe('/v1/deals', () => {
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).post(newDeal).to('/v1/deals');
+      const { status } = await as(testUsers).post(newDeal).to('/v1/deals');
 
       expect(status).toEqual(401);
     });
@@ -313,11 +334,13 @@ describe('/v1/deals', () => {
     it('returns the created deal', async () => {
       const { body: createdDeal, status } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
+      const expectedCreateDeal = expectAddedFields({ baseDeal: newDeal, auditDetails: generatePortalAuditDetails(anHSBCMaker._id) });
+
       expect(status).toEqual(200);
 
       const { body: dealAfterCreation } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
-      expect(dealAfterCreation.deal).toEqual(expectAddedFields(newDeal));
+      expect(dealAfterCreation.deal).toEqual(expectedCreateDeal);
     });
 
     it('creates unique deal IDs', async () => {
@@ -357,7 +380,7 @@ describe('/v1/deals', () => {
 
     it('401s requests that do not come from a user with role=maker', async () => {
       await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-      const { status } = await as(noRoles).remove('/v1/deals/620a1aa095a618b12da38c7b');
+      const { status } = await as(testUsers).remove('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(401);
     });

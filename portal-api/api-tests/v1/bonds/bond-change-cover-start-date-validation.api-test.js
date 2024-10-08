@@ -15,7 +15,7 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
   const todayPlus3Months1Day = add(nowDate, { months: 3, days: 1 });
   const todayPlus3Months = add(nowDate, { months: 3 });
   const twoDaysAgo = sub(nowDate, { days: 2 });
-  const aWeekAgo = sub(nowDate, { weeks: 1});
+  const aWeekAgo = sub(nowDate, { weeks: 1 });
 
   const newDeal = aDeal({
     submissionType: 'Manual Inclusion Notice',
@@ -135,7 +135,7 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
             submissionType: 'Automatic Inclusion Notice',
             details: {
               ...newDeal.details,
-              submissionDate: twoDaysAgo.valueOf()
+              submissionDate: twoDaysAgo.valueOf(),
             },
           };
 
@@ -163,7 +163,7 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
         describe('when requestedCoverStartDate is after 3 months from today', () => {
           it('should return validationError', async () => {
             const submissionDate = getStartOfDateFromEpochMillisecondString(updatedDeal.details.submissionDate);
-            const submissionPlus3Months = add(submissionDate, {months: 3});
+            const submissionPlus3Months = add(submissionDate, { months: 3 });
             const requestedCoverStartDateFields = {
               'requestedCoverStartDate-day': format(todayPlus3Months1Day, 'dd'),
               'requestedCoverStartDate-month': format(todayPlus3Months1Day, 'MM'),
@@ -173,7 +173,7 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
-            const formattedSubmissionDate = format(submissionDate, DATE_FORMATS.LONG_FORM_DATE)
+            const formattedSubmissionDate = format(submissionDate, DATE_FORMATS.LONG_FORM_DATE);
             const submissionPlus3MonthsFormatted = format(submissionPlus3Months, DATE_FORMATS.LONG_FORM_DATE);
 
             const expectedText = `Requested Cover Start Date must be between ${formattedSubmissionDate} and ${submissionPlus3MonthsFormatted}`;
@@ -279,9 +279,7 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
             const dealWithEligibilityCriteria15False = {
               ...updatedDeal,
               eligibility: {
-                criteria: [
-                  { id: 15, answer: false }
-                ],
+                criteria: [{ id: 15, answer: false }],
               },
             };
 
@@ -319,7 +317,7 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
           await updateDeal(dealId, updatedDeal);
         });
 
-        describe('when requestedCoverStartDate is before the deal\'s manual inclusion notice submission date', () => {
+        describe("when requestedCoverStartDate is before the deal's manual inclusion notice submission date", () => {
           it('should return validationError', async () => {
             const threeDaysAgo = sub(nowDate, { days: 3 });
             const requestedCoverStartDateFields = {
@@ -357,7 +355,7 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
         describe('when is after 3 months from today', () => {
           it('should return validationError', async () => {
             const manualInclusionApplicationSubmissionDate = getStartOfDateFromEpochMillisecondString(updatedDeal.details.manualInclusionNoticeSubmissionDate);
-            const minPlus3Months = add(manualInclusionApplicationSubmissionDate, { months: 3 })
+            const minPlus3Months = add(manualInclusionApplicationSubmissionDate, { months: 3 });
             const formattedManualInclusionNoticeSubmissionDate = format(manualInclusionApplicationSubmissionDate, DATE_FORMATS.LONG_FORM_DATE);
             const minPlus3MonthsFormatted = format(minPlus3Months, DATE_FORMATS.LONG_FORM_DATE);
 
@@ -380,9 +378,7 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
             const dealWithEligibilityCriteria15False = {
               ...updatedDeal,
               eligibility: {
-                criteria: [
-                  { id: 15, answer: false }
-                ],
+                criteria: [{ id: 15, answer: false }],
               },
             };
 

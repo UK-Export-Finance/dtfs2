@@ -1,14 +1,10 @@
 const { format, fromUnixTime } = require('date-fns');
+const { CURRENCY, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const sendTfmEmail = require('../controllers/send-tfm-email');
 const { UNDERWRITER_MANAGER_DECISIONS } = require('../../constants/amendments');
 const { TEAMS } = require('../../constants');
-const {
-  AMENDMENT_UW_DECISION,
-  AMENDMENT_BANK_DECISION,
-  AMENDMENT_STATUS,
-} = require('../../constants/deals');
-const { CURRENCY } = require('../../constants/currency.constant');
+const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');
 const EMAIL_TEMPLATE_IDS = require('../../constants/email-template-ids');
 const { automaticAmendmentEmailVariables } = require('../emails/amendments/automatic-approval-email-variables');
 const { generateTaskEmailVariables } = require('./generate-task-email-variables');
@@ -26,8 +22,11 @@ const { decimalsCount, roundNumber } = require('./number');
 
 // checks if amendment exists and if eligible to send email
 const amendmentEmailEligible = (amendment) =>
-  amendment && (amendment?.automaticApprovalEmail || amendment?.ukefDecision?.managersDecisionEmail || amendment?.bankDecision?.banksDecisionEmail
-    || amendment?.sendFirstTaskEmail);
+  amendment &&
+  (amendment?.automaticApprovalEmail ||
+    amendment?.ukefDecision?.managersDecisionEmail ||
+    amendment?.bankDecision?.banksDecisionEmail ||
+    amendment?.sendFirstTaskEmail);
 
 const isApprovedWithConditions = (ukefDecision) => {
   const { value, coverEndDate } = ukefDecision;
@@ -45,8 +44,8 @@ const isApprovedWithoutConditions = (ukefDecision) => {
 /**
  * Ascertain whether the requested amendment
  * have been declined or not.
- * @param {Object} amendment Amendment object
- * @returns {Boolean} Whether both the amendments decision has been declined by the underwriter.
+ * @param {object} amendment Amendment object
+ * @returns {boolean} Whether both the amendments decision has been declined by the underwriter.
  */
 const amendmentDeclined = (amendment) => {
   const { changeFacilityValue, changeCoverEndDate } = amendment;
@@ -63,7 +62,7 @@ const amendmentDeclined = (amendment) => {
   return value === DECLINED || coverEndDate === DECLINED;
 };
 
-const sendAutomaticAmendmentEmail = async (amendmentVariables) => {
+const sendAutomaticAmendmentEmail = async (amendmentVariables, auditDetails) => {
   const { email: pimEmail } = await api.findOneTeam(TEAMS.PIM.id);
   const { user, facilityId, amendmentId } = amendmentVariables;
   const templateId = EMAIL_TEMPLATE_IDS.AUTOMATIC_AMENDMENT;
@@ -76,24 +75,24 @@ const sendAutomaticAmendmentEmail = async (amendmentVariables) => {
 
     // if successful, then updates flag to say email has been sent
     if (emailResponse && pimEmailResponse) {
-      await api.updateFacilityAmendment(facilityId, amendmentId, { automaticApprovalEmailSent: true });
+      await api.updateFacilityAmendment(facilityId, amendmentId, { automaticApprovalEmailSent: true }, auditDetails);
     }
   } catch (error) {
-    console.error('TFM-API error sending email - sendAutomaticAmendmentEmail %s', error);
+    console.error('TFM-API error sending email - sendAutomaticAmendmentEmail %o', error);
   }
 };
 
 // updates flag if managers decision email sent so not sent again
-const managersDecisionUpdateEmailConfirmation = async (facilityId, amendmentId) => {
+const managersDecisionUpdateEmailConfirmation = async (facilityId, amendmentId, auditDetails) => {
   const payload = {
     ukefDecision: {
       managersDecisionEmailSent: true,
     },
   };
-  await api.updateFacilityAmendment(facilityId, amendmentId, payload);
+  await api.updateFacilityAmendment(facilityId, amendmentId, payload, auditDetails);
 };
 
-const emailApprovedWithWithoutConditions = async (amendmentVariables) => {
+const emailApprovedWithWithoutConditions = async (amendmentVariables, auditDetails) => {
   const { email: pimEmail } = await api.findOneTeam(TEAMS.PIM.id);
   const { user, facilityId, amendmentId } = amendmentVariables;
   const templateId = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS;
@@ -106,14 +105,14 @@ const emailApprovedWithWithoutConditions = async (amendmentVariables) => {
 
     // if successful, then updates flag to say email has been sent
     if (pimEmailResponse && emailResponse) {
-      await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId);
+      await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId, auditDetails);
     }
   } catch (error) {
-    console.error('TFM-API error sending email - emailApprovedWithWithoutConditions %s', error);
+    console.error('TFM-API error sending email - emailApprovedWithWithoutConditions %o', error);
   }
 };
 
-const emailApprovedWithoutConditions = async (amendmentVariables) => {
+const emailApprovedWithoutConditions = async (amendmentVariables, auditDetails) => {
   const { email: pimEmail } = await api.findOneTeam(TEAMS.PIM.id);
   const { user, facilityId, amendmentId } = amendmentVariables;
   const templateId = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS;
@@ -126,14 +125,14 @@ const emailApprovedWithoutConditions = async (amendmentVariables) => {
 
     // if successful, then updates flag to say email has been sent
     if (pimEmailResponse && emailResponse) {
-      await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId);
+      await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId, auditDetails);
     }
   } catch (error) {
-    console.error('TFM-API error sending email - emailApprovedWithoutConditions %s', error);
+    console.error('TFM-API error sending email - emailApprovedWithoutConditions %o', error);
   }
 };
 
-const emailApprovedWithConditionsDeclined = async (amendmentVariables) => {
+const emailApprovedWithConditionsDeclined = async (amendmentVariables, auditDetails) => {
   const { email: pimEmail } = await api.findOneTeam(TEAMS.PIM.id);
   const { user, facilityId, amendmentId } = amendmentVariables;
   const templateId = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS_DECLINED;
@@ -146,14 +145,14 @@ const emailApprovedWithConditionsDeclined = async (amendmentVariables) => {
 
     // if successful, then updates flag to say email has been sent
     if (pimEmailResponse && emailResponse) {
-      await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId);
+      await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId, auditDetails);
     }
   } catch (error) {
-    console.error('TFM-API error sending email - emailApprovedWithConditionsDeclined %s', error);
+    console.error('TFM-API error sending email - emailApprovedWithConditionsDeclined %o', error);
   }
 };
 
-const emailApprovedWithoutConditionsDeclined = async (amendmentVariables) => {
+const emailApprovedWithoutConditionsDeclined = async (amendmentVariables, auditDetails) => {
   const { email: pimEmail } = await api.findOneTeam(TEAMS.PIM.id);
   const { user, facilityId, amendmentId } = amendmentVariables;
   const templateId = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS_DECLINED;
@@ -166,14 +165,14 @@ const emailApprovedWithoutConditionsDeclined = async (amendmentVariables) => {
 
     // if successful, then updates flag to say email has been sent
     if (pimEmailResponse && emailResponse) {
-      await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId);
+      await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId, auditDetails);
     }
   } catch (error) {
-    console.error('TFM-API error sending email - emailApprovedWithoutConditionsDeclined %s', error);
+    console.error('TFM-API error sending email - emailApprovedWithoutConditionsDeclined %o', error);
   }
 };
 
-const emailDeclined = async (amendmentVariables) => {
+const emailDeclined = async (amendmentVariables, auditDetails) => {
   const { email: pimEmail } = await api.findOneTeam(TEAMS.PIM.id);
   const { user, facilityId, amendmentId } = amendmentVariables;
   const templateId = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_DECLINED;
@@ -186,56 +185,56 @@ const emailDeclined = async (amendmentVariables) => {
 
     // if successful, then updates flag to say email has been sent
     if (pimEmailResponse && emailResponse) {
-      await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId);
+      await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId, auditDetails);
     }
   } catch (error) {
-    console.error('TFM-API error sending email - emailDeclined %s', error);
+    console.error('TFM-API error sending email - emailDeclined %o', error);
   }
 };
 
-const sendManualDecisionAmendmentEmail = async (amendmentVariables) => {
+const sendManualDecisionAmendmentEmail = async (amendmentVariables, auditDetails) => {
   const { amendment } = amendmentVariables;
   const { ukefDecision } = amendment;
 
   try {
     // if one is approved with conditions and not declined
     if (isApprovedWithConditions(ukefDecision) && !amendmentDeclined(amendment)) {
-      await emailApprovedWithWithoutConditions(amendmentVariables);
+      await emailApprovedWithWithoutConditions(amendmentVariables, auditDetails);
 
       // if only approved without conditions (and not declined or with conditions)
     } else if (isApprovedWithoutConditions(ukefDecision) && !amendmentDeclined(amendment) && !isApprovedWithConditions(ukefDecision)) {
-      await emailApprovedWithoutConditions(amendmentVariables);
+      await emailApprovedWithoutConditions(amendmentVariables, auditDetails);
 
       // if approved with conditions and declined only
     } else if (isApprovedWithConditions(ukefDecision) && amendmentDeclined(amendment) && !isApprovedWithoutConditions(ukefDecision)) {
-      await emailApprovedWithConditionsDeclined(amendmentVariables);
+      await emailApprovedWithConditionsDeclined(amendmentVariables, auditDetails);
 
       // if approved without conditions and declined only
     } else if (isApprovedWithoutConditions(ukefDecision) && amendmentDeclined(amendment) && !isApprovedWithConditions(ukefDecision)) {
-      await emailApprovedWithoutConditionsDeclined(amendmentVariables);
+      await emailApprovedWithoutConditionsDeclined(amendmentVariables, auditDetails);
 
       // if declined only
     } else if (amendmentDeclined(amendment) && !isApprovedWithConditions(ukefDecision) && !isApprovedWithoutConditions(ukefDecision)) {
-      await emailDeclined(amendmentVariables);
+      await emailDeclined(amendmentVariables, auditDetails);
     } else {
       console.error('Incorrect ukefDecision passed for manual amendment email');
     }
   } catch (error) {
-    console.error('Error sending manual amendment underwriter decision email %s', error);
+    console.error('Error sending manual amendment underwriter decision email %o', error);
   }
 };
 
 // updates flag if managers decision email sent so not sent again
-const banksDecisionUpdateEmailConfirmation = async (facilityId, amendmentId) => {
+const banksDecisionUpdateEmailConfirmation = async (facilityId, amendmentId, auditDetails) => {
   const payload = {
     bankDecision: {
       banksDecisionEmailSent: true,
     },
   };
-  await api.updateFacilityAmendment(facilityId, amendmentId, payload);
+  await api.updateFacilityAmendment(facilityId, amendmentId, payload, auditDetails);
 };
 
-const emailBankDecision = async (amendmentVariables, templateId) => {
+const emailBankDecision = async (amendmentVariables, templateId, auditDetails) => {
   const { email: pimEmail } = await api.findOneTeam(TEAMS.PIM.id);
   const { user, facilityId, amendmentId } = amendmentVariables;
   const emailVariables = banksDecisionEmailVariables(amendmentVariables);
@@ -247,14 +246,14 @@ const emailBankDecision = async (amendmentVariables, templateId) => {
 
     // if successful, then updates flag to say email has been sent
     if (pimEmailResponse && emailResponse) {
-      await banksDecisionUpdateEmailConfirmation(facilityId, amendmentId);
+      await banksDecisionUpdateEmailConfirmation(facilityId, amendmentId, auditDetails);
     }
   } catch (error) {
-    console.error('TFM-API error sending email - emailBankDecision %s', error);
+    console.error('TFM-API error sending email - emailBankDecision %o', error);
   }
 };
 
-const sendManualBankDecisionEmail = async (amendmentVariables) => {
+const sendManualBankDecisionEmail = async (amendmentVariables, auditDetails) => {
   const { amendment } = amendmentVariables;
   const { bankDecision } = amendment;
 
@@ -262,14 +261,14 @@ const sendManualBankDecisionEmail = async (amendmentVariables) => {
 
   try {
     if (bankDecision.decision === PROCEED) {
-      await emailBankDecision(amendmentVariables, EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_BANK_PROCEED);
+      await emailBankDecision(amendmentVariables, EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_BANK_PROCEED, auditDetails);
     } else if (bankDecision.decision === WITHDRAW) {
-      await emailBankDecision(amendmentVariables, EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_BANK_WITHDRAW);
+      await emailBankDecision(amendmentVariables, EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_BANK_WITHDRAW, auditDetails);
     } else {
       console.error('Incorrect bankDecision passed for manual amendment email');
     }
   } catch (error) {
-    console.error('Error sending manual amendment bank decision email %s', error);
+    console.error('Error sending manual amendment bank decision email %o', error);
   }
 };
 
@@ -277,7 +276,7 @@ const sendManualBankDecisionEmail = async (amendmentVariables) => {
  * Evaluated whether facility amendment is eligible
  * for ACBS interaction based on myriads of conditions.
  * This function evaluated across all amendment types.
- * @param {Object} amendment Facility amendments object
+ * @param {object} amendment Facility amendments object
  */
 const canSendToAcbs = (amendment) => {
   // Ensure at least one of the attribute has been amended
@@ -304,15 +303,15 @@ const canSendToAcbs = (amendment) => {
 };
 
 // updates flag if managers decision email sent so not sent again
-const firstTaskEmailConfirmation = async (facilityId, amendmentId) => {
+const firstTaskEmailConfirmation = async (facilityId, amendmentId, auditDetails) => {
   const payload = {
     firstTaskEmailSent: true,
   };
-  await api.updateFacilityAmendment(facilityId, amendmentId, payload);
+  await api.updateFacilityAmendment(facilityId, amendmentId, payload, auditDetails);
 };
 
 // sends email for first amendment task when pim submit amendment
-const sendFirstTaskEmail = async (taskVariables) => {
+const sendFirstTaskEmail = async (taskVariables, auditDetails) => {
   const { amendment, dealSnapshot, facilityId, amendmentId } = taskVariables;
   const { tasks } = amendment;
   const { dealId, exporter } = dealSnapshot;
@@ -334,17 +333,17 @@ const sendFirstTaskEmail = async (taskVariables) => {
 
     // if successful, then updates flag to say email has been sent
     if (emailResponse) {
-      await firstTaskEmailConfirmation(facilityId, amendmentId);
+      await firstTaskEmailConfirmation(facilityId, amendmentId, auditDetails);
     }
   } catch (error) {
-    console.error('Error sending first amendment task email %s', error);
+    console.error('Error sending first amendment task email %o', error);
   }
 };
 
 /**
  * Initiate an internal UKEF team email, upon an amendment
  * submission (automatic) and approval (manual)
- * @param {String} ukefFacilityId UKEF Facility ID
+ * @param {string} ukefFacilityId UKEF Facility ID
  */
 const internalAmendmentEmail = (ukefFacilityId) => {
   try {
@@ -360,7 +359,7 @@ const internalAmendmentEmail = (ukefFacilityId) => {
 
     return sendTfmEmail(templateId, sendToEmailAddress, emailVariables);
   } catch (error) {
-    console.error('Error sending internal amendment email %s', error);
+    console.error('Error sending internal amendment email %o', error);
     return false;
   }
 };
@@ -443,7 +442,7 @@ const calculateAmendmentExposure = async (amendmentId, facilityId, latestValue) 
       ukefExposureValue,
     };
   } catch (error) {
-    console.error('TFM-API - calculateAmendmentExposure - Error in amendment helper %s', error);
+    console.error('TFM-API - calculateAmendmentExposure - Error in amendment helper %o', error);
     return null;
   }
 };
@@ -471,8 +470,10 @@ const calculateAmendmentDateTenor = async (coverEndDate, existingFacility) => {
   try {
     const { facilitySnapshot } = existingFacility;
 
-    const validConditions = (facilitySnapshot?.ukefFacilityType || facilitySnapshot?.type)
-      && (facilitySnapshot?.coverStartDate || facilitySnapshot?.requestedCoverStartDate) && coverEndDate;
+    const validConditions =
+      (facilitySnapshot?.ukefFacilityType || facilitySnapshot?.type) &&
+      (facilitySnapshot?.coverStartDate || facilitySnapshot?.requestedCoverStartDate) &&
+      coverEndDate;
 
     if (validConditions) {
       const { ukefFacilityType, type } = facilitySnapshot;
@@ -492,38 +493,60 @@ const calculateAmendmentDateTenor = async (coverEndDate, existingFacility) => {
 
     return null;
   } catch (error) {
-    console.error('TFM API - Amendment helpers - Error calculating new amendment tenor %s', error);
+    console.error('TFM API - Amendment helpers - Error calculating new amendment tenor %o', error);
     return null;
   }
 };
 
-// populates tfmObject with date values
-const addLatestAmendmentDates = async (tfmObject, latestDate, facilityId) => {
-  // if there is a latest coverEndDate
-  if (latestDate?.coverEndDate) {
-    const { coverEndDate } = latestDate;
-    const existingFacility = await api.findOneFacility(facilityId);
+/**
+ * Populates the tfmObject with cover end date values
+ * @param {import('@ukef/dtfs2-common').FacilityAmendmentTfmObject} tfmObject
+ * @param {{ coverEndDate?: number } | undefined} latestCoverEndDateResponse
+ * @param {string} facilityId
+ * @returns {Promise<import('@ukef/dtfs2-common').FacilityAmendmentTfmObject>}
+ */
+const addLatestAmendmentCoverEndDate = async (tfmObject, latestCoverEndDateResponse, facilityId) => {
+  const existingFacility = await api.findOneFacility(facilityId);
 
-    if (!existingFacility) {
-      return tfmObject;
-    }
-    // populates with coverEndDate and exposurePeriod
-    const newTfmObject = {
-      ...tfmObject,
-      coverEndDate: latestDate.coverEndDate,
-      amendmentExposurePeriodInMonths: await calculateAmendmentDateTenor(coverEndDate, existingFacility),
-    };
-
-    return newTfmObject;
+  if (!existingFacility) {
+    return tfmObject;
   }
-  return tfmObject;
+
+  const coverEndDate = latestCoverEndDateResponse?.coverEndDate;
+  const amendmentExposurePeriodInMonths = coverEndDate ? await calculateAmendmentDateTenor(coverEndDate, existingFacility) : undefined;
+
+  return {
+    ...tfmObject,
+    coverEndDate,
+    amendmentExposurePeriodInMonths,
+  };
+};
+
+/**
+ * Populates the tfmObject with facility end date values
+ * @param {import('@ukef/dtfs2-common').FacilityAmendmentTfmObject} tfmObject
+ * @param {{facilityEndDate?: string, bankReviewDate?: string, isUsingFacilityEndDate?: boolean }} latestFacilityEndDateDataResponse
+ * @returns {Promise<import('@ukef/dtfs2-common').FacilityAmendmentTfmObject>}
+ */
+const addLatestAmendmentFacilityEndDate = async (tfmObject, latestFacilityEndDateDataResponse) => {
+  if (!latestFacilityEndDateDataResponse) {
+    return tfmObject;
+  }
+
+  const { isUsingFacilityEndDate, facilityEndDate, bankReviewDate } = latestFacilityEndDateDataResponse;
+  return {
+    ...tfmObject,
+    isUsingFacilityEndDate,
+    facilityEndDate: isUsingFacilityEndDate ? facilityEndDate : undefined,
+    bankReviewDate: isUsingFacilityEndDate === false ? bankReviewDate : undefined,
+  };
 };
 
 /**
  * Calculates UKEF Exposure for the defined facility
  * based on updated facility amount and original cover percentage.
- * @param {Object} payload Amendment payload
- * @returns {Object} Computed payload with `ukefExposure` property calculated.
+ * @param {object} payload Amendment payload
+ * @returns {object} Computed payload with `ukefExposure` property calculated.
  */
 const calculateAcbsUkefExposure = (payload) => {
   if (payload?.value && payload?.coveredPercentage) {
@@ -538,15 +561,13 @@ const calculateAcbsUkefExposure = (payload) => {
 
 /**
  * Converts non-ms epoch to ms epoch.
- * @param {Object} payload Amendment payload
- * @returns {Object} Computed payload with EPOCH sm compatible `coverEndDate`.
+ * @param {object} payload Amendment payload
+ * @returns {object} Computed payload with EPOCH sm compatible `coverEndDate`.
  */
 const formatCoverEndDate = (payload) => {
   if (payload?.coverEndDate) {
     // TODO: DTFS2-7047 convert EPOCH to millisecond compatible epoch.
-    const epoch = payload.coverEndDate.toString().length > 10
-      ? payload.coverEndDate
-      : payload.coverEndDate * 1000;
+    const epoch = payload.coverEndDate.toString().length > 10 ? payload.coverEndDate : payload.coverEndDate * 1000;
 
     return {
       ...payload,
@@ -567,7 +588,8 @@ module.exports = {
   calculateUkefExposure,
   formatCoverEndDate,
   addLatestAmendmentValue,
-  addLatestAmendmentDates,
+  addLatestAmendmentCoverEndDate,
+  addLatestAmendmentFacilityEndDate,
   calculateAmendmentDateTenor,
   calculateAmendmentExposure,
   calculateAcbsUkefExposure,

@@ -17,7 +17,7 @@ const MANDATORY_CRITERIA = [
           {
             id: 3,
             copy: 'Where the Supplier is a UK Supplier, the Supplier has provided the Bank with a duly completed UK Supplier Declaration, and the Bank is not aware that any of the information contained within it is inaccurate. (Conditional for UK Supplier)',
-          }
+          },
         ],
       },
       {
@@ -36,7 +36,7 @@ const MANDATORY_CRITERIA = [
         items: [
           {
             id: 5,
-            copy: 'The Bank Customer (to include both the Supplier and any UK Parent Obligor) has a one- year probability of default of less than 14.1%.',
+            copy: 'The Bank Customer (to include both the Supplier and any UK Parent Obligor) has a one-year probability of default of less than 14.1%.',
           },
         ],
       },
@@ -69,7 +69,7 @@ const MANDATORY_CRITERIA = [
           {
             id: 10,
             copy: 'The Bank is not restricted or prevented by any agreement with an Obligor from providing information and records relating to the Transaction.',
-          }
+          },
         ],
       },
     ],
@@ -111,7 +111,7 @@ const MANDATORY_CRITERIA = [
         items: [
           {
             id: 5,
-            copy: 'The Bank Customer (to include both the Supplier and any UK Parent Obligor) has a one- year probability of default of less than 14.1%.',
+            copy: 'The Bank Customer (to include both the Supplier and any UK Parent Obligor) has a one-year probability of default of less than 14.1%.',
           },
         ],
       },
@@ -186,7 +186,7 @@ const MANDATORY_CRITERIA = [
         items: [
           {
             id: 5,
-            copy: 'The Bank Customer (to include both the Supplier and any UK Parent Obligor) has a one- year probability of default of less than 14.1%.',
+            copy: 'The Bank Customer (to include both the Supplier and any UK Parent Obligor) has a one-year probability of default of less than 14.1%.',
           },
         ],
       },
@@ -223,7 +223,7 @@ const MANDATORY_CRITERIA = [
         ],
       },
     ],
-  }
+  },
 ];
 
 module.exports = MANDATORY_CRITERIA;

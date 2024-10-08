@@ -80,10 +80,13 @@ describe('controllers/select-exporters-correspondence-address', () => {
 
       await validateSelectExportersCorrespondenceAddress(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/select-exporters-correspondence-address.njk', expect.objectContaining({
-        errors: expect.any(Object),
-        dealId: '123',
-      }));
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/select-exporters-correspondence-address.njk',
+        expect.objectContaining({
+          errors: expect.any(Object),
+          dealId: '123',
+        }),
+      );
     });
 
     it('sets address object into session string', async () => {

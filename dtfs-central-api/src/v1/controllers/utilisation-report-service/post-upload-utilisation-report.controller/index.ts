@@ -1,51 +1,17 @@
-import { Response, NextFunction } from 'express';
+import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { AzureFileInfo, Unknown, UtilisationReportEntity } from '@ukef/dtfs2-common';
-import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import {
-  validateReportId,
-  validateUtilisationReportData,
-  validateFileInfo,
-  validateReportUser,
-} from '../../../validation/utilisation-report-service/utilisation-report-validator';
+import { AzureFileInfo, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { UtilisationReportRawCsvData } from '../../../../types/utilisation-reports';
-import { ApiError, TransactionFailedError } from '../../../../errors';
+import { ApiError } from '../../../../errors';
+import { executeWithSqlTransaction } from '../../../../helpers';
 
 export type PostUploadUtilisationReportRequestBody = {
   reportId: number;
   fileInfo: AzureFileInfo;
   reportData: UtilisationReportRawCsvData[];
   user: { _id: string };
-};
-
-type PreValidationPostUploadUtilisationReportRequest = CustomExpressRequest<{
-  reqBody: Unknown<PostUploadUtilisationReportRequestBody>;
-}>;
-
-/**
- * Validates the payload for the utilisation report upload request
- * @param req - The request object
- * @param res - The response object
- * @param next - The next function
- */
-export const postUploadUtilisationReportPayloadValidator = (req: PreValidationPostUploadUtilisationReportRequest, res: Response, next: NextFunction) => {
-  const { reportId, fileInfo, reportData, user } = req.body;
-
-  const validationErrors = [
-    validateReportId(reportId),
-    ...validateFileInfo(fileInfo),
-    ...validateUtilisationReportData(reportData),
-    ...validateReportUser(user),
-  ].filter(Boolean);
-
-  if (validationErrors.length > 0) {
-    console.error('Failed to save utilisation report - validation errors: %O', validationErrors);
-    return res.status(HttpStatusCode.BadRequest).send(validationErrors);
-  }
-
-  return next();
 };
 
 type PostUploadUtilisationReportRequest = CustomExpressRequest<{
@@ -67,15 +33,9 @@ export const uploadReportInTransaction = async (
 ): Promise<UtilisationReportEntity> => {
   const uploadedByUserId = user._id.toString();
 
-  const queryRunner = SqlDbDataSource.createQueryRunner();
-  await queryRunner.connect();
-
-  await queryRunner.startTransaction();
-  try {
-    const transactionEntityManager = queryRunner.manager;
-    const reportStateMachine = await UtilisationReportStateMachine.forReportId(reportId);
-
-    const updatedReport = await reportStateMachine.handleEvent({
+  const reportStateMachine = await UtilisationReportStateMachine.forReportId(reportId);
+  const updatedReport = await executeWithSqlTransaction(async (transactionEntityManager) => {
+    return await reportStateMachine.handleEvent({
       type: 'REPORT_UPLOADED',
       payload: {
         azureFileInfo: fileInfo,
@@ -88,18 +48,8 @@ export const uploadReportInTransaction = async (
         transactionEntityManager,
       },
     });
-    await queryRunner.commitTransaction();
-    return updatedReport;
-  } catch (error) {
-    await queryRunner.rollbackTransaction();
-    if (error instanceof ApiError) {
-      throw error;
-    } else {
-      throw new TransactionFailedError();
-    }
-  } finally {
-    await queryRunner.release();
-  }
+  });
+  return updatedReport;
 };
 
 /**

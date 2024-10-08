@@ -155,9 +155,12 @@ context('Ensure proceed to review button is only visible once facilities are in 
     pages.loanFinancialDetails.submit().click();
 
     // Fee details
-    partials.taskListHeader.itemStatus('loan-financial-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
+    partials.taskListHeader
+      .itemStatus('loan-financial-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Incomplete');
+      });
     fillLoanForm.datesRepayments.inAdvanceAnnually();
     pages.loanFinancialDetails.submit().click();
 

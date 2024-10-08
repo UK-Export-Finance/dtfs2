@@ -3,9 +3,7 @@ import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
-import {
-  PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN,
-} from '../../../../../e2e-fixtures';
+import { PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import pages from '../../pages';
 
 context('Amendments underwriting - amendments should be in correct order of versions (including when withdrawn)', () => {
@@ -134,7 +132,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
 
     cy.url().should('contain', '/banks-decision/check-answers');
 
-    amendmentsPage.underWritingSubmitButton().click();
+    amendmentsPage.assignLeadUnderwriterSaveButton().click();
   });
 
   it('should show the correct details for amendment 1 on facility amendments page', () => {
@@ -237,7 +235,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
 
     cy.url().should('contain', '/banks-decision/check-answers');
 
-    amendmentsPage.underWritingSubmitButton().click();
+    amendmentsPage.assignLeadUnderwriterSaveButton().click();
   });
 
   it('should show the correct details for amendment 2 on facility amendments page', () => {
@@ -288,9 +286,9 @@ context('Amendments underwriting - amendments should be in correct order of vers
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', 'cover-end-date');
 
-    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.threeMonthsDay);
-    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.threeMonthsMonth);
-    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.threeMonthsYear);
+    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.threeYearsDay);
+    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.threeYearsMonth);
+    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.threeYearsYear);
     amendmentsPage.continueAmendment().click();
 
     cy.url().should('contain', 'facility-value');
@@ -351,7 +349,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
 
     cy.url().should('contain', '/banks-decision/check-answers');
 
-    amendmentsPage.underWritingSubmitButton().click();
+    amendmentsPage.assignLeadUnderwriterSaveButton().click();
   });
 
   it('should show the correct details for amendment 3 on facility amendments page', () => {

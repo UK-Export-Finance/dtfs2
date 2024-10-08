@@ -1,5 +1,6 @@
 import relative from '../relativeURL';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
+import { cancelLink, mainHeading, submitButton } from '../partials';
 import applicationDetails from '../pages/application-details';
 import automaticCover from '../pages/automatic-cover';
 import manualInclusion from '../pages/manual-inclusion-questionnaire';
@@ -44,22 +45,22 @@ context('Submit MIA to UKEF', () => {
       // Deny EC
       automaticCover.falseRadioButton(19).click();
 
-      automaticCover.continueButton().click();
-      manualInclusion.continueButton().click();
+      cy.clickContinueButton();
+      cy.clickContinueButton();
 
       cy.uploadFile('upload-file-valid.doc', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadSuccess('upload_file_valid.doc');
-      manualInclusion.continueButton().click();
+      cy.clickContinueButton();
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('test');
       securityDetails.facilitySecurity().type('test2');
-      securityDetails.continueButton().click();
+      cy.clickSubmitButton();
       securityDetails.visit(dealId);
-      securityDetails.cancelButton().click();
+      cy.clickCancelButton();
 
-      applicationDetails.submitButton().click();
+      cy.clickSubmitButton();
 
-      applicationSubmission.submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
     });
   });
@@ -84,24 +85,29 @@ context('Submit MIA to UKEF', () => {
     });
 
     it('Submission page as expected', () => {
-      submitToUkef.mainHeading().contains('Confirm your submission');
+      mainHeading().contains('Confirm your submission');
       submitToUkef.mainText().contains('you have reviewed the information given');
       submitToUkef.mainText().contains('you want to proceed with the submission');
 
       submitToUkef.confirmSubmission().contains('I understand and agree');
       submitToUkef.confirmSubmissionCheckbox();
-      submitToUkef.confirmSubmissionCheckbox().invoke('attr', 'aria-label').then((label) => {
-        expect(label).to.equal('Confirm your submission, By submitting to UKEF you confirm that: you have reviewed the information given and you want to proceed with the submission, I understand and agree');
-      });
-      submitToUkef.submitButton();
-      submitToUkef.cancelLink();
+      submitToUkef
+        .confirmSubmissionCheckbox()
+        .invoke('attr', 'aria-label')
+        .then((label) => {
+          expect(label).to.equal(
+            'Confirm your submission, By submitting to UKEF you confirm that: you have reviewed the information given and you want to proceed with the submission, I understand and agree',
+          );
+        });
+      submitButton();
+      cancelLink();
     });
 
     it('Submits and displays the confirmation page', () => {
       submitToUkef.confirmSubmissionCheckbox().click();
-      submitToUkef.submitButton().click();
+      cy.clickSubmitButton();
       submitToUkefConfirmation.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted to UKEF`);
-      submitToUkefConfirmation.confirmationText().contains('We\'ve sent you a confirmation email.');
+      submitToUkefConfirmation.confirmationText().contains("We've sent you a confirmation email.");
       submitToUkefConfirmation.dashboardLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit-to-ukef`));
     });

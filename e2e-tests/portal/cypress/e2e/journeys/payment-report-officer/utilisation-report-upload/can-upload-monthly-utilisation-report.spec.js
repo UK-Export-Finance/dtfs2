@@ -1,24 +1,26 @@
 const { utilisationReportUpload } = require('../../../pages');
-const MOCK_USERS = require('../../../../../../e2e-fixtures');
+const { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../e2e-fixtures');
 const relativeURL = require('../../../relativeURL');
-const { february2023ReportDetails } = require('../../../../fixtures/mockUtilisationReportDetails');
-
-const { BANK1_PAYMENT_REPORT_OFFICER1 } = MOCK_USERS;
+const { february2023ReportDetails, march2023ReportDetails } = require('../../../../fixtures/mockUtilisationReportDetails');
 
 context('Monthly utilisation report upload', () => {
   beforeEach(() => {
-    cy.removeAllUtilisationReports();
-    cy.insertUtilisationReports(february2023ReportDetails);
+    cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
+    cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [march2023ReportDetails, february2023ReportDetails]);
 
     cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
     cy.visit(relativeURL('/utilisation-report-upload'));
   });
 
   after(() => {
-    cy.removeAllUtilisationReports();
+    cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
   });
 
   describe('Submitting a file to the utilisation report upload', () => {
+    it('Should display due reports in report period order when inserted in the wrong order', () => {
+      utilisationReportUpload.overdueListItem(2, 2023).should('exist');
+    });
+
     it('Should route to the Confirm and Send page when a file is successfully validated', () => {
       utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-February_2023_monthly.xlsx');
       utilisationReportUpload.continueButton().click();
@@ -27,7 +29,7 @@ context('Monthly utilisation report upload', () => {
       utilisationReportUpload.currentUrl().should('contain', '/confirm-and-send');
     });
 
-    it('should display an error if the file selected does not contain the current report period', () => {
+    it('should display an error if the filename of the file selected does not contain the current report period', () => {
       utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-September_2023_monthly.xlsx');
       utilisationReportUpload.continueButton().click();
 

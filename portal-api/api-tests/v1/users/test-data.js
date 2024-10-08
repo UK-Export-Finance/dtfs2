@@ -8,6 +8,7 @@ module.exports = {
     surname: 'One',
     email: 'noBankNoRole@ukexportfinance.gov.uk',
     roles: [],
+    isTrusted: false,
   },
   barclaysBankMaker1: {
     username: 'barclaysBankMaker1@ukexportfinance.gov.uk',
@@ -21,6 +22,7 @@ module.exports = {
       name: 'Barclays Bank',
       emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
+    isTrusted: false,
   },
   barclaysBankMaker2: {
     username: 'barclaysBankMaker2@ukexportfinance.gov.uk',
@@ -34,6 +36,7 @@ module.exports = {
       name: 'Barclays Bank',
       emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
+    isTrusted: false,
   },
   barclaysBankChecker1: {
     username: 'barclaysBankChecker1@ukexportfinance.gov.uk',
@@ -47,6 +50,7 @@ module.exports = {
       name: 'Barclays Bank',
       emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
+    isTrusted: false,
   },
   barclaysBankMakerChecker1: {
     username: 'barclaysBankMakerChecker1@ukexportfinance.gov.uk',
@@ -60,6 +64,7 @@ module.exports = {
       name: 'Barclays Bank',
       emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
+    isTrusted: false,
   },
   barclaysBankReader1: {
     username: 'barclaysBankReader1@ukexportfinance.gov.uk',
@@ -73,6 +78,7 @@ module.exports = {
       name: 'Barclays Bank',
       emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
+    isTrusted: false,
   },
   hsbcBankMaker1: {
     username: 'hsbcBankMaker1@ukexportfinance.gov.uk',
@@ -85,6 +91,7 @@ module.exports = {
       id: '961',
       name: 'HSBC',
     },
+    isTrusted: false,
   },
   hsbcBankChecker1: {
     username: 'hsbcBankChecker1@ukexportfinance.gov.uk',
@@ -97,6 +104,7 @@ module.exports = {
       id: '961',
       name: 'HSBC',
     },
+    isTrusted: false,
   },
   hsbcBankMakerChecker1: {
     username: 'hsbcBankMakerChecker1@ukexportfinance.gov.uk',
@@ -109,6 +117,7 @@ module.exports = {
       id: '961',
       name: 'HSBC',
     },
+    isTrusted: false,
   },
   hsbcBankReader1: {
     username: 'hsbcBankReader1@ukexportfinance.gov.uk',
@@ -121,5 +130,6 @@ module.exports = {
       id: '961',
       name: 'HSBC',
     },
+    isTrusted: false,
   },
 };

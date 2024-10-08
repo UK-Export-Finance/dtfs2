@@ -1,5 +1,14 @@
 const { ObjectId } = require('mongodb');
-const db = require('../../../drivers/db-client');
+const {
+  MONGO_DB_COLLECTIONS,
+  DocumentNotDeletedError,
+  DocumentNotFoundError,
+  InvalidDealIdError,
+  FacilityNotFoundError,
+  DealNotFoundError,
+} = require('@ukef/dtfs2-common');
+const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteMany, deleteOne } = require('@ukef/dtfs2-common/change-stream');
+const { mongoDbClient: db } = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const { validateApplicationReferences, validatorStatusCheckEnums } = require('./validation/application');
 const { exporterStatus } = require('./validation/exporter');
@@ -18,9 +27,6 @@ const {
   DEAL: { DEAL_STATUS, DEAL_TYPE },
 } = require('../../../constants');
 
-const dealsCollection = 'deals';
-const facilitiesCollection = 'facilities';
-
 exports.create = async (req, res) => {
   try {
     const newDeal = {
@@ -31,7 +37,7 @@ exports.create = async (req, res) => {
       },
     };
 
-    const applicationCollection = await db.getCollection(dealsCollection);
+    const applicationCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
     const validateErrs = validateApplicationReferences(newDeal);
 
@@ -51,6 +57,8 @@ exports.create = async (req, res) => {
     if (response?.data?.version) {
       newDeal.mandatoryVersionId = response.data.version;
     }
+    const auditDetails = generatePortalAuditDetails(req.user._id);
+    newDeal.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
     const createdApplication = await applicationCollection.insertOne(new Application(newDeal, eligibility));
 
@@ -66,13 +74,13 @@ exports.create = async (req, res) => {
 
     return res.status(201).json(application);
   } catch (error) {
-    console.error('Unable to create an application %s', error);
+    console.error('Unable to create an application %o', error);
     return res.status(500).send({ status: 500, message: 'Unable to create an application' });
   }
 };
 
 exports.getAll = async (req, res) => {
-  const collection = await db.getCollection(dealsCollection);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
   const doc = await collection.find({ dealType: { $eq: DEAL_TYPE.GEF } }).toArray();
 
@@ -92,7 +100,7 @@ exports.getById = async (req, res) => {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
-  const collection = await db.getCollection(dealsCollection);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
   const doc = await collection.findOne({ _id: { $eq: ObjectId(_id) } });
 
@@ -117,7 +125,7 @@ exports.getStatus = async (req, res) => {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
-  const collection = await db.getCollection(dealsCollection);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
   const doc = await collection.findOne({
     _id: { $eq: ObjectId(_id) },
   });
@@ -134,9 +142,13 @@ exports.update = async (req, res) => {
   if (!ObjectId.isValid(id)) {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
+  const auditDetails = generatePortalAuditDetails(req.user._id);
 
-  const collection = await db.getCollection(dealsCollection);
-  const update = new Application(req.body);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+  const update = new Application({
+    ...req.body,
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+  });
   const validateErrs = validateApplicationReferences(update);
   if (validateErrs) {
     return res.status(422).send(validateErrs);
@@ -156,11 +168,10 @@ exports.update = async (req, res) => {
 
   updateAction.$set = update;
 
-  const result = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(id) } },
-    updateAction,
-    { returnNewDocument: true, returnDocument: 'after' },
-  );
+  const result = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(id) } }, updateAction, {
+    returnNewDocument: true,
+    returnDocument: 'after',
+  });
   let response;
   if (result.value) {
     response = result.value;
@@ -177,14 +188,15 @@ exports.updateSupportingInformation = async (req, res) => {
 
   const { application, field, user } = req.body;
   const { _id: editorId } = user;
+  const auditDetails = generatePortalAuditDetails(req.user._id);
 
-  const collection = await db.getCollection(dealsCollection);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
   const result = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(dealId) } },
     {
       $addToSet: { editedBy: editorId },
       // set the updatedAt property to the current time in EPOCH format
-      $set: { updatedAt: Date.now() },
+      $set: { updatedAt: Date.now(), auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
       // insert new documents into the supportingInformation object -> array. i.e. supportingInformation.manualInclusion
       $push: { [`supportingInformation.${field}`]: application },
     },
@@ -223,82 +235,120 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
 };
 
 exports.changeStatus = async (req, res) => {
-  const dealId = req.params.id;
+  try {
+    const dealId = req.params.id;
 
-  if (!ObjectId.isValid(dealId)) {
-    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
-  }
-
-  const enumValidationErr = validatorStatusCheckEnums(req.body);
-
-  if (enumValidationErr) {
-    return res.status(422).send(enumValidationErr);
-  }
-
-  const collection = await db.getCollection(dealsCollection);
-  const existingApplication = await collection.findOne({ _id: { $eq: ObjectId(dealId) } });
-  if (!existingApplication) {
-    return res.status(404).send();
-  }
-
-  const { status } = req.body;
-
-  let applicationUpdate = { status, ...{ updatedAt: Date.now() } };
-
-  // TODO: DTFS2-4705 - protect so that only a user with checker role and associated bank can submit to UKEF.
-  if (status === DEAL_STATUS.SUBMITTED_TO_UKEF) {
-    const submissionData = await addSubmissionData(dealId, existingApplication);
-
-    applicationUpdate = {
-      ...applicationUpdate,
-      ...submissionData,
-    };
-  }
-
-  const updatedDocument = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(dealId) } },
-    { $set: applicationUpdate },
-    { returnNewDocument: true, returnDocument: 'after' },
-  );
-
-  let response;
-
-  if (updatedDocument.value) {
-    response = updatedDocument.value;
-
-    // TODO: DTFS2-4705 - protect so that only a user with checker role and associated bank can submit to UKEF.
-    if (status === DEAL_STATUS.SUBMITTED_TO_UKEF) {
-      await api.tfmDealSubmit(dealId, existingApplication.dealType, req.user);
+    if (!ObjectId.isValid(dealId)) {
+      throw new InvalidDealIdError(dealId);
     }
-  }
 
-  // If status of correct type, send update email
-  if ([DEAL_STATUS.READY_FOR_APPROVAL, DEAL_STATUS.CHANGES_REQUIRED, DEAL_STATUS.SUBMITTED_TO_UKEF].includes(status)) {
-    const { user } = req;
-    await sendStatusUpdateEmail(user, existingApplication, status);
-  }
+    const enumValidationErr = validatorStatusCheckEnums(req.body);
 
-  return res.status(utils.mongoStatus(updatedDocument)).send(response);
+    if (enumValidationErr) {
+      return res.status(422).send(enumValidationErr);
+    }
+
+    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+    const existingApplication = await collection.findOne({ _id: { $eq: ObjectId(dealId) } });
+    if (!existingApplication) {
+      throw new DealNotFoundError(dealId);
+    }
+
+    const { status } = req.body;
+
+    const auditDetails = generatePortalAuditDetails(req.user._id);
+    let applicationUpdate = {
+      status,
+      updatedAt: Date.now(),
+      auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+    };
+
+    if (status === DEAL_STATUS.SUBMITTED_TO_UKEF) {
+      const submissionData = await addSubmissionData(dealId, existingApplication, auditDetails);
+
+      applicationUpdate = {
+        ...applicationUpdate,
+        ...submissionData,
+      };
+    }
+
+    const updatedDocument = await collection.findOneAndUpdate(
+      { _id: { $eq: ObjectId(dealId) } },
+      { $set: applicationUpdate },
+      { returnNewDocument: true, returnDocument: 'after' },
+    );
+
+    let response;
+
+    if (updatedDocument.value) {
+      response = updatedDocument.value;
+
+      if (status === DEAL_STATUS.SUBMITTED_TO_UKEF) {
+        await api.tfmDealSubmit(dealId, existingApplication.dealType, req.user);
+      }
+    }
+
+    // If status of correct type, send update email
+    if ([DEAL_STATUS.READY_FOR_APPROVAL, DEAL_STATUS.CHANGES_REQUIRED, DEAL_STATUS.SUBMITTED_TO_UKEF].includes(status)) {
+      const { user } = req;
+      await sendStatusUpdateEmail(user, existingApplication, status);
+    }
+
+    return res.status(utils.mongoStatus(updatedDocument)).send(response);
+  } catch (error) {
+    if (error instanceof InvalidDealIdError) {
+      return res.status(400).send({ status: 400, message: error.message });
+    }
+    if (error instanceof DealNotFoundError) {
+      return res.status(404).send({ status: 404, message: error.message });
+    }
+    return res.status(500).send({ status: 500, error });
+  }
 };
 
 exports.delete = async (req, res) => {
   const { id: dealId } = req.params;
+  const auditDetails = generatePortalAuditDetails(req.user._id);
 
   if (!ObjectId.isValid(dealId)) {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
-  const applicationCollection = await db.getCollection(dealsCollection);
-  const applicationResponse = await applicationCollection.findOneAndDelete({
-    _id: { $eq: ObjectId(dealId) },
-  });
-  if (applicationResponse.value) {
-    // remove facility information related to the application
-    const query = await db.getCollection(facilitiesCollection);
-    await query.deleteMany({ dealId: { $eq: ObjectId(dealId) } });
-  }
+  try {
+    const applicationDeleteResult = await deleteOne({
+      documentId: new ObjectId(dealId),
+      collectionName: MONGO_DB_COLLECTIONS.DEALS,
+      db,
+      auditDetails,
+    });
 
-  return res.status(utils.mongoStatus(applicationResponse)).send(applicationResponse.value ? applicationResponse.value : null);
+    // remove facility information related to the application
+    await deleteMany({
+      filter: { dealId: { $eq: ObjectId(dealId) } },
+      collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
+      db,
+      auditDetails,
+    });
+
+    return res.status(200).send(applicationDeleteResult);
+  } catch (error) {
+    if (error instanceof DocumentNotDeletedError || error instanceof DealNotFoundError || error instanceof FacilityNotFoundError) {
+      return res.status(404).send({ status: 404, message: error.message });
+    }
+
+    if (error instanceof InvalidDealIdError) {
+      return res.sendStatus(400).send({ status: 400, message: error.message });
+    }
+
+    if (error instanceof DocumentNotFoundError) {
+      // The deletedCount refers to the number of deals deleted not the number of facilities.
+      // DocumentNotFoundError is returned if no facilities are found, which occurs after the deal is successfully deleted
+      return res.status(200).send({ acknowledged: true, deletedCount: 1 });
+    }
+
+    console.error(error);
+    return res.status(500).send({ status: 500, error });
+  }
 };
 
 const dealsFilters = (user, filters = []) => {
@@ -324,7 +374,7 @@ const dealsFilters = (user, filters = []) => {
 exports.findDeals = async (requestingUser, filters, start = 0, pagesize = 0) => {
   const sanitisedFilters = dealsFilters(requestingUser, filters);
 
-  const collection = await db.getCollection(dealsCollection);
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
   const doc = await collection
     .aggregate([

@@ -12,7 +12,11 @@ const facilityGuarantee = async (req, res) => {
 
   try {
     const facility = await Facility.find({
-      dealId, facilityId, status, user, userToken,
+      dealId,
+      facilityId,
+      status,
+      user,
+      userToken,
     });
     if (!facility) {
       console.error('Facility not found, or not authorised');
@@ -33,15 +37,11 @@ const facilityGuarantee = async (req, res) => {
 };
 
 const updateFacilityGuarantee = async (req, res) => {
-  const {
-    params, body, query, session,
-  } = req;
+  const { params, body, query, session } = req;
   const { dealId, facilityId } = params;
   const { user, userToken } = session;
   const { _id: editorId } = user;
-  const {
-    feeType, inAdvanceFrequency, inArrearsFrequency, dayCountBasis,
-  } = body;
+  const { feeType, inAdvanceFrequency, inArrearsFrequency, dayCountBasis } = body;
   const { status } = query;
   const facilityGuaranteeErrors = [];
 

@@ -2,12 +2,7 @@ const CONSTANTS = require('../../../constants');
 const bssEmailVariables = require('./bss-email-variables');
 
 const commonEmailVars = (deal) => {
-  const {
-    ukefDealId,
-    bankInternalRefName,
-    maker,
-    exporter,
-  } = deal;
+  const { ukefDealId, bankInternalRefName, maker, exporter } = deal;
 
   const { firstname, surname } = maker;
 

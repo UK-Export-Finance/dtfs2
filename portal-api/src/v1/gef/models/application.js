@@ -1,29 +1,29 @@
+const { getCurrentGefDealVersion } = require('@ukef/dtfs2-common');
 const { DEAL_TYPE, DEAL_STATUS } = require('../enums');
 
 class Application {
-  constructor(req, eligibility) {
+  constructor(req, eligibility = null) {
     const editedBy = [];
 
     if (eligibility) {
       // New Application
       this.dealType = DEAL_TYPE;
 
+      this.version = getCurrentGefDealVersion();
+
       // ensure we don't consume any sensitive fields
-      const {
-        token,
-        password,
-        lastLogin,
-        ...sanitisedMaker
-      } = req.maker;
+      const { token: _token, password: _password, lastLogin: _lastLogin, ...sanitisedMaker } = req.maker;
 
       this.maker = sanitisedMaker;
 
       this.status = DEAL_STATUS.DRAFT;
       this.bank = req.bank;
 
-      this.exporter = req.exporter ? req.exporter : {
-        status: DEAL_STATUS.NOT_STARTED,
-      };
+      this.exporter = req.exporter
+        ? req.exporter
+        : {
+            status: DEAL_STATUS.NOT_STARTED,
+          };
 
       this.eligibility = {
         ...eligibility,
@@ -73,7 +73,7 @@ class Application {
         'ukefDecisionAccepted',
         'portalActivities',
         'ukefDecision',
-        'manualInclusionNoticeSubmissionDate'
+        'manualInclusionNoticeSubmissionDate',
       ];
 
       if (req.exporter) {
@@ -90,6 +90,7 @@ class Application {
         }
       });
     }
+    this.auditRecord = req.auditRecord;
   }
 }
 

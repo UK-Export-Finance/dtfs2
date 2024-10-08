@@ -22,26 +22,17 @@ context('User can view and sort deals by exporter', () => {
     testId: 'DEAL_B_SUPPLIER',
   });
 
-  const MOCK_DEALS = [
-    DEAL_A_SUPPLIER,
-    DEAL_B_SUPPLIER,
-  ];
+  const MOCK_DEALS = [DEAL_A_SUPPLIER, DEAL_B_SUPPLIER];
 
   before(() => {
     cy.deleteTfmDeals();
 
     cy.insertManyDeals(MOCK_DEALS, BANK1_MAKER1).then((insertedDeals) => {
       insertedDeals.forEach((deal) => {
-        const {
-          _id: dealId,
-          mockFacilities,
-        } = deal;
+        const { _id: dealId, mockFacilities } = deal;
 
         cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((facilities) => {
-          ALL_FACILITIES = [
-            ...ALL_FACILITIES,
-            ...facilities,
-          ];
+          ALL_FACILITIES = [...ALL_FACILITIES, ...facilities];
         });
       });
 
@@ -65,7 +56,7 @@ context('User can view and sort deals by exporter', () => {
 
   beforeEach(() => {
     cy.login(T1_USER_1);
-    cy.url().should('eq', relative('/deals'));
+    cy.url().should('eq', relative('/deals/0'));
   });
 
   after(() => {

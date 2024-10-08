@@ -1,34 +1,46 @@
+const { HttpStatusCode } = require('axios');
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../api');
-const { canDealBeSubmittedToACBS, submitACBSIfAllPartiesHaveUrn } = require('./deal.controller');
+const { createACBS } = require('./acbs.controller');
+const canSubmitToACBS = require('../helpers/can-submit-to-acbs');
 
+/**
+ * Updates the parties in TFM associated with the deal.
+ *
+ * @param {object} req - The request object containing the parameters, body, and user information.
+ * @param {object} res - The response object.
+ * @returns {Promise} - A promise that resolves with the updated parties data.
+ */
 const updateParty = async (req, res) => {
-  const { dealId } = req.params;
-  const partyUpdate = {
-    tfm: {
-      parties: req.body,
-    },
-  };
-
   try {
-    const updatedDeal = await api.updateDeal(dealId, partyUpdate);
+    const { dealId } = req.params;
+    const dealUpdate = {
+      tfm: {
+        parties: req.body,
+      },
+    };
 
-    if (updatedDeal.dealSnapshot) {
-      if (canDealBeSubmittedToACBS(updatedDeal.dealSnapshot.submissionType)) {
-        await submitACBSIfAllPartiesHaveUrn(dealId);
-      }
+    const auditDetails = generateTfmAuditDetails(req.user._id);
+    const tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
+    const canSubmitDealToACBS = await canSubmitToACBS(tfmDeal);
+
+    if (canSubmitDealToACBS) {
+      await createACBS(dealId);
     }
 
-    return res.status(200).send({
+    const response = res.status(HttpStatusCode.Ok).send({
       updateParty: {
-        parties: updatedDeal.tfm.parties
-      }
+        parties: tfmDeal.tfm.parties,
+      },
     });
+
+    return response;
   } catch (error) {
-    console.error('Unable to update party %O', error);
-    return res.status(500).send(error.message);
+    console.error('Unable to update parties for deal %s %o', req.params.dealId, error);
+    return res.status(HttpStatusCode.InternalServerError).send(error);
   }
 };
 
 module.exports = {
-  updateParty
+  updateParty,
 };

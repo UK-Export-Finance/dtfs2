@@ -5,7 +5,6 @@
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const { withNoRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 
 const { as, get } = require('../../api')(app);
 
@@ -31,14 +30,7 @@ describe('/v1/currencies', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(urlToGetCurrencies),
-      makeRequestWithAuthHeader: (authHeader) => get(urlToGetCurrencies, { headers: { Authorization: authHeader } })
-    });
-
-    withNoRoleAuthorisationTests({
-      getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-      makeRequestAsUser: (user) => as(user).get(urlToGetCurrencies),
-      successStatusCode: 200,
+      makeRequestWithAuthHeader: (authHeader) => get(urlToGetCurrencies, { headers: { Authorization: authHeader } }),
     });
 
     it('returns a list of currencies, alphabetised', async () => {
@@ -57,14 +49,7 @@ describe('/v1/currencies', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(urlToGetUsdCurrency),
-      makeRequestWithAuthHeader: (authHeader) => get(urlToGetUsdCurrency, { headers: { Authorization: authHeader } })
-    });
-
-    withNoRoleAuthorisationTests({
-      getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-      makeRequestAsUser: (user) => as(user).get(urlToGetUsdCurrency),
-      successStatusCode: 200,
+      makeRequestWithAuthHeader: (authHeader) => get(urlToGetUsdCurrency, { headers: { Authorization: authHeader } }),
     });
 
     it('returns a currency', async () => {
@@ -74,7 +59,7 @@ describe('/v1/currencies', () => {
       expect(body).toMatchObject(usd);
     });
 
-    it('returns 400 when currency doesn\'t exist', async () => {
+    it("returns 400 when currency doesn't exist", async () => {
       const { status } = await as(aUser).get('/v1/currencies/AAA');
 
       expect(status).toEqual(400);

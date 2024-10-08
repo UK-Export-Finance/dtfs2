@@ -1,8 +1,8 @@
 const { sub, isAfter, startOfDay, isBefore } = require('date-fns');
+const { CURRENCY } = require('@ukef/dtfs2-common');
 
 const { orderNumber } = require('../../../utils/error-list-order-number');
 const { hasValue } = require('../../../utils/string');
-const { CURRENCY } = require('../../../constants/currency');
 const { getStartOfDateFromDayMonthYearStrings } = require('../../helpers/date');
 const { dateHasAllValues, dateHasSomeValues } = require('../fields/date');
 
@@ -12,10 +12,7 @@ module.exports = (submissionDetails, errorList, deal) => {
   // only run this validation if first submission - submissionDate does not exist on first submission
   if (!deal?.details?.submissionDate) {
     // check to see if we're a non-GBP currency
-    if (
-      hasValue(submissionDetails.supplyContractCurrency) &&
-      submissionDetails.supplyContractCurrency.id !== CURRENCY.GBP
-    ) {
+    if (hasValue(submissionDetails.supplyContractCurrency) && submissionDetails.supplyContractCurrency.id !== CURRENCY.GBP) {
       const day = submissionDetails['supplyContractConversionDate-day'];
       const month = submissionDetails['supplyContractConversionDate-month'];
       const year = submissionDetails['supplyContractConversionDate-year'];

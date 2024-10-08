@@ -78,16 +78,22 @@ context('Portal to TFM deal submission', () => {
     // portal deal status should be updated
     //---------------------------------------------------------------
     portalPages.contract.visit(deal);
-    portalPages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('In progress by UKEF');
-    });
+    portalPages.contract
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('In progress by UKEF');
+      });
 
     //---------------------------------------------------------------
     // Portal deal submission type should be MIA to start with
     //---------------------------------------------------------------
-    portalPages.contract.eligibilitySubmissionType().invoke('text').then((text) => {
-      expect(text.trim()).to.contain('Manual Inclusion Application');
-    });
+    portalPages.contract
+      .eligibilitySubmissionType()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain('Manual Inclusion Application');
+      });
 
     //---------------------------------------------------------------
     // Underwriter Manager logs in to TFM
@@ -105,9 +111,12 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // TFM deal submission type should be MIA to start with
     //---------------------------------------------------------------
-    tfmPartials.caseSummary.dealSubmissionType().invoke('text').then((text) => {
-      expect(text.trim()).to.contain('Manual Inclusion Application');
-    });
+    tfmPartials.caseSummary
+      .dealSubmissionType()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain('Manual Inclusion Application');
+      });
 
     //---------------------------------------------------------------
     // Underwriter Manager submits a decision
@@ -134,13 +143,19 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // Portal deal status should be updated
     //---------------------------------------------------------------
-    portalPages.contract.previousStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('In progress by UKEF');
-    });
+    portalPages.contract
+      .previousStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('In progress by UKEF');
+      });
 
-    portalPages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Accepted by UKEF (with conditions)');
-    });
+    portalPages.contract
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Accepted by UKEF (with conditions)');
+      });
 
     //---------------------------------------------------------------
     // portal maker goes back into the deal
@@ -199,22 +214,31 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
 
     portalPages.contract.visit(deal);
-    portalPages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Acknowledged');
-    });
+    portalPages.contract
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Acknowledged');
+      });
 
     //---------------------------------------------------------------
     // portal deal should now be MIN with submission date
     //---------------------------------------------------------------
-    portalPages.contract.eligibilitySubmissionType().invoke('text').then((text) => {
-      expect(text.trim()).to.contain('Manual Inclusion Notice');
-    });
+    portalPages.contract
+      .eligibilitySubmissionType()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain('Manual Inclusion Notice');
+      });
 
-    portalPages.contract.eligibilityManualInclusionNoticeSubmissionDate().invoke('text').then((text) => {
-      const todayFormatted = new Date().toLocaleDateString('en-GB');
+    portalPages.contract
+      .eligibilityManualInclusionNoticeSubmissionDate()
+      .invoke('text')
+      .then((text) => {
+        const todayFormatted = new Date().toLocaleDateString('en-GB');
 
-      expect(text.trim()).to.contain(todayFormatted);
-    });
+        expect(text.trim()).to.contain(todayFormatted);
+      });
 
     //---------------------------------------------------------------
     // Go back to TFM
@@ -232,8 +256,11 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // TFM deal submission type should have changed from MIA to MIN
     //---------------------------------------------------------------
-    tfmPartials.caseSummary.dealSubmissionType().invoke('text').then((text) => {
-      expect(text.trim()).to.contain('Manual Inclusion Notice');
-    });
+    tfmPartials.caseSummary
+      .dealSubmissionType()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain('Manual Inclusion Notice');
+      });
   });
 });

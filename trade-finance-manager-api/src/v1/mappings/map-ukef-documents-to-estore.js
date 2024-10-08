@@ -1,18 +1,22 @@
-// eStore mapping
-// Exporter_questionnaire
-// Audited_financial_statements
-// Year_to_date_management
-// Financial_forecasts
-// Financial_information_commentary
-// Corporate_structure
+const { has } = require('lodash');
 
-const eStoreMap = {
+/**
+ * Map UKEF documents to eStore documents
+ *
+ * Exporter_questionnaire
+ * Audited_financial_statements
+ * Year_to_date_management
+ * Financial_forecasts
+ * Financial_information_commentary
+ * Corporate_structure
+ */
+const estoreFiles = {
   // GEF
   manualInclusion: {
     eStoreName: 'Exporter_questionnaire',
   },
   debtorAndCreditorReports: {
-    eStoreName: 'Audited_financial_statements', // TODO: update to `Business Information` once eStore supports it
+    eStoreName: 'Audited_financial_statements',
   },
   // BSS
   auditedFinancialStatements: {
@@ -24,7 +28,6 @@ const eStoreMap = {
   yearToDateManagement: {
     eStoreName: 'Year_to_date_management',
   },
-
   financialForecasts: {
     eStoreName: 'Financial_forecasts',
   },
@@ -36,16 +39,21 @@ const eStoreMap = {
   },
 };
 
-const mapUKEFDocumentsToEstore = (files) => {
+/**
+ * Produces an array of files mapped per eStore consumption
+ * @param {object} files Object of files uploaded
+ * @returns Mapped array of files for eStore API consumption
+ */
+const mapEstoreFiles = (files) => {
   const documents = [];
 
   const nonDocuments = ['validationErrors', 'security', 'status', 'securityDetails', 'requiredFields'];
   Object.keys(files).forEach((file) => {
     if (!nonDocuments.includes(file)) {
       Object.values(files[file]).forEach((val) => {
-        if (eStoreMap[file]?.eStoreName) {
+        if (has(estoreFiles, file)) {
           documents.push({
-            documentType: eStoreMap[file].eStoreName,
+            documentType: estoreFiles[file].eStoreName,
             fileName: val.filename,
             fileLocationPath: val.folder ? val.parentId : `${val.parentId}/${val.documentPath}`,
             parentId: val.parentId,
@@ -57,4 +65,4 @@ const mapUKEFDocumentsToEstore = (files) => {
   return documents;
 };
 
-exports.mapUKEFDocumentsToEstore = mapUKEFDocumentsToEstore;
+exports.mapEstoreFiles = mapEstoreFiles;

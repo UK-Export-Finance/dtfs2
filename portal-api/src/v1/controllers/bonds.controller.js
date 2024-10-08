@@ -1,21 +1,13 @@
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { isValidMongoId } = require('../validation/validateIds');
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const bondValidationErrors = require('../validation/bond');
 const { bondStatus } = require('../section-status/bonds');
-const {
-  calculateGuaranteeFee,
-  calculateUkefExposure,
-} = require('../section-calculations');
+const { calculateGuaranteeFee, calculateUkefExposure } = require('../section-calculations');
 const { handleTransactionCurrencyFields } = require('../section-currency');
-const {
-  hasAllRequestedCoverStartDateValues,
-  updateRequestedCoverStartDate,
-} = require('../facility-dates/requested-cover-start-date');
-const {
-  hasAllCoverEndDateValues,
-  updateCoverEndDate,
-} = require('../facility-dates/cover-end-date');
+const { hasAllRequestedCoverStartDateValues, updateRequestedCoverStartDate } = require('../facility-dates/requested-cover-start-date');
+const { hasAllCoverEndDateValues, updateCoverEndDate } = require('../facility-dates/cover-end-date');
 const { sanitizeCurrency } = require('../../utils/number');
 const facilitiesController = require('./facilities.controller');
 const CONSTANTS = require('../../constants');
@@ -39,7 +31,9 @@ exports.create = async (req, res) => {
       ...req.body,
     };
 
-    const { status, data } = await facilitiesController.create(facilityBody, req.user);
+    const auditDetails = generatePortalAuditDetails(req.user._id);
+
+    const { status, data } = await facilitiesController.create(facilityBody, req.user, auditDetails);
 
     return res.status(status).send({
       ...data,
@@ -49,10 +43,7 @@ exports.create = async (req, res) => {
 };
 
 exports.getBond = async (req, res) => {
-  const {
-    id: dealId,
-    bondId,
-  } = req.params;
+  const { id: dealId, bondId } = req.params;
 
   if (!isValidMongoId(req?.params?.id) || !isValidMongoId(req?.params?.bondId)) {
     console.error('Get bond API failed for deal/bond id %s', req.params.id, req.params.loanId);
@@ -124,84 +115,75 @@ const feeTypeFields = (bond) => {
 
 exports.updateBond = async (req, res) => {
   const {
-    id: dealId,
-    bondId,
-  } = req.params;
+    user,
+    params: { id: dealId, bondId },
+  } = req;
+  const auditDetails = generatePortalAuditDetails(user._id);
 
   await findOneDeal(dealId, async (deal) => {
-    if (deal) {
-      if (!userHasAccessTo(req.user, deal)) {
-        res.status(401).send();
-      }
-
-      const existingBond = await facilitiesController.findOne(bondId);
-
-      if (!existingBond) {
-        return res.status(404).send();
-      }
-
-      let modifiedBond = {
-        ...existingBond,
-        ...req.body,
-      };
-
-      modifiedBond = facilityStageFields(modifiedBond);
-
-      modifiedBond = await handleTransactionCurrencyFields(
-        modifiedBond,
-        deal,
-      );
-
-      modifiedBond = feeTypeFields(modifiedBond);
-
-      const { value, coveredPercentage, riskMarginFee } = modifiedBond;
-      const sanitizedFacilityValue = sanitizeCurrency(value);
-
-      modifiedBond.guaranteeFeePayableByBank = calculateGuaranteeFee(riskMarginFee);
-
-      if (sanitizedFacilityValue.sanitizedValue) {
-        modifiedBond.ukefExposure = calculateUkefExposure(sanitizedFacilityValue.sanitizedValue, coveredPercentage);
-        modifiedBond.value = sanitizedFacilityValue.sanitizedValue;
-      }
-
-      if (hasAllRequestedCoverStartDateValues(modifiedBond)) {
-        modifiedBond = updateRequestedCoverStartDate(modifiedBond);
-      } else {
-        modifiedBond.requestedCoverStartDate = null;
-      }
-
-      if (hasAllCoverEndDateValues(modifiedBond)) {
-        modifiedBond = updateCoverEndDate(modifiedBond);
-      } else {
-        modifiedBond.coverEndDate = null;
-      }
-
-      const { status, data } = await facilitiesController.update(
-        dealId,
-        bondId,
-        modifiedBond,
-        req.user,
-      );
-
-      const validationErrors = bondValidationErrors(data, deal);
-
-      if (validationErrors.count !== 0) {
-        return res.status(400).send({
-          validationErrors,
-          bond: data,
-        });
-      }
-
-      return res.status(status).send(data);
+    if (!deal) {
+      return res.status(404).send();
     }
-    return res.status(404).send();
+
+    if (!userHasAccessTo(user, deal)) {
+      res.status(401).send();
+    }
+
+    const existingBond = await facilitiesController.findOne(bondId);
+
+    if (!existingBond) {
+      return res.status(404).send();
+    }
+
+    let modifiedBond = {
+      ...existingBond,
+      ...req.body,
+    };
+
+    modifiedBond = facilityStageFields(modifiedBond);
+
+    modifiedBond = await handleTransactionCurrencyFields(modifiedBond, deal);
+
+    modifiedBond = feeTypeFields(modifiedBond);
+
+    const { value, coveredPercentage, riskMarginFee } = modifiedBond;
+    const sanitizedFacilityValue = sanitizeCurrency(value);
+
+    modifiedBond.guaranteeFeePayableByBank = calculateGuaranteeFee(riskMarginFee);
+
+    if (sanitizedFacilityValue.sanitizedValue) {
+      modifiedBond.ukefExposure = calculateUkefExposure(sanitizedFacilityValue.sanitizedValue, coveredPercentage);
+      modifiedBond.value = sanitizedFacilityValue.sanitizedValue;
+    }
+
+    if (hasAllRequestedCoverStartDateValues(modifiedBond)) {
+      modifiedBond = updateRequestedCoverStartDate(modifiedBond);
+    } else {
+      modifiedBond.requestedCoverStartDate = null;
+    }
+
+    if (hasAllCoverEndDateValues(modifiedBond)) {
+      modifiedBond = updateCoverEndDate(modifiedBond);
+    } else {
+      modifiedBond.coverEndDate = null;
+    }
+
+    const { status, data } = await facilitiesController.update(dealId, bondId, modifiedBond, user, auditDetails);
+
+    const validationErrors = bondValidationErrors(data, deal);
+    if (validationErrors.count !== 0) {
+      return res.status(400).send({
+        validationErrors,
+        bond: data,
+      });
+    }
+
+    return res.status(status).send(data);
   });
 };
 
 exports.deleteBond = async (req, res) => {
-  const {
-    bondId,
-  } = req.params;
+  const { bondId } = req.params;
 
   await findOneDeal(req.params.id, async (deal) => {
     if (deal) {
@@ -209,7 +191,7 @@ exports.deleteBond = async (req, res) => {
         return res.status(401).send();
       }
 
-      const { status, data } = await facilitiesController.delete(bondId, req.user);
+      const { status, data } = await facilitiesController.delete(bondId, req.user, generatePortalAuditDetails(req.user._id));
 
       return res.status(status).send(data);
     }

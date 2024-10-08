@@ -2,10 +2,7 @@ const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { dashboardFacilities } = require('../../../pages');
 const { dashboardFilters } = require('../../../partials');
-const {
-  BSS_DEAL_AIN,
-  BSS_FACILITY_BOND_ISSUED,
-} = require('../fixtures');
+const { BSS_DEAL_AIN, BSS_FACILITY_BOND_ISSUED } = require('../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 

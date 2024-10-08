@@ -1,11 +1,7 @@
 /* eslint-disable no-underscore-dangle */
-const {
-  fromUnixTime,
-  getUnixTime,
-  add,
-} = require('date-fns');
+const { fromUnixTime, getUnixTime, add } = require('date-fns');
+const { FACILITY_PROVIDED_DETAILS } = require('@ukef/dtfs2-common');
 const MIGRATION_MAP = require('./migration-map');
-const V2_CONSTANTS = require('../../../portal-api/src/constants');
 const { convertDateToTimestamp } = require('./helpers');
 
 const mapFeeFrequency = (v1Frequency) => {
@@ -35,7 +31,7 @@ const mapBasisDetails = (v1Basis) => {
       if (MIGRATION_MAP.FACILITIES.BASIS_DETAILS[v1.readable_value]) {
         mapped.details.push(MIGRATION_MAP.FACILITIES.BASIS_DETAILS[v1.readable_value]);
       } else {
-        mapped.details.push(V2_CONSTANTS.FACILITIES.GEF_FACILITY_PROVIDED_DETAILS.OTHER);
+        mapped.details.push(FACILITY_PROVIDED_DETAILS.OTHER);
         mapped.detailsOther = v1.system_value;
       }
     });
@@ -52,10 +48,7 @@ const mapCoverDateConfirmed = (issued) => {
   return false;
 };
 
-const mapShouldCoverStartOnSubmission = (
-  v2CoverStartDate,
-  v2DealSubmissionDate
-) => {
+const mapShouldCoverStartOnSubmission = (v2CoverStartDate, v2DealSubmissionDate) => {
   if (v2CoverStartDate === v2DealSubmissionDate) {
     return true;
   }
@@ -71,11 +64,7 @@ const mapCoverEndDate = (coverStartDate, exposurePeriod) => {
   return new Date(getUnixTime(date));
 };
 
-const mapV1Facilities = (
-  v1Facilities,
-  v1DealUpdatedAt,
-  v2DealSubmissionDate,
-) => {
+const mapV1Facilities = (v1Facilities, v1DealUpdatedAt, v2DealSubmissionDate) => {
   const v2Facilities = v1Facilities.map((v1Facility) => {
     const hasBeenIssued = v1Facility.facility_stage.readable_value === 'Issued';
     const { details, detailsOther } = mapBasisDetails(v1Facility.facility_characteristics);
@@ -107,10 +96,7 @@ const mapV1Facilities = (
       coverStartDate,
       coverEndDate: mapCoverEndDate(coverStartDate, Number(v1Facility.exposure_period)),
       coverDateConfirmed: mapCoverDateConfirmed(hasBeenIssued),
-      shouldCoverStartOnSubmission: mapShouldCoverStartOnSubmission(
-        coverStartDate,
-        v2DealSubmissionDate,
-      ),
+      shouldCoverStartOnSubmission: mapShouldCoverStartOnSubmission(coverStartDate, v2DealSubmissionDate),
       hasBeenIssuedAndAcknowledged: Boolean(v1Facility.stage_issued_acknowledged),
       updatedAt: v2DealSubmissionDate,
     };

@@ -1,5 +1,5 @@
 const { TEAM_IDS } = require('@ukef/dtfs2-common');
-const componentRenderer = require('../../../componentRenderer');
+const { componentRenderer } = require('../../../componentRenderer');
 const { localiseTimestamp } = require('../../../../server/nunjucks-configuration/filter-localiseTimestamp');
 
 const component = '../templates/case/tasks/_macros/tasks-table.njk';
@@ -92,10 +92,7 @@ describe(component, () => {
 
         const linkSelector = `[data-cy="task-table-row-group-${taskWithCanEdit.groupId}-task-${taskWithCanEdit.id}-link"]`;
 
-        wrapper.expectLink(linkSelector).toLinkTo(
-          `/case/${params.caseId}/tasks/${taskWithCanEdit.groupId}/${taskWithCanEdit.id}`,
-          taskWithCanEdit.title,
-        );
+        wrapper.expectLink(linkSelector).toLinkTo(`/case/${params.caseId}/tasks/${taskWithCanEdit.groupId}/${taskWithCanEdit.id}`, taskWithCanEdit.title);
 
         wrapper.expectElement(`[data-cy="task-table-row-group-${taskWithCanEdit.groupId}-task-${taskWithCanEdit.id}-title"]`).notToExist();
       });
@@ -109,11 +106,13 @@ describe(component, () => {
 
         wrapper.expectElement(linkSelector).notToExist();
 
-        wrapper.expectText(`[data-cy="task-table-row-group-${taskWithoutCanEdit.groupId}-task-${taskWithoutCanEdit.id}-title"]`).toRead(taskWithoutCanEdit.title);
+        wrapper
+          .expectText(`[data-cy="task-table-row-group-${taskWithoutCanEdit.groupId}-task-${taskWithoutCanEdit.id}-title"]`)
+          .toRead(taskWithoutCanEdit.title);
       });
     });
 
-    it('should render assignee\'s full name', () => {
+    it("should render assignee's full name", () => {
       params.tasks.forEach((group) => {
         group.groupTasks.forEach((task) => {
           const selector = `[data-cy="task-table-row-group-${task.groupId}-task-${task.id}-user-full-name"]`;

@@ -1,5 +1,6 @@
 const axios = require('axios');
 const dotenv = require('dotenv');
+const { HEADERS } = require('@ukef/dtfs2-common');
 const { isValidRegex } = require('../v1/validation/validateIds');
 const { COUNTRY_CODE } = require('../constants/regex');
 
@@ -7,8 +8,8 @@ dotenv.config();
 
 const { EXTERNAL_API_URL, EXTERNAL_API_KEY } = process.env;
 const headers = {
-  'Content-Type': 'application/json',
-  'x-api-key': EXTERNAL_API_KEY,
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+  'x-api-key': String(EXTERNAL_API_KEY),
 };
 
 /**
@@ -33,7 +34,7 @@ const getCountries = async () => {
  * Retrieves country information from an external API based on the provided country code.
  *
  * @param {string} code - The country code to retrieve information for.
- * @returns {Promise<Object>} - A promise that resolves to an object containing the status and data of the requested country.
+ * @returns {Promise<object>} - A promise that resolves to an object containing the status and data of the requested country.
  *
  * @example
  * // Returns { status: 200, data: { name: 'United Kingdom' } }
@@ -74,7 +75,7 @@ const getCountry = async (code) => {
 
   return {
     status: 404,
-    error: 'Invalid response received'
+    error: 'Invalid response received',
   };
 };
 

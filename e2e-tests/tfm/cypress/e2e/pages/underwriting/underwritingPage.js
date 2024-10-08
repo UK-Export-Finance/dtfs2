@@ -26,8 +26,10 @@ const underwritingPage = {
   underwriterManagerDecisionNotApplicable: () => cy.get('[data-cy="decision-not-applicable"]'),
   amendmentHeading: () => cy.get('[data-cy="underwriting-heading-amendment"]'),
 
-  assignAmendmentLeadUnderwriterButton: () => cy.get('[data-cy="amendment-assign-lead-underwriter-link"]'),
+  amendmentAddLeadUnderwriterLink: () => cy.get('[data-cy="amendment-assign-lead-underwriter-link"]'),
   amendmentLeadUnderwriterUnassigned: () => cy.get('[data-cy="amendment-unassigned-underwriter-readonly"]'),
+  amendmentLeadUnderwriterSelectInput: () => cy.get('[data-cy="assigned-to-select-input"]'),
+  amendmentLeadUnderwriterFullName: () => cy.get('[data-cy="amendment--lead-underwriter-fullname"]'),
   amendmentLeadUnderwriterEmail: () => cy.get('[data-cy="amendment--lead-underwriter-email"]'),
   amendmentChangeLeadUnderwriterLink: () => cy.get('[data-cy="amendment--change-lead-underwriter-link"]'),
 

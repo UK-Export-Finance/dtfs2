@@ -3,9 +3,7 @@ import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
-import {
-  PIM_USER_1, T1_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN,
-} from '../../../../../e2e-fixtures';
+import { PIM_USER_1, T1_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import pages from '../../pages';
 
 context('Amendments underwriting page', () => {
@@ -102,7 +100,7 @@ context('Amendments underwriting page', () => {
       pages.underwritingPage.amendmentUnderwriterManagerDecisionNotAdded().contains('Not added yet');
 
       // dependent on managers decision being added
-      pages.underwritingPage.bankDecisionDependent().contains('Dependent on the Underwriter manager\'s decision');
+      pages.underwritingPage.bankDecisionDependent().contains("Dependent on the Underwriter manager's decision");
     });
 
     it('should show amendment on underwriting page with correct assign links as underwriter manager', () => {
@@ -113,12 +111,12 @@ context('Amendments underwriting page', () => {
 
       pages.underwritingPage.amendmentHeading().contains(`Amendment for facility ${ukefFacilityId}`);
 
-      pages.underwritingPage.assignAmendmentLeadUnderwriterButton().contains('Add underwriter');
+      pages.underwritingPage.amendmentAddLeadUnderwriterLink().contains('Add underwriter');
 
       pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
 
       // dependent on managers decision being added so no link should show
-      pages.underwritingPage.bankDecisionDependent().contains('Dependent on the Underwriter manager\'s decision');
+      pages.underwritingPage.bankDecisionDependent().contains("Dependent on the Underwriter manager's decision");
     });
 
     it('should show amendment on underwriting page as PIM with no links to add', () => {
@@ -133,7 +131,7 @@ context('Amendments underwriting page', () => {
 
       pages.underwritingPage.amendmentUnderwriterManagerDecisionNotAdded().contains('Not added yet');
 
-      pages.underwritingPage.bankDecisionDependent().contains('Dependent on the Underwriter manager\'s decision');
+      pages.underwritingPage.bankDecisionDependent().contains("Dependent on the Underwriter manager's decision");
     });
   });
 });

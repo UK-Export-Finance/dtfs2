@@ -1,3 +1,4 @@
+const { FACILITY_TYPE, MAPPED_FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const mapFacilityType = require('./mapFacilityType');
 const CONSTANTS = require('../../../../constants');
 
@@ -20,7 +21,7 @@ describe('mapFacilityType', () => {
     it('should return loan', () => {
       const mockLoanFacility = {
         bondType: null,
-        type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+        type: FACILITY_TYPE.LOAN,
         facilityProduct: {
           code: CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN,
         },
@@ -28,40 +29,37 @@ describe('mapFacilityType', () => {
 
       const result = mapFacilityType(mockLoanFacility);
 
-      expect(result).toEqual('Loan');
+      expect(result).toEqual(MAPPED_FACILITY_TYPE.LOAN);
     });
   });
 
-  describe(`when facility is ${CONSTANTS.FACILITIES.FACILITY_TYPE.CASH}`, () => {
+  describe(`when facility is ${FACILITY_TYPE.CASH}`, () => {
     it('should return `Cash facility`', () => {
       const mockCashFacility = {
         facilityProduct: {
           code: CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.GEF,
         },
-        ukefFacilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+        ukefFacilityType: FACILITY_TYPE.CASH,
       };
 
       const result = mapFacilityType(mockCashFacility);
 
-      const expected = `${CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CASH} facility`;
-      expect(result).toEqual(expected);
+      expect(result).toEqual(MAPPED_FACILITY_TYPE.CASH);
     });
   });
 
-  describe(`when facility is ${CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT}`, () => {
+  describe(`when facility is ${FACILITY_TYPE.CONTINGENT}`, () => {
     it('should return `Contingent facility`', () => {
       const mockContingentFacility = {
         facilityProduct: {
           code: CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.GEF,
         },
-        ukefFacilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
+        ukefFacilityType: FACILITY_TYPE.CONTINGENT,
       };
 
       const result = mapFacilityType(mockContingentFacility);
 
-      const expected = `${CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CONTINGENT} facility`;
-
-      expect(result).toEqual(expected);
+      expect(result).toEqual(MAPPED_FACILITY_TYPE.CONTINGENT);
     });
   });
 

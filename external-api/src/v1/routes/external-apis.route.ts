@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
-
-export const apiRoutes = express.Router();
 
 import * as countries from '../controllers/countries.controller';
 import * as currencies from '../controllers/currencies.controller';
@@ -11,12 +11,14 @@ import * as partyUrn from '../controllers/party-urn.controller';
 import * as acbs from '../controllers/acbs.controller';
 import * as currencyExchangeRate from '../controllers/currency-exchange-rate.controller';
 import * as exposurePeriod from '../controllers/exposure-period.controller';
-import * as companiesHouse from '../controllers/companies-house.controller';
-import * as ordnanceSurvey from '../controllers/ordnance-survey.controller';
+import * as companies from '../controllers/companies.controller';
+import * as geospatialAddresses from '../controllers/geospatial-addresses.controller';
 import * as eStore from '../controllers/estore/eStore.controller';
 import * as premiumSchedule from '../controllers/premium-schedule.controller';
 import * as email from '../controllers/email.controller';
 import * as bankHolidays from '../controllers/bank-holidays.controller';
+
+export const apiRoutes = express.Router();
 
 /**
  * @openapi
@@ -182,7 +184,7 @@ apiRoutes.get('/industry-sectors/:code/acbs-sector', industrySectors.getACBSIndu
  * /number-generator:
  *   post:
  *     summary: Calls Number Generator APIM MDM API
- *     tags: [Number Generator]
+ *     tags: [Number Generator, APIM]
  *     description: Endpoint is responsible for getting a number from the number-generator via APIM MDM
  *     requestBody:
  *       required: true
@@ -492,41 +494,49 @@ apiRoutes.get('/premium-schedule', premiumSchedule.getPremiumSchedule);
 
 /**
  * @openapi
- * /companies-house/:companyRegistrationNumber:
+ * /companies/:registrationNumber:
  *   get:
- *     summary: Get Company profile from Companies House API
- *     tags: [Companies House]
+ *     summary: Get company details from MDM API.
+ *     tags: [APIM, Companies House]
  *     description: >-
- *       Get Company profile from Companies House API.
- *       Note - Not all fields are in the response body example. See Companies House API documentation.
+ *       Get company details from MDM API. MDM API retrieves the relevant details from the Companies House API and the MDM database.
  *     parameters:
  *       - in: path
- *         name: companyRegistrationNumber
+ *         name: registrationNumber
  *         schema:
  *           type: string
  *           example: UKEF0001
  *         required: true
- *         description: Company registration number
+ *         description: Companies House registration number
  *     responses:
  *       200:
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/definitions/CompaniesHouseResponseBody'
+ *               $ref: '#/definitions/Company'
+ *       400:
+ *         description: Bad request. Invalid Companies House registration number
+ *       404:
+ *         description: Not found. No company with this Companies House registration number exists
+ *       422:
+ *         description: Unprocessable entity. This Companies House registration number is for an overseas company and UKEF can only process applications from UK companies
+ *       429:
+ *         description: Too many requests
+ *       500:
+ *         description: Internal server error
  */
 
-apiRoutes.get('/companies-house/:companyRegistrationNumber', companiesHouse.lookup);
+apiRoutes.get('/companies/:registrationNumber', companies.getCompanyByRegistrationNumber);
 
 /**
  * @openapi
- * /ordnance-survey/:OSPostcode:
+ * /geospatial/addresses/postcode/:postcode:
  *   get:
- *     summary: Get a list of addresses from Ordnance Survey API
- *     tags: [Ordnance Survey]
+ *     summary: Get a list of addresses from MDM API
+ *     tags: [Addresses, APIM]
  *     description: >-
- *       Get a list of addresses from Ordnance Survey API.
- *       Note - Not all fields are in the response body example. See Ordnance Survey API documentation.
+ *       Get a list of addresses from MDM API.
  *     parameters:
  *       - in: path
  *         name: OSPostcode
@@ -540,33 +550,35 @@ apiRoutes.get('/companies-house/:companyRegistrationNumber', companiesHouse.look
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/definitions/OrdnanceSurveyResponseBody'
+ *               $ref: '#/definitions/MdmGeospatialAddressesResponseBody'
  */
-apiRoutes.get('/ordnance-survey/:OSPostcode', ordnanceSurvey.lookup);
+apiRoutes.get('/geospatial/addresses/postcode/:postcode', geospatialAddresses.lookup);
 
 /**
  * @openapi
  * /estore:
- *   get:
- *     summary: Create Estore folders
+ *   post:
+ *     summary: Creates an exporter site (if not exist), buyer, deal and facility directories. Endpoint will also upload any relevant documents.
  *     tags: [Estore, APIM]
- *     description: Creates an Estore site and then folders for buyer, deal and facilities. Multiple API calls.
+ *     description: Creates an eStore exporter site and then directories for buyer, deal and facilities. This endpoint will invoke multiple APIM eStore endpoints calls with response saved in `cron-job-logs` collection.
  *     requestBody:
  *       required: true
- *       description: Fields required for each Estore API call
+ *       description: Well formed payload for eStore API calls
  *       content:
  *         application/json:
  *           schema:
  *             $ref: '#/definitions/EstoreRequestBody'
  *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/definitions/EstoreResponseBody'
+ *       201:
+ *         description: eStore payload has been accepted and processing has been initiated.
+ *       202:
+ *         description: eStore payload has previously been accepted and execution is in progress.
+ *       400:
+ *         description: eStore payload has been declined due to malformed attributes.
+ *       500:
+ *         description: eStore payload has not been processed and failed due to an internal server error.
  */
-apiRoutes.post('/estore/', eStore.createEstore);
+apiRoutes.post('/estore/', eStore.create);
 
 /**
  * @openapi

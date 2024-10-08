@@ -6,18 +6,18 @@ const { validateFacilityValue } = require('./facility-value');
 const api = require('../../services/api');
 
 const facilityValue = async (req, res) => {
-  const {
-    params,
-    query,
-    session,
-  } = req;
+  const { params, query, session } = req;
   const { dealId, facilityId } = params;
   const { status } = query;
   const { user, userToken } = session;
 
   try {
     const facility = await Facility.find({
-      dealId, facilityId, status, user, userToken,
+      dealId,
+      facilityId,
+      status,
+      user,
+      userToken,
     });
     if (!facility) {
       // eslint-disable-next-line no-console
@@ -36,15 +36,11 @@ const facilityValue = async (req, res) => {
 };
 
 const updateFacilityValue = async (req, res) => {
-  const {
-    params, body, query, session,
-  } = req;
+  const { params, body, query, session } = req;
   const { user, userToken } = session;
   const { _id: editorId } = user;
   const { dealId, facilityId } = params;
-  const {
-    value, interestPercentage, coverPercentage, facilityType, currency,
-  } = body;
+  const { value, interestPercentage, coverPercentage, facilityType, currency } = body;
 
   const { status, saveAndReturn } = query;
   const facilityTypeConst = FACILITY_TYPE[facilityType?.toUpperCase()];

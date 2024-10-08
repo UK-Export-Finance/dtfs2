@@ -4,6 +4,9 @@ const { getAmendmentOptions, postAmendmentOptions } = require('./amendmentOption
 const { getAmendmentEffectiveDate, postAmendmentEffectiveDate } = require('./amendmentEffectiveDate.controller');
 const { getAmendFacilityValue, postAmendFacilityValue } = require('./amendFacilityValue.controller');
 const { getAmendCoverEndDate, postAmendCoverEndDate } = require('./amendCoverEndDate.controller');
+const { getAmendmentIsUsingFacilityEndDate, postAmendmentIsUsingFacilityEndDate } = require('./amendmentIsUsingFacilityEndDate.controller');
+const { getAmendmentFacilityEndDate, postAmendmentFacilityEndDate } = require('./amendmentFacilityEndDate.controller');
+const { getAmendmentBankReviewDate, postAmendmentBankReviewDate } = require('./amendmentBankReviewDate.controller');
 const { getAmendmentAnswers, postAmendmentAnswers } = require('./amendmentAnswers.controller');
 const { getAmendmentTask, postAmendmentTask } = require('./amendmentTasks.controller');
 const { getAmendmentLeadUnderwriter, getAssignAmendmentLeadUnderwriter, postAssignAmendmentLeadUnderwriter } = require('./leadUnderwriter.controller');
@@ -19,14 +22,16 @@ const {
   getAmendmentAddUnderwriterManagersFacilityValue,
   postAmendmentAddUnderwriterManagersFacilityValue,
 } = require('./underwriterManagerDecision.controller');
-const { getAmendmentBankDecisionChoice,
+const {
+  getAmendmentBankDecisionChoice,
   postAmendmentBankDecisionChoice,
   getAmendmentBankDecisionReceivedDate,
   postAmendmentBankDecisionReceivedDate,
   getAmendmentBankDecisionEffectiveDate,
   postAmendmentBankDecisionEffectiveDate,
   getAmendmentBankDecisionAnswers,
-  postAmendmentBankDecisionAnswers } = require('./bankDecision.controller');
+  postAmendmentBankDecisionAnswers,
+} = require('./bankDecision.controller');
 
 module.exports = {
   getAmendmentRequestDate,
@@ -41,6 +46,12 @@ module.exports = {
   postAmendFacilityValue,
   getAmendCoverEndDate,
   postAmendCoverEndDate,
+  getAmendmentIsUsingFacilityEndDate,
+  postAmendmentIsUsingFacilityEndDate,
+  getAmendmentFacilityEndDate,
+  postAmendmentFacilityEndDate,
+  getAmendmentBankReviewDate,
+  postAmendmentBankReviewDate,
   getAmendmentAnswers,
   postAmendmentAnswers,
   getAmendmentLeadUnderwriter,

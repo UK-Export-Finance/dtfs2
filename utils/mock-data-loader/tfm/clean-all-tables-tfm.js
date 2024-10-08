@@ -1,4 +1,5 @@
 const { logger } = require('../helpers/logger.helper');
+const { mongoDbClient } = require('../database/database-client');
 const api = require('./api');
 
 const cleanTeams = async () => {
@@ -20,7 +21,7 @@ const cleanUsers = async () => {
 };
 
 const cleanTfmDeals = async () => {
-  logger.info('cleaning TFM deals and facilities', { depth: 1 });
+  logger.info('cleaning TFM deals', { depth: 1 });
 
   const tfmDeals = await api.listDeals();
 
@@ -31,11 +32,19 @@ const cleanTfmDeals = async () => {
   }
 };
 
+const cleanTfmFacilities = async () => {
+  logger.info('cleaning TFM facilities', { depth: 1 });
+
+  const tfmFacilitiesCollection = await mongoDbClient.getCollection('tfm-facilities');
+  await tfmFacilitiesCollection.deleteMany({});
+};
+
 const cleanAllTables = async () => {
   logger.info('cleaning TFM tables');
   await cleanTeams();
   await cleanUsers();
   await cleanTfmDeals();
+  await cleanTfmFacilities();
 };
 
 module.exports = cleanAllTables;

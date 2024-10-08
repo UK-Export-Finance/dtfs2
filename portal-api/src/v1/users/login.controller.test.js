@@ -1,4 +1,5 @@
 const { when } = require('jest-when');
+const { generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { login } = require('./login.controller');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
 const { UserService } = require('./user.service');
@@ -57,7 +58,7 @@ describe('login', () => {
     mockIssueJWTSuccess(USER);
     mockUpdateSessionIdentifier(USER);
 
-    const result = await login(USERNAME, PASSWORD, userService);
+    const result = await login(USERNAME, PASSWORD, userService, generateNoUserLoggedInAuditDetails());
 
     expect(result).toEqual({ userEmail: EMAIL, tokenObject: TOKEN_OBJECT });
   });
@@ -68,7 +69,7 @@ describe('login', () => {
     mockIssueJWTSuccess(USER);
     mockUpdateSessionIdentifier(USER);
 
-    const result = await login(USERNAME, PASSWORD, userService);
+    const result = await login(USERNAME, PASSWORD, userService, generateNoUserLoggedInAuditDetails());
 
     expect(result).toEqual({ error: usernameOrPasswordIncorrect });
   });
@@ -79,7 +80,7 @@ describe('login', () => {
     mockIssueJWTSuccess(USER);
     mockUpdateSessionIdentifier(USER);
 
-    const result = await login(USERNAME, PASSWORD, userService);
+    const result = await login(USERNAME, PASSWORD, userService, generateNoUserLoggedInAuditDetails());
 
     expect(result).toEqual({ error: ERROR });
   });
@@ -90,7 +91,7 @@ describe('login', () => {
     mockIssueJWTSuccess(USER);
     mockUpdateSessionIdentifier(USER);
 
-    const result = await login(USERNAME, PASSWORD, userService);
+    const result = await login(USERNAME, PASSWORD, userService, generateNoUserLoggedInAuditDetails());
 
     expect(result).toEqual({ error: usernameOrPasswordIncorrect });
   });
@@ -103,7 +104,7 @@ describe('login', () => {
     mockIssueJWTSuccess(DISABLED_USER);
     mockUpdateSessionIdentifier(DISABLED_USER);
 
-    const result = await login(USERNAME, PASSWORD, userService);
+    const result = await login(USERNAME, PASSWORD, userService, generateNoUserLoggedInAuditDetails());
 
     expect(result).toEqual({ error: userIsDisabled });
   });
@@ -116,7 +117,7 @@ describe('login', () => {
     mockIssueJWTSuccess(BLOCKED_USER);
     mockUpdateSessionIdentifier(BLOCKED_USER);
 
-    const result = await login(USERNAME, PASSWORD, userService);
+    const result = await login(USERNAME, PASSWORD, userService, generateNoUserLoggedInAuditDetails());
 
     expect(result).toEqual({ error: userIsBlocked });
   });
@@ -129,7 +130,7 @@ describe('login', () => {
     mockIssueJWTSuccess(DISABLED_USER);
     mockUpdateSessionIdentifier(DISABLED_USER);
 
-    const result = await login(USERNAME, PASSWORD, userService);
+    const result = await login(USERNAME, PASSWORD, userService, generateNoUserLoggedInAuditDetails());
 
     expect(result).toEqual({ error: usernameOrPasswordIncorrect });
   });
@@ -142,7 +143,7 @@ describe('login', () => {
     mockIssueJWTSuccess(BLOCKED_USER);
     mockUpdateSessionIdentifier(BLOCKED_USER);
 
-    const result = await login(USERNAME, PASSWORD, userService);
+    const result = await login(USERNAME, PASSWORD, userService, generateNoUserLoggedInAuditDetails());
 
     expect(result).toEqual({ error: usernameOrPasswordIncorrect });
   });
@@ -181,8 +182,8 @@ describe('login', () => {
 
   function mockUpdateSessionIdentifier(user) {
     when(controller.updateSessionIdentifier)
-      .calledWith(user, SESSION_IDENTIFIER, expect.anything())
-      .mockImplementation((aUser, sessionIdentifier, callback) => {
+      .calledWith(user, SESSION_IDENTIFIER, generateNoUserLoggedInAuditDetails(), expect.anything())
+      .mockImplementation((aUser, sessionIdentifier, auditDetails, callback) => {
         callback();
       });
   }

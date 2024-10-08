@@ -1,7 +1,7 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common')
-const db = require('../../../drivers/db-client').default;
-const { PAYLOAD } = require('../../../constants');
-const { payloadVerification } = require('../../../helpers');
+const { MONGO_DB_COLLECTIONS, PAYLOAD_VERIFICATION } = require('@ukef/dtfs2-common');
+const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
+
+const { mongoDbClient: db } = require('../../../drivers/db-client');
 
 const createBank = async (bank) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.BANKS);
@@ -18,10 +18,10 @@ const createBank = async (bank) => {
 exports.createBankPost = async (req, res) => {
   const payload = req.body;
 
-  if (payloadVerification(req.body, PAYLOAD.BANK)) {
-    const bank = await createBank(payload);
-    return res.status(200).send(bank);
+  if (!isVerifiedPayload({ payload, template: PAYLOAD_VERIFICATION.BANK })) {
+    return res.status(400).send({ status: 400, message: 'Invalid bank payload' });
   }
 
-  return res.status(400).send({ status: 400, message: 'Invalid bank payload' });
+  const bank = await createBank(payload);
+  return res.status(200).send(bank);
 };

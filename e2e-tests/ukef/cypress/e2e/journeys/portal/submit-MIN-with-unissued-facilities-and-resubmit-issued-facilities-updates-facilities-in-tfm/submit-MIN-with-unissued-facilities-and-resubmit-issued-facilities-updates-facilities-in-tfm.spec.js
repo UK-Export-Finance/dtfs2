@@ -18,9 +18,9 @@ import {
   fillAndSubmitIssueLoanFacilityForm,
 } from '../../../../../../portal/cypress/e2e/journeys/maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm';
 
-const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
-
 import { UNDERWRITER_MANAGER_1, TFM_URL } from '../../../../../../e2e-fixtures';
+
+const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 context('Portal to TFM deal submission', () => {
   let deal;
@@ -166,20 +166,26 @@ context('Portal to TFM deal submission', () => {
     cy.forceVisit(tfmDealPage);
 
     const tfmBondRow = tfmPages.caseDealPage.dealFacilitiesTable.row(bondId);
-    tfmBondRow.facilityTenor().invoke('text').then((text) => {
-      // the actual month is generated dynamically via API.
-      // 'months' is added to the mapping of the API result.
-      // so safe to assert based on `months` appearing, rather than adding regex assertion.
-      expect(text.trim()).to.contain('month');
-    });
+    tfmBondRow
+      .facilityTenor()
+      .invoke('text')
+      .then((text) => {
+        // the actual month is generated dynamically via API.
+        // 'months' is added to the mapping of the API result.
+        // so safe to assert based on `months` appearing, rather than adding regex assertion.
+        expect(text.trim()).to.contain('month');
+      });
 
     const tfmLoanRow = tfmPages.caseDealPage.dealFacilitiesTable.row(loanId);
-    tfmLoanRow.facilityTenor().invoke('text').then((text) => {
-      // the actual month is generated dynamically via API.
-      // 'months' is added to the mapping of the API result.
-      // so safe to assert based on `months` appearing, rather than adding regex assertion.
-      expect(text.trim()).to.contain('month');
-    });
+    tfmLoanRow
+      .facilityTenor()
+      .invoke('text')
+      .then((text) => {
+        // the actual month is generated dynamically via API.
+        // 'months' is added to the mapping of the API result.
+        // so safe to assert based on `months` appearing, rather than adding regex assertion.
+        expect(text.trim()).to.contain('month');
+      });
 
     //---------------------------------------------------------------
     // bond facility should be updated
@@ -187,34 +193,57 @@ context('Portal to TFM deal submission', () => {
     const tfmBondFacilityPage = `${TFM_URL}/case/${dealId}/facility/${bondId}`;
     cy.forceVisit(tfmBondFacilityPage);
 
-    tfmPages.facilityPage.facilityStage().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Issued');
-    });
+    tfmPages.facilityPage
+      .facilityStage()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Issued');
+      });
 
-    tfmPages.facilityPage.facilityBankIssueNoticeReceived().invoke('text').then((text) => {
-      // the code actually uses facility.submittedAsIssuedDate,
-      // but in this e2e test it will always be today so to simplify..
-      const expectedDate = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
-      expect(text.trim()).to.equal(expectedDate);
-    });
+    tfmPages.facilityPage
+      .facilityBankIssueNoticeReceived()
+      .invoke('text')
+      .then((text) => {
+        // the code actually uses facility.submittedAsIssuedDate,
+        // but in this e2e test it will always be today so to simplify..
+        const expectedDate = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
+        expect(text.trim()).to.equal(expectedDate);
+      });
 
-    tfmPages.facilityPage.facilityCoverStartDate().invoke('text').then((text) => {
-      const expectedDate = new Date(BOND_COVER_START_DATE_VALUE).toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
-      expect(text.trim()).to.equal(expectedDate);
-    });
+    tfmPages.facilityPage
+      .facilityCoverStartDate()
+      .invoke('text')
+      .then((text) => {
+        const expectedDate = new Date(BOND_COVER_START_DATE_VALUE).toLocaleString('en-GB', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        });
+        expect(text.trim()).to.equal(expectedDate);
+      });
 
-    tfmPages.facilityPage.facilityCoverEndDate().invoke('text').then((text) => {
-      const expectedDate = new Date(BOND_COVER_END_DATE_VALUE).toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
-      expect(text.trim()).to.equal(expectedDate);
-    });
+    tfmPages.facilityPage
+      .facilityCoverEndDate()
+      .invoke('text')
+      .then((text) => {
+        const expectedDate = new Date(BOND_COVER_END_DATE_VALUE).toLocaleString('en-GB', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        });
+        expect(text.trim()).to.equal(expectedDate);
+      });
 
-    tfmPages.facilityPage.facilityTenor().invoke('text').then((text) => {
-      // the actual month is generated dynamically via API.
-      // 'months' is added to the mapping of the API result.
-      // so safe to assert based on `months` appearing, rather than adding regex assertion.
-      expect(text.trim()).not.to.contain(dealFacilities.bonds[0].ukefGuaranteeInMonths);
-      expect(text.trim()).to.contain('month');
-    });
+    tfmPages.facilityPage
+      .facilityTenor()
+      .invoke('text')
+      .then((text) => {
+        // the actual month is generated dynamically via API.
+        // 'months' is added to the mapping of the API result.
+        // so safe to assert based on `months` appearing, rather than adding regex assertion.
+        expect(text.trim()).not.to.contain(dealFacilities.bonds[0].ukefGuaranteeInMonths);
+        expect(text.trim()).to.contain('month');
+      });
 
     //---------------------------------------------------------------
     // bond facility - premium schedule should be updated
@@ -223,11 +252,14 @@ context('Portal to TFM deal submission', () => {
 
     tfmPages.facilityPage.premiumScheduleTable.total().should('be.visible');
 
-    tfmPages.facilityPage.premiumScheduleTable.total().invoke('text').then((text) => {
-      // total is calculated dynamically so we can only assert the `Total` text.
-      // this text is only displayed if a total exists.
-      expect(text.trim()).to.contain('Total');
-    });
+    tfmPages.facilityPage.premiumScheduleTable
+      .total()
+      .invoke('text')
+      .then((text) => {
+        // total is calculated dynamically so we can only assert the `Total` text.
+        // this text is only displayed if a total exists.
+        expect(text.trim()).to.contain('Total');
+      });
 
     //---------------------------------------------------------------
     // loan facility should be updated
@@ -235,45 +267,71 @@ context('Portal to TFM deal submission', () => {
     const tfmLoanFacilityPage = `${TFM_URL}/case/${dealId}/facility/${loanId}`;
     cy.forceVisit(tfmLoanFacilityPage);
 
-    tfmPages.facilityPage.facilityStage().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Issued');
-    });
-
-    tfmPages.facilityPage.facilityBankIssueNoticeReceived().invoke('text').then((text) => {
-      // the code actually uses facility.submittedAsIssuedDate,
-      // but in this e2e test it will always be today so to simplify..
-      const expectedDate = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
-      expect(text.trim()).to.equal(expectedDate);
-    });
-
-    tfmPages.facilityPage.firstDrawdownAmountInExportCurrency().invoke('text').then((text) => {
-      const expectedValue = Number(DISBURSEMENT_AMOUNT_VALUE).toLocaleString('en', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
+    tfmPages.facilityPage
+      .facilityStage()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Issued');
       });
 
-      const expected = `${dealFacilities.loans[0].currency.id} ${expectedValue}`;
+    tfmPages.facilityPage
+      .facilityBankIssueNoticeReceived()
+      .invoke('text')
+      .then((text) => {
+        // the code actually uses facility.submittedAsIssuedDate,
+        // but in this e2e test it will always be today so to simplify..
+        const expectedDate = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
+        expect(text.trim()).to.equal(expectedDate);
+      });
 
-      expect(text.trim()).to.equal(expected);
-    });
+    tfmPages.facilityPage
+      .firstDrawdownAmountInExportCurrency()
+      .invoke('text')
+      .then((text) => {
+        const expectedValue = Number(DISBURSEMENT_AMOUNT_VALUE).toLocaleString('en', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
 
-    tfmPages.facilityPage.facilityCoverStartDate().invoke('text').then((text) => {
-      const expectedDate = new Date(LOAN_COVER_START_DATE_VALUE).toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
-      expect(text.trim()).to.equal(expectedDate);
-    });
+        const expected = `${dealFacilities.loans[0].currency.id} ${expectedValue}`;
 
-    tfmPages.facilityPage.facilityCoverEndDate().invoke('text').then((text) => {
-      const expectedDate = new Date(LOAN_COVER_END_DATE_VALUE).toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
-      expect(text.trim()).to.equal(expectedDate);
-    });
+        expect(text.trim()).to.equal(expected);
+      });
 
-    tfmPages.facilityPage.facilityTenor().invoke('text').then((text) => {
-      // the actual month is generated dynamically via API.
-      // 'months' is added to the mapping of the API result.
-      // so safe to assert based on `months` appearing, rather than adding regex assertion.
-      expect(text.trim()).not.to.contain(dealFacilities.loans[0].ukefGuaranteeInMonths);
-      expect(text.trim()).to.contain('month');
-    });
+    tfmPages.facilityPage
+      .facilityCoverStartDate()
+      .invoke('text')
+      .then((text) => {
+        const expectedDate = new Date(LOAN_COVER_START_DATE_VALUE).toLocaleString('en-GB', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        });
+        expect(text.trim()).to.equal(expectedDate);
+      });
+
+    tfmPages.facilityPage
+      .facilityCoverEndDate()
+      .invoke('text')
+      .then((text) => {
+        const expectedDate = new Date(LOAN_COVER_END_DATE_VALUE).toLocaleString('en-GB', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        });
+        expect(text.trim()).to.equal(expectedDate);
+      });
+
+    tfmPages.facilityPage
+      .facilityTenor()
+      .invoke('text')
+      .then((text) => {
+        // the actual month is generated dynamically via API.
+        // 'months' is added to the mapping of the API result.
+        // so safe to assert based on `months` appearing, rather than adding regex assertion.
+        expect(text.trim()).not.to.contain(dealFacilities.loans[0].ukefGuaranteeInMonths);
+        expect(text.trim()).to.contain('month');
+      });
 
     //---------------------------------------------------------------
     // loan facility - premium schedule should be updated
@@ -282,14 +340,17 @@ context('Portal to TFM deal submission', () => {
 
     tfmPages.facilityPage.premiumScheduleTable.total().should('be.visible');
 
-    tfmPages.facilityPage.premiumScheduleTable.total().invoke('text').then((text) => {
-      // total is calculated dynamically so we can only assert the `Total` text.
-      // this text is only displayed if a total exists.
-      expect(text.trim()).to.contain('Total');
-    });
+    tfmPages.facilityPage.premiumScheduleTable
+      .total()
+      .invoke('text')
+      .then((text) => {
+        // total is calculated dynamically so we can only assert the `Total` text.
+        // this text is only displayed if a total exists.
+        expect(text.trim()).to.contain('Total');
+      });
 
     tfmPages.facilityPage.allFacilitiesLink().click();
-    tfmPages.facilitiesPage.facilityIdLink(dealFacilities.bonds[0]._id).should('exist');
-    tfmPages.facilitiesPage.facilityIdLink(dealFacilities.loans[0]._id).should('exist');
+    tfmPages.facilitiesPage.facilitiesTable.row(dealFacilities.bonds[0]._id).facilityLink().should('exist');
+    tfmPages.facilitiesPage.facilitiesTable.row(dealFacilities.loans[0]._id).facilityLink().should('exist');
   });
 });

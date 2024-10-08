@@ -1,20 +1,23 @@
+const api = require('../api');
 const mapCreateEstore = require('../mappings/map-create-estore');
 
-const api = require('../api');
-
-const createEstoreFolders = async (deal) => {
+/**
+ * This function creates eStore directories and files on Sharepoint.
+ * Response is relayed using CRON jobs.
+ * Function will return deal object with a blank `siteName`.
+ * @param {object} deal Deal object
+ * @returns {Promise<object>} `tfm-deal` object with empty `siteName`
+ */
+const createEstoreSite = async (deal) => {
+  const estoreDeal = deal;
+  // 1. Creates eStore object by mapping through the deal
   const eStoreInput = mapCreateEstore(deal);
+  // 2. Creates eStore directories and upload files
+  await api.createEstoreSite(eStoreInput);
 
-  await api.createEstoreFolders(eStoreInput);
-  return {
-    ...deal,
-    tfm: {
-      ...deal.tfm,
-      estore: {},
-    },
-  };
+  return estoreDeal;
 };
 
 module.exports = {
-  createEstoreFolders,
+  createEstoreSite,
 };

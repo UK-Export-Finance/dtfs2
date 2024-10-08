@@ -1,4 +1,4 @@
-const pageRenderer = require('../../pageRenderer');
+const { pageRenderer } = require('../../pageRenderer');
 
 const page = '../templates/case/underwriting/pricing-and-risk/loss-given-default.njk';
 
@@ -24,9 +24,7 @@ describe(page, () => {
 
   describe('loss given default', () => {
     it('should render page label heading', () => {
-      wrapper.expectText('[data-cy="label-heading"]').toRead(
-        `What’s the loss given default (LGD) for ${params.deal.submissionDetails.supplierName} in %?`,
-      );
+      wrapper.expectText('[data-cy="label-heading"]').toRead(`What’s the loss given default (LGD) for ${params.deal.submissionDetails.supplierName} in %?`);
     });
 
     it('should render loss given default input', () => {
@@ -35,8 +33,7 @@ describe(page, () => {
 
     it('should render save & close buttons', () => {
       wrapper.expectElement('[data-cy="submit-button"]').toExist();
-      wrapper.expectLink('[data-cy="close-link"]')
-        .toLinkTo(`/case/${params.dealId}/underwriting`, 'Cancel');
+      wrapper.expectLink('[data-cy="close-link"]').toLinkTo(`/case/${params.dealId}/underwriting`, 'Cancel');
     });
   });
 });

@@ -22,7 +22,9 @@ module.exports.renderCheckYourEmailPage = (req, res) => {
     case 1:
       return res.render('login/new-sign-in-link-sent.njk');
     case 0:
-      return res.render('login/we-have-sent-you-another-link.njk', { obscuredSignInLinkTargetEmailAddress: obscureEmail(userEmail) });
+      return res.render('login/we-have-sent-you-another-link.njk', {
+        obscuredSignInLinkTargetEmailAddress: obscureEmail(userEmail),
+      });
     case -1:
       return res.status(403).render('login/temporarily-suspended.njk');
     default:
@@ -40,7 +42,7 @@ module.exports.sendNewSignInLink = async (req, res) => {
     if (error.response?.status === 403) {
       req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
     }
-    console.warn('Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was: %O', error);
+    console.info('Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was %o', error);
   }
 
   return res.redirect('/login/check-your-email');

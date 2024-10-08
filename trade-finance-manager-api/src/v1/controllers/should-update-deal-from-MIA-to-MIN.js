@@ -1,11 +1,11 @@
 const CONSTANTS = require('../../constants');
 
 /**
- * Determines whether a deal submission type 
+ * Determines whether a deal submission type
  * can be updated from MIA to MIN.
  *
- * @param {Object} deal - The portal deal object.
- * @param {Object} tfmDeal - The TFM deal object.
+ * @param {object} deal - The portal deal object.
+ * @param {object} tfmDeal - The TFM deal object (deal.tfm).
  * @returns {boolean} - True if the deal should be updated, false otherwise.
  */
 const shouldUpdateDealFromMIAtoMIN = (deal, tfmDeal) => {

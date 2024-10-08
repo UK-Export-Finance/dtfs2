@@ -1,3 +1,10 @@
+const { ObjectId } = require('mongodb');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const {
+  generateParsedMockPortalUserAuditDatabaseRecord,
+  withDeleteOneTests,
+  expectAnyPortalUserAuditDatabaseRecord,
+} = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
@@ -5,11 +12,12 @@ const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const { as, get, post, remove } = require('../../api')(app);
 const { expectMongoId } = require('../../expectMongoIds');
 
-const items = require('../../fixtures/gef/eligibilityCriteria');
+const mockEligibilityCriteria = require('../../fixtures/gef/eligibilityCriteria');
 
 const baseUrl = '/v1/gef/eligibility-criteria';
 
@@ -25,19 +33,18 @@ describe(baseUrl, () => {
   });
 
   beforeEach(async () => {
-    await databaseHelper.wipe(['eligibility-criteria']);
+    await databaseHelper.wipe([DB_COLLECTIONS.ELIGIBILITY_CRITERIA]);
   });
 
   describe(`GET ${baseUrl}`, () => {
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(baseUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(baseUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(baseUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(baseUrl),
       successStatusCode: 200,
     });
@@ -46,46 +53,54 @@ describe(baseUrl, () => {
   describe(`GET ${baseUrl}/latest`, () => {
     const latestEligibilityCriteriaUrl = `${baseUrl}/latest`;
 
+    beforeEach(async () => {
+      await as(anAdmin).post(mockEligibilityCriteria[0]).to(baseUrl);
+    });
+
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(latestEligibilityCriteriaUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(latestEligibilityCriteriaUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(latestEligibilityCriteriaUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(latestEligibilityCriteriaUrl),
       successStatusCode: 200,
     });
 
     it('returns the latest eligibility-criteria version', async () => {
-      await as(anAdmin).post(items[0]).to(baseUrl);
-      await as(anAdmin).post(items[1]).to(baseUrl);
-      await as(anAdmin).post(items[2]).to(baseUrl);
+      await as(anAdmin).post(mockEligibilityCriteria[0]).to(baseUrl);
+      await as(anAdmin).post(mockEligibilityCriteria[1]).to(baseUrl);
+      await as(anAdmin).post(mockEligibilityCriteria[2]).to(baseUrl);
 
       const { body } = await as(aMaker).get(latestEligibilityCriteriaUrl);
 
-      expect(body).toEqual(expect.objectContaining({
-        ...expectMongoId(items[1]),
-        createdAt: expect.any(Number),
-        criteria: expect.any(Array),
-      }));
+      expect(body).toEqual(
+        expect.objectContaining({
+          ...expectMongoId(mockEligibilityCriteria[1]),
+          createdAt: expect.any(Number),
+          criteria: expect.any(Array),
+        }),
+      );
     });
   });
 
   describe(`GET ${baseUrl}/:version`, () => {
-    const eligibilityCriteria1Url = `${baseUrl}/2.1`;
+    const eligibilityCriteria1Url = `${baseUrl}/${mockEligibilityCriteria[0].version}`;
+
+    beforeEach(async () => {
+      await as(anAdmin).post(mockEligibilityCriteria[0]).to(baseUrl);
+    });
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(eligibilityCriteria1Url),
-      makeRequestWithAuthHeader: (authHeader) => get(eligibilityCriteria1Url, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(eligibilityCriteria1Url, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(eligibilityCriteria1Url),
       successStatusCode: 200,
     });
@@ -96,15 +111,16 @@ describe(baseUrl, () => {
     });
 
     it('returns an eligibility criteria', async () => {
-      await as(anAdmin).post(items[0]).to(baseUrl);
-      const { status, body } = await as(anAdmin).get(`${baseUrl}/${items[0].version}`);
+      await as(anAdmin).post(mockEligibilityCriteria[0]).to(baseUrl);
+      const { status, body } = await as(anAdmin).get(`${baseUrl}/${mockEligibilityCriteria[0].version}`);
       expect(status).toEqual(200);
       const expected = {
-        ...expectMongoId(items[0]),
-        version: items[0].version,
+        ...expectMongoId(mockEligibilityCriteria[0]),
+        version: mockEligibilityCriteria[0].version,
         isInDraft: expect.any(Boolean),
         createdAt: expect.any(Number),
         criteria: expect.any(Array),
+        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(anAdmin._id),
       };
       expect(body).toEqual(expected);
     });
@@ -112,42 +128,44 @@ describe(baseUrl, () => {
 
   describe(`POST ${baseUrl}`, () => {
     withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => post(baseUrl, items[0]),
-      makeRequestWithAuthHeader: (authHeader) => post(baseUrl, items[0], { headers: { Authorization: authHeader } })
+      makeRequestWithoutAuthHeader: () => post(baseUrl, mockEligibilityCriteria[0]),
+      makeRequestWithAuthHeader: (authHeader) => post(baseUrl, mockEligibilityCriteria[0], { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-      makeRequestAsUser: (user) => as(user).post(items[0]).to(baseUrl),
+      makeRequestAsUser: (user) => as(user).post(mockEligibilityCriteria[0]).to(baseUrl),
       successStatusCode: 201,
     });
   });
 
   describe(`DELETE ${baseUrl}/:version`, () => {
-    const eligibilityCriteria1Url = `${baseUrl}/2.1`;
+    const eligibilityCriteria1Url = `${baseUrl}/${mockEligibilityCriteria[0].version}`;
+    let eligibilityCriteriaToDeleteId;
+
+    beforeEach(async () => {
+      const { body } = await as(anAdmin).post(mockEligibilityCriteria[0]).to(baseUrl);
+      eligibilityCriteriaToDeleteId = new ObjectId(body._id);
+    });
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => remove(eligibilityCriteria1Url),
-      makeRequestWithAuthHeader: (authHeader) => remove(eligibilityCriteria1Url, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => remove(eligibilityCriteria1Url, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).remove(eligibilityCriteria1Url),
       successStatusCode: 200,
     });
 
-    it('deletes the eligibility-criteria', async () => {
-      await as(anAdmin).post(items[0]).to(baseUrl);
-      const { body: item } = await as(anAdmin).get(`${baseUrl}/${items[0].version}`);
-
-      const { status, body } = await as(anAdmin).remove(`${baseUrl}/${items[0].version}`);
-      expect(status).toEqual(200);
-      expect(body).toEqual(item);
+    withDeleteOneTests({
+      makeRequest: () => as(anAdmin).remove(eligibilityCriteria1Url),
+      collectionName: MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA,
+      auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
+      getDeletedDocumentId: () => eligibilityCriteriaToDeleteId,
     });
   });
 });

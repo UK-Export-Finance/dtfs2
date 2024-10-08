@@ -49,7 +49,6 @@ describe('GET /v1/banks/:bankId/due-report-periods', () => {
   withRoleAuthorisationTests({
     allowedRoles: [PAYMENT_REPORT_OFFICER],
     getUserWithRole: (role) => testUsers().withRole(role).one(),
-    getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
     makeRequestAsUser: (user) => as(user).get(dueReportPeriodsUrl(matchingBankId)),
     successStatusCode: 200,
   });

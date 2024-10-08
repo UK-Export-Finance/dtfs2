@@ -1,20 +1,16 @@
-const db = require('../../drivers/db-client');
+const { mongoDbClient: db } = require('../../drivers/db-client');
 const sendEmail = require('../email');
 const { createPasswordToken } = require('./controller');
 const { EMAIL_TEMPLATE_IDS } = require('../../constants');
 
 const sendResetEmail = async (emailAddress, resetToken) => {
-  await sendEmail(
-    EMAIL_TEMPLATE_IDS.PASSWORD_RESET,
-    emailAddress,
-    {
-      resetToken,
-    },
-  );
+  await sendEmail(EMAIL_TEMPLATE_IDS.PASSWORD_RESET, emailAddress, {
+    resetToken,
+  });
 };
 
-exports.resetPassword = async (email, userService) => {
-  const resetToken = await createPasswordToken(email, userService);
+exports.resetPassword = async (email, userService, auditDetails) => {
+  const resetToken = await createPasswordToken(email, userService, auditDetails);
 
   if (resetToken) {
     await sendResetEmail(email, resetToken);

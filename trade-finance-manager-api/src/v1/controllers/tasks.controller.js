@@ -1,3 +1,4 @@
+const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const { getGroupById, getTaskInGroupById, isAdverseHistoryTaskIsComplete, shouldUpdateDealStage } = require('../helpers/tasks');
@@ -174,7 +175,7 @@ const createAllUpdatedTasks = async (allTaskGroups, groupId, taskUpdate, statusF
  * - Change the TFM dealStage (if deal is MIA and taskUpdate is first task).
  * - Updates the deal.
  * */
-const updateTfmTask = async ({ dealId, groupId, taskId, taskUpdate }) => {
+const updateTfmTask = async ({ dealId, groupId, taskId, taskUpdate, auditDetails }) => {
   const unmappedDeal = await api.findOneDeal(dealId);
   if (!unmappedDeal) {
     throw new Error(`Deal not found ${dealId}`);
@@ -243,7 +244,7 @@ const updateTfmTask = async ({ dealId, groupId, taskId, taskUpdate }) => {
   /**
    * Update the deal
    * */
-  await api.updateDeal(dealId, tfmDealUpdate);
+  await api.updateDeal({ dealId, dealUpdate: tfmDealUpdate, auditDetails });
 
   return updatedTask;
 };
@@ -253,10 +254,16 @@ const updateTask = async (req, res) => {
   const taskUpdate = req.body;
 
   try {
-    const result = await updateTfmTask({ dealId, groupId: parseInt(groupId, 10), taskId, taskUpdate });
+    const result = await updateTfmTask({
+      dealId,
+      groupId: parseInt(groupId, 10),
+      taskId,
+      taskUpdate,
+      auditDetails: generateTfmAuditDetails(req.user._id),
+    });
     return res.status(200).send(result);
   } catch (error) {
-    console.error('Unable to update the task %s in group %s deal %s: %O', taskId, groupId, dealId, error);
+    console.error('Unable to update the task %s in group %s deal %s %o', taskId, groupId, dealId, error);
     return res.status(500).send({ data: 'Unable to update the task' });
   }
 };

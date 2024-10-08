@@ -40,8 +40,7 @@ module.exports = (submissionDetails, errorList) => {
       };
     }
 
-    if (!submissionDetails['indemnifier-address-country']
-      || !submissionDetails['indemnifier-address-country'].code) {
+    if (!submissionDetails['indemnifier-address-country'] || !submissionDetails['indemnifier-address-country'].code) {
       newErrorList['indemnifier-address-country'] = {
         order: orderNumber(newErrorList),
         text: 'Indemnifier country is required',

@@ -1,8 +1,6 @@
 const deals = require('../../../../fixtures/deal-dashboard-data');
 const relative = require('../../../relativeURL');
-const {
-  ADMIN, BANK1_MAKER1, BANK1_CHECKER1, BANK1_READ_ONLY1, BANK1_PAYMENT_REPORT_OFFICER1,
-} = require('../../../../../../e2e-fixtures/portal-users.fixture');
+const { ADMIN, BANK1_MAKER1, BANK1_CHECKER1, BANK1_READ_ONLY1, BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../e2e-fixtures/portal-users.fixture');
 
 context('Only allow authorised users to access admin pages', () => {
   it('should allow admins access to restricted pages', () => {

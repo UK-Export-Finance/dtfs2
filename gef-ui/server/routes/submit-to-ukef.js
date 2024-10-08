@@ -5,7 +5,11 @@ const { CHECKER } = require('../constants/roles');
 
 const router = express.Router();
 
-router.get('/application-details/:dealId/submit-to-ukef', [validateToken, validateBank, validateRole({ role: [CHECKER] })], (req, res) => submitToUkef(req, res));
-router.post('/application-details/:dealId/submit-to-ukef', [validateToken, validateBank, validateRole({ role: [CHECKER] })], (req, res) => createSubmissionToUkef(req, res));
+router.get('/application-details/:dealId/submit-to-ukef', [validateToken, validateBank, validateRole({ role: [CHECKER] })], (req, res) =>
+  submitToUkef(req, res),
+);
+router.post('/application-details/:dealId/submit-to-ukef', [validateToken, validateBank, validateRole({ role: [CHECKER] })], (req, res) =>
+  createSubmissionToUkef(req, res),
+);
 
 module.exports = router;

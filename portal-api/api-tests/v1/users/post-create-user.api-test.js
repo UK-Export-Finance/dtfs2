@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const { produce } = require('immer');
 const databaseHelper = require('../../database-helper');
 const testUserCache = require('../../api-test-users');
@@ -47,7 +48,10 @@ describe('a user', () => {
       makeRequestWithAuthHeader: (authHeader) => post(BASE_URL, MOCK_USER, { headers: { Authorization: authHeader } }),
     });
 
-    withValidatePasswordWhenCreatingUserTests({ payload: MOCK_USER, makeRequest: async (user) => await createUser(user) });
+    withValidatePasswordWhenCreatingUserTests({
+      payload: MOCK_USER,
+      makeRequest: async (user) => await createUser(user),
+    });
 
     withValidateEmailIsUniqueTests({
       payload: MOCK_USER,
@@ -105,6 +109,7 @@ describe('a user', () => {
                 surname: MOCK_USER.surname,
                 timezone: 'Europe/London',
                 'user-status': STATUS.ACTIVE,
+                isTrusted: MOCK_USER.isTrusted,
               },
             ]),
           }),

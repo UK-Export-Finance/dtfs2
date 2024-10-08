@@ -1,9 +1,9 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
 const sanitizeHtml = require('sanitize-html');
+const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 
 const { userCanEditManagersDecision, ukefDecisionRejected, validateUkefDecision } = require('../../helpers');
-const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 const { UNDERWRITER_MANAGER_DECISIONS_TAGS, UNDERWRITER_MANAGER_DECISIONS } = require('../../../constants/decisions.constant');
 const { formattedNumber } = require('../../../helpers/number');
 const { amendmentManagersDecisionConditionsValidation } = require('./validation/amendmentUnderwriterManagersDecisionConditions.validate');
@@ -40,7 +40,7 @@ const getManagersConditionsAndComments = async (req, res) => {
       user,
     });
   } catch (error) {
-    console.error("Unable to load the Underwriter's manager - conditions and comments page %O", error);
+    console.error("Unable to load the Underwriter's manager - conditions and comments page %o", error);
     return res.redirect('/');
   }
 };
@@ -104,7 +104,7 @@ const postManagersConditionsAndComments = async (req, res) => {
     console.error('Unable to add the underwriter managers decision');
     return res.redirect(`/case/${dealId}/underwriting`);
   } catch (error) {
-    console.error("There was a problem adding the manager's decision %O", error?.response?.data);
+    console.error("There was a problem adding the manager's decision %o", error?.response?.data);
     return res.redirect(`/case/${dealId}/underwriting`);
   }
 };
@@ -142,7 +142,7 @@ const getManagersConditionsAndCommentsSummary = async (req, res) => {
       user,
     });
   } catch (error) {
-    console.error("Unable to load the Underwriter's manager - conditions and comments summary page %O", error);
+    console.error("Unable to load the Underwriter's manager - conditions and comments summary page %o", error);
     return res.redirect('/');
   }
 };
@@ -181,7 +181,7 @@ const postManagersConditionsAndCommentsSummary = async (req, res) => {
     console.error('Unable to submit the underwriter managers decision');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/managers-conditions/summary`);
   } catch (error) {
-    console.error("There was a problem submitting the manager's decision %O", error?.response?.data);
+    console.error("There was a problem submitting the manager's decision %o", error?.response?.data);
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/managers-conditions/summary`);
   }
 };

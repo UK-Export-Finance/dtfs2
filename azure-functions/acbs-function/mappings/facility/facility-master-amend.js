@@ -34,10 +34,10 @@ const { formatDate } = require('../../helpers/date');
  * Only following properties are eligible for amendments:
  * 1. Facility amount
  * 2. Facility cover end date
- * @param {Object} fmr Facility Master Record
- * @param {Object} amendments Facility amendment(s)
- * @param {Object} deal Deal object
- * @returns {Object} Facility Master Record (FMR) amended
+ * @param {object} fmr Facility Master Record
+ * @param {object} amendments Facility amendment(s)
+ * @param {object} deal Deal object
+ * @returns {object} Facility Master Record (FMR) amended
  */
 const facilityMasterAmend = (fmr, amendments, deal) => {
   try {
@@ -72,7 +72,7 @@ const facilityMasterAmend = (fmr, amendments, deal) => {
     // Return amended FMR
     return record;
   } catch (error) {
-    console.error('Unable to map facility master amendment record: %s', error);
+    console.error('Unable to map facility master amendment record %o', error);
     return {};
   }
 };

@@ -5,7 +5,6 @@ const activityCommentBoxPage = {
 
   commentErrorSummary: () => cy.get('[data-cy="error-summary"]'),
   commentErrorMessage: () => cy.get('[data-cy="activity-comment-error"]'),
-
 };
 
 module.exports = activityCommentBoxPage;

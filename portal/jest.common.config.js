@@ -6,6 +6,6 @@ module.exports = {
   },
   moduleNameMapper: {
     '^.+\\.(css|less|scss)$': 'babel-jest',
-    'uuid': require.resolve('uuid'),
+    uuid: require.resolve('uuid'),
   },
 };

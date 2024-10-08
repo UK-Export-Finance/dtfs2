@@ -32,10 +32,10 @@ const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controlle
 
 const mandatoryCriteria = require('../controllers/portal/mandatory-criteria/mandatory-criteria.controller');
 
-const { PORTAL_ROUTE } = require('../../constants/routes');
+const { ROUTES } = require('../../constants');
 
 portalRouter.use((req, res, next) => {
-  req.routePath = PORTAL_ROUTE;
+  req.routePath = ROUTES.PORTAL_ROUTE;
   next();
 });
 
@@ -54,11 +54,16 @@ portalRouter.use((req, res, next) => {
  *           schema:
  *             type: object
  *             properties:
+ *               user:
+ *                 type: object
  *               deal:
  *                 type: object
  *                 properties:
  *                   details:
  *                     type: object
+ *               auditDetails:
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAuditDetails'
  *           example:
  *             bankInternalRefName: 'a1'
  *             additionalRefName: 'test'
@@ -93,9 +98,7 @@ portalRouter.use((req, res, next) => {
  *                     order: '2'
  *                     text: 'Enter the Bank deal name'
  */
-portalRouter.route('/deals').post(
-  createDealController.createDealPost,
-);
+portalRouter.route('/deals').post(createDealController.createDealPost);
 
 /**
  * @openapi
@@ -126,9 +129,7 @@ portalRouter.route('/deals').post(
  *       404:
  *         description: Not found
  */
-portalRouter.route('/deals/:id').get(
-  getDealController.findOneDealGet,
-);
+portalRouter.route('/deals/:id').get(getDealController.findOneDealGet);
 
 /**
  * @openapi
@@ -150,9 +151,18 @@ portalRouter.route('/deals/:id').get(
  *         application/json:
  *           schema:
  *             type: object
+ *             properties:
+ *               dealUpdate:
+ *                 type: object
+ *               user:
+ *                 type: object
+ *               auditDetails:
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAuditDetails'
  *             example:
  *               user: { _id: '123456abc' }
  *               dealUpdate: { aNewField: true }
+ *               auditDetails: { userType: 'portal', id: 'abcdef123456abcdef123456' }
  *     responses:
  *       200:
  *         description: OK
@@ -168,9 +178,7 @@ portalRouter.route('/deals/:id').get(
  *       404:
  *         description: Not found
  */
-portalRouter.route('/deals/:id').put(
-  updateDealController.updateDealPut,
-);
+portalRouter.route('/deals/:id').put(updateDealController.updateDealPut);
 
 /**
  * @openapi
@@ -195,9 +203,7 @@ portalRouter.route('/deals/:id').put(
  *               acknowledged: true
  *               deletedCount: 1
  */
-portalRouter.route('/deals/:id').delete(
-  deleteDealController.deleteDeal,
-);
+portalRouter.route('/deals/:id').delete(deleteDealController.deleteDeal);
 
 /**
  * @openapi
@@ -240,10 +246,7 @@ portalRouter.route('/deals/:id').delete(
  *       404:
  *         description: Not found
  */
-portalRouter.route('/deals/:id/status')
-  .put(
-    updateDealStatusController.updateDealStatusPut,
-  );
+portalRouter.route('/deals/:id/status').put(updateDealStatusController.updateDealStatusPut);
 
 /**
  * @openapi
@@ -275,8 +278,10 @@ portalRouter.route('/deals/:id/status')
  *                 properties:
  *                   user:
  *                     type: object
- *                     schema:
- *                       $ref: '#/definitions/User'
+ *                     $ref: '#/definitions/User'
+ *                   auditDetails:
+ *                     type: object
+ *                     $ref: '#/definitions/PortalAuditDetails'
  *                   text:
  *                     type: string
  *                     example: Amazing comment
@@ -290,10 +295,7 @@ portalRouter.route('/deals/:id/status')
  *       404:
  *         description: Deal not found
  */
-portalRouter.route('/deals/:id/comment')
-  .post(
-    addDealCommentController.addDealCommentPost,
-  );
+portalRouter.route('/deals/:id/comment').post(addDealCommentController.addDealCommentPost);
 
 /**
  * @openapi
@@ -310,9 +312,7 @@ portalRouter.route('/deals/:id/comment')
  *             schema:
  *               $ref: '#/definitions/FacilitiesBSS'
  */
-portalRouter.route('/facilities').get(
-  getFacilitiesController.findAllGet,
-);
+portalRouter.route('/facilities').get(getFacilitiesController.findAllGet);
 
 /**
  * @openapi
@@ -333,6 +333,9 @@ portalRouter.route('/facilities').get(
  *                 type: string
  *               dealId:
  *                 type: string
+ *               auditDetails:
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAuditDetails'
  *           example:
  *             type: 'Bond'
  *             dealId: '123abc'
@@ -358,14 +361,9 @@ portalRouter.route('/facilities').get(
  *                     order: '2'
  *                     text: 'Enter the Associated deal id'
  */
-portalRouter.route('/facilities').post(
-  createFacilityController.createFacilityPost,
-);
+portalRouter.route('/facilities').post(createFacilityController.createFacilityPost);
 
-portalRouter.route('/multiple-facilities')
-  .post(
-    createMultipleFacilitiesController.createMultipleFacilitiesPost,
-  );
+portalRouter.route('/multiple-facilities').post(createMultipleFacilitiesController.createMultipleFacilitiesPost);
 
 /**
  * @openapi
@@ -391,9 +389,7 @@ portalRouter.route('/multiple-facilities')
  *       404:
  *         description: Not found
  */
-portalRouter.route('/facilities/:id').get(
-  getFacilityController.findOneFacilityGet,
-);
+portalRouter.route('/facilities/:id').get(getFacilityController.findOneFacilityGet);
 
 /**
  * @openapi
@@ -415,7 +411,14 @@ portalRouter.route('/facilities/:id').get(
  *         application/json:
  *           schema:
  *             type: object
- *             example: { aNewField: true }
+ *             properties:
+ *               facilityUpdate:
+ *                 type: object
+ *               user:
+ *                 type: object
+ *               auditDetails:
+ *                 type: object
+ *                 $ref: '#/definitions/portalAuditDetails'
  *     responses:
  *       200:
  *         description: OK
@@ -431,9 +434,7 @@ portalRouter.route('/facilities/:id').get(
  *       404:
  *         description: Not found
  */
-portalRouter.route('/facilities/:id').put(
-  updateFacilityController.updateFacilityPut,
-);
+portalRouter.route('/facilities/:id').put(updateFacilityController.updateFacilityPut);
 
 /**
  * @openapi
@@ -460,9 +461,7 @@ portalRouter.route('/facilities/:id').put(
  *       404:
  *         description: Not found
  */
-portalRouter.route('/facilities/:id').delete(
-  deleteFacilityController.deleteFacility,
-);
+portalRouter.route('/facilities/:id').delete(deleteFacilityController.deleteFacility);
 
 /**
  * @openapi
@@ -482,9 +481,12 @@ portalRouter.route('/facilities/:id').delete(
  *       required: true
  *       content:
  *         application/json:
- *           schema:
- *             type: object
- *             example: { status: Ready for Checker's approval }
+ *           properties:
+ *             status:
+ *               type: string
+ *             auditDetails:
+ *               type: object
+ *               $ref: '#/definitions/portalAuditDetails'
  *     responses:
  *       200:
  *         description: OK
@@ -502,10 +504,7 @@ portalRouter.route('/facilities/:id').delete(
  *       404:
  *         description: Not found
  */
-portalRouter.route('/facilities/:id/status')
-  .put(
-    updateFacilityStatusController.updateFacilityStatusPut,
-  );
+portalRouter.route('/facilities/:id/status').put(updateFacilityStatusController.updateFacilityStatusPut);
 
 /**
  * @openapi
@@ -522,10 +521,7 @@ portalRouter.route('/facilities/:id/status')
  *             example:
  *               _id: '123456abc'
  */
-portalRouter.route('/gef/deals')
-  .post(
-    createGefDealController.createDealPost,
-  );
+portalRouter.route('/gef/deals').post(createGefDealController.createDealPost);
 
 /**
  * @openapi
@@ -551,10 +547,7 @@ portalRouter.route('/gef/deals')
  *       404:
  *         description: Not found
  */
-portalRouter.route('/gef/deals/:id')
-  .get(
-    getGefDealController.findOneDealGet,
-  );
+portalRouter.route('/gef/deals/:id').get(getGefDealController.findOneDealGet);
 
 /**
  * @openapi
@@ -594,10 +587,7 @@ portalRouter.route('/gef/deals/:id')
  *       404:
  *         description: Not found
  */
-portalRouter.route('/gef/deals/:id')
-  .put(
-    updateGefDealController.updateDealPut,
-  );
+portalRouter.route('/gef/deals/:id').put(updateGefDealController.updateDealPut);
 
 /**
  * @openapi
@@ -623,10 +613,7 @@ portalRouter.route('/gef/deals/:id')
  *       404:
  *         description: Not found
  */
-portalRouter.route('/gef/deals/activity/:id')
-  .put(
-    gefActivityController.generateMINActivities,
-  );
+portalRouter.route('/gef/deals/activity/:id').put(gefActivityController.generateMINActivities);
 
 /**
  * @openapi
@@ -667,10 +654,7 @@ portalRouter.route('/gef/deals/activity/:id')
  *       404:
  *         description: Not found
  */
-portalRouter.route('/gef/deals/:id/status')
-  .put(
-    putGefDealStatusController.updateDealStatusPut,
-  );
+portalRouter.route('/gef/deals/:id/status').put(putGefDealStatusController.updateDealStatusPut);
 
 /**
  * @openapi
@@ -741,10 +725,7 @@ portalRouter.route('/gef/deals/:id/comment').post(addCommentToGefDeal.addUnderwr
  *             schema:
  *               $ref: '#/definitions/FacilitiesGEF'
  */
-portalRouter.route('/gef/deals/:id/facilities')
-  .get(
-    getGefFacilitiesController.findAllGet,
-  );
+portalRouter.route('/gef/deals/:id/facilities').get(getGefFacilitiesController.findAllGet);
 
 /**
  * @openapi
@@ -818,9 +799,7 @@ portalRouter.route('/gef/facilities').get(getGefFacilitiesController.findAllFaci
  *       404:
  *         description: Not found
  */
-portalRouter.route('/gef/facilities/:id').put(
-  updateGefFacilityController.updateFacilityPut,
-);
+portalRouter.route('/gef/facilities/:id').put(updateGefFacilityController.updateFacilityPut);
 
 /**
  * @openapi

@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const { produce } = require('immer');
 const users = require('./test-data');
 const databaseHelper = require('../../database-helper');

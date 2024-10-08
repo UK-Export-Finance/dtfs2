@@ -1,7 +1,4 @@
-import {
-  generateSelectedFiltersObject,
-  selectedSubmissionTypeFilters,
-} from '../filters/generate-selected-filters';
+import { generateSelectedFiltersObject, selectedSubmissionTypeFilters } from '../filters/generate-selected-filters';
 import { selectedFilters } from './selected-filters';
 import CONTENT_STRINGS from '../../../content-strings';
 import CONSTANTS from '../../../constants';
@@ -29,15 +26,8 @@ describe('controllers/dashboard/deals - selected-filters', () => {
           CONSTANTS.FIELD_NAMES.DEAL.DEAL_TYPE,
           mockSubmittedFilters.dealType,
         ),
-        selectedSubmissionTypeFilters(
-          CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE,
-          mockSubmittedFilters[CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE],
-        ),
-        generateSelectedFiltersObject(
-          CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.STATUS,
-          CONSTANTS.FIELD_NAMES.DEAL.STATUS,
-          mockSubmittedFilters.status,
-        ),
+        selectedSubmissionTypeFilters(CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE, mockSubmittedFilters[CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE]),
+        generateSelectedFiltersObject(CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.STATUS, CONSTANTS.FIELD_NAMES.DEAL.STATUS, mockSubmittedFilters.status),
       ];
 
       expect(result).toEqual(expected);

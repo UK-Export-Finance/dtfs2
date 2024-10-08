@@ -20,25 +20,20 @@
   "scripts": {
     "api-test": "jest --coverage --verbose --runInBand --forceExit --clearMocks --config=api-test.jest.config.js",
     "api-test-dev": "jest --verbose --runInBand --forceExit --clearMocks --config=api-test.jest.config.js",
-    "lint": "eslint ./src ./api-tests ./test-helpers ./__mocks__ && npm run type-check",
-    "lint:fix": "eslint ./src ./api-tests ./test-helpers ./__mocks__ --fix",
+    "lint": "eslint --color **/*.{ts,js} --ignore-path ../.eslintignore",
+    "lint:fix": "eslint --fix --color **/*.{ts,js}",
+    "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js} --ignore-path ../.prettierignore",
+    "prettier:fix": "prettier --write **/*.{ts,js} --ignore-path ../.prettierignore",
     "start": "npx ts-node src/index.ts",
-    "type-check": "tsc --noEmit",
+    "type-check": "tsc --noEmit --pretty",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
-    "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
-  },
-  "lint-staged": {
-    "package.json": "sort-package-json",
-    "*.js": "eslint --fix",
-    "*.ts": "eslint --fix",
-    "*": [
-      "cspell lint --gitignore --no-summary --no-must-find-files --color"
-    ]
+    "unit-test-dev": "jest --verbose --config=unit.jest.config.js",
+    "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
     "@azure/storage-file-share": "12.14.0",
     "@ukef/dtfs2-common": "1.0.0",
-    "axios": "^1.6.8",
+    "axios": "^1.7.4",
     "axios-mock-adapter": "^1.22.0",
     "comma-number": "^2.1.0",
     "compression": "^1.7.4",
@@ -46,32 +41,33 @@
     "date-fns": "^2.30.0",
     "dotenv": "16.0.3",
     "escape-string-regexp": "^4.0.0",
-    "express": "4.18.2",
+    "express": "^4.20.0",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.11.2",
-    "express-validator": "^7.0.1",
+    "express-validator": "^7.1.0",
     "filesize": "^8.0.7",
-    "immer": "^10.0.4",
-    "joi": "^17.12.3",
+    "immer": "^10.1.1",
+    "joi": "^17.13.1",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
-    "mongodb": "4.17.0",
+    "mongodb": "4.17.2",
     "multer": "1.4.5-lts.1",
     "node-fetch": "^2.7.0",
-    "notifications-node-client": "6.0.0",
     "passport": "0.6.0",
     "passport-jwt": "^4.0.1",
     "sanitize-html": "^2.13.0",
     "ts-node": "^10.9.2",
-    "tslib": "^2.6.2",
-    "validator": "^13.11.0",
-    "xss": "^1.0.15"
+    "tslib": "^2.6.3",
+    "validator": "^13.12.0",
+    "xss": "^1.0.15",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",
     "@types/jest-when": "^3.5.5",
     "@types/lodash.orderby": "^4.6.9",
+    "@types/supertest": "^6.0.2",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
@@ -83,8 +79,8 @@
     "node-mocks-http": "^1.14.1",
     "prettier": "^2.8.8",
     "supertest": "6.3.3",
-    "ts-jest": "^29.1.2",
-    "typescript": "^5.4.3"
+    "ts-jest": "^29.1.4",
+    "typescript": "^5.4.5"
   },
   "engines": {
     "node": ">=20",

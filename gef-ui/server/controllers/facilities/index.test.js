@@ -68,11 +68,14 @@ describe('controllers/facilities', () => {
   describe('Facilities', () => {
     it('renders the `Facilities` template when there is no facility ID provided', async () => {
       await facilities(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facilities.njk', expect.objectContaining({
-        facilityType: CONSTANTS.FACILITY_TYPE.CASH.toLowerCase(),
-        dealId: '123',
-        status: undefined,
-      }));
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facilities.njk',
+        expect.objectContaining({
+          facilityType: CONSTANTS.FACILITY_TYPE.CASH.toLowerCase(),
+          dealId: '123',
+          status: undefined,
+        }),
+      );
     });
 
     it('renders the `Facilities` template when there is a facility ID', async () => {
@@ -81,12 +84,15 @@ describe('controllers/facilities', () => {
 
       await facilities(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facilities.njk', expect.objectContaining({
-        facilityType: CONSTANTS.FACILITY_TYPE.CASH.toLowerCase(),
-        dealId: '123',
-        hasBeenIssued: 'true',
-        status: 'change',
-      }));
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facilities.njk',
+        expect.objectContaining({
+          facilityType: CONSTANTS.FACILITY_TYPE.CASH.toLowerCase(),
+          dealId: '123',
+          hasBeenIssued: 'true',
+          status: 'change',
+        }),
+      );
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
@@ -102,13 +108,16 @@ describe('controllers/facilities', () => {
     it('returns Has Been Issued validation error', async () => {
       await createFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facilities.njk', expect.objectContaining({
-        facilityType: CONSTANTS.FACILITY_TYPE.CASH.toLowerCase(),
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#hasBeenIssued', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facilities.njk',
+        expect.objectContaining({
+          facilityType: CONSTANTS.FACILITY_TYPE.CASH.toLowerCase(),
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#hasBeenIssued', text: expect.any(String) }]),
+          }),
+          dealId: '123',
         }),
-        dealId: '123',
-      }));
+      );
     });
 
     it('calls the create facility api if no facility ID has been provided', async () => {
@@ -150,7 +159,11 @@ describe('controllers/facilities', () => {
         editorId: '12345',
       };
 
-      expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expectedUpdateObj, userToken });
+      expect(updateApplicationSpy).toHaveBeenCalledWith({
+        dealId: mockRequest.params.dealId,
+        application: expectedUpdateObj,
+        userToken,
+      });
     });
 
     it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {

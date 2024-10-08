@@ -16,6 +16,7 @@ export const userIsInTeam = (user: TfmSessionUser, teamIdList: TeamId[]) => user
  * Function to return whether or not a user is in
  * only the set of teams provided
  */
-export const userIsOnlyInTeams = (user: TfmSessionUser, teamIdList: TeamId[]) => user.teams?.length === teamIdList.length && user.teams.every((userTeam) => teamIdList.includes(userTeam));
+export const userIsOnlyInTeams = (user: TfmSessionUser, teamIdList: TeamId[]) =>
+  user.teams?.length === teamIdList.length && user.teams.every((userTeam) => teamIdList.includes(userTeam));
 
 export const isAssignedToUser = (assignedToUserId: string, userId: string) => assignedToUserId === userId;

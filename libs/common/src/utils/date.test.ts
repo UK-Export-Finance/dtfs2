@@ -1,4 +1,4 @@
-import { getOneIndexedMonth, isValidIsoMonth, toIsoMonthStamp } from './date';
+import { getOneIndexedMonth, isValidIsoMonth, isValidIsoYear, toIsoMonthStamp } from './date';
 
 describe('date utils', () => {
   describe('getOneIndexedMonth', () => {
@@ -41,6 +41,19 @@ describe('date utils', () => {
       { date: new Date('2023-03-31'), expectedIsoMonthStamp: '2023-03' },
     ])(`converts Date object '$date' to IsoMonthStamp '$expectedIsoMonthStamp'`, ({ date, expectedIsoMonthStamp }) => {
       expect(toIsoMonthStamp(date)).toBe(expectedIsoMonthStamp);
+    });
+  });
+
+  describe('isValidIsoYear', () => {
+    it.each(['2023-11-01', '2023-11', '202', 'invalid', '', 2023, undefined, null, ['2023'], { date: '2023' }])(
+      'returns false when the value is %p',
+      (value) => {
+        expect(isValidIsoYear(value)).toBe(false);
+      },
+    );
+
+    it('returns true when a valid ISO month value is provided', () => {
+      expect(isValidIsoYear('2023')).toBe(true);
     });
   });
 });

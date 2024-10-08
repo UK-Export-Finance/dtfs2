@@ -1,9 +1,9 @@
 const dotenv = require('dotenv');
 const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
-
+const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const { findByUsername } = require('./controller');
-const { LOGIN_STATUSES, PASSPORT_VALIDATION_RESULTS } = require('../../constants');
+const { PASSPORT_VALIDATION_RESULTS } = require('../../constants');
 
 dotenv.config();
 
@@ -27,11 +27,11 @@ const sanitize = (user) => ({
   'user-status': user['user-status'],
   disabled: user.disabled,
   _id: user._id,
+  isTrusted: user.isTrusted,
 });
 
-const sessionIdentifierValidation = (user, jwtPayload) => (user && user.sessionIdentifier === jwtPayload.sessionIdentifier
-  ? PASSPORT_VALIDATION_RESULTS.PASSED
-  : PASSPORT_VALIDATION_RESULTS.FAILED);
+const sessionIdentifierValidation = (user, jwtPayload) =>
+  user && user.sessionIdentifier === jwtPayload.sessionIdentifier ? PASSPORT_VALIDATION_RESULTS.PASSED : PASSPORT_VALIDATION_RESULTS.FAILED;
 
 const baseAuthenticationConfiguration = ({
   name,
@@ -74,7 +74,7 @@ const baseAuthenticationConfiguration = ({
 const loginCompleteAuth = (passport, userService) => {
   const name = 'login-complete';
   const additionalPayloadValidation = (jwtPayload) =>
-    (jwtPayload.loginStatus === LOGIN_STATUSES.VALID_2FA ? PASSPORT_VALIDATION_RESULTS.PASSED : PASSPORT_VALIDATION_RESULTS.FAILED);
+    jwtPayload.loginStatus === PORTAL_LOGIN_STATUS.VALID_2FA ? PASSPORT_VALIDATION_RESULTS.PASSED : PASSPORT_VALIDATION_RESULTS.FAILED;
   const additionalUserValidation = (user, jwtPayload) => {
     if (userService.isUserBlockedOrDisabled(user)) {
       console.error("User with username %s is blocked or disabled for '%s' strategy", jwtPayload.username, name);
@@ -87,7 +87,7 @@ const loginCompleteAuth = (passport, userService) => {
 
 const loginInProgressAuth = (passport) => {
   const additionalPayloadValidation = (jwtPayload) =>
-    (jwtPayload.loginStatus === LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD ? PASSPORT_VALIDATION_RESULTS.PASSED : PASSPORT_VALIDATION_RESULTS.FAILED);
+    jwtPayload.loginStatus === PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD ? PASSPORT_VALIDATION_RESULTS.PASSED : PASSPORT_VALIDATION_RESULTS.FAILED;
   const getAdditionalReturnedFields = (user) => ({
     sessionIdentifier: user.sessionIdentifier,
     signInLinkSendDate: user.signInLinkSendDate,

@@ -1,8 +1,6 @@
-const db = require('./src/drivers/db-client');
+const { mongoDbClient: db } = require('./src/drivers/db-client');
 
-const mockFiles = [
-  './src/external-api/api',
-];
+const mockFiles = ['./src/external-api/api'];
 
 mockFiles.forEach((mockFile) => {
   jest.mock(mockFile);
@@ -15,11 +13,23 @@ jest.mock('node-cron', () => ({
 
 expect.extend({
   toBeNumberOrNull(received) {
-    if (typeof received !== 'number'
-      && received !== null) {
+    if (typeof received !== 'number' && received !== null) {
       return {
         pass: false,
         message: () => 'Expected a number or null value',
+      };
+    }
+
+    return {
+      pass: true,
+    };
+  },
+
+  toBeStringOrUndefined(received) {
+    if (typeof received !== 'string' && received !== undefined) {
+      return {
+        pass: false,
+        message: () => 'Expected a string or undefined value',
       };
     }
 

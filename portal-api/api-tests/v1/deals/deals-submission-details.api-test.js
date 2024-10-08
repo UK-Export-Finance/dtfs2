@@ -15,19 +15,21 @@ const newDeal = aDeal({
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
   status: 'Draft',
-  comments: [{
-    username: 'bananaman',
-    timestamp: '1984/12/25 00:00:00:001',
-    text: 'Merry Christmas from the 80s',
-  }, {
-    username: 'supergran',
-    timestamp: '1982/12/25 00:00:00:001',
-    text: 'Also Merry Christmas from the 80s',
-  }],
+  comments: [
+    {
+      username: 'bananaman',
+      timestamp: '1984/12/25 00:00:00:001',
+      text: 'Merry Christmas from the 80s',
+    },
+    {
+      username: 'supergran',
+      timestamp: '1982/12/25 00:00:00:001',
+      text: 'Also Merry Christmas from the 80s',
+    },
+  ],
 });
 
 describe('/v1/deals/:id/submission-details', () => {
-  let noRoles;
   let anHSBCMaker;
   let aBarclaysMaker;
   let aSuperuser;
@@ -35,7 +37,6 @@ describe('/v1/deals/:id/submission-details', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    noRoles = testUsers().withoutAnyRoles().one();
     aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
@@ -50,19 +51,20 @@ describe('/v1/deals/:id/submission-details', () => {
     let oneDealSubmissionDetailsUrl;
 
     beforeEach(async () => {
-      const { body: { _id: dealId } } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const {
+        body: { _id: dealId },
+      } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       oneDealSubmissionDetailsUrl = `/v1/deals/${dealId}/submission-details`;
     });
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(oneDealSubmissionDetailsUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(oneDealSubmissionDetailsUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(oneDealSubmissionDetailsUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withBankName('Barclays Bank').withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withBankName('Barclays Bank').withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(oneDealSubmissionDetailsUrl),
       successStatusCode: 200,
     });
@@ -101,9 +103,7 @@ describe('/v1/deals/:id/submission-details', () => {
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).put(newDeal).to(
-        '/v1/deals/620a1aa095a618b12da38c7b/submission-details',
-      );
+      const { status } = await as(testUsers).put(newDeal).to('/v1/deals/620a1aa095a618b12da38c7b/submission-details');
 
       expect(status).toEqual(401);
     });

@@ -1,16 +1,18 @@
 const axios = require('axios');
+const { HEADERS } = require('@ukef/dtfs2-common');
 const ApiError = require('../errors/api.error');
+const { mockDataLoaderPortalAuditDetails } = require('../constants/mockDataLoaderAuditDetails');
 require('dotenv').config();
 
 const { PORTAL_API_URL, DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY } = process.env;
 
 const headers = {
   portal: {
-    'Content-Type': 'application/json',
+    [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     Accepts: 'application/json',
   },
   central: {
-    'Content-Type': 'application/json',
+    [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     Accepts: 'application/json',
     'x-api-key': DTFS_CENTRAL_API_KEY,
   },
@@ -255,6 +257,9 @@ const deleteDurableFunctions = async (token) => {
       Authorization: token,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/durable-functions`,
+    data: {
+      auditDetails: mockDataLoaderPortalAuditDetails,
+    },
   }).catch((error) => {
     throw new ApiError({ cause: error });
   });
@@ -269,6 +274,10 @@ const deleteCronJobs = async (token) => {
       Authorization: token,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/cron-jobs`,
+
+    data: {
+      auditDetails: mockDataLoaderPortalAuditDetails,
+    },
   }).catch((error) => {
     throw new ApiError({ cause: error });
   });

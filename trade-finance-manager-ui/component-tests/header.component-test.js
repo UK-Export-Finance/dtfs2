@@ -1,4 +1,4 @@
-const componentRenderer = require('./componentRenderer');
+const { componentRenderer } = require('./componentRenderer');
 
 const component = '../templates/_macros/header.njk';
 
@@ -15,7 +15,7 @@ describe(component, () => {
       },
     };
 
-    it('should render user\'s first and last name', () => {
+    it("should render user's first and last name", () => {
       wrapper = render(params);
 
       const expected = `${params.user.firstName} ${params.user.lastName}Profile`;
@@ -31,7 +31,7 @@ describe(component, () => {
   });
 
   describe('without params.creditRating', () => {
-    it('should NOT render user\'s first and last name', () => {
+    it("should NOT render user's first and last name", () => {
       wrapper = render({});
 
       wrapper.expectElement('[data-cy="header-user-link"]').notToExist();

@@ -1,4 +1,4 @@
-const componentRenderer = require('../componentRenderer');
+const { componentRenderer } = require('../componentRenderer');
 
 const page = '../templates/case/underwriting/managers-decision/managers-decision.njk';
 
@@ -45,10 +45,9 @@ describe(page, () => {
 
     it('should render link to edit form', () => {
       wrapper = render(params);
-      wrapper.expectLink('[data-cy="add-decision-link"]').toLinkTo(
-        `/case/${params.underwriterManagersDecision.dealId}/underwriting/managers-decision/edit`,
-        'Add decision',
-      );
+      wrapper
+        .expectLink('[data-cy="add-decision-link"]')
+        .toLinkTo(`/case/${params.underwriterManagersDecision.dealId}/underwriting/managers-decision/edit`, 'Add decision');
     });
   });
 

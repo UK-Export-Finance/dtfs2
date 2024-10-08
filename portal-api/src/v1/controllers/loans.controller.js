@@ -1,32 +1,29 @@
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { isValidMongoId } = require('../validation/validateIds');
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const loanValidationErrors = require('../validation/loan');
-const {
-  calculateGuaranteeFee,
-  calculateUkefExposure,
-} = require('../section-calculations');
+const { calculateGuaranteeFee, calculateUkefExposure } = require('../section-calculations');
 const { handleTransactionCurrencyFields } = require('../section-currency');
-const {
-  hasAllRequestedCoverStartDateValues,
-  updateRequestedCoverStartDate,
-} = require('../facility-dates/requested-cover-start-date');
-const {
-  hasAllCoverEndDateValues,
-  updateCoverEndDate,
-} = require('../facility-dates/cover-end-date');
+const { hasAllRequestedCoverStartDateValues, updateRequestedCoverStartDate } = require('../facility-dates/requested-cover-start-date');
+const { hasAllCoverEndDateValues, updateCoverEndDate } = require('../facility-dates/cover-end-date');
 const { loanStatus } = require('../section-status/loans');
 const { sanitizeCurrency } = require('../../utils/number');
 const facilitiesController = require('./facilities.controller');
 const CONSTANTS = require('../../constants');
 
 exports.create = async (req, res) => {
-  if (!isValidMongoId(req?.params?.id)) {
-    console.error('Create loans API failed for deal id %s', req.params.id);
+  const {
+    user,
+    params: { id: dealId },
+    body,
+  } = req;
+  if (!isValidMongoId(dealId)) {
+    console.error('Create loans API failed for deal id %s', dealId);
     return res.status(400).send({ status: 400, message: 'Invalid id provided' });
   }
 
-  return findOneDeal(req.params.id, async (deal) => {
+  return findOneDeal(dealId, async (deal) => {
     if (!deal) return res.status(404).send();
 
     if (!userHasAccessTo(req.user, deal)) {
@@ -35,11 +32,13 @@ exports.create = async (req, res) => {
 
     const facilityBody = {
       type: 'Loan',
-      dealId: req.params.id,
-      ...req.body,
+      dealId,
+      ...body,
     };
 
-    const { status, data } = await facilitiesController.create(facilityBody, req.user);
+    const auditDetails = generatePortalAuditDetails(user._id);
+
+    const { status, data } = await facilitiesController.create(facilityBody, user, auditDetails);
 
     return res.status(status).send({
       ...data,
@@ -49,10 +48,7 @@ exports.create = async (req, res) => {
 };
 
 exports.getLoan = async (req, res) => {
-  const {
-    id: dealId,
-    loanId,
-  } = req.params;
+  const { id: dealId, loanId } = req.params;
 
   if (!isValidMongoId(req?.params?.id) || !isValidMongoId(req?.params?.loanId)) {
     console.error('Get loan API failed for deal/loan id %s', req.params.id, req.params.loanId);
@@ -123,90 +119,84 @@ const premiumTypeFields = (loan) => {
 
 exports.updateLoan = async (req, res) => {
   const {
-    id: dealId,
-    loanId,
-  } = req.params;
+    params: { id: dealId, loanId },
+    user,
+    body: update,
+  } = req;
+
+  const auditDetails = generatePortalAuditDetails(user._id);
 
   await findOneDeal(dealId, async (deal) => {
-    if (deal) {
-      if (!userHasAccessTo(req.user, deal)) {
-        res.status(401).send();
-      }
-
-      const existingLoan = await facilitiesController.findOne(loanId);
-
-      if (!existingLoan) {
-        return res.status(404).send();
-      }
-
-      let modifiedLoan = {
-        ...existingLoan,
-        ...req.body,
-      };
-
-      modifiedLoan = facilityStageFields(modifiedLoan);
-
-      modifiedLoan = await handleTransactionCurrencyFields(
-        modifiedLoan,
-        deal,
-      );
-
-      modifiedLoan = premiumTypeFields(modifiedLoan);
-
-      const { value, coveredPercentage, interestMarginFee } = modifiedLoan;
-      const sanitizedFacilityValue = sanitizeCurrency(value);
-
-      modifiedLoan.guaranteeFeePayableByBank = calculateGuaranteeFee(interestMarginFee);
-      if (sanitizedFacilityValue.sanitizedValue) {
-        modifiedLoan.ukefExposure = calculateUkefExposure(sanitizedFacilityValue.sanitizedValue, coveredPercentage);
-        modifiedLoan.value = sanitizedFacilityValue.sanitizedValue;
-      }
-
-      if (modifiedLoan.disbursementAmount) {
-        const sanitizedFacilityDisbursement = sanitizeCurrency(modifiedLoan.disbursementAmount);
-        if (sanitizedFacilityDisbursement.sanitizedValue) {
-          modifiedLoan.disbursementAmount = sanitizedFacilityDisbursement.sanitizedValue;
-        }
-      }
-
-      if (hasAllRequestedCoverStartDateValues(modifiedLoan)) {
-        modifiedLoan = updateRequestedCoverStartDate(modifiedLoan);
-      } else {
-        modifiedLoan.requestedCoverStartDate = null;
-      }
-
-      if (hasAllCoverEndDateValues(modifiedLoan)) {
-        modifiedLoan = updateCoverEndDate(modifiedLoan);
-      } else {
-        modifiedLoan.coverEndDate = null;
-      }
-
-      const { status, data } = await facilitiesController.update(
-        dealId,
-        loanId,
-        modifiedLoan,
-        req.user,
-      );
-
-      const validationErrors = loanValidationErrors(data, deal);
-
-      if (validationErrors.count !== 0) {
-        return res.status(400).send({
-          validationErrors,
-          loan: data,
-        });
-      }
-
-      return res.status(status).send(data);
+    if (!deal) {
+      return res.status(404).send();
     }
-    return res.status(404).send();
+
+    if (!userHasAccessTo(user, deal)) {
+      res.status(401).send();
+    }
+
+    const existingLoan = await facilitiesController.findOne(loanId);
+
+    if (!existingLoan) {
+      return res.status(404).send();
+    }
+
+    let modifiedLoan = {
+      ...existingLoan,
+      ...update,
+    };
+
+    modifiedLoan = facilityStageFields(modifiedLoan);
+
+    modifiedLoan = await handleTransactionCurrencyFields(modifiedLoan, deal);
+
+    modifiedLoan = premiumTypeFields(modifiedLoan);
+
+    const { value, coveredPercentage, interestMarginFee } = modifiedLoan;
+    const sanitizedFacilityValue = sanitizeCurrency(value);
+
+    modifiedLoan.guaranteeFeePayableByBank = calculateGuaranteeFee(interestMarginFee);
+    if (sanitizedFacilityValue.sanitizedValue) {
+      modifiedLoan.ukefExposure = calculateUkefExposure(sanitizedFacilityValue.sanitizedValue, coveredPercentage);
+      modifiedLoan.value = sanitizedFacilityValue.sanitizedValue;
+    }
+
+    if (modifiedLoan.disbursementAmount) {
+      const sanitizedFacilityDisbursement = sanitizeCurrency(modifiedLoan.disbursementAmount);
+      if (sanitizedFacilityDisbursement.sanitizedValue) {
+        modifiedLoan.disbursementAmount = sanitizedFacilityDisbursement.sanitizedValue;
+      }
+    }
+
+    if (hasAllRequestedCoverStartDateValues(modifiedLoan)) {
+      modifiedLoan = updateRequestedCoverStartDate(modifiedLoan);
+    } else {
+      modifiedLoan.requestedCoverStartDate = null;
+    }
+
+    if (hasAllCoverEndDateValues(modifiedLoan)) {
+      modifiedLoan = updateCoverEndDate(modifiedLoan);
+    } else {
+      modifiedLoan.coverEndDate = null;
+    }
+
+    const { status, data } = await facilitiesController.update(dealId, loanId, modifiedLoan, user, auditDetails);
+
+    const validationErrors = loanValidationErrors(data, deal);
+
+    if (validationErrors.count !== 0) {
+      return res.status(400).send({
+        validationErrors,
+        loan: data,
+      });
+    }
+
+    return res.status(status).send(data);
   });
 };
 
 exports.deleteLoan = async (req, res) => {
-  const {
-    loanId,
-  } = req.params;
+  const { loanId } = req.params;
 
   await findOneDeal(req.params.id, async (deal) => {
     if (deal) {
@@ -214,7 +204,7 @@ exports.deleteLoan = async (req, res) => {
         return res.status(401).send();
       }
 
-      const { status, data } = await facilitiesController.delete(loanId, req.user);
+      const { status, data } = await facilitiesController.delete(loanId, req.user, generatePortalAuditDetails(req.user._id));
 
       return res.status(status).send(data);
     }

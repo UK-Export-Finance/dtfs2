@@ -1,5 +1,6 @@
 const { ObjectId } = require('mongodb');
-
+const { withDeleteOneTests, expectAnyPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -12,15 +13,16 @@ const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/role
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const baseUrl = '/v1/gef/files';
-const collectionName = 'files';
 
 const applicationCollectionName = DB_COLLECTIONS.DEALS;
 const applicationBaseUrl = '/v1/gef/application';
 
-const validFiles = [{
-  fieldname: 'files',
-  filepath: 'api-tests/fixtures/test-file-1.txt',
-}];
+const validFiles = [
+  {
+    fieldname: 'files',
+    filepath: 'api-tests/fixtures/test-file-1.txt',
+  },
+];
 
 jest.mock('../../../src/drivers/fileshare', () => ({
   getConfig: jest.fn(() => ({ EXPORT_FOLDER: 'mock-folder' })),
@@ -57,32 +59,34 @@ describe(baseUrl, () => {
         status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
         updatedAt: null,
         submissionCount: 0,
-      }).to(applicationBaseUrl);
+      })
+      .to(applicationBaseUrl);
   });
 
   beforeEach(async () => {
-    await databaseHelper.wipe([collectionName]);
+    await databaseHelper.wipe([MONGO_DB_COLLECTIONS.FILES]);
   });
 
   describe(`POST ${baseUrl}`, () => {
     withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => postMultipartForm({
-        url: baseUrl,
-        data: { parentId: mockDeal.body._id },
-        files: [],
-      }),
-      makeRequestWithAuthHeader: (authHeader) => postMultipartForm({
-        url: baseUrl,
-        data: { parentId: mockDeal.body._id },
-        files: [],
-        headers: { Authorization: authHeader }
-      }),
+      makeRequestWithoutAuthHeader: () =>
+        postMultipartForm({
+          url: baseUrl,
+          data: { parentId: mockDeal.body._id },
+          files: [],
+        }),
+      makeRequestWithAuthHeader: (authHeader) =>
+        postMultipartForm({
+          url: baseUrl,
+          data: { parentId: mockDeal.body._id },
+          files: [],
+          headers: { Authorization: authHeader },
+        }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [MAKER],
       getUserWithRole: (role) => testUsers().withBankName(testBankName).withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withBankName(testBankName).withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl),
       successStatusCode: 201,
     });
@@ -98,19 +102,21 @@ describe(baseUrl, () => {
     });
 
     it('rejects requests that are missing files', async () => {
-      const { status } = await as(aMaker).post({ parentId: String(ObjectId()) }).to(baseUrl);
+      const { status } = await as(aMaker)
+        .post({ parentId: String(ObjectId()) })
+        .to(baseUrl);
       expect(status).toEqual(400);
     });
 
     it('rejects requests where application does not exist', async () => {
-      const { status } = await as(aMaker).postMultipartForm({ parentId: String(ObjectId()) }, validFiles).to(baseUrl);
+      const { status } = await as(aMaker)
+        .postMultipartForm({ parentId: String(ObjectId()) }, validFiles)
+        .to(baseUrl);
       expect(status).toEqual(422);
     });
 
     it('rejects requests that do not have access to deal', async () => {
-      const { status } = await as(invalidMaker)
-        .postMultipartForm({ parentId: mockDeal.body._id }, validFiles)
-        .to(baseUrl);
+      const { status } = await as(invalidMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
 
       expect(status).toEqual(401);
     });
@@ -127,35 +133,27 @@ describe(baseUrl, () => {
         },
       ];
 
-      const { body, status } = await as(aMaker)
-        .postMultipartForm({ parentId: mockDeal.body._id }, invalidFiles)
-        .to(baseUrl);
+      const { body, status } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, invalidFiles).to(baseUrl);
 
       expect(status).toEqual(400);
-      expect(body).toEqual(expect.arrayContaining([
-        expect.objectContaining({ message: expect.any(String) }),
-        expect.objectContaining({ message: expect.any(String) }),
-      ]));
+      expect(body).toEqual(
+        expect.arrayContaining([expect.objectContaining({ message: expect.any(String) }), expect.objectContaining({ message: expect.any(String) })]),
+      );
     });
 
     it('successfully posts a single file', async () => {
-      const { status, body } = await as(aMaker)
-        .postMultipartForm({ parentId: mockDeal.body._id }, validFiles)
-        .to(baseUrl);
+      const { status, body } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
 
       expect(status).toEqual(201);
-      expect(body).toEqual(expect.arrayContaining([
-        expect.objectContaining({ _id: expect.any(String) }),
-        expect.objectContaining({ _id: expect.any(String) }),
-      ]));
+      expect(body).toEqual(
+        expect.arrayContaining([expect.objectContaining({ _id: expect.any(String) }), expect.objectContaining({ _id: expect.any(String) })]),
+      );
     });
 
     it('posts 500 if there is an error', async () => {
       uploadFile.mockRejectedValueOnce('mock error');
 
-      const { status } = await as(aMaker)
-        .postMultipartForm({ parentId: mockDeal.body._id }, validFiles)
-        .to(baseUrl);
+      const { status } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
 
       expect(status).toEqual(500);
     });
@@ -165,22 +163,19 @@ describe(baseUrl, () => {
     let oneFileUrl;
 
     beforeEach(async () => {
-      const { body } = await as(aMaker)
-        .postMultipartForm({ parentId: mockDeal.body._id }, validFiles)
-        .to(baseUrl);
+      const { body } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
       const createdId = body[0]._id;
       oneFileUrl = `${baseUrl}/${createdId}`;
     });
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(oneFileUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(oneFileUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(oneFileUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withBankName(testBankName).withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withBankName(testBankName).withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(oneFileUrl),
       successStatusCode: 200,
     });
@@ -205,26 +200,32 @@ describe(baseUrl, () => {
 
   describe(`DELETE ${baseUrl}/:id`, () => {
     let oneFileUrl;
+    let fileToDeleteId;
 
     beforeEach(async () => {
-      const { body } = await as(aMaker)
-        .postMultipartForm({ parentId: mockDeal.body._id }, validFiles)
-        .to(baseUrl);
-      const createdId = body[0]._id;
-      oneFileUrl = `${baseUrl}/${createdId}`;
+      const { body } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
+      fileToDeleteId = body[0]._id;
+      oneFileUrl = `${baseUrl}/${fileToDeleteId}`;
     });
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => remove(oneFileUrl),
-      makeRequestWithAuthHeader: (authHeader) => remove(oneFileUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => remove(oneFileUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [MAKER],
       getUserWithRole: (role) => testUsers().withBankName(testBankName).withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withBankName(testBankName).withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).remove(oneFileUrl),
       successStatusCode: 200,
+    });
+
+    withDeleteOneTests({
+      makeRequest: () => as(aMaker).remove(oneFileUrl),
+      collectionName: MONGO_DB_COLLECTIONS.FILES,
+      auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
+      getDeletedDocumentId: () => new ObjectId(fileToDeleteId),
+      expectedStatusWhenNoDeletion: 500,
     });
 
     it('returns 404 if files is not found', async () => {
@@ -233,9 +234,7 @@ describe(baseUrl, () => {
     });
 
     it('rejects requests that do not have access to deal', async () => {
-      const { body } = await as(aMaker)
-        .postMultipartForm({ parentId: mockDeal.body._id }, validFiles)
-        .to(baseUrl);
+      const { body } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
 
       const { status } = await as(invalidMaker).remove(`${baseUrl}/${body[0]._id}`);
 
@@ -243,9 +242,7 @@ describe(baseUrl, () => {
     });
 
     it('deletes the file', async () => {
-      const { body } = await as(aMaker)
-        .postMultipartForm({ parentId: mockDeal.body._id }, validFiles)
-        .to(baseUrl);
+      const { body } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
 
       const { status } = await as(aMaker).remove(`${baseUrl}/${body[0]._id}`);
 
@@ -255,9 +252,7 @@ describe(baseUrl, () => {
     it('returns 500 if there is an api error', async () => {
       deleteFile.mockRejectedValueOnce(new Error('mock error'));
 
-      const { body } = await as(aMaker)
-        .postMultipartForm({ parentId: mockDeal.body._id }, validFiles)
-        .to(baseUrl);
+      const { body } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
 
       const { status } = await as(aMaker).remove(`${baseUrl}/${body[0]._id}`);
 
@@ -269,22 +264,19 @@ describe(baseUrl, () => {
     let oneFileDownloadUrl;
 
     beforeEach(async () => {
-      const { body } = await as(aMaker)
-        .postMultipartForm({ parentId: mockDeal.body._id }, validFiles)
-        .to(baseUrl);
+      const { body } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
       const createdId = body[0]._id;
       oneFileDownloadUrl = `${baseUrl}/${createdId}/download`;
     });
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(oneFileDownloadUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(oneFileDownloadUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(oneFileDownloadUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withBankName(testBankName).withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withBankName(testBankName).withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(oneFileDownloadUrl),
       successStatusCode: 200,
     });
@@ -304,9 +296,7 @@ describe(baseUrl, () => {
       const TestData = Buffer.from('This is sample Test Data');
       readFile.mockResolvedValueOnce(TestData);
 
-      const { body } = await as(aMaker)
-        .postMultipartForm({ parentId: mockDeal.body._id }, validFiles)
-        .to(baseUrl);
+      const { body } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
 
       const { status } = await as(aMaker).get(`${baseUrl}/${body[0]._id}/download`);
 

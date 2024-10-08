@@ -19,9 +19,7 @@ describe('/v1/deals/:id/bond', () => {
       },
     },
     eligibility: {
-      criteria: [
-        { id: 15, answer: true },
-      ],
+      criteria: [{ id: 15, answer: true }],
     },
   });
 
@@ -217,7 +215,9 @@ describe('/v1/deals/:id/bond', () => {
 
             const body = await updateBondInDeal(dealId, bond);
             expect(body.validationErrors.errorList.ukefGuaranteeInMonths).toBeDefined();
-            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Enter the Length of time that the UKEF\'s guarantee will be in place for');
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual(
+              "Enter the Length of time that the UKEF's guarantee will be in place for",
+            );
           });
         });
 
@@ -232,7 +232,9 @@ describe('/v1/deals/:id/bond', () => {
 
             const body = await updateBondInDeal(dealId, bond);
             expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
-            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be a number, like 1 or 12');
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual(
+              "Length of time that the UKEF's guarantee will be in place for must be a number, like 1 or 12",
+            );
           });
         });
 
@@ -247,7 +249,9 @@ describe('/v1/deals/:id/bond', () => {
 
             const body = await updateBondInDeal(dealId, bond);
             expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
-            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be a whole number, like 12');
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual(
+              "Length of time that the UKEF's guarantee will be in place for must be a whole number, like 12",
+            );
           });
         });
 
@@ -262,7 +266,9 @@ describe('/v1/deals/:id/bond', () => {
 
             const body = await updateBondInDeal(dealId, bond);
             expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
-            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be between 0 and 999');
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual(
+              "Length of time that the UKEF's guarantee will be in place for must be between 0 and 999",
+            );
           });
         });
 
@@ -277,14 +283,16 @@ describe('/v1/deals/:id/bond', () => {
 
             const body = await updateBondInDeal(dealId, bond);
             expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
-            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be between 0 and 999');
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual(
+              "Length of time that the UKEF's guarantee will be in place for must be between 0 and 999",
+            );
           });
         });
       });
     });
 
     describe('when facilityStage is `Issued`', () => {
-      const yesterday = sub(nowDate, { days: 1 })
+      const yesterday = sub(nowDate, { days: 1 });
 
       describe('requestedCoverStartDate', () => {
         const todayPlus3Months1Day = add(nowDate, { months: 3, days: 1 });
@@ -311,7 +319,9 @@ describe('/v1/deals/:id/bond', () => {
 
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate).toBeDefined();
-            expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual('Requested Cover Start Date must be on the application submission date or in the future');
+            expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(
+              'Requested Cover Start Date must be on the application submission date or in the future',
+            );
           });
         });
 
@@ -341,13 +351,10 @@ describe('/v1/deals/:id/bond', () => {
             const dealWithEligibilityCriteria15False = {
               ...deal,
               eligibility: {
-                criteria: [
-                  { id: 15, answer: false },
-                ],
+                criteria: [{ id: 15, answer: false }],
               },
             };
-
-            await as(aBarclaysMaker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
+            await updateDeal(dealWithEligibilityCriteria15False);
 
             const requestedCoverStartDateFields = {
               'requestedCoverStartDate-day': format(todayPlus3Months1Day, 'dd'),
@@ -369,7 +376,7 @@ describe('/v1/deals/:id/bond', () => {
                 details: {
                   ...newDeal.details,
                   submissionDate: nowDate.valueOf(),
-                }
+                },
               });
 
               const requestedCoverStartDateFields = {
@@ -390,7 +397,7 @@ describe('/v1/deals/:id/bond', () => {
                 details: {
                   ...newDeal.details,
                   submissionDate: nowDate.valueOf(),
-                }
+                },
               });
 
               const requestedCoverStartDateFields = {
@@ -414,7 +421,7 @@ describe('/v1/deals/:id/bond', () => {
                 'requestedCoverStartDate-day': format(nowDate, 'dd'),
                 'requestedCoverStartDate-month': '',
                 'requestedCoverStartDate-year': '',
-              }
+              },
             },
             {
               description: 'day and year set to empty strings',
@@ -422,7 +429,7 @@ describe('/v1/deals/:id/bond', () => {
                 'requestedCoverStartDate-day': '',
                 'requestedCoverStartDate-month': format(nowDate, 'MM'),
                 'requestedCoverStartDate-year': '',
-              }
+              },
             },
             {
               description: 'month and year set to empty strings',
@@ -430,7 +437,7 @@ describe('/v1/deals/:id/bond', () => {
                 'requestedCoverStartDate-day': '',
                 'requestedCoverStartDate-month': '',
                 'requestedCoverStartDate-year': format(nowDate, 'yyyy'),
-              }
+              },
             },
             {
               description: 'year set to empty string',
@@ -438,7 +445,7 @@ describe('/v1/deals/:id/bond', () => {
                 'requestedCoverStartDate-day': format(nowDate, 'dd'),
                 'requestedCoverStartDate-month': format(nowDate, 'MM'),
                 'requestedCoverStartDate-year': '',
-              }
+              },
             },
             {
               description: 'month set to empty string',
@@ -446,7 +453,7 @@ describe('/v1/deals/:id/bond', () => {
                 'requestedCoverStartDate-day': format(nowDate, 'dd'),
                 'requestedCoverStartDate-month': '',
                 'requestedCoverStartDate-year': format(nowDate, 'yyyy'),
-              }
+              },
             },
             {
               description: 'day set to empty string',
@@ -454,9 +461,9 @@ describe('/v1/deals/:id/bond', () => {
                 'requestedCoverStartDate-day': '',
                 'requestedCoverStartDate-month': format(nowDate, 'MM'),
                 'requestedCoverStartDate-year': format(nowDate, 'yyyy'),
-              }
+              },
             },
-          ]
+          ];
 
           it.each(testValuesWithMissingFields)('with $description it should return a validationError', async ({ requestedCoverStartDateFields }) => {
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
@@ -469,7 +476,7 @@ describe('/v1/deals/:id/bond', () => {
               requestedCoverStartDateFields['requestedCoverStartDate-year'],
             );
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
-          })
+          });
         });
       });
 
@@ -508,7 +515,7 @@ describe('/v1/deals/:id/bond', () => {
                 'coverEndDate-day': format(nowDate, 'dd'),
                 'coverEndDate-month': '',
                 'coverEndDate-year': '',
-              }
+              },
             },
             {
               description: 'day and year set to empty strings',
@@ -516,7 +523,7 @@ describe('/v1/deals/:id/bond', () => {
                 'coverEndDate-day': '',
                 'coverEndDate-month': format(nowDate, 'MM'),
                 'coverEndDate-year': '',
-              }
+              },
             },
             {
               description: 'month and year set to empty strings',
@@ -524,7 +531,7 @@ describe('/v1/deals/:id/bond', () => {
                 'coverEndDate-day': '',
                 'coverEndDate-month': '',
                 'coverEndDate-year': format(nowDate, 'yyyy'),
-              }
+              },
             },
             {
               description: 'year set to empty string',
@@ -532,7 +539,7 @@ describe('/v1/deals/:id/bond', () => {
                 'coverEndDate-day': format(nowDate, 'dd'),
                 'coverEndDate-month': format(nowDate, 'MM'),
                 'coverEndDate-year': '',
-              }
+              },
             },
             {
               description: 'month set to empty string',
@@ -540,7 +547,7 @@ describe('/v1/deals/:id/bond', () => {
                 'coverEndDate-day': format(nowDate, 'dd'),
                 'coverEndDate-month': '',
                 'coverEndDate-year': format(nowDate, 'yyyy'),
-              }
+              },
             },
             {
               description: 'day set to empty string',
@@ -548,9 +555,9 @@ describe('/v1/deals/:id/bond', () => {
                 'coverEndDate-day': '',
                 'coverEndDate-month': format(nowDate, 'MM'),
                 'requestedCoverStartDate-year': format(nowDate, 'yyyy'),
-              }
+              },
             },
-          ]
+          ];
 
           it.each(testValuesWithMissingFields)('with $description it should return a validationError', async ({ coverEndDateFields }) => {
             const { validationErrors } = await updateCoverEndDate(coverEndDateFields);
@@ -581,8 +588,8 @@ describe('/v1/deals/:id/bond', () => {
 
         describe('when is before requestedCoverStartDate', () => {
           it('should return validationError', async () => {
-            const requestedCoverStartDate = add(nowDate, { months: 2 })
-            const coverEndDate = sub(requestedCoverStartDate, { days: 1 })
+            const requestedCoverStartDate = add(nowDate, { months: 2 });
+            const coverEndDate = sub(requestedCoverStartDate, { days: 1 });
 
             const bond = {
               ...allBondFields,
@@ -637,7 +644,7 @@ describe('/v1/deals/:id/bond', () => {
 
             const { validationErrors } = await updateBondInDeal(dealId, bond);
             expect(validationErrors.errorList.name).toBeDefined();
-            expect(validationErrors.errorList.name.text).toEqual('Enter the Bond\'s unique identification number');
+            expect(validationErrors.errorList.name.text).toEqual("Enter the Bond's unique identification number");
           });
         });
 
@@ -652,7 +659,7 @@ describe('/v1/deals/:id/bond', () => {
 
             const { validationErrors } = await updateBondInDeal(dealId, bond);
             expect(validationErrors.errorList.name).toBeDefined();
-            expect(validationErrors.errorList.name.text).toEqual('Bond\'s unique identification number must be 30 characters or fewer');
+            expect(validationErrors.errorList.name.text).toEqual("Bond's unique identification number must be 30 characters or fewer");
           });
         });
       });
@@ -668,7 +675,9 @@ describe('/v1/deals/:id/bond', () => {
 
           const { validationErrors } = await updateBondInDeal(dealId, bond);
           expect(validationErrors.errorList.currencySameAsSupplyContractCurrency).toBeDefined();
-          expect(validationErrors.errorList.currencySameAsSupplyContractCurrency.text).toEqual('Select if the currency for this Transaction is the same as your Supply Contract currency');
+          expect(validationErrors.errorList.currencySameAsSupplyContractCurrency.text).toEqual(
+            'Select if the currency for this Transaction is the same as your Supply Contract currency',
+          );
         });
       });
     });
@@ -706,7 +715,9 @@ describe('/v1/deals/:id/bond', () => {
           it('should return validationError', async () => {
             const { validationErrors } = await updateBondConversionRate('1234567.123456');
             expect(validationErrors.errorList.conversionRate).toBeDefined();
-            expect(validationErrors.errorList.conversionRate.text).toEqual('Conversion rate must be 12 numbers or fewer. You can include up to 6 decimal places as part of your number.');
+            expect(validationErrors.errorList.conversionRate.text).toEqual(
+              'Conversion rate must be 12 numbers or fewer. You can include up to 6 decimal places as part of your number.',
+            );
           });
         });
 
@@ -764,7 +775,7 @@ describe('/v1/deals/:id/bond', () => {
 
         describe('when more than 29 days in the past', () => {
           it('should return validationError', async () => {
-            const thirtyDaysAgo = sub(nowDate, { days: 30 })  ;
+            const thirtyDaysAgo = sub(nowDate, { days: 30 });
             const conversionRateFields = {
               'conversionRateDate-day': format(thirtyDaysAgo, 'dd'),
               'conversionRateDate-month': format(thirtyDaysAgo, 'MM'),
@@ -775,7 +786,7 @@ describe('/v1/deals/:id/bond', () => {
             expect(validationErrors.errorList.conversionRateDate).toBeDefined();
             const twentyNineDaysAgo = sub(nowDate, { days: 29 });
             const twentyNineDaysAgoFormatted = format(twentyNineDaysAgo, DATE_FORMATS.LONG_FORM_DATE);
-            const nowDateFormatted = format(nowDate, DATE_FORMATS.LONG_FORM_DATE)
+            const nowDateFormatted = format(nowDate, DATE_FORMATS.LONG_FORM_DATE);
             const expectedText = `Conversion rate date must be between ${twentyNineDaysAgoFormatted} and ${nowDateFormatted}`;
             expect(validationErrors.errorList.conversionRateDate.text).toEqual(expectedText);
           });
@@ -789,7 +800,7 @@ describe('/v1/deals/:id/bond', () => {
                 'conversionRateDate-day': format(nowDate, 'dd'),
                 'conversionRateDate-month': '',
                 'conversionRateDate-year': '',
-              }
+              },
             },
             {
               description: 'day and year set to empty strings',
@@ -797,7 +808,7 @@ describe('/v1/deals/:id/bond', () => {
                 'conversionRateDate-day': '',
                 'conversionRateDate-month': format(nowDate, 'MM'),
                 'conversionRateDate-year': '',
-              }
+              },
             },
             {
               description: 'month and year set to empty strings',
@@ -805,7 +816,7 @@ describe('/v1/deals/:id/bond', () => {
                 'conversionRateDate-day': '',
                 'conversionRateDate-month': '',
                 'conversionRateDate-year': format(nowDate, 'yyyy'),
-              }
+              },
             },
             {
               description: 'year set to empty string',
@@ -813,7 +824,7 @@ describe('/v1/deals/:id/bond', () => {
                 'conversionRateDate-day': format(nowDate, 'dd'),
                 'conversionRateDate-month': format(nowDate, 'MM'),
                 'conversionRateDate-year': '',
-              }
+              },
             },
             {
               description: 'month set to empty string',
@@ -821,7 +832,7 @@ describe('/v1/deals/:id/bond', () => {
                 'conversionRateDate-day': format(nowDate, 'dd'),
                 'conversionRateDate-month': '',
                 'conversionRateDate-year': format(nowDate, 'yyyy'),
-              }
+              },
             },
             {
               description: 'day set to empty string',
@@ -829,9 +840,9 @@ describe('/v1/deals/:id/bond', () => {
                 'conversionRateDate-day': '',
                 'conversionRateDate-month': format(nowDate, 'MM'),
                 'conversionRateDate-year': format(nowDate, 'yyyy'),
-              }
+              },
             },
-          ]
+          ];
 
           it.each(testValuesWithSomeFieldsEmptyStrings)('with $description it should return a validationError', async ({ conversionRateDateFields }) => {
             const { validationErrors } = await updateBondConversionRateDate(conversionRateDateFields);
@@ -845,7 +856,7 @@ describe('/v1/deals/:id/bond', () => {
             );
 
             expect(validationErrors.errorList.conversionRateDate.text).toEqual(expectedText);
-          })
+          });
         });
       });
 

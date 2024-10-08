@@ -13,6 +13,7 @@ const facilityController = require('./controllers/facility.controller');
 const partyController = require('./controllers/party.controller');
 const bankHolidaysController = require('./controllers/bank-holidays');
 const utilisationReportsController = require('./controllers/utilisation-reports');
+const banksController = require('./controllers/banks.controller');
 const users = require('./controllers/user/user.routes');
 const party = require('./controllers/deal.party-db');
 const validation = require('./validation/route-validators/route-validators');
@@ -136,5 +137,64 @@ authRouter
 authRouter
   .route('/utilisation-reports/set-status')
   .put(validation.updateReportStatusPayloadValidation, handleExpressValidatorResult, utilisationReportsController.updateUtilisationReportStatus);
+
+authRouter
+  .route('/utilisation-reports/reconciliation-details/:reportId')
+  .get(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.getUtilisationReportReconciliationDetailsById);
+
+authRouter
+  .route('/utilisation-reports/:id/selected-fee-records-details')
+  .get(validation.sqlIdValidation('id'), handleExpressValidatorResult, utilisationReportsController.getSelectedFeeRecordsDetails);
+
+authRouter
+  .route('/utilisation-reports/:reportId/payment')
+  .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.postPayment);
+
+authRouter.route('/banks').get(banksController.getBanks);
+
+authRouter
+  .route('/bank/:bankId/utilisation-reports/reconciliation-summary-by-year/:year')
+  .get(
+    validation.bankIdValidation,
+    validation.isoYearValidation('year'),
+    handleExpressValidatorResult,
+    utilisationReportsController.getUtilisationReportSummariesByBankAndYear,
+  );
+
+authRouter
+  .route('/utilisation-reports/:reportId/keying-data/mark-as-done')
+  .put(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.putKeyingDataMarkAsDone);
+
+authRouter
+  .route('/utilisation-reports/:reportId/keying-data/mark-as-to-do')
+  .put(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.putKeyingDataMarkAsToDo);
+
+authRouter
+  .route('/utilisation-reports/:reportId/keying-data')
+  .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.postKeyingData);
+
+authRouter
+  .route('/utilisation-reports/:reportId/fee-records-to-key')
+  .get(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.getFeeRecordsToKey);
+
+authRouter
+  .route('/utilisation-reports/:reportId/payment/:paymentId')
+  .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('paymentId'), handleExpressValidatorResult)
+  .get(utilisationReportsController.getPaymentDetailsById)
+  .delete(utilisationReportsController.deletePayment)
+  .patch(utilisationReportsController.patchPayment);
+
+authRouter
+  .route('/utilisation-reports/:reportId/payment/:paymentId/remove-selected-fees')
+  .post(
+    validation.sqlIdValidation('reportId'),
+    validation.sqlIdValidation('paymentId'),
+    handleExpressValidatorResult,
+    utilisationReportsController.postRemoveFeesFromPayment,
+  );
+
+authRouter
+  .route('/utilisation-reports/:reportId/add-to-an-existing-payment')
+  .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.postFeesToAnExistingPayment);
 
 module.exports = { authRouter, openRouter };

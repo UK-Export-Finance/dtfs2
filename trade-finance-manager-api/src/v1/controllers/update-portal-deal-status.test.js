@@ -1,3 +1,5 @@
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { ObjectId } = require('mongodb');
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const { updatePortalDealStatus } = require('./update-portal-deal-status');
@@ -9,9 +11,11 @@ describe('updatePortalDealStatus', () => {
   const updatePortalGefDealStatusMock = jest.spyOn(api, 'updatePortalGefDealStatus');
   updatePortalGefDealStatusMock.mockResolvedValue();
 
+  const auditDetails = generatePortalAuditDetails(new ObjectId());
+
   afterEach(() => {
     jest.resetAllMocks();
-  })
+  });
 
   it('should update portal deal status to IN_PROGRESS_BY_UKEF for MIA submission type and BSS_EWCS deal type', async () => {
     const deal = {
@@ -20,9 +24,13 @@ describe('updatePortalDealStatus', () => {
       submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIA,
     };
 
-    const result = await updatePortalDealStatus(deal);
+    const result = await updatePortalDealStatus(deal, auditDetails);
 
-    expect(updatePortalBssDealStatusMock).toHaveBeenCalledWith('dealId', CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF);
+    expect(updatePortalBssDealStatusMock).toHaveBeenCalledWith({
+      auditDetails,
+      dealId: 'dealId',
+      status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF,
+    });
     expect(result).toEqual(deal);
   });
 
@@ -33,9 +41,13 @@ describe('updatePortalDealStatus', () => {
       submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
     };
 
-    const result = await updatePortalDealStatus(deal);
+    const result = await updatePortalDealStatus(deal, auditDetails);
 
-    expect(updatePortalGefDealStatusMock).toHaveBeenCalledWith('dealId', CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED);
+    expect(updatePortalGefDealStatusMock).toHaveBeenCalledWith({
+      auditDetails,
+      dealId: 'dealId',
+      status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
+    });
     expect(result).toEqual(deal);
   });
 
@@ -46,9 +58,13 @@ describe('updatePortalDealStatus', () => {
       submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
     };
 
-    const result = await updatePortalDealStatus(deal);
+    const result = await updatePortalDealStatus(deal, auditDetails);
 
-    expect(updatePortalGefDealStatusMock).toHaveBeenCalledWith('dealId', CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED);
+    expect(updatePortalGefDealStatusMock).toHaveBeenCalledWith({
+      auditDetails,
+      dealId: 'dealId',
+      status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
+    });
     expect(result).toEqual(deal);
   });
 
@@ -62,7 +78,7 @@ describe('updatePortalDealStatus', () => {
     const consoleErrorMock = jest.spyOn(console, 'error');
     consoleErrorMock.mockImplementation();
 
-    const result = await updatePortalDealStatus(deal);
+    const result = await updatePortalDealStatus(deal, auditDetails);
 
     expect(updatePortalBssDealStatusMock).not.toHaveBeenCalled();
 
@@ -80,7 +96,7 @@ describe('updatePortalDealStatus', () => {
     expect(updatePortalBssDealStatusMock).not.toHaveBeenCalled();
     expect(updatePortalGefDealStatusMock).not.toHaveBeenCalled();
 
-    const result = await updatePortalDealStatus(deal);
+    const result = await updatePortalDealStatus(deal, auditDetails);
 
     expect(result).toEqual(deal);
   });
@@ -95,7 +111,7 @@ describe('updatePortalDealStatus', () => {
     expect(updatePortalBssDealStatusMock).not.toHaveBeenCalled();
     expect(updatePortalGefDealStatusMock).not.toHaveBeenCalled();
 
-    const result = await updatePortalDealStatus(deal);
+    const result = await updatePortalDealStatus(deal, auditDetails);
 
     expect(result).toEqual(deal);
   });
@@ -110,7 +126,7 @@ describe('updatePortalDealStatus', () => {
     expect(updatePortalBssDealStatusMock).not.toHaveBeenCalled();
     expect(updatePortalGefDealStatusMock).not.toHaveBeenCalled();
 
-    const result = await updatePortalDealStatus(deal);
+    const result = await updatePortalDealStatus(deal, auditDetails);
 
     expect(result).toEqual(deal);
   });
@@ -125,7 +141,7 @@ describe('updatePortalDealStatus', () => {
     const consoleErrorMock = jest.spyOn(console, 'error');
     consoleErrorMock.mockImplementation();
 
-    const result = await updatePortalDealStatus(deal);
+    const result = await updatePortalDealStatus(deal, auditDetails);
 
     expect(updatePortalBssDealStatusMock).not.toHaveBeenCalled();
     expect(updatePortalGefDealStatusMock).not.toHaveBeenCalled();

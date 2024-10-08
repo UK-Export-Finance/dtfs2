@@ -1,16 +1,17 @@
 import {
   ValuesOf,
   UtilisationReportReconciliationStatus,
-  UtilisationReport,
-  Prettify,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
   Currency,
   ReportPeriod,
   AzureFileInfo,
   UploadedByUserDetails,
   UTILISATION_REPORT_HEADERS,
   IsoMonthStamp,
+  FeeRecordStatus,
+  CurrencyAndAmount,
 } from '@ukef/dtfs2-common';
+import { FeeRecord, KeyingSheet } from './fee-records';
+import { Payment } from './payments';
 
 export type GetUtilisationReportResponse = {
   id: number;
@@ -39,6 +40,7 @@ export type UtilisationReportReconciliationSummaryItem = {
   };
   status: UtilisationReportReconciliationStatus;
   dateUploaded?: Date;
+  totalFacilitiesReported?: number;
   totalFeesReported?: number;
   reportedFeesLeftToReconcile?: number;
 };
@@ -54,10 +56,37 @@ export type UtilisationReportRawCsvData = {
   [HeaderKey in UtilisationReportHeader]: HeaderKey extends `${string}currency` ? Currency : string;
 };
 
-export type UtilisationReportUploadDetails = Prettify<
-  Required<
-    Pick<UtilisationReport, 'azureFileInfo' | 'dateUploaded' | 'uploadedBy'> & {
-      status: typeof UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION;
-    }
-  >
->;
+export type FeeRecordReconciledByUser = {
+  firstName: string;
+  lastName: string;
+};
+
+export type FeeRecordPaymentGroup = {
+  feeRecords: FeeRecord[];
+  totalReportedPayments: CurrencyAndAmount;
+  paymentsReceived: Payment[] | null;
+  totalPaymentsReceived: CurrencyAndAmount | null;
+  status: FeeRecordStatus;
+  reconciledByUser?: FeeRecordReconciledByUser;
+  dateReconciled?: Date;
+};
+
+export type UtilisationReportReconciliationDetails = {
+  reportId: number;
+  bank: {
+    id: string;
+    name: string;
+  };
+  status: UtilisationReportReconciliationStatus;
+  reportPeriod: ReportPeriod;
+  dateUploaded: Date;
+  feeRecordPaymentGroups: FeeRecordPaymentGroup[];
+  keyingSheet: KeyingSheet;
+};
+
+export type NewPaymentDetails = {
+  currency: Currency;
+  amount: number;
+  dateReceived: Date;
+  reference?: string;
+};

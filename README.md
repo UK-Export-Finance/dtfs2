@@ -18,9 +18,9 @@ This documentation provides a comprehensive overview of the UKEF Digital TradeFi
 
 **CD** 🚀
 
-![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/development_deploy.yml/badge.svg?branch=dev)
-![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/staging_deploy.yml/badge.svg?branch=staging)
-![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/production_deploy.yml/badge.svg?branch=prod)
+![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/deployment.yml/badge.svg?branch=dev)
+![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/deployment.yml/badge.svg?branch=staging)
+![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/deployment.yml/badge.svg?branch=prod)
 
 ## Getting Started :rocket:
 
@@ -44,19 +44,20 @@ This documentation provides a comprehensive overview of the UKEF Digital TradeFi
 ### Setup :gear:
 
 1. Clone this repository.
-2. Run `nvm install` to ensure you're using the correct Node.js version.
-3. Create `.env` files for each service (including `utils/mock-data-loader`), using `.env.sample` as a base. Some sensitive variables may need to be shared within the team.
+2. Run `nvm install VERSION_NUMBER` with the node version number above to ensure you've got the correct Node.js version (then `nvm use VERSION_NUMBER` to use it).
+3. Create a single `.env` file in the project root, using `.env.sample` as a base. Some sensitive variables may need to be shared within the team.
 4. Generate JWT key pairs with `secrets/set_jwt_keypair.sh` (use `bash secrets/set_jwt_keypair.sh` for Windows).
 5. Base64 encode the generated public and private keys and add them to your portal-api `.env` file as follows:
-   - `JWT_SIGNING_KEY=1234`
-   - `JWT_VALIDATING_KEY=5678`
+   - `JWT_SIGNING_KEY=your_private_key`
+   - `JWT_VALIDATING_KEY=your_public_key`
 6. Set UKEF TFM environment variables in your terminal: `UKEF_TFM_API_SYSTEM_KEY` and `UKEF_TFM_API_REPORTS_KEY`.
-7. run `npm install` in the root folder of the repository. (note: this will install dependencies for the entire project, including those specified in sub-packages. More details on this in the [npm workspaces](./doc/npm-workspaces.md) docs)
-8. Start your local environment with `npm run dev`.
-9. Create mock data in the MongoDB database by running `npm run load` from the root folder of the repository. This should generate mocks in your database.
-10. Run migrations on the SQL Server database (see [SQL DB docs](./doc/sql-db.md#--run-migrations) for details)
+7. Run `npm run env:copy` to copy your root .env file into all the individual projects that need it.
+8. Run `npm ci` in the root folder of the repository. (note: this will install dependencies for the entire project, including those specified in sub-packages. More details on this in the [npm workspaces](./doc/npm-workspaces.md) docs)
+9. Start your local environment with `npm run start`.
+10. Run migrations on the MSSQL Server database (see [SQL DB docs](./doc/sql-db.md#--run-migrations) for details)
+11. Create mock data by running `npm run load` from the root folder of the repository. This should generate mocks in your database (both Mongo and MSSQL). (for more details on what this does please see [utils docs](./utils/README.md))
 
-Recommended: Install a MongoDB client such as Compass or Robo 3T.
+Recommended: Install a MongoDB client such as Compass or Robo 3T and a MSSQL DB client such as Azure Data Studio.
 
 Note: If you're on Windows and experiencing issues with MongoDB, install mongosh for command-line debugging.
 
@@ -68,17 +69,17 @@ npm run start
 
 Several services are built:
 
-| Service       | URL                                                                                                                                                                   |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Portal UI     | [http://localhost:5000](http://localhost:5000)                                                                                                                        |
-| Portal API    | [http://localhost:5001](http://localhost:5001)                                                                                                                        |
-| External API  | [http://localhost:5002](http://localhost:5002)                                                                                                                        |
-| TFM UI        | [http://localhost:5003](http://localhost:5003)                                                                                                                        |
-| TFM API       | [http://localhost:5004](http://localhost:5004)                                                                                                                        |
-| Central API   | [http://localhost:5005](http://localhost:5005)                                                                                                                        |
-| GEF           | [http://localhost:5006](http://localhost:5006)                                                                                                                        |
-| MongoDB       | `root:r00t@localhost:27017` (Connect via MongoDB client)                                                                                                              |
-| SQL Server DB | SSMS: `Server=localhost:1433;Database=DTFS;User Id=dtfs;Password=AbC!2345;`<br/>DataGrip: `jdbc:sqlserver://localhost:1433;database=DTFS;user=dtfs;password=AbC!2345` |
+| Service         | URL                                                                                                                                                                   |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Portal UI       | [http://localhost:5000](http://localhost:5000)                                                                                                                        |
+| Portal API      | [http://localhost:5001](http://localhost:5001)                                                                                                                        |
+| External API    | [http://localhost:5002](http://localhost:5002)                                                                                                                        |
+| TFM UI          | [http://localhost:5003](http://localhost:5003)                                                                                                                        |
+| TFM API         | [http://localhost:5004](http://localhost:5004)                                                                                                                        |
+| Central API     | [http://localhost:5005](http://localhost:5005)                                                                                                                        |
+| GEF             | [http://localhost:5006](http://localhost:5006)                                                                                                                        |
+| MongoDB         | `root:r00t@localhost:27017` (Connect via MongoDB client)                                                                                                              |
+| MSSQL Server DB | SSMS: `Server=localhost:1433;Database=DTFS;User Id=dtfs;Password=AbC!2345;`<br/>DataGrip: `jdbc:sqlserver://localhost:1433;database=DTFS;user=dtfs;password=AbC!2345` |
 
 To access GEF locally, use [http://localhost](http://localhost).
 
@@ -90,18 +91,10 @@ To stop the local environment, simply exit the running terminal and run:
 npm run stop
 ```
 
-## Different docker compose files
-
-There are 3 different docker compose files right now.
-
-- docker-compose.yml is used for local development
-- docker-compose.gha.yml is used for the pipelines to run our tests against
-- docker-compose.replica-set.yml is used when you need a replica set enabled on your local database, e.g. when working with the mongodb change stream
-
 ## Login Credentials :key:
 
-- For Portal (BSS & GEF) mock users: [utils/mock-data-loader/portal/users.js](utils/mock-data-loader/portal/users.js)
-- For Trade Finance Manager (TFM) mock users: [utils/mock-data-loader/tfm/users.js](utils/mock-data-loader/tfm/users.js)
+- For Portal (BSS & GEF) mock users: [utils/mock-data-loader/portal-users/index.js](utils/mock-data-loader/portal-users/index.js)
+- For Trade Finance Manager (TFM) mock users: [utils/mock-data-loader/tfm/mocks/users.js](utils/mock-data-loader/tfm/mocks/users.js) (use the `username` to log in as opposed to the `email`)
 
 ## Environment Variables :keycap_ten:
 
@@ -290,7 +283,7 @@ To address these issues, the plan is to move all these API calls into background
 
 ## Email Notifications :email:
 
-Email notifications are triggered using [GOV.UK Notify](https://notifications.service.gov.uk) at various stages, such as:
+Email notifications are sent through MDM APIM using [GOV.UK Notify](https://notifications.service.gov.uk) at various stages, such as:
 
 - When a deal status changes in Portal.
 - When TFM acknowledges a deal submission.

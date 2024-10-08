@@ -1,4 +1,4 @@
-const ROLES = require('./roles');
+const { ROLES, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const ALL_BANKS_ID = require('./all-banks-id');
 
 const DEAL_SUBMISSION_TYPE = {
@@ -29,16 +29,6 @@ const DEAL_STATUS = {
   WITHDRAWN: 'Withdrawn',
 };
 
-const DEAL_TYPE = {
-  GEF: 'GEF',
-  BSS_EWCS: 'BSS/EWCS',
-};
-
-const FACILITY_TYPE = {
-  CASH: 'Cash',
-  CONTINGENT: 'Contingent',
-};
-
 const BOOLEAN = {
   YES: 'Yes',
   NO: 'No',
@@ -47,16 +37,6 @@ const BOOLEAN = {
 const STAGE = {
   ISSUED: 'Issued',
   UNISSUED: 'Unissued',
-};
-
-const FACILITY_PROVIDED_DETAILS = {
-  TERM: 'Term basis',
-  RESOLVING: 'Revolving or renewing basis',
-  COMMITTED: 'Committed basis',
-  UNCOMMITTED: 'Uncommitted basis',
-  ON_DEMAND: 'On demand or overdraft basis',
-  FACTORING: 'Factoring on a  with-recourse basis',
-  OTHER: 'Other',
 };
 
 const FACILITY_PAYMENT_TYPE = {
@@ -78,24 +58,19 @@ const DATE_FORMAT = {
   COVER: 'MMMM d, yyyy',
 };
 
-const COMPANIES_HOUSE_NUMBER_REGEX = /^(([A-Z]{2}|[A-Z]\d{1}|\d{2})(\d{5,6}|\d{4,5}[A-Z]))$/; // cspell:disable-line
-
 const UK_POSTCODE_REGEX = /^[A-Za-z]{1,2}[0-9Rr][0-9A-Za-z]?\s?[0-9][ABD-HJLNP-UW-Zabd-hjlnp-uw-z]{2}$/; // cspell:disable-line
 
 module.exports = {
   ROLES,
   DEAL_SUBMISSION_TYPE,
   DEAL_STATUS,
-  DEAL_TYPE,
   FACILITY_TYPE,
   BOOLEAN,
   STAGE,
-  FACILITY_PROVIDED_DETAILS,
   FACILITY_PAYMENT_TYPE,
   AUTHORISATION_LEVEL,
   DEFAULT_COUNTRY,
   DATE_FORMAT,
-  COMPANIES_HOUSE_NUMBER_REGEX,
   UK_POSTCODE_REGEX,
   ALL_BANKS_ID,
 };

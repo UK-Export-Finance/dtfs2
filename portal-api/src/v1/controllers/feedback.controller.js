@@ -2,13 +2,19 @@ const assert = require('assert');
 const { ObjectId } = require('mongodb');
 const sanitizeHtml = require('sanitize-html');
 const { format, getUnixTime, fromUnixTime } = require('date-fns');
-
-const db = require('../../drivers/db-client');
+const { InvalidAuditDetailsError, MONGO_DB_COLLECTIONS, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
+const {
+  generateAuditDatabaseRecordFromAuditDetails,
+  validateAuditDetails,
+  deleteOne,
+  generatePortalAuditDetails,
+} = require('@ukef/dtfs2-common/change-stream');
+const { mongoDbClient: db } = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
 const sendEmail = require('../email');
 
 const findFeedbacks = async (callback) => {
-  const collection = await db.getCollection('feedback');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FEEDBACK);
 
   collection.find().toArray((error, result) => {
     assert.equal(error, null);
@@ -21,7 +27,7 @@ const findOneFeedback = async (id, callback) => {
     throw new Error('Invalid Feedback Id');
   }
 
-  const collection = await db.getCollection('feedback');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FEEDBACK);
 
   collection.findOne({ _id: { $eq: ObjectId(id) } }, (error, result) => {
     assert.equal(error, null);
@@ -49,8 +55,22 @@ exports.create = async (req, res) => {
     satisfied,
     howCanWeImprove,
     emailAddress,
-    submittedBy
+    submittedBy,
+    // Because this is on the open router, information about the user cannot be inferred from req.user
+    auditDetails,
   } = req.body;
+
+  try {
+    validateAuditDetails(auditDetails);
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: `Invalid auditDetails: ${error.message}`,
+      });
+    }
+    return res.status(500).send({ status: 500, error });
+  }
 
   const modifiedFeedback = {
     role,
@@ -64,9 +84,10 @@ exports.create = async (req, res) => {
     emailAddress,
     submittedBy,
     created: getUnixTime(new Date()),
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
-  const collection = await db.getCollection('feedback');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FEEDBACK);
   const createdFeedback = await collection.insertOne(modifiedFeedback);
 
   // get formatted date from created timestamp, to display in email
@@ -93,16 +114,12 @@ exports.create = async (req, res) => {
   const EMAIL_TEMPLATE_ID = '4214bdb8-b3f5-4081-a664-3bfcfe648b8d';
   const EMAIL_RECIPIENT = process.env.GOV_NOTIFY_EMAIL_RECIPIENT;
 
-  await sendEmail(
-    EMAIL_TEMPLATE_ID,
-    EMAIL_RECIPIENT,
-    emailVariables,
-  );
+  await sendEmail(EMAIL_TEMPLATE_ID, EMAIL_RECIPIENT, emailVariables);
 
   return res.status(200).send({ _id: createdFeedback.insertedId });
 };
 
-exports.findOne = (req, res) => (
+exports.findOne = (req, res) =>
   findOneFeedback(req.params.id, (feedback) => {
     if (!feedback) {
       res.status(404).send();
@@ -111,14 +128,13 @@ exports.findOne = (req, res) => (
     }
 
     return res.status(404).send();
-  })
-);
+  });
 
-exports.findAll = (req, res) => (
-  findFeedbacks((feedbacks) => res.status(200).send(feedbacks)));
+exports.findAll = (req, res) => findFeedbacks((feedbacks) => res.status(200).send(feedbacks));
 
 exports.delete = async (req, res) => {
   const { id } = req.params;
+  const auditDetails = generatePortalAuditDetails(req.user._id);
 
   if (!ObjectId.isValid(id)) {
     return res.status(400).send('Invalid feedback id');
@@ -129,9 +145,21 @@ exports.delete = async (req, res) => {
       return res.status(404).send();
     }
 
-    const collection = await db.getCollection('feedback');
-    const status = await collection.deleteOne({ _id: { $eq: ObjectId(id) } });
+    try {
+      const deleteResult = await deleteOne({
+        documentId: new ObjectId(id),
+        collectionName: MONGO_DB_COLLECTIONS.FEEDBACK,
+        db,
+        auditDetails,
+      });
 
-    return res.status(200).send(status);
+      return res.status(200).send(deleteResult);
+    } catch (error) {
+      if (error instanceof DocumentNotDeletedError) {
+        return res.sendStatus(404);
+      }
+      console.error('Error deleting feedback', error);
+      return res.status(500).send({ status: 500, error });
+    }
   });
 };

@@ -1,7 +1,7 @@
 const CONSTANTS = require('../../../constants');
 const facilitiesController = require('../facilities.controller');
 
-const updateSubmittedIssuedFacilities = async (user, deal) => {
+const updateSubmittedIssuedFacilities = async (user, deal, auditDetails) => {
   const modifiedDeal = deal;
 
   modifiedDeal.facilities.forEach(async (facilityId) => {
@@ -9,13 +9,12 @@ const updateSubmittedIssuedFacilities = async (user, deal) => {
 
     const { facilityStage } = facility;
 
-    const isUnconditionalUnsubmittedLoan = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
-                                            && !facility.issueFacilityDetailsSubmitted);
+    const isUnconditionalUnsubmittedLoan =
+      facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL && !facility.issueFacilityDetailsSubmitted;
 
-    const isIssuedUnsubmittedBond = (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
-                                    && !facility.issueFacilityDetailsSubmitted);
+    const isIssuedUnsubmittedBond = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED && !facility.issueFacilityDetailsSubmitted;
 
-    const shouldUpdate = (isUnconditionalUnsubmittedLoan || isIssuedUnsubmittedBond);
+    const shouldUpdate = isUnconditionalUnsubmittedLoan || isIssuedUnsubmittedBond;
 
     if (shouldUpdate) {
       const now = Date.now();
@@ -26,8 +25,7 @@ const updateSubmittedIssuedFacilities = async (user, deal) => {
       facility.submittedAsIssuedDate = now;
       facility.submittedAsIssuedBy = user;
 
-      if (!facility.previousFacilityStage
-        && !facility.issueFacilityDetailsProvided) {
+      if (!facility.previousFacilityStage && !facility.issueFacilityDetailsProvided) {
         // Facility has been issued at the Deal draft stage. Therefore:
         // - no need for Maker to Issue the facility from Issue Facility Form
         // - won't get 'Submitted to UKEF' status (declared below when Issue Facility Form details provided)
@@ -44,20 +42,13 @@ const updateSubmittedIssuedFacilities = async (user, deal) => {
 
     const facilityIsReadyForApproval = facility.status === CONSTANTS.FACILITIES.DEAL_STATUS.READY_FOR_APPROVAL;
 
-    const facilityIssuedFromIssueFacilityForm = (shouldUpdate
-                                                && facility.issueFacilityDetailsProvided
-                                                && facilityIsReadyForApproval);
+    const facilityIssuedFromIssueFacilityForm = shouldUpdate && facility.issueFacilityDetailsProvided && facilityIsReadyForApproval;
 
     if (facilityIssuedFromIssueFacilityForm) {
       facility.status = CONSTANTS.FACILITIES.DEAL_STATUS.SUBMITTED_TO_UKEF;
     }
 
-    const { data } = await facilitiesController.update(
-      deal._id,
-      facilityId,
-      facility,
-      user,
-    );
+    const { data } = await facilitiesController.update(deal._id, facilityId, facility, user, auditDetails);
 
     return data;
   });

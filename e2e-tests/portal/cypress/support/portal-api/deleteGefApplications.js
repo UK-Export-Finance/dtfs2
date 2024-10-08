@@ -5,8 +5,9 @@ const deleteGefApplications = (token, deals) => {
   deals.forEach((deal) => deleteGefApplication(token, deal._id));
 };
 
-module.exports = (opts) => logIn(opts).then((token) => {
-  listGefApplications(token).then(async (deals) => {
-    await deleteGefApplications(token, deals);
+module.exports = (opts) =>
+  logIn(opts).then((token) => {
+    listGefApplications(token).then(async (deals) => {
+      await deleteGefApplications(token, deals);
+    });
   });
-});

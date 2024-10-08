@@ -1,12 +1,8 @@
 const CONSTANTS = require('../constants');
 const { MAKER } = require('../constants/roles');
-const {
-  hasChangedToIssued,
-  coverDatesConfirmed,
-  getIssuedFacilitiesAsArray,
-} = require('./facility-helpers');
+const { hasChangedToIssued, coverDatesConfirmed, getIssuedFacilitiesAsArray } = require('./facility-helpers');
 
-const status = ({
+const status = {
   [CONSTANTS.DEAL_STATUS.NOT_STARTED]: {
     text: CONSTANTS.DEAL_STATUS.NOT_STARTED,
     class: 'govuk-tag--grey',
@@ -22,7 +18,7 @@ const status = ({
     class: 'govuk-tag--green',
     code: CONSTANTS.DEAL_STATUS.COMPLETED,
   },
-});
+};
 
 const isNotice = (type) => type.toLowerCase().includes('notice');
 
@@ -40,10 +36,7 @@ const isUkefReviewAvailable = (applicationStatus, ukefDecision) => {
 
 const isUkefReviewPositive = (applicationStatus, ukefDecision) => {
   if (ukefDecision?.length > 0) {
-    const acceptable = [
-      CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
-      CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
-    ];
+    const acceptable = [CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS, CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS];
     return acceptable.includes(applicationStatus) || acceptable.includes(ukefDecision[0].decision);
   }
   return false;
@@ -61,13 +54,9 @@ const makerCanReSubmit = (maker, application) => {
   if (application.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED) {
     facilitiesChangedToIssued = hasChangedToIssued(application);
   }
-  const coverDateConfirmed = getIssuedFacilitiesAsArray(application.facilities).length > 0
-    ? coverDatesConfirmed(application.facilities)
-    : true;
-  const ukefDecisionAccepted = application.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN
-    ? true
-    : application.ukefDecisionAccepted;
-  const makerAuthorised = (maker.roles.includes(MAKER) && maker.bank.id === application.bank.id);
+  const coverDateConfirmed = getIssuedFacilitiesAsArray(application.facilities).length > 0 ? coverDatesConfirmed(application.facilities) : true;
+  const ukefDecisionAccepted = application.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN ? true : application.ukefDecisionAccepted;
+  const makerAuthorised = maker.roles.includes(MAKER) && maker.bank.id === application.bank.id;
   return Boolean(ukefDecisionAccepted) && coverDateConfirmed && facilitiesChangedToIssued && acceptableStatus.includes(application.status) && makerAuthorised;
 };
 
@@ -84,8 +73,8 @@ const getApplicationType = (isAutomaticCover) => {
 /**
  * If the UKEF Decision has been accepted by the maker then return true
  * else evaluate whether the application is a Notice
- * @param {Boolean} ukefDecisionAccepted application.ukefDecisionAccepted
- * @param {String} submissionType application.submissionType
+ * @param {boolean} ukefDecisionAccepted application.ukefDecisionAccepted
+ * @param {string} submissionType application.submissionType
  * @returns Boolean Boolean value
  */
 const isDealNotice = (ukefDecisionAccepted, submissionType) => (ukefDecisionAccepted ? true : isNotice(submissionType));

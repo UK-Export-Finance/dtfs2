@@ -1,13 +1,9 @@
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { FIELD_NAMES, FACILITY_HAS_BEEN_ISSUED } = require('../../../constants');
 const {
-  FIELD_NAMES,
-  FACILITY_HAS_BEEN_ISSUED,
-  FACILITY_TYPE,
-} = require('../../../constants');
-const { DASHBOARD_FILTERS: { BESPOKE_FILTER_VALUES } } = require('../../../content-strings');
-const {
-  generateFiltersArray,
-  submissionTypeFilters,
-} = require('../filters/generate-template-filters');
+  DASHBOARD_FILTERS: { BESPOKE_FILTER_VALUES },
+} = require('../../../content-strings');
+const { generateFiltersArray, submissionTypeFilters } = require('../filters/generate-template-filters');
 
 /**
  * Create filters array for the 'type' (or 'product') field.
@@ -67,10 +63,7 @@ const createdByYouFilter = (submittedFilters) => {
 const facilitiesTemplateFilters = (submittedFilters = {}) => ({
   createdBy: createdByYouFilter(submittedFilters),
   type: typeFilters(submittedFilters),
-  'deal.submissionType': submissionTypeFilters(
-    `deal.${FIELD_NAMES.DEAL.SUBMISSION_TYPE}`,
-    submittedFilters,
-  ),
+  'deal.submissionType': submissionTypeFilters(`deal.${FIELD_NAMES.DEAL.SUBMISSION_TYPE}`, submittedFilters),
   hasBeenIssued: hasBeenIssuedFilters(submittedFilters),
 });
 

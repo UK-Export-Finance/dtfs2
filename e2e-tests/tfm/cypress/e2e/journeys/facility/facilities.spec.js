@@ -4,7 +4,7 @@ import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import partials from '../../partials';
-import page from '../../pages';
+import pages from '../../pages';
 
 context('Facility page', () => {
   let dealOne;
@@ -56,31 +56,38 @@ context('Facility page', () => {
 
   it('renders all facilities from TFM', () => {
     cy.visit(relative('/facilities'));
-    cy.url().should('eq', relative('/facilities'));
+    cy.url().should('eq', relative('/facilities/0'));
 
-    page.facilitiesPage.ukefFacilityIdColumn().invoke('attr', 'aria-sort').should('contain', 'ascending');
-    page.facilitiesPage.productColumn().should('contain', 'Product');
-    page.facilitiesPage.dataTypeColumn().should('contain', 'Type');
-    page.facilitiesPage.exporterColumn().should('contain', 'Exporter');
-    page.facilitiesPage.valueColumn().should('contain', 'Value (export currency)');
-    page.facilitiesPage.coverEndDateColumn().should('contain', 'Cover end date');
-    page.facilitiesPage.facilityStageColumn().should('contain', 'Facility stage');
+    pages.facilitiesPage.facilitiesTable.headings.ukefFacilityId().contains('Facility ID');
+    pages.facilitiesPage.facilitiesTable.headings.ukefFacilityId().invoke('attr', 'aria-sort').should('eq', 'ascending');
+    pages.facilitiesPage.facilitiesTable.headings.dealType().contains('Product');
+    pages.facilitiesPage.facilitiesTable.headings.type().contains('Type');
+    pages.facilitiesPage.facilitiesTable.headings.companyName().contains('Exporter');
+    pages.facilitiesPage.facilitiesTable.headings.value().contains('Value (export currency)');
+    pages.facilitiesPage.facilitiesTable.headings.coverEndDate().contains('Cover end date');
+    pages.facilitiesPage.facilitiesTable.headings.facilityStage().contains('Facility stage');
 
-    cy.get('tr:nth-child(n+1) [data-cy="facility__ukefFacilityId"]').contains('1000000');
-    cy.get('tr:nth-child(n+1) [data-cy="facility__product"]').contains(dealTwo.dealType);
-    cy.get('tr:nth-child(n+1) [data-cy="facility__type"]').contains(dealTwoFacilities[1].type);
-    cy.get('tr:nth-child(n+1) [data-cy="facility__companyName"]').contains(dealTwo.exporter.companyName);
-    cy.get('tr:nth-child(n+1) [data-cy="facility__facilityValue"]').contains('GBP 1,234.00');
-    cy.get('tr:nth-child(n+1) [data-cy="facility__coverEndDate"]').contains('24 Sep 2020');
-    cy.get('tr:nth-child(n+1) [data-cy="facility__facilityStage"]').contains('Unissued');
+    for (let i = 0; i < 4; i += 1) {
+      pages.facilitiesPage.facilityIdCell(i).contains('1000000');
+      pages.facilitiesPage.dealTypeCell(i).contains(dealOne.dealType);
 
-    cy.get('tr:nth-child(n+2) [data-cy="facility__ukefFacilityId"]').contains('1000000');
-    cy.get('tr:nth-child(n+2) [data-cy="facility__product"]').contains(dealTwo.dealType);
-    cy.get('tr:nth-child(n+2) [data-cy="facility__type"]').contains(dealTwoFacilities[0].type);
-    cy.get('tr:nth-child(n+2) [data-cy="facility__companyName"]').contains(dealTwo.exporter.companyName);
-    cy.get('tr:nth-child(n+2) [data-cy="facility__facilityValue"]').contains('GBP 1,234,567,890.1');
-    cy.get('tr:nth-child(n+2) [data-cy="facility__coverEndDate"]').contains(dateConstants.oneMonthFormattedShort);
-    cy.get('tr:nth-child(n+2) [data-cy="facility__facilityStage"]').contains('Issued');
+      const companyName = i < 2 ? dealOne.exporter.companyName : dealTwo.exporter.companyName;
+      pages.facilitiesPage.companyNameCell(i).contains(companyName);
+    }
+
+    [0, 2].forEach((i) => {
+      pages.facilitiesPage.typeCell(i).contains(dealOneFacilities[0].type);
+      pages.facilitiesPage.valueCell(i).contains('GBP 1,234,567,890.1');
+      pages.facilitiesPage.coverEndDateCell(i).contains(dateConstants.oneMonthFormattedShort);
+      pages.facilitiesPage.facilityStageCell(i).contains('Issued');
+    });
+
+    [1, 3].forEach((i) => {
+      pages.facilitiesPage.typeCell(i).contains(dealOneFacilities[1].type);
+      pages.facilitiesPage.valueCell(i).contains('GBP 1,234.00');
+      pages.facilitiesPage.coverEndDateCell(i).contains('24 Sep 2020');
+      pages.facilitiesPage.facilityStageCell(i).contains('Unissued');
+    });
   });
 
   it('renders case summary with deal data', () => {
@@ -89,235 +96,186 @@ context('Facility page', () => {
     // check that a couple of case summary elements have data
     // (no need to check all in E2E test)
     partials.caseSummary.ukefDealId().should('be.visible');
-    partials.caseSummary.ukefDealId().invoke('text').then((text) => {
-      expect(text.trim()).equal(MOCK_DEAL_AIN.details.ukefDealId);
-    });
+    partials.caseSummary
+      .ukefDealId()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal(MOCK_DEAL_AIN.details.ukefDealId);
+      });
 
     partials.caseSummary.exporterName().should('be.visible');
-    partials.caseSummary.exporterName().invoke('text').then((text) => {
-      expect(text.trim()).equal(MOCK_DEAL_AIN.exporter.companyName);
-    });
+    partials.caseSummary
+      .exporterName()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal(MOCK_DEAL_AIN.exporter.companyName);
+      });
   });
 
   it('performs a search query based on Facility ID', () => {
     cy.visit(relative('/facilities'));
-    cy.url().should('eq', relative('/facilities'));
+    cy.url().should('eq', relative('/facilities/0'));
     const searchString = '1000000';
-    page.facilitiesPage.searchFormInput().type(searchString);
-    page.facilitiesPage.searchFormSubmitButton().click();
+    pages.facilitiesPage.searchFormInput().type(searchString);
+    pages.facilitiesPage.searchFormSubmitButton().click();
 
-    page.facilitiesPage.dealsTableRows().should('have.length', 4);
+    cy.checkFacilitiesTableRowsTotal(4);
   });
 
   it('performs a search query based on AIN Export name', () => {
     cy.visit(relative('/facilities'));
-    cy.url().should('eq', relative('/facilities'));
+    cy.url().should('eq', relative('/facilities/0'));
     const searchString = MOCK_DEAL_AIN.exporter.companyName;
 
-    page.facilitiesPage.searchFormInput().type(searchString);
-    page.facilitiesPage.searchFormSubmitButton().click();
+    pages.facilitiesPage.searchFormInput().type(searchString);
+    pages.facilitiesPage.searchFormSubmitButton().click();
 
-    page.facilitiesPage.dealsTableRows().should('have.length', 2);
+    cy.checkFacilitiesTableRowsTotal(2);
   });
 
   it('performs a secondary search query based on MIA Export name', () => {
     cy.visit(relative('/facilities'));
-    cy.url().should('eq', relative('/facilities'));
+    cy.url().should('eq', relative('/facilities/0'));
     const searchString = MOCK_DEAL_MIA.exporter.companyName;
 
-    page.facilitiesPage.searchFormInput().type(searchString);
-    page.facilitiesPage.searchFormSubmitButton().click();
+    pages.facilitiesPage.searchFormInput().type(searchString);
+    pages.facilitiesPage.searchFormSubmitButton().click();
 
-    page.facilitiesPage.dealsTableRows().should('have.length', 2);
+    cy.checkFacilitiesTableRowsTotal(2);
   });
 
   it('sorts all columns based on Product column (ASC)', () => {
     cy.visit(relative('/facilities'));
-    cy.url().should('eq', relative('/facilities'));
+    cy.url().should('eq', relative('/facilities/0'));
 
-    page.facilitiesPage.dataTypeColumn().find('button').click();
+    pages.facilitiesPage.facilitiesTable.headings.typeSortButton().click();
 
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('[data-cy="facility__type"]').should('contain', dealTwoFacilities[0].type);
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('[data-cy="facility__type"]').should('contain', dealOneFacilities[0].type);
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
-    cy.get('@row3').find('[data-cy="facility__type"]').should('contain', dealTwoFacilities[1].type);
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(4).as('row4');
-    cy.get('@row4').find('[data-cy="facility__type"]').should('contain', dealOneFacilities[1].type);
+    pages.facilitiesPage.typeCell(0).contains(dealTwoFacilities[0].type);
+    pages.facilitiesPage.typeCell(1).contains(dealOneFacilities[0].type);
+    pages.facilitiesPage.typeCell(2).contains(dealTwoFacilities[1].type);
+    pages.facilitiesPage.typeCell(3).contains(dealOneFacilities[1].type);
   });
 
   it('sorts all columns based on Product column (DESC)', () => {
     cy.visit(relative('/facilities'));
-    cy.url().should('eq', relative('/facilities'));
+    cy.url().should('eq', relative('/facilities/0'));
 
-    page.facilitiesPage.dataTypeColumn().find('button').dblclick();
+    // click once for `ascending` order
+    pages.facilitiesPage.facilitiesTable.headings.typeSortButton().click();
+    // click again for `descending` order
+    pages.facilitiesPage.facilitiesTable.headings.typeSortButton().click();
 
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('[data-cy="facility__type"]').should('contain', dealOneFacilities[1].type);
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('[data-cy="facility__type"]').should('contain', dealTwoFacilities[1].type);
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
-    cy.get('@row3').find('[data-cy="facility__type"]').should('contain', dealOneFacilities[0].type);
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(4).as('row4');
-    cy.get('@row4').find('[data-cy="facility__type"]').should('contain', dealTwoFacilities[0].type);
+    pages.facilitiesPage.typeCell(0).contains(dealOneFacilities[1].type);
+    pages.facilitiesPage.typeCell(1).contains(dealTwoFacilities[1].type);
+    pages.facilitiesPage.typeCell(2).contains(dealOneFacilities[0].type);
+    pages.facilitiesPage.typeCell(3).contains(dealTwoFacilities[0].type);
   });
 
   it('sorts all columns based on Exporter column (ASC)', () => {
     cy.visit(relative('/facilities'));
-    cy.url().should('eq', relative('/facilities'));
+    cy.url().should('eq', relative('/facilities/0'));
 
-    page.facilitiesPage.exporterColumn().find('button').click();
+    pages.facilitiesPage.facilitiesTable.headings.companyNameSortButton().click();
 
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('[data-cy="facility__companyName"]').should('contain', dealOne.exporter.companyName);
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('[data-cy="facility__companyName"]').should('contain', dealOne.exporter.companyName);
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
-    cy.get('@row3').find('[data-cy="facility__companyName"]').should('contain', dealTwo.exporter.companyName);
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(4).as('row4');
-    cy.get('@row4').find('[data-cy="facility__companyName"]').should('contain', dealTwo.exporter.companyName);
+    pages.facilitiesPage.companyNameCell(0).contains(dealOne.exporter.companyName);
+    pages.facilitiesPage.companyNameCell(1).contains(dealOne.exporter.companyName);
+    pages.facilitiesPage.companyNameCell(2).contains(dealTwo.exporter.companyName);
+    pages.facilitiesPage.companyNameCell(3).contains(dealTwo.exporter.companyName);
   });
 
   it('sorts all columns based on Exporter column (DESC)', () => {
     cy.visit(relative('/facilities'));
-    cy.url().should('eq', relative('/facilities'));
+    cy.url().should('eq', relative('/facilities/0'));
 
-    page.facilitiesPage.exporterColumn().find('button').dblclick();
+    // click once for `ascending` order
+    pages.facilitiesPage.facilitiesTable.headings.companyNameSortButton().click();
+    // click again for `descending` order
+    pages.facilitiesPage.facilitiesTable.headings.companyNameSortButton().click();
 
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('[data-cy="facility__companyName"]').should('contain', dealTwo.exporter.companyName);
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('[data-cy="facility__companyName"]').should('contain', dealTwo.exporter.companyName);
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
-    cy.get('@row3').find('[data-cy="facility__companyName"]').should('contain', dealOne.exporter.companyName);
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(4).as('row4');
-    cy.get('@row4').find('[data-cy="facility__companyName"]').should('contain', dealOne.exporter.companyName);
+    pages.facilitiesPage.companyNameCell(0).contains(dealTwo.exporter.companyName);
+    pages.facilitiesPage.companyNameCell(1).contains(dealTwo.exporter.companyName);
+    pages.facilitiesPage.companyNameCell(2).contains(dealOne.exporter.companyName);
+    pages.facilitiesPage.companyNameCell(3).contains(dealOne.exporter.companyName);
   });
 
   it('sorts all columns based on Value column (ASC)', () => {
     cy.visit(relative('/facilities'));
-    cy.url().should('eq', relative('/facilities'));
+    cy.url().should('eq', relative('/facilities/0'));
 
-    page.facilitiesPage.valueColumn().find('button').click();
+    pages.facilitiesPage.facilitiesTable.headings.valueSortButton().click();
 
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234.00');
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234.00');
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
-    cy.get('@row3').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234,567,890.1');
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(4).as('row4');
-    cy.get('@row4').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234,567,890.1');
+    pages.facilitiesPage.valueCell(0).contains('GBP 1,234.00');
+    pages.facilitiesPage.valueCell(1).contains('GBP 1,234.00');
+    pages.facilitiesPage.valueCell(2).contains('GBP 1,234,567,890.1');
+    pages.facilitiesPage.valueCell(3).contains('GBP 1,234,567,890.1');
   });
 
   it('sorts all columns based on Value column (DESC)', () => {
     cy.visit(relative('/facilities'));
-    cy.url().should('eq', relative('/facilities'));
+    cy.url().should('eq', relative('/facilities/0'));
 
-    page.facilitiesPage.valueColumn().find('button').dblclick();
+    // click once for `ascending` order
+    pages.facilitiesPage.facilitiesTable.headings.valueSortButton().click();
+    // click again for `descending` order
+    pages.facilitiesPage.facilitiesTable.headings.valueSortButton().click();
 
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234,567,890.1');
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234,567,890.1');
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
-    cy.get('@row3').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234.00');
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(4).as('row4');
-    cy.get('@row4').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234.00');
+    pages.facilitiesPage.valueCell(0).contains('GBP 1,234,567,890.1');
+    pages.facilitiesPage.valueCell(1).contains('GBP 1,234,567,890.1');
+    pages.facilitiesPage.valueCell(2).contains('GBP 1,234.00');
+    pages.facilitiesPage.valueCell(3).contains('GBP 1,234.00');
   });
 
   it('sorts all columns based on Cover End Date column (ASC)', () => {
     cy.visit(relative('/facilities'));
-    cy.url().should('eq', relative('/facilities'));
+    cy.url().should('eq', relative('/facilities/0'));
 
-    page.facilitiesPage.coverEndDateColumn().find('button').click();
+    pages.facilitiesPage.facilitiesTable.headings.coverEndDateSortButton().click();
 
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('[data-cy="facility__coverEndDate"]').should('contain', '24 Sep 2020');
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('[data-cy="facility__coverEndDate"]').should('contain', '24 Sep 2020');
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
-    cy.get('@row3').find('[data-cy="facility__coverEndDate"]').should('contain', dateConstants.oneMonthFormattedShort);
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(4).as('row4');
-    cy.get('@row4').find('[data-cy="facility__coverEndDate"]').should('contain', dateConstants.oneMonthFormattedShort);
+    pages.facilitiesPage.coverEndDateCell(0).contains('24 Sep 2020');
+    pages.facilitiesPage.coverEndDateCell(1).contains('24 Sep 2020');
+    pages.facilitiesPage.coverEndDateCell(2).contains(dateConstants.oneMonthFormattedShort);
+    pages.facilitiesPage.coverEndDateCell(3).contains(dateConstants.oneMonthFormattedShort);
   });
 
   it('sorts all columns based on Cover End Date column (DESC)', () => {
     cy.visit(relative('/facilities'));
-    cy.url().should('eq', relative('/facilities'));
+    cy.url().should('eq', relative('/facilities/0'));
 
-    page.facilitiesPage.coverEndDateColumn().find('button').dblclick();
+    // click once for `ascending` order
+    pages.facilitiesPage.facilitiesTable.headings.coverEndDateSortButton().click();
+    // click again for `descending` order
+    pages.facilitiesPage.facilitiesTable.headings.coverEndDateSortButton().click();
 
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('[data-cy="facility__coverEndDate"]').should('contain', dateConstants.oneMonthFormattedShort);
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('[data-cy="facility__coverEndDate"]').should('contain', dateConstants.oneMonthFormattedShort);
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
-    cy.get('@row3').find('[data-cy="facility__coverEndDate"]').should('contain', '24 Sep 2020');
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(4).as('row4');
-    cy.get('@row4').find('[data-cy="facility__coverEndDate"]').should('contain', '24 Sep 2020');
+    pages.facilitiesPage.coverEndDateCell(0).contains(dateConstants.oneMonthFormattedShort);
+    pages.facilitiesPage.coverEndDateCell(1).contains(dateConstants.oneMonthFormattedShort);
+    pages.facilitiesPage.coverEndDateCell(2).contains('24 Sep 2020');
+    pages.facilitiesPage.coverEndDateCell(3).contains('24 Sep 2020');
   });
 
   it('sorts all columns based on Facility Stage column (ASC)', () => {
     cy.visit(relative('/facilities'));
-    cy.url().should('eq', relative('/facilities'));
+    cy.url().should('eq', relative('/facilities/0'));
 
-    page.facilitiesPage.facilityStageColumn().find('button').click();
+    pages.facilitiesPage.facilitiesTable.headings.facilityStageSortButton().click();
 
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('[data-cy="facility__facilityStage"]').should('contain', 'Issued');
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('[data-cy="facility__facilityStage"]').should('contain', 'Issued');
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
-    cy.get('@row3').find('[data-cy="facility__facilityStage"]').should('contain', 'Unissued');
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(4).as('row4');
-    cy.get('@row4').find('[data-cy="facility__facilityStage"]').should('contain', 'Unissued');
+    pages.facilitiesPage.facilityStageCell(0).contains('Issued');
+    pages.facilitiesPage.facilityStageCell(1).contains('Issued');
+    pages.facilitiesPage.facilityStageCell(2).contains('Unissued');
+    pages.facilitiesPage.facilityStageCell(3).contains('Unissued');
   });
 
   it('sorts all columns based on Facility Stage column (DESC)', () => {
     cy.visit(relative('/facilities'));
-    cy.url().should('eq', relative('/facilities'));
+    cy.url().should('eq', relative('/facilities/0'));
 
-    page.facilitiesPage.facilityStageColumn().find('button').dblclick();
+    // click once for `ascending` order
+    pages.facilitiesPage.facilitiesTable.headings.facilityStageSortButton().click();
+    // click again for `descending` order
+    pages.facilitiesPage.facilitiesTable.headings.facilityStageSortButton().click();
 
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('[data-cy="facility__facilityStage"]').should('contain', 'Unissued');
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('[data-cy="facility__facilityStage"]').should('contain', 'Unissued');
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
-    cy.get('@row3').find('[data-cy="facility__facilityStage"]').should('contain', 'Issued');
-
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(4).as('row4');
-    cy.get('@row4').find('[data-cy="facility__facilityStage"]').should('contain', 'Issued');
+    pages.facilitiesPage.facilityStageCell(0).contains('Unissued');
+    pages.facilitiesPage.facilityStageCell(1).contains('Unissued');
+    pages.facilitiesPage.facilityStageCell(2).contains('Issued');
+    pages.facilitiesPage.facilityStageCell(3).contains('Issued');
   });
 });

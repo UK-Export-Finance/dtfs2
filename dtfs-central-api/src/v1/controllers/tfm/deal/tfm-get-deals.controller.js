@@ -1,70 +1,40 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const escapeStringRegexp = require('escape-string-regexp');
 const { isValid, format } = require('date-fns');
-const { getDateFromSearchString } = require("../../../../helpers/getDateFromSearchString");
-const db = require('../../../../drivers/db-client').default;
-const CONSTANTS = require('../../../../constants');
-const getObjectPropertyValueFromStringPath = require('../../../../utils/getObjectPropertyValueFromStringPath');
-const mapDataModel = require('../../../../mapping/mapDataModel');
-const setEmptyIfNull = require('../../../../utils/setEmptyIfNull');
-const {
-  isTimestampField,
-  dayStartAndEndTimestamps,
-} = require('./tfm-get-deals-date-helpers');
+const { getDateFromSearchString } = require('../../../../helpers/getDateFromSearchString');
+const { mongoDbClient: db } = require('../../../../drivers/db-client');
+const { DEALS } = require('../../../../constants');
+const { isTimestampField, dayStartAndEndTimestamps } = require('./tfm-get-deals-date-helpers');
+const { getBSSProperty } = require('../../../../mapping/mapDataModel');
 
-const sortDeals = (deals, sortBy) =>
-  deals.sort((xDeal, yDeal) => {
-    const xField = setEmptyIfNull(
-      getObjectPropertyValueFromStringPath(
-        xDeal,
-        mapDataModel(xDeal, sortBy.field),
-      ),
-    );
-
-    const yField = setEmptyIfNull(
-      getObjectPropertyValueFromStringPath(
-        yDeal,
-        mapDataModel(yDeal, sortBy.field),
-      ),
-    );
-
-    if (sortBy.order === CONSTANTS.DEALS.SORT_BY.ASCENDING) {
-      if (xField > yField) {
-        return 1;
-      }
-
-      if (yField > xField) {
-        return -1;
-      }
-    }
-
-    if (sortBy.order === CONSTANTS.DEALS.SORT_BY.DESCENDING) {
-      if (xField > yField) {
-        return -1;
-      }
-
-      if (yField > xField) {
-        return 1;
-      }
-    }
-
-    return 0;
-  });
-
-const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
+const findDeals = async (queryParameters) => {
   const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
 
-  let dealsArray;
-  let deals;
+  const { searchString, sortBy, fieldQueries, pagesize, page = 0 } = queryParameters;
+
+  const pageNumber = Number(page);
+
+  let databaseQuery = {};
+
+  let nonBssField;
+  let bssField;
+
+  const selectedField = {};
+  if (sortBy) {
+    nonBssField = sortBy.field;
+    bssField = getBSSProperty(nonBssField);
+
+    selectedField.sortId = sortBy.order === DEALS.SORT_BY.ASCENDING ? 1 : -1;
+  }
 
   /*
    * Query/filter deals by search string input
    * - Only certain fields are supported. I.e, what is displayed in the UI.
-  */
+   */
   if (searchString) {
     const searchStringRegex = escapeStringRegexp(searchString);
 
-    const query = {
+    databaseQuery = {
       $or: [
         { 'dealSnapshot.details.ukefDealId': { $regex: searchStringRegex, $options: 'i' } }, // BSS
         { 'dealSnapshot.ukefDealId': { $regex: searchStringRegex, $options: 'i' } }, // GEF
@@ -84,106 +54,126 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
       // tfm.dateReceived is stored in the database in the form `dd-MM-yyyy`
       const dateString = format(date, 'dd-MM-yyyy');
       const dateStringEscaped = escapeStringRegexp(dateString);
-      query.$or.push({
+      databaseQuery.$or.push({
         'tfm.dateReceived': { $regex: dateStringEscaped, $options: 'i' },
       });
     }
+  }
 
-    dealsArray = await dealsCollection.find(query).toArray();
-  } else {
-    let query;
-
+  if (!searchString && fieldQueries && fieldQueries.length) {
     /*
-    * Query/filter deals by any custom field
-    * - I.e, date/timestamp fields, deals created by X bank.
-    * - All single value string fields are supported.
-    * - However, only specific timestamp fields are supported.
-    * - This is as per business requirements. More timestamp fields can be easily added if required.
-    * - Timestamp field queries are currently only used by an external system (Cedar).
-    */
-    if (fieldQueries && fieldQueries.length) {
-      fieldQueries.forEach((field) => {
-        const {
-          name: fieldName,
-          value: fieldValue,
-        } = field;
+     * Query/filter deals by any custom field
+     * - I.e, date/timestamp fields, deals created by X bank.
+     * - All single value string fields are supported.
+     * - However, only specific timestamp fields are supported.
+     * - This is as per business requirements. More timestamp fields can be easily added if required.
+     * - Timestamp field queries are currently only used by an external system (Cedar).
+     */
+    fieldQueries.forEach((field) => {
+      const { name: fieldName, value: fieldValue } = field;
 
-        if (isTimestampField(fieldName)) {
-          // NOTE: A deal timestamp field could be at any time of the day.
-          // Given a date from fieldQueries in the format 'dd-MM-yyyy', we:
-          // 1) generate timestamps for the start and end of that day
-          // 2) check that the requested timestamp field falls within this particular day;
-          // ...with the use of $gte and $lte.
-          // Example:
-          // - given: '01-11-2021'
-          // - dayStartTimestamp will be: 1636329600000
-          // - dayEndTimestamp will be: 1636415999999
-          // - if a deal has e.g submissionDate timestamp that is within this day (e.g 1636378182935.0)
-          // the deal will be returned in the MongoDB query.
+      if (isTimestampField(fieldName)) {
+        // NOTE: A deal timestamp field could be at any time of the day.
+        // Given a date from fieldQueries in the format 'dd-MM-yyyy', we:
+        // 1) generate timestamps for the start and end of that day
+        // 2) check that the requested timestamp field falls within this particular day;
+        // ...with the use of $gte and $lte.
+        // Example:
+        // - given: '01-11-2021'
+        // - dayStartTimestamp will be: 1636329600000
+        // - dayEndTimestamp will be: 1636415999999
+        // - if a deal has e.g submissionDate timestamp that is within this day (e.g 1636378182935.0)
+        // the deal will be returned in the MongoDB query.
 
-          const {
-            dayStartTimestamp,
-            dayEndTimestamp,
-          } = dayStartAndEndTimestamps(fieldValue);
+        const { dayStartTimestamp, dayEndTimestamp } = dayStartAndEndTimestamps(fieldValue);
 
-          query = {
-            ...query,
-            [fieldName]: {
-              $gte: dayStartTimestamp,
-              $lte: dayEndTimestamp,
+        databaseQuery = {
+          ...databaseQuery,
+          [fieldName]: {
+            $gte: dayStartTimestamp,
+            $lte: dayEndTimestamp,
+          },
+        };
+      } else {
+        databaseQuery = {
+          ...databaseQuery,
+          [fieldName]: {
+            $eq: fieldValue,
+          },
+        };
+      }
+    });
+  }
+  const doc = await dealsCollection
+    .aggregate([
+      {
+        $match: databaseQuery,
+      },
+      {
+        $addFields: {
+          sortId: {
+            $cond: {
+              if: { $eq: ['$dealSnapshot.dealType', DEALS.DEAL_TYPE.BSS_EWCS] },
+              then: sortBy ? `$${bssField}` : undefined,
+              else: sortBy ? `$${nonBssField}` : undefined,
             },
-          };
-        } else {
-          query = {
-            ...query,
-            [fieldName]: {
-              $eq: fieldValue,
-            },
-          };
-        }
-      });
-    }
-    dealsArray = await dealsCollection.find(query).toArray();
+          },
+        },
+      },
+      {
+        $sort: {
+          ...selectedField,
+          updatedAt: -1,
+          _id: 1,
+        },
+      },
+      {
+        $unset: 'sortId',
+      },
+      {
+        $facet: {
+          count: [{ $count: 'total' }],
+          deals: [{ $skip: pageNumber * (pagesize ?? 0) }, ...(pagesize ? [{ $limit: parseInt(pagesize, 10) }] : [])],
+        },
+      },
+      { $unwind: '$count' },
+      {
+        $project: {
+          count: '$count.total',
+          deals: true,
+        },
+      },
+    ])
+    .toArray();
+
+  if (!doc.length) {
+    const pagination = {
+      totalItems: 0,
+      currentPage: pageNumber,
+      totalPages: 1,
+    };
+    return { deals: [], pagination };
   }
+  const { count, deals } = doc[0];
 
-  deals = dealsArray;
+  const pagination = {
+    totalItems: count,
+    currentPage: pageNumber,
+    totalPages: pagesize ? Math.ceil(count / pagesize) : 1,
+  };
 
-  if (sortBy) {
-    deals = sortDeals(deals, sortBy);
-  }
-
-  if (callback) {
-    callback(deals);
-  }
-
-  return deals;
+  return { deals, pagination };
 };
-exports.findDeals = findDeals;
 
 exports.findDealsGet = async (req, res) => {
-  let searchStr;
-  let sortByObj;
-  let fieldQueries;
+  const queryParameters = { ...req.query, fieldQueries: req.query?.byField };
 
-  if (req.body?.queryParams) {
-    if (req.body.queryParams.searchString) {
-      searchStr = req.body.queryParams.searchString;
-    }
-
-    if (req.body.queryParams.byField) {
-      fieldQueries = req.body.queryParams.byField;
-    }
-
-    if (req.body.queryParams.sortBy) {
-      sortByObj = req.body.queryParams.sortBy;
-    }
-  }
-
-  const deals = await findDeals(searchStr, sortByObj, fieldQueries);
+  const { deals, pagination } = await findDeals(queryParameters);
 
   if (deals) {
     return res.status(200).send({
       deals,
+      pagination,
     });
   }
 

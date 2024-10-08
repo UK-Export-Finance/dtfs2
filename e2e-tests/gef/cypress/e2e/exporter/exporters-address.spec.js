@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { backLink, errorSummary, headingCaption, mainHeading } from '../partials';
 import exportersAddress from '../pages/exporters-address';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import { POSTCODE } from '../../fixtures/constants';
@@ -26,9 +27,9 @@ context('Exporters Address Page', () => {
 
   describe('Visiting page', () => {
     it('displays the correct elements', () => {
-      exportersAddress.backLink();
-      exportersAddress.headingCaption();
-      exportersAddress.mainHeading();
+      backLink();
+      headingCaption();
+      mainHeading();
       exportersAddress.companyNameTitle();
       exportersAddress.registeredCompanyAddressTitle();
       exportersAddress.changeDetails();
@@ -37,7 +38,7 @@ context('Exporters Address Page', () => {
     });
 
     it('redirects user to companies house page when clicking on Back Link', () => {
-      exportersAddress.backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/companies-house`));
     });
   });
@@ -72,22 +73,22 @@ context('Exporters Address Page', () => {
 
   describe('Clicking on Continue button', () => {
     it('shows error message if no radio button has been selected', () => {
-      exportersAddress.continueButton().click();
-      exportersAddress.errorSummary();
+      cy.clickContinueButton();
+      errorSummary();
       exportersAddress.fieldError();
     });
 
     it('redirects user to About exporter page if they select the No radio button', () => {
       exportersAddress.noRadioButton().click();
-      exportersAddress.continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/about-exporter`));
     });
 
     it('shows error message if user doesn`t fill in postcode', () => {
       exportersAddress.yesRadioButton().click();
       exportersAddress.correspondenceAddress().should('be.visible');
-      exportersAddress.continueButton().click();
-      exportersAddress.errorSummary();
+      cy.clickContinueButton();
+      errorSummary();
       exportersAddress.postcodeError();
       exportersAddress.yesRadioButton().should('be.checked');
     });
@@ -95,7 +96,7 @@ context('Exporters Address Page', () => {
     it('shows error message if user enter bad postcode and a valid manual address entry link', () => {
       exportersAddress.yesRadioButton().click();
       exportersAddress.correspondenceAddress().type('1');
-      exportersAddress.continueButton().click();
+      cy.clickContinueButton();
       exportersAddress.postcodeError();
       exportersAddress.manualAddressEntryLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/enter-exporters-correspondence-address`));
@@ -104,7 +105,7 @@ context('Exporters Address Page', () => {
     it('redirects user to Select exporters correspondence address page if form filled in correctly', () => {
       exportersAddress.yesRadioButton().click();
       exportersAddress.correspondenceAddress().type(POSTCODE.VALID);
-      exportersAddress.continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/select-exporters-correspondence-address`));
     });
   });

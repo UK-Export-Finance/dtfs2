@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { HEADERS } = require('@ukef/dtfs2-common');
 const { isValidMongoId, isValidBankId, isValidReportPeriod } = require('./validation/validateIds');
 
 require('dotenv').config();
@@ -7,11 +8,11 @@ const { DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY, TFM_API_URL, TFM_API_KEY } =
 
 const headers = {
   central: {
-    'Content-Type': 'application/json',
+    [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     'x-api-key': DTFS_CENTRAL_API_KEY,
   },
   tfm: {
-    'Content-Type': 'application/json',
+    [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     'x-api-key': TFM_API_KEY,
   },
 };
@@ -31,12 +32,12 @@ const findOneDeal = async (dealId) => {
 
     return response.data.deal;
   } catch (error) {
-    console.error('Unable to find one deal %s', error);
+    console.error('Unable to find one deal %o', error);
     return false;
   }
 };
 
-const createDeal = async (deal, user) => {
+const createDeal = async (deal, user, auditDetails) => {
   try {
     return await axios({
       method: 'post',
@@ -45,6 +46,7 @@ const createDeal = async (deal, user) => {
       data: {
         deal,
         user,
+        auditDetails,
       },
     });
   } catch ({ response }) {
@@ -52,7 +54,16 @@ const createDeal = async (deal, user) => {
   }
 };
 
-const updateDeal = async (dealId, dealUpdate, user) => {
+/**
+ * Sends a request to DTFS Central to update a deal
+ * @param {object} params - The parameters for updating the deal.
+ * @param {string} params.dealId - The ID of the deal being updated.
+ * @param {object} params.dealUpdate - The update to be made to the deal.
+ * @param {object} params.user - The user making the changes.
+ * @param {object} params.auditDetails - The audit details for the update.
+ * @returns {Promise<object | false>} The updated deal object.
+ */
+const updateDeal = async ({ dealId, dealUpdate, user, auditDetails }) => {
   try {
     if (!isValidMongoId(dealId)) {
       console.error('Update deal API failed for deal id %s', dealId);
@@ -66,17 +77,18 @@ const updateDeal = async (dealId, dealUpdate, user) => {
       data: {
         dealUpdate,
         user,
+        auditDetails,
       },
     });
 
     return response.data;
   } catch (error) {
-    console.error('Unable to update deal %s', error);
+    console.error('Unable to update deal %o', error);
     return false;
   }
 };
 
-const deleteDeal = async (dealId) => {
+const deleteDeal = async (dealId, auditDetails) => {
   try {
     if (!isValidMongoId(dealId)) {
       console.error('Delete deal API failed for deal id %s', dealId);
@@ -87,14 +99,17 @@ const deleteDeal = async (dealId) => {
       method: 'delete',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
       headers: headers.central,
+      data: {
+        auditDetails,
+      },
     });
   } catch (error) {
-    console.error('Unable to delete deal %s', error);
+    console.error('Unable to delete deal %o', error);
     return { status: error?.code || 500, data: 'Error when deleting deal' };
   }
 };
 
-const addDealComment = async (dealId, commentType, comment) => {
+const addDealComment = async (dealId, commentType, comment, auditDetails) => {
   try {
     if (!isValidMongoId(dealId)) {
       console.error('Add deal comment API failed for deal id %s', dealId);
@@ -108,17 +123,18 @@ const addDealComment = async (dealId, commentType, comment) => {
       data: {
         commentType,
         comment,
+        auditDetails,
       },
     });
 
     return response.data;
   } catch (error) {
-    console.error('Unable to add deal comment %s', error);
+    console.error('Unable to add deal comment %o', error);
     return false;
   }
 };
 
-const createFacility = async (facility, user) => {
+const createFacility = async (facility, user, auditDetails) => {
   try {
     return await axios({
       method: 'post',
@@ -127,6 +143,7 @@ const createFacility = async (facility, user) => {
       data: {
         facility,
         user,
+        auditDetails,
       },
     });
   } catch ({ response }) {
@@ -134,7 +151,7 @@ const createFacility = async (facility, user) => {
   }
 };
 
-const createMultipleFacilities = async (facilities, dealId, user) => {
+const createMultipleFacilities = async (facilities, dealId, user, auditDetails) => {
   try {
     return await axios({
       method: 'post',
@@ -144,6 +161,7 @@ const createMultipleFacilities = async (facilities, dealId, user) => {
         facilities,
         dealId,
         user,
+        auditDetails,
       },
     });
   } catch ({ response }) {
@@ -166,12 +184,12 @@ const findOneFacility = async (facilityId) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to find one facility %s', error);
+    console.error('Unable to find one facility %o', error);
     return false;
   }
 };
 
-const updateFacility = async (facilityId, facility, user) => {
+const updateFacility = async (facilityId, facility, user, auditDetails) => {
   try {
     if (!isValidMongoId(facilityId)) {
       console.error('Update facility API failed for facility id %s', facilityId);
@@ -183,17 +201,18 @@ const updateFacility = async (facilityId, facility, user) => {
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
       headers: headers.central,
       data: {
-        ...facility,
+        facilityUpdate: facility,
         user,
+        auditDetails,
       },
     });
   } catch (error) {
-    console.error('Unable to update facility %s', error);
+    console.error('Unable to update facility %o', error);
     return { status: error?.code || 500, data: 'Error when updating facility' };
   }
 };
 
-const deleteFacility = async (facilityId, user) => {
+const deleteFacility = async (facilityId, user, auditDetails) => {
   try {
     if (!isValidMongoId(facilityId)) {
       console.error('Delete facility API failed for facility id %s', facilityId);
@@ -206,10 +225,11 @@ const deleteFacility = async (facilityId, user) => {
       headers: headers.central,
       data: {
         user,
+        auditDetails,
       },
     });
   } catch (error) {
-    console.error('Unable to delete facility %s', error);
+    console.error('Unable to delete facility %o', error);
     return { status: error?.response?.status || 500, data: 'Error when deleting facility' };
   }
 };
@@ -244,8 +264,31 @@ const findLatestGefMandatoryCriteria = async () => {
 
     return { status: 200, data: response.data };
   } catch (error) {
-    console.error('Unable to get the latest mandatory criteria for GEF deals %s', error);
+    console.error('Unable to get the latest mandatory criteria for GEF deals %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to get latest mandatory criteria for GEF deals' };
+  }
+};
+
+/**
+ * Validates utilisation report data returning any errors to display to the user
+ * @param {import('@ukef/dtfs2-common').UtilisationReportCsvRowData[]} reportData
+ * @returns {Promise<import('./api-response-types').ValidateUtilisationReportDataResponseBody>} Object containing the validation errors to display to the user
+ */
+const validateUtilisationReportData = async (reportData) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/report-data-validation`,
+      headers: headers.central,
+      data: {
+        reportData,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to validate utilisation report data %o', error);
+    throw error;
   }
 };
 
@@ -273,13 +316,13 @@ const saveUtilisationReport = async (reportId, reportData, user, fileInfo) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to save utilisation report', error);
+    console.error('Unable to save utilisation report %o', error);
     throw error;
   }
 };
 
 /**
- * @typedef {Object} GetUtilisationReportsOptions
+ * @typedef {object} GetUtilisationReportsOptions
  * @property {import('../types/utilisation-reports').ReportPeriod} [reportPeriod] - a report period to filter reports by
  * @property {boolean} [excludeNotReceived] - whether or not to exclude reports which have not been uploaded
  */
@@ -301,13 +344,13 @@ const getUtilisationReports = async (bankId, options) => {
 
   try {
     if (!isValidBankId(bankId)) {
-      console.error('Get utilisation reports failed with the following bank ID: %s', bankId);
-      throw new Error('Invalid bank ID provided: %s', bankId);
+      console.error('Get utilisation reports failed with the following bank ID %s', bankId);
+      throw new Error(`Invalid bank ID provided ${bankId}`);
     }
 
     if (reportPeriod && !isValidReportPeriod(reportPeriod)) {
-      console.error('Get utilisation reports failed with the following report period: %s', reportPeriod);
-      throw new Error('Invalid report period provided: %s', reportPeriod);
+      console.error('Get utilisation reports failed with the following report period %s', reportPeriod);
+      throw new Error(`Invalid report period provided ${reportPeriod}`);
     }
 
     if (excludeNotReceived && typeof excludeNotReceived !== 'boolean') {
@@ -323,7 +366,7 @@ const getUtilisationReports = async (bankId, options) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to get previous utilisation reports: %s', error);
+    console.error('Unable to get previous utilisation reports %o', error);
     throw error;
   }
 };
@@ -346,24 +389,23 @@ const getUtilisationReportById = async (id) => {
   }
 };
 
+/**
+ * Call the central API to get a bank
+ * @param {string} bankId
+ * @returns {Promise<import('./api-response-types').BankResponse>} response of API call
+ */
 const getBankById = async (bankId) => {
-  try {
-    if (!isValidBankId(bankId)) {
-      console.error('Get bank failed with the following bank ID %s', bankId);
-      return false;
-    }
-
-    const response = await axios({
-      method: 'get',
-      url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}`,
-      headers: headers.central,
-    });
-
-    return { status: 200, data: response.data };
-  } catch (error) {
-    console.error('Unable to get bank by ID %s', error);
-    return { status: error?.response?.status || 500, data: 'Failed to get bank by ID' };
+  if (!isValidBankId(bankId)) {
+    throw new Error(`Invalid bank id: ${bankId}`);
   }
+
+  const response = await axios({
+    method: 'get',
+    url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}`,
+    headers: headers.central,
+  });
+
+  return response.data;
 };
 
 /**
@@ -386,7 +428,7 @@ const getAllBanks = async () => {
 /**
  * Call the central API to get the next report period for a bank
  * @param {string} bankId
- * @returns {object} response of API call or wrapped error response
+ * @returns {Promise<object>} response of API call or wrapped error response
  */
 const getNextReportPeriodByBankId = async (bankId) => {
   try {
@@ -421,6 +463,7 @@ module.exports = {
   deleteFacility,
   tfmDealSubmit,
   findLatestGefMandatoryCriteria,
+  validateUtilisationReportData,
   saveUtilisationReport,
   getUtilisationReports,
   getUtilisationReportById,

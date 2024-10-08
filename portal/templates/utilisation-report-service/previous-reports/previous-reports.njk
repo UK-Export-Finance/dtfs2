@@ -1,48 +1,47 @@
 {% extends "index.njk" %}
 {% from "moj/components/side-navigation/macro.njk" import mojSideNavigation %}
-{% block pageTitle %}
-    Previous Reports
-{% endblock %}
+{% import "./_macros/report-reconciliation-status.njk" as reconciliationStatus %}
+{% block pageTitle %}Previous Reports{% endblock %}
 {% block content %}
-    {% if not navItems.length %}
-        <h1 class="govuk-heading-l" data-cy="main-heading">
-            Download previous GEF reports
-        </h1>
-        <p class="govuk-body" data-cy="paragraph">No reports have been submitted.</p>
-    {% else %}
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-quarter">
-                {{ mojSideNavigation({
-                    label: 'Side navigation',
-                    items: navItems,
-                    attributes: {
-                    'data-cy': 'container-side-navigation' }
+  {% if not navItems.length %}
+    <h1 class="govuk-heading-l" data-cy="main-heading">Download previous GEF reports</h1>
+    <p class="govuk-body" data-cy="paragraph">No reports have been submitted.</p>
+  {% else %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-quarter">
+        {{ mojSideNavigation({
+                label: 'Side navigation',
+                items: navItems,
+                attributes: {
+                'data-cy': 'container-side-navigation' }
                 }) }}
-            </div>
-            <div class="govuk-grid-column-three-quarters">
-                <h1 class="govuk-heading-l" data-cy="main-heading">
-                    Download {{ year }} GEF reports
-                </h1>
-                {% if not reportLinks.length %}
-                    <p class="govuk-body" data-cy="paragraph">No reports have been submitted.</p>
-                {% else %}
-                    <p class="govuk-body" data-cy="paragraph">Reports are downloaded as CSV files.</p>
-                    <ul class="govuk-list">
-                        {% for reportLink in reportLinks %}
-                            <li>
-                                <a
-                                  class="govuk-link"
-                                  href="{{ reportLink.path }}"
-                                  data-cy="list-item-link-{{ reportLink.month }}"
-                                  aria-label="{{ reportLink.text }} GEF report"
-                                >
-                                    {{ reportLink.text }} GEF report
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            </div>
-        </div>
-    {% endif %}
+      </div>
+      <div class="govuk-grid-column-three-quarters">
+        <h1 class="govuk-heading-l" data-cy="main-heading">Download {{ year }} GEF reports</h1>
+        {% if not reports.length %}
+          <p class="govuk-body" data-cy="paragraph">No reports have been submitted.</p>
+        {% else %}
+          <p class="govuk-body" data-cy="paragraph">Reports are downloaded as CSV files.</p>
+          <ul class="govuk-list task-list__items">
+            {% for report in reports %}
+              <li class="task-list__item">
+                <span class="task-list__task-name">
+                  <a class="govuk-link"
+                     href="{{ report.downloadPath }}"
+                     data-cy="list-item-link-{{ report.month }}"
+                     aria-label="{{ report.linkText }} GEF report">{{ report.linkText }} GEF report</a>
+                </span>
+                <span class="task-list__task-tag">
+                  {{ reconciliationStatus.render({
+                                    status: report.status,
+                                    displayStatus: report.displayStatus
+                                    }) }}
+                </span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
 {% endblock %}

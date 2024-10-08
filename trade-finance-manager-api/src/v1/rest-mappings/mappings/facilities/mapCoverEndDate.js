@@ -4,7 +4,7 @@ const { formatYear } = require('../../../../utils/date');
 const { findLatestCompletedAmendment } = require('../../helpers/amendment.helpers');
 
 const mapCoverEndDate = (day, month, year, facility) => {
-  const hasCoverEndDate = (hasValue(day) && hasValue(month) && hasValue(year));
+  const hasCoverEndDate = hasValue(day) && hasValue(month) && hasValue(year);
   if (hasCoverEndDate) {
     let dayToUse = day;
     let monthToUse = month;
@@ -13,15 +13,13 @@ const mapCoverEndDate = (day, month, year, facility) => {
     // if there are amendments present
     if (facility?.amendments?.length) {
       // returns latest completed tfm object from amendment
-      const latestAmendmentTFM = findLatestCompletedAmendment(facility.amendments);
+      const { coverEndDate: latestAmendmentCoverEndDate } = findLatestCompletedAmendment(facility.amendments);
       // if coverEndDate as part of amendment changes
-      if (latestAmendmentTFM?.coverEndDate) {
-        const { coverEndDate } = latestAmendmentTFM;
-
+      if (latestAmendmentCoverEndDate) {
         // maps new coverEndDate from unix timestamp in amendment
-        dayToUse = format(fromUnixTime(coverEndDate), 'dd');
-        monthToUse = format(fromUnixTime(coverEndDate), 'MM');
-        yearToUse = format(fromUnixTime(coverEndDate), 'yyyy');
+        dayToUse = format(fromUnixTime(latestAmendmentCoverEndDate), 'dd');
+        monthToUse = format(fromUnixTime(latestAmendmentCoverEndDate), 'MM');
+        yearToUse = format(fromUnixTime(latestAmendmentCoverEndDate), 'yyyy');
       }
     }
 

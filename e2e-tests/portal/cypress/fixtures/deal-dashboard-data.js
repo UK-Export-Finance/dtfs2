@@ -9,10 +9,7 @@ module.exports = [
     bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
     submissionDetails: {
       status: 'Incomplete',
@@ -21,7 +18,8 @@ module.exports = [
       status: 'Incomplete',
       version: 7,
     },
-  }, {
+  },
+  {
     submissionType: 'Automatic Inclusion Notice',
     bankInternalRefName: 'abc-2-def',
     additionalRefName: 'Additional reference name example',
@@ -29,15 +27,13 @@ module.exports = [
     bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
     submissionDetails: {
       status: 'Not started',
     },
-  }, {
+  },
+  {
     submissionType: 'Automatic Inclusion Notice',
     bankInternalRefName: 'abc-3-def',
     additionalRefName: 'Additional reference name example',
@@ -45,10 +41,7 @@ module.exports = [
     bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
     details: {
       submissionDate: now,
@@ -56,7 +49,8 @@ module.exports = [
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
-  }, {
+  },
+  {
     submissionType: 'Manual Inclusion Notice',
     bankInternalRefName: 'abc-4-def',
     additionalRefName: 'Additional reference name example',
@@ -65,10 +59,7 @@ module.exports = [
     bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
     details: {
       submissionDate: now,
@@ -76,15 +67,18 @@ module.exports = [
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
-    comments: [{
-      user: {
-        firstname: 'bob',
-        surname: 'builder',
+    comments: [
+      {
+        user: {
+          firstname: 'bob',
+          surname: 'builder',
+        },
+        timestamp: '2020 07 01 11:12:08:194 +0100',
+        text: 'to me',
       },
-      timestamp: '2020 07 01 11:12:08:194 +0100',
-      text: 'to me',
-    }],
-  }, {
+    ],
+  },
+  {
     submissionType: 'Manual Inclusion Application',
     bankInternalRefName: 'abc-5-def',
     additionalRefName: 'Additional reference name example',
@@ -93,10 +87,7 @@ module.exports = [
     bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
     details: {
       submissionDate: now,
@@ -104,15 +95,18 @@ module.exports = [
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
-    comments: [{
-      user: {
-        firstname: 'bob',
-        surname: 'builder',
+    comments: [
+      {
+        user: {
+          firstname: 'bob',
+          surname: 'builder',
+        },
+        timestamp: '2020 07 01 11:12:08:194 +0100',
+        text: 'to me',
       },
-      timestamp: '2020 07 01 11:12:08:194 +0100',
-      text: 'to me',
-    }],
-  }, {
+    ],
+  },
+  {
     bankInternalRefName: 'abc-6-def',
     additionalRefName: 'Additional reference name example',
     status: 'Abandoned',
@@ -120,10 +114,7 @@ module.exports = [
     bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
     details: {
       submissionDate: now,
@@ -131,7 +122,8 @@ module.exports = [
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
-  }, {
+  },
+  {
     bankInternalRefName: 'abc-7-def',
     additionalRefName: 'Additional reference name example',
     status: 'Submitted',
@@ -139,23 +131,23 @@ module.exports = [
     bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
-    comments: [{
-      user: {
-        firstname: 'bob',
-        surname: 'builder',
+    comments: [
+      {
+        user: {
+          firstname: 'bob',
+          surname: 'builder',
+        },
+        timestamp: '2020 07 01 11:12:08:194 +0100',
+        text: 'to me',
       },
-      timestamp: '2020 07 01 11:12:08:194 +0100',
-      text: 'to me',
-    }],
-  }, {
+    ],
+  },
+  {
     bankInternalRefName: 'abc-8-def',
     additionalRefName: 'Additional reference name example',
     status: 'Submitted',
@@ -163,23 +155,23 @@ module.exports = [
     bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
-    comments: [{
-      user: {
-        firstname: 'bob',
-        surname: 'builder',
+    comments: [
+      {
+        user: {
+          firstname: 'bob',
+          surname: 'builder',
+        },
+        timestamp: '2020 07 01 11:12:08:194 +0100',
+        text: 'to me',
       },
-      timestamp: '2020 07 01 11:12:08:194 +0100',
-      text: 'to me',
-    }],
-  }, {
+    ],
+  },
+  {
     bankInternalRefName: 'abc-9-def',
     additionalRefName: 'Additional reference name example',
     status: "Ready for Checker's approval",
@@ -187,23 +179,23 @@ module.exports = [
     bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
-    comments: [{
-      user: {
-        firstname: 'bob',
-        surname: 'builder',
+    comments: [
+      {
+        user: {
+          firstname: 'bob',
+          surname: 'builder',
+        },
+        timestamp: '2020 07 01 11:12:08:194 +0100',
+        text: 'to me',
       },
-      timestamp: '2020 07 01 11:12:08:194 +0100',
-      text: 'to me',
-    }],
-  }, {
+    ],
+  },
+  {
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Additional reference name example',
     status: 'Acknowledged',
@@ -211,60 +203,52 @@ module.exports = [
     bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
-  }, {
+  },
+  {
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Additional reference name example',
     status: 'Draft',
     bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
-  }, {
+  },
+  {
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Additional reference name example',
     status: 'Draft',
     bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
-  }, {
+  },
+  {
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Additional reference name example',
     status: 'Draft',
     bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
-  }, {
+  },
+  {
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Additional reference name example',
     status: 'Acknowledged',
@@ -272,15 +256,13 @@ module.exports = [
     bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
-  }, {
+  },
+  {
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Additional reference name example',
     status: 'Accepted by UKEF (without conditions)',
@@ -288,15 +270,13 @@ module.exports = [
     bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
-  }, {
+  },
+  {
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Additional reference name example',
     status: 'Rejected by UKEF',
@@ -304,15 +284,13 @@ module.exports = [
     bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
-  }, {
+  },
+  {
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Additional reference name example',
     status: 'Rejected by UKEF',
@@ -320,15 +298,13 @@ module.exports = [
     bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
-  }, {
+  },
+  {
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Additional reference name example',
     status: "Further Maker's input required",
@@ -336,15 +312,13 @@ module.exports = [
     bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
-  }, {
+  },
+  {
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Additional reference name example',
     status: 'Accepted by UKEF (without conditions)',
@@ -352,15 +326,13 @@ module.exports = [
     bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
-  }, {
+  },
+  {
     bankInternalRefName: 'abc 2 def',
     additionalRefName: 'Additional reference name example',
     status: 'Accepted by UKEF (with conditions)',
@@ -368,15 +340,13 @@ module.exports = [
     bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',
     },
-  }, {
+  },
+  {
     bankInternalRefName: 'abc 2 def',
     additionalRefName: 'Additional reference name example',
     status: 'Abandoned',
@@ -384,10 +354,7 @@ module.exports = [
     bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
     submissionDetails: {
       'supplier-name': 'Supplier name 2',

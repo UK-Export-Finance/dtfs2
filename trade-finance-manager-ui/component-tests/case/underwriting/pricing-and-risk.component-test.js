@@ -1,4 +1,4 @@
-const componentRenderer = require('../../componentRenderer');
+const { componentRenderer } = require('../../componentRenderer');
 
 const page = '../templates/case/underwriting/pricing-and-risk/pricing-and-risk.njk';
 

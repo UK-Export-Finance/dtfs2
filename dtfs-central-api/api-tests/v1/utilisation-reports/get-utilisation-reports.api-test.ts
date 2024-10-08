@@ -1,17 +1,14 @@
 import { Response } from 'supertest';
-import { ObjectId } from 'mongodb';
 import { IsoDateTimeStamp, PortalUser, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import axios from 'axios';
-import app from '../../../src/createApp';
-import createApi from '../../api';
+import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { GetUtilisationReportResponse } from '../../../src/types/utilisation-reports';
-import mongoDbClient from '../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
+import { aPortalUser } from '../../../test-helpers';
 
-const api = createApi(app);
-
-const getUrl = (bankId: string) => `/v1/bank/${bankId}/utilisation-reports`;
+console.error = jest.fn();
 
 const saveReportsToDatabase = async (...reports: UtilisationReportEntity[]): Promise<UtilisationReportEntity[]> =>
   await SqlDbHelper.saveNewEntries('UtilisationReport', reports);
@@ -28,12 +25,12 @@ interface CustomSuccessResponse extends Response {
   body: UtilisationReportResponse[];
 }
 
-describe('GET /v1/bank/:bankId/utilisation-reports', () => {
-  const portalUser = {
-    _id: new ObjectId(),
-    firstname: 'Test',
-    surname: 'User',
-  } as PortalUser;
+const BASE_URL = '/v1/bank/:bankId/utilisation-reports';
+
+describe(`GET ${BASE_URL}`, () => {
+  const getUrl = (bankId: string) => `/v1/bank/${bankId}/utilisation-reports`;
+
+  const portalUser: PortalUser = aPortalUser();
   const portalUserId = portalUser._id.toString();
 
   beforeAll(async () => {
@@ -55,7 +52,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
 
   it('returns 400 when an invalid bank id is provided', async () => {
     // Act
-    const response: CustomErrorResponse = await api.get(getUrl('invalid-id'));
+    const response: CustomErrorResponse = await testApi.get(getUrl('invalid-id'));
 
     // Assert
     expect(response.status).toEqual(400);
@@ -73,15 +70,12 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
       .withUploadedByUserId(portalUserId)
       .build();
 
-    const nonUploadedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
-      .withId(2)
-      .withBankId(bankId)
-      .build();
+    const nonUploadedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(2).withBankId(bankId).build();
 
     await saveReportsToDatabase(uploadedReport, nonUploadedReport);
 
     // Act
-    const response: CustomSuccessResponse = await api.get(getUrl(bankId));
+    const response: CustomSuccessResponse = await testApi.get(getUrl(bankId));
 
     // Assert
     expect(response.status).toEqual(200);
@@ -109,7 +103,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     await saveReportsToDatabase(uploadedReport, notReceivedReport, reconciliationCompletedReport);
 
     // Act
-    const response: CustomSuccessResponse = await api.get(`${getUrl(bankId)}?excludeNotReceived=true`);
+    const response: CustomSuccessResponse = await testApi.get(`${getUrl(bankId)}?excludeNotReceived=true`);
 
     // Assert
     expect(response.status).toEqual(200);
@@ -145,7 +139,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
 
     // Act
     const urlWithQueryParams = axios.getUri({ url: getUrl(bankId), params: { reportPeriod } });
-    const response: CustomSuccessResponse = await api.get(urlWithQueryParams);
+    const response: CustomSuccessResponse = await testApi.get(urlWithQueryParams);
 
     // Assert
     expect(response.status).toEqual(200);
@@ -177,8 +171,11 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     await saveReportsToDatabase(notReceivedReportForReportPeriod, uploadedReportForDifferentReportPeriod);
 
     // Act
-    const urlWithQueryParams = axios.getUri({ url: getUrl(bankId), params: { reportPeriod, excludeNotReceived: true } });
-    const response: CustomSuccessResponse = await api.get(urlWithQueryParams);
+    const urlWithQueryParams = axios.getUri({
+      url: getUrl(bankId),
+      params: { reportPeriod, excludeNotReceived: true },
+    });
+    const response: CustomSuccessResponse = await testApi.get(urlWithQueryParams);
 
     // Assert
     expect(response.status).toEqual(200);

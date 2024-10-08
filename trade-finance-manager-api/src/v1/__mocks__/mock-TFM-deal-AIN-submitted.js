@@ -1,3 +1,4 @@
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../constants');
 
 const MOCK_TFM_DEAL_AIN_SUBMITTED = {
@@ -7,10 +8,7 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
     additionalRefName: null,
     bank: {
       companiesHouseNo: 'UKEF0001',
-      emails: [
-        'maker1@ukexportfinance.gov.uk',
-        'checker1@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker1@ukexportfinance.gov.uk', 'checker1@ukexportfinance.gov.uk'],
       id: '9',
       mga: ['mga_ukef_1.docx', 'mga_ukef_2.docx'],
       name: 'UKEF test bank (Delegated)',
@@ -61,7 +59,7 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
       {
         _id: { $oid: '61f94a4327c1a7009cde1b9e' },
         dealId: { $oid: '61f94a2427c1a7009cde1b9d' },
-        type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+        type: FACILITY_TYPE.CASH,
         hasBeenIssued: true,
         name: 'abc',
         shouldCoverStartOnSubmission: true,
@@ -95,10 +93,7 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
       _id: '61f29adb6851c10012604bce',
       bank: {
         companiesHouseNo: 'UKEF0001',
-        emails: [
-          'maker1@ukexportfinance.gov.uk',
-          'checker1@ukexportfinance.gov.uk',
-        ],
+        emails: ['maker1@ukexportfinance.gov.uk', 'checker1@ukexportfinance.gov.uk'],
         id: '9',
         mga: ['mga_ukef_1.docx', 'mga_ukef_2.docx'],
         name: 'UKEF test bank (Delegated)',
@@ -209,12 +204,14 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
           submittedToACBS: '2022-02-01T14:58:31+00:00',
         },
         guarantee: {
-          dealGuaranteeLocation: 'Deal/0030184099/guarantee/DealGuarantee?accountOwnerIdentifier=00000000&lenderTypeCode=100&sectionIdentifier=00&limitTypeCode=00&limitKey=00283643&guarantorPartyIdentifier=00000141',
+          dealGuaranteeLocation:
+            'Deal/0030184099/guarantee/DealGuarantee?accountOwnerIdentifier=00000000&lenderTypeCode=100&sectionIdentifier=00&limitTypeCode=00&limitKey=00283643&guarantorPartyIdentifier=00000141',
           receivedFromACBS: '2022-02-01T14:58:52+00:00',
           submittedToACBS: '2022-02-01T14:58:51+00:00',
         },
         investor: {
-          dealInvestorLocation: 'Deal/0030184099/investor/DealParty?accountOwnerIdentifier=&lenderTypeCode=500&sectionIdentifier=00&limitTypeCode=00&limitKey=00283643',
+          dealInvestorLocation:
+            'Deal/0030184099/investor/DealParty?accountOwnerIdentifier=&lenderTypeCode=500&sectionIdentifier=00&limitTypeCode=00&limitKey=00283643',
           receivedFromACBS: '2022-02-01T14:58:43+00:00',
           submittedToACBS: '2022-02-01T14:58:41+00:00',
         },
@@ -243,7 +240,8 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
           facilityInvestor: {
             submittedToACBS: '2022-02-01T14:59:35+00:00',
             receivedFromACBS: '2022-02-01T14:59:36+00:00',
-            facilityInvestorIdentifier: 'FacilityParty?accountOwnerIdentifier=00000000&lenderTypeCode=500&sectionIdentifier=00&limitTypeCode=00&limitKey=00283643',
+            facilityInvestorIdentifier:
+              'FacilityParty?accountOwnerIdentifier=00000000&lenderTypeCode=500&sectionIdentifier=00&limitTypeCode=00&limitKey=00283643',
           },
           facilityCovenant: {
             submittedToACBS: '2022-02-01T14:59:45+00:00',
@@ -253,7 +251,8 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
           facilityProviderGuarantee: {
             submittedToACBS: '2022-02-01T15:00:05+00:00',
             receivedFromACBS: '2022-02-01T15:00:06+00:00',
-            facilityGuaranteeIdentifier: 'FacilityGuarantee?accountOwnerIdentifier=00000000&lenderTypeCode=100&sectionIdentifier=00&limitTypeCode=00&limitKey=00283643&guarantorPartyIdentifier=00280449',
+            facilityGuaranteeIdentifier:
+              'FacilityGuarantee?accountOwnerIdentifier=00000000&lenderTypeCode=100&sectionIdentifier=00&limitTypeCode=00&limitKey=00283643&guarantorPartyIdentifier=00280449',
           },
           codeValueTransaction: {
             submittedToACBS: '2022-02-01T15:00:15+00:00',

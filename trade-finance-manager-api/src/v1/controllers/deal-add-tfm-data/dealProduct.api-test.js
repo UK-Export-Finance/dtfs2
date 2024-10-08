@@ -42,10 +42,7 @@ describe('deal submit - add TFM data - deal product', () => {
     it('should return bond and loan product code', () => {
       const mockDeal = {
         dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        facilities: [
-          mockBond,
-          mockLoan,
-        ],
+        facilities: [mockBond, mockLoan],
       };
 
       const result = dealProduct(mockDeal);

@@ -1,9 +1,5 @@
 const { hasValue } = require('../../../../utils/string');
-const {
-  isNumeric,
-  isInteger,
-  decimalsCount,
-} = require('../../../../utils/number');
+const { isNumeric, isInteger, decimalsCount } = require('../../../../utils/number');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
 
 const MAX_CHARACTERS = 12;
@@ -11,9 +7,9 @@ const MAX_CHARACTERS = 12;
 const isValidLength = (str) => str.length <= MAX_CHARACTERS + 1; // add 1 for decimal point
 
 const isValidFormat = (str) => {
-  const invalidInteger = (str.length > 6 && isInteger(Number(str)));
+  const invalidInteger = str.length > 6 && isInteger(Number(str));
   const invalidDecimals = decimalsCount(str) > 6;
-  const validFormat = (!invalidInteger && !invalidDecimals);
+  const validFormat = !invalidInteger && !invalidDecimals;
 
   if (!validFormat) {
     return false;
@@ -58,10 +54,7 @@ module.exports = (facility, errorList) => {
 
   if (!isValid(facility.conversionRate)) {
     newErrorList.conversionRate = {
-      text: validationText(
-        facility.conversionRate,
-        'Conversion rate',
-      ),
+      text: validationText(facility.conversionRate, 'Conversion rate'),
       order: orderNumber(newErrorList),
     };
   }

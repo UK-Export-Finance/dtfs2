@@ -1,69 +1,89 @@
 const baseParserOptions = {
-  ecmaVersion: 2020,
+  ecmaVersion: 2022,
 };
 
 const baseRules = {
-  'max-len': ['error', 160, 2, {
-    ignoreUrls: true,
-    ignoreComments: false,
-    ignoreRegExpLiterals: true,
-    ignoreStrings: true,
-    ignoreTemplateLiterals: true,
-  }],
-  'no-console': ['error', { allow: ['info', 'warn', 'error'] }],
-  'no-return-await': 'off',
+  'no-console': ['error', { allow: ['info', 'error'] }],
+  'prettier/prettier': 'error',
+  'class-methods-use-this': 'off',
   'no-underscore-dangle': [
     'error',
-    { allow: ['_id', '_csrf', '_getBuffer', '_getData', '_getHeaders', '_getStatusCode', '_getRedirectUrl', '_getRenderData', '_getRenderView'] },
+    {
+      allow: ['_id', '_csrf', '_getBuffer', '_getData', '_getHeaders', '_getStatusCode', '_getRedirectUrl', '_getRenderData', '_getRenderView', '_isEndCalled'],
+    },
   ],
-  'import/no-named-as-default': 'off',
-  'import/prefer-default-export': 'off',
   'import/extensions': 'off',
+  'import/no-named-as-default': 'off',
   'implicit-arrow-linebreak': 'off',
-  'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.{js,ts}', '**/*.spec.{js,ts}', '**/webpack.*.{js,ts}', '**/api-tests/**', '**/__mocks__/**'] }],
-  'object-curly-newline': ['error', {
-    consistent: true,
-  }],
+  'import/no-extraneous-dependencies': [
+    'error',
+    {
+      devDependencies: ['**/*.test.{js,ts}', '**/*.api-test.{js,ts}', '**/*.spec.{js,ts}', '**/webpack.*.{js,ts}', '**/api-test*/**', '**/__mocks__/**'],
+    },
+  ],
+  'import/prefer-default-export': 'off',
+  'comma-dangle': 'off',
+  'no-loop-func': 'off',
+  'no-await-in-loop': 'off',
+  'no-restricted-syntax': 'off',
+  'no-return-await': 'off',
   'no-use-before-define': [
     'error',
     {
       functions: false,
     },
   ],
+  'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
+  'no-unused-vars': ['error', { ignoreRestSiblings: true }],
+  'object-curly-newline': [
+    'error',
+    {
+      consistent: true,
+    },
+  ],
 };
 
 module.exports = {
-  extends: 'airbnb-base',
+  extends: ['airbnb-base', 'plugin:prettier/recommended'],
   env: {
     jest: true,
     browser: true,
   },
   root: true,
+  ignorePatterns: ['**/node_modules/**'],
   rules: baseRules,
   settings: {
     'import/resolver': {
       typescript: {},
     },
   },
-  ignorePatterns: ['**/node_modules/**', '**/public/**'],
   parserOptions: baseParserOptions,
   overrides: [
+    // Typescript files only
     {
       files: ['*.ts'],
-      extends: [
-        'airbnb-base',
-        'plugin:@typescript-eslint/recommended-type-checked',
-      ],
-      plugins: [
-        '@typescript-eslint',
-      ],
+      extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked', 'plugin:prettier/recommended'],
+      plugins: ['@typescript-eslint'],
       parser: '@typescript-eslint/parser',
       parserOptions: {
         ...baseParserOptions,
         project: './tsconfig.eslint.json',
         tsconfigRootDir: __dirname,
       },
-      rules: baseRules,
+      rules: {
+        ...baseRules,
+        'no-unused-vars': 'off',
+        '@typescript-eslint/no-unused-vars': [
+          'error',
+          {
+            varsIgnorePattern: '^_',
+          },
+        ],
+        '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }],
+        '@typescript-eslint/restrict-template-expressions': ['error', { allowNever: true }],
+        '@typescript-eslint/ban-ts-comment': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
+      },
     },
   ],
 };

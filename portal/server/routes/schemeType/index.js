@@ -1,5 +1,7 @@
 const express = require('express');
-const { ROLES: { MAKER, CHECKER } } = require('@ukef/dtfs2-common');
+const {
+  ROLES: { MAKER, CHECKER },
+} = require('@ukef/dtfs2-common');
 const { validateToken, validateRole } = require('../middleware');
 const { getSchemeType, postSchemeType } = require('../../controllers/schemeType');
 

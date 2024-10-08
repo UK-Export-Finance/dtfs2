@@ -3,9 +3,7 @@ import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
-import {
-  PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN,
-} from '../../../../../e2e-fixtures';
+import { PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import pages from '../../pages';
 
 context('Amendments underwriting - add underwriter decision', () => {
@@ -93,7 +91,7 @@ context('Amendments underwriting - add underwriter decision', () => {
 
     cy.url().should('contain', '/cover-end-date/managers-decision');
 
-    pages.amendmentsPage.underWriterManagerDecisionCoverEndDateHeading().contains('What\'s your decision?');
+    pages.amendmentsPage.underWriterManagerDecisionCoverEndDateHeading().contains("What's your decision?");
     pages.amendmentsPage.amendmentCurrentCoverEndDate().contains(dateConstants.oneMonthFormattedFull);
     pages.amendmentsPage.amendmentNewCoverEndDateDay().contains(dateConstants.tomorrowDay);
     pages.amendmentsPage.amendmentNewCoverEndDateDay().contains(dateConstants.todayYear);
@@ -211,9 +209,25 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
     amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('have.class', 'govuk-tag--green');
 
-    amendmentsPage.amendmentsManagersDecisionConditions().clear().focused().type('This is a list of conditions <script>(\'hello world\')</script> <embed type="text/html" src="snippet.html" width="500" height="200"> <h1>html text </h1>');
-    amendmentsPage.amendmentsManagersDecisionReasons().clear().focused().type('This is the reason for declining the amendment <img src=x onerror=console.log(\'img\')/> <object data="snippet.html" width="500" height="200"></object><h1>html text </h1>');
-    amendmentsPage.amendmentsManagersDecisionComments().clear().focused().type('This is a comment visible only to UKEF staff <input type="text" name="state" value="INPUT_FROM_USER"> <h1>html text </h1>');
+    amendmentsPage
+      .amendmentsManagersDecisionConditions()
+      .clear()
+      .focused()
+      .type(
+        'This is a list of conditions <script>(\'hello world\')</script> <embed type="text/html" src="snippet.html" width="500" height="200"> <h1>html text </h1>',
+      );
+    amendmentsPage
+      .amendmentsManagersDecisionReasons()
+      .clear()
+      .focused()
+      .type(
+        'This is the reason for declining the amendment <img src=x onerror=console.log(\'img\')/> <object data="snippet.html" width="500" height="200"></object><h1>html text </h1>',
+      );
+    amendmentsPage
+      .amendmentsManagersDecisionComments()
+      .clear()
+      .focused()
+      .type('This is a comment visible only to UKEF staff <input type="text" name="state" value="INPUT_FROM_USER"> <h1>html text </h1>');
 
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', '/managers-conditions/summary');
@@ -278,14 +292,14 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.amendmentManagersDecisionConditionsHeading().contains('Conditions');
     amendmentsPage.amendmentManagersDecisionConditions(1).contains('This is a list of conditions');
     amendmentsPage.amendmentManagersDecisionConditions(1).contains('html text');
-    amendmentsPage.amendmentManagersDecisionConditions(1).should('not.contain', '<script>console.log(\'hello world\')</script>');
+    amendmentsPage.amendmentManagersDecisionConditions(1).should('not.contain', "<script>console.log('hello world')</script>");
     amendmentsPage.amendmentManagersDecisionConditions(1).should('not.contain', '<embed type="text/html" src="snippet.html" width="500" height="200">');
     amendmentsPage.amendmentManagersDecisionConditions(1).should('not.contain', '<h1>html text </h1>');
 
     amendmentsPage.amendmentManagersDecisionReasonsHeading().contains('Reasons');
     amendmentsPage.amendmentManagersDecisionReasons(1).contains('This is the reason for declining the amendment');
     amendmentsPage.amendmentManagersDecisionReasons(1).contains('html text');
-    amendmentsPage.amendmentManagersDecisionReasons(1).should('not.contain', '<img src=x onerror=console.log(\'img\')/>');
+    amendmentsPage.amendmentManagersDecisionReasons(1).should('not.contain', "<img src=x onerror=console.log('img')/>");
     amendmentsPage.amendmentManagersDecisionReasons(1).should('not.contain', '<object data="snippet.html" width="500" height="200"></object>');
     amendmentsPage.amendmentManagersDecisionReasons(1).should('not.contain', '<h1>html text </h1>');
 
@@ -324,12 +338,12 @@ context('Amendments underwriting - add underwriter decision', () => {
 
     amendmentsPage.amendmentManagersDecisionConditionsHeading().contains('Conditions');
     amendmentsPage.amendmentManagersDecisionConditions(1).contains('This is a list of conditions');
-    amendmentsPage.amendmentManagersDecisionConditions(1).should('not.contain', '<script>console.log(\'hello world\')</script>');
+    amendmentsPage.amendmentManagersDecisionConditions(1).should('not.contain', "<script>console.log('hello world')</script>");
     amendmentsPage.amendmentManagersDecisionConditions(1).should('not.contain', '<embed type="text/html" src="snippet.html" width="500" height="200">');
 
     amendmentsPage.amendmentManagersDecisionReasonsHeading().contains('Reasons');
     amendmentsPage.amendmentManagersDecisionReasons(1).contains('This is the reason for declining the amendment');
-    amendmentsPage.amendmentManagersDecisionReasons(1).should('not.contain', '<img src=x onerror=console.log(\'img\')/>');
+    amendmentsPage.amendmentManagersDecisionReasons(1).should('not.contain', "<img src=x onerror=console.log('img')/>");
     amendmentsPage.amendmentManagersDecisionReasons(1).should('not.contain', '<object data="snippet.html" width="500" height="200"></object>');
 
     amendmentsPage.amendmentManagersDecisionCommentsHeading().contains('Comments');

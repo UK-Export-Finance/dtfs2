@@ -1,0 +1,85 @@
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% import './_macros/amendment-what-is-a-facility-end-date.njk' as whatIsAFacilityEndDate %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle -%}
+  Amendment - Has the bank provided a facility end date?
+{%- endblock %}
+
+{% block sub_content %}
+
+{% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'amendment--error-summary'
+      },
+      classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+    }) }}
+  {% endif %}
+
+  <form method="POST" autocomplete="off">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+    <fieldset class="govuk-fieldset" role="group" aria-describedby="is-using-facility-end-date-hint">
+
+      <legend class="govuk-fieldset__legend">
+        <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-0" data-cy="amendment--is-using-facility-end-date-heading">Has the bank provided a facility end date?</h1>
+      </legend>
+
+      {{ govukRadios({
+            classes: "govuk-radios--inline",
+            idPrefix: "isUsingFacilityEndDate",
+            name: "isUsingFacilityEndDate",
+            errorMessage: errors and errors.fieldErrors.isUsingFacilityEndDate and {
+              text: errors.fieldErrors.isUsingFacilityEndDate.text,
+              attributes: {
+                'data-cy': 'amendment--is-using-facility-end-date-error'
+              }
+            },
+            items: [
+              {
+                value: "Yes",
+                text: "Yes",
+                checked: isUsingFacilityEndDate === true,
+                attributes: {
+                  'data-cy': "amendment--is-using-facility-end-date-yes"
+                }
+              },
+              {
+                value: "No",
+                text: "No",
+                checked: isUsingFacilityEndDate === false,
+                attributes: {
+                  'data-cy': "amendment--is-using-facility-end-date-no"
+                }
+              }
+            ]
+          }) }}
+
+    </fieldset>
+
+    <div class="govuk-button-group">
+      {% if isEditable %}
+        {{ govukButton({
+          text: "Continue",
+          attributes: {
+              "data-cy": "amendment--continue-button"
+          }
+          })
+        }}
+      {% endif %}
+      <a class="govuk-link" href="/case/{{ dealId }}/facility/{{ facilityId }}#amendments" data-cy="amendment--cancel-button">Cancel</a>
+    </div>
+
+    {{ whatIsAFacilityEndDate.render() }}
+
+  </form>
+
+{% endblock %}

@@ -42,23 +42,23 @@ on:
   pull_request:
     branches:
       - main
-      - "release-*"
+      - 'release-*'
 
     paths:
-      - "package*.json"
-      - "docker*.yml"
-      - ".github/workflows/**"
-      - "gef-ui/**"
-      - "portal/**"
-      - "portal-api/**"
-      - "trade-finance-manager-ui/**"
-      - "trade-finance-manager-api/**"
-      - "external-api/**"
-      - "dtfs-central-api/**"
-      - "azure-functions/**"
-      - "e2e-tests/**"
-      - "utils/mock-data-loader/**"
-      - "libs/**"
+      - 'package*.json'
+      - 'docker*.yml'
+      - '.github/workflows/**'
+      - 'gef-ui/**'
+      - 'portal/**'
+      - 'portal-api/**'
+      - 'trade-finance-manager-ui/**'
+      - 'trade-finance-manager-api/**'
+      - 'external-api/**'
+      - 'dtfs-central-api/**'
+      - 'azure-functions/**'
+      - 'e2e-tests/**'
+      - 'utils/**'
+      - 'libs/**'
 
   push:
     branches:
@@ -66,18 +66,18 @@ on:
       - feature
       - staging
       - prod
-      - release-2.0
+      - release-*
 
     paths:
-      - ".github/workflows/deployment.yml"
-      - "portal/**"
-      - "gef-ui/**"
-      - "trade-finance-manager-ui/**"
-      - "portal-api/**"
-      - "dtfs-central-api/**"
-      - "trade-finance-manager-api/**"
-      - "external-api/**"
-      - "azure-functions/acbs-function/**"
+      - '.github/workflows/deployment.yml'
+      - 'portal/**'
+      - 'gef-ui/**'
+      - 'trade-finance-manager-ui/**'
+      - 'portal-api/**'
+      - 'dtfs-central-api/**'
+      - 'trade-finance-manager-api/**'
+      - 'external-api/**'
+      - 'azure-functions/acbs-function/**'
 
 env:
   environment: dev
@@ -86,7 +86,9 @@ env:
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   MONGODB_URI: ${{ secrets.MONGODB_URI }}
   MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE }}
-  MONGODB_URI_FOR_TESTS: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true
+  MONGO_INITDB_ROOT_USERNAME: ${{ secrets.MONGO_INITDB_ROOT_USERNAME }}
+  MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}
+  MONGODB_URI_QA: ${{ secrets.MONGODB_URI_QA }}
   AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
   AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
   AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
@@ -96,8 +98,6 @@ env:
   GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
   JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
   JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
-  ORDNANCE_SURVEY_API_URL: "https://api.os.co.uk"
-  ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
   APIM_TFS_URL: ${{ secrets.APIM_TFS_URL }}
   APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
   APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
@@ -108,20 +108,19 @@ env:
   APIM_ESTORE_KEY: ${{ secrets.APIM_ESTORE_KEY }}
   APIM_ESTORE_VALUE: ${{ secrets.APIM_ESTORE_VALUE }}
   SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-  COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
-  COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
   UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
   UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
   ESTORE_URL: ${{ secrets.ESTORE_URL }}
+  ESTORE_CRON_MANAGER_SCHEDULE: ${{ vars.ESTORE_CRON_MANAGER_SCHEDULE }}
   TFM_API_KEY: ${{ secrets.TFM_API_KEY }}
   PORTAL_API_KEY: ${{ secrets.PORTAL_API_KEY }}
   DTFS_CENTRAL_API_KEY: ${{ secrets.DTFS_CENTRAL_API_KEY }}
   EXTERNAL_API_KEY: ${{ secrets.EXTERNAL_API_KEY }}
   NODE_ENV: ${{ secrets.NODE_ENV }}
   CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
-  PORTAL_API_URL: http://localhost:5001
-  DTFS_CENTRAL_API_URL: http://localhost:5005
-  TFM_API_URL: http://localhost:5004
+  PORTAL_API_URL: ${{ secrets.PORTAL_API_URL }}
+  DTFS_CENTRAL_API_URL: ${{ secrets.DTFS_CENTRAL_API_URL }}
+  TFM_API_URL: ${{ secrets.TFM_API_URL }}
   RATE_LIMIT_THRESHOLD: ${{ vars.RATE_LIMIT_THRESHOLD }}
   UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: ${{ vars.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}
   UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: ${{ vars.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}
@@ -129,11 +128,11 @@ env:
   UTILISATION_REPORT_DUE_EMAIL_SCHEDULE: ${{ vars.UTILISATION_REPORT_DUE_EMAIL_SCHEDULE }}
   UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE: ${{ vars.UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE }}
   CHANGE_STREAM_ENABLED: ${{ vars.CHANGE_STREAM_ENABLED }}
+  DELETION_AUDIT_LOGS_TTL_SECONDS: ${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS }}
   AUDIT_API_URL: ${{ secrets.AUDIT_API_URL }}
   AUDIT_API_USERNAME: ${{ secrets.AUDIT_API_USERNAME }}
   AUDIT_API_PASSWORD: ${{ secrets.AUDIT_API_PASSWORD }}
   UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: ${{ vars.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }}
-  CONTACT_US_EMAIL_ADDRESS: ${{ vars.CONTACT_US_EMAIL_ADDRESS }}
   ACCEPT_EULA: ${{ vars.ACCEPT_EULA }}
   MSSQL_SA_PASSWORD: ${{ secrets.MSSQL_SA_PASSWORD }}
   SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_QA }}
@@ -142,6 +141,11 @@ env:
   SQL_DB_PASSWORD: ${{ secrets.SQL_DB_PASSWORD_QA }}
   SQL_DB_NAME: ${{ secrets.SQL_DB_NAME_QA }}
   SQL_DB_LOGGING_ENABLED: ${{ vars.SQL_DB_LOGGING_ENABLED }}
+  ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE: ${{ vars.ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE }}
+  CONTACT_US_EMAIL_ADDRESS: ${{ vars.CONTACT_US_EMAIL_ADDRESS }}
+  FF_TFM_PAYMENT_RECONCILIATION_ENABLED: ${{ vars.FF_TFM_PAYMENT_RECONCILIATION_ENABLED }}
+  FF_TFM_FACILITY_END_DATE_ENABLED: ${{ vars.FF_TFM_FACILITY_END_DATE_ENABLED }}
+  GEF_DEAL_VERSION: ${{ vars.GEF_DEAL_VERSION }}
 
 jobs:
   # 1. Setup test infrastructure
@@ -171,16 +175,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        services:
-          [
-            "portal",
-            "gef-ui",
-            "trade-finance-manager-ui",
-            "portal-api",
-            "trade-finance-manager-api",
-            "dtfs-central-api",
-            "external-api",
-          ]
+        services: ['portal', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'trade-finance-manager-api', 'dtfs-central-api', 'external-api']
 
     concurrency:
       group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
@@ -196,42 +191,38 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.node }}
 
       - name: Dependencies
         working-directory: ./
-        run: npm run ci:all
+        run: npm ci
 
       - name: Start
         working-directory: ./
-        run: docker compose -f docker-compose.gha.yml up --build -d
+        run: docker compose up --build -d
 
       - name: Initialise
-        working-directory: ./
+        working-directory: ./utils
         run: |
-          sleep 60s
+          sleep 100s
           npm run load
 
-      - name: Migrations
+      - name: SQL
         working-directory: ./libs/common
         env:
-          SQL_DB_HOST: localhost
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
         run: npm run db:migrate
 
-      - name: Seeding
-        working-directory: ./utils/sql-db-seeder
-        env:
-          SQL_DB_HOST: localhost
-        run: npm run db:seed
-
       - name: Execute
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI_QA }}
         run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
 
       - name: Stop
         working-directory: ./
-        run: docker compose -f docker-compose.gha.yml down
+        run: docker compose down
 
       - name: Coverage
         uses: codecov/codecov-action@v3
@@ -253,7 +244,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        functions: ["acbs-function"]
+        functions: ['acbs-function']
 
     concurrency:
       group: dof-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
@@ -269,13 +260,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.node }}
 
       - name: Dependencies
         working-directory: ./
-        run: npm run ci:all
+        run: npm ci
 
       - name: ${{ matrix.functions }}
         working-directory: ./azure-functions/${{ matrix.functions }}
@@ -303,15 +294,15 @@ jobs:
       matrix:
         services:
           [
-            "./portal",
-            "./gef-ui",
-            "./trade-finance-manager-ui",
-            "./portal-api",
-            "./dtfs-central-api",
-            "./external-api",
-            "./trade-finance-manager-api",
-            "./libs/common",
-            "./azure-functions/acbs-function",
+            './portal',
+            './gef-ui',
+            './trade-finance-manager-ui',
+            './portal-api',
+            './dtfs-central-api',
+            './external-api',
+            './trade-finance-manager-api',
+            './libs/common',
+            './azure-functions/acbs-function',
           ]
 
     concurrency:
@@ -328,17 +319,81 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.node }}
 
       - name: Dependencies
         working-directory: ./
-        run: npm run ci:all
+        run: npm ci
 
       - name: Execute
         working-directory: ${{ matrix.services }}
         run: npm run unit-test
+
+      - name: Coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: unit-test
+          verbose: true
+
+  # 3. Unit tests - FF
+  unit-tests-ff:
+    name: Unit feature flag 👷
+    needs: setup
+    env:
+      # Various feature flags
+      FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
+      FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
+      GEF_DEAL_VERSION: 1
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        services:
+          [
+            './portal',
+            './gef-ui',
+            './trade-finance-manager-ui',
+            './portal-api',
+            './dtfs-central-api',
+            './external-api',
+            './trade-finance-manager-api',
+            './libs/common',
+            './azure-functions/acbs-function',
+          ]
+
+    concurrency:
+      group: unit-tests-ff-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Timezone
+        uses: szenius/set-timezone@v1.2
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.node }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci
+
+      - name: Execute
+        working-directory: ${{ matrix.services }}
+        run: npm run unit-test-ff
 
       - name: Coverage
         uses: codecov/codecov-action@v3
@@ -362,22 +417,22 @@ jobs:
       matrix:
         spec:
           [
-            "*.spec.js",
-            "homepage/**/*.spec.js",
-            "admin/**/*.spec.js",
-            "checker/**/*.spec.js",
-            "dashboard/**/*.spec.js",
-            "feedback/**/*.spec.js",
-            "login/**/*.spec.js",
-            "maker/**/*.spec.js",
-            "maker-about-supply-contract/**/*.spec.js",
-            "maker-bond/**/*.spec.js",
-            "maker-facilities/**/*.spec.js",
-            "maker-loan/**/*.spec.js",
-            "number-generator/**/*.spec.js",
-            "read-only/**/*.spec.js",
-            "reports/**/*.spec.js",
-            "payment-report-officer/**/*.spec.js",
+            '*.spec.js',
+            'homepage/**/*.spec.js',
+            'admin/**/*.spec.js',
+            'checker/**/*.spec.js',
+            'dashboard/**/*.spec.js',
+            'feedback/**/*.spec.js',
+            'login/**/*.spec.js',
+            'maker/**/*.spec.js',
+            'maker-about-supply-contract/**/*.spec.js',
+            'maker-bond/**/*.spec.js',
+            'maker-facilities/**/*.spec.js',
+            'maker-loan/**/*.spec.js',
+            'number-generator/**/*.spec.js',
+            'read-only/**/*.spec.js',
+            'reports/**/*.spec.js',
+            'payment-report-officer/**/*.spec.js',
           ]
 
     concurrency:
@@ -389,7 +444,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.node }}
 
@@ -400,35 +455,29 @@ jobs:
 
       - name: Dependencies
         working-directory: ./
-        run: npm run ci:all
+        run: npm ci
 
       - name: Docker
-        run: docker compose -f docker-compose.gha.yml up --build -d
+        run: docker compose up --build -d
 
       - name: Initialise
-        working-directory: ./
+        working-directory: ./utils
         run: |
-          sleep 60s
+          sleep 100s
           npm run load
 
-      - name: Migrations
+      - name: SQL
         working-directory: ./libs/common
         env:
-          SQL_DB_HOST: localhost
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
         run: npm run db:migrate
-
-      - name: Seeding
-        working-directory: ./utils/sql-db-seeder
-        env:
-          SQL_DB_HOST: localhost
-        run: npm run db:seed
 
       - name: Execute
         working-directory: ./e2e-tests
         env:
-          SQL_DB_HOST: localhost
-          SQL_DB_LOGGING_ENABLED: false
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./portal --record false --spec "./portal/cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+          TZ: ${{ vars.TIMEZONE }}
+        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./portal --record false --spec "./portal/cypress/e2e/journeys/${{ matrix.spec }}"
 
   # 5. E2E - GEF
   e2e-tests-gef:
@@ -445,19 +494,19 @@ jobs:
       matrix:
         spec:
           [
-            "*.spec.js",
-            "application/**/*.spec.js",
-            "checker/**/*.spec.js",
-            "clone/**/*.spec.js",
-            "eligibility/**/*.spec.js",
-            "exporter/**/*.spec.js",
-            "external/**/*.spec.js",
-            "facility/**/*.spec.js",
-            "maker/**/*.spec.js",
-            "scenarios/**/*.spec.js",
-            "security/**/*.spec.js",
-            "ukef/**/*.spec.js",
-            "upload/**/*.spec.js",
+            '*.spec.js',
+            'application/**/*.spec.js',
+            'checker/**/*.spec.js',
+            'clone/**/*.spec.js',
+            'eligibility/**/*.spec.js',
+            'exporter/**/*.spec.js',
+            'external/**/*.spec.js',
+            'facility/**/*.spec.js',
+            'maker/**/*.spec.js',
+            'scenarios/**/*.spec.js',
+            'security/**/*.spec.js',
+            'ukef/**/*.spec.js',
+            'upload/**/*.spec.js',
           ]
 
     concurrency:
@@ -469,7 +518,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.node }}
 
@@ -480,35 +529,29 @@ jobs:
 
       - name: Dependencies
         working-directory: ./
-        run: npm run ci:all
+        run: npm ci
 
       - name: Docker
-        run: docker compose -f docker-compose.gha.yml up --build -d
+        run: docker compose up --build -d
 
       - name: Initialise
-        working-directory: ./
+        working-directory: ./utils
         run: |
-          sleep 60s
+          sleep 100s
           npm run load
 
-      - name: Migrations
+      - name: SQL
         working-directory: ./libs/common
         env:
-          SQL_DB_HOST: localhost
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
         run: npm run db:migrate
-
-      - name: Seeding
-        working-directory: ./utils/sql-db-seeder
-        env:
-          SQL_DB_HOST: localhost
-        run: npm run db:seed
 
       - name: Execute
         working-directory: ./e2e-tests
         env:
-          SQL_DB_HOST: localhost
-          SQL_DB_LOGGING_ENABLED: false
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./gef --record false --spec "./gef/cypress/e2e/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+          TZ: ${{ vars.TIMEZONE }}
+        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./gef --record false --spec "./gef/cypress/e2e/${{ matrix.spec }}"
 
   #6. E2E - TFM
   e2e-tests-tfm:
@@ -525,17 +568,16 @@ jobs:
       matrix:
         spec:
           [
-            "case/**/*.spec.js",
-            "case-amendments/**/*.spec.js",
-            "case-underwriting/**/*.spec.js",
-            "deals/**/*.spec.js",
-            "facility/**/*.spec.js",
-            "feedback/**/*.spec.js",
-            "footer/**/*.spec.js",
-            "header/**/*.spec.js",
-            "login/**/*.spec.js",
-            "users/**/*.spec.js",
-            "utilisation-reports/**/*.spec.js",
+            'case/**/*.spec.js',
+            'case-amendments/**/*.spec.js',
+            'case-underwriting/**/*.spec.js',
+            'deals/**/*.spec.js',
+            'facility/**/*.spec.js',
+            'feedback/**/*.spec.js',
+            'footer/**/*.spec.js',
+            'header/**/*.spec.js',
+            'login/**/*.spec.js',
+            'users/**/*.spec.js',
           ]
 
     concurrency:
@@ -547,7 +589,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.node }}
 
@@ -558,35 +600,29 @@ jobs:
 
       - name: Dependencies
         working-directory: ./
-        run: npm run ci:all
+        run: npm ci
 
       - name: Docker
-        run: docker compose -f docker-compose.gha.yml up --build -d
+        run: docker compose up --build -d
 
       - name: Initialise
-        working-directory: ./
+        working-directory: ./utils
         run: |
-          sleep 60s
+          sleep 100s
           npm run load
 
-      - name: Migrations
+      - name: SQL
         working-directory: ./libs/common
         env:
-          SQL_DB_HOST: localhost
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
         run: npm run db:migrate
-
-      - name: Seeding
-        working-directory: ./utils/sql-db-seeder
-        env:
-          SQL_DB_HOST: localhost
-        run: npm run db:seed
 
       - name: Execute
         working-directory: ./e2e-tests
         env:
-          SQL_DB_HOST: localhost
-          SQL_DB_LOGGING_ENABLED: false
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./tfm --record false --spec "./tfm/cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+          TZ: ${{ vars.TIMEZONE }}
+        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./tfm --record false --spec "./tfm/cypress/e2e/journeys/${{ matrix.spec }}"
 
   #7. E2E - UKEF
   e2e-tests-ukef:
@@ -603,26 +639,26 @@ jobs:
       matrix:
         spec:
           [
-            "MIA-underwriter-managers-approved-decision-updates-portal-deal-and-submission-type-to-MIN/**/*.spec.js",
-            "MIA-underwriter-managers-decision-updates-portal-deal/**/*.spec.js",
-            "submit-AIN-deal-creates-default-credit-rating-in-tfm/**/*.spec.js",
-            "submit-AIN-deal-creates-tasks-in-tfm/**/*.spec.js",
-            "submit-AIN-deal-creates-tfm-deal-stage-and-product/**/*.spec.js",
-            "submit-AIN-deal-updates-portal-deal-status/**/*.spec.js",
-            "submit-MIA-deal-TFM-approves-resubmit-MIA-deal-becomes-MIN/**/*.spec.js",
-            "submit-MIA-deal-creates-tasks-in-tfm/**/*.spec.js",
-            "submit-MIA-deal-creates-tfm-deal-stage-and-product/**/*.spec.js",
-            "submit-MIA-deal-updates-portal-deal-status/**/*.spec.js",
-            "submit-MIN-changes-tfm-stage-to-confirmed/**/*.spec.js",
-            "submit-MIN-deal-does-not-create-credit-rating-in-tfm/**/*.spec.js",
-            "submit-MIN-deal-updates-portal-deal-status/**/*.spec.js",
-            "submit-MIN-with-unissued-facilities-and-resubmit-issued-facilities-updates-facilities-in-tfm/**/*.spec.js",
-            "submit-deal-adds-risk-profile-to-facilities/**/*.spec.js",
-            "submit-deal-converts-contract-value-to-gbp/**/*.spec.js",
-            "submit-deal-creates-loss-given-and-probability-defaults-in-tfm/**/*.spec.js",
-            "submit-deal-with-issued-facilities/**/*.spec.js",
-            "submit-deal-with-non-gbp-facilities/**/*.spec.js",
-            "submit-deal-with-unissued-facilities-and-resubmit-as-issued/**/*.spec.js",
+            'MIA-underwriter-managers-approved-decision-updates-portal-deal-and-submission-type-to-MIN/**/*.spec.js',
+            'MIA-underwriter-managers-decision-updates-portal-deal/**/*.spec.js',
+            'submit-AIN-deal-creates-default-credit-rating-in-tfm/**/*.spec.js',
+            'submit-AIN-deal-creates-tasks-in-tfm/**/*.spec.js',
+            'submit-AIN-deal-creates-tfm-deal-stage-and-product/**/*.spec.js',
+            'submit-AIN-deal-updates-portal-deal-status/**/*.spec.js',
+            'submit-MIA-deal-TFM-approves-resubmit-MIA-deal-becomes-MIN/**/*.spec.js',
+            'submit-MIA-deal-creates-tasks-in-tfm/**/*.spec.js',
+            'submit-MIA-deal-creates-tfm-deal-stage-and-product/**/*.spec.js',
+            'submit-MIA-deal-updates-portal-deal-status/**/*.spec.js',
+            'submit-MIN-changes-tfm-stage-to-confirmed/**/*.spec.js',
+            'submit-MIN-deal-does-not-create-credit-rating-in-tfm/**/*.spec.js',
+            'submit-MIN-deal-updates-portal-deal-status/**/*.spec.js',
+            'submit-MIN-with-unissued-facilities-and-resubmit-issued-facilities-updates-facilities-in-tfm/**/*.spec.js',
+            'submit-deal-adds-risk-profile-to-facilities/**/*.spec.js',
+            'submit-deal-converts-contract-value-to-gbp/**/*.spec.js',
+            'submit-deal-creates-loss-given-and-probability-defaults-in-tfm/**/*.spec.js',
+            'submit-deal-with-issued-facilities/**/*.spec.js',
+            'submit-deal-with-non-gbp-facilities/**/*.spec.js',
+            'submit-deal-with-unissued-facilities-and-resubmit-as-issued/**/*.spec.js',
           ]
 
     concurrency:
@@ -634,7 +670,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.node }}
 
@@ -645,32 +681,122 @@ jobs:
 
       - name: Dependencies
         working-directory: ./
-        run: npm run ci:all
+        run: npm ci
 
       - name: Docker
-        run: docker compose -f docker-compose.gha.yml up --build -d
+        run: docker compose up --build -d
 
       - name: Initialise
-        working-directory: ./
+        working-directory: ./utils
         run: |
-          sleep 60s
+          sleep 100s
           npm run load
 
-      - name: Migrations
+      - name: SQL
         working-directory: ./libs/common
         env:
-          SQL_DB_HOST: localhost
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
         run: npm run db:migrate
-
-      - name: Seeding
-        working-directory: ./utils/sql-db-seeder
-        env:
-          SQL_DB_HOST: localhost
-        run: npm run db:seed
 
       - name: Execute
         working-directory: ./e2e-tests
         env:
-          SQL_DB_HOST: localhost
-          SQL_DB_LOGGING_ENABLED: false
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ukef --record false --spec "./ukef/cypress/e2e/journeys/portal/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+          TZ: ${{ vars.TIMEZONE }}
+        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ukef --record false --spec "./ukef/cypress/e2e/journeys/portal/${{ matrix.spec }}"
+
+  #8. E2E - FF
+  e2e-tests-ff:
+    name: E2E feature flag 👷
+    needs: setup
+    env:
+      # Various feature flags
+      FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
+      FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
+      GEF_DEAL_VERSION: 1
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        spec:
+          [
+            './gef/cypress/e2e/*.spec.js',
+            './gef/cypress/e2e/application/**/*.spec.js',
+            './gef/cypress/e2e/checker/**/*.spec.js',
+            './gef/cypress/e2e/clone/**/*.spec.js',
+            './gef/cypress/e2e/eligibility/**/*.spec.js',
+            './gef/cypress/e2e/exporter/**/*.spec.js',
+            './gef/cypress/e2e/external/**/*.spec.js',
+            './gef/cypress/e2e/facility/**/*.spec.js',
+            './gef/cypress/e2e/maker/**/*.spec.js',
+            './gef/cypress/e2e/scenarios/**/*.spec.js',
+            './gef/cypress/e2e/security/**/*.spec.js',
+            './gef/cypress/e2e/ukef/**/*.spec.js',
+            './gef/cypress/e2e/upload/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/case-amendments/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/case-underwriting/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/deals/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/facility/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/feedback/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/footer/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/header/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/login/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/users/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/utilisation-reports/**/*.spec.js',
+          ]
+
+    concurrency:
+      group: e2e-tests-ukef-ff-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.node }}
+
+      - name: Timezone
+        uses: szenius/set-timezone@v1.2
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci
+
+      - name: Docker
+        run: docker compose up --build -d
+
+      - name: Initialise
+        working-directory: ./utils
+        run: |
+          sleep 100s
+          npm run load
+
+      - name: SQL
+        working-directory: ./libs/common
+        env:
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+        run: npm run db:migrate
+
+      - name: Project
+        id: project
+        run: |
+          directory=$(echo ${{ matrix.spec }} | cut -d / -f2)
+          echo "::set-output name=directory::$directory"
+
+      - name: Execute
+        working-directory: ./e2e-tests
+        env:
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+          TZ: ${{ vars.TIMEZONE }}
+        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./${{ steps.project.outputs.directory }} --record false --spec "${{ matrix.spec }}"

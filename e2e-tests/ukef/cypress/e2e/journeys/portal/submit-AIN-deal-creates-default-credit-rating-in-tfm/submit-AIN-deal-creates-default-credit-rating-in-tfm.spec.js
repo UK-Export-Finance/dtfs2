@@ -5,9 +5,9 @@ import tfmPartials from '../../../../../../tfm/cypress/e2e/partials';
 
 import MOCK_USERS from '../../../../../../e2e-fixtures/portal-users.fixture';
 import MOCK_DEAL_READY_TO_SUBMIT from '../test-data/AIN-deal/dealReadyToSubmit';
+import { UNDERWRITER_MANAGER_1, TFM_URL } from '../../../../../../e2e-fixtures';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
-import { UNDERWRITER_MANAGER_1, TFM_URL } from '../../../../../../e2e-fixtures';
 
 context('Portal to TFM deal submission', () => {
   let deal;
@@ -83,9 +83,12 @@ context('Portal to TFM deal submission', () => {
     cy.url().should('eq', `${TFM_URL}/case/${dealId}/underwriting`);
 
     // assert elements/value in `pricing and risk` page
-    tfmPages.underwritingPricingAndRiskPage.exporterTableRatingValue().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Acceptable (B+)');
-    });
+    tfmPages.underwritingPricingAndRiskPage
+      .exporterTableRatingValue()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Acceptable (B+)');
+      });
 
     tfmPages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().should('contain', 'Change');
   });

@@ -1,11 +1,7 @@
-const {
-  header, users, createUser, changePassword,
-} = require('../../../pages');
+const { header, users, createUser, changePassword } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const {
-  USER_ROLES: {
-    MAKER, READ_ONLY, CHECKER, PAYMENT_REPORT_OFFICER,
-  },
+  USER_ROLES: { MAKER, READ_ONLY, CHECKER, PAYMENT_REPORT_OFFICER },
 } = require('../../../../fixtures/constants');
 const { ADMIN: AN_ADMIN, USER_WITH_INJECTION } = require('../../../../../../e2e-fixtures/portal-users.fixture');
 
@@ -48,6 +44,25 @@ context('Admin user creates a new user', () => {
     // Back to the users page
     createUser.cancel().click();
     cy.url().should('include', '/admin/users');
+  });
+
+  it('should display validation text if fields are left empty', () => {
+    // Login and go to the dashboard
+    cy.login(AN_ADMIN);
+    cy.url().should('include', '/dashboard/deals');
+    header.users().click();
+
+    // Go to add user's page
+    users.addUser().click();
+    cy.url().should('include', '/admin/users/create');
+
+    // Click the create user button without filling in the fields
+    createUser.createUser().click();
+
+    // Check if the validation text is displayed for the first name, surname, roles, and bank fields
+    createUser.firstNameError().should('contain', 'First name is required');
+    createUser.surNameError().should('contain', 'Surname is required');
+    createUser.rolesError().should('contain', 'At least one role is required');
   });
 
   it('Admin create user with empty fields', () => {
@@ -139,6 +154,36 @@ context('Admin user creates a new user', () => {
           'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.',
         );
       });
+  });
+
+  it('creates a new user with the trusted status', () => {
+    // Login and go to the dashboard
+    cy.login(AN_ADMIN);
+
+    header.users().click();
+    users.user(validUser).should('not.exist');
+
+    users.addUser().click();
+
+    validUser.roles.forEach((role) => {
+      createUser.role(role).click();
+    });
+    createUser.username().type(validUser.username);
+    createUser.firstname().type(validUser.firstname);
+    createUser.surname().type(validUser.surname);
+
+    createUser.bank().select(validUser.bank);
+
+    createUser.isTrustedTrue().click();
+
+    createUser.createUser().click();
+
+    cy.url().should('eq', relative('/admin/users/'));
+
+    users.row(validUser).trusted().should('exist');
+    cy.getUserByUsername(validUser.username).then(({ isTrusted }) => {
+      expect(isTrusted).to.equal(true);
+    });
   });
 
   it('Admin user adds a new user using "{ "$gt": "" }" as the email, triggering validation error', () => {

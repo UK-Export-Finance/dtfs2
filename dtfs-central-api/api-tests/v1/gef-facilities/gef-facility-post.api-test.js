@@ -1,22 +1,21 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
-const app = require('../../../src/createApp');
-const api = require('../../api')(app);
-const CONSTANTS = require('../../../src/constants');
+const { testApi } = require('../../test-api');
+const { DEALS } = require('../../../src/constants');
 const { MOCK_DEAL } = require('../mocks/mock-data');
 
 const newDeal = {
-  dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+  dealType: DEALS.DEAL_TYPE.GEF,
   status: 'Draft',
 };
 
 const newFacility = {
   dealId: MOCK_DEAL.DEAL_ID,
-  type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+  type: FACILITY_TYPE.CASH,
 };
 
 const createDeal = async () => {
-  const { body } = await api.post(newDeal).to('/v1/portal/gef/deals');
+  const { body } = await testApi.post(newDeal).to('/v1/portal/gef/deals');
   return body;
 };
 describe('/v1/portal/gef/facilities', () => {
@@ -40,13 +39,13 @@ describe('/v1/portal/gef/facilities', () => {
         dealId: MOCK_DEAL.DEAL_ID,
       };
 
-      const { status } = await api.post(facilityWithInvalidDealId).to('/v1/portal/gef/facilities');
+      const { status } = await testApi.post(facilityWithInvalidDealId).to('/v1/portal/gef/facilities');
 
       expect(status).toEqual(404);
     });
 
     it('returns new facility id and creates the facility', async () => {
-      const { body, status } = await api.post(newFacility).to('/v1/portal/gef/facilities');
+      const { body, status } = await testApi.post(newFacility).to('/v1/portal/gef/facilities');
 
       expect(status).toEqual(200);
 
@@ -54,12 +53,14 @@ describe('/v1/portal/gef/facilities', () => {
 
       expect(body).toEqual({ _id: expect.any(String) });
 
-      const { body: allFacilitiesByDealId } = await api.get(`/v1/portal/gef/deals/${dealId}/facilities`);
+      const { body: allFacilitiesByDealId } = await testApi.get(`/v1/portal/gef/deals/${dealId}/facilities`);
 
-      expect(allFacilitiesByDealId).toEqual([{
-        _id: facilityId,
-        ...newFacility,
-      }]);
+      expect(allFacilitiesByDealId).toEqual([
+        {
+          _id: facilityId,
+          ...newFacility,
+        },
+      ]);
     });
   });
 });

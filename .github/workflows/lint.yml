@@ -20,7 +20,7 @@
 # Sets the timezone using the specified value.
 # Checks out the repository code.
 # Sets up the specified Node.js version.
-# Installs dependencies using npm run ci:all.
+# Installs dependencies using npm ci.
 # Runs linting using the command npm run lint:all.
 #
 # Key Points:
@@ -52,7 +52,7 @@ on:
       - "dtfs-central-api/**"
       - "azure-functions/**"
       - "e2e-tests/**"
-      - "utils/mock-data-loader/**"
+      - "utils/**"
       - "libs/**"
 
 env:
@@ -90,14 +90,98 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
       - name: Dependencies
         working-directory: ./
-        run: npm run ci:all
+        run: npm ci
 
       - name: Linting
         working-directory: ./
         run: npm run lint:all
+
+  # 3. Prettier
+  prettier:
+    name: Prettier 🎨
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Timezone
+        uses: szenius/set-timezone@v1.2
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci
+
+      - name: Linting
+        working-directory: ./
+        run: npm run prettier:all
+
+  # 4. Type check
+  typecheck:
+    name: TypeScript ⌨️
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Timezone
+        uses: szenius/set-timezone@v1.2
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci
+
+      - name: Validate
+        working-directory: ./
+        run: npm run type-check:all
+
+  # 5. YAML check
+  yaml:
+    name: YAML ⌨️
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Timezone
+        uses: szenius/set-timezone@v1.2
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci
+
+      - name: Validate
+        working-directory: ./
+        run: npm run validate:yml

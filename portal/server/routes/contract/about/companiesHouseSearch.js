@@ -1,11 +1,6 @@
 const express = require('express');
-const companiesHouseAPI = require('../../../companies-house-api');
-const {
-  provide,
-  DEAL,
-  INDUSTRY_SECTORS,
-  COUNTRIES,
-} = require('../../api-data-provider');
+const { provide, DEAL, COUNTRIES } = require('../../api-data-provider');
+const companiesApi = require('../../../companies-api');
 
 // https://developer.companieshouse.gov.uk/api/docs/company/company_number/registered-office-address/registeredOfficeAddress-resource.html
 // England, Wales, Scotland, Northern Ireland, Great Britain, United Kingdom, Not specified
@@ -20,42 +15,17 @@ const getPortalCountryForCompaniesHouseCountry = (companiesHouseCountry) => {
 
 const router = express.Router();
 
-const getIndustryFromSicCode = (industrySectors, sicCodes) => {
-  let result = {};
-  if (!sicCodes) {
-    return null;
-  }
-
-  const sicCode = sicCodes[0];
-
-  industrySectors.forEach((sector) => sector.classes.find((industryClass) => {
-    if (industryClass.code === sicCode) {
-      result = {
-        sector: {
-          code: sector.code,
-          name: sector.name,
-        },
-        class: {
-          code: industryClass.code,
-          name: industryClass.name,
-        },
-      };
-      return result;
-    }
-    return null;
-  }));
-
-  return result;
-};
-
-router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', provide([DEAL, INDUSTRY_SECTORS, COUNTRIES]), async (req, res) => {
-  const { prefix } = req.params;
-  const { deal, industrySectors } = req.apiData;
+router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', provide([DEAL, COUNTRIES]), async (req, res) => {
+  const {
+    session: { userToken },
+    params: { prefix },
+    apiData: { deal },
+  } = req;
 
   const registrationNumberField = `${prefix}-companies-house-registration-number`;
   const registrationNumberFieldValue = req.body[registrationNumberField];
 
-  const { company, errorMessage } = await companiesHouseAPI.getByRegistrationNumber(registrationNumberFieldValue);
+  const { company, errorMessage } = await companiesApi.getCompanyByRegistrationNumber(registrationNumberFieldValue, userToken);
 
   if (!company) {
     req.session.aboutSupplierFormData = deal;
@@ -88,30 +58,28 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', prov
   // munge data back into form data
   deal.submissionDetails = req.body;
 
-  deal.submissionDetails[`${prefix}-name`] = company.company_name;
-  deal.submissionDetails[`${prefix}-address-line-1`] = company.registered_office_address.address_line_1;
-  deal.submissionDetails[`${prefix}-address-line-2`] = company.registered_office_address.address_line_2;
-  deal.submissionDetails[`${prefix}-address-town`] = company.registered_office_address.locality;
-  deal.submissionDetails[`${prefix}-address-postcode`] = company.registered_office_address.postal_code;
+  deal.submissionDetails[`${prefix}-name`] = company.companyName;
+  deal.submissionDetails[`${prefix}-address-line-1`] = company.registeredAddress.addressLine1;
+  deal.submissionDetails[`${prefix}-address-line-2`] = company.registeredAddress.addressLine2;
+  deal.submissionDetails[`${prefix}-address-town`] = company.registeredAddress.locality;
+  deal.submissionDetails[`${prefix}-address-postcode`] = company.registeredAddress.postalCode;
 
   deal.submissionDetails[`${prefix}-address-country`] = {
-    code: getPortalCountryForCompaniesHouseCountry(company.registered_office_address.country),
+    code: getPortalCountryForCompaniesHouseCountry(company.registeredAddress.country),
   };
 
-  const industryFromSicCode = getIndustryFromSicCode(industrySectors, company.sic_codes);
+  const industry = company.industries[0];
 
-  if (industryFromSicCode) {
-    if (industryFromSicCode.sector) {
-      deal.submissionDetails['industry-sector'] = {
-        code: industryFromSicCode.sector.code,
-        name: industryFromSicCode.sector.name,
-      };
-    }
+  if (industry) {
+    deal.submissionDetails['industry-sector'] = {
+      code: industry.code,
+      name: industry.name,
+    };
 
-    if (industryFromSicCode.class) {
+    if (industry.class) {
       deal.submissionDetails['industry-class'] = {
-        code: industryFromSicCode.class.code,
-        name: industryFromSicCode.class.name,
+        code: industry.class.code,
+        name: industry.class.name,
       };
     }
   }

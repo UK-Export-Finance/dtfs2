@@ -4,6 +4,7 @@ import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
+import facilitiesPage from '../../pages/facilitiesPage';
 
 context('Amendments all facilities table - should show amendment value and coverEndDate', () => {
   let dealId;
@@ -29,13 +30,15 @@ context('Amendments all facilities table - should show amendment value and cover
   });
 
   it('should show facility value and coverEndDate for original facility', () => {
+    const facilityId = dealFacilities[0]._id;
+
     cy.login(PIM_USER_1);
     cy.visit(relative('/facilities'));
-    cy.url().should('eq', relative('/facilities'));
+    cy.url().should('eq', relative('/facilities/0'));
 
-    cy.get('tr:nth-child(n+1) [data-cy="facility__ukefFacilityId"]').contains('1000000');
-    cy.get('tr:nth-child(n+1) [data-cy="facility__facilityValue"]').contains('GBP 12,345');
-    cy.get('tr:nth-child(n+1) [data-cy="facility__coverEndDate"]').contains(dateConstants.oneMonthFormattedShort);
+    facilitiesPage.facilitiesTable.row(facilityId).facilityLinkText().contains('1000000');
+    facilitiesPage.facilitiesTable.row(facilityId).value().contains('GBP 12,345');
+    facilitiesPage.facilitiesTable.row(facilityId).coverEndDate().contains(dateConstants.oneMonthFormattedShort);
   });
 
   it('should submit an automatic amendment request for coverEndDate', () => {
@@ -78,6 +81,7 @@ context('Amendments all facilities table - should show amendment value and cover
     amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.tomorrowMonth);
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.tomorrowYear);
     amendmentsPage.continueAmendment().click();
+
     cy.url().should('contain', 'check-answers');
     amendmentsPage.continueAmendment().click();
   });
@@ -126,12 +130,14 @@ context('Amendments all facilities table - should show amendment value and cover
   });
 
   it('should show facility value and coverEndDate from amendments in all facilities table', () => {
+    const facilityId = dealFacilities[0]._id;
+
     cy.login(PIM_USER_1);
     cy.visit(relative('/facilities'));
-    cy.url().should('eq', relative('/facilities'));
+    cy.url().should('eq', relative('/facilities/0'));
 
-    cy.get('tr:nth-child(n+1) [data-cy="facility__ukefFacilityId"]').contains('1000000');
-    cy.get('tr:nth-child(n+1) [data-cy="facility__facilityValue"]').contains('GBP 123');
-    cy.get('tr:nth-child(n+1) [data-cy="facility__coverEndDate"]').contains(dateConstants.tomorrowFormattedFacilityPage);
+    facilitiesPage.facilitiesTable.row(facilityId).facilityLinkText().contains('1000000');
+    facilitiesPage.facilitiesTable.row(facilityId).value().contains('GBP 123');
+    facilitiesPage.facilitiesTable.row(facilityId).coverEndDate().contains(dateConstants.tomorrowFormattedFacilityPage);
   });
 });

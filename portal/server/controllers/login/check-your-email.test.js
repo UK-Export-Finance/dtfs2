@@ -15,8 +15,14 @@ describe('renderCheckYourEmailPage', () => {
   });
 
   it.each([
-    { session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 2 }, expectedRenderArguments: ['login/check-your-email.njk'] },
-    { session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 1 }, expectedRenderArguments: ['login/new-sign-in-link-sent.njk'] },
+    {
+      session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 2 },
+      expectedRenderArguments: ['login/check-your-email.njk'],
+    },
+    {
+      session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 1 },
+      expectedRenderArguments: ['login/new-sign-in-link-sent.njk'],
+    },
     {
       session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 0 },
       expectedRenderArguments: ['login/we-have-sent-you-another-link.njk', { obscuredSignInLinkTargetEmailAddress: redactedEmail }],
@@ -49,7 +55,11 @@ describe('renderCheckYourEmailPage', () => {
       description: 'if numberOfSendSignInLinkAttemptsRemaining is greater than should be possible',
       session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 3 },
     },
-    { description: 'if numberOfSendSignInLinkAttemptsRemaining is not a number', session: userEmail, numberOfSendSignInLinkAttemptsRemaining: 'Test String' },
+    {
+      description: 'if numberOfSendSignInLinkAttemptsRemaining is not a number',
+      session: userEmail,
+      numberOfSendSignInLinkAttemptsRemaining: 'Test String',
+    },
     { description: 'if numberOfSendSignInLinkAttemptsRemaining is not present', session: userEmail },
   ])('renders the problems with service template $description', ({ session }) => {
     const req = { session };

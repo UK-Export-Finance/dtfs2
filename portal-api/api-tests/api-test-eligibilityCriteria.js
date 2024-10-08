@@ -6,9 +6,7 @@ let notYetInitialised = true;
 
 module.exports.initialise = async (app, user) => {
   if (notYetInitialised) {
-    const {
-      get, post, remove,
-    } = api(app).as(user);
+    const { get, post, remove } = api(app).as(user);
 
     const currentECResponse = await get('/v1/eligibility-criteria');
     const existingECs = currentECResponse.body.eligibilityCriteria;

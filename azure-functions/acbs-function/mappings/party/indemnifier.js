@@ -17,9 +17,8 @@ Field mapping based on email from GA 15/03/2021
 const indemnifier = ({ deal }) => {
   const { submissionDetails } = deal.dealSnapshot;
   const countryCode = submissionDetails['indemnifier-address-country'] && submissionDetails['indemnifier-address-country'].code;
-  const citizenshipClass = countryCode === CONSTANTS.DEAL.COUNTRY.DEFAULT
-    ? CONSTANTS.PARTY.CITIZENSHIP_CLASS.UNITED_KINGDOM
-    : CONSTANTS.PARTY.CITIZENSHIP_CLASS.ROW;
+  const citizenshipClass =
+    countryCode === CONSTANTS.DEAL.COUNTRY.DEFAULT ? CONSTANTS.PARTY.CITIZENSHIP_CLASS.UNITED_KINGDOM : CONSTANTS.PARTY.CITIZENSHIP_CLASS.ROW;
   const partyNames = getPartyNames(submissionDetails['indemnifier-name']);
 
   return {

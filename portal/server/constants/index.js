@@ -1,10 +1,8 @@
 const DASHBOARD = require('./dashboard');
 const DATE = require('./date');
 const FACILITY_HAS_BEEN_ISSUED = require('./facility-has-been-issued');
-const FACILITY_TYPE = require('./facility-type');
 const FACILITY_STAGE = require('./facility-stage');
 const FIELD_NAMES = require('./field-names');
-const { LOGIN_STATUS } = require('./login-status');
 const PRODUCT = require('./product');
 const STATUS = require('./status');
 const SUBMISSION_TYPE = require('./submission-type');
@@ -23,7 +21,6 @@ module.exports = {
   DASHBOARD,
   DATE,
   FACILITY_HAS_BEEN_ISSUED,
-  FACILITY_TYPE,
   FACILITY_STAGE,
   FIELD_NAMES,
   PRODUCT,
@@ -36,7 +33,6 @@ module.exports = {
   FILE_UPLOAD,
   MONTH_NAMES,
   ALL_BANKS_ID,
-  LOGIN_STATUS,
   HTTP_ERROR_CAUSES,
   LANDING_PAGES,
   PRIMARY_NAV_KEY,

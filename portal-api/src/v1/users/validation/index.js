@@ -10,6 +10,10 @@ const readOnlyRoleCannotBeAssignedWithOtherRoles = require('./rules/read-only-ro
 const usernameAndEmailMustMatch = require('./rules/username-and-email-must-match');
 const emailMustBeValidEmailAddress = require('./rules/email-must-be-valid-email-address');
 const emailMustBeUnique = require('./rules/email-must-be-unique');
+const firstNameMustNotBeEmpty = require('./rules/firstName-must-not-be-empty');
+const surnameMustNotBeEmpty = require('./rules/surname-must-not-be-empty');
+const selectAtLeastOneRole = require('./rules/select-at-least-one-role');
+const selectAtLeastOneBank = require('./rules/select-at-least-one-bank');
 
 const createRules = [
   passwordAtLeast8Characters,
@@ -21,6 +25,10 @@ const createRules = [
   usernameAndEmailMustMatch,
   emailMustBeValidEmailAddress,
   emailMustBeUnique,
+  firstNameMustNotBeEmpty,
+  surnameMustNotBeEmpty,
+  selectAtLeastOneRole,
+  selectAtLeastOneBank,
 ];
 
 const updateWithoutCurrentPasswordRules = [

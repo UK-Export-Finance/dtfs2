@@ -1,6 +1,4 @@
-const {
-  contract, contractAboutSupplier, contractAboutBuyer, contractAboutPreview, defaults,
-} = require('../../pages');
+const { contract, contractAboutSupplier, contractAboutBuyer, contractAboutPreview, defaults } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const aDealWithAboutSupplyContractComplete = require('./dealWithFirstPageComplete.json');
@@ -11,8 +9,9 @@ context('about-supply-contract', () => {
   let deal;
 
   before(() => {
-    cy.insertOneDeal(aDealWithAboutSupplyContractComplete, BANK1_MAKER1)
-      .then((insertedDeal) => { deal = insertedDeal; });
+    cy.insertOneDeal(aDealWithAboutSupplyContractComplete, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   it('A maker picks up a deal with the supplier details completed, and fills in the about-buyer-contract section, using the companies house search.', () => {
@@ -42,8 +41,11 @@ context('about-supply-contract', () => {
     contractAboutPreview.visit(deal);
     contractAboutPreview.submissionDetails().should('be.visible');
 
-    partials.taskListHeader.itemStatus('buyer').invoke('text').then((text) => {
-      expect(text.trim()).equal('Completed');
-    });
+    partials.taskListHeader
+      .itemStatus('buyer')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Completed');
+      });
   });
 });

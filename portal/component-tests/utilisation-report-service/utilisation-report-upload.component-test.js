@@ -1,4 +1,4 @@
-const { ROLES} = require('@ukef/dtfs2-common');
+const { ROLES } = require('@ukef/dtfs2-common');
 const pageRenderer = require('../pageRenderer');
 const { PRIMARY_NAV_KEY } = require('../../server/constants');
 
@@ -11,8 +11,8 @@ describe(page, () => {
     surname: 'Smith',
     roles: [ROLES.PAYMENT_REPORT_OFFICER],
   };
-  const dueReportPeriods = [{
-    reportPeriod: {
+  const dueReportPeriods = [
+    {
       start: {
         month: 12,
         year: 2022,
@@ -21,10 +21,9 @@ describe(page, () => {
         month: 12,
         year: 2022,
       },
+      formattedReportPeriod: 'December 2022',
     },
-    formattedReportPeriod: 'December 2022',
-  }, {
-    reportPeriod: {
+    {
       start: {
         month: 1,
         year: 2023,
@@ -33,10 +32,9 @@ describe(page, () => {
         month: 1,
         year: 2023,
       },
+      formattedReportPeriod: 'January 2023',
     },
-    formattedReportPeriod: 'January 2023',
-  }, {
-    reportPeriod: {
+    {
       start: {
         month: 2,
         year: 2023,
@@ -45,9 +43,9 @@ describe(page, () => {
         month: 2,
         year: 2023,
       },
+      formattedReportPeriod: 'February 2023',
     },
-    formattedReportPeriod: 'February 2023',
-  }];
+  ];
 
   const decemberOverdueReportText = 'December 2022 report is overdue';
   const januaryOverdueReportText = 'January 2023 report is overdue';
@@ -170,12 +168,14 @@ describe(page, () => {
     });
 
     it('should display specific text about the next report which can be uploaded', () => {
-      wrapper.expectText('[data-cy="next-due-report-text"]')
+      wrapper
+        .expectText('[data-cy="next-due-report-text"]')
         .toRead(`The ${formattedNextReportPeriod} report can be uploaded from ${nextReportPeriodSubmissionStart}.`);
     });
 
     it('should display details about the last uploaded report', () => {
-      wrapper.expectText('[data-cy="uploaded-report-details"]')
+      wrapper
+        .expectText('[data-cy="uploaded-report-details"]')
         .toRead(`The ${lastUploadedReportPeriod} report was sent to UKEF by ${uploadedByFullName} on ${formattedDateAndTimeUploaded}.`);
     });
 

@@ -6,8 +6,20 @@ const render = pageRenderer(page);
 describe(page, () => {
   const data = {
     validationErrors: [
-      { errorMessage: 'Fees paid to UKEF for the period header is missing or spelt incorrectly', column: null, row: null, value: null, exporter: null },
-      { errorMessage: 'Facility utilisation must be a number', column: 'C', row: 3, value: 'abc', exporter: 'test exporter' },
+      {
+        errorMessage: 'Fees paid to UKEF for the period header is missing or spelt incorrectly',
+        column: null,
+        row: null,
+        value: null,
+        exporter: null,
+      },
+      {
+        errorMessage: 'Facility utilisation must be a number',
+        column: 'C',
+        row: 3,
+        value: 'abc',
+        exporter: 'test exporter',
+      },
     ],
     errorSummary: [
       {

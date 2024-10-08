@@ -1,25 +1,6 @@
-import { ReportPeriod } from '@ukef/dtfs2-common';
-import { PortalSessionUser } from './portal-session-user';
+import { PartiallyLoggedInPortalSessionData, LoggedInPortalSessionData } from '@ukef/dtfs2-common';
 
-export type PartiallyLoggedInSessionData = {
-  userToken: string;
-  loginStatus: 'Valid username and password';
-  userEmail: string;
-  numberOfSignInLinkAttemptsRemaining: number;
-};
-
-export type LoggedInSessionData = {
-  userToken: string;
-  loginStatus: 'Valid 2FA';
-  user: PortalSessionUser;
-  dashboardFilters?: unknown;
-  utilisationReport?: {
-    formattedReportPeriod: string;
-    reportPeriod: ReportPeriod;
-  };
-};
-
-export type UserSessionData = PartiallyLoggedInSessionData | LoggedInSessionData;
+export type UserSessionData = PartiallyLoggedInPortalSessionData | LoggedInPortalSessionData;
 
 // https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/express-session/index.d.ts#L199-L211
 declare module 'express-session' {

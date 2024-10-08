@@ -1,18 +1,21 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
-import { QueryRunner } from 'typeorm';
-import { MOCK_AZURE_FILE_INFO, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { postUploadUtilisationReport, postUploadUtilisationReportPayloadValidator, PostUploadUtilisationReportRequestBody } from '.';
-import { MOCK_UTILISATION_REPORT_RAW_CSV_DATA } from '../../../../../api-tests/mocks/utilisation-reports/utilisation-report-raw-csv-data';
-import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
+import { EntityManager } from 'typeorm';
+import { MOCK_AZURE_FILE_INFO, TestApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { postUploadUtilisationReport, PostUploadUtilisationReportRequestBody } from '.';
+import { executeWithSqlTransaction } from '../../../../helpers';
+import { TransactionFailedError } from '../../../../errors';
+import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
+import { aUtilisationReportRawCsvData } from '../../../../../test-helpers';
+
+jest.mock('../../../../helpers');
 
 console.error = jest.fn();
 
 describe('post-upload-utilisation-report controller', () => {
   const userId = new ObjectId().toString();
-  const reportData = [MOCK_UTILISATION_REPORT_RAW_CSV_DATA];
+  const reportData = [aUtilisationReportRawCsvData()];
 
   const validPostUploadUtilisationReportRequestBody: PostUploadUtilisationReportRequestBody = {
     reportId: 1,
@@ -33,118 +36,43 @@ describe('post-upload-utilisation-report controller', () => {
       },
     });
 
-  const mockConnect = jest.fn();
-  const mockStartTransaction = jest.fn();
-  const mockCommitTransaction = jest.fn();
-  const mockRollbackTransaction = jest.fn();
-  const mockRelease = jest.fn();
-
-  const mockTransactionManager = {
-    save: jest.fn(),
-  };
-
-  const mockQueryRunner = {
-    connect: mockConnect,
-    startTransaction: mockStartTransaction,
-    commitTransaction: mockCommitTransaction,
-    rollbackTransaction: mockRollbackTransaction,
-    release: mockRelease,
-    manager: mockTransactionManager,
-  } as unknown as QueryRunner;
-
-  const createQueryRunnerSpy = jest.spyOn(SqlDbDataSource, 'createQueryRunner');
-
-  describe('postUploadUtilisationReportPayloadValidator', () => {
-    const mockNext = jest.fn();
-
-    beforeEach(() => {
-      jest.resetAllMocks();
-      createQueryRunnerSpy.mockReturnValue(mockQueryRunner);
-    });
-
-    it('calls the next function when there are no validation errors', () => {
-      // Arrange
-      const { req, res } = getHttpMocks();
-
-      // Act
-      postUploadUtilisationReportPayloadValidator(req, res, mockNext);
-
-      // Assert
-      expect(mockNext).toHaveBeenCalled();
-      expect(res._isEndCalled()).toBe(false);
-    });
-
-    const propertyNamesWithInvalidValues = [
-      {
-        propertyName: 'reportId',
-        value: '20',
-      },
-      {
-        propertyName: 'fileInfo',
-        value: {},
-      },
-      {
-        propertyName: 'reportData',
-        value: {},
-      },
-      {
-        propertyName: 'user',
-        value: 'abc123',
-      },
-    ] as const;
-
-    it.each(propertyNamesWithInvalidValues)("responds with an error if the '$propertyName' property is invalid", ({ propertyName, value }) => {
-      // Arrange
-      const { req, res } = getHttpMocks({
-        [propertyName]: value,
-      });
-
-      // Act
-      postUploadUtilisationReportPayloadValidator(req, res, mockNext);
-
-      // Assert
-      expect(mockNext).not.toHaveBeenCalled();
-      expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-    });
-  });
-
   describe('postUploadUtilisationReport', () => {
-    const mockDate = new Date('2024-01');
+    const mockEntityManager = {
+      save: jest.fn(),
+    } as unknown as EntityManager;
 
-    const utilisationReportRepoFindOneByOrFailSpy = jest.spyOn(UtilisationReportRepo, 'findOneByOrFail');
+    const utilisationReportStateMachineConstructorSpy = jest.spyOn(UtilisationReportStateMachine, 'forReportId');
 
-    const getNotReceivedReport = () => UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').build();
-
-    beforeAll(() => {
-      jest.useFakeTimers();
-      jest.setSystemTime(mockDate);
-    });
-
-    afterAll(() => {
-      jest.useRealTimers();
-    });
+    const mockEventHandler = jest.fn();
+    const mockUtilisationReportStateMachine = {
+      handleEvent: mockEventHandler,
+    } as unknown as UtilisationReportStateMachine;
 
     beforeEach(() => {
-      jest.resetAllMocks();
-      createQueryRunnerSpy.mockReturnValue(mockQueryRunner);
+      utilisationReportStateMachineConstructorSpy.mockResolvedValue(mockUtilisationReportStateMachine);
+      jest.mocked(executeWithSqlTransaction).mockImplementation(async (functionToExecute) => await functionToExecute(mockEntityManager));
     });
 
-    it('responds with a specific error status code if the state transition is invalid', async () => {
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
+
+    it('responds with an specific status code if the transaction throws a specific error', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const invalidStatusReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
-      utilisationReportRepoFindOneByOrFailSpy.mockResolvedValue(invalidStatusReport);
+      const errorMessage = 'An error message';
+      const errorStatus = HttpStatusCode.BadRequest;
+      const testApiError = new TestApiError(errorStatus, errorMessage);
+
+      jest.mocked(executeWithSqlTransaction).mockRejectedValue(TransactionFailedError.forApiError(testApiError));
 
       // Act
       await postUploadUtilisationReport(req, res);
 
       // Assert
-      expect(utilisationReportRepoFindOneByOrFailSpy).toHaveBeenCalledWith({ id: validPostUploadUtilisationReportRequestBody.reportId });
-      expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-      expect(mockTransactionManager.save).not.toHaveBeenCalled();
-      expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-      expect(res._getData()).toEqual(expect.stringContaining('Failed to save utilisation report:'));
+      expect(res._getStatusCode()).toBe(errorStatus);
+      expect(res._getData()).toEqual(`Failed to save utilisation report: ${errorMessage}`);
     });
 
     describe('when the state transition is valid', () => {
@@ -152,43 +80,31 @@ describe('post-upload-utilisation-report controller', () => {
         // Arrange
         const { req, res } = getHttpMocks();
 
-        const notReceivedReport = getNotReceivedReport();
-
-        utilisationReportRepoFindOneByOrFailSpy.mockResolvedValue(notReceivedReport);
+        const mockDate = new Date('2024-01-01');
+        const updatedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withDateUploaded(mockDate).build();
+        jest.mocked(mockEventHandler).mockResolvedValue(updatedReport);
 
         // Act
         await postUploadUtilisationReport(req, res);
 
         // Assert
-        expect(utilisationReportRepoFindOneByOrFailSpy).toHaveBeenCalledWith({ id: validPostUploadUtilisationReportRequestBody.reportId });
-        expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-        expect(mockConnect).toHaveBeenCalledTimes(1);
-        expect(mockStartTransaction).toHaveBeenCalledTimes(1);
-        expect(mockCommitTransaction).toHaveBeenCalledTimes(1);
-        expect(mockRollbackTransaction).not.toHaveBeenCalled();
-        expect(mockRelease).toHaveBeenCalled();
-        expect(mockTransactionManager.save).toHaveBeenCalled();
+        expect(mockEventHandler).toHaveBeenCalled();
 
         expect(res._getStatusCode()).toBe(HttpStatusCode.Created);
         expect(res._getData()).toEqual({ dateUploaded: mockDate });
       });
 
-      it('responds with an internal server error if an unexpected error occurs', async () => {
+      it('responds with an internal server error if an unexpected error occurs during the transaction', async () => {
         // Arrange
         const { req, res } = getHttpMocks();
 
-        const notReceivedReport = getNotReceivedReport();
-        utilisationReportRepoFindOneByOrFailSpy.mockResolvedValue(notReceivedReport);
-
-        mockTransactionManager.save.mockRejectedValue(new Error('Some error'));
+        jest.mocked(executeWithSqlTransaction).mockRejectedValue(TransactionFailedError.forUnknownError());
 
         // Act
         await postUploadUtilisationReport(req, res);
 
         // Assert
         expect(res._getData()).toEqual(expect.stringContaining('Failed to save utilisation report'));
-        expect(utilisationReportRepoFindOneByOrFailSpy).toHaveBeenCalledWith({ id: validPostUploadUtilisationReportRequestBody.reportId });
-        expect(mockTransactionManager.save).toHaveBeenCalledTimes(1);
         expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
       });
     });

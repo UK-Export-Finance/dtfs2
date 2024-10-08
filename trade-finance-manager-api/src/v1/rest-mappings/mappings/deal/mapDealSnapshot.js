@@ -4,16 +4,9 @@ const mapSubmissionDetails = require('./mapSubmissionDetails');
 const mapEligibility = require('./mapEligibility');
 
 const mapDealSnapshot = (deal) => {
-  const {
-    dealSnapshot,
-    tfm: dealTfm,
-  } = deal;
+  const { dealSnapshot, tfm: dealTfm } = deal;
 
-  const {
-    submissionDetails,
-    facilities,
-    eligibility,
-  } = dealSnapshot;
+  const { submissionDetails, facilities, eligibility } = dealSnapshot;
 
   const mapped = {
     ...dealSnapshot,

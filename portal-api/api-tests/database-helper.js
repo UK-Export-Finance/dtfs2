@@ -1,7 +1,8 @@
+/* eslint-disable no-param-reassign */
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const { produce } = require('immer');
-const db = require('../src/drivers/db-client');
-const { DB_COLLECTIONS } = require('./fixtures/constants');
+const { mongoDbClient: db } = require('../src/drivers/db-client');
 
 const wipe = async (collections) => {
   const drop = async (collection) =>
@@ -18,10 +19,26 @@ const wipe = async (collections) => {
 };
 
 const wipeAll = async () => {
-  const collections = Object.values(DB_COLLECTIONS);
+  const collections = Object.values(MONGO_DB_COLLECTIONS);
   const wiped = await wipe(collections);
 
   return wiped;
+};
+
+/**
+ * @param {string[]} bankIds - the bank id.
+ *
+ * Note this takes an `id` not the ObjectId `_id`
+ */
+const deleteBanks = async (bankIds) => {
+  const bankCollections = await db.getCollection(MONGO_DB_COLLECTIONS.BANKS);
+  await bankCollections.deleteMany({
+    $or: bankIds.map((id) => ({
+      id: {
+        $eq: id,
+      },
+    })),
+  });
 };
 
 const deleteUser = async (user) => {
@@ -31,7 +48,7 @@ const deleteUser = async (user) => {
     throw new Error('Invalid Username');
   }
 
-  const usersCollection = await db.getCollection(DB_COLLECTIONS.USERS);
+  const usersCollection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
   await usersCollection.deleteMany({ username: { $eq: username } });
 };
 
@@ -46,7 +63,7 @@ const unsetUserProperties = async ({ username, properties }) => {
     });
   });
 
-  const usersCollection = await db.getCollection(DB_COLLECTIONS.USERS);
+  const usersCollection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
   await usersCollection.updateOne({ username: { $eq: username } }, { $unset: unsetUpdate });
 };
 
@@ -55,11 +72,11 @@ const setUserProperties = async ({ username, update }) => {
     throw new Error('Invalid Username');
   }
 
-  const usersCollection = await db.getCollection(DB_COLLECTIONS.USERS);
+  const usersCollection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
   await usersCollection.updateOne({ username: { $eq: username } }, { $set: update });
 };
 
-const getUserById = async (userId) => (await db.getCollection(DB_COLLECTIONS.USERS)).findOne({ _id: { $eq: ObjectId(userId) } });
+const getUserById = async (userId) => (await db.getCollection(MONGO_DB_COLLECTIONS.USERS)).findOne({ _id: { $eq: ObjectId(userId) } });
 
 module.exports = {
   wipe,
@@ -68,4 +85,5 @@ module.exports = {
   unsetUserProperties,
   setUserProperties,
   getUserById,
+  deleteBanks,
 };

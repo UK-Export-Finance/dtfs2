@@ -2,10 +2,10 @@ const CONSTANTS = require('../../../constants');
 
 /**
  * Return facility fee record amount.
- * @param {Object} facility Facility object
- * @param {String} dealType Deal type i.e. GEF, BSS, EWCS
+ * @param {object} facility Facility object
+ * @param {string} dealType Deal type i.e. GEF, BSS, EWCS
  * @param {Integer} premiumScheduleIndex Premium schedule index
- * @returns {Integer} Fee record amount
+ * @returns {number} Fee record amount
  */
 
 const getFeeAmount = (facility, dealType, premiumScheduleIndex) => {
@@ -15,9 +15,7 @@ const getFeeAmount = (facility, dealType, premiumScheduleIndex) => {
   }
 
   // EWCS/BSS
-  return facility.tfm.premiumSchedule[premiumScheduleIndex]
-    ? Number(facility.tfm.premiumSchedule[premiumScheduleIndex].income.toFixed(2))
-    : 0;
+  return facility.tfm.premiumSchedule[premiumScheduleIndex] ? Number(facility.tfm.premiumSchedule[premiumScheduleIndex].income.toFixed(2)) : 0;
 };
 
 module.exports = getFeeAmount;

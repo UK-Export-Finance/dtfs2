@@ -1,7 +1,4 @@
-const {
-  generateTaskUrl,
-  generateTaskEmailVariables,
-} = require('./generate-task-email-variables');
+const { generateTaskUrl, generateTaskEmailVariables } = require('./generate-task-email-variables');
 const { lowercaseFirstLetter } = require('../../utils/string');
 
 describe('generate-task-email-variables', () => {
@@ -15,11 +12,7 @@ describe('generate-task-email-variables', () => {
         groupId: 2,
       };
 
-      const result = generateTaskUrl(
-        mockUrlOrigin,
-        mockDealId,
-        mockTask,
-      );
+      const result = generateTaskUrl(mockUrlOrigin, mockDealId, mockTask);
 
       const { groupId, id } = mockTask;
 
@@ -43,13 +36,7 @@ describe('generate-task-email-variables', () => {
       const mockExporterName = 'test exporter';
       const mockUkefDealId = '100200';
 
-      const result = generateTaskEmailVariables(
-        mockUrlOrigin,
-        mockTask,
-        mockDealId,
-        mockExporterName,
-        mockUkefDealId,
-      );
+      const result = generateTaskEmailVariables(mockUrlOrigin, mockTask, mockDealId, mockExporterName, mockUkefDealId);
 
       const expected = {
         taskTitle: lowercaseFirstLetter(mockTask.title),

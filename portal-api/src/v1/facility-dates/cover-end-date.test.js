@@ -90,7 +90,7 @@ describe('updateCoverEndDate', () => {
         'coverEndDate-month': '01',
         'coverEndDate-year': '2022',
       };
-  
+
       const result = updateCoverEndDate(facility);
       const date = new Date(Number(result.coverEndDate));
 
@@ -105,16 +105,15 @@ describe('updateCoverEndDate', () => {
         'coverEndDate-month': '01',
         'coverEndDate-year': '####',
       };
-  
+
       const result = updateCoverEndDate(facility);
       const date = new Date(Number(result.coverEndDate));
-      
+
       expect(format(date, 'dd')).toEqual('12');
       expect(format(date, 'MM')).toEqual('01');
       expect(format(date, 'yyyy')).toEqual(format(new Date(), 'yyyy'));
     });
   });
-
 
   it('should return NaN if invalid month', () => {
     const facility = {

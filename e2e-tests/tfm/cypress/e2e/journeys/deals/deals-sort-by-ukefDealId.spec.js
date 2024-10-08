@@ -25,26 +25,17 @@ context('User can view and sort deals by ukefDealId', () => {
     submissionDate: yesterday.valueOf().toString(),
   });
 
-  const MOCK_DEALS = [
-    DEAL_1,
-    DEAL_2,
-  ];
+  const MOCK_DEALS = [DEAL_1, DEAL_2];
 
   before(() => {
     cy.deleteTfmDeals();
 
     cy.insertManyDeals(MOCK_DEALS, BANK1_MAKER1).then((insertedDeals) => {
       insertedDeals.forEach((deal) => {
-        const {
-          _id: dealId,
-          mockFacilities,
-        } = deal;
+        const { _id: dealId, mockFacilities } = deal;
 
         cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((facilities) => {
-          ALL_FACILITIES = [
-            ...ALL_FACILITIES,
-            ...facilities,
-          ];
+          ALL_FACILITIES = [...ALL_FACILITIES, ...facilities];
         });
       });
 
@@ -56,7 +47,7 @@ context('User can view and sort deals by ukefDealId', () => {
           const dealAUkefId = a.dealSnapshot.details.ukefDealId;
           const dealBUkefId = b.dealSnapshot.details.ukefDealId;
 
-          return (Number(dealAUkefId) - Number(dealBUkefId));
+          return Number(dealAUkefId) - Number(dealBUkefId);
         });
 
         [dealAscending1, dealAscending2] = ALL_SUBMITTED_DEALS_SORTED_IN_ASCENDING_ORDER;
@@ -69,7 +60,7 @@ context('User can view and sort deals by ukefDealId', () => {
 
   beforeEach(() => {
     cy.login(T1_USER_1);
-    cy.url().should('eq', relative('/deals'));
+    cy.url().should('eq', relative('/deals/0'));
   });
 
   after(() => {

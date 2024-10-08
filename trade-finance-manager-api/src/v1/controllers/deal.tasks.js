@@ -6,8 +6,8 @@ const { createTasks } = require('../helpers/create-tasks');
  * Check if the "create or match parties" task should be created
  * if BSS, show task if either buyer or exporter party URN are not present
  * if GEF, show task if exporter party URN is not present
- * @param {Object} deal
- * @returns {Boolean}
+ * @param {object} deal
+ * @returns {boolean}
  */
 const shouldCreatePartiesTask = (deal) => {
   const { dealType, tfm } = deal;
@@ -33,8 +33,8 @@ const shouldCreatePartiesTask = (deal) => {
 
 /**
  * Check if the "check agent" task should be created
- * @param {Object} deal
- * @returns {Boolean}
+ * @param {object} deal
+ * @returns {boolean}
  */
 const shouldCreateAgentCheckTask = (deal) => {
   const { dealType, submissionType } = deal;
@@ -57,7 +57,7 @@ const shouldCreateAgentCheckTask = (deal) => {
 
 /**
  * Get additional/conditional tasks that should be added to tasks, depending on deal data.
- * @param {Object} deal
+ * @param {object} deal
  * @returns {Array}
  */
 const listAdditionalTasks = (deal) => {
@@ -76,10 +76,11 @@ const listAdditionalTasks = (deal) => {
 
 /**
  * Get additional/conditional tasks that should be added to tasks, depending on deal data.
- * @param {Object} deal
- * @returns {Object} deal with tasks
+ * @param {object} deal
+ * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
+ * @returns {Promise<object>} deal with tasks
  */
-const createDealTasks = async (deal) => {
+const createDealTasks = async (deal, auditDetails) => {
   if (!deal) {
     return false;
   }
@@ -97,7 +98,7 @@ const createDealTasks = async (deal) => {
     },
   };
 
-  const updatedDeal = await api.updateDeal(dealId, dealUpdate);
+  const updatedDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
   return {
     ...deal,

@@ -1,24 +1,16 @@
 const { format } = require('date-fns');
-const
-  {
-    validationErrorHandler,
-    getEpoch,
-    pastDate,
-    sameDate,
-    futureDateInRange,
-  } = require('../../utils/helpers');
+const { validationErrorHandler, getEpoch, pastDate, sameDate, futureDateInRange } = require('../../utils/helpers');
 const { applicationDetails } = require('../application-details');
 const api = require('../../services/api');
 const CONSTANTS = require('../../constants');
 
-const setError = (field, message) => validationErrorHandler({
-  errRef: field,
-  errMsg: message,
-});
+const setError = (field, message) =>
+  validationErrorHandler({
+    errRef: field,
+    errMsg: message,
+  });
 
-const updateCoverStartDate = async ({
-  facilityId, coverStartDate, shouldCoverStartOnSubmission, dealId, editorId, userToken,
-}) => {
+const updateCoverStartDate = async ({ facilityId, coverStartDate, shouldCoverStartOnSubmission, dealId, editorId, userToken }) => {
   try {
     const applicationUpdate = {
       editorId,
@@ -35,7 +27,7 @@ const updateCoverStartDate = async ({
       userToken,
     });
   } catch (error) {
-    console.error('Unable to update the facility. %s', error);
+    console.error('Unable to update the facility. %o', error);
   }
   return false;
 };
@@ -44,12 +36,7 @@ const processCoverStartDate = async (req, res) => {
   const { dealId, facilityId } = req.params;
   const { user, userToken } = req.session;
   const { _id: editorId } = user;
-  const {
-    ukefCoverStartDate,
-    day,
-    month,
-    year,
-  } = req.body;
+  const { ukefCoverStartDate, day, month, year } = req.body;
   let facility;
   const { details } = await api.getFacility({ facilityId, userToken });
 
@@ -58,11 +45,11 @@ const processCoverStartDate = async (req, res) => {
       req.errors = setError('ukefCoverStartDate', 'Select yes if you want UKEF cover to start on the day the notice is submitted to UKEF');
     } else if (ukefCoverStartDate === 'true') {
       /**
-         * Facility cover start will be set to the
-         * notice submission date i.e. The date
-         * checker will submit the application to the UKEF.
-         * Please do not update the coverStartDate value.
-         */
+       * Facility cover start will be set to the
+       * notice submission date i.e. The date
+       * checker will submit the application to the UKEF.
+       * Please do not update the coverStartDate value.
+       */
       facility = await updateCoverStartDate({
         facilityId,
         coverStartDate: null,
@@ -73,13 +60,13 @@ const processCoverStartDate = async (req, res) => {
       });
     } else if (ukefCoverStartDate === 'false') {
       /**
-         * Facility cover start will be set to the
-         * user specified date as long as below conditions
-         * are met.
-         */
+       * Facility cover start will be set to the
+       * user specified date as long as below conditions
+       * are met.
+       */
       // 1. Check date components have valid values
 
-      if (!Number(day) || !Number(month) || !Number(year) || (`${year}`.length < 4)) {
+      if (!Number(day) || !Number(month) || !Number(year) || `${year}`.length < 4) {
         req.errors = setError('ukefCoverStartDateInput', 'Enter the cover start date');
       } else if (pastDate({ day, month, year })) {
         // 2. Check date is not in the past
@@ -111,7 +98,7 @@ const processCoverStartDate = async (req, res) => {
 
     return applicationDetails(req, res);
   } catch (error) {
-    console.error('Unable to process cover start date %s', error);
+    console.error('Unable to process cover start date %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };

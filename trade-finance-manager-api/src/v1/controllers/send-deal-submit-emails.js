@@ -2,7 +2,7 @@ const api = require('../api');
 const CONSTANTS = require('../../constants');
 const { getFirstTask } = require('../helpers/tasks');
 const { generateTaskEmailVariables } = require('../helpers/generate-task-email-variables');
-const generateAinMinConfirmationEmailVars = require('../emails/AIN-MIN-confirmation/generate-email-variables');
+const gefEmailVariables = require('../emails/AIN-MIN-confirmation/gef-email-variables');
 const { gefFacilitiesList } = require('../emails/AIN-MIN-confirmation/gef-facilities-list');
 const { generateFacilityLists } = require('../helpers/notify-template-formatters');
 const { generateMiaConfirmationEmailVars } = require('../emails/MIA-confirmation/generate-email-variables');
@@ -17,15 +17,13 @@ const sendTfmEmail = require('./send-tfm-email');
  * we might not want to send an email.
  * */
 const shouldSendFirstTaskEmail = (firstTask) =>
-  (firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES
-    || firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE)
-  && !firstTask.emailSent;
+  (firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES ||
+    firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE) &&
+  !firstTask.emailSent;
 
 const sendFirstTaskEmail = async (deal) => {
   try {
-    const {
-      _id: dealId, ukefDealId, exporter, tfm,
-    } = deal;
+    const { _id: dealId, ukefDealId, exporter, tfm } = deal;
 
     const { tasks } = tfm;
 
@@ -45,7 +43,7 @@ const sendFirstTaskEmail = async (deal) => {
       }
     }
   } catch (error) {
-    console.error('TFM-API error sending first task email %s', error);
+    console.error('TFM-API error sending first task email %o', error);
   }
 
   return null;
@@ -104,9 +102,7 @@ const sendMiaAcknowledgement = async (deal) => {
 };
 
 const generateBssDealAinMinConfirmationEmailVariables = (deal, facilityLists) => {
-  const {
-    ukefDealId, bankInternalRefName, submissionType, maker, exporter,
-  } = deal;
+  const { ukefDealId, bankInternalRefName, submissionType, maker, exporter } = deal;
 
   const { firstname, surname } = maker;
 
@@ -127,21 +123,13 @@ const generateBssDealAinMinConfirmationEmailVariables = (deal, facilityLists) =>
 
 const sendAinMinAcknowledgement = async (deal) => {
   try {
-    const {
-      dealType, submissionType, maker, facilities,
-    } = deal;
+    const { dealType, submissionType, maker, facilities } = deal;
 
     if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIN && submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
       console.info('The current deal is not an AIN or MIN deal %s', deal?._id);
       return null;
     }
 
-    let facilityLists;
-    let templateId;
-    let emailVariables;
-    let makerEmailResponse;
-    let pimEmailResponse;
-    let bankResponse;
     const bankId = maker.bank.id;
     const { email: makerEmailAddress } = maker;
     const { emails: bankEmails } = await api.findBankById(bankId);
@@ -149,38 +137,38 @@ const sendAinMinAcknowledgement = async (deal) => {
     const { email: pimEmail } = await api.findOneTeam(CONSTANTS.TEAMS.PIM.id);
 
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-      facilityLists = generateFacilityLists(dealType, facilities);
+      const facilityLists = generateFacilityLists(dealType, facilities);
 
-      templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.BSS_DEAL_SUBMIT_CONFIRMATION;
+      const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.BSS_DEAL_SUBMIT_CONFIRMATION;
 
-      emailVariables = generateBssDealAinMinConfirmationEmailVariables(deal, facilityLists);
+      const emailVariables = generateBssDealAinMinConfirmationEmailVariables(deal, facilityLists);
 
       // send an email to the maker
-      makerEmailResponse = await sendTfmEmail(templateId, makerEmailAddress, emailVariables, deal);
+      const makerEmailResponse = await sendTfmEmail(templateId, makerEmailAddress, emailVariables, deal);
       // send a copy of the email to PIM
-      pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
+      const pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
       // send a copy of the email to the bank's general email address
-      bankResponse = bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal));
+      const bankResponse = bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal));
       return { makerEmailResponse, pimEmailResponse, bankResponse };
     }
 
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-      facilityLists = gefFacilitiesList(facilities);
+      const facilityLists = gefFacilitiesList(facilities);
 
-      templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.GEF_DEAL_SUBMIT_CONFIRMATION;
+      const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.GEF_DEAL_SUBMIT_CONFIRMATION;
 
-      emailVariables = await generateAinMinConfirmationEmailVars(deal, facilityLists);
+      const emailVariables = await gefEmailVariables(deal, facilityLists);
 
-      makerEmailResponse = await sendTfmEmail(templateId, makerEmailAddress, emailVariables, deal);
+      const makerEmailResponse = await sendTfmEmail(templateId, makerEmailAddress, emailVariables, deal);
       // send a copy of the email to PIM
-      pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
+      const pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
       // send a copy of the email to the bank's general email address
-      bankResponse = bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal));
+      const bankResponse = bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal));
 
       return { makerEmailResponse, pimEmailResponse, bankResponse };
     }
   } catch (error) {
-    console.error('TFM-API - Error sending AIN/MIN acknowledgement email %s', error);
+    console.error('TFM-API - Error sending AIN/MIN acknowledgement email %o', error);
   }
 
   return null;
@@ -202,7 +190,7 @@ const sendDealSubmitEmails = async (deal) => {
       emailAcknowledgementAinMin,
     };
   } catch (error) {
-    console.error('TFM-API - Error sending deal submit emails %s', error);
+    console.error('TFM-API - Error sending deal submit emails %o', error);
     return {};
   }
 };

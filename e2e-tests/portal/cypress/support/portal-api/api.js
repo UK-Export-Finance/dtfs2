@@ -1,4 +1,11 @@
+const { HEADERS } = require('@ukef/dtfs2-common');
+
 const { SIGN_IN_TOKENS } = require('../../fixtures/constants');
+
+const headers = {
+  'x-api-key': Cypress.config('apiKey'),
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+};
 
 const api = () => {
   const url = `${Cypress.config('apiProtocol')}${Cypress.config('apiHost')}:${Cypress.config('apiPort')}`;
@@ -14,14 +21,15 @@ const completeLoginWithSignInLink = ({ token2fa, username }) => {
         url: `${api()}/v1/users/${userId}/sign-in-link/${signInToken}/login`,
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          ...headers,
           Authorization: token2fa,
         },
       })
       .then((signInLinkResponse) => {
         expect(signInLinkResponse.status).to.equal(200);
         return signInLinkResponse.body.token;
-      }));
+      }),
+  );
 };
 module.exports.logIn = ({ username, password }) => {
   cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
@@ -31,9 +39,7 @@ module.exports.logIn = ({ username, password }) => {
       url: `${api()}/v1/login`,
       method: 'POST',
       body: { username, password },
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
     })
     .then((loginResponse) => {
       expect(loginResponse.status).to.equal(200);
@@ -51,7 +57,7 @@ module.exports.deleteDeal = (token, deal) =>
       url: `${api()}/v1/deals/${deal._id}`,
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -63,7 +69,7 @@ module.exports.listAllDeals = (token) =>
       url: `${api()}/v1/deals`,
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -78,7 +84,7 @@ module.exports.listAllUsers = (token) =>
       url: `${api()}/v1/users`,
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -93,7 +99,7 @@ module.exports.deleteUser = (token, user) =>
       url: `${api()}/v1/users/${user._id}`,
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -106,7 +112,7 @@ module.exports.insertDeal = (deal, token) =>
       method: 'POST',
       body: deal,
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -121,7 +127,7 @@ module.exports.getDeal = (dealId, token) =>
       url: `${api()}/v1/deals/${dealId}`,
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -133,7 +139,7 @@ module.exports.getFacility = (dealId, bondId, token) =>
       url: `${api()}/v1/deals/${dealId}/bond/${bondId}`,
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -146,7 +152,7 @@ module.exports.updateDeal = (dealId, update, token) =>
       method: 'PUT',
       body: update,
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -162,7 +168,7 @@ module.exports.updateBond = (dealId, bondId, update, token) =>
       method: 'PUT',
       body: update,
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
       failOnStatusCode: false, // need to allow this for when we invalidate a bond and test user flow
@@ -176,7 +182,7 @@ module.exports.updateLoan = (dealId, loanId, update, token) =>
       method: 'PUT',
       body: update,
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
       failOnStatusCode: false, // need to allow this for when we invalidate a bond and test user flow
@@ -194,7 +200,7 @@ module.exports.createFacilities = (dealId, facilities, user, token) =>
         user,
       },
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -209,7 +215,7 @@ module.exports.listGefApplications = (token) =>
       url: `${api()}/v1/gef/application/`,
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -224,7 +230,7 @@ module.exports.deleteGefApplication = (token, dealId) =>
       url: `${api()}/v1/gef/application/${dealId}`,
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -237,7 +243,7 @@ module.exports.insertGefApplication = (deal, token) =>
       method: 'POST',
       body: deal,
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -253,7 +259,7 @@ exports.updateGefApplication = (dealId, payload, token) =>
       method: 'PUT',
       body: payload,
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -269,7 +275,7 @@ module.exports.setGefApplicationStatus = (dealId, token, status) =>
       method: 'PUT',
       body: { status },
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -281,7 +287,7 @@ module.exports.listGefFacilities = (token, dealId) =>
       url: `${api()}/v1/gef/facilities/?dealId=${dealId}`,
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -296,7 +302,7 @@ module.exports.deleteGefFacility = (token, facility) =>
       url: `${api()}/v1/gef/facilities/${facility.details._id}`,
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -309,7 +315,7 @@ module.exports.insertGefFacility = (deal, token) =>
       method: 'POST',
       body: deal,
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -325,7 +331,7 @@ module.exports.updateGefFacility = (facilityId, payload, token) =>
       method: 'PUT',
       body: payload,
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -340,7 +346,7 @@ module.exports.getAllFeedback = (token) =>
       url: `${api()}/v1/feedback`,
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })

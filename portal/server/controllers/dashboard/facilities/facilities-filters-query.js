@@ -11,18 +11,13 @@ const { isSuperUser } = require('../../../helpers');
  * @example ( { _id: '1234', bank: { id: '9' } }, [ type: ['Bond'] ] )
  * @returns { AND: [ { 'deal.bank.id': '9'} ], OR: [{ hasBeenIssued: true }, { type: 'Bond' } ] }
  */
-const dashboardFacilitiesFiltersQuery = (
-  filters,
-  user,
-) => {
+const dashboardFacilitiesFiltersQuery = (filters, user) => {
   const query = {};
   let dashboardFilters = filters;
 
   // if user is admin, then deal.bank.id should not be set so cannot see all
   if (!isSuperUser(user)) {
-    query.AND = [
-      { 'deal.bank.id': user.bank.id },
-    ];
+    query.AND = [{ 'deal.bank.id': user.bank.id }];
   }
 
   const filtered = [];
@@ -45,7 +40,7 @@ const dashboardFacilitiesFiltersQuery = (
       const fieldName = Object.keys(filterObj)[0];
       const filterValue = filterObj[fieldName];
 
-      const isKeywordField = (fieldName === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD);
+      const isKeywordField = fieldName === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD;
 
       if (isKeywordField) {
         const keywordValue = filterValue[0];

@@ -1,7 +1,6 @@
 const { format, startOfMonth, addMonths } = require('date-fns');
 const { getFormattedReportPeriodWithLongMonth } = require('@ukef/dtfs2-common');
 const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
-const { validateCsvData } = require('./utilisation-report-validator');
 const { getUploadErrors } = require('./utilisation-report-upload-errors');
 const { getDueReportPeriodsByBankId, getReportDueDate } = require('./utilisation-report-status');
 const api = require('../../../api');
@@ -27,7 +26,7 @@ const setSessionUtilisationReport = (req, nextDueReportPeriod) => {
 /**
  * @typedef {import('./utilisation-report-details').ReportAndUserDetails} ReportAndUserDetails
  *
- * @typedef {Object} NextReportPeriodDetails
+ * @typedef {object} NextReportPeriodDetails
  * @property {string} nextReportPeriod - The upcoming report period (the current month) with format 'MMMM yyyy'
  * @property {string} nextReportPeriodSubmissionStart - The start of the month when the next report period report can be submitted with format 'd MMMM yyyy'
  *
@@ -117,7 +116,7 @@ const postUtilisationReportUpload = async (req, res) => {
     }
 
     // File is valid so we can start processing and validating its data
-    const { csvJson, fileBuffer, error } = await extractCsvData(req.file); // do we here catch some errors and return generic something went wrong here?
+    const { csvJson, fileBuffer, error } = await extractCsvData(req.file);
     if (error) {
       const extractDataErrorSummary = [
         {
@@ -125,12 +124,15 @@ const postUtilisationReportUpload = async (req, res) => {
           href: '#utilisation-report-file-upload',
         },
       ];
-      const extractDataError = { text: 'The selected file could not be uploaded, try again and make sure it is not password protected' };
+      const extractDataError = {
+        text: 'The selected file could not be uploaded, try again and make sure it is not password protected',
+      };
       const dueReportPeriods = await getDueReportPeriodsByBankId(userToken, bankId);
       return renderPageWithError(req, res, extractDataErrorSummary, extractDataError, dueReportPeriods);
     }
 
-    const csvValidationErrors = validateCsvData(csvJson);
+    const { csvValidationErrors } = await api.generateValidationErrorsForUtilisationReportData(csvJson, bankId, userToken);
+
     if (csvValidationErrors.length > 0) {
       const errorSummary = [
         {
@@ -196,10 +198,10 @@ const postReportConfirmAndSend = async (req, res) => {
       };
       return res.redirect('/utilisation-report-upload/confirmation');
     }
-    console.error('Error saving utilisation report: %O', response);
+    console.error('Error saving utilisation report %o', response);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   } catch (error) {
-    console.error('Error saving utilisation report: %O', error);
+    console.error('Error saving utilisation report %o', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };

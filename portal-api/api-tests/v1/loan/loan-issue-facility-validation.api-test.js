@@ -224,7 +224,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
 
       describe('when deal is AIN', () => {
         let updatedDeal;
-        const submissionDateTwoDaysAgo = sub(nowDate, { days: 2 })
+        const submissionDateTwoDaysAgo = sub(nowDate, { days: 2 });
 
         beforeEach(async () => {
           await createDealAndLoan();
@@ -234,7 +234,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
             submissionType: 'Automatic Inclusion Notice',
             details: {
               ...newDeal.details,
-              submissionDate: submissionDateTwoDaysAgo.valueOf()
+              submissionDate: submissionDateTwoDaysAgo.valueOf(),
             },
           };
 
@@ -312,7 +312,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
 
       describe('when deal is AIN and cover starts on submission', () => {
         let updatedDeal;
-        const submissionDateFourMonthsAgo = sub(nowDate, { months: 4 })
+        const submissionDateFourMonthsAgo = sub(nowDate, { months: 4 });
 
         beforeEach(async () => {
           await createDealAndLoan();
@@ -322,7 +322,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
             submissionType: 'Automatic Inclusion Notice',
             details: {
               ...newDeal.details,
-              submissionDate: submissionDateFourMonthsAgo.valueOf()
+              submissionDate: submissionDateFourMonthsAgo.valueOf(),
             },
           };
 
@@ -333,7 +333,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
           it('should return validationError', async () => {
             const submissionPlus3Months = add(submissionDateFourMonthsAgo, { months: 3 });
             const requestedCoverStartDateFields = {
-              requestedCoverStartDate: null
+              requestedCoverStartDate: null,
             };
 
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
@@ -445,9 +445,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
             const dealWithEligibilityCriteria15False = {
               ...updatedDeal,
               eligibility: {
-                criteria: [
-                  { id: 15, answer: false }
-                ],
+                criteria: [{ id: 15, answer: false }],
               },
             };
 
@@ -486,7 +484,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
           await updateDeal(dealId, updatedDeal);
         });
 
-        describe('when requestedCoverStartDate is before the deal\'s manual inclusion notice submission date', () => {
+        describe("when requestedCoverStartDate is before the deal's manual inclusion notice submission date", () => {
           it('should return validationError', async () => {
             const threeDaysAgo = sub(nowDate, { days: 3 });
             const requestedCoverStartDateFields = {
@@ -522,7 +520,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
 
         describe('when is after 3 months from today', () => {
           it('should return validationError', async () => {
-            const minPlus3Months = add(minSubmissionDate, { months : 3 });
+            const minPlus3Months = add(minSubmissionDate, { months: 3 });
             const requestedCoverStartDateFields = {
               'requestedCoverStartDate-day': format(todayPlus3Months1Day, 'dd'),
               'requestedCoverStartDate-month': format(todayPlus3Months1Day, 'MM'),
@@ -559,9 +557,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
             const dealWithEligibilityCriteria15False = {
               ...updatedDeal,
               eligibility: {
-                criteria: [
-                  { id: 15, answer: false }
-                ],
+                criteria: [{ id: 15, answer: false }],
               },
             };
 
@@ -581,7 +577,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
 
       describe('when deal is MIN with approved status and cover starts on submission', () => {
         let updatedDeal;
-        const submissionDateFourMonthsAgo = sub(nowDate, { months: 4 })
+        const submissionDateFourMonthsAgo = sub(nowDate, { months: 4 });
 
         beforeEach(async () => {
           await createDealAndLoan();
@@ -611,7 +607,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
             const formattedManualInclusionNoticeSubmissionDate = format(submissionDateFourMonthsAgo, DATE_FORMATS.LONG_FORM_DATE);
-            const submissionPlus3MonthsFormatted =  format(submissionPlus3Months, DATE_FORMATS.LONG_FORM_DATE);
+            const submissionPlus3MonthsFormatted = format(submissionPlus3Months, DATE_FORMATS.LONG_FORM_DATE);
 
             const expectedText = `Requested Cover Start Date must be between ${formattedManualInclusionNoticeSubmissionDate} and ${submissionPlus3MonthsFormatted}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
@@ -635,9 +631,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
             const dealWithEligibilityCriteria15False = {
               ...updatedDeal,
               eligibility: {
-                criteria: [
-                  { id: 15, answer: false }
-                ],
+                criteria: [{ id: 15, answer: false }],
               },
             };
 

@@ -1,7 +1,7 @@
-const pageRenderer = require('../../../componentRenderer');
+const { componentRenderer } = require('../../../componentRenderer');
 
 const page = '../templates/case/parties/_macros/parties-exporter-area.njk';
-const render = pageRenderer(page);
+const render = componentRenderer(page);
 
 describe(page, () => {
   let wrapper;
@@ -88,52 +88,34 @@ describe(page, () => {
   });
 
   it('should render exporter name', () => {
-    wrapper
-      .expectText('[data-cy="exporter-name"]')
-      .toRead(params.deal.exporter.companyName);
+    wrapper.expectText('[data-cy="exporter-name"]').toRead(params.deal.exporter.companyName);
   });
   it('should render industry class', () => {
-    wrapper
-      .expectText('[data-cy="industry-class"]')
-      .toRead(params.deal.submissionDetails.industryClass);
+    wrapper.expectText('[data-cy="industry-class"]').toRead(params.deal.submissionDetails.industryClass);
   });
   it('should render industry sector', () => {
     wrapper.expectText('[data-cy="industry-sector"]').toRead(params.deal.submissionDetails.industrySector);
   });
   it('should render exporter address country', () => {
-    wrapper
-      .expectText('[data-cy="exporter-country"]')
-      .toRead(params.deal.submissionDetails.supplierAddressCountry);
+    wrapper.expectText('[data-cy="exporter-country"]').toRead(params.deal.submissionDetails.supplierAddressCountry);
   });
   it('should render exporter country', () => {
-    wrapper
-      .expectText('[data-cy="exporter-country"]')
-      .toRead(params.deal.submissionDetails.supplierCountry);
+    wrapper.expectText('[data-cy="exporter-country"]').toRead(params.deal.submissionDetails.supplierCountry);
   });
   it('should render exporter address line 1', () => {
-    wrapper
-      .expectText('[data-cy="exporter-address"]')
-      .toContain(params.deal.submissionDetails.supplierAddressLine1);
+    wrapper.expectText('[data-cy="exporter-address"]').toContain(params.deal.submissionDetails.supplierAddressLine1);
   });
   it('should render exporter address line 2', () => {
-    wrapper
-      .expectText('[data-cy="exporter-address"]')
-      .toContain(params.deal.submissionDetails.supplierAddressLine2);
+    wrapper.expectText('[data-cy="exporter-address"]').toContain(params.deal.submissionDetails.supplierAddressLine2);
   });
   it('should render exporter address line 3', () => {
-    wrapper
-      .expectText('[data-cy="exporter-address"]')
-      .toContain(params.deal.submissionDetails.supplierAddressLine3);
+    wrapper.expectText('[data-cy="exporter-address"]').toContain(params.deal.submissionDetails.supplierAddressLine3);
   });
   it('should render exporter address town', () => {
-    wrapper
-      .expectText('[data-cy="exporter-address"]')
-      .toContain(params.deal.submissionDetails.supplierAddressTown);
+    wrapper.expectText('[data-cy="exporter-address"]').toContain(params.deal.submissionDetails.supplierAddressTown);
   });
   it('should render exporter address postcode', () => {
-    wrapper
-      .expectText('[data-cy="exporter-address"]')
-      .toContain(params.deal.submissionDetails.supplierAddressPostcode);
+    wrapper.expectText('[data-cy="exporter-address"]').toContain(params.deal.submissionDetails.supplierAddressPostcode);
   });
 
   it('should render exporter companies house registration number', () => {
@@ -142,40 +124,26 @@ describe(page, () => {
       .toRead(params.deal.submissionDetails.supplierCompaniesHouseRegistrationNumber);
   });
   it('should render exporter correspondence address country', () => {
-    wrapper
-      .expectText('[data-cy="exporter-correspondence-address-country"]')
-      .toRead(params.deal.submissionDetails.supplierCorrespondenceAddressCountry);
+    wrapper.expectText('[data-cy="exporter-correspondence-address-country"]').toRead(params.deal.submissionDetails.supplierCorrespondenceAddressCountry);
   });
   it('should render exporter correspondence address line 1', () => {
-    wrapper
-      .expectText('[data-cy="exporter-correspondence-address"]')
-      .toContain(params.deal.submissionDetails.supplierCorrespondenceAddressLine1);
+    wrapper.expectText('[data-cy="exporter-correspondence-address"]').toContain(params.deal.submissionDetails.supplierCorrespondenceAddressLine1);
   });
   it('should render exporter correspondence address line 2', () => {
-    wrapper
-      .expectText('[data-cy="exporter-correspondence-address"]')
-      .toContain(params.deal.submissionDetails.supplierCorrespondenceAddressLine2);
+    wrapper.expectText('[data-cy="exporter-correspondence-address"]').toContain(params.deal.submissionDetails.supplierCorrespondenceAddressLine2);
   });
   it('should render exporter correspondence address  line 3', () => {
-    wrapper
-      .expectText('[data-cy="exporter-correspondence-address"]')
-      .toContain(params.deal.submissionDetails.supplierCorrespondenceAddressLine3);
+    wrapper.expectText('[data-cy="exporter-correspondence-address"]').toContain(params.deal.submissionDetails.supplierCorrespondenceAddressLine3);
   });
   it('should render exporter correspondence address town', () => {
-    wrapper
-      .expectText('[data-cy="exporter-correspondence-address"]')
-      .toContain(params.deal.submissionDetails.supplierCorrespondenceAddressTown);
+    wrapper.expectText('[data-cy="exporter-correspondence-address"]').toContain(params.deal.submissionDetails.supplierCorrespondenceAddressTown);
   });
   it('should render exporter correspondence address post code', () => {
-    wrapper
-      .expectText('[data-cy="exporter-correspondence-address"]')
-      .toContain(params.deal.submissionDetails.supplierCorrespondenceAddressPostcode);
+    wrapper.expectText('[data-cy="exporter-correspondence-address"]').toContain(params.deal.submissionDetails.supplierCorrespondenceAddressPostcode);
   });
 
   it('should render sme size', () => {
-    wrapper
-      .expectText('[data-cy="sme-size"]')
-      .toRead(params.deal.submissionDetails.smeType);
+    wrapper.expectText('[data-cy="sme-size"]').toRead(params.deal.submissionDetails.smeType);
   });
 
   describe('tier 1 exporter', () => {

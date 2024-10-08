@@ -1,6 +1,4 @@
-const {
-  signInLink, beforeYouStart, signInLinkExpired, checkYourEmail, landingPage,
-} = require('../../pages');
+const { signInLink, beforeYouStart, signInLinkExpired, checkYourEmail, landingPage } = require('../../pages');
 const relative = require('../../relativeURL');
 const { BANK1_MAKER1, BANK1_MAKER2 } = require('../../../../../e2e-fixtures');
 const { SIGN_IN_TOKENS } = require('../../../fixtures/constants');
@@ -14,7 +12,10 @@ const ANOTHER_NOT_EXPIRED_TOKEN = {
   signInTokenFromLink: SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_TWO,
   expiry: Date.now() + thirtyMinutesInMilliseconds,
 };
-const INVALID_SIGN_IN_TOKEN = { signInTokenFromLink: SIGN_IN_TOKENS.INVALID_FORMAT_SIGN_IN_TOKEN, expiry: Date.now() + thirtyMinutesInMilliseconds };
+const INVALID_SIGN_IN_TOKEN = {
+  signInTokenFromLink: SIGN_IN_TOKENS.INVALID_FORMAT_SIGN_IN_TOKEN,
+  expiry: Date.now() + thirtyMinutesInMilliseconds,
+};
 const EXPIRED_SIGN_IN_TOKEN = {
   signInTokenFromLink: SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_THREE,
   expiry: Date.now() - thirtyMinutesInMilliseconds,
@@ -48,7 +49,10 @@ context('navigating using sign in link', () => {
     });
 
     it('Opening a previously issued sign in link takes the user to the /login/sign-in-link-expired page to resend link and does not give the user access to protected routes', () => {
-      cy.overridePortalUserSignInTokensByUsername({ username, newSignInTokens: [EXPIRED_SIGN_IN_TOKEN, NOT_EXPIRED_SIGN_IN_TOKEN] });
+      cy.overridePortalUserSignInTokensByUsername({
+        username,
+        newSignInTokens: [EXPIRED_SIGN_IN_TOKEN, NOT_EXPIRED_SIGN_IN_TOKEN],
+      });
       signInLink.visit({ token: EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id });
 
       linkShouldBeExpiredAndAbleToBeResent();
@@ -57,7 +61,10 @@ context('navigating using sign in link', () => {
     });
 
     it('Opening a previously issued but not expired sign in link takes the user to the /login/sign-in-link-expired page to resend link and does not give the user access to protected routes', () => {
-      cy.overridePortalUserSignInTokensByUsername({ username, newSignInTokens: [ANOTHER_NOT_EXPIRED_TOKEN, NOT_EXPIRED_SIGN_IN_TOKEN] });
+      cy.overridePortalUserSignInTokensByUsername({
+        username,
+        newSignInTokens: [ANOTHER_NOT_EXPIRED_TOKEN, NOT_EXPIRED_SIGN_IN_TOKEN],
+      });
       signInLink.visit({ token: ANOTHER_NOT_EXPIRED_TOKEN.signInTokenFromLink, userId: bank1Maker1Id });
 
       linkShouldBeExpiredAndAbleToBeResent();
@@ -98,7 +105,10 @@ context('navigating using sign in link', () => {
     });
 
     it('Opening a valid sign in link takes the user to the /dashboard page and gives the user access to protected routes', () => {
-      cy.overridePortalUserSignInTokensByUsername({ username, newSignInTokens: [EXPIRED_SIGN_IN_TOKEN, NOT_EXPIRED_SIGN_IN_TOKEN] });
+      cy.overridePortalUserSignInTokensByUsername({
+        username,
+        newSignInTokens: [EXPIRED_SIGN_IN_TOKEN, NOT_EXPIRED_SIGN_IN_TOKEN],
+      });
 
       signInLink.visit({ token: NOT_EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id });
       cy.url().should('eq', relative('/dashboard/deals/0'));

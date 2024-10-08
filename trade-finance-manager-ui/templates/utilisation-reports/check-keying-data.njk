@@ -1,0 +1,58 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% import "./_macros/check-keying-data-table-row.njk" as checkKeyingDataTableRow %}
+
+{% extends "index.njk" %}
+
+{% set backLink = {"href": "/utilisation-reports/" + reportId} %}
+
+{% block pageTitle %}Check keying data{% endblock %}
+{% block content %}
+  <div class="govuk-grid-row govuk-!-padding-top-7">
+    <h1 class="govuk-heading-l">
+      <span class="govuk-caption-l">{{ bank.name }}, {{ formattedReportPeriod }}</span>
+      Check before generating keying sheet data
+    </h1>
+
+    {% if numberOfMatchingFacilities === 1 %}
+      <h1 class="govuk-heading-m">{{ numberOfMatchingFacilities }} matched facility</h1>
+    {% else %}
+      <h1 class="govuk-heading-m">{{ numberOfMatchingFacilities }} matched facilities</h1>
+    {% endif %}
+
+    <table class="govuk-table premium-payments-table" data-module="moj-sortable-table" data-cy="check-keying-data-table">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header" aria-sort="ascending">Facility ID</th>
+          <th scope="col" class="govuk-table__header" aria-sort="none">Exporter</th>
+          <th scope="col" class="govuk-table__header govuk-table__header--numeric" aria-sort="none">Reported fees</th>
+          <th scope="col" class="govuk-table__header govuk-table__header--numeric" aria-sort="none">Reported payments</th>
+          <th scope="col" class="govuk-table__header govuk-table__header--numeric">Payments received</th>
+          <th scope="col" class="govuk-table__header" aria-sort="none">Status</th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        {% for feeRecord in feeRecords %}
+          {{ checkKeyingDataTableRow.render({
+            feeRecord: feeRecord
+          }) }}
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+      <div class="govuk-button-group">
+        <input
+          class="govuk-button govuk-!-margin-right-3"
+          formaction="/utilisation-reports/{{ reportId }}/keying-data"
+          value="Generate keying sheet data"
+          data-module="govuk-button"
+          type="submit"
+          data-cy="generate-keying-sheet-data-button"/>
+        <a href="/utilisation-reports/{{ reportId }}">Cancel</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}
+{% block sub_content %}{% endblock %}

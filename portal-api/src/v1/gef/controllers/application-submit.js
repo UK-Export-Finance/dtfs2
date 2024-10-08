@@ -31,7 +31,7 @@ const generateId = async (entityType, dealId) => number.getNumber(entityType, de
  * Generates a unique identifier for a given entity (either a 'deal' or a 'facility') based on the provided application data.
  * @param {string} entity - The type of entity for which the unique identifier needs to be generated ('deal' or 'facility').
  * @param {object} application - The application data containing the necessary information to generate the identifier.
- * @returns {Promise<Object>} - The generated unique identifier for the specified entity.
+ * @returns {Promise<object>} - The generated unique identifier for the specified entity.
  * @throws {Error} - If unable to generate the identifier.
  */
 const generateUkefId = async (entity, application) => {
@@ -69,7 +69,7 @@ const generateUkefId = async (entity, application) => {
   }
 };
 
-const addSubmissionDateToIssuedFacilities = async (dealId) => {
+const addSubmissionDateToIssuedFacilities = async (dealId, auditDetails) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
   // eslint-disable-next-line no-restricted-syntax
   for (const facility of facilities) {
@@ -96,7 +96,7 @@ const addSubmissionDateToIssuedFacilities = async (dealId) => {
         }
       }
       // eslint-disable-next-line no-await-in-loop
-      await updateFacility(_id, update);
+      await updateFacility(_id, update, auditDetails);
     }
   }
   return facilities;
@@ -107,30 +107,30 @@ const addSubmissionDateToIssuedFacilities = async (dealId) => {
   When submitting to UKEF, have to remove the canResubmitIssuedFacilities flag
   Ensures that cannot update this facility anymore
 */
-const updateChangedToIssued = async (dealId) => {
+const updateChangedToIssued = async (dealId, auditDetails) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
+  await Promise.all(
+    facilities
+      .filter(({ canResubmitIssuedFacilities }) => canResubmitIssuedFacilities)
+      .map(async ({ _id }) => {
+        const update = {
+          canResubmitIssuedFacilities: false,
+        };
 
-  facilities.forEach(async (facility) => {
-    const { _id, canResubmitIssuedFacilities } = facility;
-
-    if (canResubmitIssuedFacilities) {
-      const update = {
-        canResubmitIssuedFacilities: false,
-      };
-
-      await updateFacility(_id, update);
-    }
-  });
+        return updateFacility(_id, update, auditDetails);
+      }),
+  );
 };
 
 /**
  * Adds UKEF facility ID to facilities.
  *
  * @param {string} dealId - The ID of the deal.
+ * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
  * @returns {Promise<Array>} - A promise that resolves to an array of facilities.
  * @throws {Error} - If unable to generate facility ID.
  */
-const addUkefFacilityIdToFacilities = async (dealId) => {
+const addUkefFacilityIdToFacilities = async (dealId, auditDetails) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
 
   await Promise.all(
@@ -141,7 +141,7 @@ const addUkefFacilityIdToFacilities = async (dealId) => {
           ukefFacilityId: maskedId,
         };
 
-        await updateFacility(facility._id, update);
+        await updateFacility(facility._id, update, auditDetails);
       }
     }),
   );
@@ -182,10 +182,11 @@ const submissionPortalActivity = async (application) => {
 
 /**
  * Check the `coverDateConfirmed` property of the facility has the correct boolean flag.
- * @param {Object} app Application object
- * @returns {Bool} Facility(ies) was(were) updated or not
+ * @param {object} app Application object
+ * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
+ * @returns {Promise<boolean>} Facility(ies) was(were) updated or not
  */
-const checkCoverDateConfirmed = async (app) => {
+const checkCoverDateConfirmed = async (app, auditDetails) => {
   let hasUpdated = false;
 
   if (app) {
@@ -201,9 +202,7 @@ const checkCoverDateConfirmed = async (app) => {
           .filter((f) => f.hasBeenIssued && !f.coverDateConfirmed)
           .map(async (f) => {
             hasUpdated = true;
-            await updateFacility(f._id, {
-              coverDateConfirmed: Boolean(isAIN),
-            });
+            await updateFacility(f._id, { coverDateConfirmed: Boolean(isAIN) }, auditDetails);
           });
 
         // Iterate through unissued facilities
@@ -211,14 +210,12 @@ const checkCoverDateConfirmed = async (app) => {
           .filter((f) => !f.hasBeenIssued && f.coverDateConfirmed)
           .map(async (f) => {
             hasUpdated = true;
-            await updateFacility(f._id, {
-              coverDateConfirmed: false,
-            });
+            await updateFacility(f._id, { coverDateConfirmed: false }, auditDetails);
           });
         return hasUpdated;
       }
     } catch (error) {
-      console.error('Unable to set coverDateConfirmed for AIN facilities. %s', error);
+      console.error('Unable to set coverDateConfirmed for AIN facilities. %o', error);
     }
   }
   return hasUpdated;
@@ -228,17 +225,18 @@ const checkCoverDateConfirmed = async (app) => {
  * Adds submission data to an existing application.
  * @param {string} dealId - The ID of the deal.
  * @param {object} existingApplication - An object representing the existing application.
+ * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
  * @returns {Promise<object>} - An object containing the submission count, submission date, portal activities, and UKEF deal ID.
  */
-const addSubmissionData = async (dealId, existingApplication) => {
-  await checkCoverDateConfirmed(existingApplication);
-  await addSubmissionDateToIssuedFacilities(dealId);
+const addSubmissionData = async (dealId, existingApplication, auditDetails) => {
+  await checkCoverDateConfirmed(existingApplication, auditDetails);
+  await addSubmissionDateToIssuedFacilities(dealId, auditDetails);
 
   const { count, date } = await generateSubmissionData(existingApplication);
   const updatedPortalActivity = await submissionPortalActivity(existingApplication);
 
   if (existingApplication.submissionType !== CONSTANTS.DEAL.SUBMISSION_TYPE.MIA) {
-    await updateChangedToIssued(dealId);
+    await updateChangedToIssued(dealId, auditDetails);
   }
 
   const submissionData = {
@@ -252,7 +250,7 @@ const addSubmissionData = async (dealId, existingApplication) => {
     submissionData.ukefDealId = maskedId;
   }
 
-  await addUkefFacilityIdToFacilities(dealId);
+  await addUkefFacilityIdToFacilities(dealId, auditDetails);
 
   return submissionData;
 };

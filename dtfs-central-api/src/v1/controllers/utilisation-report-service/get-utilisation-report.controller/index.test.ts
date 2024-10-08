@@ -16,7 +16,6 @@ import { GetUtilisationReportByIdRequest, getUtilisationReportById } from '.';
 
 jest.mock('../../../../repositories/utilisation-reports-repo');
 jest.mock('../../../../repositories/users-repo');
-jest.mock('../../../../repositories/utilisation-reports-repo/utilisation-report-sql.repo');
 
 console.error = jest.fn();
 
@@ -42,7 +41,10 @@ describe('getUtilisationReport', () => {
       surname: 'User',
     };
 
-    const azureFileInfo = AzureFileInfoEntity.create({ ...MOCK_AZURE_FILE_INFO, requestSource: { platform: 'PORTAL', userId: uploadedByUser.id } });
+    const azureFileInfo = AzureFileInfoEntity.create({
+      ...MOCK_AZURE_FILE_INFO,
+      requestSource: { platform: 'PORTAL', userId: uploadedByUser.id },
+    });
 
     const mockDate = new Date('2024-01');
 

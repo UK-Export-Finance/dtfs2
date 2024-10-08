@@ -94,7 +94,9 @@ describe(component, () => {
 
   describe('indemnifier', () => {
     it('should render indemnifier-companies-house-registration-number', () => {
-      wrapper.expectText('[data-cy="indemnifier-companies-house-registration-number"]').toRead(submissionDetails['indemnifier-companies-house-registration-number']);
+      wrapper
+        .expectText('[data-cy="indemnifier-companies-house-registration-number"]')
+        .toRead(submissionDetails['indemnifier-companies-house-registration-number']);
     });
 
     it('should render indemnifier-name', () => {

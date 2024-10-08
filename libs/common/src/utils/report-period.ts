@@ -181,15 +181,13 @@ const getFormattedReportPeriod = (reportPeriod: ReportPeriod, monthFormat: strin
  * const formattedReportPeriod = getFormattedReportPeriod(reportPeriod);
  * console.log(formattedReportPeriod); // December 2023 to January 2024
  */
-export const getFormattedReportPeriodWithLongMonth = (reportPeriod: ReportPeriod): string => {
-  return getFormattedReportPeriod(reportPeriod, 'MMMM', false);
-};
+export const getFormattedReportPeriodWithLongMonth = (reportPeriod: ReportPeriod): string => getFormattedReportPeriod(reportPeriod, 'MMMM', false);
 
 /**
  * Gets the formatted report period with the month in short format
  * @param reportPeriod - The report period
  * @param includePeriodicity - Whether to suffix the formatted period with the periodicity
- * @param alwaysStateYear (optional - defaults to false) - Whether to state the year for the
+ * @param [alwaysStateYear=false] - Whether to state the year for the
  * start of the report period when the period spans only a single year
  * @returns The formatted report period
  * @example
@@ -225,6 +223,14 @@ export const getFormattedReportPeriodWithLongMonth = (reportPeriod: ReportPeriod
  * const formattedReportPeriod = getFormattedReportPeriod(reportPeriod, false);
  * console.log(formattedReportPeriod); // Dec 2023 to Jan 2024
  */
-export const getFormattedReportPeriodWithShortMonth = (reportPeriod: ReportPeriod, includePeriodicity: boolean, alwaysStateYear = false): string => {
-  return getFormattedReportPeriod(reportPeriod, 'MMM', includePeriodicity, alwaysStateYear);
-};
+export const getFormattedReportPeriodWithShortMonth = (reportPeriod: ReportPeriod, includePeriodicity: boolean, alwaysStateYear = false): string =>
+  getFormattedReportPeriod(reportPeriod, 'MMM', includePeriodicity, alwaysStateYear);
+
+/**
+ * Checks whether or not two report periods are equal
+ * @param reportPeriod1 - A report period
+ * @param reportPeriod2 - Another report period
+ * @returns Whether or not the report periods are equal
+ */
+export const isEqualReportPeriod = (reportPeriod1: ReportPeriod, reportPeriod2: ReportPeriod): boolean =>
+  isEqualMonthAndYear(reportPeriod1.start, reportPeriod2.start) && isEqualMonthAndYear(reportPeriod1.end, reportPeriod2.end);

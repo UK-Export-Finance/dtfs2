@@ -25,26 +25,17 @@ context('User can view and sort deals by buyer', () => {
     },
   });
 
-  const MOCK_DEALS = [
-    DEAL_BUYER_A,
-    DEAL_BUYER_B,
-  ];
+  const MOCK_DEALS = [DEAL_BUYER_A, DEAL_BUYER_B];
 
   before(() => {
     cy.deleteTfmDeals();
 
     cy.insertManyDeals(MOCK_DEALS, BANK1_MAKER1).then((insertedDeals) => {
       insertedDeals.forEach((deal) => {
-        const {
-          _id: dealId,
-          mockFacilities,
-        } = deal;
+        const { _id: dealId, mockFacilities } = deal;
 
         cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((facilities) => {
-          ALL_FACILITIES = [
-            ...ALL_FACILITIES,
-            ...facilities,
-          ];
+          ALL_FACILITIES = [...ALL_FACILITIES, ...facilities];
         });
       });
 
@@ -52,18 +43,16 @@ context('User can view and sort deals by buyer', () => {
       cy.get(aliasSelector(ALIAS_KEY.SUBMIT_MANY_DEALS)).then((submittedDeals) => {
         ALL_SUBMITTED_DEALS = submittedDeals;
 
-        dealBuyerA = ALL_SUBMITTED_DEALS.find((deal) =>
-          deal.dealSnapshot.testId === DEAL_BUYER_A.testId);
+        dealBuyerA = ALL_SUBMITTED_DEALS.find((deal) => deal.dealSnapshot.testId === DEAL_BUYER_A.testId);
 
-        dealBuyerB = ALL_SUBMITTED_DEALS.find((deal) =>
-          deal.dealSnapshot.testId === DEAL_BUYER_B.testId);
+        dealBuyerB = ALL_SUBMITTED_DEALS.find((deal) => deal.dealSnapshot.testId === DEAL_BUYER_B.testId);
       });
     });
   });
 
   beforeEach(() => {
     cy.login(T1_USER_1);
-    cy.url().should('eq', relative('/deals'));
+    cy.url().should('eq', relative('/deals/0'));
   });
 
   after(() => {

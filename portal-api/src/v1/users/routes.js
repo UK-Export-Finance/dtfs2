@@ -1,3 +1,9 @@
+const {
+  generateAuditDatabaseRecordFromAuditDetails,
+  generatePortalAuditDetails,
+  generateNoUserLoggedInAuditDetails,
+} = require('@ukef/dtfs2-common/change-stream');
+const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const utils = require('../../crypto/utils');
 const { login } = require('./login.controller');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
@@ -5,7 +11,6 @@ const { create, update, remove, list, findOne, disable } = require('./controller
 const { resetPassword, getUserByPasswordToken } = require('./reset-password.controller');
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
-const { LOGIN_STATUSES } = require('../../constants');
 const { SignInLinkController } = require('./sign-in-link.controller');
 const { SignInLinkService } = require('./sign-in-link.service');
 const { Pbkdf2Sha512HashStrategy } = require('../../crypto/pbkdf2-sha512-hash-strategy');
@@ -91,8 +96,10 @@ module.exports.create = async (req, res, next) => {
     hash,
   };
 
-  // Defined `e` since `error` is defined on a higher scope
-  return create(newUser, userService, (e, user) => {
+  // This is called on the open and auth router ('v1/user' and 'v1/users') endpoints so req.user may be undefined
+  const auditDetails = req.user?._id ? generatePortalAuditDetails(req.user._id) : generateNoUserLoggedInAuditDetails();
+
+  return create(newUser, userService, auditDetails, (e, user) => {
     if (e) {
       return next(e);
     }
@@ -144,21 +151,21 @@ module.exports.updateById = async (req, res, next) => {
         });
       }
 
-      return update(req.params._id, req.body, (updateErr, updatedUser) => {
+      return update(req.params._id, req.body, generatePortalAuditDetails(req.user._id), (updateErr, updatedUser) => {
         if (updateErr) {
           return next(updateErr);
         }
         return res.status(200).json(sanitizeUser(updatedUser));
       });
     });
-  } catch (e) {
-    console.error('Error updating user', e);
+  } catch (error) {
+    console.error('Error updating user %o', error);
     return res.status(500).send();
   }
 };
 
 module.exports.disable = (req, res, next) => {
-  disable(req.params._id, (error, status) => {
+  disable(req.params._id, generatePortalAuditDetails(req.user._id), (error, status) => {
     if (error) {
       next(error);
     } else {
@@ -167,20 +174,21 @@ module.exports.disable = (req, res, next) => {
   });
 };
 
-module.exports.remove = (req, res, next) => {
-  remove(req.params._id, (error, status) => {
+module.exports.remove = (req, res) => {
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+  remove(req.params._id, auditDetails, (error, status) => {
     if (error) {
-      next(error);
-    } else {
-      res.status(200).json(status);
+      return res.status(status).send({ status, error });
     }
+    return res.sendStatus(status);
   });
 };
 
 module.exports.login = async (req, res, next) => {
   const { username, password } = req.body;
+  const auditDetails = generateNoUserLoggedInAuditDetails();
 
-  const loginResult = await login(username, password, userService);
+  const loginResult = await login(username, password, userService, auditDetails);
 
   if (loginResult.error) {
     // pick out the specific cases we understand and could treat differently
@@ -204,7 +212,7 @@ module.exports.login = async (req, res, next) => {
   return res.status(200).json({
     success: true,
     token: tokenObject.token,
-    loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
+    loginStatus: PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD,
     user: { email: userEmail },
     expiresIn: tokenObject.expires,
   });
@@ -216,7 +224,8 @@ module.exports.loginWithSignInLink = (req, res) => signInLinkController.loginWit
 
 module.exports.resetPassword = async (req, res) => {
   const { email } = req.body;
-  await resetPassword(email, userService);
+  const auditDetails = generateNoUserLoggedInAuditDetails();
+  await resetPassword(email, userService, auditDetails);
 
   return res.status(200).send();
 };
@@ -330,6 +339,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
       },
     });
   }
+  const auditDetails = generatePortalAuditDetails(user._id);
   const updateData = {
     password,
     passwordConfirm,
@@ -338,9 +348,10 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
     currentPassword: '',
     loginFailureCount: 0,
     passwordUpdatedAt: `${Date.now()}`,
+    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
-  return update(user._id, updateData, (updateErr) => {
+  return update(user._id, updateData, generatePortalAuditDetails(user._id), (updateErr) => {
     if (updateErr) {
       next(updateErr);
     } else {

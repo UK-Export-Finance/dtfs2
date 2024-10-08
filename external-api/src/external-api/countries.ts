@@ -1,4 +1,5 @@
 import { Country } from '../interfaces';
+
 export const COUNTRIES: Country[] = [
   {
     id: 900,

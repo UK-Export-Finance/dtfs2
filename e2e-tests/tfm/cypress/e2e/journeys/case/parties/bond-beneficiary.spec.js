@@ -1,9 +1,7 @@
 import relative from '../../../relativeURL';
 import pages from '../../../pages';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import {
-  T1_USER_1, BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN,
-} from '../../../../../../e2e-fixtures';
+import { T1_USER_1, BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 
 const CONSTANTS = require('../../../../fixtures/constants');
 
@@ -11,14 +9,8 @@ context('Bond beneficiary URN - User can add, edit, confirm and submit URN to th
   let dealId;
   const dealFacilities = [];
   const party = CONSTANTS.PARTIES.BOND_BENEFICIARY;
-  const mockUrn = [
-    CONSTANTS.PARTY_URN.INVALID,
-    CONSTANTS.PARTY_URN.INVALID,
-  ];
-  const partyUrn = [
-    CONSTANTS.PARTY_URN.VALID,
-    CONSTANTS.PARTY_URN.VALID,
-  ];
+  const mockUrn = [CONSTANTS.PARTY_URN.INVALID, CONSTANTS.PARTY_URN.INVALID];
+  const partyUrn = [CONSTANTS.PARTY_URN.VALID, CONSTANTS.PARTY_URN.VALID];
 
   // Submit a deal with facilities
   before(() => {

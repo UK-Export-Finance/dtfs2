@@ -1,0 +1,61 @@
+{% import "./keying-sheet-status.njk" as KeyingSheetRowStatus %}
+{% import "../../_macros/table-cell-checkbox.njk" as tableCellCheckbox %}
+{% macro render(params) %}
+  {% macro adjustmentColumns(adjustment, options) %}
+    {% set amount = adjustment.amount %}
+    {% set change = adjustment.change %}
+    {% set name = options.name %}
+    {% set showBottomBorder = options.showBottomBorder %}
+    {% set showValues = options.showValues %}
+    <td class="{{ ["govuk-table__cell", " govuk-table__cell--numeric" if change === "INCREASE", " no-border" if not showBottomBorder] | join }}" data-cy="{{ name }}--increase">
+      {{ (amount if change === "INCREASE" else "-") if showValues }}
+    </td>
+    <td class="{{ ["govuk-table__cell", " govuk-table__cell--numeric" if change === "DECREASE", " no-border" if not showBottomBorder] | join }}" data-cy="{{ name }}--decrease">
+      {{ (amount if change === "DECREASE" else "-") if showValues }}
+    </td>
+  {% endmacro %}
+  {% set userCanEdit = params.userCanEdit %}
+  {% set status = params.keyingSheetRow.status %}
+  {% set displayStatus = params.keyingSheetRow.displayStatus %}
+  {% set facilityId = params.keyingSheetRow.facilityId %}
+  {% set feeRecordId = params.keyingSheetRow.feeRecordId %}
+  {% set exporter = params.keyingSheetRow.exporter %}
+  {% set feePayments = params.keyingSheetRow.feePayments if params.keyingSheetRow.feePayments.length > 0 else [{}] %}
+  {% set baseCurrency = params.keyingSheetRow.baseCurrency %}
+  {% set fixedFeeAdjustment = params.keyingSheetRow.fixedFeeAdjustment %}
+  {% set principalBalanceAdjustment = params.keyingSheetRow.principalBalanceAdjustment %}
+  {% set checkboxId = params.keyingSheetRow.checkboxId %}
+  {% set isChecked = params.keyingSheetRow.isChecked %}
+  {% for feePayment in feePayments %}
+    {% set isFirstLineOfRow = loop.index === 1 %}
+    {% set isLastLineOfRow = loop.index === feePayments.length %}
+    <tr class="govuk-table__row" data-cy="keying-sheet-row-{{ feeRecordId }}">
+      <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-sort-value="{{ status }}">
+        {{ KeyingSheetRowStatus.render({
+          status: status,
+          displayStatus: displayStatus
+        }) if isFirstLineOfRow }}
+      </td>
+      <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-sort-value="{{ facilityId }}">{{ facilityId if isFirstLineOfRow }}</td>
+      <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-sort-value="{{ exporter }}">{{ exporter if isFirstLineOfRow }}</td>
+      <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-cy="keying-sheet-fee-payment-date-received">{{ feePayment.formattedDateReceived or "-" }}</td>
+      <td
+        class="govuk-table__cell govuk-table__cell--numeric{{ "
+        no-border" if not isLastLineOfRow }}"
+        data-cy="keying-sheet-fee-payment-currency-and-amount">
+        {{ feePayment.formattedCurrencyAndAmount or "-" }}
+      </td>
+      <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}">{{ baseCurrency if isFirstLineOfRow }}</td>
+      {{ adjustmentColumns(fixedFeeAdjustment, { showBottomBorder: isLastLineOfRow, showValues: isFirstLineOfRow, name: "fixed-fee-adjustment" }) }}
+      {{ adjustmentColumns(principalBalanceAdjustment, { showBottomBorder: isLastLineOfRow, showValues: isFirstLineOfRow, name: "principal-balance-adjustment" }) }}
+      {% if userCanEdit %}
+        <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}">
+          {{ tableCellCheckbox.render({
+            checkboxId: checkboxId,
+            checked: isChecked
+          }) if isFirstLineOfRow }}
+        </td>
+      {% endif %}
+    </tr>
+  {% endfor %}
+{% endmacro %}

@@ -1,52 +1,62 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const { findOneDeal } = require('./get-gef-deal.controller');
-const db = require('../../../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../../../drivers/db-client');
 
-const updateDealStatus = async (dealId, previousStatus, newStatus) => {
-  if (ObjectId.isValid(dealId)) {
-    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+const updateDealStatus = async ({ dealId, previousStatus, newStatus, auditDetails }) => {
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+  const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
-    const dealUpdate = {
-      previousStatus,
-      status: newStatus,
-      updatedAt: Date.now(),
-    };
+  const dealUpdate = {
+    previousStatus,
+    status: newStatus,
+    updatedAt: Date.now(),
+  };
 
-    const findAndUpdateResponse = await collection.findOneAndUpdate(
-      { _id: { $eq: ObjectId(String(dealId)) } },
-      { $set: dealUpdate },
-      { returnNewDocument: true, returnDocument: 'after' },
-    );
+  const findAndUpdateResponse = await collection.findOneAndUpdate(
+    { _id: { $eq: ObjectId(String(dealId)) } },
+    { $set: { ...dealUpdate, auditRecord } },
+    { returnNewDocument: true, returnDocument: 'after' },
+  );
 
-    console.info('Updated Portal GEF deal status from %s to %s', previousStatus, newStatus);
+  console.info('Updated Portal GEF deal status from %s to %s', previousStatus, newStatus);
 
-    return findAndUpdateResponse.value;
-  }
-  return { status: 400, message: 'Invalid Deal Id' };
+  return findAndUpdateResponse.value;
 };
-exports.updateDealStatus = updateDealStatus;
 
-// eslint-disable-next-line consistent-return
 exports.updateDealStatusPut = async (req, res) => {
-  if (ObjectId.isValid(req.params.id)) {
-    const dealId = req.params.id;
+  const {
+    params: { id: dealId },
+    body: { status: newStatus, auditDetails },
+  } = req;
 
-    const { status: newStatus } = req.body;
-
-    await findOneDeal(dealId, async (existingDeal) => {
-      if (existingDeal) {
-        if (existingDeal.status === newStatus) {
-          return res.status(400).send();
-        }
-
-        const updatedDeal = await updateDealStatus(dealId, existingDeal.status, newStatus);
-        return res.status(200).json(updatedDeal);
-      }
-
-      return res.status(404).send({ status: 404, message: 'Deal not found' });
-    });
-  } else {
+  if (!ObjectId.isValid(dealId)) {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
+  try {
+    validateAuditDetails(auditDetails);
+  } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: error.message,
+        code: error.code,
+      });
+    }
+    return res.status(500).send({ status: 500, error });
+  }
+
+  return await findOneDeal(dealId, async (existingDeal) => {
+    if (existingDeal) {
+      if (existingDeal.status === newStatus) {
+        return res.status(400).send();
+      }
+
+      const updatedDeal = await updateDealStatus({ dealId, previousStatus: existingDeal.status, newStatus, auditDetails });
+      return res.status(200).json(updatedDeal);
+    }
+
+    return res.status(404).send({ status: 404, message: 'Deal not found' });
+  });
 };

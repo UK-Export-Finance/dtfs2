@@ -6,15 +6,20 @@ import {
   UtilisationReportEntity,
   FeeRecordEntity,
   AzureFileInfoEntity,
+  FacilityUtilisationDataEntity,
+  ReportPeriod,
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportReportUploadedEvent } from './report-uploaded.event-handler';
 import { UtilisationReportRawCsvData } from '../../../../../types/utilisation-reports';
+import { aUtilisationReportRawCsvData } from '../../../../../../test-helpers';
 
 describe('handleUtilisationReportReportUploadedEvent', () => {
   const mockSave = jest.fn();
+  const mockExistsBy = jest.fn();
 
   const mockEntityManager = {
     save: mockSave,
+    existsBy: mockExistsBy,
   } as unknown as EntityManager;
 
   it('calls the repo method to update the report', async () => {
@@ -49,8 +54,59 @@ describe('handleUtilisationReportReportUploadedEvent', () => {
     });
 
     // Assert
-    expect(mockSave).toHaveBeenCalledTimes(2);
     expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
     expect(mockSave).toHaveBeenCalledWith(FeeRecordEntity, [], { chunk: 100 });
+  });
+
+  it('creates and saves new FacilityUtilisationData entities using the report reportPeriod for the supplied facility ids which do not have existing entries', async () => {
+    // Arrange
+    const reportReportPeriod: ReportPeriod = {
+      start: { month: 5, year: 2024 },
+      end: { month: 6, year: 2024 },
+    };
+    const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withReportPeriod(reportReportPeriod).build();
+
+    const reportCsvDataWithExistingFacilityUtilisationData: UtilisationReportRawCsvData = { ...aUtilisationReportRawCsvData(), 'ukef facility id': '11111111' };
+    const reportCsvDataWithoutExistingFacilityUtilisationData: UtilisationReportRawCsvData[] = [
+      { ...aUtilisationReportRawCsvData(), 'ukef facility id': '22222222' },
+      { ...aUtilisationReportRawCsvData(), 'ukef facility id': '33333333' },
+    ];
+    const uploadedByUserId = 'abc123';
+    const requestSource: DbRequestSource = {
+      platform: 'PORTAL',
+      userId: uploadedByUserId,
+    };
+
+    mockExistsBy.mockImplementation((_entity: unknown, { id }: { id: string }) => {
+      switch (id) {
+        case '11111111':
+          return Promise.resolve(true);
+        default:
+          return Promise.resolve(false);
+      }
+    });
+
+    // Act
+    await handleUtilisationReportReportUploadedEvent(report, {
+      azureFileInfo: MOCK_AZURE_FILE_INFO,
+      reportCsvData: [reportCsvDataWithExistingFacilityUtilisationData, ...reportCsvDataWithoutExistingFacilityUtilisationData],
+      uploadedByUserId,
+      requestSource,
+      transactionEntityManager: mockEntityManager,
+    });
+
+    // Assert
+    expect(mockExistsBy).toHaveBeenCalledWith(FacilityUtilisationDataEntity, { id: reportCsvDataWithExistingFacilityUtilisationData['ukef facility id'] });
+
+    const createdFacilityUtilisationDataEntities = reportCsvDataWithoutExistingFacilityUtilisationData.map(({ 'ukef facility id': facilityId }) => {
+      expect(mockExistsBy).toHaveBeenCalledWith(FacilityUtilisationDataEntity, { id: facilityId });
+
+      return FacilityUtilisationDataEntity.createWithoutUtilisationAndFixedFee({
+        id: facilityId,
+        reportPeriod: reportReportPeriod,
+        requestSource,
+      });
+    });
+    expect(mockSave).toHaveBeenCalledWith(FacilityUtilisationDataEntity, createdFacilityUtilisationDataEntities, { chunk: 100 });
   });
 });

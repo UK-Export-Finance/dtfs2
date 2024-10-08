@@ -1,5 +1,5 @@
 import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
-import MOCK_BANKS from './mock-banks';
+import { MOCK_BANKS } from './mock-banks';
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../types/utilisation-reports';
 
 export const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS: Record<UtilisationReportReconciliationStatus, UtilisationReportReconciliationSummaryItem> = {
@@ -21,6 +21,7 @@ export const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS: Record<Utilis
     },
     status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
     dateUploaded: '2023-12-01T15:04:53Z',
+    totalFacilitiesReported: 4,
     totalFeesReported: 4,
     reportedFeesLeftToReconcile: 4,
   },
@@ -33,6 +34,7 @@ export const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS: Record<Utilis
     },
     status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS,
     dateUploaded: '2023-12-03T17:04:23Z',
+    totalFacilitiesReported: 4,
     totalFeesReported: 4,
     reportedFeesLeftToReconcile: 2,
   },
@@ -45,6 +47,7 @@ export const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS: Record<Utilis
     },
     status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
     dateUploaded: '2023-12-13T09:23:10Z',
+    totalFacilitiesReported: 4,
     totalFeesReported: 4,
     reportedFeesLeftToReconcile: 0,
   },

@@ -1,4 +1,4 @@
-const generateHeadingText = (count, submittedValue) => {
+const generateHeadingText = (count, submittedValue, collectionName) => {
   if (submittedValue) {
     if (count === 1) {
       return `${count} result for "${submittedValue}"`;
@@ -10,7 +10,7 @@ const generateHeadingText = (count, submittedValue) => {
     return `0 results for "${submittedValue}"`;
   }
 
-  return 'All deals';
+  return `All ${collectionName}`;
 };
 
 module.exports = { generateHeadingText };

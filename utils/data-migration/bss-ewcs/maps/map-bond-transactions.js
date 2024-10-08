@@ -1,3 +1,4 @@
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { getCurrencyById } = require('../helpers/currencies');
 const { convertV1Date } = require('../helpers/date-helpers');
 const { getBssUserByEmail } = require('../../helpers/users');
@@ -25,7 +26,7 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
     const hasBeenIssued = facilityStage === 'Issued';
 
     const v2bond = {
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+      type: FACILITY_TYPE.BOND,
       ukefFacilityId: formatUkefId(bond.UKEF_BSS_facility_id),
       name: bond.BSS_Guarantee_details.BSS_bank_id,
       bondIssuer: bond.BSS_Guarantee_details.BSS_issuer,
@@ -54,39 +55,27 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
     }
 
     if (bond.BSS_Financial_details.BSS_conversion_date_deal) {
-    // Conversion date in format dd-mm-yyyy
-      [
-        v2bond['conversionRateDate-day'],
-        v2bond['conversionRateDate-month'],
-        v2bond['conversionRateDate-year'],
-      ] = bond.BSS_Financial_details.BSS_conversion_date_deal.split('-');
+      // Conversion date in format dd-mm-yyyy
+      [v2bond['conversionRateDate-day'], v2bond['conversionRateDate-month'], v2bond['conversionRateDate-year']] =
+        bond.BSS_Financial_details.BSS_conversion_date_deal.split('-');
     }
 
     if (bond.BSS_Dates_repayments.BSS_issue_date) {
-      [
-        v2bond['issuedDate-day'],
-        v2bond['issuedDate-month'],
-        v2bond['issuedDate-year'],
-      ] = bond.BSS_Dates_repayments.BSS_issue_date.split('-');
+      [v2bond['issuedDate-day'], v2bond['issuedDate-month'], v2bond['issuedDate-year']] = bond.BSS_Dates_repayments.BSS_issue_date.split('-');
       v2bond.issuedDate = convertV1Date(`${v2bond['issuedDate-year']}-${v2bond['issuedDate-month']}-${v2bond['issuedDate-day']}`);
     }
 
     if (facilityStage !== CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED) {
       if (bond.BSS_Dates_repayments.BSS_cover_start_date) {
-        [
-          v2bond['requestedCoverStartDate-day'],
-          v2bond['requestedCoverStartDate-month'],
-          v2bond['requestedCoverStartDate-year'],
-        ] = bond.BSS_Dates_repayments.BSS_cover_start_date.split('-');
-        v2bond.requestedCoverStartDate = convertV1Date(`${v2bond['requestedCoverStartDate-year']}-${v2bond['requestedCoverStartDate-month']}-${v2bond['requestedCoverStartDate-day']}`);
+        [v2bond['requestedCoverStartDate-day'], v2bond['requestedCoverStartDate-month'], v2bond['requestedCoverStartDate-year']] =
+          bond.BSS_Dates_repayments.BSS_cover_start_date.split('-');
+        v2bond.requestedCoverStartDate = convertV1Date(
+          `${v2bond['requestedCoverStartDate-year']}-${v2bond['requestedCoverStartDate-month']}-${v2bond['requestedCoverStartDate-day']}`,
+        );
       }
 
       if (bond.BSS_Dates_repayments.BSS_cover_end_date) {
-        [
-          v2bond['coverEndDate-day'],
-          v2bond['coverEndDate-month'],
-          v2bond['coverEndDate-year'],
-        ] = bond.BSS_Dates_repayments.BSS_cover_end_date.split('-');
+        [v2bond['coverEndDate-day'], v2bond['coverEndDate-month'], v2bond['coverEndDate-year']] = bond.BSS_Dates_repayments.BSS_cover_end_date.split('-');
       }
     }
 
@@ -102,7 +91,9 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
     return v2bond;
   };
 
-  const { Facilities: { BSS: bond } } = v1Deal;
+  const {
+    Facilities: { BSS: bond },
+  } = v1Deal;
 
   let items = [];
 
@@ -114,10 +105,7 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
     }
   }
 
-  return [
-    { items },
-    hasError,
-  ];
+  return [{ items }, hasError];
 };
 
 module.exports = mapBondTransactions;

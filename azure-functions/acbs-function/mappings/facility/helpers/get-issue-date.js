@@ -4,9 +4,7 @@ const getCoverStartDate = require('./get-cover-start-date');
 
 const getIssueDate = (facility, submissionDate) => {
   if (facility.facilitySnapshot) {
-    return hasFacilityBeenIssued(facility)
-      ? formatDate(getCoverStartDate(facility, true))
-      : formatDate(submissionDate);
+    return hasFacilityBeenIssued(facility) ? formatDate(getCoverStartDate(facility, true)) : formatDate(submissionDate);
   }
   return formatDate(submissionDate);
 };

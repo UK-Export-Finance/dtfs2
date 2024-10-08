@@ -1,4 +1,4 @@
-const componentRenderer = require('../componentRenderer');
+const { componentRenderer } = require('../componentRenderer');
 
 const page = '../templates/case/underwriting/lead-underwriter/lead-underwriter.njk';
 
@@ -49,10 +49,9 @@ describe(page, () => {
 
     it('should render `change` link', () => {
       const wrapper = render(params);
-      wrapper.expectLink('[data-cy="change-lead-underwriter-link"]').toLinkTo(
-        `/case/${params.leadUnderwriter.dealId}/underwriting/lead-underwriter/assign`,
-        'Change contact details',
-      );
+      wrapper
+        .expectLink('[data-cy="change-lead-underwriter-link"]')
+        .toLinkTo(`/case/${params.leadUnderwriter.dealId}/underwriting/lead-underwriter/assign`, 'Change contact details');
     });
   });
 
@@ -69,10 +68,9 @@ describe(page, () => {
     it('should render assign button', () => {
       const wrapper = render(params);
 
-      wrapper.expectLink('[data-cy="assign-lead-underwriter-link"]').toLinkTo(
-        `/case/${params.leadUnderwriter.dealId}/underwriting/lead-underwriter/assign`,
-        'Add underwriter',
-      );
+      wrapper
+        .expectLink('[data-cy="assign-lead-underwriter-link"]')
+        .toLinkTo(`/case/${params.leadUnderwriter.dealId}/underwriting/lead-underwriter/assign`, 'Add underwriter');
     });
   });
 

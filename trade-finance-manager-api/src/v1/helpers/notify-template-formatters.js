@@ -1,3 +1,4 @@
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { issuedFacilities } = require('./issued-facilities');
 const CONSTANTS = require('../../constants');
 
@@ -7,19 +8,19 @@ const generateListItemString = (str) => `*${str}\n`;
 
 const generateFacilitiesListHeading = (type) => {
   let heading;
-  if (type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
+  if (type === FACILITY_TYPE.LOAN) {
     heading = CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.LOAN;
   }
 
-  if (type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
+  if (type === FACILITY_TYPE.BOND) {
     heading = CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.BOND;
   }
 
-  if (type === CONSTANTS.FACILITIES.FACILITY_TYPE.CASH) {
+  if (type === FACILITY_TYPE.CASH) {
     heading = `${CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CASH} facility`;
   }
 
-  if (type === CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT) {
+  if (type === FACILITY_TYPE.CONTINGENT) {
     heading = `${CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CONTINGENT} facility`;
   }
 
@@ -40,9 +41,7 @@ const generateFacilitiesListString = (facilities) => {
     }
 
     if (bankRef) {
-      const bankRefString = bankRef
-        ? `*Your bank ref: ${bankRef}\n`
-        : '';
+      const bankRefString = bankRef ? `*Your bank ref: ${bankRef}\n` : '';
 
       string += bankRefString;
     }
@@ -63,9 +62,7 @@ const generateFacilitiesListString = (facilities) => {
 };
 
 const generateBssFacilityLists = (facilities) => {
-  const {
-    issuedBonds, unissuedBonds, issuedLoans, unissuedLoans,
-  } = issuedFacilities(facilities);
+  const { issuedBonds, unissuedBonds, issuedLoans, unissuedLoans } = issuedFacilities(facilities);
 
   const issuedBondsList = generateFacilitiesListString(issuedBonds);
   const issuedLoansList = generateFacilitiesListString(issuedLoans);
@@ -90,9 +87,7 @@ const generateBssFacilityLists = (facilities) => {
 };
 
 const generateGefFacilityLists = (facilities) => {
-  const {
-    issuedCash, unissuedCash, issuedContingent, unissuedContingent,
-  } = issuedFacilities(facilities);
+  const { issuedCash, unissuedCash, issuedContingent, unissuedContingent } = issuedFacilities(facilities);
 
   const issuedCashList = generateFacilitiesListString(issuedCash);
   const issuedContingentList = generateFacilitiesListString(issuedContingent);

@@ -1,4 +1,4 @@
-const componentRenderer = require('../../../componentRenderer');
+const { componentRenderer } = require('../../../componentRenderer');
 
 const component = '../templates/case/activity/_macros/deal-submitted.njk';
 const { localiseTimestamp } = require('../../../../server/nunjucks-configuration/filter-localiseTimestamp');

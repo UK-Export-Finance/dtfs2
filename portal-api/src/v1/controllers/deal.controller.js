@@ -1,5 +1,6 @@
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const DEFAULTS = require('../defaults');
-const db = require('../../drivers/db-client');
+const { mongoDbClient: db } = require('../../drivers/db-client');
 const { isValidMongoId } = require('../validation/validateIds');
 const { userHasAccessTo } = require('../users/checks');
 const validate = require('../validation/completeDealValidation');
@@ -77,14 +78,16 @@ const createNewDealData = async (deal, maker) => {
 /**
  * Create a deal (BSS, EWCS only)
  */
-const createDeal = async (dealBody, user) => {
+const createDeal = async (dealBody, user, auditDetails) => {
   const deal = await createNewDealData(dealBody, user);
-  return api.createDeal(deal, user);
+  return api.createDeal(deal, user, auditDetails);
 };
+
 exports.createDeal = createDeal;
 
 exports.create = async (req, res) => {
-  const { status, data } = await createDeal(req.body, req.user);
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+  const { status, data } = await createDeal(req.body, req.user, auditDetails);
   return res.status(status).send(data);
 };
 
@@ -121,8 +124,17 @@ exports.findOne = (req, res) => {
   });
 };
 
-const updateDeal = async (dealId, dealUpdate, user) => {
-  const updatedDeal = await api.updateDeal(dealId, dealUpdate, user);
+/**
+ * Sends a request to DTFS Central to update a deal
+ * @param {object} params - The parameters for updating the deal.
+ * @param {string} params.dealId - The ID of the deal being updated.
+ * @param {object} params.dealUpdate - The update to be made to the deal.
+ * @param {object} params.user - The user making the changes.
+ * @param {object} params.auditDetails - The audit details for the update.
+ * @returns {Promise<object | false>} The updated deal object.
+ */
+const updateDeal = async ({ dealId, dealUpdate, user, auditDetails }) => {
+  const updatedDeal = await api.updateDeal({ dealId, dealUpdate, user, auditDetails });
 
   return updatedDeal;
 };
@@ -132,16 +144,22 @@ exports.updateDeal = updateDeal;
  * Update a deal (BSS, EWCS only)
  */
 exports.update = async (req, res) => {
-  const dealId = req.params.id;
+  const {
+    user,
+    params: { id: dealId },
+    body: dealUpdate,
+  } = req;
 
   await findOneDeal(dealId, async (deal) => {
     if (!deal) res.status(404).send();
 
-    if (!userHasAccessTo(req.user, deal)) {
+    if (!userHasAccessTo(user, deal)) {
       return res.status(401).send();
     }
 
-    const updatedDeal = await updateDeal(dealId, req.body, req.user, deal);
+    const auditDetails = generatePortalAuditDetails(user._id);
+
+    const updatedDeal = await updateDeal({ dealId, dealUpdate, user, auditDetails });
 
     return res.status(200).json(updatedDeal);
   });
@@ -159,7 +177,7 @@ exports.delete = async (req, res) => {
     if (!userHasAccessTo(req.user, deal)) {
       res.status(401).send();
     } else {
-      const response = await api.deleteDeal(dealId);
+      const response = await api.deleteDeal(dealId, generatePortalAuditDetails(req.user._id));
       res.status(response.status).send(response.body);
     }
   });
@@ -203,10 +221,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
       {
         $facet: {
           count: [{ $count: 'total' }],
-          deals: [
-            { $skip: startPage },
-            ...(pagesize ? [{ $limit: pagesize }] : []),
-          ],
+          deals: [{ $skip: startPage }, ...(pagesize ? [{ $limit: pagesize }] : [])],
         },
       },
       { $unwind: '$count' },

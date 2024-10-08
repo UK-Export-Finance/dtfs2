@@ -1,24 +1,47 @@
 {
   "name": "acbs-function",
-  "version": "",
+  "version": "1.0.0",
+  "private": true,
   "description": "DTFS ACBS DOF",
-  "author": "",
+  "keywords": [
+    "export",
+    "finance"
+  ],
+  "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
+  "bugs": {
+    "url": "https://github.com/UK-Export-Finance/dtfs2/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UK-Export-Finance/dtfs2.git"
+  },
+  "license": "MIT",
+  "author": "UK Export Finance",
+  "main": "src/functions/*.js",
   "scripts": {
     "api-test": "jest --coverage --verbose --runInBand --config=api-test.jest.config.js ",
-    "lint": "eslint ./",
+    "lint": "eslint --color **/*.{ts,js} --ignore-path ../../.eslintignore",
+    "lint:fix": "eslint --fix --color **/*.{ts,js}",
+    "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js} --ignore-path ../../.prettierignore",
+    "prettier:fix": "prettier --write **/*.{ts,js} --ignore-path ../../.prettierignore",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
-    "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
+    "unit-test-dev": "jest --verbose --config=unit.jest.config.js",
+    "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
-    "axios": "^0.27.2",
+    "axios": "^1.7.4",
     "date-fns": "^2.30.0",
     "dotenv": "^16.4.5",
-    "durable-functions": "^1.5.4",
+    "durable-functions": "^3.1.0",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "babel-jest": "29.5.0",
+    "babel-loader": "9.1.2",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.29.1",
-    "jest": "29.5.0",
-    "lodash": "^4.17.21"
+    "jest": "^29.7.0"
   },
   "engines": {
     "node": ">=20",

@@ -94,11 +94,7 @@ describe('loan page specific validation errors', () => {
       const mockDealId = '123';
       const mockLoanId = '456';
 
-      const result = loanPreviewValidationErrors(
-        mockValidationErrors,
-        mockDealId,
-        mockLoanId,
-      );
+      const result = loanPreviewValidationErrors(mockValidationErrors, mockDealId, mockLoanId);
 
       const expected = {
         errorList: {

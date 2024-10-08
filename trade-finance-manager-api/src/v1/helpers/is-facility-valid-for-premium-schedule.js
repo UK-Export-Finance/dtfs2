@@ -1,8 +1,4 @@
-const isFacilityValidForPremiumSchedule = (
-  facility,
-  facilityExposurePeriod,
-  facilityGuaranteeDates,
-) => {
+const isFacilityValidForPremiumSchedule = (facility, facilityExposurePeriod, facilityGuaranteeDates) => {
   if (!facilityExposurePeriod || facilityExposurePeriod < 1) {
     return false;
   }

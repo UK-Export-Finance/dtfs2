@@ -122,7 +122,8 @@ describe('POST underwriting - underwriting managers decision edit', () => {
     const apiUpdateSpy = jest.fn(() =>
       Promise.resolve({
         test: true,
-      }));
+      }),
+    );
 
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);

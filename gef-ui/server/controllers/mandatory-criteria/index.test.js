@@ -60,10 +60,13 @@ describe('controllers/mandatory-criteria', () => {
       mockRequest.body.mandatoryCriteria = '';
 
       await validateMandatoryCriteria(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/mandatory-criteria.njk', expect.objectContaining({
-        criteria: expect.any(Object),
-        errors: expect.any(Object),
-      }));
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/mandatory-criteria.njk',
+        expect.objectContaining({
+          criteria: expect.any(Object),
+          errors: expect.any(Object),
+        }),
+      );
     });
 
     it('redirects user to `name application` page if they select `true`', async () => {

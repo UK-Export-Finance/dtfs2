@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Request, Response } from 'express';
 import axios from 'axios';
 import { BANK_HOLIDAYS } from '../../external-api';

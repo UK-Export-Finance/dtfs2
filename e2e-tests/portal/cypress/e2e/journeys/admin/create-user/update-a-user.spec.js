@@ -1,8 +1,8 @@
-const {
-  header, users, createUser, editUser,
-} = require('../../../pages');
+const { header, users, createUser, editUser } = require('../../../pages');
 const { ADMIN: AN_ADMIN } = require('../../../../../../e2e-fixtures');
-const { USER_ROLES: { MAKER, CHECKER } } = require('../../../../fixtures/constants');
+const {
+  USER_ROLES: { MAKER, CHECKER },
+} = require('../../../../fixtures/constants');
 
 context('Admin user updates an existing user', () => {
   const userToUpdate = {
@@ -54,8 +54,37 @@ context('Admin user updates an existing user', () => {
 
       editUser.save().click();
 
-      users.row(userToUpdate).roles().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(newRole);
+      users
+        .row(userToUpdate)
+        .roles()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal(newRole);
+        });
+    });
+
+    it('changing their trusted status should display the new status on the user dashboard', () => {
+      users.row(userToUpdate).trusted().should('not.exist');
+      cy.getUserByUsername(userToUpdate.username).then(({ isTrusted }) => {
+        expect(isTrusted).to.equal(false);
+      });
+
+      openPageToEdit(userToUpdate);
+      editUser.isTrustedTrue().click();
+      editUser.save().click();
+
+      users.row(userToUpdate).trusted().should('exist');
+      cy.getUserByUsername(userToUpdate.username).then(({ isTrusted }) => {
+        expect(isTrusted).to.equal(true);
+      });
+
+      openPageToEdit(userToUpdate);
+      editUser.isTrustedFalse().click();
+      editUser.save().click();
+
+      users.row(userToUpdate).trusted().should('not.exist');
+      cy.getUserByUsername(userToUpdate.username).then(({ isTrusted }) => {
+        expect(isTrusted).to.equal(false);
       });
     });
 

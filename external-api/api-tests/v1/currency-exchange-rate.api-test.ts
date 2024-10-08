@@ -1,11 +1,21 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+import MockAdapter from 'axios-mock-adapter';
+import axios, { HttpStatusCode } from 'axios';
 import { app } from '../../src/createApp';
 import { api } from '../api';
 
+const { APIM_MDM_URL } = process.env;
 const { get } = api(app);
 
+// Mock Axios
+const axiosMock = new MockAdapter(axios);
+
+// Mock responses
 const mockResponses = {
   GBP: {
-    status: 200,
+    status: HttpStatusCode.Ok,
     data: [
       {
         id: 344413,
@@ -24,7 +34,7 @@ const mockResponses = {
     ],
   },
   USD: {
-    status: 200,
+    status: HttpStatusCode.Ok,
     data: [
       {
         id: 344336,
@@ -43,7 +53,7 @@ const mockResponses = {
     ],
   },
   EUR: {
-    status: 200,
+    status: HttpStatusCode.Ok,
     data: [
       {
         id: 344332,
@@ -62,7 +72,7 @@ const mockResponses = {
     ],
   },
   JPY: {
-    status: 200,
+    status: HttpStatusCode.Ok,
     data: [
       {
         id: 344334,
@@ -81,7 +91,7 @@ const mockResponses = {
     ],
   },
   CAD: {
-    status: 200,
+    status: HttpStatusCode.Ok,
     data: [
       {
         id: 344265,
@@ -100,7 +110,7 @@ const mockResponses = {
     ],
   },
   RON: {
-    status: 200,
+    status: HttpStatusCode.Ok,
     data: [
       {
         id: 344319,
@@ -120,69 +130,88 @@ const mockResponses = {
   },
 };
 
-jest.mock('axios', () =>
-  jest.fn((args: any) => {
-    const { url } = args;
+// Mock endpoints with respective responses
+const currencyMockCases = [
+  {
+    endpoint: 'source=GBP&target=GBP',
+    mockResponse: mockResponses.GBP.data,
+  },
+  {
+    endpoint: 'source=GBP&target=USD',
+    mockResponse: mockResponses.USD.data,
+  },
+  {
+    endpoint: 'source=GBP&target=EUR',
+    mockResponse: mockResponses.EUR.data,
+  },
+  {
+    endpoint: 'source=GBP&target=JPY',
+    mockResponse: mockResponses.JPY.data,
+  },
+  {
+    endpoint: 'source=GBP&target=CAD',
+    mockResponse: mockResponses.CAD.data,
+  },
+  {
+    endpoint: 'source=GBP&target=RON',
+    mockResponse: mockResponses.RON.data,
+  },
+  {
+    endpoint: 'source=JPY&target=GBP',
+    mockResponse: mockResponses.JPY.data,
+  },
+  {
+    endpoint: 'source=USD&target=GBP',
+    mockResponse: mockResponses.USD.data,
+  },
+  {
+    endpoint: 'source=RON&target=GBP',
+    mockResponse: mockResponses.RON.data,
+  },
+];
 
-    switch (url) {
-      case `${process.env.APIM_MDM_URL}currencies/exchange?source=GBP&target=USD`:
-        return Promise.resolve(mockResponses.USD);
-      case `${process.env.APIM_MDM_URL}currencies/exchange?source=GBP&target=EUR`:
-        return Promise.resolve(mockResponses.EUR);
-      case `${process.env.APIM_MDM_URL}currencies/exchange?source=GBP&target=JPY`:
-        return Promise.resolve(mockResponses.JPY);
-      case `${process.env.APIM_MDM_URL}currencies/exchange?source=GBP&target=CAD`:
-        return Promise.resolve(mockResponses.CAD);
-      case `${process.env.APIM_MDM_URL}currencies/exchange?source=GBP&target=RON`:
-        return Promise.resolve(mockResponses.RON);
-      case `${process.env.APIM_MDM_URL}currencies/exchange?source=JPY&target=GBP`:
-        return Promise.resolve(mockResponses.JPY);
-      case `${process.env.APIM_MDM_URL}currencies/exchange?source=USD&target=GBP`:
-        return Promise.resolve(mockResponses.USD);
-      case `${process.env.APIM_MDM_URL}currencies/exchange?source=RON&target=GBP`:
-        return Promise.resolve(mockResponses.RON);
-      default:
-        return Promise.resolve(mockResponses.GBP);
-    }
-  }),
-);
+// Axios mock possible currencies responses
+currencyMockCases.forEach(({ endpoint, mockResponse }) => {
+  const url = `${APIM_MDM_URL}currencies/exchange?${endpoint}`;
+  axiosMock.onGet(url).reply(HttpStatusCode.Ok, mockResponse);
+});
 
 describe('/currency-exchange-rate', () => {
   describe('GET /v1/currency-exchange-rate/:source/:target', () => {
     describe('GBP -> X', () => {
       it('GBP -> GBP', async () => {
         const { status, body } = await get(`/currency-exchange-rate/GBP/GBP`);
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
         expect(body.exchangeRate).toEqual(mockResponses.GBP.data[0].midPrice);
       });
 
       it('GBP -> USD', async () => {
         const { status, body } = await get(`/currency-exchange-rate/GBP/USD`);
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
         expect(body.exchangeRate).toEqual(mockResponses.USD.data[0].midPrice);
       });
 
       it('GBP -> EUR', async () => {
         const { status, body } = await get(`/currency-exchange-rate/GBP/EUR`);
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
         expect(body.exchangeRate).toEqual(mockResponses.EUR.data[0].midPrice);
       });
 
       it('GBP -> JPY', async () => {
         const { status, body } = await get(`/currency-exchange-rate/GBP/JPY`);
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
         expect(body.exchangeRate).toEqual(mockResponses.JPY.data[0].midPrice);
       });
 
       it('GBP -> CAD', async () => {
         const { status, body } = await get(`/currency-exchange-rate/GBP/CAD`);
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
         expect(body.exchangeRate).toEqual(mockResponses.CAD.data[0].midPrice);
       });
 
       it('GBP -> RON', async () => {
         const { status, body } = await get(`/currency-exchange-rate/GBP/RON`);
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
         expect(body.exchangeRate).toEqual(mockResponses.RON.data[0].midPrice);
       });
     });
@@ -190,7 +219,7 @@ describe('/currency-exchange-rate', () => {
     describe('X -> GBP', () => {
       it('USD -> GBP', async () => {
         const { status, body } = await get(`/currency-exchange-rate/USD/GBP`);
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         const inverted = Number((1 / mockResponses.USD.data[0].midPrice).toFixed(2));
         expect(body.exchangeRate).toEqual(inverted);
@@ -198,7 +227,7 @@ describe('/currency-exchange-rate', () => {
 
       it('JPY -> GBP', async () => {
         const { status, body } = await get(`/currency-exchange-rate/JPY/GBP`);
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         const inverted = Number((1 / mockResponses.JPY.data[0].midPrice).toFixed(2));
         expect(body.exchangeRate).toEqual(inverted);
@@ -206,7 +235,7 @@ describe('/currency-exchange-rate', () => {
 
       it('EUR -> GBP', async () => {
         const { status, body } = await get(`/currency-exchange-rate/EUR/GBP`);
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         const inverted = Number((1 / mockResponses.EUR.data[0].midPrice).toFixed(2));
         expect(body.exchangeRate).toEqual(inverted);
@@ -214,7 +243,7 @@ describe('/currency-exchange-rate', () => {
 
       it('CAD -> GBP', async () => {
         const { status, body } = await get(`/currency-exchange-rate/CAD/GBP`);
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         const inverted = Number((1 / mockResponses.CAD.data[0].midPrice).toFixed(2));
         expect(body.exchangeRate).toEqual(inverted);
@@ -222,7 +251,7 @@ describe('/currency-exchange-rate', () => {
 
       it('RON -> GBP', async () => {
         const { status, body } = await get(`/currency-exchange-rate/RON/GBP`);
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
 
         const inverted = Number((1 / mockResponses.RON.data[0].midPrice).toFixed(2));
         expect(body.exchangeRate).toEqual(inverted);
@@ -241,11 +270,11 @@ describe('/currency-exchange-rate', () => {
     ];
 
     describe('Invalid inputs', () => {
-      test.each(invalidCurrencyTestCases)('returns a 400 if you provide invalid currencies: %s, %s', async (currencySource, currencyTarget) => {
+      test.each(invalidCurrencyTestCases)('returns a 400 if you provide invalid currencies %s, %s', async (currencySource, currencyTarget) => {
         const { status, body } = await get(`/currency-exchange-rate/${currencySource}/${currencyTarget}`);
 
-        expect(status).toEqual(400);
-        expect(body).toMatchObject({ data: 'Invalid currency provided', status: 400 });
+        expect(status).toEqual(HttpStatusCode.BadRequest);
+        expect(body).toMatchObject({ data: 'Invalid currency provided', status: HttpStatusCode.BadRequest });
       });
     });
   });

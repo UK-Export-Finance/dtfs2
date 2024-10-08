@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const { generateTfmAuditDetails, generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const utils = require('../../../utils/crypto.util');
 const { userIsDisabled, usernameOrPasswordIncorrect, userIsBlocked } = require('../../../constants/login-results.constant');
 const { create, update, removeTfmUserById, findOne, findByUsername } = require('./user.controller');
@@ -28,6 +29,8 @@ const combineErrors = (listOfErrors) =>
 module.exports.createTfmUser = (req, res, next) => {
   const userToCreate = req.body;
   const errors = applyCreateRules(userToCreate);
+  // This is called on the open and auth router ('v1/user' and 'v1/users') endpoints so req.user may be undefined
+  const auditDetails = req.user?._id ? generateTfmAuditDetails(req.user._id) : generateNoUserLoggedInAuditDetails();
 
   if (errors.length) {
     return res.status(400).json({
@@ -46,7 +49,7 @@ module.exports.createTfmUser = (req, res, next) => {
 
   const newUser = { ...userToCreate, salt, hash };
 
-  return create(newUser, (error, user) => {
+  return create(newUser, auditDetails, (error, user) => {
     if (error) {
       return next(error);
     }
@@ -96,7 +99,8 @@ module.exports.updateTfmUserById = (req, res, next) => {
           },
         });
       } else {
-        update(req.params.user, req.body, (updateErr, updatedUser) => {
+        const auditDetails = generateTfmAuditDetails(req.user._id);
+        update(req.params.user, req.body, auditDetails, (updateErr, updatedUser) => {
           if (updateErr) {
             next(updateErr);
           } else {
@@ -110,20 +114,20 @@ module.exports.updateTfmUserById = (req, res, next) => {
   });
 };
 
-module.exports.removeTfmUserById = (req, res, next) => {
-  removeTfmUserById(req.params.user, (error, status) => {
+module.exports.removeTfmUserById = (req, res) => {
+  const auditDetails = generateTfmAuditDetails(req.user._id);
+  removeTfmUserById(req.params.user, auditDetails, (error, status) => {
     if (error) {
-      next(error);
-    } else {
-      res.status(200).json(status);
+      return res.status(status).send({ status, error });
     }
+    return res.sendStatus(status);
   });
 };
 
 module.exports.login = async (req, res, next) => {
   const { username, password } = req.body;
 
-  const loginResult = await loginCallback(username, password);
+  const loginResult = await loginCallback(username, password, generateNoUserLoggedInAuditDetails());
 
   if (loginResult.error) {
     // pick out the specific cases we understand and could treat differently

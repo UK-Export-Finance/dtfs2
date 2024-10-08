@@ -1,0 +1,42 @@
+{% from "govuk/components/accordion/macro.njk" import govukAccordion %}
+
+{% macro render(params) %}
+  {% set payments = params.recordedPaymentsDetails %}
+  {% set multipleFeeRecordsSelected = params.multipleFeeRecordsSelected %}
+  {% set recordedPaymentsHtml %}
+    <table class="govuk-table"
+           data-module="moj-sortable-table"
+           data-cy="recorded-payments-details-table">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">Date received</th>
+          <th scope="col" class="govuk-table__header govuk-table__header--numeric">Amount received</th>
+          <th scope="col" class="govuk-table__header">Payment reference</th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        {% for payment in payments %}
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">{{ payment.formattedDateReceived }}</td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">{{ payment.formattedCurrencyAndAmount }}</td>
+            <td class="govuk-table__cell">{{ payment.reference }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endset %}
+  {{ govukAccordion({
+      id: "record-payment-accordion",
+      classes: "accordion-without-show-all",
+      items: [
+        {
+          heading: {
+            text: 'Recorded payments for these fees' if multipleFeeRecordsSelected else 'Recorded payments for this fee'
+          },
+          content: {
+            html: recordedPaymentsHtml
+          }
+        }
+      ]
+  }) }}
+{% endmacro %}

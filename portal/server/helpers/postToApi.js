@@ -9,13 +9,10 @@ const makeApiCall = async (query) => {
   }
 };
 
-const isErrorResponse = (apiResponse) => (apiResponse.response && apiResponse.response.status === 400);
+const isErrorResponse = (apiResponse) => apiResponse.response && apiResponse.response.status === 400;
 
 const responseWithValidationErrors = (apiResponse, errorHref) => {
-  const validationErrors = generateErrorSummary(
-    apiResponse.response.data.validationErrors,
-    errorHref,
-  );
+  const validationErrors = generateErrorSummary(apiResponse.response.data.validationErrors, errorHref);
 
   return {
     ...apiResponse.response.data,

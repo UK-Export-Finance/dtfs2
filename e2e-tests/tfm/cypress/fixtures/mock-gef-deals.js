@@ -23,7 +23,8 @@ const eligibilityCriteria = (type) => ({
       id: 13,
       name: 'noticeDate',
       text: 'The period between the Inclusion Notice Date and the Requested Cover Start Date does not exceed 3 months (or such longer period as may be agreed by UK Export Finance).',
-      errMsg: 'Select if the period between the Inclusion Notice Date and the Requested Cover Start Date exceeds 3 months (or any other period agreed by UK Export Finance)',
+      errMsg:
+        'Select if the period between the Inclusion Notice Date and the Requested Cover Start Date exceeds 3 months (or any other period agreed by UK Export Finance)',
       answer: true,
     },
     {
@@ -45,7 +46,8 @@ const eligibilityCriteria = (type) => ({
       id: 16,
       name: 'revenueThreshold',
       text: "The Bank has received an Exporter Declaration which confirms that the Exporter's Revenue Threshold Test Percentage (as defined in the relevant Exporter Declaration) is below 5%.",
-      errMsg: "Select if the Bank has received an Exporter Declaration which confirms that the Exporter's Revenue Threshold Test Percentage (as defined in the relevant Exporter Declaration) is below 5%.",
+      errMsg:
+        "Select if the Bank has received an Exporter Declaration which confirms that the Exporter's Revenue Threshold Test Percentage (as defined in the relevant Exporter Declaration) is below 5%.",
       answer: true,
     },
     {

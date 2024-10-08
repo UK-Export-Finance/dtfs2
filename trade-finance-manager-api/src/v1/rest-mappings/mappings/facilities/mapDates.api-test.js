@@ -1,8 +1,8 @@
 const { format, fromUnixTime } = require('date-fns');
+const { AMENDMENT_STATUS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const mapDates = require('./mapDates');
 const mapCoverEndDate = require('./mapCoverEndDate');
 const mapTenorDate = require('./mapTenorDate');
-const { FACILITIES } = require('../../../../constants');
 
 describe('mapDates', () => {
   const mockCoverEndDate = {
@@ -22,7 +22,7 @@ describe('mapDates', () => {
     facilitySnapshot: {
       submittedAsIssuedDate: 160690061100,
       requestedCoverStartDate: '2021-12-08T00:00:00.000Z',
-      ukefFacilityType: FACILITIES.FACILITY_TYPE.BOND,
+      ukefFacilityType: FACILITY_TYPE.BOND,
       ukefGuaranteeInMonths: '12',
       ...mockCoverEndDate,
       ...mockCoverStartDate,
@@ -79,10 +79,7 @@ describe('mapDates', () => {
   it('should return tenor', () => {
     const result = mapDates(mockFacility, mockFacility.facilitySnapshot, mockFacilityTfm, mockDealDetails);
 
-    const expected = mapTenorDate(
-      mockFacility.facilitySnapshot.ukefGuaranteeInMonths,
-      mockFacilityTfm.exposurePeriodInMonths,
-    );
+    const expected = mapTenorDate(mockFacility.facilitySnapshot.ukefGuaranteeInMonths, mockFacilityTfm.exposurePeriodInMonths);
 
     expect(result.tenor).toEqual(expected);
   });
@@ -105,10 +102,7 @@ describe('mapDates', () => {
       mockFacility,
     );
 
-    const expectedTenor = mapTenorDate(
-      mockFacility.facilitySnapshot.ukefGuaranteeInMonths,
-      mockFacilityTfm.exposurePeriodInMonths,
-    );
+    const expectedTenor = mapTenorDate(mockFacility.facilitySnapshot.ukefGuaranteeInMonths, mockFacilityTfm.exposurePeriodInMonths);
 
     expect(result.coverEndDate).toEqual(expectedCoverEndDate);
     expect(result.tenor).toEqual(expectedTenor);
@@ -120,6 +114,7 @@ describe('mapDates', () => {
 
     mockFacility.amendments = [
       {
+        status: AMENDMENT_STATUS.COMPLETED,
         tfm: {
           coverEndDate: coverEndDateUnix,
           amendmentExposurePeriodInMonths: amendmentTenorPeriod,
@@ -131,10 +126,7 @@ describe('mapDates', () => {
 
     const expectedCoverEndDate = format(fromUnixTime(coverEndDateUnix), 'd MMMM yyyy');
 
-    const expectedTenor = mapTenorDate(
-      mockFacility.facilitySnapshot.ukefGuaranteeInMonths,
-      amendmentTenorPeriod,
-    );
+    const expectedTenor = mapTenorDate(mockFacility.facilitySnapshot.ukefGuaranteeInMonths, amendmentTenorPeriod);
 
     expect(result.coverEndDate).toEqual(expectedCoverEndDate);
     expect(result.tenor).toEqual(expectedTenor);

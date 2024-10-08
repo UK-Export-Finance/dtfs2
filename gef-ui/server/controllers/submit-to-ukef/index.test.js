@@ -45,12 +45,14 @@ const MockApplicationResponse = () => {
   res._id = '1234';
   res.exporter = {};
   res.bankInternalRefName = 'My test';
-  res.comments = [{
-    role: MAKER,
-    userName: 'Test User',
-    createdAt: '1625482095783',
-    comment: 'The client needs this asap.',
-  }];
+  res.comments = [
+    {
+      role: MAKER,
+      userName: 'Test User',
+      createdAt: '1625482095783',
+      comment: 'The client needs this asap.',
+    },
+  ];
   res.bank = { id: 'BANKID' };
   res.submissionType = 'Automatic Inclusion Notice';
   res.status = CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL;
@@ -97,14 +99,13 @@ describe('controllers/submit-to-ukef', () => {
       const submissionType = CONSTANTS.DEAL_SUBMISSION_TYPE.AIN;
       mockRequest.body.confirmSubmitUkef = 'true';
       await createSubmissionToUkef(mockRequest, mockResponse);
-      expect(mockResponse.render)
-        .toHaveBeenCalledWith('partials/submit-to-ukef-confirmation.njk', {
-          submissionType,
-          status: mockApplicationResponse.status,
-          isNotice: isNotice(submissionType),
-          ukefDecisionAccepted: mockApplicationResponse.ukefDecisionAccepted,
-          hasIssuedFacility: true,
-        });
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/submit-to-ukef-confirmation.njk', {
+        submissionType,
+        status: mockApplicationResponse.status,
+        isNotice: isNotice(submissionType),
+        ukefDecisionAccepted: mockApplicationResponse.ukefDecisionAccepted,
+        hasIssuedFacility: true,
+      });
     });
   });
 
@@ -113,14 +114,13 @@ describe('controllers/submit-to-ukef', () => {
       mockRequest.body.confirmSubmitUkef = 'true';
       await createSubmissionToUkef(mockRequest, mockResponse);
       // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
-      expect(mockResponse.render)
-        .toHaveBeenCalledWith('partials/submit-to-ukef-confirmation.njk', {
-          submissionType: mockApplicationResponse.submissionType,
-          status: mockApplicationResponse.status,
-          isNotice: isNotice(mockApplicationResponse.submissionType),
-          ukefDecisionAccepted: mockApplicationResponse.ukefDecisionAccepted,
-          hasIssuedFacility: true,
-        });
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/submit-to-ukef-confirmation.njk', {
+        submissionType: mockApplicationResponse.submissionType,
+        status: mockApplicationResponse.status,
+        isNotice: isNotice(mockApplicationResponse.submissionType),
+        ukefDecisionAccepted: mockApplicationResponse.ukefDecisionAccepted,
+        hasIssuedFacility: true,
+      });
     });
 
     it('renders an error when confirmation checkbox is not selected', async () => {
@@ -128,11 +128,13 @@ describe('controllers/submit-to-ukef', () => {
 
       await createSubmissionToUkef(mockRequest, mockResponse);
 
-      expect(mockResponse.render)
-        .toHaveBeenCalledWith('partials/submit-to-ukef.njk', expect.objectContaining({
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/submit-to-ukef.njk',
+        expect.objectContaining({
           dealId: expect.any(String),
           errors: expect.any(Object),
-        }));
+        }),
+      );
     });
   });
 
@@ -140,13 +142,12 @@ describe('controllers/submit-to-ukef', () => {
     it('renders the page as expected', async () => {
       await submitToUkef(mockRequest, mockResponse);
 
-      expect(mockResponse.render)
-        .toHaveBeenCalledWith(
-          'partials/submit-to-ukef.njk',
-          expect.objectContaining({
-            dealId: expect.any(String),
-          }),
-        );
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/submit-to-ukef.njk',
+        expect.objectContaining({
+          dealId: expect.any(String),
+        }),
+      );
     });
   });
 });

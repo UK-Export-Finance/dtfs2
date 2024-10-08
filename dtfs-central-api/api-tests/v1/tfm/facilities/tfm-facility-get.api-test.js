@@ -1,20 +1,14 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common/test-cases-backend');
 const wipeDB = require('../../../wipeDB');
-const app = require('../../../../src/createApp');
-const api = require('../../../api')(app);
+const { testApi } = require('../../../test-api');
 const aDeal = require('../../deal-builder');
-const CONSTANTS = require('../../../../src/constants');
+const { DEALS } = require('../../../../src/constants');
 const { MOCK_DEAL } = require('../../mocks/mock-data');
-
-const mockUser = {
-  _id: '123456789',
-  username: 'temp',
-  roles: [],
-  bank: {
-    id: '956',
-    name: 'Barclays Bank',
-  },
-};
+const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
+const { createDeal } = require('../../../helpers/create-deal');
+const { createFacility } = require('../../../helpers/create-facility');
 
 const newFacility = {
   type: 'Bond',
@@ -22,7 +16,7 @@ const newFacility = {
 };
 
 const newDeal = aDeal({
-  dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+  dealType: DEALS.DEAL_TYPE.BSS_EWCS,
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
   editedBy: [],
@@ -32,11 +26,6 @@ const newDeal = aDeal({
   },
 });
 
-const createDeal = async () => {
-  const { body } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
-  return body;
-};
-
 describe('/v1/tfm/facilities', () => {
   let dealId;
 
@@ -45,23 +34,31 @@ describe('/v1/tfm/facilities', () => {
   });
 
   beforeEach(async () => {
-    const deal = await createDeal();
+    const { body: deal } = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
     dealId = deal._id;
 
     newFacility.dealId = dealId;
   });
 
   describe('GET /v1/tfm/facilities/:id', () => {
+    withMongoIdPathParameterValidationTests({
+      baseUrl: '/v1/tfm/facilities/:id',
+      makeRequest: (url) => testApi.get(url),
+    });
+
     it('returns the requested resource', async () => {
-      const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      const postResult = await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
       const newId = postResult.body._id;
 
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-      }).to('/v1/tfm/deals/submit');
+      await testApi
+        .put({
+          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
+          dealId,
+          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+        })
+        .to('/v1/tfm/deals/submit');
 
-      const { status, body } = await api.get(`/v1/tfm/facilities/${newId}`);
+      const { status, body } = await testApi.get(`/v1/tfm/facilities/${newId}`);
 
       expect(status).toEqual(200);
       expect(body._id).toEqual(newId);

@@ -1,8 +1,8 @@
 const { format, fromUnixTime } = require('date-fns');
+const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 
 const { userCanEditManagersDecision } = require('../../helpers');
-const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 const { amendmentUnderwriterManagerDecisionValidation } = require('./validation/amendmentUnderwriterManagerDecision.validate');
 const { formattedNumber } = require('../../../helpers/number');
 
@@ -72,7 +72,7 @@ const postAmendmentAddUnderwriterManagersDecisionCoverEndDate = async (req, res)
     console.error('Unable to add the underwriter managers decision');
     return res.redirect(`/case/${dealId}/underwriting`);
   } catch (error) {
-    console.error('There was a problem adding the manager\'s decision %s', error);
+    console.error("There was a problem adding the manager's decision %o", error);
     return res.redirect(`/case/${dealId}/underwriting`);
   }
 };
@@ -135,7 +135,7 @@ const postAmendmentAddUnderwriterManagersFacilityValue = async (req, res) => {
     console.error('Unable to add the underwriter managers decision');
     return res.redirect(`/case/${dealId}/underwriting`);
   } catch (error) {
-    console.error('There was a problem adding the manager\'s decision %s', error);
+    console.error("There was a problem adding the manager's decision %o", error);
     return res.redirect(`/case/${dealId}/underwriting`);
   }
 };

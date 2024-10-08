@@ -9,6 +9,7 @@ export type UtilisationReportReconciliationSummaryItem = {
   };
   status: UtilisationReportReconciliationStatus;
   dateUploaded?: IsoDateTimeStamp;
+  totalFacilitiesReported?: number;
   totalFeesReported?: number;
   reportedFeesLeftToReconcile?: number;
 };
@@ -16,4 +17,10 @@ export type UtilisationReportReconciliationSummaryItem = {
 export type UtilisationReportReconciliationSummary = {
   submissionMonth: IsoMonthStamp;
   items: UtilisationReportReconciliationSummaryItem[];
+};
+
+export type UtilisationReportSearchSummary = {
+  bankName: string;
+  year: string;
+  reports: UtilisationReportReconciliationSummaryItem[];
 };

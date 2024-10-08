@@ -6,7 +6,11 @@ const { MAKER } = require('../constants/roles');
 
 const router = express.Router();
 
-router.get('/application-details/:dealId/automatic-cover', [validateToken, validateBank, validateRole({ role: [MAKER] })], (req, res) => automaticCover(req, res));
-router.post('/application-details/:dealId/automatic-cover', [validateToken, validateBank, validateRole({ role: [MAKER] })], (req, res) => validateAutomaticCover(req, res));
+router.get('/application-details/:dealId/automatic-cover', [validateToken, validateBank, validateRole({ role: [MAKER] })], (req, res) =>
+  automaticCover(req, res),
+);
+router.post('/application-details/:dealId/automatic-cover', [validateToken, validateBank, validateRole({ role: [MAKER] })], (req, res) =>
+  validateAutomaticCover(req, res),
+);
 
 module.exports = router;

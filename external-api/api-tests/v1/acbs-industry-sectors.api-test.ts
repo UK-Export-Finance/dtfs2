@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { findACBSIndustrySector } from '../../src/v1/controllers/industry-sectors.controller';
 
 describe('findACBSIndustrySector lookup', () => {
@@ -31,10 +33,10 @@ describe('findACBSIndustrySector lookup', () => {
     expect(responseData.effectiveTo).toBeDefined();
   });
 
-  const invalidIndustryCodeTestCases = ['123', '127.0.0.1', '[]', '{}'];
+  const invalidIndustryCodeTestCases = [1, 12, 123, 1234];
 
   describe('when industry id is invalid', () => {
-    test.each(invalidIndustryCodeTestCases)('returns a 400 if you provide invalid currencies: %s', async (industryId) => {
+    test.each(invalidIndustryCodeTestCases)('returns a 400 if you provide invalid industry code (5 digit)  %s', async (industryId) => {
       const { status, data } = await findACBSIndustrySector(industryId);
 
       expect(status).toEqual(400);

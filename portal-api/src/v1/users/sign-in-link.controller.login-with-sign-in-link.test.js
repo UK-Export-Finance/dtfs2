@@ -1,11 +1,13 @@
 const { when, resetAllWhenMocks } = require('jest-when');
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const { SignInLinkController } = require('./sign-in-link.controller');
 const {
   TEST_USER_SANITISED_FOR_FRONTEND,
   TEST_USER_PARTIAL_2FA,
   TEST_USER_TRANSFORMED_FROM_DATABASE,
 } = require('../../../test-helpers/unit-test-mocks/mock-user');
-const { LOGIN_STATUSES, SIGN_IN_LINK, HTTP_ERROR_CAUSES } = require('../../constants');
+const { SIGN_IN_LINK, HTTP_ERROR_CAUSES } = require('../../constants');
 const { InvalidSignInTokenError, InvalidUserIdError, UserNotFoundError } = require('../errors');
 const UserBlockedError = require('../errors/user-blocked.error');
 
@@ -45,7 +47,7 @@ describe('SignInLinkController', () => {
 
     const successfulLoginResponse = {
       expiresIn,
-      loginStatus: LOGIN_STATUSES.VALID_2FA,
+      loginStatus: PORTAL_LOGIN_STATUS.VALID_2FA,
       success: true,
       token,
       user: TEST_USER_SANITISED_FOR_FRONTEND,
@@ -77,12 +79,14 @@ describe('SignInLinkController', () => {
         it('should call resetSignInData on the signInLinkService with the user id', async () => {
           await signInLinkController.loginWithSignInLink(req, res);
 
-          expect(signInLinkService.resetSignInData).toHaveBeenCalledWith(TEST_USER_PARTIAL_2FA._id);
+          expect(signInLinkService.resetSignInData).toHaveBeenCalledWith(TEST_USER_PARTIAL_2FA._id, generatePortalAuditDetails(req.params.userId));
         });
 
         describe('given loginUser throws a UserBlockedError', () => {
           beforeEach(() => {
-            when(signInLinkService.loginUser).calledWith(TEST_USER_PARTIAL_2FA._id).mockRejectedValueOnce(new UserBlockedError(TEST_USER_PARTIAL_2FA._id));
+            when(signInLinkService.loginUser)
+              .calledWith(TEST_USER_PARTIAL_2FA._id, generatePortalAuditDetails(req.params.userId))
+              .mockRejectedValueOnce(new UserBlockedError(TEST_USER_PARTIAL_2FA._id));
           });
 
           itShouldReturnAUserBlocked403();
@@ -91,8 +95,11 @@ describe('SignInLinkController', () => {
         describe('given loginUser succeeds', () => {
           beforeEach(() => {
             when(signInLinkService.loginUser)
-              .calledWith(TEST_USER_PARTIAL_2FA._id)
-              .mockResolvedValueOnce({ user: TEST_USER_TRANSFORMED_FROM_DATABASE, tokenObject: { token, expires: expiresIn } });
+              .calledWith(TEST_USER_PARTIAL_2FA._id, generatePortalAuditDetails(req.params.userId))
+              .mockResolvedValueOnce({
+                user: TEST_USER_TRANSFORMED_FROM_DATABASE,
+                tokenObject: { token, expires: expiresIn },
+              });
           });
 
           it('should respond with a 200', async () => {
@@ -112,7 +119,9 @@ describe('SignInLinkController', () => {
           const loginUserError = new Error('test error');
 
           beforeEach(() => {
-            when(signInLinkService.loginUser).calledWith(TEST_USER_PARTIAL_2FA._id).mockRejectedValueOnce(loginUserError);
+            when(signInLinkService.loginUser)
+              .calledWith(TEST_USER_PARTIAL_2FA._id, generatePortalAuditDetails(req.params.userId))
+              .mockRejectedValueOnce(loginUserError);
           });
 
           itShouldReturnA500WithMessage(loginUserError.message);

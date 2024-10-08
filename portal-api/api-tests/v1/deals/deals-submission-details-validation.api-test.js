@@ -15,15 +15,18 @@ const newDeal = aDeal({
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
   status: 'Draft',
-  comments: [{
-    username: 'bananaman',
-    timestamp: '1984/12/25 00:00:00:001',
-    text: 'Merry Christmas from the 80s',
-  }, {
-    username: 'supergran',
-    timestamp: '1982/12/25 00:00:00:001',
-    text: 'Also Merry Christmas from the 80s',
-  }],
+  comments: [
+    {
+      username: 'bananaman',
+      timestamp: '1984/12/25 00:00:00:001',
+      text: 'Merry Christmas from the 80s',
+    },
+    {
+      username: 'supergran',
+      timestamp: '1982/12/25 00:00:00:001',
+      text: 'Also Merry Christmas from the 80s',
+    },
+  ],
 });
 
 describe('PUT /v1/deals/:id/submission-details validation rules', () => {

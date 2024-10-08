@@ -12,13 +12,14 @@ const { stripCommas, getMaximumLiability, filterTask } = require('../../data-mig
 
 // ******************** DEALS *************************
 /**
-  * Return all the TFM deals with `MIA/MIN` filter.
-  * @param {Object} filter Mongo filter
-  * @returns {Object} Collection object
-  */
-const getTfmDeals = () => getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL, { $or: [
-  { 'dealSnapshot.submissionType': { $eq: 'Manual Inclusion Application' } },
-  { 'dealSnapshot.submissionType': { $eq: 'Manual Inclusion Notice' } }] });
+ * Return all the TFM deals with `MIA/MIN` filter.
+ * @param {object} filter Mongo filter
+ * @returns {object} Collection object
+ */
+const getTfmDeals = () =>
+  getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL, {
+    $or: [{ 'dealSnapshot.submissionType': { $eq: 'Manual Inclusion Application' } }, { 'dealSnapshot.submissionType': { $eq: 'Manual Inclusion Notice' } }],
+  });
 
 // ******************** REPORTING *************************
 
@@ -36,11 +37,8 @@ const constructRows = (deals) => {
       const { dealSnapshot, tfm } = deal;
       const ukefDealId = dealSnapshot.ukefDealId ?? dealSnapshot.details.ukefDealId;
       const submissionDate = dealSnapshot.submissionDate ?? dealSnapshot.details.submissionDate;
-      const destinationCountry = dealSnapshot.submissionDetails
-        ? stripCommas(dealSnapshot.submissionDetails.destinationOfGoodsAndServices.name)
-        : '';
-      const exporterName = stripCommas(dealSnapshot.exporter.companyName)
-          ?? stripCommas(dealSnapshot.submissionDetails['supplier-name']);
+      const destinationCountry = dealSnapshot.submissionDetails ? stripCommas(dealSnapshot.submissionDetails.destinationOfGoodsAndServices.name) : '';
+      const exporterName = stripCommas(dealSnapshot.exporter.companyName) ?? stripCommas(dealSnapshot.submissionDetails['supplier-name']);
       const exporterUrn = tfm.parties.exporter.partyUrn;
       const { exporterCreditRating } = tfm;
       // Amalgamation of all facilities `facility.ukefExposure`
@@ -48,9 +46,7 @@ const constructRows = (deals) => {
       // `Complete risk analysis (RAD)` task
       const radTask = filterTask(tfm, 'Complete risk analysis (RAD)');
       const approver = stripCommas(radTask?.assignedTo?.userFullName) ?? '';
-      const approveDate = radTask?.dateCompleted
-        ? new Date(Number(radTask.dateCompleted))
-        : '';
+      const approveDate = radTask?.dateCompleted ? new Date(Number(radTask.dateCompleted)) : '';
 
       processed.push([
         ukefDealId,
@@ -78,7 +74,7 @@ const constructRows = (deals) => {
 /**
  * Generates bespoke report as CSV
  * @param {Array} rows Array of processed deals
- * @returns {Null} Null is returned
+ * @returns {Promise<boolean>} Report generation status, true if successful
  */
 const generateReport = async (rows) => {
   const path = `${__dirname}/report/csv/RAD_${new Date().valueOf()}.csv`;
@@ -124,7 +120,7 @@ const generateReport = async (rows) => {
 /**
  * Entry point function.
  * Initiates report generation process
- * @returns {Boolean} Execution status
+ * @returns {boolean} Execution status
  */
 const generate = () => {
   console.info('\n\x1b[33m%s\x1b[0m', '🚀 Initiating RAD reporting.', '\n\n');
@@ -135,7 +131,7 @@ const generate = () => {
     .then(() => disconnect())
     .then(() => process.exit(1))
     .catch((error) => {
-      console.error('\n\x1b[31m%s\x1b[0m', '🚩 Report generation failed.\n %s', error);
+      console.error('\n\x1b[31m%s\x1b[0m', '🚩 Report generation failed.\n %o', error);
       process.exit(1);
     });
 };

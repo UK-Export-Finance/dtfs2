@@ -9,10 +9,12 @@ import MOCK_USERS from '../../__mocks__/mock-users';
 console.error = jest.fn();
 
 describe('updateUtilisationReportStatus', () => {
-  const reportsWithStatus: ReportWithStatus[] = [{
-    status: 'REPORT_NOT_RECEIVED',
-    reportId: 123,
-  }];
+  const reportsWithStatus: ReportWithStatus[] = [
+    {
+      status: 'REPORT_NOT_RECEIVED',
+      reportId: 123,
+    },
+  ];
   const { req: mockRequest, res: mockResponse } = httpMocks.createMocks<Request<object, object, UpdateUtilisationReportStatusRequestBody>>({
     method: 'PUT',
     body: {

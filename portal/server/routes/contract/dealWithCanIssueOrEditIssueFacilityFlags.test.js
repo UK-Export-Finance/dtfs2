@@ -9,7 +9,7 @@ describe('dealWithCanIssueOrEditIssueFacilityFlags', () => {
 
   const mockDeal = {
     submissionType: 'Automatic Inclusion Notice',
-    status: 'Further Maker\'s input required',
+    status: "Further Maker's input required",
     details: {
       submissionDate: 12345678,
     },

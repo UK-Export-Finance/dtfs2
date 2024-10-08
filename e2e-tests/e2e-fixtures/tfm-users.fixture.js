@@ -75,3 +75,10 @@ export const PIM_USER_1 = {
   lastName: 'Last',
   ...defaultUserDetails,
 };
+
+// This is used when making a direct api request to central api, which needs a user for audit details
+// The given _id is mocked & does not correspond to the value in the database
+export const UNDERWRITER_1_WITH_MOCK_ID = {
+  ...UNDERWRITER_1,
+  _id: '1234567890abcdef12345678',
+};

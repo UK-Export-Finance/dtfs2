@@ -19,25 +19,26 @@ class SignInLinkService {
     this.#userService = userService;
   }
 
-  async createAndEmailSignInLink(user) {
-    const {
-      _id: userId,
-      email: userEmail,
-      firstname: userFirstName,
-      surname: userLastName,
-      signInLinkSendDate: userSignInLinkSendDate,
-    } = user;
+  /**
+   * Creates and emails a sign-in link to the user.
+   * @param {object} user - The user object with necessary information.
+   * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
+   * @returns {Promise<number>} - The new sign-in link count.
+   * @throws {UserBlockedError} - If the user is blocked.
+   */
+  async createAndEmailSignInLink(user, auditDetails) {
+    const { _id: userId, email: userEmail, firstname: userFirstName, surname: userLastName, signInLinkSendDate: userSignInLinkSendDate } = user;
 
     const isUserBlockedOrDisabled = await this.#userService.isUserBlockedOrDisabled(user);
 
-    const newSignInLinkCount = await this.#incrementSignInLinkSendCount({ userId, isUserBlockedOrDisabled, userSignInLinkSendDate, userEmail });
+    const newSignInLinkCount = await this.#incrementSignInLinkSendCount({ userId, isUserBlockedOrDisabled, userSignInLinkSendDate, userEmail, auditDetails });
 
     if (isUserBlockedOrDisabled) {
       throw new UserBlockedError(userId);
     }
     const signInToken = this.#createSignInToken();
 
-    await this.#saveSignInTokenHashAndSalt({ userId, signInToken });
+    await this.#saveSignInTokenHashAndSalt({ userId, signInToken, auditDetails });
 
     await this.#sendSignInLinkEmail({
       signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}&u=${userId}`,
@@ -49,6 +50,11 @@ class SignInLinkService {
     return newSignInLinkCount;
   }
 
+  /**
+   * Gets the status of a sign-in token for a user.
+   * @param {object} params - The parameters containing userId and signInToken.
+   * @returns {Promise<string>} - The status of the sign-in token.
+   */
   async getSignInTokenStatus({ userId, signInToken }) {
     const user = await this.#userRepository.findById(userId);
 
@@ -62,7 +68,8 @@ class SignInLinkService {
         target: signInToken,
         hash: databaseSignInToken.hash,
         salt: databaseSignInToken.salt,
-      }),);
+      }),
+    );
 
     if (matchingSignInTokenIndex === -1) {
       return SIGN_IN_LINK.STATUS.NOT_FOUND;
@@ -71,8 +78,8 @@ class SignInLinkService {
     const matchingSignInToken = databaseSignInTokens[matchingSignInTokenIndex];
 
     if (
-      this.#isSignInTokenIsInDate(matchingSignInToken)
-      && this.#isSignInTokenIsLastIssued({ signInTokenIndex: matchingSignInTokenIndex, databaseSignInTokens })
+      this.#isSignInTokenIsInDate(matchingSignInToken) &&
+      this.#isSignInTokenIsLastIssued({ signInTokenIndex: matchingSignInTokenIndex, databaseSignInTokens })
     ) {
       return SIGN_IN_LINK.STATUS.VALID;
     }
@@ -80,39 +87,61 @@ class SignInLinkService {
     return SIGN_IN_LINK.STATUS.EXPIRED;
   }
 
-  async loginUser(userId) {
+  /**
+   * Logs in a user and returns the user object and authentication token.
+   * @param {string} userId - The ID of the user to log in.
+   * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
+   * @returns {Promise<object>} - The user object and authentication token.
+   */
+  async loginUser(userId, auditDetails) {
     const user = await this.#userRepository.findById(userId);
 
     this.#userService.validateUserIsActiveAndNotDisabled(user);
 
     const { sessionIdentifier, ...tokenObject } = utils.issueValid2faJWT(user);
-    await this.#updateLastLoginAndResetSignInData({ userId: user._id, sessionIdentifier });
+    await this.#updateLastLoginAndResetSignInData({ userId: user._id, sessionIdentifier, auditDetails });
     return { user, tokenObject };
   }
 
-  async deleteSignInTokens(userId) {
-    return this.#userRepository.deleteSignInTokensForUser(userId);
+  /**
+   * Resets sign-in data for a user.
+   * @param {string} userId - The ID of the user to reset sign-in data.
+   * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
+   */
+  async resetSignInData(userId, auditDetails) {
+    await this.#userRepository.resetSignInData({ userId, auditDetails });
   }
 
-  async resetSignInData(userId) {
-    await this.#userRepository.resetSignInData({ userId });
+  /**
+   * Updates the last login timestamp and resets sign-in data for a user.
+   * @param {object} params - The parameters containing userId and sessionIdentifier.
+   * @param {import("@ukef/dtfs2-common").AuditDetails} params.auditDetails - user making the request
+   * @returns {Promise<void>}
+   */
+  async #updateLastLoginAndResetSignInData({ userId, sessionIdentifier, auditDetails }) {
+    return this.#userRepository.updateLastLoginAndResetSignInData({ userId, sessionIdentifier, auditDetails });
   }
 
-  async #updateLastLoginAndResetSignInData({ userId, sessionIdentifier }) {
-    return this.#userRepository.updateLastLoginAndResetSignInData({ userId, sessionIdentifier });
-  }
-
+  /**
+   * Generates a sign-in token using a random hex string.
+   * @returns {string} - The generated sign-in token.
+   * @throws {Error} - If there is an issue generating the sign-in token.
+   */
   #createSignInToken() {
     try {
       return this.#randomGenerator.randomHexString(SIGN_IN_LINK.TOKEN_BYTE_LENGTH);
-    } catch (e) {
-      const error = new Error('Failed to create a sign in token.');
-      error.cause = e;
-      throw error;
+    } catch (error) {
+      throw new Error('Failed to create a sign in token', { cause: error });
     }
   }
 
-  async #saveSignInTokenHashAndSalt({ userId, signInToken }) {
+  /**
+   * Saves the hash and salt of the sign-in token along with its expiry for a user.
+   * @param {object} params - The parameters containing userId and signInToken.
+   * @param {import("@ukef/dtfs2-common").AuditDetails} params.auditDetails - user making the request
+   * @throws {Error} - If there is an issue saving the sign-in token.
+   */
+  async #saveSignInTokenHashAndSalt({ userId, signInToken, auditDetails }) {
     try {
       const { hash, salt } = this.#hasher.hash(signInToken);
       const expiry = new Date().getTime() + SIGN_IN_LINK.DURATION_MILLISECONDS;
@@ -121,17 +150,21 @@ class SignInLinkService {
         signInTokenSalt: salt,
         signInTokenHash: hash,
         expiry,
+        auditDetails,
       });
-    } catch (e) {
-      const error = new Error('Failed to save the sign in token.');
-      error.cause = e;
-      throw error;
+    } catch (error) {
+      throw new Error('Failed to save the sign in token', { cause: error });
     }
   }
 
+  /**
+   * Sends a sign-in link email to the user.
+   * @param {object} params - The parameters containing userEmail, userFirstName, userLastName, and signInLink.
+   * @throws {Error} - If there is an issue sending the sign-in link email.
+   */
   async #sendSignInLinkEmail({ userEmail, userFirstName, userLastName, signInLink }) {
     if (process.env.NODE_ENV === 'development') {
-      console.info('🔗 signInLink 🔗', signInLink);
+      console.info('Sending sign-in link %s', signInLink);
     }
 
     try {
@@ -141,24 +174,29 @@ class SignInLinkService {
         signInLink,
         signInLinkDuration: `${SIGN_IN_LINK.DURATION_MINUTES} minute${SIGN_IN_LINK.DURATION_MINUTES === 1 ? '' : 's'}`,
       });
-    } catch (e) {
-      const error = new Error('Failed to email the sign in token.');
-      error.cause = e;
-      throw error;
+    } catch (error) {
+      throw new Error('Failed to email the sign in token', { cause: error });
     }
   }
 
-  async #incrementSignInLinkSendCount({ userId, isUserBlockedOrDisabled, userSignInLinkSendDate, userEmail }) {
+  /**
+   * Increments the sign-in link send count for a user and handles blocking if necessary.
+   * @param {object} params - The parameters containing userId, isUserBlockedOrDisabled, userSignInLinkSendDate, and userEmail.
+   * @param {import("@ukef/dtfs2-common").AuditDetails} params.auditDetails - user making the request
+   * @returns {Promise<number>} - The remaining number of sign-in link attempts.
+   * @throws {UserBlockedError} - If the user is blocked due to excessive sign-in link attempts.
+   */
+  async #incrementSignInLinkSendCount({ userId, isUserBlockedOrDisabled, userSignInLinkSendDate, userEmail, auditDetails }) {
     const maxSignInLinkSendCount = 3;
 
     if (!isUserBlockedOrDisabled) {
-      await this.#resetSignInDataIfStale({ userId, userSignInLinkSendDate });
+      await this.#resetSignInDataIfStale({ userId, userSignInLinkSendDate, auditDetails });
     }
 
-    const signInLinkCount = await this.#userRepository.incrementSignInLinkSendCount({ userId });
+    const signInLinkCount = await this.#userRepository.incrementSignInLinkSendCount({ userId, auditDetails });
 
     if (signInLinkCount === 1) {
-      await this.#userRepository.setSignInLinkSendDate({ userId });
+      await this.#userRepository.setSignInLinkSendDate({ userId, auditDetails });
     }
 
     const numberOfSendSignInLinkAttemptsRemaining = maxSignInLinkSendCount - signInLinkCount;
@@ -168,37 +206,62 @@ class SignInLinkService {
      * they are on their last attempt.
      */
     if (numberOfSendSignInLinkAttemptsRemaining === -1) {
-      await this.#blockUser({ userId, reason: STATUS_BLOCKED_REASON.EXCESSIVE_SIGN_IN_LINKS, userEmail });
+      await this.#blockUser({ userId, reason: STATUS_BLOCKED_REASON.EXCESSIVE_SIGN_IN_LINKS, userEmail, auditDetails });
       throw new UserBlockedError(userId);
     }
 
     return numberOfSendSignInLinkAttemptsRemaining;
   }
 
-  async #resetSignInDataIfStale({ userId, userSignInLinkSendDate }) {
+  /**
+   * Resets sign-in data if it is stale based on the time since the last sign-in link send.
+   * @param {object} params - The parameters containing userId and userSignInLinkSendDate.
+   * @param {import("@ukef/dtfs2-common").AuditDetails} params.auditDetails - user making the request
+   */
+  async #resetSignInDataIfStale({ userId, userSignInLinkSendDate, auditDetails }) {
     const TIME_TO_RESET_SIGN_IN_LINK_SEND_COUNT_IN_MILLISECONDS = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
     const currentDate = Date.now();
 
     const signInLinkCountStaleDate = currentDate - TIME_TO_RESET_SIGN_IN_LINK_SEND_COUNT_IN_MILLISECONDS;
 
     if (userSignInLinkSendDate && userSignInLinkSendDate < signInLinkCountStaleDate) {
-      await this.#userRepository.resetSignInData({ userId });
+      await this.#userRepository.resetSignInData({ userId, auditDetails });
     }
   }
 
-  async #blockUser({ userId, userEmail, reason }) {
-    await this.#userRepository.blockUser({ userId, reason });
+  /**
+   * Blocks a user with a given reason and sends a blocked email to the user.
+   * @param {object} params - The parameters containing userId, userEmail, and reason.
+   * @param {import("@ukef/dtfs2-common").AuditDetails} params.auditDetails - user making the request
+   */
+  async #blockUser({ userId, userEmail, reason, auditDetails }) {
+    await this.#userRepository.blockUser({ userId, reason, auditDetails });
     await sendBlockedEmail(userEmail);
   }
 
+  /**
+   * Checks if a sign-in token is within its validity period.
+   * @param {object} signInToken - The sign-in token object.
+   * @returns {boolean} - Whether the sign-in token is within its validity period.
+   */
   #isSignInTokenIsInDate(signInToken) {
     return Date.now() <= signInToken.expiry;
   }
 
+  /**
+   * Checks if a sign-in token is the last issued token for a user.
+   * @param {object} params - The parameters containing signInTokenIndex and databaseSignInTokens.
+   * @returns {boolean} - Whether the sign-in token is the last issued for the user.
+   */
   #isSignInTokenIsLastIssued({ signInTokenIndex, databaseSignInTokens }) {
     return signInTokenIndex === databaseSignInTokens.length - 1;
   }
 
+  /**
+   * Checks if a user has saved sign-in tokens.
+   * @param {object} user - The user object.
+   * @returns {boolean} - Whether the user has saved sign-in tokens.
+   */
   #doesUserHaveSavedSignInTokens(user) {
     return user.signInTokens !== undefined && user.signInTokens.length > 0;
   }

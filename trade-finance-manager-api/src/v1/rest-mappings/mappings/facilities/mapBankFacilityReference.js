@@ -1,13 +1,13 @@
-const CONSTANTS = require('../../../../constants');
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 
 const mapBankFacilityReference = (facility) => {
   const { ukefFacilityType } = facility;
 
-  if (ukefFacilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
+  if (ukefFacilityType === FACILITY_TYPE.LOAN) {
     return facility.name;
   }
 
-  if (ukefFacilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
+  if (ukefFacilityType === FACILITY_TYPE.BOND) {
     return facility.name;
   }
 

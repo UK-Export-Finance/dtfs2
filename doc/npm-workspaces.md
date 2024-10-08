@@ -33,6 +33,8 @@ and the `asString` function imported into a file with
 import { asString } from '@ukef/dtfs2-common';
 ```
 
+For more details on the common library see [libs/common/README.md](/libs/common/README.md).
+
 ## Notes on workspaces flags
 
 - `--workspaces`: this flag is added to `npm` commands so that individual scripts in each of the sub-packages included in the workspace will be run, however note that not all `npm` commands need the flag. Commands such as `npm install`, `npm ci`, and `npm audit` will run on all workspaces by default, whereas commands such as `npm test` and `npm run <script-name>` need the `--workspaces` flag added to run on all workspaces

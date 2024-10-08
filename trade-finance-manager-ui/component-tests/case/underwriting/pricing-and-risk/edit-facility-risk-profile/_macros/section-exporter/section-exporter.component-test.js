@@ -1,4 +1,4 @@
-const componentRenderer = require('../../../../../../componentRenderer');
+const { componentRenderer } = require('../../../../../../componentRenderer');
 
 const component = '../templates/case/underwriting/pricing-and-risk/_macros/section-exporter/section-exporter.njk';
 
@@ -52,7 +52,8 @@ describe(component, () => {
       };
 
       const wrapper = render(params);
-      wrapper.expectLink('[data-cy="exporter-table-credit-rating-action-link"]')
+      wrapper
+        .expectLink('[data-cy="exporter-table-credit-rating-action-link"]')
         .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/edit`, 'Add credit rating');
     });
   });

@@ -12,24 +12,16 @@ const deal = {
   bank: {
     id: '9',
     name: 'UKEF test bank (Delegated)',
-    emails: [
-      'maker@ukexportfinance.gov.uk',
-      'checker@ukexportfinance.gov.uk',
-    ],
+    emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
   },
   maker: {
     _id: '5f3ab3f705e6630007dcfb25',
     username: BANK1_MAKER1.username,
-    roles: [
-      'maker',
-    ],
+    roles: ['maker'],
     bank: {
       id: '9',
       name: 'UKEF test bank (Delegated)',
-      emails: [
-        'maker@ukexportfinance.gov.uk',
-        'checker@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
     lastLogin: '1606899737029',
     firstname: 'Hugo',
@@ -44,16 +36,11 @@ const deal = {
     checker: {
       _id: '5f3ab3f705e6630007dcfb29',
       username: BANK1_CHECKER1.username,
-      roles: [
-        'checker',
-      ],
+      roles: ['checker'],
       bank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
+        emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
       },
       lastLogin: '1606900578887',
       firstname: 'Emilio',
@@ -68,16 +55,11 @@ const deal = {
     makerMIN: {
       _id: '5f3ab3f705e6630007dcfb25',
       username: BANK1_MAKER1.username,
-      roles: [
-        'maker',
-      ],
+      roles: ['maker'],
       bank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
+        emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
       },
       lastLogin: '1606901020715',
       firstname: 'Hugo',
@@ -90,16 +72,11 @@ const deal = {
     checkerMIN: {
       _id: '5f3ab3f705e6630007dcfb29',
       username: BANK1_CHECKER1.username,
-      roles: [
-        'checker',
-      ],
+      roles: ['checker'],
       bank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
-        emails: [
-          'maker@ukexportfinance.gov.uk',
-          'checker@ukexportfinance.gov.uk',
-        ],
+        emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
       },
       lastLogin: '1606912247772',
       firstname: 'Emilio',
@@ -119,25 +96,29 @@ const deal = {
       {
         _id: '5f3bd4c19b84262f37a97fdc',
         id: 11,
-        description: 'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve agents and the Bank is not aware that any of the information contained within it is inaccurate.',
+        description:
+          'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve agents and the Bank is not aware that any of the information contained within it is inaccurate.',
         answer: true,
       },
       {
         _id: '5f3bd4d79b84262f37a97fdd',
         id: 12,
-        description: 'The period between the Cover Start Date and the Cover End Date does not exceed: for a Bond, the Bond Maximum Cover Period; and for a Loan, the Loan Maximum Cover Period.',
+        description:
+          'The period between the Cover Start Date and the Cover End Date does not exceed: for a Bond, the Bond Maximum Cover Period; and for a Loan, the Loan Maximum Cover Period.',
         answer: false,
       },
       {
         _id: '5f3bd4ec9b84262f37a97fde',
         id: 13,
-        description: 'The Covered Bank Exposure under the Transaction (converted (as at the date this representation is made) for this purpose into the Base Currency) is not more than the lesser of: the Available Facility; and the Available Obligor Covered Exposure Limit.',
+        description:
+          'The Covered Bank Exposure under the Transaction (converted (as at the date this representation is made) for this purpose into the Base Currency) is not more than the lesser of: the Available Facility; and the Available Obligor Covered Exposure Limit.',
         answer: true,
       },
       {
         _id: '5f3bd4fa9b84262f37a97fdf',
         id: 14,
-        description: 'For a bond Transaction, the bond has not yet been issued or, where the bond has been issued, this was done no more than 3 months prior to the submission of this Inclusion Notice. For a loan Transaction, the loan has not yet been advanced.',
+        description:
+          'For a bond Transaction, the bond has not yet been issued or, where the bond has been issued, this was done no more than 3 months prior to the submission of this Inclusion Notice. For a loan Transaction, the loan has not yet been advanced.',
         answer: true,
       },
       {
@@ -149,19 +130,22 @@ const deal = {
       {
         _id: '5f3bd5199b84262f37a97fe1',
         id: 16,
-        description: 'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve any of the following Controlled Sectors: sharp arms defence, nuclear, radiological, biological, human cloning, pornography, tobacco, gambling, coal, oil, gas or fossil fuel energy and the Bank is not aware that any of the information contained within it is inaccurate.',
+        description:
+          'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve any of the following Controlled Sectors: sharp arms defence, nuclear, radiological, biological, human cloning, pornography, tobacco, gambling, coal, oil, gas or fossil fuel energy and the Bank is not aware that any of the information contained within it is inaccurate.',
         answer: true,
       },
       {
         _id: '5f3bd5289b84262f37a97fe2',
         id: 17,
-        description: 'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate to any Relevant Person.',
+        description:
+          'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate to any Relevant Person.',
         answer: true,
       },
       {
         _id: '5f3bd5379b84262f37a97fe3',
         id: 18,
-        description: 'Any applicable fees, interest rate and/or Risk Margin Fee apply to the whole Cover Period of the Covered Transaction, and have been set in accordance with the Bank\'s normal pricing policies and include, if any, overall pricing requirements notified by UKEF.',
+        description:
+          "Any applicable fees, interest rate and/or Risk Margin Fee apply to the whole Cover Period of the Covered Transaction, and have been set in accordance with the Bank's normal pricing policies and include, if any, overall pricing requirements notified by UKEF.",
         answer: true,
       },
     ],
@@ -175,32 +159,19 @@ const deal = {
     validationErrors: {
       count: 0,
       errorList: {
-        11: {
-        },
-        12: {
-        },
-        13: {
-        },
-        14: {
-        },
-        15: {
-        },
-        16: {
-        },
-        17: {
-        },
-        18: {
-        },
-        agentName: {
-        },
-        agentAddressCountry: {
-        },
-        agentAddressLine1: {
-        },
-        agentAddressPostcode: {
-        },
-        agentAddressTown: {
-        },
+        11: {},
+        12: {},
+        13: {},
+        14: {},
+        15: {},
+        16: {},
+        17: {},
+        18: {},
+        agentName: {},
+        agentAddressCountry: {},
+        agentAddressLine1: {},
+        agentAddressPostcode: {},
+        agentAddressTown: {},
       },
     },
   },
@@ -284,23 +255,17 @@ const deal = {
     'supplyContractConversionDate-month': '',
     'supplyContractConversionDate-year': '',
   },
-  summary: {
-  },
+  summary: {},
   comments: [
     {
       user: {
         _id: '5f3ab3f705e6630007dcfb25',
         username: BANK1_MAKER1.username,
-        roles: [
-          'maker',
-        ],
+        roles: ['maker'],
         bank: {
           id: '9',
           name: 'UKEF test bank (Delegated)',
-          emails: [
-            'maker@ukexportfinance.gov.uk',
-            'checker@ukexportfinance.gov.uk',
-          ],
+          emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
         },
         lastLogin: '1606912269649',
         firstname: 'Hugo',
@@ -316,16 +281,11 @@ const deal = {
       user: {
         _id: '5f3ab3f705e6630007dcfb25',
         username: BANK1_MAKER1.username,
-        roles: [
-          'maker',
-        ],
+        roles: ['maker'],
         bank: {
           id: '9',
           name: 'UKEF test bank (Delegated)',
-          emails: [
-            'maker@ukexportfinance.gov.uk',
-            'checker@ukexportfinance.gov.uk',
-          ],
+          emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
         },
         lastLogin: '1606901020715',
         firstname: 'Hugo',
@@ -341,16 +301,11 @@ const deal = {
       user: {
         _id: '5f3ab3f705e6630007dcfb25',
         username: BANK1_MAKER1.username,
-        roles: [
-          'maker',
-        ],
+        roles: ['maker'],
         bank: {
           id: '9',
           name: 'UKEF test bank (Delegated)',
-          emails: [
-            'maker@ukexportfinance.gov.uk',
-            'checker@ukexportfinance.gov.uk',
-          ],
+          emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
         },
         lastLogin: '1606899737029',
         firstname: 'Hugo',
@@ -369,8 +324,7 @@ const deal = {
     validationErrors: {
       count: 0,
       errorList: {
-        exporterQuestionnaire: {
-        },
+        exporterQuestionnaire: {},
       },
     },
     exporterQuestionnaire: [

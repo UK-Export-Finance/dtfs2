@@ -1,16 +1,12 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
+const { DealNotFoundError } = require('@ukef/dtfs2-common');
 const { findOneDeal } = require('./get-deal.controller');
-const db = require('../../../../drivers/db-client').default;
-const { PORTAL_ROUTE } = require('../../../../constants/routes');
+const { mongoDbClient: db } = require('../../../../drivers/db-client');
+const { ROUTES } = require('../../../../constants');
 const { isNumber } = require('../../../../helpers');
-
-const withoutId = (obj) => {
-  const cleanedObject = { ...obj };
-  delete cleanedObject._id;
-  return cleanedObject;
-};
 
 const handleEditedByPortal = async (dealId, dealUpdate, user) => {
   let editedBy = [];
@@ -48,106 +44,129 @@ const handleEditedByPortal = async (dealId, dealUpdate, user) => {
   return editedBy;
 };
 
-const updateDealEditedByPortal = async (dealId, user) => {
-  if (ObjectId.isValid(dealId)) {
-    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
-    const editedBy = await handleEditedByPortal(dealId, {}, user);
+const updateDealEditedByPortal = async ({ dealId, user, auditDetails }) => {
+  if (!ObjectId.isValid(dealId)) {
+    return { status: 400, message: 'Invalid Deal Id' };
+  }
 
-    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten(withoutId({ editedBy })), {
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+  const { _id, ...editedByWithoutId } = await handleEditedByPortal(dealId, {}, user);
+  const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
+
+  const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten({ editedBy: editedByWithoutId, auditRecord }), {
+    returnNewDocument: true,
+    returnDocument: 'after',
+  });
+
+  const { value } = findAndUpdateResponse;
+  return value;
+};
+
+exports.updateDealEditedByPortal = updateDealEditedByPortal;
+
+/**
+ * Updates a deal in the database.
+ * @param {object} params - The parameters for updating the deal.
+ * @param {string} params.dealId - The ID of the deal being updated.
+ * @param {object} params.dealUpdate - The update to be made to the deal.
+ * @param {object} params.user - The user making the changes.
+ * @param {import("@ukef/dtfs2-common").AuditDetails} params.auditDetails - The audit details for the update.
+ * @param {object} params.existingDeal - The existing deal object.
+ * @param {string} params.routePath - The route path.
+ * @returns {Promise<{ status: number, message: string }>} The updated deal object.
+ */
+const updateDeal = async ({ dealId, dealUpdate, user, auditDetails, existingDeal, routePath }) => {
+  try {
+    if (!ObjectId.isValid(dealId)) {
+      return { status: 400, message: 'Invalid Deal Id' };
+    }
+
+    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+
+    let originalDeal = existingDeal;
+
+    if (!existingDeal) {
+      originalDeal = await findOneDeal(dealId);
+    }
+
+    let originalDealDetails;
+    let originalDealEligibility;
+
+    const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
+
+    const dealUpdateForDatabase = {
+      ...dealUpdate,
+      auditRecord,
+      updatedAt: Date.now(),
+    };
+
+    if (originalDeal?.details) {
+      originalDealDetails = originalDeal.details;
+    }
+
+    if (originalDeal?.eligibility) {
+      originalDealEligibility = originalDeal.eligibility;
+    }
+
+    /**
+     * This function is invoked numerous times when a deal status is updated.
+     * For instance upon submitting this deal to the TFM (from checker) the
+     * deal status will be updated to `Submitted` (`deal.status`), the submission count will be
+     * incremented (`deal.details.submissionCount`) and facilities updated at (`deal.facilitiesUpdated`).
+     *
+     * When multiple simultaneous calls are made to `updateDeal` function, a race condition is developed
+     * where chances are increased per number of facilities associated with the deal.
+     *
+     * Below validation ensures only latest updates pertinent to the respective deal properties `details`
+     * and `eligibility` are only added to the `update` deal object when applicable. This ensures no outdated
+     * `details` and `eligibility` object are spread or injected from other concurrent calls where deal object
+     * is extracted at the begining of this function.
+     */
+
+    if (dealUpdate?.details) {
+      dealUpdateForDatabase.details = {
+        ...originalDealDetails,
+        ...dealUpdate.details,
+      };
+    }
+
+    if (dealUpdate?.eligibility) {
+      dealUpdateForDatabase.eligibility = {
+        ...originalDealEligibility,
+        ...dealUpdate.eligibility,
+      };
+    }
+
+    if (routePath === ROUTES.PORTAL_ROUTE) {
+      dealUpdateForDatabase.editedBy = await handleEditedByPortal(dealId, dealUpdateForDatabase, user);
+    }
+    const { _id, ...dealUpdateForDatabaseWithoutId } = dealUpdateForDatabase;
+
+    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten(dealUpdateForDatabaseWithoutId), {
       returnNewDocument: true,
       returnDocument: 'after',
     });
 
-    const { value } = findAndUpdateResponse;
-    return value;
-  }
-  return { status: 400, message: 'Invalid Deal Id' };
-};
-exports.updateDealEditedByPortal = updateDealEditedByPortal;
-
-const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) => {
-  try {
-    if (ObjectId.isValid(dealId)) {
-      const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
-
-      let originalDeal = existingDeal;
-
-      if (!existingDeal) {
-        originalDeal = await findOneDeal(dealId);
-      }
-
-      let originalDealDetails;
-      let originalDealEligibility;
-
-      const update = {
-        ...dealChanges,
-        updatedAt: Date.now(),
-      };
-
-      if (originalDeal?.details) {
-        originalDealDetails = originalDeal.details;
-      }
-
-      if (originalDeal?.eligibility) {
-        originalDealEligibility = originalDeal.eligibility;
-      }
-
-      /**
-       * This function is invoked numerous times when a deal status is updated.
-       * For instance upon submitting this deal to the TFM (from checker) the
-       * deal status will be updated to `Submitted` (`deal.status`), the submission count will be
-       * incremented (`deal.details.submissionCount`) and facilities updated at (`deal.facilitiesUpdated`).
-       *
-       * When multiple simultaneous calls are made to `updateDeal` function, a race condition is developed
-       * where chances are increased per number of facilities associated with the deal.
-       *
-       * Below validation ensures only latest updates pertinent to the respective deal properties `details`
-       * and `eligibility` are only added to the `update` deal object when applicable. This ensures no outdated
-       * `details` and `eligibility` object are spread or injected from other concurrent calls where deal object
-       * is extracted at the begining of this function.
-       */
-
-      if (dealChanges?.details) {
-        update.details = {
-          ...originalDealDetails,
-          ...dealChanges.details,
-        };
-      }
-
-      if (dealChanges?.eligibility) {
-        update.eligibility = {
-          ...originalDealEligibility,
-          ...dealChanges.eligibility,
-        };
-      }
-
-      if (routePath === PORTAL_ROUTE) {
-        update.editedBy = await handleEditedByPortal(dealId, update, user);
-      }
-
-      const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten(withoutId(update)), {
-        returnNewDocument: true,
-        returnDocument: 'after',
-      });
-
-      return findAndUpdateResponse.value;
-    }
-    return { status: 400, message: 'Invalid Deal Id' };
+    return findAndUpdateResponse.value;
   } catch (error) {
-    console.error('Unable to update the deal %s %s', dealId, error);
+    console.error('Unable to update the deal %s %o', dealId, error);
     return { status: 500, message: error };
   }
 };
 exports.updateDeal = updateDeal;
 
-const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath) => {
+const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath, auditDetails) => {
   await findOneDeal(dealId, async (deal) => {
+    if (!deal) {
+      throw new DealNotFoundError(dealId);
+    }
+
     const { facilities } = deal;
 
     const updatedFacilities = [...facilities, newFacilityId.toHexString()];
     const dealUpdate = { ...deal, facilities: updatedFacilities };
 
-    const response = await updateDeal(dealId, dealUpdate, user, null, routePath);
+    const response = await updateDeal({ dealId, dealUpdate, user, auditDetails, existingDeal: null, routePath });
     const status = isNumber(response?.status, 3);
 
     if (status) {
@@ -163,7 +182,7 @@ const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath) => {
 
 exports.addFacilityIdToDeal = addFacilityIdToDeal;
 
-const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath) => {
+const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath, auditDetails) => {
   await findOneDeal(dealId, async (deal) => {
     if (deal?.facilities) {
       const { facilities } = deal;
@@ -175,7 +194,7 @@ const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath) => 
         facilities: updatedFacilities,
       };
 
-      const response = await updateDeal(dealId, dealUpdate, user, null, routePath);
+      const response = await updateDeal({ dealId, dealUpdate, user, auditDetails, existingDeal: null, routePath });
       const status = isNumber(response?.status, 3);
 
       if (status) {
@@ -196,27 +215,49 @@ exports.removeFacilityIdFromDeal = removeFacilityIdFromDeal;
 
 exports.updateDealPut = async (req, res) => {
   try {
-    if (!ObjectId.isValid(req.params.id)) {
+    const {
+      params: { id: dealId },
+      body: { user, dealUpdate, auditDetails },
+      routePath,
+    } = req;
+
+    if (!ObjectId.isValid(dealId)) {
       return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
     }
 
-    const dealId = req.params.id;
-    const { user, dealUpdate } = req.body;
-
-    // TODO: Refactor callback with status check
-    return findOneDeal(dealId, async (deal) => {
-      if (deal) {
-        const response = await updateDeal(dealId, dealUpdate, user, deal, req.routePath);
-        const status = isNumber(response?.status, 3);
-        const code = status ? response.status : 200;
-
-        return res.status(code).json(response);
+    try {
+      validateAuditDetails(auditDetails);
+    } catch (error) {
+      if (error instanceof InvalidAuditDetailsError) {
+        return res.status(error.status).send({
+          status: error.status,
+          message: error.message,
+          code: error.code,
+        });
       }
+      return res.status(500).send({ status: 500, error });
+    }
+    // TODO: Refactor callback with status check
+    return findOneDeal(dealId, async (existingDeal) => {
+      if (!existingDeal) {
+        return res.status(404).send({ status: 404, message: 'Deal not found' });
+      }
+      const response = await updateDeal({ dealId, dealUpdate, user, auditDetails, existingDeal, routePath });
+      const status = isNumber(response?.status, 3);
+      const code = status ? response.status : 200;
 
-      return res.status(404).send({ status: 404, message: 'Deal not found' });
+      return res.status(code).json(response);
     });
   } catch (error) {
-    console.error('Unable to update deal %s', error);
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: error.message,
+        code: error.code,
+      });
+    }
+
+    console.error('Unable to update deal %o', error);
     return res.status(500).send({ status: 500, message: error });
   }
 };

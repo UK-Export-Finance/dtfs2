@@ -16,8 +16,7 @@ const mockPayload = {
   submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA,
   submissionDate: '1643223993967',
   exporter: { companyName: 'Test company' },
-  ukefDecision: [{ timestamp: Date.now() }
-  ]
+  ukefDecision: [{ timestamp: Date.now() }],
 };
 
 describe('GET /v1/reports/review-ukef-decision', () => {
@@ -37,18 +36,19 @@ describe('GET /v1/reports/review-ukef-decision', () => {
     await databaseHelper.wipe([dealsCollectionName]);
 
     // create a GEF deal
-    mockApplication = await as(aMaker).post({ ...mockApplications[0], bank: { id: aMaker.bank.id } }).to(gefDealUrl);
+    mockApplication = await as(aMaker)
+      .post({ ...mockApplications[0], bank: { id: aMaker.bank.id } })
+      .to(gefDealUrl);
   });
 
   withClientAuthenticationTests({
     makeRequestWithoutAuthHeader: () => get(reviewDecisionReportUrl),
-    makeRequestWithAuthHeader: (authHeader) => get(reviewDecisionReportUrl, { headers: { Authorization: authHeader } })
+    makeRequestWithAuthHeader: (authHeader) => get(reviewDecisionReportUrl, { headers: { Authorization: authHeader } }),
   });
 
   withRoleAuthorisationTests({
     allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
     getUserWithRole: (role) => testUsers().withRole(role).one(),
-    getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
     makeRequestAsUser: (user) => as(user).get(reviewDecisionReportUrl),
     successStatusCode: 200,
   });
@@ -68,20 +68,22 @@ describe('GET /v1/reports/review-ukef-decision', () => {
     const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(reviewDecisionReportUrl, mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
-    expect(reportsBody).toEqual([{
-      dealId: expect.any(String),
-      bankInternalRefName: expect.any(String),
-      dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
-      status: expect.any(String),
-      companyName: expect.any(String),
-      dateCreatedEpoch: expect.any(Number),
-      dateOfApprovalEpoch: expect.any(Number),
-      submissionDateEpoch: expect.any(String),
-      dateCreated: expect.any(String),
-      submissionDate: expect.any(String),
-      dateOfApproval: expect.any(String),
-      daysToReview: 10 // key difference between UKEF_APPROVED_WITH_CONDITIONS and UKEF_APPROVED_WITHOUT_CONDITIONS
-    }]);
+    expect(reportsBody).toEqual([
+      {
+        dealId: expect.any(String),
+        bankInternalRefName: expect.any(String),
+        dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
+        status: expect.any(String),
+        companyName: expect.any(String),
+        dateCreatedEpoch: expect.any(Number),
+        dateOfApprovalEpoch: expect.any(Number),
+        submissionDateEpoch: expect.any(String),
+        dateCreated: expect.any(String),
+        submissionDate: expect.any(String),
+        dateOfApproval: expect.any(String),
+        daysToReview: 10, // key difference between UKEF_APPROVED_WITH_CONDITIONS and UKEF_APPROVED_WITHOUT_CONDITIONS
+      },
+    ]);
   });
 
   it('should return an empty array if the user belongs to a different bank `UKEF_APPROVED_WITHOUT_CONDITIONS`', async () => {
@@ -132,20 +134,22 @@ describe('GET /v1/reports/review-ukef-decision', () => {
     const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(reviewDecisionReportUrl, mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
-    expect(reportsBody).toEqual([{
-      dealId: expect.any(String),
-      bankInternalRefName: expect.any(String),
-      dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
-      status: expect.any(String),
-      companyName: expect.any(String),
-      dateCreatedEpoch: expect.any(Number),
-      dateOfApprovalEpoch: expect.any(Number),
-      submissionDateEpoch: expect.any(String),
-      dateCreated: expect.any(String),
-      submissionDate: expect.any(String),
-      dateOfApproval: expect.any(String),
-      daysToReview: 20 // key difference between UKEF_APPROVED_WITH_CONDITIONS and UKEF_APPROVED_WITHOUT_CONDITIONS
-    }]);
+    expect(reportsBody).toEqual([
+      {
+        dealId: expect.any(String),
+        bankInternalRefName: expect.any(String),
+        dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
+        status: expect.any(String),
+        companyName: expect.any(String),
+        dateCreatedEpoch: expect.any(Number),
+        dateOfApprovalEpoch: expect.any(Number),
+        submissionDateEpoch: expect.any(String),
+        dateCreated: expect.any(String),
+        submissionDate: expect.any(String),
+        dateOfApproval: expect.any(String),
+        daysToReview: 20, // key difference between UKEF_APPROVED_WITH_CONDITIONS and UKEF_APPROVED_WITHOUT_CONDITIONS
+      },
+    ]);
   });
 
   it('should return an empty array if the status is `Completed` and ukefDecision `UKEF_APPROVED_WITH_CONDITIONS`', async () => {

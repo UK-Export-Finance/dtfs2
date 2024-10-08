@@ -1,8 +1,4 @@
-const {
-  add,
-  format,
-  getTime,
-} = require('date-fns');
+const { add, format, getTime } = require('date-fns');
 
 const nowTimestamp = Date.now();
 

@@ -6,9 +6,15 @@ const { isChecker } = require('../../helpers/isChecker.helper');
 exports.getPortalReports = async (req, res) => {
   const { userToken } = req.session;
 
-  const facilities = await api.getUnissuedFacilitiesReport(userToken) || [];
-  const dealWithConditions = await api.getUkefDecisionReport(userToken, { ukefDecision: CONSTANTS.STATUS.DEAL.UKEF_APPROVED_WITH_CONDITIONS }) || [];
-  const dealWithoutConditions = await api.getUkefDecisionReport(userToken, { ukefDecision: CONSTANTS.STATUS.DEAL.UKEF_APPROVED_WITHOUT_CONDITIONS }) || [];
+  const facilities = (await api.getUnissuedFacilitiesReport(userToken)) || [];
+  const dealWithConditions =
+    (await api.getUkefDecisionReport(userToken, {
+      ukefDecision: CONSTANTS.STATUS.DEAL.UKEF_APPROVED_WITH_CONDITIONS,
+    })) || [];
+  const dealWithoutConditions =
+    (await api.getUkefDecisionReport(userToken, {
+      ukefDecision: CONSTANTS.STATUS.DEAL.UKEF_APPROVED_WITHOUT_CONDITIONS,
+    })) || [];
 
   const pastDeadlineUnissuedFacilitiesCount = facilities.length ? facilities.filter(({ daysLeftToIssue }) => daysLeftToIssue < 0) : [];
   const facilitiesThatNeedIssuingCount = facilities.length ? facilities.filter(({ daysLeftToIssue }) => daysLeftToIssue < 15 && daysLeftToIssue >= 0) : [];
@@ -27,7 +33,7 @@ exports.getPortalReports = async (req, res) => {
 
 exports.getUnissuedFacilitiesReport = async (req, res) => {
   const { userToken } = req.session;
-  const facilities = await api.getUnissuedFacilitiesReport(userToken) || [];
+  const facilities = (await api.getUnissuedFacilitiesReport(userToken)) || [];
 
   return res.render('reports/unissued-facilities.njk', {
     facilities,
@@ -39,7 +45,10 @@ exports.getUnissuedFacilitiesReport = async (req, res) => {
 
 exports.getUnconditionalDecisionReport = async (req, res) => {
   const { userToken } = req.session;
-  const deals = await api.getUkefDecisionReport(userToken, { ukefDecision: CONSTANTS.STATUS.DEAL.UKEF_APPROVED_WITHOUT_CONDITIONS }) || [];
+  const deals =
+    (await api.getUkefDecisionReport(userToken, {
+      ukefDecision: CONSTANTS.STATUS.DEAL.UKEF_APPROVED_WITHOUT_CONDITIONS,
+    })) || [];
 
   return res.render('reports/unconditional-decision.njk', {
     deals,
@@ -51,7 +60,10 @@ exports.getUnconditionalDecisionReport = async (req, res) => {
 
 exports.getConditionalDecisionReport = async (req, res) => {
   const { userToken } = req.session;
-  const deals = await api.getUkefDecisionReport(userToken, { ukefDecision: CONSTANTS.STATUS.DEAL.UKEF_APPROVED_WITH_CONDITIONS }) || [];
+  const deals =
+    (await api.getUkefDecisionReport(userToken, {
+      ukefDecision: CONSTANTS.STATUS.DEAL.UKEF_APPROVED_WITH_CONDITIONS,
+    })) || [];
 
   return res.render('reports/conditional-decision.njk', {
     deals,
@@ -63,7 +75,7 @@ exports.getConditionalDecisionReport = async (req, res) => {
 
 exports.downloadUnissuedFacilitiesReport = async (req, res) => {
   const { userToken } = req.session;
-  const facilities = await api.getUnissuedFacilitiesReport(userToken) || [];
+  const facilities = (await api.getUnissuedFacilitiesReport(userToken)) || [];
   const mappedFacilities = [];
   if (facilities.length) {
     // `json2csv` library strips out the leading `00` from the ukefFacility ID
@@ -153,12 +165,18 @@ const downloadUkefDecisionReport = async (userToken, ukefDecision) => {
 
 exports.downloadUnconditionalDecisionReport = async (req, res) => {
   const { userToken } = req.session;
-  const { deals, columns } = await downloadUkefDecisionReport(userToken, { ukefDecision: CONSTANTS.STATUS.DEAL.UKEF_APPROVED_WITHOUT_CONDITIONS }) || [];
+  const { deals, columns } =
+    (await downloadUkefDecisionReport(userToken, {
+      ukefDecision: CONSTANTS.STATUS.DEAL.UKEF_APPROVED_WITHOUT_CONDITIONS,
+    })) || [];
   return downloadCsv(res, 'unconditional_decisions_report', columns, deals);
 };
 
 exports.downloadConditionalDecisionReport = async (req, res) => {
   const { userToken } = req.session;
-  const { deals, columns } = await downloadUkefDecisionReport(userToken, { ukefDecision: CONSTANTS.STATUS.DEAL.UKEF_APPROVED_WITH_CONDITIONS }) || [];
+  const { deals, columns } =
+    (await downloadUkefDecisionReport(userToken, {
+      ukefDecision: CONSTANTS.STATUS.DEAL.UKEF_APPROVED_WITH_CONDITIONS,
+    })) || [];
   return downloadCsv(res, 'conditional_decisions_report', columns, deals);
 };

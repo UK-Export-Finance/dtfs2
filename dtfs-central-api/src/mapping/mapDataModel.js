@@ -1,5 +1,5 @@
 const { isNonEmptyString } = require('@ukef/dtfs2-common');
-const CONSTANTS = require('../constants');
+const { DEALS } = require('../constants');
 
 const getBSSProperty = (propertyPath) => {
   if (isNonEmptyString(propertyPath)) {
@@ -19,9 +19,12 @@ const getBSSProperty = (propertyPath) => {
 
 const mapDataModel = (deal, propertyPath) => {
   if (deal && propertyPath) {
-    if (deal.dealSnapshot.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) return getBSSProperty(propertyPath);
+    if (deal.dealSnapshot.dealType === DEALS.DEAL_TYPE.BSS_EWCS) return getBSSProperty(propertyPath);
   }
   return propertyPath;
 };
 
-module.exports = mapDataModel;
+module.exports = {
+  getBSSProperty,
+  mapDataModel,
+};

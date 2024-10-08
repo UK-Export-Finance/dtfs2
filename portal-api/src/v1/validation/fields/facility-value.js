@@ -1,9 +1,5 @@
 const { hasValue } = require('../../../utils/string');
-const {
-  stripDecimals,
-  decimalsCount,
-  sanitizeCurrency,
-} = require('../../../utils/number');
+const { stripDecimals, decimalsCount, sanitizeCurrency } = require('../../../utils/number');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 
 const MIN_VALUE = 0.01;
@@ -79,10 +75,7 @@ module.exports = (facility, fieldTitle, errorList) => {
   if (!isValid(facility.value)) {
     newErrorList.value = {
       order: orderNumber(newErrorList),
-      text: validationText(
-        facility.value,
-        fieldTitle,
-      ),
+      text: validationText(facility.value, fieldTitle),
     };
   }
 

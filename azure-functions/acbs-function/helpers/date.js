@@ -179,13 +179,13 @@ const getYearAndMmdd = (date) => {
 
   return isValid(parsedDate)
     ? {
-      mmdd: format(parsedDate, 'MM-dd'),
-      year: format(parsedDate, 'yyyy'),
-    }
+        mmdd: format(parsedDate, 'MM-dd'),
+        year: format(parsedDate, 'yyyy'),
+      }
     : {
-      mmdd: 'Invalid date',
-      year: 'Invalid date',
-    };
+        mmdd: 'Invalid date',
+        year: 'Invalid date',
+      };
 };
 
 module.exports = {

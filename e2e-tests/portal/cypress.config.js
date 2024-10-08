@@ -1,25 +1,24 @@
 const { defineConfig } = require('cypress');
-const { createTasks } = require('../support/tasks');
 const dotenv = require('dotenv');
 const path = require('path');
+const { createTasks } = require('../support/tasks');
 
 // Read from root `./.env` directory
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-const { CONTACT_US_EMAIL_ADDRESS } = process.env;
+const { CONTACT_US_EMAIL_ADDRESS, PORTAL_API_KEY } = process.env;
 
 module.exports = defineConfig({
   apiProtocol: 'http://',
   apiHost: 'localhost',
   apiPort: '5001',
+  apiKey: PORTAL_API_KEY,
   centralApiProtocol: 'http://',
   centralApiHost: 'localhost',
   centralApiPort: '5005',
   tfmApiProtocol: 'http://',
   tfmApiHost: 'localhost',
   tfmApiPort: '5004',
-  // TODO: Read value from environment variable
-  apiKey: 'test',
   dbName: 'dtfs-submissions',
   dbConnectionString: 'mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true',
   pageLoadTimeout: 180000,

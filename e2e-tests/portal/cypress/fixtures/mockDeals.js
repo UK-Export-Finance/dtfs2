@@ -1,10 +1,5 @@
 const MOCK_USERS = require('../../../e2e-fixtures/portal-users.fixture');
-const {
-  exporterOne,
-  exporterTwo,
-  exporterThree,
-  exporterFour,
-} = require('./mockExporter');
+const { exporterOne, exporterTwo, exporterThree, exporterFour } = require('./mockExporter');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -37,5 +32,8 @@ const MOCK_DEAL_FOUR = {
 };
 
 module.exports = {
-  MOCK_DEAL_ONE, MOCK_DEAL_TWO, MOCK_DEAL_THREE, MOCK_DEAL_FOUR,
+  MOCK_DEAL_ONE,
+  MOCK_DEAL_TWO,
+  MOCK_DEAL_THREE,
+  MOCK_DEAL_FOUR,
 };
