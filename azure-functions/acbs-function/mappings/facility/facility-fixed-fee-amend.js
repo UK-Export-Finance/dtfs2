@@ -3,6 +3,20 @@ const { now } = require('../../helpers/date');
 
 const { FACILITY } = CONSTANTS;
 
+/**
+ * Maps the amendments for a facility fixed fee record in the ACBS system.
+ *
+ * This function performs the following operations:
+ * 1. Validates the input amendments.
+ * 2. Constructs the fixed fee amendment records with the necessary fields.
+ * 3. Adds records for different lender types.
+ *
+ * @param {Object} amendments - The amendments to be applied to the facility fixed fee record.
+ * @param {Object} amendments.amendment - The specific amendment details.
+ * @param {number} amendments.amendment.amount - The amended amount for the facility fixed fee.
+ * @returns {Array} - An array of facility fixed fee amendment records, each containing the party identifier, period, effective date, amount amendment, and lender type code.
+ * @throws {Error} - Logs the error and returns an empty array if any error occurs during the mapping process.
+ */
 const facilityFixedFeeAmend = (amendments) => {
   try {
     const records = [];

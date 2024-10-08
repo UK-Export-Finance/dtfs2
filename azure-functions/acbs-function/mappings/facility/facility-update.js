@@ -29,6 +29,24 @@
 const helpers = require('./helpers');
 const CONSTANTS = require('../../constants');
 
+/**
+ * Updates the facility master record with new values based on the provided facility, ACBS facility, and deal details.
+ *
+ * This function performs the following operations:
+ * 1. Extracts the issue date from the facility and ACBS facility effective date.
+ * 2. Retrieves the guarantee expiry date from the facility's guarantee dates.
+ * 3. Constructs and returns the updated facility master record object with the necessary fields.
+ *
+ * @param {Object} facility - The facility object containing facility details.
+ * @param {Object} facility.tfm - The TFM-specific details of the facility.
+ * @param {Object} facility.tfm.facilityGuaranteeDates - The guarantee dates of the facility.
+ * @param {Object} acbsFacility - The existing ACBS facility object to be updated.
+ * @param {Object} deal - The deal object containing deal details.
+ * @param {Object} deal.dealSnapshot - The snapshot of the deal details.
+ * @param {string} deal.dealSnapshot.dealType - The type of the deal (e.g., GEF, BSS_EWCS).
+ * @returns {Object} - The updated facility master record, including issue date, guarantee expiry date, next quarter end date, exposure period, capital conversion factor code, facility stage code, forecast percentage, and product type name.
+ * @throws {Error} - Logs the error and returns an empty object if any error occurs during the update process.
+ */
 const facilityUpdate = (facility, acbsFacility, deal) => {
   try {
     const issueDate = helpers.getIssueDate(facility, acbsFacility.effectiveDate);

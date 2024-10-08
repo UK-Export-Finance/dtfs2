@@ -5,6 +5,17 @@
  */
 const CONSTANTS = require('../../constants');
 
+/**
+ * Generates a facility code value transaction record with default values.
+ *
+ * This function performs the following operations:
+ * 1. Sets default values for lender type code, initial bundle status code, and facility transaction code value code.
+ * 2. Returns the generated facility code value transaction record.
+ * 3. Handles any errors that occur during the process and logs them.
+ *
+ * @returns {Object|boolean} - An object containing the default values for the facility code value transaction record, or false if an error occurs.
+ * @throws {Error} - Logs the error if any error occurs during the process.
+ */
 const codeValueTransaction = () => {
   try {
     return {
