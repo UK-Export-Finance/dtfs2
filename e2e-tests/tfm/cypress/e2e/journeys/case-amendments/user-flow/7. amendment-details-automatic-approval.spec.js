@@ -96,7 +96,7 @@ context('Amendments - automatic approval journey', () => {
       errorSummary().contains('The year for the amendment request date must include 4 numbers');
       amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
 
-      cy.completeDateFormFields({ idPrefix: 'amendment--request-date', year: '2022' });
+      cy.completeDateFormFields({ idPrefix: 'amendment--request-date', year: '2O22' });
 
       cy.clickContinueButton();
 
@@ -134,7 +134,7 @@ context('Amendments - automatic approval journey', () => {
       errorSummary().contains('The year for the effective date must include 4 numbers');
       amendmentsPage.errorMessage().contains('The year for the effective date must include 4 numbers');
 
-      cy.completeDateFormFields({ idPrefix: 'amendment--effective-date', year: '2022' });
+      cy.completeDateFormFields({ idPrefix: 'amendment--effective-date', year: '2O22' });
 
       cy.clickContinueButton();
 
