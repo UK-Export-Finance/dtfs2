@@ -27,7 +27,7 @@ describe('validateUserHasAtLeastOneAllowedTeam', () => {
       middleware(req, res, next);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Forbidden);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Forbidden);
       expect(res._getData()).toEqual({ success: false, msg: "You don't have access to this page" });
     });
 
@@ -76,8 +76,8 @@ describe('validateUserHasAtLeastOneAllowedTeam', () => {
       middleware(req, res, next);
 
       // Assert
-      expect(res._getStatusCode()).toBe(200);
-      expect(res._getData()).toBe('');
+      expect(res._getStatusCode()).toEqual(200);
+      expect(res._getData()).toEqual('');
     });
   });
 });

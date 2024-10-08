@@ -76,6 +76,6 @@ describe('isDate', () => {
   it.each(testData)('$description', ({ mockString, expected }) => {
     const result = isDate(mockString);
 
-    expect(result).toBe(expected);
+    expect(result).toEqual(expected);
   });
 });

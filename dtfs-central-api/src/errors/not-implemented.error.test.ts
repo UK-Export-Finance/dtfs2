@@ -7,7 +7,7 @@ describe('NotImplementedError', () => {
     const error = new NotImplementedError();
 
     // Assert
-    expect(error.status).toBe(HttpStatusCode.NotImplemented);
+    expect(error.status).toEqual(HttpStatusCode.NotImplemented);
   });
 
   it('exposes the name of the error', () => {
@@ -15,6 +15,6 @@ describe('NotImplementedError', () => {
     const error = new NotImplementedError();
 
     // Assert
-    expect(error.name).toBe('NotImplementedError');
+    expect(error.name).toEqual('NotImplementedError');
   });
 });

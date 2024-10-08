@@ -58,7 +58,7 @@ describe('EntraIdConfig', () => {
     });
 
     it('should configure the authorityMetaDataUrl', () => {
-      expect(config.authorityMetadataUrl).toBe(`${mockEntraIdCloudInstance}/${mockEntraIdTenantId}/v2.0/.well-known/openid-configuration`);
+      expect(config.authorityMetadataUrl).toEqual(`${mockEntraIdCloudInstance}/${mockEntraIdTenantId}/v2.0/.well-known/openid-configuration`);
     });
 
     it('should configure the scopes', () => {
@@ -66,7 +66,7 @@ describe('EntraIdConfig', () => {
     });
 
     it('should configure the redirectUri', () => {
-      expect(config.redirectUri).toBe(mockEntraIdRedirectUrl);
+      expect(config.redirectUri).toEqual(mockEntraIdRedirectUrl);
     });
   });
 });

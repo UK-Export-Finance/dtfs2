@@ -226,7 +226,7 @@ describe('SignInLinkService', () => {
                 it('resolves and returns numberOfSendSignInLinkAttemptsRemaining', async () => {
                   const createAndEmailSignInLinkPromise = service.createAndEmailSignInLink(user);
 
-                  await expect(createAndEmailSignInLinkPromise).resolves.toBe(numberOfSendSignInLinkAttemptsRemaining);
+                  await expect(createAndEmailSignInLinkPromise).resolves.toEqual(numberOfSendSignInLinkAttemptsRemaining);
                 });
 
                 it('increments signInLinkSendCount', async () => {

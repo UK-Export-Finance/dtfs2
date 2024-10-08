@@ -14,7 +14,7 @@ describe('getNowAsIsoString', () => {
 
     const result = getNowAsIsoString();
 
-    expect(result).toBe('2024-03-02T00:00:00+00:00');
+    expect(result).toEqual('2024-03-02T00:00:00+00:00');
   });
 
   it('when timezone is BST returns the current date formatted to ISO-8601 without milliseconds & with UTC offset', () => {
@@ -22,6 +22,6 @@ describe('getNowAsIsoString', () => {
 
     const result = getNowAsIsoString();
 
-    expect(result).toBe('2024-08-10T00:00:00+01:00');
+    expect(result).toEqual('2024-08-10T00:00:00+01:00');
   });
 });

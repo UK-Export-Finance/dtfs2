@@ -24,7 +24,7 @@ describe('areValidUkefIds', () => {
   it('should return true when dealIdentifier and facilityIdentifiers are present and do not contain temporary IDs and match 10 digit format', () => {
     const result = areValidUkefIds(eStoreData);
 
-    expect(result).toBe(true);
+    expect(result).toEqual(true);
   });
 
   it('should return false when dealIdentifier and facilityIdentifiers are present and do not contain temporary IDs and do not match 10 digit format', () => {
@@ -35,7 +35,7 @@ describe('areValidUkefIds', () => {
     };
     const result = areValidUkefIds(eStoreDataModified);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when dealIdentifier is empty', () => {
@@ -46,7 +46,7 @@ describe('areValidUkefIds', () => {
 
     const result = areValidUkefIds(eStoreDataModified);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when facilityIdentifiers is falsy', () => {
@@ -57,7 +57,7 @@ describe('areValidUkefIds', () => {
 
     const result = areValidUkefIds(eStoreDataModified);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when dealIdentifier contains temporary (pending) ID', () => {
@@ -68,7 +68,7 @@ describe('areValidUkefIds', () => {
 
     const result = areValidUkefIds(eStoreDataModified);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when dealIdentifier contains test ID', () => {
@@ -79,7 +79,7 @@ describe('areValidUkefIds', () => {
 
     const result = areValidUkefIds(eStoreDataModified);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when facilityIdentifiers contain test ID and a valid ID', () => {
@@ -90,7 +90,7 @@ describe('areValidUkefIds', () => {
 
     const result = areValidUkefIds(eStoreDataModified);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when facilityIdentifiers contain temporary (pending) ID', () => {
@@ -101,7 +101,7 @@ describe('areValidUkefIds', () => {
 
     const result = areValidUkefIds(eStoreDataModified);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when facilityIdentifiers contain test and pending ID', () => {
@@ -112,6 +112,6 @@ describe('areValidUkefIds', () => {
 
     const result = areValidUkefIds(eStoreDataModified);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 });

@@ -16,14 +16,14 @@ describe('estoreInternalServerError', () => {
     const message = 'Mock error';
     const result = estoreInternalServerError(message);
 
-    expect(result.status).toBe(HttpStatusCode.InternalServerError);
+    expect(result.status).toEqual(HttpStatusCode.InternalServerError);
   });
 
   it('should set the data.status property to 500', () => {
     const message = 'Mock error';
     const result = estoreInternalServerError(message);
 
-    expect(result.data.status).toBe(HttpStatusCode.InternalServerError);
+    expect(result.data.status).toEqual(HttpStatusCode.InternalServerError);
   });
 
   it('should return an object with an empty string as the message property', () => {

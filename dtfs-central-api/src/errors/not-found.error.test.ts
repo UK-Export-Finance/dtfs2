@@ -21,7 +21,7 @@ describe('NotFoundError', () => {
     const error = new NotFoundError(message);
 
     // Assert
-    expect(error.status).toBe(HttpStatusCode.NotFound);
+    expect(error.status).toEqual(HttpStatusCode.NotFound);
   });
 
   it('exposes the name of the exception', () => {

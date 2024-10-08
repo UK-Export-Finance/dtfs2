@@ -103,8 +103,8 @@ describe('crypto utils', () => {
       it('should return a token with the expected payload', () => {
         const { token, sessionIdentifier } = issueValidUsernameAndPasswordJWT(USER);
         const decodedToken = jsonwebtoken.decode(token.replace('Bearer ', ''));
-        expect(decodedToken.iat).toBe(DATE_NOW_IN_UNIX_TIME);
-        expect(decodedToken.exp).toBe(DATE_NOW_IN_UNIX_TIME + SECONDS_IN_105_MINUTES);
+        expect(decodedToken.iat).toEqual(DATE_NOW_IN_UNIX_TIME);
+        expect(decodedToken.exp).toEqual(DATE_NOW_IN_UNIX_TIME + SECONDS_IN_105_MINUTES);
         expect(decodedToken.username).toEqual(USER.username);
         expect(decodedToken.loginStatus).toEqual(PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD);
         expect(decodedToken.sessionIdentifier).toEqual(sessionIdentifier);
@@ -130,8 +130,8 @@ describe('crypto utils', () => {
       it('should return a token with the expected payload', () => {
         const { token, sessionIdentifier } = issueValid2faJWT(USER_WITH_EXISTING_SESSION_IDENTIFIER);
         const decodedToken = jsonwebtoken.decode(token.replace('Bearer ', ''));
-        expect(decodedToken.iat).toBe(DATE_NOW_IN_UNIX_TIME);
-        expect(decodedToken.exp).toBe(DATE_NOW_IN_UNIX_TIME + SECONDS_IN_12_HOURS);
+        expect(decodedToken.iat).toEqual(DATE_NOW_IN_UNIX_TIME);
+        expect(decodedToken.exp).toEqual(DATE_NOW_IN_UNIX_TIME + SECONDS_IN_12_HOURS);
         expect(decodedToken.username).toEqual(USER.username);
         expect(decodedToken.loginStatus).toEqual(PORTAL_LOGIN_STATUS.VALID_2FA);
         expect(decodedToken.sessionIdentifier).toEqual(sessionIdentifier);

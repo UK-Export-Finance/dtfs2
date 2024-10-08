@@ -188,8 +188,8 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/find-utilisation-reports-by-year.njk');
       expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.errorSummary).toStrictEqual(expectedErrorSummary);
-      expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.bankError).toBe(expectedBankError);
-      expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.yearError).toBe(expectedYearError);
+      expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.bankError).toEqual(expectedBankError);
+      expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.yearError).toEqual(expectedYearError);
     });
 
     it("renders the 'find-utilisation-reports-by-year.njk' view with required data when there are query params with errors", async () => {
@@ -266,7 +266,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
 
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/find-utilisation-reports-by-year.njk');
-      expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.selectedBank).toBe(BANK_ID_TWO);
+      expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.selectedBank).toEqual(BANK_ID_TWO);
     });
 
     it("renders the 'find-utilisation-reports-by-year.njk' view with year pre-filled with year query param if there is an error with the bank", async () => {
@@ -284,7 +284,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
 
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/find-utilisation-reports-by-year.njk');
-      expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.selectedYear).toBe('2024');
+      expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.selectedYear).toEqual('2024');
     });
 
     it("renders the 'find-utilisation-reports-by-year.njk' view with year pre-filled with year query param if there is an error with the year", async () => {
@@ -302,7 +302,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
 
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/find-utilisation-reports-by-year.njk');
-      expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.selectedYear).toBe('Nonsense');
+      expect((res._getRenderData() as FindUtilisationReportsByYearViewModel)?.selectedYear).toEqual('Nonsense');
     });
 
     it("renders the 'utilisation-reports-by-bank-and-year-results.njk' view with required data when there are valid query params", async () => {
@@ -359,8 +359,8 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
 
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-reports-by-bank-and-year-results.njk');
-      expect((res._getRenderData() as UtilisationReportsByBankAndYearViewModel)?.bankName).toBe(BANK_NAME_ONE);
-      expect((res._getRenderData() as UtilisationReportsByBankAndYearViewModel)?.year).toBe(yearQuery);
+      expect((res._getRenderData() as UtilisationReportsByBankAndYearViewModel)?.bankName).toEqual(BANK_NAME_ONE);
+      expect((res._getRenderData() as UtilisationReportsByBankAndYearViewModel)?.year).toEqual(yearQuery);
       expect((res._getRenderData() as UtilisationReportsByBankAndYearViewModel)?.reports).toStrictEqual([expectedReportItem]);
     });
   });
