@@ -186,12 +186,12 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
     console.info('Initiating eStore site existence check for exporter %s', exporterName);
     const siteExistsResponse: SiteExistsResponse | EstoreErrorResponse = await siteExists(exporterName);
 
-    const created = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED;
-    const provisioning = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.PROVISIONING;
-    const absent = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.NOT_FOUND;
+    const siteCreated = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED;
+    const siteProvisioning = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.PROVISIONING;
+    const siteAbsent = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.NOT_FOUND;
 
     // Site already exists in eStore
-    if (created) {
+    if (siteCreated) {
       /**
        * Update record-set with the site name.
        * Update `cron-job-logs`
@@ -214,13 +214,13 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
 
       // Add facility IDs to term store and create the buyer folder
       await eStoreTermStoreCreationJob(eStoreData);
-    } else if (absent || provisioning) {
+    } else if (siteAbsent || siteProvisioning) {
       let siteCreationResponse: SiteExistsResponse | EstoreErrorResponse;
       // Site does not exists in eStore
 
       // Create a new eStore site
-      if (provisioning) {
-        // When site status is provisioning
+      if (siteProvisioning) {
+        // When site status is siteProvisioning
         console.info('eStore site creation in progress for deal %s', dealIdentifier);
         siteCreationResponse = siteExistsResponse;
       } else {
