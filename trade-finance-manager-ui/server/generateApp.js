@@ -62,6 +62,7 @@ const generateApp = () => {
   // We add a conditional check here as there are no auth routes for the non sso journey, and
   // we cannot call app.use with './', undefined.
   const unauthenticatedAuthRouters = getUnauthenticatedAuthRouter();
+
   if (unauthenticatedAuthRouters) {
     app.use(unauthenticatedAuthRouters);
   }
