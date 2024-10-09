@@ -1,7 +1,7 @@
 import { isTfmSsoFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import { Router } from 'express';
 import { getUnauthenticatedAuthRouter } from '.';
-import { getUnauthenticatedAuthSsoRouter } from './unauthenticatedAuthSso';
+import { getUnauthenticatedAuthSsoRouter } from './unauthenticated-auth-sso';
 
 jest.mock('@ukef/dtfs2-common', () => ({
   isTfmSsoFeatureFlagEnabled: jest.fn(),
