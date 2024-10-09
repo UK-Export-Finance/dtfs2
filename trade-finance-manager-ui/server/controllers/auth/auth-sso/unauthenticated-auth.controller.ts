@@ -10,6 +10,8 @@ export class UnauthenticatedAuthController {
       throw new InvalidPayloadError('Invalid payload from SSO redirect');
     }
 
-    return res.render('sso/accept-sso-redirect.njk', req.body);
+    const { code, client_info: clientInfo, state, session_state: sessionState } = req.body;
+
+    return res.render('sso/accept-sso-redirect.njk', { code, clientInfo, state, sessionState });
   }
 }

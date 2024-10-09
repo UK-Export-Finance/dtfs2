@@ -1,8 +1,8 @@
 import { isTfmSsoFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import { Router } from 'express';
 import { getLoginRouter } from '.';
-import { getLoginSsoRouter } from './loginSso';
-import { getLoginNonSsoRouter } from './loginNonSso';
+import { getLoginSsoRouter } from './login-sso';
+import { getLoginNonSsoRouter } from './login-non-sso';
 
 jest.mock('@ukef/dtfs2-common', () => ({
   isTfmSsoFeatureFlagEnabled: jest.fn(),
