@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode, AxiosError, AxiosResponse } from 'axios';
-import { Currency } from '@ukef/dtfs2-common';
+import { Currency, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
 import api from '../../api';
 import { PostPaymentRequest, PostPaymentRequestBody, PostPaymentRequestParams, postPayment } from './post-payment.controller';
 import { aTfmSessionUser } from '../../../../test-helpers/tfm-session-user';
@@ -73,6 +73,19 @@ describe('postPayment', () => {
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
     expect(res._isEndCalled()).toEqual(true);
+  });
+
+  it('responds with response data', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    const mockResponse = { feeRecordStatus: FEE_RECORD_STATUS.MATCH };
+    jest.mocked(api.addPaymentToFeeRecords).mockResolvedValue(mockResponse);
+
+    // Act
+    await postPayment(req, res);
+
+    // Assert
+    expect(res._getData()).toBe(mockResponse);
   });
 
   it('responds with a 500 if an unknown error occurs', async () => {

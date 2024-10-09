@@ -16,6 +16,7 @@ export type GetUtilisationReportReconciliationRequest = CustomExpressRequest<{
   query: {
     premiumPaymentsFacilityId?: string;
     selectedFeeRecordIds?: string;
+    matchSuccess?: string;
   };
 }>;
 
@@ -45,7 +46,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
   const { reportId } = req.params;
 
   try {
-    const { premiumPaymentsFacilityId, selectedFeeRecordIds: selectedFeeRecordIdsQuery } = req.query;
+    const { premiumPaymentsFacilityId, selectedFeeRecordIds: selectedFeeRecordIdsQuery, matchSuccess } = req.query;
 
     const { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds } = req.session;
 
@@ -88,7 +89,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       premiumPayments: premiumPaymentsViewModel,
       keyingSheet: keyingSheetViewModel,
       paymentDetails: paymentDetailsViewModel,
-      displayMatchSuccessNotification: true,
+      displayMatchSuccessNotification: matchSuccess === 'true',
     });
   } catch (error) {
     console.error(`Failed to render utilisation report with id ${reportId}`, error);

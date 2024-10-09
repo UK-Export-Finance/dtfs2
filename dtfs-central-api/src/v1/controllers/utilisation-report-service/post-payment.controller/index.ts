@@ -1,14 +1,21 @@
-import { ApiError } from '@ukef/dtfs2-common';
+import { ApiError, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { PostPaymentPayload } from '../../../routes/middleware/payload-validation/validate-post-payment-payload';
 import { addPaymentToUtilisationReport } from './helpers';
 import { NewPaymentDetails } from '../../../../types/utilisation-reports';
+import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 
 export type PostPaymentRequest = CustomExpressRequest<{
   reqBody: PostPaymentPayload;
 }>;
+
+export type PostPaymentResponseBody = {
+  feeRecordStatus: FeeRecordStatus;
+};
+
+export type PostPaymentResponse = Response<PostPaymentResponseBody>;
 
 /**
  * Controller for the POST add a payment route
@@ -28,7 +35,9 @@ export const postPayment = async (req: PostPaymentRequest, res: Response) => {
     };
 
     await addPaymentToUtilisationReport(parseInt(reportId, 10), feeRecordIds, user, newPaymentDetails);
-    return res.sendStatus(HttpStatusCode.Ok);
+    const { status } = await FeeRecordRepo.findOneByOrFail({ id: feeRecordIds[0] });
+
+    return res.status(HttpStatusCode.Ok).send({ feeRecordStatus: status });
   } catch (error) {
     const errorMessage = 'Failed to add a new payment';
     console.error(errorMessage, error);

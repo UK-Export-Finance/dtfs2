@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { getFormattedCurrencyAndAmount, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, getFormattedCurrencyAndAmount, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import { format, parseISO } from 'date-fns';
 import { AddPaymentViewModel, RecordedPaymentDetailsViewModel } from '../../../types/view-models';
 import api from '../../../api';
@@ -49,9 +49,14 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
     if (isAddingPayment && !formHasErrors) {
       const { addAnotherPayment, ...paymentFormValues } = formValues as ValidatedAddPaymentFormValues;
       const parsedAddPaymentFormValues = parseValidatedAddPaymentFormValues(paymentFormValues);
-      await api.addPaymentToFeeRecords(reportId, parsedAddPaymentFormValues, feeRecordIds, user, userToken);
+
+      const { feeRecordStatus } = await api.addPaymentToFeeRecords(reportId, parsedAddPaymentFormValues, feeRecordIds, user, userToken);
       if (addAnotherPayment !== 'true') {
         return res.redirect(`/utilisation-reports/${reportId}`);
+      }
+
+      if (feeRecordStatus === FEE_RECORD_STATUS.MATCH) {
+        return res.redirect(`/utilisation-reports/${reportId}?matchSuccess=true`);
       }
     }
 
