@@ -5,7 +5,7 @@ import { asUserSession } from '../../../helpers/express-session';
 import { CancelCancellationViewModel } from '../../../types/view-models';
 import api from '../../../api';
 import { canSubmissionTypeBeCancelled } from '../../helpers';
-import { getPreviousPageFromUrl } from './helpers/get-previous-page-from-url';
+import { getPreviousPageUrl } from './helpers/get-previous-page-from-url';
 
 export type GetCancelCancellationRequest = CustomExpressRequest<{ params: { _id: string } }>;
 export type PostCancelCancellationRequest = CustomExpressRequest<{ params: { _id: string }; query: { return: string }; reqBody: { previousPage: string } }>;
@@ -55,7 +55,7 @@ export const postCancelCancellation = async (req: PostCancelCancellationRequest,
   const { userToken } = asUserSession(req.session);
 
   if (req.query.return) {
-    return res.redirect(getPreviousPageFromUrl(req.body.previousPage, _id));
+    return res.redirect(getPreviousPageUrl(req.body.previousPage, _id));
   }
 
   try {
