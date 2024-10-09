@@ -71,21 +71,6 @@ export type PaymentDetailsPaymentViewModel = {
   };
 };
 
-export type PaymentDetailsViewModel = {
-  feeRecordPaymentGroupStatus: FeeRecordStatus;
-  payment: PaymentDetailsPaymentViewModel;
-  feeRecords: {
-    id: number;
-    facilityId: string;
-    exporter: string;
-  }[];
-  reconciledBy: string;
-  dateReconciled: {
-    formattedDateReconciled: string;
-    dataSortValue: number;
-  };
-}[];
-
 export type PremiumPaymentsViewModelItem = {
   feeRecords: FeeRecordViewModelItem[];
   totalReportedPayments: SortedAndFormattedCurrencyAndAmount;
@@ -109,6 +94,28 @@ export type PaymentDetailsFilterErrorsViewModel = {
   paymentReferenceErrorMessage?: string;
 };
 
+export type PaymentDetailsRowViewModel = {
+  feeRecordPaymentGroupStatus: FeeRecordStatus;
+  payment: PaymentDetailsPaymentViewModel;
+  feeRecords: {
+    id: number;
+    facilityId: string;
+    exporter: string;
+  }[];
+  reconciledBy: string;
+  dateReconciled: {
+    formattedDateReconciled: string;
+    dataSortValue: number;
+  };
+};
+
+export type PaymentDetailsViewModel = {
+  rows: PaymentDetailsRowViewModel[];
+  filters?: PaymentDetailsFiltersViewModel;
+  filterErrors?: PaymentDetailsFilterErrorsViewModel;
+  isFilterActive?: boolean;
+};
+
 export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & {
   bank: SessionBank;
   formattedReportPeriod: string;
@@ -120,7 +127,4 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   enablePaymentsReceivedSorting: boolean;
   keyingSheet: KeyingSheetViewModel;
   paymentDetails: PaymentDetailsViewModel;
-  paymentDetailsFilters?: PaymentDetailsFiltersViewModel;
-  paymentDetailsFilterErrors: PaymentDetailsFilterErrorsViewModel;
-  isPaymentDetailsFilterActive: boolean;
 };

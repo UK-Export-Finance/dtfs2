@@ -8,8 +8,8 @@ import {
   KeyingSheetAdjustmentViewModel,
   KeyingSheetViewModel,
   PaymentDetailsPaymentViewModel,
-  PaymentDetailsViewModel,
   PaymentViewModelItem,
+  PaymentDetailsRowViewModel,
 } from '../../../types/view-models';
 import { DATE_FORMAT } from '../../../constants';
 import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
@@ -247,7 +247,7 @@ export const getFormattedDateReconciled = (dateReconciled: IsoDateTimeStamp | un
  * @param feeRecordPaymentGroups - The fee record payment groups
  * @returns The payment details view model
  */
-export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): PaymentDetailsViewModel => {
+export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): PaymentDetailsRowViewModel[] => {
   // Flatten the groups to a list of payments with the date reconciled of the group existing on
   // the payment which can be used to determine the sort orders for the columns with custom sorting
   const allPaymentsWithDateReconciled = feeRecordPaymentGroups.reduce(
@@ -302,7 +302,7 @@ export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaym
         })),
       ];
     },
-    [] as PaymentDetailsViewModel,
+    [] as PaymentDetailsRowViewModel[],
   );
 };
 

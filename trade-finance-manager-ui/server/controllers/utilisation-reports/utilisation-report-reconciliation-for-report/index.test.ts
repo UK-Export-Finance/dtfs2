@@ -8,6 +8,7 @@ import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { aFeeRecordPaymentGroup, aUtilisationReportReconciliationDetailsResponse, aPayment, aFeeRecord } from '../../../../test-helpers';
 import { FeeRecordPaymentGroup, UtilisationReportReconciliationDetailsResponseBody } from '../../../api-response-types';
 import { PremiumPaymentsViewModelItem, PaymentDetailsViewModel, UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
+import { mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel } from '../helpers';
 
 jest.mock('../../../api');
 jest.mock('../../../helpers/date');
@@ -140,21 +141,6 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         },
       ];
 
-      const expectedPaymentDetailsViewModel: PaymentDetailsViewModel = [
-        {
-          payment: {
-            id: 1,
-            amount: { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 0 },
-            dateReceived: { formattedDateReceived: '1 Jan 2024', dataSortValue: 0 },
-            reference: undefined,
-          },
-          feeRecords: [{ id: 1, facilityId: '12345678', exporter: 'Test exporter' }],
-          feeRecordPaymentGroupStatus: FEE_RECORD_STATUS.MATCH,
-          reconciledBy: '-',
-          dateReconciled: { formattedDateReconciled: '-', dataSortValue: 0 },
-        },
-      ];
-
       const premiumPaymentsFilters = {
         facilityId: premiumPaymentsFacilityId,
       };
@@ -165,46 +151,26 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         paymentReference: paymentDetailsPaymentReference,
       };
 
-      const expectedPaymentDetailsFiltersViewModel = {
-        ...paymentDetailsFilters,
-        paymentCurrency: [
+      const expectedPaymentDetailsViewModel: PaymentDetailsViewModel = {
+        rows: [
           {
-            text: CURRENCY.GBP,
-            value: CURRENCY.GBP,
-            checked: true,
-            attributes: {
-              'data-cy': 'currency-GBP',
+            payment: {
+              id: 1,
+              amount: { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 0 },
+              dateReceived: { formattedDateReceived: '1 Jan 2024', dataSortValue: 0 },
+              reference: undefined,
             },
-          },
-          {
-            text: CURRENCY.EUR,
-            value: CURRENCY.EUR,
-            checked: false,
-            attributes: {
-              'data-cy': 'currency-EUR',
-            },
-          },
-          {
-            text: CURRENCY.USD,
-            value: CURRENCY.USD,
-            checked: false,
-            attributes: {
-              'data-cy': 'currency-USD',
-            },
-          },
-          {
-            text: CURRENCY.JPY,
-            value: CURRENCY.JPY,
-            checked: false,
-            attributes: {
-              'data-cy': 'currency-JPY',
-            },
+            feeRecords: [{ id: 1, facilityId: '12345678', exporter: 'Test exporter' }],
+            feeRecordPaymentGroupStatus: FEE_RECORD_STATUS.MATCH,
+            reconciledBy: '-',
+            dateReconciled: { formattedDateReconciled: '-', dataSortValue: 0 },
           },
         ],
-      };
-
-      const paymentDetailsFilterErrors = {
-        errorSummary: [],
+        filters: mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel(paymentDetailsFilters),
+        filterErrors: {
+          errorSummary: [],
+        },
+        isFilterActive: true,
       };
 
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
@@ -225,9 +191,6 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         premiumPayments,
         premiumPaymentsFilters,
         paymentDetails: expectedPaymentDetailsViewModel,
-        paymentDetailsFilters: expectedPaymentDetailsFiltersViewModel,
-        paymentDetailsFilterErrors,
-        isPaymentDetailsFilterActive: true,
         keyingSheet: [],
       });
     });
@@ -376,10 +339,14 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
+
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
-      expect(viewModel.paymentDetailsFilterErrors.errorSummary).toHaveLength(1);
-      expect(viewModel.paymentDetailsFilterErrors.errorSummary[0].href).toBe('#payment-details-facility-id-filter');
-      expect(viewModel.paymentDetailsFilterErrors.errorSummary[0].text).toBe('Facility ID must be blank or contain between 4 and 10 numbers');
+
+      expect(viewModel.paymentDetails.filterErrors).toBeDefined();
+
+      expect(viewModel.paymentDetails.filterErrors!.errorSummary).toHaveLength(1);
+      expect(viewModel.paymentDetails.filterErrors!.errorSummary[0].href).toBe('#payment-details-facility-id-filter');
+      expect(viewModel.paymentDetails.filterErrors!.errorSummary[0].text).toBe('Facility ID must be blank or contain between 4 and 10 numbers');
     });
 
     it('checks selected checkboxes when selected fee record ids query param defined', async () => {
