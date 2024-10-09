@@ -36,10 +36,6 @@ describe(page, () => {
     keyingSheet: [],
     paymentDetails: {
       rows: [],
-      filterErrors: {
-        errorSummary: [],
-      },
-      isFilterActive: false,
     },
   };
 
