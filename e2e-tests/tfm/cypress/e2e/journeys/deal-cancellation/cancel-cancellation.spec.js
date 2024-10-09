@@ -36,6 +36,20 @@ context('Deal cancellation - cancel cancellation', () => {
       cy.login(PIM_USER_1);
     });
 
+    describe('when a cancellation is not in draft', () => {
+      beforeEach(() => {
+        cy.visit(relative(`/case/${dealId}/deal`));
+
+        caseDealPage.cancelDealButton().click();
+
+        cy.clickCancelLink();
+      });
+
+      it('should redirect to deal summary page', () => {
+        cy.url().should('eq', relative(`/case/${dealId}/deal`));
+      });
+    });
+
     describe('when a cancellation is in draft', () => {
       beforeEach(() => {
         cy.visit(relative(`/case/${dealId}/deal`));
@@ -44,16 +58,66 @@ context('Deal cancellation - cancel cancellation', () => {
 
         cy.keyboardInput(reasonForCancellingPage.reasonForCancellingTextBox().clear(), 'xxx');
         cy.clickContinueButton();
-
-        cy.clickCancelLink();
       });
 
-      it('should render page correctly', () => {
-        cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
+      describe('when visiting page by URL navigation', () => {
+        beforeEach(() => {
+          cy.visit(relative(`/case/${dealId}/cancellation/cancel`));
+        });
 
-        backLink();
-        cancelCancellationPage.noGoBackButton();
-        cancelCancellationPage.yesCancelButton();
+        it('should render page correctly', () => {
+          cy.url().should('eq', relative(`/case/${dealId}/cancellation/cancel`));
+
+          backLink();
+          cancelCancellationPage.noGoBackButton();
+          cancelCancellationPage.yesCancelButton();
+        });
+
+        it(`back link navigates to reason page`, () => {
+          cy.clickBackLink();
+
+          cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
+        });
+
+        it(`no, go back button navigates to reason page`, () => {
+          cancelCancellationPage.noGoBackButton().click();
+
+          cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
+        });
+
+        it('yes cancel button navigates to deal summary page', () => {
+          cancelCancellationPage.yesCancelButton().click();
+
+          cy.url().should('eq', relative(`/case/${dealId}/deal`));
+        });
+
+        it('yes button wipes the cancellation data', () => {
+          cancelCancellationPage.yesCancelButton().click();
+
+          caseDealPage.cancelDealButton().click();
+          reasonForCancellingPage.reasonForCancellingTextBox().should('have.value', '');
+        });
+      });
+
+      ['reason', 'bank-request-date', 'effective-from-date'].forEach((page) => {
+        describe(`when visiting from ${page} page`, () => {
+          beforeEach(() => {
+            cy.visit(relative(`/case/${dealId}/cancellation/${page}`));
+            cy.clickCancelLink();
+          });
+
+          it(`back link navigates to ${page} page`, () => {
+            cy.clickBackLink();
+
+            cy.url().should('eq', relative(`/case/${dealId}/cancellation/${page}`));
+          });
+
+          it(`no, go back button navigates to ${page} page`, () => {
+            cancelCancellationPage.noGoBackButton().click();
+
+            cy.url().should('eq', relative(`/case/${dealId}/cancellation/${page}`));
+          });
+        });
       });
     });
   });
