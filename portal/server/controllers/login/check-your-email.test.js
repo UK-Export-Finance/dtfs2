@@ -106,7 +106,7 @@ describe('sendNewSignInLink', () => {
 
       await sendNewSignInLink(req, res);
 
-      expect(req.session.numberOfSendSignInLinkAttemptsRemaining).toBe(numberOfSendSignInLinkAttemptsRemaining);
+      expect(req.session.numberOfSendSignInLinkAttemptsRemaining).toEqual(numberOfSendSignInLinkAttemptsRemaining);
     });
 
     it('redirects to the check your email page', async () => {
@@ -142,7 +142,7 @@ describe('sendNewSignInLink', () => {
 
       await sendNewSignInLink(req, res);
 
-      expect(req.session.numberOfSendSignInLinkAttemptsRemaining).toBe(-1);
+      expect(req.session.numberOfSendSignInLinkAttemptsRemaining).toEqual(-1);
     });
   });
 

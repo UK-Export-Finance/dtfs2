@@ -97,7 +97,7 @@ describe(`GET ${BASE_URL}`, () => {
     const response: CustomResponse = await testApi.get(getUrl(reportId, paymentId + 1));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.NotFound);
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
   it('returns a 404 when the payment is not attached to a report with the supplied id', async () => {
@@ -105,7 +105,7 @@ describe(`GET ${BASE_URL}`, () => {
     const response: CustomResponse = await testApi.get(getUrl(reportId + 1, paymentId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.NotFound);
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
   it('returns a 404 when the bank with the same id as the report cannot be found', async () => {
@@ -120,7 +120,7 @@ describe(`GET ${BASE_URL}`, () => {
     const response: CustomResponse = await testApi.get(getUrl(2, 2));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.NotFound);
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
   it('returns a 200 with a valid report and payment id', async () => {
@@ -128,7 +128,7 @@ describe(`GET ${BASE_URL}`, () => {
     const response: CustomResponse = await testApi.get(getUrl(reportId, paymentId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Ok);
+    expect(response.status).toEqual(HttpStatusCode.Ok);
   });
 
   it('returns a request body containing the feeRecords and totalReportedPayments when the includeFeeRecords query is set to true', async () => {

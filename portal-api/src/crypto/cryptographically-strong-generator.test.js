@@ -23,7 +23,7 @@ describe('CryptographicallyStrongGenerator', () => {
 
       const randomHexString = generator.randomHexString(numberOfBytes);
 
-      expect(randomHexString).toBe(hexStringOfTheRandomBytes);
+      expect(randomHexString).toEqual(hexStringOfTheRandomBytes);
     });
   });
 
@@ -37,7 +37,7 @@ describe('CryptographicallyStrongGenerator', () => {
 
       const randomHexString = generator.randomHexString(numberOfBytes);
 
-      expect(randomHexString).toBe(hexStringOfTheRandomBytes);
+      expect(randomHexString).toEqual(hexStringOfTheRandomBytes);
     });
   });
 });

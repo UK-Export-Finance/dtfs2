@@ -30,12 +30,12 @@ describe('obscureEmail', () => {
     'returns the first character before the @, 3 stars, the last character before the @, then the rest of the original string ($original -> $expected)',
     ({ original, expected }) => {
       const obscured = obscureEmail(original);
-      expect(obscured).toBe(expected);
+      expect(obscured).toEqual(expected);
     },
   );
 
   it('removes any characters after and including a second @ sign', () => {
     const obscured = obscureEmail('2-@-signs@example.com');
-    expect(obscured).toBe('2***-@-signs');
+    expect(obscured).toEqual('2***-@-signs');
   });
 });

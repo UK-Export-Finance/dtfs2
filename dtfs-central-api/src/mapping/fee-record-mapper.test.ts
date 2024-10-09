@@ -94,7 +94,7 @@ describe('fee record mapper', () => {
       const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
 
       // Assert
-      expect(feeRecord.id).toBe(10);
+      expect(feeRecord.id).toEqual(10);
     });
 
     it('maps the fee record entity facility id to the fee record facilityId', () => {
@@ -105,7 +105,7 @@ describe('fee record mapper', () => {
       const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
 
       // Assert
-      expect(feeRecord.facilityId).toBe('27182818');
+      expect(feeRecord.facilityId).toEqual('27182818');
     });
 
     it('maps the fee record entity exporter to the fee record exporter', () => {
@@ -116,7 +116,7 @@ describe('fee record mapper', () => {
       const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
 
       // Assert
-      expect(feeRecord.exporter).toBe('Test exporter');
+      expect(feeRecord.exporter).toEqual('Test exporter');
     });
 
     it('maps the fee record entity fees paid currency to the fee record reported fees currency', () => {
@@ -127,7 +127,7 @@ describe('fee record mapper', () => {
       const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
 
       // Assert
-      expect(feeRecord.reportedFees.currency).toBe('EUR');
+      expect(feeRecord.reportedFees.currency).toEqual('EUR');
     });
 
     it('maps the fee record entity fees paid to the fee record reported fees amount', () => {
@@ -138,7 +138,7 @@ describe('fee record mapper', () => {
       const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
 
       // Assert
-      expect(feeRecord.reportedFees.amount).toBe(314.59);
+      expect(feeRecord.reportedFees.amount).toEqual(314.59);
     });
 
     describe('when the fee record entity payment currency matches the fees paid currency', () => {
@@ -155,7 +155,7 @@ describe('fee record mapper', () => {
         const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
 
         // Assert
-        expect(feeRecord.reportedPayments.currency).toBe('EUR');
+        expect(feeRecord.reportedPayments.currency).toEqual('EUR');
       });
 
       it('maps the fee record entity fees paid to the fee record reported payment amount', () => {
@@ -170,7 +170,7 @@ describe('fee record mapper', () => {
         const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
 
         // Assert
-        expect(feeRecord.reportedPayments.amount).toBe(314.59);
+        expect(feeRecord.reportedPayments.amount).toEqual(314.59);
       });
     });
 
@@ -196,7 +196,7 @@ describe('fee record mapper', () => {
         const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
 
         // Assert
-        expect(feeRecord.reportedPayments.currency).toBe(paymentCurrency);
+        expect(feeRecord.reportedPayments.currency).toEqual(paymentCurrency);
       });
 
       it('maps the fee record entity fees paid to the fee record reported payment amount in the payment currency', () => {
@@ -212,7 +212,7 @@ describe('fee record mapper', () => {
         const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
 
         // Assert
-        expect(feeRecord.reportedPayments.amount).toBe(feesPaidInPaymentCurrencyAmount);
+        expect(feeRecord.reportedPayments.amount).toEqual(feesPaidInPaymentCurrencyAmount);
       });
     });
   });

@@ -52,7 +52,7 @@ describe('date', () => {
         const result = getFirstBusinessDayOfMonth(dateInMonth, holidays);
 
         const firstBusinessDay = new Date('2023-11-01');
-        expect(isSameDay(result, firstBusinessDay)).toBe(true);
+        expect(isSameDay(result, firstBusinessDay)).toEqual(true);
       });
 
       it('should return Monday 2nd October when the month is October', () => {
@@ -61,7 +61,7 @@ describe('date', () => {
         const result = getFirstBusinessDayOfMonth(dateInMonth, holidays);
 
         const firstBusinessDay = new Date('2023-10-02');
-        expect(isSameDay(result, firstBusinessDay)).toBe(true);
+        expect(isSameDay(result, firstBusinessDay)).toEqual(true);
       });
     });
 
@@ -75,7 +75,7 @@ describe('date', () => {
         const result = getFirstBusinessDayOfMonth(dateInMonth, holidays);
 
         const firstBusinessDay = new Date('2023-10-03');
-        expect(isSameDay(result, firstBusinessDay)).toBe(true);
+        expect(isSameDay(result, firstBusinessDay)).toEqual(true);
       });
     });
   });
@@ -111,7 +111,7 @@ describe('date', () => {
         const result = getBusinessDayOfMonth(dateInMonth, holidays, businessDay);
 
         const firstBusinessDay = new Date('2023-11-01');
-        expect(isSameDay(result, firstBusinessDay)).toBe(true);
+        expect(isSameDay(result, firstBusinessDay)).toEqual(true);
       });
 
       it('should return the same day next week as the sixth business day', () => {
@@ -120,7 +120,7 @@ describe('date', () => {
         const result = getBusinessDayOfMonth(dateInMonth, holidays, businessDay);
 
         const sixthBusinessDay = new Date('2023-11-08');
-        expect(isSameDay(result, sixthBusinessDay)).toBe(true);
+        expect(isSameDay(result, sixthBusinessDay)).toEqual(true);
       });
     });
 
@@ -134,7 +134,7 @@ describe('date', () => {
         const result = getBusinessDayOfMonth(dateInMonth, holidays, businessDay);
 
         const firstBusinessDay = new Date('2023-10-05');
-        expect(isSameDay(result, firstBusinessDay)).toBe(true);
+        expect(isSameDay(result, firstBusinessDay)).toEqual(true);
       });
 
       it('should return 9th October as the second business day', () => {
@@ -143,7 +143,7 @@ describe('date', () => {
         const result = getBusinessDayOfMonth(dateInMonth, holidays, businessDay);
 
         const secondBusinessDay = new Date('2023-10-09');
-        expect(isSameDay(result, secondBusinessDay)).toBe(true);
+        expect(isSameDay(result, secondBusinessDay)).toEqual(true);
       });
     });
   });
