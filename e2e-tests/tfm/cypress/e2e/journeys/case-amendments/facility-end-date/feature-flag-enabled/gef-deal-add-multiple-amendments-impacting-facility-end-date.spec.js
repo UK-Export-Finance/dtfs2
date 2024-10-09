@@ -5,7 +5,6 @@ import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../..
 import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mock-gef-deals';
 import { DEAL_TYPE } from '../../../../../../../gef/cypress/fixtures/constants';
 import amendmentsPage from '../../../../pages/amendments/amendmentsPage';
-import { todayDay, todayMonth, todayYear } from '../../../../../../../e2e-fixtures/dateConstants';
 import { DATE_FORMATS } from '../../../../../fixtures/constants';
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 
@@ -71,9 +70,8 @@ context('Amendments - GEF deal add multiple consecutive amendments impacting fac
       amendmentsPage.amendmentCurrentBankReviewDate().should('have.text', format(Date1, currentDateFormat));
       amendmentsPage.amendmentBankReviewDateDetails().should('exist');
 
-      cy.keyboardInput(amendmentsPage.amendmentBankReviewDateDayInput(), format(Date2, 'd'));
-      cy.keyboardInput(amendmentsPage.amendmentBankReviewDateMonthInput(), format(Date2, 'M'));
-      cy.keyboardInput(amendmentsPage.amendmentBankReviewDateYearInput(), format(Date2, 'yyyy'));
+      cy.completeDateFormFields({ idPrefix: 'amendment--bank-review-date', date: Date2 });
+
       cy.clickContinueButton();
     });
 
@@ -102,9 +100,8 @@ context('Amendments - GEF deal add multiple consecutive amendments impacting fac
       amendmentsPage.amendmentCurrentBankReviewDate().should('have.text', format(Date2, currentDateFormat));
       amendmentsPage.amendmentBankReviewDateDetails().should('exist');
 
-      cy.keyboardInput(amendmentsPage.amendmentBankReviewDateDayInput(), format(Date3, 'd'));
-      cy.keyboardInput(amendmentsPage.amendmentBankReviewDateMonthInput(), format(Date3, 'M'));
-      cy.keyboardInput(amendmentsPage.amendmentBankReviewDateYearInput(), format(Date3, 'yyyy'));
+      cy.completeDateFormFields({ idPrefix: 'amendment--bank-review-date', date: Date3 });
+
       cy.clickContinueButton();
     });
 
@@ -133,9 +130,8 @@ context('Amendments - GEF deal add multiple consecutive amendments impacting fac
       amendmentsPage.amendmentCurrentFacilityEndDate().should('have.text', 'Not provided');
       amendmentsPage.amendmentFacilityEndDateDetails().should('exist');
 
-      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateDayInput(), format(Date4, 'd'));
-      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateMonthInput(), format(Date4, 'M'));
-      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateYearInput(), format(Date4, 'yyyy'));
+      cy.completeDateFormFields({ idPrefix: 'amendment--facility-end-date', date: Date4 });
+
       cy.clickContinueButton();
     });
 
@@ -164,9 +160,9 @@ context('Amendments - GEF deal add multiple consecutive amendments impacting fac
       // There should no longer be a current bank review date value, as the last amendment had a facility end date.
       // We reset it to bank review date here.
       amendmentsPage.amendmentCurrentBankReviewDate().should('have.text', 'Not provided');
-      cy.keyboardInput(amendmentsPage.amendmentBankReviewDateDayInput(), format(Date5, 'd'));
-      cy.keyboardInput(amendmentsPage.amendmentBankReviewDateMonthInput(), format(Date5, 'M'));
-      cy.keyboardInput(amendmentsPage.amendmentBankReviewDateYearInput(), format(Date5, 'yyyy'));
+
+      cy.completeDateFormFields({ idPrefix: 'amendment--bank-review-date', date: Date5 });
+
       cy.clickContinueButton();
 
       cy.url().should('contain', 'check-answers');
@@ -179,9 +175,8 @@ context('Amendments - GEF deal add multiple consecutive amendments impacting fac
       amendmentsPage.amendmentCurrentFacilityEndDate().should('have.text', format(Date4, DATE_FORMATS.FULL));
       amendmentsPage.amendmentFacilityEndDateDetails().should('exist');
 
-      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateDayInput(), format(Date5, 'd'));
-      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateMonthInput(), format(Date5, 'M'));
-      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateYearInput(), format(Date5, 'yyyy'));
+      cy.completeDateFormFields({ idPrefix: 'amendment--facility-end-date', date: Date5 });
+
       cy.clickContinueButton();
     });
 
@@ -206,9 +201,9 @@ context('Amendments - GEF deal add multiple consecutive amendments impacting fac
       amendmentsPage.addAmendmentButton().click();
 
       cy.url().should('contain', 'request-date');
-      cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), todayDay);
-      cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), todayMonth);
-      cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), todayYear);
+
+      cy.completeDateFormFields({ idPrefix: 'amendment--request-date' });
+
       cy.clickContinueButton();
 
       cy.url().should('contain', 'request-approval');
@@ -216,9 +211,9 @@ context('Amendments - GEF deal add multiple consecutive amendments impacting fac
       cy.clickContinueButton();
 
       cy.url().should('contain', 'amendment-effective-date');
-      cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), todayDay);
-      cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), todayMonth);
-      cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), todayYear);
+
+      cy.completeDateFormFields({ idPrefix: 'amendment--effective-date' });
+
       cy.clickContinueButton();
 
       cy.url().should('contain', 'amendment-options');

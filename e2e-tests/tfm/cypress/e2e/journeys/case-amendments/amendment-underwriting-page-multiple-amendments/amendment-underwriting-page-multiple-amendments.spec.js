@@ -3,7 +3,7 @@ import { caseSubNavigation } from '../../../partials';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+import { threeMonths, tomorrowDay } from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 import pages from '../../../pages';
 
@@ -42,9 +42,8 @@ context('Amendments underwriting page - multiple amendments should show without 
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--request-date' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
@@ -54,9 +53,8 @@ context('Amendments underwriting page - multiple amendments should show without 
 
     cy.url().should('contain', 'amendment-effective-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), dateConstants.todayYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--effective-date' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'amendment-options');
@@ -71,9 +69,8 @@ context('Amendments underwriting page - multiple amendments should show without 
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.tomorrowDay);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.todayYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', day: tomorrowDay });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-value');
@@ -96,9 +93,8 @@ context('Amendments underwriting page - multiple amendments should show without 
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--request-date' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
@@ -118,9 +114,8 @@ context('Amendments underwriting page - multiple amendments should show without 
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.threeMonthsDay);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.threeMonthsMonth);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.threeMonthsYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: threeMonths });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-value');
@@ -142,9 +137,8 @@ context('Amendments underwriting page - multiple amendments should show without 
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--request-date' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
