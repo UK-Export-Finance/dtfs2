@@ -47,7 +47,7 @@ describe('auth router config', () => {
 
       it('should return undefined', () => {
         const result = getUnauthenticatedAuthRouter();
-        expect(result).toBe(undefined);
+        expect(result).toBeUndefined();
       });
     });
   });
