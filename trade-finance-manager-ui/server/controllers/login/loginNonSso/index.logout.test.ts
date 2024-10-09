@@ -20,7 +20,7 @@ describe('controllers - login (sso)', () => {
       logout(req, res);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe('/');
+      expect(res._getRedirectUrl()).toEqual('/');
     });
 
     it('destroys the session', () => {

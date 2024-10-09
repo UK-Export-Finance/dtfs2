@@ -10,7 +10,7 @@ describe('dateFromIsoString.schema', () => {
       const { success } = dateFromIsoStringSchema.safeParse(validIsoString);
 
       // Assert
-      expect(success).toBe(true);
+      expect(success).toEqual(true);
     });
 
     it("sets the 'success' property to false when the ISO string is invalid", () => {
@@ -21,7 +21,7 @@ describe('dateFromIsoString.schema', () => {
       const { success } = dateFromIsoStringSchema.safeParse(invalidIsoString);
 
       // Assert
-      expect(success).toBe(false);
+      expect(success).toEqual(false);
     });
 
     it("sets the 'data' property to the parsed date", () => {

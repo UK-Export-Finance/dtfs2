@@ -12,12 +12,12 @@ describe('customValidateStatus', () => {
   it.each(falseCodes)('should return false for HTTP status code %s', (code) => {
     const result = customValidateStatus(code);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it.each(trueCodes)('should return true for HTTP status code %s', (code) => {
     const result = customValidateStatus(code);
 
-    expect(result).toBe(true);
+    expect(result).toEqual(true);
   });
 });

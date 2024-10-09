@@ -58,7 +58,7 @@ describe('user helpers', () => {
       const result = userIsOnlyInTeams(mockUser, teamIdList);
 
       // Assert
-      expect(result).toBe(false);
+      expect(result).toEqual(false);
     });
 
     it('should return true when the user teams match', () => {
@@ -71,7 +71,7 @@ describe('user helpers', () => {
       const result = userIsOnlyInTeams(mockUser, teamIdList);
 
       // Assert
-      expect(result).toBe(true);
+      expect(result).toEqual(true);
     });
   });
 });

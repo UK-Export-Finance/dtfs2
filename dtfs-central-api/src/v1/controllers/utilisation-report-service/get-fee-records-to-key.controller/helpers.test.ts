@@ -25,7 +25,7 @@ describe('get-fee-records-to-key.controller helpers', () => {
       const feeRecordsToKey = mapToFeeRecordsToKey([feeRecord]);
 
       // Assert
-      expect(feeRecordsToKey[0].id).toBe(id);
+      expect(feeRecordsToKey[0].id).toEqual(id);
     });
 
     it('maps the fee record facilityId to the fee record to key facilityId', () => {
@@ -37,7 +37,7 @@ describe('get-fee-records-to-key.controller helpers', () => {
       const feeRecordsToKey = mapToFeeRecordsToKey([feeRecord]);
 
       // Assert
-      expect(feeRecordsToKey[0].facilityId).toBe(facilityId);
+      expect(feeRecordsToKey[0].facilityId).toEqual(facilityId);
     });
 
     it('maps the fee record exporter to the fee record to key exporter', () => {
@@ -49,7 +49,7 @@ describe('get-fee-records-to-key.controller helpers', () => {
       const feeRecordsToKey = mapToFeeRecordsToKey([feeRecord]);
 
       // Assert
-      expect(feeRecordsToKey[0].exporter).toBe(exporter);
+      expect(feeRecordsToKey[0].exporter).toEqual(exporter);
     });
 
     it('maps the fee record status to the fee record to key status', () => {
@@ -61,7 +61,7 @@ describe('get-fee-records-to-key.controller helpers', () => {
       const feeRecordsToKey = mapToFeeRecordsToKey([feeRecord]);
 
       // Assert
-      expect(feeRecordsToKey[0].status).toBe(status);
+      expect(feeRecordsToKey[0].status).toEqual(status);
     });
 
     it('maps the fee record fees to the fee record to key reported fees', () => {

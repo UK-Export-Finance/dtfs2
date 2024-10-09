@@ -46,7 +46,7 @@ describe('controllers - deal cancellation', () => {
       await deleteDealCancellation(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.NoContent);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.NoContent);
     });
 
     it('should return an error when there is an API error', async () => {
@@ -64,7 +64,7 @@ describe('controllers - deal cancellation', () => {
       await deleteDealCancellation(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(testErrorStatus);
+      expect(res._getStatusCode()).toEqual(testErrorStatus);
       expect(res._getData()).toEqual({ message: `Failed to delete deal cancellation: ${testApiErrorMessage}`, status: testErrorStatus });
     });
 
@@ -81,7 +81,7 @@ describe('controllers - deal cancellation', () => {
       await deleteDealCancellation(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
       expect(res._getData()).toEqual({ message: 'Failed to delete deal cancellation', status: 500 });
     });
   });

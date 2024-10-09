@@ -13,12 +13,12 @@ export const withSchemaValidationTests = ({
 }) => {
   describe('when validating a valid input', () => {
     it.each(successTestCases)(`should validate $description as a valid ${schemaName}`, ({ testCase }) => {
-      expect(schema.safeParse(testCase).success).toBe(true);
+      expect(schema.safeParse(testCase).success).toEqual(true);
     });
   });
   describe('when validating an invalid input', () => {
     it.each(failureTestCases)(`should not validate $description as a valid ${schemaName}`, ({ testCase }) => {
-      expect(schema.safeParse(testCase).success).toBe(false);
+      expect(schema.safeParse(testCase).success).toEqual(false);
     });
   });
 };

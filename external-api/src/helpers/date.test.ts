@@ -8,7 +8,7 @@ describe('getNowAsEpoch', () => {
 
   it('should return as EPOCH representing the current time in milliseconds', () => {
     const result = getNowAsEpoch();
-    expect(typeof result).toBe('number');
+    expect(typeof result).toEqual('number');
   });
 
   it('should return a value greater than or equal to the previous value', () => {
@@ -19,7 +19,7 @@ describe('getNowAsEpoch', () => {
 
   it('should return a number', () => {
     const result = getNowAsEpoch();
-    expect(typeof result).toBe('number');
+    expect(typeof result).toEqual('number');
   });
 
   it('should return a number greater than 0', () => {
@@ -40,6 +40,6 @@ describe('getNowAsEpoch', () => {
   it('should return EPOCH as 0', () => {
     jest.useFakeTimers().setSystemTime(new Date('1970-01-01 01:00:00'));
     const result = getNowAsEpoch();
-    expect(result).toBe(0);
+    expect(result).toEqual(0);
   });
 });

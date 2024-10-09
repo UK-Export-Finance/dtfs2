@@ -5,7 +5,7 @@ describe('zBooleanStrictCoerce', () => {
   describe('when parsing a value with zBooleanStrictCoerce', () => {
     describe('when the provided value can be coerced to a boolean', () => {
       it.each(getSuccessTestCases())('should return $result when the provided value is $description', ({ value, result }) => {
-        expect(zBooleanStrictCoerce.parse(value)).toBe(result);
+        expect(zBooleanStrictCoerce.parse(value)).toEqual(result);
       });
     });
 
@@ -19,13 +19,13 @@ describe('zBooleanStrictCoerce', () => {
   describe('when parsing a value with zBooleanStrictCoerce and additional chaining', () => {
     describe('when chaining with .optional()', () => {
       it('should return undefined when the provided value is undefined', () => {
-        expect(zBooleanStrictCoerce.optional().parse(undefined)).toBe(undefined);
+        expect(zBooleanStrictCoerce.optional().parse(undefined)).toEqual(undefined);
       });
     });
 
     describe('when chaining with .nullable()', () => {
       it('should return null when the provided value is null', () => {
-        expect(zBooleanStrictCoerce.nullable().parse(null)).toBe(null);
+        expect(zBooleanStrictCoerce.nullable().parse(null)).toEqual(null);
       });
     });
   });

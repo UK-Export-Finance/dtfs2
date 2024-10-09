@@ -60,7 +60,7 @@ describe('validate-payment-form-values', () => {
       expect(errors.errorSummary).toEqual([
         { text: 'The new payment currency must be the same as the reported payment currency of the selected fees', href: '#paymentCurrency' },
       ]);
-      expect(errors.paymentCurrencyErrorMessage).toBe('The new payment currency must be the same as the reported payment currency of the selected fees');
+      expect(errors.paymentCurrencyErrorMessage).toEqual('The new payment currency must be the same as the reported payment currency of the selected fees');
     });
 
     it.each(Object.values(CURRENCY))('should not set payment currency error when payment currency value is %s', (currency: Currency) => {
@@ -872,7 +872,7 @@ describe('validate-payment-form-values', () => {
 
       // Assert
       expect(result.errorSummary).toEqual([{ text: 'Select a payment to add the fee or fees to', href: '#payment-groups' }]);
-      expect(result.paymentGroupErrorMessage).toBe('Select a payment to add the fee or fees to');
+      expect(result.paymentGroupErrorMessage).toEqual('Select a payment to add the fee or fees to');
     });
 
     it('should not return error when a payment radio is selected', () => {

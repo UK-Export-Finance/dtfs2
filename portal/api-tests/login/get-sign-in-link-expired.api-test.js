@@ -10,6 +10,6 @@ jest.mock('../../server/api', () => ({
 describe('GET /login/sign-in-link-expired', () => {
   withPartial2faAuthValidationApiTests({
     makeRequestWithHeaders: (headers) => get('/login/sign-in-link-expired', {}, headers),
-    validateResponseWasSuccessful: (response) => expect(response.status).toBe(302),
+    validateResponseWasSuccessful: (response) => expect(response.status).toEqual(302),
   });
 });

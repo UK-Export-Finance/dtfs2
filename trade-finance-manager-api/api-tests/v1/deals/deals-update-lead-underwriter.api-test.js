@@ -48,7 +48,7 @@ describe('PUT /deals/:dealId/underwriting/lead-underwriter', () => {
 
     const { status, body } = await as(tokenUser).put(VALID_LEAD_UNDERWRITER_UPDATE).to(VALID_URL_TO_UPDATE_LEAD_UNDERWRITER);
 
-    expect(status).toBe(200);
+    expect(status).toEqual(200);
     expect(body).toEqual({
       leadUnderwriter: VALID_USER_ID,
     });
@@ -61,7 +61,7 @@ describe('PUT /deals/:dealId/underwriting/lead-underwriter', () => {
 
     const { status, body } = await as(tokenUser).put(VALID_LEAD_UNDERWRITER_UPDATE).to(`/v1/deals/${INVALID_DEAL_ID}/underwriting/lead-underwriter`);
 
-    expect(status).toBe(400);
+    expect(status).toEqual(400);
     expect(body).toEqual({
       errors: [
         {
@@ -85,7 +85,7 @@ describe('PUT /deals/:dealId/underwriting/lead-underwriter', () => {
 
     const { status, body } = await as(tokenUser).put(VALID_LEAD_UNDERWRITER_UPDATE).to(VALID_URL_TO_UPDATE_LEAD_UNDERWRITER);
 
-    expect(status).toBe(500);
+    expect(status).toEqual(500);
     expect(body).toEqual({ data: 'Unable to update lead underwriter' });
   });
 });

@@ -88,7 +88,7 @@ describe('delete-payment.controller', () => {
           },
         },
       });
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
     });
 
     it('responds with a 404 (Not Found) error if a report with the supplied report and payment id cannot be found', async () => {
@@ -115,7 +115,7 @@ describe('delete-payment.controller', () => {
           },
         },
       });
-      expect(res._getStatusCode()).toBe(HttpStatusCode.NotFound);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
       expect(res._getData()).toEqual(expect.stringContaining(`Failed to find a report with id '${reportId}' with attached payment with id '${paymentId}'`));
     });
 
@@ -134,7 +134,7 @@ describe('delete-payment.controller', () => {
       await deletePayment(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(errorStatus);
+      expect(res._getStatusCode()).toEqual(errorStatus);
     });
 
     it("responds with the specific error message if saving the report throws an 'ApiError'", async () => {
@@ -152,7 +152,7 @@ describe('delete-payment.controller', () => {
       await deletePayment(req, res);
 
       // Assert
-      expect(res._getData()).toBe(`Failed to delete payment with id ${paymentId}: ${errorMessage}`);
+      expect(res._getData()).toEqual(`Failed to delete payment with id ${paymentId}: ${errorMessage}`);
     });
 
     it(`responds with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, async () => {
@@ -169,7 +169,7 @@ describe('delete-payment.controller', () => {
       await deletePayment(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
     });
 
     it('responds with a generic error message if an unknown error occurs', async () => {
@@ -186,7 +186,7 @@ describe('delete-payment.controller', () => {
       await deletePayment(req, res);
 
       // Assert
-      expect(res._getData()).toBe(`Failed to delete payment with id ${paymentId}`);
+      expect(res._getData()).toEqual(`Failed to delete payment with id ${paymentId}`);
     });
   });
 });

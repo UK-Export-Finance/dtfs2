@@ -18,7 +18,7 @@ describe('InvalidPayloadError', () => {
     const exception = new InvalidPayloadError(message);
 
     // Assert
-    expect(exception.status).toBe(HttpStatusCode.BadRequest);
+    expect(exception.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it('is an instance of InvalidFacilityIdError', () => {

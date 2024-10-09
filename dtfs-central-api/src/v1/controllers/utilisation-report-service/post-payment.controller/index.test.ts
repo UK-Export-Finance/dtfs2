@@ -78,7 +78,7 @@ describe('post-payment.controller', () => {
       await postPayment(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
     });
 
     it("responds with the specific error status if saving the report throws an 'ApiError'", async () => {
@@ -96,7 +96,7 @@ describe('post-payment.controller', () => {
       await postPayment(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(errorStatus);
+      expect(res._getStatusCode()).toEqual(errorStatus);
     });
 
     it("responds with the specific error message if saving the report throws an 'ApiError'", async () => {
@@ -114,7 +114,7 @@ describe('post-payment.controller', () => {
       await postPayment(req, res);
 
       // Assert
-      expect(res._getData()).toBe(`Failed to add a new payment: ${errorMessage}`);
+      expect(res._getData()).toEqual(`Failed to add a new payment: ${errorMessage}`);
     });
 
     it(`responds with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, async () => {
@@ -131,7 +131,7 @@ describe('post-payment.controller', () => {
       await postPayment(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
     });
 
     it('responds with a generic error message if an unknown error occurs', async () => {
@@ -148,7 +148,7 @@ describe('post-payment.controller', () => {
       await postPayment(req, res);
 
       // Assert
-      expect(res._getData()).toBe('Failed to add a new payment');
+      expect(res._getData()).toEqual('Failed to add a new payment');
     });
   });
 });

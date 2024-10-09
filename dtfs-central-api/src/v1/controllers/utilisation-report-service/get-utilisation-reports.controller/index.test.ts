@@ -231,7 +231,7 @@ describe('getUtilisationReports', () => {
         excludeNotReceived: true,
       });
 
-      expect(res._getStatusCode()).toBe(200);
+      expect(res._getStatusCode()).toEqual(200);
       expect(res._getData()).toHaveLength(1);
       expect(res._getData()).toEqual<GetUtilisationReportResponse[]>([
         {

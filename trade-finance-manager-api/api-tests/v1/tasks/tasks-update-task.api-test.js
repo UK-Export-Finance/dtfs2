@@ -71,7 +71,7 @@ describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
       history: expect.any(Array),
     };
 
-    expect(status).toBe(200);
+    expect(status).toEqual(200);
     expect(body).toEqual(expectedUpdatedTask);
   });
 
@@ -84,7 +84,7 @@ describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
     const invalidDealId = 'invalid-deal-id';
     const { status, body } = await as(tokenUser).put(taskUpdate).to(`/v1/deals/${invalidDealId}/tasks/${groupId}/${taskId}`);
 
-    expect(status).toBe(400);
+    expect(status).toEqual(400);
     expect(body).toEqual({
       errors: [
         {
@@ -108,7 +108,7 @@ describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
     const invalidGroupId = 'invalid-group-id';
     const { status, body } = await as(tokenUser).put(taskUpdate).to(`/v1/deals/${taskDealId}/tasks/${invalidGroupId}/${taskId}`);
 
-    expect(status).toBe(400);
+    expect(status).toEqual(400);
     expect(body).toEqual({
       errors: [
         {
@@ -132,7 +132,7 @@ describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
     const invalidTaskId = 'invalid-task-id';
     const { status, body } = await as(tokenUser).put(taskUpdate).to(`/v1/deals/${taskDealId}/tasks/${groupId}/${invalidTaskId}`);
 
-    expect(status).toBe(400);
+    expect(status).toEqual(400);
     expect(body).toEqual({
       errors: [
         {
@@ -155,7 +155,7 @@ describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
 
     const { status, body } = await as(tokenUser).put(taskUpdate).to(validUrlToUpdateTask);
 
-    expect(status).toBe(500);
+    expect(status).toEqual(500);
     expect(body).toEqual({ data: 'Unable to update the task' });
   });
 });

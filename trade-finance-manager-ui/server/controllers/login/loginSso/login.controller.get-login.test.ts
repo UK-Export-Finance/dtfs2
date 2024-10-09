@@ -44,7 +44,7 @@ describe('controllers - login (sso)', () => {
         await loginController.getLogin(req, res);
 
         // Assert
-        expect(res._getRedirectUrl()).toBe('/home');
+        expect(res._getRedirectUrl()).toEqual('/home');
       });
     });
 
@@ -57,7 +57,7 @@ describe('controllers - login (sso)', () => {
         await loginController.getLogin(req, res);
 
         // Assert
-        expect(res._getRedirectUrl()).toBe(mockAuthCodeUrl);
+        expect(res._getRedirectUrl()).toEqual(mockAuthCodeUrl);
       });
 
       it('overrides session login data if present', async () => {

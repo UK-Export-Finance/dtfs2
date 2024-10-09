@@ -57,7 +57,7 @@ describe('DELETE v1/portal/cron-jobs', () => {
       })
       .to(`/v1/portal/cron-jobs`);
 
-    expect(firstStatus).toBe(200);
-    expect(secondStatus).toBe(200);
+    expect(firstStatus).toEqual(200);
+    expect(secondStatus).toEqual(200);
   });
 });
