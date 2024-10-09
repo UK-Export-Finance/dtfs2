@@ -5,7 +5,7 @@ import { asUserSession } from '../../../helpers/express-session';
 import { CancelCancellationViewModel } from '../../../types/view-models';
 import api from '../../../api';
 import { canSubmissionTypeBeCancelled } from '../../helpers';
-import { getPreviousPageUrl } from './helpers/get-previous-page-from-url';
+import { getPreviousPageUrl } from './helpers/get-previous-page-url';
 
 export type GetCancelCancellationRequest = CustomExpressRequest<{ params: { _id: string } }>;
 export type PostCancelCancellationRequest = CustomExpressRequest<{ params: { _id: string }; query: { return: string }; reqBody: { previousPage: string } }>;

@@ -1,4 +1,4 @@
-import { getPreviousPageUrl } from './get-previous-page-from-url';
+import { getPreviousPageUrl } from './get-previous-page-url';
 
 const previousPages = ['reason', 'bank-request-date', 'effective-from-date', 'check-details'];
 
