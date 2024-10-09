@@ -1,17 +1,17 @@
-import { validatePreviousPage } from './validate-previous-page';
+import { getPreviousPageFromUrl } from './get-previous-page-from-url';
 
 const previousPages = ['reason', 'bank-request-date', 'effective-from-date', 'check-details'];
 
 const dealId = 'abcdef123456';
 
-describe('getPreviousPage', () => {
+describe('getPreviousPageFromUrl', () => {
   describe.each(previousPages)('when the provided url is for the %s page', (page) => {
     it('returns the correct relative url, when given a relative URL', () => {
       // Arrange
       const url = `/case/${dealId}/cancellation/${page}`;
 
       // Act
-      const response = validatePreviousPage(url, dealId);
+      const response = getPreviousPageFromUrl(url, dealId);
 
       // Assert
       expect(response).toBe(`/case/${dealId}/cancellation/${page}`);
@@ -22,7 +22,7 @@ describe('getPreviousPage', () => {
       const url = `www.example.com/case/${dealId}/cancellation/${page}`;
 
       // Act
-      const response = validatePreviousPage(url, dealId);
+      const response = getPreviousPageFromUrl(url, dealId);
 
       // Assert
       expect(response).toBe(`/case/${dealId}/cancellation/${page}`);
@@ -33,7 +33,7 @@ describe('getPreviousPage', () => {
       const url = `localhost:5003/case/${dealId}/cancellation/${page}`;
 
       // Act
-      const response = validatePreviousPage(url, dealId);
+      const response = getPreviousPageFromUrl(url, dealId);
 
       // Assert
       expect(response).toBe(`/case/${dealId}/cancellation/${page}`);
@@ -45,7 +45,7 @@ describe('getPreviousPage', () => {
     const url = `/case/${dealId}/cancellation/`;
 
     // Act
-    const response = validatePreviousPage(url, dealId);
+    const response = getPreviousPageFromUrl(url, dealId);
 
     // Assert
     expect(response).toBe(`/case/${dealId}/deal`);

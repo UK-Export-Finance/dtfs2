@@ -1,5 +1,5 @@
 /**
- * Validates the if the URL is one of
+ * Validates the if the provided URL is one of
  *  - reason for cancelling page
  *  - bank request date page
  *  - effective from date page
@@ -11,7 +11,7 @@
  * @param dealId - The deal id
  * @returns the previous page URL
  */
-export const validatePreviousPage = (url: string, dealId: string): string => {
+export const getPreviousPageFromUrl = (url: string, dealId: string): string => {
   const previousPages = ['reason', 'bank-request-date', 'effective-from-date', 'check-details'];
 
   const previousPageUrl = previousPages.reduce((existingValue: string | undefined, currentValue: string) => {
