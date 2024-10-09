@@ -5,7 +5,13 @@ import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../..
 import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mock-gef-deals';
 import { DEAL_TYPE } from '../../../../../../../gef/cypress/fixtures/constants';
 import amendmentsPage from '../../../../pages/amendments/amendmentsPage';
-import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
+import {
+  sixYearsOneDay,
+  threeMonthsOneDay,
+  threeMonthsOneDayFullString,
+  threeMonthsOneDayFullMonthString,
+  todayFullString,
+} from '../../../../../../../e2e-fixtures/dateConstants';
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 
 context('Amendments - GEF deal add facility end date - feature flag enabled', () => {
@@ -64,9 +70,8 @@ context('Amendments - GEF deal add facility end date - feature flag enabled', ()
     cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-end-date');
-    cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateDayInput(), dateConstants.sixYearsOneDayDay);
-    cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateMonthInput(), dateConstants.sixYearsOneDayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateYearInput(), dateConstants.sixYearsOneDayYear);
+
+    cy.completeDateFormFields({ idPrefix: 'amendment--facility-end-date', date: sixYearsOneDay });
 
     cy.clickContinueButton();
     errorSummary().contains('Facility end date cannot be greater than 6 years in the future');
@@ -77,9 +82,9 @@ context('Amendments - GEF deal add facility end date - feature flag enabled', ()
     cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-end-date');
-    cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateYearInput(), dateConstants.todayYear);
+
+    cy.completeDateFormFields({ idPrefix: 'amendment--facility-end-date' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-value');
@@ -90,14 +95,14 @@ context('Amendments - GEF deal add facility end date - feature flag enabled', ()
     cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-end-date');
-    cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateYearInput(), dateConstants.todayYear);
+
+    cy.completeDateFormFields({ idPrefix: 'amendment--facility-end-date' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'check-answers');
     amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('have.text', 'Yes');
-    amendmentsPage.amendmentAnswerFacilityEndDate().should('have.text', dateConstants.todayFullString);
+    amendmentsPage.amendmentAnswerFacilityEndDate().should('have.text', todayFullString);
     amendmentsPage.amendmentAnswerBankReviewDate().should('not.exist');
   });
 
@@ -112,14 +117,14 @@ context('Amendments - GEF deal add facility end date - feature flag enabled', ()
     amendmentsPage.amendmentAnswerFacilityEndDateChangeLink().click();
 
     cy.url().should('contain', 'facility-end-date');
-    cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateDayInput(), dateConstants.threeMonthsOneDayDay);
-    cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateMonthInput(), dateConstants.threeMonthsOneDayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateYearInput(), dateConstants.threeMonthsOneDayYear);
+
+    cy.completeDateFormFields({ idPrefix: 'amendment--facility-end-date', date: threeMonthsOneDay });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'check-answers');
     amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('have.text', 'Yes');
-    amendmentsPage.amendmentAnswerFacilityEndDate().should('have.text', dateConstants.threeMonthsOneDayFullString);
+    amendmentsPage.amendmentAnswerFacilityEndDate().should('have.text', threeMonthsOneDayFullString);
     amendmentsPage.amendmentAnswerBankReviewDate().should('not.exist');
 
     amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().click();
@@ -137,7 +142,7 @@ context('Amendments - GEF deal add facility end date - feature flag enabled', ()
 
     cy.visit(relative(`/case/${dealId}/facility/${facility._id}`));
     facilityPage.facilityIsUsingFacilityEndDate().should('have.text', 'Yes');
-    facilityPage.facilityFacilityEndDate().should('have.text', dateConstants.threeMonthsOneDayFullMonthString);
+    facilityPage.facilityFacilityEndDate().should('have.text', threeMonthsOneDayFullMonthString);
     facilityPage.facilityBankReviewDate().should('not.exist');
   });
 });
