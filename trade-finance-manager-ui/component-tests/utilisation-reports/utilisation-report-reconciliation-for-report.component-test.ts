@@ -279,7 +279,7 @@ describe(page, () => {
   it('should not display match success notification when param is false', () => {
     const wrapper = getWrapper({ ...params, displayMatchSuccessNotification: false });
 
-    wrapper.expectElement('[data-cy="match-success-notification"').notToExist();
+    wrapper.expectElement('[data-cy="match-success-notification"]').notToExist();
   });
 
   it('should display match success notification when param is true', () => {
