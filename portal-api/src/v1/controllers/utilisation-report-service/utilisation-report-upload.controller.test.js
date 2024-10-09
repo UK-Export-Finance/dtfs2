@@ -53,7 +53,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
     await uploadReportAndSendNotification(req, res);
 
     // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
   });
 
   it('does not upload report and returns a 500 if there are no reports for period', async () => {
@@ -66,7 +66,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
 
     // Assert
     expect(saveUtilisationReportFileToAzure).not.toHaveBeenCalled();
-    expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
   });
 
   it('does not upload report and returns a 500 if there are more than one reports for period', async () => {
@@ -79,7 +79,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
 
     // Assert
     expect(saveUtilisationReportFileToAzure).not.toHaveBeenCalled();
-    expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
   });
 
   it('does not upload report and returns a 500 with error message if report has already been received', async () => {
@@ -92,8 +92,8 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
 
     // Assert
     expect(saveUtilisationReportFileToAzure).not.toHaveBeenCalled();
-    expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-    expect(res._getData()).toBe(
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+    expect(res._getData()).toEqual(
       `Expected report to be in '${UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED}' state (was actually in '${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}' state)`,
     );
   });
@@ -130,7 +130,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
     await uploadReportAndSendNotification(req, res);
 
     // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.Created);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Created);
     expect(res._getData()).toEqual({ paymentOfficerEmails: ['email'] });
   });
 
@@ -147,7 +147,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
     await uploadReportAndSendNotification(req, res);
 
     // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.Created);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Created);
     expect(res._getData()).toEqual({ paymentOfficerEmails: ['email'] });
   });
 });

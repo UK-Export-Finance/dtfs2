@@ -48,7 +48,7 @@ describe('handleFeeRecordPaymentAddedEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.status).toBe(expectedStatus);
+      expect(feeRecord.status).toEqual(expectedStatus);
     },
   );
 
@@ -64,7 +64,7 @@ describe('handleFeeRecordPaymentAddedEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
+    expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
   });
 
   it("sets the fee record 'lastUpdatedByPortalUserId' to null", async () => {
@@ -94,6 +94,6 @@ describe('handleFeeRecordPaymentAddedEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
+    expect(feeRecord.lastUpdatedByTfmUserId).toEqual(userId);
   });
 });

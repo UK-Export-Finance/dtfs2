@@ -25,8 +25,8 @@ describe('validation helpers', () => {
       const stringValue = asString(value, 'value');
 
       // Assert
-      expect(typeof stringValue).toBe('string');
-      expect(stringValue).toBe(value);
+      expect(typeof stringValue).toEqual('string');
+      expect(stringValue).toEqual(value);
     });
 
     it.each`

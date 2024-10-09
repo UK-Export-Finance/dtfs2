@@ -46,7 +46,7 @@ describe(`GET ${BASE_URL}`, () => {
       const response = await testApi.get(requestUrl);
 
       // Assert
-      expect(response.status).toBe(axios.HttpStatusCode.Ok);
+      expect(response.status).toEqual(axios.HttpStatusCode.Ok);
       expect(response.body).toEqual(banks);
     });
   });
@@ -101,7 +101,7 @@ describe(`GET ${BASE_URL}`, () => {
       const response = await testApi.get(requestUrl);
 
       // Assert
-      expect(response.status).toBe(axios.HttpStatusCode.Ok);
+      expect(response.status).toEqual(axios.HttpStatusCode.Ok);
       expect(response.body).toEqual(banksWithReportingYears);
     });
   });

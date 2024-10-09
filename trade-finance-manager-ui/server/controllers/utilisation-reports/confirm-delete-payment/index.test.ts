@@ -46,7 +46,7 @@ describe('controllers/utilisation-reports/confirm-delete-payment', () => {
 
       // Assert
       expect(api.getPaymentDetailsWithoutFeeRecords).toHaveBeenCalledWith(reportId, paymentId, requestSession.userToken);
-      expect(res._getRenderView()).toBe('utilisation-reports/confirm-delete-payment.njk');
+      expect(res._getRenderView()).toEqual('utilisation-reports/confirm-delete-payment.njk');
     });
 
     it('renders the confirm delete payment page with the payment summary list rows', async () => {
@@ -174,7 +174,7 @@ describe('controllers/utilisation-reports/confirm-delete-payment', () => {
         await postConfirmDeletePayment(req, res);
 
         // Assert
-        expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}`);
+        expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}`);
       });
     });
 
@@ -209,7 +209,7 @@ describe('controllers/utilisation-reports/confirm-delete-payment', () => {
         await postConfirmDeletePayment(req, res);
 
         // Assert
-        expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}/edit-payment/${paymentId}?redirectTab=premium-payments`);
+        expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}/edit-payment/${paymentId}?redirectTab=premium-payments`);
       });
     });
 
@@ -227,7 +227,7 @@ describe('controllers/utilisation-reports/confirm-delete-payment', () => {
       await postConfirmDeletePayment(req, res);
 
       // Assert
-      expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
+      expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
       expect(res._getRenderData()).toEqual({ user: requestSession.user });
     });
   });

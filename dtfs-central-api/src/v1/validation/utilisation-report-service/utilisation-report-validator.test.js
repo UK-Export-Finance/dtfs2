@@ -88,7 +88,7 @@ describe('utilisation-report-validator', () => {
         mimetype: 1,
       });
 
-      expect(validationErrors.length).toBe(5);
+      expect(validationErrors.length).toEqual(5);
       expect(validationErrors).toContain('Folder name from file info must be a string');
       expect(validationErrors).toContain('Filename from file info must be a string');
       expect(validationErrors).toContain('Full path from file info must be a string');
@@ -99,7 +99,7 @@ describe('utilisation-report-validator', () => {
     it('returns an error if a file info property is not provided', async () => {
       const validationErrors = validateFileInfo({});
 
-      expect(validationErrors.length).toBe(5);
+      expect(validationErrors.length).toEqual(5);
       expect(validationErrors).toContain('Folder name from file info is required');
       expect(validationErrors).toContain('Filename from file info is required');
       expect(validationErrors).toContain('Full path from file info is required');

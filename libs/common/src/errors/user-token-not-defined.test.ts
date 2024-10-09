@@ -17,7 +17,7 @@ describe('UserTokenNotDefinedError', () => {
     const exception = new UserTokenNotDefinedError();
 
     // Assert
-    expect(exception.status).toBe(HttpStatusCode.Unauthorized);
+    expect(exception.status).toEqual(HttpStatusCode.Unauthorized);
   });
 
   it('exposes the INVALID_USER_SESSION code', () => {
@@ -25,7 +25,7 @@ describe('UserTokenNotDefinedError', () => {
     const exception = new UserTokenNotDefinedError();
 
     // Assert
-    expect(exception.code).toBe('INVALID_USER_SESSION');
+    expect(exception.code).toEqual('INVALID_USER_SESSION');
   });
 
   it('is an instance of UserTokenNotDefinedError', () => {

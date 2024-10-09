@@ -92,7 +92,7 @@ describe('validate-post-upload-utilisation-report-payload', () => {
 
       // Assert
       expect(mockNext).toHaveBeenCalled();
-      expect(res._isEndCalled()).toBe(false);
+      expect(res._isEndCalled()).toEqual(false);
     });
 
     const propertyNamesWithInvalidValues = [
@@ -121,7 +121,7 @@ describe('validate-post-upload-utilisation-report-payload', () => {
 
       // Assert
       expect(mockNext).not.toHaveBeenCalled();
-      expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
     });
 
     it.each`
@@ -142,7 +142,7 @@ describe('validate-post-upload-utilisation-report-payload', () => {
 
       // Assert
       expect(mockNext).not.toHaveBeenCalled();
-      expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
     });
 
     it('responds with an error if the reportData contains validation errors', async () => {
@@ -160,7 +160,7 @@ describe('validate-post-upload-utilisation-report-payload', () => {
 
       // Assert
       expect(mockNext).not.toHaveBeenCalled();
-      expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
       expect(res._getData()).toEqual([{ errorMessage: 'That is not valid report data', value: '300', row: 3 }]);
     });
   });

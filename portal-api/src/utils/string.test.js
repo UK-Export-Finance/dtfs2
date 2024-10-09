@@ -31,84 +31,84 @@ describe('isValidEmail function', () => {
   // Tests that a valid email returns true
   it('should test valid email', () => {
     const email = 'test@example.com';
-    expect(isValidEmail(email)).toBe(true);
+    expect(isValidEmail(email)).toEqual(true);
   });
 
   // Tests that a valid email with uppercase letters returns true
   it('should test valid email uppercase', () => {
     const email = 'Test@Example.com';
-    expect(isValidEmail(email)).toBe(true);
+    expect(isValidEmail(email)).toEqual(true);
   });
 
   // Tests that a valid email with numbers returns true
   it('should test valid email numbers', () => {
     const email = 'test123@example.com';
-    expect(isValidEmail(email)).toBe(true);
+    expect(isValidEmail(email)).toEqual(true);
   });
 
   // Tests that an empty string input returns false
   it('should test empty string input', () => {
     const email = '';
-    expect(isValidEmail(email)).toBe(false);
+    expect(isValidEmail(email)).toEqual(false);
   });
 
   // Tests that a non-string input returns false
   it('should test non string input', () => {
     const email = 123;
-    expect(isValidEmail(email)).toBe(false);
+    expect(isValidEmail(email)).toEqual(false);
   });
 
   // Tests that an invalid email returns false
   it('should test invalid email', () => {
     const email = 'example.com';
-    expect(isValidEmail(email)).toBe(false);
+    expect(isValidEmail(email)).toEqual(false);
   });
 
   // Tests that an invalid email without an @ symbol returns false
   it('should test invalid email no at symbol', () => {
     const email = 'testexample.com';
-    expect(isValidEmail(email)).toBe(false);
+    expect(isValidEmail(email)).toEqual(false);
   });
 
   // Tests that an invalid email without a domain returns false
   it('should test invalid email no domain', () => {
     const email = 'test@';
-    expect(isValidEmail(email)).toBe(false);
+    expect(isValidEmail(email)).toEqual(false);
   });
 
   // Tests that an invalid email without a username returns false
   it('should test invalid email no username', () => {
     const email = '@example.com';
-    expect(isValidEmail(email)).toBe(false);
+    expect(isValidEmail(email)).toEqual(false);
   });
 
   // Tests that an invalid email without a top-level domain returns false
   it('should test invalid email no tld', () => {
     const email = 'test@example';
-    expect(isValidEmail(email)).toBe(false);
+    expect(isValidEmail(email)).toEqual(false);
   });
 
   // Tests that a valid email address returns true
   it('should test valid email', () => {
     const email = 'abc@ukexportfinance.gov.uk';
-    expect(isValidEmail(email)).toBe(true);
+    expect(isValidEmail(email)).toEqual(true);
   });
 
   // Tests that a valid email address with uppercase letters returns true
   it('should test valid email uppercase', () => {
     const email = 'ABC@UKEXPORTFINANCE.GOV.UK';
-    expect(isValidEmail(email)).toBe(true);
+    expect(isValidEmail(email)).toEqual(true);
   });
 
   // Tests that a valid email address with numbers returns true
   it('should test valid email numbers', () => {
     const email = 'abc123@ukexportfinance.gov.uk';
-    expect(isValidEmail(email)).toBe(true);
+    expect(isValidEmail(email)).toEqual(true);
   });
 
   // Tests that an invalid email address input returns false
   it('should test invalid email input', () => {
     const email = 'abc@ukexportfinance';
-    expect(isValidEmail(email)).toBe(false);
+    expect(isValidEmail(email)).toEqual(false);
   });
 });

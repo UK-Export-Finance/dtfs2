@@ -149,6 +149,6 @@ describe('getInclusiveMonthDifference', () => {
   it.each(testData)('$description ($date1 & $date2 to $expected)', ({ date1, date2, expected }) => {
     const result = getInclusiveMonthDifference(date1, date2);
 
-    expect(result).toBe(expected);
+    expect(result).toEqual(expected);
   });
 });

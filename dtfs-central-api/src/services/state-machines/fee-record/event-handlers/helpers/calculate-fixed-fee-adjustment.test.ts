@@ -77,7 +77,7 @@ describe('calculateFixedFeeAdjustment', () => {
       const result = await calculateFixedFeeAdjustment(feeRecord, facilityUtilisationData, reportPeriod);
 
       // Assert
-      expect(result).toBe(expected);
+      expect(result).toEqual(expected);
     },
   );
 });

@@ -78,7 +78,7 @@ describe(`DELETE ${BASE_URL}`, () => {
     const response = await testApi.remove(aDeletePaymentRequestBody()).to(getUrl(reportId, paymentId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Ok);
+    expect(response.status).toEqual(HttpStatusCode.Ok);
   });
 
   it("returns a 400 when the 'user' object is an empty object", async () => {
@@ -91,7 +91,7 @@ describe(`DELETE ${BASE_URL}`, () => {
     const response = await testApi.remove(requestBody).to(getUrl(reportId, paymentId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it('returns a 404 when the report with the supplied id cannot be found', async () => {
@@ -102,7 +102,7 @@ describe(`DELETE ${BASE_URL}`, () => {
     const response = await testApi.remove(aDeletePaymentRequestBody()).to(getUrl(invalidReportId, paymentId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.NotFound);
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
   it('returns a 404 when the payment with the id cannot be found', async () => {
@@ -113,6 +113,6 @@ describe(`DELETE ${BASE_URL}`, () => {
     const response = await testApi.remove(aDeletePaymentRequestBody()).to(getUrl(reportId, invalidPaymentId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.NotFound);
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 });

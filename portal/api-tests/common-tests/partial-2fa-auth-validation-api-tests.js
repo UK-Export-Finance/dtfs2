@@ -22,8 +22,8 @@ const withPartial2faAuthValidationApiTests = ({ makeRequestWithHeaders, validate
 
     it('redirects to /login if the user does not have a session', async () => {
       const response = await makeRequestWithHeaders();
-      expect(response.status).toBe(302);
-      expect(response.headers.location).toBe('/login');
+      expect(response.status).toEqual(302);
+      expect(response.headers.location).toEqual('/login');
     });
 
     it('redirects to /login if the user has a session with an invalid partial auth token', async () => {
@@ -31,8 +31,8 @@ const withPartial2faAuthValidationApiTests = ({ makeRequestWithHeaders, validate
 
       const response = await makeRequestWithHeaders({ Cookie: sessionCookie });
 
-      expect(response.status).toBe(302);
-      expect(response.headers.location).toBe('/login');
+      expect(response.status).toEqual(302);
+      expect(response.headers.location).toEqual('/login');
     });
 
     it('succeeds if the user has a session with a valid partial auth token', async () => {
