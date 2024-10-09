@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import axios from 'axios';
 import dotenv from 'dotenv';
-import { HEADERS, AnyObject } from '@ukef/dtfs2-common';
+import { HEADERS, AnyObject, ApiError } from '@ukef/dtfs2-common';
+import { TransactionFailedError } from '../errors';
 
 dotenv.config();
 
@@ -33,6 +34,13 @@ export const sendEmail = async (templateId: string, sendToEmailAddress: string, 
     return response.data;
   } catch (error) {
     console.error('Error sending email to %s %o', sendToEmailAddress, error);
-    return false;
+
+    if (error instanceof ApiError) {
+      throw TransactionFailedError.forApiError(error);
+    }
+    if (error instanceof Error) {
+      throw TransactionFailedError.forError(error);
+    }
+    throw TransactionFailedError.forUnknownError();
   }
 };
