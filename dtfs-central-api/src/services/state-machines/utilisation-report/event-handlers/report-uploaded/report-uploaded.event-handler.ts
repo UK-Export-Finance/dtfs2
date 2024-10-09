@@ -6,11 +6,10 @@ import {
   AzureFileInfoEntity,
   FeeRecordEntity,
   FacilityUtilisationDataEntity,
-  ReportPeriod,
 } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { UtilisationReportRawCsvData } from '../../../../../types/utilisation-reports';
-import { feeRecordCsvRowToSqlEntity } from '../../../../../helpers';
+import { feeRecordCsvRowToSqlEntity, getPreviousReportPeriod } from '../../../../../helpers';
 import { calculateInitialUtilisationAndFixedFee } from '../helpers';
 
 type ReportUploadedEventPayload = {
@@ -24,17 +23,18 @@ type ReportUploadedEventPayload = {
 /**
  * Creates a new facility utilisation data entity by id if an entity does not exist
  * if it does not exist:
+ * gets the previous report period as it should not be the same as the current report period
  * calculates the initial utilisation and fixed fee
  * creates a new facility utilisation data entity with the calculated values
  * @param facilityId - The facility id
- * @param reportPeriod - The report period
+ * @param report - The report
  * @param requestSource - The request source
  * @param entityManager - The entity manager
  * @returns The new facility utilisation data entity
  */
 const createFacilityUtilisationDataEntityIfNotExists = async (
   facilityId: string,
-  reportPeriod: ReportPeriod,
+  report: UtilisationReportEntity,
   requestSource: DbRequestSource,
   entityManager: EntityManager,
 ): Promise<FacilityUtilisationDataEntity | null> => {
@@ -43,11 +43,15 @@ const createFacilityUtilisationDataEntityIfNotExists = async (
     return null;
   }
 
+  const { bankId } = report;
+
+  const previousReportPeriod = await getPreviousReportPeriod(bankId, report);
+
   const { utilisation, fixedFee } = await calculateInitialUtilisationAndFixedFee(facilityId);
 
   return FacilityUtilisationDataEntity.create({
     id: facilityId,
-    reportPeriod,
+    reportPeriod: previousReportPeriod,
     requestSource,
     utilisation,
     fixedFee,
@@ -89,7 +93,7 @@ export const handleUtilisationReportReportUploadedEvent = async (
   );
   const facilityUtilisationDataEntities = await Promise.all(
     uniqueReportCsvDataFacilityIds.map((facilityId) =>
-      createFacilityUtilisationDataEntityIfNotExists(facilityId, report.reportPeriod, requestSource, transactionEntityManager),
+      createFacilityUtilisationDataEntityIfNotExists(facilityId, report, requestSource, transactionEntityManager),
     ),
   );
 
