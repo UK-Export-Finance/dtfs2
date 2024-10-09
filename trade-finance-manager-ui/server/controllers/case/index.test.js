@@ -116,7 +116,7 @@ describe('controllers - case', () => {
           );
         });
 
-        it('should render the remplate with hasDraftCancellation=true when cancellation object non-empty', async () => {
+        it('should render the template with hasDraftCancellation=true when the cancellation object is not empty', async () => {
           jest.mocked(isDealCancellationEnabled).mockReturnValueOnce(true);
           jest.mocked(api.getDealCancellation).mockReturnValueOnce({ reason: 'a reason' });
 
@@ -130,7 +130,7 @@ describe('controllers - case', () => {
           );
         });
 
-        it('should render the remplate with hasDraftCancellation=false when cancellation object empty', async () => {
+        it('should render the template with hasDraftCancellation=false when the cancellation object is empty', async () => {
           jest.mocked(isDealCancellationEnabled).mockReturnValueOnce(true);
           jest.mocked(api.getDealCancellation).mockReturnValueOnce({});
 
