@@ -2,12 +2,12 @@ import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
 import { app } from '../../src/createApp';
 import { api } from '../api';
-import { UKEF_ID, ESTORE_CRON_STATUS } from '../../src/constants';
+import { UKEF_ID, ESTORE_CRON_STATUS, ESTORE_SITE_STATUS } from '../../src/constants';
 import { Estore, EstoreAxiosResponse } from '../../src/interfaces';
 
 const { post } = api(app);
 
-const { APIM_ESTORE_URL } = process.env;
+const { APIM_ESTORE_URL, EXTERNAL_API_URL } = process.env;
 
 const payload: Estore = {
   dealId: '6597dffeb5ef5ff4267e5044',
@@ -43,19 +43,37 @@ jest.mock('../../src/database/mongo-client', () => ({
   })),
 }));
 
-const mockExporterResponse = {
-  siteId: 'test',
-  status: 'Created',
+// Mock GovNotify email
+const mockSuccessfulEmailResponse = {
+  status: HttpStatusCode.Created,
+  data: {
+    content: {
+      body: 'Dear John Smith,\r\n\r\nThe status of your MIA for EuroStar has been updated.\r\n\r\nEmail: test@test.gov.uk\r\nPhone: +44 (0)202 123 4567\r\nOpening times: Monday to Friday, 9am to 5pm (excluding public holidays)',
+      from_email: 'test@notifications.service.gov.uk',
+      subject: 'Status update: EuroStar bridge',
+      unsubscribe_link: null,
+    },
+    id: 'efd12345-1234-5678-9012-ee123456789f',
+    reference: 'tmp1234-1234-5678-9012-abcd12345678-17133465334678',
+    scheduled_for: null,
+    template: {
+      id: 'tmp1234-1234-5678-9012-abcd12345678',
+      uri: 'https://api.notifications.service.gov.uk/services/abc12345-a123-4567-8901-123456789012/templates/tmp1234-1234-5678-9012-abcd12345678',
+      version: 24,
+    },
+    uri: 'https://api.notifications.service.gov.uk/v2/notifications/efd12345-1234-5678-9012-ee123456789f',
+  },
 };
 
-const mockApiResponse = {
-  status: HttpStatusCode.Ok,
+axiosMock.onPost(`${EXTERNAL_API_URL}/email`).reply(HttpStatusCode.Created, mockSuccessfulEmailResponse.data);
+
+const mockExporterResponse = {
+  siteId: 'ukef',
+  status: ESTORE_SITE_STATUS.CREATED,
 };
 
 // mocks test for estore if exists
-axiosMock.onPost(`${APIM_ESTORE_URL}site/sites?exporterName=testName`).reply(HttpStatusCode.Ok, mockExporterResponse);
-const estoreSitesRegex = new RegExp(`${APIM_ESTORE_URL}sites/.+`);
-axiosMock.onPost(estoreSitesRegex).reply(HttpStatusCode.Ok, mockApiResponse);
+axiosMock.onGet(`${APIM_ESTORE_URL}/sites?exporterName=testName`).reply(HttpStatusCode.Ok, mockExporterResponse);
 
 describe('/estore', () => {
   describe('Empty payload', () => {
@@ -136,6 +154,17 @@ describe('/estore', () => {
     beforeEach(() => {
       mockFindOne.mockReset();
       mockInsertOne.mockReset();
+    });
+
+    it('Should return 500 for a new deal payload with site neither created, nor pending and absent', async () => {
+      const unknownSite = {
+        ...payload,
+        exporterName: 'invalid-site-status',
+      };
+
+      const { status } = await post(unknownSite).to('/estore');
+
+      expect(status).toEqual(HttpStatusCode.InternalServerError);
     });
 
     it('Should return 201 for a new deal payload', async () => {
