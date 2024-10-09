@@ -123,7 +123,7 @@ describe('users routes', () => {
 
       const result = await loginWithSignInLink(req, res);
 
-      expect(result).toBe('mock result');
+      expect(result).toEqual('mock result');
     });
   });
 

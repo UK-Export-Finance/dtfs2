@@ -51,8 +51,8 @@ describe('controllers/utilisation-reports/keying-data', () => {
       await postKeyingData(req, res);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}#keying-sheet`);
-      expect(res._isEndCalled()).toBe(true);
+      expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}#keying-sheet`);
+      expect(res._isEndCalled()).toEqual(true);
     });
 
     it('renders the problem-with-service page when an error occurs', async () => {
@@ -68,7 +68,7 @@ describe('controllers/utilisation-reports/keying-data', () => {
       await postKeyingData(req, res);
 
       // Assert
-      expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
+      expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
       expect(res._getRenderData()).toEqual({ user: requestSession.user });
     });
   });
@@ -103,8 +103,8 @@ describe('controllers/utilisation-reports/keying-data', () => {
 
       // Assert
       expect(api.markKeyingDataAsDone).toHaveBeenCalledWith(reportId, [123, 456], user, userToken);
-      expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}#keying-sheet`);
-      expect(res._isEndCalled()).toBe(true);
+      expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}#keying-sheet`);
+      expect(res._isEndCalled()).toEqual(true);
     });
 
     it('does not mark any fees as done and redirects to keying sheet when none of the selected checkboxes are for rows with status TO_DO', async () => {
@@ -121,8 +121,8 @@ describe('controllers/utilisation-reports/keying-data', () => {
 
       // Assert
       expect(api.markKeyingDataAsDone).not.toHaveBeenCalled();
-      expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}#keying-sheet`);
-      expect(res._isEndCalled()).toBe(true);
+      expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}#keying-sheet`);
+      expect(res._isEndCalled()).toEqual(true);
     });
 
     it('renders the problem-with-service page when an error occurs', async () => {
@@ -139,7 +139,7 @@ describe('controllers/utilisation-reports/keying-data', () => {
       await postKeyingDataMarkAsDone(req, res);
 
       // Assert
-      expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
+      expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
       expect(res._getRenderData()).toEqual({ user: requestSession.user });
     });
   });
@@ -174,8 +174,8 @@ describe('controllers/utilisation-reports/keying-data', () => {
 
       // Assert
       expect(api.markKeyingDataAsToDo).toHaveBeenCalledWith(reportId, [123, 789], user, userToken);
-      expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}#keying-sheet`);
-      expect(res._isEndCalled()).toBe(true);
+      expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}#keying-sheet`);
+      expect(res._isEndCalled()).toEqual(true);
     });
 
     it('does not mark any fees as to do and redirects to keying sheet when none of the selected checkboxes are for rows with status DONE', async () => {
@@ -192,8 +192,8 @@ describe('controllers/utilisation-reports/keying-data', () => {
 
       // Assert
       expect(api.markKeyingDataAsToDo).not.toHaveBeenCalled();
-      expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}#keying-sheet`);
-      expect(res._isEndCalled()).toBe(true);
+      expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}#keying-sheet`);
+      expect(res._isEndCalled()).toEqual(true);
     });
 
     it('renders the problem-with-service page when an error occurs', async () => {
@@ -210,7 +210,7 @@ describe('controllers/utilisation-reports/keying-data', () => {
       await postKeyingDataMarkAsToDo(req, res);
 
       // Assert
-      expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
+      expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
       expect(res._getRenderData()).toEqual({ user: requestSession.user });
     });
   });

@@ -52,11 +52,11 @@ describe('isVerifiedPayloadByType', () => {
 
   it.each(successTestCases)('should return true $description', ({ payload, template }) => {
     const result = isVerifiedPayloadByType({ payload, template });
-    expect(result).toBe(true);
+    expect(result).toEqual(true);
   });
 
   it.each(failureTestCases)('should return false $description', ({ payload, template }) => {
     const result = isVerifiedPayloadByType({ payload, template });
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 });

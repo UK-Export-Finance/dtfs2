@@ -6,12 +6,12 @@ describe('UserBlockedError', () => {
   it('exposes the userId in a formatted message', () => {
     const exception = new UserBlockedError(userId);
 
-    expect(exception.message).toBe(`User blocked: ${userId}`);
+    expect(exception.message).toEqual(`User blocked: ${userId}`);
   });
 
   it('exposes the name of the exception', () => {
     const exception = new UserBlockedError(userId);
 
-    expect(exception.name).toBe('UserBlockedError');
+    expect(exception.name).toEqual('UserBlockedError');
   });
 });

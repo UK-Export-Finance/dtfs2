@@ -48,7 +48,7 @@ describe('getDeals()', () => {
 
     const response = await api.getDeals(queryParams, token);
 
-    expect(mockAxios.history.get.length).toBe(1);
+    expect(mockAxios.history.get.length).toEqual(1);
     expect(response).toEqual({
       deals: [
         { _id: 1, name: 'Deal 1' },
@@ -71,7 +71,7 @@ describe('getDeals()', () => {
 
     const errorResponse = api.getDeals(queryParams, token);
 
-    expect(mockAxios.history.get.length).toBe(1);
+    expect(mockAxios.history.get.length).toEqual(1);
     await expect(errorResponse).rejects.toThrow(new PageOutOfBoundsError('Requested page number exceeds the maximum page number'));
   });
 });
@@ -107,7 +107,7 @@ describe('getFacilities()', () => {
 
     const response = await api.getFacilities(queryParams, token);
 
-    expect(mockAxios.history.get.length).toBe(1);
+    expect(mockAxios.history.get.length).toEqual(1);
     expect(response).toEqual({
       facilities: [
         { facilityId: 1, name: 'Facility 1' },
@@ -130,7 +130,7 @@ describe('getFacilities()', () => {
 
     const errorResponse = api.getFacilities(queryParams, token);
 
-    expect(mockAxios.history.get.length).toBe(1);
+    expect(mockAxios.history.get.length).toEqual(1);
     await expect(errorResponse).rejects.toThrow(new PageOutOfBoundsError('Requested page number exceeds the maximum page number'));
   });
 });

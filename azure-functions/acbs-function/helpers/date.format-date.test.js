@@ -97,6 +97,6 @@ describe('formatDate', () => {
   it.each(testData)('$description ($mockValue to $expected)', ({ mockValue, expected }) => {
     const result = formatDate(mockValue);
 
-    expect(result).toBe(expected);
+    expect(result).toEqual(expected);
   });
 });

@@ -27,7 +27,7 @@ describe('parseValidatedAddPaymentFormValues', () => {
     const parsedFormValues = parseValidatedAddPaymentFormValues(formValues);
 
     // Assert
-    expect(parsedFormValues.paymentCurrency).toBe(paymentCurrency);
+    expect(parsedFormValues.paymentCurrency).toEqual(paymentCurrency);
   });
 
   it('returns an object containing the supplied payment reference', () => {
@@ -42,7 +42,7 @@ describe('parseValidatedAddPaymentFormValues', () => {
     const parsedFormValues = parseValidatedAddPaymentFormValues(formValues);
 
     // Assert
-    expect(parsedFormValues.paymentReference).toBe(paymentReference);
+    expect(parsedFormValues.paymentReference).toEqual(paymentReference);
   });
 
   it('parses the supplied payment date to a date object', () => {
@@ -80,7 +80,7 @@ describe('parseValidatedAddPaymentFormValues', () => {
     const parsedFormValues = parseValidatedAddPaymentFormValues(formValues);
 
     // Assert
-    expect(parsedFormValues.paymentAmount).toBe(paymentAmount);
+    expect(parsedFormValues.paymentAmount).toEqual(paymentAmount);
   });
 
   it('parses the supplied payment amount to a number when the amount does not contain any commas but has decimals', () => {
@@ -97,7 +97,7 @@ describe('parseValidatedAddPaymentFormValues', () => {
     const parsedFormValues = parseValidatedAddPaymentFormValues(formValues);
 
     // Assert
-    expect(parsedFormValues.paymentAmount).toBe(paymentAmount);
+    expect(parsedFormValues.paymentAmount).toEqual(paymentAmount);
   });
 
   it('parses the supplied payment amount to a number when the amount does not contain decimals but has commas', () => {
@@ -114,7 +114,7 @@ describe('parseValidatedAddPaymentFormValues', () => {
     const parsedFormValues = parseValidatedAddPaymentFormValues(formValues);
 
     // Assert
-    expect(parsedFormValues.paymentAmount).toBe(paymentAmount);
+    expect(parsedFormValues.paymentAmount).toEqual(paymentAmount);
   });
 
   it('parses the supplied payment amount to a number when the amount contains commas and decimals', () => {
@@ -131,7 +131,7 @@ describe('parseValidatedAddPaymentFormValues', () => {
     const parsedFormValues = parseValidatedAddPaymentFormValues(formValues);
 
     // Assert
-    expect(parsedFormValues.paymentAmount).toBe(paymentAmount);
+    expect(parsedFormValues.paymentAmount).toEqual(paymentAmount);
   });
 });
 
@@ -147,7 +147,7 @@ describe('parseValidatedEditPaymentFormValues', () => {
     const result = parseValidatedEditPaymentFormValues(validatedFormValues);
 
     // Assert
-    expect(result.paymentAmount).toBe(314.59);
+    expect(result.paymentAmount).toEqual(314.59);
   });
 
   it('sets the datePaymentReceived field to a date matching the supplied paymentDate object', () => {
@@ -179,7 +179,7 @@ describe('parseValidatedEditPaymentFormValues', () => {
     const result = parseValidatedEditPaymentFormValues(validatedFormValues);
 
     // Assert
-    expect(result.paymentReference).toBe('A payment reference');
+    expect(result.paymentReference).toEqual('A payment reference');
   });
 
   it('sets the paymentReference field to null when the supplied paymentReference is undefined', () => {

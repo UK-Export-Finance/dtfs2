@@ -10,7 +10,7 @@ describe('error-helper', () => {
     const result = isParentNotFoundError(error);
 
     // Assert
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it.each`
@@ -27,7 +27,7 @@ describe('error-helper', () => {
     const result = isParentNotFoundError(error);
 
     // Assert
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it(`returns true when errorCode is '${AZURE_STORAGE_SHARE_ERROR_CODE.PARENT_NOT_FOUND}'`, () => {
@@ -39,6 +39,6 @@ describe('error-helper', () => {
     const result = isParentNotFoundError(error);
 
     // Assert
-    expect(result).toBe(true);
+    expect(result).toEqual(true);
   });
 });

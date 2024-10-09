@@ -105,29 +105,29 @@ describe('controllers/dashboard/filters - helpers', () => {
     });
 
     it('handles boolean values', () => {
-      expect(formatFieldValue(true)).toBe('true');
-      expect(formatFieldValue(false)).toBe('false');
+      expect(formatFieldValue(true)).toEqual('true');
+      expect(formatFieldValue(false)).toEqual('false');
     });
 
     it('returns null for null or undefined values', () => {
-      expect(formatFieldValue(null)).toBe(null);
-      expect(formatFieldValue(undefined)).toBe(null);
+      expect(formatFieldValue(null)).toEqual(null);
+      expect(formatFieldValue(undefined)).toEqual(null);
     });
 
     it('returns null for empty string', () => {
-      expect(formatFieldValue('')).toBe(null);
+      expect(formatFieldValue('')).toEqual(null);
     });
 
     it('returns null for numeric zero', () => {
-      expect(formatFieldValue(0)).toBe(null);
+      expect(formatFieldValue(0)).toEqual(null);
     });
 
     it('handles numeric non-zero values', () => {
-      expect(formatFieldValue(123)).toBe('123');
+      expect(formatFieldValue(123)).toEqual('123');
     });
 
     it('handles NaN values', () => {
-      expect(formatFieldValue(NaN)).toBe(null);
+      expect(formatFieldValue(NaN)).toEqual(null);
     });
   });
 

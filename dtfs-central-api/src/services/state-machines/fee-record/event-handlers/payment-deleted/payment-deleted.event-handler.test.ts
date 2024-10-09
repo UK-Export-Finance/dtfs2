@@ -24,7 +24,7 @@ describe('handleFeeRecordPaymentDeletedEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.status).toBe('MATCH');
+    expect(feeRecord.status).toEqual('MATCH');
   });
 
   it("sets the fee record status to 'DOES_NOT_MATCH' when the event payload 'feeRecordsAndPaymentsMatch' is false and 'hasAttachedPayments' is true", async () => {
@@ -40,7 +40,7 @@ describe('handleFeeRecordPaymentDeletedEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.status).toBe('DOES_NOT_MATCH');
+    expect(feeRecord.status).toEqual('DOES_NOT_MATCH');
   });
 
   it("sets the fee record status to 'TO_DO' when the event payload 'feeRecordsAndPaymentsMatch' is false and 'hasAttachedPayments' is false", async () => {
@@ -56,7 +56,7 @@ describe('handleFeeRecordPaymentDeletedEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.status).toBe('TO_DO');
+    expect(feeRecord.status).toEqual('TO_DO');
   });
 
   it("throws an error when the event payload 'feeRecordsAndPaymentsMatch' is true and 'hasAttachedPayments' is false", async () => {
@@ -95,8 +95,8 @@ describe('handleFeeRecordPaymentDeletedEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
-    expect(feeRecord.lastUpdatedByTfmUserId).toBe('123');
+    expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
+    expect(feeRecord.lastUpdatedByTfmUserId).toEqual('123');
     expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
   });
 });

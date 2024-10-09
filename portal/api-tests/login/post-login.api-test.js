@@ -84,7 +84,7 @@ describe('POST /login', () => {
 
     it('returns a 403', async () => {
       const { status } = await loginWith({ email: anEmail, password: aPassword });
-      expect(status).toBe(403);
+      expect(status).toEqual(403);
     });
   });
 
@@ -107,7 +107,7 @@ describe('POST /login', () => {
     it('redirects the user to the check-your-email page if the sign in link is sent successfully', async () => {
       const { status, headers } = await loginWith({ email: anEmail, password: aPassword });
 
-      expect(status).toBe(302);
+      expect(status).toEqual(302);
       expect(headers).toHaveProperty('location', '/login/check-your-email');
     });
 
@@ -116,7 +116,7 @@ describe('POST /login', () => {
 
       const { status, headers } = await loginWith({ email: anEmail, password: aPassword });
 
-      expect(status).toBe(302);
+      expect(status).toEqual(302);
       expect(headers).toHaveProperty('location', '/login/check-your-email');
     });
 
@@ -127,7 +127,7 @@ describe('POST /login', () => {
 
       const { status } = await loginWith({ email: anEmail, password: aPassword });
 
-      expect(status).toBe(403);
+      expect(status).toEqual(403);
     });
   });
 });

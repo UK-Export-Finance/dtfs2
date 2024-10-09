@@ -8,7 +8,7 @@ describe('amendment-status.schema', () => {
       const { success } = AmendmentStatusSchema.safeParse(status);
 
       // Assert
-      expect(success).toBe(true);
+      expect(success).toEqual(true);
     });
 
     it("sets the 'success' property to false when the amendment status is invalid", () => {
@@ -19,7 +19,7 @@ describe('amendment-status.schema', () => {
       const { success } = AmendmentStatusSchema.safeParse(invalidStatus);
 
       // Assert
-      expect(success).toBe(false);
+      expect(success).toEqual(false);
     });
 
     it("sets the 'data' property to the parsed amendment status", () => {
@@ -30,7 +30,7 @@ describe('amendment-status.schema', () => {
       const { data } = AmendmentStatusSchema.safeParse(status);
 
       // Assert
-      expect(data).toBe(status);
+      expect(data).toEqual(status);
     });
   });
 });

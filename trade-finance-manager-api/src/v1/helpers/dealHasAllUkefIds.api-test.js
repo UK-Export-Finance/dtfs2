@@ -101,8 +101,8 @@ describe('dealHasAllValidUkefIds function', () => {
   // Tests that the function returns false if deal not found
   it('should test deal not found', async () => {
     const result = await dealHasAllValidUkefIds('invalid deal id');
-    expect(result.status).toBe(false);
-    expect(result.message).toBe('TFM Deal not found');
+    expect(result.status).toEqual(false);
+    expect(result.message).toEqual('TFM Deal not found');
   });
 
   // Tests that the function returns false if dealSnapshot or facilities are missing
@@ -118,13 +118,13 @@ describe('dealHasAllValidUkefIds function', () => {
 
     const result = await dealHasAllValidUkefIds(mockDeal._id);
 
-    expect(result.status).toBe(false);
+    expect(result.status).toEqual(false);
   });
 
   // Tests that the function returns false if  DEAL_TYPE is not GEF and ukefDealId is missing
   it('should test missing ukef deal id', async () => {
     const result = await dealHasAllValidUkefIds(MOCK_DEAL._id);
 
-    expect(result.status).toBe(true);
+    expect(result.status).toEqual(true);
   });
 });

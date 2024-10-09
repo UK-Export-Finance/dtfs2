@@ -8,7 +8,7 @@ describe('DatabaseError', () => {
     const exception = new DatabaseError(message);
 
     // Assert
-    expect(exception.message).toBe(message);
+    expect(exception.message).toEqual(message);
   });
 
   it('is an instance of DatabaseError', () => {

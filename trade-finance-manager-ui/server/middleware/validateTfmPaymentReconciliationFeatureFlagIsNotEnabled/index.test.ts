@@ -22,7 +22,7 @@ describe('validateTfmPaymentReconciliationFeatureFlagIsNotEnabled', () => {
     validateTfmPaymentReconciliationFeatureFlagIsNotEnabled(req, res, next);
 
     // Assert
-    expect(res._getRedirectUrl()).toBe('/not-found');
+    expect(res._getRedirectUrl()).toEqual('/not-found');
     expect(next).not.toHaveBeenCalled();
   });
 
@@ -37,7 +37,7 @@ describe('validateTfmPaymentReconciliationFeatureFlagIsNotEnabled', () => {
     validateTfmPaymentReconciliationFeatureFlagIsNotEnabled(req, res, next);
 
     // Assert
-    expect(res._isEndCalled()).toBe(false);
+    expect(res._isEndCalled()).toEqual(false);
     expect(next).toHaveBeenCalled();
   });
 });
