@@ -8,7 +8,7 @@ describe('currency.schema', () => {
       const { success } = CurrencySchema.safeParse(currency);
 
       // Assert
-      expect(success).toBe(true);
+      expect(success).toEqual(true);
     });
 
     it("sets the 'success' property to false when the currency is invalid", () => {
@@ -19,7 +19,7 @@ describe('currency.schema', () => {
       const { success } = CurrencySchema.safeParse(invalidCurrency);
 
       // Assert
-      expect(success).toBe(false);
+      expect(success).toEqual(false);
     });
 
     it("sets the 'data' property to the parsed currency", () => {
@@ -30,7 +30,7 @@ describe('currency.schema', () => {
       const { data } = CurrencySchema.safeParse(currency);
 
       // Assert
-      expect(data).toBe(currency);
+      expect(data).toEqual(currency);
     });
   });
 });

@@ -35,7 +35,7 @@ describe('calculatePrincipalBalanceAdjustment', () => {
       const result = calculatePrincipalBalanceAdjustment(feeRecord, facilityUtilisationData);
 
       // Assert
-      expect(result).toBe(expectedDifference);
+      expect(result).toEqual(expectedDifference);
     },
   );
 });

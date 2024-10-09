@@ -9,7 +9,7 @@ import {
   mapKeyingSheetToKeyingSheetViewModel,
   mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel,
 } from '../helpers';
-import { UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
+import { PaymentDetailsViewModel, UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 import { PremiumPaymentsGroup } from '../../../api-response-types';
 import { extractQueryAndSessionData } from './extract-query-and-session-data';
 
@@ -92,9 +92,14 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
 
     const keyingSheetViewModel = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
 
-    const paymentDetailsViewModel = mapPaymentDetailsGroupsToPaymentDetailsViewModel(paymentDetails);
-
     const paymentDetailsFiltersViewModel = mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel(paymentDetailsFilters);
+
+    const paymentDetailsViewModel: PaymentDetailsViewModel = {
+      rows: mapPaymentDetailsGroupsToPaymentDetailsViewModel(paymentDetails),
+      filters: paymentDetailsFiltersViewModel,
+      filterErrors: paymentDetailsFilterErrors,
+      isFilterActive: isPaymentDetailsFilterActive,
+    };
 
     return renderUtilisationReportReconciliationForReport(res, {
       user,
@@ -107,11 +112,8 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       premiumPaymentsTableDataError,
       enablePaymentsReceivedSorting,
       premiumPayments: premiumPaymentsViewModel,
-      keyingSheet: keyingSheetViewModel,
       paymentDetails: paymentDetailsViewModel,
-      paymentDetailsFilters: paymentDetailsFiltersViewModel,
-      paymentDetailsFilterErrors,
-      isPaymentDetailsFilterActive,
+      keyingSheet: keyingSheetViewModel,
     });
   } catch (error) {
     console.error(`Failed to render utilisation report with id ${reportId}`, error);

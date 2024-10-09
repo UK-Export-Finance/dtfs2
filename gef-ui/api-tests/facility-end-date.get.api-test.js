@@ -79,7 +79,7 @@ describe('facility end date routes', () => {
         const response = await getWithSessionCookie(url, sessionCookie);
 
         // Assert
-        expect(response.status).toBe(200);
+        expect(response.status).toEqual(200);
       });
 
       it('redirects the user to the previous page if the deal is version 0', async () => {
@@ -91,8 +91,8 @@ describe('facility end date routes', () => {
         const response = await getWithSessionCookie(url, sessionCookie);
 
         // Assert
-        expect(response.status).toBe(302);
-        expect(response.headers.location).toBe(previousPageUrl);
+        expect(response.status).toEqual(302);
+        expect(response.headers.location).toEqual(previousPageUrl);
       });
 
       it('redirects the user to the previous page if version is 1 & isUsingFacilityEndDate is null ', async () => {
@@ -104,8 +104,8 @@ describe('facility end date routes', () => {
         const response = await getWithSessionCookie(url, sessionCookie);
 
         // Assert
-        expect(response.status).toBe(302);
-        expect(response.headers.location).toBe(previousPageUrl);
+        expect(response.status).toEqual(302);
+        expect(response.headers.location).toEqual(previousPageUrl);
       });
 
       it('redirects the user to the previous page if version is 1 & isUsingFacilityEndDate is false', async () => {
@@ -117,8 +117,8 @@ describe('facility end date routes', () => {
         const response = await getWithSessionCookie(url, sessionCookie);
 
         // Assert
-        expect(response.status).toBe(302);
-        expect(response.headers.location).toBe(previousPageUrl);
+        expect(response.status).toEqual(302);
+        expect(response.headers.location).toEqual(previousPageUrl);
       });
     });
   });

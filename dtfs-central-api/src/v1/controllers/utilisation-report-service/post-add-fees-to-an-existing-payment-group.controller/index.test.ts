@@ -92,7 +92,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       await postAddFeesToAnExistingPaymentGroup(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
     });
 
     it("responds with a '404' if no payments are found with the supplied payment IDs", async () => {
@@ -109,7 +109,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       await postAddFeesToAnExistingPaymentGroup(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.NotFound);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
     });
 
     it("responds with a '400' if no fee records belong to the first payment in the payment group", async () => {
@@ -129,7 +129,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       await postAddFeesToAnExistingPaymentGroup(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
     });
 
     it("responds with a '400' if all of the supplied fee record ids already belong to the payment group.", async () => {
@@ -149,7 +149,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       await postAddFeesToAnExistingPaymentGroup(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
     });
 
     it("responds with a '400' if the fee records payment currency does not equal the payment group currency", async () => {
@@ -181,7 +181,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       await postAddFeesToAnExistingPaymentGroup(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
       expect(res._getData()).toContain('The selected fee records payment currency does not match that of the payment group.');
     });
 
@@ -200,7 +200,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       await postAddFeesToAnExistingPaymentGroup(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(errorStatus);
+      expect(res._getStatusCode()).toEqual(errorStatus);
     });
 
     it("responds with the specific error message if saving the report throws an 'ApiError'", async () => {
@@ -218,7 +218,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       await postAddFeesToAnExistingPaymentGroup(req, res);
 
       // Assert
-      expect(res._getData()).toBe(`Failed to add fees to an existing payment group: ${errorMessage}`);
+      expect(res._getData()).toEqual(`Failed to add fees to an existing payment group: ${errorMessage}`);
     });
 
     it(`responds with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, async () => {
@@ -235,7 +235,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       await postAddFeesToAnExistingPaymentGroup(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
     });
 
     it('responds with a generic error message if an unknown error occurs', async () => {
@@ -252,7 +252,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       await postAddFeesToAnExistingPaymentGroup(req, res);
 
       // Assert
-      expect(res._getData()).toBe('Failed to add fees to an existing payment group');
+      expect(res._getData()).toEqual('Failed to add fees to an existing payment group');
     });
   });
 });

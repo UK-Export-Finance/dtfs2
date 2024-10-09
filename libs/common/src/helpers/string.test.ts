@@ -13,7 +13,7 @@ describe('string helpers', () => {
       ${''}                                 | ${true}
       ${'a string'}                         | ${true}
     `('returns $expected when the value is $value', ({ value, expected }: { value: unknown; expected: boolean }) => {
-      expect(isString(value)).toBe(expected);
+      expect(isString(value)).toEqual(expected);
     });
   });
 
@@ -28,7 +28,7 @@ describe('string helpers', () => {
       ${' string'} | ${false}
       ${'string '} | ${false}
     `('returns $expected when the value is $value', ({ value, expected }: { value: unknown; expected: boolean }) => {
-      expect(isNullUndefinedOrEmptyString(value)).toBe(expected);
+      expect(isNullUndefinedOrEmptyString(value)).toEqual(expected);
     });
   });
 
@@ -43,7 +43,7 @@ describe('string helpers', () => {
       ${' string'} | ${true}
       ${'string '} | ${true}
     `('returns $expected when the value is $value', ({ value, expected }: { value: unknown; expected: boolean }) => {
-      expect(isNonEmptyString(value)).toBe(expected);
+      expect(isNonEmptyString(value)).toEqual(expected);
     });
   });
 });

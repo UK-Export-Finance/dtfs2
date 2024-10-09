@@ -40,7 +40,7 @@ describe('calculateFixedFeeAdjustment', () => {
       });
 
       // Assert
-      expect(result).toBe(4536.99); // 100000 * (5 / 100) * 0.9 * 368 / 365 = 4,536.98630... = 4,536.99 (ROUNDED)
+      expect(result).toEqual(4536.99); // 100000 * (5 / 100) * 0.9 * 368 / 365 = 4,536.98630... = 4,536.99 (ROUNDED)
     });
   });
 
@@ -68,7 +68,7 @@ describe('calculateFixedFeeAdjustment', () => {
       });
 
       // Assert
-      expect(result).toBe(5326.03); // 100000 * (5 / 100) * 0.9 * 432 / 365 = 5,326.02739... = 5,326.03 (ROUNDED)
+      expect(result).toEqual(5326.03); // 100000 * (5 / 100) * 0.9 * 432 / 365 = 5,326.02739... = 5,326.03 (ROUNDED)
     });
   });
 });

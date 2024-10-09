@@ -31,12 +31,12 @@ describe('canSubmissionTypeBeCancelled', () => {
   it.each([AIN, MIN])('returns true when deal submission type is %s', (submissionType) => {
     const result = canSubmissionTypeBeCancelled(submissionType);
 
-    expect(result).toBe(true);
+    expect(result).toEqual(true);
   });
 
   it(`returns false when deal submission type is ${MIA}`, () => {
     const result = canSubmissionTypeBeCancelled(MIA);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 });

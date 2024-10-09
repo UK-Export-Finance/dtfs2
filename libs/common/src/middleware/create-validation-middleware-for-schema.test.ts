@@ -62,8 +62,8 @@ describe('createValidationMiddleware', () => {
 
       // Assert
       expect(next).not.toHaveBeenCalled();
-      expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-      expect(res._isEndCalled()).toBe(true);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
+      expect(res._isEndCalled()).toEqual(true);
     });
 
     it('formats and logs the validation errors', () => {
@@ -109,7 +109,7 @@ describe('createValidationMiddleware', () => {
 
       // Assert
       expect(next).toHaveBeenCalled();
-      expect(res._isEndCalled()).toBe(false);
+      expect(res._isEndCalled()).toEqual(false);
       expect(req.body).toEqual(parsedData);
     });
   });

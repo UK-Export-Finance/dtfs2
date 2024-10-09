@@ -160,10 +160,10 @@
 {% endset %}
 
 {% set paymentDetailsHtml %}
-  {% if paymentDetailsFilterErrors.errorSummary | length %}
+  {% if paymentDetails.filterErrors.errorSummary | length %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
-      errorList: paymentDetailsFilterErrors.errorSummary,
+      errorList: paymentDetails.filterErrors.errorSummary,
       attributes: {
         'data-cy': 'payment-details-error-summary'
       }
@@ -172,25 +172,25 @@
 
   <h2 class="govuk-heading-l" data-cy="payment-details-heading">Payment details</h2>
 
-  {% if paymentDetails.length === 0 and isPaymentDetailsFilterActive === false %}
+  {% if paymentDetails.rows.length === 0 and paymentDetails.isFilterActive === false %}
     <p class="govuk-body" data-cy="payment-details-no-payments-text">Payment details will be displayed when payments have been entered on the premium payments tab.</p>
   {% else %}
     <div class="moj-filter-layout">
 
       {{ paymentDetailsFiltersPanel.render({
-        filters: paymentDetailsFilters,
-        selectedFilters: paymentDetailsSelectedFilters,
-        errors: paymentDetailsFilterErrors,
+        filters: paymentDetails.filters,
+        selectedFilters: paymentDetails.selectedFilters,
+        errors: paymentDetails.filterErrors,
         reportId: reportId
       }) }}
 
       <div class="moj-filter-layout__content">
 
         {{ paymentDetailsFiltersActionBar.render({
-          selectedFilters: paymentDetailsSelectedFilters
+          selectedFilters: paymentDetails.selectedFilters
         }) }}
 
-        {% if paymentDetails.length === 0 and isPaymentDetailsFilterActive === true %}
+        {% if paymentDetails.rows.length === 0 and paymentDetails.isFilterActive %}
 
           <p class="govuk-body" data-cy="payment-details-no-records-matching-filters-text">There are no records matching the search criteria</p>
 
@@ -202,7 +202,7 @@
 
               {{ paymentDetailsTable.render({
                 reportId: reportId,
-                paymentDetails: paymentDetails,
+                paymentDetails: paymentDetails.rows,
                 userCanEdit: userCanEdit
               }) }}
 

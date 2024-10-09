@@ -8,8 +8,8 @@ import {
   KeyingSheetAdjustmentViewModel,
   KeyingSheetViewModel,
   PaymentDetailsPaymentViewModel,
-  PaymentDetailsViewModel,
   PaymentViewModelItem,
+  PaymentDetailsRowViewModel,
 } from '../../../types/view-models';
 import { DATE_FORMAT } from '../../../constants';
 import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
@@ -244,7 +244,7 @@ export const getFormattedDateReconciled = (dateReconciled: IsoDateTimeStamp | un
  * @param paymentDetailsGroups - The payment details groups
  * @returns The payment details view model
  */
-export const mapPaymentDetailsGroupsToPaymentDetailsViewModel = (paymentDetailsGroups: PaymentDetails[]): PaymentDetailsViewModel => {
+export const mapPaymentDetailsGroupsToPaymentDetailsViewModel = (paymentDetailsGroups: PaymentDetails[]): PaymentDetailsRowViewModel[] => {
   // Flatten the groups to a list of payments with the date reconciled of the group existing on
   // the payment which can be used to determine the sort orders for the columns with custom sorting
   const allPaymentsWithDateReconciled = paymentDetailsGroups.reduce(
@@ -274,7 +274,7 @@ export const mapPaymentDetailsGroupsToPaymentDetailsViewModel = (paymentDetailsG
   );
 
   // Construct and return payment details view models for each payment in each group
-  return paymentDetailsGroups.reduce((paymentDetails, { feeRecords, payment, status: paymentDetailsGroupStatus, reconciledByUser, dateReconciled }) => {
+  return paymentDetailsGroups.reduce((paymentDetails, { feeRecords, payment, status, reconciledByUser, dateReconciled }) => {
     if (!payment) {
       return paymentDetails;
     }
@@ -283,13 +283,13 @@ export const mapPaymentDetailsGroupsToPaymentDetailsViewModel = (paymentDetailsG
     return [
       ...paymentDetails,
       {
-        paymentDetailsGroupStatus,
         payment: mapPaymentToPaymentDetailsPaymentViewModel(
           payment,
           paymentIdToAmountDataSortValueMap[payment.id],
           paymentIdToDateReceivedDataSortValueMap[payment.id],
         ),
         feeRecords: mappedFeeRecords,
+        status,
         reconciledBy: getFormattedReconciledByUser(reconciledByUser),
         dateReconciled: {
           formattedDateReconciled: getFormattedDateReconciled(dateReconciled),
@@ -297,7 +297,7 @@ export const mapPaymentDetailsGroupsToPaymentDetailsViewModel = (paymentDetailsG
         },
       },
     ];
-  }, [] as PaymentDetailsViewModel);
+  }, [] as PaymentDetailsRowViewModel[]);
 };
 
 /**

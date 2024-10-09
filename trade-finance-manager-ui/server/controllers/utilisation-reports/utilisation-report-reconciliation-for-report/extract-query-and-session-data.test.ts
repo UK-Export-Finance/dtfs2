@@ -33,7 +33,7 @@ describe('extractQueryAndSessionData', () => {
         const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
 
         // Assert
-        expect(result.premiumPaymentsFilters.facilityId).toBe(PREMIUM_PAYMENTS_FACILITY_ID_QUERY);
+        expect(result.premiumPaymentsFilters.facilityId).toEqual(PREMIUM_PAYMENTS_FACILITY_ID_QUERY);
       });
 
       it('should validate premiumPaymentsFacilityId and return any errors as premiumPaymentsFilterErrors', () => {
@@ -94,7 +94,7 @@ describe('extractQueryAndSessionData', () => {
         const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
 
         // Assert
-        expect(result.paymentDetailsFilters.facilityId).toBe(PAYMENT_DETAILS_FACILITY_ID_QUERY);
+        expect(result.paymentDetailsFilters.facilityId).toEqual(PAYMENT_DETAILS_FACILITY_ID_QUERY);
       });
 
       it('should set isPaymentDetailsFilterActive to true', () => {
@@ -108,7 +108,7 @@ describe('extractQueryAndSessionData', () => {
         const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
 
         // Assert
-        expect(result.isPaymentDetailsFilterActive).toBe(true);
+        expect(result.isPaymentDetailsFilterActive).toEqual(true);
       });
 
       it('should validate paymentDetailsFacilityId and return any errors as paymentDetailsFilterErrors', () => {
@@ -146,7 +146,7 @@ describe('extractQueryAndSessionData', () => {
         const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
 
         // Assert
-        expect(result.paymentDetailsFilters.paymentCurrency).toBe(PAYMENT_DETAILS_PAYMENT_CURRENCY_QUERY);
+        expect(result.paymentDetailsFilters.paymentCurrency).toEqual(PAYMENT_DETAILS_PAYMENT_CURRENCY_QUERY);
       });
 
       it('should set isPaymentDetailsFilterActive to true', () => {
@@ -160,7 +160,7 @@ describe('extractQueryAndSessionData', () => {
         const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
 
         // Assert
-        expect(result.isPaymentDetailsFilterActive).toBe(true);
+        expect(result.isPaymentDetailsFilterActive).toEqual(true);
       });
 
       it('should validate paymentDetailsPaymentCurrency and return any errors as paymentDetailsFilterErrors', () => {
@@ -198,7 +198,7 @@ describe('extractQueryAndSessionData', () => {
         const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
 
         // Assert
-        expect(result.paymentDetailsFilters.paymentReference).toBe(PAYMENT_DETAILS_PAYMENT_REFERENCE_QUERY);
+        expect(result.paymentDetailsFilters.paymentReference).toEqual(PAYMENT_DETAILS_PAYMENT_REFERENCE_QUERY);
       });
 
       it('should set isPaymentDetailsFilterActive to true', () => {
@@ -212,7 +212,7 @@ describe('extractQueryAndSessionData', () => {
         const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
 
         // Assert
-        expect(result.isPaymentDetailsFilterActive).toBe(true);
+        expect(result.isPaymentDetailsFilterActive).toEqual(true);
       });
 
       it('should validate paymentDetailsPaymentReference and return any errors as paymentDetailsFilterErrors', () => {
@@ -252,9 +252,9 @@ describe('extractQueryAndSessionData', () => {
         const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
 
         // Assert
-        expect(result.paymentDetailsFilters.facilityId).toBe(PAYMENT_DETAILS_FACILITY_ID_QUERY);
-        expect(result.paymentDetailsFilters.paymentCurrency).toBe(PAYMENT_DETAILS_PAYMENT_CURRENCY_QUERY);
-        expect(result.paymentDetailsFilters.paymentReference).toBe(PAYMENT_DETAILS_PAYMENT_REFERENCE_QUERY);
+        expect(result.paymentDetailsFilters.facilityId).toEqual(PAYMENT_DETAILS_FACILITY_ID_QUERY);
+        expect(result.paymentDetailsFilters.paymentCurrency).toEqual(PAYMENT_DETAILS_PAYMENT_CURRENCY_QUERY);
+        expect(result.paymentDetailsFilters.paymentReference).toEqual(PAYMENT_DETAILS_PAYMENT_REFERENCE_QUERY);
       });
 
       it('should set isPaymentDetailsFilterActive to true when extracting multiple filters', () => {
@@ -270,7 +270,7 @@ describe('extractQueryAndSessionData', () => {
         const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
 
         // Assert
-        expect(result.isPaymentDetailsFilterActive).toBe(true);
+        expect(result.isPaymentDetailsFilterActive).toEqual(true);
       });
     });
   });
@@ -287,9 +287,9 @@ describe('extractQueryAndSessionData', () => {
       const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
 
       // Assert
-      expect(result.isCheckboxChecked([1])).toBe(true);
-      expect(result.isCheckboxChecked([2, 3])).toBe(true);
-      expect(result.isCheckboxChecked([4])).toBe(false);
+      expect(result.isCheckboxChecked([1])).toEqual(true);
+      expect(result.isCheckboxChecked([2, 3])).toEqual(true);
+      expect(result.isCheckboxChecked([4])).toEqual(false);
     });
   });
 
@@ -309,9 +309,9 @@ describe('extractQueryAndSessionData', () => {
 
       // Assert
       expect(handleRedirectSessionData).toHaveBeenCalledWith({});
-      expect(result.isCheckboxChecked([1])).toBe(true);
-      expect(result.isCheckboxChecked([2, 3])).toBe(true);
-      expect(result.isCheckboxChecked([4])).toBe(false);
+      expect(result.isCheckboxChecked([1])).toEqual(true);
+      expect(result.isCheckboxChecked([2, 3])).toEqual(true);
+      expect(result.isCheckboxChecked([4])).toEqual(false);
     });
   });
 });

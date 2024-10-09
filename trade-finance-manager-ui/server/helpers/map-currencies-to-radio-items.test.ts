@@ -1,4 +1,5 @@
 import { CURRENCY } from '@ukef/dtfs2-common';
+import { aCurrencyRadioItem } from '../../test-helpers/currency-radio-item';
 import { mapCurrenciesToRadioItems } from './map-currencies-to-radio-items';
 
 describe('map currencies to radio items helper', () => {
@@ -11,38 +12,10 @@ describe('map currencies to radio items helper', () => {
         // Assert
         expect(currencyRadioItems.length).toBe(Object.values(CURRENCY).length);
         expect(currencyRadioItems).toEqual([
-          {
-            text: CURRENCY.GBP,
-            value: CURRENCY.GBP,
-            checked: false,
-            attributes: {
-              'data-cy': 'currency-GBP',
-            },
-          },
-          {
-            text: CURRENCY.EUR,
-            value: CURRENCY.EUR,
-            checked: false,
-            attributes: {
-              'data-cy': 'currency-EUR',
-            },
-          },
-          {
-            text: CURRENCY.USD,
-            value: CURRENCY.USD,
-            checked: false,
-            attributes: {
-              'data-cy': 'currency-USD',
-            },
-          },
-          {
-            text: CURRENCY.JPY,
-            value: CURRENCY.JPY,
-            checked: false,
-            attributes: {
-              'data-cy': 'currency-JPY',
-            },
-          },
+          aCurrencyRadioItem({ currency: CURRENCY.GBP, checked: false }),
+          aCurrencyRadioItem({ currency: CURRENCY.EUR, checked: false }),
+          aCurrencyRadioItem({ currency: CURRENCY.USD, checked: false }),
+          aCurrencyRadioItem({ currency: CURRENCY.JPY, checked: false }),
         ]);
       });
     });
@@ -57,38 +30,10 @@ describe('map currencies to radio items helper', () => {
 
         // Assert
         expect(currencyRadioItems).toEqual([
-          {
-            text: CURRENCY.GBP,
-            value: CURRENCY.GBP,
-            checked: true,
-            attributes: {
-              'data-cy': 'currency-GBP',
-            },
-          },
-          {
-            text: CURRENCY.EUR,
-            value: CURRENCY.EUR,
-            checked: false,
-            attributes: {
-              'data-cy': 'currency-EUR',
-            },
-          },
-          {
-            text: CURRENCY.USD,
-            value: CURRENCY.USD,
-            checked: false,
-            attributes: {
-              'data-cy': 'currency-USD',
-            },
-          },
-          {
-            text: CURRENCY.JPY,
-            value: CURRENCY.JPY,
-            checked: false,
-            attributes: {
-              'data-cy': 'currency-JPY',
-            },
-          },
+          aCurrencyRadioItem({ currency: CURRENCY.GBP, checked: true }),
+          aCurrencyRadioItem({ currency: CURRENCY.EUR, checked: false }),
+          aCurrencyRadioItem({ currency: CURRENCY.USD, checked: false }),
+          aCurrencyRadioItem({ currency: CURRENCY.JPY, checked: false }),
         ]);
       });
     });
@@ -102,7 +47,7 @@ describe('map currencies to radio items helper', () => {
         const currencyRadioItems = mapCurrenciesToRadioItems(checkedCurrency);
 
         // Assert
-        expect(currencyRadioItems.every((currency) => !currency.checked)).toBe(true);
+        expect(currencyRadioItems.every((currency) => !currency.checked)).toEqual(true);
       });
     });
   });

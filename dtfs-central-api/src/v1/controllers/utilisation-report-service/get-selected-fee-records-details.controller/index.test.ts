@@ -41,7 +41,7 @@ describe('get selected fee records details controller', () => {
     // Assert
     expect(findReportSpy).toHaveBeenCalledTimes(1);
     expect(findReportSpy).toHaveBeenCalledWith(REPORT_ID, [1, 2]);
-    expect(res._getStatusCode()).toBe(HttpStatusCode.NotFound);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
   });
 
   it('responds with a 400 when the requested fee records have differing payment currencies', async () => {
@@ -57,7 +57,7 @@ describe('get selected fee records details controller', () => {
     await getSelectedFeeRecordDetails(req, res);
 
     // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
     expect(res._getData()).toEqual(expect.stringContaining('Selected fee records must all have the same payment currency'));
   });
 
@@ -69,7 +69,7 @@ describe('get selected fee records details controller', () => {
     await getSelectedFeeRecordDetails(req, res);
 
     // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
     expect(res._getData()).toEqual(expect.stringContaining('No fee records selected'));
   });
 
@@ -85,7 +85,7 @@ describe('get selected fee records details controller', () => {
     await getSelectedFeeRecordDetails(req, res);
 
     // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
     expect(res._getData()).toEqual(expect.stringContaining('All selected fee records must belong to the requested report'));
   });
 
@@ -129,7 +129,7 @@ describe('get selected fee records details controller', () => {
     // Assert
     expect(getBankNameById).toHaveBeenCalledWith('999');
     expect(findReportSpy).toHaveBeenCalledWith(REPORT_ID, [1, 2]);
-    expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
     expect(res._getData()).toEqual<SelectedFeeRecordsDetails>({
       reportPeriod,
       totalReportedPayments: { currency: 'GBP', amount: 300 },

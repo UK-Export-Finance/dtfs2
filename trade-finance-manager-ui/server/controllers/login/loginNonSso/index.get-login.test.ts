@@ -27,7 +27,7 @@ describe('controllers - login (sso)', () => {
         getLogin(req, res);
 
         // Assert
-        expect(res._getRenderView()).toBe('login.njk');
+        expect(res._getRenderView()).toEqual('login.njk');
         expect(res._getRenderData()).toStrictEqual({ user: requestSession.user });
       });
     });
@@ -50,7 +50,7 @@ describe('controllers - login (sso)', () => {
         getLogin(req, res);
 
         // Assert
-        expect(res._getRenderView()).toBe('login.njk');
+        expect(res._getRenderView()).toEqual('login.njk');
         expect(res._getRenderData()).toStrictEqual({ user: requestSession.user });
       });
     });

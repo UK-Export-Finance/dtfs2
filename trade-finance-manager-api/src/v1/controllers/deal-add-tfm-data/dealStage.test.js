@@ -8,7 +8,7 @@ describe('dealStage', () => {
 
     const result = dealStage(status, submissionType);
 
-    expect(result).toBe(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
+    expect(result).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
   });
 
   it('should return DEAL_STAGE_TFM.CONFIRMED when status is PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED and submissionType is AIN', () => {
@@ -17,7 +17,7 @@ describe('dealStage', () => {
 
     const result = dealStage(status, submissionType);
 
-    expect(result).toBe(CONSTANTS.DEALS.DEAL_STAGE_TFM.CONFIRMED);
+    expect(result).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.CONFIRMED);
   });
 
   it('should return DEAL_STAGE_TFM.CONFIRMED when status is PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED and submissionType is MIN', () => {
@@ -26,7 +26,7 @@ describe('dealStage', () => {
 
     const result = dealStage(status, submissionType);
 
-    expect(result).toBe(CONSTANTS.DEALS.DEAL_STAGE_TFM.CONFIRMED);
+    expect(result).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.CONFIRMED);
   });
 
   it('should return DEAL_STAGE_TFM.APPLICATION when status is PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED and submissionType is not AIN or MIN', () => {
@@ -35,7 +35,7 @@ describe('dealStage', () => {
 
     const result = dealStage(status, submissionType);
 
-    expect(result).toBe(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
+    expect(result).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
   });
 
   it('should return `Application` when status is not PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED and submissionType is not AIN or MIN', () => {
@@ -46,7 +46,7 @@ describe('dealStage', () => {
 
     const result = dealStage(status, submissionType);
 
-    expect(result).toBe(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
+    expect(result).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
     expect(console.info).toHaveBeenCalledWith(
       'Invalid deal stage with status %s and submission type %s, setting status to Application',
       status,
@@ -60,7 +60,7 @@ describe('dealStage', () => {
 
     const result = dealStage(status, submissionType);
 
-    expect(result).toBe(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
+    expect(result).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
   });
 
   it('should return `Application` when submissionType is null', () => {
@@ -69,7 +69,7 @@ describe('dealStage', () => {
 
     const result = dealStage(status, submissionType);
 
-    expect(result).toBe(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
+    expect(result).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
   });
 
   it('should return `Application` when status is not a string', () => {
@@ -78,7 +78,7 @@ describe('dealStage', () => {
 
     const result = dealStage(status, submissionType);
 
-    expect(result).toBe(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
+    expect(result).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
   });
 
   it('should return `Application` when submissionType is not a string', () => {
@@ -87,7 +87,7 @@ describe('dealStage', () => {
 
     const result = dealStage(status, submissionType);
 
-    expect(result).toBe(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
+    expect(result).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
   });
 
   it('should return `Application` when status is an empty string', () => {
@@ -96,6 +96,6 @@ describe('dealStage', () => {
 
     const result = dealStage(status, submissionType);
 
-    expect(result).toBe(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
+    expect(result).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION);
   });
 });

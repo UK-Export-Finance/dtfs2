@@ -300,7 +300,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const result = filterer(group);
 
         // Assert
-        expect(result).toBe(true);
+        expect(result).toEqual(true);
       });
     });
 
@@ -319,7 +319,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const result = filterer(group);
 
         // Assert
-        expect(result).toBe(true);
+        expect(result).toEqual(true);
       });
     });
 
@@ -338,7 +338,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const result = filterer(group);
 
         // Assert
-        expect(result).toBe(false);
+        expect(result).toEqual(false);
       });
     });
   });
@@ -359,7 +359,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const result = filterer(group);
 
         // Assert
-        expect(result).toBe(true);
+        expect(result).toEqual(true);
       });
     });
 
@@ -378,7 +378,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const result = filterer(group);
 
         // Assert
-        expect(result).toBe(false);
+        expect(result).toEqual(false);
       });
     });
   });
@@ -402,7 +402,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const result = filterer(group);
 
         // Assert
-        expect(result).toBe(true);
+        expect(result).toEqual(true);
       });
     });
 
@@ -424,7 +424,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const result = filterer(group);
 
         // Assert
-        expect(result).toBe(true);
+        expect(result).toEqual(true);
       });
     });
 
@@ -446,7 +446,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const result = filterer(group);
 
         // Assert
-        expect(result).toBe(false);
+        expect(result).toEqual(false);
       });
     });
   });

@@ -75,9 +75,9 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
 
     // Assert
     expect(mockSave).toHaveBeenCalledWith(PaymentEntity, payment);
-    expect(payment.amount).toBe(newPaymentAmount);
-    expect(payment.dateReceived).toBe(newDatePaymentReceived);
-    expect(payment.reference).toBe(newPaymentReference);
+    expect(payment.amount).toEqual(newPaymentAmount);
+    expect(payment.dateReceived).toEqual(newDatePaymentReceived);
+    expect(payment.reference).toEqual(newPaymentReference);
   });
 
   it('calls the fee record state machine event handler for each fee record in the payload', async () => {
@@ -210,9 +210,9 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
 
     // Assert
     expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, utilisationReport);
-    expect(utilisationReport.lastUpdatedByIsSystemUser).toBe(false);
+    expect(utilisationReport.lastUpdatedByIsSystemUser).toEqual(false);
     expect(utilisationReport.lastUpdatedByPortalUserId).toBeNull();
-    expect(utilisationReport.lastUpdatedByTfmUserId).toBe(tfmUserId);
+    expect(utilisationReport.lastUpdatedByTfmUserId).toEqual(tfmUserId);
   });
 
   function aSetOfPayloadPaymentValues() {

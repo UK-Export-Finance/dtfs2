@@ -39,8 +39,8 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       await getUtilisationReportReconciliationDetailsById(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
-      expect(res._getData()).toBe(utilisationReportReconciliationDetailsResponse);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+      expect(res._getData()).toEqual(utilisationReportReconciliationDetailsResponse);
     });
 
     it('fetches report with the premium payments tab filters query param when provided', async () => {
@@ -96,8 +96,8 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       await getUtilisationReportReconciliationDetailsById(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(errorStatus);
-      expect(res._getData()).toBe(`Failed to get utilisation report reconciliation details for report with id '${reportId}': ${axiosError.message}`);
+      expect(res._getStatusCode()).toEqual(errorStatus);
+      expect(res._getData()).toEqual(`Failed to get utilisation report reconciliation details for report with id '${reportId}': ${axiosError.message}`);
     });
 
     it('responds with a 500 when an unexpected error occurs', async () => {
@@ -110,8 +110,8 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       await getUtilisationReportReconciliationDetailsById(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-      expect(res._getData()).toBe(`Failed to get utilisation report reconciliation details for report with id '${reportId}'`);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+      expect(res._getData()).toEqual(`Failed to get utilisation report reconciliation details for report with id '${reportId}'`);
     });
   });
 });

@@ -34,11 +34,9 @@ describe(page, () => {
     enablePaymentsReceivedSorting: false,
     premiumPayments: [],
     keyingSheet: [],
-    paymentDetails: [],
-    paymentDetailsFilterErrors: {
-      errorSummary: [],
+    paymentDetails: {
+      rows: [],
     },
-    isPaymentDetailsFilterActive: false,
   };
 
   const getWrapper = (viewModel: UtilisationReportReconciliationForReportViewModel = params) => render(viewModel);
@@ -239,8 +237,8 @@ describe(page, () => {
   });
 
   describe('payment details tab', () => {
-    it('should render the payment details tab with headings and text when the payment details array is empty', () => {
-      const wrapper = getWrapper({ ...params, paymentDetails: [] });
+    it('should render the payment details tab with headings and text when the payment details rows array is empty', () => {
+      const wrapper = getWrapper({ ...params, paymentDetails: { rows: [], isFilterActive: false } });
       const paymentDetailsTabSelector = 'div#payment-details';
 
       wrapper.expectText(`${paymentDetailsTabSelector} h2[data-cy="payment-details-heading"]`).toRead('Payment details');
@@ -250,8 +248,8 @@ describe(page, () => {
       wrapper.expectElement(`${paymentDetailsTabSelector} p[data-cy="payment-details-no-records-matching-filters-text"]`).notToExist();
     });
 
-    it('should render the payment details tab with headings and no records matching filters text when the payment details array is empty and the filter is active', () => {
-      const wrapper = getWrapper({ ...params, paymentDetails: [], isPaymentDetailsFilterActive: true });
+    it('should render the payment details tab with headings and no records matching filters text when the payment details rows array is empty and the filter is active', () => {
+      const wrapper = getWrapper({ ...params, paymentDetails: { rows: [], isFilterActive: true } });
       const paymentDetailsTabSelector = 'div#payment-details';
 
       wrapper.expectText(`${paymentDetailsTabSelector} h2[data-cy="payment-details-heading"]`).toRead('Payment details');
@@ -264,20 +262,22 @@ describe(page, () => {
     it('should render the payment details tab with headings (without text), the filters panel and the table when there are payment details', () => {
       const wrapper = getWrapper({
         ...params,
-        paymentDetails: [
-          {
-            payment: {
-              id: 1,
-              amount: { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 0 },
-              dateReceived: { formattedDateReceived: '1 Jan 2024', dataSortValue: 0 },
-              reference: undefined,
+        paymentDetails: {
+          rows: [
+            {
+              payment: {
+                id: 1,
+                amount: { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 0 },
+                dateReceived: { formattedDateReceived: '1 Jan 2024', dataSortValue: 0 },
+                reference: undefined,
+              },
+              feeRecords: [{ id: 1, facilityId: '12345678', exporter: 'Test exporter' }],
+              status: FEE_RECORD_STATUS.DOES_NOT_MATCH,
+              reconciledBy: '-',
+              dateReconciled: { formattedDateReconciled: '-', dataSortValue: 0 },
             },
-            feeRecords: [{ id: 1, facilityId: '12345678', exporter: 'Test exporter' }],
-            paymentDetailsGroupStatus: FEE_RECORD_STATUS.DOES_NOT_MATCH,
-            reconciledBy: '-',
-            dateReconciled: { formattedDateReconciled: '-', dataSortValue: 0 },
-          },
-        ],
+          ],
+        },
       });
       const paymentDetailsTabSelector = 'div#payment-details';
 
@@ -293,11 +293,14 @@ describe(page, () => {
     it('should render error summary when present', () => {
       const wrapper = getWrapper({
         ...params,
-        paymentDetailsFilterErrors: {
-          errorSummary: [
-            { text: "You've done something wrong", href: '#id' },
-            { text: "You've done another thing wrong", href: '#other' },
-          ],
+        paymentDetails: {
+          rows: [],
+          filterErrors: {
+            errorSummary: [
+              { text: "You've done something wrong", href: '#id' },
+              { text: "You've done another thing wrong", href: '#other' },
+            ],
+          },
         },
       });
 
