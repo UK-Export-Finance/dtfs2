@@ -40,7 +40,7 @@ describe('postPayment', () => {
   });
 
   beforeEach(() => {
-    jest.mocked(api.addPaymentToFeeRecords).mockResolvedValue({});
+    jest.mocked(api.addPaymentToFeeRecords).mockResolvedValue({ feeRecordStatus: FEE_RECORD_STATUS.MATCH });
   });
 
   it('adds a payment to the fee records', async () => {
