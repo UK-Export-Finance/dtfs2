@@ -3,7 +3,7 @@ import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
 import { aTfmSessionUser } from '../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { CancelCancellationViewModel } from '../../../types/view-models';
-import { getCancelCancellation, CancelCancellationRequest } from './cancel-cancellation.controller';
+import { getCancelCancellation, GetCancelCancellationRequest } from './cancel-cancellation.controller';
 import api from '../../../api';
 
 jest.mock('../../../api', () => ({
@@ -23,7 +23,7 @@ describe('getCancelCancellation', () => {
     // Arrange
     jest.mocked(api.getDeal).mockResolvedValue(undefined);
 
-    const { req, res } = createMocks<CancelCancellationRequest>({
+    const { req, res } = createMocks<GetCancelCancellationRequest>({
       params: { _id: dealId },
       session: {
         user: mockUser,
@@ -42,7 +42,7 @@ describe('getCancelCancellation', () => {
     // Arrange
     jest.mocked(api.getDeal).mockResolvedValue({ status: 400, data: 'Invalid deal id' });
 
-    const { req, res } = createMocks<CancelCancellationRequest>({
+    const { req, res } = createMocks<GetCancelCancellationRequest>({
       params: { _id: dealId },
       session: {
         user: mockUser,
@@ -61,7 +61,7 @@ describe('getCancelCancellation', () => {
     // Arrange
     jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: DEAL_SUBMISSION_TYPE.MIA } });
 
-    const { req, res } = createMocks<CancelCancellationRequest>({
+    const { req, res } = createMocks<GetCancelCancellationRequest>({
       params: { _id: dealId },
       session: {
         user: mockUser,
@@ -83,7 +83,7 @@ describe('getCancelCancellation', () => {
       // Arrange
       jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: validDealType } });
 
-      const { req, res } = createMocks<CancelCancellationRequest>({
+      const { req, res } = createMocks<GetCancelCancellationRequest>({
         params: { _id: dealId },
         session: {
           user: mockUser,
