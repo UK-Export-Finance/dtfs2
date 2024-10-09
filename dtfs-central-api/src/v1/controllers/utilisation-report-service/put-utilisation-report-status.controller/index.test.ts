@@ -64,7 +64,7 @@ describe('put-utilisation-report-status.controller', () => {
     await putUtilisationReportStatus(req, res);
 
     // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
     expect(res._getData()).toEqual("Failed to update utilisation report statuses: Request body item 'user' supplied does not match required format");
     expect(executeWithSqlTransaction).not.toHaveBeenCalled();
   });
@@ -83,7 +83,7 @@ describe('put-utilisation-report-status.controller', () => {
     await putUtilisationReportStatus(req, res);
 
     // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
     expect(res._getData()).toEqual(
       "Failed to update utilisation report statuses: Request body item 'reportsWithStatus' supplied does not match required format",
     );
@@ -117,14 +117,14 @@ describe('put-utilisation-report-status.controller', () => {
       await putUtilisationReportStatus(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
       expect(mockSave).toHaveBeenCalledTimes(reportsWithStatusForMarkingAsCompleted.length);
 
       existingReports.forEach((report) => {
-        expect(report.status).toBe(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED);
-        expect(report.lastUpdatedByIsSystemUser).toBe(false);
+        expect(report.status).toEqual(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED);
+        expect(report.lastUpdatedByIsSystemUser).toEqual(false);
         expect(report.lastUpdatedByPortalUserId).toBeNull();
-        expect(report.lastUpdatedByTfmUserId).toBe(userId);
+        expect(report.lastUpdatedByTfmUserId).toEqual(userId);
         expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
       });
     });
@@ -149,7 +149,7 @@ describe('put-utilisation-report-status.controller', () => {
         await putUtilisationReportStatus(req, res);
 
         // Assert
-        expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+        expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
         expect(res._getData()).toEqual(
           `Failed to update utilisation report statuses: Event type 'MANUALLY_SET_COMPLETED' is invalid for 'UtilisationReportEntity' (ID: '${reportWithStatus.reportId}') in state '${reportStatus}'`,
         );
@@ -193,15 +193,15 @@ describe('put-utilisation-report-status.controller', () => {
       await putUtilisationReportStatus(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
       expect(mockSave).toHaveBeenCalledTimes(reportsWithStatusForMarkingAsNotCompleted.length);
 
       existingReports.forEach((report, index) => {
         const expectedStatus = reportsWithStatusForMarkingAsNotCompleted[index].status;
-        expect(report.status).toBe(expectedStatus);
-        expect(report.lastUpdatedByIsSystemUser).toBe(false);
+        expect(report.status).toEqual(expectedStatus);
+        expect(report.lastUpdatedByIsSystemUser).toEqual(false);
         expect(report.lastUpdatedByPortalUserId).toBeNull();
-        expect(report.lastUpdatedByTfmUserId).toBe(userId);
+        expect(report.lastUpdatedByTfmUserId).toEqual(userId);
         expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
       });
     });
@@ -226,7 +226,7 @@ describe('put-utilisation-report-status.controller', () => {
         await putUtilisationReportStatus(req, res);
 
         // Assert
-        expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+        expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
         expect(res._getData()).toEqual(
           `Failed to update utilisation report statuses: Event type 'MANUALLY_SET_INCOMPLETE' is invalid for 'UtilisationReportEntity' (ID: '${reportWithStatus.reportId}') in state '${reportStatus}'`,
         );

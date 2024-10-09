@@ -30,7 +30,7 @@ describe('controllers - login (sso)', () => {
       await postLogin(req, res);
 
       // Assert
-      expect(res._getRenderView()).toBe('login.njk');
+      expect(res._getRenderView()).toEqual('login.njk');
       expect(res._getRenderData()).toStrictEqual({
         errors: {
           errorSummary: [
@@ -66,7 +66,7 @@ describe('controllers - login (sso)', () => {
       await postLogin(req, res);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe('/home');
+      expect(res._getRedirectUrl()).toEqual('/home');
     });
   });
 });

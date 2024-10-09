@@ -135,8 +135,8 @@ describe('handleUtilisationReportRemoveFeesFromPaymentGroupEvent', () => {
 
     // Assert
     expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, utilisationReport);
-    expect(utilisationReport.lastUpdatedByIsSystemUser).toBe(false);
+    expect(utilisationReport.lastUpdatedByIsSystemUser).toEqual(false);
     expect(utilisationReport.lastUpdatedByPortalUserId).toBeNull();
-    expect(utilisationReport.lastUpdatedByTfmUserId).toBe(tfmUserId);
+    expect(utilisationReport.lastUpdatedByTfmUserId).toEqual(tfmUserId);
   });
 });

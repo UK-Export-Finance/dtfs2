@@ -72,7 +72,7 @@ describe('InvalidParameterError', () => {
     const error = new InvalidParameterError(parameterName, parameterValue);
 
     // Assert
-    expect(error.status).toBe(HttpStatusCode.BadRequest);
+    expect(error.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it('exposes the name of the exception', () => {

@@ -107,11 +107,11 @@ describe('getKeyingSheetForReportId', () => {
 
     // Assert
     expect(keyingSheet).toHaveLength(1);
-    expect(keyingSheet[0].feeRecordId).toBe(12);
-    expect(keyingSheet[0].status).toBe(KEYING_SHEET_ROW_STATUS.TO_DO);
-    expect(keyingSheet[0].facilityId).toBe('11111111');
-    expect(keyingSheet[0].exporter).toBe('Test exporter 1');
-    expect(keyingSheet[0].baseCurrency).toBe('GBP');
+    expect(keyingSheet[0].feeRecordId).toEqual(12);
+    expect(keyingSheet[0].status).toEqual(KEYING_SHEET_ROW_STATUS.TO_DO);
+    expect(keyingSheet[0].facilityId).toEqual('11111111');
+    expect(keyingSheet[0].exporter).toEqual('Test exporter 1');
+    expect(keyingSheet[0].baseCurrency).toEqual('GBP');
     expect(keyingSheet[0].fixedFeeAdjustment).toEqual({ change: 'INCREASE', amount: 1234.56 });
     expect(keyingSheet[0].principalBalanceAdjustment).toEqual({ change: 'INCREASE', amount: 9876543.21 });
   });
@@ -201,9 +201,9 @@ describe('getKeyingSheetForReportId', () => {
     // Assert
     expect(keyingSheet).toHaveLength(1);
     expect(keyingSheet[0].feePayments).toHaveLength(3);
-    expect(keyingSheet[0].feePayments[0].amount).toBe(1000);
-    expect(keyingSheet[0].feePayments[1].amount).toBe(2000);
-    expect(keyingSheet[0].feePayments[2].amount).toBe(3000);
+    expect(keyingSheet[0].feePayments[0].amount).toEqual(1000);
+    expect(keyingSheet[0].feePayments[1].amount).toEqual(2000);
+    expect(keyingSheet[0].feePayments[2].amount).toEqual(3000);
   });
 
   it('sets the keying sheet row fee payment currency and date received to the corresponding payment value', async () => {
@@ -242,11 +242,11 @@ describe('getKeyingSheetForReportId', () => {
     // Assert
     expect(keyingSheet).toHaveLength(1);
     expect(keyingSheet[0].feePayments).toHaveLength(3);
-    expect(keyingSheet[0].feePayments[0].currency).toBe('GBP');
+    expect(keyingSheet[0].feePayments[0].currency).toEqual('GBP');
     expect(keyingSheet[0].feePayments[0].dateReceived).toEqual(new Date('2021'));
-    expect(keyingSheet[0].feePayments[1].currency).toBe('USD');
+    expect(keyingSheet[0].feePayments[1].currency).toEqual('USD');
     expect(keyingSheet[0].feePayments[1].dateReceived).toEqual(new Date('2022'));
-    expect(keyingSheet[0].feePayments[2].currency).toBe('EUR');
+    expect(keyingSheet[0].feePayments[2].currency).toEqual('EUR');
     expect(keyingSheet[0].feePayments[2].dateReceived).toEqual(new Date('2023'));
   });
 
@@ -284,8 +284,8 @@ describe('getKeyingSheetForReportId', () => {
     // Assert
     expect(keyingSheet).toHaveLength(1);
     expect(keyingSheet[0].feePayments).toHaveLength(1);
-    expect(keyingSheet[0].feePayments[0].currency).toBe('GBP');
-    expect(keyingSheet[0].feePayments[0].amount).toBe(1000);
+    expect(keyingSheet[0].feePayments[0].currency).toEqual('GBP');
+    expect(keyingSheet[0].feePayments[0].amount).toEqual(1000);
     expect(keyingSheet[0].feePayments[0].dateReceived).toEqual(new Date('2021'));
   });
 
@@ -324,8 +324,8 @@ describe('getKeyingSheetForReportId', () => {
         // Assert
         expect(keyingSheet).toHaveLength(1);
         expect(keyingSheet[0].feePayments).toHaveLength(1);
-        expect(keyingSheet[0].feePayments[0].currency).toBe('EUR');
-        expect(keyingSheet[0].feePayments[0].amount).toBe(0);
+        expect(keyingSheet[0].feePayments[0].currency).toEqual('EUR');
+        expect(keyingSheet[0].feePayments[0].amount).toEqual(0);
         expect(keyingSheet[0].feePayments[0].dateReceived).toBeNull();
       },
     );
@@ -371,7 +371,7 @@ describe('getKeyingSheetForReportId', () => {
         // Assert
         expect(keyingSheet).toHaveLength(1);
         expect(keyingSheet[0].feePayments).toHaveLength(1);
-        expect(keyingSheet[0].feePayments[0].currency).toBe('GBP');
+        expect(keyingSheet[0].feePayments[0].currency).toEqual('GBP');
         expect(keyingSheet[0].feePayments[0].dateReceived).toEqual(new Date('2021'));
       },
     );
@@ -409,9 +409,9 @@ describe('getKeyingSheetForReportId', () => {
       // Assert
       expect(keyingSheet).toHaveLength(1);
       expect(keyingSheet[0].feePayments).toHaveLength(1);
-      expect(keyingSheet[0].feePayments[0].currency).toBe('GBP');
+      expect(keyingSheet[0].feePayments[0].currency).toEqual('GBP');
       expect(keyingSheet[0].feePayments[0].dateReceived).toBeNull();
-      expect(keyingSheet[0].feePayments[0].amount).toBe(0);
+      expect(keyingSheet[0].feePayments[0].amount).toEqual(0);
     });
   });
 

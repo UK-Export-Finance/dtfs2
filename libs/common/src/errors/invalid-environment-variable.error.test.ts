@@ -6,12 +6,12 @@ describe('InvalidEnvironmentVariableError', () => {
   it('exposes the message it was created with', () => {
     const exception = new InvalidEnvironmentVariableError(message);
 
-    expect(exception.message).toBe(message);
+    expect(exception.message).toEqual(message);
   });
 
   it('exposes the name of the exception', () => {
     const exception = new InvalidEnvironmentVariableError(message);
 
-    expect(exception.name).toBe('InvalidEnvironmentVariableError');
+    expect(exception.name).toEqual('InvalidEnvironmentVariableError');
   });
 });

@@ -23,7 +23,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     const response = await as(tokenUser).put(payload).to(url);
 
     // Assert
-    expect(response.status).toBe(400);
+    expect(response.status).toEqual(400);
   });
 
   it('should return a 400 status code if the body does not contain a user object', async () => {
@@ -36,7 +36,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     const response = await as(tokenUser).put(payload).to(url);
 
     // Assert
-    expect(response.status).toBe(400);
+    expect(response.status).toEqual(400);
   });
 
   it('should return a 400 status code if reportsWithStatus is not an array', async () => {
@@ -50,7 +50,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     const response = await as(tokenUser).put(payload).to(url);
 
     // Assert
-    expect(response.status).toBe(400);
+    expect(response.status).toEqual(400);
   });
 
   it('should return a 400 status code if reportsWithStatus array is empty', async () => {
@@ -64,7 +64,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     const response = await as(tokenUser).put(payload).to(url);
 
     // Assert
-    expect(response.status).toBe(400);
+    expect(response.status).toEqual(400);
   });
 
   it('should return a 400 status code if the reportsWithStatus array does not match the expected format', async () => {
@@ -82,7 +82,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     const response = await as(tokenUser).put(payload).to(url);
 
     // Assert
-    expect(response.status).toBe(400);
+    expect(response.status).toEqual(400);
   });
 
   it('should return a 204 if the payload has the correct format', async () => {
@@ -101,6 +101,6 @@ describe('/v1/utilisation-reports/set-status', () => {
     const response = await as(tokenUser).put(payload).to(url);
 
     // Assert
-    expect(response.status).toBe(204);
+    expect(response.status).toEqual(204);
   });
 });

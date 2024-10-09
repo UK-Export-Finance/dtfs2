@@ -45,7 +45,7 @@ describe('postBankRequestDate', () => {
     await postBankRequestDate(req, res);
 
     // Assert
-    expect(res._getRedirectUrl()).toBe(`/not-found`);
+    expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
 
   it('redirects to not found if the dealId is invalid', async () => {
@@ -64,7 +64,7 @@ describe('postBankRequestDate', () => {
     await postBankRequestDate(req, res);
 
     // Assert
-    expect(res._getRedirectUrl()).toBe(`/not-found`);
+    expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
 
   it('redirects to deal summary page if the submission type is invalid (MIA)', async () => {
@@ -83,7 +83,7 @@ describe('postBankRequestDate', () => {
     await postBankRequestDate(req, res);
 
     // Assert
-    expect(res._getRedirectUrl()).toBe(`/case/${dealId}/deal`);
+    expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
   });
 
   describe.each([DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN])('when the deal type is %s', (validDealType) => {
@@ -230,7 +230,7 @@ describe('postBankRequestDate', () => {
         await postBankRequestDate(req, res);
 
         // Assert
-        expect(res._getRedirectUrl()).toBe(`/case/${dealId}/cancellation/effective-from-date`);
+        expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/cancellation/effective-from-date`);
       });
     });
   });

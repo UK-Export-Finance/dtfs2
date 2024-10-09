@@ -26,7 +26,7 @@ describe('user routes', () => {
       jest.mocked(isTfmSsoFeatureFlagEnabled).mockReturnValue(true);
       jest.mocked(getUserSsoRouter).mockReturnValue('userSsoRouter' as unknown as Router);
 
-      expect(getUserRouter()).toBe('userSsoRouter');
+      expect(getUserRouter()).toEqual('userSsoRouter');
       expect(getUserSsoRouter).toHaveBeenCalledTimes(1);
       expect(getUserNonSsoRouter).not.toHaveBeenCalled();
     });
@@ -35,7 +35,7 @@ describe('user routes', () => {
       jest.mocked(isTfmSsoFeatureFlagEnabled).mockReturnValue(false);
       jest.mocked(getUserNonSsoRouter).mockReturnValue('userNonSsoRouter' as unknown as Router);
 
-      expect(getUserRouter()).toBe('userNonSsoRouter');
+      expect(getUserRouter()).toEqual('userNonSsoRouter');
       expect(getUserNonSsoRouter).toHaveBeenCalledTimes(1);
       expect(getUserSsoRouter).not.toHaveBeenCalled();
     });

@@ -16,7 +16,7 @@ describe('validateMongoId', () => {
 
     // Assert
     expect(mockNext).not.toHaveBeenCalled();
-    expect(mockRes._getRedirectUrl()).toBe('/not-found');
+    expect(mockRes._getRedirectUrl()).toEqual('/not-found');
   });
 
   it('calls the next middleware function when a valid MongoDB ID is provided', () => {

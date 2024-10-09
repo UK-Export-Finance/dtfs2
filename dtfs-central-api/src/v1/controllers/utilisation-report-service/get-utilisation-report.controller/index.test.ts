@@ -87,7 +87,7 @@ describe('getUtilisationReport', () => {
 
       // Assert
       expect(findOneBySpy).toHaveBeenCalledWith({ id: reportId });
-      expect(res._getStatusCode()).toBe(500);
+      expect(res._getStatusCode()).toEqual(500);
       expect(errorSpy).toHaveBeenCalledWith('Failed to map data - report seems to have been uploaded but is missing some required fields');
     });
 
@@ -117,7 +117,7 @@ describe('getUtilisationReport', () => {
       expect(findOneBySpy).toHaveBeenCalledWith({ id: reportId });
       expect(getUserById).toHaveBeenCalledWith(mockUtilisationReport.uploadedByUserId);
 
-      expect(res._getStatusCode()).toBe(200);
+      expect(res._getStatusCode()).toEqual(200);
 
       expect(res._getData()).toEqual<GetUtilisationReportResponse>({
         id: reportId,
@@ -152,7 +152,7 @@ describe('getUtilisationReport', () => {
       expect(findOneBySpy).toHaveBeenCalledWith({ id: reportId });
       expect(getUserById).not.toHaveBeenCalled();
 
-      expect(res._getStatusCode()).toBe(200);
+      expect(res._getStatusCode()).toEqual(200);
 
       expect(res._getData()).toEqual<GetUtilisationReportResponse>({
         id: reportId,

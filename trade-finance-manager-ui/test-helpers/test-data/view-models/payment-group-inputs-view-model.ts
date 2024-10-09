@@ -1,4 +1,4 @@
-import { PaymentGroupInputsViewModel } from '../../server/types/view-models';
+import { PaymentGroupInputsViewModel } from '../../../server/types/view-models';
 
 export const aPaymentGroupInputsViewModel = (): PaymentGroupInputsViewModel => [
   {

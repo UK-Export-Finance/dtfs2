@@ -2,10 +2,10 @@ import { isNonEmptyString } from '@ukef/dtfs2-common';
 import { ErrorSummaryViewModel } from '../../../types/view-models';
 import { REGEX } from '../../../constants';
 
-const FACILITY_ID_INPUT_ID = '#facility-id-filter';
+const FACILITY_ID_INPUT_ID = `#premium-payments-facility-id-filter`;
 
-export const validateFacilityIdQuery = (facilityIdQuery: string | undefined, originalUrl: string): ErrorSummaryViewModel | undefined => {
-  if (originalUrl.includes('?') && originalUrl.includes('facilityIdQuery')) {
+export const validateFacilityIdQuery = (originalUrl: string, facilityIdQuery?: string): ErrorSummaryViewModel | undefined => {
+  if (originalUrl.includes('?premiumPaymentsFacilityId')) {
     if (!isNonEmptyString(facilityIdQuery)) {
       return {
         text: 'Enter a facility ID',

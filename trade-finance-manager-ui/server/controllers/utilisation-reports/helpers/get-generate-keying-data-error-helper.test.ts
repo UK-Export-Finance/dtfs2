@@ -10,8 +10,8 @@ describe('get-generate-keying-data-error-helper', () => {
       const generateKeyingDataError = getGenerateKeyingDataError(addPaymentErrorKey);
 
       // Assert
-      expect(generateKeyingDataError.text).toBe('No matched fees to generate keying data with');
-      expect(generateKeyingDataError.href).toBe('#premium-payments-table');
+      expect(generateKeyingDataError.text).toEqual('No matched fees to generate keying data with');
+      expect(generateKeyingDataError.href).toEqual('#premium-payments-table');
     });
   });
 });

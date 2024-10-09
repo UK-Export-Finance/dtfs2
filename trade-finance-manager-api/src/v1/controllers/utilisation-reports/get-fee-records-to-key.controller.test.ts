@@ -64,8 +64,8 @@ describe('get-fee-records-to-key.controller', () => {
       await getFeeRecordsToKey(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-      expect(res._isEndCalled()).toBe(true);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+      expect(res._isEndCalled()).toEqual(true);
     });
 
     it('responds with a specific error code if an axios error is thrown', async () => {
@@ -81,8 +81,8 @@ describe('get-fee-records-to-key.controller', () => {
       await getFeeRecordsToKey(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(errorStatus);
-      expect(res._isEndCalled()).toBe(true);
+      expect(res._getStatusCode()).toEqual(errorStatus);
+      expect(res._isEndCalled()).toEqual(true);
     });
 
     it('responds with an error message', async () => {
@@ -95,8 +95,8 @@ describe('get-fee-records-to-key.controller', () => {
       await getFeeRecordsToKey(req, res);
 
       // Assert
-      expect(res._getData()).toBe('Failed to get fee records to key');
-      expect(res._isEndCalled()).toBe(true);
+      expect(res._getData()).toEqual('Failed to get fee records to key');
+      expect(res._isEndCalled()).toEqual(true);
     });
   });
 });

@@ -1,6 +1,6 @@
 import { BankRequestDateViewModel, BankRequestErrorsViewModel } from '../../../server/types/view-models';
 import { pageRenderer } from '../../pageRenderer';
-import { aBankRequestDateViewModel } from '../../../test-helpers/test-data/bank-request-date-view-model';
+import { aBankRequestDateViewModel } from '../../../test-helpers/test-data/view-models';
 
 const page = '../templates/case/cancellation/bank-request-date.njk';
 const render = pageRenderer(page);
@@ -28,7 +28,7 @@ describe(page, () => {
 
     // Assert
     wrapper.expectElement('[data-cy="cancel-link"]').toExist();
-    wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo(`/case/${dealId}/deal`, 'Cancel');
+    wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo(`/case/${dealId}/cancellation/cancel`, 'Cancel');
   });
 
   it('should render back link button linking to the deal cancellation reason page', () => {
