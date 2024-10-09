@@ -25,19 +25,19 @@ describe('convertUserFormDataToRequest', () => {
     it('should return true when isTrusted is "true"', () => {
       const user = { isTrusted: 'true' };
       const result = convertUserFormDataToRequest(user);
-      expect(result.isTrusted).toBe(true);
+      expect(result.isTrusted).toEqual(true);
     });
 
     it('should return false when isTrusted is "false"', () => {
       const user = { isTrusted: 'false' };
       const result = convertUserFormDataToRequest(user);
-      expect(result.isTrusted).toBe(false);
+      expect(result.isTrusted).toEqual(false);
     });
 
     it('should return undefined when isTrusted is undefined', () => {
       const user = {};
       const result = convertUserFormDataToRequest(user);
-      expect(result.isTrusted).toBe(undefined);
+      expect(result.isTrusted).toEqual(undefined);
     });
   });
 
@@ -45,13 +45,13 @@ describe('convertUserFormDataToRequest', () => {
     it('should return username as email', () => {
       const user = { email: 'example@ukexportfinance.gov.uk' };
       const result = convertUserFormDataToRequest(user);
-      expect(result.username).toBe('example@ukexportfinance.gov.uk');
+      expect(result.username).toEqual('example@ukexportfinance.gov.uk');
     });
 
     it('should return username as undefined when email is undefined', () => {
       const user = {};
       const result = convertUserFormDataToRequest(user);
-      expect(result.email).toBe(undefined);
+      expect(result.email).toEqual(undefined);
     });
   });
 });

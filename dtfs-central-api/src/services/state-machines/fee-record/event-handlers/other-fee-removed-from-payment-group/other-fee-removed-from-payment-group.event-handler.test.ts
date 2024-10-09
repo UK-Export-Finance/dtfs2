@@ -28,7 +28,7 @@ describe('handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.status).toBe(expectedStatus);
+      expect(feeRecord.status).toEqual(expectedStatus);
     },
   );
 
@@ -53,8 +53,8 @@ describe('handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
-    expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
+    expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
+    expect(feeRecord.lastUpdatedByTfmUserId).toEqual(userId);
     expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
   });
 

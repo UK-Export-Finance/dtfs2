@@ -18,6 +18,6 @@ const { withPartial2faAuthValidationApiTests } = require('../common-tests/partia
 describe('GET /login/check-your-email', () => {
   withPartial2faAuthValidationApiTests({
     makeRequestWithHeaders: (headers) => get('/login/check-your-email', {}, headers),
-    validateResponseWasSuccessful: (response) => expect(response.status).toBe(200),
+    validateResponseWasSuccessful: (response) => expect(response.status).toEqual(200),
   });
 });

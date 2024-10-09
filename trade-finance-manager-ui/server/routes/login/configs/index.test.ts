@@ -26,7 +26,7 @@ describe('login router config', () => {
       jest.mocked(isTfmSsoFeatureFlagEnabled).mockReturnValue(true);
       jest.mocked(getLoginSsoRouter).mockReturnValue('loginSsoRouter' as unknown as Router);
 
-      expect(getLoginRouter()).toBe('loginSsoRouter');
+      expect(getLoginRouter()).toEqual('loginSsoRouter');
       expect(getLoginSsoRouter).toHaveBeenCalledTimes(1);
       expect(getLoginNonSsoRouter).not.toHaveBeenCalled();
     });
@@ -35,7 +35,7 @@ describe('login router config', () => {
       jest.mocked(isTfmSsoFeatureFlagEnabled).mockReturnValue(false);
       jest.mocked(getLoginNonSsoRouter).mockReturnValue('loginNonSsoRouter' as unknown as Router);
 
-      expect(getLoginRouter()).toBe('loginNonSsoRouter');
+      expect(getLoginRouter()).toEqual('loginNonSsoRouter');
       expect(getLoginNonSsoRouter).toHaveBeenCalledTimes(1);
       expect(getLoginSsoRouter).not.toHaveBeenCalled();
     });

@@ -10,7 +10,7 @@ import {
 describe('getNowAsEpoch', () => {
   it('should return as EPOCH representing the current time in milliseconds', () => {
     const result = getNowAsEpoch();
-    expect(typeof result).toBe('number');
+    expect(typeof result).toEqual('number');
   });
 
   it('should return EPOCH from getNowAsEpoch function call, whose subsequent value will be either equal or greater than the previous call', () => {
@@ -21,7 +21,7 @@ describe('getNowAsEpoch', () => {
 
   it('should return a number', () => {
     const result = getNowAsEpoch();
-    expect(typeof result).toBe('number');
+    expect(typeof result).toEqual('number');
   });
 
   it('should return a number greater than 0', () => {
@@ -43,7 +43,7 @@ describe('getNowAsEpoch', () => {
     jest.useFakeTimers().setSystemTime(new Date('1970-01-01 01:00:00'));
 
     const result = getNowAsEpoch();
-    expect(result).toBe(0);
+    expect(result).toEqual(0);
   });
 });
 
@@ -288,6 +288,6 @@ describe('getLongFormattedDate', () => {
 
     const result = getLongFormattedDate(mockDate);
 
-    expect(result).toBe('15th July 2024');
+    expect(result).toEqual('15th July 2024');
   });
 });

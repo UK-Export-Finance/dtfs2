@@ -30,6 +30,6 @@ describe('isCountryDisabled ', () => {
     ${undefined} | ${true}
   `('Should return $expected for specified country code $code', async ({ code, expected }) => {
     const response = await isCountryDisabled(code);
-    expect(response).toBe(expected);
+    expect(response).toEqual(expected);
   });
 });

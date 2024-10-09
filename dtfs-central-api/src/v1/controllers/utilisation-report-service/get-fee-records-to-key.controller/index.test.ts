@@ -38,7 +38,7 @@ describe('get-fee-records-to-key.controller', () => {
 
       // Assert
       expect(findOneByIdWithFeeRecordsFilteredByStatusWithPaymentsSpy).toHaveBeenCalledWith(1, [FEE_RECORD_STATUS.MATCH]);
-      expect(res._getStatusCode()).toBe(HttpStatusCode.NotFound);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
     });
 
     it('responds with a 404 when no bank with the utilisation report bank id can be found', async () => {
@@ -58,7 +58,7 @@ describe('get-fee-records-to-key.controller', () => {
 
       // Assert
       expect(getBankNameById).toHaveBeenCalledWith(bankId);
-      expect(res._getStatusCode()).toBe(HttpStatusCode.NotFound);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
     });
 
     it('responds with a 200', async () => {
@@ -74,7 +74,7 @@ describe('get-fee-records-to-key.controller', () => {
       await getFeeRecordsToKey(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
     });
 
     it('responds with a body containing the report id', async () => {
@@ -94,7 +94,7 @@ describe('get-fee-records-to-key.controller', () => {
 
       // Assert
       const responseBody = res._getData() as GetFeeRecordsToKeyResponseBody;
-      expect(responseBody.reportId).toBe(1);
+      expect(responseBody.reportId).toEqual(1);
     });
 
     it('responds with a body containing the report session bank', async () => {

@@ -45,7 +45,7 @@ describe('api.login', () => {
 
     const loginPromise = api.login(username, password);
 
-    await expect(loginPromise).rejects.toBe(error);
+    await expect(loginPromise).rejects.toEqual(error);
   });
 });
 
@@ -87,6 +87,6 @@ describe('api.loginWithSignInLink', () => {
 
     const loginPromise = api.loginWithSignInLink({ token: token2fa, signInToken, userId });
 
-    await expect(loginPromise).rejects.toBe(error);
+    await expect(loginPromise).rejects.toEqual(error);
   });
 });

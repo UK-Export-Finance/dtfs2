@@ -33,8 +33,8 @@ export const withValidateAuditDetailsTests = ({ makeRequest, validUserTypes = AU
     it(`should return 400 (Bad request) and set the body 'code' field to '${API_ERROR_CODE.INVALID_AUDIT_DETAILS}' if no auditDetails provided`, async () => {
       const { status, body } = await makeRequest();
 
-      expect(status).toBe(400);
-      expect(body.code).toBe(API_ERROR_CODE.INVALID_AUDIT_DETAILS);
+      expect(status).toEqual(400);
+      expect(body.code).toEqual(API_ERROR_CODE.INVALID_AUDIT_DETAILS);
     });
   });
 };
@@ -43,7 +43,7 @@ function withValidAuditDetailsTests(validAuditDetails: AuditDetails[], makeReque
   it.each(validAuditDetails)('it should return status 200 if the userType is $userType', async (auditDetails) => {
     const { status } = await makeRequest(auditDetails);
 
-    expect(status).toBe(200);
+    expect(status).toEqual(200);
   });
 }
 
@@ -53,8 +53,8 @@ function withInvalidAuditDetailsTests(invalidAuditDetails: AuditDetails[], makeR
     async (auditDetails) => {
       const { status, body } = await makeRequest(auditDetails);
 
-      expect(status).toBe(400);
-      expect(body.code).toBe(API_ERROR_CODE.INVALID_AUDIT_DETAILS);
+      expect(status).toEqual(400);
+      expect(body.code).toEqual(API_ERROR_CODE.INVALID_AUDIT_DETAILS);
     },
   );
 }
