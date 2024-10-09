@@ -59,30 +59,73 @@ describe('getBankRequestDate', () => {
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
 
-  it('redirects to deal summary page if the submission type is invalid (MIA)', async () => {
-    // Arrange
-    jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: DEAL_SUBMISSION_TYPE.MIA } });
-
-    const { req, res } = createMocks<GetBankRequestDateRequest>({
-      params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+  describe(`when the deal type is ${DEAL_SUBMISSION_TYPE.MIA}`, () => {
+    beforeEach(() => {
+      jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: DEAL_SUBMISSION_TYPE.MIA } });
     });
 
-    // Act
-    await getBankRequestDate(req, res);
+    it('redirects to deal summary page', async () => {
+      // Arrange
+      const { req, res } = createMocks<GetBankRequestDateRequest>({
+        params: { _id: dealId },
+        session: {
+          user: mockUser,
+          userToken: 'a user token',
+        },
+      });
 
-    // Assert
-    expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
+      // Act
+      await getBankRequestDate(req, res);
+
+      // Assert
+      expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
+    });
+
+    it('does not get the cancellation', async () => {
+      // Arrange
+      const { req, res } = createMocks<GetBankRequestDateRequest>({
+        params: { _id: dealId },
+        session: {
+          user: mockUser,
+          userToken: 'a user token',
+        },
+      });
+
+      // Act
+      await getBankRequestDate(req, res);
+
+      // Assert
+      expect(api.getDealCancellation).toHaveBeenCalledTimes(0);
+    });
   });
 
   describe.each([DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN])('when the deal type is %s', (validDealType) => {
-    it('renders the bank request date page without prepopulated data when it does not exist', async () => {
+    beforeEach(() => {
+      jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: validDealType } });
+    });
+
+    it('redirects to deal summary page if the deal cancellation is empty', async () => {
       // Arrange
       jest.mocked(api.getDealCancellation).mockResolvedValue({});
-      jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: validDealType } });
+
+      const { req, res } = createMocks<GetBankRequestDateRequest>({
+        params: { _id: dealId },
+        session: {
+          user: mockUser,
+          userToken: 'a user token',
+        },
+      });
+
+      // Act
+      await getBankRequestDate(req, res);
+
+      // Assert
+      expect(res._getRedirectUrl()).toBe(`/case/${dealId}/deal`);
+    });
+
+    it('renders the bank request date page without prepopulated data when it does not exist', async () => {
+      // Arrange
+      jest.mocked(api.getDealCancellation).mockResolvedValue({ reason: '' });
 
       const { req, res } = createMocks<GetBankRequestDateRequest>({
         params: { _id: dealId },
@@ -111,8 +154,7 @@ describe('getBankRequestDate', () => {
     it('renders the bank request date page with prepopulated data when it exists', async () => {
       // Arrange
       const existingBankRequestDate = new Date('2024-03-21');
-      jest.mocked(api.getDealCancellation).mockResolvedValue({ bankRequestDate: existingBankRequestDate.valueOf() });
-      jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: validDealType } });
+      jest.mocked(api.getDealCancellation).mockResolvedValue({ reason: '', bankRequestDate: existingBankRequestDate.valueOf() });
 
       const { req, res } = createMocks<GetBankRequestDateRequest>({
         params: { _id: dealId },
