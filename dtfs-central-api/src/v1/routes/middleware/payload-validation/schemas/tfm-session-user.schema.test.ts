@@ -14,7 +14,7 @@ describe('tfm-session-user.schema', () => {
       const { success } = TfmSessionUserSchema.safeParse(user);
 
       // Assert
-      expect(success).toBe(true);
+      expect(success).toEqual(true);
     });
 
     it("sets the 'success' property to false when the user 'username' is not a string", () => {
@@ -26,7 +26,7 @@ describe('tfm-session-user.schema', () => {
       const { success } = TfmSessionUserSchema.safeParse(user);
 
       // Assert
-      expect(success).toBe(false);
+      expect(success).toEqual(false);
     });
 
     it("sets the 'success' property to true when the user 'email' is a valid email string", () => {
@@ -38,7 +38,7 @@ describe('tfm-session-user.schema', () => {
       const { success } = TfmSessionUserSchema.safeParse(user);
 
       // Assert
-      expect(success).toBe(true);
+      expect(success).toEqual(true);
     });
 
     it("sets the 'success' property to false when the user 'email' is a string but not an email", () => {
@@ -50,7 +50,7 @@ describe('tfm-session-user.schema', () => {
       const { success } = TfmSessionUserSchema.safeParse(user);
 
       // Assert
-      expect(success).toBe(false);
+      expect(success).toEqual(false);
     });
 
     it("sets the 'success' property to false when the user 'email' is not a string", () => {
@@ -62,7 +62,7 @@ describe('tfm-session-user.schema', () => {
       const { success } = TfmSessionUserSchema.safeParse(user);
 
       // Assert
-      expect(success).toBe(false);
+      expect(success).toEqual(false);
     });
 
     it("sets the 'success' property to true when the user 'timezone' is a string", () => {
@@ -74,7 +74,7 @@ describe('tfm-session-user.schema', () => {
       const { success } = TfmSessionUserSchema.safeParse(user);
 
       // Assert
-      expect(success).toBe(true);
+      expect(success).toEqual(true);
     });
 
     it("sets the 'success' property to false when the user 'timezone' is not a string", () => {
@@ -86,7 +86,7 @@ describe('tfm-session-user.schema', () => {
       const { success } = TfmSessionUserSchema.safeParse(user);
 
       // Assert
-      expect(success).toBe(false);
+      expect(success).toEqual(false);
     });
 
     it("sets the 'success' property to true when the user 'firstName' is a string", () => {
@@ -98,7 +98,7 @@ describe('tfm-session-user.schema', () => {
       const { success } = TfmSessionUserSchema.safeParse(user);
 
       // Assert
-      expect(success).toBe(true);
+      expect(success).toEqual(true);
     });
 
     it("sets the 'success' property to false when the user 'firstName' is not a string", () => {
@@ -110,7 +110,7 @@ describe('tfm-session-user.schema', () => {
       const { success } = TfmSessionUserSchema.safeParse(user);
 
       // Assert
-      expect(success).toBe(false);
+      expect(success).toEqual(false);
     });
 
     it("sets the 'success' property to true when the user 'lastName' is a string", () => {
@@ -122,7 +122,7 @@ describe('tfm-session-user.schema', () => {
       const { success } = TfmSessionUserSchema.safeParse(user);
 
       // Assert
-      expect(success).toBe(true);
+      expect(success).toEqual(true);
     });
 
     it("sets the 'success' property to false when the user 'lastName' is not a string", () => {
@@ -134,7 +134,7 @@ describe('tfm-session-user.schema', () => {
       const { success } = TfmSessionUserSchema.safeParse(user);
 
       // Assert
-      expect(success).toBe(false);
+      expect(success).toEqual(false);
     });
 
     it("sets the 'success' property to true when the user 'status' is a string", () => {
@@ -146,7 +146,7 @@ describe('tfm-session-user.schema', () => {
       const { success } = TfmSessionUserSchema.safeParse(user);
 
       // Assert
-      expect(success).toBe(true);
+      expect(success).toEqual(true);
     });
 
     it("sets the 'success' property to false when the user 'status' is not a string", () => {
@@ -158,7 +158,7 @@ describe('tfm-session-user.schema', () => {
       const { success } = TfmSessionUserSchema.safeParse(user);
 
       // Assert
-      expect(success).toBe(false);
+      expect(success).toEqual(false);
     });
 
     it("sets the 'success' property to true when the user 'lastLogin' is undefined", () => {
@@ -170,7 +170,7 @@ describe('tfm-session-user.schema', () => {
       const { success } = TfmSessionUserSchema.safeParse(user);
 
       // Assert
-      expect(success).toBe(true);
+      expect(success).toEqual(true);
     });
 
     it("sets the 'success' property to true when the user 'lastLogin' is a number", () => {
@@ -182,7 +182,7 @@ describe('tfm-session-user.schema', () => {
       const { success } = TfmSessionUserSchema.safeParse(user);
 
       // Assert
-      expect(success).toBe(true);
+      expect(success).toEqual(true);
     });
 
     it("sets the 'success' property to false when the user 'lastLogin' is not a number", () => {
@@ -194,7 +194,7 @@ describe('tfm-session-user.schema', () => {
       const { success } = TfmSessionUserSchema.safeParse(user);
 
       // Assert
-      expect(success).toBe(false);
+      expect(success).toEqual(false);
     });
 
     it("sets the 'data' property to the parsed user", () => {

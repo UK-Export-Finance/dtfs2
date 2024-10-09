@@ -71,7 +71,7 @@ describe('post-upload-utilisation-report controller', () => {
       await postUploadUtilisationReport(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(errorStatus);
+      expect(res._getStatusCode()).toEqual(errorStatus);
       expect(res._getData()).toEqual(`Failed to save utilisation report: ${errorMessage}`);
     });
 
@@ -90,7 +90,7 @@ describe('post-upload-utilisation-report controller', () => {
         // Assert
         expect(mockEventHandler).toHaveBeenCalled();
 
-        expect(res._getStatusCode()).toBe(HttpStatusCode.Created);
+        expect(res._getStatusCode()).toEqual(HttpStatusCode.Created);
         expect(res._getData()).toEqual({ dateUploaded: mockDate });
       });
 
@@ -105,7 +105,7 @@ describe('post-upload-utilisation-report controller', () => {
 
         // Assert
         expect(res._getData()).toEqual(expect.stringContaining('Failed to save utilisation report'));
-        expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+        expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
       });
     });
   });

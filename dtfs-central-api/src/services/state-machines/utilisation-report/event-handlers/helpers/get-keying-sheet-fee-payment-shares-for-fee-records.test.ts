@@ -54,7 +54,7 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
 
       // Assert
       expect(result).toHaveLength(1);
-      expect(result[0].feeRecordId).toBe(feeRecordId);
+      expect(result[0].feeRecordId).toEqual(feeRecordId);
       expect(result[0]).toEqual<KeyingSheetFeePaymentShare>({ feeRecordId, paymentId, feePaymentAmount: paymentAmount });
     });
   });

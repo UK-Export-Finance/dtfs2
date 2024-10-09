@@ -11,7 +11,7 @@ describe('mongo-object-id.schema', () => {
       const { success } = MongoObjectIdSchema.safeParse(validObjectId);
 
       // Assert
-      expect(success).toBe(true);
+      expect(success).toEqual(true);
     });
 
     it("sets the 'success' property to true when the value is a valid object id object", () => {
@@ -22,7 +22,7 @@ describe('mongo-object-id.schema', () => {
       const { success } = MongoObjectIdSchema.safeParse(validObjectId);
 
       // Assert
-      expect(success).toBe(true);
+      expect(success).toEqual(true);
     });
 
     it("sets the 'success' property to false when the value is not a valid object id", () => {
@@ -33,7 +33,7 @@ describe('mongo-object-id.schema', () => {
       const { success } = MongoObjectIdSchema.safeParse(invalidObjectId);
 
       // Assert
-      expect(success).toBe(false);
+      expect(success).toEqual(false);
     });
 
     it("sets the 'data' property to the string representation of the object id", () => {
@@ -44,7 +44,7 @@ describe('mongo-object-id.schema', () => {
       const { data } = MongoObjectIdSchema.safeParse(objectId);
 
       // Assert
-      expect(data).toBe(objectId.toString());
+      expect(data).toEqual(objectId.toString());
     });
   });
 });

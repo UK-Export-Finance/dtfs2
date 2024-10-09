@@ -16,7 +16,7 @@ export const withBooleanFeatureFlagTests = ({ featureFlagName, getFeatureFlagVal
       const result = getFeatureFlagValue();
 
       // Assert
-      expect(result).toBe(false);
+      expect(result).toEqual(false);
     });
 
     it("returns true when the feature flag is set to 'true'", () => {
@@ -27,7 +27,7 @@ export const withBooleanFeatureFlagTests = ({ featureFlagName, getFeatureFlagVal
       const result = getFeatureFlagValue();
 
       // Assert
-      expect(result).toBe(true);
+      expect(result).toEqual(true);
     });
 
     it('defaults to false when the flag is not defined', () => {
@@ -38,7 +38,7 @@ export const withBooleanFeatureFlagTests = ({ featureFlagName, getFeatureFlagVal
       const result = getFeatureFlagValue();
 
       // Assert
-      expect(result).toBe(false);
+      expect(result).toEqual(false);
     });
   });
 };

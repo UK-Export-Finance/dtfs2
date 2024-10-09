@@ -346,7 +346,7 @@ describe('createACBS', () => {
     const result = await createACBS(dealId);
 
     // Assert
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false if the deal is not found', async () => {
@@ -357,7 +357,7 @@ describe('createACBS', () => {
     const result = await createACBS(MOCK_DEAL_ACBS._id);
 
     // Assert
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false if the deal does not have `dealSnapshot` property', async () => {
@@ -370,7 +370,7 @@ describe('createACBS', () => {
     const result = await createACBS(MOCK_DEAL_ACBS._id);
 
     // Assert
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false if the deal does not have `dealSnapshot.bank` property', async () => {
@@ -384,7 +384,7 @@ describe('createACBS', () => {
     const result = await createACBS(MOCK_DEAL_ACBS._id);
 
     // Assert
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false if the deal does not have `tfm` property', async () => {
@@ -404,7 +404,7 @@ describe('createACBS', () => {
     const result = await createACBS(MOCK_DEAL_ACBS._id);
 
     // Assert
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
     expect(consoleErrorMock).toHaveBeenCalledTimes(1);
     expect(consoleErrorMock).toHaveBeenCalledWith('Invalid ACBS deal payload, terminating API call for deal %s', MOCK_DEAL_ACBS._id);
   });
@@ -426,7 +426,7 @@ describe('createACBS', () => {
     const result = await createACBS(MOCK_DEAL_ACBS._id);
 
     // Assert
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
     expect(consoleErrorMock).toHaveBeenCalledTimes(1);
     expect(consoleErrorMock).toHaveBeenCalledWith('Invalid ACBS bank payload, terminating API call for deal %s', MOCK_DEAL_ACBS._id);
   });

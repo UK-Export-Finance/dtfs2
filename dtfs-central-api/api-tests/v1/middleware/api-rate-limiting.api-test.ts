@@ -29,7 +29,7 @@ describe('api rate limiting', () => {
   };
 
   function assertPromiseIsFulfilled(result: PromiseSettledResult<Response>): asserts result is PromiseFulfilledResult<Response> {
-    expect(result.status).toBe('fulfilled');
+    expect(result.status).toEqual('fulfilled');
   }
 
   it('returns a 429 response if more than RATE_LIMIT_THRESHOLD requests are made from the same IP to the same endpoint in 1 minute', async () => {
@@ -38,7 +38,7 @@ describe('api rate limiting', () => {
     const responseAfterRateLimitExceeded = (await sendRequestTimes(1))[0];
 
     assertPromiseIsFulfilled(responseAfterRateLimitExceeded);
-    expect(responseAfterRateLimitExceeded.value.status).toBe(429);
+    expect(responseAfterRateLimitExceeded.value.status).toEqual(429);
   });
 
   it('returns a 200 response if exactly RATE_LIMIT_THRESHOLD requests are made from the same IP to the same endpoint in 1 minute', async () => {
@@ -47,6 +47,6 @@ describe('api rate limiting', () => {
     const responseThatMeetsRateLimit = (await sendRequestTimes(1))[0];
 
     assertPromiseIsFulfilled(responseThatMeetsRateLimit);
-    expect(responseThatMeetsRateLimit.value.status).toBe(200);
+    expect(responseThatMeetsRateLimit.value.status).toEqual(200);
   });
 });

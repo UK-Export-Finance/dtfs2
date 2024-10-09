@@ -84,7 +84,7 @@ on:
 
 env:
   environment: dev
-  timezone: ${{ vars.TIMEZONE }}
+  TZ: ${{ vars.TIMEZONE }}
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   MONGODB_URI: ${{ secrets.MONGODB_URI }}
   MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE }}
@@ -162,13 +162,13 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       environment: ${{ env.environment }}
-      timezone: ${{ env.timezone }}
+      TZ: ${{ env.TZ }}
     steps:
       - name: Environment 🧪
         run: echo "Environment set to ${{ env.environment }}"
 
       - name: Timezone 🌐
-        run: echo "Timezone set to ${{ env.timezone }}"
+        run: echo "Timezone set to ${{ env.TZ }}"
 
   # 2.1. API tests
   api-tests:
@@ -198,7 +198,7 @@ jobs:
       - name: Timezone
         uses: szenius/set-timezone@v2.0
         with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+          timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
       - name: Repository
         uses: actions/checkout@v4
@@ -269,7 +269,7 @@ jobs:
       - name: Timezone
         uses: szenius/set-timezone@v2.0
         with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+          timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
       - name: Repository
         uses: actions/checkout@v4
@@ -328,7 +328,7 @@ jobs:
       - name: Timezone
         uses: szenius/set-timezone@v2.0
         with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+          timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
       - name: Repository
         uses: actions/checkout@v4
@@ -394,7 +394,7 @@ jobs:
       - name: Timezone
         uses: szenius/set-timezone@v2.0
         with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+          timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
       - name: Repository
         uses: actions/checkout@v4
@@ -482,7 +482,7 @@ jobs:
       - name: Timezone
         uses: szenius/set-timezone@v2.0
         with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+          timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
       - name: Dependencies
         working-directory: ./
@@ -566,7 +566,7 @@ jobs:
       - name: Timezone
         uses: szenius/set-timezone@v2.0
         with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+          timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
       - name: Dependencies
         working-directory: ./
@@ -666,7 +666,7 @@ jobs:
       - name: Timezone
         uses: szenius/set-timezone@v2.0
         with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+          timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
       - name: Dependencies
         working-directory: ./
@@ -750,7 +750,7 @@ jobs:
       - name: Timezone
         uses: szenius/set-timezone@v2.0
         with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+          timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
       - name: Dependencies
         working-directory: ./
@@ -880,7 +880,7 @@ jobs:
       - name: Timezone
         uses: szenius/set-timezone@v2.0
         with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+          timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
       - name: Dependencies
         working-directory: ./

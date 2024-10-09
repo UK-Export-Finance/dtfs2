@@ -6,12 +6,12 @@ describe('InvalidReportStatusError', () => {
   it('exposes the message it was created with', () => {
     const exception = new InvalidReportStatusError(message);
 
-    expect(exception.message).toBe(message);
+    expect(exception.message).toEqual(message);
   });
 
   it('exposes the name of the exception', () => {
     const exception = new InvalidReportStatusError(message);
 
-    expect(exception.name).toBe('InvalidReportStatusError');
+    expect(exception.name).toEqual('InvalidReportStatusError');
   });
 });

@@ -51,9 +51,9 @@ describe('keying sheet mapping', () => {
       const keyingSheetRow = mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments(feeRecordEntity);
 
       // Assert
-      expect(keyingSheetRow.feeRecordId).toBe(123);
-      expect(keyingSheetRow.facilityId).toBe('12345678');
-      expect(keyingSheetRow.exporter).toBe('Test exporter');
+      expect(keyingSheetRow.feeRecordId).toEqual(123);
+      expect(keyingSheetRow.facilityId).toEqual('12345678');
+      expect(keyingSheetRow.exporter).toEqual('Test exporter');
       expect(keyingSheetRow.baseCurrency).toBe<Currency>('EUR');
     });
 
@@ -120,7 +120,7 @@ describe('keying sheet mapping', () => {
 
       // Assert
       expect(feePayment.currency).toBe<Currency>('GBP');
-      expect(feePayment.amount).toBe(123.45);
+      expect(feePayment.amount).toEqual(123.45);
       expect(feePayment.dateReceived).toEqual(new Date('2024-05-06'));
     });
   });

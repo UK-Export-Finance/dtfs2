@@ -47,8 +47,8 @@ describe('patch-payment.controller', () => {
 
       // Assert
       expect(api.editPayment).toHaveBeenCalledWith(reportId.toString(), paymentId.toString(), paymentAmount, datePaymentReceived, paymentReference, user);
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
-      expect(res._isEndCalled()).toBe(true);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+      expect(res._isEndCalled()).toEqual(true);
     });
 
     it('responds with an error message if an error occurs', async () => {
@@ -61,7 +61,7 @@ describe('patch-payment.controller', () => {
       await patchPayment(req, res);
 
       // Assert
-      expect(res._getData()).toBe('Failed to edit payment');
+      expect(res._getData()).toEqual('Failed to edit payment');
     });
 
     it('responds with a 500 (Internal Server Error) if an unknown error occurs', async () => {
@@ -74,8 +74,8 @@ describe('patch-payment.controller', () => {
       await patchPayment(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-      expect(res._isEndCalled()).toBe(true);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+      expect(res._isEndCalled()).toEqual(true);
     });
 
     it('responds with a specific error code if an axios error is thrown', async () => {
@@ -91,8 +91,8 @@ describe('patch-payment.controller', () => {
       await patchPayment(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(errorStatus);
-      expect(res._isEndCalled()).toBe(true);
+      expect(res._getStatusCode()).toEqual(errorStatus);
+      expect(res._isEndCalled()).toEqual(true);
     });
 
     function aPatchPaymentRequestBody(): PatchPaymentRequest['body'] {

@@ -40,7 +40,7 @@ describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
     removeFeesFromPaymentErrorKey: RemoveFeesFromPaymentErrorKey,
     editPaymentFormValues: EditPaymentFormValues,
   ) => {
-    expect(req.session.removeFeesFromPaymentErrorKey).toBe(removeFeesFromPaymentErrorKey);
+    expect(req.session.removeFeesFromPaymentErrorKey).toEqual(removeFeesFromPaymentErrorKey);
     expect(req.session.editPaymentFormValues).toEqual(editPaymentFormValues);
   };
 
@@ -59,7 +59,7 @@ describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
     validatePostRemoveFeesFromPaymentRequestBody(req, res, next);
 
     // Assert
-    expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
+    expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
     expect(res._getRenderData()).toEqual({
       user: MOCK_TFM_SESSION_USER,
     });
@@ -77,7 +77,7 @@ describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
     validatePostRemoveFeesFromPaymentRequestBody(req, res, next);
 
     // Assert
-    expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
+    expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
     expect(res._getRenderData()).toEqual({
       user: MOCK_TFM_SESSION_USER,
     });
@@ -121,7 +121,7 @@ describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
       validatePostRemoveFeesFromPaymentRequestBody(req, res, next);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(REDIRECT_URL);
+      expect(res._getRedirectUrl()).toEqual(REDIRECT_URL);
     });
 
     it(`populates the session with the 'no-fee-records-selected' error and the extracted edit payment form values`, () => {
@@ -182,7 +182,7 @@ describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
       validatePostRemoveFeesFromPaymentRequestBody(req, res, next);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(REDIRECT_URL);
+      expect(res._getRedirectUrl()).toEqual(REDIRECT_URL);
     });
 
     it(`populates the session with the 'all-fee-records-selected' error and the extracted edit payment form values`, () => {

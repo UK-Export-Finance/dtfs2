@@ -46,7 +46,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       await getUtilisationReportReconciliationDetailsById(req, res);
 
       // Assert
-      expect(res._getData()).toBe(`Failed to get utilisation report reconciliation for report with id '${reportId}': ${errorMessage}`);
+      expect(res._getData()).toEqual(`Failed to get utilisation report reconciliation for report with id '${reportId}': ${errorMessage}`);
     });
 
     it('responds with a 500 if an unknown error occurs', async () => {
@@ -59,7 +59,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       await getUtilisationReportReconciliationDetailsById(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
     });
 
     it('responds with a generic error message if an unknown error occurs', async () => {
@@ -72,7 +72,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       await getUtilisationReportReconciliationDetailsById(req, res);
 
       // Assert
-      expect(res._getData()).toBe(`Failed to get utilisation report reconciliation for report with id '${reportId}'`);
+      expect(res._getData()).toEqual(`Failed to get utilisation report reconciliation for report with id '${reportId}'`);
     });
 
     it('fetches details and responds with 200 when there are no filters provided', async () => {
@@ -85,16 +85,21 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       const reportDetails = aUtilisationReportReconciliationDetails();
       jest.mocked(getUtilisationReportReconciliationDetails).mockResolvedValue(reportDetails);
 
+      const expectedPaymentDetailsTabParsedFilters = {};
       const expectedPremiumPaymentsTabParsedFilters = {};
 
       // Act
       await getUtilisationReportReconciliationDetailsById(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
-      expect(res._getData()).toBe(reportDetails);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+      expect(res._getData()).toEqual(reportDetails);
       expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledTimes(1);
-      expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledWith(utilisationReport, expectedPremiumPaymentsTabParsedFilters);
+      expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledWith(
+        utilisationReport,
+        expectedPaymentDetailsTabParsedFilters,
+        expectedPremiumPaymentsTabParsedFilters,
+      );
     });
 
     it('fetches details filtering by premium payments tab facility id value and responds with 200 when there is a facility id value provided', async () => {
@@ -110,6 +115,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       const reportDetails = aUtilisationReportReconciliationDetails();
       jest.mocked(getUtilisationReportReconciliationDetails).mockResolvedValue(reportDetails);
 
+      const expectedPaymentDetailsTabParsedFilters = {};
       const expectedPremiumPaymentsTabParsedFilters = {
         facilityId: '1234',
       };
@@ -118,10 +124,14 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       await getUtilisationReportReconciliationDetailsById(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
-      expect(res._getData()).toBe(reportDetails);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+      expect(res._getData()).toEqual(reportDetails);
       expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledTimes(1);
-      expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledWith(utilisationReport, expectedPremiumPaymentsTabParsedFilters);
+      expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledWith(
+        utilisationReport,
+        expectedPaymentDetailsTabParsedFilters,
+        expectedPremiumPaymentsTabParsedFilters,
+      );
     });
 
     function aUtilisationReportReconciliationDetails(): UtilisationReportReconciliationDetails {

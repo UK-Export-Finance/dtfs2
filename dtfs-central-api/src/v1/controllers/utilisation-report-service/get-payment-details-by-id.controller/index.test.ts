@@ -56,7 +56,7 @@ describe('get-payment-details-by-id.controller', () => {
       await getPaymentDetailsById(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.NotFound);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
     });
 
     it('responds with a 200', async () => {
@@ -77,7 +77,7 @@ describe('get-payment-details-by-id.controller', () => {
       await getPaymentDetailsById(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
     });
 
     it('responds with the payment details', async () => {

@@ -67,13 +67,13 @@ describe(baseUrl, () => {
 
       it('returns a 400 if the dealId is invalid', async () => {
         const { body, status } = await as(aMaker).post({ dealId: 'test', type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-        expect(status).toBe(400);
+        expect(status).toEqual(400);
         expect(body).toEqual({ status: 400, message: 'Invalid deal ID: test' });
       });
 
       it('returns a 404 if the dealId is valid but does not exist', async () => {
         const { body, status } = await as(aMaker).post({ dealId: 'abcdef123456abcdef123456', type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-        expect(status).toBe(404);
+        expect(status).toEqual(404);
         expect(body).toEqual({ status: 404, message: 'Deal not found: abcdef123456abcdef123456' });
       });
 
@@ -144,7 +144,7 @@ describe(baseUrl, () => {
           .to(baseUrl);
 
         expect(body).toEqual({ status: 400, message: 'Cannot add facility end date to deal version 0' });
-        expect(status).toBe(400);
+        expect(status).toEqual(400);
       });
 
       it('returns 400 when payload contains bankReviewDate', async () => {
@@ -153,7 +153,7 @@ describe(baseUrl, () => {
           .to(baseUrl);
 
         expect(body).toEqual({ status: 400, message: 'Cannot add facility end date to deal version 0' });
-        expect(status).toBe(400);
+        expect(status).toEqual(400);
       });
 
       it('returns 400 when payload contains facilityEndDate', async () => {
@@ -162,7 +162,7 @@ describe(baseUrl, () => {
           .to(baseUrl);
 
         expect(body).toEqual({ status: 400, message: 'Cannot add facility end date to deal version 0' });
-        expect(status).toBe(400);
+        expect(status).toEqual(400);
       });
     });
 
@@ -181,7 +181,7 @@ describe(baseUrl, () => {
           .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, isUsingFacilityEndDate: true })
           .to(baseUrl);
 
-        expect(status).toBe(201);
+        expect(status).toEqual(201);
       });
 
       it('returns 201 when payload is valid & contains bankReviewDate', async () => {
@@ -189,7 +189,7 @@ describe(baseUrl, () => {
           .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, bankReviewDate: new Date().toISOString() })
           .to(baseUrl);
 
-        expect(status).toBe(201);
+        expect(status).toEqual(201);
       });
 
       it('returns 201 when payload is valid & contains facilityEndDate', async () => {
@@ -197,7 +197,7 @@ describe(baseUrl, () => {
           .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, facilityEndDate: new Date().toISOString() })
           .to(baseUrl);
 
-        expect(status).toBe(201);
+        expect(status).toEqual(201);
       });
 
       it('returns 400 when isUsingFacilityEndDate is not a boolean', async () => {

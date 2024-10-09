@@ -56,7 +56,7 @@ describe('previous-reports controller', () => {
       expect(apiGetPreviousReportsSpy).toHaveBeenCalledTimes(1);
       expect(apiGetPreviousReportsSpy).toHaveBeenCalledWith(USER_TOKEN, BANK_ID);
       expect(mapToPreviousReportsViewModelSpy).toHaveBeenCalledWith('2024', mockUser, responseBody);
-      expect(res._getRenderView()).toBe('utilisation-report-service/previous-reports/previous-reports.njk');
+      expect(res._getRenderView()).toEqual('utilisation-report-service/previous-reports/previous-reports.njk');
       expect(res._getRenderData()).toEqual(viewModel);
     });
 
@@ -71,7 +71,7 @@ describe('previous-reports controller', () => {
       // Assert
       expect(apiGetPreviousReportsSpy).toHaveBeenCalledTimes(1);
       expect(apiGetPreviousReportsSpy).toHaveBeenCalledWith(USER_TOKEN, BANK_ID);
-      expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
+      expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
       expect(res._getRenderData()).toEqual({ user: mockUser });
     });
   });

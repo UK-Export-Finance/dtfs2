@@ -1,5 +1,6 @@
-import { Collection, ObjectId, UpdateFilter, UpdateResult, WithoutId } from 'mongodb';
+import { Collection, ObjectId, UpdateResult, WithoutId } from 'mongodb';
 import {
+  AuditDetails,
   DEAL_SUBMISSION_TYPE,
   DealNotFoundError,
   InvalidDealIdError,
@@ -8,6 +9,8 @@ import {
   TfmDeal,
   TfmDealCancellation,
 } from '@ukef/dtfs2-common';
+import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { flatten } from 'mongo-dot-notation';
 import { mongoDbClient } from '../../drivers/db-client';
 
 export class TfmDealCancellationRepo {
@@ -46,9 +49,14 @@ export class TfmDealCancellationRepo {
    * Updates the deal tfm object with the supplied cancellation
    * @param dealId - The deal id
    * @param update - The deal cancellation update to apply
+   * @param auditDetails - The users audit details
    * @returns The update result
    */
-  public static async updateOneDealCancellation(dealId: string | ObjectId, update: UpdateFilter<TfmDealCancellation>): Promise<UpdateResult> {
+  public static async updateOneDealCancellation(
+    dealId: string | ObjectId,
+    update: Partial<TfmDealCancellation>,
+    auditDetails: AuditDetails,
+  ): Promise<UpdateResult> {
     if (!ObjectId.isValid(dealId)) {
       throw new InvalidDealIdError(dealId.toString());
     }
@@ -61,7 +69,38 @@ export class TfmDealCancellationRepo {
         'tfm.stage': { $ne: TFM_DEAL_STAGE.CANCELLED },
         'dealSnapshot.submissionType': { $in: [DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN] },
       },
-      update,
+      flatten({
+        'tfm.cancellation': update,
+        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+      }),
+    );
+
+    if (!updateResult?.matchedCount) {
+      throw new DealNotFoundError(dealId.toString());
+    }
+
+    return updateResult;
+  }
+
+  /**
+   * Deletes the tfm deal cancellation object
+   * @param dealId - The deal id
+   * @param auditDetails - The users audit details
+   */
+  public static async deleteOneDealCancellation(dealId: string | ObjectId, auditDetails: AuditDetails): Promise<UpdateResult> {
+    if (!ObjectId.isValid(dealId)) {
+      throw new InvalidDealIdError(dealId.toString());
+    }
+
+    const dealCollection = await this.getCollection();
+
+    const updateResult = await dealCollection.updateOne(
+      {
+        _id: { $eq: new ObjectId(dealId) },
+        'tfm.stage': { $ne: TFM_DEAL_STAGE.CANCELLED },
+        'dealSnapshot.submissionType': { $in: [DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN] },
+      },
+      { $unset: { 'tfm.cancellation': '' }, $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) } },
     );
 
     if (!updateResult?.matchedCount) {
