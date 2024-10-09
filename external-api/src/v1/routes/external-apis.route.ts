@@ -571,8 +571,8 @@ apiRoutes.get('/geospatial/addresses/postcode/:postcode', geospatialAddresses.lo
  *     responses:
  *       201:
  *         description: eStore payload has been accepted and processing has been initiated.
- *       202:
- *         description: eStore payload has previously been accepted and execution is in progress.
+ *       208:
+ *         description: eStore payload has previously been reported and execution is in progress.
  *       400:
  *         description: eStore payload has been declined due to malformed attributes.
  *       500:
