@@ -1,17 +1,18 @@
-import { AnyObject } from '@ukef/dtfs2-common';
+import { AnyObject, ApiError } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import externalApi from '../../external-api/api';
+import { NotFoundError, TransactionFailedError } from '../../errors';
 
 export const sendEmail = async (templateId: string, sendToEmailAddress: string, emailVariables: AnyObject) => {
   try {
     if (!templateId) {
-      return { status: 400, data: 'Missing parameter templateId' };
+      throw new NotFoundError('Missing parameter templateId');
     }
     if (!sendToEmailAddress) {
-      return { status: 400, data: 'Missing parameter sendToEmailAddress' };
+      throw new NotFoundError('Missing parameter sendToEmailAddress');
     }
     if (!emailVariables) {
-      return { status: 400, data: 'Missing parameter emailVariables' };
+      throw new NotFoundError('Missing parameter emailVariables');
     }
 
     const emailSent = (await externalApi.sendEmail(templateId, sendToEmailAddress, emailVariables)) as Response;
@@ -19,6 +20,12 @@ export const sendEmail = async (templateId: string, sendToEmailAddress: string, 
     return emailSent;
   } catch (error) {
     console.error('Portal API - Failed to send email %o', error);
-    return { status: 500, data: 'Failed to send an email' };
+    if (error instanceof ApiError) {
+      throw TransactionFailedError.forApiError(error);
+    }
+    if (error instanceof Error) {
+      throw TransactionFailedError.forError(error);
+    }
+    throw TransactionFailedError.forUnknownError();
   }
 };

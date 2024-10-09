@@ -44,7 +44,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
     jest.resetAllMocks();
   });
 
-  describe('when every free record has to be reconciled', () => {
+  describe('when every fee record has to be reconciled', () => {
     // Arrange
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
     const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('READY_TO_KEY').build();
@@ -100,13 +100,13 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
       });
     });
 
-    it('should call call externalApi.sendEmail once', () => {
+    it('should call externalApi.sendEmail once', () => {
       // Assert
       expect(sendEmailSpy).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('when all fee records are now reconciled', () => {
+  describe('when all fee records are reconciled', () => {
     // Arrange
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
     const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('READY_TO_KEY').build();
@@ -150,7 +150,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
     });
   });
 
-  describe('when not all fee records are now reconciled', () => {
+  describe('when only some fee records are reconciled', () => {
     // Arrange
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
     const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('READY_TO_KEY').build();
@@ -185,7 +185,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
       );
     });
 
-    it('should NOT call call externalApi.sendEmail', () => {
+    it('should NOT call externalApi.sendEmail', () => {
       // Assert
       expect(sendEmailSpy).toHaveBeenCalledTimes(0);
     });

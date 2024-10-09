@@ -1,8 +1,9 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity, ApiError } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
-import { sendRecordReconciledEmail } from '../helpers/send-record-reconciled-email';
+import { SendReportReconciledEmail } from '../helpers/send-report-reconciled-email';
+import { TransactionFailedError } from '../../../../../errors';
 
 type MarkFeeRecordsAsReconciledEventPayload = {
   requestSource: DbRequestSource;
@@ -54,12 +55,19 @@ export const handleUtilisationReportMarkFeeRecordsAsReconciledEvent = async (
     if (allFeeRecords.every((record) => record.status === 'RECONCILED')) {
       report.updateWithStatus({ status: 'RECONCILIATION_COMPLETED', requestSource });
       await transactionEntityManager.save(UtilisationReportEntity, report);
-      await sendRecordReconciledEmail(report);
+      await SendReportReconciledEmail(report);
     }
 
     return report;
   } catch (error) {
     console.error(`Failed to mark fee records as reconciled - handleUtilisationReportMarkFeeRecordsAsReconciledEvent %o`, error);
-    throw new Error(`Failed to mark fee records as reconciled - handleUtilisationReportMarkFeeRecordsAsReconciledEvent`);
+
+    if (error instanceof ApiError) {
+      throw TransactionFailedError.forApiError(error);
+    }
+    if (error instanceof Error) {
+      throw TransactionFailedError.forError(error);
+    }
+    throw TransactionFailedError.forUnknownError();
   }
 };

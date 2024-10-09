@@ -1,7 +1,7 @@
 import { formatInTimeZone } from 'date-fns-tz';
 import { getNowAsUtcISOString, getMonthName } from './date';
 
-describe('date-validation helpers', () => {
+describe('date helpers', () => {
   describe('getNowAsUtcISOString', () => {
     it('should return the current time as a UtcISOString', () => {
       const result = getNowAsUtcISOString();

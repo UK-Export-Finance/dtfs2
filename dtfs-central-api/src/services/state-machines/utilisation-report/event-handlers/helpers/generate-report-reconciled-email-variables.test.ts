@@ -1,11 +1,13 @@
-import { UtilisationReportEntityMockBuilder, formatDateForEmail, getFormattedReportPeriodWithShortMonth } from '@ukef/dtfs2-common';
-import { generateRecordReconciledEmailVariables } from './generate-record-reconciled-email-variables';
+import { HttpStatusCode } from 'axios';
+import { UtilisationReportEntityMockBuilder, formatDateForEmail, getFormattedReportPeriodWithShortMonth, TestApiError } from '@ukef/dtfs2-common';
+import { generateReportReconciledEmailVariables } from './generate-report-reconciled-email-variables';
 import { getBankById } from '../../../../../repositories/banks-repo';
 import { aBank } from '../../../../../../test-helpers';
+import { TransactionFailedError, NotFoundError } from '../../../../../errors';
 
 jest.mock('../../../../../repositories/banks-repo');
 
-describe('generateRecordReconciledEmailVariables', () => {
+describe('generateReportReconciledEmailVariables', () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
@@ -14,15 +16,18 @@ describe('generateRecordReconciledEmailVariables', () => {
 
   const mockGetBankByIdResponse = aBank();
 
+  const errorMessage = 'An error message';
+  const errorStatus = HttpStatusCode.BadRequest;
+  const notFoundError = new NotFoundError('Bank not found');
+  const testApiError = new TestApiError(errorStatus, errorMessage);
+
   describe('when getBankById errors', () => {
     beforeEach(() => {
-      jest.mocked(getBankById).mockImplementation(jest.fn().mockRejectedValue(new Error()));
+      jest.mocked(getBankById).mockRejectedValue(TransactionFailedError.forApiError(testApiError));
     });
 
     it('should throw an error', async () => {
-      await expect(generateRecordReconciledEmailVariables(utilisationReport)).rejects.toThrow(
-        new Error('Error getting bank - generateRecordReconciledEmailVariables'),
-      );
+      await expect(generateReportReconciledEmailVariables(utilisationReport)).rejects.toThrow(TransactionFailedError.forApiError(testApiError));
     });
   });
 
@@ -32,9 +37,7 @@ describe('generateRecordReconciledEmailVariables', () => {
     });
 
     it('should throw an error', async () => {
-      await expect(generateRecordReconciledEmailVariables(utilisationReport)).rejects.toThrow(
-        new Error('Error getting bank - generateRecordReconciledEmailVariables'),
-      );
+      await expect(generateReportReconciledEmailVariables(utilisationReport)).rejects.toThrow(notFoundError);
     });
   });
 
@@ -44,7 +47,7 @@ describe('generateRecordReconciledEmailVariables', () => {
     });
 
     it('should return correct variables', async () => {
-      const result = await generateRecordReconciledEmailVariables(utilisationReport);
+      const result = await generateReportReconciledEmailVariables(utilisationReport);
 
       const { reportPeriod } = utilisationReport;
 

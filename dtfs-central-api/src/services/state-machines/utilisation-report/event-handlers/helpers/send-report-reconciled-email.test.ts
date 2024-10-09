@@ -1,17 +1,24 @@
-import { UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { sendRecordReconciledEmail } from './send-record-reconciled-email';
-import { generateRecordReconciledEmailVariables } from './generate-record-reconciled-email-variables';
+import { HttpStatusCode } from 'axios';
+import { UtilisationReportEntityMockBuilder, TestApiError } from '@ukef/dtfs2-common';
+import { SendReportReconciledEmail } from './send-report-reconciled-email';
+import { generateReportReconciledEmailVariables } from './generate-report-reconciled-email-variables';
 import EMAIL_TEMPLATE_IDS from '../../../../../constants/email-template-ids';
 import externalApi from '../../../../../external-api/api';
 import { getBankById } from '../../../../../repositories/banks-repo';
 import { aBank } from '../../../../../../test-helpers';
+import { TransactionFailedError } from '../../../../../errors';
 
 jest.mock('../../../../../repositories/banks-repo');
 jest.mock('../../../../../external-api/api');
 
-describe('sendRecordReconciledEmail', () => {
+describe('SendReportReconciledEmail', () => {
   let sendEmailSpy = jest.fn();
   const mockGetBankByIdResponse = aBank();
+  mockGetBankByIdResponse.paymentOfficerTeam.emails = ['test@test.com'];
+
+  const errorMessage = 'An error message';
+  const errorStatus = HttpStatusCode.BadRequest;
+  const testApiError = new TestApiError(errorStatus, errorMessage);
 
   beforeEach(() => {
     sendEmailSpy = jest.fn(() => Promise.resolve({}));
@@ -27,39 +34,35 @@ describe('sendRecordReconciledEmail', () => {
 
   describe('when getBankById errors', () => {
     beforeEach(() => {
-      jest.mocked(getBankById).mockImplementation(jest.fn().mockRejectedValue(new Error()));
+      jest.mocked(getBankById).mockRejectedValue(TransactionFailedError.forApiError(testApiError));
     });
 
     it('should throw an error', async () => {
-      await expect(sendRecordReconciledEmail(utilisationReport)).rejects.toThrow(
-        new Error('Error sending record reconciled email - sendRecordReconciledEmail'),
-      );
+      await expect(SendReportReconciledEmail(utilisationReport)).rejects.toThrow(TransactionFailedError.forApiError(testApiError));
     });
   });
 
   describe('when externalApi.sendEmail errors', () => {
     beforeEach(() => {
-      jest.mocked(externalApi.sendEmail).mockImplementation(jest.fn().mockRejectedValue(new Error()));
+      jest.mocked(externalApi.sendEmail).mockRejectedValue(TransactionFailedError.forApiError(testApiError));
     });
 
     it('should throw an error', async () => {
-      await expect(sendRecordReconciledEmail(utilisationReport)).rejects.toThrow(
-        new Error('Error sending record reconciled email - sendRecordReconciledEmail'),
-      );
+      await expect(SendReportReconciledEmail(utilisationReport)).rejects.toThrow(TransactionFailedError.forApiError(testApiError));
     });
   });
 
-  describe('when a valid report is provided and only 1 email address is returned by "generateRecordReconciledEmailVariables"', () => {
+  describe('when a valid report is provided and only 1 email address is returned by "generateReportReconciledEmailVariables"', () => {
     it('should call externalApi.sendEmail once', async () => {
-      await sendRecordReconciledEmail(utilisationReport);
+      await SendReportReconciledEmail(utilisationReport);
 
       expect(sendEmailSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should call externalApi.sendEmail with correct variables', async () => {
-      await sendRecordReconciledEmail(utilisationReport);
+      await SendReportReconciledEmail(utilisationReport);
 
-      const { emails, variables } = await generateRecordReconciledEmailVariables(utilisationReport);
+      const { emails, variables } = await generateReportReconciledEmailVariables(utilisationReport);
 
       expect(sendEmailSpy).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.REPORT_RECONCILED, emails[0], {
         recipient: variables.bankRecipient,
@@ -69,24 +72,24 @@ describe('sendRecordReconciledEmail', () => {
     });
   });
 
-  describe('when a valid report is provided and multiple emails are returned by "generateRecordReconciledEmailVariables"', () => {
+  describe('when a valid report is provided and multiple emails are returned by "generateReportReconciledEmailVariables"', () => {
     const bankResponse = aBank();
-    bankResponse.paymentOfficerTeam.emails.push('test@test.com');
+    bankResponse.paymentOfficerTeam.emails = ['test@test.com', 'test2@test.com'];
 
     beforeEach(() => {
       jest.mocked(getBankById).mockImplementation(jest.fn().mockResolvedValue(bankResponse));
     });
 
     it('should call externalApi.sendEmail twice', async () => {
-      await sendRecordReconciledEmail(utilisationReport);
+      await SendReportReconciledEmail(utilisationReport);
 
       expect(sendEmailSpy).toHaveBeenCalledTimes(2);
     });
 
     it('should call externalApi.sendEmail with correct variables', async () => {
-      await sendRecordReconciledEmail(utilisationReport);
+      await SendReportReconciledEmail(utilisationReport);
 
-      const { emails, variables } = await generateRecordReconciledEmailVariables(utilisationReport);
+      const { emails, variables } = await generateReportReconciledEmailVariables(utilisationReport);
 
       expect(sendEmailSpy).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.REPORT_RECONCILED, emails[0], {
         recipient: variables.bankRecipient,
