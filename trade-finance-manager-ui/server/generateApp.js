@@ -66,6 +66,7 @@ const generateApp = () => {
   if (unauthenticatedAuthRouters) {
     app.use(unauthenticatedAuthRouters);
   }
+
   app.use(
     csrf({
       cookie: {
