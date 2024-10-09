@@ -47,21 +47,7 @@ jest.mock('../../src/database/mongo-client', () => ({
 const mockSuccessfulEmailResponse = {
   status: HttpStatusCode.Created,
   data: {
-    content: {
-      body: 'Dear John Smith,\r\n\r\nThe status of your MIA for EuroStar has been updated.\r\n\r\nEmail: test@test.gov.uk\r\nPhone: +44 (0)202 123 4567\r\nOpening times: Monday to Friday, 9am to 5pm (excluding public holidays)',
-      from_email: 'test@notifications.service.gov.uk',
-      subject: 'Status update: EuroStar bridge',
-      unsubscribe_link: null,
-    },
-    id: 'efd12345-1234-5678-9012-ee123456789f',
-    reference: 'tmp1234-1234-5678-9012-abcd12345678-17133465334678',
-    scheduled_for: null,
-    template: {
-      id: 'tmp1234-1234-5678-9012-abcd12345678',
-      uri: 'https://api.notifications.service.gov.uk/services/abc12345-a123-4567-8901-123456789012/templates/tmp1234-1234-5678-9012-abcd12345678',
-      version: 24,
-    },
-    uri: 'https://api.notifications.service.gov.uk/v2/notifications/efd12345-1234-5678-9012-ee123456789f',
+    content: {},
   },
 };
 
