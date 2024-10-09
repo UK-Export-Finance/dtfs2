@@ -15,7 +15,10 @@ describe('controllers - unauthenticated auth (sso)', () => {
   let res: MockResponse<Response>;
   let req: CustomExpressRequest<{ reqBody: EntraIdAuthCodeRedirectResponseBody }>;
   const mockBody = {
-    test: 'test',
+    client_info: 'mock client info',
+    code: 'mock code',
+    session_state: 'mock session state',
+    state: 'mock state',
   };
 
   beforeEach(() => {
@@ -34,13 +37,18 @@ describe('controllers - unauthenticated auth (sso)', () => {
       expect(() => unauthenticatedAuthController.postSsoRedirect(req, res)).toThrow(InvalidPayloadError);
     });
 
-    it('should render sso/accept-sso-redirect.njk with req.body when validation passes', () => {
+    it('should render sso/accept-sso-redirect.njk with mapped parameters when validation passes', () => {
       jest.mocked(isVerifiedPayload).mockReturnValue(true);
 
       unauthenticatedAuthController.postSsoRedirect(req, res);
 
       expect(res._getRenderView()).toBe('sso/accept-sso-redirect.njk');
-      expect(res._getRenderData()).toBe(mockBody);
+      expect(res._getRenderData()).toEqual({
+        clientInfo: mockBody.client_info,
+        state: mockBody.state,
+        sessionState: mockBody.session_state,
+        code: mockBody.code,
+      });
     });
   });
 
