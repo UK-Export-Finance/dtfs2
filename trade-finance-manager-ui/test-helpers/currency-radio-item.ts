@@ -1,9 +1,14 @@
 import { Currency, RadioItem } from '@ukef/dtfs2-common';
 
-export const aCurrencyRadioItem = (currency: Currency): RadioItem => ({
+type CurrencyRadioItemParams = {
+  currency: Currency;
+  checked: boolean;
+};
+
+export const aCurrencyRadioItem = ({ currency, checked }: CurrencyRadioItemParams): RadioItem => ({
   text: currency,
   value: currency,
-  checked: false,
+  checked,
   attributes: {
     'data-cy': `currency-${currency}`,
   },

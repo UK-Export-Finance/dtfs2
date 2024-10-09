@@ -12,10 +12,10 @@ describe('map currencies to radio items helper', () => {
         // Assert
         expect(currencyRadioItems.length).toBe(Object.values(CURRENCY).length);
         expect(currencyRadioItems).toEqual([
-          aCurrencyRadioItem(CURRENCY.GBP),
-          aCurrencyRadioItem(CURRENCY.EUR),
-          aCurrencyRadioItem(CURRENCY.USD),
-          aCurrencyRadioItem(CURRENCY.JPY),
+          aCurrencyRadioItem({ currency: CURRENCY.GBP, checked: false }),
+          aCurrencyRadioItem({ currency: CURRENCY.EUR, checked: false }),
+          aCurrencyRadioItem({ currency: CURRENCY.USD, checked: false }),
+          aCurrencyRadioItem({ currency: CURRENCY.JPY, checked: false }),
         ]);
       });
     });
@@ -30,13 +30,10 @@ describe('map currencies to radio items helper', () => {
 
         // Assert
         expect(currencyRadioItems).toEqual([
-          {
-            ...aCurrencyRadioItem(CURRENCY.GBP),
-            checked: true,
-          },
-          aCurrencyRadioItem(CURRENCY.EUR),
-          aCurrencyRadioItem(CURRENCY.USD),
-          aCurrencyRadioItem(CURRENCY.JPY),
+          aCurrencyRadioItem({ currency: CURRENCY.GBP, checked: true }),
+          aCurrencyRadioItem({ currency: CURRENCY.EUR, checked: false }),
+          aCurrencyRadioItem({ currency: CURRENCY.USD, checked: false }),
+          aCurrencyRadioItem({ currency: CURRENCY.JPY, checked: false }),
         ]);
       });
     });
