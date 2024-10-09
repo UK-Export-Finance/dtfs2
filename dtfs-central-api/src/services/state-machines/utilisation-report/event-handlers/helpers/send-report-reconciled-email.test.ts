@@ -1,12 +1,10 @@
-import { HttpStatusCode } from 'axios';
-import { UtilisationReportEntityMockBuilder, TestApiError } from '@ukef/dtfs2-common';
+import { UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { SendReportReconciledEmail } from './send-report-reconciled-email';
 import { generateReportReconciledEmailVariables } from './generate-report-reconciled-email-variables';
 import EMAIL_TEMPLATE_IDS from '../../../../../constants/email-template-ids';
 import externalApi from '../../../../../external-api/api';
 import { getBankById } from '../../../../../repositories/banks-repo';
 import { aBank } from '../../../../../../test-helpers';
-import { TransactionFailedError } from '../../../../../errors';
 
 jest.mock('../../../../../repositories/banks-repo');
 jest.mock('../../../../../external-api/api');
@@ -15,10 +13,6 @@ describe('SendReportReconciledEmail', () => {
   let sendEmailSpy = jest.fn();
   const mockGetBankByIdResponse = aBank();
   mockGetBankByIdResponse.paymentOfficerTeam.emails = ['test@test.com'];
-
-  const errorMessage = 'An error message';
-  const errorStatus = HttpStatusCode.BadRequest;
-  const testApiError = new TestApiError(errorStatus, errorMessage);
 
   beforeEach(() => {
     sendEmailSpy = jest.fn(() => Promise.resolve({}));
@@ -34,21 +28,21 @@ describe('SendReportReconciledEmail', () => {
 
   describe('when getBankById errors', () => {
     beforeEach(() => {
-      jest.mocked(getBankById).mockRejectedValue(TransactionFailedError.forApiError(testApiError));
+      jest.mocked(getBankById).mockRejectedValue(new Error());
     });
 
     it('should throw an error', async () => {
-      await expect(SendReportReconciledEmail(utilisationReport)).rejects.toThrow(TransactionFailedError.forApiError(testApiError));
+      await expect(SendReportReconciledEmail(utilisationReport)).rejects.toThrow(new Error());
     });
   });
 
   describe('when externalApi.sendEmail errors', () => {
     beforeEach(() => {
-      jest.mocked(externalApi.sendEmail).mockRejectedValue(TransactionFailedError.forApiError(testApiError));
+      jest.mocked(externalApi.sendEmail).mockRejectedValue(new Error());
     });
 
     it('should throw an error', async () => {
-      await expect(SendReportReconciledEmail(utilisationReport)).rejects.toThrow(TransactionFailedError.forApiError(testApiError));
+      await expect(SendReportReconciledEmail(utilisationReport)).rejects.toThrow(new Error());
     });
   });
 

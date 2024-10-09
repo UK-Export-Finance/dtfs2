@@ -1,9 +1,8 @@
-import { HttpStatusCode } from 'axios';
-import { UtilisationReportEntityMockBuilder, formatDateForEmail, getFormattedReportPeriodWithShortMonth, TestApiError } from '@ukef/dtfs2-common';
+import { UtilisationReportEntityMockBuilder, formatDateForEmail, getFormattedReportPeriodWithShortMonth } from '@ukef/dtfs2-common';
 import { generateReportReconciledEmailVariables } from './generate-report-reconciled-email-variables';
 import { getBankById } from '../../../../../repositories/banks-repo';
 import { aBank } from '../../../../../../test-helpers';
-import { TransactionFailedError, NotFoundError } from '../../../../../errors';
+import { NotFoundError } from '../../../../../errors';
 
 jest.mock('../../../../../repositories/banks-repo');
 
@@ -16,18 +15,15 @@ describe('generateReportReconciledEmailVariables', () => {
 
   const mockGetBankByIdResponse = aBank();
 
-  const errorMessage = 'An error message';
-  const errorStatus = HttpStatusCode.BadRequest;
   const notFoundError = new NotFoundError('Bank not found');
-  const testApiError = new TestApiError(errorStatus, errorMessage);
 
   describe('when getBankById errors', () => {
     beforeEach(() => {
-      jest.mocked(getBankById).mockRejectedValue(TransactionFailedError.forApiError(testApiError));
+      jest.mocked(getBankById).mockRejectedValue(new Error());
     });
 
     it('should throw an error', async () => {
-      await expect(generateReportReconciledEmailVariables(utilisationReport)).rejects.toThrow(TransactionFailedError.forApiError(testApiError));
+      await expect(generateReportReconciledEmailVariables(utilisationReport)).rejects.toThrow(new Error());
     });
   });
 

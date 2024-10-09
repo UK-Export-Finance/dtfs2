@@ -1,17 +1,10 @@
-import { HttpStatusCode } from 'axios';
-import { TestApiError } from '@ukef/dtfs2-common';
 import { sendEmail } from '.';
 import externalApi from '../../external-api/api';
-import { TransactionFailedError } from '../../errors';
 
 jest.mock('../../external-api/api');
 
 describe('sendEmail', () => {
   let sendEmailSpy = jest.fn();
-
-  const errorMessage = 'An error message';
-  const errorStatus = HttpStatusCode.BadRequest;
-  const testApiError = new TestApiError(errorStatus, errorMessage);
 
   const template = 'template';
   const email = 'test@test.com';
@@ -24,11 +17,11 @@ describe('sendEmail', () => {
 
   describe('when externalApi.sendEmail errors', () => {
     beforeEach(() => {
-      jest.mocked(externalApi.sendEmail).mockRejectedValue(TransactionFailedError.forApiError(testApiError));
+      jest.mocked(externalApi.sendEmail).mockRejectedValue(new Error());
     });
 
     it('should throw an error', async () => {
-      await expect(sendEmail(template, email, emailVariables)).rejects.toThrow(TransactionFailedError.forApiError(testApiError));
+      await expect(sendEmail(template, email, emailVariables)).rejects.toThrow(new Error());
     });
   });
 

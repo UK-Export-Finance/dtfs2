@@ -1,8 +1,7 @@
-import { UtilisationReportEntity, ApiError } from '@ukef/dtfs2-common';
+import { UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { generateReportReconciledEmailVariables } from './generate-report-reconciled-email-variables';
 import externalApi from '../../../../../external-api/api';
 import EMAIL_TEMPLATE_IDS from '../../../../../constants/email-template-ids';
-import { TransactionFailedError } from '../../../../../errors';
 
 /**
  * sends the report reconciled email to the bank
@@ -26,12 +25,6 @@ export const SendReportReconciledEmail = async (report: UtilisationReportEntity)
   } catch (error) {
     console.error('Error sending record reconciled email - SendReportReconciledEmail %o', error);
 
-    if (error instanceof ApiError) {
-      throw TransactionFailedError.forApiError(error);
-    }
-    if (error instanceof Error) {
-      throw TransactionFailedError.forError(error);
-    }
-    throw TransactionFailedError.forUnknownError();
+    throw error;
   }
 };

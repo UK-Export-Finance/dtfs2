@@ -1,9 +1,8 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity, ApiError } from '@ukef/dtfs2-common';
+import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { SendReportReconciledEmail } from '../helpers/send-report-reconciled-email';
-import { TransactionFailedError } from '../../../../../errors';
 
 type MarkFeeRecordsAsReconciledEventPayload = {
   requestSource: DbRequestSource;
@@ -62,12 +61,6 @@ export const handleUtilisationReportMarkFeeRecordsAsReconciledEvent = async (
   } catch (error) {
     console.error(`Failed to mark fee records as reconciled - handleUtilisationReportMarkFeeRecordsAsReconciledEvent %o`, error);
 
-    if (error instanceof ApiError) {
-      throw TransactionFailedError.forApiError(error);
-    }
-    if (error instanceof Error) {
-      throw TransactionFailedError.forError(error);
-    }
-    throw TransactionFailedError.forUnknownError();
+    throw error;
   }
 };

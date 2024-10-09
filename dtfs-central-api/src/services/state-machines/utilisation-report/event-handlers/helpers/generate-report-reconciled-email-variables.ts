@@ -1,7 +1,7 @@
-import { UtilisationReportEntity, formatDateForEmail, getFormattedReportPeriodWithShortMonth, ApiError } from '@ukef/dtfs2-common';
+import { UtilisationReportEntity, formatDateForEmail, getFormattedReportPeriodWithShortMonth } from '@ukef/dtfs2-common';
 import { getBankById } from '../../../../../repositories/banks-repo';
-import { FeeReportReconciledEmail } from '../../../../../types/utilisation-reports';
-import { NotFoundError, TransactionFailedError } from '../../../../../errors';
+import { ReportReconciledEmail } from '../../../../../types/utilisation-reports';
+import { NotFoundError } from '../../../../../errors';
 
 /**
  * generates variables for the record reconciled email
@@ -10,7 +10,7 @@ import { NotFoundError, TransactionFailedError } from '../../../../../errors';
  * @param report
  * @returns emails and variables for the email
  */
-export const generateReportReconciledEmailVariables = async (report: UtilisationReportEntity): Promise<FeeReportReconciledEmail> => {
+export const generateReportReconciledEmailVariables = async (report: UtilisationReportEntity): Promise<ReportReconciledEmail> => {
   try {
     const bank = await getBankById(report.bankId);
 
@@ -36,12 +36,6 @@ export const generateReportReconciledEmailVariables = async (report: Utilisation
   } catch (error) {
     console.error('Error getting bank - generateReportReconciledEmailVariables %o', error);
 
-    if (error instanceof ApiError) {
-      throw TransactionFailedError.forApiError(error);
-    }
-    if (error instanceof Error) {
-      throw TransactionFailedError.forError(error);
-    }
-    throw TransactionFailedError.forUnknownError();
+    throw error;
   }
 };
