@@ -8,11 +8,11 @@ jest.mock('@ukef/dtfs2-common', () => ({
   isTfmSsoFeatureFlagEnabled: jest.fn(),
 }));
 
-jest.mock('./userSso', () => ({
+jest.mock('./user-sso', () => ({
   getUserSsoRouter: jest.fn(),
 }));
 
-jest.mock('./userNonSso', () => ({
+jest.mock('./user-non-sso', () => ({
   getUserNonSsoRouter: jest.fn(),
 }));
 
