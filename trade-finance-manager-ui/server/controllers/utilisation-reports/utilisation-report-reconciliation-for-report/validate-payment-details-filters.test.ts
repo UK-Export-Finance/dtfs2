@@ -1,4 +1,5 @@
 import { CURRENCY } from '@ukef/dtfs2-common';
+import { ErrorSummaryViewModel, PaymentDetailsFilterErrorsViewModel } from '../../../types/view-models';
 import {
   isFacilityIdFilterValid,
   isPaymentCurrencyFilterValid,
@@ -205,18 +206,41 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         };
         const originalUrl = 'http://example.com?paymentDetailsFacilityId=INVALID&paymentDetailsPaymentCurrency=INVALID&paymentDetailsPaymentReference=ABC';
 
+        const expectedFacilityIdErrorMessage = 'Facility ID must be blank or contain between 4 and 10 numbers';
+        const expectedPaymentCurrencyErrorMessage = 'Payment currency must be unselected or one of the options';
+        const expectedPaymentReferenceErrorMessage = 'Payment reference must be blank or contain a minimum of 4 characters';
+
+        const expectedErrorSummary: ErrorSummaryViewModel[] = [
+          {
+            href: '#payment-details-payment-currency-filter',
+            text: expectedPaymentCurrencyErrorMessage,
+          },
+          {
+            href: '#payment-details-payment-reference-filter',
+            text: expectedPaymentReferenceErrorMessage,
+          },
+          {
+            href: '#payment-details-facility-id-filter',
+            text: expectedFacilityIdErrorMessage,
+          },
+        ];
+
+        const expectedFilterErrors: PaymentDetailsFilterErrorsViewModel = {
+          errorSummary: expectedErrorSummary,
+          facilityIdErrorMessage: expectedFacilityIdErrorMessage,
+          paymentCurrencyErrorMessage: expectedPaymentCurrencyErrorMessage,
+          paymentReferenceErrorMessage: expectedPaymentReferenceErrorMessage,
+        };
+
         // Act
         const result = validatePaymentDetailsFilters(originalUrl, filters);
 
         // Assert
-        expect(result.errorSummary).toHaveLength(3);
-        expect(result.facilityIdErrorMessage).toBeDefined();
-        expect(result.paymentCurrencyErrorMessage).toBeDefined();
-        expect(result.paymentReferenceErrorMessage).toBeDefined();
+        expect(result).toEqual(expectedFilterErrors);
       });
     });
 
-    describe('when original URL does not include filter parameters', () => {
+    describe('when original URL does not include filter query parameters', () => {
       it('should return an object with all error messages and errorSummary', () => {
         // Arrange
         const filters = {
@@ -226,14 +250,38 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         };
         const originalUrl = 'http://example.com';
 
+        const expectedFacilityIdErrorMessage = 'Facility ID must be blank or contain between 4 and 10 numbers';
+        const expectedPaymentCurrencyErrorMessage = 'Payment currency must be unselected or one of the options';
+        const expectedPaymentReferenceErrorMessage = 'Payment reference must be blank or contain a minimum of 4 characters';
+
+        const expectedErrorSummary: ErrorSummaryViewModel[] = [
+          {
+            href: '#payment-details-payment-currency-filter',
+            text: expectedPaymentCurrencyErrorMessage,
+          },
+          {
+            href: '#payment-details-payment-reference-filter',
+            text: expectedPaymentReferenceErrorMessage,
+          },
+          {
+            href: '#payment-details-facility-id-filter',
+            text: expectedFacilityIdErrorMessage,
+          },
+        ];
+
+        const expectedFilterErrors: PaymentDetailsFilterErrorsViewModel = {
+          errorSummary: expectedErrorSummary,
+          facilityIdErrorMessage: expectedFacilityIdErrorMessage,
+          paymentCurrencyErrorMessage: expectedPaymentCurrencyErrorMessage,
+          paymentReferenceErrorMessage: expectedPaymentReferenceErrorMessage,
+        };
+
         // Act
         const result = validatePaymentDetailsFilters(originalUrl, filters);
 
         // Assert
-        expect(result.errorSummary).toHaveLength(3);
-        expect(result.facilityIdErrorMessage).toBeDefined();
-        expect(result.paymentCurrencyErrorMessage).toBeDefined();
-        expect(result.paymentReferenceErrorMessage).toBeDefined();
+
+        expect(result).toEqual(expectedFilterErrors);
       });
     });
   });
