@@ -118,7 +118,7 @@ context('Deal cancellation - cancel cancellation', () => {
           cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
         });
 
-        it(`no, go back button navigates to reason page`, () => {
+        it(`"no, go back" button navigates to reason page`, () => {
           cancelCancellationPage.noGoBackButton().click();
 
           cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
@@ -137,7 +137,7 @@ context('Deal cancellation - cancel cancellation', () => {
           cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
         });
 
-        it(`no, go back button navigates to check-details page`, () => {
+        it(`"no, go back" button navigates to check-details page`, () => {
           cancelCancellationPage.noGoBackButton().click();
 
           cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
@@ -157,7 +157,7 @@ context('Deal cancellation - cancel cancellation', () => {
             cy.url().should('eq', relative(`/case/${dealId}/cancellation/${page}`));
           });
 
-          it(`no, go back button navigates to ${page} page`, () => {
+          it(`"no, go back" button navigates to ${page} page`, () => {
             cancelCancellationPage.noGoBackButton().click();
 
             cy.url().should('eq', relative(`/case/${dealId}/cancellation/${page}`));
