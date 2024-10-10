@@ -5,7 +5,6 @@ import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { PostPaymentPayload } from '../../../routes/middleware/payload-validation/validate-post-payment-payload';
 import { addPaymentToUtilisationReport } from './helpers';
 import { NewPaymentDetails } from '../../../../types/utilisation-reports';
-import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 
 export type PostPaymentRequest = CustomExpressRequest<{
   reqBody: PostPaymentPayload;
@@ -34,10 +33,9 @@ export const postPayment = async (req: PostPaymentRequest, res: Response) => {
       reference: paymentReference,
     };
 
-    await addPaymentToUtilisationReport(parseInt(reportId, 10), feeRecordIds, user, newPaymentDetails);
-    const { status } = await FeeRecordRepo.findOneByOrFail({ id: feeRecordIds[0] });
+    const feeRecordStatus = await addPaymentToUtilisationReport(parseInt(reportId, 10), feeRecordIds, user, newPaymentDetails);
 
-    return res.status(HttpStatusCode.Ok).send({ feeRecordStatus: status });
+    return res.status(HttpStatusCode.Ok).send({ feeRecordStatus });
   } catch (error) {
     const errorMessage = 'Failed to add a new payment';
     console.error(errorMessage, error);

@@ -1,17 +1,15 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
-import { Currency, FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, TestApiError } from '@ukef/dtfs2-common';
+import { Currency, FEE_RECORD_STATUS, TestApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { PostPaymentRequest, postPayment } from '.';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
-import { aTfmSessionUser, aUtilisationReport } from '../../../../../test-helpers';
+import { aTfmSessionUser } from '../../../../../test-helpers';
 import { addPaymentToUtilisationReport } from './helpers';
 import { PostPaymentPayload } from '../../../routes/middleware/payload-validation/validate-post-payment-payload';
 import { NewPaymentDetails } from '../../../../types/utilisation-reports';
-import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 
 jest.mock('./helpers');
-jest.mock('../../../../repositories/fee-record-repo');
 
 console.error = jest.fn();
 
@@ -50,7 +48,7 @@ describe('post-payment.controller', () => {
       });
       const res = httpMocks.createResponse();
 
-      jest.mocked(addPaymentToUtilisationReport).mockResolvedValue();
+      jest.mocked(addPaymentToUtilisationReport).mockResolvedValue(FEE_RECORD_STATUS.MATCH);
 
       const newPaymentDetails: NewPaymentDetails = {
         currency: paymentCurrency,
@@ -74,10 +72,7 @@ describe('post-payment.controller', () => {
       });
       const res = httpMocks.createResponse();
 
-      jest.mocked(addPaymentToUtilisationReport).mockResolvedValue();
-      jest
-        .spyOn(FeeRecordRepo, 'findOneByOrFail')
-        .mockResolvedValue(FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(FEE_RECORD_STATUS.MATCH).build());
+      jest.mocked(addPaymentToUtilisationReport).mockResolvedValue(FEE_RECORD_STATUS.MATCH);
 
       // Act
       await postPayment(req, res);
