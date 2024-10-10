@@ -2,7 +2,6 @@ import relative from '../../../../relativeURL';
 import facilityPage from '../../../../pages/facilityPage';
 import amendmentsPage from '../../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../../fixtures/deal-AIN';
-import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1 } from '../../../../../../../e2e-fixtures';
 
 context('Amendments - BSS/EWCS deal does not display any Facility end date pages or fields', () => {
@@ -49,9 +48,9 @@ context('Amendments - BSS/EWCS deal does not display any Facility end date pages
     amendmentsPage.addAmendmentButton().click();
 
     cy.url().should('contain', 'request-date');
-    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+
+    cy.completeDateFormFields({ idPrefix: 'amendment--request-date' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
@@ -63,9 +62,9 @@ context('Amendments - BSS/EWCS deal does not display any Facility end date pages
     cy.clickContinueButton();
 
     cy.url().should('contain', 'cover-end-date');
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.todayYear);
+
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'check-answers');
