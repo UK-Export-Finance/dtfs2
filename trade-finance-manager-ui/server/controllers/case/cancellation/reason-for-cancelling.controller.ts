@@ -16,7 +16,7 @@ export type PostReasonForCancellingRequest = CustomExpressRequest<{ params: { _i
  * @param dealId - The deal ID
  * @param status - 'change' if user comes from the check answers page, otherwise undefined
  */
-const getPreviousPage = (dealId: string, status?: string): string => {
+const getPreviousPageUrl = (dealId: string, status?: string): string => {
   return status === 'change' ? `/case/${dealId}/cancellation/check-details` : `/case/${dealId}/deal`;
 };
 
@@ -50,7 +50,7 @@ export const getReasonForCancelling = async (req: GetReasonForCancellingRequest,
       ukefDealId: deal.dealSnapshot.details.ukefDealId,
       dealId: _id,
       reasonForCancelling: cancellation?.reason,
-      previousPage: getPreviousPage(_id, status),
+      previousPage: getPreviousPageUrl(_id, status),
     };
     return res.render('case/cancellation/reason-for-cancelling.njk', reasonForCancellingViewModel);
   } catch (error) {
@@ -94,7 +94,7 @@ export const postReasonForCancelling = async (req: PostReasonForCancellingReques
         dealId: _id,
         errors: validationErrors,
         reasonForCancelling: reason,
-        previousPage: getPreviousPage(_id, status),
+        previousPage: getPreviousPageUrl(_id, status),
       };
 
       return res.render('case/cancellation/reason-for-cancelling.njk', reasonForCancellingViewModel);

@@ -21,7 +21,7 @@ export type PostEffectiveFromDateRequest = CustomExpressRequest<{
  * @param dealId - The deal ID
  * @param status - 'change' if user comes from the check answers page, otherwise undefined
  */
-const getPreviousPage = (dealId: string, status?: string): string => {
+const getPreviousPageUrl = (dealId: string, status?: string): string => {
   return status === 'change' ? `/case/${dealId}/cancellation/check-details` : `/case/${dealId}/cancellation/bank-request-date`;
 };
 
@@ -63,7 +63,7 @@ export const getEffectiveFromDate = async (req: GetEffectiveFromDateRequest, res
       day,
       month,
       year,
-      previousPage: getPreviousPage(_id, status),
+      previousPage: getPreviousPageUrl(_id, status),
     };
     return res.render('case/cancellation/effective-from-date.njk', effectiveFromDateViewModel);
   } catch (error) {
@@ -107,7 +107,7 @@ export const postEffectiveFromDate = async (req: PostEffectiveFromDateRequest, r
         month,
         year,
         errors: validationErrors,
-        previousPage: getPreviousPage(_id, status),
+        previousPage: getPreviousPageUrl(_id, status),
       };
 
       return res.render('case/cancellation/effective-from-date.njk', effectiveFromDateViewModel);

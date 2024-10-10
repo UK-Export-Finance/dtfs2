@@ -21,7 +21,7 @@ export type PostBankRequestDateRequest = CustomExpressRequest<{
  * @param dealId - The deal ID
  * @param status - 'change' if user comes from the check answers page, otherwise undefined
  */
-const getPreviousPage = (dealId: string, status?: string): string => {
+const getPreviousPageUrl = (dealId: string, status?: string): string => {
   return status === 'change' ? `/case/${dealId}/cancellation/check-details` : `/case/${dealId}/cancellation/reason`;
 };
 
@@ -63,7 +63,7 @@ export const getBankRequestDate = async (req: GetBankRequestDateRequest, res: Re
       day,
       month,
       year,
-      previousPage: getPreviousPage(_id, status),
+      previousPage: getPreviousPageUrl(_id, status),
     };
     return res.render('case/cancellation/bank-request-date.njk', bankRequestDateViewModel);
   } catch (error) {
@@ -107,7 +107,7 @@ export const postBankRequestDate = async (req: PostBankRequestDateRequest, res: 
         month,
         year,
         errors: validationErrors,
-        previousPage: getPreviousPage(_id, status),
+        previousPage: getPreviousPageUrl(_id, status),
       };
       return res.render('case/cancellation/bank-request-date.njk', bankRequestDateViewModel);
     }
