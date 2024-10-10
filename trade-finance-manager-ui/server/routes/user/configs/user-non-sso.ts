@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
-import { getRouter } from '../../../types/get-router';
+import { GetRouter } from '../../../types/get-router';
 import * as userController from '../../../controllers/user/userNonSso';
 
-export const getUserNonSsoRouter: getRouter = () => {
+export const getUserNonSsoRouter: GetRouter = () => {
   const userNonSsoRouter = express.Router();
 
   userNonSsoRouter.get('/change-password', userController.getUserProfile);

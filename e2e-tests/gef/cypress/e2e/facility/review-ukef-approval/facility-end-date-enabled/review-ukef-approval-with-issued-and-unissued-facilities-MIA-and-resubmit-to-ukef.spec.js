@@ -1,16 +1,10 @@
 import relative from '../../../relativeURL';
-
 import CONSTANTS from '../../../../fixtures/constants';
-
-import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
-
+import { threeDaysAgo, threeMonthsOneDay, twoMonths, threeMonths } from '../../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_DRAFT, UKEF_DECISION, underwriterManagersDecision } from '../../../../fixtures/mocks/mock-deals';
-
 import { BANK1_MAKER1, BANK1_CHECKER1, BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../../../e2e-fixtures/portal-users.fixture';
 import { anIssuedCashFacilityWithCoverDateConfirmed, multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
-
 import { toTitleCase } from '../../../../fixtures/helpers';
-
 import { continueButton, errorSummary, submitButton } from '../../../partials';
 import applicationPreview from '../../../pages/application-preview';
 import unissuedFacilityTable from '../../../pages/unissued-facilities';
@@ -175,9 +169,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.todayDay);
-      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.todayMonth);
-      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.todayYear);
+      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date' });
 
       cy.clickContinueButton();
 
@@ -185,7 +177,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.rows().contains(format(dateConstants.threeMonths, 'dd MMM yyyy'));
+      unissuedFacilityTable.rows().contains(format(threeMonths, 'dd MMM yyyy'));
       unissuedFacilityTable.updateFacilitiesLater().click();
 
       // link on application preview exists
@@ -199,9 +191,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.threeDaysDay);
-      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.threeDaysMonth);
-      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.threeDaysYear);
+      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: threeDaysAgo });
 
       cy.clickContinueButton();
 
@@ -216,9 +206,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.threeMonthsOneDayDay);
-      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.threeMonthsOneDayMonth);
-      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.threeMonthsOneDayYear);
+      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: threeMonthsOneDay });
 
       cy.clickContinueButton();
 
@@ -231,19 +219,13 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.todayDay);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.todayMonth);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.todayYear);
+      cy.completeDateFormFields({ idPrefix: 'issue-date' });
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.twoMonthsDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.twoMonthsMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.twoMonthsYear);
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths });
 
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.threeMonthsOneDayDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeMonthsOneDayYear);
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonths });
 
       aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
 
