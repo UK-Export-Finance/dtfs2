@@ -36,7 +36,7 @@ describe(page, () => {
     premiumPayments: [],
     keyingSheet: [],
     paymentDetails: [],
-    utilisationDetails: { utilisationTableRows: [] },
+    utilisationDetails: { utilisationTableRows: [], downloadUrl: 'utilisation-reports/123/download' },
   };
 
   const getWrapper = (viewModel: UtilisationReportReconciliationForReportViewModel = params) => render(viewModel);
@@ -296,6 +296,7 @@ describe(page, () => {
             feeRecordId,
           },
         ],
+        downloadUrl: 'a link',
       },
     });
 
@@ -303,5 +304,20 @@ describe(page, () => {
 
     wrapper.expectElement(`${utilisationTabSelector} table`).toExist();
     wrapper.expectElement(`${utilisationTabSelector} table tr[data-cy="utilisation-table-row-${feeRecordId}"]`);
+  });
+
+  it('should render the download link for the report', () => {
+    const downloadUrl = 'utilisation-reports/12345/download';
+    const wrapper = getWrapper({
+      ...params,
+      utilisationDetails: {
+        utilisationTableRows: [aUtilisationTableRowViewModel()],
+        downloadUrl,
+      },
+    });
+
+    const utilisationTabSelector = 'div#utilisation';
+
+    wrapper.expectLink(`${utilisationTabSelector} a`).toLinkTo(downloadUrl, 'Download the report submitted by the bank as a CSV');
   });
 });

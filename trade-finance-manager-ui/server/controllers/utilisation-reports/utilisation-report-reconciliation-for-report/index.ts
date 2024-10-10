@@ -76,7 +76,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
 
     const paymentDetailsViewModel = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel(paymentDetails);
 
-    const utilisationDetailsViewModel = mapToUtilisationDetailsViewModel(utilisationDetails);
+    const utilisationDetailsViewModel = mapToUtilisationDetailsViewModel(utilisationDetails, reportId);
 
     return renderUtilisationReportReconciliationForReport(res, {
       user,

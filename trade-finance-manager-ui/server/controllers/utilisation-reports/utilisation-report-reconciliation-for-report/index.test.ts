@@ -178,6 +178,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
             feesPayable: { formattedCurrencyAndAmount: `${CURRENCY.JPY} 2.00`, dataSortValue: 0 },
           },
         ],
+        downloadUrl: `/utilisation-reports/${reportId}/download`,
       };
 
       const premiumPaymentsFilters = {

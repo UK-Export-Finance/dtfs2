@@ -33,13 +33,7 @@ utilisationReportsRoutes.post(
   updateUtilisationReportStatus,
 );
 
-utilisationReportsRoutes.get(
-  '/:id/download',
-  validateTfmPaymentReconciliationFeatureFlagIsNotEnabled,
-  validateUserTeam(Object.values(PDC_TEAM_IDS)),
-  validateSqlId('id'),
-  getReportDownload,
-);
+utilisationReportsRoutes.get('/:id/download', validateUserTeam(Object.values(PDC_TEAM_IDS)), validateSqlId('id'), getReportDownload);
 
 utilisationReportsRoutes.get('/find-reports-by-year', validateUserTeam(Object.values(PDC_TEAM_IDS)), getFindReportsByYear);
 

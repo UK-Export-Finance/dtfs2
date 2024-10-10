@@ -178,7 +178,7 @@ describe('utilisation-details-helper', () => {
       ];
 
       // Act
-      const viewModel = mapToUtilisationDetailsViewModel(items);
+      const viewModel = mapToUtilisationDetailsViewModel(items, '1');
 
       // Assert
       expect(viewModel.utilisationTableRows.length).toEqual(2);
@@ -195,7 +195,7 @@ describe('utilisation-details-helper', () => {
       ];
 
       // Act
-      const viewModel = mapToUtilisationDetailsViewModel(items);
+      const viewModel = mapToUtilisationDetailsViewModel(items, '1');
 
       // Assert
       expect(viewModel.utilisationTableRows.length).toEqual(3);
@@ -213,13 +213,24 @@ describe('utilisation-details-helper', () => {
       ];
 
       // Act
-      const viewModel = mapToUtilisationDetailsViewModel(items);
+      const viewModel = mapToUtilisationDetailsViewModel(items, '1');
 
       // Assert
       expect(viewModel.utilisationTableRows.length).toEqual(3);
       expect(viewModel.utilisationTableRows[0].feesPayable.dataSortValue).toEqual(1);
       expect(viewModel.utilisationTableRows[1].feesPayable.dataSortValue).toEqual(2);
       expect(viewModel.utilisationTableRows[2].feesPayable.dataSortValue).toEqual(0);
+    });
+
+    it('should set the download url using the report id', () => {
+      // Arrange
+      const reportId = '123';
+
+      // Act
+      const viewModel = mapToUtilisationDetailsViewModel([], reportId);
+
+      // Assert
+      expect(viewModel.downloadUrl).toEqual(`/utilisation-reports/${reportId}/download`);
     });
   });
 });

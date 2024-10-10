@@ -26,7 +26,7 @@ export const mapToUtilisationTableRowViewModel = (
   },
 });
 
-export const mapToUtilisationDetailsViewModel = (utilisationDetails: FeeRecordUtilisation[]): UtilisationDetailsViewModel => {
+export const mapToUtilisationDetailsViewModel = (utilisationDetails: FeeRecordUtilisation[], reportId: string): UtilisationDetailsViewModel => {
   const feesPayableDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(
     utilisationDetails.map(({ feeRecordId, feesPayable }) => ({ ...feesPayable, key: feeRecordId })),
   );
@@ -35,6 +35,7 @@ export const mapToUtilisationDetailsViewModel = (utilisationDetails: FeeRecordUt
   );
 
   return {
+    downloadUrl: `/utilisation-reports/${reportId}/download`,
     utilisationTableRows: utilisationDetails.map((feeRecordUtilisation) => {
       const { feeRecordId } = feeRecordUtilisation;
       const dataSortValues: UtilisationTableRowDataSortValues = {
