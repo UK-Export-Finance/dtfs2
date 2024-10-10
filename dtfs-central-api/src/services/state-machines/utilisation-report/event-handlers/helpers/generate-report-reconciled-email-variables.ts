@@ -16,7 +16,7 @@ export const generateReportReconciledEmailVariables = async (report: Utilisation
 
     if (!bank) {
       console.error('Bank not found: %s', report.bankId);
-      throw new NotFoundError('Bank not found');
+      throw new NotFoundError(`Bank not found: ${report.bankId}`);
     }
 
     const { teamName, emails } = bank.paymentOfficerTeam;

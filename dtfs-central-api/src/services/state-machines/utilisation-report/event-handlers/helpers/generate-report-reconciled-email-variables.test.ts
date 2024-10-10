@@ -15,7 +15,7 @@ describe('generateReportReconciledEmailVariables', () => {
 
   const mockGetBankByIdResponse = aBank();
 
-  const notFoundError = new NotFoundError('Bank not found');
+  const notFoundError = new NotFoundError(`Bank not found: ${utilisationReport.bankId}`);
 
   describe('when getBankById errors', () => {
     beforeEach(() => {
