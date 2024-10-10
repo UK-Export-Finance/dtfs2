@@ -36,7 +36,7 @@ describe('postCancelCancellation', () => {
     await postCancelCancellation(req, res);
 
     // Assert
-    expect(res._getRedirectUrl()).toBe(previousPage);
+    expect(res._getRedirectUrl()).toEqual(previousPage);
   });
 
   it('redirects to not found if the deal does not exist', async () => {
@@ -52,7 +52,7 @@ describe('postCancelCancellation', () => {
     await postCancelCancellation(req, res);
 
     // Assert
-    expect(res._getRedirectUrl()).toBe(`/not-found`);
+    expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
 
   it('redirects to not found if the dealId is invalid', async () => {
@@ -68,7 +68,7 @@ describe('postCancelCancellation', () => {
     await postCancelCancellation(req, res);
 
     // Assert
-    expect(res._getRedirectUrl()).toBe(`/not-found`);
+    expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
 
   describe(`when the deal type is ${DEAL_SUBMISSION_TYPE.MIA}`, () => {
@@ -87,7 +87,7 @@ describe('postCancelCancellation', () => {
       await postCancelCancellation(req, res);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(`/case/${dealId}/deal`);
+      expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
     });
 
     it('does not delete the deal cancellation', async () => {
@@ -138,7 +138,7 @@ describe('postCancelCancellation', () => {
       await postCancelCancellation(req, res);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(`/case/${dealId}/deal`);
+      expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
     });
   });
 });

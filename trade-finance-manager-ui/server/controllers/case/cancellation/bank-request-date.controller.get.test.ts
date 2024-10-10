@@ -104,7 +104,7 @@ describe('getBankRequestDate', () => {
       await getBankRequestDate(req, res);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(`/case/${dealId}/deal`);
+      expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
     });
 
     it('renders the bank request date page without prepopulated data when it does not exist', async () => {

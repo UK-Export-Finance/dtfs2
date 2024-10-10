@@ -104,7 +104,7 @@ describe('getDealCancellationDetails', () => {
       await getDealCancellationDetails(req, res);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(`/case/${dealId}/deal`);
+      expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
     });
 
     it('renders the check details page with deal cancellation details', async () => {

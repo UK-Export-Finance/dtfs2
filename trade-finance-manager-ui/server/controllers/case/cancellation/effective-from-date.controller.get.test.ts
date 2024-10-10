@@ -104,7 +104,7 @@ describe('getEffectiveFromDate', () => {
       await getEffectiveFromDate(req, res);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(`/case/${dealId}/deal`);
+      expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
     });
 
     it('renders the effective from date page without prepopulated data when it does not exist', async () => {
