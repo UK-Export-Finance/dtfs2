@@ -32,9 +32,9 @@ context('about-supply-contract', () => {
 
     cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day(), today.day);
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().month(), `${today.getMonth() + 1}`);
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().month(), today.month);
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), `${today.getFullYear()}`);
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), today.year);
 
     contractAboutFinancial.saveAndGoBack().click();
 
