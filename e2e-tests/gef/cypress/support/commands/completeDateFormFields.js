@@ -13,7 +13,7 @@ import { today, longDayFormat, longMonthFormat, longYearFormat } from '../../../
  * @param {string} month: Optional month string
  * @param {string} year: Optional year string
  */
-const completeDateFormFields = ({ idPrefix, date = today, day, month, year }) => {
+const completeDateFormFields = ({ idPrefix, date = today.date, day, month, year }) => {
   if (day !== null) {
     const dayValue = day || format(date, longDayFormat);
 
