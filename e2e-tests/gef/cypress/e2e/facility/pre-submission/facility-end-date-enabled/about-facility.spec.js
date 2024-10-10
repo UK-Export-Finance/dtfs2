@@ -251,8 +251,8 @@ context('About Facility Page  - feature flag enabled', () => {
       aboutFacility.coverStartDateDay().should('have.value', today.day); // pre-populated date uses the 'd' format
       aboutFacility.coverStartDateMonth().should('have.value', today.month); // pre-populated month uses the 'M' format
       aboutFacility.coverStartDateYear().should('have.value', today.year);
-      aboutFacility.coverEndDateDay().should('have.value', tomorrow.dayLong); // pre-populated date uses the 'd' format
-      aboutFacility.coverEndDateMonth().should('have.value', tomorrow.getMonth() + 1); // pre-populated month uses the 'M' format
+      aboutFacility.coverEndDateDay().should('have.value', tomorrow.day); // pre-populated date uses the 'd' format
+      aboutFacility.coverEndDateMonth().should('have.value', tomorrow.month); // pre-populated month uses the 'M' format
       aboutFacility.coverEndDateYear().should('have.value', tomorrow.year);
       if (application.version >= 1) {
         aboutFacility.isUsingFacilityEndDateYes().should('be.checked');
