@@ -8,7 +8,7 @@ import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { aFeeRecordPaymentGroup, aUtilisationReportReconciliationDetailsResponse, aPayment, aFeeRecord } from '../../../../test-helpers';
 import { FeeRecordPaymentGroup, UtilisationReportReconciliationDetailsResponseBody } from '../../../api-response-types';
 import { PremiumPaymentsViewModelItem, PaymentDetailsViewModel, UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
-import { mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel } from '../helpers';
+import { mapPaymentDetailsFiltersToViewModel } from '../helpers';
 
 jest.mock('../../../api');
 jest.mock('../../../helpers/date');
@@ -166,7 +166,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
             dateReconciled: { formattedDateReconciled: '-', dataSortValue: 0 },
           },
         ],
-        filters: mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel(paymentDetailsFilters),
+        filters: mapPaymentDetailsFiltersToViewModel(paymentDetailsFilters),
         filterErrors: {
           errorSummary: [],
         },

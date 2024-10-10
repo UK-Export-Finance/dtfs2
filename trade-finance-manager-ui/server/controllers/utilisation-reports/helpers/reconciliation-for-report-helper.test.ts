@@ -988,7 +988,7 @@ describe('reconciliation-for-report-helper', () => {
     });
   });
 
-  describe('mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel', () => {
+  describe('mapPaymentDetailsFiltersToViewModel', () => {
     describe('when payment currency filter is defined', () => {
       it('should map payment details filters to view model with radio items for currencies with the provided currency checked', () => {
         // Arrange
