@@ -160,13 +160,9 @@ context('Loan Guarantee Details', () => {
 
       pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
 
-      cy.keyboardInput(pages.loanGuaranteeDetails.requestedCoverStartDateDayInput(), '23-');
-      cy.keyboardInput(pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput(), '03-');
-      cy.keyboardInput(pages.loanGuaranteeDetails.requestedCoverStartDateYearInput(), '2022-');
+      cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', day: '23-', month: '03-', year: '2022-' });
 
-      cy.keyboardInput(pages.loanGuaranteeDetails.coverEndDateDayInput(), '23-');
-      cy.keyboardInput(pages.loanGuaranteeDetails.coverEndDateMonthInput(), '08-');
-      cy.keyboardInput(pages.loanGuaranteeDetails.coverEndDateYearInput(), '2023-');
+      cy.completeDateFormFields({ idPrefix: 'coverEndDate', day: '23-', month: '08-', year: '2023-' });
 
       cy.clickSubmitButton();
 
@@ -178,13 +174,9 @@ context('Loan Guarantee Details', () => {
       pages.loanGuaranteeDetails.coverEndDateErrorMessage().contains('The year for the Cover End Date must include 4 numbers');
       pages.loanGuaranteeDetails.requestedCoverStartDateErrorMessage().contains('The year for the requested Cover Start Date must include 4 numbers');
 
-      cy.keyboardInput(pages.loanGuaranteeDetails.requestedCoverStartDateDayInput(), ' ');
-      cy.keyboardInput(pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput(), ' ');
-      cy.keyboardInput(pages.loanGuaranteeDetails.requestedCoverStartDateYearInput(), ' ');
+      cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', day: ' ', month: ' ', year: ' ' });
 
-      cy.keyboardInput(pages.loanGuaranteeDetails.coverEndDateDayInput(), ' ');
-      cy.keyboardInput(pages.loanGuaranteeDetails.coverEndDateMonthInput(), ' ');
-      cy.keyboardInput(pages.loanGuaranteeDetails.coverEndDateYearInput(), ' ');
+      cy.completeDateFormFields({ idPrefix: 'coverEndDate', day: ' ', month: ' ', year: ' ' });
 
       cy.clickSubmitButton();
 
@@ -196,13 +188,9 @@ context('Loan Guarantee Details', () => {
       pages.loanGuaranteeDetails.coverEndDateErrorMessage().contains('The year for the Cover End Date must include 4 numbers');
       pages.loanGuaranteeDetails.requestedCoverStartDateErrorMessage().contains('The year for the requested Cover Start Date must include 4 numbers');
 
-      cy.keyboardInput(pages.loanGuaranteeDetails.requestedCoverStartDateDayInput(), '23-');
-      cy.keyboardInput(pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput(), '05');
-      cy.keyboardInput(pages.loanGuaranteeDetails.requestedCoverStartDateYearInput(), '2022');
+      cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', day: '23-', month: '05', year: '2022' });
 
-      cy.keyboardInput(pages.loanGuaranteeDetails.coverEndDateDayInput(), '23-');
-      cy.keyboardInput(pages.loanGuaranteeDetails.coverEndDateMonthInput(), '05');
-      cy.keyboardInput(pages.loanGuaranteeDetails.coverEndDateYearInput(), '2025');
+      cy.completeDateFormFields({ idPrefix: 'coverEndDate', day: '23-', month: '05', year: '2025' });
 
       cy.clickSubmitButton();
 
@@ -214,13 +202,9 @@ context('Loan Guarantee Details', () => {
       pages.loanGuaranteeDetails.coverEndDateErrorMessage().contains('The day for the cover end date must only include 1 or 2 numbers');
       pages.loanGuaranteeDetails.requestedCoverStartDateErrorMessage().contains('The day for the requested Cover Start Date must include 1 or 2 numbers');
 
-      cy.keyboardInput(pages.loanGuaranteeDetails.requestedCoverStartDateDayInput(), '23');
-      cy.keyboardInput(pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput(), '05-');
-      cy.keyboardInput(pages.loanGuaranteeDetails.requestedCoverStartDateYearInput(), '2022');
+      cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', day: '23', month: '05-', year: '2022' });
 
-      cy.keyboardInput(pages.loanGuaranteeDetails.coverEndDateDayInput(), '23');
-      cy.keyboardInput(pages.loanGuaranteeDetails.coverEndDateMonthInput(), '05-');
-      cy.keyboardInput(pages.loanGuaranteeDetails.coverEndDateYearInput(), '2025');
+      cy.completeDateFormFields({ idPrefix: 'coverEndDate', day: '23', month: '05-', year: '2025' });
 
       cy.clickSubmitButton();
 
@@ -232,13 +216,9 @@ context('Loan Guarantee Details', () => {
       pages.loanGuaranteeDetails.coverEndDateErrorMessage().contains('The month for the cover end date must only include 1 or 2 numbers');
       pages.loanGuaranteeDetails.requestedCoverStartDateErrorMessage().contains('The month for the requested Cover Start Date must include 1 or 2 numbers');
 
-      cy.keyboardInput(pages.loanGuaranteeDetails.requestedCoverStartDateDayInput(), '##');
-      cy.keyboardInput(pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput(), '##');
-      cy.keyboardInput(pages.loanGuaranteeDetails.requestedCoverStartDateYearInput(), '####');
+      cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', day: '##', month: '##', year: '####' });
 
-      cy.keyboardInput(pages.loanGuaranteeDetails.coverEndDateDayInput(), '##');
-      cy.keyboardInput(pages.loanGuaranteeDetails.coverEndDateMonthInput(), '##');
-      cy.keyboardInput(pages.loanGuaranteeDetails.coverEndDateYearInput(), '####');
+      cy.completeDateFormFields({ idPrefix: 'coverEndDate', day: '##', month: '##', year: '####' });
 
       partials.taskListHeader.loanId().then((loanIdHiddenInput) => {
         const loanId = loanIdHiddenInput[0].value;
