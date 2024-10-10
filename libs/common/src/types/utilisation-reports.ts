@@ -51,6 +51,12 @@ export type PaymentDetailsFilters = {
   paymentReference?: string;
 };
 
+export type ValidatedPaymentDetailsFilters = {
+  facilityId?: string;
+  paymentCurrency?: Currency;
+  paymentReference?: string;
+};
+
 export type UtilisationReportFacilityData = {
   baseCurrency: string;
   facilityUtilisation: string;

@@ -10,7 +10,9 @@ type PaymentDetailsTableViewModel = {
 
 describe(component, () => {
   const aPaymentDetailsTableViewModel = (): PaymentDetailsTableViewModel => ({
-    paymentDetails: [],
+    paymentDetails: {
+      rows: [],
+    },
   });
 
   const getWrapper = (viewModel: PaymentDetailsTableViewModel = aPaymentDetailsTableViewModel()) => render(viewModel);

@@ -1,4 +1,4 @@
-import { COMPANY_REGISTRATION_NUMBER } from '../constants';
+import { COMPANY_REGISTRATION_NUMBER, MAX_PAYMENT_REFERENCE_CHARACTER_COUNT } from '../constants';
 import { isNonEmptyString, isString } from './string';
 
 /**
@@ -33,10 +33,11 @@ export const isValidCompanyRegistrationNumber = (registrationNumber: string): bo
   matchesRegex(COMPANY_REGISTRATION_NUMBER.REGEX, registrationNumber.toString());
 
 /**
- * Checks if the payment reference exceeds 50 characters.
+ * Checks if the payment reference exceeds
+ * {@link MAX_PAYMENT_REFERENCE_CHARACTER_COUNT} characters.
  * @param paymentReference - The payment reference to check.
- * @returns True if the payment reference is a non-empty string and longer than 50 characters, false otherwise.
+ * @returns True if the payment reference is a non-empty string and longer than the maximum character count, false otherwise.
  */
-export const isPaymentReferenceOverFiftyCharacters = (paymentReference: string | undefined): boolean => {
-  return isNonEmptyString(paymentReference) && paymentReference.length > 50;
+export const isPaymentReferenceOverMaxCharacterCount = (paymentReference: string | undefined): boolean => {
+  return isNonEmptyString(paymentReference) && paymentReference.length > MAX_PAYMENT_REFERENCE_CHARACTER_COUNT;
 };

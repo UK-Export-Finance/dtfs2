@@ -12,6 +12,7 @@ export const aUtilisationReportReconciliationDetailsResponse = (): UtilisationRe
     end: { month: 2, year: 2024 },
   },
   dateUploaded: new Date().toString(),
-  feeRecordPaymentGroups: [],
+  premiumPayments: [],
+  paymentDetails: [],
   keyingSheet: [],
 });
