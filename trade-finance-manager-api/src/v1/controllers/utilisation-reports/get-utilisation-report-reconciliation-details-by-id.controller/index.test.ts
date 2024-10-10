@@ -58,6 +58,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       await getUtilisationReportReconciliationDetailsById(req, res);
 
       // Assert
+      expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledTimes(1);
       expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledWith(reportId.toString(), premiumPaymentsFilters, paymentDetailsFilters);
     });
 
@@ -78,6 +79,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       await getUtilisationReportReconciliationDetailsById(req, res);
 
       // Assert
+      expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledTimes(1);
       expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledWith(reportId.toString(), premiumPaymentsFilters, paymentDetailsFilters);
     });
 
