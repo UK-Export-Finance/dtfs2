@@ -88,6 +88,8 @@ context('Deal cancellation - reason for cancelling', () => {
   describe('when logged in as a non-PIM user', () => {
     beforeEach(() => {
       cy.login(T1_USER_1);
+
+      cy.visit(relative(`/case/${dealId}/cancellation/reason`));
     });
 
     it('should redirect when visiting reason for cancelling page ', () => {
