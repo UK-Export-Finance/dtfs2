@@ -110,11 +110,11 @@ describe('postCancelCancellation', () => {
       // Arrange
       jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: validDealType } });
 
-      const userToken = 'userToken';
+      const session = aRequestSession();
 
       const { req, res } = createMocks<PostCancelCancellationRequest>({
         params: { _id: dealId },
-        session: aRequestSession(),
+        session,
       });
 
       // Act
@@ -122,7 +122,7 @@ describe('postCancelCancellation', () => {
 
       // Assert
       expect(api.deleteDealCancellation).toHaveBeenCalledTimes(1);
-      expect(api.deleteDealCancellation).toHaveBeenCalledWith(dealId, userToken);
+      expect(api.deleteDealCancellation).toHaveBeenCalledWith(dealId, session.userToken);
     });
 
     it('redirects to the deal summary page', async () => {

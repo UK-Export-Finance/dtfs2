@@ -171,11 +171,11 @@ describe('postBankRequestDate', () => {
 
       it('updates the deal cancellation bank request date', async () => {
         // Arrange
-        const userToken = 'userToken';
+        const session = aRequestSession();
 
         const { req, res } = createMocks<PostBankRequestDateRequest>({
           params: { _id: dealId },
-          session: aRequestSession(),
+          session,
           body: {
             'bank-request-date-day': testDate.getDate(),
             'bank-request-date-month': testDate.getMonth() + 1,
@@ -188,7 +188,7 @@ describe('postBankRequestDate', () => {
 
         // Assert
         expect(api.updateDealCancellation).toHaveBeenCalledTimes(1);
-        expect(api.updateDealCancellation).toHaveBeenCalledWith(dealId, { bankRequestDate: testDate.valueOf() }, userToken);
+        expect(api.updateDealCancellation).toHaveBeenCalledWith(dealId, { bankRequestDate: testDate.valueOf() }, session.userToken);
       });
 
       it('redirects to the effective from date page', async () => {
