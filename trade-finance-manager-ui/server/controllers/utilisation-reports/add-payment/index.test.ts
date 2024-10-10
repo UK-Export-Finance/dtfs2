@@ -1,5 +1,5 @@
 import httpMocks from 'node-mocks-http';
-import { CURRENCY, SelectedFeeRecordDetails } from '@ukef/dtfs2-common';
+import { CURRENCY, FEE_RECORD_STATUS, SelectedFeeRecordDetails } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { addPayment } from '.';
 import { PaymentErrorsViewModel, AddPaymentViewModel, RecordedPaymentDetailsViewModel } from '../../../types/view-models';
@@ -664,7 +664,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
       beforeEach(() => {
         jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
-        addPaymentToFeeRecordsSpy.mockResolvedValue({});
+        addPaymentToFeeRecordsSpy.mockResolvedValue({ feeRecordStatus: FEE_RECORD_STATUS.DOES_NOT_MATCH });
       });
 
       afterEach(() => {
@@ -697,79 +697,114 @@ describe('controllers/utilisation-reports/add-payment', () => {
         );
       });
 
-      it("redirects to premium payments if 'addAnotherPayment' is set to 'false'", async () => {
-        // Arrange
-        const { req, res } = httpMocks.createMocks({
-          session: requestSession,
-          params: { reportId },
-          body: {
-            ...addPaymentFormSubmissionRequestBody,
-            addAnotherPayment: 'false',
-          },
+      describe("when 'addAnotherPayment' is set to 'false'", () => {
+        it('redirects to premium payments', async () => {
+          // Arrange
+          const { req, res } = httpMocks.createMocks({
+            session: requestSession,
+            params: { reportId },
+            body: {
+              ...addPaymentFormSubmissionRequestBody,
+              addAnotherPayment: 'false',
+            },
+          });
+
+          // Act
+          await addPayment(req, res);
+
+          // Assert
+          expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}`);
         });
-
-        // Act
-        await addPayment(req, res);
-
-        // Assert
-        expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}`);
       });
 
-      it("should render the add payment page if 'addAnotherPayment' is set to 'true'", async () => {
-        // Arrange
-        const { req, res } = httpMocks.createMocks({
-          session: requestSession,
-          params: { reportId: '123' },
-          body: {
-            ...addPaymentFormSubmissionRequestBody,
-            addAnotherPayment: 'true',
-          },
+      describe("and when 'addAnotherPayment' is set to 'true'", () => {
+        describe('and when adding payment takes fee record(s) to match status', () => {
+          beforeEach(() => {
+            addPaymentToFeeRecordsSpy.mockResolvedValue({ feeRecordStatus: FEE_RECORD_STATUS.MATCH });
+          });
+
+          it('should redirect to premium payments with match success notification', async () => {
+            // Arrange
+            const { req, res } = httpMocks.createMocks({
+              session: requestSession,
+              params: { reportId: '123' },
+              body: {
+                ...addPaymentFormSubmissionRequestBody,
+                addAnotherPayment: 'true',
+              },
+            });
+            jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
+
+            // Act
+            await addPayment(req, res);
+
+            // Assert
+            expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}?matchSuccess=true`);
+          });
         });
-        jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
 
-        // Act
-        await addPayment(req, res);
+        describe('and when adding payment does not take fee record(s) to match status', () => {
+          beforeEach(() => {
+            addPaymentToFeeRecordsSpy.mockResolvedValue({ feeRecordStatus: FEE_RECORD_STATUS.DOES_NOT_MATCH });
+          });
 
-        // Assert
-        expect(res._getRenderView()).toEqual('utilisation-reports/add-payment.njk');
-      });
+          it('should render the add payment page', async () => {
+            // Arrange
+            const { req, res } = httpMocks.createMocks({
+              session: requestSession,
+              params: { reportId: '123' },
+              body: {
+                ...addPaymentFormSubmissionRequestBody,
+                addAnotherPayment: 'true',
+              },
+            });
+            jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
 
-      it("should render the add payment page with empty form values if 'addAnotherPayment' is set to 'true'", async () => {
-        // Arrange
-        const { req, res } = httpMocks.createMocks({
-          session: requestSession,
-          params: { reportId: '123' },
-          body: {
-            ...addPaymentFormSubmissionRequestBody,
-            addAnotherPayment: 'true',
-          },
+            // Act
+            await addPayment(req, res);
+
+            // Assert
+            expect(res._getRenderView()).toEqual('utilisation-reports/add-payment.njk');
+          });
+
+          it('should render the page with empty form values', async () => {
+            // Arrange
+            const { req, res } = httpMocks.createMocks({
+              session: requestSession,
+              params: { reportId: '123' },
+              body: {
+                ...addPaymentFormSubmissionRequestBody,
+                addAnotherPayment: 'true',
+              },
+            });
+            jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
+
+            // Act
+            await addPayment(req, res);
+
+            // Assert
+            expect((res._getRenderData() as AddPaymentViewModel).formValues).toEqual({ paymentDate: {} });
+          });
+
+          it('should render the page with empty errors', async () => {
+            // Arrange
+            const { req, res } = httpMocks.createMocks({
+              session: requestSession,
+              params: { reportId: '123' },
+              body: {
+                ...addPaymentFormSubmissionRequestBody,
+                addAnotherPayment: 'true',
+              },
+            });
+            jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
+
+            // Act
+            await addPayment(req, res);
+
+            // Assert
+            expect((res._getRenderData() as AddPaymentViewModel).errors).toEqual({ errorSummary: [] });
+          });
         });
-        jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
-
-        // Act
-        await addPayment(req, res);
-
-        // Assert
-        expect((res._getRenderData() as AddPaymentViewModel).formValues).toEqual({ paymentDate: {} });
-      });
-
-      it("should render the add payment page with empty errors if 'addAnotherPayment' is set to 'true'", async () => {
-        // Arrange
-        const { req, res } = httpMocks.createMocks({
-          session: requestSession,
-          params: { reportId: '123' },
-          body: {
-            ...addPaymentFormSubmissionRequestBody,
-            addAnotherPayment: 'true',
-          },
-        });
-        jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
-
-        // Act
-        await addPayment(req, res);
-
-        // Assert
-        expect((res._getRenderData() as AddPaymentViewModel).errors).toEqual({ errorSummary: [] });
       });
     });
   });

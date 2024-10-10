@@ -1442,6 +1442,7 @@ const getUtilisationReportSummariesByBankIdAndYear = async (bankId, year) => {
  * @param {number} paymentAmount - The payment amount
  * @param {import('@ukef/dtfs2-common').IsoDateTimeStamp} datePaymentReceived - The date the payment was received
  * @param {string | undefined} paymentReference - The payment reference
+ * @returns {Promise<import('./api-response-types').AddPaymentResponseBody>}
  */
 const addPaymentToFeeRecords = async (reportId, feeRecordIds, user, paymentCurrency, paymentAmount, datePaymentReceived, paymentReference) => {
   const response = await axios({

@@ -3,6 +3,8 @@ const utilisationReportPage = {
   keyingSheetTabLink: () => cy.get('a[data-cy="bank-report-tab-keying-sheet"]'),
   paymentDetailsLink: () => cy.get('a[data-cy="bank-report-tab-payment-details"]'),
   premiumPaymentsTab: {
+    matchSuccessNotificationHeading: () => cy.get('[data-cy="match-success-notification"] h3'),
+    matchSuccessNotificationMessage: () => cy.get('[data-cy="match-success-notification"] p'),
     selectPaymentsText: () => cy.get('[data-cy="select-payments-text"]'),
     paymentsOnPremiumPaymentsText: () => cy.get('[data-cy="payments-on-premium-payments-tab-text"]'),
     getPaymentLink: (paymentId) => cy.get(`a[data-cy="premium-payments-tab-edit-payment-link--paymentId-${paymentId}"]`),

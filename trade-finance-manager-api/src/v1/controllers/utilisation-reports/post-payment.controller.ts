@@ -28,8 +28,8 @@ export const postPayment = async (req: PostPaymentRequest, res: Response) => {
     const { reportId } = req.params;
     const { feeRecordIds, paymentCurrency, paymentAmount, datePaymentReceived, paymentReference, user } = req.body;
 
-    await api.addPaymentToFeeRecords(reportId, feeRecordIds, user, paymentCurrency, paymentAmount, datePaymentReceived, paymentReference);
-    return res.sendStatus(HttpStatusCode.Ok);
+    const data = await api.addPaymentToFeeRecords(reportId, feeRecordIds, user, paymentCurrency, paymentAmount, datePaymentReceived, paymentReference);
+    return res.status(HttpStatusCode.Ok).send(data);
   } catch (error) {
     const errorMessage = 'Failed to add payment';
     const errorStatus = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;

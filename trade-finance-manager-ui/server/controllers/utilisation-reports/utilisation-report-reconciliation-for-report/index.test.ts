@@ -166,6 +166,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         premiumPaymentsFilters,
         keyingSheet: [],
         paymentDetails: paymentDetailsViewModel,
+        displayMatchSuccessNotification: false,
       });
     });
 
@@ -198,6 +199,73 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(viewModel.premiumPaymentsTableDataError?.href).toEqual('#premium-payments-table');
       expect(viewModel.premiumPaymentsTableDataError?.text).toEqual('Select a fee or fees with the same status');
       expect(viewModel.premiumPayments[0].isChecked).toEqual(true);
+    });
+
+    it("renders the page with 'displayMatchSuccessNotification' set to true if matchSuccess query param is set to 'true'", async () => {
+      // Arrange
+      const { req, res } = httpMocks.createMocks({
+        session,
+        params: {
+          reportId,
+        },
+        query: {
+          matchSuccess: 'true',
+        },
+      });
+
+      jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(aUtilisationReportReconciliationDetailsResponse());
+
+      // Act
+      await getUtilisationReportReconciliationByReportId(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
+      const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
+      expect(viewModel.displayMatchSuccessNotification).toBe(true);
+    });
+
+    it("renders the page with 'displayMatchSuccessNotification' set to false if matchSuccess query param is not set", async () => {
+      // Arrange
+      const { req, res } = httpMocks.createMocks({
+        session,
+        params: {
+          reportId,
+        },
+        query: {},
+      });
+
+      jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(aUtilisationReportReconciliationDetailsResponse());
+
+      // Act
+      await getUtilisationReportReconciliationByReportId(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
+      const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
+      expect(viewModel.displayMatchSuccessNotification).toBe(false);
+    });
+
+    it("renders the page with 'displayMatchSuccessNotification' set to false if matchSuccess query param is set to a value other than 'true'", async () => {
+      // Arrange
+      const { req, res } = httpMocks.createMocks({
+        session,
+        params: {
+          reportId,
+        },
+        query: {
+          matchSuccess: 'abcd',
+        },
+      });
+
+      jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(aUtilisationReportReconciliationDetailsResponse());
+
+      // Act
+      await getUtilisationReportReconciliationByReportId(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
+      const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
+      expect(viewModel.displayMatchSuccessNotification).toBe(false);
     });
 
     it("renders the page with 'enablePaymentsReceivedSorting' set to true if at least one fee record has a non-null 'paymentsReceived'", async () => {
