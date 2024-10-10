@@ -1,5 +1,5 @@
-import { BaseViewModel } from '../base-view-model';
 import { ErrorSummaryViewModel } from '../error-summary-view-model';
+import { BaseCancellationViewModel } from './base-cancellation-view-model';
 
 export type EffectiveFromDateErrorsViewModel = {
   summary: ErrorSummaryViewModel[];
@@ -11,10 +11,7 @@ export type EffectiveFromDateValidationViewModel = {
   effectiveFromDate?: Date;
 };
 
-export type EffectiveFromDateViewModel = BaseViewModel & {
-  ukefDealId: string;
-  dealId: string;
-  previousPage: string;
+export type EffectiveFromDateViewModel = BaseCancellationViewModel & {
   day?: string;
   month?: string;
   year?: string;
