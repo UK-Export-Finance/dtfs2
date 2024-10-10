@@ -1,7 +1,7 @@
 import { createMocks } from 'node-mocks-http';
 import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
-import { aTfmSessionUser } from '../../../../test-helpers';
+import { aRequestSession } from '../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { BankRequestDateViewModel } from '../../../types/view-models';
 import { getBankRequestDate, GetBankRequestDateRequest } from './bank-request-date.controller';
@@ -14,7 +14,6 @@ jest.mock('../../../api', () => ({
 
 const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
-const mockUser = aTfmSessionUser();
 
 describe('getBankRequestDate', () => {
   beforeEach(() => {
@@ -27,10 +26,7 @@ describe('getBankRequestDate', () => {
 
     const { req, res } = createMocks<GetBankRequestDateRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
@@ -46,10 +42,7 @@ describe('getBankRequestDate', () => {
 
     const { req, res } = createMocks<GetBankRequestDateRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
@@ -68,10 +61,7 @@ describe('getBankRequestDate', () => {
       // Arrange
       const { req, res } = createMocks<GetBankRequestDateRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken: 'a user token',
-        },
+        session: aRequestSession(),
       });
 
       // Act
@@ -85,10 +75,7 @@ describe('getBankRequestDate', () => {
       // Arrange
       const { req, res } = createMocks<GetBankRequestDateRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken: 'a user token',
-        },
+        session: aRequestSession(),
       });
 
       // Act
@@ -110,10 +97,7 @@ describe('getBankRequestDate', () => {
 
       const { req, res } = createMocks<GetBankRequestDateRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken: 'a user token',
-        },
+        session: aRequestSession(),
       });
 
       // Act
@@ -127,12 +111,11 @@ describe('getBankRequestDate', () => {
       // Arrange
       jest.mocked(api.getDealCancellation).mockResolvedValue({ reason: '' });
 
+      const session = aRequestSession();
+
       const { req, res } = createMocks<GetBankRequestDateRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken: 'a user token',
-        },
+        session: aRequestSession(),
       });
 
       // Act
@@ -142,7 +125,7 @@ describe('getBankRequestDate', () => {
       expect(res._getRenderView()).toEqual('case/cancellation/bank-request-date.njk');
       expect(res._getRenderData() as BankRequestDateViewModel).toEqual({
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
-        user: mockUser,
+        user: session.user,
         ukefDealId,
         dealId,
         day: '',
@@ -156,12 +139,11 @@ describe('getBankRequestDate', () => {
       const existingBankRequestDate = new Date('2024-03-21');
       jest.mocked(api.getDealCancellation).mockResolvedValue({ reason: '', bankRequestDate: existingBankRequestDate.valueOf() });
 
+      const session = aRequestSession();
+
       const { req, res } = createMocks<GetBankRequestDateRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken: 'a user token',
-        },
+        session: aRequestSession(),
       });
 
       // Act
@@ -171,7 +153,7 @@ describe('getBankRequestDate', () => {
       expect(res._getRenderView()).toEqual('case/cancellation/bank-request-date.njk');
       expect(res._getRenderData() as BankRequestDateViewModel).toEqual({
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
-        user: mockUser,
+        user: session.user,
         ukefDealId,
         dealId,
         day: format(existingBankRequestDate, 'd'),

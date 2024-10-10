@@ -1,7 +1,7 @@
 import { createMocks } from 'node-mocks-http';
 import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
-import { aTfmSessionUser } from '../../../../test-helpers';
+import { aRequestSession } from '../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { BankRequestDateViewModel } from '../../../types/view-models';
 import api from '../../../api';
@@ -14,7 +14,6 @@ jest.mock('../../../api', () => ({
 
 const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
-const mockUser = aTfmSessionUser();
 
 describe('getDealCancellationDetails', () => {
   beforeEach(() => {
@@ -27,10 +26,7 @@ describe('getDealCancellationDetails', () => {
 
     const { req, res } = createMocks<GetDealCancellationDetailsRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
@@ -46,10 +42,7 @@ describe('getDealCancellationDetails', () => {
 
     const { req, res } = createMocks<GetDealCancellationDetailsRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
@@ -68,10 +61,7 @@ describe('getDealCancellationDetails', () => {
       // Arrange
       const { req, res } = createMocks<GetDealCancellationDetailsRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken: 'a user token',
-        },
+        session: aRequestSession(),
       });
 
       // Act
@@ -85,10 +75,7 @@ describe('getDealCancellationDetails', () => {
       // Arrange
       const { req, res } = createMocks<GetDealCancellationDetailsRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken: 'a user token',
-        },
+        session: aRequestSession(),
       });
 
       // Act
@@ -110,10 +97,7 @@ describe('getDealCancellationDetails', () => {
 
       const { req, res } = createMocks<GetDealCancellationDetailsRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken: 'a user token',
-        },
+        session: aRequestSession(),
       });
 
       // Act
@@ -128,6 +112,8 @@ describe('getDealCancellationDetails', () => {
       const bankRequestDate = new Date('2024-01-01');
       const effectiveFromDate = new Date('2024-03-03');
 
+      const session = aRequestSession();
+
       // Arrange
       jest
         .mocked(api.getDealCancellation)
@@ -135,10 +121,7 @@ describe('getDealCancellationDetails', () => {
 
       const { req, res } = createMocks<GetDealCancellationDetailsRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken: 'a user token',
-        },
+        session,
       });
 
       // Act
@@ -148,7 +131,7 @@ describe('getDealCancellationDetails', () => {
       expect(res._getRenderView()).toEqual('case/cancellation/check-details.njk');
       expect(res._getRenderData() as BankRequestDateViewModel).toEqual({
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
-        user: mockUser,
+        user: session.user,
         ukefDealId,
         dealId,
         reason,

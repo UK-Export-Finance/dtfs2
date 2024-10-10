@@ -1,6 +1,6 @@
 import { createMocks } from 'node-mocks-http';
 import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
-import { aTfmSessionUser } from '../../../../test-helpers';
+import { aRequestSession } from '../../../../test-helpers';
 import { postCancelCancellation, PostCancelCancellationRequest } from './cancel-cancellation.controller';
 import api from '../../../api';
 
@@ -11,7 +11,6 @@ jest.mock('../../../api', () => ({
 
 const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
-const mockUser = aTfmSessionUser();
 
 describe('postCancelCancellation', () => {
   beforeEach(() => {
@@ -24,10 +23,7 @@ describe('postCancelCancellation', () => {
 
     const { req, res } = createMocks<PostCancelCancellationRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
       query: {
         return: 'true',
       },
@@ -49,10 +45,7 @@ describe('postCancelCancellation', () => {
 
     const { req, res } = createMocks<PostCancelCancellationRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
@@ -68,10 +61,7 @@ describe('postCancelCancellation', () => {
 
     const { req, res } = createMocks<PostCancelCancellationRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
@@ -90,10 +80,7 @@ describe('postCancelCancellation', () => {
       // Arrange
       const { req, res } = createMocks<PostCancelCancellationRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken: 'a user token',
-        },
+        session: aRequestSession(),
       });
 
       // Act
@@ -107,10 +94,7 @@ describe('postCancelCancellation', () => {
       // Arrange
       const { req, res } = createMocks<PostCancelCancellationRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken: 'a user token',
-        },
+        session: aRequestSession(),
       });
 
       // Act
@@ -130,10 +114,7 @@ describe('postCancelCancellation', () => {
 
       const { req, res } = createMocks<PostCancelCancellationRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken,
-        },
+        session: aRequestSession(),
       });
 
       // Act
@@ -150,10 +131,7 @@ describe('postCancelCancellation', () => {
 
       const { req, res } = createMocks<PostCancelCancellationRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken: 'userToken',
-        },
+        session: aRequestSession(),
       });
 
       // Act

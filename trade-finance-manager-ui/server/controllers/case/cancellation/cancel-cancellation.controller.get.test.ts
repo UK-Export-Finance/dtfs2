@@ -1,6 +1,6 @@
 import { createMocks } from 'node-mocks-http';
 import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
-import { aTfmSessionUser } from '../../../../test-helpers';
+import { aRequestSession } from '../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { CancelCancellationViewModel } from '../../../types/view-models';
 import { getCancelCancellation, GetCancelCancellationRequest } from './cancel-cancellation.controller';
@@ -13,7 +13,6 @@ jest.mock('../../../api', () => ({
 
 const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
-const mockUser = aTfmSessionUser();
 
 describe('getCancelCancellation', () => {
   beforeEach(() => {
@@ -26,10 +25,7 @@ describe('getCancelCancellation', () => {
 
     const { req, res } = createMocks<GetCancelCancellationRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
@@ -45,10 +41,7 @@ describe('getCancelCancellation', () => {
 
     const { req, res } = createMocks<GetCancelCancellationRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
@@ -67,10 +60,7 @@ describe('getCancelCancellation', () => {
       // Arrange
       const { req, res } = createMocks<GetCancelCancellationRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken: 'a user token',
-        },
+        session: aRequestSession(),
       });
 
       // Act
@@ -84,10 +74,7 @@ describe('getCancelCancellation', () => {
       // Arrange
       const { req, res } = createMocks<GetCancelCancellationRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken: 'a user token',
-        },
+        session: aRequestSession(),
       });
 
       // Act
@@ -109,10 +96,7 @@ describe('getCancelCancellation', () => {
 
       const { req, res } = createMocks<GetCancelCancellationRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken: 'a user token',
-        },
+        session: aRequestSession(),
       });
 
       // Act
@@ -127,13 +111,11 @@ describe('getCancelCancellation', () => {
       jest.mocked(api.getDealCancellation).mockResolvedValue({ reason: 'reason' });
 
       const previousPage = 'previousPage';
+      const session = aRequestSession();
 
       const { req, res } = createMocks<GetCancelCancellationRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken: 'a user token',
-        },
+        session,
         headers: {
           referer: previousPage,
         },
@@ -146,7 +128,7 @@ describe('getCancelCancellation', () => {
       expect(res._getRenderView()).toEqual('case/cancellation/cancel.njk');
       expect(res._getRenderData() as CancelCancellationViewModel).toEqual({
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
-        user: mockUser,
+        user: session.user,
         ukefDealId,
         previousPage,
       });
