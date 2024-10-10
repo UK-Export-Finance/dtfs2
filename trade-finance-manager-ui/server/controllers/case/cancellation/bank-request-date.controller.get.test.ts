@@ -15,7 +15,7 @@ jest.mock('../../../api', () => ({
 const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
 const mockUser = aTfmSessionUser();
-const defaultBackUrl = `/case/${dealId}/cancellation/reason`;
+const previousPage = `/case/${dealId}/cancellation/reason`;
 
 describe('getBankRequestDate', () => {
   beforeEach(() => {
@@ -106,7 +106,7 @@ describe('getBankRequestDate', () => {
         day: '',
         month: '',
         year: '',
-        previousPage: defaultBackUrl,
+        previousPage,
       });
     });
 
@@ -137,7 +137,7 @@ describe('getBankRequestDate', () => {
         day: format(existingBankRequestDate, 'd'),
         month: format(existingBankRequestDate, 'M'),
         year: format(existingBankRequestDate, 'yyyy'),
-        previousPage: defaultBackUrl,
+        previousPage,
       });
     });
 

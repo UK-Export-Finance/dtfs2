@@ -23,7 +23,6 @@ jest.mock('../../../api', () => ({
 const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
 const mockUser = aTfmSessionUser();
-const defaultBackUrl = `/case/${dealId}/deal`;
 
 describe('postReasonForCancelling', () => {
   beforeEach(() => {
@@ -157,7 +156,7 @@ describe('postReasonForCancelling', () => {
           dealId,
           errors: validationErrors,
           reasonForCancelling,
-          previousPage: defaultBackUrl,
+          previousPage: `/case/${dealId}/deal`,
         });
       });
 
