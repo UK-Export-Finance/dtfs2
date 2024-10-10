@@ -1,14 +1,14 @@
 const mockDeal = require('../../../../fixtures/deal');
 const CONSTANTS = require('../../../../fixtures/constants');
 const FIXTURE_CONSTANTS = require('../../../../../../e2e-fixtures/constants.fixture');
-const DATE_CONSTANTS = require('../../../../../../e2e-fixtures/dateConstants');
+const { today, tomorrow } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const deal = {
   ...mockDeal,
   mockFacilities: [
     {
       type: CONSTANTS.FACILITY.FACILITY_TYPE.BOND,
-      createdDate: DATE_CONSTANTS.today.valueOf(),
+      createdDate: today.unixMilliseconds,
       bondIssuer: '',
       bondType: FIXTURE_CONSTANTS.BSS_FACILITY_TYPE.BID_BOND,
       facilityStage: CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED,
@@ -45,7 +45,7 @@ const deal = {
     },
     {
       type: CONSTANTS.FACILITY.FACILITY_TYPE.LOAN,
-      createdDate: DATE_CONSTANTS.today.valueOf(),
+      createdDate: today.unixMilliseconds,
       facilityStage: CONSTANTS.FACILITY.FACILITY_STAGE.CONDITIONAL,
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -69,7 +69,7 @@ const deal = {
       'conversionRateDate-day': '28',
       'conversionRateDate-month': '04',
       'conversionRateDate-year': '2022',
-      issuedDate: DATE_CONSTANTS.tomorrow.valueOf(),
+      issuedDate: tomorrow.unixMilliseconds,
       'coverEndDate-day': '06',
       'coverEndDate-month': '01',
       'coverEndDate-year': '2021',
@@ -83,7 +83,7 @@ const deal = {
     },
     {
       type: CONSTANTS.FACILITY.FACILITY_TYPE.LOAN,
-      createdDate: DATE_CONSTANTS.today.valueOf(),
+      createdDate: today.unixMilliseconds,
       facilityStage: CONSTANTS.FACILITY.FACILITY_STAGE.UNCONDITIONAL,
       hasBeenIssued: true,
       'requestedCoverStartDate-day': '13',
