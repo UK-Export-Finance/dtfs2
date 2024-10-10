@@ -117,6 +117,7 @@ export type UtilisationTableRowViewModel = {
 
 export type UtilisationDetailsViewModel = {
   utilisationTableRows: UtilisationTableRowViewModel[];
+  downloadUrl: string;
 };
 
 export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & {
