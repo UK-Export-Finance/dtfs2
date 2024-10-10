@@ -109,6 +109,8 @@ context('Deal cancellation - effective from date', () => {
   describe('when logged in as a non-PIM user', () => {
     beforeEach(() => {
       cy.login(T1_USER_1);
+
+      cy.visit(relative(`/case/${dealId}/cancellation/effective-from-date`));
     });
 
     it('should redirect when visiting effective from date page ', () => {
