@@ -31,7 +31,7 @@ export const sendEmail = async (templateId: string, sendToEmailAddress: string, 
     });
 
     return response.data;
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error sending email to %s %o', sendToEmailAddress, error);
 
     throw error;
