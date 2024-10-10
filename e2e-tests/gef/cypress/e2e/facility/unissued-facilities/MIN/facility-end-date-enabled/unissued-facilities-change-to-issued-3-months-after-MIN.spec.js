@@ -125,7 +125,7 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
     it('should display error on facility end date page if date is over 6 years in the future', () => {
       applicationPreview.facilitySummaryListTable(1).facilityEndDateAction().click();
 
-      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: sixYearsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: sixYearsOneDay.date });
 
       cy.clickContinueButton();
 
