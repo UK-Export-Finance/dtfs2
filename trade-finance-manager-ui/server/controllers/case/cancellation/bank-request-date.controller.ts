@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
+import { isEmpty } from 'lodash';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { asUserSession } from '../../../helpers/express-session';
 import { BankRequestDateViewModel } from '../../../types/view-models';
@@ -36,6 +37,10 @@ export const getBankRequestDate = async (req: GetBankRequestDateRequest, res: Re
     }
 
     const cancellation = await api.getDealCancellation(_id, userToken);
+
+    if (isEmpty(cancellation)) {
+      return res.redirect(`/case/${_id}/deal`);
+    }
 
     const previouslyEnteredBankRequestDate = cancellation?.bankRequestDate && new Date(cancellation.bankRequestDate);
 
