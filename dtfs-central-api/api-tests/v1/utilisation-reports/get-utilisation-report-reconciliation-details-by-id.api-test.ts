@@ -106,6 +106,7 @@ describe(`GET ${BASE_URL}`, () => {
       premiumPayments: [],
       paymentDetails: [],
       keyingSheet: [],
+      utilisationDetails: [],
     });
   });
 });

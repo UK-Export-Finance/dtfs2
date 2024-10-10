@@ -9,6 +9,7 @@ import { PDC_TEAMS } from '../../../fixtures/teams';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
 import USERS from '../../../fixtures/users';
 import relative from '../../relativeURL';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`, () => {
   const bankId = '961';
@@ -26,6 +27,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
 
   beforeEach(() => {
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+    cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
 
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [utilisationReport]);
 
@@ -44,6 +46,9 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
     ];
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
 
+    const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
+
     cy.reload();
 
     feeRecords.forEach(({ id, facilityId }) => {
@@ -60,6 +65,9 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
       FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(4).withFacilityId('44444444').build(),
     ];
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
+
+    const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
     cy.reload();
 
@@ -86,6 +94,9 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
       FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(4).withFacilityId('44444444').build(),
     ];
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
+
+    const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
     cy.reload();
 
@@ -148,6 +159,9 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, allFeeRecords);
     cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
 
+    const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(allFeeRecords);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
+
     cy.reload();
 
     allFeeRecords.forEach(({ id, facilityId }) => {
@@ -178,6 +192,9 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
       FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityId('22222222').build(),
     ];
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
+
+    const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
     cy.reload();
 

@@ -1,6 +1,6 @@
 import { TfmFacility, TfmFacilityAmendment } from '@ukef/dtfs2-common';
 import { getLatestCompletedAmendmentCoverEndDate } from './tfm-facility-latest-completed-amendment-to-cover-end-date';
-import { aTfmFacility, aTfmFacilityAmendment } from '../../test-helpers';
+import { aTfmFacility, aTfmFacilityAmendment } from '../../../test-helpers';
 
 describe('tfm-facility-latest-completed-amendment-to-cover-end-date', () => {
   describe('getLatestCompletedAmendmentCoverEndDate', () => {

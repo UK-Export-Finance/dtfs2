@@ -11,6 +11,7 @@ import USERS from '../../../fixtures/users';
 import { PDC_TEAMS } from '../../../fixtures/teams';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
 import relative from '../../relativeURL';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing payments`, () => {
   const REPORT_ID = 1;
@@ -59,6 +60,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
   afterEach(() => {
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
     cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
+    cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
   });
 
   const navigateToAddToExistingPaymentScreenForFirstFeeRecord = () => {
@@ -87,9 +89,14 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     beforeEach(() => {
       cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
       cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
+      cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
       cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
 
-      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord]);
+      const feeRecords = [firstFeeRecord, secondFeeRecord];
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
+
+      const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
       navigateToAddToExistingPaymentScreenForFirstFeeRecord();
     });
@@ -131,9 +138,15 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
 
       cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
       cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
+      cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
+
       cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
 
-      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord, thirdFeeRecord]);
+      const feeRecords = [firstFeeRecord, secondFeeRecord, thirdFeeRecord];
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
+
+      const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
       navigateToAddToExistingPaymentScreenForFirstFeeRecord();
     });
@@ -169,7 +182,12 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
     cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
-    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord]);
+
+    const feeRecords = [firstFeeRecord, secondFeeRecord];
+    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
+
+    const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
     navigateToAddToExistingPaymentScreenForFirstFeeRecord();
 
@@ -198,7 +216,12 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
       cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
       cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
       cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
-      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord, thirdFeeRecord]);
+
+      const feeRecords = [firstFeeRecord, secondFeeRecord, thirdFeeRecord];
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
+
+      const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
     });
 
     describe('by clicking the back button', () => {
