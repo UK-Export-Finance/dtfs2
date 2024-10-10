@@ -11,7 +11,7 @@ describe('monetary value helpers', () => {
       const formattedValue = getFormattedMonetaryValue(value);
 
       // Assert
-      expect(formattedValue).toBe(expectedFormattedValue);
+      expect(formattedValue).toEqual(expectedFormattedValue);
     });
 
     it('should format the value to 2 decimal places when the amount has more than 2 decimal places - rounding down', () => {
@@ -23,7 +23,7 @@ describe('monetary value helpers', () => {
       const formattedValue = getFormattedMonetaryValue(value);
 
       // Assert
-      expect(formattedValue).toBe(expectedFormattedValue);
+      expect(formattedValue).toEqual(expectedFormattedValue);
     });
 
     it('should format the value to 2 decimal places when the amount has more than 2 decimal places - rounding up', () => {
@@ -35,7 +35,7 @@ describe('monetary value helpers', () => {
       const formattedValue = getFormattedMonetaryValue(value);
 
       // Assert
-      expect(formattedValue).toBe(expectedFormattedValue);
+      expect(formattedValue).toEqual(expectedFormattedValue);
     });
 
     it('should format the value to 2 decimal places when the amount has no decimal places', () => {
@@ -47,7 +47,7 @@ describe('monetary value helpers', () => {
       const formattedValue = getFormattedMonetaryValue(value);
 
       // Assert
-      expect(formattedValue).toBe(expectedFormattedValue);
+      expect(formattedValue).toEqual(expectedFormattedValue);
     });
   });
 });
