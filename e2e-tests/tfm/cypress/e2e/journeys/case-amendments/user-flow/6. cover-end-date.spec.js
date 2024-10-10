@@ -72,7 +72,7 @@ context('Amendments - Cover End Date', () => {
     cy.url().should('contain', 'amendment-options');
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
-    amendmentsPage.amendmentCurrentCoverEndDate().should('contain', oneMonth.ddMMMyyyy);
+    amendmentsPage.amendmentCurrentCoverEndDate().should('contain', oneMonth.ddMMMMyyyy);
 
     cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: oneMonth.date });
 
