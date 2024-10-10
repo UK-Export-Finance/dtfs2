@@ -300,7 +300,6 @@ describe('extractQueryAndSessionData', () => {
       const sessionData = {};
 
       jest.mocked(handleRedirectSessionData).mockReturnValue({
-        premiumPaymentsTableDataError: undefined,
         selectedFeeRecordIds: new Set([1, 2, 3]),
       });
 
