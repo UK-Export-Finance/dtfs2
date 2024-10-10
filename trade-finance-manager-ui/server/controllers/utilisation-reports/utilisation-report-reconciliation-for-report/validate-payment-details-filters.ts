@@ -1,4 +1,4 @@
-import { CURRENCY_REGEX, PaymentDetailsFilters } from '@ukef/dtfs2-common';
+import { CURRENCY_REGEX, MIN_PAYMENT_REFERENCE_FILTER_CHARACTER_COUNT, PaymentDetailsFilters } from '@ukef/dtfs2-common';
 import { REGEX } from '../../../constants';
 import { ErrorSummaryViewModel, PaymentDetailsFilterErrorsViewModel } from '../../../types/view-models';
 
@@ -29,7 +29,7 @@ export const isPaymentCurrencyFilterValid = (originalUrl: string, paymentCurrenc
  * @returns True if the payment reference filter is valid, false otherwise.
  */
 export const isPaymentReferenceFilterValid = (originalUrl: string, paymentReferenceQuery: string): boolean => {
-  return originalUrl.includes('paymentDetailsPaymentReference') && paymentReferenceQuery.length >= 4;
+  return originalUrl.includes('paymentDetailsPaymentReference') && paymentReferenceQuery.length >= MIN_PAYMENT_REFERENCE_FILTER_CHARACTER_COUNT;
 };
 
 /**
