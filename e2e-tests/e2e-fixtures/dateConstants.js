@@ -63,7 +63,7 @@ export const todayFormattedTimeHours = format(todayDate, 'h');
 export const todayFormattedTimeAmPm = format(todayDate, 'aaa');
 
 // TODO: The below value does not match the variable name. We should investigate why the test that uses this still passes, and if the name or the value is incorrect.
-export const threeDaysAgoPlusMonth = getFormattedValuesFromDate(add(threeDaysAgo.date, { months: 1 }));
+export const threeDaysAgoPlusMonth = getFormattedValuesFromDate(add(threeDaysAgo.date, { months: 3 }));
 
 /**
  * Some tests check that validation errors appear,
