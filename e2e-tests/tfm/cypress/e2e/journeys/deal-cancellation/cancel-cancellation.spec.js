@@ -5,6 +5,9 @@ import caseDealPage from '../../pages/caseDealPage';
 import reasonForCancellingPage from '../../pages/deal-cancellation/reason-for-cancelling';
 import { backLink } from '../../partials';
 import cancelCancellationPage from '../../pages/deal-cancellation/cancel-cancellation';
+import bankRequestDatePage from '../../pages/deal-cancellation/bank-request-date';
+import effectiveFromDatePage from '../../pages/deal-cancellation/effective-from-date';
+import checkDetailsPage from '../../pages/deal-cancellation/check-details';
 
 context('Deal cancellation - cancel cancellation', () => {
   let dealId;
@@ -56,8 +59,44 @@ context('Deal cancellation - cancel cancellation', () => {
 
         caseDealPage.cancelDealButton().click();
 
-        cy.keyboardInput(reasonForCancellingPage.reasonForCancellingTextBox().clear(), 'xxx');
+        cy.keyboardInput(reasonForCancellingPage.reasonForCancellingTextBox(), 'xxx');
         cy.clickContinueButton();
+      });
+
+      describe('when all the values are provided', () => {
+        beforeEach(() => {
+          cy.completeDateFormFields({ idPrefix: 'bank-request-date' });
+          cy.clickContinueButton();
+
+          cy.completeDateFormFields({ idPrefix: 'effective-from-date' });
+          cy.clickContinueButton();
+
+          checkDetailsPage.returnLink().click();
+        });
+
+        it('"yes, cancel" button navigates to deal summary page', () => {
+          cancelCancellationPage.yesCancelButton().click();
+
+          cy.url().should('eq', relative(`/case/${dealId}/deal`));
+        });
+
+        it('"yes, cancel" button wipes the cancellation data', () => {
+          cancelCancellationPage.yesCancelButton().click();
+
+          caseDealPage.cancelDealButton().click();
+          reasonForCancellingPage.reasonForCancellingTextBox().should('have.value', '');
+          cy.clickContinueButton();
+
+          bankRequestDatePage.bankRequestDateDay().should('have.value', '');
+          bankRequestDatePage.bankRequestDateMonth().should('have.value', '');
+          bankRequestDatePage.bankRequestDateYear().should('have.value', '');
+          cy.completeDateFormFields({ idPrefix: 'bank-request-date' });
+          cy.clickContinueButton();
+
+          effectiveFromDatePage.effectiveFromDateDay().should('have.value', '');
+          effectiveFromDatePage.effectiveFromDateMonth().should('have.value', '');
+          effectiveFromDatePage.effectiveFromDateYear().should('have.value', '');
+        });
       });
 
       describe('when visiting page by URL navigation', () => {
@@ -83,19 +122,6 @@ context('Deal cancellation - cancel cancellation', () => {
           cancelCancellationPage.noGoBackButton().click();
 
           cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
-        });
-
-        it('yes cancel button navigates to deal summary page', () => {
-          cancelCancellationPage.yesCancelButton().click();
-
-          cy.url().should('eq', relative(`/case/${dealId}/deal`));
-        });
-
-        it('yes button wipes the cancellation data', () => {
-          cancelCancellationPage.yesCancelButton().click();
-
-          caseDealPage.cancelDealButton().click();
-          reasonForCancellingPage.reasonForCancellingTextBox().should('have.value', '');
         });
       });
 
