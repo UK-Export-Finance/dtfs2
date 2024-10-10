@@ -10,7 +10,7 @@ describe('map currencies to radio items helper', () => {
         const currencyRadioItems = mapCurrenciesToRadioItems();
 
         // Assert
-        expect(currencyRadioItems.length).toBe(Object.values(CURRENCY).length);
+        expect(currencyRadioItems.length).toEqual(Object.values(CURRENCY).length);
         expect(currencyRadioItems).toEqual([
           aCurrencyRadioItem({ currency: CURRENCY.GBP, checked: false }),
           aCurrencyRadioItem({ currency: CURRENCY.EUR, checked: false }),

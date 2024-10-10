@@ -13,19 +13,19 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const originalUrl = 'http://example.com?paymentDetailsFacilityId=12345';
 
       it('should return true for a valid facility ID', () => {
-        expect(isFacilityIdFilterValid(originalUrl, '12345')).toBe(true);
+        expect(isFacilityIdFilterValid(originalUrl, '12345')).toEqual(true);
       });
 
       it('should return false for a facility ID with less than 4 digits', () => {
-        expect(isFacilityIdFilterValid(originalUrl, '123')).toBe(false);
+        expect(isFacilityIdFilterValid(originalUrl, '123')).toEqual(false);
       });
 
       it('should return false for a facility ID with more than 10 digits', () => {
-        expect(isFacilityIdFilterValid(originalUrl, '12345678901')).toBe(false);
+        expect(isFacilityIdFilterValid(originalUrl, '12345678901')).toEqual(false);
       });
 
       it('should return false for a facility ID containing non-numeric characters', () => {
-        expect(isFacilityIdFilterValid(originalUrl, '1234a')).toBe(false);
+        expect(isFacilityIdFilterValid(originalUrl, '1234a')).toEqual(false);
       });
     });
 
@@ -33,7 +33,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const originalUrl = 'http://example.com';
 
       it('should return false even for a valid facility ID', () => {
-        expect(isFacilityIdFilterValid(originalUrl, '12345')).toBe(false);
+        expect(isFacilityIdFilterValid(originalUrl, '12345')).toEqual(false);
       });
     });
   });
@@ -43,15 +43,15 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const originalUrl = 'http://example.com?paymentDetailsPaymentCurrency=USD';
 
       it('should return true for a non-empty payment currency', () => {
-        expect(isPaymentCurrencyFilterValid(originalUrl, CURRENCY.USD)).toBe(true);
+        expect(isPaymentCurrencyFilterValid(originalUrl, CURRENCY.USD)).toEqual(true);
       });
 
       it('should return false for an empty payment currency', () => {
-        expect(isPaymentCurrencyFilterValid(originalUrl, '')).toBe(false);
+        expect(isPaymentCurrencyFilterValid(originalUrl, '')).toEqual(false);
       });
 
       it('should return false for an unknown payment currency', () => {
-        expect(isPaymentCurrencyFilterValid(originalUrl, 'ABC')).toBe(false);
+        expect(isPaymentCurrencyFilterValid(originalUrl, 'ABC')).toEqual(false);
       });
     });
 
@@ -59,7 +59,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const originalUrl = 'http://example.com';
 
       it('should return false even for a valid payment currency', () => {
-        expect(isPaymentCurrencyFilterValid(originalUrl, CURRENCY.USD)).toBe(false);
+        expect(isPaymentCurrencyFilterValid(originalUrl, CURRENCY.USD)).toEqual(false);
       });
     });
   });
@@ -69,15 +69,15 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const originalUrl = 'http://example.com?paymentDetailsPaymentReference=REF123';
 
       it('should return true for a non-empty payment reference', () => {
-        expect(isPaymentReferenceFilterValid(originalUrl, 'REF123')).toBe(true);
+        expect(isPaymentReferenceFilterValid(originalUrl, 'REF123')).toEqual(true);
       });
 
       it('should return false for a payment reference with less than 4 characters', () => {
-        expect(isPaymentReferenceFilterValid(originalUrl, 'ABC')).toBe(false);
+        expect(isPaymentReferenceFilterValid(originalUrl, 'ABC')).toEqual(false);
       });
 
       it('should return false for an empty payment reference', () => {
-        expect(isPaymentReferenceFilterValid(originalUrl, '')).toBe(false);
+        expect(isPaymentReferenceFilterValid(originalUrl, '')).toEqual(false);
       });
     });
 
@@ -85,7 +85,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const originalUrl = 'http://example.com';
 
       it('should return false even for a valid payment reference', () => {
-        expect(isPaymentReferenceFilterValid(originalUrl, 'REF123')).toBe(false);
+        expect(isPaymentReferenceFilterValid(originalUrl, 'REF123')).toEqual(false);
       });
     });
   });
