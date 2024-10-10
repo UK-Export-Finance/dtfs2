@@ -1,5 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode, AxiosError, AxiosResponse } from 'axios';
+import { PaymentDetailsFilters } from '@ukef/dtfs2-common';
 import { GetUtilisationReportReconciliationDetailsByIdRequest, getUtilisationReportReconciliationDetailsById } from '.';
 import api from '../../../api';
 import { aUtilisationReportReconciliationDetailsResponse } from '../../../../../test-helpers';
@@ -48,7 +49,8 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       const premiumPaymentsFilters = {
         facilityId: '1234',
       };
-      req.query = { premiumPaymentsFilters };
+      const paymentDetailsFilters = {};
+      req.query = { premiumPaymentsFilters, paymentDetailsFilters };
 
       apiGetUtilisationReportReconciliationDetailsByIdSpy.mockResolvedValue(utilisationReportReconciliationDetailsResponse);
 
@@ -56,7 +58,29 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       await getUtilisationReportReconciliationDetailsById(req, res);
 
       // Assert
-      expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledWith(reportId.toString(), premiumPaymentsFilters);
+      expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledTimes(1);
+      expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledWith(reportId.toString(), premiumPaymentsFilters, paymentDetailsFilters);
+    });
+
+    it('fetches report with the payment details tab filters query param when provided', async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      const premiumPaymentsFilters = {};
+      const paymentDetailsFilters: PaymentDetailsFilters = {
+        facilityId: '1234',
+        paymentCurrency: 'GBP',
+        paymentReference: 'A sample payment reference.',
+      };
+      req.query = { premiumPaymentsFilters, paymentDetailsFilters };
+
+      apiGetUtilisationReportReconciliationDetailsByIdSpy.mockResolvedValue(utilisationReportReconciliationDetailsResponse);
+
+      // Act
+      await getUtilisationReportReconciliationDetailsById(req, res);
+
+      // Assert
+      expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledTimes(1);
+      expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledWith(reportId.toString(), premiumPaymentsFilters, paymentDetailsFilters);
     });
 
     it('responds with the specific axios error code when the api throws an error', async () => {

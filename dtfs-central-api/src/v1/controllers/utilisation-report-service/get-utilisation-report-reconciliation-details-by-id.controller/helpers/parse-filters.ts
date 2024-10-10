@@ -1,14 +1,25 @@
-import { Currency, CURRENCY_REGEX, isPaymentReferenceOverFiftyCharacters, PaymentDetailsFilters, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
+import {
+  Currency,
+  CURRENCY_REGEX,
+  isPaymentReferenceOverMaxCharacterCount,
+  MIN_PAYMENT_REFERENCE_FILTER_CHARACTER_COUNT,
+  PaymentDetailsFilters,
+  PremiumPaymentsFilters,
+  ValidatedPaymentDetailsFilters,
+} from '@ukef/dtfs2-common';
 import { REGEX } from '../../../../../constants';
-import { ValidatedPaymentDetailsFilters } from '../../../../../types/utilisation-reports';
 
 /**
- * Checks if the payment reference is between 4 and 50 characters long.
+ * Checks if the payment reference is defined and has a valid length between
+ * {@link MIN_PAYMENT_REFERENCE_FILTER_CHARACTER_COUNT} and
+ * {@link @ukef/dtfs2-common#MAX_PAYMENT_REFERENCE_CHARACTER_COUNT}.
  * @param paymentReference - The payment reference string to check.
- * @returns True if the payment reference is between 4 and 50 characters long, false otherwise.
+ * @returns True if the payment reference is defined and has a valid length, false otherwise.
  */
-export const isPaymentReferenceBetweenFourAndFiftyCharacters = (paymentReference?: string): boolean => {
-  return !!paymentReference && paymentReference.length >= 4 && !isPaymentReferenceOverFiftyCharacters(paymentReference);
+export const isPaymentReferenceFilterLengthValid = (paymentReference?: string): boolean => {
+  return (
+    !!paymentReference && paymentReference.length >= MIN_PAYMENT_REFERENCE_FILTER_CHARACTER_COUNT && !isPaymentReferenceOverMaxCharacterCount(paymentReference)
+  );
 };
 
 /**
@@ -34,7 +45,7 @@ export const parsePaymentDetailsFilters = (paymentDetailsFilters?: PaymentDetail
 
   let paymentReferenceFilter;
 
-  if (isPaymentReferenceBetweenFourAndFiftyCharacters(paymentReference)) {
+  if (isPaymentReferenceFilterLengthValid(paymentReference)) {
     paymentReferenceFilter = paymentReference;
   }
 

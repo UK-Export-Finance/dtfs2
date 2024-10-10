@@ -1,4 +1,4 @@
-import { isPaymentReferenceBetweenFourAndFiftyCharacters, parsePaymentDetailsFilters, parsePremiumPaymentsFilters } from './parse-filters';
+import { isPaymentReferenceFilterLengthValid, parsePaymentDetailsFilters, parsePremiumPaymentsFilters } from './parse-filters';
 
 describe('parse-filters helper', () => {
   describe('parsePaymentDetailsFilters', () => {
@@ -236,28 +236,28 @@ describe('parse-filters helper', () => {
   describe('isPaymentReferenceBetweenFourAndFiftyCharacters', () => {
     describe('when payment reference is less than 4 characters', () => {
       it('should return false', () => {
-        const result = isPaymentReferenceBetweenFourAndFiftyCharacters('123');
+        const result = isPaymentReferenceFilterLengthValid('123');
         expect(result).toEqual(false);
       });
     });
 
     describe('when payment reference is exactly 4 characters', () => {
       it('should return true', () => {
-        const result = isPaymentReferenceBetweenFourAndFiftyCharacters('1234');
+        const result = isPaymentReferenceFilterLengthValid('1234');
         expect(result).toEqual(true);
       });
     });
 
     describe('when payment reference is between 4 and 50 characters', () => {
       it('should return true', () => {
-        const result = isPaymentReferenceBetweenFourAndFiftyCharacters('This is a string with exactly 44 characters.');
+        const result = isPaymentReferenceFilterLengthValid('This is a string with exactly 44 characters.');
         expect(result).toEqual(true);
       });
     });
 
     describe('when payment reference is exactly 50 characters', () => {
       it('should return true', () => {
-        const result = isPaymentReferenceBetweenFourAndFiftyCharacters('This is a string with exactly 50 characters.......');
+        const result = isPaymentReferenceFilterLengthValid('This is a string with exactly 50 characters.......');
         expect(result).toEqual(true);
       });
     });
@@ -266,7 +266,7 @@ describe('parse-filters helper', () => {
       it('should return false', () => {
         const paymentReference = 'This is a string with exactly 51 characters........';
 
-        const result = isPaymentReferenceBetweenFourAndFiftyCharacters(paymentReference);
+        const result = isPaymentReferenceFilterLengthValid(paymentReference);
 
         expect(result).toEqual(false);
       });

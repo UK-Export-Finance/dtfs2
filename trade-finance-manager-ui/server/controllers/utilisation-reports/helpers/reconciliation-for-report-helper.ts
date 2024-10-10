@@ -1,5 +1,5 @@
 import orderBy from 'lodash.orderby';
-import { FeeRecordStatus, getFormattedCurrencyAndAmount, IsoDateTimeStamp, KeyingSheetAdjustment } from '@ukef/dtfs2-common';
+import { FeeRecordStatus, getFormattedCurrencyAndAmount, IsoDateTimeStamp, KeyingSheetAdjustment, PaymentDetailsFilters } from '@ukef/dtfs2-common';
 import { format, parseISO } from 'date-fns';
 import { FeeRecord, FeeRecordPaymentGroup, KeyingSheet, KeyingSheetRow, Payment } from '../../../api-response-types';
 import {
@@ -8,8 +8,9 @@ import {
   KeyingSheetAdjustmentViewModel,
   KeyingSheetViewModel,
   PaymentDetailsPaymentViewModel,
-  PaymentDetailsViewModel,
   PaymentViewModelItem,
+  PaymentDetailsRowViewModel,
+  PaymentDetailsFiltersViewModel,
 } from '../../../types/view-models';
 import { DATE_FORMAT } from '../../../constants';
 import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
@@ -18,6 +19,7 @@ import { getFeeRecordDisplayStatus } from './get-fee-record-display-status';
 import { getKeyingSheetDisplayStatus } from './get-keying-sheet-display-status';
 import { KeyingSheetCheckboxId } from '../../../types/keying-sheet-checkbox-id';
 import { getKeyToDateSortValueMap } from './get-key-to-date-sort-value-map-helper';
+import { mapCurrenciesToRadioItems } from '../../../helpers/map-currencies-to-radio-items';
 
 /**
  * Sort fee records by reported payments
@@ -246,7 +248,7 @@ export const getFormattedDateReconciled = (dateReconciled: IsoDateTimeStamp | un
  * @param feeRecordPaymentGroups - The fee record payment groups
  * @returns The payment details view model
  */
-export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): PaymentDetailsViewModel => {
+export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): PaymentDetailsRowViewModel[] => {
   // Flatten the groups to a list of payments with the date reconciled of the group existing on
   // the payment which can be used to determine the sort orders for the columns with custom sorting
   const allPaymentsWithDateReconciled = feeRecordPaymentGroups.reduce(
@@ -301,6 +303,22 @@ export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaym
         })),
       ];
     },
-    [] as PaymentDetailsViewModel,
+    [] as PaymentDetailsRowViewModel[],
   );
+};
+
+/**
+ * Maps payment details filters to a view model for payment details filters.
+ * The supported currencies are mapped to radio items.
+ * If a currency filter is defined, the corresponding radio item for that
+ * currency is checked.
+ * @param paymentDetailsFilters - The payment details filters to be mapped.
+ * @returns A view model of the payment details filters with the supported
+ * payment currencies mapped to radio items.
+ */
+export const mapPaymentDetailsFiltersToViewModel = (paymentDetailsFilters: PaymentDetailsFilters): PaymentDetailsFiltersViewModel => {
+  return {
+    ...paymentDetailsFilters,
+    paymentCurrency: mapCurrenciesToRadioItems(paymentDetailsFilters.paymentCurrency),
+  };
 };
