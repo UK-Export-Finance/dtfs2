@@ -491,7 +491,6 @@ context(`users can filter payment details by facility id and payment reference a
         pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput().should('have.value', completePaymentReferenceFilter);
 
         pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(firstPayment.id, firstFeeRecord.id).should('exist');
-        // TODO FN-2311: This assertion is failing at present as the backend implementation needs updating to not return full groups.
         pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(secondPayment.id, firstFeeRecord.id).should('not.exist');
         pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(thirdPayment.id, secondFeeRecord.id).should('not.exist');
       });
@@ -648,5 +647,74 @@ context(`users can filter payment details by facility id and payment reference a
     });
   });
 
-  // TODO FN-2311: Add tests for multiple filters being applied.
+  describe('when multiple filters are submitted', () => {
+    it('should only display the payments which match the supplied filters and persist the inputted filter values', () => {
+      const paymentCurrencyFilter = CURRENCY.GBP;
+      const partialPaymentReferenceFilter = 'payment';
+      const partialFacilityIdFilter = '1111';
+
+      const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build();
+      const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityId('22222222').build();
+      const thirdFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(3).withFacilityId('11113333').build();
+      const fourthFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(4).withFacilityId('11113333').build();
+
+      const firstPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
+        .withId(11)
+        .withAmount(100)
+        .withReference('First payment ref')
+        .withFeeRecords([firstFeeRecord])
+        .build();
+      const secondPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.EUR)
+        .withId(12)
+        .withAmount(200)
+        .withReference('Second payment ref')
+        .withFeeRecords([secondFeeRecord])
+        .build();
+      const thirdPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
+        .withId(13)
+        .withAmount(300)
+        .withReference('Third payment ref')
+        .withFeeRecords([thirdFeeRecord])
+        .build();
+      const fourthPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
+        .withId(14)
+        .withAmount(400)
+        .withReference('Another ref')
+        .withFeeRecords([thirdFeeRecord, fourthFeeRecord])
+        .build();
+
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord, thirdFeeRecord, fourthFeeRecord]);
+      cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [firstPayment, secondPayment, thirdPayment, fourthPayment]);
+
+      pages.landingPage.visit();
+      cy.login(USERS.PDC_RECONCILE);
+
+      cy.visit(`/utilisation-reports/${reportId}`);
+
+      pages.utilisationReportPage.paymentDetailsTabLink().click();
+
+      pages.utilisationReportPage.paymentDetailsTab.filters.paymentCurrencyRadioInput(paymentCurrencyFilter).click();
+      cy.keyboardInput(pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput(), partialPaymentReferenceFilter);
+      cy.keyboardInput(pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdInput(), partialFacilityIdFilter);
+
+      pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
+
+      cy.url().should(
+        'eq',
+        relative(
+          `/utilisation-reports/${reportId}?paymentDetailsPaymentCurrency=${paymentCurrencyFilter}&paymentDetailsPaymentReference=${partialPaymentReferenceFilter}&paymentDetailsFacilityId=${partialFacilityIdFilter}#payment-details`,
+        ),
+      );
+
+      pages.utilisationReportPage.paymentDetailsTab.filters.paymentCurrencyRadioInput(paymentCurrencyFilter).should('be.checked');
+      pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput().should('have.value', partialPaymentReferenceFilter);
+      pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdInput().should('have.value', partialFacilityIdFilter);
+
+      pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(firstPayment.id, firstFeeRecord.id).should('exist');
+      pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(secondPayment.id, secondFeeRecord.id).should('not.exist');
+      pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(thirdPayment.id, thirdFeeRecord.id).should('exist');
+      pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(fourthPayment.id, thirdFeeRecord.id).should('not.exist');
+      pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(fourthPayment.id, fourthFeeRecord.id).should('not.exist');
+    });
+  });
 });
