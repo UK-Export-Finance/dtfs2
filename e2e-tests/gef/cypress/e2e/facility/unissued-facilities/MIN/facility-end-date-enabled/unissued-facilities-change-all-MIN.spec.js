@@ -62,11 +62,11 @@ context('Unissued Facilities MIN - change all to issued from unissued table - fe
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo });
+      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo.date });
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo.date });
       cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
 
       aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
@@ -75,7 +75,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table - fe
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/facility-end-date`));
 
-      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonths });
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonths.date });
 
       cy.clickContinueButton();
 
@@ -98,7 +98,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table - fe
 
       cy.clickContinueButton();
 
-      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonths });
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonths.date });
 
       cy.clickContinueButton();
 
@@ -114,7 +114,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table - fe
 
       // testing if MIN submission date so can do 3months
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeMonths });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeMonths.date });
       cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
 
       aboutFacilityUnissued.isUsingFacilityEndDateNo().click();

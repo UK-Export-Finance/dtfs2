@@ -180,7 +180,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       // entering cover start date before issue date
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo.date });
 
       cy.clickContinueButton();
       aboutFacilityUnissued.coverStartDateError().contains('Cover start date cannot be before the issue date');
@@ -239,11 +239,11 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo });
+      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo.date });
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo.date });
       cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
 
       aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
@@ -252,7 +252,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/facility-end-date`));
 
-      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonths });
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonths.date });
 
       cy.clickContinueButton();
 
@@ -275,7 +275,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
 
       cy.clickContinueButton();
 
-      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonths });
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonths.date });
 
       cy.clickContinueButton();
 
@@ -436,7 +436,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
 
       cy.clickContinueButton();
 
-      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonths });
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonths.date });
 
       cy.clickContinueButton();
 

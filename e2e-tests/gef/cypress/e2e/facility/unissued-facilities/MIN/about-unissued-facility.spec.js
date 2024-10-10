@@ -168,7 +168,7 @@ context('Unissued Facilities MIN - about unissued facility page', () => {
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo.date });
 
       cy.clickContinueButton();
 

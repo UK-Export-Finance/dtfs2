@@ -164,7 +164,7 @@ context('Unissued Facilities MIN - change to issued from preview page - feature 
       errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
       aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
 
-      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo });
+      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo.date });
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 

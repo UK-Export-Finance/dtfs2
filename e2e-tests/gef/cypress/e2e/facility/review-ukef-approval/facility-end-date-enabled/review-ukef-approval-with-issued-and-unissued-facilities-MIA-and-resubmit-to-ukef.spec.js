@@ -191,7 +191,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: threeDaysAgo });
+      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: threeDaysAgo.date });
 
       cy.clickContinueButton();
 
@@ -225,7 +225,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
       cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths.date });
 
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonths });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonths.date });
 
       aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
 

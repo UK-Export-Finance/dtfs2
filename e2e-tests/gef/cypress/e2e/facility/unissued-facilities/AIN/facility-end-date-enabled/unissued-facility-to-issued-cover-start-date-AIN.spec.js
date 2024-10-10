@@ -120,7 +120,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       // Cover start date to user defined date - Three days in the past
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo.date });
 
       // Cover end date to user defined date
       cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });

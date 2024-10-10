@@ -174,7 +174,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: threeMonths });
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: threeMonths.date });
 
     cy.clickContinueButton();
 
