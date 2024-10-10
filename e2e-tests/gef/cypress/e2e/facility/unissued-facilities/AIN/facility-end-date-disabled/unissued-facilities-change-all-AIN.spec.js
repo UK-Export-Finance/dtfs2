@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import relative from '../../../../relativeURL';
 import CONSTANTS from '../../../../../fixtures/constants';
 import {
@@ -98,7 +97,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.rows().contains(format(threeDaysAgoPlusMonth, 'dd MMM yyyy'));
+      unissuedFacilityTable.rows().contains(threeDaysAgoPlusMonth.ddMMMyyyy);
       statusBanner.applicationBanner().should('exist');
     });
 

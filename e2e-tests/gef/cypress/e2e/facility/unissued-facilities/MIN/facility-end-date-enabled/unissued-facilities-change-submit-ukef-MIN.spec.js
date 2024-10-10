@@ -78,7 +78,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table - fe
 
       cy.clickContinueButton();
 
-      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 
@@ -101,7 +101,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table - fe
 
       cy.clickContinueButton();
 
-      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 
@@ -345,7 +345,7 @@ context('Return to maker for unissued to issued facilities - feature flag enable
       aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       cy.clickContinueButton();
 
-      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 

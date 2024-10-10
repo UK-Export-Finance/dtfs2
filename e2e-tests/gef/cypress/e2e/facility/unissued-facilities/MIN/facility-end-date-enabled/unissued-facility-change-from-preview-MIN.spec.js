@@ -95,7 +95,7 @@ context('Unissued Facilities MIN - change to issued from preview page - feature 
 
       cy.clickContinueButton();
 
-      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 
@@ -198,7 +198,7 @@ context('Unissued Facilities MIN - change to issued from preview page - feature 
 
       cy.clickContinueButton();
 
-      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
     });

@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import relative from '../../relativeURL';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../e2e-fixtures';
@@ -100,8 +99,8 @@ context('Deal cancellation - effective from date', () => {
       cy.clickContinueButton();
       cy.visit(relative(`/case/${dealId}/cancellation/effective-from-date`));
 
-      effectiveFromDatePage.effectiveFromDateDay().should('have.value', format(today, 'd'));
-      effectiveFromDatePage.effectiveFromDateMonth().should('have.value', format(today, 'M'));
+      effectiveFromDatePage.effectiveFromDateDay().should('have.value', today.day);
+      effectiveFromDatePage.effectiveFromDateMonth().should('have.value', today.month);
       effectiveFromDatePage.effectiveFromDateYear().should('have.value', today.year);
     });
   });

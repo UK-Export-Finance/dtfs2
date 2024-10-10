@@ -163,7 +163,7 @@ context('Deal cancellation - check details', () => {
       it('correctly updates the "check details" page with the new bank request date', () => {
         const testReason = 'test reason';
 
-        cy.completeDateFormFields({ idPrefix: 'bank-request-date', date: threeMonthsOneDay });
+        cy.completeDateFormFields({ idPrefix: 'bank-request-date', date: threeMonthsOneDay.date });
 
         cy.clickContinueButton();
         cy.clickContinueButton();

@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import relative from '../../../../relativeURL';
 import CONSTANTS from '../../../../../fixtures/constants';
 import { threeDaysAgo, threeMonths, threeMonthsOneDay, today, twoMonths } from '../../../../../../../e2e-fixtures/dateConstants';
@@ -125,7 +124,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table - fe
     it('facility table should have change links on the changed to issued facilities', () => {
       // to check date format
       const issuedDate = today.dMMMMyyyy;
-      const coverStartThreeMonths = format(threeMonths, 'd MMMM yyyy');
+      const coverStartThreeMonths = threeMonths.dMMMMyyyy;
       const coverEnd = threeMonthsOneDay.dMMMMyyyy;
 
       // should be able to change facility four as changed to issued

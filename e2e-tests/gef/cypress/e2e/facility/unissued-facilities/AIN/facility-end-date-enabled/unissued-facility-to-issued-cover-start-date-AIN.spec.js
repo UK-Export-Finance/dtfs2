@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import relative from '../../../../relativeURL';
 import CONSTANTS from '../../../../../fixtures/constants';
 import { threeDaysAgoPlusMonth, threeDaysAgo, threeMonthsOneDay } from '../../../../../../../e2e-fixtures/dateConstants';
@@ -62,7 +61,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.rows().contains(format(threeDaysAgoPlusMonth, 'dd MMM yyyy'));
+      unissuedFacilityTable.rows().contains(threeDaysAgoPlusMonth.ddMMMyyyy);
       statusBanner.applicationBanner().should('exist');
     });
 
@@ -131,7 +130,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();
       cy.clickContinueButton();
 
-      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 

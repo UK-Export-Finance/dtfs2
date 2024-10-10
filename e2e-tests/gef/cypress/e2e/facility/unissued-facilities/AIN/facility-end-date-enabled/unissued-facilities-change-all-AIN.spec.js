@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import relative from '../../../../relativeURL';
 import CONSTANTS from '../../../../../fixtures/constants';
 import {
@@ -101,7 +100,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.rows().contains(format(threeDaysAgoPlusMonth, 'dd MMM yyyy'));
+      unissuedFacilityTable.rows().contains(threeDaysAgoPlusMonth.ddMMMyyyy);
       statusBanner.applicationBanner().should('exist');
     });
 
@@ -355,7 +354,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
     });
 
     it('can submit facility when facility end date has been provided', () => {
-      const facilityEndDateFormatted = format(threeMonths, 'd MMMM yyyy');
+      const facilityEndDateFormatted = threeMonths.dMMMMyyyy;
 
       applicationPreview.facilitySummaryListTable(3).facilityEndDateValue().contains(facilityEndDateFormatted);
 
@@ -377,7 +376,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
     });
 
     it('can submit facility when bank review date has been provided', () => {
-      const bankReviewDateFormatted = format(threeMonths, 'd MMMM yyyy');
+      const bankReviewDateFormatted = threeMonths.dMMMMyyyy;
 
       applicationPreview.facilitySummaryListTable(3).bankReviewDateAction().click();
 

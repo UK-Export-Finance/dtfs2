@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import relative from '../../relativeURL';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../e2e-fixtures';
@@ -55,14 +54,14 @@ context('Deal cancellation - bank request date', () => {
     });
 
     it('should validate submitting a date more than 12 months in the future', () => {
-      cy.completeDateFormFields({ idPrefix: 'bank-request-date', date: twelveMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'bank-request-date', date: twelveMonthsOneDay.date });
 
       cy.clickContinueButton();
       errorSummary().contains('The bank request date cannot exceed 12 months in the future from the submission date');
     });
 
     it('should validate submitting a date more than 12 months in the past', () => {
-      cy.completeDateFormFields({ idPrefix: 'bank-request-date', date: twelveMonthsOneDayAgo });
+      cy.completeDateFormFields({ idPrefix: 'bank-request-date', date: twelveMonthsOneDayAgo.date });
 
       cy.clickContinueButton();
       errorSummary().contains('The bank request date cannot exceed 12 months in the past from the submission date');
@@ -94,8 +93,8 @@ context('Deal cancellation - bank request date', () => {
       cy.clickContinueButton();
       cy.clickBackLink();
 
-      bankRequestDatePage.bankRequestDateDay().should('have.value', format(today, 'd'));
-      bankRequestDatePage.bankRequestDateMonth().should('have.value', format(today, 'M'));
+      bankRequestDatePage.bankRequestDateDay().should('have.value', today.day);
+      bankRequestDatePage.bankRequestDateMonth().should('have.value', today.month);
       bankRequestDatePage.bankRequestDateYear().should('have.value', today.year);
     });
   });

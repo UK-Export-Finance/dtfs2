@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import relative from '../../../relativeURL';
 import CONSTANTS from '../../../../fixtures/constants';
 import { fourDaysAgo, tomorrow, threeDaysAgo, threeMonths, threeMonthsOneDay, twoMonths, twentyEightDays } from '../../../../../../e2e-fixtures/dateConstants';
@@ -82,7 +81,7 @@ context('Unissued Facilities MIN - about unissued facility page', () => {
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.rows().contains(format(threeMonths, 'dd MMM yyyy'));
+      unissuedFacilityTable.rows().contains(threeMonths.ddMMMyyyy);
       statusBanner.applicationBanner().should('exist');
     });
 

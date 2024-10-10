@@ -20,8 +20,6 @@ const { unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWi
 });
 const issuedCashFacilityWithCoverDateConfirmed = anIssuedCashFacilityWithCoverDateConfirmed({ facilityEndDateEnabled: true });
 
-const { format } = require('date-fns');
-
 let dealId;
 let token;
 let facilityTwoId;
@@ -177,7 +175,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.rows().contains(format(threeMonths, 'dd MMM yyyy'));
+      unissuedFacilityTable.rows().contains(threeMonths.ddMMMyyyy);
       unissuedFacilityTable.updateFacilitiesLater().click();
 
       // link on application preview exists
@@ -206,7 +204,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 
