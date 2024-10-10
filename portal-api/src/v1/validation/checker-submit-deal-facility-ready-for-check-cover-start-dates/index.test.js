@@ -122,7 +122,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
 
       const deal = {
         details: {
-          submissionDate: fourDaysAgo.valueOf(),
+          submissionDate: fourDaysAgo.unixMilliseconds,
           manualInclusionApplicationSubmissionDate: twoDaysAgo.valueOf(),
         },
         submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA,
@@ -141,7 +141,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
 
       const deal = {
         details: {
-          submissionDate: fourDaysAgo.valueOf(),
+          submissionDate: fourDaysAgo.unixMilliseconds,
           manualInclusionApplicationSubmissionDate: twoDaysAgo.valueOf(),
         },
         submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA,
@@ -178,8 +178,8 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
 
       const deal = {
         details: {
-          submissionDate: fourDaysAgo.valueOf(),
-          manualInclusionApplicationSubmissionDate: fourDaysAgo.valueOf(),
+          submissionDate: fourDaysAgo.unixMilliseconds,
+          manualInclusionApplicationSubmissionDate: fourDaysAgo.unixMilliseconds,
           manualInclusionNoticeSubmissionDate: twoDaysAgo.valueOf(),
         },
         submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
@@ -198,8 +198,8 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
 
       const deal = {
         details: {
-          submissionDate: fourDaysAgo.valueOf(),
-          manualInclusionApplicationSubmissionDate: fourDaysAgo.valueOf(),
+          submissionDate: fourDaysAgo.unixMilliseconds,
+          manualInclusionApplicationSubmissionDate: fourDaysAgo.unixMilliseconds,
           manualInclusionNoticeSubmissionDate: twoDaysAgo.valueOf(),
         },
         submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,

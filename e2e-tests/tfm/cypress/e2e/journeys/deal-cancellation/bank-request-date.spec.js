@@ -5,7 +5,7 @@ import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../e2e-f
 import caseDealPage from '../../pages/caseDealPage';
 import { backLink, cancelLink, continueButton, errorSummary } from '../../partials';
 import bankRequestDatePage from '../../pages/deal-cancellation/bank-request-date';
-import { today, todayYear, twelveMonthsOneDayAgo, twelveMonthsOneDay } from '../../../../../e2e-fixtures/dateConstants';
+import { today, twelveMonthsOneDayAgo, twelveMonthsOneDay } from '../../../../../e2e-fixtures/dateConstants';
 
 context('Deal cancellation - bank request date', () => {
   let dealId;
@@ -96,7 +96,7 @@ context('Deal cancellation - bank request date', () => {
 
       bankRequestDatePage.bankRequestDateDay().should('have.value', format(today, 'd'));
       bankRequestDatePage.bankRequestDateMonth().should('have.value', format(today, 'M'));
-      bankRequestDatePage.bankRequestDateYear().should('have.value', todayYear);
+      bankRequestDatePage.bankRequestDateYear().should('have.value', today.year);
     });
   });
 

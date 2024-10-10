@@ -2,14 +2,14 @@ import relative from '../../../relativeURL';
 import { backLink, headingCaption, continueButton, errorSummary, saveAndReturnButton } from '../../../partials';
 import facilityEndDate from '../../../pages/facility-end-date';
 import aboutFacility from '../../../pages/about-facility';
-import { todayYear, tomorrow, yesterday } from '../../../../../../e2e-fixtures/dateConstants';
+import { today, tomorrow, yesterday } from '../../../../../../e2e-fixtures/dateConstants';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 
 const applications = [];
 let token;
 
 const now = new Date();
-const nextYear = Number(todayYear) + 1;
+const nextYear = Number(today.year) + 1;
 
 context('Facility End Date Page - feature flag enabled', () => {
   let application;
@@ -108,7 +108,7 @@ context('Facility End Date Page - feature flag enabled', () => {
     cy.keyboardInput(aboutFacility.facilityName(), 'Name');
     aboutFacility.shouldCoverStartOnSubmissionNo().click();
 
-    cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: tomorrow });
+    cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: tomorrow.date });
     cy.completeDateFormFields({ idPrefix: 'cover-end-date', year: nextYear });
 
     aboutFacility.isUsingFacilityEndDateYes().click();
@@ -125,7 +125,7 @@ context('Facility End Date Page - feature flag enabled', () => {
     errorSummary();
     facilityEndDate.facilityEndDateError();
 
-    cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: tomorrow });
+    cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: tomorrow.date });
 
     cy.clickContinueButton();
     errorSummary().should('not.exist');

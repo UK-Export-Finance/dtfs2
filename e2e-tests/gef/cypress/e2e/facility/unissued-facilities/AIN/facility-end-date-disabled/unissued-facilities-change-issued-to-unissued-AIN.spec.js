@@ -101,7 +101,7 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
       cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 
@@ -116,8 +116,8 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 
@@ -141,9 +141,9 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
     /* should be able to change dates and unissue on facility that has changed to issued */
     it('facility table should have change links on the changed to issued facilities', () => {
       // to check date format
-      const issuedDate = format(today, 'd MMMM yyyy');
-      const coverStart = format(twoMonths, 'd MMMM yyyy');
-      const coverEnd = format(threeMonthsOneDay, 'd MMMM yyyy');
+      const issuedDate = today.dMMMMyyyy;
+      const coverStart = twoMonths.dMMMMyyyy;
+      const coverEnd = threeMonthsOneDay.dMMMMyyyy;
 
       // should be able to change facility three as changed to issued
       applicationPreview.facilitySummaryListTable(0).nameValue().contains(unissuedContingentFacility.name);
@@ -200,9 +200,9 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
     });
 
     it('pressing back, cancel or yes should not edit the facility and take you back to details page', () => {
-      const issuedDate = format(threeDaysAgo, 'd MMMM yyyy');
-      const coverStart = format(threeDaysAgo, 'd MMMM yyyy');
-      const coverEnd = format(threeMonthsOneDay, 'd MMMM yyyy');
+      const issuedDate = threeDaysAgo.dMMMMyyyy;
+      const coverStart = threeDaysAgo.dMMMMyyyy;
+      const coverEnd = threeMonthsOneDay.dMMMMyyyy;
       // should be able to change number 1 as changed to issued
       applicationPreview.facilitySummaryListTable(2).nameValue().contains(unissuedCashFacility.name);
       applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().click();
@@ -323,7 +323,7 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
       cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 

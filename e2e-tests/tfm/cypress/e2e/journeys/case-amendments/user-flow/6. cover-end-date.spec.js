@@ -3,7 +3,7 @@ import { errorSummary } from '../../../partials';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import { oneMonth, oneMonthFormattedFull, todayDay, yearWithZeroLetter } from '../../../../../../e2e-fixtures/dateConstants';
+import { oneMonth, today, yearWithZeroLetter } from '../../../../../../e2e-fixtures/dateConstants';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1 } from '../../../../../../e2e-fixtures';
 
 context('Amendments - Cover End Date', () => {
@@ -72,9 +72,9 @@ context('Amendments - Cover End Date', () => {
     cy.url().should('contain', 'amendment-options');
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
-    amendmentsPage.amendmentCurrentCoverEndDate().should('contain', oneMonthFormattedFull);
+    amendmentsPage.amendmentCurrentCoverEndDate().should('contain', oneMonth.ddMMMyyyy);
 
-    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: oneMonth });
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: oneMonth.date });
 
     cy.clickContinueButton();
     errorSummary().contains('The new cover end date cannot be the same as the current cover end date');
@@ -117,9 +117,9 @@ context('Amendments - Cover End Date', () => {
 
     cy.url().should('contain', 'check-answers');
 
-    amendmentsPage.amendmentAnswerBankRequestDate().should('contain', todayDay);
+    amendmentsPage.amendmentAnswerBankRequestDate().should('contain', today.dayLong);
     amendmentsPage.amendmentAnswerRequireApproval().should('contain', 'Yes');
-    amendmentsPage.amendmentAnswerCoverEndDate().should('contain', todayDay);
+    amendmentsPage.amendmentAnswerCoverEndDate().should('contain', today.dayLong);
   });
 
   it('should continue to the `Enter the facility value` page if the cover end date is valid and the facility value also needs changing', () => {

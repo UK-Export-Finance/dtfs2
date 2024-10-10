@@ -6,8 +6,7 @@ import applicationDetails from '../pages/application-details';
 import applicationSubmission from '../pages/application-submission';
 import statusBanner from '../pages/application-status-banner';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
-
-import { todayFormattedShort } from '../../../../e2e-fixtures/dateConstants';
+import { today } from '../../../../e2e-fixtures/dateConstants';
 
 let dealId;
 
@@ -49,7 +48,7 @@ context('Submit to UKEF as MIA', () => {
 
       statusBanner.bannerStatus().contains('Draft');
 
-      statusBanner.bannerDateCreated().contains(todayFormattedShort);
+      statusBanner.bannerDateCreated().contains(today.ddMMMyyyy);
 
       securityDetails.visit(dealId);
       cy.keyboardInput(securityDetails.exporterSecurity(), 'test');

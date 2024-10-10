@@ -1,17 +1,17 @@
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
-const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
+const { today, oneMonth, yesterday } = require('../../../../../../e2e-fixtures/dateConstants');
 
-const nowDay = dateConstants.todayDay.toString();
-const nowMonth = dateConstants.todayMonth.toString();
-const nowYear = dateConstants.todayYear.toString();
+const nowDay = today.dayLong;
+const nowMonth = today.monthLong;
+const nowYear = today.year;
 
-const nowPlusMonthDay = dateConstants.oneMonthDay.toString();
-const nowPlusMonthMonth = dateConstants.oneMonthMonth.toString();
-const nowPlusMonthYear = dateConstants.oneMonthYear.toString();
+const nowPlusMonthDay = oneMonth.dayLong;
+const nowPlusMonthMonth = oneMonth.monthLong;
+const nowPlusMonthYear = oneMonth.year;
 
-const nowMinusDayDay = dateConstants.yesterdayDay.toString();
-const nowMinusDayMonth = dateConstants.yesterdayMonth.toString();
-const nowMinusDayYear = dateConstants.yesterdayYear.toString();
+const nowMinusDayDay = yesterday.dayLong;
+const nowMinusDayMonth = yesterday.monthLong;
+const nowMinusDayYear = yesterday.year;
 
 const deal = {
   submissionType: 'Automatic Inclusion Notice',
@@ -287,9 +287,9 @@ const deal = {
       id: 'USD',
     },
     supplyContractValue: '10,000',
-    'supplyContractConversionDate-day': nowMinusDayDay,
-    'supplyContractConversionDate-month': nowMinusDayMonth,
-    'supplyContractConversionDate-year': nowMinusDayYear,
+    'supplyContractConversionDate-day': yesterday.dayLong,
+    'supplyContractConversionDate-month': yesterday.monthLong,
+    'supplyContractConversionDate-year': yesterday.year,
   },
   summary: {
     totalValue: {

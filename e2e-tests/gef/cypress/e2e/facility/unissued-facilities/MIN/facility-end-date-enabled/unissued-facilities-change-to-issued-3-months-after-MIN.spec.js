@@ -1,6 +1,6 @@
 import relative from '../../../../relativeURL';
 import CONSTANTS from '../../../../../fixtures/constants';
-import { oneYearUnix, sixYearsOneDay, threeYears, tomorrow, threeMonthsOneDay } from '../../../../../../../e2e-fixtures/dateConstants';
+import { sixYearsOneDay, threeYears, tomorrow, threeMonthsOneDay, oneYear } from '../../../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_MIN } from '../../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { multipleMockGefFacilities } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
@@ -29,7 +29,7 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
       .then(() => {
         cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
           dealId = body._id;
-          MOCK_APPLICATION_MIN.manualInclusionNoticeSubmissionDate = `${oneYearUnix}608`;
+          MOCK_APPLICATION_MIN.manualInclusionNoticeSubmissionDate = `${oneYear.unixSecondsString}608`;
           cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
@@ -72,8 +72,8 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: tomorrow });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeYears });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: tomorrow.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeYears.date });
 
       cy.clickContinueButton();
 
@@ -95,8 +95,8 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: tomorrow });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeYears });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: tomorrow.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeYears.date });
 
       aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
 
@@ -154,8 +154,8 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: tomorrow });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeYears });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: tomorrow.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeYears.date });
 
       cy.clickContinueButton();
 

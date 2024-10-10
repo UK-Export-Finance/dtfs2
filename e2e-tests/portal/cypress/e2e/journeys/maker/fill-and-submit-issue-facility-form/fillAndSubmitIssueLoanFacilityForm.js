@@ -9,7 +9,7 @@ export const DISBURSEMENT_AMOUNT_VALUE = '50000';
 export const fillAndSubmitIssueLoanFacilityFormWithoutRequestedCoverStartDate = () => {
   cy.completeDateFormFields({ idPrefix: 'issuedDate' });
 
-  cy.completeDateFormFields({ idPrefix: 'coverEndDate', date: oneMonth });
+  cy.completeDateFormFields({ idPrefix: 'coverEndDate', date: oneMonth.date });
 
   cy.keyboardInput(pages.loanIssueFacility.disbursementAmount(), DISBURSEMENT_AMOUNT_VALUE);
   cy.keyboardInput(pages.loanIssueFacility.name(), '5678');
@@ -20,9 +20,9 @@ export const fillAndSubmitIssueLoanFacilityFormWithoutRequestedCoverStartDate = 
 export const fillAndSubmitIssueLoanFacilityForm = () => {
   cy.completeDateFormFields({ idPrefix: 'issuedDate' });
 
-  cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: twoDays });
+  cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: twoDays.date });
 
-  cy.completeDateFormFields({ idPrefix: 'coverEndDate', date: oneMonth });
+  cy.completeDateFormFields({ idPrefix: 'coverEndDate', date: oneMonth.date });
 
   cy.keyboardInput(pages.loanIssueFacility.disbursementAmount(), DISBURSEMENT_AMOUNT_VALUE);
   cy.keyboardInput(pages.loanIssueFacility.name(), '5678');

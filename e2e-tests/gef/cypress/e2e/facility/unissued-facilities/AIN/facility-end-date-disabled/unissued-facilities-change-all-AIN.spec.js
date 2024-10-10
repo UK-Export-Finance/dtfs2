@@ -4,20 +4,13 @@ import CONSTANTS from '../../../../../fixtures/constants';
 import {
   fourDaysAgo,
   threeDaysAgoPlusMonth,
-  threeDaysMonth,
-  threeDaysYear,
-  twoMonthsDay,
-  twoMonthsMonth,
-  twoMonthsYear,
-  threeMonthsOneDayDay,
-  threeMonthsOneDayMonth,
-  threeMonthsOneDayYear,
   today,
   tomorrow,
   twoMonths,
   threeMonthsOneDay,
   threeDaysAgo,
-  twentyEight,
+  twentyEightDays,
+  threeDays,
 } from '../../../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../../e2e-fixtures/portal-users.fixture';
@@ -163,14 +156,14 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       errorSummary().contains('Enter a cover end date');
 
       // entering date in the past for issue date
-      cy.completeDateFormFields({ idPrefix: 'issue-date', date: fourDaysAgo });
+      cy.completeDateFormFields({ idPrefix: 'issue-date', date: fourDaysAgo.date });
 
       cy.clickContinueButton();
       aboutFacilityUnissued.issueDateError().contains('The issue date must not be before the date of the inclusion notice submission date');
       errorSummary().contains('The issue date must not be before the date of the inclusion notice submission date');
 
       // entering issue date in the future
-      cy.completeDateFormFields({ idPrefix: 'issue-date', date: tomorrow });
+      cy.completeDateFormFields({ idPrefix: 'issue-date', date: tomorrow.date });
 
       cy.clickContinueButton();
       aboutFacilityUnissued.issueDateError().contains('The issue date cannot be in the future');
@@ -188,15 +181,15 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       errorSummary().contains('Cover start date cannot be before the issue date');
 
       // entering cover start date beyond 3 months from notice date
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
       aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
       errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
 
       // coverEnd date before coverStartDate
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: twentyEight });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: twentyEightDays.date });
 
       cy.clickContinueButton();
       errorSummary().contains('Cover end date cannot be before cover start date');
@@ -208,17 +201,17 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       cy.clickContinueButton();
       errorSummary().contains('The cover end date must be after the cover start date');
 
-      cy.completeDateFormFields({ idPrefix: 'issue-date', day: '**', month: `${threeDaysMonth}-`, year: `${threeDaysYear}2` });
+      cy.completeDateFormFields({ idPrefix: 'issue-date', day: '**', month: `${threeDays.monthLong}-`, year: `${threeDays.year}2` });
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', day: `${twoMonthsDay}/`, month: `${twoMonthsMonth}2`, year: `${twoMonthsYear}/` });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', day: `${twoMonths.dayLong}/`, month: `${twoMonths.monthLong}2`, year: `${twoMonths.year}/` });
 
       cy.completeDateFormFields({
         idPrefix: 'cover-end-date',
-        day: `${threeMonthsOneDayDay}2`,
-        month: `${threeMonthsOneDayMonth}-`,
-        year: `${threeMonthsOneDayYear}2`,
+        day: `${threeMonthsOneDay.dayLong}2`,
+        month: `${threeMonthsOneDay.monthLong}-`,
+        year: `${threeMonthsOneDay.year}2`,
       });
 
       cy.clickContinueButton();
@@ -246,7 +239,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
       cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 
@@ -262,8 +255,8 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 
@@ -277,8 +270,8 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 
@@ -303,9 +296,9 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
     /* should be able to change dates on facility that has changed to issued */
     it('facility table should have change links on the changed to issued facilities', () => {
       // to check date format
-      const issuedDate = format(today, 'd MMMM yyyy');
-      const coverStart = format(twoMonths, 'd MMMM yyyy');
-      const coverEnd = format(threeMonthsOneDay, 'd MMMM yyyy');
+      const issuedDate = today.dMMMMyyyy;
+      const coverStart = twoMonths.dMMMMyyyy;
+      const coverEnd = threeMonthsOneDay.dMMMMyyyy;
 
       // should be able to change facility four as changed to issued
       applicationPreview.facilitySummaryListTable(0).nameValue().contains(unissuedCashFacilityWith20MonthsOfCover.name);
@@ -333,8 +326,8 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
 
     // checks that can edit changed facility
     it('clicking change should take you to about facility page with different url', () => {
-      const issuedDate = format(threeDaysAgo, 'd MMMM yyyy');
-      const coverStart = format(threeDaysAgo, 'd MMMM yyyy');
+      const issuedDate = threeDaysAgo.dMMMMyyyy;
+      const coverStart = threeDaysAgo.dMMMMyyyy;
 
       // should be able to change number 1 as changed to issued
       applicationPreview.facilitySummaryListTable(3).nameValue().contains(unissuedCashFacility.name);

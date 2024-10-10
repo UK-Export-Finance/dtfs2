@@ -123,7 +123,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo });
 
       // Cover end date to user defined date
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
 
       aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
 

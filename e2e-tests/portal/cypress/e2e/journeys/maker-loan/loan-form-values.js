@@ -1,12 +1,12 @@
-const dateConstants = require('../../../../../e2e-fixtures/dateConstants');
+const { today, oneMonth } = require('../../../../../e2e-fixtures/dateConstants');
 
-const nowDay = dateConstants.todayDay.toString();
-const nowMonth = dateConstants.todayMonth.toString();
-const nowYear = dateConstants.todayYear.toString();
+const nowDay = today.dayLong;
+const nowMonth = today.monthLong;
+const nowYear = today.year;
 
-const nowPlusMonthDay = dateConstants.oneMonthDay.toString();
-const nowPlusMonthMonth = dateConstants.oneMonthMonth.toString();
-const nowPlusMonthYear = dateConstants.oneMonthYear.toString();
+const nowPlusMonthDay = oneMonth.dayLong;
+const nowPlusMonthMonth = oneMonth.monthLong;
+const nowPlusMonthYear = oneMonth.year;
 
 const GUARANTEE_DETAILS = {
   // 'Conditional' facility stage specifics

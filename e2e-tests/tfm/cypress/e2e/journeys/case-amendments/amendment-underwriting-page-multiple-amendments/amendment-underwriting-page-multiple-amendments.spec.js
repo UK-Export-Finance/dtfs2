@@ -3,7 +3,7 @@ import { caseSubNavigation } from '../../../partials';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import { threeMonths, tomorrowDay } from '../../../../../../e2e-fixtures/dateConstants';
+import { threeMonths, tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 import pages from '../../../pages';
 
@@ -69,7 +69,7 @@ context('Amendments underwriting page - multiple amendments should show without 
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', day: tomorrowDay });
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', day: tomorrow.day });
 
     cy.clickContinueButton();
 

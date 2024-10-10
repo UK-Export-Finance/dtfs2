@@ -30,7 +30,7 @@ context('about-supply-contract', () => {
 
     const today = new Date();
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day(), `${today.getDate()}`);
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day(), today.day);
 
     cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().month(), `${today.getMonth() + 1}`);
 

@@ -159,7 +159,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: tomorrow });
+      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: tomorrow.date });
 
       cy.clickContinueButton();
 

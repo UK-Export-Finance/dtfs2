@@ -1,11 +1,11 @@
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
-const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
+const { oneMonth, today } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const now = new Date().valueOf();
-const nowMonth = dateConstants.todayMonth.toString();
-const nowPlusMonthDay = dateConstants.oneMonthDay.toString();
-const nowPlusMonthMonth = dateConstants.oneMonthMonth.toString();
-const nowPlusMonthYear = dateConstants.oneMonthYear.toString();
+const nowMonth = today.monthLong;
+const nowPlusMonthDay = oneMonth.dayLong;
+const nowPlusMonthMonth = oneMonth.monthLong;
+const nowPlusMonthYear = oneMonth.year;
 
 const deal = {
   submissionType: 'Manual Inclusion Application',

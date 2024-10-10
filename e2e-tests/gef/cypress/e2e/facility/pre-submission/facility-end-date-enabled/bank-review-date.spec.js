@@ -2,13 +2,11 @@ import relative from '../../../relativeURL';
 import { backLink, headingCaption, continueButton, saveAndReturnButton, errorSummary } from '../../../partials';
 import bankReviewDate from '../../../pages/bank-review-date';
 import aboutFacility from '../../../pages/about-facility';
-import { today, todayYear, twoYears, tomorrow, yesterday, sixYearsOneDay } from '../../../../../../e2e-fixtures/dateConstants';
+import { today, twoYears, tomorrow, yesterday, sixYearsOneDay, oneYear } from '../../../../../../e2e-fixtures/dateConstants';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 
 const applications = [];
 let token;
-
-const nextYear = Number(todayYear) + 1;
 
 context('Bank Review Date Page - feature flag enabled', () => {
   let application;
@@ -95,7 +93,7 @@ context('Bank Review Date Page - feature flag enabled', () => {
   it('redirects user to application page when clicking on `save and return` button and form has been successfully filled in', () => {
     cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-    cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: twoYears });
+    cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: twoYears.date });
 
     cy.clickSaveAndReturnButton();
 
@@ -107,8 +105,8 @@ context('Bank Review Date Page - feature flag enabled', () => {
     cy.keyboardInput(aboutFacility.facilityName(), 'Name');
     aboutFacility.shouldCoverStartOnSubmissionNo().click();
 
-    cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: tomorrow });
-    cy.completeDateFormFields({ idPrefix: 'cover-end-date', year: nextYear });
+    cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: tomorrow.date });
+    cy.completeDateFormFields({ idPrefix: 'cover-end-date', year: oneYear.date });
 
     aboutFacility.isUsingFacilityEndDateNo().click();
 
@@ -118,13 +116,13 @@ context('Bank Review Date Page - feature flag enabled', () => {
 
     cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-    cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: today });
+    cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: today.date });
 
     cy.clickContinueButton();
     errorSummary();
     bankReviewDate.bankReviewDateError();
 
-    cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: tomorrow });
+    cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: tomorrow.date });
 
     cy.clickContinueButton();
     errorSummary().should('not.exist');
@@ -135,20 +133,20 @@ context('Bank Review Date Page - feature flag enabled', () => {
     cy.keyboardInput(aboutFacility.facilityName(), 'Name');
     aboutFacility.shouldCoverStartOnSubmissionYes().click();
 
-    cy.completeDateFormFields({ idPrefix: 'cover-end-date', year: nextYear });
+    cy.completeDateFormFields({ idPrefix: 'cover-end-date', year: oneYear.date });
 
     aboutFacility.isUsingFacilityEndDateNo().click();
 
     cy.clickContinueButton();
     cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-    cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: yesterday });
+    cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: yesterday.date });
 
     cy.clickContinueButton();
     errorSummary();
     bankReviewDate.bankReviewDateError();
 
-    cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: today });
+    cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: today.date });
 
     cy.clickContinueButton();
     errorSummary().should('not.exist');
@@ -157,7 +155,7 @@ context('Bank Review Date Page - feature flag enabled', () => {
   it('validates bank review date is less than 6 years in the future', () => {
     cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-    cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: sixYearsOneDay });
+    cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: sixYearsOneDay.date });
 
     cy.clickContinueButton();
     errorSummary();
@@ -167,7 +165,7 @@ context('Bank Review Date Page - feature flag enabled', () => {
   it('redirects the user to `provided facility` page when form has been successfully filled in', () => {
     cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-    cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: twoYears });
+    cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: twoYears.date });
 
     cy.clickContinueButton();
 
@@ -177,14 +175,14 @@ context('Bank Review Date Page - feature flag enabled', () => {
   it('stores the inputted values', () => {
     cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-    cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: twoYears });
+    cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: twoYears.date });
 
     cy.clickContinueButton();
 
     cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
-    bankReviewDate.bankReviewDateDay().should('have.value', twoYears.getDate());
-    bankReviewDate.bankReviewDateMonth().should('have.value', twoYears.getMonth() + 1);
-    bankReviewDate.bankReviewDateYear().should('have.value', twoYears.getFullYear());
+    bankReviewDate.bankReviewDateDay().should('have.value', twoYears.day);
+    bankReviewDate.bankReviewDateMonth().should('have.value', twoYears.month);
+    bankReviewDate.bankReviewDateYear().should('have.value', twoYears.year);
   });
 
   it('redirects to the About Facility page when using facility end date ', () => {
@@ -192,7 +190,7 @@ context('Bank Review Date Page - feature flag enabled', () => {
     cy.keyboardInput(aboutFacility.facilityName(), 'Name');
     aboutFacility.shouldCoverStartOnSubmissionYes().click();
 
-    cy.completeDateFormFields({ idPrefix: 'cover-end-date', year: nextYear });
+    cy.completeDateFormFields({ idPrefix: 'cover-end-date', year: oneYear.date });
 
     aboutFacility.isUsingFacilityEndDateYes().click();
     cy.clickContinueButton();

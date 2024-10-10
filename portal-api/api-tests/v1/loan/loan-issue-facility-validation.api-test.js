@@ -488,9 +488,9 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
           it('should return validationError', async () => {
             const threeDaysAgo = sub(nowDate, { days: 3 });
             const requestedCoverStartDateFields = {
-              'requestedCoverStartDate-day': format(threeDaysAgo, 'dd'),
-              'requestedCoverStartDate-month': format(threeDaysAgo, 'MM'),
-              'requestedCoverStartDate-year': format(threeDaysAgo, 'yyyy'),
+              'requestedCoverStartDate-day': threeDaysAgo.dayLong,
+              'requestedCoverStartDate-month': threeDaysAgo.monthLong,
+              'requestedCoverStartDate-year': threeDaysAgo.year,
             };
 
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);

@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import relative from '../../relativeURL';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../e2e-fixtures';
@@ -51,7 +50,7 @@ context('Deal cancellation - check details', () => {
 
       cy.url().should('eq', relative(`/case/${dealId}/cancellation/effective-from-date`));
 
-      cy.completeDateFormFields({ idPrefix: 'effective-from-date', date: tomorrow });
+      cy.completeDateFormFields({ idPrefix: 'effective-from-date', date: tomorrow.date });
 
       cy.clickContinueButton();
     });
@@ -66,11 +65,11 @@ context('Deal cancellation - check details', () => {
       checkDetailsPage.reasonLink();
 
       checkDetailsPage.bankRequestDateResponse();
-      cy.assertText(checkDetailsPage.bankRequestDateResponse(), format(today, 'd MMMM yyyy'));
+      cy.assertText(checkDetailsPage.bankRequestDateResponse(), today.dMMMMyyyy);
       checkDetailsPage.bankRequestDateLink();
 
       checkDetailsPage.effectiveFromResponse();
-      cy.assertText(checkDetailsPage.effectiveFromResponse(), format(tomorrow, 'd MMMM yyyy'));
+      cy.assertText(checkDetailsPage.effectiveFromResponse(), tomorrow.dMMMMyyyy);
       checkDetailsPage.effectiveFromLink();
 
       checkDetailsPage.dealDeletionButton();
@@ -123,8 +122,8 @@ context('Deal cancellation - check details', () => {
 
         cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
         cy.assertText(checkDetailsPage.reasonResponse(), testReason);
-        cy.assertText(checkDetailsPage.bankRequestDateResponse(), format(today, 'd MMMM yyyy'));
-        cy.assertText(checkDetailsPage.effectiveFromResponse(), format(tomorrow, 'd MMMM yyyy'));
+        cy.assertText(checkDetailsPage.bankRequestDateResponse(), today.dMMMMyyyy);
+        cy.assertText(checkDetailsPage.effectiveFromResponse(), tomorrow.dMMMMyyyy);
       });
 
       describe('clicking the back link', () => {
@@ -171,8 +170,8 @@ context('Deal cancellation - check details', () => {
 
         cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
         cy.assertText(checkDetailsPage.reasonResponse(), testReason);
-        cy.assertText(checkDetailsPage.bankRequestDateResponse(), format(threeMonthsOneDay, 'd MMMM yyyy'));
-        cy.assertText(checkDetailsPage.effectiveFromResponse(), format(tomorrow, 'd MMMM yyyy'));
+        cy.assertText(checkDetailsPage.bankRequestDateResponse(), threeMonthsOneDay.dMMMMyyyy);
+        cy.assertText(checkDetailsPage.effectiveFromResponse(), tomorrow.dMMMMyyyy);
       });
 
       describe('clicking the back link', () => {
@@ -212,14 +211,14 @@ context('Deal cancellation - check details', () => {
       it('correctly updates the "check details" page with the new effective from date', () => {
         const testReason = 'test reason';
 
-        cy.completeDateFormFields({ idPrefix: 'effective-from-date', date: threeMonthsOneDay });
+        cy.completeDateFormFields({ idPrefix: 'effective-from-date', date: threeMonthsOneDay.date });
 
         cy.clickContinueButton();
 
         cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
         cy.assertText(checkDetailsPage.reasonResponse(), testReason);
-        cy.assertText(checkDetailsPage.bankRequestDateResponse(), format(today, 'd MMMM yyyy'));
-        cy.assertText(checkDetailsPage.effectiveFromResponse(), format(threeMonthsOneDay, 'd MMMM yyyy'));
+        cy.assertText(checkDetailsPage.bankRequestDateResponse(), today.dMMMMyyyy);
+        cy.assertText(checkDetailsPage.effectiveFromResponse(), threeMonthsOneDay.dMMMMyyyy);
       });
 
       describe('clicking the back link', () => {

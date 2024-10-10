@@ -8,7 +8,7 @@ export const COVER_END_DATE_VALUE = oneMonth;
 export const fillAndSubmitIssueBondFacilityFormWithoutRequestedCoverStartDate = () => {
   cy.completeDateFormFields({ idPrefix: 'issuedDate' });
 
-  cy.completeDateFormFields({ idPrefix: 'coverEndDate', date: oneMonth });
+  cy.completeDateFormFields({ idPrefix: 'coverEndDate', date: oneMonth.date });
 
   cy.keyboardInput(pages.bondIssueFacility.name(), '1234');
 
@@ -18,9 +18,9 @@ export const fillAndSubmitIssueBondFacilityFormWithoutRequestedCoverStartDate = 
 export const fillAndSubmitIssueBondFacilityForm = () => {
   cy.completeDateFormFields({ idPrefix: 'issuedDate' });
 
-  cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: twoDays });
+  cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: twoDays.date });
 
-  cy.completeDateFormFields({ idPrefix: 'coverEndDate', date: oneMonth });
+  cy.completeDateFormFields({ idPrefix: 'coverEndDate', date: oneMonth.date });
 
   cy.keyboardInput(pages.bondIssueFacility.name(), '1234');
 

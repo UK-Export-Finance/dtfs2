@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import relative from '../../../../relativeURL';
 import CONSTANTS from '../../../../../fixtures/constants';
 import { today, threeYears, twoYears } from '../../../../../../../e2e-fixtures/dateConstants';
@@ -70,8 +69,8 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoYears });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeYears });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoYears.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeYears.date });
 
       cy.clickContinueButton();
 
@@ -94,9 +93,9 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
     });
 
     it('facility table should have change links on the changed to issued facilities', () => {
-      const issuedDate = format(today, 'd MMMM yyyy');
-      const coverStart = format(twoYears, 'd MMMM yyyy');
-      const coverEnd = format(threeYears, 'd MMMM yyyy');
+      const issuedDate = today.dMMMMyyyy;
+      const coverStart = twoYears.dMMMMyyyy;
+      const coverEnd = threeYears.dMMMMyyyy;
 
       // can change facility one name and issue dates etc since changed to issued
       applicationPreview.facilitySummaryListTable(3).nameValue().contains(unissuedCashFacility.name);
@@ -150,15 +149,15 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeYears });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeYears.date });
 
       cy.clickContinueButton();
     });
 
     it('change links should appear for facility four and three should be unissued still', () => {
-      const issuedDate = format(today, 'd MMMM yyyy');
-      const coverStartNow = format(today, 'd MMMM yyyy');
-      const coverEnd = format(threeYears, 'd MMMM yyyy');
+      const issuedDate = today.dMMMMyyyy;
+      const coverStartNow = today.dMMMMyyyy;
+      const coverEnd = threeYears.dMMMMyyyy;
 
       applicationPreview.reviewFacilityStage().contains('Review facility stage');
       applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
