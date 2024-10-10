@@ -1,16 +1,16 @@
 import { when } from 'jest-when';
 import { CURRENCY, Currency, CurrencyAndAmount, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { mapCurrenciesToRadioItems } from '../../../helpers/map-currencies-to-radio-items';
 import {
   getFormattedDateReconciled,
   getFormattedReconciledByUser,
   mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems,
   mapPaymentDetailsGroupsToPaymentDetailsViewModel,
   mapKeyingSheetToKeyingSheetViewModel,
-  mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel,
+  mapPaymentDetailsFiltersToViewModel,
 } from './reconciliation-for-report-helper';
 import { FeeRecord, KeyingSheet, KeyingSheetRow, Payment, PaymentDetails, PremiumPaymentsGroup } from '../../../api-response-types';
 import { aPremiumPaymentsGroup, aFeeRecord, aPayment, aPaymentDetails } from '../../../../test-helpers';
-import * as mapCurrenciesToRadioItems from '../../../helpers/map-currencies-to-radio-items';
 
 describe('reconciliation-for-report-helper', () => {
   describe('mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems', () => {
@@ -1005,7 +1005,7 @@ describe('reconciliation-for-report-helper', () => {
     });
   });
 
-  describe('mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel', () => {
+  describe('mapPaymentDetailsFiltersToViewModel', () => {
     describe('when payment currency filter is defined', () => {
       it('should map payment details filters to view model with radio items for currencies with the provided currency checked', () => {
         // Arrange
@@ -1015,21 +1015,13 @@ describe('reconciliation-for-report-helper', () => {
           paymentReference: 'some-payment-reference',
         };
 
-        const mockCurrencyRadioItems = [
-          { value: 'GBP', text: 'GBP', checked: true },
-          { value: 'EUR', text: 'EUR', checked: false },
-        ];
-
-        const mapCurrenciesToRadioItemsSpy = jest.spyOn(mapCurrenciesToRadioItems, 'mapCurrenciesToRadioItems').mockReturnValue(mockCurrencyRadioItems);
-
         // Act
-        const result = mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel(paymentDetailsFilters);
+        const result = mapPaymentDetailsFiltersToViewModel(paymentDetailsFilters);
 
         // Assert
-        expect(mapCurrenciesToRadioItemsSpy).toHaveBeenCalledWith(CURRENCY.GBP);
         expect(result).toEqual({
           ...paymentDetailsFilters,
-          paymentCurrency: mockCurrencyRadioItems,
+          paymentCurrency: mapCurrenciesToRadioItems(paymentDetailsFilters.paymentCurrency),
         });
       });
     });
@@ -1042,20 +1034,13 @@ describe('reconciliation-for-report-helper', () => {
           paymentReference: 'some-payment-reference',
         };
 
-        const mockCurrencyRadioItems = [
-          { value: 'GBP', text: 'GBP', checked: false },
-          { value: 'EUR', text: 'EUR', checked: false },
-        ];
-        const mapCurrenciesToRadioItemsSpy = jest.spyOn(mapCurrenciesToRadioItems, 'mapCurrenciesToRadioItems').mockReturnValue(mockCurrencyRadioItems);
-
         // Act
-        const result = mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel(paymentDetailsFilters);
+        const result = mapPaymentDetailsFiltersToViewModel(paymentDetailsFilters);
 
         // Assert
-        expect(mapCurrenciesToRadioItemsSpy).toHaveBeenCalledWith(undefined);
         expect(result).toEqual({
           ...paymentDetailsFilters,
-          paymentCurrency: mockCurrencyRadioItems,
+          paymentCurrency: mapCurrenciesToRadioItems(),
         });
       });
     });

@@ -7,7 +7,7 @@ import {
   mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems,
   mapPaymentDetailsGroupsToPaymentDetailsViewModel,
   mapKeyingSheetToKeyingSheetViewModel,
-  mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel,
+  mapPaymentDetailsFiltersToViewModel,
 } from '../helpers';
 import { PaymentDetailsViewModel, UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 import { PremiumPaymentsGroup } from '../../../api-response-types';
@@ -92,7 +92,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
 
     const keyingSheetViewModel = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
 
-    const paymentDetailsFiltersViewModel = mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel(paymentDetailsFilters);
+    const paymentDetailsFiltersViewModel = mapPaymentDetailsFiltersToViewModel(paymentDetailsFilters);
 
     const paymentDetailsViewModel: PaymentDetailsViewModel = {
       rows: mapPaymentDetailsGroupsToPaymentDetailsViewModel(paymentDetails),

@@ -2,7 +2,7 @@ import { CURRENCY, RadioItem } from '@ukef/dtfs2-common';
 
 /**
  * Maps currencies to radio items for form input.
- * Uses the @link{CURRENCY} enum to get all available currencies.
+ * Uses the {@link CURRENCY} enum to get all available currencies.
  * @param checkedCurrency - The currency radio item to be marked as checked
  * (optional)
  * @returns An array of RadioItem objects representing currency options

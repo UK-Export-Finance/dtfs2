@@ -1,6 +1,6 @@
 import { createMocks } from 'node-mocks-http';
 import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
-import { aTfmSessionUser } from '../../../../test-helpers';
+import { aRequestSession } from '../../../../test-helpers';
 import api from '../../../api';
 import { postDealCancellationDetails, PostDealCancellationDetailsRequest } from './check-details.controller';
 
@@ -10,7 +10,6 @@ jest.mock('../../../api', () => ({
 
 const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
-const mockUser = aTfmSessionUser();
 
 describe('postBankRequestDate', () => {
   beforeEach(() => {
@@ -23,10 +22,7 @@ describe('postBankRequestDate', () => {
 
     const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
@@ -42,10 +38,7 @@ describe('postBankRequestDate', () => {
 
     const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
@@ -61,10 +54,7 @@ describe('postBankRequestDate', () => {
 
     const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
@@ -85,10 +75,7 @@ describe('postBankRequestDate', () => {
       // Arrange
       const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken: 'a user token',
-        },
+        session: aRequestSession(),
       });
 
       // Act

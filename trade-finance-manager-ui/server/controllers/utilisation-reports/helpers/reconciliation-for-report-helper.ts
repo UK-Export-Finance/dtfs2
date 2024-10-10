@@ -10,6 +10,7 @@ import {
   PaymentDetailsPaymentViewModel,
   PaymentViewModelItem,
   PaymentDetailsRowViewModel,
+  PaymentDetailsFiltersViewModel,
 } from '../../../types/view-models';
 import { DATE_FORMAT } from '../../../constants';
 import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
@@ -309,7 +310,7 @@ export const mapPaymentDetailsGroupsToPaymentDetailsViewModel = (paymentDetailsG
  * @returns A view model of the payment details filters with the supported
  * payment currencies mapped to radio items.
  */
-export const mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel = (paymentDetailsFilters: PaymentDetailsFilters) => {
+export const mapPaymentDetailsFiltersToViewModel = (paymentDetailsFilters: PaymentDetailsFilters): PaymentDetailsFiltersViewModel => {
   return {
     ...paymentDetailsFilters,
     paymentCurrency: mapCurrenciesToRadioItems(paymentDetailsFilters.paymentCurrency),
