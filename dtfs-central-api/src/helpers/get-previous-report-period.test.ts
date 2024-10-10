@@ -11,7 +11,7 @@ describe('getPreviousReportPeriod', () => {
     jest.resetAllMocks();
   });
 
-  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+  let utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
   const mockGetBankByIdResponse = aBank();
   const bankId = '1234';
@@ -37,19 +37,49 @@ describe('getPreviousReportPeriod', () => {
     });
   });
 
-  describe('when a bank is found', () => {
+  describe('when a bank is found and the month has 1 digit', () => {
     beforeEach(() => {
       jest.mocked(getBankById).mockImplementation(jest.fn().mockResolvedValueOnce(mockGetBankByIdResponse));
     });
 
     it('should return the result of getPreviousReportPeriodForBankScheduleByMonth', async () => {
+      const reportPeriod = { start: { month: 2, year: 2024 }, end: { month: 4, year: 2024 } };
+      utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withReportPeriod(reportPeriod).build();
       const response = await getPreviousReportPeriod(bankId, utilisationReport);
 
-      const { start } = utilisationReport.reportPeriod;
-      const paddedMonth = String(start.month).padStart(2, '0');
-      const monthFormatted = `${start.year}-${paddedMonth}`;
+      const expected = getPreviousReportPeriodForBankScheduleByMonth(mockGetBankByIdResponse.utilisationReportPeriodSchedule, '2024-02');
 
-      const expected = getPreviousReportPeriodForBankScheduleByMonth(mockGetBankByIdResponse.utilisationReportPeriodSchedule, monthFormatted);
+      expect(response).toEqual(expected);
+    });
+  });
+
+  describe('when a bank is found and the month has 2 digits', () => {
+    beforeEach(() => {
+      jest.mocked(getBankById).mockImplementation(jest.fn().mockResolvedValueOnce(mockGetBankByIdResponse));
+    });
+
+    it('should return the result of getPreviousReportPeriodForBankScheduleByMonth', async () => {
+      const reportPeriod = { start: { month: 10, year: 2024 }, end: { month: 4, year: 2024 } };
+      utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withReportPeriod(reportPeriod).build();
+      const response = await getPreviousReportPeriod(bankId, utilisationReport);
+
+      const expected = getPreviousReportPeriodForBankScheduleByMonth(mockGetBankByIdResponse.utilisationReportPeriodSchedule, '2024-10');
+
+      expect(response).toEqual(expected);
+    });
+  });
+
+  describe('when a bank is found and the month has 2 digits and starts with 0', () => {
+    beforeEach(() => {
+      jest.mocked(getBankById).mockImplementation(jest.fn().mockResolvedValueOnce(mockGetBankByIdResponse));
+    });
+
+    it('should return the result of getPreviousReportPeriodForBankScheduleByMonth', async () => {
+      const reportPeriod = { start: { month: 0o3, year: 2024 }, end: { month: 4, year: 2024 } };
+      utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withReportPeriod(reportPeriod).build();
+      const response = await getPreviousReportPeriod(bankId, utilisationReport);
+
+      const expected = getPreviousReportPeriodForBankScheduleByMonth(mockGetBankByIdResponse.utilisationReportPeriodSchedule, '2024-03');
 
       expect(response).toEqual(expected);
     });
