@@ -4,8 +4,7 @@ import activitiesPage from '../../../pages/activities/activitiesPage';
 import activityCommentBoxPage from '../../../pages/activities/activityCommentBoxPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import { BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
-
-import { todayFormatted } from '../../../../../../e2e-fixtures/dateConstants';
+import { today } from '../../../../../../e2e-fixtures/dateConstants';
 
 context('Users can create and submit comments', () => {
   let dealId;
@@ -89,7 +88,7 @@ context('Users can create and submit comments', () => {
       activitiesPage.activitiesTimeline().contains('test');
       activitiesPage.activitiesTimeline().contains(userFullName);
 
-      const expectedDate = todayFormatted;
+      const expectedDate = today.dMMMMyyyy;
 
       activitiesPage.activitiesTimeline().contains(expectedDate);
     });

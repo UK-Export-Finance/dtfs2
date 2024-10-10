@@ -69,7 +69,7 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: tomorrow });
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: tomorrow.date });
 
     cy.clickContinueButton();
 
@@ -114,14 +114,14 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: tomorrow });
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: tomorrow.date });
 
     cy.clickContinueButton();
 
     errorSummary().contains('The new cover end date cannot be the same as the current cover end date');
     amendmentsPage.errorMessage().contains('The new cover end date cannot be the same as the current cover end date');
 
-    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: threeDaysAgo });
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: threeDaysAgo.date });
 
     cy.clickContinueButton();
 
@@ -223,7 +223,7 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: threeYears });
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: threeYears.date });
 
     cy.clickContinueButton();
 
@@ -319,7 +319,7 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: threeDaysAgo });
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: threeDaysAgo.date });
     cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-value');

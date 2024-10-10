@@ -9,15 +9,9 @@ const amendmentsPage = {
   amendmentRequestYearInput: () => cy.get('[data-cy="amendment--request-date-year"]'),
 
   amendmentNewCoverEndDateDay: () => cy.get('[data-cy="amendment--cover-end-date"]'),
-  amendmentCoverEndDateDayInput: () => cy.get('[data-cy="amendment--cover-end-date-day"]'),
-  amendmentCoverEndDateMonthInput: () => cy.get('[data-cy="amendment--cover-end-date-month"]'),
-  amendmentCoverEndDateYearInput: () => cy.get('[data-cy="amendment--cover-end-date-year"]'),
   amendmentFacilityValueInput: () => cy.get('[data-cy="amendment--facility-value"]'),
   amendmentCurrentFacilityValue: () => cy.get('[data-cy="amendment--current-facility-value"]'),
 
-  amendmentEffectiveDayInput: () => cy.get('[data-cy="amendment--effective-date-day"]'),
-  amendmentEffectiveMonthInput: () => cy.get('[data-cy="amendment--effective-date-month"]'),
-  amendmentEffectiveYearInput: () => cy.get('[data-cy="amendment--effective-date-year"]'),
   amendmentCurrentCoverEndDate: () => cy.get('[data-cy="amendment--current-cover-end-date"]'),
 
   amendmentCoverEndDateCheckbox: () => cy.get('[data-cy="amendment--coverEndDate-checkbox"]'),
@@ -31,15 +25,9 @@ const amendmentsPage = {
   isUsingFacilityEndDateYes: () => cy.get('[data-cy="amendment--is-using-facility-end-date-yes"]'),
   isUsingFacilityEndDateNo: () => cy.get('[data-cy="amendment--is-using-facility-end-date-no"]'),
 
-  amendmentFacilityEndDateDayInput: () => cy.get('[data-cy="amendment--facility-end-date-day"]'),
-  amendmentFacilityEndDateMonthInput: () => cy.get('[data-cy="amendment--facility-end-date-month"]'),
-  amendmentFacilityEndDateYearInput: () => cy.get('[data-cy="amendment--facility-end-date-year"]'),
   amendmentCurrentFacilityEndDate: () => cy.get('[data-cy="amendment--current-facility-end-date"]'),
   amendmentFacilityEndDateDetails: () => cy.get('[data-cy="amendment--facility-end-date-details"]'),
 
-  amendmentBankReviewDateDayInput: () => cy.get('[data-cy="amendment--bank-review-date-day"]'),
-  amendmentBankReviewDateMonthInput: () => cy.get('[data-cy="amendment--bank-review-date-month"]'),
-  amendmentBankReviewDateYearInput: () => cy.get('[data-cy="amendment--bank-review-date-year"]'),
   amendmentCurrentBankReviewDate: () => cy.get('[data-cy="amendment--current-bank-review-date"]'),
   amendmentBankReviewDateDetails: () => cy.get('[data-cy="amendment--bank-review-date-details"]'),
 

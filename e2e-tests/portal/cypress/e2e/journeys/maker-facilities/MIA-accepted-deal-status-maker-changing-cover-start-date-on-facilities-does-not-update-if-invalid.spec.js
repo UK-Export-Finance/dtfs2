@@ -59,7 +59,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     const unconditionalSubmittedLoanId = unconditionalSubmittedLoan._id;
     const unconditionalSubmittedLoanRow = pages.contract.loansTransactionsTable.row(unconditionalSubmittedLoanId);
 
-    const INVALID_DATE = sevenDaysAgo;
+    const INVALID_DATE = sevenDaysAgo.date;
 
     //---------------------------------------------------------------
     // Issued Bond - enter and submit an invalid date in 'Confirm start date' form

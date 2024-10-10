@@ -46,7 +46,7 @@ context('Issue Bond Form - Submit issued bond with inserted element on page', ()
 
     cy.completeDateFormFields({ idPrefix: 'issuedDate' });
 
-    cy.completeDateFormFields({ idPrefix: 'coverEndDate', date: oneMonth });
+    cy.completeDateFormFields({ idPrefix: 'coverEndDate', date: oneMonth.date });
 
     cy.keyboardInput(pages.bondIssueFacility.name(), '1234');
 

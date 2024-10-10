@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import { tomorrowDay } from '../../../../../../e2e-fixtures/dateConstants';
+import { tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, T1_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 import pages from '../../../pages';
 
@@ -71,7 +71,7 @@ context('Amendments underwriting page', () => {
       cy.clickContinueButton();
       cy.url().should('contain', 'cover-end-date');
 
-      cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', day: tomorrowDay });
+      cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', day: tomorrow.dayLong });
 
       cy.clickContinueButton();
 

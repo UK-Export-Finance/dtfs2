@@ -1,6 +1,6 @@
 import relative from '../../relativeURL';
 import pages from '../../pages';
-import DATE_CONSTANTS from '../../../../../e2e-fixtures/dateConstants';
+import { twoDaysAgo, yesterday } from '../../../../../e2e-fixtures/dateConstants';
 import createMockDeal from '../../../fixtures/create-mock-deal';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
 import { ALIAS_KEY } from '../../../fixtures/constants';
@@ -15,14 +15,12 @@ context('User can view and sort deals by ukefDealId', () => {
   let dealDescending1;
   let dealDescending2;
 
-  const { twoDaysAgo, yesterday } = DATE_CONSTANTS;
-
   const DEAL_1 = createMockDeal({
-    submissionDate: twoDaysAgo.valueOf().toString(),
+    submissionDate: twoDaysAgo.unixMillisecondsString,
   });
 
   const DEAL_2 = createMockDeal({
-    submissionDate: yesterday.valueOf().toString(),
+    submissionDate: yesterday.unixMillisecondsString,
   });
 
   const MOCK_DEALS = [DEAL_1, DEAL_2];

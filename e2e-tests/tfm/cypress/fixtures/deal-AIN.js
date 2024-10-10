@@ -1,6 +1,6 @@
 const CONSTANTS = require('./constants');
-const dateConstants = require('../../../e2e-fixtures/dateConstants');
 const { BANK1_MAKER1 } = require('../../../e2e-fixtures/portal-users.fixture');
+const { twoYearsAgo, oneMonth } = require('../../../e2e-fixtures/dateConstants');
 
 const MOCK_DEAL = {
   dealType: CONSTANTS.DEAL_TYPE.BSS_EWCS,
@@ -27,7 +27,7 @@ const MOCK_DEAL = {
       firstname: 'Emilio',
       surname: 'Largo',
     },
-    submissionDate: `${dateConstants.twoYearsAgoUnix}000`,
+    submissionDate: twoYearsAgo.unixMillisecondsString,
     submissionCount: 1,
   },
   submissionDetails: {
@@ -199,11 +199,11 @@ const MOCK_DEAL = {
         text: 'GBP - UK Sterling',
         id: 'GBP',
       },
-      'coverEndDate-day': dateConstants.oneMonthDay,
-      'coverEndDate-month': dateConstants.oneMonthMonth,
-      'coverEndDate-year': dateConstants.oneMonthYear,
-      issuedDate: `${dateConstants.twoYearsAgoUnix}000`,
-      requestedCoverStartDate: `${dateConstants.twoYearsAgoUnix}000`,
+      'coverEndDate-day': oneMonth.dayLong,
+      'coverEndDate-month': oneMonth.monthLong,
+      'coverEndDate-year': oneMonth.year,
+      issuedDate: twoYearsAgo.unixMillisecondsString,
+      requestedCoverStartDate: twoYearsAgo.unixMillisecondsString,
       name: 'Test-123',
       updatedAt: Date.now(),
     },

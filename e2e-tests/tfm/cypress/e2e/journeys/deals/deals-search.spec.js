@@ -56,9 +56,9 @@ context('User can view and filter multiple deals', () => {
   const DEAL_COMPLETED_YESTERDAY = createMockDeal({
     testId: 'DEAL_COMPLETED_YESTERDAY',
     eligibility: {
-      lastUpdated: yesterday.valueOf().toString(),
+      lastUpdated: yesterday.unixMillisecondsString,
     },
-    facilitiesUpdated: yesterday.valueOf().toString(),
+    facilitiesUpdated: yesterday.unixMillisecondsString,
   });
 
   const MOCK_BSS_DEALS = [

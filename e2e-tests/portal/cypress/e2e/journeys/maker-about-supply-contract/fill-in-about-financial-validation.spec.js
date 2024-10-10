@@ -2,7 +2,7 @@ const { contractAboutBuyer, contractAboutFinancial, contractAboutPreview } = req
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json');
-const DATE_CONSTANTS = require('../../../../../e2e-fixtures/dateConstants');
+const { thirtyFiveDaysAgo } = require('../../../../../e2e-fixtures/dateConstants');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -104,15 +104,15 @@ context('about-buyer', () => {
 
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion date cannot be in the future');
 
-    const dateTooFarInThePast = DATE_CONSTANTS.thirtyFiveDaysAgo;
+    const dateTooFarInThePast = thirtyFiveDaysAgo;
 
     contractAboutFinancial.visit(deal);
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day(), `{selectall}{backspace}${dateTooFarInThePast.getDate()}`);
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day(), `{selectall}{backspace}${dateTooFarInThePast.day}`);
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().month(), `{selectall}{backspace}${dateTooFarInThePast.getMonth() + 1}`);
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().month(), `{selectall}{backspace}${dateTooFarInThePast.month}`);
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), `{selectall}{backspace}${dateTooFarInThePast.getFullYear()}`);
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), `{selectall}{backspace}${dateTooFarInThePast.year}`);
 
     contractAboutFinancial.preview().click();
 

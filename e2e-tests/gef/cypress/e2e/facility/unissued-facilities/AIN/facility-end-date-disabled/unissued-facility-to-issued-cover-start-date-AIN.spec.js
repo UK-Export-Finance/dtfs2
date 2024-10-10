@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import relative from '../../../../relativeURL';
 import CONSTANTS from '../../../../../fixtures/constants';
 import { threeDaysAgo, threeDaysAgoPlusMonth, threeMonthsOneDay } from '../../../../../../../e2e-fixtures/dateConstants';
@@ -62,7 +61,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.rows().contains(format(threeDaysAgoPlusMonth, 'dd MMM yyyy'));
+      unissuedFacilityTable.rows().contains(threeDaysAgoPlusMonth.ddMMMyyyy);
       statusBanner.applicationBanner().should('exist');
     });
 
@@ -117,9 +116,9 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       // Cover start date to user defined date - Three days in the past
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo.date });
 
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
 
       // Changing cover start date to issuance date
       aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();

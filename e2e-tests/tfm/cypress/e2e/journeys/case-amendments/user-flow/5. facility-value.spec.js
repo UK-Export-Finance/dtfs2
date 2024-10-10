@@ -3,7 +3,7 @@ import { errorSummary } from '../../../partials';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import { todayDay } from '../../../../../../e2e-fixtures/dateConstants';
+import { today } from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 
 context('Amendments - Facility value', () => {
@@ -119,7 +119,7 @@ context('Amendments - Facility value', () => {
     cy.clickContinueButton();
     cy.url().should('contain', 'check-answers');
 
-    amendmentsPage.amendmentAnswerBankRequestDate().should('contain', todayDay);
+    amendmentsPage.amendmentAnswerBankRequestDate().should('contain', today.dayLong);
     amendmentsPage.amendmentAnswerRequireApproval().should('contain', 'Yes');
     amendmentsPage.amendmentAnswerFacilityValue().should('contain', '123.00');
   });

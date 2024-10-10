@@ -67,12 +67,12 @@ context('Unissued Facilities AIN - facility end date page - feature flag enabled
       cy.visit(relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo });
+      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo.date });
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
 
       aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
 
@@ -167,9 +167,9 @@ context('Unissued Facilities AIN - facility end date page - feature flag enabled
     });
 
     it('should store values when returning to the page', () => {
-      facilityEndDate.facilityEndDateDay().should('have.value', today.getDate());
-      facilityEndDate.facilityEndDateMonth().should('have.value', today.getMonth() + 1);
-      facilityEndDate.facilityEndDateYear().should('have.value', today.getFullYear());
+      facilityEndDate.facilityEndDateDay().should('have.value', today.day);
+      facilityEndDate.facilityEndDateMonth().should('have.value', today.month);
+      facilityEndDate.facilityEndDateYear().should('have.value', today.year);
 
       cy.clickSaveAndReturnButton();
 
