@@ -16,7 +16,7 @@
 {% set reasonForCancellingUrl %}
   <a
     class="govuk-link"
-    href="/case/{{ dealId }}/cancellation/reason"
+    href="/case/{{ dealId }}/cancellation/reason?status=change"
     data-cy="reason-link">
     Change <span class="govuk-visually-hidden">reason</span>
   </a>
@@ -33,7 +33,7 @@
 {% set bankRequestDateUrl %}
   <a
     class="govuk-link"
-    href="/case/{{ dealId }}/cancellation/bank-request-date"
+    href="/case/{{ dealId }}/cancellation/bank-request-date?status=change"
     data-cy="bank-request-date-link">
     Change <span class="govuk-visually-hidden">bank request date</span>
   </a>
@@ -50,7 +50,7 @@
 {% set effectiveFromDateUrl %}
   <a
     class="govuk-link"
-    href="/case/{{ dealId }}/cancellation/effective-from-date"
+    href="/case/{{ dealId }}/cancellation/effective-from-date?status=change"
     data-cy="effective-from-link">
     Change <span class="govuk-visually-hidden">date effective from</span>
   </a>

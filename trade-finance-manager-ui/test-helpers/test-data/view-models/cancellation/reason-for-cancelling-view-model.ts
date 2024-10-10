@@ -7,4 +7,5 @@ export const aReasonForCancellingViewModel = (): ReasonForCancellingViewModel =>
   activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
   ukefDealId: 'testUkefId',
   dealId: 'testId',
+  previousPage: 'testBackUrl',
 });
