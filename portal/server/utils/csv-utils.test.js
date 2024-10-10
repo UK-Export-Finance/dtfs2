@@ -15,13 +15,13 @@ describe('csv-utils', () => {
     it('returns the correct column for an index below 26', async () => {
       const excelColumnIndex = columnIndexToExcelColumn(2);
 
-      expect(excelColumnIndex).toBe('C');
+      expect(excelColumnIndex).toEqual('C');
     });
 
     it('returns the correct column for an index above 26', async () => {
       const excelColumnIndex = columnIndexToExcelColumn(30);
 
-      expect(excelColumnIndex).toBe('AE');
+      expect(excelColumnIndex).toEqual('AE');
     });
   });
 
@@ -29,13 +29,13 @@ describe('csv-utils', () => {
     it('returns the correct index for a column below 26', async () => {
       const columnIndex = excelColumnToColumnIndex('C');
 
-      expect(columnIndex).toBe(2);
+      expect(columnIndex).toEqual(2);
     });
 
     it('returns the correct index for a column above 26', async () => {
       const columnIndex = excelColumnToColumnIndex('AE');
 
-      expect(columnIndex).toBe(30);
+      expect(columnIndex).toEqual(30);
     });
   });
 
@@ -299,15 +299,15 @@ describe('csv-utils', () => {
       { input: 987654321.1200005, expected: 987654321.12 },
       { input: 987654321.1200006, expected: 987654321.120001 },
     ])('should return $expected for $input', ({ input, expected }) => {
-      expect(handleFloatingPointRoundingErrors(input)).toBe(expected);
+      expect(handleFloatingPointRoundingErrors(input)).toEqual(expected);
     });
 
     it.each([123.456, 0.1, 1.230001])('should return %f unchanged (already rounded to required decimal places)', (value) => {
-      expect(handleFloatingPointRoundingErrors(value)).toBe(value);
+      expect(handleFloatingPointRoundingErrors(value)).toEqual(value);
     });
 
     it.each([456, 1234567, Number.MAX_SAFE_INTEGER])('should return integer %d unchanged', (value) => {
-      expect(handleFloatingPointRoundingErrors(value)).toBe(value);
+      expect(handleFloatingPointRoundingErrors(value)).toEqual(value);
     });
 
     it.each([
@@ -317,7 +317,7 @@ describe('csv-utils', () => {
       { input: -987654321.1200006, expected: -987654321.120001 },
       { input: Number.MIN_SAFE_INTEGER, expected: Number.MIN_SAFE_INTEGER },
     ])('should return $expected for negative number $input', ({ input, expected }) => {
-      expect(handleFloatingPointRoundingErrors(input)).toBe(expected);
+      expect(handleFloatingPointRoundingErrors(input)).toEqual(expected);
     });
 
     it.each(['123.456', null, undefined])('should throw TypeError for non-number input %o', (input) => {

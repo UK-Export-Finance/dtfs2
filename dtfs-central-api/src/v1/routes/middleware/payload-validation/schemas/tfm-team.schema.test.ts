@@ -8,7 +8,7 @@ describe('tfm-team.schema', () => {
       const { success } = TfmTeamSchema.safeParse(team);
 
       // Assert
-      expect(success).toBe(true);
+      expect(success).toEqual(true);
     });
 
     it("sets the 'success' property to false when the team is not a valid team", () => {
@@ -19,7 +19,7 @@ describe('tfm-team.schema', () => {
       const { success } = TfmTeamSchema.safeParse(invalidTeam);
 
       // Assert
-      expect(success).toBe(false);
+      expect(success).toEqual(false);
     });
 
     it("set the 'data' property to the parsed team", () => {
@@ -30,7 +30,7 @@ describe('tfm-team.schema', () => {
       const { data } = TfmTeamSchema.safeParse(team);
 
       // Assert
-      expect(data).toBe(team);
+      expect(data).toEqual(team);
     });
   });
 });

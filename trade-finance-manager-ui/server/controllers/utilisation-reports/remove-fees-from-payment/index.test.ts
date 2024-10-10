@@ -77,8 +77,8 @@ describe('controllers/utilisation-reports/remove-fees-from-payment', () => {
           month: '8',
         },
       };
-      expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}/edit-payment/${paymentId}?redirectTab=premium-payments`);
-      expect(res._isEndCalled()).toBe(true);
+      expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}/edit-payment/${paymentId}?redirectTab=premium-payments`);
+      expect(res._isEndCalled()).toEqual(true);
       expect(req.session.editPaymentFormValues).toEqual(expectedEditPaymentFormValues);
     });
 
@@ -95,7 +95,7 @@ describe('controllers/utilisation-reports/remove-fees-from-payment', () => {
       await postRemoveFeesFromPayment(req, res);
 
       // Assert
-      expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
+      expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
       expect(res._getRenderData()).toEqual({ user: requestSession.user });
     });
 

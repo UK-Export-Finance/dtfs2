@@ -6,12 +6,12 @@ describe('InvalidDatabaseQueryError', () => {
   it('exposes the message it was created with', () => {
     const exception = new InvalidDatabaseQueryError(message);
 
-    expect(exception.message).toBe(message);
+    expect(exception.message).toEqual(message);
   });
 
   it('exposes the name of the exception', () => {
     const exception = new InvalidDatabaseQueryError(message);
 
-    expect(exception.name).toBe('InvalidDatabaseQueryError');
+    expect(exception.name).toEqual('InvalidDatabaseQueryError');
   });
 });

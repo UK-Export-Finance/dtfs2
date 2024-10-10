@@ -29,7 +29,7 @@ describe('extractQueryAndSessionData', () => {
       const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
 
       // Assert
-      expect(result.premiumPaymentsFilters.facilityId).toBe(PREMIUM_PAYMENTS_FACILITY_ID_QUERY);
+      expect(result.premiumPaymentsFilters.facilityId).toEqual(PREMIUM_PAYMENTS_FACILITY_ID_QUERY);
     });
 
     it('validates premiumPaymentsFacilityId and returns any errors as premiumPaymentsFilterError', () => {
@@ -84,9 +84,9 @@ describe('extractQueryAndSessionData', () => {
     const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
 
     // Assert
-    expect(result.isCheckboxChecked([1])).toBe(true);
-    expect(result.isCheckboxChecked([2, 3])).toBe(true);
-    expect(result.isCheckboxChecked([4])).toBe(false);
+    expect(result.isCheckboxChecked([1])).toEqual(true);
+    expect(result.isCheckboxChecked([2, 3])).toEqual(true);
+    expect(result.isCheckboxChecked([4])).toEqual(false);
   });
 
   it('uses selectedFeeRecordIds from session data for isCheckboxChecked when present', () => {
@@ -105,8 +105,8 @@ describe('extractQueryAndSessionData', () => {
 
     // Assert
     expect(handleRedirectSessionData).toHaveBeenCalledWith({});
-    expect(result.isCheckboxChecked([1])).toBe(true);
-    expect(result.isCheckboxChecked([2, 3])).toBe(true);
-    expect(result.isCheckboxChecked([4])).toBe(false);
+    expect(result.isCheckboxChecked([1])).toEqual(true);
+    expect(result.isCheckboxChecked([2, 3])).toEqual(true);
+    expect(result.isCheckboxChecked([4])).toEqual(false);
   });
 });

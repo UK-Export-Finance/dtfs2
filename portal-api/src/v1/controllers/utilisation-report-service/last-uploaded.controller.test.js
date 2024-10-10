@@ -128,7 +128,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
       expect(api.getUtilisationReports).toHaveBeenCalledWith(bankId, { excludeNotReceived });
 
       // eslint-disable-next-line no-underscore-dangle
-      expect(res._getStatusCode()).toBe(errorStatusCode);
+      expect(res._getStatusCode()).toEqual(errorStatusCode);
     });
 
     it('should return an error response if the api does not find any uploaded reports', async () => {
@@ -143,7 +143,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
       expect(api.getUtilisationReports).toHaveBeenCalledWith(bankId, { excludeNotReceived });
 
       // eslint-disable-next-line no-underscore-dangle
-      expect(res._getStatusCode()).toBe(500);
+      expect(res._getStatusCode()).toEqual(500);
     });
 
     it('should return the last uploaded report', async () => {
@@ -162,7 +162,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
       expect(api.getUtilisationReports).toHaveBeenCalledWith(bankId, { excludeNotReceived });
 
       // eslint-disable-next-line no-underscore-dangle
-      expect(res._getStatusCode()).toBe(200);
+      expect(res._getStatusCode()).toEqual(200);
       // eslint-disable-next-line no-underscore-dangle
       expect(res._getData()).toEqual(lastUploadedReport);
     });

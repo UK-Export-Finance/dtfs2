@@ -107,7 +107,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Ok);
+    expect(response.status).toEqual(HttpStatusCode.Ok);
   });
 
   it("returns a 400 when the 'feeRecordIds' array is empty", async () => {
@@ -121,7 +121,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it("returns a 400 when the 'user' object is an empty object", async () => {
@@ -135,7 +135,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it.each(Object.values(CURRENCY))("returns a 200 when 'paymentCurrency' is '%s'", async (currency) => {
@@ -157,7 +157,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Ok);
+    expect(response.status).toEqual(HttpStatusCode.Ok);
   });
 
   it("returns a 400 when the 'paymentCurrency' is not a valid currency", async () => {
@@ -171,7 +171,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it("returns a 400 when the 'feeRecordIds' array is empty", async () => {
@@ -185,7 +185,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it("returns a 400 when the 'paymentAmount' is less than zero", async () => {
@@ -199,7 +199,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it("returns a 400 when the 'paymentAmount' is less than zero", async () => {
@@ -213,7 +213,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it("returns a 400 when the 'datePaymentReceived' cannot be coerced to a 'Date' object", async () => {
@@ -227,7 +227,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it("returns a 200 when the 'paymentReference' is undefined", async () => {
@@ -241,7 +241,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Ok);
+    expect(response.status).toEqual(HttpStatusCode.Ok);
   });
 
   it('returns a 400 when the new payment currency does not match the existing fee record currency', async () => {
@@ -263,7 +263,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBodyWithEURPaymentCurrency).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it('adds a new payment to the fee record when the fee record already has payments', async () => {

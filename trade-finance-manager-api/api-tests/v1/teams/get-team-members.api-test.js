@@ -35,7 +35,7 @@ describe('GET /teams/:teamId/members', () => {
     const allTeamsSeparatedByComma = Object.values(TEAMS)
       .map((team) => team.id)
       .join(', ');
-    expect(status).toBe(400);
+    expect(status).toEqual(400);
     expect(body).toStrictEqual({
       status: 400,
       errors: [
@@ -60,7 +60,7 @@ describe('GET /teams/:teamId/members', () => {
 
     const { status, body } = await as(tokenUser).get(validUrlToGetTeamMembers);
 
-    expect(status).toBe(statusFromDtfsCentralApiCall);
+    expect(status).toEqual(statusFromDtfsCentralApiCall);
     expect(body).toStrictEqual({
       status: statusFromDtfsCentralApiCall,
       data: dataFromDtfsCentralApiCall,
@@ -106,7 +106,7 @@ describe('GET /teams/:teamId/members', () => {
 
       const { status, body } = await as(tokenUser).get(`/v1/teams/${teamId}/members`);
 
-      expect(status).toBe(200);
+      expect(status).toEqual(200);
       expect(body).toStrictEqual({ teamMembers: expectedTeamMemberDataToReturn });
     });
 
@@ -115,7 +115,7 @@ describe('GET /teams/:teamId/members', () => {
 
       const { status, body } = await as(tokenUser).get(`/v1/teams/${teamId}/members`);
 
-      expect(status).toBe(200);
+      expect(status).toEqual(200);
       expect(body).toStrictEqual({ teamMembers: [] });
     });
   });

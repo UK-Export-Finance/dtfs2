@@ -119,8 +119,8 @@ describe('get-selected-fee-records-details.controller', () => {
       await getSelectedFeeRecordsDetails(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-      expect(res._isEndCalled()).toBe(true);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+      expect(res._isEndCalled()).toEqual(true);
     });
 
     it('responds with a specific error code if an axios error is thrown', async () => {
@@ -136,8 +136,8 @@ describe('get-selected-fee-records-details.controller', () => {
       await getSelectedFeeRecordsDetails(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(errorStatus);
-      expect(res._isEndCalled()).toBe(true);
+      expect(res._getStatusCode()).toEqual(errorStatus);
+      expect(res._isEndCalled()).toEqual(true);
     });
 
     it('responds with an error message when api call fails', async () => {
@@ -150,8 +150,8 @@ describe('get-selected-fee-records-details.controller', () => {
       await getSelectedFeeRecordsDetails(req, res);
 
       // Assert
-      expect(res._getData()).toBe('Failed to get selected fee records details');
-      expect(res._isEndCalled()).toBe(true);
+      expect(res._getData()).toEqual('Failed to get selected fee records details');
+      expect(res._isEndCalled()).toEqual(true);
     });
   });
 });

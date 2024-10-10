@@ -41,7 +41,7 @@ describe('handleFeeRecordRemoveFromPaymentGroupEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.status).toBe('TO_DO');
+    expect(feeRecord.status).toEqual('TO_DO');
   });
 
   it('updates the last updated by fields to the request source', async () => {
@@ -64,8 +64,8 @@ describe('handleFeeRecordRemoveFromPaymentGroupEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
-    expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
+    expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
+    expect(feeRecord.lastUpdatedByTfmUserId).toEqual(userId);
     expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
   });
 

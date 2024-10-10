@@ -3,7 +3,7 @@ import { errorSummary } from '../../../partials';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+import { todayDay } from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 
 context('Amendments - Facility value', () => {
@@ -42,9 +42,8 @@ context('Amendments - Facility value', () => {
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--request-date' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
@@ -120,7 +119,7 @@ context('Amendments - Facility value', () => {
     cy.clickContinueButton();
     cy.url().should('contain', 'check-answers');
 
-    amendmentsPage.amendmentAnswerBankRequestDate().should('contain', dateConstants.todayDay);
+    amendmentsPage.amendmentAnswerBankRequestDate().should('contain', todayDay);
     amendmentsPage.amendmentAnswerRequireApproval().should('contain', 'Yes');
     amendmentsPage.amendmentAnswerFacilityValue().should('contain', '123.00');
   });

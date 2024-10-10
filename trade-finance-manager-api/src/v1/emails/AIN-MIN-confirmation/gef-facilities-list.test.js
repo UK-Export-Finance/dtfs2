@@ -64,25 +64,25 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
     it('maps true to `Yes`', () => {
       const result = mapBooleanToYesOrNo(true);
 
-      expect(result).toBe('Yes');
+      expect(result).toEqual('Yes');
     });
 
     it('maps false to `No`', () => {
       const result = mapBooleanToYesOrNo(false);
 
-      expect(result).toBe('No');
+      expect(result).toEqual('No');
     });
 
     it('maps undefined to undefined', () => {
       const result = mapBooleanToYesOrNo(undefined);
 
-      expect(result).toBe(undefined);
+      expect(result).toEqual(undefined);
     });
 
     it('maps null to undefined', () => {
       const result = mapBooleanToYesOrNo(null);
 
-      expect(result).toBe(undefined);
+      expect(result).toEqual(undefined);
     });
   });
 

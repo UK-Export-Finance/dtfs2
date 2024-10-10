@@ -14,7 +14,7 @@ describe('is-deal-feature-enabled helpers', () => {
 
       const result = getCurrentGefDealVersion();
 
-      expect(result).toBe(1);
+      expect(result).toEqual(1);
     });
 
     it("returns 0 when deal version set to '0'", () => {
@@ -22,7 +22,7 @@ describe('is-deal-feature-enabled helpers', () => {
 
       const result = getCurrentGefDealVersion();
 
-      expect(result).toBe(0);
+      expect(result).toEqual(0);
     });
 
     it('returns 0 when deal version set to empty string', () => {
@@ -30,7 +30,7 @@ describe('is-deal-feature-enabled helpers', () => {
 
       const result = getCurrentGefDealVersion();
 
-      expect(result).toBe(0);
+      expect(result).toEqual(0);
     });
 
     it('returns 0 when deal version undefined', () => {
@@ -38,7 +38,7 @@ describe('is-deal-feature-enabled helpers', () => {
 
       const result = getCurrentGefDealVersion();
 
-      expect(result).toBe(0);
+      expect(result).toEqual(0);
     });
 
     it('throws an error when deal version is invalid', () => {
@@ -52,19 +52,19 @@ describe('is-deal-feature-enabled helpers', () => {
     it('returns true when deal version set to 1', () => {
       const result = isFacilityEndDateEnabledOnGefVersion(1);
 
-      expect(result).toBe(true);
+      expect(result).toEqual(true);
     });
 
     it('returns true when deal version greater than 1', () => {
       const result = isFacilityEndDateEnabledOnGefVersion(2);
 
-      expect(result).toBe(true);
+      expect(result).toEqual(true);
     });
 
     it('returns false when deal version less than 1', () => {
       const result = isFacilityEndDateEnabledOnGefVersion(0);
 
-      expect(result).toBe(false);
+      expect(result).toEqual(false);
     });
   });
 });

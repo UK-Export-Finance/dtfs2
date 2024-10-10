@@ -57,7 +57,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
       // Assert
       expect(api.getUtilisationReportReconciliationDetailsById).toHaveBeenCalledWith(reportId, premiumPaymentsFilters, userToken);
-      expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
+      expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
       expect(res._getRenderData()).toEqual({ user });
     });
 
@@ -195,9 +195,9 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
       expect(viewModel.premiumPaymentsTableDataError).toBeDefined();
-      expect(viewModel.premiumPaymentsTableDataError?.href).toBe('#premium-payments-table');
-      expect(viewModel.premiumPaymentsTableDataError?.text).toBe('Select a fee or fees with the same status');
-      expect(viewModel.premiumPayments[0].isChecked).toBe(true);
+      expect(viewModel.premiumPaymentsTableDataError?.href).toEqual('#premium-payments-table');
+      expect(viewModel.premiumPaymentsTableDataError?.text).toEqual('Select a fee or fees with the same status');
+      expect(viewModel.premiumPayments[0].isChecked).toEqual(true);
     });
 
     it("renders the page with 'enablePaymentsReceivedSorting' set to true if at least one fee record has a non-null 'paymentsReceived'", async () => {
@@ -226,7 +226,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
-      expect(viewModel.enablePaymentsReceivedSorting).toBe(true);
+      expect(viewModel.enablePaymentsReceivedSorting).toEqual(true);
     });
 
     it("renders the page with 'enablePaymentsReceivedSorting' set to false if all fee records have null 'paymentsReceived'", async () => {
@@ -248,7 +248,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
-      expect(viewModel.enablePaymentsReceivedSorting).toBe(false);
+      expect(viewModel.enablePaymentsReceivedSorting).toEqual(false);
     });
 
     it('sets facility ID query error when invalid facility ID query value used', async () => {
@@ -281,8 +281,8 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
       expect(viewModel.premiumPaymentsFilterError).toBeDefined();
-      expect(viewModel.premiumPaymentsFilterError?.href).toBe('#premium-payments-facility-id-filter');
-      expect(viewModel.premiumPaymentsFilterError?.text).toBe('Facility ID must be a number');
+      expect(viewModel.premiumPaymentsFilterError?.href).toEqual('#premium-payments-facility-id-filter');
+      expect(viewModel.premiumPaymentsFilterError?.text).toEqual('Facility ID must be a number');
     });
 
     it('checks selected checkboxes when selected fee record ids query param defined', async () => {
@@ -328,9 +328,9 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
       // Assert
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
-      expect(viewModel.premiumPayments[0].isChecked).toBe(true);
-      expect(viewModel.premiumPayments[1].isChecked).toBe(true);
-      expect(viewModel.premiumPayments[2].isChecked).toBe(false);
+      expect(viewModel.premiumPayments[0].isChecked).toEqual(true);
+      expect(viewModel.premiumPayments[1].isChecked).toEqual(true);
+      expect(viewModel.premiumPayments[2].isChecked).toEqual(false);
     });
 
     it('clears redirect session data', async () => {

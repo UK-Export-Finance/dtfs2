@@ -106,8 +106,8 @@ describe('validatePutDealCancellationPayload', () => {
     validatePutDealCancellationPayload(req, res, next);
 
     // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-    expect(res._isEndCalled()).toBe(true);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
+    expect(res._isEndCalled()).toEqual(true);
     expect(next).not.toHaveBeenCalled();
   });
 
@@ -123,6 +123,6 @@ describe('validatePutDealCancellationPayload', () => {
 
     // Assert
     expect(next).toHaveBeenCalled();
-    expect(res._isEndCalled()).toBe(false);
+    expect(res._isEndCalled()).toEqual(false);
   });
 });
