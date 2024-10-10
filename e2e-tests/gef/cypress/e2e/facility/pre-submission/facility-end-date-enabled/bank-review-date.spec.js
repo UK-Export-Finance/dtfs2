@@ -2,11 +2,13 @@ import relative from '../../../relativeURL';
 import { backLink, headingCaption, continueButton, saveAndReturnButton, errorSummary } from '../../../partials';
 import bankReviewDate from '../../../pages/bank-review-date';
 import aboutFacility from '../../../pages/about-facility';
-import { today, twoYears, tomorrow, yesterday, sixYearsOneDay, oneYear } from '../../../../../../e2e-fixtures/dateConstants';
+import { today, twoYears, tomorrow, yesterday, sixYearsOneDay } from '../../../../../../e2e-fixtures/dateConstants';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 
 const applications = [];
 let token;
+
+const nextYear = Number(today.year) + 1;
 
 context('Bank Review Date Page - feature flag enabled', () => {
   let application;
@@ -106,7 +108,7 @@ context('Bank Review Date Page - feature flag enabled', () => {
     aboutFacility.shouldCoverStartOnSubmissionNo().click();
 
     cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: tomorrow.date });
-    cy.completeDateFormFields({ idPrefix: 'cover-end-date', year: oneYear.date });
+    cy.completeDateFormFields({ idPrefix: 'cover-end-date', year: nextYear });
 
     aboutFacility.isUsingFacilityEndDateNo().click();
 
@@ -133,7 +135,7 @@ context('Bank Review Date Page - feature flag enabled', () => {
     cy.keyboardInput(aboutFacility.facilityName(), 'Name');
     aboutFacility.shouldCoverStartOnSubmissionYes().click();
 
-    cy.completeDateFormFields({ idPrefix: 'cover-end-date', year: oneYear.date });
+    cy.completeDateFormFields({ idPrefix: 'cover-end-date', year: nextYear });
 
     aboutFacility.isUsingFacilityEndDateNo().click();
 
@@ -190,7 +192,7 @@ context('Bank Review Date Page - feature flag enabled', () => {
     cy.keyboardInput(aboutFacility.facilityName(), 'Name');
     aboutFacility.shouldCoverStartOnSubmissionYes().click();
 
-    cy.completeDateFormFields({ idPrefix: 'cover-end-date', year: oneYear.date });
+    cy.completeDateFormFields({ idPrefix: 'cover-end-date', year: nextYear });
 
     aboutFacility.isUsingFacilityEndDateYes().click();
     cy.clickContinueButton();

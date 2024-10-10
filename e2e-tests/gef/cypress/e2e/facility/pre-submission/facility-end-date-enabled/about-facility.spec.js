@@ -157,7 +157,7 @@ context('About Facility Page  - feature flag enabled', () => {
       cy.keyboardInput(aboutFacility.facilityName(), 'Name');
       aboutFacility.shouldCoverStartOnSubmissionYes().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: yesterday });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: yesterday.date });
 
       cy.clickContinueButton();
       aboutFacility.coverEndDateError().contains('Cover end date cannot be before cover start date');

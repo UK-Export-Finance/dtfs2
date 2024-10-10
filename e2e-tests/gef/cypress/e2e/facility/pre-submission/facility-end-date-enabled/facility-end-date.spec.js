@@ -143,7 +143,7 @@ context('Facility End Date Page - feature flag enabled', () => {
     cy.clickContinueButton();
     cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
-    cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: yesterday });
+    cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: yesterday.date });
 
     cy.clickContinueButton();
     errorSummary();
