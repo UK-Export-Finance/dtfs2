@@ -1,11 +1,11 @@
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
-const { oneMonth } = require('../../../../../../e2e-fixtures/dateConstants');
+const { oneMonth, today } = require('../../../../../../e2e-fixtures/dateConstants');
 
-const now = new Date().valueOf();
+const now = today.unixMilliseconds;
 
 const deal = {
   submissionType: 'Manual Inclusion Application',
-  updatedAt: Date.now(),
+  updatedAt: now,
   bankInternalRefName: 'TEST-DEAL',
   additionalRefName: 'TEST-DEAL',
   status: 'Draft',

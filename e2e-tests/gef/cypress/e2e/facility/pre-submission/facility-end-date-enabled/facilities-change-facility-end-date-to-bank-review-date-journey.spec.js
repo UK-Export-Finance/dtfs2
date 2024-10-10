@@ -2,13 +2,13 @@ import relative from '../../../relativeURL';
 import aboutFacility from '../../../pages/about-facility';
 import bankReviewDate from '../../../pages/bank-review-date';
 import facilityEndDate from '../../../pages/facility-end-date';
-import { threeMonths, today, tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
+import { oneYear, threeMonths, tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 
 const applications = [];
 let token;
 
-const nextYear = Number(today.year) + 1;
+const nextYear = oneYear.year;
 
 context('Changing between facility end date and bank review date - feature flag enabled', () => {
   let application;
