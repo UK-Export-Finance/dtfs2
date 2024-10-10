@@ -21,7 +21,7 @@
 {% block sub_content %}
   {{ govukBackLink({
       text: "Back",
-      href: "/case/" + dealId + "/cancellation/bank-request-date",
+      href: previousPage,
       attributes: {
         'data-cy': 'back-link'
       }

@@ -137,6 +137,36 @@ describe('postBankRequestDate', () => {
           day,
           month,
           year,
+          previousPage: `/case/${dealId}/cancellation/reason`,
+        });
+      });
+
+      it('renders the page with the back URL as the check details page when "change" is passed in as a query parameter', async () => {
+        // Arrange
+        const session = aRequestSession();
+
+        const { req, res } = createMocks<PostBankRequestDateRequest>({
+          params: { _id: dealId },
+          query: { status: 'change' },
+          session,
+          body: inputtedDate,
+        });
+
+        // Act
+        await postBankRequestDate(req, res);
+
+        // Assert
+        expect(res._getRenderView()).toEqual('case/cancellation/bank-request-date.njk');
+        expect(res._getRenderData() as BankRequestDateViewModel).toEqual({
+          activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
+          user: session.user,
+          ukefDealId,
+          dealId,
+          errors,
+          day,
+          month,
+          year,
+          previousPage: `/case/${dealId}/cancellation/check-details`,
         });
       });
 

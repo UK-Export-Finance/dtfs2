@@ -8,12 +8,16 @@ import { EffectiveFromDateViewModel } from '../../../types/view-models';
 import { validateEffectiveFromDate } from './validation/validate-effective-from-date';
 import { canSubmissionTypeBeCancelled } from '../../helpers/deal-cancellation-enabled.helper';
 import api from '../../../api';
+import { getPreviousPageUrlForCancellationFlow } from './helpers/get-previous-page-url';
 
-export type GetEffectiveFromDateRequest = CustomExpressRequest<{ params: { _id: string } }>;
+export type GetEffectiveFromDateRequest = CustomExpressRequest<{ params: { _id: string }; query: { status?: string } }>;
 export type PostEffectiveFromDateRequest = CustomExpressRequest<{
   params: { _id: string };
+  query: { status?: string };
   reqBody: { 'effective-from-date-day': string; 'effective-from-date-month': string; 'effective-from-date-year': string };
 }>;
+
+const defaultPreviousPage = '/cancellation/bank-request-date';
 
 /**
  * controller to get the effective from date page
@@ -23,6 +27,7 @@ export type PostEffectiveFromDateRequest = CustomExpressRequest<{
  */
 export const getEffectiveFromDate = async (req: GetEffectiveFromDateRequest, res: Response) => {
   const { _id } = req.params;
+  const { status } = req.query;
   const { user, userToken } = asUserSession(req.session);
 
   try {
@@ -56,6 +61,7 @@ export const getEffectiveFromDate = async (req: GetEffectiveFromDateRequest, res
       day,
       month,
       year,
+      previousPage: getPreviousPageUrlForCancellationFlow(_id, defaultPreviousPage, status),
     };
     return res.render('case/cancellation/effective-from-date.njk', effectiveFromDateViewModel);
   } catch (error) {
@@ -72,6 +78,7 @@ export const getEffectiveFromDate = async (req: GetEffectiveFromDateRequest, res
  */
 export const postEffectiveFromDate = async (req: PostEffectiveFromDateRequest, res: Response) => {
   const { _id } = req.params;
+  const { status } = req.query;
   const { 'effective-from-date-day': day, 'effective-from-date-month': month, 'effective-from-date-year': year } = req.body;
   const { user, userToken } = asUserSession(req.session);
 
@@ -98,6 +105,7 @@ export const postEffectiveFromDate = async (req: PostEffectiveFromDateRequest, r
         month,
         year,
         errors: validationErrors,
+        previousPage: getPreviousPageUrlForCancellationFlow(_id, defaultPreviousPage, status),
       };
 
       return res.render('case/cancellation/effective-from-date.njk', effectiveFromDateViewModel);
