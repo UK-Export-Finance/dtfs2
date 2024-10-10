@@ -1,6 +1,6 @@
 import { getFormattedMonetaryValue } from './monetary-value';
 
-describe('monteray value helpers', () => {
+describe('monetary value helpers', () => {
   describe('getFormattedMonetaryValue', () => {
     it('should format the given value as a string with thousands separated by comma', () => {
       // Arrange
@@ -14,10 +14,22 @@ describe('monteray value helpers', () => {
       expect(formattedValue).toBe(expectedFormattedValue);
     });
 
-    it('should format the value to 2 decimal places when the amount has more than 2 decimal places', () => {
+    it('should format the value to 2 decimal places when the amount has more than 2 decimal places - rounding down', () => {
       // Arrange
-      const value = 1234567.89123;
+      const value = 1234567.89423;
       const expectedFormattedValue = '1,234,567.89';
+
+      // Act
+      const formattedValue = getFormattedMonetaryValue(value);
+
+      // Assert
+      expect(formattedValue).toBe(expectedFormattedValue);
+    });
+
+    it('should format the value to 2 decimal places when the amount has more than 2 decimal places - rounding up', () => {
+      // Arrange
+      const value = 1234567.8956766;
+      const expectedFormattedValue = '1,234,567.90';
 
       // Act
       const formattedValue = getFormattedMonetaryValue(value);

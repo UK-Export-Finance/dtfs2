@@ -4,7 +4,7 @@ import { mapToUtilisationDetailsViewModel, mapToUtilisationTableRowViewModel } f
 
 describe('utilisation-details-helper', () => {
   describe('mapToUtilisationTableRowViewModel', () => {
-    const aDataSortValues = () => ({ feesPayable: 1, feesAccrued: 2, facilityId: 3 });
+    const aDataSortValues = () => ({ feesPayable: 1, feesAccrued: 2 });
 
     it('should format the fees accrued currency and amount to the currency followed by the amount', () => {
       // Arrange
@@ -186,7 +186,7 @@ describe('utilisation-details-helper', () => {
       expect(viewModel.utilisationTableRows[1].feeRecordId).toEqual(2);
     });
 
-    it.only('sets the data sort values for fees accrued to be alphabetically by currency then numerically by amount', () => {
+    it('sets the data sort values for fees accrued to be alphabetically by currency then numerically by amount', () => {
       // Arrange
       const items: FeeRecordUtilisation[] = [
         { ...aFeeRecordUtilisation(), feeRecordId: 1, feesAccrued: { currency: CURRENCY.EUR, amount: 300 } },
