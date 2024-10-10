@@ -1,5 +1,4 @@
-import { FeeRecordEntity, TfmFacility } from '@ukef/dtfs2-common';
-import { FeeRecordUtilisation } from '../../../../../types/fee-records';
+import { FeeRecordEntity, TfmFacility, FeeRecordUtilisation } from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../../../../../errors';
 import { mapToFeeRecordUtilisation } from './map-to-fee-record-utilisation';

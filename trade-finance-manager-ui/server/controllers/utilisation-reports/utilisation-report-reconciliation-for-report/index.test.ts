@@ -1,13 +1,18 @@
 import httpMocks from 'node-mocks-http';
 import { SessionData } from 'express-session';
-import { FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
+import { CURRENCY, FEE_RECORD_STATUS, FeeRecordUtilisation } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { getUtilisationReportReconciliationByReportId } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { aFeeRecordPaymentGroup, aUtilisationReportReconciliationDetailsResponse, aPayment, aFeeRecord } from '../../../../test-helpers';
 import { FeeRecordPaymentGroup, UtilisationReportReconciliationDetailsResponseBody } from '../../../api-response-types';
-import { PremiumPaymentsViewModelItem, PaymentDetailsViewModel, UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
+import {
+  PremiumPaymentsViewModelItem,
+  PaymentDetailsViewModel,
+  UtilisationReportReconciliationForReportViewModel,
+  UtilisationDetailsViewModel,
+} from '../../../types/view-models';
 
 jest.mock('../../../api');
 jest.mock('../../../helpers/date');
@@ -88,6 +93,20 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
           dateReconciled: undefined,
         },
       ];
+      const utilisationDetails: FeeRecordUtilisation[] = [
+        {
+          feeRecordId: 1,
+          facilityId: '12345678',
+          exporter: 'Test exporter',
+          baseCurrency: CURRENCY.GBP,
+          utilisation: 3,
+          value: 4,
+          coverPercentage: 80,
+          exposure: 2,
+          feesAccrued: { currency: CURRENCY.EUR, amount: 5 },
+          feesPayable: { currency: CURRENCY.JPY, amount: 2 },
+        },
+      ];
       const utilisationReportReconciliationDetails: UtilisationReportReconciliationDetailsResponseBody = {
         ...aUtilisationReportReconciliationDetailsResponse(),
         bank,
@@ -97,10 +116,11 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         },
         premiumPayments: feeRecordPaymentGroups,
         paymentDetails: feeRecordPaymentGroups,
+        utilisationDetails,
       };
       const formattedReportPeriod = 'January 2024';
 
-      const premiumPayments: PremiumPaymentsViewModelItem[] = [
+      const expectedPremiumPayments: PremiumPaymentsViewModelItem[] = [
         {
           feeRecords: [
             {
@@ -128,7 +148,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         },
       ];
 
-      const paymentDetailsViewModel: PaymentDetailsViewModel = [
+      const expectedPaymentDetailsViewModel: PaymentDetailsViewModel = [
         {
           payment: {
             id: 1,
@@ -142,6 +162,23 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
           dateReconciled: { formattedDateReconciled: '-', dataSortValue: 0 },
         },
       ];
+
+      const expectedUtilisationDetails: UtilisationDetailsViewModel = {
+        utilisationTableRows: [
+          {
+            feeRecordId: 1,
+            facilityId: '12345678',
+            exporter: 'Test exporter',
+            baseCurrency: CURRENCY.GBP,
+            formattedUtilisation: '3.00',
+            formattedValue: '4.00',
+            coverPercentage: 80,
+            formattedExposure: '2.00',
+            feesAccrued: { formattedCurrencyAndAmount: `${CURRENCY.EUR} 5.00`, dataSortValue: 0 },
+            feesPayable: { formattedCurrencyAndAmount: `${CURRENCY.JPY} 2.00`, dataSortValue: 0 },
+          },
+        ],
+      };
 
       const premiumPaymentsFilters = {
         facilityId: premiumPaymentsFacilityId,
@@ -162,10 +199,11 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         formattedReportPeriod,
         enablePaymentsReceivedSorting: true,
         reportId: '1',
-        premiumPayments,
+        premiumPayments: expectedPremiumPayments,
         premiumPaymentsFilters,
         keyingSheet: [],
-        paymentDetails: paymentDetailsViewModel,
+        paymentDetails: expectedPaymentDetailsViewModel,
+        utilisationDetails: expectedUtilisationDetails,
       });
     });
 
