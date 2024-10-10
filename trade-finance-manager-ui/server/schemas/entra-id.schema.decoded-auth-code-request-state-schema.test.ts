@@ -3,12 +3,22 @@ import { withSchemaTests } from '../../test-helpers';
 import { DecodedAuthCodeRequestStateSchema } from './entra-id.schema';
 
 describe('DecodedAuthCodeRequestStateSchema', () => {
-  const aValidPayload: () => DecodedAuthCodeRequestState = () => ({
-    csrfToken: 'a',
-    successRedirect: 'b',
+  withSchemaTests({
+    schema: DecodedAuthCodeRequestStateSchema,
+    failureTestCases: getFailureTestCases(),
+    successTestCases: getSuccessTestCases(),
   });
+});
 
-  const failureTestCases = [
+function aValidPayload(): DecodedAuthCodeRequestState {
+  return {
+    csrfToken: 'a-csrf-token',
+    successRedirect: 'a-success-redirect',
+  };
+}
+
+function getFailureTestCases() {
+  return [
     {
       aTestCase: () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -30,8 +40,10 @@ describe('DecodedAuthCodeRequestStateSchema', () => {
       description: 'the object is empty',
     },
   ];
+}
 
-  const successTestCases = [
+function getSuccessTestCases() {
+  return [
     { aTestCase: aValidPayload, description: 'a complete valid payload is present' },
     {
       aTestCase: () => {
@@ -46,10 +58,4 @@ describe('DecodedAuthCodeRequestStateSchema', () => {
       description: 'there is an extra field',
     },
   ];
-
-  withSchemaTests({
-    schema: DecodedAuthCodeRequestStateSchema,
-    failureTestCases,
-    successTestCases,
-  });
-});
+}

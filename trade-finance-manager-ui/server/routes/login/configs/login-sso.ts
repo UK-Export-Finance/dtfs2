@@ -1,5 +1,5 @@
 import express from 'express';
-import { LoginController } from '../../../controllers/login/loginSso/login.controller';
+import { LoginController } from '../../../controllers/login/login-sso/login.controller';
 import { GetRouter } from '../../../types/get-router';
 import { EntraIdService } from '../../../services/entra-id.service';
 import { EntraIdConfig } from '../../../configs/entra-id.config';
