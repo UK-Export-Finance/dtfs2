@@ -103,6 +103,8 @@ context('Deal cancellation - bank request date', () => {
   describe('when logged in as a non-PIM user', () => {
     beforeEach(() => {
       cy.login(T1_USER_1);
+
+      cy.visit(relative(`/case/${dealId}/cancellation/bank-request-date`));
     });
 
     it('should redirect when visiting bank request date page ', () => {
