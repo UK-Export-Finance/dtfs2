@@ -125,6 +125,25 @@ context('Deal cancellation - cancel cancellation', () => {
         });
       });
 
+      describe(`when visiting from check-details page`, () => {
+        beforeEach(() => {
+          cy.visit(relative(`/case/${dealId}/cancellation/check-details`));
+          checkDetailsPage.returnLink().click();
+        });
+
+        it(`back link navigates to check-details page`, () => {
+          cy.clickBackLink();
+
+          cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
+        });
+
+        it(`no, go back button navigates to check-details page`, () => {
+          cancelCancellationPage.noGoBackButton().click();
+
+          cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
+        });
+      });
+
       ['reason', 'bank-request-date', 'effective-from-date'].forEach((page) => {
         describe(`when visiting from ${page} page`, () => {
           beforeEach(() => {
