@@ -1,5 +1,6 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { isEmpty } from 'lodash';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { asUserSession } from '../../../helpers/express-session';
 import { CancelCancellationViewModel } from '../../../types/view-models';
@@ -28,6 +29,12 @@ export const getCancelCancellation = async (req: GetCancelCancellationRequest, r
     }
 
     if (!canSubmissionTypeBeCancelled(deal.dealSnapshot.submissionType)) {
+      return res.redirect(`/case/${_id}/deal`);
+    }
+
+    const cancellation = await api.getDealCancellation(_id, userToken);
+
+    if (isEmpty(cancellation)) {
       return res.redirect(`/case/${_id}/deal`);
     }
 

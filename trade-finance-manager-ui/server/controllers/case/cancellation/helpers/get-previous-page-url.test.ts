@@ -14,7 +14,7 @@ describe('getPreviousPageUrlForCancelCancellation', () => {
       const response = getPreviousPageUrlForCancelCancellation(url, dealId);
 
       // Assert
-      expect(response).toBe(`/case/${dealId}/cancellation/${page}`);
+      expect(response).toEqual(`/case/${dealId}/cancellation/${page}`);
     });
 
     it('returns the correct relative url, when given an absolute URL', () => {
@@ -25,7 +25,7 @@ describe('getPreviousPageUrlForCancelCancellation', () => {
       const response = getPreviousPageUrlForCancelCancellation(url, dealId);
 
       // Assert
-      expect(response).toBe(`/case/${dealId}/cancellation/${page}`);
+      expect(response).toEqual(`/case/${dealId}/cancellation/${page}`);
     });
 
     it('returns the correct relative url, when given a localhost URL', () => {
@@ -36,7 +36,7 @@ describe('getPreviousPageUrlForCancelCancellation', () => {
       const response = getPreviousPageUrlForCancelCancellation(url, dealId);
 
       // Assert
-      expect(response).toBe(`/case/${dealId}/cancellation/${page}`);
+      expect(response).toEqual(`/case/${dealId}/cancellation/${page}`);
     });
   });
 
@@ -48,7 +48,7 @@ describe('getPreviousPageUrlForCancelCancellation', () => {
     const response = getPreviousPageUrlForCancelCancellation(url, dealId);
 
     // Assert
-    expect(response).toBe(`/case/${dealId}/deal`);
+    expect(response).toEqual(`/case/${dealId}/deal`);
   });
 });
 

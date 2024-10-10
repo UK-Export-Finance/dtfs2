@@ -1,6 +1,6 @@
 import { createMocks } from 'node-mocks-http';
 import { DayMonthYearInput, DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
-import { aTfmSessionUser } from '../../../../test-helpers';
+import { aRequestSession } from '../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { BankRequestDateValidationViewModel, BankRequestDateViewModel } from '../../../types/view-models';
 import { postBankRequestDate, PostBankRequestDateRequest } from './bank-request-date.controller';
@@ -22,7 +22,6 @@ jest.mock('../../../api', () => ({
 
 const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
-const mockUser = aTfmSessionUser();
 
 describe('postBankRequestDate', () => {
   beforeEach(() => {
@@ -35,10 +34,7 @@ describe('postBankRequestDate', () => {
 
     const { req, res } = createMocks<PostBankRequestDateRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
@@ -54,10 +50,7 @@ describe('postBankRequestDate', () => {
 
     const { req, res } = createMocks<PostBankRequestDateRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
@@ -73,10 +66,7 @@ describe('postBankRequestDate', () => {
 
     const { req, res } = createMocks<PostBankRequestDateRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
@@ -112,10 +102,7 @@ describe('postBankRequestDate', () => {
         // Arrange
         const { req, res } = createMocks<PostBankRequestDateRequest>({
           params: { _id: dealId },
-          session: {
-            user: mockUser,
-            userToken: 'a user token',
-          },
+          session: aRequestSession(),
           body: inputtedDate,
         });
 
@@ -128,12 +115,11 @@ describe('postBankRequestDate', () => {
 
       it('renders the bank request date page with errors', async () => {
         // Arrange
+        const session = aRequestSession();
+
         const { req, res } = createMocks<PostBankRequestDateRequest>({
           params: { _id: dealId },
-          session: {
-            user: mockUser,
-            userToken: 'a user token',
-          },
+          session,
           body: inputtedDate,
         });
 
@@ -144,7 +130,7 @@ describe('postBankRequestDate', () => {
         expect(res._getRenderView()).toEqual('case/cancellation/bank-request-date.njk');
         expect(res._getRenderData() as BankRequestDateViewModel).toEqual({
           activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
-          user: mockUser,
+          user: session.user,
           ukefDealId,
           dealId,
           errors,
@@ -157,13 +143,12 @@ describe('postBankRequestDate', () => {
 
       it('renders the page with the back URL as the check details page when "change" is passed in as a query parameter', async () => {
         // Arrange
+        const session = aRequestSession();
+
         const { req, res } = createMocks<PostBankRequestDateRequest>({
           params: { _id: dealId },
           query: { status: 'change' },
-          session: {
-            user: mockUser,
-            userToken: 'a user token',
-          },
+          session,
           body: inputtedDate,
         });
 
@@ -174,7 +159,7 @@ describe('postBankRequestDate', () => {
         expect(res._getRenderView()).toEqual('case/cancellation/bank-request-date.njk');
         expect(res._getRenderData() as BankRequestDateViewModel).toEqual({
           activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
-          user: mockUser,
+          user: session.user,
           ukefDealId,
           dealId,
           errors,
@@ -189,10 +174,7 @@ describe('postBankRequestDate', () => {
         // Arrange
         const { req, res } = createMocks<PostBankRequestDateRequest>({
           params: { _id: dealId },
-          session: {
-            user: mockUser,
-            userToken: 'a user token',
-          },
+          session: aRequestSession(),
           body: inputtedDate,
         });
 
@@ -219,14 +201,11 @@ describe('postBankRequestDate', () => {
 
       it('updates the deal cancellation bank request date', async () => {
         // Arrange
-        const userToken = 'userToken';
+        const session = aRequestSession();
 
         const { req, res } = createMocks<PostBankRequestDateRequest>({
           params: { _id: dealId },
-          session: {
-            user: mockUser,
-            userToken,
-          },
+          session,
           body: {
             'bank-request-date-day': testDate.getDate(),
             'bank-request-date-month': testDate.getMonth() + 1,
@@ -239,17 +218,14 @@ describe('postBankRequestDate', () => {
 
         // Assert
         expect(api.updateDealCancellation).toHaveBeenCalledTimes(1);
-        expect(api.updateDealCancellation).toHaveBeenCalledWith(dealId, { bankRequestDate: testDate.valueOf() }, userToken);
+        expect(api.updateDealCancellation).toHaveBeenCalledWith(dealId, { bankRequestDate: testDate.valueOf() }, session.userToken);
       });
 
       it('redirects to the effective from date page', async () => {
         // Arrange
         const { req, res } = createMocks<PostBankRequestDateRequest>({
           params: { _id: dealId },
-          session: {
-            user: mockUser,
-            userToken: 'a user token',
-          },
+          session: aRequestSession(),
           body: {
             'bank-request-date-day': testDate.getDate(),
             'bank-request-date-month': testDate.getMonth() + 1,
