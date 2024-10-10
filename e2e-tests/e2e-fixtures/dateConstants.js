@@ -56,6 +56,7 @@ export const sevenDaysAgo = getFormattedValuesFromDate(sub(todayDate, { days: 7 
 export const twentyFiveDaysAgo = getFormattedValuesFromDate(sub(todayDate, { days: 25 }));
 export const thirtyFiveDaysAgo = getFormattedValuesFromDate(sub(todayDate, { days: 35 }));
 export const twelveMonthsOneDayAgo = getFormattedValuesFromDate(sub(todayDate, { months: 12, days: 1 }));
+export const oneYearAgo = getFormattedValuesFromDate(sub(todayDate, { years: 1 }));
 export const twoYearsAgo = getFormattedValuesFromDate(sub(todayDate, { years: 2 }));
 
 // Times
