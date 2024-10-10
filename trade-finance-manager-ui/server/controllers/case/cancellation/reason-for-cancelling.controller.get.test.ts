@@ -1,6 +1,6 @@
 import { createMocks } from 'node-mocks-http';
 import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
-import { aTfmSessionUser } from '../../../../test-helpers';
+import { aRequestSession } from '../../../../test-helpers';
 import { getReasonForCancelling, GetReasonForCancellingRequest } from './reason-for-cancelling.controller';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { ReasonForCancellingViewModel } from '../../../types/view-models';
@@ -13,7 +13,6 @@ jest.mock('../../../api', () => ({
 
 const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
-const mockUser = aTfmSessionUser();
 
 describe('getReasonForCancelling', () => {
   beforeEach(() => {
@@ -26,10 +25,7 @@ describe('getReasonForCancelling', () => {
 
     const { req, res } = createMocks<GetReasonForCancellingRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
@@ -45,10 +41,7 @@ describe('getReasonForCancelling', () => {
 
     const { req, res } = createMocks<GetReasonForCancellingRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
@@ -64,10 +57,7 @@ describe('getReasonForCancelling', () => {
 
     const { req, res } = createMocks<GetReasonForCancellingRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
@@ -84,12 +74,11 @@ describe('getReasonForCancelling', () => {
       jest.mocked(api.getDealCancellation).mockResolvedValue({ reason });
       jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: validDealType } });
 
+      const session = aRequestSession();
+
       const { req, res } = createMocks<GetReasonForCancellingRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken: 'a user token',
-        },
+        session,
       });
 
       // Act
@@ -99,7 +88,7 @@ describe('getReasonForCancelling', () => {
       expect(res._getRenderView()).toEqual('case/cancellation/reason-for-cancelling.njk');
       expect(res._getRenderData() as ReasonForCancellingViewModel).toEqual({
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
-        user: mockUser,
+        user: session.user,
         ukefDealId,
         dealId,
         reasonForCancelling: reason,

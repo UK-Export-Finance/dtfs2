@@ -1,6 +1,6 @@
 import { createMocks } from 'node-mocks-http';
 import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
-import { aTfmSessionUser } from '../../../../test-helpers';
+import { aRequestSession } from '../../../../test-helpers';
 import { postCancelCancellation, PostCancelCancellationRequest } from './cancel-cancellation.controller';
 import api from '../../../api';
 
@@ -11,7 +11,6 @@ jest.mock('../../../api', () => ({
 
 const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
-const mockUser = aTfmSessionUser();
 
 describe('postCancelCancellation', () => {
   beforeEach(() => {
@@ -24,10 +23,7 @@ describe('postCancelCancellation', () => {
 
     const { req, res } = createMocks<PostCancelCancellationRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
       query: {
         return: 'true',
       },
@@ -40,7 +36,7 @@ describe('postCancelCancellation', () => {
     await postCancelCancellation(req, res);
 
     // Assert
-    expect(res._getRedirectUrl()).toBe(previousPage);
+    expect(res._getRedirectUrl()).toEqual(previousPage);
   });
 
   it('redirects to not found if the deal does not exist', async () => {
@@ -49,17 +45,14 @@ describe('postCancelCancellation', () => {
 
     const { req, res } = createMocks<PostCancelCancellationRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
     await postCancelCancellation(req, res);
 
     // Assert
-    expect(res._getRedirectUrl()).toBe(`/not-found`);
+    expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
 
   it('redirects to not found if the dealId is invalid', async () => {
@@ -68,17 +61,14 @@ describe('postCancelCancellation', () => {
 
     const { req, res } = createMocks<PostCancelCancellationRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
     await postCancelCancellation(req, res);
 
     // Assert
-    expect(res._getRedirectUrl()).toBe(`/not-found`);
+    expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
 
   describe(`when the deal type is ${DEAL_SUBMISSION_TYPE.MIA}`, () => {
@@ -90,27 +80,21 @@ describe('postCancelCancellation', () => {
       // Arrange
       const { req, res } = createMocks<PostCancelCancellationRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken: 'a user token',
-        },
+        session: aRequestSession(),
       });
 
       // Act
       await postCancelCancellation(req, res);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(`/case/${dealId}/deal`);
+      expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
     });
 
     it('does not delete the deal cancellation', async () => {
       // Arrange
       const { req, res } = createMocks<PostCancelCancellationRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken: 'a user token',
-        },
+        session: aRequestSession(),
       });
 
       // Act
@@ -126,14 +110,11 @@ describe('postCancelCancellation', () => {
       // Arrange
       jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: validDealType } });
 
-      const userToken = 'userToken';
+      const session = aRequestSession();
 
       const { req, res } = createMocks<PostCancelCancellationRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken,
-        },
+        session,
       });
 
       // Act
@@ -141,7 +122,7 @@ describe('postCancelCancellation', () => {
 
       // Assert
       expect(api.deleteDealCancellation).toHaveBeenCalledTimes(1);
-      expect(api.deleteDealCancellation).toHaveBeenCalledWith(dealId, userToken);
+      expect(api.deleteDealCancellation).toHaveBeenCalledWith(dealId, session.userToken);
     });
 
     it('redirects to the deal summary page', async () => {
@@ -150,17 +131,14 @@ describe('postCancelCancellation', () => {
 
       const { req, res } = createMocks<PostCancelCancellationRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken: 'userToken',
-        },
+        session: aRequestSession(),
       });
 
       // Act
       await postCancelCancellation(req, res);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(`/case/${dealId}/deal`);
+      expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
     });
   });
 });
