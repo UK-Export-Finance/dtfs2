@@ -8,7 +8,7 @@ import { BankRequestDateViewModel } from '../../../types/view-models';
 import { validateBankRequestDate } from './validation/validate-bank-request-date';
 import api from '../../../api';
 import { canSubmissionTypeBeCancelled } from '../../helpers';
-import { getPreviousPageUrlForCancellationFlow } from './helpers/get-previous-page-url-for-cancel-cancellation';
+import { getPreviousPageUrlForCancellationFlow } from './helpers/get-previous-page-url';
 
 export type GetBankRequestDateRequest = CustomExpressRequest<{ params: { _id: string }; query: { status?: string } }>;
 export type PostBankRequestDateRequest = CustomExpressRequest<{

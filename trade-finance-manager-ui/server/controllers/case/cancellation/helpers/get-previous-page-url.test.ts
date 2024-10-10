@@ -1,4 +1,4 @@
-import { getPreviousPageUrlForCancelCancellation, getPreviousPageUrlForCancellationFlow } from './get-previous-page-url-for-cancel-cancellation';
+import { getPreviousPageUrl, getPreviousPageUrlForCancellationFlow } from './get-previous-page-url';
 
 const dealId = 'abcdef123456';
 
@@ -11,7 +11,7 @@ describe('getPreviousPageUrlForCancelCancellation', () => {
       const url = `/case/${dealId}/cancellation/${page}`;
 
       // Act
-      const response = getPreviousPageUrlForCancelCancellation(url, dealId);
+      const response = getPreviousPageUrl(url, dealId);
 
       // Assert
       expect(response).toEqual(`/case/${dealId}/cancellation/${page}`);
@@ -22,7 +22,7 @@ describe('getPreviousPageUrlForCancelCancellation', () => {
       const url = `www.example.com/case/${dealId}/cancellation/${page}`;
 
       // Act
-      const response = getPreviousPageUrlForCancelCancellation(url, dealId);
+      const response = getPreviousPageUrl(url, dealId);
 
       // Assert
       expect(response).toEqual(`/case/${dealId}/cancellation/${page}`);
@@ -33,7 +33,7 @@ describe('getPreviousPageUrlForCancelCancellation', () => {
       const url = `localhost:5003/case/${dealId}/cancellation/${page}`;
 
       // Act
-      const response = getPreviousPageUrlForCancelCancellation(url, dealId);
+      const response = getPreviousPageUrl(url, dealId);
 
       // Assert
       expect(response).toEqual(`/case/${dealId}/cancellation/${page}`);
@@ -45,7 +45,7 @@ describe('getPreviousPageUrlForCancelCancellation', () => {
     const url = `/case/${dealId}/cancellation/`;
 
     // Act
-    const response = getPreviousPageUrlForCancelCancellation(url, dealId);
+    const response = getPreviousPageUrl(url, dealId);
 
     // Assert
     expect(response).toEqual(`/case/${dealId}/deal`);
@@ -61,7 +61,7 @@ describe('getPreviousPageUrlForCancellationFlow', () => {
     const response = getPreviousPageUrlForCancellationFlow(dealId, defaultPreviousPage);
 
     // Assert
-    expect(response).toBe(`/case/${dealId}/defaultPreviousPage`);
+    expect(response).toEqual(`/case/${dealId}/defaultPreviousPage`);
   });
 
   it('returns the check answers url when status is "change"', () => {
@@ -73,6 +73,6 @@ describe('getPreviousPageUrlForCancellationFlow', () => {
     const response = getPreviousPageUrlForCancellationFlow(dealId, defaultPreviousPage, status);
 
     // Assert
-    expect(response).toBe(`/case/${dealId}/cancellation/check-details`);
+    expect(response).toEqual(`/case/${dealId}/cancellation/check-details`);
   });
 });

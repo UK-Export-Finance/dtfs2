@@ -6,7 +6,7 @@ import { ReasonForCancellingViewModel } from '../../../types/view-models';
 import { validateReasonForCancelling } from './validation/validate-reason-for-cancelling';
 import api from '../../../api';
 import { canSubmissionTypeBeCancelled } from '../../helpers';
-import { getPreviousPageUrlForCancellationFlow } from './helpers/get-previous-page-url-for-cancel-cancellation';
+import { getPreviousPageUrlForCancellationFlow } from './helpers/get-previous-page-url';
 
 export type GetReasonForCancellingRequest = CustomExpressRequest<{ params: { _id: string }; query: { status?: string } }>;
 export type PostReasonForCancellingRequest = CustomExpressRequest<{ params: { _id: string }; query: { status?: string }; reqBody: { reason: string } }>;

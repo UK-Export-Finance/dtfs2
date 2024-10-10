@@ -8,7 +8,7 @@ import { EffectiveFromDateViewModel } from '../../../types/view-models';
 import { validateEffectiveFromDate } from './validation/validate-effective-from-date';
 import { canSubmissionTypeBeCancelled } from '../../helpers/deal-cancellation-enabled.helper';
 import api from '../../../api';
-import { getPreviousPageUrlForCancellationFlow } from './helpers/get-previous-page-url-for-cancel-cancellation';
+import { getPreviousPageUrlForCancellationFlow } from './helpers/get-previous-page-url';
 
 export type GetEffectiveFromDateRequest = CustomExpressRequest<{ params: { _id: string }; query: { status?: string } }>;
 export type PostEffectiveFromDateRequest = CustomExpressRequest<{
