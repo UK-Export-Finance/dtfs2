@@ -7,6 +7,7 @@ import { EffectiveFromDateViewModel } from '../../../types/view-models';
 import { validateEffectiveFromDate } from './validation/validate-effective-from-date';
 import { canSubmissionTypeBeCancelled } from '../../helpers/deal-cancellation-enabled.helper';
 import api from '../../../api';
+import { getPreviousPageUrlForCancellationFlow } from './helpers/get-previous-page-url-for-cancel-cancellation';
 
 export type GetEffectiveFromDateRequest = CustomExpressRequest<{ params: { _id: string }; query: { status?: string } }>;
 export type PostEffectiveFromDateRequest = CustomExpressRequest<{
@@ -15,15 +16,7 @@ export type PostEffectiveFromDateRequest = CustomExpressRequest<{
   reqBody: { 'effective-from-date-day': string; 'effective-from-date-month': string; 'effective-from-date-year': string };
 }>;
 
-/**
- * Gets the previous page URL to pass into the back link
- *
- * @param dealId - The deal ID
- * @param status - 'change' if user comes from the check answers page, otherwise undefined
- */
-const getPreviousPageUrl = (dealId: string, status?: string): string => {
-  return status === 'change' ? `/case/${dealId}/cancellation/check-details` : `/case/${dealId}/cancellation/bank-request-date`;
-};
+const defaultPreviousPage = '/cancellation/bank-request-date';
 
 /**
  * controller to get the effective from date page
@@ -63,7 +56,7 @@ export const getEffectiveFromDate = async (req: GetEffectiveFromDateRequest, res
       day,
       month,
       year,
-      previousPage: getPreviousPageUrl(_id, status),
+      previousPage: getPreviousPageUrlForCancellationFlow(_id, defaultPreviousPage, status),
     };
     return res.render('case/cancellation/effective-from-date.njk', effectiveFromDateViewModel);
   } catch (error) {
@@ -107,7 +100,7 @@ export const postEffectiveFromDate = async (req: PostEffectiveFromDateRequest, r
         month,
         year,
         errors: validationErrors,
-        previousPage: getPreviousPageUrl(_id, status),
+        previousPage: getPreviousPageUrlForCancellationFlow(_id, defaultPreviousPage, status),
       };
 
       return res.render('case/cancellation/effective-from-date.njk', effectiveFromDateViewModel);

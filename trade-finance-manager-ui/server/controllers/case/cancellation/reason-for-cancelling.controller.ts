@@ -6,19 +6,12 @@ import { ReasonForCancellingViewModel } from '../../../types/view-models';
 import { validateReasonForCancelling } from './validation/validate-reason-for-cancelling';
 import api from '../../../api';
 import { canSubmissionTypeBeCancelled } from '../../helpers';
+import { getPreviousPageUrlForCancellationFlow } from './helpers/get-previous-page-url-for-cancel-cancellation';
 
 export type GetReasonForCancellingRequest = CustomExpressRequest<{ params: { _id: string }; query: { status?: string } }>;
 export type PostReasonForCancellingRequest = CustomExpressRequest<{ params: { _id: string }; query: { status?: string }; reqBody: { reason: string } }>;
 
-/**
- * Gets the previous page URL to pass into the back link
- *
- * @param dealId - The deal ID
- * @param status - 'change' if user comes from the check answers page, otherwise undefined
- */
-const getPreviousPageUrl = (dealId: string, status?: string): string => {
-  return status === 'change' ? `/case/${dealId}/cancellation/check-details` : `/case/${dealId}/deal`;
-};
+const defaultPreviousPage = '/deal';
 
 /**
  * controller to get the reason for cancelling page
@@ -50,7 +43,7 @@ export const getReasonForCancelling = async (req: GetReasonForCancellingRequest,
       ukefDealId: deal.dealSnapshot.details.ukefDealId,
       dealId: _id,
       reasonForCancelling: cancellation?.reason,
-      previousPage: getPreviousPageUrl(_id, status),
+      previousPage: getPreviousPageUrlForCancellationFlow(_id, defaultPreviousPage, status),
     };
     return res.render('case/cancellation/reason-for-cancelling.njk', reasonForCancellingViewModel);
   } catch (error) {
@@ -94,7 +87,7 @@ export const postReasonForCancelling = async (req: PostReasonForCancellingReques
         dealId: _id,
         errors: validationErrors,
         reasonForCancelling: reason,
-        previousPage: getPreviousPageUrl(_id, status),
+        previousPage: getPreviousPageUrlForCancellationFlow(_id, defaultPreviousPage, status),
       };
 
       return res.render('case/cancellation/reason-for-cancelling.njk', reasonForCancellingViewModel);

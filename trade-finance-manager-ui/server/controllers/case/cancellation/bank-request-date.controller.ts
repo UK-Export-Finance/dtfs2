@@ -7,6 +7,7 @@ import { BankRequestDateViewModel } from '../../../types/view-models';
 import { validateBankRequestDate } from './validation/validate-bank-request-date';
 import api from '../../../api';
 import { canSubmissionTypeBeCancelled } from '../../helpers';
+import { getPreviousPageUrlForCancellationFlow } from './helpers/get-previous-page-url-for-cancel-cancellation';
 
 export type GetBankRequestDateRequest = CustomExpressRequest<{ params: { _id: string }; query: { status?: string } }>;
 export type PostBankRequestDateRequest = CustomExpressRequest<{
@@ -15,15 +16,7 @@ export type PostBankRequestDateRequest = CustomExpressRequest<{
   reqBody: { 'bank-request-date-day': string; 'bank-request-date-month': string; 'bank-request-date-year': string };
 }>;
 
-/**
- * Gets the previous page URL to pass into the back link
- *
- * @param dealId - The deal ID
- * @param status - 'change' if user comes from the check answers page, otherwise undefined
- */
-const getPreviousPageUrl = (dealId: string, status?: string): string => {
-  return status === 'change' ? `/case/${dealId}/cancellation/check-details` : `/case/${dealId}/cancellation/reason`;
-};
+const defaultPreviousPage = '/cancellation/reason';
 
 /**
  * controller to get the bank request date page
@@ -63,7 +56,7 @@ export const getBankRequestDate = async (req: GetBankRequestDateRequest, res: Re
       day,
       month,
       year,
-      previousPage: getPreviousPageUrl(_id, status),
+      previousPage: getPreviousPageUrlForCancellationFlow(_id, defaultPreviousPage, status),
     };
     return res.render('case/cancellation/bank-request-date.njk', bankRequestDateViewModel);
   } catch (error) {
@@ -107,7 +100,7 @@ export const postBankRequestDate = async (req: PostBankRequestDateRequest, res: 
         month,
         year,
         errors: validationErrors,
-        previousPage: getPreviousPageUrl(_id, status),
+        previousPage: getPreviousPageUrlForCancellationFlow(_id, defaultPreviousPage, status),
       };
       return res.render('case/cancellation/bank-request-date.njk', bankRequestDateViewModel);
     }
