@@ -28,10 +28,10 @@ describe('date helpers', () => {
       { monthNumber: 12, expectedMonthName: 'December' },
     ])("should return month name '$expectedMonthName' from month number '$monthNumber'", ({ monthNumber, expectedMonthName }) => {
       // Act
-      const monthName = getMonthName(monthNumber);
+      const result = getMonthName(monthNumber);
 
       // Assert
-      expect(monthName).toEqual(expectedMonthName);
+      expect(result).toEqual(expectedMonthName);
     });
   });
 });

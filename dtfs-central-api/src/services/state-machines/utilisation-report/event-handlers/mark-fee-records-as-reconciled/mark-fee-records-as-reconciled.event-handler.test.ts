@@ -144,7 +144,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
       );
     });
 
-    it('should call call externalApi.sendEmail once', () => {
+    it('should call externalApi.sendEmail once', () => {
       // Assert
       expect(sendEmailSpy).toHaveBeenCalledTimes(1);
     });
