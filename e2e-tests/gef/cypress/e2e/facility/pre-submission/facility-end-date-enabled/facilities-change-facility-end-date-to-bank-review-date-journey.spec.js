@@ -88,7 +88,7 @@ context('Changing between facility end date and bank review date - feature flag 
     bankReviewDate.bankReviewDateMonth().should('have.value', '');
     bankReviewDate.bankReviewDateYear().should('have.value', '');
 
-    cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: threeMonths.date });
+    cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: tomorrow.date });
 
     cy.clickContinueButton();
 

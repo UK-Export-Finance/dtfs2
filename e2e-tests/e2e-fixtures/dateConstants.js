@@ -1,13 +1,13 @@
 const { sub, add, format, getUnixTime } = require('date-fns');
 
-const shortDayFormat = 'd';
-const longDayFormat = 'dd';
-const shortMonthFormat = 'M';
-const longMonthFormat = 'MM';
-const longYearFormat = 'yyyy';
-const ddMMMyyyyFormat = 'dd MMM yyyy';
-const dMMMMyyyyFormat = 'd MMMM yyyy';
-const ddMMMMyyyyFormat = 'dd MMMM yyyy';
+export const shortDayFormat = 'd';
+export const longDayFormat = 'dd';
+export const shortMonthFormat = 'M';
+export const longMonthFormat = 'MM';
+export const longYearFormat = 'yyyy';
+export const ddMMMyyyyFormat = 'dd MMM yyyy';
+export const dMMMMyyyyFormat = 'd MMMM yyyy';
+export const ddMMMMyyyyFormat = 'dd MMMM yyyy';
 
 const getFormattedValuesFromDate = (date) => {
   return {
