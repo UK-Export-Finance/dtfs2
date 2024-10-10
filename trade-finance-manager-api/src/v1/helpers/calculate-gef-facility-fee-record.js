@@ -1,3 +1,5 @@
+const { calculateDrawnAmount } = require('@ukef/dtfs2-common');
+
 const { differenceInDays } = require('date-fns');
 
 /* Business logic:
@@ -8,11 +10,6 @@ const { differenceInDays } = require('date-fns');
 
 // NOTE: if the start date is passed first, we get a minus result.
 const calculateDaysOfCover = (coverStartDate, coverEndDate) => differenceInDays(new Date(Number(coverEndDate)), new Date(Number(coverStartDate)));
-
-/* Business logic:
- * (Facility Amount * UKEF Cover (fractional percentage)) * 10%
- */
-const calculateDrawnAmount = (facilityValue, coverPercentage) => facilityValue * (coverPercentage / 100) * 0.1;
 
 /* Business logic:
  * (Drawn Amount * Days Of Cover * Interest rate) / day basis
@@ -35,7 +32,6 @@ const calculateGefFacilityFeeRecord = (facility) => {
 };
 
 module.exports = {
-  calculateDrawnAmount,
   calculateDaysOfCover,
   calculateFeeAmount,
   calculateGefFacilityFeeRecord,

@@ -1,8 +1,8 @@
 import { when } from 'jest-when';
 import { addDays, addMonths, startOfMonth, subMonths } from 'date-fns';
-import { ReportPeriod } from '@ukef/dtfs2-common';
+import { ReportPeriod, CalculateFixedFeeParams } from '@ukef/dtfs2-common';
 import { getFixedFeeForFacility } from './get-fixed-fee-for-facility';
-import { calculateFixedFee, CalculateFixedFeeParams } from './calculate-fixed-fee';
+import { calculateFixedFee } from './calculate-fixed-fee';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { aFacility, aReportPeriod, aTfmFacility, aTfmFacilityAmendment } from '../../../../../../test-helpers';
 import { NotFoundError } from '../../../../../errors';

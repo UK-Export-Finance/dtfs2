@@ -18,7 +18,7 @@ import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
-import { aUtilisationReportRawCsvData, aPortalUser, aFacility } from '../../../test-helpers';
+import { aUtilisationReportRawCsvData, aPortalUser, aFacility, aBank } from '../../../test-helpers';
 import { PostUploadUtilisationReportRequestBody } from '../../../src/v1/controllers/utilisation-report-service/post-upload-utilisation-report.controller';
 
 console.error = jest.fn();
@@ -53,6 +53,17 @@ describe(`POST ${getUrl()}`, () => {
     await tfmFacilitiesCollection.insertMany(tfmFacilities);
   };
 
+  const bankToInsert = {
+    ...aBank(),
+    id: aNotReceivedReport().bankId,
+    utilisationReportPeriodSchedule: [
+      { startMonth: 1, endMonth: 3 },
+      { startMonth: 4, endMonth: 6 },
+      { startMonth: 7, endMonth: 9 },
+      { startMonth: 10, endMonth: 12 },
+    ],
+  };
+
   beforeAll(async () => {
     await wipe([MONGO_DB_COLLECTIONS.USERS]);
     const usersCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.USERS);
@@ -60,17 +71,20 @@ describe(`POST ${getUrl()}`, () => {
   });
 
   beforeEach(async () => {
-    await wipe([MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
+    await wipe([MONGO_DB_COLLECTIONS.TFM_FACILITIES, MONGO_DB_COLLECTIONS.BANKS]);
     await SqlDbHelper.deleteAll();
 
     await SqlDbHelper.saveNewEntry('UtilisationReport', aNotReceivedReport());
 
     const tfmFacilitiesCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
     await tfmFacilitiesCollection.insertOne({ facilitySnapshot: { ...aFacility(), ukefFacilityId: facilityId } });
+
+    const banksCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.BANKS);
+    await banksCollection.insertOne(bankToInsert);
   });
 
   afterAll(async () => {
-    await wipe([MONGO_DB_COLLECTIONS.USERS, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
+    await wipe([MONGO_DB_COLLECTIONS.USERS, MONGO_DB_COLLECTIONS.TFM_FACILITIES, MONGO_DB_COLLECTIONS.BANKS]);
     await SqlDbHelper.deleteAll();
   });
 
@@ -221,7 +235,12 @@ describe(`POST ${getUrl()}`, () => {
     // Assert
     expect(response.status).toEqual(HttpStatusCode.Created);
 
-    const facilityUtilisationDataEntityExists = await SqlDbHelper.manager.existsBy(FacilityUtilisationDataEntity, { id: ukefFacilityId, reportPeriod });
+    const previousReportPeriod = { start: { month: 1, year: 2023 }, end: { month: 3, year: 2023 } };
+
+    const facilityUtilisationDataEntityExists = await SqlDbHelper.manager.existsBy(FacilityUtilisationDataEntity, {
+      id: ukefFacilityId,
+      reportPeriod: previousReportPeriod,
+    });
     expect(facilityUtilisationDataEntityExists).toEqual(true);
   });
 

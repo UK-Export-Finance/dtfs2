@@ -1,5 +1,6 @@
 const { differenceInDays } = require('date-fns');
-const { calculateDrawnAmount, calculateDaysOfCover, calculateFeeAmount, calculateGefFacilityFeeRecord } = require('./calculate-gef-facility-fee-record');
+const { calculateDrawnAmount } = require('@ukef/dtfs2-common');
+const { calculateDaysOfCover, calculateFeeAmount, calculateGefFacilityFeeRecord } = require('./calculate-gef-facility-fee-record');
 
 describe('calculate-gef-facility-fee-record', () => {
   // for drawn amount
@@ -13,16 +14,6 @@ describe('calculate-gef-facility-fee-record', () => {
   // for fee amount
   const mockInterestPercentage = 12;
   const mockDayBasis = 365;
-
-  describe('calculateDrawnAmount', () => {
-    it('should return correct calculation', () => {
-      const result = calculateDrawnAmount(mockFacilityValue, mockCoverPercentage, mockInterestPercentage);
-
-      const expected = mockFacilityValue * (mockCoverPercentage / 100) * 0.1;
-
-      expect(result).toEqual(expected);
-    });
-  });
 
   describe('calculateDaysOfCover', () => {
     it('should return the amount of days between start and end cover dates', () => {

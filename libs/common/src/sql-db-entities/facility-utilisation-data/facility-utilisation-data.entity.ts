@@ -3,11 +3,7 @@ import { AuditableBaseEntity } from '../base-entities';
 import { FeeRecordEntity } from '../fee-record';
 import { MonetaryColumn } from '../custom-columns';
 import { ReportPeriodPartialEntity } from '../partial-entities';
-import {
-  CreateFacilityUtilisationDataParams,
-  CreateFacilityUtilisationDataWithoutUtilisationParams,
-  UpdateWithCurrentReportPeriodDetailsParams,
-} from './facility-utilisation-data.types';
+import { CreateFacilityUtilisationDataParams, UpdateWithCurrentReportPeriodDetailsParams } from './facility-utilisation-data.types';
 
 /**
  * Entity representing facility utilisation data
@@ -63,26 +59,6 @@ export class FacilityUtilisationDataEntity extends AuditableBaseEntity {
     data.reportPeriod = reportPeriod;
     data.utilisation = utilisation;
     data.fixedFee = fixedFee;
-    data.updateLastUpdatedBy(requestSource);
-    return data;
-  }
-
-  /**
-   * Creates a new FacilityUtilisationDataEntity without utilisation and fixed fee
-   * @param facilityUtilisationData - Parameters for creating the entity
-   * @param facilityUtilisationData.id - The ID of the entity
-   * @param facilityUtilisationData.reportPeriod - The report period details
-   * @param facilityUtilisationData.requestSource - The source of the request
-   * @returns The created entity
-   */
-  public static createWithoutUtilisationAndFixedFee({
-    id,
-    reportPeriod,
-    requestSource,
-  }: CreateFacilityUtilisationDataWithoutUtilisationParams): FacilityUtilisationDataEntity {
-    const data = new FacilityUtilisationDataEntity();
-    data.id = id;
-    data.reportPeriod = reportPeriod;
     data.updateLastUpdatedBy(requestSource);
     return data;
   }

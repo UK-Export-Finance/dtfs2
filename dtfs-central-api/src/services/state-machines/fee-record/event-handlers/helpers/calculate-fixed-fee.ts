@@ -1,12 +1,6 @@
-import Big from 'big.js';
 import { differenceInDays, isBefore, startOfMonth } from 'date-fns';
-import { getDateFromMonthAndYear, MonthAndYear, ReportPeriod } from '@ukef/dtfs2-common';
-
-/**
- * An admin fee (fixed at 10%) is applied to the fixed fee, meaning
- * we subtract this amount when calculating it
- */
-const BANK_ADMIN_FEE_ADJUSTMENT = 0.9;
+import { getDateFromMonthAndYear, MonthAndYear, CalculateFixedFeeParams } from '@ukef/dtfs2-common';
+import { calculateFixedFeeFromDaysRemaining } from '../../../../../helpers/calculate-fixed-fee-from-days-remaining';
 
 const getNumberOfDaysRemainingInCoverPeriod = (reportPeriodStart: MonthAndYear, coverStartDate: Date, coverEndDate: Date): number => {
   const currentReportPeriodStartMonthStart = startOfMonth(getDateFromMonthAndYear(reportPeriodStart));
@@ -15,15 +9,6 @@ const getNumberOfDaysRemainingInCoverPeriod = (reportPeriodStart: MonthAndYear, 
     return differenceInDays(coverEndDate, coverStartDate);
   }
   return differenceInDays(coverEndDate, currentReportPeriodStartMonthStart);
-};
-
-export type CalculateFixedFeeParams = {
-  utilisation: number;
-  reportPeriod: ReportPeriod;
-  coverStartDate: Date;
-  coverEndDate: Date;
-  interestPercentage: number;
-  dayCountBasis: number;
 };
 
 /**
@@ -46,12 +31,6 @@ export const calculateFixedFee = ({
   dayCountBasis,
 }: CalculateFixedFeeParams): number => {
   const numberOfDaysRemainingInCoverPeriod = getNumberOfDaysRemainingInCoverPeriod(reportPeriod.start, coverStartDate, coverEndDate);
-  const interestPercentageAsDecimal = new Big(interestPercentage).div(100);
-  return new Big(utilisation)
-    .mul(interestPercentageAsDecimal)
-    .mul(BANK_ADMIN_FEE_ADJUSTMENT)
-    .mul(numberOfDaysRemainingInCoverPeriod)
-    .div(dayCountBasis)
-    .round(2)
-    .toNumber();
+
+  return calculateFixedFeeFromDaysRemaining({ utilisation, numberOfDaysRemainingInCoverPeriod, interestPercentage, dayCountBasis });
 };
