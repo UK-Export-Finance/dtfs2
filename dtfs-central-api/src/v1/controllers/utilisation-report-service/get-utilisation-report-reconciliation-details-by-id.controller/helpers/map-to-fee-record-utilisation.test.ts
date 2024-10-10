@@ -57,7 +57,7 @@ describe('map-to-fee-record-utilisation', () => {
       expect(feeRecordUtilisation.coverPercentage).toEqual(coverPercentage);
     });
 
-    it('should set the value to the corresponding field in the facility snapshot when there are no amendments to the value', () => {
+    it('should check for amendments to the facility value', () => {
       // Arrange
       const value = 200000;
       const facilityId = '12345678';
@@ -71,11 +71,30 @@ describe('map-to-fee-record-utilisation', () => {
       const getLatestCompletedAmendmentFacilityValueSpy = jest.spyOn(helpers, 'getLatestCompletedAmendmentToFacilityValue').mockReturnValue(null);
 
       // Act
-      const feeRecordUtilisation = mapToFeeRecordUtilisation(feeRecord, tfmFacility);
+      mapToFeeRecordUtilisation(feeRecord, tfmFacility);
 
       // Assert
       expect(getLatestCompletedAmendmentFacilityValueSpy).toHaveBeenCalledTimes(1);
       expect(getLatestCompletedAmendmentFacilityValueSpy).toHaveBeenCalledWith(tfmFacility);
+    });
+
+    it('should set the value to the corresponding field in the facility snapshot when there are no amendments to the value', () => {
+      // Arrange
+      const value = 200000;
+      const facilityId = '12345678';
+
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFacilityId(facilityId).build();
+
+      const tfmFacility = aTfmFacility();
+      tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
+      tfmFacility.facilitySnapshot.value = value;
+
+      jest.spyOn(helpers, 'getLatestCompletedAmendmentToFacilityValue').mockReturnValue(null);
+
+      // Act
+      const feeRecordUtilisation = mapToFeeRecordUtilisation(feeRecord, tfmFacility);
+
+      // Assert
       expect(feeRecordUtilisation.value).toEqual(value);
     });
 
@@ -91,14 +110,12 @@ describe('map-to-fee-record-utilisation', () => {
       tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
       tfmFacility.facilitySnapshot.value = originalValue;
 
-      const getLatestCompletedAmendmentFacilityValueSpy = jest.spyOn(helpers, 'getLatestCompletedAmendmentToFacilityValue').mockReturnValue(amendedValue);
+      jest.spyOn(helpers, 'getLatestCompletedAmendmentToFacilityValue').mockReturnValue(amendedValue);
 
       // Act
       const feeRecordUtilisation = mapToFeeRecordUtilisation(feeRecord, tfmFacility);
 
       // Assert
-      expect(getLatestCompletedAmendmentFacilityValueSpy).toHaveBeenCalledTimes(1);
-      expect(getLatestCompletedAmendmentFacilityValueSpy).toHaveBeenCalledWith(tfmFacility);
       expect(feeRecordUtilisation.value).toEqual(amendedValue);
     });
 
@@ -107,8 +124,6 @@ describe('map-to-fee-record-utilisation', () => {
       const facilityId = '12345678';
       const utilisation = 1000;
       const coverPercentage = 60;
-      // The expected exposure = 1000 * 60 / 100 = 600
-      const expectedExposure = 600;
 
       const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFacilityId(facilityId).withFacilityUtilisation(utilisation).build();
 
@@ -120,7 +135,7 @@ describe('map-to-fee-record-utilisation', () => {
       const feeRecordUtilisation = mapToFeeRecordUtilisation(feeRecord, tfmFacility);
 
       // Assert
-      expect(feeRecordUtilisation.exposure).toEqual(expectedExposure);
+      expect(feeRecordUtilisation.exposure).toEqual(calculateExposure(utilisation, coverPercentage));
     });
 
     it('should set the facility id, exporter, base currency and utilisation to the corresponding fields on the fee record', () => {
