@@ -1,15 +1,14 @@
-import { ROLES } from '@ukef/dtfs2-common';
-import { STATUS } from '../../server/constants';
-
+const {
+  ROLES,
+  TIMEZONES: { LONDON },
+} = require('@ukef/dtfs2-common');
+const { STATUS } = require('../../server/constants');
 const pageRenderer = require('../pageRenderer');
 
 const page = 'contract/contract-view.njk';
 const render = pageRenderer(page);
 const dealFullyCompleted = require('../fixtures/deal-fully-completed');
 const { NON_MAKER_ROLES } = require('../../test-helpers/common-role-lists');
-const {
-  DATE: { LONDON_TIMEZONE },
-} = require('../../server/constants');
 
 const { MAKER, CHECKER } = ROLES;
 
@@ -40,7 +39,7 @@ const confirmedRequestStartDateParams = {
 
 describe(page, () => {
   describe("when viewed as a 'maker'", () => {
-    const user = { roles: [MAKER], timezone: LONDON_TIMEZONE };
+    const user = { roles: [MAKER], timezone: LONDON };
 
     commonTests(user);
 
@@ -73,7 +72,7 @@ describe(page, () => {
   });
 
   describe("when viewed as a 'checker'", () => {
-    const user = { roles: [CHECKER], timezone: LONDON_TIMEZONE };
+    const user = { roles: [CHECKER], timezone: LONDON };
 
     commonTests(user);
 
@@ -104,7 +103,7 @@ describe(page, () => {
   });
 
   describe.each(NON_MAKER_ROLES)("when viewed as a '%s'", (nonMakerRole) => {
-    const user = { roles: [nonMakerRole], timezone: LONDON_TIMEZONE };
+    const user = { roles: [nonMakerRole], timezone: LONDON };
 
     commonTests(user);
 

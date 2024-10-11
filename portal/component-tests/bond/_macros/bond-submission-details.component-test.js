@@ -1,11 +1,9 @@
 const {
   ROLES: { MAKER },
+  TIMEZONES: LONDON,
 } = require('@ukef/dtfs2-common');
 const componentRenderer = require('../../componentRenderer');
 const deal = require('../../fixtures/deal-fully-completed');
-const {
-  DATE: { LONDON_TIMEZONE },
-} = require('../../../server/constants');
 
 const component = 'bond/_macros/bond-submission-details.njk';
 const render = componentRenderer(component);
@@ -14,7 +12,7 @@ describe(component, () => {
   let wrapper;
   const user = {
     roles: [MAKER],
-    timezone: LONDON_TIMEZONE,
+    timezone: LONDON,
   };
 
   const bond = deal.bondTransactions.items[0];

@@ -1,6 +1,9 @@
 const { formatInTimeZone } = require('date-fns-tz');
 const {
-  DATE: { LONDON_TIMEZONE, FULL_DATE, FULL_DATE_AND_TIME },
+  TIMEZONES: { LONDON },
+} = require('@ukef/dtfs2-common');
+const {
+  DATE: { FULL_DATE, FULL_DATE_AND_TIME },
 } = require('../../../server/constants');
 const { getNowAsEpoch } = require('../../../server/helpers');
 const componentRenderer = require('../../componentRenderer');
@@ -40,7 +43,7 @@ describe(component, () => {
     let wrapper;
 
     beforeAll(() => {
-      const user = { timezone: LONDON_TIMEZONE };
+      const user = { timezone: LONDON };
       wrapper = render({ deal, user });
     });
 
@@ -58,15 +61,15 @@ describe(component, () => {
       wrapper.expectText('[data-cy="checker"]').toRead(`${deal.details.checker.firstname} ${deal.details.checker.surname}`));
 
     it('displays deal.details.submissionDate', () =>
-      wrapper.expectText('[data-cy="submissionDate"]').toRead(formatInTimeZone(new Date(deal.details.submissionDate), LONDON_TIMEZONE, FULL_DATE)));
+      wrapper.expectText('[data-cy="submissionDate"]').toRead(formatInTimeZone(new Date(deal.details.submissionDate), LONDON, FULL_DATE)));
 
     it('displays deal.updatedAt', () =>
-      wrapper.expectText('[data-cy="updatedAt"]').toRead(formatInTimeZone(new Date(deal.updatedAt), LONDON_TIMEZONE, FULL_DATE_AND_TIME)));
+      wrapper.expectText('[data-cy="updatedAt"]').toRead(formatInTimeZone(new Date(deal.updatedAt), LONDON, FULL_DATE_AND_TIME)));
   });
 
   describe('when deal has manualInclusionApplicationSubmissionDate', () => {
     let wrapper;
-    const user = { timezone: LONDON_TIMEZONE };
+    const user = { timezone: LONDON };
 
     beforeAll(() => {
       wrapper = render({ deal: dealWithManualInclusionApplicationSubmissionDate, user });
@@ -78,11 +81,7 @@ describe(component, () => {
       wrapper
         .expectText('[data-cy="submissionDate"]')
         .toRead(
-          formatInTimeZone(
-            new Date(dealWithManualInclusionApplicationSubmissionDate.details.manualInclusionApplicationSubmissionDate),
-            LONDON_TIMEZONE,
-            FULL_DATE,
-          ),
+          formatInTimeZone(new Date(dealWithManualInclusionApplicationSubmissionDate.details.manualInclusionApplicationSubmissionDate), LONDON, FULL_DATE),
         ));
   });
 
@@ -103,7 +102,7 @@ describe(component, () => {
     };
 
     beforeAll(() => {
-      const user = { timezone: LONDON_TIMEZONE };
+      const user = { timezone: LONDON };
       wrapper = render({ mockDeal, user });
     });
 

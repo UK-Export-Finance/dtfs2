@@ -1,14 +1,14 @@
-const pageRenderer = require('../pageRenderer');
 const {
-  DATE: { LONDON_TIMEZONE },
-} = require('../../server/constants');
+  TIMEZONES: { LONDON },
+} = require('@ukef/dtfs2-common');
+const pageRenderer = require('../pageRenderer');
 
 const page = 'admin/user-edit.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
   const adminUser = {
-    timezone: LONDON_TIMEZONE,
+    timezone: LONDON,
     roles: ['admin'],
   };
   const newUser = { roles: [] };
