@@ -151,4 +151,5 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   keyingSheet: KeyingSheetViewModel;
   paymentDetails: PaymentDetailsViewModel;
   utilisationDetails: UtilisationDetailsViewModel;
+  displayMatchSuccessNotification: boolean;
 };

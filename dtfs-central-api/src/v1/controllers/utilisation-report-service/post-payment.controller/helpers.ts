@@ -1,4 +1,5 @@
 import { In } from 'typeorm';
+import { FeeRecordEntity, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { InvalidPayloadError, NotFoundError } from '../../../../errors';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
@@ -7,13 +8,20 @@ import { NewPaymentDetails } from '../../../../types/utilisation-reports';
 import { executeWithSqlTransaction } from '../../../../helpers';
 
 /**
- * Adds a payment to the utilisation report with the specified id
+ * Adds a payment to the utilisation report with the specified id and
+ * returns the resulting status of the fee record(s) it was added against
  * @param reportId - The report id
  * @param feeRecordIds - The fee record ids linked to the payment
  * @param user - The user adding the payment
  * @param payment - The payment to add
+ * @returns the resulting fee record status
  */
-export const addPaymentToUtilisationReport = async (reportId: number, feeRecordIds: number[], user: TfmSessionUser, payment: NewPaymentDetails) => {
+export const addPaymentToUtilisationReport = async (
+  reportId: number,
+  feeRecordIds: number[],
+  user: TfmSessionUser,
+  payment: NewPaymentDetails,
+): Promise<FeeRecordStatus> => {
   const utilisationReportStateMachine = await UtilisationReportStateMachine.forReportId(reportId);
 
   const feeRecords = await FeeRecordRepo.findBy({ id: In(feeRecordIds) });
@@ -26,7 +34,7 @@ export const addPaymentToUtilisationReport = async (reportId: number, feeRecordI
     throw new InvalidPayloadError(`Payment currency '${payment.currency}' does not match fee record payment currency`);
   }
 
-  await executeWithSqlTransaction(async (transactionEntityManager) => {
+  return await executeWithSqlTransaction<FeeRecordStatus>(async (transactionEntityManager) => {
     await utilisationReportStateMachine.handleEvent({
       type: 'ADD_A_PAYMENT',
       payload: {
@@ -39,5 +47,9 @@ export const addPaymentToUtilisationReport = async (reportId: number, feeRecordI
         },
       },
     });
+
+    const { status: updatedStatus } = await transactionEntityManager.findOneByOrFail(FeeRecordEntity, { id: feeRecords[0].id });
+
+    return updatedStatus;
   });
 };

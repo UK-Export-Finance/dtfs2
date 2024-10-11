@@ -39,6 +39,7 @@ describe(page, () => {
       rows: [],
     },
     utilisationDetails: { utilisationTableRows: [] },
+    displayMatchSuccessNotification: false,
   };
 
   const getWrapper = (viewModel: UtilisationReportReconciliationForReportViewModel = params) => render(viewModel);
@@ -338,5 +339,21 @@ describe(page, () => {
 
     wrapper.expectElement(`${utilisationTabSelector} table`).toExist();
     wrapper.expectElement(`${utilisationTabSelector} table tr[data-cy="utilisation-table-row-${feeRecordId}"]`);
+  });
+
+  it('should not display match success notification when param is false', () => {
+    const wrapper = getWrapper({ ...params, displayMatchSuccessNotification: false });
+
+    wrapper.expectElement('[data-cy="match-success-notification"]').notToExist();
+  });
+
+  it('should display match success notification when param is true', () => {
+    const wrapper = getWrapper({ ...params, displayMatchSuccessNotification: true });
+
+    wrapper.expectElement('[data-cy="match-success-notification"]').toExist();
+    wrapper.expectText('[data-cy="match-success-notification-heading"]').toRead('Match payment recorded');
+    wrapper
+      .expectText('[data-cy="match-success-notification-message"]')
+      .toRead('The fee(s) are now at a Match state. Further payments cannot be added to the fee record.');
   });
 });
