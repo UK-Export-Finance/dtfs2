@@ -51,8 +51,17 @@ const utilisationReportPage = {
     },
   },
   utilisationTab: {
-    utilisationTable: {
+    table: {
       row: (feeRecordId) => cy.get(`tr[data-cy="utilisation-table-row-${feeRecordId}"]`),
+      facilityId: () => cy.get('[data-cy="facility-id"]'),
+      exporter: () => cy.get('[data-cy="exporter"]'),
+      baseCurrency: () => cy.get('[data-cy="base-currency"]'),
+      value: () => cy.get('[data-cy="value"]'),
+      utilisation: () => cy.get('[data-cy="utilisation"]'),
+      coverPercentage: () => cy.get('[data-cy="cover-percentage"]'),
+      exposure: () => cy.get('[data-cy="exposure"]'),
+      feesAccrued: () => cy.get('[data-cy="fees-accrued"]'),
+      feesPayable: () => cy.get('[data-cy="fees-payable"]'),
     },
   },
 };
