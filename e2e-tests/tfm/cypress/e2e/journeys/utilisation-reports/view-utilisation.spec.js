@@ -121,7 +121,7 @@ context('Users can view utilisation', () => {
     });
   });
 
-  it('should be able to download report for offline viewing', () => {
+  it('should render a link to download the report', () => {
     cy.assertText(pages.utilisationReportPage.utilisationTab.downloadReportLink(), 'Download the report submitted by the bank as a CSV');
 
     pages.utilisationReportPage.utilisationTab.downloadReportLink().click();

@@ -25,6 +25,7 @@ describe(page, () => {
     facilityId: '1234',
   };
 
+  const downloadUrl = 'utilisation-reports/12345/download';
   const params: UtilisationReportReconciliationForReportViewModel = {
     user: aTfmSessionUser(),
     activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
@@ -38,7 +39,7 @@ describe(page, () => {
     paymentDetails: {
       rows: [],
     },
-    utilisationDetails: { utilisationTableRows: [], downloadUrl: 'utilisation-reports/123/download' },
+    utilisationDetails: { utilisationTableRows: [], downloadUrl },
   };
 
   const getWrapper = (viewModel: UtilisationReportReconciliationForReportViewModel = params) => render(viewModel);
@@ -331,7 +332,7 @@ describe(page, () => {
             feeRecordId,
           },
         ],
-        downloadUrl: 'a link',
+        downloadUrl,
       },
     });
 
@@ -342,7 +343,6 @@ describe(page, () => {
   });
 
   it('should render the download link for the report', () => {
-    const downloadUrl = 'utilisation-reports/12345/download';
     const wrapper = getWrapper({
       ...params,
       utilisationDetails: {
