@@ -13,7 +13,7 @@ describe('audit-details.schema', () => {
         const { success } = AuditDetailsSchema.safeParse(auditDetails);
 
         // Assert
-        expect(success).toBe(true);
+        expect(success).toEqual(true);
       });
 
       it("sets the 'data' property to the parsed auditDetails when the auditDetails object is valid", () => {
@@ -35,7 +35,7 @@ describe('audit-details.schema', () => {
         const { success } = AuditDetailsSchema.safeParse(auditDetails);
 
         // Assert
-        expect(success).toBe(false);
+        expect(success).toEqual(false);
       });
     });
 
@@ -50,7 +50,7 @@ describe('audit-details.schema', () => {
         const { success } = AuditDetailsSchema.safeParse(auditDetails);
 
         // Assert
-        expect(success).toBe(true);
+        expect(success).toEqual(true);
       });
 
       it("sets the 'data' property to the parsed auditDetails when the auditDetails object is valid", () => {
@@ -75,7 +75,7 @@ describe('audit-details.schema', () => {
         const { success } = AuditDetailsSchema.safeParse(auditDetails);
 
         // Assert
-        expect(success).toBe(false);
+        expect(success).toEqual(false);
       });
 
       it("sets the 'success' property to false when the auditDetails 'id' is invalid", () => {
@@ -86,7 +86,7 @@ describe('audit-details.schema', () => {
         const { success } = AuditDetailsSchema.safeParse(auditDetails);
 
         // Assert
-        expect(success).toBe(false);
+        expect(success).toEqual(false);
       });
     });
   });

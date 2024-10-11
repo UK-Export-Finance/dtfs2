@@ -1,3 +1,3 @@
 import { Router } from 'express';
 
-export type getRouter = () => Router;
+export type GetRouter = () => Router;

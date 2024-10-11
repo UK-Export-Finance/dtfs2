@@ -1,16 +1,10 @@
 import relative from '../../../relativeURL';
-
 import CONSTANTS from '../../../../fixtures/constants';
-
-import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
-
+import { tomorrow, threeDaysAgo, threeMonthsOneDay } from '../../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_DRAFT, UKEF_DECISION, underwriterManagersDecision } from '../../../../fixtures/mocks/mock-deals';
-
 import { BANK1_MAKER1, BANK1_CHECKER1, BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../../../e2e-fixtures/portal-users.fixture';
 import { anIssuedCashFacilityWithCoverDateConfirmed, multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
-
 import { toTitleCase } from '../../../../fixtures/helpers';
-
 import { errorSummary, submitButton } from '../../../partials';
 import applicationPreview from '../../../pages/application-preview';
 import unissuedFacilityTable from '../../../pages/unissued-facilities';
@@ -165,9 +159,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.tomorrowDay);
-      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.tomorrowMonth);
-      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.tomorrowYear);
+      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: tomorrow });
 
       cy.clickContinueButton();
 
@@ -182,9 +174,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.threeDaysDay);
-      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.threeDaysMonth);
-      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.threeDaysYear);
+      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: threeDaysAgo });
 
       cy.clickContinueButton();
 
@@ -199,9 +189,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.threeMonthsOneDayDay);
-      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.threeMonthsOneDayMonth);
-      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.threeMonthsOneDayYear);
+      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: threeMonthsOneDay });
 
       cy.clickContinueButton();
 
@@ -217,9 +205,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.todayDay);
-      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.todayMonth);
-      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.todayYear);
+      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date' });
 
       cy.clickContinueButton();
 

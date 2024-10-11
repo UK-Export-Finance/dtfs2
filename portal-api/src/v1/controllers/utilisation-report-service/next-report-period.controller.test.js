@@ -53,7 +53,7 @@ describe('controllers/utilisation-report-service/next-report-period', () => {
 
       // Assert
       // eslint-disable-next-line no-underscore-dangle
-      expect(res._getStatusCode()).toBe(errorStatus);
+      expect(res._getStatusCode()).toEqual(errorStatus);
     });
   });
 });

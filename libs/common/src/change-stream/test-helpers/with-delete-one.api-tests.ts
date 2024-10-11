@@ -67,13 +67,13 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
           const collection = await mongoDbClient.getCollection(collectionName);
           const deletedDocument = await collection.findOne({ _id: { $eq: getDeletedDocumentId() } });
 
-          expect(deletedDocument).toBe(null);
+          expect(deletedDocument).toEqual(null);
         });
 
         it('should return 200', async () => {
           const { status } = await makeRequest();
 
-          expect(status).toBe(200);
+          expect(status).toEqual(200);
         });
       });
 
@@ -97,7 +97,7 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
         it('should return 500', async () => {
           const { status } = await makeRequest();
 
-          expect(status).toBe(500);
+          expect(status).toEqual(500);
         });
       });
 
@@ -121,7 +121,7 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
         it('should return 500', async () => {
           const { status } = await makeRequest();
 
-          expect(status).toBe(500);
+          expect(status).toEqual(500);
         });
       });
     } else {
@@ -131,13 +131,13 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
         const collection = await mongoDbClient.getCollection(collectionName);
         const deletedDocument = await collection.findOne({ _id: { $eq: getDeletedDocumentId() } });
 
-        expect(deletedDocument).toBe(null);
+        expect(deletedDocument).toEqual(null);
       });
 
       it('should return 200', async () => {
         const { status } = await makeRequest();
 
-        expect(status).toBe(200);
+        expect(status).toEqual(200);
       });
     }
 

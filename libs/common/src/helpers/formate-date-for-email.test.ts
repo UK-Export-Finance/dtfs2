@@ -1,4 +1,4 @@
-const { formatDateForEmail } = require('./formatDateForEmail');
+import { formatDateForEmail } from './format-date-for-email';
 
 describe('formatDateTimeForEmail', () => {
   const dateUkSummer = new Date('2023-07-05T16:26:35.123Z');

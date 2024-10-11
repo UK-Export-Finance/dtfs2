@@ -1,6 +1,6 @@
 import { createMocks } from 'node-mocks-http';
 import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
-import { aTfmSessionUser } from '../../../../test-helpers';
+import { aRequestSession } from '../../../../test-helpers';
 import api from '../../../api';
 import { postDealCancellationDetails, PostDealCancellationDetailsRequest } from './check-details.controller';
 
@@ -10,7 +10,6 @@ jest.mock('../../../api', () => ({
 
 const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
-const mockUser = aTfmSessionUser();
 
 describe('postBankRequestDate', () => {
   beforeEach(() => {
@@ -23,17 +22,14 @@ describe('postBankRequestDate', () => {
 
     const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
     await postDealCancellationDetails(req, res);
 
     // Assert
-    expect(res._getRedirectUrl()).toBe(`/not-found`);
+    expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
 
   it('redirects to not found if the dealId is invalid', async () => {
@@ -42,17 +38,14 @@ describe('postBankRequestDate', () => {
 
     const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
     await postDealCancellationDetails(req, res);
 
     // Assert
-    expect(res._getRedirectUrl()).toBe(`/not-found`);
+    expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
 
   it('redirects to deal summary page if the submission type is invalid (MIA)', async () => {
@@ -61,17 +54,14 @@ describe('postBankRequestDate', () => {
 
     const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
     await postDealCancellationDetails(req, res);
 
     // Assert
-    expect(res._getRedirectUrl()).toBe(`/case/${dealId}/deal`);
+    expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
   });
 
   describe.each([DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN])('when the deal type is %s', (validDealType) => {
@@ -85,17 +75,14 @@ describe('postBankRequestDate', () => {
       // Arrange
       const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
         params: { _id: dealId },
-        session: {
-          user: mockUser,
-          userToken: 'a user token',
-        },
+        session: aRequestSession(),
       });
 
       // Act
       await postDealCancellationDetails(req, res);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(`/case/${dealId}/deal`);
+      expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
     });
   });
 });

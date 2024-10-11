@@ -48,7 +48,7 @@ describe(`GET ${BASE_URL}`, () => {
     // Assert
     expect(response.status).toEqual(200);
     expect(response.body).toHaveLength(1);
-    expect(response.body[0].submissionMonth).toBe(submissionMonth);
+    expect(response.body[0].submissionMonth).toEqual(submissionMonth);
     expect(response.body[0].items).toHaveLength(0);
   });
 
@@ -84,12 +84,12 @@ describe(`GET ${BASE_URL}`, () => {
     const response: CustomResponse = await testApi.get(`/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`);
 
     // Assert
-    expect(response.status).toBe(200);
+    expect(response.status).toEqual(200);
     expect(response.body).toHaveLength(1);
-    expect(response.body[0].submissionMonth).toBe(submissionMonth);
+    expect(response.body[0].submissionMonth).toEqual(submissionMonth);
     expect(response.body[0].items).toHaveLength(1);
-    expect(response.body[0].items[0].totalFeesReported).toBe(feeRecords.length);
-    expect(response.body[0].items[0].reportedFeesLeftToReconcile).toBe(feeRecords.length);
+    expect(response.body[0].items[0].totalFeesReported).toEqual(feeRecords.length);
+    expect(response.body[0].items[0].reportedFeesLeftToReconcile).toEqual(feeRecords.length);
   });
 });
 

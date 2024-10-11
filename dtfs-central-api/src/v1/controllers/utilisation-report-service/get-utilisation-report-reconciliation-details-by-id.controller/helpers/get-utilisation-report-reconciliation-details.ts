@@ -1,7 +1,7 @@
-import { UtilisationReportEntity, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
+import { UtilisationReportEntity, PremiumPaymentsFilters, ValidatedPaymentDetailsFilters } from '@ukef/dtfs2-common';
 import { NotFoundError } from '../../../../../errors';
 import { getBankNameById } from '../../../../../repositories/banks-repo';
-import { UtilisationReportReconciliationDetails, ValidatedPaymentDetailsFilters } from '../../../../../types/utilisation-reports';
+import { UtilisationReportReconciliationDetails } from '../../../../../types/utilisation-reports';
 import { filterFeeRecordPaymentEntityGroups } from './filter-fee-record-payment-entity-groups';
 import { mapToFeeRecordPaymentGroups } from './map-to-fee-record-payment-groups';
 import { getFeeRecordPaymentEntityGroups } from '../../../../../helpers';

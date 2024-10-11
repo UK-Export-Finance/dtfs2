@@ -31,7 +31,7 @@ describe('UserService', () => {
 
     it('checking a user is blocked or disabled returns true', async () => {
       const result = userService.isUserBlockedOrDisabled(blockedUser);
-      expect(result).toBe(true);
+      expect(result).toEqual(true);
     });
   });
 
@@ -49,7 +49,7 @@ describe('UserService', () => {
 
     it('checking a user is blocked or disabled returns true', async () => {
       const result = userService.isUserBlockedOrDisabled(disabledUser);
-      expect(result).toBe(true);
+      expect(result).toEqual(true);
     });
   });
 
@@ -67,7 +67,7 @@ describe('UserService', () => {
 
     it('checking a user is blocked or disabled returns true', async () => {
       const result = userService.isUserBlockedOrDisabled(disabledAndBlockedUser);
-      expect(result).toBe(true);
+      expect(result).toEqual(true);
     });
   });
 
@@ -78,7 +78,7 @@ describe('UserService', () => {
 
     it('checking a user is blocked or disabled returns false', async () => {
       const result = userService.isUserBlockedOrDisabled(testUser._id);
-      expect(result).toBe(false);
+      expect(result).toEqual(false);
     });
   });
 
@@ -96,7 +96,7 @@ describe('UserService', () => {
 
     it('checking a user is blocked or disabled returns false', async () => {
       const result = userService.isUserBlockedOrDisabled(disabledSetToFalseUser._id);
-      expect(result).toBe(false);
+      expect(result).toEqual(false);
     });
   });
 });

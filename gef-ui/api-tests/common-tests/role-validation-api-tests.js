@@ -51,11 +51,11 @@ const withRoleValidationApiTests = ({
             Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`],
           });
 
-          expect(response.status).toBe(successCode);
+          expect(response.status).toEqual(successCode);
 
           if (successHeaders) {
             Object.entries(successHeaders).forEach(([key, value]) => {
-              expect(response.headers[key]).toBe(value);
+              expect(response.headers[key]).toEqual(value);
             });
           }
         });
@@ -71,9 +71,9 @@ const withRoleValidationApiTests = ({
             Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`],
           });
 
-          expect(response.status).toBe(302);
+          expect(response.status).toEqual(302);
           const redirectUrl = redirectUrlForInvalidRoles ?? '/';
-          expect(response.headers.location).toBe(redirectUrl);
+          expect(response.headers.location).toEqual(redirectUrl);
         });
       });
     }

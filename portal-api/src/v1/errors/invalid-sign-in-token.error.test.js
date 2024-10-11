@@ -6,12 +6,12 @@ describe('InvalidSignInToken', () => {
   it('exposes the signInToken in a formatted message', () => {
     const exception = new InvalidSignInToken(signInToken);
 
-    expect(exception.message).toBe(`Invalid signInToken: ${signInToken}`);
+    expect(exception.message).toEqual(`Invalid signInToken: ${signInToken}`);
   });
 
   it('exposes the name of the exception', () => {
     const exception = new InvalidSignInToken(signInToken);
 
-    expect(exception.name).toBe('InvalidSignInTokenError');
+    expect(exception.name).toEqual('InvalidSignInTokenError');
   });
 });

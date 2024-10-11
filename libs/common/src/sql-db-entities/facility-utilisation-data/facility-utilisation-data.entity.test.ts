@@ -27,15 +27,15 @@ describe('FacilityUtilisationDataEntity', () => {
       });
 
       // Assert
-      expect(facilityUtilisationDataEntity.fixedFee).toBe(543.21);
-      expect(facilityUtilisationDataEntity.utilisation).toBe(876543.21);
+      expect(facilityUtilisationDataEntity.fixedFee).toEqual(543.21);
+      expect(facilityUtilisationDataEntity.utilisation).toEqual(876543.21);
       expect(facilityUtilisationDataEntity.reportPeriod).toEqual({
         start: { month: 3, year: 2023 },
         end: { month: 4, year: 2024 },
       });
-      expect(facilityUtilisationDataEntity.lastUpdatedByIsSystemUser).toBe(false);
+      expect(facilityUtilisationDataEntity.lastUpdatedByIsSystemUser).toEqual(false);
       expect(facilityUtilisationDataEntity.lastUpdatedByPortalUserId).toBeNull();
-      expect(facilityUtilisationDataEntity.lastUpdatedByTfmUserId).toBe(userId);
+      expect(facilityUtilisationDataEntity.lastUpdatedByTfmUserId).toEqual(userId);
     });
   });
 });

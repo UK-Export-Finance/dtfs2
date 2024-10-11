@@ -8,7 +8,7 @@ describe('isEveryFacilityComplete', () => {
 
     const result = isEveryFacilityComplete(facilities);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when facilities is undefined', () => {
@@ -16,7 +16,7 @@ describe('isEveryFacilityComplete', () => {
 
     const result = isEveryFacilityComplete(facilities);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when all facilities are incomplete', () => {
@@ -28,7 +28,7 @@ describe('isEveryFacilityComplete', () => {
 
     const result = isEveryFacilityComplete(facilities);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when all facilities are not started', () => {
@@ -40,7 +40,7 @@ describe('isEveryFacilityComplete', () => {
 
     const result = isEveryFacilityComplete(facilities);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when all facilities are not started and are incomplete', () => {
@@ -55,7 +55,7 @@ describe('isEveryFacilityComplete', () => {
 
     const result = isEveryFacilityComplete(facilities);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return true when atleast one facility is completed', () => {
@@ -67,7 +67,7 @@ describe('isEveryFacilityComplete', () => {
 
     const result = isEveryFacilityComplete(facilities);
 
-    expect(result).toBe(true);
+    expect(result).toEqual(true);
   });
 
   it('should return true when facilities is complete', () => {
@@ -79,7 +79,7 @@ describe('isEveryFacilityComplete', () => {
 
     const result = isEveryFacilityComplete(facilities);
 
-    expect(result).toBe(true);
+    expect(result).toEqual(true);
   });
 
   it('should return false when a single facility is incomplete', () => {
@@ -91,7 +91,7 @@ describe('isEveryFacilityComplete', () => {
 
     const result = isEveryFacilityComplete(facilities);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when multiple facilities are in `Incomplete` status', () => {
@@ -116,7 +116,7 @@ describe('isEveryFacilityComplete', () => {
 
     const result = isEveryFacilityComplete(facilities);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when facilities has acknowledged items but not all are complete', () => {
@@ -128,7 +128,7 @@ describe('isEveryFacilityComplete', () => {
 
     const result = isEveryFacilityComplete(facilities);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when facilities has acknowledged items and all are complete with missing properties', () => {
@@ -141,7 +141,7 @@ describe('isEveryFacilityComplete', () => {
 
     const result = isEveryFacilityComplete(facilities);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when facilities has acknowledged items but not all have requestedCoverStartDate and coverDateConfirmed', () => {
@@ -153,7 +153,7 @@ describe('isEveryFacilityComplete', () => {
 
     const result = isEveryFacilityComplete(facilities);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return true when facilities has acknowledged items and all have requestedCoverStartDate and coverDateConfirmed', () => {
@@ -174,6 +174,6 @@ describe('isEveryFacilityComplete', () => {
 
     const result = isEveryFacilityComplete(facilities);
 
-    expect(result).toBe(true);
+    expect(result).toEqual(true);
   });
 });

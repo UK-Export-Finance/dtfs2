@@ -25,7 +25,7 @@ describe('correspondence-address.js', () => {
 
     runCorrespondenceAddressScript();
 
-    expect(conditionalCorrespondenceElement().className).toBe('');
+    expect(conditionalCorrespondenceElement().className).toEqual('');
   });
 
   it('sets a class to hide the conditional correspondence element on load if the no correspondence radio is checked', () => {
@@ -37,7 +37,7 @@ describe('correspondence-address.js', () => {
 
     runCorrespondenceAddressScript();
 
-    expect(conditionalCorrespondenceElement().className).toBe(classNameToHideElement);
+    expect(conditionalCorrespondenceElement().className).toEqual(classNameToHideElement);
   });
 
   it('sets a class to hide the conditional correspondence element on load if neither of the correspondence radios are checked', () => {
@@ -49,6 +49,6 @@ describe('correspondence-address.js', () => {
 
     runCorrespondenceAddressScript();
 
-    expect(conditionalCorrespondenceElement().className).toBe(classNameToHideElement);
+    expect(conditionalCorrespondenceElement().className).toEqual(classNameToHideElement);
   });
 });

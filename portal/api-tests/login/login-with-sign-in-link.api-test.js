@@ -36,7 +36,7 @@ describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
 
     const { status } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
 
-    expect(status).toBe(200);
+    expect(status).toEqual(200);
   });
 
   it('redirects to /login/sign-in-link-expired if the login API request fails with a token expired 403', async () => {
@@ -48,8 +48,8 @@ describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
 
     const { status, headers } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
 
-    expect(status).toBe(302);
-    expect(headers.location).toBe('/login/sign-in-link-expired');
+    expect(status).toEqual(302);
+    expect(headers.location).toEqual('/login/sign-in-link-expired');
   });
 
   it('redirects to /login/sign-in-link-expired if the login API request fails with a user blocked 403', async () => {
@@ -61,7 +61,7 @@ describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
 
     const { status, text } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
 
-    expect(status).toBe(403);
+    expect(status).toEqual(403);
     expect(text).toContain('This account has been temporarily suspended');
   });
 
@@ -72,8 +72,8 @@ describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
 
     const { status, headers } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
 
-    expect(status).toBe(302);
-    expect(headers.location).toBe('/login');
+    expect(status).toEqual(302);
+    expect(headers.location).toEqual('/login');
   });
 
   it('redirects to /login if the login API request fails with a 404', async () => {
@@ -83,8 +83,8 @@ describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
 
     const { status, headers } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
 
-    expect(status).toBe(302);
-    expect(headers.location).toBe('/login');
+    expect(status).toEqual(302);
+    expect(headers.location).toEqual('/login');
   });
 
   it('returns a 500 response if the login API request has an unexpected error', async () => {
@@ -92,49 +92,49 @@ describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
 
     const { status, text } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
 
-    expect(status).toBe(500);
+    expect(status).toEqual(500);
     expect(text).toContain('Problem with the service');
   });
 
   it('returns a 400 response if the u query string is not a valid ObjectId', async () => {
     const { status, text } = await getSignInLinkLoginPage({ u: '123', t: validSignInToken });
 
-    expect(status).toBe(400);
+    expect(status).toEqual(400);
     expect(text).toContain('Problem with the service');
   });
 
   it('returns a 400 response if the u query string is not provided', async () => {
     const { status, text } = await getSignInLinkLoginPage({ t: validSignInToken });
 
-    expect(status).toBe(400);
+    expect(status).toEqual(400);
     expect(text).toContain('Problem with the service');
   });
 
   it('returns a 400 response if the u query string is empty', async () => {
     const { status, text } = await getSignInLinkLoginPage({ t: validSignInToken, u: '' });
 
-    expect(status).toBe(400);
+    expect(status).toEqual(400);
     expect(text).toContain('Problem with the service');
   });
 
   it('returns a 400 response if the t query string is not a string of hex characters', async () => {
     const { status, text } = await getSignInLinkLoginPage({ u: validUserId, t: 'not-a-hex-string' });
 
-    expect(status).toBe(400);
+    expect(status).toEqual(400);
     expect(text).toContain('Problem with the service');
   });
 
   it('returns a 400 response if the t query string is not provided', async () => {
     const { status, text } = await getSignInLinkLoginPage({ u: validUserId });
 
-    expect(status).toBe(400);
+    expect(status).toEqual(400);
     expect(text).toContain('Problem with the service');
   });
 
   it('returns a 400 response if the t query string is empty', async () => {
     const { status, text } = await getSignInLinkLoginPage({ u: validUserId, t: '' });
 
-    expect(status).toBe(400);
+    expect(status).toEqual(400);
     expect(text).toContain('Problem with the service');
   });
 });

@@ -65,7 +65,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.fixedFeeAdjustment).toBe(999.99);
+      expect(feeRecord.fixedFeeAdjustment).toEqual(999.99);
       expect(calculateFixedFeeAdjustment).toHaveBeenCalledWith(feeRecord, feeRecord.facilityUtilisationData, reportPeriod);
     });
 
@@ -87,7 +87,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.principalBalanceAdjustment).toBe(200);
+      expect(feeRecord.principalBalanceAdjustment).toEqual(200);
       expect(calculatePrincipalBalanceAdjustment).toHaveBeenCalledWith(feeRecord, facilityUtilisationData);
     });
 
@@ -125,7 +125,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.status).toBe(FEE_RECORD_STATUS.READY_TO_KEY);
+      expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.READY_TO_KEY);
     });
 
     it(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the fixed fee adjustment is greater than zero`, async () => {
@@ -143,7 +143,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.status).toBe(FEE_RECORD_STATUS.READY_TO_KEY);
+      expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.READY_TO_KEY);
     });
 
     it(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the fixed fee adjustment is less than zero`, async () => {
@@ -161,7 +161,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.status).toBe(FEE_RECORD_STATUS.READY_TO_KEY);
+      expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.READY_TO_KEY);
     });
 
     it(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the principal balance adjustment is greater than zero`, async () => {
@@ -179,7 +179,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.status).toBe(FEE_RECORD_STATUS.READY_TO_KEY);
+      expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.READY_TO_KEY);
     });
 
     it(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the principal balance adjustment is less than zero`, async () => {
@@ -197,7 +197,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.status).toBe(FEE_RECORD_STATUS.READY_TO_KEY);
+      expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.READY_TO_KEY);
     });
 
     it(`updates the fee record status to '${FEE_RECORD_STATUS.RECONCILED}' if the principal balance adjustment, fixed fee adjustment and fees paid to ukef for the period are all zero`, async () => {
@@ -215,7 +215,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.status).toBe(FEE_RECORD_STATUS.RECONCILED);
+      expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.RECONCILED);
     });
 
     it("sets the fee record 'lastUpdatedByIsSystemUser' field to false", async () => {
@@ -231,7 +231,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
+      expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
     });
 
     it("sets the fee record 'lastUpdatedByPortalUserId' to null", async () => {
@@ -263,7 +263,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
+      expect(feeRecord.lastUpdatedByTfmUserId).toEqual(userId);
     });
 
     it('updates the facility utilisation data entity attached to the fee record', async () => {
@@ -363,7 +363,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.status).toBe(FEE_RECORD_STATUS.READY_TO_KEY);
+      expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.READY_TO_KEY);
     });
 
     it(`updates the fee record status to '${FEE_RECORD_STATUS.RECONCILED}' if fees paid to ukef is equal to zero`, async () => {
@@ -379,7 +379,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.status).toBe(FEE_RECORD_STATUS.RECONCILED);
+      expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.RECONCILED);
     });
 
     it("sets the fee record 'lastUpdatedByIsSystemUser' field to false", async () => {
@@ -395,7 +395,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
+      expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
     });
 
     it("sets the fee record 'lastUpdatedByPortalUserId' to null", async () => {
@@ -427,7 +427,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
+      expect(feeRecord.lastUpdatedByTfmUserId).toEqual(userId);
     });
 
     it('does not update the facility utilisation data entity attached to the fee record', async () => {

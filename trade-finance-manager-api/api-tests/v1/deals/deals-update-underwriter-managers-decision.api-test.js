@@ -159,7 +159,7 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
       }
       const { status, body } = await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
-      expect(status).toBe(500);
+      expect(status).toEqual(500);
       expect(body).toEqual({
         data: "Unable to update the underwriter manager's decision",
       });
@@ -218,7 +218,7 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
   it('should return a 400 if deal id is invalid', async () => {
     const { status, body } = await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${INVALID_DEAL_ID}/underwriting/managers-decision`);
 
-    expect(status).toBe(400);
+    expect(status).toEqual(400);
     expect(body).toEqual({
       errors: [
         {
@@ -244,7 +244,7 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
 
     const { status, body } = await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
-    expect(status).toBe(500);
+    expect(status).toEqual(500);
     expect(body).toEqual({
       data: "Unable to update the underwriter manager's decision",
     });

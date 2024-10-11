@@ -150,122 +150,129 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
     // Returns the document from `cron-job-logs` collection if exists
     const cronJobExist = await EstoreRepo.findByDealId(dealId);
 
-    if (!cronJobExist) {
-      /**
-       * Send `201` status code back to avoid
-       * `TFM-API` awaiting.
-       */
-      console.info('Attempting to create a new CRON job for deal %s', dealIdentifier);
-      res.status(HttpStatusCode.Created).send({ status: HttpStatusCode.Created, message: 'eStore job accepted' });
+    if (cronJobExist) {
+      // When CRON job already exists for provided deal id.
+      console.info('eStore CRON job exists for deal %s', dealIdentifier);
+      return res.status(HttpStatusCode.AlreadyReported).send({ status: HttpStatusCode.AlreadyReported, message: 'eStore job in queue' });
+    }
 
-      // Add CRON job to the collection
-      const inserted = await EstoreRepo.insertOne({
-        payload: eStoreData,
-        timestamp: getNowAsEpoch(),
-        cron: {
-          site: { status: ESTORE_CRON_STATUS.PENDING },
-          term: { status: ESTORE_CRON_STATUS.PENDING },
-          buyer: { status: ESTORE_CRON_STATUS.PENDING },
-          deal: { status: ESTORE_CRON_STATUS.PENDING },
-          facility: { status: ESTORE_CRON_STATUS.PENDING },
-          document: { status: ESTORE_CRON_STATUS.PENDING },
+    /**
+     * Send `201` status code back to avoid
+     * `TFM-API` awaiting.
+     */
+    console.info('Attempting to create a new CRON job for deal %s', dealIdentifier);
+
+    // Add CRON job to the collection
+    const inserted = await EstoreRepo.insertOne({
+      payload: eStoreData,
+      timestamp: getNowAsEpoch(),
+      cron: {
+        site: { status: ESTORE_CRON_STATUS.PENDING },
+        term: { status: ESTORE_CRON_STATUS.PENDING },
+        buyer: { status: ESTORE_CRON_STATUS.PENDING },
+        deal: { status: ESTORE_CRON_STATUS.PENDING },
+        facility: { status: ESTORE_CRON_STATUS.PENDING },
+        document: { status: ESTORE_CRON_STATUS.PENDING },
+      },
+    });
+
+    if (!inserted) {
+      throw new Error('eStore CRON job log insertion failed');
+    }
+
+    const { insertedId: _id } = inserted as InsertOneResult;
+
+    // Site exists check
+    console.info('Initiating eStore site existence check for exporter %s', exporterName);
+    const siteExistsResponse: SiteExistsResponse | EstoreErrorResponse = await siteExists(exporterName);
+
+    const siteCreated = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED;
+    const siteProvisioning = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.PROVISIONING;
+    const siteAbsent = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.NOT_FOUND;
+
+    // Site already exists in eStore
+    if (siteCreated) {
+      /**
+       * Update record-set with the site name.
+       * Update `cron-job-logs`
+       */
+      await EstoreRepo.updateByDealId(dealId, {
+        'cron.site.create': {
+          status: ESTORE_CRON_STATUS.COMPLETED,
+          response: siteExistsResponse.data.status,
+          timestamp: getNowAsEpoch(),
+          id: siteExistsResponse.data.siteId,
         },
+        'cron.site.status': ESTORE_CRON_STATUS.COMPLETED,
       });
 
-      if (!inserted) {
-        throw new Error('eStore CRON job log insertion failed');
+      // Update `tfm-deals`
+      await tfmDeals.updateOne({ _id: { $eq: new ObjectId(dealId) } }, { $set: { 'tfm.estore.siteName': siteExistsResponse.data.siteId } });
+
+      // Update object
+      eStoreData.siteId = String(siteExistsResponse.data.siteId);
+
+      // Add facility IDs to term store and create the buyer folder
+      await eStoreTermStoreCreationJob(eStoreData);
+    } else if (siteAbsent || siteProvisioning) {
+      let siteCreationResponse: SiteExistsResponse | EstoreErrorResponse;
+      // Site does not exists in eStore
+
+      // Create a new eStore site
+      if (siteProvisioning) {
+        // When site status is siteProvisioning
+        console.info('eStore site creation in progress for deal %s', dealIdentifier);
+        siteCreationResponse = siteExistsResponse;
+      } else {
+        console.info('eStore site creation initiated for exporter %s with deal %s', exporterName, dealIdentifier);
+        siteCreationResponse = await createExporterSite({ exporterName });
       }
 
-      const { insertedId: _id } = inserted as InsertOneResult;
-
-      // Site exists check
-      console.info('Initiating eStore site existence check for exporter %s', exporterName);
-      const siteExistsResponse: SiteExistsResponse | EstoreErrorResponse = await siteExists(exporterName);
-
-      const created = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED;
-      const provisioning = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.PROVISIONING;
-      const absent = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.NOT_FOUND;
-
-      // Site already exists in eStore
-      if (created) {
-        /**
-         * Update record-set with the site name.
-         * Update `cron-job-logs`
-         */
-        await EstoreRepo.updateByDealId(dealId, {
-          'cron.site.create': {
-            status: ESTORE_CRON_STATUS.COMPLETED,
-            response: siteExistsResponse.data.status,
-            timestamp: getNowAsEpoch(),
-            id: siteExistsResponse.data.siteId,
-          },
-          'cron.site.status': ESTORE_CRON_STATUS.COMPLETED,
-        });
-
-        // Update `tfm-deals`
-        await tfmDeals.updateOne({ _id: { $eq: new ObjectId(dealId) } }, { $set: { 'tfm.estore.siteName': siteExistsResponse.data.siteId } });
-
-        // Update object
-        eStoreData.siteId = String(siteExistsResponse.data.siteId);
-
-        // Add facility IDs to term store and create the buyer folder
-        await eStoreTermStoreCreationJob(eStoreData);
-      } else if (absent || provisioning) {
-        let siteCreationResponse: SiteExistsResponse | EstoreErrorResponse;
-        // Site does not exists in eStore
-
-        // Create a new eStore site
-        if (provisioning) {
-          // When site status is provisioning
-          console.info('eStore site creation in progress for deal %s', dealIdentifier);
-          siteCreationResponse = siteExistsResponse;
-        } else {
-          console.info('eStore site creation initiated for exporter %s with deal %s', exporterName, dealIdentifier);
-          siteCreationResponse = await createExporterSite({ exporterName });
-        }
-
-        /**
-         * Check if the siteCreation endpoint returns a siteId - this is usually a number (i.e. 12345)
-         * Returning a site ID does not state site creation has been completed, merely acknowledges site creation
-         * has been initiated.
-         */
-        if (siteCreationResponse?.data?.siteId) {
-          await eStoreSiteCreationCronJob(eStoreData);
-        } else {
-          console.error('eStore site creation failed for deal %s %o', dealIdentifier, siteCreationResponse?.data);
-
-          // CRON job log update
-          await EstoreRepo.updateByDealId(dealId, {
-            'cron.site.create': {
-              response: siteCreationResponse?.data,
-              status: ESTORE_CRON_STATUS.FAILED,
-              timestamp: getNowAsEpoch(),
-            },
-            'cron.site.status': ESTORE_CRON_STATUS.FAILED,
-          });
-        }
+      /**
+       * Check if the siteCreation endpoint returns a siteId - this is usually a number (i.e. 12345)
+       * Returning a site ID does not state site creation has been completed, merely acknowledges site creation
+       * has been initiated.
+       */
+      if (siteCreationResponse?.data?.siteId) {
+        await eStoreSiteCreationCronJob(eStoreData);
       } else {
-        console.error('❌ eStore site exist check failed for deal %s %o', dealIdentifier, siteExistsResponse);
+        console.error('eStore site creation failed for deal %s %o', dealIdentifier, siteCreationResponse?.data);
 
         // CRON job log update
         await EstoreRepo.updateByDealId(dealId, {
           'cron.site.create': {
+            response: siteCreationResponse?.data,
             status: ESTORE_CRON_STATUS.FAILED,
-            response: siteExistsResponse?.data,
             timestamp: getNowAsEpoch(),
           },
           'cron.site.status': ESTORE_CRON_STATUS.FAILED,
         });
       }
     } else {
-      // When CRON job already exists for provided deal id.
-      console.info('eStore CRON job exists for deal %s', dealIdentifier);
-      res.status(HttpStatusCode.Accepted).send({ status: HttpStatusCode.Accepted, message: 'eStore job in queue' });
+      console.error('❌ eStore site exist check failed for deal %s', dealIdentifier);
+      throw new Error(JSON.stringify(siteExistsResponse));
     }
 
-    return res.status(HttpStatusCode.Created).send();
+    return res.status(HttpStatusCode.Created).send({ status: HttpStatusCode.Created, message: 'eStore job accepted' });
   } catch (error: unknown) {
     console.error('❌ Unable to create eStore directories %o', error);
+
+    // CRON job log update
+    await EstoreRepo.updateByDealId(req?.body?.dealId, {
+      'cron.site': {
+        status: ESTORE_CRON_STATUS.FAILED,
+        create: {
+          status: ESTORE_CRON_STATUS.FAILED,
+          response: String(error),
+          timestamp: getNowAsEpoch(),
+        },
+      },
+      'cron.term.status': ESTORE_CRON_STATUS.FAILED,
+      'cron.buyer.status': ESTORE_CRON_STATUS.FAILED,
+      'cron.deal.status': ESTORE_CRON_STATUS.FAILED,
+      'cron.facility.status': ESTORE_CRON_STATUS.FAILED,
+      'cron.document.status': ESTORE_CRON_STATUS.FAILED,
+    });
 
     // Dispatch an alert
     await sendEmail(EMAIL_TEMPLATES.ESTORE_FAILED, String(UKEF_INTERNAL_NOTIFICATION), {

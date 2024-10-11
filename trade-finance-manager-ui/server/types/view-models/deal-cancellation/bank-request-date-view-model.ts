@@ -1,5 +1,5 @@
-import { BaseViewModel } from '../base-view-model';
 import { ErrorSummaryViewModel } from '../error-summary-view-model';
+import { BaseCancellationViewModel } from './base-cancellation-view-model';
 
 export type BankRequestErrorsViewModel = {
   summary: ErrorSummaryViewModel[];
@@ -11,9 +11,7 @@ export type BankRequestDateValidationViewModel = {
   bankRequestDate?: Date;
 };
 
-export type BankRequestDateViewModel = BaseViewModel & {
-  ukefDealId: string;
-  dealId: string;
+export type BankRequestDateViewModel = BaseCancellationViewModel & {
   day?: string;
   month?: string;
   year?: string;

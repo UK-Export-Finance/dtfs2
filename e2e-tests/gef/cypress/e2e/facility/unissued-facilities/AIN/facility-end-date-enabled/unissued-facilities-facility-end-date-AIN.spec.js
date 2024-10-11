@@ -1,7 +1,7 @@
 import relative from '../../../../relativeURL';
 import { errorSummary } from '../../../../partials';
 import CONSTANTS from '../../../../../fixtures/constants';
-import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
+import { threeDaysAgo, threeMonthsOneDay, today } from '../../../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { multipleMockGefFacilities } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
@@ -67,18 +67,12 @@ context('Unissued Facilities AIN - facility end date page - feature flag enabled
       cy.visit(relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.threeDaysDay);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.threeDaysMonth);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.threeDaysYear);
+      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo });
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.threeDaysDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.threeDaysMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.threeDaysYear);
 
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.threeMonthsOneDayDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeMonthsOneDayYear);
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
 
       aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
 
@@ -110,9 +104,7 @@ context('Unissued Facilities AIN - facility end date page - feature flag enabled
     });
 
     it('should redirect user to the unissued facility page when clicking continue', () => {
-      cy.keyboardInput(facilityEndDate.facilityEndDateDay().clear(), dateConstants.todayDay);
-      cy.keyboardInput(facilityEndDate.facilityEndDateMonth().clear(), dateConstants.todayMonth);
-      cy.keyboardInput(facilityEndDate.facilityEndDateYear().clear(), dateConstants.todayYear);
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date' });
 
       cy.clickContinueButton();
 
@@ -120,9 +112,7 @@ context('Unissued Facilities AIN - facility end date page - feature flag enabled
     });
 
     it('should redirect user to the unissued facility page when clicking save and return', () => {
-      cy.keyboardInput(facilityEndDate.facilityEndDateDay().clear(), dateConstants.todayDay);
-      cy.keyboardInput(facilityEndDate.facilityEndDateMonth().clear(), dateConstants.todayMonth);
-      cy.keyboardInput(facilityEndDate.facilityEndDateYear().clear(), dateConstants.todayYear);
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date' });
 
       cy.clickSaveAndReturnButton();
 
@@ -161,18 +151,15 @@ context('Unissued Facilities AIN - facility end date page - feature flag enabled
     });
 
     it('should redirect user to the application details page when clicking continue', () => {
-      cy.keyboardInput(facilityEndDate.facilityEndDateDay().clear(), dateConstants.todayDay);
-      cy.keyboardInput(facilityEndDate.facilityEndDateMonth().clear(), dateConstants.todayMonth);
-      cy.keyboardInput(facilityEndDate.facilityEndDateYear().clear(), dateConstants.todayYear);
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date' });
+
       cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
     });
 
     it('should redirect user to the application details page when clicking save and return', () => {
-      cy.keyboardInput(facilityEndDate.facilityEndDateDay().clear(), dateConstants.todayDay);
-      cy.keyboardInput(facilityEndDate.facilityEndDateMonth().clear(), dateConstants.todayMonth);
-      cy.keyboardInput(facilityEndDate.facilityEndDateYear().clear(), dateConstants.todayYear);
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date' });
 
       cy.clickSaveAndReturnButton();
 
@@ -180,9 +167,9 @@ context('Unissued Facilities AIN - facility end date page - feature flag enabled
     });
 
     it('should store values when returning to the page', () => {
-      facilityEndDate.facilityEndDateDay().should('have.value', dateConstants.today.getDate());
-      facilityEndDate.facilityEndDateMonth().should('have.value', dateConstants.today.getMonth() + 1);
-      facilityEndDate.facilityEndDateYear().should('have.value', dateConstants.today.getFullYear());
+      facilityEndDate.facilityEndDateDay().should('have.value', today.getDate());
+      facilityEndDate.facilityEndDateMonth().should('have.value', today.getMonth() + 1);
+      facilityEndDate.facilityEndDateYear().should('have.value', today.getFullYear());
 
       cy.clickSaveAndReturnButton();
 
