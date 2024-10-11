@@ -57,6 +57,8 @@ context('PDC_RECONCILE users can generate keying data', () => {
       coverEndDate: ONE_YEAR_FROM_CURRENT_REPORT_PERIOD_END.getTime(), // days left in cover period = 365
       interestPercentage: 5,
       dayCountBasis: 365,
+      value: 30,
+      coverPercentage: 40,
       ukefFacilityId: FACILITY_UTILISATION_DATA.id,
     },
   };

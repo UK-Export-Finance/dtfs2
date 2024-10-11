@@ -30,10 +30,10 @@ describe('calculateFixedFeeAdjustment', () => {
     // Act
     const result = calculateFixedFee({
       utilisation,
-      interestPercentage,
-      dayCountBasis,
       reportPeriod,
       coverEndDate,
+      interestPercentage,
+      dayCountBasis,
     });
 
     // Assert

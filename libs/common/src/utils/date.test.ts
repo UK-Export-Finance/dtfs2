@@ -1,6 +1,14 @@
 import { getOneIndexedMonth, isValidIsoMonth, isValidIsoYear, toIsoMonthStamp } from './date';
 
 describe('date utils', () => {
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   describe('getOneIndexedMonth', () => {
     it.each([
       { date: new Date(2023, 0), expectedOneIndexMonth: 1 },
@@ -24,12 +32,12 @@ describe('date utils', () => {
     it.each(['2023-11-01', '2023-13', '202-11', 'invalid', '', 202311, undefined, null, ['2023-11'], { date: '2023-11' }])(
       'returns false when the value is %p',
       (value) => {
-        expect(isValidIsoMonth(value)).toBe(false);
+        expect(isValidIsoMonth(value)).toEqual(false);
       },
     );
 
     it('returns true when a valid ISO month value is provided', () => {
-      expect(isValidIsoMonth('2023-11')).toBe(true);
+      expect(isValidIsoMonth('2023-11')).toEqual(true);
     });
   });
 
@@ -40,7 +48,7 @@ describe('date utils', () => {
       { date: new Date('2023-03'), expectedIsoMonthStamp: '2023-03' },
       { date: new Date('2023-03-31'), expectedIsoMonthStamp: '2023-03' },
     ])(`converts Date object '$date' to IsoMonthStamp '$expectedIsoMonthStamp'`, ({ date, expectedIsoMonthStamp }) => {
-      expect(toIsoMonthStamp(date)).toBe(expectedIsoMonthStamp);
+      expect(toIsoMonthStamp(date)).toEqual(expectedIsoMonthStamp);
     });
   });
 
@@ -48,12 +56,12 @@ describe('date utils', () => {
     it.each(['2023-11-01', '2023-11', '202', 'invalid', '', 2023, undefined, null, ['2023'], { date: '2023' }])(
       'returns false when the value is %p',
       (value) => {
-        expect(isValidIsoYear(value)).toBe(false);
+        expect(isValidIsoYear(value)).toEqual(false);
       },
     );
 
     it('returns true when a valid ISO month value is provided', () => {
-      expect(isValidIsoYear('2023')).toBe(true);
+      expect(isValidIsoYear('2023')).toEqual(true);
     });
   });
 });

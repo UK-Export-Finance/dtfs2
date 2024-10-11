@@ -67,7 +67,7 @@ describe(`GET ${BASE_URL}`, () => {
     const response: CustomResponse = await testApi.get(getUrl(99999));
 
     // Assert
-    expect(response.status).toBe(404);
+    expect(response.status).toEqual(404);
   });
 
   it('returns a 404 when a bank can not be found with the same id as the bankId in the report', async () => {
@@ -85,7 +85,7 @@ describe(`GET ${BASE_URL}`, () => {
     const response: CustomResponse = await testApi.get(getUrl(reportIdWithNoMatchingBank));
 
     // Assert
-    expect(response.status).toBe(404);
+    expect(response.status).toEqual(404);
   });
 
   it('gets a utilisation report', async () => {
@@ -106,6 +106,7 @@ describe(`GET ${BASE_URL}`, () => {
       premiumPayments: [],
       paymentDetails: [],
       keyingSheet: [],
+      utilisationDetails: [],
     });
   });
 });

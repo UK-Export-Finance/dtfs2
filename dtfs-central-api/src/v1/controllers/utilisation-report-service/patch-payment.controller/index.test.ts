@@ -67,7 +67,7 @@ describe('patch-payment.controller', () => {
 
       // Assert
       expect(paymentRepoFindSpy).toHaveBeenCalledWith(paymentId, reportId);
-      expect(res._getStatusCode()).toBe(HttpStatusCode.NotFound);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
     });
 
     it('responds with a 500 (Internal Server Error) when an unexpected error occurs', async () => {
@@ -80,7 +80,7 @@ describe('patch-payment.controller', () => {
       await patchPayment(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
     });
 
     it('responds with a 200 and updates the payment', async () => {
@@ -121,7 +121,7 @@ describe('patch-payment.controller', () => {
           },
         },
       });
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
     });
 
     function aPatchPaymentRequestBody(): PatchPaymentPayload {

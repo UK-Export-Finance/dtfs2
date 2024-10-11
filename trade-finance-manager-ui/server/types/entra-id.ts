@@ -1,8 +1,8 @@
 import { z } from 'zod';
-
-export const DecodedAuthCodeRequestStateSchema = z.object({
-  csrfToken: z.string(),
-  successRedirect: z.string().optional(),
-});
+import { DecodedAuthCodeRequestStateSchema, EntraIdAuthCodeRedirectResponseBodySchema, EntraIdAuthenticationResultSchema } from '../schemas';
 
 export type DecodedAuthCodeRequestState = z.infer<typeof DecodedAuthCodeRequestStateSchema>;
+
+export type EntraIdAuthCodeRedirectResponseBody = z.infer<typeof EntraIdAuthCodeRedirectResponseBodySchema>;
+
+export type EntraIdAuthenticationResult = z.infer<typeof EntraIdAuthenticationResultSchema>;

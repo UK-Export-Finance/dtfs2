@@ -1,0 +1,32 @@
+{% extends "index.njk" %}
+
+{% block pageTitle -%}
+    Login in progress
+{%- endblock %}
+
+{% block content %}
+    <h1 class="govuk-heading-l govuk-!-padding-top-5" data-cy="heading">
+        Login in progress
+    </h1>
+
+    <form
+        id="accept-sso-redirect-form"
+        method="POST"
+        action="/auth/sso-redirect/form"
+        autocomplete="off"
+    >
+        <input type="hidden" name="code" value="{{ code }}">
+        <input type="hidden" name="client_info" value="{{ client_info }}">
+        <input type="hidden" name="state" value="{{ state }}">
+        <input type="hidden" name="session_state" value="{{ session_state }}">
+
+        <p class="govuk-body">
+            If you are not redirected within a few seconds, please click the button below to continue
+        </p>
+        <button type="submit" class="govuk-button" data-module="govuk-button">
+            Continue
+        </button>
+    </form>
+
+    <script src="/assets/js/sso-redirect-auto-submit.js" integrity="sha512-b3lAomt+1plfTu0V/kYiNAIuoGLvjBpmcaXoYvfcXBPYOGXzS35e50lFVNID/6ww1k6K0tRW6peMw2fCpM+eZw==" crossorigin="anonymous" type="text/javascript"></script>
+{% endblock %}

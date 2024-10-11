@@ -1384,13 +1384,15 @@ const updateUtilisationReportStatus = async (reportsWithStatus, user) => {
  * Gets the utilisation report reconciliation details by report id
  * @param {string} reportId - The report id
  * @param {import('@ukef/dtfs2-common').PremiumPaymentsFilters)} premiumPaymentsFilters - Filters to apply to the premium payments tab
+ * @param {import('@ukef/dtfs2-common').PaymentDetailsFilters)} paymentDetailsFilters - Filters to apply to the payment details tab
  * @returns {Promise<import('./api-response-types').UtilisationReportReconciliationDetailsResponseBody>}
  */
-const getUtilisationReportReconciliationDetailsById = async (reportId, premiumPaymentsFilters) => {
+const getUtilisationReportReconciliationDetailsById = async (reportId, premiumPaymentsFilters, paymentDetailsFilters) => {
   const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/reconciliation-details/${reportId}`, {
     headers: headers.central,
     params: {
       premiumPaymentsFilters,
+      paymentDetailsFilters,
     },
   });
 
@@ -1442,6 +1444,7 @@ const getUtilisationReportSummariesByBankIdAndYear = async (bankId, year) => {
  * @param {number} paymentAmount - The payment amount
  * @param {import('@ukef/dtfs2-common').IsoDateTimeStamp} datePaymentReceived - The date the payment was received
  * @param {string | undefined} paymentReference - The payment reference
+ * @returns {Promise<import('./api-response-types').AddPaymentResponseBody>}
  */
 const addPaymentToFeeRecords = async (reportId, feeRecordIds, user, paymentCurrency, paymentAmount, datePaymentReceived, paymentReference) => {
   const response = await axios({

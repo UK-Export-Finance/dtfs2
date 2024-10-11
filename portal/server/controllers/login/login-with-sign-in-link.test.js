@@ -49,10 +49,10 @@ describe('loginWithSignInLink', () => {
 
     await loginWithSignInLink(req, res);
 
-    expect(session.userToken).toBe(loginResponseUserToken);
+    expect(session.userToken).toEqual(loginResponseUserToken);
     expect(session.user).toEqual(user);
-    expect(session.loginStatus).toBe(loginStatus);
-    expect(session.dashboardFilters).toBe(CONSTANTS.DASHBOARD.DEFAULT_FILTERS);
+    expect(session.loginStatus).toEqual(loginStatus);
+    expect(session.dashboardFilters).toEqual(CONSTANTS.DASHBOARD.DEFAULT_FILTERS);
   });
 
   it('deletes the numberOfSendSignInLinkAttemptsRemaining from the session', async () => {
@@ -60,7 +60,7 @@ describe('loginWithSignInLink', () => {
 
     await loginWithSignInLink(req, res);
 
-    expect(session.numberOfSendSignInLinkAttemptsRemaining).toBe(undefined);
+    expect(session.numberOfSendSignInLinkAttemptsRemaining).toEqual(undefined);
   });
 
   it('deletes the userEmail from the session', async () => {
@@ -68,7 +68,7 @@ describe('loginWithSignInLink', () => {
 
     await loginWithSignInLink(req, res);
 
-    expect(session.userEmail).toBe(undefined);
+    expect(session.userEmail).toEqual(undefined);
   });
 
   it.each`

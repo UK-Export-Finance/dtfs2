@@ -101,6 +101,7 @@ const COUNTRIES = [
     id: 112,
     name: 'Belarus',
     code: 'BLR',
+    disabled: true,
   },
   {
     id: 56,
@@ -136,6 +137,7 @@ const COUNTRIES = [
     id: 70,
     name: 'Bosnia and Herzegovina',
     code: 'BIH',
+    disabled: true,
   },
   {
     id: 72,
@@ -166,11 +168,13 @@ const COUNTRIES = [
     id: 854,
     name: 'Burkina Faso',
     code: 'BFA',
+    disabled: true,
   },
   {
     id: 104,
     name: 'Burma or Myanmar',
     code: 'MMR',
+    disabled: true,
   },
   {
     id: 108,
@@ -206,6 +210,7 @@ const COUNTRIES = [
     id: 140,
     name: 'Central African Republic',
     code: 'CAF',
+    disabled: true,
   },
   {
     id: 148,
@@ -437,11 +442,13 @@ const COUNTRIES = [
     id: 324,
     name: 'Guinea',
     code: 'GIN',
+    disabled: true,
   },
   {
     id: 624,
     name: 'Guinea Bissau',
     code: 'GNB',
+    disabled: true,
   },
   {
     id: 328,
@@ -488,11 +495,13 @@ const COUNTRIES = [
     id: 364,
     name: 'Iran',
     code: 'IRN',
+    disabled: true,
   },
   {
     id: 368,
     name: 'Iraq',
     code: 'IRQ',
+    disabled: true,
   },
   {
     id: 372,
@@ -641,6 +650,7 @@ const COUNTRIES = [
     id: 466,
     name: 'Mali',
     code: 'MLI',
+    disabled: true,
   },
   {
     id: 470,
@@ -746,6 +756,7 @@ const COUNTRIES = [
     id: 558,
     name: 'Nicaragua',
     code: 'NIC',
+    disabled: true,
   },
   {
     id: 562,
@@ -792,6 +803,7 @@ const COUNTRIES = [
     id: 275,
     name: 'Palestinian National Authority',
     code: 'PSE',
+    disabled: true,
   },
   {
     id: 591,
@@ -852,6 +864,7 @@ const COUNTRIES = [
     id: 643,
     name: 'Russian Federation',
     code: 'RUS',
+    disabled: true,
   },
   {
     id: 646,
@@ -994,6 +1007,7 @@ const COUNTRIES = [
     id: 760,
     name: 'Syrian Arab Republic',
     code: 'SYR',
+    disabled: true,
   },
   {
     id: 158,
@@ -1109,6 +1123,7 @@ const COUNTRIES = [
     id: 862,
     name: 'Venezuela',
     code: 'VEN',
+    disabled: true,
   },
   {
     id: 704,
@@ -1134,6 +1149,7 @@ const COUNTRIES = [
     id: 732,
     name: 'Western Sahara',
     code: 'ESH',
+    disabled: true,
   },
   {
     id: 887,

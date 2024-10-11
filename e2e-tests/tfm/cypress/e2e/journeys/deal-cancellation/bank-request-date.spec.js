@@ -5,7 +5,7 @@ import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../e2e-f
 import caseDealPage from '../../pages/caseDealPage';
 import { backLink, cancelLink, continueButton, errorSummary } from '../../partials';
 import bankRequestDatePage from '../../pages/deal-cancellation/bank-request-date';
-import dateConstants from '../../../../../e2e-fixtures/dateConstants';
+import { today, todayYear, twelveMonthsOneDayAgo, twelveMonthsOneDay } from '../../../../../e2e-fixtures/dateConstants';
 
 context('Deal cancellation - bank request date', () => {
   let dealId;
@@ -55,18 +55,14 @@ context('Deal cancellation - bank request date', () => {
     });
 
     it('should validate submitting a date more than 12 months in the future', () => {
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateDay(), dateConstants.twelveMonthsOneDayDay);
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateMonth(), dateConstants.twelveMonthsOneDayMonth);
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateYear(), dateConstants.twelveMonthsOneDayYear);
+      cy.completeDateFormFields({ idPrefix: 'bank-request-date', date: twelveMonthsOneDay });
 
       cy.clickContinueButton();
       errorSummary().contains('The bank request date cannot exceed 12 months in the future from the submission date');
     });
 
     it('should validate submitting a date more than 12 months in the past', () => {
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateDay(), dateConstants.twelveMonthsOneDayAgoDay);
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateMonth(), dateConstants.twelveMonthsOneDayAgoMonth);
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateYear(), dateConstants.twelveMonthsOneDayAgoYear);
+      cy.completeDateFormFields({ idPrefix: 'bank-request-date', date: twelveMonthsOneDayAgo });
 
       cy.clickContinueButton();
       errorSummary().contains('The bank request date cannot exceed 12 months in the past from the submission date');
@@ -79,9 +75,7 @@ context('Deal cancellation - bank request date', () => {
     });
 
     it('continue button should take you to the effective from date page', () => {
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateDay(), dateConstants.todayDay);
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateMonth(), dateConstants.todayMonth);
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateYear(), dateConstants.todayYear);
+      cy.completeDateFormFields({ idPrefix: 'bank-request-date' });
 
       cy.clickContinueButton();
 
@@ -95,22 +89,22 @@ context('Deal cancellation - bank request date', () => {
     });
 
     it('returning to the page should display saved data', () => {
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateDay(), dateConstants.todayDay);
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateMonth(), dateConstants.todayMonth);
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateYear(), dateConstants.todayYear);
+      cy.completeDateFormFields({ idPrefix: 'bank-request-date' });
 
       cy.clickContinueButton();
       cy.clickBackLink();
 
-      bankRequestDatePage.bankRequestDateDay().should('have.value', format(dateConstants.today, 'd'));
-      bankRequestDatePage.bankRequestDateMonth().should('have.value', format(dateConstants.today, 'M'));
-      bankRequestDatePage.bankRequestDateYear().should('have.value', dateConstants.todayYear);
+      bankRequestDatePage.bankRequestDateDay().should('have.value', format(today, 'd'));
+      bankRequestDatePage.bankRequestDateMonth().should('have.value', format(today, 'M'));
+      bankRequestDatePage.bankRequestDateYear().should('have.value', todayYear);
     });
   });
 
   describe('when logged in as a non-PIM user', () => {
     beforeEach(() => {
       cy.login(T1_USER_1);
+
+      cy.visit(relative(`/case/${dealId}/cancellation/bank-request-date`));
     });
 
     it('should redirect when visiting bank request date page ', () => {

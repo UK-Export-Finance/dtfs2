@@ -1,18 +1,23 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
+import { isEmpty } from 'lodash';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { asUserSession } from '../../../helpers/express-session';
 import { BankRequestDateViewModel } from '../../../types/view-models';
 import { validateBankRequestDate } from './validation/validate-bank-request-date';
 import api from '../../../api';
 import { canSubmissionTypeBeCancelled } from '../../helpers';
+import { getPreviousPageUrlForCancellationFlow } from './helpers/get-previous-page-url';
 
-export type GetBankRequestDateRequest = CustomExpressRequest<{ params: { _id: string } }>;
+export type GetBankRequestDateRequest = CustomExpressRequest<{ params: { _id: string }; query: { status?: string } }>;
 export type PostBankRequestDateRequest = CustomExpressRequest<{
   params: { _id: string };
+  query: { status?: string };
   reqBody: { 'bank-request-date-day': string; 'bank-request-date-month': string; 'bank-request-date-year': string };
 }>;
+
+const defaultPreviousPage = '/cancellation/reason';
 
 /**
  * controller to get the bank request date page
@@ -22,6 +27,7 @@ export type PostBankRequestDateRequest = CustomExpressRequest<{
  */
 export const getBankRequestDate = async (req: GetBankRequestDateRequest, res: Response) => {
   const { _id } = req.params;
+  const { status } = req.query;
   const { user, userToken } = asUserSession(req.session);
 
   try {
@@ -37,6 +43,10 @@ export const getBankRequestDate = async (req: GetBankRequestDateRequest, res: Re
 
     const cancellation = await api.getDealCancellation(_id, userToken);
 
+    if (isEmpty(cancellation)) {
+      return res.redirect(`/case/${_id}/deal`);
+    }
+
     const previouslyEnteredBankRequestDate = cancellation?.bankRequestDate && new Date(cancellation.bankRequestDate);
 
     const day = previouslyEnteredBankRequestDate ? format(previouslyEnteredBankRequestDate, 'd') : '';
@@ -51,6 +61,7 @@ export const getBankRequestDate = async (req: GetBankRequestDateRequest, res: Re
       day,
       month,
       year,
+      previousPage: getPreviousPageUrlForCancellationFlow(_id, defaultPreviousPage, status),
     };
     return res.render('case/cancellation/bank-request-date.njk', bankRequestDateViewModel);
   } catch (error) {
@@ -67,6 +78,7 @@ export const getBankRequestDate = async (req: GetBankRequestDateRequest, res: Re
  */
 export const postBankRequestDate = async (req: PostBankRequestDateRequest, res: Response) => {
   const { _id } = req.params;
+  const { status } = req.query;
   const { 'bank-request-date-day': day, 'bank-request-date-month': month, 'bank-request-date-year': year } = req.body;
   const { user, userToken } = asUserSession(req.session);
 
@@ -93,6 +105,7 @@ export const postBankRequestDate = async (req: PostBankRequestDateRequest, res: 
         month,
         year,
         errors: validationErrors,
+        previousPage: getPreviousPageUrlForCancellationFlow(_id, defaultPreviousPage, status),
       };
       return res.render('case/cancellation/bank-request-date.njk', bankRequestDateViewModel);
     }

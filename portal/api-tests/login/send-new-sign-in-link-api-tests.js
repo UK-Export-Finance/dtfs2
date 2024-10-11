@@ -36,8 +36,8 @@ const withSendNewSignInLinkApiTests = (endpoint) => {
     withPartial2faAuthValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/login/${endpoint}`),
       validateResponseWasSuccessful: (response) => {
-        expect(response.status).toBe(302);
-        expect(response.headers.location).toBe('/login/check-your-email');
+        expect(response.status).toEqual(302);
+        expect(response.headers.location).toEqual('/login/check-your-email');
       },
     });
 
@@ -70,8 +70,8 @@ const withSendNewSignInLinkApiTests = (endpoint) => {
         it('redirects the user to /login', async () => {
           const { status, headers } = await post().to(`/login/${endpoint}`);
 
-          expect(status).toBe(302);
-          expect(headers.location).toBe('/login');
+          expect(status).toEqual(302);
+          expect(headers.location).toEqual('/login');
         });
       });
 
@@ -107,8 +107,8 @@ const withSendNewSignInLinkApiTests = (endpoint) => {
         it('redirects the user to /login/check-your-email', async () => {
           const { status, headers } = await post({}, { Cookie: sessionCookie }).to('/login/check-your-email');
 
-          expect(status).toBe(302);
-          expect(headers.location).toBe('/login/check-your-email');
+          expect(status).toEqual(302);
+          expect(headers.location).toEqual('/login/check-your-email');
         });
       }
 

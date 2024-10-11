@@ -107,7 +107,7 @@ describe(`GET ${BASE_URL}`, () => {
     const response: CustomResponse = await testApi.get(getUrl(reportId + 1));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.NotFound);
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
   it('returns a 404 when the bank with the same id as the report cannot be found', async () => {
@@ -120,7 +120,7 @@ describe(`GET ${BASE_URL}`, () => {
     const response: CustomResponse = await testApi.get(getUrl(2));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.NotFound);
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
   it('returns a 200 with a valid report id', async () => {
@@ -128,7 +128,7 @@ describe(`GET ${BASE_URL}`, () => {
     const response: CustomResponse = await testApi.get(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Ok);
+    expect(response.status).toEqual(HttpStatusCode.Ok);
   });
 
   it('returns a body containing the report id', async () => {
@@ -136,7 +136,7 @@ describe(`GET ${BASE_URL}`, () => {
     const response: CustomResponse = await testApi.get(getUrl(reportId));
 
     // Assert
-    expect(response.body.reportId).toBe(reportId);
+    expect(response.body.reportId).toEqual(reportId);
   });
 
   it('returns a body containing the session bank', async () => {
