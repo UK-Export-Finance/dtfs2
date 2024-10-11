@@ -1,10 +1,10 @@
 import { aValidEntraIdUser, withEntraIdUserSchemaTests, withSchemaTests } from '@ukef/dtfs2-common';
 import { EntraIdAuthenticationResult } from '../types/entra-id';
-import { EntraIdAuthenticationResultSchema } from './entra-id.schema';
+import { ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA } from './entra-id.schema';
 
-describe('EntraIdAuthenticationResultSchema', () => {
+describe('ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA', () => {
   withEntraIdUserSchemaTests({
-    schema: EntraIdAuthenticationResultSchema,
+    schema: ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA,
     getTestObjectWithUpdatedUserParams: (entraIdUser) => ({
       ...aValidPayload(),
       account: { idTokenClaims: entraIdUser },
@@ -12,7 +12,7 @@ describe('EntraIdAuthenticationResultSchema', () => {
   });
 
   withSchemaTests({
-    schema: EntraIdAuthenticationResultSchema,
+    schema: ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA,
     failureTestCases: getFailureTestCases(),
     successTestCases: getSuccessTestCases(),
   });

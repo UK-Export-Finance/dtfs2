@@ -1,10 +1,10 @@
 import { withSchemaTests } from '@ukef/dtfs2-common';
 import { EntraIdAuthCodeRedirectResponseBody } from '../types/entra-id';
-import { EntraIdAuthCodeRedirectResponseBodySchema } from './entra-id.schema';
+import { ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA } from './entra-id.schema';
 
-describe('EntraIdAuthCodeRedirectResponseBodySchema', () => {
+describe('ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA', () => {
   withSchemaTests({
-    schema: EntraIdAuthCodeRedirectResponseBodySchema,
+    schema: ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA,
     failureTestCases: getFailureTestCases(),
     successTestCases: getSuccessTestCases(),
   });
