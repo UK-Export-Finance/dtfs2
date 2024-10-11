@@ -4,6 +4,6 @@ import { withEntraIdUserSchemaTests } from './with-entra-id-user-schema.tests';
 describe('EntraIdUserSchema', () => {
   withEntraIdUserSchemaTests({
     schema: EntraIdUserSchema,
-    getValidObjectWithUpdatedEntraIdUserParams: (entraIdUser) => entraIdUser,
+    getTestObjectWithUpdatedUserParams: (entraIdUser) => entraIdUser,
   });
 });

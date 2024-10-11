@@ -6,7 +6,7 @@ import { aValidEntraIdUser, withEntraIdUserSchemaTests } from './with-entra-id-u
 describe('EntraIdAuthenticationResultSchema', () => {
   withEntraIdUserSchemaTests({
     schema: EntraIdAuthenticationResultSchema,
-    getValidObjectWithUpdatedEntraIdUserParams: (entraIdUser) => ({
+    getTestObjectWithUpdatedUserParams: (entraIdUser) => ({
       ...aValidPayload(),
       account: { idTokenClaims: entraIdUser },
     }),
