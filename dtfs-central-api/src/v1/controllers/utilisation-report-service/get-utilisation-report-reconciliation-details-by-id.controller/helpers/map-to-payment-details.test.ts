@@ -26,7 +26,7 @@ describe('mapToPaymentDetails', () => {
     jest.resetAllMocks();
   });
 
-  it('populates each of the groups with their respective group status', async () => {
+  it('should populate each of the groups with their respective group status', async () => {
     // Arrange
     const firstGroup: FeeRecordPaymentEntityGroup = {
       feeRecords: [FeeRecordEntityMockBuilder.forReport(utilisationReport()).withStatus(FEE_RECORD_STATUS.TO_DO).build()],
@@ -57,7 +57,7 @@ describe('mapToPaymentDetails', () => {
   });
 
   describe('when a group has one payment and a multiple fee records', () => {
-    it('returns only one payment details object', async () => {
+    it('should return only one payment details object', async () => {
       // Arrange
       const group: FeeRecordPaymentEntityGroup = {
         feeRecords: [FeeRecordEntityMockBuilder.forReport(utilisationReport()).build(), FeeRecordEntityMockBuilder.forReport(utilisationReport()).build()],
@@ -70,8 +70,7 @@ describe('mapToPaymentDetails', () => {
       // Assert
       expect(result).toHaveLength(1);
     });
-
-    it('returns the group with as many fee records as there are fee records in the supplied group', async () => {
+    it('should return the group with as many fee records as there are fee records in the supplied group', async () => {
       // Arrange
       const feeRecords = [FeeRecordEntityMockBuilder.forReport(utilisationReport()).build(), FeeRecordEntityMockBuilder.forReport(utilisationReport()).build()];
       const group: FeeRecordPaymentEntityGroup = {
@@ -151,7 +150,9 @@ describe('mapToPaymentDetails', () => {
       };
 
       // Act / Assert
-      await expect(mapToPaymentDetails([group])).rejects.toThrow(new Error('Each fee record payment entity group must have at most one payment.'));
+      await expect(mapToPaymentDetails([group])).rejects.toThrow(
+        new Error('Error mapping payments to payment details - groups must have at most one payment.'),
+      );
     });
   });
 

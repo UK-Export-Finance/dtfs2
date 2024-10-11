@@ -26,7 +26,7 @@ describe('mapToPremiumPaymentsGroups', () => {
     jest.resetAllMocks();
   });
 
-  it('throws an error when a group has multiple fee records but no payments', () => {
+  it('should throw an error when a group has multiple fee records but no payments', () => {
     // Arrange
     const group: FeeRecordPaymentEntityGroup = {
       feeRecords: [
@@ -43,7 +43,7 @@ describe('mapToPremiumPaymentsGroups', () => {
     );
   });
 
-  it('populates each of the groups with their respective group status', () => {
+  it('should populate each of the groups with their respective group status', () => {
     // Arrange
     const firstGroup: FeeRecordPaymentEntityGroup = {
       feeRecords: [FeeRecordEntityMockBuilder.forReport(utilisationReport()).withStatus(FEE_RECORD_STATUS.TO_DO).build()],
@@ -90,7 +90,7 @@ describe('mapToPremiumPaymentsGroups', () => {
       payments: [],
     });
 
-    it('returns as many fee record payment groups as there are fee record payment entity groups', () => {
+    it('should return as many fee record payment groups as there are fee record payment entity groups', () => {
       // Arrange
       const groups = [
         createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, FEE_RECORD_STATUS.TO_DO),
@@ -105,7 +105,7 @@ describe('mapToPremiumPaymentsGroups', () => {
       expect(result).toHaveLength(groups.length);
     });
 
-    it('sets the totalReportedPayments to the same value as the fee record reported payments', () => {
+    it('should set the totalReportedPayments to the same value as the fee record reported payments', () => {
       // Arrange
       const groups = [createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, FEE_RECORD_STATUS.TO_DO)];
 
@@ -116,7 +116,7 @@ describe('mapToPremiumPaymentsGroups', () => {
       expect(result[0].totalReportedPayments).toEqual({ currency, amount });
     });
 
-    it('sets the paymentsReceived to null', () => {
+    it('should set the paymentsReceived to null', () => {
       // Arrange
       const groups = [createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, FEE_RECORD_STATUS.TO_DO)];
 
@@ -127,7 +127,7 @@ describe('mapToPremiumPaymentsGroups', () => {
       expect(result[0].paymentsReceived).toBeNull();
     });
 
-    it('sets the totalPaymentsReceived to null', () => {
+    it('should set the totalPaymentsReceived to null', () => {
       // Arrange
       const groups = [createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, FEE_RECORD_STATUS.TO_DO)];
 
@@ -140,7 +140,7 @@ describe('mapToPremiumPaymentsGroups', () => {
   });
 
   describe('when a group has a multiple fee records and payments', () => {
-    it('returns only one fee record payment group', () => {
+    it('should return only one fee record payment group', () => {
       // Arrange
       const group: FeeRecordPaymentEntityGroup = {
         feeRecords: [FeeRecordEntityMockBuilder.forReport(utilisationReport()).build(), FeeRecordEntityMockBuilder.forReport(utilisationReport()).build()],
@@ -157,7 +157,7 @@ describe('mapToPremiumPaymentsGroups', () => {
       expect(result).toHaveLength(1);
     });
 
-    it('returns the group with as many fee records as there are fee records in the supplied group', () => {
+    it('should return the group with as many fee records as there are fee records in the supplied group', () => {
       // Arrange
       const feeRecordOne = FeeRecordEntityMockBuilder.forReport(utilisationReport()).build();
       const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(utilisationReport()).build();
@@ -173,7 +173,7 @@ describe('mapToPremiumPaymentsGroups', () => {
       expect(result[0].feeRecords).toHaveLength(2);
     });
 
-    it('sets the totalReportedPayments to the sum of the fee record reported payments', () => {
+    it('should set the totalReportedPayments to the sum of the fee record reported payments', () => {
       // Arrange
       const testValues = {
         feeRecordOne: {
@@ -218,7 +218,7 @@ describe('mapToPremiumPaymentsGroups', () => {
       expect(result[0].totalReportedPayments).toEqual({ currency: CURRENCY.GBP, amount: testValues.expectedTotalReportedPaymentAmount });
     });
 
-    it('returns the group with as many paymentsReceived as there are payments in the supplied group', () => {
+    it('should return the group with as many paymentsReceived as there are payments in the supplied group', () => {
       // Arrange
       const group: FeeRecordPaymentEntityGroup = {
         feeRecords: [FeeRecordEntityMockBuilder.forReport(utilisationReport()).build(), FeeRecordEntityMockBuilder.forReport(utilisationReport()).build()],
@@ -232,7 +232,7 @@ describe('mapToPremiumPaymentsGroups', () => {
       expect(result[0].paymentsReceived).toHaveLength(2);
     });
 
-    it('sets the totalPaymentsReceived to the total of the payment amounts', () => {
+    it('should set the totalPaymentsReceived to the total of the payment amounts', () => {
       // Arrange
       const group: FeeRecordPaymentEntityGroup = {
         feeRecords: [FeeRecordEntityMockBuilder.forReport(utilisationReport()).build(), FeeRecordEntityMockBuilder.forReport(utilisationReport()).build()],

@@ -209,7 +209,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       });
     });
 
-    it('sets add payment error to contain passed in session data and checks selected checkboxes', async () => {
+    it('should set the add payment error to contain passed in session data and checks selected checkboxes', async () => {
       // Arrange
       const sessionData: Partial<SessionData> = {
         addPaymentErrorKey: 'different-fee-record-statuses',
@@ -295,7 +295,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(viewModel.enablePaymentsReceivedSorting).toEqual(false);
     });
 
-    it('sets premium payments filter error when invalid premium payments facility ID query value used', async () => {
+    it('should set the premium payments filter error when invalid premium payments facility ID query value used', async () => {
       // Arrange
       const premiumPaymentsFacilityIdParam = 'abc';
       const { req, res } = httpMocks.createMocks({
@@ -329,7 +329,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(viewModel.premiumPaymentsFilterError?.text).toEqual('Facility ID must be a number');
     });
 
-    it('sets payment details filter error when invalid payment details facility ID query value used', async () => {
+    it('should set the payment details filter error when invalid payment details facility ID query value used', async () => {
       // Arrange
       const paymentDetailsFacilityIdParam = 'abc';
       const { req, res } = httpMocks.createMocks({
@@ -367,7 +367,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(viewModel.paymentDetails.filterErrors!.errorSummary[0].text).toEqual('Facility ID must be blank or contain between 4 and 10 numbers');
     });
 
-    it('checks selected checkboxes when selected fee record ids query param defined', async () => {
+    it('should check the selected checkboxes when selected fee record ids query param defined', async () => {
       // Arrange
       const selectedFeeRecordIdsQueryParam = '1,2,3';
       const { req, res } = httpMocks.createMocks({
@@ -415,7 +415,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(viewModel.premiumPayments[2].isChecked).toEqual(false);
     });
 
-    it('clears redirect session data', async () => {
+    it('should clear the redirect session data', async () => {
       // Arrange
       const sessionData: Partial<SessionData> = {
         addPaymentErrorKey: 'no-fee-records-selected',

@@ -16,7 +16,7 @@ describe('reconciliation-for-report-helper', () => {
   describe('mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems', () => {
     const DEFAULT_IS_CHECKBOX_SELECTED = () => false;
 
-    it('maps the group feeRecords id to the view model feeRecords id', () => {
+    it('should map the group feeRecords id to the view model feeRecords id', () => {
       // Arrange
       const firstFeeRecordId = 10;
       const firstFeeRecord: FeeRecord = { ...aFeeRecord(), id: firstFeeRecordId };
@@ -41,7 +41,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[0].feeRecords[1].id).toEqual(secondFeeRecordId);
     });
 
-    it('maps the group feeRecords facilityId to the view model feeRecords facilityId', () => {
+    it('should map the group feeRecords facilityId to the view model feeRecords facilityId', () => {
       // Arrange
       const firstFeeRecordFacilityId = '12345678';
       const firstFeeRecord: FeeRecord = { ...aFeeRecord(), facilityId: firstFeeRecordFacilityId };
@@ -66,7 +66,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[0].feeRecords[1].facilityId).toEqual(secondFeeRecordFacilityId);
     });
 
-    it('maps the group feeRecords exporter to the view model feeRecords exporter', () => {
+    it('should map the group feeRecords exporter to the view model feeRecords exporter', () => {
       // Arrange
       const firstFeeRecordExporter = 'Test exporter 1';
       const firstFeeRecord: FeeRecord = { ...aFeeRecord(), exporter: firstFeeRecordExporter };
@@ -91,7 +91,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[0].feeRecords[1].exporter).toEqual(secondFeeRecordExporter);
     });
 
-    it('maps the group feeRecords reportedFees to the view model feeRecords reportedFees formatted currency and amount', () => {
+    it('should map the group feeRecords reportedFees to the view model feeRecords reportedFees formatted currency and amount', () => {
       // Arrange
       const firstFeeRecordReportedFees: CurrencyAndAmount = { currency: 'GBP', amount: 100 };
       const firstFeeRecord: FeeRecord = { ...aFeeRecord(), reportedFees: firstFeeRecordReportedFees };
@@ -118,7 +118,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[0].feeRecords[1].reportedFees).toEqual(secondFeeRecordFormattedReportedFees);
     });
 
-    it('maps the group feeRecords reportedPayments to the view model feeRecords reportedPayments formatted currency and amount', () => {
+    it('should map the group feeRecords reportedPayments to the view model feeRecords reportedPayments formatted currency and amount', () => {
       // Arrange
       const firstFeeRecordReportedPayments: CurrencyAndAmount = { currency: 'EUR', amount: 314.59 };
       const firstFeeRecord: FeeRecord = { ...aFeeRecord(), reportedPayments: firstFeeRecordReportedPayments };
@@ -145,7 +145,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[0].feeRecords[1].reportedPayments).toEqual(secondFeeRecordFormattedReportedPayments);
     });
 
-    it('sorts the view model feeRecords reportedPayments by currency first and amount second in ascending order', () => {
+    it('should sort the view model feeRecords reportedPayments by currency first and amount second in ascending order', () => {
       // Arrange
       const unsortedFeeRecords: FeeRecord[] = [
         { ...aFeeRecord(), reportedPayments: { currency: 'GBP', amount: 100 } }, // after sorting: 'GBP 100.00' at index 1
@@ -173,7 +173,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[0].feeRecords[4].reportedPayments).toEqual('USD 200.00');
     });
 
-    it('maps the group totalReportedPayments to the view model totalReportedPayments formattedCurrencyAndAmount', () => {
+    it('should map the group totalReportedPayments to the view model totalReportedPayments formattedCurrencyAndAmount', () => {
       // Arrange
       const totalReportedPayments: CurrencyAndAmount = { currency: 'GBP', amount: 100 };
       const totalReportedPaymentsFormattedCurrencyAndAmount = 'GBP 100.00';
@@ -193,7 +193,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[0].totalReportedPayments.formattedCurrencyAndAmount).toEqual(totalReportedPaymentsFormattedCurrencyAndAmount);
     });
 
-    it('sorts the group totalReportedPayments and sets to the view model totalReportedPayments dataSortValue', () => {
+    it('should sort the group totalReportedPayments and sets to the view model totalReportedPayments dataSortValue', () => {
       // Arrange
       const firstTotalReportedPayments: CurrencyAndAmount = { currency: 'GBP', amount: 100 }; // dataSortValue = 2
       const secondTotalReportedPayments: CurrencyAndAmount = { currency: 'EUR', amount: 100 }; // dataSortValue = 1
@@ -218,7 +218,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[3].totalReportedPayments.dataSortValue).toEqual(0);
     });
 
-    it('sets the view model paymentsReceived to undefined when the group paymentsReceived is null', () => {
+    it('should set the view model paymentsReceived to undefined when the group paymentsReceived is null', () => {
       // Arrange
       const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), paymentsReceived: null }];
 
@@ -230,7 +230,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[0].paymentsReceived).toBeUndefined();
     });
 
-    it('maps the group paymentsReceived to the view model paymentsReceived formatted currency and amount', () => {
+    it('should map the group paymentsReceived to the view model paymentsReceived formatted currency and amount', () => {
       // Arrange
       const paymentsReceived: Payment[] = [{ ...aPayment(), id: 1, currency: 'GBP', amount: 314.59 }];
       const paymentsReceivedFormattedCurrencyAndAmount = 'GBP 314.59';
@@ -250,7 +250,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[0].paymentsReceived![0].formattedCurrencyAndAmount).toEqual(paymentsReceivedFormattedCurrencyAndAmount);
     });
 
-    it('maps the group paymentsReceived id to the view model paymentsReceived id', () => {
+    it('should map the group paymentsReceived id to the view model paymentsReceived id', () => {
       // Arrange
       const paymentsReceived: Payment[] = [{ ...aPayment(), id: 1, currency: 'GBP', amount: 100 }];
 
@@ -269,7 +269,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[0].paymentsReceived![0].id).toEqual(1);
     });
 
-    it('sets the view model totalPaymentsReceived formattedCurrencyAndAmount to undefined when the group totalPaymentsReceived is null', () => {
+    it('should set the view model totalPaymentsReceived formattedCurrencyAndAmount to undefined when the group totalPaymentsReceived is null', () => {
       // Arrange
       const premiumPaymentGroups: PremiumPaymentsGroup[] = [
         {
@@ -286,7 +286,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[0].totalPaymentsReceived.formattedCurrencyAndAmount).toBeUndefined();
     });
 
-    it('maps the group totalPaymentsReceived to the view model totalPaymentsReceived formattedCurrencyAndAmount', () => {
+    it('should map the group totalPaymentsReceived to the view model totalPaymentsReceived formattedCurrencyAndAmount', () => {
       // Arrange
       const totalPaymentsReceived: CurrencyAndAmount = { currency: 'GBP', amount: 100 };
       const totalPaymentsReceivedFormattedCurrencyAndAmount = 'GBP 100.00';
@@ -306,7 +306,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[0].totalPaymentsReceived.formattedCurrencyAndAmount).toEqual(totalPaymentsReceivedFormattedCurrencyAndAmount);
     });
 
-    it('sorts the group totalPaymentsReceived and sets to the view model totalPaymentsReceived dataSortValue', () => {
+    it('should sort the group totalPaymentsReceived and sets to the view model totalPaymentsReceived dataSortValue', () => {
       // Arrange
       const firstTotalPaymentsReceived: CurrencyAndAmount = { currency: 'GBP', amount: 100 }; // dataSortValue = 2
       const secondTotalPaymentsReceived: CurrencyAndAmount = { currency: 'EUR', amount: 100 }; // dataSortValue = 1
@@ -331,7 +331,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[3].totalPaymentsReceived.dataSortValue).toEqual(0);
     });
 
-    it('maps the group status to the view model status', () => {
+    it('should map the group status to the view model status', () => {
       // Arrange
       const status: FeeRecordStatus = 'TO_DO';
       const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), status }];
@@ -364,7 +364,7 @@ describe('reconciliation-for-report-helper', () => {
       },
     );
 
-    it('sets the view model checkboxId using the supplied fee record items for the ids, currency and the group status for the status', () => {
+    it('should set the view model checkboxId using the supplied fee record items for the ids, currency and the group status for the status', () => {
       // Arrange
       const feeRecordIds = [1, 20];
 
@@ -402,7 +402,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[0].checkboxId).toEqual(checkboxId);
     });
 
-    it('sets isChecked to true if the payment groups fee record ids are recognised by the supplied isCheckboxChecked function', () => {
+    it('should set isChecked to true if the payment groups fee record ids are recognised by the supplied isCheckboxChecked function', () => {
       // Arrange
       const feeRecordId = 1;
       const feeRecordReportedPaymentsCurrency: Currency = 'GBP';
@@ -429,7 +429,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[0].isChecked).toEqual(true);
     });
 
-    it('sets isChecked to false if the payment groups fee record ids are not recognised by the supplied isCheckboxChecked function', () => {
+    it('should set isChecked to false if the payment groups fee record ids are not recognised by the supplied isCheckboxChecked function', () => {
       // Arrange
       const feeRecordId = 1;
       const nonMatchingFeeRecordId = 5;
@@ -457,7 +457,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[0].isChecked).toEqual(false);
     });
 
-    it('sets the checkbox aria label to "Select" followed by the fee record facility ids', () => {
+    it('should set the checkbox aria label to "Select" followed by the fee record facility ids', () => {
       // Arrange
       const firstFeeRecord: FeeRecord = {
         ...aFeeRecord(),
@@ -493,7 +493,7 @@ describe('reconciliation-for-report-helper', () => {
       principalBalanceAdjustment: null,
     });
 
-    it('maps the keying sheet status, facility id, feeRecordId, exporter and base currency', () => {
+    it('should map the keying sheet status, facility id, feeRecordId, exporter and base currency', () => {
       // Arrange
       const keyingSheet: KeyingSheet = [
         {
@@ -536,7 +536,7 @@ describe('reconciliation-for-report-helper', () => {
       },
     );
 
-    it('maps the keying sheet feePayments to the view model feePayments formattedCurrencyAndAmount and formattedDateReceived', () => {
+    it('should map the keying sheet feePayments to the view model feePayments formattedCurrencyAndAmount and formattedDateReceived', () => {
       // Arrange
       const keyingSheet: KeyingSheet = [
         {
@@ -632,7 +632,7 @@ describe('reconciliation-for-report-helper', () => {
       },
     );
 
-    it('sets the keying sheet view model checkbox id using the keying sheet fee record id and status', () => {
+    it('should set the keying sheet view model checkbox id using the keying sheet fee record id and status', () => {
       // Arrange
       const keyingSheet: KeyingSheet = [{ ...aKeyingSheetRow(), feeRecordId: 123, status: 'TO_DO' }];
 
@@ -646,7 +646,7 @@ describe('reconciliation-for-report-helper', () => {
   });
 
   describe('mapPaymentDetailsGroupsToPaymentDetailsViewModel', () => {
-    it('creates a list item for each of the supplied groups', () => {
+    it('should create a list item for each of the supplied groups', () => {
       // Arrange
       const firstGroup: PaymentDetails = {
         ...aPaymentDetails(),
@@ -666,7 +666,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(result).toHaveLength(2);
     });
 
-    it('maps the payment id and reference to the payment details view model reference', () => {
+    it('should map the payment id and reference to the payment details view model reference', () => {
       // Arrange
       const firstGroup: PaymentDetails = {
         ...aPaymentDetails(),
@@ -697,7 +697,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(result[2].payment.reference).toBeUndefined();
     });
 
-    it('maps the fee records to an array of facility ids and exporters linked to the payment in the same group', () => {
+    it('should map the fee records to an array of facility ids and exporters linked to the payment in the same group', () => {
       // Arrange
       const firstGroup: PaymentDetails = {
         ...aPaymentDetails(),
@@ -721,7 +721,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(result[1].feeRecords[0]).toEqual({ id: 2, facilityId: '22222222', exporter: 'Test exporter 2' });
     });
 
-    it('maps the fee records in the group to an array of facility ids and exporters when a payment has multiple fee records', () => {
+    it('should map the fee records in the group to an array of facility ids and exporters when a payment has multiple fee records', () => {
       // Arrange
       const group: PaymentDetails = {
         ...aPaymentDetails(),
@@ -744,7 +744,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(result[0].feeRecords[2]).toEqual({ id: 3, facilityId: '33333333', exporter: 'Test exporter 3' });
     });
 
-    it('maps the fee records to an array of facility ids and exporters when a group has multiple fee records', () => {
+    it('should map the fee records to an array of facility ids and exporters when a group has multiple fee records', () => {
       // Arrange
       const group: PaymentDetails = {
         ...aPaymentDetails(),
@@ -768,7 +768,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(result[0].feeRecords[2]).toEqual({ id: 3, facilityId: '33333333', exporter: 'Test exporter 3' });
     });
 
-    it('maps the payment to a formatted currency and amount sorted first by currency alphabetically and second by amount ascending', () => {
+    it('should map the payment to a formatted currency and amount sorted first by currency alphabetically and second by amount ascending', () => {
       // Arrange
       const groups: PaymentDetails[] = [
         {
@@ -812,7 +812,7 @@ describe('reconciliation-for-report-helper', () => {
       ]);
     });
 
-    it('maps the payment to a formatted date received sorted by date ascending', () => {
+    it('should map the payment to a formatted date received sorted by date ascending', () => {
       // Arrange
       const groups: PaymentDetails[] = [
         {
@@ -856,7 +856,7 @@ describe('reconciliation-for-report-helper', () => {
       ]);
     });
 
-    it('maps the reconciledByUser to the payment details reconciledBy field with value "-" when the reconciledByUser is undefined', () => {
+    it('should map the reconciledByUser to the payment details reconciledBy field with value "-" when the reconciledByUser is undefined', () => {
       // Arrange
       const group: PaymentDetails = {
         ...aPaymentDetails(),
@@ -873,7 +873,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(result[0].reconciledBy).toEqual('-');
     });
 
-    it('maps the reconciledByUser to the payment details reconciledBy field', () => {
+    it('should map the reconciledByUser to the payment details reconciledBy field', () => {
       // Arrange
       const group: PaymentDetails = {
         ...aPaymentDetails(),
@@ -888,7 +888,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(result[0].reconciledBy).toEqual('John Smith');
     });
 
-    it('maps the dateReconciled to the payment details dateReconciled field with value "-" when the dateReconciled is undefined', () => {
+    it('should map the dateReconciled to the payment details dateReconciled field with value "-" when the dateReconciled is undefined', () => {
       // Arrange
       const group: PaymentDetails = {
         ...aPaymentDetails(),
@@ -921,7 +921,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(result[0].dateReconciled.formattedDateReconciled).toEqual(formattedDate);
     });
 
-    it('sorts the dateReconciled by date ascending with undefined dates being at the start of the sorted list', () => {
+    it('should sort the dateReconciled by date ascending with undefined dates being at the start of the sorted list', () => {
       // Arrange
       const firstGroup: PaymentDetails = {
         ...aPaymentDetails(),
@@ -953,7 +953,7 @@ describe('reconciliation-for-report-helper', () => {
   });
 
   describe('getFormattedReconciledByUser', () => {
-    it('returns the formatted reconciled by user', () => {
+    it('should return the formatted reconciled by user', () => {
       // Arrange
       const reconciledByUser = { firstName: 'John', lastName: 'Smith' };
 
@@ -964,7 +964,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(result).toEqual('John Smith');
     });
 
-    it('returns the "-" character when the supplied user is undefined', () => {
+    it('should return the "-" character when the supplied user is undefined', () => {
       // Act
       const result = getFormattedReconciledByUser(undefined);
 
@@ -974,7 +974,7 @@ describe('reconciliation-for-report-helper', () => {
   });
 
   describe('getFormattedDateReconciled', () => {
-    it('returns the formatted date reconciled using "am" when the date is in the morning', () => {
+    it('should return the formatted date reconciled using "am" when the date is in the morning', () => {
       // Arrange
       const dateReconciled = '2024-01-01T10:45:00.000';
 
@@ -985,7 +985,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(result).toEqual('1 Jan 2024 at 10:45am');
     });
 
-    it('returns the formatted date reconciled using "pm" when the date is in the afternoon', () => {
+    it('should return the formatted date reconciled using "pm" when the date is in the afternoon', () => {
       // Arrange
       const dateReconciled = '2024-01-01T15:45:00.000';
 
@@ -996,7 +996,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(result).toEqual('1 Jan 2024 at 03:45pm');
     });
 
-    it('returns the "-" character when the supplied date reconciled is undefined', () => {
+    it('should return the "-" character when the supplied date reconciled is undefined', () => {
       // Act
       const result = getFormattedDateReconciled(undefined);
 
