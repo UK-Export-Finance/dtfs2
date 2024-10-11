@@ -713,7 +713,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
           await addPayment(req, res);
 
           // Assert
-          expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}`);
+          expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}`);
         });
       });
 
@@ -739,7 +739,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
             await addPayment(req, res);
 
             // Assert
-            expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}?matchSuccess=true`);
+            expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}?matchSuccess=true`);
           });
         });
 

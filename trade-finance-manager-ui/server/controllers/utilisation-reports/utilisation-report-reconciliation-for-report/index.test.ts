@@ -221,7 +221,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
-      expect(viewModel.displayMatchSuccessNotification).toBe(true);
+      expect(viewModel.displayMatchSuccessNotification).toEqual(true);
     });
 
     it("renders the page with 'displayMatchSuccessNotification' set to false if matchSuccess query param is not set", async () => {
@@ -242,7 +242,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
-      expect(viewModel.displayMatchSuccessNotification).toBe(false);
+      expect(viewModel.displayMatchSuccessNotification).toEqual(false);
     });
 
     it("renders the page with 'displayMatchSuccessNotification' set to false if matchSuccess query param is set to a value other than 'true'", async () => {
@@ -265,7 +265,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
-      expect(viewModel.displayMatchSuccessNotification).toBe(false);
+      expect(viewModel.displayMatchSuccessNotification).toEqual(false);
     });
 
     it("renders the page with 'enablePaymentsReceivedSorting' set to true if at least one fee record has a non-null 'paymentsReceived'", async () => {

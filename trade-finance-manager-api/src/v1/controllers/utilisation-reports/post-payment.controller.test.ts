@@ -85,7 +85,7 @@ describe('postPayment', () => {
     await postPayment(req, res);
 
     // Assert
-    expect(res._getData()).toBe(mockResponse);
+    expect(res._getData()).toEqual(mockResponse);
   });
 
   it('responds with a 500 if an unknown error occurs', async () => {

@@ -55,6 +55,11 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
         return res.redirect(`/utilisation-reports/${reportId}`);
       }
 
+      /*
+       * If the payment just added take the user to match we redirect to the premium
+       * payments tab regardless of their selection for addAnotherPayment
+       * since adding another payment is an invalid journey after reaching match status
+       */
       if (feeRecordStatus === FEE_RECORD_STATUS.MATCH) {
         return res.redirect(`/utilisation-reports/${reportId}?matchSuccess=true`);
       }
