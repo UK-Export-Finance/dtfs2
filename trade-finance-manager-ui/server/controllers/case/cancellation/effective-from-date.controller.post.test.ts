@@ -1,6 +1,6 @@
 import { createMocks } from 'node-mocks-http';
 import { DayMonthYearInput, DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
-import { aTfmSessionUser } from '../../../../test-helpers';
+import { aRequestSession } from '../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { postEffectiveFromDate, PostEffectiveFromDateRequest } from './effective-from-date.controller';
 import { EffectiveFromDateValidationViewModel, EffectiveFromDateViewModel } from '../../../types/view-models';
@@ -22,7 +22,6 @@ jest.mock('../../../api', () => ({
 
 const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
-const mockUser = aTfmSessionUser();
 
 describe('postEffectiveFromDate', () => {
   beforeEach(() => {
@@ -35,17 +34,14 @@ describe('postEffectiveFromDate', () => {
 
     const { req, res } = createMocks<PostEffectiveFromDateRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
     await postEffectiveFromDate(req, res);
 
     // Assert
-    expect(res._getRedirectUrl()).toBe(`/not-found`);
+    expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
 
   it('redirects to not found if the dealId is invalid', async () => {
@@ -54,17 +50,14 @@ describe('postEffectiveFromDate', () => {
 
     const { req, res } = createMocks<PostEffectiveFromDateRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
     await postEffectiveFromDate(req, res);
 
     // Assert
-    expect(res._getRedirectUrl()).toBe(`/not-found`);
+    expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
 
   it('redirects to deal summary page if the submission type is invalid (MIA)', async () => {
@@ -73,17 +66,14 @@ describe('postEffectiveFromDate', () => {
 
     const { req, res } = createMocks<PostEffectiveFromDateRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
     });
 
     // Act
     await postEffectiveFromDate(req, res);
 
     // Assert
-    expect(res._getRedirectUrl()).toBe(`/case/${dealId}/deal`);
+    expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
   });
 
   describe.each([DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN])('when the deal type is %s', (validDealType) => {
@@ -112,10 +102,7 @@ describe('postEffectiveFromDate', () => {
         // Arrange
         const { req, res } = createMocks<PostEffectiveFromDateRequest>({
           params: { _id: dealId },
-          session: {
-            user: mockUser,
-            userToken: 'a user token',
-          },
+          session: aRequestSession(),
           body: inputtedDate,
         });
 
@@ -129,12 +116,11 @@ describe('postEffectiveFromDate', () => {
 
       it('renders the effective from page with errors', async () => {
         // Arrange
+        const session = aRequestSession();
+
         const { req, res } = createMocks<PostEffectiveFromDateRequest>({
           params: { _id: dealId },
-          session: {
-            user: mockUser,
-            userToken: 'a user token',
-          },
+          session,
           body: inputtedDate,
         });
 
@@ -145,13 +131,43 @@ describe('postEffectiveFromDate', () => {
         expect(res._getRenderView()).toEqual('case/cancellation/effective-from-date.njk');
         expect(res._getRenderData() as EffectiveFromDateViewModel).toEqual({
           activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
-          user: mockUser,
+          user: session.user,
           ukefDealId,
           dealId,
           errors,
           day,
           month,
           year,
+          previousPage: `/case/${dealId}/cancellation/bank-request-date`,
+        });
+      });
+
+      it('renders the page with the back URL as the check details page when "change" is passed in as a query parameter', async () => {
+        // Arrange
+        const session = aRequestSession();
+
+        const { req, res } = createMocks<PostEffectiveFromDateRequest>({
+          params: { _id: dealId },
+          query: { status: 'change' },
+          session,
+          body: inputtedDate,
+        });
+
+        // Act
+        await postEffectiveFromDate(req, res);
+
+        // Assert
+        expect(res._getRenderView()).toEqual('case/cancellation/effective-from-date.njk');
+        expect(res._getRenderData() as EffectiveFromDateViewModel).toEqual({
+          activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
+          user: session.user,
+          ukefDealId,
+          dealId,
+          errors,
+          day,
+          month,
+          year,
+          previousPage: `/case/${dealId}/cancellation/check-details`,
         });
       });
 
@@ -159,10 +175,7 @@ describe('postEffectiveFromDate', () => {
         // Arrange
         const { req, res } = createMocks<PostEffectiveFromDateRequest>({
           params: { _id: dealId },
-          session: {
-            user: mockUser,
-            userToken: 'a user token',
-          },
+          session: aRequestSession(),
           body: inputtedDate,
         });
 
@@ -189,14 +202,11 @@ describe('postEffectiveFromDate', () => {
 
       it('updates the deal cancellation effective from date', async () => {
         // Arrange
-        const userToken = 'userToken';
+        const session = aRequestSession();
 
         const { req, res } = createMocks<PostEffectiveFromDateRequest>({
           params: { _id: dealId },
-          session: {
-            user: mockUser,
-            userToken,
-          },
+          session,
           body: {
             'effective-from-date-day': testDate.getDate(),
             'effective-from-date-month': testDate.getMonth() + 1,
@@ -209,19 +219,14 @@ describe('postEffectiveFromDate', () => {
 
         // Assert
         expect(api.updateDealCancellation).toHaveBeenCalledTimes(1);
-        expect(api.updateDealCancellation).toHaveBeenCalledWith(dealId, { effectiveFrom: testDate.valueOf() }, userToken);
+        expect(api.updateDealCancellation).toHaveBeenCalledWith(dealId, { effectiveFrom: testDate.valueOf() }, session.userToken);
       });
 
       it('redirects to the check cancellation details page', async () => {
         // Arrange
-        const userToken = 'userToken';
-
         const { req, res } = createMocks<PostEffectiveFromDateRequest>({
           params: { _id: dealId },
-          session: {
-            user: mockUser,
-            userToken,
-          },
+          session: aRequestSession(),
           body: {
             'effective-from-date-day': testDate.getDate(),
             'effective-from-date-month': testDate.getMonth() + 1,
@@ -233,7 +238,7 @@ describe('postEffectiveFromDate', () => {
         await postEffectiveFromDate(req, res);
 
         // Assert
-        expect(res._getRedirectUrl()).toBe(`/case/${dealId}/cancellation/check-details`);
+        expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/cancellation/check-details`);
       });
     });
   });

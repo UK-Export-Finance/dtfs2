@@ -31,7 +31,7 @@ describe('calculateTotalCurrencyAndAmount', () => {
     const totalCurrencyAndAmount = calculateTotalCurrencyAndAmount(currencyAndAmountList);
 
     // Assert
-    expect(totalCurrencyAndAmount.currency).toBe('JPY');
+    expect(totalCurrencyAndAmount.currency).toEqual('JPY');
   });
 
   it('returns an object with the sum total of the supplied list amount as the amount', () => {
@@ -46,6 +46,6 @@ describe('calculateTotalCurrencyAndAmount', () => {
     const totalCurrencyAndAmount = calculateTotalCurrencyAndAmount(currencyAndAmountList);
 
     // Assert
-    expect(totalCurrencyAndAmount.amount).toBe(350);
+    expect(totalCurrencyAndAmount.amount).toEqual(350);
   });
 });

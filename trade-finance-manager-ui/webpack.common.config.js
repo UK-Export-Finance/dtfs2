@@ -13,6 +13,7 @@ module.exports = {
     enableSelectAllTableCheckbox: './scripts/enable-select-all-table-checkbox.js',
     enableFindReportsByYearDropdown: './scripts/enable-find-reports-by-year-dropdown.ts',
     mojFilterHide: './scripts/moj-filter-hide.ts',
+    ssoRedirectAutoSubmit: './scripts/sso-redirect-auto-submit.ts',
   },
   output: {
     path: path.join(__dirname, 'public/js'),

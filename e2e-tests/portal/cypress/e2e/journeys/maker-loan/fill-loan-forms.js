@@ -12,13 +12,19 @@ const guaranteeDetails = {
     pages.loanGuaranteeDetails.unconditionalNameInput().clear();
     cy.keyboardInput(pages.loanGuaranteeDetails.unconditionalNameInput(), LOAN_FORM_VALUES.GUARANTEE_DETAILS.name);
 
-    cy.keyboardInput(pages.loanGuaranteeDetails.requestedCoverStartDateDayInput(), LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateDay);
-    cy.keyboardInput(pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput(), LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateMonth);
-    cy.keyboardInput(pages.loanGuaranteeDetails.requestedCoverStartDateYearInput(), LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateYear);
+    cy.completeDateFormFields({
+      idPrefix: 'requestedCoverStartDate',
+      day: LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateDay,
+      month: LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateMonth,
+      year: LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateYear,
+    });
 
-    cy.keyboardInput(pages.loanGuaranteeDetails.coverEndDateDayInput(), LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateDay);
-    cy.keyboardInput(pages.loanGuaranteeDetails.coverEndDateMonthInput(), LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateMonth);
-    cy.keyboardInput(pages.loanGuaranteeDetails.coverEndDateYearInput(), LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateYear);
+    cy.completeDateFormFields({
+      idPrefix: 'coverEndDate',
+      day: LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateDay,
+      month: LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateMonth,
+      year: LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateYear,
+    });
   },
 };
 
@@ -35,9 +41,14 @@ const financialDetails = {
     pages.loanFinancialDetails.currencySameAsSupplyContractCurrencyInputNo().click();
     pages.loanFinancialDetails.currencyInput().select(LOAN_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
     cy.keyboardInput(pages.loanFinancialDetails.conversionRateInput(), LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRate);
-    cy.keyboardInput(pages.loanFinancialDetails.conversionRateDateDayInput(), LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateDay);
-    cy.keyboardInput(pages.loanFinancialDetails.conversionRateDateMonthInput(), LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateMonth);
-    cy.keyboardInput(pages.loanFinancialDetails.conversionRateDateYearInput(), LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateYear);
+
+    cy.completeDateFormFields({
+      idPrefix: 'conversionRateDate',
+      day: LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateDay,
+      month: LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateMonth,
+      year: LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateYear,
+    });
+
     cy.keyboardInput(pages.loanFinancialDetails.disbursementAmountInput(), LOAN_FORM_VALUES.FINANCIAL_DETAILS.disbursementAmount);
     cy.keyboardInput(pages.loanFinancialDetails.interestMarginFeeInput(), LOAN_FORM_VALUES.FINANCIAL_DETAILS.interestMarginFee);
     cy.keyboardInput(pages.loanFinancialDetails.coveredPercentageInput(), LOAN_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage);

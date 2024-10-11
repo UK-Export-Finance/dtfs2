@@ -4,11 +4,11 @@ import {
   getFormattedReportPeriodWithShortMonth,
   isEqualMonthAndYear,
   PortalSessionUser,
+  getMonthName,
 } from '@ukef/dtfs2-common';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import { PreviousUtilisationReportsResponseBody, UtilisationReportResponseBody } from '../../../../api-response-types';
 import { PreviousReportNavItemViewModel, PreviousReportViewModel, PreviousReportsViewModel } from '../../../../types/view-models/previous-reports';
-import { getMonthName } from '../../../../helpers/getMonthName';
 
 const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportReconciliationStatus, string> = {
   REPORT_NOT_RECEIVED: 'Not submitted',

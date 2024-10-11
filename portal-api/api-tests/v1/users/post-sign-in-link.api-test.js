@@ -133,7 +133,7 @@ describe('POST /users/me/sign-in-link', () => {
       await sendSignInLink();
 
       const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
-      expect(userInDb.signInLinkSendCount).toBe(initialSignInLinkSendCount + 1);
+      expect(userInDb.signInLinkSendCount).toEqual(initialSignInLinkSendCount + 1);
     });
 
     it('does not email a new sign in link', async () => {
@@ -168,7 +168,7 @@ describe('POST /users/me/sign-in-link', () => {
       await sendSignInLink();
 
       const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
-      expect(userInDb.signInLinkSendCount).toBe(initialSignInLinkSendCount + 1);
+      expect(userInDb.signInLinkSendCount).toEqual(initialSignInLinkSendCount + 1);
     });
 
     it('does not email a new sign in link', async () => {
@@ -211,7 +211,7 @@ describe('POST /users/me/sign-in-link', () => {
       await sendSignInLink();
 
       const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
-      expect(userInDb.signInLinkSendCount).toBe(4);
+      expect(userInDb.signInLinkSendCount).toEqual(4);
     });
 
     it('keeps any existing sign in token data', async () => {
@@ -346,14 +346,14 @@ describe('POST /users/me/sign-in-link', () => {
             it('should return a 201 response', async () => {
               const { status } = await sendSignInLink();
 
-              expect(status).toBe(201);
+              expect(status).toEqual(201);
             });
 
             it('increments the signInLinkSendCount', async () => {
               await sendSignInLink();
 
               const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
-              expect(userInDb.signInLinkSendCount).toBe(1);
+              expect(userInDb.signInLinkSendCount).toEqual(1);
             });
 
             describe('when the user has not been sent a sign in link before', () => {
@@ -375,7 +375,7 @@ describe('POST /users/me/sign-in-link', () => {
                 await sendSignInLink();
 
                 const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
-                expect(userInDb.signInLinkSendCount).toBe(1);
+                expect(userInDb.signInLinkSendCount).toEqual(1);
               });
 
               it('adds the signInToken to the end of saved signInTokens array', async () => {
@@ -420,7 +420,7 @@ describe('POST /users/me/sign-in-link', () => {
                   await sendSignInLink();
 
                   const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
-                  expect(userInDb.signInLinkSendCount).toBe(initialSignInLinkSendCount + 1);
+                  expect(userInDb.signInLinkSendCount).toEqual(initialSignInLinkSendCount + 1);
                 });
 
                 it('adds the signInToken to the end of saved signInTokens array', async () => {
@@ -493,14 +493,14 @@ describe('POST /users/me/sign-in-link', () => {
   });
 
   function expect403ErrorWithUserBlockedMessage({ status, body }) {
-    expect(status).toBe(403);
+    expect(status).toEqual(403);
     expect(body).toStrictEqual({
       error: 'Forbidden',
       message: `User blocked: ${partiallyLoggedInUserId}`,
     });
   }
   function expect500ErrorWithFailedToCreateCodeMessage({ status, body }) {
-    expect(status).toBe(500);
+    expect(status).toEqual(500);
     expect(body).toStrictEqual({
       error: 'Internal Server Error',
       message: 'Failed to create a sign in token',
@@ -508,7 +508,7 @@ describe('POST /users/me/sign-in-link', () => {
   }
 
   function expect500ErrorWithFailedToSaveCodeMessage({ status, body }) {
-    expect(status).toBe(500);
+    expect(status).toEqual(500);
     expect(body).toStrictEqual({
       error: 'Internal Server Error',
       message: 'Failed to save the sign in token',
@@ -516,7 +516,7 @@ describe('POST /users/me/sign-in-link', () => {
   }
 
   function expect500ErrorWithFailedToSendEmailMessage({ status, body }) {
-    expect(status).toBe(500);
+    expect(status).toEqual(500);
     expect(body).toStrictEqual({
       error: 'Internal Server Error',
       message: 'Failed to email the sign in token',

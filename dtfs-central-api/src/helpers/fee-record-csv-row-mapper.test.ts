@@ -33,7 +33,7 @@ describe('fee-record-helpers', () => {
       });
 
       // Assert
-      expect(feeRecordEntity instanceof FeeRecordEntity).toBe(true);
+      expect(feeRecordEntity instanceof FeeRecordEntity).toEqual(true);
       expect(feeRecordEntity).toEqual(
         expect.objectContaining<Partial<FeeRecordEntity>>({
           facilityId: rawCsvData['ukef facility id'],
@@ -64,7 +64,7 @@ describe('fee-record-helpers', () => {
       });
 
       // Assert
-      expect(feeRecordEntity instanceof FeeRecordEntity).toBe(true);
+      expect(feeRecordEntity instanceof FeeRecordEntity).toEqual(true);
       expect(feeRecordEntity.status).toEqual<FeeRecordStatus>('TO_DO');
     });
 
@@ -77,7 +77,7 @@ describe('fee-record-helpers', () => {
       });
 
       // Assert
-      expect(feeRecordEntity instanceof FeeRecordEntity).toBe(true);
+      expect(feeRecordEntity instanceof FeeRecordEntity).toEqual(true);
       expect(feeRecordEntity.status).toEqual<FeeRecordStatus>('MATCH');
     });
 

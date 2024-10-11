@@ -1,4 +1,4 @@
-import { CURRENCY, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder } from '@ukef/dtfs2-common';
+import { CURRENCY, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, ValidatedPaymentDetailsFilters } from '@ukef/dtfs2-common';
 import { aUtilisationReport, getSqlIdGenerator } from '../../../../../../test-helpers';
 import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-payment-entity-group';
 import {
@@ -7,7 +7,6 @@ import {
   getPaymentCurrencyFilterer,
   getPaymentReferenceFilterer,
 } from './filter-fee-record-payment-entity-groups';
-import { ValidatedPaymentDetailsFilters } from '../../../../../types/utilisation-reports';
 
 describe('get-utilisation-report-reconciliation-details-by-id.controller helpers', () => {
   const feeRecordIdGenerator = getSqlIdGenerator();
@@ -272,7 +271,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
 
         const filters: ValidatedPaymentDetailsFilters = {
           facilityId: '2222', // partial matches on all fee record payment groups
-          paymentCurrency: 'EUR', // matches all payments in thirdGroup, and 1/2 payments in secondGroup
+          paymentCurrency: CURRENCY.EUR, // matches all payments in thirdGroup, and 1/2 payments in secondGroup
           paymentReference: 'AAA', // matches all payments in firstGroup and thirdGroup
         };
 
@@ -301,7 +300,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const result = filterer(group);
 
         // Assert
-        expect(result).toBe(true);
+        expect(result).toEqual(true);
       });
     });
 
@@ -320,7 +319,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const result = filterer(group);
 
         // Assert
-        expect(result).toBe(true);
+        expect(result).toEqual(true);
       });
     });
 
@@ -339,7 +338,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const result = filterer(group);
 
         // Assert
-        expect(result).toBe(false);
+        expect(result).toEqual(false);
       });
     });
   });
@@ -360,7 +359,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const result = filterer(group);
 
         // Assert
-        expect(result).toBe(true);
+        expect(result).toEqual(true);
       });
     });
 
@@ -379,7 +378,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const result = filterer(group);
 
         // Assert
-        expect(result).toBe(false);
+        expect(result).toEqual(false);
       });
     });
   });
@@ -403,7 +402,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const result = filterer(group);
 
         // Assert
-        expect(result).toBe(true);
+        expect(result).toEqual(true);
       });
     });
 
@@ -425,7 +424,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const result = filterer(group);
 
         // Assert
-        expect(result).toBe(true);
+        expect(result).toEqual(true);
       });
     });
 
@@ -447,7 +446,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const result = filterer(group);
 
         // Assert
-        expect(result).toBe(false);
+        expect(result).toEqual(false);
       });
     });
   });

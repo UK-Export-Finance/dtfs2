@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+import { tomorrowDay } from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, T1_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 import pages from '../../../pages';
 
@@ -50,9 +50,8 @@ context('Amendments underwriting page', () => {
       amendmentsPage.addAmendmentButton().click();
       cy.url().should('contain', 'request-date');
 
-      cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
-      cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
-      cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+      cy.completeDateFormFields({ idPrefix: 'amendment--request-date' });
+
       cy.clickContinueButton();
 
       cy.url().should('contain', 'request-approval');
@@ -72,9 +71,8 @@ context('Amendments underwriting page', () => {
       cy.clickContinueButton();
       cy.url().should('contain', 'cover-end-date');
 
-      cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.tomorrowDay);
-      cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.todayMonth);
-      cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.todayYear);
+      cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', day: tomorrowDay });
+
       cy.clickContinueButton();
 
       cy.url().should('contain', 'facility-value');

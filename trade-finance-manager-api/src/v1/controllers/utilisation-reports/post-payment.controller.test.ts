@@ -71,8 +71,8 @@ describe('postPayment', () => {
     await postPayment(req, res);
 
     // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
-    expect(res._isEndCalled()).toBe(true);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+    expect(res._isEndCalled()).toEqual(true);
   });
 
   it('responds with a 500 if an unknown error occurs', async () => {
@@ -85,8 +85,8 @@ describe('postPayment', () => {
     await postPayment(req, res);
 
     // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-    expect(res._isEndCalled()).toBe(true);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+    expect(res._isEndCalled()).toEqual(true);
   });
 
   it('responds with a specific error code if an axios error is thrown', async () => {
@@ -102,8 +102,8 @@ describe('postPayment', () => {
     await postPayment(req, res);
 
     // Assert
-    expect(res._getStatusCode()).toBe(errorStatus);
-    expect(res._isEndCalled()).toBe(true);
+    expect(res._getStatusCode()).toEqual(errorStatus);
+    expect(res._isEndCalled()).toEqual(true);
   });
 
   it('responds with an error message', async () => {
@@ -116,7 +116,7 @@ describe('postPayment', () => {
     await postPayment(req, res);
 
     // Assert
-    expect(res._getData()).toBe('Failed to add payment');
-    expect(res._isEndCalled()).toBe(true);
+    expect(res._getData()).toEqual('Failed to add payment');
+    expect(res._isEndCalled()).toEqual(true);
   });
 });
