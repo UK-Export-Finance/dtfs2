@@ -14,7 +14,7 @@ describe('services/utilisation-report-data-validator/utilisation-report-cell-val
     };
 
     it(`should return the result of "generateErrorsForMismatchedFacilityValues" for "${field}"`, () => {
-      const result = generateFacilityUtilisationErrors(existingData, mockFacilityUtilisationValue, [], csvData, csvData[1]);
+      const result = generateFacilityUtilisationErrors(mockFacilityUtilisationValue, [], csvData, csvData[1], existingData);
 
       const currencyErrors = generateErrorsForMismatchedFacilityValues(csvData, [], csvData[0], field, errorMessage);
 
@@ -30,7 +30,7 @@ describe('services/utilisation-report-data-validator/utilisation-report-cell-val
     } as UtilisationReportFacilityData;
 
     it(`should return the result of "generateErrorsForMismatchedFacilityValues" for "${field}"`, () => {
-      const result = generateFacilityUtilisationErrors(existingData, mockFacilityUtilisationValue, [], csvData, csvData[1]);
+      const result = generateFacilityUtilisationErrors(mockFacilityUtilisationValue, [], csvData, csvData[1], existingData);
 
       expect(result).toEqual([]);
     });
