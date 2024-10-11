@@ -13,7 +13,7 @@ describe('calculateFixedFeeAdjustment', () => {
     jest.resetAllMocks();
   });
 
-  it('returns the product of the utilisation, interest percentage (divided by 100), bank admin fee percentage (fixed at 0.9) and number of days remaining in the cover period divided by the day count basis and rounds to 2 decimal places', () => {
+  it('should return the correct calculation for the fixed fee', () => {
     // Arrange
     const utilisation = 100000;
     const interestPercentage = 5;
@@ -37,6 +37,6 @@ describe('calculateFixedFeeAdjustment', () => {
     });
 
     // Assert
-    expect(result).toBe(2626.03); // 100000 * (5 / 100) * 0.9 * 213 / 365 = 2,626.0274 = 2,626.03 (ROUNDED)
+    expect(result).toEqual(2626.03); // 100000 * (5 / 100) * 0.9 * 213 / 365 = 2,626.0274 = 2,626.03 (ROUNDED)
   });
 });

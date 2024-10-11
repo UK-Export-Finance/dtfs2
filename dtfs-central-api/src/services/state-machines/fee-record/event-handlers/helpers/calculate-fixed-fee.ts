@@ -16,7 +16,8 @@ const BANK_ADMIN_FEE_ADJUSTMENT = 0.9;
  * @returns The number of days remaining in the cover period
  */
 const getNumberOfDaysRemainingInCoverPeriod = (reportPeriodEnd: MonthAndYear, coverEndDate: Date): number => {
-  const endDateOfReportPeriod = startOfDay(endOfMonth(getDateFromMonthAndYear(reportPeriodEnd)));
+  const startDateOfReportPeriod = getDateFromMonthAndYear(reportPeriodEnd);
+  const endDateOfReportPeriod = startOfDay(endOfMonth(startDateOfReportPeriod));
   const startDateOfNextReportPeriod = addDays(endDateOfReportPeriod, 1);
 
   return differenceInDays(coverEndDate, startDateOfNextReportPeriod);
