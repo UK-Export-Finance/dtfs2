@@ -5,7 +5,6 @@ describe('date helpers', () => {
   describe('getNowAsUtcISOString', () => {
     beforeAll(() => {
       jest.useFakeTimers();
-      jest.setSystemTime(new Date());
     });
 
     afterAll(() => {
