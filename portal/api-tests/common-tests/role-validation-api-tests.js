@@ -36,11 +36,11 @@ const withRoleValidationApiTests = ({
             await get('/login/sign-in-link', { t: token, u: userId }, { Cookie: sessionCookie });
             const response = await makeRequestWithHeaders({ Cookie: sessionCookie });
 
-            expect(response.status).toBe(successCode);
+            expect(response.status).toEqual(successCode);
 
             if (successHeaders) {
               for (const [key, value] of Object.entries(successHeaders)) {
-                expect(response.headers[key]).toBe(value);
+                expect(response.headers[key]).toEqual(value);
               }
             }
           });
@@ -58,9 +58,9 @@ const withRoleValidationApiTests = ({
           await get('/login/sign-in-link', { t: token, u: userId }, { Cookie: sessionCookie });
           const response = await makeRequestWithHeaders({ Cookie: sessionCookie });
 
-          expect(response.status).toBe(302);
+          expect(response.status).toEqual(302);
           const redirectUrl = redirectUrlForInvalidRoles ?? '/';
-          expect(response.headers.location).toBe(redirectUrl);
+          expect(response.headers.location).toEqual(redirectUrl);
         });
       });
     }

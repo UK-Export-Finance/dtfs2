@@ -56,7 +56,7 @@ describe('DELETE /v1/portal/durable-functions', () => {
       })
       .to(`/v1/portal/durable-functions`);
 
-    expect(firstStatus).toBe(200);
-    expect(secondStatus).toBe(200);
+    expect(firstStatus).toEqual(200);
+    expect(secondStatus).toEqual(200);
   });
 });

@@ -226,9 +226,9 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
 
     // Assert
     expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, utilisationReport);
-    expect(utilisationReport.lastUpdatedByIsSystemUser).toBe(false);
+    expect(utilisationReport.lastUpdatedByIsSystemUser).toEqual(false);
     expect(utilisationReport.lastUpdatedByPortalUserId).toBeNull();
-    expect(utilisationReport.lastUpdatedByTfmUserId).toBe(tfmUserId);
+    expect(utilisationReport.lastUpdatedByTfmUserId).toEqual(tfmUserId);
   });
 
   it('updates and saves the report setting status to RECONCILIATION_IN_PROGRESS when the status is PENDING_RECONCILIATION', async () => {
@@ -247,8 +247,8 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
     // Assert
     expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, utilisationReport);
     expect(utilisationReport.status).toBe<UtilisationReportReconciliationStatus>('RECONCILIATION_IN_PROGRESS');
-    expect(utilisationReport.lastUpdatedByIsSystemUser).toBe(false);
+    expect(utilisationReport.lastUpdatedByIsSystemUser).toEqual(false);
     expect(utilisationReport.lastUpdatedByPortalUserId).toBeNull();
-    expect(utilisationReport.lastUpdatedByTfmUserId).toBe(tfmUserId);
+    expect(utilisationReport.lastUpdatedByTfmUserId).toEqual(tfmUserId);
   });
 });

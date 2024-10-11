@@ -52,11 +52,11 @@ describe('updateFacilityUtilisationData', () => {
 
     // Assert
     expect(mockSave).toHaveBeenCalledWith(FacilityUtilisationDataEntity, facilityUtilisationDataEntity);
-    expect(facilityUtilisationDataEntity.utilisation).toBe(9876543.21);
+    expect(facilityUtilisationDataEntity.utilisation).toEqual(9876543.21);
     expect(facilityUtilisationDataEntity.reportPeriod).toEqual(reportPeriod);
-    expect(facilityUtilisationDataEntity.lastUpdatedByTfmUserId).toBe('abc123');
+    expect(facilityUtilisationDataEntity.lastUpdatedByTfmUserId).toEqual('abc123');
     expect(facilityUtilisationDataEntity.lastUpdatedByPortalUserId).toBeNull();
-    expect(facilityUtilisationDataEntity.lastUpdatedByIsSystemUser).toBe(false);
+    expect(facilityUtilisationDataEntity.lastUpdatedByIsSystemUser).toEqual(false);
   });
 
   it('calculates the fixed fee using the supplied facility utilisation data id and utilisation and the supplied report period and updates the facility utilisation data fixed fee', async () => {
@@ -86,6 +86,6 @@ describe('updateFacilityUtilisationData', () => {
     });
 
     // Assert
-    expect(facilityUtilisationDataEntity.fixedFee).toBe(76543.21);
+    expect(facilityUtilisationDataEntity.fixedFee).toEqual(76543.21);
   });
 });

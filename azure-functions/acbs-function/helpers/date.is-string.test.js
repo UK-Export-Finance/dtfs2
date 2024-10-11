@@ -52,6 +52,6 @@ describe('isString', () => {
   it.each(testData)('$description ($mockValue)', ({ mockValue, expected }) => {
     const result = isString(mockValue);
 
-    expect(result).toBe(expected);
+    expect(result).toEqual(expected);
   });
 });

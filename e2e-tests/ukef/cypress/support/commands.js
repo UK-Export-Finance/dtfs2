@@ -21,6 +21,7 @@ Cypress.Commands.add('overridePortalUserSignInTokenWithValidTokenByUsername', re
 Cypress.Commands.add('getUserByUsername', require('./portal/getUserByUsername'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('enterUsernameAndPassword', require('./portal/enterUsernameAndPassword'));
+Cypress.Commands.add('completeDateFormFields', require('./portal/completeDateFormFields'));
 
 Cypress.Commands.add('forceVisit', (url) => {
   cy.window().then((win) => win.open(url, '_self'));

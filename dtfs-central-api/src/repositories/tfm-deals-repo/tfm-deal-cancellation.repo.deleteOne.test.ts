@@ -87,7 +87,7 @@ describe('tfm-deals-cancellation-repo', () => {
       const result = await TfmDealCancellationRepo.deleteOneDealCancellation(dealId, auditDetails);
 
       // Assert
-      expect(result).toBe(mockUpdateResult);
+      expect(result).toEqual(mockUpdateResult);
     });
   });
 });

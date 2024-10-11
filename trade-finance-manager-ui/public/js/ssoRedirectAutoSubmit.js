@@ -1,0 +1,2 @@
+var DTFS_TFM;!function(){"use strict";const t=document.getElementById("accept-sso-redirect-form");t&&t.submit(),(DTFS_TFM=void 0===DTFS_TFM?{}:DTFS_TFM).ssoRedirectAutoSubmit={}}();
+//# sourceMappingURL=ssoRedirectAutoSubmit.js.map

@@ -7,7 +7,7 @@ describe('InvalidEnvironmentVariableError', () => {
   it('exposes the message it was created with', () => {
     const exception = new InvalidEnvironmentVariableError(message);
 
-    expect(exception.message).toBe(message);
+    expect(exception.message).toEqual(message);
   });
 
   it('exposes the 500 (Internal Server Error) status code', () => {
@@ -15,12 +15,12 @@ describe('InvalidEnvironmentVariableError', () => {
     const error = new InvalidEnvironmentVariableError(message);
 
     // Assert
-    expect(error.status).toBe(HttpStatusCode.InternalServerError);
+    expect(error.status).toEqual(HttpStatusCode.InternalServerError);
   });
 
   it('exposes the name of the exception', () => {
     const exception = new InvalidEnvironmentVariableError(message);
 
-    expect(exception.name).toBe('InvalidEnvironmentVariableError');
+    expect(exception.name).toEqual('InvalidEnvironmentVariableError');
   });
 });

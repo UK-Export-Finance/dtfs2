@@ -7,8 +7,9 @@ import {
   mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems,
   mapFeeRecordPaymentGroupsToPaymentDetailsViewModel,
   mapKeyingSheetToKeyingSheetViewModel,
+  mapPaymentDetailsFiltersToViewModel,
 } from '../helpers';
-import { UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
+import { PaymentDetailsViewModel, UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 import { FeeRecordPaymentGroup } from '../../../api-response-types';
 import { extractQueryAndSessionData } from './extract-query-and-session-data';
 import { mapToUtilisationDetailsViewModel } from '../helpers/utilisation-details-helper';
@@ -16,6 +17,9 @@ import { mapToUtilisationDetailsViewModel } from '../helpers/utilisation-details
 export type GetUtilisationReportReconciliationRequest = CustomExpressRequest<{
   query: {
     premiumPaymentsFacilityId?: string;
+    paymentDetailsFacilityId?: string;
+    paymentDetailsPaymentCurrency?: string;
+    paymentDetailsPaymentReference?: string;
     selectedFeeRecordIds?: string;
   };
 }>;
@@ -46,7 +50,13 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
   const { reportId } = req.params;
 
   try {
-    const { premiumPaymentsFacilityId, selectedFeeRecordIds: selectedFeeRecordIdsQuery } = req.query;
+    const {
+      premiumPaymentsFacilityId,
+      paymentDetailsFacilityId,
+      paymentDetailsPaymentReference,
+      paymentDetailsPaymentCurrency,
+      selectedFeeRecordIds: selectedFeeRecordIdsQuery,
+    } = req.query;
 
     const { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds } = req.session;
 
@@ -54,8 +64,16 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
     delete req.session.checkedCheckboxIds;
     delete req.session.generateKeyingDataErrorKey;
 
-    const { premiumPaymentsFilters, premiumPaymentsFilterError, premiumPaymentsTableDataError, isCheckboxChecked } = extractQueryAndSessionData(
-      { premiumPaymentsFacilityId, selectedFeeRecordIdsQuery },
+    const {
+      premiumPaymentsFilters,
+      premiumPaymentsFilterError,
+      premiumPaymentsTableDataError,
+      paymentDetailsFilters,
+      paymentDetailsFilterErrors,
+      isPaymentDetailsFilterActive,
+      isCheckboxChecked,
+    } = extractQueryAndSessionData(
+      { premiumPaymentsFacilityId, paymentDetailsFacilityId, paymentDetailsPaymentReference, paymentDetailsPaymentCurrency, selectedFeeRecordIdsQuery },
       { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds },
       req.originalUrl,
     );
@@ -63,6 +81,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
     const { premiumPayments, paymentDetails, reportPeriod, bank, keyingSheet, utilisationDetails } = await api.getUtilisationReportReconciliationDetailsById(
       reportId,
       premiumPaymentsFilters,
+      paymentDetailsFilters,
       userToken,
     );
 
@@ -74,7 +93,14 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
 
     const keyingSheetViewModel = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
 
-    const paymentDetailsViewModel = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel(paymentDetails);
+    const paymentDetailsFiltersViewModel = mapPaymentDetailsFiltersToViewModel(paymentDetailsFilters);
+
+    const paymentDetailsViewModel: PaymentDetailsViewModel = {
+      rows: mapFeeRecordPaymentGroupsToPaymentDetailsViewModel(paymentDetails),
+      filters: paymentDetailsFiltersViewModel,
+      filterErrors: paymentDetailsFilterErrors,
+      isFilterActive: isPaymentDetailsFilterActive,
+    };
 
     const utilisationDetailsViewModel = mapToUtilisationDetailsViewModel(utilisationDetails, reportId);
 
@@ -89,9 +115,9 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       premiumPaymentsTableDataError,
       enablePaymentsReceivedSorting,
       premiumPayments: premiumPaymentsViewModel,
-      keyingSheet: keyingSheetViewModel,
       paymentDetails: paymentDetailsViewModel,
       utilisationDetails: utilisationDetailsViewModel,
+      keyingSheet: keyingSheetViewModel,
     });
   } catch (error) {
     console.error(`Failed to render utilisation report with id ${reportId}`, error);

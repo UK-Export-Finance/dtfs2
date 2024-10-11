@@ -338,14 +338,14 @@ describe('getCompanyByRegistrationNumber()', () => {
     };
     Axios.get.mockRejectedValueOnce(axiosError);
 
-    await expect(api.getCompanyByRegistrationNumber({ registrationNumber, userToken })).rejects.toBe(axiosError);
+    await expect(api.getCompanyByRegistrationNumber({ registrationNumber, userToken })).rejects.toEqual(axiosError);
   });
 
   it('rethrows the error if making the request to Portal API throws an unhandled error', async () => {
     const error = new Error();
     Axios.get.mockRejectedValueOnce(error);
 
-    await expect(api.getCompanyByRegistrationNumber({ registrationNumber, userToken })).rejects.toBe(error);
+    await expect(api.getCompanyByRegistrationNumber({ registrationNumber, userToken })).rejects.toEqual(error);
   });
 });
 

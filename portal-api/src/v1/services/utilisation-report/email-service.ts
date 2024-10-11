@@ -1,8 +1,7 @@
 import z from 'zod';
-import { InvalidEnvironmentVariableError, PaymentOfficerTeam, asString } from '@ukef/dtfs2-common';
+import { InvalidEnvironmentVariableError, PaymentOfficerTeam, asString, formatDateForEmail } from '@ukef/dtfs2-common';
 import sendEmail from '../../email';
 import { EMAIL_TEMPLATE_IDS } from '../../../constants';
-import { formatDateForEmail } from '../../helpers/formatDateForEmail';
 import api from '../../api';
 
 const getUkefGefReportingEmailRecipients = () => {

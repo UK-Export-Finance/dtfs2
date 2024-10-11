@@ -17,7 +17,7 @@ export const getLatestCompletedAmendmentToFacilityValue = (tfmFacility: TfmFacil
 
   const latestAmendmentWithFacilityValue = orderBy(completedAmendments, ['updatedAt'], ['desc']).find(({ value }) => value !== undefined && value !== null);
 
-  if (latestAmendmentWithFacilityValue?.value !== undefined && latestAmendmentWithFacilityValue?.value !== null) {
+  if (latestAmendmentWithFacilityValue?.value !== undefined) {
     return latestAmendmentWithFacilityValue.value;
   }
 

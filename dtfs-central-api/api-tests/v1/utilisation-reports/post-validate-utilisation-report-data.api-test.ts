@@ -24,7 +24,7 @@ describe(`POST ${URL}`, () => {
     const response = await testApi.post(requestBody).to(URL);
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it(`returns a ${HttpStatusCode.BadRequest} when the 'reportData' items are not csv rows`, async () => {
@@ -37,7 +37,7 @@ describe(`POST ${URL}`, () => {
     const response = await testApi.post(requestBody).to(URL);
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   describe('when the request body is valid', () => {
@@ -51,7 +51,7 @@ describe(`POST ${URL}`, () => {
       const response = await testApi.post(requestBody).to(URL);
 
       // Assert
-      expect(response.status).toBe(HttpStatusCode.Ok);
+      expect(response.status).toEqual(HttpStatusCode.Ok);
     });
 
     describe('and when the UKEF facility ID is an 8 to 10 digit string', () => {

@@ -451,7 +451,7 @@ describe(baseUrl, () => {
         const { status, body } = await as(aMaker).put({ isUsingFacilityEndDate: true }).to(`${baseUrl}/${facilityBody.details._id}`);
 
         expect(body).toEqual({ status: 400, message: 'Cannot add facility end date to deal version 0' });
-        expect(status).toBe(400);
+        expect(status).toEqual(400);
       });
 
       it('returns 400 when payload contains bankReviewDate', async () => {
@@ -459,7 +459,7 @@ describe(baseUrl, () => {
         const { status, body } = await as(aMaker).put({ bankReviewDate: new Date().toISOString() }).to(`${baseUrl}/${facilityBody.details._id}`);
 
         expect(body).toEqual({ status: 400, message: 'Cannot add facility end date to deal version 0' });
-        expect(status).toBe(400);
+        expect(status).toEqual(400);
       });
 
       it('returns 400 when payload contains facilityEndDate', async () => {
@@ -467,7 +467,7 @@ describe(baseUrl, () => {
         const { status, body } = await as(aMaker).put({ bankReviewDate: new Date().toISOString() }).to(`${baseUrl}/${facilityBody.details._id}`);
 
         expect(body).toEqual({ status: 400, message: 'Cannot add facility end date to deal version 0' });
-        expect(status).toBe(400);
+        expect(status).toEqual(400);
       });
     });
 
@@ -486,7 +486,7 @@ describe(baseUrl, () => {
 
         const { status } = await as(aMaker).put({ isUsingFacilityEndDate: true }).to(`${baseUrl}/${facilityBody.details._id}`);
 
-        expect(status).toBe(HttpStatusCode.Ok);
+        expect(status).toEqual(HttpStatusCode.Ok);
       });
 
       it('returns 200 when payload is valid & contains bankReviewDate', async () => {
@@ -494,7 +494,7 @@ describe(baseUrl, () => {
 
         const { status } = await as(aMaker).put({ bankReviewDate: new Date().toISOString() }).to(`${baseUrl}/${facilityBody.details._id}`);
 
-        expect(status).toBe(HttpStatusCode.Ok);
+        expect(status).toEqual(HttpStatusCode.Ok);
       });
 
       it('returns 200 when payload is valid & contains facilityEndDate', async () => {
@@ -502,7 +502,7 @@ describe(baseUrl, () => {
 
         const { status } = await as(aMaker).put({ facilityEndDate: new Date().toISOString() }).to(`${baseUrl}/${facilityBody.details._id}`);
 
-        expect(status).toBe(HttpStatusCode.Ok);
+        expect(status).toEqual(HttpStatusCode.Ok);
       });
 
       it('returns 200 when facilityEndDate & bankReviewDate are both null', async () => {
@@ -510,7 +510,7 @@ describe(baseUrl, () => {
 
         const { status } = await as(aMaker).put({ facilityEndDate: null, bankReviewDate: null }).to(`${baseUrl}/${facilityBody.details._id}`);
 
-        expect(status).toBe(HttpStatusCode.Ok);
+        expect(status).toEqual(HttpStatusCode.Ok);
       });
 
       it('returns 400 when isUsingFacilityEndDate is not a boolean', async () => {

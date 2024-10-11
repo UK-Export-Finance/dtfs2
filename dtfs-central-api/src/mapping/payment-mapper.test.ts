@@ -13,7 +13,7 @@ describe('payment mapper', () => {
       const payment = mapPaymentEntityToPayment(paymentEntity);
 
       // Assert
-      expect(payment.currency).toBe(paymentCurrency);
+      expect(payment.currency).toEqual(paymentCurrency);
     });
 
     it('maps the payment entity amount to the payment amount', () => {
@@ -26,7 +26,7 @@ describe('payment mapper', () => {
       const payment = mapPaymentEntityToPayment(paymentEntity);
 
       // Assert
-      expect(payment.amount).toBe(paymentAmount);
+      expect(payment.amount).toEqual(paymentAmount);
     });
 
     it('maps the payment entity id to the payment id', () => {
@@ -39,7 +39,7 @@ describe('payment mapper', () => {
       const payment = mapPaymentEntityToPayment(paymentEntity);
 
       // Assert
-      expect(payment.id).toBe(paymentId);
+      expect(payment.id).toEqual(paymentId);
     });
 
     it('maps the payment entity dateReceived to the payment dateReceived', () => {
@@ -65,7 +65,7 @@ describe('payment mapper', () => {
       const payment = mapPaymentEntityToPayment(paymentEntity);
 
       // Assert
-      expect(payment.reference).toBe(reference);
+      expect(payment.reference).toEqual(reference);
     });
 
     it('maps the payment entity reference to the payment reference when the reference is not defined', () => {

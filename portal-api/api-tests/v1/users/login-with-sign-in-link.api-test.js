@@ -83,7 +83,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
         userToken: partiallyLoggedInUserToken,
       });
 
-      expect(status).toBe(400);
+      expect(status).toEqual(400);
       expect(body).toStrictEqual({
         message: 'Bad Request',
         errors: [
@@ -105,7 +105,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
         userToken: partiallyLoggedInUserToken,
       });
 
-      expect(status).toBe(400);
+      expect(status).toEqual(400);
       expect(body).toStrictEqual({
         message: 'Bad Request',
         errors: [
@@ -127,7 +127,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
         userToken: partiallyLoggedInUserToken,
       });
 
-      expect(status).toBe(400);
+      expect(status).toEqual(400);
       expect(body).toStrictEqual({
         message: 'Bad Request',
         errors: [
@@ -149,7 +149,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
         userToken: partiallyLoggedInUserToken,
       });
 
-      expect(status).toBe(400);
+      expect(status).toEqual(400);
       expect(body).toStrictEqual({
         message: 'Bad Request',
         errors: [
@@ -172,7 +172,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
         userToken: partiallyLoggedInUserToken,
       });
 
-      expect(status).toBe(400);
+      expect(status).toEqual(400);
       expect(body).toStrictEqual({
         message: 'Bad Request',
         errors: [
@@ -214,7 +214,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
         userToken: anotherPartiallyLoggedInUserToken,
       });
 
-      expect(status).toBe(400);
+      expect(status).toEqual(400);
       expect(body).toStrictEqual({
         message: 'Bad Request',
         errors: [
@@ -235,7 +235,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
           userToken: partiallyLoggedInUserToken,
         });
 
-        expect(status).toBe(404);
+        expect(status).toEqual(404);
         expect(body).toStrictEqual({
           message: 'Not Found',
           errors: [
@@ -275,7 +275,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
             userToken: partiallyLoggedInUserToken,
           });
 
-          expect(status).toBe(404);
+          expect(status).toEqual(404);
           expect(body).toStrictEqual({
             message: 'Not Found',
             errors: [
@@ -311,7 +311,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
               signInToken: validSignInToken,
               userToken: partiallyLoggedInUserToken,
             });
-            expect(status).toBe(403);
+            expect(status).toEqual(403);
             expect(body).toStrictEqual({
               message: 'Forbidden',
               errors: [
@@ -347,7 +347,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
               signInToken: validSignInToken,
               userToken: partiallyLoggedInUserToken,
             });
-            expect(status).toBe(403);
+            expect(status).toEqual(403);
             expect(body).toStrictEqual({
               message: 'Forbidden',
               errors: [
@@ -382,7 +382,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
               signInToken: validSignInToken,
               userToken: partiallyLoggedInUserToken,
             });
-            expect(status).toBe(403);
+            expect(status).toEqual(403);
             expect(body).toStrictEqual({
               message: 'Forbidden',
               errors: [
@@ -418,7 +418,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
               signInToken: validSignInToken,
               userToken: partiallyLoggedInUserToken,
             });
-            expect(status).toBe(403);
+            expect(status).toEqual(403);
             expect(body).toStrictEqual({
               message: 'Forbidden',
               errors: [
@@ -474,7 +474,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
             });
 
             const testUserInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
-            expect(testUserInDb.signInTokens).toBe(undefined);
+            expect(testUserInDb.signInTokens).toEqual(undefined);
           });
         });
       });

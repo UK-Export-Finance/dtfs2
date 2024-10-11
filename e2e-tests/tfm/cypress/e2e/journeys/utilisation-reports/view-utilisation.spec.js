@@ -94,30 +94,30 @@ context('Users can view utilisation', () => {
   });
 
   it('should render the utilisation for each fee record', () => {
-    pages.utilisationReportPage.utilisationTab.utilisationTable.row(FEE_RECORD_ID_ONE).within(() => {
-      cy.assertText(cy.get('[data-cy="facility-id"]'), FACILITY_ID_ONE);
-      cy.assertText(cy.get('[data-cy="exporter"]'), 'Exporter 1');
-      cy.assertText(cy.get('[data-cy="base-currency"]'), CURRENCY.GBP);
-      cy.assertText(cy.get('[data-cy="value"]'), '1,000,000.00');
-      cy.assertText(cy.get('[data-cy="utilisation"]'), '500,000.00');
-      cy.assertText(cy.get('[data-cy="cover-percentage"]'), '80%');
+    pages.utilisationReportPage.utilisationTab.table.row(FEE_RECORD_ID_ONE).within(() => {
+      cy.assertText(pages.utilisationReportPage.utilisationTab.table.facilityId(), FACILITY_ID_ONE);
+      cy.assertText(pages.utilisationReportPage.utilisationTab.table.exporter(), 'Exporter 1');
+      cy.assertText(pages.utilisationReportPage.utilisationTab.table.baseCurrency(), CURRENCY.GBP);
+      cy.assertText(pages.utilisationReportPage.utilisationTab.table.value(), '1,000,000.00');
+      cy.assertText(pages.utilisationReportPage.utilisationTab.table.utilisation(), '500,000.00');
+      cy.assertText(pages.utilisationReportPage.utilisationTab.table.coverPercentage(), '80%');
       // 80% of 500,000 is 400,000
-      cy.assertText(cy.get('[data-cy="exposure"]'), '400,000.00');
-      cy.assertText(cy.get('[data-cy="fees-accrued"]'), `${CURRENCY.EUR} 300.00`);
-      cy.assertText(cy.get('[data-cy="fees-payable"]'), `${CURRENCY.JPY} 100.00`);
+      cy.assertText(pages.utilisationReportPage.utilisationTab.table.exposure(), '400,000.00');
+      cy.assertText(pages.utilisationReportPage.utilisationTab.table.feesAccrued(), `${CURRENCY.EUR} 300.00`);
+      cy.assertText(pages.utilisationReportPage.utilisationTab.table.feesPayable(), `${CURRENCY.JPY} 100.00`);
     });
 
-    pages.utilisationReportPage.utilisationTab.utilisationTable.row(FEE_RECORD_ID_TWO).within(() => {
-      cy.assertText(cy.get('[data-cy="facility-id"]'), FACILITY_ID_TWO);
-      cy.assertText(cy.get('[data-cy="exporter"]'), 'Exporter 2');
-      cy.assertText(cy.get('[data-cy="base-currency"]'), CURRENCY.GBP);
-      cy.assertText(cy.get('[data-cy="value"]'), '300,000.00');
-      cy.assertText(cy.get('[data-cy="utilisation"]'), '199,999.99');
-      cy.assertText(cy.get('[data-cy="cover-percentage"]'), '85%');
+    pages.utilisationReportPage.utilisationTab.table.row(FEE_RECORD_ID_TWO).within(() => {
+      cy.assertText(pages.utilisationReportPage.utilisationTab.table.facilityId(), FACILITY_ID_TWO);
+      cy.assertText(pages.utilisationReportPage.utilisationTab.table.exporter(), 'Exporter 2');
+      cy.assertText(pages.utilisationReportPage.utilisationTab.table.baseCurrency(), CURRENCY.GBP);
+      cy.assertText(pages.utilisationReportPage.utilisationTab.table.value(), '300,000.00');
+      cy.assertText(pages.utilisationReportPage.utilisationTab.table.utilisation(), '199,999.99');
+      cy.assertText(pages.utilisationReportPage.utilisationTab.table.coverPercentage(), '85%');
       // 85% of 199,999.99 is 169,999.9915
-      cy.assertText(cy.get('[data-cy="exposure"]'), '169,999.99');
-      cy.assertText(cy.get('[data-cy="fees-accrued"]'), `${CURRENCY.EUR} 200.00`);
-      cy.assertText(cy.get('[data-cy="fees-payable"]'), `${CURRENCY.GBP} 100.00`);
+      cy.assertText(pages.utilisationReportPage.utilisationTab.table.exposure(), '169,999.99');
+      cy.assertText(pages.utilisationReportPage.utilisationTab.table.feesAccrued(), `${CURRENCY.EUR} 200.00`);
+      cy.assertText(pages.utilisationReportPage.utilisationTab.table.feesPayable(), `${CURRENCY.GBP} 100.00`);
     });
   });
 
