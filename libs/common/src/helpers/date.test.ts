@@ -3,6 +3,15 @@ import { getNowAsUtcISOString, getMonthName } from './date';
 
 describe('date helpers', () => {
   describe('getNowAsUtcISOString', () => {
+    beforeAll(() => {
+      jest.useFakeTimers();
+      jest.setSystemTime(new Date());
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
     it('should return the current time as a UtcISOString', () => {
       const result = getNowAsUtcISOString();
 
