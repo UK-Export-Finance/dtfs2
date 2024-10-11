@@ -1,6 +1,14 @@
 import { getOneIndexedMonth, isValidIsoMonth, isValidIsoYear, toIsoMonthStamp } from './date';
 
 describe('date utils', () => {
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   describe('getOneIndexedMonth', () => {
     it.each([
       { date: new Date(2023, 0), expectedOneIndexMonth: 1 },
