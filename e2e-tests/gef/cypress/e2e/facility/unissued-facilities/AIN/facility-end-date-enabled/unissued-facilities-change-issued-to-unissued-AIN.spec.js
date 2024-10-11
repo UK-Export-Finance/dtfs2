@@ -82,7 +82,7 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.rows().contains(threeMonthsMinusThreeDays.ddMMMyyyy);
+      unissuedFacilityTable.rows().contains(threeMonthsMinusThreeDays.dd_MMM_yyyy);
       statusBanner.applicationBanner().should('exist');
     });
 
@@ -154,9 +154,9 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
     /* should be able to change dates and unissue on facility that has changed to issued */
     it('facility table should have change links on the changed to issued facilities', () => {
       // to check date format
-      const issuedDate = today.dMMMMyyyy;
-      const coverStart = twoMonths.dMMMMyyyy;
-      const coverEnd = threeMonthsOneDay.dMMMMyyyy;
+      const issuedDate = today.d_MMMM_yyyy;
+      const coverStart = twoMonths.d_MMMM_yyyy;
+      const coverEnd = threeMonthsOneDay.d_MMMM_yyyy;
 
       // should be able to change facility three as changed to issued
       applicationPreview.facilitySummaryListTable(0).nameValue().contains(unissuedContingentFacility.name);
@@ -218,10 +218,10 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
     });
 
     it('pressing back, cancel or yes should not edit the facility and take you back to details page', () => {
-      const issuedDate = threeDaysAgo.dMMMMyyyy;
-      const coverStart = threeDaysAgo.dMMMMyyyy;
-      const coverEnd = threeMonthsOneDay.dMMMMyyyy;
-      const facilityEnd = threeMonthsOneDay.dMMMMyyyy;
+      const issuedDate = threeDaysAgo.d_MMMM_yyyy;
+      const coverStart = threeDaysAgo.d_MMMM_yyyy;
+      const coverEnd = threeMonthsOneDay.d_MMMM_yyyy;
+      const facilityEnd = threeMonthsOneDay.d_MMMM_yyyy;
       // should be able to change number 1 as changed to issued
       applicationPreview.facilitySummaryListTable(2).nameValue().contains(unissuedCashFacility.name);
       applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().click();

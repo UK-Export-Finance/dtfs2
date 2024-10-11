@@ -50,7 +50,7 @@ context('Amendments - automatic approval journey', () => {
 
       cy.visit(relative(`/case/${dealId}/deal`));
       caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
-      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(oneMonth.dMMMMyyyy);
+      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
       caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
@@ -63,7 +63,7 @@ context('Amendments - automatic approval journey', () => {
       facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 12,345.00`);
       facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
 
-      facilityPage.facilityCoverEndDate().contains(oneMonth.dMMMMyyyy);
+      facilityPage.facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
       facilityPage.facilityTenor().contains(facilityTenor);
     });
 
@@ -184,7 +184,7 @@ context('Amendments - automatic approval journey', () => {
       amendmentsPage.amendmentAnswerBankRequestDate().should('contain', today.dayLong);
       amendmentsPage.amendmentAnswerRequireApproval().should('contain', 'No');
       amendmentsPage.amendmentAnswerEffectiveDate().should('contain', fourDaysAgo.dayLong);
-      amendmentsPage.amendmentAnswerCoverEndDate().should('contain', twoMonths.ddMMMyyyy);
+      amendmentsPage.amendmentAnswerCoverEndDate().should('contain', twoMonths.dd_MMM_yyyy);
       amendmentsPage.amendmentAnswerFacilityValue().should('contain', 'GBP 123.00');
 
       cy.clickContinueButton();
@@ -199,9 +199,9 @@ context('Amendments - automatic approval journey', () => {
 
       facilityPage.facilityTabAmendments().click();
       amendmentsPage.amendmentDetails.row(1).heading().should('contain', 'Amendment 1');
-      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', fourDaysAgo.dMMMMyyyy);
-      amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.ddMMMMyyyy);
-      amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', twoMonths.ddMMMMyyyy);
+      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', fourDaysAgo.d_MMMM_yyyy);
+      amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
+      amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', twoMonths.dd_MMMM_yyyy);
       amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
 
       amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
@@ -215,7 +215,7 @@ context('Amendments - automatic approval journey', () => {
 
       cy.visit(relative(`/case/${dealId}/deal`));
       caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().should('not.contain', facilityTenor);
-      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(twoMonths.dMMMMyyyy);
+      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(twoMonths.d_MMMM_yyyy);
       caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 123.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 123.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 24.60`);
@@ -228,7 +228,7 @@ context('Amendments - automatic approval journey', () => {
       facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 123.00`);
       facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60`);
 
-      facilityPage.facilityCoverEndDate().contains(twoMonths.dMMMMyyyy);
+      facilityPage.facilityCoverEndDate().contains(twoMonths.d_MMMM_yyyy);
       facilityPage.facilityTenor().should('not.contain', facilityTenor);
     });
   });
@@ -264,7 +264,7 @@ context('Amendments - automatic approval journey', () => {
 
       cy.visit(relative(`/case/${dealId}/deal`));
       caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
-      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(oneMonth.dMMMMyyyy);
+      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
       caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
@@ -275,7 +275,7 @@ context('Amendments - automatic approval journey', () => {
       facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 12,345.00`);
       facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
 
-      facilityPage.facilityCoverEndDate().contains(oneMonth.dMMMMyyyy);
+      facilityPage.facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
       facilityPage.facilityTenor().contains(facilityTenor);
     });
 
@@ -347,7 +347,7 @@ context('Amendments - automatic approval journey', () => {
       amendmentsPage.amendmentAnswerBankRequestDate().should('contain', today.dayLong);
       amendmentsPage.amendmentAnswerRequireApproval().should('contain', 'No');
       amendmentsPage.amendmentAnswerEffectiveDate().should('contain', fourDaysAgo.dayLong);
-      amendmentsPage.amendmentAnswerCoverEndDate().should('contain', twoMonths.ddMMMyyyy);
+      amendmentsPage.amendmentAnswerCoverEndDate().should('contain', twoMonths.dd_MMM_yyyy);
 
       cy.clickContinueButton();
       amendmentsPage.addAmendmentButton().should('exist');
@@ -361,9 +361,9 @@ context('Amendments - automatic approval journey', () => {
 
       facilityPage.facilityTabAmendments().click();
       amendmentsPage.amendmentDetails.row(1).heading().should('contain', 'Amendment 1');
-      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', fourDaysAgo.dMMMMyyyy);
-      amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.ddMMMMyyyy);
-      amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', twoMonths.ddMMMMyyyy);
+      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', fourDaysAgo.d_MMMM_yyyy);
+      amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
+      amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', twoMonths.dd_MMMM_yyyy);
       amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
 
       amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('not.exist');
@@ -377,7 +377,7 @@ context('Amendments - automatic approval journey', () => {
 
       cy.visit(relative(`/case/${dealId}/deal`));
       caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().should('not.contain', facilityTenor);
-      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(twoMonths.dMMMMyyyy);
+      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(twoMonths.d_MMMM_yyyy);
       caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
@@ -388,7 +388,7 @@ context('Amendments - automatic approval journey', () => {
       facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 12,345.00`);
       facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
 
-      facilityPage.facilityCoverEndDate().contains(twoMonths.dMMMMyyyy);
+      facilityPage.facilityCoverEndDate().contains(twoMonths.d_MMMM_yyyy);
       facilityPage.facilityTenor().should('not.contain', facilityTenor);
     });
   });
@@ -424,7 +424,7 @@ context('Amendments - automatic approval journey', () => {
 
       cy.visit(relative(`/case/${dealId}/deal`));
       caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
-      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(oneMonth.dMMMMyyyy);
+      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
       caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
@@ -435,7 +435,7 @@ context('Amendments - automatic approval journey', () => {
       facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 12,345.00`);
       facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
 
-      facilityPage.facilityCoverEndDate().contains(oneMonth.dMMMMyyyy);
+      facilityPage.facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
       facilityPage.facilityTenor().contains(facilityTenor);
     });
 
@@ -519,7 +519,7 @@ context('Amendments - automatic approval journey', () => {
 
       facilityPage.facilityTabAmendments().click();
       amendmentsPage.amendmentDetails.row(1).heading().should('contain', 'Amendment 1');
-      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', fourDaysAgo.dMMMMyyyy);
+      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', fourDaysAgo.d_MMMM_yyyy);
       amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('not.exist');
       amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('not.exist');
       amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('not.exist');
@@ -535,7 +535,7 @@ context('Amendments - automatic approval journey', () => {
 
       cy.visit(relative(`/case/${dealId}/deal`));
       caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
-      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(oneMonth.dMMMMyyyy);
+      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
       caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 123.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 123.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 24.60`);
@@ -544,9 +544,9 @@ context('Amendments - automatic approval journey', () => {
 
       facilityPage.facilityValueExportCurrency().contains(`${CURRENCY.GBP} 123.00`);
       facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 123.00`);
-      facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60 as at ${fourDaysAgo.dMMMMyyyy}`);
+      facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60 as at ${fourDaysAgo.d_MMMM_yyyy}`);
 
-      facilityPage.facilityCoverEndDate().contains(oneMonth.dMMMMyyyy);
+      facilityPage.facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
       facilityPage.facilityTenor().contains(facilityTenor);
     });
   });

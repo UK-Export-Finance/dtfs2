@@ -38,7 +38,7 @@ context('Amendments all facilities table - should show amendment value and cover
 
     facilitiesPage.facilitiesTable.row(facilityId).facilityLinkText().contains('1000000');
     facilitiesPage.facilitiesTable.row(facilityId).value().contains('GBP 12,345');
-    facilitiesPage.facilitiesTable.row(facilityId).coverEndDate().contains(oneMonth.ddMMMyyyy);
+    facilitiesPage.facilitiesTable.row(facilityId).coverEndDate().contains(oneMonth.dd_MMM_yyyy);
   });
 
   it('should submit an automatic amendment request for coverEndDate', () => {
@@ -133,6 +133,6 @@ context('Amendments all facilities table - should show amendment value and cover
 
     facilitiesPage.facilitiesTable.row(facilityId).facilityLinkText().contains('1000000');
     facilitiesPage.facilitiesTable.row(facilityId).value().contains('GBP 123');
-    facilitiesPage.facilitiesTable.row(facilityId).coverEndDate().contains(tomorrow.ddMMMyyyy);
+    facilitiesPage.facilitiesTable.row(facilityId).coverEndDate().contains(tomorrow.dd_MMM_yyyy);
   });
 });

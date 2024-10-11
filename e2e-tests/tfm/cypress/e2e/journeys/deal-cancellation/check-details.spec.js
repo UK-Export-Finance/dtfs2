@@ -65,11 +65,11 @@ context('Deal cancellation - check details', () => {
       checkDetailsPage.reasonLink();
 
       checkDetailsPage.bankRequestDateResponse();
-      cy.assertText(checkDetailsPage.bankRequestDateResponse(), today.dMMMMyyyy);
+      cy.assertText(checkDetailsPage.bankRequestDateResponse(), today.d_MMMM_yyyy);
       checkDetailsPage.bankRequestDateLink();
 
       checkDetailsPage.effectiveFromResponse();
-      cy.assertText(checkDetailsPage.effectiveFromResponse(), tomorrow.dMMMMyyyy);
+      cy.assertText(checkDetailsPage.effectiveFromResponse(), tomorrow.d_MMMM_yyyy);
       checkDetailsPage.effectiveFromLink();
 
       checkDetailsPage.dealDeletionButton();
@@ -122,8 +122,8 @@ context('Deal cancellation - check details', () => {
 
         cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
         cy.assertText(checkDetailsPage.reasonResponse(), testReason);
-        cy.assertText(checkDetailsPage.bankRequestDateResponse(), today.dMMMMyyyy);
-        cy.assertText(checkDetailsPage.effectiveFromResponse(), tomorrow.dMMMMyyyy);
+        cy.assertText(checkDetailsPage.bankRequestDateResponse(), today.d_MMMM_yyyy);
+        cy.assertText(checkDetailsPage.effectiveFromResponse(), tomorrow.d_MMMM_yyyy);
       });
 
       describe('clicking the back link', () => {
@@ -170,8 +170,8 @@ context('Deal cancellation - check details', () => {
 
         cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
         cy.assertText(checkDetailsPage.reasonResponse(), testReason);
-        cy.assertText(checkDetailsPage.bankRequestDateResponse(), threeMonthsOneDay.dMMMMyyyy);
-        cy.assertText(checkDetailsPage.effectiveFromResponse(), tomorrow.dMMMMyyyy);
+        cy.assertText(checkDetailsPage.bankRequestDateResponse(), threeMonthsOneDay.d_MMMM_yyyy);
+        cy.assertText(checkDetailsPage.effectiveFromResponse(), tomorrow.d_MMMM_yyyy);
       });
 
       describe('clicking the back link', () => {
@@ -217,8 +217,8 @@ context('Deal cancellation - check details', () => {
 
         cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
         cy.assertText(checkDetailsPage.reasonResponse(), testReason);
-        cy.assertText(checkDetailsPage.bankRequestDateResponse(), today.dMMMMyyyy);
-        cy.assertText(checkDetailsPage.effectiveFromResponse(), threeMonthsOneDay.dMMMMyyyy);
+        cy.assertText(checkDetailsPage.bankRequestDateResponse(), today.d_MMMM_yyyy);
+        cy.assertText(checkDetailsPage.effectiveFromResponse(), threeMonthsOneDay.d_MMMM_yyyy);
       });
 
       describe('clicking the back link', () => {

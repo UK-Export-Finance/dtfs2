@@ -119,7 +119,7 @@ context('Amendments changes displayed - multiple single change amendments', () =
 
     cy.visit(relative(`/case/${dealId}/deal`));
     caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().should('not.contain', '23 months');
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(twoMonths.dMMMMyyyy);
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(twoMonths.d_MMMM_yyyy);
     caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 123.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 123.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 24.60`);
@@ -127,8 +127,8 @@ context('Amendments changes displayed - multiple single change amendments', () =
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
     facilityPage.facilityValueExportCurrency().contains(`${CURRENCY.GBP} 123.00`);
     facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 123.00`);
-    facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60 as at ${today.dMMMMyyyy}`);
-    facilityPage.facilityCoverEndDate().contains(twoMonths.dMMMMyyyy);
+    facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60 as at ${today.d_MMMM_yyyy}`);
+    facilityPage.facilityCoverEndDate().contains(twoMonths.d_MMMM_yyyy);
     facilityPage.facilityTenor().should('not.contain', '23 months');
   });
 });

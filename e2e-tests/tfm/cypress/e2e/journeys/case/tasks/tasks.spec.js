@@ -386,7 +386,7 @@ context('Case tasks - AIN deal', () => {
 
     firstTask = pages.tasksPage.tasks.row(1, 1);
 
-    cy.assertText(firstTask.dateStarted(), today.ddMMMyyyy);
-    cy.assertText(firstTask.dateCompleted(), today.ddMMMyyyy);
+    cy.assertText(firstTask.dateStarted(), today.dd_MMM_yyyy);
+    cy.assertText(firstTask.dateCompleted(), today.dd_MMM_yyyy);
   });
 });

@@ -48,7 +48,7 @@ context('Submit to UKEF as MIA', () => {
 
       statusBanner.bannerStatus().contains('Draft');
 
-      statusBanner.bannerDateCreated().contains(today.ddMMMyyyy);
+      statusBanner.bannerDateCreated().contains(today.dd_MMM_yyyy);
 
       securityDetails.visit(dealId);
       cy.keyboardInput(securityDetails.exporterSecurity(), 'test');

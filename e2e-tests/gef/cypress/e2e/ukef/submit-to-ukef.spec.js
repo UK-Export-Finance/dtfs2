@@ -99,9 +99,9 @@ context('Submit to UKEF', () => {
       it('application banner displays the submission date, pending UKEF deal ID and updated status and contains comment in correct format', () => {
         cy.visit(relative(`/gef/application-details/${dealId}`));
 
-        statusBanner.bannerDateSubmitted().contains(today.ddMMMyyyy);
+        statusBanner.bannerDateSubmitted().contains(today.dd_MMM_yyyy);
         statusBanner.bannerUkefDealId();
-        statusBanner.bannerDateCreated().contains(today.ddMMMyyyy);
+        statusBanner.bannerDateCreated().contains(today.dd_MMM_yyyy);
       });
     });
   });

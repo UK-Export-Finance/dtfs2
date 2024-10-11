@@ -91,7 +91,7 @@ context('Amendments underwriting - add underwriter decision', () => {
     cy.url().should('contain', '/cover-end-date/managers-decision');
 
     pages.amendmentsPage.underWriterManagerDecisionCoverEndDateHeading().contains("What's your decision?");
-    pages.amendmentsPage.amendmentCurrentCoverEndDate().contains(oneMonth.ddMMMMyyyy);
+    pages.amendmentsPage.amendmentCurrentCoverEndDate().contains(oneMonth.dd_MMMM_yyyy);
     pages.amendmentsPage.amendmentNewCoverEndDateDay().contains(tomorrow.dayLong);
     pages.amendmentsPage.amendmentNewCoverEndDateDay().contains(today.year);
 
@@ -160,7 +160,7 @@ context('Amendments underwriting - add underwriter decision', () => {
 
     amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
     amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', tomorrow.dayLong);
-    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.ddMMMMyyyy);
+    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
 
     amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
@@ -201,7 +201,7 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
     amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('have.class', 'govuk-tag--red');
     amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', tomorrow.dayLong);
-    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.ddMMMMyyyy);
+    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
 
     amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
@@ -229,7 +229,7 @@ context('Amendments underwriting - add underwriter decision', () => {
 
     amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
     amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', tomorrow.dayLong);
-    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.ddMMMMyyyy);
+    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
 
     amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
@@ -266,7 +266,7 @@ context('Amendments underwriting - add underwriter decision', () => {
 
     amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
     amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', tomorrow.dayLong);
-    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.ddMMMMyyyy);
+    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
 
     amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
@@ -276,7 +276,7 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.amendmentManagersDecisionBy(1).contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
 
     amendmentsPage.amendmentManagersDecisionDateHeading().contains('Date and time');
-    amendmentsPage.amendmentManagersDecisionDate(1).contains(today.dMMMMyyyy);
+    amendmentsPage.amendmentManagersDecisionDate(1).contains(today.d_MMMM_yyyy);
     amendmentsPage.amendmentManagersDecisionDate(1).contains(todayTimeHours);
     amendmentsPage.amendmentManagersDecisionDate(1).contains(todayTimeAmPm);
 
@@ -313,7 +313,7 @@ context('Amendments underwriting - add underwriter decision', () => {
 
     amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
     amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', tomorrow.dayLong);
-    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.ddMMMMyyyy);
+    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
 
     amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
@@ -323,7 +323,7 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.amendmentManagersDecisionBy(1).contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
 
     amendmentsPage.amendmentManagersDecisionDateHeading().contains('Date and time');
-    amendmentsPage.amendmentManagersDecisionDate(1).contains(today.dMMMMyyyy);
+    amendmentsPage.amendmentManagersDecisionDate(1).contains(today.d_MMMM_yyyy);
     amendmentsPage.amendmentManagersDecisionDate(1).contains(todayTimeHours);
     amendmentsPage.amendmentManagersDecisionDate(1).contains(todayTimeAmPm);
 

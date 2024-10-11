@@ -52,7 +52,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
     cy.visit(relative(`/case/${dealId}/deal`));
     caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(oneMonth.dMMMMyyyy);
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
     caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
@@ -63,7 +63,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 12,345.00`);
     facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
 
-    facilityPage.facilityCoverEndDate().contains(oneMonth.dMMMMyyyy);
+    facilityPage.facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
     facilityPage.facilityTenor().contains(facilityTenor);
   });
 
@@ -144,7 +144,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
     amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
     amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', tomorrow.dayLong);
-    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.ddMMMMyyyy);
+    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
 
     amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
@@ -183,7 +183,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
     amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
     amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', tomorrow.dayLong);
-    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.ddMMMMyyyy);
+    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
 
     amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
@@ -198,7 +198,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
     cy.visit(relative(`/case/${dealId}/deal`));
     caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(oneMonth.dMMMMyyyy);
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
     caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
@@ -209,7 +209,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 12,345.00`);
     facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
 
-    facilityPage.facilityCoverEndDate().contains(oneMonth.dMMMMyyyy);
+    facilityPage.facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
     facilityPage.facilityTenor().contains(facilityTenor);
   });
 
@@ -491,7 +491,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
     cy.visit(relative(`/case/${dealId}/deal`));
     caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(updatedFacilityTenor);
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(tomorrow.dMMMMyyyy);
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(tomorrow.d_MMMM_yyyy);
     caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 123.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 123.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 24.60`);
@@ -502,7 +502,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 123.00`);
     facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60 as at 5 June 2022`);
 
-    facilityPage.facilityCoverEndDate().contains(tomorrow.dMMMMyyyy);
+    facilityPage.facilityCoverEndDate().contains(tomorrow.d_MMMM_yyyy);
     facilityPage.facilityTenor().contains(updatedFacilityTenor);
   });
 });

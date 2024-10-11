@@ -107,7 +107,7 @@ context('Submit AIN deal and check portalActivities', () => {
         .activityTimeline()
         .contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)}`)
         .should('not.exist');
-      applicationActivities.activityTimeline().contains(today.dMMMMyyyy);
+      applicationActivities.activityTimeline().contains(today.d_MMMM_yyyy);
       applicationActivities.activityTimeline().contains(BANK1_CHECKER1.firstname);
     });
 
@@ -115,8 +115,8 @@ context('Submit AIN deal and check portalActivities', () => {
     it('should display the blue status banner', () => {
       applicationActivities.subNavigationBarActivities().click();
       statusBanner.applicationBanner().should('exist');
-      statusBanner.bannerDateCreated().contains(today.ddMMMyyyy);
-      statusBanner.bannerDateSubmitted().contains(today.ddMMMyyyy);
+      statusBanner.bannerDateCreated().contains(today.dd_MMM_yyyy);
+      statusBanner.bannerDateSubmitted().contains(today.dd_MMM_yyyy);
       statusBanner.bannerCreatedBy().contains(deal.maker.firstname);
       statusBanner.bannerCheckedBy().contains(BANK1_CHECKER1.firstname);
       statusBanner.bannerSubmissionType().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA);

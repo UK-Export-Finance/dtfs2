@@ -107,7 +107,7 @@ context('Clone GEF (AIN) deal', () => {
         cy.visit(`${url}`);
         statusBanner.bannerStatus().contains('Draft');
         statusBanner.bannerUkefDealId().should('not.exist');
-        statusBanner.bannerDateCreated().contains(today.ddMMMyyyy);
+        statusBanner.bannerDateCreated().contains(today.dd_MMM_yyyy);
 
         applicationDetails.bankRefName().contains('Cloned AIN deal');
         applicationDetails.automaticCoverStatus().contains('Not started');
@@ -300,7 +300,7 @@ context('Clone GEF (MIA) deal', () => {
         cy.visit(`${url}`);
         statusBanner.bannerStatus().contains('Draft');
         statusBanner.bannerUkefDealId().should('not.exist');
-        statusBanner.bannerDateCreated().contains(today.ddMMMyyyy);
+        statusBanner.bannerDateCreated().contains(today.dd_MMM_yyyy);
 
         applicationDetails.bankRefName().contains('Cloned MIA deal');
         applicationDetails.automaticCoverStatus().contains('Not started');

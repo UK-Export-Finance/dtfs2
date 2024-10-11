@@ -175,7 +175,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.rows().contains(threeMonths.ddMMMyyyy);
+      unissuedFacilityTable.rows().contains(threeMonths.dd_MMM_yyyy);
       unissuedFacilityTable.updateFacilitiesLater().click();
 
       // link on application preview exists

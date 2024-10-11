@@ -100,7 +100,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.rows().contains(threeMonthsMinusThreeDays.ddMMMyyyy);
+      unissuedFacilityTable.rows().contains(threeMonthsMinusThreeDays.dd_MMM_yyyy);
       statusBanner.applicationBanner().should('exist');
     });
 
@@ -320,9 +320,9 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
     /* should be able to change dates on facility that has changed to issued */
     it('facility table should have change links on the changed to issued facilities', () => {
       // to check date format
-      const issuedDate = today.dMMMMyyyy;
-      const coverStart = twoMonths.dMMMMyyyy;
-      const coverEnd = threeMonthsOneDay.dMMMMyyyy;
+      const issuedDate = today.d_MMMM_yyyy;
+      const coverStart = twoMonths.d_MMMM_yyyy;
+      const coverEnd = threeMonthsOneDay.d_MMMM_yyyy;
 
       // should be able to change facility four as changed to issued
       applicationPreview.facilitySummaryListTable(0).nameValue().contains(unissuedCashFacilityWith20MonthsOfCover.name);
@@ -354,7 +354,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
     });
 
     it('can submit facility when facility end date has been provided', () => {
-      const facilityEndDateFormatted = threeMonths.dMMMMyyyy;
+      const facilityEndDateFormatted = threeMonths.d_MMMM_yyyy;
 
       applicationPreview.facilitySummaryListTable(3).facilityEndDateValue().contains(facilityEndDateFormatted);
 
@@ -376,7 +376,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
     });
 
     it('can submit facility when bank review date has been provided', () => {
-      const bankReviewDateFormatted = threeMonths.dMMMMyyyy;
+      const bankReviewDateFormatted = threeMonths.d_MMMM_yyyy;
 
       applicationPreview.facilitySummaryListTable(3).bankReviewDateAction().click();
 
@@ -405,8 +405,8 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
 
     // checks that can edit changed facility
     it('clicking change should take you to about facility page with different url', () => {
-      const issuedDate = threeDaysAgo.dMMMMyyyy;
-      const coverStart = threeDaysAgo.dMMMMyyyy;
+      const issuedDate = threeDaysAgo.d_MMMM_yyyy;
+      const coverStart = threeDaysAgo.d_MMMM_yyyy;
 
       // should be able to change number 1 as changed to issued
       applicationPreview.facilitySummaryListTable(3).nameValue().contains(unissuedCashFacility.name);

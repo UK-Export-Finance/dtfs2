@@ -51,7 +51,7 @@ context('Application Details Page', () => {
       statusBanner.bannerStatus().contains('Draft');
       statusBanner.bannerProduct().should('have.text', 'General Export Facility');
 
-      statusBanner.bannerDateCreated().contains(today.ddMMMyyyy);
+      statusBanner.bannerDateCreated().contains(today.dd_MMM_yyyy);
       statusBanner.bannerSubmissionType().should('have.text', '-');
       statusBanner.bannerCreatedBy().should('have.text', `${dealWithEmptyExporter.maker.firstname} ${dealWithEmptyExporter.maker.surname}`);
       statusBanner.bannerExporter().should('have.text', '-');

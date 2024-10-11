@@ -88,7 +88,7 @@ context('Users can create and submit comments', () => {
       activitiesPage.activitiesTimeline().contains('test');
       activitiesPage.activitiesTimeline().contains(userFullName);
 
-      const expectedDate = today.dMMMMyyyy;
+      const expectedDate = today.d_MMMM_yyyy;
 
       activitiesPage.activitiesTimeline().contains(expectedDate);
     });

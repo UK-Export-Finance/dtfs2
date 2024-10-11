@@ -81,7 +81,7 @@ context('Unissued Facilities MIN - about unissued facility page', () => {
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.rows().contains(threeMonths.ddMMMyyyy);
+      unissuedFacilityTable.rows().contains(threeMonths.dd_MMM_yyyy);
       statusBanner.applicationBanner().should('exist');
     });
 

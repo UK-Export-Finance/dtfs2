@@ -61,7 +61,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.rows().contains(threeMonthsMinusThreeDays.ddMMMyyyy);
+      unissuedFacilityTable.rows().contains(threeMonthsMinusThreeDays.dd_MMM_yyyy);
       statusBanner.applicationBanner().should('exist');
     });
 

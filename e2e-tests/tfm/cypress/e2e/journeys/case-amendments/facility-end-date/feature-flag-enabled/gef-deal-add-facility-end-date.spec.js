@@ -96,7 +96,7 @@ context('Amendments - GEF deal add facility end date - feature flag enabled', ()
 
     cy.url().should('contain', 'check-answers');
     amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('have.text', 'Yes');
-    amendmentsPage.amendmentAnswerFacilityEndDate().should('have.text', today.ddMMMyyyy);
+    amendmentsPage.amendmentAnswerFacilityEndDate().should('have.text', today.dd_MMM_yyyy);
     amendmentsPage.amendmentAnswerBankReviewDate().should('not.exist');
   });
 
@@ -118,7 +118,7 @@ context('Amendments - GEF deal add facility end date - feature flag enabled', ()
 
     cy.url().should('contain', 'check-answers');
     amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('have.text', 'Yes');
-    amendmentsPage.amendmentAnswerFacilityEndDate().should('have.text', threeMonthsOneDay.ddMMMyyyy);
+    amendmentsPage.amendmentAnswerFacilityEndDate().should('have.text', threeMonthsOneDay.dd_MMM_yyyy);
     amendmentsPage.amendmentAnswerBankReviewDate().should('not.exist');
 
     amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().click();
@@ -136,7 +136,7 @@ context('Amendments - GEF deal add facility end date - feature flag enabled', ()
 
     cy.visit(relative(`/case/${dealId}/facility/${facility._id}`));
     facilityPage.facilityIsUsingFacilityEndDate().should('have.text', 'Yes');
-    facilityPage.facilityFacilityEndDate().should('have.text', threeMonthsOneDay.dMMMMyyyy);
+    facilityPage.facilityFacilityEndDate().should('have.text', threeMonthsOneDay.d_MMMM_yyyy);
     facilityPage.facilityBankReviewDate().should('not.exist');
   });
 });
