@@ -1,5 +1,5 @@
 import { In } from 'typeorm';
-import { FeeRecordStatus } from '@ukef/dtfs2-common';
+import { FeeRecordEntity, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { InvalidPayloadError, NotFoundError } from '../../../../errors';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
@@ -48,7 +48,8 @@ export const addPaymentToUtilisationReport = async (
       },
     });
 
-    const { status: updatedStatus } = await FeeRecordRepo.findOneByOrFail({ id: feeRecords[0].id });
+    const { status: updatedStatus } = await transactionEntityManager.findOneByOrFail(FeeRecordEntity, { id: feeRecords[0].id });
+
     return updatedStatus;
   });
 };

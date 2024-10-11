@@ -43,12 +43,14 @@ describe('post-add-payment.controller helpers', () => {
 
     const utilisationReportStateMachineConstructorSpy = jest.spyOn(UtilisationReportStateMachine, 'forReportId');
     const handleEventSpy = jest.spyOn(utilisationReportStateMachine, 'handleEvent');
-    const feeRecordFindOneByOrFailSpy = jest.spyOn(FeeRecordRepo, 'findOneByOrFail');
 
     const mockEntityManager = {
       save: jest.fn(),
       find: jest.fn(),
+      findOneByOrFail: jest.fn(),
     } as unknown as EntityManager;
+
+    const feeRecordFindOneByOrFailSpy = jest.spyOn(mockEntityManager, 'findOneByOrFail');
 
     beforeEach(() => {
       feeRecordFindBySpy.mockResolvedValue(feeRecordsInPaymentCurrency);
