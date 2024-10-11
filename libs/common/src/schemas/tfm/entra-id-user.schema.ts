@@ -5,9 +5,9 @@
  */
 
 import z from 'zod';
-import { ALL_ENTRA_ID_USER_GROUPS } from '../constants/entra-id-user-groups';
+import { ALL_ENTRA_ID_USER_GROUPS } from '../../constants';
 
-export const EntraIdUserSchema = z.object({
+export const ENTRA_ID_USER_SCHEMA = z.object({
   oid: z.string(),
   verified_primary_email: z.array(z.string()),
   verified_secondary_email: z.array(z.string()),

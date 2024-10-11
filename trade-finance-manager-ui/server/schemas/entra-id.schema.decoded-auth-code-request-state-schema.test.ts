@@ -1,5 +1,5 @@
+import { withSchemaTests } from '@ukef/dtfs2-common';
 import { DecodedAuthCodeRequestState } from '../types/entra-id';
-import { withSchemaTests } from '../../test-helpers';
 import { DecodedAuthCodeRequestStateSchema } from './entra-id.schema';
 
 describe('DecodedAuthCodeRequestStateSchema', () => {

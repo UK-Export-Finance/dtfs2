@@ -1,5 +1,5 @@
+import { withSchemaTests } from '@ukef/dtfs2-common';
 import { EntraIdAuthCodeRedirectResponseBody } from '../types/entra-id';
-import { withSchemaTests } from '../../test-helpers';
 import { EntraIdAuthCodeRedirectResponseBodySchema } from './entra-id.schema';
 
 describe('EntraIdAuthCodeRedirectResponseBodySchema', () => {

@@ -1,7 +1,6 @@
+import { aValidEntraIdUser, withEntraIdUserSchemaTests, withSchemaTests } from '@ukef/dtfs2-common';
 import { EntraIdAuthenticationResult } from '../types/entra-id';
-import { withSchemaTests } from '../../test-helpers';
 import { EntraIdAuthenticationResultSchema } from './entra-id.schema';
-import { aValidEntraIdUser, withEntraIdUserSchemaTests } from './with-entra-id-user-schema.tests';
 
 describe('EntraIdAuthenticationResultSchema', () => {
   withEntraIdUserSchemaTests({

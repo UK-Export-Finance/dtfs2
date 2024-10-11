@@ -1,5 +1,5 @@
+import { ENTRA_ID_USER_SCHEMA } from '@ukef/dtfs2-common/schemas';
 import { z } from 'zod';
-import { EntraIdUserSchema } from './entra-id-user.schema';
 
 export const DecodedAuthCodeRequestStateSchema = z.object({
   csrfToken: z.string(),
@@ -19,6 +19,6 @@ export const EntraIdAuthCodeRedirectResponseBodySchema = z.object({
 export const EntraIdAuthenticationResultSchema = z.object({
   accessToken: z.string(),
   account: z.object({
-    idTokenClaims: EntraIdUserSchema,
+    idTokenClaims: ENTRA_ID_USER_SCHEMA,
   }),
 });
