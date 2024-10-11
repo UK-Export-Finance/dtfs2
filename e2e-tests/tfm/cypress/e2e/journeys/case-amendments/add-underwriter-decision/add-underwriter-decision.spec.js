@@ -3,7 +3,7 @@ import { continueButton, errorSummary } from '../../../partials';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import { tomorrow, today, todayFormattedTimeHours, todayFormattedTimeAmPm, oneMonth } from '../../../../../../e2e-fixtures/dateConstants';
+import { tomorrow, today, todayTimeHours, todayTimeAmPm, oneMonth } from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 import pages from '../../../pages';
 
@@ -277,8 +277,8 @@ context('Amendments underwriting - add underwriter decision', () => {
 
     amendmentsPage.amendmentManagersDecisionDateHeading().contains('Date and time');
     amendmentsPage.amendmentManagersDecisionDate(1).contains(today.dMMMMyyyy);
-    amendmentsPage.amendmentManagersDecisionDate(1).contains(todayFormattedTimeHours);
-    amendmentsPage.amendmentManagersDecisionDate(1).contains(todayFormattedTimeAmPm);
+    amendmentsPage.amendmentManagersDecisionDate(1).contains(todayTimeHours);
+    amendmentsPage.amendmentManagersDecisionDate(1).contains(todayTimeAmPm);
 
     amendmentsPage.amendmentManagersDecisionByHeading().contains('UKEF decision made by');
     amendmentsPage.amendmentManagersDecisionBy(1).contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
@@ -324,8 +324,8 @@ context('Amendments underwriting - add underwriter decision', () => {
 
     amendmentsPage.amendmentManagersDecisionDateHeading().contains('Date and time');
     amendmentsPage.amendmentManagersDecisionDate(1).contains(today.dMMMMyyyy);
-    amendmentsPage.amendmentManagersDecisionDate(1).contains(todayFormattedTimeHours);
-    amendmentsPage.amendmentManagersDecisionDate(1).contains(todayFormattedTimeAmPm);
+    amendmentsPage.amendmentManagersDecisionDate(1).contains(todayTimeHours);
+    amendmentsPage.amendmentManagersDecisionDate(1).contains(todayTimeAmPm);
 
     amendmentsPage.amendmentManagersDecisionByHeading().contains('UKEF decision made by');
     amendmentsPage.amendmentManagersDecisionBy(1).contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);

@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import aboutFacility from '../../../pages/about-facility';
 import bankReviewDate from '../../../pages/bank-review-date';
 import facilityEndDate from '../../../pages/facility-end-date';
-import { oneYear, threeMonths, tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
+import { oneYear, tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 
 const applications = [];
@@ -53,7 +53,7 @@ context('Changing between facility end date and bank review date - feature flag 
 
     cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-    cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: threeMonths.date });
+    cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: tomorrow.date });
 
     cy.clickContinueButton();
 

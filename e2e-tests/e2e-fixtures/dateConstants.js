@@ -1,25 +1,27 @@
 const { sub, add, format, getUnixTime } = require('date-fns');
 
-export const shortDayFormat = 'd';
-export const longDayFormat = 'dd';
-export const shortMonthFormat = 'M';
-export const longMonthFormat = 'MM';
-export const longYearFormat = 'yyyy';
-export const ddMMMyyyyFormat = 'dd MMM yyyy';
-export const dMMMMyyyyFormat = 'd MMMM yyyy';
-export const ddMMMMyyyyFormat = 'dd MMMM yyyy';
+export const SHORT_DAY_FORMAT = 'd';
+export const LONG_DAY_FORMAT = 'dd';
+export const SHORT_MONTH_FORMAT = 'M';
+export const LONG_MONTH_FORMAT = 'MM';
+export const LONG_YEAR_FORMAT = 'yyyy';
+export const DD_MMM_YYYY_FORMAT = 'dd MMM yyyy';
+export const D_MMMM_YYYY_FORMAT = 'd MMMM yyyy';
+export const DD_MMMM_YYYY_FORMAT = 'dd MMMM yyyy';
+export const TIME_HOURS_FORMAT = 'h';
+export const TIME_AM_PM_FORMAT = 'aaa';
 
 const getFormattedValuesFromDate = (date) => {
   return {
     date,
-    day: format(date, shortDayFormat),
-    dayLong: format(date, longDayFormat),
-    month: format(date, shortMonthFormat),
-    monthLong: format(date, longMonthFormat),
-    year: format(date, longYearFormat),
-    ddMMMyyyy: format(date, ddMMMyyyyFormat),
-    dMMMMyyyy: format(date, dMMMMyyyyFormat),
-    ddMMMMyyyy: format(date, ddMMMMyyyyFormat),
+    day: format(date, SHORT_DAY_FORMAT),
+    dayLong: format(date, LONG_DAY_FORMAT),
+    month: format(date, SHORT_MONTH_FORMAT),
+    monthLong: format(date, LONG_MONTH_FORMAT),
+    year: format(date, LONG_YEAR_FORMAT),
+    ddMMMyyyy: format(date, DD_MMM_YYYY_FORMAT),
+    dMMMMyyyy: format(date, D_MMMM_YYYY_FORMAT),
+    ddMMMMyyyy: format(date, DD_MMMM_YYYY_FORMAT),
     unixSecondsString: getUnixTime(date).toString(),
     unixMillisecondsString: date.valueOf().toString(),
     unixMilliseconds: date.valueOf(),
@@ -60,8 +62,8 @@ export const oneYearAgo = getFormattedValuesFromDate(sub(todayDate, { years: 1 }
 export const twoYearsAgo = getFormattedValuesFromDate(sub(todayDate, { years: 2 }));
 
 // Times
-export const todayFormattedTimeHours = format(todayDate, 'h');
-export const todayFormattedTimeAmPm = format(todayDate, 'aaa');
+export const todayTimeHours = format(todayDate, TIME_HOURS_FORMAT);
+export const todayTimeAmPm = format(todayDate, TIME_AM_PM_FORMAT);
 
 // TODO: The below value does not match the variable name. We should investigate why the test that uses this still passes, and if the name or the value is incorrect.
 export const threeDaysAgoPlusMonth = getFormattedValuesFromDate(add(threeDaysAgo.date, { months: 3 }));
