@@ -1,5 +1,5 @@
 import { calculateInitialUtilisation } from '@ukef/dtfs2-common';
-import { calculateInitialUtilisationAndFixedFee, parseDate, hasRequiredValues } from './calculate-initial-utilisation-and-fixed-fee';
+import { calculateInitialUtilisationAndFixedFee, parseDate, hasRequiredValues, RequiredParams } from './calculate-initial-utilisation-and-fixed-fee';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { aTfmFacility } from '../../../../../../test-helpers';
 import { calculateInitialFixedFee } from './calculate-initial-fixed-fee';
@@ -46,107 +46,65 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
   });
 
   describe('hasRequiredValues', () => {
-    it('should return true if all values are present', () => {
-      const params = {
-        value: 1,
-        interestPercentage: 2,
-        dayCountBasis: 3,
-        coverStartDate: new Date(),
-        coverEndDate: new Date(),
-      };
+    const baseParams = {
+      value: 1,
+      interestPercentage: 2,
+      dayCountBasis: 3,
+      coverStartDate: new Date(),
+      coverEndDate: new Date(),
+    } as RequiredParams;
 
-      const result = hasRequiredValues(params);
+    it('should return true if all values are present', () => {
+      const result = hasRequiredValues(baseParams);
       expect(result).toEqual(true);
     });
 
     it('should return false if the value is not provided', () => {
-      const params = {
-        value: null,
-        interestPercentage: 2,
-        dayCountBasis: 3,
-        coverStartDate: new Date(),
-        coverEndDate: new Date(),
-      };
+      baseParams.value = null;
 
-      const result = hasRequiredValues(params);
+      const result = hasRequiredValues(baseParams);
       expect(result).toEqual(false);
     });
 
     it('should return false if the interestPercentage is not provided', () => {
-      const params = {
-        value: 1,
-        interestPercentage: null,
-        dayCountBasis: 3,
-        coverStartDate: new Date(),
-        coverEndDate: new Date(),
-      };
+      baseParams.interestPercentage = null;
 
-      const result = hasRequiredValues(params);
+      const result = hasRequiredValues(baseParams);
       expect(result).toEqual(false);
     });
 
     it('should return false if the dayCountBasis is not provided', () => {
-      const params = {
-        value: 1,
-        interestPercentage: 2,
-        dayCountBasis: null,
-        coverStartDate: new Date(),
-        coverEndDate: new Date(),
-      };
+      baseParams.dayCountBasis = null;
 
-      const result = hasRequiredValues(params);
+      const result = hasRequiredValues(baseParams);
       expect(result).toEqual(false);
     });
 
     it('should return false if the coverEndDate is not provided', () => {
-      const params = {
-        value: 1,
-        interestPercentage: 2,
-        dayCountBasis: 3,
-        coverStartDate: new Date(),
-        coverEndDate: null,
-      };
+      baseParams.coverEndDate = null;
 
-      const result = hasRequiredValues(params);
+      const result = hasRequiredValues(baseParams);
       expect(result).toEqual(false);
     });
 
     it('should return false if the coverStartDate is not provided', () => {
-      const params = {
-        value: 1,
-        interestPercentage: 2,
-        dayCountBasis: 3,
-        coverStartDate: null,
-        coverEndDate: new Date(),
-      };
+      baseParams.coverStartDate = null;
 
-      const result = hasRequiredValues(params);
+      const result = hasRequiredValues(baseParams);
       expect(result).toEqual(false);
     });
 
     it('should return false if the coverStartDate is the wrong format', () => {
-      const params = {
-        value: 1,
-        interestPercentage: 2,
-        dayCountBasis: 3,
-        coverStartDate: 'a',
-        coverEndDate: new Date(),
-      };
+      baseParams.coverStartDate = 'a';
 
-      const result = hasRequiredValues(params);
+      const result = hasRequiredValues(baseParams);
       expect(result).toEqual(false);
     });
 
     it('should return false if the coverEndDate is the wrong format', () => {
-      const params = {
-        value: 1,
-        interestPercentage: 2,
-        dayCountBasis: 3,
-        coverStartDate: new Date(),
-        coverEndDate: 'a',
-      };
+      baseParams.coverEndDate = 'a';
 
-      const result = hasRequiredValues(params);
+      const result = hasRequiredValues(baseParams);
       expect(result).toEqual(false);
     });
   });

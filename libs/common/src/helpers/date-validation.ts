@@ -216,13 +216,6 @@ export const applyStandardValidationAndParseDateInput = (inputtedDate: DayMonthY
 };
 
 /**
- * checks if provided value is a date
- * @param date - provided date
- * @returns if the provided date is an instance of Date
- */
-export const isDate = (date: any): boolean => date instanceof Date;
-
-/**
  * checks if provided value is a date and is not invalid
  * @param date - provided date
  * @returns if the provided date is an instance of Date and is not invalid
