@@ -4,7 +4,9 @@ import {
   FeeRecordStatus,
   KeyingSheetAdjustmentChange,
   KeyingSheetRowStatus,
+  PaymentDetailsFilters,
   PremiumPaymentsFilters,
+  RadioItem,
   SessionBank,
 } from '@ukef/dtfs2-common';
 import { ErrorSummaryViewModel } from './error-summary-view-model';
@@ -62,14 +64,37 @@ export type PaymentDetailsPaymentViewModel = {
     formattedCurrencyAndAmount: CurrencyAndAmountString;
     dataSortValue: number;
   };
-  reference: string | undefined;
+  reference?: string;
   dateReceived: {
     formattedDateReceived: string;
     dataSortValue: number;
   };
 };
 
-export type PaymentDetailsViewModel = {
+export type PremiumPaymentsViewModelItem = {
+  feeRecords: FeeRecordViewModelItem[];
+  totalReportedPayments: SortedAndFormattedCurrencyAndAmount;
+  paymentsReceived: PaymentViewModelItem[] | undefined;
+  totalPaymentsReceived: SortedAndFormattedCurrencyAndAmount;
+  status: FeeRecordStatus;
+  displayStatus: FeeRecordDisplayStatus;
+  checkboxId: PremiumPaymentsTableCheckboxId;
+  isChecked: boolean;
+  checkboxAriaLabel: string;
+};
+
+export type PaymentDetailsFiltersViewModel = Omit<PaymentDetailsFilters, 'paymentCurrency'> & {
+  paymentCurrency: RadioItem[];
+};
+
+export type PaymentDetailsFilterErrorsViewModel = {
+  errorSummary: ErrorSummaryViewModel[];
+  facilityIdErrorMessage?: string;
+  paymentCurrencyErrorMessage?: string;
+  paymentReferenceErrorMessage?: string;
+};
+
+export type PaymentDetailsRowViewModel = {
   feeRecordPaymentGroupStatus: FeeRecordStatus;
   payment: PaymentDetailsPaymentViewModel;
   feeRecords: {
@@ -82,18 +107,13 @@ export type PaymentDetailsViewModel = {
     formattedDateReconciled: string;
     dataSortValue: number;
   };
-}[];
+};
 
-export type PremiumPaymentsViewModelItem = {
-  feeRecords: FeeRecordViewModelItem[];
-  totalReportedPayments: SortedAndFormattedCurrencyAndAmount;
-  paymentsReceived: PaymentViewModelItem[] | undefined;
-  totalPaymentsReceived: SortedAndFormattedCurrencyAndAmount;
-  status: FeeRecordStatus;
-  displayStatus: FeeRecordDisplayStatus;
-  checkboxId: PremiumPaymentsTableCheckboxId;
-  isChecked: boolean;
-  checkboxAriaLabel: string;
+export type PaymentDetailsViewModel = {
+  rows: PaymentDetailsRowViewModel[];
+  filters?: PaymentDetailsFiltersViewModel;
+  filterErrors?: PaymentDetailsFilterErrorsViewModel;
+  isFilterActive?: boolean;
 };
 
 export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & {
