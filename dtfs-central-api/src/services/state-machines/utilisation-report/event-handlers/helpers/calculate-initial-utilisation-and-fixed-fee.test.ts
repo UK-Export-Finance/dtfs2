@@ -60,51 +60,37 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
     });
 
     it('should return false if the value is not provided', () => {
-      baseParams.value = null;
-
-      const result = hasRequiredValues(baseParams);
+      const result = hasRequiredValues({ ...baseParams, value: null });
       expect(result).toEqual(false);
     });
 
     it('should return false if the interestPercentage is not provided', () => {
-      baseParams.interestPercentage = null;
-
-      const result = hasRequiredValues(baseParams);
+      const result = hasRequiredValues({ ...baseParams, interestPercentage: null });
       expect(result).toEqual(false);
     });
 
     it('should return false if the dayCountBasis is not provided', () => {
-      baseParams.dayCountBasis = null;
-
-      const result = hasRequiredValues(baseParams);
+      const result = hasRequiredValues({ ...baseParams, dayCountBasis: null });
       expect(result).toEqual(false);
     });
 
     it('should return false if the coverEndDate is not provided', () => {
-      baseParams.coverEndDate = null;
-
-      const result = hasRequiredValues(baseParams);
+      const result = hasRequiredValues({ ...baseParams, coverEndDate: null });
       expect(result).toEqual(false);
     });
 
     it('should return false if the coverStartDate is not provided', () => {
-      baseParams.coverStartDate = null;
-
-      const result = hasRequiredValues(baseParams);
+      const result = hasRequiredValues({ ...baseParams, coverStartDate: null });
       expect(result).toEqual(false);
     });
 
     it('should return false if the coverStartDate is the wrong format', () => {
-      baseParams.coverStartDate = 'a';
-
-      const result = hasRequiredValues(baseParams);
+      const result = hasRequiredValues({ ...baseParams, coverStartDate: 'a' });
       expect(result).toEqual(false);
     });
 
     it('should return false if the coverEndDate is the wrong format', () => {
-      baseParams.coverEndDate = 'a';
-
-      const result = hasRequiredValues(baseParams);
+      const result = hasRequiredValues({ ...baseParams, coverEndDate: 'a' });
       expect(result).toEqual(false);
     });
   });
