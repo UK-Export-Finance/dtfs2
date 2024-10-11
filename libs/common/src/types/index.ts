@@ -25,4 +25,5 @@ export * from './deal-type';
 export * from './any-object';
 export * from './tfm-deal-cancellation';
 export * from './file';
+export * from './fee-record-utilisation';
 export * from './radio-item';

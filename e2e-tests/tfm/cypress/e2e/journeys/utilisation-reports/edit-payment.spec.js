@@ -11,6 +11,7 @@ import { PDC_TEAMS } from '../../../fixtures/teams';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
 import USERS from '../../../fixtures/users';
 import relative from '../../relativeURL';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
   const reportId = 12;
@@ -66,12 +67,16 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
   beforeEach(() => {
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
     cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
+    cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
 
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [utilisationReport]);
 
     const payment = aPaymentWithAmount(paymentAmount);
     const feeRecord = aFeeRecordWithIdAmountStatusAndPayments(123, paymentAmount, FEE_RECORD_STATUS.MATCH, [payment]);
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
+
+    const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([feeRecord]);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
     pages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);

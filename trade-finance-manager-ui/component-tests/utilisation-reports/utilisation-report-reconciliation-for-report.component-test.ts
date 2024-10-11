@@ -4,6 +4,7 @@ import { pageRenderer } from '../pageRenderer';
 import { aTfmSessionUser } from '../../test-helpers/test-data/tfm-session-user';
 import { UtilisationReportReconciliationForReportViewModel } from '../../server/types/view-models';
 import { TfmSessionUser } from '../../server/types/tfm-session-user';
+import { aUtilisationTableRowViewModel } from '../../test-helpers';
 
 const page = '../templates/utilisation-reports/utilisation-report-reconciliation-for-report.njk';
 const render = pageRenderer<UtilisationReportReconciliationForReportViewModel>(page);
@@ -37,6 +38,8 @@ describe(page, () => {
     paymentDetails: {
       rows: [],
     },
+    utilisationDetails: { utilisationTableRows: [] },
+    displayMatchSuccessNotification: false,
   };
 
   const getWrapper = (viewModel: UtilisationReportReconciliationForReportViewModel = params) => render(viewModel);
@@ -308,5 +311,49 @@ describe(page, () => {
       wrapper.expectElement('a[href="#other"]').toExist();
       wrapper.expectText('a[href="#other"]').toRead("You've done another thing wrong");
     });
+  });
+
+  it('should render the utilisation tab header', () => {
+    const wrapper = getWrapper();
+
+    const utilisationTabSelector = 'div#utilisation';
+
+    wrapper.expectText(`${utilisationTabSelector} h2[data-cy="bank-report-heading"]`).toRead('Bank report');
+  });
+
+  it('should render the utilisation tab table', () => {
+    const feeRecordId = 12;
+    const wrapper = getWrapper({
+      ...params,
+      utilisationDetails: {
+        utilisationTableRows: [
+          {
+            ...aUtilisationTableRowViewModel(),
+            feeRecordId,
+          },
+        ],
+      },
+    });
+
+    const utilisationTabSelector = 'div#utilisation';
+
+    wrapper.expectElement(`${utilisationTabSelector} table`).toExist();
+    wrapper.expectElement(`${utilisationTabSelector} table tr[data-cy="utilisation-table-row-${feeRecordId}"]`);
+  });
+
+  it('should not display match success notification when param is false', () => {
+    const wrapper = getWrapper({ ...params, displayMatchSuccessNotification: false });
+
+    wrapper.expectElement('[data-cy="match-success-notification"]').notToExist();
+  });
+
+  it('should display match success notification when param is true', () => {
+    const wrapper = getWrapper({ ...params, displayMatchSuccessNotification: true });
+
+    wrapper.expectElement('[data-cy="match-success-notification"]').toExist();
+    wrapper.expectText('[data-cy="match-success-notification-heading"]').toRead('Match payment recorded');
+    wrapper
+      .expectText('[data-cy="match-success-notification-message"]')
+      .toRead('The fee(s) are now at a Match state. Further payments cannot be added to the fee record.');
   });
 });

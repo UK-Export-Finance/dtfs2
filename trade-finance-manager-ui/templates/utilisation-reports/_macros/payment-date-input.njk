@@ -21,17 +21,26 @@
         {
           classes: (paymentDateError.dayError and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
           name: "day",
-          value: paymentDate.day
+          value: paymentDate.day,
+          attributes: {
+            'data-cy': "payment-date-day"
+          }
         },
         {
           classes: (paymentDateError.monthError and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
           name: "month",
-          value: paymentDate.month
+          value: paymentDate.month,
+          attributes: {
+            'data-cy': "payment-date-month"
+          }
         },
         {
           classes: (paymentDateError.yearError and "govuk-input--width-4 govuk-input--error") or "govuk-input--width-4",
           name: "year",
-          value: paymentDate.year
+          value: paymentDate.year,
+          attributes: {
+            'data-cy': "payment-date-year"
+          }
         }
       ]
     }) }}

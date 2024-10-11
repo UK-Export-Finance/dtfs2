@@ -1,4 +1,4 @@
-import { startOfMonth, subMonths, subYears, addYears } from 'date-fns';
+import { startOfMonth, subMonths, subYears, addDays } from 'date-fns';
 import {
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
@@ -20,6 +20,7 @@ context('PDC_RECONCILE users can generate keying data', () => {
   const TODAY = new Date();
 
   const START_OF_CURRENT_REPORT_PERIOD = startOfMonth(subMonths(TODAY, 1));
+  const END_OF_CURRENT_REPORT_PERIOD = startOfMonth(TODAY);
   const CURRENT_REPORT_PERIOD = {
     start: { month: START_OF_CURRENT_REPORT_PERIOD.getMonth() + 1, year: START_OF_CURRENT_REPORT_PERIOD.getFullYear() },
     end: { month: START_OF_CURRENT_REPORT_PERIOD.getMonth() + 1, year: START_OF_CURRENT_REPORT_PERIOD.getFullYear() },
@@ -45,7 +46,7 @@ context('PDC_RECONCILE users can generate keying data', () => {
     .build();
 
   const ONE_YEAR_AGO = subYears(TODAY, 1);
-  const ONE_YEAR_FROM_CURRENT_REPORT_PERIOD_START = addYears(START_OF_CURRENT_REPORT_PERIOD, 1); // days left in cover period = 365
+  const ONE_YEAR_FROM_CURRENT_REPORT_PERIOD_END = addDays(END_OF_CURRENT_REPORT_PERIOD, 365); // days left in cover period = 365
 
   const FIRST_FEE_RECORD_ID = '11';
   const SECOND_FEE_RECORD_ID = '22';
@@ -53,9 +54,11 @@ context('PDC_RECONCILE users can generate keying data', () => {
   const TFM_FACILITY = {
     facilitySnapshot: {
       coverStartDate: ONE_YEAR_AGO.getTime(),
-      coverEndDate: ONE_YEAR_FROM_CURRENT_REPORT_PERIOD_START.getTime(), // days left in cover period = 365
+      coverEndDate: ONE_YEAR_FROM_CURRENT_REPORT_PERIOD_END.getTime(), // days left in cover period = 365
       interestPercentage: 5,
       dayCountBasis: 365,
+      value: 30,
+      coverPercentage: 40,
       ukefFacilityId: FACILITY_UTILISATION_DATA.id,
     },
   };

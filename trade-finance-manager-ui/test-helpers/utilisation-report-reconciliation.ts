@@ -15,4 +15,5 @@ export const aUtilisationReportReconciliationDetailsResponse = (): UtilisationRe
   premiumPayments: [],
   paymentDetails: [],
   keyingSheet: [],
+  utilisationDetails: [],
 });

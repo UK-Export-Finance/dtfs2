@@ -69,7 +69,6 @@ export interface CalculateFixedFeeBaseParams {
 }
 
 export interface CalculateFixedFeeParams extends CalculateFixedFeeBaseParams {
-  coverStartDate: Date;
   coverEndDate: Date;
   reportPeriod: ReportPeriod;
 }

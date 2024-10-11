@@ -1026,6 +1026,7 @@ const getReportSummariesByBankAndYear = async (userToken, bankId, year) => {
  * @param {number[]} feeRecordIds - The list of fee record ids to add the payment to
  * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user adding the payment
  * @param {string} userToken - The user token
+ * @returns {Promise<import('./api-response-types').AddPaymentResponseBody>}
  */
 const addPaymentToFeeRecords = async (reportId, parsedAddPaymentFormValues, feeRecordIds, user, userToken) => {
   const { paymentCurrency, paymentAmount, datePaymentReceived, paymentReference } = parsedAddPaymentFormValues;

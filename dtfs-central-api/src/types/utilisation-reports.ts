@@ -9,6 +9,7 @@ import {
   IsoMonthStamp,
   FeeRecordStatus,
   CurrencyAndAmount,
+  FeeRecordUtilisation,
 } from '@ukef/dtfs2-common';
 import { FeeRecord, KeyingSheet } from './fee-records';
 import { Payment } from './payments';
@@ -83,6 +84,7 @@ export type UtilisationReportReconciliationDetails = {
   premiumPayments: FeeRecordPaymentGroup[];
   paymentDetails: FeeRecordPaymentGroup[];
   keyingSheet: KeyingSheet;
+  utilisationDetails: FeeRecordUtilisation[];
 };
 
 export type NewPaymentDetails = {
