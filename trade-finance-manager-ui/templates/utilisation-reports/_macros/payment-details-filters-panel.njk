@@ -1,25 +1,25 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "moj/components/filter/macro.njk" import mojFilter %}
 {% import "./payment-details-filters-form.njk" as paymentDetailsFiltersForm %}
 
 {% macro render(params) %}
   {% set filters = params.filters %}
   {% set selectedFilters = params.selectedFilters %}
-  {% set paymentReference = params.paymentReference %}
-  {% set facilityId = params.facilityId %}
-
-  {% set filterOptionsHtml %}
-    {{ paymentDetailsFiltersForm.render({
-      filters: filters,
-      paymentReference: paymentReference,
-      facilityId: facilityId
-    }) }}
-  {% endset %}
+  {% set errors = params.errors %}
+  {% set reportId = params.reportId %}
 
   <div class="moj-filter-layout__filter" data-filtered-table-id="payment-details" data-cy="payment-details--filters-panel">
 
     <form method="GET" data-cy="payment-details--filter-form">
 
       {% if selectedFilters.length %}
+
+        {% set filterOptionsHtml %}
+          {{ paymentDetailsFiltersForm.render({
+            filters: filters,
+            errors: errors
+          }) }}
+        {% endset %}
 
         {{ mojFilter({
           heading: {
@@ -35,6 +35,11 @@
             },
             categories: selectedFilters
           },
+          submit: {
+            attributes: {
+              'data-cy': 'payment-details--filters-submit-button'
+            }
+          },
           attributes: {
             'data-cy': 'payment-details--filters-container'
           },
@@ -42,10 +47,31 @@
         }) }}
 
       {% else %}
+        {% set filterOptionsHtml %}
+          {{ govukButton({
+            text: "Clear filters",
+            classes: "govuk-button--secondary",
+            href: "/utilisation-reports/" + reportId + "#payment-details",
+            attributes: {
+              'data-cy': 'payment-details--clear-filters-button'
+            }
+          }) }}
+
+          {{ paymentDetailsFiltersForm.render({
+            filters: filters,
+            errors: errors
+          }) }}
+        {% endset %}
+
 
         {{ mojFilter({
           heading: {
             text: 'Filter'
+          },
+          submit: {
+            attributes: {
+              'data-cy': 'payment-details--filters-submit-button'
+            }
           },
           attributes: {
             'data-cy': 'payment-details--filters-container'

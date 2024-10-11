@@ -1,10 +1,10 @@
-import { getPreviousPageUrl } from './get-previous-page-url';
-
-const previousPages = ['reason', 'bank-request-date', 'effective-from-date', 'check-details'];
+import { getPreviousPageUrl, getPreviousPageUrlForCancellationFlow } from './get-previous-page-url';
 
 const dealId = 'abcdef123456';
 
-describe('getPreviousPageUrl', () => {
+describe('getPreviousPageUrlForCancelCancellation', () => {
+  const previousPages = ['reason', 'bank-request-date', 'effective-from-date', 'check-details'];
+
   describe.each(previousPages)('when the provided url is for the %s page', (page) => {
     it('returns the correct relative url, when given a relative URL', () => {
       // Arrange
@@ -14,7 +14,7 @@ describe('getPreviousPageUrl', () => {
       const response = getPreviousPageUrl(url, dealId);
 
       // Assert
-      expect(response).toBe(`/case/${dealId}/cancellation/${page}`);
+      expect(response).toEqual(`/case/${dealId}/cancellation/${page}`);
     });
 
     it('returns the correct relative url, when given an absolute URL', () => {
@@ -25,7 +25,7 @@ describe('getPreviousPageUrl', () => {
       const response = getPreviousPageUrl(url, dealId);
 
       // Assert
-      expect(response).toBe(`/case/${dealId}/cancellation/${page}`);
+      expect(response).toEqual(`/case/${dealId}/cancellation/${page}`);
     });
 
     it('returns the correct relative url, when given a localhost URL', () => {
@@ -36,7 +36,7 @@ describe('getPreviousPageUrl', () => {
       const response = getPreviousPageUrl(url, dealId);
 
       // Assert
-      expect(response).toBe(`/case/${dealId}/cancellation/${page}`);
+      expect(response).toEqual(`/case/${dealId}/cancellation/${page}`);
     });
   });
 
@@ -48,6 +48,31 @@ describe('getPreviousPageUrl', () => {
     const response = getPreviousPageUrl(url, dealId);
 
     // Assert
-    expect(response).toBe(`/case/${dealId}/deal`);
+    expect(response).toEqual(`/case/${dealId}/deal`);
+  });
+});
+
+describe('getPreviousPageUrlForCancellationFlow', () => {
+  it('returns the correct relative url when status is not passed in', () => {
+    // Arrange
+    const defaultPreviousPage = `/defaultPreviousPage`;
+
+    // Act
+    const response = getPreviousPageUrlForCancellationFlow(dealId, defaultPreviousPage);
+
+    // Assert
+    expect(response).toEqual(`/case/${dealId}/defaultPreviousPage`);
+  });
+
+  it('returns the check answers url when status is "change"', () => {
+    // Arrange
+    const defaultPreviousPage = `/defaultPreviousPage`;
+    const status = 'change';
+
+    // Act
+    const response = getPreviousPageUrlForCancellationFlow(dealId, defaultPreviousPage, status);
+
+    // Assert
+    expect(response).toEqual(`/case/${dealId}/cancellation/check-details`);
   });
 });

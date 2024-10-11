@@ -4,7 +4,7 @@ import { SessionData } from 'express-session';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
 import { PostEditPaymentRequest, getEditPayment, postEditPayment } from '.';
 import api from '../../../api';
-import { aPaymentDetailsWithFeeRecordsResponseBody, aTfmSessionUser, aPayment, aFeeRecord } from '../../../../test-helpers';
+import { aPaymentDetailsWithFeeRecordsResponseBody, aTfmSessionUser, aPayment, aFeeRecord, aRequestSession } from '../../../../test-helpers';
 import { EMPTY_PAYMENT_ERRORS_VIEW_MODEL, EditPaymentFormRequestBody } from '../helpers';
 import { RECONCILIATION_FOR_REPORT_TABS } from '../../../constants/reconciliation-for-report-tabs';
 import { EditPaymentViewModel } from '../../../types/view-models/edit-payment-view-model';
@@ -14,11 +14,6 @@ import { EditPaymentFormValues, ParsedEditPaymentFormValues } from '../../../typ
 jest.mock('../../../api');
 
 describe('controllers/utilisation-reports/edit-payment', () => {
-  const aRequestSession = () => ({
-    user: aTfmSessionUser(),
-    userToken: 'abc123',
-  });
-
   beforeEach(() => {
     jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue(aPaymentDetailsWithFeeRecordsResponseBody());
   });
