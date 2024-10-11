@@ -1,5 +1,5 @@
 /**
- * Validates the if the provided URL is one of
+ * Validates if the provided URL is one of
  *  - reason for cancelling page
  *  - bank request date page
  *  - effective from date page
@@ -23,4 +23,18 @@ export const getPreviousPageUrl = (url: string, dealId: string): string => {
   }, undefined);
 
   return previousPageUrl ?? `/case/${dealId}/deal`;
+};
+
+/**
+ * Gets the previous page URL to pass into the back link on the general deal cancellation flow.
+ * This ensures that if the user has reached a page by clicking 'Change' on the check details page, then they are redirected back to that page.
+ *
+ * @param dealId - The deal ID
+ * @param defaultPreviousPage string - the expected previous page in the deal cancellation flow
+ * @param status - 'change' if user comes from the check details page, otherwise undefined
+ */
+export const getPreviousPageUrlForCancellationFlow = (dealId: string, defaultPreviousPage: string, status?: string): string => {
+  const baseUrl = `/case/${dealId}`;
+  const checkDetailsPage = `/cancellation/check-details`;
+  return baseUrl + (status === 'change' ? checkDetailsPage : defaultPreviousPage);
 };

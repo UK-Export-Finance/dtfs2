@@ -46,10 +46,10 @@ export const validateRows = (csvData: UtilisationReportCsvRowData[]): Utilisatio
     const existingData = map.get(ukefFacilityId);
 
     // generate errors for base currency
-    errors = generateBaseCurrencyErrors(existingData, baseCurrencyValue, errors, csvData, row);
+    errors = generateBaseCurrencyErrors(baseCurrencyValue, errors, csvData, row, existingData);
 
     // generate errors for facility utilisation
-    errors = generateFacilityUtilisationErrors(existingData, facilityUtilisationValue, errors, csvData, row);
+    errors = generateFacilityUtilisationErrors(facilityUtilisationValue, errors, csvData, row, existingData);
   });
 
   return errors;

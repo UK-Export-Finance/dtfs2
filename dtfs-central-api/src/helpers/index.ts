@@ -8,3 +8,4 @@ export { getFeeRecordPaymentEntityGroupStatus } from './get-fee-record-payment-e
 export { getFeeRecordPaymentEntityGroupReconciliationData } from './get-fee-record-payment-entity-group-reconciliation-data';
 export { convertTimestampToDate } from './convert-timestamp-to-date';
 export { getLatestCompletedAmendmentCoverEndDate } from './tfm-facility-latest-completed-amendment-to-cover-end-date';
+export { getPreviousReportPeriod } from './get-previous-report-period';

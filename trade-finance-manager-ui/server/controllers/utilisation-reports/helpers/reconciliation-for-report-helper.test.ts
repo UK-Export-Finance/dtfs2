@@ -1,11 +1,13 @@
 import { when } from 'jest-when';
-import { Currency, CurrencyAndAmount, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { CURRENCY, Currency, CurrencyAndAmount, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { mapCurrenciesToRadioItems } from '../../../helpers/map-currencies-to-radio-items';
 import {
   getFormattedDateReconciled,
   getFormattedReconciledByUser,
   mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems,
   mapFeeRecordPaymentGroupsToPaymentDetailsViewModel,
   mapKeyingSheetToKeyingSheetViewModel,
+  mapPaymentDetailsFiltersToViewModel,
 } from './reconciliation-for-report-helper';
 import { FeeRecord, FeeRecordPaymentGroup, KeyingSheet, KeyingSheetRow, Payment } from '../../../api-response-types';
 import { aFeeRecordPaymentGroup, aFeeRecord, aPayment } from '../../../../test-helpers';
@@ -983,6 +985,47 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(result).toEqual('-');
+    });
+  });
+
+  describe('mapPaymentDetailsFiltersToViewModel', () => {
+    describe('when payment currency filter is defined', () => {
+      it('should map payment details filters to view model with radio items for currencies with the provided currency checked', () => {
+        // Arrange
+        const paymentDetailsFilters = {
+          facilityId: '11111111',
+          paymentCurrency: CURRENCY.GBP,
+          paymentReference: 'some-payment-reference',
+        };
+
+        // Act
+        const result = mapPaymentDetailsFiltersToViewModel(paymentDetailsFilters);
+
+        // Assert
+        expect(result).toEqual({
+          ...paymentDetailsFilters,
+          paymentCurrency: mapCurrenciesToRadioItems(paymentDetailsFilters.paymentCurrency),
+        });
+      });
+    });
+
+    describe('when payment currency filter is undefined', () => {
+      it('should map payment details filters to view model with radio items for currencies with no currencies checked', () => {
+        // Arrange
+        const paymentDetailsFilters = {
+          facilityId: '11111111',
+          paymentReference: 'some-payment-reference',
+        };
+
+        // Act
+        const result = mapPaymentDetailsFiltersToViewModel(paymentDetailsFilters);
+
+        // Assert
+        expect(result).toEqual({
+          ...paymentDetailsFilters,
+          paymentCurrency: mapCurrenciesToRadioItems(),
+        });
+      });
     });
   });
 });
