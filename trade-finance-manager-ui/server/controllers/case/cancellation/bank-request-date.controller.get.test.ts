@@ -14,6 +14,7 @@ jest.mock('../../../api', () => ({
 
 const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
+const previousPage = `/case/${dealId}/cancellation/reason`;
 
 describe('getBankRequestDate', () => {
   beforeEach(() => {
@@ -131,6 +132,7 @@ describe('getBankRequestDate', () => {
         day: '',
         month: '',
         year: '',
+        previousPage,
       });
     });
 
@@ -159,6 +161,37 @@ describe('getBankRequestDate', () => {
         day: format(existingBankRequestDate, 'd'),
         month: format(existingBankRequestDate, 'M'),
         year: format(existingBankRequestDate, 'yyyy'),
+        previousPage,
+      });
+    });
+
+    it('renders the page with the back URL as the check details page when "change" is passed in as a query parameter', async () => {
+      // Arrange
+      const existingBankRequestDate = new Date('2024-03-21');
+      jest.mocked(api.getDealCancellation).mockResolvedValue({ bankRequestDate: existingBankRequestDate.valueOf() });
+
+      const session = aRequestSession();
+
+      const { req, res } = createMocks<GetBankRequestDateRequest>({
+        params: { _id: dealId },
+        query: { status: 'change' },
+        session,
+      });
+
+      // Act
+      await getBankRequestDate(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('case/cancellation/bank-request-date.njk');
+      expect(res._getRenderData() as BankRequestDateViewModel).toEqual({
+        activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
+        user: session.user,
+        ukefDealId,
+        dealId,
+        day: format(existingBankRequestDate, 'd'),
+        month: format(existingBankRequestDate, 'M'),
+        year: format(existingBankRequestDate, 'yyyy'),
+        previousPage: `/case/${dealId}/cancellation/check-details`,
       });
     });
   });

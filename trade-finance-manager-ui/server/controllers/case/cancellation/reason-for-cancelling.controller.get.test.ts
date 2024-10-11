@@ -92,6 +92,36 @@ describe('getReasonForCancelling', () => {
         ukefDealId,
         dealId,
         reasonForCancelling: reason,
+        previousPage: `/case/${dealId}/deal`,
+      });
+    });
+
+    it('renders the page with the back URL as the check details page when "change" is passed in as a query parameter', async () => {
+      // Arrange
+      const reason = 'Existing reason';
+      jest.mocked(api.getDealCancellation).mockResolvedValue({ reason });
+      jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: validDealType } });
+
+      const session = aRequestSession();
+
+      const { req, res } = createMocks<GetReasonForCancellingRequest>({
+        params: { _id: dealId },
+        query: { status: 'change' },
+        session,
+      });
+
+      // Act
+      await getReasonForCancelling(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('case/cancellation/reason-for-cancelling.njk');
+      expect(res._getRenderData() as ReasonForCancellingViewModel).toEqual({
+        activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
+        user: session.user,
+        ukefDealId,
+        dealId,
+        reasonForCancelling: reason,
+        previousPage: `/case/${dealId}/cancellation/check-details`,
       });
     });
   });

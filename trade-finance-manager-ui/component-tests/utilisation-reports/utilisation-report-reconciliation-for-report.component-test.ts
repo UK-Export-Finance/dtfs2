@@ -269,7 +269,6 @@ describe(page, () => {
                 id: 1,
                 amount: { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 0 },
                 dateReceived: { formattedDateReceived: '1 Jan 2024', dataSortValue: 0 },
-                reference: undefined,
               },
               feeRecords: [{ id: 1, facilityId: '12345678', exporter: 'Test exporter' }],
               status: FEE_RECORD_STATUS.DOES_NOT_MATCH,
