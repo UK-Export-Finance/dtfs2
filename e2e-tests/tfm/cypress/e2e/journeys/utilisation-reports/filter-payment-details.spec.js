@@ -9,6 +9,7 @@ import pages from '../../pages';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
 import USERS from '../../../fixtures/users';
 import relative from '../../relativeURL';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context(`users can filter payment details by facility id and payment reference and currency`, () => {
   const bankId = '961';
@@ -26,6 +27,7 @@ context(`users can filter payment details by facility id and payment reference a
 
   beforeEach(() => {
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+    cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
 
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [utilisationReport]);
   });
@@ -33,10 +35,16 @@ context(`users can filter payment details by facility id and payment reference a
   describe('when filter panel toggle button is clicked', () => {
     it('should toggle the filter panel', () => {
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
-      const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords([feeRecord]).build();
 
-      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
+      const feeRecords = [feeRecord];
+
+      const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords(feeRecords).build();
+
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
       cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
+
+      const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
       pages.landingPage.visit();
       cy.login(USERS.PDC_RECONCILE);
@@ -63,6 +71,8 @@ context(`users can filter payment details by facility id and payment reference a
       const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build();
       const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityId('22222222').build();
 
+      const feeRecords = [firstFeeRecord, secondFeeRecord];
+
       const firstPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
         .withId(11)
         .withAmount(100)
@@ -78,8 +88,11 @@ context(`users can filter payment details by facility id and payment reference a
 
       const payments = [firstPayment, secondPayment];
 
-      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord]);
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
       cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, payments);
+
+      const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
       pages.landingPage.visit();
       cy.login(USERS.PDC_RECONCILE);
@@ -88,8 +101,8 @@ context(`users can filter payment details by facility id and payment reference a
 
       pages.utilisationReportPage.paymentDetailsTabLink().click();
 
-      payments.forEach(({ id: paymentId, currency, amount, reference, feeRecords }) => {
-        feeRecords.forEach(({ id: feeRecordId, facilityId }, index) => {
+      payments.forEach(({ id: paymentId, currency, amount, reference, feeRecords: paymentFeeRecords }) => {
+        paymentFeeRecords.forEach(({ id: feeRecordId, facilityId }, index) => {
           pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(paymentId, feeRecordId).should('exist');
 
           const isFirstFeeRecordRow = index === 0;
@@ -117,6 +130,8 @@ context(`users can filter payment details by facility id and payment reference a
         const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId(completeFacilityIdFilter).build();
         const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityId('22222222').build();
 
+        const feeRecords = [firstFeeRecord, secondFeeRecord];
+
         const firstPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
           .withId(11)
           .withAmount(100)
@@ -130,8 +145,11 @@ context(`users can filter payment details by facility id and payment reference a
           .withFeeRecords([secondFeeRecord])
           .build();
 
-        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord]);
+        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
         cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [firstPayment, secondPayment]);
+
+        const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+        cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
         pages.landingPage.visit();
         cy.login(USERS.PDC_RECONCILE);
@@ -162,6 +180,8 @@ context(`users can filter payment details by facility id and payment reference a
         const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('77771111').build();
         const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityId('22222222').build();
 
+        const feeRecords = [firstFeeRecord, secondFeeRecord];
+
         const firstPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
           .withId(11)
           .withAmount(100)
@@ -175,8 +195,11 @@ context(`users can filter payment details by facility id and payment reference a
           .withFeeRecords([secondFeeRecord])
           .build();
 
-        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord]);
+        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
         cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [firstPayment, secondPayment]);
+
+        const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+        cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
         pages.landingPage.visit();
         cy.login(USERS.PDC_RECONCILE);
@@ -206,10 +229,16 @@ context(`users can filter payment details by facility id and payment reference a
         const expectedErrorMessage = 'Facility ID must be blank or contain between 4 and 10 numbers';
 
         const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
+
+        const feeRecords = [feeRecord];
+
         const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords([feeRecord]).build();
 
-        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
+        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
         cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
+
+        const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+        cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
         pages.landingPage.visit();
         cy.login(USERS.PDC_RECONCILE);
@@ -240,10 +269,16 @@ context(`users can filter payment details by facility id and payment reference a
         const emptyFacilityIdFilter = '';
 
         const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
-        const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords([feeRecord]).build();
 
-        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
+        const feeRecords = [feeRecord];
+
+        const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords(feeRecords).build();
+
+        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
         cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
+
+        const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+        cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
         pages.landingPage.visit();
         cy.login(USERS.PDC_RECONCILE);
@@ -269,10 +304,16 @@ context(`users can filter payment details by facility id and payment reference a
         const unknownFacilityIdFilter = '99999999';
 
         const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build();
+
+        const feeRecords = [feeRecord];
+
         const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords([feeRecord]).build();
 
-        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
+        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
         cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
+
+        const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+        cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
         pages.landingPage.visit();
         cy.login(USERS.PDC_RECONCILE);
@@ -314,6 +355,8 @@ context(`users can filter payment details by facility id and payment reference a
         const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build();
         const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityId('22222222').build();
 
+        const feeRecords = [firstFeeRecord, secondFeeRecord];
+
         const firstPayment = PaymentEntityMockBuilder.forCurrency(paymentCurrencyFilter)
           .withId(11)
           .withAmount(100)
@@ -327,8 +370,11 @@ context(`users can filter payment details by facility id and payment reference a
           .withFeeRecords([secondFeeRecord])
           .build();
 
-        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord]);
+        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
         cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [firstPayment, secondPayment]);
+
+        const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+        cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
         pages.landingPage.visit();
         cy.login(USERS.PDC_RECONCILE);
@@ -359,10 +405,16 @@ context(`users can filter payment details by facility id and payment reference a
         const unknownPaymentCurrencyFilter = 'UNKNOWN';
 
         const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
+
+        const feeRecords = [feeRecord];
+
         const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords([feeRecord]).build();
 
-        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
+        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
         cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
+
+        const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+        cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
         pages.landingPage.visit();
         cy.login(USERS.PDC_RECONCILE);
@@ -381,10 +433,16 @@ context(`users can filter payment details by facility id and payment reference a
     describe('when the payment currency filter is submitted with no selection', () => {
       it('should not check any radio inputs or display any error messages', () => {
         const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
+
+        const feeRecords = [feeRecord];
+
         const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords([feeRecord]).build();
 
-        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
+        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
         cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
+
+        const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+        cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
         pages.landingPage.visit();
         cy.login(USERS.PDC_RECONCILE);
@@ -410,8 +468,13 @@ context(`users can filter payment details by facility id and payment reference a
         const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build();
         const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords([feeRecord]).build();
 
-        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
+        const feeRecords = [feeRecord];
+
+        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
         cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
+
+        const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+        cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
         pages.landingPage.visit();
         cy.login(USERS.PDC_RECONCILE);
@@ -449,6 +512,8 @@ context(`users can filter payment details by facility id and payment reference a
         const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build();
         const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityId('22222222').build();
 
+        const feeRecords = [firstFeeRecord, secondFeeRecord];
+
         const firstPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
           .withId(11)
           .withAmount(100)
@@ -470,6 +535,9 @@ context(`users can filter payment details by facility id and payment reference a
 
         cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord]);
         cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [firstPayment, secondPayment, thirdPayment]);
+
+        const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+        cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
         pages.landingPage.visit();
         cy.login(USERS.PDC_RECONCILE);
@@ -503,6 +571,8 @@ context(`users can filter payment details by facility id and payment reference a
         const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build();
         const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityId('22222222').build();
 
+        const feeRecords = [firstFeeRecord, secondFeeRecord];
+
         const firstPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
           .withId(11)
           .withAmount(100)
@@ -516,8 +586,11 @@ context(`users can filter payment details by facility id and payment reference a
           .withFeeRecords([secondFeeRecord])
           .build();
 
-        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord]);
+        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
         cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [firstPayment, secondPayment]);
+
+        const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+        cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
         pages.landingPage.visit();
         cy.login(USERS.PDC_RECONCILE);
@@ -549,10 +622,16 @@ context(`users can filter payment details by facility id and payment reference a
         const expectedErrorMessage = 'Payment reference must be blank or contain a minimum of 4 characters';
 
         const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
+
+        const feeRecords = [feeRecord];
+
         const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords([feeRecord]).build();
 
-        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
+        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
         cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
+
+        const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+        cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
         pages.landingPage.visit();
         cy.login(USERS.PDC_RECONCILE);
@@ -585,10 +664,16 @@ context(`users can filter payment details by facility id and payment reference a
         const emptyPaymentReferenceFilter = '';
 
         const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
+
+        const feeRecords = [feeRecord];
+
         const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords([feeRecord]).build();
 
-        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
+        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
         cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
+
+        const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+        cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
         pages.landingPage.visit();
         cy.login(USERS.PDC_RECONCILE);
@@ -614,10 +699,16 @@ context(`users can filter payment details by facility id and payment reference a
         const unknownPaymentReferenceFilter = 'some-unknown-payment-reference';
 
         const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build();
+
+        const feeRecords = [feeRecord];
+
         const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('ABCD').withFeeRecords([feeRecord]).build();
 
-        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
+        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
         cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
+
+        const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+        cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
         pages.landingPage.visit();
         cy.login(USERS.PDC_RECONCILE);
@@ -658,6 +749,8 @@ context(`users can filter payment details by facility id and payment reference a
       const thirdFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(3).withFacilityId('11113333').build();
       const fourthFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(4).withFacilityId('11113333').build();
 
+      const feeRecords = [firstFeeRecord, secondFeeRecord, thirdFeeRecord, fourthFeeRecord];
+
       const firstPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
         .withId(11)
         .withAmount(100)
@@ -683,8 +776,11 @@ context(`users can filter payment details by facility id and payment reference a
         .withFeeRecords([thirdFeeRecord, fourthFeeRecord])
         .build();
 
-      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord, thirdFeeRecord, fourthFeeRecord]);
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
       cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [firstPayment, secondPayment, thirdPayment, fourthPayment]);
+
+      const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
       pages.landingPage.visit();
       cy.login(USERS.PDC_RECONCILE);
