@@ -9,8 +9,9 @@ import {
   IsoMonthStamp,
   FeeRecordStatus,
   CurrencyAndAmount,
+  FeeRecordUtilisation,
 } from '@ukef/dtfs2-common';
-import { FeeRecord, FeeRecordUtilisation, KeyingSheet } from './fee-records';
+import { FeeRecord, KeyingSheet } from './fee-records';
 import { Payment } from './payments';
 
 export type GetUtilisationReportResponse = {

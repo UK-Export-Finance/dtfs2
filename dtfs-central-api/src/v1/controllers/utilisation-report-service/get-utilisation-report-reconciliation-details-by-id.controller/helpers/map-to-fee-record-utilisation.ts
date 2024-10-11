@@ -1,4 +1,4 @@
-import { FeeRecordEntity, TfmFacility } from '@ukef/dtfs2-common';
+import { FeeRecordEntity, TfmFacility, FeeRecordUtilisation } from '@ukef/dtfs2-common';
 import Big from 'big.js';
 import { getLatestCompletedAmendmentToFacilityValue } from '../../../../../helpers';
 
@@ -13,14 +13,15 @@ export const calculateExposure = (utilisation: number, coverPercentage: number) 
 };
 
 /**
- * Maps a fee record entity and the tfm facility it corresponds to to the
- * utilisation details for that fee record
+ * Maps a fee record entity and the tfm facility it corresponds to,
+ * to the utilisation details for that fee record
  * @param feeRecord - The fee record
  * @param tfmFacility - the tfm facility
  * @returns the mapped utilisation details
  */
-export const mapToFeeRecordUtilisation = (feeRecord: FeeRecordEntity, tfmFacility: TfmFacility) => {
+export const mapToFeeRecordUtilisation = (feeRecord: FeeRecordEntity, tfmFacility: TfmFacility): FeeRecordUtilisation => {
   const {
+    id,
     facilityId,
     baseCurrency,
     exporter,
@@ -35,6 +36,7 @@ export const mapToFeeRecordUtilisation = (feeRecord: FeeRecordEntity, tfmFacilit
   const value = amendedValue === null ? facilitySnapshotValue : amendedValue;
 
   return {
+    feeRecordId: id,
     facilityId,
     exporter,
     baseCurrency,

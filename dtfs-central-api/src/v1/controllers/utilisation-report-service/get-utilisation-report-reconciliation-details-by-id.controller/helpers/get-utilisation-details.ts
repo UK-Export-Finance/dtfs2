@@ -1,11 +1,17 @@
-import { FeeRecordEntity, TfmFacility } from '@ukef/dtfs2-common';
-import { FeeRecordUtilisation } from '../../../../../types/fee-records';
+import { FeeRecordEntity, TfmFacility, FeeRecordUtilisation } from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../../../../../errors';
 import { mapToFeeRecordUtilisation } from './map-to-fee-record-utilisation';
 
 /**
- * Retrieves and constructs utilisation data for the given fee records
+ * Retrieves and constructs utilisation data for the given fee records.
+ * Some data is mapped directly from the fee records and for other data
+ * which exists only against the facility we fetch from the tfm facility.
+ * We fetch facilities in one go to be more efficient storing in a Record.
+ * This is more efficient because:
+ * - It involves only one database call instead of one per fee record
+ * - Multiple fee records could be for the same facility so avoids
+ *   us making any duplicate calls
  * @param feeRecords - The fee records
  * @returns Utilisation data for each fee record
  */

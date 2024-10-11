@@ -4,6 +4,7 @@ import { pageRenderer } from '../pageRenderer';
 import { aTfmSessionUser } from '../../test-helpers/test-data/tfm-session-user';
 import { UtilisationReportReconciliationForReportViewModel } from '../../server/types/view-models';
 import { TfmSessionUser } from '../../server/types/tfm-session-user';
+import { aUtilisationTableRowViewModel } from '../../test-helpers';
 
 const page = '../templates/utilisation-reports/utilisation-report-reconciliation-for-report.njk';
 const render = pageRenderer<UtilisationReportReconciliationForReportViewModel>(page);
@@ -37,6 +38,7 @@ describe(page, () => {
     paymentDetails: {
       rows: [],
     },
+    utilisationDetails: { utilisationTableRows: [] },
     displayMatchSuccessNotification: false,
   };
 
@@ -309,6 +311,34 @@ describe(page, () => {
       wrapper.expectElement('a[href="#other"]').toExist();
       wrapper.expectText('a[href="#other"]').toRead("You've done another thing wrong");
     });
+  });
+
+  it('should render the utilisation tab header', () => {
+    const wrapper = getWrapper();
+
+    const utilisationTabSelector = 'div#utilisation';
+
+    wrapper.expectText(`${utilisationTabSelector} h2[data-cy="bank-report-heading"]`).toRead('Bank report');
+  });
+
+  it('should render the utilisation tab table', () => {
+    const feeRecordId = 12;
+    const wrapper = getWrapper({
+      ...params,
+      utilisationDetails: {
+        utilisationTableRows: [
+          {
+            ...aUtilisationTableRowViewModel(),
+            feeRecordId,
+          },
+        ],
+      },
+    });
+
+    const utilisationTabSelector = 'div#utilisation';
+
+    wrapper.expectElement(`${utilisationTabSelector} table`).toExist();
+    wrapper.expectElement(`${utilisationTabSelector} table tr[data-cy="utilisation-table-row-${feeRecordId}"]`);
   });
 
   it('should not display match success notification when param is false', () => {
