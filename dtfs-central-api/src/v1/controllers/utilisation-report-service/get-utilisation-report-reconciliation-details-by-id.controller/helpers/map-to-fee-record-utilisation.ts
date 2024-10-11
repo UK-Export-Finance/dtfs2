@@ -13,8 +13,8 @@ export const calculateExposure = (utilisation: number, coverPercentage: number) 
 };
 
 /**
- * Maps a fee record entity and the tfm facility it corresponds to to the
- * utilisation details for that fee record
+ * Maps a fee record entity and the tfm facility it corresponds to,
+ * to the utilisation details for that fee record
  * @param feeRecord - The fee record
  * @param tfmFacility - the tfm facility
  * @returns the mapped utilisation details
