@@ -18,25 +18,25 @@
     <tbody class="govuk-table__body">
       {% for utilisationTableRow in utilisationTableRows %}
         <tr class="govuk-table__row" data-cy="utilisation-table-row-{{ utilisationTableRow.feeRecordId }}">
-          <th class="govuk-table__cell">{{ utilisationTableRow.facilityId }}</th>
-          <td class="govuk-table__cell">{{ utilisationTableRow.exporter }}</td>
-          <td class="govuk-table__cell">{{ utilisationTableRow.baseCurrency }}</td>
-          <td class="govuk-table__cell govuk-table__cell--numeric">
+          <th class="govuk-table__cell" data-cy="facility-id">{{ utilisationTableRow.facilityId }}</th>
+          <td class="govuk-table__cell" data-cy="exporter">{{ utilisationTableRow.exporter }}</td>
+          <td class="govuk-table__cell" data-cy="base-currency">{{ utilisationTableRow.baseCurrency }}</td>
+          <td class="govuk-table__cell govuk-table__cell--numeric" data-cy="value">
             {{ utilisationTableRow.formattedValue }}
           </td>
-          <td class="govuk-table__cell govuk-table__cell--numeric">
+          <td class="govuk-table__cell govuk-table__cell--numeric" data-cy="utilisation">
             {{ utilisationTableRow.formattedUtilisation }}
           </td>
-          <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ utilisationTableRow.coverPercentage }}">
+          <td class="govuk-table__cell govuk-table__cell--numeric" data-cy="cover-percentage" data-sort-value="{{ utilisationTableRow.coverPercentage }}">
             {{ utilisationTableRow.coverPercentage }}%
           </td>
-          <td class="govuk-table__cell govuk-table__cell--numeric">
+          <td class="govuk-table__cell govuk-table__cell--numeric" data-cy="exposure">
             {{ utilisationTableRow.formattedExposure }}
           </td>
-          <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ utilisationTableRow.feesAccrued.dataSortValue }}">
+          <td class="govuk-table__cell govuk-table__cell--numeric" data-cy="fees-accrued" data-sort-value="{{ utilisationTableRow.feesAccrued.dataSortValue }}">
             {{ utilisationTableRow.feesAccrued.formattedCurrencyAndAmount }}
           </td>
-          <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="{{ utilisationTableRow.feesPayable.dataSortValue }}">
+          <td class="govuk-table__cell govuk-table__cell--numeric" data-cy="fees-payable" data-sort-value="{{ utilisationTableRow.feesPayable.dataSortValue }}">
             {{ utilisationTableRow.feesPayable.formattedCurrencyAndAmount }}
           </td>
         </tr>
