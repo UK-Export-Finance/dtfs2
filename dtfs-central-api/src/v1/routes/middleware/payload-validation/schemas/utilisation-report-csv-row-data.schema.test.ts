@@ -16,7 +16,7 @@ describe('utilisation-report-raw-csv-cell-data-with-location.schema', () => {
       const { success } = UtilisationReportCsvRowDataSchema.safeParse(invalidRowData);
 
       // Assert
-      expect(success).toBe(false);
+      expect(success).toEqual(false);
     });
 
     it.each`
@@ -34,7 +34,7 @@ describe('utilisation-report-raw-csv-cell-data-with-location.schema', () => {
       const { success } = UtilisationReportCsvRowDataSchema.safeParse(invalidRowData);
 
       // Assert
-      expect(success).toBe(false);
+      expect(success).toEqual(false);
     });
 
     it.each`
@@ -51,7 +51,7 @@ describe('utilisation-report-raw-csv-cell-data-with-location.schema', () => {
       const { success } = UtilisationReportCsvRowDataSchema.safeParse(invalidRowData);
 
       // Assert
-      expect(success).toBe(false);
+      expect(success).toEqual(false);
     });
 
     it.each`
@@ -70,7 +70,7 @@ describe('utilisation-report-raw-csv-cell-data-with-location.schema', () => {
         const result = UtilisationReportCsvRowDataSchema.safeParse(validRowData);
 
         // Assert
-        expect(result.success).toBe(true);
+        expect(result.success).toEqual(true);
       },
     );
 

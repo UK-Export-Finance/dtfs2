@@ -6,9 +6,12 @@ import { ReasonForCancellingViewModel } from '../../../types/view-models';
 import { validateReasonForCancelling } from './validation/validate-reason-for-cancelling';
 import api from '../../../api';
 import { canSubmissionTypeBeCancelled } from '../../helpers';
+import { getPreviousPageUrlForCancellationFlow } from './helpers/get-previous-page-url';
 
-export type GetReasonForCancellingRequest = CustomExpressRequest<{ params: { _id: string } }>;
-export type PostReasonForCancellingRequest = CustomExpressRequest<{ params: { _id: string }; reqBody: { reason: string } }>;
+export type GetReasonForCancellingRequest = CustomExpressRequest<{ params: { _id: string }; query: { status?: string } }>;
+export type PostReasonForCancellingRequest = CustomExpressRequest<{ params: { _id: string }; query: { status?: string }; reqBody: { reason: string } }>;
+
+const defaultPreviousPage = '/deal';
 
 /**
  * controller to get the reason for cancelling page
@@ -18,7 +21,9 @@ export type PostReasonForCancellingRequest = CustomExpressRequest<{ params: { _i
  */
 export const getReasonForCancelling = async (req: GetReasonForCancellingRequest, res: Response) => {
   const { _id } = req.params;
+  const { status } = req.query;
   const { user, userToken } = asUserSession(req.session);
+
   try {
     const deal = await api.getDeal(_id, userToken);
 
@@ -38,6 +43,7 @@ export const getReasonForCancelling = async (req: GetReasonForCancellingRequest,
       ukefDealId: deal.dealSnapshot.details.ukefDealId,
       dealId: _id,
       reasonForCancelling: cancellation?.reason,
+      previousPage: getPreviousPageUrlForCancellationFlow(_id, defaultPreviousPage, status),
     };
     return res.render('case/cancellation/reason-for-cancelling.njk', reasonForCancellingViewModel);
   } catch (error) {
@@ -54,6 +60,7 @@ export const getReasonForCancelling = async (req: GetReasonForCancellingRequest,
  */
 export const postReasonForCancelling = async (req: PostReasonForCancellingRequest, res: Response) => {
   const { _id } = req.params;
+  const { status } = req.query;
   const { reason } = req.body;
   const { user, userToken } = asUserSession(req.session);
 
@@ -80,6 +87,7 @@ export const postReasonForCancelling = async (req: PostReasonForCancellingReques
         dealId: _id,
         errors: validationErrors,
         reasonForCancelling: reason,
+        previousPage: getPreviousPageUrlForCancellationFlow(_id, defaultPreviousPage, status),
       };
 
       return res.render('case/cancellation/reason-for-cancelling.njk', reasonForCancellingViewModel);

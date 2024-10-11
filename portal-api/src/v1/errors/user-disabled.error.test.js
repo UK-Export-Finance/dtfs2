@@ -6,12 +6,12 @@ describe('UserDisabledError', () => {
   it('exposes the userId in a formatted message', () => {
     const exception = new UserDisabledError(userId);
 
-    expect(exception.message).toBe(`User disabled: ${userId}`);
+    expect(exception.message).toEqual(`User disabled: ${userId}`);
   });
 
   it('exposes the name of the exception', () => {
     const exception = new UserDisabledError(userId);
 
-    expect(exception.name).toBe('UserDisabledError');
+    expect(exception.name).toEqual('UserDisabledError');
   });
 });

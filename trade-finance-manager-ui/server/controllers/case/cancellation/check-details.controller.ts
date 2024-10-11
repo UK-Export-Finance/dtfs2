@@ -1,5 +1,6 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { isEmpty } from 'lodash';
 import { format } from 'date-fns';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { asUserSession } from '../../../helpers/express-session';
@@ -31,7 +32,13 @@ export const getDealCancellationDetails = async (req: GetDealCancellationDetails
       return res.redirect(`/case/${_id}/deal`);
     }
 
-    const { reason, bankRequestDate, effectiveFrom } = await api.getDealCancellation(_id, userToken);
+    const cancellation = await api.getDealCancellation(_id, userToken);
+
+    if (isEmpty(cancellation)) {
+      return res.redirect(`/case/${_id}/deal`);
+    }
+
+    const { reason, bankRequestDate, effectiveFrom } = cancellation;
 
     const bankRequestDateFormatted = bankRequestDate ? format(new Date(bankRequestDate), 'd MMMM yyyy') : undefined;
     const effectiveFromDateFormatted = effectiveFrom ? format(new Date(effectiveFrom), 'd MMMM yyyy') : undefined;

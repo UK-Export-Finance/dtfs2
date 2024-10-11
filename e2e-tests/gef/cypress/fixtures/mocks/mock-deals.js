@@ -1,6 +1,5 @@
 import Chance from 'chance';
-
-import dateConstants from '../../../../e2e-fixtures/dateConstants';
+import { threeDaysAgoUnix, todayUnix } from '../../../../e2e-fixtures/dateConstants';
 import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE } from '../constants';
 import { BANK1_CHECKER1, BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
@@ -103,7 +102,7 @@ const commonApplicationDetails = {
   mandatoryVersionId: null,
   createdAt: 1638363403942,
   updatedAt: 1638983294975,
-  submissionDate: `${dateConstants.threeDaysAgoUnix}503`,
+  submissionDate: `${threeDaysAgoUnix}503`,
   ukefDealId: '0030113304',
   checkerId: '619bae3467cc7c002069fc21',
   editedBy: ['619bae3467cc7c002069fc1e'],
@@ -236,7 +235,7 @@ export const MOCK_APPLICATION_MIN = {
     requiredFields: ['manualInclusion'],
   },
   ukefDecision: [],
-  manualInclusionNoticeSubmissionDate: `${dateConstants.todayUnix}503`,
+  manualInclusionNoticeSubmissionDate: `${todayUnix}503`,
   ...commonApplicationDetails,
 };
 

@@ -223,9 +223,9 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     });
 
     // Assert
-    expect(reconciliationInProgressReport.lastUpdatedByIsSystemUser).toBe(false);
+    expect(reconciliationInProgressReport.lastUpdatedByIsSystemUser).toEqual(false);
     expect(reconciliationInProgressReport.lastUpdatedByPortalUserId).toBeNull();
-    expect(reconciliationInProgressReport.lastUpdatedByTfmUserId).toBe(tfmUserId);
+    expect(reconciliationInProgressReport.lastUpdatedByTfmUserId).toEqual(tfmUserId);
   });
 
   it(`updates the report audit fields and status if the report status is '${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}'`, async () => {
@@ -243,9 +243,9 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     });
 
     // Assert
-    expect(pendingReconciliationReport.lastUpdatedByIsSystemUser).toBe(false);
+    expect(pendingReconciliationReport.lastUpdatedByIsSystemUser).toEqual(false);
     expect(pendingReconciliationReport.lastUpdatedByPortalUserId).toBeNull();
-    expect(pendingReconciliationReport.lastUpdatedByTfmUserId).toBe(tfmUserId);
-    expect(pendingReconciliationReport.status).toBe(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS);
+    expect(pendingReconciliationReport.lastUpdatedByTfmUserId).toEqual(tfmUserId);
+    expect(pendingReconciliationReport.status).toEqual(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS);
   });
 });

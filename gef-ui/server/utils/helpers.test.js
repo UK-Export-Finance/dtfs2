@@ -96,12 +96,12 @@ describe('userToken()', () => {
 
 describe('isObject()', () => {
   it('returns the correct boolean', () => {
-    expect(isObject({})).toBe(true);
-    expect(isObject([])).toBe(false);
-    expect(isObject('')).toBe(false);
-    expect(isObject(1)).toBe(false);
-    expect(isObject(true)).toBe(false);
-    expect(isObject(false)).toBe(false);
+    expect(isObject({})).toEqual(true);
+    expect(isObject([])).toEqual(false);
+    expect(isObject('')).toEqual(false);
+    expect(isObject(1)).toEqual(false);
+    expect(isObject(true)).toEqual(false);
+    expect(isObject(false)).toEqual(false);
   });
 });
 
@@ -978,20 +978,20 @@ describe('mapSummaryList()', () => {
 
 describe('isTrueSet()', () => {
   it('returns null if value is not a string', () => {
-    expect(isTrueSet(null)).toBe(null);
-    expect(isTrueSet(10)).toBe(null);
-    expect(isTrueSet('')).toBe(null);
-    expect(isTrueSet(true)).toBe(null);
-    expect(isTrueSet(false)).toBe(null);
-    expect(isTrueSet(undefined)).toBe(null);
+    expect(isTrueSet(null)).toEqual(null);
+    expect(isTrueSet(10)).toEqual(null);
+    expect(isTrueSet('')).toEqual(null);
+    expect(isTrueSet(true)).toEqual(null);
+    expect(isTrueSet(false)).toEqual(null);
+    expect(isTrueSet(undefined)).toEqual(null);
   });
 
   it('returns true boolean if string value is equal to `true`', () => {
-    expect(isTrueSet('true')).toBe(true);
+    expect(isTrueSet('true')).toEqual(true);
   });
 
   it('returns false boolean if string value is equal to `false`', () => {
-    expect(isTrueSet('false')).toBe(false);
+    expect(isTrueSet('false')).toEqual(false);
   });
 });
 

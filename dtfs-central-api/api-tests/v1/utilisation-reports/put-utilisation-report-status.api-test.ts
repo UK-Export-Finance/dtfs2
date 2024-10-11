@@ -35,7 +35,7 @@ describe(`PUT ${BASE_URL}`, () => {
     const { status } = await testApi.put(requestBody).to(BASE_URL);
 
     // Assert
-    expect(status).toBe(404);
+    expect(status).toEqual(404);
   });
 
   it("returns a 400 error if a request body item is missing the 'reportId' property", async () => {
@@ -54,7 +54,7 @@ describe(`PUT ${BASE_URL}`, () => {
     const { status } = await testApi.put(requestBody).to(BASE_URL);
 
     // Assert
-    expect(status).toBe(400);
+    expect(status).toEqual(400);
   });
 
   it("returns a 400 error if a request body item is missing the 'status' property", async () => {
@@ -73,7 +73,7 @@ describe(`PUT ${BASE_URL}`, () => {
     const { status } = await testApi.put(requestBody).to(BASE_URL);
 
     // Assert
-    expect(status).toBe(400);
+    expect(status).toEqual(400);
   });
 
   it('returns a 200 if the request body is valid', async () => {
@@ -92,6 +92,6 @@ describe(`PUT ${BASE_URL}`, () => {
     const { status } = await testApi.put(requestBody).to(BASE_URL);
 
     // Assert
-    expect(status).toBe(200);
+    expect(status).toEqual(200);
   });
 });

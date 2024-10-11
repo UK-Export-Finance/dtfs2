@@ -14,7 +14,7 @@ describe('get-fee-record-display-status-helper', () => {
       const displayStatus = getFeeRecordDisplayStatus(status);
 
       // Assert
-      expect(displayStatus).toBe(expectedDisplayStatus);
+      expect(displayStatus).toEqual(expectedDisplayStatus);
     });
   });
 });

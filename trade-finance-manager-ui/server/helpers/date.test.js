@@ -43,7 +43,7 @@ describe('date', () => {
           const result = getBusinessDayOfMonth(dateInMonth, holidays, businessDay);
 
           // Assert
-          expect(isSameDay(result, expected)).toBe(true);
+          expect(isSameDay(result, expected)).toEqual(true);
         });
       });
 
@@ -59,7 +59,7 @@ describe('date', () => {
           const result = getBusinessDayOfMonth(dateInMonth, holidays, businessDay);
 
           // Assert
-          expect(isSameDay(result, expected)).toBe(true);
+          expect(isSameDay(result, expected)).toEqual(true);
         });
       });
     });
@@ -79,7 +79,7 @@ describe('date', () => {
         const result = getBusinessDayOfMonth(dateInMonth, holidays, businessDay);
 
         // Assert
-        expect(isSameDay(result, expected)).toBe(true);
+        expect(isSameDay(result, expected)).toEqual(true);
       });
 
       it('takes into account both holidays and weekend dates', () => {
@@ -96,7 +96,7 @@ describe('date', () => {
         const result = getBusinessDayOfMonth(dateInMonth, holidays, businessDay);
 
         // Assert
-        expect(isSameDay(result, expected)).toBe(true);
+        expect(isSameDay(result, expected)).toEqual(true);
       });
     });
   });

@@ -87,6 +87,6 @@ describe('isEpoch', () => {
   it.each(testData)('$description ($mockValue)', ({ mockValue, expected }) => {
     const result = isEpoch(mockValue);
 
-    expect(result).toBe(expected);
+    expect(result).toEqual(expected);
   });
 });

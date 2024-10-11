@@ -198,7 +198,7 @@ describe('utilisation-report-helpers', () => {
       expect(api.getUtilisationReports).toHaveBeenCalledWith(BANK_ID, {
         reportPeriod,
       });
-      expect(result).toBe(true);
+      expect(result).toEqual(true);
     });
 
     it.each(Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS).filter((status) => status !== 'REPORT_NOT_RECEIVED'))(
@@ -221,7 +221,7 @@ describe('utilisation-report-helpers', () => {
         expect(api.getUtilisationReports).toHaveBeenCalledWith(BANK_ID, {
           reportPeriod,
         });
-        expect(result).toBe(false);
+        expect(result).toEqual(false);
       },
     );
   });

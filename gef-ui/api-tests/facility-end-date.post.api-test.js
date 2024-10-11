@@ -93,7 +93,7 @@ describe('facility end date routes', () => {
           const response = await makeRequest(body);
 
           // Assert
-          expect(response.status).toBe(HttpStatusCode.Ok);
+          expect(response.status).toEqual(HttpStatusCode.Ok);
           expect(api.updateFacility).toHaveBeenCalledTimes(0);
         });
 
@@ -105,8 +105,8 @@ describe('facility end date routes', () => {
           const response = await makeRequest(body);
 
           // Assert
-          expect(response.status).toBe(HttpStatusCode.Found);
-          expect(response.headers.location).toBe(nextPageUrl);
+          expect(response.status).toEqual(HttpStatusCode.Found);
+          expect(response.headers.location).toEqual(nextPageUrl);
         });
 
         it('updates the facility if request body is valid', async () => {
@@ -178,7 +178,7 @@ describe('facility end date routes', () => {
           const response = await makeRequest(body);
 
           // Assert
-          expect(response.status).toBe(HttpStatusCode.Ok);
+          expect(response.status).toEqual(HttpStatusCode.Ok);
           expect(api.updateFacility).toHaveBeenCalledTimes(0);
         });
 
@@ -190,8 +190,8 @@ describe('facility end date routes', () => {
           const response = await makeRequest(body);
 
           // Assert
-          expect(response.status).toBe(HttpStatusCode.Found);
-          expect(response.headers.location).toBe(saveAndReturnRedirectUrl);
+          expect(response.status).toEqual(HttpStatusCode.Found);
+          expect(response.headers.location).toEqual(saveAndReturnRedirectUrl);
         });
 
         it('does not update the database if the facility end date is blank', async () => {
@@ -213,8 +213,8 @@ describe('facility end date routes', () => {
           const response = await makeRequest(body);
 
           // Assert
-          expect(response.status).toBe(HttpStatusCode.Found);
-          expect(response.headers.location).toBe(saveAndReturnRedirectUrl);
+          expect(response.status).toEqual(HttpStatusCode.Found);
+          expect(response.headers.location).toEqual(saveAndReturnRedirectUrl);
         });
 
         it('updates the facility if request body is valid', async () => {
