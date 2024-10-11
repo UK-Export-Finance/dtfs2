@@ -41,6 +41,7 @@ export const sevenDays = getFormattedValuesFromDate(add(todayDate, { days: 7 }))
 export const twentyEightDays = getFormattedValuesFromDate(add(todayDate, { days: 28 }));
 export const oneMonth = getFormattedValuesFromDate(add(todayDate, { months: 1 }));
 export const twoMonths = getFormattedValuesFromDate(add(todayDate, { months: 2 }));
+export const threeMonthsMinusThreeDays = getFormattedValuesFromDate(add(todayDate, { months: 3, days: -3 }));
 export const threeMonths = getFormattedValuesFromDate(add(todayDate, { months: 3 }));
 export const threeMonthsOneDay = getFormattedValuesFromDate(add(todayDate, { months: 3, days: 1 }));
 export const oneYear = getFormattedValuesFromDate(add(todayDate, { years: 1 }));
@@ -64,9 +65,6 @@ export const twoYearsAgo = getFormattedValuesFromDate(sub(todayDate, { years: 2 
 // Times
 export const todayTimeHours = format(todayDate, TIME_HOURS_FORMAT);
 export const todayTimeAmPm = format(todayDate, TIME_AM_PM_FORMAT);
-
-// TODO: The below value does not match the variable name. We should investigate why the test that uses this still passes, and if the name or the value is incorrect.
-export const threeDaysAgoPlusMonth = getFormattedValuesFromDate(add(threeDaysAgo.date, { months: 3 }));
 
 /**
  * Some tests check that validation errors appear,

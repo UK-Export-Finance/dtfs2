@@ -1,6 +1,6 @@
 import relative from '../../../../relativeURL';
 import CONSTANTS from '../../../../../fixtures/constants';
-import { today, twoMonths, threeDaysAgo, threeDaysAgoPlusMonth, threeMonthsOneDay } from '../../../../../../../e2e-fixtures/dateConstants';
+import { today, twoMonths, threeDaysAgo, threeMonthsMinusThreeDays, threeMonthsOneDay } from '../../../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mocks/mock-deals';
 import { multipleMockGefFacilities } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 import { backLink, cancelLink, continueButton, headingCaption, mainHeading, submitButton } from '../../../../partials';
@@ -80,7 +80,7 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.rows().contains(threeDaysAgoPlusMonth.ddMMMyyyy);
+      unissuedFacilityTable.rows().contains(threeMonthsMinusThreeDays.ddMMMyyyy);
       statusBanner.applicationBanner().should('exist');
     });
 
