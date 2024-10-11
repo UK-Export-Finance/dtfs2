@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { In, EntityManager } from 'typeorm';
-import { Currency, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { Currency, FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { addPaymentToUtilisationReport } from './helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { InvalidPayloadError, NotFoundError } from '../../../../errors';
@@ -11,6 +11,7 @@ import { NewPaymentDetails } from '../../../../types/utilisation-reports';
 import { executeWithSqlTransaction } from '../../../../helpers';
 
 jest.mock('../../../../helpers');
+jest.mock('../../../../repositories/fee-record-repo');
 
 describe('post-add-payment.controller helpers', () => {
   describe('addPaymentToUtilisationReport', () => {
@@ -46,15 +47,19 @@ describe('post-add-payment.controller helpers', () => {
     const mockEntityManager = {
       save: jest.fn(),
       find: jest.fn(),
+      findOneByOrFail: jest.fn(),
     } as unknown as EntityManager;
+
+    const feeRecordFindOneByOrFailSpy = jest.spyOn(mockEntityManager, 'findOneByOrFail');
 
     beforeEach(() => {
       feeRecordFindBySpy.mockResolvedValue(feeRecordsInPaymentCurrency);
       utilisationReportStateMachineConstructorSpy.mockResolvedValue(utilisationReportStateMachine);
       handleEventSpy.mockResolvedValue(utilisationReport);
+      feeRecordFindOneByOrFailSpy.mockResolvedValue(FeeRecordEntityMockBuilder.forReport(utilisationReport).build());
 
       jest.mocked(executeWithSqlTransaction).mockImplementation(async (functionToExecute) => {
-        await functionToExecute(mockEntityManager);
+        return await functionToExecute(mockEntityManager);
       });
     });
 
@@ -136,6 +141,19 @@ describe('post-add-payment.controller helpers', () => {
           },
         },
       });
+    });
+
+    it('returns the status of the fee record the payment was added to', async () => {
+      // Arrange
+      feeRecordFindOneByOrFailSpy.mockResolvedValue(
+        FeeRecordEntityMockBuilder.forReport(utilisationReport).withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH).build(),
+      );
+
+      // Act
+      const feeRecordStatus = await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
+
+      // Assert
+      expect(feeRecordStatus).toEqual(FEE_RECORD_STATUS.DOES_NOT_MATCH);
     });
   });
 });

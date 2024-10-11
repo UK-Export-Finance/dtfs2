@@ -4,6 +4,8 @@ const utilisationReportPage = {
   paymentDetailsLink: () => cy.get('a[data-cy="bank-report-tab-payment-details"]'),
   utilisationTabLink: () => cy.get('a[data-cy="bank-report-tab-utilisation"]'),
   premiumPaymentsTab: {
+    matchSuccessNotificationHeading: () => cy.get('[data-cy="match-success-notification-heading"]'),
+    matchSuccessNotificationMessage: () => cy.get('[data-cy="match-success-notification-message"]'),
     selectPaymentsText: () => cy.get('[data-cy="select-payments-text"]'),
     paymentsOnPremiumPaymentsText: () => cy.get('[data-cy="payments-on-premium-payments-tab-text"]'),
     getPaymentLink: (paymentId) => cy.get(`a[data-cy="premium-payments-tab-edit-payment-link--paymentId-${paymentId}"]`),
