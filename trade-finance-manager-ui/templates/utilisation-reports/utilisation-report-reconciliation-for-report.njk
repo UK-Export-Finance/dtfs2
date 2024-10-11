@@ -2,6 +2,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% import "./_macros/premium-payments-table.njk" as premiumPaymentsTable %}
 {% import "./_macros/keying-sheet-table.njk" as keyingSheetTable %}
 {% import "./_macros/payment-details-table.njk" as paymentDetailsTable %}
@@ -17,6 +18,23 @@
 {% endblock %}
 
 {% set premiumPaymentsHtml %}
+  {% if displayMatchSuccessNotification %}
+    {% set notificationHtml %}
+      <h3 class="govuk-notification-banner__heading" data-cy="match-success-notification-heading">
+        Match payment recorded
+      </h3>
+      <p class="govuk-body" data-cy="match-success-notification-message">The fee(s) are now at a Match state. Further payments cannot be added to the fee record.</p>
+    {% endset %}
+
+    <div class="govuk-grid-row govuk-!-padding-top-7" data-cy="match-success-notification">
+      <div class="govuk-grid-column-one-half-from-desktop">
+        {{ govukNotificationBanner({
+          html: notificationHtml,
+          type: "success"
+        }) }}
+      </div>
+    </div>
+  {% endif %}
   {% if premiumPaymentsTableDataError or premiumPaymentsFilterError %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
