@@ -1,7 +1,7 @@
 import { ZodSchema } from 'zod';
 import { withSchemaTests } from '../../test-helpers';
 import { EntraIdUser } from '../types/entra-id-user';
-import { ENTRA_ID_USER_GROUP } from '../constants/entra-id-user';
+import { ENTRA_ID_USER_GROUP } from '../constants/entra-id-user-groups';
 
 type TestCasesParams = {
   getValidObjectWithUpdatedEntraIdUserParams: (entraIdUser: unknown) => unknown;
