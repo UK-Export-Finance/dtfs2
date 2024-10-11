@@ -24,6 +24,8 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
     coverEndDate: new Date().getTime(),
     interestPercentage: 5,
     dayCountBasis: 365,
+    coverPercentage: 80,
+    value: 100000,
   });
 
   const TFM_FACILITIES = [

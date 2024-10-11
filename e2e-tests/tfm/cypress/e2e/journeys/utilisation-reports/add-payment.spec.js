@@ -9,6 +9,7 @@ import {
 import pages from '../../pages';
 import USERS from '../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context('PDC_RECONCILE users can add a payment to a report', () => {
   const GBP_TOLERANCE = 2;
@@ -30,6 +31,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
   beforeEach(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
+    cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
     resetTolerances();
 
     const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
@@ -65,7 +67,12 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
       .withStatus('DOES_NOT_MATCH')
       .withPayments([payment])
       .build();
-    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecordOne, feeRecordTwo]);
+
+    const feeRecords = [feeRecordOne, feeRecordTwo];
+    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
+
+    const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
     pages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
