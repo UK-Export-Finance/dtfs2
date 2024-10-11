@@ -208,7 +208,9 @@
     utilisationTableRows: utilisationDetails.utilisationTableRows
   }) }}
 
-  <a class="govuk-link" href="{{ utilisationDetails.downloadUrl }}">Download the report submitted by the bank as a CSV</a>
+  <a class="govuk-link" href="{{ utilisationDetails.downloadUrl }}" data-cy="download-report-link">
+    Download the report submitted by the bank as a CSV
+  </a>
 {% endset %}
 
 {% block content %}

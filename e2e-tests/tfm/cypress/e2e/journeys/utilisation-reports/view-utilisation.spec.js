@@ -8,6 +8,7 @@ import {
 } from '@ukef/dtfs2-common';
 import pages from '../../pages';
 import USERS from '../../../fixtures/users';
+import relative from '../../relativeURL';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
 
 context('Users can view utilisation', () => {
@@ -118,5 +119,12 @@ context('Users can view utilisation', () => {
       cy.assertText(cy.get('[data-cy="fees-accrued"]'), `${CURRENCY.EUR} 200.00`);
       cy.assertText(cy.get('[data-cy="fees-payable"]'), `${CURRENCY.GBP} 100.00`);
     });
+  });
+
+  it('should be able to download report for offline viewing', () => {
+    cy.assertText(pages.utilisationReportPage.utilisationTab.downloadReportLink(), 'Download the report submitted by the bank as a CSV');
+
+    pages.utilisationReportPage.utilisationTab.downloadReportLink().click();
+    cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/download`));
   });
 });
