@@ -142,6 +142,38 @@ describe('postReasonForCancelling', () => {
           dealId,
           errors: validationErrors,
           reasonForCancelling,
+          previousPage: `/case/${dealId}/deal`,
+        });
+      });
+
+      it('renders the page with the back URL as the check details page when "change" is passed in as a query parameter', async () => {
+        // Arrange
+        const reasonForCancelling = 'reasonForCancelling';
+
+        const session = aRequestSession();
+
+        const { req, res } = createMocks<PostReasonForCancellingRequest>({
+          params: { _id: dealId },
+          query: { status: 'change' },
+          session,
+          body: {
+            reason: reasonForCancelling,
+          },
+        });
+
+        // Act
+        await postReasonForCancelling(req, res);
+
+        // Assert
+        expect(res._getRenderView()).toEqual('case/cancellation/reason-for-cancelling.njk');
+        expect(res._getRenderData() as ReasonForCancellingViewModel).toEqual({
+          activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
+          user: session.user,
+          ukefDealId,
+          dealId,
+          errors: validationErrors,
+          reasonForCancelling,
+          previousPage: `/case/${dealId}/cancellation/check-details`,
         });
       });
 

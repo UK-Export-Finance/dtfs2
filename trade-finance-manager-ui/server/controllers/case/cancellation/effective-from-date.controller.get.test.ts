@@ -14,6 +14,7 @@ jest.mock('../../../api', () => ({
 
 const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
+const previousPage = `/case/${dealId}/cancellation/bank-request-date`;
 
 describe('getEffectiveFromDate', () => {
   beforeEach(() => {
@@ -131,6 +132,7 @@ describe('getEffectiveFromDate', () => {
         day: '',
         month: '',
         year: '',
+        previousPage,
       });
     });
 
@@ -159,6 +161,37 @@ describe('getEffectiveFromDate', () => {
         day: format(existingEffectiveFromDate, 'd'),
         month: format(existingEffectiveFromDate, 'M'),
         year: format(existingEffectiveFromDate, 'yyyy'),
+        previousPage,
+      });
+    });
+
+    it('renders the page with the back URL as the check details page when "change" is passed in as a query parameter', async () => {
+      // Arrange
+      const existingEffectiveFromDate = new Date('2024-03-21');
+      jest.mocked(api.getDealCancellation).mockResolvedValue({ effectiveFrom: existingEffectiveFromDate.valueOf() });
+
+      const session = aRequestSession();
+
+      const { req, res } = createMocks<GetEffectiveFromDateRequest>({
+        params: { _id: dealId },
+        query: { status: 'change' },
+        session,
+      });
+
+      // Act
+      await getEffectiveFromDate(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('case/cancellation/effective-from-date.njk');
+      expect(res._getRenderData() as EffectiveFromDateViewModel).toEqual({
+        activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
+        user: session.user,
+        ukefDealId,
+        dealId,
+        day: format(existingEffectiveFromDate, 'd'),
+        month: format(existingEffectiveFromDate, 'M'),
+        year: format(existingEffectiveFromDate, 'yyyy'),
+        previousPage: `/case/${dealId}/cancellation/check-details`,
       });
     });
   });
