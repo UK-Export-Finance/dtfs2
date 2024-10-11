@@ -20,10 +20,10 @@
 {% set premiumPaymentsHtml %}
   {% if displayMatchSuccessNotification %}
     {% set notificationHtml %}
-      <h3 class="govuk-notification-banner__heading">
+      <h3 class="govuk-notification-banner__heading" data-cy="match-success-notification-heading">
         Match payment recorded
       </h3>
-      <p class="govuk-body">The fee(s) are now at a Match state. Further payments cannot be added to the fee record.</p>
+      <p class="govuk-body" data-cy="match-success-notification-message">The fee(s) are now at a Match state. Further payments cannot be added to the fee record.</p>
     {% endset %}
 
     <div class="govuk-grid-row govuk-!-padding-top-7" data-cy="match-success-notification">

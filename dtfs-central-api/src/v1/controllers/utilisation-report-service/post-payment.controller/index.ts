@@ -33,7 +33,7 @@ export const postPayment = async (req: PostPaymentRequest, res: Response) => {
       reference: paymentReference,
     };
 
-    const feeRecordStatus = await addPaymentToUtilisationReport(parseInt(reportId, 10), feeRecordIds, user, newPaymentDetails);
+    const feeRecordStatus = await addPaymentToUtilisationReport(Number(reportId), feeRecordIds, user, newPaymentDetails);
 
     return res.status(HttpStatusCode.Ok).send({ feeRecordStatus });
   } catch (error) {

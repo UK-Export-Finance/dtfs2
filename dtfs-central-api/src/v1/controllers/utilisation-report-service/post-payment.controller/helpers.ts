@@ -8,9 +8,8 @@ import { NewPaymentDetails } from '../../../../types/utilisation-reports';
 import { executeWithSqlTransaction } from '../../../../helpers';
 
 /**
- * Adds a payment to the utilisation report with the specified id
- * and returns the resulting status of the fee record(s) it was
- * added against
+ * Adds a payment to the utilisation report with the specified id and
+ * returns the resulting status of the fee record(s) it was added against
  * @param reportId - The report id
  * @param feeRecordIds - The fee record ids linked to the payment
  * @param user - The user adding the payment

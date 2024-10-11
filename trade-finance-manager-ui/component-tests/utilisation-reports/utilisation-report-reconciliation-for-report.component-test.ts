@@ -286,9 +286,9 @@ describe(page, () => {
     const wrapper = getWrapper({ ...params, displayMatchSuccessNotification: true });
 
     wrapper.expectElement('[data-cy="match-success-notification"]').toExist();
-    wrapper.expectText('[data-cy="match-success-notification"] h3').toRead('Match payment recorded');
+    wrapper.expectText('[data-cy="match-success-notification-heading"]').toRead('Match payment recorded');
     wrapper
-      .expectText('[data-cy="match-success-notification"] p')
+      .expectText('[data-cy="match-success-notification-message"]')
       .toRead('The fee(s) are now at a Match state. Further payments cannot be added to the fee record.');
   });
 });
