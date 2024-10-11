@@ -1,4 +1,4 @@
-import { ZodObject } from 'zod';
+import { ZodSchema } from 'zod';
 import { withSchemaTests } from '../../test-helpers';
 import { EntraIdUser } from '../types/entra-id-user';
 import { ENTRA_ID_USER_GROUP } from '../constants/entra-id-user';
@@ -8,7 +8,7 @@ type TestCasesParams = {
 };
 
 type withEntraIdUserSchemaTestsParams = {
-  schema: ZodObject<any>;
+  schema: ZodSchema;
 } & TestCasesParams;
 
 export function aValidEntraIdUser(): EntraIdUser {
