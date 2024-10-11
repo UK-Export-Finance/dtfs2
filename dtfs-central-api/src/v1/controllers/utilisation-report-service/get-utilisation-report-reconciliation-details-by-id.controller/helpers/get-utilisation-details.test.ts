@@ -17,7 +17,7 @@ describe('get-utilisation-details', () => {
 
   describe('getUtilisationDetails', () => {
     describe('when no tfm facility is found for a fee record', () => {
-      it('should throw', async () => {
+      it('should throw a NotFoundError', async () => {
         // Arrange
         const facilityId = '12345678';
         const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFacilityId(facilityId).build();
@@ -44,6 +44,7 @@ describe('get-utilisation-details', () => {
         secondTfmFacility.facilitySnapshot.ukefFacilityId = secondFacilityId;
 
         jest.spyOn(TfmFacilitiesRepo, 'findByUkefFacilityIds').mockResolvedValue([firstTfmFacility, secondTfmFacility]);
+
         const expected: FeeRecordUtilisation[] = [
           {
             feeRecordId: 1,

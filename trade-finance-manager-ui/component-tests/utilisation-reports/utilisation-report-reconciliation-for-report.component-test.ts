@@ -318,7 +318,7 @@ describe(page, () => {
 
     const utilisationTabSelector = 'div#utilisation';
 
-    wrapper.expectText(`${utilisationTabSelector} h2`).toRead('Bank report');
+    wrapper.expectText(`${utilisationTabSelector} h2[data-cy="bank-report-heading"]`).toRead('Bank report');
   });
 
   it('should render the utilisation tab table', () => {

@@ -9,6 +9,5 @@ import { getFormattedMonetaryValue } from './monetary-value';
  * @example
  * const amount = getFormattedCurrencyAndAmount({ currency: 'GBP', amount: 3.14159 }); // 'GBP 3.14'
  */
-export const getFormattedCurrencyAndAmount = (currencyAndAmount: CurrencyAndAmount): CurrencyAndAmountString => {
-  return `${currencyAndAmount.currency} ${getFormattedMonetaryValue(currencyAndAmount.amount)}`;
-};
+export const getFormattedCurrencyAndAmount = (currencyAndAmount: CurrencyAndAmount): CurrencyAndAmountString =>
+  `${currencyAndAmount.currency} ${getFormattedMonetaryValue(currencyAndAmount.amount)}`;

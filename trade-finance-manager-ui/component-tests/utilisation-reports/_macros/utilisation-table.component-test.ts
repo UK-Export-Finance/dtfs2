@@ -17,8 +17,6 @@ describe(component, () => {
 
   const getWrapper = (viewModel: UtilisationTableViewModel = aUtilisationTableViewModel()) => render(viewModel);
 
-  const nthTableHeaderSelector = (n: number) => `thead th:nth-child(${n})`;
-
   it('should render all table headings', () => {
     // Arrange
     const wrapper = getWrapper();
@@ -26,31 +24,31 @@ describe(component, () => {
     // Assert
     wrapper.expectElement('table thead tr').toHaveCount(1);
     wrapper.expectElement('table thead th').toHaveCount(9);
-    wrapper.expectText(nthTableHeaderSelector(1)).toRead('Facility ID');
-    wrapper.expectText(nthTableHeaderSelector(2)).toRead('Exporter');
-    wrapper.expectText(nthTableHeaderSelector(3)).toRead('Base currency');
-    wrapper.expectText(nthTableHeaderSelector(4)).toRead('Value');
-    wrapper.expectText(nthTableHeaderSelector(5)).toRead('Utilisation');
-    wrapper.expectText(nthTableHeaderSelector(6)).toRead('UKEF cover');
-    wrapper.expectText(nthTableHeaderSelector(7)).toRead('UKEF exposure');
-    wrapper.expectText(nthTableHeaderSelector(8)).toRead('Fees accrued');
-    wrapper.expectText(nthTableHeaderSelector(9)).toRead('Fees payable to UKEF (reported currency)');
+    wrapper.expectText('th[data-cy="facility-id-header"]').toRead('Facility ID');
+    wrapper.expectText('th[data-cy="exporter-header"]').toRead('Exporter');
+    wrapper.expectText('th[data-cy="base-currency-header"]').toRead('Base currency');
+    wrapper.expectText('th[data-cy="value-header"]').toRead('Value');
+    wrapper.expectText('th[data-cy="utilisation-header"]').toRead('Utilisation');
+    wrapper.expectText('th[data-cy="cover-percentage-header"]').toRead('UKEF cover');
+    wrapper.expectText('th[data-cy="exposure-header"]').toRead('UKEF exposure');
+    wrapper.expectText('th[data-cy="fees-accrued-header"]').toRead('Fees accrued');
+    wrapper.expectText('th[data-cy="fees-payable-header"]').toRead('Fees payable to UKEF (reported currency)');
   });
 
-  it('should set all columns as sortable with the default sort order as the first column ascending', () => {
+  it('should set all columns as sortable with the default sort order as the facility id column ascending', () => {
     // Arrange
     const wrapper = getWrapper();
 
     // Assert
-    wrapper.expectAriaSort(nthTableHeaderSelector(1)).toEqual('ascending');
-    wrapper.expectAriaSort(nthTableHeaderSelector(2)).toEqual('none');
-    wrapper.expectAriaSort(nthTableHeaderSelector(3)).toEqual('none');
-    wrapper.expectAriaSort(nthTableHeaderSelector(4)).toEqual('none');
-    wrapper.expectAriaSort(nthTableHeaderSelector(5)).toEqual('none');
-    wrapper.expectAriaSort(nthTableHeaderSelector(6)).toEqual('none');
-    wrapper.expectAriaSort(nthTableHeaderSelector(7)).toEqual('none');
-    wrapper.expectAriaSort(nthTableHeaderSelector(8)).toEqual('none');
-    wrapper.expectAriaSort(nthTableHeaderSelector(9)).toEqual('none');
+    wrapper.expectAriaSort('th[data-cy="facility-id-header"]').toEqual('ascending');
+    wrapper.expectAriaSort('th[data-cy="exporter-header"]').toEqual('none');
+    wrapper.expectAriaSort('th[data-cy="base-currency-header"]').toEqual('none');
+    wrapper.expectAriaSort('th[data-cy="value-header"]').toEqual('none');
+    wrapper.expectAriaSort('th[data-cy="utilisation-header"]').toEqual('none');
+    wrapper.expectAriaSort('th[data-cy="cover-percentage-header"]').toEqual('none');
+    wrapper.expectAriaSort('th[data-cy="exposure-header"]').toEqual('none');
+    wrapper.expectAriaSort('th[data-cy="fees-accrued-header"]').toEqual('none');
+    wrapper.expectAriaSort('th[data-cy="fees-payable-header"]').toEqual('none');
   });
 
   it('should render one row per passed in item', () => {
