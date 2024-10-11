@@ -42,7 +42,7 @@ describe('controllers - unauthenticated auth (sso)', () => {
 
       unauthenticatedAuthController.postSsoRedirect(req, res);
 
-      expect(res._getRenderView()).toBe('sso/accept-sso-redirect.njk');
+      expect(res._getRenderView()).toEqual('sso/accept-sso-redirect.njk');
       expect(res._getRenderData()).toEqual({
         clientInfo: mockBody.client_info,
         state: mockBody.state,
