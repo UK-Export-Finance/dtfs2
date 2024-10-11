@@ -9,7 +9,6 @@ import {
 import pages from '../../pages';
 import USERS from '../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
-import { continueButton } from '../../partials';
 
 context('PDC_RECONCILE users can add a payment to a report', () => {
   const GBP_TOLERANCE = 2;
@@ -109,7 +108,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
     cy.completeDateFormFields({ idPrefix: 'payment-date', day: '56', month: '12', year: '2023' });
 
-    continueButton().click();
+    cy.clickContinueButton();
 
     cy.get('a').should('contain', 'Select payment currency');
     cy.get('a').should('contain', 'The date payment received must be a real date');
@@ -135,7 +134,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
     cy.getInputByLabelText('No').click();
 
-    continueButton().click();
+    cy.clickContinueButton();
 
     cy.contains('Premium payments').should('exist');
 
@@ -152,7 +151,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
     cy.getInputByLabelText('Yes').click();
 
-    continueButton().click();
+    cy.clickContinueButton();
 
     cy.contains('Premium payments').should('exist');
 
@@ -172,7 +171,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
     cy.completeDateFormFields({ idPrefix: 'payment-date', day: '12', month: '12', year: '2023' });
     cy.getInputByLabelText('Yes').click();
 
-    continueButton().click();
+    cy.clickContinueButton();
 
     cy.get('h1').invoke('text').should('contain', 'Add a payment');
     cy.getInputByLabelText('GBP').should('not.be.checked');
