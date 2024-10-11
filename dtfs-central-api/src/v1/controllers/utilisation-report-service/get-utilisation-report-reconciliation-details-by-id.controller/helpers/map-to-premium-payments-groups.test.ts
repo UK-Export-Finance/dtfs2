@@ -1,7 +1,6 @@
 import { when } from 'jest-when';
 import {
   CURRENCY,
-  Currency,
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
   FeeRecordStatus,
@@ -75,7 +74,7 @@ describe('mapToPremiumPaymentsGroups', () => {
   });
 
   describe('when a group has a single fee record with no payments', () => {
-    const currency: Currency = 'GBP';
+    const currency = CURRENCY.GBP;
     const amount = 100;
 
     const createFeeRecordEntityPaymentGroupForSingleFeeRecord = (id: number, status: FeeRecordStatus): FeeRecordPaymentEntityGroup => ({
@@ -94,9 +93,9 @@ describe('mapToPremiumPaymentsGroups', () => {
     it('returns as many fee record payment groups as there are fee record payment entity groups', () => {
       // Arrange
       const groups = [
-        createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, 'TO_DO'),
-        createFeeRecordEntityPaymentGroupForSingleFeeRecord(2, 'TO_DO'),
-        createFeeRecordEntityPaymentGroupForSingleFeeRecord(3, 'TO_DO'),
+        createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, FEE_RECORD_STATUS.TO_DO),
+        createFeeRecordEntityPaymentGroupForSingleFeeRecord(2, FEE_RECORD_STATUS.TO_DO),
+        createFeeRecordEntityPaymentGroupForSingleFeeRecord(3, FEE_RECORD_STATUS.TO_DO),
       ];
 
       // Act
@@ -108,7 +107,7 @@ describe('mapToPremiumPaymentsGroups', () => {
 
     it('sets the totalReportedPayments to the same value as the fee record reported payments', () => {
       // Arrange
-      const groups = [createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, 'TO_DO')];
+      const groups = [createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, FEE_RECORD_STATUS.TO_DO)];
 
       // Act
       const result = mapToPremiumPaymentsGroups(groups);
@@ -119,7 +118,7 @@ describe('mapToPremiumPaymentsGroups', () => {
 
     it('sets the paymentsReceived to null', () => {
       // Arrange
-      const groups = [createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, 'TO_DO')];
+      const groups = [createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, FEE_RECORD_STATUS.TO_DO)];
 
       // Act
       const result = mapToPremiumPaymentsGroups(groups);
@@ -130,7 +129,7 @@ describe('mapToPremiumPaymentsGroups', () => {
 
     it('sets the totalPaymentsReceived to null', () => {
       // Arrange
-      const groups = [createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, 'TO_DO')];
+      const groups = [createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, FEE_RECORD_STATUS.TO_DO)];
 
       // Act
       const result = mapToPremiumPaymentsGroups(groups);
@@ -145,7 +144,10 @@ describe('mapToPremiumPaymentsGroups', () => {
       // Arrange
       const group: FeeRecordPaymentEntityGroup = {
         feeRecords: [FeeRecordEntityMockBuilder.forReport(utilisationReport()).build(), FeeRecordEntityMockBuilder.forReport(utilisationReport()).build()],
-        payments: [PaymentEntityMockBuilder.forCurrency('GBP').withAmount(200).build(), PaymentEntityMockBuilder.forCurrency('GBP').withAmount(300).build()],
+        payments: [
+          PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withAmount(200).build(),
+          PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withAmount(300).build(),
+        ],
       };
 
       // Act
@@ -161,7 +163,7 @@ describe('mapToPremiumPaymentsGroups', () => {
       const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(utilisationReport()).build();
       const group: FeeRecordPaymentEntityGroup = {
         feeRecords: [feeRecordOne, feeRecordTwo],
-        payments: [PaymentEntityMockBuilder.forCurrency('GBP').build()],
+        payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
       };
 
       // Act
@@ -205,7 +207,7 @@ describe('mapToPremiumPaymentsGroups', () => {
         .build();
       const group: FeeRecordPaymentEntityGroup = {
         feeRecords: [feeRecordOne, feeRecordTwo],
-        payments: [PaymentEntityMockBuilder.forCurrency('GBP').withAmount(5000000).build()],
+        payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withAmount(5000000).build()],
       };
 
       // Act
@@ -213,14 +215,14 @@ describe('mapToPremiumPaymentsGroups', () => {
 
       // Assert
       expect(result.length).toEqual(1);
-      expect(result[0].totalReportedPayments).toEqual({ currency: 'GBP', amount: testValues.expectedTotalReportedPaymentAmount });
+      expect(result[0].totalReportedPayments).toEqual({ currency: CURRENCY.GBP, amount: testValues.expectedTotalReportedPaymentAmount });
     });
 
     it('returns the group with as many paymentsReceived as there are payments in the supplied group', () => {
       // Arrange
       const group: FeeRecordPaymentEntityGroup = {
         feeRecords: [FeeRecordEntityMockBuilder.forReport(utilisationReport()).build(), FeeRecordEntityMockBuilder.forReport(utilisationReport()).build()],
-        payments: [PaymentEntityMockBuilder.forCurrency('GBP').build(), PaymentEntityMockBuilder.forCurrency('GBP').build()],
+        payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build(), PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
       };
 
       // Act
@@ -234,14 +236,17 @@ describe('mapToPremiumPaymentsGroups', () => {
       // Arrange
       const group: FeeRecordPaymentEntityGroup = {
         feeRecords: [FeeRecordEntityMockBuilder.forReport(utilisationReport()).build(), FeeRecordEntityMockBuilder.forReport(utilisationReport()).build()],
-        payments: [PaymentEntityMockBuilder.forCurrency('GBP').withAmount(200).build(), PaymentEntityMockBuilder.forCurrency('GBP').withAmount(300).build()],
+        payments: [
+          PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withAmount(200).build(),
+          PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withAmount(300).build(),
+        ],
       };
 
       // Act
       const result = mapToPremiumPaymentsGroups([group]);
 
       // Assert
-      expect(result[0].totalPaymentsReceived).toEqual({ currency: 'GBP', amount: 500 });
+      expect(result[0].totalPaymentsReceived).toEqual({ currency: CURRENCY.GBP, amount: 500 });
     });
   });
 

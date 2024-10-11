@@ -1,3 +1,4 @@
+import { FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
 import { PremiumPaymentsGroup } from '../server/api-response-types';
 import { aFeeRecord } from './fee-record';
 
@@ -9,5 +10,5 @@ export const aPremiumPaymentsGroup = (): PremiumPaymentsGroup => ({
   },
   paymentsReceived: null,
   totalPaymentsReceived: null,
-  status: 'TO_DO',
+  status: FEE_RECORD_STATUS.TO_DO,
 });
