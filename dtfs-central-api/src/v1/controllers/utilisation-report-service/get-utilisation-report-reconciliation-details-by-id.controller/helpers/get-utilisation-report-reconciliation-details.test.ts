@@ -80,6 +80,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         await expect(getUtilisationReportReconciliationDetails(uploadedReport, paymentDetailsFilters, premiumPaymentsFilters)).rejects.toThrow(
           new NotFoundError(`Failed to find a bank with id '${bankId}'`),
         );
+        expect(getBankNameById).toHaveBeenCalledTimes(1);
         expect(getBankNameById).toHaveBeenCalledWith(bankId);
       });
     });
@@ -110,6 +111,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const mappedReport = await getUtilisationReportReconciliationDetails(uploadedReport, paymentDetailsFilters, premiumPaymentsFilters);
 
         // Assert
+        expect(getBankNameById).toHaveBeenCalledTimes(1);
         expect(getBankNameById).toHaveBeenCalledWith(bankId);
         expect(mappedReport).toEqual<UtilisationReportReconciliationDetails>({
           reportId,
@@ -145,6 +147,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         await getUtilisationReportReconciliationDetails(uploadedReport, paymentDetailsFilters, premiumPaymentsFilters);
 
         // Assert
+        expect(getPremiumPaymentsSpy).toHaveBeenCalledTimes(1);
         expect(getPremiumPaymentsSpy).toHaveBeenCalledWith([], premiumPaymentsFilters);
 
         getPremiumPaymentsSpy.mockRestore();
@@ -168,6 +171,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         await getUtilisationReportReconciliationDetails(uploadedReport, paymentDetailsFilters, premiumPaymentsFilters);
 
         // Assert
+        expect(getPaymentDetailsSpy).toHaveBeenCalledTimes(1);
         expect(getPaymentDetailsSpy).toHaveBeenCalledWith([], paymentDetailsFilters);
 
         getPaymentDetailsSpy.mockRestore();
@@ -196,6 +200,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         getPremiumPayments([], premiumPaymentsFilters);
 
         // Assert
+        expect(filterFeeRecordSpy).toHaveBeenCalledTimes(1);
         expect(filterFeeRecordSpy).toHaveBeenCalledWith([], premiumPaymentsFilters);
       });
     });
@@ -237,6 +242,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       await getPaymentDetails([], paymentDetailsFilters);
 
       // Assert
+      expect(filterFeeRecordSpy).toHaveBeenCalledTimes(1);
       expect(filterFeeRecordSpy).toHaveBeenCalledWith([], paymentDetailsFilters);
     });
 
@@ -255,6 +261,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         await getPaymentDetails([], paymentDetailsFilters);
 
         // Assert
+        expect(filterFeeRecordSpy).toHaveBeenCalledTimes(1);
         expect(filterFeeRecordSpy).toHaveBeenCalledWith([], paymentDetailsFilters);
       });
     });
@@ -311,6 +318,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
           await getPaymentDetails(groups, paymentDetailsFilters);
 
           // Assert
+          expect(mapToPaymentDetailsSpy).toHaveBeenCalledTimes(1);
           expect(mapToPaymentDetailsSpy).toHaveBeenCalledWith(expectedFlattenedGroups);
         });
       });
@@ -328,6 +336,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
           await getPaymentDetails(groups, paymentDetailsFilters);
 
           // Assert
+          expect(filterFeeRecordSpy).toHaveBeenCalledTimes(1);
           expect(filterFeeRecordSpy).toHaveBeenCalledWith(expectedFlattenedGroups, paymentDetailsFilters);
         });
       });
