@@ -44,6 +44,7 @@ describe('get-utilisation-details', () => {
         secondTfmFacility.facilitySnapshot.ukefFacilityId = secondFacilityId;
 
         jest.spyOn(TfmFacilitiesRepo, 'findByUkefFacilityIds').mockResolvedValue([firstTfmFacility, secondTfmFacility]);
+
         const expected: FeeRecordUtilisation[] = [
           {
             feeRecordId: 1,
