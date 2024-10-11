@@ -14,7 +14,6 @@ describe(component, () => {
       formattedCurrencyAndAmount: 'GBP 100.00',
       dataSortValue: 0,
     },
-    reference: undefined,
     dateReceived: {
       formattedDateReceived: '9 Mar 2024',
       dataSortValue: 0,

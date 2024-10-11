@@ -64,7 +64,7 @@ export type PaymentDetailsPaymentViewModel = {
     formattedCurrencyAndAmount: CurrencyAndAmountString;
     dataSortValue: number;
   };
-  reference: string | undefined;
+  reference?: string;
   dateReceived: {
     formattedDateReceived: string;
     dataSortValue: number;
