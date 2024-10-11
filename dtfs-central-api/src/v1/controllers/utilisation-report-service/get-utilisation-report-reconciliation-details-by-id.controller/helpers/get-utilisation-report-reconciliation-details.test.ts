@@ -264,8 +264,6 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       });
     });
 
-    // TODO FN-2311: Add test case for no filters defined, multiple payments, should flatten these
-
     describe('when there are fee record payment groups with multiple payments', () => {
       const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).withBankId(bankId).build();
 
