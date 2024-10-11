@@ -4,34 +4,46 @@
 
 {% macro render(params) %}
   {% set filters = params.filters %}
-  {% set paymentReference = params.paymentReference %}
-  {% set facilityId = params.facilityId %}
+  {% set errors = params.errors %}
 
-  {% if filters.currency %}
+  {% if filters.paymentCurrency %}
     {{ govukRadios({
-      name: "paymentDetailsCurrency",
+      name: "paymentDetailsPaymentCurrency",
       fieldset: {
         legend: {
           text: "Currency",
           classes: "govuk-fieldset__legend--m"
         }
       },
-      items: filters.currency,
+      items: filters.paymentCurrency,
+      errorMessage: errors and errors.paymentCurrencyErrorMessage and {
+        text: errors.paymentCurrencyErrorMessage,
+        attributes: {
+          'data-cy': 'payment-details--filter-payment-currency-error'
+        }
+      },
       attributes: {
+        id: 'payment-details-payment-currency-filter',
         'data-cy': 'payment-details--filter-currency'
       }
     }) }}
   {% endif %}
 
   {{ govukInput({
-    id: 'paymentDetailsPaymentReference',
+    id: 'payment-details-payment-reference-filter',
     name: 'paymentDetailsPaymentReference',
-    value: paymentReference,
+    value: filters.paymentReference,
     label: {
       text: 'Payment reference',
       classes: 'govuk-label--m',
       attributes: {
         'data-cy': 'payment-details--filter-payment-reference-label'
+      }
+    },
+    errorMessage: errors and errors.paymentReferenceErrorMessage and {
+      text: errors.paymentReferenceErrorMessage,
+      attributes: {
+        'data-cy': 'payment-details--filter-payment-reference-error'
       }
     },
     attributes: {
@@ -40,14 +52,20 @@
   }) }}
 
   {{ govukInput({
-    id: 'paymentDetailsFacilityId',
+    id: 'payment-details-facility-id-filter',
     name: 'paymentDetailsFacilityId',
-    value: facilityId,
+    value: filters.facilityId,
     label: {
       text: 'Facility ID',
       classes: 'govuk-label--m',
       attributes: {
         'data-cy': 'payment-details--filter-facility-id-label'
+      }
+    },
+    errorMessage: errors and errors.facilityIdErrorMessage and {
+      text: errors.facilityIdErrorMessage,
+      attributes: {
+        'data-cy': 'payment-details--filter-facility-id-error'
       }
     },
     attributes: {
