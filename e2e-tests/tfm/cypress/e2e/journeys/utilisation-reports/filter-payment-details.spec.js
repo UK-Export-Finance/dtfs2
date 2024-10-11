@@ -7,6 +7,7 @@ import {
 import pages from '../../pages';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
 import USERS from '../../../fixtures/users';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context(`users can filter payment details by facility id and payment reference and currency`, () => {
   const bankId = '961';
@@ -24,6 +25,7 @@ context(`users can filter payment details by facility id and payment reference a
 
   beforeEach(() => {
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+    cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
 
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [utilisationReport]);
 
@@ -37,6 +39,7 @@ context(`users can filter payment details by facility id and payment reference a
     const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build();
     const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityId('22222222').build();
     const thirdFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(3).withFacilityId('33333333').build();
+    const allFeeRecords = [firstFeeRecord, secondFeeRecord, thirdFeeRecord];
 
     const firstPayment = PaymentEntityMockBuilder.forCurrency('GBP')
       .withId(2)
@@ -48,8 +51,11 @@ context(`users can filter payment details by facility id and payment reference a
 
     const payments = [firstPayment, secondPayment];
 
-    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord, thirdFeeRecord]);
+    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, allFeeRecords);
     cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, payments);
+
+    const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(allFeeRecords);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
     cy.reload();
 
