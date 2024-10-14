@@ -12,32 +12,32 @@ import { PaymentDetails } from '../../../../../types/utilisation-reports';
  * @throws {Error} If the group has more than one payment
  */
 export const mapToPaymentDetails = async (paymentsWithFeeRecords: FeeRecordPaymentEntityGroup[]): Promise<PaymentDetails[]> => {
-  const mappedPaymentDetails: (PaymentDetails | undefined)[] = await Promise.all(
-    paymentsWithFeeRecords.map(async (group) => {
-      if (group.payments.length === 0) {
-        return undefined;
-      }
+  const mappedPaymentDetails: PaymentDetails[] = [];
 
-      if (group.payments.length !== 1) {
-        throw new Error('Error mapping payments to payment details - groups must have at most one payment.');
-      }
+  for (const group of paymentsWithFeeRecords) {
+    if (group.payments.length === 0) {
+      break;
+    }
 
-      const groupStatus = getFeeRecordPaymentEntityGroupStatus(group);
+    if (group.payments.length !== 1) {
+      throw new Error('Error mapping payments to payment details - groups must have at most one payment.');
+    }
 
-      const groupReconciliationData = await getFeeRecordPaymentEntityGroupReconciliationData(group);
+    const groupStatus = getFeeRecordPaymentEntityGroupStatus(group);
 
-      const feeRecords = group.feeRecords.map(mapFeeRecordEntityToFeeRecord);
+    const groupReconciliationData = await getFeeRecordPaymentEntityGroupReconciliationData(group);
 
-      const payment = mapPaymentEntityToPayment(group.payments[0]);
+    const feeRecords = group.feeRecords.map(mapFeeRecordEntityToFeeRecord);
 
-      return {
-        ...groupReconciliationData,
-        feeRecords,
-        payment,
-        status: groupStatus,
-      };
-    }),
-  );
+    const payment = mapPaymentEntityToPayment(group.payments[0]);
 
-  return mappedPaymentDetails.filter((payment): payment is PaymentDetails => payment !== undefined);
+    mappedPaymentDetails.push({
+      ...groupReconciliationData,
+      feeRecords,
+      payment,
+      status: groupStatus,
+    });
+  }
+
+  return mappedPaymentDetails;
 };
