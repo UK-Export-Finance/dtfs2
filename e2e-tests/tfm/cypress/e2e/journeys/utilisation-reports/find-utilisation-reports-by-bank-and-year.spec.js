@@ -85,11 +85,15 @@ context('PDC_RECONCILE users can search for reports by bank and year', () => {
     pages.searchUtilisationReportsResultsPage.noReportsText().should('exist');
   });
 
-  it('should NOT disable the year input and should NOT have any dropdown options when no bank is selected', () => {
+  it('should NOT disable the year input  when no bank is selected', () => {
     pages.searchUtilisationReportsFormPage.heading().should('exist');
 
     pages.searchUtilisationReportsFormPage.yearInput().should('not.be.disabled');
     pages.searchUtilisationReportsFormPage.yearInput().should('be.enabled');
+  });
+
+  it('should NOT have any dropdown options when no bank is selected', () => {
+    pages.searchUtilisationReportsFormPage.heading().should('exist');
 
     pages.searchUtilisationReportsFormPage.yearInputDropdownId().should('equal', '');
   });
