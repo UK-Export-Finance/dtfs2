@@ -19,14 +19,6 @@ const { as, post } = createApi(app);
 
 const validId = new ObjectId().toString();
 
-const mockUpdateResult: UpdateResult = {
-  acknowledged: true,
-  modifiedCount: 1,
-  matchedCount: 1,
-  upsertedCount: 1,
-  upsertedId: new ObjectId(validId),
-};
-
 const getSubmitTfmDealCancellationUrl = ({ id }: { id: string }) => `/v1/deals/${id}/cancellation/submit`;
 
 const aValidPayload = (): PostSubmitDealCancellationPayload => ({
@@ -44,23 +36,13 @@ describe('POST /v1/deals/:id/cancellation/submit', () => {
     aPimUser = testUsers().withTeam(TEAM_IDS.PIM).one();
   });
 
-  beforeEach(() => {
-    jest.resetAllMocks();
-    jest.mocked(updateDealCancellationMock).mockResolvedValue(mockUpdateResult);
-  });
-
-  afterAll(() => {
-    jest.restoreAllMocks();
-    process.env = originalProcessEnv;
-  });
-
   describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is disabled', () => {
     beforeEach(() => {
       process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'false';
     });
 
     afterAll(() => {
-      jest.resetAllMocks();
+      process.env = originalProcessEnv;
     });
 
     it('returns a 404 response for an authenticated user with a valid id path', async () => {
@@ -81,7 +63,7 @@ describe('POST /v1/deals/:id/cancellation/submit', () => {
     });
 
     afterAll(() => {
-      jest.resetAllMocks();
+      process.env = originalProcessEnv;
     });
 
     withTeamAuthorisationTests({
