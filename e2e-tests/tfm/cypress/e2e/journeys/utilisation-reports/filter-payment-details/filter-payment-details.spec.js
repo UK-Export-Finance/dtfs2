@@ -104,21 +104,13 @@ context(`users can filter payment details by facility id and payment reference a
 
       paymentDetailsTabLink().click();
 
-      payments.forEach(({ id: paymentId, currency, amount, reference, feeRecords: paymentFeeRecords }) => {
-        paymentFeeRecords.forEach(({ id: feeRecordId, facilityId }, index) => {
-          paymentDetailsTable.row(paymentId, feeRecordId).should('exist');
+      paymentDetailsTable.row(firstPayment.id, firstFeeRecord.id).should('exist');
+      cy.assertText(paymentDetailsTable.paymentCurrencyAndAmount(firstPayment.id, firstFeeRecord.id), `${CURRENCY.GBP} 100.00`);
+      cy.assertText(paymentDetailsTable.paymentReference(firstPayment.id, firstFeeRecord.id), 'ABCD');
+      cy.assertText(paymentDetailsTable.facilityId(firstPayment.id, firstFeeRecord.id), '11111111');
 
-          const isFirstFeeRecordRow = index === 0;
-
-          if (isFirstFeeRecordRow) {
-            cy.assertText(paymentDetailsTable.paymentCurrencyAndAmount(paymentId, feeRecordId), `${currency} ${amount.toFixed(2)}`);
-
-            cy.assertText(paymentDetailsTable.paymentReference(paymentId, feeRecordId), reference);
-          }
-
-          cy.assertText(paymentDetailsTable.facilityId(paymentId, feeRecordId), facilityId);
-        });
-      });
+      paymentDetailsTable.row(secondPayment.id, secondFeeRecord.id).should('exist');
+      cy.assertText(paymentDetailsTable.facilityId(secondPayment.id, secondFeeRecord.id), '22222222');
     });
   });
 
