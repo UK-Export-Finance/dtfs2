@@ -1,6 +1,7 @@
 import {
   CURRENCY,
   FeeRecordEntityMockBuilder,
+  MIN_PAYMENT_REFERENCE_FILTER_CHARACTER_COUNT,
   PaymentEntityMockBuilder,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
@@ -618,7 +619,7 @@ context(`users can filter payment details by facility id and payment reference a
 
     describe('when the payment reference filter is submitted with an invalid value', () => {
       it('should display an error message for invalid payment reference and persist the inputted value', () => {
-        const invalidPaymentReferenceFilter = '123'; // Invalid due to length.
+        const invalidPaymentReferenceFilter = 'a'.repeat(MIN_PAYMENT_REFERENCE_FILTER_CHARACTER_COUNT - 1); // Invalid due to length.
         const expectedErrorMessage = 'Payment reference must be blank or contain a minimum of 4 characters';
 
         const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
