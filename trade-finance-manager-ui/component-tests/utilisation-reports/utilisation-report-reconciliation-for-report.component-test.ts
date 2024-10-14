@@ -352,9 +352,7 @@ describe(page, () => {
       },
     });
 
-    const utilisationTabSelector = 'div#utilisation';
-
-    wrapper.expectLink(`${utilisationTabSelector} a`).toLinkTo(downloadUrl, 'Download the report submitted by the bank as a CSV');
+    wrapper.expectLink('[data-cy="download-report-link"]').toLinkTo(downloadUrl, 'Download the report submitted by the bank as a CSV');
   });
 
   it('should not display match success notification when param is false', () => {
