@@ -22,6 +22,9 @@ context(`users can filter payment details by facility id and payment reference a
     .withDateUploaded(new Date())
     .build();
 
+  const { paymentDetailsTabLink, paymentDetailsTab } = pages.utilisationReportPage;
+  const { filters, paymentDetailsTable, errorSummaryErrors } = paymentDetailsTab;
+
   before(() => {
     cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
   });
@@ -52,18 +55,18 @@ context(`users can filter payment details by facility id and payment reference a
 
       cy.visit(`/utilisation-reports/${reportId}`);
 
-      pages.utilisationReportPage.paymentDetailsTabLink().click();
+      paymentDetailsTabLink().click();
 
       // On first page load, the filter panel should be visible.
-      pages.utilisationReportPage.paymentDetailsTab.filters.panel().should('be.visible');
+      filters.panel().should('be.visible');
 
-      cy.assertText(pages.utilisationReportPage.paymentDetailsTab.filters.panelToggleButton(), 'Hide filters');
-      pages.utilisationReportPage.paymentDetailsTab.filters.panelToggleButton().click();
-      pages.utilisationReportPage.paymentDetailsTab.filters.panel().should('not.be.visible');
+      cy.assertText(filters.panelToggleButton(), 'Hide filters');
+      filters.panelToggleButton().click();
+      filters.panel().should('not.be.visible');
 
-      cy.assertText(pages.utilisationReportPage.paymentDetailsTab.filters.panelToggleButton(), 'Show filters');
-      pages.utilisationReportPage.paymentDetailsTab.filters.panelToggleButton().click();
-      pages.utilisationReportPage.paymentDetailsTab.filters.panel().should('be.visible');
+      cy.assertText(filters.panelToggleButton(), 'Show filters');
+      filters.panelToggleButton().click();
+      filters.panel().should('be.visible');
     });
   });
 
@@ -100,24 +103,21 @@ context(`users can filter payment details by facility id and payment reference a
 
       cy.visit(`/utilisation-reports/${reportId}`);
 
-      pages.utilisationReportPage.paymentDetailsTabLink().click();
+      paymentDetailsTabLink().click();
 
       payments.forEach(({ id: paymentId, currency, amount, reference, feeRecords: paymentFeeRecords }) => {
         paymentFeeRecords.forEach(({ id: feeRecordId, facilityId }, index) => {
-          pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(paymentId, feeRecordId).should('exist');
+          paymentDetailsTable.row(paymentId, feeRecordId).should('exist');
 
           const isFirstFeeRecordRow = index === 0;
 
           if (isFirstFeeRecordRow) {
-            cy.assertText(
-              pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.paymentCurrencyAndAmount(paymentId, feeRecordId),
-              `${currency} ${amount.toFixed(2)}`,
-            );
+            cy.assertText(paymentDetailsTable.paymentCurrencyAndAmount(paymentId, feeRecordId), `${currency} ${amount.toFixed(2)}`);
 
-            cy.assertText(pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.paymentReference(paymentId, feeRecordId), reference);
+            cy.assertText(paymentDetailsTable.paymentReference(paymentId, feeRecordId), reference);
           }
 
-          cy.assertText(pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.facilityId(paymentId, feeRecordId), facilityId);
+          cy.assertText(paymentDetailsTable.facilityId(paymentId, feeRecordId), facilityId);
         });
       });
     });
@@ -157,20 +157,20 @@ context(`users can filter payment details by facility id and payment reference a
 
         cy.visit(`/utilisation-reports/${reportId}`);
 
-        pages.utilisationReportPage.paymentDetailsTabLink().click();
+        paymentDetailsTabLink().click();
 
-        cy.keyboardInput(pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdInput(), completeFacilityIdFilter);
-        pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
+        cy.keyboardInput(filters.facilityIdInput(), completeFacilityIdFilter);
+        filters.submitButton().click();
 
         cy.url().should(
           'eq',
           relative(`/utilisation-reports/${reportId}?paymentDetailsPaymentReference=&paymentDetailsFacilityId=${completeFacilityIdFilter}#payment-details`),
         );
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdInput().should('have.value', completeFacilityIdFilter);
+        filters.facilityIdInput().should('have.value', completeFacilityIdFilter);
 
-        pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(firstPayment.id, firstFeeRecord.id).should('exist');
-        pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(secondPayment.id, secondFeeRecord.id).should('not.exist');
+        paymentDetailsTable.row(firstPayment.id, firstFeeRecord.id).should('exist');
+        paymentDetailsTable.row(secondPayment.id, secondFeeRecord.id).should('not.exist');
       });
     });
 
@@ -207,20 +207,20 @@ context(`users can filter payment details by facility id and payment reference a
 
         cy.visit(`/utilisation-reports/${reportId}`);
 
-        pages.utilisationReportPage.paymentDetailsTabLink().click();
+        paymentDetailsTabLink().click();
 
-        cy.keyboardInput(pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdInput(), partialFacilityIdFilter);
-        pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
+        cy.keyboardInput(filters.facilityIdInput(), partialFacilityIdFilter);
+        filters.submitButton().click();
 
         cy.url().should(
           'eq',
           relative(`/utilisation-reports/${reportId}?paymentDetailsPaymentReference=&paymentDetailsFacilityId=${partialFacilityIdFilter}#payment-details`),
         );
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdInput().should('have.value', partialFacilityIdFilter);
+        filters.facilityIdInput().should('have.value', partialFacilityIdFilter);
 
-        pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(firstPayment.id, firstFeeRecord.id).should('exist');
-        pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(secondPayment.id, secondFeeRecord.id).should('not.exist');
+        paymentDetailsTable.row(firstPayment.id, firstFeeRecord.id).should('exist');
+        paymentDetailsTable.row(secondPayment.id, secondFeeRecord.id).should('not.exist');
       });
     });
 
@@ -246,22 +246,22 @@ context(`users can filter payment details by facility id and payment reference a
 
         cy.visit(`/utilisation-reports/${reportId}`);
 
-        pages.utilisationReportPage.paymentDetailsTabLink().click();
+        paymentDetailsTabLink().click();
 
-        cy.keyboardInput(pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdInput(), invalidFacilityIdFilter);
-        pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
+        cy.keyboardInput(filters.facilityIdInput(), invalidFacilityIdFilter);
+        filters.submitButton().click();
 
         cy.url().should(
           'eq',
           relative(`/utilisation-reports/${reportId}?paymentDetailsPaymentReference=&paymentDetailsFacilityId=${invalidFacilityIdFilter}#payment-details`),
         );
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdInput().should('have.value', invalidFacilityIdFilter);
+        filters.facilityIdInput().should('have.value', invalidFacilityIdFilter);
 
-        pages.utilisationReportPage.paymentDetailsTab.errorSummaryErrors().should('have.length', 1);
-        cy.assertText(pages.utilisationReportPage.paymentDetailsTab.errorSummaryErrors().eq(0), expectedErrorMessage);
+        errorSummaryErrors().should('have.length', 1);
+        cy.assertText(errorSummaryErrors().eq(0), expectedErrorMessage);
 
-        cy.assertText(pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdError(), `Error: ${expectedErrorMessage}`);
+        cy.assertText(filters.facilityIdError(), `Error: ${expectedErrorMessage}`);
       });
     });
 
@@ -286,17 +286,17 @@ context(`users can filter payment details by facility id and payment reference a
 
         cy.visit(`/utilisation-reports/${reportId}`);
 
-        pages.utilisationReportPage.paymentDetailsTabLink().click();
+        paymentDetailsTabLink().click();
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdInput().should('have.value', emptyFacilityIdFilter);
-        pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
+        filters.facilityIdInput().should('have.value', emptyFacilityIdFilter);
+        filters.submitButton().click();
 
         cy.url().should('eq', relative(`/utilisation-reports/${reportId}?paymentDetailsPaymentReference=&paymentDetailsFacilityId=#payment-details`));
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdInput().should('have.value', emptyFacilityIdFilter);
+        filters.facilityIdInput().should('have.value', emptyFacilityIdFilter);
 
-        pages.utilisationReportPage.paymentDetailsTab.errorSummaryErrors().should('have.length', 0);
-        pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdError().should('not.exist');
+        errorSummaryErrors().should('have.length', 0);
+        filters.facilityIdError().should('not.exist');
       });
     });
 
@@ -321,23 +321,23 @@ context(`users can filter payment details by facility id and payment reference a
 
         cy.visit(`/utilisation-reports/${reportId}`);
 
-        pages.utilisationReportPage.paymentDetailsTabLink().click();
+        paymentDetailsTabLink().click();
 
-        cy.keyboardInput(pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdInput(), unknownFacilityIdFilter);
-        pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
+        cy.keyboardInput(filters.facilityIdInput(), unknownFacilityIdFilter);
+        filters.submitButton().click();
 
         cy.url().should(
           'eq',
           relative(`/utilisation-reports/${reportId}?paymentDetailsPaymentReference=&paymentDetailsFacilityId=${unknownFacilityIdFilter}#payment-details`),
         );
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.panel().should('exist');
+        filters.panel().should('exist');
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdInput().should('have.value', unknownFacilityIdFilter);
+        filters.facilityIdInput().should('have.value', unknownFacilityIdFilter);
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.noRecordsMatchingFiltersText().should('exist');
+        filters.noRecordsMatchingFiltersText().should('exist');
 
-        pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(payment.id, feeRecord.id).should('not.exist');
+        paymentDetailsTable.row(payment.id, feeRecord.id).should('not.exist');
       });
     });
   });
@@ -345,7 +345,7 @@ context(`users can filter payment details by facility id and payment reference a
   describe('payment currency filter', () => {
     const assertAllPaymentCurrencyInputsAreNotChecked = () => {
       Object.values(CURRENCY).forEach((currency) => {
-        pages.utilisationReportPage.paymentDetailsTab.filters.paymentCurrencyRadioInput(currency).should('not.be.checked');
+        filters.paymentCurrencyRadioInput(currency).should('not.be.checked');
       });
     };
 
@@ -382,10 +382,10 @@ context(`users can filter payment details by facility id and payment reference a
 
         cy.visit(`/utilisation-reports/${reportId}`);
 
-        pages.utilisationReportPage.paymentDetailsTabLink().click();
+        paymentDetailsTabLink().click();
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.paymentCurrencyRadioInput(paymentCurrencyFilter).click();
-        pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
+        filters.paymentCurrencyRadioInput(paymentCurrencyFilter).click();
+        filters.submitButton().click();
 
         cy.url().should(
           'eq',
@@ -394,10 +394,10 @@ context(`users can filter payment details by facility id and payment reference a
           ),
         );
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.paymentCurrencyRadioInput(paymentCurrencyFilter).should('be.checked');
+        filters.paymentCurrencyRadioInput(paymentCurrencyFilter).should('be.checked');
 
-        pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(firstPayment.id, firstFeeRecord.id).should('exist');
-        pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(secondPayment.id, secondFeeRecord.id).should('not.exist');
+        paymentDetailsTable.row(firstPayment.id, firstFeeRecord.id).should('exist');
+        paymentDetailsTable.row(secondPayment.id, secondFeeRecord.id).should('not.exist');
       });
     });
 
@@ -450,15 +450,15 @@ context(`users can filter payment details by facility id and payment reference a
 
         cy.visit(`/utilisation-reports/${reportId}`);
 
-        pages.utilisationReportPage.paymentDetailsTabLink().click();
+        paymentDetailsTabLink().click();
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
+        filters.submitButton().click();
 
         cy.url().should('eq', relative(`/utilisation-reports/${reportId}?paymentDetailsPaymentReference=&paymentDetailsFacilityId=#payment-details`));
 
         assertAllPaymentCurrencyInputsAreNotChecked();
 
-        pages.utilisationReportPage.paymentDetailsTab.errorSummaryErrors().should('have.length', 0);
+        errorSummaryErrors().should('have.length', 0);
       });
     });
 
@@ -482,10 +482,10 @@ context(`users can filter payment details by facility id and payment reference a
 
         cy.visit(`/utilisation-reports/${reportId}`);
 
-        pages.utilisationReportPage.paymentDetailsTabLink().click();
+        paymentDetailsTabLink().click();
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.paymentCurrencyRadioInput(unknownPaymentCurrencyFilter).click();
-        pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
+        filters.paymentCurrencyRadioInput(unknownPaymentCurrencyFilter).click();
+        filters.submitButton().click();
 
         cy.url().should(
           'eq',
@@ -494,13 +494,13 @@ context(`users can filter payment details by facility id and payment reference a
           ),
         );
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.panel().should('exist');
+        filters.panel().should('exist');
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.paymentCurrencyRadioInput(unknownPaymentCurrencyFilter).should('be.checked');
+        filters.paymentCurrencyRadioInput(unknownPaymentCurrencyFilter).should('be.checked');
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.noRecordsMatchingFiltersText().should('exist');
+        filters.noRecordsMatchingFiltersText().should('exist');
 
-        pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(payment.id, feeRecord.id).should('not.exist');
+        paymentDetailsTable.row(payment.id, feeRecord.id).should('not.exist');
       });
     });
   });
@@ -545,10 +545,10 @@ context(`users can filter payment details by facility id and payment reference a
 
         cy.visit(`/utilisation-reports/${reportId}`);
 
-        pages.utilisationReportPage.paymentDetailsTabLink().click();
+        paymentDetailsTabLink().click();
 
-        cy.keyboardInput(pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput(), completePaymentReferenceFilter);
-        pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
+        cy.keyboardInput(filters.paymentReferenceInput(), completePaymentReferenceFilter);
+        filters.submitButton().click();
 
         cy.url().should(
           'eq',
@@ -557,11 +557,11 @@ context(`users can filter payment details by facility id and payment reference a
           ),
         );
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput().should('have.value', completePaymentReferenceFilter);
+        filters.paymentReferenceInput().should('have.value', completePaymentReferenceFilter);
 
-        pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(firstPayment.id, firstFeeRecord.id).should('exist');
-        pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(secondPayment.id, firstFeeRecord.id).should('not.exist');
-        pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(thirdPayment.id, secondFeeRecord.id).should('not.exist');
+        paymentDetailsTable.row(firstPayment.id, firstFeeRecord.id).should('exist');
+        paymentDetailsTable.row(secondPayment.id, firstFeeRecord.id).should('not.exist');
+        paymentDetailsTable.row(thirdPayment.id, secondFeeRecord.id).should('not.exist');
       });
     });
 
@@ -598,10 +598,10 @@ context(`users can filter payment details by facility id and payment reference a
 
         cy.visit(`/utilisation-reports/${reportId}`);
 
-        pages.utilisationReportPage.paymentDetailsTabLink().click();
+        paymentDetailsTabLink().click();
 
-        cy.keyboardInput(pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput(), partialPaymentReferenceFilter);
-        pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
+        cy.keyboardInput(filters.paymentReferenceInput(), partialPaymentReferenceFilter);
+        filters.submitButton().click();
 
         cy.url().should(
           'eq',
@@ -610,10 +610,10 @@ context(`users can filter payment details by facility id and payment reference a
           ),
         );
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput().should('have.value', partialPaymentReferenceFilter);
+        filters.paymentReferenceInput().should('have.value', partialPaymentReferenceFilter);
 
-        pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(firstPayment.id, firstFeeRecord.id).should('exist');
-        pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(secondPayment.id, secondFeeRecord.id).should('not.exist');
+        paymentDetailsTable.row(firstPayment.id, firstFeeRecord.id).should('exist');
+        paymentDetailsTable.row(secondPayment.id, secondFeeRecord.id).should('not.exist');
       });
     });
 
@@ -639,10 +639,10 @@ context(`users can filter payment details by facility id and payment reference a
 
         cy.visit(`/utilisation-reports/${reportId}`);
 
-        pages.utilisationReportPage.paymentDetailsTabLink().click();
+        paymentDetailsTabLink().click();
 
-        cy.keyboardInput(pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput(), invalidPaymentReferenceFilter);
-        pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
+        cy.keyboardInput(filters.paymentReferenceInput(), invalidPaymentReferenceFilter);
+        filters.submitButton().click();
 
         cy.url().should(
           'eq',
@@ -651,12 +651,12 @@ context(`users can filter payment details by facility id and payment reference a
           ),
         );
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput().should('have.value', invalidPaymentReferenceFilter);
+        filters.paymentReferenceInput().should('have.value', invalidPaymentReferenceFilter);
 
-        pages.utilisationReportPage.paymentDetailsTab.errorSummaryErrors().should('have.length', 1);
-        cy.assertText(pages.utilisationReportPage.paymentDetailsTab.errorSummaryErrors().eq(0), expectedErrorMessage);
+        errorSummaryErrors().should('have.length', 1);
+        cy.assertText(errorSummaryErrors().eq(0), expectedErrorMessage);
 
-        cy.assertText(pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceError(), `Error: ${expectedErrorMessage}`);
+        cy.assertText(filters.paymentReferenceError(), `Error: ${expectedErrorMessage}`);
       });
     });
 
@@ -681,17 +681,17 @@ context(`users can filter payment details by facility id and payment reference a
 
         cy.visit(`/utilisation-reports/${reportId}`);
 
-        pages.utilisationReportPage.paymentDetailsTabLink().click();
+        paymentDetailsTabLink().click();
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput().should('have.value', emptyPaymentReferenceFilter);
-        pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
+        filters.paymentReferenceInput().should('have.value', emptyPaymentReferenceFilter);
+        filters.submitButton().click();
 
         cy.url().should('eq', relative(`/utilisation-reports/${reportId}?paymentDetailsPaymentReference=&paymentDetailsFacilityId=#payment-details`));
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput().should('have.value', emptyPaymentReferenceFilter);
+        filters.paymentReferenceInput().should('have.value', emptyPaymentReferenceFilter);
 
-        pages.utilisationReportPage.paymentDetailsTab.errorSummaryErrors().should('have.length', 0);
-        pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdError().should('not.exist');
+        errorSummaryErrors().should('have.length', 0);
+        filters.facilityIdError().should('not.exist');
       });
     });
 
@@ -716,10 +716,10 @@ context(`users can filter payment details by facility id and payment reference a
 
         cy.visit(`/utilisation-reports/${reportId}`);
 
-        pages.utilisationReportPage.paymentDetailsTabLink().click();
+        paymentDetailsTabLink().click();
 
-        cy.keyboardInput(pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput(), unknownPaymentReferenceFilter);
-        pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
+        cy.keyboardInput(filters.paymentReferenceInput(), unknownPaymentReferenceFilter);
+        filters.submitButton().click();
 
         cy.url().should(
           'eq',
@@ -728,13 +728,13 @@ context(`users can filter payment details by facility id and payment reference a
           ),
         );
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.panel().should('exist');
+        filters.panel().should('exist');
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput().should('have.value', unknownPaymentReferenceFilter);
+        filters.paymentReferenceInput().should('have.value', unknownPaymentReferenceFilter);
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.noRecordsMatchingFiltersText().should('exist');
+        filters.noRecordsMatchingFiltersText().should('exist');
 
-        pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(payment.id, feeRecord.id).should('not.exist');
+        paymentDetailsTable.row(payment.id, feeRecord.id).should('not.exist');
       });
     });
   });
@@ -788,13 +788,13 @@ context(`users can filter payment details by facility id and payment reference a
 
       cy.visit(`/utilisation-reports/${reportId}`);
 
-      pages.utilisationReportPage.paymentDetailsTabLink().click();
+      paymentDetailsTabLink().click();
 
-      pages.utilisationReportPage.paymentDetailsTab.filters.paymentCurrencyRadioInput(paymentCurrencyFilter).click();
-      cy.keyboardInput(pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput(), partialPaymentReferenceFilter);
-      cy.keyboardInput(pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdInput(), partialFacilityIdFilter);
+      filters.paymentCurrencyRadioInput(paymentCurrencyFilter).click();
+      cy.keyboardInput(filters.paymentReferenceInput(), partialPaymentReferenceFilter);
+      cy.keyboardInput(filters.facilityIdInput(), partialFacilityIdFilter);
 
-      pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
+      filters.submitButton().click();
 
       cy.url().should(
         'eq',
@@ -803,15 +803,15 @@ context(`users can filter payment details by facility id and payment reference a
         ),
       );
 
-      pages.utilisationReportPage.paymentDetailsTab.filters.paymentCurrencyRadioInput(paymentCurrencyFilter).should('be.checked');
-      pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput().should('have.value', partialPaymentReferenceFilter);
-      pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdInput().should('have.value', partialFacilityIdFilter);
+      filters.paymentCurrencyRadioInput(paymentCurrencyFilter).should('be.checked');
+      filters.paymentReferenceInput().should('have.value', partialPaymentReferenceFilter);
+      filters.facilityIdInput().should('have.value', partialFacilityIdFilter);
 
-      pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(firstPayment.id, firstFeeRecord.id).should('exist');
-      pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(secondPayment.id, secondFeeRecord.id).should('not.exist');
-      pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(thirdPayment.id, thirdFeeRecord.id).should('exist');
-      pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(fourthPayment.id, thirdFeeRecord.id).should('not.exist');
-      pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(fourthPayment.id, fourthFeeRecord.id).should('not.exist');
+      paymentDetailsTable.row(firstPayment.id, firstFeeRecord.id).should('exist');
+      paymentDetailsTable.row(secondPayment.id, secondFeeRecord.id).should('not.exist');
+      paymentDetailsTable.row(thirdPayment.id, thirdFeeRecord.id).should('exist');
+      paymentDetailsTable.row(fourthPayment.id, thirdFeeRecord.id).should('not.exist');
+      paymentDetailsTable.row(fourthPayment.id, fourthFeeRecord.id).should('not.exist');
     });
   });
 });
