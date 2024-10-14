@@ -102,7 +102,7 @@ const getCheckboxAriaLabel = (feeRecords: FeeRecord[]): string => {
  * @param isCheckboxChecked - Whether or not the premium payments group checkbox is checked
  * @returns The premium payments view model items
  */
-export const mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems = (
+export const mapPremiumPaymentsToViewModelItems = (
   premiumPaymentGroups: PremiumPaymentsGroup[],
   isCheckboxChecked: (feeRecordIds: number[]) => boolean = () => false,
 ): PremiumPaymentsViewModelItem[] => {

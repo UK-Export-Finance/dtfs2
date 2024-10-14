@@ -4,7 +4,7 @@ import { mapCurrenciesToRadioItems } from '../../../helpers/map-currencies-to-ra
 import {
   getFormattedDateReconciled,
   getFormattedReconciledByUser,
-  mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems,
+  mapPremiumPaymentsToViewModelItems,
   mapPaymentDetailsGroupsToPaymentDetailsViewModel,
   mapKeyingSheetToKeyingSheetViewModel,
   mapPaymentDetailsFiltersToViewModel,
@@ -13,7 +13,7 @@ import { FeeRecord, KeyingSheet, KeyingSheetRow, Payment, PaymentDetails, Premiu
 import { aPremiumPaymentsGroup, aFeeRecord, aPayment, aPaymentDetails } from '../../../../test-helpers';
 
 describe('reconciliation-for-report-helper', () => {
-  describe('mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems', () => {
+  describe('mapPremiumPaymentsToViewModelItems', () => {
     const DEFAULT_IS_CHECKBOX_SELECTED = () => false;
 
     it('should map the group feeRecords id to the view model feeRecords id', () => {
@@ -32,7 +32,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -57,7 +57,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -82,7 +82,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -109,7 +109,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -136,7 +136,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -163,7 +163,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel[0].feeRecords[0].reportedPayments).toEqual('EUR 100.00');
@@ -186,7 +186,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -208,7 +208,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(4);
@@ -223,7 +223,7 @@ describe('reconciliation-for-report-helper', () => {
       const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), paymentsReceived: null }];
 
       // Act
-      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -243,7 +243,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel[0].paymentsReceived).toHaveLength(1);
@@ -262,7 +262,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel[0].paymentsReceived).toHaveLength(1);
@@ -279,7 +279,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -299,7 +299,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -321,7 +321,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(4);
@@ -337,7 +337,7 @@ describe('reconciliation-for-report-helper', () => {
       const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), status }];
 
       // Act
-      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -357,7 +357,7 @@ describe('reconciliation-for-report-helper', () => {
         const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), status: feeRecordStatus }];
 
         // Act
-        const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+        const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
         // Assert
         expect(viewModel[0].displayStatus).toEqual(feeRecordDisplayStatus);
@@ -396,7 +396,7 @@ describe('reconciliation-for-report-helper', () => {
       const checkboxId = `feeRecordIds-${feeRecordIds.join(',')}-reportedPaymentsCurrency-${firstFeeRecordReportedPaymentsCurrency}-status-${groupStatus}`;
 
       // Act
-      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel[0].checkboxId).toEqual(checkboxId);
@@ -423,7 +423,7 @@ describe('reconciliation-for-report-helper', () => {
       when(isCheckboxChecked).calledWith([feeRecordId]).mockReturnValue(true);
 
       // Act
-      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, isCheckboxChecked);
+      const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, isCheckboxChecked);
 
       // Assert
       expect(viewModel[0].isChecked).toEqual(true);
@@ -451,7 +451,7 @@ describe('reconciliation-for-report-helper', () => {
       when(isCheckboxChecked).calledWith([nonMatchingFeeRecordId]).mockReturnValue(true);
 
       // Act
-      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, isCheckboxChecked);
+      const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, isCheckboxChecked);
 
       // Assert
       expect(viewModel[0].isChecked).toEqual(false);
@@ -474,7 +474,7 @@ describe('reconciliation-for-report-helper', () => {
       const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), feeRecords }];
 
       // Act
-      const viewModel = mapPremiumPaymentsGroupsToPremiumPaymentsViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel[0].checkboxAriaLabel).toEqual('Select 123 456');
