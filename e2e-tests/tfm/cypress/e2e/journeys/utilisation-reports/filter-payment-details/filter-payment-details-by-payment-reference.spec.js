@@ -36,33 +36,24 @@ context(`users can filter payment details by payment reference`, () => {
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [utilisationReport]);
   });
 
+  const aPaymentWithIdFeeRecordsAndReference = (id, feeRecords, reference) =>
+    PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(id).withFeeRecords(feeRecords).withReference(reference).build();
+
+  const aPaymentWithFeeRecords = (feeRecords) => PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords(feeRecords).build();
+
+  const aFeeRecordWithId = (id) => FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(id).build();
+
   describe('when a complete payment reference filter is submitted', () => {
     it('should only display the payment with the supplied payment reference and persist the inputted value', () => {
       const completePaymentReferenceFilter = 'AAAA';
 
-      const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build();
-      const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityId('22222222').build();
-
+      const firstFeeRecord = aFeeRecordWithId(1);
+      const secondFeeRecord = aFeeRecordWithId(2);
       const feeRecords = [firstFeeRecord, secondFeeRecord];
 
-      const firstPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
-        .withId(11)
-        .withAmount(100)
-        .withReference(completePaymentReferenceFilter)
-        .withFeeRecords([firstFeeRecord])
-        .build();
-      const secondPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
-        .withId(12)
-        .withAmount(200)
-        .withReference('BBBB')
-        .withFeeRecords([firstFeeRecord])
-        .build();
-      const thirdPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
-        .withId(13)
-        .withAmount(300)
-        .withReference('CCCC')
-        .withFeeRecords([secondFeeRecord])
-        .build();
+      const firstPayment = aPaymentWithIdFeeRecordsAndReference(11, [firstFeeRecord], completePaymentReferenceFilter);
+      const secondPayment = aPaymentWithIdFeeRecordsAndReference(12, [firstFeeRecord], 'BBBB');
+      const thirdPayment = aPaymentWithIdFeeRecordsAndReference(13, [secondFeeRecord], 'CCCC');
 
       cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord]);
       cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [firstPayment, secondPayment, thirdPayment]);
@@ -97,23 +88,12 @@ context(`users can filter payment details by payment reference`, () => {
     it('should only display the payments which partially match the supplied payment reference and persist the inputted value', () => {
       const partialPaymentReferenceFilter = 'ABCD';
 
-      const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build();
-      const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityId('22222222').build();
-
+      const firstFeeRecord = aFeeRecordWithId(1);
+      const secondFeeRecord = aFeeRecordWithId(2);
       const feeRecords = [firstFeeRecord, secondFeeRecord];
 
-      const firstPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
-        .withId(11)
-        .withAmount(100)
-        .withReference('ABCDEFGH')
-        .withFeeRecords([firstFeeRecord])
-        .build();
-      const secondPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
-        .withId(12)
-        .withAmount(200)
-        .withReference('EFGH')
-        .withFeeRecords([secondFeeRecord])
-        .build();
+      const firstPayment = aPaymentWithIdFeeRecordsAndReference(11, [firstFeeRecord], 'ABCDEFGH');
+      const secondPayment = aPaymentWithIdFeeRecordsAndReference(12, [secondFeeRecord], 'EFGH');
 
       cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
       cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [firstPayment, secondPayment]);
@@ -148,11 +128,10 @@ context(`users can filter payment details by payment reference`, () => {
       const invalidPaymentReferenceFilter = 'a'.repeat(MIN_PAYMENT_REFERENCE_FILTER_CHARACTER_COUNT - 1); // Invalid due to length.
       const expectedErrorMessage = 'Payment reference must be blank or contain a minimum of 4 characters';
 
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
-
+      const feeRecord = aFeeRecordWithId(1);
       const feeRecords = [feeRecord];
 
-      const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords([feeRecord]).build();
+      const payment = aPaymentWithFeeRecords([feeRecord]);
 
       cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
       cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
@@ -188,11 +167,10 @@ context(`users can filter payment details by payment reference`, () => {
     it('should persist the inputted value and not display any error messages', () => {
       const emptyPaymentReferenceFilter = '';
 
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
-
+      const feeRecord = aFeeRecordWithId(1);
       const feeRecords = [feeRecord];
 
-      const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords([feeRecord]).build();
+      const payment = aPaymentWithFeeRecords([feeRecord]);
 
       cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
       cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
@@ -223,11 +201,10 @@ context(`users can filter payment details by payment reference`, () => {
     it('should display an error message for no payments found and persist the inputted value', () => {
       const unknownPaymentReferenceFilter = 'some-unknown-payment-reference';
 
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build();
-
+      const feeRecord = aFeeRecordWithId(1);
       const feeRecords = [feeRecord];
 
-      const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('ABCD').withFeeRecords([feeRecord]).build();
+      const payment = aPaymentWithIdFeeRecordsAndReference(11, [feeRecord], 'ABCD');
 
       cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
       cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);

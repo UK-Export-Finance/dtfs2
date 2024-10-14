@@ -35,6 +35,15 @@ context(`users can filter payment details by payment currency`, () => {
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [utilisationReport]);
   });
 
+  const aPaymentWithCurrencyAndFeeRecords = (currency, feeRecords) => PaymentEntityMockBuilder.forCurrency(currency).withFeeRecords(feeRecords).build();
+
+  const aPaymentWithIdCurrencyAndFeeRecords = (id, currency, feeRecords) =>
+    PaymentEntityMockBuilder.forCurrency(currency).withId(id).withFeeRecords(feeRecords).build();
+
+  const aFeeRecord = () => FeeRecordEntityMockBuilder.forReport(utilisationReport).build();
+
+  const aFeeRecordWithId = (id) => FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(id).build();
+
   const assertAllPaymentCurrencyInputsAreNotChecked = () => {
     Object.values(CURRENCY).forEach((currency) => {
       filters.paymentCurrencyRadioInput(currency).should('not.be.checked');
@@ -45,23 +54,12 @@ context(`users can filter payment details by payment currency`, () => {
     it('should only display the payment with the supplied payment currency and persist the checked currency', () => {
       const paymentCurrencyFilter = CURRENCY.USD;
 
-      const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build();
-      const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityId('22222222').build();
-
+      const firstFeeRecord = aFeeRecordWithId(1);
+      const secondFeeRecord = aFeeRecordWithId(2);
       const feeRecords = [firstFeeRecord, secondFeeRecord];
 
-      const firstPayment = PaymentEntityMockBuilder.forCurrency(paymentCurrencyFilter)
-        .withId(11)
-        .withAmount(100)
-        .withReference('ABCD')
-        .withFeeRecords([firstFeeRecord])
-        .build();
-      const secondPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
-        .withId(12)
-        .withAmount(200)
-        .withReference('EFGH')
-        .withFeeRecords([secondFeeRecord])
-        .build();
+      const firstPayment = aPaymentWithIdCurrencyAndFeeRecords(11, paymentCurrencyFilter, [firstFeeRecord]);
+      const secondPayment = aPaymentWithIdCurrencyAndFeeRecords(12, CURRENCY.GBP, [secondFeeRecord]);
 
       cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
       cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [firstPayment, secondPayment]);
@@ -97,11 +95,10 @@ context(`users can filter payment details by payment currency`, () => {
     it('should not check any radio inputs', () => {
       const unknownPaymentCurrencyFilter = 'UNKNOWN';
 
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
-
+      const feeRecord = aFeeRecord();
       const feeRecords = [feeRecord];
 
-      const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords([feeRecord]).build();
+      const payment = aPaymentWithCurrencyAndFeeRecords(CURRENCY.GBP, [feeRecord]);
 
       cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
       cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
@@ -125,11 +122,10 @@ context(`users can filter payment details by payment currency`, () => {
 
   describe('when the payment currency filter is submitted with no selection', () => {
     it('should not check any radio inputs or display any error messages', () => {
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
-
+      const feeRecord = aFeeRecord();
       const feeRecords = [feeRecord];
 
-      const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords([feeRecord]).build();
+      const payment = aPaymentWithCurrencyAndFeeRecords(CURRENCY.GBP, [feeRecord]);
 
       cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
       cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
@@ -158,10 +154,10 @@ context(`users can filter payment details by payment currency`, () => {
     it('should display an error message for no payments found and persist the inputted value', () => {
       const unknownPaymentCurrencyFilter = CURRENCY.JPY;
 
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build();
-      const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords([feeRecord]).build();
-
+      const feeRecord = aFeeRecord();
       const feeRecords = [feeRecord];
+
+      const payment = aPaymentWithCurrencyAndFeeRecords(CURRENCY.GBP, [feeRecord]);
 
       cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
       cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);

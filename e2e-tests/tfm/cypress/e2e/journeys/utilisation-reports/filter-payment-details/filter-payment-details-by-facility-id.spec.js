@@ -24,6 +24,15 @@ context(`users can filter payment details by facility id`, () => {
   const { paymentDetailsTabLink, paymentDetailsTab } = pages.utilisationReportPage;
   const { filters, paymentDetailsTable, errorSummaryErrors } = paymentDetailsTab;
 
+  const aPaymentWithFeeRecords = (feeRecords) => PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords(feeRecords).build();
+
+  const aPaymentWithIdAndFeeRecords = (id, feeRecords) => PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(id).withFeeRecords(feeRecords).build();
+
+  const aFeeRecord = () => FeeRecordEntityMockBuilder.forReport(utilisationReport).build();
+
+  const aFeeRecordWithIdAndFacilityId = (id, facilityId) =>
+    FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(id).withFacilityId(facilityId).build();
+
   before(() => {
     cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
   });
@@ -39,23 +48,12 @@ context(`users can filter payment details by facility id`, () => {
     it('should only display the payment with the supplied facility id and persist the inputted value', () => {
       const completeFacilityIdFilter = '11111111';
 
-      const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId(completeFacilityIdFilter).build();
-      const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityId('22222222').build();
-
+      const firstFeeRecord = aFeeRecordWithIdAndFacilityId(1, completeFacilityIdFilter);
+      const secondFeeRecord = aFeeRecordWithIdAndFacilityId(2, '22222222');
       const feeRecords = [firstFeeRecord, secondFeeRecord];
 
-      const firstPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
-        .withId(11)
-        .withAmount(100)
-        .withReference('ABCD')
-        .withFeeRecords([firstFeeRecord])
-        .build();
-      const secondPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
-        .withId(12)
-        .withAmount(200)
-        .withReference('EFGH')
-        .withFeeRecords([secondFeeRecord])
-        .build();
+      const firstPayment = aPaymentWithIdAndFeeRecords(11, [firstFeeRecord]);
+      const secondPayment = aPaymentWithIdAndFeeRecords(12, [secondFeeRecord]);
 
       cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
       cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [firstPayment, secondPayment]);
@@ -89,23 +87,12 @@ context(`users can filter payment details by facility id`, () => {
     it('should only display the payments which partially match the supplied facility id and persist the inputted value', () => {
       const partialFacilityIdFilter = '1111';
 
-      const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('77771111').build();
-      const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityId('22222222').build();
-
+      const firstFeeRecord = aFeeRecordWithIdAndFacilityId(1, '77771111');
+      const secondFeeRecord = aFeeRecordWithIdAndFacilityId(2, '22222222');
       const feeRecords = [firstFeeRecord, secondFeeRecord];
 
-      const firstPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
-        .withId(11)
-        .withAmount(100)
-        .withReference('ABCD')
-        .withFeeRecords([firstFeeRecord])
-        .build();
-      const secondPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
-        .withId(12)
-        .withAmount(200)
-        .withReference('EFGH')
-        .withFeeRecords([secondFeeRecord])
-        .build();
+      const firstPayment = aPaymentWithIdAndFeeRecords(11, [firstFeeRecord]);
+      const secondPayment = aPaymentWithIdAndFeeRecords(12, [secondFeeRecord]);
 
       cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
       cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [firstPayment, secondPayment]);
@@ -140,11 +127,10 @@ context(`users can filter payment details by facility id`, () => {
       const invalidFacilityIdFilter = '123'; // Invalid due to length.
       const expectedErrorMessage = 'Facility ID must be blank or contain between 4 and 10 numbers';
 
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
-
+      const feeRecord = aFeeRecord();
       const feeRecords = [feeRecord];
 
-      const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords([feeRecord]).build();
+      const payment = aPaymentWithFeeRecords([feeRecord]);
 
       cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
       cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
@@ -180,11 +166,10 @@ context(`users can filter payment details by facility id`, () => {
     it('should persist the inputted value and not display any error messages', () => {
       const emptyFacilityIdFilter = '';
 
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
-
+      const feeRecord = aFeeRecord();
       const feeRecords = [feeRecord];
 
-      const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords(feeRecords).build();
+      const payment = aPaymentWithFeeRecords(feeRecords);
 
       cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
       cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
@@ -215,11 +200,10 @@ context(`users can filter payment details by facility id`, () => {
     it('should display an error message for no payments found and persist the inputted value', () => {
       const unknownFacilityIdFilter = '99999999';
 
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build();
-
+      const feeRecord = aFeeRecordWithIdAndFacilityId(1, '11111111');
       const feeRecords = [feeRecord];
 
-      const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords([feeRecord]).build();
+      const payment = aPaymentWithFeeRecords([feeRecord]);
 
       cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
       cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);

@@ -24,6 +24,16 @@ context(`users can filter payment details by facility id and payment reference a
   const { paymentDetailsTabLink, paymentDetailsTab } = pages.utilisationReportPage;
   const { filters, paymentDetailsTable } = paymentDetailsTab;
 
+  const aPaymentWithFeeRecords = (feeRecords) => PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords(feeRecords).build();
+
+  const aPaymentWithIdFeeRecordsAndReference = (id, feeRecords, reference) =>
+    PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(id).withFeeRecords(feeRecords).withReference(reference).build();
+
+  const aFeeRecordWithId = (id) => FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(id).build();
+
+  const aFeeRecordWithIdAndFacilityId = (id, facilityId) =>
+    FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(id).withFacilityId(facilityId).build();
+
   before(() => {
     cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
   });
@@ -37,11 +47,10 @@ context(`users can filter payment details by facility id and payment reference a
 
   describe('when filter panel toggle button is clicked', () => {
     it('should toggle the filter panel', () => {
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
-
+      const feeRecord = aFeeRecordWithId(1);
       const feeRecords = [feeRecord];
 
-      const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords(feeRecords).build();
+      const payment = aPaymentWithFeeRecords(feeRecords);
 
       cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
       cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
@@ -71,24 +80,12 @@ context(`users can filter payment details by facility id and payment reference a
 
   describe('when no filters are applied', () => {
     it('should display all the payments attached to the utilisation report', () => {
-      const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build();
-      const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityId('22222222').build();
-
+      const firstFeeRecord = aFeeRecordWithIdAndFacilityId(1, '11111111');
+      const secondFeeRecord = aFeeRecordWithIdAndFacilityId(2, '22222222');
       const feeRecords = [firstFeeRecord, secondFeeRecord];
 
-      const firstPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
-        .withId(11)
-        .withAmount(100)
-        .withReference('ABCD')
-        .withFeeRecords([firstFeeRecord])
-        .build();
-      const secondPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
-        .withId(12)
-        .withAmount(200)
-        .withReference('EFGH')
-        .withFeeRecords([secondFeeRecord])
-        .build();
-
+      const firstPayment = aPaymentWithIdFeeRecordsAndReference(11, [firstFeeRecord], 'ABCD');
+      const secondPayment = aPaymentWithIdFeeRecordsAndReference(12, [secondFeeRecord], 'EFGH');
       const payments = [firstPayment, secondPayment];
 
       cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
@@ -110,6 +107,8 @@ context(`users can filter payment details by facility id and payment reference a
       cy.assertText(paymentDetailsTable.facilityId(firstPayment.id, firstFeeRecord.id), '11111111');
 
       paymentDetailsTable.row(secondPayment.id, secondFeeRecord.id).should('exist');
+      cy.assertText(paymentDetailsTable.paymentCurrencyAndAmount(secondPayment.id, secondFeeRecord.id), `${CURRENCY.GBP} 100.00`);
+      cy.assertText(paymentDetailsTable.paymentReference(secondPayment.id, secondFeeRecord.id), 'EFGH');
       cy.assertText(paymentDetailsTable.facilityId(secondPayment.id, secondFeeRecord.id), '22222222');
     });
   });
@@ -120,37 +119,16 @@ context(`users can filter payment details by facility id and payment reference a
       const partialPaymentReferenceFilter = 'payment';
       const partialFacilityIdFilter = '1111';
 
-      const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build();
-      const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityId('22222222').build();
-      const thirdFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(3).withFacilityId('11113333').build();
-      const fourthFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(4).withFacilityId('11113333').build();
-
+      const firstFeeRecord = aFeeRecordWithIdAndFacilityId(1, '11111111');
+      const secondFeeRecord = aFeeRecordWithIdAndFacilityId(2, '22222222');
+      const thirdFeeRecord = aFeeRecordWithIdAndFacilityId(3, '11113333');
+      const fourthFeeRecord = aFeeRecordWithIdAndFacilityId(4, '11113333');
       const feeRecords = [firstFeeRecord, secondFeeRecord, thirdFeeRecord, fourthFeeRecord];
 
-      const firstPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
-        .withId(11)
-        .withAmount(100)
-        .withReference('First payment ref')
-        .withFeeRecords([firstFeeRecord])
-        .build();
-      const secondPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.EUR)
-        .withId(12)
-        .withAmount(200)
-        .withReference('Second payment ref')
-        .withFeeRecords([secondFeeRecord])
-        .build();
-      const thirdPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
-        .withId(13)
-        .withAmount(300)
-        .withReference('Third payment ref')
-        .withFeeRecords([thirdFeeRecord])
-        .build();
-      const fourthPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
-        .withId(14)
-        .withAmount(400)
-        .withReference('Another ref')
-        .withFeeRecords([thirdFeeRecord, fourthFeeRecord])
-        .build();
+      const firstPayment = aPaymentWithIdFeeRecordsAndReference(11, [firstFeeRecord], 'First payment ref');
+      const secondPayment = aPaymentWithIdFeeRecordsAndReference(12, [secondFeeRecord], 'Second payment ref');
+      const thirdPayment = aPaymentWithIdFeeRecordsAndReference(13, [thirdFeeRecord], 'Third payment ref');
+      const fourthPayment = aPaymentWithIdFeeRecordsAndReference(14, [thirdFeeRecord, fourthFeeRecord], 'Another ref');
 
       cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
       cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [firstPayment, secondPayment, thirdPayment, fourthPayment]);
