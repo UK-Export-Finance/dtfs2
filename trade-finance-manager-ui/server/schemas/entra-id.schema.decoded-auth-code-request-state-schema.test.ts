@@ -1,10 +1,10 @@
+import { withSchemaTests } from '@ukef/dtfs2-common';
 import { DecodedAuthCodeRequestState } from '../types/entra-id';
-import { withSchemaTests } from '../../test-helpers';
-import { DecodedAuthCodeRequestStateSchema } from './entra-id.schema';
+import { DECODED_AUTH_CODE_REQUEST_STATE_SCHEMA } from './entra-id.schema';
 
-describe('DecodedAuthCodeRequestStateSchema', () => {
+describe('DECODED_AUTH_CODE_REQUEST_STATE_SCHEMA', () => {
   withSchemaTests({
-    schema: DecodedAuthCodeRequestStateSchema,
+    schema: DECODED_AUTH_CODE_REQUEST_STATE_SCHEMA,
     failureTestCases: getFailureTestCases(),
     successTestCases: getSuccessTestCases(),
   });

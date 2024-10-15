@@ -1,7 +1,7 @@
 import { ZodSchema } from 'zod';
-import { withSchemaTests } from '../../test-helpers';
-import { EntraIdUser } from '../types/entra-id-user';
-import { ENTRA_ID_USER_GROUP } from '../constants/entra-id-user-groups';
+import { EntraIdUser } from '../../types/tfm/entra-id-user';
+import { ENTRA_ID_USER_GROUP } from '../../constants';
+import { withSchemaTests } from './with-schema.tests';
 
 type TestCasesParams = {
   getTestObjectWithUpdatedUserParams: (entraIdUser: unknown) => unknown;
@@ -23,7 +23,7 @@ export function aValidEntraIdUser(): EntraIdUser {
 }
 
 export function withEntraIdUserSchemaTests({ schema, getTestObjectWithUpdatedUserParams }: withEntraIdUserSchemaTestsParams) {
-  describe('with EntraIdUserSchema tests', () => {
+  describe('with ENTRA_ID_USER_SCHEMA tests', () => {
     withSchemaTests({
       schema,
       failureTestCases: getFailureTestCases({ getTestObjectWithUpdatedUserParams }),
