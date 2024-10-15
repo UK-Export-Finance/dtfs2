@@ -138,6 +138,23 @@ describe('map-to-fee-record-utilisation', () => {
       expect(feeRecordUtilisation.exposure).toEqual(calculateExposure(utilisation, coverPercentage));
     });
 
+    it('should set the fee record id to the id of the fee record', () => {
+      // Arrange
+      const facilityId = '12345678';
+      const id = 123;
+
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFacilityId(facilityId).withId(id).build();
+
+      const tfmFacility = aTfmFacility();
+      tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
+
+      // Act
+      const feeRecordUtilisation = mapToFeeRecordUtilisation(feeRecord, tfmFacility);
+
+      // Assert
+      expect(feeRecordUtilisation.feeRecordId).toEqual(id);
+    });
+
     it('should set the facility id, exporter, base currency and utilisation to the corresponding fields on the fee record', () => {
       // Arrange
       const facilityId = '12345678';

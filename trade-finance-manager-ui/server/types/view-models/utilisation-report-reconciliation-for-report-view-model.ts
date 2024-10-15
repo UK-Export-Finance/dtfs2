@@ -116,6 +116,29 @@ export type PaymentDetailsViewModel = {
   isFilterActive?: boolean;
 };
 
+export type UtilisationTableRowViewModel = {
+  feeRecordId: number;
+  facilityId: string;
+  exporter: string;
+  baseCurrency: Currency;
+  formattedValue: string;
+  formattedUtilisation: string;
+  coverPercentage: number;
+  formattedExposure: string;
+  feesAccrued: {
+    formattedCurrencyAndAmount: CurrencyAndAmountString;
+    dataSortValue: number;
+  };
+  feesPayable: {
+    formattedCurrencyAndAmount: CurrencyAndAmountString;
+    dataSortValue: number;
+  };
+};
+
+export type UtilisationDetailsViewModel = {
+  utilisationTableRows: UtilisationTableRowViewModel[];
+};
+
 export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & {
   bank: SessionBank;
   formattedReportPeriod: string;
@@ -127,4 +150,6 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   enablePaymentsReceivedSorting: boolean;
   keyingSheet: KeyingSheetViewModel;
   paymentDetails: PaymentDetailsViewModel;
+  utilisationDetails: UtilisationDetailsViewModel;
+  displayMatchSuccessNotification: boolean;
 };

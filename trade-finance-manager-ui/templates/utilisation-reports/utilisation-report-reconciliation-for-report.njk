@@ -2,11 +2,13 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% import "./_macros/premium-payments-table.njk" as premiumPaymentsTable %}
 {% import "./_macros/keying-sheet-table.njk" as keyingSheetTable %}
 {% import "./_macros/payment-details-table.njk" as paymentDetailsTable %}
 {% import './_macros/payment-details-filters-panel.njk' as paymentDetailsFiltersPanel %}
 {% import './_macros/payment-details-filters-action-bar.njk' as paymentDetailsFiltersActionBar %}
+{% import './_macros/utilisation-table.njk' as utilisationTable %}
 
 {% extends "index.njk" %}
 
@@ -17,6 +19,23 @@
 {% endblock %}
 
 {% set premiumPaymentsHtml %}
+  {% if displayMatchSuccessNotification %}
+    {% set notificationHtml %}
+      <h3 class="govuk-notification-banner__heading" data-cy="match-success-notification-heading">
+        Match payment recorded
+      </h3>
+      <p class="govuk-body" data-cy="match-success-notification-message">The fee(s) are now at a Match state. Further payments cannot be added to the fee record.</p>
+    {% endset %}
+
+    <div class="govuk-grid-row govuk-!-padding-top-7" data-cy="match-success-notification">
+      <div class="govuk-grid-column-one-half-from-desktop">
+        {{ govukNotificationBanner({
+          html: notificationHtml,
+          type: "success"
+        }) }}
+      </div>
+    </div>
+  {% endif %}
   {% if premiumPaymentsTableDataError or premiumPaymentsFilterError %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
@@ -219,7 +238,11 @@
 {% endset %}
 
 {% set utilisationHtml %}
-  <div></div>
+  <h2 class="govuk-heading-l" data-cy="bank-report-heading">Bank report</h2>
+
+  {{ utilisationTable.render({
+    utilisationTableRows: utilisationDetails.utilisationTableRows
+  }) }}
 {% endset %}
 
 {% block content %}
@@ -284,5 +307,5 @@
 
 {% block page_scripts %}
   <script src="/assets/js/enableSelectAllTableCheckbox.js" type="text/javascript" integrity="sha512-ER/5raNAJX5VTcyrRBjVExC/f39WaVY4r8k1CyGqJUad95QZ0A1H6zHtsFpdf0JDBLV0acXzSA1B2mkKC8g5Tg==" crossorigin="anonymous"></script>
-  <script src="/assets/js/mojFilterHide.js" type="text/javascript" integrity="sha512-xSkZAX17gyhHPS0ZaZi3omWv2zCwsKeSnOerRl73ezzLwPTW/To/5OYsAGKZfazTq/H2/XXyAAagkJFuWT+G/g==" crossorigin="anonymous"></script>
+  <script src="/assets/js/mojFilterHide.js" type="text/javascript" integrity="sha512-HEA7Ob0l4HkVIoI5HflMNQ1PnMLnP8tcNPiO9Mf50dMGS3uUQDCeuIXgPjXRidK3faPUrzTklms5jIM44LQ2kA==" crossorigin="anonymous"></script>
 {% endblock %}

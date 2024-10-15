@@ -2,6 +2,7 @@ import { HttpStatusCode } from 'axios';
 import {
   CURRENCY,
   Currency,
+  FEE_RECORD_STATUS,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   FeeRecordStatus,
@@ -99,7 +100,7 @@ describe(`POST ${BASE_URL}`, () => {
     makeRequest: (url) => testApi.post(aValidRequestBody()).to(url),
   });
 
-  it('returns a 200 with a valid request body', async () => {
+  it(`should respond with a ${HttpStatusCode.Ok} with a valid request body`, async () => {
     // Arrange
     const requestBody = aValidRequestBody();
 
@@ -110,7 +111,7 @@ describe(`POST ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.Ok);
   });
 
-  it("returns a 400 when the 'feeRecordIds' array is empty", async () => {
+  it(`should respond with a ${HttpStatusCode.BadRequest} when the 'feeRecordIds' array is empty`, async () => {
     // Arrange
     const requestBody = {
       ...aValidRequestBody(),
@@ -124,7 +125,7 @@ describe(`POST ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
-  it("returns a 400 when the 'user' object is an empty object", async () => {
+  it(`should respond with a ${HttpStatusCode.BadRequest} when the 'user' object is an empty object`, async () => {
     // Arrange
     const requestBody = {
       ...aValidRequestBody(),
@@ -138,7 +139,7 @@ describe(`POST ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
-  it.each(Object.values(CURRENCY))("returns a 200 when 'paymentCurrency' is '%s'", async (currency) => {
+  it.each(Object.values(CURRENCY))(`should respond with a ${HttpStatusCode.Ok} when 'paymentCurrency' is '%s'`, async (currency) => {
     // Arrange
     await SqlDbHelper.deleteAllEntries('Payment');
     await SqlDbHelper.deleteAllEntries('FeeRecord');
@@ -160,7 +161,7 @@ describe(`POST ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.Ok);
   });
 
-  it("returns a 400 when the 'paymentCurrency' is not a valid currency", async () => {
+  it(`should respond with a ${HttpStatusCode.BadRequest} when the 'paymentCurrency' is not a valid currency`, async () => {
     // Arrange
     const requestBody = {
       ...aValidRequestBody(),
@@ -174,7 +175,7 @@ describe(`POST ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
-  it("returns a 400 when the 'feeRecordIds' array is empty", async () => {
+  it(`should respond with a ${HttpStatusCode.BadRequest} when the 'feeRecordIds' array is empty`, async () => {
     // Arrange
     const requestBody = {
       ...aValidRequestBody(),
@@ -188,7 +189,7 @@ describe(`POST ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
-  it("returns a 400 when the 'paymentAmount' is less than zero", async () => {
+  it(`should respond with a ${HttpStatusCode.BadRequest} when the 'paymentAmount' is less than zero`, async () => {
     // Arrange
     const requestBody = {
       ...aValidRequestBody(),
@@ -202,7 +203,7 @@ describe(`POST ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
-  it("returns a 400 when the 'paymentAmount' is less than zero", async () => {
+  it(`should respond with a ${HttpStatusCode.BadRequest} when the 'paymentAmount' is less than zero`, async () => {
     // Arrange
     const requestBody = {
       ...aValidRequestBody(),
@@ -216,7 +217,7 @@ describe(`POST ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
-  it("returns a 400 when the 'datePaymentReceived' cannot be coerced to a 'Date' object", async () => {
+  it(`should respond with a ${HttpStatusCode.BadRequest} when the 'datePaymentReceived' cannot be coerced to a 'Date' object`, async () => {
     // Arrange
     const requestBody = {
       ...aValidRequestBody(),
@@ -230,7 +231,7 @@ describe(`POST ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
-  it("returns a 200 when the 'paymentReference' is undefined", async () => {
+  it(`should respond with a ${HttpStatusCode.Ok} when the 'paymentReference' is undefined`, async () => {
     // Arrange
     const requestBody = {
       ...aValidRequestBody(),
@@ -244,7 +245,7 @@ describe(`POST ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.Ok);
   });
 
-  it('returns a 400 when the new payment currency does not match the existing fee record currency', async () => {
+  it(`should respond with a ${HttpStatusCode.BadRequest} when the new payment currency does not match the existing fee record currency`, async () => {
     // Arrange
     await SqlDbHelper.deleteAllEntries('Payment');
     await SqlDbHelper.deleteAllEntries('FeeRecord');
@@ -315,7 +316,7 @@ describe(`POST ${BASE_URL}`, () => {
     );
   });
 
-  it("sets the fee record status to 'DOES_NOT_MATCH' if the new payment plus the existing payments does not match the fee record amounts", async () => {
+  it(`should the fee record status to ${FEE_RECORD_STATUS.DOES_NOT_MATCH} if the new payment plus the existing payments does not match the fee record amounts`, async () => {
     // Arrange
     await SqlDbHelper.deleteAllEntries('Payment');
     await SqlDbHelper.deleteAllEntries('FeeRecord');
@@ -353,7 +354,7 @@ describe(`POST ${BASE_URL}`, () => {
     };
 
     // Act
-    await testApi.post(requestBody).to(getUrl(reportId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     const feeRecordsWithPayments = await SqlDbHelper.manager.find(FeeRecordEntity, {
@@ -362,11 +363,12 @@ describe(`POST ${BASE_URL}`, () => {
     expect(feeRecordsWithPayments).toHaveLength(2);
     feeRecordsWithPayments.forEach((feeRecord) => {
       expect(feeRecord.payments).toHaveLength(2);
-      expect(feeRecord.status).toBe<FeeRecordStatus>('DOES_NOT_MATCH');
+      expect(feeRecord.status).toEqual<FeeRecordStatus>(FEE_RECORD_STATUS.DOES_NOT_MATCH);
     });
+    expect(response.body).toEqual({ feeRecordStatus: FEE_RECORD_STATUS.DOES_NOT_MATCH });
   });
 
-  it("sets the fee record status to 'MATCH' if the new payment plus the existing payments match the fee record amount", async () => {
+  it(`should set the fee record status to ${FEE_RECORD_STATUS.MATCH} if the new payment plus the existing payments match the fee record amount`, async () => {
     // Arrange
     await SqlDbHelper.deleteAllEntries('Payment');
     await SqlDbHelper.deleteAllEntries('FeeRecord');
@@ -404,7 +406,7 @@ describe(`POST ${BASE_URL}`, () => {
     };
 
     // Act
-    await testApi.post(requestBody).to(getUrl(reportId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     const feeRecordsWithPayments = await SqlDbHelper.manager.find(FeeRecordEntity, {
@@ -413,7 +415,8 @@ describe(`POST ${BASE_URL}`, () => {
     expect(feeRecordsWithPayments).toHaveLength(2);
     feeRecordsWithPayments.forEach((feeRecord) => {
       expect(feeRecord.payments).toHaveLength(2);
-      expect(feeRecord.status).toBe<FeeRecordStatus>('MATCH');
+      expect(feeRecord.status).toEqual<FeeRecordStatus>(FEE_RECORD_STATUS.MATCH);
     });
+    expect(response.body).toEqual({ feeRecordStatus: FEE_RECORD_STATUS.MATCH });
   });
 });

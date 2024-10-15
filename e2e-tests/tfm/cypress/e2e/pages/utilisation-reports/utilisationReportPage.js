@@ -2,7 +2,10 @@ const utilisationReportPage = {
   bankReportsNavLink: () => cy.get('a[data-cy="bank-reports-nav-link"]'),
   keyingSheetTabLink: () => cy.get('a[data-cy="bank-report-tab-keying-sheet"]'),
   paymentDetailsTabLink: () => cy.get('a[data-cy="bank-report-tab-payment-details"]'),
+  utilisationTabLink: () => cy.get('a[data-cy="bank-report-tab-utilisation"]'),
   premiumPaymentsTab: {
+    matchSuccessNotificationHeading: () => cy.get('[data-cy="match-success-notification-heading"]'),
+    matchSuccessNotificationMessage: () => cy.get('[data-cy="match-success-notification-message"]'),
     selectPaymentsText: () => cy.get('[data-cy="select-payments-text"]'),
     paymentsOnPremiumPaymentsText: () => cy.get('[data-cy="payments-on-premium-payments-tab-text"]'),
     getPaymentLink: (paymentId) => cy.get(`a[data-cy="premium-payments-tab-edit-payment-link--paymentId-${paymentId}"]`),
@@ -60,6 +63,20 @@ const utilisationReportPage = {
       paymentCurrencyRadioInput: (currencyCode) => cy.get(`input[type="radio"][data-cy="currency-${currencyCode}"]`),
       paymentCurrencyError: () => cy.get('[data-cy="payment-details--filter-payment-currency-error"]'),
       noRecordsMatchingFiltersText: () => cy.get('[data-cy="payment-details-no-records-matching-filters-text"]'),
+    },
+  },
+  utilisationTab: {
+    table: {
+      row: (feeRecordId) => cy.get(`tr[data-cy="utilisation-table-row-${feeRecordId}"]`),
+      facilityId: () => cy.get('[data-cy="facility-id"]'),
+      exporter: () => cy.get('[data-cy="exporter"]'),
+      baseCurrency: () => cy.get('[data-cy="base-currency"]'),
+      value: () => cy.get('[data-cy="value"]'),
+      utilisation: () => cy.get('[data-cy="utilisation"]'),
+      coverPercentage: () => cy.get('[data-cy="cover-percentage"]'),
+      exposure: () => cy.get('[data-cy="exposure"]'),
+      feesAccrued: () => cy.get('[data-cy="fees-accrued"]'),
+      feesPayable: () => cy.get('[data-cy="fees-payable"]'),
     },
   },
 };

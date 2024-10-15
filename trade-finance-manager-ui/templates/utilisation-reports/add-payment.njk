@@ -156,7 +156,10 @@
         ]
     }) }}
     <div class="govuk-button-group">
-      {{ govukButton({"text": "Continue"}) }}
+      {{ govukButton({
+        text: "Continue",
+        attributes: { 'data-cy': 'continue-button'}
+      })}}
       <a class="govuk-link" href="/utilisation-reports/{{ reportId }}">Cancel</a>
     </div>
   </form>

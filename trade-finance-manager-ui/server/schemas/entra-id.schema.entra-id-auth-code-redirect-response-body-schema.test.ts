@@ -3,14 +3,19 @@ import { withSchemaTests } from '../../test-helpers';
 import { EntraIdAuthCodeRedirectResponseBodySchema } from './entra-id.schema';
 
 describe('EntraIdAuthCodeRedirectResponseBodySchema', () => {
-  const aValidPayload: () => EntraIdAuthCodeRedirectResponseBody = () => ({
-    code: 'a',
-    client_info: 'b',
-    state: 'c',
-    session_state: 'd',
+  withSchemaTests({
+    schema: EntraIdAuthCodeRedirectResponseBodySchema,
+    failureTestCases: getFailureTestCases(),
+    successTestCases: getSuccessTestCases(),
   });
+});
 
-  const failureTestCases = [
+function aValidPayload(): EntraIdAuthCodeRedirectResponseBody {
+  return { code: 'a-code', client_info: 'a-client-info', state: 'a-state', session_state: 'a-session-state' };
+}
+
+function getFailureTestCases() {
+  return [
     {
       aTestCase: () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -49,8 +54,10 @@ describe('EntraIdAuthCodeRedirectResponseBodySchema', () => {
       description: 'the object is empty',
     },
   ];
+}
 
-  const successTestCases = [
+function getSuccessTestCases() {
+  return [
     { aTestCase: aValidPayload, description: 'a complete valid payload is present' },
     {
       aTestCase: () => {
@@ -83,10 +90,4 @@ describe('EntraIdAuthCodeRedirectResponseBodySchema', () => {
       description: 'there is an extra field',
     },
   ];
-
-  withSchemaTests({
-    schema: EntraIdAuthCodeRedirectResponseBodySchema,
-    failureTestCases,
-    successTestCases,
-  });
-});
+}
