@@ -7,10 +7,10 @@
     {% set name = options.name %}
     {% set showBottomBorder = options.showBottomBorder %}
     {% set showValues = options.showValues %}
-    <td class="{{ ["govuk-table__cell", " govuk-table__cell--numeric" if change === "INCREASE", " no-border" if not showBottomBorder] | join }}" data-cy="{{ name }}--increase">
+    <td class="{{ ["govuk-table__cell", " govuk-table__cell--numeric" if change === "INCREASE" else " govuk-!-text-align-right", " no-border" if not showBottomBorder] | join }}" data-cy="{{ name }}--increase">
       {{ (amount if change === "INCREASE" else "-") if showValues }}
     </td>
-    <td class="{{ ["govuk-table__cell", " govuk-table__cell--numeric" if change === "DECREASE", " no-border" if not showBottomBorder] | join }}" data-cy="{{ name }}--decrease">
+    <td class="{{ ["govuk-table__cell", " govuk-table__cell--numeric" if change === "DECREASE" else " govuk-!-text-align-right", " no-border" if not showBottomBorder] | join }}" data-cy="{{ name }}--decrease">
       {{ (amount if change === "DECREASE" else "-") if showValues }}
     </td>
   {% endmacro %}

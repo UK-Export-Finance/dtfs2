@@ -25,6 +25,7 @@ describe(page, () => {
     facilityId: '1234',
   };
 
+  const downloadUrl = 'utilisation-reports/12345/download';
   const params: UtilisationReportReconciliationForReportViewModel = {
     user: aTfmSessionUser(),
     activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
@@ -38,7 +39,7 @@ describe(page, () => {
     paymentDetails: {
       rows: [],
     },
-    utilisationDetails: { utilisationTableRows: [] },
+    utilisationDetails: { utilisationTableRows: [], downloadUrl },
     displayMatchSuccessNotification: false,
   };
 
@@ -274,7 +275,7 @@ describe(page, () => {
                 dateReceived: { formattedDateReceived: '1 Jan 2024', dataSortValue: 0 },
               },
               feeRecords: [{ id: 1, facilityId: '12345678', exporter: 'Test exporter' }],
-              feeRecordPaymentGroupStatus: FEE_RECORD_STATUS.DOES_NOT_MATCH,
+              status: FEE_RECORD_STATUS.DOES_NOT_MATCH,
               reconciledBy: '-',
               dateReconciled: { formattedDateReconciled: '-', dataSortValue: 0 },
             },
@@ -332,6 +333,7 @@ describe(page, () => {
             feeRecordId,
           },
         ],
+        downloadUrl,
       },
     });
 
@@ -339,6 +341,18 @@ describe(page, () => {
 
     wrapper.expectElement(`${utilisationTabSelector} table`).toExist();
     wrapper.expectElement(`${utilisationTabSelector} table tr[data-cy="utilisation-table-row-${feeRecordId}"]`);
+  });
+
+  it('should render the download link for the report', () => {
+    const wrapper = getWrapper({
+      ...params,
+      utilisationDetails: {
+        utilisationTableRows: [aUtilisationTableRowViewModel()],
+        downloadUrl,
+      },
+    });
+
+    wrapper.expectLink('[data-cy="download-report-link"]').toLinkTo(downloadUrl, 'Download the report submitted by the bank as a CSV');
   });
 
   it('should not display match success notification when param is false', () => {
