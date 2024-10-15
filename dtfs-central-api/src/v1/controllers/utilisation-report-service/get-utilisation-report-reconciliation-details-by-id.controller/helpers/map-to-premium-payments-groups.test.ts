@@ -284,61 +284,63 @@ describe('map-to-premium-payments-groups helper', () => {
       expect(result[2].status).toEqual(FEE_RECORD_STATUS.READY_TO_KEY);
     });
 
-    it('should return the expected groups', () => {
-      // Arrange
-      const groupWithNoPayments = createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, FEE_RECORD_STATUS.TO_DO);
-      const groupWithPayments: FeeRecordPaymentEntityGroup = {
-        ...createFeeRecordEntityPaymentGroupForSingleFeeRecord(2, FEE_RECORD_STATUS.MATCH),
-        payments: [PaymentEntityMockBuilder.forCurrency(currency).withAmount(amount).build()],
-      };
-      const groups = [groupWithNoPayments, groupWithPayments];
+    describe('when given fee record entity groups with and without payments', () => {
+      it('should return the expected premium payment groups', () => {
+        // Arrange
+        const groupWithNoPayments = createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, FEE_RECORD_STATUS.TO_DO, currency, amount);
+        const groupWithPayments: FeeRecordPaymentEntityGroup = {
+          ...createFeeRecordEntityPaymentGroupForSingleFeeRecord(2, FEE_RECORD_STATUS.MATCH, currency, amount),
+          payments: [PaymentEntityMockBuilder.forCurrency(currency).withAmount(amount).build()],
+        };
+        const groups = [groupWithNoPayments, groupWithPayments];
 
-      when(getFeeRecordPaymentEntityGroupStatusSpy).calledWith(groupWithNoPayments).mockReturnValue(FEE_RECORD_STATUS.TO_DO);
-      when(getFeeRecordPaymentEntityGroupStatusSpy).calledWith(groupWithPayments).mockReturnValue(FEE_RECORD_STATUS.MATCH);
+        when(getFeeRecordPaymentEntityGroupStatusSpy).calledWith(groupWithNoPayments).mockReturnValue(FEE_RECORD_STATUS.TO_DO);
+        when(getFeeRecordPaymentEntityGroupStatusSpy).calledWith(groupWithPayments).mockReturnValue(FEE_RECORD_STATUS.MATCH);
 
-      // Act
-      const result = mapToPremiumPaymentsGroups(groups);
+        // Act
+        const result = mapToPremiumPaymentsGroups(groups);
 
-      // Assert
-      expect(result).toEqual<PremiumPaymentsGroup[]>([
-        {
-          feeRecords: [
-            {
-              id: 1,
-              facilityId: '12345678',
-              exporter: 'test exporter',
-              reportedFees: { currency, amount },
-              reportedPayments: { currency, amount },
-            },
-          ],
-          totalReportedPayments: { currency, amount },
-          paymentsReceived: null,
-          totalPaymentsReceived: null,
-          status: FEE_RECORD_STATUS.TO_DO,
-        },
-        {
-          feeRecords: [
-            {
-              id: 2,
-              facilityId: '12345678',
-              exporter: 'test exporter',
-              reportedFees: { currency, amount },
-              reportedPayments: { currency, amount },
-            },
-          ],
-          totalReportedPayments: { currency, amount },
-          paymentsReceived: [
-            {
-              currency,
-              amount,
-              id: 1,
-              dateReceived: mockDate,
-            },
-          ],
-          totalPaymentsReceived: { currency, amount },
-          status: FEE_RECORD_STATUS.MATCH,
-        },
-      ]);
+        // Assert
+        expect(result).toEqual<PremiumPaymentsGroup[]>([
+          {
+            feeRecords: [
+              {
+                id: 1,
+                facilityId: '12345678',
+                exporter: 'test exporter',
+                reportedFees: { currency, amount },
+                reportedPayments: { currency, amount },
+              },
+            ],
+            totalReportedPayments: { currency, amount },
+            paymentsReceived: null,
+            totalPaymentsReceived: null,
+            status: FEE_RECORD_STATUS.TO_DO,
+          },
+          {
+            feeRecords: [
+              {
+                id: 2,
+                facilityId: '12345678',
+                exporter: 'test exporter',
+                reportedFees: { currency, amount },
+                reportedPayments: { currency, amount },
+              },
+            ],
+            totalReportedPayments: { currency, amount },
+            paymentsReceived: [
+              {
+                currency,
+                amount,
+                id: 1,
+                dateReceived: mockDate,
+              },
+            ],
+            totalPaymentsReceived: { currency, amount },
+            status: FEE_RECORD_STATUS.MATCH,
+          },
+        ]);
+      });
     });
   });
 
