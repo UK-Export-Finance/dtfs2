@@ -1,7 +1,7 @@
 const utilisationReportPage = {
   bankReportsNavLink: () => cy.get('a[data-cy="bank-reports-nav-link"]'),
   keyingSheetTabLink: () => cy.get('a[data-cy="bank-report-tab-keying-sheet"]'),
-  paymentDetailsLink: () => cy.get('a[data-cy="bank-report-tab-payment-details"]'),
+  paymentDetailsTabLink: () => cy.get('a[data-cy="bank-report-tab-payment-details"]'),
   utilisationTabLink: () => cy.get('a[data-cy="bank-report-tab-utilisation"]'),
   premiumPaymentsTab: {
     matchSuccessNotificationHeading: () => cy.get('[data-cy="match-success-notification-heading"]'),
@@ -42,6 +42,7 @@ const utilisationReportPage = {
   },
   paymentDetailsTab: {
     clickPaymentLink: (paymentId) => cy.get(`a[data-cy="payment-details-tab-edit-payment-link--paymentId-${paymentId}"]`).click(),
+    errorSummaryErrors: () => cy.get('[data-cy="payment-details-error-summary"] a'),
     paymentDetailsTable: {
       row: (paymentId, feeRecordId) => cy.get(`[data-cy="payment-details-row--paymentId-${paymentId}-feeRecordId-${feeRecordId}"]`),
       paymentCurrencyAndAmount: (paymentId, feeRecordId) =>
@@ -50,6 +51,18 @@ const utilisationReportPage = {
         cy.get(`[data-cy="payment-details-row--paymentId-${paymentId}-feeRecordId-${feeRecordId}"] td[data-cy="payment-reference"]`),
       facilityId: (paymentId, feeRecordId) =>
         cy.get(`[data-cy="payment-details-row--paymentId-${paymentId}-feeRecordId-${feeRecordId}"] td[data-cy="facility-id"]`),
+    },
+    filters: {
+      panel: () => cy.get('[data-cy="payment-details--filters-panel"]'),
+      panelToggleButton: () => cy.get('[data-cy="payment-details--filters-action-bar"] button'),
+      submitButton: () => cy.get('[data-cy="payment-details--filters-submit-button"]'),
+      facilityIdInput: () => cy.get('[data-cy="payment-details--filter-facility-id-input"]'),
+      facilityIdError: () => cy.get('[data-cy="payment-details--filter-facility-id-error"]'),
+      paymentReferenceInput: () => cy.get('[data-cy="payment-details--filter-payment-reference-input"]'),
+      paymentReferenceError: () => cy.get('[data-cy="payment-details--filter-payment-reference-error"]'),
+      paymentCurrencyRadioInput: (currencyCode) => cy.get(`input[type="radio"][data-cy="currency-${currencyCode}"]`),
+      paymentCurrencyError: () => cy.get('[data-cy="payment-details--filter-payment-currency-error"]'),
+      noRecordsMatchingFiltersText: () => cy.get('[data-cy="payment-details-no-records-matching-filters-text"]'),
     },
   },
   utilisationTab: {
