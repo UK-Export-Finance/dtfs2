@@ -1,7 +1,7 @@
 const startCase = require('lodash/startCase');
 const {
   DEAL_TYPE,
-  TIMEZONES: { LONDON },
+  DATE_IANA_TIMEZONES: { LONDON },
 } = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
 const { canUpdateUnissuedFacilitiesCheck } = require('./canUpdateUnissuedFacilitiesCheck');

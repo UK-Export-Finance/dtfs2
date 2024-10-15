@@ -1,6 +1,6 @@
 const {
   ROLES: { MAKER },
-  TIMEZONES: { LONDON },
+  DATE_IANA_TIMEZONES: { LONDON },
 } = require('@ukef/dtfs2-common');
 const componentRenderer = require('../../componentRenderer');
 const deal = require('../../fixtures/deal-fully-completed');

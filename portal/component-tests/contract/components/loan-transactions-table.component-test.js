@@ -1,6 +1,6 @@
 const {
   ROLES,
-  TIMEZONES: { LONDON },
+  DATE_IANA_TIMEZONES: { LONDON },
 } = require('@ukef/dtfs2-common');
 const { UNCONDITIONAL } = require('../../../server/constants/facility-stage');
 const { getNowAsEpoch } = require('../../../server/helpers');

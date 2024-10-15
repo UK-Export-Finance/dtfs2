@@ -1,6 +1,6 @@
 const { fromUnixTime } = require('date-fns');
 const {
-  TIMEZONES: { LONDON },
+  DATE_IANA_TIMEZONES: { LONDON },
 } = require('@ukef/dtfs2-common');
 const { getApplication, getUserDetails } = require('../../services/api');
 

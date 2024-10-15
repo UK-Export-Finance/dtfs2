@@ -1,6 +1,6 @@
 const {
   ROLES: { MAKER },
-  TIMEZONES: { LONDON },
+  DATE_IANA_TIMEZONES: { LONDON },
 } = require('@ukef/dtfs2-common');
 
 const pageRenderer = require('../pageRenderer');

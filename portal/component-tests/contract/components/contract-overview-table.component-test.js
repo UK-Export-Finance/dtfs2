@@ -1,6 +1,6 @@
 const { formatInTimeZone } = require('date-fns-tz');
 const {
-  TIMEZONES: { LONDON },
+  DATE_IANA_TIMEZONES: { LONDON },
 } = require('@ukef/dtfs2-common');
 const {
   DATE: { FULL_DATE, FULL_DATE_AND_TIME },
