@@ -2,12 +2,12 @@ import {
   CURRENCY,
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
-  FeeRecordStatus,
   PaymentEntityMockBuilder,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { when } from 'jest-when';
+import { createFeeRecordEntityPaymentGroupForSingleFeeRecord } from '../../../../../../test-helpers';
 import { PremiumPaymentsGroup } from '../../../../../types/utilisation-reports';
 import {
   mapGroupWithNoPaymentsToPremiumPaymentsGroup,
@@ -26,19 +26,6 @@ describe('map-to-premium-payments-groups helper', () => {
 
   const currency = CURRENCY.GBP;
   const amount = 100;
-
-  const createFeeRecordEntityPaymentGroupForSingleFeeRecord = (id: number, status: FeeRecordStatus): FeeRecordPaymentEntityGroup => ({
-    feeRecords: [
-      FeeRecordEntityMockBuilder.forReport(utilisationReport())
-        .withId(id)
-        .withStatus(status)
-        .withFeesPaidToUkefForThePeriod(amount)
-        .withFeesPaidToUkefForThePeriodCurrency(currency)
-        .withPaymentCurrency(currency)
-        .build(),
-    ],
-    payments: [],
-  });
 
   beforeAll(() => {
     jest.useFakeTimers();
@@ -63,7 +50,7 @@ describe('map-to-premium-payments-groups helper', () => {
       it('should return the group with a single fee record', () => {
         // Arrange
         const groupStatus = FEE_RECORD_STATUS.TO_DO;
-        const group = createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, groupStatus);
+        const group = createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, groupStatus, currency, amount);
 
         // Act
         const result = mapGroupWithNoPaymentsToPremiumPaymentsGroup(group, groupStatus);
@@ -75,7 +62,7 @@ describe('map-to-premium-payments-groups helper', () => {
       it('should set the totalReportedPayments to the same value as the fee record reported payments', () => {
         // Arrange
         const groupStatus = FEE_RECORD_STATUS.TO_DO;
-        const group = createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, groupStatus);
+        const group = createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, groupStatus, currency, amount);
 
         // Act
         const result = mapGroupWithNoPaymentsToPremiumPaymentsGroup(group, groupStatus);
@@ -87,7 +74,7 @@ describe('map-to-premium-payments-groups helper', () => {
       it('should set the paymentsReceived to null', () => {
         // Arrange
         const groupStatus = FEE_RECORD_STATUS.TO_DO;
-        const group = createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, groupStatus);
+        const group = createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, groupStatus, currency, amount);
 
         // Act
         const result = mapGroupWithNoPaymentsToPremiumPaymentsGroup(group, groupStatus);
@@ -99,7 +86,7 @@ describe('map-to-premium-payments-groups helper', () => {
       it('should set the totalPaymentsReceived to null', () => {
         // Arrange
         const groupStatus = FEE_RECORD_STATUS.TO_DO;
-        const group = createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, groupStatus);
+        const group = createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, groupStatus, currency, amount);
 
         // Act
         const result = mapGroupWithNoPaymentsToPremiumPaymentsGroup(group, groupStatus);
@@ -111,7 +98,7 @@ describe('map-to-premium-payments-groups helper', () => {
       it('should set the status to the status of the fee record', () => {
         // Arrange
         const groupStatus = FEE_RECORD_STATUS.TO_DO;
-        const group = createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, groupStatus);
+        const group = createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, groupStatus, currency, amount);
 
         // Act
         const result = mapGroupWithNoPaymentsToPremiumPaymentsGroup(group, groupStatus);
@@ -264,9 +251,9 @@ describe('map-to-premium-payments-groups helper', () => {
     it('should return as many fee record payment groups as there are fee record payment entity groups', () => {
       // Arrange
       const groups = [
-        createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, FEE_RECORD_STATUS.TO_DO),
-        createFeeRecordEntityPaymentGroupForSingleFeeRecord(2, FEE_RECORD_STATUS.TO_DO),
-        createFeeRecordEntityPaymentGroupForSingleFeeRecord(3, FEE_RECORD_STATUS.TO_DO),
+        createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, FEE_RECORD_STATUS.TO_DO, currency, amount),
+        createFeeRecordEntityPaymentGroupForSingleFeeRecord(2, FEE_RECORD_STATUS.TO_DO, currency, amount),
+        createFeeRecordEntityPaymentGroupForSingleFeeRecord(3, FEE_RECORD_STATUS.TO_DO, currency, amount),
       ];
 
       // Act
@@ -278,9 +265,9 @@ describe('map-to-premium-payments-groups helper', () => {
 
     it('should populate each of the groups with their respective group status', () => {
       // Arrange
-      const firstGroup = createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, FEE_RECORD_STATUS.TO_DO);
-      const secondGroup = createFeeRecordEntityPaymentGroupForSingleFeeRecord(2, FEE_RECORD_STATUS.DOES_NOT_MATCH);
-      const thirdGroup = createFeeRecordEntityPaymentGroupForSingleFeeRecord(3, FEE_RECORD_STATUS.READY_TO_KEY);
+      const firstGroup = createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, FEE_RECORD_STATUS.TO_DO, currency, amount);
+      const secondGroup = createFeeRecordEntityPaymentGroupForSingleFeeRecord(2, FEE_RECORD_STATUS.DOES_NOT_MATCH, currency, amount);
+      const thirdGroup = createFeeRecordEntityPaymentGroupForSingleFeeRecord(3, FEE_RECORD_STATUS.READY_TO_KEY, currency, amount);
       const groups = [firstGroup, secondGroup, thirdGroup];
 
       when(getFeeRecordPaymentEntityGroupStatusSpy).calledWith(firstGroup).mockReturnValue(FEE_RECORD_STATUS.TO_DO);
