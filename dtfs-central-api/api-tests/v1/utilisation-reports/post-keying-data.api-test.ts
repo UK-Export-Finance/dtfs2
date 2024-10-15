@@ -1,6 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import { IsNull, Not } from 'typeorm';
 import {
+  AMENDMENT_STATUS,
   FacilityUtilisationDataEntity,
   FacilityUtilisationDataEntityMockBuilder,
   FEE_RECORD_STATUS,
@@ -10,6 +11,8 @@ import {
   FeeRecordStatus,
   PaymentEntityMockBuilder,
   ReportPeriod,
+  TfmFacility,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
   UtilisationReportReconciliationStatus,
@@ -19,7 +22,7 @@ import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
-import { aPortalUser, aTfmUser, aTfmSessionUser, aTfmFacility, aFacility } from '../../../test-helpers';
+import { aPortalUser, aTfmUser, aTfmSessionUser, aTfmFacility, aFacility, aTfmFacilityAmendment } from '../../../test-helpers';
 
 console.error = jest.fn();
 
@@ -314,6 +317,87 @@ describe(`POST ${BASE_URL}`, () => {
     expect(joinTableEntities[0].feeRecordId).toEqual(1);
     expect(joinTableEntities[0].paymentId).toEqual(1);
     expect(joinTableEntities[0].paymentAmountUsedForFeeRecord).not.toBeNull();
+  });
+
+  it('calculates the new fixed fee using the effective amendment at the report period end', async () => {
+    // Arrange
+    const reportPeriod = { start: { month: 12, year: 2023 }, end: { month: 2, year: 2024 } };
+    const dateWithinReportPeriod = new Date('2024-01-01');
+    const dateAfterReportPeriodEnd = new Date('2024-03-01');
+    const facilityId = '11111111';
+
+    const tfmFacility: TfmFacility = {
+      ...aTfmFacility(),
+      facilitySnapshot: {
+        ...aFacility(),
+        ukefFacilityId: facilityId,
+        dayCountBasis: 1,
+        interestPercentage: 100,
+        // 1095 days after report period end
+        coverEndDate: new Date('2027-03-01'),
+      },
+      amendments: [
+        {
+          ...aTfmFacilityAmendment(),
+          value: 350000,
+          status: AMENDMENT_STATUS.COMPLETED,
+          effectiveDate: dateAfterReportPeriodEnd.getTime(),
+          // 365 days after report period end
+          coverEndDate: new Date('2025-03-01').getTime(),
+        },
+        {
+          ...aTfmFacilityAmendment(),
+          value: 300000,
+          status: AMENDMENT_STATUS.COMPLETED,
+          effectiveDate: dateWithinReportPeriod.getTime(),
+          // 730 days after report period end
+          coverEndDate: new Date('2026-03-01').getTime(),
+        },
+      ],
+    };
+
+    const tfmFacilitiesCollection = await mongoDbClient.getCollection('tfm-facilities');
+    await tfmFacilitiesCollection.insertOne(tfmFacility);
+
+    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+      .withId(reportId)
+      .withReportPeriod(reportPeriod)
+      .build();
+
+    const utilisationData = FacilityUtilisationDataEntityMockBuilder.forId(facilityId).withFixedFee(1).build();
+    const feeRecords = [
+      FeeRecordEntityMockBuilder.forReport(report)
+        .withId(1)
+        .withFacilityId(facilityId)
+        .withFacilityUtilisationData(utilisationData)
+        .withStatus('MATCH')
+        .withFacilityUtilisation(1)
+        .build(),
+    ];
+    report.feeRecords = feeRecords;
+    await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
+    await insertMatchingPaymentsForFeeRecords(feeRecords);
+
+    const requestBody = aValidRequestBody();
+
+    // Act
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
+
+    // Assert
+    expect(response.status).toEqual(HttpStatusCode.Ok);
+
+    const entities = await SqlDbHelper.manager.find(FacilityUtilisationDataEntity, {});
+    expect(entities).toHaveLength(1);
+    expect(entities[0].id).toEqual(facilityId);
+    /**
+     * The fixed fee is calculated as follows:
+     * fixed fee = utilisation * bank fee adjustment * interest percentage * days left in cover period / day count basis
+     *           = 1 * 0.9 * 100 / 100 * 730 / 1
+     *           = 0.9 * 730
+     *           = 657
+     */
+    expect(entities[0].fixedFee).toEqual(657);
   });
 
   describe('when there are multiple fee records with the same facility id', () => {
