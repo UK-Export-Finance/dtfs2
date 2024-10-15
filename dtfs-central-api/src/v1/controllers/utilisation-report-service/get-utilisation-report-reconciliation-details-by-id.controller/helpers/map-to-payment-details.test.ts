@@ -7,15 +7,28 @@ import {
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
+import { createFeeRecordEntityPaymentGroupForSingleFeeRecord } from '../../../../../../test-helpers';
+import { PaymentDetails } from '../../../../../types/utilisation-reports';
 import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-payment-entity-group';
 import * as helpersModule from '../../../../../helpers';
 import { TfmUsersRepo } from '../../../../../repositories/tfm-users-repo';
 import { mapToPaymentDetails } from './map-to-payment-details';
 
 describe('mapToPaymentDetails', () => {
+  const mockDate = new Date('2024-01');
+
   const findTfmUserSpy = jest.spyOn(TfmUsersRepo, 'findOneUserById');
   const getFeeRecordPaymentEntityGroupStatusSpy = jest.spyOn(helpersModule, 'getFeeRecordPaymentEntityGroupStatus');
   const getFeeRecordPaymentEntityGroupReconciliationDataSpy = jest.spyOn(helpersModule, 'getFeeRecordPaymentEntityGroupReconciliationData');
+
+  beforeAll(() => {
+    jest.useFakeTimers();
+    jest.setSystemTime(mockDate);
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
 
   beforeEach(() => {
     findTfmUserSpy.mockRejectedValue('Some error');
@@ -154,6 +167,49 @@ describe('mapToPaymentDetails', () => {
       await expect(mapToPaymentDetails([group])).rejects.toThrow(
         new Error('Error mapping payments to payment details - groups must have at most one payment.'),
       );
+    });
+  });
+
+  describe('when given fee record entity groups with and without payments', () => {
+    it('should return the expected payment details groups', async () => {
+      // Arrange
+      const currency = CURRENCY.GBP;
+      const amount = 100;
+
+      const groupWithNoPayments = createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, FEE_RECORD_STATUS.TO_DO, currency, amount);
+      const groupWithOnePayment: FeeRecordPaymentEntityGroup = {
+        ...createFeeRecordEntityPaymentGroupForSingleFeeRecord(2, FEE_RECORD_STATUS.MATCH, currency, amount),
+        payments: [PaymentEntityMockBuilder.forCurrency(currency).withId(11).withAmount(amount).build()],
+      };
+      const groups = [groupWithNoPayments, groupWithOnePayment];
+
+      when(getFeeRecordPaymentEntityGroupStatusSpy).calledWith(groupWithNoPayments).mockReturnValue(FEE_RECORD_STATUS.TO_DO);
+      when(getFeeRecordPaymentEntityGroupStatusSpy).calledWith(groupWithOnePayment).mockReturnValue(FEE_RECORD_STATUS.MATCH);
+
+      // Act
+      const result = await mapToPaymentDetails(groups);
+
+      // Assert
+      expect(result).toEqual<PaymentDetails[]>([
+        {
+          feeRecords: [
+            {
+              id: 2,
+              facilityId: '12345678',
+              exporter: 'test exporter',
+              reportedFees: { currency, amount },
+              reportedPayments: { currency, amount },
+            },
+          ],
+          payment: {
+            currency,
+            amount,
+            id: 11,
+            dateReceived: mockDate,
+          },
+          status: FEE_RECORD_STATUS.MATCH,
+        },
+      ]);
     });
   });
 
