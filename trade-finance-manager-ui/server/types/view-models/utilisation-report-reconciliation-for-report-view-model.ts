@@ -95,13 +95,13 @@ export type PaymentDetailsFilterErrorsViewModel = {
 };
 
 export type PaymentDetailsRowViewModel = {
-  feeRecordPaymentGroupStatus: FeeRecordStatus;
   payment: PaymentDetailsPaymentViewModel;
   feeRecords: {
     id: number;
     facilityId: string;
     exporter: string;
   }[];
+  status: FeeRecordStatus;
   reconciledBy: string;
   dateReconciled: {
     formattedDateReconciled: string;
@@ -137,6 +137,7 @@ export type UtilisationTableRowViewModel = {
 
 export type UtilisationDetailsViewModel = {
   utilisationTableRows: UtilisationTableRowViewModel[];
+  downloadUrl: string;
 };
 
 export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & {
