@@ -7,7 +7,7 @@ import {
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
-import { createFeeRecordEntityPaymentGroupForSingleFeeRecord } from '../../../../../../test-helpers';
+import { aFeeRecordPaymentEntityGroupForASingleFeeRecord } from '../../../../../../test-helpers';
 import { PaymentDetails } from '../../../../../types/utilisation-reports';
 import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-payment-entity-group';
 import * as helpersModule from '../../../../../helpers';
@@ -176,9 +176,9 @@ describe('mapToPaymentDetails', () => {
       const currency = CURRENCY.GBP;
       const amount = 100;
 
-      const groupWithNoPayments = createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, FEE_RECORD_STATUS.TO_DO, currency, amount);
+      const groupWithNoPayments = aFeeRecordPaymentEntityGroupForASingleFeeRecord(1, FEE_RECORD_STATUS.TO_DO, currency, amount);
       const groupWithOnePayment: FeeRecordPaymentEntityGroup = {
-        ...createFeeRecordEntityPaymentGroupForSingleFeeRecord(2, FEE_RECORD_STATUS.MATCH, currency, amount),
+        ...aFeeRecordPaymentEntityGroupForASingleFeeRecord(2, FEE_RECORD_STATUS.MATCH, currency, amount),
         payments: [PaymentEntityMockBuilder.forCurrency(currency).withId(11).withAmount(amount).build()],
       };
       const groups = [groupWithNoPayments, groupWithOnePayment];

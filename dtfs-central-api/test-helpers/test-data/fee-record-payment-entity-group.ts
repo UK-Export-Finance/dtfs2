@@ -1,7 +1,7 @@
 import { FeeRecordStatus, Currency, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { FeeRecordPaymentEntityGroup } from '../../src/types/fee-record-payment-entity-group';
 
-export const createFeeRecordEntityPaymentGroupForSingleFeeRecord = (
+export const aFeeRecordPaymentEntityGroupForASingleFeeRecord = (
   id: number,
   status: FeeRecordStatus,
   currency: Currency,
