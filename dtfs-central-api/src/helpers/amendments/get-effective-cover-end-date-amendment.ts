@@ -9,19 +9,19 @@ import { filterAndSortCompletedEffectiveAmendments } from './filter-and-sort-com
  * @param effectiveAtDate - The date to find the effective amendment for
  * @returns The latest completed amendment cover end date
  */
-export const getEffectiveCoverEndDateAmendment = (tfmFacility: TfmFacility, effectiveAtDate: Date): Date | undefined => {
+export const getEffectiveCoverEndDateAmendment = (tfmFacility: TfmFacility, effectiveAtDate: Date): Date | null => {
   const { amendments } = tfmFacility;
   if (!amendments) {
-    return undefined;
+    return null;
   }
 
   const completedEffectiveAmendments = filterAndSortCompletedEffectiveAmendments(amendments, effectiveAtDate);
 
   const effectiveAmendmentWithCoverEndDate = completedEffectiveAmendments.find(({ coverEndDate }) => coverEndDate);
 
-  const effectiveCoverEndDateAmendment = effectiveAmendmentWithCoverEndDate?.coverEndDate ?? undefined;
+  const effectiveCoverEndDateAmendment = effectiveAmendmentWithCoverEndDate?.coverEndDate ?? null;
   if (!effectiveCoverEndDateAmendment) {
-    return undefined;
+    return null;
   }
   return convertTimestampToDate(effectiveCoverEndDateAmendment);
 };
