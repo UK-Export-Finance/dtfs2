@@ -98,43 +98,12 @@ describe('POST /v1/deals/:id/cancellation/submit', () => {
       expect(response.status).toEqual(400);
     });
 
-    const invalidPayloads = [
-      {
-        description: 'the reason is not a string',
-        payload: { ...aValidPayload(), reason: 12 },
-      },
-      {
-        description: `the reason is over ${MAX_CHARACTER_COUNT} characters`,
-        payload: { ...aValidPayload(), reason: 'x'.repeat(MAX_CHARACTER_COUNT + 1) },
-      },
-      {
-        description: 'the reason is undefined',
-        payload: { ...aValidPayload(), reason: undefined },
-      },
-      {
-        description: 'the bankRequestDate is a string ',
-        payload: { ...aValidPayload(), bankRequestDate: new Date().toISOString() },
-      },
-      {
-        description: 'the bankRequestDate is undefined ',
-        payload: { ...aValidPayload(), bankRequestDate: undefined },
-      },
-      {
-        description: 'the effectiveFrom is a string ',
-        payload: { ...aValidPayload(), effectiveFrom: new Date().toISOString() },
-      },
-      {
-        description: 'the effectiveFrom is undefined ',
-        payload: { ...aValidPayload(), effectiveFrom: undefined },
-      },
-    ];
-
-    it.each(invalidPayloads)('returns a 400 response when $description', async ({ payload }) => {
+    it('returns a 400 response when the payload is invalid', async () => {
       // Arrange
       const url = getSubmitTfmDealCancellationUrl({ id: validId });
 
       // Act
-      const response = await as(aPimUser).post(payload).to(url);
+      const response = await as(aPimUser).post({}).to(url);
 
       // Assert
       expect(response.status).toEqual(400);

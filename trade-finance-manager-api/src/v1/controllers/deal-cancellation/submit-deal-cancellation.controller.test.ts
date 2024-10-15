@@ -19,7 +19,7 @@ describe('controllers - deal cancellation', () => {
     jest.resetAllMocks();
   });
 
-  describe('PUT - updateDealCancellation', () => {
+  describe('POST - submitDealCancellation', () => {
     it('should return 200', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks<SubmitDealCancellationRequest>({
