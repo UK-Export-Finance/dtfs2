@@ -70,6 +70,7 @@ describe('mapToPaymentDetails', () => {
       // Assert
       expect(result).toHaveLength(1);
     });
+
     it('should return the group with as many fee records as there are fee records in the supplied group', async () => {
       // Arrange
       const feeRecords = [FeeRecordEntityMockBuilder.forReport(utilisationReport()).build(), FeeRecordEntityMockBuilder.forReport(utilisationReport()).build()];
