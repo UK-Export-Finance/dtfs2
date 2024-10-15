@@ -1,8 +1,5 @@
 const startCase = require('lodash/startCase');
-const {
-  DEAL_TYPE,
-  DATE_IANA_TIMEZONES: { LONDON },
-} = require('@ukef/dtfs2-common');
+const { DEAL_TYPE, dateIanaTimezoneConfig } = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
 const { canUpdateUnissuedFacilitiesCheck } = require('./canUpdateUnissuedFacilitiesCheck');
 const {
@@ -38,7 +35,7 @@ function buildHeader(app) {
     companyName: app.exporter?.companyName,
     applicationStatus: app.status,
     dateCreated: app.createdAt,
-    timezone: app.maker.timezone || LONDON,
+    timezone: app.maker.timezone || dateIanaTimezoneConfig.DEFAULT,
     createdBy: `${app.maker.firstname} ${app.maker.surname}`,
     comments: app.comments,
     applicationType: app.submissionType,

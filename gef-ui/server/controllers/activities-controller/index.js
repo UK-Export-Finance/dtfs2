@@ -1,7 +1,5 @@
 const { fromUnixTime } = require('date-fns');
-const {
-  DATE_IANA_TIMEZONES: { LONDON },
-} = require('@ukef/dtfs2-common');
+const { dateIanaTimezoneConfig } = require('@ukef/dtfs2-common');
 const { getApplication, getUserDetails } = require('../../services/api');
 
 // maps portalActivities array to create array in correct format for mojTimeline
@@ -55,7 +53,7 @@ const getPortalActivities = async (req, res) => {
     createdBy: `${deal.maker.firstname} ${deal.maker.surname}`,
     companyName: deal.exporter.companyName,
     dateCreated: deal.createdAt,
-    timezone: deal.maker.timezone || LONDON,
+    timezone: deal.maker.timezone || dateIanaTimezoneConfig.DEFAULT,
     submissionDate: deal.submissionDate,
     manualInclusionNoticeSubmissionDate: deal?.manualInclusionNoticeSubmissionDate,
   });

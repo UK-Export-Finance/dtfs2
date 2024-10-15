@@ -1,7 +1,4 @@
-const {
-  ROLES,
-  DATE_IANA_TIMEZONES: { LONDON },
-} = require('@ukef/dtfs2-common');
+const { ROLES, dateIanaTimezoneConfig } = require('@ukef/dtfs2-common');
 const { DEAL, FACILITY } = require('../../../server/constants/status');
 const { getNowAsEpoch } = require('../../../server/helpers');
 
@@ -100,7 +97,7 @@ describe(component, () => {
   });
 
   describe('when user is checker', () => {
-    const user = { roles: [CHECKER], timezone: LONDON };
+    const user = { roles: [CHECKER], timezone: dateIanaTimezoneConfig.DEFAULT };
 
     commonTests(user);
 
@@ -141,7 +138,7 @@ describe(component, () => {
   });
 
   describe.each(NON_MAKER_OR_CHECKER_ROLES)('when user is %s', (nonMakerOrCheckerRole) => {
-    const user = { roles: [nonMakerOrCheckerRole], timezone: LONDON };
+    const user = { roles: [nonMakerOrCheckerRole], timezone: dateIanaTimezoneConfig.DEFAULT };
 
     commonTests(user);
 
