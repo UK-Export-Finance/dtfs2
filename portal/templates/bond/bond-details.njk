@@ -1,5 +1,6 @@
 {% extends "index.njk" %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% import 'contract/components/task-list-header.njk' as taskListHeader %}
@@ -38,29 +39,24 @@
 
       <div class="govuk-grid-column-full">
 
-        <div class="govuk-form-group">
-
-          <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
-            <div class="govuk-form-group">
-              <label class="govuk-label" for="bondIssuer">
-                Bond issuer (optional)
-              </label>
-              <span id="bond-issuer-hint" class="govuk-hint">
-                Only enter if Bond issuer differs from the bank
-              </span>
-
-              <div class="govuk-grid-row">
-                <div class="govuk-grid-column-one-half">
-                  <input class="govuk-input govuk-js-character-count" id="bondIssuer" name="bondIssuer" type="text" maxlength="150" aria-describedby="bond-issuer-hint" value="{{ bond.bondIssuer }}" data-cy="bond-issuer">
-                </div>
-              </div>
-            </div>
-
-            <span id="bond-issuer-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-              You can enter up to 150 characters
-            </span>
-          </div>
-        </div>
+        {{ govukCharacterCount({
+          name: "bondIssuer",
+          id: "bondIssuer",
+          value: bond.bondIssuer,
+          maxlength: 150,
+          label: {
+            text: "Bond issuer (optional)"
+          },
+          hint: {
+            text: "Only enter if Bond issuer differs from the bank"
+          },
+          errorMessage: validationErrors and {
+            text: validationErrors.errorList.bondIssuer.text
+          },
+          attributes: {
+            "data-cy": "bond-issuer"
+          }
+        }) }}
 
         {{ govukSelect({
           id: "bondType",
@@ -171,30 +167,24 @@
           }
         }) }}
 
-        <div class="govuk-form-group">
-
-          <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
-            <div class="govuk-form-group">
-              <label class="govuk-label" for="bondBeneficiary">
-                Bond beneficiary (optional)
-              </label>
-              <span id="bond-beneficiary-hint" class="govuk-hint">
-                Only enter if different from (but related to) the overseas buyer in line with the MGA
-              </span>
-
-              <div class="govuk-grid-row">
-                <div class="govuk-grid-column-one-half">
-                  <input class="govuk-input govuk-js-character-count" id="bondBeneficiary" name="bondBeneficiary" type="text" maxlength="150" aria-describedby="bond-beneficiary-info bond-beneficiary-hint" value="{{ bond.bondBeneficiary }}" data-cy="bond-beneficiary">
-                </div>
-              </div>
-
-            </div>
-
-            <span id="bond-beneficiary-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-              You can enter up to 150 characters
-            </span>
-          </div>
-        </div>
+        {{ govukCharacterCount({
+          name: "bondBeneficiary",
+          id: "bondBeneficiary",
+          value: bond.bondBeneficiary,
+          maxlength: 150,
+          label: {
+            text: "Bond beneficiary (optional)"
+          },
+          hint: {
+            text: "Only enter if different from (but related to) the overseas buyer in line with the MGA"
+          },
+          errorMessage: validationErrors and {
+            text: validationErrors.errorList.bondBeneficiary.text
+          },
+          attributes: {
+            "data-cy": "bond-beneficiary"
+          }
+        }) }}
 
       </div>
     </div>

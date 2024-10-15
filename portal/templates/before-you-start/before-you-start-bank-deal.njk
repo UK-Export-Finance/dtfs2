@@ -1,6 +1,6 @@
 {% extends "index.njk" %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 
 {% block pageTitle -%}
   Before you start
@@ -34,48 +34,45 @@
   <form method="POST" autocomplete="off">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
-    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="30" id="before-you-start-form">
-      {{ govukInput({
-        label: {
-          text: "Bank deal ID"
-        },
-        id: "bankInternalRefName",
-        name: "bankInternalRefName",
-        value: bankInternalRefName,
-        classes: "govuk-!-width-one-third govuk-js-character-count",
-        attributes: {
-          "data-cy": "bankInternalRefName",
-          "maxlength": "30"
-        },
-        errorMessage: validationErrors.errorList.bankInternalRefName
-      }) }}
+    {# TODO: cypress - replace this #}
+    {# bankInternalRefName-info #}
 
-      <span id="bankInternalRefName-info" class="govuk-hint govuk-character-count__message" aria-live="polite" data-cy="bankInternalRefName-count">
-        You can enter up to 30 characters
-      </span>
-    </div>
+    {{ govukCharacterCount({
+      name: "bankInternalRefName",
+      id: "bankInternalRefName",
+      value: bankInternalRefName,
+      maxlength: 30,
+      classes: "govuk-!-width-one-third",
+      label: {
+        text: "Bank deal ID"
+      },
+      errorMessage: validationErrors and {
+        text: validationErrors.errorList.bankInternalRefName.text
+      },
+      attributes: {
+        "data-cy": "bankInternalRefName"
+      }
+    }) }}
 
-    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="100">
-      {{ govukInput({
-        label: {
-          text: "Bank deal Name"
-        },
-        id: "additionalRefName",
-        name: "additionalRefName",
-        value: additionalRefName,
-        classes: "govuk-!-width-one-third govuk-js-character-count",
-        attributes: {
-          "data-cy": "additionalRefName",
-          "maxlength": "100"
-        },
-        errorMessage: validationErrors.errorList.additionalRefName
-      }) }}
+    {# TODO: cypress - replace this #}
+    {# additionalRefName-info #}
 
-      <span id="additionalRefName-info" class="govuk-hint govuk-character-count__message" aria-live="polite" data-cy="additionalRefName-count">
-        You can enter up to 100 characters
-      </span>
-
-    </div>
+    {{ govukCharacterCount({
+      name: "additionalRefName",
+      id: "additionalRefName",
+      value: additionalRefName,
+      maxlength: 100,
+      classes: "govuk-!-width-one-third",
+      label: {
+        text: "Bank deal Name"
+      },
+      errorMessage: validationErrors and {
+        text: validationErrors.errorList.additionalRefName.text
+      },
+      attributes: {
+        "data-cy": "additionalRefName"
+      }
+    }) }}
 
     <button class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">Create</button>
 
