@@ -5,7 +5,7 @@ dotenv.config();
 
 /**
  * {@link https://www.iana.org/time-zones}
- * There is no default provided in this config, as this would allow for inconsistency in microservices.
+ * There is no default for unset values in this config, as this would allow for inconsistency in microservices.
  */
 const defaultIanaTimezoneConfigSchema = z
   .object({
