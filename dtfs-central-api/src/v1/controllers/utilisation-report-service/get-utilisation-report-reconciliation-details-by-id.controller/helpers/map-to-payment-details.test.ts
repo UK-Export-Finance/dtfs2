@@ -165,7 +165,7 @@ describe('mapToPaymentDetails', () => {
 
       // Act / Assert
       await expect(mapToPaymentDetails([group])).rejects.toThrow(
-        new Error('Error mapping payments to payment details - groups must have at most one payment.'),
+        new Error('Error mapping group payments to payment details - group has more than one payment.'),
       );
     });
   });

@@ -16,7 +16,8 @@ export const mapToPaymentDetails = async (paymentsWithFeeRecords: FeeRecordPayme
 
   for (const group of paymentsWithFeeRecords) {
     if (group.payments.length > 1) {
-      throw new Error('Error mapping payments to payment details - groups must have at most one payment.');
+      console.error('Group with more than one payment: %o', group);
+      throw new Error('Error mapping group payments to payment details - group has more than one payment.');
     }
 
     if (group.payments.length === 1) {
