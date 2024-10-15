@@ -1,5 +1,12 @@
 import orderBy from 'lodash.orderby';
-import { FeeRecordStatus, getFormattedCurrencyAndAmount, IsoDateTimeStamp, KeyingSheetAdjustment, PaymentDetailsFilters } from '@ukef/dtfs2-common';
+import {
+  FeeRecordStatus,
+  getFormattedCurrencyAndAmount,
+  getFormattedMonetaryValue,
+  IsoDateTimeStamp,
+  KeyingSheetAdjustment,
+  PaymentDetailsFilters,
+} from '@ukef/dtfs2-common';
 import { format, parseISO } from 'date-fns';
 import { FeeRecord, KeyingSheet, KeyingSheetRow, Payment, PaymentDetails, PremiumPaymentsGroup } from '../../../api-response-types';
 import {
@@ -152,7 +159,7 @@ const getKeyingSheetAdjustmentViewModel = (adjustment: KeyingSheetAdjustment | n
     return { amount: undefined, change: 'NONE' };
   }
   return {
-    amount: adjustment.amount.toFixed(2),
+    amount: getFormattedMonetaryValue(adjustment.amount),
     change: adjustment.change,
   };
 };

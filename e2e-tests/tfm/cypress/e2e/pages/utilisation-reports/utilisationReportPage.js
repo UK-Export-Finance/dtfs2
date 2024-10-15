@@ -66,6 +66,7 @@ const utilisationReportPage = {
     },
   },
   utilisationTab: {
+    downloadReportLink: () => cy.get('[data-cy="download-report-link"]'),
     table: {
       row: (feeRecordId) => cy.get(`tr[data-cy="utilisation-table-row-${feeRecordId}"]`),
       facilityId: () => cy.get('[data-cy="facility-id"]'),
