@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, TfmDealCancellation } from '@ukef/dtfs2-common';
 import { isEmpty } from 'lodash';
 import { format } from 'date-fns';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
@@ -9,7 +9,7 @@ import api from '../../../api';
 import { CheckDetailsViewModel } from '../../../types/view-models';
 
 export type GetDealCancellationDetailsRequest = CustomExpressRequest<{ params: { _id: string } }>;
-export type PostDealCancellationDetailsRequest = CustomExpressRequest<{ params: { _id: string } }>;
+export type PostDealCancellationDetailsRequest = CustomExpressRequest<{ params: { _id: string }; reqBody: { cancellation: Partial<TfmDealCancellation> } }>;
 
 /**
  * controller to get deal cancellation details
@@ -43,7 +43,7 @@ export const getDealCancellationDetails = async (req: GetDealCancellationDetails
     const bankRequestDateFormatted = bankRequestDate ? format(new Date(bankRequestDate), 'd MMMM yyyy') : undefined;
     const effectiveFromDateFormatted = effectiveFrom ? format(new Date(effectiveFrom), 'd MMMM yyyy') : undefined;
 
-    const effectiveFromDateViewModel: CheckDetailsViewModel = {
+    const checkDetailsViewModel: CheckDetailsViewModel = {
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
       user,
       ukefDealId: deal.dealSnapshot.details.ukefDealId,
@@ -51,8 +51,9 @@ export const getDealCancellationDetails = async (req: GetDealCancellationDetails
       reason,
       bankRequestDate: bankRequestDateFormatted,
       effectiveFromDate: effectiveFromDateFormatted,
+      cancellation,
     };
-    return res.render('case/cancellation/check-details.njk', effectiveFromDateViewModel);
+    return res.render('case/cancellation/check-details.njk', checkDetailsViewModel);
   } catch (error) {
     console.error('Error getting deal cancellation details', error);
     return res.render('_partials/problem-with-service.njk');
@@ -67,6 +68,9 @@ export const getDealCancellationDetails = async (req: GetDealCancellationDetails
  */
 export const postDealCancellationDetails = async (req: PostDealCancellationDetailsRequest, res: Response) => {
   const { _id } = req.params;
+  const {
+    cancellation: { reason, bankRequestDate, effectiveFrom },
+  } = req.body;
   const { userToken } = asUserSession(req.session);
 
   try {
@@ -76,11 +80,15 @@ export const postDealCancellationDetails = async (req: PostDealCancellationDetai
       return res.redirect('/not-found');
     }
 
-    if (!canSubmissionTypeBeCancelled(deal.dealSnapshot.submissionType)) {
+    const submissionTypeCanBeCancelled = canSubmissionTypeBeCancelled(deal.dealSnapshot.submissionType);
+    const cancellationIncomplete = reason === undefined || !bankRequestDate || !effectiveFrom;
+
+    if (!submissionTypeCanBeCancelled || cancellationIncomplete) {
       return res.redirect(`/case/${_id}/deal`);
     }
 
-    // TODO: DTFS2-7298 - enact deal cancellation
+    await api.submitDealCancellation(_id, { reason, bankRequestDate, effectiveFrom }, userToken);
+
     return res.redirect(`/case/${_id}/deal`);
   } catch (error) {
     console.error('Error cancelling deal', error);

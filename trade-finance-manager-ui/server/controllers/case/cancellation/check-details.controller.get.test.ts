@@ -3,7 +3,7 @@ import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
 import { aRequestSession } from '../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { BankRequestDateViewModel } from '../../../types/view-models';
+import { CheckDetailsViewModel } from '../../../types/view-models';
 import api from '../../../api';
 import { getDealCancellationDetails, GetDealCancellationDetailsRequest } from './check-details.controller';
 
@@ -129,7 +129,7 @@ describe('getDealCancellationDetails', () => {
 
       // Assert
       expect(res._getRenderView()).toEqual('case/cancellation/check-details.njk');
-      expect(res._getRenderData() as BankRequestDateViewModel).toEqual({
+      expect(res._getRenderData() as CheckDetailsViewModel).toEqual({
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
         user: session.user,
         ukefDealId,
@@ -137,6 +137,7 @@ describe('getDealCancellationDetails', () => {
         reason,
         bankRequestDate: format(bankRequestDate, 'd MMMM yyyy'),
         effectiveFromDate: format(effectiveFromDate, 'd MMMM yyyy'),
+        cancellation: { reason, bankRequestDate, effectiveFrom: effectiveFromDate },
       });
     });
   });
