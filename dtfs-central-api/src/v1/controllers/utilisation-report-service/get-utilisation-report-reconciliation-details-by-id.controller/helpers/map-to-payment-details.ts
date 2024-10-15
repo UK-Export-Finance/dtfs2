@@ -15,28 +15,26 @@ export const mapToPaymentDetails = async (paymentsWithFeeRecords: FeeRecordPayme
   const mappedPaymentDetails: PaymentDetails[] = [];
 
   for (const group of paymentsWithFeeRecords) {
-    if (group.payments.length === 0) {
-      break;
-    }
-
-    if (group.payments.length !== 1) {
+    if (group.payments.length > 1) {
       throw new Error('Error mapping payments to payment details - groups must have at most one payment.');
     }
 
-    const groupStatus = getFeeRecordPaymentEntityGroupStatus(group);
+    if (group.payments.length === 1) {
+      const groupStatus = getFeeRecordPaymentEntityGroupStatus(group);
 
-    const groupReconciliationData = await getFeeRecordPaymentEntityGroupReconciliationData(group);
+      const groupReconciliationData = await getFeeRecordPaymentEntityGroupReconciliationData(group);
 
-    const feeRecords = group.feeRecords.map(mapFeeRecordEntityToFeeRecord);
+      const feeRecords = group.feeRecords.map(mapFeeRecordEntityToFeeRecord);
 
-    const payment = mapPaymentEntityToPayment(group.payments[0]);
+      const payment = mapPaymentEntityToPayment(group.payments[0]);
 
-    mappedPaymentDetails.push({
-      ...groupReconciliationData,
-      feeRecords,
-      payment,
-      status: groupStatus,
-    });
+      mappedPaymentDetails.push({
+        ...groupReconciliationData,
+        feeRecords,
+        payment,
+        status: groupStatus,
+      });
+    }
   }
 
   return mappedPaymentDetails;
