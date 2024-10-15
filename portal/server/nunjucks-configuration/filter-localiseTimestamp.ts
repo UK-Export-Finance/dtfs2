@@ -1,4 +1,4 @@
-import { IanaTimezone } from '@ukef/dtfs2-common';
+import { DateIanaTimezone } from '@ukef/dtfs2-common';
 import { formatInTimeZone } from 'date-fns-tz';
 
 /**
@@ -11,7 +11,7 @@ import { formatInTimeZone } from 'date-fns-tz';
  *
  * https://www.npmjs.com/package/date-fns-tz#formatintimezone
  */
-export const filterLocaliseTimestamp = (utcTimestamp: number | string, format: string, targetTimezone: IanaTimezone): string => {
+export const filterLocaliseTimestamp = (utcTimestamp: number | string, format: string, targetTimezone: DateIanaTimezone): string => {
   if (!utcTimestamp) {
     return '';
   }

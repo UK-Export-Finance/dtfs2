@@ -4,4 +4,4 @@
  * return from Intl.supportedValuesOf('timeZone')
  * {@link https://www.iana.org/time-zones}
  */
-export type IanaTimezone = string;
+export type DateIanaTimezone = string;

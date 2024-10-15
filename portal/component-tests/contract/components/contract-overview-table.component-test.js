@@ -30,12 +30,14 @@ describe(component, () => {
     },
   };
 
+  const manualInclusionApplicationSubmissionDate = getNowAsEpoch();
+
   const dealWithManualInclusionApplicationSubmissionDate = {
     ...deal,
     submissionType: 'Manual Inclusion Notice',
     details: {
       ...deal.details,
-      manualInclusionApplicationSubmissionDate: getNowAsEpoch(),
+      manualInclusionApplicationSubmissionDate,
     },
   };
 
@@ -78,11 +80,7 @@ describe(component, () => {
     it('displays MIA submission date table header', () => wrapper.expectText('[data-cy="submissionDateHeader"]').toRead('MIA Submission date'));
 
     it('displays deal.details.manualInclusionApplicationSubmissionDate', () =>
-      wrapper
-        .expectText('[data-cy="submissionDate"]')
-        .toRead(
-          formatInTimeZone(new Date(dealWithManualInclusionApplicationSubmissionDate.details.manualInclusionApplicationSubmissionDate), LONDON, FULL_DATE),
-        ));
+      wrapper.expectText('[data-cy="submissionDate"]').toRead(formatInTimeZone(new Date(manualInclusionApplicationSubmissionDate), LONDON, FULL_DATE)));
   });
 
   describe('renders - for any blank fields', () => {

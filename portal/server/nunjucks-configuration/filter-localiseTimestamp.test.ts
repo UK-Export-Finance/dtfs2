@@ -1,7 +1,7 @@
-import { IANA_TIMEZONES } from '@ukef/dtfs2-common';
+import { DATE_IANA_TIMEZONES } from '@ukef/dtfs2-common';
 import { filterLocaliseTimestamp } from './filter-localiseTimestamp';
 
-const { LONDON } = IANA_TIMEZONES;
+const { LONDON } = DATE_IANA_TIMEZONES;
 
 describe('nunjuck filters - dashIfEmpty', () => {
   describe('when timestamp is a valid number', () => {

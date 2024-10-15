@@ -20,7 +20,7 @@ export * from './facility-type-mapped';
 export * from './max-request-size';
 export * from './request-platform-type';
 export * from './date-formats';
-export * from './date-timezones';
+export * from './date-iana-timezones';
 export * from './url-character-allowances';
 export * from './max-character-count';
 export * from './deal-submission-type';
