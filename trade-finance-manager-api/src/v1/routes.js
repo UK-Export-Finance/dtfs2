@@ -69,7 +69,7 @@ authRouter.use('/', tasksRouter);
 openRouter.route('/feedback').post(feedbackController.create);
 
 openRouter.route('/user').post(users.createTfmUser);
-authRouter.route('/users').post(users.createTfmUser);
+authRouter.route('/users').post(users.createTfmUser).put(users.upsertTfmUserFromEntraUser);
 
 authRouter
   .route('/users/:user')

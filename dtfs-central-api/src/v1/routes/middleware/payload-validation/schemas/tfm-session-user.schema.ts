@@ -1,6 +1,6 @@
 import z from 'zod';
+import { TfmTeamSchema } from '@ukef/dtfs2-common/schemas';
 import { MongoObjectIdSchema } from './mongo-object-id.schema';
-import { TfmTeamSchema } from './tfm-team.schema';
 
 export const TfmSessionUserSchema = z.object({
   username: z.string(),
