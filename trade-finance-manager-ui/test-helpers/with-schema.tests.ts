@@ -13,11 +13,11 @@ export const withSchemaTests = ({
 }) => {
   it.each(failureTestCases)('should fail parsing if $description', ({ aTestCase }) => {
     const { success } = schema.safeParse(aTestCase());
-    expect(success).toBe(false);
+    expect(success).toEqual(false);
   });
 
   it.each(successTestCases)('should pass parsing if $description', ({ aTestCase }) => {
     const { success } = schema.safeParse(aTestCase());
-    expect(success).toBe(true);
+    expect(success).toEqual(true);
   });
 };
