@@ -571,13 +571,13 @@ describe('reconciliation-for-report-helper', () => {
       { condition: 'has zero amount (no change)', value: { amount: 0, change: 'NONE' }, expectedMappedValue: { amount: '0.00', change: 'NONE' } },
       {
         condition: 'has a positive amount (increase)',
-        value: { amount: 100, change: 'INCREASE' },
-        expectedMappedValue: { amount: '100.00', change: 'INCREASE' },
+        value: { amount: 1234567.89, change: 'INCREASE' },
+        expectedMappedValue: { amount: '1,234,567.89', change: 'INCREASE' },
       },
       {
         condition: 'has a negative amount (decrease)',
-        value: { amount: 100, change: 'DECREASE' },
-        expectedMappedValue: { amount: '100.00', change: 'DECREASE' },
+        value: { amount: 1234567.89, change: 'DECREASE' },
+        expectedMappedValue: { amount: '1,234,567.89', change: 'DECREASE' },
       },
     ] as const)(
       'sets the view model fixedFeeAdjustment to $expectedMappedValue when the fee record entity fixedFeeAdjustment $condition',
@@ -604,13 +604,13 @@ describe('reconciliation-for-report-helper', () => {
       { condition: 'has zero amount (no change)', value: { amount: 0, change: 'NONE' }, expectedMappedValue: { amount: '0.00', change: 'NONE' } },
       {
         condition: 'has a positive amount (increase)',
-        value: { amount: 100, change: 'INCREASE' },
-        expectedMappedValue: { amount: '100.00', change: 'INCREASE' },
+        value: { amount: 1234567.89, change: 'INCREASE' },
+        expectedMappedValue: { amount: '1,234,567.89', change: 'INCREASE' },
       },
       {
         condition: 'has a negative amount (decrease)',
-        value: { amount: 100, change: 'DECREASE' },
-        expectedMappedValue: { amount: '100.00', change: 'DECREASE' },
+        value: { amount: 1234567.89, change: 'DECREASE' },
+        expectedMappedValue: { amount: '1,234,567.89', change: 'DECREASE' },
       },
     ] as const)(
       'sets the view model principalBalanceAdjustment to $expectedMappedValue when the keying sheet principalBalanceAdjustment $condition',
