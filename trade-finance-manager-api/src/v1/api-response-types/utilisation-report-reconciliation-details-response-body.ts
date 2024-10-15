@@ -12,11 +12,17 @@ import {
 import { FeeRecord } from './fee-record';
 import { Payment } from './payment';
 
-type FeeRecordPaymentGroup = {
+type PremiumPaymentsGroup = {
   feeRecords: FeeRecord[];
   totalReportedPayments: CurrencyAndAmount;
   paymentsReceived: Payment[] | null;
   totalPaymentsReceived: CurrencyAndAmount | null;
+  status: FeeRecordStatus;
+};
+
+type PaymentDetails = {
+  feeRecords: FeeRecord[];
+  payment: Payment;
   status: FeeRecordStatus;
   reconciledByUser?: {
     firstName: string;
@@ -50,7 +56,8 @@ export type UtilisationReportReconciliationDetailsResponseBody = {
   status: UtilisationReportReconciliationStatus;
   reportPeriod: ReportPeriod;
   dateUploaded: IsoDateTimeStamp;
-  feeRecordPaymentGroups: FeeRecordPaymentGroup[];
+  premiumPayments: PremiumPaymentsGroup[];
+  paymentDetails: PaymentDetails[];
   keyingSheet: KeyingSheet;
   utilisationDetails: FeeRecordUtilisation[];
 };
