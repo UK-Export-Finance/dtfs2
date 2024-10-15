@@ -24,7 +24,7 @@
 {% set reasonForCancelling =
   [
     { text: 'Reason for cancelling deal', attributes: { "data-cy": "reason-heading" }, classes: rowTextClasses },
-    { text: reason | dashIfEmpty, attributes: { "data-cy": "reason-response" }, classes: rowTextClasses },
+    { text: cancellation.reason | dashIfEmpty, attributes: { "data-cy": "reason-response" }, classes: rowTextClasses },
     { html: reasonForCancellingUrl, classes: rowLinkClasses }
   ]
 %}
@@ -41,7 +41,7 @@
 {% set bankRequestDate =
   [
     { text: 'Bank request date', attributes: { "data-cy": "bank-request-date-heading" }, classes: rowTextClasses},
-    { text: bankRequestDate | dashIfEmpty, attributes: { "data-cy": "bank-request-date-response" }, classes: rowTextClasses },
+    { text: cancellation.bankRequestDate | formatUnixTimestamp('d MMMM yyyy') | dashIfEmpty, attributes: { "data-cy": "bank-request-date-response" }, classes: rowTextClasses },
     { html: bankRequestDateUrl, classes: rowLinkClasses }
   ]
 %}
@@ -58,7 +58,7 @@
 {% set effectiveFromDate =
     [
       { text: 'Date effective from', attributes: { "data-cy": "effective-from-heading" }, classes: rowTextClasses },
-      { text: effectiveFromDate | dashIfEmpty, attributes: { "data-cy": "effective-from-response" }, classes: rowTextClasses },
+      { text: cancellation.effectiveFrom | formatUnixTimestamp('d MMMM yyyy') | dashIfEmpty, attributes: { "data-cy": "effective-from-response" }, classes: rowTextClasses },
       { html: effectiveFromDateUrl, classes: rowLinkClasses }
     ]
 %}

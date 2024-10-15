@@ -1,7 +1,6 @@
 import { Response } from 'express';
 import { CustomExpressRequest, TfmDealCancellation } from '@ukef/dtfs2-common';
 import { isEmpty } from 'lodash';
-import { format } from 'date-fns';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { asUserSession } from '../../../helpers/express-session';
 import { canSubmissionTypeBeCancelled } from '../../helpers/deal-cancellation-enabled.helper';
@@ -38,19 +37,11 @@ export const getDealCancellationDetails = async (req: GetDealCancellationDetails
       return res.redirect(`/case/${_id}/deal`);
     }
 
-    const { reason, bankRequestDate, effectiveFrom } = cancellation;
-
-    const bankRequestDateFormatted = bankRequestDate ? format(new Date(bankRequestDate), 'd MMMM yyyy') : undefined;
-    const effectiveFromDateFormatted = effectiveFrom ? format(new Date(effectiveFrom), 'd MMMM yyyy') : undefined;
-
     const checkDetailsViewModel: CheckDetailsViewModel = {
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
       user,
       ukefDealId: deal.dealSnapshot.details.ukefDealId,
       dealId: _id,
-      reason,
-      bankRequestDate: bankRequestDateFormatted,
-      effectiveFromDate: effectiveFromDateFormatted,
       cancellation,
     };
     return res.render('case/cancellation/check-details.njk', checkDetailsViewModel);
