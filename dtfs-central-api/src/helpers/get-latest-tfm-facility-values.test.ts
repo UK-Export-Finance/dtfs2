@@ -11,6 +11,11 @@ describe('getLatestTfmFacilityValues', () => {
   const facilityId = '123';
   const today = new Date();
 
+  const reportPeriod = {
+    start: { month: today.getMonth() + 1, year: today.getFullYear() },
+    end: { month: today.getMonth() + 1, year: today.getFullYear() },
+  };
+
   afterEach(() => {
     jest.resetAllMocks();
   });
@@ -21,7 +26,7 @@ describe('getLatestTfmFacilityValues', () => {
     });
 
     it('should throw a NotFoundError', async () => {
-      await expect(getLatestTfmFacilityValues(facilityId)).rejects.toThrow(
+      await expect(getLatestTfmFacilityValues(facilityId, reportPeriod)).rejects.toThrow(
         new NotFoundError(`Failed to find a tfm facility with ukef facility id '${facilityId}'`),
       );
     });
@@ -44,7 +49,7 @@ describe('getLatestTfmFacilityValues', () => {
 
     it('should throw a NotFoundError', async () => {
       // Act / Assert
-      await expect(getLatestTfmFacilityValues(facilityId)).rejects.toThrow(
+      await expect(getLatestTfmFacilityValues(facilityId, reportPeriod)).rejects.toThrow(
         new NotFoundError(`Failed to find a cover start date for the tfm facility with ukef facility id '${facilityId}`),
       );
     });
@@ -67,7 +72,7 @@ describe('getLatestTfmFacilityValues', () => {
 
     it('should throw a NotFoundError', async () => {
       // Act / Assert
-      await expect(getLatestTfmFacilityValues(facilityId)).rejects.toThrow(
+      await expect(getLatestTfmFacilityValues(facilityId, reportPeriod)).rejects.toThrow(
         new NotFoundError(`Failed to find a cover end date for the tfm facility with ukef facility id '${facilityId}`),
       );
     });
@@ -90,7 +95,7 @@ describe('getLatestTfmFacilityValues', () => {
     });
 
     it('should return a populated object', async () => {
-      const result = await getLatestTfmFacilityValues(facilityId);
+      const result = await getLatestTfmFacilityValues(facilityId, reportPeriod);
 
       const expected = {
         coverEndDate: convertTimestampToDate(today),
