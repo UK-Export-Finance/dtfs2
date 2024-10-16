@@ -155,7 +155,7 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
 
         const expected = {
           fixedFee: calculateInitialFixedFee({
-            utilisation: ukefShareOfUtilisation,
+            ukefShareOfUtilisation,
             coverStartDate: parseDate(coverStartDate),
             coverEndDate: parseDate(coverEndDate),
             interestPercentage,

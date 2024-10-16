@@ -392,12 +392,12 @@ describe(`POST ${BASE_URL}`, () => {
     expect(entities[0].id).toEqual(facilityId);
     /**
      * The fixed fee is calculated as follows:
-     * fixed fee = utilisation * bank fee adjustment * interest percentage * days left in cover period / day count basis
+     * fixed fee = (utilisation * (coverPercentage / 100)) * bank fee adjustment * interest percentage * days left in cover period / day count basis
      *           = 1 * 0.9 * 100 / 100 * 730 / 1
      *           = 0.9 * 730
      *           = 657
      */
-    expect(entities[0].fixedFee).toEqual(657);
+    expect(entities[0].fixedFee).toEqual(525.6);
   });
 
   describe('when there are multiple fee records with the same facility id', () => {

@@ -16,7 +16,7 @@ export const getFixedFeeForFacility = async (facilityId: string, utilisation: nu
   const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, coverPercentage);
 
   return calculateFixedFee({
-    utilisation: ukefShareOfUtilisation,
+    ukefShareOfUtilisation,
     reportPeriod,
     coverEndDate,
     interestPercentage,

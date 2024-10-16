@@ -9,7 +9,7 @@ describe('calculateFixedFeeAdjustment', () => {
 
   it('should return the correct calculation for the fixed fee for monthly report period', () => {
     // Arrange
-    const utilisation = 100000;
+    const ukefShareOfUtilisation = 100000;
     const interestPercentage = 5;
     const dayCountBasis = 365;
 
@@ -21,7 +21,7 @@ describe('calculateFixedFeeAdjustment', () => {
 
     // Act
     const result = calculateFixedFee({
-      utilisation,
+      ukefShareOfUtilisation,
       reportPeriod,
       coverEndDate,
       interestPercentage,
@@ -34,7 +34,7 @@ describe('calculateFixedFeeAdjustment', () => {
 
   it('should return the correct calculation for the fixed fee for quarterly report period', () => {
     // Arrange
-    const utilisation = 100000;
+    const ukefShareOfUtilisation = 100000;
     const interestPercentage = 5;
     const dayCountBasis = 365;
 
@@ -46,7 +46,7 @@ describe('calculateFixedFeeAdjustment', () => {
 
     // Act
     const result = calculateFixedFee({
-      utilisation,
+      ukefShareOfUtilisation,
       reportPeriod,
       coverEndDate,
       interestPercentage,

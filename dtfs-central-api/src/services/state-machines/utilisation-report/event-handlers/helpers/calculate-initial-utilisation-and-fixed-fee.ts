@@ -75,7 +75,7 @@ export const calculateInitialUtilisationAndFixedFee = async (facilityId: string)
   const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, coverPercentage);
 
   const fixedFee = calculateInitialFixedFee({
-    utilisation: ukefShareOfUtilisation,
+    ukefShareOfUtilisation,
     coverStartDate: parseDate(coverStartDate),
     coverEndDate: parseDate(coverEndDate),
     interestPercentage,
