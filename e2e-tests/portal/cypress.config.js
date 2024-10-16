@@ -38,7 +38,6 @@ module.exports = defineConfig({
     },
     env: {
       CONTACT_US_EMAIL_ADDRESS,
-      TZ,
     },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],

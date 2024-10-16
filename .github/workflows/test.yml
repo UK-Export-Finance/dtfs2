@@ -84,7 +84,7 @@ on:
 
 env:
   environment: dev
-  TZ: 'Europe/London'
+  TZ: ${{ vars.TIMEZONE }}
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   MONGODB_URI: ${{ secrets.MONGODB_URI }}
   MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE }}
@@ -610,8 +610,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        spec:
-          [
+        spec: [
             'case/activities/*.spec.js',
             'case/AIN/*.spec.js',
             'case/deal-cancellation-disabled/*.spec.js',

@@ -1294,7 +1294,17 @@ jobs:
 
   portal-api:
     name: Portal API
-    needs: [set-environment, vnet, private-dns, cosmos-db-private, external-api, dtfs-central-api, file-storage, trade-finance-manager-api]
+    needs:
+      [
+        set-environment,
+        vnet,
+        private-dns,
+        cosmos-db-private,
+        external-api,
+        dtfs-central-api,
+        file-storage,
+        trade-finance-manager-api,
+      ]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -1486,7 +1496,15 @@ jobs:
 
   trade-finance-manager-api:
     name: Trade Finance Manager API
-    needs: [set-environment, vnet, private-dns, cosmos-db-private, external-api, dtfs-central-api]
+    needs:
+      [
+        set-environment,
+        vnet,
+        private-dns,
+        cosmos-db-private,
+        external-api,
+        dtfs-central-api,
+      ]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -1823,7 +1841,8 @@ jobs:
 
   trade-finance-manager-ui:
     name: Trade Finance Manager UI
-    needs: [set-environment, vnet, private-dns, trade-finance-manager-api, redis]
+    needs:
+      [set-environment, vnet, private-dns, trade-finance-manager-api, redis]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
