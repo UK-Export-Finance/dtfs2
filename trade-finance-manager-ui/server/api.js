@@ -1300,6 +1300,27 @@ const deleteDealCancellation = async (dealId, userToken) => {
   }
 };
 
+/**
+ * Submits the deal cancellation object on a TFM MIN or AIN deal
+ * @param {string} dealId - The deal ID
+ * @param {import('@ukef/dtfs2-common').TfmDealCancellation} cancellation - The deal cancellation object
+ * @param {string} userToken - The user token
+ * @returns {Promise<void>}
+ */
+const submitDealCancellation = async (dealId, cancellation, userToken) => {
+  try {
+    await axios({
+      method: 'post',
+      url: `${TFM_API_URL}/v1/deals/${dealId}/cancellation/submit`,
+      headers: generateHeaders(userToken),
+      data: cancellation,
+    });
+  } catch (error) {
+    console.error('Failed to submit deal cancellation', error);
+    throw error;
+  }
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -1359,4 +1380,5 @@ module.exports = {
   updateDealCancellation,
   getDealCancellation,
   deleteDealCancellation,
+  submitDealCancellation,
 };
