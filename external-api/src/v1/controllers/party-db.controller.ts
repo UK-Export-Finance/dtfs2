@@ -1,4 +1,4 @@
-import { HEADERS, isValidCompanyRegistrationNumber } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, HEADERS, isValidCompanyRegistrationNumber } from '@ukef/dtfs2-common';
 import axios, { AxiosError, HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
@@ -33,8 +33,9 @@ export const lookup = async (req: Request, res: Response) => {
   return res.status(status).send(data);
 };
 
-export const createParty = async (req: Request, res: Response) => {
+export const createParty = async (req: CustomExpressRequest<{ reqBody: { companyName: string } }>, res: Response) => {
   const { partyDbCompanyRegistrationNumber: companyReg } = req.params;
+  const { companyName } = req.body;
 
   if (!isValidCompanyRegistrationNumber(companyReg)) {
     console.error('Invalid company registration number provided %s', companyReg);
@@ -47,6 +48,7 @@ export const createParty = async (req: Request, res: Response) => {
     headers,
     data: {
       companyRegistrationNumber: companyReg,
+      companyName,
     },
   }).catch((error: AxiosError) => {
     console.error('Error calling Party DB API %o', error);

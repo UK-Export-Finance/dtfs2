@@ -830,12 +830,15 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
   }
 };
 
-const createParty = async ({ companyRegNo }) => {
+const createParty = async ({ companyRegNo, companyName }) => {
   try {
     const response = await axios({
       method: 'post',
       url: `${EXTERNAL_API_URL}/party-db/${encodeURIComponent(companyRegNo)}`,
       headers: headers.external,
+      data: {
+        companyName,
+      },
     });
     return response.data;
   } catch (error) {
