@@ -33,7 +33,7 @@ export const handleFeeRecordGenerateKeyingDataEvent = async (
     return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
   }
 
-  const { coverPercentage } = await getLatestTfmFacilityValues(feeRecord.facilityId);
+  const { coverPercentage } = await getLatestTfmFacilityValues(feeRecord.facilityId, reportPeriod);
 
   const fixedFeeAdjustment = await calculateFixedFeeAdjustment(feeRecord, feeRecord.facilityUtilisationData, reportPeriod);
 
