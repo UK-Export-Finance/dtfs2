@@ -1,16 +1,15 @@
-import { getLatestTfmFacilityValues } from './get-latest-tfm-values';
+import { getLatestTfmFacilityValues } from './get-latest-tfm-facility-values';
 import { TfmFacilitiesRepo } from '../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../errors';
 import { aTfmFacility, aFacility } from '../../test-helpers';
 import { convertTimestampToDate } from './convert-timestamp-to-date';
-// import { getLatestCompletedAmendmentCoverEndDate } from './amendments';
 
 jest.mock('../repositories/tfm-facilities-repo');
 
 describe('getLatestTfmFacilityValues', () => {
   const findOneByUkefFacilityIdSpy = jest.spyOn(TfmFacilitiesRepo, 'findOneByUkefFacilityId');
   const facilityId = '123';
-  const TODAY = new Date();
+  const today = new Date();
 
   afterEach(() => {
     jest.resetAllMocks();
@@ -37,7 +36,7 @@ describe('getLatestTfmFacilityValues', () => {
           ukefFacilityId: facilityId,
           interestPercentage: 5,
           dayCountBasis: 365,
-          coverEndDate: TODAY,
+          coverEndDate: today,
           coverStartDate: null,
         },
       });
@@ -51,7 +50,7 @@ describe('getLatestTfmFacilityValues', () => {
     });
   });
 
-  describe('when the found tfm facility does not contain a defined facility snapshot or amendment cover end date', () => {
+  describe('when the found tfm facility does not contain a cover end date', () => {
     beforeEach(() => {
       findOneByUkefFacilityIdSpy.mockResolvedValue({
         ...aTfmFacility(),
@@ -61,7 +60,7 @@ describe('getLatestTfmFacilityValues', () => {
           interestPercentage: 5,
           dayCountBasis: 365,
           coverEndDate: null,
-          coverStartDate: TODAY,
+          coverStartDate: today,
         },
       });
     });
@@ -83,8 +82,8 @@ describe('getLatestTfmFacilityValues', () => {
           ukefFacilityId: facilityId,
           interestPercentage: 5,
           dayCountBasis: 365,
-          coverEndDate: TODAY,
-          coverStartDate: TODAY,
+          coverEndDate: today,
+          coverStartDate: today,
           coverPercentage: 5,
         },
       });
@@ -94,8 +93,8 @@ describe('getLatestTfmFacilityValues', () => {
       const result = await getLatestTfmFacilityValues(facilityId);
 
       const expected = {
-        coverEndDate: convertTimestampToDate(TODAY),
-        coverStartDate: convertTimestampToDate(TODAY),
+        coverEndDate: convertTimestampToDate(today),
+        coverStartDate: convertTimestampToDate(today),
         dayCountBasis: 365,
         interestPercentage: 5,
         coverPercentage: 5,

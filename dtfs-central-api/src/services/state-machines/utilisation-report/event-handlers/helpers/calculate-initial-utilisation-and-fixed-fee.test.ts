@@ -151,11 +151,11 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
         const { value, coverStartDate, coverEndDate, interestPercentage, dayCountBasis } = facility.facilitySnapshot;
 
         const utilisation = calculateInitialUtilisation(value);
-        const calculatedUtilisation = calculateUkefShareOfUtilisation(utilisation, facility.facilitySnapshot.coverPercentage);
+        const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, facility.facilitySnapshot.coverPercentage);
 
         const expected = {
           fixedFee: calculateInitialFixedFee({
-            utilisation: calculatedUtilisation,
+            utilisation: ukefShareOfUtilisation,
             coverStartDate: parseDate(coverStartDate),
             coverEndDate: parseDate(coverEndDate),
             interestPercentage,

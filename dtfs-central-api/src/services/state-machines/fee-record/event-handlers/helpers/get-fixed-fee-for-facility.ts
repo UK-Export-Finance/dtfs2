@@ -13,10 +13,10 @@ import { calculateFixedFee } from './calculate-fixed-fee';
 export const getFixedFeeForFacility = async (facilityId: string, utilisation: number, reportPeriod: ReportPeriod) => {
   const { coverEndDate, dayCountBasis, interestPercentage, coverPercentage } = await getLatestTfmFacilityValues(facilityId);
 
-  const calculatedUtilisation = calculateUkefShareOfUtilisation(utilisation, coverPercentage);
+  const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, coverPercentage);
 
   return calculateFixedFee({
-    utilisation: calculatedUtilisation,
+    utilisation: ukefShareOfUtilisation,
     reportPeriod,
     coverEndDate,
     interestPercentage,

@@ -14,7 +14,7 @@ export const calculatePrincipalBalanceAdjustment = (
   facilityUtilisationData: FacilityUtilisationDataEntity,
   coverPercentage: number,
 ): number => {
-  const calculatedUtilisation = calculateUkefShareOfUtilisation(feeRecord.facilityUtilisation, coverPercentage);
+  const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(feeRecord.facilityUtilisation, coverPercentage);
 
-  return new Big(calculatedUtilisation).sub(facilityUtilisationData.utilisation).toNumber();
+  return new Big(ukefShareOfUtilisation).sub(facilityUtilisationData.utilisation).toNumber();
 };

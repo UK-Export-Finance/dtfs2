@@ -120,11 +120,11 @@ describe('getFixedFeeForFacility', () => {
     // Act
     await getFixedFeeForFacility(facilityId, utilisation, reportPeriod);
 
-    const calculatedUtilisation = calculateUkefShareOfUtilisation(utilisation, aFacility().coverPercentage);
+    const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, aFacility().coverPercentage);
 
     // Assert
     expect(calculateFixedFee).toHaveBeenCalledWith<[CalculateFixedFeeParams]>({
-      utilisation: calculatedUtilisation,
+      utilisation: ukefShareOfUtilisation,
       reportPeriod,
       coverEndDate,
       interestPercentage,
@@ -162,11 +162,11 @@ describe('getFixedFeeForFacility', () => {
     // Act
     await getFixedFeeForFacility(facilityId, utilisation, reportPeriod);
 
-    const calculatedUtilisation = calculateUkefShareOfUtilisation(utilisation, aFacility().coverPercentage);
+    const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, aFacility().coverPercentage);
 
     // Assert
     expect(calculateFixedFee).toHaveBeenCalledWith<[CalculateFixedFeeParams]>({
-      utilisation: calculatedUtilisation,
+      utilisation: ukefShareOfUtilisation,
       reportPeriod,
       coverEndDate,
       interestPercentage,
@@ -208,11 +208,11 @@ describe('getFixedFeeForFacility', () => {
     // Act
     await getFixedFeeForFacility(facilityId, utilisation, reportPeriod);
 
-    const calculatedUtilisation = calculateUkefShareOfUtilisation(utilisation, aFacility().coverPercentage);
+    const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, aFacility().coverPercentage);
 
     // Assert
     expect(calculateFixedFee).toHaveBeenCalledWith<[CalculateFixedFeeParams]>({
-      utilisation: calculatedUtilisation,
+      utilisation: ukefShareOfUtilisation,
       reportPeriod,
       coverEndDate: amendedCoverEndDate,
       interestPercentage,

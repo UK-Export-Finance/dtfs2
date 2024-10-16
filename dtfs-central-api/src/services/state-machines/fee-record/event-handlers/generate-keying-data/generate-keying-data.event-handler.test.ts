@@ -11,7 +11,7 @@ import {
 import { handleFeeRecordGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
 import { aReportPeriod, aFacility } from '../../../../../../test-helpers';
 import { calculateFixedFeeAdjustment, calculatePrincipalBalanceAdjustment, updateFacilityUtilisationData } from '../helpers';
-import { getLatestTfmFacilityValues, convertTimestampToDate } from '../../../../../helpers';
+import { getLatestTfmFacilityValues } from '../../../../../helpers';
 
 jest.mock<unknown>('../helpers', () => ({
   ...jest.requireActual('../helpers'),
@@ -20,7 +20,7 @@ jest.mock<unknown>('../helpers', () => ({
   updateFacilityUtilisationData: jest.fn(),
 }));
 
-jest.mock('../../../../../helpers/get-latest-tfm-values');
+jest.mock('../../../../../helpers/get-latest-tfm-facility-values');
 
 describe('handleFeeRecordGenerateKeyingDataEvent', () => {
   const mockSave = jest.fn();
@@ -39,8 +39,8 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
   const facility = aFacility();
 
   const tfmFacilityReturnedValues = {
-    coverEndDate: convertTimestampToDate(facility.coverEndDate as Date),
-    coverStartDate: convertTimestampToDate(facility.coverStartDate as Date),
+    coverEndDate: new Date(),
+    coverStartDate: new Date(),
     dayCountBasis: facility.dayCountBasis,
     interestPercentage: facility.interestPercentage,
     coverPercentage: facility.coverPercentage,
@@ -102,7 +102,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
 
       // Assert
       expect(feeRecord.principalBalanceAdjustment).toEqual(200);
-      expect(calculatePrincipalBalanceAdjustment).toHaveBeenCalledWith(feeRecord, facilityUtilisationData, facility.coverPercentage);
+      expect(calculatePrincipalBalanceAdjustment).toHaveBeenCalledWith(feeRecord, facilityUtilisationData, tfmFacilityReturnedValues.coverPercentage);
     });
 
     it('saves the updated fee record with the supplied entity manager', async () => {

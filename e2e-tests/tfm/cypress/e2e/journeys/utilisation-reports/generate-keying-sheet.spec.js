@@ -186,7 +186,7 @@ context('PDC_RECONCILE users can generate keying data', () => {
      * - (72000 * 0.9 * 0.05 * 1) = 3240
      * This yields a current utilisation value of 3240
      */
-    const expectedFixedFeeAdjustment = '2,240.00'; // 8100 - 1000, INCREASE
+    const expectedFixedFeeAdjustment = '2,240.00'; // 3240  - 1000, INCREASE
 
     pages.utilisationReportPage.keyingSheetTab.fixedFeeAdjustmentDecrease(FIRST_FEE_RECORD_ID).should('contain', '-');
     pages.utilisationReportPage.keyingSheetTab.fixedFeeAdjustmentIncrease(FIRST_FEE_RECORD_ID).should('contain', expectedFixedFeeAdjustment);
