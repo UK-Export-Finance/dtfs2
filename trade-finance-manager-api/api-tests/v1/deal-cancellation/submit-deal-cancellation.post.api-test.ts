@@ -1,3 +1,4 @@
+import { add, format } from 'date-fns';
 import { AnyObject, MAX_CHARACTER_COUNT, TEAM_IDS } from '@ukef/dtfs2-common';
 import { ObjectId, UpdateResult } from 'mongodb';
 import { createApi } from '../../api';
@@ -6,12 +7,18 @@ import { initialiseTestUsers } from '../../api-test-users';
 import { TestUser } from '../../types/test-user';
 import { withTeamAuthorisationTests } from '../../common-tests/with-team-authorisation.api-tests';
 import { PostSubmitDealCancellationPayload } from '../../../src/v1/middleware/validate-post-submit-deal-cancellation-payload';
+import { CANCEL_DEAL_FUTURE_DATE, CANCEL_DEAL_PAST_DATE } from '../../../src/constants/email-template-ids';
 
 const updateDealCancellationMock = jest.fn() as jest.Mock<Promise<UpdateResult>>;
+const sendEmailMock = jest.fn() as jest.Mock<Promise<void>>;
+
+const mockPimEmailAddress = 'pim@example.com';
 
 jest.mock('../../../src/v1/api', () => ({
   ...jest.requireActual<AnyObject>('../../../src/v1/api'),
   updateDealCancellation: () => updateDealCancellationMock(),
+  sendEmail: (templateId: string, sendToEmailAddress: string, emailVariables: object) => sendEmailMock(templateId, sendToEmailAddress, emailVariables),
+  findOneTeam: () => ({ email: mockPimEmailAddress }),
 }));
 
 const originalProcessEnv = { ...process.env };
@@ -60,6 +67,7 @@ describe('POST /v1/deals/:id/cancellation/submit', () => {
   describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is enabled', () => {
     beforeEach(() => {
       process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'true';
+      jest.clearAllMocks();
     });
 
     afterAll(() => {
@@ -107,6 +115,48 @@ describe('POST /v1/deals/:id/cancellation/submit', () => {
 
       // Assert
       expect(response.status).toEqual(400);
+    });
+
+    it('sends correct email when effective date is today', async () => {
+      // Arrange
+      const url = getSubmitTfmDealCancellationUrl({ id: validId });
+
+      const payload = { ...aValidPayload(), effectiveFrom: new Date().valueOf() };
+
+      // Act
+      await as(aPimUser).post(payload).to(url);
+
+      // Assert
+      expect(sendEmailMock).toHaveBeenCalledTimes(1);
+      expect(sendEmailMock).toHaveBeenCalledWith(CANCEL_DEAL_PAST_DATE, mockPimEmailAddress, {
+        bankRequestDate: format(payload.bankRequestDate, 'd MMMM yyyy'),
+        effectiveFromDate: format(payload.effectiveFrom, 'd MMMM yyyy'),
+        cancelReason: payload.reason,
+        formattedFacilitiesList: ` 1. Facility ID 00123145
+ 2. Facility ID 00123146`,
+        ukefDealId: '00123144',
+      });
+    });
+
+    it('sends correct email when effective date is in the future', async () => {
+      // Arrange
+      const url = getSubmitTfmDealCancellationUrl({ id: validId });
+
+      const payload = { ...aValidPayload(), effectiveFrom: add(new Date(), { days: 2 }).valueOf() };
+
+      // Act
+      await as(aPimUser).post(payload).to(url);
+
+      // Assert
+      expect(sendEmailMock).toHaveBeenCalledTimes(1);
+      expect(sendEmailMock).toHaveBeenCalledWith(CANCEL_DEAL_FUTURE_DATE, mockPimEmailAddress, {
+        bankRequestDate: format(payload.bankRequestDate, 'd MMMM yyyy'),
+        effectiveFromDate: format(payload.effectiveFrom, 'd MMMM yyyy'),
+        cancelReason: payload.reason,
+        formattedFacilitiesList: ` 1. Facility ID 00123145
+ 2. Facility ID 00123146`,
+        ukefDealId: '00123144',
+      });
     });
 
     it('returns 200 for an authenticated user', async () => {
