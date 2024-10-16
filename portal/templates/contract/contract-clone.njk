@@ -1,5 +1,6 @@
 {% extends "index.njk" %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 
 {% block pageTitle -%}
@@ -26,98 +27,72 @@
 
       <div class="govuk-grid-column-one-half">
 
-        <div
-          {% if validationErrors.errorList.bankInternalRefName %}
-            class="govuk-form-group govuk-form-group--error"
-          {% else %}
-            class="govuk-form-group"
-          {% endif %}
-        >
-          <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="30">
-            <div class="govuk-form-group">
-              <label class="govuk-label" for="bankInternalRefName">
-                Bank deal ID
-              </label>
+        {{ govukCharacterCount({
+          name: "bankInternalRefName",
+          id: "bankInternalRefName",
+          value: bankInternalRefName,
+          maxlength: 30,
+          classes: "govuk-!-width-one-half",
+          label: {
+            text: "Bank deal ID"
+          },
+          hint: {
+            text: "It's not possible to change this later."
+          },
+          errorMessage: validationErrors and {
+            text: validationErrors.errorList.bankInternalRefName.text
+          },
+          attributes: {
+            "data-cy": "bank-supply-contract-id"
+          }
+        }) }}
 
-              <span id="bankInternalRefName-hint" class="govuk-hint">
-                It's not possible to change this later.
-              </span>
-
-              {% if validationErrors.errorList.bankInternalRefName %}
-                <span id="bankInternalRefName-error" class="govuk-error-message">
-                  <span class="govuk-visually-hidden">Error:</span> {{ validationErrors.errorList.bankInternalRefName.text }}
-                </span>
-              {% endif %}
-
-              <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="bankInternalRefName" name="bankInternalRefName" type="text" maxlength="30" aria-describedby="bankInternalRefName-info bankInternalRefName-hint bankInternalRefName-error" value="{{ bankInternalRefName }}" data-cy="bank-supply-contract-id">
-            </div>
-
-            <span id="bankInternalRefName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-              You can enter up to 30 characters
-            </span>
-          </div>
-        </div>
-
-        <div
-          {% if validationErrors.errorList.additionalRefName %}
-            class="govuk-form-group govuk-form-group--error"
-          {% else %}
-            class="govuk-form-group"
-          {% endif %}
-        >
-
-          <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="100">
-            <div class="govuk-form-group">
-              <label class="govuk-label" for="additionalRefName">
-                Bank deal name
-              </label>
-
-              {% if validationErrors.errorList.additionalRefName %}
-                <span id="additionalRefName-error" class="govuk-error-message">
-                  <span class="govuk-visually-hidden">Error:</span> {{ validationErrors.errorList.additionalRefName.text }}
-                </span>
-              {% endif %}
-
-              <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="additionalRefName" name="additionalRefName" type="text" maxlength="100" aria-describedby="additionalRefName-info additionalRefName-error" value="{{ additionalRefName }}" data-cy="bank-supply-contract-name">
-            </div>
-
-            <span id="additionalRefName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-              You can enter up to 100 characters
-            </span>
-          </div>
-        </div>
+        {{ govukCharacterCount({
+          name: "additionalRefName",
+          id: "additionalRefName",
+          value: additionalRefName,
+          maxlength: 100,
+          classes: "govuk-!-width-one-half",
+          label: {
+            text: "Bank deal name"
+          },
+          errorMessage: validationErrors and {
+            text: validationErrors.errorList.additionalRefName.text
+          },
+          attributes: {
+            "data-cy": "bank-supply-contract-name"
+          }
+        }) }}
 
       </div>
     </div>
 
-    {{
-      govukRadios({
-        classes: "govuk-radios--inline",
-        idPrefix: "cloneTransactions",
-        name: "cloneTransactions",
-        fieldset: {
-          legend: {
-            text: "Do you want to clone this deal with transactions?",
-            isPageHeading: true,
-            classes: "govuk-fieldset__legend"
+    {{ govukRadios({
+      classes: "govuk-radios--inline",
+      idPrefix: "cloneTransactions",
+      name: "cloneTransactions",
+      fieldset: {
+        legend: {
+          text: "Do you want to clone this deal with transactions?",
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend"
+        }
+      },
+      items: [
+        {
+          value: "true",
+          text: "Yes",
+          attributes: {
+            "data-cy": "clone-transactions"
           }
         },
-        items: [
-          {
-            value: "true",
-            text: "Yes",
-            attributes: {
-              "data-cy": "clone-transactions"
-            }
-          },
-          {
-            value: "false",
-            text: "No"
-          }
-        ],
-        errorMessage: validationErrors.errorList.cloneTransactions
-      })
-    }}
+        {
+          value: "false",
+          text: "No"
+        }
+      ],
+      errorMessage: validationErrors.errorList.cloneTransactions
+    }) }}
 
     <button class="govuk-button" data-module="govuk-button" data-cy="submit-button">
       Clone
