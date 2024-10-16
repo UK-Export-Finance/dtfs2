@@ -4,15 +4,13 @@ import { ReportPeriod, CalculateFixedFeeParams } from '@ukef/dtfs2-common';
 import { getFixedFeeForFacility } from './get-fixed-fee-for-facility';
 import { calculateFixedFee } from './calculate-fixed-fee';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
+import { calculateUkefShareOfUtilisation } from '../../../../../helpers';
 import { aFacility, aReportPeriod, aTfmFacility, aTfmFacilityAmendment } from '../../../../../../test-helpers';
 import { NotFoundError } from '../../../../../errors';
 import * as helpers from '../../../../../helpers';
 
 jest.mock('./calculate-fixed-fee');
-jest.mock('../../../../../helpers', () => ({
-  ...jest.requireActual<object>('../../../../../helpers'),
-  getEffectiveCoverEndDateAmendment: jest.fn(),
-}));
+jest.mock('../../../../../helpers/amendments/get-effective-cover-end-date-amendment');
 
 console.error = jest.fn();
 
@@ -24,14 +22,6 @@ describe('getFixedFeeForFacility', () => {
   const getReportPeriodForDate = (date: Date): ReportPeriod => ({
     start: { month: date.getMonth() + 1, year: date.getFullYear() },
     end: { month: date.getMonth() + 1, year: date.getFullYear() },
-  });
-
-  beforeAll(() => {
-    jest.useFakeTimers();
-  });
-
-  afterAll(() => {
-    jest.useRealTimers();
   });
 
   beforeEach(() => {
@@ -135,9 +125,11 @@ describe('getFixedFeeForFacility', () => {
     // Act
     await getFixedFeeForFacility(facilityId, utilisation, reportPeriod);
 
+    const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, aFacility().coverPercentage);
+
     // Assert
     expect(calculateFixedFee).toHaveBeenCalledWith<[CalculateFixedFeeParams]>({
-      utilisation,
+      ukefShareOfUtilisation,
       reportPeriod,
       coverEndDate,
       interestPercentage,
@@ -177,9 +169,11 @@ describe('getFixedFeeForFacility', () => {
     // Act
     await getFixedFeeForFacility(facilityId, utilisation, reportPeriod);
 
+    const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, aFacility().coverPercentage);
+
     // Assert
     expect(calculateFixedFee).toHaveBeenCalledWith<[CalculateFixedFeeParams]>({
-      utilisation,
+      ukefShareOfUtilisation,
       reportPeriod,
       coverEndDate,
       interestPercentage,
@@ -225,29 +219,31 @@ describe('getFixedFeeForFacility', () => {
     const coverEndDate = addDays(TODAY, 365);
     const amendedCoverEndDate = addDays(startOfMonth(TODAY), 730); // report period starts at start of month
 
-    when(findOneByUkefFacilityIdSpy)
-      .calledWith(facilityId)
-      .mockResolvedValue({
-        ...aTfmFacility(),
-        facilitySnapshot: {
-          ...aFacility(),
-          ukefFacilityId: facilityId,
-          interestPercentage,
-          dayCountBasis,
-          coverStartDate,
-          coverEndDate,
-        },
-        amendments: [aTfmFacilityAmendment()],
-      });
+    const facility = {
+      ...aTfmFacility(),
+      facilitySnapshot: {
+        ...aFacility(),
+        ukefFacilityId: facilityId,
+        interestPercentage,
+        dayCountBasis,
+        coverStartDate,
+        coverEndDate,
+      },
+      amendments: [aTfmFacilityAmendment()],
+    };
+
+    when(findOneByUkefFacilityIdSpy).calledWith(facilityId).mockResolvedValue(facility);
 
     jest.mocked(helpers.getEffectiveCoverEndDateAmendment).mockReturnValue(amendedCoverEndDate);
 
     // Act
     await getFixedFeeForFacility(facilityId, utilisation, reportPeriod);
 
+    const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, facility.facilitySnapshot.coverPercentage);
+
     // Assert
     expect(calculateFixedFee).toHaveBeenCalledWith<[CalculateFixedFeeParams]>({
-      utilisation,
+      ukefShareOfUtilisation,
       reportPeriod,
       coverEndDate: amendedCoverEndDate,
       interestPercentage,
