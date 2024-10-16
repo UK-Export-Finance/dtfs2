@@ -28,7 +28,7 @@ const getCompany = async (req, res) => {
   }
 };
 
-const getPartyUrn = async ({ companyRegNo }) => {
+const getPartyUrn = async ({ companyRegNo, companyName }) => {
   if (!companyRegNo) {
     return '';
   }
@@ -36,7 +36,11 @@ const getPartyUrn = async ({ companyRegNo }) => {
   let partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
 
   if (partyDbInfo.status === 404) {
-    await api.createParty({ companyRegNo });
+    if (!companyName) {
+      return '';
+    }
+
+    await api.createParty({ companyRegNo, companyName });
     partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
   }
 
@@ -66,7 +70,7 @@ const addPartyUrns = async (deal, auditDetails) => {
       ...deal.tfm,
       parties: {
         exporter: {
-          partyUrn: await getPartyUrn({ companyRegNo: deal.exporter.companiesHouseRegistrationNumber }),
+          partyUrn: await getPartyUrn({ companyRegNo: deal.exporter.companiesHouseRegistrationNumber, companyName: deal.exporter.companyName }),
           partyUrnRequired: hasExporter,
         },
         buyer: {
