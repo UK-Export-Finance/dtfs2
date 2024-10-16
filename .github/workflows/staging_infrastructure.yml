@@ -1129,7 +1129,7 @@ jobs:
                 MONGO_INITDB_DATABASE="${{ env.database_name }}" \
                 MONGODB_URI="$mongo_connection_string" \
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
-                TZ="${{ vars.TZ }}"
+                TZ=${{ vars.TZ }}
 
   dtfs-central-api:
     name: DTFS Central API
@@ -1269,7 +1269,7 @@ jobs:
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
                 CHANGE_STREAM_ENABLED="${{ vars.CHANGE_STREAM_ENABLED}}" \
                 DELETION_AUDIT_LOGS_TTL_SECONDS="${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS}}" \
-                TZ="${{ vars.TZ }}"
+                TZ=${{ vars.TZ }}
 
       - name: Secrets
         uses: azure/cli@v2
@@ -1294,17 +1294,7 @@ jobs:
 
   portal-api:
     name: Portal API
-    needs:
-      [
-        set-environment,
-        vnet,
-        private-dns,
-        cosmos-db-private,
-        external-api,
-        dtfs-central-api,
-        file-storage,
-        trade-finance-manager-api,
-      ]
+    needs: [set-environment, vnet, private-dns, cosmos-db-private, external-api, dtfs-central-api, file-storage, trade-finance-manager-api]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -1452,7 +1442,7 @@ jobs:
                 CHANGE_STREAM_ENABLED="${{ vars.CHANGE_STREAM_ENABLED}}" \
                 DELETION_AUDIT_LOGS_TTL_SECONDS="${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS}}" \
                 GEF_DEAL_VERSION=${{ vars.GEF_DEAL_VERSION }} \
-                TZ="${{ vars.TZ }}"
+                TZ=${{ vars.TZ }}
 
       - name: Secrets
         uses: azure/cli@v2
@@ -1496,15 +1486,7 @@ jobs:
 
   trade-finance-manager-api:
     name: Trade Finance Manager API
-    needs:
-      [
-        set-environment,
-        vnet,
-        private-dns,
-        cosmos-db-private,
-        external-api,
-        dtfs-central-api,
-      ]
+    needs: [set-environment, vnet, private-dns, cosmos-db-private, external-api, dtfs-central-api]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -1640,7 +1622,7 @@ jobs:
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
                 CHANGE_STREAM_ENABLED="${{ vars.CHANGE_STREAM_ENABLED}}" \
                 DELETION_AUDIT_LOGS_TTL_SECONDS="${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS}}" \
-                TZ="${{ vars.TZ }}"
+                TZ=${{ vars.TZ }}
 
       - name: Secrets
         uses: azure/cli@v2
@@ -1828,7 +1810,7 @@ jobs:
                 HTTPS=1 \
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
                 UTILISATION_REPORT_MAX_FILE_SIZE_BYTES=${{ vars.UTILISATION_REPORT_MAX_FILE_SIZE_BYTES }} \
-                TZ="${{ vars.TZ }}"
+                TZ=${{ vars.TZ }}
 
       - name: Secrets
         uses: azure/cli@v2
@@ -1841,8 +1823,7 @@ jobs:
 
   trade-finance-manager-ui:
     name: Trade Finance Manager UI
-    needs:
-      [set-environment, vnet, private-dns, trade-finance-manager-api, redis]
+    needs: [set-environment, vnet, private-dns, trade-finance-manager-api, redis]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -1998,7 +1979,7 @@ jobs:
                 ENTRA_ID_TENANT_ID="${{ vars.ENTRA_ID_TENANT_ID }}" \
                 ENTRA_ID_CLIENT_SECRET="${{ vars.ENTRA_ID_CLIENT_SECRET }}" \
                 ENTRA_ID_REDIRECT_URL="${{ vars.ENTRA_ID_REDIRECT_URL }}" \
-                TZ="${{ vars.TZ }}"
+                TZ=${{ vars.TZ }}
 
       - name: Secrets
         uses: azure/cli@v2
@@ -2159,7 +2140,7 @@ jobs:
                 HTTPS=1 \
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
                 GEF_DEAL_VERSION=${{ vars.GEF_DEAL_VERSION }} \
-                TZ="${{ vars.TZ }}"
+                TZ=${{ vars.TZ }}
 
       - name: Secrets
         uses: azure/cli@v2

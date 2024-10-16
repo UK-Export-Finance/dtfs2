@@ -4,7 +4,7 @@ on:
   push:
     branches: [infrastructure]
     paths:
-      - ".github/workflows/development_infrastructure.yml"
+      - '.github/workflows/development_infrastructure.yml'
 
 env:
   # Environment
@@ -20,7 +20,7 @@ env:
   app_service_plan_egress_cidr: 172.16.42.0/28
   vm_cidr: 172.16.43.0/28
   aca_clam_av_cidr: 172.16.42.32/27
-  vnet_address_prefixes: "172.16.40.0/22 172.16.60.0/23"
+  vnet_address_prefixes: '172.16.40.0/22 172.16.60.0/23'
   production_subnet_cidr: 10.60.0.0/16
   palo_alto_next_hop: 10.50.0.100
   api_portal_access_port: 44232
@@ -1127,7 +1127,7 @@ jobs:
                 MONGO_INITDB_DATABASE="${{ env.database_name }}" \
                 MONGODB_URI="$mongo_connection_string" \
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
-                TZ="${{ vars.TZ }}"
+                TZ=${{ vars.TZ }}
 
   dtfs-central-api:
     name: DTFS Central API
@@ -1267,7 +1267,7 @@ jobs:
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
                 CHANGE_STREAM_ENABLED="${{ vars.CHANGE_STREAM_ENABLED}}" \
                 DELETION_AUDIT_LOGS_TTL_SECONDS="${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS}}" \
-                TZ="${{ vars.TZ }}"
+                TZ=${{ vars.TZ }}
 
       - name: Secrets
         uses: azure/cli@v2
@@ -1292,18 +1292,7 @@ jobs:
 
   portal-api:
     name: Portal API
-    needs:
-      [
-        set-environment,
-        vnet,
-        private-dns,
-        cosmos-db-private,
-        clamav,
-        external-api,
-        dtfs-central-api,
-        file-storage,
-        trade-finance-manager-api,
-      ]
+    needs: [set-environment, vnet, private-dns, cosmos-db-private, clamav, external-api, dtfs-central-api, file-storage, trade-finance-manager-api]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -1451,7 +1440,7 @@ jobs:
                 CHANGE_STREAM_ENABLED="${{ vars.CHANGE_STREAM_ENABLED}}" \
                 DELETION_AUDIT_LOGS_TTL_SECONDS="${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS}}" \
                 GEF_DEAL_VERSION=${{ vars.GEF_DEAL_VERSION }} \
-                TZ="${{ vars.TZ }}"
+                TZ=${{ vars.TZ }}
 
       - name: Secrets
         uses: azure/cli@v2
@@ -1495,15 +1484,7 @@ jobs:
 
   trade-finance-manager-api:
     name: Trade Finance Manager API
-    needs:
-      [
-        set-environment,
-        vnet,
-        private-dns,
-        cosmos-db-private,
-        external-api,
-        dtfs-central-api,
-      ]
+    needs: [set-environment, vnet, private-dns, cosmos-db-private, external-api, dtfs-central-api]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -1639,7 +1620,7 @@ jobs:
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
                 CHANGE_STREAM_ENABLED="${{ vars.CHANGE_STREAM_ENABLED}}" \
                 DELETION_AUDIT_LOGS_TTL_SECONDS="${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS}}" \
-                TZ="${{ vars.TZ }}"
+                TZ=${{ vars.TZ }}
 
       - name: Secrets
         uses: azure/cli@v2
@@ -1679,16 +1660,7 @@ jobs:
   # START UI setup
   portal-ui:
     name: Portal UI
-    needs:
-      [
-        set-environment,
-        vnet,
-        private-dns,
-        clamav,
-        portal-api,
-        external-api,
-        redis,
-      ]
+    needs: [set-environment, vnet, private-dns, clamav, portal-api, external-api, redis]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -1841,7 +1813,7 @@ jobs:
                 UTILISATION_REPORT_MAX_FILE_SIZE_BYTES=${{ vars.UTILISATION_REPORT_MAX_FILE_SIZE_BYTES }} \
                 CLAMAV_HOST="$clamav_host" \
                 CLAMAV_PORT="$clamav_port" \
-                TZ="${{ vars.TZ }}"
+                TZ=${{ vars.TZ }}
 
       - name: Secrets
         uses: azure/cli@v2
@@ -1854,8 +1826,7 @@ jobs:
 
   trade-finance-manager-ui:
     name: Trade Finance Manager UI
-    needs:
-      [set-environment, vnet, private-dns, trade-finance-manager-api, redis]
+    needs: [set-environment, vnet, private-dns, trade-finance-manager-api, redis]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -2006,7 +1977,7 @@ jobs:
                 HTTPS=1 \
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
                 FF_TFM_SSO_ENABLED="${{ vars.FF_TFM_SSO_ENABLED }}" \
-                TZ="${{ vars.TZ }}"
+                TZ=${{ vars.TZ }}
 
       - name: Secrets
         uses: azure/cli@v2
@@ -2167,7 +2138,7 @@ jobs:
                 HTTPS=1 \
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
                 GEF_DEAL_VERSION=${{ vars.GEF_DEAL_VERSION }} \
-                TZ="${{ vars.TZ }}"
+                TZ=${{ vars.TZ }}
 
       - name: Secrets
         uses: azure/cli@v2
