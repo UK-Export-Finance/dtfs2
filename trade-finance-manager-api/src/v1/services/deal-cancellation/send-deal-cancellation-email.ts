@@ -11,21 +11,13 @@ export const sendDealCancellationEmail = async (ukefDealId: string, dealCancella
 
   const { email: pimEmail } = await api.findOneTeam(TEAMS.PIM.id);
 
-  if (isAfter(effectiveFromDate, endOfToday)) {
-    await sendTfmEmail(CANCEL_DEAL_FUTURE_DATE, pimEmail, {
-      ukefDealId,
-      effectiveFromDate: format(dealCancellation.effectiveFrom, 'd MMMM yyyy'),
-      bankRequestDate: format(dealCancellation.bankRequestDate, 'd MMMM yyyy'),
-      cancelReason: dealCancellation.reason || '-',
-      formattedFacilitiesList: formatFacilityIds(facilityIds),
-    });
-  } else {
-    await sendTfmEmail(CANCEL_DEAL_PAST_DATE, pimEmail, {
-      ukefDealId,
-      effectiveFromDate: format(dealCancellation.effectiveFrom, 'd MMMM yyyy'),
-      bankRequestDate: format(dealCancellation.bankRequestDate, 'd MMMM yyyy'),
-      cancelReason: dealCancellation.reason || '-',
-      formattedFacilitiesList: formatFacilityIds(facilityIds),
-    });
-  }
+  const emailTemplateId = isAfter(effectiveFromDate, endOfToday) ? CANCEL_DEAL_FUTURE_DATE : CANCEL_DEAL_PAST_DATE;
+
+  await sendTfmEmail(emailTemplateId, pimEmail, {
+    ukefDealId,
+    effectiveFromDate: format(dealCancellation.effectiveFrom, 'd MMMM yyyy'),
+    bankRequestDate: format(dealCancellation.bankRequestDate, 'd MMMM yyyy'),
+    cancelReason: dealCancellation.reason || '-',
+    formattedFacilitiesList: formatFacilityIds(facilityIds),
+  });
 };
