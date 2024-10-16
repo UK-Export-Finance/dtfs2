@@ -8,6 +8,7 @@ import { getEffectiveCoverEndDateAmendment } from './amendments/get-effective-co
 /**
  * Gets the latest values for the TFM facility with the supplied facility id
  * @param facilityId - The facility id
+ * @param reportPeriod - The report period
  * @returns The latest values
  */
 export const getLatestTfmFacilityValues = async (
