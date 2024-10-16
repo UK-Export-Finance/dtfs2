@@ -226,7 +226,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
       cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
     });
 
-    describe('by clicking the back button', () => {
+    describe('by clicking the back button with checkboxes for fee records 3 and 4 checked', () => {
       beforeEach(() => {
         pages.landingPage.visit();
         cy.login(USERS.PDC_RECONCILE);
@@ -254,7 +254,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
       });
     });
 
-    describe('by clicking the cancel button', () => {
+    describe('by clicking the cancel button with checkboxes for fee records 3 and 4 checked', () => {
       beforeEach(() => {
         pages.landingPage.visit();
         cy.login(USERS.PDC_RECONCILE);
