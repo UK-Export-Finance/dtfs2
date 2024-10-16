@@ -281,24 +281,32 @@ describe(page, () => {
     wrapper.expectText('[id="addAnotherPayment-error"]').toContain('Please, tell us if you have more');
   });
 
-  it('cancel link should link to utilisation report page', () => {
+  it('cancel link should link to backLinkHref', () => {
     // Arrange
-    const addPaymentViewModel = anAddPaymentViewModel();
-    addPaymentViewModel.reportId = 123;
+    const backLinkHref = 'back-link-url';
+    const addPaymentViewModel = {
+      ...anAddPaymentViewModel(),
+      backLinkHref,
+    };
+
     const wrapper = render(addPaymentViewModel);
 
     // Assert
-    wrapper.expectLink('a:contains("Cancel")').toLinkTo('/utilisation-reports/123', 'Cancel');
+    wrapper.expectLink('a:contains("Cancel")').toLinkTo(backLinkHref, 'Cancel');
   });
 
-  it('back link should link to utilisation report page', () => {
+  it('back link should link to backLinkHref', () => {
     // Arrange
-    const addPaymentViewModel = anAddPaymentViewModel();
-    addPaymentViewModel.reportId = 123;
+    const backLinkHref = 'back-link-url';
+    const addPaymentViewModel = {
+      ...anAddPaymentViewModel(),
+      backLinkHref,
+    };
+
     const wrapper = render(addPaymentViewModel);
 
     // Assert
-    wrapper.expectLink('a:contains("Back")').toLinkTo('/utilisation-reports/123', 'Back');
+    wrapper.expectLink('a:contains("Back")').toLinkTo(backLinkHref, 'Back');
   });
 
   it('should display form heading as "New payment details" when payment number is 1', () => {

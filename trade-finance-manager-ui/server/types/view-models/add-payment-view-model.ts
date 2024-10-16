@@ -23,4 +23,5 @@ export type AddPaymentViewModel = BaseViewModel & {
   errors: PaymentErrorsViewModel;
   multipleFeeRecordsSelected: boolean;
   canAddToExistingPayment: boolean;
+  backLinkHref: string;
 };

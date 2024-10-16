@@ -9,6 +9,7 @@ import {
 import pages from '../../pages';
 import USERS from '../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
+import relative from '../../relativeURL';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context('PDC_RECONCILE users can add a payment to a report', () => {
@@ -29,44 +30,49 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
     ]);
   };
 
+  const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+    .withId(REPORT_ID)
+    .withBankId(BANK_ID)
+    .build();
+
+  const payment = PaymentEntityMockBuilder.forCurrency(PAYMENT_CURRENCY)
+    .withAmount(60)
+    .withDateReceived(new Date('2023-02-02'))
+    .withReference('REF01234')
+    .build();
+  const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report)
+    .withId(FEE_RECORD_ID_ONE)
+    .withFacilityId('11111111')
+    .withExporter('Exporter 1')
+    .withPaymentCurrency(PAYMENT_CURRENCY)
+    .withFeesPaidToUkefForThePeriod(100)
+    .withFeesPaidToUkefForThePeriodCurrency('JPY')
+    .withPaymentExchangeRate(2)
+    .withStatus('DOES_NOT_MATCH')
+    .withPayments([payment])
+    .build();
+  const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(report)
+    .withId(FEE_RECORD_ID_TWO)
+    .withFacilityId('22222222')
+    .withExporter('Exporter 2')
+    .withFeesPaidToUkefForThePeriod(200)
+    .withFeesPaidToUkefForThePeriodCurrency('EUR')
+    .withPaymentCurrency(PAYMENT_CURRENCY)
+    .withPaymentExchangeRate(0.5)
+    .withStatus('DOES_NOT_MATCH')
+    .withPayments([payment])
+    .build();
+
+  const { premiumPaymentsTab } = pages.utilisationReportPage;
+  const { premiumPaymentsTable } = premiumPaymentsTab;
+  const { selectedReportedFeesDetailsTable, recordedPaymentsDetailsTable } = pages.utilisationReportAddPaymentPage;
+
   beforeEach(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
     cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
     resetTolerances();
 
-    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
-      .withId(REPORT_ID)
-      .withBankId(BANK_ID)
-      .build();
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
-
-    const payment = PaymentEntityMockBuilder.forCurrency(PAYMENT_CURRENCY)
-      .withAmount(60)
-      .withDateReceived(new Date('2023-02-02'))
-      .withReference('REF01234')
-      .build();
-    const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report)
-      .withId(FEE_RECORD_ID_ONE)
-      .withFacilityId('11111111')
-      .withExporter('Exporter 1')
-      .withPaymentCurrency(PAYMENT_CURRENCY)
-      .withFeesPaidToUkefForThePeriod(100)
-      .withFeesPaidToUkefForThePeriodCurrency('JPY')
-      .withPaymentExchangeRate(2)
-      .withStatus('DOES_NOT_MATCH')
-      .withPayments([payment])
-      .build();
-    const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(report)
-      .withId(FEE_RECORD_ID_TWO)
-      .withFacilityId('22222222')
-      .withExporter('Exporter 2')
-      .withFeesPaidToUkefForThePeriod(200)
-      .withFeesPaidToUkefForThePeriodCurrency('EUR')
-      .withPaymentCurrency(PAYMENT_CURRENCY)
-      .withPaymentExchangeRate(0.5)
-      .withStatus('DOES_NOT_MATCH')
-      .withPayments([payment])
-      .build();
 
     const feeRecords = [feeRecordOne, feeRecordTwo];
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
@@ -79,9 +85,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
     cy.visit(`utilisation-reports/${REPORT_ID}`);
 
-    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
-      .checkbox([FEE_RECORD_ID_ONE, FEE_RECORD_ID_TWO], PAYMENT_CURRENCY, FEE_RECORD_STATUS.DOES_NOT_MATCH)
-      .click();
+    premiumPaymentsTable.checkbox([FEE_RECORD_ID_ONE, FEE_RECORD_ID_TWO], PAYMENT_CURRENCY, FEE_RECORD_STATUS.DOES_NOT_MATCH).click();
 
     cy.get('[type="submit"]').contains('Add a payment').click();
   });
@@ -91,23 +95,23 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
   });
 
   it('should render the selected fee record details', () => {
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().should('contain', '11111111');
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().should('contain', 'Exporter 1');
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().should('contain', 'JPY 100');
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().should('contain', 'GBP 50');
+    selectedReportedFeesDetailsTable().should('contain', '11111111');
+    selectedReportedFeesDetailsTable().should('contain', 'Exporter 1');
+    selectedReportedFeesDetailsTable().should('contain', 'JPY 100');
+    selectedReportedFeesDetailsTable().should('contain', 'GBP 50');
 
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().should('contain', '22222222');
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().should('contain', 'Exporter 2');
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().should('contain', 'EUR 200');
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().should('contain', 'GBP 400');
+    selectedReportedFeesDetailsTable().should('contain', '22222222');
+    selectedReportedFeesDetailsTable().should('contain', 'Exporter 2');
+    selectedReportedFeesDetailsTable().should('contain', 'EUR 200');
+    selectedReportedFeesDetailsTable().should('contain', 'GBP 400');
 
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('Total reported payments GBP 450').should('exist');
+    selectedReportedFeesDetailsTable().contains('Total reported payments GBP 450').should('exist');
   });
 
   it('should render the recorded payment details table', () => {
-    pages.utilisationReportAddPaymentPage.recordedPaymentsDetailsTable().should('contain', 'GBP 60');
-    pages.utilisationReportAddPaymentPage.recordedPaymentsDetailsTable().should('contain', '2 Feb 2023');
-    pages.utilisationReportAddPaymentPage.recordedPaymentsDetailsTable().should('contain', 'REF01234');
+    recordedPaymentsDetailsTable().should('contain', 'GBP 60');
+    recordedPaymentsDetailsTable().should('contain', '2 Feb 2023');
+    recordedPaymentsDetailsTable().should('contain', 'REF01234');
   });
 
   it('should display errors when form submitted with invalid values', () => {
@@ -145,7 +149,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
     cy.contains('Premium payments').should('exist');
 
-    cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.status(FEE_RECORD_ID_ONE), FEE_RECORD_STATUS.MATCH);
+    cy.assertText(premiumPaymentsTable.status(FEE_RECORD_ID_ONE), FEE_RECORD_STATUS.MATCH);
   });
 
   it('redirects user to premium payments tab with match success notification when taken to match whilst trying to add another payment', () => {
@@ -162,12 +166,12 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
     cy.contains('Premium payments').should('exist');
 
-    cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.status(FEE_RECORD_ID_ONE), FEE_RECORD_STATUS.MATCH);
+    cy.assertText(premiumPaymentsTable.status(FEE_RECORD_ID_ONE), FEE_RECORD_STATUS.MATCH);
 
-    cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.matchSuccessNotificationHeading(), 'Match payment recorded');
+    cy.assertText(premiumPaymentsTab.matchSuccessNotificationHeading(), 'Match payment recorded');
 
     cy.assertText(
-      pages.utilisationReportPage.premiumPaymentsTab.matchSuccessNotificationMessage(),
+      premiumPaymentsTab.matchSuccessNotificationMessage(),
       'The fee(s) are now at a Match state. Further payments cannot be added to the fee record.',
     );
   });
@@ -192,5 +196,89 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
     cy.getInputByLabelText('Payment reference').should('have.value', '');
     cy.getInputByLabelText('Yes').should('not.be.checked');
     cy.getInputByLabelText('No').should('not.be.checked');
+  });
+
+  describe('when user navigates away', () => {
+    const FEE_RECORD_ID_THREE = '33';
+    const FEE_RECORD_ID_FOUR = '44';
+
+    beforeEach(() => {
+      const feeRecordThree = FeeRecordEntityMockBuilder.forReport(report)
+        .withId(FEE_RECORD_ID_THREE)
+        .withPaymentCurrency(PAYMENT_CURRENCY)
+        .withStatus(FEE_RECORD_STATUS.TO_DO)
+        .build();
+      const feeRecordFour = FeeRecordEntityMockBuilder.forReport(report)
+        .withId(FEE_RECORD_ID_FOUR)
+        .withPaymentCurrency(PAYMENT_CURRENCY)
+        .withStatus(FEE_RECORD_STATUS.TO_DO)
+        .build();
+
+      cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+      cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
+      cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
+
+      const feeRecords = [feeRecordOne, feeRecordTwo, feeRecordThree, feeRecordFour];
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
+
+      const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
+    });
+
+    describe('by clicking the back button', () => {
+      beforeEach(() => {
+        pages.landingPage.visit();
+        cy.login(USERS.PDC_RECONCILE);
+
+        cy.visit(`utilisation-reports/${REPORT_ID}`);
+        premiumPaymentsTable.checkbox([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();
+        premiumPaymentsTable.checkbox([FEE_RECORD_ID_FOUR], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();
+
+        premiumPaymentsTab.addAPaymentButton().click();
+        cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-payment`));
+
+        cy.clickBackLink();
+      });
+
+      it('should redirect the user to the premium payments page', () => {
+        cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}?selectedFeeRecordIds=${FEE_RECORD_ID_THREE}%2C${FEE_RECORD_ID_FOUR}`));
+      });
+
+      it('should persist the selected fees', () => {
+        premiumPaymentsTable.checkbox([FEE_RECORD_ID_ONE, FEE_RECORD_ID_TWO], PAYMENT_CURRENCY, FEE_RECORD_STATUS.DOES_NOT_MATCH).should('not.be.checked');
+
+        premiumPaymentsTable.checkbox([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).should('be.checked');
+
+        premiumPaymentsTable.checkbox([FEE_RECORD_ID_FOUR], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).should('be.checked');
+      });
+    });
+
+    describe('by clicking the cancel button', () => {
+      beforeEach(() => {
+        pages.landingPage.visit();
+        cy.login(USERS.PDC_RECONCILE);
+
+        cy.visit(`utilisation-reports/${REPORT_ID}`);
+        premiumPaymentsTable.checkbox([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();
+        premiumPaymentsTable.checkbox([FEE_RECORD_ID_FOUR], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();
+
+        premiumPaymentsTab.addAPaymentButton().click();
+        cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-payment`));
+
+        cy.clickCancelLink();
+      });
+
+      it('should redirect the user to the premium payments page', () => {
+        cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}?selectedFeeRecordIds=${FEE_RECORD_ID_THREE}%2C${FEE_RECORD_ID_FOUR}`));
+      });
+
+      it('should persist the selected fees', () => {
+        premiumPaymentsTable.checkbox([FEE_RECORD_ID_ONE, FEE_RECORD_ID_TWO], PAYMENT_CURRENCY, FEE_RECORD_STATUS.DOES_NOT_MATCH).should('not.be.checked');
+
+        premiumPaymentsTable.checkbox([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).should('be.checked');
+
+        premiumPaymentsTable.checkbox([FEE_RECORD_ID_FOUR], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).should('be.checked');
+      });
+    });
   });
 });
