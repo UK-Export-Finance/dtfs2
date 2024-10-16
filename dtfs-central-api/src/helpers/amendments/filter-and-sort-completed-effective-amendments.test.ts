@@ -3,7 +3,7 @@ import { addDays, subDays } from 'date-fns';
 import { aCompletedTfmFacilityAmendment, aTfmFacilityAmendment } from '../../../test-helpers';
 import { filterAndSortCompletedEffectiveAmendments } from './filter-and-sort-completed-effective-amendments';
 
-describe('filter-and-sort-completed--effective-amendments', () => {
+describe('filter-and-sort-completed-effective-amendments', () => {
   describe('filterAndSortCompletedEffectiveAmendments', () => {
     it('should filter out all amendments which are not completed', () => {
       // Arrange

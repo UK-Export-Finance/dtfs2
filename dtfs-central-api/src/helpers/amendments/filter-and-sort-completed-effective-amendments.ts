@@ -23,7 +23,7 @@ export const filterAndSortCompletedEffectiveAmendments = (tfmFacilityAmendments:
     const dateToUse = effectiveDate ? new Date(effectiveDate) : new Date(updatedAt);
 
     if (!isValidDate(dateToUse)) {
-      const invalidField = effectiveDate ? 'effective date' : 'updated at';
+      const invalidField = effectiveDate ? 'effectiveDate' : 'updatedAt';
       const message = `Error filtering amendments - Tfm facility amendment with ID ${amendmentId.toString()} has an invalid ${invalidField}`;
       console.error(message);
       throw new Error(message);

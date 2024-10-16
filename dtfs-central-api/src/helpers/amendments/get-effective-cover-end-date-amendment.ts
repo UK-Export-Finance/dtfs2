@@ -25,6 +25,7 @@ export const getEffectiveCoverEndDateAmendment = (tfmFacility: TfmFacility, effe
   const effectiveAmendmentWithCoverEndDate = completedEffectiveAmendments.find(({ coverEndDate }) => coverEndDate);
 
   const effectiveCoverEndDateAmendment = effectiveAmendmentWithCoverEndDate?.coverEndDate ?? null;
+
   if (!effectiveCoverEndDateAmendment) {
     return null;
   }
