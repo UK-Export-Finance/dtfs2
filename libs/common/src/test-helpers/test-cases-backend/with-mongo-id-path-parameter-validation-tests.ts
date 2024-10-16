@@ -34,7 +34,7 @@ export const withMongoIdPathParameterValidationTests = ({ baseUrl, makeRequest }
       const { status } = await makeRequest(testUrl);
 
       // Assert
-      expect(status).toBe(HttpStatusCode.BadRequest);
+      expect(status).toEqual(HttpStatusCode.BadRequest);
     });
 
     it(`sets the response body 'code' field to ${API_ERROR_CODE.INVALID_MONGO_ID_PATH_PARAMETER}`, async () => {
@@ -42,7 +42,7 @@ export const withMongoIdPathParameterValidationTests = ({ baseUrl, makeRequest }
       const { body } = await makeRequest(testUrl);
 
       // Assert
-      expect(body.code).toBe(API_ERROR_CODE.INVALID_MONGO_ID_PATH_PARAMETER);
+      expect(body.code).toEqual(API_ERROR_CODE.INVALID_MONGO_ID_PATH_PARAMETER);
     });
   });
 };

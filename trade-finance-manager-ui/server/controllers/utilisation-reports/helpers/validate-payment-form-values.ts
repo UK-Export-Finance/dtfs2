@@ -1,4 +1,4 @@
-import { CURRENCY, Currency, isNonEmptyString } from '@ukef/dtfs2-common';
+import { CURRENCY, Currency, isNonEmptyString, isPaymentReferenceOverMaxCharacterCount } from '@ukef/dtfs2-common';
 import { isBefore, isValid, parseISO, startOfDay } from 'date-fns';
 import { REGEX } from '../../../constants';
 import { PaymentErrorsViewModel, PaymentDateErrorViewModel, ErrorSummaryViewModel, AddToAnExistingPaymentErrorsViewModel } from '../../../types/view-models';
@@ -30,10 +30,6 @@ const isPaymentAmountValid = (paymentAmount: string | undefined): boolean => {
 
 const isAddAnotherPaymentChoiceValid = (addAnotherPaymentChoice: string | undefined): boolean => {
   return isNonEmptyString(addAnotherPaymentChoice) && (addAnotherPaymentChoice === 'true' || addAnotherPaymentChoice === 'false');
-};
-
-const isPaymentReferenceOverFiftyCharacters = (paymentReference: string | undefined): boolean => {
-  return isNonEmptyString(paymentReference) && paymentReference.length > 50;
 };
 
 const isValidDay = (day: string) => {
@@ -146,7 +142,7 @@ const validateCommonPaymentRequestFormValues = (formValues: AddPaymentFormValues
     errorSummary.push({ text: paymentAmountErrorMessage, href: '#paymentAmount' });
   }
 
-  const paymentReferenceErrorMessage = isPaymentReferenceOverFiftyCharacters(formValues.paymentReference)
+  const paymentReferenceErrorMessage = isPaymentReferenceOverMaxCharacterCount(formValues.paymentReference)
     ? 'Payment reference must be 50 characters or less'
     : undefined;
   if (paymentReferenceErrorMessage) {

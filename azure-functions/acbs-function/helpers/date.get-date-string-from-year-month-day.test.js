@@ -84,6 +84,6 @@ describe('getDateStringFromYearMonthDay', () => {
   it.each(testData)('$description ($year, $month, $day returns $expected)', ({ year, month, day, expected }) => {
     const result = getDateStringFromYearMonthDay(year, month, day);
 
-    expect(result).toBe(expected);
+    expect(result).toEqual(expected);
   });
 });

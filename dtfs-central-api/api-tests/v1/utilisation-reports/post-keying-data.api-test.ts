@@ -13,8 +13,8 @@ import {
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
   UtilisationReportReconciliationStatus,
+  withSqlIdPathParameterValidationTests,
 } from '@ukef/dtfs2-common';
-import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
@@ -85,7 +85,7 @@ describe(`POST ${BASE_URL}`, () => {
 
   withSqlIdPathParameterValidationTests({
     baseUrl: BASE_URL,
-    makeRequest: (url) => testApi.post(aValidRequestBody()).to(url),
+    makeRequest: (url: string) => testApi.post(aValidRequestBody()).to(url),
   });
 
   it("returns a 400 (Bad Request) when the payload 'user' is an empty object", async () => {

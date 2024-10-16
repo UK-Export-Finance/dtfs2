@@ -29,7 +29,7 @@ initialise() {
 
 # Boot check
 while ! query "SELECT 1;"; do
-  echo "❌ MSSQL boot has failed, retrying..."
+  echo "❌ MSSQL boot has failed, retrying"
   sleep 3
 done
 

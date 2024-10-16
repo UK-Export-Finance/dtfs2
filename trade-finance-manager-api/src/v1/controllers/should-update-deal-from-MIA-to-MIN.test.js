@@ -39,43 +39,43 @@ describe('shouldUpdateDealFromMIAtoMIN', () => {
   it('should return false when deal object is null', () => {
     const result = shouldUpdateDealFromMIAtoMIN(null, null);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when deal object is null', () => {
     const result = shouldUpdateDealFromMIAtoMIN(miaDeal, null);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when deal object is null', () => {
     const result = shouldUpdateDealFromMIAtoMIN(minDeal, null);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when deal object is null', () => {
     const result = shouldUpdateDealFromMIAtoMIN(ainDeal, null);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when deal object is null', () => {
     const result = shouldUpdateDealFromMIAtoMIN(null, tfmDealApprovedWithConditions);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when deal object is null', () => {
     const result = shouldUpdateDealFromMIAtoMIN(null, tfmDealApprovedWithoutConditions);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when deal object is null', () => {
     const result = shouldUpdateDealFromMIAtoMIN(null, tfmDealDeclined);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should log an error message when deal does not exist either in Portal or in TFM', () => {
@@ -91,55 +91,55 @@ describe('shouldUpdateDealFromMIAtoMIN', () => {
   it('should return true when deal submission type is MIA and TFM deal object has an underwriter manager decision that is UKEF approved with or without conditions', () => {
     const result = shouldUpdateDealFromMIAtoMIN(miaDeal, tfmDealApprovedWithConditions);
 
-    expect(result).toBe(true);
+    expect(result).toEqual(true);
   });
 
   it('should return true when deal submission type is MIA and TFM deal object has an underwriter manager decision that is UKEF approved with or without conditions', () => {
     const result = shouldUpdateDealFromMIAtoMIN(miaDeal, tfmDealApprovedWithoutConditions);
 
-    expect(result).toBe(true);
+    expect(result).toEqual(true);
   });
 
   it('should return false when deal submission type is MIA and TFM deal object has an underwriter manager decision that is UKEF has declined', () => {
     const result = shouldUpdateDealFromMIAtoMIN(miaDeal, tfmDealDeclined);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when deal submission type is not MIA and TFM deal object has an underwriter manager decision that is UKEF approved with or without conditions', () => {
     const result = shouldUpdateDealFromMIAtoMIN(minDeal, tfmDealApprovedWithConditions);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when deal submission type is not MIA and TFM deal object has an underwriter manager decision that is UKEF approved with or without conditions', () => {
     const result = shouldUpdateDealFromMIAtoMIN(minDeal, tfmDealApprovedWithoutConditions);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when deal submission type is MIA and TFM deal object has an underwriter manager decision that is UKEF has declined', () => {
     const result = shouldUpdateDealFromMIAtoMIN(minDeal, tfmDealDeclined);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when deal submission type is not MIA and TFM deal object has an underwriter manager decision that is UKEF approved with or without conditions', () => {
     const result = shouldUpdateDealFromMIAtoMIN(ainDeal, tfmDealApprovedWithConditions);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when deal submission type is not MIA and TFM deal object has an underwriter manager decision that is UKEF approved with or without conditions', () => {
     const result = shouldUpdateDealFromMIAtoMIN(ainDeal, tfmDealApprovedWithoutConditions);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when deal submission type is MIA and TFM deal object has an underwriter manager decision that is UKEF has declined', () => {
     const result = shouldUpdateDealFromMIAtoMIN(ainDeal, tfmDealDeclined);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should log an info message for MIA deal after pre-condition check and before returning response back', () => {

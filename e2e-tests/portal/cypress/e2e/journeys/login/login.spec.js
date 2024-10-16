@@ -31,7 +31,7 @@ context('Login', () => {
   });
 
   it('Shows an error if email field is empty', () => {
-    landingPage.password().type('mockpass');
+    cy.keyboardInput(landingPage.password(), 'mockpass');
     landingPage.login().click();
 
     const emailError = 'Enter an email address in the correct format';
@@ -42,7 +42,7 @@ context('Login', () => {
   });
 
   it('Shows an error if password field is empty', () => {
-    landingPage.email().type('mock user');
+    cy.keyboardInput(landingPage.email(), 'mock user');
     landingPage.login().click();
 
     const passwordError = 'Enter a valid password';

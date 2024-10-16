@@ -1,5 +1,5 @@
 # Base image
-FROM mongo:5.0.5
+FROM mongo:4.2.0
 
 # Enviornment variable
 ARG MONGO_INITDB_DATABASE

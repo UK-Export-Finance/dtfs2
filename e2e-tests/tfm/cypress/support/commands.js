@@ -5,10 +5,14 @@ import './ui';
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
 
+Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
+
 // Assert an element has some exact text
 Cypress.Commands.add('assertText', require('./utils/assertText'));
 
 Cypress.Commands.add('getInputByLabelText', require('./utils/getInputByLabelText'));
+
+Cypress.Commands.add('completeDateFormFields', require('./trade-finance-manager-ui/completeDateFormFields'));
 
 // commands used to interact directly with Deal API
 // NOTE: this will eventually become TFM API, that calls Deal API.

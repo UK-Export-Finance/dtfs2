@@ -6,7 +6,7 @@ describe('utilisation-report-raw-csv-cell-data-with-location.schema', () => {
       condition      | testValue
       ${'undefined'} | ${undefined}
       ${'number'}    | ${7}
-      ${'object'}    | ${{}}
+      ${'Object'}    | ${{}}
       ${'array'}     | ${[]}
     `("sets the 'success' property to false when the cell value is: $condition", ({ testValue }: { testValue: unknown }) => {
       // Arrange
@@ -16,7 +16,7 @@ describe('utilisation-report-raw-csv-cell-data-with-location.schema', () => {
       const { success } = UtilisationReportCsvRowDataSchema.safeParse(invalidRowData);
 
       // Assert
-      expect(success).toBe(false);
+      expect(success).toEqual(false);
     });
 
     it.each`
@@ -24,7 +24,7 @@ describe('utilisation-report-raw-csv-cell-data-with-location.schema', () => {
       ${'null'}      | ${null}
       ${'undefined'} | ${undefined}
       ${'number'}    | ${7}
-      ${'object'}    | ${{}}
+      ${'Object'}    | ${{}}
       ${'array'}     | ${[]}
     `("sets the 'success' property to false when the cell column is: $condition", ({ testValue }: { testValue: unknown }) => {
       // Arrange
@@ -34,14 +34,14 @@ describe('utilisation-report-raw-csv-cell-data-with-location.schema', () => {
       const { success } = UtilisationReportCsvRowDataSchema.safeParse(invalidRowData);
 
       // Assert
-      expect(success).toBe(false);
+      expect(success).toEqual(false);
     });
 
     it.each`
       condition      | testValue
       ${'null'}      | ${null}
       ${'undefined'} | ${undefined}
-      ${'object'}    | ${{}}
+      ${'Object'}    | ${{}}
       ${'array'}     | ${[]}
     `("sets the 'success' property to false when the cell row is: $condition", ({ testValue }: { testValue: unknown }) => {
       // Arrange
@@ -51,7 +51,7 @@ describe('utilisation-report-raw-csv-cell-data-with-location.schema', () => {
       const { success } = UtilisationReportCsvRowDataSchema.safeParse(invalidRowData);
 
       // Assert
-      expect(success).toBe(false);
+      expect(success).toEqual(false);
     });
 
     it.each`
@@ -70,7 +70,7 @@ describe('utilisation-report-raw-csv-cell-data-with-location.schema', () => {
         const result = UtilisationReportCsvRowDataSchema.safeParse(validRowData);
 
         // Assert
-        expect(result.success).toBe(true);
+        expect(result.success).toEqual(true);
       },
     );
 

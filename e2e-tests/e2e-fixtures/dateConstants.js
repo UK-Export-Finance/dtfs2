@@ -134,6 +134,16 @@ const sixYearsOneDayDay = format(sixYearsOneDay, longDayFormat);
 const sixYearsOneDayMonth = format(sixYearsOneDay, longMonthFormat);
 const sixYearsOneDayYear = format(sixYearsOneDay, longYearFormat);
 
+const twelveMonthsOneDay = add(today, { months: 12, days: 1 });
+const twelveMonthsOneDayDay = format(twelveMonthsOneDay, longDayFormat);
+const twelveMonthsOneDayMonth = format(twelveMonthsOneDay, longMonthFormat);
+const twelveMonthsOneDayYear = format(twelveMonthsOneDay, longYearFormat);
+
+const twelveMonthsOneDayAgo = sub(today, { months: 12, days: 1 });
+const twelveMonthsOneDayAgoDay = format(twelveMonthsOneDayAgo, longDayFormat);
+const twelveMonthsOneDayAgoMonth = format(twelveMonthsOneDayAgo, longMonthFormat);
+const twelveMonthsOneDayAgoYear = format(twelveMonthsOneDayAgo, longYearFormat);
+
 const todayUnix = getUnixTime(today).toString();
 const todayUnixDay = format(threeDaysAgo, longDayFormat);
 const todayUnixMonth = format(threeDaysAgo, longMonthFormat);
@@ -148,6 +158,12 @@ const tomorrowUnix = getUnixTime(tomorrow).toString();
 
 const todayFormattedTimeHours = format(today, 'h');
 const todayFormattedTimeAmPm = format(today, 'aaa');
+
+/**
+ * Some tests check that validation errors appear,
+ * If a year is entered with zero as a letter. I.e, O, instead of 0.
+ */
+const yearWithZeroLetter = '2O22';
 
 module.exports = {
   shortDayFormat,
@@ -267,4 +283,13 @@ module.exports = {
   oneYearAgoDay,
   oneYearAgoMonth,
   oneYearAgoYear,
+  twelveMonthsOneDayAgo,
+  twelveMonthsOneDay,
+  twelveMonthsOneDayDay,
+  twelveMonthsOneDayMonth,
+  twelveMonthsOneDayYear,
+  twelveMonthsOneDayAgoDay,
+  twelveMonthsOneDayAgoMonth,
+  twelveMonthsOneDayAgoYear,
+  yearWithZeroLetter,
 };

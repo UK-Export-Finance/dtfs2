@@ -79,7 +79,7 @@ context('A checker selects to return a deal (with some issued facilities) to mak
 
     // return the deal to maker
     cy.clickReturnToMakerButton();
-    pages.contractReturnToMaker.comments().type('Nope!');
+    cy.keyboardInput(pages.contractReturnToMaker.comments(), 'Nope!');
     cy.clickReturnToMakerButton();
     cy.url().should('include', '/dashboard');
 

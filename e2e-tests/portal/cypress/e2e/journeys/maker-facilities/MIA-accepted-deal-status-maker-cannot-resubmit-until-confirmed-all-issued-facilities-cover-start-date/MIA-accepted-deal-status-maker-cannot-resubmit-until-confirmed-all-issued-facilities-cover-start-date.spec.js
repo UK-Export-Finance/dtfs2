@@ -144,9 +144,9 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     };
 
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().click();
-    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(NEW_BOND_COVER_START_DATE().getDate());
-    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(NEW_BOND_COVER_START_DATE().getMonth() + 1);
-    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(NEW_BOND_COVER_START_DATE().getFullYear());
+
+    cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: NEW_BOND_COVER_START_DATE() });
+
     cy.clickSubmitButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
@@ -160,9 +160,9 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     cy.url().should('eq', relative(`/contract/${dealId}/bond/${issuedCompletedBondId}/confirm-requested-cover-start-date`));
 
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().click();
-    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(NEW_BOND_COVER_START_DATE().getDate());
-    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(NEW_BOND_COVER_START_DATE().getMonth() + 1);
-    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(NEW_BOND_COVER_START_DATE().getFullYear());
+
+    cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: NEW_BOND_COVER_START_DATE() });
+
     cy.clickSubmitButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
@@ -175,9 +175,8 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     const NEW_LOAN_COVER_START_DATE = DATE_CONSTANTS.oneMonth;
 
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().click();
-    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(NEW_LOAN_COVER_START_DATE.getDate());
-    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(NEW_LOAN_COVER_START_DATE.getMonth() + 1);
-    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(NEW_LOAN_COVER_START_DATE.getFullYear());
+    cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: NEW_LOAN_COVER_START_DATE });
+
     cy.clickSubmitButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
@@ -196,9 +195,9 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     unconditionalCompletedLoanRow.changeOrConfirmCoverStartDateLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/loan/${unconditionalCompletedLoanId}/confirm-requested-cover-start-date`));
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().click();
-    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(NEW_LOAN_COVER_START_DATE.getDate());
-    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(NEW_LOAN_COVER_START_DATE.getMonth() + 1);
-    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(NEW_LOAN_COVER_START_DATE.getFullYear());
+
+    cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: NEW_LOAN_COVER_START_DATE });
+
     cy.clickSubmitButton();
 
     //---------------------------------------------------------------
@@ -298,7 +297,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     //---------------------------------------------------------------
     pages.contract.proceedToReview().should('not.be.disabled');
     cy.clickProceedToReviewButton();
-    pages.contractReadyForReview.comments().type('Updated cover start dates');
+    cy.keyboardInput(pages.contractReadyForReview.comments(), 'Updated cover start dates');
     pages.contractReadyForReview.readyForCheckersApproval().click();
     cy.url().should('eq', relative('/dashboard/deals/0'));
 

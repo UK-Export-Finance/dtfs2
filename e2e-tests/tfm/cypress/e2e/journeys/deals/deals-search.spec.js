@@ -1,14 +1,14 @@
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import { primaryNavigation } from '../../partials';
-import DATE_CONSTANTS from '../../../../../e2e-fixtures/dateConstants';
+import { yesterday } from '../../../../../e2e-fixtures/dateConstants';
 import createMockDeal from '../../../fixtures/create-mock-deal';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
 import { FACILITY_TYPE, DEAL_TYPE, ALIAS_KEY } from '../../../fixtures/constants';
 import { MOCK_APPLICATION_AIN } from '../../../fixtures/mock-gef-deals';
-import { MOCK_FACILITY_ONE } from '../../../fixtures/mock-gef-facilities';
 import { aliasSelector } from '../../../../../support/alias-selector';
+import { anUnissuedCashFacility } from '../../../../../e2e-fixtures/mock-gef-facilities';
 
 const { format } = require('date-fns');
 
@@ -50,8 +50,6 @@ context('User can view and filter multiple deals', () => {
     testId: 'DEAL_WITH_ONLY_1_FACILITY_LOAN',
     mockFacilities: [MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === FACILITY_TYPE.LOAN)],
   });
-
-  const { yesterday } = DATE_CONSTANTS;
 
   // NOTE: searching by date queries multiple fields.
   // Therefore we need to set all of these fields to yesterday.
@@ -95,7 +93,7 @@ context('User can view and filter multiple deals', () => {
       const dealId = insertedDeal._id;
       cy.updateGefDeal(dealId, MOCK_GEF_DEAL_AIN, BANK1_MAKER1);
 
-      cy.createGefFacilities(dealId, [MOCK_FACILITY_ONE], BANK1_MAKER1);
+      cy.createGefFacilities(dealId, [anUnissuedCashFacility()], BANK1_MAKER1);
 
       cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
       cy.get(aliasSelector(ALIAS_KEY.SUBMIT_DEAL)).then((submittedDeal) => {
@@ -146,17 +144,17 @@ context('User can view and filter multiple deals', () => {
       (d) => d.dealSnapshot.details?.ukefDealId === searchString || d.dealSnapshot.ukefDealId === searchString,
     );
 
-    const expectedResultsLength = bssDealsWithUkefDealId.length;
+    const expectedLength = bssDealsWithUkefDealId.length;
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
-    pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
+    pages.dealsPage.dealsTableRows().should('have.length', expectedLength);
 
-    if (expectedResultsLength === 1) {
-      cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} result for "${searchString}"`);
+    if (expectedLength === 1) {
+      cy.assertText(pages.dealsPage.heading(), `${expectedLength} result for "${searchString}"`);
     } else {
-      cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} result for "${searchString}"`);
+      cy.assertText(pages.dealsPage.heading(), `${expectedLength} result for "${searchString}"`);
     }
   });
 
@@ -165,20 +163,20 @@ context('User can view and filter multiple deals', () => {
 
     const searchString = gefDeal.dealSnapshot.ukefDealId;
 
-    const expectedResultsLength = 1;
+    const expectedLength = 1;
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
-    pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
+    pages.dealsPage.dealsTableRows().should('have.length', expectedLength);
 
-    cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} result for "${searchString}"`);
+    cy.assertText(pages.dealsPage.heading(), `${expectedLength} result for "${searchString}"`);
   });
 
   it('search/filter by bank name', () => {
     const searchString = 'UKEF test bank';
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
     const dealsWithMakerUkefTestBank = ALL_SUBMITTED_DEALS.filter((deal) => deal.dealSnapshot.bank.name.includes(searchString));
@@ -191,7 +189,7 @@ context('User can view and filter multiple deals', () => {
   it('search/filter by supplier name', () => {
     const searchString = DEAL_WITH_TEST_SUPPLIER_NAME.submissionDetails['supplier-name'];
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
     pages.dealsPage.dealsTableRows().should('have.length', 1);
@@ -202,7 +200,7 @@ context('User can view and filter multiple deals', () => {
   it('search/filter by submission type', () => {
     const searchString = DEAL_WITH_TEST_MIN_SUBMISSION_TYPE.submissionType;
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
     pages.dealsPage.dealsTableRows().should('have.length', 1);
@@ -213,7 +211,7 @@ context('User can view and filter multiple deals', () => {
   it('search/filter by buyer name', () => {
     const searchString = DEAL_WITH_TEST_BUYER_NAME.submissionDetails['buyer-name'];
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
     pages.dealsPage.dealsTableRows().should('have.length', 1);
@@ -231,7 +229,7 @@ context('User can view and filter multiple deals', () => {
 
     const searchString = submittedMiaDeal.tfm.stage;
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
     pages.dealsPage.dealsTableRows().should('have.length', 1);
@@ -253,27 +251,27 @@ context('User can view and filter multiple deals', () => {
       return null;
     });
 
-    const expectedResultsLength = dealsWithBonds.length;
+    const expectedLength = dealsWithBonds.length;
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
-    pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
+    pages.dealsPage.dealsTableRows().should('have.length', expectedLength);
 
-    cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} results for "${searchString}"`);
+    cy.assertText(pages.dealsPage.heading(), `${expectedLength} results for "${searchString}"`);
   });
 
   it('search/filter by loan productCode', () => {
     const searchString = 'EWCS';
 
-    const expectedResultsLength = 1;
+    const expectedLength = 1;
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
-    pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
+    pages.dealsPage.dealsTableRows().should('have.length', expectedLength);
 
-    cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} result for "${searchString}"`);
+    cy.assertText(pages.dealsPage.heading(), `${expectedLength} result for "${searchString}"`);
   });
 
   it('search/filter by date received in DD/MM/YYYY format', () => {
@@ -283,14 +281,14 @@ context('User can view and filter multiple deals', () => {
 
     // Note: Date received is generated on submission.
     // all deals in this test are submitted at the same time.
-    const expectedResultsLength = ALL_SUBMITTED_DEALS.length;
+    const expectedLength = ALL_SUBMITTED_DEALS.length;
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
-    pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
+    pages.dealsPage.dealsTableRows().should('have.length', expectedLength);
 
-    cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} results for "${searchString}"`);
+    cy.assertText(pages.dealsPage.heading(), `${expectedLength} results for "${searchString}"`);
   });
 
   it('search/filter by date received in DD-MM-YYYY format', () => {
@@ -300,33 +298,33 @@ context('User can view and filter multiple deals', () => {
 
     // Note: Date received is generated on submission.
     // all deals in this test are submitted at the same time.
-    const expectedResultsLength = ALL_SUBMITTED_DEALS.length;
+    const expectedLength = ALL_SUBMITTED_DEALS.length;
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
-    pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
+    pages.dealsPage.dealsTableRows().should('have.length', expectedLength);
 
-    cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} results for "${searchString}"`);
+    cy.assertText(pages.dealsPage.heading(), `${expectedLength} results for "${searchString}"`);
   });
 
   it('updates heading text and does not render any deals when no results are found', () => {
     const searchString = 'bingo';
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
-    const expectedResultsLength = 0;
+    const expectedLength = 0;
 
-    pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
+    pages.dealsPage.dealsTableRows().should('have.length', expectedLength);
 
-    cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} results for "${searchString}"`);
+    cy.assertText(pages.dealsPage.heading(), `${expectedLength} results for "${searchString}"`);
   });
 
   it('after a search has been performed, clicking `All deals` nav item returns all deals ', () => {
     const searchString = DEAL_WITH_TEST_BUYER_NAME.submissionDetails['buyer-name'];
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
     pages.dealsPage.dealsTableRows().should('have.length', 1);

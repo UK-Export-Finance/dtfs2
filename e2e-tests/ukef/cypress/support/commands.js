@@ -1,10 +1,10 @@
 import 'cypress-file-upload';
 import './click-events';
 
-import './commands/click-events';
-
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
+
+Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
 
 // Assert an element has some exact text
 Cypress.Commands.add('assertText', require('./utils/assertText'));
@@ -21,6 +21,7 @@ Cypress.Commands.add('overridePortalUserSignInTokenWithValidTokenByUsername', re
 Cypress.Commands.add('getUserByUsername', require('./portal/getUserByUsername'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('enterUsernameAndPassword', require('./portal/enterUsernameAndPassword'));
+Cypress.Commands.add('completeDateFormFields', require('./portal/completeDateFormFields'));
 
 Cypress.Commands.add('forceVisit', (url) => {
   cy.window().then((win) => win.open(url, '_self'));

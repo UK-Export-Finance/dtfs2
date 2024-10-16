@@ -165,8 +165,8 @@ exports.getById = async (req, res) => {
 };
 
 /**
- * @param {objectId | string} id - facility id to update
- * @param {object} updateBody - update to make
+ * @param {ObjectId | string} id - facility id to update
+ * @param {Object} updateBody - update to make
  * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
  * @returns {Promise<import("mongodb").ModifyResult | false>} - Modify Result from the db operation or false if the facility or deal id are invalid
  * @throws {import("@ukef/dtfs2-common").DealVersionError} - if `dealVersion` is too low & `updateBody` has property `isUsingFacilityEndDate`

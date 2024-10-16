@@ -1,5 +1,5 @@
 import { ReasonForCancellingErrorsViewModel, ReasonForCancellingViewModel } from '../../../server/types/view-models';
-import { aReasonForCancellingViewModel } from '../../../test-helpers/test-data/reason-for-cancelling-view-model';
+import { aReasonForCancellingViewModel } from '../../../test-helpers/test-data/view-models';
 import { pageRenderer } from '../../pageRenderer';
 
 const page = '../templates/case/cancellation/reason-for-cancelling.njk';
@@ -26,19 +26,20 @@ describe(page, () => {
 
     // Assert
     wrapper.expectElement('[data-cy="cancel-link"]').toExist();
-    wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo(`/case/${dealId}/deal`, 'Cancel');
+    wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo(`/case/${dealId}/cancellation/cancel`, 'Cancel');
   });
 
-  it('should render back link button linking to the case deal page', () => {
+  it('should render back link button with the passed in URL', () => {
     // Arrange
     const dealId = 'dealId';
-    const reasonForCancellingViewModel: ReasonForCancellingViewModel = { ...aReasonForCancellingViewModel(), dealId };
+    const previousPage = 'testUrl';
+    const reasonForCancellingViewModel: ReasonForCancellingViewModel = { ...aReasonForCancellingViewModel(), dealId, previousPage };
     // Act
     const wrapper = render(reasonForCancellingViewModel);
 
     // Assert
     wrapper.expectElement('[data-cy="back-link"]').toExist();
-    wrapper.expectLink('[data-cy="back-link"]').toLinkTo(`/case/${dealId}/deal`, 'Back');
+    wrapper.expectLink('[data-cy="back-link"]').toLinkTo(previousPage, 'Back');
   });
 
   it('should not render error summary when no errors', () => {
@@ -51,7 +52,7 @@ describe(page, () => {
     wrapper.expectElement('[data-cy="error-summary"]').notToExist();
   });
 
-  it('should not render in line error when there are errors', () => {
+  it('should not render in line error when there are no errors', () => {
     // Arrange
     const reasonForCancellingViewModel = aReasonForCancellingViewModel();
     // Act

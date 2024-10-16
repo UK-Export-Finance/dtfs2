@@ -47,12 +47,12 @@ describe('calculateFixedFeeAdjustment', () => {
   });
 
   it.each([
-    { condition: 'the previous fixed fee is greater', previousFixedFee: 123.456, currentFixedFee: 23.332, expectedResult: -100.12 },
-    { condition: 'the current fixed fee is greater', previousFixedFee: 23.332, currentFixedFee: 123.456, expectedResult: 100.12 },
-    { condition: 'both fixed fees are equal', previousFixedFee: 100, currentFixedFee: 100, expectedResult: 0 },
+    { condition: 'the previous fixed fee is greater', previousFixedFee: 123.456, currentFixedFee: 23.332, expected: -100.12 },
+    { condition: 'the current fixed fee is greater', previousFixedFee: 23.332, currentFixedFee: 123.456, expected: 100.12 },
+    { condition: 'both fixed fees are equal', previousFixedFee: 100, currentFixedFee: 100, expected: 0 },
   ])(
     'returns the difference between the current and previous fixed fee rounded to 2 decimal places when $condition',
-    async ({ previousFixedFee, currentFixedFee, expectedResult }) => {
+    async ({ previousFixedFee, currentFixedFee, expected }) => {
       // Arrange
       const reportPeriod = aReportPeriod();
       const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
@@ -77,7 +77,7 @@ describe('calculateFixedFeeAdjustment', () => {
       const result = await calculateFixedFeeAdjustment(feeRecord, facilityUtilisationData, reportPeriod);
 
       // Assert
-      expect(result).toBe(expectedResult);
+      expect(result).toEqual(expected);
     },
   );
 });

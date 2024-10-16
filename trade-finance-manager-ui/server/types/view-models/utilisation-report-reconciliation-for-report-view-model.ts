@@ -1,4 +1,14 @@
-import { Currency, CurrencyAndAmountString, FeeRecordStatus, KeyingSheetAdjustmentChange, KeyingSheetRowStatus, SessionBank } from '@ukef/dtfs2-common';
+import {
+  Currency,
+  CurrencyAndAmountString,
+  FeeRecordStatus,
+  KeyingSheetAdjustmentChange,
+  KeyingSheetRowStatus,
+  PaymentDetailsFilters,
+  PremiumPaymentsFilters,
+  RadioItem,
+  SessionBank,
+} from '@ukef/dtfs2-common';
 import { ErrorSummaryViewModel } from './error-summary-view-model';
 import { PremiumPaymentsTableCheckboxId } from '../premium-payments-table-checkbox-id';
 import { BaseViewModel } from './base-view-model';
@@ -54,28 +64,14 @@ export type PaymentDetailsPaymentViewModel = {
     formattedCurrencyAndAmount: CurrencyAndAmountString;
     dataSortValue: number;
   };
-  reference: string | undefined;
+  reference?: string;
   dateReceived: {
     formattedDateReceived: string;
     dataSortValue: number;
   };
 };
 
-export type PaymentDetailsViewModel = {
-  feeRecordPaymentGroupStatus: FeeRecordStatus;
-  payment: PaymentDetailsPaymentViewModel;
-  feeRecords: {
-    facilityId: string;
-    exporter: string;
-  }[];
-  reconciledBy: string;
-  dateReconciled: {
-    formattedDateReconciled: string;
-    dataSortValue: number;
-  };
-}[];
-
-export type FeeRecordPaymentGroupViewModelItem = {
+export type PremiumPaymentsViewModelItem = {
   feeRecords: FeeRecordViewModelItem[];
   totalReportedPayments: SortedAndFormattedCurrencyAndAmount;
   paymentsReceived: PaymentViewModelItem[] | undefined;
@@ -87,15 +83,74 @@ export type FeeRecordPaymentGroupViewModelItem = {
   checkboxAriaLabel: string;
 };
 
+export type PaymentDetailsFiltersViewModel = Omit<PaymentDetailsFilters, 'paymentCurrency'> & {
+  paymentCurrency: RadioItem[];
+};
+
+export type PaymentDetailsFilterErrorsViewModel = {
+  errorSummary: ErrorSummaryViewModel[];
+  facilityIdErrorMessage?: string;
+  paymentCurrencyErrorMessage?: string;
+  paymentReferenceErrorMessage?: string;
+};
+
+export type PaymentDetailsRowViewModel = {
+  payment: PaymentDetailsPaymentViewModel;
+  feeRecords: {
+    id: number;
+    facilityId: string;
+    exporter: string;
+  }[];
+  status: FeeRecordStatus;
+  reconciledBy: string;
+  dateReconciled: {
+    formattedDateReconciled: string;
+    dataSortValue: number;
+  };
+};
+
+export type PaymentDetailsViewModel = {
+  rows: PaymentDetailsRowViewModel[];
+  filters?: PaymentDetailsFiltersViewModel;
+  filterErrors?: PaymentDetailsFilterErrorsViewModel;
+  isFilterActive?: boolean;
+};
+
+export type UtilisationTableRowViewModel = {
+  feeRecordId: number;
+  facilityId: string;
+  exporter: string;
+  baseCurrency: Currency;
+  formattedValue: string;
+  formattedUtilisation: string;
+  coverPercentage: number;
+  formattedExposure: string;
+  feesAccrued: {
+    formattedCurrencyAndAmount: CurrencyAndAmountString;
+    dataSortValue: number;
+  };
+  feesPayable: {
+    formattedCurrencyAndAmount: CurrencyAndAmountString;
+    dataSortValue: number;
+  };
+};
+
+export type UtilisationDetailsViewModel = {
+  utilisationTableRows: UtilisationTableRowViewModel[];
+  downloadUrl: string;
+};
+
 export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & {
   bank: SessionBank;
   formattedReportPeriod: string;
   reportId: string;
+  premiumPayments: PremiumPaymentsViewModelItem[];
+  premiumPaymentsFilters?: PremiumPaymentsFilters;
+  premiumPaymentsFilterError?: ErrorSummaryViewModel;
+  premiumPaymentsTableDataError?: ErrorSummaryViewModel;
   enablePaymentsReceivedSorting: boolean;
-  feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[];
-  tableDataError?: ErrorSummaryViewModel;
-  filterError?: ErrorSummaryViewModel;
-  facilityIdQuery?: string;
   keyingSheet: KeyingSheetViewModel;
   paymentDetails: PaymentDetailsViewModel;
+  utilisationDetails: UtilisationDetailsViewModel;
+  displayMatchSuccessNotification: boolean;
 };

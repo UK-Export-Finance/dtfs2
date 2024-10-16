@@ -40,3 +40,44 @@ export type UtilisationReportDataValidationError = {
   value?: string | null;
   exporter?: string | null;
 };
+
+export type PremiumPaymentsFilters = {
+  facilityId?: string;
+};
+
+export type PaymentDetailsFilters = {
+  facilityId?: string;
+  paymentCurrency?: string;
+  paymentReference?: string;
+};
+
+export type ValidatedPaymentDetailsFilters = {
+  facilityId?: string;
+  paymentCurrency?: Currency;
+  paymentReference?: string;
+};
+
+export type UtilisationReportFacilityData = {
+  baseCurrency: string;
+  facilityUtilisation: string;
+};
+
+export interface CalculateFixedFeeBaseParams {
+  utilisation: number;
+  interestPercentage: number;
+  dayCountBasis: number;
+}
+
+export interface CalculateFixedFeeParams extends CalculateFixedFeeBaseParams {
+  coverEndDate: Date;
+  reportPeriod: ReportPeriod;
+}
+
+export interface CalculateFixedFeeUtilisationReportParams extends CalculateFixedFeeBaseParams {
+  coverStartDate: Date;
+  coverEndDate: Date;
+}
+
+export interface CalculateFixedFeeFromDaysRemainingParams extends CalculateFixedFeeBaseParams {
+  numberOfDaysRemainingInCoverPeriod: number;
+}

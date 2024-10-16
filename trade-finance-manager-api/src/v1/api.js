@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { HEADERS } = require('@ukef/dtfs2-common');
+const { HEADERS, InvalidDealIdError } = require('@ukef/dtfs2-common');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
 const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
 require('dotenv').config();
@@ -187,11 +187,11 @@ const findOneDeal = async (dealId) => {
 };
 
 /**
- * @param {object} params
+ * @param {Object} params
  * @param {string} params.dealId - deal to update
- * @param {object} params.dealUpdate - update to make
+ * @param {Object} params.dealUpdate - update to make
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
- * @typedef {object} ErrorParam
+ * @typedef {Object} ErrorParam
  * @property {string} message error message
  * @property {number} status HTTP status code
  * @param {(Error: ErrorParam) => any} params.onError
@@ -266,6 +266,94 @@ const submitDeal = async (dealType, dealId, auditDetails) => {
   } catch (error) {
     console.error('submitDeal: Failed to submit deal %o', error);
     return { status: error?.code || 500, data: 'Error when submitting deal' };
+  }
+};
+
+/**
+ * Updates the deal cancellation object on a TFM AIN or MIN deal
+ * @param {Object} params
+ * @param {string} params.dealId - deal cancellation to update
+ * @param {Partial<import('@ukef/dtfs2-common').TfmDealCancellation>} params.dealCancellationUpdate - deal cancellation update to make
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
+ * @returns {Promise<import('mongodb').UpdateResult>} update result object
+ */
+const updateDealCancellation = async ({ dealId, dealCancellationUpdate, auditDetails }) => {
+  try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      throw new InvalidDealIdError(dealId);
+    }
+
+    const response = await axios({
+      method: 'put',
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/cancellation`,
+      headers: headers.central,
+      data: {
+        dealCancellationUpdate,
+        auditDetails,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+/**
+ * Gets the deal cancellation object on a TFM deal
+ * @param {string} dealId - deal cancellation to update
+ * @returns {Promise<Partial<import('@ukef/dtfs2-common').TfmDealCancellation>>} - Deal cancellation object
+ */
+const getDealCancellation = async (dealId) => {
+  try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      throw new InvalidDealIdError(dealId);
+    }
+
+    const response = await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/cancellation`,
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+/**
+ * Deletes the deal cancellation object on a deal
+ * @param {Object} params
+ * @param {string} params.dealId - deal cancellation to update
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
+ * @returns {Promise<void>} update result object
+ */
+const deleteDealCancellation = async ({ dealId, auditDetails }) => {
+  try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      throw new InvalidDealIdError(dealId);
+    }
+
+    await axios({
+      method: 'delete',
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/cancellation`,
+      headers: headers.central,
+      data: {
+        auditDetails,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 };
 
@@ -700,8 +788,8 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
 
 /**
  * Get company information from Party URN
- * @param {Integer} partyUrn Party URN
- * @returns {Promise<object>} Company information
+ * @param {number} partyUrn Party URN
+ * @returns {Promise<Object>} Company information
  */
 const getCompanyInfo = async (partyUrn) => {
   try {
@@ -952,8 +1040,8 @@ const updateACBSfacility = async (facility, deal) => {
 /**
  * ACBS facility amendment
  * @param {string} ukefFacilityId UKEF Facility ID
- * @param {object} amendments Facility object comprising of amendments
- * @returns {Promise<object>} updated FMR upon success otherwise error
+ * @param {Object} amendments Facility object comprising of amendments
+ * @returns {Promise<Object>} updated FMR upon success otherwise error
  */
 const amendACBSfacility = async (amendments, facility, deal) => {
   if (amendments && facility.facilitySnapshot) {
@@ -998,8 +1086,8 @@ const getFunctionsAPI = async (url = '') => {
  * An external API call, responsible for creating
  * eStore site, directories and documents (if applicable).
  * Upon any exception an empty object is returned.
- * @param {object} data eStore API object
- * @returns {Promise<object>} eStore API response object
+ * @param {Object} data eStore API object
+ * @returns {Promise<Object>} eStore API response object
  */
 const createEstoreSite = async (data) => {
   try {
@@ -1196,7 +1284,7 @@ const findBankById = async (bankId) => {
 };
 
 /**
- * @typedef {object} GetBanksQuery
+ * @typedef {Object} GetBanksQuery
  * @property {boolean | undefined} includeReportingYears - Whether or not to include the bank reporting years
  */
 
@@ -1295,14 +1383,16 @@ const updateUtilisationReportStatus = async (reportsWithStatus, user) => {
 /**
  * Gets the utilisation report reconciliation details by report id
  * @param {string} reportId - The report id
- * @param { string | undefined } facilityIdQuery - query params object containing a facility ID query
+ * @param {import('@ukef/dtfs2-common').PremiumPaymentsFilters)} premiumPaymentsFilters - Filters to apply to the premium payments tab
+ * @param {import('@ukef/dtfs2-common').PaymentDetailsFilters)} paymentDetailsFilters - Filters to apply to the payment details tab
  * @returns {Promise<import('./api-response-types').UtilisationReportReconciliationDetailsResponseBody>}
  */
-const getUtilisationReportReconciliationDetailsById = async (reportId, facilityIdQuery) => {
+const getUtilisationReportReconciliationDetailsById = async (reportId, premiumPaymentsFilters, paymentDetailsFilters) => {
   const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/reconciliation-details/${reportId}`, {
     headers: headers.central,
     params: {
-      facilityIdQuery,
+      premiumPaymentsFilters,
+      paymentDetailsFilters,
     },
   });
 
@@ -1354,6 +1444,7 @@ const getUtilisationReportSummariesByBankIdAndYear = async (bankId, year) => {
  * @param {number} paymentAmount - The payment amount
  * @param {import('@ukef/dtfs2-common').IsoDateTimeStamp} datePaymentReceived - The date the payment was received
  * @param {string | undefined} paymentReference - The payment reference
+ * @returns {Promise<import('./api-response-types').AddPaymentResponseBody>}
  */
 const addPaymentToFeeRecords = async (reportId, feeRecordIds, user, paymentCurrency, paymentAmount, datePaymentReceived, paymentReference) => {
   const response = await axios({
@@ -1572,6 +1663,9 @@ module.exports = {
   getCompanyInfo,
   findUser,
   findUserById,
+  updateDealCancellation,
+  getDealCancellation,
+  deleteDealCancellation,
   findPortalUserById,
   updateUserTasks,
   findOneTeam,

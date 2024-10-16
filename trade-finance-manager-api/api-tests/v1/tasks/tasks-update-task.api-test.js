@@ -1,12 +1,14 @@
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const app = require('../../../src/createApp');
-const { as, put } = require('../../api')(app);
-const testUserCache = require('../../api-test-users');
+const { createApi } = require('../../api');
+const { initialiseTestUsers } = require('../../api-test-users');
 const MOCK_DEAL_MIA_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-MIA-submitted');
 const MOCK_MIA_TASKS = require('../../../src/v1/__mocks__/mock-MIA-tasks');
 const MOCK_USERS = require('../../../src/v1/__mocks__/mock-users');
 const CONSTANTS = require('../../../src/constants');
 const { mockFindOneDeal, mockUpdateDeal, mockFindUserById, mockFindOneDealFailure, mockFindOneTeam } = require('../../../src/v1/__mocks__/common-api-mocks');
+
+const { as, put } = createApi(app);
 
 describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
   const mockUser = MOCK_USERS[0];
@@ -36,7 +38,8 @@ describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
   let tokenUser;
 
   beforeAll(async () => {
-    tokenUser = await testUserCache.initialise(app);
+    const testUsers = await initialiseTestUsers(app);
+    tokenUser = testUsers().one();
   });
 
   withClientAuthenticationTests({
@@ -68,7 +71,7 @@ describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
       history: expect.any(Array),
     };
 
-    expect(status).toBe(200);
+    expect(status).toEqual(200);
     expect(body).toEqual(expectedUpdatedTask);
   });
 
@@ -81,7 +84,7 @@ describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
     const invalidDealId = 'invalid-deal-id';
     const { status, body } = await as(tokenUser).put(taskUpdate).to(`/v1/deals/${invalidDealId}/tasks/${groupId}/${taskId}`);
 
-    expect(status).toBe(400);
+    expect(status).toEqual(400);
     expect(body).toEqual({
       errors: [
         {
@@ -105,7 +108,7 @@ describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
     const invalidGroupId = 'invalid-group-id';
     const { status, body } = await as(tokenUser).put(taskUpdate).to(`/v1/deals/${taskDealId}/tasks/${invalidGroupId}/${taskId}`);
 
-    expect(status).toBe(400);
+    expect(status).toEqual(400);
     expect(body).toEqual({
       errors: [
         {
@@ -129,7 +132,7 @@ describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
     const invalidTaskId = 'invalid-task-id';
     const { status, body } = await as(tokenUser).put(taskUpdate).to(`/v1/deals/${taskDealId}/tasks/${groupId}/${invalidTaskId}`);
 
-    expect(status).toBe(400);
+    expect(status).toEqual(400);
     expect(body).toEqual({
       errors: [
         {
@@ -152,7 +155,7 @@ describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
 
     const { status, body } = await as(tokenUser).put(taskUpdate).to(validUrlToUpdateTask);
 
-    expect(status).toBe(500);
+    expect(status).toEqual(500);
     expect(body).toEqual({ data: 'Unable to update the task' });
   });
 });

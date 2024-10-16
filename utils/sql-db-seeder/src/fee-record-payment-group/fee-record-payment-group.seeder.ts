@@ -164,7 +164,7 @@ export class FeeRecordPaymentGroupSeeder {
       return;
     }
 
-    if (this.status === FEE_RECORD_STATUS.RECONCILED) {
+    if (this.status === FEE_RECORD_STATUS.RECONCILED && !this.reportIsManuallyReconciled) {
       const pdcReconcileUser = await MongoDbDataLoader.getPdcReconcileUserOrFail();
       for (const feeRecord of this.feeRecords) {
         feeRecord.updateLastUpdatedBy({ platform: 'TFM', userId: pdcReconcileUser._id.toString() });

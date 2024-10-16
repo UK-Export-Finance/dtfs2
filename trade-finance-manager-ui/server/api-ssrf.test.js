@@ -3,6 +3,9 @@ const MockAdapter = require('axios-mock-adapter');
 const api = require('./api');
 
 const mockAxios = new MockAdapter(axios);
+const localIp = '127.0.0.1';
+const urlTraversal = '../../../etc/stealpassword';
+const validId = '5ce819935e539c343f141ece';
 
 describe('API is protected against SSRF attacks', () => {
   describe('updateUserPassword', () => {
@@ -14,7 +17,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid user id' };
 
       const response = await api.updateUserPassword(urlTraversal, 'password update');
@@ -23,7 +25,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid user id' };
 
       const response = await api.updateUserPassword(localIp, 'password update');
@@ -32,9 +33,7 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Makes an axios request when the user id is valid', async () => {
-      const validUserId = '5ce819935e539c343f141ece';
-
-      const response = await api.updateUserPassword(validUserId, 'password update');
+      const response = await api.updateUserPassword(validId, 'password update');
 
       expect(response.data).toEqual(mockResponse);
     });
@@ -49,7 +48,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid user id' };
 
       const response = await api.updateUserPassword(urlTraversal, 'password update');
@@ -58,7 +56,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid user id' };
 
       const response = await api.updateUserPassword(localIp, 'password update');
@@ -67,9 +64,7 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Makes an axios request when the user id is valid', async () => {
-      const validUserId = '5ce819935e539c343f141ece';
-
-      const response = await api.updateUserPassword(validUserId, 'password update');
+      const response = await api.updateUserPassword(validId, 'password update');
 
       expect(response.data).toEqual(mockResponse);
     });
@@ -84,7 +79,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
       const response = await api.createFacilityAmendment(urlTraversal, 'mock token');
@@ -93,7 +87,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
       const response = await api.createFacilityAmendment(localIp, 'mock token');
@@ -102,9 +95,7 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Makes an axios request when the facility id is valid', async () => {
-      const validFacilityId = '5ce819935e539c343f141ece';
-
-      const response = await api.createFacilityAmendment(validFacilityId, 'mock token');
+      const response = await api.createFacilityAmendment(validId, 'mock token');
 
       expect(response).toEqual(mockResponse);
     });
@@ -119,7 +110,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const validAmendmentId = '5ce819935e539c343f141ece';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
@@ -129,20 +119,16 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
-      const validFacilityId = '5ce819935e539c343f141ece';
       const expectedResponse = { status: 400, data: 'Invalid amendment id' };
 
-      const response = await api.updateAmendment(validFacilityId, localIp, 'mock data', 'mock token');
+      const response = await api.updateAmendment(validId, localIp, 'mock data', 'mock token');
 
       expect(response).toMatchObject(expectedResponse);
     });
 
     it('Makes an axios request when the facility id is valid', async () => {
-      const validFacilityId = '5ce819935e539c343f141ece';
       const validAmendmentId = '5ce819935e539c343f141ece';
-
-      const response = await api.updateAmendment(validFacilityId, validAmendmentId, 'mock data', 'mock token');
+      const response = await api.updateAmendment(validId, validAmendmentId, 'mock data', 'mock token');
 
       expect(response.data).toEqual(mockResponse);
     });
@@ -194,7 +180,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
       const response = await apiFunction(urlTraversal, 'mock token');
@@ -203,7 +188,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
       const response = await apiFunction(localIp, 'mock token');
@@ -212,9 +196,7 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Makes an axios request when the facility id is valid', async () => {
-      const validFacilityId = '5ce819935e539c343f141ece';
-
-      const response = await apiFunction(validFacilityId, 'mock token');
+      const response = await apiFunction(validId, 'mock token');
 
       expect(response.data).toEqual(mockResponse);
     });
@@ -229,169 +211,78 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
-      const validAmendmentId = '5ce819935e539c343f141ece';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
-      const response = await api.getAmendmentById(urlTraversal, validAmendmentId, 'mock token');
+      const response = await api.getAmendmentById(urlTraversal, validId, 'mock token');
 
       expect(response).toMatchObject(expectedResponse);
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
-      const validFacilityId = '5ce819935e539c343f141ece';
       const expectedResponse = { status: 400, data: 'Invalid amendment id' };
 
-      const response = await api.getAmendmentById(validFacilityId, localIp, 'mock token');
+      const response = await api.getAmendmentById(validId, localIp, 'mock token');
 
       expect(response).toMatchObject(expectedResponse);
     });
 
     it('Makes an axios request when the facility id is valid', async () => {
-      const validFacilityId = '5ce819935e539c343f141ece';
       const validAmendmentId = '5ce819935e539c343f141ece';
 
-      const response = await api.getAmendmentById(validFacilityId, validAmendmentId, 'mock token');
+      const response = await api.getAmendmentById(validId, validAmendmentId, 'mock token');
 
       expect(response.data).toEqual(mockResponse);
     });
   });
 
-  describe('getAmendmentsByDealId', () => {
-    const mockResponse = 'Mock amendments';
-    beforeAll(() => {
-      mockAxios.reset();
-      const url = /^.*\/v1\/deals\/.*\/amendments$/;
-      mockAxios.onGet(url).reply(200, mockResponse);
-    });
-    it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
-      const expectedResponse = { status: 400, data: 'Invalid deal id' };
+  const getAmendmentDetailsByDealIdFunctionsToTest = [
+    {
+      description: 'getAmendmentsByDealId',
+      apiFunction: api.getAmendmentsByDealId,
+      url: /^.*\/v1\/deals\/.*\/amendments$/,
+    },
+    {
+      description: 'getAmendmentInProgressByDealId',
+      apiFunction: api.getAmendmentInProgressByDealId,
+      url: /^.*\/v1\/deals\/.*\/amendments\/in-progress$/,
+    },
+    {
+      description: 'getCompletedAmendmentByDealId',
+      apiFunction: api.getCompletedAmendmentByDealId,
+      url: /^.*\/v1\/deals\/.*\/amendments\/completed$/,
+    },
+    {
+      description: 'getLatestCompletedAmendmentByDealId',
+      apiFunction: api.getLatestCompletedAmendmentByDealId,
+      url: /^.*\/v1\/deals\/.*\/amendments\/completed\/latest$/,
+    },
+  ];
 
-      const response = await api.getAmendmentsByDealId(urlTraversal, 'mock token');
-
-      expect(response).toMatchObject(expectedResponse);
-    });
-
-    it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
-      const expectedResponse = { status: 400, data: 'Invalid deal id' };
-
-      const response = await api.getAmendmentsByDealId(localIp, 'mock token');
-
-      expect(response).toMatchObject(expectedResponse);
-    });
-
-    it('Makes an axios request when the deal id is valid', async () => {
-      const validDealId = '5ce819935e539c343f141ece';
-
-      const response = await api.getAmendmentsByDealId(validDealId, 'mock token');
-
-      expect(response.data).toEqual(mockResponse);
-    });
-  });
-
-  describe('getAmendmentInProgressByDealId', () => {
+  describe.each(getAmendmentDetailsByDealIdFunctionsToTest)('$description', ({ apiFunction, url }) => {
     const mockResponse = 'Mock amendment';
     beforeAll(() => {
       mockAxios.reset();
-      const url = /^.*\/v1\/deals\/.*\/amendments\/in-progress$/;
       mockAxios.onGet(url).reply(200, mockResponse);
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
-      const response = await api.getAmendmentInProgressByDealId(urlTraversal, 'mock token');
+      const response = await apiFunction(urlTraversal, 'mock token');
 
       expect(response).toMatchObject(expectedResponse);
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
-      const response = await api.getAmendmentInProgressByDealId(localIp, 'mock token');
+      const response = await apiFunction(localIp, 'mock token');
 
       expect(response).toMatchObject(expectedResponse);
     });
 
-    it('Makes an axios request when the deal id is valid', async () => {
-      const validDealId = '5ce819935e539c343f141ece';
-
-      const response = await api.getAmendmentInProgressByDealId(validDealId, 'mock token');
-
-      expect(response.data).toEqual(mockResponse);
-    });
-  });
-
-  describe('getCompletedAmendmentByDealId', () => {
-    const mockResponse = 'Mock amendment';
-    beforeAll(() => {
-      mockAxios.reset();
-      const url = /^.*\/v1\/deals\/.*\/amendments\/completed$/;
-      mockAxios.onGet(url).reply(200, mockResponse);
-    });
-
-    it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
-      const expectedResponse = { status: 400, data: 'Invalid deal id' };
-
-      const response = await api.getCompletedAmendmentByDealId(urlTraversal, 'mock token');
-
-      expect(response).toMatchObject(expectedResponse);
-    });
-
-    it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
-      const expectedResponse = { status: 400, data: 'Invalid deal id' };
-
-      const response = await api.getCompletedAmendmentByDealId(localIp, 'mock token');
-
-      expect(response).toMatchObject(expectedResponse);
-    });
-
-    it('Makes an axios request when the deal id is valid', async () => {
-      const validDealId = '5ce819935e539c343f141ece';
-
-      const response = await api.getCompletedAmendmentByDealId(validDealId, 'mock token');
-
-      expect(response.data).toEqual(mockResponse);
-    });
-  });
-
-  describe('getLatestCompletedAmendmentByDealId', () => {
-    const mockResponse = 'Mock amendment';
-    beforeAll(() => {
-      mockAxios.reset();
-      const url = /^.*\/v1\/deals\/.*\/amendments\/completed\/latest$/;
-      mockAxios.onGet(url).reply(200, mockResponse);
-    });
-
-    it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
-      const expectedResponse = { status: 400, data: 'Invalid deal id' };
-
-      const response = await api.getLatestCompletedAmendmentByDealId(urlTraversal, 'mock token');
-
-      expect(response).toMatchObject(expectedResponse);
-    });
-
-    it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
-      const expectedResponse = { status: 400, data: 'Invalid deal id' };
-
-      const response = await api.getLatestCompletedAmendmentByDealId(localIp, 'mock token');
-
-      expect(response).toMatchObject(expectedResponse);
-    });
-
-    it('Makes an axios request when the deal id is valid', async () => {
-      const validDealId = '5ce819935e539c343f141ece';
-
-      const response = await api.getLatestCompletedAmendmentByDealId(validDealId, 'mock token');
+    it('Makes an axios request when the facility id is valid', async () => {
+      const response = await apiFunction(validId, 'mock token');
 
       expect(response.data).toEqual(mockResponse);
     });
@@ -406,7 +297,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid party urn' };
 
       const response = await api.getParty(urlTraversal, 'mock token');
@@ -415,7 +305,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid party urn' };
 
       const response = await api.getParty(localIp, 'mock token');

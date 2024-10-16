@@ -1,14 +1,14 @@
 import { AzureFileInfoEntity } from '../azure-file-info';
 import { MOCK_AZURE_FILE_INFO, UtilisationReportEntityMockBuilder } from '../../test-helpers';
 import { DbRequestSource } from '../helpers';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
+import { REQUEST_PLATFORM_TYPE, UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
 
 describe('UtilisationReportEntity', () => {
   describe('updateReportWithUploadDetails', () => {
     const uploadedByUserId = 'abc123';
 
     const requestSource: DbRequestSource = {
-      platform: 'PORTAL',
+      platform: REQUEST_PLATFORM_TYPE.PORTAL,
       userId: uploadedByUserId,
     };
 
@@ -41,8 +41,8 @@ describe('UtilisationReportEntity', () => {
       expect(report.azureFileInfo).toEqual(azureFileInfo);
       expect(report.status).toEqual(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION);
 
-      expect(report.lastUpdatedByIsSystemUser).toBe(false);
-      expect(report.lastUpdatedByPortalUserId).toBe(uploadedByUserId);
+      expect(report.lastUpdatedByIsSystemUser).toEqual(false);
+      expect(report.lastUpdatedByPortalUserId).toEqual(uploadedByUserId);
       expect(report.lastUpdatedByTfmUserId).toBeNull();
     });
   });
@@ -62,10 +62,10 @@ describe('UtilisationReportEntity', () => {
       report.updateWithStatus({ status, requestSource });
 
       // Assert
-      expect(report.status).toBe(status);
-      expect(report.lastUpdatedByIsSystemUser).toBe(false);
+      expect(report.status).toEqual(status);
+      expect(report.lastUpdatedByIsSystemUser).toEqual(false);
       expect(report.lastUpdatedByPortalUserId).toBeNull();
-      expect(report.lastUpdatedByTfmUserId).toBe(requestSource.userId);
+      expect(report.lastUpdatedByTfmUserId).toEqual(requestSource.userId);
     });
   });
 });

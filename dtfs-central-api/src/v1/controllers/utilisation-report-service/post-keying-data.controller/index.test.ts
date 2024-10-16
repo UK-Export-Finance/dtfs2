@@ -64,8 +64,8 @@ describe('post-keying-data.controller', () => {
       await postKeyingData(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.NotFound);
-      expect(res._isEndCalled()).toBe(true);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
+      expect(res._isEndCalled()).toEqual(true);
     });
 
     it('responds with a 500 (Internal Server Error) if the returned fee records have an undefined report', async () => {
@@ -84,8 +84,8 @@ describe('post-keying-data.controller', () => {
       await postKeyingData(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-      expect(res._isEndCalled()).toBe(true);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+      expect(res._isEndCalled()).toEqual(true);
     });
 
     it('responds with a 200 and generates the keying data', async () => {
@@ -106,8 +106,8 @@ describe('post-keying-data.controller', () => {
       await postKeyingData(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
-      expect(res._isEndCalled()).toBe(true);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+      expect(res._isEndCalled()).toEqual(true);
       expect(mockEventHandler).toHaveBeenCalledWith({
         type: 'GENERATE_KEYING_DATA',
         payload: {
@@ -132,7 +132,7 @@ describe('post-keying-data.controller', () => {
       await postKeyingData(req, res);
 
       // Assert
-      expect(res._getData()).toBe(`Failed to generate keying data: ${errorMessage}`);
+      expect(res._getData()).toEqual(`Failed to generate keying data: ${errorMessage}`);
     });
 
     it('responds with a 500 if an unknown error occurs', async () => {
@@ -145,7 +145,7 @@ describe('post-keying-data.controller', () => {
       await postKeyingData(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
     });
 
     it('responds with a generic error message if an unknown error occurs', async () => {
@@ -158,7 +158,7 @@ describe('post-keying-data.controller', () => {
       await postKeyingData(req, res);
 
       // Assert
-      expect(res._getData()).toBe('Failed to generate keying data');
+      expect(res._getData()).toEqual('Failed to generate keying data');
     });
   });
 });

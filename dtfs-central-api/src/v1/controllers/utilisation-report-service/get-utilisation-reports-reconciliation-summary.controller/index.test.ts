@@ -1,6 +1,7 @@
 import { Request } from 'express';
 import httpMocks from 'node-mocks-http';
 import {
+  REQUEST_PLATFORM_TYPE,
   AzureFileInfoEntity,
   Bank,
   MOCK_AZURE_FILE_INFO,
@@ -158,7 +159,7 @@ describe('getReconciliationSummary', () => {
       // Arrange
       const azureFileInfo = AzureFileInfoEntity.create({
         ...MOCK_AZURE_FILE_INFO,
-        requestSource: { platform: 'PORTAL', userId: 'abc123' },
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.PORTAL, userId: 'abc123' },
       });
 
       const mockDate = new Date('2024-01');
@@ -222,7 +223,7 @@ describe('getReconciliationSummary', () => {
       // Assert
       expect(findSubmittedReportsForBankIdWithReportPeriodEndInYearMock).toHaveBeenCalledWith(bankId, Number(year));
 
-      expect(res._getStatusCode()).toBe(200);
+      expect(res._getStatusCode()).toEqual(200);
       expect(res._getData()).toEqual<{
         bankName: string;
         year: string;

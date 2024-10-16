@@ -1,4 +1,4 @@
-import { DbRequestSource, FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { REQUEST_PLATFORM_TYPE, DbRequestSource, FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { feeRecordCsvRowToSqlEntity } from './fee-record-csv-row-mapper';
 import { UtilisationReportRawCsvData } from '../types/utilisation-reports';
 import { aUtilisationReportRawCsvData } from '../../test-helpers';
@@ -8,7 +8,7 @@ describe('fee-record-helpers', () => {
     const mockDate = new Date('2024-01');
 
     const requestSource: DbRequestSource = {
-      platform: 'PORTAL',
+      platform: REQUEST_PLATFORM_TYPE.PORTAL,
       userId: 'abc123',
     };
 
@@ -33,7 +33,7 @@ describe('fee-record-helpers', () => {
       });
 
       // Assert
-      expect(feeRecordEntity instanceof FeeRecordEntity).toBe(true);
+      expect(feeRecordEntity instanceof FeeRecordEntity).toEqual(true);
       expect(feeRecordEntity).toEqual(
         expect.objectContaining<Partial<FeeRecordEntity>>({
           facilityId: rawCsvData['ukef facility id'],
@@ -64,7 +64,7 @@ describe('fee-record-helpers', () => {
       });
 
       // Assert
-      expect(feeRecordEntity instanceof FeeRecordEntity).toBe(true);
+      expect(feeRecordEntity instanceof FeeRecordEntity).toEqual(true);
       expect(feeRecordEntity.status).toEqual<FeeRecordStatus>('TO_DO');
     });
 
@@ -77,7 +77,7 @@ describe('fee-record-helpers', () => {
       });
 
       // Assert
-      expect(feeRecordEntity instanceof FeeRecordEntity).toBe(true);
+      expect(feeRecordEntity instanceof FeeRecordEntity).toEqual(true);
       expect(feeRecordEntity.status).toEqual<FeeRecordStatus>('MATCH');
     });
 

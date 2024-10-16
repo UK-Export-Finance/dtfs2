@@ -17,7 +17,7 @@ describe('utilisation-report-validator', () => {
       const { filenameError } = validateFilenameFormat(filename, dueReportPeriod);
 
       // Assert
-      expect(filenameError).toBe(`Report filename must not contain '${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}'`);
+      expect(filenameError).toEqual(`Report filename must not contain '${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}'`);
     });
 
     describe('when the due report period is a monthly report period', () => {
@@ -53,7 +53,9 @@ describe('utilisation-report-validator', () => {
           const { filenameError } = validateFilenameFormat(filename, dueReportPeriod);
 
           // Assert
-          expect(filenameError).toBe(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
+          expect(filenameError).toEqual(
+            `The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`,
+          );
         });
 
         it('should return an error with an example filename when the filename contains an incorrect year', () => {
@@ -67,7 +69,9 @@ describe('utilisation-report-validator', () => {
           const { filenameError } = validateFilenameFormat(filename, dueReportPeriod);
 
           // Assert
-          expect(filenameError).toBe(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
+          expect(filenameError).toEqual(
+            `The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`,
+          );
         });
       });
 
@@ -83,7 +87,7 @@ describe('utilisation-report-validator', () => {
         const { filenameError } = validateFilenameFormat(filename, dueReportPeriod);
 
         // Assert
-        expect(filenameError).toBe("The selected file must contain the word 'monthly'");
+        expect(filenameError).toEqual("The selected file must contain the word 'monthly'");
       });
     });
 
@@ -123,7 +127,7 @@ describe('utilisation-report-validator', () => {
         const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
 
         // Assert
-        expect(filenameError).toBe(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
+        expect(filenameError).toEqual(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
       });
 
       it('should return an error with an example filename when the filename contains an incorrect year', () => {
@@ -137,7 +141,7 @@ describe('utilisation-report-validator', () => {
         const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
 
         // Assert
-        expect(filenameError).toBe(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
+        expect(filenameError).toEqual(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
       });
 
       it("should return an error when the filename does not contain the word 'quarterly'", () => {
@@ -148,7 +152,7 @@ describe('utilisation-report-validator', () => {
         const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
 
         // Assert
-        expect(filenameError).toBe("The selected file must contain the word 'quarterly'");
+        expect(filenameError).toEqual("The selected file must contain the word 'quarterly'");
       });
     });
 
@@ -189,7 +193,7 @@ describe('utilisation-report-validator', () => {
         const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
 
         // Assert
-        expect(filenameError).toBe(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
+        expect(filenameError).toEqual(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
       });
 
       it('should return an error with an example filename when the filename contains an incorrect end year', () => {
@@ -203,7 +207,7 @@ describe('utilisation-report-validator', () => {
         const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
 
         // Assert
-        expect(filenameError).toBe(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
+        expect(filenameError).toEqual(`The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`);
       });
 
       it("should return an error when the filename does not contain the word 'quarterly'", () => {
@@ -214,7 +218,7 @@ describe('utilisation-report-validator', () => {
         const { filenameError } = validateFilenameFormat(filename, dueQuarterlyReportPeriod);
 
         // Assert
-        expect(filenameError).toBe("The selected file must contain the word 'quarterly'");
+        expect(filenameError).toEqual("The selected file must contain the word 'quarterly'");
       });
     });
   });

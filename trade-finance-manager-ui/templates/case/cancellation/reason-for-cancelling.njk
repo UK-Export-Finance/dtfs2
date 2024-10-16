@@ -21,7 +21,7 @@
 {% block sub_content %}
   {{ govukBackLink({
       text: "Back",
-      href: "/case/" + dealId + "/deal",
+      href: previousPage,
       attributes: {
         'data-cy': 'back-link'
       }
@@ -42,9 +42,9 @@
     <div class="govuk-grid-column-one-half">
       <form method="POST" autocomplete="off">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-        
+
         {{ govukCharacterCount({
-          name: "reason-for-cancelling",
+          name: "reason",
           id: "reason-for-cancelling",
           value: reasonForCancelling,
           maxlength: 1200,
@@ -71,7 +71,7 @@
             attributes: { "data-cy": "continue-button" }
             })
           }}
-          <a class="govuk-link" href="/case/{{ dealId }}/deal" data-cy="cancel-link">Cancel</a>
+          <a class="govuk-link" href="/case/{{ dealId }}/cancellation/cancel" data-cy="cancel-link">Cancel</a>
         </div>
       </form>
     </div>

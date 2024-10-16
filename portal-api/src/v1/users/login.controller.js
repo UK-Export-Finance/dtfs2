@@ -9,7 +9,7 @@ const UserDisabledError = require('../errors/user-disabled.error');
  *
  * @param {string} username - The username of the user attempting to log in.
  * @param {string} password - The password associated with the provided username.
- * @param {object} userService - An object providing user-related services, such as validation.
+ * @param {Object} userService - An object providing user-related services, such as validation.
  * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
  * @returns {Promise} A promise that resolves to an object containing either a valid JWT token and user email,
  *                    or an error message if the login fails.

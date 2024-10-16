@@ -43,7 +43,7 @@ describe('feeRecordsMatchAttachedPayments', () => {
 
     // Assert
     expect(feeRecordsAndPaymentsMatch).toHaveBeenCalledWith(feeRecordsWithoutTheirAttachedPayments, feeRecordOneWithPayments.payments, mockEntityManager);
-    expect(result).toBe(true);
+    expect(result).toEqual(true);
   });
 
   it('returns false when the payments attached to the fee records do not have the same total payments', async () => {
@@ -69,6 +69,6 @@ describe('feeRecordsMatchAttachedPayments', () => {
 
     // Assert
     expect(feeRecordsAndPaymentsMatch).toHaveBeenCalledWith(feeRecordsWithoutTheirAttachedPayments, feeRecordOneWithPayments.payments, mockEntityManager);
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 });

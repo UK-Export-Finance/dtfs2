@@ -80,7 +80,7 @@ describe('post-remove-fees-from-payment-group.controller', () => {
       await postRemoveFeesFromPaymentGroup(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
     });
 
     it("responds with a '400' if no matching fee records are found on the payment", async () => {
@@ -98,7 +98,7 @@ describe('post-remove-fees-from-payment-group.controller', () => {
       await postRemoveFeesFromPaymentGroup(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
     });
 
     it("responds with a '400' if all of the payments fee records are selected", async () => {
@@ -116,7 +116,7 @@ describe('post-remove-fees-from-payment-group.controller', () => {
       await postRemoveFeesFromPaymentGroup(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
     });
 
     it("responds with the specific error status if saving the report throws an 'ApiError'", async () => {
@@ -134,7 +134,7 @@ describe('post-remove-fees-from-payment-group.controller', () => {
       await postRemoveFeesFromPaymentGroup(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(errorStatus);
+      expect(res._getStatusCode()).toEqual(errorStatus);
     });
 
     it("responds with the specific error message if saving the report throws an 'ApiError'", async () => {
@@ -152,7 +152,7 @@ describe('post-remove-fees-from-payment-group.controller', () => {
       await postRemoveFeesFromPaymentGroup(req, res);
 
       // Assert
-      expect(res._getData()).toBe(`Failed to remove fees from payment with id ${paymentId}: ${errorMessage}`);
+      expect(res._getData()).toEqual(`Failed to remove fees from payment with id ${paymentId}: ${errorMessage}`);
     });
 
     it(`responds with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, async () => {
@@ -169,7 +169,7 @@ describe('post-remove-fees-from-payment-group.controller', () => {
       await postRemoveFeesFromPaymentGroup(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
     });
 
     it('responds with a generic error message if an unknown error occurs', async () => {
@@ -186,7 +186,7 @@ describe('post-remove-fees-from-payment-group.controller', () => {
       await postRemoveFeesFromPaymentGroup(req, res);
 
       // Assert
-      expect(res._getData()).toBe(`Failed to remove fees from payment with id ${paymentId}`);
+      expect(res._getData()).toEqual(`Failed to remove fees from payment with id ${paymentId}`);
     });
   });
 });

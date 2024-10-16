@@ -89,7 +89,7 @@ describe('submissionPortalActivity()', () => {
 
     const { status: dealStatus, body: dealBody } = await as(aMaker).post(MOCK_APPLICATION_FACILITIES).to(applicationBaseUrl);
 
-    expect(dealStatus).toBe(201);
+    expect(dealStatus).toEqual(201);
 
     const req = {
       body: {
@@ -115,7 +115,7 @@ describe('submissionPortalActivity()', () => {
 
     const { status: dealStatus, body: dealBody } = await as(aMaker).post(MOCK_APPLICATION_FACILITIES).to(applicationBaseUrl);
 
-    expect(dealStatus).toBe(201);
+    expect(dealStatus).toEqual(201);
 
     const req = {
       body: {

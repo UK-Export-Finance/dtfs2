@@ -21,19 +21,22 @@ export const getFeeRecordPaymentEntityGroupReconciliationData = async (
     throw new Error('Fee record payment entity group cannot have an empty fee records array');
   }
 
-  const reconciledFeeRecords = group.feeRecords.filter(({ status }) => status === FEE_RECORD_STATUS.RECONCILED);
+  const allFeeRecordsAreReconciled = group.feeRecords.every(({ status }) => status === FEE_RECORD_STATUS.RECONCILED);
 
-  if (reconciledFeeRecords.length === 0) {
+  if (!allFeeRecordsAreReconciled) {
     return {};
   }
 
-  const anyReconciledFeeRecordIsMissingDateReconciled = reconciledFeeRecords.some(({ dateReconciled }) => dateReconciled === null);
+  const anyReconciledFeeRecordIsMissingDateReconciled = group.feeRecords.some(({ dateReconciled }) => dateReconciled === null);
 
   if (anyReconciledFeeRecordIsMissingDateReconciled) {
-    throw new Error(`Fee records at the '${FEE_RECORD_STATUS.RECONCILED}' status cannot have a null 'dateReconciled' property`);
+    if (group.payments.length === 0) {
+      return {};
+    }
+    throw new Error(`Fee records with payments at the '${FEE_RECORD_STATUS.RECONCILED}' status cannot have a null 'dateReconciled' property`);
   }
 
-  const feeRecordsSortedByDateReconciledDescending = orderBy(reconciledFeeRecords, [(feeRecord) => feeRecord.dateReconciled!.getTime()], ['desc']);
+  const feeRecordsSortedByDateReconciledDescending = orderBy(group.feeRecords, [(feeRecord) => feeRecord.dateReconciled!.getTime()], ['desc']);
   const mostRecentlyReconciledFeeRecord = feeRecordsSortedByDateReconciledDescending.at(0)!;
 
   const { dateReconciled, reconciledByUserId } = mostRecentlyReconciledFeeRecord;

@@ -34,7 +34,7 @@ describe('validatePostAddPaymentRequestBody', () => {
     addPaymentErrorKey: AddPaymentErrorKey,
     checkedCheckboxIdList: PremiumPaymentsTableCheckboxId[],
   ) => {
-    expect(req.session.addPaymentErrorKey).toBe(addPaymentErrorKey);
+    expect(req.session.addPaymentErrorKey).toEqual(addPaymentErrorKey);
 
     const expectedCheckedCheckboxIds = checkedCheckboxIdList.reduce((obj, checkboxId) => ({ ...obj, [checkboxId]: true }), {});
     expect(req.session.checkedCheckboxIds).toEqual(expectedCheckedCheckboxIds);
@@ -55,7 +55,7 @@ describe('validatePostAddPaymentRequestBody', () => {
     validatePostAddPaymentRequestBody(req, res, next);
 
     // Assert
-    expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
+    expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
     expect(res._getRenderData()).toEqual({
       user: MOCK_TFM_SESSION_USER,
     });
@@ -74,7 +74,7 @@ describe('validatePostAddPaymentRequestBody', () => {
       validatePostAddPaymentRequestBody(req, res, next);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(REDIRECT_URL);
+      expect(res._getRedirectUrl()).toEqual(REDIRECT_URL);
     });
 
     it(`populates the session with the 'no-fee-records-selected' error and no checked checkbox ids`, () => {
@@ -107,20 +107,20 @@ describe('validatePostAddPaymentRequestBody', () => {
       validatePostAddPaymentRequestBody(req, res, next);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(REDIRECT_URL);
+      expect(res._getRedirectUrl()).toEqual(REDIRECT_URL);
     });
 
     it(`redirects to '${REDIRECT_URL}' with facility id filter if referer has one`, () => {
       // Arrange
       const { req, res } = getHttpMocks();
       req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
-      req.headers.referer = 'some-url?facilityIdQuery=1234';
+      req.headers.referer = 'some-url?premiumPaymentsFacilityId=1234';
 
       // Act
       validatePostAddPaymentRequestBody(req, res, next);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(`${REDIRECT_URL}?facilityIdQuery=1234`);
+      expect(res._getRedirectUrl()).toEqual(`${REDIRECT_URL}?premiumPaymentsFacilityId=1234`);
     });
 
     it(`populates the session with the 'different-fee-record-payment-currencies' error and the checked checkbox ids`, () => {
@@ -161,20 +161,20 @@ describe('validatePostAddPaymentRequestBody', () => {
       validatePostAddPaymentRequestBody(req, res, next);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(REDIRECT_URL);
+      expect(res._getRedirectUrl()).toEqual(REDIRECT_URL);
     });
 
     it(`redirects to '${REDIRECT_URL}' with facility id filter if referer has one`, () => {
       // Arrange
       const { req, res } = getHttpMocks();
       req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
-      req.headers.referer = 'some-url?facilityIdQuery=1234';
+      req.headers.referer = 'some-url?premiumPaymentsFacilityId=1234';
 
       // Act
       validatePostAddPaymentRequestBody(req, res, next);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(`${REDIRECT_URL}?facilityIdQuery=1234`);
+      expect(res._getRedirectUrl()).toEqual(`${REDIRECT_URL}?premiumPaymentsFacilityId=1234`);
     });
 
     it(`populates the session with the 'different-fee-record-statuses' error and the checked checkbox ids`, () => {
@@ -216,7 +216,7 @@ describe('validatePostAddPaymentRequestBody', () => {
       validatePostAddPaymentRequestBody(req, res, next);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(REDIRECT_URL);
+      expect(res._getRedirectUrl()).toEqual(REDIRECT_URL);
     });
 
     it(`populates the session with the 'multiple-does-not-match-selected' error and the checked checkbox ids`, () => {

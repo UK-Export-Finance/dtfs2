@@ -398,7 +398,7 @@ describe('report-period utils', () => {
       const result = isEqualReportPeriod(reportPeriod1, reportPeriod2);
 
       // Assert
-      expect(result).toBe(true);
+      expect(result).toEqual(true);
     });
 
     it('returns false when the two supplied report periods are not equal', () => {
@@ -416,7 +416,7 @@ describe('report-period utils', () => {
       const result = isEqualReportPeriod(reportPeriod1, reportPeriod2);
 
       // Assert
-      expect(result).toBe(false);
+      expect(result).toEqual(false);
     });
   });
 });

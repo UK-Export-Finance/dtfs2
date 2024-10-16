@@ -12,6 +12,7 @@ import { PDC_TEAMS } from '../../../fixtures/teams';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
 import USERS from '../../../fixtures/users';
 import relative from '../../relativeURL';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => {
   const reportId = 12;
@@ -74,6 +75,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
   beforeEach(() => {
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
     cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
+    cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
 
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [utilisationReport]);
 
@@ -81,6 +83,9 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
 
     const feeRecords = feeRecordIds.map((id) => aFeeRecordWithAmountStatusAndPayments(id, paymentAmount, FEE_RECORD_STATUS.MATCH, [payment]));
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
+
+    const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
     pages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
@@ -98,15 +103,20 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
       getFeeRecordCheckbox(feeRecordId).check();
     });
 
-    cy.getInputByLabelText('Amount received').type('1234');
-    cy.getInputByLabelText('Day').type('nonsense');
-    cy.getInputByLabelText('Month').type('nonsense');
-    cy.getInputByLabelText('Year').type('nonsense');
-    cy.getInputByLabelText('Payment reference (optional)').type('Some payment reference');
+    cy.keyboardInput(cy.getInputByLabelText('Amount received'), '1234');
+
+    cy.keyboardInput(cy.getInputByLabelText('Day'), 'nonsense');
+
+    cy.keyboardInput(cy.getInputByLabelText('Month'), 'nonsense');
+
+    cy.keyboardInput(cy.getInputByLabelText('Year'), 'nonsense');
+
+    cy.keyboardInput(cy.getInputByLabelText('Payment reference (optional)'), 'Some payment reference');
 
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
 
     errorSummary().contains('You cannot remove all the fees. Delete the payment instead.');
+
     feeRecordIds.forEach((feeRecordId) => {
       getFeeRecordCheckbox(feeRecordId).should('be.checked');
     });
@@ -126,11 +136,15 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
 
     getFeeRecordCheckbox(feeRecordIdToRemove).check();
 
-    cy.getInputByLabelText('Amount received').type('1234');
-    cy.getInputByLabelText('Day').type('nonsense');
-    cy.getInputByLabelText('Month').type('nonsense');
-    cy.getInputByLabelText('Year').type('nonsense');
-    cy.getInputByLabelText('Payment reference (optional)').type('Some payment reference');
+    cy.keyboardInput(cy.getInputByLabelText('Amount received'), '1234');
+
+    cy.keyboardInput(cy.getInputByLabelText('Day'), 'nonsense');
+
+    cy.keyboardInput(cy.getInputByLabelText('Month'), 'nonsense');
+
+    cy.keyboardInput(cy.getInputByLabelText('Year'), 'nonsense');
+
+    cy.keyboardInput(cy.getInputByLabelText('Payment reference (optional)'), 'Some payment reference');
 
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
 

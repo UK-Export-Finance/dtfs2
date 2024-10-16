@@ -24,6 +24,8 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
     coverEndDate: new Date().getTime(),
     interestPercentage: 5,
     dayCountBasis: 365,
+    coverPercentage: 80,
+    value: 100000,
   });
 
   const TFM_FACILITIES = [
@@ -107,6 +109,40 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
     cy.visit(`utilisation-reports/${REPORT_ID}`);
     pages.utilisationReportPage.premiumPaymentsTab.generateKeyingDataButton().click();
     pages.checkKeyingDataPage.generateKeyingSheetDataButton().click();
+  });
+
+  describe('when logging in as "PDC_RECONCILE" user', () => {
+    it('should display the relevant text', () => {
+      pages.utilisationReportPage.premiumPaymentsTab.selectPaymentsText().should('exist');
+      pages.utilisationReportPage.premiumPaymentsTab.paymentsOnPremiumPaymentsText().should('exist');
+
+      cy.assertText(
+        pages.utilisationReportPage.premiumPaymentsTab.selectPaymentsText(),
+        'Select payments and mark as done when the adjustments have been keyed into ACBS.',
+      );
+      cy.assertText(
+        pages.utilisationReportPage.premiumPaymentsTab.paymentsOnPremiumPaymentsText(),
+        'Payments on the premium payments tab will show as reconciled when they have been marked as done here.',
+      );
+    });
+  });
+
+  describe('when logging in as "PDC_READ" user', () => {
+    it('should display the relevant text', () => {
+      pages.landingPage.visit();
+      cy.login(USERS.PDC_READ);
+
+      cy.visit(`utilisation-reports/${REPORT_ID}`);
+      pages.utilisationReportPage.keyingSheetTabLink().click();
+
+      pages.utilisationReportPage.premiumPaymentsTab.selectPaymentsText().should('not.exist');
+      pages.utilisationReportPage.premiumPaymentsTab.paymentsOnPremiumPaymentsText().should('exist');
+
+      cy.assertText(
+        pages.utilisationReportPage.premiumPaymentsTab.paymentsOnPremiumPaymentsText(),
+        'Payments on the premium payments tab will show as reconciled when they have been marked as done here.',
+      );
+    });
   });
 
   it('can mark keying sheet rows as done and to do', () => {
