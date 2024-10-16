@@ -335,6 +335,7 @@ describe(`POST ${BASE_URL}`, () => {
         interestPercentage: 100,
         // 1095 days after report period end
         coverEndDate: new Date('2027-03-01'),
+        coverPercentage: 80,
       },
       amendments: [
         {
