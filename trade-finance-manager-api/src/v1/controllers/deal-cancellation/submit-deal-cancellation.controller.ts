@@ -19,8 +19,11 @@ export type SubmitDealCancellationRequest = CustomExpressRequest<{
 export const submitDealCancellation = async (req: SubmitDealCancellationRequest, res: Response) => {
   const cancellation = req.body;
   try {
-    // TODO: DTFS2-7298 - update cancellation in database
-    await sendDealCancellationEmail(cancellation);
+    // TODO: DTFS2-7298 - update cancellation in database & return cancelled deal/facility ids
+    const ukefDealId = '00123144';
+    const facilityIds = ['00123145', '00123146'];
+
+    await sendDealCancellationEmail(ukefDealId, cancellation, facilityIds);
     return res.status(HttpStatusCode.Ok).send();
   } catch (error) {
     const errorMessage = 'Failed to submit deal cancellation';

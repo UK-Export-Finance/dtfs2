@@ -895,6 +895,11 @@ const updateUserTasks = async (userId, updatedTasks) => {
   }
 };
 
+/**
+ * find one team
+ * @param {string} teamId - the team id
+ * @returns {Promise<import('@ukef/dtfs2-common').Team>}
+ */
 const findOneTeam = async (teamId) => {
   try {
     const isValidId = isValidTeamId(teamId);
