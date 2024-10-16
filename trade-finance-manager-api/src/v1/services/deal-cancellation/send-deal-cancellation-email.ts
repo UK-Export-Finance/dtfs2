@@ -3,9 +3,7 @@ import { TEAMS, TfmDealCancellation } from '@ukef/dtfs2-common';
 import sendTfmEmail from '../send-tfm-email';
 import { CANCEL_DEAL_PAST_DATE, CANCEL_DEAL_FUTURE_DATE } from '../../../constants/email-template-ids';
 import * as api from '../../api';
-
-const formatFacilityIds = (facilityIds: string[]) =>
-  facilityIds.reduce((previousValue, currentValue, index) => `${previousValue}\n ${index + 1}. Facility ID ${currentValue}`, '');
+import { formatFacilityIds } from './helpers/format-facility-ids';
 
 export const sendDealCancellationEmail = async (ukefDealId: string, dealCancellation: TfmDealCancellation, facilityIds: string[]) => {
   const effectiveFromDate = toDate(dealCancellation.effectiveFrom);
