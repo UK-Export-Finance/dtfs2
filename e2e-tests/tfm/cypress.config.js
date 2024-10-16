@@ -6,7 +6,7 @@ const { createTasks } = require('../support/tasks');
 // Read from root `./.env` directory
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-const { TZ, TFM_API_KEY } = process.env;
+const { TFM_API_KEY, TZ } = process.env;
 
 module.exports = defineConfig({
   TZ,
@@ -40,6 +40,9 @@ module.exports = defineConfig({
     specPattern: 'cypress/e2e/**/*.spec.js',
     setupNodeEvents(on) {
       on('task', createTasks());
+    },
+    env: {
+      TZ,
     },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],
