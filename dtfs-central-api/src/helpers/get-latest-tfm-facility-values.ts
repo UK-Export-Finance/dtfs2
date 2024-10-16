@@ -1,7 +1,9 @@
+import { endOfMonth } from 'date-fns';
+import { getDateFromMonthAndYear, ReportPeriod } from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo } from '../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../errors';
 import { convertTimestampToDate } from './convert-timestamp-to-date';
-import { getLatestCompletedAmendmentCoverEndDate } from './amendments';
+import { getEffectiveCoverEndDateAmendment } from './amendments/get-effective-cover-end-date-amendment';
 
 /**
  * Gets the latest values for the TFM facility with the supplied facility id
@@ -10,6 +12,7 @@ import { getLatestCompletedAmendmentCoverEndDate } from './amendments';
  */
 export const getLatestTfmFacilityValues = async (
   facilityId: string,
+  reportPeriod: ReportPeriod,
 ): Promise<{
   coverEndDate: Date;
   coverStartDate: Date;
@@ -23,7 +26,9 @@ export const getLatestTfmFacilityValues = async (
   }
 
   const { coverEndDate: snapshotCoverEndDate, coverStartDate, dayCountBasis, interestPercentage, coverPercentage } = tfmFacility.facilitySnapshot;
-  const latestAmendedCoverEndDate = getLatestCompletedAmendmentCoverEndDate(tfmFacility);
+
+  const endDateOfReportPeriod = endOfMonth(getDateFromMonthAndYear(reportPeriod.end));
+  const latestAmendedCoverEndDate = getEffectiveCoverEndDateAmendment(tfmFacility, endDateOfReportPeriod);
 
   const coverEndDate = latestAmendedCoverEndDate ?? snapshotCoverEndDate;
   if (!coverEndDate) {
