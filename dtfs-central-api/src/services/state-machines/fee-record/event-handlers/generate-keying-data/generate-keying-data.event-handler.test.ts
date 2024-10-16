@@ -9,8 +9,9 @@ import {
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { handleFeeRecordGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
-import { aReportPeriod } from '../../../../../../test-helpers';
+import { aReportPeriod, aFacility } from '../../../../../../test-helpers';
 import { calculateFixedFeeAdjustment, calculatePrincipalBalanceAdjustment, updateFacilityUtilisationData } from '../helpers';
+import { getLatestTfmFacilityValues, convertTimestampToDate } from '../../../../../helpers';
 
 jest.mock<unknown>('../helpers', () => ({
   ...jest.requireActual('../helpers'),
@@ -18,6 +19,8 @@ jest.mock<unknown>('../helpers', () => ({
   calculatePrincipalBalanceAdjustment: jest.fn(),
   updateFacilityUtilisationData: jest.fn(),
 }));
+
+jest.mock('../../../../../helpers/get-latest-tfm-values');
 
 describe('handleFeeRecordGenerateKeyingDataEvent', () => {
   const mockSave = jest.fn();
@@ -33,10 +36,21 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
 
   const aMatchingFeeRecord = () => FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withStatus('MATCH').build();
 
+  const facility = aFacility();
+
+  const tfmFacilityReturnedValues = {
+    coverEndDate: convertTimestampToDate(facility.coverEndDate as Date),
+    coverStartDate: convertTimestampToDate(facility.coverStartDate as Date),
+    dayCountBasis: facility.dayCountBasis,
+    interestPercentage: facility.interestPercentage,
+    coverPercentage: facility.coverPercentage,
+  };
+
   beforeEach(() => {
     jest.mocked(calculateFixedFeeAdjustment).mockResolvedValue(10);
     jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(20);
     jest.mocked(updateFacilityUtilisationData).mockResolvedValue(aFacilityUtilisationDataEntity());
+    jest.mocked(getLatestTfmFacilityValues).mockResolvedValue(tfmFacilityReturnedValues);
   });
 
   afterEach(() => {
@@ -88,7 +102,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
 
       // Assert
       expect(feeRecord.principalBalanceAdjustment).toEqual(200);
-      expect(calculatePrincipalBalanceAdjustment).toHaveBeenCalledWith(feeRecord, facilityUtilisationData);
+      expect(calculatePrincipalBalanceAdjustment).toHaveBeenCalledWith(feeRecord, facilityUtilisationData, facility.coverPercentage);
     });
 
     it('saves the updated fee record with the supplied entity manager', async () => {

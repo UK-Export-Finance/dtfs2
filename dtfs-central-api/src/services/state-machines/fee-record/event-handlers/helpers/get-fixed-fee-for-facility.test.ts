@@ -4,6 +4,7 @@ import { ReportPeriod, CalculateFixedFeeParams } from '@ukef/dtfs2-common';
 import { getFixedFeeForFacility } from './get-fixed-fee-for-facility';
 import { calculateFixedFee } from './calculate-fixed-fee';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
+import { calculateUkefShareOfUtilisation } from '../../../../../helpers';
 import { aFacility, aReportPeriod, aTfmFacility, aTfmFacilityAmendment } from '../../../../../../test-helpers';
 import { NotFoundError } from '../../../../../errors';
 
@@ -119,9 +120,11 @@ describe('getFixedFeeForFacility', () => {
     // Act
     await getFixedFeeForFacility(facilityId, utilisation, reportPeriod);
 
+    const calculatedUtilisation = calculateUkefShareOfUtilisation(utilisation, aFacility().coverPercentage);
+
     // Assert
     expect(calculateFixedFee).toHaveBeenCalledWith<[CalculateFixedFeeParams]>({
-      utilisation,
+      utilisation: calculatedUtilisation,
       reportPeriod,
       coverEndDate,
       interestPercentage,
@@ -159,9 +162,11 @@ describe('getFixedFeeForFacility', () => {
     // Act
     await getFixedFeeForFacility(facilityId, utilisation, reportPeriod);
 
+    const calculatedUtilisation = calculateUkefShareOfUtilisation(utilisation, aFacility().coverPercentage);
+
     // Assert
     expect(calculateFixedFee).toHaveBeenCalledWith<[CalculateFixedFeeParams]>({
-      utilisation,
+      utilisation: calculatedUtilisation,
       reportPeriod,
       coverEndDate,
       interestPercentage,
@@ -203,9 +208,11 @@ describe('getFixedFeeForFacility', () => {
     // Act
     await getFixedFeeForFacility(facilityId, utilisation, reportPeriod);
 
+    const calculatedUtilisation = calculateUkefShareOfUtilisation(utilisation, aFacility().coverPercentage);
+
     // Assert
     expect(calculateFixedFee).toHaveBeenCalledWith<[CalculateFixedFeeParams]>({
-      utilisation,
+      utilisation: calculatedUtilisation,
       reportPeriod,
       coverEndDate: amendedCoverEndDate,
       interestPercentage,

@@ -3,6 +3,7 @@ import { calculateInitialUtilisationAndFixedFee, parseDate, hasRequiredValues, R
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { aTfmFacility } from '../../../../../../test-helpers';
 import { calculateInitialFixedFee } from './calculate-initial-fixed-fee';
+import { calculateUkefShareOfUtilisation } from '../../../../../helpers';
 
 describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
   describe('parseDate', () => {
@@ -52,6 +53,7 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
       dayCountBasis: 3,
       coverStartDate: new Date(),
       coverEndDate: new Date(),
+      coverPercentage: 4,
     } as RequiredParams;
 
     it('should return true if all values are present', () => {
@@ -71,6 +73,11 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
 
     it('should return false if the dayCountBasis is not provided', () => {
       const result = hasRequiredValues({ ...baseParams, dayCountBasis: null });
+      expect(result).toEqual(false);
+    });
+
+    it('should return false if the coverPercentage is not provided', () => {
+      const result = hasRequiredValues({ ...baseParams, coverPercentage: null });
       expect(result).toEqual(false);
     });
 
@@ -144,9 +151,11 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
         const { value, coverStartDate, coverEndDate, interestPercentage, dayCountBasis } = facility.facilitySnapshot;
 
         const utilisation = calculateInitialUtilisation(value);
+        const calculatedUtilisation = calculateUkefShareOfUtilisation(utilisation, facility.facilitySnapshot.coverPercentage);
+
         const expected = {
           fixedFee: calculateInitialFixedFee({
-            utilisation,
+            utilisation: calculatedUtilisation,
             coverStartDate: parseDate(coverStartDate),
             coverEndDate: parseDate(coverEndDate),
             interestPercentage,
