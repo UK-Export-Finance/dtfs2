@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { CustomExpressRequest, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { isEmpty } from 'lodash';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { asUserSession } from '../../../helpers/express-session';
@@ -8,7 +8,10 @@ import api from '../../../api';
 import { CheckDetailsViewModel } from '../../../types/view-models';
 
 export type GetDealCancellationDetailsRequest = CustomExpressRequest<{ params: { _id: string } }>;
-export type PostDealCancellationDetailsRequest = CustomExpressRequest<{ params: { _id: string }; reqBody: { cancellation: Partial<TfmDealCancellation> } }>;
+export type PostDealCancellationDetailsRequest = CustomExpressRequest<{
+  params: { _id: string };
+  reqBody: { reason: string; effectiveFrom: string; bankRequestDate: string };
+}>;
 
 /**
  * controller to get deal cancellation details
@@ -44,6 +47,7 @@ export const getDealCancellationDetails = async (req: GetDealCancellationDetails
       dealId: _id,
       cancellation,
     };
+
     return res.render('case/cancellation/check-details.njk', checkDetailsViewModel);
   } catch (error) {
     console.error('Error getting deal cancellation details', error);
@@ -59,9 +63,11 @@ export const getDealCancellationDetails = async (req: GetDealCancellationDetails
  */
 export const postDealCancellationDetails = async (req: PostDealCancellationDetailsRequest, res: Response) => {
   const { _id } = req.params;
-  const {
-    cancellation: { reason, bankRequestDate, effectiveFrom },
-  } = req.body;
+  const { reason } = req.body;
+
+  const bankRequestDate = Number(req.body.bankRequestDate);
+  const effectiveFrom = Number(req.body.effectiveFrom);
+
   const { userToken } = asUserSession(req.session);
 
   try {
@@ -72,9 +78,10 @@ export const postDealCancellationDetails = async (req: PostDealCancellationDetai
     }
 
     const submissionTypeCanBeCancelled = canSubmissionTypeBeCancelled(deal.dealSnapshot.submissionType);
-    const cancellationIncomplete = reason === undefined || !bankRequestDate || !effectiveFrom;
 
-    if (!submissionTypeCanBeCancelled || cancellationIncomplete) {
+    const cancellationInvalid = reason === undefined || !bankRequestDate || Number.isNaN(bankRequestDate) || !effectiveFrom || Number.isNaN(effectiveFrom);
+
+    if (!submissionTypeCanBeCancelled || cancellationInvalid) {
       return res.redirect(`/case/${_id}/deal`);
     }
 
