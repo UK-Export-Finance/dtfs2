@@ -18,7 +18,7 @@ const createUser = async (user, auditDetails) => {
 exports.createUser = createUser;
 
 /**
- * @deprecated Do not use -- Favour TFM API (removal todo:DTFS2-7160)
+ * @deprecated Do not use (removal todo:DTFS2-6892)
  */
 exports.createTfmUser = async (req, res) => {
   const { user: payload, auditDetails } = req.body;
