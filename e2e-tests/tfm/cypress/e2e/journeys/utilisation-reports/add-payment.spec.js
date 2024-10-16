@@ -5,6 +5,7 @@ import {
   PaymentMatchingToleranceEntityMockBuilder,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
+  CURRENCY,
 } from '@ukef/dtfs2-common';
 import pages from '../../pages';
 import USERS from '../../../fixtures/users';
@@ -46,9 +47,9 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
     .withExporter('Exporter 1')
     .withPaymentCurrency(PAYMENT_CURRENCY)
     .withFeesPaidToUkefForThePeriod(100)
-    .withFeesPaidToUkefForThePeriodCurrency('JPY')
+    .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.JPY)
     .withPaymentExchangeRate(2)
-    .withStatus('DOES_NOT_MATCH')
+    .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
     .withPayments([payment])
     .build();
   const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(report)
@@ -56,10 +57,10 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
     .withFacilityId('22222222')
     .withExporter('Exporter 2')
     .withFeesPaidToUkefForThePeriod(200)
-    .withFeesPaidToUkefForThePeriodCurrency('EUR')
+    .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.EUR)
     .withPaymentCurrency(PAYMENT_CURRENCY)
     .withPaymentExchangeRate(0.5)
-    .withStatus('DOES_NOT_MATCH')
+    .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
     .withPayments([payment])
     .build();
 
