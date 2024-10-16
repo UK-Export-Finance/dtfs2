@@ -6,8 +6,13 @@ import { calculateFixedFee } from './calculate-fixed-fee';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { aFacility, aReportPeriod, aTfmFacility, aTfmFacilityAmendment } from '../../../../../../test-helpers';
 import { NotFoundError } from '../../../../../errors';
+import * as helpers from '../../../../../helpers';
 
 jest.mock('./calculate-fixed-fee');
+jest.mock('../../../../../helpers', () => ({
+  ...jest.requireActual<object>('../../../../../helpers'),
+  getEffectiveCoverEndDateAmendment: jest.fn(),
+}));
 
 console.error = jest.fn();
 
@@ -21,7 +26,16 @@ describe('getFixedFeeForFacility', () => {
     end: { month: date.getMonth() + 1, year: date.getFullYear() },
   });
 
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   beforeEach(() => {
+    jest.mocked(helpers.getEffectiveCoverEndDateAmendment).mockReturnValue(null);
     findOneByUkefFacilityIdSpy.mockRejectedValue(new Error('Some error'));
   });
 
@@ -59,6 +73,8 @@ describe('getFixedFeeForFacility', () => {
           coverEndDate: null,
         },
       });
+
+    jest.mocked(helpers.getEffectiveCoverEndDateAmendment).mockReturnValue(null);
 
     // Act / Assert
     await expect(getFixedFeeForFacility(facilityId, 0, aReportPeriod())).rejects.toThrow(
@@ -156,6 +172,8 @@ describe('getFixedFeeForFacility', () => {
         amendments: [],
       });
 
+    jest.mocked(helpers.getEffectiveCoverEndDateAmendment).mockReturnValue(null);
+
     // Act
     await getFixedFeeForFacility(facilityId, utilisation, reportPeriod);
 
@@ -169,7 +187,32 @@ describe('getFixedFeeForFacility', () => {
     });
   });
 
-  it('calculates the fixed fee using the latest completed amendment amended cover end date', async () => {
+  it('should fetch any completed amendments to cover end date effective at the end of the report period', async () => {
+    // Arrange
+    const facilityId = '12345678';
+
+    const reportPeriod = { start: { month: 12, year: 2023 }, end: { month: 2, year: 2024 } };
+
+    const tfmFacility = {
+      ...aTfmFacility(),
+      facilitySnapshot: {
+        ...aFacility(),
+        ukefFacilityId: facilityId,
+      },
+      amendments: [aTfmFacilityAmendment()],
+    };
+    when(findOneByUkefFacilityIdSpy).calledWith(facilityId).mockResolvedValue(tfmFacility);
+
+    const getAmendmentSpy = jest.spyOn(helpers, 'getEffectiveCoverEndDateAmendment').mockReturnValue(addDays(TODAY, 365));
+
+    // Act
+    await getFixedFeeForFacility(facilityId, 10000, reportPeriod);
+
+    // Assert
+    expect(getAmendmentSpy).toHaveBeenCalledWith(tfmFacility, new Date('2024-02-29T23:59:59.999Z'));
+  });
+
+  it('calculates the fixed fee using the current effective completed cover end date amendment', async () => {
     // Arrange
     const facilityId = '12345678';
 
@@ -194,11 +237,10 @@ describe('getFixedFeeForFacility', () => {
           coverStartDate,
           coverEndDate,
         },
-        amendments: [
-          { ...aTfmFacilityAmendment(), status: 'Completed', coverEndDate: coverEndDate.getTime(), updatedAt: new Date('2023').getTime() },
-          { ...aTfmFacilityAmendment(), status: 'Completed', coverEndDate: amendedCoverEndDate.getTime(), updatedAt: new Date('2024').getTime() }, // most recent `updatedAt` value
-        ],
+        amendments: [aTfmFacilityAmendment()],
       });
+
+    jest.mocked(helpers.getEffectiveCoverEndDateAmendment).mockReturnValue(amendedCoverEndDate);
 
     // Act
     await getFixedFeeForFacility(facilityId, utilisation, reportPeriod);

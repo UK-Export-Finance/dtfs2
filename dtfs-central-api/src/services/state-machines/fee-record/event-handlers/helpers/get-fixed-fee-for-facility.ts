@@ -1,7 +1,8 @@
-import { ReportPeriod } from '@ukef/dtfs2-common';
+import { getDateFromMonthAndYear, ReportPeriod } from '@ukef/dtfs2-common';
+import { endOfMonth } from 'date-fns';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../../../../../errors';
-import { convertTimestampToDate, getLatestCompletedAmendmentCoverEndDate } from '../../../../../helpers';
+import { convertTimestampToDate, getEffectiveCoverEndDateAmendment } from '../../../../../helpers';
 import { calculateFixedFee } from './calculate-fixed-fee';
 
 /**
@@ -11,6 +12,7 @@ import { calculateFixedFee } from './calculate-fixed-fee';
  */
 const getLatestTfmFacilityValues = async (
   facilityId: string,
+  reportPeriod: ReportPeriod,
 ): Promise<{
   coverEndDate: Date;
   coverStartDate: Date;
@@ -23,7 +25,9 @@ const getLatestTfmFacilityValues = async (
   }
 
   const { coverEndDate: snapshotCoverEndDate, coverStartDate, dayCountBasis, interestPercentage } = tfmFacility.facilitySnapshot;
-  const latestAmendedCoverEndDate = getLatestCompletedAmendmentCoverEndDate(tfmFacility);
+
+  const endDateOfReportPeriod = endOfMonth(getDateFromMonthAndYear(reportPeriod.end));
+  const latestAmendedCoverEndDate = getEffectiveCoverEndDateAmendment(tfmFacility, endDateOfReportPeriod);
 
   const coverEndDate = latestAmendedCoverEndDate ?? snapshotCoverEndDate;
   if (!coverEndDate) {
@@ -50,7 +54,7 @@ const getLatestTfmFacilityValues = async (
  * @returns The fixed fee for the supplied report period
  */
 export const getFixedFeeForFacility = async (facilityId: string, utilisation: number, reportPeriod: ReportPeriod) => {
-  const { coverEndDate, dayCountBasis, interestPercentage } = await getLatestTfmFacilityValues(facilityId);
+  const { coverEndDate, dayCountBasis, interestPercentage } = await getLatestTfmFacilityValues(facilityId, reportPeriod);
   return calculateFixedFee({
     utilisation,
     reportPeriod,
