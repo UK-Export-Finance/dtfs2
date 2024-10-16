@@ -11,4 +11,15 @@ describe('calculateUkefShareOfUtilisation', () => {
 
     expect(result).toEqual(expected);
   });
+
+  it('should round the ukef share of the utilisation to 2 decimal places', () => {
+    const utilisation = 26.85;
+    const coverPercentage = 45;
+
+    const result = calculateUkefShareOfUtilisation(utilisation, coverPercentage);
+
+    // utilisation * (coverPercentage / 100);
+
+    expect(result).toEqual(12.08);
+  });
 });
