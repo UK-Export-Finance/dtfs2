@@ -52,6 +52,7 @@
           classes: "govuk-input govuk-!-width-one-quarter",
           id: "find-utilisation-reports-by-year--year-input",
           name: "year",
+          autocomplete: "off",
           inputmode: "numeric",
           attributes: {
             "data-cy": "year-input",
@@ -87,5 +88,5 @@
 {% block sub_content %}{% endblock %}
 
 {% block page_scripts %}
-  <script src="/assets/js/enableFindReportsByYearDropdown.js" type="module" integrity="sha512-QLvf2zIp3WAaUOyTIf4SlZ9JLBWVw1CCwwY8Ozzc3+mTsFv4WClwZ9ZYNdNwf9nSFNd2Y4WNr1GL/Bc6ABo1Fw==" crossorigin="anonymous"></script>
+  <script src="/assets/js/enableFindReportsByYearDropdown.js" type="module" integrity="sha512-EFJiI4d7Q8VRfgYiiboT3GIz93joREbGYasuLLcdGROS7srBMp+Y+b9b5U389AXQhsDbAkuSwnZtEmnRUWrYSg==" crossorigin="anonymous"></script>
 {% endblock %}

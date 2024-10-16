@@ -243,6 +243,10 @@
   {{ utilisationTable.render({
     utilisationTableRows: utilisationDetails.utilisationTableRows
   }) }}
+
+  <a class="govuk-link" href="{{ utilisationDetails.downloadUrl }}" data-cy="download-report-link">
+    Download the report submitted by the bank as a CSV
+  </a>
 {% endset %}
 
 {% block content %}
@@ -307,5 +311,5 @@
 
 {% block page_scripts %}
   <script src="/assets/js/enableSelectAllTableCheckbox.js" type="module" integrity="sha512-ER/5raNAJX5VTcyrRBjVExC/f39WaVY4r8k1CyGqJUad95QZ0A1H6zHtsFpdf0JDBLV0acXzSA1B2mkKC8g5Tg==" crossorigin="anonymous"></script>
-  <script src="/assets/js/mojFilterHide.js" type="module" integrity="sha512-xSkZAX17gyhHPS0ZaZi3omWv2zCwsKeSnOerRl73ezzLwPTW/To/5OYsAGKZfazTq/H2/XXyAAagkJFuWT+G/g==" crossorigin="anonymous"></script>
+  <script src="/assets/js/mojFilterHide.js" type="module" integrity="sha512-HEA7Ob0l4HkVIoI5HflMNQ1PnMLnP8tcNPiO9Mf50dMGS3uUQDCeuIXgPjXRidK3faPUrzTklms5jIM44LQ2kA==" crossorigin="anonymous"></script>
 {% endblock %}
