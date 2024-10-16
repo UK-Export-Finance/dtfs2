@@ -393,8 +393,8 @@ describe(`POST ${BASE_URL}`, () => {
     /**
      * The fixed fee is calculated as follows:
      * fixed fee = (utilisation * (coverPercentage / 100)) * bank fee adjustment * interest percentage * days left in cover period / day count basis
-     *           = 1 * 0.9 * 100 / 100 * 730 / 1
-     *           = 0.9 * 730
+     *           = 1 * (80 / 100) *  0.9 * 100 / 100 * 730 / 1
+     *           = 0.8 * 0.9 * 730
      *           = 657
      */
     expect(entities[0].fixedFee).toEqual(525.6);
