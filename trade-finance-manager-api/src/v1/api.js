@@ -850,17 +850,6 @@ const findUserById = async (userId) => {
   }
 };
 
-const upsertUser = async ({ userUpdateFromEntraIdUser, auditDetails }) => {
-  const response = await axios({
-    method: 'put',
-    url: `${DTFS_CENTRAL_API_URL}/v1/tfm/users`,
-    headers: headers.central,
-    data: { userUpdateFromEntraIdUser, auditDetails },
-  });
-
-  return response.data;
-};
-
 const findPortalUserById = async (userId) => {
   try {
     const isValidUserId = isValidMongoId(userId);
@@ -1674,7 +1663,6 @@ module.exports = {
   getCompanyInfo,
   findUser,
   findUserById,
-  upsertUser,
   updateDealCancellation,
   getDealCancellation,
   deleteDealCancellation,

@@ -8,7 +8,6 @@ const {
   validatePostFacilityAmendmentPayload,
   validatePutDealCancellationPayload,
   validateDeleteDealCancellationPayload,
-  validatePutTfmUserPayload,
 } = require('./middleware/payload-validation');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
@@ -763,41 +762,6 @@ tfmRouter.route('/users').get(tfmUsersController.listTfmUser);
  *               _id: '123456abc'
  */
 tfmRouter.route('/users').post(tfmUsersController.createTfmUser);
-
-// TODO: DTFS2-6892: Update these docs
-/**
- * @openapi
- * /tfm/users:
- *   put:
- *     summary: Updates or creates a user from a request
- *     tags: [TFM]
- *     description: Updates or creates a user from a request, used in the SSO process
- *     requestBody:
- *       description: Fields required to find a deal and associated facilities
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               dealId:
- *                 type: string
- *               dealType:
- *                 type: string
- *             example:
- *               dealId: 61e54dd5b578247e14575882
- *               dealType: GEF
- *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/definitions/TFMDealBSS'
- *       404:
- *         description: Not found
- */
-tfmRouter.route('/users').put(validatePutTfmUserPayload, tfmUsersController.upsertTfmUser);
 
 /**
  * @openapi
