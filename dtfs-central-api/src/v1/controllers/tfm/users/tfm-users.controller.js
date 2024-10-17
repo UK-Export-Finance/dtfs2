@@ -8,7 +8,6 @@ const {
   validateAuditDetailsAndUserType,
 } = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
-const TfmUsersRepo = require('../../../../repositories/tfm-users-repo');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 
 const createUser = async (user, auditDetails) => {
@@ -157,12 +156,4 @@ exports.deleteTfmUser = async (req, res) => {
     }
     return res.status(500).send({ status: 500, error });
   }
-};
-
-/**
- * @param {import('../../../routes/middleware/payload-validation').PutTfmUserPayload} param0
- * @returns {import('@ukef/dtfs2-common').TfmUser} a complete tfm user
- */
-exports.upsertTfmUser = async ({ userUpdateFromEntraIdUser, auditDetails }) => {
-  return await TfmUsersRepo.upsertUser({ userUpdate: userUpdateFromEntraIdUser, auditDetails });
 };
