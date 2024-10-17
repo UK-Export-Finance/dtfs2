@@ -1,21 +1,31 @@
 import { TfmDealCancellation } from '@ukef/dtfs2-common';
 import { CANCEL_DEAL_FUTURE_DATE, CANCEL_DEAL_PAST_DATE } from '../../../constants/email-template-ids';
 import sendTfmEmail from '../send-tfm-email';
-import { sendDealCancellationEmail } from './send-deal-cancellation-email';
+import { DealCancellationService } from './deal-cancellation.service';
 
 const mockPimEmailAddress = 'pim@example.com';
 const mockFormattedFacilities = 'mock formatted facilities';
+const ukefDealId = 'ukefDealId';
+const ukefFacilityIds = ['aFacilityId'];
 
 jest.mock('../send-tfm-email');
 jest.mock('../../api', () => ({
   findOneTeam: jest.fn(() => ({ email: mockPimEmailAddress })),
+  findOneDeal: jest.fn(() => ({ dealSnapshot: { ukefDealId } })),
+  findFacilitiesByDealId: jest.fn(() =>
+    ukefFacilityIds.map((ukefFacilityId) => ({
+      facilitySnapshot: {
+        ukefFacilityId,
+      },
+    })),
+  ),
 }));
+
 jest.mock('./helpers/format-facility-ids', () => ({
   formatFacilityIds: jest.fn(() => mockFormattedFacilities),
 }));
 
-const ukefDealId = 'ukefDealId';
-const facilityIds = ['aFacilityId'];
+const dealId = 'dealId';
 
 describe('sendDealCancellationEmail', () => {
   beforeAll(() => {
@@ -37,7 +47,7 @@ describe('sendDealCancellationEmail', () => {
       const dealCancellation = aDealCancellation();
 
       // Act
-      await sendDealCancellationEmail(ukefDealId, dealCancellation, facilityIds);
+      await DealCancellationService.submitDealCancellation(dealId, dealCancellation);
 
       // Assert
       expect(sendTfmEmail).toHaveBeenCalledTimes(1);
@@ -55,8 +65,7 @@ describe('sendDealCancellationEmail', () => {
       const dealCancellation = { ...aDealCancellation(), reason: '' };
 
       // Act
-      await sendDealCancellationEmail(ukefDealId, dealCancellation, facilityIds);
-
+      await DealCancellationService.submitDealCancellation(dealId, dealCancellation);
       // Assert
       expect(sendTfmEmail).toHaveBeenCalledTimes(1);
       expect(sendTfmEmail).toHaveBeenCalledWith(
@@ -77,8 +86,7 @@ describe('sendDealCancellationEmail', () => {
       const dealCancellation = aDealCancellation();
 
       // Act
-      await sendDealCancellationEmail(ukefDealId, dealCancellation, facilityIds);
-
+      await DealCancellationService.submitDealCancellation(dealId, dealCancellation);
       // Assert
       expect(sendTfmEmail).toHaveBeenCalledTimes(1);
       expect(sendTfmEmail).toHaveBeenCalledWith(CANCEL_DEAL_PAST_DATE, mockPimEmailAddress, {
@@ -95,8 +103,7 @@ describe('sendDealCancellationEmail', () => {
       const dealCancellation = { ...aDealCancellation(), reason: '' };
 
       // Act
-      await sendDealCancellationEmail(ukefDealId, dealCancellation, facilityIds);
-
+      await DealCancellationService.submitDealCancellation(dealId, dealCancellation);
       // Assert
       expect(sendTfmEmail).toHaveBeenCalledTimes(1);
       expect(sendTfmEmail).toHaveBeenCalledWith(
