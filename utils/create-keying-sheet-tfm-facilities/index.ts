@@ -5,6 +5,10 @@ import { FacilityClient, mongoDbClient, TfmFacilityClient, DealClient, TfmDealCl
 import { generateRandomTfmFacilityForFacility, getSqlFacilityIds, getPortalUserIdOrFail } from './helpers';
 import { aDeal, aFacility, aTfmDeal } from './mock-data';
 
+/**
+ * A function to seed facilities into the mongo db for each facility id
+ * used in utilisation reports in the SQL db
+ */
 const run = async () => {
   const dataSource = await SqlDbDataSource.initialize();
 
@@ -37,7 +41,7 @@ const run = async () => {
     const tfmDeal = { ...aTfmDeal(dealId, portalUserId, deal) };
     await TfmDealClient.insertIfNotExists(tfmDeal);
   } catch (error) {
-    console.error('Failed to create tfm facilities:', error);
+    console.error('Failed to create tfm facilities: %o', error);
   } finally {
     await dataSource.destroy();
     await mongoDbClient.close();

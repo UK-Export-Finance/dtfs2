@@ -1,5 +1,5 @@
+import { Deal } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
-import { Deal } from '../database-client';
 
 /**
  * Creates an active deal that can be used for utilisation reporting testing.

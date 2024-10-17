@@ -1,5 +1,5 @@
+import { Deal, TfmDeal } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
-import { TfmDeal, Deal } from '../database-client';
 
 /**
  * Creates an active tfm deal that can be used for utilisation reporting testing.

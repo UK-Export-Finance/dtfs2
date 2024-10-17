@@ -25,6 +25,7 @@ export type TfmDeal = {
     product: string;
     stage: string;
     cancellation?: TfmDealCancellation;
+    tasks?: AnyObject[];
   };
   // Audit records may not exist on a deal if it has not been modified after Audit Logs is released
   auditRecord?: AuditDatabaseRecord;

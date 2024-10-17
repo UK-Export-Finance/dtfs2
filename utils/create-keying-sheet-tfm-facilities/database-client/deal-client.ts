@@ -1,9 +1,6 @@
 import { Collection, WithoutId } from 'mongodb';
-import { AnyObject } from '@ukef/dtfs2-common';
-import { mongoDbClient } from './mongo-db-client';
-
-// This should be replaced by a more complete Deal type should one get created
-export type Deal = AnyObject & { ukefDealId: string };
+import { Deal } from '@ukef/dtfs2-common';
+import { mongoDbClient } from '../../drivers/db-client';
 
 export class DealClient {
   private static collection?: Collection<WithoutId<Deal>>;
@@ -21,11 +18,11 @@ export class DealClient {
 
     const numberOfDeals = await this.collection.count({ ukefDealId: { $eq: ukefDealId } });
     if (numberOfDeals !== 0) {
-      console.info(`Facility with UKEF facility id '${ukefDealId}' already exists`);
+      console.info("Deal with UKEF deal id '%s' already exists", ukefDealId);
       return;
     }
 
-    console.info(`Inserting deal with ukef deal id '${ukefDealId}'`);
+    console.info("Inserting deal with ukef deal id '%s'", ukefDealId);
     await this.collection.insertOne(deal);
   }
 }
