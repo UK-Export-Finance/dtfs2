@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { CANCELLATION_STATUS, TestApiError, TfmDealCancellationWithStatus } from '@ukef/dtfs2-common';
+import { TFM_DEAL_CANCELLATION_STATUS, TestApiError, TfmDealCancellationWithStatus } from '@ukef/dtfs2-common';
 import api from '../../api';
 import { getDealCancellation, GetDealCancellationRequest } from './get-deal-cancellation.controller';
 
@@ -32,7 +32,7 @@ describe('controllers - deal cancellation', () => {
     it('should return the deal cancellation', async () => {
       // Arrange
       const mockTfmDealCancellation: TfmDealCancellationWithStatus = {
-        status: CANCELLATION_STATUS.DRAFT,
+        status: TFM_DEAL_CANCELLATION_STATUS.DRAFT,
         reason: 'Test Reason',
         bankRequestDate: new Date().valueOf(),
         effectiveFrom: new Date().valueOf(),

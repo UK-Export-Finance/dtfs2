@@ -1,4 +1,4 @@
-import { AnyObject, CANCELLATION_STATUS, TEAM_IDS, TfmDealCancellationWithStatus } from '@ukef/dtfs2-common';
+import { AnyObject, TFM_DEAL_CANCELLATION_STATUS, TEAM_IDS, TfmDealCancellationWithStatus } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { createApi } from '../../api';
 import app from '../../../src/createApp';
@@ -100,7 +100,7 @@ describe('/v1/deals/:id/cancellation', () => {
       it('returns the deal cancellation object for an authenticated user', async () => {
         // Arrange
         const dealCancellation: TfmDealCancellationWithStatus = {
-          status: CANCELLATION_STATUS.DRAFT,
+          status: TFM_DEAL_CANCELLATION_STATUS.DRAFT,
           reason: 'Test Reason',
           bankRequestDate: new Date().valueOf(),
           effectiveFrom: new Date().valueOf(),

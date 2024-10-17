@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { ApiError, ApiErrorResponseBody, AUDIT_USER_TYPES, CANCELLATION_STATUS, CustomExpressRequest } from '@ukef/dtfs2-common';
+import { ApiError, ApiErrorResponseBody, AUDIT_USER_TYPES, TFM_DEAL_CANCELLATION_STATUS, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
 import { UpdateResult } from 'mongodb';
 import { TfmDealCancellationRepo } from '../../../../repositories/tfm-deals-repo';
@@ -26,7 +26,7 @@ export const updateTfmDealCancellation = async (req: UpdateTfmDealCancellationRe
 
     const update = {
       ...dealCancellationUpdate,
-      status: CANCELLATION_STATUS.DRAFT,
+      status: TFM_DEAL_CANCELLATION_STATUS.DRAFT,
     };
 
     const updateResult = await TfmDealCancellationRepo.updateOneDealCancellation(dealId, update, auditDetails);
