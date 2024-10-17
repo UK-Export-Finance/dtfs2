@@ -9,7 +9,9 @@ dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 const { PORTAL_API_KEY, TFM_API_KEY, TZ } = process.env;
 
 module.exports = defineConfig({
-  TZ,
+  env: {
+    TZ,
+  },
   centralApiProtocol: 'http://',
   centralApiHost: 'localhost',
   centralApiPort: '5005',
@@ -37,9 +39,6 @@ module.exports = defineConfig({
     specPattern: 'cypress/e2e/**/*.spec.js',
     setupNodeEvents(on) {
       on('task', createTasks());
-    },
-    env: {
-      TZ,
     },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],

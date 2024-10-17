@@ -9,7 +9,10 @@ dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 const { CONTACT_US_EMAIL_ADDRESS, PORTAL_API_KEY, TZ } = process.env;
 
 module.exports = defineConfig({
-  TZ,
+  env: {
+    TZ,
+    CONTACT_US_EMAIL_ADDRESS,
+  },
   apiProtocol: 'http://',
   apiHost: 'localhost',
   apiPort: '5001',
@@ -35,10 +38,6 @@ module.exports = defineConfig({
     specPattern: 'cypress/e2e/**/*.spec.js',
     setupNodeEvents(on) {
       on('task', createTasks());
-    },
-    env: {
-      TZ,
-      CONTACT_US_EMAIL_ADDRESS,
     },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],
