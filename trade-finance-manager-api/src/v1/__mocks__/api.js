@@ -249,6 +249,7 @@ module.exports = {
   editPayment: jest.fn(),
   removeFeesFromPayment: jest.fn(),
   updateDealCancellation: jest.fn(),
+  submitDealCancellation: jest.fn(),
   getDealCancellation: jest.fn(),
   deleteDealCancellation: jest.fn(),
   getSelectedFeeRecordsDetails: jest.fn(),

@@ -8,6 +8,7 @@ import {
   TFM_DEAL_STAGE,
   TfmDeal,
   TfmDealCancellation,
+  TfmDealCancellationResponse,
 } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { flatten } from 'mongo-dot-notation';
@@ -108,5 +109,34 @@ export class TfmDealCancellationRepo {
     }
 
     return updateResult;
+  }
+
+  /**
+   * submits the deal cancellation and updates the respective deal stage
+   * @param dealId - The deal id
+   * @param auditDetails - The users audit details
+   */
+  public static async updateDealTfmStageToCancelled(dealId: string | ObjectId, auditDetails: AuditDetails): Promise<TfmDealCancellationResponse> {
+    const dealCollection = await this.getCollection();
+
+    // TODO: Throw error if passed in object doesn't match retrieved object
+
+    const updateDeal = await dealCollection.updateOne(
+      {
+        _id: { $eq: new ObjectId(dealId) },
+        'tfm.stage': { $ne: TFM_DEAL_STAGE.CANCELLED },
+        'dealSnapshot.submissionType': { $in: [DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN] },
+      },
+      flatten({
+        'tfm.stage': TFM_DEAL_STAGE.CANCELLED,
+        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+      }),
+    );
+
+    if (!updateDeal?.matchedCount) {
+      throw new DealNotFoundError(dealId.toString());
+    }
+
+    return { cancelledDeal: { ukefDealId: dealId } };
   }
 }

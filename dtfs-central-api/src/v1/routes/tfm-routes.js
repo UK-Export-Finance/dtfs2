@@ -26,11 +26,13 @@ const tfmPostAmendmentController = require('../controllers/tfm/amendments/tfm-po
 const tfmPutUpdateDealCancellationController = require('../controllers/tfm/deal-cancellation/tfm-put-update-deal-cancellation.controller');
 const tfmGetDealCancellationController = require('../controllers/tfm/deal-cancellation/tfm-get-deal-cancellation.controller');
 const tfmDeleteDealCancellationController = require('../controllers/tfm/deal-cancellation/tfm-delete-deal-cancellation.controller');
+const tfmSubmitDealCancellationController = require('../controllers/tfm/deal-cancellation/tfm-submit-deal-cancellation.controller');
 
 const tfmTeamsController = require('../controllers/tfm/users/tfm-teams.controller');
 const tfmUsersController = require('../controllers/tfm/users/tfm-users.controller');
 
 const { ROUTES } = require('../../constants');
+const { validatePostDealCancellationPayload } = require('./middleware/payload-validation/validate-post-deal-cancellation-payload');
 
 tfmRouter.use((req, res, next) => {
   req.routePath = ROUTES.TFM_ROUTE;
@@ -618,6 +620,11 @@ tfmRouter
   .put(validatePutDealCancellationPayload, tfmPutUpdateDealCancellationController.updateTfmDealCancellation)
   .get(tfmGetDealCancellationController.getTfmDealCancellation)
   .delete(validateDeleteDealCancellationPayload, tfmDeleteDealCancellationController.deleteTfmDealCancellation);
+
+tfmRouter
+  .route('/deals/:dealId/cancellation/submit')
+  .all(validateDealCancellationEnabled, validation.mongoIdValidation('dealId'), handleExpressValidatorResult)
+  .post(validatePostDealCancellationPayload, tfmSubmitDealCancellationController.submitTfmDealCancellation);
 
 /**
  * @openapi

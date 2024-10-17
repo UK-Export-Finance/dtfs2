@@ -303,6 +303,37 @@ const updateDealCancellation = async ({ dealId, dealCancellationUpdate, auditDet
 };
 
 /**
+ * Submits the deal cancellation
+ * @param {Object} params
+ * @param {string} params.dealId - id of deal to cancel
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
+ * @returns {Promise<import('@ukef/dtfs2-common').TfmDealCancellationResponse>} update result object
+ */
+const submitDealCancellation = async ({ dealId, auditDetails }) => {
+  try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      throw new InvalidDealIdError(dealId);
+    }
+
+    const response = await axios({
+      method: 'post',
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/cancellation/submit`,
+      headers: headers.central,
+      data: {
+        auditDetails,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+/**
  * Gets the deal cancellation object on a TFM deal
  * @param {string} dealId - deal cancellation to update
  * @returns {Promise<Partial<import('@ukef/dtfs2-common').TfmDealCancellation>>} - Deal cancellation object
@@ -1666,6 +1697,7 @@ module.exports = {
   updateDealCancellation,
   getDealCancellation,
   deleteDealCancellation,
+  submitDealCancellation,
   findPortalUserById,
   updateUserTasks,
   findOneTeam,
