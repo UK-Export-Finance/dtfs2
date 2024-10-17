@@ -1,0 +1,5 @@
+export const CANCELLATION_STATUS = {
+  COMPLETED: 'COMPLETED',
+  DRAFT: 'DRAFT',
+  SCHEDULED: 'SCHEDULED',
+} as const;

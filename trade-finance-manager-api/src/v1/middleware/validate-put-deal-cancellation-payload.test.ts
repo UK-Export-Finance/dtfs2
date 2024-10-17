@@ -1,4 +1,4 @@
-import { MAX_CHARACTER_COUNT, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { MAX_CHARACTER_COUNT, TfmDealCancellationWithoutStatus } from '@ukef/dtfs2-common';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { validatePutDealCancellationPayload } from './validate-put-deal-cancellation-payload';
@@ -6,7 +6,7 @@ import { validatePutDealCancellationPayload } from './validate-put-deal-cancella
 describe('validatePutDealCancellationPayload', () => {
   const getHttpMocks = () => httpMocks.createMocks();
 
-  const aValidPayload = (): Partial<TfmDealCancellation> => ({
+  const aValidPayload = (): Partial<TfmDealCancellationWithoutStatus> => ({
     reason: 'x'.repeat(MAX_CHARACTER_COUNT),
     bankRequestDate: new Date().valueOf(),
     effectiveFrom: new Date().valueOf(),

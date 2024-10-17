@@ -1,4 +1,4 @@
-import { AUDIT_USER_TYPES, AuditDetails, MAX_CHARACTER_COUNT, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { AUDIT_USER_TYPES, AuditDetails, MAX_CHARACTER_COUNT, TfmDealCancellationWithoutStatus } from '@ukef/dtfs2-common';
 import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
@@ -8,7 +8,7 @@ import { validatePutDealCancellationPayload } from './validate-put-deal-cancella
 describe('validatePutDealCancellationPayload', () => {
   const getHttpMocks = () => httpMocks.createMocks();
 
-  const aValidPayload = (): { dealCancellationUpdate: TfmDealCancellation; auditDetails: AuditDetails } => ({
+  const aValidPayload = (): { dealCancellationUpdate: TfmDealCancellationWithoutStatus; auditDetails: AuditDetails } => ({
     dealCancellationUpdate: {
       reason: 'x'.repeat(MAX_CHARACTER_COUNT),
       bankRequestDate: new Date().valueOf(),
