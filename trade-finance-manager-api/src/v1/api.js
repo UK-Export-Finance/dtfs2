@@ -164,6 +164,10 @@ const updatePortalFacility = async (facilityId, update, auditDetails) => {
   }
 };
 
+/**
+ * @param {string} dealId
+ * @returns {Promise<import('@ukef/dtfs2-common').TfmDeal}
+ */
 const findOneDeal = async (dealId) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -379,6 +383,10 @@ const findOneFacility = async (facilityId) => {
   }
 };
 
+/**
+ * @param {string} dealId
+ * @returns {Promise<import('@ukef/dtfs2-common').TfmFacility[]>}
+ */
 const findFacilitiesByDealId = async (dealId) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
