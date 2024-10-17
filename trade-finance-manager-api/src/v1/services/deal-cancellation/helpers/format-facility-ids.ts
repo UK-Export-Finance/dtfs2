@@ -1,2 +1,1 @@
-export const formatFacilityIds = (facilityIds: string[]) =>
-  facilityIds.reduce((previousValue, currentValue, index) => `${previousValue}${index ? '\n' : ''} ${index + 1}. Facility ID ${currentValue}`, '');
+export const formatFacilityIds = (facilityIds: string[]) => facilityIds.map((id, index) => ` ${index + 1}. Facility ID ${id}`).join(`\n`);
