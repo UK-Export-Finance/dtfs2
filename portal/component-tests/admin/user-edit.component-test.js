@@ -1,4 +1,4 @@
-const { dateIanaTimezoneConfig } = require('@ukef/dtfs2-common');
+const { timezoneConfig } = require('@ukef/dtfs2-common');
 const pageRenderer = require('../pageRenderer');
 
 const page = 'admin/user-edit.njk';
@@ -6,7 +6,7 @@ const render = pageRenderer(page);
 
 describe(page, () => {
   const adminUser = {
-    timezone: dateIanaTimezoneConfig.DEFAULT,
+    timezone: timezoneConfig.DEFAULT,
     roles: ['admin'],
   };
   const newUser = { roles: [] };

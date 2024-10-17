@@ -8,4 +8,4 @@ export * from './middleware';
 export * from './utils';
 export * from './constants';
 export * from './errors';
-export * from './schemas/timezone-iana';
+export * from './schemas/timezone';

@@ -1,6 +1,6 @@
 const {
   ROLES: { MAKER },
-  dateIanaTimezoneConfig,
+  timezoneConfig,
 } = require('@ukef/dtfs2-common');
 const componentRenderer = require('../../componentRenderer');
 const deal = require('../../fixtures/deal-fully-completed');
@@ -12,7 +12,7 @@ describe(component, () => {
   let wrapper;
   const user = {
     roles: [MAKER],
-    timezone: dateIanaTimezoneConfig.DEFAULT,
+    timezone: timezoneConfig.DEFAULT,
   };
 
   const bond = deal.bondTransactions.items[0];

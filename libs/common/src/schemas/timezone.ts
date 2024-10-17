@@ -9,12 +9,18 @@ const { TZ } = process.env;
  * {@link https://www.iana.org/time-zones}
  * There is no default for unset values in this config, as this would allow for inconsistency in microservices.
  */
-const defaultTimeZoneSchema = z.object({
-  TZ: z.string().default('Europe/London'),
-});
+const timezoneConfigSchema = z
+  .object({
+    TZ: z.string().default('Europe/London'),
+  })
+  .transform((parsedEnvVars) => {
+    return {
+      DEFAULT: parsedEnvVars.TZ,
+    };
+  });
 
 const data = {
   TZ,
 };
 
-export const timeZoneConfig = defaultTimeZoneSchema.parse(data);
+export const timezoneConfig = timezoneConfigSchema.parse(data);
