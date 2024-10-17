@@ -21,9 +21,9 @@ describe(component, () => {
   });
 
   const aPaymentDetailsTableRow = (): PaymentDetailsRowViewModel => ({
-    feeRecordPaymentGroupStatus: FEE_RECORD_STATUS.TO_DO,
     payment: aPaymentDetailsPayment(),
     feeRecords: [{ id: 1, facilityId: '12345678', exporter: 'Test exporter' }],
+    status: FEE_RECORD_STATUS.TO_DO,
     reconciledBy: '-',
     dateReconciled: {
       formattedDateReconciled: '-',
@@ -104,11 +104,11 @@ describe(component, () => {
       (status) => {
         const paymentDetailsRow: PaymentDetailsRowViewModel = {
           ...aPaymentDetailsTableRow(),
-          feeRecordPaymentGroupStatus: status,
           payment: {
             ...aPaymentDetailsPayment(),
             amount: { formattedCurrencyAndAmount: 'GBP 123.45', dataSortValue: 0 },
           },
+          status,
         };
         const wrapper = getWrapper({ paymentDetailsRow, userCanEdit });
 
@@ -122,12 +122,12 @@ describe(component, () => {
       (status) => {
         const paymentDetailsRow: PaymentDetailsRowViewModel = {
           ...aPaymentDetailsTableRow(),
-          feeRecordPaymentGroupStatus: status,
           payment: {
             ...aPaymentDetailsPayment(),
             id: 24,
             amount: { formattedCurrencyAndAmount: 'GBP 123.45', dataSortValue: 0 },
           },
+          status,
         };
         const wrapper = getWrapper({ reportId: 12, paymentDetailsRow, userCanEdit });
 
@@ -145,11 +145,11 @@ describe(component, () => {
     it.each(Object.values(FEE_RECORD_STATUS))('renders the payment amount as plain text when the fee record status is %s', (status) => {
       const paymentDetailsRow: PaymentDetailsRowViewModel = {
         ...aPaymentDetailsTableRow(),
-        feeRecordPaymentGroupStatus: status,
         payment: {
           ...aPaymentDetailsPayment(),
           amount: { formattedCurrencyAndAmount: 'GBP 123.45', dataSortValue: 0 },
         },
+        status,
       };
       const wrapper = getWrapper({ paymentDetailsRow, userCanEdit });
 

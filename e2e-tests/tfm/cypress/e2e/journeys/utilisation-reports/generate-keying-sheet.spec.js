@@ -168,7 +168,7 @@ context('PDC_RECONCILE users can generate keying data', () => {
      * difference between the current and previous
      * utilisation
      */
-    const expectedPrincipalBalanceAdjustment = 20000; // 200000 - 180000, DECREASE
+    const expectedPrincipalBalanceAdjustment = '20,000.00'; // 200000 - 180000, DECREASE
 
     /**
      * The fixed fee adjustment is the difference between
@@ -183,7 +183,7 @@ context('PDC_RECONCILE users can generate keying data', () => {
      * - number of days left in cover period divided by day count basis: 365 / 365 = 1
      * This yields a current utilisation value of 8100
      */
-    const expectedFixedFeeAdjustment = 7100; // 8100 - 1000, INCREASE
+    const expectedFixedFeeAdjustment = '7,100.00'; // 8100 - 1000, INCREASE
 
     pages.utilisationReportPage.keyingSheetTab.fixedFeeAdjustmentDecrease(FIRST_FEE_RECORD_ID).should('contain', '-');
     pages.utilisationReportPage.keyingSheetTab.fixedFeeAdjustmentIncrease(FIRST_FEE_RECORD_ID).should('contain', expectedFixedFeeAdjustment);

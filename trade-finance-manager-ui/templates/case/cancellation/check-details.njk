@@ -14,51 +14,51 @@
 {% set rowLinkClasses = "govuk-!-padding-top-6 govuk-!-padding-bottom-6 govuk-!-text-align-right" %}
 
 {% set reasonForCancellingUrl %}
-  <a
+<a
     class="govuk-link"
     href="/case/{{ dealId }}/cancellation/reason?status=change"
     data-cy="reason-link">
     Change <span class="govuk-visually-hidden">reason</span>
-  </a>
+</a>
 {% endset %}
 {% set reasonForCancelling =
   [
     { text: 'Reason for cancelling deal', attributes: { "data-cy": "reason-heading" }, classes: rowTextClasses },
-    { text: reason | dashIfEmpty, attributes: { "data-cy": "reason-response" }, classes: rowTextClasses },
+    { text: cancellation.reason | dashIfEmpty, attributes: { "data-cy": "reason-response" }, classes: rowTextClasses },
     { html: reasonForCancellingUrl, classes: rowLinkClasses }
   ]
 %}
 {% set optionsWithHTML = (optionsWithHTML.push(reasonForCancelling), optionsWithHTML) %}
 
 {% set bankRequestDateUrl %}
-  <a
+<a
     class="govuk-link"
     href="/case/{{ dealId }}/cancellation/bank-request-date?status=change"
     data-cy="bank-request-date-link">
     Change <span class="govuk-visually-hidden">bank request date</span>
-  </a>
+</a>
 {% endset %}
 {% set bankRequestDate =
   [
     { text: 'Bank request date', attributes: { "data-cy": "bank-request-date-heading" }, classes: rowTextClasses},
-    { text: bankRequestDate | dashIfEmpty, attributes: { "data-cy": "bank-request-date-response" }, classes: rowTextClasses },
+    { text: cancellation.bankRequestDate | formatUnixTimestamp('d MMMM yyyy') | dashIfEmpty, attributes: { "data-cy": "bank-request-date-response" }, classes: rowTextClasses },
     { html: bankRequestDateUrl, classes: rowLinkClasses }
   ]
 %}
 {% set optionsWithHTML = (optionsWithHTML.push(bankRequestDate), optionsWithHTML) %}
 
 {% set effectiveFromDateUrl %}
-  <a
+<a
     class="govuk-link"
     href="/case/{{ dealId }}/cancellation/effective-from-date?status=change"
     data-cy="effective-from-link">
     Change <span class="govuk-visually-hidden">date effective from</span>
-  </a>
+</a>
 {% endset %}
-  {% set effectiveFromDate =
+{% set effectiveFromDate =
     [
       { text: 'Date effective from', attributes: { "data-cy": "effective-from-heading" }, classes: rowTextClasses },
-      { text: effectiveFromDate | dashIfEmpty, attributes: { "data-cy": "effective-from-response" }, classes: rowTextClasses },
+      { text: cancellation.effectiveFrom | formatUnixTimestamp('d MMMM yyyy') | dashIfEmpty, attributes: { "data-cy": "effective-from-response" }, classes: rowTextClasses },
       { html: effectiveFromDateUrl, classes: rowLinkClasses }
     ]
 %}
@@ -90,7 +90,7 @@
       }) }}
 
       <div class="govuk-!-margin-bottom-9">
-      {{ govukWarningText({
+        {{ govukWarningText({
         text: "When you cancel the deal it cannot be undone",
         iconFallbackText: "Warning",
         attributes: { 'data-cy': 'warning' }
@@ -99,9 +99,10 @@
 
       <form method="POST" autocomplete="off">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <input type="hidden" name="cancellation" value="{{ cancellation }}">
         <div class="govuk-!-margin-bottom-5">
           {{ govukButton({
-            text: "Delete account",
+            text: "Cancel deal",
             classes: "govuk-button--warning",
             attributes: { 'data-cy': 'delete-button' }
           }) }}

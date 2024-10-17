@@ -4,7 +4,7 @@ on:
   push:
     branches: [infrastructure]
     paths:
-      - ".github/workflows/staging_infrastructure.yml"
+      - '.github/workflows/staging_infrastructure.yml'
 
 env:
   # Environment
@@ -20,7 +20,7 @@ env:
   app_service_plan_egress_cidr: 172.16.52.0/28
   vm_cidr: 172.16.53.0/28
   aca_clam_av_cidr: 172.16.52.32/27
-  vnet_address_prefixes: "172.16.50.0/23 172.16.52.0/23 172.16.70.0/23" # App service settings
+  vnet_address_prefixes: '172.16.50.0/23 172.16.52.0/23 172.16.70.0/23' # App service settings
   production_subnet_cidr: 10.60.0.0/16
   palo_alto_next_hop: 10.50.0.100
 
@@ -1128,7 +1128,8 @@ jobs:
                 GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}" \
                 MONGO_INITDB_DATABASE="${{ env.database_name }}" \
                 MONGODB_URI="$mongo_connection_string" \
-                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
+                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
+                TZ=${{ vars.TZ }}
 
   dtfs-central-api:
     name: DTFS Central API
@@ -1267,7 +1268,8 @@ jobs:
                 WEBSITES_PORT=5000 \
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
                 CHANGE_STREAM_ENABLED="${{ vars.CHANGE_STREAM_ENABLED}}" \
-                DELETION_AUDIT_LOGS_TTL_SECONDS="${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS}}"
+                DELETION_AUDIT_LOGS_TTL_SECONDS="${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS}}" \
+                TZ=${{ vars.TZ }}
 
       - name: Secrets
         uses: azure/cli@v2
@@ -1449,7 +1451,8 @@ jobs:
                 CLAMAV_PORT="$clamav_port" \
                 CHANGE_STREAM_ENABLED="${{ vars.CHANGE_STREAM_ENABLED}}" \
                 DELETION_AUDIT_LOGS_TTL_SECONDS="${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS}}" \
-                GEF_DEAL_VERSION=${{ vars.GEF_DEAL_VERSION }}
+                GEF_DEAL_VERSION=${{ vars.GEF_DEAL_VERSION }} \
+                TZ=${{ vars.TZ }}
 
       - name: Secrets
         uses: azure/cli@v2
@@ -1636,7 +1639,8 @@ jobs:
                 WEBSITES_PORT=5000 \
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
                 CHANGE_STREAM_ENABLED="${{ vars.CHANGE_STREAM_ENABLED}}" \
-                DELETION_AUDIT_LOGS_TTL_SECONDS="${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS}}"
+                DELETION_AUDIT_LOGS_TTL_SECONDS="${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS}}" \
+                TZ=${{ vars.TZ }}
 
       - name: Secrets
         uses: azure/cli@v2
@@ -1823,7 +1827,8 @@ jobs:
                 EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
                 HTTPS=1 \
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
-                UTILISATION_REPORT_MAX_FILE_SIZE_BYTES=${{ vars.UTILISATION_REPORT_MAX_FILE_SIZE_BYTES }}
+                UTILISATION_REPORT_MAX_FILE_SIZE_BYTES=${{ vars.UTILISATION_REPORT_MAX_FILE_SIZE_BYTES }} \
+                TZ=${{ vars.TZ }}
 
       - name: Secrets
         uses: azure/cli@v2
@@ -1992,7 +1997,8 @@ jobs:
                 ENTRA_ID_CLOUD_INSTANCE="${{ vars.ENTRA_ID_CLOUD_INSTANCE }}" \
                 ENTRA_ID_TENANT_ID="${{ vars.ENTRA_ID_TENANT_ID }}" \
                 ENTRA_ID_CLIENT_SECRET="${{ vars.ENTRA_ID_CLIENT_SECRET }}" \
-                ENTRA_ID_REDIRECT_URL="${{ vars.ENTRA_ID_REDIRECT_URL }}"
+                ENTRA_ID_REDIRECT_URL="${{ vars.ENTRA_ID_REDIRECT_URL }}" \
+                TZ=${{ vars.TZ }}
 
       - name: Secrets
         uses: azure/cli@v2
@@ -2152,7 +2158,8 @@ jobs:
                 EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
                 HTTPS=1 \
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
-                GEF_DEAL_VERSION=${{ vars.GEF_DEAL_VERSION }}
+                GEF_DEAL_VERSION=${{ vars.GEF_DEAL_VERSION }} \
+                TZ=${{ vars.TZ }}
 
       - name: Secrets
         uses: azure/cli@v2

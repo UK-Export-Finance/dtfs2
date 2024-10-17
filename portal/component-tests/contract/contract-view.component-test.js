@@ -1,7 +1,4 @@
-const {
-  ROLES,
-  DATE_IANA_TIMEZONES: { LONDON },
-} = require('@ukef/dtfs2-common');
+const { ROLES, timezoneConfig } = require('@ukef/dtfs2-common');
 const { STATUS } = require('../../server/constants');
 const pageRenderer = require('../pageRenderer');
 
@@ -39,7 +36,7 @@ const confirmedRequestStartDateParams = {
 
 describe(page, () => {
   describe("when viewed as a 'maker'", () => {
-    const user = { roles: [MAKER], timezone: LONDON };
+    const user = { roles: [MAKER], timezone: timezoneConfig.DEFAULT };
 
     commonTests(user);
 
@@ -72,7 +69,7 @@ describe(page, () => {
   });
 
   describe("when viewed as a 'checker'", () => {
-    const user = { roles: [CHECKER], timezone: LONDON };
+    const user = { roles: [CHECKER], timezone: timezoneConfig.DEFAULT };
 
     commonTests(user);
 
@@ -103,7 +100,7 @@ describe(page, () => {
   });
 
   describe.each(NON_MAKER_ROLES)("when viewed as a '%s'", (nonMakerRole) => {
-    const user = { roles: [nonMakerRole], timezone: LONDON };
+    const user = { roles: [nonMakerRole], timezone: timezoneConfig.DEFAULT };
 
     commonTests(user);
 
