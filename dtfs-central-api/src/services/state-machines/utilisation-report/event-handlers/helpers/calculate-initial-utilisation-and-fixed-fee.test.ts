@@ -1,9 +1,15 @@
-import { calculateInitialUtilisation } from '@ukef/dtfs2-common';
+import * as dtfsCommon from '@ukef/dtfs2-common';
 import { calculateInitialUtilisationAndFixedFee, parseDate, hasRequiredValues, RequiredParams } from './calculate-initial-utilisation-and-fixed-fee';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { aTfmFacility } from '../../../../../../test-helpers';
-import { calculateInitialFixedFee } from './calculate-initial-fixed-fee';
-import { calculateUkefShareOfUtilisation } from '../../../../../helpers';
+import * as fixedFeeHelpers from './calculate-initial-fixed-fee';
+
+jest.mock('./calculate-initial-fixed-fee');
+// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  calculateDrawnAmount: jest.fn(),
+}));
 
 describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
   describe('parseDate', () => {
@@ -145,26 +151,40 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
         findOneByUkefFacilityIdSpy.mockResolvedValue(facility);
       });
 
-      it('should return a value for utilisation and fixed fee', async () => {
+      it('should set initial utilisation to drawn amount rounded to 2 decimal places', async () => {
+        // Arrange
+        const drawnAmount = 12345.678;
+        const drawnAmountRoundedToTwoDecimalPlaces = 12345.68;
+        const calculateDrawnAmountSpy = jest.spyOn(dtfsCommon, 'calculateDrawnAmount').mockReturnValue(drawnAmount);
+        jest.mocked(fixedFeeHelpers.calculateInitialFixedFee).mockReturnValue(999.99);
+
+        // Act
         const result = await calculateInitialUtilisationAndFixedFee(facilityId);
 
-        const { value, coverStartDate, coverEndDate, interestPercentage, dayCountBasis } = facility.facilitySnapshot;
+        // Assert
+        expect(calculateDrawnAmountSpy).toHaveBeenCalledWith(facility.facilitySnapshot.value, facility.facilitySnapshot.coverPercentage);
+        expect(result.utilisation).toEqual(drawnAmountRoundedToTwoDecimalPlaces);
+      });
 
-        const utilisation = calculateInitialUtilisation(value);
-        const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, facility.facilitySnapshot.coverPercentage);
+      it('should calculate and return the initial fixed fee', async () => {
+        // Arrange
+        const drawnAmount = 12345.678;
+        const drawnAmountRoundedToTwoDecimalPlaces = 12345.68;
+        jest.mocked(dtfsCommon.calculateDrawnAmount).mockReturnValue(drawnAmount);
+        const calculateInitialFixedFeeSpy = jest.spyOn(fixedFeeHelpers, 'calculateInitialFixedFee').mockReturnValue(999.99);
 
-        const expected = {
-          fixedFee: calculateInitialFixedFee({
-            ukefShareOfUtilisation,
-            coverStartDate: parseDate(coverStartDate),
-            coverEndDate: parseDate(coverEndDate),
-            interestPercentage,
-            dayCountBasis,
-          }),
-          utilisation,
-        };
+        // Act
+        const result = await calculateInitialUtilisationAndFixedFee(facilityId);
 
-        expect(result).toEqual(expected);
+        // Assert
+        expect(calculateInitialFixedFeeSpy).toHaveBeenCalledWith({
+          ukefShareOfUtilisation: drawnAmountRoundedToTwoDecimalPlaces,
+          coverStartDate: facility.facilitySnapshot.coverStartDate,
+          coverEndDate: facility.facilitySnapshot.coverEndDate,
+          interestPercentage: facility.facilitySnapshot.interestPercentage,
+          dayCountBasis: facility.facilitySnapshot.dayCountBasis,
+        });
+        expect(result.fixedFee).toEqual(999.99);
       });
     });
   });
