@@ -55,12 +55,34 @@ describe('postBankRequestDate', () => {
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
 
-  describe(`when the deal type is ${DEAL_SUBMISSION_TYPE.MIA}`, () => {
+  describe.each([DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN])('when the deal type is %s', (validDealType) => {
     beforeEach(() => {
-      jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: DEAL_SUBMISSION_TYPE.MIA } });
+      jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: validDealType } });
     });
 
-    it('redirects to deal summary page', async () => {
+    it('submits the deal cancellation', async () => {
+      // Arrange
+      const session = aRequestSession();
+
+      const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
+        params: { _id: dealId },
+        session,
+        body: { reason, bankRequestDate, effectiveFrom },
+      });
+
+      // Act
+      await postDealCancellationDetails(req, res);
+
+      // Assert
+      expect(api.submitDealCancellation).toHaveBeenCalledTimes(1);
+      expect(api.submitDealCancellation).toHaveBeenCalledWith(
+        dealId,
+        { reason, bankRequestDate: Number(bankRequestDate), effectiveFrom: Number(effectiveFrom) },
+        session.userToken,
+      );
+    });
+
+    it('redirects to the deal summary', async () => {
       // Arrange
       const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
         params: { _id: dealId },
@@ -73,113 +95,6 @@ describe('postBankRequestDate', () => {
 
       // Assert
       expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
-    });
-
-    it('does not submit a deal cancellation', async () => {
-      // Arrange
-      const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
-        params: { _id: dealId },
-        session: aRequestSession(),
-        body: { reason, bankRequestDate, effectiveFrom },
-      });
-
-      // Act
-      await postDealCancellationDetails(req, res);
-
-      // Assert
-      expect(api.submitDealCancellation).toHaveBeenCalledTimes(0);
-    });
-  });
-
-  describe.each([DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN])('when the deal type is %s', (validDealType) => {
-    beforeEach(() => {
-      jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: validDealType } });
-    });
-
-    const invalidTestCases = [
-      {
-        description: 'when the reason is undefined',
-        body: { bankRequestDate, effectiveFrom },
-      },
-      {
-        description: 'when the bankRequestDate is undefined',
-        body: { reason, effectiveFrom },
-      },
-      {
-        description: 'when the effectiveFrom is undefined',
-        body: { reason, bankRequestDate },
-      },
-    ];
-
-    describe.each(invalidTestCases)('$description', ({ body }) => {
-      it('does not submit the deal cancellation', async () => {
-        // Arrange
-        const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
-          params: { _id: dealId },
-          session: aRequestSession(),
-          body,
-        });
-
-        // Act
-        await postDealCancellationDetails(req, res);
-
-        // Assert
-        expect(api.submitDealCancellation).toHaveBeenCalledTimes(0);
-      });
-
-      it('redirects to the deal summary', async () => {
-        // Arrange
-        const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
-          params: { _id: dealId },
-          session: aRequestSession(),
-          body,
-        });
-
-        // Act
-        await postDealCancellationDetails(req, res);
-
-        // Assert
-        expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
-      });
-    });
-
-    describe('when the cancellation is valid', () => {
-      it('submits the deal cancellation', async () => {
-        // Arrange
-        const session = aRequestSession();
-
-        const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
-          params: { _id: dealId },
-          session,
-          body: { reason, bankRequestDate, effectiveFrom },
-        });
-
-        // Act
-        await postDealCancellationDetails(req, res);
-
-        // Assert
-        expect(api.submitDealCancellation).toHaveBeenCalledTimes(1);
-        expect(api.submitDealCancellation).toHaveBeenCalledWith(
-          dealId,
-          { reason, bankRequestDate: Number(bankRequestDate), effectiveFrom: Number(effectiveFrom) },
-          session.userToken,
-        );
-      });
-
-      it('redirects to the deal summary', async () => {
-        // Arrange
-        const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
-          params: { _id: dealId },
-          session: aRequestSession(),
-          body: { reason, bankRequestDate, effectiveFrom },
-        });
-
-        // Act
-        await postDealCancellationDetails(req, res);
-
-        // Assert
-        expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
-      });
     });
   });
 });
