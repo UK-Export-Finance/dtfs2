@@ -49,6 +49,28 @@ export class TfmDealCancellationRepo {
   }
 
   /**
+   * Find deals with scheduled cancellations
+   * @returns the found deal cancellations with the dealId
+   */
+  public static async findScheduledDealCancellations(): Promise<(TfmDealCancellationWithStatus & { dealId: ObjectId })[]> {
+    const dealCollection = await this.getCollection();
+    const matchingDeals = await dealCollection
+      .aggregate<TfmDealCancellationWithStatus & { dealId: ObjectId }>([
+        {
+          $match: {
+            'dealSnapshot.submissionType': { $in: [DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN] },
+            'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.SCHEDULED,
+            'tfm.cancellation.effectiveFrom': {},
+          },
+        },
+        { $replaceRoot: { newRoot: { $mergeObjects: ['$tfm.cancellation', { dealId: '$_id' }] } } },
+      ])
+      .toArray();
+
+    return matchingDeals;
+  }
+
+  /**
    * Updates the deal tfm object with the supplied cancellation
    * @param dealId - The deal id
    * @param update - The deal cancellation update to apply
