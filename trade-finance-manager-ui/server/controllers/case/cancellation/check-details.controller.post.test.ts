@@ -13,8 +13,8 @@ const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
 
 const reason = 'reason';
-const bankRequestDate = new Date().valueOf();
-const effectiveFrom = new Date().valueOf();
+const bankRequestDate = new Date().valueOf().toString();
+const effectiveFrom = new Date().valueOf().toString();
 
 describe('postBankRequestDate', () => {
   beforeEach(() => {
@@ -28,7 +28,7 @@ describe('postBankRequestDate', () => {
     const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
       params: { _id: dealId },
       session: aRequestSession(),
-      body: { cancellation: { reason, bankRequestDate, effectiveFrom } },
+      body: { reason, bankRequestDate, effectiveFrom },
     });
 
     // Act
@@ -45,7 +45,7 @@ describe('postBankRequestDate', () => {
     const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
       params: { _id: dealId },
       session: aRequestSession(),
-      body: { cancellation: { reason, bankRequestDate, effectiveFrom } },
+      body: { reason, bankRequestDate, effectiveFrom },
     });
 
     // Act
@@ -65,7 +65,7 @@ describe('postBankRequestDate', () => {
       const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
         params: { _id: dealId },
         session: aRequestSession(),
-        body: { cancellation: { reason, bankRequestDate, effectiveFrom } },
+        body: { reason, bankRequestDate, effectiveFrom },
       });
 
       // Act
@@ -80,7 +80,7 @@ describe('postBankRequestDate', () => {
       const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
         params: { _id: dealId },
         session: aRequestSession(),
-        body: { cancellation: { reason, bankRequestDate, effectiveFrom } },
+        body: { reason, bankRequestDate, effectiveFrom },
       });
 
       // Act
@@ -99,25 +99,25 @@ describe('postBankRequestDate', () => {
     const invalidTestCases = [
       {
         description: 'when the reason is undefined',
-        cancellation: { bankRequestDate, effectiveFrom },
+        body: { bankRequestDate, effectiveFrom },
       },
       {
         description: 'when the bankRequestDate is undefined',
-        cancellation: { reason, effectiveFrom },
+        body: { reason, effectiveFrom },
       },
       {
         description: 'when the effectiveFrom is undefined',
-        cancellation: { reason, bankRequestDate },
+        body: { reason, bankRequestDate },
       },
     ];
 
-    describe.each(invalidTestCases)('$description', ({ cancellation }) => {
+    describe.each(invalidTestCases)('$description', ({ body }) => {
       it('does not submit the deal cancellation', async () => {
         // Arrange
         const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
           params: { _id: dealId },
           session: aRequestSession(),
-          body: { cancellation },
+          body,
         });
 
         // Act
@@ -132,7 +132,7 @@ describe('postBankRequestDate', () => {
         const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
           params: { _id: dealId },
           session: aRequestSession(),
-          body: { cancellation: { reason, bankRequestDate, effectiveFrom } },
+          body,
         });
 
         // Act
@@ -146,13 +146,12 @@ describe('postBankRequestDate', () => {
     describe('when the cancellation is valid', () => {
       it('submits the deal cancellation', async () => {
         // Arrange
-        const cancellation = { reason, bankRequestDate, effectiveFrom };
         const session = aRequestSession();
 
         const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
           params: { _id: dealId },
           session,
-          body: { cancellation },
+          body: { reason, bankRequestDate, effectiveFrom },
         });
 
         // Act
@@ -160,7 +159,11 @@ describe('postBankRequestDate', () => {
 
         // Assert
         expect(api.submitDealCancellation).toHaveBeenCalledTimes(1);
-        expect(api.submitDealCancellation).toHaveBeenCalledWith(dealId, cancellation, session.userToken);
+        expect(api.submitDealCancellation).toHaveBeenCalledWith(
+          dealId,
+          { reason, bankRequestDate: Number(bankRequestDate), effectiveFrom: Number(effectiveFrom) },
+          session.userToken,
+        );
       });
 
       it('redirects to the deal summary', async () => {
@@ -168,7 +171,7 @@ describe('postBankRequestDate', () => {
         const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
           params: { _id: dealId },
           session: aRequestSession(),
-          body: { cancellation: { reason, bankRequestDate, effectiveFrom } },
+          body: { reason, bankRequestDate, effectiveFrom },
         });
 
         // Act
