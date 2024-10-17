@@ -117,7 +117,7 @@ export class TfmDealCancellationRepo {
    * @param cancellation - The deal cancellation details to submit
    * @param auditDetails - The users audit details
    */
-  public static async updateDealTfmStageToCancelled(
+  public static async submitCancelDeal(
     dealId: string | ObjectId,
     cancellation: TfmDealCancellation,
     auditDetails: AuditDetails,

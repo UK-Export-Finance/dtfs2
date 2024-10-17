@@ -4,6 +4,7 @@ import { ApiError, ApiErrorResponseBody, AUDIT_USER_TYPES, CustomExpressRequest,
 import { validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
 import { TfmDealCancellationRepo } from '../../../../repositories/tfm-deals-repo';
 import { PostDealCancellationPayload } from '../../../routes/middleware/payload-validation/validate-post-deal-cancellation-payload';
+import { shouldDealBeCancelledImmediately } from '../../../../services/deal-cancellation/post-deal-cancellation.service';
 
 type SubmitTfmDealCancellationRequest = CustomExpressRequest<{
   reqBody: PostDealCancellationPayload;
@@ -16,16 +17,18 @@ type SubmitTfmDealCancellationResponse = Response<ApiErrorResponseBody | TfmDeal
  * @param req - The request object
  * @param res - The response object
  */
-export const submitTfmDealCancellation = async (req: SubmitTfmDealCancellationRequest, res: SubmitTfmDealCancellationResponse) => {
+export const postTfmDealCancellation = async (req: SubmitTfmDealCancellationRequest, res: SubmitTfmDealCancellationResponse) => {
   const { cancellation, auditDetails } = req.body;
   const { dealId } = req.params;
 
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.TFM);
 
-    const cancelledDealData = await TfmDealCancellationRepo.updateDealTfmStageToCancelled(dealId, cancellation, auditDetails);
-
-    return res.status(HttpStatusCode.Ok).send(cancelledDealData);
+    if (shouldDealBeCancelledImmediately(cancellation.effectiveFrom)) {
+      const cancelledDealData = await TfmDealCancellationRepo.submitCancelDeal(dealId, cancellation, auditDetails);
+      return res.status(HttpStatusCode.Ok).send(cancelledDealData);
+    }
+    return res.sendStatus(HttpStatusCode.NoContent); // TODO DTFS2-7429: Handle future effective from dates
   } catch (error) {
     console.error('Error submitting the deal cancellation:', error);
 
