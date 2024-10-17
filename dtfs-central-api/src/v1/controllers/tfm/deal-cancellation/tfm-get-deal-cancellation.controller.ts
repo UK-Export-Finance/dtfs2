@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { ApiError, ApiErrorResponseBody, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { ApiError, ApiErrorResponseBody, TfmDealCancellationWithStatus } from '@ukef/dtfs2-common';
 import { TfmDealCancellationRepo } from '../../../../repositories/tfm-deals-repo';
 
-type GetTfmDealCancellationResponse = Response<ApiErrorResponseBody | Partial<TfmDealCancellation>>;
+type GetTfmDealCancellationResponse = Response<ApiErrorResponseBody | Partial<TfmDealCancellationWithStatus>>;
 
 export const getTfmDealCancellation = async (req: Request, res: GetTfmDealCancellationResponse) => {
   const { dealId } = req.params;

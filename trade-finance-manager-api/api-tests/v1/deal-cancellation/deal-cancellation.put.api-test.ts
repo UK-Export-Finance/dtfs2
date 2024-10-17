@@ -1,4 +1,4 @@
-import { AnyObject, MAX_CHARACTER_COUNT, TEAM_IDS, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { AnyObject, MAX_CHARACTER_COUNT, TEAM_IDS, TfmDealCancellationWithoutStatus } from '@ukef/dtfs2-common';
 import { ObjectId, UpdateResult } from 'mongodb';
 import { createApi } from '../../api';
 import app from '../../../src/createApp';
@@ -31,7 +31,7 @@ describe('/v1/deals/:id/cancellation', () => {
   let testUsers: Awaited<ReturnType<typeof initialiseTestUsers>>;
   let aPimUser: TestUser;
 
-  const validPayload: TfmDealCancellation = {
+  const validPayload: TfmDealCancellationWithoutStatus = {
     reason: 'x'.repeat(MAX_CHARACTER_COUNT),
     bankRequestDate: new Date().valueOf(),
     effectiveFrom: new Date().valueOf(),
