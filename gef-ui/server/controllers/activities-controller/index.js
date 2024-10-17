@@ -53,7 +53,7 @@ const getPortalActivities = async (req, res) => {
     createdBy: `${deal.maker.firstname} ${deal.maker.surname}`,
     companyName: deal.exporter.companyName,
     dateCreated: deal.createdAt,
-    timezone: deal.maker.timezone || timeZoneConfig.TZ,
+    timezone: deal.maker.timezone || timeZoneConfig.DEFAULT,
     submissionDate: deal.submissionDate,
     manualInclusionNoticeSubmissionDate: deal?.manualInclusionNoticeSubmissionDate,
   });
