@@ -1,6 +1,6 @@
 import { isTfmSsoFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
-import { NextFunction, Request, Response } from 'express';
+import { RequestHandler } from 'express';
 import httpMocks from 'node-mocks-http';
 import { validateSsoFeatureFlagIsOff, validateSsoFeatureFlagIsOn } from './validate-sso-feature-flag';
 
@@ -65,7 +65,7 @@ describe('validateSsoFeatureFlag', () => {
     jest.mocked(isTfmSsoFeatureFlagEnabled).mockReturnValue(value);
   }
 
-  function itCallsTheNextMiddleware({ makeRequest }: { makeRequest: (req: Request, res: Response, next: NextFunction) => unknown }) {
+  function itCallsTheNextMiddleware({ makeRequest }: { makeRequest: RequestHandler }) {
     it('calls the next middleware', () => {
       const { req, res } = getHttpMocks();
       const next = jest.fn();
@@ -74,7 +74,7 @@ describe('validateSsoFeatureFlag', () => {
     });
   }
 
-  function itReturnsAnErrorResponse({ makeRequest }: { makeRequest: (req: Request, res: Response, next: NextFunction) => unknown }) {
+  function itReturnsAnErrorResponse({ makeRequest }: { makeRequest: RequestHandler }) {
     it('returns an error response', () => {
       const { req, res } = getHttpMocks();
       const next = jest.fn();
