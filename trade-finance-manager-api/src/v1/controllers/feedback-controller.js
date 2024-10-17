@@ -4,7 +4,7 @@ const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { mongoDbClient: db } = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
-const sendTfmEmail = require('./send-tfm-email');
+const sendTfmEmail = require('../services/send-tfm-email');
 
 const CONSTANTS = require('../../constants');
 

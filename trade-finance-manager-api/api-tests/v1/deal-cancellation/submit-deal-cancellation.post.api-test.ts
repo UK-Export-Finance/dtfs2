@@ -1,17 +1,29 @@
-import { AnyObject, MAX_CHARACTER_COUNT, TEAM_IDS } from '@ukef/dtfs2-common';
+import { add, format } from 'date-fns';
+import { AnyObject, MAX_CHARACTER_COUNT, TEAM_IDS, TestApiError, TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
 import { ObjectId, UpdateResult } from 'mongodb';
+import { HttpStatusCode } from 'axios';
 import { createApi } from '../../api';
 import app from '../../../src/createApp';
 import { initialiseTestUsers } from '../../api-test-users';
 import { TestUser } from '../../types/test-user';
 import { withTeamAuthorisationTests } from '../../common-tests/with-team-authorisation.api-tests';
 import { PostSubmitDealCancellationPayload } from '../../../src/v1/middleware/validate-post-submit-deal-cancellation-payload';
+import { CANCEL_DEAL_FUTURE_DATE, CANCEL_DEAL_PAST_DATE } from '../../../src/constants/email-template-ids';
 
 const updateDealCancellationMock = jest.fn() as jest.Mock<Promise<UpdateResult>>;
+const sendEmailMock = jest.fn() as jest.Mock<Promise<void>>;
+const findOneDealMock = jest.fn() as jest.Mock<Promise<TfmDeal>>;
+const findFacilitiesByDealIdMock = jest.fn() as jest.Mock<Promise<TfmFacility[]>>;
+
+const mockPimEmailAddress = 'pim@example.com';
 
 jest.mock('../../../src/v1/api', () => ({
   ...jest.requireActual<AnyObject>('../../../src/v1/api'),
   updateDealCancellation: () => updateDealCancellationMock(),
+  sendEmail: (templateId: string, sendToEmailAddress: string, emailVariables: object) => sendEmailMock(templateId, sendToEmailAddress, emailVariables),
+  findOneTeam: () => ({ email: mockPimEmailAddress }),
+  findOneDeal: () => findOneDealMock(),
+  findFacilitiesByDealId: () => findFacilitiesByDealIdMock(),
 }));
 
 const originalProcessEnv = { ...process.env };
@@ -26,6 +38,9 @@ const aValidPayload = (): PostSubmitDealCancellationPayload => ({
   bankRequestDate: new Date().valueOf(),
   effectiveFrom: new Date().valueOf(),
 });
+
+const ukefDealId = 'ukefDealId';
+const ukefFacilityIds = ['ukefFacilityId1', 'ukefFacilityId2'];
 
 describe('POST /v1/deals/:id/cancellation/submit', () => {
   let testUsers: Awaited<ReturnType<typeof initialiseTestUsers>>;
@@ -60,6 +75,21 @@ describe('POST /v1/deals/:id/cancellation/submit', () => {
   describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is enabled', () => {
     beforeEach(() => {
       process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'true';
+      jest.clearAllMocks();
+    });
+
+    beforeEach(() => {
+      findOneDealMock.mockResolvedValue({ dealSnapshot: { ukefDealId } } as TfmDeal);
+      findFacilitiesByDealIdMock.mockResolvedValue(
+        ukefFacilityIds.map(
+          (ukefFacilityId) =>
+            ({
+              facilitySnapshot: {
+                ukefFacilityId,
+              },
+            }) as TfmFacility,
+        ),
+      );
     });
 
     afterAll(() => {
@@ -95,7 +125,7 @@ describe('POST /v1/deals/:id/cancellation/submit', () => {
       const response = await as(aPimUser).post(aValidPayload()).to(url);
 
       // Assert
-      expect(response.status).toEqual(400);
+      expect(response.status).toEqual(HttpStatusCode.BadRequest);
     });
 
     it('returns a 400 response when the payload is invalid', async () => {
@@ -106,18 +136,92 @@ describe('POST /v1/deals/:id/cancellation/submit', () => {
       const response = await as(aPimUser).post({}).to(url);
 
       // Assert
-      expect(response.status).toEqual(400);
+      expect(response.status).toEqual(HttpStatusCode.BadRequest);
     });
 
-    it('returns 200 for an authenticated user', async () => {
+    it('returns 500 if an unknown error is thrown', async () => {
       // Arrange
+      findOneDealMock.mockRejectedValueOnce(new Error('An error occurred'));
+
       const url = getSubmitTfmDealCancellationUrl({ id: validId });
 
       // Act
       const response = await as(aPimUser).post(aValidPayload()).to(url);
 
       // Assert
-      expect(response.status).toEqual(200);
+      expect(response.status).toEqual(HttpStatusCode.InternalServerError);
+      expect(response.body).toEqual({ status: HttpStatusCode.InternalServerError, message: 'Failed to submit deal cancellation' });
+    });
+
+    it('returns correct status & message if an ApiError is thrown', async () => {
+      // Arrange
+      const errorStatus = HttpStatusCode.BadRequest;
+      const errorMessage = 'An error occurred';
+      findOneDealMock.mockRejectedValueOnce(new TestApiError(errorStatus, errorMessage));
+
+      const url = getSubmitTfmDealCancellationUrl({ id: validId });
+
+      // Act
+      const response = await as(aPimUser).post(aValidPayload()).to(url);
+
+      // Assert
+      expect(response.status).toEqual(errorStatus);
+      expect(response.body).toEqual({ status: errorStatus, message: `Failed to submit deal cancellation: ${errorMessage}` });
+    });
+
+    describe('when the deal and facilities are fetched successfully', () => {
+      it('sends correct email when effective date is today', async () => {
+        // Arrange
+        const url = getSubmitTfmDealCancellationUrl({ id: validId });
+
+        const payload = { ...aValidPayload(), effectiveFrom: new Date().valueOf() };
+
+        // Act
+        await as(aPimUser).post(payload).to(url);
+
+        // Assert
+        expect(sendEmailMock).toHaveBeenCalledTimes(1);
+        expect(sendEmailMock).toHaveBeenCalledWith(CANCEL_DEAL_PAST_DATE, mockPimEmailAddress, {
+          bankRequestDate: format(payload.bankRequestDate, 'd MMMM yyyy'),
+          effectiveFromDate: format(payload.effectiveFrom, 'd MMMM yyyy'),
+          cancelReason: payload.reason,
+          formattedFacilitiesList: ` 1. Facility ID ${ukefFacilityIds[0]}
+ 2. Facility ID ${ukefFacilityIds[1]}`,
+          ukefDealId,
+        });
+      });
+
+      it('sends correct email when effective date is in the future', async () => {
+        // Arrange
+        const url = getSubmitTfmDealCancellationUrl({ id: validId });
+
+        const payload = { ...aValidPayload(), effectiveFrom: add(new Date(), { days: 2 }).valueOf() };
+
+        // Act
+        await as(aPimUser).post(payload).to(url);
+
+        // Assert
+        expect(sendEmailMock).toHaveBeenCalledTimes(1);
+        expect(sendEmailMock).toHaveBeenCalledWith(CANCEL_DEAL_FUTURE_DATE, mockPimEmailAddress, {
+          bankRequestDate: format(payload.bankRequestDate, 'd MMMM yyyy'),
+          effectiveFromDate: format(payload.effectiveFrom, 'd MMMM yyyy'),
+          cancelReason: payload.reason,
+          formattedFacilitiesList: ` 1. Facility ID ${ukefFacilityIds[0]}
+ 2. Facility ID ${ukefFacilityIds[1]}`,
+          ukefDealId,
+        });
+      });
+
+      it('returns 200 for an authenticated user', async () => {
+        // Arrange
+        const url = getSubmitTfmDealCancellationUrl({ id: validId });
+
+        // Act
+        const response = await as(aPimUser).post(aValidPayload()).to(url);
+
+        // Assert
+        expect(response.status).toEqual(HttpStatusCode.Ok);
+      });
     });
   });
 });

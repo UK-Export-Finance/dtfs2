@@ -6,7 +6,7 @@ const gefEmailVariables = require('../emails/AIN-MIN-confirmation/gef-email-vari
 const { gefFacilitiesList } = require('../emails/AIN-MIN-confirmation/gef-facilities-list');
 const { generateFacilityLists } = require('../helpers/notify-template-formatters');
 const { generateMiaConfirmationEmailVars } = require('../emails/MIA-confirmation/generate-email-variables');
-const sendTfmEmail = require('./send-tfm-email');
+const sendTfmEmail = require('../services/send-tfm-email');
 
 /**
  * Make sure the first task is either:
