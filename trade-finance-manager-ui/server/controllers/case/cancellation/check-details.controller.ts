@@ -77,14 +77,6 @@ export const postDealCancellationDetails = async (req: PostDealCancellationDetai
       return res.redirect('/not-found');
     }
 
-    const submissionTypeCanBeCancelled = canSubmissionTypeBeCancelled(deal.dealSnapshot.submissionType);
-
-    const cancellationInvalid = reason === undefined || !bankRequestDate || Number.isNaN(bankRequestDate) || !effectiveFrom || Number.isNaN(effectiveFrom);
-
-    if (!submissionTypeCanBeCancelled || cancellationInvalid) {
-      return res.redirect(`/case/${_id}/deal`);
-    }
-
     await api.submitDealCancellation(_id, { reason, bankRequestDate, effectiveFrom }, userToken);
 
     return res.redirect(`/case/${_id}/deal`);
