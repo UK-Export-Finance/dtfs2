@@ -6,18 +6,18 @@ import { TfmDealCancellationRepo } from '../../../../repositories/tfm-deals-repo
 import { PostDealCancellationPayload } from '../../../routes/middleware/payload-validation/validate-post-deal-cancellation-payload';
 import { shouldDealBeCancelledImmediately } from '../../../../services/deal-cancellation/post-deal-cancellation.service';
 
-type SubmitTfmDealCancellationRequest = CustomExpressRequest<{
+type PostTfmDealCancellationRequest = CustomExpressRequest<{
   reqBody: PostDealCancellationPayload;
 }>;
 
-type SubmitTfmDealCancellationResponse = Response<ApiErrorResponseBody | TfmDealCancellationResponse>;
+type PostTfmDealCancellationResponse = Response<ApiErrorResponseBody | TfmDealCancellationResponse>;
 
 /**
  * Submits the TFM deal cancellation object
  * @param req - The request object
  * @param res - The response object
  */
-export const postTfmDealCancellation = async (req: SubmitTfmDealCancellationRequest, res: SubmitTfmDealCancellationResponse) => {
+export const postTfmDealCancellation = async (req: PostTfmDealCancellationRequest, res: PostTfmDealCancellationResponse) => {
   const { cancellation, auditDetails } = req.body;
   const { dealId } = req.params;
 
