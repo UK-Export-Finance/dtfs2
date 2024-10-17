@@ -39,6 +39,9 @@ const aValidPayload = (): PostSubmitDealCancellationPayload => ({
   effectiveFrom: new Date().valueOf(),
 });
 
+const ukefDealId = 'ukefDealId';
+const ukefFacilityIds = ['ukefFacilityId1', 'ukefFacilityId2'];
+
 describe('POST /v1/deals/:id/cancellation/submit', () => {
   let testUsers: Awaited<ReturnType<typeof initialiseTestUsers>>;
   let aPimUser: TestUser;
@@ -73,6 +76,20 @@ describe('POST /v1/deals/:id/cancellation/submit', () => {
     beforeEach(() => {
       process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'true';
       jest.clearAllMocks();
+    });
+
+    beforeEach(() => {
+      findOneDealMock.mockResolvedValue({ dealSnapshot: { ukefDealId } } as TfmDeal);
+      findFacilitiesByDealIdMock.mockResolvedValue(
+        ukefFacilityIds.map(
+          (ukefFacilityId) =>
+            ({
+              facilitySnapshot: {
+                ukefFacilityId,
+              },
+            }) as TfmFacility,
+        ),
+      );
     });
 
     afterAll(() => {
@@ -153,23 +170,6 @@ describe('POST /v1/deals/:id/cancellation/submit', () => {
     });
 
     describe('when the deal and facilities are fetched successfully', () => {
-      const ukefDealId = 'ukefDealId';
-      const ukefFacilityIds = ['ukefFacilityId1', 'ukefFacilityId2'];
-
-      beforeEach(() => {
-        findOneDealMock.mockResolvedValueOnce({ dealSnapshot: { ukefDealId } } as TfmDeal);
-        findFacilitiesByDealIdMock.mockResolvedValueOnce(
-          ukefFacilityIds.map(
-            (ukefFacilityId) =>
-              ({
-                facilitySnapshot: {
-                  ukefFacilityId,
-                },
-              }) as TfmFacility,
-          ),
-        );
-      });
-
       it('sends correct email when effective date is today', async () => {
         // Arrange
         const url = getSubmitTfmDealCancellationUrl({ id: validId });
@@ -185,9 +185,9 @@ describe('POST /v1/deals/:id/cancellation/submit', () => {
           bankRequestDate: format(payload.bankRequestDate, 'd MMMM yyyy'),
           effectiveFromDate: format(payload.effectiveFrom, 'd MMMM yyyy'),
           cancelReason: payload.reason,
-          formattedFacilitiesList: ` 1. Facility ID 00123145
-   2. Facility ID 00123146`,
-          ukefDealId: '00123144',
+          formattedFacilitiesList: ` 1. Facility ID ${ukefFacilityIds[0]}
+ 2. Facility ID ${ukefFacilityIds[1]}`,
+          ukefDealId,
         });
       });
 
@@ -206,9 +206,9 @@ describe('POST /v1/deals/:id/cancellation/submit', () => {
           bankRequestDate: format(payload.bankRequestDate, 'd MMMM yyyy'),
           effectiveFromDate: format(payload.effectiveFrom, 'd MMMM yyyy'),
           cancelReason: payload.reason,
-          formattedFacilitiesList: ` 1. Facility ID 00123145
-   2. Facility ID 00123146`,
-          ukefDealId: '00123144',
+          formattedFacilitiesList: ` 1. Facility ID ${ukefFacilityIds[0]}
+ 2. Facility ID ${ukefFacilityIds[1]}`,
+          ukefDealId,
         });
       });
 
