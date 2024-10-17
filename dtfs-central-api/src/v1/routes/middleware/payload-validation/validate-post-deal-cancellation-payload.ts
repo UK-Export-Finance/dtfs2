@@ -1,8 +1,10 @@
 import z from 'zod';
-import { AuditDetails, createValidationMiddlewareForSchema } from '@ukef/dtfs2-common';
+import { AuditDetails, createValidationMiddlewareForSchema, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { DEAL_CANCELLATION } from '@ukef/dtfs2-common/schemas';
 import { AuditDetailsSchema } from './schemas';
 
-const PostDealCancellationSchema: z.ZodType<{ auditDetails: AuditDetails }> = z.object({
+const PostDealCancellationSchema: z.ZodType<{ cancellation: TfmDealCancellation; auditDetails: AuditDetails }> = z.object({
+  cancellation: DEAL_CANCELLATION,
   auditDetails: AuditDetailsSchema,
 });
 

@@ -19,10 +19,12 @@ export type SubmitDealCancellationRequest = CustomExpressRequest<{
  */
 export const submitDealCancellation = async (req: SubmitDealCancellationRequest, res: Response) => {
   const { dealId } = req.params;
+  const cancellation = req.body;
 
   try {
     const cancellationResponse = await api.submitDealCancellation({
       dealId,
+      cancellation,
       auditDetails: generateTfmAuditDetails(req.user._id),
     });
 

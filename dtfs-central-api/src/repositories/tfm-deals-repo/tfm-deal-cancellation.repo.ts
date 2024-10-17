@@ -114,18 +114,24 @@ export class TfmDealCancellationRepo {
   /**
    * submits the deal cancellation and updates the respective deal stage
    * @param dealId - The deal id
+   * @param cancellation - The deal cancellation details to submit
    * @param auditDetails - The users audit details
    */
-  public static async updateDealTfmStageToCancelled(dealId: string | ObjectId, auditDetails: AuditDetails): Promise<TfmDealCancellationResponse> {
+  public static async updateDealTfmStageToCancelled(
+    dealId: string | ObjectId,
+    cancellation: TfmDealCancellation,
+    auditDetails: AuditDetails,
+  ): Promise<TfmDealCancellationResponse> {
     const dealCollection = await this.getCollection();
-
-    // TODO: Throw error if passed in object doesn't match retrieved object
 
     const updateDeal = await dealCollection.updateOne(
       {
         _id: { $eq: new ObjectId(dealId) },
         'tfm.stage': { $ne: TFM_DEAL_STAGE.CANCELLED },
         'dealSnapshot.submissionType': { $in: [DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN] },
+        'tfm.cancellation.reason': { $eq: cancellation.reason },
+        'tfm.cancellation.bankRequestDate': { $eq: cancellation.bankRequestDate },
+        'tfm.cancellation.effectiveFrom': { $eq: cancellation.effectiveFrom },
       },
       flatten({
         'tfm.stage': TFM_DEAL_STAGE.CANCELLED,

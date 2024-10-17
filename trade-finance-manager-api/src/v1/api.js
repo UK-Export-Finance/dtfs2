@@ -306,10 +306,11 @@ const updateDealCancellation = async ({ dealId, dealCancellationUpdate, auditDet
  * Submits the deal cancellation
  * @param {Object} params
  * @param {string} params.dealId - id of deal to cancel
+ * @param {import('@ukef/dtfs2-common').TfmDealCancellation} params.cancellation - the cancellation details to submit
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
  * @returns {Promise<import('@ukef/dtfs2-common').TfmDealCancellationResponse>} update result object
  */
-const submitDealCancellation = async ({ dealId, auditDetails }) => {
+const submitDealCancellation = async ({ dealId, cancellation, auditDetails }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -322,6 +323,7 @@ const submitDealCancellation = async ({ dealId, auditDetails }) => {
       url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/cancellation/submit`,
       headers: headers.central,
       data: {
+        cancellation,
         auditDetails,
       },
     });

@@ -17,13 +17,13 @@ type SubmitTfmDealCancellationResponse = Response<ApiErrorResponseBody | TfmDeal
  * @param res - The response object
  */
 export const submitTfmDealCancellation = async (req: SubmitTfmDealCancellationRequest, res: SubmitTfmDealCancellationResponse) => {
-  const { auditDetails } = req.body;
+  const { cancellation, auditDetails } = req.body;
   const { dealId } = req.params;
 
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.TFM);
 
-    const cancelledDealData = await TfmDealCancellationRepo.updateDealTfmStageToCancelled(dealId, auditDetails);
+    const cancelledDealData = await TfmDealCancellationRepo.updateDealTfmStageToCancelled(dealId, cancellation, auditDetails);
 
     return res.status(HttpStatusCode.Ok).send(cancelledDealData);
   } catch (error) {
