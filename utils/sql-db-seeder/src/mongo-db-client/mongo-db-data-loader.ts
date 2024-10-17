@@ -7,7 +7,9 @@ import { mongoDbClient } from '../../../drivers/db-client';
  * more efficient
  */
 export class MongoDbDataLoader {
-  private static banks: Bank[] | undefined;
+  private static allBanks: Bank[] | undefined;
+
+  private static banks: Record<string, Bank> = {};
 
   private static pdcReconciledUser: TfmUser | undefined;
 
@@ -18,12 +20,15 @@ export class MongoDbDataLoader {
    * @returns All banks
    */
   public static async getAllBanks(): Promise<Bank[]> {
-    if (this.banks) {
-      return this.banks;
+    if (this.allBanks) {
+      return this.allBanks;
     }
     const collection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.BANKS);
-    this.banks = await collection.find().toArray();
-    return this.banks;
+    this.allBanks = await collection.find().toArray();
+    this.allBanks.forEach((bank) => {
+      this.banks[bank.id] = bank;
+    });
+    return this.allBanks;
   }
 
   /**
@@ -64,5 +69,24 @@ export class MongoDbDataLoader {
     }
     this.paymentReportOfficerUsers[username] = user;
     return user;
+  }
+
+  /**
+   * Gets a bank by bank id
+   * @param bankId - The id of the bank
+   * @returns The found bank
+   * @throws {Error} If the bank cannot be found
+   */
+  public static async getBankByIdOrFail(bankId: string): Promise<Bank> {
+    if (this.banks[bankId]) {
+      return this.banks[bankId];
+    }
+    const banksCollection = await mongoDbClient.getCollection('banks');
+    const bank = await banksCollection.findOne({ id: { $eq: bankId } });
+    if (!bank) {
+      throw new Error(`Failed to get bank with id`);
+    }
+    this.banks[bank.id] = bank;
+    return bank;
   }
 }

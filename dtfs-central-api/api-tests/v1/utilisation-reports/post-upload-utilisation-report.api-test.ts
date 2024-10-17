@@ -18,7 +18,7 @@ import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
-import { aUtilisationReportRawCsvData, aPortalUser, aFacility, aBank } from '../../../test-helpers';
+import { aUtilisationReportRawCsvData, aPortalUser, aFacility, aTfmFacility, aBank } from '../../../test-helpers';
 import { PostUploadUtilisationReportRequestBody } from '../../../src/v1/controllers/utilisation-report-service/post-upload-utilisation-report.controller';
 
 console.error = jest.fn();
@@ -43,6 +43,7 @@ describe(`POST ${getUrl()}`, () => {
 
   const insertTfmFacilitiesForFacilityIds = async (ukefFacilityIds: string[]): Promise<void> => {
     const tfmFacilities: WithoutId<TfmFacility>[] = ukefFacilityIds.map((ukefFacilityId) => ({
+      ...aTfmFacility(),
       facilitySnapshot: {
         ...aFacility(),
         ukefFacilityId,
@@ -77,7 +78,7 @@ describe(`POST ${getUrl()}`, () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', aNotReceivedReport());
 
     const tfmFacilitiesCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
-    await tfmFacilitiesCollection.insertOne({ facilitySnapshot: { ...aFacility(), ukefFacilityId: facilityId } });
+    await tfmFacilitiesCollection.insertOne({ ...aTfmFacility(), facilitySnapshot: { ...aFacility(), ukefFacilityId: facilityId } });
 
     const banksCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.BANKS);
     await banksCollection.insertOne(bankToInsert);
