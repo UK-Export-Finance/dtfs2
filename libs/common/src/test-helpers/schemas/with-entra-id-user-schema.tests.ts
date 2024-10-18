@@ -8,7 +8,7 @@ type TestCasesParams = {
 
 type WithEntraIdUserSchemaTestsParams = {
   schema: ZodSchema;
-} & TestCasesParams;
+} & Partial<TestCasesParams>;
 
 export function aValidEntraIdUser(): EntraIdUser {
   return {
@@ -21,7 +21,7 @@ export function aValidEntraIdUser(): EntraIdUser {
   };
 }
 
-export function withEntraIdUserSchemaTests({ schema, getTestObjectWithUpdatedUserParams }: WithEntraIdUserSchemaTestsParams) {
+export function withEntraIdUserSchemaTests({ schema, getTestObjectWithUpdatedUserParams = (entraIdUser) => entraIdUser }: WithEntraIdUserSchemaTestsParams) {
   describe('with ENTRA_ID_USER_SCHEMA tests', () => {
     withSchemaTests({
       schema,

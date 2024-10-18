@@ -8,7 +8,7 @@ type TestCasesParams = {
 
 type WithUserUpsertRequestSchemaTestsParams = {
   schema: ZodSchema;
-} & TestCasesParams;
+} & Partial<TestCasesParams>;
 
 export function aValidUserUpsertRequest(): UserUpsertRequest {
   return {
@@ -22,7 +22,10 @@ export function aValidUserUpsertRequest(): UserUpsertRequest {
   };
 }
 
-export function withUserUpsertRequestSchemaTests({ schema, getTestObjectWithUpdatedUserUpsertRequestParams }: WithUserUpsertRequestSchemaTestsParams) {
+export function withUserUpsertRequestSchemaTests({
+  schema,
+  getTestObjectWithUpdatedUserUpsertRequestParams = (userUpsertRequest) => userUpsertRequest,
+}: WithUserUpsertRequestSchemaTestsParams) {
   describe('with USER_UPSERT_REQUEST_SCHEMA tests', () => {
     withSchemaTests({
       schema,

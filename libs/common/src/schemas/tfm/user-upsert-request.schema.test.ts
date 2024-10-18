@@ -4,6 +4,5 @@ import { USER_UPSERT_REQUEST_SCHEMA } from './user-upsert-request.schema';
 describe('USER_UPSERT_REQUEST_SCHEMA', () => {
   withUserUpsertRequestSchemaTests({
     schema: USER_UPSERT_REQUEST_SCHEMA,
-    getTestObjectWithUpdatedUserUpsertRequestParams: (userUpsertRequest) => userUpsertRequest,
   });
 });
