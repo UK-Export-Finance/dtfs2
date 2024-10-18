@@ -40,7 +40,7 @@
     "clamscan": "^2.3.1",
     "connect-flash": "0.1.1",
     "connect-redis": "5.2.0",
-    "cookie-parser": "^1.4.6",
+    "cookie-parser": "^1.4.7",
     "core-js": "^3.38.1",
     "csurf": "^1.11.0",
     "csv-parser": "^3.0.0",
