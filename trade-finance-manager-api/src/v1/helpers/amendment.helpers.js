@@ -1,7 +1,7 @@
 const { format, fromUnixTime } = require('date-fns');
 const { CURRENCY, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../api');
-const sendTfmEmail = require('../controllers/send-tfm-email');
+const sendTfmEmail = require('../services/send-tfm-email');
 const { UNDERWRITER_MANAGER_DECISIONS } = require('../../constants/amendments');
 const { TEAMS } = require('../../constants');
 const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');

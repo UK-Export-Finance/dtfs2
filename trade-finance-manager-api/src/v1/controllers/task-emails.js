@@ -1,6 +1,6 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
-const sendTfmEmail = require('./send-tfm-email');
+const sendTfmEmail = require('../services/send-tfm-email');
 const { generateTaskEmailVariables } = require('../helpers/generate-task-email-variables');
 
 const sendUpdatedTaskEmail = async (task, deal, urlOrigin) => {
