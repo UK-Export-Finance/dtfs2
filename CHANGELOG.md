@@ -1,5 +1,28 @@
 # Changelog
 
+## [2.5.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.4.0...v2.5.0) (2024-10-18)
+
+
+### Features
+
+* **DTFS2-6892:** commonise entra user schema and refactor tests ([#3671](https://github.com/UK-Export-Finance/dtfs2/issues/3671)) ([df92877](https://github.com/UK-Export-Finance/dtfs2/commit/df928779cc08be8ce401bab871fdca921416af05))
+* **dtfs2-6892:** fix docker config and update routers to avoid issue with unbound methods ([#3693](https://github.com/UK-Export-Finance/dtfs2/issues/3693)) ([89221dc](https://github.com/UK-Export-Finance/dtfs2/commit/89221dc8b7389e55a5f3df606a7dc0d5ae095f07))
+* **DTFS2-7296:** refactor e2e date constants ([#3664](https://github.com/UK-Export-Finance/dtfs2/issues/3664)) ([29cbb6f](https://github.com/UK-Export-Finance/dtfs2/commit/29cbb6f01ead0cc3c7b1e855e17c9904d8853713))
+* **DTFS2-7489:** create submit cancellation endpoint tfm api ([#3674](https://github.com/UK-Export-Finance/dtfs2/issues/3674)) ([0733875](https://github.com/UK-Export-Finance/dtfs2/commit/073387538d1053d10514f656dd2c38e175ea2307))
+* **DTFS2-7528:** submit cancellation in tfm-ui ([#3683](https://github.com/UK-Export-Finance/dtfs2/issues/3683)) ([59132d8](https://github.com/UK-Export-Finance/dtfs2/commit/59132d89a42e9cdcf8ebaca883e558ea16ea4793))
+* **DTFS2-7553:** add status to deal cancellation ([#3697](https://github.com/UK-Export-Finance/dtfs2/issues/3697)) ([9d42cbc](https://github.com/UK-Export-Finance/dtfs2/commit/9d42cbc4d9d9f8450c53fdcf0e8beb4d1cf50903))
+* **DTFS2-7557:** acbs build test ([#3701](https://github.com/UK-Export-Finance/dtfs2/issues/3701)) ([6c3fbd6](https://github.com/UK-Export-Finance/dtfs2/commit/6c3fbd69f745b2ac2d5ce6fc086486ddb7f168dd))
+* **FN-2311:** split premium payments and payment detail types ([#3656](https://github.com/UK-Export-Finance/dtfs2/issues/3656)) ([2ed7305](https://github.com/UK-Export-Finance/dtfs2/commit/2ed730574cbe015b59a3cff718a54944f1a0f475))
+* **FN-2594:** remove disabled year and autocomplete fix on find report by year tfm page ([#3675](https://github.com/UK-Export-Finance/dtfs2/issues/3675)) ([034280a](https://github.com/UK-Export-Finance/dtfs2/commit/034280a9055adce99dbb96238a241ff9d8255292))
+* **FN-3484:** download report link on utilisation tab ([#3667](https://github.com/UK-Export-Finance/dtfs2/issues/3667)) ([33a5e68](https://github.com/UK-Export-Finance/dtfs2/commit/33a5e684431fbc68f5bf588fe54519a12f497aec))
+* **FN-3493:** persist selected records on add payment screen ([#3692](https://github.com/UK-Export-Finance/dtfs2/issues/3692)) ([c26d533](https://github.com/UK-Export-Finance/dtfs2/commit/c26d533324853bacc6e2918b590e60e98ee67fb0))
+
+
+### Bug Fixes
+
+* **acbs-deployment:** acbs dockerfile reference fix ([#3700](https://github.com/UK-Export-Finance/dtfs2/issues/3700)) ([e9f943c](https://github.com/UK-Export-Finance/dtfs2/commit/e9f943cbec9f06a2c1de5b23f9cbb39708197685))
+* **FN-3502-3503:** fix keying sheet adjustments UI ([#3673](https://github.com/UK-Export-Finance/dtfs2/issues/3673)) ([558487f](https://github.com/UK-Export-Finance/dtfs2/commit/558487f924639222bff8ec2e4592c9b885147535))
+
 ## [2.4.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.3.0...v2.4.0) (2024-10-14)
 
 ### Features
