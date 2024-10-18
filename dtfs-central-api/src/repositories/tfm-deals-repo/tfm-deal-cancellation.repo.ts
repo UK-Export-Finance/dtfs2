@@ -117,11 +117,15 @@ export class TfmDealCancellationRepo {
    * @param cancellation - The deal cancellation details to submit
    * @param auditDetails - The users audit details
    */
-  public static async submitCancelDeal(
+  public static async submitDealCancellation(
     dealId: string | ObjectId,
     cancellation: TfmDealCancellation,
     auditDetails: AuditDetails,
   ): Promise<TfmDealCancellationResponse> {
+    if (!ObjectId.isValid(dealId)) {
+      throw new InvalidDealIdError(dealId.toString());
+    }
+
     const dealCollection = await this.getCollection();
 
     const updateDeal = await dealCollection.updateOne(

@@ -11,7 +11,7 @@ export class DealCancellationService {
     const isDealCancellationPastOrPresent = new Date().valueOf() >= cancellation.effectiveFrom;
 
     if (isDealCancellationPastOrPresent) {
-      return await TfmDealCancellationRepo.submitCancelDeal(dealId, cancellation, auditDetails);
+      return await TfmDealCancellationRepo.submitDealCancellation(dealId, cancellation, auditDetails);
     }
 
     // TODO DTFS2-7429: Handle future effective from dates

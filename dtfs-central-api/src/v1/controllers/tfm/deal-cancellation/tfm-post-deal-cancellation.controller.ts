@@ -3,7 +3,7 @@ import { HttpStatusCode } from 'axios';
 import { ApiError, ApiErrorResponseBody, AUDIT_USER_TYPES, CustomExpressRequest, TfmDealCancellationResponse } from '@ukef/dtfs2-common';
 import { validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
 import { SubmitDealCancellationPayload } from '../../../routes/middleware/payload-validation/validate-post-deal-cancellation-payload';
-import { DealCancellationService } from '../../../../services/deal-cancellation/deal-cancellation.service';
+import { DealCancellationService } from '../../../../services/tfm/deal-cancellation.service';
 
 type SubmitTfmDealCancellationRequest = CustomExpressRequest<{
   reqBody: SubmitDealCancellationPayload;
