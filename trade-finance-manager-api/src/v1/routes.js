@@ -74,7 +74,7 @@ openRouter.route('/user').post(validateSsoFeatureFlagIsOff, users.createTfmUser)
 authRouter
   .route('/users')
   .post(validateSsoFeatureFlagIsOff, users.createTfmUser)
-  .put(validateSsoFeatureFlagIsOn, validatePutUserPayload, users.upsertTfmUserFromEntraUser);
+  .put(validateSsoFeatureFlagIsOn, validatePutUserPayload, users.upsertTfmUserFromEntraIdUser);
 
 authRouter
   .route('/users/:user')
