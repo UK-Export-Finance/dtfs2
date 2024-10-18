@@ -1264,7 +1264,7 @@ const updateDealCancellation = async (dealId, cancellationUpdate, userToken) => 
  * Gets the deal cancellation object on a TFM MIN or AIN deal
  * @param {string} dealId - The deal ID
  * @param {string} userToken - The user token
- * @returns {Promise<Partial<import('@ukef/dtfs2-common').TfmDealCancellation>>}
+ * @returns {Promise<Partial<import('@ukef/dtfs2-common').TfmDealCancellationWithStatus>>}
  */
 const getDealCancellation = async (dealId, userToken) => {
   try {

@@ -9,6 +9,7 @@ import {
   TfmDeal,
   TfmDealCancellation,
   TfmDealCancellationResponse,
+  TfmDealCancellationWithStatus,
 } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { flatten } from 'mongo-dot-notation';
@@ -24,7 +25,7 @@ export class TfmDealCancellationRepo {
    * @param dealId - The deal id
    * @returns the found deal cancellation
    */
-  public static async findDealCancellationByDealId(dealId: string | ObjectId): Promise<Partial<TfmDealCancellation>> {
+  public static async findDealCancellationByDealId(dealId: string | ObjectId): Promise<Partial<TfmDealCancellationWithStatus>> {
     if (!ObjectId.isValid(dealId)) {
       throw new InvalidDealIdError(dealId.toString());
     }
@@ -55,7 +56,7 @@ export class TfmDealCancellationRepo {
    */
   public static async updateOneDealCancellation(
     dealId: string | ObjectId,
-    update: Partial<TfmDealCancellation>,
+    update: Partial<TfmDealCancellationWithStatus>,
     auditDetails: AuditDetails,
   ): Promise<UpdateResult> {
     if (!ObjectId.isValid(dealId)) {

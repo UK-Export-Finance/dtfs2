@@ -8,7 +8,10 @@ import api from '../../../api';
 import { CheckDetailsViewModel } from '../../../types/view-models';
 
 export type GetDealCancellationDetailsRequest = CustomExpressRequest<{ params: { _id: string } }>;
-export type PostDealCancellationDetailsRequest = CustomExpressRequest<{ params: { _id: string }; reqBody: { cancellation: Partial<TfmDealCancellation> } }>;
+export type PostDealCancellationDetailsRequest = CustomExpressRequest<{
+  params: { _id: string };
+  reqBody: { cancellation: Partial<TfmDealCancellation> };
+}>;
 
 /**
  * controller to get deal cancellation details
