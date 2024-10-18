@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_STAGE } from '@ukef/dtfs2-common';
+import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_STAGE, AuditDetails, API_ERROR_CODE } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { withMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import wipeDB from '../../../wipeDB';
@@ -13,11 +13,17 @@ import { MOCK_PORTAL_USER } from '../../../mocks/test-users/mock-portal-user';
 
 const originalProcessEnv = { ...process.env };
 
-const auditDetails = generateTfmAuditDetails(aTfmUser()._id);
-
-describe('/v1/tfm/deals/:dealId/cancellation', () => {
+describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
   let dealId: string;
-  let dealCancellationUrl: string;
+  let submitDealCancellationUrl: string;
+  let auditDetails: AuditDetails;
+  let tfmUserId: ObjectId;
+
+  const cancellation = {
+    reason: 'test reason',
+    bankRequestDate: new Date().valueOf(),
+    effectiveFrom: new Date().valueOf(),
+  };
 
   const newDeal = aDeal({
     dealType: DEALS.DEAL_TYPE.BSS_EWCS,
@@ -31,7 +37,9 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
   beforeEach(async () => {
     const createDealResponse: { body: { _id: string } } = await createDeal({ deal: newDeal, user: aPortalUser() });
     dealId = createDealResponse.body._id;
-    dealCancellationUrl = `/v1/tfm/deals/${dealId}/cancellation`;
+    tfmUserId = aTfmUser()._id;
+    auditDetails = generateTfmAuditDetails(tfmUserId);
+    submitDealCancellationUrl = `/v1/tfm/deals/${dealId}/cancellation/submit`;
 
     await testApi
       .put({
@@ -54,6 +62,7 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
             stage: TFM_DEAL_STAGE.CONFIRMED,
             exporterCreditRating: 'Acceptable (B+)',
             lastUpdated: 1727085149571,
+            cancellation,
             lossGivenDefault: 50,
             probabilityOfDefault: 12,
           },
@@ -68,7 +77,7 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.DEALS]);
   });
 
-  describe('DELETE /v1/tfm/deals/:dealId/cancellation', () => {
+  describe('POST /v1/tfm/deals/:dealId/cancellation/submit', () => {
     describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is disabled', () => {
       beforeEach(() => {
         process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'false';
@@ -79,7 +88,7 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
       });
 
       it('should return 404', async () => {
-        const { status } = await testApi.remove({ auditDetails }).to(dealCancellationUrl);
+        const { status } = await testApi.post({ cancellation, auditDetails }).to(submitDealCancellationUrl);
 
         expect(status).toEqual(HttpStatusCode.NotFound);
       });
@@ -95,49 +104,65 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
       });
 
       withMongoIdPathParameterValidationTests({
-        baseUrl: '/v1/tfm/deals/:dealId/cancellation',
-        makeRequest: (url) => testApi.remove({ auditDetails }).to(url),
+        baseUrl: '/v1/tfm/deals/:dealId/cancellation/submit',
+        makeRequest: (url) => testApi.post({ cancellation, auditDetails }).to(url),
       });
 
-      it('should delete the deal cancellation object', async () => {
-        const dealCancellation = {
-          reason: 'test reason',
-          bankRequestDate: 1794418807,
-          effectiveFrom: 1794419907,
-        };
+      it('should return the submit cancellation response object if a matching deal and cancellation exists', async () => {
+        const submitCancellationResponse = await testApi.post({ cancellation, auditDetails }).to(submitDealCancellationUrl);
 
-        await testApi.put({ dealCancellationUpdate: dealCancellation, auditDetails: generateTfmAuditDetails(aTfmUser()._id) }).to(dealCancellationUrl);
+        expect(submitCancellationResponse.body).toEqual({ cancelledDealUkefId: dealId });
+        expect(submitCancellationResponse.status).toEqual(HttpStatusCode.Ok);
+      });
 
-        const deleteCancellationResponse = await testApi.remove({ auditDetails }).to(dealCancellationUrl);
+      it('should return 404 if deal is valid but the existing cancellation does not match the passed in params', async () => {
+        const differentDealCancellationDetails = { ...cancellation, reason: 'a different reason' };
 
-        expect(deleteCancellationResponse.status).toEqual(HttpStatusCode.NoContent);
+        const submitCancellationResponse = await testApi.post({ cancellation: differentDealCancellationDetails, auditDetails }).to(submitDealCancellationUrl);
 
-        const getCancellationResponse = await testApi.get(dealCancellationUrl);
-
-        expect(getCancellationResponse.body).toEqual({});
+        expect(submitCancellationResponse.status).toEqual(HttpStatusCode.NotFound);
+        expect(submitCancellationResponse.body).toEqual({
+          status: HttpStatusCode.NotFound,
+          message: `Deal not found: ${dealId}`,
+        });
       });
 
       it('should return 404 if dealId is valid but not associated to a deal', async () => {
-        const validButNonExistentDealId = new ObjectId().toString();
+        const validButNonExistentDealId = new ObjectId();
 
-        const deleteCancellationResponse = await testApi.remove({ auditDetails }).to(`/v1/tfm/deals/${validButNonExistentDealId}/cancellation`);
+        const submitCancellationResponse = await testApi
+          .post({ cancellation, auditDetails })
+          .to(`/v1/tfm/deals/${validButNonExistentDealId.toString()}/cancellation/submit`);
 
-        expect(deleteCancellationResponse.status).toEqual(HttpStatusCode.NotFound);
-        expect(deleteCancellationResponse.body).toEqual({
+        expect(submitCancellationResponse.status).toEqual(HttpStatusCode.NotFound);
+        expect(submitCancellationResponse.body).toEqual({
           status: HttpStatusCode.NotFound,
-          message: `Deal not found: ${validButNonExistentDealId}`,
+          message: `Deal not found: ${validButNonExistentDealId.toString()}`,
         });
       });
 
       it('should return 400 if invalid dealId', async () => {
         const invalidDealId = '1234';
 
-        const deleteCancellationResponse = await testApi.remove({ auditDetails }).to(`/v1/tfm/deals/${invalidDealId}/cancellation`);
-        expect(deleteCancellationResponse.status).toEqual(400);
-        expect(deleteCancellationResponse.body).toEqual({
+        const submitCancellationResponse = await testApi.post({ cancellation, auditDetails }).to(`/v1/tfm/deals/${invalidDealId}/cancellation/submit`);
+        expect(submitCancellationResponse.status).toEqual(400);
+        expect(submitCancellationResponse.body).toEqual({
           code: 'INVALID_MONGO_ID_PATH_PARAMETER',
           message: "Expected path parameter 'dealId' to be a valid mongo id",
         });
+      });
+
+      it('should return 400 if the payload is invalid', async () => {
+        const invalidPayload = {
+          reason: '',
+          bankRequestDate: new Date().valueOf(),
+          effectiveFrom: undefined,
+        };
+
+        const submitCancellationResponse = await testApi.post({ cancellation: invalidPayload, auditDetails }).to(submitDealCancellationUrl);
+
+        expect(submitCancellationResponse.status).toEqual(400);
+        expect(submitCancellationResponse.body).toHaveProperty('code', API_ERROR_CODE.INVALID_PAYLOAD);
       });
     });
   });

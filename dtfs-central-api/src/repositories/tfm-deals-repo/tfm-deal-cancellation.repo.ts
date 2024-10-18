@@ -5,8 +5,11 @@ import {
   DealNotFoundError,
   InvalidDealIdError,
   MONGO_DB_COLLECTIONS,
+  TFM_DEAL_CANCELLATION_STATUS,
   TFM_DEAL_STAGE,
   TfmDeal,
+  TfmDealCancellation,
+  TfmDealCancellationResponse,
   TfmDealCancellationWithStatus,
 } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
@@ -108,5 +111,45 @@ export class TfmDealCancellationRepo {
     }
 
     return updateResult;
+  }
+
+  /**
+   * submits the deal cancellation and updates the respective deal stage
+   * @param dealId - The deal id
+   * @param cancellation - The deal cancellation details to submit
+   * @param auditDetails - The users audit details
+   */
+  public static async submitDealCancellation(
+    dealId: string | ObjectId,
+    cancellation: TfmDealCancellation,
+    auditDetails: AuditDetails,
+  ): Promise<TfmDealCancellationResponse> {
+    if (!ObjectId.isValid(dealId)) {
+      throw new InvalidDealIdError(dealId.toString());
+    }
+
+    const dealCollection = await this.getCollection();
+
+    const updateDeal = await dealCollection.updateOne(
+      {
+        _id: { $eq: new ObjectId(dealId) },
+        'tfm.stage': { $ne: TFM_DEAL_STAGE.CANCELLED },
+        'dealSnapshot.submissionType': { $in: [DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN] },
+        'tfm.cancellation.reason': { $eq: cancellation.reason },
+        'tfm.cancellation.bankRequestDate': { $eq: cancellation.bankRequestDate },
+        'tfm.cancellation.effectiveFrom': { $eq: cancellation.effectiveFrom },
+      },
+      flatten({
+        'tfm.stage': TFM_DEAL_STAGE.CANCELLED,
+        'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.COMPLETED,
+        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+      }),
+    );
+
+    if (!updateDeal?.matchedCount) {
+      throw new DealNotFoundError(dealId.toString());
+    }
+
+    return { cancelledDealUkefId: dealId };
   }
 }
