@@ -624,7 +624,7 @@ tfmRouter
 tfmRouter
   .route('/deals/:dealId/cancellation/submit')
   .all(validateDealCancellationEnabled, validation.mongoIdValidation('dealId'), handleExpressValidatorResult)
-  .post(validatePostDealCancellationPayload, tfmPostDealCancellationController.postTfmDealCancellation);
+  .post(validatePostDealCancellationPayload, tfmPostDealCancellationController.submitTfmDealCancellation);
 
 /**
  * @openapi

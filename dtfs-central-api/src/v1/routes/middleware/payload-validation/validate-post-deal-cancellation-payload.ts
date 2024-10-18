@@ -8,6 +8,6 @@ const PostDealCancellationSchema: z.ZodType<{ cancellation: TfmDealCancellation;
   auditDetails: AuditDetailsSchema,
 });
 
-export type PostDealCancellationPayload = z.infer<typeof PostDealCancellationSchema>;
+export type SubmitDealCancellationPayload = z.infer<typeof PostDealCancellationSchema>;
 
 export const validatePostDealCancellationPayload = createValidationMiddlewareForSchema(PostDealCancellationSchema);
