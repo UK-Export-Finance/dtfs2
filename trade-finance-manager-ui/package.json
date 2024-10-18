@@ -42,7 +42,7 @@
     "axios": "^1.7.7",
     "chance": "^1.1.12",
     "cheerio": "1.0.0-rc.12",
-    "chokidar": "^3.6.0",
+    "chokidar": "^4.0.1",
     "compression": "^1.7.4",
     "connect-flash": "0.1.1",
     "connect-redis": "^5.2.0",
