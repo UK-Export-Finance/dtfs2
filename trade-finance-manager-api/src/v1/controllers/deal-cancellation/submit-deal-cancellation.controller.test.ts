@@ -27,7 +27,7 @@ describe('controllers - deal cancellation', () => {
   });
 
   describe('POST - submitDealCancellation', () => {
-    it('should return 500 when submitDealCancellationMock throws an unknown error', async () => {
+    it('should return 500 when submitDealCancellation throws an unknown error', async () => {
       // Arrange
       submitDealCancellationMock.mockRejectedValueOnce(new Error('An error occurred'));
 
@@ -45,7 +45,7 @@ describe('controllers - deal cancellation', () => {
       expect(res._getData()).toEqual({ status: HttpStatusCode.InternalServerError, message: 'Failed to submit deal cancellation' });
     });
 
-    it('should return correct error status & message when submitDealCancellationMock throws an api error', async () => {
+    it('should return correct error status & message when submitDealCancellation throws an api error', async () => {
       // Arrange
       const errorStatus = HttpStatusCode.BadRequest;
       const errorMessage = 'An error occurred';
@@ -65,7 +65,7 @@ describe('controllers - deal cancellation', () => {
       expect(res._getData()).toEqual({ status: errorStatus, message: `Failed to submit deal cancellation: ${errorMessage}` });
     });
 
-    it('should call submitDealCancellationMock with the correct parameters', async () => {
+    it('should call submitDealCancellation with the correct parameters', async () => {
       // Arrange
       const { req, res } = httpMocks.createMocks<SubmitDealCancellationRequest>({
         params: { dealId: mockDealId },
@@ -78,7 +78,6 @@ describe('controllers - deal cancellation', () => {
 
       // Assert
       expect(submitDealCancellationMock).toHaveBeenCalledTimes(1);
-      // TODO: DTFS2-7298 - use values returned by api
       expect(submitDealCancellationMock).toHaveBeenCalledWith(mockDealId, dealCancellation);
     });
 
