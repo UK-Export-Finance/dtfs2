@@ -54,7 +54,7 @@ describe('updateFacilityUtilisationData', () => {
 
     // Assert
     expect(mockSave).toHaveBeenCalledWith(FacilityUtilisationDataEntity, facilityUtilisationDataEntity);
-    expect(facilityUtilisationDataEntity.utilisation).toEqual(1234567.77);
+    expect(facilityUtilisationDataEntity.utilisation).toEqual(ukefShareOfUtilisation);
     expect(facilityUtilisationDataEntity.reportPeriod).toEqual(reportPeriod);
     expect(facilityUtilisationDataEntity.lastUpdatedByTfmUserId).toEqual('abc123');
     expect(facilityUtilisationDataEntity.lastUpdatedByPortalUserId).toBeNull();
