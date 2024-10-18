@@ -1,4 +1,4 @@
-import { CronSchedulerJob } from '@ukef/dtfs2-common';
+import { CronSchedulerJob, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { endOfDay } from 'date-fns';
 import { ObjectId } from 'mongodb';
@@ -14,7 +14,7 @@ const cancelDeals = async (dealIds: ObjectId[]) => {
     dealIds.map((dealId) =>
       TfmDealRepo.updateOneDeal(
         dealId.toString(),
-        { dealSnapshot: { stage: 'Cancelled ' }, tfm: { cancellation: { status: 'Submitted' } } },
+        { dealSnapshot: { stage: 'Cancelled ' }, tfm: { cancellation: { status: TFM_DEAL_CANCELLATION_STATUS.COMPLETED } } },
         generateSystemAuditDetails(),
       ),
     ),
