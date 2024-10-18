@@ -1,4 +1,11 @@
-import { DEAL_SUBMISSION_TYPE, DealNotFoundError, InvalidDealIdError, MONGO_DB_COLLECTIONS, TFM_DEAL_STAGE } from '@ukef/dtfs2-common';
+import {
+  DEAL_SUBMISSION_TYPE,
+  DealNotFoundError,
+  InvalidDealIdError,
+  MONGO_DB_COLLECTIONS,
+  TFM_DEAL_CANCELLATION_STATUS,
+  TFM_DEAL_STAGE,
+} from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { ObjectId } from 'mongodb';
 import { flatten } from 'mongo-dot-notation';
@@ -49,7 +56,7 @@ describe('tfm-deals-cancellation-repo', () => {
 
       // Assert
       expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.TFM_DEALS);
-      expect(updateOneMock).toHaveBeenCalled();
+      expect(updateOneMock).toHaveBeenCalledTimes(1);
     });
 
     it('throws an InvalidDealIdError if deal is not a valid object id', async () => {
@@ -91,6 +98,7 @@ describe('tfm-deals-cancellation-repo', () => {
       };
       const expectedUpdate = flatten({
         'tfm.stage': TFM_DEAL_STAGE.CANCELLED,
+        'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.COMPLETED,
         auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
       });
 
