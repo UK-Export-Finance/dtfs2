@@ -95,7 +95,7 @@ export const getUtilisationReportReconciliationDetails = async (
 
   const paymentDetails = await getPaymentDetails(feeRecordPaymentEntityGroups, paymentDetailsFilters);
 
-  const utilisationDetails = await getUtilisationDetails(feeRecords);
+  const utilisationDetails = await getUtilisationDetails(feeRecords, reportPeriod);
 
   return {
     reportId: id,

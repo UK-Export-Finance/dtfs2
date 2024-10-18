@@ -19,6 +19,10 @@ context('Users can view utilisation', () => {
   const FACILITY_ID_ONE = '11111111';
   const FACILITY_ID_TWO = '22222222';
 
+  const reportPeriod = { start: { month: 12, year: 2023 }, end: { month: 2, year: 2024 } };
+  const dateWithinReportPeriod = new Date('2024-01-01');
+  const dateAfterReportPeriodEnd = new Date('2024-03-01');
+
   beforeEach(() => {
     cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
 
@@ -37,8 +41,22 @@ context('Users can view utilisation', () => {
       },
       amendments: [
         {
+          value: 350000,
+          status: AMENDMENT_STATUS.COMPLETED,
+          /**
+           * This amendment is not in effect for the report in question
+           * so should be ignored
+           */
+          effectiveDate: dateAfterReportPeriodEnd.getTime(),
+        },
+        {
           value: 300000,
           status: AMENDMENT_STATUS.COMPLETED,
+          /**
+           * This amendment is in effect for the report in question
+           * so it's value should be used
+           */
+          effectiveDate: dateWithinReportPeriod.getTime(),
         },
       ],
     };
@@ -49,6 +67,7 @@ context('Users can view utilisation', () => {
 
     const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
       .withId(REPORT_ID)
+      .withReportPeriod(reportPeriod)
       .withBankId(BANK_ID)
       .build();
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);

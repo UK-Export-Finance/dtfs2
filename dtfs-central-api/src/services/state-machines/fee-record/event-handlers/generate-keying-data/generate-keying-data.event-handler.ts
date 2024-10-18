@@ -2,6 +2,7 @@ import { EntityManager } from 'typeorm';
 import { DbRequestSource, FeeRecordEntity, FeeRecordStatus, ReportPeriod } from '@ukef/dtfs2-common';
 import { BaseFeeRecordEvent } from '../../event/base-fee-record.event';
 import { calculatePrincipalBalanceAdjustment, calculateFixedFeeAdjustment, updateFacilityUtilisationData } from '../helpers';
+import { calculateUkefShareOfUtilisation, getLatestTfmFacilityValues } from '../../../../../helpers';
 
 type GenerateKeyingDataEventPayload = {
   transactionEntityManager: EntityManager;
@@ -32,21 +33,30 @@ export const handleFeeRecordGenerateKeyingDataEvent = async (
     return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
   }
 
+  const { coverPercentage } = await getLatestTfmFacilityValues(feeRecord.facilityId, reportPeriod);
+
   const fixedFeeAdjustment = await calculateFixedFeeAdjustment(feeRecord, feeRecord.facilityUtilisationData, reportPeriod);
-  const principalBalanceAdjustment = calculatePrincipalBalanceAdjustment(feeRecord, feeRecord.facilityUtilisationData);
+
+  const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(feeRecord.facilityUtilisation, coverPercentage);
+
+  const principalBalanceAdjustment = calculatePrincipalBalanceAdjustment(ukefShareOfUtilisation, feeRecord.facilityUtilisationData);
+
   const statusToUpdateTo = getStatusToUpdateTo(feeRecord.feesPaidToUkefForThePeriod, fixedFeeAdjustment, principalBalanceAdjustment);
+
   feeRecord.updateWithKeyingData({
     status: statusToUpdateTo,
     fixedFeeAdjustment,
     principalBalanceAdjustment,
     requestSource,
   });
+
   await transactionEntityManager.save(FeeRecordEntity, feeRecord);
 
   await updateFacilityUtilisationData(feeRecord.facilityUtilisationData, {
     reportPeriod,
     utilisation: feeRecord.facilityUtilisation,
     requestSource,
+    ukefShareOfUtilisation,
     entityManager: transactionEntityManager,
   });
 

@@ -102,6 +102,7 @@ const tfmFacilityForReport = {
     coverEndDate: addMonths(new Date(), 5),
     interestPercentage: 5,
     dayCountBasis: 5,
+    coverPercentage: 80,
   },
 };
 

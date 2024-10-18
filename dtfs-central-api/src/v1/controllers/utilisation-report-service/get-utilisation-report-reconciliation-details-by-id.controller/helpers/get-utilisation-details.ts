@@ -1,4 +1,4 @@
-import { FeeRecordEntity, TfmFacility, FeeRecordUtilisation } from '@ukef/dtfs2-common';
+import { FeeRecordEntity, TfmFacility, FeeRecordUtilisation, ReportPeriod } from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../../../../../errors';
 import { mapToFeeRecordUtilisation } from './map-to-fee-record-utilisation';
@@ -13,9 +13,10 @@ import { mapToFeeRecordUtilisation } from './map-to-fee-record-utilisation';
  * - Multiple fee records could be for the same facility so avoids
  *   us making any duplicate calls
  * @param feeRecords - The fee records
+ * @param reportPeriod - The report period of the report of the fee records
  * @returns Utilisation data for each fee record
  */
-export const getUtilisationDetails = async (feeRecords: FeeRecordEntity[]): Promise<FeeRecordUtilisation[]> => {
+export const getUtilisationDetails = async (feeRecords: FeeRecordEntity[], reportPeriod: ReportPeriod): Promise<FeeRecordUtilisation[]> => {
   try {
     const allFacilityIds = feeRecords.map((feeRecord) => feeRecord.facilityId);
 
@@ -39,7 +40,7 @@ export const getUtilisationDetails = async (feeRecords: FeeRecordEntity[]): Prom
         throw new NotFoundError(`Failed to find a tfm facility with ukef facility id '${facilityId}'`);
       }
 
-      return mapToFeeRecordUtilisation(feeRecord, tfmFacility);
+      return mapToFeeRecordUtilisation(feeRecord, tfmFacility, reportPeriod);
     });
   } catch (error) {
     console.error('Failed to get utilisation details %o', error);

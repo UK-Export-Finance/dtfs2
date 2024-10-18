@@ -1,6 +1,7 @@
-import { FeeRecordEntity, TfmFacility, FeeRecordUtilisation } from '@ukef/dtfs2-common';
+import { FeeRecordEntity, TfmFacility, FeeRecordUtilisation, ReportPeriod, getDateFromMonthAndYear } from '@ukef/dtfs2-common';
 import Big from 'big.js';
-import { getLatestCompletedAmendmentToFacilityValue } from '../../../../../helpers';
+import { endOfMonth } from 'date-fns';
+import { getEffectiveFacilityValueAmendment } from '../../../../../helpers';
 
 /**
  * Calculates the exposure based on the current utilisation
@@ -19,7 +20,7 @@ export const calculateExposure = (utilisation: number, coverPercentage: number) 
  * @param tfmFacility - the tfm facility
  * @returns the mapped utilisation details
  */
-export const mapToFeeRecordUtilisation = (feeRecord: FeeRecordEntity, tfmFacility: TfmFacility): FeeRecordUtilisation => {
+export const mapToFeeRecordUtilisation = (feeRecord: FeeRecordEntity, tfmFacility: TfmFacility, reportPeriod: ReportPeriod): FeeRecordUtilisation => {
   const {
     id,
     facilityId,
@@ -31,8 +32,12 @@ export const mapToFeeRecordUtilisation = (feeRecord: FeeRecordEntity, tfmFacilit
     feesPaidToUkefForThePeriod,
     feesPaidToUkefForThePeriodCurrency,
   } = feeRecord;
+
   const { value: facilitySnapshotValue, coverPercentage } = tfmFacility.facilitySnapshot;
-  const amendedValue = getLatestCompletedAmendmentToFacilityValue(tfmFacility);
+
+  const endDateOfReportPeriod = endOfMonth(getDateFromMonthAndYear(reportPeriod.end));
+  const amendedValue = getEffectiveFacilityValueAmendment(tfmFacility, endDateOfReportPeriod);
+
   const value = amendedValue === null ? facilitySnapshotValue : amendedValue;
 
   return {

@@ -1,4 +1,5 @@
-import { calculateInitialUtilisation, isValidDate } from '@ukef/dtfs2-common';
+import { calculateDrawnAmount, isValidDate } from '@ukef/dtfs2-common';
+import Big from 'big.js';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { calculateInitialFixedFee } from './calculate-initial-fixed-fee';
 
@@ -8,6 +9,7 @@ export type RequiredParams = {
   dayCountBasis?: number | null;
   coverStartDate?: string | Date | null;
   coverEndDate?: string | Date | null;
+  coverPercentage?: number | null;
 };
 
 /**
@@ -33,13 +35,14 @@ export const parseDate = (date: string | Date | number | null): Date => {
  * @param coverEndDate
  * @returns true if all values are present and in the correct format
  */
-export const hasRequiredValues = ({ value, interestPercentage, dayCountBasis, coverStartDate, coverEndDate }: RequiredParams): boolean =>
+export const hasRequiredValues = ({ value, interestPercentage, dayCountBasis, coverStartDate, coverEndDate, coverPercentage }: RequiredParams): boolean =>
   Boolean(
     value &&
       coverStartDate &&
       coverEndDate &&
       interestPercentage &&
       dayCountBasis &&
+      coverPercentage &&
       isValidDate(new Date(coverStartDate)) &&
       isValidDate(new Date(coverEndDate)),
   );
@@ -49,6 +52,7 @@ export const hasRequiredValues = ({ value, interestPercentage, dayCountBasis, co
  * calculates initial utilisation and fixed fee for a facility
  * gets the facility from the tfm facilities repo
  * calculates initial utilisation and fixed fee from facility values
+ * calculates ukef share of utilisation from provided utilisation value and cover percentage
  * returns the calculated values
  * @param {String} facilityId
  * @returns {Object} fixedFee and utilisation values
@@ -60,15 +64,16 @@ export const calculateInitialUtilisationAndFixedFee = async (facilityId: string)
     throw new Error(`TFM facility ${facilityId} could not be found`);
   }
 
-  const { value, coverStartDate, coverEndDate, interestPercentage, dayCountBasis } = tfmFacility.facilitySnapshot;
+  const { value, coverStartDate, coverEndDate, interestPercentage, dayCountBasis, coverPercentage } = tfmFacility.facilitySnapshot;
 
-  if (!hasRequiredValues({ value, interestPercentage, dayCountBasis, coverStartDate, coverEndDate })) {
+  if (!hasRequiredValues({ value, interestPercentage, dayCountBasis, coverStartDate, coverEndDate, coverPercentage })) {
     throw new Error(`TFM facility values for ${facilityId} are missing`);
   }
 
-  const utilisation = calculateInitialUtilisation(value);
+  const ukefShareOfInitialUtilisation = new Big(calculateDrawnAmount(value, coverPercentage)).round(2).toNumber();
+
   const fixedFee = calculateInitialFixedFee({
-    utilisation,
+    ukefShareOfUtilisation: ukefShareOfInitialUtilisation,
     coverStartDate: parseDate(coverStartDate),
     coverEndDate: parseDate(coverEndDate),
     interestPercentage,
@@ -77,6 +82,6 @@ export const calculateInitialUtilisationAndFixedFee = async (facilityId: string)
 
   return {
     fixedFee,
-    utilisation,
+    utilisation: ukefShareOfInitialUtilisation,
   };
 };

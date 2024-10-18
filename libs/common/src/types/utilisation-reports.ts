@@ -63,7 +63,7 @@ export type UtilisationReportFacilityData = {
 };
 
 export interface CalculateFixedFeeBaseParams {
-  utilisation: number;
+  ukefShareOfUtilisation: number;
   interestPercentage: number;
   dayCountBasis: number;
 }

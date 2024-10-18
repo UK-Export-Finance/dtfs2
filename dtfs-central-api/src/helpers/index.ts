@@ -8,4 +8,6 @@ export { getFeeRecordPaymentEntityGroupStatus } from './get-fee-record-payment-e
 export { getFeeRecordPaymentEntityGroupReconciliationData } from './get-fee-record-payment-entity-group-reconciliation-data';
 export { convertTimestampToDate } from './convert-timestamp-to-date';
 export { getPreviousReportPeriod } from './get-previous-report-period';
+export { calculateUkefShareOfUtilisation } from './calculate-ukef-share-of-utilisation';
+export { getLatestTfmFacilityValues } from './get-latest-tfm-facility-values';
 export * from './amendments';

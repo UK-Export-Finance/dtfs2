@@ -1,7 +1,7 @@
 import { CURRENCY, FeeRecordEntityMockBuilder, FeeRecordUtilisation } from '@ukef/dtfs2-common';
 import { when } from 'jest-when';
 import { getUtilisationDetails } from './get-utilisation-details';
-import { aTfmFacility, aUtilisationReport } from '../../../../../../test-helpers';
+import { aReportPeriod, aTfmFacility, aUtilisationReport } from '../../../../../../test-helpers';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../../../../../errors';
 import { mapToFeeRecordUtilisation } from './map-to-fee-record-utilisation';
@@ -16,6 +16,8 @@ describe('get-utilisation-details', () => {
   });
 
   describe('getUtilisationDetails', () => {
+    const reportPeriod = aReportPeriod();
+
     describe('when no tfm facility is found for a fee record', () => {
       it('should throw a NotFoundError', async () => {
         // Arrange
@@ -24,7 +26,7 @@ describe('get-utilisation-details', () => {
         jest.spyOn(TfmFacilitiesRepo, 'findByUkefFacilityIds').mockResolvedValue([]);
 
         // Act + Assert
-        await expect(getUtilisationDetails([feeRecord])).rejects.toThrow(
+        await expect(getUtilisationDetails([feeRecord], reportPeriod)).rejects.toThrow(
           new NotFoundError(`Failed to find a tfm facility with ukef facility id '${facilityId}'`),
         );
       });
@@ -71,11 +73,11 @@ describe('get-utilisation-details', () => {
             feesPayable: { currency: CURRENCY.USD, amount: 6000 },
           },
         ];
-        when(mapToFeeRecordUtilisation).calledWith(firstFeeRecord, firstTfmFacility).mockReturnValue(expected[0]);
-        when(mapToFeeRecordUtilisation).calledWith(secondFeeRecord, secondTfmFacility).mockReturnValue(expected[1]);
+        when(mapToFeeRecordUtilisation).calledWith(firstFeeRecord, firstTfmFacility, reportPeriod).mockReturnValue(expected[0]);
+        when(mapToFeeRecordUtilisation).calledWith(secondFeeRecord, secondTfmFacility, reportPeriod).mockReturnValue(expected[1]);
 
         // Act
-        const utilisationDetails = await getUtilisationDetails([firstFeeRecord, secondFeeRecord]);
+        const utilisationDetails = await getUtilisationDetails([firstFeeRecord, secondFeeRecord], reportPeriod);
 
         // Assert
         expect(utilisationDetails).toHaveLength(2);
