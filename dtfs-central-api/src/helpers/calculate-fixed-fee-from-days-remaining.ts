@@ -18,13 +18,13 @@ export const BANK_ADMIN_FEE_ADJUSTMENT = 0.9;
  * @returns The fixed fee for the current report period
  */
 export const calculateFixedFeeFromDaysRemaining = ({
-  utilisation,
+  ukefShareOfUtilisation,
   numberOfDaysRemainingInCoverPeriod,
   interestPercentage,
   dayCountBasis,
 }: CalculateFixedFeeFromDaysRemainingParams): number => {
   const interestPercentageAsDecimal = new Big(interestPercentage).div(100);
-  return new Big(utilisation)
+  return new Big(ukefShareOfUtilisation)
     .mul(interestPercentageAsDecimal)
     .mul(BANK_ADMIN_FEE_ADJUSTMENT)
     .mul(numberOfDaysRemainingInCoverPeriod)

@@ -1,2 +1,2 @@
-export { getLatestCompletedAmendmentCoverEndDate } from './tfm-facility-latest-completed-amendment-to-cover-end-date';
-export { getLatestCompletedAmendmentToFacilityValue } from './tfm-facility-latest-completed-amendment-to-facility-value';
+export { getEffectiveCoverEndDateAmendment } from './get-effective-cover-end-date-amendment';
+export { getEffectiveFacilityValueAmendment } from './get-effective-facility-value-amendment';
