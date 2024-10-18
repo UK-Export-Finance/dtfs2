@@ -8,79 +8,86 @@
   {% set errors = params.errors %}
   {% set reportId = params.reportId %}
 
+  {% if object.field2 %}
+    {% set myArray = myArray.concat([object.field2]) %}
+  {% endif %}
+
+  {% if object.field3 %}
+    {% set myArray = myArray.concat([object.field3]) %}
+  {% endif %}
+
   <div class="moj-filter-layout__filter" data-filtered-table-id="payment-details" data-cy="payment-details--filters-panel">
 
     <form method="GET" data-cy="payment-details--filter-form">
+      {% set selectedFiltersCategories = [] %}
 
-      {% if selectedFilters.length %}
-
-        {% set filterOptionsHtml %}
-          {{ paymentDetailsFiltersForm.render({
-            filters: filters,
-            errors: errors
-          }) }}
-        {% endset %}
-
-        {{ mojFilter({
-          heading: {
-            text: 'Filter'
-          },
-          selectedFilters: {
+      {% if selectedFilters.paymentCurrency %}
+        {% set selectedFiltersCategories = selectedFiltersCategories.concat([{
             heading: {
-              text: 'Selected filters'
+              text: 'Currency'
             },
-            clearLink: {
-              text: 'Clear filters',
-              href: '#payment-details'
-            },
-            categories: selectedFilters
-          },
-          submit: {
-            attributes: {
-              'data-cy': 'payment-details--filters-submit-button'
-            }
-          },
-          attributes: {
-            'data-cy': 'payment-details--filters-container'
-          },
-          optionsHtml: filterOptionsHtml
-        }) }}
-
-      {% else %}
-        {% set filterOptionsHtml %}
-          {{ govukButton({
-            text: "Clear filters",
-            classes: "govuk-button--secondary",
-            href: "/utilisation-reports/" + reportId + "#payment-details",
-            attributes: {
-              'data-cy': 'payment-details--clear-filters-button'
-            }
-          }) }}
-
-          {{ paymentDetailsFiltersForm.render({
-            filters: filters,
-            errors: errors
-          }) }}
-        {% endset %}
-
-
-        {{ mojFilter({
-          heading: {
-            text: 'Filter'
-          },
-          submit: {
-            attributes: {
-              'data-cy': 'payment-details--filters-submit-button'
-            }
-          },
-          attributes: {
-            'data-cy': 'payment-details--filters-container'
-          },
-          optionsHtml: filterOptionsHtml
-        }) }}
-
+            items: [{
+              href: selectedFilters.paymentCurrency.removeHref,
+              text: selectedFilters.paymentCurrency.value
+            }]
+          }]) %}
       {% endif %}
 
+      {% if selectedFilters.paymentReference %}
+        {% set selectedFiltersCategories = selectedFiltersCategories.concat([{
+            heading: {
+              text: 'Payment reference'
+            },
+            items: [{
+              href: selectedFilters.paymentReference.removeHref,
+              text: selectedFilters.paymentReference.value
+            }]
+          }]) %}
+      {% endif %}
+
+      {% if selectedFilters.facilityId %}
+        {% set selectedFiltersCategories = selectedFiltersCategories.concat([{
+            heading: {
+              text: 'Facility ID'
+            },
+            items: [{
+              href: selectedFilters.facilityId.removeHref,
+              text: selectedFilters.facilityId.value
+            }]
+          }]) %}
+      {% endif %}
+
+      {% set filterOptionsHtml %}
+        {{ paymentDetailsFiltersForm.render({
+          filters: filters,
+          errors: errors
+        }) }}
+      {% endset %}
+
+      {{ mojFilter({
+        heading: {
+          text: 'Filter'
+        },
+        selectedFilters: {
+          heading: {
+            text: 'Selected filters'
+          },
+          clearLink: {
+            text: 'Clear filters',
+            href: "/utilisation-reports/" + reportId + "#payment-details"
+          },
+          categories: selectedFiltersCategories
+        },
+        submit: {
+          attributes: {
+            'data-cy': 'payment-details--filters-submit-button'
+          }
+        },
+        attributes: {
+          'data-cy': 'payment-details--filters-container'
+        },
+        optionsHtml: filterOptionsHtml
+      }) }}
     </form>
 
   </div>

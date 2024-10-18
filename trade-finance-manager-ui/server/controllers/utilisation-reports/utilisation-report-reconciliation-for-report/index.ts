@@ -13,6 +13,7 @@ import { PaymentDetailsViewModel, UtilisationReportReconciliationForReportViewMo
 import { PremiumPaymentsGroup } from '../../../api-response-types';
 import { extractQueryAndSessionData } from './extract-query-and-session-data';
 import { mapToUtilisationDetailsViewModel } from '../helpers/utilisation-details-helper';
+import { mapToSelectedPaymentDetailsFiltersViewModel } from './map-to-selected-payment-details-filters-view-model';
 
 export type GetUtilisationReportReconciliationRequest = CustomExpressRequest<{
   query: {
@@ -102,6 +103,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       filters: paymentDetailsFiltersViewModel,
       filterErrors: paymentDetailsFilterErrors,
       isFilterActive: isPaymentDetailsFilterActive,
+      selectedFilters: mapToSelectedPaymentDetailsFiltersViewModel(paymentDetailsFilters),
     };
 
     const utilisationDetailsViewModel = mapToUtilisationDetailsViewModel(utilisationDetails, reportId);
