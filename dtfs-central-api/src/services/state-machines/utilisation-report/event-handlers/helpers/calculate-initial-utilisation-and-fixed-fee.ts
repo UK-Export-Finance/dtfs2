@@ -1,7 +1,7 @@
-import { calculateInitialUtilisation, isValidDate } from '@ukef/dtfs2-common';
+import { calculateDrawnAmount, isValidDate } from '@ukef/dtfs2-common';
+import Big from 'big.js';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { calculateInitialFixedFee } from './calculate-initial-fixed-fee';
-import { calculateUkefShareOfUtilisation } from '../../../../../helpers';
 
 export type RequiredParams = {
   value?: number | null;
@@ -70,12 +70,10 @@ export const calculateInitialUtilisationAndFixedFee = async (facilityId: string)
     throw new Error(`TFM facility values for ${facilityId} are missing`);
   }
 
-  const utilisation = calculateInitialUtilisation(value);
-
-  const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, coverPercentage);
+  const ukefShareOfInitialUtilisation = new Big(calculateDrawnAmount(value, coverPercentage)).round(2).toNumber();
 
   const fixedFee = calculateInitialFixedFee({
-    ukefShareOfUtilisation,
+    ukefShareOfUtilisation: ukefShareOfInitialUtilisation,
     coverStartDate: parseDate(coverStartDate),
     coverEndDate: parseDate(coverEndDate),
     interestPercentage,
@@ -84,6 +82,6 @@ export const calculateInitialUtilisationAndFixedFee = async (facilityId: string)
 
   return {
     fixedFee,
-    utilisation,
+    utilisation: ukefShareOfInitialUtilisation,
   };
 };
