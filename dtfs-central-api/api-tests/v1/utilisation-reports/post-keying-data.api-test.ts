@@ -401,6 +401,59 @@ describe(`POST ${BASE_URL}`, () => {
     expect(entities[0].fixedFee).toEqual(525.6);
   });
 
+  it('calculates the ukef share of utilisation and saves to facility utilisation table', async () => {
+    // Arrange
+    const facilityId = '11111111';
+
+    const tfmFacility: TfmFacility = {
+      ...aTfmFacility(),
+      facilitySnapshot: {
+        ...aFacility(),
+        ukefFacilityId: facilityId,
+        coverPercentage: 80,
+      },
+    };
+
+    const tfmFacilitiesCollection = await mongoDbClient.getCollection('tfm-facilities');
+    await tfmFacilitiesCollection.insertOne(tfmFacility);
+
+    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).withId(reportId).build();
+
+    const utilisationData = FacilityUtilisationDataEntityMockBuilder.forId(facilityId).withUtilisation(100).build();
+    const feeRecords = [
+      FeeRecordEntityMockBuilder.forReport(report)
+        .withId(1)
+        .withFacilityId(facilityId)
+        .withFacilityUtilisationData(utilisationData)
+        .withStatus('MATCH')
+        .withFacilityUtilisation(10000)
+        .build(),
+    ];
+    report.feeRecords = feeRecords;
+    await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
+    await insertMatchingPaymentsForFeeRecords(feeRecords);
+
+    const requestBody = aValidRequestBody();
+
+    // Act
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
+
+    // Assert
+    expect(response.status).toEqual(HttpStatusCode.Ok);
+
+    const entities = await SqlDbHelper.manager.find(FacilityUtilisationDataEntity, {});
+    expect(entities).toHaveLength(1);
+    expect(entities[0].id).toEqual(facilityId);
+    /**
+     * The utilisation is calculated as follows:
+     * utilisation = reported utilisation * (coverPercentage / 100)
+     *             = 10000 * (80 / 100)
+     *             = 8000
+     */
+    expect(entities[0].utilisation).toEqual(8000);
+  });
+
   describe('when there are multiple fee records with the same facility id', () => {
     const facilityId = '12345678';
 
@@ -548,7 +601,7 @@ describe(`POST ${BASE_URL}`, () => {
         // Assert
         expect(response.status).toEqual(HttpStatusCode.Ok);
         const facilityUtilisationData = await SqlDbHelper.manager.findOneByOrFail(FacilityUtilisationDataEntity, { id: facilityId });
-        expect(facilityUtilisationData.utilisation).toEqual(currentUtilisation);
+        expect(facilityUtilisationData.utilisation).not.toEqual(previousUtilisation);
         expect(facilityUtilisationData.fixedFee).not.toEqual(previousFixedFee);
         expect(facilityUtilisationData.reportPeriod).toEqual(currentReportPeriod);
       });

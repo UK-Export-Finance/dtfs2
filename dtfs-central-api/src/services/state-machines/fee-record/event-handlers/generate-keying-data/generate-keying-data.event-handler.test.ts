@@ -11,7 +11,7 @@ import {
 import { handleFeeRecordGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
 import { aReportPeriod, aFacility } from '../../../../../../test-helpers';
 import { calculateFixedFeeAdjustment, calculatePrincipalBalanceAdjustment, updateFacilityUtilisationData } from '../helpers';
-import { getLatestTfmFacilityValues } from '../../../../../helpers';
+import { calculateUkefShareOfUtilisation, getLatestTfmFacilityValues } from '../../../../../helpers';
 
 jest.mock<unknown>('../helpers', () => ({
   ...jest.requireActual('../helpers'),
@@ -21,6 +21,7 @@ jest.mock<unknown>('../helpers', () => ({
 }));
 
 jest.mock('../../../../../helpers/get-latest-tfm-facility-values');
+jest.mock('../../../../../helpers/calculate-ukef-share-of-utilisation');
 
 describe('handleFeeRecordGenerateKeyingDataEvent', () => {
   const mockSave = jest.fn();
@@ -51,6 +52,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
     jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(20);
     jest.mocked(updateFacilityUtilisationData).mockResolvedValue(aFacilityUtilisationDataEntity());
     jest.mocked(getLatestTfmFacilityValues).mockResolvedValue(tfmFacilityReturnedValues);
+    jest.mocked(calculateUkefShareOfUtilisation).mockReturnValue(99999999);
   });
 
   afterEach(() => {
@@ -86,10 +88,11 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
     it('sets the fee record principalBalanceAdjustment to principal balance adjustment', async () => {
       // Arrange
       const feeRecord = aMatchingFeeRecord();
-      feeRecord.facilityUtilisation = 3000;
+      feeRecord.facilityUtilisation = 1300;
       const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId(feeRecord.facilityId).withUtilisation(2000).build();
       feeRecord.facilityUtilisationData = facilityUtilisationData;
 
+      jest.mocked(calculateUkefShareOfUtilisation).mockReturnValue(1500);
       jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(200);
 
       // Act
@@ -102,7 +105,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
 
       // Assert
       expect(feeRecord.principalBalanceAdjustment).toEqual(200);
-      expect(calculatePrincipalBalanceAdjustment).toHaveBeenCalledWith(feeRecord, facilityUtilisationData, tfmFacilityReturnedValues.coverPercentage);
+      expect(calculatePrincipalBalanceAdjustment).toHaveBeenCalledWith(1500, facilityUtilisationData);
     });
 
     it('saves the updated fee record with the supplied entity manager', async () => {
@@ -292,6 +295,8 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
         end: { month: 5, year: 2025 },
       };
 
+      jest.mocked(calculateUkefShareOfUtilisation).mockReturnValue(78787.87);
+
       // Act
       await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
         transactionEntityManager: mockEntityManager,
@@ -301,10 +306,12 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
+      expect(calculateUkefShareOfUtilisation).toHaveBeenCalledWith(feeRecord.facilityUtilisation, tfmFacilityReturnedValues.coverPercentage);
       expect(updateFacilityUtilisationData).toHaveBeenCalledWith(facilityUtilisationDataEntity, {
         reportPeriod,
         utilisation: 9876543.21,
         requestSource,
+        ukefShareOfUtilisation: 78787.87,
         entityManager: mockEntityManager,
       });
     });
