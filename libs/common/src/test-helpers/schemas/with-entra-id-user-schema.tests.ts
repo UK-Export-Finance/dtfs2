@@ -1,6 +1,5 @@
 import { ZodSchema } from 'zod';
 import { EntraIdUser } from '../../types/tfm/entra-id-user';
-import { ENTRA_ID_USER_GROUP } from '../../constants';
 import { withSchemaTests } from './with-schema.tests';
 
 type TestCasesParams = {
@@ -18,7 +17,7 @@ export function aValidEntraIdUser(): EntraIdUser {
     verified_secondary_email: ['a-secondary-email'],
     given_name: 'a-given-name',
     family_name: 'a-family-name',
-    groups: [ENTRA_ID_USER_GROUP.AZURE_SSO_GROUP_BUSINESS_SUPPORT],
+    roles: ['BUSINESS_SUPPORT'],
   };
 }
 
@@ -78,10 +77,10 @@ function getFailureTestCases({ getTestObjectWithUpdatedUserParams }: TestCasesPa
     {
       aTestCase: () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars, camelcase
-        const { groups, ...rest } = aValidEntraIdUser();
+        const { roles, ...rest } = aValidEntraIdUser();
         return getTestObjectWithUpdatedUserParams(rest);
       },
-      description: 'the groups are missing',
+      description: 'the roles are missing',
     },
     {
       aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), oid: 1 }),
@@ -112,12 +111,12 @@ function getFailureTestCases({ getTestObjectWithUpdatedUserParams }: TestCasesPa
       description: 'the family name is not a string',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), groups: ['NOT_A_USER_GROUP'] }),
-      description: 'the groups are not an array of user groups',
+      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), roles: ['NOT_A_USER_ROLE'] }),
+      description: 'the roles are not an array of user roles',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), groups: ENTRA_ID_USER_GROUP.AZURE_SSO_GROUP_BUSINESS_SUPPORT }),
-      description: 'the groups are not an array',
+      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), roles: 'BUSINESS_SUPPORT' }),
+      description: 'the roles are not an array',
     },
     {
       aTestCase: () => ({}),
@@ -138,8 +137,8 @@ function getSuccessTestCases({ getTestObjectWithUpdatedUserParams }: TestCasesPa
       description: 'the verified secondary email array is empty',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), groups: [] }),
-      description: 'the groups array is empty',
+      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), roles: [] }),
+      description: 'the roles array is empty',
     },
     {
       aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), extraField: 'extra' }),
