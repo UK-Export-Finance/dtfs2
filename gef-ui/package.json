@@ -59,7 +59,7 @@
     "form-data": "4.0.0",
     "govuk-frontend": "^4.8.0",
     "http-errors": "^2.0.0",
-    "imask": "^6.6.3",
+    "imask": "^7.6.1",
     "joi": "^17.13.3",
     "jquery": "3.6.4",
     "lodash": "^4.17.21",
