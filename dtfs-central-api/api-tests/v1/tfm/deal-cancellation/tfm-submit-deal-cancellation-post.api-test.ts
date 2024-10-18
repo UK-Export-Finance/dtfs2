@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_STAGE, AuditDetails } from '@ukef/dtfs2-common';
+import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_STAGE, AuditDetails, API_ERROR_CODE } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { withMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import wipeDB from '../../../wipeDB';
@@ -150,6 +150,19 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
           code: 'INVALID_MONGO_ID_PATH_PARAMETER',
           message: "Expected path parameter 'dealId' to be a valid mongo id",
         });
+      });
+
+      it('should return 400 if the payload is invalid', async () => {
+        const invalidPayload = {
+          reason: '',
+          bankRequestDate: new Date().valueOf(),
+          effectiveFrom: undefined,
+        };
+
+        const submitCancellationResponse = await testApi.post({ cancellation: invalidPayload, auditDetails }).to(submitDealCancellationUrl);
+
+        expect(submitCancellationResponse.status).toEqual(400);
+        expect(submitCancellationResponse.body).toHaveProperty('code', API_ERROR_CODE.INVALID_PAYLOAD);
       });
     });
   });
