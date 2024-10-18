@@ -1,5 +1,3 @@
-import { todayFormattedShort } from '../../../../e2e-fixtures/dateConstants';
-
 import relative from '../relativeURL';
 import { form, mainHeading, submitButton } from '../partials';
 import manualInclusion from '../pages/manual-inclusion-questionnaire';
@@ -15,6 +13,7 @@ import CONSTANTS from '../../fixtures/constants';
 import { anUnissuedCashFacility } from '../../../../e2e-fixtures/mock-gef-facilities';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_MIN } from '../../fixtures/mocks/mock-deals';
+import { today } from '../../../../e2e-fixtures/dateConstants';
 
 context('Clone GEF (AIN) deal', () => {
   let AINdealId;
@@ -108,7 +107,7 @@ context('Clone GEF (AIN) deal', () => {
         cy.visit(`${url}`);
         statusBanner.bannerStatus().contains('Draft');
         statusBanner.bannerUkefDealId().should('not.exist');
-        statusBanner.bannerDateCreated().contains(todayFormattedShort);
+        statusBanner.bannerDateCreated().contains(today.dd_MMM_yyyy);
 
         applicationDetails.bankRefName().contains('Cloned AIN deal');
         applicationDetails.automaticCoverStatus().contains('Not started');
@@ -301,7 +300,7 @@ context('Clone GEF (MIA) deal', () => {
         cy.visit(`${url}`);
         statusBanner.bannerStatus().contains('Draft');
         statusBanner.bannerUkefDealId().should('not.exist');
-        statusBanner.bannerDateCreated().contains(todayFormattedShort);
+        statusBanner.bannerDateCreated().contains(today.dd_MMM_yyyy);
 
         applicationDetails.bankRefName().contains('Cloned MIA deal');
         applicationDetails.automaticCoverStatus().contains('Not started');

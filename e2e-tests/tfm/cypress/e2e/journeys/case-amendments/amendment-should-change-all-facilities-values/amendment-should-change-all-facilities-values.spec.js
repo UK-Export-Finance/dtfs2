@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import { oneMonthFormattedShort, tomorrow, tomorrowFormattedFacilityPage } from '../../../../../../e2e-fixtures/dateConstants';
+import { oneMonth, tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 import facilitiesPage from '../../../pages/facilitiesPage';
 
@@ -38,7 +38,7 @@ context('Amendments all facilities table - should show amendment value and cover
 
     facilitiesPage.facilitiesTable.row(facilityId).facilityLinkText().contains('1000000');
     facilitiesPage.facilitiesTable.row(facilityId).value().contains('GBP 12,345');
-    facilitiesPage.facilitiesTable.row(facilityId).coverEndDate().contains(oneMonthFormattedShort);
+    facilitiesPage.facilitiesTable.row(facilityId).coverEndDate().contains(oneMonth.dd_MMM_yyyy);
   });
 
   it('should submit an automatic amendment request for coverEndDate', () => {
@@ -75,7 +75,7 @@ context('Amendments all facilities table - should show amendment value and cover
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: tomorrow });
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: tomorrow.date });
 
     cy.clickContinueButton();
 
@@ -133,6 +133,6 @@ context('Amendments all facilities table - should show amendment value and cover
 
     facilitiesPage.facilitiesTable.row(facilityId).facilityLinkText().contains('1000000');
     facilitiesPage.facilitiesTable.row(facilityId).value().contains('GBP 123');
-    facilitiesPage.facilitiesTable.row(facilityId).coverEndDate().contains(tomorrowFormattedFacilityPage);
+    facilitiesPage.facilitiesTable.row(facilityId).coverEndDate().contains(tomorrow.dd_MMM_yyyy);
   });
 });

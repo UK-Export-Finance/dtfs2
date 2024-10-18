@@ -1,7 +1,6 @@
-import { format } from 'date-fns';
 import relative from '../../../relativeURL';
 import CONSTANTS from '../../../../fixtures/constants';
-import { fourDaysAgo, tomorrow, threeDaysAgo, threeMonths, threeMonthsOneDay, twentyEight, twoMonths } from '../../../../../../e2e-fixtures/dateConstants';
+import { fourDaysAgo, tomorrow, threeDaysAgo, threeMonths, threeMonthsOneDay, twoMonths, twentyEightDays } from '../../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_MIN } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
@@ -82,7 +81,7 @@ context('Unissued Facilities MIN - about unissued facility page', () => {
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.rows().contains(format(threeMonths, 'dd MMM yyyy'));
+      unissuedFacilityTable.rows().contains(threeMonths.dd_MMM_yyyy);
       statusBanner.applicationBanner().should('exist');
     });
 
@@ -140,7 +139,7 @@ context('Unissued Facilities MIN - about unissued facility page', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.completeDateFormFields({ idPrefix: 'issue-date', date: fourDaysAgo });
+      cy.completeDateFormFields({ idPrefix: 'issue-date', date: fourDaysAgo.date });
 
       cy.clickContinueButton();
 
@@ -152,7 +151,7 @@ context('Unissued Facilities MIN - about unissued facility page', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.completeDateFormFields({ idPrefix: 'issue-date', date: tomorrow });
+      cy.completeDateFormFields({ idPrefix: 'issue-date', date: tomorrow.date });
 
       cy.clickContinueButton();
 
@@ -168,7 +167,7 @@ context('Unissued Facilities MIN - about unissued facility page', () => {
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo.date });
 
       cy.clickContinueButton();
 
@@ -182,7 +181,7 @@ context('Unissued Facilities MIN - about unissued facility page', () => {
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 
@@ -196,8 +195,8 @@ context('Unissued Facilities MIN - about unissued facility page', () => {
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: twentyEight });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: twentyEightDays.date });
 
       cy.clickContinueButton();
 
