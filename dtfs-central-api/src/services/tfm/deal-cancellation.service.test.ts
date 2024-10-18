@@ -40,16 +40,8 @@ const effectiveFromPresentAndPastTestCases = [
 
 describe('DealCancellationService', () => {
   describe('cancelDeal', () => {
-    beforeAll(() => {
-      jest.useFakeTimers().setSystemTime(new Date());
-    });
-
     beforeEach(() => {
       jest.clearAllMocks();
-    });
-
-    afterAll(() => {
-      jest.useRealTimers();
     });
 
     describe('when effectiveFrom is the present or in the past', () => {

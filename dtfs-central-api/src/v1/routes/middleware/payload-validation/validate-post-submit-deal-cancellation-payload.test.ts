@@ -3,7 +3,7 @@ import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { aTfmSessionUser } from '../../../../../test-helpers';
-import { validatePostDealCancellationPayload } from './validate-post-deal-cancellation-payload';
+import { validatePostSubmitDealCancellationPayload } from './validate-post-submit-deal-cancellation-payload';
 
 describe('validatePostDealCancellationPayload', () => {
   const getHttpMocks = () => httpMocks.createMocks();
@@ -19,7 +19,7 @@ describe('validatePostDealCancellationPayload', () => {
 
   const invalidPayloads = [
     {
-      description: 'the payload is undefined',
+      description: 'the cancellation is undefined',
       payload: { ...aValidPayload(), cancellation: undefined },
     },
     {
@@ -121,7 +121,7 @@ describe('validatePostDealCancellationPayload', () => {
     req.body = payload;
 
     // Act
-    validatePostDealCancellationPayload(req, res, next);
+    validatePostSubmitDealCancellationPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
@@ -137,7 +137,7 @@ describe('validatePostDealCancellationPayload', () => {
     req.body = aValidPayload();
 
     // Act
-    validatePostDealCancellationPayload(req, res, next);
+    validatePostSubmitDealCancellationPayload(req, res, next);
 
     // Assert
     expect(next).toHaveBeenCalled();
