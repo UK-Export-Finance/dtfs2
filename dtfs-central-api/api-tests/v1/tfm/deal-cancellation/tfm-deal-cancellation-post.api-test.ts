@@ -127,7 +127,7 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
         });
       });
 
-      it('should return 404 if dealId is valid but not associated to a record', async () => {
+      it('should return 404 if dealId is valid but not associated to a deal', async () => {
         const validButNonExistentDealId = new ObjectId();
 
         const submitCancellationResponse = await testApi
