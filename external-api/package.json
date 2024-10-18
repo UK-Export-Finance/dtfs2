@@ -42,7 +42,7 @@
     "dotenv": "16.3.1",
     "express": "^4.21.0",
     "express-mongo-sanitize": "^2.2.0",
-    "express-rate-limit": "^6.11.2",
+    "express-rate-limit": "^7.4.1",
     "joi": "^17.13.3",
     "lodash": "^4.17.21",
     "mongodb": "^4.17.2",
