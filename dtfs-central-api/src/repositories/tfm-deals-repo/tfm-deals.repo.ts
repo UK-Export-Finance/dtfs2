@@ -2,6 +2,7 @@ import { Collection, ObjectId, UpdateResult, WithoutId } from 'mongodb';
 import { AuditDetails, DealNotFoundError, InvalidDealIdError, MONGO_DB_COLLECTIONS, TfmDeal } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { flatten } from 'mongo-dot-notation';
+import { DeepPartial } from 'typeorm/browser';
 import { mongoDbClient } from '../../drivers/db-client';
 
 export class TfmDealRepo {
@@ -16,7 +17,7 @@ export class TfmDealRepo {
    * @param auditDetails - The users audit details
    * @returns The update result
    */
-  public static async updateOneDeal(dealId: string | ObjectId, update: Partial<TfmDeal>, auditDetails: AuditDetails): Promise<UpdateResult> {
+  public static async updateOneDeal(dealId: string | ObjectId, update: DeepPartial<TfmDeal>, auditDetails: AuditDetails): Promise<UpdateResult> {
     if (!ObjectId.isValid(dealId)) {
       throw new InvalidDealIdError(dealId.toString());
     }
