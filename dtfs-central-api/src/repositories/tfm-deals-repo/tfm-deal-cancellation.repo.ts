@@ -5,6 +5,7 @@ import {
   DealNotFoundError,
   InvalidDealIdError,
   MONGO_DB_COLLECTIONS,
+  TFM_DEAL_CANCELLATION_STATUS,
   TFM_DEAL_STAGE,
   TfmDeal,
   TfmDealCancellation,
@@ -140,6 +141,7 @@ export class TfmDealCancellationRepo {
       },
       flatten({
         'tfm.stage': TFM_DEAL_STAGE.CANCELLED,
+        'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.COMPLETED,
         auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
       }),
     );
