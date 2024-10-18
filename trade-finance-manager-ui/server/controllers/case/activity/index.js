@@ -13,19 +13,46 @@ const mappedActivities = (activities) => {
     return false;
   }
 
-  return activities.map((activity) => ({
-    label: {
-      text: activity.label,
-    },
-    text: activity.text,
-    datetime: {
-      timestamp: fromUnixTime(new Date(activity.timestamp)),
-      type: 'datetime',
-    },
-    byline: {
-      text: `${activity.author.firstName} ${activity.author.lastName}`,
-    },
-  }));
+  return activities.map((activity) => {
+    switch (activity.type) {
+      case 'CANCELLATION':
+        return {
+          label: {
+            text: activity.label,
+          },
+          html: `
+          <p> Deal stage:
+            <strong class="govuk-tag govuk-tag--red">
+              Cancelled
+            </strong> <br/>
+            Bank request date: ${activity.bankRequestDate}<br/>
+            Date effective from: ${activity.effectiveFrom}<br/>
+            Comments: ${activity.reason || '-'}
+          </p>`,
+          datetime: {
+            timestamp: fromUnixTime(activity.timestamp),
+            type: 'datetime',
+          },
+          byline: {
+            text: `${activity.author.firstName} ${activity.author.lastName}`,
+          },
+        };
+      default:
+        return {
+          label: {
+            text: activity.label,
+          },
+          text: activity.text,
+          datetime: {
+            timestamp: fromUnixTime(activity.timestamp),
+            type: 'datetime',
+          },
+          byline: {
+            text: `${activity.author.firstName} ${activity.author.lastName}`,
+          },
+        };
+    }
+  });
 };
 
 const getActivity = async (req, res) => {
