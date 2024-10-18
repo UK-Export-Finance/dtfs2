@@ -11,3 +11,4 @@ export * from './validate-post-add-fees-to-an-existing-payment-group-payload';
 export { validatePostUploadUtilisationReportPayload } from './validate-post-upload-utilisation-report-payload';
 export * from './validate-put-deal-cancellation-payload';
 export * from './validate-delete-deal-cancellation-payload';
+export * from './validate-post-deal-cancellation-payload';

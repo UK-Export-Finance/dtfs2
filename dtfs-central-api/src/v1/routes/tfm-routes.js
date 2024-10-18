@@ -8,6 +8,7 @@ const {
   validatePostFacilityAmendmentPayload,
   validatePutDealCancellationPayload,
   validateDeleteDealCancellationPayload,
+  validatePostDealCancellationPayload,
 } = require('./middleware/payload-validation');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
@@ -32,7 +33,6 @@ const tfmTeamsController = require('../controllers/tfm/users/tfm-teams.controlle
 const tfmUsersController = require('../controllers/tfm/users/tfm-users.controller');
 
 const { ROUTES } = require('../../constants');
-const { validatePostDealCancellationPayload } = require('./middleware/payload-validation/validate-post-deal-cancellation-payload');
 
 tfmRouter.use((req, res, next) => {
   req.routePath = ROUTES.TFM_ROUTE;

@@ -5,7 +5,7 @@ import { validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-strea
 import { SubmitDealCancellationPayload } from '../../../routes/middleware/payload-validation/validate-post-deal-cancellation-payload';
 import { DealCancellationService } from '../../../../services/tfm/deal-cancellation.service';
 
-type SubmitTfmDealCancellationRequest = CustomExpressRequest<{
+type PostTfmDealCancellationRequest = CustomExpressRequest<{
   reqBody: SubmitDealCancellationPayload;
 }>;
 
@@ -16,7 +16,7 @@ type PostTfmDealCancellationResponse = Response<ApiErrorResponseBody | TfmDealCa
  * @param req - The request object
  * @param res - The response object
  */
-export const submitTfmDealCancellation = async (req: SubmitTfmDealCancellationRequest, res: PostTfmDealCancellationResponse) => {
+export const submitTfmDealCancellation = async (req: PostTfmDealCancellationRequest, res: PostTfmDealCancellationResponse) => {
   const { cancellation, auditDetails } = req.body;
   const { dealId } = req.params;
 
