@@ -41,7 +41,7 @@
     "escape-string-regexp": "^4.0.0",
     "express": "^4.21.0",
     "express-mongo-sanitize": "^2.2.0",
-    "express-rate-limit": "^6.11.2",
+    "express-rate-limit": "^7.4.1",
     "express-validator": "^7.2.0",
     "lodash": "^4.17.21",
     "lodash.orderby": "^4.6.0",
