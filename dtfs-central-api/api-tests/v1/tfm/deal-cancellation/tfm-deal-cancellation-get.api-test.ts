@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_STAGE } from '@ukef/dtfs2-common';
+import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_STAGE, TFM_DEAL_CANCELLATION_STATUS, TfmDealCancellation } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { withMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import wipeDB from '../../../wipeDB';
@@ -98,7 +98,7 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
       });
 
       it('should return the deal cancellation object if it exists', async () => {
-        const dealCancellation = {
+        const dealCancellation: TfmDealCancellation = {
           reason: 'test reason',
           bankRequestDate: 1794418807,
           effectiveFrom: 1794419907,
@@ -108,7 +108,7 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
 
         const getCancellationResponse = await testApi.get(dealCancellationUrl);
 
-        expect(getCancellationResponse.body).toEqual(dealCancellation);
+        expect(getCancellationResponse.body).toEqual({ ...dealCancellation, status: TFM_DEAL_CANCELLATION_STATUS.DRAFT });
         expect(getCancellationResponse.status).toEqual(HttpStatusCode.Ok);
       });
 
