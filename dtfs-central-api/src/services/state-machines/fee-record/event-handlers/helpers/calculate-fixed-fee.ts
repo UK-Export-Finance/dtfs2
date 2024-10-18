@@ -27,8 +27,14 @@ const getNumberOfDaysRemainingInCoverPeriod = (reportPeriodEnd: MonthAndYear, co
  * @param param.dayCountBasis - The facility day count basis
  * @returns The fixed fee for the current report period
  */
-export const calculateFixedFee = ({ utilisation, reportPeriod, coverEndDate, interestPercentage, dayCountBasis }: CalculateFixedFeeParams): number => {
+export const calculateFixedFee = ({
+  ukefShareOfUtilisation,
+  reportPeriod,
+  coverEndDate,
+  interestPercentage,
+  dayCountBasis,
+}: CalculateFixedFeeParams): number => {
   const numberOfDaysRemainingInCoverPeriod = getNumberOfDaysRemainingInCoverPeriod(reportPeriod.end, coverEndDate);
 
-  return calculateFixedFeeFromDaysRemaining({ utilisation, numberOfDaysRemainingInCoverPeriod, interestPercentage, dayCountBasis });
+  return calculateFixedFeeFromDaysRemaining({ ukefShareOfUtilisation, numberOfDaysRemainingInCoverPeriod, interestPercentage, dayCountBasis });
 };
