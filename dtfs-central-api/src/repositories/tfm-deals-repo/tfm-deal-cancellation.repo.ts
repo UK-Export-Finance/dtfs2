@@ -54,14 +54,13 @@ export class TfmDealCancellationRepo {
    */
   public static async findScheduledDealCancellations(): Promise<TfmDeal[]> {
     const dealCollection = await this.getCollection();
-    const matchingDeals = await dealCollection
+
+    return await dealCollection
       .find({
         'dealSnapshot.submissionType': { $in: [DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN] },
         'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.SCHEDULED,
       })
       .toArray();
-
-    return matchingDeals;
   }
 
   /**
