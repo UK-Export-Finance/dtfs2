@@ -37,6 +37,12 @@
 # Environment variables and secrets are managed securely.
 # Codecov integration tracks code coverage across different test types.
 #
+# 9. Docker build
+# Verified docker build step for `acbs-functions` microservice.
+# All other microservice builds are not tested due to docker compose
+# execution prior to test suits initiation.
+# Since ACBS pertinent tests do not require `acbs` docker service initialisation
+# any build failure would be missed without this QAT job.
 
 name: QAT
 run-name: ✅ Quality assurance testing on ${{ github.event.number }}
