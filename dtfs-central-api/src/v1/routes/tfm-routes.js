@@ -621,6 +621,43 @@ tfmRouter
   .get(tfmGetDealCancellationController.getTfmDealCancellation)
   .delete(validateDeleteDealCancellationPayload, tfmDeleteDealCancellationController.deleteTfmDealCancellation);
 
+/**
+ * @openapi
+ * /tfm/deals/:id/cancellation/submit:
+ *   post:
+ *     summary: Updates the tfm deal to have stage 'Cancelled' and the deal cancellation object to have status 'Completed'
+ *     tags: [TFM, deals, cancellation, data fix]
+ *     description: Submits deal cancellation
+ *     parameters:
+ *       - in: path
+ *         name: dealId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the deal to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               reason:
+ *                 type: string
+ *               bankRequestDate:
+ *                 type: number
+ *                 example: 1725977352
+ *               effectiveFrom:
+ *                 type: number
+ *                 example: 1725977352
+ *     responses:
+ *       200:
+ *         description: OK
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal server error
+ */
 tfmRouter
   .route('/deals/:dealId/cancellation/submit')
   .all(validateDealCancellationEnabled, validation.mongoIdValidation('dealId'), handleExpressValidatorResult)
