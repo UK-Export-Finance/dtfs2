@@ -1,2 +1,2 @@
-FROM nginx:1.27.1
+FROM nginx:1.27.2
 COPY default.conf.template /etc/nginx/templates/
