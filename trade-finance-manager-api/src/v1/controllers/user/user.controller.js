@@ -3,7 +3,6 @@ const { generateAuditDatabaseRecordFromAuditDetails, deleteOne } = require('@uke
 const { PAYLOAD_VERIFICATION, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const { UserService } = require('../../services/user.service');
-const api = require('../../api');
 const { mongoDbClient: db } = require('../../../drivers/db-client');
 const { mapUserData } = require('./helpers/mapUserData.helper');
 const { USER } = require('../../../constants');
@@ -114,11 +113,11 @@ exports.update = async (_id, update, auditDetails, callback) => {
  * @param {object} upsertUserParams
  * @param {import('@ukef/dtfs2-common').EntraIdUser} upsertUserParams.entraUser
  * @param {import('@ukef/dtfs2-common').AuditDetails} upsertUserParams.auditDetails
- *
  */
 exports.upsertTfmUserFromEntraUser = async ({ entraUser, auditDetails }) => {
-  const userUpsertRequest = UserService.transformEntraUserToTfmUserUpsert(entraUser);
-  return await api.upsertUser({ userUpsertRequest, auditDetails });
+  const upsertedUser = UserService.upsertUserFromEntraIdUser({ entraUser, auditDetails });
+  const tfmSessionUser = mapUserData(upsertedUser);
+  return tfmSessionUser;
 };
 
 exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, auditDetails, callback) => {
