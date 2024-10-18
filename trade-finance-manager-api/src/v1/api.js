@@ -273,7 +273,7 @@ const submitDeal = async (dealType, dealId, auditDetails) => {
  * Updates the deal cancellation object on a TFM AIN or MIN deal
  * @param {Object} params
  * @param {string} params.dealId - deal cancellation to update
- * @param {Partial<import('@ukef/dtfs2-common').TfmDealCancellationWithoutStatus>} params.dealCancellationUpdate - deal cancellation update to make
+ * @param {Partial<import('@ukef/dtfs2-common').TfmDealCancellation>} params.dealCancellationUpdate - deal cancellation update to make
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
  * @returns {Promise<import('mongodb').UpdateResult>} update result object
  */

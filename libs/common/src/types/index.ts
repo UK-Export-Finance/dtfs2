@@ -23,7 +23,7 @@ export * from './api-error-code';
 export * from './facility-type';
 export * from './deal-type';
 export * from './any-object';
-export * from './deal-cancellation';
+export * from './tfm-deal-cancellation';
 export * from './file';
 export * from './fee-record-utilisation';
 export * from './radio-item';

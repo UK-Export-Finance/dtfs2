@@ -1,8 +1,8 @@
-import { TfmDealCancellationWithoutStatus } from '@ukef/dtfs2-common';
+import { TfmDealCancellation } from '@ukef/dtfs2-common';
 import { BaseViewModel } from '../base-view-model';
 
 export type CheckDetailsViewModel = BaseViewModel & {
   ukefDealId: string;
   dealId: string;
-  cancellation: Partial<TfmDealCancellationWithoutStatus>;
+  cancellation: Partial<TfmDealCancellation>;
 };

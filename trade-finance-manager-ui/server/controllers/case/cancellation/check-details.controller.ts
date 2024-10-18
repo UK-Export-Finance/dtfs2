@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { CustomExpressRequest, TfmDealCancellationWithoutStatus } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, TfmDealCancellation } from '@ukef/dtfs2-common';
 import { isEmpty } from 'lodash';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { asUserSession } from '../../../helpers/express-session';
@@ -10,7 +10,7 @@ import { CheckDetailsViewModel } from '../../../types/view-models';
 export type GetDealCancellationDetailsRequest = CustomExpressRequest<{ params: { _id: string } }>;
 export type PostDealCancellationDetailsRequest = CustomExpressRequest<{
   params: { _id: string };
-  reqBody: { cancellation: Partial<TfmDealCancellationWithoutStatus> };
+  reqBody: { cancellation: Partial<TfmDealCancellation> };
 }>;
 
 /**

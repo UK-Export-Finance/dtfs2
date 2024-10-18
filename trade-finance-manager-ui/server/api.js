@@ -1242,7 +1242,7 @@ const addFeesToAnExistingPayment = async (reportId, feeRecordIds, paymentIds, us
 /**
  * Updates the deal cancellation object on a TFM MIN or AIN deal
  * @param {string} dealId - The deal ID
- * @param {Partial<import('@ukef/dtfs2-common').TfmDealCancellationWithoutStatus>} cancellationUpdate - The deal cancellation update object
+ * @param {Partial<import('@ukef/dtfs2-common').TfmDealCancellation>} cancellationUpdate - The deal cancellation update object
  * @param {string} userToken - The user token
  * @returns {Promise<void>}
  */
@@ -1303,7 +1303,7 @@ const deleteDealCancellation = async (dealId, userToken) => {
 /**
  * Submits the deal cancellation object on a TFM MIN or AIN deal
  * @param {string} dealId - The deal ID
- * @param {import('@ukef/dtfs2-common').TfmDealCancellationWithoutStatus} cancellation - The deal cancellation object
+ * @param {import('@ukef/dtfs2-common').TfmDealCancellation} cancellation - The deal cancellation object
  * @param {string} userToken - The user token
  * @returns {Promise<void>}
  */
