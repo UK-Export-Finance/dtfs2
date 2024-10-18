@@ -1,7 +1,7 @@
-import escapeStringRegexp from 'escape-string-regexp';
 import { AuditDetails, MONGO_DB_COLLECTIONS, TfmUser, UserUpsertRequest } from '@ukef/dtfs2-common';
-import { Collection, WithoutId } from 'mongodb';
+import { Collection, FindOneAndUpdateOptions, WithoutId } from 'mongodb';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import escapeStringRegexp from 'escape-string-regexp';
 import { mongoDbClient } from '../../drivers/db-client';
 
 type UpsertUserParams = {
@@ -40,7 +40,7 @@ export class UserRepo {
    * @param upsertUserParams.auditDetails the audit details
    * @returns upserted user
    */
-  public static async upsertUser({ emailsOfUserToUpsert, userUpsertRequest, auditDetails }: UpsertUserParams): Promise<void> {
+  public static async upsertUser({ emailsOfUserToUpsert, userUpsertRequest, auditDetails }: UpsertUserParams): Promise<TfmUser> {
     const collection = await this.getCollection();
 
     const userUpsert = {
@@ -52,7 +52,11 @@ export class UserRepo {
 
     const query = { email: { $in: emailsRegex } };
     const update = { $set: userUpsert };
-    const options = { upsert: true };
-    await collection.updateOne(query, update, options); // TODO: DTFS2-6892: Test this fails if there are multiple users
+    const options: FindOneAndUpdateOptions = { upsert: true, returnDocument: 'after' };
+    const result = await collection.findOneAndUpdate(query, update, options); // TODO: DTFS2-6892: Test this fails if there are multiple users
+    if (!result.value || !result.ok) {
+      throw new Error('Failed to upsert user');
+    }
+    return result.value;
   }
 }
