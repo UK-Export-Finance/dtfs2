@@ -173,7 +173,7 @@ jobs:
   # 2.1. API tests
   api-tests:
     name: API 👷
-    needs: setup
+    needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
@@ -244,7 +244,7 @@ jobs:
   # 2.2. API tests
   dof-api-tests:
     name: DOF API 👷
-    needs: setup
+    needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
@@ -292,7 +292,7 @@ jobs:
   # 3. Unit tests
   unit-tests:
     name: Unit 👷
-    needs: setup
+    needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
@@ -351,7 +351,7 @@ jobs:
   # 3. Unit tests - FF
   unit-tests-ff:
     name: Unit feature flag 👷
-    needs: setup
+    needs: [setup]
     env:
       # Various feature flags
       FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
@@ -417,7 +417,7 @@ jobs:
   # 4. E2E - PORTAL
   e2e-tests-portal:
     name: E2E Portal 👷
-    needs: setup
+    needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
@@ -516,7 +516,7 @@ jobs:
   # 5. E2E - GEF
   e2e-tests-gef:
     name: E2E GEF 👷
-    needs: setup
+    needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
@@ -600,7 +600,7 @@ jobs:
   #6. E2E - TFM
   e2e-tests-tfm:
     name: E2E TFM 👷
-    needs: setup
+    needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
@@ -610,7 +610,8 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        spec: [
+        spec:
+          [
             'case/activities/*.spec.js',
             'case/AIN/*.spec.js',
             'case/deal-cancellation-disabled/*.spec.js',
@@ -700,7 +701,7 @@ jobs:
   #7. E2E - UKEF
   e2e-tests-ukef:
     name: E2E UKEF 👷
-    needs: setup
+    needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
@@ -784,7 +785,7 @@ jobs:
   #8. E2E - FF
   e2e-tests-ff:
     name: E2E feature flag 👷
-    needs: setup
+    needs: [setup]
     env:
       # Various feature flags
       FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
@@ -916,3 +917,43 @@ jobs:
           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
           TZ: ${{ vars.TIMEZONE }}
         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./${{ steps.project.outputs.directory }} --record false --spec "${{ matrix.spec }}"
+
+  #9. Docker build
+  build:
+    name: Build 🛠️
+    needs: [setup]
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        functions: ['acbs-function']
+
+    concurrency:
+      group: docker-build-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci
+
+      - name: Build
+        run: docker build -f ./azure-functions/${{ matrix.functions }}/Dockerfile .
