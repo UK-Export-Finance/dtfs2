@@ -4,9 +4,7 @@ import { add, sub } from 'date-fns';
 import { DealCancellationService } from './deal-cancellation.service';
 import { aTfmUser } from '../../../test-helpers';
 
-const submitDealCancellationMock = jest.fn(() => Promise.resolve({ cancelledDeal: { ukefDealId: 'dealId' } })) as jest.Mock<
-  Promise<TfmDealCancellationResponse>
->;
+const submitDealCancellationMock = jest.fn(() => Promise.resolve({ cancelledDealUkefId: 'dealId' })) as jest.Mock<Promise<TfmDealCancellationResponse>>;
 
 jest.mock('../../repositories/tfm-deals-repo/tfm-deal-cancellation.repo', () => ({
   TfmDealCancellationRepo: {
@@ -85,7 +83,7 @@ describe('DealCancellationService', () => {
         const dealCancellationResponse = await DealCancellationService.cancelDeal(dealId, cancellation, auditDetails);
 
         // Assert
-        expect(dealCancellationResponse).toEqual({ cancelledDeal: { ukefDealId: dealId } });
+        expect(dealCancellationResponse).toEqual({ cancelledDealUkefId: dealId });
       });
     });
 

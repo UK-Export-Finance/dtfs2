@@ -111,7 +111,7 @@ describe('tfm-deals-cancellation-repo', () => {
       const result = await TfmDealCancellationRepo.submitDealCancellation(dealId, mockDealCancellationObject, auditDetails);
 
       // Assert
-      expect(result).toEqual({ cancelledDeal: { ukefDealId: dealId } });
+      expect(result).toEqual({ cancelledDealUkefId: dealId });
     });
   });
 });

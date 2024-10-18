@@ -111,7 +111,7 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
       it('should return the submit cancellation response object if a matching deal and cancellation exists', async () => {
         const submitCancellationResponse = await testApi.post({ cancellation, auditDetails }).to(submitDealCancellationUrl);
 
-        expect(submitCancellationResponse.body).toEqual({ cancelledDeal: { ukefDealId: dealId } });
+        expect(submitCancellationResponse.body).toEqual({ cancelledDealUkefId: dealId });
         expect(submitCancellationResponse.status).toEqual(HttpStatusCode.Ok);
       });
 

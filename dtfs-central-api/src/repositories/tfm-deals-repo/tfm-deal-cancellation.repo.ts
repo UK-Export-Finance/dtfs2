@@ -150,6 +150,6 @@ export class TfmDealCancellationRepo {
       throw new DealNotFoundError(dealId.toString());
     }
 
-    return { cancelledDeal: { ukefDealId: dealId } };
+    return { cancelledDealUkefId: dealId };
   }
 }
