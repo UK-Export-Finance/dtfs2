@@ -5,6 +5,7 @@ import {
   DealNotFoundError,
   InvalidDealIdError,
   MONGO_DB_COLLECTIONS,
+  TFM_DEAL_CANCELLATION_STATUS,
   TFM_DEAL_STAGE,
   TfmDeal,
   TfmDealCancellationWithStatus,
@@ -43,6 +44,21 @@ export class TfmDealCancellationRepo {
     }
 
     return matchingDeal.tfm.cancellation;
+  }
+
+  /**
+   * Find deals with scheduled cancellations
+   * @returns the deals
+   */
+  public static async findScheduledDealCancellations(): Promise<TfmDeal[]> {
+    const dealCollection = await this.getCollection();
+
+    return await dealCollection
+      .find({
+        'dealSnapshot.submissionType': { $in: [DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN] },
+        'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.SCHEDULED,
+      })
+      .toArray();
   }
 
   /**
