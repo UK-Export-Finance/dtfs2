@@ -1,7 +1,14 @@
+import escapeStringRegexp from 'escape-string-regexp';
 import { AuditDetails, MONGO_DB_COLLECTIONS, TfmUser, UserUpsertRequest } from '@ukef/dtfs2-common';
 import { Collection, WithoutId } from 'mongodb';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../drivers/db-client';
+
+type UpsertUserParams = {
+  emailsOfUserToUpsert: string[];
+  userUpsertRequest: UserUpsertRequest;
+  auditDetails: AuditDetails;
+};
 
 export class UserRepo {
   /**
@@ -13,19 +20,37 @@ export class UserRepo {
   }
 
   /**
+   * generateArrayOfEmailsRegex
+   * Generate an array of emails as regular expressions.
+   * This is used to find users with matching emails.
+   * @param {string[]} emails
+   * @returns {RegExp[]} Emails as regular expressions.
+   */
+  private static generateArrayOfEmailsRegex(emails: string[]) {
+    return emails.map((email) => new RegExp(`^${escapeStringRegexp(email)}$`, 'i'));
+  }
+
+  /**
    * Upserts a user
-   * @param upsertUserRequest
+   * If there are multiple users with the provided emails, an error will be thrown
+   * If there are no users found, an error will be thrown
+   * @param upsertUserParams
+   * @param upsertUserParams.upsertUserRequest the upsert user request
+   * @param upsertUserParams.emailsOfUserToUpsert the emails of the user to update, used to identify the tfm user
+   * @param upsertUserParams.auditDetails the audit details
    * @returns upserted user
    */
-  public static async upsertUser({ userUpdate, auditDetails }: { userUpdate: UserUpsertRequest; auditDetails: AuditDetails }): Promise<void> {
+  public static async upsertUser({ emailsOfUserToUpsert, userUpsertRequest, auditDetails }: UpsertUserParams): Promise<void> {
     const collection = await this.getCollection();
 
     const userUpsert = {
-      ...userUpdate,
+      ...userUpsertRequest,
       auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
     };
 
-    const query = { name: 'To Update' }; // TODO: DTFS2-6892: This should be updated as part of this ticket
+    const emailsRegex = this.generateArrayOfEmailsRegex(emailsOfUserToUpsert);
+
+    const query = { email: { $in: emailsRegex } };
     const update = { $set: userUpsert };
     const options = { upsert: true };
     await collection.updateOne(query, update, options); // TODO: DTFS2-6892: Test this fails if there are multiple users

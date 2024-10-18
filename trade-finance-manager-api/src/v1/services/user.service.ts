@@ -8,7 +8,10 @@ export class UserService {
   }
 
   public static async upsertUserFromEntraIdUser({ entraUser, auditDetails }: { entraUser: EntraIdUser; auditDetails: AuditDetails }): Promise<void> {
-    const userUpsertRequest = this.transformEntraUserToTfmUserUpsert(entraUser);
-    await UserRepo.upsertUser({ userUpdate: userUpsertRequest, auditDetails });
+    await UserRepo.upsertUser({
+      emailsOfUserToUpsert: [...entraUser.verified_primary_email, ...entraUser.verified_secondary_email],
+      userUpsertRequest: this.transformEntraUserToTfmUserUpsert(entraUser),
+      auditDetails,
+    });
   }
 }

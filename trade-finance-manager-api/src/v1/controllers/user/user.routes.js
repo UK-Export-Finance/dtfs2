@@ -3,7 +3,7 @@ const { ObjectId } = require('mongodb');
 const { generateTfmAuditDetails, generateNoUserLoggedInAuditDetails, generateSystemAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const utils = require('../../../utils/crypto.util');
 const { userIsDisabled, usernameOrPasswordIncorrect, userIsBlocked } = require('../../../constants/login-results.constant');
-const { create, update, removeTfmUserById, findOne, findByUsername, upsertUser } = require('./user.controller');
+const { create, update, removeTfmUserById, findOne, findByUsername, upsertTfmUserFromEntraUser } = require('./user.controller');
 
 const { mapUserData } = require('./helpers/mapUserData.helper');
 const { loginCallback } = require('./helpers/loginCallback.helper');
@@ -65,7 +65,7 @@ module.exports.createTfmUser = (req, res, next) => {
 // TODO: DTFS2-6892 - Consider whether next is needed in express 4
 module.exports.upsertTfmUserFromEntraUser = async (req, res) => {
   const entraUser = ENTRA_ID_USER_SCHEMA.parse(req.body);
-  const tfmUser = await upsertUser({ entraUser, auditDetails: generateSystemAuditDetails() });
+  const tfmUser = await upsertTfmUserFromEntraUser({ entraUser, auditDetails: generateSystemAuditDetails() });
   res.status(200).send(tfmUser);
 };
 

@@ -5,7 +5,7 @@
  */
 
 import z from 'zod';
-import { ALL_ENTRA_ID_USER_GROUPS } from '../../constants';
+import { TfmTeamSchema } from './tfm-team.schema';
 
 export const ENTRA_ID_USER_SCHEMA = z.object({
   oid: z.string(),
@@ -13,5 +13,5 @@ export const ENTRA_ID_USER_SCHEMA = z.object({
   verified_secondary_email: z.array(z.string()),
   given_name: z.string(),
   family_name: z.string(),
-  groups: z.array(z.enum(ALL_ENTRA_ID_USER_GROUPS)), // TODO: DTFS2-6892: this is using existing roles, but could be improved
+  roles: z.array(TfmTeamSchema),
 });
