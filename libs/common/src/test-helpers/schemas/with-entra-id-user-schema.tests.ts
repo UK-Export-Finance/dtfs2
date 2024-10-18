@@ -87,6 +87,10 @@ function getFailureTestCases({ getTestObjectWithUpdatedUserParams }: TestCasesPa
       description: 'the oid is not a string',
     },
     {
+      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), verified_primary_email: [] }),
+      description: 'the verify primary email is zero length',
+    },
+    {
       aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), verified_primary_email: [1] }),
       description: 'the verify primary email is not a string array',
     },

@@ -30,6 +30,12 @@ describe('ENTRA_ID_USER_SCHEMA', () => {
     const request = { ...aValidEntraIdUser(), roles: 1 };
     itShouldThrowAnError(request);
   });
+
+  describe('when no primary email is provided', () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const request = { ...aValidEntraIdUser(), verified_primary_email: [] };
+    itShouldThrowAnError(request);
+  });
 });
 
 function itShouldReturnAValidaUserUpsertRequest(request: EntraIdUser) {

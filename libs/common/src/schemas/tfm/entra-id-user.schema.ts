@@ -9,7 +9,7 @@ import { TfmTeamSchema } from './tfm-team.schema';
 
 export const ENTRA_ID_USER_SCHEMA = z.object({
   oid: z.string(),
-  verified_primary_email: z.array(z.string()),
+  verified_primary_email: z.array(z.string()).nonempty(),
   verified_secondary_email: z.array(z.string()),
   given_name: z.string(),
   family_name: z.string(),
