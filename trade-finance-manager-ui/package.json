@@ -57,7 +57,7 @@
     "express-session": "1.17.3",
     "express-validator": "7.0.1",
     "express-xss-sanitizer": "^1.2.0",
-    "govuk-frontend": "^4.8.0",
+    "govuk-frontend": "^5.7.1",
     "imask": "^6.6.3",
     "joi": "^17.13.3",
     "jquery": "3.6.4",
