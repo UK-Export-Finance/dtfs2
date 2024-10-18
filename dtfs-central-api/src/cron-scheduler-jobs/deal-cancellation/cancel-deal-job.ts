@@ -26,9 +26,9 @@ const cancelDeals = async (dealIds: ObjectId[]) => {
  * @returns The deal ids to cancel
  */
 const getDealIdsWithCancellationsScheduledForThePast = async (): Promise<ObjectId[]> => {
-  const scheduledDealCancellations = await TfmDealCancellationRepo.findScheduledDealCancellations();
+  const dealsScheduledForCancellation = await TfmDealCancellationRepo.findScheduledDealCancellations();
 
-  return scheduledDealCancellations.filter((dealCancellations) => dealCancellations.effectiveFrom < endOfDay(new Date()).valueOf()).map(({ dealId }) => dealId);
+  return dealsScheduledForCancellation.filter((deals) => deals.tfm.cancellation!.effectiveFrom < endOfDay(new Date()).valueOf()).map(({ _id }) => _id);
 };
 
 /**
