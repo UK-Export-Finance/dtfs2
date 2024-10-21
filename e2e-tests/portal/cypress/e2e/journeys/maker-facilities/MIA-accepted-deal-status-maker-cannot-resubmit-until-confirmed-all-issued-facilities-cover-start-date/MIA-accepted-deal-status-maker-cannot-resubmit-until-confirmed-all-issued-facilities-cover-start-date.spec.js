@@ -2,7 +2,7 @@ const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MIADealWithAcceptedStatusIssuedFacilities = require('./MIA-deal-with-accepted-status-issued-facilities');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
-const DATE_CONSTANTS = require('../../../../../../e2e-fixtures/dateConstants');
+const { oneMonth } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
@@ -172,7 +172,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/loan/${unconditionalSubmittedLoanId}/confirm-requested-cover-start-date`));
 
-    const NEW_LOAN_COVER_START_DATE = DATE_CONSTANTS.oneMonth;
+    const NEW_LOAN_COVER_START_DATE = oneMonth.date;
 
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().click();
     cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: NEW_LOAN_COVER_START_DATE });

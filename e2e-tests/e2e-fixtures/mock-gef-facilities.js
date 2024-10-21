@@ -1,5 +1,5 @@
 const CONSTANTS = require('../gef/cypress/fixtures/constants');
-const dateConstants = require('./dateConstants');
+const { tomorrow } = require('./dateConstants');
 
 /**
  * Gets facility end date properties if enabled on default deal version
@@ -112,7 +112,7 @@ const anIssuedCashFacilityWithCoverDateConfirmed = ({ facilityEndDateEnabled = f
   name: 'Facility two',
   shouldCoverStartOnSubmission: true,
   coverStartDate: 1638403200000,
-  coverEndDate: dateConstants.tomorrow,
+  coverEndDate: tomorrow.date,
   monthsOfCover: null,
   details: [
     'Term basis',

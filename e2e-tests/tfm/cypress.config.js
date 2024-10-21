@@ -6,9 +6,12 @@ const { createTasks } = require('../support/tasks');
 // Read from root `./.env` directory
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-const { TFM_API_KEY } = process.env;
+const { TFM_API_KEY, TZ } = process.env;
 
 module.exports = defineConfig({
+  env: {
+    TZ,
+  },
   dealApiProtocol: 'http://',
   dealApiHost: 'localhost',
   dealApiPort: '5001',

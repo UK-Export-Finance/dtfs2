@@ -1,12 +1,4 @@
 /**
- * IANA timezone name for London
- *
- * {@link https://www.iana.org/time-zones}
- *
- */
-export const LONDON_TIMEZONE = 'Europe/London';
-
-/**
  * To use with date-fns/format
  *
  * e.g '30/01/2024'

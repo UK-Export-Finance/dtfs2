@@ -1,9 +1,8 @@
 import { createMocks } from 'node-mocks-http';
 import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
-import { format } from 'date-fns';
 import { aRequestSession } from '../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { BankRequestDateViewModel } from '../../../types/view-models';
+import { CheckDetailsViewModel } from '../../../types/view-models';
 import api from '../../../api';
 import { getDealCancellationDetails, GetDealCancellationDetailsRequest } from './check-details.controller';
 
@@ -109,15 +108,13 @@ describe('getDealCancellationDetails', () => {
 
     it('renders the check details page with deal cancellation details', async () => {
       const reason = 'test reaspn';
-      const bankRequestDate = new Date('2024-01-01');
-      const effectiveFromDate = new Date('2024-03-03');
+      const bankRequestDate = new Date('2024-01-01').valueOf();
+      const effectiveFrom = new Date('2024-03-03').valueOf();
 
       const session = aRequestSession();
 
       // Arrange
-      jest
-        .mocked(api.getDealCancellation)
-        .mockResolvedValue({ reason, effectiveFrom: effectiveFromDate.valueOf(), bankRequestDate: bankRequestDate.valueOf() });
+      jest.mocked(api.getDealCancellation).mockResolvedValue({ reason, effectiveFrom, bankRequestDate });
 
       const { req, res } = createMocks<GetDealCancellationDetailsRequest>({
         params: { _id: dealId },
@@ -129,14 +126,12 @@ describe('getDealCancellationDetails', () => {
 
       // Assert
       expect(res._getRenderView()).toEqual('case/cancellation/check-details.njk');
-      expect(res._getRenderData() as BankRequestDateViewModel).toEqual({
+      expect(res._getRenderData() as CheckDetailsViewModel).toEqual({
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
         user: session.user,
         ukefDealId,
         dealId,
-        reason,
-        bankRequestDate: format(bankRequestDate, 'd MMMM yyyy'),
-        effectiveFromDate: format(effectiveFromDate, 'd MMMM yyyy'),
+        cancellation: { reason, bankRequestDate, effectiveFrom },
       });
     });
   });

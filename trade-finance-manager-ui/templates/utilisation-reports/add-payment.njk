@@ -7,7 +7,7 @@
 {% import "./_macros/fee-record-details-table.njk" as feeRecordDetailsTable %}
 {% import "./_macros/payment-date-input.njk" as paymentDateInput %}
 {% extends "index.njk" %}
-{% set backLink = {"href": '/utilisation-reports/' + reportId} %}
+{% set backLink = { "href": backLinkHref } %}
 {% block pageTitle %}Add a payment{% endblock %}
 {% block content %}
   {% if errors.errorSummary | length %}
@@ -160,7 +160,7 @@
         text: "Continue",
         attributes: { 'data-cy': 'continue-button'}
       })}}
-      <a class="govuk-link" href="/utilisation-reports/{{ reportId }}">Cancel</a>
+      <a class="govuk-link" href="{{ backLinkHref }}" id="cancel-link" data-cy="cancel-link">Cancel</a>
     </div>
   </form>
 {% endblock %}

@@ -7,16 +7,16 @@ on:
     branches:
       - release-2.4.0
     paths:
-      - "portal/**"
-      - "portal-api/**"
-      - "gef-ui/**"
-      - "trade-finance-manager-ui/**"
-      - "trade-finance-manager-api/**"
-      - "dtfs-central-api/**"
-      - "external-api/**"
-      - "azure-functions/acbs-function/**"
-      - "libs/common/**"
-      - ".github/**"
+      - 'portal/**'
+      - 'portal-api/**'
+      - 'gef-ui/**'
+      - 'trade-finance-manager-ui/**'
+      - 'trade-finance-manager-api/**'
+      - 'dtfs-central-api/**'
+      - 'external-api/**'
+      - 'azure-functions/acbs-function/**'
+      - 'libs/common/**'
+      - '.github/**'
 
 env:
   environment: feature
