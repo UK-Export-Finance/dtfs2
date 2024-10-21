@@ -1,3 +1,7 @@
+/**
+ * @param {import("@ukef/dtfs2-common").TfmUser} user
+ * @returns {import("../../../../types/tfm-session-user").TfmSessionUser}
+ */
 const mapUserData = (user) => ({
   username: user.username,
   firstName: user.firstName,
