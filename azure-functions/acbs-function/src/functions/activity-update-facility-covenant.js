@@ -12,7 +12,7 @@ const { isHttpErrorStatus } = require('../../helpers/http');
  * 3. Handles the response from the ACBS system and returns the result.
  *
  * @param {Object} payload - The input payload containing the facility identifier and ACBS facility covenant input.
- * @param {string} payload.facilityId - The identifier of the facility to be amended.
+ * @param {string} payload.facilityIdentifier - The identifier of the facility to be amended.
  * @param {Object} payload.acbsFacilityCovenantInput - The ACBS facility covenant input details.
  * @returns {Object} - The result of the facility covenant record amendment, including status, timestamps, and data sent/received.
  * @throws {Error} - Throws an error if the input payload is invalid or if there is an error during the amendment process.
@@ -29,9 +29,9 @@ const handler = async (payload) => {
      * `targetAmount` is only set for the value attribute.
      */
 
-    const { facilityId, acbsFacilityCovenantInput } = payload;
+    const { facilityIdentifier, acbsFacilityCovenantInput } = payload;
     const submittedToACBS = getNowAsIsoString();
-    const { status, data } = await api.updateFacilityCovenant(facilityId, acbsFacilityCovenantInput);
+    const { status, data } = await api.updateFacilityCovenant(facilityIdentifier, acbsFacilityCovenantInput);
 
     if (isHttpErrorStatus(status)) {
       throw new Error(

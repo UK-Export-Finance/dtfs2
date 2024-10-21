@@ -1016,7 +1016,7 @@ const createACBS = async (deal, bank) => {
   return {};
 };
 
-const updateACBSfacility = async (facility, deal) => {
+const issueACBSfacility = async (facility, deal) => {
   if (!!facility && !!deal) {
     try {
       const response = await axios({
@@ -1674,7 +1674,7 @@ module.exports = {
   getFacilityExposurePeriod,
   getPremiumSchedule,
   createACBS,
-  updateACBSfacility,
+  issueACBSfacility,
   amendACBSfacility,
   getFunctionsAPI,
   createEstoreSite,

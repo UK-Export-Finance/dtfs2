@@ -195,8 +195,8 @@ const createFacilityCovenantId = (payload) => postMdm('numbers', payload);
 // *** TFS ***
 
 // GET
-const getFacility = (facilityId) => get(`facilities/${facilityId}`);
-const getLoanId = (facilityId) => get(`facilities/${facilityId}/loans`);
+const getFacility = (facilityIdentifier) => get(`facilities/${facilityIdentifier}`);
+const getLoanId = (facilityIdentifier) => get(`facilities/${facilityIdentifier}/loans`);
 
 // POST
 const createParty = (payload) => post('parties', payload);
