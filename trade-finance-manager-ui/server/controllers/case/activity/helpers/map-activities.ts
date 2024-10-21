@@ -1,9 +1,9 @@
 import { ACTIVITY_TYPES, TfmActivity } from '@ukef/dtfs2-common';
 import { format, fromUnixTime } from 'date-fns';
 
-export const mapActivities = (activities: TfmActivity[]) => {
+export const mapActivities = (activities: TfmActivity[] | undefined) => {
   if (!activities) {
-    return false;
+    return [];
   }
 
   return activities.map((activity) => {
