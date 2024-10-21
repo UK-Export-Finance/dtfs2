@@ -53,8 +53,8 @@ const mandatoryFields = [
  * If the payload is not valid or does not contain all mandatory fields, it returns an object with the missing mandatory fields.
  * If any other error occurs, it logs the error and throws a new error.
  *
- * @param {Object} payload - The payload containing the facilityId, acbsFacilityMasterInput, updateType, and etag.
- * @param {string} payload.facilityId - The ID of the facility.
+ * @param {Object} payload - The payload containing the facilityIdentifier, acbsFacilityMasterInput, updateType, and etag.
+ * @param {string} payload.facilityIdentifier - The ID of the facility.
  * @param {Object} payload.acbsFacilityMasterInput - The input for the ACBS facility master, containing the mandatory fields.
  * @param {string} payload.updateType - The type of update to be performed.
  * @param {string} payload.etag - The etag of the facility.
@@ -67,7 +67,7 @@ const handler = async (payload) => {
       throw new Error('Invalid facility master amendment payload');
     }
 
-    const { facilityId, acbsFacilityMasterInput, updateType, etag } = payload;
+    const { facilityIdentifier, acbsFacilityMasterInput, updateType, etag } = payload;
 
     const missingMandatory = findMissingMandatory(acbsFacilityMasterInput, mandatoryFields);
 
@@ -77,7 +77,7 @@ const handler = async (payload) => {
 
     const submittedToACBS = getNowAsIsoString();
 
-    const { status, data } = await api.updateFacility(facilityId, updateType, acbsFacilityMasterInput, etag);
+    const { status, data } = await api.updateFacility(facilityIdentifier, updateType, acbsFacilityMasterInput, etag);
 
     if (isHttpErrorStatus(status)) {
       throw new Error(
