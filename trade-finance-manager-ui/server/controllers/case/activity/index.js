@@ -1,4 +1,4 @@
-const { getUnixTime, fromUnixTime } = require('date-fns');
+const { getUnixTime, fromUnixTime, format } = require('date-fns');
 const api = require('../../../api');
 const { generateValidationErrors } = require('../../../helpers/validation');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
@@ -24,9 +24,9 @@ const mappedActivities = (activities) => {
           <p> Deal stage:
             <strong class="govuk-tag govuk-tag--red">
               Cancelled
-            </strong> <br/>
-            Bank request date: ${activity.bankRequestDate}<br/>
-            Date effective from: ${activity.effectiveFrom}<br/>
+            </strong> <br/><br/>
+            Bank request date: ${format(activity.bankRequestDate, 'd MMMM yyyy')}<br/><br/>
+            Date effective from: ${format(activity.effectiveFrom, 'd MMMM yyyy')}<br/><br/>
             Comments: ${activity.reason || '-'}
           </p>`,
           datetime: {
