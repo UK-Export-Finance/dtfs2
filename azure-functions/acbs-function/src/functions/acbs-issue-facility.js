@@ -98,7 +98,7 @@ df.app.orchestration('acbs-issue-facility', function* issueFacility(context) {
         }
 
         return {
-          facilityIdentifier: facility._id,
+          facilityIdentifier,
           issuedFacilityMaster,
           facilityLoan,
           facilityFee,

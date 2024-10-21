@@ -74,7 +74,7 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
     const { facilitySnapshot } = facility;
 
     if (facilityIdentifier.includes(DEAL.UKEF_ID.PENDING) || facilityIdentifier.includes(DEAL.UKEF_ID.TEST)) {
-      throw new Error(`Invalid facility ID ${facilityIdentifier}`);
+      throw new Error(`Invalid facility identifier ${facilityIdentifier}`);
     }
 
     // 1. DAF : get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
