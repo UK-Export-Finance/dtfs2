@@ -45,18 +45,22 @@ context('Users can view utilisation', () => {
           status: AMENDMENT_STATUS.COMPLETED,
           /**
            * This amendment is not in effect for the report in question
-           * so should be ignored
+           * so should be ignored.
+           *
+           * Effective date is stored as unix epoch time in seconds.
            */
-          effectiveDate: dateAfterReportPeriodEnd.getTime(),
+          effectiveDate: Math.round(dateAfterReportPeriodEnd.getTime() / 1000),
         },
         {
           value: 300000,
           status: AMENDMENT_STATUS.COMPLETED,
           /**
            * This amendment is in effect for the report in question
-           * so it's value should be used
+           * so it's value should be used.
+           *
+           * Effective date is stored as unix epoch time in seconds.
            */
-          effectiveDate: dateWithinReportPeriod.getTime(),
+          effectiveDate: Math.round(dateWithinReportPeriod.getTime() / 1000),
         },
       ],
     };

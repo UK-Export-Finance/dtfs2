@@ -60,19 +60,22 @@ context('Fixed fee calculation uses effective amendment to cover end date at rep
     amendments: [
       {
         status: AMENDMENT_STATUS.COMPLETED,
-        effectiveDate: dateAfterReportPeriodEnd.getTime(),
+        // Effective date is stored as unix epoch time in seconds not milliseconds.
+        effectiveDate: Math.round(dateAfterReportPeriodEnd.getTime() / 1000),
         // 365 days after report period end
         coverEndDate: new Date('2025-03-01').getTime(),
       },
       {
         status: AMENDMENT_STATUS.IN_PROGRESS,
-        effectiveDate: dateBeforeReportPeriodEnd.getTime(),
+        // Effective date is stored as unix epoch time in seconds not milliseconds.
+        effectiveDate: Math.round(dateBeforeReportPeriodEnd.getTime() / 1000),
         // 370 days after report period end
         coverEndDate: new Date('2025-03-06').getTime(),
       },
       {
         status: AMENDMENT_STATUS.COMPLETED,
-        effectiveDate: dateBeforeDateBeforeReportPeriodEnd.getTime(),
+        // Effective date is stored as unix epoch time in seconds not milliseconds.
+        effectiveDate: Math.round(dateBeforeDateBeforeReportPeriodEnd.getTime() / 1000),
         // 730 days after report period end
         coverEndDate: new Date('2026-03-01').getTime(),
       },
