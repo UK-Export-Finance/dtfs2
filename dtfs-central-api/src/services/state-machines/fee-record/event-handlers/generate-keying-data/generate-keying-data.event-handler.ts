@@ -33,11 +33,11 @@ export const handleFeeRecordGenerateKeyingDataEvent = async (
     return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
   }
 
-  const { coverPercentage } = await getLatestTfmFacilityValues(feeRecord.facilityId, reportPeriod);
+  const tfmFacilityValues = await getLatestTfmFacilityValues(feeRecord.facilityId, reportPeriod);
 
-  const fixedFeeAdjustment = await calculateFixedFeeAdjustment(feeRecord, feeRecord.facilityUtilisationData, reportPeriod);
+  const fixedFeeAdjustment = calculateFixedFeeAdjustment(feeRecord, feeRecord.facilityUtilisationData, reportPeriod, tfmFacilityValues);
 
-  const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(feeRecord.facilityUtilisation, coverPercentage);
+  const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(feeRecord.facilityUtilisation, tfmFacilityValues.coverPercentage);
 
   const principalBalanceAdjustment = calculatePrincipalBalanceAdjustment(ukefShareOfUtilisation, feeRecord.facilityUtilisationData);
 
@@ -52,13 +52,17 @@ export const handleFeeRecordGenerateKeyingDataEvent = async (
 
   await transactionEntityManager.save(FeeRecordEntity, feeRecord);
 
-  await updateFacilityUtilisationData(feeRecord.facilityUtilisationData, {
-    reportPeriod,
-    utilisation: feeRecord.facilityUtilisation,
-    requestSource,
-    ukefShareOfUtilisation,
-    entityManager: transactionEntityManager,
-  });
+  await updateFacilityUtilisationData(
+    feeRecord.facilityUtilisationData,
+    {
+      reportPeriod,
+      utilisation: feeRecord.facilityUtilisation,
+      requestSource,
+      ukefShareOfUtilisation,
+      entityManager: transactionEntityManager,
+    },
+    tfmFacilityValues,
+  );
 
   return feeRecord;
 };

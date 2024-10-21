@@ -2,15 +2,26 @@ import { ObjectId } from 'mongodb';
 import { TfmFacility } from '@ukef/dtfs2-common';
 import { aFacility } from './facility';
 
+const facility = aFacility();
+
 export const aTfmFacility = (): TfmFacility => {
   const tfmFacilityId = new ObjectId();
 
   return {
     _id: tfmFacilityId,
     facilitySnapshot: {
-      ...aFacility(),
+      ...facility,
       _id: tfmFacilityId,
     },
     amendments: [],
   };
+};
+
+export const tfmFacilityReturnedValues = {
+  coverEndDate: new Date(),
+  coverStartDate: new Date(),
+  dayCountBasis: facility.dayCountBasis,
+  interestPercentage: facility.interestPercentage,
+  coverPercentage: facility.coverPercentage,
+  value: facility.value,
 };

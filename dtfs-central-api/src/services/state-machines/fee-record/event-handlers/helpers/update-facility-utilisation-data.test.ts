@@ -3,7 +3,7 @@ import { when } from 'jest-when';
 import { DbRequestSource, FacilityUtilisationDataEntity, FacilityUtilisationDataEntityMockBuilder, ReportPeriod } from '@ukef/dtfs2-common';
 import { updateFacilityUtilisationData } from './update-facility-utilisation-data';
 import { getFixedFeeForFacility } from './get-fixed-fee-for-facility';
-import { aDbRequestSource } from '../../../../../../test-helpers';
+import { aDbRequestSource, tfmFacilityReturnedValues } from '../../../../../../test-helpers';
 
 jest.mock('./get-fixed-fee-for-facility');
 
@@ -15,7 +15,7 @@ describe('updateFacilityUtilisationData', () => {
   } as unknown as EntityManager;
 
   beforeEach(() => {
-    jest.mocked(getFixedFeeForFacility).mockResolvedValue(100);
+    jest.mocked(getFixedFeeForFacility).mockReturnValue(100);
   });
 
   afterEach(() => {
@@ -44,13 +44,17 @@ describe('updateFacilityUtilisationData', () => {
     };
 
     // Act
-    await updateFacilityUtilisationData(facilityUtilisationDataEntity, {
-      reportPeriod,
-      utilisation,
-      requestSource,
-      ukefShareOfUtilisation,
-      entityManager: mockEntityManager,
-    });
+    await updateFacilityUtilisationData(
+      facilityUtilisationDataEntity,
+      {
+        reportPeriod,
+        utilisation,
+        requestSource,
+        ukefShareOfUtilisation,
+        entityManager: mockEntityManager,
+      },
+      tfmFacilityReturnedValues,
+    );
 
     // Assert
     expect(mockSave).toHaveBeenCalledWith(FacilityUtilisationDataEntity, facilityUtilisationDataEntity);
@@ -78,16 +82,20 @@ describe('updateFacilityUtilisationData', () => {
     const utilisation = 9876543.21;
     const ukefShareOfUtilisation = 123;
 
-    when(getFixedFeeForFacility).calledWith('12345678', utilisation, reportPeriod).mockResolvedValue(76543.21);
+    when(getFixedFeeForFacility).calledWith(utilisation, reportPeriod, tfmFacilityReturnedValues).mockReturnValue(76543.21);
 
     // Act
-    await updateFacilityUtilisationData(facilityUtilisationDataEntity, {
-      reportPeriod,
-      utilisation,
-      requestSource: aDbRequestSource(),
-      ukefShareOfUtilisation,
-      entityManager: mockEntityManager,
-    });
+    await updateFacilityUtilisationData(
+      facilityUtilisationDataEntity,
+      {
+        reportPeriod,
+        utilisation,
+        requestSource: aDbRequestSource(),
+        ukefShareOfUtilisation,
+        entityManager: mockEntityManager,
+      },
+      tfmFacilityReturnedValues,
+    );
 
     // Assert
     expect(facilityUtilisationDataEntity.fixedFee).toEqual(76543.21);

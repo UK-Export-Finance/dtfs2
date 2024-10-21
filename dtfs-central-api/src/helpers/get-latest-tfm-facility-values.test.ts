@@ -11,6 +11,19 @@ describe('getLatestTfmFacilityValues', () => {
   const facilityId = '123';
   const today = new Date();
 
+  const facility = {
+    ...aTfmFacility(),
+    facilitySnapshot: {
+      ...aFacility(),
+      ukefFacilityId: facilityId,
+      interestPercentage: 5,
+      dayCountBasis: 365,
+      coverEndDate: today,
+      coverStartDate: today,
+      coverPercentage: 5,
+    },
+  };
+
   const reportPeriod = {
     start: { month: today.getMonth() + 1, year: today.getFullYear() },
     end: { month: today.getMonth() + 1, year: today.getFullYear() },
@@ -80,22 +93,31 @@ describe('getLatestTfmFacilityValues', () => {
 
   describe('when the tfm facility is found', () => {
     beforeEach(() => {
-      findOneByUkefFacilityIdSpy.mockResolvedValue({
-        ...aTfmFacility(),
-        facilitySnapshot: {
-          ...aFacility(),
-          ukefFacilityId: facilityId,
-          interestPercentage: 5,
-          dayCountBasis: 365,
-          coverEndDate: today,
-          coverStartDate: today,
-          coverPercentage: 5,
-        },
-      });
+      findOneByUkefFacilityIdSpy.mockResolvedValue(facility);
     });
 
     it('should return a populated object', async () => {
       const result = await getLatestTfmFacilityValues(facilityId, reportPeriod);
+
+      const expected = {
+        coverEndDate: convertTimestampToDate(today),
+        coverStartDate: convertTimestampToDate(today),
+        dayCountBasis: 365,
+        interestPercentage: 5,
+        coverPercentage: 5,
+      };
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('when the report period is not provided', () => {
+    beforeEach(() => {
+      findOneByUkefFacilityIdSpy.mockResolvedValue(facility);
+    });
+
+    it("should return a populated object with the facility's cover end date", async () => {
+      const result = await getLatestTfmFacilityValues(facilityId);
 
       const expected = {
         coverEndDate: convertTimestampToDate(today),
