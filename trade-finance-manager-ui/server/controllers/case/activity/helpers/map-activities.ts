@@ -7,6 +7,14 @@ export const mapActivities = (activities: TfmActivity[]) => {
   }
 
   return activities.map((activity) => {
+    const datetime = {
+      timestamp: fromUnixTime(activity.timestamp),
+      type: 'datetime',
+    };
+    const byline = {
+      text: `${activity.author.firstName} ${activity.author.lastName}`,
+    };
+
     switch (activity.type) {
       case ACTIVITY_TYPES.CANCELLATION:
         return {
@@ -25,13 +33,8 @@ export const mapActivities = (activities: TfmActivity[]) => {
             <br/><br/>
             Comments: ${activity.reason || '-'}
           </p>`,
-          datetime: {
-            timestamp: fromUnixTime(activity.timestamp),
-            type: 'datetime',
-          },
-          byline: {
-            text: `${activity.author.firstName} ${activity.author.lastName}`,
-          },
+          datetime,
+          byline,
         };
       default:
         return {
@@ -39,13 +42,8 @@ export const mapActivities = (activities: TfmActivity[]) => {
             text: activity.label,
           },
           text: activity.text,
-          datetime: {
-            timestamp: fromUnixTime(activity.timestamp),
-            type: 'datetime',
-          },
-          byline: {
-            text: `${activity.author.firstName} ${activity.author.lastName}`,
-          },
+          datetime,
+          byline,
         };
     }
   });
