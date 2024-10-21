@@ -3,6 +3,7 @@ import { TfmDealCancellationWithStatus } from './tfm-deal-cancellation';
 import { Deal } from './deals';
 import { AuditDatabaseRecord } from '../audit-database-record';
 import { AnyObject } from '../any-object';
+import { TfmActivity } from './tfm-activity';
 
 /**
  * Type of the mongo db "tfm-deals" collection
@@ -14,7 +15,7 @@ export type TfmDeal = {
   _id: ObjectId;
   dealSnapshot: Deal;
   tfm: {
-    activities: AnyObject[];
+    activities: TfmActivity[];
     dateReceived: string;
     dateReceivedTimestamp: number;
     exporterCreditRating: string;

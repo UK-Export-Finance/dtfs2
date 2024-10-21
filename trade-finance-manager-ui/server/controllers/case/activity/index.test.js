@@ -1,8 +1,10 @@
+import { ACTIVITY_TYPES } from '@ukef/dtfs2-common';
 import activityController from '.';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 import CONSTANTS from '../../../constants';
 import { generateValidationErrors } from '../../../helpers/validation';
+import { mapActivities } from './helpers/map-activities';
 
 const res = mockRes();
 
@@ -44,7 +46,7 @@ describe('GET activity', () => {
         session,
       };
 
-      const activities = activityController.mappedActivities(mockDeal.tfm.activities);
+      const activities = mapActivities(mockDeal.tfm.activities);
 
       await activityController.getActivity(req, res);
       expect(res.render).toHaveBeenCalledWith('case/activity/activity.njk', {
@@ -100,7 +102,7 @@ describe('POST activity (filter)', () => {
     tfm: {
       activities: [
         {
-          type: 'COMMENT',
+          type: ACTIVITY_TYPES.COMMENT,
           timestamp: 13345665,
           text: 'test1',
           author: MOCK_AUTHOR,
@@ -114,7 +116,7 @@ describe('POST activity (filter)', () => {
           label: 'Other',
         },
         {
-          type: 'COMMENT',
+          type: ACTIVITY_TYPES.COMMENT,
           timestamp: 13345665,
           text: 'test2',
           author: MOCK_AUTHOR,
@@ -148,7 +150,7 @@ describe('POST activity (filter)', () => {
         session,
       };
 
-      const activities = activityController.mappedActivities(mockDeal.tfm.activities);
+      const activities = mapActivities(mockDeal.tfm.activities);
 
       await activityController.filterActivities(req, res);
       expect(res.render).toHaveBeenCalledWith('case/activity/activity.njk', {
@@ -300,7 +302,7 @@ describe('POST activity - post-comment', () => {
         },
         session,
       };
-      const activities = activityController.mappedActivities(mockDeal.tfm.activities);
+      const activities = mapActivities(mockDeal.tfm.activities);
 
       await activityController.postComment(req, res);
       expect(res.render).toHaveBeenCalledWith('case/activity/activity.njk', {
@@ -327,7 +329,7 @@ describe('POST activity - post-comment', () => {
         },
         session,
       };
-      const activities = activityController.mappedActivities(mockDeal.tfm.activities);
+      const activities = mapActivities(mockDeal.tfm.activities);
 
       await activityController.postComment(req, res);
       expect(res.render).toHaveBeenCalledWith('case/activity/activity.njk', {
