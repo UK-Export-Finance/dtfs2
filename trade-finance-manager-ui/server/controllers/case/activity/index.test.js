@@ -109,7 +109,7 @@ describe('POST activity (filter)', () => {
           label: 'Comment added',
         },
         {
-          type: ACTIVITY_TYPES.OTHER,
+          type: ACTIVITY_TYPES.ACTIVITY,
           timestamp: 13345665,
           text: '',
           author: MOCK_AUTHOR,
@@ -123,7 +123,7 @@ describe('POST activity (filter)', () => {
           label: 'Comment added',
         },
         {
-          type: ACTIVITY_TYPES.OTHER,
+          type: ACTIVITY_TYPES.ACTIVITY,
           timestamp: 13345665,
           text: 'test1',
           author: MOCK_AUTHOR,

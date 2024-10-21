@@ -29,7 +29,7 @@ context('Users can create and submit comments', () => {
       const otherActivity = {
         tfm: {
           activities: {
-            type: ACTIVITY_TYPES.OTHER,
+            type: ACTIVITY_TYPES.ACTIVITY,
             timestamp: 13345665,
             text: 'Not a comment',
             author: {

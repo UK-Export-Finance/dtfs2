@@ -16,7 +16,7 @@ const mockActivities = [
     label: 'Comment added',
   },
   {
-    type: ACTIVITY_TYPES.OTHER,
+    type: ACTIVITY_TYPES.ACTIVITY,
     timestamp: 13345665,
     text: '',
     author: MOCK_AUTHOR,
@@ -30,7 +30,7 @@ const mockActivities = [
     label: 'Comment added',
   },
   {
-    type: ACTIVITY_TYPES.OTHER,
+    type: ACTIVITY_TYPES.ACTIVITY,
     timestamp: 13345665,
     text: 'test1',
     author: MOCK_AUTHOR,
@@ -45,7 +45,7 @@ const filtersObj = {
 describe('filterActivities', () => {
   describe('filter', () => {
     it('should filter activity types by the given FILTER_VALUE', () => {
-      const mockFilterValue = ACTIVITY_TYPES.OTHER;
+      const mockFilterValue = ACTIVITY_TYPES.ACTIVITY;
       const result = filter(mockActivities, mockFilterValue);
 
       const expected = mockActivities.filter((activity) => activity.type === mockFilterValue);
@@ -95,7 +95,7 @@ describe('filterActivities', () => {
           label: 'Comment added',
         },
         {
-          type: ACTIVITY_TYPES.OTHER,
+          type: ACTIVITY_TYPES.ACTIVITY,
           timestamp: 13345665,
           text: '',
           author: MOCK_AUTHOR,
@@ -109,7 +109,7 @@ describe('filterActivities', () => {
           label: 'Comment added',
         },
         {
-          type: ACTIVITY_TYPES.OTHER,
+          type: ACTIVITY_TYPES.ACTIVITY,
           timestamp: 13345665,
           text: 'test1',
           author: MOCK_AUTHOR,
@@ -135,7 +135,7 @@ describe('filterActivities', () => {
           label: 'Comment added',
         },
         {
-          type: ACTIVITY_TYPES.OTHER,
+          type: ACTIVITY_TYPES.ACTIVITY,
           timestamp: 13345665,
           text: '',
           author: MOCK_AUTHOR,
@@ -149,7 +149,7 @@ describe('filterActivities', () => {
           label: 'Comment added',
         },
         {
-          type: ACTIVITY_TYPES.OTHER,
+          type: ACTIVITY_TYPES.ACTIVITY,
           timestamp: 13345665,
           text: 'test1',
           author: MOCK_AUTHOR,
