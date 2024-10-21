@@ -1,3 +1,4 @@
+const { ACTIVITY_TYPES } = require('@ukef/dtfs2-common');
 const { filter, filterByComment, filterActivities } = require('./filterActivities');
 
 const MOCK_AUTHOR = {
@@ -8,28 +9,28 @@ const MOCK_AUTHOR = {
 
 const mockActivities = [
   {
-    type: 'COMMENT',
+    type: ACTIVITY_TYPES.COMMENT,
     timestamp: 13345665,
     text: 'test1',
     author: MOCK_AUTHOR,
     label: 'Comment added',
   },
   {
-    type: 'OTHER',
+    type: ACTIVITY_TYPES.OTHER,
     timestamp: 13345665,
     text: '',
     author: MOCK_AUTHOR,
     label: 'Other',
   },
   {
-    type: 'COMMENT',
+    type: ACTIVITY_TYPES.COMMENT,
     timestamp: 13345665,
     text: 'test2',
     author: MOCK_AUTHOR,
     label: 'Comment added',
   },
   {
-    type: 'OTHER',
+    type: ACTIVITY_TYPES.OTHER,
     timestamp: 13345665,
     text: 'test1',
     author: MOCK_AUTHOR,
@@ -44,7 +45,7 @@ const filtersObj = {
 describe('filterActivities', () => {
   describe('filter', () => {
     it('should filter activity types by the given FILTER_VALUE', () => {
-      const mockFilterValue = 'OTHER';
+      const mockFilterValue = ACTIVITY_TYPES.OTHER;
       const result = filter(mockActivities, mockFilterValue);
 
       const expected = mockActivities.filter((activity) => activity.type === mockFilterValue);
@@ -56,7 +57,7 @@ describe('filterActivities', () => {
     it('should filter activity types by `COMMENT`', () => {
       const result = filterByComment(mockActivities);
 
-      const expected = mockActivities.filter((activity) => activity.type === 'COMMENT');
+      const expected = mockActivities.filter((activity) => activity.type === ACTIVITY_TYPES.COMMENT);
       expect(result).toEqual(expected);
     });
   });
@@ -65,14 +66,14 @@ describe('filterActivities', () => {
     it('should filter by comment when comment filter used', () => {
       const expected = [
         {
-          type: 'COMMENT',
+          type: ACTIVITY_TYPES.COMMENT,
           timestamp: 13345665,
           text: 'test1',
           author: MOCK_AUTHOR,
           label: 'Comment added',
         },
         {
-          type: 'COMMENT',
+          type: ACTIVITY_TYPES.COMMENT,
           timestamp: 13345665,
           text: 'test2',
           author: MOCK_AUTHOR,
@@ -87,28 +88,28 @@ describe('filterActivities', () => {
     it('if filtersObj set on all, should show all activities', () => {
       const expected = [
         {
-          type: 'COMMENT',
+          type: ACTIVITY_TYPES.COMMENT,
           timestamp: 13345665,
           text: 'test1',
           author: MOCK_AUTHOR,
           label: 'Comment added',
         },
         {
-          type: 'OTHER',
+          type: ACTIVITY_TYPES.OTHER,
           timestamp: 13345665,
           text: '',
           author: MOCK_AUTHOR,
           label: 'Other',
         },
         {
-          type: 'COMMENT',
+          type: ACTIVITY_TYPES.COMMENT,
           timestamp: 13345665,
           text: 'test2',
           author: MOCK_AUTHOR,
           label: 'Comment added',
         },
         {
-          type: 'OTHER',
+          type: ACTIVITY_TYPES.OTHER,
           timestamp: 13345665,
           text: 'test1',
           author: MOCK_AUTHOR,
@@ -127,28 +128,28 @@ describe('filterActivities', () => {
     it('if filtersObj set on null, should show all activities', () => {
       const expected = [
         {
-          type: 'COMMENT',
+          type: ACTIVITY_TYPES.COMMENT,
           timestamp: 13345665,
           text: 'test1',
           author: MOCK_AUTHOR,
           label: 'Comment added',
         },
         {
-          type: 'OTHER',
+          type: ACTIVITY_TYPES.OTHER,
           timestamp: 13345665,
           text: '',
           author: MOCK_AUTHOR,
           label: 'Other',
         },
         {
-          type: 'COMMENT',
+          type: ACTIVITY_TYPES.COMMENT,
           timestamp: 13345665,
           text: 'test2',
           author: MOCK_AUTHOR,
           label: 'Comment added',
         },
         {
-          type: 'OTHER',
+          type: ACTIVITY_TYPES.OTHER,
           timestamp: 13345665,
           text: 'test1',
           author: MOCK_AUTHOR,

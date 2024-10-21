@@ -1,3 +1,4 @@
+import { ACTIVITY_TYPES } from '@ukef/dtfs2-common';
 import relative from '../../../relativeURL';
 import { errorSummary } from '../../../partials';
 import activitiesPage from '../../../pages/activities/activitiesPage';
@@ -28,7 +29,7 @@ context('Users can create and submit comments', () => {
       const otherActivity = {
         tfm: {
           activities: {
-            type: 'OTHER',
+            type: ACTIVITY_TYPES.OTHER,
             timestamp: 13345665,
             text: 'Not a comment',
             author: {
