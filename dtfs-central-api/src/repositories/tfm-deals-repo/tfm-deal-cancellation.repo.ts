@@ -58,7 +58,7 @@ export class TfmDealCancellationRepo {
     return await dealCollection
       .find({
         'dealSnapshot.submissionType': { $in: [DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN] },
-        'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.SCHEDULED,
+        'tfm.cancellation.status': { $eq: TFM_DEAL_CANCELLATION_STATUS.SCHEDULED },
       })
       .toArray();
   }
