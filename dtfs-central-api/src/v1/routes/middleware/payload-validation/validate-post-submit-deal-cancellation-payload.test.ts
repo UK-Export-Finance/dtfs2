@@ -23,7 +23,7 @@ describe('validatePostDealCancellationPayload', () => {
       payload: { ...aValidPayload(), cancellation: undefined },
     },
     {
-      description: "the 'reason' is not a string",
+      description: "'reason' is not a string",
       payload: {
         ...aValidPayload(),
         cancellation: {
@@ -32,7 +32,7 @@ describe('validatePostDealCancellationPayload', () => {
       },
     },
     {
-      description: `the 'reason' is over ${MAX_CHARACTER_COUNT} characters`,
+      description: `'reason' is over ${MAX_CHARACTER_COUNT} characters`,
       payload: {
         ...aValidPayload(),
         cancellation: {
@@ -41,7 +41,7 @@ describe('validatePostDealCancellationPayload', () => {
       },
     },
     {
-      description: "the 'effectiveFrom' is a string",
+      description: "'effectiveFrom' is a string",
       payload: {
         ...aValidPayload(),
         cancellation: {
@@ -50,7 +50,7 @@ describe('validatePostDealCancellationPayload', () => {
       },
     },
     {
-      description: "the 'effectiveFrom' is undefined",
+      description: "'effectiveFrom' is undefined",
       payload: {
         ...aValidPayload(),
         cancellation: {
@@ -59,7 +59,7 @@ describe('validatePostDealCancellationPayload', () => {
       },
     },
     {
-      description: "the 'bankRequestDate' is a string",
+      description: "'bankRequestDate' is a string",
       payload: {
         ...aValidPayload(),
         cancellation: {
@@ -68,7 +68,7 @@ describe('validatePostDealCancellationPayload', () => {
       },
     },
     {
-      description: "the 'bankRequestDate' is undefined",
+      description: "'bankRequestDate' is undefined",
       payload: {
         ...aValidPayload(),
         cancellation: {

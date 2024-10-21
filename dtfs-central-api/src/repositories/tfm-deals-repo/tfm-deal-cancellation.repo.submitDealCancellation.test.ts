@@ -51,8 +51,8 @@ describe('tfm-deals-cancellation-repo', () => {
       await TfmDealCancellationRepo.submitDealCancellation(dealId, mockDealCancellationObject, auditDetails);
 
       // Assert
+      expect(getCollectionMock).toHaveBeenCalledTimes(1);
       expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.TFM_DEALS);
-      expect(updateOneMock).toHaveBeenCalledTimes(1);
     });
 
     it('throws an InvalidDealIdError if deal is not a valid object id', async () => {
@@ -98,7 +98,7 @@ describe('tfm-deals-cancellation-repo', () => {
         auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
       });
 
-      expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.TFM_DEALS);
+      expect(updateOneMock).toHaveBeenCalledTimes(1);
       expect(updateOneMock).toHaveBeenCalledWith(expectedFilter, expectedUpdate);
     });
 

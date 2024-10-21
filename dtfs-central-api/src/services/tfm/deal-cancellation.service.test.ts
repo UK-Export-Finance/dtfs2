@@ -87,7 +87,7 @@ describe('DealCancellationService', () => {
       });
       const auditDetails = generateTfmAuditDetails(aTfmUser()._id);
 
-      it('does not submitDealCancellation', async () => {
+      it('should not call submitDealCancellation', async () => {
         // Arrange
         const cancellation = aDealCancellation();
 
