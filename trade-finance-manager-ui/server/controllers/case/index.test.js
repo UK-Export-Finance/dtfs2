@@ -2,7 +2,7 @@ import { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } from '@ukef/
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
-import { getTask, isDealCancellationEnabled } from '../helpers';
+import { getTask, canDealBeCancelled } from '../helpers';
 import mapAssignToSelectOptions from '../../helpers/map-assign-to-select-options';
 
 jest.mock('@ukef/dtfs2-common', () => ({
@@ -99,12 +99,12 @@ describe('controllers - case', () => {
       it('should check whether deal cancellation is enabled', async () => {
         await caseController.getCaseDeal(req, res);
 
-        expect(isDealCancellationEnabled).toHaveBeenCalledTimes(1);
+        expect(canDealBeCancelled).toHaveBeenCalledTimes(1);
       });
 
       describe('when deal cancellation is enabled', () => {
         it('should render the template with showDealCancelButton=true', async () => {
-          jest.mocked(isDealCancellationEnabled).mockReturnValueOnce(true);
+          jest.mocked(canDealBeCancelled).mockReturnValueOnce(true);
 
           await caseController.getCaseDeal(req, res);
 
@@ -117,7 +117,7 @@ describe('controllers - case', () => {
         });
 
         it('should render the template with hasDraftCancellation=true when the cancellation object is not empty', async () => {
-          jest.mocked(isDealCancellationEnabled).mockReturnValueOnce(true);
+          jest.mocked(canDealBeCancelled).mockReturnValueOnce(true);
           jest.mocked(api.getDealCancellation).mockReturnValueOnce({ reason: 'a reason' });
 
           await caseController.getCaseDeal(req, res);
@@ -131,7 +131,7 @@ describe('controllers - case', () => {
         });
 
         it('should render the template with hasDraftCancellation=false when the cancellation object is empty', async () => {
-          jest.mocked(isDealCancellationEnabled).mockReturnValueOnce(true);
+          jest.mocked(canDealBeCancelled).mockReturnValueOnce(true);
           jest.mocked(api.getDealCancellation).mockReturnValueOnce({});
 
           await caseController.getCaseDeal(req, res);
@@ -147,7 +147,7 @@ describe('controllers - case', () => {
 
       describe('when deal cancellation is disabled', () => {
         it('should render the template with showDealCancelButton=false', async () => {
-          jest.mocked(isDealCancellationEnabled).mockReturnValueOnce(false);
+          jest.mocked(canDealBeCancelled).mockReturnValueOnce(false);
 
           await caseController.getCaseDeal(req, res);
 

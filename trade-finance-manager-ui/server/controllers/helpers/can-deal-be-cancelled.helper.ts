@@ -1,4 +1,11 @@
-import { DEAL_SUBMISSION_TYPE, DealSubmissionType, isTfmDealCancellationFeatureFlagEnabled, TEAM_IDS } from '@ukef/dtfs2-common';
+import {
+  DEAL_SUBMISSION_TYPE,
+  DealSubmissionType,
+  isTfmDealCancellationFeatureFlagEnabled,
+  TEAM_IDS,
+  TFM_DEAL_CANCELLATION_STATUS,
+  TfmDealCancellationStatus,
+} from '@ukef/dtfs2-common';
 import { userIsInTeam } from '../../helpers/user';
 import { TfmSessionUser } from '../../types/tfm-session-user';
 
@@ -16,14 +23,19 @@ export const canSubmissionTypeBeCancelled = (submissionType: DealSubmissionType)
  * Checks if deal cancellation is enabled for a deal and user type
  * @param submissionType - the deal submission type
  * @param user - the session user
+ * @param cancellationStatus - the current deal cancellation status if it exists
  * @returns true or false depending on the feature flag, submission type and user type
  */
-export const isDealCancellationEnabled = (submissionType: DealSubmissionType, user: TfmSessionUser): boolean => {
-  // TODO: DTFS2-7298: also check that the deal hasn't already been cancelled.
+export const canDealBeCancelled = (submissionType: DealSubmissionType, user: TfmSessionUser, cancellationStatus?: TfmDealCancellationStatus): boolean => {
+  const isDealCancellationFeatureFlagEnabled = isTfmDealCancellationFeatureFlagEnabled();
 
   const isUserAllowedToCancelDeal = userIsInTeam(user, [TEAM_IDS.PIM]);
-  const isDealCancellationFeatureFlagEnabled = isTfmDealCancellationFeatureFlagEnabled();
+
   const isAcceptableSubmissionType = canSubmissionTypeBeCancelled(submissionType);
 
-  return isUserAllowedToCancelDeal && isDealCancellationFeatureFlagEnabled && isAcceptableSubmissionType;
+  const isDealNotAlreadyCancelled = !(
+    cancellationStatus === TFM_DEAL_CANCELLATION_STATUS.COMPLETED || cancellationStatus === TFM_DEAL_CANCELLATION_STATUS.SCHEDULED
+  );
+
+  return isDealCancellationFeatureFlagEnabled && isUserAllowedToCancelDeal && isAcceptableSubmissionType && isDealNotAlreadyCancelled;
 };

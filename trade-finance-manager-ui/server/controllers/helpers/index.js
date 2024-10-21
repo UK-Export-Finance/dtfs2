@@ -13,11 +13,11 @@ const { probabilityOfDefaultValidation } = require('./probabilityOfDefault.valid
 const { overrideDealsIfAmendmentsInProgress } = require('./overrideDealsIfAmendmentsInProgress.helper');
 const { overrideFacilitiesIfAmendmentsInProgress } = require('./overrideFacilitiesIfAmendmentsInProgress.helper');
 const { renderDealsOrFacilitiesPage, queryDealsOrFacilities } = require('./dealsAndFacilities.helper');
-const { isDealCancellationEnabled, canSubmissionTypeBeCancelled } = require('./deal-cancellation-enabled.helper');
+const { canDealBeCancelled, canSubmissionTypeBeCancelled } = require('./can-deal-be-cancelled.helper');
 
 module.exports = {
   showAmendmentButton,
-  isDealCancellationEnabled,
+  canDealBeCancelled,
   canSubmissionTypeBeCancelled,
   userCanEditManagersDecision,
   userCanEditBankDecision,
