@@ -1,3 +1,6 @@
+const { HttpStatusCode } = require('axios');
+const { ZodError } = require('zod');
+const { ApiError } = require('@ukef/dtfs2-common');
 const { ENTRA_ID_USER_SCHEMA } = require('@ukef/dtfs2-common/schemas');
 const { ObjectId } = require('mongodb');
 const { generateTfmAuditDetails, generateNoUserLoggedInAuditDetails, generateSystemAuditDetails } = require('@ukef/dtfs2-common/change-stream');
@@ -62,11 +65,29 @@ module.exports.createTfmUser = (req, res, next) => {
   });
 };
 
-// TODO: DTFS2-6892 - Consider whether next is needed in express 4
-module.exports.upsertTfmUserFromEntraIdUser = async (req, res) => {
-  const entraIdUser = ENTRA_ID_USER_SCHEMA.parse(req.body);
-  const tfmUser = await upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails: generateSystemAuditDetails() });
-  res.status(200).send(tfmUser);
+module.exports.upsertTfmUserFromEntraIdUser = async (req, res, next) => {
+  try {
+    const entraIdUser = ENTRA_ID_USER_SCHEMA.parse(req.body);
+    const tfmUser = await upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails: generateSystemAuditDetails() });
+
+    return res.status(200).send(tfmUser);
+  } catch (error) {
+    if (error instanceof ApiError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: error.message,
+        code: error.code,
+      });
+    }
+    if (error instanceof ZodError) {
+      return res.status(HttpStatusCode.BadRequest).send({
+        status: HttpStatusCode.BadRequest,
+        message: 'Error validating payload',
+      });
+    }
+
+    return next(error);
+  }
 };
 
 module.exports.findTfmUser = (req, res, next) => {
@@ -135,6 +156,7 @@ module.exports.removeTfmUserById = (req, res) => {
   });
 };
 
+// TODO: DTFS2-6892 - Deprecate this function
 module.exports.login = async (req, res, next) => {
   const { username, password } = req.body;
 
