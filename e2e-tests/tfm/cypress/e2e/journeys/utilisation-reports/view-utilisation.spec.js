@@ -5,6 +5,7 @@ import {
   FeeRecordEntityMockBuilder,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
+  convertMillisecondsToSeconds,
 } from '@ukef/dtfs2-common';
 import pages from '../../pages';
 import USERS from '../../../fixtures/users';
@@ -49,7 +50,7 @@ context('Users can view utilisation', () => {
            *
            * Effective date is stored as unix epoch time in seconds.
            */
-          effectiveDate: Math.round(dateAfterReportPeriodEnd.getTime() / 1000),
+          effectiveDate: convertMillisecondsToSeconds(dateAfterReportPeriodEnd.getTime()),
         },
         {
           value: 300000,
@@ -60,7 +61,7 @@ context('Users can view utilisation', () => {
            *
            * Effective date is stored as unix epoch time in seconds.
            */
-          effectiveDate: Math.round(dateWithinReportPeriod.getTime() / 1000),
+          effectiveDate: convertMillisecondsToSeconds(dateWithinReportPeriod.getTime()),
         },
       ],
     };

@@ -1,4 +1,4 @@
-import { AMENDMENT_STATUS, TfmFacilityAmendment } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, convertMillisecondsToSeconds, TfmFacilityAmendment } from '@ukef/dtfs2-common';
 import { addDays, subDays } from 'date-fns';
 import { aCompletedTfmFacilityAmendment, aTfmFacilityAmendment } from '../../../test-helpers';
 import { filterAndSortCompletedEffectiveAmendments } from './filter-and-sort-completed-effective-amendments';
@@ -8,16 +8,16 @@ describe('filter-and-sort-completed-effective-amendments', () => {
     const latestEffectiveDate = new Date('2024-02-28');
 
     const oneDayBeforeLatestEffectiveDateInMilliseconds = subDays(latestEffectiveDate, 1).getTime();
-    const oneDayBeforeLatestEffectiveDateInSeconds = Math.round(oneDayBeforeLatestEffectiveDateInMilliseconds / 1000);
+    const oneDayBeforeLatestEffectiveDateInSeconds = convertMillisecondsToSeconds(oneDayBeforeLatestEffectiveDateInMilliseconds);
 
     const oneDayAfterLatestEffectiveDateInMilliseconds = addDays(latestEffectiveDate, 1).getTime();
-    const oneDayAfterLatestEffectiveDateInSeconds = Math.round(oneDayAfterLatestEffectiveDateInMilliseconds / 1000);
+    const oneDayAfterLatestEffectiveDateInSeconds = convertMillisecondsToSeconds(oneDayAfterLatestEffectiveDateInMilliseconds);
 
     const twoDaysBeforeLatestEffectiveDateInMilliseconds = subDays(latestEffectiveDate, 2).getTime();
-    const twoDaysBeforeLatestEffectiveDateInSeconds = Math.round(twoDaysBeforeLatestEffectiveDateInMilliseconds / 1000);
+    const twoDaysBeforeLatestEffectiveDateInSeconds = convertMillisecondsToSeconds(twoDaysBeforeLatestEffectiveDateInMilliseconds);
 
     const threeDaysBeforeLatestEffectiveDateInMilliseconds = subDays(latestEffectiveDate, 3).getTime();
-    const threeDaysBeforeLatestEffectiveDateInSeconds = Math.round(threeDaysBeforeLatestEffectiveDateInMilliseconds / 1000);
+    const threeDaysBeforeLatestEffectiveDateInSeconds = convertMillisecondsToSeconds(threeDaysBeforeLatestEffectiveDateInMilliseconds);
 
     it('should filter out all amendments which are not completed', () => {
       // Arrange
