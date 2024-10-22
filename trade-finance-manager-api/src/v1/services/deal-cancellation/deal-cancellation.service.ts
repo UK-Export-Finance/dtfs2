@@ -4,6 +4,7 @@ import sendTfmEmail from '../send-tfm-email';
 import { CANCEL_DEAL_PAST_DATE, CANCEL_DEAL_FUTURE_DATE } from '../../../constants/email-template-ids';
 import * as api from '../../api';
 import { formatFacilityIds } from './helpers/format-facility-ids';
+import { UKEF_ID } from '../../../constants/deals';
 
 export class DealCancellationService {
   /**
@@ -17,6 +18,10 @@ export class DealCancellationService {
     const endOfToday = endOfDay(new Date());
 
     const { email: pimEmail } = await api.findOneTeam(TEAMS.PIM.id);
+
+    if (!pimEmail) {
+      throw Error('Failed to send deal cancellation email to PIM');
+    }
 
     const emailTemplateId = isAfter(effectiveFromDate, endOfToday) ? CANCEL_DEAL_FUTURE_DATE : CANCEL_DEAL_PAST_DATE;
 
@@ -37,8 +42,10 @@ export class DealCancellationService {
    * @param facilities Facilities
    * @returns UKEF facility Ids
    */
-  private static getFacilityIds(facilities: TfmFacility[]) {
-    return facilities.map((facility) => facility.facilitySnapshot.ukefFacilityId).filter((id) => id !== null);
+  private static getFacilityIds(facilities: TfmFacility[]): string[] {
+    return facilities
+      .map((facility) => facility.facilitySnapshot.ukefFacilityId)
+      .filter((id): id is string => id !== null && id !== UKEF_ID.PENDING && id !== UKEF_ID.TEST);
   }
 
   /**
@@ -55,6 +62,10 @@ export class DealCancellationService {
     const ukefDealId = dealSnapshot.dealType === DEAL_TYPE.BSS_EWCS ? dealSnapshot.details.ukefDealId : dealSnapshot.ukefDealId;
 
     const ukefFacilityIds = this.getFacilityIds(facilities);
+
+    if (!ukefFacilityIds.length) {
+      throw new Error(`Failed to find facility ids on deal ${dealId} when submitting deal cancellation`);
+    }
 
     await this.sendDealCancellationEmail(ukefDealId, dealCancellation, ukefFacilityIds);
   }
