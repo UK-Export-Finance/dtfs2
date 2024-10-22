@@ -4,15 +4,15 @@ const mapGefFacility = require('./mappings/gef-facilities/mapGefFacility');
 const isGefFacility = require('./helpers/isGefFacility');
 
 const facilityMapper = (facility, dealSnapshot, dealTfm) => {
-  const { facilitySnapshot } = facility;
+  const facilityType = facility.facilitySnapshot.type;
 
-  if (isGefFacility(facilitySnapshot.type)) {
+  if (isGefFacility(facilityType)) {
     return mapGefFacility(facility, dealSnapshot, dealTfm);
   }
 
   const result = {
     _id: facility._id,
-    facilitySnapshot: mapFacility(facilitySnapshot, facility.tfm, dealSnapshot.details, facility),
+    facilitySnapshot: mapFacility(facility, dealSnapshot),
     tfm: mapFacilityTfm(facility.tfm, dealTfm, facility),
   };
 

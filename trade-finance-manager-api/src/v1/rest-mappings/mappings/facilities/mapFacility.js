@@ -18,56 +18,60 @@ const mapFacilityValueExportCurrency = require('./mapFacilityValueExportCurrency
  * Note: This implimentation is called where it modifies the facility snapshot
  * to have values not consistent with the facility snapshot in the database.
  */
-const mapFacility = (f, facilityTfm, dealDetails, facilityFull) => {
+const mapFacility = (facility, dealSnapshot) => {
+  const dealDetails = dealSnapshot.details;
+
+  const { facilitySnapshot, tfm: facilityTfm } = facility;
+
   // Ensure facility is valid
-  if (!f) {
+  if (!facilitySnapshot) {
     return null;
   }
 
   // Deep clone
-  const facility = JSON.parse(JSON.stringify(f, null, 4));
+  const f = JSON.parse(JSON.stringify(facilitySnapshot, null, 4));
 
-  const { type, value, facilityStage, guaranteeFeePayableByBank, currency } = facility;
+  const { type, value, facilityStage, guaranteeFeePayableByBank, currency } = f;
 
-  facility.ukefFacilityType = type;
+  f.ukefFacilityType = type;
 
-  facility.facilityProduct = mapFacilityProduct(type);
+  f.facilityProduct = mapFacilityProduct(type);
 
-  facility.type = mapFacilityType(facility);
+  f.type = mapFacilityType(f);
 
   const formattedFacilityValue = formattedNumber(value);
 
-  facility.facilityStage = mapFacilityStage(facilityStage);
+  f.facilityStage = mapFacilityStage(facilityStage);
 
   const mapped = {
-    _id: facility._id,
+    _id: f._id,
     isGef: false,
-    dealId: facility.dealId,
-    ukefFacilityId: facility.ukefFacilityId,
+    dealId: f.dealId,
+    ukefFacilityId: f.ukefFacilityId,
 
     // TODO: DTFS2-4634 - we shouldn't need facility.type and ukefFacilityType.
-    type: facility.type,
-    ukefFacilityType: facility.ukefFacilityType,
-    facilityProduct: facility.facilityProduct,
-    facilityStage: facility.facilityStage,
-    hasBeenIssued: facility.hasBeenIssued,
-    coveredPercentage: `${facility.coveredPercentage}%`,
-    facilityValueExportCurrency: mapFacilityValueExportCurrency(facilityFull),
-    value: mapFacilityValue(currency.id, formattedFacilityValue, facilityFull),
+    type: f.type,
+    ukefFacilityType: f.ukefFacilityType,
+    facilityProduct: f.facilityProduct,
+    facilityStage: f.facilityStage,
+    hasBeenIssued: f.hasBeenIssued,
+    coveredPercentage: `${f.coveredPercentage}%`,
+    facilityValueExportCurrency: mapFacilityValueExportCurrency(facility),
+    value: mapFacilityValue(currency.id, formattedFacilityValue, facility),
     currency: currency.id,
-    ukefExposure: mapUkefExposureValue(facilityTfm, facilityFull),
-    bankFacilityReference: mapBankFacilityReference(facility),
+    ukefExposure: mapUkefExposureValue(facilityTfm, facility),
+    bankFacilityReference: mapBankFacilityReference(f),
     guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFeePayableByBank),
-    banksInterestMargin: mapBanksInterestMargin(facility),
-    firstDrawdownAmountInExportCurrency: mapFirstDrawdownAmountInExportCurrency(facility),
-    feeType: mapFeeType(facility),
-    feeFrequency: mapFeeFrequency(facility),
-    dayCountBasis: Number(facility.dayCountBasis),
-    dates: mapDates(facilityFull, facility, facilityTfm, dealDetails),
+    banksInterestMargin: mapBanksInterestMargin(f),
+    firstDrawdownAmountInExportCurrency: mapFirstDrawdownAmountInExportCurrency(f),
+    feeType: mapFeeType(f),
+    feeFrequency: mapFeeFrequency(f),
+    dayCountBasis: Number(f.dayCountBasis),
+    dates: mapDates(facility, f, facilityTfm, dealDetails),
 
     // bond specifics
-    bondIssuer: facility.bondIssuer,
-    bondBeneficiary: facility.bondBeneficiary,
+    bondIssuer: f.bondIssuer,
+    bondBeneficiary: f.bondBeneficiary,
   };
 
   return mapped;
