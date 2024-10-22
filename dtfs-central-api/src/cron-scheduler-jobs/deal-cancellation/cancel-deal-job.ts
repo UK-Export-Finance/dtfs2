@@ -1,7 +1,9 @@
-import { CronSchedulerJob, TfmDeal } from '@ukef/dtfs2-common';
+import { asString, CronSchedulerJob, TfmDeal } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { endOfDay } from 'date-fns';
 import { TfmDealCancellationRepo } from '../../repositories/tfm-deals-repo';
+
+const { DEAL_CANCELLATION_SCHEDULE } = process.env;
 
 /**
  * Updates deals to be cancelled
@@ -31,7 +33,7 @@ const cancelScheduledDeals = async (): Promise<void> => {
 };
 
 export const cancelDealJob: CronSchedulerJob = {
-  cronExpression: '30 2 * * *',
+  cronExpression: asString(DEAL_CANCELLATION_SCHEDULE, 'DEAL_CANCELLATION_SCHEDULE'),
   description: 'Cancel deals in the database that have been scheduled & the effective from date has passed',
   task: cancelScheduledDeals,
 };

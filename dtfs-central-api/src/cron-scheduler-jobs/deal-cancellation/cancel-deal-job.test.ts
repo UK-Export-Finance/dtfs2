@@ -41,7 +41,7 @@ describe('cancelDealJob', () => {
   });
 
   it('is scheduled to run', () => {
-    expect(cancelDealJob.cronExpression).toEqual('30 2 * * *');
+    expect(cancelDealJob.cronExpression).toEqual(process.env.DEAL_CANCELLATION_SCHEDULE);
   });
 
   it('is has correct description', () => {
