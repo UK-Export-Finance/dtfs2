@@ -308,6 +308,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
+        shard: [1, 2, 3, 4]
         services:
           [
             './portal',
@@ -345,7 +346,8 @@ jobs:
 
       - name: Execute
         working-directory: ${{ matrix.services }}
-        run: npm run unit-test
+        # run: npm run unit-test
+        run: npm run unit-test --shard=${{ matrix.shard }}/${{ strategy.job-total }}
 
       - name: Coverage
         uses: codecov/codecov-action@v4
