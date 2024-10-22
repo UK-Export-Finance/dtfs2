@@ -1,5 +1,5 @@
 import { endOfDay, format, isAfter, toDate } from 'date-fns';
-import { DATE_FORMATS, DEAL_TYPE, TEAMS, TfmDealCancellation, TfmFacility } from '@ukef/dtfs2-common';
+import { DATE_FORMATS, DEAL_TYPE, TEAMS, TfmDealCancellation } from '@ukef/dtfs2-common';
 import sendTfmEmail from '../send-tfm-email';
 import { CANCEL_DEAL_PAST_DATE, CANCEL_DEAL_FUTURE_DATE } from '../../../constants/email-template-ids';
 import * as api from '../../api';
@@ -12,8 +12,9 @@ export class DealCancellationService {
    * @param ukefDealId ukef deal id
    * @param dealCancellation deal cancellation object
    * @param facilityIds ukef facility ids
+   * @private - This function is exported for unit testing only and should not be used outside of the service
    */
-  private static async sendDealCancellationEmail(ukefDealId: string, dealCancellation: TfmDealCancellation, facilityIds: string[]) {
+  public static async sendDealCancellationEmail(ukefDealId: string, dealCancellation: TfmDealCancellation, facilityIds: string[]): Promise<void> {
     const effectiveFromDate = toDate(dealCancellation.effectiveFrom);
     const endOfToday = endOfDay(new Date());
 
@@ -38,17 +39,6 @@ export class DealCancellationService {
   }
 
   /**
-   * Maps the facilities objects into their UKEF ids
-   * @param facilities Facilities
-   * @returns UKEF facility Ids
-   */
-  private static getFacilityIds(facilities: TfmFacility[]): string[] {
-    return facilities
-      .map((facility) => facility.facilitySnapshot.ukefFacilityId)
-      .filter((id): id is string => id !== null && id !== UKEF_ID.PENDING && id !== UKEF_ID.TEST);
-  }
-
-  /**
    * Submit the deal cancellation
    * @param dealId the Deal ID
    * @param dealCancellation the deal cancellation object
@@ -61,7 +51,9 @@ export class DealCancellationService {
 
     const ukefDealId = dealSnapshot.dealType === DEAL_TYPE.BSS_EWCS ? dealSnapshot.details.ukefDealId : dealSnapshot.ukefDealId;
 
-    const ukefFacilityIds = this.getFacilityIds(facilities);
+    const ukefFacilityIds = facilities
+      .map((facility) => facility.facilitySnapshot.ukefFacilityId)
+      .filter((id): id is string => id !== null && id !== UKEF_ID.PENDING && id !== UKEF_ID.TEST);
 
     if (!ukefFacilityIds.length) {
       throw new Error(`Failed to find facility ids on deal ${dealId} when submitting deal cancellation`);

@@ -31,88 +31,124 @@ const dealId = 'dealId';
 const today = new Date();
 const tomorrow = add(new Date(), { days: 1 });
 
-describe('sendDealCancellationEmail', () => {
+describe('deal cancellation service', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('when effective date is in the future', () => {
-    const aDealCancellation = (): TfmDealCancellation => ({
-      reason: 'a reason',
-      bankRequestDate: today.valueOf(),
-      effectiveFrom: tomorrow.valueOf(),
-    });
-    it('calls sendTfmEmail with the correct parameters', async () => {
-      // Arrange
-      const dealCancellation = aDealCancellation();
+  describe('submitDealCancellation', () => {
+    describe('when effective date is in the future', () => {
+      const aDealCancellation = (): TfmDealCancellation => ({
+        reason: 'a reason',
+        bankRequestDate: today.valueOf(),
+        effectiveFrom: tomorrow.valueOf(),
+      });
+      it('calls sendTfmEmail with the correct parameters', async () => {
+        // Arrange
+        const dealCancellation = aDealCancellation();
 
-      // Act
-      await DealCancellationService.submitDealCancellation(dealId, dealCancellation);
+        // Act
+        await DealCancellationService.submitDealCancellation(dealId, dealCancellation);
 
-      // Assert
-      expect(sendTfmEmail).toHaveBeenCalledTimes(1);
-      expect(sendTfmEmail).toHaveBeenCalledWith(CANCEL_DEAL_FUTURE_DATE, mockPimEmailAddress, {
-        cancelReason: dealCancellation.reason,
-        bankRequestDate: format(today, 'dd MMMM yyyy'),
-        effectiveFromDate: format(tomorrow, 'dd MMMM yyyy'),
-        formattedFacilitiesList: mockFormattedFacilities,
-        ukefDealId,
+        // Assert
+        expect(sendTfmEmail).toHaveBeenCalledTimes(1);
+        expect(sendTfmEmail).toHaveBeenCalledWith(CANCEL_DEAL_FUTURE_DATE, mockPimEmailAddress, {
+          cancelReason: dealCancellation.reason,
+          bankRequestDate: format(today, 'dd MMMM yyyy'),
+          effectiveFromDate: format(tomorrow, 'dd MMMM yyyy'),
+          formattedFacilitiesList: mockFormattedFacilities,
+          ukefDealId,
+        });
       });
     });
 
-    it('sends the reason as `-` when it is an empty string', async () => {
-      // Arrange
-      const dealCancellation = { ...aDealCancellation(), reason: '' };
+    describe('when effective date is today', () => {
+      const aDealCancellation = (): TfmDealCancellation => ({ reason: 'a reason', bankRequestDate: today.valueOf(), effectiveFrom: today.valueOf() });
 
-      // Act
-      await DealCancellationService.submitDealCancellation(dealId, dealCancellation);
-      // Assert
-      expect(sendTfmEmail).toHaveBeenCalledTimes(1);
-      expect(sendTfmEmail).toHaveBeenCalledWith(
-        CANCEL_DEAL_FUTURE_DATE,
-        mockPimEmailAddress,
-        expect.objectContaining({
-          cancelReason: '-',
-        }),
-      );
+      it('calls sendTfmEmail with the correct parameters', async () => {
+        // Arrange
+        const dealCancellation = aDealCancellation();
+
+        // Act
+        await DealCancellationService.submitDealCancellation(dealId, dealCancellation);
+        // Assert
+        expect(sendTfmEmail).toHaveBeenCalledTimes(1);
+        expect(sendTfmEmail).toHaveBeenCalledWith(CANCEL_DEAL_PAST_DATE, mockPimEmailAddress, {
+          cancelReason: dealCancellation.reason,
+          bankRequestDate: format(today, 'dd MMMM yyyy'),
+          effectiveFromDate: format(today, 'dd MMMM yyyy'),
+          formattedFacilitiesList: mockFormattedFacilities,
+          ukefDealId,
+        });
+      });
     });
   });
 
-  describe('when effective date is today', () => {
-    const aDealCancellation = (): TfmDealCancellation => ({ reason: 'a reason', bankRequestDate: today.valueOf(), effectiveFrom: today.valueOf() });
+  describe('sendDealCancellationEmail', () => {
+    describe('when effective date is in the future', () => {
+      const aDealCancellation = (): TfmDealCancellation => ({
+        reason: 'a reason',
+        bankRequestDate: today.valueOf(),
+        effectiveFrom: tomorrow.valueOf(),
+      });
 
-    it('calls sendTfmEmail with the correct parameters', async () => {
-      // Arrange
-      const dealCancellation = aDealCancellation();
+      it('calls sendTfmEmail with the correct parameters', async () => {
+        // Arrange
+        const dealCancellation = aDealCancellation();
 
-      // Act
-      await DealCancellationService.submitDealCancellation(dealId, dealCancellation);
-      // Assert
-      expect(sendTfmEmail).toHaveBeenCalledTimes(1);
-      expect(sendTfmEmail).toHaveBeenCalledWith(CANCEL_DEAL_PAST_DATE, mockPimEmailAddress, {
-        cancelReason: dealCancellation.reason,
-        bankRequestDate: format(today, 'dd MMMM yyyy'),
-        effectiveFromDate: format(today, 'dd MMMM yyyy'),
-        formattedFacilitiesList: mockFormattedFacilities,
-        ukefDealId,
+        // Act
+        await DealCancellationService.sendDealCancellationEmail(ukefDealId, aDealCancellation(), ukefFacilityIds);
+
+        // Assert
+        expect(sendTfmEmail).toHaveBeenCalledTimes(1);
+        expect(sendTfmEmail).toHaveBeenCalledWith(CANCEL_DEAL_FUTURE_DATE, mockPimEmailAddress, {
+          cancelReason: dealCancellation.reason,
+          bankRequestDate: format(today, 'dd MMMM yyyy'),
+          effectiveFromDate: format(tomorrow, 'dd MMMM yyyy'),
+          formattedFacilitiesList: mockFormattedFacilities,
+          ukefDealId,
+        });
       });
     });
 
-    it('sends the reason as `-` when it is an empty string', async () => {
-      // Arrange
-      const dealCancellation = { ...aDealCancellation(), reason: '' };
+    describe('when effective date is today', () => {
+      const aDealCancellation = (): TfmDealCancellation => ({ reason: 'a reason', bankRequestDate: today.valueOf(), effectiveFrom: today.valueOf() });
 
-      // Act
-      await DealCancellationService.submitDealCancellation(dealId, dealCancellation);
-      // Assert
-      expect(sendTfmEmail).toHaveBeenCalledTimes(1);
-      expect(sendTfmEmail).toHaveBeenCalledWith(
-        CANCEL_DEAL_PAST_DATE,
-        mockPimEmailAddress,
-        expect.objectContaining({
-          cancelReason: '-',
-        }),
-      );
+      it('calls sendTfmEmail with the correct parameters', async () => {
+        // Arrange
+        const dealCancellation = aDealCancellation();
+
+        // Act
+        await DealCancellationService.sendDealCancellationEmail(ukefDealId, aDealCancellation(), ukefFacilityIds);
+
+        // Assert
+        expect(sendTfmEmail).toHaveBeenCalledTimes(1);
+        expect(sendTfmEmail).toHaveBeenCalledWith(CANCEL_DEAL_PAST_DATE, mockPimEmailAddress, {
+          cancelReason: dealCancellation.reason,
+          bankRequestDate: format(today, 'dd MMMM yyyy'),
+          effectiveFromDate: format(today, 'dd MMMM yyyy'),
+          formattedFacilitiesList: mockFormattedFacilities,
+          ukefDealId,
+        });
+      });
+
+      it('sends the reason as `-` when it is an empty string', async () => {
+        // Arrange
+        const dealCancellation = { ...aDealCancellation(), reason: '' };
+
+        // Act
+        await DealCancellationService.sendDealCancellationEmail(ukefDealId, dealCancellation, ukefFacilityIds);
+
+        // Assert
+        expect(sendTfmEmail).toHaveBeenCalledTimes(1);
+        expect(sendTfmEmail).toHaveBeenCalledWith(
+          CANCEL_DEAL_PAST_DATE,
+          mockPimEmailAddress,
+          expect.objectContaining({
+            cancelReason: '-',
+          }),
+        );
+      });
     });
   });
 });
