@@ -41,7 +41,8 @@ const getPartyUrn = async ({ companyRegNo, companyName }) => {
     }
 
     await api.createParty({ companyRegNo, companyName });
-    partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
+    // TODO: need to get PartyURN instead here for new customer once it is populated (takes about 1 min with current NUMGEN-calling flow in SF)
+    return '';
   }
 
   if (partyDbInfo.status !== 200) {
