@@ -5,13 +5,7 @@ import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../..
 import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mock-gef-deals';
 import { DEAL_TYPE } from '../../../../../../../gef/cypress/fixtures/constants';
 import amendmentsPage from '../../../../pages/amendments/amendmentsPage';
-import {
-  sixYearsOneDay,
-  threeMonthsOneDay,
-  todayFullString,
-  threeMonthsOneDayFullString,
-  threeMonthsOneDayFullMonthString,
-} from '../../../../../../../e2e-fixtures/dateConstants';
+import { sixYearsOneDay, threeMonthsOneDay, today } from '../../../../../../../e2e-fixtures/dateConstants';
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 
 context('Amendments - GEF deal add bank review date - feature flag enabled', () => {
@@ -77,7 +71,7 @@ context('Amendments - GEF deal add bank review date - feature flag enabled', () 
       cy.clickContinueButton();
       cy.url().should('contain', 'bank-review-date');
 
-      cy.completeDateFormFields({ idPrefix: 'amendment--bank-review-date', date: sixYearsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'amendment--bank-review-date', date: sixYearsOneDay.date });
 
       cy.clickContinueButton();
     });
@@ -119,7 +113,7 @@ context('Amendments - GEF deal add bank review date - feature flag enabled', () 
     it('should continue to "Check your answers" page', () => {
       cy.url().should('contain', 'check-answers');
       amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('have.text', 'No');
-      amendmentsPage.amendmentAnswerBankReviewDate().should('have.text', todayFullString);
+      amendmentsPage.amendmentAnswerBankReviewDate().should('have.text', today.dd_MMM_yyyy);
       amendmentsPage.amendmentAnswerFacilityEndDate().should('not.exist');
     });
   });
@@ -140,13 +134,13 @@ context('Amendments - GEF deal add bank review date - feature flag enabled', () 
 
       cy.url().should('contain', 'bank-review-date');
 
-      cy.completeDateFormFields({ idPrefix: 'amendment--bank-review-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'amendment--bank-review-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 
       cy.url().should('contain', 'check-answers');
       amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('have.text', 'No');
-      amendmentsPage.amendmentAnswerBankReviewDate().should('have.text', threeMonthsOneDayFullString);
+      amendmentsPage.amendmentAnswerBankReviewDate().should('have.text', threeMonthsOneDay.dd_MMM_yyyy);
       amendmentsPage.amendmentAnswerFacilityEndDate().should('not.exist');
     });
 
@@ -158,7 +152,7 @@ context('Amendments - GEF deal add bank review date - feature flag enabled', () 
 
       it('should correctly display amended values', () => {
         facilityPage.facilityIsUsingFacilityEndDate().should('have.text', 'No');
-        facilityPage.facilityBankReviewDate().should('have.text', threeMonthsOneDayFullMonthString);
+        facilityPage.facilityBankReviewDate().should('have.text', threeMonthsOneDay.d_MMMM_yyyy);
         facilityPage.facilityFacilityEndDate().should('not.exist');
       });
     });

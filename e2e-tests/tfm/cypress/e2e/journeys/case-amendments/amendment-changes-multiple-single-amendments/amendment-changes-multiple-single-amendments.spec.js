@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import { todayFormatted, twoMonths, twoMonthsFormattedTable } from '../../../../../../e2e-fixtures/dateConstants';
+import { today, twoMonths } from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 import { CURRENCY } from '../../../../../../e2e-fixtures/constants.fixture';
 import caseDealPage from '../../../pages/caseDealPage';
@@ -64,7 +64,7 @@ context('Amendments changes displayed - multiple single change amendments', () =
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: twoMonths });
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: twoMonths.date });
 
     cy.clickContinueButton();
 
@@ -119,7 +119,7 @@ context('Amendments changes displayed - multiple single change amendments', () =
 
     cy.visit(relative(`/case/${dealId}/deal`));
     caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().should('not.contain', '23 months');
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(twoMonthsFormattedTable);
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(twoMonths.d_MMMM_yyyy);
     caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 123.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 123.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 24.60`);
@@ -127,8 +127,8 @@ context('Amendments changes displayed - multiple single change amendments', () =
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
     facilityPage.facilityValueExportCurrency().contains(`${CURRENCY.GBP} 123.00`);
     facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 123.00`);
-    facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60 as at ${todayFormatted}`);
-    facilityPage.facilityCoverEndDate().contains(twoMonthsFormattedTable);
+    facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60 as at ${today.d_MMMM_yyyy}`);
+    facilityPage.facilityCoverEndDate().contains(twoMonths.d_MMMM_yyyy);
     facilityPage.facilityTenor().should('not.contain', '23 months');
   });
 });

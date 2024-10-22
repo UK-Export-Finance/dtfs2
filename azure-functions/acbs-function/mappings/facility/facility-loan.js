@@ -1,6 +1,6 @@
 /*
 "postingDate"                      Date of submission to ACBS
-"borrowerPartyIdentifier"          exporter ACBS ID
+"borrowerPartyIdentifier"          Exporter ACBS ID
 "productTypeId"                    Facility type ID
 "productTypeGroup"                 Facility product group type
 "currency"                         Facility currency code

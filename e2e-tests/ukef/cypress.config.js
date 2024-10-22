@@ -6,9 +6,12 @@ const { createTasks } = require('../support/tasks');
 // Read from root `./.env` directory
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-const { PORTAL_API_KEY, TFM_API_KEY } = process.env;
+const { PORTAL_API_KEY, TFM_API_KEY, TZ } = process.env;
 
 module.exports = defineConfig({
+  env: {
+    TZ,
+  },
   centralApiProtocol: 'http://',
   centralApiHost: 'localhost',
   centralApiPort: '5005',

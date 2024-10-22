@@ -101,6 +101,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
         },
       ]);
       expect((res._getRenderData() as AddPaymentViewModel).canAddToExistingPayment).toEqual(true);
+      expect((res._getRenderData() as AddPaymentViewModel).backLinkHref).toEqual('/utilisation-reports/123?selectedFeeRecordIds=456');
     });
 
     it('should set payment number to number of payments plus 1', async () => {

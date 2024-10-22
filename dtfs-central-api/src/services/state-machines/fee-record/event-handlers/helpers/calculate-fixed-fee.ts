@@ -10,8 +10,8 @@ import { calculateFixedFeeFromDaysRemaining } from '../../../../../helpers/calcu
  * @returns The number of days remaining in the cover period
  */
 const getNumberOfDaysRemainingInCoverPeriod = (reportPeriodEnd: MonthAndYear, coverEndDate: Date): number => {
-  const startDateOfReportPeriod = getDateFromMonthAndYear(reportPeriodEnd);
-  const endDateOfReportPeriod = startOfDay(endOfMonth(startDateOfReportPeriod));
+  const startDateOfReportPeriodEndMonth = getDateFromMonthAndYear(reportPeriodEnd);
+  const endDateOfReportPeriod = startOfDay(endOfMonth(startDateOfReportPeriodEndMonth));
   const startDateOfNextReportPeriod = addDays(endDateOfReportPeriod, 1);
 
   return differenceInDays(coverEndDate, startDateOfNextReportPeriod);
@@ -27,8 +27,14 @@ const getNumberOfDaysRemainingInCoverPeriod = (reportPeriodEnd: MonthAndYear, co
  * @param param.dayCountBasis - The facility day count basis
  * @returns The fixed fee for the current report period
  */
-export const calculateFixedFee = ({ utilisation, reportPeriod, coverEndDate, interestPercentage, dayCountBasis }: CalculateFixedFeeParams): number => {
-  const numberOfDaysRemainingInCoverPeriod = getNumberOfDaysRemainingInCoverPeriod(reportPeriod.start, coverEndDate);
+export const calculateFixedFee = ({
+  ukefShareOfUtilisation,
+  reportPeriod,
+  coverEndDate,
+  interestPercentage,
+  dayCountBasis,
+}: CalculateFixedFeeParams): number => {
+  const numberOfDaysRemainingInCoverPeriod = getNumberOfDaysRemainingInCoverPeriod(reportPeriod.end, coverEndDate);
 
-  return calculateFixedFeeFromDaysRemaining({ utilisation, numberOfDaysRemainingInCoverPeriod, interestPercentage, dayCountBasis });
+  return calculateFixedFeeFromDaysRemaining({ ukefShareOfUtilisation, numberOfDaysRemainingInCoverPeriod, interestPercentage, dayCountBasis });
 };

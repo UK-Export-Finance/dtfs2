@@ -2,26 +2,24 @@
 
 ## [2.4.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.3.0...v2.4.0) (2024-10-14)
 
-
 ### Features
 
-* **dtfs2-6892:** create and auto submit accept sso redirect form ([#3659](https://github.com/UK-Export-Finance/dtfs2/issues/3659)) ([2a18fde](https://github.com/UK-Export-Finance/dtfs2/commit/2a18fde59a59715d7b9e699036a07608279a2958))
-* **dtfs2-6892:** handle entra redirect to accept sso redirect form ([#3637](https://github.com/UK-Export-Finance/dtfs2/issues/3637)) ([e8e746f](https://github.com/UK-Export-Finance/dtfs2/commit/e8e746f32c71c85032d89016d669458fb3b02594))
-* **DTFS2-7303:** change links on deal cancellation summary page ([#3647](https://github.com/UK-Export-Finance/dtfs2/issues/3647)) ([09c34a1](https://github.com/UK-Export-Finance/dtfs2/commit/09c34a1091d38598d18aacd2f6b387c4129a0a27))
-* **DTFS2-7450:** add e2e tests for cancel cancellation ([#3661](https://github.com/UK-Export-Finance/dtfs2/issues/3661)) ([51f2481](https://github.com/UK-Export-Finance/dtfs2/commit/51f24810377a06c1fe890f7a3bfe10ed4d272660))
-* **DTFS2-7454:** redirect from cancellation pages if no cancellation in draft ([#3649](https://github.com/UK-Export-Finance/dtfs2/issues/3649)) ([dc81c48](https://github.com/UK-Export-Finance/dtfs2/commit/dc81c4866d1a4e9d116179dc031fb8e9739642f9))
-* **FN-2294:** send email to bank if report reconciled ([#3648](https://github.com/UK-Export-Finance/dtfs2/issues/3648)) ([3ff1e91](https://github.com/UK-Export-Finance/dtfs2/commit/3ff1e913ab9122dcd104d50e99ea13af4d50f06c))
-* **FN-2311:** add frontend payment details filtering logic ([#3646](https://github.com/UK-Export-Finance/dtfs2/issues/3646)) ([f265852](https://github.com/UK-Export-Finance/dtfs2/commit/f2658529c9883611edc5fb90c898b2af4877cb9b))
-* **FN-2976:** add match success notification to template ([#3662](https://github.com/UK-Export-Finance/dtfs2/issues/3662)) ([74086af](https://github.com/UK-Export-Finance/dtfs2/commit/74086af31255ba36ef2f2aaf8a2671de89038054))
-* **FN-3272:** store initial utilisation and fee based on supplied and facility values ([#3589](https://github.com/UK-Export-Finance/dtfs2/issues/3589)) ([0ab38f7](https://github.com/UK-Export-Finance/dtfs2/commit/0ab38f7978763ccc63cacb6605fed47aa8d08b41))
-* **FN-3447:** add utilisation tab data to response ([#3651](https://github.com/UK-Export-Finance/dtfs2/issues/3651)) ([5f1a9e7](https://github.com/UK-Export-Finance/dtfs2/commit/5f1a9e729b853619d490309f9ea8f493f022a02d))
-* **FN-3447:** utilisation tab e2e tests ([#3666](https://github.com/UK-Export-Finance/dtfs2/issues/3666)) ([d717e6e](https://github.com/UK-Export-Finance/dtfs2/commit/d717e6e46d36997705aec73a89ef32838c20b85e))
-* **FN-3447:** utilisation tab table ([#3652](https://github.com/UK-Export-Finance/dtfs2/issues/3652)) ([005f64a](https://github.com/UK-Export-Finance/dtfs2/commit/005f64a70a3a276f3693037fc8d793ed45085d5e))
-
+- **dtfs2-6892:** create and auto submit accept sso redirect form ([#3659](https://github.com/UK-Export-Finance/dtfs2/issues/3659)) ([2a18fde](https://github.com/UK-Export-Finance/dtfs2/commit/2a18fde59a59715d7b9e699036a07608279a2958))
+- **dtfs2-6892:** handle entra redirect to accept sso redirect form ([#3637](https://github.com/UK-Export-Finance/dtfs2/issues/3637)) ([e8e746f](https://github.com/UK-Export-Finance/dtfs2/commit/e8e746f32c71c85032d89016d669458fb3b02594))
+- **DTFS2-7303:** change links on deal cancellation summary page ([#3647](https://github.com/UK-Export-Finance/dtfs2/issues/3647)) ([09c34a1](https://github.com/UK-Export-Finance/dtfs2/commit/09c34a1091d38598d18aacd2f6b387c4129a0a27))
+- **DTFS2-7450:** add e2e tests for cancel cancellation ([#3661](https://github.com/UK-Export-Finance/dtfs2/issues/3661)) ([51f2481](https://github.com/UK-Export-Finance/dtfs2/commit/51f24810377a06c1fe890f7a3bfe10ed4d272660))
+- **DTFS2-7454:** redirect from cancellation pages if no cancellation in draft ([#3649](https://github.com/UK-Export-Finance/dtfs2/issues/3649)) ([dc81c48](https://github.com/UK-Export-Finance/dtfs2/commit/dc81c4866d1a4e9d116179dc031fb8e9739642f9))
+- **FN-2294:** send email to bank if report reconciled ([#3648](https://github.com/UK-Export-Finance/dtfs2/issues/3648)) ([3ff1e91](https://github.com/UK-Export-Finance/dtfs2/commit/3ff1e913ab9122dcd104d50e99ea13af4d50f06c))
+- **FN-2311:** add frontend payment details filtering logic ([#3646](https://github.com/UK-Export-Finance/dtfs2/issues/3646)) ([f265852](https://github.com/UK-Export-Finance/dtfs2/commit/f2658529c9883611edc5fb90c898b2af4877cb9b))
+- **FN-2976:** add match success notification to template ([#3662](https://github.com/UK-Export-Finance/dtfs2/issues/3662)) ([74086af](https://github.com/UK-Export-Finance/dtfs2/commit/74086af31255ba36ef2f2aaf8a2671de89038054))
+- **FN-3272:** store initial utilisation and fee based on supplied and facility values ([#3589](https://github.com/UK-Export-Finance/dtfs2/issues/3589)) ([0ab38f7](https://github.com/UK-Export-Finance/dtfs2/commit/0ab38f7978763ccc63cacb6605fed47aa8d08b41))
+- **FN-3447:** add utilisation tab data to response ([#3651](https://github.com/UK-Export-Finance/dtfs2/issues/3651)) ([5f1a9e7](https://github.com/UK-Export-Finance/dtfs2/commit/5f1a9e729b853619d490309f9ea8f493f022a02d))
+- **FN-3447:** utilisation tab e2e tests ([#3666](https://github.com/UK-Export-Finance/dtfs2/issues/3666)) ([d717e6e](https://github.com/UK-Export-Finance/dtfs2/commit/d717e6e46d36997705aec73a89ef32838c20b85e))
+- **FN-3447:** utilisation tab table ([#3652](https://github.com/UK-Export-Finance/dtfs2/issues/3652)) ([005f64a](https://github.com/UK-Export-Finance/dtfs2/commit/005f64a70a3a276f3693037fc8d793ed45085d5e))
 
 ### Bug Fixes
 
-* **FN-3422:** calculate fixed fee from report period end date ([#3650](https://github.com/UK-Export-Finance/dtfs2/issues/3650)) ([92b22f2](https://github.com/UK-Export-Finance/dtfs2/commit/92b22f204d52019e67f2e814e77e7befa97a165c))
+- **FN-3422:** calculate fixed fee from report period end date ([#3650](https://github.com/UK-Export-Finance/dtfs2/issues/3650)) ([92b22f2](https://github.com/UK-Export-Finance/dtfs2/commit/92b22f204d52019e67f2e814e77e7befa97a165c))
 
 ## 2.3.0 (2024-10-09)
 
