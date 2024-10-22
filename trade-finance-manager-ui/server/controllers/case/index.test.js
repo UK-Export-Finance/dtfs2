@@ -1,4 +1,4 @@
-import { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, DEAL_SUBMISSION_TYPE, isTfmFacilityEndDateFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
@@ -44,6 +44,7 @@ describe('controllers - case', () => {
         _id: '61f6ac5b02fade01b1e8efef',
         dealSnapshot: {
           _id: '61f6ac5b02fade01b1e8efef',
+          submissionType: DEAL_SUBMISSION_TYPE.AIN,
         },
         tfm: {
           parties: [],
@@ -100,6 +101,7 @@ describe('controllers - case', () => {
         await caseController.getCaseDeal(req, res);
 
         expect(canDealBeCancelled).toHaveBeenCalledTimes(1);
+        expect(canDealBeCancelled).toHaveBeenCalledWith(DEAL_SUBMISSION_TYPE.AIN, session.user);
       });
 
       describe('when deal cancellation is enabled', () => {
