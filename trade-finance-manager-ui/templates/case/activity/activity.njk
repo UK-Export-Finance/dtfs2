@@ -3,12 +3,28 @@
 {% import './_macros/activity-comment-filter.njk' as activityCommentFilter %}
 {% import '../amendments/_macros/amendment-in-progress-bar.njk' as amendmentInProgressBar %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "./_macros/cancellation-activity-item-html.njk" import cancellationActivityHtml %}
 
 {% extends "case/case.njk" %}
 
 {% block pageTitle -%}
   Deal {{ deal.details.ukefDealId }} - Activity and comments
 {%- endblock %}
+
+{% set items = [] %}
+
+{% for activity in activities %}
+  {% if activity.type === 'CANCELLATION' %}
+    {{ items.push({
+      label: activity.label,
+      html: cancellationActivityHtml(activity),
+      datetime: activity.datetime,
+      byline: activity.byline
+    }) }}
+  {% else %}
+    {{ items.push(activity) }}
+  {% endif %}
+{% endfor %}
 
 {% block sub_content %}
   {% set amendmentBarParams = {
@@ -23,10 +39,10 @@
 
       <h2 class="govuk-heading-xl govuk-!-margin-top-6" data-cy="activity-heading">Activity and comments</h2>
 
-        {% set filterCommentData = {
-          selectedActivityFilter: selectedActivityFilter,
-          csrfToken: csrfToken
-        } %}
+      {% set filterCommentData = {
+        selectedActivityFilter: selectedActivityFilter,
+        csrfToken: csrfToken
+      } %}
 
       {{ activityCommentFilter.render(filterCommentData) }}
 
@@ -40,7 +56,7 @@
       }) }}
 
       {{ mojTimeline({
-        items: activities,
+        items: items,
         attributes: {
           'data-cy': 'activities-timeline'
         }

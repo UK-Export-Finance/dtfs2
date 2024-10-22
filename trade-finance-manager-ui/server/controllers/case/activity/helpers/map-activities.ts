@@ -1,5 +1,5 @@
 import { ACTIVITY_TYPES, TfmActivity } from '@ukef/dtfs2-common';
-import { format, fromUnixTime } from 'date-fns';
+import { fromUnixTime } from 'date-fns';
 
 export const mapActivities = (activities: TfmActivity[] | undefined) => {
   if (!activities) {
@@ -18,26 +18,19 @@ export const mapActivities = (activities: TfmActivity[] | undefined) => {
     switch (activity.type) {
       case ACTIVITY_TYPES.CANCELLATION:
         return {
+          type: activity.type,
           label: {
             text: 'Deal cancelled',
           },
-          html: `
-          <p> Deal stage:
-            <strong class="govuk-tag govuk-tag--red">
-              Cancelled
-            </strong>
-            <br/><br/>
-            Bank request date: ${format(activity.bankRequestDate, 'd MMMM yyyy')}
-            <br/><br/>
-            Date effective from: ${format(activity.effectiveFrom, 'd MMMM yyyy')}
-            <br/><br/>
-            Comments: ${activity.reason || '-'}
-          </p>`,
+          bankRequestDate: activity.bankRequestDate,
+          effectiveFrom: activity.effectiveFrom,
+          reason: activity.reason,
           datetime,
           byline,
         };
       default:
         return {
+          type: activity.type,
           label: {
             text: activity.label,
           },
