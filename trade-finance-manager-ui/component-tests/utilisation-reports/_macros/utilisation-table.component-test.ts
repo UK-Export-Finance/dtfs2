@@ -82,14 +82,14 @@ describe(component, () => {
     const tableRowSelector = `tbody tr[data-cy="utilisation-table-row-${feeRecordId}"]`;
 
     // Assert
-    wrapper.expectText(`${tableRowSelector} th`).toRead(row.facilityId);
-    wrapper.expectText(`${tableRowSelector} td:nth-of-type(1)`).toRead(row.exporter);
-    wrapper.expectText(`${tableRowSelector} td:nth-of-type(2)`).toRead(row.baseCurrency);
-    wrapper.expectText(`${tableRowSelector} td:nth-of-type(3)`).toRead(row.formattedValue);
-    wrapper.expectText(`${tableRowSelector} td:nth-of-type(4)`).toRead(row.formattedUtilisation);
-    wrapper.expectText(`${tableRowSelector} td:nth-of-type(5)`).toRead(`${row.coverPercentage}%`);
-    wrapper.expectText(`${tableRowSelector} td:nth-of-type(6)`).toRead(row.formattedExposure);
-    wrapper.expectText(`${tableRowSelector} td:nth-of-type(7)`).toRead(row.feesAccrued.formattedCurrencyAndAmount);
-    wrapper.expectText(`${tableRowSelector} td:nth-of-type(8)`).toRead(row.feesPayable.formattedCurrencyAndAmount);
+    wrapper.expectText(`${tableRowSelector} td:nth-of-type(1)`).toRead(row.facilityId);
+    wrapper.expectText(`${tableRowSelector} td:nth-of-type(2)`).toRead(row.exporter);
+    wrapper.expectText(`${tableRowSelector} td:nth-of-type(3)`).toRead(row.baseCurrency);
+    wrapper.expectText(`${tableRowSelector} td:nth-of-type(4)`).toRead(row.formattedValue);
+    wrapper.expectText(`${tableRowSelector} td:nth-of-type(5)`).toRead(row.formattedUtilisation);
+    wrapper.expectText(`${tableRowSelector} td:nth-of-type(6)`).toRead(`${row.coverPercentage}%`);
+    wrapper.expectText(`${tableRowSelector} td:nth-of-type(7)`).toRead(row.formattedExposure);
+    wrapper.expectText(`${tableRowSelector} td:nth-of-type(8)`).toRead(row.feesAccrued.formattedCurrencyAndAmount);
+    wrapper.expectText(`${tableRowSelector} td:nth-of-type(9)`).toRead(row.feesPayable.formattedCurrencyAndAmount);
   });
 });

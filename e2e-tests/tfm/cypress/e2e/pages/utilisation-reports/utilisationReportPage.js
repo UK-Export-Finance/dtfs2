@@ -70,6 +70,8 @@ const utilisationReportPage = {
     table: {
       row: (feeRecordId) => cy.get(`tr[data-cy="utilisation-table-row-${feeRecordId}"]`),
       utilisationHeader: () => cy.get('[data-cy="utilisation-header"]'),
+      valueHeader: () => cy.get('[data-cy="value-header"]'),
+      exposureHeader: () => cy.get('[data-cy="exposure-header"]'),
       facilityId: () => cy.get('[data-cy="facility-id"]'),
       exporter: () => cy.get('[data-cy="exporter"]'),
       baseCurrency: () => cy.get('[data-cy="base-currency"]'),
