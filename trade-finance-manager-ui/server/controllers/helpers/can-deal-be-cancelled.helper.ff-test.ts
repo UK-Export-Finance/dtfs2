@@ -30,7 +30,7 @@ describe('canDealBeCancelled', () => {
           expect(result).toEqual(true);
         });
 
-        it('should return true when there is no existing deal cancellation object', () => {
+        it('should return true if the cancellation status is undefined', () => {
           const result = canDealBeCancelled(type, pimUser, undefined);
 
           expect(result).toEqual(true);
@@ -56,7 +56,7 @@ describe('canDealBeCancelled', () => {
           expect(result).toEqual(false);
         });
 
-        it('should return false when there is no existing deal cancellation object', () => {
+        it('should return false if the cancellation status is undefined', () => {
           const result = canDealBeCancelled(MIA, pimUser, undefined);
 
           expect(result).toEqual(false);
@@ -65,28 +65,26 @@ describe('canDealBeCancelled', () => {
     });
 
     describe('when user is not a PIM user', () => {
-      it.each([MIA, MIN, AIN])('should return false if the deal type is %s and the cancellation status is completed', (type) => {
-        const result = canDealBeCancelled(type, nonPimUser, COMPLETED);
+      describe.each([MIA, MIN, AIN])('when the deal type is %s', (type) => {
+        it('should return false if the cancellation status is completed', () => {
+          const result = canDealBeCancelled(type, nonPimUser, COMPLETED);
+          expect(result).toEqual(false);
+        });
 
-        expect(result).toEqual(false);
-      });
+        it('should return false if the cancellation status is scheduled', () => {
+          const result = canDealBeCancelled(type, nonPimUser, SCHEDULED);
+          expect(result).toEqual(false);
+        });
 
-      it.each([MIA, MIN, AIN])('should return false if the deal type is %s and the cancellation status is scheduled', (type) => {
-        const result = canDealBeCancelled(type, nonPimUser, SCHEDULED);
+        it('should return false if the cancellation status is draft', () => {
+          const result = canDealBeCancelled(type, nonPimUser, DRAFT);
+          expect(result).toEqual(false);
+        });
 
-        expect(result).toEqual(false);
-      });
-
-      it.each([MIA, MIN, AIN])('should return false if the deal type is %s and the cancellation status is draft', (type) => {
-        const result = canDealBeCancelled(type, nonPimUser, DRAFT);
-
-        expect(result).toEqual(false);
-      });
-
-      it.each([MIA, MIN, AIN])('should return false if the deal type is %s and the cancellation status is undefined', (type) => {
-        const result = canDealBeCancelled(type, nonPimUser, undefined);
-
-        expect(result).toEqual(false);
+        it('should return false if the cancellation status is undefined', () => {
+          const result = canDealBeCancelled(type, nonPimUser, undefined);
+          expect(result).toEqual(false);
+        });
       });
     });
   });
