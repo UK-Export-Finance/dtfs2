@@ -54,6 +54,7 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('sentence', sentenceCase);
   nunjucksEnvironment.addFilter('userIsInTeam', (user, teamIdList) => userIsInTeam(user, teamIdList));
   nunjucksEnvironment.addFilter('userIsOnlyInTeams', (user, teamIdList) => userIsOnlyInTeams(user, teamIdList));
+  nunjucksEnvironment.addFilter('removeCommasAndFloat', (value) => parseFloat(value.replace(/,/g, '')));
 
   mojFilters = Object.assign(mojFilters);
   Object.keys(mojFilters).forEach((filterName) => {
