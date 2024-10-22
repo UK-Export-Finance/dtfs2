@@ -103,7 +103,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       filters: paymentDetailsFiltersViewModel,
       filterErrors: paymentDetailsFilterErrors,
       isFilterActive: isPaymentDetailsFilterActive,
-      selectedFilters: mapToSelectedPaymentDetailsFiltersViewModel(paymentDetailsFilters),
+      selectedFilters: mapToSelectedPaymentDetailsFiltersViewModel(paymentDetailsFilters, reportId),
     };
 
     const utilisationDetailsViewModel = mapToUtilisationDetailsViewModel(utilisationDetails, reportId);

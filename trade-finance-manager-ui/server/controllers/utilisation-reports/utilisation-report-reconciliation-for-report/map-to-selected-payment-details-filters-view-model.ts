@@ -1,8 +1,8 @@
 import { PaymentDetailsFilters } from '@ukef/dtfs2-common';
 import { SelectedPaymentDetailsFiltersViewModel } from '../../../types/view-models';
 
-export const getPaymentDetailsTabHref = (activeFilters: PaymentDetailsFilters) => {
-  const baseHref = '/utilisation-reports/100001231';
+export const getPaymentDetailsTabHref = (activeFilters: PaymentDetailsFilters, reportId: string) => {
+  const baseHref = `/utilisation-reports/${reportId}`;
   const tab = '#payment-details';
   const activeFilterQueries = [];
 
@@ -19,20 +19,22 @@ export const getPaymentDetailsTabHref = (activeFilters: PaymentDetailsFilters) =
   }
 
   if (activeFilterQueries.length === 0) {
-    return baseHref + tab;
+    return baseHref.concat(tab);
   }
 
   return baseHref.concat('?', activeFilterQueries.join('&'), tab);
 };
 
-export const mapToSelectedPaymentDetailsFiltersViewModel = (filters: PaymentDetailsFilters): SelectedPaymentDetailsFiltersViewModel => {
+export const mapToSelectedPaymentDetailsFiltersViewModel = (filters: PaymentDetailsFilters, reportId: string): SelectedPaymentDetailsFiltersViewModel => {
   return {
-    facilityId: filters.facilityId ? { value: filters.facilityId, removeHref: getPaymentDetailsTabHref({ ...filters, facilityId: undefined }) } : null,
+    facilityId: filters.facilityId
+      ? { value: filters.facilityId, removeHref: getPaymentDetailsTabHref({ ...filters, facilityId: undefined }, reportId) }
+      : null,
     paymentCurrency: filters.paymentCurrency
-      ? { value: filters.paymentCurrency, removeHref: getPaymentDetailsTabHref({ ...filters, paymentCurrency: undefined }) }
+      ? { value: filters.paymentCurrency, removeHref: getPaymentDetailsTabHref({ ...filters, paymentCurrency: undefined }, reportId) }
       : null,
     paymentReference: filters.paymentReference
-      ? { value: filters.paymentReference, removeHref: getPaymentDetailsTabHref({ ...filters, paymentReference: undefined }) }
+      ? { value: filters.paymentReference, removeHref: getPaymentDetailsTabHref({ ...filters, paymentReference: undefined }, reportId) }
       : null,
   };
 };
