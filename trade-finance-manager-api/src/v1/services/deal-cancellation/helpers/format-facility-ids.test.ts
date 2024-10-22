@@ -16,4 +16,15 @@ describe('formatFacilityIds', () => {
  4. Facility ID ${facilityIds[3]}`,
     );
   });
+
+  it('formats an empty array correctly', () => {
+    // Arrange
+    const facilityIds: string[] = [];
+
+    // Act
+    const result = formatFacilityIds(facilityIds);
+
+    // Assert
+    expect(result).toEqual('');
+  });
 });
