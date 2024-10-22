@@ -31,7 +31,7 @@ describe('canDealBeCancelled', () => {
         });
 
         it('should return true if the cancellation status is undefined', () => {
-          const result = canDealBeCancelled(type, pimUser, undefined);
+          const result = canDealBeCancelled(type, pimUser);
 
           expect(result).toEqual(true);
         });
@@ -57,7 +57,7 @@ describe('canDealBeCancelled', () => {
         });
 
         it('should return false if the cancellation status is undefined', () => {
-          const result = canDealBeCancelled(MIA, pimUser, undefined);
+          const result = canDealBeCancelled(MIA, pimUser);
 
           expect(result).toEqual(false);
         });
@@ -82,7 +82,7 @@ describe('canDealBeCancelled', () => {
         });
 
         it('should return false if the cancellation status is undefined', () => {
-          const result = canDealBeCancelled(type, nonPimUser, undefined);
+          const result = canDealBeCancelled(type, nonPimUser);
           expect(result).toEqual(false);
         });
       });
