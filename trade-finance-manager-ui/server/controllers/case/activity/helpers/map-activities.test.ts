@@ -1,5 +1,5 @@
 import { ACTIVITY_TYPES, TfmActivity } from '@ukef/dtfs2-common';
-import { format, getUnixTime, set } from 'date-fns';
+import { getUnixTime, set } from 'date-fns';
 import { mapActivities } from './map-activities';
 
 const now = new Date();
@@ -53,21 +53,10 @@ describe('mapActivities', () => {
     // Assert
     expect(result).toEqual([
       {
+        type: ACTIVITY_TYPES.CANCELLATION,
         label: {
           text: 'Deal cancelled',
         },
-        html: `
-          <p> Deal stage:
-            <strong class="govuk-tag govuk-tag--red">
-              Cancelled
-            </strong>
-            <br/><br/>
-            Bank request date: ${format(cancellation.bankRequestDate, 'd MMMM yyyy')}
-            <br/><br/>
-            Date effective from: ${format(cancellation.effectiveFrom, 'd MMMM yyyy')}
-            <br/><br/>
-            Comments: ${cancellation.reason || '-'}
-          </p>`,
         datetime: {
           timestamp: nowZeroMilliseconds,
           type: 'datetime',
@@ -75,8 +64,12 @@ describe('mapActivities', () => {
         byline: {
           text: `${cancellation.author.firstName} ${cancellation.author.lastName}`,
         },
+        bankRequestDate: cancellation.bankRequestDate,
+        effectiveFrom: cancellation.effectiveFrom,
+        reason: cancellation.reason,
       },
       {
+        type: ACTIVITY_TYPES.ACTIVITY,
         label: {
           text: activity.label,
         },
@@ -90,6 +83,7 @@ describe('mapActivities', () => {
         },
       },
       {
+        type: ACTIVITY_TYPES.COMMENT,
         label: {
           text: comment.label,
         },
