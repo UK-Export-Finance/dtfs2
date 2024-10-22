@@ -1,5 +1,5 @@
 import { endOfDay, format, isAfter, toDate } from 'date-fns';
-import { DATE_FORMATS, TEAMS, TfmDealCancellation, TfmFacility } from '@ukef/dtfs2-common';
+import { DATE_FORMATS, DEAL_TYPE, TEAMS, TfmDealCancellation, TfmFacility } from '@ukef/dtfs2-common';
 import sendTfmEmail from '../send-tfm-email';
 import { CANCEL_DEAL_PAST_DATE, CANCEL_DEAL_FUTURE_DATE } from '../../../constants/email-template-ids';
 import * as api from '../../api';
@@ -49,10 +49,10 @@ export class DealCancellationService {
   public static async submitDealCancellation(dealId: string, dealCancellation: TfmDealCancellation) {
     // TODO: DTFS2-7298 - update cancellation in database & return cancelled deal/facility ids
 
-    const {
-      dealSnapshot: { ukefDealId },
-    } = await api.findOneDeal(dealId);
+    const { dealSnapshot } = await api.findOneDeal(dealId);
     const facilities = await api.findFacilitiesByDealId(dealId);
+
+    const ukefDealId = dealSnapshot.dealType === DEAL_TYPE.BSS_EWCS ? dealSnapshot.details.ukefDealId : dealSnapshot.ukefDealId;
 
     const ukefFacilityIds = this.getFacilityIds(facilities);
 
