@@ -7,6 +7,7 @@ import {
   AMENDMENT_STATUS,
   CURRENCY,
   FEE_RECORD_STATUS,
+  convertMillisecondsToSeconds,
 } from '@ukef/dtfs2-common';
 import pages from '../../pages';
 import USERS from '../../../fixtures/users';
@@ -60,19 +61,22 @@ context('Fixed fee calculation uses effective amendment to cover end date at rep
     amendments: [
       {
         status: AMENDMENT_STATUS.COMPLETED,
-        effectiveDate: dateAfterReportPeriodEnd.getTime(),
+        // Effective date is stored as unix epoch time in seconds not milliseconds.
+        effectiveDate: convertMillisecondsToSeconds(dateAfterReportPeriodEnd.getTime()),
         // 365 days after report period end
         coverEndDate: new Date('2025-03-01').getTime(),
       },
       {
         status: AMENDMENT_STATUS.IN_PROGRESS,
-        effectiveDate: dateBeforeReportPeriodEnd.getTime(),
+        // Effective date is stored as unix epoch time in seconds not milliseconds.
+        effectiveDate: convertMillisecondsToSeconds(dateBeforeReportPeriodEnd.getTime()),
         // 370 days after report period end
         coverEndDate: new Date('2025-03-06').getTime(),
       },
       {
         status: AMENDMENT_STATUS.COMPLETED,
-        effectiveDate: dateBeforeDateBeforeReportPeriodEnd.getTime(),
+        // Effective date is stored as unix epoch time in seconds not milliseconds.
+        effectiveDate: convertMillisecondsToSeconds(dateBeforeDateBeforeReportPeriodEnd.getTime()),
         // 730 days after report period end
         coverEndDate: new Date('2026-03-01').getTime(),
       },
