@@ -1,5 +1,5 @@
 import { endOfDay, format, isAfter, toDate } from 'date-fns';
-import { TEAMS, TfmDealCancellation, TfmFacility } from '@ukef/dtfs2-common';
+import { DATE_FORMATS, TEAMS, TfmDealCancellation, TfmFacility } from '@ukef/dtfs2-common';
 import sendTfmEmail from '../send-tfm-email';
 import { CANCEL_DEAL_PAST_DATE, CANCEL_DEAL_FUTURE_DATE } from '../../../constants/email-template-ids';
 import * as api from '../../api';
@@ -20,10 +20,13 @@ export class DealCancellationService {
 
     const emailTemplateId = isAfter(effectiveFromDate, endOfToday) ? CANCEL_DEAL_FUTURE_DATE : CANCEL_DEAL_PAST_DATE;
 
+    const formattedEffectiveFromDate = format(dealCancellation.effectiveFrom, DATE_FORMATS.D_MMMM_YYYY);
+    const formattedBankRequestDate = format(dealCancellation.bankRequestDate, DATE_FORMATS.D_MMMM_YYYY);
+
     await sendTfmEmail(emailTemplateId, pimEmail, {
       ukefDealId,
-      effectiveFromDate: format(dealCancellation.effectiveFrom, 'd MMMM yyyy'),
-      bankRequestDate: format(dealCancellation.bankRequestDate, 'd MMMM yyyy'),
+      effectiveFromDate: formattedEffectiveFromDate,
+      bankRequestDate: formattedBankRequestDate,
       cancelReason: dealCancellation.reason || '-',
       formattedFacilitiesList: formatFacilityIds(facilityIds),
     });
