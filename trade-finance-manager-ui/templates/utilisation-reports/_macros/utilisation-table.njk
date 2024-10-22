@@ -18,13 +18,13 @@
     <tbody class="govuk-table__body">
       {% for utilisationTableRow in utilisationTableRows %}
         <tr class="govuk-table__row" data-cy="utilisation-table-row-{{ utilisationTableRow.feeRecordId }}">
-          <th class="govuk-table__cell" data-cy="facility-id">{{ utilisationTableRow.facilityId }}</th>
+          <td class="govuk-table__cell" data-cy="facility-id">{{ utilisationTableRow.facilityId }}</td>
           <td class="govuk-table__cell" data-cy="exporter">{{ utilisationTableRow.exporter }}</td>
           <td class="govuk-table__cell" data-cy="base-currency">{{ utilisationTableRow.baseCurrency }}</td>
           <td class="govuk-table__cell govuk-table__cell--numeric" data-cy="value">
             {{ utilisationTableRow.formattedValue }}
           </td>
-          <td class="govuk-table__cell govuk-table__cell--numeric" data-cy="utilisation">
+          <td class="govuk-table__cell govuk-table__cell--numeric" data-cy="utilisation" data-sort-value="{{ utilisationTableRow.formattedUtilisation | float }}">
             {{ utilisationTableRow.formattedUtilisation }}
           </td>
           <td class="govuk-table__cell govuk-table__cell--numeric" data-cy="cover-percentage" data-sort-value="{{ utilisationTableRow.coverPercentage }}">
