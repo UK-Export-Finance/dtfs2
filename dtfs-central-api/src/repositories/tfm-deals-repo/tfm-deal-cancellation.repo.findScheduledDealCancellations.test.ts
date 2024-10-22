@@ -1,4 +1,4 @@
-import { DEAL_SUBMISSION_TYPE, MONGO_DB_COLLECTIONS, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
+import { DEAL_SUBMISSION_TYPE, MONGO_DB_COLLECTIONS, TFM_DEAL_CANCELLATION_STATUS, TFM_DEAL_STAGE } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { mongoDbClient as db } from '../../drivers/db-client';
 import { TfmDealCancellationRepo } from './tfm-deal-cancellation.repo';
@@ -41,6 +41,7 @@ describe('tfm-deals-cancellation-repo', () => {
       // Assert
       const expectedFilter = {
         'dealSnapshot.submissionType': { $in: [DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN] },
+        'tfm.stage': { $ne: TFM_DEAL_STAGE.CANCELLED },
         'tfm.cancellation.status': { $eq: TFM_DEAL_CANCELLATION_STATUS.SCHEDULED },
       };
 

@@ -17,7 +17,7 @@ const cancelDeals = async (deals: TfmDeal[]) => {
  * Gets deal ids with a scheduled cancellation & effective date today or in the past
  * @returns The deal ids to cancel
  */
-const getDealsWithCancellationsScheduledForThePast = async (): Promise<TfmDeal[]> => {
+const getDealsWithPastCancellationsScheduled = async (): Promise<TfmDeal[]> => {
   const dealsScheduledForCancellation = await TfmDealCancellationRepo.findScheduledDealCancellations();
 
   return dealsScheduledForCancellation.filter((deals) => deals.tfm.cancellation!.effectiveFrom < endOfDay(new Date()).valueOf());
@@ -27,7 +27,7 @@ const getDealsWithCancellationsScheduledForThePast = async (): Promise<TfmDeal[]
  * Cancels deals scheduled to be cancelled in the past
  */
 const cancelScheduledDeals = async (): Promise<void> => {
-  const deals = await getDealsWithCancellationsScheduledForThePast();
+  const deals = await getDealsWithPastCancellationsScheduled();
 
   await cancelDeals(deals);
 };
