@@ -2,7 +2,7 @@ name: Notify
 on:
   push:
     branches:
-      - main
+      - release-*
 
 env:
   environment: dev
