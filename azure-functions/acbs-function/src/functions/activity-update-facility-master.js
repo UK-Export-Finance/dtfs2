@@ -7,15 +7,11 @@ const { findMissingMandatory } = require('../../helpers/mandatoryFields');
 /**
  * Handles the creation of a deal guarantee record in the ACBS system.
  *
- * This function performs the following operations:
- * 1. Validates the input payload.
- * 2. Checks for missing mandatory fields in the guarantee object.
- * 3. Submits the creation request to the ACBS system.
- * 4. Handles the response from the ACBS system and returns the result.
- *
- * @param {Object} payload - The input payload containing the deal identifier and guarantee details.
- * @param {string} payload.dealIdentifier - The identifier of the deal.
- * @param {Object} payload.guarantee - The guarantee object containing the mandatory fields.
+ * @param {Object} payload - The payload containing the facilityIdentifier, acbsFacilityMasterInput, updateType, and etag.
+ * @param {string} payload.facilityIdentifier - The ID of the facility.
+ * @param {Object} payload.acbsFacilityMasterInput - The input for the ACBS facility master, containing the mandatory fields.
+ * @param {string} payload.updateType - The type of update to be performed.
+ * @param {string} payload.etag - The etag of the facility.
  * @returns {Object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
  * @throws {Error} - Throws an error if the payload is invalid, if the API request fails, or if any other error occurs.
  */
@@ -25,7 +21,6 @@ const handler = async (payload) => {
       throw new Error('Invalid facility master amendment payload');
     }
 
-    const { facilityId, acbsFacilityMasterInput, updateType, etag } = payload;
     const mandatoryFields = [
       'dealIdentifier',
       'facilityIdentifier',
@@ -50,6 +45,8 @@ const handler = async (payload) => {
       'obligorPartyIdentifier',
       'obligorIndustryClassification',
     ];
+    const { facilityIdentifier, acbsFacilityMasterInput, updateType, etag } = payload;
+
     const missingMandatory = findMissingMandatory(acbsFacilityMasterInput, mandatoryFields);
 
     if (missingMandatory.length) {
@@ -57,7 +54,8 @@ const handler = async (payload) => {
     }
 
     const submittedToACBS = getNowAsIsoString();
-    const { status, data } = await api.updateFacility(facilityId, updateType, acbsFacilityMasterInput, etag);
+
+    const { status, data } = await api.updateFacility(facilityIdentifier, updateType, acbsFacilityMasterInput, etag);
 
     if (isHttpErrorStatus(status)) {
       throw new Error(

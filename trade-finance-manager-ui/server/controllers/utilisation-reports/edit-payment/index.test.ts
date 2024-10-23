@@ -4,7 +4,7 @@ import { SessionData } from 'express-session';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
 import { PostEditPaymentRequest, getEditPayment, postEditPayment } from '.';
 import api from '../../../api';
-import { aPaymentDetailsWithFeeRecordsResponseBody, aTfmSessionUser, aPayment, aFeeRecord } from '../../../../test-helpers';
+import { aPaymentDetailsWithFeeRecordsResponseBody, aTfmSessionUser, aPayment, aFeeRecord, aRequestSession } from '../../../../test-helpers';
 import { EMPTY_PAYMENT_ERRORS_VIEW_MODEL, EditPaymentFormRequestBody } from '../helpers';
 import { RECONCILIATION_FOR_REPORT_TABS } from '../../../constants/reconciliation-for-report-tabs';
 import { EditPaymentViewModel } from '../../../types/view-models/edit-payment-view-model';
@@ -14,11 +14,6 @@ import { EditPaymentFormValues, ParsedEditPaymentFormValues } from '../../../typ
 jest.mock('../../../api');
 
 describe('controllers/utilisation-reports/edit-payment', () => {
-  const aRequestSession = () => ({
-    user: aTfmSessionUser(),
-    userToken: 'abc123',
-  });
-
   beforeEach(() => {
     jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue(aPaymentDetailsWithFeeRecordsResponseBody());
   });
@@ -58,7 +53,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       await getEditPayment(req, res);
 
       // Assert
-      expect(res._getRenderView()).toBe('utilisation-reports/edit-payment.njk');
+      expect(res._getRenderView()).toEqual('utilisation-reports/edit-payment.njk');
     });
 
     it('sets the render view model reportId to the request params reportId', async () => {
@@ -70,7 +65,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
       // Assert
       const viewModel = res._getRenderData() as EditPaymentViewModel;
-      expect(viewModel.reportId).toBe(reportId);
+      expect(viewModel.reportId).toEqual(reportId);
     });
 
     it('sets the render view model paymentId to the request params paymentId', async () => {
@@ -82,7 +77,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
       // Assert
       const viewModel = res._getRenderData() as EditPaymentViewModel;
-      expect(viewModel.paymentId).toBe(paymentId);
+      expect(viewModel.paymentId).toEqual(paymentId);
     });
 
     describe('when the remove fees from payment error key is set in the session data', () => {
@@ -104,8 +99,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         expect(res._getRenderView()).toEqual('utilisation-reports/edit-payment.njk');
         const viewModel = res._getRenderData() as EditPaymentViewModel;
         expect(viewModel.errors.errorSummary).toBeDefined();
-        expect((viewModel.errors.errorSummary as [ErrorSummaryViewModel])[0].href).toBe('#added-reported-fees-details-header');
-        expect((viewModel.errors.errorSummary as [ErrorSummaryViewModel])[0].text).toBe('Select fee or fees to remove from the payment');
+        expect((viewModel.errors.errorSummary as [ErrorSummaryViewModel])[0].href).toEqual('#added-reported-fees-details-header');
+        expect((viewModel.errors.errorSummary as [ErrorSummaryViewModel])[0].text).toEqual('Select fee or fees to remove from the payment');
       });
 
       it("sets the render view model feeRecords isChecked to false for every fee record when the key is 'no-fee-records-selected'", async () => {
@@ -128,7 +123,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         // Assert
         const viewModel = res._getRenderData() as EditPaymentViewModel;
         expect(viewModel.feeRecords).toHaveLength(feeRecords.length);
-        viewModel.feeRecords.forEach(({ isChecked }) => expect(isChecked).toBe(false));
+        viewModel.feeRecords.forEach(({ isChecked }) => expect(isChecked).toEqual(false));
       });
 
       it("sets the render view model feeRecords isChecked to false for every fee record when the key is 'all-fee-records-selected'", async () => {
@@ -151,7 +146,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         // Assert
         const viewModel = res._getRenderData() as EditPaymentViewModel;
         expect(viewModel.feeRecords).toHaveLength(feeRecords.length);
-        viewModel.feeRecords.forEach(({ isChecked }) => expect(isChecked).toBe(true));
+        viewModel.feeRecords.forEach(({ isChecked }) => expect(isChecked).toEqual(true));
       });
     });
 
@@ -174,7 +169,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
       // Assert
       const viewModel = res._getRenderData() as EditPaymentViewModel;
-      expect(viewModel.paymentCurrency).toBe(paymentCurrency);
+      expect(viewModel.paymentCurrency).toEqual(paymentCurrency);
     });
 
     it('sets the render view model bank to the edit payment details response bank', async () => {
@@ -237,7 +232,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       // Assert
       const viewModel = res._getRenderData() as EditPaymentViewModel;
       expect(viewModel.feeRecords).toHaveLength(feeRecordIds.length);
-      viewModel.feeRecords.forEach(({ id }, index) => expect(id).toBe(feeRecordIds[index]));
+      viewModel.feeRecords.forEach(({ id }, index) => expect(id).toEqual(feeRecordIds[index]));
     });
 
     it('sets the render view model feeRecords facilityId to the edit payment details response feeRecords facilityId', async () => {
@@ -258,7 +253,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       // Assert
       const viewModel = res._getRenderData() as EditPaymentViewModel;
       expect(viewModel.feeRecords).toHaveLength(feeRecordFacilityIds.length);
-      viewModel.feeRecords.forEach(({ facilityId }, index) => expect(facilityId).toBe(feeRecordFacilityIds[index]));
+      viewModel.feeRecords.forEach(({ facilityId }, index) => expect(facilityId).toEqual(feeRecordFacilityIds[index]));
     });
 
     it('sets the render view model feeRecords exporter to the edit payment details response feeRecords exporter', async () => {
@@ -279,7 +274,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       // Assert
       const viewModel = res._getRenderData() as EditPaymentViewModel;
       expect(viewModel.feeRecords).toHaveLength(feeRecordExporters.length);
-      viewModel.feeRecords.forEach(({ exporter }, index) => expect(exporter).toBe(feeRecordExporters[index]));
+      viewModel.feeRecords.forEach(({ exporter }, index) => expect(exporter).toEqual(feeRecordExporters[index]));
     });
 
     it('sets the render view model feeRecords reportedFees to the edit payment details response feeRecords sorted and formatted reportedFees', async () => {
@@ -356,7 +351,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       // Assert
       const viewModel = res._getRenderData() as EditPaymentViewModel;
       expect(viewModel.feeRecords).toHaveLength(feeRecordIds.length);
-      viewModel.feeRecords.forEach(({ checkboxId }, index) => expect(checkboxId).toBe(`feeRecordId-${feeRecordIds[index]}`));
+      viewModel.feeRecords.forEach(({ checkboxId }, index) => expect(checkboxId).toEqual(`feeRecordId-${feeRecordIds[index]}`));
     });
 
     it('sets the render view model feeRecords isChecked to false for every fee record', async () => {
@@ -376,7 +371,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       // Assert
       const viewModel = res._getRenderData() as EditPaymentViewModel;
       expect(viewModel.feeRecords).toHaveLength(feeRecords.length);
-      viewModel.feeRecords.forEach(({ isChecked }) => expect(isChecked).toBe(false));
+      viewModel.feeRecords.forEach(({ isChecked }) => expect(isChecked).toEqual(false));
     });
 
     it('sets the render view model totalReportedPayments to the edit payment details response formatted totalReportedPayments', async () => {
@@ -394,7 +389,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
       // Assert
       const viewModel = res._getRenderData() as EditPaymentViewModel;
-      expect(viewModel.totalReportedPayments).toBe('USD 314.59');
+      expect(viewModel.totalReportedPayments).toEqual('USD 314.59');
     });
 
     it('sets the render view model errors to the empty errors', async () => {
@@ -459,7 +454,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
         // Assert
         const viewModel = res._getRenderData() as EditPaymentViewModel;
-        expect(viewModel.formValues.paymentAmount).toBe(paymentAmount.toString());
+        expect(viewModel.formValues.paymentAmount).toEqual(paymentAmount.toString());
       });
 
       it('sets the render view model formValues paymentDate day to the edit payment details response payment dateReceived day', async () => {
@@ -481,7 +476,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
         // Assert
         const viewModel = res._getRenderData() as EditPaymentViewModel;
-        expect(viewModel.formValues.paymentDate.day).toBe(day);
+        expect(viewModel.formValues.paymentDate.day).toEqual(day);
       });
 
       it('sets the render view model formValues paymentDate month to the edit payment details response payment dateReceived month', async () => {
@@ -503,7 +498,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
         // Assert
         const viewModel = res._getRenderData() as EditPaymentViewModel;
-        expect(viewModel.formValues.paymentDate.month).toBe(month);
+        expect(viewModel.formValues.paymentDate.month).toEqual(month);
       });
 
       it('sets the render view model formValues paymentDate year to the edit payment details response payment dateReceived year', async () => {
@@ -525,7 +520,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
         // Assert
         const viewModel = res._getRenderData() as EditPaymentViewModel;
-        expect(viewModel.formValues.paymentDate.year).toBe(year);
+        expect(viewModel.formValues.paymentDate.year).toEqual(year);
       });
 
       it('sets the render view model formValues paymentReference to the edit payment details response payment reference', async () => {
@@ -546,7 +541,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
         // Assert
         const viewModel = res._getRenderData() as EditPaymentViewModel;
-        expect(viewModel.formValues.paymentReference).toBe(reference);
+        expect(viewModel.formValues.paymentReference).toEqual(reference);
       });
     });
   });
@@ -639,7 +634,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         await postEditPayment(req, res);
 
         // Assert
-        expect(res._getRenderView()).toBe('utilisation-reports/edit-payment.njk');
+        expect(res._getRenderView()).toEqual('utilisation-reports/edit-payment.njk');
       });
 
       it('sets the render view model reportId to the request params reportId', async () => {
@@ -651,7 +646,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
         // Assert
         const viewModel = res._getRenderData() as EditPaymentViewModel;
-        expect(viewModel.reportId).toBe(reportId);
+        expect(viewModel.reportId).toEqual(reportId);
       });
 
       it('sets the render view model paymentId to the request params paymentId', async () => {
@@ -663,7 +658,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
         // Assert
         const viewModel = res._getRenderData() as EditPaymentViewModel;
-        expect(viewModel.paymentId).toBe(paymentId);
+        expect(viewModel.paymentId).toEqual(paymentId);
       });
 
       it('sets the render view model paymentCurrency to the edit payment details response payment currency', async () => {
@@ -685,7 +680,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
         // Assert
         const viewModel = res._getRenderData() as EditPaymentViewModel;
-        expect(viewModel.paymentCurrency).toBe(paymentCurrency);
+        expect(viewModel.paymentCurrency).toEqual(paymentCurrency);
       });
 
       it('sets the render view model bank to the edit payment details response bank', async () => {
@@ -748,7 +743,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         // Assert
         const viewModel = res._getRenderData() as EditPaymentViewModel;
         expect(viewModel.feeRecords).toHaveLength(feeRecordIds.length);
-        viewModel.feeRecords.forEach(({ id }, index) => expect(id).toBe(feeRecordIds[index]));
+        viewModel.feeRecords.forEach(({ id }, index) => expect(id).toEqual(feeRecordIds[index]));
       });
 
       it('sets the render view model feeRecords facilityId to the edit payment details response feeRecords facilityId', async () => {
@@ -769,7 +764,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         // Assert
         const viewModel = res._getRenderData() as EditPaymentViewModel;
         expect(viewModel.feeRecords).toHaveLength(feeRecordFacilityIds.length);
-        viewModel.feeRecords.forEach(({ facilityId }, index) => expect(facilityId).toBe(feeRecordFacilityIds[index]));
+        viewModel.feeRecords.forEach(({ facilityId }, index) => expect(facilityId).toEqual(feeRecordFacilityIds[index]));
       });
 
       it('sets the render view model feeRecords exporter to the edit payment details response feeRecords exporter', async () => {
@@ -790,7 +785,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         // Assert
         const viewModel = res._getRenderData() as EditPaymentViewModel;
         expect(viewModel.feeRecords).toHaveLength(feeRecordExporters.length);
-        viewModel.feeRecords.forEach(({ exporter }, index) => expect(exporter).toBe(feeRecordExporters[index]));
+        viewModel.feeRecords.forEach(({ exporter }, index) => expect(exporter).toEqual(feeRecordExporters[index]));
       });
 
       it('sets the render view model feeRecords reportedFees to the edit payment details response feeRecords sorted and formatted reportedFees', async () => {
@@ -867,7 +862,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         // Assert
         const viewModel = res._getRenderData() as EditPaymentViewModel;
         expect(viewModel.feeRecords).toHaveLength(feeRecordIds.length);
-        viewModel.feeRecords.forEach(({ checkboxId }, index) => expect(checkboxId).toBe(`feeRecordId-${feeRecordIds[index]}`));
+        viewModel.feeRecords.forEach(({ checkboxId }, index) => expect(checkboxId).toEqual(`feeRecordId-${feeRecordIds[index]}`));
       });
 
       it('sets the render view model feeRecords isChecked based on whether the fee record was selected or not', async () => {
@@ -895,9 +890,9 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         // Assert
         const viewModel = res._getRenderData() as EditPaymentViewModel;
         expect(viewModel.feeRecords).toHaveLength(feeRecords.length);
-        expect(viewModel.feeRecords[0].isChecked).toBe(true);
-        expect(viewModel.feeRecords[1].isChecked).toBe(false);
-        expect(viewModel.feeRecords[2].isChecked).toBe(true);
+        expect(viewModel.feeRecords[0].isChecked).toEqual(true);
+        expect(viewModel.feeRecords[1].isChecked).toEqual(false);
+        expect(viewModel.feeRecords[2].isChecked).toEqual(true);
       });
 
       it('sets the render view model totalReportedPayments to the edit payment details response formatted totalReportedPayments', async () => {
@@ -915,7 +910,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
         // Assert
         const viewModel = res._getRenderData() as EditPaymentViewModel;
-        expect(viewModel.totalReportedPayments).toBe('USD 314.59');
+        expect(viewModel.totalReportedPayments).toEqual('USD 314.59');
       });
 
       it('sets the render view model formValues paymentAmount to the request body paymentAmount', async () => {
@@ -928,7 +923,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
         // Assert
         const viewModel = res._getRenderData() as EditPaymentViewModel;
-        expect(viewModel.formValues.paymentAmount).toBe('314.59');
+        expect(viewModel.formValues.paymentAmount).toEqual('314.59');
       });
 
       it('sets the render view model formValues paymentDate day to the request body paymentDate-day', async () => {
@@ -941,7 +936,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
         // Assert
         const viewModel = res._getRenderData() as EditPaymentViewModel;
-        expect(viewModel.formValues.paymentDate.day).toBe('10');
+        expect(viewModel.formValues.paymentDate.day).toEqual('10');
       });
 
       it('sets the render view model formValues paymentDate month to the request body paymentDate-month', async () => {
@@ -954,7 +949,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
         // Assert
         const viewModel = res._getRenderData() as EditPaymentViewModel;
-        expect(viewModel.formValues.paymentDate.month).toBe('5');
+        expect(viewModel.formValues.paymentDate.month).toEqual('5');
       });
 
       it('sets the render view model formValues paymentDate year to the request body paymentDate-year', async () => {
@@ -967,7 +962,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
         // Assert
         const viewModel = res._getRenderData() as EditPaymentViewModel;
-        expect(viewModel.formValues.paymentDate.year).toBe('2024');
+        expect(viewModel.formValues.paymentDate.year).toEqual('2024');
       });
 
       it('sets the render view model formValues paymentReference to the edit payment details response payment reference', async () => {
@@ -980,7 +975,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
         // Assert
         const viewModel = res._getRenderData() as EditPaymentViewModel;
-        expect(viewModel.formValues.paymentReference).toBe('A payment reference');
+        expect(viewModel.formValues.paymentReference).toEqual('A payment reference');
       });
 
       it('populates the render view model errors errorSummary array', async () => {

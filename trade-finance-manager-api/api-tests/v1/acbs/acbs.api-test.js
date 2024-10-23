@@ -101,7 +101,7 @@ describe('acbs controller', () => {
         },
       };
       await acbsController.issueAcbsFacilities(mockDeal);
-      expect(api.updateACBSfacility).not.toHaveBeenCalled();
+      expect(api.issueACBSfacility).not.toHaveBeenCalled();
     });
 
     it('should not update facility in ACBS if facility is risk expired', async () => {
@@ -123,10 +123,10 @@ describe('acbs controller', () => {
         },
       };
       await acbsController.issueAcbsFacilities(mockDeal);
-      expect(api.updateACBSfacility).not.toHaveBeenCalled();
+      expect(api.issueACBSfacility).not.toHaveBeenCalled();
     });
 
-    it('should call updateACBSfacility ACBS function', async () => {
+    it('should call issueACBSfacility ACBS function', async () => {
       const mockDeal = {
         exporter: { companyName: 'test' },
         facilities: [
@@ -145,7 +145,7 @@ describe('acbs controller', () => {
         },
       };
       await acbsController.issueAcbsFacilities(mockDeal);
-      expect(api.updateACBSfacility).toHaveBeenCalled();
+      expect(api.issueACBSfacility).toHaveBeenCalled();
     });
   });
 

@@ -57,7 +57,7 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
       throw new Error('Facility Loan Record amendment SOF - Invalid payload provided');
     }
 
-    const { facilityId, facility, amendments, fmr } = payload;
+    const { facilityIdentifier, facility, amendments, fmr } = payload;
     const { facilitySnapshot } = facility;
     const { amendment } = amendments;
     let facilityLoanRecordAmendment;
@@ -75,7 +75,7 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
 
     // 1.2. Extract loan id for facility id
     const loanId = yield context.df.callActivityWithRetry('get-facility-loan-id', retryOptions, {
-      facilityId,
+      facilityIdentifier,
     });
 
     if (loanId) {
@@ -87,7 +87,7 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
       if (amendment.amount) {
         const amount = yield context.df.callActivityWithRetry('update-facility-loan-amount', retryOptions, {
           loanId,
-          facilityId,
+          facilityIdentifier,
           acbsFacilityLoanInput,
         });
 
@@ -101,7 +101,7 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
       if (amendment.coverEndDate) {
         const coverEndDate = yield context.df.callActivityWithRetry('update-facility-loan', retryOptions, {
           loanId,
-          facilityId,
+          facilityIdentifier,
           acbsFacilityLoanInput,
         });
 

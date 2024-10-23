@@ -4,7 +4,7 @@ import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../..
 import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mock-gef-deals';
 import { DEAL_TYPE } from '../../../../../../../gef/cypress/fixtures/constants';
 import amendmentsPage from '../../../../pages/amendments/amendmentsPage';
-import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
+import { threeMonthsOneDay, today } from '../../../../../../../e2e-fixtures/dateConstants';
 
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 
@@ -62,14 +62,13 @@ context('Amendments - GEF deal amend facility end date and then change to bank r
     amendmentsPage.amendmentCurrentFacilityEndDate().should('have.text', '01 January 2023');
     amendmentsPage.amendmentFacilityEndDateDetails().should('exist');
 
-    cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateYearInput(), dateConstants.todayYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--facility-end-date' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'check-answers');
     amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('have.text', 'Yes');
-    amendmentsPage.amendmentAnswerFacilityEndDate().should('have.text', dateConstants.todayFullString);
+    amendmentsPage.amendmentAnswerFacilityEndDate().should('have.text', today.dd_MMM_yyyy);
     amendmentsPage.amendmentAnswerBankReviewDate().should('not.exist');
 
     amendmentsPage.amendmentAnswerIsUsingFacilityEndDateChangeLink().click();
@@ -80,21 +79,20 @@ context('Amendments - GEF deal amend facility end date and then change to bank r
     amendmentsPage.amendmentCurrentBankReviewDate().should('have.text', 'Not provided');
     amendmentsPage.amendmentBankReviewDateDetails().should('exist');
 
-    cy.keyboardInput(amendmentsPage.amendmentBankReviewDateDayInput(), dateConstants.threeMonthsOneDayDay);
-    cy.keyboardInput(amendmentsPage.amendmentBankReviewDateMonthInput(), dateConstants.threeMonthsOneDayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentBankReviewDateYearInput(), dateConstants.threeMonthsOneDayYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-review-date', date: threeMonthsOneDay.date });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'check-answers');
     amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('have.text', 'No');
-    amendmentsPage.amendmentAnswerBankReviewDate().should('have.text', dateConstants.threeMonthsOneDayFullString);
+    amendmentsPage.amendmentAnswerBankReviewDate().should('have.text', threeMonthsOneDay.dd_MMM_yyyy);
     amendmentsPage.amendmentAnswerFacilityEndDate().should('not.exist');
 
     cy.clickContinueButton();
 
     cy.visit(relative(`/case/${dealId}/facility/${facility._id}`));
     facilityPage.facilityIsUsingFacilityEndDate().should('have.text', 'No');
-    facilityPage.facilityBankReviewDate().should('have.text', dateConstants.threeMonthsOneDayFullMonthString);
+    facilityPage.facilityBankReviewDate().should('have.text', threeMonthsOneDay.d_MMMM_yyyy);
     facilityPage.facilityFacilityEndDate().should('not.exist');
   });
 });

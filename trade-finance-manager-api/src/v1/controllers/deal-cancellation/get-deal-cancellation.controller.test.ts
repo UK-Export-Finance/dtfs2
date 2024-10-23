@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { TestApiError, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { TFM_DEAL_CANCELLATION_STATUS, TestApiError, TfmDealCancellationWithStatus } from '@ukef/dtfs2-common';
 import api from '../../api';
 import { getDealCancellation, GetDealCancellationRequest } from './get-deal-cancellation.controller';
 
@@ -31,7 +31,8 @@ describe('controllers - deal cancellation', () => {
 
     it('should return the deal cancellation', async () => {
       // Arrange
-      const mockTfmDealCancellation: TfmDealCancellation = {
+      const mockTfmDealCancellation: TfmDealCancellationWithStatus = {
+        status: TFM_DEAL_CANCELLATION_STATUS.DRAFT,
         reason: 'Test Reason',
         bankRequestDate: new Date().valueOf(),
         effectiveFrom: new Date().valueOf(),
@@ -46,7 +47,7 @@ describe('controllers - deal cancellation', () => {
       await getDealCancellation(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
       expect(res._getData()).toEqual(mockTfmDealCancellation);
     });
 
@@ -64,7 +65,7 @@ describe('controllers - deal cancellation', () => {
       await getDealCancellation(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(testErrorStatus);
+      expect(res._getStatusCode()).toEqual(testErrorStatus);
       expect(res._getData()).toEqual({ message: `Failed to get deal cancellation: ${testApiErrorMessage}`, status: testErrorStatus });
     });
 
@@ -80,7 +81,7 @@ describe('controllers - deal cancellation', () => {
       await getDealCancellation(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
       expect(res._getData()).toEqual({ message: 'Failed to get deal cancellation', status: 500 });
     });
   });

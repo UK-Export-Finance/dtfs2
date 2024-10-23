@@ -12,6 +12,8 @@ Cypress.Commands.add('assertText', require('./utils/assertText'));
 
 Cypress.Commands.add('getInputByLabelText', require('./utils/getInputByLabelText'));
 
+Cypress.Commands.add('completeDateFormFields', require('./trade-finance-manager-ui/completeDateFormFields'));
+
 // commands used to interact directly with Deal API
 // NOTE: this will eventually become TFM API, that calls Deal API.
 // right now we only have TFM API that can find a deal, Portal API does the rest.

@@ -33,12 +33,12 @@ describe('Hasher', () => {
 
     it('returns the salt generated from the hash strategy', () => {
       const { salt } = hasher.hash(valueToHash);
-      expect(salt).toBe(saltFromStrategy);
+      expect(salt).toEqual(saltFromStrategy);
     });
 
     it('returns the hash generated from the target and salt from the hash strategy', () => {
       const { hash } = hasher.hash(valueToHash);
-      expect(hash).toBe(hashFromStrategy);
+      expect(hash).toEqual(hashFromStrategy);
     });
   });
 
@@ -74,7 +74,7 @@ describe('Hasher', () => {
           salt: saltFromStrategy,
           hash: matchingHashFromStrategy,
         });
-        expect(result).toBe(true);
+        expect(result).toEqual(true);
       });
     });
 
@@ -85,7 +85,7 @@ describe('Hasher', () => {
           salt: saltFromStrategy,
           hash: matchingHashFromStrategy,
         });
-        expect(result).toBe(false);
+        expect(result).toEqual(false);
       });
     });
   });

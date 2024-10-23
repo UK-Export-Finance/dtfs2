@@ -69,7 +69,7 @@ describe('api rate limiting', () => {
 
     const responseAfterRateLimitExceeded = await sendRequestTimes(1);
 
-    expect(responseAfterRateLimitExceeded[0].value.status).toBe(429);
+    expect(responseAfterRateLimitExceeded[0].value.status).toEqual(429);
   });
 
   it('returns a 200 response if exactly RATE_LIMIT_THRESHOLD requests are made from the same IP to the same endpoint in 1 minute', async () => {
@@ -77,6 +77,6 @@ describe('api rate limiting', () => {
 
     const responseThatMeetsRateLimit = await sendRequestTimes(1);
 
-    expect(responseThatMeetsRateLimit[0].value.status).toBe(200);
+    expect(responseThatMeetsRateLimit[0].value.status).toEqual(200);
   });
 });

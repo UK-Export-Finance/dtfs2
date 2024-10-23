@@ -18,7 +18,7 @@ import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
-import { aUtilisationReportRawCsvData, aPortalUser, aFacility } from '../../../test-helpers';
+import { aUtilisationReportRawCsvData, aPortalUser, aFacility, aBank, aTfmFacility } from '../../../test-helpers';
 import { PostUploadUtilisationReportRequestBody } from '../../../src/v1/controllers/utilisation-report-service/post-upload-utilisation-report.controller';
 
 console.error = jest.fn();
@@ -53,6 +53,17 @@ describe(`POST ${getUrl()}`, () => {
     await tfmFacilitiesCollection.insertMany(tfmFacilities);
   };
 
+  const bankToInsert = {
+    ...aBank(),
+    id: aNotReceivedReport().bankId,
+    utilisationReportPeriodSchedule: [
+      { startMonth: 1, endMonth: 3 },
+      { startMonth: 4, endMonth: 6 },
+      { startMonth: 7, endMonth: 9 },
+      { startMonth: 10, endMonth: 12 },
+    ],
+  };
+
   beforeAll(async () => {
     await wipe([MONGO_DB_COLLECTIONS.USERS]);
     const usersCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.USERS);
@@ -60,17 +71,20 @@ describe(`POST ${getUrl()}`, () => {
   });
 
   beforeEach(async () => {
-    await wipe([MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
+    await wipe([MONGO_DB_COLLECTIONS.TFM_FACILITIES, MONGO_DB_COLLECTIONS.BANKS]);
     await SqlDbHelper.deleteAll();
 
     await SqlDbHelper.saveNewEntry('UtilisationReport', aNotReceivedReport());
 
     const tfmFacilitiesCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
     await tfmFacilitiesCollection.insertOne({ facilitySnapshot: { ...aFacility(), ukefFacilityId: facilityId } });
+
+    const banksCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.BANKS);
+    await banksCollection.insertOne(bankToInsert);
   });
 
   afterAll(async () => {
-    await wipe([MONGO_DB_COLLECTIONS.USERS, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
+    await wipe([MONGO_DB_COLLECTIONS.USERS, MONGO_DB_COLLECTIONS.TFM_FACILITIES, MONGO_DB_COLLECTIONS.BANKS]);
     await SqlDbHelper.deleteAll();
   });
 
@@ -138,6 +152,58 @@ describe(`POST ${getUrl()}`, () => {
     expect(facilityIdExists).toEqual([true, true, true]);
   });
 
+  it('should calculate and save initial utilisation and fixed fee using facility values from facility creation', async () => {
+    // Arrange
+    const ukefFacilityId = '11111111';
+    const reportData: UtilisationReportRawCsvData[] = [
+      {
+        ...aUtilisationReportRawCsvData(),
+        'ukef facility id': ukefFacilityId,
+      },
+    ];
+
+    const tfmFacility: WithoutId<TfmFacility> = {
+      ...aTfmFacility(),
+      facilitySnapshot: {
+        ...aTfmFacility().facilitySnapshot,
+        ukefFacilityId,
+        coverPercentage: 80,
+        coverStartDate: new Date('2024-01-01'),
+        // 366 days after cover start date because 2024 is a leap year
+        coverEndDate: new Date('2025-01-01'),
+        value: 500000,
+        interestPercentage: 5,
+        dayCountBasis: 360,
+      },
+    };
+
+    const tfmFacilitiesCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
+    await tfmFacilitiesCollection.insertOne(tfmFacility);
+
+    const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
+
+    // Act
+    const response = await testApi.post(payload).to(getUrl());
+
+    // Assert
+    expect(response.status).toEqual(HttpStatusCode.Created);
+
+    const facilityUtilisationData = await SqlDbHelper.manager.findOneBy(FacilityUtilisationDataEntity, { id: ukefFacilityId });
+    expect(facilityUtilisationData).not.toBeNull();
+    /**
+     * Initial utilisation is 10% of the facility value * (cover percentage / 100) thus,
+     * utilisation = 0.1 * 500000 * (80 / 100)
+     *             = 40000
+     */
+    expect(facilityUtilisationData?.utilisation).toEqual(40000);
+    /**
+     * Initial fixed fee = initial utilisation * bank margin rate * interest * days in cover period / day count basis
+     *                   = 40000 * 0.9 * (5 / 100) * 366 / 360
+     *                   = 1830
+     */
+    expect(facilityUtilisationData?.fixedFee).toEqual(1830);
+  });
+
   it('creates an entry in the AzureFileInfo table', async () => {
     // Act
     const response = await testApi.post(aValidPayload()).to(getUrl());
@@ -197,7 +263,7 @@ describe(`POST ${getUrl()}`, () => {
     });
   });
 
-  it('creates a new FacilityUtilisationData row using the report reportPeriod if the report data has a facility id which does not already exist', async () => {
+  it('creates a new FacilityUtilisationData row using the previous reportPeriod if the report data has a facility id which does not already exist', async () => {
     // Arrange
     await SqlDbHelper.deleteAll();
 
@@ -221,7 +287,12 @@ describe(`POST ${getUrl()}`, () => {
     // Assert
     expect(response.status).toEqual(HttpStatusCode.Created);
 
-    const facilityUtilisationDataEntityExists = await SqlDbHelper.manager.existsBy(FacilityUtilisationDataEntity, { id: ukefFacilityId, reportPeriod });
+    const previousReportPeriod = { start: { month: 1, year: 2023 }, end: { month: 3, year: 2023 } };
+
+    const facilityUtilisationDataEntityExists = await SqlDbHelper.manager.existsBy(FacilityUtilisationDataEntity, {
+      id: ukefFacilityId,
+      reportPeriod: previousReportPeriod,
+    });
     expect(facilityUtilisationDataEntityExists).toEqual(true);
   });
 

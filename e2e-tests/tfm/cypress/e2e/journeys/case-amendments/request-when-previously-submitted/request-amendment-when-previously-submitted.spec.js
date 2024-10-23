@@ -3,7 +3,7 @@ import { errorSummary } from '../../../partials';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+import { threeDaysAgo, threeYears, tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 import pages from '../../../pages';
 
@@ -42,9 +42,8 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--request-date' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
@@ -54,9 +53,8 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
 
     cy.url().should('contain', 'amendment-effective-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), dateConstants.todayYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--effective-date' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'amendment-options');
@@ -71,9 +69,8 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.tomorrowDay);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.tomorrowMonth);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.tomorrowYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: tomorrow.date });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-value');
@@ -96,9 +93,8 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--request-date' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
@@ -118,17 +114,15 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.tomorrowDay);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.tomorrowMonth);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.tomorrowYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: tomorrow.date });
+
     cy.clickContinueButton();
 
     errorSummary().contains('The new cover end date cannot be the same as the current cover end date');
     amendmentsPage.errorMessage().contains('The new cover end date cannot be the same as the current cover end date');
 
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.threeDaysDay);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.threeDaysMonth);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.threeDaysYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: threeDaysAgo.date });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-value');
@@ -183,15 +177,14 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/received-date');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateMonth(), '06');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateYear(), '2022');
+
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '06', year: '2022' });
     cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/effective-date');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateMonth(), '06');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateYear(), '2022');
+
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '06', year: '2022' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/check-answers');
@@ -209,9 +202,8 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--request-date' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
@@ -231,9 +223,8 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.threeYearsDay);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.threeYearsMonth);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.threeYearsYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: threeYears.date });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-value');
@@ -287,9 +278,9 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/received-date');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateMonth(), '06');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateYear(), '2022');
+
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '06', year: '2022' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/check-answers');
@@ -307,9 +298,8 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--request-date' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
@@ -329,9 +319,7 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.threeDaysDay);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.threeDaysMonth);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.threeDaysYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: threeDaysAgo.date });
     cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-value');

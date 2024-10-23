@@ -1,5 +1,5 @@
 const expectNotAuthenticatedResponse = ({ status, body }) => {
-  expect(status).toBe(401);
+  expect(status).toEqual(401);
   expect(body).toStrictEqual({});
 };
 

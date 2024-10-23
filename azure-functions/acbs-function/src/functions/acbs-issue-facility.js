@@ -43,10 +43,10 @@ df.app.orchestration('acbs-issue-facility', function* issueFacility(context) {
   const payload = context.df.input;
 
   try {
-    const { facilityId, facility, deal } = payload;
+    const { facilityIdentifier, facility, deal } = payload;
 
-    if (facilityId.includes(CONSTANTS.DEAL.UKEF_ID.PENDING) || facilityId.includes(CONSTANTS.DEAL.UKEF_ID.TEST)) {
-      throw new Error(`Invalid facility ID ${facilityId}`);
+    if (facilityIdentifier.includes(CONSTANTS.DEAL.UKEF_ID.PENDING) || facilityIdentifier.includes(CONSTANTS.DEAL.UKEF_ID.TEST)) {
+      throw new Error(`Invalid facility ID ${facilityIdentifier}`);
     }
 
     let facilityFee;
@@ -69,9 +69,9 @@ df.app.orchestration('acbs-issue-facility', function* issueFacility(context) {
       update: {},
     };
 
-    if (facilityId) {
+    if (facilityIdentifier) {
       // 1. GET Facility master record object
-      const { acbsFacility, etag } = yield context.df.callActivityWithRetry('get-facility-master', retryOptions, facilityId);
+      const { acbsFacility, etag } = yield context.df.callActivityWithRetry('get-facility-master', retryOptions, facilityIdentifier);
 
       if (acbsFacility && etag) {
         // 2.1. Create updated facility master record object
@@ -79,7 +79,7 @@ df.app.orchestration('acbs-issue-facility', function* issueFacility(context) {
 
         // 2.2. PUT updated facility master record object
         const issuedFacilityMaster = yield context.df.callActivityWithRetry('update-facility-master', retryOptions, {
-          facilityId,
+          facilityIdentifier,
           acbsFacilityMasterInput,
           updateType: CONSTANTS.FACILITY.OPERATION.ISSUE,
           etag,
@@ -99,7 +99,7 @@ df.app.orchestration('acbs-issue-facility', function* issueFacility(context) {
 
         // 3.2. Create facility loan record
         const facilityLoan = yield context.df.callActivityWithRetry('create-facility-loan', retryOptions, {
-          facilityIdentifier: facilityId,
+          facilityIdentifier,
           acbsFacilityLoanInput,
         });
 
@@ -114,20 +114,20 @@ df.app.orchestration('acbs-issue-facility', function* issueFacility(context) {
             const input = acbsFacilityFeeInput[i];
             facilityFee.push(
               yield context.df.callActivityWithRetry('create-facility-fee', retryOptions, {
-                facilityIdentifier: facilityId,
+                facilityIdentifier,
                 acbsFacilityFeeInput: input,
               }),
             );
           }
         } else {
           facilityFee = yield context.df.callActivityWithRetry('create-facility-fee', retryOptions, {
-            facilityIdentifier: facilityId,
+            facilityIdentifier,
             acbsFacilityFeeInput,
           });
         }
 
         return {
-          facilityId: facility._id,
+          facilityIdentifier,
           issuedFacilityMaster,
           facilityLoan,
           facilityFee,

@@ -1,8 +1,8 @@
 /*
   "dealIdentifier"                 Deal ACBS ID,
-  "facilityIdentifier"             UKEF facilityId,
-  "dealBorrowerIdentifier"         exporter ACBS ID
-  "maximumLiability"               ukef Exposure
+  "facilityIdentifier"             Facility ACBS ID,
+  "dealBorrowerIdentifier"         Exporter ACBS ID
+  "maximumLiability"               UKEF Exposure
   "productTypeId"                  Facility Type i.e. 250 for BOND
   "capitalConversionFactorCode"    This field is required for GEF. Cash facility has 8, Contingent facility has 9.
   "productTypeName"                Facility Type Name/ description i.e. GEF / BSS so appropriate description can be set
