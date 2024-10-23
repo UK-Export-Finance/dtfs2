@@ -9,12 +9,12 @@ describe('formatFacilityIds', () => {
     const result = formatFacilityIds(facilityIds);
 
     // Assert
-    expect(result).toEqual(
-      ` 1. Facility ID ${facilityIds[0]}
+    const expected = ` 1. Facility ID ${facilityIds[0]}
  2. Facility ID ${facilityIds[1]}
  3. Facility ID ${facilityIds[2]}
- 4. Facility ID ${facilityIds[3]}`,
-    );
+ 4. Facility ID ${facilityIds[3]}`;
+
+    expect(result).toEqual(expected);
   });
 
   it('formats an empty array correctly', () => {
