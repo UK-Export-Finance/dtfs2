@@ -39,6 +39,7 @@ describe('deal cancellation service', () => {
         bankRequestDate: today.valueOf(),
         effectiveFrom: tomorrow.valueOf(),
       });
+
       it('calls sendTfmEmail with the correct parameters', async () => {
         // Arrange
         const dealCancellation = aDealCancellation();

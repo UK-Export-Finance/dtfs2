@@ -4,7 +4,7 @@ import sendTfmEmail from '../send-tfm-email';
 import { CANCEL_DEAL_PAST_DATE, CANCEL_DEAL_FUTURE_DATE } from '../../../constants/email-template-ids';
 import * as api from '../../api';
 import { formatFacilityIds } from './helpers/format-facility-ids';
-import { UKEF_ID } from '../../../constants/deals';
+import { getUkefFacilityIds } from './helpers/get-ukef-facility-ids';
 
 const { D_MMMM_YYYY } = DATE_FORMATS;
 
@@ -14,7 +14,8 @@ export class DealCancellationService {
    * @param ukefDealId ukef deal id
    * @param dealCancellation deal cancellation object
    * @param facilityIds ukef facility ids
-   * @private - This function is exported for unit testing only and should not be used outside of the service
+   *
+   * This function is exported for unit testing only and should not be used outside of the service
    */
   public static async sendDealCancellationEmail(ukefDealId: string, dealCancellation: TfmDealCancellation, facilityIds: string[]): Promise<void> {
     const effectiveFromDate = toDate(dealCancellation.effectiveFrom);
@@ -30,12 +31,13 @@ export class DealCancellationService {
 
     const formattedEffectiveFromDate = format(dealCancellation.effectiveFrom, D_MMMM_YYYY);
     const formattedBankRequestDate = format(dealCancellation.bankRequestDate, D_MMMM_YYYY);
+    const cancelReason = dealCancellation.reason || '-';
 
     await sendTfmEmail(emailTemplateId, pimEmail, {
       ukefDealId,
       effectiveFromDate: formattedEffectiveFromDate,
       bankRequestDate: formattedBankRequestDate,
-      cancelReason: dealCancellation.reason || '-',
+      cancelReason,
       formattedFacilitiesList: formatFacilityIds(facilityIds),
     });
   }
@@ -53,9 +55,7 @@ export class DealCancellationService {
 
     const ukefDealId = dealSnapshot.dealType === DEAL_TYPE.BSS_EWCS ? dealSnapshot.details.ukefDealId : dealSnapshot.ukefDealId;
 
-    const ukefFacilityIds = facilities
-      .map((facility) => facility.facilitySnapshot.ukefFacilityId)
-      .filter((id): id is string => id !== null && id !== UKEF_ID.PENDING && id !== UKEF_ID.TEST);
+    const ukefFacilityIds = getUkefFacilityIds(facilities);
 
     if (!ukefFacilityIds.length) {
       throw new Error(`Failed to find facility ids on deal ${dealId} when submitting deal cancellation`);
