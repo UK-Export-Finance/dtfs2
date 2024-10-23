@@ -19,8 +19,7 @@
               <a class="govuk-link govuk-button--secondary moj-filter__tag"
                 href="{{ selectedFilter.removeHref }}"
                 data-cy="payment-details--main-container-selected-filter-{{ key }}">
-                <span class="govuk-visually-hidden">Remove this filter</span>
-                {{ selectedFilter.value }}
+                <span class="govuk-visually-hidden">Remove this filter</span> {{ selectedFilter.value }}
               </a>
             </li>
           {% endif %}

@@ -111,6 +111,24 @@ context(`users can filter payment details by facility id and payment reference a
       cy.assertText(paymentDetailsTable.paymentReference(secondPayment.id, secondFeeRecord.id), 'EFGH');
       cy.assertText(paymentDetailsTable.facilityId(secondPayment.id, secondFeeRecord.id), '22222222');
     });
+
+    it('should not display selected filters text', () => {
+      const feeRecord = aFeeRecordWithIdAndFacilityId(1, '11111111');
+      const payment = aPaymentWithIdFeeRecordsAndReference(11, [feeRecord], 'ABCD');
+      cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
+
+      const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([feeRecord]);
+      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
+
+      pages.landingPage.visit();
+      cy.login(USERS.PDC_RECONCILE);
+
+      cy.visit(`/utilisation-reports/${reportId}`);
+
+      paymentDetailsTabLink().click();
+
+      filters.panel().should('not.contain', 'Selected filters');
+    });
   });
 
   describe('when multiple filters are submitted', () => {
@@ -165,6 +183,125 @@ context(`users can filter payment details by facility id and payment reference a
       paymentDetailsTable.row(thirdPayment.id, thirdFeeRecord.id).should('exist');
       paymentDetailsTable.row(fourthPayment.id, thirdFeeRecord.id).should('not.exist');
       paymentDetailsTable.row(fourthPayment.id, fourthFeeRecord.id).should('not.exist');
+    });
+
+    it('should display all applied filters as selected filters', () => {
+      const paymentCurrencyFilter = CURRENCY.GBP;
+      const paymentReferenceFilter = 'payment ref';
+      const facilityIdFilter = '1111';
+
+      const feeRecord = aFeeRecordWithIdAndFacilityId(1, '11111111');
+      const payment = aPaymentWithIdFeeRecordsAndReference(11, [feeRecord], 'ABCD');
+      cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
+
+      const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([feeRecord]);
+      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
+
+      pages.landingPage.visit();
+      cy.login(USERS.PDC_RECONCILE);
+
+      cy.visit(`/utilisation-reports/${reportId}`);
+
+      paymentDetailsTabLink().click();
+
+      filters.paymentCurrencyRadioInput(paymentCurrencyFilter).click();
+      cy.keyboardInput(filters.paymentReferenceInput(), paymentReferenceFilter);
+      cy.keyboardInput(filters.facilityIdInput(), facilityIdFilter);
+
+      filters.submitButton().click();
+
+      filters.panel().should('contain', 'Selected filters');
+
+      filters.panel().within(() => {
+        cy.assertText(cy.get('h3').eq(0), 'Currency');
+        cy.assertText(cy.get('h3').eq(1), 'Payment reference');
+        cy.assertText(cy.get('h3').eq(2), 'Facility ID');
+      });
+
+      cy.assertText(filters.selectedFilter(paymentCurrencyFilter), `Remove this filter ${paymentCurrencyFilter}`);
+      cy.assertText(filters.selectedFilter(paymentReferenceFilter), `Remove this filter ${paymentReferenceFilter}`);
+      cy.assertText(filters.selectedFilter(facilityIdFilter), `Remove this filter ${facilityIdFilter}`);
+
+      cy.assertText(filters.actionBarItem(facilityIdFilter), `Remove this filter ${facilityIdFilter}`);
+      cy.assertText(filters.actionBarItem(paymentCurrencyFilter), `Remove this filter ${paymentCurrencyFilter}`);
+      cy.assertText(filters.actionBarItem(paymentReferenceFilter), `Remove this filter ${paymentReferenceFilter}`);
+    });
+
+    it('should remove all filters when clear filters button clicked', () => {
+      const paymentCurrencyFilter = CURRENCY.GBP;
+      const paymentReferenceFilter = 'payment ref';
+      const facilityIdFilter = '1111';
+
+      const feeRecord = aFeeRecordWithIdAndFacilityId(1, '11111111');
+      const payment = aPaymentWithIdFeeRecordsAndReference(11, [feeRecord], 'ABCD');
+      cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
+
+      const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([feeRecord]);
+      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
+
+      pages.landingPage.visit();
+      cy.login(USERS.PDC_RECONCILE);
+
+      cy.visit(`/utilisation-reports/${reportId}`);
+
+      paymentDetailsTabLink().click();
+
+      filters.paymentCurrencyRadioInput(paymentCurrencyFilter).click();
+      cy.keyboardInput(filters.paymentReferenceInput(), paymentReferenceFilter);
+      cy.keyboardInput(filters.facilityIdInput(), facilityIdFilter);
+
+      filters.submitButton().click();
+
+      filters.clearFiltersLink().click();
+
+      filters.panel().should('not.contain', 'Selected filters');
+
+      filters.paymentCurrencyRadioInput(paymentCurrencyFilter).should('not.be.checked');
+      filters.paymentReferenceInput().should('have.value', '');
+      filters.facilityIdInput().should('have.value', '');
+    });
+
+    it('should remove selected filter when selected filter clicked and leave other filters in place', () => {
+      const paymentCurrencyFilter = CURRENCY.GBP;
+      const paymentReferenceFilter = 'payment ref';
+      const facilityIdFilter = '1111';
+
+      const feeRecord = aFeeRecordWithIdAndFacilityId(1, '11111111');
+      const payment = aPaymentWithIdFeeRecordsAndReference(11, [feeRecord], 'ABCD');
+      cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
+
+      const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([feeRecord]);
+      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
+
+      pages.landingPage.visit();
+      cy.login(USERS.PDC_RECONCILE);
+
+      cy.visit(`/utilisation-reports/${reportId}`);
+
+      paymentDetailsTabLink().click();
+
+      filters.paymentCurrencyRadioInput(paymentCurrencyFilter).click();
+      cy.keyboardInput(filters.paymentReferenceInput(), paymentReferenceFilter);
+      cy.keyboardInput(filters.facilityIdInput(), facilityIdFilter);
+
+      filters.submitButton().click();
+
+      filters.selectedFilter('1111').click();
+
+      filters.paymentCurrencyRadioInput(paymentCurrencyFilter).should('be.checked');
+      filters.paymentReferenceInput().should('have.value', 'payment ref');
+      filters.facilityIdInput().should('have.value', '');
+
+      filters.panel().within(() => {
+        cy.assertText(cy.get('h3').eq(0), 'Currency');
+        cy.assertText(cy.get('h3').eq(1), 'Payment reference');
+      });
+
+      cy.assertText(filters.selectedFilter(paymentCurrencyFilter), `Remove this filter ${paymentCurrencyFilter}`);
+      cy.assertText(filters.selectedFilter(paymentReferenceFilter), `Remove this filter ${paymentReferenceFilter}`);
+
+      cy.assertText(filters.actionBarItem(paymentCurrencyFilter), `Remove this filter ${paymentCurrencyFilter}`);
+      cy.assertText(filters.actionBarItem(paymentReferenceFilter), `Remove this filter ${paymentReferenceFilter}`);
     });
   });
 });
