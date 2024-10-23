@@ -305,7 +305,7 @@ const updateDealCancellation = async ({ dealId, dealCancellationUpdate, auditDet
 /**
  * Gets the deal cancellation object on a TFM deal
  * @param {string} dealId - deal cancellation to update
- * @returns {Promise<Partial<import('@ukef/dtfs2-common').TfmDealCancellation>>} - Deal cancellation object
+ * @returns {Promise<Partial<import('@ukef/dtfs2-common').TfmDealCancellationWithStatus>>} - Deal cancellation object
  */
 const getDealCancellation = async (dealId) => {
   try {
@@ -1016,7 +1016,7 @@ const createACBS = async (deal, bank) => {
   return {};
 };
 
-const updateACBSfacility = async (facility, deal) => {
+const issueACBSfacility = async (facility, deal) => {
   if (!!facility && !!deal) {
     try {
       const response = await axios({
@@ -1674,7 +1674,7 @@ module.exports = {
   getFacilityExposurePeriod,
   getPremiumSchedule,
   createACBS,
-  updateACBSfacility,
+  issueACBSfacility,
   amendACBSfacility,
   getFunctionsAPI,
   createEstoreSite,

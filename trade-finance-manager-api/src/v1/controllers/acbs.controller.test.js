@@ -39,7 +39,7 @@ const mockACBSTaskLink = {
   purgeHistoryDeleteUri: 'acbs',
 };
 
-const updateACBSFacilityMock = jest.spyOn(api, 'updateACBSfacility');
+const updateACBSFacilityMock = jest.spyOn(api, 'issueACBSfacility');
 updateACBSFacilityMock.mockResolvedValue(mockACBSTaskLink);
 
 const invalidDealIds = ['invalid', '', '0000000000', '123', 'ABC', '!"£', [], {}];
@@ -173,7 +173,7 @@ describe('issueAcbsFacilities', () => {
     expect(result).toEqual(false);
   });
 
-  it('should call updateACBSfacility', async () => {
+  it('should call issueACBSfacility', async () => {
     // Act
     const result = await issueAcbsFacilities(mockDeal);
 
@@ -202,7 +202,7 @@ describe('issueAcbsFacilities', () => {
     expect(result).toEqual([true]);
   });
 
-  it('should not call updateACBSfacility if acbs property does not exist', async () => {
+  it('should not call issueACBSfacility if acbs property does not exist', async () => {
     // Deal has not been created in ACBS
     const mockAcbsDeal = {
       ...mockDeal,
@@ -221,7 +221,7 @@ describe('issueAcbsFacilities', () => {
     expect(result).toEqual(false);
   });
 
-  it('should not call updateACBSfacility if the facility is not issued in Portal', async () => {
+  it('should not call issueACBSfacility if the facility is not issued in Portal', async () => {
     // Arrange
     const mockAcbsDeal = {
       ...mockDeal,
@@ -249,7 +249,7 @@ describe('issueAcbsFacilities', () => {
     expect(result).toEqual(false);
   });
 
-  it('should not call updateACBSfacility if the facility is not created in ACBS', async () => {
+  it('should not call issueACBSfacility if the facility is not created in ACBS', async () => {
     // Arrange
     const mockAcbsDeal = {
       ...mockDeal,
@@ -277,7 +277,7 @@ describe('issueAcbsFacilities', () => {
     expect(result).toEqual(false);
   });
 
-  it('should not call updateACBSfacility if the facility is issued in ACBS', async () => {
+  it('should not call issueACBSfacility if the facility is issued in ACBS', async () => {
     // Arrange
     const mockAcbsDeal = {
       ...mockDeal,
@@ -306,7 +306,7 @@ describe('issueAcbsFacilities', () => {
     expect(result).toEqual(false);
   });
 
-  it('should not call updateACBSfacility if the facility is risk expired in ACBS', async () => {
+  it('should not call issueACBSfacility if the facility is risk expired in ACBS', async () => {
     // Arrange
     const mockAcbsDeal = {
       ...mockDeal,
