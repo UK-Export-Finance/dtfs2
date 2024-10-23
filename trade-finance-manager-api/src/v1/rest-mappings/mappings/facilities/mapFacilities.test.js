@@ -1,5 +1,5 @@
 const mapFacilities = require('./mapFacilities');
-const mapFacility = require('./mapFacility');
+const mapFacilitySnapshot = require('./mapFacilitySnapshot');
 const mapFacilityTfm = require('./mapFacilityTfm');
 const MOCK_DEAL = require('../../../__mocks__/mock-deal');
 
@@ -107,14 +107,14 @@ describe('mapFacilities', () => {
       {
         _id: MOCK_FACILITIES[0]._id,
         facilitySnapshot: {
-          ...mapFacility(MOCK_FACILITIES[0].facilitySnapshot, mockTfmFacility, mockDealDetails, MOCK_FACILITIES[0]),
+          ...mapFacilitySnapshot(MOCK_FACILITIES[0].facilitySnapshot, mockTfmFacility, mockDealDetails, MOCK_FACILITIES[0]),
         },
         tfm: mapFacilityTfm(mockTfmFacility, MOCK_DEAL_TFM, MOCK_FACILITIES[0]),
       },
       {
         _id: MOCK_FACILITIES[1]._id,
         facilitySnapshot: {
-          ...mapFacility(MOCK_FACILITIES[1].facilitySnapshot, mockTfmFacility, mockDealDetails, MOCK_FACILITIES[1]),
+          ...mapFacilitySnapshot(MOCK_FACILITIES[1].facilitySnapshot, mockTfmFacility, mockDealDetails, MOCK_FACILITIES[1]),
         },
         tfm: mapFacilityTfm(mockTfmFacility, MOCK_DEAL_TFM, MOCK_FACILITIES[1]),
       },

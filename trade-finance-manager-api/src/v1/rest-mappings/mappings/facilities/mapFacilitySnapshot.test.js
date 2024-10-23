@@ -1,4 +1,4 @@
-const mapFacility = require('./mapFacility');
+const mapFacilitySnapshot = require('./mapFacilitySnapshot');
 const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityProduct = require('./mapFacilityProduct');
 const mapFacilityType = require('./mapFacilityType');
@@ -78,7 +78,7 @@ describe('mapFacility', () => {
   };
 
   it('should map and format correct fields/values', () => {
-    const result = mapFacility(mockFacility, mockTfmFacility, mockDealDetails, mockFacilityFull);
+    const result = mapFacilitySnapshot(mockFacility, mockTfmFacility, mockDealDetails, mockFacilityFull);
 
     const expectedCoveredPercentage = `${mockCoveredPercentage}%`;
 

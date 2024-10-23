@@ -14,11 +14,11 @@ const mapUkefExposureValue = require('./mapUkefExposureValue');
 const mapFacilityValueExportCurrency = require('./mapFacilityValueExportCurrency');
 
 /**
- * Maps existing facility to the facility used in TFM API.
- * Note: This implimentation is called where it modifies the facility snapshot
- * to have values not consistent with the facility snapshot in the database.
+ * Maps the existing facility snapshot in the database to the facility snapshot used in TFM API.
+ * Note: This implementation modifies the facility snapshot to have values not consistent with the facility snapshot in the database.
+ * In particular, this is a live object that updates e.g. when amendments are added in TFM.
  */
-const mapFacility = (facility, dealSnapshot) => {
+const mapFacilitySnapshot = (facility, dealSnapshot) => {
   const dealDetails = dealSnapshot.details;
 
   const { facilitySnapshot, tfm: facilityTfm } = facility;
@@ -77,4 +77,4 @@ const mapFacility = (facility, dealSnapshot) => {
   return mapped;
 };
 
-module.exports = mapFacility;
+module.exports = mapFacilitySnapshot;
