@@ -31,4 +31,7 @@ export type TfmDeal = {
   auditRecord?: AuditDatabaseRecord;
 };
 
+/**
+ * The type `TfmDeal` with the `tfm.cancellation` object required
+ */
 export type TfmDealWithCancellation = Prettify<TfmDeal & { tfm: { cancellation: TfmDealCancellationWithStatus } }>;
