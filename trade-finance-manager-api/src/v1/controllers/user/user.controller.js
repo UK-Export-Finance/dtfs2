@@ -115,7 +115,7 @@ exports.update = async (_id, update, auditDetails, callback) => {
  * @param {import('@ukef/dtfs2-common').AuditDetails} upsertUserParams.auditDetails
  */
 exports.upsertTfmUserFromEntraIdUser = async ({ entraIdUser, auditDetails }) => {
-  const upsertedUser = UserService.upsertUserFromEntraIdUser({ entraIdUser, auditDetails });
+  const upsertedUser = await UserService.upsertUserFromEntraIdUser({ entraIdUser, auditDetails });
   const tfmSessionUser = mapUserData(upsertedUser);
   return tfmSessionUser;
 };
