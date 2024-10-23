@@ -1,9 +1,11 @@
 import { ACTIVITY_TYPES } from '../../constants';
 import { UnixTimestamp, UnixTimestampSeconds } from '../date';
 
+const { ACTIVITY, COMMENT, CANCELLATION } = ACTIVITY_TYPES;
+
 export type TfmActivity =
   | {
-      type: typeof ACTIVITY_TYPES.ACTIVITY | typeof ACTIVITY_TYPES.COMMENT;
+      type: typeof ACTIVITY | typeof COMMENT;
       timestamp: UnixTimestampSeconds;
       author: {
         firstName: string;
@@ -14,7 +16,7 @@ export type TfmActivity =
       label: string;
     }
   | {
-      type: typeof ACTIVITY_TYPES.CANCELLATION;
+      type: typeof CANCELLATION;
       timestamp: UnixTimestampSeconds;
       author: {
         firstName: string;
