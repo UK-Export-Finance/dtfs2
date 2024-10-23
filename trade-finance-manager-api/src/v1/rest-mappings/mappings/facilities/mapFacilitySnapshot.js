@@ -15,6 +15,7 @@ const mapFacilityValueExportCurrency = require('./mapFacilityValueExportCurrency
 
 /**
  * Maps the existing facility snapshot in the database to the facility snapshot used in TFM API.
+ * This function is only used on BSS/EWCS facilities.
  * Note: This implementation modifies the facility snapshot to have values not consistent with the facility snapshot in the database.
  * In particular, this is a live object that updates e.g. when amendments are added in TFM.
  */
