@@ -11,6 +11,7 @@ import {
   TfmDealCancellation,
   TfmDealCancellationResponse,
   TfmDealCancellationWithStatus,
+  TfmDealWithCancellation,
 } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { flatten } from 'mongo-dot-notation';
@@ -52,11 +53,11 @@ export class TfmDealCancellationRepo {
    * Find deals with scheduled cancellations
    * @returns the deals
    */
-  public static async findScheduledDealCancellations(): Promise<TfmDeal[]> {
+  public static async findScheduledDealCancellations(): Promise<TfmDealWithCancellation[]> {
     const dealCollection = await this.getCollection();
 
     return await dealCollection
-      .find({
+      .find<TfmDealWithCancellation>({
         'dealSnapshot.submissionType': { $in: [DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN] },
         'tfm.stage': { $ne: TFM_DEAL_STAGE.CANCELLED },
         'tfm.cancellation.status': { $eq: TFM_DEAL_CANCELLATION_STATUS.SCHEDULED },
