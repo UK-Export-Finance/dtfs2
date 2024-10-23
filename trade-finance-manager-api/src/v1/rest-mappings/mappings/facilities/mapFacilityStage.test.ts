@@ -1,5 +1,5 @@
-const { TFM_FACILITY_STAGE } = require('@ukef/dtfs2-common');
-const { mapBssEwcsFacilityStage, mapGefFacilityStage } = require('./mapFacilityStage');
+import { TFM_FACILITY_STAGE } from '@ukef/dtfs2-common';
+import { mapBssEwcsFacilityStage, mapGefFacilityStage } from './mapFacilityStage';
 
 describe('mapGefFacilityStage', () => {
   describe('when a tfm facility stage is passed in', () => {
@@ -27,7 +27,7 @@ describe('mapGefFacilityStage', () => {
 describe('mapBssEwcsFacilityStage', () => {
   describe('when a tfm facility stage is passed in', () => {
     it('should return the tfm facility stage', () => {
-      const result = mapBssEwcsFacilityStage(true, TFM_FACILITY_STAGE.RISK_EXPIRED);
+      const result = mapBssEwcsFacilityStage(TFM_FACILITY_STAGE.RISK_EXPIRED);
       expect(result).toEqual(TFM_FACILITY_STAGE.RISK_EXPIRED);
     });
   });
