@@ -1,31 +1,20 @@
 import { PaymentDetailsFilters } from '@ukef/dtfs2-common';
 import { SelectedPaymentDetailsFiltersViewModel } from '../../../types/view-models';
+import { getPaymentDetailsTabHref } from './get-payment-details-tab-href';
 
-export const getPaymentDetailsTabHref = (activeFilters: PaymentDetailsFilters, reportId: string) => {
-  const baseHref = `/utilisation-reports/${reportId}`;
-  const tab = '#payment-details';
-  const activeFilterQueries = [];
-
-  if (activeFilters.facilityId) {
-    activeFilterQueries.push(`paymentDetailsFacilityId=${activeFilters.facilityId}`);
+/**
+ * Map to selected payment details filters view model
+ * @param filters - The filter values
+ * @param reportId - The report id
+ * @returns the selected payment details filters view model
+ */
+export const mapToSelectedPaymentDetailsFiltersViewModel = (
+  filters: PaymentDetailsFilters,
+  reportId: string,
+): SelectedPaymentDetailsFiltersViewModel | null => {
+  if (!filters.facilityId && !filters.paymentCurrency && !filters.paymentReference) {
+    return null;
   }
-
-  if (activeFilters.paymentCurrency) {
-    activeFilterQueries.push(`paymentDetailsPaymentCurrency=${activeFilters.paymentCurrency}`);
-  }
-
-  if (activeFilters.paymentReference) {
-    activeFilterQueries.push(`paymentDetailsPaymentReference=${activeFilters.paymentReference}`);
-  }
-
-  if (activeFilterQueries.length === 0) {
-    return baseHref.concat(tab);
-  }
-
-  return baseHref.concat('?', activeFilterQueries.join('&'), tab);
-};
-
-export const mapToSelectedPaymentDetailsFiltersViewModel = (filters: PaymentDetailsFilters, reportId: string): SelectedPaymentDetailsFiltersViewModel => {
   return {
     facilityId: filters.facilityId
       ? { value: filters.facilityId, removeHref: getPaymentDetailsTabHref({ ...filters, facilityId: undefined }, reportId) }

@@ -120,7 +120,7 @@ export type SelectedPaymentDetailsFiltersViewModel = {
 export type PaymentDetailsViewModel = {
   rows: PaymentDetailsRowViewModel[];
   filters?: PaymentDetailsFiltersViewModel;
-  selectedFilters?: SelectedPaymentDetailsFiltersViewModel;
+  selectedFilters: SelectedPaymentDetailsFiltersViewModel | null;
   filterErrors?: PaymentDetailsFilterErrorsViewModel;
   isFilterActive?: boolean;
 };

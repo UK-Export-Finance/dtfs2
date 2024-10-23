@@ -12,6 +12,7 @@ describe(component, () => {
   const aPaymentDetailsTableViewModel = (): PaymentDetailsTableViewModel => ({
     paymentDetails: {
       rows: [],
+      selectedFilters: null,
     },
   });
 
