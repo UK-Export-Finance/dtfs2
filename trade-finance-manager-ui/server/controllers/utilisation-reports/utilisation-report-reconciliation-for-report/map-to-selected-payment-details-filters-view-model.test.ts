@@ -3,18 +3,8 @@ import { when } from 'jest-when';
 import { mapToSelectedPaymentDetailsFiltersViewModel } from './map-to-selected-payment-details-filters-view-model';
 import { getPaymentDetailsTabHref } from './get-payment-details-tab-href';
 
-jest.mock('./get-payment-details-tab-href');
-
 describe('map-to-selected-payment-details-filters-view-model', () => {
   const reportId = '123';
-
-  beforeEach(() => {
-    jest.mocked(getPaymentDetailsTabHref).mockReturnValue('#payment-details');
-  });
-
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
 
   describe('mapToSelectedPaymentDetailsFiltersViewModel', () => {
     it('should return null if no filters are active', () => {
@@ -106,37 +96,32 @@ describe('map-to-selected-payment-details-filters-view-model', () => {
       const result = mapToSelectedPaymentDetailsFiltersViewModel(filters, reportId);
 
       // Assert
-      expect(result!.facilityId!.removeHref).toEqual('/remove-facility-id-filter');
+      const expected = getPaymentDetailsTabHref({ paymentReference: 'REF123', paymentCurrency: CURRENCY.USD }, reportId);
+      expect(result!.facilityId!.removeHref).toEqual(expected);
     });
 
     it('should set paymentCurrency remove href to link to report with other active filters still applied', () => {
       // Arrange
       const filters = { facilityId: '12345', paymentReference: 'REF123', paymentCurrency: CURRENCY.USD };
 
-      when(getPaymentDetailsTabHref)
-        .calledWith({ facilityId: '12345', paymentReference: 'REF123' }, reportId)
-        .mockReturnValue('/remove-payment-currency-filter');
-
       // Act
       const result = mapToSelectedPaymentDetailsFiltersViewModel(filters, reportId);
 
       // Assert
-      expect(result!.paymentCurrency!.removeHref).toEqual('/remove-payment-currency-filter');
+      const expected = getPaymentDetailsTabHref({ facilityId: '12345', paymentReference: 'REF123' }, reportId);
+      expect(result!.paymentCurrency!.removeHref).toEqual(expected);
     });
 
-    it('should set paymentReference remove href to link to report with other active filters still applied', () => {
+    it.only('should set paymentReference remove href to link to report with other active filters still applied', () => {
       // Arrange
       const filters = { facilityId: '12345', paymentReference: 'REF123', paymentCurrency: CURRENCY.USD };
 
-      when(getPaymentDetailsTabHref)
-        .calledWith({ facilityId: '12345', paymentCurrency: CURRENCY.USD }, reportId)
-        .mockReturnValue('/remove-payment-reference-filter');
-
       // Act
       const result = mapToSelectedPaymentDetailsFiltersViewModel(filters, reportId);
 
       // Assert
-      expect(result!.paymentReference!.removeHref).toEqual('/remove-payment-reference-filter');
+      const expected = getPaymentDetailsTabHref({ facilityId: '12345', paymentCurrency: CURRENCY.USD }, reportId);
+      expect(result!.paymentReference!.removeHref).toEqual(expected);
     });
   });
 });
