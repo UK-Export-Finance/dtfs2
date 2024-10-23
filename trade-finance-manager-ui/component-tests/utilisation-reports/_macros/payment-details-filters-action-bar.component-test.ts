@@ -51,11 +51,7 @@ describe(component, () => {
 
   it('should not render unprovided selected filters', () => {
     const params: ViewModel = {
-      selectedFilters: {
-        paymentCurrency: null,
-        paymentReference: null,
-        facilityId: null,
-      },
+      selectedFilters: {},
     };
     const wrapper = render(params);
 

@@ -28,7 +28,7 @@ describe('map-to-selected-payment-details-filters-view-model', () => {
       expect(result).toBeNull();
     });
 
-    it('should set facilityId selected filter to null when no facility id provided', () => {
+    it('should not set facilityId selected filter when no facility id provided', () => {
       // Arrange
       const filters = { paymentCurrency: CURRENCY.USD, paymentReference: 'REF123' };
 
@@ -36,10 +36,10 @@ describe('map-to-selected-payment-details-filters-view-model', () => {
       const result = mapToSelectedPaymentDetailsFiltersViewModel(filters, reportId);
 
       // Assert
-      expect(result!.facilityId).toBeNull();
+      expect(result!.facilityId).toBeUndefined();
     });
 
-    it('should set paymentCurrency selected filter to null when no payment currency provided', () => {
+    it('should not set paymentCurrency selected filter when no payment currency provided', () => {
       // Arrange
       const filters = { facilityId: '1234', paymentReference: 'REF123' };
 
@@ -47,10 +47,10 @@ describe('map-to-selected-payment-details-filters-view-model', () => {
       const result = mapToSelectedPaymentDetailsFiltersViewModel(filters, reportId);
 
       // Assert
-      expect(result!.paymentCurrency).toBeNull();
+      expect(result!.paymentCurrency).toBeUndefined();
     });
 
-    it('should set paymentReference selected filter to null when no payment reference provided', () => {
+    it('should not set paymentReference selected filter when no payment reference provided', () => {
       // Arrange
       const filters = { facilityId: '1234', paymentCurrency: CURRENCY.USD };
 
@@ -58,7 +58,7 @@ describe('map-to-selected-payment-details-filters-view-model', () => {
       const result = mapToSelectedPaymentDetailsFiltersViewModel(filters, reportId);
 
       // Assert
-      expect(result!.paymentReference).toBeNull();
+      expect(result!.paymentReference).toBeUndefined();
     });
 
     it('should set facilityId selected filter value to the facility id when facility id provided', () => {

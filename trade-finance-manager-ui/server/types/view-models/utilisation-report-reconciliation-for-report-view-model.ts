@@ -112,9 +112,9 @@ export type PaymentDetailsRowViewModel = {
 export type SelectedFilter = { value: string; removeHref: string };
 
 export type SelectedPaymentDetailsFiltersViewModel = {
-  facilityId: SelectedFilter | null;
-  paymentCurrency: SelectedFilter | null;
-  paymentReference: SelectedFilter | null;
+  facilityId?: SelectedFilter;
+  paymentCurrency?: SelectedFilter;
+  paymentReference?: SelectedFilter;
 };
 
 export type PaymentDetailsViewModel = {

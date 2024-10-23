@@ -14,7 +14,8 @@ describe('get-payment-details-tab-href', () => {
         const href = getPaymentDetailsTabHref(activeFilters, reportId);
 
         // Assert
-        expect(href).toEqual(`/utilisation-reports/${reportId}#payment-details`);
+        const expected = `/utilisation-reports/${reportId}#payment-details`;
+        expect(href).toEqual(expected);
       });
     });
 
@@ -28,7 +29,8 @@ describe('get-payment-details-tab-href', () => {
         const href = getPaymentDetailsTabHref(activeFilters, reportId);
 
         // Assert
-        expect(href).toEqual(`/utilisation-reports/${reportId}?paymentDetailsPaymentCurrency=${paymentCurrencyFilter}#payment-details`);
+        const expected = `/utilisation-reports/${reportId}?paymentDetailsPaymentCurrency=${paymentCurrencyFilter}#payment-details`;
+        expect(href).toEqual(expected);
       });
     });
 
@@ -42,7 +44,8 @@ describe('get-payment-details-tab-href', () => {
         const href = getPaymentDetailsTabHref(activeFilters, reportId);
 
         // Assert
-        expect(href).toEqual(`/utilisation-reports/${reportId}?paymentDetailsPaymentReference=${paymentReferenceFilter}#payment-details`);
+        const expected = `/utilisation-reports/${reportId}?paymentDetailsPaymentReference=${paymentReferenceFilter}#payment-details`;
+        expect(href).toEqual(expected);
       });
     });
 
@@ -56,7 +59,8 @@ describe('get-payment-details-tab-href', () => {
         const href = getPaymentDetailsTabHref(activeFilters, reportId);
 
         // Assert
-        expect(href).toEqual(`/utilisation-reports/${reportId}?paymentDetailsFacilityId=${facilityIdFilter}#payment-details`);
+        const expected = `/utilisation-reports/${reportId}?paymentDetailsFacilityId=${facilityIdFilter}#payment-details`;
+        expect(href).toEqual(expected);
       });
     });
 
@@ -76,9 +80,11 @@ describe('get-payment-details-tab-href', () => {
         const href = getPaymentDetailsTabHref(activeFilters, reportId);
 
         // Assert
-        expect(href).toEqual(
-          `/utilisation-reports/${reportId}?paymentDetailsFacilityId=${facilityIdFilter}&paymentDetailsPaymentCurrency=${paymentCurrencyFilter}&paymentDetailsPaymentReference=${paymentReferenceFilter}#payment-details`,
-        );
+        const expectedFacilityIdParam = `paymentDetailsFacilityId=${facilityIdFilter}`;
+        const expectedPaymentCurrencyParam = `paymentDetailsPaymentCurrency=${paymentCurrencyFilter}`;
+        const expectedPaymentReferenceParam = `paymentDetailsPaymentReference=${paymentReferenceFilter}`;
+        const expected = `/utilisation-reports/${reportId}?${expectedFacilityIdParam}&${expectedPaymentCurrencyParam}&${expectedPaymentReferenceParam}#payment-details`;
+        expect(href).toEqual(expected);
       });
     });
   });

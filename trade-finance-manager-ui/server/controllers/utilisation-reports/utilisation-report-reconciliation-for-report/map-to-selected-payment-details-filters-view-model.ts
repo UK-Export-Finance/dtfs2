@@ -15,15 +15,20 @@ export const mapToSelectedPaymentDetailsFiltersViewModel = (
   if (!filters.facilityId && !filters.paymentCurrency && !filters.paymentReference) {
     return null;
   }
-  return {
-    facilityId: filters.facilityId
-      ? { value: filters.facilityId, removeHref: getPaymentDetailsTabHref({ ...filters, facilityId: undefined }, reportId) }
-      : null,
-    paymentCurrency: filters.paymentCurrency
-      ? { value: filters.paymentCurrency, removeHref: getPaymentDetailsTabHref({ ...filters, paymentCurrency: undefined }, reportId) }
-      : null,
-    paymentReference: filters.paymentReference
-      ? { value: filters.paymentReference, removeHref: getPaymentDetailsTabHref({ ...filters, paymentReference: undefined }, reportId) }
-      : null,
-  };
+
+  const mapped: SelectedPaymentDetailsFiltersViewModel = {};
+
+  if (filters.facilityId) {
+    mapped.facilityId = { value: filters.facilityId, removeHref: getPaymentDetailsTabHref({ ...filters, facilityId: undefined }, reportId) };
+  }
+
+  if (filters.paymentCurrency) {
+    mapped.paymentCurrency = { value: filters.paymentCurrency, removeHref: getPaymentDetailsTabHref({ ...filters, paymentCurrency: undefined }, reportId) };
+  }
+
+  if (filters.paymentReference) {
+    mapped.paymentReference = { value: filters.paymentReference, removeHref: getPaymentDetailsTabHref({ ...filters, paymentReference: undefined }, reportId) };
+  }
+
+  return mapped;
 };

@@ -188,13 +188,13 @@ describe(page, () => {
       wrapper.expectElement(`div#premium-payments input[type="checkbox"]`).notToExist();
     });
 
-    it('should not display match success notification when param is false', () => {
+    it('should not display "match success notification" when param is false', () => {
       const wrapper = getWrapper({ ...params, displayMatchSuccessNotification: false });
 
       wrapper.expectElement('[data-cy="match-success-notification"]').notToExist();
     });
 
-    it('should display match success notification when param is true', () => {
+    it('should display "match success notification" when param is true', () => {
       const wrapper = getWrapper({ ...params, displayMatchSuccessNotification: true });
 
       wrapper.expectElement('[data-cy="match-success-notification"]').toExist();

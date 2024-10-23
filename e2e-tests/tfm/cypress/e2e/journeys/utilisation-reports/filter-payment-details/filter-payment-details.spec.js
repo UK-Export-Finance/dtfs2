@@ -79,19 +79,19 @@ context(`users can filter payment details by facility id and payment reference a
   });
 
   describe('when no filters are applied', () => {
-    it('should display all the payments attached to the utilisation report', () => {
-      const firstFeeRecord = aFeeRecordWithIdAndFacilityId(1, '11111111');
-      const secondFeeRecord = aFeeRecordWithIdAndFacilityId(2, '22222222');
-      const feeRecords = [firstFeeRecord, secondFeeRecord];
+    const firstFeeRecord = aFeeRecordWithIdAndFacilityId(1, '11111111');
+    const secondFeeRecord = aFeeRecordWithIdAndFacilityId(2, '22222222');
+    const feeRecords = [firstFeeRecord, secondFeeRecord];
 
-      const firstPayment = aPaymentWithIdFeeRecordsAndReference(11, [firstFeeRecord], 'ABCD');
-      const secondPayment = aPaymentWithIdFeeRecordsAndReference(12, [secondFeeRecord], 'EFGH');
-      const payments = [firstPayment, secondPayment];
+    const firstPayment = aPaymentWithIdFeeRecordsAndReference(11, [firstFeeRecord], 'ABCD');
+    const secondPayment = aPaymentWithIdFeeRecordsAndReference(12, [secondFeeRecord], 'EFGH');
+    const payments = [firstPayment, secondPayment];
 
+    const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+
+    beforeEach(() => {
       cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
       cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, payments);
-
-      const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
       cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
       pages.landingPage.visit();
@@ -100,7 +100,9 @@ context(`users can filter payment details by facility id and payment reference a
       cy.visit(`/utilisation-reports/${reportId}`);
 
       paymentDetailsTabLink().click();
+    });
 
+    it('should display all the payments attached to the utilisation report', () => {
       paymentDetailsTable.row(firstPayment.id, firstFeeRecord.id).should('exist');
       cy.assertText(paymentDetailsTable.paymentCurrencyAndAmount(firstPayment.id, firstFeeRecord.id), `${CURRENCY.GBP} 100.00`);
       cy.assertText(paymentDetailsTable.paymentReference(firstPayment.id, firstFeeRecord.id), 'ABCD');
@@ -113,45 +115,31 @@ context(`users can filter payment details by facility id and payment reference a
     });
 
     it('should not display selected filters text', () => {
-      const feeRecord = aFeeRecordWithIdAndFacilityId(1, '11111111');
-      const payment = aPaymentWithIdFeeRecordsAndReference(11, [feeRecord], 'ABCD');
-      cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
-
-      const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([feeRecord]);
-      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
-
-      pages.landingPage.visit();
-      cy.login(USERS.PDC_RECONCILE);
-
-      cy.visit(`/utilisation-reports/${reportId}`);
-
-      paymentDetailsTabLink().click();
-
       filters.panel().should('not.contain', 'Selected filters');
     });
   });
 
   describe('when multiple filters are submitted', () => {
-    it('should only display the payments which match the supplied filters and persist the inputted filter values', () => {
-      const paymentCurrencyFilter = CURRENCY.GBP;
-      const partialPaymentReferenceFilter = 'payment';
-      const partialFacilityIdFilter = '1111';
+    const paymentCurrencyFilter = CURRENCY.GBP;
+    const partialPaymentReferenceFilter = 'payment ref';
+    const partialFacilityIdFilter = '1111';
 
-      const firstFeeRecord = aFeeRecordWithIdAndFacilityId(1, '11111111');
-      const secondFeeRecord = aFeeRecordWithIdAndFacilityId(2, '22222222');
-      const thirdFeeRecord = aFeeRecordWithIdAndFacilityId(3, '11113333');
-      const fourthFeeRecord = aFeeRecordWithIdAndFacilityId(4, '11113333');
-      const feeRecords = [firstFeeRecord, secondFeeRecord, thirdFeeRecord, fourthFeeRecord];
+    const firstFeeRecord = aFeeRecordWithIdAndFacilityId(1, '11111111');
+    const secondFeeRecord = aFeeRecordWithIdAndFacilityId(2, '22222222');
+    const thirdFeeRecord = aFeeRecordWithIdAndFacilityId(3, '11113333');
+    const fourthFeeRecord = aFeeRecordWithIdAndFacilityId(4, '11113333');
+    const feeRecords = [firstFeeRecord, secondFeeRecord, thirdFeeRecord, fourthFeeRecord];
 
-      const firstPayment = aPaymentWithIdFeeRecordsAndReference(11, [firstFeeRecord], 'First payment ref');
-      const secondPayment = aPaymentWithIdFeeRecordsAndReference(12, [secondFeeRecord], 'Second payment ref');
-      const thirdPayment = aPaymentWithIdFeeRecordsAndReference(13, [thirdFeeRecord], 'Third payment ref');
-      const fourthPayment = aPaymentWithIdFeeRecordsAndReference(14, [thirdFeeRecord, fourthFeeRecord], 'Another ref');
+    const firstPayment = aPaymentWithIdFeeRecordsAndReference(11, [firstFeeRecord], 'First payment ref');
+    const secondPayment = aPaymentWithIdFeeRecordsAndReference(12, [secondFeeRecord], 'Second payment ref');
+    const thirdPayment = aPaymentWithIdFeeRecordsAndReference(13, [thirdFeeRecord], 'Third payment ref');
+    const fourthPayment = aPaymentWithIdFeeRecordsAndReference(14, [thirdFeeRecord, fourthFeeRecord], 'Another ref');
 
+    const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+
+    beforeEach(() => {
       cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
       cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [firstPayment, secondPayment, thirdPayment, fourthPayment]);
-
-      const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
       cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
       pages.landingPage.visit();
@@ -166,7 +154,9 @@ context(`users can filter payment details by facility id and payment reference a
       cy.keyboardInput(filters.facilityIdInput(), partialFacilityIdFilter);
 
       filters.submitButton().click();
+    });
 
+    it('should only display the payments which match the supplied filters and persist the inputted filter values', () => {
       cy.url().should(
         'eq',
         relative(
@@ -186,30 +176,6 @@ context(`users can filter payment details by facility id and payment reference a
     });
 
     it('should display all applied filters as selected filters', () => {
-      const paymentCurrencyFilter = CURRENCY.GBP;
-      const paymentReferenceFilter = 'payment ref';
-      const facilityIdFilter = '1111';
-
-      const feeRecord = aFeeRecordWithIdAndFacilityId(1, '11111111');
-      const payment = aPaymentWithIdFeeRecordsAndReference(11, [feeRecord], 'ABCD');
-      cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
-
-      const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([feeRecord]);
-      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
-
-      pages.landingPage.visit();
-      cy.login(USERS.PDC_RECONCILE);
-
-      cy.visit(`/utilisation-reports/${reportId}`);
-
-      paymentDetailsTabLink().click();
-
-      filters.paymentCurrencyRadioInput(paymentCurrencyFilter).click();
-      cy.keyboardInput(filters.paymentReferenceInput(), paymentReferenceFilter);
-      cy.keyboardInput(filters.facilityIdInput(), facilityIdFilter);
-
-      filters.submitButton().click();
-
       filters.panel().should('contain', 'Selected filters');
 
       filters.panel().within(() => {
@@ -219,39 +185,15 @@ context(`users can filter payment details by facility id and payment reference a
       });
 
       cy.assertText(filters.selectedFilter(paymentCurrencyFilter), `Remove this filter ${paymentCurrencyFilter}`);
-      cy.assertText(filters.selectedFilter(paymentReferenceFilter), `Remove this filter ${paymentReferenceFilter}`);
-      cy.assertText(filters.selectedFilter(facilityIdFilter), `Remove this filter ${facilityIdFilter}`);
+      cy.assertText(filters.selectedFilter(partialPaymentReferenceFilter), `Remove this filter ${partialPaymentReferenceFilter}`);
+      cy.assertText(filters.selectedFilter(partialFacilityIdFilter), `Remove this filter ${partialFacilityIdFilter}`);
 
-      cy.assertText(filters.actionBarItem(facilityIdFilter), `Remove this filter ${facilityIdFilter}`);
+      cy.assertText(filters.actionBarItem(partialFacilityIdFilter), `Remove this filter ${partialFacilityIdFilter}`);
       cy.assertText(filters.actionBarItem(paymentCurrencyFilter), `Remove this filter ${paymentCurrencyFilter}`);
-      cy.assertText(filters.actionBarItem(paymentReferenceFilter), `Remove this filter ${paymentReferenceFilter}`);
+      cy.assertText(filters.actionBarItem(partialPaymentReferenceFilter), `Remove this filter ${partialPaymentReferenceFilter}`);
     });
 
     it('should remove all filters when clear filters button clicked', () => {
-      const paymentCurrencyFilter = CURRENCY.GBP;
-      const paymentReferenceFilter = 'payment ref';
-      const facilityIdFilter = '1111';
-
-      const feeRecord = aFeeRecordWithIdAndFacilityId(1, '11111111');
-      const payment = aPaymentWithIdFeeRecordsAndReference(11, [feeRecord], 'ABCD');
-      cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
-
-      const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([feeRecord]);
-      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
-
-      pages.landingPage.visit();
-      cy.login(USERS.PDC_RECONCILE);
-
-      cy.visit(`/utilisation-reports/${reportId}`);
-
-      paymentDetailsTabLink().click();
-
-      filters.paymentCurrencyRadioInput(paymentCurrencyFilter).click();
-      cy.keyboardInput(filters.paymentReferenceInput(), paymentReferenceFilter);
-      cy.keyboardInput(filters.facilityIdInput(), facilityIdFilter);
-
-      filters.submitButton().click();
-
       filters.clearFiltersLink().click();
 
       filters.panel().should('not.contain', 'Selected filters');
@@ -262,30 +204,6 @@ context(`users can filter payment details by facility id and payment reference a
     });
 
     it('should remove selected filter when selected filter clicked and leave other filters in place', () => {
-      const paymentCurrencyFilter = CURRENCY.GBP;
-      const paymentReferenceFilter = 'payment ref';
-      const facilityIdFilter = '1111';
-
-      const feeRecord = aFeeRecordWithIdAndFacilityId(1, '11111111');
-      const payment = aPaymentWithIdFeeRecordsAndReference(11, [feeRecord], 'ABCD');
-      cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
-
-      const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([feeRecord]);
-      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
-
-      pages.landingPage.visit();
-      cy.login(USERS.PDC_RECONCILE);
-
-      cy.visit(`/utilisation-reports/${reportId}`);
-
-      paymentDetailsTabLink().click();
-
-      filters.paymentCurrencyRadioInput(paymentCurrencyFilter).click();
-      cy.keyboardInput(filters.paymentReferenceInput(), paymentReferenceFilter);
-      cy.keyboardInput(filters.facilityIdInput(), facilityIdFilter);
-
-      filters.submitButton().click();
-
       filters.selectedFilter('1111').click();
 
       filters.paymentCurrencyRadioInput(paymentCurrencyFilter).should('be.checked');
@@ -298,10 +216,10 @@ context(`users can filter payment details by facility id and payment reference a
       });
 
       cy.assertText(filters.selectedFilter(paymentCurrencyFilter), `Remove this filter ${paymentCurrencyFilter}`);
-      cy.assertText(filters.selectedFilter(paymentReferenceFilter), `Remove this filter ${paymentReferenceFilter}`);
+      cy.assertText(filters.selectedFilter(partialPaymentReferenceFilter), `Remove this filter ${partialPaymentReferenceFilter}`);
 
       cy.assertText(filters.actionBarItem(paymentCurrencyFilter), `Remove this filter ${paymentCurrencyFilter}`);
-      cy.assertText(filters.actionBarItem(paymentReferenceFilter), `Remove this filter ${paymentReferenceFilter}`);
+      cy.assertText(filters.actionBarItem(partialPaymentReferenceFilter), `Remove this filter ${partialPaymentReferenceFilter}`);
     });
   });
 });
