@@ -107,14 +107,14 @@ describe('mapFacilities', () => {
       {
         _id: MOCK_FACILITIES[0]._id,
         facilitySnapshot: {
-          ...mapFacilitySnapshot(MOCK_FACILITIES[0].facilitySnapshot, mockTfmFacility, mockDealDetails, MOCK_FACILITIES[0]),
+          ...mapFacilitySnapshot(MOCK_FACILITIES[0], mockDealDetails),
         },
         tfm: mapFacilityTfm(mockTfmFacility, MOCK_DEAL_TFM, MOCK_FACILITIES[0]),
       },
       {
         _id: MOCK_FACILITIES[1]._id,
         facilitySnapshot: {
-          ...mapFacilitySnapshot(MOCK_FACILITIES[1].facilitySnapshot, mockTfmFacility, mockDealDetails, MOCK_FACILITIES[1]),
+          ...mapFacilitySnapshot(MOCK_FACILITIES[1], mockDealDetails),
         },
         tfm: mapFacilityTfm(mockTfmFacility, MOCK_DEAL_TFM, MOCK_FACILITIES[1]),
       },

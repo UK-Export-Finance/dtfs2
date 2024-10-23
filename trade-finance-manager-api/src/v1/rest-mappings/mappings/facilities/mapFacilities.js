@@ -4,10 +4,10 @@ const mapFacilityTfm = require('./mapFacilityTfm');
 const mapFacilities = (facilities, dealDetails, dealTfm) => {
   // Map facilities if only they exists
   if (facilities?.length) {
-    const mappedFacilities = facilities.map((f) => ({
-      _id: f._id,
-      facilitySnapshot: mapFacilitySnapshot(f.facilitySnapshot, f.tfm, dealDetails, f),
-      tfm: mapFacilityTfm(f.tfm, dealTfm, f),
+    const mappedFacilities = facilities.map((facility) => ({
+      _id: facility._id,
+      facilitySnapshot: mapFacilitySnapshot(facility, dealDetails),
+      tfm: mapFacilityTfm(facility.tfm, dealTfm, facility),
     }));
 
     return mappedFacilities;

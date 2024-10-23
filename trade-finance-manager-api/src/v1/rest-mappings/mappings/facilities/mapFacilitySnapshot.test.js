@@ -15,7 +15,7 @@ const mapDates = require('./mapDates');
 const MOCK_DEAL = require('../../../__mocks__/mock-deal');
 
 describe('mapFacility', () => {
-  const mockTfmFacility = {
+  const mockFacilityTfm = {
     ukefExposure: '1,234.00',
     ukefExposureCalculationTimestamp: '1606900616651',
     facilityValueInGBP: '12345',
@@ -40,7 +40,7 @@ describe('mapFacility', () => {
   const mockType = 'Bond';
   const mockFacilityStage = 'Unissued';
 
-  const mockFacility = {
+  const mockFacilitySnapshot = {
     _id: '12345678',
     dealId: '100200300',
     ukefFacilityId: '0040004833',
@@ -68,17 +68,17 @@ describe('mapFacility', () => {
     dayCountBasis: '365',
   };
 
-  const mockFacilityFull = {
+  const mockFacility = {
     facilitySnapshot: {
-      ...mockFacility,
+      ...mockFacilitySnapshot,
     },
     tfm: {
-      ...mockTfmFacility,
+      ...mockFacilityTfm,
     },
   };
 
   it('should map and format correct fields/values', () => {
-    const result = mapFacilitySnapshot(mockFacility, mockTfmFacility, mockDealDetails, mockFacilityFull);
+    const result = mapFacilitySnapshot(mockFacility, mockDealDetails);
 
     const expectedCoveredPercentage = `${mockCoveredPercentage}%`;
 
@@ -88,21 +88,21 @@ describe('mapFacility', () => {
 
     const facilityStage = mapFacilityStage(mockFacilityStage);
 
-    const expectedFacilityProduct = mapFacilityProduct(mockFacility.type);
+    const expectedFacilityProduct = mapFacilityProduct(mockFacilitySnapshot.type);
 
     const expectedType = mapFacilityType({
-      ...mockFacility,
+      ...mockFacilitySnapshot,
       facilityProduct: expectedFacilityProduct,
     });
 
     const expectedBanksInterestMargin = mapBanksInterestMargin({
-      ...mockFacility,
+      ...mockFacilitySnapshot,
       facilityProduct: expectedFacilityProduct,
     });
 
     const facilityLatest = {
       facilitySnapshot: {
-        ...mockFacility,
+        ...mockFacilitySnapshot,
         facilityStage,
         facilityProduct: expectedFacilityProduct,
       },
@@ -110,33 +110,33 @@ describe('mapFacility', () => {
 
     const expectedFirstDrawdownAmountInExportCurrency = mapFirstDrawdownAmountInExportCurrency(facilityLatest.facilitySnapshot);
 
-    const expectedDates = mapDates(facilityLatest, facilityLatest.facilitySnapshot, mockTfmFacility, mockDealDetails);
+    const expectedDates = mapDates(facilityLatest, facilityLatest.facilitySnapshot, mockFacilityTfm, mockDealDetails);
 
     const expected = {
-      _id: mockFacility._id,
+      _id: mockFacilitySnapshot._id,
       isGef: false,
-      dealId: mockFacility.dealId,
-      ukefFacilityId: mockFacility.ukefFacilityId,
+      dealId: mockFacilitySnapshot.dealId,
+      ukefFacilityId: mockFacilitySnapshot.ukefFacilityId,
       type: expectedType,
       ukefFacilityType: mockType,
       facilityProduct: expectedFacilityProduct,
       facilityStage: mapFacilityStage(mockFacilityStage),
-      hasBeenIssued: mockFacility.hasBeenIssued,
+      hasBeenIssued: mockFacilitySnapshot.hasBeenIssued,
       coveredPercentage: expectedCoveredPercentage,
-      value: mapFacilityValue(mockFacility.currency.id, formattedFacilityValue, mockFacilityFull),
-      currency: mockFacility.currency.id,
+      value: mapFacilityValue(mockFacilitySnapshot.currency.id, formattedFacilityValue, mockFacility),
+      currency: mockFacilitySnapshot.currency.id,
       facilityValueExportCurrency: expectedFacilityValueExportCurrency,
-      ukefExposure: `${mockFacility.currency.id} ${mockFacility.ukefExposure}`,
-      bankFacilityReference: mapBankFacilityReference(mockFacility),
-      guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(mockFacility.guaranteeFeePayableByBank, 4),
+      ukefExposure: `${mockFacilitySnapshot.currency.id} ${mockFacilitySnapshot.ukefExposure}`,
+      bankFacilityReference: mapBankFacilityReference(mockFacilitySnapshot),
+      guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(mockFacilitySnapshot.guaranteeFeePayableByBank, 4),
       banksInterestMargin: expectedBanksInterestMargin,
       firstDrawdownAmountInExportCurrency: expectedFirstDrawdownAmountInExportCurrency,
       feeType: mapFeeType(facilityLatest.facilitySnapshot),
       feeFrequency: mapFeeFrequency(facilityLatest.facilitySnapshot),
-      dayCountBasis: Number(mockFacility.dayCountBasis),
+      dayCountBasis: Number(mockFacilitySnapshot.dayCountBasis),
       dates: expectedDates,
-      bondIssuer: mockFacility.bondIssuer,
-      bondBeneficiary: mockFacility.bondBeneficiary,
+      bondIssuer: mockFacilitySnapshot.bondIssuer,
+      bondBeneficiary: mockFacilitySnapshot.bondBeneficiary,
     };
 
     expect(result).toEqual(expected);

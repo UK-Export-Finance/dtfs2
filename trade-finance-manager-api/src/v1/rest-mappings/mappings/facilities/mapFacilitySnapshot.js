@@ -18,9 +18,7 @@ const mapFacilityValueExportCurrency = require('./mapFacilityValueExportCurrency
  * Note: This implementation modifies the facility snapshot to have values not consistent with the facility snapshot in the database.
  * In particular, this is a live object that updates e.g. when amendments are added in TFM.
  */
-const mapFacilitySnapshot = (facility, dealSnapshot) => {
-  const dealDetails = dealSnapshot.details;
-
+const mapFacilitySnapshot = (facility, dealDetails) => {
   const { facilitySnapshot, tfm: facilityTfm } = facility;
 
   // Ensure facility is valid
