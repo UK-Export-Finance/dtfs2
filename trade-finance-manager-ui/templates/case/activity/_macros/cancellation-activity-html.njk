@@ -1,21 +1,22 @@
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
-{% macro cancellationActivityHtml(activity) %}
+{% macro render(activity) %}
   {% set bankRequestDate = activity.bankRequestDate | formatUnixTimestamp('d MMMM yyyy') | dashIfEmpty%}
   {% set effectiveFrom = activity.effectiveFrom | formatUnixTimestamp('d MMMM yyyy') | dashIfEmpty%}
   {% set reason = activity.reason | dashIfEmpty%}
 
-  <p> Deal stage:
+  <p data-cy="deal-stage">
+    Deal stage:
     {{ govukTag({
       text: "Cancelled",
-      classes: "govuk-tag--red"
+      classes: "govuk-tag--red",
+      attributes: {
+        'data-cy': 'cancelled-tag'
+      }
     })}}
-    <br/><br/>
-    Bank request date: {{ bankRequestDate }}, 
-    <br/><br/>
-    Date effective from: {{ effectiveFrom }}
-    <br/><br/>
-    Comments: {{ reason }}
   </p>
+  <p data-cy="bank-request-date">Bank request date: {{ bankRequestDate }}</p>
+  <p data-cy="date-effective-from">Date effective from: {{ effectiveFrom }}</p>
+  <p data-cy="cancellation-comments">Comments: {{ reason }}</p>
 
 {% endmacro %}

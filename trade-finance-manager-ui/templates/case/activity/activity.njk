@@ -3,7 +3,7 @@
 {% import './_macros/activity-comment-filter.njk' as activityCommentFilter %}
 {% import '../amendments/_macros/amendment-in-progress-bar.njk' as amendmentInProgressBar %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "./_macros/cancellation-activity-item-html.njk" import cancellationActivityHtml %}
+{% import  "./_macros/cancellation-activity-html.njk" as cancellationActivityHtml %}
 
 {% extends "case/case.njk" %}
 
@@ -17,7 +17,7 @@
   {% if activity.type === 'CANCELLATION' %}
     {{ items.push({
       label: activity.label,
-      html: cancellationActivityHtml(activity),
+      html: cancellationActivityHtml.render(activity),
       datetime: activity.datetime,
       byline: activity.byline
     }) }}
