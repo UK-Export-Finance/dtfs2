@@ -30,6 +30,14 @@ describe('tfm-deals-cancellation-repo', () => {
   const updateOneMock = jest.fn();
   const getCollectionMock = jest.fn();
 
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   afterEach(() => {
     jest.resetAllMocks();
   });
