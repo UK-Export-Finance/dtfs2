@@ -1,5 +1,7 @@
 const { format, parseISO } = require('date-fns');
-const { DATE_FORMATS } = require('@ukef/dtfs2-common');
+const {
+  DATE_FORMATS: { DO_MMMM_YYYY },
+} = require('@ukef/dtfs2-common');
 const getFacilitiesByType = require('../../helpers/get-facilities-by-type');
 const { generateHeadingString, generateListItemString } = require('../../helpers/notify-template-formatters');
 const CONSTANTS = require('../../../constants');
@@ -55,11 +57,11 @@ const facilityFieldsObj = ({
   ukefFacilityId,
   bankReference,
   hasBeenIssued: hasBeenIssued && mapIssuedValue(hasBeenIssued),
-  coverStartDate: coverStartDate && format(Number(coverStartDate), DATE_FORMATS.DO_MMMM_YYYY),
-  coverEndDate: coverEndDate && format(parseISO(coverEndDate), DATE_FORMATS.DO_MMMM_YYYY),
+  coverStartDate: coverStartDate && format(Number(coverStartDate), DO_MMMM_YYYY),
+  coverEndDate: coverEndDate && format(parseISO(coverEndDate), DO_MMMM_YYYY),
   isUsingFacilityEndDate: mapBooleanToYesOrNo(isUsingFacilityEndDate),
-  facilityEndDate: facilityEndDate && format(parseISO(facilityEndDate), DATE_FORMATS.DO_MMMM_YYYY),
-  bankReviewDate: bankReviewDate && format(parseISO(bankReviewDate), DATE_FORMATS.DO_MMMM_YYYY),
+  facilityEndDate: facilityEndDate && format(parseISO(facilityEndDate), DO_MMMM_YYYY),
+  bankReviewDate: bankReviewDate && format(parseISO(bankReviewDate), DO_MMMM_YYYY),
   value,
   currencyCode,
   coverPercentage: coverPercentage && `${coverPercentage}%`,

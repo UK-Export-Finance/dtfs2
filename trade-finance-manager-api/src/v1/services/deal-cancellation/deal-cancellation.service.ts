@@ -6,6 +6,8 @@ import * as api from '../../api';
 import { formatFacilityIds } from './helpers/format-facility-ids';
 import { UKEF_ID } from '../../../constants/deals';
 
+const { D_MMMM_YYYY } = DATE_FORMATS;
+
 export class DealCancellationService {
   /**
    * Sends email to PIM email address confirming the cancellation has been submitted
@@ -26,8 +28,8 @@ export class DealCancellationService {
 
     const emailTemplateId = isAfter(effectiveFromDate, endOfToday) ? CANCEL_DEAL_FUTURE_DATE : CANCEL_DEAL_PAST_DATE;
 
-    const formattedEffectiveFromDate = format(dealCancellation.effectiveFrom, DATE_FORMATS.D_MMMM_YYYY);
-    const formattedBankRequestDate = format(dealCancellation.bankRequestDate, DATE_FORMATS.D_MMMM_YYYY);
+    const formattedEffectiveFromDate = format(dealCancellation.effectiveFrom, D_MMMM_YYYY);
+    const formattedBankRequestDate = format(dealCancellation.bankRequestDate, D_MMMM_YYYY);
 
     await sendTfmEmail(emailTemplateId, pimEmail, {
       ukefDealId,
