@@ -7,6 +7,9 @@ const filter = (activities, FILTER_VALUE) => activities.filter((activity) => act
 
 const filterByComment = (activities) => filter(activities, 'COMMENT');
 
+/**
+ * filters activities
+ */
 const filterActivities = (activities, filtersObj) => {
   if (!filtersObj?.filterType || filtersObj?.filterType === FILTER_TYPE.ALL) {
     return activities;
