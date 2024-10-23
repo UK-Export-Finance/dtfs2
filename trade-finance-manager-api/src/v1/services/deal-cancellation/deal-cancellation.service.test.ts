@@ -3,9 +3,9 @@ import { add, format } from 'date-fns';
 import { CANCEL_DEAL_FUTURE_DATE, CANCEL_DEAL_PAST_DATE } from '../../../constants/email-template-ids';
 import sendTfmEmail from '../send-tfm-email';
 import { DealCancellationService } from './deal-cancellation.service';
+import { formatFacilityIds } from './helpers/format-facility-ids';
 
 const mockPimEmailAddress = 'pim@example.com';
-const mockFormattedFacilities = 'mock formatted facilities';
 const ukefDealId = 'ukefDealId';
 const ukefFacilityIds = ['aFacilityId'];
 
@@ -20,10 +20,6 @@ jest.mock('../../api', () => ({
       },
     })),
   ),
-}));
-
-jest.mock('./helpers/format-facility-ids', () => ({
-  formatFacilityIds: jest.fn(() => mockFormattedFacilities),
 }));
 
 const dealId = 'dealId';
@@ -56,7 +52,7 @@ describe('deal cancellation service', () => {
           cancelReason: dealCancellation.reason,
           bankRequestDate: format(today, 'dd MMMM yyyy'),
           effectiveFromDate: format(tomorrow, 'dd MMMM yyyy'),
-          formattedFacilitiesList: mockFormattedFacilities,
+          formattedFacilitiesList: formatFacilityIds(ukefFacilityIds),
           ukefDealId,
         });
       });
@@ -77,7 +73,7 @@ describe('deal cancellation service', () => {
           cancelReason: dealCancellation.reason,
           bankRequestDate: format(today, 'dd MMMM yyyy'),
           effectiveFromDate: format(today, 'dd MMMM yyyy'),
-          formattedFacilitiesList: mockFormattedFacilities,
+          formattedFacilitiesList: formatFacilityIds(ukefFacilityIds),
           ukefDealId,
         });
       });
@@ -105,7 +101,7 @@ describe('deal cancellation service', () => {
           cancelReason: dealCancellation.reason,
           bankRequestDate: format(today, 'dd MMMM yyyy'),
           effectiveFromDate: format(tomorrow, 'dd MMMM yyyy'),
-          formattedFacilitiesList: mockFormattedFacilities,
+          formattedFacilitiesList: formatFacilityIds(ukefFacilityIds),
           ukefDealId,
         });
       });
@@ -127,7 +123,7 @@ describe('deal cancellation service', () => {
           cancelReason: dealCancellation.reason,
           bankRequestDate: format(today, 'dd MMMM yyyy'),
           effectiveFromDate: format(today, 'dd MMMM yyyy'),
-          formattedFacilitiesList: mockFormattedFacilities,
+          formattedFacilitiesList: formatFacilityIds(ukefFacilityIds),
           ukefDealId,
         });
       });
