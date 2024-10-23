@@ -121,7 +121,7 @@ context(`users can filter payment details by facility id and payment reference a
 
   describe('when multiple filters are submitted', () => {
     const paymentCurrencyFilter = CURRENCY.GBP;
-    const partialPaymentReferenceFilter = 'payment ref';
+    const partialPaymentReferenceFilter = 'payment';
     const partialFacilityIdFilter = '1111';
 
     const firstFeeRecord = aFeeRecordWithIdAndFacilityId(1, '11111111');
@@ -207,7 +207,7 @@ context(`users can filter payment details by facility id and payment reference a
       filters.selectedFilter('1111').click();
 
       filters.paymentCurrencyRadioInput(paymentCurrencyFilter).should('be.checked');
-      filters.paymentReferenceInput().should('have.value', 'payment ref');
+      filters.paymentReferenceInput().should('have.value', partialPaymentReferenceFilter);
       filters.facilityIdInput().should('have.value', '');
 
       filters.panel().within(() => {
