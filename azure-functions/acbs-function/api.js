@@ -1,13 +1,64 @@
 /**
- * ACBS durable functions API library deals with following HTTP methods:
- *
+ * ACBS Durable Functions API Library
+ * ----------------------------------
+ * This module provides a set of functions to interact with the ACBS system using HTTP methods.
+ * The supported HTTP methods are:
  * 1. GET
  * 2. POST
  * 3. PUT
  * 4. PATCH
  *
- * All of the function have argument validation check and return object verification in
- * case error object does not have expected properties due to network connection, SSL verification or other issues.
+ * Each function includes argument validation and error handling to ensure robust API interactions.
+ * In case of errors such as network issues or SSL verification failures, the functions return a standardized error object.
+ *
+ * Environment Variables
+ * ---------------------
+ * - `APIM_TFS_URL`: The base URL for the TFS API.
+ * - `APIM_MDM_URL`: The base URL for the MDM API.
+ * - `APIM_TFS_KEY`: The key for the TFS API.
+ * - `APIM_TFS_VALUE`: The value for the TFS API key.
+ * - `APIM_MDM_KEY`: The key for the MDM API.
+ * - `APIM_MDM_VALUE`: The value for the MDM API key.
+ *
+ * Constants
+ * ---------
+ * - `HEADERS`: Contains the headers used for API requests.
+ *
+ * Functions
+ * ---------
+ * - `get`: Invokes a TFS GET endpoint.
+ * - `post`: Invokes a TFS POST endpoint.
+ * - `postMdm`: Invokes an MDM POST endpoint.
+ * - `put`: Invokes a TFS PUT endpoint.
+ * - `patch`: Invokes a TFS PATCH endpoint.
+ *
+ * MDM Functions
+ * -------------
+ * - `createFacilityCovenantId`: Creates a facility covenant ID using the MDM POST endpoint.
+ *
+ * TFS Functions
+ * -------------
+ * - `getFacility`: Retrieves a facility by its ID using the TFS GET endpoint.
+ * - `getLoanId`: Retrieves the loan ID for a given facility ID using the TFS GET endpoint.
+ * - `createParty`: Creates a party using the TFS POST endpoint.
+ * - `createDeal`: Creates a deal using the TFS POST endpoint.
+ * - `createDealInvestor`: Creates a deal investor using the TFS POST endpoint.
+ * - `createDealGuarantee`: Creates a deal guarantee using the TFS POST endpoint.
+ * - `createFacility`: Creates a facility using the TFS POST endpoint.
+ * - `createFacilityInvestor`: Creates a facility investor using the TFS POST endpoint.
+ * - `createFacilityCovenant`: Creates a facility covenant using the TFS POST endpoint.
+ * - `createFacilityGuarantee`: Creates a facility guarantee using the TFS POST endpoint.
+ * - `createCodeValueTransaction`: Creates a code value transaction using the TFS POST endpoint.
+ * - `createFacilityLoan`: Creates a facility loan using the TFS POST endpoint.
+ * - `createFacilityFee`: Creates a facility fee using the TFS POST endpoint.
+ * - `updateFacilityLoanAmount`: Updates the facility loan amount using the TFS POST endpoint.
+ * - `updateFacilityFixedFeeAmount`: Updates the facility fixed fee amount using the TFS POST endpoint.
+ * - `updateFacility`: Updates a facility using the TFS PUT endpoint.
+ * - `updateFacilityLoan`: Updates a facility loan using the TFS PATCH endpoint.
+ * - `updateFacilityCovenant`: Updates a facility covenant using the TFS PATCH endpoint.
+ * - `updateFacilityGuarantee`: Updates a facility guarantee using the TFS PATCH endpoint.
+ *
+ * @module api
  */
 
 require('dotenv').config();
@@ -221,7 +272,7 @@ const getLoanId = async (facilityIdentifier) => get(`facilities/${facilityIdenti
 // POST
 
 /**
- * Creates a party record in the TFS system.
+ * Creates a party record in the ACBS.
  *
  * @param {Object} payload - The payload containing the details for creating the party.
  * @returns {Promise<Object>} - The response from the TFS API.
@@ -229,7 +280,7 @@ const getLoanId = async (facilityIdentifier) => get(`facilities/${facilityIdenti
 const createParty = async (payload) => post('parties', payload);
 
 /**
- * Creates a deal record in the TFS system.
+ * Creates a deal record in the ACBS.
  *
  * @param {Object} payload - The payload containing the details for creating the deal.
  * @returns {Promise<Object>} - The response from the TFS API.
@@ -237,7 +288,7 @@ const createParty = async (payload) => post('parties', payload);
 const createDeal = async (payload) => post('deals', payload);
 
 /**
- * Creates a deal investor record in the TFS system.
+ * Creates a deal investor record in the ACBS.
  *
  * @param {string} dealIdentifier - The identifier of the deal.
  * @param {Object} payload - The payload containing the details for creating the deal investor.
@@ -246,7 +297,7 @@ const createDeal = async (payload) => post('deals', payload);
 const createDealInvestor = async (dealIdentifier, payload) => post(`deals/${dealIdentifier}/investors`, payload);
 
 /**
- * Creates a deal guarantee record in the TFS system.
+ * Creates a deal guarantee record in the ACBS.
  *
  * @param {string} dealIdentifier - The identifier of the deal.
  * @param {Object} payload - The payload containing the details for creating the deal guarantee.
@@ -255,7 +306,7 @@ const createDealInvestor = async (dealIdentifier, payload) => post(`deals/${deal
 const createDealGuarantee = async (dealIdentifier, payload) => post(`deals/${dealIdentifier}/guarantees`, payload);
 
 /**
- * Creates a facility record in the TFS system.
+ * Creates a facility record in the ACBS.
  *
  * @param {Object} payload - The payload containing the details for creating the facility.
  * @returns {Promise<Object>} - The response from the TFS API.
@@ -263,7 +314,7 @@ const createDealGuarantee = async (dealIdentifier, payload) => post(`deals/${dea
 const createFacility = async (payload) => post('facilities', payload);
 
 /**
- * Creates a facility investor record in the TFS system.
+ * Creates a facility investor record in the ACBS.
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
  * @param {Object} payload - The payload containing the details for creating the facility investor.
@@ -272,7 +323,7 @@ const createFacility = async (payload) => post('facilities', payload);
 const createFacilityInvestor = async (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/investors`, payload);
 
 /**
- * Creates a facility covenant record in the TFS system.
+ * Creates a facility covenant record in the ACBS.
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
  * @param {Object} payload - The payload containing the details for creating the facility covenant.
@@ -281,7 +332,7 @@ const createFacilityInvestor = async (facilityIdentifier, payload) => post(`faci
 const createFacilityCovenant = async (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/covenants`, payload);
 
 /**
- * Creates a facility guarantee record in the TFS system.
+ * Creates a facility guarantee record in the ACBS.
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
  * @param {Object} payload - The payload containing the details for creating the facility guarantee.
@@ -290,7 +341,7 @@ const createFacilityCovenant = async (facilityIdentifier, payload) => post(`faci
 const createFacilityGuarantee = async (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/guarantees`, payload);
 
 /**
- * Creates a code value transaction record for a facility in the TFS system.
+ * Creates a code value transaction record for a facility in the ACBS.
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
  * @param {Object} payload - The payload containing the details for creating the code value transaction.
@@ -299,7 +350,7 @@ const createFacilityGuarantee = async (facilityIdentifier, payload) => post(`fac
 const createCodeValueTransaction = async (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/activation-transactions`, payload);
 
 /**
- * Creates a facility loan record in the TFS system.
+ * Creates a facility loan record in the ACBS.
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
  * @param {Object} payload - The payload containing the details for creating the facility loan.
@@ -308,7 +359,7 @@ const createCodeValueTransaction = async (facilityIdentifier, payload) => post(`
 const createFacilityLoan = async (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/loans`, payload);
 
 /**
- * Creates a facility fee record in the TFS system.
+ * Creates a facility fee record in the ACBS.
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
  * @param {Object} payload - The payload containing the details for creating the facility fee.
@@ -317,7 +368,7 @@ const createFacilityLoan = async (facilityIdentifier, payload) => post(`faciliti
 const createFacilityFee = async (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/fixed-fees`, payload);
 
 /**
- * Updates the loan amount for a facility in the TFS system.
+ * Updates the loan amount for a facility in the ACBS.
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
  * @param {string} loanId - The identifier of the loan.
@@ -330,7 +381,7 @@ const updateFacilityLoanAmount = async (facilityIdentifier, loanId, payload) =>
 // PUT
 
 /**
- * Updates a facility record in the TFS system.
+ * Updates a facility record in the ACBS.
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
  * @param {string} updateType - The type of update to be performed.
@@ -343,7 +394,7 @@ const updateFacility = async (facilityIdentifier, updateType, payload, etag) => 
 // PATCH
 
 /**
- * Updates a facility loan record in the TFS system.
+ * Updates a facility loan record in the ACBS.
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
  * @param {string} loanId - The identifier of the loan.
@@ -353,7 +404,7 @@ const updateFacility = async (facilityIdentifier, updateType, payload, etag) => 
 const updateFacilityLoan = async (facilityIdentifier, loanId, payload) => patch(`facilities/${facilityIdentifier}/loans/${loanId}`, payload);
 
 /**
- * Updates a facility covenant record in the TFS system.
+ * Updates a facility covenant record in the ACBS.
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
  * @param {Object} payload - The payload containing the details for updating the facility covenant.
@@ -362,13 +413,22 @@ const updateFacilityLoan = async (facilityIdentifier, loanId, payload) => patch(
 const updateFacilityCovenant = async (facilityIdentifier, payload) => patch(`facilities/${facilityIdentifier}/covenants`, payload);
 
 /**
- * Updates a facility guarantee record in the TFS system.
+ * Updates a facility guarantee record in the ACBS.
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
  * @param {Object} payload - The payload containing the details for updating the facility guarantee.
  * @returns {Promise<Object>} - The response from the TFS API.
  */
 const updateFacilityGuarantee = async (facilityIdentifier, payload) => patch(`facilities/${facilityIdentifier}/guarantees`, payload);
+
+/**
+ * Updates a facility fixed fee (premium schedule) record in ACBS.
+ *
+ * @param {string} facilityIdentifier - The identifier of the facility.
+ * @param {Object} payload - The payload containing the details for updating the facility fixed fee.
+ * @returns {Promise<Object>} - The response from the TFS API.
+ */
+const updateFacilityFixedFeeAmount = (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/fixed-fees/amendments/amount`, payload);
 
 module.exports = {
   getFacility,
@@ -390,4 +450,5 @@ module.exports = {
   updateFacilityLoanAmount,
   updateFacilityCovenant,
   updateFacilityGuarantee,
+  updateFacilityFixedFeeAmount,
 };

@@ -30,6 +30,37 @@ const helpers = require('./helpers');
 const CONSTANTS = require('../../constants');
 const getDealSubmissionDate = require('../deal/helpers/get-deal-submission-date');
 
+/**
+ * Constructs the facility master record for a given deal and facility.
+ *
+ * This function performs the following operations:
+ * 1. Extracts the guarantee expiry date and effective date from the facility's guarantee dates.
+ * 2. Retrieves the issue date based on the facility and deal submission date.
+ * 3. Determines the facility stage code based on the facility snapshot and deal type.
+ * 4. Retrieves the currency of the facility, defaulting to a constant if not provided.
+ * 5. Constructs and returns the facility master record object with the necessary fields.
+ *
+ * @param {Object} deal - The deal object containing deal details.
+ * @param {Object} deal._id - The unique identifier of the deal.
+ * @param {Object} deal.dealSnapshot - The snapshot of the deal details.
+ * @param {string} deal.dealSnapshot.dealType - The type of the deal (e.g., GEF, BSS_EWCS).
+ * @param {string} deal.dealSnapshot.submissionType - The submission type of the deal.
+ * @param {Object} facility - The facility object containing facility details.
+ * @param {Object} facility.tfm - The TFM-specific details of the facility.
+ * @param {Object} facility.tfm.facilityGuaranteeDates - The guarantee dates of the facility.
+ * @param {Object} facility.facilitySnapshot - The snapshot of the facility details.
+ * @param {string} facility.facilitySnapshot.ukefFacilityId - The UKEF facility ID.
+ * @param {Object} facility.facilitySnapshot.currency - The currency details of the facility.
+ * @param {Object} acbsData - The ACBS data containing party identifiers and other details.
+ * @param {Object} acbsData.deal - The ACBS deal details.
+ * @param {string} acbsData.deal.dealIdentifier - The ACBS deal identifier.
+ * @param {Object} acbsData.parties - The parties involved in the deal.
+ * @param {Object} acbsData.parties.exporter - The exporter party details.
+ * @param {string} acbsData.parties.exporter.partyIdentifier - The party identifier of the exporter.
+ * @param {Object} acbsReference - The ACBS reference data.
+ * @returns {Object} - The constructed facility master record, including deal identifier, facility identifier, borrower identifier, maximum liability, product type ID, capital conversion factor code, product type name, currency, guarantee expiry date, next quarter end date, delegation type, interest or fee rate, facility stage code, exposure period, credit rating code, premium frequency code, risk country code, risk status code, effective date, forecast percentage, and issue date.
+ * @throws {Error} - Logs the error and returns an empty object if any error occurs during the construction process.
+ */
 const facilityMaster = (deal, facility, acbsData, acbsReference) => {
   try {
     const { guaranteeExpiryDate, effectiveDate } = facility.tfm.facilityGuaranteeDates;

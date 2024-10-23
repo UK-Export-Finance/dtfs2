@@ -1,7 +1,7 @@
 /**
  *
  * Facility loan `amount` amendment DAF
- * **********************************
+ * ************************************
  * This DAF (Durable Activity Function) is never invoked directly.
  * It is invoked via DOF (Durable Orchestrator Function).
  *
@@ -15,21 +15,15 @@
  * HTTP -> DOF -> DAF
  * ------------------
  */
+
 const df = require('durable-functions');
-const { getNowAsIsoString } = require('../../helpers/date');
 const api = require('../../api');
+const { getNowAsIsoString } = require('../../helpers/date');
 const { isHttpErrorStatus } = require('../../helpers/http');
 const { findMissingMandatory } = require('../../helpers/mandatoryFields');
 
-const mandatoryFields = ['effectiveDate', 'amountAmendment'];
-
 /**
- * This function is used to update the loan amount of a facility. It first checks if the payload is valid and contains all mandatory fields.
- * If the payload is valid, it sends a request to the API to update the facility loan amount.
- * If the API request is successful, it returns an object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
- * If the API request fails, it throws an error with details about the request and the error.
- * If the payload is not valid or does not contain all mandatory fields, it returns an object with the missing mandatory fields.
- * If any other error occurs, it logs the error and throws a new error.
+ * Handles the amendment of a facility loan amount in the ACBS system.
  *
  * @param {Object} payload - The payload containing the loanId, facilityIdentifier, and acbsFacilityLoanInput.
  * @param {string} payload.loanId - The ID of the loan.
@@ -44,6 +38,7 @@ const handler = async (payload) => {
       throw new Error('Invalid facility loan amount amendment payload');
     }
 
+    const mandatoryFields = ['effectiveDate', 'amountAmendment'];
     const { loanId, facilityIdentifier, acbsFacilityLoanInput } = payload;
 
     const missingMandatory = findMissingMandatory(acbsFacilityLoanInput, mandatoryFields);

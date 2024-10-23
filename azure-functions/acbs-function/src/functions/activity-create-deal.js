@@ -1,30 +1,28 @@
 const df = require('durable-functions');
-const { getNowAsIsoString } = require('../../helpers/date');
 const api = require('../../api');
+const { getNowAsIsoString } = require('../../helpers/date');
 const { isHttpErrorStatus } = require('../../helpers/http');
 const { findMissingMandatory } = require('../../helpers/mandatoryFields');
 
-const mandatoryFields = [
-  'dealIdentifier',
-  'currency',
-  'dealValue',
-  'guaranteeCommencementDate',
-  'obligorPartyIdentifier',
-  'obligorName',
-  'obligorIndustryClassification',
-];
-
 /**
- * This function is used to create a deal record. It first checks if the payload is valid and contains all mandatory fields.
- * If the payload is valid, it sends a request to the API to create the deal record.
- * If the API request is successful, it returns an object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
- * If the API request fails, it throws an error with details about the request and the error.
- * If the payload is not valid or does not contain all mandatory fields, it returns an object with the missing mandatory fields.
- * If any other error occurs, it logs the error and throws a new error.
+ * Handles the creation of a deal master record in the ACBS system.
  *
- * @param {Object} payload - The payload containing the deal details.
- * @returns {Object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
- * @throws {Error} - Throws an error if the payload is invalid, if the API request fails, or if any other error occurs.
+ * This function performs the following operations:
+ * 1. Validates the input payload.
+ * 2. Checks for missing mandatory fields in the payload.
+ * 3. Submits the creation request to the ACBS system.
+ * 4. Handles the response from the ACBS system and returns the result.
+ *
+ * @param {Object} payload - The input payload containing the deal details.
+ * @param {string} payload.dealIdentifier - The identifier of the deal.
+ * @param {string} payload.currency - The currency of the deal.
+ * @param {number} payload.dealValue - The value of the deal.
+ * @param {string} payload.guaranteeCommencementDate - The commencement date of the guarantee.
+ * @param {string} payload.obligorPartyIdentifier - The identifier of the obligor party.
+ * @param {string} payload.obligorName - The name of the obligor.
+ * @param {string} payload.obligorIndustryClassification - The industry classification of the obligor.
+ * @returns {Object} - The result of the deal creation, including status, timestamps, and data sent/received.
+ * @throws {Error} - Throws an error if the input payload is invalid, if there are missing mandatory fields, or if there is an error during the creation process.
  */
 const handler = async (payload) => {
   try {
@@ -32,6 +30,15 @@ const handler = async (payload) => {
       throw new Error('Invalid deal master record payload');
     }
 
+    const mandatoryFields = [
+      'dealIdentifier',
+      'currency',
+      'dealValue',
+      'guaranteeCommencementDate',
+      'obligorPartyIdentifier',
+      'obligorName',
+      'obligorIndustryClassification',
+    ];
     const missingMandatory = findMissingMandatory(payload, mandatoryFields);
 
     if (missingMandatory.length) {

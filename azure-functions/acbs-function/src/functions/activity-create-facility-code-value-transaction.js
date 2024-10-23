@@ -1,24 +1,23 @@
 const df = require('durable-functions');
-const { getNowAsIsoString } = require('../../helpers/date');
 const api = require('../../api');
+const { getNowAsIsoString } = require('../../helpers/date');
 const { isHttpErrorStatus } = require('../../helpers/http');
 const { findMissingMandatory } = require('../../helpers/mandatoryFields');
 
-const mandatoryFields = ['lenderTypeCode', 'initialBundleStatusCode', 'facilityTransactionCodeValueCode'];
-
 /**
- * This function is used to create a facility code value transaction record. It first checks if the payload is valid and contains all mandatory fields.
- * If the payload is valid, it sends a request to the API to create the facility code value transaction record.
- * If the API request is successful, it returns an object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
- * If the API request fails, it throws an error with details about the request and the error.
- * If the payload is not valid or does not contain all mandatory fields, it returns an object with the missing mandatory fields.
- * If any other error occurs, it logs the error and throws a new error.
+ * Handles the creation of a facility code value transaction record in the ACBS system.
  *
- * @param {Object} payload - The payload containing the facilityIdentifier and acbsCodeValueTransactionInput.
+ * This function performs the following operations:
+ * 1. Validates the input payload.
+ * 2. Checks for missing mandatory fields in the ACBS code value transaction input.
+ * 3. Submits the creation request to the ACBS system.
+ * 4. Handles the response from the ACBS system and returns the result.
+ *
+ * @param {Object} payload - The input payload containing the facility identifier and ACBS code value transaction input.
  * @param {string} payload.facilityIdentifier - The identifier of the facility.
- * @param {Object} payload.acbsCodeValueTransactionInput - The acbsCodeValueTransactionInput object containing the mandatory fields.
- * @returns {Object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
- * @throws {Error} - Throws an error if the payload is invalid, if the API request fails, or if any other error occurs.
+ * @param {Object} payload.acbsCodeValueTransactionInput - The ACBS code value transaction input details.
+ * @returns {Object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API, or an object with the missing mandatory fields.
+ * @throws {Error} - Throws an error if the payload is invalid, if there are missing mandatory fields, if the API request fails, or if any other error occurs.
  */
 const handler = async (payload) => {
   try {
@@ -27,7 +26,7 @@ const handler = async (payload) => {
     }
 
     const { facilityIdentifier, acbsCodeValueTransactionInput } = payload;
-
+    const mandatoryFields = ['lenderTypeCode', 'initialBundleStatusCode', 'facilityTransactionCodeValueCode'];
     const missingMandatory = findMissingMandatory(acbsCodeValueTransactionInput, mandatoryFields);
 
     if (missingMandatory.length) {

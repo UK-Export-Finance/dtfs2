@@ -1,57 +1,11 @@
-/*
- * Facility master record update DAF
- * **********************************
- * This DAF (Durable Activity Function) is never invoked directly.
- * It is invoked via DOF (Durable Orchestrator Function).
- *
- * Pre-requisites
- * --------------
- * 0. 'npm install durable-functions'
- * 1. Durable  HTTP trigger function (acbs-http)
- * 2. Durable Orchestrator function (DOF) (acbs-issue-facility)
- *
- * ------------------
- * HTTP -> DOF -> DAF
- * ------------------
- */
 const df = require('durable-functions');
-const { getNowAsIsoString } = require('../../helpers/date');
 const api = require('../../api');
+const { getNowAsIsoString } = require('../../helpers/date');
 const { isHttpErrorStatus } = require('../../helpers/http');
 const { findMissingMandatory } = require('../../helpers/mandatoryFields');
 
-const mandatoryFields = [
-  'dealIdentifier',
-  'facilityIdentifier',
-  'dealBorrowerIdentifier',
-  'maximumLiability',
-  'productTypeId',
-  'productTypeName',
-  'currency',
-  'guaranteeExpiryDate',
-  'nextQuarterEndDate',
-  'delegationType',
-  'interestOrFeeRate',
-  'facilityStageCode',
-  'exposurePeriod',
-  'creditRatingCode',
-  'premiumFrequencyCode',
-  'riskCountryCode',
-  'riskStatusCode',
-  'effectiveDate',
-  'forecastPercentage',
-  'agentBankIdentifier',
-  'obligorPartyIdentifier',
-  'obligorIndustryClassification',
-];
-
 /**
- * This function is used to update a facility. It first checks if the payload is valid and contains all mandatory fields.
- * If the payload is valid, it sends a request to the API to update the facility.
- * If the API request is successful, it returns an object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
- * If the API request fails, it throws an error with details about the request and the error.
- * If the payload is not valid or does not contain all mandatory fields, it returns an object with the missing mandatory fields.
- * If any other error occurs, it logs the error and throws a new error.
+ * Handles the creation of a deal guarantee record in the ACBS system.
  *
  * @param {Object} payload - The payload containing the facilityIdentifier, acbsFacilityMasterInput, updateType, and etag.
  * @param {string} payload.facilityIdentifier - The ID of the facility.
@@ -67,6 +21,30 @@ const handler = async (payload) => {
       throw new Error('Invalid facility master amendment payload');
     }
 
+    const mandatoryFields = [
+      'dealIdentifier',
+      'facilityIdentifier',
+      'dealBorrowerIdentifier',
+      'maximumLiability',
+      'productTypeId',
+      'productTypeName',
+      'currency',
+      'guaranteeExpiryDate',
+      'nextQuarterEndDate',
+      'delegationType',
+      'interestOrFeeRate',
+      'facilityStageCode',
+      'exposurePeriod',
+      'creditRatingCode',
+      'premiumFrequencyCode',
+      'riskCountryCode',
+      'riskStatusCode',
+      'effectiveDate',
+      'forecastPercentage',
+      'agentBankIdentifier',
+      'obligorPartyIdentifier',
+      'obligorIndustryClassification',
+    ];
     const { facilityIdentifier, acbsFacilityMasterInput, updateType, etag } = payload;
 
     const missingMandatory = findMissingMandatory(acbsFacilityMasterInput, mandatoryFields);

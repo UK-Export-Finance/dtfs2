@@ -15,6 +15,21 @@ const helpers = require('./helpers');
 const CONSTANTS = require('../../constants');
 const getDealSubmissionDate = require('../deal/helpers/get-deal-submission-date');
 
+/**
+ * Constructs and returns the facility fee record(s) for a given deal and facility.
+ *
+ * This function performs the following operations:
+ * 1. Determines the effective date, expiration date, next due date, and next accrue to date for the fee record.
+ * 2. Retrieves the currency of the facility, defaulting to a constant if not provided.
+ * 3. Constructs the fee record object with the necessary fields.
+ * 4. Handles both singular and multiple fee records based on the deal type.
+ *
+ * @param {Object} deal - The deal object containing deal details.
+ * @param {Object} facility - The facility object containing facility details.
+ * @param {number} [premiumScheduleIndex=0] - The index of the premium schedule for multiple fee records.
+ * @returns {Object|Array} - The constructed facility fee record(s). Returns an object for singular GEF fee records and an array for multiple EWCS/BSS fee records.
+ * @throws {Error} - Logs the error and returns an empty object if any error occurs during the construction process.
+ */
 const constructFeeRecord = (deal, facility, premiumScheduleIndex = 0) => {
   try {
     const effectiveDate = helpers.getIssueDate(facility, getDealSubmissionDate(deal));
@@ -39,6 +54,21 @@ const constructFeeRecord = (deal, facility, premiumScheduleIndex = 0) => {
   }
 };
 
+/**
+ * Generates the facility fee record(s) for a given deal and facility.
+ *
+ * This function determines whether to generate a singular fee record or multiple fee records
+ * based on the deal type. For GEF deals, a single fee record is generated. For EWCS/BSS deals,
+ * multiple fee records are generated based on the premium schedule.
+ *
+ * @param {Object} deal - The deal object containing deal details.
+ * @param {Object} deal.dealSnapshot - The snapshot of the deal details.
+ * @param {string} deal.dealSnapshot.dealType - The type of the deal (e.g., GEF, EWCS, BSS).
+ * @param {Object} facility - The facility object containing facility details.
+ * @param {Object} facility.tfm - The TFM-specific details of the facility.
+ * @param {Array} facility.tfm.premiumSchedule - The premium schedule for the facility.
+ * @returns {Object|Array} - The generated facility fee record(s). Returns an object for singular GEF fee records and an array for multiple EWCS/BSS fee records.
+ */
 const facilityFee = (deal, facility) => {
   let feeRecord;
   if (deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF) {

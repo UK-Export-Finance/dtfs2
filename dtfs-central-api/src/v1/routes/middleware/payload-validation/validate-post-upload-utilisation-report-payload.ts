@@ -48,7 +48,7 @@ export const validatePostUploadUtilisationReportPayload = async (req: PreValidat
   const validationErrors = [validateReportId(reportId), ...validateFileInfo(fileInfo), ...reportDataErrors, ...validateReportUser(user)].filter(Boolean);
 
   if (validationErrors.length > 0) {
-    console.error('Failed to save utilisation report - validation errors: %O', validationErrors);
+    console.error('Failed to save utilisation report - validation errors: %o', validationErrors);
     return res.status(HttpStatusCode.BadRequest).send(validationErrors);
   }
 
