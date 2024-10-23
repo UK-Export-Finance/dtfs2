@@ -19,6 +19,8 @@ export class DealCancellationService {
    * This function is exported for unit testing only and should not be used outside of the service
    */
   public static async sendDealCancellationEmail(ukefDealId: string, dealCancellation: TfmDealCancellation, facilityIds: string[]): Promise<void> {
+    console.info(`Sending deal cancellation email for ${ukefDealId}`);
+
     const effectiveFromDate = toDate(dealCancellation.effectiveFrom);
     const endOfToday = endOfDay(new Date());
 
@@ -49,6 +51,8 @@ export class DealCancellationService {
    * @param dealCancellation the deal cancellation object
    */
   public static async submitDealCancellation(dealId: string, dealCancellation: TfmDealCancellation) {
+    console.info(`Submitting deal cancellation for ${dealId}`);
+
     // TODO: DTFS2-7298 - update cancellation in database & return cancelled deal/facility ids
 
     const { dealSnapshot } = await api.findOneDeal(dealId);
