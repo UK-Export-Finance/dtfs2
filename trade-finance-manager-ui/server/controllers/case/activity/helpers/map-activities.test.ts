@@ -51,7 +51,7 @@ describe('mapActivities', () => {
     const result = mapActivities(activities);
 
     // Assert
-    expect(result).toEqual([
+    const expected = [
       {
         type: ACTIVITY_TYPES.CANCELLATION,
         label: {
@@ -96,12 +96,13 @@ describe('mapActivities', () => {
           text: `${comment.author.firstName} ${comment.author.lastName}`,
         },
       },
-    ]);
+    ];
+    expect(result).toEqual(expected);
   });
 
   it('returns empty array if activities is undefined', () => {
     // Act
-    const result = mapActivities(undefined);
+    const result = mapActivities();
 
     // Assert
     expect(result).toEqual([]);

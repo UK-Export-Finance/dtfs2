@@ -1,7 +1,12 @@
 import { ACTIVITY_TYPES, TfmActivity } from '@ukef/dtfs2-common';
 import { fromUnixTime } from 'date-fns';
 
-export const mapActivities = (activities: TfmActivity[] | undefined) => {
+/**
+ * Map activities for use in {@link https://design-patterns.service.justice.gov.uk/components/timeline/ | MOJ timeline}
+ * @param activities tfm activities
+ * @returns array of timeline items
+ */
+export const mapActivities = (activities?: TfmActivity[]) => {
   if (!activities) {
     return [];
   }
