@@ -2,7 +2,6 @@ const mapFacility = require('./mapFacility');
 const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityProduct = require('./mapFacilityProduct');
 const mapFacilityType = require('./mapFacilityType');
-const mapFacilityStage = require('./mapFacilityStage');
 const mapFacilityValue = require('./mapFacilityValue');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
@@ -13,6 +12,7 @@ const mapFeeFrequency = require('./mapFeeFrequency');
 const mapDates = require('./mapDates');
 
 const MOCK_DEAL = require('../../../__mocks__/mock-deal');
+const { mapBssEwcsFacilityStage } = require('./mapFacilityStage');
 
 describe('mapFacility', () => {
   const mockTfmFacility = {
@@ -86,7 +86,7 @@ describe('mapFacility', () => {
 
     const expectedFacilityValueExportCurrency = `${mockCurrency.id} ${formattedFacilityValue}`;
 
-    const facilityStage = mapFacilityStage(mockFacilityStage);
+    const facilityStage = mapBssEwcsFacilityStage(mockFacilityStage);
 
     const expectedFacilityProduct = mapFacilityProduct(mockFacility.type);
 
@@ -120,7 +120,7 @@ describe('mapFacility', () => {
       type: expectedType,
       ukefFacilityType: mockType,
       facilityProduct: expectedFacilityProduct,
-      facilityStage: mapFacilityStage(mockFacilityStage),
+      facilityStage: mapBssEwcsFacilityStage(mockFacilityStage),
       hasBeenIssued: mockFacility.hasBeenIssued,
       coveredPercentage: expectedCoveredPercentage,
       value: mapFacilityValue(mockFacility.currency.id, formattedFacilityValue, mockFacilityFull),

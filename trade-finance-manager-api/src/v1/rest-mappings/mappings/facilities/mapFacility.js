@@ -1,7 +1,6 @@
 const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityProduct = require('./mapFacilityProduct');
 const mapFacilityType = require('./mapFacilityType');
-const mapFacilityStage = require('./mapFacilityStage');
 const mapFacilityValue = require('./mapFacilityValue');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
@@ -12,11 +11,12 @@ const mapFeeFrequency = require('./mapFeeFrequency');
 const mapDates = require('./mapDates');
 const mapUkefExposureValue = require('./mapUkefExposureValue');
 const mapFacilityValueExportCurrency = require('./mapFacilityValueExportCurrency');
+const { mapBssEwcsFacilityStage } = require('./mapFacilityStage');
 
 /**
  * Maps existing facility to the facility used in TFM API.
- * Note: This implimentation is called where it modifies the facility snapshot
- * to have values not consistent with the facility snapshot in the database.
+ * Note: This implementation modifies the facility snapshot to have values not consistent with the facility snapshot in the database.
+ * In particular, this is a live object that updates e.g. when amendments are added in TFM.
  */
 const mapFacility = (f, facilityTfm, dealDetails, facilityFull) => {
   // Ensure facility is valid
@@ -37,7 +37,7 @@ const mapFacility = (f, facilityTfm, dealDetails, facilityFull) => {
 
   const formattedFacilityValue = formattedNumber(value);
 
-  facility.facilityStage = mapFacilityStage(facilityStage);
+  facility.facilityStage = mapBssEwcsFacilityStage(facilityStage, facilityTfm?.stage);
 
   const mapped = {
     _id: facility._id,

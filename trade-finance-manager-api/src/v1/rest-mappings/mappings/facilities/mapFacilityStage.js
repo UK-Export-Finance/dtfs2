@@ -1,29 +1,28 @@
+import { TFM_FACILITY_STAGE } from '@ukef/dtfs2-common';
+
 const CONSTANTS = require('../../../../constants');
 
-const mapFacilityStage = (facilityStage) => {
-  let mapped;
+const { ISSUED, UNCONDITIONAL, UNISSUED, CONDITIONAL } = CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL;
 
-  // NOTE: we currently have two different data sources.
-  // - Bond & Loan facilities have facilityStage string of 'issued' or 'unissued'.
-  // - Cash & Contingent facilities have hasBeenIssued boolean.
-
-  const isIssuedGefFacility = facilityStage === true;
-
-  if (
-    facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.ISSUED ||
-    facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNCONDITIONAL ||
-    isIssuedGefFacility
-  ) {
-    mapped = CONSTANTS.FACILITIES.FACILITY_STAGE.ISSUED;
-  } else if (
-    facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNISSUED ||
-    facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.CONDITIONAL ||
-    !isIssuedGefFacility
-  ) {
-    mapped = CONSTANTS.FACILITIES.FACILITY_STAGE.COMMITMENT;
+export const mapGefFacilityStage = (isIssued, tfmFacilityStage) => {
+  if (tfmFacilityStage) {
+    return tfmFacilityStage;
   }
 
-  return mapped;
+  return isIssued ? TFM_FACILITY_STAGE.ISSUED : TFM_FACILITY_STAGE.COMMITMENT;
 };
 
-module.exports = mapFacilityStage;
+export const mapBssEwcsFacilityStage = (facilityStage, tfmFacilityStage) => {
+  if (tfmFacilityStage) {
+    return tfmFacilityStage;
+  }
+
+  if (facilityStage === ISSUED || facilityStage === UNCONDITIONAL) {
+    return TFM_FACILITY_STAGE.ISSUED;
+  }
+
+  if (facilityStage === UNISSUED || facilityStage === CONDITIONAL) {
+    return TFM_FACILITY_STAGE.COMMITMENT;
+  }
+  return undefined;
+};
