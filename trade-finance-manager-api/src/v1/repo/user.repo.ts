@@ -1,10 +1,11 @@
 import escapeStringRegexp from 'escape-string-regexp';
-import { AuditDetails, MONGO_DB_COLLECTIONS, MultipleUsersFoundError, TfmUser, UserUpsertRequest } from '@ukef/dtfs2-common';
-import { Collection, FindOneAndUpdateOptions, WithoutId } from 'mongodb';
+import { AuditDetails, DocumentNotUpdatedError, MONGO_DB_COLLECTIONS, TfmUser, UserUpsertRequest } from '@ukef/dtfs2-common';
+import { Collection, FindOneAndUpdateOptions, ObjectId, WithoutId } from 'mongodb';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../drivers/db-client';
+import { USER } from '../../constants';
 
-type UpsertUserParams = {
+export type upsertUserByEmailAddressesParams = {
   emailsOfUserToUpsert: string[];
   userUpsertRequest: UserUpsertRequest;
   auditDetails: AuditDetails;
@@ -30,40 +31,51 @@ export class UserRepo {
     return emails.map((email) => new RegExp(`^${escapeStringRegexp(email)}$`, 'i'));
   }
 
-  /**
-   * Upserts a user
-   * If there are multiple users with the provided emails, an error will be thrown
-   * If there are no users found, an error will be thrown
-   * @param upsertUserParams
-   * @param upsertUserParams.upsertUserRequest the upsert user request
-   * @param upsertUserParams.emailsOfUserToUpsert the emails of the user to update, used to identify the tfm user
-   * @param upsertUserParams.auditDetails the audit details
-   * @returns upserted user
-   */
-  public static async upsertUser({ emailsOfUserToUpsert, userUpsertRequest, auditDetails }: UpsertUserParams): Promise<TfmUser> {
-    const collection = await this.getCollection();
+  public static async findUsersByEmailAddresses(emails: string[]): Promise<TfmUser[]> {
+    const collection = await UserRepo.getCollection();
 
-    const userUpsert = {
-      ...userUpsertRequest,
-      auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-    };
-
-    const emailsRegex = this.generateArrayOfEmailsRegex(emailsOfUserToUpsert);
+    const emailsRegex = UserRepo.generateArrayOfEmailsRegex(emails);
 
     const query = { email: { $in: emailsRegex } };
 
-    const findResult = await collection.find(query).toArray();
-    if (findResult.length > 1) {
-      throw new MultipleUsersFoundError({ userIdsFound: findResult.map((user) => user._id.toString()) });
-    }
+    return await collection.find(query).toArray();
+  }
 
-    const update = { $set: userUpsert };
-    const options: FindOneAndUpdateOptions = { upsert: true, returnDocument: 'after' };
+  public static async createUser({ user, auditDetails }: { user: UserUpsertRequest; auditDetails: AuditDetails }): Promise<TfmUser> {
+    const collection = await UserRepo.getCollection();
 
-    const upsertResult = await collection.findOneAndUpdate(query, update, options); // TODO: DTFS2-6892: Test this fails if there are multiple users
-    if (!upsertResult.value || !upsertResult.ok) {
-      throw new Error('Failed to upsert user');
+    const userToCreate: WithoutId<TfmUser> = {
+      ...user,
+      auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+      status: USER.STATUS.ACTIVE, // New users start in an active state
+    };
+
+    const result = await collection.insertOne(userToCreate);
+    return { _id: result.insertedId, ...userToCreate };
+  }
+
+  public static async updateUserById({
+    userId,
+    userUpdate,
+    auditDetails,
+  }: {
+    userId: string | ObjectId;
+    userUpdate: UserUpsertRequest;
+    auditDetails: AuditDetails;
+  }) {
+    const collection = await UserRepo.getCollection();
+    const filter = { _id: { $eq: new ObjectId(userId.toString()) } };
+    const update = {
+      $set: {
+        ...userUpdate,
+        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+      },
+    };
+    const options: FindOneAndUpdateOptions = { returnDocument: 'after' };
+    const result = await collection.findOneAndUpdate(filter, update, options);
+    if (!result.ok || !result.value) {
+      throw new DocumentNotUpdatedError(userId.toString());
     }
-    return upsertResult.value;
+    return result.value;
   }
 }

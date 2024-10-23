@@ -19,6 +19,7 @@ export function aValidUserUpsertRequest(): UserUpsertRequest {
     timezone: 'Europe/London',
     firstName: 'a-first-name',
     lastName: 'a-last-name',
+    lastLogin: Date.now(),
   };
 }
 

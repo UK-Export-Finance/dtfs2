@@ -9,4 +9,5 @@ export const USER_UPSERT_REQUEST_SCHEMA = z.object({
   timezone: z.string(),
   firstName: z.string(),
   lastName: z.string(),
+  lastLogin: z.number().int().positive(), // unix timestamp
 });
