@@ -12,14 +12,14 @@ describe('mapGefFacilityStage', () => {
   describe('when facilityStage is true boolean', () => {
     it('should return facilityStage as `Issued`', () => {
       const result = mapGefFacilityStage(true);
-      expect(result).toEqual('Issued');
+      expect(result).toEqual(TFM_FACILITY_STAGE.ISSUED);
     });
   });
 
   describe('when facilityStage is false boolean', () => {
     it('should return facilityStage as `Commitment`', () => {
       const result = mapGefFacilityStage(false);
-      expect(result).toEqual('Commitment');
+      expect(result).toEqual(TFM_FACILITY_STAGE.COMMITMENT);
     });
   });
 });
@@ -35,28 +35,28 @@ describe('mapBssEwcsFacilityStage', () => {
   describe('when facilityStage is `Issued`', () => {
     it('should return facilityStage as `Issued`', () => {
       const result = mapBssEwcsFacilityStage('Issued');
-      expect(result).toEqual('Issued');
+      expect(result).toEqual(TFM_FACILITY_STAGE.ISSUED);
     });
   });
 
   describe('when facilityStage is `Unconditional`', () => {
     it('should return facilityStage as `Issued`', () => {
       const result = mapBssEwcsFacilityStage('Unconditional');
-      expect(result).toEqual('Issued');
+      expect(result).toEqual(TFM_FACILITY_STAGE.ISSUED);
     });
   });
 
   describe('when facilityStage is `Unissued`', () => {
     it('should return facilityStage as `Commitment`', () => {
       const result = mapBssEwcsFacilityStage('Unissued');
-      expect(result).toEqual('Commitment');
+      expect(result).toEqual(TFM_FACILITY_STAGE.COMMITMENT);
     });
   });
 
   describe('when facilityStage is `Conditional`', () => {
     it('should return facilityStage as `Commitment`', () => {
       const result = mapBssEwcsFacilityStage('Conditional');
-      expect(result).toEqual('Commitment');
+      expect(result).toEqual(TFM_FACILITY_STAGE.COMMITMENT);
     });
   });
 });
