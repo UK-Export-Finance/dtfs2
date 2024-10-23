@@ -46,9 +46,9 @@ const getCaseDeal = async (req, res) => {
 
   const dealCancellation = await api.getDealCancellation(dealId, userToken);
 
-  const dealCancellationPermitted = canDealBeCancelled(submissionType, user, dealCancellation.status);
+  const isDealCancellationPermitted = canDealBeCancelled(submissionType, user, dealCancellation.status);
 
-  const hasDraftCancellation = dealCancellationPermitted && dealCancellation?.status === TFM_DEAL_CANCELLATION_STATUS.DRAFT;
+  const hasDraftCancellation = isDealCancellationPermitted && dealCancellation?.status === TFM_DEAL_CANCELLATION_STATUS.DRAFT;
 
   return res.render('case/deal/deal.njk', {
     deal: deal.dealSnapshot,
@@ -60,7 +60,7 @@ const getCaseDeal = async (req, res) => {
     amendments,
     amendmentsInProgress,
     hasAmendmentInProgress,
-    showDealCancelButton: dealCancellationPermitted,
+    showDealCancelButton: isDealCancellationPermitted,
     hasDraftCancellation,
   });
 };
