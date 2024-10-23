@@ -1,5 +1,4 @@
 import { TfmFacility } from '@ukef/dtfs2-common';
-import { UKEF_ID } from '../../../../constants/deals';
 import { MOCK_FACILITY_SNAPSHOT } from '../../../__mocks__/mock-facility-snapshot';
 import { getUkefFacilityIds } from './get-ukef-facility-ids';
 
@@ -18,10 +17,8 @@ describe('getUkefFacilityIds', () => {
     const validUkefId2 = 'validUkefId2';
 
     const facilities: TfmFacility[] = [
-      aFacility({ ukefFacilityId: null }),
-      aFacility({ ukefFacilityId: UKEF_ID.PENDING }),
       aFacility({ ukefFacilityId: validUkefId1 }),
-      aFacility({ ukefFacilityId: UKEF_ID.TEST }),
+      aFacility({ ukefFacilityId: null }),
       aFacility({ ukefFacilityId: validUkefId2 }),
     ];
 
@@ -45,11 +42,7 @@ describe('getUkefFacilityIds', () => {
 
   it('returns an empty array when all the facilities are invalid', () => {
     // Arrange
-    const facilities: TfmFacility[] = [
-      aFacility({ ukefFacilityId: null }),
-      aFacility({ ukefFacilityId: UKEF_ID.PENDING }),
-      aFacility({ ukefFacilityId: UKEF_ID.TEST }),
-    ];
+    const facilities: TfmFacility[] = [aFacility({ ukefFacilityId: null })];
 
     // Act
     const result = getUkefFacilityIds(facilities);

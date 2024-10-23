@@ -5,6 +5,7 @@ import { CANCEL_DEAL_PAST_DATE, CANCEL_DEAL_FUTURE_DATE } from '../../../constan
 import * as api from '../../api';
 import { formatFacilityIds } from './helpers/format-facility-ids';
 import { getUkefFacilityIds } from './helpers/get-ukef-facility-ids';
+import { UKEF_ID } from '../../../constants/deals';
 
 const { D_MMMM_YYYY } = DATE_FORMATS;
 
@@ -65,6 +66,10 @@ export class DealCancellationService {
 
       if (!ukefFacilityIds.length) {
         throw new Error(`Failed to find facility ids on deal ${dealId} when submitting deal cancellation`);
+      }
+
+      if (ukefFacilityIds.includes(UKEF_ID.PENDING) || ukefFacilityIds.includes(UKEF_ID.TEST)) {
+        throw new Error(`Some UKEF facility ids were invalid when submitting deal ${dealId} for cancellation. No email has been sent`);
       }
 
       await this.sendDealCancellationEmail(ukefDealId, dealCancellation, ukefFacilityIds);
