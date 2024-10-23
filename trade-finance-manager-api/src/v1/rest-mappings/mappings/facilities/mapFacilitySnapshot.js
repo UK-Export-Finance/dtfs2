@@ -28,49 +28,49 @@ const mapFacilitySnapshot = (facility, dealDetails) => {
   }
 
   // Deep clone
-  const f = JSON.parse(JSON.stringify(facilitySnapshot, null, 4));
+  const clonedSnapshot = JSON.parse(JSON.stringify(facilitySnapshot, null, 4));
 
-  const { type, value, facilityStage, guaranteeFeePayableByBank, currency } = f;
+  const { type, value, facilityStage, guaranteeFeePayableByBank, currency } = clonedSnapshot;
 
-  f.ukefFacilityType = type;
+  clonedSnapshot.ukefFacilityType = type;
 
-  f.facilityProduct = mapFacilityProduct(type);
+  clonedSnapshot.facilityProduct = mapFacilityProduct(type);
 
-  f.type = mapFacilityType(f);
+  clonedSnapshot.type = mapFacilityType(clonedSnapshot);
 
   const formattedFacilityValue = formattedNumber(value);
 
-  f.facilityStage = mapFacilityStage(facilityStage);
+  clonedSnapshot.facilityStage = mapFacilityStage(facilityStage);
 
   const mapped = {
-    _id: f._id,
+    _id: clonedSnapshot._id,
     isGef: false,
-    dealId: f.dealId,
-    ukefFacilityId: f.ukefFacilityId,
+    dealId: clonedSnapshot.dealId,
+    ukefFacilityId: clonedSnapshot.ukefFacilityId,
 
     // TODO: DTFS2-4634 - we shouldn't need facility.type and ukefFacilityType.
-    type: f.type,
-    ukefFacilityType: f.ukefFacilityType,
-    facilityProduct: f.facilityProduct,
-    facilityStage: f.facilityStage,
-    hasBeenIssued: f.hasBeenIssued,
-    coveredPercentage: `${f.coveredPercentage}%`,
+    type: clonedSnapshot.type,
+    ukefFacilityType: clonedSnapshot.ukefFacilityType,
+    facilityProduct: clonedSnapshot.facilityProduct,
+    facilityStage: clonedSnapshot.facilityStage,
+    hasBeenIssued: clonedSnapshot.hasBeenIssued,
+    coveredPercentage: `${clonedSnapshot.coveredPercentage}%`,
     facilityValueExportCurrency: mapFacilityValueExportCurrency(facility),
     value: mapFacilityValue(currency.id, formattedFacilityValue, facility),
     currency: currency.id,
     ukefExposure: mapUkefExposureValue(facilityTfm, facility),
-    bankFacilityReference: mapBankFacilityReference(f),
+    bankFacilityReference: mapBankFacilityReference(clonedSnapshot),
     guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFeePayableByBank),
-    banksInterestMargin: mapBanksInterestMargin(f),
-    firstDrawdownAmountInExportCurrency: mapFirstDrawdownAmountInExportCurrency(f),
-    feeType: mapFeeType(f),
-    feeFrequency: mapFeeFrequency(f),
-    dayCountBasis: Number(f.dayCountBasis),
-    dates: mapDates(facility, f, facilityTfm, dealDetails),
+    banksInterestMargin: mapBanksInterestMargin(clonedSnapshot),
+    firstDrawdownAmountInExportCurrency: mapFirstDrawdownAmountInExportCurrency(clonedSnapshot),
+    feeType: mapFeeType(clonedSnapshot),
+    feeFrequency: mapFeeFrequency(clonedSnapshot),
+    dayCountBasis: Number(clonedSnapshot.dayCountBasis),
+    dates: mapDates(facility, clonedSnapshot, facilityTfm, dealDetails),
 
     // bond specifics
-    bondIssuer: f.bondIssuer,
-    bondBeneficiary: f.bondBeneficiary,
+    bondIssuer: clonedSnapshot.bondIssuer,
+    bondBeneficiary: clonedSnapshot.bondBeneficiary,
   };
 
   return mapped;
