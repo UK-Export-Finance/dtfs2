@@ -25,7 +25,7 @@ export const mapGefFacilityStage = (isIssued: boolean, tfmFacilityStage?: TfmFac
  * @param tfmFacilityStage optional passed in Tfm facility stage
  * @returns the mapped facility stage
  */
-export const mapBssEwcsFacilityStage = (facilityStage: PortalFacilityStageType, tfmFacilityStage?: TfmFacilityStage): TfmFacilityStage | undefined => {
+export const mapBssEwcsFacilityStage = (facilityStage: PortalFacilityStageType, tfmFacilityStage?: TfmFacilityStage): TfmFacilityStage | null => {
   if (tfmFacilityStage) {
     return tfmFacilityStage;
   }
@@ -38,5 +38,5 @@ export const mapBssEwcsFacilityStage = (facilityStage: PortalFacilityStageType, 
     return TFM_FACILITY_STAGE.COMMITMENT;
   }
 
-  return undefined;
+  return null;
 };
