@@ -1,6 +1,7 @@
 import { ZodSchema } from 'zod';
 import { EntraIdUser } from '../../types/tfm/entra-id-user';
 import { withSchemaTests } from './with-schema.tests';
+import { TEAMS } from '../../constants';
 
 type TestCasesParams = {
   getTestObjectWithUpdatedUserParams: (entraIdUser: unknown) => unknown;
@@ -17,7 +18,7 @@ export function aValidEntraIdUser(): EntraIdUser {
     verified_secondary_email: ['a-secondary-email'],
     given_name: 'a-given-name',
     family_name: 'a-family-name',
-    roles: ['BUSINESS_SUPPORT'],
+    roles: [TEAMS.BUSINESS_SUPPORT.id],
   };
 }
 
@@ -119,7 +120,7 @@ function getFailureTestCases({ getTestObjectWithUpdatedUserParams }: TestCasesPa
       description: 'the roles are not an array of user roles',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), roles: 'BUSINESS_SUPPORT' }),
+      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), roles: TEAMS.BUSINESS_SUPPORT.id }),
       description: 'the roles are not an array',
     },
     {
