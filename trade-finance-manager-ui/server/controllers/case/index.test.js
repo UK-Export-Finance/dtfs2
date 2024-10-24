@@ -2,7 +2,7 @@ import { AMENDMENT_STATUS, DEAL_SUBMISSION_TYPE, isTfmFacilityEndDateFeatureFlag
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
-import { getTask, canDealBeCancelled } from '../helpers';
+import { getTask, isDealCancellationEnabled } from '../helpers';
 import mapAssignToSelectOptions from '../../helpers/map-assign-to-select-options';
 
 jest.mock('@ukef/dtfs2-common', () => ({
@@ -12,7 +12,7 @@ jest.mock('@ukef/dtfs2-common', () => ({
 
 jest.mock('../helpers', () => ({
   ...jest.requireActual('../helpers'),
-  canDealBeCancelled: jest.fn().mockReturnValue(false),
+  isDealCancellationEnabled: jest.fn().mockReturnValue(false),
 }));
 
 const res = mockRes();
@@ -97,59 +97,82 @@ describe('controllers - case', () => {
         });
       });
 
-      it('should check whether deal can be cancelled', async () => {
+      it('should check whether deal cancellation is enabled', async () => {
         await caseController.getCaseDeal(req, res);
 
-        expect(canDealBeCancelled).toHaveBeenCalledTimes(1);
-        expect(canDealBeCancelled).toHaveBeenCalledWith(DEAL_SUBMISSION_TYPE.AIN, session.user, undefined);
+        expect(isDealCancellationEnabled).toHaveBeenCalledTimes(1);
+        expect(isDealCancellationEnabled).toHaveBeenCalledWith(DEAL_SUBMISSION_TYPE.AIN, session.user);
       });
 
-      describe('when deal can be cancelled', () => {
-        it('should render the template with showDealCancelButton=true', async () => {
-          jest.mocked(canDealBeCancelled).mockReturnValueOnce(true);
-
-          await caseController.getCaseDeal(req, res);
-
-          expect(res.render).toHaveBeenCalledWith(
-            'case/deal/deal.njk',
-            expect.objectContaining({
-              showDealCancelButton: true,
-            }),
-          );
+      describe('when deal cancellation is enabled', () => {
+        beforeEach(() => {
+          jest.mocked(isDealCancellationEnabled).mockReturnValueOnce(true);
         });
 
-        it('should render the template with hasDraftCancellation=true when the cancellation object has a draft status', async () => {
-          jest.mocked(canDealBeCancelled).mockReturnValueOnce(true);
-          jest.mocked(api.getDealCancellation).mockReturnValueOnce({ reason: 'a reason', status: TFM_DEAL_CANCELLATION_STATUS.DRAFT });
+        describe('when the deal can still be cancelled', () => {
+          it('should render the template with showDealCancelButton=true', async () => {
+            jest.mocked(api.getDealCancellation).mockReturnValueOnce({ status: TFM_DEAL_CANCELLATION_STATUS.DRAFT });
 
-          await caseController.getCaseDeal(req, res);
+            await caseController.getCaseDeal(req, res);
 
-          expect(res.render).toHaveBeenCalledWith(
-            'case/deal/deal.njk',
-            expect.objectContaining({
-              hasDraftCancellation: true,
-            }),
-          );
+            expect(res.render).toHaveBeenCalledWith(
+              'case/deal/deal.njk',
+              expect.objectContaining({
+                showDealCancelButton: true,
+              }),
+            );
+          });
         });
 
-        it('should render the template with hasDraftCancellation=false when the cancellation object does not have a draft status', async () => {
-          jest.mocked(canDealBeCancelled).mockReturnValueOnce(true);
-          jest.mocked(api.getDealCancellation).mockReturnValueOnce({});
+        describe('when the deal is already cancelled', () => {
+          it('should render the template with showDealCancelButton=false', async () => {
+            jest.mocked(api.getDealCancellation).mockReturnValueOnce({ status: TFM_DEAL_CANCELLATION_STATUS.COMPLETED });
 
-          await caseController.getCaseDeal(req, res);
+            await caseController.getCaseDeal(req, res);
 
-          expect(res.render).toHaveBeenCalledWith(
-            'case/deal/deal.njk',
-            expect.objectContaining({
-              hasDraftCancellation: false,
-            }),
-          );
+            expect(res.render).toHaveBeenCalledWith(
+              'case/deal/deal.njk',
+              expect.objectContaining({
+                showDealCancelButton: false,
+              }),
+            );
+          });
+        });
+
+        describe('when the deal cancellation is in draft', () => {
+          it('should render the template with hasDraftCancellation=true', async () => {
+            jest.mocked(api.getDealCancellation).mockReturnValueOnce({ status: TFM_DEAL_CANCELLATION_STATUS.DRAFT });
+
+            await caseController.getCaseDeal(req, res);
+
+            expect(res.render).toHaveBeenCalledWith(
+              'case/deal/deal.njk',
+              expect.objectContaining({
+                hasDraftCancellation: true,
+              }),
+            );
+          });
+        });
+
+        describe('when the deal cancellation is not yet started', () => {
+          it('should render the template with hasDraftCancellation=false', async () => {
+            jest.mocked(api.getDealCancellation).mockReturnValueOnce({});
+
+            await caseController.getCaseDeal(req, res);
+
+            expect(res.render).toHaveBeenCalledWith(
+              'case/deal/deal.njk',
+              expect.objectContaining({
+                hasDraftCancellation: false,
+              }),
+            );
+          });
         });
       });
 
-      describe('when deal cancellation is not allowed', () => {
+      describe('when deal cancellation is disabled', () => {
         it('should render the template with showDealCancelButton=false', async () => {
-          jest.mocked(canDealBeCancelled).mockReturnValueOnce(false);
+          jest.mocked(isDealCancellationEnabled).mockReturnValueOnce(false);
 
           await caseController.getCaseDeal(req, res);
 
