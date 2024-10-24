@@ -2,7 +2,7 @@ import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
 import { EntityManager } from 'typeorm';
-import { FeeRecordEntityMockBuilder, TestApiError, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, TestApiError, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { postKeyingData, PostKeyingDataRequest } from '.';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { executeWithSqlTransaction } from '../../../../helpers';
@@ -26,8 +26,8 @@ describe('post-keying-data.controller', () => {
       });
 
     const someFeeRecordsForReport = (report: UtilisationReportEntity) => [
-      FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('MATCH').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.MATCH).build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus(FEE_RECORD_STATUS.MATCH).build(),
     ];
 
     const feeRecordRepoFindSpy = jest.spyOn(FeeRecordRepo, 'findByReportIdAndStatusesWithReportAndPayments');
@@ -58,7 +58,7 @@ describe('post-keying-data.controller', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      when(feeRecordRepoFindSpy).calledWith(reportId, ['MATCH']).mockResolvedValue([]);
+      when(feeRecordRepoFindSpy).calledWith(reportId, [FEE_RECORD_STATUS.MATCH]).mockResolvedValue([]);
 
       // Act
       await postKeyingData(req, res);
@@ -78,7 +78,7 @@ describe('post-keying-data.controller', () => {
         // eslint-disable-next-line no-param-reassign
         delete feeRecord.report;
       });
-      when(feeRecordRepoFindSpy).calledWith(reportId, ['MATCH']).mockResolvedValue(feeRecords);
+      when(feeRecordRepoFindSpy).calledWith(reportId, [FEE_RECORD_STATUS.MATCH]).mockResolvedValue(feeRecords);
 
       // Act
       await postKeyingData(req, res);
@@ -96,11 +96,11 @@ describe('post-keying-data.controller', () => {
       req.body.user._id = userId;
 
       const feeRecords = [
-        FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withStatus('MATCH').build(),
-        FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withStatus('MATCH').build(),
+        FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withStatus(FEE_RECORD_STATUS.MATCH).build(),
+        FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withStatus(FEE_RECORD_STATUS.MATCH).build(),
       ];
 
-      when(feeRecordRepoFindSpy).calledWith(reportId, ['MATCH']).mockResolvedValue(feeRecords);
+      when(feeRecordRepoFindSpy).calledWith(reportId, [FEE_RECORD_STATUS.MATCH]).mockResolvedValue(feeRecords);
 
       // Act
       await postKeyingData(req, res);

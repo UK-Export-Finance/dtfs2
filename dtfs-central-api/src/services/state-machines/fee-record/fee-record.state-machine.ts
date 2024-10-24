@@ -1,4 +1,4 @@
-import { FeeRecordEntity } from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, FeeRecordEntity } from '@ukef/dtfs2-common';
 import { InvalidStateMachineTransitionError, NotFoundError } from '../../../errors';
 import { FeeRecordRepo } from '../../../repositories/fee-record-repo';
 import { FeeRecordEvent } from './event/fee-record.event';
@@ -70,14 +70,14 @@ export class FeeRecordStateMachine {
    */
   public async handleEvent(event: FeeRecordEvent): Promise<FeeRecordEntity> {
     switch (this.feeRecord.status) {
-      case 'TO_DO':
+      case FEE_RECORD_STATUS.TO_DO:
         switch (event.type) {
           case 'PAYMENT_ADDED':
             return handleFeeRecordPaymentAddedEvent(this.feeRecord, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
-      case 'MATCH':
+      case FEE_RECORD_STATUS.MATCH:
         switch (event.type) {
           case 'PAYMENT_DELETED':
             return handleFeeRecordPaymentDeletedEvent(this.feeRecord, event.payload);
@@ -92,7 +92,7 @@ export class FeeRecordStateMachine {
           default:
             return this.handleInvalidTransition(event);
         }
-      case 'DOES_NOT_MATCH':
+      case FEE_RECORD_STATUS.DOES_NOT_MATCH:
         switch (event.type) {
           case 'PAYMENT_ADDED':
             return handleFeeRecordPaymentAddedEvent(this.feeRecord, event.payload);
@@ -109,14 +109,14 @@ export class FeeRecordStateMachine {
           default:
             return this.handleInvalidTransition(event);
         }
-      case 'READY_TO_KEY':
+      case FEE_RECORD_STATUS.READY_TO_KEY:
         switch (event.type) {
           case 'MARK_AS_RECONCILED':
             return handleFeeRecordMarkAsReconciledEvent(this.feeRecord, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
-      case 'RECONCILED':
+      case FEE_RECORD_STATUS.RECONCILED:
         switch (event.type) {
           case 'MARK_AS_READY_TO_KEY':
             return handleFeeRecordMarkAsReadyToKeyEvent(this.feeRecord, event.payload);
