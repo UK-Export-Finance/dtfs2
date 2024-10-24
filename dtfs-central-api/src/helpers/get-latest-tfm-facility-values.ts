@@ -4,6 +4,7 @@ import { TfmFacilitiesRepo } from '../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../errors';
 import { convertTimestampToDate } from './convert-timestamp-to-date';
 import { getEffectiveCoverEndDateAmendment } from './amendments/get-effective-cover-end-date-amendment';
+import { LatestTfmFacilityValues } from '../types/tfm/tfm-facility';
 
 /**
  * Gets the latest values for the TFM facility with the supplied facility id
@@ -11,25 +12,21 @@ import { getEffectiveCoverEndDateAmendment } from './amendments/get-effective-co
  * @param reportPeriod - The report period
  * @returns The latest values
  */
-export const getLatestTfmFacilityValues = async (
-  facilityId: string,
-  reportPeriod: ReportPeriod,
-): Promise<{
-  coverEndDate: Date;
-  coverStartDate: Date;
-  dayCountBasis: number;
-  interestPercentage: number;
-  coverPercentage: number;
-}> => {
+export const getLatestTfmFacilityValues = async (facilityId: string, reportPeriod?: ReportPeriod): Promise<LatestTfmFacilityValues> => {
   const tfmFacility = await TfmFacilitiesRepo.findOneByUkefFacilityId(facilityId);
+
   if (!tfmFacility) {
-    throw new NotFoundError(`Failed to find a tfm facility with ukef facility id '${facilityId}'`);
+    throw new NotFoundError(`TFM facility ${facilityId} could not be found`);
   }
 
-  const { coverEndDate: snapshotCoverEndDate, coverStartDate, dayCountBasis, interestPercentage, coverPercentage } = tfmFacility.facilitySnapshot;
+  const { coverEndDate: snapshotCoverEndDate, coverStartDate, dayCountBasis, interestPercentage, coverPercentage, value } = tfmFacility.facilitySnapshot;
 
-  const endDateOfReportPeriod = endOfMonth(getDateFromMonthAndYear(reportPeriod.end));
-  const latestAmendedCoverEndDate = getEffectiveCoverEndDateAmendment(tfmFacility, endDateOfReportPeriod);
+  let latestAmendedCoverEndDate;
+
+  if (reportPeriod) {
+    const endDateOfReportPeriod = endOfMonth(getDateFromMonthAndYear(reportPeriod.end));
+    latestAmendedCoverEndDate = getEffectiveCoverEndDateAmendment(tfmFacility, endDateOfReportPeriod);
+  }
 
   const coverEndDate = latestAmendedCoverEndDate ?? snapshotCoverEndDate;
   if (!coverEndDate) {
@@ -46,5 +43,6 @@ export const getLatestTfmFacilityValues = async (
     dayCountBasis,
     interestPercentage,
     coverPercentage,
+    value,
   };
 };

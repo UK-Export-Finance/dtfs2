@@ -1,6 +1,7 @@
 import { ReportPeriod } from '@ukef/dtfs2-common';
-import { calculateUkefShareOfUtilisation, getLatestTfmFacilityValues } from '../../../../../helpers';
+import { calculateUkefShareOfUtilisation } from '../../../../../helpers';
 import { calculateFixedFee } from './calculate-fixed-fee';
+import { LatestTfmFacilityValues } from '../../../../../types/tfm/tfm-facility';
 
 /**
  * Gets the fixed fee for the given report period
@@ -8,10 +9,11 @@ import { calculateFixedFee } from './calculate-fixed-fee';
  * @param facilityId - The (ukef) facility id
  * @param utilisation - The facility utilisation
  * @param reportPeriod - The report period
+ * @param tfmFacilityValues - TFM facility values
  * @returns The fixed fee for the supplied report period
  */
-export const getFixedFeeForFacility = async (facilityId: string, utilisation: number, reportPeriod: ReportPeriod) => {
-  const { coverEndDate, dayCountBasis, interestPercentage, coverPercentage } = await getLatestTfmFacilityValues(facilityId, reportPeriod);
+export const getFixedFeeForFacility = (utilisation: number, reportPeriod: ReportPeriod, tfmFacilityValues: LatestTfmFacilityValues) => {
+  const { coverPercentage, coverEndDate, interestPercentage, dayCountBasis } = tfmFacilityValues;
 
   const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, coverPercentage);
 
