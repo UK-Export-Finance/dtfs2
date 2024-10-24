@@ -1,5 +1,5 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, FeeRecordEntity, FeeRecordStatus, ReportPeriod } from '@ukef/dtfs2-common';
+import { DbRequestSource, FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordStatus, ReportPeriod } from '@ukef/dtfs2-common';
 import { BaseFeeRecordEvent } from '../../event/base-fee-record.event';
 import { calculatePrincipalBalanceAdjustment, calculateFixedFeeAdjustment, updateFacilityUtilisationData } from '../helpers';
 import { calculateUkefShareOfUtilisation, getLatestTfmFacilityValues } from '../../../../../helpers';
@@ -68,7 +68,9 @@ function getStatusToUpdateTo(
   fixedFeeAdjustment: number = 0,
   principalBalanceAdjustment: number = 0,
 ): Extract<FeeRecordStatus, 'READY_TO_KEY' | 'RECONCILED'> {
-  return feeRecordCanBeAutoReconciled(feesPaidToUkefForThePeriod, fixedFeeAdjustment, principalBalanceAdjustment) ? 'RECONCILED' : 'READY_TO_KEY';
+  return feeRecordCanBeAutoReconciled(feesPaidToUkefForThePeriod, fixedFeeAdjustment, principalBalanceAdjustment)
+    ? FEE_RECORD_STATUS.RECONCILED
+    : FEE_RECORD_STATUS.READY_TO_KEY;
 }
 
 function feeRecordCanBeAutoReconciled(feesPaidToUkefForThePeriod: number, fixedFeeAdjustment: number, principalBalanceAdjustment: number): boolean {

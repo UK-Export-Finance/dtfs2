@@ -1,5 +1,4 @@
 const { formattedNumber } = require('../../../../utils/number');
-const mapFacilityStage = require('../facilities/mapFacilityStage');
 const mapFacilityValue = require('../facilities/mapFacilityValue');
 const mapFacilityProduct = require('../facilities/mapFacilityProduct');
 const mapFacilityType = require('../facilities/mapFacilityType');
@@ -9,11 +8,12 @@ const mapGefUkefFacilityType = require('./mapGefUkefFacilityType');
 const mapGefFacilityDates = require('./mapGefFacilityDates');
 const mapFacilityValueExportCurrency = require('../facilities/mapFacilityValueExportCurrency');
 const mapUkefExposureValue = require('../facilities/mapUkefExposureValue');
+const { mapGefFacilityStage } = require('../facilities/mapFacilityStage');
 
 /**
  * Maps existing GEF facility to the facility used in TFM API.
- * Note: This implimentation modifies the facility snapshot
- * to have values not consistent with the facility snapshot in the database.
+ * Note: This implementation modifies the facility snapshot to have values not consistent with the facility snapshot in the database.
+ * In particular, this is a live object that updates e.g. when amendments are added in TFM.
  */
 const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
   const { facilitySnapshot, tfm: facilityTfm } = facility;
@@ -25,7 +25,7 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
 
   facilitySnapshot.facilityProduct = mapFacilityProduct(type);
 
-  facilitySnapshot.facilityStage = mapFacilityStage(hasBeenIssued);
+  facilitySnapshot.facilityStage = mapGefFacilityStage(hasBeenIssued, facilityTfm?.stage);
 
   facilitySnapshot.ukefFacilityType = type;
 

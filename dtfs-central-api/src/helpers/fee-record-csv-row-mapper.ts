@@ -1,4 +1,4 @@
-import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity, UTILISATION_REPORT_HEADERS, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity, UTILISATION_REPORT_HEADERS, FeeRecordStatus, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
 import { UtilisationReportRawCsvData } from '../types/utilisation-reports';
 
 type FeeRecordCsvRowToSqlEntityParams = {
@@ -22,7 +22,7 @@ const asNumberOrDefault = (maybeString: string | undefined, defaultNumber: numbe
  */
 export const feeRecordCsvRowToSqlEntity = ({ dataEntry, requestSource, report }: FeeRecordCsvRowToSqlEntityParams): FeeRecordEntity => {
   const feesPaidToUkefForThePeriod = Number(dataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD]);
-  const status: FeeRecordStatus = feesPaidToUkefForThePeriod === 0 ? 'MATCH' : 'TO_DO';
+  const status: FeeRecordStatus = feesPaidToUkefForThePeriod === 0 ? FEE_RECORD_STATUS.MATCH : FEE_RECORD_STATUS.TO_DO;
 
   return FeeRecordEntity.create({
     facilityId: dataEntry[UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID],
