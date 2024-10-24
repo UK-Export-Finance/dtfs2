@@ -1,11 +1,13 @@
+const { ACTIVITY_TYPES } = require('@ukef/dtfs2-common');
+
 const FILTER_TYPE = {
   ALL: 'all-activity',
   COMMENT: 'comments-only',
 };
 
-const filter = (activities, FILTER_VALUE) => activities.filter((activity) => activity.type === FILTER_VALUE);
+const filter = (activities, activityType) => activities.filter((activity) => activity.type === activityType);
 
-const filterByComment = (activities) => filter(activities, 'COMMENT');
+const filterByComment = (activities) => filter(activities, ACTIVITY_TYPES.COMMENT);
 
 const filterActivities = (activities, filtersObj) => {
   if (!filtersObj?.filterType || filtersObj?.filterType === FILTER_TYPE.ALL) {
