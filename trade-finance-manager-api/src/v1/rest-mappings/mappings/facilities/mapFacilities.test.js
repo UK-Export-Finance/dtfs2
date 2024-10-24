@@ -100,8 +100,8 @@ describe('mapFacilities', () => {
 
   const mockFacilities = [{ ...MOCK_FACILITIES[0] }, { ...MOCK_FACILITIES[1] }];
 
-  it('should map and format correct fields/values', () => {
-    const result = mapFacilities(mockFacilities, mockDealDetails, MOCK_DEAL_TFM);
+  it('should map and format correct fields/values for a BSS/EWCS facility', () => {
+    const result = mapFacilities(mockFacilities, MOCK_DEAL, MOCK_DEAL_TFM);
 
     const expected = [
       {

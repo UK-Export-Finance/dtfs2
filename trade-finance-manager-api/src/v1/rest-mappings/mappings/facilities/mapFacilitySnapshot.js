@@ -42,7 +42,7 @@ const mapFacilitySnapshot = (facility, dealDetails) => {
 
   clonedSnapshot.facilityStage = mapFacilityStage(facilityStage);
 
-  const mapped = {
+  return {
     _id: clonedSnapshot._id,
     isGef: false,
     dealId: clonedSnapshot.dealId,
@@ -72,8 +72,6 @@ const mapFacilitySnapshot = (facility, dealDetails) => {
     bondIssuer: clonedSnapshot.bondIssuer,
     bondBeneficiary: clonedSnapshot.bondBeneficiary,
   };
-
-  return mapped;
 };
 
 module.exports = mapFacilitySnapshot;
