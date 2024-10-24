@@ -5,32 +5,27 @@
   {% set selectedFilters = params.selectedFilters %}
 
   <div class="moj-action-bar" data-cy="payment-details--filters-action-bar">
-
     <div class="govuk-grid-row govuk-!-margin-right-0 govuk-!-margin-left-0">
-      <div class="govuk-grid-column-one-half govuk-!-padding-left-0">
+      <div class="govuk-!-padding-left-0 govuk-!-display-inline-block">
         <div class="moj-action-bar__filter" data-filtered-table-id="payment-details"></div>
       </div>
-    </div>
 
-    {% if selectedFilters.length %}
-      <ul class="govuk-!-padding-left-0" data-cy="payment-details--main-container-selected-filters">
-        {% for filter in selectedFilters %}
-          {% for filterItem in filter.items %}
-            <li class="main-container-selected-filter-list-item">
-              <a
-                class="govuk-link govuk-button--secondary moj-filter__tag"
-                href="{{ filterItem.href }}"
-                data-cy="payment-details--main-container-selected-filter-{{ filterItem.formattedValue }}"
-              >
-                <span class="govuk-visually-hidden">Remove this filter</span>
-                {{ filterItem.text }}
+      {% if selectedFilters %}
+      <ul class="govuk-!-padding-left-0 govuk-!-margin-bottom-5"
+          data-cy="payment-details--main-container-selected-filters">
+        {% for key, selectedFilter in selectedFilters %}
+         {% if selectedFilter %}
+            <li class="main-container-selected-filter-list-item govuk-!-display-inline-block govuk-!-margin-right-3">
+              <a class="govuk-link govuk-button--secondary moj-filter__tag"
+                href="{{ selectedFilter.removeHref }}"
+                data-cy="payment-details--main-container-selected-filter-{{ key }}">
+                <span class="govuk-visually-hidden">Remove this filter</span> {{ selectedFilter.value }}
               </a>
             </li>
-          {% endfor %}
+          {% endif %}
         {% endfor %}
       </ul>
     {% endif %}
-
+    </div>
   </div>
-
 {% endmacro %}

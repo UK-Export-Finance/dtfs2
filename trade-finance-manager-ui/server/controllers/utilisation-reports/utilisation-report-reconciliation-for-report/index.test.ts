@@ -14,6 +14,7 @@ import {
   UtilisationDetailsViewModel,
 } from '../../../types/view-models';
 import { mapPaymentDetailsFiltersToViewModel } from '../helpers';
+import { mapToSelectedPaymentDetailsFiltersViewModel } from './map-to-selected-payment-details-filters-view-model';
 
 jest.mock('../../../api');
 jest.mock('../../../helpers/date');
@@ -222,6 +223,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         filterErrors: {
           errorSummary: [],
         },
+        selectedFilters: mapToSelectedPaymentDetailsFiltersViewModel(paymentDetailsFilters, reportId),
         isFilterActive: true,
       };
 
