@@ -1,11 +1,11 @@
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
-const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
+const { oneMonth, twoMonths } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const now = new Date().valueOf();
-const nowPlusOneMonth = `${dateConstants.oneMonthUnix}000`;
-const nowPlusTwoMonthsDay = dateConstants.twoMonthsDay.toString();
-const nowPlusTwoMonthsMonth = dateConstants.twoMonthsMonth.toString();
-const nowPlusTwoMonthsYear = dateConstants.twoMonthsYear.toString();
+const nowPlusOneMonth = oneMonth.unixMillisecondsString;
+const nowPlusTwoMonthsDay = twoMonths.dayLong;
+const nowPlusTwoMonthsMonth = twoMonths.monthLong;
+const nowPlusTwoMonthsYear = twoMonths.year;
 
 const deal = {
   submissionType: 'Automatic Inclusion Notice',

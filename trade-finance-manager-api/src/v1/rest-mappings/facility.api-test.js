@@ -1,5 +1,5 @@
 const facilityReducer = require('./facility');
-const mapFacility = require('./mappings/facilities/mapFacility');
+const mapFacilitySnapshot = require('./mappings/facilities/mapFacilitySnapshot');
 const mapFacilityTfm = require('./mappings/facilities/mapFacilityTfm');
 const mapGefFacility = require('./mappings/gef-facilities/mapGefFacility');
 
@@ -26,7 +26,7 @@ describe('reducer - facility', () => {
 
     const expected = {
       _id: mockFacility._id,
-      facilitySnapshot: mapFacility(mockFacility.facilitySnapshot, mockFacility.tfm, mockDeal.dealSnapshot.details, mockFacility),
+      facilitySnapshot: mapFacilitySnapshot(mockFacility, mockDeal.dealSnapshot.details),
       tfm: mapFacilityTfm(mockFacility.tfm, {}, mockFacility),
     };
 

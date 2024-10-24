@@ -35,7 +35,7 @@ function buildHeader(app) {
     companyName: app.exporter?.companyName,
     applicationStatus: app.status,
     dateCreated: app.createdAt,
-    timezone: app.maker.timezone || timeZoneConfig.TZ,
+    timezone: app.maker.timezone || timeZoneConfig.DEFAULT,
     createdBy: `${app.maker.firstname} ${app.maker.surname}`,
     comments: app.comments,
     applicationType: app.submissionType,

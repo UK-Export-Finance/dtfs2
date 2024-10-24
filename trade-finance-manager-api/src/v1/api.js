@@ -164,6 +164,10 @@ const updatePortalFacility = async (facilityId, update, auditDetails) => {
   }
 };
 
+/**
+ * @param {string} dealId
+ * @returns {Promise<import('@ukef/dtfs2-common').TfmDeal}
+ */
 const findOneDeal = async (dealId) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -305,7 +309,7 @@ const updateDealCancellation = async ({ dealId, dealCancellationUpdate, auditDet
 /**
  * Gets the deal cancellation object on a TFM deal
  * @param {string} dealId - deal cancellation to update
- * @returns {Promise<Partial<import('@ukef/dtfs2-common').TfmDealCancellation>>} - Deal cancellation object
+ * @returns {Promise<Partial<import('@ukef/dtfs2-common').TfmDealCancellationWithStatus>>} - Deal cancellation object
  */
 const getDealCancellation = async (dealId) => {
   try {
@@ -379,6 +383,10 @@ const findOneFacility = async (facilityId) => {
   }
 };
 
+/**
+ * @param {string} dealId
+ * @returns {Promise<import('@ukef/dtfs2-common').TfmFacility[]>}
+ */
 const findFacilitiesByDealId = async (dealId) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -895,6 +903,11 @@ const updateUserTasks = async (userId, updatedTasks) => {
   }
 };
 
+/**
+ * find one team
+ * @param {string} teamId - the team id
+ * @returns {Promise<import('@ukef/dtfs2-common').Team>}
+ */
 const findOneTeam = async (teamId) => {
   try {
     const isValidId = isValidTeamId(teamId);
@@ -1016,7 +1029,7 @@ const createACBS = async (deal, bank) => {
   return {};
 };
 
-const updateACBSfacility = async (facility, deal) => {
+const issueACBSfacility = async (facility, deal) => {
   if (!!facility && !!deal) {
     try {
       const response = await axios({
@@ -1674,7 +1687,7 @@ module.exports = {
   getFacilityExposurePeriod,
   getPremiumSchedule,
   createACBS,
-  updateACBSfacility,
+  issueACBSfacility,
   amendACBSfacility,
   getFunctionsAPI,
   createEstoreSite,

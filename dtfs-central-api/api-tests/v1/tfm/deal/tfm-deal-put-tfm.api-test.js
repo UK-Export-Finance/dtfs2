@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, ACTIVITY_TYPES } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
@@ -193,7 +193,7 @@ describe('/v1/tfm/deal/:id', () => {
       };
 
       const commentObj = {
-        type: 'COMMENT',
+        type: ACTIVITY_TYPES.COMMENT,
         timestamp: 13345665,
         text: 'test1',
         author: MOCK_AUTHOR,
@@ -213,7 +213,7 @@ describe('/v1/tfm/deal/:id', () => {
       expect(firstCommentUpdate.deal.tfm.activities).toEqual([commentObj]);
 
       const secondCommentObj = {
-        type: 'COMMENT',
+        type: ACTIVITY_TYPES.COMMENT,
         timestamp: 13345669,
         text: 'test2',
         author: MOCK_AUTHOR,
@@ -260,7 +260,7 @@ describe('/v1/tfm/deal/:id', () => {
       };
 
       const commentObj = {
-        type: 'COMMENT',
+        type: ACTIVITY_TYPES.COMMENT,
         timestamp: 13345665,
         text: 'test1',
         author: MOCK_AUTHOR,
@@ -280,7 +280,7 @@ describe('/v1/tfm/deal/:id', () => {
       expect(firstCommentUpdate.deal.tfm.activities).toEqual([commentObj]);
 
       const secondCommentObj = {
-        type: 'COMMENT',
+        type: ACTIVITY_TYPES.COMMENT,
         timestamp: 13345665,
         text: 'test1',
         author: MOCK_AUTHOR,
@@ -328,7 +328,7 @@ describe('/v1/tfm/deal/:id', () => {
       };
 
       const commentObj = {
-        type: 'COMMENT',
+        type: ACTIVITY_TYPES.COMMENT,
         timestamp: 13345665,
         text: 'test1',
         author: MOCK_AUTHOR,
@@ -348,7 +348,7 @@ describe('/v1/tfm/deal/:id', () => {
       expect(firstCommentUpdate.deal.tfm.activities).toEqual([commentObj]);
 
       const secondCommentObj = {
-        type: 'COMMENT',
+        type: ACTIVITY_TYPES.COMMENT,
         timestamp: 13345665,
         text: 'test1',
         author: MOCK_AUTHOR,
@@ -396,7 +396,7 @@ describe('/v1/tfm/deal/:id', () => {
       };
 
       const commentOne = {
-        type: 'COMMENT',
+        type: ACTIVITY_TYPES.COMMENT,
         timestamp: 13345665,
         text: 'test1',
         author: MOCK_AUTHOR,
@@ -404,7 +404,7 @@ describe('/v1/tfm/deal/:id', () => {
       };
 
       const commentTwo = {
-        type: 'COMMENT',
+        type: ACTIVITY_TYPES.COMMENT,
         timestamp: 13345668,
         text: 'test1',
         author: MOCK_AUTHOR,
@@ -426,7 +426,7 @@ describe('/v1/tfm/deal/:id', () => {
       expect(firstCommentUpdate.deal.tfm.activities).toEqual([commentOne, commentTwo]);
 
       const commentThree = {
-        type: 'COMMENT',
+        type: ACTIVITY_TYPES.COMMENT,
         timestamp: 13345445,
         text: 'test1',
         author: MOCK_AUTHOR,
@@ -434,7 +434,7 @@ describe('/v1/tfm/deal/:id', () => {
       };
 
       const commentFour = {
-        type: 'COMMENT',
+        type: ACTIVITY_TYPES.COMMENT,
         timestamp: 13345445,
         text: 'test1',
         author: MOCK_AUTHOR,
@@ -442,7 +442,7 @@ describe('/v1/tfm/deal/:id', () => {
       };
 
       const commentFive = {
-        type: 'COMMENT',
+        type: ACTIVITY_TYPES.COMMENT,
         timestamp: 13345566,
         text: 'test1',
         author: MOCK_AUTHOR,

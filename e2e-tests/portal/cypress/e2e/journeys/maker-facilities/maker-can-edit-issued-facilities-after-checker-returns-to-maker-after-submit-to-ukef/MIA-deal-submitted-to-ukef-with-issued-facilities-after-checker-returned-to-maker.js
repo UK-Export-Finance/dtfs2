@@ -1,8 +1,8 @@
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
-const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
+const { sevenDays, twoMonths, oneMonth } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const now = new Date();
-const nowPlusWeek = `${dateConstants.sevenDaysUnix}000`;
+const nowPlusWeek = sevenDays.unixMillisecondsString;
 
 const deal = {
   submissionType: 'Manual Inclusion Application',
@@ -209,13 +209,13 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': dateConstants.twoMonthsDay.toString(),
-      'coverEndDate-month': dateConstants.twoMonthsMonth.toString(),
-      'coverEndDate-year': dateConstants.twoMonthsYear.toString(),
+      'coverEndDate-day': twoMonths.dayLong,
+      'coverEndDate-month': twoMonths.monthLong,
+      'coverEndDate-year': twoMonths.year,
       name: '1234',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
-      requestedCoverStartDate: `${dateConstants.oneMonthUnix}000`,
+      requestedCoverStartDate: oneMonth.unixMillisecondsString,
       issuedDate: nowPlusWeek,
       issueFacilityDetailsProvided: true,
       status: "Maker's input required",
@@ -245,9 +245,9 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': dateConstants.twoMonthsDay.toString(),
-      'coverEndDate-month': dateConstants.twoMonthsMonth.toString(),
-      'coverEndDate-year': dateConstants.twoMonthsYear.toString(),
+      'coverEndDate-day': twoMonths.dayLong,
+      'coverEndDate-month': twoMonths.monthLong,
+      'coverEndDate-year': twoMonths.year,
       disbursementAmount: '1,234.00',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
@@ -255,7 +255,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
       status: "Maker's input required",
       previousFacilityStage: 'Conditional',
-      requestedCoverStartDate: `${dateConstants.oneMonthUnix}000`,
+      requestedCoverStartDate: oneMonth.unixMillisecondsString,
     },
   ],
   summary: {},

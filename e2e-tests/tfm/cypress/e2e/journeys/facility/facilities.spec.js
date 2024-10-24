@@ -2,7 +2,7 @@ import relative from '../../relativeURL';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
-import { oneMonthFormattedShort } from '../../../../../e2e-fixtures/dateConstants';
+import { oneMonth } from '../../../../../e2e-fixtures/dateConstants';
 import { caseSummary } from '../../partials';
 import pages from '../../pages';
 
@@ -78,7 +78,7 @@ context('Facility page', () => {
     [0, 2].forEach((i) => {
       pages.facilitiesPage.typeCell(i).contains(dealOneFacilities[0].type);
       pages.facilitiesPage.valueCell(i).contains('GBP 1,234,567,890.1');
-      pages.facilitiesPage.coverEndDateCell(i).contains(oneMonthFormattedShort);
+      pages.facilitiesPage.coverEndDateCell(i).contains(oneMonth.dd_MMM_yyyy);
       pages.facilitiesPage.facilityStageCell(i).contains('Issued');
     });
 
@@ -225,8 +225,8 @@ context('Facility page', () => {
 
     pages.facilitiesPage.coverEndDateCell(0).contains('24 Sep 2020');
     pages.facilitiesPage.coverEndDateCell(1).contains('24 Sep 2020');
-    pages.facilitiesPage.coverEndDateCell(2).contains(oneMonthFormattedShort);
-    pages.facilitiesPage.coverEndDateCell(3).contains(oneMonthFormattedShort);
+    pages.facilitiesPage.coverEndDateCell(2).contains(oneMonth.dd_MMM_yyyy);
+    pages.facilitiesPage.coverEndDateCell(3).contains(oneMonth.dd_MMM_yyyy);
   });
 
   it('sorts all columns based on Cover End Date column (DESC)', () => {
@@ -238,8 +238,8 @@ context('Facility page', () => {
     // click again for `descending` order
     pages.facilitiesPage.facilitiesTable.headings.coverEndDateSortButton().click();
 
-    pages.facilitiesPage.coverEndDateCell(0).contains(oneMonthFormattedShort);
-    pages.facilitiesPage.coverEndDateCell(1).contains(oneMonthFormattedShort);
+    pages.facilitiesPage.coverEndDateCell(0).contains(oneMonth.dd_MMM_yyyy);
+    pages.facilitiesPage.coverEndDateCell(1).contains(oneMonth.dd_MMM_yyyy);
     pages.facilitiesPage.coverEndDateCell(2).contains('24 Sep 2020');
     pages.facilitiesPage.coverEndDateCell(3).contains('24 Sep 2020');
   });

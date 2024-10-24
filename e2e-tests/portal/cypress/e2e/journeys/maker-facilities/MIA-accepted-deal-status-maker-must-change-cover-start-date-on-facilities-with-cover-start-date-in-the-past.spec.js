@@ -87,7 +87,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().should('not.exist');
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().should('not.exist');
 
-    cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: oneMonth });
+    cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: oneMonth.date });
 
     cy.clickSubmitButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));

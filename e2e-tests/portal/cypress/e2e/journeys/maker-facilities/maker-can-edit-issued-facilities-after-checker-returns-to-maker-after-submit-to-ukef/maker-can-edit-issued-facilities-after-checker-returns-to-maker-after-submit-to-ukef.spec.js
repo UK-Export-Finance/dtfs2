@@ -2,15 +2,7 @@ const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
 const mockDeal = require('./MIA-deal-submitted-to-ukef-with-issued-facilities-after-checker-returned-to-maker');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
-const {
-  oneMonthDay,
-  oneMonthMonth,
-  oneMonthYear,
-  todayDay,
-  twoMonthsDay,
-  twoMonthsMonth,
-  twoMonthsYear,
-} = require('../../../../../../e2e-fixtures/dateConstants');
+const { today, oneMonth, twoMonths } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
@@ -84,45 +76,45 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
       bondRow.issueFacilityLink().click();
       cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
 
-      cy.completeDateFormFields({ idPrefix: 'issuedDate', day: todayDay, month: null, year: null });
-      cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', day: `${oneMonthDay}-`, month: null, year: null });
+      cy.completeDateFormFields({ idPrefix: 'issuedDate', day: today.day, month: null, year: null });
+      cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', day: `${oneMonth.dayLong}-`, month: null, year: null });
 
       cy.clickSubmitButton();
 
       pages.bondIssueFacility.requestedCoverStartDateError().contains('The day for the requested Cover Start Date must include 1 or 2 numbers');
 
-      cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', day: oneMonthDay, month: `${oneMonthMonth}3`, year: null });
+      cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', day: oneMonth.dayLong, month: `${oneMonth.monthLong}3`, year: null });
 
       cy.clickSubmitButton();
 
       pages.bondIssueFacility.requestedCoverStartDateError().contains('The month for the requested Cover Start Date must include 1 or 2 numbers');
 
-      cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', day: null, month: oneMonthMonth, year: `${oneMonthYear}/` });
+      cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', day: null, month: oneMonth.monthLong, year: `${oneMonth.year}/` });
 
       cy.clickSubmitButton();
 
       pages.bondIssueFacility.requestedCoverStartDateError().contains('The year for the requested Cover Start Date must include 4 numbers');
 
-      cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', day: null, month: null, year: oneMonthYear });
-      cy.completeDateFormFields({ idPrefix: 'coverEndDate', day: `${twoMonthsDay}-`, month: null, year: null });
+      cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', day: null, month: null, year: oneMonth.year });
+      cy.completeDateFormFields({ idPrefix: 'coverEndDate', day: `${twoMonths.dayLong}-`, month: null, year: null });
 
       cy.clickSubmitButton();
 
       pages.bondIssueFacility.coverEndDateError().contains('The day for the cover end date must only include 1 or 2 numbers');
 
-      cy.completeDateFormFields({ idPrefix: 'coverEndDate', day: twoMonthsDay, month: `${twoMonthsMonth}3`, year: null });
+      cy.completeDateFormFields({ idPrefix: 'coverEndDate', day: twoMonths.dayLong, month: `${twoMonths.monthLong}3`, year: null });
 
       cy.clickSubmitButton();
 
       pages.bondIssueFacility.coverEndDateError().contains('The month for the cover end date must only include 1 or 2 numbers');
 
-      cy.completeDateFormFields({ idPrefix: 'coverEndDate', day: null, month: twoMonthsMonth, year: `${twoMonthsYear}/` });
+      cy.completeDateFormFields({ idPrefix: 'coverEndDate', day: null, month: twoMonths.monthLong, year: `${twoMonths.year}/` });
 
       cy.clickSubmitButton();
 
       pages.bondIssueFacility.coverEndDateError().contains('The year for the Cover End Date must include 4 numbers');
 
-      cy.completeDateFormFields({ idPrefix: 'coverEndDate', day: null, month: null, year: twoMonthsYear });
+      cy.completeDateFormFields({ idPrefix: 'coverEndDate', day: null, month: null, year: twoMonths.year });
 
       cy.clickSubmitButton();
     });
@@ -141,7 +133,7 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
       loanRow.issueFacilityLink().click();
       cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanId}/issue-facility`));
 
-      cy.completeDateFormFields({ idPrefix: 'issuedDate', day: todayDay, month: null, year: null });
+      cy.completeDateFormFields({ idPrefix: 'issuedDate', day: today.dayLong, month: null, year: null });
       cy.clickSubmitButton();
     });
 
