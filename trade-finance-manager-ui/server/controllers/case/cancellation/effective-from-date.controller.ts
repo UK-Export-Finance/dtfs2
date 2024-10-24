@@ -6,7 +6,7 @@ import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { asUserSession } from '../../../helpers/express-session';
 import { EffectiveFromDateViewModel } from '../../../types/view-models';
 import { validateEffectiveFromDate } from './validation/validate-effective-from-date';
-import { canSubmissionTypeBeCancelled } from '../../helpers/can-deal-be-cancelled.helper';
+import { canSubmissionTypeBeCancelled } from '../../helpers/deal-cancellation-enabled.helper';
 import api from '../../../api';
 import { getPreviousPageUrlForCancellationFlow } from './helpers/get-previous-page-url';
 
