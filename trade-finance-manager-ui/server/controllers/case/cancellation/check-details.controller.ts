@@ -3,7 +3,7 @@ import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { isEmpty } from 'lodash';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { asUserSession } from '../../../helpers/express-session';
-import { canSubmissionTypeBeCancelled } from '../../helpers/deal-cancellation-enabled.helper';
+import { canSubmissionTypeBeCancelled } from '../../helpers/can-deal-be-cancelled.helper';
 import api from '../../../api';
 import { CheckDetailsViewModel } from '../../../types/view-models';
 
