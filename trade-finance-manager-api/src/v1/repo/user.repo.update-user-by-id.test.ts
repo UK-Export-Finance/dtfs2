@@ -89,7 +89,7 @@ describe('user repo', () => {
         mockUnsuccessfulFindOneAndUpdateResponse();
       });
 
-      it('throws an error if an update fails', async () => {
+      it('throws an error', async () => {
         await expect(makeRequest()).rejects.toThrow(DocumentNotUpdatedError);
       });
     });

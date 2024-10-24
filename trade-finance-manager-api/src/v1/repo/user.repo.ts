@@ -1,5 +1,5 @@
 import escapeStringRegexp from 'escape-string-regexp';
-import { AuditDetails, DocumentNotUpdatedError, MONGO_DB_COLLECTIONS, TfmUser, UserUpsertRequest } from '@ukef/dtfs2-common';
+import { AuditDetails, DocumentNotCreatedError, DocumentNotUpdatedError, MONGO_DB_COLLECTIONS, TfmUser, UserUpsertRequest } from '@ukef/dtfs2-common';
 import { Collection, FindOneAndUpdateOptions, ObjectId, WithoutId } from 'mongodb';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../drivers/db-client';
@@ -51,6 +51,11 @@ export class UserRepo {
     };
 
     const result = await collection.insertOne(userToCreate);
+
+    if (!result.acknowledged) {
+      throw new DocumentNotCreatedError();
+    }
+
     return { _id: result.insertedId, ...userToCreate };
   }
 
@@ -64,6 +69,7 @@ export class UserRepo {
     auditDetails: AuditDetails;
   }) {
     const collection = await UserRepo.getCollection();
+
     const filter = { _id: { $eq: new ObjectId(userId.toString()) } };
     const update = {
       $set: {
@@ -72,10 +78,13 @@ export class UserRepo {
       },
     };
     const options: FindOneAndUpdateOptions = { returnDocument: 'after' };
+
     const result = await collection.findOneAndUpdate(filter, update, options);
+
     if (!result.ok || !result.value) {
       throw new DocumentNotUpdatedError(userId.toString());
     }
+
     return result.value;
   }
 }
