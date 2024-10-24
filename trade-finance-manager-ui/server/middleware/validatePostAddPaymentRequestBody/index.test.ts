@@ -95,7 +95,7 @@ describe('validatePostAddPaymentRequestBody', () => {
   });
 
   describe('when the body contains checkbox ids with different payment currencies', () => {
-    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', 'TO_DO'), getCheckboxId(2, 'EUR', 'TO_DO')];
+    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', FEE_RECORD_STATUS.TO_DO), getCheckboxId(2, 'EUR', FEE_RECORD_STATUS.TO_DO)];
     const next = jest.fn();
 
     it(`redirects to '${REDIRECT_URL}'`, () => {
@@ -236,11 +236,11 @@ describe('validatePostAddPaymentRequestBody', () => {
     });
   });
 
-  it("calls the 'next' function when the body contains multiple checkbox ids with the 'TO_DO' fee record status", () => {
+  it(`calls the 'next' function when the body contains multiple checkbox ids with the ${FEE_RECORD_STATUS.TO_DO} fee record status`, () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
-    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', 'TO_DO'), getCheckboxId(2, 'GBP', 'TO_DO')];
+    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', FEE_RECORD_STATUS.TO_DO), getCheckboxId(2, 'GBP', FEE_RECORD_STATUS.TO_DO)];
     req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
 
     const next = jest.fn();
@@ -252,11 +252,11 @@ describe('validatePostAddPaymentRequestBody', () => {
     expect(next).toHaveBeenCalled();
   });
 
-  it("calls the 'next' function when the body contains one checkbox id with the 'TO_DO' fee record status", () => {
+  it(`calls the 'next' function when the body contains one checkbox id with the ${FEE_RECORD_STATUS.TO_DO} fee record status`, () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
-    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', 'TO_DO')];
+    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', FEE_RECORD_STATUS.TO_DO)];
     req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
 
     const next = jest.fn();

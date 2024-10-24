@@ -333,7 +333,7 @@ describe('reconciliation-for-report-helper', () => {
 
     it('should map the group status to the view model status', () => {
       // Arrange
-      const status: FeeRecordStatus = 'TO_DO';
+      const status: FeeRecordStatus = FEE_RECORD_STATUS.TO_DO;
       const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), status }];
 
       // Act
@@ -345,7 +345,7 @@ describe('reconciliation-for-report-helper', () => {
     });
 
     it.each([
-      { feeRecordStatus: 'TO_DO', feeRecordDisplayStatus: 'TO DO' },
+      { feeRecordStatus: FEE_RECORD_STATUS.TO_DO, feeRecordDisplayStatus: 'TO DO' },
       { feeRecordStatus: FEE_RECORD_STATUS.MATCH, feeRecordDisplayStatus: 'MATCH' },
       { feeRecordStatus: FEE_RECORD_STATUS.DOES_NOT_MATCH, feeRecordDisplayStatus: 'DOES NOT MATCH' },
       { feeRecordStatus: FEE_RECORD_STATUS.READY_TO_KEY, feeRecordDisplayStatus: 'READY TO KEY' },
@@ -389,7 +389,7 @@ describe('reconciliation-for-report-helper', () => {
 
       const feeRecords = [firstFeeRecord, secondFeeRecord];
 
-      const groupStatus: FeeRecordStatus = 'TO_DO';
+      const groupStatus: FeeRecordStatus = FEE_RECORD_STATUS.TO_DO;
 
       const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), feeRecords, status: groupStatus }];
 

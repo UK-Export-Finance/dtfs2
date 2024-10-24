@@ -21,7 +21,7 @@ const getFacilityIdsAtToDoOrDoesNotMatchStatus = async (entityManager: EntityMan
   const feeRecordsAtToDoOrDoesNotMatchStatus = await entityManager.find(FeeRecordEntity, {
     where: {
       report: { id: reportId },
-      status: In<FeeRecordStatus>(['TO_DO', FEE_RECORD_STATUS.DOES_NOT_MATCH]),
+      status: In<FeeRecordStatus>([FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.DOES_NOT_MATCH]),
     },
   });
   return feeRecordsAtToDoOrDoesNotMatchStatus.reduce((facilityIds, { facilityId }) => facilityIds.add(facilityId), new Set<string>());

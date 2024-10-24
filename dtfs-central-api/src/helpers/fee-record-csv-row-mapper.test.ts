@@ -65,7 +65,7 @@ describe('fee-record-helpers', () => {
 
       // Assert
       expect(feeRecordEntity instanceof FeeRecordEntity).toEqual(true);
-      expect(feeRecordEntity.status).toEqual<FeeRecordStatus>('TO_DO');
+      expect(feeRecordEntity.status).toEqual<FeeRecordStatus>(FEE_RECORD_STATUS.TO_DO);
     });
 
     it(`sets the entity status to ${FEE_RECORD_STATUS.MATCH} when fees paid to ukef for the period is zero`, () => {

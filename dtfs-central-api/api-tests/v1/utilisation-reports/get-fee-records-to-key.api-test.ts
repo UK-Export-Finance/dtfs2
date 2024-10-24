@@ -197,8 +197,8 @@ describe(`GET ${BASE_URL}`, () => {
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
 
     const toDoFeeRecords = [
-      FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('TO_DO').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('TO_DO').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.TO_DO).build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus(FEE_RECORD_STATUS.TO_DO).build(),
     ];
     report.feeRecords = toDoFeeRecords;
 

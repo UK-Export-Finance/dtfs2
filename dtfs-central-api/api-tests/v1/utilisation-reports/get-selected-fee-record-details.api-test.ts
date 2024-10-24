@@ -167,7 +167,7 @@ describe(`GET ${BASE_URL}`, () => {
       .withFeesPaidToUkefForThePeriod(100)
       .withFeesPaidToUkefForThePeriodCurrency('GBP')
       .withPaymentCurrency(paymentCurrency)
-      .withStatus('TO_DO')
+      .withStatus(FEE_RECORD_STATUS.TO_DO)
       .build();
   }
 });

@@ -33,7 +33,7 @@ describe('FeeRecordStateMachine', () => {
 
   describe(`when the fee record has the '${FEE_RECORD_STATUS.TO_DO}' status`, () => {
     // Arrange
-    const TO_DO_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus('TO_DO').build();
+    const TO_DO_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus(FEE_RECORD_STATUS.TO_DO).build();
 
     const VALID_TO_DO_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['PAYMENT_ADDED'];
     const INVALID_TO_DO_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_TO_DO_FEE_RECORD_EVENT_TYPES);

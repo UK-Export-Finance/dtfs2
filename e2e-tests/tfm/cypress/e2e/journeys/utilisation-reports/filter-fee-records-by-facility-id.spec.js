@@ -148,8 +148,8 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
     ];
 
     const toDoFeeRecords = [
-      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(4).withStatus('TO_DO').withFacilityId('44444444').build(),
-      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(5).withStatus('TO_DO').withFacilityId('55555555').build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(4).withStatus(FEE_RECORD_STATUS.TO_DO).withFacilityId('44444444').build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(5).withStatus(FEE_RECORD_STATUS.TO_DO).withFacilityId('55555555').build(),
     ];
 
     const allFeeRecords = [...groupedFeeRecords, ...toDoFeeRecords];

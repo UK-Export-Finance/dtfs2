@@ -335,6 +335,6 @@ describe('get selected fee record details controller helpers', () => {
 
   function aFeeRecordWithStatusToDo(): FeeRecordEntity {
     const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-    return FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('GBP').withStatus('TO_DO').build();
+    return FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('GBP').withStatus(FEE_RECORD_STATUS.TO_DO).build();
   }
 });

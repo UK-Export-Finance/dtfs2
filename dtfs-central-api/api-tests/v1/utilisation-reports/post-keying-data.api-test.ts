@@ -109,8 +109,8 @@ describe(`POST ${BASE_URL}`, () => {
     // Arrange
     const report = anUploadedReconciliationInProgressUtilisationReport();
     const toDoFeeRecords = [
-      FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('TO_DO').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('TO_DO').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.TO_DO).build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus(FEE_RECORD_STATUS.TO_DO).build(),
     ];
     report.feeRecords = toDoFeeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
@@ -223,7 +223,7 @@ describe(`POST ${BASE_URL}`, () => {
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(1)
         .withFacilityId(facilityId)
-        .withStatus('TO_DO')
+        .withStatus(FEE_RECORD_STATUS.TO_DO)
         .withLastUpdatedByPortalUserId(portalUserId)
         .withLastUpdatedByTfmUserId(null)
         .withLastUpdatedByIsSystemUser(false)
@@ -269,7 +269,7 @@ describe(`POST ${BASE_URL}`, () => {
     const secondFacilityId = '22222222';
     const feeRecords = [
       // Fee records for same facility where only one has MATCH status
-      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(firstFacilityId).withStatus('TO_DO').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(firstFacilityId).withStatus(FEE_RECORD_STATUS.TO_DO).build(),
       FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(firstFacilityId).withStatus(FEE_RECORD_STATUS.MATCH).build(),
       // Fee records for same facility where both have MATCH status
       FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(secondFacilityId).withStatus(FEE_RECORD_STATUS.MATCH).build(),
@@ -291,7 +291,7 @@ describe(`POST ${BASE_URL}`, () => {
 
     const allFeeRecords = await SqlDbHelper.manager.find(FeeRecordEntity, {});
     expect(allFeeRecords).toHaveLength(feeRecords.length);
-    expect(allFeeRecords.find(({ id }) => id === 1)!.status).toBe<FeeRecordStatus>('TO_DO');
+    expect(allFeeRecords.find(({ id }) => id === 1)!.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.TO_DO);
     expect(allFeeRecords.find(({ id }) => id === 2)!.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.READY_TO_KEY);
     expect(allFeeRecords.find(({ id }) => id === 3)!.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.READY_TO_KEY);
     expect(allFeeRecords.find(({ id }) => id === 4)!.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.READY_TO_KEY);
@@ -539,7 +539,7 @@ describe(`POST ${BASE_URL}`, () => {
         report.reportPeriod = currentReportPeriod;
 
         const toDoFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
-          .withStatus('TO_DO')
+          .withStatus(FEE_RECORD_STATUS.TO_DO)
           .withId(toDoFeeRecordId)
           .withFacilityUtilisation(currentUtilisation)
           .withFacilityId(facilityId)
@@ -576,7 +576,7 @@ describe(`POST ${BASE_URL}`, () => {
 
       it('generates keying data for the last facility fee record which has been moved to READY_TO_KEY', async () => {
         // Arrange
-        const existingToDoFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: toDoFeeRecordId, status: 'TO_DO' });
+        const existingToDoFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: toDoFeeRecordId, status: FEE_RECORD_STATUS.TO_DO });
         existingToDoFeeRecord.status = FEE_RECORD_STATUS.MATCH;
         await SqlDbHelper.saveNewEntry('FeeRecord', existingToDoFeeRecord);
         await insertMatchingPaymentsForFeeRecords([existingToDoFeeRecord]);
@@ -594,7 +594,7 @@ describe(`POST ${BASE_URL}`, () => {
 
       it('updates the facility utilisation data table once all fee records for the facility have been moved to READY_TO_KEY', async () => {
         // Arrange
-        const existingToDoFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: toDoFeeRecordId, status: 'TO_DO' });
+        const existingToDoFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: toDoFeeRecordId, status: FEE_RECORD_STATUS.TO_DO });
         existingToDoFeeRecord.status = FEE_RECORD_STATUS.MATCH;
         await SqlDbHelper.saveNewEntry('FeeRecord', existingToDoFeeRecord);
         await insertMatchingPaymentsForFeeRecords([existingToDoFeeRecord]);

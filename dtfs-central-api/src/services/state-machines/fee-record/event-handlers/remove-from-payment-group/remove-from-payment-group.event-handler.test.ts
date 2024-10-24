@@ -36,7 +36,7 @@ describe('handleFeeRecordRemoveFromPaymentGroupEvent', () => {
     expect(feeRecord.payments).toHaveLength(0);
   });
 
-  it("sets the fee record status to 'TO_DO'", async () => {
+  it(`sets the fee record status to ${FEE_RECORD_STATUS.TO_DO}`, async () => {
     // Arrange
     const feeRecord = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withStatus(FEE_RECORD_STATUS.MATCH).build();
 
@@ -47,7 +47,7 @@ describe('handleFeeRecordRemoveFromPaymentGroupEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.status).toEqual('TO_DO');
+    expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.TO_DO);
   });
 
   it('updates the last updated by fields to the request source', async () => {

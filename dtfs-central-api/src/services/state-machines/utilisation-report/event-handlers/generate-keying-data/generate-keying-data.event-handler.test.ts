@@ -82,7 +82,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
     expect(mockFind).toHaveBeenCalledWith(FeeRecordEntity, {
       where: {
         report: { id: utilisationReport.id },
-        status: In(['TO_DO', FEE_RECORD_STATUS.DOES_NOT_MATCH]),
+        status: In([FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.DOES_NOT_MATCH]),
       },
     });
 
@@ -133,7 +133,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
       expect(mockFind).toHaveBeenCalledWith(FeeRecordEntity, {
         where: {
           report: { id: utilisationReport.id },
-          status: In(['TO_DO', FEE_RECORD_STATUS.DOES_NOT_MATCH]),
+          status: In([FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.DOES_NOT_MATCH]),
         },
       });
 
@@ -179,7 +179,10 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
 
       jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
 
-      const toDoFeeRecordWithSameFacilityId = FeeRecordEntityMockBuilder.forReport(utilisationReport).withStatus('TO_DO').withFacilityId(facilityId).build();
+      const toDoFeeRecordWithSameFacilityId = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+        .withStatus(FEE_RECORD_STATUS.TO_DO)
+        .withFacilityId(facilityId)
+        .build();
       mockFind.mockResolvedValue([toDoFeeRecordWithSameFacilityId]);
 
       // Act
@@ -193,7 +196,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
       expect(mockFind).toHaveBeenCalledWith(FeeRecordEntity, {
         where: {
           report: { id: utilisationReport.id },
-          status: In(['TO_DO', FEE_RECORD_STATUS.DOES_NOT_MATCH]),
+          status: In([FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.DOES_NOT_MATCH]),
         },
       });
 

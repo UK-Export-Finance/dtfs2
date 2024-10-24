@@ -43,7 +43,7 @@ describe('handleFeeRecordPaymentDeletedEvent', () => {
     expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.DOES_NOT_MATCH);
   });
 
-  it("sets the fee record status to 'TO_DO' when the event payload 'feeRecordsAndPaymentsMatch' is false and 'hasAttachedPayments' is false", async () => {
+  it(`sets the fee record status to ${FEE_RECORD_STATUS.TO_DO} when the event payload 'feeRecordsAndPaymentsMatch' is false and 'hasAttachedPayments' is false`, async () => {
     // Arrange
     const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus(FEE_RECORD_STATUS.MATCH).build();
 
@@ -56,7 +56,7 @@ describe('handleFeeRecordPaymentDeletedEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.status).toEqual('TO_DO');
+    expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.TO_DO);
   });
 
   it("throws an error when the event payload 'feeRecordsAndPaymentsMatch' is true and 'hasAttachedPayments' is false", async () => {
@@ -77,7 +77,7 @@ describe('handleFeeRecordPaymentDeletedEvent', () => {
   it('updates the last updated by fields to the request source', async () => {
     // Arrange
     const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT)
-      .withStatus('TO_DO')
+      .withStatus(FEE_RECORD_STATUS.TO_DO)
       .withLastUpdatedByIsSystemUser(true)
       .withLastUpdatedByPortalUserId(null)
       .withLastUpdatedByTfmUserId(null)

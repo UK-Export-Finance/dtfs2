@@ -14,7 +14,7 @@ export const createRandomFeeRecordForReport = (report: UtilisationReportEntity, 
 
   feeRecord.report = report;
 
-  feeRecord.status = overrides.status ?? 'TO_DO';
+  feeRecord.status = overrides.status ?? FEE_RECORD_STATUS.TO_DO;
   feeRecord.facilityId = overrides.facilityId ?? faker.string.numeric({ length: { min: 8, max: 10 } });
   feeRecord.exporter = overrides.exporter ?? faker.company.name();
 

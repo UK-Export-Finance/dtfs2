@@ -35,6 +35,6 @@ export const handleFeeRecordPaymentDeletedEvent = async (
     throw new Error('Fee records and payments cannot match when there are no attached payments');
   }
 
-  feeRecord.updateWithStatus({ status: 'TO_DO', requestSource });
+  feeRecord.updateWithStatus({ status: FEE_RECORD_STATUS.TO_DO, requestSource });
   return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
 };
