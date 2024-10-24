@@ -1,8 +1,8 @@
-import { Bank, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { Bank, FEE_RECORD_STATUS, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { UtilisationReportReconciliationSummaryItem } from '../../../../../types/utilisation-reports';
 
 const getCountOfReconciledFeeRecords = (feeRecords: FeeRecordEntity[]): number => {
-  return feeRecords.filter((feeRecord) => feeRecord.status === 'RECONCILED').length;
+  return feeRecords.filter((feeRecord) => feeRecord.status === FEE_RECORD_STATUS.RECONCILED).length;
 };
 
 const getCountOfDistinctFacilities = (feeRecords: FeeRecordEntity[]): number => {

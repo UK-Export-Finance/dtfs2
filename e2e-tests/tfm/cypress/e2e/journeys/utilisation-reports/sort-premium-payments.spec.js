@@ -3,6 +3,7 @@ import {
   PaymentEntityMockBuilder,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
+  FEE_RECORD_STATUS,
 } from '@ukef/dtfs2-common';
 import pages from '../../pages';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
@@ -23,14 +24,14 @@ context(`users can sort premium payments table by total reported payments and to
     .withId(1)
     .withFeesPaidToUkefForThePeriod(30)
     .withFeesPaidToUkefForThePeriodCurrency('EUR')
-    .withStatus('DOES_NOT_MATCH')
+    .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
     .withFacilityId('11111111')
     .build();
   const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
     .withId(2)
     .withFeesPaidToUkefForThePeriod(20)
     .withFeesPaidToUkefForThePeriodCurrency('GBP')
-    .withStatus('DOES_NOT_MATCH')
+    .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
     .withFacilityId('22222222')
     .build();
   const thirdFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)

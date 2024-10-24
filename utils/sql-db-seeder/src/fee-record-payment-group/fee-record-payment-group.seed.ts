@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { FeeRecordPaymentGroupSeeder } from './fee-record-payment-group.seeder';
 
 export const seedFeeRecordPaymentGroups = async (dataSource: DataSource) => {
@@ -19,58 +19,58 @@ export const seedFeeRecordPaymentGroups = async (dataSource: DataSource) => {
   await FeeRecordPaymentGroupSeeder.forReport(reconciliationInProgressReport).addManyRandomFeeRecords(3, { facilityId: '11111111' }).save(dataSource);
 
   // Groups of one fee record to one payment
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'DOES_NOT_MATCH', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.DOES_NOT_MATCH, 'GBP')
     .addOneRandomFeeRecord()
     .addPaymentsAndSave(1, dataSource);
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'MATCH', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.MATCH, 'GBP')
     .addOneRandomFeeRecord()
     .addPaymentsAndSave(1, dataSource);
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'READY_TO_KEY', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.READY_TO_KEY, 'GBP')
     .addOneRandomFeeRecord()
     .addPaymentsAndSave(1, dataSource);
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'RECONCILED', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.RECONCILED, 'GBP')
     .addOneRandomFeeRecord()
     .addPaymentsAndSave(1, dataSource);
 
   // Groups of many fee records with a single bulk payment
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'DOES_NOT_MATCH', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.DOES_NOT_MATCH, 'GBP')
     .addManyRandomFeeRecords(4)
     .addPaymentsAndSave(1, dataSource);
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'MATCH', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.MATCH, 'GBP')
     .addManyRandomFeeRecords(4)
     .addPaymentsAndSave(1, dataSource);
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'READY_TO_KEY', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.READY_TO_KEY, 'GBP')
     .addManyRandomFeeRecords(4)
     .addPaymentsAndSave(1, dataSource);
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'RECONCILED', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.RECONCILED, 'GBP')
     .addManyRandomFeeRecords(4)
     .addPaymentsAndSave(1, dataSource);
 
   // Groups of single fee record with many payments
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'DOES_NOT_MATCH', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.DOES_NOT_MATCH, 'GBP')
     .addOneRandomFeeRecord()
     .addPaymentsAndSave(4, dataSource);
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'MATCH', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.MATCH, 'GBP')
     .addOneRandomFeeRecord()
     .addPaymentsAndSave(4, dataSource);
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'READY_TO_KEY', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.READY_TO_KEY, 'GBP')
     .addOneRandomFeeRecord()
     .addPaymentsAndSave(4, dataSource);
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'RECONCILED', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.RECONCILED, 'GBP')
     .addOneRandomFeeRecord()
     .addPaymentsAndSave(4, dataSource);
 
   // Groups of many fee records to many payments
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'DOES_NOT_MATCH', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.DOES_NOT_MATCH, 'GBP')
     .addManyRandomFeeRecords(4)
     .addPaymentsAndSave(4, dataSource);
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'MATCH', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.MATCH, 'GBP')
     .addManyRandomFeeRecords(4)
     .addPaymentsAndSave(4, dataSource);
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'READY_TO_KEY', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.READY_TO_KEY, 'GBP')
     .addManyRandomFeeRecords(4)
     .addPaymentsAndSave(4, dataSource);
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'RECONCILED', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.RECONCILED, 'GBP')
     .addManyRandomFeeRecords(4)
     .addPaymentsAndSave(4, dataSource);
 };
