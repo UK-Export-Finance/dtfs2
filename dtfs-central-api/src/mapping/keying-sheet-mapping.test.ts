@@ -28,7 +28,7 @@ describe('keying sheet mapping', () => {
 
     it('maps the fee record RECONCILED status to the keying sheet DONE status', () => {
       // Arrange
-      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('RECONCILED').build();
+      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
 
       // Act
       const keyingSheetRow = mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments(feeRecordEntity);

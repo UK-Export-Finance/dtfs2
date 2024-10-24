@@ -1,5 +1,5 @@
 import { when } from 'jest-when';
-import { CURRENCY, Currency, CurrencyAndAmount, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { CURRENCY, Currency, CurrencyAndAmount, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { mapCurrenciesToRadioItems } from '../../../helpers/map-currencies-to-radio-items';
 import {
   getFormattedDateReconciled,
@@ -349,7 +349,7 @@ describe('reconciliation-for-report-helper', () => {
       { feeRecordStatus: 'MATCH', feeRecordDisplayStatus: 'MATCH' },
       { feeRecordStatus: 'DOES_NOT_MATCH', feeRecordDisplayStatus: 'DOES NOT MATCH' },
       { feeRecordStatus: 'READY_TO_KEY', feeRecordDisplayStatus: 'READY TO KEY' },
-      { feeRecordStatus: 'RECONCILED', feeRecordDisplayStatus: 'RECONCILED' },
+      { feeRecordStatus: FEE_RECORD_STATUS.RECONCILED, feeRecordDisplayStatus: 'RECONCILED' },
     ] as const)(
       "maps the fee record status '$feeRecordStatus' to the view model display status '$feeRecordDisplayStatus'",
       ({ feeRecordStatus, feeRecordDisplayStatus }) => {

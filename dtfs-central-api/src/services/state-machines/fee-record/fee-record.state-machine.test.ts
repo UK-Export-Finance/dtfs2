@@ -366,7 +366,7 @@ describe('FeeRecordStateMachine', () => {
 
   describe(`when the fee record has the '${FEE_RECORD_STATUS.RECONCILED}' status`, () => {
     // Arrange
-    const RECONCILED_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus('RECONCILED').build();
+    const RECONCILED_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
 
     it(`handles the '${FEE_RECORD_EVENT_TYPE.MARK_AS_READY_TO_KEY}' event`, async () => {
       // Arrange

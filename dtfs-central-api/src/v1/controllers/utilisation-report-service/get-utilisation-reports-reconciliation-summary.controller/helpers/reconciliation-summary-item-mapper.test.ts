@@ -47,8 +47,8 @@ describe('reconciliation-summary-item-mapper', () => {
       const report = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
       const aNotYetReconciledFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('1111').withStatus('READY_TO_KEY').build();
       const anotherNotYetReconciledFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('5555').withStatus('READY_TO_KEY').build();
-      const aReconciledFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('1111').withStatus('RECONCILED').build();
-      const anotherReconciledFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('2222').withStatus('RECONCILED').build();
+      const aReconciledFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('1111').withStatus(FEE_RECORD_STATUS.RECONCILED).build();
+      const anotherReconciledFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('2222').withStatus(FEE_RECORD_STATUS.RECONCILED).build();
       report.feeRecords = [aNotYetReconciledFeeRecord, anotherNotYetReconciledFeeRecord, aReconciledFeeRecord, anotherReconciledFeeRecord];
 
       // Act

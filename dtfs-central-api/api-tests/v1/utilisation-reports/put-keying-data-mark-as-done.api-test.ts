@@ -145,7 +145,7 @@ describe(`PUT ${BASE_URL}`, () => {
     const reportId = 1;
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
     const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('READY_TO_KEY').build();
-    const anotherFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('RECONCILED').build();
+    const anotherFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
     report.feeRecords = [feeRecord, anotherFeeRecord];
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 

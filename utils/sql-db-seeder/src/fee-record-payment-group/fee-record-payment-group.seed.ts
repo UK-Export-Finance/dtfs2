@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { FeeRecordPaymentGroupSeeder } from './fee-record-payment-group.seeder';
 
 export const seedFeeRecordPaymentGroups = async (dataSource: DataSource) => {
@@ -28,7 +28,7 @@ export const seedFeeRecordPaymentGroups = async (dataSource: DataSource) => {
   await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'READY_TO_KEY', 'GBP')
     .addOneRandomFeeRecord()
     .addPaymentsAndSave(1, dataSource);
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'RECONCILED', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.RECONCILED, 'GBP')
     .addOneRandomFeeRecord()
     .addPaymentsAndSave(1, dataSource);
 
@@ -42,7 +42,7 @@ export const seedFeeRecordPaymentGroups = async (dataSource: DataSource) => {
   await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'READY_TO_KEY', 'GBP')
     .addManyRandomFeeRecords(4)
     .addPaymentsAndSave(1, dataSource);
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'RECONCILED', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.RECONCILED, 'GBP')
     .addManyRandomFeeRecords(4)
     .addPaymentsAndSave(1, dataSource);
 
@@ -56,7 +56,7 @@ export const seedFeeRecordPaymentGroups = async (dataSource: DataSource) => {
   await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'READY_TO_KEY', 'GBP')
     .addOneRandomFeeRecord()
     .addPaymentsAndSave(4, dataSource);
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'RECONCILED', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.RECONCILED, 'GBP')
     .addOneRandomFeeRecord()
     .addPaymentsAndSave(4, dataSource);
 
@@ -70,7 +70,7 @@ export const seedFeeRecordPaymentGroups = async (dataSource: DataSource) => {
   await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'READY_TO_KEY', 'GBP')
     .addManyRandomFeeRecords(4)
     .addPaymentsAndSave(4, dataSource);
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'RECONCILED', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.RECONCILED, 'GBP')
     .addManyRandomFeeRecords(4)
     .addPaymentsAndSave(4, dataSource);
 };

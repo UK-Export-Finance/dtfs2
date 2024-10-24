@@ -61,7 +61,7 @@ describe('handleFeeRecordMarkAsReconciledEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.status).toEqual<FeeRecordStatus>('RECONCILED');
+    expect(feeRecord.status).toEqual<FeeRecordStatus>(FEE_RECORD_STATUS.RECONCILED);
   });
 
   it('sets the dateReconciled to the current date and reconciledByUserId field to the supplied value', async () => {

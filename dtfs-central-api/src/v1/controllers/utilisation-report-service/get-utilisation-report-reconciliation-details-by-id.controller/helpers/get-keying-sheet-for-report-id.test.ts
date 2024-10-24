@@ -53,7 +53,7 @@ describe('getKeyingSheetForReportId', () => {
         where: {
           feeRecord: {
             report: { id: reportId },
-            status: In<FeeRecordStatus>(['READY_TO_KEY', 'RECONCILED']),
+            status: In<FeeRecordStatus>(['READY_TO_KEY', FEE_RECORD_STATUS.RECONCILED]),
           },
         },
         relations: {
@@ -92,7 +92,7 @@ describe('getKeyingSheetForReportId', () => {
         where: {
           feeRecord: {
             report: { id: reportId },
-            status: In<FeeRecordStatus>(['READY_TO_KEY', 'RECONCILED']),
+            status: In<FeeRecordStatus>(['READY_TO_KEY', FEE_RECORD_STATUS.RECONCILED]),
           },
         },
         relations: {
@@ -146,7 +146,7 @@ describe('getKeyingSheetForReportId', () => {
         where: {
           feeRecord: {
             report: { id: reportId },
-            status: In<FeeRecordStatus>(['READY_TO_KEY', 'RECONCILED']),
+            status: In<FeeRecordStatus>(['READY_TO_KEY', FEE_RECORD_STATUS.RECONCILED]),
           },
         },
         relations: {
@@ -185,7 +185,7 @@ describe('getKeyingSheetForReportId', () => {
         where: {
           feeRecord: {
             report: { id: reportId },
-            status: In<FeeRecordStatus>(['READY_TO_KEY', 'RECONCILED']),
+            status: In<FeeRecordStatus>(['READY_TO_KEY', FEE_RECORD_STATUS.RECONCILED]),
           },
         },
         relations: {
@@ -226,7 +226,7 @@ describe('getKeyingSheetForReportId', () => {
         where: {
           feeRecord: {
             report: { id: reportId },
-            status: In<FeeRecordStatus>(['READY_TO_KEY', 'RECONCILED']),
+            status: In<FeeRecordStatus>(['READY_TO_KEY', FEE_RECORD_STATUS.RECONCILED]),
           },
         },
         relations: {
@@ -268,7 +268,7 @@ describe('getKeyingSheetForReportId', () => {
         where: {
           feeRecord: {
             report: { id: reportId },
-            status: In<FeeRecordStatus>(['READY_TO_KEY', 'RECONCILED']),
+            status: In<FeeRecordStatus>(['READY_TO_KEY', FEE_RECORD_STATUS.RECONCILED]),
           },
         },
         relations: {
@@ -290,7 +290,7 @@ describe('getKeyingSheetForReportId', () => {
   });
 
   describe('when there are fee records with no payments', () => {
-    const FEE_RECORD_STATUSES_TO_INCLUDE_IN_KEYING_SHEET: FeeRecordStatus[] = ['READY_TO_KEY', 'RECONCILED'];
+    const FEE_RECORD_STATUSES_TO_INCLUDE_IN_KEYING_SHEET: FeeRecordStatus[] = ['READY_TO_KEY', FEE_RECORD_STATUS.RECONCILED];
 
     it.each(FEE_RECORD_STATUSES_TO_INCLUDE_IN_KEYING_SHEET)(
       'sets the fee record fee payment to a zero amount fee payment when a %s fee record has no payments',
@@ -308,7 +308,7 @@ describe('getKeyingSheetForReportId', () => {
             where: {
               feeRecord: {
                 report: { id: reportId },
-                status: In<FeeRecordStatus>(['READY_TO_KEY', 'RECONCILED']),
+                status: In<FeeRecordStatus>(['READY_TO_KEY', FEE_RECORD_STATUS.RECONCILED]),
               },
             },
             relations: {
@@ -355,7 +355,7 @@ describe('getKeyingSheetForReportId', () => {
             where: {
               feeRecord: {
                 report: { id: reportId },
-                status: In<FeeRecordStatus>(['READY_TO_KEY', 'RECONCILED']),
+                status: In<FeeRecordStatus>(['READY_TO_KEY', FEE_RECORD_STATUS.RECONCILED]),
               },
             },
             relations: {
@@ -393,7 +393,7 @@ describe('getKeyingSheetForReportId', () => {
           where: {
             feeRecord: {
               report: { id: reportId },
-              status: In<FeeRecordStatus>(['READY_TO_KEY', 'RECONCILED']),
+              status: In<FeeRecordStatus>(['READY_TO_KEY', FEE_RECORD_STATUS.RECONCILED]),
             },
           },
           relations: {

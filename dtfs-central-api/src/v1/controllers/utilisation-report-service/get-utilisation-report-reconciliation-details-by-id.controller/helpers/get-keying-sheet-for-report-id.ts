@@ -1,11 +1,11 @@
 import { In } from 'typeorm';
 import { remove } from 'lodash';
-import { FeeRecordEntity, FeeRecordPaymentJoinTableEntity, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordPaymentJoinTableEntity, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments } from '../../../../../mapping/keying-sheet-mapping';
 import { KeyingSheet, KeyingSheetFeePayment, KeyingSheetRow } from '../../../../../types/fee-records';
 
-const STATUSES_OF_FEE_RECORDS_TO_DISPLAY_ON_KEYING_SHEET: FeeRecordStatus[] = ['READY_TO_KEY', 'RECONCILED'];
+const STATUSES_OF_FEE_RECORDS_TO_DISPLAY_ON_KEYING_SHEET: FeeRecordStatus[] = ['READY_TO_KEY', FEE_RECORD_STATUS.RECONCILED];
 
 /**
  * Gets all the keying sheet fee record payment join table entries
