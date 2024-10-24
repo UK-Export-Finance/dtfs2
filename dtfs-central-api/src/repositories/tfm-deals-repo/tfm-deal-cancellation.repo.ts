@@ -7,6 +7,7 @@ import {
   MONGO_DB_COLLECTIONS,
   TFM_DEAL_CANCELLATION_STATUS,
   TFM_DEAL_STAGE,
+  TfmActivity,
   TfmDeal,
   TfmDealCancellation,
   TfmDealCancellationResponse,
@@ -136,11 +137,17 @@ export class TfmDealCancellationRepo {
    * @param cancellation - The deal cancellation details to submit
    * @param auditDetails - The users audit details
    */
-  public static async submitDealCancellation(
-    dealId: string | ObjectId,
-    cancellation: TfmDealCancellation,
-    auditDetails: AuditDetails,
-  ): Promise<TfmDealCancellationResponse> {
+  public static async submitDealCancellation({
+    dealId,
+    cancellation,
+    activity,
+    auditDetails,
+  }: {
+    dealId: string | ObjectId;
+    cancellation: TfmDealCancellation;
+    activity: TfmActivity;
+    auditDetails: AuditDetails;
+  }): Promise<TfmDealCancellationResponse> {
     if (!ObjectId.isValid(dealId)) {
       throw new InvalidDealIdError(dealId.toString());
     }
@@ -156,11 +163,16 @@ export class TfmDealCancellationRepo {
         'tfm.cancellation.bankRequestDate': { $eq: cancellation.bankRequestDate },
         'tfm.cancellation.effectiveFrom': { $eq: cancellation.effectiveFrom },
       },
-      flatten({
-        'tfm.stage': TFM_DEAL_STAGE.CANCELLED,
-        'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.COMPLETED,
-        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-      }),
+      {
+        $set: {
+          'tfm.stage': TFM_DEAL_STAGE.CANCELLED,
+          'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.COMPLETED,
+          auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+        },
+        $push: {
+          'tfm.activities': activity,
+        },
+      },
     );
 
     if (!updateDeal?.matchedCount) {
