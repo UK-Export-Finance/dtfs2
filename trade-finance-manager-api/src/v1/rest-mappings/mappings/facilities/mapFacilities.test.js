@@ -9,7 +9,7 @@ describe('mapFacilities', () => {
     ukefExposureCalculationTimestamp: '1606900616651',
   };
 
-  const mockDealDetails = MOCK_DEAL.details;
+  const mockDealSnapshot = MOCK_DEAL;
 
   const MOCK_DEAL_TFM = {
     exporterCreditRating: 'Good (BB-)',
@@ -100,21 +100,21 @@ describe('mapFacilities', () => {
 
   const mockFacilities = [{ ...MOCK_FACILITIES[0] }, { ...MOCK_FACILITIES[1] }];
 
-  it('should map and format correct fields/values', () => {
-    const result = mapFacilities(mockFacilities, mockDealDetails, MOCK_DEAL_TFM);
+  it('should map and format correct fields/values for a BSS/EWCS facility', () => {
+    const result = mapFacilities(mockFacilities, mockDealSnapshot, MOCK_DEAL_TFM);
 
     const expected = [
       {
         _id: MOCK_FACILITIES[0]._id,
         facilitySnapshot: {
-          ...mapFacilitySnapshot(MOCK_FACILITIES[0], mockDealDetails),
+          ...mapFacilitySnapshot(MOCK_FACILITIES[0], mockDealSnapshot),
         },
         tfm: mapFacilityTfm(mockTfmFacility, MOCK_DEAL_TFM, MOCK_FACILITIES[0]),
       },
       {
         _id: MOCK_FACILITIES[1]._id,
         facilitySnapshot: {
-          ...mapFacilitySnapshot(MOCK_FACILITIES[1], mockDealDetails),
+          ...mapFacilitySnapshot(MOCK_FACILITIES[1], mockDealSnapshot),
         },
         tfm: mapFacilityTfm(mockTfmFacility, MOCK_DEAL_TFM, MOCK_FACILITIES[1]),
       },

@@ -78,7 +78,7 @@ describe('mapFacility', () => {
   };
 
   it('should map and format correct fields/values', () => {
-    const result = mapFacilitySnapshot(mockFacility, mockDealDetails);
+    const result = mapFacilitySnapshot(mockFacility, MOCK_DEAL);
 
     const expectedCoveredPercentage = `${mockCoveredPercentage}%`;
 

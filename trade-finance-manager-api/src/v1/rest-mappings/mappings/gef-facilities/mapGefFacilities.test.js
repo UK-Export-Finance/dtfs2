@@ -1,5 +1,5 @@
 const mapGefFacilities = require('./mapGefFacilities');
-const mapGefFacility = require('./mapGefFacility');
+const facilityMapper = require('../../facility');
 const MOCK_CASH_CONTINGENT_FACILITIES = require('../../../__mocks__/mock-cash-contingent-facilities');
 
 describe('mapGefFacilities', () => {
@@ -22,8 +22,8 @@ describe('mapGefFacilities', () => {
     const result = mapGefFacilities(mockDealSnapshot, mockDealTfm);
 
     const expected = [
-      mapGefFacility(mockDealSnapshot.facilities[0], mockDealSnapshot, mockDealTfm),
-      mapGefFacility(mockDealSnapshot.facilities[1], mockDealSnapshot, mockDealTfm),
+      facilityMapper(mockDealSnapshot.facilities[0], mockDealSnapshot, mockDealTfm),
+      facilityMapper(mockDealSnapshot.facilities[1], mockDealSnapshot, mockDealTfm),
     ];
 
     expect(result).toEqual(expected);
