@@ -10,9 +10,13 @@ const mapFacilityValueExportCurrency = require('../facilities/mapFacilityValueEx
 const mapUkefExposureValue = require('../facilities/mapUkefExposureValue');
 
 /**
- * Maps existing GEF facility to the facility used in TFM API.
- * Note: This implimentation modifies the facility snapshot
- * to have values not consistent with the facility snapshot in the database.
+ * Maps the existing GEF facility snapshot in the database to the facility snapshot used in TFM API.
+ * This function is only used on GEF facilities.
+ * Note: This implementation modifies the facility snapshot to have values not consistent with the facility snapshot in the database.
+ * In particular, this is a live object that updates e.g. when amendments are added in TFM.
+ * @param facility the full facility object from the database
+ * @param dealSnapshot the deal.dealSnapshot object from the database corresponding to the facility
+ * @returns mapped facility snapshot for use in TFM
  */
 const mapGefFacilitySnapshot = (facility, dealSnapshot) => {
   const { facilitySnapshot, tfm: facilityTfm } = facility;

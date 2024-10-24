@@ -27,7 +27,7 @@ describe('reducer - facility', () => {
 
       const expected = {
         _id: mockFacility._id,
-        facilitySnapshot: mapFacilitySnapshot(mockFacility, mockDeal.dealSnapshot.details),
+        facilitySnapshot: mapFacilitySnapshot(mockFacility, mockDeal.dealSnapshot),
         tfm: mapFacilityTfm(mockFacility.tfm, {}, mockFacility),
       };
 
@@ -54,7 +54,7 @@ describe('reducer - facility', () => {
 
       const expected = {
         _id: mockGefFacility._id,
-        facilitySnapshot: mapGefFacilitySnapshot(mockGefFacility, MOCK_GEF_DEAL, mockGefDeal.tfm),
+        facilitySnapshot: mapGefFacilitySnapshot(mockGefFacility, MOCK_GEF_DEAL),
         tfm: mapFacilityTfm(mockGefFacility.tfm, {}, mockGefFacility),
       };
 
