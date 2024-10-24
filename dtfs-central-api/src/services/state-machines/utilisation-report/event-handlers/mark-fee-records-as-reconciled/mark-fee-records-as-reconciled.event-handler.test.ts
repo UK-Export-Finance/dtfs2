@@ -53,8 +53,8 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
   describe('when every fee record has to be reconciled', () => {
     // Arrange
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-    const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('READY_TO_KEY').build();
-    const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('READY_TO_KEY').build();
+    const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
+    const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
 
     const eventHandlerOne = aMockEventHandler();
     const eventHandlerTwo = aMockEventHandler();
@@ -115,8 +115,8 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
   describe('when all fee records are reconciled', () => {
     // Arrange
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-    const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('READY_TO_KEY').build();
-    const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('READY_TO_KEY').build();
+    const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
+    const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
 
     const reportWithUpdatedFeeRecords = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
     const feeRecordOneUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
@@ -159,13 +159,13 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
   describe('when only some fee records are reconciled', () => {
     // Arrange
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-    const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('READY_TO_KEY').build();
-    const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('READY_TO_KEY').build();
+    const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
+    const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
 
     const reportWithUpdatedFeeRecords = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
     const feeRecordOneUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
     const feeRecordTwoUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
-    const feeRecordThreeUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus('READY_TO_KEY').build();
+    const feeRecordThreeUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
     reportWithUpdatedFeeRecords.feeRecords = [feeRecordOneUpdated, feeRecordTwoUpdated, feeRecordThreeUpdated];
 
     beforeEach(async () => {

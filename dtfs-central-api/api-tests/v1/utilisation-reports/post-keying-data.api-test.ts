@@ -288,9 +288,9 @@ describe(`POST ${BASE_URL}`, () => {
     const allFeeRecords = await SqlDbHelper.manager.find(FeeRecordEntity, {});
     expect(allFeeRecords).toHaveLength(feeRecords.length);
     expect(allFeeRecords.find(({ id }) => id === 1)!.status).toBe<FeeRecordStatus>('TO_DO');
-    expect(allFeeRecords.find(({ id }) => id === 2)!.status).toBe<FeeRecordStatus>('READY_TO_KEY');
-    expect(allFeeRecords.find(({ id }) => id === 3)!.status).toBe<FeeRecordStatus>('READY_TO_KEY');
-    expect(allFeeRecords.find(({ id }) => id === 4)!.status).toBe<FeeRecordStatus>('READY_TO_KEY');
+    expect(allFeeRecords.find(({ id }) => id === 2)!.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.READY_TO_KEY);
+    expect(allFeeRecords.find(({ id }) => id === 3)!.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.READY_TO_KEY);
+    expect(allFeeRecords.find(({ id }) => id === 4)!.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.READY_TO_KEY);
   });
 
   it('populates the fee record payment join table paymentAmountUsedForFeeRecord column', async () => {
@@ -464,7 +464,7 @@ describe(`POST ${BASE_URL}`, () => {
     const getReadyToKeyFeeRecordsWithNonNullKeyingData = async (): Promise<FeeRecordEntity[]> =>
       await SqlDbHelper.manager.find(FeeRecordEntity, {
         where: {
-          status: 'READY_TO_KEY',
+          status: FEE_RECORD_STATUS.READY_TO_KEY,
           fixedFeeAdjustment: Not(IsNull()),
           principalBalanceAdjustment: Not(IsNull()),
         },
@@ -473,7 +473,7 @@ describe(`POST ${BASE_URL}`, () => {
     const getReadyToKeyFeeRecordsWithNullKeyingData = async (): Promise<FeeRecordEntity[]> =>
       await SqlDbHelper.manager.find(FeeRecordEntity, {
         where: {
-          status: 'READY_TO_KEY',
+          status: FEE_RECORD_STATUS.READY_TO_KEY,
           fixedFeeAdjustment: IsNull(),
           principalBalanceAdjustment: IsNull(),
         },

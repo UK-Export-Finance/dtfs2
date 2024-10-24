@@ -1,5 +1,6 @@
 import {
   CurrencyAndAmount,
+  FEE_RECORD_STATUS,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
@@ -309,7 +310,7 @@ describe('get selected fee record details controller helpers', () => {
       // Arrange
       const existsUnmatchedPaymentSpy = jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(true);
       const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('USD').withStatus('READY_TO_KEY').build();
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('USD').withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
 
       // Act
       const result = await canFeeRecordsBeAddedToExistingPayment('123', [feeRecord]);
