@@ -62,4 +62,13 @@ describe('mapBssEwcsFacilityStage', () => {
       expect(result).toEqual(TFM_FACILITY_STAGE.COMMITMENT);
     });
   });
+
+  describe(`when facilityStage is an unrecognised string`, () => {
+    it('should return null', () => {
+      const invalidFacilityStage = 'invalid stage';
+
+      const result = mapBssEwcsFacilityStage(invalidFacilityStage);
+      expect(result).toEqual(null);
+    });
+  });
 });
