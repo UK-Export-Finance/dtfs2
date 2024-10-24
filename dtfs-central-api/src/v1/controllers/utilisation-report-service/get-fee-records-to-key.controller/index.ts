@@ -1,6 +1,6 @@
 import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
-import { ReportPeriod, SessionBank } from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, ReportPeriod, SessionBank } from '@ukef/dtfs2-common';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { ApiError, NotFoundError } from '../../../../errors';
@@ -20,7 +20,7 @@ export const getFeeRecordsToKey = async (req: Request, res: GetFeeRecordsToKeyRe
   const { reportId } = req.params;
 
   try {
-    const utilisationReport = await UtilisationReportRepo.findOneByIdWithFeeRecordsFilteredByStatusWithPayments(Number(reportId), ['MATCH']);
+    const utilisationReport = await UtilisationReportRepo.findOneByIdWithFeeRecordsFilteredByStatusWithPayments(Number(reportId), [FEE_RECORD_STATUS.MATCH]);
     if (!utilisationReport) {
       throw new NotFoundError(`Failed to find a report with id ${reportId}`);
     }

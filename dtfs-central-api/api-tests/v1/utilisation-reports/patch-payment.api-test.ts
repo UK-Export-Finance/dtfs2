@@ -3,6 +3,7 @@ import { ObjectId } from 'mongodb';
 import { In } from 'typeorm';
 import { difference } from 'lodash';
 import {
+  FEE_RECORD_STATUS,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   FeeRecordStatus,
@@ -43,13 +44,13 @@ describe(`PATCH ${BASE_URL}`, () => {
   const feeRecordsForReportWithPayments = (report: UtilisationReportEntity, payments: PaymentEntity[]) => [
     FeeRecordEntityMockBuilder.forReport(report)
       .withId(1)
-      .withStatus('DOES_NOT_MATCH')
+      .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
       .withFeesPaidToUkefForThePeriodCurrency('GBP')
       .withPayments(payments)
       .build(),
     FeeRecordEntityMockBuilder.forReport(report)
       .withId(2)
-      .withStatus('DOES_NOT_MATCH')
+      .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
       .withFeesPaidToUkefForThePeriodCurrency('GBP')
       .withPayments(payments)
       .build(),
@@ -177,7 +178,7 @@ describe(`PATCH ${BASE_URL}`, () => {
     const feeRecords = [
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(1)
-        .withStatus('DOES_NOT_MATCH')
+        .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
         .withFeesPaidToUkefForThePeriod(100)
         .withFeesPaidToUkefForThePeriodCurrency('GBP')
         .withPaymentCurrency('GBP')
@@ -185,7 +186,7 @@ describe(`PATCH ${BASE_URL}`, () => {
         .build(),
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(2)
-        .withStatus('DOES_NOT_MATCH')
+        .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
         .withFeesPaidToUkefForThePeriod(200)
         .withFeesPaidToUkefForThePeriodCurrency('GBP')
         .withPaymentCurrency('GBP')
@@ -211,12 +212,12 @@ describe(`PATCH ${BASE_URL}`, () => {
 
     expect(oldFeeRecords).toHaveLength(feeRecords.length);
     oldFeeRecords.forEach((feeRecord) => {
-      expect(feeRecord.status).toBe<FeeRecordStatus>('DOES_NOT_MATCH');
+      expect(feeRecord.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.DOES_NOT_MATCH);
     });
 
     expect(newFeeRecords).toHaveLength(feeRecords.length);
     newFeeRecords.forEach((feeRecord) => {
-      expect(feeRecord.status).toBe<FeeRecordStatus>('MATCH');
+      expect(feeRecord.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.MATCH);
     });
   });
 
@@ -228,7 +229,7 @@ describe(`PATCH ${BASE_URL}`, () => {
     const feeRecords = [
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(1)
-        .withStatus('MATCH')
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withFeesPaidToUkefForThePeriod(100)
         .withFeesPaidToUkefForThePeriodCurrency('GBP')
         .withPaymentCurrency('GBP')
@@ -236,7 +237,7 @@ describe(`PATCH ${BASE_URL}`, () => {
         .build(),
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(2)
-        .withStatus('MATCH')
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withFeesPaidToUkefForThePeriod(200)
         .withFeesPaidToUkefForThePeriodCurrency('GBP')
         .withPaymentCurrency('GBP')
@@ -262,12 +263,12 @@ describe(`PATCH ${BASE_URL}`, () => {
 
     expect(oldFeeRecords).toHaveLength(feeRecords.length);
     oldFeeRecords.forEach((feeRecord) => {
-      expect(feeRecord.status).toBe<FeeRecordStatus>('MATCH');
+      expect(feeRecord.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.MATCH);
     });
 
     expect(newFeeRecords).toHaveLength(feeRecords.length);
     newFeeRecords.forEach((feeRecord) => {
-      expect(feeRecord.status).toBe<FeeRecordStatus>('DOES_NOT_MATCH');
+      expect(feeRecord.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.DOES_NOT_MATCH);
     });
   });
 });
