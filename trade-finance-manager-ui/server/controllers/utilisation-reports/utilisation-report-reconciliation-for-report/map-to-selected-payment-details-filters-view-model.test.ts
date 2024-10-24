@@ -1,5 +1,4 @@
 import { CURRENCY } from '@ukef/dtfs2-common';
-import { when } from 'jest-when';
 import { mapToSelectedPaymentDetailsFiltersViewModel } from './map-to-selected-payment-details-filters-view-model';
 import { getPaymentDetailsTabHref } from './get-payment-details-tab-href';
 
@@ -88,10 +87,6 @@ describe('map-to-selected-payment-details-filters-view-model', () => {
       // Arrange
       const filters = { facilityId: '12345', paymentReference: 'REF123', paymentCurrency: CURRENCY.USD };
 
-      when(getPaymentDetailsTabHref)
-        .calledWith({ paymentReference: 'REF123', paymentCurrency: CURRENCY.USD }, reportId)
-        .mockReturnValue('/remove-facility-id-filter');
-
       // Act
       const result = mapToSelectedPaymentDetailsFiltersViewModel(filters, reportId);
 
@@ -112,7 +107,7 @@ describe('map-to-selected-payment-details-filters-view-model', () => {
       expect(result!.paymentCurrency!.removeHref).toEqual(expected);
     });
 
-    it.only('should set paymentReference remove href to link to report with other active filters still applied', () => {
+    it('should set paymentReference remove href to link to report with other active filters still applied', () => {
       // Arrange
       const filters = { facilityId: '12345', paymentReference: 'REF123', paymentCurrency: CURRENCY.USD };
 
