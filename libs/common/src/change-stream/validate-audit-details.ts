@@ -53,7 +53,7 @@ export function validateAuditDetails(auditDetails: unknown): asserts auditDetail
   }
 }
 
-export function validateAuditDetailsAndUserType(auditDetails: unknown, requiredUserType: AuditUserTypes): asserts auditDetails is AuditDetails {
+export function validateAuditDetailsAndUserType<T extends AuditUserTypes>(auditDetails: unknown, requiredUserType: T): asserts auditDetails is AuditDetails<T> {
   validateAuditDetails(auditDetails);
 
   if (auditDetails.userType !== requiredUserType) {
