@@ -8,14 +8,6 @@
   {% set errors = params.errors %}
   {% set reportId = params.reportId %}
 
-  {% if object.field2 %}
-    {% set myArray = myArray.concat([object.field2]) %}
-  {% endif %}
-
-  {% if object.field3 %}
-    {% set myArray = myArray.concat([object.field3]) %}
-  {% endif %}
-
   <div class="moj-filter-layout__filter" data-filtered-table-id="payment-details" data-cy="payment-details--filters-panel">
 
     <form method="GET" data-cy="payment-details--filter-form">
