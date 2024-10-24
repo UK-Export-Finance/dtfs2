@@ -1,7 +1,6 @@
 const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityProduct = require('./mapFacilityProduct');
 const mapFacilityType = require('./mapFacilityType');
-const mapFacilityStage = require('./mapFacilityStage');
 const mapFacilityValue = require('./mapFacilityValue');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
@@ -12,6 +11,7 @@ const mapFeeFrequency = require('./mapFeeFrequency');
 const mapDates = require('./mapDates');
 const mapUkefExposureValue = require('./mapUkefExposureValue');
 const mapFacilityValueExportCurrency = require('./mapFacilityValueExportCurrency');
+const { mapBssEwcsFacilityStage } = require('./mapFacilityStage');
 
 /**
  * Maps the existing facility snapshot in the database to the facility snapshot used in TFM API.
@@ -40,7 +40,7 @@ const mapFacilitySnapshot = (facility, dealDetails) => {
 
   const formattedFacilityValue = formattedNumber(value);
 
-  clonedSnapshot.facilityStage = mapFacilityStage(facilityStage);
+  clonedSnapshot.facilityStage = mapBssEwcsFacilityStage(facilityStage);
 
   const mapped = {
     _id: clonedSnapshot._id,
