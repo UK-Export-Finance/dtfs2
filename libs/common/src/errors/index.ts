@@ -6,6 +6,7 @@ export * from './write-concern.error';
 export * from './document-not-deleted.error';
 export * from './document-not-found.error';
 export * from './document-not-updated.error';
+export * from './document-not-created.error';
 export * from './facility-not-found.error';
 export * from './deal-not-found.error';
 export * from './invalid-deal-id.error';
