@@ -45,12 +45,13 @@ const getCaseDeal = async (req, res) => {
 
   const { submissionType } = deal.dealSnapshot;
 
-  const dealCancellationIsEnabled = canDealBeCancelled(submissionType, user);
+  const dealCancellation = await api.getDealCancellation(dealId, userToken);
   let hasDraftCancellation = false;
 
-  if (dealCancellationIsEnabled) {
-    const cancellation = await api.getDealCancellation(dealId, userToken);
-    hasDraftCancellation = !isEmpty(cancellation);
+  const isDealCancellationPermitted = canDealBeCancelled(submissionType, user, dealCancellation.status);
+
+  if (isDealCancellationPermitted) {
+    hasDraftCancellation = !isEmpty(dealCancellation);
   }
 
   return res.render('case/deal/deal.njk', {
@@ -63,7 +64,7 @@ const getCaseDeal = async (req, res) => {
     amendments,
     amendmentsInProgress,
     hasAmendmentInProgress,
-    showDealCancelButton: dealCancellationIsEnabled,
+    showDealCancelButton: isDealCancellationPermitted,
     hasDraftCancellation,
   });
 };
