@@ -347,7 +347,7 @@ describe('reconciliation-for-report-helper', () => {
     it.each([
       { feeRecordStatus: 'TO_DO', feeRecordDisplayStatus: 'TO DO' },
       { feeRecordStatus: 'MATCH', feeRecordDisplayStatus: 'MATCH' },
-      { feeRecordStatus: 'DOES_NOT_MATCH', feeRecordDisplayStatus: 'DOES NOT MATCH' },
+      { feeRecordStatus: FEE_RECORD_STATUS.DOES_NOT_MATCH, feeRecordDisplayStatus: 'DOES NOT MATCH' },
       { feeRecordStatus: FEE_RECORD_STATUS.READY_TO_KEY, feeRecordDisplayStatus: 'READY TO KEY' },
       { feeRecordStatus: FEE_RECORD_STATUS.RECONCILED, feeRecordDisplayStatus: 'RECONCILED' },
     ] as const)(
@@ -415,7 +415,7 @@ describe('reconciliation-for-report-helper', () => {
         },
       };
 
-      const status: FeeRecordStatus = 'DOES_NOT_MATCH';
+      const status = FEE_RECORD_STATUS.DOES_NOT_MATCH;
 
       const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), feeRecords: [feeRecord], status }];
 
@@ -443,7 +443,7 @@ describe('reconciliation-for-report-helper', () => {
         },
       };
 
-      const status: FeeRecordStatus = 'DOES_NOT_MATCH';
+      const status = FEE_RECORD_STATUS.DOES_NOT_MATCH;
 
       const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), feeRecords: [feeRecord], status }];
 

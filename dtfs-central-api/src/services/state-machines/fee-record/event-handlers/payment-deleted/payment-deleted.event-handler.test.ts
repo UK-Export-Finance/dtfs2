@@ -1,5 +1,5 @@
 import { EntityManager } from 'typeorm';
-import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { handleFeeRecordPaymentDeletedEvent } from './payment-deleted.event-handler';
 import { aDbRequestSource } from '../../../../../../test-helpers';
 
@@ -13,7 +13,7 @@ describe('handleFeeRecordPaymentDeletedEvent', () => {
 
   it("sets the fee record status to 'MATCH' when the event payload 'feeRecordsAndPaymentsMatch' is true and 'hasAttachedPayments' is true", async () => {
     // Arrange
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus('DOES_NOT_MATCH').build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH).build();
 
     // Act
     await handleFeeRecordPaymentDeletedEvent(feeRecord, {
@@ -27,7 +27,7 @@ describe('handleFeeRecordPaymentDeletedEvent', () => {
     expect(feeRecord.status).toEqual('MATCH');
   });
 
-  it("sets the fee record status to 'DOES_NOT_MATCH' when the event payload 'feeRecordsAndPaymentsMatch' is false and 'hasAttachedPayments' is true", async () => {
+  it(`sets the fee record status to ${FEE_RECORD_STATUS.DOES_NOT_MATCH} when the event payload 'feeRecordsAndPaymentsMatch' is false and 'hasAttachedPayments' is true`, async () => {
     // Arrange
     const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus('MATCH').build();
 
@@ -40,7 +40,7 @@ describe('handleFeeRecordPaymentDeletedEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.status).toEqual('DOES_NOT_MATCH');
+    expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.DOES_NOT_MATCH);
   });
 
   it("sets the fee record status to 'TO_DO' when the event payload 'feeRecordsAndPaymentsMatch' is false and 'hasAttachedPayments' is false", async () => {

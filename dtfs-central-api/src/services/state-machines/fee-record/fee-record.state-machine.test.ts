@@ -190,7 +190,7 @@ describe('FeeRecordStateMachine', () => {
 
   describe(`when the fee record has the '${FEE_RECORD_STATUS.DOES_NOT_MATCH}' status`, () => {
     // Arrange
-    const DOES_NOT_MATCH_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus('DOES_NOT_MATCH').build();
+    const DOES_NOT_MATCH_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH).build();
 
     it(`handles the '${FEE_RECORD_EVENT_TYPE.PAYMENT_EDITED}' event`, async () => {
       // Arrange

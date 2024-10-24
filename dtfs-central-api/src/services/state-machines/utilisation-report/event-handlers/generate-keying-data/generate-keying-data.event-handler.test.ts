@@ -7,6 +7,7 @@ import {
   FeeRecordEntity,
   UtilisationReportReconciliationStatus,
   FeeRecordPaymentJoinTableEntity,
+  FEE_RECORD_STATUS,
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
@@ -81,7 +82,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
     expect(mockFind).toHaveBeenCalledWith(FeeRecordEntity, {
       where: {
         report: { id: utilisationReport.id },
-        status: In(['TO_DO', 'DOES_NOT_MATCH']),
+        status: In(['TO_DO', FEE_RECORD_STATUS.DOES_NOT_MATCH]),
       },
     });
 
@@ -132,7 +133,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
       expect(mockFind).toHaveBeenCalledWith(FeeRecordEntity, {
         where: {
           report: { id: utilisationReport.id },
-          status: In(['TO_DO', 'DOES_NOT_MATCH']),
+          status: In(['TO_DO', FEE_RECORD_STATUS.DOES_NOT_MATCH]),
         },
       });
 
@@ -192,7 +193,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
       expect(mockFind).toHaveBeenCalledWith(FeeRecordEntity, {
         where: {
           report: { id: utilisationReport.id },
-          status: In(['TO_DO', 'DOES_NOT_MATCH']),
+          status: In(['TO_DO', FEE_RECORD_STATUS.DOES_NOT_MATCH]),
         },
       });
 

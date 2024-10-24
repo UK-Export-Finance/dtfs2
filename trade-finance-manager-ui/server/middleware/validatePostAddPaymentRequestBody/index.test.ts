@@ -1,5 +1,5 @@
 import httpMocks from 'node-mocks-http';
-import { Currency, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { Currency, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { validatePostAddPaymentRequestBody } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../test-mocks/mock-tfm-session-user';
 import { AddPaymentErrorKey } from '../../controllers/utilisation-reports/helpers';
@@ -149,7 +149,7 @@ describe('validatePostAddPaymentRequestBody', () => {
   });
 
   describe('when the body contains checkbox ids with different statuses', () => {
-    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', 'TO_DO'), getCheckboxId(2, 'GBP', 'DOES_NOT_MATCH')];
+    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', FEE_RECORD_STATUS.TO_DO), getCheckboxId(2, 'GBP', FEE_RECORD_STATUS.DOES_NOT_MATCH)];
     const next = jest.fn();
 
     it(`redirects to '${REDIRECT_URL}'`, () => {
@@ -202,11 +202,11 @@ describe('validatePostAddPaymentRequestBody', () => {
     });
   });
 
-  describe("when the body contains more than one checkbox id with the 'DOES_NOT_MATCH' status", () => {
+  describe(`when the body contains more than one checkbox id with the ${FEE_RECORD_STATUS.DOES_NOT_MATCH} status`, () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
-    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', 'DOES_NOT_MATCH'), getCheckboxId(2, 'GBP', 'DOES_NOT_MATCH')];
+    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', FEE_RECORD_STATUS.DOES_NOT_MATCH), getCheckboxId(2, 'GBP', FEE_RECORD_STATUS.DOES_NOT_MATCH)];
     req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
 
     const next = jest.fn();
@@ -268,11 +268,11 @@ describe('validatePostAddPaymentRequestBody', () => {
     expect(next).toHaveBeenCalled();
   });
 
-  it("calls the 'next' function when the body contains one checkbox id with the 'DOES_NOT_MATCH' fee record status", () => {
+  it(`calls the 'next' function when the body contains one checkbox id with the ${FEE_RECORD_STATUS.DOES_NOT_MATCH} fee record status`, () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
-    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', 'DOES_NOT_MATCH')];
+    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', FEE_RECORD_STATUS.DOES_NOT_MATCH)];
     req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
 
     const next = jest.fn();

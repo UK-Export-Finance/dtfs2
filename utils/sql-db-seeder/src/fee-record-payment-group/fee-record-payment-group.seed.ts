@@ -19,7 +19,7 @@ export const seedFeeRecordPaymentGroups = async (dataSource: DataSource) => {
   await FeeRecordPaymentGroupSeeder.forReport(reconciliationInProgressReport).addManyRandomFeeRecords(3, { facilityId: '11111111' }).save(dataSource);
 
   // Groups of one fee record to one payment
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'DOES_NOT_MATCH', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.DOES_NOT_MATCH, 'GBP')
     .addOneRandomFeeRecord()
     .addPaymentsAndSave(1, dataSource);
   await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'MATCH', 'GBP')
@@ -33,7 +33,7 @@ export const seedFeeRecordPaymentGroups = async (dataSource: DataSource) => {
     .addPaymentsAndSave(1, dataSource);
 
   // Groups of many fee records with a single bulk payment
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'DOES_NOT_MATCH', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.DOES_NOT_MATCH, 'GBP')
     .addManyRandomFeeRecords(4)
     .addPaymentsAndSave(1, dataSource);
   await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'MATCH', 'GBP')
@@ -47,7 +47,7 @@ export const seedFeeRecordPaymentGroups = async (dataSource: DataSource) => {
     .addPaymentsAndSave(1, dataSource);
 
   // Groups of single fee record with many payments
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'DOES_NOT_MATCH', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.DOES_NOT_MATCH, 'GBP')
     .addOneRandomFeeRecord()
     .addPaymentsAndSave(4, dataSource);
   await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'MATCH', 'GBP')
@@ -61,7 +61,7 @@ export const seedFeeRecordPaymentGroups = async (dataSource: DataSource) => {
     .addPaymentsAndSave(4, dataSource);
 
   // Groups of many fee records to many payments
-  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'DOES_NOT_MATCH', 'GBP')
+  await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, FEE_RECORD_STATUS.DOES_NOT_MATCH, 'GBP')
     .addManyRandomFeeRecords(4)
     .addPaymentsAndSave(4, dataSource);
   await FeeRecordPaymentGroupSeeder.forReportStatusAndPaymentCurrency(reconciliationInProgressReport, 'MATCH', 'GBP')

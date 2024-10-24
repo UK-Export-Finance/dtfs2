@@ -1,5 +1,12 @@
 import { EntityManager, In } from 'typeorm';
-import { DbRequestSource, FeeRecordEntity, FeeRecordPaymentJoinTableEntity, FeeRecordStatus, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import {
+  DbRequestSource,
+  FEE_RECORD_STATUS,
+  FeeRecordEntity,
+  FeeRecordPaymentJoinTableEntity,
+  FeeRecordStatus,
+  UtilisationReportEntity,
+} from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { KeyingSheetFeePaymentShare, getKeyingSheetFeePaymentSharesForFeeRecords } from '../helpers';
@@ -14,7 +21,7 @@ const getFacilityIdsAtToDoOrDoesNotMatchStatus = async (entityManager: EntityMan
   const feeRecordsAtToDoOrDoesNotMatchStatus = await entityManager.find(FeeRecordEntity, {
     where: {
       report: { id: reportId },
-      status: In<FeeRecordStatus>(['TO_DO', 'DOES_NOT_MATCH']),
+      status: In<FeeRecordStatus>(['TO_DO', FEE_RECORD_STATUS.DOES_NOT_MATCH]),
     },
   });
   return feeRecordsAtToDoOrDoesNotMatchStatus.reduce((facilityIds, { facilityId }) => facilityIds.add(facilityId), new Set<string>());

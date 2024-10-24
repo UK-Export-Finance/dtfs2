@@ -237,12 +237,12 @@ describe('get selected fee record details controller helpers', () => {
       const firstFeeRecordEntity = FeeRecordEntityMockBuilder.forReport(UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build())
         .withId(1)
         .withPayments([firstPaymentEntity, secondPaymentEntity])
-        .withStatus('DOES_NOT_MATCH')
+        .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
         .build();
       const secondFeeRecordEntity = FeeRecordEntityMockBuilder.forReport(UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build())
         .withId(2)
         .withPayments([thirdPaymentEntity])
-        .withStatus('DOES_NOT_MATCH')
+        .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
         .build();
 
       const mockFeeRecordEntities: FeeRecordEntity[] = [firstFeeRecordEntity, secondFeeRecordEntity];
