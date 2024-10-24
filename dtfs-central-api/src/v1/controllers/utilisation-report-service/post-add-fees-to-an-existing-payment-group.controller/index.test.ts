@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
-import { PaymentEntityMockBuilder, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, TestApiError } from '@ukef/dtfs2-common';
+import { PaymentEntityMockBuilder, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, TestApiError, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { PostAddFeesToAnExistingPaymentGroupRequest, postAddFeesToAnExistingPaymentGroup } from '.';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
@@ -28,7 +28,11 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
     const paymentIds = [3, 4];
     const payments = paymentIds.map((id) => PaymentEntityMockBuilder.forCurrency('GBP').withId(id).withFeeRecords([]).build());
 
-    const aFeeRecordToAdd = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withPaymentCurrency('GBP').withStatus('TO_DO').build();
+    const aFeeRecordToAdd = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+      .withId(1)
+      .withPaymentCurrency('GBP')
+      .withStatus(FEE_RECORD_STATUS.TO_DO)
+      .build();
     const aFeeRecordWithPayments = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withPaymentCurrency('GBP').withPayments(payments).build();
 
     const paymentsWithFeeRecords = paymentIds.map((id) =>
@@ -161,7 +165,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       const feeRecordInDifferentCurrencyToExistingPayment = FeeRecordEntityMockBuilder.forReport(utilisationReport)
         .withId(1)
         .withPaymentCurrency('GBP')
-        .withStatus('TO_DO')
+        .withStatus(FEE_RECORD_STATUS.TO_DO)
         .build();
 
       const req = httpMocks.createRequest<PostAddFeesToAnExistingPaymentGroupRequest>({

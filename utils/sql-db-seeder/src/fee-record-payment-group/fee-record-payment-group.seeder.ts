@@ -49,11 +49,11 @@ export class FeeRecordPaymentGroupSeeder {
   }
 
   public static forReport(report: UtilisationReportEntity): FeeRecordPaymentGroupSeeder {
-    return new FeeRecordPaymentGroupSeeder(report, 'TO_DO', null, null);
+    return new FeeRecordPaymentGroupSeeder(report, FEE_RECORD_STATUS.TO_DO, null, null);
   }
 
   public static forManuallyCompletedReport(report: UtilisationReportEntity): FeeRecordPaymentGroupSeeder {
-    return new FeeRecordPaymentGroupSeeder(report, 'RECONCILED', null, true);
+    return new FeeRecordPaymentGroupSeeder(report, FEE_RECORD_STATUS.RECONCILED, null, true);
   }
 
   public addOneRandomFeeRecord(overrides: AddRandomFeeRecordOverrides = {}): FeeRecordPaymentGroupSeeder {
@@ -110,10 +110,10 @@ export class FeeRecordPaymentGroupSeeder {
   public async save(dataSource: DataSource): Promise<void> {
     await this.saveFacilityUtilisationData(dataSource);
 
-    if (!this.reportIsManuallyReconciled && this.status !== 'TO_DO') {
+    if (!this.reportIsManuallyReconciled && this.status !== FEE_RECORD_STATUS.TO_DO) {
       throw new Error(`Cannot save fee records with status '${this.status}' when there are no payments`);
     }
-    if (this.reportIsManuallyReconciled && this.status !== 'RECONCILED') {
+    if (this.reportIsManuallyReconciled && this.status !== FEE_RECORD_STATUS.RECONCILED) {
       throw new Error(`Cannot save fee records with status '${this.status}' when report is manually reconciled`);
     }
     if (this.feeRecords.length === 0) {
@@ -126,7 +126,7 @@ export class FeeRecordPaymentGroupSeeder {
     await this.saveFacilityUtilisationData(dataSource);
 
     if (this.status === FEE_RECORD_STATUS.TO_DO) {
-      throw new Error("Cannot add payments to fee records with 'TO_DO' status");
+      throw new Error(`Cannot add payments to fee records with ${FEE_RECORD_STATUS.TO_DO} status`);
     }
     if (!this.paymentCurrency) {
       throw new Error(`Cannot create payments without a payment currency`);
