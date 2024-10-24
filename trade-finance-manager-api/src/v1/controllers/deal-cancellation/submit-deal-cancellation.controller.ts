@@ -1,6 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { ApiError, CustomExpressRequest } from '@ukef/dtfs2-common';
+import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { PostSubmitDealCancellationPayload } from '../../middleware/validate-post-submit-deal-cancellation-payload';
 import { DealCancellationService } from '../../services/deal-cancellation/deal-cancellation.service';
 
@@ -20,7 +21,9 @@ export const submitDealCancellation = async (req: SubmitDealCancellationRequest,
   const cancellation = req.body;
   const { dealId } = req.params;
   try {
-    await DealCancellationService.submitDealCancellation(dealId, cancellation);
+    const auditDetails = generateTfmAuditDetails(req.user._id);
+
+    await DealCancellationService.submitDealCancellation({ dealId, cancellation, auditDetails });
 
     return res.status(HttpStatusCode.Ok).send();
   } catch (error) {
