@@ -1,6 +1,5 @@
 const mapGefFacilitySnapshot = require('./mapGefFacilitySnapshot');
 const { formattedNumber } = require('../../../../utils/number');
-const mapFacilityStage = require('../facilities/mapFacilityStage');
 const mapFacilityValue = require('../facilities/mapFacilityValue');
 const mapFacilityProduct = require('../facilities/mapFacilityProduct');
 const mapFacilityType = require('../facilities/mapFacilityType');
@@ -11,6 +10,7 @@ const mapUkefExposureValue = require('../facilities/mapUkefExposureValue');
 
 const MOCK_GEF_DEAL = require('../../../__mocks__/mock-gef-deal');
 const MOCK_CASH_CONTINGENT_FACILITIES = require('../../../__mocks__/mock-cash-contingent-facilities');
+const { mapGefFacilityStage } = require('../facilities/mapFacilityStage');
 
 describe('mapGefFacilitySnapshot', () => {
   it('should return mapped GEF facility snapshot', () => {
@@ -26,7 +26,7 @@ describe('mapGefFacilitySnapshot', () => {
 
     mockFacility.facilitySnapshot.facilityProduct = mapFacilityProduct(mockFacility.facilitySnapshot.type);
 
-    mockFacility.facilitySnapshot.facilityStage = mapFacilityStage(mockFacility.facilitySnapshot.hasBeenIssued);
+    mockFacility.facilitySnapshot.facilityStage = mapGefFacilityStage(mockFacility.facilitySnapshot.hasBeenIssued);
 
     const { facilitySnapshot } = mockFacility;
 
@@ -39,7 +39,7 @@ describe('mapGefFacilitySnapshot', () => {
       coveredPercentage: `${facilitySnapshot.coverPercentage}%`,
       dates: mapGefFacilityDates(mockFacility, mockFacility.tfm, MOCK_GEF_DEAL),
       facilityProduct: mapFacilityProduct(facilitySnapshot.type),
-      facilityStage: mapFacilityStage(facilitySnapshot.hasBeenIssued),
+      facilityStage: mapGefFacilityStage(facilitySnapshot.hasBeenIssued),
       hasBeenIssued: facilitySnapshot.hasBeenIssued,
       type: mapFacilityType(facilitySnapshot),
       currency: facilitySnapshot.currency.id,

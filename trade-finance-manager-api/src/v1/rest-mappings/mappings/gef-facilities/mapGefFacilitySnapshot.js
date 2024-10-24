@@ -1,5 +1,4 @@
 const { formattedNumber } = require('../../../../utils/number');
-const mapFacilityStage = require('../facilities/mapFacilityStage');
 const mapFacilityValue = require('../facilities/mapFacilityValue');
 const mapFacilityProduct = require('../facilities/mapFacilityProduct');
 const mapFacilityType = require('../facilities/mapFacilityType');
@@ -8,6 +7,7 @@ const mapGefUkefFacilityType = require('./mapGefUkefFacilityType');
 const mapGefFacilityDates = require('./mapGefFacilityDates');
 const mapFacilityValueExportCurrency = require('../facilities/mapFacilityValueExportCurrency');
 const mapUkefExposureValue = require('../facilities/mapUkefExposureValue');
+const { mapGefFacilityStage } = require('../facilities/mapFacilityStage');
 
 /**
  * Maps the existing GEF facility snapshot in the database to the facility snapshot used in TFM API.
@@ -28,7 +28,7 @@ const mapGefFacilitySnapshot = (facility, dealSnapshot) => {
 
   facilitySnapshot.facilityProduct = mapFacilityProduct(type);
 
-  facilitySnapshot.facilityStage = mapFacilityStage(hasBeenIssued);
+  facilitySnapshot.facilityStage = mapGefFacilityStage(hasBeenIssued);
 
   facilitySnapshot.ukefFacilityType = type;
 
