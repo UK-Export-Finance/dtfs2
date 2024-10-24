@@ -112,7 +112,7 @@ describe('FeeRecordEntity', () => {
       const payment = PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(paymentId).build();
 
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
-        .withStatus('MATCH')
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withPaymentCurrency(paymentCurrency)
         .withPayments([payment])
         .withLastUpdatedByIsSystemUser(true)

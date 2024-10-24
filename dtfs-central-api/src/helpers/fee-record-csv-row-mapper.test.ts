@@ -1,4 +1,4 @@
-import { REQUEST_PLATFORM_TYPE, DbRequestSource, FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { REQUEST_PLATFORM_TYPE, DbRequestSource, FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
 import { feeRecordCsvRowToSqlEntity } from './fee-record-csv-row-mapper';
 import { UtilisationReportRawCsvData } from '../types/utilisation-reports';
 import { aUtilisationReportRawCsvData } from '../../test-helpers';
@@ -68,7 +68,7 @@ describe('fee-record-helpers', () => {
       expect(feeRecordEntity.status).toEqual<FeeRecordStatus>('TO_DO');
     });
 
-    it('sets the entity status to MATCH when fees paid to ukef for the period is zero', () => {
+    it(`sets the entity status to ${FEE_RECORD_STATUS.MATCH} when fees paid to ukef for the period is zero`, () => {
       // Act
       const feeRecordEntity = feeRecordCsvRowToSqlEntity({
         dataEntry: { ...aUtilisationReportRawCsvData(), 'fees paid to ukef for the period': '0.00' },
@@ -78,7 +78,7 @@ describe('fee-record-helpers', () => {
 
       // Assert
       expect(feeRecordEntity instanceof FeeRecordEntity).toEqual(true);
-      expect(feeRecordEntity.status).toEqual<FeeRecordStatus>('MATCH');
+      expect(feeRecordEntity.status).toEqual<FeeRecordStatus>(FEE_RECORD_STATUS.MATCH);
     });
 
     it('converts the numeric string columns to numbers', () => {

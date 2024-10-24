@@ -126,8 +126,8 @@ describe(`POST ${BASE_URL}`, () => {
     // Arrange
     const report = anUploadedReconciliationInProgressUtilisationReport();
     const feeRecords = [
-      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId('11111111').withStatus('MATCH').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId('22222222').withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId('11111111').withStatus(FEE_RECORD_STATUS.MATCH).build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId('22222222').withStatus(FEE_RECORD_STATUS.MATCH).build(),
     ];
     report.feeRecords = feeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
@@ -148,7 +148,9 @@ describe(`POST ${BASE_URL}`, () => {
     // Arrange
     const report = anUploadedPendingReconciliationUtilisationReport();
     const facilityId = '11111111';
-    report.feeRecords = [FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withPayments([]).withStatus('MATCH').build()];
+    report.feeRecords = [
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withPayments([]).withStatus(FEE_RECORD_STATUS.MATCH).build(),
+    ];
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
     await insertMatchingPaymentsForFeeRecords(report.feeRecords);
 
@@ -167,7 +169,9 @@ describe(`POST ${BASE_URL}`, () => {
     // Arrange
     const report = anUploadedPendingReconciliationUtilisationReport();
     const facilityId = '11111111';
-    report.feeRecords = [FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withPayments([]).withStatus('MATCH').build()];
+    report.feeRecords = [
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withPayments([]).withStatus(FEE_RECORD_STATUS.MATCH).build(),
+    ];
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
     await insertMatchingPaymentsForFeeRecords(report.feeRecords);
 
@@ -188,8 +192,8 @@ describe(`POST ${BASE_URL}`, () => {
     const report = anUploadedReconciliationInProgressUtilisationReport();
     const facilityId = '11111111';
     const feeRecords = [
-      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withStatus('MATCH').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withStatus(FEE_RECORD_STATUS.MATCH).build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus(FEE_RECORD_STATUS.MATCH).build(),
     ];
     report.feeRecords = feeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
@@ -224,8 +228,8 @@ describe(`POST ${BASE_URL}`, () => {
         .withLastUpdatedByTfmUserId(null)
         .withLastUpdatedByIsSystemUser(false)
         .build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus('MATCH').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(facilityId).withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus(FEE_RECORD_STATUS.MATCH).build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(facilityId).withStatus(FEE_RECORD_STATUS.MATCH).build(),
     ];
     report.feeRecords = feeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
@@ -266,10 +270,10 @@ describe(`POST ${BASE_URL}`, () => {
     const feeRecords = [
       // Fee records for same facility where only one has MATCH status
       FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(firstFacilityId).withStatus('TO_DO').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(firstFacilityId).withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(firstFacilityId).withStatus(FEE_RECORD_STATUS.MATCH).build(),
       // Fee records for same facility where both have MATCH status
-      FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(secondFacilityId).withStatus('MATCH').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(4).withFacilityId(secondFacilityId).withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(secondFacilityId).withStatus(FEE_RECORD_STATUS.MATCH).build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(4).withFacilityId(secondFacilityId).withStatus(FEE_RECORD_STATUS.MATCH).build(),
     ];
     report.feeRecords = feeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
@@ -297,7 +301,7 @@ describe(`POST ${BASE_URL}`, () => {
     // Arrange
     const report = anUploadedReconciliationInProgressUtilisationReport();
     const firstFacilityId = '11111111';
-    const feeRecords = [FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(firstFacilityId).withStatus('MATCH').build()];
+    const feeRecords = [FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(firstFacilityId).withStatus(FEE_RECORD_STATUS.MATCH).build()];
     report.feeRecords = feeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
     await insertMatchingPaymentsForFeeRecords(feeRecords);
@@ -371,7 +375,7 @@ describe(`POST ${BASE_URL}`, () => {
         .withId(1)
         .withFacilityId(facilityId)
         .withFacilityUtilisationData(utilisationData)
-        .withStatus('MATCH')
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withFacilityUtilisation(1)
         .build(),
     ];
@@ -425,7 +429,7 @@ describe(`POST ${BASE_URL}`, () => {
         .withId(1)
         .withFacilityId(facilityId)
         .withFacilityUtilisationData(utilisationData)
-        .withStatus('MATCH')
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withFacilityUtilisation(10000)
         .build(),
     ];
@@ -484,9 +488,9 @@ describe(`POST ${BASE_URL}`, () => {
       const report = anUploadedReconciliationInProgressUtilisationReport();
 
       const feeRecordsAtMatchStatus = [
-        FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withStatus('MATCH').build(),
-        FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus('MATCH').build(),
-        FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(facilityId).withStatus('MATCH').build(),
+        FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withStatus(FEE_RECORD_STATUS.MATCH).build(),
+        FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus(FEE_RECORD_STATUS.MATCH).build(),
+        FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(facilityId).withStatus(FEE_RECORD_STATUS.MATCH).build(),
       ];
       report.feeRecords = feeRecordsAtMatchStatus;
       await SqlDbHelper.saveNewEntry('UtilisationReport', report);
@@ -546,13 +550,13 @@ describe(`POST ${BASE_URL}`, () => {
             .withId(2)
             .withFacilityId(facilityId)
             .withFacilityUtilisation(currentUtilisation)
-            .withStatus('MATCH')
+            .withStatus(FEE_RECORD_STATUS.MATCH)
             .build(),
           FeeRecordEntityMockBuilder.forReport(report)
             .withId(3)
             .withFacilityId(facilityId)
             .withFacilityUtilisation(currentUtilisation)
-            .withStatus('MATCH')
+            .withStatus(FEE_RECORD_STATUS.MATCH)
             .build(),
         ];
 
@@ -573,7 +577,7 @@ describe(`POST ${BASE_URL}`, () => {
       it('generates keying data for the last facility fee record which has been moved to READY_TO_KEY', async () => {
         // Arrange
         const existingToDoFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: toDoFeeRecordId, status: 'TO_DO' });
-        existingToDoFeeRecord.status = 'MATCH';
+        existingToDoFeeRecord.status = FEE_RECORD_STATUS.MATCH;
         await SqlDbHelper.saveNewEntry('FeeRecord', existingToDoFeeRecord);
         await insertMatchingPaymentsForFeeRecords([existingToDoFeeRecord]);
 
@@ -591,7 +595,7 @@ describe(`POST ${BASE_URL}`, () => {
       it('updates the facility utilisation data table once all fee records for the facility have been moved to READY_TO_KEY', async () => {
         // Arrange
         const existingToDoFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: toDoFeeRecordId, status: 'TO_DO' });
-        existingToDoFeeRecord.status = 'MATCH';
+        existingToDoFeeRecord.status = FEE_RECORD_STATUS.MATCH;
         await SqlDbHelper.saveNewEntry('FeeRecord', existingToDoFeeRecord);
         await insertMatchingPaymentsForFeeRecords([existingToDoFeeRecord]);
 

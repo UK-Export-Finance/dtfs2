@@ -34,7 +34,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
   const aReconciliationInProgressReport = () => UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
 
   const aMatchedFeeRecordForReportWithFacilityId = (report: UtilisationReportEntity, facilityId: string) =>
-    FeeRecordEntityMockBuilder.forReport(report).withStatus('MATCH').withFacilityId(facilityId).build();
+    FeeRecordEntityMockBuilder.forReport(report).withStatus(FEE_RECORD_STATUS.MATCH).withFacilityId(facilityId).build();
 
   const aMockEventHandler = () => jest.fn();
   const aMockFeeRecordStateMachine = (eventHandler: jest.Mock): FeeRecordStateMachine =>

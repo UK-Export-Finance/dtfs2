@@ -11,7 +11,7 @@ describe('handleFeeRecordPaymentDeletedEvent', () => {
     save: mockSave,
   } as unknown as EntityManager;
 
-  it("sets the fee record status to 'MATCH' when the event payload 'feeRecordsAndPaymentsMatch' is true and 'hasAttachedPayments' is true", async () => {
+  it(`sets the fee record status to ${FEE_RECORD_STATUS.MATCH} when the event payload 'feeRecordsAndPaymentsMatch' is true and 'hasAttachedPayments' is true`, async () => {
     // Arrange
     const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH).build();
 
@@ -24,12 +24,12 @@ describe('handleFeeRecordPaymentDeletedEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.status).toEqual('MATCH');
+    expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.MATCH);
   });
 
   it(`sets the fee record status to ${FEE_RECORD_STATUS.DOES_NOT_MATCH} when the event payload 'feeRecordsAndPaymentsMatch' is false and 'hasAttachedPayments' is true`, async () => {
     // Arrange
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus('MATCH').build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus(FEE_RECORD_STATUS.MATCH).build();
 
     // Act
     await handleFeeRecordPaymentDeletedEvent(feeRecord, {
@@ -45,7 +45,7 @@ describe('handleFeeRecordPaymentDeletedEvent', () => {
 
   it("sets the fee record status to 'TO_DO' when the event payload 'feeRecordsAndPaymentsMatch' is false and 'hasAttachedPayments' is false", async () => {
     // Arrange
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus('MATCH').build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus(FEE_RECORD_STATUS.MATCH).build();
 
     // Act
     await handleFeeRecordPaymentDeletedEvent(feeRecord, {
@@ -61,7 +61,7 @@ describe('handleFeeRecordPaymentDeletedEvent', () => {
 
   it("throws an error when the event payload 'feeRecordsAndPaymentsMatch' is true and 'hasAttachedPayments' is false", async () => {
     // Arrange
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus('MATCH').build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus(FEE_RECORD_STATUS.MATCH).build();
 
     // Act / Assert
     await expect(

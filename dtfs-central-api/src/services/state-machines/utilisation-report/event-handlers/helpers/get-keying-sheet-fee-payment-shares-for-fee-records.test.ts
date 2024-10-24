@@ -1,4 +1,4 @@
-import { Currency, FeeRecordEntity, FeeRecordEntityMockBuilder, PaymentEntity, PaymentEntityMockBuilder } from '@ukef/dtfs2-common';
+import { Currency, FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordEntityMockBuilder, PaymentEntity, PaymentEntityMockBuilder } from '@ukef/dtfs2-common';
 import { KeyingSheetFeePaymentShare, getKeyingSheetFeePaymentSharesForFeeRecords } from './get-keying-sheet-fee-payment-shares-for-fee-records';
 import { aUtilisationReport } from '../../../../../../test-helpers';
 
@@ -13,7 +13,7 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
 
       const feeRecordId = 456;
       const matchFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-        .withStatus('MATCH')
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withId(feeRecordId)
         .withPaymentCurrency(paymentCurrency)
         .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
@@ -41,7 +41,7 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
 
       const feeRecordId = 456;
       const matchFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-        .withStatus('MATCH')
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withId(feeRecordId)
         .withPaymentCurrency(paymentCurrency)
         .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
@@ -67,7 +67,7 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
 
     const aMatchFeeRecordWithIdAmountAndPayment = (id: number, amount: number, payment: PaymentEntity) =>
       FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-        .withStatus('MATCH')
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withId(id)
         .withPaymentCurrency(paymentCurrency)
         .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
@@ -146,7 +146,7 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
 
       const feeRecordId = 123;
       const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-        .withStatus('MATCH')
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withId(feeRecordId)
         .withPaymentCurrency(paymentCurrency)
         .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
@@ -180,7 +180,7 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
 
         const feeRecordId = 123;
         const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-          .withStatus('MATCH')
+          .withStatus(FEE_RECORD_STATUS.MATCH)
           .withId(feeRecordId)
           .withPaymentCurrency(paymentCurrency)
           .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
@@ -210,7 +210,7 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
 
         const feeRecordId = 123;
         const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-          .withStatus('MATCH')
+          .withStatus(FEE_RECORD_STATUS.MATCH)
           .withId(feeRecordId)
           .withPaymentCurrency(paymentCurrency)
           .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
@@ -241,7 +241,7 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
 
     const aFeeRecordWithIdAmountAndPayments = (id: number, amount: number, payments: PaymentEntity[]) =>
       FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-        .withStatus('MATCH')
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withId(id)
         .withFeesPaidToUkefForThePeriod(amount)
         .withPaymentCurrency(paymentCurrency)
@@ -387,7 +387,7 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
   describe('when the fee records have no attached payments and have been automatically moved to the MATCH status', () => {
     it('does not return any fee payments', () => {
       // Arrange
-      const matchFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('MATCH').withPayments([]).build();
+      const matchFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(FEE_RECORD_STATUS.MATCH).withPayments([]).build();
 
       // Act
       const result = getKeyingSheetFeePaymentSharesForFeeRecords([matchFeeRecord]);

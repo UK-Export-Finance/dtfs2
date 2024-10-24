@@ -217,7 +217,7 @@ describe(`PATCH ${BASE_URL}`, () => {
 
     expect(newFeeRecords).toHaveLength(feeRecords.length);
     newFeeRecords.forEach((feeRecord) => {
-      expect(feeRecord.status).toBe<FeeRecordStatus>('MATCH');
+      expect(feeRecord.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.MATCH);
     });
   });
 
@@ -229,7 +229,7 @@ describe(`PATCH ${BASE_URL}`, () => {
     const feeRecords = [
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(1)
-        .withStatus('MATCH')
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withFeesPaidToUkefForThePeriod(100)
         .withFeesPaidToUkefForThePeriodCurrency('GBP')
         .withPaymentCurrency('GBP')
@@ -237,7 +237,7 @@ describe(`PATCH ${BASE_URL}`, () => {
         .build(),
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(2)
-        .withStatus('MATCH')
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withFeesPaidToUkefForThePeriod(200)
         .withFeesPaidToUkefForThePeriodCurrency('GBP')
         .withPaymentCurrency('GBP')
@@ -263,7 +263,7 @@ describe(`PATCH ${BASE_URL}`, () => {
 
     expect(oldFeeRecords).toHaveLength(feeRecords.length);
     oldFeeRecords.forEach((feeRecord) => {
-      expect(feeRecord.status).toBe<FeeRecordStatus>('MATCH');
+      expect(feeRecord.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.MATCH);
     });
 
     expect(newFeeRecords).toHaveLength(feeRecords.length);

@@ -119,7 +119,7 @@ describe(`GET ${BASE_URL}`, () => {
       .withFeesPaidToUkefForThePeriodCurrency('GBP')
       .withPaymentCurrency('USD')
       .withPayments([aPaymentInUSD])
-      .withStatus('MATCH')
+      .withStatus(FEE_RECORD_STATUS.MATCH)
       .build();
 
     report.feeRecords = [aFeeRecordInUSD, aFeeRecordInUSDWithAPaymentAttached];

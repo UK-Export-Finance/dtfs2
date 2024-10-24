@@ -1,6 +1,14 @@
 import { Response } from 'supertest';
 import { HttpStatusCode } from 'axios';
-import { Bank, Currency, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  Bank,
+  Currency,
+  FEE_RECORD_STATUS,
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  ReportPeriod,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
@@ -54,7 +62,7 @@ describe(`GET ${BASE_URL}`, () => {
       .withId(1)
       .withFacilityId('12345678')
       .withExporter('Test exporter 1')
-      .withStatus('MATCH')
+      .withStatus(FEE_RECORD_STATUS.MATCH)
       .withFeesPaidToUkefForThePeriod(75)
       .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
       .withPaymentCurrency(paymentCurrency)
@@ -64,7 +72,7 @@ describe(`GET ${BASE_URL}`, () => {
       .withId(2)
       .withFacilityId('87654321')
       .withExporter('Test exporter 2')
-      .withStatus('MATCH')
+      .withStatus(FEE_RECORD_STATUS.MATCH)
       .withFeesPaidToUkefForThePeriod(75)
       .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
       .withPaymentCurrency(paymentCurrency)
@@ -168,7 +176,7 @@ describe(`GET ${BASE_URL}`, () => {
         reportedFees: { currency: paymentCurrency, amount: 75 },
         reportedPayments: { currency: paymentCurrency, amount: 75 },
         paymentsReceived: [{ currency: paymentCurrency, amount: 75 }],
-        status: 'MATCH',
+        status: FEE_RECORD_STATUS.MATCH,
       },
       {
         id: 2,
@@ -177,7 +185,7 @@ describe(`GET ${BASE_URL}`, () => {
         reportedFees: { currency: paymentCurrency, amount: 75 },
         reportedPayments: { currency: paymentCurrency, amount: 75 },
         paymentsReceived: [{ currency: paymentCurrency, amount: 75 }],
-        status: 'MATCH',
+        status: FEE_RECORD_STATUS.MATCH,
       },
     ]);
   });
