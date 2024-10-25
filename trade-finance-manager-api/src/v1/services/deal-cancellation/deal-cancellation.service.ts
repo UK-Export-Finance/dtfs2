@@ -53,8 +53,11 @@ export class DealCancellationService {
 
   /**
    * Submit the deal cancellation
-   * @param dealId the Deal ID
-   * @param dealCancellation the deal cancellation object
+   *
+   * @param params
+   * @param params.dealId the Deal ID
+   * @param params.dealCancellation the deal cancellation object
+   * @param params.auditDetails the users audit details
    */
   public static async submitDealCancellation({ dealId, cancellation, auditDetails }: SubmitDealCancellationParams) {
     console.info(`Submitting deal cancellation for ${dealId}`);
