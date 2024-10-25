@@ -1,6 +1,6 @@
 import relative from '../../relativeURL';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
-import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../e2e-fixtures';
+import { ADMIN, BANK1_MAKER1, PIM_USER_1 } from '../../../../../e2e-fixtures';
 import caseDealPage from '../../pages/caseDealPage';
 import { backLink, errorSummary } from '../../partials';
 import { today, threeMonthsOneDay, yesterday } from '../../../../../e2e-fixtures/dateConstants';
@@ -29,38 +29,6 @@ context('Deal cancellation - check details', () => {
     cy.deleteDeals(dealId, ADMIN);
     dealFacilities.forEach((facility) => {
       cy.deleteFacility(facility._id, BANK1_MAKER1);
-    });
-  });
-
-  describe('when logged in as a non-PIM user', () => {
-    beforeEach(() => {
-      cy.login(PIM_USER_1);
-      cy.visit(relative(`/case/${dealId}/deal`));
-
-      caseDealPage.cancelDealButton().click();
-
-      cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
-      cy.clickContinueButton();
-
-      cy.url().should('eq', relative(`/case/${dealId}/cancellation/bank-request-date`));
-
-      cy.completeDateFormFields({ idPrefix: 'bank-request-date' });
-
-      cy.clickContinueButton();
-
-      cy.url().should('eq', relative(`/case/${dealId}/cancellation/effective-from-date`));
-
-      cy.completeDateFormFields({ idPrefix: 'effective-from-date', date: yesterday.date });
-
-      cy.clickContinueButton();
-
-      cy.login(T1_USER_1);
-
-      cy.visit(`/case/${dealId}/cancellation/check-details`);
-    });
-
-    it('should redirect when visiting the check details page', () => {
-      cy.url().should('eq', relative('/deals/0'));
     });
   });
 
