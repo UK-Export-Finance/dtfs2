@@ -1,9 +1,9 @@
-import escapeStringRegexp from 'escape-string-regexp';
 import { AuditDetails, DocumentNotCreatedError, DocumentNotUpdatedError, MONGO_DB_COLLECTIONS, TfmUser, UserUpsertRequest } from '@ukef/dtfs2-common';
 import { Collection, FindOneAndUpdateOptions, ObjectId, WithoutId } from 'mongodb';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../drivers/db-client';
 import { USER } from '../../constants';
+import getEscapedRegexFromString from '../helpers/get-escaped-regex-from-string';
 
 export type upsertUserByEmailAddressesParams = {
   emailsOfUserToUpsert: string[];
@@ -20,21 +20,10 @@ export class UserRepo {
     return await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_USERS);
   }
 
-  /**
-   * generateArrayOfEmailsRegex
-   * Generate an array of emails as regular expressions.
-   * This is used to find users with matching emails.
-   * @param {string[]} emails
-   * @returns {RegExp[]} Emails as regular expressions.
-   */
-  public static generateArrayOfEmailsRegex(emails: string[]) {
-    return emails.map((email) => new RegExp(`^${escapeStringRegexp(email)}$`, 'i'));
-  }
-
   public static async findUsersByEmailAddresses(emails: string[]): Promise<TfmUser[]> {
     const collection = await UserRepo.getCollection();
 
-    const emailsRegex = UserRepo.generateArrayOfEmailsRegex(emails);
+    const emailsRegex = emails.map((email) => getEscapedRegexFromString(email));
 
     const query = { email: { $in: emailsRegex } };
 

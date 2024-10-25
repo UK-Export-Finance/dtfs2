@@ -1,6 +1,7 @@
 import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { UserRepo } from './user.repo';
 import { mongoDbClient } from '../../drivers/db-client';
+import getEscapedRegexFromString from '../helpers/get-escaped-regex-from-string';
 
 let toArrayMock = jest.fn();
 const findMock = jest.fn();
@@ -28,8 +29,11 @@ describe('user repo', () => {
         findResult: ['a-user', 'another-user'],
       },
     ])(`when finding $description user(s) by email addresses`, ({ emailsToTest, findResult }) => {
+      let expectedEmailRegex: RegExp[];
+
       beforeEach(() => {
         jest.spyOn(mongoDbClient, 'getCollection').mockImplementation(getCollectionMock);
+        expectedEmailRegex = emailsToTest.map((email) => getEscapedRegexFromString(email));
 
         mockFindResponse(findResult);
       });
@@ -42,7 +46,7 @@ describe('user repo', () => {
       });
 
       it('finds users by escaped email addresses', async () => {
-        const expectedQuery = { email: { $in: UserRepo.generateArrayOfEmailsRegex(emailsToTest) } };
+        const expectedQuery = { email: { $in: expectedEmailRegex } };
 
         await makeRequest();
 
