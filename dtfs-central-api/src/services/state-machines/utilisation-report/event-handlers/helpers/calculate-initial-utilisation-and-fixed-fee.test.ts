@@ -111,7 +111,7 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
   });
 
   describe('calculateInitialUtilisationAndFixedFee', () => {
-    const getLatestTfmFacilityValuesSpy = jest.spyOn(helpers, 'getLatestTfmFacilityValues');
+    const getLatestTfmFacilityValuesSpy = jest.spyOn(helpers, 'getSpecificTfmFacilityValues');
     const facilityId = '12345678';
     const { facilitySnapshot } = aTfmFacility();
 
