@@ -10,9 +10,7 @@ ENV AzureWebJobsFeatureFlags=EnableWorkerIndexing
 # Directories setup
 WORKDIR /app
 
-COPY libs libs
 COPY azure-functions/acbs-function .
 
-COPY package*.json .
-RUN npm ci
+RUN npm i
 RUN npm cache clean --force
