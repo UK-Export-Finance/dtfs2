@@ -1,6 +1,5 @@
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { Response } from 'supertest';
 import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_STAGE, API_ERROR_CODE, TfmAuditDetails } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { withMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
@@ -11,10 +10,7 @@ import aDeal from '../../deal-builder';
 import { createDeal } from '../../../helpers/create-deal';
 import { aPortalUser } from '../../../../test-helpers';
 import { MOCK_PORTAL_USER } from '../../../mocks/test-users/mock-portal-user';
-
-interface CreateUserResponse extends Response {
-  body: { _id: string };
-}
+import { createTfmUser } from '../../../helpers/create-tfm-user';
 
 const originalProcessEnv = { ...process.env };
 
@@ -35,23 +31,11 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
     submissionType: DEALS.SUBMISSION_TYPE.AIN,
   }) as AnyObject;
 
-  const mockUser = {
-    username: 'T1_USER_1',
-    email: 'T1_USER_1@ukexportfinance.gov.uk',
-    salt: '00',
-    hash: '01',
-    teams: ['TEAM1'],
-    timezone: 'Europe/London',
-    firstName: 'Joe',
-    lastName: 'Bloggs',
-    status: 'active',
-  };
-
   beforeAll(async () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.DEALS]);
 
-    const response: CreateUserResponse = await testApi.post({ user: mockUser, auditDetails: generateTfmAuditDetails(new ObjectId()) }).to('/v1/tfm/users');
-    tfmUserId = response.body._id;
+    const tfmUser = await createTfmUser();
+    tfmUserId = tfmUser._id;
   });
 
   beforeEach(async () => {
