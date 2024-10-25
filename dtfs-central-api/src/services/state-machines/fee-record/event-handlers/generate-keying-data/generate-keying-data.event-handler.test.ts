@@ -35,7 +35,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
     userId,
   };
 
-  const aMatchingFeeRecord = () => FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withStatus('MATCH').build();
+  const aMatchingFeeRecord = () => FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withStatus(FEE_RECORD_STATUS.MATCH).build();
 
   beforeEach(() => {
     jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(10);
@@ -117,7 +117,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
     it(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the fees paid to ukef is non zero`, async () => {
       // Arrange
       const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport())
-        .withStatus('MATCH')
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withFeesPaidToUkefForThePeriod(0.01)
         .build();
       jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(0);
@@ -137,7 +137,10 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
 
     it(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the fixed fee adjustment is greater than zero`, async () => {
       // Arrange
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withStatus('MATCH').withFeesPaidToUkefForThePeriod(0).build();
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport())
+        .withStatus(FEE_RECORD_STATUS.MATCH)
+        .withFeesPaidToUkefForThePeriod(0)
+        .build();
       jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(0);
       jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(0.01);
 
@@ -155,7 +158,10 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
 
     it(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the fixed fee adjustment is less than zero`, async () => {
       // Arrange
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withStatus('MATCH').withFeesPaidToUkefForThePeriod(0).build();
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport())
+        .withStatus(FEE_RECORD_STATUS.MATCH)
+        .withFeesPaidToUkefForThePeriod(0)
+        .build();
       jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(0);
       jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(-0.01);
 
@@ -173,7 +179,10 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
 
     it(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the principal balance adjustment is greater than zero`, async () => {
       // Arrange
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withStatus('MATCH').withFeesPaidToUkefForThePeriod(0).build();
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport())
+        .withStatus(FEE_RECORD_STATUS.MATCH)
+        .withFeesPaidToUkefForThePeriod(0)
+        .build();
       jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(0.01);
       jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(0);
 
@@ -191,7 +200,10 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
 
     it(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the principal balance adjustment is less than zero`, async () => {
       // Arrange
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withStatus('MATCH').withFeesPaidToUkefForThePeriod(0).build();
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport())
+        .withStatus(FEE_RECORD_STATUS.MATCH)
+        .withFeesPaidToUkefForThePeriod(0)
+        .build();
       jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(-0.01);
       jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(0);
 
@@ -209,7 +221,10 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
 
     it(`updates the fee record status to '${FEE_RECORD_STATUS.RECONCILED}' if the principal balance adjustment, fixed fee adjustment and fees paid to ukef for the period are all zero`, async () => {
       // Arrange
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withStatus('MATCH').withFeesPaidToUkefForThePeriod(0).build();
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport())
+        .withStatus(FEE_RECORD_STATUS.MATCH)
+        .withFeesPaidToUkefForThePeriod(0)
+        .build();
       jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(0);
       jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(0);
 
@@ -365,7 +380,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
     it(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if fees paid to ukef is greater than zero`, async () => {
       // Arrange
       const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport())
-        .withStatus('MATCH')
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withFeesPaidToUkefForThePeriod(0.01)
         .build();
 
@@ -383,7 +398,10 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
 
     it(`updates the fee record status to '${FEE_RECORD_STATUS.RECONCILED}' if fees paid to ukef is equal to zero`, async () => {
       // Arrange
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withStatus('MATCH').withFeesPaidToUkefForThePeriod(0).build();
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport())
+        .withStatus(FEE_RECORD_STATUS.MATCH)
+        .withFeesPaidToUkefForThePeriod(0)
+        .build();
 
       // Act
       await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {

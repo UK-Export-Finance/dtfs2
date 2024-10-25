@@ -1,5 +1,5 @@
 import { when } from 'jest-when';
-import { CURRENCY, Currency, CurrencyAndAmount, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { CURRENCY, Currency, CurrencyAndAmount, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { mapCurrenciesToRadioItems } from '../../../helpers/map-currencies-to-radio-items';
 import {
   getFormattedDateReconciled,
@@ -333,7 +333,7 @@ describe('reconciliation-for-report-helper', () => {
 
     it('should map the group status to the view model status', () => {
       // Arrange
-      const status: FeeRecordStatus = 'TO_DO';
+      const status: FeeRecordStatus = FEE_RECORD_STATUS.TO_DO;
       const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), status }];
 
       // Act
@@ -345,11 +345,11 @@ describe('reconciliation-for-report-helper', () => {
     });
 
     it.each([
-      { feeRecordStatus: 'TO_DO', feeRecordDisplayStatus: 'TO DO' },
-      { feeRecordStatus: 'MATCH', feeRecordDisplayStatus: 'MATCH' },
-      { feeRecordStatus: 'DOES_NOT_MATCH', feeRecordDisplayStatus: 'DOES NOT MATCH' },
-      { feeRecordStatus: 'READY_TO_KEY', feeRecordDisplayStatus: 'READY TO KEY' },
-      { feeRecordStatus: 'RECONCILED', feeRecordDisplayStatus: 'RECONCILED' },
+      { feeRecordStatus: FEE_RECORD_STATUS.TO_DO, feeRecordDisplayStatus: 'TO DO' },
+      { feeRecordStatus: FEE_RECORD_STATUS.MATCH, feeRecordDisplayStatus: 'MATCH' },
+      { feeRecordStatus: FEE_RECORD_STATUS.DOES_NOT_MATCH, feeRecordDisplayStatus: 'DOES NOT MATCH' },
+      { feeRecordStatus: FEE_RECORD_STATUS.READY_TO_KEY, feeRecordDisplayStatus: 'READY TO KEY' },
+      { feeRecordStatus: FEE_RECORD_STATUS.RECONCILED, feeRecordDisplayStatus: 'RECONCILED' },
     ] as const)(
       "maps the fee record status '$feeRecordStatus' to the view model display status '$feeRecordDisplayStatus'",
       ({ feeRecordStatus, feeRecordDisplayStatus }) => {
@@ -389,7 +389,7 @@ describe('reconciliation-for-report-helper', () => {
 
       const feeRecords = [firstFeeRecord, secondFeeRecord];
 
-      const groupStatus: FeeRecordStatus = 'TO_DO';
+      const groupStatus: FeeRecordStatus = FEE_RECORD_STATUS.TO_DO;
 
       const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), feeRecords, status: groupStatus }];
 
@@ -415,7 +415,7 @@ describe('reconciliation-for-report-helper', () => {
         },
       };
 
-      const status: FeeRecordStatus = 'DOES_NOT_MATCH';
+      const status = FEE_RECORD_STATUS.DOES_NOT_MATCH;
 
       const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), feeRecords: [feeRecord], status }];
 
@@ -443,7 +443,7 @@ describe('reconciliation-for-report-helper', () => {
         },
       };
 
-      const status: FeeRecordStatus = 'DOES_NOT_MATCH';
+      const status = FEE_RECORD_STATUS.DOES_NOT_MATCH;
 
       const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), feeRecords: [feeRecord], status }];
 

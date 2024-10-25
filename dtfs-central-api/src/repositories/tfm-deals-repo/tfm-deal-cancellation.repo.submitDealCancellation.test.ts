@@ -30,12 +30,24 @@ describe('tfm-deals-cancellation-repo', () => {
   const updateOneMock = jest.fn();
   const getCollectionMock = jest.fn();
 
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   afterEach(() => {
     jest.resetAllMocks();
   });
 
   describe('submitDealCancellation', () => {
     const mockUpdateResult = { matchedCount: 1 };
+
+    beforeAll(() => {
+      jest.useFakeTimers();
+    });
 
     beforeEach(() => {
       updateOneMock.mockResolvedValue(mockUpdateResult);
@@ -44,6 +56,10 @@ describe('tfm-deals-cancellation-repo', () => {
         updateOne: updateOneMock,
       });
       jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
     });
 
     it('calls the DB with the correct collection name', async () => {

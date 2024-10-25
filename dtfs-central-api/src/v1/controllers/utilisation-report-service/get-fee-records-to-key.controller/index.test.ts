@@ -16,7 +16,7 @@ describe('get-fee-records-to-key.controller', () => {
     const aUtilisationReportWithFeeRecordsAndPayments = () => {
       const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
       const payments = [PaymentEntityMockBuilder.forCurrency('GBP').build()];
-      const feeRecords = [FeeRecordEntityMockBuilder.forReport(report).withStatus('MATCH').withPayments(payments).build()];
+      const feeRecords = [FeeRecordEntityMockBuilder.forReport(report).withStatus(FEE_RECORD_STATUS.MATCH).withPayments(payments).build()];
       report.feeRecords = feeRecords;
       return report;
     };
