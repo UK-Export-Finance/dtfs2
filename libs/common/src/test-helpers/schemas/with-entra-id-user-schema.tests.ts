@@ -89,7 +89,7 @@ function getFailureTestCases({ getTestObjectWithUpdatedUserParams }: TestCasesPa
     },
     {
       aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), verified_primary_email: [] }),
-      description: 'the verify primary email is zero length',
+      description: 'the verify primary email array is empty',
     },
     {
       aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), verified_primary_email: [1] }),
@@ -133,10 +133,6 @@ function getFailureTestCases({ getTestObjectWithUpdatedUserParams }: TestCasesPa
 function getSuccessTestCases({ getTestObjectWithUpdatedUserParams }: TestCasesParams) {
   return [
     { aTestCase: () => getTestObjectWithUpdatedUserParams(aValidEntraIdUser()), description: 'a complete valid payload is present' },
-    {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), verified_primary_email: [] }),
-      description: 'the verified primary email array is empty',
-    },
     {
       aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), verified_secondary_email: [] }),
       description: 'the verified secondary email array is empty',
