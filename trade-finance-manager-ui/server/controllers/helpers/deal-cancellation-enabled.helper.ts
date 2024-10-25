@@ -38,10 +38,13 @@ export const isDealCancellationEnabled = (submissionType: DealSubmissionType, us
  * @param cancellationStatus - optional current deal cancellation status
  * @returns true or false depending on if the deal has already been cancelled
  */
-export const canDealStillBeCancelled = (cancellationStatus?: TfmDealCancellationStatus): boolean => {
-  const isDealAlreadyCancelled = cancellationStatus === TFM_DEAL_CANCELLATION_STATUS.COMPLETED || cancellationStatus === TFM_DEAL_CANCELLATION_STATUS.SCHEDULED;
+export const canDealBeCancelled = (cancellationStatus?: TfmDealCancellationStatus): boolean => {
+  const isCompleted = cancellationStatus === TFM_DEAL_CANCELLATION_STATUS.COMPLETED;
+  const isScheduled = cancellationStatus === TFM_DEAL_CANCELLATION_STATUS.SCHEDULED;
 
-  return !isDealAlreadyCancelled;
+  const canBeCancelled = !isCompleted && !isScheduled;
+
+  return canBeCancelled;
 };
 
 /**

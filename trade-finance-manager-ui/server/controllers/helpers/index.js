@@ -16,14 +16,14 @@ const { renderDealsOrFacilitiesPage, queryDealsOrFacilities } = require('./deals
 const {
   isDealCancellationEnabled,
   canSubmissionTypeBeCancelled,
-  canDealStillBeCancelled,
+  canDealBeCancelled,
   isDealCancellationInDraft,
 } = require('./deal-cancellation-enabled.helper');
 
 module.exports = {
   showAmendmentButton,
   isDealCancellationEnabled,
-  canDealStillBeCancelled,
+  canDealBeCancelled,
   isDealCancellationInDraft,
   canSubmissionTypeBeCancelled,
   userCanEditManagersDecision,

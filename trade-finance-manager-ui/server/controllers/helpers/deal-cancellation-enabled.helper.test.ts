@@ -1,10 +1,5 @@
 import { DEAL_SUBMISSION_TYPE, TEAM_IDS, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
-import {
-  canDealStillBeCancelled,
-  canSubmissionTypeBeCancelled,
-  isDealCancellationEnabled,
-  isDealCancellationInDraft,
-} from './deal-cancellation-enabled.helper';
+import { canDealBeCancelled, canSubmissionTypeBeCancelled, isDealCancellationEnabled, isDealCancellationInDraft } from './deal-cancellation-enabled.helper';
 import { TfmSessionUser } from '../../types/tfm-session-user';
 
 const pimUser = { teams: [TEAM_IDS.PIM] } as TfmSessionUser;
@@ -49,25 +44,25 @@ describe('canSubmissionTypeBeCancelled', () => {
 
 describe('canDealStillBeCancelled', () => {
   it(`returns false when the cancellation status is ${COMPLETED}`, () => {
-    const result = canDealStillBeCancelled(COMPLETED);
+    const result = canDealBeCancelled(COMPLETED);
 
     expect(result).toEqual(false);
   });
 
   it(`returns false when the cancellation status is ${SCHEDULED}`, () => {
-    const result = canDealStillBeCancelled(SCHEDULED);
+    const result = canDealBeCancelled(SCHEDULED);
 
     expect(result).toEqual(false);
   });
 
   it(`returns true when the cancellation status is ${DRAFT}`, () => {
-    const result = canDealStillBeCancelled(DRAFT);
+    const result = canDealBeCancelled(DRAFT);
 
     expect(result).toEqual(true);
   });
 
   it(`returns true when the cancellation status is undefined`, () => {
-    const result = canDealStillBeCancelled();
+    const result = canDealBeCancelled();
 
     expect(result).toEqual(true);
   });
