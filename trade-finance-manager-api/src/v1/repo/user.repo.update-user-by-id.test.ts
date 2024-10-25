@@ -60,6 +60,7 @@ describe('user repo', () => {
         await makeRequest();
 
         expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.TFM_USERS);
+        expect(getCollectionMock).toHaveBeenCalledTimes(1);
       });
 
       it('updates a user', async () => {
@@ -75,6 +76,7 @@ describe('user repo', () => {
         await makeRequest();
 
         expect(findOneAndUpdateMock).toHaveBeenCalledWith(filter, update, options);
+        expect(findOneAndUpdateMock).toHaveBeenCalledTimes(1);
       });
 
       it('returns the updated user', async () => {

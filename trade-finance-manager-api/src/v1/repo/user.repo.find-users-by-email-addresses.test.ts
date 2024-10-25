@@ -38,6 +38,7 @@ describe('user repo', () => {
         await makeRequest();
 
         expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.TFM_USERS);
+        expect(getCollectionMock).toHaveBeenCalledTimes(1);
       });
 
       it('finds users by escaped email addresses', async () => {
@@ -46,6 +47,7 @@ describe('user repo', () => {
         await makeRequest();
 
         expect(findMock).toHaveBeenCalledWith(expectedQuery);
+        expect(findMock).toHaveBeenCalledTimes(1);
       });
 
       it('returns the found users', async () => {

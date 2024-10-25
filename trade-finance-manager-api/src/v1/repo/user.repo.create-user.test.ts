@@ -57,11 +57,13 @@ describe('user repo', () => {
         await makeRequest();
 
         expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.TFM_USERS);
+        expect(getCollectionMock).toHaveBeenCalledTimes(1);
       });
 
       it('creates a user', async () => {
         await makeRequest();
         expect(insertOneMock).toHaveBeenCalledWith(createUserDatabaseRequest);
+        expect(insertOneMock).toHaveBeenCalledTimes(1);
       });
 
       it('returns the created user', async () => {
