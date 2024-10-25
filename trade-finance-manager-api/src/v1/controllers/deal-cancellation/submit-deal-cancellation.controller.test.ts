@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { AnyObject, TestApiError } from '@ukef/dtfs2-common';
+import { AuditDetails, TestApiError, TfmDealCancellation } from '@ukef/dtfs2-common';
 import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { submitDealCancellation, SubmitDealCancellationRequest } from './submit-deal-cancellation.controller';
 
@@ -9,11 +9,11 @@ const submitDealCancellationMock = jest.fn() as jest.Mock<Promise<void>>;
 
 jest.mock('../../services/deal-cancellation/deal-cancellation.service', () => ({
   DealCancellationService: {
-    submitDealCancellation: (params: AnyObject) => submitDealCancellationMock(params),
+    submitDealCancellation: (params: { dealId: string; cancellation: TfmDealCancellation; auditDetails: AuditDetails }) => submitDealCancellationMock(params),
   },
 }));
 
-const cancellation = {
+const dealCancellation = {
   reason: 'test reason',
   bankRequestDate: 1794418807,
   effectiveFrom: 1794418808,
@@ -34,7 +34,7 @@ describe('controllers - deal cancellation', () => {
 
       const { req, res } = httpMocks.createMocks<SubmitDealCancellationRequest>({
         params: { dealId: mockDealId },
-        body: cancellation,
+        body: dealCancellation,
         user: { _id: mockUserId },
       });
 
@@ -54,7 +54,7 @@ describe('controllers - deal cancellation', () => {
 
       const { req, res } = httpMocks.createMocks<SubmitDealCancellationRequest>({
         params: { dealId: mockDealId },
-        body: cancellation,
+        body: dealCancellation,
         user: { _id: mockUserId },
       });
 
@@ -70,7 +70,7 @@ describe('controllers - deal cancellation', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks<SubmitDealCancellationRequest>({
         params: { dealId: mockDealId },
-        body: cancellation,
+        body: dealCancellation,
         user: { _id: mockUserId },
       });
 
@@ -79,14 +79,18 @@ describe('controllers - deal cancellation', () => {
 
       // Assert
       expect(submitDealCancellationMock).toHaveBeenCalledTimes(1);
-      expect(submitDealCancellationMock).toHaveBeenCalledWith({ dealId: mockDealId, cancellation, auditDetails: generateTfmAuditDetails(mockUserId) });
+      expect(submitDealCancellationMock).toHaveBeenCalledWith({
+        dealId: mockDealId,
+        cancellation: dealCancellation,
+        auditDetails: generateTfmAuditDetails(mockUserId),
+      });
     });
 
     it('should return 200', async () => {
       // Arrange
       const { req, res } = httpMocks.createMocks<SubmitDealCancellationRequest>({
         params: { dealId: mockDealId },
-        body: cancellation,
+        body: dealCancellation,
         user: { _id: mockUserId },
       });
 
