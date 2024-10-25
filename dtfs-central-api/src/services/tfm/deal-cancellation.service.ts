@@ -15,7 +15,7 @@ export class DealCancellationService {
     const user = await TfmUsersRepo.findOneUserById(auditDetails.id);
 
     if (!user) {
-      throw new InvalidAuditDetailsError("Supplied auditDetails 'id' does not correspond to a valid user");
+      throw new InvalidAuditDetailsError(`Supplied auditDetails 'id' ${auditDetails.id.toString()} does not correspond to a valid user`);
     }
 
     const activity: TfmActivity = {

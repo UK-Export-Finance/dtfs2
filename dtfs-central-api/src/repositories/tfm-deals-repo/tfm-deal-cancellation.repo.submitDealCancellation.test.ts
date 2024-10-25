@@ -5,10 +5,10 @@ import {
   MONGO_DB_COLLECTIONS,
   TFM_DEAL_CANCELLATION_STATUS,
   TFM_DEAL_STAGE,
+  TfmActivity,
 } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { ObjectId } from 'mongodb';
-import { flatten } from 'mongo-dot-notation';
 import { getUnixTime } from 'date-fns';
 import { mongoDbClient as db } from '../../drivers/db-client';
 import { TfmDealCancellationRepo } from './tfm-deal-cancellation.repo';
@@ -25,6 +25,8 @@ const mockDealCancellationObject = { reason: mockReason, bankRequestDate: mockBa
 const tfmUserId = aTfmUser()._id;
 
 const auditDetails = generateTfmAuditDetails(tfmUserId);
+
+const mockActivity = { text: 'This is an activity' } as TfmActivity;
 
 describe('tfm-deals-cancellation-repo', () => {
   const updateOneMock = jest.fn();
@@ -64,7 +66,7 @@ describe('tfm-deals-cancellation-repo', () => {
 
     it('calls the DB with the correct collection name', async () => {
       // Act
-      await TfmDealCancellationRepo.submitDealCancellation(dealId, mockDealCancellationObject, auditDetails);
+      await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation: mockDealCancellationObject, auditDetails, activity: mockActivity });
 
       // Assert
       expect(getCollectionMock).toHaveBeenCalledTimes(1);
@@ -76,9 +78,14 @@ describe('tfm-deals-cancellation-repo', () => {
       const invalidDealId = 'xyz';
 
       // Assert
-      await expect(TfmDealCancellationRepo.submitDealCancellation(invalidDealId, mockDealCancellationObject, auditDetails)).rejects.toThrow(
-        new InvalidDealIdError(invalidDealId.toString()),
-      );
+      await expect(
+        TfmDealCancellationRepo.submitDealCancellation({
+          dealId: invalidDealId,
+          cancellation: mockDealCancellationObject,
+          auditDetails,
+          activity: mockActivity,
+        }),
+      ).rejects.toThrow(new InvalidDealIdError(invalidDealId.toString()));
     });
 
     it('throws a DealNotFoundError if no matching result is found', async () => {
@@ -90,14 +97,14 @@ describe('tfm-deals-cancellation-repo', () => {
       getCollectionMock.mockResolvedValue({ updateOne: updateOneMock });
 
       // Assert
-      await expect(TfmDealCancellationRepo.submitDealCancellation(dealId, mockDealCancellationObject, auditDetails)).rejects.toThrow(
-        new DealNotFoundError(dealId.toString()),
-      );
+      await expect(
+        TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation: mockDealCancellationObject, auditDetails, activity: mockActivity }),
+      ).rejects.toThrow(new DealNotFoundError(dealId.toString()));
     });
 
     it('calls updateOne with the expected parameters', async () => {
       // Act
-      await TfmDealCancellationRepo.submitDealCancellation(dealId, mockDealCancellationObject, auditDetails);
+      await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation: mockDealCancellationObject, auditDetails, activity: mockActivity });
 
       // Assert
       const expectedFilter = {
@@ -108,11 +115,16 @@ describe('tfm-deals-cancellation-repo', () => {
         'tfm.cancellation.bankRequestDate': { $eq: mockBankRequestDate },
         'tfm.cancellation.effectiveFrom': { $eq: mockEffectiveFrom },
       };
-      const expectedUpdate = flatten({
-        'tfm.stage': TFM_DEAL_STAGE.CANCELLED,
-        'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.COMPLETED,
-        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-      });
+      const expectedUpdate = {
+        $set: {
+          'tfm.stage': TFM_DEAL_STAGE.CANCELLED,
+          'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.COMPLETED,
+          auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+        },
+        $push: {
+          'tfm.activities': mockActivity,
+        },
+      };
 
       expect(updateOneMock).toHaveBeenCalledTimes(1);
       expect(updateOneMock).toHaveBeenCalledWith(expectedFilter, expectedUpdate);
@@ -120,7 +132,12 @@ describe('tfm-deals-cancellation-repo', () => {
 
     it('returns the deal cancellation response object', async () => {
       // Act
-      const result = await TfmDealCancellationRepo.submitDealCancellation(dealId, mockDealCancellationObject, auditDetails);
+      const result = await TfmDealCancellationRepo.submitDealCancellation({
+        dealId,
+        cancellation: mockDealCancellationObject,
+        auditDetails,
+        activity: mockActivity,
+      });
 
       // Assert
       expect(result).toEqual({ cancelledDealUkefId: dealId });
