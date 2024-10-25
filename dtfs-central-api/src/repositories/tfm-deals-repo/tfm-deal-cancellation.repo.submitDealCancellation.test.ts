@@ -127,7 +127,7 @@ describe('tfm-deals-cancellation-repo', () => {
       });
     });
 
-    describe('updating and finding the matching facility stages', () => {
+    describe('updating and finding the matching facilities', () => {
       it('calls updateMany with the expected parameters', async () => {
         // Act
         await TfmDealCancellationRepo.submitDealCancellation(dealId, mockDealCancellationObject, auditDetails);
