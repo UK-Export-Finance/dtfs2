@@ -1,3 +1,4 @@
+const { TFM_FACILITY_STAGE } = require('@ukef/dtfs2-common');
 const mapGefFacility = require('./mapGefFacility');
 const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityValue = require('../facilities/mapFacilityValue');
@@ -14,15 +15,15 @@ const MOCK_CASH_CONTINGENT_FACILITIES = require('../../../__mocks__/mock-cash-co
 const { mapGefFacilityStage } = require('../facilities/mapFacilityStage');
 
 describe('mapGefFacility', () => {
+  const mockFacility = {
+    _id: MOCK_CASH_CONTINGENT_FACILITIES[0]._id,
+    facilitySnapshot: MOCK_CASH_CONTINGENT_FACILITIES[0],
+    tfm: {},
+  };
+
+  const mockDealTfm = {};
+
   it('should return mapped GEF facility', () => {
-    const mockFacility = {
-      _id: MOCK_CASH_CONTINGENT_FACILITIES[0]._id,
-      facilitySnapshot: MOCK_CASH_CONTINGENT_FACILITIES[0],
-      tfm: {},
-    };
-
-    const mockDealTfm = {};
-
     const result = mapGefFacility(mockFacility, MOCK_GEF_DEAL, mockDealTfm);
 
     const formattedFacilityValue = formattedNumber(mockFacility.facilitySnapshot.value);
@@ -64,5 +65,15 @@ describe('mapGefFacility', () => {
     };
 
     expect(result).toEqual(expected);
+  });
+
+  describe('when a tfm facilityStage exists', () => {
+    it('should return the tfm facility stage on the mapped facility snapshot object', () => {
+      const facilityWithTfmFacilityStage = { ...mockFacility, tfm: { facilityStage: TFM_FACILITY_STAGE.RISK_EXPIRED } };
+
+      const result = mapGefFacility(facilityWithTfmFacilityStage, MOCK_GEF_DEAL, mockDealTfm);
+
+      expect(result.facilitySnapshot).toEqual(expect.objectContaining({ facilityStage: TFM_FACILITY_STAGE.RISK_EXPIRED }));
+    });
   });
 });

@@ -7,19 +7,25 @@ import {
   MONGO_DB_COLLECTIONS,
   TFM_DEAL_CANCELLATION_STATUS,
   TFM_DEAL_STAGE,
+  TFM_FACILITY_STAGE,
   TfmDeal,
   TfmDealCancellation,
   TfmDealCancellationResponse,
   TfmDealCancellationWithStatus,
   TfmDealWithCancellation,
+  TfmFacility,
 } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { flatten } from 'mongo-dot-notation';
 import { mongoDbClient } from '../../drivers/db-client';
 
 export class TfmDealCancellationRepo {
-  private static async getCollection(): Promise<Collection<WithoutId<TfmDeal>>> {
+  private static async getDealCollection(): Promise<Collection<WithoutId<TfmDeal>>> {
     return await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
+  }
+
+  private static async getFacilityCollection(): Promise<Collection<WithoutId<TfmFacility>>> {
+    return await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
   }
 
   /**
@@ -32,7 +38,7 @@ export class TfmDealCancellationRepo {
       throw new InvalidDealIdError(dealId.toString());
     }
 
-    const dealCollection = await this.getCollection();
+    const dealCollection = await this.getDealCollection();
     const matchingDeal = await dealCollection.findOne({
       _id: { $eq: new ObjectId(dealId) },
       'dealSnapshot.submissionType': { $in: [DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN] },
@@ -54,7 +60,7 @@ export class TfmDealCancellationRepo {
    * @returns the deals
    */
   public static async findScheduledDealCancellations(): Promise<TfmDealWithCancellation[]> {
-    const dealCollection = await this.getCollection();
+    const dealCollection = await this.getDealCollection();
 
     return await dealCollection
       .find<TfmDealWithCancellation>({
@@ -81,7 +87,7 @@ export class TfmDealCancellationRepo {
       throw new InvalidDealIdError(dealId.toString());
     }
 
-    const dealCollection = await this.getCollection();
+    const dealCollection = await this.getDealCollection();
 
     const updateResult = await dealCollection.updateOne(
       {
@@ -112,7 +118,7 @@ export class TfmDealCancellationRepo {
       throw new InvalidDealIdError(dealId.toString());
     }
 
-    const dealCollection = await this.getCollection();
+    const dealCollection = await this.getDealCollection();
 
     const updateResult = await dealCollection.updateOne(
       {
@@ -145,7 +151,7 @@ export class TfmDealCancellationRepo {
       throw new InvalidDealIdError(dealId.toString());
     }
 
-    const dealCollection = await this.getCollection();
+    const dealCollection = await this.getDealCollection();
 
     const updateDeal = await dealCollection.updateOne(
       {
@@ -167,6 +173,20 @@ export class TfmDealCancellationRepo {
       throw new DealNotFoundError(dealId.toString());
     }
 
-    return { cancelledDealUkefId: dealId };
+    const facilityCollection = await this.getFacilityCollection();
+
+    await facilityCollection.updateMany(
+      { 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } },
+      flatten({
+        'tfm.facilityStage': TFM_FACILITY_STAGE.RISK_EXPIRED,
+        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+      }),
+    );
+
+    const updatedFacilities = await facilityCollection.find({ 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } }).toArray();
+
+    const updatedFacilityUkefIds = updatedFacilities.map((facility) => facility.facilitySnapshot.ukefFacilityId).filter((id) => id !== null);
+
+    return { cancelledDealUkefId: dealId, riskExpiredFacilityUkefIds: updatedFacilityUkefIds };
   }
 }
