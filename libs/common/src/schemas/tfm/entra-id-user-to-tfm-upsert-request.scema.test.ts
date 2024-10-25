@@ -1,9 +1,18 @@
+import { afterAll } from '@jest/globals';
 import { aValidEntraIdUser } from '../../test-helpers';
 import { EntraIdUser } from '../../types';
 import { timezoneConfig } from '../timezone';
 import { ENTRA_ID_USER_TO_TFM_UPSERT_REQUEST_SCHEMA } from './entra-id-user-to-tfm-upsert-request.schema';
 
-describe('ENTRA_ID_USER_SCHEMA', () => {
+describe('ENTRA_ID_USER_TO_TFM_UPSERT_REQUEST_SCHEMA', () => {
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   describe('when provided a valid entra id user', () => {
     const request = aValidEntraIdUser();
     itShouldReturnAValidaUserUpsertRequest(request);
@@ -49,6 +58,7 @@ function itShouldReturnAValidaUserUpsertRequest(request: EntraIdUser) {
       timezone: timezoneConfig.DEFAULT,
       firstName: request.given_name,
       lastName: request.family_name,
+      lastLogin: Date.now(),
     });
   });
 }
