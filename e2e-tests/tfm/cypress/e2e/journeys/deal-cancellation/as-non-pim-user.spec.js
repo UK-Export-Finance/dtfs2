@@ -29,10 +29,6 @@ context('Deal cancellation - logged in as non-PIM user', () => {
     });
   });
 
-  beforeEach(() => {
-    cy.login(T1_USER_1);
-  });
-
   describe('when logged in as a non-PIM user', () => {
     before(() => {
       cy.login(PIM_USER_1);
@@ -55,6 +51,10 @@ context('Deal cancellation - logged in as non-PIM user', () => {
       cy.completeDateFormFields({ idPrefix: 'effective-from-date', date: yesterday.date });
 
       cy.clickContinueButton();
+    });
+
+    beforeEach(() => {
+      cy.login(T1_USER_1);
     });
 
     it('should redirect when visiting the reason for cancelling page', () => {
