@@ -14,16 +14,16 @@ const mapFacilityValueExportCurrency = require('./mapFacilityValueExportCurrency
 const { mapBssEwcsFacilityStage } = require('./mapFacilityStage');
 
 /**
- * Maps the existing facility snapshot in the database to the facility snapshot used in TFM API.
+ * Maps a GEF facility snapshot in the database to the facility snapshot used in TFM-API and TFM-UI.
  * This function is only used on BSS/EWCS facilities.
- * Note: This implementation modifies the facility snapshot to have values not consistent with the facility snapshot in the database.
- * In particular, this is a live object that updates e.g. when amendments are added in TFM.
- * @param facility the full facility object from the database
- * @param dealSnapshot the deal.dealSnapshot object from the database corresponding to the facility
- * @returns mapped facility snapshot for use in TFM
+ * This returns a facility object that represent the current facility state with all changes applied e.g. when amendments are added in TFM.
+ * These values may differ from the facility snapshot in the database.
+ * @param {import('@ukef/dtfs2-common').TfmFacility} facility the full facility object from the database
+ * @param {import('@ukef/dtfs2-common').Deal} dealSnapshot the deal.dealSnapshot object from the database corresponding to the facility
+ * @returns mapped facility snapshot
  */
 const mapFacilitySnapshot = (facility, dealSnapshot) => {
-  const dealDetails = dealSnapshot.details;
+  const { details: dealDetails } = dealSnapshot;
 
   const { facilitySnapshot, tfm: facilityTfm } = facility;
 
@@ -47,7 +47,7 @@ const mapFacilitySnapshot = (facility, dealSnapshot) => {
 
   clonedSnapshot.facilityStage = mapBssEwcsFacilityStage(facilityStage);
 
-  return {
+  const mapped = {
     _id: clonedSnapshot._id,
     isGef: false,
     dealId: clonedSnapshot.dealId,
@@ -77,6 +77,8 @@ const mapFacilitySnapshot = (facility, dealSnapshot) => {
     bondIssuer: clonedSnapshot.bondIssuer,
     bondBeneficiary: clonedSnapshot.bondBeneficiary,
   };
+
+  return mapped;
 };
 
 module.exports = mapFacilitySnapshot;

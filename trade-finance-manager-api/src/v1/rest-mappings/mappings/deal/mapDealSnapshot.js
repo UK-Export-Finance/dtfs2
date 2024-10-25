@@ -8,7 +8,7 @@ const mapDealSnapshot = (deal) => {
 
   const { submissionDetails, facilities, eligibility } = dealSnapshot;
 
-  return {
+  const mapped = {
     ...dealSnapshot,
     submissionDetails: mapSubmissionDetails(submissionDetails),
     eligibility: eligibility ? mapEligibility(eligibility) : {},
@@ -16,6 +16,8 @@ const mapDealSnapshot = (deal) => {
     totals: mapTotals(facilities),
     isFinanceIncreasing: false,
   };
+
+  return mapped;
 };
 
 module.exports = mapDealSnapshot;

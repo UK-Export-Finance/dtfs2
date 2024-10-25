@@ -1,12 +1,11 @@
 const facilityMapper = require('../../facility');
 
 /**
- * Maps all the facilities from the database associated with a GEF deal to their corresponding facility objects for use in TFM.
- * In particular, these are live facility objects that update e.g. when amendments are added in TFM.
- * This function is only used on GEF facilities.
- * @param dealSnapshot the deal.dealSnapshot object from the database corresponding to the facility
- * @param dealTfm the deal.tfm object from the database corresponding to the facility
- * @returns mapped facility objects for use in TFM
+ * Maps facilities from the database associated with a deal to their corresponding facility objects for use in TFM-UI and TFM-API.
+ * This returns facility objects that represents current facility states with all changes applied e.g. when amendments are added in TFM.
+ * @param {import('@ukef/dtfs2-common').Deal} dealSnapshot the deal.dealSnapshot object from the database corresponding to the facility
+ * @param {import('@ukef/dtfs2-common').TfmDeal.tfm} dealTfm the deal.tfm object from the database corresponding to the facility
+ * @returns mapped facility objects
  */
 const mapGefFacilities = (dealSnapshot, dealTfm) => {
   const { facilities } = dealSnapshot;

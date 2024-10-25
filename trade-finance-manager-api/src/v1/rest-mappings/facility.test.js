@@ -8,7 +8,7 @@ const MOCK_GEF_DEAL = require('../__mocks__/mock-gef-deal');
 const MOCK_CASH_CONTINGENT_FACILITIES = require('../__mocks__/mock-cash-contingent-facilities');
 
 describe('reducer - facility', () => {
-  describe('when facility is a BSS/EWCS facility (BOND/LOAN)', () => {
+  describe('when facility is a BSS/EWCS facility', () => {
     it('should return correctly mapped facility object', () => {
       const mockDeal = {
         dealSnapshot: MOCK_DEAL_AIN_SUBMITTED,
@@ -35,7 +35,7 @@ describe('reducer - facility', () => {
     });
   });
 
-  describe('when facility is a GEF facility (CASH/CONTINGENT)', () => {
+  describe('when facility is a GEF facility', () => {
     it('should return correctly mapped facility object', () => {
       const mockGefDeal = {
         dealSnapshot: MOCK_GEF_DEAL,

@@ -4,12 +4,12 @@ const mapGefFacilitySnapshot = require('./mappings/gef-facilities/mapGefFacility
 const isGefFacility = require('./helpers/isGefFacility');
 
 /**
- * Maps the facility object from the database to a dynamically updating facility object used across TFM.
- * This facility object updates e.g. when amendments are added in TFM.
- * @param facility the full facility object from the database
- * @param dealSnapshot the deal.dealSnapshot object from the database corresponding to the facility
- * @param dealTfm the deal.dealTfm object from the database corresponding to the facility
- * @returns mapped facility object for use in TFM
+ * Maps a facility database object to a facility type throughout TFM-API and TFM-UI.
+ * The mappings include creating a facility snapshot that represents the current facility, with all amendments and tfm changes applied.
+ * @param {import('@ukef/dtfs2-common').TfmFacility} facility the full facility object from the database
+ * @param {import('@ukef/dtfs2-common').Deal} dealSnapshot the deal.dealSnapshot object from the database corresponding to the facility
+ * @param {import('@ukef/dtfs2-common').TfmDeal.tfm} dealTfm the deal.dealTfm object from the database corresponding to the facility
+ * @returns mapped facility object
  */
 const facilityMapper = (facility, dealSnapshot, dealTfm) => {
   const facilityType = facility.facilitySnapshot.type;
