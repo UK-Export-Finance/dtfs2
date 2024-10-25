@@ -27,7 +27,7 @@ export class UserRepo {
    * @param {string[]} emails
    * @returns {RegExp[]} Emails as regular expressions.
    */
-  private static generateArrayOfEmailsRegex(emails: string[]) {
+  public static generateArrayOfEmailsRegex(emails: string[]) {
     return emails.map((email) => new RegExp(`^${escapeStringRegexp(email)}$`, 'i'));
   }
 
