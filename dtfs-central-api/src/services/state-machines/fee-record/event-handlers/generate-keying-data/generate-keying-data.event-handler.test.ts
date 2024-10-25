@@ -11,7 +11,7 @@ import {
 import { handleFeeRecordGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
 import { aReportPeriod, tfmFacilityReturnedValues } from '../../../../../../test-helpers';
 import { calculateFixedFeeAdjustment, calculatePrincipalBalanceAdjustment, updateFacilityUtilisationData } from '../helpers';
-import { calculateUkefShareOfUtilisation, getLatestTfmFacilityValues } from '../../../../../helpers';
+import { calculateUkefShareOfUtilisation, getSpecificTfmFacilityValues } from '../../../../../helpers';
 
 jest.mock<unknown>('../helpers', () => ({
   ...jest.requireActual('../helpers'),
@@ -41,7 +41,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
     jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(10);
     jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(20);
     jest.mocked(updateFacilityUtilisationData).mockResolvedValue(aFacilityUtilisationDataEntity());
-    jest.mocked(getLatestTfmFacilityValues).mockResolvedValue(tfmFacilityReturnedValues);
+    jest.mocked(getSpecificTfmFacilityValues).mockResolvedValue(tfmFacilityReturnedValues);
     jest.mocked(calculateUkefShareOfUtilisation).mockReturnValue(99999999);
   });
 

@@ -1,9 +1,8 @@
 import { EntityManager } from 'typeorm';
-import { when } from 'jest-when';
 import { DbRequestSource, FacilityUtilisationDataEntity, FacilityUtilisationDataEntityMockBuilder, ReportPeriod } from '@ukef/dtfs2-common';
 import { updateFacilityUtilisationData } from './update-facility-utilisation-data';
 import { getFixedFeeForFacility } from './get-fixed-fee-for-facility';
-import { aDbRequestSource, tfmFacilityReturnedValues } from '../../../../../../test-helpers';
+import { aDbRequestSource } from '../../../../../../test-helpers';
 
 jest.mock('./get-fixed-fee-for-facility');
 
@@ -22,7 +21,7 @@ describe('updateFacilityUtilisationData', () => {
     jest.resetAllMocks();
   });
 
-  it('updates the facility utilisation data entity with the supplied report period, ukef share of utilisation and request source and saves the entity', async () => {
+  it('should update the facility utilisation data entity with the supplied report period, ukef share of utilisation and request source and saves the entity', async () => {
     // Arrange
     const facilityUtilisationDataEntity = FacilityUtilisationDataEntityMockBuilder.forId('12345678')
       .withUtilisation(1234567.89)
@@ -36,24 +35,23 @@ describe('updateFacilityUtilisationData', () => {
       start: { month: 6, year: 2026 },
       end: { month: 7, year: 2027 },
     };
-    const utilisation = 9876543.21;
     const ukefShareOfUtilisation = 1234567.77;
     const requestSource: DbRequestSource = {
       platform: 'TFM',
       userId: 'abc123',
     };
+    const fixedFee = 12345;
 
     // Act
     await updateFacilityUtilisationData(
       facilityUtilisationDataEntity,
       {
         reportPeriod,
-        utilisation,
         requestSource,
         ukefShareOfUtilisation,
         entityManager: mockEntityManager,
       },
-      tfmFacilityReturnedValues,
+      fixedFee,
     );
 
     // Assert
@@ -65,7 +63,7 @@ describe('updateFacilityUtilisationData', () => {
     expect(facilityUtilisationDataEntity.lastUpdatedByIsSystemUser).toEqual(false);
   });
 
-  it('calculates the fixed fee using the supplied facility utilisation data id and utilisation and the supplied report period and updates the facility utilisation data fixed fee', async () => {
+  it('should update the facility utilisation data fixed fee using the supplied facility utilisation data id and the supplied report period and provided fixed fee', async () => {
     // Arrange
     const facilityUtilisationDataEntity = FacilityUtilisationDataEntityMockBuilder.forId('12345678')
       .withUtilisation(123.45)
@@ -79,22 +77,20 @@ describe('updateFacilityUtilisationData', () => {
       start: { month: 6, year: 2026 },
       end: { month: 7, year: 2027 },
     };
-    const utilisation = 9876543.21;
-    const ukefShareOfUtilisation = 123;
 
-    when(getFixedFeeForFacility).calledWith(utilisation, reportPeriod, tfmFacilityReturnedValues).mockReturnValue(76543.21);
+    const ukefShareOfUtilisation = 123;
+    const fixedFee = 76543.21;
 
     // Act
     await updateFacilityUtilisationData(
       facilityUtilisationDataEntity,
       {
         reportPeriod,
-        utilisation,
         requestSource: aDbRequestSource(),
         ukefShareOfUtilisation,
         entityManager: mockEntityManager,
       },
-      tfmFacilityReturnedValues,
+      fixedFee,
     );
 
     // Assert

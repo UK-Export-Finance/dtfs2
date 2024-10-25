@@ -1,4 +1,3 @@
-import { when } from 'jest-when';
 import {
   FacilityUtilisationDataEntityMockBuilder,
   FeeRecordEntityMockBuilder,
@@ -7,10 +6,11 @@ import {
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { calculateFixedFeeAdjustment } from './calculate-fixed-fee-adjustment';
-import { aReportPeriod, aUtilisationReport, tfmFacilityReturnedValues } from '../../../../../../test-helpers';
-import { getFixedFeeForFacility } from './get-fixed-fee-for-facility';
+import { aReportPeriod, aUtilisationReport } from '../../../../../../test-helpers';
 
 jest.mock('./get-fixed-fee-for-facility');
+
+const fixedFee = 100;
 
 describe('calculateFixedFeeAdjustment', () => {
   it('throws an error if the fee record facility id does not match the facility utilisation data id', () => {
@@ -19,7 +19,7 @@ describe('calculateFixedFeeAdjustment', () => {
     const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('22222222').build();
 
     // Act / Assert
-    expect(() => calculateFixedFeeAdjustment(feeRecord, facilityUtilisationData, aReportPeriod(), tfmFacilityReturnedValues)).toThrow(
+    expect(() => calculateFixedFeeAdjustment(feeRecord, facilityUtilisationData, aReportPeriod(), fixedFee)).toThrow(
       new Error('Fee record facility id does not match the facility utilisation id'),
     );
   });
@@ -37,7 +37,7 @@ describe('calculateFixedFeeAdjustment', () => {
     const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('11111111').withReportPeriod(reportPeriod).build();
 
     // Act / Assert
-    expect(() => calculateFixedFeeAdjustment(feeRecord, facilityUtilisationData, reportPeriod, tfmFacilityReturnedValues)).toThrow(
+    expect(() => calculateFixedFeeAdjustment(feeRecord, facilityUtilisationData, reportPeriod, fixedFee)).toThrow(
       new Error('Fixed fee adjustment must be calculated before the facility utilisation data has been updated'),
     );
   });
@@ -61,7 +61,6 @@ describe('calculateFixedFeeAdjustment', () => {
         .withFacilityId(facilityId)
         .withFacilityUtilisation(currentFacilityUtilisation)
         .build();
-      when(getFixedFeeForFacility).calledWith(currentFacilityUtilisation, reportPeriod, tfmFacilityReturnedValues).mockReturnValue(currentFixedFee);
 
       const previousFacilityUtilisation = 654.321;
       const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId(facilityId)
@@ -70,7 +69,7 @@ describe('calculateFixedFeeAdjustment', () => {
         .build();
 
       // Act
-      const result = calculateFixedFeeAdjustment(feeRecord, facilityUtilisationData, reportPeriod, tfmFacilityReturnedValues);
+      const result = calculateFixedFeeAdjustment(feeRecord, facilityUtilisationData, reportPeriod, currentFixedFee);
 
       // Assert
       expect(result).toEqual(expected);

@@ -37,15 +37,12 @@ describe('getFixedFeeForFacility', () => {
     const coverStartDateAfterReportPeriod = addMonths(TODAY, 1);
     const coverEndDate = addDays(coverStartDateAfterReportPeriod, 365);
 
-    const tfmFacilityValues = {
-      ...tfmFacilityReturnedValues,
-      coverEndDate,
-    };
+    const { coverPercentage } = tfmFacilityReturnedValues;
 
     // Act
-    getFixedFeeForFacility(utilisation, reportPeriod, tfmFacilityValues);
+    getFixedFeeForFacility(utilisation, reportPeriod, coverPercentage, coverEndDate, interestPercentage, dayCountBasis);
 
-    const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, tfmFacilityValues.coverPercentage);
+    const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, coverPercentage);
 
     // Assert
     expect(calculateFixedFee).toHaveBeenCalledWith<[CalculateFixedFeeParams]>({
@@ -66,17 +63,14 @@ describe('getFixedFeeForFacility', () => {
     const reportPeriod = getReportPeriodForDate(TODAY);
     const coverEndDate = addDays(startOfMonth(TODAY), 730);
 
-    const tfmFacilityValues = {
-      ...tfmFacilityReturnedValues,
-      coverEndDate,
-    };
+    const { coverPercentage } = tfmFacilityReturnedValues;
 
     jest.mocked(helpers.getEffectiveCoverEndDateAmendment).mockReturnValue(null);
 
     // Act
-    getFixedFeeForFacility(utilisation, reportPeriod, tfmFacilityValues);
+    getFixedFeeForFacility(utilisation, reportPeriod, coverPercentage, coverEndDate, interestPercentage, dayCountBasis);
 
-    const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, tfmFacilityValues.coverPercentage);
+    const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, coverPercentage);
 
     // Assert
     expect(calculateFixedFee).toHaveBeenCalledWith<[CalculateFixedFeeParams]>({
@@ -98,15 +92,12 @@ describe('getFixedFeeForFacility', () => {
 
     const amendedCoverEndDate = addDays(startOfMonth(TODAY), 730); // report period starts at start of month
 
-    const tfmFacilityValues = {
-      ...tfmFacilityReturnedValues,
-      coverEndDate: amendedCoverEndDate,
-    };
+    const { coverPercentage } = tfmFacilityReturnedValues;
 
     // Act
-    getFixedFeeForFacility(utilisation, reportPeriod, tfmFacilityValues);
+    getFixedFeeForFacility(utilisation, reportPeriod, coverPercentage, amendedCoverEndDate, interestPercentage, dayCountBasis);
 
-    const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, tfmFacilityValues.coverPercentage);
+    const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, coverPercentage);
 
     // Assert
     expect(calculateFixedFee).toHaveBeenCalledWith<[CalculateFixedFeeParams]>({

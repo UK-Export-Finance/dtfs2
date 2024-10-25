@@ -1,4 +1,4 @@
-export type LatestTfmFacilityValues = {
+export type SpecificTfmFacilityValues = {
   coverEndDate: Date;
   coverStartDate: Date;
   dayCountBasis: number;

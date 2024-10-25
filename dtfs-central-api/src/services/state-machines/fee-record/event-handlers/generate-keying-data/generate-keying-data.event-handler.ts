@@ -1,8 +1,8 @@
 import { EntityManager } from 'typeorm';
 import { DbRequestSource, FeeRecordEntity, FeeRecordStatus, ReportPeriod } from '@ukef/dtfs2-common';
 import { BaseFeeRecordEvent } from '../../event/base-fee-record.event';
-import { calculatePrincipalBalanceAdjustment, calculateFixedFeeAdjustment, updateFacilityUtilisationData } from '../helpers';
-import { calculateUkefShareOfUtilisation, getLatestTfmFacilityValues } from '../../../../../helpers';
+import { calculatePrincipalBalanceAdjustment, calculateFixedFeeAdjustment, updateFacilityUtilisationData, getFixedFeeForFacility } from '../helpers';
+import { calculateUkefShareOfUtilisation, getSpecificTfmFacilityValues } from '../../../../../helpers';
 
 type GenerateKeyingDataEventPayload = {
   transactionEntityManager: EntityManager;
@@ -33,11 +33,14 @@ export const handleFeeRecordGenerateKeyingDataEvent = async (
     return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
   }
 
-  const tfmFacilityValues = await getLatestTfmFacilityValues(feeRecord.facilityId, reportPeriod);
+  const specificTfmFacilityValues = await getSpecificTfmFacilityValues(feeRecord.facilityId, reportPeriod);
+  const { coverPercentage, coverEndDate, interestPercentage, dayCountBasis } = specificTfmFacilityValues;
 
-  const fixedFeeAdjustment = calculateFixedFeeAdjustment(feeRecord, feeRecord.facilityUtilisationData, reportPeriod, tfmFacilityValues);
+  const fixedFee = getFixedFeeForFacility(feeRecord.facilityUtilisation, reportPeriod, coverPercentage, coverEndDate, interestPercentage, dayCountBasis);
 
-  const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(feeRecord.facilityUtilisation, tfmFacilityValues.coverPercentage);
+  const fixedFeeAdjustment = calculateFixedFeeAdjustment(feeRecord, feeRecord.facilityUtilisationData, reportPeriod, fixedFee);
+
+  const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(feeRecord.facilityUtilisation, specificTfmFacilityValues.coverPercentage);
 
   const principalBalanceAdjustment = calculatePrincipalBalanceAdjustment(ukefShareOfUtilisation, feeRecord.facilityUtilisationData);
 
@@ -56,12 +59,11 @@ export const handleFeeRecordGenerateKeyingDataEvent = async (
     feeRecord.facilityUtilisationData,
     {
       reportPeriod,
-      utilisation: feeRecord.facilityUtilisation,
       requestSource,
       ukefShareOfUtilisation,
       entityManager: transactionEntityManager,
     },
-    tfmFacilityValues,
+    fixedFee,
   );
 
   return feeRecord;

@@ -4,7 +4,7 @@ import { TfmFacilitiesRepo } from '../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../errors';
 import { convertTimestampToDate } from './convert-timestamp-to-date';
 import { getEffectiveCoverEndDateAmendment } from './amendments/get-effective-cover-end-date-amendment';
-import { LatestTfmFacilityValues } from '../types/tfm/tfm-facility';
+import { SpecificTfmFacilityValues } from '../types/tfm/tfm-facility';
 
 /**
  * Gets the latest values for the TFM facility with the supplied facility id
@@ -12,7 +12,7 @@ import { LatestTfmFacilityValues } from '../types/tfm/tfm-facility';
  * @param reportPeriod - The report period
  * @returns The latest values
  */
-export const getLatestTfmFacilityValues = async (facilityId: string, reportPeriod?: ReportPeriod): Promise<LatestTfmFacilityValues> => {
+export const getSpecificTfmFacilityValues = async (facilityId: string, reportPeriod?: ReportPeriod): Promise<SpecificTfmFacilityValues> => {
   const tfmFacility = await TfmFacilitiesRepo.findOneByUkefFacilityId(facilityId);
 
   if (!tfmFacility) {
@@ -29,6 +29,7 @@ export const getLatestTfmFacilityValues = async (facilityId: string, reportPerio
   }
 
   const coverEndDate = latestAmendedCoverEndDate ?? snapshotCoverEndDate;
+
   if (!coverEndDate) {
     throw new NotFoundError(`Failed to find a cover end date for the tfm facility with ukef facility id '${facilityId}`);
   }

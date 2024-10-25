@@ -1,4 +1,4 @@
-import { getLatestTfmFacilityValues } from './get-latest-tfm-facility-values';
+import { getSpecificTfmFacilityValues } from './get-specific-tfm-facility-values';
 import { TfmFacilitiesRepo } from '../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../errors';
 import { aTfmFacility, aFacility } from '../../test-helpers';
@@ -6,12 +6,12 @@ import { convertTimestampToDate } from './convert-timestamp-to-date';
 
 jest.mock('../repositories/tfm-facilities-repo');
 
-describe('getLatestTfmFacilityValues', () => {
+describe('getSpecificTfmFacilityValues', () => {
   const findOneByUkefFacilityIdSpy = jest.spyOn(TfmFacilitiesRepo, 'findOneByUkefFacilityId');
   const facilityId = '123';
   const today = new Date();
 
-  const facility = {
+  const mockFacility = {
     ...aTfmFacility(),
     facilitySnapshot: {
       ...aFacility(),
@@ -39,7 +39,7 @@ describe('getLatestTfmFacilityValues', () => {
     });
 
     it('should throw a NotFoundError', async () => {
-      await expect(getLatestTfmFacilityValues(facilityId, reportPeriod)).rejects.toThrow(
+      await expect(getSpecificTfmFacilityValues(facilityId, reportPeriod)).rejects.toThrow(
         new NotFoundError(`Failed to find a tfm facility with ukef facility id '${facilityId}'`),
       );
     });
@@ -62,7 +62,7 @@ describe('getLatestTfmFacilityValues', () => {
 
     it('should throw a NotFoundError', async () => {
       // Act / Assert
-      await expect(getLatestTfmFacilityValues(facilityId, reportPeriod)).rejects.toThrow(
+      await expect(getSpecificTfmFacilityValues(facilityId, reportPeriod)).rejects.toThrow(
         new NotFoundError(`Failed to find a cover start date for the tfm facility with ukef facility id '${facilityId}`),
       );
     });
@@ -85,7 +85,7 @@ describe('getLatestTfmFacilityValues', () => {
 
     it('should throw a NotFoundError', async () => {
       // Act / Assert
-      await expect(getLatestTfmFacilityValues(facilityId, reportPeriod)).rejects.toThrow(
+      await expect(getSpecificTfmFacilityValues(facilityId, reportPeriod)).rejects.toThrow(
         new NotFoundError(`Failed to find a cover end date for the tfm facility with ukef facility id '${facilityId}`),
       );
     });
@@ -93,11 +93,11 @@ describe('getLatestTfmFacilityValues', () => {
 
   describe('when the tfm facility is found', () => {
     beforeEach(() => {
-      findOneByUkefFacilityIdSpy.mockResolvedValue(facility);
+      findOneByUkefFacilityIdSpy.mockResolvedValue(mockFacility);
     });
 
     it('should return a populated object', async () => {
-      const result = await getLatestTfmFacilityValues(facilityId, reportPeriod);
+      const result = await getSpecificTfmFacilityValues(facilityId, reportPeriod);
 
       const expected = {
         coverEndDate: convertTimestampToDate(today),
@@ -113,11 +113,11 @@ describe('getLatestTfmFacilityValues', () => {
 
   describe('when the report period is not provided', () => {
     beforeEach(() => {
-      findOneByUkefFacilityIdSpy.mockResolvedValue(facility);
+      findOneByUkefFacilityIdSpy.mockResolvedValue(mockFacility);
     });
 
     it("should return a populated object with the facility's cover end date", async () => {
-      const result = await getLatestTfmFacilityValues(facilityId);
+      const result = await getSpecificTfmFacilityValues(facilityId);
 
       const expected = {
         coverEndDate: convertTimestampToDate(today),

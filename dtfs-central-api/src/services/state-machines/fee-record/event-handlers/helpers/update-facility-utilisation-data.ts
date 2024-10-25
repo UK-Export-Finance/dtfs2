@@ -1,12 +1,9 @@
 import { EntityManager } from 'typeorm';
 import { DbRequestSource, FacilityUtilisationDataEntity, ReportPeriod } from '@ukef/dtfs2-common';
-import { getFixedFeeForFacility } from './get-fixed-fee-for-facility';
-import { LatestTfmFacilityValues } from '../../../../../types/tfm/tfm-facility';
 
 type UpdateFacilityUtilisationDataUpdate = {
   entityManager: EntityManager;
   reportPeriod: ReportPeriod;
-  utilisation: number;
   ukefShareOfUtilisation: number;
   requestSource: DbRequestSource;
 };
@@ -21,16 +18,14 @@ type UpdateFacilityUtilisationDataUpdate = {
  * @param update.ukefShareOfUtilisation - UKEF's share of the utilisation as reported by the bank
  * @param update.requestSource - The request source supplying the update
  * @param update.entityManager - The entity manager
- * @param tfmFacilityValues - TFM facility values
+ * @param nextReportPeriodFixedFee - value for the calculated fixed fee for the next report period
  * @returns The updated entity
  */
 export const updateFacilityUtilisationData = async (
   facilityUtilisationDataEntity: FacilityUtilisationDataEntity,
-  { reportPeriod, utilisation, requestSource, entityManager, ukefShareOfUtilisation }: UpdateFacilityUtilisationDataUpdate,
-  tfmFacilityValues: LatestTfmFacilityValues,
+  { reportPeriod, requestSource, entityManager, ukefShareOfUtilisation }: UpdateFacilityUtilisationDataUpdate,
+  nextReportPeriodFixedFee: number,
 ): Promise<FacilityUtilisationDataEntity> => {
-  const nextReportPeriodFixedFee = getFixedFeeForFacility(utilisation, reportPeriod, tfmFacilityValues);
-
   facilityUtilisationDataEntity.updateWithCurrentReportPeriodDetails({
     fixedFee: nextReportPeriodFixedFee,
     utilisation: ukefShareOfUtilisation,
