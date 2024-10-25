@@ -59,18 +59,10 @@ export class UserRepo {
     return { _id: result.insertedId, ...userToCreate };
   }
 
-  public static async updateUserById({
-    userId,
-    userUpdate,
-    auditDetails,
-  }: {
-    userId: string | ObjectId;
-    userUpdate: UserUpsertRequest;
-    auditDetails: AuditDetails;
-  }) {
+  public static async updateUserById({ userId, userUpdate, auditDetails }: { userId: ObjectId; userUpdate: UserUpsertRequest; auditDetails: AuditDetails }) {
     const collection = await UserRepo.getCollection();
 
-    const filter = { _id: { $eq: new ObjectId(userId.toString()) } };
+    const filter = { _id: { $eq: userId } };
     const update = {
       $set: {
         ...userUpdate,
