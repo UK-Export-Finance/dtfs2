@@ -32,31 +32,31 @@ context('Deal cancellation - check details', () => {
     });
   });
 
-  beforeEach(() => {
-    cy.login(PIM_USER_1);
-    cy.visit(relative(`/case/${dealId}/deal`));
-
-    caseDealPage.cancelDealButton().click();
-
-    cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
-    cy.clickContinueButton();
-
-    cy.url().should('eq', relative(`/case/${dealId}/cancellation/bank-request-date`));
-
-    cy.completeDateFormFields({ idPrefix: 'bank-request-date' });
-
-    cy.clickContinueButton();
-
-    cy.url().should('eq', relative(`/case/${dealId}/cancellation/effective-from-date`));
-
-    cy.completeDateFormFields({ idPrefix: 'effective-from-date', date: yesterday.date });
-
-    cy.clickContinueButton();
-  });
-
   describe('when logged in as a non-PIM user', () => {
     beforeEach(() => {
+      cy.login(PIM_USER_1);
+      cy.visit(relative(`/case/${dealId}/deal`));
+
+      caseDealPage.cancelDealButton().click();
+
+      cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
+      cy.clickContinueButton();
+
+      cy.url().should('eq', relative(`/case/${dealId}/cancellation/bank-request-date`));
+
+      cy.completeDateFormFields({ idPrefix: 'bank-request-date' });
+
+      cy.clickContinueButton();
+
+      cy.url().should('eq', relative(`/case/${dealId}/cancellation/effective-from-date`));
+
+      cy.completeDateFormFields({ idPrefix: 'effective-from-date', date: yesterday.date });
+
+      cy.clickContinueButton();
+
       cy.login(T1_USER_1);
+
+      cy.visit(`/case/${dealId}/cancellation/check-details`);
     });
 
     it('should redirect when visiting the check details page', () => {
@@ -65,6 +65,28 @@ context('Deal cancellation - check details', () => {
   });
 
   describe('when logged in as a PIM user', () => {
+    beforeEach(() => {
+      cy.login(PIM_USER_1);
+      cy.visit(relative(`/case/${dealId}/deal`));
+
+      caseDealPage.cancelDealButton().click();
+
+      cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
+      cy.clickContinueButton();
+
+      cy.url().should('eq', relative(`/case/${dealId}/cancellation/bank-request-date`));
+
+      cy.completeDateFormFields({ idPrefix: 'bank-request-date' });
+
+      cy.clickContinueButton();
+
+      cy.url().should('eq', relative(`/case/${dealId}/cancellation/effective-from-date`));
+
+      cy.completeDateFormFields({ idPrefix: 'effective-from-date', date: yesterday.date });
+
+      cy.clickContinueButton();
+    });
+
     it('should render the page correctly', () => {
       cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
 
@@ -250,8 +272,8 @@ context('Deal cancellation - check details', () => {
       });
     });
 
-    describe('"delete deals" button', () => {
-      it('delete deal button takes you to the deal summary page', () => {
+    describe('when clicking the "delete deals" button', () => {
+      it('redirects you to the deal summary page', () => {
         checkDetailsPage.dealDeletionButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/deal`));
