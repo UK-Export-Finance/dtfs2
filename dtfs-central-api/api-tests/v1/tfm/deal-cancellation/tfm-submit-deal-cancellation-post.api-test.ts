@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_STAGE, AuditDetails, API_ERROR_CODE } from '@ukef/dtfs2-common';
+import { Response } from 'supertest';
+import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_STAGE, API_ERROR_CODE, TfmAuditDetails } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { withMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import wipeDB from '../../../wipeDB';
@@ -8,16 +9,20 @@ import { testApi } from '../../../test-api';
 import { DEALS } from '../../../../src/constants';
 import aDeal from '../../deal-builder';
 import { createDeal } from '../../../helpers/create-deal';
-import { aPortalUser, aTfmUser } from '../../../../test-helpers';
+import { aPortalUser } from '../../../../test-helpers';
 import { MOCK_PORTAL_USER } from '../../../mocks/test-users/mock-portal-user';
+
+interface CreateUserResponse extends Response {
+  body: { _id: string };
+}
 
 const originalProcessEnv = { ...process.env };
 
 describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
   let dealId: string;
   let submitDealCancellationUrl: string;
-  let auditDetails: AuditDetails;
-  let tfmUserId: ObjectId;
+  let auditDetails: TfmAuditDetails;
+  let tfmUserId: string;
 
   const cancellation = {
     reason: 'test reason',
@@ -30,14 +35,28 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
     submissionType: DEALS.SUBMISSION_TYPE.AIN,
   }) as AnyObject;
 
+  const mockUser = {
+    username: 'T1_USER_1',
+    email: 'T1_USER_1@ukexportfinance.gov.uk',
+    salt: '00',
+    hash: '01',
+    teams: ['TEAM1'],
+    timezone: 'Europe/London',
+    firstName: 'Joe',
+    lastName: 'Bloggs',
+    status: 'active',
+  };
+
   beforeAll(async () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.DEALS]);
+
+    const response: CreateUserResponse = await testApi.post({ user: mockUser, auditDetails: generateTfmAuditDetails(new ObjectId()) }).to('/v1/tfm/users');
+    tfmUserId = response.body._id;
   });
 
   beforeEach(async () => {
     const createDealResponse: { body: { _id: string } } = await createDeal({ deal: newDeal, user: aPortalUser() });
     dealId = createDealResponse.body._id;
-    tfmUserId = aTfmUser()._id;
     auditDetails = generateTfmAuditDetails(tfmUserId);
     submitDealCancellationUrl = `/v1/tfm/deals/${dealId}/cancellation/submit`;
 
@@ -149,6 +168,21 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
         expect(submitCancellationResponse.body).toEqual({
           code: 'INVALID_MONGO_ID_PATH_PARAMETER',
           message: "Expected path parameter 'dealId' to be a valid mongo id",
+        });
+      });
+
+      it('should return 400 if auditDetails are valid but do not correspond to a user', async () => {
+        const invalidAuditDetails = generateTfmAuditDetails(new ObjectId());
+
+        const submitCancellationResponse = await testApi
+          .post({ cancellation, auditDetails: invalidAuditDetails })
+          .to(`/v1/tfm/deals/${dealId}/cancellation/submit`);
+
+        expect(submitCancellationResponse.status).toEqual(400);
+        expect(submitCancellationResponse.body).toEqual({
+          code: 'INVALID_AUDIT_DETAILS',
+          message: `Supplied auditDetails 'id' ${invalidAuditDetails.id.toString()} does not correspond to a valid user`,
+          status: 400,
         });
       });
 
