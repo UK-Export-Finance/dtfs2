@@ -1,5 +1,5 @@
 import relative from '../relativeURL';
-import { form, mainHeading, submitButton } from '../partials';
+import { mainHeading, submitButton } from '../partials';
 import manualInclusion from '../pages/manual-inclusion-questionnaire';
 import applicationDetails from '../pages/application-details';
 import submitToUkef from '../pages/submit-to-ukef';
@@ -44,7 +44,7 @@ context('Clone GEF (AIN) deal', () => {
       cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${testDealId}/clone`));
       mandatoryCriteria.falseRadio().click();
-      form().submit();
+      cy.clickContinueButton();
       cy.url().should('eq', relative('/gef/ineligible-gef'));
       mainHeading().should('contain', 'This is not eligible for a GEF guarantee');
     });
@@ -53,9 +53,9 @@ context('Clone GEF (AIN) deal', () => {
       cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${testDealId}/clone`));
       mandatoryCriteria.trueRadio().click();
-      form().submit();
+      cy.clickContinueButton();
       nameApplication.internalRef().clear();
-      form().submit();
+      cy.clickContinueButton();
       nameApplication.formError().should('contain', 'Application reference name is mandatory');
     });
   });
@@ -94,10 +94,10 @@ context('Clone GEF (AIN) deal', () => {
       cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone`));
       mandatoryCriteria.trueRadio().click();
-      form().submit();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone/name-application`));
       cy.keyboardInput(nameApplication.internalRef(), 'Cloned AIN deal');
-      form().submit();
+      cy.clickContinueButton();
     });
 
     it('should validate the information in the banner', () => {
@@ -144,10 +144,10 @@ context('Clone GEF (AIN) deal', () => {
       cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone`));
       mandatoryCriteria.trueRadio().click();
-      form().submit();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone/name-application`));
       cy.keyboardInput(nameApplication.internalRef(), 'Cloned AIN deal');
-      form().submit();
+      cy.clickContinueButton();
 
       cy.get('[data-cy="success-message-link"]').click();
 
@@ -275,10 +275,10 @@ context('Clone GEF (MIA) deal', () => {
       cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${MIAdealId}/clone`));
       mandatoryCriteria.trueRadio().click();
-      form().submit();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${MIAdealId}/clone/name-application`));
       cy.keyboardInput(nameApplication.internalRef(), 'Cloned MIA deal');
-      form().submit();
+      cy.clickContinueButton();
     });
 
     it('should modify the Exporter details', () => {
@@ -345,10 +345,10 @@ context('Clone GEF (MIN) deal', () => {
       cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${MINdealId}/clone`));
       mandatoryCriteria.trueRadio().click();
-      form().submit();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${MINdealId}/clone/name-application`));
       cy.keyboardInput(nameApplication.internalRef(), 'Cloned MIN deal');
-      form().submit();
+      cy.clickContinueButton();
 
       cy.get('[data-cy="success-message-link"]').click();
       statusBanner.bannerStatus().contains('Draft');
