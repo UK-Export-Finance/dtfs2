@@ -78,7 +78,7 @@ describe('mapFacility', () => {
   };
 
   it('should map and format correct fields/values', () => {
-    const result = mapFacilitySnapshot(mockFacility, mockDealDetails);
+    const result = mapFacilitySnapshot(mockFacility, MOCK_DEAL);
 
     const expectedCoveredPercentage = `${mockCoveredPercentage}%`;
 
@@ -86,7 +86,7 @@ describe('mapFacility', () => {
 
     const expectedFacilityValueExportCurrency = `${mockCurrency.id} ${formattedFacilityValue}`;
 
-    const facilityStage = mapBssEwcsFacilityStage(mockFacilityStage);
+    const facilityStage = mapBssEwcsFacilityStage(mockFacilityStage, mockFacilityTfm.facilityStage);
 
     const expectedFacilityProduct = mapFacilityProduct(mockFacilitySnapshot.type);
 
