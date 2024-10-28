@@ -24,6 +24,7 @@ export const createTfmUser = async (overrides: Partial<TfmUser> = {}) => {
     firstName: 'Joe',
     lastName: 'Bloggs',
     status: 'active',
+    auditRecord: {},
     ...overrides,
   };
 

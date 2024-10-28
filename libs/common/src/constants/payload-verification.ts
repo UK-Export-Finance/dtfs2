@@ -28,6 +28,7 @@ export const TFM = {
     firstName: 'String',
     lastName: 'String',
     status: 'String',
+    auditRecord: 'Object',
   },
   TEAM: {
     id: 'String',

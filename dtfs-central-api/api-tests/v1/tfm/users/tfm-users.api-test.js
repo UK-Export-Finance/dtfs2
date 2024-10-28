@@ -19,6 +19,7 @@ const mockUsers = [
     firstName: 'Joe',
     lastName: 'Bloggs',
     status: 'active',
+    auditRecord: {},
   },
   {
     username: 'T1_USER_2',
@@ -30,6 +31,7 @@ const mockUsers = [
     firstName: 'Joe',
     lastName: 'Bloggs',
     status: 'active',
+    auditRecord: {},
   },
   {
     username: 'T1_USER_3',
@@ -41,6 +43,7 @@ const mockUsers = [
     firstName: 'Joe',
     lastName: 'Bloggs',
     status: 'active',
+    auditRecord: {},
   },
 ];
 
