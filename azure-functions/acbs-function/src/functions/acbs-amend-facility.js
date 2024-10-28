@@ -139,9 +139,9 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
     });
 
     /**
-     * Below have disabled due to BR.
-     * Enable below two alongside with investor and fixed fee records.
      * TODO: DTFS2-7581
+     * Below have been disabled for release 2.4.0.
+     * Enable below two alongside with investor and fixed fee records.
      */
     // 3. SOF: Facility Covenant Record (FCR)
     // const facilityCovenantRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-covenant-record', {
