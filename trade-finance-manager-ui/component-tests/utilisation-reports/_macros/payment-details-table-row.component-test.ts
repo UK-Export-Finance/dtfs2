@@ -8,7 +8,7 @@ const component = '../templates/utilisation-reports/_macros/payment-details-tabl
 const render = componentRenderer(component, true);
 
 describe(component, () => {
-  const screenreaderAlternativeCellSelector = '[data-cy="screenreader-alternative-facility-id-and-expoter"]';
+  const hiddenCellSelector = '[data-cy="hidden-facility-id-and-expoter"]';
 
   const aPaymentDetailsPayment = (): PaymentDetailsPaymentViewModel => ({
     id: 1,
@@ -80,7 +80,7 @@ describe(component, () => {
     wrapper.expectElement(`tr td:contains("Some exporter")`).toHaveAttribute('aria-hidden', 'true');
   });
 
-  it('renders screenreader alternative combined facility ID and exporter cell', () => {
+  it('renders visually hidden alternative combined facility ID and exporter cell', () => {
     const paymentDetailsRow: PaymentDetailsRowViewModel = {
       ...aPaymentDetailsTableRow(),
       feeRecords: [
@@ -93,9 +93,9 @@ describe(component, () => {
     };
     const wrapper = getWrapper({ paymentDetailsRow });
 
-    wrapper.expectElement(`tr ${screenreaderAlternativeCellSelector}`).toExist();
-    wrapper.expectElement(`tr ${screenreaderAlternativeCellSelector}`).hasClass('govuk-visually-hidden');
-    wrapper.expectText(`tr ${screenreaderAlternativeCellSelector}`).toRead('Some facility id Some exporter');
+    wrapper.expectElement(`tr ${hiddenCellSelector}`).toExist();
+    wrapper.expectElement(`tr ${hiddenCellSelector}`).hasClass('govuk-visually-hidden');
+    wrapper.expectText(`tr ${hiddenCellSelector}`).toRead('Some facility id Some exporter');
   });
 
   it('renders the date reconciled', () => {
@@ -197,7 +197,7 @@ describe(component, () => {
       wrapper.expectElement('tr').toHaveCount(3);
     });
 
-    it('should hide all rows other than first row from screenreaders', () => {
+    it('should visually hide all rows other than first row', () => {
       const paymentDetailsRow: PaymentDetailsRowViewModel = {
         ...aPaymentDetailsTableRow(),
         feeRecords: [aFeeRecord(), aFeeRecord(), aFeeRecord()],
@@ -339,7 +339,7 @@ describe(component, () => {
       wrapper.expectElement('tr:eq(2) td:contains("Test exporter 3")').toExist();
     });
 
-    it('renders all facility ids and exporters in screenreader only cell in the first row of group', () => {
+    it('renders all facility ids and exporters in visually hidden cell in the first row of group', () => {
       const feeRecords: { id: number; facilityId: string; exporter: string }[] = [
         { id: 1, facilityId: '11111111', exporter: 'Test exporter 1' },
         { id: 1, facilityId: '22222222', exporter: 'Test exporter 2' },
@@ -351,10 +351,10 @@ describe(component, () => {
       };
       const wrapper = getWrapper({ paymentDetailsRow });
 
-      wrapper.expectElement(`tr:eq(0) ${screenreaderAlternativeCellSelector}`).toExist();
-      wrapper.expectText(`tr:eq(0) ${screenreaderAlternativeCellSelector} li:eq(0)`).toRead('11111111 Test exporter 1');
-      wrapper.expectText(`tr:eq(0) ${screenreaderAlternativeCellSelector} li:eq(1)`).toRead('22222222 Test exporter 2');
-      wrapper.expectText(`tr:eq(0) ${screenreaderAlternativeCellSelector} li:eq(2)`).toRead('33333333 Test exporter 3');
+      wrapper.expectElement(`tr:eq(0) ${hiddenCellSelector}`).toExist();
+      wrapper.expectText(`tr:eq(0) ${hiddenCellSelector} li:eq(0)`).toRead('11111111 Test exporter 1');
+      wrapper.expectText(`tr:eq(0) ${hiddenCellSelector} li:eq(1)`).toRead('22222222 Test exporter 2');
+      wrapper.expectText(`tr:eq(0) ${hiddenCellSelector} li:eq(2)`).toRead('33333333 Test exporter 3');
     });
   });
 });

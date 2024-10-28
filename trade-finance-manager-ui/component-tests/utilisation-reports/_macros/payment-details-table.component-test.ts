@@ -59,7 +59,7 @@ describe(component, () => {
     wrapper.expectElement(tableHeaderSelector('Exporter')).notToHaveAttribute('aria-sort');
   });
 
-  it('should hide the facility ID and exporter headings from screenreaders', () => {
+  it('should render the facility ID and exporter headings as aria hidden', () => {
     const wrapper = getWrapper();
 
     wrapper.expectElement(tableHeaderSelector('Facility ID')).toExist();
@@ -69,7 +69,7 @@ describe(component, () => {
     wrapper.expectElement(tableHeaderSelector('Exporter')).toHaveAttribute('aria-hidden', 'true');
   });
 
-  it('should render the combined facility ID and export heading to screenreaders only', () => {
+  it('should render the combined facility ID and export heading as visually hidden', () => {
     const wrapper = getWrapper();
 
     wrapper.expectElement(tableHeaderSelector('Facility ID and Exporter')).toExist();
