@@ -10,7 +10,15 @@ const { DEAL_CANCELLATION_SCHEDULE } = process.env;
  * @param dealIds the deals to be cancelled
  */
 const cancelDeals = async (deals: TfmDealWithCancellation[]) => {
-  await Promise.all(deals.map((deal) => TfmDealCancellationRepo.submitDealCancellation(deal._id, deal.tfm.cancellation, generateSystemAuditDetails())));
+  await Promise.all(
+    deals.map((deal) =>
+      TfmDealCancellationRepo.submitDealCancellation({
+        dealId: deal._id,
+        cancellation: deal.tfm.cancellation,
+        auditDetails: generateSystemAuditDetails(),
+      }),
+    ),
+  );
 };
 
 /**

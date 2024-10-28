@@ -1,4 +1,4 @@
-import { Collection, ObjectId, UpdateResult, WithoutId } from 'mongodb';
+import { Collection, ObjectId, UpdateResult, WithoutId, UpdateFilter } from 'mongodb';
 import {
   AuditDetails,
   DEAL_SUBMISSION_TYPE,
@@ -132,10 +132,12 @@ export class TfmDealCancellationRepo {
   }
 
   /**
-   * submits the deal cancellation and updates the respective deal stage
-   * @param dealId - The deal id
-   * @param cancellation - The deal cancellation details to submit
-   * @param auditDetails - The users audit details
+   * Submits the deal cancellation and updates the respective deal stage
+   * @param params
+   * @param params.dealId - The deal id
+   * @param params.cancellation - The deal cancellation details to submit
+   * @param params.activity - Object to add to the activities array
+   * @param params.auditDetails - The users audit details
    */
   public static async submitDealCancellation({
     dealId,
@@ -145,7 +147,7 @@ export class TfmDealCancellationRepo {
   }: {
     dealId: string | ObjectId;
     cancellation: TfmDealCancellation;
-    activity: TfmActivity;
+    activity?: TfmActivity;
     auditDetails: AuditDetails;
   }): Promise<TfmDealCancellationResponse> {
     if (!ObjectId.isValid(dealId)) {
@@ -153,6 +155,20 @@ export class TfmDealCancellationRepo {
     }
 
     const dealCollection = await this.getCollection();
+
+    const update: UpdateFilter<WithoutId<TfmDeal>> = {
+      $set: {
+        'tfm.stage': TFM_DEAL_STAGE.CANCELLED,
+        'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.COMPLETED,
+        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+      },
+    };
+
+    if (activity) {
+      update.$push = {
+        'tfm.activities': activity,
+      };
+    }
 
     const updateDeal = await dealCollection.updateOne(
       {
@@ -163,16 +179,7 @@ export class TfmDealCancellationRepo {
         'tfm.cancellation.bankRequestDate': { $eq: cancellation.bankRequestDate },
         'tfm.cancellation.effectiveFrom': { $eq: cancellation.effectiveFrom },
       },
-      {
-        $set: {
-          'tfm.stage': TFM_DEAL_STAGE.CANCELLED,
-          'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.COMPLETED,
-          auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-        },
-        $push: {
-          'tfm.activities': activity,
-        },
-      },
+      update,
     );
 
     if (!updateDeal?.matchedCount) {
