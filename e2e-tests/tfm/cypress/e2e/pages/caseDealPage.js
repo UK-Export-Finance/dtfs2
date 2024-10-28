@@ -9,6 +9,7 @@ const caseDealPage = {
   bankSecurityText: () => cy.get('[data-cy="bank-security-text"]'),
   bankSecurityFacilityText: () => cy.get('[data-cy="bank-security-facility-text"]'),
   cancelDealButton: () => cy.get('[data-cy="cancel-deal-button"]'),
+  dealStage: () => cy.get('[data-cy="ukef-deal-stage-value"]'),
 
   dealFacilitiesTable: {
     row: (facilityId) => {
@@ -24,6 +25,7 @@ const caseDealPage = {
         totalExposure: () => cy.get(`@facility${facilityId}`).get('[data-cy="facilities-total-ukef-exposure"]'),
         facilityValueGBP: () => cy.get(`@facility${facilityId}`).get(`[data-cy="facility-${facilityId}-value-gbp"]`),
         facilityExposure: () => cy.get(`@facility${facilityId}`).get(`[data-cy="facility-${facilityId}-ukef-exposure"]`),
+        facilityStage: () => cy.get(`@facility${facilityId}`).get(`[data-cy="facility-${facilityId}-stage`),
       };
     },
   },

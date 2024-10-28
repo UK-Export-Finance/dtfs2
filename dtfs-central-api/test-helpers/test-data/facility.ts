@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { Facility } from '@ukef/dtfs2-common';
+import { generateMockPortalUserAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream/test-helpers';
 
 export const aFacility = (): Facility => ({
   _id: new ObjectId(),
@@ -34,4 +35,5 @@ export const aFacility = (): Facility => ({
   hasBeenIssuedAndAcknowledged: null,
   canResubmitIssuedFacilities: null,
   unissuedToIssuedByMaker: {},
+  auditRecord: generateMockPortalUserAuditDatabaseRecord(new ObjectId()),
 });

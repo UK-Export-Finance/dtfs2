@@ -79,17 +79,10 @@ describe('POST /v1/deals/:id/cancellation/submit', () => {
     });
 
     beforeEach(() => {
-      submitDealCancellationMock.mockResolvedValue({ cancelledDealUkefId: ukefDealId } as TfmDealCancellationResponse);
-      findFacilitiesByDealIdMock.mockResolvedValue(
-        ukefFacilityIds.map(
-          (ukefFacilityId) =>
-            ({
-              facilitySnapshot: {
-                ukefFacilityId,
-              },
-            }) as TfmFacility,
-        ),
-      );
+      submitDealCancellationMock.mockResolvedValue({
+        cancelledDealUkefId: ukefDealId,
+        riskExpiredFacilityUkefIds: ukefFacilityIds,
+      } as TfmDealCancellationResponse);
     });
 
     afterAll(() => {
