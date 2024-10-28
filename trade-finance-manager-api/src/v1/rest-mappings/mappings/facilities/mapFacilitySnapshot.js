@@ -45,7 +45,7 @@ const mapFacilitySnapshot = (facility, dealSnapshot) => {
 
   const formattedFacilityValue = formattedNumber(value);
 
-  clonedSnapshot.facilityStage = mapBssEwcsFacilityStage(facilityStage);
+  clonedSnapshot.facilityStage = mapBssEwcsFacilityStage(facilityStage, facilityTfm?.facilityStage);
 
   const mapped = {
     _id: clonedSnapshot._id,

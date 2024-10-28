@@ -10,11 +10,13 @@ import aDeal from '../../deal-builder';
 import { createDeal } from '../../../helpers/create-deal';
 import { aPortalUser, aTfmUser } from '../../../../test-helpers';
 import { MOCK_PORTAL_USER } from '../../../mocks/test-users/mock-portal-user';
+import { createFacility } from '../../../helpers/create-facility';
 
 const originalProcessEnv = { ...process.env };
 
 describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
   let dealId: string;
+  let facilityId: string;
   let submitDealCancellationUrl: string;
   let auditDetails: AuditDetails;
   let tfmUserId: ObjectId;
@@ -36,7 +38,15 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
 
   beforeEach(async () => {
     const createDealResponse: { body: { _id: string } } = await createDeal({ deal: newDeal, user: aPortalUser() });
+    const createFacilityResponse: { body: { _id: string } } = await createFacility({
+      facility: {
+        dealId,
+      },
+      user: aPortalUser(),
+    });
+
     dealId = createDealResponse.body._id;
+    facilityId = createFacilityResponse.body._id;
     tfmUserId = aTfmUser()._id;
     auditDetails = generateTfmAuditDetails(tfmUserId);
     submitDealCancellationUrl = `/v1/tfm/deals/${dealId}/cancellation/submit`;
@@ -111,7 +121,7 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
       it('should return the submit cancellation response object if a matching deal and cancellation exists', async () => {
         const submitCancellationResponse = await testApi.post({ cancellation, auditDetails }).to(submitDealCancellationUrl);
 
-        expect(submitCancellationResponse.body).toEqual({ cancelledDealUkefId: dealId });
+        expect(submitCancellationResponse.body).toEqual({ cancelledDealUkefId: dealId, riskExpiredFacilityUkefIds: [facilityId] });
         expect(submitCancellationResponse.status).toEqual(HttpStatusCode.Ok);
       });
 
