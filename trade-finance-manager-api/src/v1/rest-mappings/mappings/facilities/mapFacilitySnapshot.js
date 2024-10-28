@@ -35,7 +35,21 @@ const mapFacilitySnapshot = (facility, dealSnapshot) => {
   // Deep clone
   const clonedSnapshot = JSON.parse(JSON.stringify(facilitySnapshot, null, 4));
 
-  const { type, value, facilityStage, guaranteeFeePayableByBank, currency } = clonedSnapshot;
+  const {
+    _id,
+    ukefFacilityId,
+    dealId,
+    type,
+    hasBeenIssued,
+    value,
+    facilityStage,
+    guaranteeFeePayableByBank,
+    currency,
+    coveredPercentage,
+    dayCountBasis,
+    bondIssuer,
+    bondBeneficiary,
+  } = clonedSnapshot;
 
   clonedSnapshot.ukefFacilityType = type;
 
@@ -47,38 +61,46 @@ const mapFacilitySnapshot = (facility, dealSnapshot) => {
 
   clonedSnapshot.facilityStage = mapBssEwcsFacilityStage(facilityStage);
 
-  const mapped = {
-    _id: clonedSnapshot._id,
+  const mappedFacilitySnapshot = {
+    // Fields in common with all facility types
+    _id,
+    ukefFacilityId,
+    dealId,
     isGef: false,
-    dealId: clonedSnapshot.dealId,
-    ukefFacilityId: clonedSnapshot.ukefFacilityId,
-
-    // TODO: DTFS2-4634 - we shouldn't need facility.type and ukefFacilityType.
     type: clonedSnapshot.type,
-    ukefFacilityType: clonedSnapshot.ukefFacilityType,
-    facilityProduct: clonedSnapshot.facilityProduct,
+    hasBeenIssued,
+
+    ukefFacilityType: clonedSnapshot.ukefFacilityType, // TODO: DTFS2-4634 - we shouldn't need facility.type and ukefFacilityType.
     facilityStage: clonedSnapshot.facilityStage,
-    hasBeenIssued: clonedSnapshot.hasBeenIssued,
-    coveredPercentage: `${clonedSnapshot.coveredPercentage}%`,
+    facilityProduct: clonedSnapshot.facilityProduct,
+
+    bankFacilityReference: mapBankFacilityReference(clonedSnapshot),
+    banksInterestMargin: mapBanksInterestMargin(clonedSnapshot),
+
+    currency: currency.id,
+    coveredPercentage: `${coveredPercentage}%`,
+    dayCountBasis: Number(dayCountBasis),
+
     facilityValueExportCurrency: mapFacilityValueExportCurrency(facility),
     value: mapFacilityValue(currency.id, formattedFacilityValue, facility),
-    currency: currency.id,
+
     ukefExposure: mapUkefExposureValue(facilityTfm, facility),
-    bankFacilityReference: mapBankFacilityReference(clonedSnapshot),
     guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFeePayableByBank),
-    banksInterestMargin: mapBanksInterestMargin(clonedSnapshot),
-    firstDrawdownAmountInExportCurrency: mapFirstDrawdownAmountInExportCurrency(clonedSnapshot),
+
     feeType: mapFeeType(clonedSnapshot),
     feeFrequency: mapFeeFrequency(clonedSnapshot),
-    dayCountBasis: Number(clonedSnapshot.dayCountBasis),
+
     dates: mapDates(facility, clonedSnapshot, facilityTfm, dealDetails),
 
-    // bond specifics
-    bondIssuer: clonedSnapshot.bondIssuer,
-    bondBeneficiary: clonedSnapshot.bondBeneficiary,
+    // Mapped fields unique to BSS/EWCS facilities
+    firstDrawdownAmountInExportCurrency: mapFirstDrawdownAmountInExportCurrency(clonedSnapshot),
+
+    // Mapped fields unique to BSS/EWCS facilities - bond specifics
+    bondIssuer,
+    bondBeneficiary,
   };
 
-  return mapped;
+  return mappedFacilitySnapshot;
 };
 
 module.exports = mapFacilitySnapshot;
