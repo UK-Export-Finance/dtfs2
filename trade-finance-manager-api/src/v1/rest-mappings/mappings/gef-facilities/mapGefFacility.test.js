@@ -1,4 +1,3 @@
-const { TFM_FACILITY_STAGE } = require('@ukef/dtfs2-common');
 const mapGefFacility = require('./mapGefFacility');
 const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityValue = require('../facilities/mapFacilityValue');
@@ -30,7 +29,7 @@ describe('mapGefFacility', () => {
 
     mockFacility.facilitySnapshot.facilityProduct = mapFacilityProduct(mockFacility.facilitySnapshot.type);
 
-    mockFacility.facilitySnapshot.facilityStage = mapGefFacilityStage(mockFacility.facilitySnapshot.hasBeenIssued);
+    mockFacility.facilitySnapshot.facilityStage = mapGefFacilityStage(mockFacility.facilitySnapshot.hasBeenIssued, mockFacility.tfm.facilityStage);
 
     const { facilitySnapshot } = mockFacility;
 
@@ -65,15 +64,5 @@ describe('mapGefFacility', () => {
     };
 
     expect(result).toEqual(expected);
-  });
-
-  describe('when a tfm facilityStage exists', () => {
-    it('should return the tfm facility stage on the mapped facility snapshot object', () => {
-      const facilityWithTfmFacilityStage = { ...mockFacility, tfm: { facilityStage: TFM_FACILITY_STAGE.RISK_EXPIRED } };
-
-      const result = mapGefFacility(facilityWithTfmFacilityStage, MOCK_GEF_DEAL, mockDealTfm);
-
-      expect(result.facilitySnapshot).toEqual(expect.objectContaining({ facilityStage: TFM_FACILITY_STAGE.RISK_EXPIRED }));
-    });
   });
 });

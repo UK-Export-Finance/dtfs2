@@ -1,4 +1,3 @@
-const { TFM_FACILITY_STAGE } = require('@ukef/dtfs2-common');
 const mapFacilitySnapshot = require('./mapFacilitySnapshot');
 const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityProduct = require('./mapFacilityProduct');
@@ -87,7 +86,7 @@ describe('mapFacility', () => {
 
     const expectedFacilityValueExportCurrency = `${mockCurrency.id} ${formattedFacilityValue}`;
 
-    const facilityStage = mapBssEwcsFacilityStage(mockFacilityStage);
+    const facilityStage = mapBssEwcsFacilityStage(mockFacilityStage, mockFacilityTfm.facilityStage);
 
     const expectedFacilityProduct = mapFacilityProduct(mockFacilitySnapshot.type);
 
@@ -141,15 +140,5 @@ describe('mapFacility', () => {
     };
 
     expect(result).toEqual(expected);
-  });
-
-  describe('when a tfm facilityStage exists', () => {
-    it('should return the tfm facility stage on the mapped facility snapshot object', () => {
-      const facilityWithTfmFacilityStage = { ...mockFacility, tfm: { ...mockFacilityTfm, facilityStage: TFM_FACILITY_STAGE.RISK_EXPIRED } };
-
-      const result = mapFacilitySnapshot(facilityWithTfmFacilityStage, mockDealDetails);
-
-      expect(result).toEqual(expect.objectContaining({ facilityStage: TFM_FACILITY_STAGE.RISK_EXPIRED }));
-    });
   });
 });
