@@ -4,6 +4,7 @@
   {% set reportId = params.reportId %}
   {% set feeRecordPaymentGroup = params.feeRecordPaymentGroup %}
   {% set userCanEdit = params.userCanEdit %}
+  {% set displayCheckboxColumn = params.displayCheckboxColumn %}
   {% set feeRecords = feeRecordPaymentGroup.feeRecords %}
   {% set totalReportedPayments = feeRecordPaymentGroup.totalReportedPayments %}
   {% set paymentsReceived = feeRecordPaymentGroup.paymentsReceived %}
@@ -13,6 +14,7 @@
   {% set checkboxId = feeRecordPaymentGroup.checkboxId %}
   {% set isChecked = feeRecordPaymentGroup.isChecked %}
   {% set checkboxAriaLabel = feeRecordPaymentGroup.checkboxAriaLabel %}
+
   {% for feeRecord in feeRecords %}
     {% set isFirstFeeRecordInGroup = loop.index === 1 %}
     {% set isLastFeeRecordInGroup = loop.index === feeRecords.length %}
@@ -60,7 +62,7 @@
           displayStatus: displayStatus
         }) if isFirstFeeRecordInGroup else "" }}
       </td>
-      {% if userCanEdit %}
+      {% if userCanEdit and displayCheckboxColumn %}
         <td class="govuk-table__cell{{ " no-border" if not isLastFeeRecordInGroup }}">
           {% if status === 'TO_DO' or status === 'DOES_NOT_MATCH' %}
             {{ tableCellCheckbox.render({

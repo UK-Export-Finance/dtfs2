@@ -114,15 +114,18 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       bank,
       formattedReportPeriod,
       reportId,
-      premiumPaymentsFilters,
-      premiumPaymentsFilterError,
-      premiumPaymentsTableDataError,
-      enablePaymentsReceivedSorting,
-      premiumPayments: premiumPaymentsViewModel,
+      premiumPayments: {
+        payments: premiumPaymentsViewModel,
+        filters: premiumPaymentsFilters,
+        filterError: premiumPaymentsFilterError,
+        tableDataError: premiumPaymentsTableDataError,
+        enablePaymentsReceivedSorting,
+        displayMatchSuccessNotification: matchSuccess === 'true',
+        displaySelectAllCheckbox: true,
+      },
       paymentDetails: paymentDetailsViewModel,
       utilisationDetails: utilisationDetailsViewModel,
       keyingSheet: keyingSheetViewModel,
-      displayMatchSuccessNotification: matchSuccess === 'true',
     });
   } catch (error) {
     console.error(`Failed to render utilisation report with id ${reportId}`, error);

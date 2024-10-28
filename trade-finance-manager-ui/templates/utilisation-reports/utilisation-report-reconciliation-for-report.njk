@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% set premiumPaymentsHtml %}
-  {% if displayMatchSuccessNotification %}
+  {% if premiumPayments.displayMatchSuccessNotification %}
     {% set notificationHtml %}
       <h3 class="govuk-notification-banner__heading" data-cy="match-success-notification-heading">
         Match payment recorded
@@ -36,10 +36,11 @@
       </div>
     </div>
   {% endif %}
-  {% if premiumPaymentsTableDataError or premiumPaymentsFilterError %}
+
+  {% if premiumPayments.tableDataError or premiumPayments.filterError %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
-      errorList: [premiumPaymentsTableDataError, premiumPaymentsFilterError],
+      errorList: [premiumPayments.tableDataError, premiumPayments.filterError],
       attributes: {
         'data-cy': 'error-summary'
       }
@@ -74,9 +75,9 @@
               },
               id: "premium-payments-facility-id-filter",
               name: "premiumPaymentsFacilityId",
-              value: premiumPaymentsFilters.facilityId,
-              errorMessage: premiumPaymentsFilterError and {
-                text: premiumPaymentsFilterError.text
+              value: premiumPayments.filters.facilityId,
+              errorMessage: premiumPayments.filterError and {
+                text: premiumPayments.filterError.text
               },
               attributes: {'data-cy': 'premium-payments-facility-filter-input'}
             }) }}
@@ -104,7 +105,7 @@
       </div>
     </div>
 
-  {% if premiumPaymentsTableDataError %}
+  {% if premiumPayments.tableDataError %}
     <div class="govuk-form-group--error">
   {% endif %}
   {% if userCanEdit %}
@@ -129,14 +130,15 @@
   {% endif %}
   {{ premiumPaymentsTable.render({
     reportId: reportId,
-    feeRecordPaymentGroups: premiumPayments,
-    enablePaymentsReceivedSorting: enablePaymentsReceivedSorting,
-    userCanEdit: userCanEdit
+    feeRecordPaymentGroups: premiumPayments.payments,
+    enablePaymentsReceivedSorting: premiumPayments.enablePaymentsReceivedSorting,
+    userCanEdit: userCanEdit,
+    displaySelectAllCheckbox: premiumPayments.displaySelectAllCheckbox
   }) }}
   {% if userCanEdit %}
     </form>
   {% endif %}
-  {% if premiumPaymentsTableDataError %}
+  {% if premiumPayments.tableDataError %}
     </div>
   {% endif %}
 {% endset %}

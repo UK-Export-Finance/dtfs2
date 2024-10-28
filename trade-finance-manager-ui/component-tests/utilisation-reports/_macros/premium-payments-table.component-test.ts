@@ -19,6 +19,7 @@ type ComponentRendererParams = {
   userCanEdit: boolean;
   feeRecordPaymentGroups: PremiumPaymentsViewModelItem[];
   enablePaymentsReceivedSorting: boolean;
+  displaySelectAllCheckbox: boolean;
 };
 
 const render = componentRenderer<ComponentRendererParams>(component);
@@ -63,29 +64,15 @@ describe(component, () => {
     reportId: 1,
     feeRecordPaymentGroups: aPremiumPaymentsViewModelList(),
     enablePaymentsReceivedSorting: true,
+    displaySelectAllCheckbox: true,
   });
 
   const getWrapper = () => render(defaultRendererParams());
 
   const numericCellClass = 'govuk-table__cell--numeric';
 
-  it('should render all table headings when userCanEdit is true', () => {
+  it('should render all table headings', () => {
     const wrapper = getWrapper();
-    wrapper.expectElement(`${tableSelector} thead th`).toHaveCount(8);
-    wrapper.expectElement(`${tableSelector} thead td:contains("")`).toExist();
-    wrapper.expectElement(`${tableSelector} thead th:contains("Facility ID")`).toExist();
-    wrapper.expectElement(`${tableSelector} thead th:contains("Exporter")`).toExist();
-    wrapper.expectElement(`${tableSelector} thead th:contains("Reported fees")`).toExist();
-    wrapper.expectElement(`${tableSelector} thead th:contains("Reported payments")`).toExist();
-    wrapper.expectElement(`${tableSelector} thead th:contains("Total reported payments")`).toExist();
-    wrapper.expectElement(`${tableSelector} thead th:contains("Payments received")`).toExist();
-    wrapper.expectElement(`${tableSelector} thead th:contains("Total payments received")`).toExist();
-    wrapper.expectElement(`${tableSelector} thead th:contains("Status")`).toExist();
-  });
-
-  it('should render table headings without the checkbox column when userCanEdit is false', () => {
-    const wrapper = render({ ...defaultRendererParams(), userCanEdit: false, feeRecordPaymentGroups: aPremiumPaymentsViewModelList() });
-
     wrapper.expectElement(`${tableSelector} thead th`).toHaveCount(8);
     wrapper.expectElement(`${tableSelector} thead th:contains("Facility ID")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Exporter")`).toExist();
@@ -137,13 +124,18 @@ describe(component, () => {
     wrapper.expectElement(`${tableSelector} thead th:contains("Total payments received")`).notToHaveAttribute('aria-sort');
   });
 
-  it('should render the select all checkbox in the table headings row when userCanEdit is true', () => {
-    const wrapper = getWrapper();
+  it('should render the select all checkbox in the table headings row when userCanEdit and displaySelectAllCheckbox are true', () => {
+    const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, displaySelectAllCheckbox: true });
     wrapper.expectElement(`${tableSelector} thead td input[type="checkbox"]#select-all-checkbox`).toExist();
   });
 
   it('should not render the select all checkbox in the table headings row when userCanEdit is false', () => {
-    const wrapper = render({ ...defaultRendererParams(), userCanEdit: false });
+    const wrapper = render({ ...defaultRendererParams(), userCanEdit: false, displaySelectAllCheckbox: true });
+    wrapper.expectElement(`${tableSelector} thead th input[type="checkbox"]#select-all-checkbox`).notToExist();
+  });
+
+  it('should not render the select all checkbox in the table headings row when displaySelectAllCheckbox is false', () => {
+    const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, displaySelectAllCheckbox: false });
     wrapper.expectElement(`${tableSelector} thead th input[type="checkbox"]#select-all-checkbox`).notToExist();
   });
 
@@ -507,7 +499,7 @@ describe(component, () => {
   const FEE_RECORD_STATUSES_WHERE_CHECKBOX_SHOULD_EXIST = [FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.DOES_NOT_MATCH];
 
   it.each(FEE_RECORD_STATUSES_WHERE_CHECKBOX_SHOULD_EXIST)(
-    'should render the checkbox when userCanEdit is true and the fee record status is %s',
+    'should render the checkbox when userCanEdit and displaySelectAllCheckbox are true, and the fee record status is %s',
     (feeRecordStatus) => {
       const checkboxId: PremiumPaymentsTableCheckboxId = `feeRecordIds-1-reportedPaymentsCurrency-GBP-status-${feeRecordStatus}`;
       const feeRecordPaymentGroups: PremiumPaymentsViewModelItem[] = [
@@ -517,14 +509,20 @@ describe(component, () => {
           checkboxId,
         },
       ];
-      const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, feeRecordPaymentGroups });
+
+      const wrapper = render({
+        ...defaultRendererParams(),
+        userCanEdit: true,
+        displaySelectAllCheckbox: true,
+        feeRecordPaymentGroups,
+      });
 
       wrapper.expectElement(`input#${checkboxId}[type="checkbox"]`).toExist();
     },
   );
 
   it.each(difference(Object.values(FEE_RECORD_STATUS), FEE_RECORD_STATUSES_WHERE_CHECKBOX_SHOULD_EXIST))(
-    'should not render the checkbox when userCanEdit is true and the fee record status is %s',
+    'should not render the checkbox when userCanEdit and displaySelectAllCheckbox are true, and the fee record status is %s',
     (feeRecordStatus) => {
       const checkboxId = 'feeRecordIds-1,2,3-reportedPaymentsCurrency-GBP-status-TO_DO';
       const feeRecordPaymentGroups: PremiumPaymentsViewModelItem[] = [
@@ -534,7 +532,13 @@ describe(component, () => {
           checkboxId,
         },
       ];
-      const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, feeRecordPaymentGroups });
+
+      const wrapper = render({
+        ...defaultRendererParams(),
+        userCanEdit: true,
+        displaySelectAllCheckbox: true,
+        feeRecordPaymentGroups,
+      });
 
       wrapper.expectElement(`input#${checkboxId}[type="checkbox"]`).notToExist();
     },
@@ -546,7 +550,30 @@ describe(component, () => {
       status,
       checkboxId: `feeRecordIds-1,2,3-reportedPaymentsCurrency-GBP-status-${status}`,
     }));
-    const wrapper = render({ ...defaultRendererParams(), userCanEdit: false, feeRecordPaymentGroups });
+    const wrapper = render({
+      ...defaultRendererParams(),
+      userCanEdit: false,
+      displaySelectAllCheckbox: true,
+      feeRecordPaymentGroups,
+    });
+
+    feeRecordPaymentGroups.forEach((group) => {
+      wrapper.expectElement(`input#${group.checkboxId}[type="checkbox"]`).notToExist();
+    });
+  });
+
+  it('should not render any checkboxes when displaySelectAllCheckbox is false', () => {
+    const feeRecordPaymentGroups: PremiumPaymentsViewModelItem[] = Object.values(FEE_RECORD_STATUS).map((status) => ({
+      ...aPremiumPaymentsViewModelItem(),
+      status,
+      checkboxId: `feeRecordIds-1,2,3-reportedPaymentsCurrency-GBP-status-${status}`,
+    }));
+    const wrapper = render({
+      ...defaultRendererParams(),
+      userCanEdit: true,
+      displaySelectAllCheckbox: false,
+      feeRecordPaymentGroups,
+    });
 
     feeRecordPaymentGroups.forEach((group) => {
       wrapper.expectElement(`input#${group.checkboxId}[type="checkbox"]`).notToExist();

@@ -149,17 +149,22 @@ export type UtilisationDetailsViewModel = {
   downloadUrl: string;
 };
 
+export type PremiumPaymentsViewModel = {
+  payments: PremiumPaymentsViewModelItem[];
+  filters?: PremiumPaymentsFilters;
+  filterError?: ErrorSummaryViewModel;
+  tableDataError?: ErrorSummaryViewModel;
+  enablePaymentsReceivedSorting: boolean;
+  displayMatchSuccessNotification: boolean;
+  displaySelectAllCheckbox: boolean;
+};
+
 export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & {
   bank: SessionBank;
   formattedReportPeriod: string;
   reportId: string;
-  premiumPayments: PremiumPaymentsViewModelItem[];
-  premiumPaymentsFilters?: PremiumPaymentsFilters;
-  premiumPaymentsFilterError?: ErrorSummaryViewModel;
-  premiumPaymentsTableDataError?: ErrorSummaryViewModel;
-  enablePaymentsReceivedSorting: boolean;
+  premiumPayments: PremiumPaymentsViewModel;
   keyingSheet: KeyingSheetViewModel;
   paymentDetails: PaymentDetailsViewModel;
   utilisationDetails: UtilisationDetailsViewModel;
-  displayMatchSuccessNotification: boolean;
 };
