@@ -10,7 +10,7 @@ import {
 } from '@ukef/dtfs2-common';
 import { handleFeeRecordGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
 import { aReportPeriod, tfmFacilityReturnedValues } from '../../../../../../test-helpers';
-import { calculateFixedFeeAdjustment, calculatePrincipalBalanceAdjustment, updateFacilityUtilisationData } from '../helpers';
+import { calculateFixedFeeAdjustment, calculatePrincipalBalanceAdjustment, updateFacilityUtilisationData, getFixedFeeForFacility } from '../helpers';
 import { calculateUkefShareOfUtilisation, getSpecificTfmFacilityValues } from '../../../../../helpers';
 
 jest.mock<unknown>('../helpers', () => ({
@@ -20,7 +20,7 @@ jest.mock<unknown>('../helpers', () => ({
   updateFacilityUtilisationData: jest.fn(),
 }));
 
-jest.mock('../../../../../helpers/get-latest-tfm-facility-values');
+jest.mock('../../../../../helpers/get-specific-tfm-facility-values');
 jest.mock('../../../../../helpers/calculate-ukef-share-of-utilisation');
 
 describe('handleFeeRecordGenerateKeyingDataEvent', () => {
@@ -62,6 +62,9 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
 
       jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(999.99);
 
+      const { coverPercentage, coverEndDate, interestPercentage, dayCountBasis } = tfmFacilityReturnedValues;
+      const fixedFee = getFixedFeeForFacility(feeRecord.facilityUtilisation, reportPeriod, coverPercentage, coverEndDate, interestPercentage, dayCountBasis);
+
       // Act
       await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
         transactionEntityManager: mockEntityManager,
@@ -72,7 +75,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
 
       // Assert
       expect(feeRecord.fixedFeeAdjustment).toEqual(999.99);
-      expect(calculateFixedFeeAdjustment).toHaveBeenCalledWith(feeRecord, feeRecord.facilityUtilisationData, reportPeriod, tfmFacilityReturnedValues);
+      expect(calculateFixedFeeAdjustment).toHaveBeenCalledWith(feeRecord, feeRecord.facilityUtilisationData, reportPeriod, fixedFee);
     });
 
     it('sets the fee record principalBalanceAdjustment to principal balance adjustment', async () => {
@@ -301,6 +304,8 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       };
 
       jest.mocked(calculateUkefShareOfUtilisation).mockReturnValue(78787.87);
+      const { coverPercentage, coverEndDate, interestPercentage, dayCountBasis } = tfmFacilityReturnedValues;
+      const fixedFee = getFixedFeeForFacility(feeRecord.facilityUtilisation, reportPeriod, coverPercentage, coverEndDate, interestPercentage, dayCountBasis);
 
       // Act
       await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
@@ -316,12 +321,11 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
         facilityUtilisationDataEntity,
         {
           reportPeriod,
-          utilisation: 9876543.21,
           requestSource,
           ukefShareOfUtilisation: 78787.87,
           entityManager: mockEntityManager,
         },
-        tfmFacilityReturnedValues,
+        fixedFee,
       );
     });
   });

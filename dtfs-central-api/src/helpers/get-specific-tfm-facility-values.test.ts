@@ -39,9 +39,7 @@ describe('getSpecificTfmFacilityValues', () => {
     });
 
     it('should throw a NotFoundError', async () => {
-      await expect(getSpecificTfmFacilityValues(facilityId, reportPeriod)).rejects.toThrow(
-        new NotFoundError(`Failed to find a tfm facility with ukef facility id '${facilityId}'`),
-      );
+      await expect(getSpecificTfmFacilityValues(facilityId, reportPeriod)).rejects.toThrow(new NotFoundError(`TFM facility ${facilityId} could not be found`));
     });
   });
 
@@ -105,6 +103,7 @@ describe('getSpecificTfmFacilityValues', () => {
         dayCountBasis: 365,
         interestPercentage: 5,
         coverPercentage: 5,
+        value: mockFacility.facilitySnapshot.value,
       };
 
       expect(result).toEqual(expected);
@@ -125,6 +124,7 @@ describe('getSpecificTfmFacilityValues', () => {
         dayCountBasis: 365,
         interestPercentage: 5,
         coverPercentage: 5,
+        value: mockFacility.facilitySnapshot.value,
       };
 
       expect(result).toEqual(expected);
