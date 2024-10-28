@@ -14,12 +14,17 @@ const mapFacilityValueExportCurrency = require('./mapFacilityValueExportCurrency
 const { mapBssEwcsFacilityStage } = require('./mapFacilityStage');
 
 /**
- * Maps the existing facility snapshot in the database to the facility snapshot used in TFM API.
+ * Maps a BSS/EWCS facility snapshot in the database to the facility snapshot used in TFM-API and TFM-UI.
  * This function is only used on BSS/EWCS facilities.
- * Note: This implementation modifies the facility snapshot to have values not consistent with the facility snapshot in the database.
- * In particular, this is a live object that updates e.g. when amendments are added in TFM.
+ * This returns a facility object that represent the current facility state with all changes applied e.g. when amendments are added in TFM.
+ * These values may differ from the facility snapshot in the database.
+ * @param {import('@ukef/dtfs2-common').TfmFacility} facility the full facility object from the database
+ * @param {import('@ukef/dtfs2-common').Deal} dealSnapshot the deal.dealSnapshot object from the database corresponding to the facility
+ * @returns mapped facility snapshot
  */
-const mapFacilitySnapshot = (facility, dealDetails) => {
+const mapFacilitySnapshot = (facility, dealSnapshot) => {
+  const { details: dealDetails } = dealSnapshot;
+
   const { facilitySnapshot, tfm: facilityTfm } = facility;
 
   // Ensure facility is valid
