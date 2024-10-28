@@ -840,10 +840,9 @@ const createParty = async ({ companyRegNo, companyName }) => {
         companyName,
       },
     });
-    return response.data;
+    return { status: 200, data: response.data };
   } catch (error) {
-    console.error('Unable to create party %o', error);
-    return false;
+    return { status: error?.status || 500, data: 'Failed to create party' };
   }
 };
 
