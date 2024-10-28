@@ -1,4 +1,6 @@
 /**
+ * Maps a user object from the database to a user object that can be returned to TFM UI
+ * This strips out sensitive information not used by the frontend service
  * @param {import("@ukef/dtfs2-common").TfmUser} user
  * @returns {import("../../../../types/tfm-session-user").TfmSessionUser}
  */

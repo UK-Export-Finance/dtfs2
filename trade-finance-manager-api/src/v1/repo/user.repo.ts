@@ -6,7 +6,6 @@ import {
   MONGO_DB_COLLECTIONS,
   TfmUser,
   UpdateUserRequest,
-  UpsertUserRequest,
 } from '@ukef/dtfs2-common';
 import { Collection, FindOneAndUpdateOptions, ObjectId, WithoutId } from 'mongodb';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
@@ -14,21 +13,27 @@ import { mongoDbClient } from '../../drivers/db-client';
 import { USER } from '../../constants';
 import getEscapedRegexFromString from '../helpers/get-escaped-regex-from-string';
 
-export type upsertUserByEmailAddressesParams = {
-  emailsOfUserToUpsert: string[];
-  userUpsertRequest: UpsertUserRequest;
+type CreateUserParams = {
+  user: CreateUserRequest;
   auditDetails: AuditDetails;
 };
 
+type UpdateUserByIdParams = { userId: ObjectId; userUpdate: UpdateUserRequest; auditDetails: AuditDetails };
 export class UserRepo {
   /**
    * Gets the tfm users collection
-   * @returns The collection
+   * @returns The tfm users collection
    */
   private static async getCollection(): Promise<Collection<WithoutId<TfmUser>>> {
     return await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_USERS);
   }
 
+  /**
+   * Finds users by email addresses
+   * Will return multiple users if multiple users are found
+   * @param emails email addresses to search for
+   * @returns any matched TFM users
+   */
   public static async findUsersByEmailAddresses(emails: string[]): Promise<TfmUser[]> {
     const collection = await UserRepo.getCollection();
 
@@ -39,7 +44,15 @@ export class UserRepo {
     return await collection.find(query).toArray();
   }
 
-  public static async createUser({ user, auditDetails }: { user: CreateUserRequest; auditDetails: AuditDetails }): Promise<TfmUser> {
+  /**
+   * Create user
+   * @param createUserParams
+   * @param createUserParams.user
+   * @param createUserParams.auditDetails
+   * @returns The created user
+   * @throws DocumentNotCreatedError if the request is not acknowledged
+   */
+  public static async createUser({ user, auditDetails }: CreateUserParams): Promise<TfmUser> {
     const collection = await UserRepo.getCollection();
 
     const userToCreate: WithoutId<TfmUser> = {
@@ -57,7 +70,16 @@ export class UserRepo {
     return { _id: result.insertedId, ...userToCreate };
   }
 
-  public static async updateUserById({ userId, userUpdate, auditDetails }: { userId: ObjectId; userUpdate: UpdateUserRequest; auditDetails: AuditDetails }) {
+  /**
+   * Update user by ID
+   * @param updateUserByIdParams
+   * @param updateUserByIdParams.userId
+   * @param updateUserByIdParams.userUpdate
+   * @param updateUserByIdParams.auditDetails
+   * @returns The updated user
+   * @throws DocumentNotUpdatedError if the user is not updated
+   */
+  public static async updateUserById({ userId, userUpdate, auditDetails }: UpdateUserByIdParams) {
     const collection = await UserRepo.getCollection();
 
     const filter = { _id: { $eq: userId } };
