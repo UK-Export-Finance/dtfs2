@@ -20,12 +20,13 @@ export class UserService {
 
   /**
    * Used as part of the SSO process
+   *
    * Upserts a user from an Entra ID user
    *
    * This upsert works through ensuring that there is only one user with the email addresses provided by the Entra ID user,
    * throwing an error if multiple users are found
    *
-   * If no user is found, a new user is created
+   * If no user is found, a new user is created,
    * If one user is found, the user is updated
    *
    * Dev note: utilising the current database (Mongo's) upsert was originally considered, however due to the complexity of the upsert logic,
