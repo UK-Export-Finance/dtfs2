@@ -14,7 +14,7 @@ const mapFacilityValueExportCurrency = require('./mapFacilityValueExportCurrency
 const { mapBssEwcsFacilityStage } = require('./mapFacilityStage');
 
 /**
- * Maps a GEF facility snapshot in the database to the facility snapshot used in TFM-API and TFM-UI.
+ * Maps a BSS/EWCS facility snapshot in the database to the facility snapshot used in TFM-API and TFM-UI.
  * This function is only used on BSS/EWCS facilities.
  * This returns a facility object that represent the current facility state with all changes applied e.g. when amendments are added in TFM.
  * These values may differ from the facility snapshot in the database.
