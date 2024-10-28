@@ -1,11 +1,9 @@
 import { TfmFacility } from '@ukef/dtfs2-common';
-import { MOCK_FACILITY_SNAPSHOT } from '../../../__mocks__/mock-facility-snapshot';
 import { getUkefFacilityIds } from './get-ukef-facility-ids';
 
 const aFacility = ({ ukefFacilityId }: { ukefFacilityId: unknown }): TfmFacility =>
   ({
     facilitySnapshot: {
-      ...MOCK_FACILITY_SNAPSHOT,
       ukefFacilityId,
     },
   }) as TfmFacility;

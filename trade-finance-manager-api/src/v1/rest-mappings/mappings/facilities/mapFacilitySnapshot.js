@@ -59,7 +59,7 @@ const mapFacilitySnapshot = (facility, dealSnapshot) => {
 
   const formattedFacilityValue = formattedNumber(value);
 
-  clonedSnapshot.facilityStage = mapBssEwcsFacilityStage(facilityStage);
+  clonedSnapshot.facilityStage = mapBssEwcsFacilityStage(facilityStage, facilityTfm?.facilityStage);
 
   const mappedFacilitySnapshot = {
     // Fields in common with all facility types

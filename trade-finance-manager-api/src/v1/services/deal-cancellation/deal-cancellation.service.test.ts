@@ -16,13 +16,6 @@ const submitDealCancellationMock = jest.fn() as jest.Mock<Promise<TfmDealCancell
 jest.mock('../send-tfm-email');
 jest.mock('../../api', () => ({
   findOneTeam: jest.fn(() => ({ email: mockPimEmailAddress })),
-  findFacilitiesByDealId: jest.fn(() =>
-    ukefFacilityIds.map((ukefFacilityId) => ({
-      facilitySnapshot: {
-        ukefFacilityId,
-      },
-    })),
-  ),
   submitDealCancellation: jest.fn((params: AnyObject) => submitDealCancellationMock(params)),
 }));
 
@@ -40,6 +33,7 @@ describe('deal cancellation service', () => {
     beforeEach(() => {
       submitDealCancellationMock.mockResolvedValueOnce({
         cancelledDealUkefId: ukefDealId,
+        riskExpiredFacilityUkefIds: ukefFacilityIds,
       } as TfmDealCancellationResponse);
     });
 
