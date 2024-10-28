@@ -2,6 +2,12 @@ import { timezoneConfig } from '../timezone';
 import { ENTRA_ID_USER_SCHEMA } from './entra-id-user.schema';
 import { UPSERT_USER_REQUEST_SCHEMA } from './upsert-user-request.schema';
 
+/**
+ * Used during the SSO login process to upsert a user
+ * This is the transformer to transform the Entra ID user to the upsert user request
+ * @see ENTRA_ID_USER_SCHEMA for the Entra ID user schema received from Entra
+ * @see UPSERT_USER_REQUEST_SCHEMA for the target upsert request schema
+ */
 export const ENTRA_ID_USER_TO_UPSERT_USER_REQUEST_SCHEMA = ENTRA_ID_USER_SCHEMA.transform((entraIdUser) => ({
   azureOid: entraIdUser.oid,
   email: entraIdUser.verified_primary_email[0],

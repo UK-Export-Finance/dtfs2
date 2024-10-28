@@ -109,7 +109,7 @@ exports.update = async (_id, update, auditDetails, callback) => {
 
 /**
  * Creates or updates a TFM user from an Entra ID user.
- * Used during the login process to keep the TFM user in sync with the Entra ID user.
+ * Used during the SSO login process to keep the TFM user in sync with the Entra ID user.
  * @param {object} upsertUserParams
  * @param {import('@ukef/dtfs2-common').EntraIdUser} upsertUserParams.entraIdUser
  * @param {import('@ukef/dtfs2-common').AuditDetails} upsertUserParams.auditDetails
