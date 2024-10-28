@@ -1,6 +1,6 @@
 import { WithId } from 'mongodb';
 import { TeamId } from '../tfm/team-id';
-import { UnixTimestamp } from '../date';
+import { UnixTimestampMilliseconds } from '../date';
 import { AuditDatabaseRecord } from '../audit-database-record';
 
 /**
@@ -33,9 +33,8 @@ export type TfmUser = WithId<
     firstName: string;
     lastName: string;
     status: string;
-    lastLogin?: UnixTimestamp;
+    lastLogin?: UnixTimestampMilliseconds;
     sessionIdentifier?: string;
-    // Audit records may not exist on a user if it has not been modified after Audit Logs is released
     auditRecord?: AuditDatabaseRecord;
   } & Partial<NonSsoUserProperties> &
     Partial<SsoUserProperties>

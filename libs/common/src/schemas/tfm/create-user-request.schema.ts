@@ -1,5 +1,6 @@
 import z from 'zod';
 import { TfmTeamSchema } from './tfm-team.schema';
+import { UNIX_TIMESTAMP_MILLISECONDS_SCHEMA } from '../unix-timestamp.schema';
 
 /**
  * Used during the SSO login process when a user is required to be created in TFM
@@ -15,5 +16,5 @@ export const CREATE_USER_REQUEST_SCHEMA = z.object({
   timezone: z.string(),
   firstName: z.string(),
   lastName: z.string(),
-  lastLogin: z.number().int().positive(), // unix timestamp
+  lastLogin: UNIX_TIMESTAMP_MILLISECONDS_SCHEMA,
 });

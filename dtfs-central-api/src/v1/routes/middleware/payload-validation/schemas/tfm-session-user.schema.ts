@@ -1,5 +1,5 @@
 import z from 'zod';
-import { TfmTeamSchema } from '@ukef/dtfs2-common/schemas';
+import { TfmTeamSchema, UNIX_TIMESTAMP_MILLISECONDS_SCHEMA } from '@ukef/dtfs2-common/schemas';
 import { MongoObjectIdSchema } from './mongo-object-id.schema';
 
 export const TfmSessionUserSchema = z.object({
@@ -11,5 +11,5 @@ export const TfmSessionUserSchema = z.object({
   lastName: z.string(),
   status: z.string(),
   _id: MongoObjectIdSchema,
-  lastLogin: z.number().optional(),
+  lastLogin: UNIX_TIMESTAMP_MILLISECONDS_SCHEMA.optional(),
 });
