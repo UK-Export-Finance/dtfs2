@@ -37,7 +37,7 @@ describe('mapDealSnapshot', () => {
       ...mockDeal.dealSnapshot,
       submissionDetails: mapSubmissionDetails(MOCK_DEAL.submissionDetails),
       eligibility: mapEligibility(MOCK_DEAL.eligibility),
-      facilities: mapFacilities(mockFacilities, MOCK_DEAL.details, mockDeal.tfm),
+      facilities: mapFacilities(mockFacilities, MOCK_DEAL, mockDeal.tfm),
       totals: mapTotals(mockFacilities),
       isFinanceIncreasing: false,
     };
