@@ -8,7 +8,7 @@ import { CreateUserRequest } from '../../types';
  */
 
 type TestCasesParams = {
-  getTestObjectWithUpdatedCreateUserRequestParams: (userUpsertRequest: unknown) => unknown;
+  getTestObjectWithUpdatedCreateUserRequestParams: (createUserRequest: unknown) => unknown;
 };
 
 type WithCreateUserRequestSchemaTestsParams = {
@@ -30,7 +30,7 @@ export function aValidCreateUserRequest(): CreateUserRequest {
 
 export function withCreateUserRequestSchemaTests({
   schema,
-  getTestObjectWithUpdatedCreateUserRequestParams = (userUpsertRequest) => userUpsertRequest,
+  getTestObjectWithUpdatedCreateUserRequestParams = (createUserRequest) => createUserRequest,
 }: WithCreateUserRequestSchemaTestsParams) {
   describe('with CREATE_USER_REQUEST_SCHEMA tests', () => {
     withSchemaTests({
