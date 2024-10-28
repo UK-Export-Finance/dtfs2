@@ -28,14 +28,14 @@ describe('handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.status).toBe(expectedStatus);
+      expect(feeRecord.status).toEqual(expectedStatus);
     },
   );
 
   it('updates the last updated by fields to the request source', async () => {
     // Arrange
     const feeRecord = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT)
-      .withStatus('MATCH')
+      .withStatus(FEE_RECORD_STATUS.MATCH)
       .withLastUpdatedByIsSystemUser(true)
       .withLastUpdatedByPortalUserId(null)
       .withLastUpdatedByTfmUserId(null)
@@ -53,8 +53,8 @@ describe('handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
-    expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
+    expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
+    expect(feeRecord.lastUpdatedByTfmUserId).toEqual(userId);
     expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
   });
 

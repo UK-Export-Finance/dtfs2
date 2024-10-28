@@ -116,7 +116,7 @@ df.app.orchestration('acbs-facility', function* createFacility(context) {
     }
 
     return {
-      facilityId: facility._id,
+      facilityIdentifier: facility._id,
       facilityStage: helpers.getFacilityStageCode(facility.facilitySnapshot, deal.dealSnapshot.dealType),
       facilityMaster,
       facilityInvestor,

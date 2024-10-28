@@ -4,6 +4,7 @@ import { pageRenderer } from '../pageRenderer';
 import { aTfmSessionUser } from '../../test-helpers/test-data/tfm-session-user';
 import { UtilisationReportReconciliationForReportViewModel } from '../../server/types/view-models';
 import { TfmSessionUser } from '../../server/types/tfm-session-user';
+import { aUtilisationTableRowViewModel } from '../../test-helpers';
 
 const page = '../templates/utilisation-reports/utilisation-report-reconciliation-for-report.njk';
 const render = pageRenderer<UtilisationReportReconciliationForReportViewModel>(page);
@@ -24,6 +25,7 @@ describe(page, () => {
     facilityId: '1234',
   };
 
+  const downloadUrl = 'utilisation-reports/12345/download';
   const params: UtilisationReportReconciliationForReportViewModel = {
     user: aTfmSessionUser(),
     activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
@@ -34,7 +36,12 @@ describe(page, () => {
     enablePaymentsReceivedSorting: false,
     premiumPayments: [],
     keyingSheet: [],
-    paymentDetails: [],
+    paymentDetails: {
+      rows: [],
+      selectedFilters: null,
+    },
+    utilisationDetails: { utilisationTableRows: [], downloadUrl },
+    displayMatchSuccessNotification: false,
   };
 
   const getWrapper = (viewModel: UtilisationReportReconciliationForReportViewModel = params) => render(viewModel);
@@ -180,6 +187,22 @@ describe(page, () => {
 
       wrapper.expectElement(`div#premium-payments input[type="checkbox"]`).notToExist();
     });
+
+    it('should not display "match success notification" when param is false', () => {
+      const wrapper = getWrapper({ ...params, displayMatchSuccessNotification: false });
+
+      wrapper.expectElement('[data-cy="match-success-notification"]').notToExist();
+    });
+
+    it('should display "match success notification" when param is true', () => {
+      const wrapper = getWrapper({ ...params, displayMatchSuccessNotification: true });
+
+      wrapper.expectElement('[data-cy="match-success-notification"]').toExist();
+      wrapper.expectText('[data-cy="match-success-notification-heading"]').toRead('Match payment recorded');
+      wrapper
+        .expectText('[data-cy="match-success-notification-message"]')
+        .toRead('The fee(s) are now at a Match state. Further payments cannot be added to the fee record.');
+    });
   });
 
   describe('keying sheet tab', () => {
@@ -235,33 +258,47 @@ describe(page, () => {
   });
 
   describe('payment details tab', () => {
-    it('should render the payment details tab with headings and text when the payment details array is empty', () => {
-      const wrapper = getWrapper({ ...params, paymentDetails: [] });
+    it('should render the payment details tab with headings and text when the payment details rows array is empty', () => {
+      const wrapper = getWrapper({ ...params, paymentDetails: { rows: [], isFilterActive: false, selectedFilters: null } });
       const paymentDetailsTabSelector = 'div#payment-details';
 
       wrapper.expectText(`${paymentDetailsTabSelector} h2[data-cy="payment-details-heading"]`).toRead('Payment details');
       wrapper
-        .expectText(`${paymentDetailsTabSelector} p`)
+        .expectText(`${paymentDetailsTabSelector} p[data-cy="payment-details-no-payments-text"]`)
         .toMatch(/Payment details will be displayed when payments have been entered on the premium payments tab./);
+      wrapper.expectElement(`${paymentDetailsTabSelector} p[data-cy="payment-details-no-records-matching-filters-text"]`).notToExist();
+    });
+
+    it('should render the payment details tab with headings and no records matching filters text when the payment details rows array is empty and the filter is active', () => {
+      const wrapper = getWrapper({ ...params, paymentDetails: { rows: [], isFilterActive: true, selectedFilters: null } });
+      const paymentDetailsTabSelector = 'div#payment-details';
+
+      wrapper.expectText(`${paymentDetailsTabSelector} h2[data-cy="payment-details-heading"]`).toRead('Payment details');
+      wrapper
+        .expectText(`${paymentDetailsTabSelector} p[data-cy="payment-details-no-records-matching-filters-text"]`)
+        .toMatch(/There are no records matching the search criteria/);
+      wrapper.expectElement(`${paymentDetailsTabSelector} p[data-cy="payment-details-no-payments-text"]`).notToExist();
     });
 
     it('should render the payment details tab with headings (without text), the filters panel and the table when there are payment details', () => {
       const wrapper = getWrapper({
         ...params,
-        paymentDetails: [
-          {
-            payment: {
-              id: 1,
-              amount: { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 0 },
-              dateReceived: { formattedDateReceived: '1 Jan 2024', dataSortValue: 0 },
-              reference: undefined,
+        paymentDetails: {
+          rows: [
+            {
+              payment: {
+                id: 1,
+                amount: { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 0 },
+                dateReceived: { formattedDateReceived: '1 Jan 2024', dataSortValue: 0 },
+              },
+              feeRecords: [{ id: 1, facilityId: '12345678', exporter: 'Test exporter' }],
+              status: FEE_RECORD_STATUS.DOES_NOT_MATCH,
+              reconciledBy: '-',
+              dateReconciled: { formattedDateReconciled: '-', dataSortValue: 0 },
             },
-            feeRecords: [{ id: 1, facilityId: '12345678', exporter: 'Test exporter' }],
-            feeRecordPaymentGroupStatus: FEE_RECORD_STATUS.DOES_NOT_MATCH,
-            reconciledBy: '-',
-            dateReconciled: { formattedDateReconciled: '-', dataSortValue: 0 },
-          },
-        ],
+          ],
+          selectedFilters: null,
+        },
       });
       const paymentDetailsTabSelector = 'div#payment-details';
 
@@ -272,6 +309,70 @@ describe(page, () => {
       wrapper.expectElement(`${paymentDetailsTabSelector} [data-cy="payment-details--filters-action-bar"]`).toExist();
 
       wrapper.expectElement(`${paymentDetailsTabSelector} table`).toExist();
+    });
+
+    it('should render error summary when present', () => {
+      const wrapper = getWrapper({
+        ...params,
+        paymentDetails: {
+          rows: [],
+          filterErrors: {
+            errorSummary: [
+              { text: "You've done something wrong", href: '#id' },
+              { text: "You've done another thing wrong", href: '#other' },
+            ],
+          },
+          selectedFilters: null,
+        },
+      });
+
+      wrapper.expectElement('a[href="#id"]').toExist();
+      wrapper.expectText('a[href="#id"]').toRead("You've done something wrong");
+      wrapper.expectElement('a[href="#other"]').toExist();
+      wrapper.expectText('a[href="#other"]').toRead("You've done another thing wrong");
+    });
+  });
+
+  describe('utilisation tab', () => {
+    it('should render the utilisation tab header', () => {
+      const wrapper = getWrapper();
+
+      const utilisationTabSelector = 'div#utilisation';
+
+      wrapper.expectText(`${utilisationTabSelector} h2[data-cy="bank-report-heading"]`).toRead('Bank report');
+    });
+
+    it('should render the utilisation tab table', () => {
+      const feeRecordId = 12;
+      const wrapper = getWrapper({
+        ...params,
+        utilisationDetails: {
+          utilisationTableRows: [
+            {
+              ...aUtilisationTableRowViewModel(),
+              feeRecordId,
+            },
+          ],
+          downloadUrl,
+        },
+      });
+
+      const utilisationTabSelector = 'div#utilisation';
+
+      wrapper.expectElement(`${utilisationTabSelector} table`).toExist();
+      wrapper.expectElement(`${utilisationTabSelector} table tr[data-cy="utilisation-table-row-${feeRecordId}"]`);
+    });
+
+    it('should render the download link for the report', () => {
+      const wrapper = getWrapper({
+        ...params,
+        utilisationDetails: {
+          utilisationTableRows: [aUtilisationTableRowViewModel()],
+          downloadUrl,
+        },
+      });
+
+      wrapper.expectLink('[data-cy="download-report-link"]').toLinkTo(downloadUrl, 'Download the report submitted by the bank as a CSV');
     });
   });
 });

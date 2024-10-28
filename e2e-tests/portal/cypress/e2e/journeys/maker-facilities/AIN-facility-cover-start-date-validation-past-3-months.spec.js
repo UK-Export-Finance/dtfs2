@@ -5,6 +5,7 @@ const relative = require('../../relativeURL');
 const AINDeal = require('./fixtures/AIN-deal-submitted-3-months-more');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const { LONG_FORM_DATE_FORMAT } = require('../../../fixtures/constants');
+const { oneYear } = require('../../../../../e2e-fixtures/dateConstants');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
@@ -15,11 +16,6 @@ context('Issue facilities beyond 3 months of submission - errors', () => {
     bonds: [],
     loans: [],
   };
-
-  const date = new Date();
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
 
   const submissionDate = new Date(AINDeal.details.submissionDate);
   const submissionDateFormatted = format(submissionDate, LONG_FORM_DATE_FORMAT);
@@ -55,7 +51,7 @@ context('Issue facilities beyond 3 months of submission - errors', () => {
     });
   });
 
-  it('should show an error for bond cover start date beyond 3 years from submission date', () => {
+  it('should show an error for bond cover start date beyond 3 months from submission date', () => {
     cy.login(BANK1_MAKER1);
 
     pages.contract.visit(deal);
@@ -68,13 +64,9 @@ context('Issue facilities beyond 3 months of submission - errors', () => {
       cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
 
       // cover starts on submission
-      cy.keyboardInput(pages.bondIssueFacility.issuedDateDayInput(), day);
-      cy.keyboardInput(pages.bondIssueFacility.issuedDateMonthInput(), month);
-      cy.keyboardInput(pages.bondIssueFacility.issuedDateYearInput(), year);
+      cy.completeDateFormFields({ idPrefix: 'issuedDate' });
 
-      cy.keyboardInput(pages.bondIssueFacility.coverEndDateDayInput(), day);
-      cy.keyboardInput(pages.bondIssueFacility.coverEndDateMonthInput(), month);
-      cy.keyboardInput(pages.bondIssueFacility.coverEndDateYearInput(), year + 1);
+      cy.completeDateFormFields({ idPrefix: 'coverEndDate', date: oneYear.date });
 
       cy.clickSubmitButton();
       pages.bondIssueFacility
@@ -82,10 +74,7 @@ context('Issue facilities beyond 3 months of submission - errors', () => {
         .contains(`Requested Cover Start Date must be between ${submissionDateFormatted} and ${submissionDatePlus3Months}`);
 
       // cover starts beyond 3 months from submission
-
-      cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateDayInput(), day);
-      cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateMonthInput(), month);
-      cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateYearInput(), year + 1);
+      cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: oneYear.date });
 
       cy.clickSubmitButton();
       pages.bondIssueFacility
@@ -108,14 +97,9 @@ context('Issue facilities beyond 3 months of submission - errors', () => {
       cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanId}/issue-facility`));
 
       // cover starts on submission
+      cy.completeDateFormFields({ idPrefix: 'issuedDate' });
 
-      cy.keyboardInput(pages.loanIssueFacility.issuedDateDayInput(), day);
-      cy.keyboardInput(pages.loanIssueFacility.issuedDateMonthInput(), month);
-      cy.keyboardInput(pages.loanIssueFacility.issuedDateYearInput(), year);
-
-      cy.keyboardInput(pages.loanIssueFacility.coverEndDateDayInput(), day);
-      cy.keyboardInput(pages.loanIssueFacility.coverEndDateMonthInput(), month);
-      cy.keyboardInput(pages.loanIssueFacility.coverEndDateYearInput(), year + 1);
+      cy.completeDateFormFields({ idPrefix: 'coverEndDate', date: oneYear.date });
 
       cy.clickSubmitButton();
       pages.loanIssueFacility
@@ -123,10 +107,7 @@ context('Issue facilities beyond 3 months of submission - errors', () => {
         .contains(`Requested Cover Start Date must be between ${submissionDateFormatted} and ${submissionDatePlus3Months}`);
 
       // cover starts beyond 3 months from submission
-
-      cy.keyboardInput(pages.loanIssueFacility.requestedCoverStartDateDayInput(), day);
-      cy.keyboardInput(pages.loanIssueFacility.requestedCoverStartDateMonthInput(), month);
-      cy.keyboardInput(pages.loanIssueFacility.requestedCoverStartDateYearInput(), year);
+      cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate' });
 
       cy.clickSubmitButton();
       pages.loanIssueFacility
@@ -143,11 +124,6 @@ context('Issue facilities beyond 3 months of submission specialIssuePermission -
     bonds: [],
     loans: [],
   };
-
-  const date = new Date();
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
 
   before(() => {
     cy.deleteDeals(ADMIN);
@@ -195,13 +171,9 @@ context('Issue facilities beyond 3 months of submission specialIssuePermission -
       cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
 
       // cover starts on submission
-      cy.keyboardInput(pages.bondIssueFacility.issuedDateDayInput(), day);
-      cy.keyboardInput(pages.bondIssueFacility.issuedDateMonthInput(), month);
-      cy.keyboardInput(pages.bondIssueFacility.issuedDateYearInput(), year);
+      cy.completeDateFormFields({ idPrefix: 'issuedDate' });
 
-      cy.keyboardInput(pages.bondIssueFacility.coverEndDateDayInput(), day);
-      cy.keyboardInput(pages.bondIssueFacility.coverEndDateMonthInput(), month);
-      cy.keyboardInput(pages.bondIssueFacility.coverEndDateYearInput(), year + 1);
+      cy.completeDateFormFields({ idPrefix: 'coverEndDate', date: oneYear.date });
 
       cy.clickSubmitButton();
       cy.url().should('eq', relative(`/contract/${dealId}`));
@@ -209,9 +181,8 @@ context('Issue facilities beyond 3 months of submission specialIssuePermission -
       cy.assertText(bondRow.issueFacilityLink(), 'Facility issued');
 
       bondRow.issueFacilityLink().click();
-      cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateDayInput(), day);
-      cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateMonthInput(), month);
-      cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateYearInput(), year);
+
+      cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate' });
 
       cy.clickSubmitButton();
       cy.url().should('eq', relative(`/contract/${dealId}`));
@@ -233,14 +204,9 @@ context('Issue facilities beyond 3 months of submission specialIssuePermission -
       cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanId}/issue-facility`));
 
       // cover starts on submission
+      cy.completeDateFormFields({ idPrefix: 'issuedDate' });
 
-      cy.keyboardInput(pages.loanIssueFacility.issuedDateDayInput(), day);
-      cy.keyboardInput(pages.loanIssueFacility.issuedDateMonthInput(), month);
-      cy.keyboardInput(pages.loanIssueFacility.issuedDateYearInput(), year);
-
-      cy.keyboardInput(pages.loanIssueFacility.coverEndDateDayInput(), day);
-      cy.keyboardInput(pages.loanIssueFacility.coverEndDateMonthInput(), month);
-      cy.keyboardInput(pages.loanIssueFacility.coverEndDateYearInput(), year + 1);
+      cy.completeDateFormFields({ idPrefix: 'coverEndDate', date: oneYear.date });
 
       cy.clickSubmitButton();
       cy.url().should('eq', relative(`/contract/${dealId}`));
@@ -250,9 +216,7 @@ context('Issue facilities beyond 3 months of submission specialIssuePermission -
       // cover starts beyond 3 months from submission
       loanRow.issueFacilityLink().click();
 
-      cy.keyboardInput(pages.loanIssueFacility.requestedCoverStartDateDayInput(), day);
-      cy.keyboardInput(pages.loanIssueFacility.requestedCoverStartDateMonthInput(), month);
-      cy.keyboardInput(pages.loanIssueFacility.requestedCoverStartDateYearInput(), year);
+      cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate' });
 
       cy.clickSubmitButton();
       cy.url().should('eq', relative(`/contract/${dealId}`));

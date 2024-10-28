@@ -60,6 +60,8 @@ Cypress.Commands.add('clickSaveGoBackButton', require('./portal/click-events/cli
 Cypress.Commands.add('clickSubmitButton', require('./portal/click-events/click-submit-button'));
 Cypress.Commands.add('clickDashboardDealLink', require('./portal/click-events/click-dashboard-deal-link'));
 
+Cypress.Commands.add('completeDateFormFields', require('./portal/completeDateFormFields'));
+
 Cypress.Commands.add('addBondToDeal', require('./portal/addBondToDeal'));
 Cypress.Commands.add('addLoanToDeal', require('./portal/addLoanToDeal'));
 Cypress.Commands.add('createADeal', require('./portal/createADeal'));

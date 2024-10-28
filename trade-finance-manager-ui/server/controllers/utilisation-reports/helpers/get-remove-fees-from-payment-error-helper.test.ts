@@ -11,8 +11,8 @@ describe('get-remove-fees-from-payment-error-helper', () => {
 
       // Assert
       expect(errors.errorSummary).toHaveLength(1);
-      expect(errors.errorSummary[0].text).toBe('Select fee or fees to remove from the payment');
-      expect(errors.errorSummary[0].href).toBe('#added-reported-fees-details-header');
+      expect(errors.errorSummary[0].text).toEqual('Select fee or fees to remove from the payment');
+      expect(errors.errorSummary[0].href).toEqual('#added-reported-fees-details-header');
     });
 
     it("sets remove selected fees error message when the payment error key is 'no-fee-records-selected'", () => {
@@ -23,7 +23,7 @@ describe('get-remove-fees-from-payment-error-helper', () => {
       const errors = getRemoveFeesFromPaymentError(removeFeesFromPaymentErrorKey);
 
       // Assert
-      expect(errors.removeSelectedFeesErrorMessage).toBe('Select fee or fees to remove from the payment');
+      expect(errors.removeSelectedFeesErrorMessage).toEqual('Select fee or fees to remove from the payment');
     });
 
     it("sets error summary to a single error with text and href when the payment error key is 'all-fee-records-selected'", () => {
@@ -35,8 +35,8 @@ describe('get-remove-fees-from-payment-error-helper', () => {
 
       // Assert
       expect(errors.errorSummary).toHaveLength(1);
-      expect(errors.errorSummary[0].text).toBe('You cannot remove all the fees. Delete the payment instead.');
-      expect(errors.errorSummary[0].href).toBe('#added-reported-fees-details-header');
+      expect(errors.errorSummary[0].text).toEqual('You cannot remove all the fees. Delete the payment instead.');
+      expect(errors.errorSummary[0].href).toEqual('#added-reported-fees-details-header');
     });
 
     it("sets remove selected fees error message whe the payment error key is 'all-fee-records-selected'", () => {
@@ -47,7 +47,7 @@ describe('get-remove-fees-from-payment-error-helper', () => {
       const error = getRemoveFeesFromPaymentError(removeFeesFromPaymentErrorKey);
 
       // Assert
-      expect(error.removeSelectedFeesErrorMessage).toBe('You cannot remove all the fees. Delete the payment instead.');
+      expect(error.removeSelectedFeesErrorMessage).toEqual('You cannot remove all the fees. Delete the payment instead.');
     });
   });
 });

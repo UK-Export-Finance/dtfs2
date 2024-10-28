@@ -40,9 +40,9 @@ describe('getBanks', () => {
       await getBanks(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
       expect(res._getData()).toEqual(banks);
-      expect(res._isEndCalled()).toBe(true);
+      expect(res._isEndCalled()).toEqual(true);
       expect(findReportingYearsByBankIdSpy).not.toHaveBeenCalled();
     });
   });
@@ -81,9 +81,9 @@ describe('getBanks', () => {
       await getBanks(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
       expect(res._getData()).toEqual(banksWithReportingYears);
-      expect(res._isEndCalled()).toBe(true);
+      expect(res._isEndCalled()).toEqual(true);
       expect(findReportingYearsByBankIdSpy).not.toHaveBeenCalledWith('789');
     });
   });

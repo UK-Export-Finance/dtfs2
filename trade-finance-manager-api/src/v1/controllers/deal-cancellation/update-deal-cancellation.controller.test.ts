@@ -61,7 +61,7 @@ describe('controllers - deal cancellation', () => {
       await updateDealCancellation(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
       expect(res._getData()).toEqual(mockUpdateResult);
     });
 
@@ -81,7 +81,7 @@ describe('controllers - deal cancellation', () => {
       await updateDealCancellation(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(testErrorStatus);
+      expect(res._getStatusCode()).toEqual(testErrorStatus);
       expect(res._getData()).toEqual({ message: `Failed to update deal cancellation: ${testApiErrorMessage}`, status: testErrorStatus });
     });
 
@@ -99,7 +99,7 @@ describe('controllers - deal cancellation', () => {
       await updateDealCancellation(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
       expect(res._getData()).toEqual({ message: 'Failed to update deal cancellation', status: 500 });
     });
   });

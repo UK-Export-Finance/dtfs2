@@ -8,6 +8,7 @@ import {
   SelectedFeeRecordsDetails,
   SelectedFeeRecordsPaymentDetails,
   SelectedFeeRecordsAvailablePaymentGroups,
+  FEE_RECORD_STATUS,
 } from '@ukef/dtfs2-common';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
@@ -73,7 +74,7 @@ export const canFeeRecordsBeAddedToExistingPayment = async (reportId: string, fe
     return false;
   }
 
-  const anyFeeRecordDoesNotHaveStatusToDo = feeRecords.some((record) => record.status !== 'TO_DO');
+  const anyFeeRecordDoesNotHaveStatusToDo = feeRecords.some((record) => record.status !== FEE_RECORD_STATUS.TO_DO);
   if (anyFeeRecordDoesNotHaveStatusToDo) {
     return false;
   }

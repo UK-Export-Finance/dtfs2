@@ -1,11 +1,6 @@
-import { format } from 'date-fns';
-
 import relative from '../../../../relativeURL';
-
 import CONSTANTS from '../../../../../fixtures/constants';
-
-import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
-
+import { twoYears, threeYears, threeMonthsOneDay, today } from '../../../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_MIN } from '../../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { multipleMockGefFacilities } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
@@ -14,7 +9,6 @@ import applicationPreview from '../../../../pages/application-preview';
 import unissuedFacilityTable from '../../../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../../../pages/unissued-facilities-about-facility';
 import applicationSubmission from '../../../../pages/application-submission';
-import facilityEndDate from '../../../../pages/facility-end-date';
 
 let dealId;
 let token;
@@ -81,25 +75,18 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.todayDay);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.todayMonth);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.todayYear);
+      cy.completeDateFormFields({ idPrefix: 'issue-date' });
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.twoYearsDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.twoYearsMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.twoYearsYear);
 
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.threeYearsDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeYearsMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeYearsYear);
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoYears.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeYears.date });
 
       aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       cy.clickContinueButton();
 
-      cy.keyboardInput(facilityEndDate.facilityEndDateDay(), dateConstants.threeYearsDay);
-      cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), dateConstants.threeYearsMonth);
-      cy.keyboardInput(facilityEndDate.facilityEndDateYear(), dateConstants.threeYearsYear);
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeYears.date });
+
       cy.clickContinueButton();
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);
@@ -121,9 +108,9 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
     });
 
     it('facility table should have change links on the changed to issued facilities', () => {
-      const issuedDate = format(dateConstants.today, 'd MMMM yyyy');
-      const coverStart = format(dateConstants.twoYears, 'd MMMM yyyy');
-      const coverEnd = format(dateConstants.threeYears, 'd MMMM yyyy');
+      const issuedDate = today.d_MMMM_yyyy;
+      const coverStart = twoYears.d_MMMM_yyyy;
+      const coverEnd = threeYears.d_MMMM_yyyy;
 
       // can change facility one name and issue dates etc since changed to issued
       applicationPreview.facilitySummaryListTable(3).nameValue().contains(unissuedCashFacility.name);
@@ -178,30 +165,25 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
 
       cy.keyboardInput(aboutFacilityUnissued.facilityName(), `${unissuedCashFacilityWith20MonthsOfCover.name}name`);
 
-      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.todayDay);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.todayMonth);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.todayYear);
+      cy.completeDateFormFields({ idPrefix: 'issue-date' });
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();
 
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.threeYearsDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeYearsMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeYearsYear);
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeYears.date });
 
       aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
 
       cy.clickContinueButton();
 
-      cy.keyboardInput(facilityEndDate.facilityEndDateDay(), dateConstants.threeMonthsOneDayDay);
-      cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
-      cy.keyboardInput(facilityEndDate.facilityEndDateYear(), dateConstants.threeMonthsOneDayYear);
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay.date });
+
       cy.clickContinueButton();
     });
 
     it('change links should appear for facility four and three should be unissued still', () => {
-      const issuedDate = format(dateConstants.today, 'd MMMM yyyy');
-      const coverStartNow = format(dateConstants.today, 'd MMMM yyyy');
-      const coverEnd = format(dateConstants.threeYears, 'd MMMM yyyy');
+      const issuedDate = today.d_MMMM_yyyy;
+      const coverStartNow = today.d_MMMM_yyyy;
+      const coverEnd = threeYears.d_MMMM_yyyy;
 
       applicationPreview.reviewFacilityStage().contains('Review facility stage');
       applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');

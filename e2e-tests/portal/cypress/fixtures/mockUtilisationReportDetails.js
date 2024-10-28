@@ -1,4 +1,4 @@
-const { eachMonthOfInterval, getYear, getMonth, subMonths } = require('date-fns');
+const { eachMonthOfInterval, getYear, getMonth, subMonths, addMonths } = require('date-fns');
 const { UtilisationReportEntityMockBuilder, AzureFileInfoEntity, MOCK_AZURE_FILE_INFO } = require('@ukef/dtfs2-common');
 const { BANK1_PAYMENT_REPORT_OFFICER1, BANK2_PAYMENT_REPORT_OFFICER1 } = require('../../../e2e-fixtures');
 
@@ -97,6 +97,12 @@ const upToDateReportDetails = generateUpToDateReportDetails();
 const tfmFacilityForReport = {
   facilitySnapshot: {
     ukefFacilityId: '20001371',
+    value: 1000,
+    coverStartDate: new Date(),
+    coverEndDate: addMonths(new Date(), 5),
+    interestPercentage: 5,
+    dayCountBasis: 5,
+    coverPercentage: 80,
   },
 };
 

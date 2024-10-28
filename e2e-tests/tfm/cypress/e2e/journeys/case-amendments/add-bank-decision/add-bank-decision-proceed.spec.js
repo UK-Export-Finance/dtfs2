@@ -5,17 +5,7 @@ import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import caseDealPage from '../../../pages/caseDealPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import {
-  oneMonthFormattedTable,
-  todayDay,
-  todayMonth,
-  todayYear,
-  tomorrowDay,
-  tomorrowMonth,
-  tomorrowYear,
-  oneMonthFormattedFull,
-  tomorrowFormattedFull,
-} from '../../../../../../e2e-fixtures/dateConstants';
+import { oneMonth, tomorrow, yearWithZeroLetter } from '../../../../../../e2e-fixtures/dateConstants';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS } from '../../../../../../e2e-fixtures';
 import pages from '../../../pages';
 import { CURRENCY } from '../../../../../../e2e-fixtures/constants.fixture';
@@ -62,7 +52,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
     cy.visit(relative(`/case/${dealId}/deal`));
     caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(oneMonthFormattedTable);
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
     caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
@@ -73,7 +63,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 12,345.00`);
     facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
 
-    facilityPage.facilityCoverEndDate().contains(oneMonthFormattedTable);
+    facilityPage.facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
     facilityPage.facilityTenor().contains(facilityTenor);
   });
 
@@ -88,9 +78,8 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), todayYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--request-date' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
@@ -110,9 +99,8 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), tomorrowDay);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), tomorrowMonth);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), tomorrowYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: tomorrow.date });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-value');
@@ -155,8 +143,8 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     cy.url().should('contain', '/managers-conditions');
 
     amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
-    amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', tomorrowDay);
-    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonthFormattedFull);
+    amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', tomorrow.dayLong);
+    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
 
     amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
@@ -194,8 +182,8 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     amendmentsPage.amendmentSendToBankButton().should('be.visible');
 
     amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
-    amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', tomorrowDay);
-    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonthFormattedFull);
+    amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', tomorrow.dayLong);
+    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
 
     amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
@@ -210,7 +198,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
     cy.visit(relative(`/case/${dealId}/deal`));
     caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(oneMonthFormattedTable);
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
     caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
@@ -221,7 +209,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 12,345.00`);
     facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
 
-    facilityPage.facilityCoverEndDate().contains(oneMonthFormattedTable);
+    facilityPage.facilityCoverEndDate().contains(oneMonth.d_MMMM_yyyy);
     facilityPage.facilityTenor().contains(facilityTenor);
   });
 
@@ -280,44 +268,35 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     errorSummary().contains("Enter the date UKEF received the bank's decision");
     amendmentsPage.errorMessage().contains("Enter the date UKEF received the bank's decision");
 
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateYear(), '2022');
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: null, year: '2022' });
 
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/received-date');
     errorSummary().contains("Enter the date UKEF received the bank's decision");
     amendmentsPage.errorMessage().contains("Enter the date UKEF received the bank's decision");
 
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateMonth(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateYear(), '22');
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '22' });
 
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/received-date');
     errorSummary().contains('The year must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year must include 4 numbers');
 
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateMonth(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateYear(), '2O22');
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '2o22' });
 
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/received-date');
     errorSummary().contains('The year must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year must include 4 numbers');
 
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateMonth(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateYear(), '2 022');
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '2 022' });
 
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/received-date');
     errorSummary().contains('The year must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year must include 4 numbers');
 
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateMonth(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateYear(), '2 22');
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '2 22' });
 
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/received-date');
@@ -334,9 +313,8 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/received-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateMonth(), '06');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateYear(), '2022');
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '06', year: '2022' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/effective-date');
@@ -360,26 +338,23 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     errorSummary().contains('Enter the date the amendment will be effective from');
     amendmentsPage.errorMessage().contains('Enter the date the amendment will be effective from');
 
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateYear(), '2022');
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: null, year: '2022' });
     cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/effective-date');
     errorSummary().contains('Enter the date the amendment will be effective from');
     amendmentsPage.errorMessage().contains('Enter the date the amendment will be effective from');
 
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateMonth(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateYear(), '22');
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '22' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/effective-date');
     errorSummary().contains('The year must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year must include 4 numbers');
 
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateMonth(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateYear(), '2O22');
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: yearWithZeroLetter });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/effective-date');
@@ -398,9 +373,8 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/effective-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateMonth(), '06');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateYear(), '2022');
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '06', year: '2022' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/check-answers');
@@ -517,7 +491,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
     cy.visit(relative(`/case/${dealId}/deal`));
     caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(updatedFacilityTenor);
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(tomorrowFormattedFull);
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(tomorrow.d_MMMM_yyyy);
     caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 123.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 123.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 24.60`);
@@ -528,7 +502,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 123.00`);
     facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60 as at 5 June 2022`);
 
-    facilityPage.facilityCoverEndDate().contains(tomorrowFormattedFull);
+    facilityPage.facilityCoverEndDate().contains(tomorrow.d_MMMM_yyyy);
     facilityPage.facilityTenor().contains(updatedFacilityTenor);
   });
 });

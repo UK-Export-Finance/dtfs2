@@ -93,6 +93,13 @@ export const eStoreDocumentsCreationJob = async (eStoreData: Estore): Promise<vo
      */
     const someDocumentsFailed = responses.some((document) => document?.status === Number(HttpStatusCode.BadRequest));
 
+    /**
+     * When either one or more documents upload fail due to any internal server error.
+     * This can happen due to duplicate documents, connection termination (leaving temporary files on eStore)
+     * and for any other unknown reason
+     */
+    const anyInternalServerErrorDocument = responses.some((document) => document?.status === Number(HttpStatusCode.InternalServerError));
+
     // Validate each and every response status code
     if (allDocumentsCreated) {
       console.info('✅ All %i supporting documents have been created for deal %s', supportingInformation.length, dealIdentifier);
@@ -111,8 +118,6 @@ export const eStoreDocumentsCreationJob = async (eStoreData: Estore): Promise<vo
         category: ENDPOINT.DOCUMENT,
         kill: true,
       });
-
-      // Initiate document upload
     } else if (someDocumentsFailed) {
       console.info('⚡ eStore documents creation is still in progress for deal %s', dealIdentifier);
 
@@ -123,6 +128,8 @@ export const eStoreDocumentsCreationJob = async (eStoreData: Estore): Promise<vo
           timestamp: getNowAsEpoch(),
         },
       });
+    } else if (anyInternalServerErrorDocument) {
+      throw new Error(JSON.stringify(responses));
     } else {
       throw new Error(`eStore documents creation have failed for deal ${dealIdentifier} ${JSON.stringify(responses)}`);
     }

@@ -34,7 +34,7 @@ describe('payment-form-helpers', () => {
         const { isAddingPayment } = extractAddPaymentFormValuesAndValidateIfPresent(body, 'GBP');
 
         // Assert
-        expect(isAddingPayment).toBe(false);
+        expect(isAddingPayment).toEqual(false);
       });
 
       it('sets the errors property to the empty payment errors view model', () => {
@@ -74,7 +74,7 @@ describe('payment-form-helpers', () => {
         const { isAddingPayment } = extractAddPaymentFormValuesAndValidateIfPresent(body, 'GBP');
 
         // Assert
-        expect(isAddingPayment).toBe(true);
+        expect(isAddingPayment).toEqual(true);
       });
 
       it('sets the formValues paymentCurrency property to the requestBody paymentCurrency', () => {
@@ -89,7 +89,7 @@ describe('payment-form-helpers', () => {
         const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, 'GBP');
 
         // Assert
-        expect(formValues.paymentCurrency).toBe('USD');
+        expect(formValues.paymentCurrency).toEqual('USD');
       });
 
       it('sets the formValues paymentAmount property to the requestBody paymentAmount', () => {
@@ -104,7 +104,7 @@ describe('payment-form-helpers', () => {
         const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, 'GBP');
 
         // Assert
-        expect(formValues.paymentAmount).toBe('314.59');
+        expect(formValues.paymentAmount).toEqual('314.59');
       });
 
       it('sets the formValues paymentDate day property to the requestBody paymentDate-day', () => {
@@ -119,7 +119,7 @@ describe('payment-form-helpers', () => {
         const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, 'GBP');
 
         // Assert
-        expect(formValues.paymentDate.day).toBe('10');
+        expect(formValues.paymentDate.day).toEqual('10');
       });
 
       it('sets the formValues paymentDate month property to the requestBody paymentDate-month', () => {
@@ -134,7 +134,7 @@ describe('payment-form-helpers', () => {
         const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, 'GBP');
 
         // Assert
-        expect(formValues.paymentDate.month).toBe('6');
+        expect(formValues.paymentDate.month).toEqual('6');
       });
 
       it('sets the formValues paymentDate year property to the requestBody paymentDate-year', () => {
@@ -149,7 +149,7 @@ describe('payment-form-helpers', () => {
         const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, 'GBP');
 
         // Assert
-        expect(formValues.paymentDate.year).toBe('2024');
+        expect(formValues.paymentDate.year).toEqual('2024');
       });
 
       it('sets the formValues paymentReference property to the requestBody paymentReference', () => {
@@ -164,7 +164,7 @@ describe('payment-form-helpers', () => {
         const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, 'GBP');
 
         // Assert
-        expect(formValues.paymentReference).toBe('A payment reference');
+        expect(formValues.paymentReference).toEqual('A payment reference');
       });
 
       it('sets the formValues addAnotherPayment property to the requestBody addAnotherPayment', () => {
@@ -179,7 +179,7 @@ describe('payment-form-helpers', () => {
         const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, 'GBP');
 
         // Assert
-        expect(formValues.addAnotherPayment).toBe('true');
+        expect(formValues.addAnotherPayment).toEqual('true');
       });
 
       it('sets the errors property to the result of the validateAddPaymentRequestFormValues function', () => {
@@ -228,7 +228,7 @@ describe('payment-form-helpers', () => {
       const formValues = extractEditPaymentFormValues(body);
 
       // Assert
-      expect(formValues.paymentAmount).toBe('314.59');
+      expect(formValues.paymentAmount).toEqual('314.59');
     });
 
     it('sets the formValues paymentDate day property to the requestBody paymentDate-day', () => {
@@ -242,7 +242,7 @@ describe('payment-form-helpers', () => {
       const formValues = extractEditPaymentFormValues(body);
 
       // Assert
-      expect(formValues.paymentDate.day).toBe('10');
+      expect(formValues.paymentDate.day).toEqual('10');
     });
 
     it('sets the formValues paymentDate month property to the requestBody paymentDate-month', () => {
@@ -256,7 +256,7 @@ describe('payment-form-helpers', () => {
       const formValues = extractEditPaymentFormValues(body);
 
       // Assert
-      expect(formValues.paymentDate.month).toBe('6');
+      expect(formValues.paymentDate.month).toEqual('6');
     });
 
     it('sets the formValues paymentDate year property to the requestBody paymentDate-year', () => {
@@ -270,7 +270,7 @@ describe('payment-form-helpers', () => {
       const formValues = extractEditPaymentFormValues(body);
 
       // Assert
-      expect(formValues.paymentDate.year).toBe('2024');
+      expect(formValues.paymentDate.year).toEqual('2024');
     });
 
     it('sets the formValues paymentReference property to the requestBody paymentReference', () => {
@@ -284,7 +284,7 @@ describe('payment-form-helpers', () => {
       const formValues = extractEditPaymentFormValues(body);
 
       // Assert
-      expect(formValues.paymentReference).toBe('A payment reference');
+      expect(formValues.paymentReference).toEqual('A payment reference');
     });
 
     function aValidEditPaymentFormRequestBody(): EditPaymentFormRequestBody {
@@ -311,7 +311,7 @@ describe('payment-form-helpers', () => {
         const { isAddingToAnExistingPayment } = extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent(requestBody);
 
         // Assert
-        expect(isAddingToAnExistingPayment).toBe(false);
+        expect(isAddingToAnExistingPayment).toEqual(false);
       });
 
       it('sets the errors property to the empty payment errors view model', () => {
@@ -342,7 +342,7 @@ describe('payment-form-helpers', () => {
         const { isAddingToAnExistingPayment } = extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent(requestBody);
 
         // Assert
-        expect(isAddingToAnExistingPayment).toBe(true);
+        expect(isAddingToAnExistingPayment).toEqual(true);
       });
 
       it('sets the errors property to the result of the validateAddPaymentRequestFormValues function', () => {

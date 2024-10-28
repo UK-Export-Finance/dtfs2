@@ -72,6 +72,6 @@ describe('formatYear', () => {
   it.each(testData)('$description', ({ mockValue, expected }) => {
     const result = formatYear(mockValue);
 
-    expect(result).toBe(expected);
+    expect(result).toEqual(expected);
   });
 });

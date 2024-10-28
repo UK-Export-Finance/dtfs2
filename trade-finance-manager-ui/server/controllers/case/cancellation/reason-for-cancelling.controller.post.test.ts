@@ -1,6 +1,6 @@
 import { createMocks } from 'node-mocks-http';
 import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
-import { aTfmSessionUser } from '../../../../test-helpers';
+import { aRequestSession } from '../../../../test-helpers';
 import { postReasonForCancelling, PostReasonForCancellingRequest } from './reason-for-cancelling.controller';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { ReasonForCancellingErrorsViewModel, ReasonForCancellingViewModel } from '../../../types/view-models';
@@ -22,7 +22,6 @@ jest.mock('../../../api', () => ({
 
 const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
-const mockUser = aTfmSessionUser();
 
 describe('postReasonForCancelling', () => {
   beforeEach(() => {
@@ -37,10 +36,7 @@ describe('postReasonForCancelling', () => {
 
     const { req, res } = createMocks<PostReasonForCancellingRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
       body: {
         reason: 'reasonForCancelling',
       },
@@ -50,7 +46,7 @@ describe('postReasonForCancelling', () => {
     await postReasonForCancelling(req, res);
 
     // Assert
-    expect(res._getRedirectUrl()).toBe(`/not-found`);
+    expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
 
   it('redirects to not found if the dealId is invalid', async () => {
@@ -59,10 +55,7 @@ describe('postReasonForCancelling', () => {
 
     const { req, res } = createMocks<PostReasonForCancellingRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
       body: {
         reason: 'reasonForCancelling',
       },
@@ -72,7 +65,7 @@ describe('postReasonForCancelling', () => {
     await postReasonForCancelling(req, res);
 
     // Assert
-    expect(res._getRedirectUrl()).toBe(`/not-found`);
+    expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
 
   it('redirects to deal summary page if the submission type is invalid (MIA)', async () => {
@@ -81,10 +74,7 @@ describe('postReasonForCancelling', () => {
 
     const { req, res } = createMocks<PostReasonForCancellingRequest>({
       params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      session: aRequestSession(),
       body: {
         reason: 'reasonForCancelling',
       },
@@ -94,7 +84,7 @@ describe('postReasonForCancelling', () => {
     await postReasonForCancelling(req, res);
 
     // Assert
-    expect(res._getRedirectUrl()).toBe(`/case/${dealId}/deal`);
+    expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
   });
 
   describe.each([DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN])('when the deal type is %s', (validDealType) => {
@@ -114,10 +104,7 @@ describe('postReasonForCancelling', () => {
         const reasonForCancelling = 'reasonForCancelling';
         const { req, res } = createMocks<PostReasonForCancellingRequest>({
           params: { _id: dealId },
-          session: {
-            user: mockUser,
-            userToken: 'a user token',
-          },
+          session: aRequestSession(),
           body: {
             reason: reasonForCancelling,
           },
@@ -133,12 +120,11 @@ describe('postReasonForCancelling', () => {
       it('renders the reason for cancelling page with errors', async () => {
         // Arrange
         const reasonForCancelling = 'reasonForCancelling';
+        const session = aRequestSession();
+
         const { req, res } = createMocks<PostReasonForCancellingRequest>({
           params: { _id: dealId },
-          session: {
-            user: mockUser,
-            userToken: 'a user token',
-          },
+          session,
           body: {
             reason: reasonForCancelling,
           },
@@ -151,11 +137,43 @@ describe('postReasonForCancelling', () => {
         expect(res._getRenderView()).toEqual('case/cancellation/reason-for-cancelling.njk');
         expect(res._getRenderData() as ReasonForCancellingViewModel).toEqual({
           activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
-          user: mockUser,
+          user: session.user,
           ukefDealId,
           dealId,
           errors: validationErrors,
           reasonForCancelling,
+          previousPage: `/case/${dealId}/deal`,
+        });
+      });
+
+      it('renders the page with the back URL as the check details page when "change" is passed in as a query parameter', async () => {
+        // Arrange
+        const reasonForCancelling = 'reasonForCancelling';
+
+        const session = aRequestSession();
+
+        const { req, res } = createMocks<PostReasonForCancellingRequest>({
+          params: { _id: dealId },
+          query: { status: 'change' },
+          session,
+          body: {
+            reason: reasonForCancelling,
+          },
+        });
+
+        // Act
+        await postReasonForCancelling(req, res);
+
+        // Assert
+        expect(res._getRenderView()).toEqual('case/cancellation/reason-for-cancelling.njk');
+        expect(res._getRenderData() as ReasonForCancellingViewModel).toEqual({
+          activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
+          user: session.user,
+          ukefDealId,
+          dealId,
+          errors: validationErrors,
+          reasonForCancelling,
+          previousPage: `/case/${dealId}/cancellation/check-details`,
         });
       });
 
@@ -164,10 +182,7 @@ describe('postReasonForCancelling', () => {
         const reasonForCancelling = 'reasonForCancelling';
         const { req, res } = createMocks<PostReasonForCancellingRequest>({
           params: { _id: dealId },
-          session: {
-            user: mockUser,
-            userToken: 'a user token',
-          },
+          session: aRequestSession(),
           body: {
             reason: reasonForCancelling,
           },
@@ -195,14 +210,12 @@ describe('postReasonForCancelling', () => {
       it('updates the deal cancellation reason', async () => {
         // Arrange
         const reason = 'reason';
-        const userToken = 'userToken';
+
+        const session = aRequestSession();
 
         const { req, res } = createMocks<PostReasonForCancellingRequest>({
           params: { _id: dealId },
-          session: {
-            user: mockUser,
-            userToken,
-          },
+          session,
           body: {
             reason,
           },
@@ -213,17 +226,14 @@ describe('postReasonForCancelling', () => {
 
         // Assert
         expect(api.updateDealCancellation).toHaveBeenCalledTimes(1);
-        expect(api.updateDealCancellation).toHaveBeenCalledWith(dealId, { reason }, userToken);
+        expect(api.updateDealCancellation).toHaveBeenCalledWith(dealId, { reason }, session.userToken);
       });
 
       it('redirects to the bank request date page', async () => {
         // Arrange
         const { req, res } = createMocks<PostReasonForCancellingRequest>({
           params: { _id: dealId },
-          session: {
-            user: mockUser,
-            userToken: 'a user token',
-          },
+          session: aRequestSession(),
           body: {
             reason: 'reasonForCancelling',
           },
@@ -233,7 +243,7 @@ describe('postReasonForCancelling', () => {
         await postReasonForCancelling(req, res);
 
         // Assert
-        expect(res._getRedirectUrl()).toBe(`/case/${dealId}/cancellation/bank-request-date`);
+        expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/cancellation/bank-request-date`);
       });
     });
   });

@@ -3,7 +3,7 @@ import { caseSubNavigation } from '../../../partials';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+import { today, tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, UNDERWRITING_SUPPORT_1, UNDERWRITER_MANAGER_1, UNDERWRITER_1, RISK_MANAGER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 import pages from '../../../pages';
 import { DISPLAY_USER_TEAMS } from '../../../../fixtures/constants';
@@ -76,9 +76,8 @@ context('Amendments tasks - manual amendment tasks', () => {
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--request-date' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
@@ -98,9 +97,8 @@ context('Amendments tasks - manual amendment tasks', () => {
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.tomorrowDay);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.todayYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', day: tomorrow.dayLong });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-value');
@@ -191,8 +189,8 @@ context('Amendments tasks - manual amendment tasks', () => {
     pages.tasksPage.filterRadioAllTasks().click();
 
     pages.tasksPage.tasks.row(1, 1).assignedTo().first().contains(`${PIM_USER_1.firstName} ${PIM_USER_1.lastName}`);
-    pages.tasksPage.tasks.row(1, 1).dateStarted().first().contains(dateConstants.todayFullString);
-    pages.tasksPage.tasks.row(1, 1).dateCompleted().first().contains(dateConstants.todayFullString);
+    pages.tasksPage.tasks.row(1, 1).dateStarted().first().contains(today.dd_MMM_yyyy);
+    pages.tasksPage.tasks.row(1, 1).dateCompleted().first().contains(today.dd_MMM_yyyy);
     pages.tasksPage.tasks.row(1, 1).status().first().contains('Done');
 
     pages.tasksPage.tasks.row(1, 2).status().contains('To do');

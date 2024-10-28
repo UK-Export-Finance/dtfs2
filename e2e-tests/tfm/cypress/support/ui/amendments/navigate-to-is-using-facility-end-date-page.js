@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { today, todayDay, todayMonth, todayYear } from '../../../../../e2e-fixtures/dateConstants';
+import { today } from '../../../../../e2e-fixtures/dateConstants';
 
 const amendmentsPage = require('../../../e2e/pages/amendments/amendmentsPage');
 const facilityPage = require('../../../e2e/pages/facilityPage');
@@ -12,7 +12,7 @@ const facilityPage = require('../../../e2e/pages/facilityPage');
  * @param {boolean} [options.changeFacilityValue = false] - whether to change the facility value
  * @param {Date} [options.newCoverEndDate = today] - the new cover end date
  */
-const navigateToIsUsingFacilityEndDatePage = ({ startNewAmendment = false, changeFacilityValue = false, newCoverEndDate = today } = {}) => {
+const navigateToIsUsingFacilityEndDatePage = ({ startNewAmendment = false, changeFacilityValue = false, newCoverEndDate = today.date } = {}) => {
   facilityPage.facilityTabAmendments().click();
 
   if (startNewAmendment) {
@@ -24,9 +24,9 @@ const navigateToIsUsingFacilityEndDatePage = ({ startNewAmendment = false, chang
   }
 
   cy.url().should('contain', 'request-date');
-  cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), todayDay);
-  cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), todayMonth);
-  cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), todayYear);
+
+  cy.completeDateFormFields({ idPrefix: 'amendment--request-date' });
+
   cy.clickContinueButton();
 
   cy.url().should('contain', 'request-approval');
@@ -34,23 +34,30 @@ const navigateToIsUsingFacilityEndDatePage = ({ startNewAmendment = false, chang
   cy.clickContinueButton();
 
   cy.url().should('contain', 'amendment-effective-date');
-  cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), todayDay);
-  cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), todayMonth);
-  cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), todayYear);
+
+  cy.completeDateFormFields({ idPrefix: 'amendment--effective-date' });
+
   cy.clickContinueButton();
 
   cy.url().should('contain', 'amendment-options');
   amendmentsPage.amendmentFacilityValueCheckbox().uncheck();
+
   if (changeFacilityValue) {
     amendmentsPage.amendmentFacilityValueCheckbox().check();
   }
+
   amendmentsPage.amendmentCoverEndDateCheckbox().check();
   cy.clickContinueButton();
 
   cy.url().should('contain', 'cover-end-date');
-  cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), format(newCoverEndDate, 'd'));
-  cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), format(newCoverEndDate, 'M'));
-  cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), format(newCoverEndDate, 'yyyy'));
+
+  cy.completeDateFormFields({
+    idPrefix: 'amendment--cover-end-date',
+    day: format(newCoverEndDate, 'd'),
+    month: format(newCoverEndDate, 'M'),
+    year: format(newCoverEndDate, 'yyyy'),
+  });
+
   cy.clickContinueButton();
 
   cy.url().should('contain', 'is-using-facility-end-date');

@@ -18,7 +18,7 @@ describe('handleFeeRecordPaymentEditedEvent', () => {
 
   it('saves the updated fee record with the supplied entity manager', async () => {
     // Arrange
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus('TO_DO').build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus(FEE_RECORD_STATUS.TO_DO).build();
 
     // Act
     await handleFeeRecordPaymentEditedEvent(feeRecord, {
@@ -38,7 +38,7 @@ describe('handleFeeRecordPaymentEditedEvent', () => {
     "sets the fee record status to '$expectedStatus' when the event payload 'feeRecordsAndPaymentsMatch' is '$feeRecordsAndPaymentsMatch'",
     async ({ feeRecordsAndPaymentsMatch, expectedStatus }) => {
       // Arrange
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus('TO_DO').build();
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus(FEE_RECORD_STATUS.TO_DO).build();
 
       // Act
       await handleFeeRecordPaymentEditedEvent(feeRecord, {
@@ -48,13 +48,13 @@ describe('handleFeeRecordPaymentEditedEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.status).toBe(expectedStatus);
+      expect(feeRecord.status).toEqual(expectedStatus);
     },
   );
 
   it("sets the fee record 'lastUpdatedByIsSystemUser' field to false", async () => {
     // Arrange
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus('TO_DO').build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus(FEE_RECORD_STATUS.TO_DO).build();
 
     // Act
     await handleFeeRecordPaymentEditedEvent(feeRecord, {
@@ -64,12 +64,12 @@ describe('handleFeeRecordPaymentEditedEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
+    expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
   });
 
   it("sets the fee record 'lastUpdatedByPortalUserId' to null", async () => {
     // Arrange
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus('TO_DO').build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus(FEE_RECORD_STATUS.TO_DO).build();
 
     // Act
     await handleFeeRecordPaymentEditedEvent(feeRecord, {
@@ -84,7 +84,7 @@ describe('handleFeeRecordPaymentEditedEvent', () => {
 
   it("sets the fee record 'lastUpdatedByTfmUserId' to the request source user id", async () => {
     // Arrange
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus('TO_DO').build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus(FEE_RECORD_STATUS.TO_DO).build();
 
     // Act
     await handleFeeRecordPaymentEditedEvent(feeRecord, {
@@ -94,6 +94,6 @@ describe('handleFeeRecordPaymentEditedEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
+    expect(feeRecord.lastUpdatedByTfmUserId).toEqual(userId);
   });
 });

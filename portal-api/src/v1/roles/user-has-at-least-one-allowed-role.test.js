@@ -13,7 +13,7 @@ describe('userHasAtLeastOneAllowedRole', () => {
         user: { roles: [] },
       });
 
-      expect(allowed).toBe(false);
+      expect(allowed).toEqual(false);
     });
 
     it.each(allRoles)('returns false if the user has the %s role', (userRole) => {
@@ -22,7 +22,7 @@ describe('userHasAtLeastOneAllowedRole', () => {
         user: { roles: [userRole] },
       });
 
-      expect(allowed).toBe(false);
+      expect(allowed).toEqual(false);
     });
   });
 
@@ -35,7 +35,7 @@ describe('userHasAtLeastOneAllowedRole', () => {
         user: { roles: [] },
       });
 
-      expect(allowed).toBe(false);
+      expect(allowed).toEqual(false);
     });
 
     const nonMatchingRoles = allRoles.filter((role) => role !== allowedRole);
@@ -45,7 +45,7 @@ describe('userHasAtLeastOneAllowedRole', () => {
         user: { roles: [userRole] },
       });
 
-      expect(allowed).toBe(false);
+      expect(allowed).toEqual(false);
     });
 
     it(`returns true if the user has the ${allowedRole} role only`, () => {
@@ -54,7 +54,7 @@ describe('userHasAtLeastOneAllowedRole', () => {
         user: { roles: [allowedRole] },
       });
 
-      expect(allowed).toBe(true);
+      expect(allowed).toEqual(true);
     });
 
     it.each(nonMatchingRoles)(`returns true if the user has the ${allowedRole} role and the %s role in either order`, (userRole) => {
@@ -67,8 +67,8 @@ describe('userHasAtLeastOneAllowedRole', () => {
         user: { roles: [userRole, allowedRole] },
       });
 
-      expect(allowedWithAllowedRoleFirst).toBe(true);
-      expect(allowedWithAllowedRoleSecond).toBe(true);
+      expect(allowedWithAllowedRoleFirst).toEqual(true);
+      expect(allowedWithAllowedRoleSecond).toEqual(true);
     });
   });
 
@@ -82,7 +82,7 @@ describe('userHasAtLeastOneAllowedRole', () => {
         user: { roles: [] },
       });
 
-      expect(allowed).toBe(false);
+      expect(allowed).toEqual(false);
     });
 
     it('returns false if the user has none of the allowed roles', () => {
@@ -91,7 +91,7 @@ describe('userHasAtLeastOneAllowedRole', () => {
         user: { roles: [notAllowedRole] },
       });
 
-      expect(allowed).toBe(false);
+      expect(allowed).toEqual(false);
     });
 
     it('returns true if the user has one of the allowed roles', () => {
@@ -100,7 +100,7 @@ describe('userHasAtLeastOneAllowedRole', () => {
         user: { roles: [allowedRoles[0]] },
       });
 
-      expect(allowed).toBe(true);
+      expect(allowed).toEqual(true);
     });
 
     it('returns true if the user has multiple of the allowed roles', () => {
@@ -109,7 +109,7 @@ describe('userHasAtLeastOneAllowedRole', () => {
         user: { roles: [allowedRoles[0], allowedRoles[1]] },
       });
 
-      expect(allowed).toBe(true);
+      expect(allowed).toEqual(true);
     });
 
     it('returns true if the user has an allowed role and another role in either order', () => {
@@ -122,8 +122,8 @@ describe('userHasAtLeastOneAllowedRole', () => {
         user: { roles: [notAllowedRole, allowedRoles[1]] },
       });
 
-      expect(allowedWithAllowedRoleFirst).toBe(true);
-      expect(allowedWithAllowedRoleSecond).toBe(true);
+      expect(allowedWithAllowedRoleFirst).toEqual(true);
+      expect(allowedWithAllowedRoleSecond).toEqual(true);
     });
   });
 });

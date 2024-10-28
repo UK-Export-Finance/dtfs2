@@ -12,6 +12,6 @@ describe('now', () => {
   it('returns the current date in the format `yyyy-MM-dd', () => {
     const result = now();
 
-    expect(result).toBe('2024-03-02');
+    expect(result).toEqual('2024-03-02');
   });
 });

@@ -462,7 +462,7 @@ describe('isEligibilityComplete', () => {
       },
     };
     const result = isEligibilityComplete(deal);
-    expect(result).toBe(true);
+    expect(result).toEqual(true);
   });
 
   it("should return false when eligibility status is not 'completed'", () => {
@@ -472,7 +472,7 @@ describe('isEligibilityComplete', () => {
       },
     };
     const result = isEligibilityComplete(deal);
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when eligibility status is undefined', () => {
@@ -480,18 +480,18 @@ describe('isEligibilityComplete', () => {
       eligibility: {},
     };
     const result = isEligibilityComplete(deal);
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when deal object is undefined', () => {
     const result = isEligibilityComplete(undefined);
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when eligibility object is undefined', () => {
     const deal = {};
     const result = isEligibilityComplete(deal);
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when status property of eligibility object is undefined', () => {
@@ -499,7 +499,7 @@ describe('isEligibilityComplete', () => {
       eligibility: {},
     };
     const result = isEligibilityComplete(deal);
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 });
 
@@ -511,7 +511,7 @@ describe('isSubmissionDetailComplete', () => {
       },
     };
     const result = isSubmissionDetailComplete(deal);
-    expect(result).toBe(true);
+    expect(result).toEqual(true);
   });
 
   it("should return false when submissionDetails status is not 'completed'", () => {
@@ -521,7 +521,7 @@ describe('isSubmissionDetailComplete', () => {
       },
     };
     const result = isSubmissionDetailComplete(deal);
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when submissionDetails status is undefined', () => {
@@ -529,18 +529,18 @@ describe('isSubmissionDetailComplete', () => {
       submissionDetails: {},
     };
     const result = isSubmissionDetailComplete(deal);
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when deal object is undefined', () => {
     const result = isSubmissionDetailComplete(undefined);
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when submissionDetails object is undefined', () => {
     const deal = {};
     const result = isSubmissionDetailComplete(deal);
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when status property of submissionDetails object is undefined', () => {
@@ -548,6 +548,6 @@ describe('isSubmissionDetailComplete', () => {
       submissionDetails: {},
     };
     const result = isSubmissionDetailComplete(deal);
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 });

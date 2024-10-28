@@ -1,37 +1,21 @@
-/*
- * Facility guarantee amendment DAF
- * ***************************
- * This DAF (Durable Activity Function) is never invoked directly.
- * It is invoked via DOF (Durable Orchestrator Function).
- *
- * Pre-requisites
- * --------------
- * 0. 'npm install durable-functions'
- * 1. Durable  HTTP trigger function (acbs-http)
- * 2. Durable Orchestrator function (DOF) (acbs-amend-facility)
- *
- * ------------------
- * HTTP -> DOF -> DAF
- * ------------------
- */
 const df = require('durable-functions');
-const { getNowAsIsoString } = require('../../helpers/date');
 const api = require('../../api');
+const { getNowAsIsoString } = require('../../helpers/date');
 const { isHttpErrorStatus } = require('../../helpers/http');
 
 /**
- * This function is used to update the guarantee of a facility. It first checks if the payload is valid and contains all mandatory fields.
- * If the payload is valid, it sends a request to the API to update the facility guarantee.
- * If the API request is successful, it returns an object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
- * If the API request fails, it throws an error with details about the request and the error.
- * If the payload is not valid or does not contain all mandatory fields, it returns an object with the missing mandatory fields.
- * If any other error occurs, it logs the error and throws a new error.
+ * Handles the amendment of a facility guarantee record in the ACBS system.
  *
- * @param {Object} payload - The payload containing the facilityIdentifier and acbsFacilityGuaranteeInput.
- * @param {string} payload.facilityIdentifier - The identifier of the facility.
- * @param {import('../../mappings/facility/facility-guarantee-amend').MappedFacilityGuaranteeAmendment} payload.acbsFacilityGuaranteeInput - The acbsFacilityGuaranteeInput object containing the guarantee details.
- * @returns {Object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
- * @throws {Error} - Throws an error if the payload is invalid, if the API request to generate the guarantee ID fails, or if any other error occurs.
+ * This function performs the following operations:
+ * 1. Validates the input payload.
+ * 2. Submits the amendment to the ACBS system.
+ * 3. Handles the response from the ACBS system and returns the result.
+ *
+ * @param {Object} payload - The input payload containing the facility ID and ACBS facility guarantee input.
+ * @param {string} payload.facilityIdentifier - The ID of the facility to be amended.
+ * @param {Object} payload.acbsFacilityGuaranteeInput - The ACBS facility guarantee input details.
+ * @returns {Object} - The result of the facility guarantee record amendment, including status, timestamps, and data sent/received.
+ * @throws {Error} - Throws an error if the input payload is invalid or if there is an error during the amendment process.
  */
 const handler = async (payload) => {
   try {
@@ -39,9 +23,13 @@ const handler = async (payload) => {
       throw new Error('Invalid facility guarantee update payload');
     }
 
-    const { facilityIdentifier, acbsFacilityGuaranteeInput } = payload;
+    /**
+     * There are no mandatory fields for guarantee amendment payload
+     * `expirationDate` is only set for cover end date attrbiute.
+     * `guaranteedLimit` is only set for the value attribute.
+     */
 
-    // Call create guarantee API
+    const { facilityIdentifier, acbsFacilityGuaranteeInput } = payload;
     const submittedToACBS = getNowAsIsoString();
     const { status, data } = await api.updateFacilityGuarantee(facilityIdentifier, acbsFacilityGuaranteeInput);
 
@@ -50,7 +38,6 @@ const handler = async (payload) => {
         JSON.stringify(
           {
             name: 'ACBS Facility Guarantee amend error',
-            facilityIdentifier,
             submittedToACBS,
             receivedFromACBS: getNowAsIsoString(),
             dataReceived: data,

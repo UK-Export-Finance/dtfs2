@@ -1,32 +1,14 @@
-const { getUnixTime, fromUnixTime } = require('date-fns');
+const { getUnixTime } = require('date-fns');
+const { ACTIVITY_TYPES } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { generateValidationErrors } = require('../../../helpers/validation');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
 const CONSTANTS = require('../../../constants');
+const { mapActivities } = require('./helpers/map-activities');
 
 const { DEAL } = CONSTANTS;
 
 const MAX_COMMENT_LENGTH = 1000;
-
-const mappedActivities = (activities) => {
-  if (!activities) {
-    return false;
-  }
-
-  return activities.map((activity) => ({
-    label: {
-      text: activity.label,
-    },
-    text: activity.text,
-    datetime: {
-      timestamp: fromUnixTime(new Date(activity.timestamp)),
-      type: 'datetime',
-    },
-    byline: {
-      text: `${activity.author.firstName} ${activity.author.lastName}`,
-    },
-  }));
-};
 
 const getActivity = async (req, res) => {
   const dealId = req.params._id;
@@ -52,7 +34,7 @@ const getActivity = async (req, res) => {
   }
   const amendmentsInProgress = amendmentsInProgressByDeal(amendments);
 
-  const activities = mappedActivities(deal.tfm.activities);
+  const activities = mapActivities(deal.tfm.activities);
 
   return res.render('case/activity/activity.njk', {
     activePrimaryNavigation: 'manage work',
@@ -92,7 +74,7 @@ const filterActivities = async (req, res) => {
   }
   const amendmentsInProgress = amendmentsInProgressByDeal(amendments);
 
-  const activities = mappedActivities(deal.tfm.activities);
+  const activities = mapActivities(deal.tfm.activities);
 
   return res.render('case/activity/activity.njk', {
     activePrimaryNavigation: 'manage work',
@@ -152,7 +134,7 @@ const postComment = async (req, res) => {
         _id: user._id,
       };
       const commentObj = {
-        type: 'COMMENT',
+        type: ACTIVITY_TYPES.COMMENT,
         timestamp: getUnixTime(new Date()),
         author: shortUser,
         text: comment,
@@ -168,7 +150,6 @@ const postComment = async (req, res) => {
 };
 
 module.exports = {
-  mappedActivities,
   getActivity,
   filterActivities,
   getCommentBox,

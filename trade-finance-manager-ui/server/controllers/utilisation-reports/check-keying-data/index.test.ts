@@ -1,5 +1,5 @@
 import httpMocks from 'node-mocks-http';
-import { SessionBank } from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, SessionBank } from '@ukef/dtfs2-common';
 import { postCheckKeyingData } from '.';
 import { aTfmSessionUser } from '../../../../test-helpers/test-data/tfm-session-user';
 import api from '../../../api';
@@ -36,7 +36,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
       await postCheckKeyingData(req, res);
 
       // Assert
-      expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
+      expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
       expect(res._getRenderData()).toEqual({ user: requestSession.user });
     });
 
@@ -59,7 +59,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
         await postCheckKeyingData(req, res);
 
         // Assert
-        expect(req.session.generateKeyingDataErrorKey).toBe('no-matching-fee-records');
+        expect(req.session.generateKeyingDataErrorKey).toEqual('no-matching-fee-records');
       });
 
       it("redirects to '/utilisation-reports/:reportId'", async () => {
@@ -74,8 +74,8 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
         await postCheckKeyingData(req, res);
 
         // Assert
-        expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}`);
-        expect(res._isEndCalled()).toBe(true);
+        expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}`);
+        expect(res._isEndCalled()).toEqual(true);
       });
     });
 
@@ -87,7 +87,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
         reportedFees: { currency: 'EUR', amount: 100 },
         reportedPayments: { currency: 'GBP', amount: 90.91 },
         paymentsReceived: [{ currency: 'GBP', amount: 90.91 }],
-        status: 'MATCH',
+        status: FEE_RECORD_STATUS.MATCH,
       });
 
       beforeEach(() => {
@@ -108,7 +108,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
         await postCheckKeyingData(req, res);
 
         // Assert
-        expect(res._getRenderView()).toBe('utilisation-reports/check-keying-data.njk');
+        expect(res._getRenderView()).toEqual('utilisation-reports/check-keying-data.njk');
       });
 
       it('renders the page with the bank', async () => {
@@ -159,7 +159,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
 
         // Assert
         const viewModel = res._getRenderData() as CheckKeyingDataViewModel;
-        expect(viewModel.formattedReportPeriod).toBe('January 2024');
+        expect(viewModel.formattedReportPeriod).toEqual('January 2024');
       });
 
       it('renders the page with the mapped fee records', async () => {
@@ -179,7 +179,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
               reportedFees: { currency: 'EUR', amount: 100 },
               reportedPayments: { currency: 'GBP', amount: 90.91 },
               paymentsReceived: [{ currency: 'GBP', amount: 90.91 }],
-              status: 'MATCH',
+              status: FEE_RECORD_STATUS.MATCH,
             },
           ],
         };
@@ -204,7 +204,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
             dataSortValue: 0,
           },
           paymentsReceived: ['GBP 90.91'],
-          status: 'MATCH',
+          status: FEE_RECORD_STATUS.MATCH,
           displayStatus: 'MATCH',
         });
       });
@@ -228,7 +228,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
         // Assert
         const viewModel = res._getRenderData() as CheckKeyingDataViewModel;
         expect(viewModel.feeRecords).toHaveLength(3);
-        expect(viewModel.numberOfMatchingFacilities).toBe(3);
+        expect(viewModel.numberOfMatchingFacilities).toEqual(3);
       });
 
       it('sets the view model report id to path parameter report id', async () => {
@@ -244,7 +244,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
 
         // Assert
         const viewModel = res._getRenderData() as CheckKeyingDataViewModel;
-        expect(viewModel.reportId).toBe(reportId);
+        expect(viewModel.reportId).toEqual(reportId);
       });
     });
   });

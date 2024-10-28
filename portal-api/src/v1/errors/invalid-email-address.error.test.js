@@ -6,12 +6,12 @@ describe('InvalidEmailAddressError', () => {
   it('exposes the email in a formatted message', () => {
     const exception = new InvalidEmailAddressError(email);
 
-    expect(exception.message).toBe(`Invalid email address: ${email}`);
+    expect(exception.message).toEqual(`Invalid email address: ${email}`);
   });
 
   it('exposes the name of the exception', () => {
     const exception = new InvalidEmailAddressError(email);
 
-    expect(exception.name).toBe('InvalidEmailAddressError');
+    expect(exception.name).toEqual('InvalidEmailAddressError');
   });
 });

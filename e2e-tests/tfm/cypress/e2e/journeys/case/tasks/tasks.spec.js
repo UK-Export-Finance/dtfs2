@@ -4,6 +4,7 @@ import pages from '../../../pages';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import * as MOCK_USERS from '../../../../../../e2e-fixtures';
 import { BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
+import { today } from '../../../../../../e2e-fixtures/dateConstants';
 
 const TOTAL_DEFAULT_AIN_TASKS = 2;
 
@@ -385,15 +386,7 @@ context('Case tasks - AIN deal', () => {
 
     firstTask = pages.tasksPage.tasks.row(1, 1);
 
-    const now = new Date();
-    let expectedDate = [
-      now.toLocaleDateString('en-GB', { day: '2-digit' }),
-      now.toLocaleDateString('en-GB', { month: 'short' }).substr(0, 3),
-      now.toLocaleDateString('en-GB', { year: 'numeric' }),
-    ];
-    expectedDate = expectedDate.join(' ');
-
-    cy.assertText(firstTask.dateStarted(), expectedDate);
-    cy.assertText(firstTask.dateCompleted(), expectedDate);
+    cy.assertText(firstTask.dateStarted(), today.dd_MMM_yyyy);
+    cy.assertText(firstTask.dateCompleted(), today.dd_MMM_yyyy);
   });
 });

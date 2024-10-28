@@ -16,7 +16,7 @@ describe('currency helpers', () => {
       const formattedCurrencyAndAmount = getFormattedCurrencyAndAmount(currencyAndAmount);
 
       // Assert
-      expect(formattedCurrencyAndAmount).toBe(expectedFormattedCurrencyAndAmount);
+      expect(formattedCurrencyAndAmount).toEqual(expectedFormattedCurrencyAndAmount);
     });
 
     it('gets the formatted the current and amount string with 2 decimal places when the amount has more than 2 decimal places', () => {
@@ -32,7 +32,7 @@ describe('currency helpers', () => {
       const formattedCurrencyAndAmount = getFormattedCurrencyAndAmount(currencyAndAmount);
 
       // Assert
-      expect(formattedCurrencyAndAmount).toBe(expectedFormattedCurrencyAndAmount);
+      expect(formattedCurrencyAndAmount).toEqual(expectedFormattedCurrencyAndAmount);
     });
 
     it('gets the formatted the current and amount string with 2 decimal places when the amount has no decimal places', () => {
@@ -48,7 +48,7 @@ describe('currency helpers', () => {
       const formattedCurrencyAndAmount = getFormattedCurrencyAndAmount(currencyAndAmount);
 
       // Assert
-      expect(formattedCurrencyAndAmount).toBe(expectedFormattedCurrencyAndAmount);
+      expect(formattedCurrencyAndAmount).toEqual(expectedFormattedCurrencyAndAmount);
     });
   });
 });

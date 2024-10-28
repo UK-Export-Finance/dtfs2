@@ -1,5 +1,5 @@
 import { HttpStatusCode } from 'axios';
-import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
@@ -24,7 +24,11 @@ describe(`POST ${BASE_URL}`, () => {
   const payments = paymentIds.map((id) => PaymentEntityMockBuilder.forCurrency('GBP').withId(id).withFeeRecords([]).build());
 
   const aFeeRecordToAdd = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
-  const aFeeRecordWithPayments = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withStatus('DOES_NOT_MATCH').withPayments(payments).build();
+  const aFeeRecordWithPayments = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+    .withId(2)
+    .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
+    .withPayments(payments)
+    .build();
 
   utilisationReport.feeRecords = [aFeeRecordToAdd, aFeeRecordWithPayments];
 
@@ -70,7 +74,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(aPostAddFeesToAnExistingPaymentGroupRequestBody()).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Ok);
+    expect(response.status).toEqual(HttpStatusCode.Ok);
   });
 
   it("returns a 400 when the 'feeRecordIds' list is empty", async () => {
@@ -84,7 +88,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it("returns a 400 when the 'paymentIds' list is empty", async () => {
@@ -98,7 +102,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it("returns a 400 when the 'user' object is an empty object", async () => {
@@ -111,7 +115,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it('returns a 404 when no payments with the supplied ids can be found', async () => {
@@ -125,6 +129,6 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.NotFound);
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 });

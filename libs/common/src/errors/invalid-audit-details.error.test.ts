@@ -20,7 +20,7 @@ describe('InvalidAuditDetailsError', () => {
     const error = new InvalidAuditDetailsError(message);
 
     // Assert
-    expect(error.status).toBe(400);
+    expect(error.status).toEqual(400);
   });
 
   it('exposes the name of the exception', () => {

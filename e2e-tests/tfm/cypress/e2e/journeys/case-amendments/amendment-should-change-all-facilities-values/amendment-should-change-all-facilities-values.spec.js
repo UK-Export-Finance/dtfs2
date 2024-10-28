@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+import { oneMonth, tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 import facilitiesPage from '../../../pages/facilitiesPage';
 
@@ -38,7 +38,7 @@ context('Amendments all facilities table - should show amendment value and cover
 
     facilitiesPage.facilitiesTable.row(facilityId).facilityLinkText().contains('1000000');
     facilitiesPage.facilitiesTable.row(facilityId).value().contains('GBP 12,345');
-    facilitiesPage.facilitiesTable.row(facilityId).coverEndDate().contains(dateConstants.oneMonthFormattedShort);
+    facilitiesPage.facilitiesTable.row(facilityId).coverEndDate().contains(oneMonth.dd_MMM_yyyy);
   });
 
   it('should submit an automatic amendment request for coverEndDate', () => {
@@ -52,9 +52,8 @@ context('Amendments all facilities table - should show amendment value and cover
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--request-date' });
+
     cy.clickContinueButton();
     cy.url().should('contain', 'request-approval');
 
@@ -63,9 +62,8 @@ context('Amendments all facilities table - should show amendment value and cover
     cy.clickContinueButton();
     cy.url().should('contain', 'amendment-effective-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), dateConstants.todayYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--effective-date' });
+
     cy.clickContinueButton();
     cy.url().should('contain', 'amendment-options');
 
@@ -77,9 +75,8 @@ context('Amendments all facilities table - should show amendment value and cover
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.tomorrowDay);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.tomorrowMonth);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.tomorrowYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: tomorrow.date });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'check-answers');
@@ -97,9 +94,8 @@ context('Amendments all facilities table - should show amendment value and cover
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--request-date' });
+
     cy.clickContinueButton();
     cy.url().should('contain', 'request-approval');
 
@@ -108,9 +104,8 @@ context('Amendments all facilities table - should show amendment value and cover
     cy.clickContinueButton();
     cy.url().should('contain', 'amendment-effective-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), dateConstants.todayYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--effective-date' });
+
     cy.clickContinueButton();
     cy.url().should('contain', 'amendment-options');
 
@@ -138,6 +133,6 @@ context('Amendments all facilities table - should show amendment value and cover
 
     facilitiesPage.facilitiesTable.row(facilityId).facilityLinkText().contains('1000000');
     facilitiesPage.facilitiesTable.row(facilityId).value().contains('GBP 123');
-    facilitiesPage.facilitiesTable.row(facilityId).coverEndDate().contains(dateConstants.tomorrowFormattedFacilityPage);
+    facilitiesPage.facilitiesTable.row(facilityId).coverEndDate().contains(tomorrow.dd_MMM_yyyy);
   });
 });

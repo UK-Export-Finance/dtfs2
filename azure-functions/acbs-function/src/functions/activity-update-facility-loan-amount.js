@@ -31,9 +31,9 @@ const mandatoryFields = ['effectiveDate', 'amountAmendment'];
  * If the payload is not valid or does not contain all mandatory fields, it returns an object with the missing mandatory fields.
  * If any other error occurs, it logs the error and throws a new error.
  *
- * @param {Object} payload - The payload containing the loanId, facilityId, and acbsFacilityLoanInput.
+ * @param {Object} payload - The payload containing the loanId, facilityIdentifier, and acbsFacilityLoanInput.
  * @param {string} payload.loanId - The ID of the loan.
- * @param {string} payload.facilityId - The ID of the facility.
+ * @param {string} payload.facilityIdentifier - The ID of the facility.
  * @param {Object} payload.acbsFacilityLoanInput - The input for the ACBS facility loan, containing the effectiveDate and amountAmendment.
  * @returns {Object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
  * @throws {Error} - Throws an error if the payload is invalid, if the API request fails, or if any other error occurs.
@@ -44,7 +44,7 @@ const handler = async (payload) => {
       throw new Error('Invalid facility loan amount amendment payload');
     }
 
-    const { loanId, facilityId, acbsFacilityLoanInput } = payload;
+    const { loanId, facilityIdentifier, acbsFacilityLoanInput } = payload;
 
     const missingMandatory = findMissingMandatory(acbsFacilityLoanInput, mandatoryFields);
 
@@ -54,7 +54,7 @@ const handler = async (payload) => {
 
     const submittedToACBS = getNowAsIsoString();
 
-    const { status, data } = await api.updateFacilityLoanAmount(facilityId, loanId, acbsFacilityLoanInput);
+    const { status, data } = await api.updateFacilityLoanAmount(facilityIdentifier, loanId, acbsFacilityLoanInput);
     if (isHttpErrorStatus(status)) {
       throw new Error(
         JSON.stringify(

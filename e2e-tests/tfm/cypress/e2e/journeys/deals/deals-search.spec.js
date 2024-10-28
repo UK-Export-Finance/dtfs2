@@ -1,7 +1,7 @@
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import { primaryNavigation } from '../../partials';
-import DATE_CONSTANTS from '../../../../../e2e-fixtures/dateConstants';
+import { yesterday } from '../../../../../e2e-fixtures/dateConstants';
 import createMockDeal from '../../../fixtures/create-mock-deal';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
@@ -51,16 +51,14 @@ context('User can view and filter multiple deals', () => {
     mockFacilities: [MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === FACILITY_TYPE.LOAN)],
   });
 
-  const { yesterday } = DATE_CONSTANTS;
-
   // NOTE: searching by date queries multiple fields.
   // Therefore we need to set all of these fields to yesterday.
   const DEAL_COMPLETED_YESTERDAY = createMockDeal({
     testId: 'DEAL_COMPLETED_YESTERDAY',
     eligibility: {
-      lastUpdated: yesterday.valueOf().toString(),
+      lastUpdated: yesterday.unixMillisecondsString,
     },
-    facilitiesUpdated: yesterday.valueOf().toString(),
+    facilitiesUpdated: yesterday.unixMillisecondsString,
   });
 
   const MOCK_BSS_DEALS = [
