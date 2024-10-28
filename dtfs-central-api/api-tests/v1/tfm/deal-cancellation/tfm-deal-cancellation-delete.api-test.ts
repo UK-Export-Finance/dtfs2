@@ -117,7 +117,7 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
         expect(getCancellationResponse.body).toEqual({});
       });
 
-      it('should return 404 if dealId is valid but not associated to a record', async () => {
+      it('should return 404 if dealId is valid but not associated to a deal', async () => {
         const validButNonExistentDealId = new ObjectId().toString();
 
         const deleteCancellationResponse = await testApi.remove({ auditDetails }).to(`/v1/tfm/deals/${validButNonExistentDealId}/cancellation`);

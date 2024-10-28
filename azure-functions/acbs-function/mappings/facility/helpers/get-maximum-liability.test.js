@@ -77,7 +77,7 @@ describe('getMaximumLiability', () => {
         },
       };
 
-      it('returns the snapshot ukef exposure', () => {
+      it('returns the snapshot UKEF exposure', () => {
         const result = getMaximumLiability(facility, false);
         expect(result).toEqual(456);
       });

@@ -22,7 +22,7 @@ describe('updateFacilityUtilisationData', () => {
     jest.resetAllMocks();
   });
 
-  it('updates the facility utilisation data entity with the supplied report period, utilisation and request source and saves the entity', async () => {
+  it('updates the facility utilisation data entity with the supplied report period, ukef share of utilisation and request source and saves the entity', async () => {
     // Arrange
     const facilityUtilisationDataEntity = FacilityUtilisationDataEntityMockBuilder.forId('12345678')
       .withUtilisation(1234567.89)
@@ -37,6 +37,7 @@ describe('updateFacilityUtilisationData', () => {
       end: { month: 7, year: 2027 },
     };
     const utilisation = 9876543.21;
+    const ukefShareOfUtilisation = 1234567.77;
     const requestSource: DbRequestSource = {
       platform: 'TFM',
       userId: 'abc123',
@@ -47,12 +48,13 @@ describe('updateFacilityUtilisationData', () => {
       reportPeriod,
       utilisation,
       requestSource,
+      ukefShareOfUtilisation,
       entityManager: mockEntityManager,
     });
 
     // Assert
     expect(mockSave).toHaveBeenCalledWith(FacilityUtilisationDataEntity, facilityUtilisationDataEntity);
-    expect(facilityUtilisationDataEntity.utilisation).toEqual(9876543.21);
+    expect(facilityUtilisationDataEntity.utilisation).toEqual(ukefShareOfUtilisation);
     expect(facilityUtilisationDataEntity.reportPeriod).toEqual(reportPeriod);
     expect(facilityUtilisationDataEntity.lastUpdatedByTfmUserId).toEqual('abc123');
     expect(facilityUtilisationDataEntity.lastUpdatedByPortalUserId).toBeNull();
@@ -74,6 +76,7 @@ describe('updateFacilityUtilisationData', () => {
       end: { month: 7, year: 2027 },
     };
     const utilisation = 9876543.21;
+    const ukefShareOfUtilisation = 123;
 
     when(getFixedFeeForFacility).calledWith('12345678', utilisation, reportPeriod).mockResolvedValue(76543.21);
 
@@ -82,6 +85,7 @@ describe('updateFacilityUtilisationData', () => {
       reportPeriod,
       utilisation,
       requestSource: aDbRequestSource(),
+      ukefShareOfUtilisation,
       entityManager: mockEntityManager,
     });
 

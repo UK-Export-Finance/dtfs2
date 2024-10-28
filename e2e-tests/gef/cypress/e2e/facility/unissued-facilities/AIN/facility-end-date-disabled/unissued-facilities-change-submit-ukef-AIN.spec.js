@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import relative from '../../../../relativeURL';
 import CONSTANTS from '../../../../../fixtures/constants';
 import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mocks/mock-deals';
@@ -66,12 +65,12 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(1).click();
 
-      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo });
+      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo.date });
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 
@@ -87,8 +86,8 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 
@@ -300,19 +299,19 @@ context('Return to maker for unissued to issued facilities - feature flag disabl
 
     // change facility to issued and check correct format
     it('change unissued to issued from application details whilst changes required', () => {
-      const issuedDate = format(threeDaysAgo, 'd MMMM yyyy');
-      const coverStart = format(twoMonths, 'd MMMM yyyy');
-      const coverEnd = format(threeMonthsOneDay, 'd MMMM yyyy');
+      const issuedDate = threeDaysAgo.d_MMMM_yyyy;
+      const coverStart = twoMonths.d_MMMM_yyyy;
+      const coverEnd = threeMonthsOneDay.d_MMMM_yyyy;
 
       applicationDetails.facilitySummaryListTable(3).hasBeenIssuedAction().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change`));
 
-      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo });
+      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo.date });
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 

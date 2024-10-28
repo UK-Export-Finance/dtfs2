@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import relative from '../../../../relativeURL';
 import CONSTANTS from '../../../../../fixtures/constants';
 import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mocks/mock-deals';
@@ -97,12 +96,12 @@ context('Unissued Facilities AIN - change to issued from preview page - feature 
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo });
+      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo.date });
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 
@@ -125,9 +124,9 @@ context('Unissued Facilities AIN - change to issued from preview page - feature 
     });
 
     it('facility table should have change links on the changed to issued facilities', () => {
-      const issuedDate = format(threeDaysAgo, 'd MMMM yyyy');
-      const coverStart = format(twoMonths, 'd MMMM yyyy');
-      const coverEnd = format(threeMonthsOneDay, 'd MMMM yyyy');
+      const issuedDate = threeDaysAgo.d_MMMM_yyyy;
+      const coverStart = twoMonths.d_MMMM_yyyy;
+      const coverEnd = threeMonthsOneDay.d_MMMM_yyyy;
 
       // can change facility one name and issue dates etc since changed to issued
       applicationPreview.facilitySummaryListTable(3).nameValue().contains(unissuedCashFacility.name);
@@ -181,16 +180,16 @@ context('Unissued Facilities AIN - change to issued from preview page - feature 
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
     });
 
     it('change links should appear for facility four and three should be unissued still', () => {
-      const issuedDate = format(today, 'd MMMM yyyy');
-      const coverStart = format(twoMonths, 'd MMMM yyyy');
-      const coverEnd = format(threeMonthsOneDay, 'd MMMM yyyy');
+      const issuedDate = today.d_MMMM_yyyy;
+      const coverStart = twoMonths.d_MMMM_yyyy;
+      const coverEnd = threeMonthsOneDay.d_MMMM_yyyy;
 
       applicationPreview.reviewFacilityStage().contains('Review facility stage');
       applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');

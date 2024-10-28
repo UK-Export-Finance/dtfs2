@@ -45,7 +45,7 @@ on:
   pull_request:
     branches:
       - main
-      - "release-*"
+      - 'release-*'
 
 env:
   environment: dev
