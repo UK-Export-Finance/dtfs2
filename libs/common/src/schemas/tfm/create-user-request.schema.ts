@@ -1,7 +1,7 @@
 import z from 'zod';
 import { TfmTeamSchema } from './tfm-team.schema';
 
-export const USER_UPSERT_REQUEST_SCHEMA = z.object({
+export const CREATE_USER_REQUEST_SCHEMA = z.object({
   azureOid: z.string(),
   email: z.string(),
   username: z.string(),

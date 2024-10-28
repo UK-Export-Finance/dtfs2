@@ -1,14 +1,14 @@
-import { AuditDetails, EntraIdUser, MultipleUsersFoundError, TfmUser, UserUpsertRequest } from '@ukef/dtfs2-common';
-import { ENTRA_ID_USER_TO_TFM_UPSERT_REQUEST_SCHEMA } from '@ukef/dtfs2-common/schemas';
+import { AuditDetails, EntraIdUser, MultipleUsersFoundError, TfmUser, UpsertUserRequest } from '@ukef/dtfs2-common';
+import { ENTRA_ID_USER_TO_UPSERT_USER_REQUEST_SCHEMA } from '@ukef/dtfs2-common/schemas';
 import { UserRepo } from '../repo/user.repo';
 
 export class UserService {
-  public static transformEntraIdUserToTfmUpsertUserRequest(entraIdUser: EntraIdUser): UserUpsertRequest {
-    return ENTRA_ID_USER_TO_TFM_UPSERT_REQUEST_SCHEMA.parse(entraIdUser);
+  public static transformEntraIdUserToUpsertUserRequest(entraIdUser: EntraIdUser): UpsertUserRequest {
+    return ENTRA_ID_USER_TO_UPSERT_USER_REQUEST_SCHEMA.parse(entraIdUser);
   }
 
   public static async upsertUserFromEntraIdUser({ entraIdUser, auditDetails }: { entraIdUser: EntraIdUser; auditDetails: AuditDetails }): Promise<TfmUser> {
-    const userUpsertRequest = UserService.transformEntraIdUserToTfmUpsertUserRequest(entraIdUser);
+    const userUpsertRequest = UserService.transformEntraIdUserToUpsertUserRequest(entraIdUser);
     const findResult = await UserRepo.findUsersByEmailAddresses([...entraIdUser.verified_primary_email, ...entraIdUser.verified_secondary_email]);
 
     let upsertedUser: TfmUser;

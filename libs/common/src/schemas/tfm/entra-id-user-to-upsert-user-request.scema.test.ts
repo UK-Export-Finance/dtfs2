@@ -2,7 +2,7 @@ import { afterAll } from '@jest/globals';
 import { aValidEntraIdUser } from '../../test-helpers';
 import { EntraIdUser } from '../../types';
 import { timezoneConfig } from '../timezone';
-import { ENTRA_ID_USER_TO_TFM_UPSERT_REQUEST_SCHEMA } from './entra-id-user-to-tfm-upsert-request.schema';
+import { ENTRA_ID_USER_TO_UPSERT_USER_REQUEST_SCHEMA } from './entra-id-user-to-upsert-user-request.schema';
 
 describe('ENTRA_ID_USER_TO_TFM_UPSERT_REQUEST_SCHEMA', () => {
   beforeAll(() => {
@@ -49,7 +49,7 @@ describe('ENTRA_ID_USER_TO_TFM_UPSERT_REQUEST_SCHEMA', () => {
 
 function itShouldReturnAValidaUserUpsertRequest(request: EntraIdUser) {
   it('should return a valid user upsert request', () => {
-    const result = ENTRA_ID_USER_TO_TFM_UPSERT_REQUEST_SCHEMA.parse(request);
+    const result = ENTRA_ID_USER_TO_UPSERT_USER_REQUEST_SCHEMA.parse(request);
     expect(result).toEqual({
       azureOid: request.oid,
       email: request.verified_primary_email[0],
@@ -65,6 +65,6 @@ function itShouldReturnAValidaUserUpsertRequest(request: EntraIdUser) {
 
 function itShouldThrowAnError(request: unknown) {
   it('should throw an error', () => {
-    expect(() => ENTRA_ID_USER_TO_TFM_UPSERT_REQUEST_SCHEMA.parse(request)).toThrow();
+    expect(() => ENTRA_ID_USER_TO_UPSERT_USER_REQUEST_SCHEMA.parse(request)).toThrow();
   });
 }

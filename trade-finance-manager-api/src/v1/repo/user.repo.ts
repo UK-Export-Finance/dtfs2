@@ -1,4 +1,13 @@
-import { AuditDetails, DocumentNotCreatedError, DocumentNotUpdatedError, MONGO_DB_COLLECTIONS, TfmUser, UserUpsertRequest } from '@ukef/dtfs2-common';
+import {
+  AuditDetails,
+  CreateUserRequest,
+  DocumentNotCreatedError,
+  DocumentNotUpdatedError,
+  MONGO_DB_COLLECTIONS,
+  TfmUser,
+  UpdateUserRequest,
+  UpsertUserRequest,
+} from '@ukef/dtfs2-common';
 import { Collection, FindOneAndUpdateOptions, ObjectId, WithoutId } from 'mongodb';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../drivers/db-client';
@@ -7,7 +16,7 @@ import getEscapedRegexFromString from '../helpers/get-escaped-regex-from-string'
 
 export type upsertUserByEmailAddressesParams = {
   emailsOfUserToUpsert: string[];
-  userUpsertRequest: UserUpsertRequest;
+  userUpsertRequest: UpsertUserRequest;
   auditDetails: AuditDetails;
 };
 
@@ -30,7 +39,7 @@ export class UserRepo {
     return await collection.find(query).toArray();
   }
 
-  public static async createUser({ user, auditDetails }: { user: UserUpsertRequest; auditDetails: AuditDetails }): Promise<TfmUser> {
+  public static async createUser({ user, auditDetails }: { user: CreateUserRequest; auditDetails: AuditDetails }): Promise<TfmUser> {
     const collection = await UserRepo.getCollection();
 
     const userToCreate: WithoutId<TfmUser> = {
@@ -48,7 +57,7 @@ export class UserRepo {
     return { _id: result.insertedId, ...userToCreate };
   }
 
-  public static async updateUserById({ userId, userUpdate, auditDetails }: { userId: ObjectId; userUpdate: UserUpsertRequest; auditDetails: AuditDetails }) {
+  public static async updateUserById({ userId, userUpdate, auditDetails }: { userId: ObjectId; userUpdate: UpdateUserRequest; auditDetails: AuditDetails }) {
     const collection = await UserRepo.getCollection();
 
     const filter = { _id: { $eq: userId } };
