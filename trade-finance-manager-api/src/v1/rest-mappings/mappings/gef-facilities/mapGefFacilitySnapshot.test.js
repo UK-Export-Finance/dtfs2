@@ -26,7 +26,7 @@ describe('mapGefFacilitySnapshot', () => {
 
     mockFacility.facilitySnapshot.facilityProduct = mapFacilityProduct(mockFacility.facilitySnapshot.type);
 
-    mockFacility.facilitySnapshot.facilityStage = mapGefFacilityStage(mockFacility.facilitySnapshot.hasBeenIssued);
+    mockFacility.facilitySnapshot.facilityStage = mapGefFacilityStage(mockFacility.facilitySnapshot.hasBeenIssued, mockFacility.tfm.facilityStage);
 
     const { facilitySnapshot } = mockFacility;
 
@@ -39,7 +39,7 @@ describe('mapGefFacilitySnapshot', () => {
       coveredPercentage: `${facilitySnapshot.coverPercentage}%`,
       dates: mapGefFacilityDates(mockFacility, mockFacility.tfm, MOCK_GEF_DEAL),
       facilityProduct: mapFacilityProduct(facilitySnapshot.type),
-      facilityStage: mapGefFacilityStage(facilitySnapshot.hasBeenIssued),
+      facilityStage: mapGefFacilityStage(facilitySnapshot.hasBeenIssued, mockFacility.tfm.facilityStage),
       hasBeenIssued: facilitySnapshot.hasBeenIssued,
       type: mapFacilityType(facilitySnapshot),
       currency: facilitySnapshot.currency.id,
