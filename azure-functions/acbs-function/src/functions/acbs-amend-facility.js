@@ -138,23 +138,28 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
       amendments,
     });
 
+    /**
+     * Below have disabled due to BR.
+     * Enable below two alongside with investor and fixed fee records.
+     * TODO: DTFS2-7581
+     */
     // 3. SOF: Facility Covenant Record (FCR)
-    const facilityCovenantRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-covenant-record', {
-      facilityId,
-      amendments,
-    });
+    // const facilityCovenantRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-covenant-record', {
+    //   facilityId,
+    //   amendments,
+    // });
 
     // 4. SOF: Facility Guarantee Record (FGR)
-    const facilityGuaranteeRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-guarantee-record', {
-      facilityId,
-      amendments,
-    });
+    // const facilityGuaranteeRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-guarantee-record', {
+    //   facilityId,
+    //   amendments,
+    // });
 
     return {
       facilityId,
       facilityMasterRecord: facilityMasterRecord.result,
-      facilityCovenantRecord: facilityCovenantRecord.result,
-      facilityGuaranteeRecord: facilityGuaranteeRecord.result,
+      // facilityCovenantRecord: facilityCovenantRecord.result,
+      // facilityGuaranteeRecord: facilityGuaranteeRecord.result,
       facilityLoanRecord: facilityLoanRecord.result,
     };
   } catch (error) {
