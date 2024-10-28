@@ -19,8 +19,8 @@ const page = {
     updated: (id) => cy.get(`[data-cy*="deal__updated--${id}"]`),
   },
   rowIndex: {
-    // link: (index = 1) => cy.get(`[data-cy*="deal__link--index--${index}]`),
-    link: (index = 1) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('a'),
+    link: (index = 1) => cy.get(`[data-cy*="deal__link--index--${index}"]`),
+    // link: (index = 1) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('a'),
 
     // bankRef: (index = 1) => cy.get(`[data-cy*="deal__bankRef--index--${index}]`),
     bankRef: (index = 1) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(1),

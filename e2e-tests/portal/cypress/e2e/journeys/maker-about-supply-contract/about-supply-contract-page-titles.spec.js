@@ -1,7 +1,7 @@
 const { contractAboutBuyer, contractAboutFinancial, contractAboutSupplier, contract } = require('../../pages');
 
 context('About supply contract page titles', () => {
-  before(() => {
+  beforeEach(() => {
     cy.createBssEwcsDeal({});
   });
 
