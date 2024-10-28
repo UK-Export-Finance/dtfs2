@@ -18,6 +18,7 @@ import {
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { flatten } from 'mongo-dot-notation';
 import { mongoDbClient } from '../../drivers/db-client';
+import { getUkefFacilityIds } from '../../helpers/get-ukef-facility-ids';
 
 export class TfmDealCancellationRepo {
   private static async getDealCollection(): Promise<Collection<WithoutId<TfmDeal>>> {
@@ -185,7 +186,7 @@ export class TfmDealCancellationRepo {
 
     const updatedFacilities = await facilityCollection.find({ 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } }).toArray();
 
-    const updatedFacilityUkefIds = updatedFacilities.map((facility) => facility.facilitySnapshot.ukefFacilityId).filter((id) => id !== null);
+    const updatedFacilityUkefIds = getUkefFacilityIds(updatedFacilities);
 
     return { cancelledDealUkefId: dealId, riskExpiredFacilityUkefIds: updatedFacilityUkefIds };
   }
