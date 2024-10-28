@@ -1,6 +1,6 @@
 import { add, sub } from 'date-fns';
 import { ObjectId } from 'mongodb';
-import { AuditDetails, TFM_DEAL_CANCELLATION_STATUS, TfmDeal, TfmDealCancellation, TfmDealCancellationResponse } from '@ukef/dtfs2-common';
+import { AnyObject, TFM_DEAL_CANCELLATION_STATUS, TfmDeal, TfmDealCancellationResponse } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { cancelDealJob } from './cancel-deal-job';
 
@@ -11,8 +11,7 @@ const findScheduledDealCancellationsMock = jest.fn() as jest.Mock<Promise<TfmDea
 
 jest.mock('../../repositories/tfm-deals-repo', () => ({
   TfmDealCancellationRepo: {
-    submitDealCancellation: (dealId: string | ObjectId, cancellation: TfmDealCancellation, auditDetails: AuditDetails) =>
-      submitDealCancellationMock(dealId, cancellation, auditDetails),
+    submitDealCancellation: (params: AnyObject) => submitDealCancellationMock(params),
     findScheduledDealCancellations: () => findScheduledDealCancellationsMock(),
   },
 }));
@@ -62,15 +61,15 @@ describe('cancelDealJob', () => {
 
     // Assert
     expect(submitDealCancellationMock).toHaveBeenCalledTimes(2);
-    expect(submitDealCancellationMock).toHaveBeenCalledWith(
-      dealWithCancellationToday._id,
-      dealWithCancellationToday.tfm.cancellation,
-      generateSystemAuditDetails(),
-    );
-    expect(submitDealCancellationMock).toHaveBeenCalledWith(
-      dealWithCancellationInPast._id,
-      dealWithCancellationInPast.tfm.cancellation,
-      generateSystemAuditDetails(),
-    );
+    expect(submitDealCancellationMock).toHaveBeenCalledWith({
+      dealId: dealWithCancellationToday._id,
+      cancellation: dealWithCancellationToday.tfm.cancellation,
+      auditDetails: generateSystemAuditDetails(),
+    });
+    expect(submitDealCancellationMock).toHaveBeenCalledWith({
+      dealId: dealWithCancellationInPast._id,
+      cancellation: dealWithCancellationInPast.tfm.cancellation,
+      auditDetails: generateSystemAuditDetails(),
+    });
   });
 });
