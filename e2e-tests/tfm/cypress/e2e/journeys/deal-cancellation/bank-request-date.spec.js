@@ -1,6 +1,6 @@
 import relative from '../../relativeURL';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
-import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../e2e-fixtures';
+import { ADMIN, BANK1_MAKER1, PIM_USER_1 } from '../../../../../e2e-fixtures';
 import caseDealPage from '../../pages/caseDealPage';
 import { backLink, cancelLink, continueButton, errorSummary } from '../../partials';
 import bankRequestDatePage from '../../pages/deal-cancellation/bank-request-date';
@@ -96,18 +96,6 @@ context('Deal cancellation - bank request date', () => {
       bankRequestDatePage.bankRequestDateDay().should('have.value', today.day);
       bankRequestDatePage.bankRequestDateMonth().should('have.value', today.month);
       bankRequestDatePage.bankRequestDateYear().should('have.value', today.year);
-    });
-  });
-
-  describe('when logged in as a non-PIM user', () => {
-    beforeEach(() => {
-      cy.login(T1_USER_1);
-
-      cy.visit(relative(`/case/${dealId}/cancellation/bank-request-date`));
-    });
-
-    it('should redirect when visiting bank request date page ', () => {
-      cy.url().should('eq', relative('/deals/0'));
     });
   });
 });

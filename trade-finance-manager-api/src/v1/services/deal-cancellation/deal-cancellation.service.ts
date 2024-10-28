@@ -1,13 +1,19 @@
 import { endOfDay, format, isAfter, toDate } from 'date-fns';
-import { DATE_FORMATS, DEAL_TYPE, TEAMS, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { AuditDetails, DATE_FORMATS, TEAMS, TfmDealCancellation } from '@ukef/dtfs2-common';
 import sendTfmEmail from '../send-tfm-email';
 import { CANCEL_DEAL_PAST_DATE, CANCEL_DEAL_FUTURE_DATE } from '../../../constants/email-template-ids';
 import * as api from '../../api';
 import { formatFacilityIds } from './helpers/format-facility-ids';
-import { getUkefFacilityIds } from './helpers/get-ukef-facility-ids';
 import { UKEF_ID } from '../../../constants/deals';
+import { getUkefFacilityIds } from './helpers/get-ukef-facility-ids';
 
 const { D_MMMM_YYYY } = DATE_FORMATS;
+
+type SubmitDealCancellationParams = {
+  dealId: string;
+  cancellation: TfmDealCancellation;
+  auditDetails: AuditDetails;
+};
 
 export class DealCancellationService {
   /**
@@ -47,18 +53,17 @@ export class DealCancellationService {
 
   /**
    * Submit the deal cancellation
-   * @param dealId the Deal ID
-   * @param dealCancellation the deal cancellation object
+   *
+   * @param params
+   * @param params.dealId the Deal ID
+   * @param params.dealCancellation the deal cancellation object
+   * @param params.auditDetails the users audit details
    */
-  public static async submitDealCancellation(dealId: string, dealCancellation: TfmDealCancellation) {
+  public static async submitDealCancellation({ dealId, cancellation, auditDetails }: SubmitDealCancellationParams) {
     console.info(`Submitting deal cancellation for ${dealId}`);
 
-    // TODO: DTFS2-7298 - update cancellation in database & return cancelled deal/facility ids
-
-    const { dealSnapshot } = await api.findOneDeal(dealId);
+    const { cancelledDealUkefId } = await api.submitDealCancellation({ dealId, cancellation, auditDetails });
     const facilities = await api.findFacilitiesByDealId(dealId);
-
-    const ukefDealId = dealSnapshot.dealType === DEAL_TYPE.BSS_EWCS ? dealSnapshot.details.ukefDealId : dealSnapshot.ukefDealId;
 
     const ukefFacilityIds = getUkefFacilityIds(facilities);
 
@@ -70,6 +75,6 @@ export class DealCancellationService {
       throw new Error(`Some UKEF facility ids were invalid when submitting deal ${dealId} for cancellation. No email has been sent`);
     }
 
-    await this.sendDealCancellationEmail(ukefDealId, dealCancellation, ukefFacilityIds);
+    await this.sendDealCancellationEmail(cancelledDealUkefId.toString(), cancellation, ukefFacilityIds);
   }
 }
