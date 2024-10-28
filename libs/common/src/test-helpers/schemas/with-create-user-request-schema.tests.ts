@@ -2,6 +2,11 @@ import { ZodSchema } from 'zod';
 import { withSchemaTests } from './with-schema.tests';
 import { CreateUserRequest } from '../../types';
 
+/**
+ * This is a reusable test to allow for complete testing of schemas that
+ * utilise the CREATE_USER_REQUEST_SCHEMA as part of their definition
+ */
+
 type TestCasesParams = {
   getTestObjectWithUpdatedCreateUserRequestParams: (userUpsertRequest: unknown) => unknown;
 };

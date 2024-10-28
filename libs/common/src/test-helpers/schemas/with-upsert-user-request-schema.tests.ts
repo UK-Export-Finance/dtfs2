@@ -3,6 +3,13 @@ import { withSchemaTests } from './with-schema.tests';
 import { UpsertUserRequest } from '../../types';
 import { aValidCreateUserRequest, getCreateUserRequestFailureTestCases, getCreateUserRequestSuccessTestCases } from './with-create-user-request-schema.tests';
 
+/**
+ * This is a reusable test to allow for complete testing of schemas that
+ * utilise the UPSERT_USER_REQUEST_SCHEMA as part of their definition
+ *
+ * Note: UPSERT_USER_REQUEST_SCHEMA is effectively an alias for CREATE_USER_REQUEST_SCHEMA
+ */
+
 type TestCasesParams = {
   getTestObjectWithUpdatedUpsertUserRequestParams: (userUpsertRequest: unknown) => unknown;
 };
@@ -19,7 +26,7 @@ export function withUpsertUserRequestSchemaTests({
   schema,
   getTestObjectWithUpdatedUpsertUserRequestParams = (userUpsertRequest) => userUpsertRequest,
 }: WithUpsertUserRequestSchemaTestsParams) {
-  describe('with CREATE_USER_REQUEST_SCHEMA tests', () => {
+  describe('with UPSERT_USER_REQUEST_SCHEMA tests', () => {
     withSchemaTests({
       schema,
       failureTestCases: getUpsertUserRequestFailureTestCases({ getTestObjectWithUpdatedUpsertUserRequestParams }),

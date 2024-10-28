@@ -14,6 +14,11 @@ type NonSsoUserProperties = {
   loginFailureCount?: number;
 };
 
+/**
+ * These properties are only present on users who have logged in via SSO
+ * The azureOid is taken from the EntraId user from the SSO authority
+ */
+
 type SsoUserProperties = {
   // Azure Oid will not exist on users that have not logged in via SSO
   azureOid?: string;

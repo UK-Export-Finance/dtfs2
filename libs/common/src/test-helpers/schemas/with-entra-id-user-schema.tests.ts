@@ -3,6 +3,11 @@ import { EntraIdUser } from '../../types/tfm/entra-id-user';
 import { withSchemaTests } from './with-schema.tests';
 import { TEAMS } from '../../constants';
 
+/**
+ * This is a reusable test to allow for complete testing of schemas that
+ * utilise the ENTRA_ID_USER_SCHEMA as part of their definition
+ */
+
 type TestCasesParams = {
   getTestObjectWithUpdatedUserParams: (entraIdUser: unknown) => unknown;
 };
