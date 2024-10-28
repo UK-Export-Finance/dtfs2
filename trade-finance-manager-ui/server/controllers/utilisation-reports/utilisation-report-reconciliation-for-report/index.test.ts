@@ -172,6 +172,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
           },
           status: FEE_RECORD_STATUS.MATCH,
           displayStatus: 'MATCH',
+          isSelectable: false,
           checkboxId: 'feeRecordIds-1-reportedPaymentsCurrency-GBP-status-MATCH',
           isChecked: false,
           checkboxAriaLabel: 'Select 12345678',
@@ -187,7 +188,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         enablePaymentsReceivedSorting: true,
         displayMatchSuccessNotification: false,
         filters: premiumPaymentsFilters,
-        displaySelectAllCheckbox: true,
+        displaySelectAllCheckbox: false,
       };
 
       const expectedUtilisationDetails: UtilisationDetailsViewModel = {

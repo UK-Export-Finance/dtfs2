@@ -496,53 +496,45 @@ describe(component, () => {
     });
   });
 
-  const FEE_RECORD_STATUSES_WHERE_CHECKBOX_SHOULD_EXIST = [FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.DOES_NOT_MATCH];
+  it('should render the checkbox when userCanEdit and displaySelectAllCheckbox are true, and the fee record status is selectable', () => {
+    const checkboxId: PremiumPaymentsTableCheckboxId = `feeRecordIds-1-reportedPaymentsCurrency-GBP-status-TO_DO`;
+    const feeRecordPaymentGroups: PremiumPaymentsViewModelItem[] = [
+      {
+        ...aPremiumPaymentsViewModelItem(),
+        isSelectable: true,
+        checkboxId,
+      },
+    ];
 
-  it.each(FEE_RECORD_STATUSES_WHERE_CHECKBOX_SHOULD_EXIST)(
-    'should render the checkbox when userCanEdit and displaySelectAllCheckbox are true, and the fee record status is %s',
-    (feeRecordStatus) => {
-      const checkboxId: PremiumPaymentsTableCheckboxId = `feeRecordIds-1-reportedPaymentsCurrency-GBP-status-${feeRecordStatus}`;
-      const feeRecordPaymentGroups: PremiumPaymentsViewModelItem[] = [
-        {
-          ...aPremiumPaymentsViewModelItem(),
-          status: feeRecordStatus,
-          checkboxId,
-        },
-      ];
+    const wrapper = render({
+      ...defaultRendererParams(),
+      userCanEdit: true,
+      displaySelectAllCheckbox: true,
+      feeRecordPaymentGroups,
+    });
 
-      const wrapper = render({
-        ...defaultRendererParams(),
-        userCanEdit: true,
-        displaySelectAllCheckbox: true,
-        feeRecordPaymentGroups,
-      });
+    wrapper.expectElement(`input#${checkboxId}[type="checkbox"]`).toExist();
+  });
 
-      wrapper.expectElement(`input#${checkboxId}[type="checkbox"]`).toExist();
-    },
-  );
+  it('should not render the checkbox when userCanEdit and displaySelectAllCheckbox are true, and the fee record is not selectable', () => {
+    const checkboxId = 'feeRecordIds-1,2,3-reportedPaymentsCurrency-GBP-status-TO_DO';
+    const feeRecordPaymentGroups: PremiumPaymentsViewModelItem[] = [
+      {
+        ...aPremiumPaymentsViewModelItem(),
+        isSelectable: false,
+        checkboxId,
+      },
+    ];
 
-  it.each(difference(Object.values(FEE_RECORD_STATUS), FEE_RECORD_STATUSES_WHERE_CHECKBOX_SHOULD_EXIST))(
-    'should not render the checkbox when userCanEdit and displaySelectAllCheckbox are true, and the fee record status is %s',
-    (feeRecordStatus) => {
-      const checkboxId = 'feeRecordIds-1,2,3-reportedPaymentsCurrency-GBP-status-TO_DO';
-      const feeRecordPaymentGroups: PremiumPaymentsViewModelItem[] = [
-        {
-          ...aPremiumPaymentsViewModelItem(),
-          status: feeRecordStatus,
-          checkboxId,
-        },
-      ];
+    const wrapper = render({
+      ...defaultRendererParams(),
+      userCanEdit: true,
+      displaySelectAllCheckbox: true,
+      feeRecordPaymentGroups,
+    });
 
-      const wrapper = render({
-        ...defaultRendererParams(),
-        userCanEdit: true,
-        displaySelectAllCheckbox: true,
-        feeRecordPaymentGroups,
-      });
-
-      wrapper.expectElement(`input#${checkboxId}[type="checkbox"]`).notToExist();
-    },
-  );
+    wrapper.expectElement(`input#${checkboxId}[type="checkbox"]`).notToExist();
+  });
 
   it('should not render any checkboxes when userCanEdit is false', () => {
     const feeRecordPaymentGroups: PremiumPaymentsViewModelItem[] = Object.values(FEE_RECORD_STATUS).map((status) => ({

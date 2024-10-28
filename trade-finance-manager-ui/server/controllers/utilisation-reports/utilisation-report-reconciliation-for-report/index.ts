@@ -8,6 +8,7 @@ import {
   mapPaymentDetailsGroupsToPaymentDetailsViewModel,
   mapKeyingSheetToKeyingSheetViewModel,
   mapPaymentDetailsFiltersToViewModel,
+  shouldDisplayPremiumPaymentsSelectAllCheckbox,
 } from '../helpers';
 import { PaymentDetailsViewModel, UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 import { PremiumPaymentsGroup } from '../../../api-response-types';
@@ -92,7 +93,17 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
 
     const enablePaymentsReceivedSorting = premiumPaymentsGroupsHaveAtLeastOnePaymentReceived(premiumPayments);
 
-    const premiumPaymentsViewModel = mapPremiumPaymentsToViewModelItems(premiumPayments, isCheckboxChecked);
+    const premiumPaymentsItems = mapPremiumPaymentsToViewModelItems(premiumPayments, isCheckboxChecked);
+
+    const premiumPaymentsViewModel = {
+      payments: premiumPaymentsItems,
+      filters: premiumPaymentsFilters,
+      filterError: premiumPaymentsFilterError,
+      tableDataError: premiumPaymentsTableDataError,
+      enablePaymentsReceivedSorting,
+      displayMatchSuccessNotification: matchSuccess === 'true',
+      displaySelectAllCheckbox: shouldDisplayPremiumPaymentsSelectAllCheckbox(premiumPaymentsItems),
+    };
 
     const keyingSheetViewModel = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
 
@@ -114,15 +125,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       bank,
       formattedReportPeriod,
       reportId,
-      premiumPayments: {
-        payments: premiumPaymentsViewModel,
-        filters: premiumPaymentsFilters,
-        filterError: premiumPaymentsFilterError,
-        tableDataError: premiumPaymentsTableDataError,
-        enablePaymentsReceivedSorting,
-        displayMatchSuccessNotification: matchSuccess === 'true',
-        displaySelectAllCheckbox: true,
-      },
+      premiumPayments: premiumPaymentsViewModel,
       paymentDetails: paymentDetailsViewModel,
       utilisationDetails: utilisationDetailsViewModel,
       keyingSheet: keyingSheetViewModel,

@@ -78,6 +78,7 @@ export type PremiumPaymentsViewModelItem = {
   totalPaymentsReceived: SortedAndFormattedCurrencyAndAmount;
   status: FeeRecordStatus;
   displayStatus: FeeRecordDisplayStatus;
+  isSelectable: boolean;
   checkboxId: PremiumPaymentsTableCheckboxId;
   isChecked: boolean;
   checkboxAriaLabel: string;

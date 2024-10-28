@@ -10,6 +10,7 @@
   {% set paymentsReceived = feeRecordPaymentGroup.paymentsReceived %}
   {% set totalPaymentsReceived = feeRecordPaymentGroup.totalPaymentsReceived %}
   {% set status = feeRecordPaymentGroup.status %}
+  {% set isSelectable = feeRecordPaymentGroup.isSelectable %}
   {% set displayStatus = feeRecordPaymentGroup.displayStatus %}
   {% set checkboxId = feeRecordPaymentGroup.checkboxId %}
   {% set isChecked = feeRecordPaymentGroup.isChecked %}
@@ -64,7 +65,7 @@
       </td>
       {% if userCanEdit and displayCheckboxColumn %}
         <td class="govuk-table__cell{{ " no-border" if not isLastFeeRecordInGroup }}">
-          {% if status === 'TO_DO' or status === 'DOES_NOT_MATCH' %}
+          {% if isSelectable %}
             {{ tableCellCheckbox.render({
               checkboxId: checkboxId,
               checked: isChecked,
