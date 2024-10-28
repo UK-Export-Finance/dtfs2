@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const { getCurrentGefDealVersion } = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { mongoDbClient: db } = require('../../../drivers/db-client');
 
@@ -116,6 +117,7 @@ const cloneDeal = async ({ dealId, bankInternalRefName, additionalRefName, maker
       }
     });
 
+    clonedDeal.version = getCurrentGefDealVersion();
     clonedDeal.createdAt = Date.now();
     clonedDeal.updatedAt = Date.now();
     clonedDeal.facilitiesUpdated = Date.now();
