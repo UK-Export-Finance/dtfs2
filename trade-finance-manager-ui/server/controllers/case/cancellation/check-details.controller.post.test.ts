@@ -18,7 +18,7 @@ const reason = 'reason';
 const bankRequestDate = new Date().valueOf().toString();
 const effectiveFrom = new Date().valueOf().toString();
 
-describe('postBankRequestDate', () => {
+describe('postDealCancellationDetails', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
@@ -31,6 +31,7 @@ describe('postBankRequestDate', () => {
       params: { _id: dealId },
       session: aRequestSession(),
       body: { reason, bankRequestDate, effectiveFrom },
+      flash: flashMock,
     });
 
     // Act
@@ -48,6 +49,7 @@ describe('postBankRequestDate', () => {
       params: { _id: dealId },
       session: aRequestSession(),
       body: { reason, bankRequestDate, effectiveFrom },
+      flash: flashMock,
     });
 
     // Act
@@ -70,6 +72,7 @@ describe('postBankRequestDate', () => {
         params: { _id: dealId },
         session,
         body: { reason, bankRequestDate, effectiveFrom },
+        flash: flashMock,
       });
 
       // Act
@@ -108,6 +111,7 @@ describe('postBankRequestDate', () => {
         params: { _id: dealId },
         session: aRequestSession(),
         body: { reason, bankRequestDate, effectiveFrom },
+        flash: flashMock,
       });
 
       // Act
