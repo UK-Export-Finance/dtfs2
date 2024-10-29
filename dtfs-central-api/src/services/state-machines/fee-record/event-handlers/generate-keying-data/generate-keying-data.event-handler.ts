@@ -33,14 +33,13 @@ export const handleFeeRecordGenerateKeyingDataEvent = async (
     return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
   }
 
-  const specificTfmFacilityValues = await getSpecificTfmFacilityValues(feeRecord.facilityId, reportPeriod);
-  const { coverPercentage, coverEndDate, interestPercentage, dayCountBasis } = specificTfmFacilityValues;
+  const { coverPercentage, coverEndDate, interestPercentage, dayCountBasis } = await getSpecificTfmFacilityValues(feeRecord.facilityId, reportPeriod);
 
   const fixedFee = getFixedFeeForFacility(feeRecord.facilityUtilisation, reportPeriod, coverPercentage, coverEndDate, interestPercentage, dayCountBasis);
 
   const fixedFeeAdjustment = calculateFixedFeeAdjustment(feeRecord, feeRecord.facilityUtilisationData, reportPeriod, fixedFee);
 
-  const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(feeRecord.facilityUtilisation, specificTfmFacilityValues.coverPercentage);
+  const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(feeRecord.facilityUtilisation, coverPercentage);
 
   const principalBalanceAdjustment = calculatePrincipalBalanceAdjustment(ukefShareOfUtilisation, feeRecord.facilityUtilisationData);
 

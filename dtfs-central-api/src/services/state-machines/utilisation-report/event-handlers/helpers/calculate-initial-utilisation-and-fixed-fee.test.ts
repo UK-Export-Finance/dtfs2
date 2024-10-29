@@ -6,7 +6,7 @@ import * as fixedFeeHelpers from './calculate-initial-fixed-fee';
 import * as helpers from '../../../../../helpers';
 
 jest.mock('./calculate-initial-fixed-fee');
-jest.mock('../../../../../helpers/get-latest-tfm-facility-values');
+jest.mock('../../../../../helpers/get-specific-tfm-facility-values');
 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
