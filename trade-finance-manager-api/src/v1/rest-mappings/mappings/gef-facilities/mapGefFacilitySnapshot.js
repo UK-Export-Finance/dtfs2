@@ -44,7 +44,7 @@ const mapGefFacilitySnapshot = (facility, dealSnapshot) => {
 
   facilitySnapshot.facilityProduct = mapFacilityProduct(type);
 
-  facilitySnapshot.facilityStage = mapGefFacilityStage(hasBeenIssued);
+  facilitySnapshot.facilityStage = mapGefFacilityStage(hasBeenIssued, facilityTfm?.facilityStage);
 
   facilitySnapshot.ukefFacilityType = type;
 
