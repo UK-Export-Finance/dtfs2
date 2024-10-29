@@ -1,11 +1,11 @@
 import {
   AuditDatabaseRecord,
   AuditDetails,
-  aValidUserUpsertRequest,
+  aValidCreateUserRequest,
   DocumentNotCreatedError,
   MONGO_DB_COLLECTIONS,
   TfmUser,
-  UserUpsertRequest,
+  CreateUserRequest,
 } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { InsertOneResult, ObjectId, WithoutId } from 'mongodb';
@@ -25,7 +25,7 @@ describe('user repo', () => {
   });
 
   describe('create user', () => {
-    let createUserRequest: UserUpsertRequest;
+    let createUserRequest: CreateUserRequest;
     let createUserDatabaseRequest: WithoutId<TfmUser>;
     let auditDetails: AuditDetails;
     let auditRecord: AuditDatabaseRecord;
@@ -39,7 +39,7 @@ describe('user repo', () => {
       auditDetails = generateSystemAuditDetails();
       auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
-      createUserRequest = aValidUserUpsertRequest();
+      createUserRequest = aValidCreateUserRequest();
       createUserDatabaseRequest = { ...createUserRequest, status: USER.STATUS.ACTIVE, auditRecord };
 
       insertedId = new ObjectId();
