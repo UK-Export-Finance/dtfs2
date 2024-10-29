@@ -20,11 +20,11 @@ describe(component, () => {
 
   const tableHeaderSelector = (text: string) => `thead th:contains("${text}")`;
 
-  it('renders 7 table headings', () => {
+  it('renders 8 table headings', () => {
     const wrapper = getWrapper();
 
     wrapper.expectElement('table thead tr').toHaveCount(1);
-    wrapper.expectElement('table thead th').toHaveCount(7);
+    wrapper.expectElement('table thead th').toHaveCount(8);
   });
 
   it('renders the amount heading with the aria-sort attribute set to ascending', () => {
@@ -58,5 +58,22 @@ describe(component, () => {
 
     wrapper.expectElement(tableHeaderSelector('Exporter')).toExist();
     wrapper.expectElement(tableHeaderSelector('Exporter')).notToHaveAttribute('aria-sort');
+  });
+
+  it('should render the facility ID and exporter headings as aria hidden', () => {
+    const wrapper = getWrapper();
+
+    wrapper.expectElement(tableHeaderSelector('Facility ID')).toExist();
+    wrapper.expectElement(tableHeaderSelector('Facility ID')).toHaveAttribute('aria-hidden', 'true');
+
+    wrapper.expectElement(tableHeaderSelector('Exporter')).toExist();
+    wrapper.expectElement(tableHeaderSelector('Exporter')).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  it('should render the combined facility ID and export heading as visually hidden', () => {
+    const wrapper = getWrapper();
+
+    wrapper.expectElement(tableHeaderSelector('Facility ID and Exporter')).toExist();
+    wrapper.expectElement(tableHeaderSelector('Facility ID')).hasClass('govuk-visually-hidden');
   });
 });

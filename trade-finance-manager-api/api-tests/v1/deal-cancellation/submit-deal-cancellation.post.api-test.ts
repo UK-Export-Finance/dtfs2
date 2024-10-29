@@ -1,5 +1,5 @@
 import { add, format } from 'date-fns';
-import { AnyObject, MAX_CHARACTER_COUNT, TEAM_IDS, TestApiError, TfmDeal, TfmFacility } from '@ukef/dtfs2-common';
+import { AnyObject, MAX_CHARACTER_COUNT, TEAM_IDS, TestApiError, TfmDealCancellationResponse, TfmFacility } from '@ukef/dtfs2-common';
 import { ObjectId, UpdateResult } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import { createApi } from '../../api';
@@ -12,7 +12,7 @@ import { CANCEL_DEAL_FUTURE_DATE, CANCEL_DEAL_PAST_DATE } from '../../../src/con
 
 const updateDealCancellationMock = jest.fn() as jest.Mock<Promise<UpdateResult>>;
 const sendEmailMock = jest.fn() as jest.Mock<Promise<void>>;
-const findOneDealMock = jest.fn() as jest.Mock<Promise<TfmDeal>>;
+const submitDealCancellationMock = jest.fn() as jest.Mock<Promise<TfmDealCancellationResponse>>;
 const findFacilitiesByDealIdMock = jest.fn() as jest.Mock<Promise<TfmFacility[]>>;
 
 const mockPimEmailAddress = 'pim@example.com';
@@ -22,7 +22,7 @@ jest.mock('../../../src/v1/api', () => ({
   updateDealCancellation: () => updateDealCancellationMock(),
   sendEmail: (templateId: string, sendToEmailAddress: string, emailVariables: object) => sendEmailMock(templateId, sendToEmailAddress, emailVariables),
   findOneTeam: () => ({ email: mockPimEmailAddress }),
-  findOneDeal: () => findOneDealMock(),
+  submitDealCancellation: (params: AnyObject) => submitDealCancellationMock(params),
   findFacilitiesByDealId: () => findFacilitiesByDealIdMock(),
 }));
 
@@ -79,17 +79,10 @@ describe('POST /v1/deals/:id/cancellation/submit', () => {
     });
 
     beforeEach(() => {
-      findOneDealMock.mockResolvedValue({ dealSnapshot: { ukefDealId } } as TfmDeal);
-      findFacilitiesByDealIdMock.mockResolvedValue(
-        ukefFacilityIds.map(
-          (ukefFacilityId) =>
-            ({
-              facilitySnapshot: {
-                ukefFacilityId,
-              },
-            }) as TfmFacility,
-        ),
-      );
+      submitDealCancellationMock.mockResolvedValue({
+        cancelledDealUkefId: ukefDealId,
+        riskExpiredFacilityUkefIds: ukefFacilityIds,
+      } as TfmDealCancellationResponse);
     });
 
     afterAll(() => {
@@ -139,9 +132,26 @@ describe('POST /v1/deals/:id/cancellation/submit', () => {
       expect(response.status).toEqual(HttpStatusCode.BadRequest);
     });
 
+    it('calls api.submitDealCancellation with the correct parameters', async () => {
+      // Arrange
+      const url = getSubmitTfmDealCancellationUrl({ id: validId });
+      const cancellation = aValidPayload();
+
+      // Act
+      await as(aPimUser).post(cancellation).to(url);
+
+      // Assert
+      expect(submitDealCancellationMock).toHaveBeenCalledTimes(1);
+      expect(submitDealCancellationMock).toHaveBeenCalledWith({
+        dealId: validId,
+        cancellation,
+        auditDetails: expect.any(Object) as object,
+      });
+    });
+
     it('returns 500 if an unknown error is thrown', async () => {
       // Arrange
-      findOneDealMock.mockRejectedValueOnce(new Error('An error occurred'));
+      submitDealCancellationMock.mockRejectedValueOnce(new Error('An error occurred'));
 
       const url = getSubmitTfmDealCancellationUrl({ id: validId });
 
@@ -157,7 +167,7 @@ describe('POST /v1/deals/:id/cancellation/submit', () => {
       // Arrange
       const errorStatus = HttpStatusCode.BadRequest;
       const errorMessage = 'An error occurred';
-      findOneDealMock.mockRejectedValueOnce(new TestApiError(errorStatus, errorMessage));
+      submitDealCancellationMock.mockRejectedValueOnce(new TestApiError(errorStatus, errorMessage));
 
       const url = getSubmitTfmDealCancellationUrl({ id: validId });
 

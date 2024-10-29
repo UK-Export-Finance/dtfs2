@@ -1,14 +1,15 @@
 import { ObjectId } from 'mongodb';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { TestApiError, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { AuditDetails, TestApiError, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { submitDealCancellation, SubmitDealCancellationRequest } from './submit-deal-cancellation.controller';
 
 const submitDealCancellationMock = jest.fn() as jest.Mock<Promise<void>>;
 
 jest.mock('../../services/deal-cancellation/deal-cancellation.service', () => ({
   DealCancellationService: {
-    submitDealCancellation: (dealId: string, dealCancellation: TfmDealCancellation) => submitDealCancellationMock(dealId, dealCancellation),
+    submitDealCancellation: (params: { dealId: string; cancellation: TfmDealCancellation; auditDetails: AuditDetails }) => submitDealCancellationMock(params),
   },
 }));
 
@@ -78,7 +79,11 @@ describe('controllers - deal cancellation', () => {
 
       // Assert
       expect(submitDealCancellationMock).toHaveBeenCalledTimes(1);
-      expect(submitDealCancellationMock).toHaveBeenCalledWith(mockDealId, dealCancellation);
+      expect(submitDealCancellationMock).toHaveBeenCalledWith({
+        dealId: mockDealId,
+        cancellation: dealCancellation,
+        auditDetails: generateTfmAuditDetails(mockUserId),
+      });
     });
 
     it('should return 200', async () => {

@@ -1,12 +1,12 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
-import { isEmpty } from 'lodash';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { asUserSession } from '../../../helpers/express-session';
 import { CancelCancellationViewModel } from '../../../types/view-models';
 import api from '../../../api';
 import { canSubmissionTypeBeCancelled } from '../../helpers';
 import { getPreviousPageUrl } from './helpers/get-previous-page-url';
+import { isDealCancellationInDraft } from '../../helpers/deal-cancellation-enabled.helper';
 
 export type GetCancelCancellationRequest = CustomExpressRequest<{ params: { _id: string } }>;
 export type PostCancelCancellationRequest = CustomExpressRequest<{ params: { _id: string }; query: { return: string }; reqBody: { previousPage: string } }>;
@@ -34,7 +34,7 @@ export const getCancelCancellation = async (req: GetCancelCancellationRequest, r
 
     const cancellation = await api.getDealCancellation(_id, userToken);
 
-    if (isEmpty(cancellation)) {
+    if (!isDealCancellationInDraft(cancellation.status)) {
       return res.redirect(`/case/${_id}/deal`);
     }
 
