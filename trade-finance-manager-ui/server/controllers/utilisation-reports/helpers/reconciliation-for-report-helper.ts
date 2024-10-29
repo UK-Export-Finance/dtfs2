@@ -329,8 +329,8 @@ export const mapPaymentDetailsFiltersToViewModel = (paymentDetailsFilters: Payme
 };
 
 /**
- * Determines whether the premium payments select all checkbox should be displayed
+ * Determines whether any of the premium payments items are selectable
  * @param items - the items that will be displayed in the table
- * @returns - whether premium payments select all checkbox should be displayed
+ * @returns - whether any of the items are selectable
  */
-export const shouldDisplayPremiumPaymentsSelectAllCheckbox = (items: PremiumPaymentsViewModelItem[]): boolean => items.some((item) => item.isSelectable);
+export const premiumPaymentsHasSelectableItems = (items: PremiumPaymentsViewModelItem[]): boolean => items.some((item) => item.isSelectable);

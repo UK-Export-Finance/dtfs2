@@ -6,7 +6,7 @@
   {% set feeRecordPaymentGroups = params.feeRecordPaymentGroups %}
   {% set enablePaymentsReceivedSorting = params.enablePaymentsReceivedSorting %}
   {% set userCanEdit = params.userCanEdit %}
-  {% set displaySelectAllCheckbox = params.displaySelectAllCheckbox %}
+  {% set hasSelectableRows = params.hasSelectableRows %}
 
   {% macro tableHeader(params) %}
     {% set headerText = params.headerText %}
@@ -51,7 +51,7 @@
         {{ tableHeader({ headerText: 'Payments received', isNumericColumn: true, enableSorting: false }) }}
         {{ tableHeader({ headerText: 'Total payments received', isNumericColumn: true, enableSorting: enablePaymentsReceivedSorting, ariaSort: 'none', dataCy: 'premium-payments-table--total-payments-received' }) }}
         {{ tableHeader({ headerText: 'Status', isNumericColumn: false, enableSorting: true, ariaSort: 'none', dataCy: 'premium-payments-table--status' }) }}
-        {% if userCanEdit and displaySelectAllCheckbox %}
+        {% if userCanEdit and hasSelectableRows %}
           <td class="govuk-table__header">
             {{ selectAllTableCellCheckbox.render() }}
           </td>
@@ -61,7 +61,7 @@
 
     <tbody class="govuk-table__body">
     {% for feeRecordPaymentGroup in feeRecordPaymentGroups %}
-      {{ premiumPaymentsTableRow.render({ reportId: reportId, feeRecordPaymentGroup: feeRecordPaymentGroup, userCanEdit: userCanEdit, displayCheckboxColumn: displaySelectAllCheckbox }) }}
+      {{ premiumPaymentsTableRow.render({ reportId: reportId, feeRecordPaymentGroup: feeRecordPaymentGroup, userCanEdit: userCanEdit, showCheckboxColumn: hasSelectableRows }) }}
     {% endfor %}
     </tbody>
   </table>

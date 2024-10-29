@@ -35,8 +35,8 @@ describe(page, () => {
     premiumPayments: {
       payments: [],
       filters: premiumPaymentsFilters,
-      displayMatchSuccessNotification: false,
-      displaySelectAllCheckbox: true,
+      showMatchSuccessNotification: false,
+      hasSelectableRows: true,
       enablePaymentsReceivedSorting: false,
     },
     keyingSheet: [],
@@ -202,7 +202,7 @@ describe(page, () => {
         ...params,
         premiumPayments: {
           ...params.premiumPayments,
-          displayMatchSuccessNotification: false,
+          showMatchSuccessNotification: false,
         },
       });
 
@@ -214,7 +214,7 @@ describe(page, () => {
         ...params,
         premiumPayments: {
           ...params.premiumPayments,
-          displayMatchSuccessNotification: true,
+          showMatchSuccessNotification: true,
         },
       });
 

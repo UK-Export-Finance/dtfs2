@@ -156,8 +156,8 @@ export type PremiumPaymentsViewModel = {
   filterError?: ErrorSummaryViewModel;
   tableDataError?: ErrorSummaryViewModel;
   enablePaymentsReceivedSorting: boolean;
-  displayMatchSuccessNotification: boolean;
-  displaySelectAllCheckbox: boolean;
+  showMatchSuccessNotification: boolean;
+  hasSelectableRows: boolean;
 };
 
 export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & {

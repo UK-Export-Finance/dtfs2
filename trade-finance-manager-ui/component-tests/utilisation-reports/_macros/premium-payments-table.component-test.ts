@@ -19,7 +19,7 @@ type ComponentRendererParams = {
   userCanEdit: boolean;
   feeRecordPaymentGroups: PremiumPaymentsViewModelItem[];
   enablePaymentsReceivedSorting: boolean;
-  displaySelectAllCheckbox: boolean;
+  hasSelectableRows: boolean;
 };
 
 const render = componentRenderer<ComponentRendererParams>(component);
@@ -64,7 +64,7 @@ describe(component, () => {
     reportId: 1,
     feeRecordPaymentGroups: aPremiumPaymentsViewModelList(),
     enablePaymentsReceivedSorting: true,
-    displaySelectAllCheckbox: true,
+    hasSelectableRows: true,
   });
 
   const getWrapper = () => render(defaultRendererParams());
@@ -124,18 +124,18 @@ describe(component, () => {
     wrapper.expectElement(`${tableSelector} thead th:contains("Total payments received")`).notToHaveAttribute('aria-sort');
   });
 
-  it('should render the select all checkbox in the table headings row when userCanEdit and displaySelectAllCheckbox are true', () => {
-    const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, displaySelectAllCheckbox: true });
+  it('should render the select all checkbox in the table headings row when userCanEdit and hasSelectableRows are true', () => {
+    const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, hasSelectableRows: true });
     wrapper.expectElement(`${tableSelector} thead td input[type="checkbox"]#select-all-checkbox`).toExist();
   });
 
   it('should not render the select all checkbox in the table headings row when userCanEdit is false', () => {
-    const wrapper = render({ ...defaultRendererParams(), userCanEdit: false, displaySelectAllCheckbox: true });
+    const wrapper = render({ ...defaultRendererParams(), userCanEdit: false, hasSelectableRows: true });
     wrapper.expectElement(`${tableSelector} thead th input[type="checkbox"]#select-all-checkbox`).notToExist();
   });
 
-  it('should not render the select all checkbox in the table headings row when displaySelectAllCheckbox is false', () => {
-    const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, displaySelectAllCheckbox: false });
+  it('should not render the select all checkbox in the table headings row when hasSelectableRows is false', () => {
+    const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, hasSelectableRows: false });
     wrapper.expectElement(`${tableSelector} thead th input[type="checkbox"]#select-all-checkbox`).notToExist();
   });
 
@@ -496,7 +496,7 @@ describe(component, () => {
     });
   });
 
-  it('should render the checkbox when userCanEdit and displaySelectAllCheckbox are true, and the fee record status is selectable', () => {
+  it('should render the checkbox when userCanEdit and hasSelectableRows are true, and the fee record status is selectable', () => {
     const checkboxId: PremiumPaymentsTableCheckboxId = `feeRecordIds-1-reportedPaymentsCurrency-GBP-status-TO_DO`;
     const feeRecordPaymentGroups: PremiumPaymentsViewModelItem[] = [
       {
@@ -509,14 +509,14 @@ describe(component, () => {
     const wrapper = render({
       ...defaultRendererParams(),
       userCanEdit: true,
-      displaySelectAllCheckbox: true,
+      hasSelectableRows: true,
       feeRecordPaymentGroups,
     });
 
     wrapper.expectElement(`input#${checkboxId}[type="checkbox"]`).toExist();
   });
 
-  it('should not render the checkbox when userCanEdit and displaySelectAllCheckbox are true, and the fee record is not selectable', () => {
+  it('should not render the checkbox when userCanEdit and hasSelectableRows are true, and the fee record is not selectable', () => {
     const checkboxId = 'feeRecordIds-1,2,3-reportedPaymentsCurrency-GBP-status-TO_DO';
     const feeRecordPaymentGroups: PremiumPaymentsViewModelItem[] = [
       {
@@ -529,7 +529,7 @@ describe(component, () => {
     const wrapper = render({
       ...defaultRendererParams(),
       userCanEdit: true,
-      displaySelectAllCheckbox: true,
+      hasSelectableRows: true,
       feeRecordPaymentGroups,
     });
 
@@ -545,7 +545,7 @@ describe(component, () => {
     const wrapper = render({
       ...defaultRendererParams(),
       userCanEdit: false,
-      displaySelectAllCheckbox: true,
+      hasSelectableRows: true,
       feeRecordPaymentGroups,
     });
 
@@ -554,7 +554,7 @@ describe(component, () => {
     });
   });
 
-  it('should not render any checkboxes when displaySelectAllCheckbox is false', () => {
+  it('should not render any checkboxes when hasSelectableRows is false', () => {
     const feeRecordPaymentGroups: PremiumPaymentsViewModelItem[] = Object.values(FEE_RECORD_STATUS).map((status) => ({
       ...aPremiumPaymentsViewModelItem(),
       status,
@@ -563,7 +563,7 @@ describe(component, () => {
     const wrapper = render({
       ...defaultRendererParams(),
       userCanEdit: true,
-      displaySelectAllCheckbox: false,
+      hasSelectableRows: false,
       feeRecordPaymentGroups,
     });
 

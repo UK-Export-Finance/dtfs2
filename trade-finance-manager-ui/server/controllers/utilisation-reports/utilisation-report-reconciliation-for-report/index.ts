@@ -8,7 +8,7 @@ import {
   mapPaymentDetailsGroupsToPaymentDetailsViewModel,
   mapKeyingSheetToKeyingSheetViewModel,
   mapPaymentDetailsFiltersToViewModel,
-  shouldDisplayPremiumPaymentsSelectAllCheckbox,
+  premiumPaymentsHasSelectableItems,
 } from '../helpers';
 import { PaymentDetailsViewModel, UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 import { PremiumPaymentsGroup } from '../../../api-response-types';
@@ -101,8 +101,8 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       filterError: premiumPaymentsFilterError,
       tableDataError: premiumPaymentsTableDataError,
       enablePaymentsReceivedSorting,
-      displayMatchSuccessNotification: matchSuccess === 'true',
-      displaySelectAllCheckbox: shouldDisplayPremiumPaymentsSelectAllCheckbox(premiumPaymentsItems),
+      showMatchSuccessNotification: matchSuccess === 'true',
+      hasSelectableRows: premiumPaymentsHasSelectableItems(premiumPaymentsItems),
     };
 
     const keyingSheetViewModel = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);

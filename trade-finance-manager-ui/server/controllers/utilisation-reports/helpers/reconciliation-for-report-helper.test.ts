@@ -9,7 +9,7 @@ import {
   mapPaymentDetailsGroupsToPaymentDetailsViewModel,
   mapKeyingSheetToKeyingSheetViewModel,
   mapPaymentDetailsFiltersToViewModel,
-  shouldDisplayPremiumPaymentsSelectAllCheckbox,
+  premiumPaymentsHasSelectableItems,
 } from './reconciliation-for-report-helper';
 import { FeeRecord, KeyingSheet, KeyingSheetRow, Payment, PaymentDetails, PremiumPaymentsGroup } from '../../../api-response-types';
 import { aPremiumPaymentsGroup, aFeeRecord, aPayment, aPaymentDetails, aPremiumPaymentsViewModelItem } from '../../../../test-helpers';
@@ -1078,13 +1078,13 @@ describe('reconciliation-for-report-helper', () => {
     });
   });
 
-  describe('shouldDisplayPremiumPaymentsSelectAllCheckbox', () => {
+  describe('premiumPaymentsHasSelectableItems', () => {
     it('should return false if there are no items to display', () => {
       // Arrange
       const items: PremiumPaymentsViewModelItem[] = [];
 
       // Act
-      const result = shouldDisplayPremiumPaymentsSelectAllCheckbox(items);
+      const result = premiumPaymentsHasSelectableItems(items);
 
       // Assert
       expect(result).toEqual(false);
@@ -1098,7 +1098,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const result = shouldDisplayPremiumPaymentsSelectAllCheckbox(items);
+      const result = premiumPaymentsHasSelectableItems(items);
 
       // Assert
       expect(result).toEqual(false);
@@ -1112,7 +1112,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const result = shouldDisplayPremiumPaymentsSelectAllCheckbox(items);
+      const result = premiumPaymentsHasSelectableItems(items);
 
       // Assert
       expect(result).toEqual(true);
@@ -1126,7 +1126,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const result = shouldDisplayPremiumPaymentsSelectAllCheckbox(items);
+      const result = premiumPaymentsHasSelectableItems(items);
 
       // Assert
       expect(result).toEqual(true);

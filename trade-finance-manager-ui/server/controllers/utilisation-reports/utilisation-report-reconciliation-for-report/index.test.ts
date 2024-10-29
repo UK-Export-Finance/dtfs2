@@ -186,9 +186,9 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const expectedPremiumPayments: PremiumPaymentsViewModel = {
         payments: expectedPremiumPaymentsPayments,
         enablePaymentsReceivedSorting: true,
-        displayMatchSuccessNotification: false,
+        showMatchSuccessNotification: false,
         filters: premiumPaymentsFilters,
-        displaySelectAllCheckbox: false,
+        hasSelectableRows: false,
       };
 
       const expectedUtilisationDetails: UtilisationDetailsViewModel = {
@@ -291,7 +291,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(viewModel.premiumPayments.payments[0].isChecked).toEqual(true);
     });
 
-    it("renders the page with 'displayMatchSuccessNotification' set to true if matchSuccess query param is set to 'true'", async () => {
+    it("renders the page with 'showMatchSuccessNotification' set to true if matchSuccess query param is set to 'true'", async () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session,
@@ -311,10 +311,10 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
-      expect(viewModel.premiumPayments.displayMatchSuccessNotification).toEqual(true);
+      expect(viewModel.premiumPayments.showMatchSuccessNotification).toEqual(true);
     });
 
-    it("renders the page with 'displayMatchSuccessNotification' set to false if matchSuccess query param is not set", async () => {
+    it("renders the page with 'showMatchSuccessNotification' set to false if matchSuccess query param is not set", async () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session,
@@ -332,10 +332,10 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
-      expect(viewModel.premiumPayments.displayMatchSuccessNotification).toEqual(false);
+      expect(viewModel.premiumPayments.showMatchSuccessNotification).toEqual(false);
     });
 
-    it("renders the page with 'displayMatchSuccessNotification' set to false if matchSuccess query param is set to a value other than 'true'", async () => {
+    it("renders the page with 'showMatchSuccessNotification' set to false if matchSuccess query param is set to a value other than 'true'", async () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session,
@@ -355,7 +355,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
-      expect(viewModel.premiumPayments.displayMatchSuccessNotification).toEqual(false);
+      expect(viewModel.premiumPayments.showMatchSuccessNotification).toEqual(false);
     });
 
     it("renders the page with 'enablePaymentsReceivedSorting' set to true if at least one fee record has a non-null 'paymentsReceived'", async () => {

@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% set premiumPaymentsHtml %}
-  {% if premiumPayments.displayMatchSuccessNotification %}
+  {% if premiumPayments.showMatchSuccessNotification %}
     {% set notificationHtml %}
       <h3 class="govuk-notification-banner__heading" data-cy="match-success-notification-heading">
         Match payment recorded
@@ -133,7 +133,7 @@
     feeRecordPaymentGroups: premiumPayments.payments,
     enablePaymentsReceivedSorting: premiumPayments.enablePaymentsReceivedSorting,
     userCanEdit: userCanEdit,
-    displaySelectAllCheckbox: premiumPayments.displaySelectAllCheckbox
+    hasSelectableRows: premiumPayments.hasSelectableRows
   }) }}
   {% if userCanEdit %}
     </form>
