@@ -79,17 +79,17 @@ context('Deal cancellation - effective from date in past', () => {
         caseDealPage.cancelDealButton().should('not.exist');
       });
 
-      it('should show the deal status as "Cancelled"', () => {
+      it(`should show the deal status as ${TFM_DEAL_STAGE.CANCELLED}`, () => {
         cy.assertText(caseDealPage.dealStage(), TFM_DEAL_STAGE.CANCELLED);
       });
 
-      it('should show the facility statuses as "Risk Expired"', () => {
+      it(`should show the facility statuses as ${TFM_FACILITY_STAGE.RISK_EXPIRED}`, () => {
         const facilityId = dealFacilities[0]._id;
 
         cy.assertText(caseDealPage.dealFacilitiesTable.row(facilityId).facilityStage(), TFM_FACILITY_STAGE.RISK_EXPIRED);
       });
 
-      it('should show the deal stage on the "All deals" page as "Cancelled"', () => {
+      it(`should show the deal stage on the "All deals" page as ${TFM_DEAL_STAGE.CANCELLED}`, () => {
         cy.visit(relative(`/deals/0`));
 
         const row = dealsPage.dealsTable.row(dealId);

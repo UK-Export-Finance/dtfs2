@@ -17,10 +17,6 @@ jest.mock('../helpers', () => ({
 
 const mockSuccessBannerMessage = 'mock success flash message';
 
-function mockSuccessfulFlashResponse() {
-  return jest.fn().mockReturnValue([mockSuccessBannerMessage]);
-}
-
 const res = mockRes();
 
 const token = 'test-token';
@@ -82,7 +78,7 @@ describe('controllers - case', () => {
             _id: mockDeal._id,
           },
           session,
-          flash: mockSuccessfulFlashResponse(),
+          flash: jest.fn().mockReturnValue([mockSuccessBannerMessage]),
         };
       });
 

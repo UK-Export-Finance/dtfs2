@@ -87,7 +87,7 @@ describe('postDealCancellationDetails', () => {
       );
     });
 
-    it('adds a successMessage to flash storage', async () => {
+    it('adds a successMessage to req.flash', async () => {
       // Arrange
       const session = aRequestSession();
 
