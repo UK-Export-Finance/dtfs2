@@ -29,14 +29,11 @@ exports.clone = async (req, res) => {
       auditDetails,
     });
 
-    if (response.status === 200) {
-      const { newDealId } = response;
-      // clone the corresponding facilities
-      await cloneFacilities(existingDealId, newDealId, auditDetails);
+    const { insertedId } = response;
+    // clone the corresponding facilities
+    await cloneFacilities(existingDealId, insertedId, auditDetails);
 
-      return res.status(200).send({ dealId: newDealId });
-    }
-    return res.status(404).send({ message: 'The resource that you are trying to access does not exist' });
+    return res.status(200).send({ dealId: insertedId });
   } catch (error) {
     console.error('Failed to clone deal, %o', error);
 

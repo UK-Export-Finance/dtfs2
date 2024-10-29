@@ -34,7 +34,7 @@ export const cloneDeal = async ({
   userId,
   bank,
   auditDetails,
-}: CloneDealParams): Promise<{ newDealId: string; status: 200 }> => {
+}: CloneDealParams): Promise<{ insertedId: ObjectId }> => {
   if (!ObjectId.isValid(dealId)) {
     throw new InvalidDealIdError(String(dealId));
   }
@@ -44,9 +44,8 @@ export const cloneDeal = async ({
   }
 
   const collection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.DEALS);
-  // remove unused properties at the top of the Object (i.e. _id, ukefDecision, etc).
-  // any additional fields that are located at the root of the object and that need removing can be added here
-  const unusedProperties = [
+
+  const propertiesToRemove = [
     '_id',
     'ukefDecision',
     'ukefDecisionAccepted',
@@ -67,8 +66,7 @@ export const cloneDeal = async ({
   const clonedDeal = existingDeal;
   const eligibility = await getLatestEligibilityCriteria();
 
-  // delete unused properties
-  unusedProperties.forEach((property) => {
+  propertiesToRemove.forEach((property) => {
     if (clonedDeal[property]) {
       delete clonedDeal[property];
     }
@@ -97,10 +95,9 @@ export const cloneDeal = async ({
   clonedDeal.clonedDealId = dealId;
   clonedDeal.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
-  // insert the cloned deal in the database
   const createdApplication = await collection.insertOne(clonedDeal);
   const newDealId = createdApplication.insertedId;
 
   // return the ID for the newly inserted deal
-  return { newDealId: newDealId.toHexString(), status: 200 };
+  return { insertedId: newDealId };
 };

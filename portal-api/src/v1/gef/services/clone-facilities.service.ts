@@ -5,15 +5,7 @@ import { AuditDetails, Facility } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../../drivers/db-client';
 
-export const cloneFacilities = async (currentDealId: string, newDealId: ObjectId, auditDetails: AuditDetails) => {
-  if (!ObjectId.isValid(currentDealId)) {
-    throw new Error('Invalid Current Deal Id');
-  }
-
-  if (!ObjectId.isValid(newDealId)) {
-    throw new Error('Invalid New Deal Id');
-  }
-
+export const cloneFacilities = async (currentDealId: string, newDealId: ObjectId, auditDetails: AuditDetails): Promise<void> => {
   const facilitiesCollection = 'facilities';
   const collection = await mongoDbClient.getCollection(facilitiesCollection);
 
