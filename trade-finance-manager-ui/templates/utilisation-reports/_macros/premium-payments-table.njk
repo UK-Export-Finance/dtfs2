@@ -52,7 +52,7 @@
         {{ tableHeader({ headerText: 'Total payments received', isNumericColumn: true, enableSorting: enablePaymentsReceivedSorting, ariaSort: 'none', dataCy: 'premium-payments-table--total-payments-received' }) }}
         {{ tableHeader({ headerText: 'Status', isNumericColumn: false, enableSorting: true, ariaSort: 'none', dataCy: 'premium-payments-table--status' }) }}
         {% if userCanEdit and hasSelectableRows %}
-          <td class="govuk-table__header">
+          <td class="govuk-table__header" data-cy="premium-payments-select-all-checkbox-container">
             {{ selectAllTableCellCheckbox.render() }}
           </td>
         {% endif %}

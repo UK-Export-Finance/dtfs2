@@ -136,7 +136,7 @@ describe(component, () => {
 
   it('should not render the select all checkbox in the table headings row when userCanEdit is true and hasSelectableRows is false', () => {
     const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, hasSelectableRows: false });
-    wrapper.expectElement(`${tableSelector} thead th input[type="checkbox"]#select-all-checkbox`).notToExist();
+    wrapper.expectElement(`${tableSelector} [data-cy="table-cell-checkbox--select-all"]`).notToExist();
   });
 
   it('should not render the select all checkbox in the table headings row when userCanEdit is false and hasSelectableRows is false', () => {
