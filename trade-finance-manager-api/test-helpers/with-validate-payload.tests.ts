@@ -4,6 +4,13 @@ import { NextFunction, Request, Response } from 'express';
 
 type ValidatePayloadTestCases = { aTestCase: () => unknown; description: string }[];
 
+/**
+ * This is a reusable test to allow for validating payloads
+ * It is intended to be used for any controller-level function that utilises
+ * `req`, `res` and `next` as parameters
+ * It allows for commonisation of test cases and commonisation of tests
+ */
+
 export const withValidatePayloadTests = ({
   validatePayload,
   failureTestCases,
