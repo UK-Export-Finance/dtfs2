@@ -1,10 +1,10 @@
 import { getUpsertTfmUserRequestFailureTestCases, getUpsertTfmUserRequestSuccessTestCases } from '@ukef/dtfs2-common';
-import { validatePutUserPayload } from './validate-put-user-payload';
+import { validateTfmPutUserPayload } from './validate-put-tfm-user-payload';
 import { withValidatePayloadTests } from '../../../test-helpers';
 
-describe('validatePutUserPayload', () => {
+describe('validatePutTfmUserPayload', () => {
   withValidatePayloadTests({
-    validatePayload: validatePutUserPayload,
+    validatePayload: validateTfmPutUserPayload,
     failureTestCases: getUpsertTfmUserRequestFailureTestCases({
       getTestObjectWithUpdatedUpsertTfmUserRequestParams: aPayloadWithUpdatedUpsertTfmUserRequest,
     }),

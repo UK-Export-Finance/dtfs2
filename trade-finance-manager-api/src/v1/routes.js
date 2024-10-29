@@ -8,7 +8,7 @@ const passport = require('passport');
 
 const { swaggerSpec, swaggerUiOptions } = require('./swagger');
 const { validateSsoFeatureFlagIsOff, validateSsoFeatureFlagIsOn } = require('./middleware/validate-sso-feature-flag');
-const { validatePutUserPayload } = require('./middleware/validate-put-user-payload');
+const { validateTfmPutUserPayload } = require('./middleware/validate-put-tfm-user-payload');
 const feedbackController = require('./controllers/feedback-controller');
 const amendmentController = require('./controllers/amendment.controller');
 const facilityController = require('./controllers/facility.controller');
@@ -74,7 +74,7 @@ openRouter.route('/user').post(validateSsoFeatureFlagIsOff, users.createTfmUser)
 authRouter
   .route('/users')
   .post(validateSsoFeatureFlagIsOff, users.createTfmUser)
-  .put(validateSsoFeatureFlagIsOn, validatePutUserPayload, users.upsertTfmUserFromEntraIdUser);
+  .put(validateSsoFeatureFlagIsOn, validateTfmPutUserPayload, users.upsertTfmUserFromEntraIdUser);
 
 authRouter
   .route('/users/:user')
