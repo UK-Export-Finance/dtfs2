@@ -4,6 +4,7 @@ import cloneGEFDeal from '../../pages/clone-deal';
 import mandatoryCriteria from '../../pages/mandatory-criteria';
 import nameApplication from '../../pages/name-application';
 import applicationDetails from '../../pages/application-details';
+import facilities from '../../pages/facilities';
 
 /**
  * NOTE: These tests check the backwards compatibility with in-flight version 0 deals.
@@ -17,8 +18,6 @@ context('Clone version 0 deal to version 1', () => {
     cy.loadData();
     cy.insertVersion0Deal(BANK1_MAKER1.username).then(({ insertedId: dealId }) => {
       version0DealId = dealId;
-
-      cy.insertVersion0Facility(version0DealId);
     });
   });
 
@@ -30,6 +29,10 @@ context('Clone version 0 deal to version 1', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${version0DealId}`));
+
+      applicationDetails.addContingentFacilityButton().click();
+      facilities.hasBeenIssuedRadioYesRadioButton().click();
+      cy.clickContinueButton();
 
       cy.visit(relative(`/gef/application-details/${version0DealId}`));
 
