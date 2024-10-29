@@ -9,6 +9,8 @@ jest.mock('../../../api', () => ({
   submitDealCancellation: jest.fn(),
 }));
 
+const flashMock = jest.fn();
+
 const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
 
@@ -80,6 +82,24 @@ describe('postBankRequestDate', () => {
         { reason, bankRequestDate: Number(bankRequestDate), effectiveFrom: Number(effectiveFrom) },
         session.userToken,
       );
+    });
+
+    it('adds a successMessage to flash storage', async () => {
+      // Arrange
+      const session = aRequestSession();
+
+      const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
+        params: { _id: dealId },
+        session,
+        body: { reason, bankRequestDate, effectiveFrom },
+        flash: flashMock,
+      });
+
+      // Act
+      await postDealCancellationDetails(req, res);
+
+      // Assert
+      expect(flashMock).toHaveBeenCalledWith('successMessage', `Deal ${ukefDealId} cancelled`);
     });
 
     it('redirects to the deal summary', async () => {
