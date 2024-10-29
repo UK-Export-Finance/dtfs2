@@ -43,7 +43,7 @@ exports.getByVersion = async (req, res) => {
  * criteria document from the 'eligibilityCriteria' collection.
  * EC is returned as an array for mapping.
  *
- * @returns {Promise<Object>} The latest eligibility criteria document.
+ * @returns {Promise<import('@ukef/dtfs2-common').GefDeal['eligibility']>} The latest eligibility criteria document.
  */
 const getLatestEligibilityCriteria = async () => {
   const collection = await db.getCollection('eligibilityCriteria');
