@@ -5,6 +5,7 @@ let mojFilters = require('@ministryofjustice/frontend/moj/filters/all')();
 const { localiseTimestamp } = require('./filter-localiseTimestamp');
 const { formatDateString } = require('./filter-formatDateString');
 const { formatIsoDateString } = require('./filter-formatIsoDateString');
+const { formatUnixTimestamp } = require('./filter-formatUnixTimestamp');
 const dashIfEmpty = require('./filter-dashIfEmpty');
 const formatBooleanAsString = require('./filter-formatOptionalBooleanAsString');
 const displayName = require('./filter-displayName');
@@ -42,6 +43,7 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('localiseTimestamp', localiseTimestamp);
   nunjucksEnvironment.addFilter('formatDateString', formatDateString);
   nunjucksEnvironment.addFilter('formatIsoDateString', formatIsoDateString);
+  nunjucksEnvironment.addFilter('formatUnixTimestamp', formatUnixTimestamp);
   nunjucksEnvironment.addFilter('dashIfEmpty', dashIfEmpty);
   nunjucksEnvironment.addFilter('formatBooleanAsString', formatBooleanAsString);
   nunjucksEnvironment.addFilter('displayName', displayName);

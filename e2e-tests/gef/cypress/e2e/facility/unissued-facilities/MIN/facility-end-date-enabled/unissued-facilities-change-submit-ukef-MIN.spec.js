@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import relative from '../../../../relativeURL';
 import CONSTANTS from '../../../../../fixtures/constants';
 import { threeDaysAgo, threeMonthsOneDay, twoMonths, today } from '../../../../../../../e2e-fixtures/dateConstants';
@@ -68,18 +67,18 @@ context('Unissued Facilities MIN - change all to issued from unissued table - fe
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(1).click();
 
-      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo });
+      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo.date });
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
 
       aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
 
       cy.clickContinueButton();
 
-      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 
@@ -95,14 +94,14 @@ context('Unissued Facilities MIN - change all to issued from unissued table - fe
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
 
       aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
 
       cy.clickContinueButton();
 
-      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 
@@ -328,10 +327,10 @@ context('Return to maker for unissued to issued facilities - feature flag enable
 
     // change facility to issued and check correct format
     it('change unissued to issued from application details whilst changes required', () => {
-      const issuedDate = format(today, 'd MMMM yyyy');
-      const coverStart = format(today, 'd MMMM yyyy');
-      const coverEnd = format(threeMonthsOneDay, 'd MMMM yyyy');
-      const facilityEnd = format(threeMonthsOneDay, 'd MMMM yyyy');
+      const issuedDate = today.d_MMMM_yyyy;
+      const coverStart = today.d_MMMM_yyyy;
+      const coverEnd = threeMonthsOneDay.d_MMMM_yyyy;
+      const facilityEnd = threeMonthsOneDay.d_MMMM_yyyy;
 
       applicationDetails.facilitySummaryListTable(3).hasBeenIssuedAction().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change`));
@@ -341,12 +340,12 @@ context('Return to maker for unissued to issued facilities - feature flag enable
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
       cy.completeDateFormFields({ idPrefix: 'cover-start-date' });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
 
       aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       cy.clickContinueButton();
 
-      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 

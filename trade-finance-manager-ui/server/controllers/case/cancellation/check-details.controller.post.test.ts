@@ -6,10 +6,15 @@ import { postDealCancellationDetails, PostDealCancellationDetailsRequest } from 
 
 jest.mock('../../../api', () => ({
   getDeal: jest.fn(),
+  submitDealCancellation: jest.fn(),
 }));
 
 const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
+
+const reason = 'reason';
+const bankRequestDate = new Date().valueOf().toString();
+const effectiveFrom = new Date().valueOf().toString();
 
 describe('postBankRequestDate', () => {
   beforeEach(() => {
@@ -23,6 +28,7 @@ describe('postBankRequestDate', () => {
     const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
       params: { _id: dealId },
       session: aRequestSession(),
+      body: { reason, bankRequestDate, effectiveFrom },
     });
 
     // Act
@@ -39,6 +45,7 @@ describe('postBankRequestDate', () => {
     const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
       params: { _id: dealId },
       session: aRequestSession(),
+      body: { reason, bankRequestDate, effectiveFrom },
     });
 
     // Act
@@ -48,34 +55,39 @@ describe('postBankRequestDate', () => {
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
 
-  it('redirects to deal summary page if the submission type is invalid (MIA)', async () => {
-    // Arrange
-    jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: DEAL_SUBMISSION_TYPE.MIA } });
-
-    const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
-      params: { _id: dealId },
-      session: aRequestSession(),
-    });
-
-    // Act
-    await postDealCancellationDetails(req, res);
-
-    // Assert
-    expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
-  });
-
   describe.each([DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN])('when the deal type is %s', (validDealType) => {
     beforeEach(() => {
       jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: validDealType } });
     });
 
-    // TODO: DTFS2-7298 - test deal cancellation endpoints are called with correct payload
+    it('submits the deal cancellation', async () => {
+      // Arrange
+      const session = aRequestSession();
 
-    it('redirects to the effective from date page', async () => {
+      const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
+        params: { _id: dealId },
+        session,
+        body: { reason, bankRequestDate, effectiveFrom },
+      });
+
+      // Act
+      await postDealCancellationDetails(req, res);
+
+      // Assert
+      expect(api.submitDealCancellation).toHaveBeenCalledTimes(1);
+      expect(api.submitDealCancellation).toHaveBeenCalledWith(
+        dealId,
+        { reason, bankRequestDate: Number(bankRequestDate), effectiveFrom: Number(effectiveFrom) },
+        session.userToken,
+      );
+    });
+
+    it('redirects to the deal summary', async () => {
       // Arrange
       const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
         params: { _id: dealId },
         session: aRequestSession(),
+        body: { reason, bankRequestDate, effectiveFrom },
       });
 
       // Act

@@ -8,4 +8,4 @@ export const TFM_DEAL_STAGE = {
   DECLINED: 'Declined',
   ABANDONED: 'Abandoned',
   AMENDMENT_IN_PROGRESS: 'Amendment in progress',
-};
+} as const;

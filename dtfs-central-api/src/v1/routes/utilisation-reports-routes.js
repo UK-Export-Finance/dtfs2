@@ -254,6 +254,11 @@ utilisationReportsRouter.route('/set-status').put(putUtilisationReportStatusCont
  *         schema:
  *           type: object
  *           $ref: '#/definitions/PremiumPaymentsFilters'
+ *       - in: query
+ *         name: paymentDetailsFilters
+ *         schema:
+ *           type: object
+ *           $ref: '#/definitions/PaymentDetailsFilters'
  *     responses:
  *       200:
  *         description: OK

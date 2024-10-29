@@ -279,10 +279,10 @@ jobs:
           password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Artifacts 🗃️
-        working-directory: ./azure-functions/${{ matrix.functions }}
+        working-directory: .
         run: |
           # Build images
-          docker build . \
+          docker build -f ./azure-functions/${{ matrix.functions }}/Dockerfile . \
           -t ${{ env.ACR }}/${{ matrix.functions }}:${{ github.sha }} \
           -t ${{ env.ACR }}/${{ matrix.functions }}:${{ env.FROM }}
 

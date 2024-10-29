@@ -11,36 +11,56 @@ const getRandomCoverStartDate = (): Date => faker.date.past({ years: 1, refDate:
 const EARLIEST_COVER_END_DATE = addMonths(TODAY, 12);
 const getRandomCoverEndDate = (): Date => faker.date.future({ years: 2, refDate: EARLIEST_COVER_END_DATE });
 
-export const aFacilityWithoutDealId = (): Omit<Facility, 'dealId'> => ({
-  _id: new ObjectId(),
+/**
+ * Creates a facility that can be used for utilisation reporting testing.
+ * It can be replaced by creating a deal with a facility manually and then pulling from the mongo db collection.
+ * This way we ensure we are inserting a valid facility.
+ * @param facilityId - id for the facility
+ * @param dealId - id of the deal
+ * @param portalUserId - id of a portal user
+ * @returns a facility
+ */
+export const aFacility = (facilityId: ObjectId, dealId: ObjectId, portalUserId: ObjectId): Facility => ({
+  _id: facilityId,
+  dealId,
   type: 'Cash',
   hasBeenIssued: true,
-  name: 'facilityName',
+  name: 'TEST FOR UTILISATION REPORTING',
   shouldCoverStartOnSubmission: true,
   coverStartDate: getRandomCoverStartDate(),
   coverEndDate: getRandomCoverEndDate(),
   issueDate: null,
-  monthsOfCover: 12,
-  details: [],
+  monthsOfCover: null,
+  details: ['Committed basis'],
   detailsOther: '',
   currency: {
     id: 'GBP',
   },
-  value: 100000,
+  value: 500000,
   coverPercentage: 80,
-  interestPercentage: 5,
-  paymentType: 'cash',
-  createdAt: TODAY.getTime(),
-  updatedAt: TODAY.getTime(),
-  ukefExposure: 80000,
-  guaranteeFee: 10,
-  submittedAsIssuedDate: null,
-  ukefFacilityId: '12345678',
-  feeType: 'cash',
+  interestPercentage: 4,
+  paymentType: 'Monthly',
+  createdAt: 1726060441121,
+  updatedAt: 1726061294910,
+  ukefExposure: 400000,
+  guaranteeFee: 3.6,
+  submittedAsIssuedDate: '1726061292962',
+  ukefFacilityId: '0040905629',
+  feeType: 'In arrears',
   feeFrequency: 'Monthly',
-  dayCountBasis: 365,
-  coverDateConfirmed: null,
-  hasBeenIssuedAndAcknowledged: null,
+  dayCountBasis: 360,
+  coverDateConfirmed: true,
+  hasBeenIssuedAndAcknowledged: true,
   canResubmitIssuedFacilities: null,
   unissuedToIssuedByMaker: {},
+  isUsingFacilityEndDate: false,
+  bankReviewDate: new Date('2028-02-29'),
+  facilityEndDate: null,
+  auditRecord: {
+    lastUpdatedAt: '2024-09-11T13:28:19.402 +00:00',
+    lastUpdatedByPortalUserId: portalUserId,
+    lastUpdatedByTfmUserId: null,
+    lastUpdatedByIsSystem: null,
+    noUserLoggedIn: null,
+  },
 });

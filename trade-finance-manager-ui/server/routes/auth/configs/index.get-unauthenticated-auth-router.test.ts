@@ -30,7 +30,7 @@ describe('auth router config', () => {
       });
       it('should return unauthenticatedAuthSsoRouter', () => {
         const result = getUnauthenticatedAuthRouter();
-        expect(result).toBe('unauthenticatedAuthSsoRouter');
+        expect(result).toEqual('unauthenticatedAuthSsoRouter');
       });
     });
 

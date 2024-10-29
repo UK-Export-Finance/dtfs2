@@ -244,7 +244,7 @@ const issueAcbsFacilities = async (deal) => {
     .filter((facility) => facility?.hasBeenIssued && isUnissuedInACBS(facility?.tfm?.acbs.facilityStage))
     .map(
       async (facility) =>
-        await api.updateACBSfacility(facility, {
+        await api.issueACBSfacility(facility, {
           dealSnapshot: {
             dealType: deal.dealType,
             submissionType: deal.submissionType,

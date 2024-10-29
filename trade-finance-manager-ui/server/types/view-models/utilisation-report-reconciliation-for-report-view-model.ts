@@ -95,13 +95,13 @@ export type PaymentDetailsFilterErrorsViewModel = {
 };
 
 export type PaymentDetailsRowViewModel = {
-  feeRecordPaymentGroupStatus: FeeRecordStatus;
   payment: PaymentDetailsPaymentViewModel;
   feeRecords: {
     id: number;
     facilityId: string;
     exporter: string;
   }[];
+  status: FeeRecordStatus;
   reconciledBy: string;
   dateReconciled: {
     formattedDateReconciled: string;
@@ -109,9 +109,18 @@ export type PaymentDetailsRowViewModel = {
   };
 };
 
+export type SelectedFilter = { value: string; removeHref: string };
+
+export type SelectedPaymentDetailsFiltersViewModel = {
+  facilityId?: SelectedFilter;
+  paymentCurrency?: SelectedFilter;
+  paymentReference?: SelectedFilter;
+};
+
 export type PaymentDetailsViewModel = {
   rows: PaymentDetailsRowViewModel[];
   filters?: PaymentDetailsFiltersViewModel;
+  selectedFilters: SelectedPaymentDetailsFiltersViewModel | null;
   filterErrors?: PaymentDetailsFilterErrorsViewModel;
   isFilterActive?: boolean;
 };
@@ -137,6 +146,7 @@ export type UtilisationTableRowViewModel = {
 
 export type UtilisationDetailsViewModel = {
   utilisationTableRows: UtilisationTableRowViewModel[];
+  downloadUrl: string;
 };
 
 export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & {

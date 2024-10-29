@@ -1,5 +1,5 @@
 import httpMocks from 'node-mocks-http';
-import { SessionBank } from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, SessionBank } from '@ukef/dtfs2-common';
 import { postCheckKeyingData } from '.';
 import { aTfmSessionUser } from '../../../../test-helpers/test-data/tfm-session-user';
 import api from '../../../api';
@@ -87,7 +87,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
         reportedFees: { currency: 'EUR', amount: 100 },
         reportedPayments: { currency: 'GBP', amount: 90.91 },
         paymentsReceived: [{ currency: 'GBP', amount: 90.91 }],
-        status: 'MATCH',
+        status: FEE_RECORD_STATUS.MATCH,
       });
 
       beforeEach(() => {
@@ -179,7 +179,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
               reportedFees: { currency: 'EUR', amount: 100 },
               reportedPayments: { currency: 'GBP', amount: 90.91 },
               paymentsReceived: [{ currency: 'GBP', amount: 90.91 }],
-              status: 'MATCH',
+              status: FEE_RECORD_STATUS.MATCH,
             },
           ],
         };
@@ -204,7 +204,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
             dataSortValue: 0,
           },
           paymentsReceived: ['GBP 90.91'],
-          status: 'MATCH',
+          status: FEE_RECORD_STATUS.MATCH,
           displayStatus: 'MATCH',
         });
       });

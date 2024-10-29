@@ -36,7 +36,7 @@ describe('handleFeeRecordMarkAsReconciledEvent', () => {
 
   it('saves the updated fee record with the supplied entity manager', async () => {
     // Arrange
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withStatus('READY_TO_KEY').build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
 
     // Act
     await handleFeeRecordMarkAsReconciledEvent(feeRecord, {
@@ -51,7 +51,7 @@ describe('handleFeeRecordMarkAsReconciledEvent', () => {
 
   it('sets the fee record status to RECONCILED', async () => {
     // Arrange
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withStatus('READY_TO_KEY').build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
 
     // Act
     await handleFeeRecordMarkAsReconciledEvent(feeRecord, {
@@ -61,7 +61,7 @@ describe('handleFeeRecordMarkAsReconciledEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.status).toEqual<FeeRecordStatus>('RECONCILED');
+    expect(feeRecord.status).toEqual<FeeRecordStatus>(FEE_RECORD_STATUS.RECONCILED);
   });
 
   it('sets the dateReconciled to the current date and reconciledByUserId field to the supplied value', async () => {
@@ -87,7 +87,7 @@ describe('handleFeeRecordMarkAsReconciledEvent', () => {
   it('updates the last updated by user fields using the db request source', async () => {
     // Arrange
     const feeRecord = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT)
-      .withStatus('READY_TO_KEY')
+      .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
       .withLastUpdatedByIsSystemUser(true)
       .withLastUpdatedByPortalUserId('123')
       .withLastUpdatedByTfmUserId(null)

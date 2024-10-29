@@ -27,12 +27,12 @@ describe(component, () => {
     wrapper.expectText('th[data-cy="facility-id-header"]').toRead('Facility ID');
     wrapper.expectText('th[data-cy="exporter-header"]').toRead('Exporter');
     wrapper.expectText('th[data-cy="base-currency-header"]').toRead('Base currency');
-    wrapper.expectText('th[data-cy="value-header"]').toRead('Value');
-    wrapper.expectText('th[data-cy="utilisation-header"]').toRead('Utilisation');
+    wrapper.expectText('th[data-cy="value-header"]').toRead('Facility value');
+    wrapper.expectText('th[data-cy="utilisation-header"]').toRead('Bank utilisation');
     wrapper.expectText('th[data-cy="cover-percentage-header"]').toRead('UKEF cover');
     wrapper.expectText('th[data-cy="exposure-header"]').toRead('UKEF exposure');
-    wrapper.expectText('th[data-cy="fees-accrued-header"]').toRead('Fees accrued');
-    wrapper.expectText('th[data-cy="fees-payable-header"]').toRead('Fees payable to UKEF (reported currency)');
+    wrapper.expectText('th[data-cy="fees-accrued-header"]').toRead('Fees accrued for the period');
+    wrapper.expectText('th[data-cy="fees-payable-header"]').toRead('Fees payable to UKEF for the period (reported currency)');
   });
 
   it('should set all columns as sortable with the default sort order as the facility id column ascending', () => {

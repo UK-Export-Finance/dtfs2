@@ -25,6 +25,7 @@ describe(page, () => {
     facilityId: '1234',
   };
 
+  const downloadUrl = 'utilisation-reports/12345/download';
   const params: UtilisationReportReconciliationForReportViewModel = {
     user: aTfmSessionUser(),
     activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
@@ -37,8 +38,9 @@ describe(page, () => {
     keyingSheet: [],
     paymentDetails: {
       rows: [],
+      selectedFilters: null,
     },
-    utilisationDetails: { utilisationTableRows: [] },
+    utilisationDetails: { utilisationTableRows: [], downloadUrl },
     displayMatchSuccessNotification: false,
   };
 
@@ -185,6 +187,22 @@ describe(page, () => {
 
       wrapper.expectElement(`div#premium-payments input[type="checkbox"]`).notToExist();
     });
+
+    it('should not display "match success notification" when param is false', () => {
+      const wrapper = getWrapper({ ...params, displayMatchSuccessNotification: false });
+
+      wrapper.expectElement('[data-cy="match-success-notification"]').notToExist();
+    });
+
+    it('should display "match success notification" when param is true', () => {
+      const wrapper = getWrapper({ ...params, displayMatchSuccessNotification: true });
+
+      wrapper.expectElement('[data-cy="match-success-notification"]').toExist();
+      wrapper.expectText('[data-cy="match-success-notification-heading"]').toRead('Match payment recorded');
+      wrapper
+        .expectText('[data-cy="match-success-notification-message"]')
+        .toRead('The fee(s) are now at a Match state. Further payments cannot be added to the fee record.');
+    });
   });
 
   describe('keying sheet tab', () => {
@@ -241,7 +259,7 @@ describe(page, () => {
 
   describe('payment details tab', () => {
     it('should render the payment details tab with headings and text when the payment details rows array is empty', () => {
-      const wrapper = getWrapper({ ...params, paymentDetails: { rows: [], isFilterActive: false } });
+      const wrapper = getWrapper({ ...params, paymentDetails: { rows: [], isFilterActive: false, selectedFilters: null } });
       const paymentDetailsTabSelector = 'div#payment-details';
 
       wrapper.expectText(`${paymentDetailsTabSelector} h2[data-cy="payment-details-heading"]`).toRead('Payment details');
@@ -252,7 +270,7 @@ describe(page, () => {
     });
 
     it('should render the payment details tab with headings and no records matching filters text when the payment details rows array is empty and the filter is active', () => {
-      const wrapper = getWrapper({ ...params, paymentDetails: { rows: [], isFilterActive: true } });
+      const wrapper = getWrapper({ ...params, paymentDetails: { rows: [], isFilterActive: true, selectedFilters: null } });
       const paymentDetailsTabSelector = 'div#payment-details';
 
       wrapper.expectText(`${paymentDetailsTabSelector} h2[data-cy="payment-details-heading"]`).toRead('Payment details');
@@ -274,11 +292,12 @@ describe(page, () => {
                 dateReceived: { formattedDateReceived: '1 Jan 2024', dataSortValue: 0 },
               },
               feeRecords: [{ id: 1, facilityId: '12345678', exporter: 'Test exporter' }],
-              feeRecordPaymentGroupStatus: FEE_RECORD_STATUS.DOES_NOT_MATCH,
+              status: FEE_RECORD_STATUS.DOES_NOT_MATCH,
               reconciledBy: '-',
               dateReconciled: { formattedDateReconciled: '-', dataSortValue: 0 },
             },
           ],
+          selectedFilters: null,
         },
       });
       const paymentDetailsTabSelector = 'div#payment-details';
@@ -303,6 +322,7 @@ describe(page, () => {
               { text: "You've done another thing wrong", href: '#other' },
             ],
           },
+          selectedFilters: null,
         },
       });
 
@@ -313,47 +333,46 @@ describe(page, () => {
     });
   });
 
-  it('should render the utilisation tab header', () => {
-    const wrapper = getWrapper();
+  describe('utilisation tab', () => {
+    it('should render the utilisation tab header', () => {
+      const wrapper = getWrapper();
 
-    const utilisationTabSelector = 'div#utilisation';
+      const utilisationTabSelector = 'div#utilisation';
 
-    wrapper.expectText(`${utilisationTabSelector} h2[data-cy="bank-report-heading"]`).toRead('Bank report');
-  });
-
-  it('should render the utilisation tab table', () => {
-    const feeRecordId = 12;
-    const wrapper = getWrapper({
-      ...params,
-      utilisationDetails: {
-        utilisationTableRows: [
-          {
-            ...aUtilisationTableRowViewModel(),
-            feeRecordId,
-          },
-        ],
-      },
+      wrapper.expectText(`${utilisationTabSelector} h2[data-cy="bank-report-heading"]`).toRead('Bank report');
     });
 
-    const utilisationTabSelector = 'div#utilisation';
+    it('should render the utilisation tab table', () => {
+      const feeRecordId = 12;
+      const wrapper = getWrapper({
+        ...params,
+        utilisationDetails: {
+          utilisationTableRows: [
+            {
+              ...aUtilisationTableRowViewModel(),
+              feeRecordId,
+            },
+          ],
+          downloadUrl,
+        },
+      });
 
-    wrapper.expectElement(`${utilisationTabSelector} table`).toExist();
-    wrapper.expectElement(`${utilisationTabSelector} table tr[data-cy="utilisation-table-row-${feeRecordId}"]`);
-  });
+      const utilisationTabSelector = 'div#utilisation';
 
-  it('should not display match success notification when param is false', () => {
-    const wrapper = getWrapper({ ...params, displayMatchSuccessNotification: false });
+      wrapper.expectElement(`${utilisationTabSelector} table`).toExist();
+      wrapper.expectElement(`${utilisationTabSelector} table tr[data-cy="utilisation-table-row-${feeRecordId}"]`);
+    });
 
-    wrapper.expectElement('[data-cy="match-success-notification"]').notToExist();
-  });
+    it('should render the download link for the report', () => {
+      const wrapper = getWrapper({
+        ...params,
+        utilisationDetails: {
+          utilisationTableRows: [aUtilisationTableRowViewModel()],
+          downloadUrl,
+        },
+      });
 
-  it('should display match success notification when param is true', () => {
-    const wrapper = getWrapper({ ...params, displayMatchSuccessNotification: true });
-
-    wrapper.expectElement('[data-cy="match-success-notification"]').toExist();
-    wrapper.expectText('[data-cy="match-success-notification-heading"]').toRead('Match payment recorded');
-    wrapper
-      .expectText('[data-cy="match-success-notification-message"]')
-      .toRead('The fee(s) are now at a Match state. Further payments cannot be added to the fee record.');
+      wrapper.expectLink('[data-cy="download-report-link"]').toLinkTo(downloadUrl, 'Download the report submitted by the bank as a CSV');
+    });
   });
 });

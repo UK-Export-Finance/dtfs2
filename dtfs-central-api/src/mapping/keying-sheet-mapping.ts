@@ -1,13 +1,13 @@
-import { FeeRecordEntity, KeyingSheetAdjustment, KeyingSheetRowStatus, PaymentEntity } from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, FeeRecordEntity, KEYING_SHEET_ROW_STATUS, KeyingSheetAdjustment, KeyingSheetRowStatus, PaymentEntity } from '@ukef/dtfs2-common';
 import Big from 'big.js';
 import { KeyingSheetFeePayment, KeyingSheetRow } from '../types/fee-records';
 
 const mapFeeRecordEntityToKeyingSheetRowStatus = (feeRecord: FeeRecordEntity): KeyingSheetRowStatus => {
   switch (feeRecord.status) {
-    case 'READY_TO_KEY':
-      return 'TO_DO';
-    case 'RECONCILED':
-      return 'DONE';
+    case FEE_RECORD_STATUS.READY_TO_KEY:
+      return KEYING_SHEET_ROW_STATUS.TO_DO;
+    case FEE_RECORD_STATUS.RECONCILED:
+      return KEYING_SHEET_ROW_STATUS.DONE;
     default:
       throw new Error(`Cannot get keying sheet status for fee record with status '${feeRecord.status}'`);
   }

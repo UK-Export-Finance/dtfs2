@@ -4,15 +4,16 @@ import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import {
-  mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems,
-  mapFeeRecordPaymentGroupsToPaymentDetailsViewModel,
+  mapPremiumPaymentsToViewModelItems,
+  mapPaymentDetailsGroupsToPaymentDetailsViewModel,
   mapKeyingSheetToKeyingSheetViewModel,
   mapPaymentDetailsFiltersToViewModel,
 } from '../helpers';
 import { PaymentDetailsViewModel, UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
-import { FeeRecordPaymentGroup } from '../../../api-response-types';
+import { PremiumPaymentsGroup } from '../../../api-response-types';
 import { extractQueryAndSessionData } from './extract-query-and-session-data';
 import { mapToUtilisationDetailsViewModel } from '../helpers/utilisation-details-helper';
+import { mapToSelectedPaymentDetailsFiltersViewModel } from './map-to-selected-payment-details-filters-view-model';
 
 export type GetUtilisationReportReconciliationRequest = CustomExpressRequest<{
   query: {
@@ -25,8 +26,8 @@ export type GetUtilisationReportReconciliationRequest = CustomExpressRequest<{
   };
 }>;
 
-const feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): boolean =>
-  feeRecordPaymentGroups.some(({ paymentsReceived }) => paymentsReceived !== null);
+const premiumPaymentsGroupsHaveAtLeastOnePaymentReceived = (premiumPaymentsGroups: PremiumPaymentsGroup[]): boolean =>
+  premiumPaymentsGroups.some(({ paymentsReceived }) => paymentsReceived !== null);
 
 const renderUtilisationReportReconciliationForReport = (res: Response, viewModel: UtilisationReportReconciliationForReportViewModel) =>
   res.render('utilisation-reports/utilisation-report-reconciliation-for-report.njk', viewModel);
@@ -89,22 +90,23 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
 
     const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(reportPeriod);
 
-    const enablePaymentsReceivedSorting = feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived(premiumPayments);
+    const enablePaymentsReceivedSorting = premiumPaymentsGroupsHaveAtLeastOnePaymentReceived(premiumPayments);
 
-    const premiumPaymentsViewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(premiumPayments, isCheckboxChecked);
+    const premiumPaymentsViewModel = mapPremiumPaymentsToViewModelItems(premiumPayments, isCheckboxChecked);
 
     const keyingSheetViewModel = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
 
     const paymentDetailsFiltersViewModel = mapPaymentDetailsFiltersToViewModel(paymentDetailsFilters);
 
     const paymentDetailsViewModel: PaymentDetailsViewModel = {
-      rows: mapFeeRecordPaymentGroupsToPaymentDetailsViewModel(paymentDetails),
+      rows: mapPaymentDetailsGroupsToPaymentDetailsViewModel(paymentDetails),
       filters: paymentDetailsFiltersViewModel,
       filterErrors: paymentDetailsFilterErrors,
       isFilterActive: isPaymentDetailsFilterActive,
+      selectedFilters: mapToSelectedPaymentDetailsFiltersViewModel(paymentDetailsFilters, reportId),
     };
 
-    const utilisationDetailsViewModel = mapToUtilisationDetailsViewModel(utilisationDetails);
+    const utilisationDetailsViewModel = mapToUtilisationDetailsViewModel(utilisationDetails, reportId);
 
     return renderUtilisationReportReconciliationForReport(res, {
       user,
