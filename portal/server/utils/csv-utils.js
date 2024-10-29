@@ -238,6 +238,9 @@ const extractCsvData = async (file) => {
       await workbook.xlsx.load(file.buffer, { sheetStubs: true }).then(async () => {
         // An Excel file must contain at least 1 visible worksheet at all times.
         const worksheet = workbook.worksheets.find((sheet) => sheet.state === 'visible');
+        if (!worksheet) {
+          throw new Error('No visible worksheet found in the Excel file');
+        }
 
         // We create one csv version of the data without cell addresses to be persisted in azure
         // And another csv version of the data with cell addresses to be used for validation so we can
