@@ -1,19 +1,19 @@
-import { getUpsertUserRequestFailureTestCases, getUpsertUserRequestSuccessTestCases } from '@ukef/dtfs2-common';
+import { getUpsertTfmUserRequestFailureTestCases, getUpsertTfmUserRequestSuccessTestCases } from '@ukef/dtfs2-common';
 import { validatePutUserPayload } from './validate-put-user-payload';
 import { withValidatePayloadTests } from '../../../test-helpers';
 
 describe('validatePutUserPayload', () => {
   withValidatePayloadTests({
     validatePayload: validatePutUserPayload,
-    failureTestCases: getUpsertUserRequestFailureTestCases({
-      getTestObjectWithUpdatedUpsertUserRequestParams: aPayloadWithUpdatedUserUpsertRequest,
+    failureTestCases: getUpsertTfmUserRequestFailureTestCases({
+      getTestObjectWithUpdatedUpsertTfmUserRequestParams: aPayloadWithUpdatedUpsertTfmUserRequest,
     }),
-    successTestCases: getUpsertUserRequestSuccessTestCases({
-      getTestObjectWithUpdatedUpsertUserRequestParams: aPayloadWithUpdatedUserUpsertRequest,
+    successTestCases: getUpsertTfmUserRequestSuccessTestCases({
+      getTestObjectWithUpdatedUpsertTfmUserRequestParams: aPayloadWithUpdatedUpsertTfmUserRequest,
     }),
   });
 
-  function aPayloadWithUpdatedUserUpsertRequest(userUpsertRequest: unknown) {
-    return userUpsertRequest;
+  function aPayloadWithUpdatedUpsertTfmUserRequest(upsertTfmUserRequest: unknown) {
+    return upsertTfmUserRequest;
   }
 });

@@ -1,4 +1,4 @@
-import { aValidEntraIdUser, withEntraIdUserSchemaTests, withSchemaTests } from '@ukef/dtfs2-common';
+import { aEntraIdUser, withEntraIdUserSchemaTests, withSchemaTests } from '@ukef/dtfs2-common';
 import { EntraIdAuthenticationResult } from '../types/entra-id';
 import { ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA } from './entra-id.schema';
 
@@ -21,7 +21,7 @@ describe('ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA', () => {
 function aValidPayload(): EntraIdAuthenticationResult {
   return {
     accessToken: 'an-access-token',
-    account: { idTokenClaims: aValidEntraIdUser() },
+    account: { idTokenClaims: aEntraIdUser() },
   };
 }
 

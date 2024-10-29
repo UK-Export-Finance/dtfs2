@@ -7,3 +7,7 @@ export * from './company-registration-numbers.mock';
 export * from './facility-utilisation-data.entity.mock-builder';
 export * from './payment-matching-tolerance.entity.mock-builder';
 export * from './utilisation-report-mock-csv-data';
+export * from './tfm-user';
+export * from './entra-id-user';
+export * from './create-tfm-user-request';
+export * from './upsert-tfm-user-request';

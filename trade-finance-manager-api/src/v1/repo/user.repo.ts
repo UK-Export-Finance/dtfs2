@@ -1,11 +1,11 @@
 import {
   AuditDetails,
-  CreateUserRequest,
+  CreateTfmUserRequest,
   DocumentNotCreatedError,
   DocumentNotUpdatedError,
   MONGO_DB_COLLECTIONS,
   TfmUser,
-  UpdateUserRequest,
+  UpdateTfmUserRequest,
 } from '@ukef/dtfs2-common';
 import { Collection, FindOneAndUpdateOptions, ObjectId, WithoutId } from 'mongodb';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
@@ -14,11 +14,11 @@ import { USER } from '../../constants';
 import { getEscapedRegexFromString } from '../helpers/get-escaped-regex-from-string';
 
 type CreateUserParams = {
-  user: CreateUserRequest;
+  user: CreateTfmUserRequest;
   auditDetails: AuditDetails;
 };
 
-type UpdateUserByIdParams = { userId: ObjectId; userUpdate: UpdateUserRequest; auditDetails: AuditDetails };
+type UpdateUserByIdParams = { userId: ObjectId; userUpdate: UpdateTfmUserRequest; auditDetails: AuditDetails };
 export class UserRepo {
   /**
    * Gets the tfm users collection

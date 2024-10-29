@@ -1,11 +1,11 @@
 import {
   AuditDatabaseRecord,
   AuditDetails,
-  aValidCreateUserRequest,
   DocumentNotCreatedError,
   MONGO_DB_COLLECTIONS,
   TfmUser,
-  CreateUserRequest,
+  CreateTfmUserRequest,
+  aCreateTfmUserRequest,
 } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { InsertOneResult, ObjectId, WithoutId } from 'mongodb';
@@ -25,7 +25,7 @@ describe('user repo', () => {
   });
 
   describe('create user', () => {
-    let createUserRequest: CreateUserRequest;
+    let createTfmUserRequest: CreateTfmUserRequest;
     let createUserDatabaseRequest: WithoutId<TfmUser>;
     let auditDetails: AuditDetails;
     let auditRecord: AuditDatabaseRecord;
@@ -39,8 +39,8 @@ describe('user repo', () => {
       auditDetails = generateSystemAuditDetails();
       auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
-      createUserRequest = aValidCreateUserRequest();
-      createUserDatabaseRequest = { ...createUserRequest, status: USER.STATUS.ACTIVE, auditRecord };
+      createTfmUserRequest = aCreateTfmUserRequest();
+      createUserDatabaseRequest = { ...createTfmUserRequest, status: USER.STATUS.ACTIVE, auditRecord };
 
       insertedId = new ObjectId();
     });
@@ -101,7 +101,7 @@ describe('user repo', () => {
     }
 
     async function makeRequest() {
-      return UserRepo.createUser({ user: createUserRequest, auditDetails });
+      return UserRepo.createUser({ user: createTfmUserRequest, auditDetails });
     }
   });
 });

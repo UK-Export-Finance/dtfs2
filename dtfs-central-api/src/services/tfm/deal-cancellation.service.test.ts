@@ -1,5 +1,6 @@
 import {
   ACTIVITY_TYPES,
+  aTfmUser,
   AuditDetails,
   InvalidAuditDetailsError,
   TfmActivity,
@@ -11,7 +12,6 @@ import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { add, getUnixTime, sub } from 'date-fns';
 import { ObjectId } from 'mongodb';
 import { DealCancellationService } from './deal-cancellation.service';
-import { aTfmUser } from '../../../test-helpers';
 
 const submitDealCancellationMock = jest.fn(() => Promise.resolve({ cancelledDealUkefId: 'dealId' })) as jest.Mock<Promise<TfmDealCancellationResponse>>;
 

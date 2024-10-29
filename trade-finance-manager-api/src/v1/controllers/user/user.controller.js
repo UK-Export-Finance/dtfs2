@@ -110,12 +110,12 @@ exports.update = async (_id, update, auditDetails, callback) => {
 /**
  * Used during the SSO login process to keep the TFM user in sync with the Entra ID user.
  * Upserts (Creates or updates) a TFM user from an Entra ID user.
- * @param {object} upsertUserParams
- * @param {import('@ukef/dtfs2-common').EntraIdUser} upsertUserParams.entraIdUser
- * @param {import('@ukef/dtfs2-common').AuditDetails} upsertUserParams.auditDetails
+ * @param {object} upsertTfmUserFromEntraIdUserParams
+ * @param {import('@ukef/dtfs2-common').EntraIdUser} upsertTfmUserFromEntraIdUserParams.entraIdUser
+ * @param {import('@ukef/dtfs2-common').AuditDetails} upsertTfmUserFromEntraIdUserParams.auditDetails
  */
 exports.upsertTfmUserFromEntraIdUser = async ({ entraIdUser, auditDetails }) => {
-  const upsertedUser = await UserService.upsertUserFromEntraIdUser({ entraIdUser, auditDetails });
+  const upsertedUser = await UserService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
   const tfmSessionUser = mapUserData(upsertedUser);
   return tfmSessionUser;
 };

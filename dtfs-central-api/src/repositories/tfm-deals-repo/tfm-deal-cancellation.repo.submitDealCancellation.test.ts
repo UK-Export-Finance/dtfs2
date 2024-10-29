@@ -7,6 +7,7 @@ import {
   TFM_DEAL_STAGE,
   TfmActivity,
   TFM_FACILITY_STAGE,
+  aTfmUser,
 } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { ObjectId } from 'mongodb';
@@ -14,7 +15,6 @@ import { flatten } from 'mongo-dot-notation';
 import { getUnixTime } from 'date-fns';
 import { mongoDbClient as db } from '../../drivers/db-client';
 import { TfmDealCancellationRepo } from './tfm-deal-cancellation.repo';
-import { aTfmUser } from '../../../test-helpers';
 
 const dealId = new ObjectId();
 

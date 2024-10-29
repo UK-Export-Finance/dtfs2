@@ -17,12 +17,13 @@ import {
   UtilisationReportEntityMockBuilder,
   UtilisationReportReconciliationStatus,
   withSqlIdPathParameterValidationTests,
+  aTfmUser,
 } from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
-import { aPortalUser, aTfmUser, aTfmSessionUser, aTfmFacility, aFacility, aTfmFacilityAmendment } from '../../../test-helpers';
+import { aPortalUser, aTfmSessionUser, aTfmFacility, aFacility, aTfmFacilityAmendment } from '../../../test-helpers';
 
 console.error = jest.fn();
 

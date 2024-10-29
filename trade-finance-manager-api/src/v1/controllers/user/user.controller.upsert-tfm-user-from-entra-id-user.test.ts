@@ -1,38 +1,38 @@
 import { when, resetAllWhenMocks } from 'jest-when';
+import { aEntraIdUser } from '@ukef/dtfs2-common';
+import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mapUserData } from './helpers/mapUserData.helper';
 import { UserService } from '../../services/user.service';
 import { upsertTfmUserFromEntraIdUser } from './user.controller';
+import { userServiceMockResponses } from '../../../../test-helpers';
 
 jest.mock('../../services/user.service', () => ({
   __esModule: true,
   UserService: {
-    upsertUserFromEntraIdUser: jest.fn(),
+    upsertTfmUserFromEntraIdUser: jest.fn(),
   },
-}));
-
-jest.mock('./helpers/mapUserData.helper', () => ({
-  mapUserData: jest.fn(),
 }));
 
 describe('user controller', () => {
   describe('upsertTfmUserFromEntraIdUser', () => {
-    const entraIdUser = 'anEntraIdUser';
-    const auditDetails = 'auditDetails';
+    const entraIdUser = aEntraIdUser();
+    const auditDetails = generateSystemAuditDetails();
 
-    const upsertedUserResponse = 'upsertedUserResponse';
-    const mappedUserDetails = 'mappedUserDetails';
+    const upsertedUserResponse = userServiceMockResponses.aUpsertTfmUserFromEntraIdUserResponse();
+    const mappedUserDetails = mapUserData(upsertedUserResponse);
 
     beforeEach(() => {
       jest.resetAllMocks();
       resetAllWhenMocks();
-      when(jest.mocked(UserService.upsertUserFromEntraIdUser)).calledWith({ entraIdUser, auditDetails }).mockResolvedValue(upsertedUserResponse);
-      when(jest.mocked(mapUserData)).calledWith(upsertedUserResponse).mockReturnValue(mappedUserDetails);
+      when(jest.mocked(UserService.upsertTfmUserFromEntraIdUser.bind(UserService)))
+        .calledWith({ entraIdUser, auditDetails })
+        .mockResolvedValue(upsertedUserResponse);
     });
 
     it('should upsert user in the database', async () => {
       await makeRequest();
 
-      expect(UserService.upsertUserFromEntraIdUser).toHaveBeenCalledWith({ entraIdUser, auditDetails });
+      expect(UserService.upsertTfmUserFromEntraIdUser.bind(UserService)).toHaveBeenCalledWith({ entraIdUser, auditDetails });
     });
 
     it('should map the user', async () => {

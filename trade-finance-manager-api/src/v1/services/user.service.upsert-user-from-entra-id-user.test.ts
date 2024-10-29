@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { AuditDetails, aValidEntraIdUser, EntraIdUser, TfmUser, UpsertUserRequest } from '@ukef/dtfs2-common';
+import { AuditDetails, aEntraIdUser, EntraIdUser, TfmUser, UpsertTfmUserRequest } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { ObjectId } from 'mongodb';
 import { USER } from '../../constants';
@@ -15,10 +15,10 @@ jest.mock('../repo/user.repo.ts', () => ({
 }));
 
 describe('user service', () => {
-  describe('upsertUserFromEntraIdUser', () => {
+  describe('upsertTfmUserFromEntraIdUser', () => {
     let entraIdUser: EntraIdUser;
     let auditDetails: AuditDetails;
-    let transformedUser: UpsertUserRequest;
+    let transformedUser: UpsertTfmUserRequest;
     let existingUser: TfmUser;
     let userId: ObjectId;
 
@@ -28,9 +28,9 @@ describe('user service', () => {
 
     beforeEach(() => {
       jest.resetAllMocks();
-      entraIdUser = aValidEntraIdUser();
+      entraIdUser = aEntraIdUser();
       auditDetails = generateSystemAuditDetails();
-      transformedUser = UserService.transformEntraIdUserToUpsertUserRequest(entraIdUser);
+      transformedUser = UserService.transformEntraIdUserToUpsertTfmUserRequest(entraIdUser);
       userId = new ObjectId();
       existingUser = { ...transformedUser, _id: userId, status: USER.STATUS.ACTIVE };
     });
@@ -45,7 +45,7 @@ describe('user service', () => {
       });
 
       it('creates a new user in the database', async () => {
-        await UserService.upsertUserFromEntraIdUser({ entraIdUser, auditDetails });
+        await UserService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
 
         expect(UserRepo.createUser).toHaveBeenCalledWith({
           user: transformedUser,
@@ -60,7 +60,7 @@ describe('user service', () => {
       });
 
       it('updates the user in the database', async () => {
-        await UserService.upsertUserFromEntraIdUser({ entraIdUser, auditDetails });
+        await UserService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
 
         expect(jest.mocked(UserRepo.updateUserById)).toHaveBeenCalledWith({
           userId,
@@ -76,7 +76,7 @@ describe('user service', () => {
       });
 
       it('throws an error', async () => {
-        await expect(UserService.upsertUserFromEntraIdUser({ entraIdUser, auditDetails })).rejects.toThrowError();
+        await expect(UserService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails })).rejects.toThrowError();
       });
     });
   });
