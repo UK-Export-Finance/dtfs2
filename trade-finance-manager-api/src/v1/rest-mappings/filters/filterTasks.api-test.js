@@ -52,7 +52,7 @@ describe('filterTasks', () => {
       return group;
     };
 
-    it.each([null, undefined, {}, []])('should return empty array when tasks are empty', (invalidTasks) => {
+    it.each([null, undefined, {}, []])('should return an empty array when tasks are empty', (invalidTasks) => {
       const result = mapAndFilter(invalidTasks, mockArgsFunc, MOCK_TEAM_ID);
 
       expect(result).toEqual([]);
@@ -209,21 +209,21 @@ describe('filterTasks', () => {
 
   describe('filterTasks function', () => {
     describe('when there are no tasks', () => {
-      it('should return empty array back when there are no tasks', () => {
+      it('should return an empty array back when there are no tasks', () => {
         const mockFiltersObj = {};
 
         const result = filterTasks(mockEmptyTasks, mockFiltersObj);
         expect(result).toEqual([]);
       });
 
-      it('should return empty array back when tasks are null', () => {
+      it('should return an empty array back when the task is null', () => {
         const mockFiltersObj = {};
 
         const result = filterTasks(null, mockFiltersObj);
         expect(result).toEqual([]);
       });
 
-      it('should return empty array back when tasks is undefined', () => {
+      it('should return an empty array back when tasks are undefined', () => {
         const mockFiltersObj = {};
 
         const result = filterTasks(undefined, mockFiltersObj);
