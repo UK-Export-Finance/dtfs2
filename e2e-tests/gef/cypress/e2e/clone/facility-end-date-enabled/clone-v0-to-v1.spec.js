@@ -5,6 +5,8 @@ import mandatoryCriteria from '../../pages/mandatory-criteria';
 import nameApplication from '../../pages/name-application';
 import applicationDetails from '../../pages/application-details';
 import facilities from '../../pages/facilities';
+import { submitButton } from '../../partials';
+import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
 
 /**
  * NOTE: These tests check the backwards compatibility with in-flight version 0 deals.
@@ -15,7 +17,6 @@ context('Clone version 0 deal to version 1', () => {
   let clonedDealId;
 
   before(() => {
-    cy.loadData();
     cy.insertVersion0Deal(BANK1_MAKER1.username).then(({ insertedId: dealId }) => {
       version0DealId = dealId;
     });
@@ -60,7 +61,24 @@ context('Clone version 0 deal to version 1', () => {
     });
 
     it('shows required for has bank provided facilityEndDate', () => {
-      applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateValue().should('eq', 'Required');
+      applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateValue().should('contain', 'Required');
+      submitButton().should('not.exist');
+    });
+
+    it('shows required for has facilityEndDate after isUsingFacilityEndDate is set to true', () => {
+      applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().click();
+      aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
+      cy.clickSaveAndReturnButton();
+
+      applicationDetails.facilitySummaryListTable(0).facilityEndDateValue().should('contain', 'Required');
+    });
+
+    it('shows required for has bankReviewDate after isUsingFacilityEndDate is set to false', () => {
+      applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().click();
+      aboutFacilityUnissued.isUsingFacilityEndDateNo().click();
+      cy.clickSaveAndReturnButton();
+
+      applicationDetails.facilitySummaryListTable(0).bankReviewDateValue().should('contain', 'Required');
     });
   });
 });

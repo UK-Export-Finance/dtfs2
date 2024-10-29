@@ -35,6 +35,10 @@ export const cloneFacilities = async (currentDealId: string, newDealId: ObjectId
       draft.submittedAsIssuedDate = null;
       draft.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
+      draft.isUsingFacilityEndDate = null;
+      draft.facilityEndDate = null;
+      draft.bankReviewDate = null;
+
       const currentTime = new Date();
       currentTime.setHours(0, 0, 0, 0);
 
