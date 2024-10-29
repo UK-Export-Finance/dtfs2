@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http';
-import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
+import { DEAL_SUBMISSION_TYPE, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
 import { aRequestSession } from '../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { CheckDetailsViewModel } from '../../../types/view-models';
@@ -106,6 +106,22 @@ describe('getDealCancellationDetails', () => {
       expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
     });
 
+    it('redirects to deal summary page if the deal cancellation is not in draft', async () => {
+      // Arrange
+      jest.mocked(api.getDealCancellation).mockResolvedValue({ status: TFM_DEAL_CANCELLATION_STATUS.COMPLETED });
+
+      const { req, res } = createMocks<GetDealCancellationDetailsRequest>({
+        params: { _id: dealId },
+        session: aRequestSession(),
+      });
+
+      // Act
+      await getDealCancellationDetails(req, res);
+
+      // Assert
+      expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
+    });
+
     it('renders the check details page with deal cancellation details', async () => {
       const reason = 'test reaspn';
       const bankRequestDate = new Date('2024-01-01').valueOf();
@@ -114,7 +130,7 @@ describe('getDealCancellationDetails', () => {
       const session = aRequestSession();
 
       // Arrange
-      jest.mocked(api.getDealCancellation).mockResolvedValue({ reason, effectiveFrom, bankRequestDate });
+      jest.mocked(api.getDealCancellation).mockResolvedValue({ reason, effectiveFrom, bankRequestDate, status: TFM_DEAL_CANCELLATION_STATUS.DRAFT });
 
       const { req, res } = createMocks<GetDealCancellationDetailsRequest>({
         params: { _id: dealId },
@@ -131,7 +147,7 @@ describe('getDealCancellationDetails', () => {
         user: session.user,
         ukefDealId,
         dealId,
-        cancellation: { reason, bankRequestDate, effectiveFrom },
+        cancellation: { reason, bankRequestDate, effectiveFrom, status: TFM_DEAL_CANCELLATION_STATUS.DRAFT },
       });
     });
   });
