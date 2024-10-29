@@ -10,6 +10,7 @@ const caseDealPage = {
   bankSecurityFacilityText: () => cy.get('[data-cy="bank-security-facility-text"]'),
   cancelDealButton: () => cy.get('[data-cy="cancel-deal-button"]'),
   dealStage: () => cy.get('[data-cy="ukef-deal-stage-value"]'),
+  successBanner: () => cy.get('[data-cy="success-banner"]'),
 
   dealFacilitiesTable: {
     row: (facilityId) => {
