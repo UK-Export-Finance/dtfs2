@@ -209,21 +209,21 @@ describe('filterTasks', () => {
 
   describe('filterTasks function', () => {
     describe('when there are no tasks', () => {
-      it('should return an empty array back when there are no tasks', () => {
+      it('should return an empty array, when there are no tasks', () => {
         const mockFiltersObj = {};
 
         const result = filterTasks(mockEmptyTasks, mockFiltersObj);
         expect(result).toEqual([]);
       });
 
-      it('should return an empty array back when the task is null', () => {
+      it('should return an empty array, when the task is null', () => {
         const mockFiltersObj = {};
 
         const result = filterTasks(null, mockFiltersObj);
         expect(result).toEqual([]);
       });
 
-      it('should return an empty array back when tasks are undefined', () => {
+      it('should return an empty array, when tasks are undefined', () => {
         const mockFiltersObj = {};
 
         const result = filterTasks(undefined, mockFiltersObj);
