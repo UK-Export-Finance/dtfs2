@@ -4,7 +4,7 @@ import { UnixTimestampMilliseconds } from '../date';
 import { AuditDatabaseRecord } from '../audit-database-record';
 
 /**
- * These properties are only on non-SSO users,
+ * These properties are only on non-SSO users (TFM users),
  * and can be removed once SSO is permanently enabled.
  * TODO: DTFS2-6892: Remove NonSSOUserProperties once SSO is permanently enabled
  */
