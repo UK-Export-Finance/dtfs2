@@ -11,7 +11,7 @@ import { Collection, FindOneAndUpdateOptions, ObjectId, WithoutId } from 'mongod
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../drivers/db-client';
 import { USER } from '../../constants';
-import getEscapedRegexFromString from '../helpers/get-escaped-regex-from-string';
+import { getEscapedRegexFromString } from '../helpers/get-escaped-regex-from-string';
 
 type CreateUserParams = {
   user: CreateUserRequest;

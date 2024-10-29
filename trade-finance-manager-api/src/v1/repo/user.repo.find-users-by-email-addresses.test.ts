@@ -1,7 +1,7 @@
 import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { UserRepo } from './user.repo';
 import { mongoDbClient } from '../../drivers/db-client';
-import getEscapedRegexFromString from '../helpers/get-escaped-regex-from-string';
+import { getEscapedRegexFromString } from '../helpers/get-escaped-regex-from-string';
 
 let toArrayMock = jest.fn();
 const findMock = jest.fn();

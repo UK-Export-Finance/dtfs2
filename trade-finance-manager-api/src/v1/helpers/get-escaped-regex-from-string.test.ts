@@ -1,4 +1,4 @@
-const getEscapedRegexFromString = require('./get-escaped-regex-from-string');
+import { getEscapedRegexFromString } from './get-escaped-regex-from-string';
 
 describe('getEscapedRegexFromString', () => {
   it('should return a regex', () => {

@@ -74,6 +74,7 @@ describe('user service', () => {
       beforeEach(() => {
         jest.mocked(UserRepo.findUsersByEmailAddresses).mockResolvedValue([existingUser, existingUser]);
       });
+
       it('throws an error', async () => {
         await expect(UserService.upsertUserFromEntraIdUser({ entraIdUser, auditDetails })).rejects.toThrowError();
       });
