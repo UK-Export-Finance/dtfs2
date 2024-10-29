@@ -10,6 +10,7 @@ import {
 } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { ObjectId } from 'mongodb';
+import { flatten } from 'mongo-dot-notation';
 import { getUnixTime } from 'date-fns';
 import { mongoDbClient as db } from '../../drivers/db-client';
 import { TfmDealCancellationRepo } from './tfm-deal-cancellation.repo';
@@ -109,11 +110,10 @@ describe('tfm-deals-cancellation-repo', () => {
       ).rejects.toThrow(new DealNotFoundError(dealId.toString()));
     });
 
-
     describe('updating the deal stage', () => {
       it('calls updateOne with the expected parameters', async () => {
         // Act
-        await TfmDealCancellationRepo.submitDealCancellation(dealId, mockDealCancellationObject, auditDetails);
+        await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation: mockDealCancellationObject, auditDetails, activity: mockActivity });
 
         // Assert
         const expectedFilter = {
@@ -143,7 +143,7 @@ describe('tfm-deals-cancellation-repo', () => {
     describe('updating and finding the matching facilities', () => {
       it('calls updateMany with the expected parameters', async () => {
         // Act
-        await TfmDealCancellationRepo.submitDealCancellation(dealId, mockDealCancellationObject, auditDetails);
+        await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation: mockDealCancellationObject, auditDetails, activity: mockActivity });
 
         // Assert
         const expectedFilter = {
@@ -160,7 +160,7 @@ describe('tfm-deals-cancellation-repo', () => {
 
       it('calls find with the expected parameters', async () => {
         // Act
-        await TfmDealCancellationRepo.submitDealCancellation(dealId, mockDealCancellationObject, auditDetails);
+        await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation: mockDealCancellationObject, auditDetails, activity: mockActivity });
 
         // Assert
         const expectedFilter = {

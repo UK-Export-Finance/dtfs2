@@ -51,7 +51,6 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
 
     dealId = createDealResponse.body._id;
     facilityId = createFacilityResponse.body._id;
-    tfmUserId = aTfmUser()._id;
     auditDetails = generateTfmAuditDetails(tfmUserId);
     submitDealCancellationUrl = `/v1/tfm/deals/${dealId}/cancellation/submit`;
 
