@@ -1,4 +1,13 @@
-import { aPortalSessionUser, Bank, Deal, DEAL_STATUS, getCurrentGefDealVersion } from '@ukef/dtfs2-common';
+import {
+  aPortalSessionUser,
+  Bank,
+  Deal,
+  DEAL_STATUS,
+  DealNotFoundError,
+  getCurrentGefDealVersion,
+  InvalidDealIdError,
+  InvalidParameterError,
+} from '@ukef/dtfs2-common';
 import { Collection, ObjectId } from 'mongodb';
 import { generateAuditDatabaseRecordFromAuditDetails, generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { cloneDeal } from './clone-deal.service';
@@ -82,6 +91,60 @@ describe('cloneDeal', () => {
 
   afterAll(() => {
     jest.useRealTimers();
+  });
+
+  it('throws InvalidDealIdError when the dealId is not an ObjectId', async () => {
+    // Arrange
+    const invalidDealId = 'dealId';
+
+    // Act
+    await expect(() =>
+      cloneDeal({
+        dealId: invalidDealId,
+        bankInternalRefName,
+        additionalRefName,
+        maker,
+        userId: maker._id,
+        bank: mockBank,
+        auditDetails: mockAuditDetails,
+      }),
+    ).rejects.toThrow(new InvalidDealIdError(invalidDealId));
+  });
+
+  it('throws InvalidParameterError when the bank id is not a string', async () => {
+    // Arrange
+    const bankId = 123;
+
+    // Act
+    await expect(() =>
+      cloneDeal({
+        dealId: existingDealId,
+        bankInternalRefName,
+        additionalRefName,
+        maker,
+        userId: maker._id,
+        bank: { id: bankId } as unknown as Bank,
+        auditDetails: mockAuditDetails,
+      }),
+    ).rejects.toThrow(new InvalidParameterError('bank.id', bankId));
+  });
+
+  it('throws DealNotFoundError when the dealId is valid but does not correspond to a deal', async () => {
+    // Arrange
+    findOneMock.mockResolvedValueOnce(null);
+
+    // Act
+    await expect(() =>
+      cloneDeal({
+        dealId: existingDealId,
+        bankInternalRefName,
+        additionalRefName,
+        maker,
+        userId: maker._id,
+        bank: mockBank,
+        auditDetails: mockAuditDetails,
+      }),
+    ).rejects.toThrow(new DealNotFoundError(existingDealId));
   });
 
   it('gets existing deal', async () => {

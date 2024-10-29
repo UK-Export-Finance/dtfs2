@@ -1,3 +1,5 @@
+const { ApiError } = require('@ukef/dtfs2-common');
+
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { cloneDeal } = require('../services/clone-deal.service');
 const { cloneFacilities } = require('../services/clone-facilities.service');
@@ -8,30 +10,40 @@ exports.clone = async (req, res) => {
     body: { dealId: existingDealId, bankInternalRefName, additionalRefName, userId, bank },
   } = req;
 
-  const validateErrs = validateApplicationReferences(req.body);
+  try {
+    const validateErrs = validateApplicationReferences(req.body);
 
-  if (validateErrs) {
-    return res.status(422).send(validateErrs);
+    if (validateErrs) {
+      return res.status(422).send(validateErrs);
+    }
+
+    const auditDetails = generatePortalAuditDetails(req.user._id);
+    // clone GEF deal
+    const response = await cloneDeal({
+      dealId: existingDealId,
+      bankInternalRefName,
+      additionalRefName,
+      maker: req.user,
+      userId,
+      bank,
+      auditDetails,
+    });
+
+    if (response.status === 200) {
+      const { newDealId } = response;
+      // clone the corresponding facilities
+      await cloneFacilities(existingDealId, newDealId, auditDetails);
+
+      return res.status(200).send({ dealId: newDealId });
+    }
+    return res.status(404).send({ message: 'The resource that you are trying to access does not exist' });
+  } catch (error) {
+    console.error('Failed to clone deal, %o', error);
+
+    if (error instanceof ApiError) {
+      return res.status(error.status).send(error.message);
+    }
+
+    return res.status(500).send('Failed to clone deal');
   }
-
-  const auditDetails = generatePortalAuditDetails(req.user._id);
-  // clone GEF deal
-  const response = await cloneDeal({
-    dealId: existingDealId,
-    bankInternalRefName,
-    additionalRefName,
-    maker: req.user,
-    userId,
-    bank,
-    auditDetails,
-  });
-
-  if (response.status === 200) {
-    const { newDealId } = response;
-    // clone the corresponding facilities
-    await cloneFacilities(existingDealId, newDealId, auditDetails);
-
-    return res.status(200).send({ dealId: newDealId });
-  }
-  return res.status(404).send({ message: 'The resource that you are trying to access does not exist' });
 };
