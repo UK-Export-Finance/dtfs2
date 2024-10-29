@@ -1,4 +1,4 @@
-import { Collection, ObjectId, UpdateResult, WithoutId } from 'mongodb';
+import { Collection, ObjectId, UpdateResult, WithoutId, UpdateFilter } from 'mongodb';
 import {
   AuditDetails,
   DEAL_SUBMISSION_TYPE,
@@ -7,6 +7,7 @@ import {
   MONGO_DB_COLLECTIONS,
   TFM_DEAL_CANCELLATION_STATUS,
   TFM_DEAL_STAGE,
+  TfmActivity,
   TFM_FACILITY_STAGE,
   TfmDeal,
   TfmDealCancellation,
@@ -138,21 +139,43 @@ export class TfmDealCancellationRepo {
   }
 
   /**
-   * submits the deal cancellation and updates the respective deal stage
-   * @param dealId - The deal id
-   * @param cancellation - The deal cancellation details to submit
-   * @param auditDetails - The users audit details
+   * Submits the deal cancellation and updates the respective deal stage
+   * @param params
+   * @param params.dealId - The deal id
+   * @param params.cancellation - The deal cancellation details to submit
+   * @param params.activity - Object to add to the activities array
+   * @param params.auditDetails - The users audit details
    */
-  public static async submitDealCancellation(
-    dealId: string | ObjectId,
-    cancellation: TfmDealCancellation,
-    auditDetails: AuditDetails,
-  ): Promise<TfmDealCancellationResponse> {
+  public static async submitDealCancellation({
+    dealId,
+    cancellation,
+    activity,
+    auditDetails,
+  }: {
+    dealId: string | ObjectId;
+    cancellation: TfmDealCancellation;
+    activity?: TfmActivity;
+    auditDetails: AuditDetails;
+  }): Promise<TfmDealCancellationResponse> {
     if (!ObjectId.isValid(dealId)) {
       throw new InvalidDealIdError(dealId.toString());
     }
 
     const dealCollection = await this.getDealCollection();
+
+    const update: UpdateFilter<WithoutId<TfmDeal>> = {
+      $set: {
+        'tfm.stage': TFM_DEAL_STAGE.CANCELLED,
+        'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.COMPLETED,
+        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+      },
+    };
+
+    if (activity) {
+      update.$push = {
+        'tfm.activities': activity,
+      };
+    }
 
     const updateDeal = await dealCollection.updateOne(
       {
@@ -163,11 +186,7 @@ export class TfmDealCancellationRepo {
         'tfm.cancellation.bankRequestDate': { $eq: cancellation.bankRequestDate },
         'tfm.cancellation.effectiveFrom': { $eq: cancellation.effectiveFrom },
       },
-      flatten({
-        'tfm.stage': TFM_DEAL_STAGE.CANCELLED,
-        'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.COMPLETED,
-        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-      }),
+      update,
     );
 
     if (!updateDeal?.matchedCount) {

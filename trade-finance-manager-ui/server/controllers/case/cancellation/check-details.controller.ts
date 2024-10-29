@@ -1,9 +1,8 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
-import { isEmpty } from 'lodash';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { asUserSession } from '../../../helpers/express-session';
-import { canSubmissionTypeBeCancelled } from '../../helpers/deal-cancellation-enabled.helper';
+import { canSubmissionTypeBeCancelled, isDealCancellationInDraft } from '../../helpers/deal-cancellation-enabled.helper';
 import api from '../../../api';
 import { CheckDetailsViewModel } from '../../../types/view-models';
 
@@ -36,7 +35,7 @@ export const getDealCancellationDetails = async (req: GetDealCancellationDetails
 
     const cancellation = await api.getDealCancellation(_id, userToken);
 
-    if (isEmpty(cancellation)) {
+    if (!isDealCancellationInDraft(cancellation.status)) {
       return res.redirect(`/case/${_id}/deal`);
     }
 
