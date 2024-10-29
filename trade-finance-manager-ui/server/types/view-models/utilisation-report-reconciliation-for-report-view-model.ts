@@ -109,9 +109,18 @@ export type PaymentDetailsRowViewModel = {
   };
 };
 
+export type SelectedFilter = { value: string; removeHref: string };
+
+export type SelectedPaymentDetailsFiltersViewModel = {
+  facilityId?: SelectedFilter;
+  paymentCurrency?: SelectedFilter;
+  paymentReference?: SelectedFilter;
+};
+
 export type PaymentDetailsViewModel = {
   rows: PaymentDetailsRowViewModel[];
   filters?: PaymentDetailsFiltersViewModel;
+  selectedFilters: SelectedPaymentDetailsFiltersViewModel | null;
   filterErrors?: PaymentDetailsFilterErrorsViewModel;
   isFilterActive?: boolean;
 };

@@ -1,4 +1,4 @@
-import { Currency, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { Currency, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { NextFunction, Request, Response } from 'express';
 import axios from 'axios';
 import { asUserSession } from '../../helpers/express-session';
@@ -138,7 +138,7 @@ export const validatePostAddPaymentRequestBody = (req: Request, res: Response, n
     return redirectWithError(req, res, reportId, 'different-fee-record-statuses', mapCheckedCheckboxesToRecord(checkedCheckboxIds));
   }
 
-  if (selectedFeeRecordStatuses.has('DOES_NOT_MATCH') && checkedCheckboxIds.length > 1) {
+  if (selectedFeeRecordStatuses.has(FEE_RECORD_STATUS.DOES_NOT_MATCH) && checkedCheckboxIds.length > 1) {
     return redirectWithError(req, res, reportId, 'multiple-does-not-match-selected', mapCheckedCheckboxesToRecord(checkedCheckboxIds));
   }
 

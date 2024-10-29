@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import { oneMonthFormattedFull, threeMonths, threeYears, tomorrowDay, todayMonth, todayYear } from '../../../../../../e2e-fixtures/dateConstants';
+import { threeMonths, threeYears, tomorrow, today, oneMonth } from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 import pages from '../../../pages';
 
@@ -63,7 +63,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', day: tomorrowDay, month: todayMonth, year: todayYear });
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', day: tomorrow.dayLong, month: today.monthLong, year: today.year });
 
     cy.clickContinueButton();
 
@@ -91,8 +91,8 @@ context('Amendments underwriting - amendments should be in correct order of vers
     cy.url().should('contain', '/managers-conditions');
 
     amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS);
-    amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', tomorrowDay);
-    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonthFormattedFull);
+    amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', tomorrow.dayLong);
+    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonth.dd_MMMM_yyyy);
 
     amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
@@ -174,7 +174,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: threeMonths });
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: threeMonths.date });
 
     cy.clickContinueButton();
 
@@ -277,7 +277,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: threeYears });
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: threeYears.date });
 
     cy.clickContinueButton();
 

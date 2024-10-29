@@ -63,6 +63,10 @@ const utilisationReportPage = {
       paymentCurrencyRadioInput: (currencyCode) => cy.get(`input[type="radio"][data-cy="currency-${currencyCode}"]`),
       paymentCurrencyError: () => cy.get('[data-cy="payment-details--filter-payment-currency-error"]'),
       noRecordsMatchingFiltersText: () => cy.get('[data-cy="payment-details-no-records-matching-filters-text"]'),
+      actionBar: () => cy.get('[data-cy="payment-details--filters-action-bar"]'),
+      actionBarItem: (value) => cy.get(`[data-cy="payment-details--filters-action-bar"] a:contains(${value})`),
+      clearFiltersLink: () => cy.get('a:contains("Clear filters")'),
+      selectedFilter: (value) => cy.get(`[data-cy="payment-details--filters-panel"] .moj-filter__tag:contains(${value})`),
     },
   },
   utilisationTab: {

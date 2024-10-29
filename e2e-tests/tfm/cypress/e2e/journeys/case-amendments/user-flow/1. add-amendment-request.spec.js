@@ -91,7 +91,7 @@ context('Amendments - Request date', () => {
     facilityPage.facilityTabAmendments().click();
     amendmentsPage.addAmendmentButton().click();
 
-    cy.completeDateFormFields({ idPrefix: 'amendment--request-date', date: threeMonths });
+    cy.completeDateFormFields({ idPrefix: 'amendment--request-date', date: threeMonths.date });
 
     cy.clickContinueButton();
 

@@ -10,10 +10,9 @@ export const getLoginSsoRouter: GetRouter = () => {
   const entraIdApi = new EntraIdApi({ entraIdConfig });
   const entraIdService = new EntraIdService({ entraIdConfig, entraIdApi });
   const loginController = new LoginController({ entraIdService });
-
   const loginSsoRouter = express.Router();
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises, @typescript-eslint/unbound-method
-  loginSsoRouter.get('/', loginController.getLogin);
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  loginSsoRouter.get('/', (req, res) => loginController.getLogin(req, res));
 
   return loginSsoRouter;
 };

@@ -1,5 +1,5 @@
 const dealThatJustNeedsConversionDate = require('./dealThatJustNeedsConversionDate');
-const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
+const { oneMonth, today } = require('../../../../../../e2e-fixtures/dateConstants');
 
 module.exports = () => {
   const now = new Date();
@@ -11,14 +11,14 @@ module.exports = () => {
 
   deal.details.submissionCount = 0;
 
-  deal.submissionDetails['supplyContractConversionDate-day'] = dateConstants.todayDay;
-  deal.submissionDetails['supplyContractConversionDate-month'] = dateConstants.todayMonth;
-  deal.submissionDetails['supplyContractConversionDate-year'] = dateConstants.todayYear;
+  deal.submissionDetails['supplyContractConversionDate-day'] = today.dayLong;
+  deal.submissionDetails['supplyContractConversionDate-month'] = today.monthLong;
+  deal.submissionDetails['supplyContractConversionDate-year'] = today.year;
 
   deal.loanTransactions.items[0].requestedCoverStartDate = now.valueOf();
 
-  deal.loanTransactions.items[0]['coverEndDate-day'] = dateConstants.oneMonthDay.toString();
-  deal.loanTransactions.items[0]['coverEndDate-month'] = dateConstants.oneMonthMonth.toString();
-  deal.loanTransactions.items[0]['coverEndDate-year'] = dateConstants.oneMonthYear.toString();
+  deal.loanTransactions.items[0]['coverEndDate-day'] = oneMonth.dayLong;
+  deal.loanTransactions.items[0]['coverEndDate-month'] = oneMonth.monthLong;
+  deal.loanTransactions.items[0]['coverEndDate-year'] = oneMonth.year;
   return deal;
 };

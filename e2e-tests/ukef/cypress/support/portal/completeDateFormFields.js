@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { today, longDayFormat, longMonthFormat, longYearFormat } from '../../../../e2e-fixtures/dateConstants';
+import { today, LONG_DAY_FORMAT, LONG_MONTH_FORMAT, LONG_YEAR_FORMAT } from '../../../../e2e-fixtures/dateConstants';
 
 /**
  * completeDateFormFields
@@ -13,21 +13,21 @@ import { today, longDayFormat, longMonthFormat, longYearFormat } from '../../../
  * @param {string} month: Optional month string
  * @param {string} year: Optional year string
  */
-const completeDateFormFields = ({ idPrefix, date = today, day, month, year }) => {
+const completeDateFormFields = ({ idPrefix, date = today.date, day, month, year }) => {
   if (day !== null) {
-    const dayValue = day || format(date, longDayFormat);
+    const dayValue = day || format(date, LONG_DAY_FORMAT);
 
     cy.keyboardInput(cy.get(`[data-cy="${idPrefix}-day"]`), dayValue);
   }
 
   if (month !== null) {
-    const monthValue = month || format(date, longMonthFormat);
+    const monthValue = month || format(date, LONG_MONTH_FORMAT);
 
     cy.keyboardInput(cy.get(`[data-cy="${idPrefix}-month"]`), monthValue);
   }
 
   if (year !== null) {
-    const yearValue = year || format(date, longYearFormat);
+    const yearValue = year || format(date, LONG_YEAR_FORMAT);
 
     cy.keyboardInput(cy.get(`[data-cy="${idPrefix}-year"]`), yearValue);
   }

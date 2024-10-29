@@ -8,6 +8,8 @@ const component = '../templates/utilisation-reports/_macros/payment-details-tabl
 const render = componentRenderer(component, true);
 
 describe(component, () => {
+  const hiddenCellSelector = '[data-cy="hidden-facility-id-and-expoter"]';
+
   const aPaymentDetailsPayment = (): PaymentDetailsPaymentViewModel => ({
     id: 1,
     amount: {
@@ -74,6 +76,26 @@ describe(component, () => {
 
     wrapper.expectElement(`tr td:contains("Some facility id")`).toExist();
     wrapper.expectElement(`tr td:contains("Some exporter")`).toExist();
+    wrapper.expectElement(`tr td:contains("Some facility id")`).toHaveAttribute('aria-hidden', 'true');
+    wrapper.expectElement(`tr td:contains("Some exporter")`).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  it('renders visually hidden alternative combined facility ID and exporter cell', () => {
+    const paymentDetailsRow: PaymentDetailsRowViewModel = {
+      ...aPaymentDetailsTableRow(),
+      feeRecords: [
+        {
+          id: 1,
+          facilityId: 'Some facility id',
+          exporter: 'Some exporter',
+        },
+      ],
+    };
+    const wrapper = getWrapper({ paymentDetailsRow });
+
+    wrapper.expectElement(`tr ${hiddenCellSelector}`).toExist();
+    wrapper.expectElement(`tr ${hiddenCellSelector}`).hasClass('govuk-visually-hidden');
+    wrapper.expectText(`tr ${hiddenCellSelector}`).toRead('Some facility id Some exporter');
   });
 
   it('renders the date reconciled', () => {
@@ -173,6 +195,18 @@ describe(component, () => {
       const wrapper = getWrapper({ paymentDetailsRow });
 
       wrapper.expectElement('tr').toHaveCount(3);
+    });
+
+    it('should visually hide all rows other than first row', () => {
+      const paymentDetailsRow: PaymentDetailsRowViewModel = {
+        ...aPaymentDetailsTableRow(),
+        feeRecords: [aFeeRecord(), aFeeRecord(), aFeeRecord()],
+      };
+      const wrapper = getWrapper({ paymentDetailsRow });
+
+      wrapper.expectElement('tr:eq(0)').toHaveAttribute('aria-hidden', 'false');
+      wrapper.expectElement('tr:eq(1)').toHaveAttribute('aria-hidden', 'true');
+      wrapper.expectElement('tr:eq(2)').toHaveAttribute('aria-hidden', 'true');
     });
 
     it('renders the non-fee record payment details data only in the first row', () => {
@@ -303,6 +337,24 @@ describe(component, () => {
 
       wrapper.expectElement('tr:eq(2) td:contains("33333333")').toExist();
       wrapper.expectElement('tr:eq(2) td:contains("Test exporter 3")').toExist();
+    });
+
+    it('renders all facility ids and exporters in visually hidden cell in the first row of group', () => {
+      const feeRecords: { id: number; facilityId: string; exporter: string }[] = [
+        { id: 1, facilityId: '11111111', exporter: 'Test exporter 1' },
+        { id: 1, facilityId: '22222222', exporter: 'Test exporter 2' },
+        { id: 1, facilityId: '33333333', exporter: 'Test exporter 3' },
+      ];
+      const paymentDetailsRow: PaymentDetailsRowViewModel = {
+        ...aPaymentDetailsTableRow(),
+        feeRecords,
+      };
+      const wrapper = getWrapper({ paymentDetailsRow });
+
+      wrapper.expectElement(`tr:eq(0) ${hiddenCellSelector}`).toExist();
+      wrapper.expectText(`tr:eq(0) ${hiddenCellSelector} li:eq(0)`).toRead('11111111 Test exporter 1');
+      wrapper.expectText(`tr:eq(0) ${hiddenCellSelector} li:eq(1)`).toRead('22222222 Test exporter 2');
+      wrapper.expectText(`tr:eq(0) ${hiddenCellSelector} li:eq(2)`).toRead('33333333 Test exporter 3');
     });
   });
 });

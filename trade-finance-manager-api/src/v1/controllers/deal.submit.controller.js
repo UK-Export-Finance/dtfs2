@@ -107,7 +107,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
     }
 
     // Update the deal with all the above modifications
-    const tfmDeal = api.updateDeal({ dealId, dealUpdate, auditDetails });
+    const tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
     // Submit to ACBS
     const canSubmitDealToACBS = await canSubmitToACBS(tfmDeal);

@@ -1,9 +1,8 @@
 import { createMocks } from 'node-mocks-http';
-import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
-import { format } from 'date-fns';
+import { DEAL_SUBMISSION_TYPE, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
 import { aRequestSession } from '../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { BankRequestDateViewModel } from '../../../types/view-models';
+import { CheckDetailsViewModel } from '../../../types/view-models';
 import api from '../../../api';
 import { getDealCancellationDetails, GetDealCancellationDetailsRequest } from './check-details.controller';
 
@@ -107,17 +106,31 @@ describe('getDealCancellationDetails', () => {
       expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
     });
 
+    it('redirects to deal summary page if the deal cancellation is not in draft', async () => {
+      // Arrange
+      jest.mocked(api.getDealCancellation).mockResolvedValue({ status: TFM_DEAL_CANCELLATION_STATUS.COMPLETED });
+
+      const { req, res } = createMocks<GetDealCancellationDetailsRequest>({
+        params: { _id: dealId },
+        session: aRequestSession(),
+      });
+
+      // Act
+      await getDealCancellationDetails(req, res);
+
+      // Assert
+      expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
+    });
+
     it('renders the check details page with deal cancellation details', async () => {
       const reason = 'test reaspn';
-      const bankRequestDate = new Date('2024-01-01');
-      const effectiveFromDate = new Date('2024-03-03');
+      const bankRequestDate = new Date('2024-01-01').valueOf();
+      const effectiveFrom = new Date('2024-03-03').valueOf();
 
       const session = aRequestSession();
 
       // Arrange
-      jest
-        .mocked(api.getDealCancellation)
-        .mockResolvedValue({ reason, effectiveFrom: effectiveFromDate.valueOf(), bankRequestDate: bankRequestDate.valueOf() });
+      jest.mocked(api.getDealCancellation).mockResolvedValue({ reason, effectiveFrom, bankRequestDate, status: TFM_DEAL_CANCELLATION_STATUS.DRAFT });
 
       const { req, res } = createMocks<GetDealCancellationDetailsRequest>({
         params: { _id: dealId },
@@ -129,14 +142,12 @@ describe('getDealCancellationDetails', () => {
 
       // Assert
       expect(res._getRenderView()).toEqual('case/cancellation/check-details.njk');
-      expect(res._getRenderData() as BankRequestDateViewModel).toEqual({
+      expect(res._getRenderData() as CheckDetailsViewModel).toEqual({
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
         user: session.user,
         ukefDealId,
         dealId,
-        reason,
-        bankRequestDate: format(bankRequestDate, 'd MMMM yyyy'),
-        effectiveFromDate: format(effectiveFromDate, 'd MMMM yyyy'),
+        cancellation: { reason, bankRequestDate, effectiveFrom, status: TFM_DEAL_CANCELLATION_STATUS.DRAFT },
       });
     });
   });
