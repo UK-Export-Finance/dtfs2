@@ -39,7 +39,7 @@ export type Facility = {
   shouldCoverStartOnSubmission: boolean;
   coverStartDate: UnixTimestampString | Date | null;
   coverEndDate: UnixTimestampString | Date | null;
-  issueDate: UnixTimestampString | Date | null;
+  issueDate?: UnixTimestampString | Date | null;
   monthsOfCover: number | null;
   details: string[];
   detailsOther: string;
@@ -60,9 +60,9 @@ export type Facility = {
   feeFrequency: string;
   dayCountBasis: number;
   coverDateConfirmed: boolean | null;
-  hasBeenIssuedAndAcknowledged: boolean | null;
+  hasBeenIssuedAndAcknowledged?: boolean | null;
   canResubmitIssuedFacilities: boolean | null;
-  unissuedToIssuedByMaker: object;
+  unissuedToIssuedByMaker?: object;
   // Legacy data from migrating old GEF Facilities into DTFS
   dataMigration?: {
     drupalFacilityId: string;
