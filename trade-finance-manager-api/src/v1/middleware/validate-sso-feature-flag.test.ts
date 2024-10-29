@@ -1,7 +1,7 @@
 import { isTfmSsoFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
-import { RequestHandler } from 'express';
-import httpMocks from 'node-mocks-http';
+import { RequestHandler, Request, Response, NextFunction } from 'express';
+import httpMocks, { MockRequest, MockResponse } from 'node-mocks-http';
 import { validateSsoFeatureFlagIsOff, validateSsoFeatureFlagIsOn } from './validate-sso-feature-flag';
 
 jest.mock('@ukef/dtfs2-common', () => ({
@@ -9,7 +9,14 @@ jest.mock('@ukef/dtfs2-common', () => ({
 }));
 
 describe('validateSsoFeatureFlag', () => {
+  let req: MockRequest<Request>;
+  let res: MockResponse<Response>;
+  let next: jest.Mock | NextFunction;
+
   beforeEach(() => {
+    ({ req, res } = httpMocks.createMocks());
+    next = jest.fn();
+
     jest.resetAllMocks();
   });
 
@@ -57,28 +64,22 @@ describe('validateSsoFeatureFlag', () => {
     });
   });
 
-  function getHttpMocks() {
-    return httpMocks.createMocks();
-  }
-
   function mockIsTfmSsoFeatureFlag(value: boolean) {
     jest.mocked(isTfmSsoFeatureFlagEnabled).mockReturnValue(value);
   }
 
   function itCallsTheNextMiddleware({ makeRequest }: { makeRequest: RequestHandler }) {
     it('calls the next middleware', () => {
-      const { req, res } = getHttpMocks();
-      const next = jest.fn();
       makeRequest(req, res, next);
+
       expect(next).toHaveBeenCalled();
     });
   }
 
   function itReturnsAnErrorResponse({ makeRequest }: { makeRequest: RequestHandler }) {
     it('returns an error response', () => {
-      const { req, res } = getHttpMocks();
-      const next = jest.fn();
       makeRequest(req, res, next);
+
       expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
       expect(res._isEndCalled()).toEqual(true);
     });
