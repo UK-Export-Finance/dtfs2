@@ -1,11 +1,11 @@
 import {
   AuditDatabaseRecord,
   AuditDetails,
-  aValidUserUpsertRequest,
+  aValidUpsertUserRequest,
   DocumentNotUpdatedError,
   MONGO_DB_COLLECTIONS,
   TfmUser,
-  UserUpsertRequest,
+  UpdateUserRequest,
 } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { FindOneAndUpdateOptions, ModifyResult, ObjectId, WithId } from 'mongodb';
@@ -25,8 +25,8 @@ describe('user repo', () => {
   });
 
   describe('update user by id', () => {
-    let updateUserRequest: UserUpsertRequest;
-    let updateUserDatabaseRequest: UserUpsertRequest & { auditRecord: AuditDatabaseRecord };
+    let updateUserRequest: UpdateUserRequest;
+    let updateUserDatabaseRequest: UpdateUserRequest & { auditRecord: AuditDatabaseRecord };
     let updateUserDatabaseResponse: WithId<TfmUser>;
     let auditDetails: AuditDetails;
     let auditRecord: AuditDatabaseRecord;
@@ -40,9 +40,9 @@ describe('user repo', () => {
       auditDetails = generateSystemAuditDetails();
       auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
-      updateUserRequest = aValidUserUpsertRequest();
+      updateUserRequest = aValidUpsertUserRequest();
       updateUserDatabaseRequest = { ...updateUserRequest, auditRecord };
-      updateUserDatabaseResponse = { ...updateUserDatabaseRequest, _id: userId, status: USER.STATUS.ACTIVE };
+      updateUserDatabaseResponse = { ...updateUserDatabaseRequest, _id: userId, status: USER.STATUS.ACTIVE } as WithId<TfmUser>;
 
       userId = new ObjectId();
     });
