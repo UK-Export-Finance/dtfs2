@@ -38,19 +38,27 @@ describe('filterTasks', () => {
     },
   ];
 
+  const mockEmptyTasks = [];
+
   describe('mapAndFilter function', () => {
+    const mockArgsFunc = (task, group) => {
+      if (task.id === '2') {
+        return {
+          ...group,
+          groupTasks: [task],
+        };
+      }
+
+      return group;
+    };
+
+    it.each([null, undefined, {}, []])('should return empty array when tasks are empty', (invalidTasks) => {
+      const result = mapAndFilter(invalidTasks, mockArgsFunc, MOCK_TEAM_ID);
+
+      expect(result).toEqual([]);
+    });
+
     it('should return tasks filtered by the given function via params', () => {
-      const mockArgsFunc = (task, group) => {
-        if (task.id === '2') {
-          return {
-            ...group,
-            groupTasks: [task],
-          };
-        }
-
-        return group;
-      };
-
       const result = mapAndFilter(mockTasks, mockArgsFunc, MOCK_TEAM_ID);
 
       const mockTasksThatDoNotHaveTaskId1 = [
@@ -200,6 +208,29 @@ describe('filterTasks', () => {
   });
 
   describe('filterTasks function', () => {
+    describe('when there are no tasks', () => {
+      it('should return empty array back when there are no tasks', () => {
+        const mockFiltersObj = {};
+
+        const result = filterTasks(mockEmptyTasks, mockFiltersObj);
+        expect(result).toEqual([]);
+      });
+
+      it('should return empty array back when tasks are null', () => {
+        const mockFiltersObj = {};
+
+        const result = filterTasks(null, mockFiltersObj);
+        expect(result).toEqual([]);
+      });
+
+      it('should return empty array back when tasks is undefined', () => {
+        const mockFiltersObj = {};
+
+        const result = filterTasks(undefined, mockFiltersObj);
+        expect(result).toEqual([]);
+      });
+    });
+
     describe('when there is no filterType', () => {
       it('should return all tasks', () => {
         const mockFiltersObj = {};

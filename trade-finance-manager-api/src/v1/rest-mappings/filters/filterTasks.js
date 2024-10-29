@@ -7,6 +7,10 @@ const FILTER_TYPE = {
 const mapAndFilter = (tasks, argsFunc, FILTER_VALUE) => {
   const filteredTasks = [];
 
+  if (!tasks?.length) {
+    return filteredTasks;
+  }
+
   tasks.map((group) => {
     const { groupTasks } = group;
 
@@ -61,6 +65,11 @@ const filterUserTasksInGroup = (task, group, FILTER_VALUE) => {
 const filterUserTasks = (tasks, FILTER_USER_ID) => mapAndFilter(tasks, filterUserTasksInGroup, FILTER_USER_ID);
 
 const filterTasks = (tasks, filtersObj) => {
+  // Return an empty array if the tasks are null or void.
+  if (!tasks?.length) {
+    return [];
+  }
+
   if (!filtersObj?.filterType || filtersObj?.filterType === FILTER_TYPE.ALL) {
     return tasks;
   }
