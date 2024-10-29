@@ -2,7 +2,14 @@ import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
 import { EntityManager } from 'typeorm';
-import { FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, TestApiError, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FEE_RECORD_STATUS,
+  FeeRecordEntityMockBuilder,
+  REQUEST_PLATFORM_TYPE,
+  TestApiError,
+  UtilisationReportEntity,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { postKeyingData, PostKeyingDataRequest } from '.';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { executeWithSqlTransaction } from '../../../../helpers';
@@ -114,7 +121,7 @@ describe('post-keying-data.controller', () => {
           transactionEntityManager: mockEntityManager,
           feeRecordsAtMatchStatusWithPayments: feeRecords,
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId,
           },
         },
