@@ -29,7 +29,7 @@ export const cloneFacilities = async (currentDealId: string, newDealId: ObjectId
 
   const clonedFacilities = existingFacilities.map((facility) => {
     return produce(facility, (draft) => {
-      delete draft._id;
+      draft._id = new ObjectId();
 
       draft.dealId = new ObjectId(newDealId);
       draft.createdAt = Date.now();
@@ -53,7 +53,8 @@ export const cloneFacilities = async (currentDealId: string, newDealId: ObjectId
           draft.coverStartDate = null;
         }
       }
-    });
-  }) as Facility[];
+    }) as Facility;
+  });
+
   await collection.insertMany(clonedFacilities);
 };

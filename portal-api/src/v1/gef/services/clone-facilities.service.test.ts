@@ -1,5 +1,5 @@
 import { Facility, FACILITY_TYPE } from '@ukef/dtfs2-common';
-import { Collection, ObjectId, WithoutId } from 'mongodb';
+import { Collection, ObjectId } from 'mongodb';
 import { add } from 'date-fns';
 import { generateAuditDatabaseRecordFromAuditDetails, generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { cloneFacilities } from './clone-facilities.service';
@@ -9,7 +9,8 @@ const existingDealId = new ObjectId().toString();
 const newDealId = new ObjectId();
 const mockAuditDetails = generateSystemAuditDetails();
 
-const facilityOneWithoutId: WithoutId<Facility> = {
+const facilityOne: Facility = {
+  _id: new ObjectId(),
   dealId: new ObjectId(existingDealId),
   type: FACILITY_TYPE.CASH,
   hasBeenIssued: false,
@@ -46,7 +47,8 @@ const facilityOneWithoutId: WithoutId<Facility> = {
   canResubmitIssuedFacilities: null,
 };
 
-const facilityTwoWithoutId: WithoutId<Facility> = {
+const facilityTwo: Facility = {
+  _id: new ObjectId(),
   dealId: new ObjectId(existingDealId),
   type: FACILITY_TYPE.CASH,
   hasBeenIssued: true,
@@ -83,16 +85,7 @@ const facilityTwoWithoutId: WithoutId<Facility> = {
   canResubmitIssuedFacilities: null,
 };
 
-const facilities: Facility[] = [
-  {
-    ...facilityOneWithoutId,
-    _id: new ObjectId(),
-  } as Facility,
-  {
-    ...facilityTwoWithoutId,
-    _id: new ObjectId(),
-  } as Facility,
-];
+const facilities: Facility[] = [facilityOne, facilityTwo];
 
 describe('cloneFacilities', () => {
   let facilitiesCollection: Collection<Facility>;
@@ -156,7 +149,8 @@ describe('cloneFacilities', () => {
     expect(insertManyMock).toHaveBeenCalledTimes(1);
     expect(insertManyMock).toHaveBeenCalledWith([
       {
-        ...facilityOneWithoutId,
+        ...facilityOne,
+        _id: expect.any(ObjectId) as ObjectId,
         dealId: new ObjectId(newDealId),
         type: FACILITY_TYPE.CASH,
         hasBeenIssued: false,
@@ -174,7 +168,8 @@ describe('cloneFacilities', () => {
         auditRecord: generateAuditDatabaseRecordFromAuditDetails(mockAuditDetails),
       },
       {
-        ...facilityTwoWithoutId,
+        ...facilityTwo,
+        _id: expect.any(ObjectId) as ObjectId,
         dealId: new ObjectId(newDealId),
         type: FACILITY_TYPE.CASH,
         hasBeenIssued: true,
