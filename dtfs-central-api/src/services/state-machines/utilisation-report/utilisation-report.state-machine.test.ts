@@ -396,7 +396,9 @@ describe('UtilisationReportStateMachine', () => {
   });
 
   describe(`when report is in '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED}' status`, () => {
-    const RECONCILIATION_COMPLETED_REPORT = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').build();
+    const RECONCILIATION_COMPLETED_REPORT = UtilisationReportEntityMockBuilder.forStatus(
+      UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+    ).build();
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_INCOMPLETE}' event`, async () => {
       // Arrange

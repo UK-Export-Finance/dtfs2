@@ -3,6 +3,7 @@ import {
   FeeRecordEntityMockBuilder,
   MONGO_DB_COLLECTIONS,
   PortalUser,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
   getCurrentReportPeriodForBankSchedule,
@@ -163,7 +164,10 @@ describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-yea
       .withUploadedByUserId(portalUserId)
       .build();
 
-    const reconciliationCompletedReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withId(2).withBankId(bankId).build();
+    const reconciliationCompletedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED)
+      .withId(2)
+      .withBankId(bankId)
+      .build();
 
     await saveReportsToDatabase(uploadedReport, reconciliationCompletedReport);
 
@@ -188,7 +192,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-yea
 
     const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(2).withBankId(bankId).build();
 
-    const reconciliationCompletedReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED')
+    const reconciliationCompletedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED)
       .withId(3)
       .withBankId(bankId)
       .withUploadedByUserId(portalUserId)

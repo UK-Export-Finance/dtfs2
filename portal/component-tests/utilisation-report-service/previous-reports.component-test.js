@@ -1,3 +1,4 @@
+const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
 const pageRenderer = require('../pageRenderer');
 
 const page = 'utilisation-report-service/previous-reports/previous-reports.njk';
@@ -58,7 +59,7 @@ describe(page, () => {
       linkText: 'May 2023',
       month: 'May',
       downloadPath: 'www.abc.com',
-      status: 'RECONCILIATION_COMPLETED',
+      status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
       displayStatus: 'Report completed',
     },
   ];

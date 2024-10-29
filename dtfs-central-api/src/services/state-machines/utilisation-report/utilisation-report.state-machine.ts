@@ -1,4 +1,4 @@
-import { UtilisationReportEntity, ReportPeriod } from '@ukef/dtfs2-common';
+import { UtilisationReportEntity, ReportPeriod, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 import { UtilisationReportRepo } from '../../../repositories/utilisation-reports-repo';
 import { InvalidStateMachineTransitionError, NotFoundError } from '../../../errors';
 import {
@@ -137,7 +137,7 @@ export class UtilisationReportStateMachine {
           default:
             return this.handleInvalidTransition(event);
         }
-      case 'RECONCILIATION_COMPLETED':
+      case UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED:
         switch (event.type) {
           case 'MANUALLY_SET_INCOMPLETE':
             return handleUtilisationReportManuallySetIncompleteEvent(this.report, event.payload);

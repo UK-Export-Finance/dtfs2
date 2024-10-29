@@ -8,6 +8,7 @@ import {
   toIsoMonthStamp,
   FEE_RECORD_STATUS,
   CURRENCY,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
 } from '@ukef/dtfs2-common';
 import { subMonths } from 'date-fns';
 import { FeeRecordPaymentGroupSeeder } from './fee-record-payment-group.seeder';
@@ -41,7 +42,9 @@ const getPrecedingReportPeriod = (reportingSchedule: BankReportPeriodSchedule, r
  * @param dataSource - The sql db data source
  */
 export const seedFeeRecordPaymentGroups = async (dataSource: DataSource) => {
-  const manuallyCompletedReport = await dataSource.manager.findOneByOrFail(UtilisationReportEntity, { status: 'RECONCILIATION_COMPLETED' });
+  const manuallyCompletedReport = await dataSource.manager.findOneByOrFail(UtilisationReportEntity, {
+    status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+  });
   await FeeRecordPaymentGroupSeeder.forManuallyCompletedReport(manuallyCompletedReport).addManyRandomFeeRecords(50).save(dataSource);
 
   const pendingReconciliationReport = await dataSource.manager.findOneByOrFail(UtilisationReportEntity, { status: 'PENDING_RECONCILIATION' });

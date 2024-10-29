@@ -3,6 +3,7 @@ import {
   FEE_RECORD_STATUS,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -143,7 +144,7 @@ describe(`PUT ${BASE_URL}`, () => {
   it('sets the report status to RECONCILIATION_IN_PROGRESS if it was RECONCILIATION_COMPLETED', async () => {
     // Arrange
     const reportId = 1;
-    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withId(reportId).build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED).withId(reportId).build();
     const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
     report.feeRecords = [feeRecord];
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);

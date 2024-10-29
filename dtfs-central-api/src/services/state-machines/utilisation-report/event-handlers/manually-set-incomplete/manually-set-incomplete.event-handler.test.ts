@@ -1,5 +1,5 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { DbRequestSource, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { handleUtilisationReportManuallySetIncompleteEvent } from '.';
 
 describe('handleUtilisationReportManuallySetIncompleteEvent', () => {
@@ -16,7 +16,7 @@ describe('handleUtilisationReportManuallySetIncompleteEvent', () => {
 
   it("sets the report status to 'PENDING_RECONCILIATION' and saves the report using the transaction entity manager", async () => {
     // Arrange
-    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED).build();
 
     // Act
     await handleUtilisationReportManuallySetIncompleteEvent(report, {

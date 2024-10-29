@@ -3,6 +3,7 @@ import {
   DbRequestSource,
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -136,13 +137,13 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
       });
     });
 
-    it('should set the report status to RECONCILED', () => {
+    it(`should set the report status to ${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED}`, () => {
       // Assert
       expect(mockFindOneOrFail).toHaveBeenCalledWith(UtilisationReportEntity, { where: { id: report.id }, relations: { feeRecords: true } });
       expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
       expect(report).toEqual(
         expect.objectContaining<Partial<UtilisationReportEntity>>({
-          status: 'RECONCILIATION_COMPLETED',
+          status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
           lastUpdatedByTfmUserId: requestSource.userId,
           lastUpdatedByPortalUserId: null,
           lastUpdatedByIsSystemUser: false,
@@ -180,7 +181,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
       });
     });
 
-    it('should not set report status to RECONCILED if not all fee records are now reconciled', () => {
+    it(`should not set report status to ${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED} if not all fee records are now reconciled`, () => {
       // Assert
       expect(mockFindOneOrFail).toHaveBeenCalledWith(UtilisationReportEntity, { where: { id: report.id }, relations: { feeRecords: true } });
       expect(mockSave).not.toHaveBeenCalled();

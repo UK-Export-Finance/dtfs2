@@ -72,7 +72,7 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
   ): Promise<UtilisationReportEntity[]> {
     const bankIdAndStatusFindOptions: FindOptionsWhere<UtilisationReportEntity> = {
       bankId,
-      status: Not('RECONCILIATION_COMPLETED'),
+      status: Not(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED),
     };
 
     const previousYearFindOptions: FindOptionsWhere<UtilisationReportEntity> = {

@@ -1,5 +1,9 @@
 import { DataSource } from 'typeorm';
-import { getCurrentReportPeriodForBankSchedule, getPreviousReportPeriodForBankScheduleByMonth } from '@ukef/dtfs2-common';
+import {
+  getCurrentReportPeriodForBankSchedule,
+  getPreviousReportPeriodForBankScheduleByMonth,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+} from '@ukef/dtfs2-common';
 import { UtilisationReportSeeder } from './utilisation-report.seeder';
 import { MongoDbDataLoader } from '../mongo-db-client';
 
@@ -22,7 +26,7 @@ export const seedUtilisationReports = async (dataSource: DataSource): Promise<vo
 
   await UtilisationReportSeeder.forBankIdAndReportPeriod(bankIdAndReportPeriodForPastManuallyCompletedReport)
     .withUploadedByUserId(uploadedByUserId)
-    .saveWithStatus('RECONCILIATION_COMPLETED', dataSource);
+    .saveWithStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED, dataSource);
 
   await UtilisationReportSeeder.forBankIdAndReportPeriod(pendingReconciliationBankIdWithReportPeriod)
     .withUploadedByUserId(uploadedByUserId)

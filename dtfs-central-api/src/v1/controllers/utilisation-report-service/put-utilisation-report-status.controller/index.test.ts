@@ -96,11 +96,11 @@ describe('put-utilisation-report-status.controller', () => {
       const reportsWithStatusForMarkingAsCompleted: ReportWithStatus[] = [
         {
           reportId: 1,
-          status: 'RECONCILIATION_COMPLETED',
+          status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
         },
         {
           reportId: 2,
-          status: 'RECONCILIATION_COMPLETED',
+          status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
         },
       ];
 
@@ -135,7 +135,7 @@ describe('put-utilisation-report-status.controller', () => {
         // Arrange
         const reportWithStatus: ReportWithStatus = {
           reportId: 1,
-          status: 'RECONCILIATION_COMPLETED',
+          status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
         };
 
         const { req, res } = getHttpMocks();
@@ -184,7 +184,10 @@ describe('put-utilisation-report-status.controller', () => {
       });
 
       const existingReports = reportsWithStatusForMarkingAsNotCompleted.map((reportWithStatus) =>
-        UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withId(reportWithStatus.reportId).withAzureFileInfo(azureFileInfo).build(),
+        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED)
+          .withId(reportWithStatus.reportId)
+          .withAzureFileInfo(azureFileInfo)
+          .build(),
       );
 
       utilisationReportRepoFindOneBySpy.mockImplementation(mockFindOneBy(existingReports));

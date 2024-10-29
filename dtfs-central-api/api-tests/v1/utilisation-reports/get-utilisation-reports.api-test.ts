@@ -1,5 +1,11 @@
 import { Response } from 'supertest';
-import { IsoDateTimeStamp, PortalUser, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  IsoDateTimeStamp,
+  PortalUser,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UtilisationReportEntity,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import axios from 'axios';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
@@ -94,7 +100,7 @@ describe(`GET ${BASE_URL}`, () => {
 
     const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(2).withBankId(bankId).build();
 
-    const reconciliationCompletedReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED')
+    const reconciliationCompletedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED)
       .withId(3)
       .withBankId(bankId)
       .withUploadedByUserId(portalUserId)

@@ -79,7 +79,7 @@ describe('reconciliation-summary-item-mapper', () => {
 
     it('sets the reported fees left to reconcile to zero if the report is reconciled but not all fee records are', () => {
       // Arrange
-      const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withFeeRecords([]).build();
+      const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED).withFeeRecords([]).build();
       const aNotReconciledFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('1111').withStatus(FEE_RECORD_STATUS.TO_DO).build();
       report.feeRecords = [aNotReconciledFeeRecord];
 

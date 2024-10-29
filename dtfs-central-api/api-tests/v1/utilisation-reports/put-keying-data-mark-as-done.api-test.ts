@@ -3,6 +3,7 @@ import {
   FEE_RECORD_STATUS,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -159,7 +160,7 @@ describe(`PUT ${BASE_URL}`, () => {
 
     // Assert
     const updatedReport = await SqlDbHelper.manager.findOneBy(UtilisationReportEntity, { id: reportId });
-    expect(updatedReport?.status).toEqual('RECONCILIATION_COMPLETED');
+    expect(updatedReport?.status).toEqual(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED);
   });
 
   it('does not set the report status to RECONCILIATION_COMPLETED if there are fee records not at RECONCILED status', async () => {
