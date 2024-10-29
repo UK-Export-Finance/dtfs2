@@ -27,17 +27,19 @@ context('Loan form - Submit loan with created element on page', () => {
     pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
     cy.keyboardInput(pages.loanGuaranteeDetails.unconditionalNameInput(), LOAN_FORM_VALUES.GUARANTEE_DETAILS.name);
 
-    cy.keyboardInput(pages.loanGuaranteeDetails.requestedCoverStartDateDayInput(), LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateDay);
+    cy.completeDateFormFields({
+      idPrefix: 'requestedCoverStartDate',
+      day: LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateDay,
+      month: LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateMonth,
+      year: LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateYear,
+    });
 
-    cy.keyboardInput(pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput(), LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateMonth);
-
-    cy.keyboardInput(pages.loanGuaranteeDetails.requestedCoverStartDateYearInput(), LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateYear);
-
-    cy.keyboardInput(pages.loanGuaranteeDetails.coverEndDateDayInput(), LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateDay);
-
-    cy.keyboardInput(pages.loanGuaranteeDetails.coverEndDateMonthInput(), LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateMonth);
-
-    cy.keyboardInput(pages.loanGuaranteeDetails.coverEndDateYearInput(), LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateYear);
+    cy.completeDateFormFields({
+      idPrefix: 'coverEndDate',
+      day: LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateDay,
+      month: LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateMonth,
+      year: LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateYear,
+    });
 
     cy.clickSubmitButton();
 

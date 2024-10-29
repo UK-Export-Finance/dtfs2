@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity, Currency } from '@ukef/dtfs2-common';
+import { FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity, Currency, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
 import { getRandomCurrency, getRandomFinancialAmount, getExchangeRate } from '../helpers';
 
 type CreateRandomFeeRecordForReportOverrides = {
@@ -14,7 +14,7 @@ export const createRandomFeeRecordForReport = (report: UtilisationReportEntity, 
 
   feeRecord.report = report;
 
-  feeRecord.status = overrides.status ?? 'TO_DO';
+  feeRecord.status = overrides.status ?? FEE_RECORD_STATUS.TO_DO;
   feeRecord.facilityId = overrides.facilityId ?? faker.string.numeric({ length: { min: 8, max: 10 } });
   feeRecord.exporter = overrides.exporter ?? faker.company.name();
 
@@ -57,7 +57,7 @@ export const createAutoMatchedZeroPaymentFeeRecordForReport = (report: Utilisati
 
   feeRecord.report = report;
 
-  feeRecord.status = 'MATCH';
+  feeRecord.status = FEE_RECORD_STATUS.MATCH;
   feeRecord.facilityId = faker.string.numeric({ length: { min: 8, max: 10 } });
   feeRecord.exporter = faker.company.name();
 

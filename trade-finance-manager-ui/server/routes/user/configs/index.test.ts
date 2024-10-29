@@ -1,18 +1,18 @@
 import { isTfmSsoFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import { Router } from 'express';
 import { getUserRouter } from '.';
-import { getUserSsoRouter } from './userSso';
-import { getUserNonSsoRouter } from './userNonSso';
+import { getUserSsoRouter } from './user-sso';
+import { getUserNonSsoRouter } from './user-non-sso';
 
 jest.mock('@ukef/dtfs2-common', () => ({
   isTfmSsoFeatureFlagEnabled: jest.fn(),
 }));
 
-jest.mock('./userSso', () => ({
+jest.mock('./user-sso', () => ({
   getUserSsoRouter: jest.fn(),
 }));
 
-jest.mock('./userNonSso', () => ({
+jest.mock('./user-non-sso', () => ({
   getUserNonSsoRouter: jest.fn(),
 }));
 
@@ -26,7 +26,7 @@ describe('user routes', () => {
       jest.mocked(isTfmSsoFeatureFlagEnabled).mockReturnValue(true);
       jest.mocked(getUserSsoRouter).mockReturnValue('userSsoRouter' as unknown as Router);
 
-      expect(getUserRouter()).toBe('userSsoRouter');
+      expect(getUserRouter()).toEqual('userSsoRouter');
       expect(getUserSsoRouter).toHaveBeenCalledTimes(1);
       expect(getUserNonSsoRouter).not.toHaveBeenCalled();
     });
@@ -35,7 +35,7 @@ describe('user routes', () => {
       jest.mocked(isTfmSsoFeatureFlagEnabled).mockReturnValue(false);
       jest.mocked(getUserNonSsoRouter).mockReturnValue('userNonSsoRouter' as unknown as Router);
 
-      expect(getUserRouter()).toBe('userNonSsoRouter');
+      expect(getUserRouter()).toEqual('userNonSsoRouter');
       expect(getUserNonSsoRouter).toHaveBeenCalledTimes(1);
       expect(getUserSsoRouter).not.toHaveBeenCalled();
     });

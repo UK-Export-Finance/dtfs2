@@ -1,6 +1,7 @@
 const { contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, dashboardDeals, contractAboutPreview } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
+const { today } = require('../../../../../e2e-fixtures/dateConstants');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -22,13 +23,11 @@ context('about-supply-contract', () => {
     contractAboutFinancial.supplyContractCurrency().select('USD');
     cy.keyboardInput(contractAboutFinancial.supplyContractConversionRateToGBP(), '1.123456');
 
-    const today = new Date();
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day(), today.day);
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day(), `${today.getDate()}`);
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().month(), today.month);
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().month(), `${today.getMonth() + 1}`);
-
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), `${today.getFullYear()}`);
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), today.year);
 
     contractAboutFinancial.saveAndGoBack().click();
 

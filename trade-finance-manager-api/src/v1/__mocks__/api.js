@@ -202,7 +202,7 @@ module.exports = {
     exchangeRate: MOCK_CURRENCY_EXCHANGE_RATE,
   }),
   createACBS: jest.fn(() => ({})),
-  updateACBSfacility: jest.fn(() =>
+  issueACBSfacility: jest.fn(() =>
     Promise.resolve({
       acbsTaskLinks: {
         mockLinkUrl: 'mockLinkUrl',

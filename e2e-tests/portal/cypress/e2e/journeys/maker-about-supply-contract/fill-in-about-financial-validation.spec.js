@@ -1,7 +1,7 @@
 const { contractAboutBuyer, contractAboutFinancial, contractAboutPreview, dashboardDeals, contract, contractAboutSupplier } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const DATE_CONSTANTS = require('../../../../../e2e-fixtures/dateConstants');
+const { thirtyFiveDaysAgo } = require('../../../../../e2e-fixtures/dateConstants');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -125,16 +125,19 @@ context('about-buyer', () => {
 
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion date cannot be in the future');
 
-    const dateTooFarInThePast = DATE_CONSTANTS.thirtyFiveDaysAgo;
+    const dateTooFarInThePast = thirtyFiveDaysAgo;
 
     dashboardDeals.visit();
     cy.clickDashboardDealLink();
+
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
+
     cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day(), `{selectall}{backspace}${dateTooFarInThePast.getDate()}`);
     cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().month(), `{selectall}{backspace}${dateTooFarInThePast.getMonth() + 1}`);
     cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), `{selectall}{backspace}${dateTooFarInThePast.getFullYear()}`);
+
     contractAboutFinancial.preview().click();
 
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion date cannot be more than 30 days in the past');

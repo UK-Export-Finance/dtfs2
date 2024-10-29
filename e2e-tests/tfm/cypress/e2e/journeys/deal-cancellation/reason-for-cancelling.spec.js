@@ -1,6 +1,6 @@
 import relative from '../../relativeURL';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
-import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../e2e-fixtures';
+import { ADMIN, BANK1_MAKER1, PIM_USER_1 } from '../../../../../e2e-fixtures';
 import caseDealPage from '../../pages/caseDealPage';
 import reasonForCancellingPage from '../../pages/deal-cancellation/reason-for-cancelling';
 import { backLink, cancelLink, continueButton, errorSummary } from '../../partials';
@@ -82,16 +82,6 @@ context('Deal cancellation - reason for cancelling', () => {
       cy.clickBackLink();
 
       reasonForCancellingPage.reasonForCancellingTextBox().should('have.value', reason);
-    });
-  });
-
-  describe('when logged in as a non-PIM user', () => {
-    beforeEach(() => {
-      cy.login(T1_USER_1);
-    });
-
-    it('should redirect when visiting reason for cancelling page ', () => {
-      cy.url().should('eq', relative('/deals/0'));
     });
   });
 });

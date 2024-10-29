@@ -24,8 +24,6 @@ const enableFindReportsByYearDropdown = (): void => {
     return;
   }
 
-  yearInput.disabled = true;
-
   const bankRadios: NodeListOf<HTMLInputElement> = findUtilisationReportsByYearForm.querySelectorAll('input.govuk-radios__input');
 
   bankRadios.forEach((bankRadio) => {
@@ -37,7 +35,6 @@ const enableFindReportsByYearDropdown = (): void => {
     }
 
     bankRadio.addEventListener('click', () => {
-      yearInput.disabled = false;
       yearInput.setAttribute('list', dataListId);
     });
   });

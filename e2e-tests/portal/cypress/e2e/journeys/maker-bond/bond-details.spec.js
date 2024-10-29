@@ -54,17 +54,19 @@ context('Bond Details', () => {
     pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
     pages.bondDetails.facilityStageIssuedInput().click();
 
-    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateDayInput(), `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}-`);
+    cy.completeDateFormFields({
+      idPrefix: 'requestedCoverStartDate',
+      day: `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}-`,
+      month: BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth,
+      year: BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear,
+    });
 
-    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateMonthInput(), BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth);
-
-    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateYearInput(), BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear);
-
-    cy.keyboardInput(pages.bondDetails.coverEndDateDayInput(), `${BOND_FORM_VALUES.DETAILS.coverEndDateDay}-`);
-
-    cy.keyboardInput(pages.bondDetails.coverEndDateMonthInput(), BOND_FORM_VALUES.DETAILS.coverEndDateMonth);
-
-    cy.keyboardInput(pages.bondDetails.coverEndDateYearInput(), BOND_FORM_VALUES.DETAILS.coverEndDateYear);
+    cy.completeDateFormFields({
+      idPrefix: 'coverEndDate',
+      day: `${BOND_FORM_VALUES.DETAILS.coverEndDateDay}-`,
+      month: BOND_FORM_VALUES.DETAILS.coverEndDateMonth,
+      year: BOND_FORM_VALUES.DETAILS.coverEndDateYear,
+    });
 
     cy.keyboardInput(pages.bondDetails.nameInput(), BOND_FORM_VALUES.DETAILS.name);
 
@@ -80,17 +82,19 @@ context('Bond Details', () => {
     pages.bondDetails.requestedCoverStartDateInputErrorMessage().contains('The day for the requested Cover Start Date must include 1 or 2 numbers');
     pages.bondDetails.coverEndDateInputErrorMessage().contains('The day for the cover end date must only include 1 or 2 numbers');
 
-    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateDayInput().clear(), BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay);
+    cy.completeDateFormFields({
+      idPrefix: 'requestedCoverStartDate',
+      day: BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay,
+      month: `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}-`,
+      year: BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear,
+    });
 
-    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateMonthInput().clear(), `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}-`);
-
-    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateYearInput().clear(), BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear);
-
-    cy.keyboardInput(pages.bondDetails.coverEndDateDayInput().clear(), BOND_FORM_VALUES.DETAILS.coverEndDateDay);
-
-    cy.keyboardInput(pages.bondDetails.coverEndDateMonthInput().clear(), `${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}-`);
-
-    cy.keyboardInput(pages.bondDetails.coverEndDateYearInput().clear(), BOND_FORM_VALUES.DETAILS.coverEndDateYear);
+    cy.completeDateFormFields({
+      idPrefix: 'coverEndDate',
+      day: BOND_FORM_VALUES.DETAILS.coverEndDateDay,
+      month: `${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}-`,
+      year: BOND_FORM_VALUES.DETAILS.coverEndDateYear,
+    });
 
     cy.clickSubmitButton();
 
@@ -98,17 +102,19 @@ context('Bond Details', () => {
     pages.bondDetails.requestedCoverStartDateInputErrorMessage().contains('The month for the requested Cover Start Date must include 1 or 2 numbers');
     pages.bondDetails.coverEndDateInputErrorMessage().contains('The month for the cover end date must only include 1 or 2 numbers');
 
-    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateDayInput().clear(), BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay);
+    cy.completeDateFormFields({
+      idPrefix: 'requestedCoverStartDate',
+      day: BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay,
+      month: BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth,
+      year: `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}-`,
+    });
 
-    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateMonthInput().clear(), BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth);
-
-    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateYearInput().clear(), `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}-`);
-
-    cy.keyboardInput(pages.bondDetails.coverEndDateDayInput().clear(), BOND_FORM_VALUES.DETAILS.coverEndDateDay);
-
-    cy.keyboardInput(pages.bondDetails.coverEndDateMonthInput().clear(), BOND_FORM_VALUES.DETAILS.coverEndDateMonth);
-
-    cy.keyboardInput(pages.bondDetails.coverEndDateYearInput().clear(), `${BOND_FORM_VALUES.DETAILS.coverEndDateYear}-`);
+    cy.completeDateFormFields({
+      idPrefix: 'coverEndDate',
+      day: BOND_FORM_VALUES.DETAILS.coverEndDateDay,
+      month: BOND_FORM_VALUES.DETAILS.coverEndDateMonth,
+      year: `${BOND_FORM_VALUES.DETAILS.coverEndDateYear}-`,
+    });
 
     cy.clickSubmitButton();
 
@@ -116,12 +122,19 @@ context('Bond Details', () => {
     pages.bondDetails.requestedCoverStartDateInputErrorMessage().contains('The year for the requested Cover Start Date must include 4 numbers');
     pages.bondDetails.coverEndDateInputErrorMessage().contains('The year for the Cover End Date must include 4 numbers');
 
-    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateDayInput().clear(), '##');
-    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateMonthInput().clear(), '##');
-    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateYearInput().clear(), '##');
-    cy.keyboardInput(pages.bondDetails.coverEndDateDayInput().clear(), '##');
-    cy.keyboardInput(pages.bondDetails.coverEndDateMonthInput().clear(), '##');
-    cy.keyboardInput(pages.bondDetails.coverEndDateYearInput().clear(), '##');
+    cy.completeDateFormFields({
+      idPrefix: 'requestedCoverStartDate',
+      day: '##',
+      month: '##',
+      year: '##',
+    });
+
+    cy.completeDateFormFields({
+      idPrefix: 'coverEndDate',
+      day: '##',
+      month: '##',
+      year: '##',
+    });
 
     partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
       const bondId = bondIdHiddenInput[0].value;

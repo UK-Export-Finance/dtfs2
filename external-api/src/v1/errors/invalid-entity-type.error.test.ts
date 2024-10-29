@@ -9,7 +9,7 @@ describe('InvalidEntityTypeError', () => {
     const exception = new InvalidEntityTypeError(entityType);
 
     // Assert
-    expect(exception.message).toBe(ERRORS.ENTITY_TYPE.INVALID);
+    expect(exception.message).toEqual(ERRORS.ENTITY_TYPE.INVALID);
   });
 
   it('exposes the expected cause', () => {
@@ -19,7 +19,7 @@ describe('InvalidEntityTypeError', () => {
     const exception = new InvalidEntityTypeError(entityType);
 
     // Assert
-    expect(exception.cause).toBe(expectedCause);
+    expect(exception.cause).toEqual(expectedCause);
   });
 
   it('exposes the name of the exception', () => {

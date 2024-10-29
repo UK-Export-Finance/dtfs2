@@ -142,7 +142,7 @@ describe('report-period utils', () => {
       const result = isValidReportPeriod(validReportPeriod);
 
       // Assert
-      expect(result).toBe(true);
+      expect(result).toEqual(true);
     });
 
     const validStart = { month: 1, year: 2021 };
@@ -164,7 +164,7 @@ describe('report-period utils', () => {
       const result = isValidReportPeriod(reportPeriod);
 
       // Assert
-      expect(result).toBe(false);
+      expect(result).toEqual(false);
     });
   });
 });

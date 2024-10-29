@@ -223,7 +223,7 @@ describe('getReconciliationSummary', () => {
       // Assert
       expect(findSubmittedReportsForBankIdWithReportPeriodEndInYearMock).toHaveBeenCalledWith(bankId, Number(year));
 
-      expect(res._getStatusCode()).toBe(200);
+      expect(res._getStatusCode()).toEqual(200);
       expect(res._getData()).toEqual<{
         bankName: string;
         year: string;

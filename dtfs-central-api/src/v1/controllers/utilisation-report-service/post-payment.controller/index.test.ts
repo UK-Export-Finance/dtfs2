@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
-import { Currency, TestApiError } from '@ukef/dtfs2-common';
+import { Currency, FEE_RECORD_STATUS, TestApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { PostPaymentRequest, postPayment } from '.';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
@@ -48,7 +48,7 @@ describe('post-payment.controller', () => {
       });
       const res = httpMocks.createResponse();
 
-      jest.mocked(addPaymentToUtilisationReport).mockResolvedValue();
+      jest.mocked(addPaymentToUtilisationReport).mockResolvedValue(FEE_RECORD_STATUS.MATCH);
 
       const newPaymentDetails: NewPaymentDetails = {
         currency: paymentCurrency,
@@ -64,7 +64,7 @@ describe('post-payment.controller', () => {
       expect(addPaymentToUtilisationReport).toHaveBeenCalledWith(reportId, feeRecordIds, tfmUser, newPaymentDetails);
     });
 
-    it("responds with a '200' if the report is saved successfully", async () => {
+    it("responds with a '200' and fee record status if the report is saved successfully", async () => {
       // Arrange
       const req = httpMocks.createRequest<PostPaymentRequest>({
         params: aValidRequestQuery(),
@@ -72,13 +72,14 @@ describe('post-payment.controller', () => {
       });
       const res = httpMocks.createResponse();
 
-      jest.mocked(addPaymentToUtilisationReport).mockResolvedValue();
+      jest.mocked(addPaymentToUtilisationReport).mockResolvedValue(FEE_RECORD_STATUS.MATCH);
 
       // Act
       await postPayment(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+      expect(res._getData()).toEqual({ feeRecordStatus: FEE_RECORD_STATUS.MATCH });
     });
 
     it("responds with the specific error status if saving the report throws an 'ApiError'", async () => {
@@ -96,7 +97,7 @@ describe('post-payment.controller', () => {
       await postPayment(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(errorStatus);
+      expect(res._getStatusCode()).toEqual(errorStatus);
     });
 
     it("responds with the specific error message if saving the report throws an 'ApiError'", async () => {
@@ -114,7 +115,7 @@ describe('post-payment.controller', () => {
       await postPayment(req, res);
 
       // Assert
-      expect(res._getData()).toBe(`Failed to add a new payment: ${errorMessage}`);
+      expect(res._getData()).toEqual(`Failed to add a new payment: ${errorMessage}`);
     });
 
     it(`responds with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, async () => {
@@ -131,7 +132,7 @@ describe('post-payment.controller', () => {
       await postPayment(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
     });
 
     it('responds with a generic error message if an unknown error occurs', async () => {
@@ -148,7 +149,7 @@ describe('post-payment.controller', () => {
       await postPayment(req, res);
 
       // Assert
-      expect(res._getData()).toBe('Failed to add a new payment');
+      expect(res._getData()).toEqual('Failed to add a new payment');
     });
   });
 });

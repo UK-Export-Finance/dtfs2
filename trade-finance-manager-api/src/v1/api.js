@@ -164,6 +164,10 @@ const updatePortalFacility = async (facilityId, update, auditDetails) => {
   }
 };
 
+/**
+ * @param {string} dealId
+ * @returns {Promise<import('@ukef/dtfs2-common').TfmDeal}
+ */
 const findOneDeal = async (dealId) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -305,7 +309,7 @@ const updateDealCancellation = async ({ dealId, dealCancellationUpdate, auditDet
 /**
  * Gets the deal cancellation object on a TFM deal
  * @param {string} dealId - deal cancellation to update
- * @returns {Promise<Partial<import('@ukef/dtfs2-common').TfmDealCancellation>>} - Deal cancellation object
+ * @returns {Promise<Partial<import('@ukef/dtfs2-common').TfmDealCancellationWithStatus>>} - Deal cancellation object
  */
 const getDealCancellation = async (dealId) => {
   try {
@@ -357,6 +361,39 @@ const deleteDealCancellation = async ({ dealId, auditDetails }) => {
   }
 };
 
+/**
+ * Submits the deal cancellation
+ * @param {Object} params
+ * @param {string} params.dealId - id of deal to cancel
+ * @param {import('@ukef/dtfs2-common').TfmDealCancellation} params.cancellation - the cancellation details to submit
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
+ * @returns {Promise<import('@ukef/dtfs2-common').TfmDealCancellationResponse>} update result object
+ */
+const submitDealCancellation = async ({ dealId, cancellation, auditDetails }) => {
+  try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      throw new InvalidDealIdError(dealId);
+    }
+
+    const response = await axios({
+      method: 'post',
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/cancellation/submit`,
+      headers: headers.central,
+      data: {
+        cancellation,
+        auditDetails,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 const findOneFacility = async (facilityId) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
@@ -379,6 +416,10 @@ const findOneFacility = async (facilityId) => {
   }
 };
 
+/**
+ * @param {string} dealId
+ * @returns {Promise<import('@ukef/dtfs2-common').TfmFacility[]>}
+ */
 const findFacilitiesByDealId = async (dealId) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -895,6 +936,11 @@ const updateUserTasks = async (userId, updatedTasks) => {
   }
 };
 
+/**
+ * find one team
+ * @param {string} teamId - the team id
+ * @returns {Promise<import('@ukef/dtfs2-common').Team>}
+ */
 const findOneTeam = async (teamId) => {
   try {
     const isValidId = isValidTeamId(teamId);
@@ -1016,7 +1062,7 @@ const createACBS = async (deal, bank) => {
   return {};
 };
 
-const updateACBSfacility = async (facility, deal) => {
+const issueACBSfacility = async (facility, deal) => {
   if (!!facility && !!deal) {
     try {
       const response = await axios({
@@ -1384,13 +1430,15 @@ const updateUtilisationReportStatus = async (reportsWithStatus, user) => {
  * Gets the utilisation report reconciliation details by report id
  * @param {string} reportId - The report id
  * @param {import('@ukef/dtfs2-common').PremiumPaymentsFilters)} premiumPaymentsFilters - Filters to apply to the premium payments tab
+ * @param {import('@ukef/dtfs2-common').PaymentDetailsFilters)} paymentDetailsFilters - Filters to apply to the payment details tab
  * @returns {Promise<import('./api-response-types').UtilisationReportReconciliationDetailsResponseBody>}
  */
-const getUtilisationReportReconciliationDetailsById = async (reportId, premiumPaymentsFilters) => {
+const getUtilisationReportReconciliationDetailsById = async (reportId, premiumPaymentsFilters, paymentDetailsFilters) => {
   const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/reconciliation-details/${reportId}`, {
     headers: headers.central,
     params: {
       premiumPaymentsFilters,
+      paymentDetailsFilters,
     },
   });
 
@@ -1442,6 +1490,7 @@ const getUtilisationReportSummariesByBankIdAndYear = async (bankId, year) => {
  * @param {number} paymentAmount - The payment amount
  * @param {import('@ukef/dtfs2-common').IsoDateTimeStamp} datePaymentReceived - The date the payment was received
  * @param {string | undefined} paymentReference - The payment reference
+ * @returns {Promise<import('./api-response-types').AddPaymentResponseBody>}
  */
 const addPaymentToFeeRecords = async (reportId, feeRecordIds, user, paymentCurrency, paymentAmount, datePaymentReceived, paymentReference) => {
   const response = await axios({
@@ -1663,6 +1712,7 @@ module.exports = {
   updateDealCancellation,
   getDealCancellation,
   deleteDealCancellation,
+  submitDealCancellation,
   findPortalUserById,
   updateUserTasks,
   findOneTeam,
@@ -1671,7 +1721,7 @@ module.exports = {
   getFacilityExposurePeriod,
   getPremiumSchedule,
   createACBS,
-  updateACBSfacility,
+  issueACBSfacility,
   amendACBSfacility,
   getFunctionsAPI,
   createEstoreSite,

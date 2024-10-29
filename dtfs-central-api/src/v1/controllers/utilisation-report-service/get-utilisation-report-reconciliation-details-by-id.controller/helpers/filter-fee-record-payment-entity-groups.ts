@@ -1,6 +1,5 @@
-import { Currency, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
+import { Currency, PremiumPaymentsFilters, ValidatedPaymentDetailsFilters } from '@ukef/dtfs2-common';
 import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-payment-entity-group';
-import { ValidatedPaymentDetailsFilters } from '../../../../../types/utilisation-reports';
 
 /**
  * All possible filters for FeeRecordPaymentGroup filtering.

@@ -1,5 +1,4 @@
 import * as api from './commands/api';
-import { fillInBankReviewDate } from './commands/fillInBankReviewDate';
 
 import './commands/click-events';
 
@@ -27,6 +26,7 @@ Cypress.Commands.add('getApplicationById', require('./commands/getApplicationByI
 Cypress.Commands.add('loadData', require('./commands/loadData'));
 Cypress.Commands.add('automaticEligibilityCriteria', require('./commands/automaticEligibilityCriteria'));
 Cypress.Commands.add('manualEligibilityCriteria', require('./commands/manualEligibilityCriteria'));
+Cypress.Commands.add('completeDateFormFields', require('./commands/completeDateFormFields'));
 
 Cypress.Commands.add('apiLogin', api.login);
 Cypress.Commands.add('apiFetchAllApplications', api.fetchAllApplications);
@@ -42,5 +42,3 @@ Cypress.Commands.add('submitDealToTfm', api.submitDealToTfm);
 Cypress.Commands.add('addUnderwriterCommentToTfm', api.addUnderwriterCommentToTfm);
 Cypress.Commands.add('insertVersion0Deal', require('./commands/insertVersion0Deal'));
 Cypress.Commands.add('insertVersion0Facility', require('./commands/insertVersion0Facility'));
-
-Cypress.Commands.add('fillInBankReviewDate', fillInBankReviewDate);

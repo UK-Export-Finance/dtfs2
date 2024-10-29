@@ -311,7 +311,7 @@ describe('getSignInTokenStatus', () => {
 
   function itReturnsTheStatus(expectedStatus) {
     it(`returns ${expectedStatus}`, async () => {
-      await expect(service.getSignInTokenStatus({ userId: testUserFromDatabase._id, signInToken: aTokenProvidedByUser })).resolves.toBe(expectedStatus);
+      await expect(service.getSignInTokenStatus({ userId: testUserFromDatabase._id, signInToken: aTokenProvidedByUser })).resolves.toEqual(expectedStatus);
     });
   }
 

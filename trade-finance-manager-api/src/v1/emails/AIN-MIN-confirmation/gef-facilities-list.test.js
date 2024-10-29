@@ -1,5 +1,8 @@
 const { format } = require('date-fns');
-const { FACILITY_TYPE, LONG_FORM_DATE_FORMAT } = require('@ukef/dtfs2-common');
+const {
+  FACILITY_TYPE,
+  DATE_FORMATS: { DO_MMMM_YYYY },
+} = require('@ukef/dtfs2-common');
 const {
   mapIssuedValue,
   facilityFieldsObj,
@@ -64,25 +67,25 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
     it('maps true to `Yes`', () => {
       const result = mapBooleanToYesOrNo(true);
 
-      expect(result).toBe('Yes');
+      expect(result).toEqual('Yes');
     });
 
     it('maps false to `No`', () => {
       const result = mapBooleanToYesOrNo(false);
 
-      expect(result).toBe('No');
+      expect(result).toEqual('No');
     });
 
     it('maps undefined to undefined', () => {
       const result = mapBooleanToYesOrNo(undefined);
 
-      expect(result).toBe(undefined);
+      expect(result).toEqual(undefined);
     });
 
     it('maps null to undefined', () => {
       const result = mapBooleanToYesOrNo(null);
 
-      expect(result).toBe(undefined);
+      expect(result).toEqual(undefined);
     });
   });
 
@@ -130,7 +133,7 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
 
       const result = facilityFieldsObj({ facilityEndDate: facilityEndDate.toISOString() });
 
-      const expected = format(facilityEndDate, LONG_FORM_DATE_FORMAT);
+      const expected = format(facilityEndDate, DO_MMMM_YYYY);
       expect(result.facilityEndDate).toEqual(expected);
     });
 
@@ -139,7 +142,7 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
 
       const result = facilityFieldsObj({ bankReviewDate: bankReviewDate.toISOString() });
 
-      const expected = format(bankReviewDate, LONG_FORM_DATE_FORMAT);
+      const expected = format(bankReviewDate, DO_MMMM_YYYY);
       expect(result.bankReviewDate).toEqual(expected);
     });
   });

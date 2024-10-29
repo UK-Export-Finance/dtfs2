@@ -59,7 +59,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       await addToAnExistingPayment(req, res);
 
       // Assert
-      expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
+      expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
     });
 
     it("should render the 'problem-with-service' page when there are no available payment groups", async () => {
@@ -79,7 +79,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       await addToAnExistingPayment(req, res);
 
       // Assert
-      expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
+      expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
     });
 
     it('should fetch and map selected fee record details', async () => {

@@ -34,14 +34,14 @@ const mockErrorDealInput = {
 };
 
 const mockACBSFacilityInput = {
-  facilityId: '1234',
+  facilityIdentifier: '1234',
   facility: {},
   deal: {},
 };
 
 const mockACBSFacilityErrorInput = {
   ...mockACBSFacilityInput,
-  facilityId: 'errorId',
+  facilityIdentifier: 'errorId',
 };
 
 // Mock Axios
@@ -67,12 +67,12 @@ describe('/acbs', () => {
     axiosMock.onPost(`${AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs-issue-facility`, mockACBSFacilityInput).reply(HttpStatusCode.Ok, {});
     axiosMock.onPost(`${AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs-issue-facility`, mockACBSFacilityErrorInput).reply(HttpStatusCode.BadRequest, {});
     it('should catch error on ACBS issue facility API call', async () => {
-      const { status } = await testApi.post(mockACBSFacilityErrorInput).to(`/acbs/facility/${mockACBSFacilityErrorInput.facilityId}/issue`);
+      const { status } = await testApi.post(mockACBSFacilityErrorInput).to(`/acbs/facility/${mockACBSFacilityErrorInput.facilityIdentifier}/issue`);
       expect(status).toEqual(HttpStatusCode.BadRequest);
     });
 
     it('should return status code from ACBS issue facility API call', async () => {
-      const { status } = await testApi.post(mockACBSFacilityInput).to(`/acbs/facility/${mockACBSFacilityInput.facilityId}/issue`);
+      const { status } = await testApi.post(mockACBSFacilityInput).to(`/acbs/facility/${mockACBSFacilityInput.facilityIdentifier}/issue`);
       expect(status).toEqual(HttpStatusCode.Ok);
     });
   });

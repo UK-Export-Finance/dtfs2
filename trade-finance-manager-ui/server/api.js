@@ -903,13 +903,14 @@ const updateUtilisationReportStatus = async (user, reportsWithStatus, userToken)
 /**
  * @param {string} reportId - The report id
  * @param {import('@ukef/dtfs2-common').PremiumPaymentsFilters} premiumPaymentsFilters - Filters to apply to the premium payments tab
+ * @param {import('@ukef/dtfs2-common').PaymentDetailsFilters} paymentDetailsFilters - Filters to apply to the payment details tab
  * @param {string} userToken - The user token
  * @returns {Promise<import('./api-response-types').UtilisationReportReconciliationDetailsResponseBody>}
  */
-const getUtilisationReportReconciliationDetailsById = async (reportId, premiumPaymentsFilters, userToken) => {
+const getUtilisationReportReconciliationDetailsById = async (reportId, premiumPaymentsFilters, paymentDetailsFilters, userToken) => {
   const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/reconciliation-details/${reportId}`, {
     headers: generateHeaders(userToken),
-    params: { premiumPaymentsFilters },
+    params: { premiumPaymentsFilters, paymentDetailsFilters },
   });
 
   return response.data;
@@ -1025,6 +1026,7 @@ const getReportSummariesByBankAndYear = async (userToken, bankId, year) => {
  * @param {number[]} feeRecordIds - The list of fee record ids to add the payment to
  * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user adding the payment
  * @param {string} userToken - The user token
+ * @returns {Promise<import('./api-response-types').AddPaymentResponseBody>}
  */
 const addPaymentToFeeRecords = async (reportId, parsedAddPaymentFormValues, feeRecordIds, user, userToken) => {
   const { paymentCurrency, paymentAmount, datePaymentReceived, paymentReference } = parsedAddPaymentFormValues;
@@ -1259,10 +1261,10 @@ const updateDealCancellation = async (dealId, cancellationUpdate, userToken) => 
 };
 
 /**
- * Updates the deal cancellation object on a TFM MIN or AIN deal
+ * Gets the deal cancellation object on a TFM MIN or AIN deal
  * @param {string} dealId - The deal ID
  * @param {string} userToken - The user token
- * @returns {Promise<Partial<import('@ukef/dtfs2-common').TfmDealCancellation>>}
+ * @returns {Promise<Partial<import('@ukef/dtfs2-common').TfmDealCancellationWithStatus>>}
  */
 const getDealCancellation = async (dealId, userToken) => {
   try {
@@ -1275,6 +1277,46 @@ const getDealCancellation = async (dealId, userToken) => {
     return response.data;
   } catch (error) {
     console.error('Failed to get deal cancellation', error);
+    throw error;
+  }
+};
+
+/**
+ * Deletes the deal cancellation object on a TFM MIN or AIN deal
+ * @param {string} dealId - The deal ID
+ * @param {string} userToken - The user token
+ * @returns {Promise<void>}
+ */
+const deleteDealCancellation = async (dealId, userToken) => {
+  try {
+    await axios({
+      method: 'delete',
+      url: `${TFM_API_URL}/v1/deals/${dealId}/cancellation`,
+      headers: generateHeaders(userToken),
+    });
+  } catch (error) {
+    console.error('Failed to get deal cancellation', error);
+    throw error;
+  }
+};
+
+/**
+ * Submits the deal cancellation object on a TFM MIN or AIN deal
+ * @param {string} dealId - The deal ID
+ * @param {import('@ukef/dtfs2-common').TfmDealCancellation} cancellation - The deal cancellation object
+ * @param {string} userToken - The user token
+ * @returns {Promise<void>}
+ */
+const submitDealCancellation = async (dealId, cancellation, userToken) => {
+  try {
+    await axios({
+      method: 'post',
+      url: `${TFM_API_URL}/v1/deals/${dealId}/cancellation/submit`,
+      headers: generateHeaders(userToken),
+      data: cancellation,
+    });
+  } catch (error) {
+    console.error('Failed to submit deal cancellation', error);
     throw error;
   }
 };
@@ -1337,4 +1379,6 @@ module.exports = {
   addFeesToAnExistingPayment,
   updateDealCancellation,
   getDealCancellation,
+  deleteDealCancellation,
+  submitDealCancellation,
 };

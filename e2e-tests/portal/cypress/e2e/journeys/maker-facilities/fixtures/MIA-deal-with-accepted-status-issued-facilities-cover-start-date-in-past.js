@@ -1,15 +1,12 @@
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
+const { today, yesterday } = require('../../../../../../e2e-fixtures/dateConstants');
 
-const now = new Date().valueOf();
-const nowMinusDay = () => {
-  const date = new Date();
-  date.setDate(date.getDate() - 1);
-  return date.valueOf();
-};
+const now = today.unixMilliseconds;
+const nowMinusDay = yesterday.unixMilliseconds;
 
 const deal = {
   submissionType: 'Manual Inclusion Application',
-  updatedAt: Date.now(),
+  updatedAt: now,
   bankInternalRefName: 'test',
   additionalRefName: 'testing',
   status: 'Accepted by UKEF (with conditions)',
@@ -221,7 +218,7 @@ const deal = {
       name: '1234',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
-      requestedCoverStartDate: nowMinusDay(),
+      requestedCoverStartDate: nowMinusDay,
       issuedDate: now,
       issueFacilityDetailsProvided: true,
       status: 'Submitted',
@@ -254,7 +251,7 @@ const deal = {
       disbursementAmount: '1,234.00',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
-      requestedCoverStartDate: nowMinusDay(),
+      requestedCoverStartDate: nowMinusDay,
       issuedDate: now,
       issueFacilityDetailsProvided: true,
       status: 'Submitted',

@@ -9,155 +9,155 @@
 version: 2
 updates:
   # NPM
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
     labels:
-      - "chore"
+      - 'chore'
 
   # NPM
-  - package-ecosystem: "npm"
-    directory: "/external-api"
+  - package-ecosystem: 'npm'
+    directory: '/external-api'
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
     labels:
-      - "chore"
+      - 'chore'
 
   # NPM
-  - package-ecosystem: "npm"
-    directory: "/portal-api"
+  - package-ecosystem: 'npm'
+    directory: '/portal-api'
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
     labels:
-      - "chore"
+      - 'chore'
 
   # NPM
-  - package-ecosystem: "npm"
-    directory: "/trade-finance-manager-api"
+  - package-ecosystem: 'npm'
+    directory: '/trade-finance-manager-api'
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
     labels:
-      - "chore"
+      - 'chore'
 
   # NPM
-  - package-ecosystem: "npm"
-    directory: "/gef-ui"
+  - package-ecosystem: 'npm'
+    directory: '/gef-ui'
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
     labels:
-      - "chore"
+      - 'chore'
 
   # NPM
-  - package-ecosystem: "npm"
-    directory: "/portal"
+  - package-ecosystem: 'npm'
+    directory: '/portal'
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
     labels:
-      - "chore"
+      - 'chore'
 
   # NPM
-  - package-ecosystem: "npm"
-    directory: "/trade-finance-manager-ui"
+  - package-ecosystem: 'npm'
+    directory: '/trade-finance-manager-ui'
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
     labels:
-      - "chore"
+      - 'chore'
 
   # NPM
-  - package-ecosystem: "npm"
-    directory: "/azure-functions/acbs-function"
+  - package-ecosystem: 'npm'
+    directory: '/azure-functions/acbs-function'
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
     labels:
-      - "chore"
+      - 'chore'
 
   # NPM
-  - package-ecosystem: "npm"
-    directory: "/dtfs-central-api"
+  - package-ecosystem: 'npm'
+    directory: '/dtfs-central-api'
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
     labels:
-      - "chore"
+      - 'chore'
 
   # Dockerfile
-  - package-ecosystem: "docker"
-    directory: "/external-api"
+  - package-ecosystem: 'docker'
+    directory: '/external-api'
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
     labels:
-      - "chore"
+      - 'chore'
 
   # Dockerfile
-  - package-ecosystem: "docker"
-    directory: "/portal-api"
+  - package-ecosystem: 'docker'
+    directory: '/portal-api'
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
     labels:
-      - "chore"
+      - 'chore'
 
   # Dockerfile
-  - package-ecosystem: "docker"
-    directory: "/trade-finance-manager-api"
+  - package-ecosystem: 'docker'
+    directory: '/trade-finance-manager-api'
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
     labels:
-      - "chore"
+      - 'chore'
 
   # Dockerfile
-  - package-ecosystem: "docker"
-    directory: "/gef-ui"
+  - package-ecosystem: 'docker'
+    directory: '/gef-ui'
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
     labels:
-      - "chore"
+      - 'chore'
 
   # Dockerfile
-  - package-ecosystem: "docker"
-    directory: "/portal"
+  - package-ecosystem: 'docker'
+    directory: '/portal'
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
     labels:
-      - "chore"
+      - 'chore'
 
   # Dockerfile
-  - package-ecosystem: "docker"
-    directory: "/trade-finance-manager-ui"
+  - package-ecosystem: 'docker'
+    directory: '/trade-finance-manager-ui'
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
     labels:
-      - "chore"
+      - 'chore'
 
   # Dockerfile
-  - package-ecosystem: "docker"
-    directory: "/azure-functions/acbs-function"
+  - package-ecosystem: 'docker'
+    directory: '/azure-functions/acbs-function'
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
     labels:
-      - "chore"
+      - 'chore'
 
   # Dockerfile
-  - package-ecosystem: "docker"
-    directory: "/dtfs-central-api"
+  - package-ecosystem: 'docker'
+    directory: '/dtfs-central-api'
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
     labels:
-      - "chore"
+      - 'chore'
 
   # Dockerfile
-  - package-ecosystem: "docker"
-    directory: "/reverse-proxy"
+  - package-ecosystem: 'docker'
+    directory: '/reverse-proxy'
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
     labels:
-      - "chore"
+      - 'chore'
 
   # Git Hub Actions
   #  Set the directory to `/` for
   # .github/workflows GHA files
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
     labels:
-      - "chore"
+      - 'chore'

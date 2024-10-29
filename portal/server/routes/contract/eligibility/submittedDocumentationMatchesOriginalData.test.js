@@ -89,7 +89,7 @@ describe('submittedDocumentationMatchesOriginalData', () => {
 
     const result = submittedDocumentationMatchesOriginalData(formData, formFiles, originalData);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when savedDeal parameter is null', () => {
@@ -101,7 +101,7 @@ describe('submittedDocumentationMatchesOriginalData', () => {
 
     const result = submittedDocumentationMatchesOriginalData(formData, formFiles, savedDeal);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when savedDeal parameter is undefined', () => {
@@ -113,7 +113,7 @@ describe('submittedDocumentationMatchesOriginalData', () => {
 
     const result = submittedDocumentationMatchesOriginalData(formData, formFiles, savedDeal);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when savedDeal parameter is an empty object', () => {
@@ -125,7 +125,7 @@ describe('submittedDocumentationMatchesOriginalData', () => {
 
     const result = submittedDocumentationMatchesOriginalData(formData, formFiles, savedDeal);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when savedDeal.securityDetails property does not exist', () => {
@@ -149,7 +149,7 @@ describe('submittedDocumentationMatchesOriginalData', () => {
 
     const result = submittedDocumentationMatchesOriginalData(formData, formFiles, savedDeal);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when savedDeal.securityDetails is null', () => {
@@ -163,7 +163,7 @@ describe('submittedDocumentationMatchesOriginalData', () => {
 
     const result = submittedDocumentationMatchesOriginalData(formData, formFiles, savedDeal);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when savedDeal.securityDetails is undefined', () => {
@@ -177,7 +177,7 @@ describe('submittedDocumentationMatchesOriginalData', () => {
 
     const result = submittedDocumentationMatchesOriginalData(formData, formFiles, savedDeal);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when savedDeal.securityDetails is an empty object', () => {
@@ -191,7 +191,7 @@ describe('submittedDocumentationMatchesOriginalData', () => {
 
     const result = submittedDocumentationMatchesOriginalData(formData, formFiles, savedDeal);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when form data is null', () => {
@@ -205,7 +205,7 @@ describe('submittedDocumentationMatchesOriginalData', () => {
 
     const result = submittedDocumentationMatchesOriginalData(formData, formFiles, savedDeal);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when form data is undefined', () => {
@@ -219,7 +219,7 @@ describe('submittedDocumentationMatchesOriginalData', () => {
 
     const result = submittedDocumentationMatchesOriginalData(formData, formFiles, savedDeal);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when form data is an empty object', () => {
@@ -233,7 +233,7 @@ describe('submittedDocumentationMatchesOriginalData', () => {
 
     const result = submittedDocumentationMatchesOriginalData(formData, formFiles, savedDeal);
 
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return true when security field in form data matches security field in the saved deal data and no files have been submitted', () => {
@@ -249,6 +249,6 @@ describe('submittedDocumentationMatchesOriginalData', () => {
 
     const result = submittedDocumentationMatchesOriginalData(formData, formFiles, savedDeal);
 
-    expect(result).toBe(true);
+    expect(result).toEqual(true);
   });
 });

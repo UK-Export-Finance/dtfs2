@@ -1,7 +1,7 @@
 const { format, fromUnixTime } = require('date-fns');
 const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const api = require('../../api');
-const { getTask, showAmendmentButton, ukefDecisionRejected, isDealCancellationEnabled } = require('../helpers');
+const { getTask, showAmendmentButton, ukefDecisionRejected, isDealCancellationEnabled, canDealBeCancelled, isDealCancellationInDraft } = require('../helpers');
 const { formattedNumber } = require('../../helpers/number');
 const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-options');
 const CONSTANTS = require('../../constants');
@@ -44,6 +44,17 @@ const getCaseDeal = async (req, res) => {
 
   const { submissionType } = deal.dealSnapshot;
 
+  const dealCancellationIsEnabled = isDealCancellationEnabled(submissionType, user);
+
+  let showDealCancelButton = false;
+  let hasDraftCancellation = false;
+
+  if (dealCancellationIsEnabled) {
+    const cancellation = await api.getDealCancellation(dealId, userToken);
+    showDealCancelButton = canDealBeCancelled(cancellation.status);
+    hasDraftCancellation = isDealCancellationInDraft(cancellation.status);
+  }
+
   return res.render('case/deal/deal.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
@@ -54,7 +65,8 @@ const getCaseDeal = async (req, res) => {
     amendments,
     amendmentsInProgress,
     hasAmendmentInProgress,
-    showDealCancelButton: isDealCancellationEnabled(submissionType, user),
+    showDealCancelButton,
+    hasDraftCancellation,
   });
 };
 

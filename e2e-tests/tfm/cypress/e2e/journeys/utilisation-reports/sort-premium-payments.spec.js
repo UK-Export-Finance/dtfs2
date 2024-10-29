@@ -3,10 +3,12 @@ import {
   PaymentEntityMockBuilder,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
+  FEE_RECORD_STATUS,
 } from '@ukef/dtfs2-common';
 import pages from '../../pages';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
 import USERS from '../../../fixtures/users';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context(`users can sort premium payments table by total reported payments and total payments received and status`, () => {
   const bankId = '961';
@@ -22,14 +24,14 @@ context(`users can sort premium payments table by total reported payments and to
     .withId(1)
     .withFeesPaidToUkefForThePeriod(30)
     .withFeesPaidToUkefForThePeriodCurrency('EUR')
-    .withStatus('DOES_NOT_MATCH')
+    .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
     .withFacilityId('11111111')
     .build();
   const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
     .withId(2)
     .withFeesPaidToUkefForThePeriod(20)
     .withFeesPaidToUkefForThePeriodCurrency('GBP')
-    .withStatus('DOES_NOT_MATCH')
+    .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
     .withFacilityId('22222222')
     .build();
   const thirdFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
@@ -38,6 +40,8 @@ context(`users can sort premium payments table by total reported payments and to
     .withFeesPaidToUkefForThePeriodCurrency('USD')
     .withFacilityId('33333333')
     .build();
+  const feeRecords = [firstFeeRecord, secondFeeRecord, thirdFeeRecord];
+  const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
 
   const firstPayment = PaymentEntityMockBuilder.forCurrency('USD').withId(1).withAmount(300).withFeeRecords([firstFeeRecord]).build();
   const secondPayment = PaymentEntityMockBuilder.forCurrency('EUR').withId(2).withAmount(200).withFeeRecords([secondFeeRecord]).build();
@@ -48,10 +52,12 @@ context(`users can sort premium payments table by total reported payments and to
 
   beforeEach(() => {
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+    cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
 
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [utilisationReport]);
 
-    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord, thirdFeeRecord]);
+    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
     cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [firstPayment, secondPayment]);
 
     pages.landingPage.visit();

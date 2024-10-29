@@ -1,9 +1,17 @@
 import { DataSource } from 'typeorm';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { AzureFileInfoEntity, FacilityUtilisationDataEntity, FeeRecordEntity, PaymentEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import {
+  AzureFileInfoEntity,
+  FacilityUtilisationDataEntity,
+  FeeRecordEntity,
+  PaymentEntity,
+  PaymentMatchingToleranceEntity,
+  UtilisationReportEntity,
+} from '@ukef/dtfs2-common';
 import { seedUtilisationReports } from './utilisation-report';
 import { seedFeeRecordPaymentGroups } from './fee-record-payment-group';
 import { mongoDbClient } from '../../drivers/db-client';
+import { seedPaymentMatchingTolerances } from './payment-matching-tolerance/payment-matching-tolerance.seed';
 
 /**
  * Clears all data from the specified MSSQL database.
@@ -19,6 +27,7 @@ const clearDatabase = async (dataSource: DataSource): Promise<void> => {
   await dataSource.manager.delete(UtilisationReportEntity, {});
   await dataSource.manager.delete(AzureFileInfoEntity, {});
   await dataSource.manager.delete(FacilityUtilisationDataEntity, {});
+  await dataSource.manager.delete(PaymentMatchingToleranceEntity, {});
 
   console.info('✅ MSSQL database has been cleared successfully');
 };
@@ -34,6 +43,7 @@ const seedData = async (dataSource: DataSource): Promise<void> => {
 
   await seedUtilisationReports(dataSource);
   await seedFeeRecordPaymentGroups(dataSource);
+  await seedPaymentMatchingTolerances(dataSource);
 
   console.info('✅ MSSQL database has been seeded successfully');
 };

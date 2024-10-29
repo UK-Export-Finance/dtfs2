@@ -159,7 +159,7 @@ export const createAcbsRecordPOST = async (req: Request, res: Response) => {
 
 /**
  * Invokes facility issuance DOF using HTTP `POST` method.
- * @param id Facility ID
+ * @param id UKEF Facility ID
  * @param facility Facility object
  * @param deal Deal object
  * @returns DOF response
@@ -171,7 +171,7 @@ const issueAcbsFacility = async (id: any, facility: object, deal: object) => {
       headers,
       url: `${acbsUrl}/api/orchestrators/acbs-issue-facility`,
       data: {
-        facilityId: id,
+        facilityIdentifier: id,
         facility,
         deal,
       },
@@ -255,7 +255,7 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
     const { amendments, facility, deal } = req.body;
     // Construct payload
     const payload = {
-      facilityId: id,
+      facilityIdentifier: id,
       amount: amendments.ukefExposure,
       coverEndDate: amendments.coverEndDate,
       facility,

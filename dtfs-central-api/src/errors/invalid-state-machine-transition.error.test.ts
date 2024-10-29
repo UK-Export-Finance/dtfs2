@@ -12,7 +12,7 @@ describe('InvalidStateMachineTransitionError', () => {
     const error = InvalidStateMachineTransitionError.forUninitialisedEntity(uninitialisedEntityParams);
 
     // Assert
-    expect(error.message).toBe("Event type 'DELETE_ENTITY' is invalid for uninitialised 'SomeEntity'");
+    expect(error.message).toEqual("Event type 'DELETE_ENTITY' is invalid for uninitialised 'SomeEntity'");
   });
 
   it('exposes a message when entity params are provided', () => {
@@ -27,7 +27,7 @@ describe('InvalidStateMachineTransitionError', () => {
     const error = InvalidStateMachineTransitionError.forEntity(entityParams);
 
     // Assert
-    expect(error.message).toBe("Event type 'DELETE_ENTITY' is invalid for 'SomeEntity' (ID: '123') in state 'COMPLETED'");
+    expect(error.message).toEqual("Event type 'DELETE_ENTITY' is invalid for 'SomeEntity' (ID: '123') in state 'COMPLETED'");
   });
 
   it('exposes the 400 (Bad Request) status code', () => {
@@ -35,7 +35,7 @@ describe('InvalidStateMachineTransitionError', () => {
     const error = InvalidStateMachineTransitionError.forUninitialisedEntity(uninitialisedEntityParams);
 
     // Assert
-    expect(error.status).toBe(HttpStatusCode.BadRequest);
+    expect(error.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it('exposes the name of the error', () => {
@@ -43,6 +43,6 @@ describe('InvalidStateMachineTransitionError', () => {
     const error = InvalidStateMachineTransitionError.forUninitialisedEntity(uninitialisedEntityParams);
 
     // Assert
-    expect(error.name).toBe('InvalidStateMachineTransitionError');
+    expect(error.name).toEqual('InvalidStateMachineTransitionError');
   });
 });

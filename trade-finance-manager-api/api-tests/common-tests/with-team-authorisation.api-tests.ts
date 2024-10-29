@@ -12,7 +12,7 @@ type WithTeamAuthorisationTestsParams = {
 };
 
 const expectForbiddenResponse = ({ status, body }: ResponseObject) => {
-  expect(status).toBe(HttpStatusCode.Forbidden);
+  expect(status).toEqual(HttpStatusCode.Forbidden);
   expect(body).toStrictEqual({
     success: false,
     msg: "You don't have access to this page",
@@ -43,6 +43,6 @@ export const withTeamAuthorisationTests = ({ allowedTeams, getUserWithTeam, make
   it.each(allowedTeams)(`returns a ${successStatusCode} response for requests from a user with team %s`, async (team) => {
     const userWithTeam = getUserWithTeam(team);
     const { status } = await makeRequestAsUser(userWithTeam);
-    expect(status).toBe(successStatusCode);
+    expect(status).toEqual(successStatusCode);
   });
 };
