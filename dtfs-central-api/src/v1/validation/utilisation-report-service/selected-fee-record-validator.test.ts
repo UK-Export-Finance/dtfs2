@@ -1,14 +1,25 @@
-import { Currency, FeeRecordEntity, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { validateSelectedFeeRecordsAllHaveSamePaymentCurrency } from './selected-fee-record-validator';
+import {
+  CURRENCY,
+  Currency,
+  FEE_RECORD_STATUS,
+  FeeRecordEntity,
+  FeeRecordEntityMockBuilder,
+  FeeRecordStatus,
+  PaymentEntity,
+  PaymentEntityMockBuilder,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
+import {
+  validateSelectedFeeRecordsAllHaveSamePaymentCurrency,
+  validateThatAllSelectedFeeRecordsWithPaymentsFormACompletePaymentGroup,
+} from './selected-fee-record-validator';
 import { InvalidPayloadError } from '../../../errors';
 
 describe('selected fee record validator', () => {
   describe('validateSelectedFeeRecordsAllHaveSamePaymentCurrency', () => {
     it('does not throw if only one fee record', () => {
       // Arrange
-      const selectedFeeRecords = [
-        FeeRecordEntityMockBuilder.forReport(UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build()).build(),
-      ];
+      const selectedFeeRecords = [FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).build()];
 
       // Act + Assert
       expect(() => validateSelectedFeeRecordsAllHaveSamePaymentCurrency(selectedFeeRecords)).not.toThrow();
@@ -37,11 +48,108 @@ describe('selected fee record validator', () => {
       // Act + Assert
       expect(() => validateSelectedFeeRecordsAllHaveSamePaymentCurrency(selectedFeeRecords)).toThrow(InvalidPayloadError);
     });
+
+    function aFeeRecordWithPaymentCurrency(paymentCurrency: Currency) {
+      return FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withPaymentCurrency(paymentCurrency).build();
+    }
   });
 
-  function aFeeRecordWithPaymentCurrency(paymentCurrency: Currency) {
-    return FeeRecordEntityMockBuilder.forReport(UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build())
-      .withPaymentCurrency(paymentCurrency)
-      .build();
+  describe('validateThatAllSelectedFeeRecordsWithPaymentsFormACompletePaymentGroup', () => {
+    describe(`when the first fee record has status ${FEE_RECORD_STATUS.TO_DO}`, () => {
+      it('should not throw', () => {
+        // Arrange
+        const selectedFeeRecords = [
+          FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(1).withStatus(FEE_RECORD_STATUS.TO_DO).build(),
+        ];
+        const requestedFeeRecordIds = [1];
+
+        // Act + Assert
+        expect(() => validateThatAllSelectedFeeRecordsWithPaymentsFormACompletePaymentGroup(selectedFeeRecords, requestedFeeRecordIds)).not.toThrow();
+      });
+    });
+
+    describe(`when the first fee record has status ${FEE_RECORD_STATUS.DOES_NOT_MATCH}`, () => {
+      describe('and the selected fee record ids match those of the fee record payment group', () => {
+        it('should not throw', () => {
+          // Arrange
+          const payments: PaymentEntity[] = [aPaymentWithFeeRecords([aFeeRecordWithId(1), aFeeRecordWithId(2)])];
+          const selectedFeeRecords = [
+            aFeeRecordWithIdStatusAndPayments(1, FEE_RECORD_STATUS.DOES_NOT_MATCH, payments),
+            aFeeRecordWithIdStatusAndPayments(2, FEE_RECORD_STATUS.DOES_NOT_MATCH, payments),
+          ];
+          const requestedFeeRecordIds = [1, 2];
+
+          // Act + Assert
+          expect(() => validateThatAllSelectedFeeRecordsWithPaymentsFormACompletePaymentGroup(selectedFeeRecords, requestedFeeRecordIds)).not.toThrow();
+        });
+      });
+
+      describe('and the selected fee record ids do not match those in the fee record payment group', () => {
+        it('should throw an invalid payload error', () => {
+          // Arrange
+          const payments: PaymentEntity[] = [aPaymentWithFeeRecords([aFeeRecordWithId(1), aFeeRecordWithId(3)])];
+          const selectedFeeRecords = [
+            aFeeRecordWithIdStatusAndPayments(1, FEE_RECORD_STATUS.DOES_NOT_MATCH, payments),
+            aFeeRecordWithIdStatusAndPayments(2, FEE_RECORD_STATUS.DOES_NOT_MATCH, []),
+          ];
+          const requestedFeeRecordIds = [1, 2];
+
+          // Act + Assert
+          expect(() => validateThatAllSelectedFeeRecordsWithPaymentsFormACompletePaymentGroup(selectedFeeRecords, requestedFeeRecordIds)).toThrow(
+            InvalidPayloadError,
+          );
+        });
+      });
+
+      describe('and there are missing selected fee record ids from the fee record payment group', () => {
+        it('should throw an invalid payload error', () => {
+          // Arrange
+          const payments: PaymentEntity[] = [aPaymentWithFeeRecords([aFeeRecordWithId(1)])];
+          const selectedFeeRecords = [
+            aFeeRecordWithIdStatusAndPayments(1, FEE_RECORD_STATUS.DOES_NOT_MATCH, payments),
+            aFeeRecordWithIdStatusAndPayments(2, FEE_RECORD_STATUS.DOES_NOT_MATCH, []),
+          ];
+          const requestedFeeRecordIds = [1, 2];
+
+          // Act + Assert
+          expect(() => validateThatAllSelectedFeeRecordsWithPaymentsFormACompletePaymentGroup(selectedFeeRecords, requestedFeeRecordIds)).toThrow(
+            InvalidPayloadError,
+          );
+        });
+      });
+
+      describe('and there are extra selected fee record ids than those in the fee record payment group', () => {
+        it('should throw an invalid payload error', () => {
+          // Arrange
+          const payments: PaymentEntity[] = [aPaymentWithFeeRecords([aFeeRecordWithId(1), aFeeRecordWithId(2), aFeeRecordWithId(3)])];
+          const selectedFeeRecords = [
+            aFeeRecordWithIdStatusAndPayments(1, FEE_RECORD_STATUS.DOES_NOT_MATCH, payments),
+            aFeeRecordWithIdStatusAndPayments(2, FEE_RECORD_STATUS.DOES_NOT_MATCH, []),
+          ];
+          const requestedFeeRecordIds = [1, 2];
+
+          // Act + Assert
+          expect(() => validateThatAllSelectedFeeRecordsWithPaymentsFormACompletePaymentGroup(selectedFeeRecords, requestedFeeRecordIds)).toThrow(
+            InvalidPayloadError,
+          );
+        });
+      });
+    });
+
+    function aFeeRecordWithId(id: number) {
+      return FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(id).build();
+    }
+
+    function aFeeRecordWithIdStatusAndPayments(id: number, status: FeeRecordStatus, payments: PaymentEntity[]) {
+      return FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(id).withStatus(status).withPayments(payments).build();
+    }
+
+    function aPaymentWithFeeRecords(feeRecords: FeeRecordEntity[]) {
+      return PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords(feeRecords).build();
+    }
+  });
+
+  function aReconciliationInProgressReport() {
+    return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
   }
 });

@@ -1,6 +1,13 @@
 import { ObjectId } from 'mongodb';
-import { In, EntityManager } from 'typeorm';
-import { Currency, FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { EntityManager } from 'typeorm';
+import {
+  CURRENCY,
+  Currency,
+  FEE_RECORD_STATUS,
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { addPaymentToUtilisationReport } from './helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { InvalidPayloadError, NotFoundError } from '../../../../errors';
@@ -39,7 +46,7 @@ describe('post-add-payment.controller helpers', () => {
       FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(feeRecordId).withPaymentCurrency(paymentCurrency).build(),
     );
 
-    const feeRecordFindBySpy = jest.spyOn(FeeRecordRepo, 'findBy');
+    const feeRecordFindBySpy = jest.spyOn(FeeRecordRepo, 'findByIdAndReportIdWithPayments');
 
     const utilisationReportStateMachineConstructorSpy = jest.spyOn(UtilisationReportStateMachine, 'forReportId');
     const handleEventSpy = jest.spyOn(utilisationReportStateMachine, 'handleEvent');
@@ -80,7 +87,7 @@ describe('post-add-payment.controller helpers', () => {
       await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
 
       // Assert
-      expect(feeRecordFindBySpy).toHaveBeenCalledWith({ id: In(feeRecordIds) });
+      expect(feeRecordFindBySpy).toHaveBeenCalledWith(feeRecordIds, reportId);
     });
 
     it("throws the 'NotFoundError' if no fee records are found", async () => {
@@ -122,6 +129,30 @@ describe('post-add-payment.controller helpers', () => {
 
       // Act / Assert
       await expect(addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetailsWithGBPCurrency)).rejects.toThrow(InvalidPayloadError);
+    });
+
+    it("throws the 'InvalidPayloadError' if the selected fee records have payments and do not match those in the fee record payment group", async () => {
+      // Arrange
+      const selectedFeeRecordIds = [1, 2];
+      const paymentFeeRecordIds = [1, 2, 3];
+
+      const payments = [
+        PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
+          .withFeeRecords(paymentFeeRecordIds.map((feeRecordId) => FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(feeRecordId).build()))
+          .build(),
+      ];
+      const feeRecordsWithGBPPaymentCurrency = paymentFeeRecordIds.map((feeRecordId) =>
+        FeeRecordEntityMockBuilder.forReport(utilisationReport)
+          .withId(feeRecordId)
+          .withPaymentCurrency('GBP')
+          .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
+          .withPayments(payments)
+          .build(),
+      );
+      feeRecordFindBySpy.mockResolvedValue(feeRecordsWithGBPPaymentCurrency);
+
+      // Act / Assert
+      await expect(addPaymentToUtilisationReport(reportId, selectedFeeRecordIds, tfmUser, newPaymentDetails)).rejects.toThrow(InvalidPayloadError);
     });
 
     it('adds the payment to the utilisation report using the utilisation report state machine', async () => {
