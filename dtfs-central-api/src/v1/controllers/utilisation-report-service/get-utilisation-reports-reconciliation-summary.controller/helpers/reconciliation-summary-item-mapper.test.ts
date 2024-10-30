@@ -92,7 +92,7 @@ describe('reconciliation-summary-item-mapper', () => {
 
     it('does not set the reconciliation summary count fields if the report has not yet been received', () => {
       // Arrange
-      const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withFeeRecords([]).build();
+      const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED).withFeeRecords([]).build();
 
       // Act
       const summaryItem = mapReportToSummaryItem(aBank(), report);

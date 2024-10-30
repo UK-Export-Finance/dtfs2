@@ -2,6 +2,7 @@ import { endOfDay, format, isPast, isSameMonth, parseISO, subMonths } from 'date
 import {
   IsoMonthStamp,
   ReportPeriod,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportReconciliationStatus,
   getFormattedReportPeriodWithShortMonth,
   isEqualMonthAndYear,
@@ -45,7 +46,7 @@ const getSummaryItemViewModel = (apiItem: UtilisationReportReconciliationSummary
     frequency: getUtilisationReportDisplayFrequency(reportPeriod),
     displayStatus: reconciliationStatusCodeToDisplayStatus[status],
     formattedDateUploaded: dateUploaded ? format(parseISO(dateUploaded), 'd MMM yyyy') : undefined,
-    downloadPath: status !== 'REPORT_NOT_RECEIVED' ? `/utilisation-reports/${reportId}/download` : undefined,
+    downloadPath: status !== UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED ? `/utilisation-reports/${reportId}/download` : undefined,
   };
 };
 

@@ -10,6 +10,7 @@ import {
   UpdateWithUploadDetailsParams,
   UpdateWithFeeRecordsParams,
 } from './utilisation-report.types';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
 
 @Entity('UtilisationReport')
 export class UtilisationReportEntity extends AuditableBaseEntity {
@@ -76,7 +77,7 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
     report.bankId = bankId;
     report.reportPeriod = reportPeriod;
     report.dateUploaded = null;
-    report.status = 'REPORT_NOT_RECEIVED';
+    report.status = UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED;
     report.uploadedByUserId = null;
     report.updateLastUpdatedBy(requestSource);
     return report;

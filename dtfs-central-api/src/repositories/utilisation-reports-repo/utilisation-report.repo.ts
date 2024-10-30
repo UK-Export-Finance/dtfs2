@@ -38,7 +38,7 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
     }
 
     if (options?.excludeNotReceived) {
-      findByOptionsWhere.status = Not('REPORT_NOT_RECEIVED');
+      findByOptionsWhere.status = Not(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED);
     }
 
     return await this.find({
@@ -121,7 +121,7 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
   async findSubmittedReportsForBankIdWithReportPeriodEndInYear(bankId: string, year: number): Promise<UtilisationReportEntity[]> {
     const bankIdAndStatusFindOptions: FindOptionsWhere<UtilisationReportEntity> = {
       bankId,
-      status: Not('REPORT_NOT_RECEIVED'),
+      status: Not(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED),
     };
 
     const sameYearFindOptions: FindOptionsWhere<UtilisationReportEntity> = {

@@ -39,7 +39,7 @@ describe('controllers/utilisation-report-service/due-report-periods', () => {
     it("returns a 200 response when 'api.getUtilisationReports' returns an array of reports", async () => {
       // Arrange
       const { req, res } = getHttpMocks();
-      api.getUtilisationReports.mockResolvedValue([{ ...aUtilisationReportResponse(), status: 'REPORT_NOT_RECEIVED' }]);
+      api.getUtilisationReports.mockResolvedValue([{ ...aUtilisationReportResponse(), status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED }]);
 
       // Act
       await getDueReportPeriodsByBankId(req, res);

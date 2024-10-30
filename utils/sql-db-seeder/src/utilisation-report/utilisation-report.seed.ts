@@ -38,7 +38,10 @@ export const seedUtilisationReports = async (dataSource: DataSource): Promise<vo
 
   await Promise.all(
     notReceivedBankIdsWithReportPeriod.map((bankIdWithReportPeriod) =>
-      UtilisationReportSeeder.forBankIdAndReportPeriod(bankIdWithReportPeriod).saveWithStatus('REPORT_NOT_RECEIVED', dataSource),
+      UtilisationReportSeeder.forBankIdAndReportPeriod(bankIdWithReportPeriod).saveWithStatus(
+        UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+        dataSource,
+      ),
     ),
   );
 };

@@ -16,7 +16,7 @@ describe('handleUtilisationReportManuallySetCompletedEvent', () => {
       save: mockSave,
     } as unknown as EntityManager;
 
-    const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED).build();
 
     // Act
     await handleUtilisationReportManuallySetCompletedEvent(report, {

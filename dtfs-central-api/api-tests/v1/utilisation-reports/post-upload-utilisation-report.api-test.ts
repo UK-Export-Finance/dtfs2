@@ -9,6 +9,7 @@ import {
   MONGO_DB_COLLECTIONS,
   ReportPeriod,
   TfmFacility,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
   UtilisationReportRawCsvData,
@@ -39,7 +40,8 @@ describe(`POST ${getUrl()}`, () => {
     user: { _id: portalUserId },
   });
 
-  const aNotReceivedReport = () => UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).build();
+  const aNotReceivedReport = () =>
+    UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED).withId(reportId).build();
 
   const insertTfmFacilitiesForFacilityIds = async (ukefFacilityIds: string[]): Promise<void> => {
     const tfmFacilities: WithoutId<TfmFacility>[] = ukefFacilityIds.map((ukefFacilityId) => ({
@@ -272,7 +274,10 @@ describe(`POST ${getUrl()}`, () => {
       start: { month: 4, year: 2023 },
       end: { month: 6, year: 2023 },
     };
-    const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).withReportPeriod(reportPeriod).build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+      .withId(reportId)
+      .withReportPeriod(reportPeriod)
+      .build();
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     const ukefFacilityId = '12345678';
@@ -305,7 +310,10 @@ describe(`POST ${getUrl()}`, () => {
       start: { month: 4, year: 2023 },
       end: { month: 6, year: 2023 },
     };
-    const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).withReportPeriod(reportReportPeriod).build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+      .withId(reportId)
+      .withReportPeriod(reportReportPeriod)
+      .build();
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     const ukefFacilityId = '12345678';

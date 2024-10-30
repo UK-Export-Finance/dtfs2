@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import httpMocks from 'node-mocks-http';
 import { AxiosError, AxiosResponse } from 'axios';
-import { ReportWithStatus } from '@ukef/dtfs2-common';
+import { ReportWithStatus, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 import { UpdateUtilisationReportStatusRequestBody, updateUtilisationReportStatus } from './update-utilisation-report-status.controller';
 import api from '../../api';
 import MOCK_USERS from '../../__mocks__/mock-users';
@@ -11,7 +11,7 @@ console.error = jest.fn();
 describe('updateUtilisationReportStatus', () => {
   const reportsWithStatus: ReportWithStatus[] = [
     {
-      status: 'REPORT_NOT_RECEIVED',
+      status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
       reportId: 123,
     },
   ];

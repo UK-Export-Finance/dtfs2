@@ -26,7 +26,7 @@ describe('UtilisationReportEntity', () => {
     it('populates the report with the upload details and updates the other relevant fields', () => {
       // Arrange
       const azureFileInfo = AzureFileInfoEntity.create({ ...MOCK_AZURE_FILE_INFO, requestSource });
-      const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').build();
+      const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED).build();
 
       // Act
       report.updateWithUploadDetails({
@@ -56,7 +56,7 @@ describe('UtilisationReportEntity', () => {
     const allStatuses = Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS);
     it.each(allStatuses)(`sets the report status to '%s' and updates the 'lastUpdatedBy...' fields`, (status) => {
       // Arrange
-      const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').build();
+      const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED).build();
 
       // Act
       report.updateWithStatus({ status, requestSource });

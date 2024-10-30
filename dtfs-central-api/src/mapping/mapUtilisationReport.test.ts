@@ -6,6 +6,7 @@ import {
   PortalUser,
   ReportPeriod,
   UtilisationReportEntityMockBuilder,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
 } from '@ukef/dtfs2-common';
 import { mapUtilisationReportEntityToGetUtilisationReportResponse } from './mapUtilisationReport';
 import { getUserById } from '../repositories/users-repo';
@@ -30,7 +31,7 @@ describe('mapUtilisationReportEntityToGetUtilisationReportResponse', () => {
   it("maps the report and sets the 'dateUploaded', 'uploadedByUser' and 'azureFileInfo' to null when the report is not uploaded", async () => {
     // Arrange
     const reportId = 312;
-    const nonUploadedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+    const nonUploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
       .withId(reportId)
       .withBankId(bankId)
       .withReportPeriod(reportPeriod)
@@ -44,7 +45,7 @@ describe('mapUtilisationReportEntityToGetUtilisationReportResponse', () => {
       id: reportId,
       bankId,
       reportPeriod,
-      status: 'REPORT_NOT_RECEIVED',
+      status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
       dateUploaded: null,
       uploadedByUser: null,
       azureFileInfo: null,

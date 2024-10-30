@@ -44,7 +44,7 @@ export const aNotReceivedUtilisationReportResponse = (): UtilisationReportRespon
     },
   },
   azureFileInfo: null,
-  status: 'REPORT_NOT_RECEIVED',
+  status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
   dateUploaded: null,
   uploadedByUser: null,
 });

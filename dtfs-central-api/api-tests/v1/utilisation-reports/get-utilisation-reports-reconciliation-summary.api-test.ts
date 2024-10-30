@@ -158,7 +158,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-yea
     const bankId = '956';
     const year = '2023';
 
-    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
       .withId(1)
       .withBankId(bankId)
       .withUploadedByUserId(portalUserId)
@@ -179,18 +179,21 @@ describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-yea
     expect(response.body.reports.length).toEqual(2);
   });
 
-  it("gets only the utilisation reports which are not in the 'REPORT_NOT_RECEIVED'", async () => {
+  it(`gets only the utilisation reports which are not in the ${UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED}`, async () => {
     // Arrange
     const bankId = '956';
     const year = '2023';
 
-    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
       .withId(1)
       .withBankId(bankId)
       .withUploadedByUserId(portalUserId)
       .build();
 
-    const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(2).withBankId(bankId).build();
+    const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+      .withId(2)
+      .withBankId(bankId)
+      .build();
 
     const reconciliationCompletedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED)
       .withId(3)
@@ -220,14 +223,14 @@ describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-yea
       end: { month: 12, year: 2021 },
     };
 
-    const uploadedReportForYear = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+    const uploadedReportForYear = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
       .withId(1)
       .withBankId(bankId)
       .withReportPeriod(reportPeriod)
       .withUploadedByUserId(portalUserId)
       .build();
 
-    const uploadedReportForDifferentYear = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+    const uploadedReportForDifferentYear = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
       .withId(2)
       .withBankId(bankId)
       .withReportPeriod({ start: { month: 1, year: 2022 }, end: { month: 2, year: 2022 } })
@@ -254,13 +257,13 @@ describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-yea
       end: { month: 12, year: 2021 },
     };
 
-    const notReceivedReportForReportPeriod = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+    const notReceivedReportForReportPeriod = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
       .withId(1)
       .withBankId(bankId)
       .withReportPeriod(reportPeriod)
       .build();
 
-    const uploadedReportForDifferentReportPeriod = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+    const uploadedReportForDifferentReportPeriod = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
       .withId(2)
       .withBankId(bankId)
       .withReportPeriod({ start: { month: 1, year: 2022 }, end: { month: 2, year: 2022 } })

@@ -11,7 +11,7 @@ const getCountOfDistinctFacilities = (feeRecords: FeeRecordEntity[]): number => 
 };
 
 export const mapReportToSummaryItem = (bank: Bank, report: UtilisationReportEntity): UtilisationReportReconciliationSummaryItem => {
-  const reportReceived = report.status !== 'REPORT_NOT_RECEIVED';
+  const reportReceived = report.status !== UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED;
   const totalFacilitiesReported = getCountOfDistinctFacilities(report.feeRecords);
   const totalFeesReported = report.feeRecords.length;
 

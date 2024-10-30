@@ -1,4 +1,11 @@
-import { getCurrentReportPeriodForBankSchedule, Bank, ReportPeriod, UtilisationReportEntityMockBuilder, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import {
+  getCurrentReportPeriodForBankSchedule,
+  Bank,
+  ReportPeriod,
+  UtilisationReportEntityMockBuilder,
+  UtilisationReportEntity,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+} from '@ukef/dtfs2-common';
 import { createUtilisationReportForBanksJob } from '.';
 import { getAllBanks } from '../../repositories/banks-repo';
 import { UtilisationReportRepo } from '../../repositories/utilisation-reports-repo';
@@ -70,7 +77,9 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
       } as Bank;
       jest.mocked(getAllBanks).mockResolvedValue([bank]);
 
-      const existingReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withBankId(bank.id).build();
+      const existingReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+        .withBankId(bank.id)
+        .build();
       findOneByBankIdAndReportPeriodSpy.mockResolvedValue(existingReport);
 
       // Act
@@ -147,7 +156,7 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
 
       const bankWithoutReport = banks[0];
 
-      const existingReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').build();
+      const existingReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED).build();
       findOneByBankIdAndReportPeriodSpy.mockImplementation((bankId: string) => {
         switch (bankId) {
           case bankWithoutReport.id:

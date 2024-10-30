@@ -9,6 +9,7 @@ import {
   AzureFileInfoEntity,
   FacilityUtilisationDataEntity,
   ReportPeriod,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportReportUploadedEvent } from './report-uploaded.event-handler';
 import { calculateInitialUtilisationAndFixedFee } from '../helpers';
@@ -41,7 +42,7 @@ describe('handleUtilisationReportReportUploadedEvent', () => {
 
   it('calls the repo method to update the report', async () => {
     // Arrange
-    const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED).build();
 
     const azureFileInfo = MOCK_AZURE_FILE_INFO;
     const reportCsvData: UtilisationReportRawCsvData[] = [];
@@ -85,7 +86,9 @@ describe('handleUtilisationReportReportUploadedEvent', () => {
       start: { month: 5, year: 2024 },
       end: { month: 6, year: 2024 },
     };
-    const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withReportPeriod(reportReportPeriod).build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+      .withReportPeriod(reportReportPeriod)
+      .build();
 
     const reportCsvDataWithExistingFacilityUtilisationData: UtilisationReportRawCsvData = { ...aUtilisationReportRawCsvData(), 'ukef facility id': '11111111' };
     const reportCsvDataWithoutExistingFacilityUtilisationData: UtilisationReportRawCsvData[] = [

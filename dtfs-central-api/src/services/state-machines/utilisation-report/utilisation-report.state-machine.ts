@@ -98,7 +98,7 @@ export class UtilisationReportStateMachine {
           default:
             return this.handleInvalidTransition(event);
         }
-      case 'REPORT_NOT_RECEIVED':
+      case UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED:
         switch (event.type) {
           case 'REPORT_UPLOADED':
             return handleUtilisationReportReportUploadedEvent(this.report, event.payload);

@@ -80,7 +80,7 @@ describe('UtilisationReportStateMachine', () => {
 
   describe(`when report is in '${UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED}' status`, () => {
     // Arrange
-    const REPORT_NOT_RECEIVED_REPORT = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').build();
+    const REPORT_NOT_RECEIVED_REPORT = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED).build();
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.REPORT_UPLOADED}' event`, async () => {
       // Arrange

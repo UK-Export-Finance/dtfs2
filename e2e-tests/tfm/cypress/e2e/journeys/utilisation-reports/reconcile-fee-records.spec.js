@@ -95,7 +95,7 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
           .build();
         cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecordOne, feeRecordTwo]);
       } else {
-        const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+        const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
           .withId(bank.id)
           .withBankId(bank.id)
           .withReportPeriod(reportPeriod)

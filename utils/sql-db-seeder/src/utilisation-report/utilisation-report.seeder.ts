@@ -1,5 +1,12 @@
 import { faker } from '@faker-js/faker';
-import { AzureFileInfoEntity, MOCK_AZURE_FILE_INFO, ReportPeriod, UtilisationReportEntity, UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
+import {
+  AzureFileInfoEntity,
+  MOCK_AZURE_FILE_INFO,
+  ReportPeriod,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UtilisationReportEntity,
+  UtilisationReportReconciliationStatus,
+} from '@ukef/dtfs2-common';
 import { DataSource } from 'typeorm';
 
 export class UtilisationReportSeeder {
@@ -36,7 +43,7 @@ export class UtilisationReportSeeder {
     report.reportPeriod = this.reportPeriod;
     report.updateLastUpdatedBy({ platform: 'SYSTEM' });
 
-    if (status === 'REPORT_NOT_RECEIVED') {
+    if (status === UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED) {
       await dataSource.manager.save(UtilisationReportEntity, report);
       return;
     }

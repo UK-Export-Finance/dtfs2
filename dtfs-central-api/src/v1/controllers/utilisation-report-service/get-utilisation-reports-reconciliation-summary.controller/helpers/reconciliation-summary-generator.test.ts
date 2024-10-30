@@ -6,6 +6,7 @@ import {
   FeeRecordEntityMockBuilder,
   ReportPeriod,
   IsoMonthStamp,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
 } from '@ukef/dtfs2-common';
 
 import { UtilisationReportRepo } from '../../../../../repositories/utilisation-reports-repo';
@@ -190,7 +191,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
         .build();
       septemberPeriodReport.feeRecords = [getMockFeeRecordForReport(septemberPeriodReport)];
 
-      const octoberPeriodReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+      const octoberPeriodReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
         .withBankId(banks[0].id)
         .withReportPeriod({
           start: {
@@ -219,7 +220,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
           submissionMonth: '2023-11',
           items: [
             expect.objectContaining<Partial<UtilisationReportReconciliationSummaryItem>>({
-              status: 'REPORT_NOT_RECEIVED',
+              status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
             }),
           ],
         },
