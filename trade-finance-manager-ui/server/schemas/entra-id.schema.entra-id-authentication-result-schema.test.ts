@@ -29,8 +29,7 @@ function getFailureTestCases() {
   return [
     {
       aTestCase: () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { accessToken, ...rest } = aValidPayload();
+        const { accessToken: _accessToken, ...rest } = aValidPayload();
         return rest;
       },
       description: 'the access token is missing',
@@ -41,7 +40,6 @@ function getFailureTestCases() {
     },
     {
       aTestCase: () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { accessToken } = aValidPayload();
         return { accessToken, account: {} };
       },

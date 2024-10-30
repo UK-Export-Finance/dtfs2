@@ -37,24 +37,21 @@ function getFailureTestCases({ getTestObjectWithUpdatedUserParams }: TestCasesPa
     },
     {
       aTestCase: () => {
-        // eslint-disable-next-line camelcase
-        const { verified_primary_email: _verified_primary_email, ...rest } = aEntraIdUser();
+        const { verified_primary_email: _verifiedPrimaryEmail, ...rest } = aEntraIdUser();
         return getTestObjectWithUpdatedUserParams(rest);
       },
       description: 'the verified primary email is missing',
     },
     {
       aTestCase: () => {
-        // eslint-disable-next-line camelcase
-        const { verified_secondary_email: _verified_secondary_email, ...rest } = aEntraIdUser();
+        const { verified_secondary_email: _verifiedSecondaryEmail, ...rest } = aEntraIdUser();
         return getTestObjectWithUpdatedUserParams(rest);
       },
       description: 'the verified secondary email is missing',
     },
     {
       aTestCase: () => {
-        // eslint-disable-next-line camelcase
-        const { given_name: _given_name, ...rest } = aEntraIdUser();
+        const { given_name: _givenName, ...rest } = aEntraIdUser();
         return getTestObjectWithUpdatedUserParams(rest);
       },
       description: 'the given name is missing',
@@ -62,8 +59,7 @@ function getFailureTestCases({ getTestObjectWithUpdatedUserParams }: TestCasesPa
 
     {
       aTestCase: () => {
-        // eslint-disable-next-line camelcase
-        const { family_name: _family_name, ...rest } = aEntraIdUser();
+        const { family_name: _familyName, ...rest } = aEntraIdUser();
         return getTestObjectWithUpdatedUserParams(rest);
       },
       description: 'the family name is missing',
