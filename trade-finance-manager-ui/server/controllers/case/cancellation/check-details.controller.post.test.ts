@@ -102,6 +102,7 @@ describe('postDealCancellationDetails', () => {
       await postDealCancellationDetails(req, res);
 
       // Assert
+      expect(flashMock).toHaveBeenCalledTimes(1);
       expect(flashMock).toHaveBeenCalledWith('successMessage', `Deal ${ukefDealId} cancelled`);
     });
 
