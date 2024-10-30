@@ -5,6 +5,7 @@ import mandatoryCriteria from '../../pages/mandatory-criteria';
 import nameApplication from '../../pages/name-application';
 import applicationDetails from '../../pages/application-details';
 import { submitButton } from '../../partials';
+import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
 import { MOCK_APPLICATION_AIN } from '../../../fixtures/mocks/mock-deals';
 import { anUnissuedCashFacility, anIssuedCashFacility } from '../../../../../e2e-fixtures/mock-gef-facilities';
 import { DEAL_STATUS, FACILITY_TYPE } from '../../../fixtures/constants';
@@ -93,6 +94,24 @@ context('Clone version 1 deal to version 1', () => {
       applicationDetails.facilitySummaryListTable(1).facilityEndDateAction().should('not.exist');
       applicationDetails.facilitySummaryListTable(1).bankReviewDateAction().should('not.exist');
 
+      submitButton().should('not.exist');
+    });
+
+    it('shows required for has facilityEndDate after isUsingFacilityEndDate is set to true', () => {
+      applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().click();
+      aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
+      cy.clickSaveAndReturnButton();
+
+      applicationDetails.facilitySummaryListTable(0).facilityEndDateValue().should('contain', 'Required');
+      submitButton().should('not.exist');
+    });
+
+    it('shows required for has bankReviewDate after isUsingFacilityEndDate is set to false', () => {
+      applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().click();
+      aboutFacilityUnissued.isUsingFacilityEndDateNo().click();
+      cy.clickSaveAndReturnButton();
+
+      applicationDetails.facilitySummaryListTable(0).bankReviewDateValue().should('contain', 'Required');
       submitButton().should('not.exist');
     });
   });
