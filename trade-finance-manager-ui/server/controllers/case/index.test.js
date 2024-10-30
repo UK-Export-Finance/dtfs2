@@ -15,6 +15,8 @@ jest.mock('../helpers', () => ({
   isDealCancellationEnabled: jest.fn().mockReturnValue(false),
 }));
 
+const mockSuccessBannerMessage = 'mock success flash message';
+
 const res = mockRes();
 
 const token = 'test-token';
@@ -76,6 +78,7 @@ describe('controllers - case', () => {
             _id: mockDeal._id,
           },
           session,
+          flash: jest.fn().mockReturnValue([mockSuccessBannerMessage]),
         };
       });
 
@@ -87,6 +90,7 @@ describe('controllers - case', () => {
           tfm: mockDeal.tfm,
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'deal',
+          successMessage: mockSuccessBannerMessage,
           dealId: req.params._id,
           user: session.user,
           hasDraftCancellation: false,

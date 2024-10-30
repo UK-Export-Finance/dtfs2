@@ -59,8 +59,6 @@ const mapFacilitySnapshot = (facility, dealSnapshot) => {
 
   const formattedFacilityValue = formattedNumber(value);
 
-  clonedSnapshot.facilityStage = mapBssEwcsFacilityStage(facilityStage, facilityTfm?.facilityStage);
-
   const mappedFacilitySnapshot = {
     // Fields in common with all facility types
     _id,
@@ -71,7 +69,7 @@ const mapFacilitySnapshot = (facility, dealSnapshot) => {
     hasBeenIssued,
 
     ukefFacilityType: clonedSnapshot.ukefFacilityType, // TODO: DTFS2-4634 - we shouldn't need facility.type and ukefFacilityType.
-    facilityStage: clonedSnapshot.facilityStage,
+    facilityStage: mapBssEwcsFacilityStage(facilityStage, facilityTfm?.facilityStage),
     facilityProduct: clonedSnapshot.facilityProduct,
 
     bankFacilityReference: mapBankFacilityReference(clonedSnapshot),
