@@ -10,7 +10,7 @@ import {
 } from '@ukef/dtfs2-common';
 import { Collection, ObjectId } from 'mongodb';
 import { generateAuditDatabaseRecordFromAuditDetails, generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import { cloneDeal } from './clone-deal.service';
+import { cloneDealToLatestVersion } from './clone-deal.service';
 import { mongoDbClient } from '../../../drivers/db-client';
 import { cloneExporter } from './clone-exporter.service';
 
@@ -65,7 +65,7 @@ const existingDeal: Deal = {
   dataMigration: 'dataMigration',
 };
 
-describe('cloneDeal', () => {
+describe('cloneDealToLatestVersion', () => {
   let dealsCollection: Collection<Deal>;
   const findOneMock = jest.fn();
   const insertOneMock = jest.fn();
@@ -99,7 +99,7 @@ describe('cloneDeal', () => {
 
     // Act & Assert
     await expect(() =>
-      cloneDeal({
+      cloneDealToLatestVersion({
         dealId: invalidDealId,
         bankInternalRefName,
         additionalRefName,
@@ -117,7 +117,7 @@ describe('cloneDeal', () => {
 
     // Act & Assert
     await expect(() =>
-      cloneDeal({
+      cloneDealToLatestVersion({
         dealId: existingDealId,
         bankInternalRefName,
         additionalRefName,
@@ -135,7 +135,7 @@ describe('cloneDeal', () => {
 
     // Act & Assert
     await expect(() =>
-      cloneDeal({
+      cloneDealToLatestVersion({
         dealId: existingDealId,
         bankInternalRefName,
         additionalRefName,
@@ -149,7 +149,7 @@ describe('cloneDeal', () => {
 
   it('gets existing deal', async () => {
     // Act
-    await cloneDeal({
+    await cloneDealToLatestVersion({
       dealId: existingDealId,
       bankInternalRefName,
       additionalRefName,
@@ -166,7 +166,7 @@ describe('cloneDeal', () => {
 
   it('inserts a cloned deal', async () => {
     // Act
-    await cloneDeal({
+    await cloneDealToLatestVersion({
       dealId: existingDealId,
       bankInternalRefName,
       additionalRefName,

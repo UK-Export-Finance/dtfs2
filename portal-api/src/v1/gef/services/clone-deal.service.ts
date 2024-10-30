@@ -51,7 +51,7 @@ type CloneDealParams = {
 
  * @returns the inserted deal id
  */
-export const cloneDeal = async ({
+export const cloneDealToLatestVersion = async ({
   dealId,
   bankInternalRefName,
   additionalRefName,

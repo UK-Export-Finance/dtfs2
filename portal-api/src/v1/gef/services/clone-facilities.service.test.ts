@@ -45,6 +45,8 @@ const facilityOne: Facility = {
   dayCountBasis: 365,
   coverDateConfirmed: null,
   canResubmitIssuedFacilities: null,
+  hasBeenIssuedAndAcknowledged: null,
+  issueDate: null,
 };
 
 const facilityTwo: Facility = {
@@ -83,6 +85,8 @@ const facilityTwo: Facility = {
   dayCountBasis: 365,
   coverDateConfirmed: true,
   canResubmitIssuedFacilities: null,
+  hasBeenIssuedAndAcknowledged: null,
+  issueDate: null,
 };
 
 const facilities: Facility[] = [facilityOne, facilityTwo];
