@@ -19,7 +19,7 @@ type UpdateFacilityUtilisationDataUpdate = {
  * @param update.ukefShareOfUtilisation - UKEF's share of the utilisation as reported by the bank
  * @param update.requestSource - The request source supplying the update
  * @param update.entityManager - The entity manager
- * @param nextReportPeriodFixedFee - value for the calculated fixed fee for the next report period
+ * @param update.fixedFee - value for the calculated fixed fee
  * @returns The updated entity
  */
 export const updateFacilityUtilisationData = async (
