@@ -1,5 +1,6 @@
 import z from 'zod';
 import { AUDIT_DATABASE_RECORD } from './audit-database-record';
+import { UNIX_TIMESTAMP_MILLISECONDS_SCHEMA } from './unix-timestamp.schema';
 
 const BASE_PORTAL_USER_SCHEMA = z
   .object({
@@ -23,7 +24,7 @@ export const CREATE = BASE_PORTAL_USER_SCHEMA;
 
 export const UPDATE = BASE_PORTAL_USER_SCHEMA.extend({
   blockedPasswordList: z.array(z.object({})),
-  lastLogin: z.number(),
+  lastLogin: UNIX_TIMESTAMP_MILLISECONDS_SCHEMA,
   loginFailureCount: z.number(),
   passwordUpdatedAt: z.number(),
   resetPwdToken: z.string(),

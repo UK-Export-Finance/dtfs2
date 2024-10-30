@@ -1,3 +1,4 @@
+const { TFM_FACILITY_STAGE } = require('@ukef/dtfs2-common');
 const mapGefFacilitySnapshot = require('./mapGefFacilitySnapshot');
 const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityValue = require('../facilities/mapFacilityValue');
@@ -17,7 +18,9 @@ describe('mapGefFacilitySnapshot', () => {
     const mockFacility = {
       _id: MOCK_CASH_CONTINGENT_FACILITIES[0]._id,
       facilitySnapshot: MOCK_CASH_CONTINGENT_FACILITIES[0],
-      tfm: {},
+      tfm: {
+        facilityStage: TFM_FACILITY_STAGE.RISK_EXPIRED,
+      },
     };
 
     const result = mapGefFacilitySnapshot(mockFacility, MOCK_GEF_DEAL);
@@ -25,8 +28,6 @@ describe('mapGefFacilitySnapshot', () => {
     const formattedFacilityValue = formattedNumber(mockFacility.facilitySnapshot.value);
 
     mockFacility.facilitySnapshot.facilityProduct = mapFacilityProduct(mockFacility.facilitySnapshot.type);
-
-    mockFacility.facilitySnapshot.facilityStage = mapGefFacilityStage(mockFacility.facilitySnapshot.hasBeenIssued, mockFacility.tfm.facilityStage);
 
     const { facilitySnapshot } = mockFacility;
 

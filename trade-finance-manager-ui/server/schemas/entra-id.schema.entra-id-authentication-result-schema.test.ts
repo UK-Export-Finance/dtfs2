@@ -1,4 +1,4 @@
-import { aValidEntraIdUser, withEntraIdUserSchemaTests, withSchemaTests } from '@ukef/dtfs2-common';
+import { aEntraIdUser, withEntraIdUserSchemaTests, withSchemaTests } from '@ukef/dtfs2-common';
 import { EntraIdAuthenticationResult } from '../types/entra-id';
 import { ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA } from './entra-id.schema';
 
@@ -21,7 +21,7 @@ describe('ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA', () => {
 function aValidPayload(): EntraIdAuthenticationResult {
   return {
     accessToken: 'an-access-token',
-    account: { idTokenClaims: aValidEntraIdUser() },
+    account: { idTokenClaims: aEntraIdUser() },
   };
 }
 
@@ -29,8 +29,7 @@ function getFailureTestCases() {
   return [
     {
       aTestCase: () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { accessToken, ...rest } = aValidPayload();
+        const { accessToken: _accessToken, ...rest } = aValidPayload();
         return rest;
       },
       description: 'the access token is missing',
@@ -41,7 +40,6 @@ function getFailureTestCases() {
     },
     {
       aTestCase: () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { accessToken } = aValidPayload();
         return { accessToken, account: {} };
       },

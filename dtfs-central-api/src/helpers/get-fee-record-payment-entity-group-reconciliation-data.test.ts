@@ -1,10 +1,11 @@
 import { difference } from 'lodash';
 import { when } from 'jest-when';
 import { CURRENCY, FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder } from '@ukef/dtfs2-common';
+import { aTfmUser } from '@ukef/dtfs2-common/mock-data-backend';
 import { getFeeRecordPaymentEntityGroupReconciliationData } from './get-fee-record-payment-entity-group-reconciliation-data';
 import { FeeRecordPaymentEntityGroup } from '../types/fee-record-payment-entity-group';
 import { TfmUsersRepo } from '../repositories/tfm-users-repo';
-import { aTfmUser, aUtilisationReport } from '../../test-helpers';
+import { aUtilisationReport } from '../../test-helpers';
 
 describe('getFeeRecordPaymentEntityGroupReconciliationData', () => {
   const findTfmUserSpy = jest.spyOn(TfmUsersRepo, 'findOneUserById');

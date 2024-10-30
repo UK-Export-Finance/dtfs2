@@ -1,6 +1,5 @@
-import { ValuesOf } from '..';
-import { PDC_TEAM_IDS, TEAM_IDS } from '../../constants/tfm/team-ids';
+import { ALL_PDC_TEAM_IDS, ALL_TEAM_IDS } from '../../constants/tfm/team-ids';
 
-export type TeamId = ValuesOf<typeof TEAM_IDS>;
+export type PdcTeamId = (typeof ALL_PDC_TEAM_IDS)[number];
 
-export type PdcTeamId = ValuesOf<typeof PDC_TEAM_IDS>;
+export type TeamId = (typeof ALL_TEAM_IDS)[number];

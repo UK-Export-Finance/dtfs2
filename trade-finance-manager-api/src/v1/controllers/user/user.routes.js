@@ -1,8 +1,12 @@
+const { HttpStatusCode } = require('axios');
+const { ZodError } = require('zod');
+const { ApiError } = require('@ukef/dtfs2-common');
+const { ENTRA_ID_USER_SCHEMA } = require('@ukef/dtfs2-common/schemas');
 const { ObjectId } = require('mongodb');
-const { generateTfmAuditDetails, generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateTfmAuditDetails, generateNoUserLoggedInAuditDetails, generateSystemAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const utils = require('../../../utils/crypto.util');
 const { userIsDisabled, usernameOrPasswordIncorrect, userIsBlocked } = require('../../../constants/login-results.constant');
-const { create, update, removeTfmUserById, findOne, findByUsername } = require('./user.controller');
+const { create, update, removeTfmUserById, findOne, findByUsername, upsertTfmUserFromEntraIdUser } = require('./user.controller');
 
 const { mapUserData } = require('./helpers/mapUserData.helper');
 const { loginCallback } = require('./helpers/loginCallback.helper');
@@ -26,6 +30,7 @@ const combineErrors = (listOfErrors) =>
     return response;
   }, {});
 
+// TODO: DTFS2-6892 - Deprecate this function
 module.exports.createTfmUser = (req, res, next) => {
   const userToCreate = req.body;
   const errors = applyCreateRules(userToCreate);
@@ -60,6 +65,31 @@ module.exports.createTfmUser = (req, res, next) => {
   });
 };
 
+module.exports.upsertTfmUserFromEntraIdUser = async (req, res, next) => {
+  try {
+    const entraIdUser = ENTRA_ID_USER_SCHEMA.parse(req.body);
+    const tfmUser = await upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails: generateSystemAuditDetails() });
+
+    return res.status(200).send(tfmUser);
+  } catch (error) {
+    if (error instanceof ApiError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: error.message,
+        code: error.code,
+      });
+    }
+    if (error instanceof ZodError) {
+      return res.status(HttpStatusCode.BadRequest).send({
+        status: HttpStatusCode.BadRequest,
+        message: 'Error validating payload',
+      });
+    }
+
+    return next(error);
+  }
+};
+
 module.exports.findTfmUser = (req, res, next) => {
   if (ObjectId.isValid(req.params.user)) {
     findOne(req.params.user, (error, user) => {
@@ -84,6 +114,7 @@ module.exports.findTfmUser = (req, res, next) => {
   }
 };
 
+// TODO: DTFS2-6892 - Deprecate this function
 module.exports.updateTfmUserById = (req, res, next) => {
   findOne(req.params.user, (error, user) => {
     if (error) {
@@ -114,6 +145,7 @@ module.exports.updateTfmUserById = (req, res, next) => {
   });
 };
 
+// TODO: DTFS2-6892 - Deprecate this function
 module.exports.removeTfmUserById = (req, res) => {
   const auditDetails = generateTfmAuditDetails(req.user._id);
   removeTfmUserById(req.params.user, auditDetails, (error, status) => {
@@ -124,6 +156,7 @@ module.exports.removeTfmUserById = (req, res) => {
   });
 };
 
+// TODO: DTFS2-6892 - Deprecate this function
 module.exports.login = async (req, res, next) => {
   const { username, password } = req.body;
 
