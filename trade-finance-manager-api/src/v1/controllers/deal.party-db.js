@@ -55,7 +55,20 @@ const getPartyUrn = async ({ companyRegNo, companyName }) => {
     return '';
   }
 
-  return partyDbInfo.data[0].partyUrn || '';
+    if (partyDbInfo.status === 404) {
+      if (!companyName) {
+        return '';
+      }
+
+      partyDbInfo = await api.createParty({ companyRegNo, companyName });
+    }
+
+    if (partyDbInfo.status !== 200) {
+      return '';
+    }
+
+    return partyDbInfo.data[0].partyUrn || '';
+  }
 };
 
 const identifyDealParties = (deal) => ({
