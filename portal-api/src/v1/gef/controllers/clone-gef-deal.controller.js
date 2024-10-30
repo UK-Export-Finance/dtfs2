@@ -1,7 +1,7 @@
 const { ApiError } = require('@ukef/dtfs2-common');
 
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { cloneDeal } = require('../services/clone-deal.service');
+const { cloneDealToLatestVersion } = require('../services/clone-deal.service');
 const { cloneFacilities } = require('../services/clone-facilities.service');
 const { validateApplicationReferences } = require('./validation/application');
 
@@ -19,7 +19,7 @@ exports.clone = async (req, res) => {
 
     const auditDetails = generatePortalAuditDetails(req.user._id);
     // clone GEF deal
-    const response = await cloneDeal({
+    const response = await cloneDealToLatestVersion({
       dealId: existingDealId,
       bankInternalRefName,
       additionalRefName,
