@@ -8,8 +8,6 @@ import {
 import { calculateFixedFeeAdjustment } from './calculate-fixed-fee-adjustment';
 import { aReportPeriod, aUtilisationReport } from '../../../../../../test-helpers';
 
-jest.mock('./get-fixed-fee-for-facility');
-
 const fixedFee = 100;
 
 describe('calculateFixedFeeAdjustment', () => {
