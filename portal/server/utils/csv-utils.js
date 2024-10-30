@@ -236,6 +236,7 @@ const extractCsvData = async (file) => {
       // Read the .xlsx file using exceljs
       const workbook = new ExcelJS.Workbook();
       await workbook.xlsx.load(file.buffer, { sheetStubs: true }).then(async () => {
+        // An Excel file must contain at least 1 visible worksheet at all times.
         // Assume the utilisation report data is on the first visible sheet.
         const worksheet = workbook.worksheets.find((sheet) => sheet.state === 'visible');
         if (!worksheet) {
