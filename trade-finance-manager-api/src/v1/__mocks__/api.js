@@ -181,9 +181,18 @@ module.exports = {
     exposurePeriodInMonths: 12,
   })),
   getPartyDbInfo: ({ companyRegNo }) =>
-    companyRegNo === 'NO_MATCH'
-      ? { status: 400, data: 'Failed to get party' }
-      : {
+    process.env.AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED ?
+      companyRegNo === 'NO_MATCH'
+        ? false
+        : [
+          {
+            partyUrn: 'testPartyUrn',
+          },
+        ]
+      :
+      companyRegNo === 'NO_MATCH'
+        ? { status: 400, data: 'Failed to get party' }
+        : {
           status: 200,
           data: [
             {
