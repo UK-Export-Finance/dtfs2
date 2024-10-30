@@ -29,19 +29,16 @@ describe('ENTRA_ID_USER_TO_TFM_UPSERT_REQUEST_SCHEMA', () => {
   });
 
   describe('when provided with a invalid entra id user with missing fields', () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { roles, ...request } = aEntraIdUser();
+    const { roles: _roles, ...request } = aEntraIdUser();
     itShouldThrowAnError(request);
   });
 
   describe('when provided an invalid entra id user with incorrect fields', () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const request = { ...aEntraIdUser(), roles: 1 };
     itShouldThrowAnError(request);
   });
 
   describe('when no primary email is provided', () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const request = { ...aEntraIdUser(), verified_primary_email: [] };
     itShouldThrowAnError(request);
   });
