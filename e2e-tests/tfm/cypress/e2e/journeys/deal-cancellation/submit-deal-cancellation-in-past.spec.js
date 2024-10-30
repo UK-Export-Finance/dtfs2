@@ -6,6 +6,7 @@ import caseDealPage from '../../pages/caseDealPage';
 import { yesterday } from '../../../../../e2e-fixtures/dateConstants';
 import checkDetailsPage from '../../pages/deal-cancellation/check-details';
 import dealsPage from '../../pages/dealsPage';
+import { successBanner } from '../../partials';
 
 context('Deal cancellation - effective from date in past', () => {
   let dealId;
@@ -68,11 +69,11 @@ context('Deal cancellation - effective from date in past', () => {
 
         cy.url().should('eq', relative(`/case/${dealId}/deal`));
 
-        caseDealPage.successBanner().should('exist');
-        cy.assertText(caseDealPage.successBanner(), `Deal ${ukefDealId} cancelled`);
+        successBanner().should('exist');
+        cy.assertText(successBanner(), `Deal ${ukefDealId} cancelled`);
 
         cy.reload();
-        caseDealPage.successBanner().should('not.exist');
+        successBanner().should('not.exist');
       });
 
       it('should not show the "Cancel Deal" button', () => {
