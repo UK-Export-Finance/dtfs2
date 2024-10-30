@@ -5,10 +5,13 @@ import { ADMIN, BANK1_MAKER1, PIM_USER_1 } from '../../../../../e2e-fixtures';
 import caseDealPage from '../../pages/caseDealPage';
 import { yesterday } from '../../../../../e2e-fixtures/dateConstants';
 import checkDetailsPage from '../../pages/deal-cancellation/check-details';
+import dealsPage from '../../pages/dealsPage';
+import { successBanner } from '../../partials';
 
 context('Deal cancellation - effective from date in past', () => {
   let dealId;
   const dealFacilities = [];
+  const ukefDealId = 10000001;
 
   before(() => {
     cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
@@ -36,45 +39,63 @@ context('Deal cancellation - effective from date in past', () => {
     });
   });
 
+  const submitDealCancellation = () => {
+    caseDealPage.cancelDealButton().click();
+
+    cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
+    cy.clickContinueButton();
+
+    cy.url().should('eq', relative(`/case/${dealId}/cancellation/bank-request-date`));
+    cy.completeDateFormFields({ idPrefix: 'bank-request-date' });
+    cy.clickContinueButton();
+
+    cy.url().should('eq', relative(`/case/${dealId}/cancellation/effective-from-date`));
+    cy.completeDateFormFields({ idPrefix: 'effective-from-date', date: yesterday.date });
+    cy.clickContinueButton();
+
+    cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
+    checkDetailsPage.dealDeletionButton().click();
+  };
+
   describe('when logged in as a PIM user', () => {
     before(() => {
       cy.login(PIM_USER_1);
-
       cy.visit(relative(`/case/${dealId}/deal`));
-
-      caseDealPage.cancelDealButton().click();
-
-      cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
-      cy.clickContinueButton();
-
-      cy.url().should('eq', relative(`/case/${dealId}/cancellation/bank-request-date`));
-      cy.completeDateFormFields({ idPrefix: 'bank-request-date' });
-      cy.clickContinueButton();
-
-      cy.url().should('eq', relative(`/case/${dealId}/cancellation/effective-from-date`));
-      cy.completeDateFormFields({ idPrefix: 'effective-from-date', date: yesterday.date });
-      cy.clickContinueButton();
-
-      cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
-      checkDetailsPage.dealDeletionButton().click();
     });
 
-    it('should redirect you to the deal summary page', () => {
-      cy.url().should('eq', relative(`/case/${dealId}/deal`));
-    });
+    describe('after submitting the cancellation', () => {
+      it('should redirect you to the deal summary page with the success banner visible once', () => {
+        submitDealCancellation();
 
-    it('should not show the "Cancel Deal" button', () => {
-      caseDealPage.cancelDealButton().should('not.exist');
-    });
+        cy.url().should('eq', relative(`/case/${dealId}/deal`));
 
-    it('should show the deal status as "Cancelled"', () => {
-      cy.assertText(caseDealPage.dealStage(), TFM_DEAL_STAGE.CANCELLED);
-    });
+        successBanner().should('exist');
+        cy.assertText(successBanner(), `Deal ${ukefDealId} cancelled`);
 
-    it('should show the facility statuses as "Risk Expired"', () => {
-      const facilityId = dealFacilities[0]._id;
+        cy.reload();
+        successBanner().should('not.exist');
+      });
 
-      cy.assertText(caseDealPage.dealFacilitiesTable.row(facilityId).facilityStage(), TFM_FACILITY_STAGE.RISK_EXPIRED);
+      it('should not show the "Cancel Deal" button', () => {
+        caseDealPage.cancelDealButton().should('not.exist');
+      });
+
+      it(`should show the deal status as ${TFM_DEAL_STAGE.CANCELLED}`, () => {
+        cy.assertText(caseDealPage.dealStage(), TFM_DEAL_STAGE.CANCELLED);
+      });
+
+      it(`should show the facility statuses as ${TFM_FACILITY_STAGE.RISK_EXPIRED}`, () => {
+        const facilityId = dealFacilities[0]._id;
+
+        cy.assertText(caseDealPage.dealFacilitiesTable.row(facilityId).facilityStage(), TFM_FACILITY_STAGE.RISK_EXPIRED);
+      });
+
+      it(`should show the deal stage on the "All deals" page as ${TFM_DEAL_STAGE.CANCELLED}`, () => {
+        cy.visit(relative(`/deals/0`));
+
+        const row = dealsPage.dealsTable.row(dealId);
+        cy.assertText(row.stage(), TFM_DEAL_STAGE.CANCELLED);
+      });
     });
   });
 });

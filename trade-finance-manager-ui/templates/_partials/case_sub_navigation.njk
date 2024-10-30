@@ -1,6 +1,6 @@
 {% from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation %}
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full govuk-!-padding-top-8">
+    <div class="govuk-grid-column-full  {{ 'govuk-!-padding-top-8' if not successMessage }} ">
       {{ mojSubNavigation({
         label: 'Sub navigation',
         items: [{

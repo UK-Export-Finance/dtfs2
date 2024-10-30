@@ -32,16 +32,19 @@ describe(page, () => {
     bank,
     formattedReportPeriod,
     reportId: reportId.toString(),
-    premiumPaymentsFilters,
-    enablePaymentsReceivedSorting: false,
-    premiumPayments: [],
+    premiumPayments: {
+      payments: [],
+      filters: premiumPaymentsFilters,
+      showMatchSuccessNotification: false,
+      hasSelectableRows: true,
+      enablePaymentsReceivedSorting: false,
+    },
     keyingSheet: [],
     paymentDetails: {
       rows: [],
       selectedFilters: null,
     },
     utilisationDetails: { utilisationTableRows: [], downloadUrl },
-    displayMatchSuccessNotification: false,
   };
 
   const getWrapper = (viewModel: UtilisationReportReconciliationForReportViewModel = params) => render(viewModel);
@@ -147,8 +150,14 @@ describe(page, () => {
       wrapper.expectText('[data-cy="premium-payments-facility-filter-clear-button"]').toRead('Clear filter');
     });
 
-    it('renders error when premiumPaymentsFilterError is provided', () => {
-      const wrapper = getWrapper({ ...params, premiumPaymentsFilterError: { text: 'Oh no that is not correct', href: '#filter-component' } });
+    it('renders error when filterError is provided', () => {
+      const wrapper = getWrapper({
+        ...params,
+        premiumPayments: {
+          ...params.premiumPayments,
+          filterError: { text: 'Oh no that is not correct', href: '#filter-component' },
+        },
+      });
       wrapper.expectText('[data-cy="facility-filter-form"]').toContain('Oh no that is not correct');
       wrapper.expectLink('[data-cy="error-summary"] a').toLinkTo('#filter-component', 'Oh no that is not correct');
     });
@@ -189,13 +198,25 @@ describe(page, () => {
     });
 
     it('should not display "match success notification" when param is false', () => {
-      const wrapper = getWrapper({ ...params, displayMatchSuccessNotification: false });
+      const wrapper = getWrapper({
+        ...params,
+        premiumPayments: {
+          ...params.premiumPayments,
+          showMatchSuccessNotification: false,
+        },
+      });
 
       wrapper.expectElement('[data-cy="match-success-notification"]').notToExist();
     });
 
     it('should display "match success notification" when param is true', () => {
-      const wrapper = getWrapper({ ...params, displayMatchSuccessNotification: true });
+      const wrapper = getWrapper({
+        ...params,
+        premiumPayments: {
+          ...params.premiumPayments,
+          showMatchSuccessNotification: true,
+        },
+      });
 
       wrapper.expectElement('[data-cy="match-success-notification"]').toExist();
       wrapper.expectText('[data-cy="match-success-notification-heading"]').toRead('Match payment recorded');

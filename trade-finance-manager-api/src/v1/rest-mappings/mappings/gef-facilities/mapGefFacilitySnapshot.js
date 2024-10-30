@@ -44,8 +44,6 @@ const mapGefFacilitySnapshot = (facility, dealSnapshot) => {
 
   facilitySnapshot.facilityProduct = mapFacilityProduct(type);
 
-  facilitySnapshot.facilityStage = mapGefFacilityStage(hasBeenIssued);
-
   facilitySnapshot.ukefFacilityType = type;
 
   const mappedFacilitySnapshot = {
@@ -58,7 +56,7 @@ const mapGefFacilitySnapshot = (facility, dealSnapshot) => {
     hasBeenIssued,
 
     ukefFacilityType: mapGefUkefFacilityType(type), // TODO: DTFS2-4634 - we shouldn't need type and ukefFacilityType.
-    facilityStage: facilitySnapshot.facilityStage,
+    facilityStage: mapGefFacilityStage(hasBeenIssued, facilityTfm?.facilityStage),
     facilityProduct: facilitySnapshot.facilityProduct,
 
     bankFacilityReference: name,
