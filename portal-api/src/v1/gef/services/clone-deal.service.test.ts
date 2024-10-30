@@ -97,7 +97,7 @@ describe('cloneDeal', () => {
     // Arrange
     const invalidDealId = 'dealId';
 
-    // Act
+    // Act & Assert
     await expect(() =>
       cloneDeal({
         dealId: invalidDealId,
@@ -115,7 +115,7 @@ describe('cloneDeal', () => {
     // Arrange
     const bankId = 123;
 
-    // Act
+    // Act & Assert
     await expect(() =>
       cloneDeal({
         dealId: existingDealId,
@@ -133,7 +133,7 @@ describe('cloneDeal', () => {
     // Arrange
     findOneMock.mockResolvedValueOnce(null);
 
-    // Act
+    // Act & Assert
     await expect(() =>
       cloneDeal({
         dealId: existingDealId,
@@ -179,6 +179,7 @@ describe('cloneDeal', () => {
     // Assert
     expect(insertOneMock).toHaveBeenCalledTimes(1);
     expect(insertOneMock).toHaveBeenCalledWith({
+      _id: expect.any(ObjectId) as ObjectId,
       dealType: existingDeal.dealType,
       version: getCurrentGefDealVersion(),
       createdAt: Date.now(),

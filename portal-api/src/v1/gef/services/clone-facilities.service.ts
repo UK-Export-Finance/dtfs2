@@ -5,6 +5,13 @@ import { AuditDetails, Facility } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../../drivers/db-client';
 
+/**
+ * Clones the existing facilities, removing/updating fields
+ * @param currentDealId - the existing deal id
+ * @param newDealId - the new deal id
+ * @param auditDetails - the users audit details
+ * @returns void
+ */
 export const cloneFacilities = async (currentDealId: string, newDealId: ObjectId, auditDetails: AuditDetails): Promise<void> => {
   const facilitiesCollection = 'facilities';
   const collection = await mongoDbClient.getCollection(facilitiesCollection);
@@ -43,9 +50,7 @@ export const cloneFacilities = async (currentDealId: string, newDealId: ObjectId
       currentTime.setHours(0, 0, 0, 0);
 
       if (draft.coverStartDate) {
-        // check if the coverStartDate is in the past
         if (isBefore(new Date(draft.coverStartDate), startOfDay(new Date()))) {
-          // if it is, then ask the user to update it
           draft.coverStartDate = null;
         }
       }

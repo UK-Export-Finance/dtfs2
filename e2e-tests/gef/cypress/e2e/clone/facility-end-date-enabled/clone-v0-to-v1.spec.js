@@ -71,6 +71,7 @@ context('Clone version 0 deal to version 1', () => {
       cy.clickSaveAndReturnButton();
 
       applicationDetails.facilitySummaryListTable(0).facilityEndDateValue().should('contain', 'Required');
+      submitButton().should('not.exist');
     });
 
     it('shows required for has bankReviewDate after isUsingFacilityEndDate is set to false', () => {
@@ -79,6 +80,7 @@ context('Clone version 0 deal to version 1', () => {
       cy.clickSaveAndReturnButton();
 
       applicationDetails.facilitySummaryListTable(0).bankReviewDateValue().should('contain', 'Required');
+      submitButton().should('not.exist');
     });
   });
 });
