@@ -1,6 +1,5 @@
 import {
   ACTIVITY_TYPES,
-  aTfmUser,
   AuditDetails,
   InvalidAuditDetailsError,
   TfmActivity,
@@ -8,6 +7,7 @@ import {
   TfmDealCancellationResponse,
   TfmUser,
 } from '@ukef/dtfs2-common';
+import { aTfmUser } from '@ukef/dtfs2-common/mock-data-backend';
 import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { add, getUnixTime, sub } from 'date-fns';
 import { ObjectId } from 'mongodb';

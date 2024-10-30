@@ -1,4 +1,5 @@
-const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES, aTfmUser } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
+const { aTfmUser } = require('@ukef/dtfs2-common/mock-data-backend');
 const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common/test-cases-backend');

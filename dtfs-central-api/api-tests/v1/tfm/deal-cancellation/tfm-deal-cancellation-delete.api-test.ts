@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_STAGE, aTfmUser } from '@ukef/dtfs2-common';
+import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_STAGE } from '@ukef/dtfs2-common';
+import { aTfmUser } from '@ukef/dtfs2-common/mock-data-backend';
 import { generatePortalAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { withMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import wipeDB from '../../../wipeDB';
