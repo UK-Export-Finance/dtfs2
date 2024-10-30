@@ -166,6 +166,9 @@ describe('cloneFacilities', () => {
         hasBeenIssuedAndAcknowledged: null,
         unissuedToIssuedByMaker: {},
         auditRecord: generateAuditDatabaseRecordFromAuditDetails(mockAuditDetails),
+        isUsingFacilityEndDate: null,
+        facilityEndDate: null,
+        bankReviewDate: null,
       },
       {
         ...facilityTwo,
@@ -184,6 +187,9 @@ describe('cloneFacilities', () => {
         hasBeenIssuedAndAcknowledged: null,
         unissuedToIssuedByMaker: {},
         auditRecord: generateAuditDatabaseRecordFromAuditDetails(mockAuditDetails),
+        isUsingFacilityEndDate: null,
+        facilityEndDate: null,
+        bankReviewDate: null,
       },
     ]);
   });
