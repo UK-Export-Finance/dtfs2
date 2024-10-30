@@ -1,5 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
-const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled, TFM_DEAL_CANCELLATION_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const { getTask, showAmendmentButton, ukefDecisionRejected, isDealCancellationEnabled, canDealBeCancelled, isDealCancellationInDraft } = require('../helpers');
 const { formattedNumber } = require('../../helpers/number');
@@ -49,17 +49,28 @@ const getCaseDeal = async (req, res) => {
 
   let showDealCancelButton = false;
   let hasDraftCancellation = false;
+  let successMessage;
 
   if (dealCancellationIsEnabled) {
     const cancellation = await api.getDealCancellation(dealId, userToken);
     showDealCancelButton = canDealBeCancelled(cancellation.status);
     hasDraftCancellation = isDealCancellationInDraft(cancellation.status);
+
+    if (cancellation.status === TFM_DEAL_CANCELLATION_STATUS.COMPLETED) {
+      successMessage = getFlashSuccessMessage(req);
+    }
+
+    if (cancellation.status === TFM_DEAL_CANCELLATION_STATUS.SCHEDULED) {
+      const { ukefDealId } = deal.dealSnapshot.details;
+
+      successMessage = `Deal ${ukefDealId} scheduled for cancellation on ${format(new Date(cancellation.effectiveFrom), 'd MMMM yyyy')}`;
+    }
   }
 
   return res.render('case/deal/deal.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    successMessage: getFlashSuccessMessage(req),
+    successMessage,
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'deal',
     dealId,
