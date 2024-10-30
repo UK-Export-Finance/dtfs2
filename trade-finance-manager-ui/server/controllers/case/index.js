@@ -10,7 +10,7 @@ const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require(
 const validatePartyURN = require('./parties/partyUrnValidation.validate');
 const { bondType, partyType, userCanEdit } = require('./parties/helpers');
 const { asUserSession } = require('../../helpers/express-session');
-const getFlashSuccessMessage = require('../../helpers/getFlashSuccessMessage');
+const { getFlashSuccessMessage } = require('../../helpers/getFlashSuccessMessage');
 
 const {
   DEAL,
