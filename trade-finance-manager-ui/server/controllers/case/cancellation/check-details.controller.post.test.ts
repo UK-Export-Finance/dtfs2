@@ -9,6 +9,8 @@ jest.mock('../../../api', () => ({
   submitDealCancellation: jest.fn(),
 }));
 
+const flashMock = jest.fn();
+
 const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
 
@@ -16,7 +18,7 @@ const reason = 'reason';
 const bankRequestDate = new Date().valueOf().toString();
 const effectiveFrom = new Date().valueOf().toString();
 
-describe('postBankRequestDate', () => {
+describe('postDealCancellationDetails', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
@@ -29,6 +31,7 @@ describe('postBankRequestDate', () => {
       params: { _id: dealId },
       session: aRequestSession(),
       body: { reason, bankRequestDate, effectiveFrom },
+      flash: flashMock,
     });
 
     // Act
@@ -46,6 +49,7 @@ describe('postBankRequestDate', () => {
       params: { _id: dealId },
       session: aRequestSession(),
       body: { reason, bankRequestDate, effectiveFrom },
+      flash: flashMock,
     });
 
     // Act
@@ -68,6 +72,7 @@ describe('postBankRequestDate', () => {
         params: { _id: dealId },
         session,
         body: { reason, bankRequestDate, effectiveFrom },
+        flash: flashMock,
       });
 
       // Act
@@ -82,12 +87,32 @@ describe('postBankRequestDate', () => {
       );
     });
 
+    it('adds a successMessage to req.flash', async () => {
+      // Arrange
+      const session = aRequestSession();
+
+      const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
+        params: { _id: dealId },
+        session,
+        body: { reason, bankRequestDate, effectiveFrom },
+        flash: flashMock,
+      });
+
+      // Act
+      await postDealCancellationDetails(req, res);
+
+      // Assert
+      expect(flashMock).toHaveBeenCalledTimes(1);
+      expect(flashMock).toHaveBeenCalledWith('successMessage', `Deal ${ukefDealId} cancelled`);
+    });
+
     it('redirects to the deal summary', async () => {
       // Arrange
       const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
         params: { _id: dealId },
         session: aRequestSession(),
         body: { reason, bankRequestDate, effectiveFrom },
+        flash: flashMock,
       });
 
       // Act
