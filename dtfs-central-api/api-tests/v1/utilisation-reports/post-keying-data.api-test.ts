@@ -40,7 +40,10 @@ describe(`POST ${BASE_URL}`, () => {
   const tfmUserId = tfmUser._id.toString();
 
   const anUploadedReconciliationInProgressUtilisationReport = () =>
-    UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).withUploadedByUserId(portalUserId).build();
+    UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+      .withId(reportId)
+      .withUploadedByUserId(portalUserId)
+      .build();
   const anUploadedPendingReconciliationUtilisationReport = () =>
     UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
       .withId(reportId)
@@ -187,7 +190,7 @@ describe(`POST ${BASE_URL}`, () => {
 
     // Assert
     const updatedReport = await SqlDbHelper.manager.findOneByOrFail(UtilisationReportEntity, { id: reportId });
-    expect(updatedReport.status).toBe<UtilisationReportReconciliationStatus>('RECONCILIATION_IN_PROGRESS');
+    expect(updatedReport.status).toBe<UtilisationReportReconciliationStatus>(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS);
   });
 
   it('updates the utilisation report audit fields', async () => {

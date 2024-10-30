@@ -52,7 +52,7 @@ describe(page, () => {
       linkText: 'March 2023',
       month: 'March',
       downloadPath: 'www.abc.com',
-      status: 'RECONCILIATION_IN_PROGRESS',
+      status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS,
       displayStatus: 'Reconciliation in progress',
     },
     {

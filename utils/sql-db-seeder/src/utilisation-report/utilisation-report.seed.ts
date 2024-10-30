@@ -34,7 +34,7 @@ export const seedUtilisationReports = async (dataSource: DataSource): Promise<vo
 
   await UtilisationReportSeeder.forBankIdAndReportPeriod(reconciliationInProgressBankIdWithReportPeriod)
     .withUploadedByUserId(uploadedByUserId)
-    .saveWithStatus('RECONCILIATION_IN_PROGRESS', dataSource);
+    .saveWithStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS, dataSource);
 
   await Promise.all(
     notReceivedBankIdsWithReportPeriod.map((bankIdWithReportPeriod) =>

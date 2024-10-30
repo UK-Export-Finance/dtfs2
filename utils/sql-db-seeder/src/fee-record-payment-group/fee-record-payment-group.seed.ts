@@ -60,7 +60,9 @@ export const seedFeeRecordPaymentGroups = async (dataSource: DataSource) => {
     .addAnAutoMatchedZeroPaymentFeeRecord()
     .save(dataSource);
 
-  const reconciliationInProgressReport = await dataSource.manager.findOneByOrFail(UtilisationReportEntity, { status: 'RECONCILIATION_IN_PROGRESS' });
+  const reconciliationInProgressReport = await dataSource.manager.findOneByOrFail(UtilisationReportEntity, {
+    status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS,
+  });
   const reconciliationInProgressBank = await MongoDbDataLoader.getBankByIdOrFail(reconciliationInProgressReport.bankId);
   const reconciliationInProgressPreviousReportPeriod = getPrecedingReportPeriod(
     reconciliationInProgressBank.utilisationReportPeriodSchedule,

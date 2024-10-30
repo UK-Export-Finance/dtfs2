@@ -1,5 +1,11 @@
 import { EntityManager } from 'typeorm';
-import { UtilisationReportEntityMockBuilder, DbRequestSource, FeeRecordEntityMockBuilder, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import {
+  UtilisationReportEntityMockBuilder,
+  DbRequestSource,
+  FeeRecordEntityMockBuilder,
+  UtilisationReportEntity,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+} from '@ukef/dtfs2-common';
 import { handleUtilisationReportRemoveFeesFromPaymentGroupEvent } from './remove-fees-from-payment-group.event-handler';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { feeRecordsMatchAttachedPayments } from '../helpers';
@@ -18,7 +24,8 @@ describe('handleUtilisationReportRemoveFeesFromPaymentGroupEvent', () => {
     save: mockSave,
   } as unknown as EntityManager;
 
-  const aReconciliationInProgressReport = () => UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+  const aReconciliationInProgressReport = () =>
+    UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).build();
 
   const aFeeRecordForReport = (report: UtilisationReportEntity, id: number) => FeeRecordEntityMockBuilder.forReport(report).withId(id).build();
 

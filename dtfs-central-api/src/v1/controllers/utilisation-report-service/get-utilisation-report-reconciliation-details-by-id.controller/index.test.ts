@@ -79,7 +79,9 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+        .withId(reportId)
+        .build();
       when(utilisationReportRepoFindSpy).calledWith(reportId).mockResolvedValue(utilisationReport);
 
       const reportDetails = aUtilisationReportReconciliationDetails();
@@ -109,7 +111,9 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       };
       const { req, res } = getHttpMocks(premiumPaymentsFilters);
 
-      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+        .withId(reportId)
+        .build();
       when(utilisationReportRepoFindSpy).calledWith(reportId).mockResolvedValue(utilisationReport);
 
       const reportDetails = aUtilisationReportReconciliationDetails();

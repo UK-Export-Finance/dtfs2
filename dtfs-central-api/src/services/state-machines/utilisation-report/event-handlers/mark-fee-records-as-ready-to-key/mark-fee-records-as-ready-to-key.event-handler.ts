@@ -41,7 +41,7 @@ export const handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent = async (
   );
 
   if (report.status === UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED) {
-    report.updateWithStatus({ status: 'RECONCILIATION_IN_PROGRESS', requestSource });
+    report.updateWithStatus({ status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS, requestSource });
     return await transactionEntityManager.save(UtilisationReportEntity, report);
   }
 

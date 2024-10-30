@@ -69,7 +69,7 @@ describe(`GET ${BASE_URL}`, () => {
     const reportPeriod = getCurrentReportPeriodForBankSchedule(MOCK_BANKS.BARCLAYS.utilisationReportPeriodSchedule);
     const submissionMonth = getSubmissionMonthForReportPeriod(reportPeriod);
 
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
       .withBankId(MOCK_BANKS.BARCLAYS.id)
       .withReportPeriod(reportPeriod)
       .build();

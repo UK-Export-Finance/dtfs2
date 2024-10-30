@@ -1,7 +1,12 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { EntityManager } from 'typeorm';
-import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { patchPayment } from '.';
 import { PatchPaymentPayload } from '../../../routes/middleware/payload-validation';
 import { aTfmSessionUser } from '../../../../../test-helpers';
@@ -24,7 +29,9 @@ describe('patch-payment.controller', () => {
         body: aPatchPaymentRequestBody(),
       });
 
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+      .withId(reportId)
+      .build();
 
     const feeRecords = [
       FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build(),

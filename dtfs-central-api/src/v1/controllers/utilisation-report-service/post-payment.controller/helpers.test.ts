@@ -1,6 +1,12 @@
 import { ObjectId } from 'mongodb';
 import { In, EntityManager } from 'typeorm';
-import { Currency, FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  Currency,
+  FEE_RECORD_STATUS,
+  FeeRecordEntityMockBuilder,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { addPaymentToUtilisationReport } from './helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { InvalidPayloadError, NotFoundError } from '../../../../errors';
@@ -32,7 +38,9 @@ describe('post-add-payment.controller helpers', () => {
       reference: 'A payment reference',
     };
 
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+      .withId(reportId)
+      .build();
     const utilisationReportStateMachine = UtilisationReportStateMachine.forReport(utilisationReport);
 
     const feeRecordsInPaymentCurrency = feeRecordIds.map((feeRecordId) =>

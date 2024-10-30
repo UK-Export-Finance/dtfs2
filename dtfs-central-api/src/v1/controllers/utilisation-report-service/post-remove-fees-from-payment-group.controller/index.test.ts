@@ -1,6 +1,12 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
-import { PaymentEntityMockBuilder, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, TestApiError } from '@ukef/dtfs2-common';
+import {
+  PaymentEntityMockBuilder,
+  FeeRecordEntityMockBuilder,
+  UtilisationReportEntityMockBuilder,
+  TestApiError,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+} from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { PostRemoveFeesFromPaymentGroupRequest, postRemoveFeesFromPaymentGroup } from '.';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
@@ -24,7 +30,9 @@ describe('post-remove-fees-from-payment-group.controller', () => {
     const reportId = 1;
     const paymentId = 2;
 
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+      .withId(reportId)
+      .build();
 
     const feeRecordIds = [1, 2];
     const feeRecords = feeRecordIds.map((id) => FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(id).build());

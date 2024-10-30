@@ -39,7 +39,8 @@ describe(`PATCH ${BASE_URL}`, () => {
 
   const payment = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).build();
 
-  const aReport = () => UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+  const aReport = () =>
+    UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).withId(reportId).build();
 
   const feeRecordsForReportWithPayments = (report: UtilisationReportEntity, payments: PaymentEntity[]) => [
     FeeRecordEntityMockBuilder.forReport(report)

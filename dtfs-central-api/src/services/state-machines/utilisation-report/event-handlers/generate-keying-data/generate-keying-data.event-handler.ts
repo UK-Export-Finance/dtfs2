@@ -99,7 +99,7 @@ export const handleUtilisationReportGenerateKeyingDataEvent = async (
   await updateFeeRecordPaymentJoinTable(KeyingSheetFeePaymentShares, transactionEntityManager);
 
   if (report.status === UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION) {
-    report.updateWithStatus({ status: 'RECONCILIATION_IN_PROGRESS', requestSource });
+    report.updateWithStatus({ status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS, requestSource });
   } else {
     report.updateLastUpdatedBy(requestSource);
   }

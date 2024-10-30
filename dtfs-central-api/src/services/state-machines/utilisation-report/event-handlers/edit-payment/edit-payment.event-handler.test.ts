@@ -27,7 +27,8 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     save: mockSave,
   } as unknown as EntityManager;
 
-  const aReconciliationInProgressReport = () => UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+  const aReconciliationInProgressReport = () =>
+    UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).build();
 
   const aListOfFeeRecordsForReport = (report: UtilisationReportEntity): FeeRecordEntity[] => [
     FeeRecordEntityMockBuilder.forReport(report).withId(1).withPaymentCurrency('GBP').build(),

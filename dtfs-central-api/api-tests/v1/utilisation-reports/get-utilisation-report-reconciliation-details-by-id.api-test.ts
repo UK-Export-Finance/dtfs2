@@ -1,5 +1,5 @@
 import { Response } from 'supertest';
-import { Bank, IsoDateTimeStamp, PortalUser, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { Bank, IsoDateTimeStamp, PortalUser, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
@@ -32,7 +32,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   const reportId = 1;
 
-  const reconciliationInProgressReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
+  const reconciliationInProgressReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
     .withId(reportId)
     .withBankId(bankId)
     .withUploadedByUserId(portalUserId)
@@ -73,7 +73,7 @@ describe(`GET ${BASE_URL}`, () => {
   it('returns a 404 when a bank can not be found with the same id as the bankId in the report', async () => {
     // Arrange
     const reportIdWithNoMatchingBank = 2;
-    const reportWithNoMatchingBank = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
+    const reportWithNoMatchingBank = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
       .withId(reportIdWithNoMatchingBank)
       .withBankId(nonExistingBankId)
       .withUploadedByUserId(portalUserId)
@@ -100,7 +100,7 @@ describe(`GET ${BASE_URL}`, () => {
         id: bank.id,
         name: bank.name,
       },
-      status: 'RECONCILIATION_IN_PROGRESS',
+      status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS,
       reportPeriod: reconciliationInProgressReport.reportPeriod,
       dateUploaded: reconciliationInProgressReport.dateUploaded!.toISOString(),
       premiumPayments: [],

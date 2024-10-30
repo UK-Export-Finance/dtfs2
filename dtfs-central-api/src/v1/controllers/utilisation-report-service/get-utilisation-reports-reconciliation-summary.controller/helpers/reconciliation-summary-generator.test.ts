@@ -87,7 +87,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
         },
       ];
 
-      const reportOne = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
+      const reportOne = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
         .withBankId(bankIdOne)
         .withReportPeriod({ start: { month: 12, year: 2023 }, end: { month: 12, year: 2023 } })
         .build();
@@ -164,7 +164,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
       const banks: Bank[] = [{ ...aBank(), utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule() }];
       const currentSubmissionMonth: IsoMonthStamp = '2023-12';
 
-      const augustPeriodReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
+      const augustPeriodReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
         .withBankId(banks[0].id)
         .withReportPeriod({
           start: {
@@ -239,7 +239,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
           submissionMonth: '2023-09',
           items: [
             expect.objectContaining<Partial<UtilisationReportReconciliationSummaryItem>>({
-              status: 'RECONCILIATION_IN_PROGRESS',
+              status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS,
             }),
           ],
         },

@@ -71,7 +71,7 @@ public async handleEvent(event: UtilisationReportEvent): Promise<UtilisationRepo
 
 In this simplified example note how we take a "state-first" approach, as opposed to an "event-first" approach, first switching on `this.report?.status` then `event.type`. This method matches how we would read the visual state machine (see [Utilisation Reports](#utilisation-reports) below), so makes it easier to reason about, and ensure that all scenarios have been accounted for.
 
-In the example above you can see that if the report is in `'RECONCILIATION_IN_PROGRESS'` status there are only two valid events that can occur, and this matches the two outward arrows in the diagram below. For each of these two valid event types the relevant handler is called to handle the transition. For any other event type the `this.handleInvalidTransition` will be called, resulting in an error.
+In the example above you can see that if the report is in `UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS` status there are only two valid events that can occur, and this matches the two outward arrows in the diagram below. For each of these two valid event types the relevant handler is called to handle the transition. For any other event type the `this.handleInvalidTransition` will be called, resulting in an error.
 
 ## Diagrams
 

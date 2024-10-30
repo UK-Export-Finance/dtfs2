@@ -61,7 +61,7 @@ describe(component, () => {
       .build();
     const pendingFeeRecord = FeeRecordEntityMockBuilder.forReport(pendingMockReport).build();
     pendingMockReport.feeRecords = [pendingFeeRecord];
-    const reconciliationInProgressMockReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
+    const reconciliationInProgressMockReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
       .withDateUploaded('2023-12-01T15:04:53Z')
       .withReportPeriod(getReportPeriod(11))
       .build();

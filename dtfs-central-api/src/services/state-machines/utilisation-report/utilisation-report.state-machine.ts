@@ -116,7 +116,7 @@ export class UtilisationReportStateMachine {
           default:
             return this.handleInvalidTransition(event);
         }
-      case 'RECONCILIATION_IN_PROGRESS':
+      case UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS:
         switch (event.type) {
           case 'ADD_A_PAYMENT':
             return handleUtilisationReportAddAPaymentEvent(this.report, event.payload);

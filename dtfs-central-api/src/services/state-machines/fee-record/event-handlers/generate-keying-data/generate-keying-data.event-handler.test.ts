@@ -6,6 +6,7 @@ import {
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   ReportPeriod,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { handleFeeRecordGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
@@ -487,7 +488,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
   });
 
   function aReconciliationInProgressReport() {
-    return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+    return UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).build();
   }
 
   function aFacilityUtilisationDataEntity() {

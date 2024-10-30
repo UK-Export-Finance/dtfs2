@@ -1,6 +1,13 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FEE_RECORD_STATUS,
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  ReportPeriod,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { getFeeRecordsToKey, GetFeeRecordsToKeyResponseBody } from '.';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { getBankNameById } from '../../../../repositories/banks-repo';
@@ -14,7 +21,7 @@ describe('get-fee-records-to-key.controller', () => {
     const findOneByIdWithFeeRecordsFilteredByStatusWithPaymentsSpy = jest.spyOn(UtilisationReportRepo, 'findOneByIdWithFeeRecordsFilteredByStatusWithPayments');
 
     const aUtilisationReportWithFeeRecordsAndPayments = () => {
-      const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+      const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).build();
       const payments = [PaymentEntityMockBuilder.forCurrency('GBP').build()];
       const feeRecords = [FeeRecordEntityMockBuilder.forReport(report).withStatus(FEE_RECORD_STATUS.MATCH).withPayments(payments).build()];
       report.feeRecords = feeRecords;
@@ -48,7 +55,10 @@ describe('get-fee-records-to-key.controller', () => {
       });
 
       const bankId = '123';
-      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(1).withBankId(bankId).build();
+      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+        .withId(1)
+        .withBankId(bankId)
+        .build();
 
       findOneByIdWithFeeRecordsFilteredByStatusWithPaymentsSpy.mockResolvedValue(utilisationReport);
       jest.mocked(getBankNameById).mockResolvedValue(undefined);

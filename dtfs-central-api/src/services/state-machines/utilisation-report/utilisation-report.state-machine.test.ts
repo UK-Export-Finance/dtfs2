@@ -207,7 +207,9 @@ describe('UtilisationReportStateMachine', () => {
   });
 
   describe(`when report is in '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS}' status`, () => {
-    const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+    const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus(
+      UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS,
+    ).build();
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT}' event`, async () => {
       // Arrange

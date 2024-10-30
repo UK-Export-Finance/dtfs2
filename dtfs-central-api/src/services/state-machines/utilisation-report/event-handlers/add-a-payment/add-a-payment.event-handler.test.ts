@@ -210,7 +210,9 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
 
   it(`only updates the report audit fields if the report status is '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS}'`, async () => {
     // Arrange
-    const reconciliationInProgressReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+    const reconciliationInProgressReport = UtilisationReportEntityMockBuilder.forStatus(
+      UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS,
+    ).build();
 
     const feeRecords = aListOfFeeRecordsForReport(reconciliationInProgressReport);
 

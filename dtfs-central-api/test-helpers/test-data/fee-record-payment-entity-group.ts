@@ -1,4 +1,10 @@
-import { FeeRecordStatus, Currency, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FeeRecordStatus,
+  Currency,
+  FeeRecordEntityMockBuilder,
+  UtilisationReportEntityMockBuilder,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+} from '@ukef/dtfs2-common';
 import { FeeRecordPaymentEntityGroup } from '../../src/types/fee-record-payment-entity-group';
 
 export const aFeeRecordPaymentEntityGroupForASingleFeeRecord = (
@@ -7,7 +13,7 @@ export const aFeeRecordPaymentEntityGroupForASingleFeeRecord = (
   currency: Currency,
   feesPaidToUkefForThePeriod: number,
 ): FeeRecordPaymentEntityGroup => {
-  const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+  const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).build();
 
   return {
     feeRecords: [
