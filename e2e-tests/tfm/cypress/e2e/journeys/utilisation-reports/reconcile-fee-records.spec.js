@@ -174,4 +174,13 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
     pages.utilisationReportPage.bankReportsNavLink().click();
     pages.utilisationReportsSummaryPage.tableRowSelector(BANK_ID, SUBMISSION_MONTH).should('contain', 'Reconciliation in progress');
   });
+
+  it('should not display select all checkbox when there are no further actions to take', () => {
+    pages.utilisationReportPage.keyingSheetTab.selectAllCheckbox().click();
+    pages.utilisationReportPage.keyingSheetTab.markAsDoneButton().click();
+
+    pages.utilisationReportPage.premiumPaymentsTabLink().click();
+
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.selectAllCheckboxContainer().should('not.exist');
+  });
 });
