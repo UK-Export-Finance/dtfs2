@@ -5,6 +5,7 @@ import { ADMIN, BANK1_MAKER1, PIM_USER_1 } from '../../../../../e2e-fixtures';
 import caseDealPage from '../../pages/caseDealPage';
 import { yesterday } from '../../../../../e2e-fixtures/dateConstants';
 import checkDetailsPage from '../../pages/deal-cancellation/check-details';
+import facilitiesPage from '../../pages/facilitiesPage';
 
 context('Deal cancellation - effective from date in past', () => {
   let dealId;
@@ -75,6 +76,14 @@ context('Deal cancellation - effective from date in past', () => {
       const facilityId = dealFacilities[0]._id;
 
       cy.assertText(caseDealPage.dealFacilitiesTable.row(facilityId).facilityStage(), TFM_FACILITY_STAGE.RISK_EXPIRED);
+    });
+
+    it(`should show the facility stage on the "All facilities" page as ${TFM_FACILITY_STAGE.RISK_EXPIRED}`, () => {
+      cy.visit(relative(`/facilities/0`));
+      const facilityId = dealFacilities[0]._id;
+
+      const row = facilitiesPage.facilitiesTable.row(facilityId);
+      cy.assertText(row.facilityStage(), TFM_FACILITY_STAGE.RISK_EXPIRED);
     });
   });
 });
