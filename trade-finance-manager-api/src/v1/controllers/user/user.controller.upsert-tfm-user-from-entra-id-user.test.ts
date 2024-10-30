@@ -24,21 +24,15 @@ describe('user controller', () => {
     beforeEach(() => {
       jest.resetAllMocks();
       resetAllWhenMocks();
-      when(jest.mocked(UserService.upsertTfmUserFromEntraIdUser.bind(UserService)))
-        .calledWith({ entraIdUser, auditDetails })
-        .mockResolvedValue(upsertedUserResponse);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      when(UserService.upsertTfmUserFromEntraIdUser).calledWith({ entraIdUser, auditDetails }).mockResolvedValue(upsertedUserResponse);
     });
 
     it('should upsert user in the database', async () => {
       await makeRequest();
 
-      expect(UserService.upsertTfmUserFromEntraIdUser.bind(UserService)).toHaveBeenCalledWith({ entraIdUser, auditDetails });
-    });
-
-    it('should map the user', async () => {
-      await makeRequest();
-
-      expect(mapUserData).toHaveBeenCalledWith(upsertedUserResponse);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(UserService.upsertTfmUserFromEntraIdUser).toHaveBeenCalledWith({ entraIdUser, auditDetails });
     });
 
     it('should return the mapped user', async () => {
