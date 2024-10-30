@@ -5,7 +5,7 @@ const fs = require('fs');
 
 /**
  * Sleep helper function
- * @param {Integer} ms Milliseconds (1000ms = 1s)
+ * @param {number} ms Milliseconds (1000ms = 1s)
  * @returns Sleeps for `ms` provided
  */
 // eslint-disable-next-line no-promise-executor-return

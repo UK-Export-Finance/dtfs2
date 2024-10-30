@@ -1,6 +1,6 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
-const sendTfmEmail = require('./send-tfm-email');
+const sendTfmEmail = require('../services/send-tfm-email');
 
 const sendDealDecisionEmail = async (mappedDeal) => {
   const { tfm } = mappedDeal;
@@ -44,11 +44,11 @@ const sendDealDecisionEmail = async (mappedDeal) => {
 
   await sendTfmEmail(templateId, sendToEmailAddress, emailVariables, mappedDeal);
   // send a copy of the email to bank's general email address
-  const bankResponse = bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, mappedDeal));
+  const bankResponses = await Promise.all(bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, mappedDeal)));
   // send a copy of the email to PIM
   await sendTfmEmail(templateId, pimEmail, emailVariables, mappedDeal);
 
-  return bankResponse;
+  return bankResponses;
 };
 
 module.exports = sendDealDecisionEmail;

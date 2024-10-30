@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { getFormattedCurrencyAndAmount, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, getFormattedCurrencyAndAmount, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import { format, parseISO } from 'date-fns';
 import { AddPaymentViewModel, RecordedPaymentDetailsViewModel } from '../../../types/view-models';
 import api from '../../../api';
@@ -20,6 +20,7 @@ import {
   mapToSelectedReportedFeesDetailsViewModel,
 } from '../helpers';
 import { SelectedFeeRecordsPaymentDetailsResponse } from '../../../api-response-types';
+import { getLinkToPremiumPaymentsTab } from '../add-to-an-existing-payment/get-link-to-premium-payments-tab';
 
 export type AddPaymentRequest = CustomExpressRequest<{
   reqBody: AddPaymentFormRequestBody;
@@ -49,9 +50,19 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
     if (isAddingPayment && !formHasErrors) {
       const { addAnotherPayment, ...paymentFormValues } = formValues as ValidatedAddPaymentFormValues;
       const parsedAddPaymentFormValues = parseValidatedAddPaymentFormValues(paymentFormValues);
-      await api.addPaymentToFeeRecords(reportId, parsedAddPaymentFormValues, feeRecordIds, user, userToken);
+
+      const { feeRecordStatus } = await api.addPaymentToFeeRecords(reportId, parsedAddPaymentFormValues, feeRecordIds, user, userToken);
       if (addAnotherPayment !== 'true') {
         return res.redirect(`/utilisation-reports/${reportId}`);
+      }
+
+      /*
+       * If the payment just added take the user to match we redirect to the premium
+       * payments tab regardless of their selection for addAnotherPayment
+       * since adding another payment is an invalid journey after reaching match status
+       */
+      if (feeRecordStatus === FEE_RECORD_STATUS.MATCH) {
+        return res.redirect(`/utilisation-reports/${reportId}?matchSuccess=true`);
       }
     }
 
@@ -72,6 +83,7 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
       recordedPaymentsDetails: selectedFeeRecordDetails.payments.map((payment) => mapToRecordedPaymentDetailsViewModel(payment)),
       multipleFeeRecordsSelected: selectedFeeRecordDetails.feeRecords.length > 1,
       canAddToExistingPayment: selectedFeeRecordDetails.canAddToExistingPayment,
+      backLinkHref: getLinkToPremiumPaymentsTab(reportId, feeRecordIds),
     });
   } catch (error) {
     console.error('Failed to add payment', error);

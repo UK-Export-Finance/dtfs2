@@ -6,7 +6,7 @@ const DEFAULT_ALLOWED_FORMATS = ['bmp', 'doc', 'docx', 'gif', 'jpeg', 'jpg', 'pd
 /**
  * Validates file's for size and format
  *
- * @param {*} file file to validate. Expects format from multer upload
+ * @param {Object} file file to validate. Expects format from multer upload
  * @param {number} maxSize (optional) maximum allowed size for file, defaults to 10mb. Sizes are in bytes
  * @param {Array} allowedFormats (optional) array of file extensions to allow
  * @returns [isValid, error]

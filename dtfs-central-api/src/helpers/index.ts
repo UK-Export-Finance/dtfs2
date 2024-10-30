@@ -1,11 +1,13 @@
 export { isNumber } from './isNumber';
-export { feeRecordCsvRowToSqlEntity } from './fee-record.helper';
+export { feeRecordCsvRowToSqlEntity } from './fee-record-csv-row-mapper';
 export { executeWithSqlTransaction } from './execute-with-sql-transaction';
 export { calculateTotalCurrencyAndAmount } from './calculate-total-currency-and-amount';
 export { feeRecordsAndPaymentsMatch } from './fee-record-matching';
-export {
-  FeeRecordPaymentEntityGroup,
-  getFeeRecordPaymentEntityGroupsFromFeeRecordEntities,
-} from './get-fee-record-payment-entity-groups-from-fee-record-entities';
+export { getFeeRecordPaymentEntityGroups } from './get-fee-record-payment-entity-groups';
+export { getFeeRecordPaymentEntityGroupStatus } from './get-fee-record-payment-entity-group-status';
+export { getFeeRecordPaymentEntityGroupReconciliationData } from './get-fee-record-payment-entity-group-reconciliation-data';
 export { convertTimestampToDate } from './convert-timestamp-to-date';
-export { getLatestCompletedAmendmentCoverEndDate } from './tfm-facilities.helper';
+export { getPreviousReportPeriod } from './get-previous-report-period';
+export { calculateUkefShareOfUtilisation } from './calculate-ukef-share-of-utilisation';
+export { getLatestTfmFacilityValues } from './get-latest-tfm-facility-values';
+export * from './amendments';

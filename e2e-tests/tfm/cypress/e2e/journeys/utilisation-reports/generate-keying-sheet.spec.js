@@ -1,4 +1,4 @@
-import { startOfMonth, subMonths, subYears, addYears } from 'date-fns';
+import { startOfMonth, subMonths, subYears, addDays } from 'date-fns';
 import {
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
@@ -20,6 +20,7 @@ context('PDC_RECONCILE users can generate keying data', () => {
   const TODAY = new Date();
 
   const START_OF_CURRENT_REPORT_PERIOD = startOfMonth(subMonths(TODAY, 1));
+  const END_OF_CURRENT_REPORT_PERIOD = startOfMonth(TODAY);
   const CURRENT_REPORT_PERIOD = {
     start: { month: START_OF_CURRENT_REPORT_PERIOD.getMonth() + 1, year: START_OF_CURRENT_REPORT_PERIOD.getFullYear() },
     end: { month: START_OF_CURRENT_REPORT_PERIOD.getMonth() + 1, year: START_OF_CURRENT_REPORT_PERIOD.getFullYear() },
@@ -45,7 +46,7 @@ context('PDC_RECONCILE users can generate keying data', () => {
     .build();
 
   const ONE_YEAR_AGO = subYears(TODAY, 1);
-  const ONE_YEAR_FROM_CURRENT_REPORT_PERIOD_START = addYears(START_OF_CURRENT_REPORT_PERIOD, 1); // days left in cover period = 365
+  const ONE_YEAR_FROM_CURRENT_REPORT_PERIOD_END = addDays(END_OF_CURRENT_REPORT_PERIOD, 365); // days left in cover period = 365
 
   const FIRST_FEE_RECORD_ID = '11';
   const SECOND_FEE_RECORD_ID = '22';
@@ -53,9 +54,11 @@ context('PDC_RECONCILE users can generate keying data', () => {
   const TFM_FACILITY = {
     facilitySnapshot: {
       coverStartDate: ONE_YEAR_AGO.getTime(),
-      coverEndDate: ONE_YEAR_FROM_CURRENT_REPORT_PERIOD_START.getTime(), // days left in cover period = 365
+      coverEndDate: ONE_YEAR_FROM_CURRENT_REPORT_PERIOD_END.getTime(), // days left in cover period = 365
       interestPercentage: 5,
       dayCountBasis: 365,
+      value: 30,
+      coverPercentage: 40,
       ukefFacilityId: FACILITY_UTILISATION_DATA.id,
     },
   };
@@ -165,7 +168,7 @@ context('PDC_RECONCILE users can generate keying data', () => {
      * difference between the current and previous
      * utilisation
      */
-    const expectedPrincipalBalanceAdjustment = 20000; // 200000 - 180000, DECREASE
+    const expectedPrincipalBalanceAdjustment = '128,000.00'; // 200000 - (180000 * 0.4), DECREASE
 
     /**
      * The fixed fee adjustment is the difference between
@@ -175,12 +178,15 @@ context('PDC_RECONCILE users can generate keying data', () => {
      * current fixed fee is given by the product of the below
      * values:
      * - utilisation: 180000
+     * - cover percentage: 40
+     * - ukef utilisation: 180000 * 0.4 = 72000
      * - bank margin: 0.9 (this is a fixed, constant value)
      * - interest percentage: 0.05
      * - number of days left in cover period divided by day count basis: 365 / 365 = 1
-     * This yields a current utilisation value of 8100
+     * - (72000 * 0.9 * 0.05 * 1) = 3240
+     * This yields a current utilisation value of 3240
      */
-    const expectedFixedFeeAdjustment = 7100; // 8100 - 1000, INCREASE
+    const expectedFixedFeeAdjustment = '2,240.00'; // 3240  - 1000, INCREASE
 
     pages.utilisationReportPage.keyingSheetTab.fixedFeeAdjustmentDecrease(FIRST_FEE_RECORD_ID).should('contain', '-');
     pages.utilisationReportPage.keyingSheetTab.fixedFeeAdjustmentIncrease(FIRST_FEE_RECORD_ID).should('contain', expectedFixedFeeAdjustment);

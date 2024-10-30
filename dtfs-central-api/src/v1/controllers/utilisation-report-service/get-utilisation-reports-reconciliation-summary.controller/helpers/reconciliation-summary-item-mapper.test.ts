@@ -45,10 +45,13 @@ describe('reconciliation-summary-item-mapper', () => {
     it('does not count reconciled fee records in the reported fees left to reconcile', () => {
       // Arrange
       const report = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
-      const aNotYetReconciledFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('1111').withStatus('READY_TO_KEY').build();
-      const anotherNotYetReconciledFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('5555').withStatus('READY_TO_KEY').build();
-      const aReconciledFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('1111').withStatus('RECONCILED').build();
-      const anotherReconciledFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('2222').withStatus('RECONCILED').build();
+      const aNotYetReconciledFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('1111').withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
+      const anotherNotYetReconciledFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
+        .withFacilityId('5555')
+        .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
+        .build();
+      const aReconciledFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('1111').withStatus(FEE_RECORD_STATUS.RECONCILED).build();
+      const anotherReconciledFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('2222').withStatus(FEE_RECORD_STATUS.RECONCILED).build();
       report.feeRecords = [aNotYetReconciledFeeRecord, anotherNotYetReconciledFeeRecord, aReconciledFeeRecord, anotherReconciledFeeRecord];
 
       // Act
@@ -77,7 +80,7 @@ describe('reconciliation-summary-item-mapper', () => {
     it('sets the reported fees left to reconcile to zero if the report is reconciled but not all fee records are', () => {
       // Arrange
       const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withFeeRecords([]).build();
-      const aNotReconciledFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('1111').withStatus('TO_DO').build();
+      const aNotReconciledFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('1111').withStatus(FEE_RECORD_STATUS.TO_DO).build();
       report.feeRecords = [aNotReconciledFeeRecord];
 
       // Act

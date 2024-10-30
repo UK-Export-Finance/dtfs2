@@ -48,25 +48,25 @@ context('Application Details Submission', () => {
     });
 
     it('allows submission with comments', () => {
-      applicationSubmission.commentsField().type('test');
+      cy.keyboardInput(applicationSubmission.commentsField(), 'test');
       cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
     });
 
     it('shows error when comments are too long', () => {
-      applicationSubmission.commentsField().type(longComment);
+      cy.keyboardInput(applicationSubmission.commentsField(), longComment);
       cy.clickSubmitButton();
       errorSummary();
     });
 
     it('takes user back to application details page if cancel link clicked', () => {
-      applicationSubmission.commentsField().type('test');
+      cy.keyboardInput(applicationSubmission.commentsField(), 'test');
       cy.clickCancelLink();
       applicationPreview.applicationPreviewPage();
     });
 
     it('takes user back to application details page if back link clicked', () => {
-      applicationSubmission.commentsField().type('test');
+      cy.keyboardInput(applicationSubmission.commentsField(), 'test');
       cy.clickBackLink();
       applicationPreview.applicationPreviewPage();
     });
@@ -95,7 +95,7 @@ context('Application Details Submission', () => {
       applicationDetails.abandonLink().should('not.exist');
     });
 
-    it('it shows the latest comment with the firstname and lastname', () => {
+    it('shows the latest comment with the firstname and lastname', () => {
       applicationDetails.comments().contains(`Comments from ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
       applicationDetails.comments().contains('test');
     });

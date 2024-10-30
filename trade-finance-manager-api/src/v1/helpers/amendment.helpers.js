@@ -1,7 +1,7 @@
 const { format, fromUnixTime } = require('date-fns');
 const { CURRENCY, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../api');
-const sendTfmEmail = require('../controllers/send-tfm-email');
+const sendTfmEmail = require('../services/send-tfm-email');
 const { UNDERWRITER_MANAGER_DECISIONS } = require('../../constants/amendments');
 const { TEAMS } = require('../../constants');
 const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');
@@ -44,7 +44,7 @@ const isApprovedWithoutConditions = (ukefDecision) => {
 /**
  * Ascertain whether the requested amendment
  * have been declined or not.
- * @param {object} amendment Amendment object
+ * @param {Object} amendment Amendment object
  * @returns {boolean} Whether both the amendments decision has been declined by the underwriter.
  */
 const amendmentDeclined = (amendment) => {
@@ -276,7 +276,7 @@ const sendManualBankDecisionEmail = async (amendmentVariables, auditDetails) => 
  * Evaluated whether facility amendment is eligible
  * for ACBS interaction based on myriads of conditions.
  * This function evaluated across all amendment types.
- * @param {object} amendment Facility amendments object
+ * @param {Object} amendment Facility amendments object
  */
 const canSendToAcbs = (amendment) => {
   // Ensure at least one of the attribute has been amended
@@ -545,8 +545,8 @@ const addLatestAmendmentFacilityEndDate = async (tfmObject, latestFacilityEndDat
 /**
  * Calculates UKEF Exposure for the defined facility
  * based on updated facility amount and original cover percentage.
- * @param {object} payload Amendment payload
- * @returns {object} Computed payload with `ukefExposure` property calculated.
+ * @param {Object} payload Amendment payload
+ * @returns {Object} Computed payload with `ukefExposure` property calculated.
  */
 const calculateAcbsUkefExposure = (payload) => {
   if (payload?.value && payload?.coveredPercentage) {
@@ -561,8 +561,8 @@ const calculateAcbsUkefExposure = (payload) => {
 
 /**
  * Converts non-ms epoch to ms epoch.
- * @param {object} payload Amendment payload
- * @returns {object} Computed payload with EPOCH sm compatible `coverEndDate`.
+ * @param {Object} payload Amendment payload
+ * @returns {Object} Computed payload with EPOCH sm compatible `coverEndDate`.
  */
 const formatCoverEndDate = (payload) => {
   if (payload?.coverEndDate) {

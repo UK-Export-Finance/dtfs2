@@ -1,0 +1,52 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle -%}
+  Cancellation - Reason for cancelling
+{%- endblock %}
+
+{% block sub_content %}
+  {{ govukBackLink({
+      text: "Back",
+      href: previousPage,
+      attributes: {
+        'data-cy': 'back-link'
+      }
+    }) }}
+
+  <h1>
+    <span class="govuk-caption-l govuk-!-margin-top-3 govuk-!-margin-bottom-1">Cancel deal {{ ukefDealId }}</span>
+    <span class="govuk-heading-xl govuk-!-margin-bottom-1">Are you sure you want to cancel the request?</span>
+  </h1>
+  <p>You'll lose all the data you have entered and return to deal summary</p>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <form method="POST" autocomplete="off">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <input type="hidden" name="previousPage" value="{{ previousPage }}">
+
+        <div 
+          class="govuk-button-group govuk-!-margin-top-4" 
+        >
+          {{ govukButton({
+            text: "Yes, cancel",
+            attributes: { "data-cy": "yes-cancel-button" }
+            })
+          }}
+          {{ govukButton({
+            text: "No, go back",
+            classes: "govuk-button--secondary",
+            attributes: {
+              "data-cy": "no-go-back-button",
+              formaction: "?return=true"
+            }
+            })
+          }}
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -1,4 +1,13 @@
-import { FeeRecordStatus, UtilisationReportEntity, Currency, FeeRecordEntity, PaymentEntity, FacilityUtilisationDataEntity } from '@ukef/dtfs2-common';
+import {
+  FeeRecordStatus,
+  UtilisationReportEntity,
+  Currency,
+  FeeRecordEntity,
+  PaymentEntity,
+  FacilityUtilisationDataEntity,
+  FEE_RECORD_STATUS,
+  ReportPeriod,
+} from '@ukef/dtfs2-common';
 import { DataSource } from 'typeorm';
 import Big from 'big.js';
 import { faker } from '@faker-js/faker';
@@ -7,6 +16,7 @@ import {
   createRandomFeeRecordForReport,
   splitAmountIntoRandomAmounts,
 } from './fee-record-payment-group.helpers';
+import { MongoDbDataLoader } from '../mongo-db-client';
 
 type AddRandomFeeRecordOverrides = {
   facilityId?: string;
@@ -22,29 +32,39 @@ export class FeeRecordPaymentGroupSeeder {
 
   private readonly feeRecords: FeeRecordEntity[] = [];
 
+  private readonly utilisationDataReportPeriod: ReportPeriod;
+
   private readonly reportIsManuallyReconciled: boolean = false;
 
-  private constructor(report: UtilisationReportEntity, status: FeeRecordStatus, paymentCurrency: Currency | null, reportIsManuallyReconciled: boolean | null) {
+  private constructor(
+    report: UtilisationReportEntity,
+    utilisationDataReportPeriod: ReportPeriod,
+    status: FeeRecordStatus,
+    paymentCurrency: Currency | null,
+    reportIsManuallyReconciled: boolean | null,
+  ) {
     this.status = status;
     this.report = report;
     this.paymentCurrency = paymentCurrency;
     this.reportIsManuallyReconciled = reportIsManuallyReconciled ?? false;
+    this.utilisationDataReportPeriod = utilisationDataReportPeriod;
   }
 
   public static forReportStatusAndPaymentCurrency(
     report: UtilisationReportEntity,
+    utilisationDataReportPeriod: ReportPeriod,
     status: Exclude<FeeRecordStatus, 'TO_DO'>,
     paymentCurrency: Currency,
   ): FeeRecordPaymentGroupSeeder {
-    return new FeeRecordPaymentGroupSeeder(report, status, paymentCurrency, null);
+    return new FeeRecordPaymentGroupSeeder(report, utilisationDataReportPeriod, status, paymentCurrency, null);
   }
 
-  public static forReport(report: UtilisationReportEntity): FeeRecordPaymentGroupSeeder {
-    return new FeeRecordPaymentGroupSeeder(report, 'TO_DO', null, null);
+  public static forReport(report: UtilisationReportEntity, utilisationDataReportPeriod: ReportPeriod): FeeRecordPaymentGroupSeeder {
+    return new FeeRecordPaymentGroupSeeder(report, utilisationDataReportPeriod, FEE_RECORD_STATUS.TO_DO, null, null);
   }
 
   public static forManuallyCompletedReport(report: UtilisationReportEntity): FeeRecordPaymentGroupSeeder {
-    return new FeeRecordPaymentGroupSeeder(report, 'RECONCILED', null, true);
+    return new FeeRecordPaymentGroupSeeder(report, report.reportPeriod, FEE_RECORD_STATUS.RECONCILED, null, true);
   }
 
   public addOneRandomFeeRecord(overrides: AddRandomFeeRecordOverrides = {}): FeeRecordPaymentGroupSeeder {
@@ -83,7 +103,7 @@ export class FeeRecordPaymentGroupSeeder {
   }
 
   private async saveFacilityUtilisationData(dataSource: DataSource): Promise<void> {
-    for (const { facilityId, facilityUtilisation, report } of this.feeRecords) {
+    for (const { facilityId, facilityUtilisation } of this.feeRecords) {
       const facilityUtilisationDataExists = await dataSource.manager.existsBy(FacilityUtilisationDataEntity, { id: facilityId });
       if (facilityUtilisationDataExists) {
         // eslint-disable-next-line no-continue
@@ -91,7 +111,7 @@ export class FeeRecordPaymentGroupSeeder {
       }
       const facilityUtilisationData = new FacilityUtilisationDataEntity();
       facilityUtilisationData.id = facilityId;
-      facilityUtilisationData.reportPeriod = report.reportPeriod;
+      facilityUtilisationData.reportPeriod = this.utilisationDataReportPeriod;
       facilityUtilisationData.utilisation = facilityUtilisation * faker.number.float({ min: 0.8, max: 1.2 });
       facilityUtilisationData.updateLastUpdatedBy({ platform: 'SYSTEM' });
       await dataSource.manager.save(FacilityUtilisationDataEntity, facilityUtilisationData);
@@ -101,10 +121,10 @@ export class FeeRecordPaymentGroupSeeder {
   public async save(dataSource: DataSource): Promise<void> {
     await this.saveFacilityUtilisationData(dataSource);
 
-    if (!this.reportIsManuallyReconciled && this.status !== 'TO_DO') {
+    if (!this.reportIsManuallyReconciled && this.status !== FEE_RECORD_STATUS.TO_DO) {
       throw new Error(`Cannot save fee records with status '${this.status}' when there are no payments`);
     }
-    if (this.reportIsManuallyReconciled && this.status !== 'RECONCILED') {
+    if (this.reportIsManuallyReconciled && this.status !== FEE_RECORD_STATUS.RECONCILED) {
       throw new Error(`Cannot save fee records with status '${this.status}' when report is manually reconciled`);
     }
     if (this.feeRecords.length === 0) {
@@ -116,8 +136,8 @@ export class FeeRecordPaymentGroupSeeder {
   public async addPaymentsAndSave(numberOfPayments: number, dataSource: DataSource): Promise<void> {
     await this.saveFacilityUtilisationData(dataSource);
 
-    if (this.status === 'TO_DO') {
-      throw new Error("Cannot add payments to fee records with 'TO_DO' status");
+    if (this.status === FEE_RECORD_STATUS.TO_DO) {
+      throw new Error(`Cannot add payments to fee records with ${FEE_RECORD_STATUS.TO_DO} status`);
     }
     if (!this.paymentCurrency) {
       throw new Error(`Cannot create payments without a payment currency`);
@@ -138,10 +158,19 @@ export class FeeRecordPaymentGroupSeeder {
         requestSource: { platform: 'SYSTEM' },
       });
 
-    if (this.status === 'DOES_NOT_MATCH') {
+    if (this.status === FEE_RECORD_STATUS.DOES_NOT_MATCH) {
       const payments = paymentAmounts.map((amount) => Number((amount * 0.8).toFixed(2))).map(mapAmountToPayment);
       await dataSource.manager.save(PaymentEntity, payments);
       return;
+    }
+
+    if (this.status === FEE_RECORD_STATUS.RECONCILED && !this.reportIsManuallyReconciled) {
+      const pdcReconcileUser = await MongoDbDataLoader.getPdcReconcileUserOrFail();
+      for (const feeRecord of this.feeRecords) {
+        feeRecord.updateLastUpdatedBy({ platform: 'TFM', userId: pdcReconcileUser._id.toString() });
+        feeRecord.dateReconciled = faker.date.recent({ days: 15 });
+        feeRecord.reconciledByUserId = pdcReconcileUser._id.toString();
+      }
     }
 
     const payments = paymentAmounts.map(mapAmountToPayment);

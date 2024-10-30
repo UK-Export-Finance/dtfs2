@@ -55,7 +55,7 @@ context('Name Application Page', () => {
     });
 
     it('Entering new Bank internal ref takes you application detail page', () => {
-      nameApplication.internalRef().type('NEW-REF-NAME');
+      cy.keyboardInput(nameApplication.internalRef(), 'NEW-REF-NAME');
       form().submit();
       nameApplication.applicationDetailsPage();
     });
@@ -81,7 +81,7 @@ context('Name Application Page', () => {
     });
 
     it('Entering new Bank internal ref takes you application detail page', () => {
-      nameApplication.internalRef().type('NEW-REF-NAME');
+      cy.keyboardInput(nameApplication.internalRef(), 'NEW-REF-NAME');
       form().submit();
       nameApplication.applicationDetailsPage();
     });

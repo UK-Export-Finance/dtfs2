@@ -1,10 +1,10 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
-import { TestApiError, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { TestApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { EntityManager } from 'typeorm';
 import { DeletePaymentRequest, deletePayment } from '.';
-import { aTfmSessionUser } from '../../../../../test-helpers';
+import { aTfmSessionUser, aUtilisationReport } from '../../../../../test-helpers';
 import { DeletePaymentPayload } from '../../../routes/middleware/payload-validation/validate-delete-payment-payload';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
@@ -88,7 +88,7 @@ describe('delete-payment.controller', () => {
           },
         },
       });
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
     });
 
     it('responds with a 404 (Not Found) error if a report with the supplied report and payment id cannot be found', async () => {
@@ -115,7 +115,7 @@ describe('delete-payment.controller', () => {
           },
         },
       });
-      expect(res._getStatusCode()).toBe(HttpStatusCode.NotFound);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
       expect(res._getData()).toEqual(expect.stringContaining(`Failed to find a report with id '${reportId}' with attached payment with id '${paymentId}'`));
     });
 
@@ -134,7 +134,7 @@ describe('delete-payment.controller', () => {
       await deletePayment(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(errorStatus);
+      expect(res._getStatusCode()).toEqual(errorStatus);
     });
 
     it("responds with the specific error message if saving the report throws an 'ApiError'", async () => {
@@ -152,7 +152,7 @@ describe('delete-payment.controller', () => {
       await deletePayment(req, res);
 
       // Assert
-      expect(res._getData()).toBe(`Failed to delete payment with id ${paymentId}: ${errorMessage}`);
+      expect(res._getData()).toEqual(`Failed to delete payment with id ${paymentId}: ${errorMessage}`);
     });
 
     it(`responds with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, async () => {
@@ -169,7 +169,7 @@ describe('delete-payment.controller', () => {
       await deletePayment(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
     });
 
     it('responds with a generic error message if an unknown error occurs', async () => {
@@ -186,11 +186,7 @@ describe('delete-payment.controller', () => {
       await deletePayment(req, res);
 
       // Assert
-      expect(res._getData()).toBe(`Failed to delete payment with id ${paymentId}`);
+      expect(res._getData()).toEqual(`Failed to delete payment with id ${paymentId}`);
     });
-
-    function aUtilisationReport(): UtilisationReportEntity {
-      return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-    }
   });
 });

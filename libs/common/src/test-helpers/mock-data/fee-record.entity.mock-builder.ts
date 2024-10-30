@@ -1,6 +1,7 @@
 import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity, FacilityUtilisationDataEntity, PaymentEntity } from '../../sql-db-entities';
 import { Currency, FeeRecordStatus, ReportPeriod } from '../../types';
 import { FacilityUtilisationDataEntityMockBuilder } from './facility-utilisation-data.entity.mock-builder';
+import { FEE_RECORD_STATUS, REQUEST_PLATFORM_TYPE } from '../../constants';
 
 /**
  * Gets the previous report period based on a monthly reporting
@@ -32,7 +33,7 @@ export class FeeRecordEntityMockBuilder {
     const data = new FeeRecordEntity();
     const userId = '5ce819935e539c343f141ece';
     const requestSource: DbRequestSource = {
-      platform: 'PORTAL',
+      platform: REQUEST_PLATFORM_TYPE.PORTAL,
       userId,
     };
 
@@ -52,10 +53,12 @@ export class FeeRecordEntityMockBuilder {
     data.feesPaidToUkefForThePeriodCurrency = 'GBP';
     data.paymentCurrency = 'GBP';
     data.paymentExchangeRate = 1;
-    data.status = 'TO_DO';
+    data.status = FEE_RECORD_STATUS.TO_DO;
     data.payments = [];
     data.fixedFeeAdjustment = null;
     data.principalBalanceAdjustment = null;
+    data.reconciledByUserId = null;
+    data.dateReconciled = null;
     data.updateLastUpdatedBy(requestSource);
     return new FeeRecordEntityMockBuilder(data);
   }
@@ -144,6 +147,16 @@ export class FeeRecordEntityMockBuilder {
 
   public withPrincipalBalanceAdjustment(principalBalanceAdjustment: number | null): FeeRecordEntityMockBuilder {
     this.feeRecord.principalBalanceAdjustment = principalBalanceAdjustment;
+    return this;
+  }
+
+  public withReconciledByUserId(reconciledByUserId: string | null): FeeRecordEntityMockBuilder {
+    this.feeRecord.reconciledByUserId = reconciledByUserId;
+    return this;
+  }
+
+  public withDateReconciled(dateReconciled: Date | null): FeeRecordEntityMockBuilder {
+    this.feeRecord.dateReconciled = dateReconciled;
     return this;
   }
 

@@ -1,5 +1,6 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 {% import '../amendments/_macros/amendment-in-progress-bar.njk' as amendmentInProgressBar %}
 {% import './_macros/eligibility-criteria-answers.njk' as eligibilityCriteriaAnswers %}
 {% import './_macros/facilities-table.njk' as facilitiesTable %}
@@ -112,5 +113,18 @@
       {% endif %}
     </div>
   </div>
+
+  {% if showDealCancelButton %}
+    <div class="govuk-!-padding-top-7">
+      {{ govukButton({
+        text: "Continue with deal cancellation" if hasDraftCancellation else "Cancel deal",
+        classes: "govuk-button--warning",
+        attributes: {
+          'data-cy': 'cancel-deal-button'
+        },
+        href: "/case/" + dealId + "/cancellation/reason"
+      }) }}
+    </div>
+  {% endif %}
 
 {% endblock %}

@@ -43,7 +43,7 @@ const summaryIssuedUnchanged = (params) => {
  * if changes required add to application type and status
  * */
 const areUnissuedFacilitiesPresent = (application) => {
-  const acceptableStatuses = [
+  const ACCEPTABLE_STATUSES = [
     CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
     CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
     CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
@@ -54,7 +54,7 @@ const areUnissuedFacilitiesPresent = (application) => {
   if (!acceptableApplicationType.includes(application.submissionType)) {
     return false;
   }
-  if (!acceptableStatuses.includes(application.status)) {
+  if (!ACCEPTABLE_STATUSES.includes(application.status)) {
     return false;
   }
   /**
@@ -138,7 +138,7 @@ const getUnissuedFacilitiesAsArray = (facilities, application) =>
  * This is a bespoke govUkTable mapping function which
  * returns an array of all the facilities specifically
  * for the cover-start-date.njk template.
- * @param {object} facilities
+ * @param {Object} facilities
  * @returns {Array}
  */
 const getIssuedFacilitiesAsArray = (facilities) => {
@@ -189,7 +189,7 @@ const facilitiesChangedPresent = (application) => facilitiesChangedToIssuedAsArr
 /**
  * Helper function ascertain whether the facility confirmation message should appear or not.
  * It takes into account recent issuance of a facility, submission type to be MIN.
- * @param {object} application Application object with facilities
+ * @param {Object} application Application object with facilities
  * @returns {boolean} Boolean value
  */
 const issuedFacilityConfirmation = (application) => {

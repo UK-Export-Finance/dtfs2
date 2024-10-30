@@ -263,4 +263,25 @@ export class TfmFacilitiesRepo {
       'facilitySnapshot.ukefFacilityId': { $eq: ukefFacilityId },
     });
   }
+
+  /**
+   * Finds the TFM facilities with the supplied ukef facility ids
+   * @param ukefFacilityIds - The ukef facility ids
+   * @returns The found TFM facilities
+   */
+  public static async findByUkefFacilityIds(ukefFacilityIds: string[]): Promise<TfmFacility[]> {
+    const collection = await this.getCollection();
+    return await collection.find({ 'facilitySnapshot.ukefFacilityId': { $in: ukefFacilityIds } }).toArray();
+  }
+
+  /**
+   * Checks whether or not a facility exists which has a matching UKEF facility ID
+   * @param ukefFacilityId - The UKEF facility ID
+   * @returns Whether a not a facility with that UKEF facility ID exists
+   */
+  public static async ukefFacilityIdExists(ukefFacilityId: string): Promise<boolean> {
+    const collection = await this.getCollection();
+    const numberOfFoundDocuments = await collection.count({ 'facilitySnapshot.ukefFacilityId': { $eq: ukefFacilityId } });
+    return numberOfFoundDocuments > 0;
+  }
 }

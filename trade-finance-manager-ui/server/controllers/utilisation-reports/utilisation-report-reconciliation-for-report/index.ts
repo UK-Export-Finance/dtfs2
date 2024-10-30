@@ -4,23 +4,31 @@ import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import {
-  mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems,
-  mapFeeRecordPaymentGroupsToPaymentDetailsViewModel,
+  mapPremiumPaymentsToViewModelItems,
+  mapPaymentDetailsGroupsToPaymentDetailsViewModel,
   mapKeyingSheetToKeyingSheetViewModel,
+  mapPaymentDetailsFiltersToViewModel,
+  premiumPaymentsHasSelectableItems,
 } from '../helpers';
-import { UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
-import { FeeRecordPaymentGroup } from '../../../api-response-types';
+import { PaymentDetailsViewModel, UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
+import { PremiumPaymentsGroup } from '../../../api-response-types';
 import { extractQueryAndSessionData } from './extract-query-and-session-data';
+import { mapToUtilisationDetailsViewModel } from '../helpers/utilisation-details-helper';
+import { mapToSelectedPaymentDetailsFiltersViewModel } from './map-to-selected-payment-details-filters-view-model';
 
 export type GetUtilisationReportReconciliationRequest = CustomExpressRequest<{
   query: {
-    facilityIdQuery?: string;
+    premiumPaymentsFacilityId?: string;
+    paymentDetailsFacilityId?: string;
+    paymentDetailsPaymentCurrency?: string;
+    paymentDetailsPaymentReference?: string;
     selectedFeeRecordIds?: string;
+    matchSuccess?: string;
   };
 }>;
 
-const feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): boolean =>
-  feeRecordPaymentGroups.some(({ paymentsReceived }) => paymentsReceived !== null);
+const premiumPaymentsGroupsHaveAtLeastOnePaymentReceived = (premiumPaymentsGroups: PremiumPaymentsGroup[]): boolean =>
+  premiumPaymentsGroups.some(({ paymentsReceived }) => paymentsReceived !== null);
 
 const renderUtilisationReportReconciliationForReport = (res: Response, viewModel: UtilisationReportReconciliationForReportViewModel) =>
   res.render('utilisation-reports/utilisation-report-reconciliation-for-report.njk', viewModel);
@@ -45,7 +53,14 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
   const { reportId } = req.params;
 
   try {
-    const { facilityIdQuery, selectedFeeRecordIds: selectedFeeRecordIdsQuery } = req.query;
+    const {
+      premiumPaymentsFacilityId,
+      paymentDetailsFacilityId,
+      paymentDetailsPaymentReference,
+      paymentDetailsPaymentCurrency,
+      selectedFeeRecordIds: selectedFeeRecordIdsQuery,
+      matchSuccess,
+    } = req.query;
 
     const { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds } = req.session;
 
@@ -53,27 +68,56 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
     delete req.session.checkedCheckboxIds;
     delete req.session.generateKeyingDataErrorKey;
 
-    const { facilityIdQueryString, filterError, tableDataError, isCheckboxChecked } = extractQueryAndSessionData(
-      { facilityIdQuery, selectedFeeRecordIdsQuery },
+    const {
+      premiumPaymentsFilters,
+      premiumPaymentsFilterError,
+      premiumPaymentsTableDataError,
+      paymentDetailsFilters,
+      paymentDetailsFilterErrors,
+      isPaymentDetailsFilterActive,
+      isCheckboxChecked,
+    } = extractQueryAndSessionData(
+      { premiumPaymentsFacilityId, paymentDetailsFacilityId, paymentDetailsPaymentReference, paymentDetailsPaymentCurrency, selectedFeeRecordIdsQuery },
       { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds },
       req.originalUrl,
     );
 
-    const { feeRecordPaymentGroups, reportPeriod, bank, keyingSheet } = await api.getUtilisationReportReconciliationDetailsById(
+    const { premiumPayments, paymentDetails, reportPeriod, bank, keyingSheet, utilisationDetails } = await api.getUtilisationReportReconciliationDetailsById(
       reportId,
-      facilityIdQueryString,
+      premiumPaymentsFilters,
+      paymentDetailsFilters,
       userToken,
     );
 
     const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(reportPeriod);
 
-    const enablePaymentsReceivedSorting = feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived(feeRecordPaymentGroups);
+    const enablePaymentsReceivedSorting = premiumPaymentsGroupsHaveAtLeastOnePaymentReceived(premiumPayments);
 
-    const feeRecordPaymentGroupViewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);
+    const premiumPaymentsItems = mapPremiumPaymentsToViewModelItems(premiumPayments, isCheckboxChecked);
+
+    const premiumPaymentsViewModel = {
+      payments: premiumPaymentsItems,
+      filters: premiumPaymentsFilters,
+      filterError: premiumPaymentsFilterError,
+      tableDataError: premiumPaymentsTableDataError,
+      enablePaymentsReceivedSorting,
+      showMatchSuccessNotification: matchSuccess === 'true',
+      hasSelectableRows: premiumPaymentsHasSelectableItems(premiumPaymentsItems),
+    };
 
     const keyingSheetViewModel = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
 
-    const paymentDetailsViewModel = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel(feeRecordPaymentGroups);
+    const paymentDetailsFiltersViewModel = mapPaymentDetailsFiltersToViewModel(paymentDetailsFilters);
+
+    const paymentDetailsViewModel: PaymentDetailsViewModel = {
+      rows: mapPaymentDetailsGroupsToPaymentDetailsViewModel(paymentDetails),
+      filters: paymentDetailsFiltersViewModel,
+      filterErrors: paymentDetailsFilterErrors,
+      isFilterActive: isPaymentDetailsFilterActive,
+      selectedFilters: mapToSelectedPaymentDetailsFiltersViewModel(paymentDetailsFilters, reportId),
+    };
+
+    const utilisationDetailsViewModel = mapToUtilisationDetailsViewModel(utilisationDetails, reportId);
 
     return renderUtilisationReportReconciliationForReport(res, {
       user,
@@ -81,13 +125,10 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       bank,
       formattedReportPeriod,
       reportId,
-      enablePaymentsReceivedSorting,
-      feeRecordPaymentGroups: feeRecordPaymentGroupViewModel,
-      tableDataError,
-      filterError,
-      facilityIdQuery: facilityIdQueryString,
-      keyingSheet: keyingSheetViewModel,
+      premiumPayments: premiumPaymentsViewModel,
       paymentDetails: paymentDetailsViewModel,
+      utilisationDetails: utilisationDetailsViewModel,
+      keyingSheet: keyingSheetViewModel,
     });
   } catch (error) {
     console.error(`Failed to render utilisation report with id ${reportId}`, error);

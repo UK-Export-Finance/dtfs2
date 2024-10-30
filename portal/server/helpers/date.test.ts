@@ -20,8 +20,8 @@ describe('helpers - date', () => {
       const nowAsEpoch = getNowAsEpoch();
 
       // Assert
-      expect(nowAsEpoch).toBe(now);
-      expect(nowAsEpoch.toString().length).toBe(13);
+      expect(nowAsEpoch).toEqual(now);
+      expect(nowAsEpoch.toString().length).toEqual(13);
     });
   });
 });

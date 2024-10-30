@@ -58,7 +58,7 @@ context('Portal to TFM deal submission', () => {
     portalPages.contract.proceedToReview().click();
     cy.url().should('eq', relative(`/contract/${dealId}/ready-for-review`));
 
-    portalPages.contractReadyForReview.comments().type('go');
+    cy.keyboardInput(portalPages.contractReadyForReview.comments(), 'go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
 
     //---------------------------------------------------------------
@@ -88,40 +88,15 @@ context('Portal to TFM deal submission', () => {
     let tfmFacilityPage = `${TFM_URL}/case/${dealId}/facility/${bondId}`;
     cy.forceVisit(tfmFacilityPage);
 
-    tfmPages.facilityPage
-      .facilityStage()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Commitment');
-      });
+    cy.assertText(tfmPages.facilityPage.facilityStage(), 'Commitment');
 
-    tfmPages.facilityPage
-      .facilityBankIssueNoticeReceived()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('-');
-      });
+    cy.assertText(tfmPages.facilityPage.facilityBankIssueNoticeReceived(), '-');
 
-    tfmPages.facilityPage
-      .facilityCoverStartDate()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('-');
-      });
+    cy.assertText(tfmPages.facilityPage.facilityCoverStartDate(), '-');
 
-    tfmPages.facilityPage
-      .facilityCoverEndDate()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('-');
-      });
+    cy.assertText(tfmPages.facilityPage.facilityCoverEndDate(), '-');
 
-    tfmPages.facilityPage
-      .facilityTenor()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`${bond.ukefGuaranteeInMonths} months`);
-      });
+    cy.assertText(tfmPages.facilityPage.facilityTenor(), `${bond.ukefGuaranteeInMonths} months`);
 
     //---------------------------------------------------------------
     // portal maker completes bond insurance form
@@ -143,7 +118,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     portalPages.contract.proceedToReview().click();
 
-    portalPages.contractReadyForReview.comments().type('Issued');
+    cy.keyboardInput(portalPages.contractReadyForReview.comments(), 'Issued');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
 
     // expect to land on the /dashboard page with a success message
@@ -175,46 +150,30 @@ context('Portal to TFM deal submission', () => {
     tfmFacilityPage = `${TFM_URL}/case/${dealId}/facility/${bondId}`;
     cy.forceVisit(tfmFacilityPage);
 
-    tfmPages.facilityPage
-      .facilityStage()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Issued');
-      });
+    cy.assertText(tfmPages.facilityPage.facilityStage(), 'Issued');
 
-    tfmPages.facilityPage
-      .facilityBankIssueNoticeReceived()
-      .invoke('text')
-      .then((text) => {
-        // the code actually uses facility.submittedAsIssuedDate,
-        // but in this e2e test it will always be today so to simplify..
-        const expectedDate = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
-        expect(text.trim()).to.equal(expectedDate);
-      });
+    cy.assertText(
+      tfmPages.facilityPage.facilityBankIssueNoticeReceived(),
+      // the code actually uses facility.submittedAsIssuedDate,
+      // but in this e2e test it will always be today so to simplify..
+      new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' }),
+    );
 
-    tfmPages.facilityPage
-      .facilityCoverStartDate()
-      .invoke('text')
-      .then((text) => {
-        const expectedDate = new Date(COVER_START_DATE_VALUE).toLocaleString('en-GB', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        });
-        expect(text.trim()).to.equal(expectedDate);
-      });
+    const expectedCoverStartDate = new Date(COVER_START_DATE_VALUE).toLocaleString('en-GB', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
 
-    tfmPages.facilityPage
-      .facilityCoverEndDate()
-      .invoke('text')
-      .then((text) => {
-        const expectedDate = new Date(COVER_END_DATE_VALUE).toLocaleString('en-GB', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        });
-        expect(text.trim()).to.equal(expectedDate);
-      });
+    cy.assertText(tfmPages.facilityPage.facilityCoverStartDate(), expectedCoverStartDate);
+
+    const expectedCoverEndDate = new Date(COVER_END_DATE_VALUE).toLocaleString('en-GB', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+
+    cy.assertText(tfmPages.facilityPage.facilityCoverEndDate(), expectedCoverEndDate);
 
     tfmPages.facilityPage
       .facilityTenor()
@@ -253,28 +212,13 @@ context('Portal to TFM deal submission', () => {
     cy.login(BANK1_MAKER1);
     portalPages.contract.visit(deal);
 
-    bondRow
-      .bondStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Acknowledged');
-      });
+    cy.assertText(bondRow.bondStatus(), 'Acknowledged');
 
     //---------------------------------------------------------------
     // portal deal status should be updated to `Acknowledged`
     //---------------------------------------------------------------
-    portalPages.contract
-      .previousStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Submitted');
-      });
+    cy.assertText(portalPages.contract.previousStatus(), 'Submitted');
 
-    portalPages.contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Acknowledged');
-      });
+    cy.assertText(portalPages.contract.status(), 'Acknowledged');
   });
 });

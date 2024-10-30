@@ -1,12 +1,11 @@
 import httpMocks from 'node-mocks-http';
-import { PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
+import { PORTAL_LOGIN_STATUS, aPortalSessionUser } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { getPreviousReports } from '.';
 import { PRIMARY_NAV_KEY } from '../../../constants';
 import { PreviousUtilisationReportsResponseBody } from '../../../api-response-types';
 import * as mapper from './helpers/previous-reports-view-model-mapper';
 import { PreviousReportsViewModel } from '../../../types/view-models/previous-reports';
-import { aPortalSessionUser } from '../../../../test-helpers/test-data/portal-session-user';
 
 describe('previous-reports controller', () => {
   describe('getPreviousReports', () => {
@@ -57,7 +56,7 @@ describe('previous-reports controller', () => {
       expect(apiGetPreviousReportsSpy).toHaveBeenCalledTimes(1);
       expect(apiGetPreviousReportsSpy).toHaveBeenCalledWith(USER_TOKEN, BANK_ID);
       expect(mapToPreviousReportsViewModelSpy).toHaveBeenCalledWith('2024', mockUser, responseBody);
-      expect(res._getRenderView()).toBe('utilisation-report-service/previous-reports/previous-reports.njk');
+      expect(res._getRenderView()).toEqual('utilisation-report-service/previous-reports/previous-reports.njk');
       expect(res._getRenderData()).toEqual(viewModel);
     });
 
@@ -72,7 +71,7 @@ describe('previous-reports controller', () => {
       // Assert
       expect(apiGetPreviousReportsSpy).toHaveBeenCalledTimes(1);
       expect(apiGetPreviousReportsSpy).toHaveBeenCalledWith(USER_TOKEN, BANK_ID);
-      expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
+      expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
       expect(res._getRenderData()).toEqual({ user: mockUser });
     });
   });

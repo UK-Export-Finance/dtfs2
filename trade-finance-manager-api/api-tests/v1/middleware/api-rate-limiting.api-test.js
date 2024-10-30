@@ -1,6 +1,6 @@
 require('dotenv').config();
 const { generateApp } = require('../../../src/generateApp');
-const createApi = require('../../api');
+const { createApi } = require('../../api');
 
 describe('api rate limiting', () => {
   const rateLimit = 2;
@@ -27,7 +27,7 @@ describe('api rate limiting', () => {
 
     const responseAfterRateLimitExceeded = (await sendRequestTimes(1))[0].value;
 
-    expect(responseAfterRateLimitExceeded.status).toBe(429);
+    expect(responseAfterRateLimitExceeded.status).toEqual(429);
   });
 
   it('returns a 400 response if exactly RATE_LIMIT_THRESHOLD requests are made from the same IP to the same endpoint in 1 minute', async () => {
@@ -35,6 +35,6 @@ describe('api rate limiting', () => {
 
     const responseThatMeetsRateLimit = (await sendRequestTimes(1))[0].value;
 
-    expect(responseThatMeetsRateLimit.status).toBe(400);
+    expect(responseThatMeetsRateLimit.status).toEqual(400);
   });
 });

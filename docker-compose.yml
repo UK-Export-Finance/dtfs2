@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   clamav:
     image: mkodockx/docker-clamav:alpine
@@ -30,18 +29,17 @@ services:
     build:
       context: ./mongodb
       dockerfile: Dockerfile
-    restart: always
+      args:
+        MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+        MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+        MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     environment:
-      - MONGO_INITDB_DATABASE=dtfs-submissions
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=r00t
+      - MONGO_INITDB_DATABASE
+      - MONGO_INITDB_ROOT_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD
+    restart: always
     ports:
-      - "27017:27017"
-    healthcheck:
-      test: test $$(echo "rs.initiate().ok || rs.status().ok" | mongo -u $${MONGO_INITDB_ROOT_USERNAME} -p $${MONGO_INITDB_ROOT_PASSWORD} --quiet) -eq 1
-      interval: 10s
-      start_period: 30s
-    command: "--bind_ip_all --keyFile /mongo-keyfile --replSet rs0"
+      - '27017:27017'
     volumes:
       - ./dtfs-mongo-volume-dtfs-submissions:/data/db
 
@@ -62,12 +60,12 @@ services:
       - ./dtfs-central-api/src:/app/dtfs-central-api/src:ro
       - ./libs:/app/libs:ro
     environment:
+      - TZ
       - PORT=5005
       - CORS_ORIGIN
       - EXTERNAL_API_URL=http://external-api:5002
-      - MONGO_INITDB_DATABASE=dtfs-submissions
+      - MONGO_INITDB_DATABASE
       - MONGODB_URI
-      - TZ=Europe/London
       - PORTAL_API_KEY
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
@@ -87,6 +85,8 @@ services:
       - SQL_DB_LOGGING_ENABLED
       - ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE
       - DELETION_AUDIT_LOGS_TTL_SECONDS
+      - FF_TFM_DEAL_CANCELLATION_ENABLED
+      - DEAL_CANCELLATION_SCHEDULE
 
   trade-finance-manager-ui:
     build:
@@ -104,6 +104,7 @@ services:
       - ./trade-finance-manager-ui/templates:/app/trade-finance-manager-ui/templates:ro
       - ./libs:/app/libs:ro
     environment:
+      - TZ
       - PORT=5003
       - PORTAL_API_KEY
       - TFM_API_KEY
@@ -116,7 +117,6 @@ services:
       - REDIS_HOSTNAME=redis
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - SESSION_SECRET
-      - TZ=Europe/London
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
@@ -124,6 +124,13 @@ services:
       - CONTACT_US_EMAIL_ADDRESS
       - FF_TFM_PAYMENT_RECONCILIATION_ENABLED
       - FF_TFM_FACILITY_END_DATE_ENABLED
+      - FF_TFM_DEAL_CANCELLATION_ENABLED
+      - FF_TFM_SSO_ENABLED
+      - ENTRA_ID_CLIENT_ID
+      - ENTRA_ID_CLOUD_INSTANCE
+      - ENTRA_ID_TENANT_ID
+      - ENTRA_ID_CLIENT_SECRET
+      - ENTRA_ID_REDIRECT_URL
 
   trade-finance-manager-api:
     build:
@@ -142,6 +149,7 @@ services:
       - ./trade-finance-manager-api/src:/app/trade-finance-manager-api/src:ro
       - ./libs:/app/libs:ro
     environment:
+      - TZ
       - PORT=5004
       - CORS_ORIGIN
       - EXTERNAL_API_URL=http://external-api:5002
@@ -149,7 +157,7 @@ services:
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
-      - MONGO_INITDB_DATABASE=dtfs-submissions
+      - MONGO_INITDB_DATABASE
       - MONGODB_URI
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - AZURE_PORTAL_STORAGE_ACCOUNT
@@ -161,13 +169,18 @@ services:
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
-      - TZ=Europe/London
       - UKEF_INTERNAL_NOTIFICATION=test
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - CHANGE_STREAM_ENABLED
       - DELETION_AUDIT_LOGS_TTL_SECONDS
       - FF_TFM_FACILITY_END_DATE_ENABLED
+      - FF_TFM_DEAL_CANCELLATION_ENABLED
+      - ENTRA_ID_CLIENT_ID
+      - ENTRA_ID_CLOUD_INSTANCE
+      - ENTRA_ID_TENANT_ID
+      - ENTRA_ID_CLIENT_SECRET
+      - ENTRA_ID_REDIRECT_URL
 
   portal:
     build:
@@ -188,6 +201,7 @@ services:
       - ./portal/templates:/app/portal/templates:ro
       - ./libs:/app/libs:ro
     environment:
+      - TZ
       - PORTAL_API_URL=http://portal-api:5001
       - EXTERNAL_API_URL=http://external-api:5002
       - PORTAL_API_KEY
@@ -196,7 +210,6 @@ services:
       - EXTERNAL_API_KEY
       - REDIS_HOSTNAME=redis
       - SESSION_SECRET
-      - TZ=Europe/London
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - CLAMAV_PORT=3310
@@ -222,11 +235,12 @@ services:
       - ./portal-api/src:/app/portal-api/src:ro
       - ./libs:/app/libs:ro
     environment:
+      - TZ
       - PORT=5001
       - CORS_ORIGIN
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
-      - MONGO_INITDB_DATABASE=dtfs-submissions
+      - MONGO_INITDB_DATABASE
       - MONGODB_URI
       - AZURE_PORTAL_STORAGE_ACCOUNT
       - AZURE_PORTAL_STORAGE_ACCESS_KEY
@@ -244,7 +258,6 @@ services:
       - TFM_UI_URL=http://localhost:5003
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - TFM_API_URL=http://trade-finance-manager-api:5004
-      - TZ=Europe/London
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - UKEF_GEF_REPORTING_EMAIL_RECIPIENT
@@ -278,6 +291,7 @@ services:
       - ./external-api/src:/app/external-api/src:ro
       - ./libs:/app/libs:ro
     environment:
+      - TZ
       - PORT=5002
       - PORTAL_API_KEY
       - TFM_API_KEY
@@ -295,10 +309,9 @@ services:
       - APIM_ESTORE_VALUE
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
       - GOV_NOTIFY_API_KEY
-      - MONGO_INITDB_DATABASE=dtfs-submissions
+      - MONGO_INITDB_DATABASE
       - MONGODB_URI
       - EXTERNAL_API_URL=http://external-api:5002
-      - TZ=Europe/London
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - ESTORE_CRON_MANAGER_SCHEDULE
@@ -322,13 +335,13 @@ services:
       - ./gef-ui/templates:/app/gef-ui/templates:ro
       - ./libs:/app/libs:ro
     environment:
+      - TZ
       - PORTAL_API_URL=http://portal-api:5001
       - EXTERNAL_API_URL=http://external-api:5002
       - REDIS_HOSTNAME=redis
       - SESSION_SECRET
       - AZURE_PORTAL_STORAGE_ACCOUNT
       - AZURE_PORTAL_STORAGE_ACCESS_KEY
-      - TZ=Europe/London
       - NODE_ENV
       - PORTAL_API_KEY
       - TFM_API_KEY
@@ -364,3 +377,25 @@ services:
         limits:
           cpus: '0.01'
           memory: 150M
+
+  acbs:
+    build:
+      context: .
+      dockerfile: ./azure-functions/acbs-function/Dockerfile
+    image: dtfs/acbs
+    profiles:
+      - acbs
+    restart: always
+    ports:
+      - '7071:80'
+    environment:
+      - TZ
+      - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
+      - FUNCTIONS_WORKER_RUNTIME=node
+      - WEBSITE_HOSTNAME=localhost:7071
+      - APIM_MDM_URL
+      - APIM_MDM_KEY
+      - APIM_MDM_VALUE
+      - APIM_TFS_URL
+      - APIM_TFS_KEY
+      - APIM_TFS_VALUE

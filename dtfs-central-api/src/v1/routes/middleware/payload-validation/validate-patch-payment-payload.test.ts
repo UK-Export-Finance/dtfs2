@@ -30,8 +30,8 @@ describe('validatePatchPaymentPayload', () => {
     validatePatchPaymentPayload(req, res, next);
 
     // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-    expect(res._isEndCalled()).toBe(true);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
+    expect(res._isEndCalled()).toEqual(true);
     expect(next).not.toHaveBeenCalled();
   });
 
@@ -50,8 +50,8 @@ describe('validatePatchPaymentPayload', () => {
     validatePatchPaymentPayload(req, res, next);
 
     // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-    expect(res._isEndCalled()).toBe(true);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
+    expect(res._isEndCalled()).toEqual(true);
     expect(next).not.toHaveBeenCalled();
   });
 
@@ -75,7 +75,7 @@ describe('validatePatchPaymentPayload', () => {
     // Assert
     expect(datePaymentReceived).toEqual(new Date(dateAsString));
     expect(next).toHaveBeenCalled();
-    expect(res._isEndCalled()).toBe(false);
+    expect(res._isEndCalled()).toEqual(false);
   });
 
   it(`responds with a '${HttpStatusCode.BadRequest}' if the 'datePaymentReceived' field is an invalid date string`, () => {
@@ -93,8 +93,8 @@ describe('validatePatchPaymentPayload', () => {
     validatePatchPaymentPayload(req, res, next);
 
     // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-    expect(res._isEndCalled()).toBe(true);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
+    expect(res._isEndCalled()).toEqual(true);
     expect(next).not.toHaveBeenCalled();
   });
 
@@ -114,10 +114,10 @@ describe('validatePatchPaymentPayload', () => {
 
     // Assert
     expect(next).toHaveBeenCalled();
-    expect(res._isEndCalled()).toBe(false);
+    expect(res._isEndCalled()).toEqual(false);
 
     const requestBody = req.body as PatchPaymentPayload;
-    expect('paymentReference' in requestBody).toBe(true);
+    expect('paymentReference' in requestBody).toEqual(true);
     expect(requestBody.paymentReference).toBeUndefined();
   });
 
@@ -137,9 +137,9 @@ describe('validatePatchPaymentPayload', () => {
 
     // Assert
     expect(next).toHaveBeenCalled();
-    expect(res._isEndCalled()).toBe(false);
+    expect(res._isEndCalled()).toEqual(false);
 
     const requestBody = req.body as PatchPaymentPayload;
-    expect(requestBody.paymentReference).toBe('Some payment reference');
+    expect(requestBody.paymentReference).toEqual('Some payment reference');
   });
 });

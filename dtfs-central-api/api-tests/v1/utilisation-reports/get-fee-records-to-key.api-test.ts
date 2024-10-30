@@ -1,6 +1,14 @@
 import { Response } from 'supertest';
 import { HttpStatusCode } from 'axios';
-import { Bank, Currency, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  Bank,
+  Currency,
+  FEE_RECORD_STATUS,
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  ReportPeriod,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
@@ -54,7 +62,7 @@ describe(`GET ${BASE_URL}`, () => {
       .withId(1)
       .withFacilityId('12345678')
       .withExporter('Test exporter 1')
-      .withStatus('MATCH')
+      .withStatus(FEE_RECORD_STATUS.MATCH)
       .withFeesPaidToUkefForThePeriod(75)
       .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
       .withPaymentCurrency(paymentCurrency)
@@ -64,7 +72,7 @@ describe(`GET ${BASE_URL}`, () => {
       .withId(2)
       .withFacilityId('87654321')
       .withExporter('Test exporter 2')
-      .withStatus('MATCH')
+      .withStatus(FEE_RECORD_STATUS.MATCH)
       .withFeesPaidToUkefForThePeriod(75)
       .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
       .withPaymentCurrency(paymentCurrency)
@@ -107,7 +115,7 @@ describe(`GET ${BASE_URL}`, () => {
     const response: CustomResponse = await testApi.get(getUrl(reportId + 1));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.NotFound);
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
   it('returns a 404 when the bank with the same id as the report cannot be found', async () => {
@@ -120,7 +128,7 @@ describe(`GET ${BASE_URL}`, () => {
     const response: CustomResponse = await testApi.get(getUrl(2));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.NotFound);
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
   it('returns a 200 with a valid report id', async () => {
@@ -128,7 +136,7 @@ describe(`GET ${BASE_URL}`, () => {
     const response: CustomResponse = await testApi.get(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Ok);
+    expect(response.status).toEqual(HttpStatusCode.Ok);
   });
 
   it('returns a body containing the report id', async () => {
@@ -136,7 +144,7 @@ describe(`GET ${BASE_URL}`, () => {
     const response: CustomResponse = await testApi.get(getUrl(reportId));
 
     // Assert
-    expect(response.body.reportId).toBe(reportId);
+    expect(response.body.reportId).toEqual(reportId);
   });
 
   it('returns a body containing the session bank', async () => {
@@ -168,7 +176,7 @@ describe(`GET ${BASE_URL}`, () => {
         reportedFees: { currency: paymentCurrency, amount: 75 },
         reportedPayments: { currency: paymentCurrency, amount: 75 },
         paymentsReceived: [{ currency: paymentCurrency, amount: 75 }],
-        status: 'MATCH',
+        status: FEE_RECORD_STATUS.MATCH,
       },
       {
         id: 2,
@@ -177,7 +185,7 @@ describe(`GET ${BASE_URL}`, () => {
         reportedFees: { currency: paymentCurrency, amount: 75 },
         reportedPayments: { currency: paymentCurrency, amount: 75 },
         paymentsReceived: [{ currency: paymentCurrency, amount: 75 }],
-        status: 'MATCH',
+        status: FEE_RECORD_STATUS.MATCH,
       },
     ]);
   });
@@ -189,8 +197,8 @@ describe(`GET ${BASE_URL}`, () => {
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
 
     const toDoFeeRecords = [
-      FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('TO_DO').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('TO_DO').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.TO_DO).build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus(FEE_RECORD_STATUS.TO_DO).build(),
     ];
     report.feeRecords = toDoFeeRecords;
 

@@ -2,7 +2,7 @@ const pages = require('../../pages');
 const relative = require('../../relativeURL');
 const MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast = require('./fixtures/MIA-deal-with-accepted-status-issued-facilities-cover-start-date-in-past');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const DATE_CONSTANTS = require('../../../../../e2e-fixtures/dateConstants');
+const { sevenDaysAgo } = require('../../../../../e2e-fixtures/dateConstants');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
@@ -59,24 +59,22 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     const unconditionalSubmittedLoanId = unconditionalSubmittedLoan._id;
     const unconditionalSubmittedLoanRow = pages.contract.loansTransactionsTable.row(unconditionalSubmittedLoanId);
 
-    const INVALID_DATE = DATE_CONSTANTS.sevenDaysAgo;
+    const INVALID_DATE = sevenDaysAgo.date;
 
     //---------------------------------------------------------------
     // Issued Bond - enter and submit an invalid date in 'Confirm start date' form
     //---------------------------------------------------------------
     issuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().click();
 
-    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(INVALID_DATE.getDate());
-    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(INVALID_DATE.getMonth() + 1);
-    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(INVALID_DATE.getFullYear());
-    pages.facilityConfirmCoverStartDate.submit().click();
+    cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: INVALID_DATE });
+    cy.clickSubmitButton();
 
     pages.facilityConfirmCoverStartDate.coverStarDateErrorMessage().should('be.visible');
 
     //---------------------------------------------------------------
     // go back to the deal page
     //---------------------------------------------------------------
-    pages.facilityConfirmCoverStartDate.cancelButton().click();
+    cy.clickCancelButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     //---------------------------------------------------------------
@@ -84,17 +82,16 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     //---------------------------------------------------------------
     unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().click();
 
-    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(INVALID_DATE.getDate());
-    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(INVALID_DATE.getMonth() + 1);
-    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(INVALID_DATE.getFullYear());
-    pages.facilityConfirmCoverStartDate.submit().click();
+    cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: INVALID_DATE });
+
+    cy.clickSubmitButton();
 
     pages.facilityConfirmCoverStartDate.coverStarDateErrorMessage().should('be.visible');
 
     //---------------------------------------------------------------
     // go back to the deal page
     //---------------------------------------------------------------
-    pages.facilityConfirmCoverStartDate.cancelButton().click();
+    cy.clickCancelButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     //---------------------------------------------------------------
@@ -103,38 +100,18 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     //---------------------------------------------------------------
     const originalBondCoverStartDate = new Date(parseInt(issuedSubmittedBond.requestedCoverStartDate, 10));
 
-    issuedSubmittedBondRow
-      .requestedCoverStartDate()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(originalBondCoverStartDate.toLocaleDateString('en-GB'));
-      });
+    cy.assertText(issuedSubmittedBondRow.requestedCoverStartDate(), originalBondCoverStartDate.toLocaleDateString('en-GB'));
 
     const originalLoanCoverStartDate = new Date(parseInt(unconditionalSubmittedLoan.requestedCoverStartDate, 10));
 
-    unconditionalSubmittedLoanRow
-      .requestedCoverStartDate()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(originalLoanCoverStartDate.toLocaleDateString('en-GB'));
-      });
+    cy.assertText(unconditionalSubmittedLoanRow.requestedCoverStartDate(), originalLoanCoverStartDate.toLocaleDateString('en-GB'));
 
     //---------------------------------------------------------------
     // facility tables should display 'Confirm start date',
     // not 'Start date confirmed'
     //---------------------------------------------------------------
-    issuedSubmittedBondRow
-      .changeOrConfirmCoverStartDateLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Confirm start date');
-      });
+    cy.assertText(issuedSubmittedBondRow.changeOrConfirmCoverStartDateLink(), 'Confirm start date');
 
-    unconditionalSubmittedLoanRow
-      .changeOrConfirmCoverStartDateLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Confirm start date');
-      });
+    cy.assertText(unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink(), 'Confirm start date');
   });
 });

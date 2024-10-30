@@ -1,5 +1,5 @@
 import httpMocks from 'node-mocks-http';
-import { Currency, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { Currency, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { validatePostAddPaymentRequestBody } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../test-mocks/mock-tfm-session-user';
 import { AddPaymentErrorKey } from '../../controllers/utilisation-reports/helpers';
@@ -34,7 +34,7 @@ describe('validatePostAddPaymentRequestBody', () => {
     addPaymentErrorKey: AddPaymentErrorKey,
     checkedCheckboxIdList: PremiumPaymentsTableCheckboxId[],
   ) => {
-    expect(req.session.addPaymentErrorKey).toBe(addPaymentErrorKey);
+    expect(req.session.addPaymentErrorKey).toEqual(addPaymentErrorKey);
 
     const expectedCheckedCheckboxIds = checkedCheckboxIdList.reduce((obj, checkboxId) => ({ ...obj, [checkboxId]: true }), {});
     expect(req.session.checkedCheckboxIds).toEqual(expectedCheckedCheckboxIds);
@@ -55,7 +55,7 @@ describe('validatePostAddPaymentRequestBody', () => {
     validatePostAddPaymentRequestBody(req, res, next);
 
     // Assert
-    expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
+    expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
     expect(res._getRenderData()).toEqual({
       user: MOCK_TFM_SESSION_USER,
     });
@@ -74,7 +74,7 @@ describe('validatePostAddPaymentRequestBody', () => {
       validatePostAddPaymentRequestBody(req, res, next);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(REDIRECT_URL);
+      expect(res._getRedirectUrl()).toEqual(REDIRECT_URL);
     });
 
     it(`populates the session with the 'no-fee-records-selected' error and no checked checkbox ids`, () => {
@@ -95,7 +95,7 @@ describe('validatePostAddPaymentRequestBody', () => {
   });
 
   describe('when the body contains checkbox ids with different payment currencies', () => {
-    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', 'TO_DO'), getCheckboxId(2, 'EUR', 'TO_DO')];
+    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', FEE_RECORD_STATUS.TO_DO), getCheckboxId(2, 'EUR', FEE_RECORD_STATUS.TO_DO)];
     const next = jest.fn();
 
     it(`redirects to '${REDIRECT_URL}'`, () => {
@@ -107,20 +107,20 @@ describe('validatePostAddPaymentRequestBody', () => {
       validatePostAddPaymentRequestBody(req, res, next);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(REDIRECT_URL);
+      expect(res._getRedirectUrl()).toEqual(REDIRECT_URL);
     });
 
     it(`redirects to '${REDIRECT_URL}' with facility id filter if referer has one`, () => {
       // Arrange
       const { req, res } = getHttpMocks();
       req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
-      req.headers.referer = 'some-url?facilityIdQuery=1234';
+      req.headers.referer = 'some-url?premiumPaymentsFacilityId=1234';
 
       // Act
       validatePostAddPaymentRequestBody(req, res, next);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(`${REDIRECT_URL}?facilityIdQuery=1234`);
+      expect(res._getRedirectUrl()).toEqual(`${REDIRECT_URL}?premiumPaymentsFacilityId=1234`);
     });
 
     it(`populates the session with the 'different-fee-record-payment-currencies' error and the checked checkbox ids`, () => {
@@ -149,7 +149,7 @@ describe('validatePostAddPaymentRequestBody', () => {
   });
 
   describe('when the body contains checkbox ids with different statuses', () => {
-    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', 'TO_DO'), getCheckboxId(2, 'GBP', 'DOES_NOT_MATCH')];
+    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', FEE_RECORD_STATUS.TO_DO), getCheckboxId(2, 'GBP', FEE_RECORD_STATUS.DOES_NOT_MATCH)];
     const next = jest.fn();
 
     it(`redirects to '${REDIRECT_URL}'`, () => {
@@ -161,20 +161,20 @@ describe('validatePostAddPaymentRequestBody', () => {
       validatePostAddPaymentRequestBody(req, res, next);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(REDIRECT_URL);
+      expect(res._getRedirectUrl()).toEqual(REDIRECT_URL);
     });
 
     it(`redirects to '${REDIRECT_URL}' with facility id filter if referer has one`, () => {
       // Arrange
       const { req, res } = getHttpMocks();
       req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
-      req.headers.referer = 'some-url?facilityIdQuery=1234';
+      req.headers.referer = 'some-url?premiumPaymentsFacilityId=1234';
 
       // Act
       validatePostAddPaymentRequestBody(req, res, next);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(`${REDIRECT_URL}?facilityIdQuery=1234`);
+      expect(res._getRedirectUrl()).toEqual(`${REDIRECT_URL}?premiumPaymentsFacilityId=1234`);
     });
 
     it(`populates the session with the 'different-fee-record-statuses' error and the checked checkbox ids`, () => {
@@ -202,11 +202,11 @@ describe('validatePostAddPaymentRequestBody', () => {
     });
   });
 
-  describe("when the body contains more than one checkbox id with the 'DOES_NOT_MATCH' status", () => {
+  describe(`when the body contains more than one checkbox id with the ${FEE_RECORD_STATUS.DOES_NOT_MATCH} status`, () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
-    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', 'DOES_NOT_MATCH'), getCheckboxId(2, 'GBP', 'DOES_NOT_MATCH')];
+    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', FEE_RECORD_STATUS.DOES_NOT_MATCH), getCheckboxId(2, 'GBP', FEE_RECORD_STATUS.DOES_NOT_MATCH)];
     req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
 
     const next = jest.fn();
@@ -216,7 +216,7 @@ describe('validatePostAddPaymentRequestBody', () => {
       validatePostAddPaymentRequestBody(req, res, next);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(REDIRECT_URL);
+      expect(res._getRedirectUrl()).toEqual(REDIRECT_URL);
     });
 
     it(`populates the session with the 'multiple-does-not-match-selected' error and the checked checkbox ids`, () => {
@@ -236,11 +236,11 @@ describe('validatePostAddPaymentRequestBody', () => {
     });
   });
 
-  it("calls the 'next' function when the body contains multiple checkbox ids with the 'TO_DO' fee record status", () => {
+  it(`calls the 'next' function when the body contains multiple checkbox ids with the ${FEE_RECORD_STATUS.TO_DO} fee record status`, () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
-    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', 'TO_DO'), getCheckboxId(2, 'GBP', 'TO_DO')];
+    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', FEE_RECORD_STATUS.TO_DO), getCheckboxId(2, 'GBP', FEE_RECORD_STATUS.TO_DO)];
     req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
 
     const next = jest.fn();
@@ -252,11 +252,11 @@ describe('validatePostAddPaymentRequestBody', () => {
     expect(next).toHaveBeenCalled();
   });
 
-  it("calls the 'next' function when the body contains one checkbox id with the 'TO_DO' fee record status", () => {
+  it(`calls the 'next' function when the body contains one checkbox id with the ${FEE_RECORD_STATUS.TO_DO} fee record status`, () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
-    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', 'TO_DO')];
+    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', FEE_RECORD_STATUS.TO_DO)];
     req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
 
     const next = jest.fn();
@@ -268,11 +268,11 @@ describe('validatePostAddPaymentRequestBody', () => {
     expect(next).toHaveBeenCalled();
   });
 
-  it("calls the 'next' function when the body contains one checkbox id with the 'DOES_NOT_MATCH' fee record status", () => {
+  it(`calls the 'next' function when the body contains one checkbox id with the ${FEE_RECORD_STATUS.DOES_NOT_MATCH} fee record status`, () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
-    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', 'DOES_NOT_MATCH')];
+    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', FEE_RECORD_STATUS.DOES_NOT_MATCH)];
     req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
 
     const next = jest.fn();

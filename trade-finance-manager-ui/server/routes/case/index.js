@@ -6,6 +6,7 @@ const underwritingController = require('../../controllers/case/underwriting');
 const activityController = require('../../controllers/case/activity');
 const amendmentsController = require('../../controllers/case/amendments');
 const { validateUserTeam } = require('../../middleware');
+const { cancellationRouter } = require('./cancellation');
 
 const router = express.Router();
 
@@ -171,5 +172,7 @@ router.get('/:_id/underwriting/managers-decision/edit', underwritingController.g
 router.post('/:_id/underwriting/managers-decision/edit', underwritingController.postUnderwriterManagersDecision);
 
 router.get('/:_id/documents', caseController.getCaseDocuments);
+
+router.use('/', cancellationRouter);
 
 module.exports = router;

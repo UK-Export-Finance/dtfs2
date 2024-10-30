@@ -23,9 +23,15 @@
  *         $ref: '#/definitions/Currency'
  *       amount:
  *         type: number
- *   UtilisationReportReconciliationDetailsFeeRecordPaymentGroup:
+ *   UtilisationReportReconciliationDetailsPremiumPayments:
  *     type: object
  *     properties:
+ *       required:
+ *         - feeRecords
+ *         - totalReportedPayments
+ *         - paymentsReceived
+ *         - totalPaymentsReceived
+ *         - status
  *       feeRecords:
  *         type: array
  *         items:
@@ -42,6 +48,31 @@
  *         nullable: true
  *       status:
  *         $ref: '#/definitions/FeeRecordStatus'
+ *   UtilisationReportReconciliationDetailsPaymentDetails:
+ *     type: object
+ *     properties:
+ *       required:
+ *         - feeRecords
+ *         - payment
+ *         - status
+ *       feeRecords:
+ *         type: array
+ *         items:
+ *           $ref: '#/definitions/UtilisationReportReconciliationDetailsFeeRecord'
+ *       payment:
+ *         $ref: '#/definitions/UtilisationReportReconciliationDetailsPayment'
+ *       status:
+ *         $ref: '#/definitions/FeeRecordStatus'
+ *       reconciledByUser:
+ *         type: object
+ *         properties:
+ *           firstName:
+ *             type: string
+ *           lastName:
+ *             type: string
+ *       dateReconciled:
+ *         type: string
+ *         format: date
  *   UtilisationReportReconciliationDetails:
  *     type: object
  *     properties:
@@ -61,10 +92,28 @@
  *       dateUploaded:
  *         type: string
  *         format: date-time
- *       feeRecordPaymentGroups:
+ *       premiumPayments:
  *         type: array
  *         items:
- *           $ref: '#/definitions/UtilisationReportReconciliationDetailsFeeRecordPaymentGroup'
+ *           $ref: '#/definitions/UtilisationReportReconciliationDetailsPremiumPayments'
+ *       paymentDetails:
+ *         type: array
+ *         items:
+ *           $ref: '#/definitions/UtilisationReportReconciliationDetailsPaymentDetails'
  *       keyingSheet:
  *         $ref: '#/definitions/KeyingSheet'
+ *   PremiumPaymentsFilters:
+ *     type: object
+ *     properties:
+ *       facilityId:
+ *         type: string
+ *   PaymentDetailsFilters:
+ *     type: object
+ *     properties:
+ *       facilityId:
+ *         type: string
+ *       paymentCurrency:
+ *         type: string
+ *       paymentReference:
+ *         type: string
  */

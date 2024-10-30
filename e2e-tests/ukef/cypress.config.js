@@ -6,9 +6,12 @@ const { createTasks } = require('../support/tasks');
 // Read from root `./.env` directory
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-const { PORTAL_API_KEY, TFM_API_KEY } = process.env;
+const { PORTAL_API_KEY, TFM_API_KEY, TZ } = process.env;
 
 module.exports = defineConfig({
+  env: {
+    TZ,
+  },
   centralApiProtocol: 'http://',
   centralApiHost: 'localhost',
   centralApiPort: '5005',
@@ -34,9 +37,8 @@ module.exports = defineConfig({
   e2e: {
     baseUrl: 'http://localhost:5000',
     specPattern: 'cypress/e2e/**/*.spec.js',
-    setupNodeEvents(on, config) {
-      const { dbName, dbConnectionString } = config;
-      on('task', createTasks({ dbName, dbConnectionString }));
+    setupNodeEvents(on) {
+      on('task', createTasks());
     },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],

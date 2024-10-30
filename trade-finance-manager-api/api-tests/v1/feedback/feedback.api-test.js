@@ -1,6 +1,8 @@
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const app = require('../../../src/createApp');
-const { post } = require('../../api')(app);
+const { createApi } = require('../../api');
+
+const { post } = createApi(app);
 
 describe('/feedback', () => {
   const feedbackFormBody = {
@@ -19,7 +21,7 @@ describe('/feedback', () => {
   };
 
   describe('POST /v1/feedback', () => {
-    it('it successfully sends feedback form', async () => {
+    it('successfully sends feedback form', async () => {
       const { status } = await post(feedbackFormBody).to('/v1/feedback');
       expect(status).toEqual(200);
     });

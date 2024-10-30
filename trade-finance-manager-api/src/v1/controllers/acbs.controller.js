@@ -17,12 +17,12 @@ const { findOneTfmDeal } = require('./deal.controller');
 
 /**
  * Adds a log entry to the ACBS log collection in the database.
- * @param {object} payload - The payload object.
- * @param {object} payload.deal - The deal object.
- * @param {object} payload.facility - The facility object.
- * @param {object} payload.bank - The bank object.
- * @param {object} payload.acbsTaskLinks - The ACBS task links object.
- * @returns {Promise<object|boolean>} - A promise that resolves to the inserted log entry if successful, or false otherwise.
+ * @param {Object} payload - The payload object.
+ * @param {Object} payload.deal - The deal object.
+ * @param {Object} payload.facility - The facility object.
+ * @param {Object} payload.bank - The bank object.
+ * @param {Object} payload.acbsTaskLinks - The ACBS task links object.
+ * @returns {Promise<Object|boolean>} - A promise that resolves to the inserted log entry if successful, or false otherwise.
  */
 const addToACBSLog = async (payload) => {
   if (!payload?.deal || !payload?.acbsTaskLinks) {
@@ -135,10 +135,10 @@ const updateDealAcbs = async (taskOutput) => {
  * Updated `tfm.acbs` property of a facility upon successful
  * facility issuance.
  * @param {string} ID UKEF Facility mongo ID
- * @param {object} FMR Facility master record
- * @param {object} FLR Facility loan record
- * @param {object} FFR Facility fixed fee record
- * @returns {object} ACBS returned response
+ * @param {Object} FMR Facility master record
+ * @param {Object} FLR Facility loan record
+ * @param {Object} FFR Facility fixed fee record
+ * @returns {Object} ACBS returned response
  */
 const updateIssuedFacilityAcbs = ({ facilityId, issuedFacilityMaster, facilityLoan, facilityFee }) =>
   tfmController.updateFacilityAcbs(facilityId, {
@@ -220,8 +220,8 @@ const checkAzureAcbsFunction = async () => {
  * 1. Ensure facility has been issued in Portal.
  * 2. Facility has been created in ACBS.
  * 3. Facility in ACBS is `06` stage.
- * @param {object} deal - The deal object containing information about the deal, including facilities and ACBS details.
- * @returns {Promise<object>} - A promise that resolves with the results of adding the facilities to ACBS log.
+ * @param {Object} deal - The deal object containing information about the deal, including facilities and ACBS details.
+ * @returns {Promise<Object>} - A promise that resolves with the results of adding the facilities to ACBS log.
  */
 const issueAcbsFacilities = async (deal) => {
   if (!deal?.tfm?.acbs) {
@@ -244,7 +244,7 @@ const issueAcbsFacilities = async (deal) => {
     .filter((facility) => facility?.hasBeenIssued && isUnissuedInACBS(facility?.tfm?.acbs.facilityStage))
     .map(
       async (facility) =>
-        await api.updateACBSfacility(facility, {
+        await api.issueACBSfacility(facility, {
           dealSnapshot: {
             dealType: deal.dealType,
             submissionType: deal.submissionType,
@@ -268,9 +268,9 @@ const issueAcbsFacilities = async (deal) => {
 /**
  * Amend facility controller function responsible for invoking
  * respective API and writes ACBS task links to DB.
- * @param {object} amendments Facility amendments object
- * @param {object} facility Complete TFM facility object
- * @param {object} deal Bespoke deal object
+ * @param {Object} amendments Facility amendments object
+ * @param {Object} facility Complete TFM facility object
+ * @param {Object} deal Bespoke deal object
  */
 const amendAcbsFacility = (amendments, facility, deal) => {
   let payload = amendments;

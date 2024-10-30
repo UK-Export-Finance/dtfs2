@@ -129,7 +129,7 @@ const createTasksManualAmendment = (NDBDeal = false) => {
 /**
  * Create tasks/task groups depending on the amendment type (automatic or manual)
  * @param {string} requireUkefApproval - true/false
- * @param {object} tfm - facility TFM object
+ * @param {Object} tfm - facility TFM object
  * @returns {Array} created task groups
  */
 const createAmendmentTasks = (requireUkefApproval, tfm) => {
@@ -323,7 +323,7 @@ const updateAmendmentTasks = async (facilityId, amendmentId, taskUpdate) => {
  *                        a 'groupTasks' key with a list of tasks.
  * @param {string} groupName - The name of the team/group which tasks should be assigned.
  * @param {string} newUserId - The ID of the user to whom tasks should be assigned.
- * @returns {Promise<object[]>} A modified list of task groups.
+ * @returns {Promise<Object[]>} A modified list of task groups.
  */
 const getTasksAssignedToUserByGroup = async (tasks, groupName, newUserId) => {
   const updatedAt = getUnixTime(new Date());

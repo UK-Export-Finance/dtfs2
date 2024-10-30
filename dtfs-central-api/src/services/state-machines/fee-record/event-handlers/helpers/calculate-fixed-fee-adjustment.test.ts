@@ -1,7 +1,13 @@
 import { when } from 'jest-when';
-import { FacilityUtilisationDataEntityMockBuilder, FeeRecordEntityMockBuilder, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FacilityUtilisationDataEntityMockBuilder,
+  FeeRecordEntityMockBuilder,
+  ReportPeriod,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { calculateFixedFeeAdjustment } from './calculate-fixed-fee-adjustment';
-import { aReportPeriod } from '../../../../../../test-helpers';
+import { aReportPeriod, aUtilisationReport } from '../../../../../../test-helpers';
 import { getFixedFeeForFacility } from './get-fixed-fee-for-facility';
 
 jest.mock('./get-fixed-fee-for-facility');
@@ -28,8 +34,9 @@ describe('calculateFixedFeeAdjustment', () => {
       start: { month: 1, year: 2024 },
       end: { month: 1, year: 2024 },
     };
-    const report = aUtilisationReport();
-    report.reportPeriod = reportPeriod;
+    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+      .withReportPeriod(reportPeriod)
+      .build();
     const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('11111111').build();
     const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('11111111').withReportPeriod(reportPeriod).build();
 
@@ -40,15 +47,17 @@ describe('calculateFixedFeeAdjustment', () => {
   });
 
   it.each([
-    { condition: 'the previous fixed fee is greater', previousFixedFee: 123.456, currentFixedFee: 23.332, expectedResult: -100.12 },
-    { condition: 'the current fixed fee is greater', previousFixedFee: 23.332, currentFixedFee: 123.456, expectedResult: 100.12 },
-    { condition: 'both fixed fees are equal', previousFixedFee: 100, currentFixedFee: 100, expectedResult: 0 },
+    { condition: 'the previous fixed fee is greater', previousFixedFee: 123.456, currentFixedFee: 23.332, expected: -100.12 },
+    { condition: 'the current fixed fee is greater', previousFixedFee: 23.332, currentFixedFee: 123.456, expected: 100.12 },
+    { condition: 'both fixed fees are equal', previousFixedFee: 100, currentFixedFee: 100, expected: 0 },
   ])(
     'returns the difference between the current and previous fixed fee rounded to 2 decimal places when $condition',
-    async ({ previousFixedFee, currentFixedFee, expectedResult }) => {
+    async ({ previousFixedFee, currentFixedFee, expected }) => {
       // Arrange
       const reportPeriod = aReportPeriod();
-      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withReportPeriod(reportPeriod).build();
+      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+        .withReportPeriod(reportPeriod)
+        .build();
 
       const currentFacilityUtilisation = 123.456;
       const facilityId = '123456789';
@@ -68,11 +77,7 @@ describe('calculateFixedFeeAdjustment', () => {
       const result = await calculateFixedFeeAdjustment(feeRecord, facilityUtilisationData, reportPeriod);
 
       // Assert
-      expect(result).toBe(expectedResult);
+      expect(result).toEqual(expected);
     },
   );
-
-  function aUtilisationReport() {
-    return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-  }
 });

@@ -1,3 +1,5 @@
+import { InvalidDealIdError } from '@ukef/dtfs2-common';
+
 const { ObjectId } = require('mongodb');
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const axios = require('axios');
@@ -8,6 +10,9 @@ const { MOCK_PORTAL_USERS } = require('../src/v1/__mocks__/mock-portal-users');
 const api = jest.requireActual('../src/v1/api');
 
 const mockAxios = new MockAdapter(axios);
+
+const localIp = '127.0.0.1';
+const urlTraversal = '../../../etc/stealpassword';
 
 describe('API is protected against SSRF attacks', () => {
   const MOCK_PORTAL_USER_AUDIT_DETAILS = generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id);
@@ -24,7 +29,6 @@ describe('API is protected against SSRF attacks', () => {
       mockAxios.onGet(url).reply(200, mockResponse);
     });
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
       const response = await api.findOnePortalDeal(urlTraversal);
@@ -33,7 +37,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
       const response = await api.findOnePortalDeal(localIp);
@@ -57,7 +60,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
       const response = await api.updatePortalDeal(urlTraversal, { deal: 'Mock deal' }, MOCK_PORTAL_USER_AUDIT_DETAILS);
@@ -66,7 +68,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
       const response = await api.updatePortalDeal(localIp, { deal: 'Mock deal' }, MOCK_PORTAL_USER_AUDIT_DETAILS);
@@ -91,7 +92,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
       const response = await api.updatePortalBssDealStatus({ dealId: urlTraversal, status: 'Mock status', auditDetails: portalAuditDetails });
@@ -100,7 +100,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
       const response = await api.updatePortalBssDealStatus({ dealId: localIp, status: 'Mock status', auditDetails: portalAuditDetails });
@@ -124,16 +123,12 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
-
       const addingAPortalDealComment = () => api.addPortalDealComment(urlTraversal, 'mock', 'mock', MOCK_PORTAL_USER_AUDIT_DETAILS);
 
       await expect(addingAPortalDealComment).rejects.toThrow(`Invalid deal id: ${urlTraversal}`);
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
-
       const addingAPortalDealComment = () => api.addPortalDealComment(localIp, 'mock', 'mock', MOCK_PORTAL_USER_AUDIT_DETAILS);
 
       await expect(addingAPortalDealComment).rejects.toThrow(`Invalid deal id: ${localIp}`);
@@ -155,7 +150,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
       const response = await api.updatePortalFacilityStatus(urlTraversal, 'Mock status', MOCK_PORTAL_USER_AUDIT_DETAILS);
@@ -164,7 +158,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
       const response = await api.updatePortalFacilityStatus(localIp, 'Mock status', MOCK_PORTAL_USER_AUDIT_DETAILS);
@@ -190,7 +183,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
       const response = await api.findOneDeal(urlTraversal);
@@ -199,7 +191,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
       const response = await api.findOneDeal(localIp);
@@ -223,7 +214,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
       const response = await api.updateDeal({ dealId: urlTraversal, dealUpdate: 'Mock update' });
@@ -232,7 +222,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
       const response = await api.updateDeal({ dealId: localIp, dealUpdate: 'Mock update' });
@@ -258,7 +247,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
       const response = await api.updateDealSnapshot(urlTraversal, 'Mock update', MOCK_PORTAL_USER_AUDIT_DETAILS);
@@ -267,7 +255,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
       const response = await api.updateDealSnapshot(localIp, 'Mock update', MOCK_PORTAL_USER_AUDIT_DETAILS);
@@ -291,7 +278,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
       const response = await api.findOneFacility(urlTraversal, 'Mock update');
@@ -300,7 +286,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
       const response = await api.findOneFacility(localIp, 'Mock update');
@@ -326,7 +311,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
       const response = await api.findFacilitiesByDealId(urlTraversal);
@@ -335,7 +319,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
       const response = await api.findFacilitiesByDealId(localIp);
@@ -359,7 +342,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
       const response = await api.updateFacility({
@@ -372,7 +354,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
       const response = await api.updateFacility({
@@ -406,7 +387,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
       const response = await api.createFacilityAmendment(urlTraversal, generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id));
@@ -415,7 +395,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
       const response = await api.createFacilityAmendment(localIp, generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id));
@@ -441,7 +420,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const validAmendmentId = '5ce819935e539c343f141ece';
       const expectedResponse = { status: 400, data: 'Invalid facility Id or amendment Id provided' };
 
@@ -451,7 +429,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const validFacilityId = '5ce819935e539c343f141ece';
       const expectedResponse = { status: 400, data: 'Invalid facility Id or amendment Id provided' };
 
@@ -479,7 +456,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
 
       const response = await api.getAmendmentInProgress(urlTraversal);
@@ -488,7 +464,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
 
       const response = await api.getAmendmentInProgress(localIp);
@@ -541,7 +516,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
 
       const response = await apiFunction(urlTraversal);
@@ -550,7 +524,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
 
       const response = await apiFunction(localIp);
@@ -576,7 +549,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const validAmendmentId = '5ce819935e539c343f141ece';
       const expectedResponse = { status: 400, data: 'Invalid facility Id or amendment Id provided' };
 
@@ -586,7 +558,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const validFacilityId = '5ce819935e539c343f141ece';
       const expectedResponse = { status: 400, data: 'Invalid facility Id or amendment Id provided' };
 
@@ -614,7 +585,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal Id provided' };
 
       const response = await api.getAmendmentsByDealId(urlTraversal);
@@ -623,7 +593,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal Id provided' };
 
       const response = await api.getAmendmentsByDealId(localIp);
@@ -647,7 +616,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal Id provided' };
 
       const response = await api.getAmendmentInProgressByDealId(urlTraversal);
@@ -656,7 +624,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal Id provided' };
 
       const response = await api.getAmendmentInProgressByDealId(localIp);
@@ -680,7 +647,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal Id provided' };
 
       const response = await api.getCompletedAmendmentByDealId(urlTraversal);
@@ -689,7 +655,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal Id provided' };
 
       const response = await api.getCompletedAmendmentByDealId(localIp);
@@ -713,7 +678,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal Id provided' };
 
       const response = await api.getLatestCompletedAmendmentByDealId(urlTraversal);
@@ -722,7 +686,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal Id provided' };
 
       const response = await api.getLatestCompletedAmendmentByDealId(localIp);
@@ -746,7 +709,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
 
       const response = await api.updateGefFacility({ facilityId: urlTraversal, facilityUpdate: {}, auditDetails: MOCK_PORTAL_USER_AUDIT_DETAILS });
@@ -755,7 +717,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
 
       const response = await api.updateGefFacility({ facilityId: localIp, facilityUpdate: {}, auditDetails: MOCK_PORTAL_USER_AUDIT_DETAILS });
@@ -781,7 +742,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid party urn provided' };
 
       const response = await api.getCompanyInfo(urlTraversal);
@@ -790,7 +750,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid party urn provided' };
 
       const response = await api.getCompanyInfo(localIp);
@@ -816,7 +775,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid user id provided' };
 
       const response = await api.findUserById(urlTraversal);
@@ -825,7 +783,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid user id provided' };
 
       const response = await api.findUserById(localIp);
@@ -851,7 +808,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid user id provided' };
 
       const response = await api.findPortalUserById(urlTraversal);
@@ -860,7 +816,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid user id provided' };
 
       const response = await api.findPortalUserById(localIp);
@@ -886,7 +841,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid user id provided' };
 
       const response = await api.updateUserTasks(urlTraversal);
@@ -895,7 +849,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid user id provided' };
 
       const response = await api.updateUserTasks(localIp);
@@ -921,7 +874,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid team id provided' };
 
       const response = await api.findOneTeam(urlTraversal);
@@ -930,7 +882,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid team id provided' };
 
       const response = await api.findOneTeam(localIp);
@@ -956,7 +907,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid team id provided' };
 
       const response = await api.findTeamMembers(urlTraversal);
@@ -965,7 +915,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid team id provided' };
 
       const response = await api.findTeamMembers(localIp);
@@ -991,7 +940,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const validCurrencyCode = 'USD';
       const expectedResponse = { status: 400, data: 'Invalid currency provided' };
 
@@ -1001,7 +949,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const validCurrencyCode = 'USD';
       const expectedResponse = { status: 400, data: 'Invalid currency provided' };
 
@@ -1029,7 +976,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
 
       const response = await api.findOneGefDeal(urlTraversal);
@@ -1038,7 +984,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
 
       const response = await api.findOneGefDeal(localIp);
@@ -1063,7 +1008,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
 
       const response = await api.updatePortalGefDealStatus({ dealId: urlTraversal, status: 'mock status', auditDetails });
@@ -1072,7 +1016,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
 
       const response = await api.updatePortalGefDealStatus({ dealId: localIp, status: 'mock status', auditDetails });
@@ -1097,7 +1040,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
 
       const response = await api.updatePortalGefDeal({ dealId: urlTraversal, status: 'mock update', auditDetails });
@@ -1106,7 +1048,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
 
       const response = await api.updatePortalGefDeal({ dealId: localIp, status: 'mock update', auditDetails });
@@ -1131,7 +1072,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
 
       const response = await api.updateGefMINActivity({ dealId: urlTraversal, auditDetails });
@@ -1140,7 +1080,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
 
       const response = await api.updateGefMINActivity({ dealId: localIp, auditDetails });
@@ -1164,16 +1103,12 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
-
       const addingAComment = () => api.addUnderwriterCommentToGefDeal(urlTraversal, 'mock comment type', 'mock comment');
 
       await expect(addingAComment).rejects.toThrow(`Invalid deal id: ${urlTraversal}`);
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
-
       const addingAComment = () => api.addUnderwriterCommentToGefDeal(localIp, 'mock comment type', 'mock comment');
 
       await expect(addingAComment).rejects.toThrow(`Invalid deal id: ${localIp}`);
@@ -1195,7 +1130,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid bank id provided' };
 
       const response = await api.findBankById(urlTraversal);
@@ -1204,7 +1138,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid bank id provided' };
 
       const response = await api.findBankById(localIp);
@@ -1230,7 +1163,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid mandatory criteria version provided' };
 
       const response = await api.getGefMandatoryCriteriaByVersion(urlTraversal);
@@ -1239,7 +1171,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid mandatory criteria version provided' };
 
       const response = await api.getGefMandatoryCriteriaByVersion(localIp);
@@ -1251,6 +1182,34 @@ describe('API is protected against SSRF attacks', () => {
       const validVersion = '37';
 
       const response = await api.getGefMandatoryCriteriaByVersion(validVersion);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('updateDealCancellation', () => {
+    const mockResponse = 'Mock response';
+    const auditDetails = generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/deals\/.*\/cancellation$/;
+      mockAxios.onPut(url).reply(200, mockResponse);
+    });
+
+    it('Returns an error when a url traversal is supplied', async () => {
+      await expect(api.updateDealCancellation({ dealId: urlTraversal, dealCancellationUpdate: {}, auditDetails })).rejects.toThrow(
+        new InvalidDealIdError(urlTraversal.toString()),
+      );
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      await expect(api.updateDealCancellation({ dealId: localIp, dealCancellationUpdate: {}, auditDetails })).rejects.toThrow(
+        new InvalidDealIdError(localIp.toString()),
+      );
+    });
+
+    it('Makes an axios request when the version is valid', async () => {
+      const response = await api.updateDealCancellation({ dealId: validDealId, dealCancellationUpdate: {}, auditDetails });
 
       expect(response).toEqual(mockResponse);
     });

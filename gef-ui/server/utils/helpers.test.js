@@ -23,7 +23,7 @@ import {
 
 import { getFacilityCoverStartDate } from './facility-helpers';
 
-import { MOCK_ISSUED_FACILITY, MOCK_FACILITY, MOCK_ISSUED_FACILITY_UNCHANGED, MOCK_UNISSUED_FACILITY } from './mocks/mock_facilities';
+import { MOCK_ISSUED_FACILITY, MOCK_FACILITY, MOCK_ISSUED_FACILITY_UNCHANGED, MOCK_UNISSUED_FACILITY } from './mocks/mock-facilities';
 
 import { makerCanReSubmit } from './deal-helpers';
 
@@ -36,9 +36,9 @@ import {
   MOCK_AIN_APPLICATION_FALSE_COMMENTS,
   MOCK_AIN_APPLICATION_SUPPORTING_INFO,
   MOCK_AIN_APPLICATION_UNISSUED_ONLY,
-} from './mocks/mock_applications';
+} from './mocks/mock-applications';
 
-import { MOCK_REQUEST } from './mocks/mock_requests';
+import { MOCK_REQUEST } from './mocks/mock-requests';
 import { CHECKER } from '../constants/roles';
 
 const CONSTANTS = require('../constants');
@@ -96,12 +96,12 @@ describe('userToken()', () => {
 
 describe('isObject()', () => {
   it('returns the correct boolean', () => {
-    expect(isObject({})).toBe(true);
-    expect(isObject([])).toBe(false);
-    expect(isObject('')).toBe(false);
-    expect(isObject(1)).toBe(false);
-    expect(isObject(true)).toBe(false);
-    expect(isObject(false)).toBe(false);
+    expect(isObject({})).toEqual(true);
+    expect(isObject([])).toEqual(false);
+    expect(isObject('')).toEqual(false);
+    expect(isObject(1)).toEqual(false);
+    expect(isObject(true)).toEqual(false);
+    expect(isObject(false)).toEqual(false);
   });
 });
 
@@ -978,20 +978,20 @@ describe('mapSummaryList()', () => {
 
 describe('isTrueSet()', () => {
   it('returns null if value is not a string', () => {
-    expect(isTrueSet(null)).toBe(null);
-    expect(isTrueSet(10)).toBe(null);
-    expect(isTrueSet('')).toBe(null);
-    expect(isTrueSet(true)).toBe(null);
-    expect(isTrueSet(false)).toBe(null);
-    expect(isTrueSet(undefined)).toBe(null);
+    expect(isTrueSet(null)).toEqual(null);
+    expect(isTrueSet(10)).toEqual(null);
+    expect(isTrueSet('')).toEqual(null);
+    expect(isTrueSet(true)).toEqual(null);
+    expect(isTrueSet(false)).toEqual(null);
+    expect(isTrueSet(undefined)).toEqual(null);
   });
 
   it('returns true boolean if string value is equal to `true`', () => {
-    expect(isTrueSet('true')).toBe(true);
+    expect(isTrueSet('true')).toEqual(true);
   });
 
   it('returns false boolean if string value is equal to `false`', () => {
-    expect(isTrueSet('false')).toBe(false);
+    expect(isTrueSet('false')).toEqual(false);
   });
 });
 
@@ -1095,7 +1095,7 @@ describe('summaryItemsConditions()', () => {
 
       expect(text).toEqual('Change');
       expect(href).toContain('/unissued-facilities/');
-      expect(href).toContain('/change');
+      expect(href).toContain('/bank-review-date/change');
     });
 
     it('Should be able to change issued', () => {

@@ -5,6 +5,7 @@ import {
   UtilisationReportEntityMockBuilder,
   toIsoMonthStamp,
   getPreviousReportPeriodForBankScheduleByMonth,
+  FEE_RECORD_STATUS,
 } from '@ukef/dtfs2-common';
 import pages from '../../pages';
 import USERS from '../../../fixtures/users';
@@ -24,6 +25,8 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
     coverEndDate: new Date().getTime(),
     interestPercentage: 5,
     dayCountBasis: 365,
+    coverPercentage: 80,
+    value: 100000,
   });
 
   const TFM_FACILITIES = [
@@ -75,7 +78,7 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
           .withFeesPaidToUkefForThePeriod(100)
           .withFeesPaidToUkefForThePeriodCurrency('JPY')
           .withPaymentExchangeRate(2)
-          .withStatus('MATCH')
+          .withStatus(FEE_RECORD_STATUS.MATCH)
           .withPayments([paymentMatchingFeeRecordOneAndTwo])
           .build();
 
@@ -87,7 +90,7 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
           .withFeesPaidToUkefForThePeriodCurrency('EUR')
           .withPaymentCurrency('GBP')
           .withPaymentExchangeRate(0.5)
-          .withStatus('MATCH')
+          .withStatus(FEE_RECORD_STATUS.MATCH)
           .withPayments([paymentMatchingFeeRecordOneAndTwo])
           .build();
         cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecordOne, feeRecordTwo]);
@@ -107,6 +110,40 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
     cy.visit(`utilisation-reports/${REPORT_ID}`);
     pages.utilisationReportPage.premiumPaymentsTab.generateKeyingDataButton().click();
     pages.checkKeyingDataPage.generateKeyingSheetDataButton().click();
+  });
+
+  describe('when logging in as "PDC_RECONCILE" user', () => {
+    it('should display the relevant text', () => {
+      pages.utilisationReportPage.premiumPaymentsTab.selectPaymentsText().should('exist');
+      pages.utilisationReportPage.premiumPaymentsTab.paymentsOnPremiumPaymentsText().should('exist');
+
+      cy.assertText(
+        pages.utilisationReportPage.premiumPaymentsTab.selectPaymentsText(),
+        'Select payments and mark as done when the adjustments have been keyed into ACBS.',
+      );
+      cy.assertText(
+        pages.utilisationReportPage.premiumPaymentsTab.paymentsOnPremiumPaymentsText(),
+        'Payments on the premium payments tab will show as reconciled when they have been marked as done here.',
+      );
+    });
+  });
+
+  describe('when logging in as "PDC_READ" user', () => {
+    it('should display the relevant text', () => {
+      pages.landingPage.visit();
+      cy.login(USERS.PDC_READ);
+
+      cy.visit(`utilisation-reports/${REPORT_ID}`);
+      pages.utilisationReportPage.keyingSheetTabLink().click();
+
+      pages.utilisationReportPage.premiumPaymentsTab.selectPaymentsText().should('not.exist');
+      pages.utilisationReportPage.premiumPaymentsTab.paymentsOnPremiumPaymentsText().should('exist');
+
+      cy.assertText(
+        pages.utilisationReportPage.premiumPaymentsTab.paymentsOnPremiumPaymentsText(),
+        'Payments on the premium payments tab will show as reconciled when they have been marked as done here.',
+      );
+    });
   });
 
   it('can mark keying sheet rows as done and to do', () => {
@@ -136,5 +173,14 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
 
     pages.utilisationReportPage.bankReportsNavLink().click();
     pages.utilisationReportsSummaryPage.tableRowSelector(BANK_ID, SUBMISSION_MONTH).should('contain', 'Reconciliation in progress');
+  });
+
+  it('should not display select all checkbox when there are no further actions to take', () => {
+    pages.utilisationReportPage.keyingSheetTab.selectAllCheckbox().click();
+    pages.utilisationReportPage.keyingSheetTab.markAsDoneButton().click();
+
+    pages.utilisationReportPage.premiumPaymentsTabLink().click();
+
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.selectAllCheckboxContainer().should('not.exist');
   });
 });

@@ -106,7 +106,7 @@ describe('fee-record-matching', () => {
           const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
 
           // Assert
-          expect(result).toBe(true);
+          expect(result).toEqual(true);
         },
       );
 
@@ -130,7 +130,7 @@ describe('fee-record-matching', () => {
           const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
 
           // Assert
-          expect(result).toBe(false);
+          expect(result).toEqual(false);
         },
       );
 
@@ -154,7 +154,7 @@ describe('fee-record-matching', () => {
           const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
 
           // Assert
-          expect(result).toBe(false);
+          expect(result).toEqual(false);
         },
       );
 
@@ -169,7 +169,7 @@ describe('fee-record-matching', () => {
         const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
 
         // Assert
-        expect(result).toBe(true);
+        expect(result).toEqual(true);
       });
 
       it('returns false if fee record payment amount is non-zero and there are no payments', async () => {
@@ -183,18 +183,18 @@ describe('fee-record-matching', () => {
         const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
 
         // Assert
-        expect(result).toBe(false);
+        expect(result).toEqual(false);
       });
 
       describe('and when the payment currency and fees paid currency do not match', () => {
         it.each`
-          condition            | expectedResult | paymentAmount
-          ${'equals'}          | ${true}        | ${95.91}
-          ${'is less than'}    | ${false}       | ${95.9}
-          ${'is greater than'} | ${false}       | ${95.92}
+          condition            | expected | paymentAmount
+          ${'equals'}          | ${true}  | ${95.91}
+          ${'is less than'}    | ${false} | ${95.9}
+          ${'is greater than'} | ${false} | ${95.92}
         `(
-          'returns $expectedResult if total received payments $condition the total reported payments with the reported payments converted into the payment currency',
-          async ({ expectedResult, paymentAmount }: { expectedResult: boolean; paymentAmount: number }) => {
+          'returns $expected if total received payments $condition the total reported payments with the reported payments converted into the payment currency',
+          async ({ expected, paymentAmount }: { expected: boolean; paymentAmount: number }) => {
             // Arrange
             const firstFeeRecordFeesPaidToUkefForThePeriodCurrency: Currency = 'EUR';
             const firstFeeRecordPaymentExchangeRate = 1.1;
@@ -232,7 +232,7 @@ describe('fee-record-matching', () => {
             const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
 
             // Assert
-            expect(result).toBe(expectedResult);
+            expect(result).toEqual(expected);
           },
         );
 
@@ -263,7 +263,7 @@ describe('fee-record-matching', () => {
           const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
 
           // Assert
-          expect(result).toBe(true);
+          expect(result).toEqual(true);
         });
 
         it('returns false if fee record payment amount is zero after conversion to payment currency and there are no payments', async () => {
@@ -293,7 +293,7 @@ describe('fee-record-matching', () => {
           const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
 
           // Assert
-          expect(result).toBe(false);
+          expect(result).toEqual(false);
         });
       });
     });
@@ -320,7 +320,7 @@ describe('fee-record-matching', () => {
           const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
 
           // Assert
-          expect(result).toBe(true);
+          expect(result).toEqual(true);
         },
       );
 
@@ -345,7 +345,7 @@ describe('fee-record-matching', () => {
           const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
 
           // Assert
-          expect(result).toBe(true);
+          expect(result).toEqual(true);
         },
       );
 
@@ -370,7 +370,7 @@ describe('fee-record-matching', () => {
           const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
 
           // Assert
-          expect(result).toBe(false);
+          expect(result).toEqual(false);
         },
       );
 
@@ -395,7 +395,7 @@ describe('fee-record-matching', () => {
           const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
 
           // Assert
-          expect(result).toBe(false);
+          expect(result).toEqual(false);
         },
       );
 
@@ -420,7 +420,7 @@ describe('fee-record-matching', () => {
           const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
 
           // Assert
-          expect(result).toBe(true);
+          expect(result).toEqual(true);
         },
       );
 
@@ -445,7 +445,7 @@ describe('fee-record-matching', () => {
           const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
 
           // Assert
-          expect(result).toBe(true);
+          expect(result).toEqual(true);
         },
       );
 
@@ -461,7 +461,7 @@ describe('fee-record-matching', () => {
         const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
 
         // Assert
-        expect(result).toBe(true);
+        expect(result).toEqual(true);
       });
 
       it('returns false if fee record payment amount exceeds the tolerance and there are no payments', async () => {
@@ -476,7 +476,7 @@ describe('fee-record-matching', () => {
         const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
 
         // Assert
-        expect(result).toBe(false);
+        expect(result).toEqual(false);
       });
 
       describe('and when the payment currency and fees paid to ukef currency do not match', () => {
@@ -508,7 +508,7 @@ describe('fee-record-matching', () => {
           const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
 
           // Assert
-          expect(result).toBe(true);
+          expect(result).toEqual(true);
         });
 
         it('returns false if fee record payment amount exceeds the tolerance after conversion to payment currency and there are no payments', async () => {
@@ -539,17 +539,17 @@ describe('fee-record-matching', () => {
           const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
 
           // Assert
-          expect(result).toBe(false);
+          expect(result).toEqual(false);
         });
 
         it.each`
-          condition      | expectedResult | paymentAmount
-          ${'less than'} | ${true}        | ${96.9}
-          ${'more than'} | ${false}       | ${96.92}
-          ${'equal to'}  | ${true}        | ${96.91}
+          condition      | expected | paymentAmount
+          ${'less than'} | ${true}  | ${96.9}
+          ${'more than'} | ${false} | ${96.92}
+          ${'equal to'}  | ${true}  | ${96.91}
         `(
-          'returns $expectedResult if received payments are greater than the reported payments converted to payment currency by an amount $condition the tolerance',
-          async ({ expectedResult, paymentAmount }: { expectedResult: boolean; paymentAmount: number }) => {
+          'returns $expected if received payments are greater than the reported payments converted to payment currency by an amount $condition the tolerance',
+          async ({ expected, paymentAmount }: { expected: boolean; paymentAmount: number }) => {
             // Arrange
             const tolerance = 1;
             const firstFeeRecordFeesPaidToUkefForThePeriodCurrency: Currency = 'EUR';
@@ -590,18 +590,18 @@ describe('fee-record-matching', () => {
             const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
 
             // Assert
-            expect(result).toBe(expectedResult);
+            expect(result).toEqual(expected);
           },
         );
 
         it.each`
-          condition      | expectedResult | paymentAmount
-          ${'less than'} | ${true}        | ${94.92}
-          ${'more than'} | ${false}       | ${94.9}
-          ${'equal to'}  | ${true}        | ${94.91}
+          condition      | expected | paymentAmount
+          ${'less than'} | ${true}  | ${94.92}
+          ${'more than'} | ${false} | ${94.9}
+          ${'equal to'}  | ${true}  | ${94.91}
         `(
-          'returns $expectedResult if received payments are less than reported payments converted to payment currency by an amount $condition the tolerance',
-          async ({ expectedResult, paymentAmount }: { expectedResult: boolean; paymentAmount: number }) => {
+          'returns $expected if received payments are less than reported payments converted to payment currency by an amount $condition the tolerance',
+          async ({ expected, paymentAmount }: { expected: boolean; paymentAmount: number }) => {
             // Arrange
             const tolerance = 1;
             const firstFeeRecordFeesPaidToUkefForThePeriodCurrency: Currency = 'EUR';
@@ -642,7 +642,7 @@ describe('fee-record-matching', () => {
             const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
 
             // Assert
-            expect(result).toBe(expectedResult);
+            expect(result).toEqual(expected);
           },
         );
       });

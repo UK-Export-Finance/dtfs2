@@ -5,8 +5,6 @@ const page = {
   coverStartDateMonth: () => cy.get('[data-cy="requestedCoverStartDate-month"]'),
   coverStartDateYear: () => cy.get('[data-cy="requestedCoverStartDate-year"]'),
   coverStarDateErrorMessage: () => cy.get('[data-cy="requestedCoverStartDate-error-message"]'),
-  submit: () => cy.get('[data-cy="submit-button"]'),
-  cancelButton: () => cy.get('[data-cy="cancel-button"]'),
 };
 
 module.exports = page;

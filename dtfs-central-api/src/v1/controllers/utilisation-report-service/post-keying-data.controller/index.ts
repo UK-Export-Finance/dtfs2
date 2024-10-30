@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { ApiError, CustomExpressRequest } from '@ukef/dtfs2-common';
+import { ApiError, CustomExpressRequest, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { NotFoundError } from '../../../../errors';
 import { executeWithSqlTransaction } from '../../../../helpers';
@@ -16,7 +16,7 @@ export const postKeyingData = async (req: PostKeyingDataRequest, res: Response) 
   const { user } = req.body;
 
   try {
-    const feeRecordsAtMatchStatusWithPayments = await FeeRecordRepo.findByReportIdAndStatusesWithReportAndPayments(Number(reportId), ['MATCH']);
+    const feeRecordsAtMatchStatusWithPayments = await FeeRecordRepo.findByReportIdAndStatusesWithReportAndPayments(Number(reportId), [FEE_RECORD_STATUS.MATCH]);
 
     if (feeRecordsAtMatchStatusWithPayments.length === 0) {
       throw new NotFoundError(`Failed to find any fee records which can be keyed attached to report with id '${reportId}'`);

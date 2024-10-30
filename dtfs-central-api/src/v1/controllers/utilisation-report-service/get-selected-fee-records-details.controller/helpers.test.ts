@@ -1,5 +1,6 @@
 import {
   CurrencyAndAmount,
+  FEE_RECORD_STATUS,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
@@ -236,12 +237,12 @@ describe('get selected fee record details controller helpers', () => {
       const firstFeeRecordEntity = FeeRecordEntityMockBuilder.forReport(UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build())
         .withId(1)
         .withPayments([firstPaymentEntity, secondPaymentEntity])
-        .withStatus('DOES_NOT_MATCH')
+        .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
         .build();
       const secondFeeRecordEntity = FeeRecordEntityMockBuilder.forReport(UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build())
         .withId(2)
         .withPayments([thirdPaymentEntity])
-        .withStatus('DOES_NOT_MATCH')
+        .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
         .build();
 
       const mockFeeRecordEntities: FeeRecordEntity[] = [firstFeeRecordEntity, secondFeeRecordEntity];
@@ -309,7 +310,7 @@ describe('get selected fee record details controller helpers', () => {
       // Arrange
       const existsUnmatchedPaymentSpy = jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(true);
       const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('USD').withStatus('READY_TO_KEY').build();
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('USD').withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
 
       // Act
       const result = await canFeeRecordsBeAddedToExistingPayment('123', [feeRecord]);
@@ -334,6 +335,6 @@ describe('get selected fee record details controller helpers', () => {
 
   function aFeeRecordWithStatusToDo(): FeeRecordEntity {
     const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-    return FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('GBP').withStatus('TO_DO').build();
+    return FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('GBP').withStatus(FEE_RECORD_STATUS.TO_DO).build();
   }
 });

@@ -1,6 +1,7 @@
 {% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
 {% import './_macros/case-summary.njk' as caseSummary %}
 {% import './_macros/case-summary-ndb.njk' as caseSummaryNdb %}
+{% import '../_macros/success-banner.njk' as successBanner %}
 
 {% extends "index.njk" %}
 {% set primary = 'cases' %}
@@ -18,6 +19,10 @@
     {{caseSummaryNdb.render(componentData)}}
   {% else %}
     {{caseSummary.render(componentData)}}
+  {% endif %}
+
+  {% if successMessage %}
+   {{ successBanner.render(successMessage) }}
   {% endif %}
 
   {% include "_partials/case_sub_navigation.njk" %}

@@ -25,6 +25,6 @@ describe(`GET ${url}`, () => {
 
     const { status } = await get(url, { headers: { Authorization: token } });
 
-    expect(status).toBe(200);
+    expect(status).toEqual(200);
   });
 });

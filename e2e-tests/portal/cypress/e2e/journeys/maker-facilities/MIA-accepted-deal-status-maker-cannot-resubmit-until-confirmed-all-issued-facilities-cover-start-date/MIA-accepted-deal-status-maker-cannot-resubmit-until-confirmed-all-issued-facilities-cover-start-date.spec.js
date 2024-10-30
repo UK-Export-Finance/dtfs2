@@ -2,7 +2,7 @@ const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MIADealWithAcceptedStatusIssuedFacilities = require('./MIA-deal-with-accepted-status-issued-facilities');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
-const DATE_CONSTANTS = require('../../../../../../e2e-fixtures/dateConstants');
+const { oneMonth } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
@@ -144,10 +144,10 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     };
 
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().click();
-    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(NEW_BOND_COVER_START_DATE().getDate());
-    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(NEW_BOND_COVER_START_DATE().getMonth() + 1);
-    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(NEW_BOND_COVER_START_DATE().getFullYear());
-    pages.facilityConfirmCoverStartDate.submit().click();
+
+    cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: NEW_BOND_COVER_START_DATE() });
+
+    cy.clickSubmitButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     //---------------------------------------------------------------
@@ -160,10 +160,10 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     cy.url().should('eq', relative(`/contract/${dealId}/bond/${issuedCompletedBondId}/confirm-requested-cover-start-date`));
 
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().click();
-    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(NEW_BOND_COVER_START_DATE().getDate());
-    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(NEW_BOND_COVER_START_DATE().getMonth() + 1);
-    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(NEW_BOND_COVER_START_DATE().getFullYear());
-    pages.facilityConfirmCoverStartDate.submit().click();
+
+    cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: NEW_BOND_COVER_START_DATE() });
+
+    cy.clickSubmitButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     //---------------------------------------------------------------
@@ -172,13 +172,12 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/loan/${unconditionalSubmittedLoanId}/confirm-requested-cover-start-date`));
 
-    const NEW_LOAN_COVER_START_DATE = DATE_CONSTANTS.oneMonth;
+    const NEW_LOAN_COVER_START_DATE = oneMonth.date;
 
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().click();
-    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(NEW_LOAN_COVER_START_DATE.getDate());
-    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(NEW_LOAN_COVER_START_DATE.getMonth() + 1);
-    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(NEW_LOAN_COVER_START_DATE.getFullYear());
-    pages.facilityConfirmCoverStartDate.submit().click();
+    cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: NEW_LOAN_COVER_START_DATE });
+
+    cy.clickSubmitButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     //---------------------------------------------------------------
@@ -196,10 +195,10 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     unconditionalCompletedLoanRow.changeOrConfirmCoverStartDateLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/loan/${unconditionalCompletedLoanId}/confirm-requested-cover-start-date`));
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().click();
-    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(NEW_LOAN_COVER_START_DATE.getDate());
-    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(NEW_LOAN_COVER_START_DATE.getMonth() + 1);
-    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(NEW_LOAN_COVER_START_DATE.getFullYear());
-    pages.facilityConfirmCoverStartDate.submit().click();
+
+    cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: NEW_LOAN_COVER_START_DATE });
+
+    cy.clickSubmitButton();
 
     //---------------------------------------------------------------
     // Maker selects 'no, do not change date, keep existing date' for a Bond
@@ -213,7 +212,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().click();
     coverStartDateInputsShouldNotBeVisible();
 
-    pages.facilityConfirmCoverStartDate.submit().click();
+    cy.clickSubmitButton();
 
     /**
      * Maker should still not be able to submit the deal for check,
@@ -234,7 +233,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().click();
 
     coverStartDateInputsShouldNotBeVisible();
-    pages.facilityConfirmCoverStartDate.submit().click();
+    cy.clickSubmitButton();
 
     //---------------------------------------------------------------
     // - Cover start date changes are rendered in the table
@@ -249,20 +248,12 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
 
     const expectedLoanDate = NEW_LOAN_COVER_START_DATE.toLocaleDateString('en-GB');
 
-    unconditionalSubmittedLoanRow
-      .requestedCoverStartDate()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(expectedLoanDate);
-      });
+    cy.assertText(unconditionalSubmittedLoanRow.requestedCoverStartDate(), expectedLoanDate);
+
     unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
 
-    unconditionalCompletedLoanRow
-      .requestedCoverStartDate()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(expectedLoanDate);
-      });
+    cy.assertText(unconditionalCompletedLoanRow.requestedCoverStartDate(), expectedLoanDate);
+
     unconditionalCompletedLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
 
     //---------------------------------------------------------------
@@ -272,21 +263,11 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
 
     const expectedIssuedBondDate = new Date(secondIssuedSubmittedBond.requestedCoverStartDate).toLocaleDateString('en-GB');
 
-    secondIssuedSubmittedBondRow
-      .requestedCoverStartDate()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(expectedIssuedBondDate);
-      });
+    cy.assertText(secondIssuedSubmittedBondRow.requestedCoverStartDate(), expectedIssuedBondDate);
 
     secondIssuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
 
-    secondUnconditionalSubmittedLoanRow
-      .requestedCoverStartDate()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(expectedIssuedBondDate);
-      });
+    cy.assertText(secondUnconditionalSubmittedLoanRow.requestedCoverStartDate(), expectedIssuedBondDate);
 
     secondUnconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
 
@@ -299,12 +280,8 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     fourthIssuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().should('be.visible');
     fourthIssuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
 
-    fourthIssuedSubmittedBondRow
-      .requestedCoverStartDate()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(expectedIssuedBondDate);
-      });
+    cy.assertText(fourthIssuedSubmittedBondRow.requestedCoverStartDate(), expectedIssuedBondDate);
+
     //---------------------------------------------------------------
     // Maker selects 'no, do not change date, keep existing date' for a Loan
     // in Confirm start date form
@@ -313,19 +290,14 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     fourthUnconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().should('be.visible');
     fourthUnconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
 
-    fourthUnconditionalSubmittedLoanRow
-      .requestedCoverStartDate()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(expectedLoanDate);
-      });
+    cy.assertText(fourthUnconditionalSubmittedLoanRow.requestedCoverStartDate(), expectedLoanDate);
 
     //---------------------------------------------------------------
     // Maker can resubmit deal now, after all cover start dates have been confirmed
     //---------------------------------------------------------------
     pages.contract.proceedToReview().should('not.be.disabled');
-    pages.contract.proceedToReview().click();
-    pages.contractReadyForReview.comments().type('Updated cover start dates');
+    cy.clickProceedToReviewButton();
+    cy.keyboardInput(pages.contractReadyForReview.comments(), 'Updated cover start dates');
     pages.contractReadyForReview.readyForCheckersApproval().click();
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
@@ -357,24 +329,14 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
       const bondRow = pages.contract.bondTransactionsTable.row(bond._id);
       bondRow.changeOrConfirmCoverStartDateLink().should('not.exist');
 
-      issuedSubmittedBondRow
-        .issueFacilityLink()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Facility issued');
-        });
+      cy.assertText(issuedSubmittedBondRow.issueFacilityLink(), 'Facility issued');
     });
 
     dealFacilities.loans.forEach((loan) => {
       const loanRow = pages.contract.loansTransactionsTable.row(loan._id);
       loanRow.changeOrConfirmCoverStartDateLink().should('not.exist');
 
-      unconditionalSubmittedLoanRow
-        .issueFacilityLink()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Facility issued');
-        });
+      cy.assertText(unconditionalSubmittedLoanRow.issueFacilityLink(), 'Facility issued');
     });
   });
 });

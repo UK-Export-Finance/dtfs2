@@ -6,8 +6,7 @@ import facilities from '../pages/facilities';
 import statusBanner from '../pages/application-status-banner';
 import { BANK1_MAKER1, ADMIN, READ_ONLY_ALL_BANKS } from '../../../../e2e-fixtures/portal-users.fixture';
 import CONSTANTS from '../../fixtures/constants';
-
-const { todayFormattedShort } = require('../../../../e2e-fixtures/dateConstants');
+import { today } from '../../../../e2e-fixtures/dateConstants';
 
 let dealWithEmptyExporter;
 let dealWithEmptyExporterName;
@@ -52,7 +51,7 @@ context('Application Details Page', () => {
       statusBanner.bannerStatus().contains('Draft');
       statusBanner.bannerProduct().should('have.text', 'General Export Facility');
 
-      statusBanner.bannerDateCreated().contains(todayFormattedShort);
+      statusBanner.bannerDateCreated().contains(today.dd_MMM_yyyy);
       statusBanner.bannerSubmissionType().should('have.text', '-');
       statusBanner.bannerCreatedBy().should('have.text', `${dealWithEmptyExporter.maker.firstname} ${dealWithEmptyExporter.maker.surname}`);
       statusBanner.bannerExporter().should('have.text', '-');
@@ -63,11 +62,8 @@ context('Application Details Page', () => {
     it('displays the correct headings', () => {
       applicationDetails.applicationDetailsPage();
       headingCaption();
-      mainHeading()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Application Details');
-        });
+
+      cy.assertText(mainHeading(), 'Application Details');
     });
 
     it('shows an abandon button with correct aria-label', () => {
@@ -168,11 +164,7 @@ context('Application Details Page', () => {
     });
 
     it('displays the correct submission type heading', () => {
-      mainHeading()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Application Details');
-        });
+      cy.assertText(mainHeading(), 'Application Details');
     });
 
     it('displays the correct exporter elements', () => {

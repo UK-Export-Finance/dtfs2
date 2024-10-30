@@ -37,23 +37,23 @@ on:
   pull_request:
     branches:
       - main
-      - "release-*"
+      - 'release-*'
 
     paths:
-      - "package*.json"
-      - "docker*.yml"
-      - ".github/workflows/**"
-      - "gef-ui/**"
-      - "portal/**"
-      - "portal-api/**"
-      - "trade-finance-manager-ui/**"
-      - "trade-finance-manager-api/**"
-      - "external-api/**"
-      - "dtfs-central-api/**"
-      - "azure-functions/**"
-      - "e2e-tests/**"
-      - "utils/**"
-      - "libs/**"
+      - 'package*.json'
+      - 'docker*.yml'
+      - '.github/workflows/**'
+      - 'gef-ui/**'
+      - 'portal/**'
+      - 'portal-api/**'
+      - 'trade-finance-manager-ui/**'
+      - 'trade-finance-manager-api/**'
+      - 'external-api/**'
+      - 'dtfs-central-api/**'
+      - 'azure-functions/**'
+      - 'e2e-tests/**'
+      - 'utils/**'
+      - 'libs/**'
 
 env:
   environment: dev
@@ -82,7 +82,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Timezone
-        uses: szenius/set-timezone@v1.2
+        uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
@@ -110,7 +110,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Timezone
-        uses: szenius/set-timezone@v1.2
+        uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
@@ -138,7 +138,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Timezone
-        uses: szenius/set-timezone@v1.2
+        uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
@@ -166,7 +166,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Timezone
-        uses: szenius/set-timezone@v1.2
+        uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 

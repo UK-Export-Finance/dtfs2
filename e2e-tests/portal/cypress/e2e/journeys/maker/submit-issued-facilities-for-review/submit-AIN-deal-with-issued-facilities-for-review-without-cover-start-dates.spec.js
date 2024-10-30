@@ -77,9 +77,9 @@ context('Maker fills in bond & loan issue facility forms without requested cover
     });
 
     // Submit deal for review
-    pages.contract.proceedToReview().click();
+    cy.clickProceedToReviewButton();
 
-    pages.contractReadyForReview.comments().type('Issued facilities');
+    cy.keyboardInput(pages.contractReadyForReview.comments(), 'Issued facilities');
     pages.contractReadyForReview.readyForCheckersApproval().click();
 
     // Expect to land on the /dashboard page
@@ -92,12 +92,7 @@ context('Maker fills in bond & loan issue facility forms without requested cover
       const bondId = bond._id;
       bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-      bondRow
-        .requestedCoverStartDate()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(today);
-        });
+      cy.assertText(bondRow.requestedCoverStartDate(), today);
     });
 
     // Expect loan requested cover start date to default to issued date
@@ -105,12 +100,7 @@ context('Maker fills in bond & loan issue facility forms without requested cover
       const loanId = loan._id;
       loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-      loanRow
-        .requestedCoverStartDate()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(today);
-        });
+      cy.assertText(loanRow.requestedCoverStartDate(), today);
     });
   });
 });

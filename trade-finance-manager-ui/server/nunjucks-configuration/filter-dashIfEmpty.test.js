@@ -1,33 +1,32 @@
 import dashIfEmpty from './filter-dashIfEmpty';
 
 describe('nunjuck filters - dashIfEmpty', () => {
-  it('should return string if text is number', () => {
+  it('should return string if text is non-zero number', () => {
     const result = dashIfEmpty(1234);
 
     const expected = '1234';
     expect(result).toEqual(expected);
   });
 
-  it('should return string', () => {
+  it('should return string, if its non-empty', () => {
     const result = dashIfEmpty('hello');
 
     expect(result).toEqual('hello');
   });
 
-  it('should return dash if nothing passed', () => {
-    const result = dashIfEmpty();
+  const returnDashCases = [
+    { argument: undefined, description: 'undefined' },
+    { argument: '', description: 'empty string' },
+    { argument: NaN, description: 'NaN' },
+    { argument: 'NaN', description: '"NaN"' },
+    { argument: '    ', description: 'whitespace' },
+    { argument: 'Invalid date', description: '`Invalid date`' },
+    { argument: new Date(NaN), description: 'an invalid Date' },
+    { argument: 0, description: '0' },
+  ];
 
-    expect(result).toEqual('-');
-  });
-
-  it('should return dash if empty string passed', () => {
-    const result = dashIfEmpty('');
-
-    expect(result).toEqual('-');
-  });
-
-  it('should return dash if NaN', () => {
-    const result = dashIfEmpty('NaN');
+  it.each(returnDashCases)('should return `-` when argument is $description', ({ argument }) => {
+    const result = dashIfEmpty(argument);
 
     expect(result).toEqual('-');
   });

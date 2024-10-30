@@ -31,41 +31,50 @@ context('Loan form - Submit loan with created element on page', () => {
     // navigate to the about-buyer page; use the nav so we have it covered in a test..
     pages.contract.visit(deal);
 
-    pages.contract.addLoanButton().click();
+    cy.clickAddLoanButton();
 
     // insert text element onto loan form
     cy.insertElement('loan-guarantee-form');
 
     pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
-    pages.loanGuaranteeDetails.unconditionalNameInput().clear();
-    pages.loanGuaranteeDetails.unconditionalNameInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.name);
+    cy.keyboardInput(pages.loanGuaranteeDetails.unconditionalNameInput(), LOAN_FORM_VALUES.GUARANTEE_DETAILS.name);
 
-    pages.loanGuaranteeDetails.requestedCoverStartDateDayInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateDay);
-    pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateMonth);
-    pages.loanGuaranteeDetails.requestedCoverStartDateYearInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateYear);
+    cy.completeDateFormFields({
+      idPrefix: 'requestedCoverStartDate',
+      day: LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateDay,
+      month: LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateMonth,
+      year: LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateYear,
+    });
 
-    pages.loanGuaranteeDetails.coverEndDateDayInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateDay);
-    pages.loanGuaranteeDetails.coverEndDateMonthInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateMonth);
-    pages.loanGuaranteeDetails.coverEndDateYearInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateYear);
+    cy.completeDateFormFields({
+      idPrefix: 'coverEndDate',
+      day: LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateDay,
+      month: LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateMonth,
+      year: LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateYear,
+    });
 
-    pages.loanGuaranteeDetails.submit().click();
+    cy.clickSubmitButton();
 
     // insert text element onto loan form
     cy.insertElement('loan-financial-details-form');
 
-    pages.loanFinancialDetails.facilityValueInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.value);
-    pages.loanFinancialDetails.currencySameAsSupplyContractCurrencyInputYes().click();
-    pages.loanFinancialDetails.interestMarginFeeInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.interestMarginFee);
-    pages.loanFinancialDetails.coveredPercentageInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage);
-    pages.loanFinancialDetails.minimumQuarterlyFeeInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.minimumQuarterlyFee);
+    cy.keyboardInput(pages.loanFinancialDetails.facilityValueInput(), LOAN_FORM_VALUES.FINANCIAL_DETAILS.value);
 
-    pages.loanFinancialDetails.disbursementAmountInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.disbursementAmount);
-    pages.loanFinancialDetails.submit().click();
+    pages.loanFinancialDetails.currencySameAsSupplyContractCurrencyInputYes().click();
+    cy.keyboardInput(pages.loanFinancialDetails.interestMarginFeeInput(), LOAN_FORM_VALUES.FINANCIAL_DETAILS.interestMarginFee);
+
+    cy.keyboardInput(pages.loanFinancialDetails.coveredPercentageInput(), LOAN_FORM_VALUES.FINANCIAL_DETAILS.coveredPercentage);
+
+    cy.keyboardInput(pages.loanFinancialDetails.minimumQuarterlyFeeInput(), LOAN_FORM_VALUES.FINANCIAL_DETAILS.minimumQuarterlyFee);
+
+    cy.keyboardInput(pages.loanFinancialDetails.disbursementAmountInput(), LOAN_FORM_VALUES.FINANCIAL_DETAILS.disbursementAmount);
+
+    cy.clickSubmitButton();
 
     fillLoanForm.datesRepayments.inAdvanceAnnually();
     // insert text element onto loan form
     cy.insertElement('loan-repayment-form');
-    pages.loanDatesRepayments.submit().click();
+    cy.clickSubmitButton();
 
     // gets deal
     cy.getDeal(deal._id, BANK1_MAKER1).then((updatedDeal) => {

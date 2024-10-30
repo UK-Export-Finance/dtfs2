@@ -22,8 +22,8 @@ describe('current password must match', () => {
       passwordConfirm: 'AAAA',
     };
 
-    const matchTest = currentPasswordMustMatch(user, change);
-    expect(matchTest).toEqual(errorResult);
+    const result = currentPasswordMustMatch(user, change);
+    expect(result).toEqual(errorResult);
   });
 
   it("should return error if current password doesn't match", () => {
@@ -33,8 +33,8 @@ describe('current password must match', () => {
       passwordConfirm: 'AAAA',
     };
 
-    const matchTest = currentPasswordMustMatch(user, change);
-    expect(matchTest).toEqual(errorResult);
+    const result = currentPasswordMustMatch(user, change);
+    expect(result).toEqual(errorResult);
   });
 
   it('should not return error if current password is valid', () => {
@@ -44,8 +44,8 @@ describe('current password must match', () => {
       passwordConfirm: 'AAAA',
     };
 
-    const matchTest = currentPasswordMustMatch(user, change);
-    expect(matchTest).toEqual([]);
+    const result = currentPasswordMustMatch(user, change);
+    expect(result).toEqual([]);
   });
 
   it('should not return error if valid reset password token supplied', () => {
@@ -61,8 +61,8 @@ describe('current password must match', () => {
       ...user,
       resetPwdToken,
     };
-    const matchTest = currentPasswordMustMatch(userWithResetToken, change);
-    expect(matchTest).toEqual([]);
+    const result = currentPasswordMustMatch(userWithResetToken, change);
+    expect(result).toEqual([]);
   });
 
   it('should return error if invalid reset password token supplied', () => {
@@ -78,7 +78,7 @@ describe('current password must match', () => {
       ...user,
       resetPwdToken,
     };
-    const matchTest = currentPasswordMustMatch(userWithResetToken, change);
-    expect(matchTest).toEqual(errorResult);
+    const result = currentPasswordMustMatch(userWithResetToken, change);
+    expect(result).toEqual(errorResult);
   });
 });

@@ -1,3 +1,5 @@
+const { ACTIVITY_TYPES } = require('@ukef/dtfs2-common');
+
 const CONSTANTS = require('../../constants');
 const api = require('../api');
 
@@ -13,15 +15,15 @@ const labelCase = (label) => label.charAt(0).toUpperCase() + label.substring(1).
 /**
  * Returns ACBS record creation timestamp in UNIX EPOCH
  * without the milliseconds.
- * @param {object} record ACBS response object
+ * @param {Object} record ACBS response object
  * @returns {Integer} EPOCH time without the milliseconds
  */
 const getTimestamp = (record) => new Date(record.receivedFromACBS).valueOf() / 1000;
 
 /**
  * Returns activity compatible author object
- * @param {object} Deal Deal object
- * @returns {object} Author object
+ * @param {Object} Deal Deal object
+ * @returns {Object} Author object
  */
 const getAuthor = (deal) => ({
   firstName: deal.dealSnapshot.bank.name,
@@ -31,8 +33,8 @@ const getAuthor = (deal) => ({
 
 /**
  * Returns user specific latest comment
- * @param {object} role User role
- * @param {object} Deal Deal object
+ * @param {Object} role User role
+ * @param {Object} Deal Deal object
  * @returns {string} User specific comments
  */
 const getComments = (role, deal) => {
@@ -54,8 +56,8 @@ const getComments = (role, deal) => {
 
 /**
  * Returns appropriate activity description from the checker
- * @param {object} record ACBS response object
- * @param {object} Deal Deal object
+ * @param {Object} record ACBS response object
+ * @param {Object} Deal Deal object
  * @returns {string} Description
  */
 const getDescription = (record, deal) => {
@@ -67,8 +69,8 @@ const getDescription = (record, deal) => {
 
 /**
  * Returns appropriate activity label
- * @param {object} record ACBS response object
- * @param {object} Deal Deal object
+ * @param {Object} record ACBS response object
+ * @param {Object} Deal Deal object
  * @returns {string} Label string
  */
 const getLabel = (record, deal) => {
@@ -85,12 +87,12 @@ const getLabel = (record, deal) => {
 
 /**
  * Constructs activity object
- * @param {object} record ACBS response object
- * @param {object} Deal Deal object
- * @returns {object} Activity object
+ * @param {Object} record ACBS response object
+ * @param {Object} Deal Deal object
+ * @returns {Object} Activity object
  */
 const getObject = (record, deal) => ({
-  type: CONSTANTS.ACTIVITY.TYPE.ACTIVITY,
+  type: ACTIVITY_TYPES.ACTIVITY,
   timestamp: getTimestamp(record),
   author: getAuthor(deal),
   text: getDescription(record, deal),
@@ -99,7 +101,7 @@ const getObject = (record, deal) => ({
 
 /**
  * Constructs ACBS records activities
- * @param {object} Deal Deal object
+ * @param {Object} Deal Deal object
  * @returns {Array} An array of activities object
  */
 const getActivities = (deal) => {
@@ -128,8 +130,8 @@ const getActivities = (deal) => {
 /**
  * Return array of activities object, comprising of
  * ACBS interaction records
- * @param {object} acbs Durable function output
- * @returns {Promise<object[] | {}>} An array of activities object
+ * @param {Object} acbs Durable function output
+ * @returns {Promise<Object[] | {}>} An array of activities object
  */
 const add = async (acbs) => {
   if (acbs.portalDealId) {

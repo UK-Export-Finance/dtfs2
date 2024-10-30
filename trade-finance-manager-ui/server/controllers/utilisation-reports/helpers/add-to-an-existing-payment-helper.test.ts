@@ -11,7 +11,7 @@ describe('add-to-an-existing-payment-helper', () => {
       const result = getPaymentsHeading(paymentGroups);
 
       // Assert
-      expect(result).toBe('There is one existing payment that the reported fees will be added to');
+      expect(result).toEqual('There is one existing payment that the reported fees will be added to');
     });
 
     it('should return "one existing group of payments" heading for a single group of payments', () => {
@@ -24,7 +24,7 @@ describe('add-to-an-existing-payment-helper', () => {
       const result = getPaymentsHeading(paymentGroups);
 
       // Assert
-      expect(result).toBe('There is one existing group of payments that the reported fees will be added to');
+      expect(result).toEqual('There is one existing group of payments that the reported fees will be added to');
     });
 
     it('should return "which payment" heading for multiple single payments', () => {
@@ -39,7 +39,7 @@ describe('add-to-an-existing-payment-helper', () => {
       const result = getPaymentsHeading(paymentGroups);
 
       // Assert
-      expect(result).toBe('Which payment do you want to add the reported fees to?');
+      expect(result).toEqual('Which payment do you want to add the reported fees to?');
     });
 
     it('should return "group of payments" heading for multiple groups of payments', () => {
@@ -54,7 +54,7 @@ describe('add-to-an-existing-payment-helper', () => {
       const result = getPaymentsHeading(paymentGroups);
 
       // Assert
-      expect(result).toBe('Which group of payments do you want to add the reported fees to?');
+      expect(result).toEqual('Which group of payments do you want to add the reported fees to?');
     });
 
     it('should return "payment or group of payments" heading for mix of single payments and groups', () => {
@@ -70,7 +70,7 @@ describe('add-to-an-existing-payment-helper', () => {
       const result = getPaymentsHeading(paymentGroups);
 
       // Assert
-      expect(result).toBe('Which payment or group of payments do you want to add the reported fees to?');
+      expect(result).toEqual('Which payment or group of payments do you want to add the reported fees to?');
     });
 
     function aSelectedFeeRecordsAvailablePaymentDetails(): SelectedFeeRecordsAvailablePaymentDetails {

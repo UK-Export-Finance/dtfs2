@@ -557,24 +557,26 @@ apiRoutes.get('/geospatial/addresses/postcode/:postcode', geospatialAddresses.lo
 /**
  * @openapi
  * /estore:
- *   get:
- *     summary: Create Estore folders
+ *   post:
+ *     summary: Creates an exporter site (if not exist), buyer, deal and facility directories. Endpoint will also upload any relevant documents.
  *     tags: [Estore, APIM]
- *     description: Creates an Estore site and then folders for buyer, deal and facilities. Multiple API calls.
+ *     description: Creates an eStore exporter site and then directories for buyer, deal and facilities. This endpoint will invoke multiple APIM eStore endpoints calls with response saved in `cron-job-logs` collection.
  *     requestBody:
  *       required: true
- *       description: Fields required for each Estore API call
+ *       description: Well formed payload for eStore API calls
  *       content:
  *         application/json:
  *           schema:
  *             $ref: '#/definitions/EstoreRequestBody'
  *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/definitions/EstoreResponseBody'
+ *       201:
+ *         description: eStore payload has been accepted and processing has been initiated.
+ *       208:
+ *         description: eStore payload has previously been reported and execution is in progress.
+ *       400:
+ *         description: eStore payload has been declined due to malformed attributes.
+ *       500:
+ *         description: eStore payload has not been processed and failed due to an internal server error.
  */
 apiRoutes.post('/estore/', eStore.create);
 

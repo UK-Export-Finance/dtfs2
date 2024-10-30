@@ -13,7 +13,7 @@ describe(page, () => {
   });
 
   it('should render page heading', () => {
-    wrapper.expectText('[data-cy="confirmation-main-heading"]').toRead(`${reportPeriod} GEF report sent to UKEF`);
+    wrapper.expectText('[data-cy="main-heading"]').toRead(`${reportPeriod} GEF report sent to UKEF`);
   });
 
   it('should render paragraph', () => {

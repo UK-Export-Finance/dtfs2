@@ -10,18 +10,18 @@ context('Feedback - create element and check if inserted into feedback', () => {
   });
 
   it("should not insert created element's data in the feedback", () => {
-    feedbackPage.role().type('test');
-    feedbackPage.organisation().type('test');
+    cy.keyboardInput(feedbackPage.role(), 'test');
+    cy.keyboardInput(feedbackPage.organisation(), 'test');
     feedbackPage.reasonForVisitingSelection().click();
     feedbackPage.easyToUseSelection().click();
     feedbackPage.clearlyExplainedSelection().click();
     feedbackPage.satisfiedSelection().click();
-    feedbackPage.howCanWeImprove().type('test');
+    cy.keyboardInput(feedbackPage.howCanWeImprove(), 'test');
     feedbackPage.emailAddress().clear();
 
     cy.insertElement('feedback-form');
 
-    feedbackPage.submitButton().click();
+    cy.clickSubmitButton();
 
     cy.getAllFeedback(ADMIN).then((feedback) => {
       const feedbackLength = feedback.length;

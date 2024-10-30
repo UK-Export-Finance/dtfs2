@@ -1,0 +1,109 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle -%}
+  Cancellation - Date effective from
+{%- endblock %}
+
+{% set headingHtml %}
+<h1 class="govuk-label-wrapper">
+  <span class="govuk-caption-l govuk-!-margin-top-3 govuk-!-margin-bottom-1">Cancel deal {{ ukefDealId }}</span>
+  <label class="govuk-label govuk-label--l" for="effective-from-date">
+    Date effective from
+  </label>
+</h1>
+{% endset %}
+
+{% block sub_content %}
+  {{ govukBackLink({
+      text: "Back",
+      href: previousPage,
+      attributes: {
+        'data-cy': 'back-link'
+      }
+    }) }}
+
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.summary,
+      attributes: {
+        'data-cy': 'error-summary'
+      },
+      classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <form method="POST" autocomplete="off">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukDateInput({
+          id: "effective-from-date",
+          value: effectiveFromDate,
+          namePrefix: "effective-from-date",
+          fieldset: {
+            legend: {
+              html: headingHtml
+            }
+          },
+          hint: {
+            text: "For example, 31 3 2024",
+            attributes: {
+              "data-cy": "effective-from-date-hint"
+            }
+          },
+          errorMessage: errors and {
+            text: errors.effectiveFromDateError.message,
+            attributes: {
+              'data-cy': 'effective-from-date-inline-error'
+            }
+          },
+          items: [
+            {
+              label: "Day",
+              classes: (errors and 'effective-from-date-day' in errors.effectiveFromDateError.fields) and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+              name: "day",
+              value: day,
+              attributes: {
+                'data-cy': "effective-from-date-day"
+              }
+            },
+            {
+              label: "Month",
+              classes: (errors and 'effective-from-date-month' in errors.effectiveFromDateError.fields) and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+              name: "month",
+              value: month,
+              attributes: {
+                'data-cy': "effective-from-date-month"
+              }
+            },
+            {
+              label: "Year",
+              classes: (errors and 'effective-from-date-year' in errors.effectiveFromDateError.fields) and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
+              name: "year",
+              value: year,
+              attributes: {
+                'data-cy': "effective-from-date-year"
+              }
+            }
+          ]
+        }) }}
+
+        <div class="govuk-button-group govuk-!-margin-top-4">
+          {{ govukButton({
+            text: "Continue",
+            attributes: { "data-cy": "continue-button" }
+          }) }}
+          <a class="govuk-link" href="/case/{{ dealId }}/cancellation/cancel" data-cy="cancel-link">Cancel</a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+{% endblock %}

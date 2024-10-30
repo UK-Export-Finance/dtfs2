@@ -2,6 +2,7 @@ const { contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinanc
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json');
+const { today } = require('../../../../../e2e-fixtures/dateConstants');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -24,17 +25,15 @@ context('about-supply-contract', () => {
     partials.taskListHeader.itemLink('financial-information').click();
 
     // set a GBP value, so we don't need to fill in the exchange-rate fields
-    contractAboutFinancial.supplyContractValue().type('10,000');
+    cy.keyboardInput(contractAboutFinancial.supplyContractValue(), '10,000');
     contractAboutFinancial.supplyContractCurrency().select('USD');
-    contractAboutFinancial.supplyContractConversionRateToGBP().type('1.123456');
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionRateToGBP(), '1.123456');
 
-    const today = new Date();
-    contractAboutFinancial.supplyContractConversionDate().day().type(`${today.getDate()}`);
-    contractAboutFinancial
-      .supplyContractConversionDate()
-      .month()
-      .type(`${today.getMonth() + 1}`);
-    contractAboutFinancial.supplyContractConversionDate().year().type(`${today.getFullYear()}`);
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day(), today.day);
+
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().month(), today.month);
+
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), today.year);
 
     contractAboutFinancial.saveAndGoBack().click();
 

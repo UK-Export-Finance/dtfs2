@@ -1,48 +1,28 @@
 const pages = require('../../../pages');
-const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
+const { oneMonth, today, twoDays } = require('../../../../../../e2e-fixtures/dateConstants');
 
-export const ISSUED_BOND_DATE_VALUE = dateConstants.today;
-export const COVER_START_DATE_VALUE = dateConstants.twoDays;
-export const COVER_END_DATE_VALUE = dateConstants.oneMonth;
+export const ISSUED_BOND_DATE_VALUE = today.date;
+export const COVER_START_DATE_VALUE = twoDays.date;
+export const COVER_END_DATE_VALUE = oneMonth.date;
 
 export const fillAndSubmitIssueBondFacilityFormWithoutRequestedCoverStartDate = () => {
-  pages.bondIssueFacility.issuedDateDayInput().type(dateConstants.todayDay);
-  pages.bondIssueFacility.issuedDateMonthInput().type(dateConstants.todayMonth);
-  pages.bondIssueFacility.issuedDateYearInput().type(dateConstants.todayYear);
+  cy.completeDateFormFields({ idPrefix: 'issuedDate' });
 
-  pages.bondIssueFacility.coverEndDateDayInput().type(dateConstants.oneMonthDay);
-  pages.bondIssueFacility.coverEndDateMonthInput().type(dateConstants.oneMonthMonth);
-  pages.bondIssueFacility.coverEndDateYearInput().type(dateConstants.oneMonthYear);
+  cy.completeDateFormFields({ idPrefix: 'coverEndDate', date: COVER_END_DATE_VALUE });
 
-  pages.bondIssueFacility.name().type('1234');
+  cy.keyboardInput(pages.bondIssueFacility.name(), '1234');
 
-  pages.bondIssueFacility.submit().click();
+  cy.clickSubmitButton();
 };
 
 export const fillAndSubmitIssueBondFacilityForm = () => {
-  pages.bondIssueFacility.issuedDateDayInput().type(dateConstants.todayDay);
-  pages.bondIssueFacility.issuedDateMonthInput().type(dateConstants.todayMonth);
-  pages.bondIssueFacility.issuedDateYearInput().type(dateConstants.todayYear);
+  cy.completeDateFormFields({ idPrefix: 'issuedDate' });
 
-  pages.bondIssueFacility.requestedCoverStartDateDayInput().clear();
-  pages.bondIssueFacility.requestedCoverStartDateDayInput().type(dateConstants.twoDaysDay);
+  cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: COVER_START_DATE_VALUE });
 
-  pages.bondIssueFacility.requestedCoverStartDateMonthInput().clear();
-  pages.bondIssueFacility.requestedCoverStartDateMonthInput().type(dateConstants.twoDaysMonth);
+  cy.completeDateFormFields({ idPrefix: 'coverEndDate', date: COVER_END_DATE_VALUE });
 
-  pages.bondIssueFacility.requestedCoverStartDateYearInput().clear();
-  pages.bondIssueFacility.requestedCoverStartDateYearInput().type(dateConstants.twoDaysYear);
+  cy.keyboardInput(pages.bondIssueFacility.name(), '1234');
 
-  pages.bondIssueFacility.coverEndDateDayInput().clear();
-  pages.bondIssueFacility.coverEndDateDayInput().type(dateConstants.oneMonthDay);
-
-  pages.bondIssueFacility.coverEndDateMonthInput().clear();
-  pages.bondIssueFacility.coverEndDateMonthInput().type(dateConstants.oneMonthMonth);
-
-  pages.bondIssueFacility.coverEndDateYearInput().clear();
-  pages.bondIssueFacility.coverEndDateYearInput().type(dateConstants.oneMonthYear);
-
-  pages.bondIssueFacility.name().type('1234');
-
-  pages.bondIssueFacility.submit().click();
+  cy.clickSubmitButton();
 };

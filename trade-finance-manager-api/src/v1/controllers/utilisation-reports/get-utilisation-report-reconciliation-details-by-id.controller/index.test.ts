@@ -1,5 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode, AxiosError, AxiosResponse } from 'axios';
+import { PaymentDetailsFilters } from '@ukef/dtfs2-common';
 import { GetUtilisationReportReconciliationDetailsByIdRequest, getUtilisationReportReconciliationDetailsById } from '.';
 import api from '../../../api';
 import { aUtilisationReportReconciliationDetailsResponse } from '../../../../../test-helpers';
@@ -38,14 +39,18 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       await getUtilisationReportReconciliationDetailsById(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
-      expect(res._getData()).toBe(utilisationReportReconciliationDetailsResponse);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+      expect(res._getData()).toEqual(utilisationReportReconciliationDetailsResponse);
     });
 
-    it('fetches report with facilityIdQuery query param when provided ', async () => {
+    it('fetches report with the premium payments tab filters query param when provided', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
-      req.query = { facilityIdQuery: '1234' };
+      const premiumPaymentsFilters = {
+        facilityId: '1234',
+      };
+      const paymentDetailsFilters = {};
+      req.query = { premiumPaymentsFilters, paymentDetailsFilters };
 
       apiGetUtilisationReportReconciliationDetailsByIdSpy.mockResolvedValue(utilisationReportReconciliationDetailsResponse);
 
@@ -53,7 +58,29 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       await getUtilisationReportReconciliationDetailsById(req, res);
 
       // Assert
-      expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledWith(reportId.toString(), '1234');
+      expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledTimes(1);
+      expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledWith(reportId.toString(), premiumPaymentsFilters, paymentDetailsFilters);
+    });
+
+    it('fetches report with the payment details tab filters query param when provided', async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      const premiumPaymentsFilters = {};
+      const paymentDetailsFilters: PaymentDetailsFilters = {
+        facilityId: '1234',
+        paymentCurrency: 'GBP',
+        paymentReference: 'A sample payment reference.',
+      };
+      req.query = { premiumPaymentsFilters, paymentDetailsFilters };
+
+      apiGetUtilisationReportReconciliationDetailsByIdSpy.mockResolvedValue(utilisationReportReconciliationDetailsResponse);
+
+      // Act
+      await getUtilisationReportReconciliationDetailsById(req, res);
+
+      // Assert
+      expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledTimes(1);
+      expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledWith(reportId.toString(), premiumPaymentsFilters, paymentDetailsFilters);
     });
 
     it('responds with the specific axios error code when the api throws an error', async () => {
@@ -71,8 +98,8 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       await getUtilisationReportReconciliationDetailsById(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(errorStatus);
-      expect(res._getData()).toBe(`Failed to get utilisation report reconciliation details for report with id '${reportId}': ${axiosError.message}`);
+      expect(res._getStatusCode()).toEqual(errorStatus);
+      expect(res._getData()).toEqual(`Failed to get utilisation report reconciliation details for report with id '${reportId}': ${axiosError.message}`);
     });
 
     it('responds with a 500 when an unexpected error occurs', async () => {
@@ -85,8 +112,8 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       await getUtilisationReportReconciliationDetailsById(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-      expect(res._getData()).toBe(`Failed to get utilisation report reconciliation details for report with id '${reportId}'`);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+      expect(res._getData()).toEqual(`Failed to get utilisation report reconciliation details for report with id '${reportId}'`);
     });
   });
 });

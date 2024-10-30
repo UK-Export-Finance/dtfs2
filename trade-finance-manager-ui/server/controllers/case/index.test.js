@@ -1,8 +1,8 @@
-import { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, DEAL_SUBMISSION_TYPE, isTfmFacilityEndDateFeatureFlagEnabled, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
-import { getTask } from '../helpers';
+import { getTask, isDealCancellationEnabled } from '../helpers';
 import mapAssignToSelectOptions from '../../helpers/map-assign-to-select-options';
 
 jest.mock('@ukef/dtfs2-common', () => ({
@@ -10,11 +10,18 @@ jest.mock('@ukef/dtfs2-common', () => ({
   isTfmFacilityEndDateFeatureFlagEnabled: jest.fn(),
 }));
 
+jest.mock('../helpers', () => ({
+  ...jest.requireActual('../helpers'),
+  isDealCancellationEnabled: jest.fn().mockReturnValue(false),
+}));
+
+const mockSuccessBannerMessage = 'mock success flash message';
+
 const res = mockRes();
 
-const TOKEN = 'test-token';
+const token = 'test-token';
 
-const SESSION = {
+const session = {
   user: {
     _id: '12345678',
     username: 'testUser',
@@ -22,20 +29,24 @@ const SESSION = {
     lastName: 'Bloggs',
     teams: ['TEAM1'],
   },
-  userToken: TOKEN,
+  userToken: token,
 };
 
 describe('controllers - case', () => {
   beforeEach(() => {
-    jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(true);
+    jest.clearAllMocks();
+    jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(false);
   });
 
   describe('GET case deal', () => {
     describe('when deal exists', () => {
+      let req;
+
       const mockDeal = {
         _id: '61f6ac5b02fade01b1e8efef',
         dealSnapshot: {
           _id: '61f6ac5b02fade01b1e8efef',
+          submissionType: DEAL_SUBMISSION_TYPE.AIN,
         },
         tfm: {
           parties: [],
@@ -60,16 +71,18 @@ describe('controllers - case', () => {
             status: 200,
             data: mockAmendments,
           });
-      });
+        api.getDealCancellation = jest.fn(() => ({}));
 
-      it('should render deal template with data', async () => {
-        const req = {
+        req = {
           params: {
             _id: mockDeal._id,
           },
-          session: SESSION,
+          session,
+          flash: jest.fn().mockReturnValue([mockSuccessBannerMessage]),
         };
+      });
 
+      it('should render deal template with data', async () => {
         await caseController.getCaseDeal(req, res);
 
         expect(res.render).toHaveBeenCalledWith('case/deal/deal.njk', {
@@ -77,11 +90,102 @@ describe('controllers - case', () => {
           tfm: mockDeal.tfm,
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'deal',
+          successMessage: mockSuccessBannerMessage,
           dealId: req.params._id,
-          user: SESSION.user,
+          user: session.user,
+          hasDraftCancellation: false,
+          showDealCancelButton: false,
           hasAmendmentInProgress: true,
           amendments: mockAmendments,
           amendmentsInProgress: mockAmendments,
+        });
+      });
+
+      it('should check whether deal cancellation is enabled', async () => {
+        await caseController.getCaseDeal(req, res);
+
+        expect(isDealCancellationEnabled).toHaveBeenCalledTimes(1);
+        expect(isDealCancellationEnabled).toHaveBeenCalledWith(DEAL_SUBMISSION_TYPE.AIN, session.user);
+      });
+
+      describe('when deal cancellation is enabled', () => {
+        beforeEach(() => {
+          jest.mocked(isDealCancellationEnabled).mockReturnValueOnce(true);
+        });
+
+        describe('when the deal can still be cancelled', () => {
+          it('should render the template with showDealCancelButton=true', async () => {
+            jest.mocked(api.getDealCancellation).mockReturnValueOnce({ status: TFM_DEAL_CANCELLATION_STATUS.DRAFT });
+
+            await caseController.getCaseDeal(req, res);
+
+            expect(res.render).toHaveBeenCalledWith(
+              'case/deal/deal.njk',
+              expect.objectContaining({
+                showDealCancelButton: true,
+              }),
+            );
+          });
+        });
+
+        describe('when the deal is already cancelled', () => {
+          it('should render the template with showDealCancelButton=false', async () => {
+            jest.mocked(api.getDealCancellation).mockReturnValueOnce({ status: TFM_DEAL_CANCELLATION_STATUS.COMPLETED });
+
+            await caseController.getCaseDeal(req, res);
+
+            expect(res.render).toHaveBeenCalledWith(
+              'case/deal/deal.njk',
+              expect.objectContaining({
+                showDealCancelButton: false,
+              }),
+            );
+          });
+        });
+
+        describe('when the deal cancellation is in draft', () => {
+          it('should render the template with hasDraftCancellation=true', async () => {
+            jest.mocked(api.getDealCancellation).mockReturnValueOnce({ status: TFM_DEAL_CANCELLATION_STATUS.DRAFT });
+
+            await caseController.getCaseDeal(req, res);
+
+            expect(res.render).toHaveBeenCalledWith(
+              'case/deal/deal.njk',
+              expect.objectContaining({
+                hasDraftCancellation: true,
+              }),
+            );
+          });
+        });
+
+        describe('when the deal cancellation is not yet started', () => {
+          it('should render the template with hasDraftCancellation=false', async () => {
+            jest.mocked(api.getDealCancellation).mockReturnValueOnce({});
+
+            await caseController.getCaseDeal(req, res);
+
+            expect(res.render).toHaveBeenCalledWith(
+              'case/deal/deal.njk',
+              expect.objectContaining({
+                hasDraftCancellation: false,
+              }),
+            );
+          });
+        });
+      });
+
+      describe('when deal cancellation is disabled', () => {
+        it('should render the template with showDealCancelButton=false', async () => {
+          jest.mocked(isDealCancellationEnabled).mockReturnValueOnce(false);
+
+          await caseController.getCaseDeal(req, res);
+
+          expect(res.render).toHaveBeenCalledWith(
+            'case/deal/deal.njk',
+            expect.objectContaining({
+              showDealCancelButton: false,
+            }),
+          );
         });
       });
     });
@@ -96,7 +200,7 @@ describe('controllers - case', () => {
           params: {
             _id: '1',
           },
-          session: SESSION,
+          session,
         };
 
         await caseController.getCaseDeal(req, res);
@@ -135,7 +239,7 @@ describe('controllers - case', () => {
           params: {
             _id: mockDeal._id,
           },
-          session: SESSION,
+          session,
         };
 
         await caseController.getCaseTasks(req, res);
@@ -145,7 +249,7 @@ describe('controllers - case', () => {
           userId: req.session.user._id,
         };
 
-        expect(apiGetDealSpy).toHaveBeenCalledWith(mockDeal._id, TOKEN, expectedTaskFiltersObj);
+        expect(apiGetDealSpy).toHaveBeenCalledWith(mockDeal._id, token, expectedTaskFiltersObj);
 
         expect(res.render).toHaveBeenCalledWith('case/tasks/tasks.njk', {
           deal: mockDeal.dealSnapshot,
@@ -154,7 +258,7 @@ describe('controllers - case', () => {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'tasks',
           dealId: req.params._id,
-          user: SESSION.user,
+          user: session.user,
           selectedTaskFilter: 'all',
           amendments: [],
           hasAmendmentInProgress: false,
@@ -173,7 +277,7 @@ describe('controllers - case', () => {
           params: {
             _id: '1',
           },
-          session: SESSION,
+          session,
         };
 
         await caseController.getCaseTasks(req, res);
@@ -212,7 +316,7 @@ describe('controllers - case', () => {
           params: {
             _id: mockDeal._id,
           },
-          session: SESSION,
+          session,
           body: {
             filterType: 'team',
           },
@@ -226,7 +330,7 @@ describe('controllers - case', () => {
           userId: req.session.user._id,
         };
 
-        expect(apiGetDealSpy).toHaveBeenCalledWith(mockDeal._id, TOKEN, expectedTaskFiltersObj);
+        expect(apiGetDealSpy).toHaveBeenCalledWith(mockDeal._id, token, expectedTaskFiltersObj);
 
         expect(res.render).toHaveBeenCalledWith('case/tasks/tasks.njk', {
           deal: mockDeal.dealSnapshot,
@@ -235,7 +339,7 @@ describe('controllers - case', () => {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'tasks',
           dealId: req.params._id,
-          user: SESSION.user,
+          user: session.user,
           selectedTaskFilter: req.body.filterType,
           amendments: [],
           hasAmendmentInProgress: false,
@@ -254,7 +358,7 @@ describe('controllers - case', () => {
           params: {
             _id: '1',
           },
-          session: SESSION,
+          session,
           body: {
             filterType: 'team',
           },
@@ -284,7 +388,7 @@ describe('controllers - case', () => {
                   id: '123',
                   groupId: 1,
                   assignedTo: {
-                    userId: SESSION.user._id,
+                    userId: session.user._id,
                   },
                   team: {
                     id: 'TEAM_1',
@@ -295,7 +399,7 @@ describe('controllers - case', () => {
                   groupId: 1,
                   canEdit: true,
                   assignedTo: {
-                    userId: SESSION.user._id,
+                    userId: session.user._id,
                   },
                   team: {
                     id: 'TEAM_1',
@@ -322,7 +426,7 @@ describe('controllers - case', () => {
           teams: ['TEAM_1'],
         },
         {
-          _id: SESSION.user._id,
+          _id: session.user._id,
           firstName: 'a',
           lastName: 'b',
           teams: ['TEAM_1'],
@@ -341,7 +445,7 @@ describe('controllers - case', () => {
             groupId: '1',
             taskId: '456',
           },
-          session: SESSION,
+          session,
         };
 
         const expectedTask = getTask(Number(req.params.groupId), req.params.taskId, mockDeal.tfm.tasks);
@@ -354,9 +458,9 @@ describe('controllers - case', () => {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'tasks',
           dealId: req.params._id,
-          user: SESSION.user,
+          user: session.user,
           task: expectedTask,
-          assignToSelectOptions: mapAssignToSelectOptions(expectedTask.assignedTo.userId, SESSION.user, mockTeamMembers),
+          assignToSelectOptions: mapAssignToSelectOptions(expectedTask.assignedTo.userId, session.user, mockTeamMembers),
         });
       });
     });
@@ -377,7 +481,7 @@ describe('controllers - case', () => {
                   id: '123',
                   groupId: 1,
                   assignedTo: {
-                    userId: SESSION.user._id,
+                    userId: session.user._id,
                   },
                   team: {
                     id: 'TEAM_1',
@@ -387,7 +491,7 @@ describe('controllers - case', () => {
                   id: '456',
                   groupId: 1,
                   assignedTo: {
-                    userId: SESSION.user._id,
+                    userId: session.user._id,
                   },
                   team: {
                     id: 'TEAM_1',
@@ -411,7 +515,7 @@ describe('controllers - case', () => {
             groupId: '1',
             taskId: '123',
           },
-          session: SESSION,
+          session,
         };
 
         await caseController.getCaseTask(req, res);
@@ -447,7 +551,7 @@ describe('controllers - case', () => {
             _id: mockDeal._id,
             taskId: '12345678',
           },
-          session: SESSION,
+          session,
         };
 
         await caseController.getCaseTask(req, res);
@@ -484,7 +588,7 @@ describe('controllers - case', () => {
             groupId: '1',
             taskId: '123',
           },
-          session: SESSION,
+          session,
         };
 
         await caseController.getCaseTask(req, res);
@@ -503,7 +607,7 @@ describe('controllers - case', () => {
           params: {
             _id: '1',
           },
-          session: SESSION,
+          session,
         };
 
         await caseController.getCaseTask(req, res);
@@ -547,9 +651,9 @@ describe('controllers - case', () => {
             groupId,
             taskId,
           },
-          session: SESSION,
+          session,
           body: {
-            assignedTo: SESSION.user._id,
+            assignedTo: session.user._id,
             status: 'In progress',
           },
           headers: {
@@ -568,7 +672,7 @@ describe('controllers - case', () => {
           urlOrigin: req.headers.origin,
         };
 
-        expect(apiUpdateSpy).toHaveBeenCalledWith(mockDeal._id, groupId, taskId, expectedUpdateObj, TOKEN);
+        expect(apiUpdateSpy).toHaveBeenCalledWith(mockDeal._id, groupId, taskId, expectedUpdateObj, token);
 
         expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/tasks`);
       });
@@ -586,7 +690,7 @@ describe('controllers - case', () => {
             groupId: '1',
             taskId: '456',
           },
-          session: SESSION,
+          session,
           headers: {
             origin: 'http://test.com',
           },
@@ -692,7 +796,7 @@ describe('controllers - case', () => {
                 params: {
                   facilityId: mockFacility._id,
                 },
-                session: SESSION,
+                session,
               };
 
               await caseController.getCaseFacility(req, res);
@@ -708,12 +812,12 @@ describe('controllers - case', () => {
         });
       });
 
-      it('should render deal template with data', async () => {
+      it('should render facility template with data', async () => {
         const req = {
           params: {
             facilityId: mockFacility._id,
           },
-          session: SESSION,
+          session,
         };
 
         await caseController.getCaseFacility(req, res);
@@ -726,7 +830,7 @@ describe('controllers - case', () => {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'facility',
           facilityId: req.params.facilityId,
-          user: SESSION.user,
+          user: session.user,
           showAmendmentButton: false,
           showContinueAmendmentButton: false,
           amendmentId: '626bae8c43c01e02076352e1',
@@ -751,7 +855,7 @@ describe('controllers - case', () => {
           params: {
             _id: '1',
           },
-          session: SESSION,
+          session,
         };
 
         await caseController.getCaseFacility(req, res);
@@ -780,7 +884,7 @@ describe('controllers - case', () => {
           params: {
             _id: mockDeal._id,
           },
-          session: SESSION,
+          session,
         };
 
         await caseController.getCaseDocuments(req, res);
@@ -791,7 +895,7 @@ describe('controllers - case', () => {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'documents',
           dealId: req.params._id,
-          user: SESSION.user,
+          user: session.user,
           amendmentsInProgress: [],
           hasAmendmentInProgress: false,
         });
@@ -809,7 +913,7 @@ describe('controllers - case', () => {
           params: {
             _id: '1',
           },
-          session: SESSION,
+          session,
         };
 
         await caseController.getCaseDocuments(req, res);

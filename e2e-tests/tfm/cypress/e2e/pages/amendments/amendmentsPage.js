@@ -9,21 +9,14 @@ const amendmentsPage = {
   amendmentRequestYearInput: () => cy.get('[data-cy="amendment--request-date-year"]'),
 
   amendmentNewCoverEndDateDay: () => cy.get('[data-cy="amendment--cover-end-date"]'),
-  amendmentCoverEndDateDayInput: () => cy.get('[data-cy="amendment--cover-end-date-day"]'),
-  amendmentCoverEndDateMonthInput: () => cy.get('[data-cy="amendment--cover-end-date-month"]'),
-  amendmentCoverEndDateYearInput: () => cy.get('[data-cy="amendment--cover-end-date-year"]'),
   amendmentFacilityValueInput: () => cy.get('[data-cy="amendment--facility-value"]'),
   amendmentCurrentFacilityValue: () => cy.get('[data-cy="amendment--current-facility-value"]'),
 
-  amendmentEffectiveDayInput: () => cy.get('[data-cy="amendment--effective-date-day"]'),
-  amendmentEffectiveMonthInput: () => cy.get('[data-cy="amendment--effective-date-month"]'),
-  amendmentEffectiveYearInput: () => cy.get('[data-cy="amendment--effective-date-year"]'),
   amendmentCurrentCoverEndDate: () => cy.get('[data-cy="amendment--current-cover-end-date"]'),
 
   amendmentCoverEndDateCheckbox: () => cy.get('[data-cy="amendment--coverEndDate-checkbox"]'),
   amendmentFacilityValueCheckbox: () => cy.get('[data-cy="amendment--facilityValue-checkbox"]'),
 
-  errorSummary: () => cy.get('[data-cy="amendment--error-summary"]'),
   errorMessage: () => cy.get('[data-cy="amendment--inline-error"]'),
 
   amendmentRequestApprovalYes: () => cy.get('[data-cy="amendment--request-approval-yes"]'),
@@ -32,23 +25,14 @@ const amendmentsPage = {
   isUsingFacilityEndDateYes: () => cy.get('[data-cy="amendment--is-using-facility-end-date-yes"]'),
   isUsingFacilityEndDateNo: () => cy.get('[data-cy="amendment--is-using-facility-end-date-no"]'),
 
-  amendmentFacilityEndDateDayInput: () => cy.get('[data-cy="amendment--facility-end-date-day"]'),
-  amendmentFacilityEndDateMonthInput: () => cy.get('[data-cy="amendment--facility-end-date-month"]'),
-  amendmentFacilityEndDateYearInput: () => cy.get('[data-cy="amendment--facility-end-date-year"]'),
   amendmentCurrentFacilityEndDate: () => cy.get('[data-cy="amendment--current-facility-end-date"]'),
   amendmentFacilityEndDateDetails: () => cy.get('[data-cy="amendment--facility-end-date-details"]'),
 
-  amendmentBankReviewDateDayInput: () => cy.get('[data-cy="amendment--bank-review-date-day"]'),
-  amendmentBankReviewDateMonthInput: () => cy.get('[data-cy="amendment--bank-review-date-month"]'),
-  amendmentBankReviewDateYearInput: () => cy.get('[data-cy="amendment--bank-review-date-year"]'),
   amendmentCurrentBankReviewDate: () => cy.get('[data-cy="amendment--current-bank-review-date"]'),
   amendmentBankReviewDateDetails: () => cy.get('[data-cy="amendment--bank-review-date-details"]'),
 
   addAmendmentButton: () => cy.get('[data-cy="amendment--add-amendment-button"]'),
-  continueAmendmentButton: () => cy.get('[data-cy="amendment--continue-amendment-button"]'),
-  continueAmendment: () => cy.get('[data-cy="amendment--continue-button"]'),
   amendmentSendToBankButton: () => cy.get('[data-cy="amendment--send-to-bank-button"]'),
-  cancelLink: () => cy.get('[data-cy="amendment--cancel-button"]'),
 
   leadUnderwriterHeading: () => cy.get('[data-cy="amendment-assign-lead-underwriter-heading"]'),
 
@@ -65,9 +49,6 @@ const amendmentsPage = {
   underWriterManagerDecisionRadioInputDecline: () => cy.get('[data-cy="amendment--decline-radio-button"]'),
 
   underWriterManagerDecisionRadioInputValidationError: () => cy.get('[data-cy="decision-input-error"]'),
-
-  assignLeadUnderwriterSaveButton: () => cy.get('[data-cy="amendment--continue-button"]'),
-  assignLeadUnderwriterCancelLink: () => cy.get('[data-cy="cancel-link"]'),
 
   amendmentAnswerBankRequestDate: () => cy.get('[data-cy="amendment--bank-request-date-response"]'),
   amendmentAnswerRequireApproval: () => cy.get('[data-cy="amendment--require-approval-response"]'),

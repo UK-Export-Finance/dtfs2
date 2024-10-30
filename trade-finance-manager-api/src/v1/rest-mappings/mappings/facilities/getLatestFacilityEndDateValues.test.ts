@@ -1,13 +1,16 @@
 import { ObjectId } from 'mongodb';
 import { Facility, TfmFacility } from '@ukef/dtfs2-common';
-import { getLatestFacilityEndDateValues } from './getLatestFacilityEndDateValues.ts';
-import { MOCK_FACILITY_SNAPSHOT } from '../../../__mocks__/mock-facility-snapshot.ts';
+import { generateMockTfmUserAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream/test-helpers';
+import { getLatestFacilityEndDateValues } from './getLatestFacilityEndDateValues';
+import { MOCK_FACILITY_SNAPSHOT } from '../../../__mocks__/mock-facility-snapshot';
 import { MOCK_AMENDMENT } from '../../../__mocks__/mock-amendment';
 
 describe('getLatestFacilityEndDateValues', () => {
   const facility: TfmFacility = {
     _id: new ObjectId('1234567890abcdef12345678'),
     facilitySnapshot: MOCK_FACILITY_SNAPSHOT,
+    tfm: {},
+    auditRecord: generateMockTfmUserAuditDatabaseRecord(new ObjectId()),
   };
 
   const mockFacilityEndDate = new Date('2024-04-04');
@@ -44,24 +47,6 @@ describe('getLatestFacilityEndDateValues', () => {
 
       // Assert
       expect(result).toEqual({ isUsingFacilityEndDate: true, facilityEndDate: mockFacilityEndDate });
-    });
-
-    it('should return the the latest amendment value when the FED has been amended', () => {
-      // Arrange
-      const facilityWithAmendments: TfmFacility = {
-        ...facility,
-        facilitySnapshot: facilitySnapshotWithFacilityEndDate,
-        amendments: [
-          { ...MOCK_AMENDMENT, updatedAt: 1723653111, version: 1, tfm: { bankReviewDate: mockBankReviewDate, isUsingFacilityEndDate: false } },
-          { ...MOCK_AMENDMENT, updatedAt: 1723653222, version: 2 },
-        ],
-      };
-
-      // Act
-      const result = getLatestFacilityEndDateValues(facilityWithAmendments);
-
-      // Assert
-      expect(result).toEqual({ isUsingFacilityEndDate: false, bankReviewDate: mockBankReviewDate });
     });
   });
 

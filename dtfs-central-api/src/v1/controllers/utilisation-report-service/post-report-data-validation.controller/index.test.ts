@@ -19,7 +19,7 @@ describe('post-report-data-validation.controller', () => {
       reportData: [{ header: { value: 'value', column: 'A', row: '1' } }],
     });
 
-    it(`respond with a ${HttpStatusCode.Ok} and validation errors when successfully validates the report data`, () => {
+    it(`respond with a ${HttpStatusCode.Ok} and validation errors when successfully validates the report data`, async () => {
       // Arrange
       const reportData = [{ header: { value: 'value', column: 'A', row: '1' } }];
       const req = httpMocks.createRequest<PostReportDataValidationRequest>({
@@ -27,18 +27,18 @@ describe('post-report-data-validation.controller', () => {
       });
       const res = httpMocks.createResponse();
 
-      jest.mocked(validateUtilisationReportCsvData).mockReturnValue([{ errorMessage: 'Data invalid!' }]);
+      jest.mocked(validateUtilisationReportCsvData).mockResolvedValue([{ errorMessage: 'Data invalid!' }]);
 
       // Act
-      postReportDataValidation(req, res);
+      await postReportDataValidation(req, res);
 
       // Assert
       expect(validateUtilisationReportCsvData).toHaveBeenCalledWith(reportData);
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
       expect(res._getData()).toEqual({ csvValidationErrors: [{ errorMessage: 'Data invalid!' }] });
     });
 
-    it("responds with the specific error status if saving the report throws an 'ApiError'", () => {
+    it("responds with the specific error status if saving the report throws an 'ApiError'", async () => {
       // Arrange
       const req = httpMocks.createRequest<PostReportDataValidationRequest>({
         body: aValidRequestBody(),
@@ -51,13 +51,13 @@ describe('post-report-data-validation.controller', () => {
       });
 
       // Act
-      postReportDataValidation(req, res);
+      await postReportDataValidation(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(errorStatus);
+      expect(res._getStatusCode()).toEqual(errorStatus);
     });
 
-    it("responds with the specific error message if saving the report throws an 'ApiError'", () => {
+    it("responds with the specific error message if saving the report throws an 'ApiError'", async () => {
       // Arrange
       const req = httpMocks.createRequest<PostReportDataValidationRequest>({
         body: aValidRequestBody(),
@@ -70,13 +70,13 @@ describe('post-report-data-validation.controller', () => {
       });
 
       // Act
-      postReportDataValidation(req, res);
+      await postReportDataValidation(req, res);
 
       // Assert
-      expect(res._getData()).toBe(`Failed to validate report data: ${errorMessage}`);
+      expect(res._getData()).toEqual(`Failed to validate report data: ${errorMessage}`);
     });
 
-    it(`responds with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, () => {
+    it(`responds with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, async () => {
       // Arrange
       const req = httpMocks.createRequest<PostReportDataValidationRequest>({
         body: aValidRequestBody(),
@@ -88,13 +88,13 @@ describe('post-report-data-validation.controller', () => {
       });
 
       // Act
-      postReportDataValidation(req, res);
+      await postReportDataValidation(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
     });
 
-    it('responds with a generic error message if an unknown error occurs', () => {
+    it('responds with a generic error message if an unknown error occurs', async () => {
       // Arrange
       const req = httpMocks.createRequest<PostReportDataValidationRequest>({
         body: aValidRequestBody(),
@@ -106,10 +106,10 @@ describe('post-report-data-validation.controller', () => {
       });
 
       // Act
-      postReportDataValidation(req, res);
+      await postReportDataValidation(req, res);
 
       // Assert
-      expect(res._getData()).toBe('Failed to validate report data');
+      expect(res._getData()).toEqual('Failed to validate report data');
     });
   });
 });

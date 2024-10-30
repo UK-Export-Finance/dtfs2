@@ -8,7 +8,10 @@ jest.mock('../../../server/api');
 const component = '../templates/utilisation-reports/_macros/report-reconciliation-table-manual-reconciliation.njk';
 const tableSelector = '[data-cy="utilisation-report-reconciliation-table"]';
 
-const render = componentRenderer(component);
+const render = componentRenderer<{
+  summaryItems: UtilisationReportSummaryViewModel[];
+  submissionMonth: string;
+}>(component);
 
 describe(component, () => {
   const getWrapper = (userTeams?: TeamId[]) => {

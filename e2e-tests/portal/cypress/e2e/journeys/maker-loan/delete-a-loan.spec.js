@@ -2,10 +2,11 @@ const pages = require('../../pages');
 const partials = require('../../partials');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
+const { today } = require('../../../../../e2e-fixtures/dateConstants');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
-const now = new Date().valueOf();
+const now = today.unixMilliseconds;
 
 const MOCK_DEAL = {
   bankInternalRefName: 'someDealId',
@@ -27,7 +28,7 @@ const MOCK_DEAL = {
       ukefGuaranteeInMonths: '12',
       name: '',
       guaranteeFeePayableByBank: '18.0000',
-      updatedAt: Date.now(),
+      updatedAt: now,
       value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       interestMarginFee: '20',
@@ -46,7 +47,7 @@ const MOCK_DEAL = {
       ukefGuaranteeInMonths: '12',
       name: '',
       guaranteeFeePayableByBank: '18.0000',
-      updatedAt: Date.now(),
+      updatedAt: now,
       value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       interestMarginFee: '20',
@@ -65,7 +66,7 @@ const MOCK_DEAL = {
       ukefGuaranteeInMonths: '12',
       name: '',
       guaranteeFeePayableByBank: '18.0000',
-      updatedAt: Date.now(),
+      updatedAt: now,
       value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       interestMarginFee: '20',
@@ -123,16 +124,11 @@ context('Delete a Loan', () => {
     loanToDeleteRow.deleteLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanToDeleteId}/delete`));
 
-    pages.loanDelete.submit().click();
+    cy.clickSubmitButton();
 
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
-    partials.successMessage
-      .successMessageListItem()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`Loan #${loanToDeleteId} has been deleted`);
-      });
+    cy.assertText(partials.successMessage.successMessageListItem(), `Loan #${loanToDeleteId} has been deleted`);
 
     pages.contract.loansTransactionsTableRows().should('have.length', 2);
   });

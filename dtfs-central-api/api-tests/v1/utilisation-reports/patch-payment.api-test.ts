@@ -3,6 +3,7 @@ import { ObjectId } from 'mongodb';
 import { In } from 'typeorm';
 import { difference } from 'lodash';
 import {
+  FEE_RECORD_STATUS,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   FeeRecordStatus,
@@ -43,13 +44,13 @@ describe(`PATCH ${BASE_URL}`, () => {
   const feeRecordsForReportWithPayments = (report: UtilisationReportEntity, payments: PaymentEntity[]) => [
     FeeRecordEntityMockBuilder.forReport(report)
       .withId(1)
-      .withStatus('DOES_NOT_MATCH')
+      .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
       .withFeesPaidToUkefForThePeriodCurrency('GBP')
       .withPayments(payments)
       .build(),
     FeeRecordEntityMockBuilder.forReport(report)
       .withId(2)
-      .withStatus('DOES_NOT_MATCH')
+      .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
       .withFeesPaidToUkefForThePeriodCurrency('GBP')
       .withPayments(payments)
       .build(),
@@ -77,7 +78,7 @@ describe(`PATCH ${BASE_URL}`, () => {
     const response = await testApi.patch(aPatchPaymentRequestBody()).to(getUrl(reportId, paymentId + 1));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.NotFound);
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
   it('returns a 404 when the payment with the supplied id exists but it is not attached to a report with the supplied id', async () => {
@@ -90,7 +91,7 @@ describe(`PATCH ${BASE_URL}`, () => {
     const response = await testApi.patch(aPatchPaymentRequestBody()).to(getUrl(reportId, differentPaymentId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.NotFound);
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
   it.each(difference(Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS), [UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS]))(
@@ -108,7 +109,7 @@ describe(`PATCH ${BASE_URL}`, () => {
       const response = await testApi.patch(aPatchPaymentRequestBody()).to(getUrl(reportId, paymentId));
 
       // Assert
-      expect(response.status).toBe(HttpStatusCode.BadRequest);
+      expect(response.status).toEqual(HttpStatusCode.BadRequest);
     },
   );
 
@@ -117,7 +118,7 @@ describe(`PATCH ${BASE_URL}`, () => {
     const response = await testApi.patch(aPatchPaymentRequestBody()).to(getUrl(reportId, paymentId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Ok);
+    expect(response.status).toEqual(HttpStatusCode.Ok);
   });
 
   it('updates the payment, fee records and report with the fields supplied in the payload', async () => {
@@ -141,31 +142,31 @@ describe(`PATCH ${BASE_URL}`, () => {
     const response = await testApi.patch(requestBody).to(getUrl(reportId, paymentId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Ok);
+    expect(response.status).toEqual(HttpStatusCode.Ok);
 
     const paymentEntity = (await SqlDbHelper.manager.findOneBy(PaymentEntity, { id: paymentId }))!;
 
-    expect(paymentEntity.amount).toBe(paymentAmount);
+    expect(paymentEntity.amount).toEqual(paymentAmount);
     expect(paymentEntity.dateReceived).toEqual(datePaymentReceived);
-    expect(paymentEntity.reference).toBe(paymentReference);
+    expect(paymentEntity.reference).toEqual(paymentReference);
 
-    expect(paymentEntity.lastUpdatedByTfmUserId).toBe(tfmUserId);
+    expect(paymentEntity.lastUpdatedByTfmUserId).toEqual(tfmUserId);
     expect(paymentEntity.lastUpdatedByPortalUserId).toBeNull();
-    expect(paymentEntity.lastUpdatedByIsSystemUser).toBe(false);
+    expect(paymentEntity.lastUpdatedByIsSystemUser).toEqual(false);
 
     const reportEntity = (await SqlDbHelper.manager.findOneBy(UtilisationReportEntity, { id: reportId }))!;
 
-    expect(reportEntity.lastUpdatedByTfmUserId).toBe(tfmUserId);
+    expect(reportEntity.lastUpdatedByTfmUserId).toEqual(tfmUserId);
     expect(reportEntity.lastUpdatedByPortalUserId).toBeNull();
-    expect(reportEntity.lastUpdatedByIsSystemUser).toBe(false);
+    expect(reportEntity.lastUpdatedByIsSystemUser).toEqual(false);
 
     const feeRecordEntities = await SqlDbHelper.manager.findBy(FeeRecordEntity, { id: In([1, 2]) });
 
     expect(feeRecordEntities).toHaveLength(2);
     feeRecordEntities.forEach((feeRecord) => {
-      expect(feeRecord.lastUpdatedByTfmUserId).toBe(tfmUserId);
+      expect(feeRecord.lastUpdatedByTfmUserId).toEqual(tfmUserId);
       expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
-      expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
+      expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
     });
   });
 
@@ -177,7 +178,7 @@ describe(`PATCH ${BASE_URL}`, () => {
     const feeRecords = [
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(1)
-        .withStatus('DOES_NOT_MATCH')
+        .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
         .withFeesPaidToUkefForThePeriod(100)
         .withFeesPaidToUkefForThePeriodCurrency('GBP')
         .withPaymentCurrency('GBP')
@@ -185,7 +186,7 @@ describe(`PATCH ${BASE_URL}`, () => {
         .build(),
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(2)
-        .withStatus('DOES_NOT_MATCH')
+        .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
         .withFeesPaidToUkefForThePeriod(200)
         .withFeesPaidToUkefForThePeriodCurrency('GBP')
         .withPaymentCurrency('GBP')
@@ -207,16 +208,16 @@ describe(`PATCH ${BASE_URL}`, () => {
     const newFeeRecords = await SqlDbHelper.manager.findBy(FeeRecordEntity, { id: In([1, 2]) });
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Ok);
+    expect(response.status).toEqual(HttpStatusCode.Ok);
 
     expect(oldFeeRecords).toHaveLength(feeRecords.length);
     oldFeeRecords.forEach((feeRecord) => {
-      expect(feeRecord.status).toBe<FeeRecordStatus>('DOES_NOT_MATCH');
+      expect(feeRecord.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.DOES_NOT_MATCH);
     });
 
     expect(newFeeRecords).toHaveLength(feeRecords.length);
     newFeeRecords.forEach((feeRecord) => {
-      expect(feeRecord.status).toBe<FeeRecordStatus>('MATCH');
+      expect(feeRecord.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.MATCH);
     });
   });
 
@@ -228,7 +229,7 @@ describe(`PATCH ${BASE_URL}`, () => {
     const feeRecords = [
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(1)
-        .withStatus('MATCH')
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withFeesPaidToUkefForThePeriod(100)
         .withFeesPaidToUkefForThePeriodCurrency('GBP')
         .withPaymentCurrency('GBP')
@@ -236,7 +237,7 @@ describe(`PATCH ${BASE_URL}`, () => {
         .build(),
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(2)
-        .withStatus('MATCH')
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withFeesPaidToUkefForThePeriod(200)
         .withFeesPaidToUkefForThePeriodCurrency('GBP')
         .withPaymentCurrency('GBP')
@@ -258,16 +259,16 @@ describe(`PATCH ${BASE_URL}`, () => {
     const newFeeRecords = await SqlDbHelper.manager.findBy(FeeRecordEntity, { id: In([1, 2]) });
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Ok);
+    expect(response.status).toEqual(HttpStatusCode.Ok);
 
     expect(oldFeeRecords).toHaveLength(feeRecords.length);
     oldFeeRecords.forEach((feeRecord) => {
-      expect(feeRecord.status).toBe<FeeRecordStatus>('MATCH');
+      expect(feeRecord.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.MATCH);
     });
 
     expect(newFeeRecords).toHaveLength(feeRecords.length);
     newFeeRecords.forEach((feeRecord) => {
-      expect(feeRecord.status).toBe<FeeRecordStatus>('DOES_NOT_MATCH');
+      expect(feeRecord.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.DOES_NOT_MATCH);
     });
   });
 });

@@ -202,7 +202,7 @@ module.exports = {
     exchangeRate: MOCK_CURRENCY_EXCHANGE_RATE,
   }),
   createACBS: jest.fn(() => ({})),
-  updateACBSfacility: jest.fn(() =>
+  issueACBSfacility: jest.fn(() =>
     Promise.resolve({
       acbsTaskLinks: {
         mockLinkUrl: 'mockLinkUrl',
@@ -248,6 +248,9 @@ module.exports = {
   deletePaymentById: jest.fn(),
   editPayment: jest.fn(),
   removeFeesFromPayment: jest.fn(),
+  updateDealCancellation: jest.fn(),
+  getDealCancellation: jest.fn(),
+  deleteDealCancellation: jest.fn(),
   getSelectedFeeRecordsDetails: jest.fn(),
   addFeesToAnExistingPayment: jest.fn(),
 };

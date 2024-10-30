@@ -130,8 +130,8 @@ context('Upload files to Azure', () => {
     it('should populate the `Security Details` section', () => {
       uploadFiles.supportingInfoSecurityDetailsButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/security-details`));
-      uploadFiles.exporterSecurity().type('test');
-      uploadFiles.facilitySecurity().type('test2');
+      cy.keyboardInput(uploadFiles.exporterSecurity(), 'test');
+      cy.keyboardInput(uploadFiles.facilitySecurity(), 'test2');
       cy.clickSubmitButton();
     });
 

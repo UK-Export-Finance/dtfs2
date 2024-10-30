@@ -2,6 +2,7 @@ import { Response } from 'supertest';
 import {
   Bank,
   Currency,
+  FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
   SelectedFeeRecordDetails,
@@ -72,7 +73,7 @@ describe(`GET ${BASE_URL}`, () => {
       .withFeesPaidToUkefForThePeriodCurrency('GBP')
       .withPaymentCurrency('GBP')
       .withPayments([aPaymentInGBP])
-      .withStatus('DOES_NOT_MATCH')
+      .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
       .build();
 
     report.feeRecords = [aFeeRecordInGBP, aFeeRecordInGBPWithAPaymentAttached];
@@ -104,7 +105,7 @@ describe(`GET ${BASE_URL}`, () => {
     });
   });
 
-  it("gets selected fee record details with canAddToExistingPayment set to false when a payment exists in the same currency but has no fee records with the 'DOES_NOT_MATCH' status", async () => {
+  it(`gets selected fee record details with canAddToExistingPayment set to false when a payment exists in the same currency but has no fee records with the ${FEE_RECORD_STATUS.DOES_NOT_MATCH} status`, async () => {
     // Arrange
     const report = aReconciliationInProgressReport();
 
@@ -118,7 +119,7 @@ describe(`GET ${BASE_URL}`, () => {
       .withFeesPaidToUkefForThePeriodCurrency('GBP')
       .withPaymentCurrency('USD')
       .withPayments([aPaymentInUSD])
-      .withStatus('MATCH')
+      .withStatus(FEE_RECORD_STATUS.MATCH)
       .build();
 
     report.feeRecords = [aFeeRecordInUSD, aFeeRecordInUSDWithAPaymentAttached];
@@ -166,7 +167,7 @@ describe(`GET ${BASE_URL}`, () => {
       .withFeesPaidToUkefForThePeriod(100)
       .withFeesPaidToUkefForThePeriodCurrency('GBP')
       .withPaymentCurrency(paymentCurrency)
-      .withStatus('TO_DO')
+      .withStatus(FEE_RECORD_STATUS.TO_DO)
       .build();
   }
 });

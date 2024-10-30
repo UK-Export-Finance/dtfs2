@@ -1,5 +1,6 @@
 import relative from '../../relativeURL';
 
+const { errorSummary } = require('../../partials');
 const { feedbackPage, header } = require('../../pages');
 
 context('User submit feedback on portal', () => {
@@ -38,9 +39,9 @@ context('User submit feedback on portal', () => {
   });
 
   it('feedback should give errors if incorrectly filled up', () => {
-    feedbackPage.emailAddress().type('a');
+    cy.keyboardInput(feedbackPage.emailAddress(), 'a');
 
-    feedbackPage.submitButton().click();
+    cy.clickSubmitButton();
 
     feedbackPage.roleErrorMessage().contains('Enter your role');
     feedbackPage.organisationErrorMessage().contains('Enter which organisation you work for');
@@ -50,26 +51,26 @@ context('User submit feedback on portal', () => {
     feedbackPage.satisfiedErrorMessage().contains('Select a rating for how satisfied you are with the service');
     feedbackPage.emailAddressErrorMessage().contains('Enter an email address in the correct format, like name@example.com');
 
-    feedbackPage.errorSummary().contains('Enter your role');
-    feedbackPage.errorSummary().contains('Enter which organisation you work for');
-    feedbackPage.errorSummary().contains('Select your reason for visiting the service today');
-    feedbackPage.errorSummary().contains('Select a rating for how easy the service is to use');
-    feedbackPage.errorSummary().contains('Select a rating for how clearly explained the information you need to provide is');
-    feedbackPage.errorSummary().contains('Select a rating for how satisfied you are with the service');
-    feedbackPage.errorSummary().contains('Enter an email address in the correct format, like name@example.com');
+    errorSummary().contains('Enter your role');
+    errorSummary().contains('Enter which organisation you work for');
+    errorSummary().contains('Select your reason for visiting the service today');
+    errorSummary().contains('Select a rating for how easy the service is to use');
+    errorSummary().contains('Select a rating for how clearly explained the information you need to provide is');
+    errorSummary().contains('Select a rating for how satisfied you are with the service');
+    errorSummary().contains('Enter an email address in the correct format, like name@example.com');
   });
 
   it('feedback should submit without errors and with correct thank you page', () => {
-    feedbackPage.role().type('test');
-    feedbackPage.organisation().type('test');
+    cy.keyboardInput(feedbackPage.role(), 'test');
+    cy.keyboardInput(feedbackPage.organisation(), 'test');
     feedbackPage.reasonForVisitingSelection().click();
     feedbackPage.easyToUseSelection().click();
     feedbackPage.clearlyExplainedSelection().click();
     feedbackPage.satisfiedSelection().click();
-    feedbackPage.howCanWeImprove().type('test');
+    cy.keyboardInput(feedbackPage.howCanWeImprove(), 'test');
     feedbackPage.emailAddress().clear();
 
-    feedbackPage.submitButton().click();
+    cy.clickSubmitButton();
 
     cy.url().should('eq', relative('/thank-you-feedback'));
 

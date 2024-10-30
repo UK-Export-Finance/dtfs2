@@ -66,7 +66,7 @@ const ErrorMessagesMap = {
  * Maps validation errors so both Summary Error component and field component display the error messages correctly.
  * @param {import('../types/validation-error').ValidationError[] | import('../types/validation-error').ValidationError} errs - errors to be mapped
  * @param {string} href - the current page URL
- * @returns {import('../types/view-models/facility-end-date-view-model').ViewModelErrors | null}
+ * @returns {import('../types/view-models/view-model-errors').ViewModelErrors | null}
  */
 const validationErrorHandler = (errs, href = '') => {
   const errorSummary = [];
@@ -135,7 +135,7 @@ const returnToMakerNoFacilitiesChanged = (app, hasChangedFacilities) => {
   );
 };
 /**
- * @param {object} params
+ * @param {Object} params
  * @param {string} params.href - the URL to navigate to
  * @param {string} params.visuallyHiddenText - the visually hidden label to make it clear to a screen reader what the link is changing
  * @param {string | undefined} params.text - the text to display, component has class display-none if falsy
@@ -304,6 +304,9 @@ const summaryItemsConditions = (summaryItemsObj) => {
   if (id === 'facilityEndDate') {
     // personalised href to change facility end date (once submitted to UKEF)
     unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/facility-end-date/change`;
+  } else if (id === 'bankReviewDate') {
+    // personalised href to change bank review date (once submitted to UKEF)
+    unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/bank-review-date/change`;
   }
   // personalised href for facility to change to unissued from issued (once submitted to UKEF and changed to issued)
   const issuedToUnissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/change-to-unissued`;
@@ -540,7 +543,7 @@ const getCurrentTimePlusMinutes = (minutesToAdd = 0) => new Date(new Date().getT
  * used to display supporting info change or add links
  * should be hidden if checker/MIA/AIN and returning to maker
  * logic done in nunjucks template so needs this function
- * @param {object} application
+ * @param {Object} application
  * @param {boolean} preview
  * @returns {boolean}
  */

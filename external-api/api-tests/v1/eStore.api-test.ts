@@ -1,20 +1,26 @@
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
-import { ObjectId } from 'mongodb';
 import { app } from '../../src/createApp';
 import { api } from '../api';
-import { UKEF_ID, ESTORE_CRON_STATUS } from '../../src/constants';
+import { UKEF_ID, ESTORE_CRON_STATUS, ESTORE_SITE_STATUS } from '../../src/constants';
 import { Estore, EstoreAxiosResponse } from '../../src/interfaces';
 
 const { post } = api(app);
 
-const { APIM_ESTORE_URL } = process.env;
+const { APIM_ESTORE_URL, EXTERNAL_API_URL } = process.env;
 
 const payload: Estore = {
   dealId: '6597dffeb5ef5ff4267e5044',
   siteId: 'ukef',
   facilityIdentifiers: [1234567890, 1234567891],
-  supportingInformation: ['test'],
+  supportingInformation: [
+    {
+      documentType: 'test',
+      fileName: 'test.docx',
+      fileLocationPath: 'directory/',
+      parentId: 'abc',
+    },
+  ],
   exporterName: 'testName',
   buyerName: 'testBuyer',
   dealIdentifier: '1234567890',
@@ -37,19 +43,23 @@ jest.mock('../../src/database/mongo-client', () => ({
   })),
 }));
 
-const mockExporterResponse = {
-  siteId: 'test',
-  status: 'Created',
+// Mock GovNotify email
+const mockSuccessfulEmailResponse = {
+  status: HttpStatusCode.Created,
+  data: {
+    content: {},
+  },
 };
 
-const mockApiResponse = {
-  status: HttpStatusCode.Ok,
+axiosMock.onPost(`${EXTERNAL_API_URL}/email`).reply(HttpStatusCode.Created, mockSuccessfulEmailResponse.data);
+
+const mockExporterResponse = {
+  siteId: 'ukef',
+  status: ESTORE_SITE_STATUS.CREATED,
 };
 
 // mocks test for estore if exists
-axiosMock.onPost(`${APIM_ESTORE_URL}site/sites?exporterName=testName`).reply(HttpStatusCode.Ok, mockExporterResponse);
-const estoreSitesRegex = new RegExp(`${APIM_ESTORE_URL}sites/.+`);
-axiosMock.onPost(estoreSitesRegex).reply(HttpStatusCode.Ok, mockApiResponse);
+axiosMock.onGet(`${APIM_ESTORE_URL}/sites?exporterName=testName`).reply(HttpStatusCode.Ok, mockExporterResponse);
 
 describe('/estore', () => {
   describe('Empty payload', () => {
@@ -132,6 +142,17 @@ describe('/estore', () => {
       mockInsertOne.mockReset();
     });
 
+    it('Should return 500 for a new deal payload with site neither created, nor pending and absent', async () => {
+      const unknownSite = {
+        ...payload,
+        exporterName: 'invalid-site-status',
+      };
+
+      const { status } = await post(unknownSite).to('/estore');
+
+      expect(status).toEqual(HttpStatusCode.InternalServerError);
+    });
+
     it('Should return 201 for a new deal payload', async () => {
       const { status } = await post(payload).to('/estore');
 
@@ -143,7 +164,7 @@ describe('/estore', () => {
 
       // Look up for the deal ID in the collection
       expect(mockFindOne).toHaveBeenCalledTimes(1);
-      expect(mockFindOne).toHaveBeenCalledWith({ 'payload.dealId': { $eq: new ObjectId(payload.dealId) } });
+      expect(mockFindOne).toHaveBeenCalledWith({ 'payload.dealId': { $eq: payload.dealId } });
 
       // Insert a new entry in the collection
       expect(mockInsertOne).toHaveBeenCalledTimes(1);
@@ -156,6 +177,7 @@ describe('/estore', () => {
           buyer: { status: ESTORE_CRON_STATUS.PENDING },
           deal: { status: ESTORE_CRON_STATUS.PENDING },
           facility: { status: ESTORE_CRON_STATUS.PENDING },
+          document: { status: ESTORE_CRON_STATUS.PENDING },
         },
       });
     });
@@ -166,7 +188,7 @@ describe('/estore', () => {
       await post(payload).to('/estore');
 
       // Look up for the deal ID in the collection
-      expect(mockFindOne).toHaveBeenCalledWith({ 'payload.dealId': { $eq: new ObjectId(payload.dealId) } });
+      expect(mockFindOne).toHaveBeenCalledWith({ 'payload.dealId': { $eq: payload.dealId } });
 
       // Insert a new entry in the collection
       expect(mockInsertOne).not.toHaveBeenCalled();

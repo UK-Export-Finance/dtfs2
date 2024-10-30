@@ -6,6 +6,8 @@ import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 import { EditPaymentViewModel, FeeRecordDetailsCheckboxId, EditPaymentErrorsViewModel } from '../../../types/view-models';
 import { EMPTY_PAYMENT_ERRORS_VIEW_MODEL } from './payment-form-helpers';
 import { EditPaymentsTableCheckboxId } from '../../../types/edit-payments-table-checkbox-id';
+import { ReconciliationForReportTab } from '../../../types/reconciliation-for-report-tab';
+import { getReconciliationForReportHref } from './get-reconciliation-for-report-href';
 
 const mapToEditPaymentFeeRecords = (
   feeRecords: FeeRecord[],
@@ -59,6 +61,10 @@ const mapToEditPaymentFormValues = (payment: Payment): EditPaymentFormValues => 
  * Maps the payment details response body to the edit payment view model
  * @param editPaymentResponse - The GET payment details response body
  * @param reportId - The report id
+ * @param paymentId - The payment id
+ * @param isCheckboxChecked - Function to check if a checkbox is checked
+ * @param redirectTab - Optional reconciliation for report redirect tab
+ * @param errors - Optional errors view model
  * @returns The edit payment view model
  */
 export const getEditPaymentViewModel = (
@@ -66,6 +72,7 @@ export const getEditPaymentViewModel = (
   reportId: string,
   paymentId: string,
   isCheckboxChecked: (checkboxId: string) => boolean,
+  redirectTab?: ReconciliationForReportTab,
   errors: EditPaymentErrorsViewModel = EMPTY_PAYMENT_ERRORS_VIEW_MODEL,
 ): EditPaymentViewModel => ({
   reportId,
@@ -77,12 +84,19 @@ export const getEditPaymentViewModel = (
   totalReportedPayments: getFormattedCurrencyAndAmount(editPaymentResponse.totalReportedPayments),
   formValues: mapToEditPaymentFormValues(editPaymentResponse.payment),
   errors,
+  backLinkHref: getReconciliationForReportHref(reportId, redirectTab),
+  redirectTab,
 });
 
 /**
  * Maps the payment details response body to the edit payment view model
  * @param editPaymentResponse - The GET payment details response body
  * @param reportId - The report id
+ * @param paymentId - The payment id
+ * @param isCheckboxChecked - Function to check if a checkbox is checked
+ * @param formValues - The form values for editing payment
+ * @param redirectTab - Optional reconciliation for report redirect tab
+ * @param errors - Optional errors view model
  * @returns The edit payment view model
  */
 export const getEditPaymentViewModelWithFormValues = (
@@ -91,6 +105,7 @@ export const getEditPaymentViewModelWithFormValues = (
   paymentId: string,
   isCheckboxChecked: (checkboxId: EditPaymentsTableCheckboxId) => boolean,
   formValues: EditPaymentFormValues,
+  redirectTab?: ReconciliationForReportTab,
   errors: EditPaymentErrorsViewModel = EMPTY_PAYMENT_ERRORS_VIEW_MODEL,
 ): EditPaymentViewModel => ({
   reportId,
@@ -102,4 +117,6 @@ export const getEditPaymentViewModelWithFormValues = (
   totalReportedPayments: getFormattedCurrencyAndAmount(editPaymentResponse.totalReportedPayments),
   formValues,
   errors,
+  backLinkHref: getReconciliationForReportHref(reportId, redirectTab),
+  redirectTab,
 });

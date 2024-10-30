@@ -1,10 +1,11 @@
+import { ACTIVITY_TYPES } from '@ukef/dtfs2-common';
 import relative from '../../../relativeURL';
+import { errorSummary } from '../../../partials';
 import activitiesPage from '../../../pages/activities/activitiesPage';
 import activityCommentBoxPage from '../../../pages/activities/activityCommentBoxPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import { BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
-
-import { todayFormatted } from '../../../../../../e2e-fixtures/dateConstants';
+import { today } from '../../../../../../e2e-fixtures/dateConstants';
 
 context('Users can create and submit comments', () => {
   let dealId;
@@ -28,7 +29,7 @@ context('Users can create and submit comments', () => {
       const otherActivity = {
         tfm: {
           activities: {
-            type: 'OTHER',
+            type: ACTIVITY_TYPES.ACTIVITY,
             timestamp: 13345665,
             text: 'Not a comment',
             author: {
@@ -82,28 +83,28 @@ context('Users can create and submit comments', () => {
 
     it('should submit a comment under 1000 characters and render date of comment', () => {
       activitiesPage.addACommentButton().click();
-      activityCommentBoxPage.activityCommentBox().type('test');
+      cy.keyboardInput(activityCommentBoxPage.activityCommentBox(), 'test');
       activityCommentBoxPage.addCommentButton().click();
 
       activitiesPage.activitiesTimeline().contains('test');
       activitiesPage.activitiesTimeline().contains(userFullName);
 
-      const expectedDate = todayFormatted;
+      const expectedDate = today.d_MMMM_yyyy;
 
       activitiesPage.activitiesTimeline().contains(expectedDate);
     });
 
     it('pressing cancel should not submit a comment', () => {
       activitiesPage.addACommentButton().click();
-      activityCommentBoxPage.activityCommentBox().type('should cancel');
-      activityCommentBoxPage.cancelButton().click();
+      cy.keyboardInput(activityCommentBoxPage.activityCommentBox(), 'should cancel');
+      cy.clickCancelLink();
       activitiesPage.activitiesTimeline().contains('should cancel').should('not.exist');
     });
 
     it('pressing comment filter should show comments', () => {
       activitiesPage.activitiesTimeline().contains('Not a comment');
       activitiesPage.filterCommentsOnly().click();
-      activitiesPage.filterSubmitButton().click();
+      cy.clickSubmitButton();
       activitiesPage.activitiesTimeline().contains('test');
       activitiesPage.activitiesTimeline().contains(userFullName);
       // ensures that is filtered out
@@ -113,9 +114,9 @@ context('Users can create and submit comments', () => {
     it('should not be allowed to add comment over 1000 characters', () => {
       const longComment = 'aaaaaaaaaa'.repeat(101);
       activitiesPage.addACommentButton().click();
-      activityCommentBoxPage.activityCommentBox().typeWithoutDelay(longComment);
+      cy.keyboardInput(activityCommentBoxPage.activityCommentBox(), longComment);
       activityCommentBoxPage.addCommentButton().click();
-      activityCommentBoxPage.commentErrorSummary().contains('Comments must be 1000 characters or fewer');
+      errorSummary().contains('Comments must be 1000 characters or fewer');
       activityCommentBoxPage.commentErrorMessage().contains('Comments must be 1000 characters or fewer');
     });
   });

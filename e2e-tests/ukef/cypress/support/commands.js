@@ -1,33 +1,13 @@
 import 'cypress-file-upload';
-
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add("login", (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add("dismiss", { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+import './click-events';
 
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
+
+Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
+
+// Assert an element has some exact text
+Cypress.Commands.add('assertText', require('./utils/assertText'));
 
 // commands used to interact directly with portal-api
 Cypress.Commands.add('insertManyDeals', require('./portal-api/insertManyDeals'));
@@ -41,6 +21,7 @@ Cypress.Commands.add('overridePortalUserSignInTokenWithValidTokenByUsername', re
 Cypress.Commands.add('getUserByUsername', require('./portal/getUserByUsername'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('enterUsernameAndPassword', require('./portal/enterUsernameAndPassword'));
+Cypress.Commands.add('completeDateFormFields', require('./portal/completeDateFormFields'));
 
 Cypress.Commands.add('forceVisit', (url) => {
   cy.window().then((win) => win.open(url, '_self'));

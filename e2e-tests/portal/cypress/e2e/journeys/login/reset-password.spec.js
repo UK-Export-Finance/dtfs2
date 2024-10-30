@@ -1,4 +1,5 @@
-const { resetPassword, changePassword, header, userProfile } = require('../../pages');
+const { cancelButton, submitButton } = require('../../partials');
+const { resetPassword, changePassword, header } = require('../../pages');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const { TEST_EMAIL_NO_GOV_NOTIFY } = require('../../../../../e2e-fixtures/portal-users.fixture');
@@ -21,37 +22,37 @@ context('Password management screens', () => {
     it('Should have email address input, submit and cancel buttons on the page', () => {
       cy.url().should('eq', relative('/reset-password'));
       resetPassword.emailInput().should('exist');
-      resetPassword.submit().should('exist');
-      resetPassword.cancel().should('exist');
+      submitButton().should('exist');
+      cancelButton().should('exist');
     });
 
     it('Enter an empty email address displays error message', () => {
       resetPassword.emailInput().should('be.empty');
-      resetPassword.submit().click();
+      cy.clickSubmitButton();
 
       resetPassword.emailInputError().should('exist');
       resetPassword.emailInputError().contains('Enter an email address in the correct format, for example, name@example.com');
     });
 
     it('should redirect to login page when a non-existant email is used', () => {
-      resetPassword.emailInput().type('email_is_not_valid@ukexportfinance.gov.uk');
-      resetPassword.submit().click();
+      cy.keyboardInput(resetPassword.emailInput(), 'email_is_not_valid@ukexportfinance.gov.uk');
+      cy.clickSubmitButton();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
       cy.get('[data-cy="password-reset-notification').contains(expectedContactUsMessage);
     });
 
     it('should redirect to login page on successful request for reset password', () => {
-      resetPassword.emailInput().type(TEST_EMAIL_NO_GOV_NOTIFY.email);
-      resetPassword.submit().click();
+      cy.keyboardInput(resetPassword.emailInput(), TEST_EMAIL_NO_GOV_NOTIFY.email);
+      cy.clickSubmitButton();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
       cy.get('[data-cy="password-reset-notification').contains(expectedContactUsMessage);
     });
 
     it('should be case insensitive when accepting email', () => {
-      resetPassword.emailInput().type(TEST_EMAIL_NO_GOV_NOTIFY.email.toUpperCase());
-      resetPassword.submit().click();
+      cy.keyboardInput(resetPassword.emailInput(), TEST_EMAIL_NO_GOV_NOTIFY.email.toUpperCase());
+      cy.clickSubmitButton();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
       cy.get('[data-cy="password-reset-notification').contains(expectedContactUsMessage);
@@ -65,13 +66,13 @@ context('Password management screens', () => {
       changePassword.currentPassword().should('not.exist');
       changePassword.password().should('exist');
       changePassword.confirmPassword().should('exist');
-      changePassword.submit().should('exist');
-      changePassword.cancel().should('exist');
+      submitButton().should('exist');
+      cancelButton().should('exist');
     });
 
     it('Should display error message on an empty new password field submit', () => {
       resetPassword.visitChangePassword();
-      changePassword.submit().click();
+      cy.clickSubmitButton();
 
       changePassword.passwordError().should('exist');
       changePassword.passwordError().contains('Empty password');
@@ -79,8 +80,8 @@ context('Password management screens', () => {
 
     it('Should display error message on an empty confirm new password field submit', () => {
       resetPassword.visitChangePassword();
-      changePassword.password().type('abc');
-      changePassword.submit().click();
+      cy.keyboardInput(changePassword.password(), 'abc');
+      cy.clickSubmitButton();
 
       changePassword.passwordConfirmError().should('exist');
       changePassword.passwordConfirmError().contains('Empty password');
@@ -92,7 +93,7 @@ context('Password management screens', () => {
       cy.login(BANK1_MAKER1);
       cy.url().should('eq', relative('/dashboard/deals/0'));
       header.profile().click();
-      userProfile.changePassword().click();
+      cy.clickSubmitButton();
       cy.url().should('include', '/change-password');
     });
 
@@ -100,12 +101,12 @@ context('Password management screens', () => {
       changePassword.currentPassword().should('exist');
       changePassword.password().should('exist');
       changePassword.confirmPassword().should('exist');
-      changePassword.submit().should('exist');
-      changePassword.cancel().should('exist');
+      submitButton().should('exist');
+      cancelButton().should('exist');
     });
 
     it('Should display error messages upon empty field submission', () => {
-      changePassword.submit().click();
+      cy.clickSubmitButton();
       cy.url().should('include', '/change-password');
 
       changePassword.currentPasswordError().should('exist');

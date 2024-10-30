@@ -11,6 +11,7 @@ import { PDC_TEAMS } from '../../../fixtures/teams';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
 import USERS from '../../../fixtures/users';
 import relative from '../../relativeURL';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
   const reportIdGenerator = idGenerator();
@@ -45,6 +46,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
   beforeEach(() => {
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
     cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
+    cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
 
     pages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
@@ -57,23 +59,26 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     const feeRecord = aFeeRecordForReportWithAmountStatusAndPayments(report, 300, FEE_RECORD_STATUS.DOES_NOT_MATCH, [payment]);
 
+    const editPaymentUrl = `/utilisation-reports/${report.id}/edit-payment/${payment.id}`;
+
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, getMatchingTfmFacilitiesForFeeRecords([feeRecord]));
 
     cy.visit(`/utilisation-reports/${report.id}`);
 
     pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(payment.id);
 
-    cy.url().should('eq', relative(`/utilisation-reports/${report.id}/edit-payment/${payment.id}`));
+    cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
     pages.utilisationReportEditPaymentPage.clickDeletePaymentButton();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${report.id}/edit-payment/${payment.id}/confirm-delete`));
+    cy.url().should('eq', relative(`${editPaymentUrl}/confirm-delete?redirectTab=premium-payments`));
 
     pages.utilisationReportConfirmDeletePaymentPage.selectNoRadio();
     pages.utilisationReportConfirmDeletePaymentPage.clickContinueButton();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${report.id}/edit-payment/${payment.id}`));
+    cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
   });
 
   it(`allows the user to delete the payment and resets the status to '${FEE_RECORD_STATUS.DOES_NOT_MATCH}' when the remaining payments do not match`, () => {
@@ -85,24 +90,27 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     const feeRecord = aFeeRecordForReportWithAmountStatusAndPayments(report, 300, FEE_RECORD_STATUS.MATCH, [firstPayment, secondPayment]);
 
+    const editPaymentUrl = `/utilisation-reports/${report.id}/edit-payment/${firstPayment.id}`;
+
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, getMatchingTfmFacilitiesForFeeRecords([feeRecord]));
 
     cy.visit(`/utilisation-reports/${report.id}`);
 
     cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
     pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(firstPayment.id);
 
-    cy.url().should('eq', relative(`/utilisation-reports/${report.id}/edit-payment/${firstPayment.id}`));
+    cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
     pages.utilisationReportEditPaymentPage.clickDeletePaymentButton();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${report.id}/edit-payment/${firstPayment.id}/confirm-delete`));
+    cy.url().should('eq', relative(`${editPaymentUrl}/confirm-delete?redirectTab=premium-payments`));
 
     pages.utilisationReportConfirmDeletePaymentPage.selectYesRadio();
     pages.utilisationReportConfirmDeletePaymentPage.clickContinueButton();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${report.id}`));
+    cy.url().should('eq', relative(`/utilisation-reports/${report.id}#premium-payments`));
 
     pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(firstPayment.id).should('not.exist');
     cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('exist');
@@ -117,24 +125,27 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     const feeRecord = aFeeRecordForReportWithAmountStatusAndPayments(report, 200, FEE_RECORD_STATUS.DOES_NOT_MATCH, [firstPayment, secondPayment]);
 
+    const editPaymentUrl = `/utilisation-reports/${report.id}/edit-payment/${firstPayment.id}`;
+
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, getMatchingTfmFacilitiesForFeeRecords([feeRecord]));
 
     cy.visit(`/utilisation-reports/${report.id}`);
 
     cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('exist');
     pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(firstPayment.id);
 
-    cy.url().should('eq', relative(`/utilisation-reports/${report.id}/edit-payment/${firstPayment.id}`));
+    cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
     pages.utilisationReportEditPaymentPage.clickDeletePaymentButton();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${report.id}/edit-payment/${firstPayment.id}/confirm-delete`));
+    cy.url().should('eq', relative(`${editPaymentUrl}/confirm-delete?redirectTab=premium-payments`));
 
     pages.utilisationReportConfirmDeletePaymentPage.selectYesRadio();
     pages.utilisationReportConfirmDeletePaymentPage.clickContinueButton();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${report.id}`));
+    cy.url().should('eq', relative(`/utilisation-reports/${report.id}#premium-payments`));
 
     pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(firstPayment.id).should('not.exist');
     cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
@@ -147,18 +158,21 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     const feeRecord = aFeeRecordForReportWithAmountStatusAndPayments(report, 300, FEE_RECORD_STATUS.DOES_NOT_MATCH, [payment]);
 
+    const editPaymentUrl = `/utilisation-reports/${report.id}/edit-payment/${payment.id}`;
+
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, getMatchingTfmFacilitiesForFeeRecords([feeRecord]));
 
     cy.visit(`/utilisation-reports/${report.id}`);
 
     pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(payment.id);
 
-    cy.url().should('eq', relative(`/utilisation-reports/${report.id}/edit-payment/${payment.id}`));
+    cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
     pages.utilisationReportEditPaymentPage.clickDeletePaymentButton();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${report.id}/edit-payment/${payment.id}/confirm-delete`));
+    cy.url().should('eq', relative(`${editPaymentUrl}/confirm-delete?redirectTab=premium-payments`));
 
     pages.utilisationReportConfirmDeletePaymentPage.selectYesRadio();
     pages.utilisationReportConfirmDeletePaymentPage.clickContinueButton();

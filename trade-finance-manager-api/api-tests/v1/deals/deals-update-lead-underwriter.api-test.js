@@ -2,12 +2,14 @@ const { when } = require('jest-when');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 
 const app = require('../../../src/createApp');
-const { as, put } = require('../../api')(app);
-const testUserCache = require('../../api-test-users');
+const { createApi } = require('../../api');
+const { initialiseTestUsers } = require('../../api-test-users');
 const api = require('../../../src/v1/api');
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_USERS = require('../../../src/v1/__mocks__/mock-users');
 const { mockUpdateDeal, mockFindOneDeal, mockFindUserById } = require('../../../src/v1/__mocks__/common-api-mocks');
+
+const { as, put } = createApi(app);
 
 describe('PUT /deals/:dealId/underwriting/lead-underwriter', () => {
   const VALID_DEAL_ID = '61f6b18502fade01b1e8f07f';
@@ -21,7 +23,8 @@ describe('PUT /deals/:dealId/underwriting/lead-underwriter', () => {
 
   const VALID_URL_TO_UPDATE_LEAD_UNDERWRITER = `/v1/deals/${VALID_DEAL_ID}/underwriting/lead-underwriter`;
   beforeAll(async () => {
-    tokenUser = await testUserCache.initialise(app);
+    const testUsers = await initialiseTestUsers(app);
+    tokenUser = testUsers().one();
   });
 
   beforeEach(() => {
@@ -45,7 +48,7 @@ describe('PUT /deals/:dealId/underwriting/lead-underwriter', () => {
 
     const { status, body } = await as(tokenUser).put(VALID_LEAD_UNDERWRITER_UPDATE).to(VALID_URL_TO_UPDATE_LEAD_UNDERWRITER);
 
-    expect(status).toBe(200);
+    expect(status).toEqual(200);
     expect(body).toEqual({
       leadUnderwriter: VALID_USER_ID,
     });
@@ -58,7 +61,7 @@ describe('PUT /deals/:dealId/underwriting/lead-underwriter', () => {
 
     const { status, body } = await as(tokenUser).put(VALID_LEAD_UNDERWRITER_UPDATE).to(`/v1/deals/${INVALID_DEAL_ID}/underwriting/lead-underwriter`);
 
-    expect(status).toBe(400);
+    expect(status).toEqual(400);
     expect(body).toEqual({
       errors: [
         {
@@ -82,7 +85,7 @@ describe('PUT /deals/:dealId/underwriting/lead-underwriter', () => {
 
     const { status, body } = await as(tokenUser).put(VALID_LEAD_UNDERWRITER_UPDATE).to(VALID_URL_TO_UPDATE_LEAD_UNDERWRITER);
 
-    expect(status).toBe(500);
+    expect(status).toEqual(500);
     expect(body).toEqual({ data: 'Unable to update lead underwriter' });
   });
 });

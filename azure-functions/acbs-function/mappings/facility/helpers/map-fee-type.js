@@ -1,6 +1,6 @@
 /**
  * Maps facility type across all the products
- * @param {object} facilitySnapshot Facility snapshot
+ * @param {Object} facilitySnapshot Facility snapshot
  * @returns {string} Facility type else `null`
  */
 const mapFeeType = (facilitySnapshot) => {

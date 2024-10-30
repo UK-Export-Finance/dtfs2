@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
-import { FeeRecordEntityMockBuilder, TestApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, TestApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { EntityManager } from 'typeorm';
 import { aTfmSessionUser } from '../../../../../test-helpers';
@@ -44,7 +44,7 @@ describe('put-keying-data-mark-as-done.controller', () => {
       });
       UtilisationReportStateMachine.forReport = mockForReport;
       const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(feeRecordId).withStatus('READY_TO_KEY').build();
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(feeRecordId).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
       feeRecordRepoFindByIdAndReportIdSpy.mockResolvedValue([feeRecord]);
     });
 
@@ -67,7 +67,7 @@ describe('put-keying-data-mark-as-done.controller', () => {
       await putKeyingDataMarkAsDone(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(errorStatus);
+      expect(res._getStatusCode()).toEqual(errorStatus);
     });
 
     it("responds with the specific error message if marking keying data throws an 'ApiError'", async () => {
@@ -85,7 +85,7 @@ describe('put-keying-data-mark-as-done.controller', () => {
       await putKeyingDataMarkAsDone(req, res);
 
       // Assert
-      expect(res._getData()).toBe(`Failed to mark keying data with fee record ids ${feeRecordId} from report with id ${reportId} as DONE: ${errorMessage}`);
+      expect(res._getData()).toEqual(`Failed to mark keying data with fee record ids ${feeRecordId} from report with id ${reportId} as DONE: ${errorMessage}`);
     });
 
     it(`responds with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, async () => {
@@ -102,7 +102,7 @@ describe('put-keying-data-mark-as-done.controller', () => {
       await putKeyingDataMarkAsDone(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
     });
 
     it('responds with a generic error message if an unknown error occurs', async () => {
@@ -119,7 +119,7 @@ describe('put-keying-data-mark-as-done.controller', () => {
       await putKeyingDataMarkAsDone(req, res);
 
       // Assert
-      expect(res._getData()).toBe(`Failed to mark keying data with fee record ids ${feeRecordId} from report with id ${reportId} as DONE`);
+      expect(res._getData()).toEqual(`Failed to mark keying data with fee record ids ${feeRecordId} from report with id ${reportId} as DONE`);
     });
   });
 });

@@ -159,7 +159,7 @@ export const createAcbsRecordPOST = async (req: Request, res: Response) => {
 
 /**
  * Invokes facility issuance DOF using HTTP `POST` method.
- * @param id Facility ID
+ * @param id UKEF Facility ID
  * @param facility Facility object
  * @param deal Deal object
  * @returns DOF response
@@ -171,7 +171,7 @@ const issueAcbsFacility = async (id: any, facility: object, deal: object) => {
       headers,
       url: `${acbsUrl}/api/orchestrators/acbs-issue-facility`,
       data: {
-        facilityId: id,
+        facilityIdentifier: id,
         facility,
         deal,
       },
@@ -215,8 +215,8 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
 
 /**
  * Invoked Azure DOF using HTTP `POST` method.
- * @param {object} amendment Amendment object comprising facility ID and amends. A amendment at a time is processed.
- * @returns {Promise<object | null>} DOF Response
+ * @param {Object} amendment Amendment object comprising facility ID and amends. A amendment at a time is processed.
+ * @returns {Promise<Object | null>} DOF Response
  */
 const amendAcbsFacility = async (amendment: Amendment) => {
   const hasAmendment = amendment.coverEndDate || amendment.amount;
@@ -245,9 +245,9 @@ const amendAcbsFacility = async (amendment: Amendment) => {
 /**
  * ACBS facility amendment entry function.
  * Constructs acceptable payload by DOF.
- * @param {object} req Request
- * @param {object} res Response
- * @returns {Promise<object>} Response object with HTTP code as `status` and response as `data`.
+ * @param {Object} req Request
+ * @param {Object} res Response
+ * @returns {Promise<Object>} Response object with HTTP code as `status` and response as `data`.
  */
 export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
   try {
@@ -255,7 +255,7 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
     const { amendments, facility, deal } = req.body;
     // Construct payload
     const payload = {
-      facilityId: id,
+      facilityIdentifier: id,
       amount: amendments.ukefExposure,
       coverEndDate: amendments.coverEndDate,
       facility,

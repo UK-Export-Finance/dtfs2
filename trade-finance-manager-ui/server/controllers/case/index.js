@@ -1,7 +1,7 @@
 const { format, fromUnixTime } = require('date-fns');
 const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const api = require('../../api');
-const { getTask, showAmendmentButton, ukefDecisionRejected } = require('../helpers');
+const { getTask, showAmendmentButton, ukefDecisionRejected, isDealCancellationEnabled, canDealBeCancelled, isDealCancellationInDraft } = require('../helpers');
 const { formattedNumber } = require('../../helpers/number');
 const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-options');
 const CONSTANTS = require('../../constants');
@@ -9,6 +9,8 @@ const { filterTasks } = require('../helpers/tasks.helper');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../helpers/amendments.helper');
 const validatePartyURN = require('./parties/partyUrnValidation.validate');
 const { bondType, partyType, userCanEdit } = require('./parties/helpers');
+const { asUserSession } = require('../../helpers/express-session');
+const { getFlashSuccessMessage } = require('../../helpers/getFlashSuccessMessage');
 
 const {
   DEAL,
@@ -20,6 +22,8 @@ const {
 const getCaseDeal = async (req, res) => {
   const dealId = req.params._id;
   const { userToken } = req.session;
+
+  const { user } = asUserSession(req.session);
 
   const deal = await api.getDeal(dealId, userToken);
   const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
@@ -39,9 +43,23 @@ const getCaseDeal = async (req, res) => {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
 
+  const { submissionType } = deal.dealSnapshot;
+
+  const dealCancellationIsEnabled = isDealCancellationEnabled(submissionType, user);
+
+  let showDealCancelButton = false;
+  let hasDraftCancellation = false;
+
+  if (dealCancellationIsEnabled) {
+    const cancellation = await api.getDealCancellation(dealId, userToken);
+    showDealCancelButton = canDealBeCancelled(cancellation.status);
+    hasDraftCancellation = isDealCancellationInDraft(cancellation.status);
+  }
+
   return res.render('case/deal/deal.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
+    successMessage: getFlashSuccessMessage(req),
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'deal',
     dealId,
@@ -49,6 +67,8 @@ const getCaseDeal = async (req, res) => {
     amendments,
     amendmentsInProgress,
     hasAmendmentInProgress,
+    showDealCancelButton,
+    hasDraftCancellation,
   });
 };
 
@@ -368,7 +388,7 @@ const getCaseDocuments = async (req, res) => {
  * Post party URNs to bond summary page for confirmation
  * @param {Express.Request} req
  * @param {Express.Response} res
- * @returns {Promise<object>} Express response as rendered confirm party URN page.
+ * @returns {Promise<Object>} Express response as rendered confirm party URN page.
  */
 const confirmTfmFacility = async (req, res) => {
   try {
@@ -488,7 +508,7 @@ const confirmTfmFacility = async (req, res) => {
  * Post bond party URNs to the TFM
  * @param {Express.Request} req
  * @param {Express.Response} res
- * @returns {Promise<object>} Express response as rendered confirm party URN page.
+ * @returns {Promise<Object>} Express response as rendered confirm party URN page.
  */
 const postTfmFacility = async (req, res) => {
   try {

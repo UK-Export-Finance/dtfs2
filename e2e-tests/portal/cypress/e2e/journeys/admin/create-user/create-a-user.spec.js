@@ -94,9 +94,10 @@ context('Admin user creates a new user', () => {
     validUser.roles.forEach((role) => {
       createUser.role(role).click();
     });
-    createUser.username().type(validUser.username);
-    createUser.firstname().type(validUser.firstname);
-    createUser.surname().type(validUser.surname);
+
+    cy.keyboardInput(createUser.username(), validUser.username);
+    cy.keyboardInput(createUser.firstname(), validUser.firstname);
+    cy.keyboardInput(createUser.surname(), validUser.surname);
 
     createUser.bank().select(validUser.bank);
 
@@ -137,9 +138,11 @@ context('Admin user creates a new user', () => {
     userWithInvalidPassword.roles.forEach((role) => {
       createUser.role(role).click();
     });
-    createUser.username().type(userWithInvalidPassword.username);
-    createUser.firstname().type(userWithInvalidPassword.firstname);
-    createUser.surname().type(userWithInvalidPassword.surname);
+
+    cy.keyboardInput(createUser.username(), userWithInvalidPassword.username);
+    cy.keyboardInput(createUser.firstname(), userWithInvalidPassword.firstname);
+    cy.keyboardInput(createUser.surname(), userWithInvalidPassword.surname);
+
     createUser.bank().select(userWithInvalidPassword.bank);
 
     createUser.createUser().click();
@@ -168,9 +171,10 @@ context('Admin user creates a new user', () => {
     validUser.roles.forEach((role) => {
       createUser.role(role).click();
     });
-    createUser.username().type(validUser.username);
-    createUser.firstname().type(validUser.firstname);
-    createUser.surname().type(validUser.surname);
+
+    cy.keyboardInput(createUser.username(), validUser.username);
+    cy.keyboardInput(createUser.firstname(), validUser.firstname);
+    cy.keyboardInput(createUser.surname(), validUser.surname);
 
     createUser.bank().select(validUser.bank);
 
@@ -200,9 +204,10 @@ context('Admin user creates a new user', () => {
     });
 
     // as the string has object characters, need to use parseSpecialCharSequences
-    createUser.username().type(USER_WITH_INJECTION.username, { parseSpecialCharSequences: false });
-    createUser.firstname().type(USER_WITH_INJECTION.firstname);
-    createUser.surname().type(USER_WITH_INJECTION.surname);
+    createUser.username().type(USER_WITH_INJECTION.username, { delay: 0, parseSpecialCharSequences: false });
+    cy.keyboardInput(createUser.firstname(), USER_WITH_INJECTION.firstname);
+    cy.keyboardInput(createUser.surname(), USER_WITH_INJECTION.surname);
+
     createUser.bank().select(USER_WITH_INJECTION.bank);
 
     createUser.createUser().click();
@@ -236,22 +241,18 @@ context('Admin user creates a new user', () => {
     });
 
     it('should create a read-only user', () => {
-      createUser.username().type(validUser.username);
-      createUser.firstname().type(validUser.firstname);
-      createUser.surname().type(validUser.surname);
+      cy.keyboardInput(createUser.username(), validUser.username);
+      cy.keyboardInput(createUser.firstname(), validUser.firstname);
+      cy.keyboardInput(createUser.surname(), validUser.surname);
+
       createUser.bank().select(validUser.bank);
 
       createUser.role(READ_ONLY).click();
       createUser.createUser().click();
 
       cy.url().should('eq', relative('/admin/users/'));
-      users
-        .row(validUser)
-        .roles()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(READ_ONLY);
-        });
+
+      cy.assertText(users.row(validUser).roles(), READ_ONLY);
     });
 
     it('should unselect other roles if the read-only role is selected', () => {

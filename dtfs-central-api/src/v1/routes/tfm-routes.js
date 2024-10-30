@@ -2,7 +2,14 @@ const express = require('express');
 
 const tfmRouter = express.Router();
 
-const { validatePutFacilityAmendmentPayload, validatePostFacilityAmendmentPayload } = require('./middleware/payload-validation');
+const { validateDealCancellationEnabled } = require('@ukef/dtfs2-common');
+const {
+  validatePutFacilityAmendmentPayload,
+  validatePostFacilityAmendmentPayload,
+  validatePutDealCancellationPayload,
+  validateDeleteDealCancellationPayload,
+  validatePostSubmitDealCancellationPayload,
+} = require('./middleware/payload-validation');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
 
@@ -17,6 +24,10 @@ const tfmUpdateFacilityController = require('../controllers/tfm/facility/tfm-upd
 const tfmGetAmendmentController = require('../controllers/tfm/amendments/tfm-get-amendments.controller');
 const tfmPutAmendmentController = require('../controllers/tfm/amendments/tfm-put-amendments.controller');
 const tfmPostAmendmentController = require('../controllers/tfm/amendments/tfm-post-amendments.controller');
+const tfmPutUpdateDealCancellationController = require('../controllers/tfm/deal-cancellation/tfm-put-update-deal-cancellation.controller');
+const tfmGetDealCancellationController = require('../controllers/tfm/deal-cancellation/tfm-get-deal-cancellation.controller');
+const tfmDeleteDealCancellationController = require('../controllers/tfm/deal-cancellation/tfm-delete-deal-cancellation.controller');
+const tfmPostDealCancellationController = require('../controllers/tfm/deal-cancellation/tfm-post-submit-deal-cancellation.controller');
 
 const tfmTeamsController = require('../controllers/tfm/users/tfm-teams.controller');
 const tfmUsersController = require('../controllers/tfm/users/tfm-users.controller');
@@ -528,6 +539,133 @@ tfmRouter
     handleExpressValidatorResult,
     validatePutFacilityAmendmentPayload,
     tfmPutAmendmentController.updateTfmAmendment,
+  );
+
+/**
+ * @openapi
+ * /tfm/deals/:id/cancellation:
+ *   put:
+ *     summary: Updates tfm deal cancellation object on MIN and AIN deal types
+ *     tags: [TFM, deals, cancellation, data fix]
+ *     description: Updates cancellation object on the deals tfm object
+ *     parameters:
+ *       - in: path
+ *         name: dealId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the deal to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               reason:
+ *                 type: string
+ *               bankRequestDate:
+ *                 type: number
+ *                 example: 1725977352
+ *               effectiveFrom:
+ *                 type: number
+ *                 example: 1725977352
+ *     responses:
+ *       200:
+ *         description: OK
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal server error
+ *   get:
+ *     summary: Get tfm deal cancellation object on MIN and AIN deal types
+ *     tags: [TFM, deals, cancellation, data fix]
+ *     description: Get cancellation object on the deals tfm object
+ *     parameters:
+ *       - in: path
+ *         name: dealId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the deal to update
+ *     responses:
+ *       200:
+ *         description: OK
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal server error
+ *   delete:
+ *     summary: Delete tfm deal cancellation object on MIN and AIN deal types
+ *     tags: [TFM, deals, cancellation, data fix]
+ *     description: Delete cancellation object on the deals tfm object
+ *     parameters:
+ *       - in: path
+ *         name: dealId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the deal to update
+ *     responses:
+ *       204:
+ *         description: No content
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal server error
+ */
+tfmRouter
+  .route('/deals/:dealId/cancellation')
+  .all(validateDealCancellationEnabled, validation.mongoIdValidation('dealId'), handleExpressValidatorResult)
+  .put(validatePutDealCancellationPayload, tfmPutUpdateDealCancellationController.updateTfmDealCancellation)
+  .get(tfmGetDealCancellationController.getTfmDealCancellation)
+  .delete(validateDeleteDealCancellationPayload, tfmDeleteDealCancellationController.deleteTfmDealCancellation);
+
+/**
+ * @openapi
+ * /tfm/deals/:id/cancellation/submit:
+ *   post:
+ *     summary: Updates the tfm deal to have stage 'Cancelled' and the deal cancellation object to have status 'Completed'
+ *     tags: [TFM, deals, cancellation, data fix]
+ *     description: Submits deal cancellation
+ *     parameters:
+ *       - in: path
+ *         name: dealId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the deal to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               reason:
+ *                 type: string
+ *               bankRequestDate:
+ *                 type: number
+ *                 example: 1725977352
+ *               effectiveFrom:
+ *                 type: number
+ *                 example: 1725977352
+ *     responses:
+ *       200:
+ *         description: OK
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal server error
+ */
+tfmRouter
+  .route('/deals/:dealId/cancellation/submit')
+  .post(
+    validateDealCancellationEnabled,
+    validation.mongoIdValidation('dealId'),
+    handleExpressValidatorResult,
+    validatePostSubmitDealCancellationPayload,
+    tfmPostDealCancellationController.submitTfmDealCancellation,
   );
 
 /**
