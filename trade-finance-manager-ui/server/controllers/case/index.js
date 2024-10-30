@@ -10,6 +10,7 @@ const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require(
 const validatePartyURN = require('./parties/partyUrnValidation.validate');
 const { bondType, partyType, userCanEdit } = require('./parties/helpers');
 const { asUserSession } = require('../../helpers/express-session');
+const { getFlashSuccessMessage } = require('../../helpers/getFlashSuccessMessage');
 
 const {
   DEAL,
@@ -58,6 +59,7 @@ const getCaseDeal = async (req, res) => {
   return res.render('case/deal/deal.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
+    successMessage: getFlashSuccessMessage(req),
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'deal',
     dealId,

@@ -78,6 +78,10 @@ export const postDealCancellationDetails = async (req: PostDealCancellationDetai
 
     await api.submitDealCancellation(_id, { reason, bankRequestDate, effectiveFrom }, userToken);
 
+    const { ukefDealId } = deal.dealSnapshot.details;
+
+    req.flash('successMessage', `Deal ${ukefDealId} cancelled`);
+
     return res.redirect(`/case/${_id}/deal`);
   } catch (error) {
     console.error('Error cancelling deal', error);

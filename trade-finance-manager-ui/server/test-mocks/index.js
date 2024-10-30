@@ -1,5 +1,6 @@
 const mockReq = () => ({
   session: {},
+  flash: jest.fn(),
 });
 
 const mockRes = () => {
