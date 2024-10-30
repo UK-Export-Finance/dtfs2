@@ -6,6 +6,7 @@ type UpdateFacilityUtilisationDataUpdate = {
   reportPeriod: ReportPeriod;
   ukefShareOfUtilisation: number;
   requestSource: DbRequestSource;
+  fixedFee: number;
 };
 
 /**
@@ -23,11 +24,10 @@ type UpdateFacilityUtilisationDataUpdate = {
  */
 export const updateFacilityUtilisationData = async (
   facilityUtilisationDataEntity: FacilityUtilisationDataEntity,
-  { reportPeriod, requestSource, entityManager, ukefShareOfUtilisation }: UpdateFacilityUtilisationDataUpdate,
-  nextReportPeriodFixedFee: number,
+  { reportPeriod, requestSource, entityManager, ukefShareOfUtilisation, fixedFee }: UpdateFacilityUtilisationDataUpdate,
 ): Promise<FacilityUtilisationDataEntity> => {
   facilityUtilisationDataEntity.updateWithCurrentReportPeriodDetails({
-    fixedFee: nextReportPeriodFixedFee,
+    fixedFee,
     utilisation: ukefShareOfUtilisation,
     reportPeriod,
     requestSource,

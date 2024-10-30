@@ -1,5 +1,4 @@
 import { ReportPeriod } from '@ukef/dtfs2-common';
-import { calculateUkefShareOfUtilisation } from '../../../../../helpers';
 import { calculateFixedFee } from './calculate-fixed-fee';
 
 /**
@@ -15,15 +14,12 @@ import { calculateFixedFee } from './calculate-fixed-fee';
  * @returns The fixed fee for the supplied report period
  */
 export const getFixedFeeForFacility = (
-  utilisation: number,
   reportPeriod: ReportPeriod,
-  coverPercentage: number,
   coverEndDate: Date,
   interestPercentage: number,
   dayCountBasis: number,
+  ukefShareOfUtilisation: number,
 ) => {
-  const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, coverPercentage);
-
   return calculateFixedFee({
     ukefShareOfUtilisation,
     reportPeriod,

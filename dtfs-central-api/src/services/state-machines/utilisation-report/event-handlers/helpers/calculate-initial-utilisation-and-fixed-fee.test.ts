@@ -6,7 +6,8 @@ import * as fixedFeeHelpers from './calculate-initial-fixed-fee';
 import * as helpers from '../../../../../helpers';
 
 jest.mock('./calculate-initial-fixed-fee');
-jest.mock('../../../../../helpers/get-specific-tfm-facility-values');
+jest.mock('../../../../../helpers/get-keying-sheet-calculation-tfm-facility-values');
+
 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
@@ -111,7 +112,7 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
   });
 
   describe('calculateInitialUtilisationAndFixedFee', () => {
-    const getLatestTfmFacilityValuesSpy = jest.spyOn(helpers, 'getSpecificTfmFacilityValues');
+    const getKeyingSheetCalculationTfmFacilityValuesSpy = jest.spyOn(helpers, 'getKeyingSheetCalculationTfmFacilityValues');
     const facilityId = '12345678';
     const { facilitySnapshot } = aTfmFacility();
 
@@ -131,7 +132,7 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
     describe('when a facility is not found', () => {
       const errorMessage = `TFM facility ${facilityId} could not be found`;
       beforeEach(() => {
-        getLatestTfmFacilityValuesSpy.mockRejectedValue(new NotFoundError(errorMessage));
+        getKeyingSheetCalculationTfmFacilityValuesSpy.mockRejectedValue(new NotFoundError(errorMessage));
       });
 
       it('should throw an error', async () => {
@@ -146,7 +147,7 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
           value: 0,
         };
 
-        getLatestTfmFacilityValuesSpy.mockResolvedValue(values);
+        getKeyingSheetCalculationTfmFacilityValuesSpy.mockResolvedValue(values);
       });
 
       it('should throw an error', async () => {
@@ -158,7 +159,7 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
       const drawnAmount = 12345.678;
 
       beforeEach(() => {
-        getLatestTfmFacilityValuesSpy.mockResolvedValue(latestTfmFacilityValues);
+        getKeyingSheetCalculationTfmFacilityValuesSpy.mockResolvedValue(latestTfmFacilityValues);
         jest.mocked(fixedFeeHelpers.calculateInitialFixedFee).mockReturnValue(999.99);
         jest.mocked(dtfsCommon.calculateDrawnAmount).mockReturnValue(drawnAmount);
       });
@@ -166,8 +167,8 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
       it('should call "getLatestTfmFacilityValues" with the facilityId', async () => {
         await calculateInitialUtilisationAndFixedFee(facilityId);
 
-        expect(getLatestTfmFacilityValuesSpy).toHaveBeenCalledTimes(1);
-        expect(getLatestTfmFacilityValuesSpy).toHaveBeenCalledWith(facilityId);
+        expect(getKeyingSheetCalculationTfmFacilityValuesSpy).toHaveBeenCalledTimes(1);
+        expect(getKeyingSheetCalculationTfmFacilityValuesSpy).toHaveBeenCalledWith(facilityId);
       });
 
       it('should set initial utilisation to drawn amount rounded to 2 decimal places', async () => {

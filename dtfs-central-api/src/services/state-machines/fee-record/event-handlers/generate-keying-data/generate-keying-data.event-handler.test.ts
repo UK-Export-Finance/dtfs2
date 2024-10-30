@@ -11,7 +11,7 @@ import {
 import { handleFeeRecordGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
 import { aReportPeriod, tfmFacilityReturnedValues } from '../../../../../../test-helpers';
 import { calculateFixedFeeAdjustment, calculatePrincipalBalanceAdjustment, updateFacilityUtilisationData, getFixedFeeForFacility } from '../helpers';
-import { calculateUkefShareOfUtilisation, getSpecificTfmFacilityValues } from '../../../../../helpers';
+import { calculateUkefShareOfUtilisation, getKeyingSheetCalculationTfmFacilityValues } from '../../../../../helpers';
 
 jest.mock<unknown>('../helpers', () => ({
   ...jest.requireActual('../helpers'),
@@ -20,7 +20,7 @@ jest.mock<unknown>('../helpers', () => ({
   updateFacilityUtilisationData: jest.fn(),
 }));
 
-jest.mock('../../../../../helpers/get-specific-tfm-facility-values');
+jest.mock('../../../../../helpers/get-keying-sheet-calculation-tfm-facility-values');
 jest.mock('../../../../../helpers/calculate-ukef-share-of-utilisation');
 
 describe('handleFeeRecordGenerateKeyingDataEvent', () => {
@@ -41,7 +41,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
     jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(10);
     jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(20);
     jest.mocked(updateFacilityUtilisationData).mockResolvedValue(aFacilityUtilisationDataEntity());
-    jest.mocked(getSpecificTfmFacilityValues).mockResolvedValue(tfmFacilityReturnedValues);
+    jest.mocked(getKeyingSheetCalculationTfmFacilityValues).mockResolvedValue(tfmFacilityReturnedValues);
     jest.mocked(calculateUkefShareOfUtilisation).mockReturnValue(99999999);
   });
 
@@ -60,10 +60,12 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
         end: { month: 1, year: 2024 },
       };
 
+      const ukefShareOfUtilisation = 1500;
       jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(999.99);
+      jest.mocked(calculateUkefShareOfUtilisation).mockReturnValue(1500);
 
-      const { coverPercentage, coverEndDate, interestPercentage, dayCountBasis } = tfmFacilityReturnedValues;
-      const fixedFee = getFixedFeeForFacility(feeRecord.facilityUtilisation, reportPeriod, coverPercentage, coverEndDate, interestPercentage, dayCountBasis);
+      const { coverEndDate, interestPercentage, dayCountBasis } = tfmFacilityReturnedValues;
+      const fixedFee = getFixedFeeForFacility(reportPeriod, coverEndDate, interestPercentage, dayCountBasis, ukefShareOfUtilisation);
 
       // Act
       await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
@@ -303,9 +305,10 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
         end: { month: 5, year: 2025 },
       };
 
+      const ukefShareOfUtilisation = 78787.87;
       jest.mocked(calculateUkefShareOfUtilisation).mockReturnValue(78787.87);
-      const { coverPercentage, coverEndDate, interestPercentage, dayCountBasis } = tfmFacilityReturnedValues;
-      const fixedFee = getFixedFeeForFacility(feeRecord.facilityUtilisation, reportPeriod, coverPercentage, coverEndDate, interestPercentage, dayCountBasis);
+      const { coverEndDate, interestPercentage, dayCountBasis } = tfmFacilityReturnedValues;
+      const fixedFee = getFixedFeeForFacility(reportPeriod, coverEndDate, interestPercentage, dayCountBasis, ukefShareOfUtilisation);
 
       // Act
       await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
@@ -316,17 +319,13 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
-      expect(calculateUkefShareOfUtilisation).toHaveBeenCalledWith(feeRecord.facilityUtilisation, tfmFacilityReturnedValues.coverPercentage);
-      expect(updateFacilityUtilisationData).toHaveBeenCalledWith(
-        facilityUtilisationDataEntity,
-        {
-          reportPeriod,
-          requestSource,
-          ukefShareOfUtilisation: 78787.87,
-          entityManager: mockEntityManager,
-        },
+      expect(updateFacilityUtilisationData).toHaveBeenCalledWith(facilityUtilisationDataEntity, {
         fixedFee,
-      );
+        reportPeriod,
+        requestSource,
+        ukefShareOfUtilisation: 78787.87,
+        entityManager: mockEntityManager,
+      });
     });
   });
 

@@ -2,7 +2,7 @@ import { EntityManager } from 'typeorm';
 import { DbRequestSource, FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordStatus, ReportPeriod } from '@ukef/dtfs2-common';
 import { BaseFeeRecordEvent } from '../../event/base-fee-record.event';
 import { calculatePrincipalBalanceAdjustment, calculateFixedFeeAdjustment, updateFacilityUtilisationData, getFixedFeeForFacility } from '../helpers';
-import { calculateUkefShareOfUtilisation, getSpecificTfmFacilityValues } from '../../../../../helpers';
+import { calculateUkefShareOfUtilisation, getKeyingSheetCalculationTfmFacilityValues } from '../../../../../helpers';
 
 type GenerateKeyingDataEventPayload = {
   transactionEntityManager: EntityManager;
@@ -33,13 +33,16 @@ export const handleFeeRecordGenerateKeyingDataEvent = async (
     return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
   }
 
-  const { coverPercentage, coverEndDate, interestPercentage, dayCountBasis } = await getSpecificTfmFacilityValues(feeRecord.facilityId, reportPeriod);
-
-  const fixedFee = getFixedFeeForFacility(feeRecord.facilityUtilisation, reportPeriod, coverPercentage, coverEndDate, interestPercentage, dayCountBasis);
-
-  const fixedFeeAdjustment = calculateFixedFeeAdjustment(feeRecord, feeRecord.facilityUtilisationData, reportPeriod, fixedFee);
+  const { coverPercentage, coverEndDate, interestPercentage, dayCountBasis } = await getKeyingSheetCalculationTfmFacilityValues(
+    feeRecord.facilityId,
+    reportPeriod,
+  );
 
   const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(feeRecord.facilityUtilisation, coverPercentage);
+
+  const fixedFee = getFixedFeeForFacility(reportPeriod, coverEndDate, interestPercentage, dayCountBasis, ukefShareOfUtilisation);
+
+  const fixedFeeAdjustment = calculateFixedFeeAdjustment(feeRecord, feeRecord.facilityUtilisationData, reportPeriod, fixedFee);
 
   const principalBalanceAdjustment = calculatePrincipalBalanceAdjustment(ukefShareOfUtilisation, feeRecord.facilityUtilisationData);
 
@@ -54,16 +57,13 @@ export const handleFeeRecordGenerateKeyingDataEvent = async (
 
   await transactionEntityManager.save(FeeRecordEntity, feeRecord);
 
-  await updateFacilityUtilisationData(
-    feeRecord.facilityUtilisationData,
-    {
-      reportPeriod,
-      requestSource,
-      ukefShareOfUtilisation,
-      entityManager: transactionEntityManager,
-    },
+  await updateFacilityUtilisationData(feeRecord.facilityUtilisationData, {
+    reportPeriod,
+    requestSource,
+    ukefShareOfUtilisation,
+    entityManager: transactionEntityManager,
     fixedFee,
-  );
+  });
 
   return feeRecord;
 };

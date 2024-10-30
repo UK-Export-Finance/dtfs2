@@ -9,5 +9,5 @@ export { getFeeRecordPaymentEntityGroupReconciliationData } from './get-fee-reco
 export { convertTimestampToDate } from './convert-timestamp-to-date';
 export { getPreviousReportPeriod } from './get-previous-report-period';
 export { calculateUkefShareOfUtilisation } from './calculate-ukef-share-of-utilisation';
-export { getSpecificTfmFacilityValues } from './get-specific-tfm-facility-values';
+export { getKeyingSheetCalculationTfmFacilityValues } from './get-keying-sheet-calculation-tfm-facility-values';
 export * from './amendments';

@@ -4,19 +4,22 @@ import { TfmFacilitiesRepo } from '../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../errors';
 import { convertTimestampToDate } from './convert-timestamp-to-date';
 import { getEffectiveCoverEndDateAmendment } from './amendments/get-effective-cover-end-date-amendment';
-import { SpecificTfmFacilityValues } from '../types/tfm/tfm-facility';
+import { KeyingSheetCalculationTfmFacilityValues } from '../types/tfm/tfm-facility';
 
 /**
- * Gets the latest values for the TFM facility with the supplied facility id
+ * Gets TFM facility values with the supplied facility id for keying sheet calculations
  * @param facilityId - The facility id
  * @param reportPeriod - The report period
  * @returns The latest values
  */
-export const getSpecificTfmFacilityValues = async (facilityId: string, reportPeriod?: ReportPeriod): Promise<SpecificTfmFacilityValues> => {
+export const getKeyingSheetCalculationTfmFacilityValues = async (
+  facilityId: string,
+  reportPeriod?: ReportPeriod,
+): Promise<KeyingSheetCalculationTfmFacilityValues> => {
   const tfmFacility = await TfmFacilitiesRepo.findOneByUkefFacilityId(facilityId);
 
   if (!tfmFacility) {
-    throw new NotFoundError(`TFM facility ${facilityId} could not be found`);
+    throw new NotFoundError(`TFM facility with ukefFacilityId '${facilityId}' could not be found`);
   }
 
   const { coverEndDate: snapshotCoverEndDate, coverStartDate, dayCountBasis, interestPercentage, coverPercentage, value } = tfmFacility.facilitySnapshot;

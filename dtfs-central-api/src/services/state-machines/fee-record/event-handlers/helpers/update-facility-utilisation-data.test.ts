@@ -43,16 +43,13 @@ describe('updateFacilityUtilisationData', () => {
     const fixedFee = 12345;
 
     // Act
-    await updateFacilityUtilisationData(
-      facilityUtilisationDataEntity,
-      {
-        reportPeriod,
-        requestSource,
-        ukefShareOfUtilisation,
-        entityManager: mockEntityManager,
-      },
+    await updateFacilityUtilisationData(facilityUtilisationDataEntity, {
       fixedFee,
-    );
+      reportPeriod,
+      requestSource,
+      ukefShareOfUtilisation,
+      entityManager: mockEntityManager,
+    });
 
     // Assert
     expect(mockSave).toHaveBeenCalledWith(FacilityUtilisationDataEntity, facilityUtilisationDataEntity);
@@ -82,16 +79,13 @@ describe('updateFacilityUtilisationData', () => {
     const fixedFee = 76543.21;
 
     // Act
-    await updateFacilityUtilisationData(
-      facilityUtilisationDataEntity,
-      {
-        reportPeriod,
-        requestSource: aDbRequestSource(),
-        ukefShareOfUtilisation,
-        entityManager: mockEntityManager,
-      },
+    await updateFacilityUtilisationData(facilityUtilisationDataEntity, {
       fixedFee,
-    );
+      reportPeriod,
+      requestSource: aDbRequestSource(),
+      ukefShareOfUtilisation,
+      entityManager: mockEntityManager,
+    });
 
     // Assert
     expect(facilityUtilisationDataEntity.fixedFee).toEqual(76543.21);

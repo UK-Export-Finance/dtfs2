@@ -4,10 +4,8 @@ import { getFixedFeeForFacility } from './get-fixed-fee-for-facility';
 import { calculateFixedFee } from './calculate-fixed-fee';
 import { calculateUkefShareOfUtilisation } from '../../../../../helpers';
 import { tfmFacilityReturnedValues } from '../../../../../../test-helpers';
-import * as helpers from '../../../../../helpers';
 
 jest.mock('./calculate-fixed-fee');
-jest.mock('../../../../../helpers/amendments/get-effective-cover-end-date-amendment');
 
 console.error = jest.fn();
 
@@ -18,11 +16,6 @@ describe('getFixedFeeForFacility', () => {
     start: { month: date.getMonth() + 1, year: date.getFullYear() },
     end: { month: date.getMonth() + 1, year: date.getFullYear() },
   });
-
-  beforeEach(() => {
-    jest.mocked(helpers.getEffectiveCoverEndDateAmendment).mockReturnValue(null);
-  });
-
   afterEach(() => {
     jest.resetAllMocks();
   });
@@ -38,11 +31,10 @@ describe('getFixedFeeForFacility', () => {
     const coverEndDate = addDays(coverStartDateAfterReportPeriod, 365);
 
     const { coverPercentage } = tfmFacilityReturnedValues;
+    const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, coverPercentage);
 
     // Act
-    getFixedFeeForFacility(utilisation, reportPeriod, coverPercentage, coverEndDate, interestPercentage, dayCountBasis);
-
-    const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, coverPercentage);
+    getFixedFeeForFacility(reportPeriod, coverEndDate, interestPercentage, dayCountBasis, ukefShareOfUtilisation);
 
     // Assert
     expect(calculateFixedFee).toHaveBeenCalledWith<[CalculateFixedFeeParams]>({
@@ -65,12 +57,10 @@ describe('getFixedFeeForFacility', () => {
 
     const { coverPercentage } = tfmFacilityReturnedValues;
 
-    jest.mocked(helpers.getEffectiveCoverEndDateAmendment).mockReturnValue(null);
+    const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, coverPercentage);
 
     // Act
-    getFixedFeeForFacility(utilisation, reportPeriod, coverPercentage, coverEndDate, interestPercentage, dayCountBasis);
-
-    const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, coverPercentage);
+    getFixedFeeForFacility(reportPeriod, coverEndDate, interestPercentage, dayCountBasis, ukefShareOfUtilisation);
 
     // Assert
     expect(calculateFixedFee).toHaveBeenCalledWith<[CalculateFixedFeeParams]>({
@@ -94,10 +84,10 @@ describe('getFixedFeeForFacility', () => {
 
     const { coverPercentage } = tfmFacilityReturnedValues;
 
-    // Act
-    getFixedFeeForFacility(utilisation, reportPeriod, coverPercentage, amendedCoverEndDate, interestPercentage, dayCountBasis);
-
     const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, coverPercentage);
+
+    // Act
+    getFixedFeeForFacility(reportPeriod, amendedCoverEndDate, interestPercentage, dayCountBasis, ukefShareOfUtilisation);
 
     // Assert
     expect(calculateFixedFee).toHaveBeenCalledWith<[CalculateFixedFeeParams]>({

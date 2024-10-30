@@ -1,4 +1,4 @@
-export type SpecificTfmFacilityValues = {
+export type KeyingSheetCalculationTfmFacilityValues = {
   coverEndDate: Date;
   coverStartDate: Date;
   dayCountBasis: number;

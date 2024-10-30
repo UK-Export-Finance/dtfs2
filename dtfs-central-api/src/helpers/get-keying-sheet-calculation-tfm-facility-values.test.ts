@@ -1,12 +1,12 @@
-import { getSpecificTfmFacilityValues } from './get-specific-tfm-facility-values';
+import { getKeyingSheetCalculationTfmFacilityValues } from './get-keying-sheet-calculation-tfm-facility-values';
 import { TfmFacilitiesRepo } from '../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../errors';
-import { aTfmFacility, aFacility } from '../../test-helpers';
+import { aTfmFacility, aFacility, aCompletedTfmFacilityAmendment } from '../../test-helpers';
 import { convertTimestampToDate } from './convert-timestamp-to-date';
 
 jest.mock('../repositories/tfm-facilities-repo');
 
-describe('getSpecificTfmFacilityValues', () => {
+describe('getKeyingSheetCalculationTfmFacilityValues', () => {
   const findOneByUkefFacilityIdSpy = jest.spyOn(TfmFacilitiesRepo, 'findOneByUkefFacilityId');
   const facilityId = '123';
   const today = new Date();
@@ -39,7 +39,9 @@ describe('getSpecificTfmFacilityValues', () => {
     });
 
     it('should throw a NotFoundError', async () => {
-      await expect(getSpecificTfmFacilityValues(facilityId, reportPeriod)).rejects.toThrow(new NotFoundError(`TFM facility ${facilityId} could not be found`));
+      await expect(getKeyingSheetCalculationTfmFacilityValues(facilityId, reportPeriod)).rejects.toThrow(
+        new NotFoundError(`TFM facility with ukefFacilityId '${facilityId}' could not be found`),
+      );
     });
   });
 
@@ -60,7 +62,7 @@ describe('getSpecificTfmFacilityValues', () => {
 
     it('should throw a NotFoundError', async () => {
       // Act / Assert
-      await expect(getSpecificTfmFacilityValues(facilityId, reportPeriod)).rejects.toThrow(
+      await expect(getKeyingSheetCalculationTfmFacilityValues(facilityId, reportPeriod)).rejects.toThrow(
         new NotFoundError(`Failed to find a cover start date for the tfm facility with ukef facility id '${facilityId}`),
       );
     });
@@ -83,19 +85,19 @@ describe('getSpecificTfmFacilityValues', () => {
 
     it('should throw a NotFoundError', async () => {
       // Act / Assert
-      await expect(getSpecificTfmFacilityValues(facilityId, reportPeriod)).rejects.toThrow(
+      await expect(getKeyingSheetCalculationTfmFacilityValues(facilityId, reportPeriod)).rejects.toThrow(
         new NotFoundError(`Failed to find a cover end date for the tfm facility with ukef facility id '${facilityId}`),
       );
     });
   });
 
-  describe('when the tfm facility is found', () => {
+  describe('when the report period is provided', () => {
     beforeEach(() => {
       findOneByUkefFacilityIdSpy.mockResolvedValue(mockFacility);
     });
 
     it('should return a populated object', async () => {
-      const result = await getSpecificTfmFacilityValues(facilityId, reportPeriod);
+      const result = await getKeyingSheetCalculationTfmFacilityValues(facilityId, reportPeriod);
 
       const expected = {
         coverEndDate: convertTimestampToDate(today),
@@ -116,10 +118,45 @@ describe('getSpecificTfmFacilityValues', () => {
     });
 
     it("should return a populated object with the facility's cover end date", async () => {
-      const result = await getSpecificTfmFacilityValues(facilityId);
+      const result = await getKeyingSheetCalculationTfmFacilityValues(facilityId);
 
       const expected = {
         coverEndDate: convertTimestampToDate(today),
+        coverStartDate: convertTimestampToDate(today),
+        dayCountBasis: 365,
+        interestPercentage: 5,
+        coverPercentage: 5,
+        value: mockFacility.facilitySnapshot.value,
+      };
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('when the facility contains a completed amendment', () => {
+    const dateAfterReportPeriodEnd = new Date('2024-03-01');
+
+    const mockFacilityWithAmendment = {
+      ...mockFacility,
+      amendments: [
+        {
+          ...aCompletedTfmFacilityAmendment(),
+          value: 350000,
+          effectiveDate: dateAfterReportPeriodEnd.getTime(),
+          // 365 days after report period end
+          coverEndDate: new Date('2025-03-01').getTime(),
+        },
+      ],
+    };
+    beforeEach(() => {
+      findOneByUkefFacilityIdSpy.mockResolvedValue(mockFacilityWithAmendment);
+    });
+
+    it("should return a populated object with the amendment's cover end date", async () => {
+      const result = await getKeyingSheetCalculationTfmFacilityValues(facilityId, reportPeriod);
+
+      const expected = {
+        coverEndDate: convertTimestampToDate(mockFacilityWithAmendment.amendments[0].coverEndDate),
         coverStartDate: convertTimestampToDate(today),
         dayCountBasis: 365,
         interestPercentage: 5,
