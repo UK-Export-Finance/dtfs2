@@ -315,6 +315,14 @@ const getCaseFacility = async (req, res) => {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
 
+  /**
+   * Ensure imperative deal properties exist before rendering
+   */
+  if (!deal?.dealSnapshot?._id || !deal?.tfm) {
+    console.error('An error occurred while rendering a TFM deal %s', dealId);
+    return res.render('_partials/problem-with-service.njk');
+  }
+
   return res.render('case/facility/facility.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,

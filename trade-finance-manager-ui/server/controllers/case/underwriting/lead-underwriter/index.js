@@ -87,7 +87,7 @@ const postAssignLeadUnderwriter = async (req, res) => {
   }
 
   if (!req.body.assignedTo) {
-    return res.render('partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk');
   }
 
   const update = {

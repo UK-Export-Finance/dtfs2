@@ -247,9 +247,15 @@ export class TfmFacilitiesRepo {
   public static async findAllFacilitiesAndFacilityCount(
     aggregateOptions: AllFacilitiesAndFacilityCountAggregatePipelineOptions,
   ): Promise<{ count: number; facilities: Document[] } | null> {
-    const collection = await this.getCollection();
-    const result = await collection.aggregate(aggregatePipelines.allFacilitiesAndFacilityCount(aggregateOptions)).toArray();
-    return (result.at(0) as { count: number; facilities: Document[] }) ?? null;
+    try {
+      const collection = await this.getCollection();
+      const facilities = aggregatePipelines.allFacilitiesAndFacilityCount(aggregateOptions);
+      const result = await collection.aggregate(facilities).toArray();
+      return (result.at(0) as { count: number; facilities: Document[] }) ?? null;
+    } catch (error) {
+      console.error('Error while finding all facilities %o', error);
+      return null;
+    }
   }
 
   /**
