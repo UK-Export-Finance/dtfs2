@@ -336,7 +336,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         reportId: '1',
         reportPeriod,
         bank: { id: bankQuery, name: BANK_NAME_ONE },
-        status: 'PENDING_RECONCILIATION',
+        status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
         dateUploaded: '2024-02-15 10:38:01.4033333',
         totalFeesReported: 3,
         reportedFeesLeftToReconcile: 3,

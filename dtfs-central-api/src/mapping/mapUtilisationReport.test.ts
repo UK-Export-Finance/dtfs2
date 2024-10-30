@@ -62,7 +62,7 @@ describe('mapUtilisationReportEntityToGetUtilisationReportResponse', () => {
     });
     const mockDate = new Date('2024-01');
 
-    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
       .withId(reportId)
       .withBankId(bankId)
       .withReportPeriod(reportPeriod)
@@ -82,7 +82,7 @@ describe('mapUtilisationReportEntityToGetUtilisationReportResponse', () => {
       id: reportId,
       bankId,
       reportPeriod,
-      status: 'PENDING_RECONCILIATION',
+      status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
       dateUploaded: mockDate,
       uploadedByUser: {
         id: uploadedByUserId,

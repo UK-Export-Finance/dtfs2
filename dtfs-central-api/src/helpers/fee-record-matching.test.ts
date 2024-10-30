@@ -6,6 +6,7 @@ import {
   PaymentEntity,
   PaymentEntityMockBuilder,
   PaymentMatchingToleranceEntityMockBuilder,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { EntityManager } from 'typeorm';
@@ -69,7 +70,9 @@ describe('fee-record-matching', () => {
     it.each(Object.values(CURRENCY))('uses fee record payment currency to fetch tolerance (currency: %s)', async (currency: Currency) => {
       // Arrange
       const feeRecords = [
-        FeeRecordEntityMockBuilder.forReport(UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build())
+        FeeRecordEntityMockBuilder.forReport(
+          UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build(),
+        )
           .withPaymentCurrency(currency)
           .build(),
       ];
@@ -206,7 +209,7 @@ describe('fee-record-matching', () => {
 
             const paymentCurrency: Currency = 'USD';
 
-            const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+            const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
             const feeRecords = [
               FeeRecordEntityMockBuilder.forReport(utilisationReport)
                 .withPaymentCurrency(paymentCurrency)
@@ -243,7 +246,7 @@ describe('fee-record-matching', () => {
           // 0.1 / 200 = 0.0005 = 0 (to 2 decimal places)
           const feesPaidAmount = 0.1;
           const exchangeRate = 200;
-          const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+          const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
           const feeRecords = [
             FeeRecordEntityMockBuilder.forReport(utilisationReport)
               .withId(1)
@@ -273,7 +276,7 @@ describe('fee-record-matching', () => {
           // 1 / 200 = 0.005 = 0.1 (to 2 decimal places)
           const feesPaidAmount = 1;
           const exchangeRate = 200;
-          const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+          const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
           const feeRecords = [
             FeeRecordEntityMockBuilder.forReport(utilisationReport)
               .withId(1)
@@ -488,7 +491,7 @@ describe('fee-record-matching', () => {
           // 600.1 / 200 = 3.00005, rounded to 2 decimal places = 3 = tolerance
           const feesPaidAmount = 600.1;
           const exchangeRate = 200;
-          const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+          const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
           const feeRecords = [
             FeeRecordEntityMockBuilder.forReport(utilisationReport)
               .withId(1)
@@ -519,7 +522,7 @@ describe('fee-record-matching', () => {
           // 601 / 200 = 3.005, rounded to 2 decimal places = 3.01 > tolerance
           const feesPaidAmount = 601;
           const exchangeRate = 200;
-          const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+          const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
           const feeRecords = [
             FeeRecordEntityMockBuilder.forReport(utilisationReport)
               .withId(1)
@@ -562,7 +565,7 @@ describe('fee-record-matching', () => {
 
             const paymentCurrency: Currency = 'GBP';
 
-            const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+            const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
             const feeRecords = [
               FeeRecordEntityMockBuilder.forReport(utilisationReport)
                 .withId(1)
@@ -614,7 +617,7 @@ describe('fee-record-matching', () => {
 
             const paymentCurrency: Currency = 'GBP';
 
-            const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+            const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
             const feeRecords = [
               FeeRecordEntityMockBuilder.forReport(utilisationReport)
                 .withId(1)
@@ -650,7 +653,7 @@ describe('fee-record-matching', () => {
   });
 
   function getFeeRecordsWithReportedPayments(reportedPaymentAmounts: number[], paymentCurrency: Currency): FeeRecordEntity[] {
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
     return reportedPaymentAmounts.map((paymentAmount) =>
       FeeRecordEntityMockBuilder.forReport(utilisationReport)
         .withPaymentCurrency(paymentCurrency)

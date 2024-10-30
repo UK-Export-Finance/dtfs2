@@ -19,7 +19,7 @@ describe('updateReportStatusPayloadValidation', () => {
     user: opts.user ?? MOCK_TFM_SESSION_USER,
     reportsWithStatus: opts.reportsWithStatus ?? [
       {
-        status: opts.status ?? 'PENDING_RECONCILIATION',
+        status: opts.status ?? UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
         reportId: opts.reportId ?? 123,
       },
     ],

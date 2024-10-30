@@ -21,7 +21,7 @@ function* idGenerator() {
 const reportIdGenerator = idGenerator();
 
 const generateReportDetails = (year, month) =>
-  UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+  UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
     .withBankId(bankId)
     .withId(reportIdGenerator.next().value)
     .withReportPeriod({

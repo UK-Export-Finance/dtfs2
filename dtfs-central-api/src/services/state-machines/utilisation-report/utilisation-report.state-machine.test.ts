@@ -119,7 +119,7 @@ describe('UtilisationReportStateMachine', () => {
   });
 
   describe(`when report is in '${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}' status`, () => {
-    const PENDING_RECONCILIATION_REPORT = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    const PENDING_RECONCILIATION_REPORT = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT}' event`, async () => {
       // Arrange

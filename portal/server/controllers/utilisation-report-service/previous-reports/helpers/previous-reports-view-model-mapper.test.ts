@@ -136,7 +136,7 @@ describe('previous-reports-view-model-mapper', () => {
     it.each`
       status                                                               | displayStatus
       ${UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED}      | ${'Not submitted'}
-      ${'PENDING_RECONCILIATION'}                                          | ${'Pending reconciliation'}
+      ${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}   | ${'Pending reconciliation'}
       ${'RECONCILIATION_IN_PROGRESS'}                                      | ${'Reconciliation in progress'}
       ${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED} | ${'Report completed'}
     `(

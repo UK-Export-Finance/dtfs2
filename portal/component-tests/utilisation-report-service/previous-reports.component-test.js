@@ -38,14 +38,14 @@ describe(page, () => {
       linkText: 'January 2023',
       month: 'January',
       downloadPath: 'www.abc.com',
-      status: 'PENDING_RECONCILIATION',
+      status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
       displayStatus: 'Pending reconciliation',
     },
     {
       linkText: 'February 2023',
       month: 'February',
       downloadPath: 'www.abc.com',
-      status: 'PENDING_RECONCILIATION',
+      status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
       displayStatus: 'Pending reconciliation',
     },
     {

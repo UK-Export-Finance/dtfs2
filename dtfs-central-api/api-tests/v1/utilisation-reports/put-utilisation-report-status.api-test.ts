@@ -9,7 +9,7 @@ const BASE_URL = '/v1/utilisation-reports/set-status';
 
 describe(`PUT ${BASE_URL}`, () => {
   const reportId = 1;
-  const mockReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).build();
+  const mockReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).withId(reportId).build();
 
   beforeAll(async () => {
     await SqlDbHelper.initialize();

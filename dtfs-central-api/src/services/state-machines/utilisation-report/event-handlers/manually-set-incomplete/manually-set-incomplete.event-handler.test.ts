@@ -14,7 +14,7 @@ describe('handleUtilisationReportManuallySetIncompleteEvent', () => {
     save: mockSave,
   } as unknown as EntityManager;
 
-  it("sets the report status to 'PENDING_RECONCILIATION' and saves the report using the transaction entity manager", async () => {
+  it(`sets the report status to ${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION} and saves the report using the transaction entity manager`, async () => {
     // Arrange
     const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED).build();
 
@@ -28,7 +28,7 @@ describe('handleUtilisationReportManuallySetIncompleteEvent', () => {
     expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
     expect(report).toEqual(
       expect.objectContaining<Partial<UtilisationReportEntity>>({
-        status: 'PENDING_RECONCILIATION',
+        status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
         lastUpdatedByTfmUserId: requestSource.userId,
         lastUpdatedByPortalUserId: null,
         lastUpdatedByIsSystemUser: false,

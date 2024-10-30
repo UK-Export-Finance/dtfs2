@@ -1,7 +1,8 @@
+import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
 import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '../../test-helpers';
 
 describe('PaymentEntity', () => {
-  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
 
   describe('updateWithAdditionalFeeRecords', () => {
     it('adds new fee records to the payment', () => {

@@ -1,6 +1,12 @@
 import difference from 'lodash/difference';
 import { EntityManager } from 'typeorm';
-import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
+import {
+  FeeRecordEntityMockBuilder,
+  UtilisationReportEntityMockBuilder,
+  FEE_RECORD_STATUS,
+  FeeRecordStatus,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+} from '@ukef/dtfs2-common';
 import { InvalidStateMachineTransitionError } from '../../../errors';
 import { FEE_RECORD_EVENT_TYPE, FEE_RECORD_EVENT_TYPES, FeeRecordEventType } from './event/fee-record.event-type';
 import { FeeRecordStateMachine } from './fee-record.state-machine';
@@ -29,7 +35,7 @@ describe('FeeRecordStateMachine', () => {
     await expect(stateMachine.handleEvent({ type: eventType, payload: null })).rejects.toThrow(InvalidStateMachineTransitionError);
   };
 
-  const UPLOADED_REPORT = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+  const UPLOADED_REPORT = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
 
   describe(`when the fee record has the '${FEE_RECORD_STATUS.TO_DO}' status`, () => {
     // Arrange

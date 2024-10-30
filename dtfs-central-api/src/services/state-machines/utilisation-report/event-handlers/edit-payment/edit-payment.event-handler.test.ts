@@ -5,6 +5,7 @@ import {
   FeeRecordEntityMockBuilder,
   PaymentEntity,
   PaymentEntityMockBuilder,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -197,7 +198,7 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
 
   it('updates and saves the updated report', async () => {
     // Arrange
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
 
     // Act
     await handleUtilisationReportEditPaymentEvent(utilisationReport, {

@@ -42,7 +42,10 @@ describe(`POST ${BASE_URL}`, () => {
   const anUploadedReconciliationInProgressUtilisationReport = () =>
     UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).withUploadedByUserId(portalUserId).build();
   const anUploadedPendingReconciliationUtilisationReport = () =>
-    UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).withUploadedByUserId(portalUserId).build();
+    UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+      .withId(reportId)
+      .withUploadedByUserId(portalUserId)
+      .build();
 
   const aValidRequestBody = () => ({
     user: {

@@ -8,6 +8,7 @@ import {
   UtilisationReportReconciliationStatus,
   FeeRecordPaymentJoinTableEntity,
   FEE_RECORD_STATUS,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
@@ -237,7 +238,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
 
   it('updates and saves the report setting status to RECONCILIATION_IN_PROGRESS when the status is PENDING_RECONCILIATION', async () => {
     // Arrange
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
 
     mockFind.mockResolvedValue([]);
 

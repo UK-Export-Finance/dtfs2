@@ -1,4 +1,9 @@
-import { UtilisationReportEntityMockBuilder, formatDateForEmail, getFormattedReportPeriodWithShortMonth } from '@ukef/dtfs2-common';
+import {
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UtilisationReportEntityMockBuilder,
+  formatDateForEmail,
+  getFormattedReportPeriodWithShortMonth,
+} from '@ukef/dtfs2-common';
 import { generateReportReconciledEmailVariables } from './generate-report-reconciled-email-variables';
 import { getBankById } from '../../../../../repositories/banks-repo';
 import { aBank } from '../../../../../../test-helpers';
@@ -11,7 +16,7 @@ describe('generateReportReconciledEmailVariables', () => {
     jest.resetAllMocks();
   });
 
-  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
 
   const mockGetBankByIdResponse = aBank();
 

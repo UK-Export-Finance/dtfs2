@@ -47,7 +47,9 @@ export const seedFeeRecordPaymentGroups = async (dataSource: DataSource) => {
   });
   await FeeRecordPaymentGroupSeeder.forManuallyCompletedReport(manuallyCompletedReport).addManyRandomFeeRecords(50).save(dataSource);
 
-  const pendingReconciliationReport = await dataSource.manager.findOneByOrFail(UtilisationReportEntity, { status: 'PENDING_RECONCILIATION' });
+  const pendingReconciliationReport = await dataSource.manager.findOneByOrFail(UtilisationReportEntity, {
+    status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+  });
   const pendingReconciliationBank = await MongoDbDataLoader.getBankByIdOrFail(pendingReconciliationReport.bankId);
   const pendingReconciliationPreviousReportPeriod = getPrecedingReportPeriod(
     pendingReconciliationBank.utilisationReportPeriodSchedule,

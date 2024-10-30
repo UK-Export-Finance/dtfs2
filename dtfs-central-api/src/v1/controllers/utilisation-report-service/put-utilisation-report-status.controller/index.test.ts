@@ -73,7 +73,7 @@ describe('put-utilisation-report-status.controller', () => {
     condition                                                  | invalidReportsWithStatus
     ${"'req.body.reportsWithStatus' is undefined"}             | ${undefined}
     ${"'req.body.reportsWithStatus[0].status' is undefined"}   | ${[{ reportId: 1, status: undefined }]}
-    ${"'req.body.reportsWithStatus[0].reportId' is undefined"} | ${[{ reportId: undefined, status: 'PENDING_RECONCILIATION' }]}
+    ${"'req.body.reportsWithStatus[0].reportId' is undefined"} | ${[{ reportId: undefined, status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION }]}
   `('responds with an InvalidPayloadError if $condition', async ({ invalidReportsWithStatus }: { invalidReportsWithStatus?: ReportWithStatus[] }) => {
     // Arrange
     const { req, res } = getHttpMocks();
@@ -108,7 +108,7 @@ describe('put-utilisation-report-status.controller', () => {
       req.body.reportsWithStatus = reportsWithStatusForMarkingAsCompleted;
 
       const existingReports = reportsWithStatusForMarkingAsCompleted.map(({ reportId }) =>
-        UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).build(),
+        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).withId(reportId).build(),
       );
 
       utilisationReportRepoFindOneBySpy.mockImplementation(mockFindOneBy(existingReports));
@@ -164,11 +164,11 @@ describe('put-utilisation-report-status.controller', () => {
       const reportsWithStatusForMarkingAsNotCompleted: ReportWithStatus[] = [
         {
           reportId: 1,
-          status: 'PENDING_RECONCILIATION',
+          status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
         },
         {
           reportId: 2,
-          status: 'PENDING_RECONCILIATION',
+          status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
         },
       ];
 
@@ -215,7 +215,7 @@ describe('put-utilisation-report-status.controller', () => {
         // Arrange
         const reportWithStatus: ReportWithStatus = {
           reportId: 1,
-          status: 'PENDING_RECONCILIATION',
+          status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
         };
 
         const { req, res } = getHttpMocks();

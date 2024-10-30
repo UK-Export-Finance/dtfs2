@@ -102,7 +102,7 @@ describe(`POST ${getUrl()}`, () => {
     expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
-  it("responds with a 201 (Created) with a valid payload and sets the report status to 'PENDING_RECONCILIATION'", async () => {
+  it(`responds with a 201 (Created) with a valid payload and sets the report status to ${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}`, async () => {
     // Act
     const response = await testApi.post(aValidPayload()).to(getUrl());
 
@@ -110,7 +110,7 @@ describe(`POST ${getUrl()}`, () => {
     expect(response.status).toEqual(HttpStatusCode.Created);
 
     const report = await SqlDbHelper.manager.findOneByOrFail(UtilisationReportEntity, { id: reportId });
-    expect(report.status).toBe<UtilisationReportReconciliationStatus>('PENDING_RECONCILIATION');
+    expect(report.status).toBe<UtilisationReportReconciliationStatus>(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION);
   });
 
   it('creates as many fee records as there are rows in the reportData field', async () => {

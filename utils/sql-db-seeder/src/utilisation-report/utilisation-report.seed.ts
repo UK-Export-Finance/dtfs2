@@ -30,7 +30,7 @@ export const seedUtilisationReports = async (dataSource: DataSource): Promise<vo
 
   await UtilisationReportSeeder.forBankIdAndReportPeriod(pendingReconciliationBankIdWithReportPeriod)
     .withUploadedByUserId(uploadedByUserId)
-    .saveWithStatus('PENDING_RECONCILIATION', dataSource);
+    .saveWithStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION, dataSource);
 
   await UtilisationReportSeeder.forBankIdAndReportPeriod(reconciliationInProgressBankIdWithReportPeriod)
     .withUploadedByUserId(uploadedByUserId)

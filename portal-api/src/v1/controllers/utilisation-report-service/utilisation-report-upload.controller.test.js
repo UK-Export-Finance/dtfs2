@@ -85,7 +85,9 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
   it('does not upload report and returns a 500 with error message if report has already been received', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
-    jest.mocked(getUtilisationReports).mockResolvedValue([{ ...aUtilisationReportResponse(), status: 'PENDING_RECONCILIATION' }]);
+    jest
+      .mocked(getUtilisationReports)
+      .mockResolvedValue([{ ...aUtilisationReportResponse(), status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION }]);
 
     // Act
     await uploadReportAndSendNotification(req, res);

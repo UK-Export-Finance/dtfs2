@@ -1,6 +1,12 @@
 import { EntityManager } from 'typeorm';
 import { when } from 'jest-when';
-import { FeeRecordEntity, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FeeRecordEntity,
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { feeRecordsMatchAttachedPayments } from './fee-records-match-attached-payments';
 import { feeRecordsAndPaymentsMatch } from '../../../../../helpers';
 
@@ -22,7 +28,7 @@ describe('feeRecordsMatchAttachedPayments', () => {
 
   it('returns true when the payments attached to the fee records have the same total payments', async () => {
     // Arrange
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
     const payments = [PaymentEntityMockBuilder.forCurrency('GBP').withId(1).build(), PaymentEntityMockBuilder.forCurrency('GBP').withId(2).build()];
     const feeRecordsWithoutTheirAttachedPayments = [
       FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withPayments([]).build(),
@@ -48,7 +54,7 @@ describe('feeRecordsMatchAttachedPayments', () => {
 
   it('returns false when the payments attached to the fee records do not have the same total payments', async () => {
     // Arrange
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
     const payments = [PaymentEntityMockBuilder.forCurrency('GBP').withId(1).build(), PaymentEntityMockBuilder.forCurrency('GBP').withId(2).build()];
     const feeRecordsWithoutTheirAttachedPayments = [
       FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withPayments([]).build(),

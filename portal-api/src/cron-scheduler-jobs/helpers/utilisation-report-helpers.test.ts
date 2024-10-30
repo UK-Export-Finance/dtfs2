@@ -273,7 +273,7 @@ describe('utilisation-report-helpers', () => {
       // Arrange
       const existingReport: UtilisationReportResponseBody = {
         ...aUtilisationReportResponse(),
-        status: 'PENDING_RECONCILIATION',
+        status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
         reportPeriod: {
           start: { month: CURRENT_REPORT_PERIOD_MONTH, year: CURRENT_YEAR },
           end: { month: CURRENT_REPORT_PERIOD_MONTH, year: CURRENT_YEAR },

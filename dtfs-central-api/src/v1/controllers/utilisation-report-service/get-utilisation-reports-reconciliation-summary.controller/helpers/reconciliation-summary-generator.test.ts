@@ -22,7 +22,10 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
   const getMockFeeRecordForReport = (report: UtilisationReportEntity): FeeRecordEntity => FeeRecordEntityMockBuilder.forReport(report).build();
 
   const getOpenReportWithReportPeriod = (bank: Bank, reportPeriod: ReportPeriod): UtilisationReportEntity => {
-    const openReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withBankId(bank.id).withReportPeriod(reportPeriod).build();
+    const openReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+      .withBankId(bank.id)
+      .withReportPeriod(reportPeriod)
+      .build();
     openReport.feeRecords = [getMockFeeRecordForReport(openReport)];
     return openReport;
   };
@@ -89,7 +92,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
         .withReportPeriod({ start: { month: 12, year: 2023 }, end: { month: 12, year: 2023 } })
         .build();
       reportOne.feeRecords = [getMockFeeRecordForReport(reportOne)];
-      const reportTwo = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+      const reportTwo = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
         .withBankId(bankIdTwo)
         .withReportPeriod({ start: { month: 10, year: 2023 }, end: { month: 12, year: 2023 } })
         .build();
@@ -176,7 +179,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
         .build();
       augustPeriodReport.feeRecords = [getMockFeeRecordForReport(augustPeriodReport)];
 
-      const septemberPeriodReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+      const septemberPeriodReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
         .withBankId(banks[0].id)
         .withReportPeriod({
           start: {
@@ -228,7 +231,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
           submissionMonth: '2023-10',
           items: [
             expect.objectContaining<Partial<UtilisationReportReconciliationSummaryItem>>({
-              status: 'PENDING_RECONCILIATION',
+              status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
             }),
           ],
         },
