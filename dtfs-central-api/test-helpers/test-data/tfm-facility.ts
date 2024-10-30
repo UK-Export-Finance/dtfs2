@@ -20,7 +20,7 @@ export const aTfmFacility = (): TfmFacility => {
   };
 };
 
-export const tfmFacilityReturnedValues = {
+export const keyingSheetCalculationTfmFacilityValues = {
   coverEndDate: new Date(),
   coverStartDate: new Date(),
   dayCountBasis: facility.dayCountBasis,

@@ -116,7 +116,7 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
     const facilityId = '12345678';
     const { facilitySnapshot } = aTfmFacility();
 
-    const latestTfmFacilityValues = {
+    const keyingSheetCalculationTfmFacilityValues = {
       coverEndDate: new Date(),
       coverStartDate: new Date(),
       dayCountBasis: facilitySnapshot.dayCountBasis,
@@ -143,7 +143,7 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
     describe('when a facility does not contain a value', () => {
       beforeEach(() => {
         const values = {
-          ...latestTfmFacilityValues,
+          ...keyingSheetCalculationTfmFacilityValues,
           value: 0,
         };
 
@@ -159,12 +159,12 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
       const drawnAmount = 12345.678;
 
       beforeEach(() => {
-        getKeyingSheetCalculationTfmFacilityValuesSpy.mockResolvedValue(latestTfmFacilityValues);
+        getKeyingSheetCalculationTfmFacilityValuesSpy.mockResolvedValue(keyingSheetCalculationTfmFacilityValues);
         jest.mocked(fixedFeeHelpers.calculateInitialFixedFee).mockReturnValue(999.99);
         jest.mocked(dtfsCommon.calculateDrawnAmount).mockReturnValue(drawnAmount);
       });
 
-      it('should call "getLatestTfmFacilityValues" with the facilityId', async () => {
+      it('should call "getkeyingSheetCalculationTfmFacilityValues" with the facilityId', async () => {
         await calculateInitialUtilisationAndFixedFee(facilityId);
 
         expect(getKeyingSheetCalculationTfmFacilityValuesSpy).toHaveBeenCalledTimes(1);
@@ -180,7 +180,10 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
         const result = await calculateInitialUtilisationAndFixedFee(facilityId);
 
         // Assert
-        expect(calculateDrawnAmountSpy).toHaveBeenCalledWith(latestTfmFacilityValues.value, latestTfmFacilityValues.coverPercentage);
+        expect(calculateDrawnAmountSpy).toHaveBeenCalledWith(
+          keyingSheetCalculationTfmFacilityValues.value,
+          keyingSheetCalculationTfmFacilityValues.coverPercentage,
+        );
         expect(result.utilisation).toEqual(drawnAmountRoundedToTwoDecimalPlaces);
       });
 
@@ -195,10 +198,10 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
         // Assert
         expect(calculateInitialFixedFeeSpy).toHaveBeenCalledWith({
           ukefShareOfUtilisation: drawnAmountRoundedToTwoDecimalPlaces,
-          coverStartDate: latestTfmFacilityValues.coverStartDate,
-          coverEndDate: latestTfmFacilityValues.coverEndDate,
-          interestPercentage: latestTfmFacilityValues.interestPercentage,
-          dayCountBasis: latestTfmFacilityValues.dayCountBasis,
+          coverStartDate: keyingSheetCalculationTfmFacilityValues.coverStartDate,
+          coverEndDate: keyingSheetCalculationTfmFacilityValues.coverEndDate,
+          interestPercentage: keyingSheetCalculationTfmFacilityValues.interestPercentage,
+          dayCountBasis: keyingSheetCalculationTfmFacilityValues.dayCountBasis,
         });
         expect(result.fixedFee).toEqual(999.99);
       });

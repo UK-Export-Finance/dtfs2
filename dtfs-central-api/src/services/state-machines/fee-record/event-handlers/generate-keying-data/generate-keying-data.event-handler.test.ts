@@ -9,8 +9,8 @@ import {
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { handleFeeRecordGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
-import { aReportPeriod, tfmFacilityReturnedValues } from '../../../../../../test-helpers';
-import { calculateFixedFeeAdjustment, calculatePrincipalBalanceAdjustment, updateFacilityUtilisationData, getFixedFeeForFacility } from '../helpers';
+import { aReportPeriod, keyingSheetCalculationTfmFacilityValues } from '../../../../../../test-helpers';
+import { calculateFixedFeeAdjustment, calculatePrincipalBalanceAdjustment, updateFacilityUtilisationData, calculateFixedFee } from '../helpers';
 import { calculateUkefShareOfUtilisation, getKeyingSheetCalculationTfmFacilityValues } from '../../../../../helpers';
 
 jest.mock<unknown>('../helpers', () => ({
@@ -41,7 +41,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
     jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(10);
     jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(20);
     jest.mocked(updateFacilityUtilisationData).mockResolvedValue(aFacilityUtilisationDataEntity());
-    jest.mocked(getKeyingSheetCalculationTfmFacilityValues).mockResolvedValue(tfmFacilityReturnedValues);
+    jest.mocked(getKeyingSheetCalculationTfmFacilityValues).mockResolvedValue(keyingSheetCalculationTfmFacilityValues);
     jest.mocked(calculateUkefShareOfUtilisation).mockReturnValue(99999999);
   });
 
@@ -64,8 +64,14 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(999.99);
       jest.mocked(calculateUkefShareOfUtilisation).mockReturnValue(1500);
 
-      const { coverEndDate, interestPercentage, dayCountBasis } = tfmFacilityReturnedValues;
-      const fixedFee = getFixedFeeForFacility(reportPeriod, coverEndDate, interestPercentage, dayCountBasis, ukefShareOfUtilisation);
+      const { coverEndDate, interestPercentage, dayCountBasis } = keyingSheetCalculationTfmFacilityValues;
+      const fixedFee = calculateFixedFee({
+        ukefShareOfUtilisation,
+        reportPeriod,
+        coverEndDate,
+        interestPercentage,
+        dayCountBasis,
+      });
 
       // Act
       await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
@@ -307,8 +313,14 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
 
       const ukefShareOfUtilisation = 78787.87;
       jest.mocked(calculateUkefShareOfUtilisation).mockReturnValue(78787.87);
-      const { coverEndDate, interestPercentage, dayCountBasis } = tfmFacilityReturnedValues;
-      const fixedFee = getFixedFeeForFacility(reportPeriod, coverEndDate, interestPercentage, dayCountBasis, ukefShareOfUtilisation);
+      const { coverEndDate, interestPercentage, dayCountBasis } = keyingSheetCalculationTfmFacilityValues;
+      const fixedFee = calculateFixedFee({
+        ukefShareOfUtilisation,
+        reportPeriod,
+        coverEndDate,
+        interestPercentage,
+        dayCountBasis,
+      });
 
       // Act
       await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {

@@ -1,3 +1,4 @@
+import { addDays } from 'date-fns';
 import { getKeyingSheetCalculationTfmFacilityValues } from './get-keying-sheet-calculation-tfm-facility-values';
 import { TfmFacilitiesRepo } from '../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../errors';
@@ -96,19 +97,56 @@ describe('getKeyingSheetCalculationTfmFacilityValues', () => {
       findOneByUkefFacilityIdSpy.mockResolvedValue(mockFacility);
     });
 
-    it('should return a populated object', async () => {
-      const result = await getKeyingSheetCalculationTfmFacilityValues(facilityId, reportPeriod);
+    describe('when the facility does not contain a completed amendment', () => {
+      it("should return a populated object with the facility's cover end date", async () => {
+        const result = await getKeyingSheetCalculationTfmFacilityValues(facilityId, reportPeriod);
 
-      const expected = {
-        coverEndDate: convertTimestampToDate(today),
-        coverStartDate: convertTimestampToDate(today),
-        dayCountBasis: 365,
-        interestPercentage: 5,
-        coverPercentage: 5,
-        value: mockFacility.facilitySnapshot.value,
+        const expected = {
+          coverEndDate: convertTimestampToDate(today),
+          coverStartDate: convertTimestampToDate(today),
+          dayCountBasis: 365,
+          interestPercentage: 5,
+          coverPercentage: 5,
+          value: mockFacility.facilitySnapshot.value,
+        };
+
+        expect(result).toEqual(expected);
+      });
+    });
+
+    describe('when the facility contains a completed amendment', () => {
+      const dateAfterReportPeriodEnd = new Date(addDays(today, 1));
+
+      const mockFacilityWithAmendment = {
+        ...mockFacility,
+        amendments: [
+          {
+            ...aCompletedTfmFacilityAmendment(),
+            value: 350000,
+            effectiveDate: dateAfterReportPeriodEnd.getTime(),
+            // 365 days after report period end
+            coverEndDate: new Date(addDays(today, 365)).getTime(),
+          },
+        ],
       };
+      beforeEach(() => {
+        findOneByUkefFacilityIdSpy.mockResolvedValue(mockFacilityWithAmendment);
+      });
 
-      expect(result).toEqual(expected);
+      it("should return a populated object with the amendment's cover end date", async () => {
+        const result = await getKeyingSheetCalculationTfmFacilityValues(facilityId, reportPeriod);
+
+        const expected = {
+          coverEndDate: convertTimestampToDate(mockFacilityWithAmendment.amendments[0].coverEndDate),
+          coverStartDate: convertTimestampToDate(today),
+          dayCountBasis: 365,
+          interestPercentage: 5,
+          coverPercentage: 5,
+          value: mockFacility.facilitySnapshot.value,
+        };
+
+        expect(result).toEqual(expected);
+      });
     });
   });
 
@@ -122,41 +160,6 @@ describe('getKeyingSheetCalculationTfmFacilityValues', () => {
 
       const expected = {
         coverEndDate: convertTimestampToDate(today),
-        coverStartDate: convertTimestampToDate(today),
-        dayCountBasis: 365,
-        interestPercentage: 5,
-        coverPercentage: 5,
-        value: mockFacility.facilitySnapshot.value,
-      };
-
-      expect(result).toEqual(expected);
-    });
-  });
-
-  describe('when the facility contains a completed amendment', () => {
-    const dateAfterReportPeriodEnd = new Date('2024-03-01');
-
-    const mockFacilityWithAmendment = {
-      ...mockFacility,
-      amendments: [
-        {
-          ...aCompletedTfmFacilityAmendment(),
-          value: 350000,
-          effectiveDate: dateAfterReportPeriodEnd.getTime(),
-          // 365 days after report period end
-          coverEndDate: new Date('2025-03-01').getTime(),
-        },
-      ],
-    };
-    beforeEach(() => {
-      findOneByUkefFacilityIdSpy.mockResolvedValue(mockFacilityWithAmendment);
-    });
-
-    it("should return a populated object with the amendment's cover end date", async () => {
-      const result = await getKeyingSheetCalculationTfmFacilityValues(facilityId, reportPeriod);
-
-      const expected = {
-        coverEndDate: convertTimestampToDate(mockFacilityWithAmendment.amendments[0].coverEndDate),
         coverStartDate: convertTimestampToDate(today),
         dayCountBasis: 365,
         interestPercentage: 5,

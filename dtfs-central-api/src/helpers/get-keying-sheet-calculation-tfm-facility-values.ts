@@ -8,9 +8,11 @@ import { KeyingSheetCalculationTfmFacilityValues } from '../types/tfm/tfm-facili
 
 /**
  * Gets TFM facility values with the supplied facility id for keying sheet calculations
+ * if a report period is supplied, the effective cover end date from the amendment will be applied if the amendment is completed
+ * else will use the snapshot cover end date
  * @param facilityId - The facility id
  * @param reportPeriod - The report period
- * @returns The latest values
+ * @returns TFM facility values - coverEndDate, coverStartDate, dayCountBasis, interestPercentage, coverPercentage, value
  */
 export const getKeyingSheetCalculationTfmFacilityValues = async (
   facilityId: string,
