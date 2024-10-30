@@ -53,7 +53,7 @@ describe('user repo', () => {
 
     describe('when the update is successful', () => {
       beforeEach(() => {
-        mockSuccessfulFindOneAndUpdateResponse();
+        mockFindOneAndUpdateResponse({ ok: 1, value: updateUserDatabaseResponse });
       });
 
       it('calls the tfm user collection', async () => {
@@ -88,7 +88,7 @@ describe('user repo', () => {
 
     describe('when the update is unsuccessful', () => {
       beforeEach(() => {
-        mockUnsuccessfulFindOneAndUpdateResponse();
+        mockFindOneAndUpdateResponse({ ok: 0, value: null });
       });
 
       it('throws an error', async () => {
@@ -104,14 +104,6 @@ describe('user repo', () => {
       });
 
       jest.spyOn(mongoDbClient, 'getCollection').mockImplementation(getCollectionMock);
-    }
-
-    function mockSuccessfulFindOneAndUpdateResponse() {
-      mockFindOneAndUpdateResponse({ ok: 1, value: updateUserDatabaseResponse });
-    }
-
-    function mockUnsuccessfulFindOneAndUpdateResponse() {
-      mockFindOneAndUpdateResponse({ ok: 0, value: null });
     }
 
     async function makeRequest() {
