@@ -3,7 +3,6 @@ import { ReportPeriod, CalculateFixedFeeParams } from '@ukef/dtfs2-common';
 import { getFixedFeeForFacility } from './get-fixed-fee-for-facility';
 import { calculateFixedFee } from './calculate-fixed-fee';
 import { calculateUkefShareOfUtilisation } from '../../../../../helpers';
-import { tfmFacilityReturnedValues } from '../../../../../../test-helpers';
 
 jest.mock('./calculate-fixed-fee');
 
@@ -25,12 +24,12 @@ describe('getFixedFeeForFacility', () => {
     const utilisation = 100000;
     const interestPercentage = 5;
     const dayCountBasis = 365;
+    const coverPercentage = 80;
 
     const reportPeriod = getReportPeriodForDate(TODAY);
     const coverStartDateAfterReportPeriod = addMonths(TODAY, 1);
     const coverEndDate = addDays(coverStartDateAfterReportPeriod, 365);
 
-    const { coverPercentage } = tfmFacilityReturnedValues;
     const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, coverPercentage);
 
     // Act
@@ -51,11 +50,10 @@ describe('getFixedFeeForFacility', () => {
     const utilisation = 100000;
     const interestPercentage = 5;
     const dayCountBasis = 365;
+    const coverPercentage = 80;
 
     const reportPeriod = getReportPeriodForDate(TODAY);
     const coverEndDate = addDays(startOfMonth(TODAY), 730);
-
-    const { coverPercentage } = tfmFacilityReturnedValues;
 
     const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, coverPercentage);
 
@@ -77,12 +75,11 @@ describe('getFixedFeeForFacility', () => {
     const utilisation = 100000;
     const interestPercentage = 5;
     const dayCountBasis = 365;
+    const coverPercentage = 80;
 
     const reportPeriod = getReportPeriodForDate(TODAY);
 
     const amendedCoverEndDate = addDays(startOfMonth(TODAY), 730); // report period starts at start of month
-
-    const { coverPercentage } = tfmFacilityReturnedValues;
 
     const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(utilisation, coverPercentage);
 
