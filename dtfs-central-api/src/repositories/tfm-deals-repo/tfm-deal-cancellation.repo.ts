@@ -209,4 +209,67 @@ export class TfmDealCancellationRepo {
 
     return { cancelledDealUkefId: dealId, riskExpiredFacilityUkefIds: updatedFacilityUkefIds };
   }
+
+  /**
+   * Submits a scheduled deal cancellation
+   * @param params
+   * @param params.dealId - The deal id
+   * @param params.cancellation - The deal cancellation details to submit
+   * @param params.activity - Object to add to the activities array
+   * @param params.auditDetails - The users audit details
+   */
+  public static async submitScheduledDealCancellation({
+    dealId,
+    cancellation,
+    activity,
+    auditDetails,
+  }: {
+    dealId: string | ObjectId;
+    cancellation: TfmDealCancellation;
+    activity?: TfmActivity;
+    auditDetails: AuditDetails;
+  }): Promise<TfmDealCancellationResponse> {
+    if (!ObjectId.isValid(dealId)) {
+      throw new InvalidDealIdError(dealId.toString());
+    }
+
+    const dealCollection = await this.getDealCollection();
+
+    const update: UpdateFilter<WithoutId<TfmDeal>> = {
+      $set: {
+        'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.SCHEDULED,
+        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+      },
+    };
+
+    if (activity) {
+      update.$push = {
+        'tfm.activities': activity,
+      };
+    }
+
+    const updateDeal = await dealCollection.updateOne(
+      {
+        _id: { $eq: new ObjectId(dealId) },
+        'tfm.stage': { $ne: TFM_DEAL_STAGE.CANCELLED },
+        'dealSnapshot.submissionType': { $in: [DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN] },
+        'tfm.cancellation.reason': { $eq: cancellation.reason },
+        'tfm.cancellation.bankRequestDate': { $eq: cancellation.bankRequestDate },
+        'tfm.cancellation.effectiveFrom': { $eq: cancellation.effectiveFrom },
+      },
+      update,
+    );
+
+    if (!updateDeal?.matchedCount) {
+      throw new DealNotFoundError(dealId.toString());
+    }
+
+    const facilityCollection = await this.getFacilityCollection();
+
+    const scheduledCancelledFacilities = await facilityCollection.find({ 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } }).toArray();
+
+    const scheduledCancelledFacilityUkefIds = getUkefFacilityIds(scheduledCancelledFacilities);
+
+    return { cancelledDealUkefId: dealId, riskExpiredFacilityUkefIds: scheduledCancelledFacilityUkefIds };
+  }
 }
