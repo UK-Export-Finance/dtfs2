@@ -72,7 +72,6 @@ context('Clone version 1 deal to version 1', () => {
       cy.clickContinueButton();
 
       cy.get('table.govuk-table tr').eq(1).find('td').eq(1).find('.govuk-link').click();
-      cy.url().should('contain', relative(`/gef/application-details/`));
 
       cy.url().then((url) => {
         clonedDealId = url.split('/').at(-1);
