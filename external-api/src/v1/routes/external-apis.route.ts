@@ -390,6 +390,8 @@ apiRoutes.get('/party-db/:partyDbCompanyRegistrationNumber', partyDb.lookup);
  *           application/json:
  *             schema:
  *               $ref: '#/definitions/PartyDB'
+ *       404:
+ *         description: Not found
  */
 apiRoutes.post('/party-db/:partyDbCompanyRegistrationNumber', partyDb.createParty);
 
