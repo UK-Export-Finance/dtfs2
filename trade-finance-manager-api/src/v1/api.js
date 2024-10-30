@@ -820,13 +820,17 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
       url: `${EXTERNAL_API_URL}/party-db/${encodeURIComponent(companyRegNo)}`,
       headers: headers.external,
     });
-    return { status: 200, data: response.data };
+    return process.env.AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED ? { status: 200, data: response.data } : response.data;
   } catch (error) {
     console.error('Unable to get party DB info %o', error);
-    if (error?.status === 404) {
-      return { status: 404, data: 'Party not found' };
+    if (process.env.AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED) {
+      if (error?.status === 404) {
+        return { status: 404, data: 'Party not found' };
+      }
+      return { status: error?.status || 500, data: 'Failed to get party' };
+    } else {
+      return false
     }
-    return { status: error?.status || 500, data: 'Failed to get party' };
   }
 };
 

@@ -33,21 +33,31 @@ const getPartyUrn = async ({ companyRegNo, companyName }) => {
     return '';
   }
 
-  let partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
-
-  if (partyDbInfo.status === 404) {
-    if (!companyName) {
+  if (process.env.AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED) {
+    const partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
+    if (!partyDbInfo) {
       return '';
     }
 
-    partyDbInfo = await api.createParty({ companyRegNo, companyName });
-  }
+    return partyDbInfo[0].partyUrn;
 
-  if (partyDbInfo.status !== 200) {
-    return '';
-  }
+  } else {
+    let partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
 
-  return partyDbInfo.data[0].partyUrn || '';
+    if (partyDbInfo.status === 404) {
+      if (!companyName) {
+        return '';
+      }
+
+      partyDbInfo = await api.createParty({ companyRegNo, companyName });
+    }
+
+    if (partyDbInfo.status !== 200) {
+      return '';
+    }
+
+    return partyDbInfo.data[0].partyUrn || '';
+  }
 };
 
 const identifyDealParties = (deal) => ({
