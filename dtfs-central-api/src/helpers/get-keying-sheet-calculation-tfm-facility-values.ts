@@ -8,8 +8,8 @@ import { KeyingSheetCalculationTfmFacilityValues } from '../types/tfm/tfm-facili
 
 /**
  * Gets TFM facility values with the supplied facility id for keying sheet calculations
- * if a report period is supplied, the effective cover end date from the amendment will be applied if the amendment is completed
- * else will use the snapshot cover end date
+ * if a report period is supplied, the values returned will take into account any amendments that came into effect before the end of the report period passed in.
+ * else will return the values as they were at facility creation ignoring all amendments
  * @param facilityId - The facility id
  * @param reportPeriod - The report period
  * @returns TFM facility values - coverEndDate, coverStartDate, dayCountBasis, interestPercentage, coverPercentage, value

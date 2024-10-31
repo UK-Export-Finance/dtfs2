@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb';
 import { TfmFacility } from '@ukef/dtfs2-common';
 import { generateMockPortalUserAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream/test-helpers';
 import { aFacility } from './facility';
+import { KeyingSheetCalculationTfmFacilityValues } from '../../src/types/tfm/tfm-facility';
 
 const facility = aFacility();
 
@@ -27,4 +28,4 @@ export const keyingSheetCalculationTfmFacilityValues = {
   interestPercentage: facility.interestPercentage,
   coverPercentage: facility.coverPercentage,
   value: facility.value,
-};
+} as KeyingSheetCalculationTfmFacilityValues;

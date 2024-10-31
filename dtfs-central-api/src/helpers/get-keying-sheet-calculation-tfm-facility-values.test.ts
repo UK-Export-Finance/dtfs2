@@ -1,4 +1,4 @@
-import { addDays } from 'date-fns';
+import { addDays, subDays } from 'date-fns';
 import { getKeyingSheetCalculationTfmFacilityValues } from './get-keying-sheet-calculation-tfm-facility-values';
 import { TfmFacilitiesRepo } from '../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../errors';
@@ -28,6 +28,21 @@ describe('getKeyingSheetCalculationTfmFacilityValues', () => {
   const reportPeriod = {
     start: { month: today.getMonth() + 1, year: today.getFullYear() },
     end: { month: today.getMonth() + 1, year: today.getFullYear() },
+  };
+
+  const dateBeforeReportPeriodEnd = new Date(subDays(today, 1));
+
+  const mockFacilityWithAmendment = {
+    ...mockFacility,
+    amendments: [
+      {
+        ...aCompletedTfmFacilityAmendment(),
+        value: 350000,
+        effectiveDate: dateBeforeReportPeriodEnd.getTime(),
+        // 365 days after report period end
+        coverEndDate: new Date(addDays(today, 365)).getTime(),
+      },
+    ],
   };
 
   afterEach(() => {
@@ -115,20 +130,6 @@ describe('getKeyingSheetCalculationTfmFacilityValues', () => {
     });
 
     describe('when the facility contains a completed amendment', () => {
-      const dateAfterReportPeriodEnd = new Date(addDays(today, 1));
-
-      const mockFacilityWithAmendment = {
-        ...mockFacility,
-        amendments: [
-          {
-            ...aCompletedTfmFacilityAmendment(),
-            value: 350000,
-            effectiveDate: dateAfterReportPeriodEnd.getTime(),
-            // 365 days after report period end
-            coverEndDate: new Date(addDays(today, 365)).getTime(),
-          },
-        ],
-      };
       beforeEach(() => {
         findOneByUkefFacilityIdSpy.mockResolvedValue(mockFacilityWithAmendment);
       });
@@ -168,6 +169,27 @@ describe('getKeyingSheetCalculationTfmFacilityValues', () => {
       };
 
       expect(result).toEqual(expected);
+    });
+
+    describe('when the facility contains a completed amendment', () => {
+      beforeEach(() => {
+        findOneByUkefFacilityIdSpy.mockResolvedValue(mockFacilityWithAmendment);
+      });
+
+      it("should return a populated object with the facility's cover end date", async () => {
+        const result = await getKeyingSheetCalculationTfmFacilityValues(facilityId);
+
+        const expected = {
+          coverEndDate: convertTimestampToDate(today),
+          coverStartDate: convertTimestampToDate(today),
+          dayCountBasis: 365,
+          interestPercentage: 5,
+          coverPercentage: 5,
+          value: mockFacility.facilitySnapshot.value,
+        };
+
+        expect(result).toEqual(expected);
+      });
     });
   });
 });
