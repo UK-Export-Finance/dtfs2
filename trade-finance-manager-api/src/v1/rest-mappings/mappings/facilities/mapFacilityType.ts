@@ -3,7 +3,7 @@ import { Facility, FacilityType, FACILITY_TYPE, MAPPED_FACILITY_TYPE } from '@uk
 const { BOND, LOAN, CASH, CONTINGENT } = FACILITY_TYPE;
 
 /**
- * Maps type to a different facility type used in TFM-UI and TFM-API.
+ * Maps a facility type to a differently worded facility type, to ultimately be rendered in the UI, as per design.
  * @param type - the facility type in the database
  * @param facilitySnapshot - the facility snapshot from the database
  * @returns the mapped facility type
@@ -29,7 +29,7 @@ export const mapFacilityType = (type: FacilityType, facilitySnapshot: Facility):
 };
 
 /**
- * Maps a GEF facility type to a different facility type used in TFM-UI and TFM-API.
+ * Maps a GEF facility type to a differently worded facility type, to ultimately be rendered in the UI, as per design.
  * @param type - the facility type in the database
  * @returns the mapped facility type
  *
