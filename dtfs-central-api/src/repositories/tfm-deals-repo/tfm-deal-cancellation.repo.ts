@@ -266,10 +266,10 @@ export class TfmDealCancellationRepo {
 
     const facilityCollection = await this.getFacilityCollection();
 
-    const scheduledCancelledFacilities = await facilityCollection.find({ 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } }).toArray();
+    const cancelledFacilities = await facilityCollection.find({ 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } }).toArray();
 
-    const scheduledCancelledFacilityUkefIds = getUkefFacilityIds(scheduledCancelledFacilities);
+    const cancelledFacilityUkefIds = getUkefFacilityIds(cancelledFacilities);
 
-    return { cancelledDealUkefId: dealId, riskExpiredFacilityUkefIds: scheduledCancelledFacilityUkefIds };
+    return { cancelledDealUkefId: dealId, riskExpiredFacilityUkefIds: cancelledFacilityUkefIds };
   }
 }

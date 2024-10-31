@@ -103,6 +103,25 @@ describe('controllers - case', () => {
         });
       });
 
+      it('should render the template with the success message from flash storage if it exists', async () => {
+        req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          session,
+          flash: jest.fn().mockReturnValue([mockSuccessBannerMessage]),
+        };
+
+        await caseController.getCaseDeal(req, res);
+
+        expect(res.render).toHaveBeenCalledWith(
+          'case/deal/deal.njk',
+          expect.objectContaining({
+            successMessage: mockSuccessBannerMessage,
+          }),
+        );
+      });
+
       it('should check whether deal cancellation is enabled', async () => {
         await caseController.getCaseDeal(req, res);
 
@@ -170,52 +189,6 @@ describe('controllers - case', () => {
               'case/deal/deal.njk',
               expect.objectContaining({
                 hasDraftCancellation: false,
-              }),
-            );
-          });
-        });
-
-        describe('when the deal cancellation is completed and there is a success message in flash storage', () => {
-          it('should render the template with the correct success message', async () => {
-            jest.mocked(api.getDealCancellation).mockReturnValueOnce({ status: COMPLETED });
-
-            req = {
-              params: {
-                _id: mockDeal._id,
-              },
-              session,
-              flash: jest.fn().mockReturnValue([mockSuccessBannerMessage]),
-            };
-
-            await caseController.getCaseDeal(req, res);
-
-            expect(res.render).toHaveBeenCalledWith(
-              'case/deal/deal.njk',
-              expect.objectContaining({
-                successMessage: mockSuccessBannerMessage,
-              }),
-            );
-          });
-        });
-
-        describe('when the deal cancellation is completed and there is no success message in flash storage', () => {
-          it('should render the template with no success message', async () => {
-            jest.mocked(api.getDealCancellation).mockReturnValueOnce({ status: COMPLETED });
-
-            req = {
-              params: {
-                _id: mockDeal._id,
-              },
-              session,
-              flash: jest.fn().mockReturnValue([]),
-            };
-
-            await caseController.getCaseDeal(req, res);
-
-            expect(res.render).toHaveBeenCalledWith(
-              'case/deal/deal.njk',
-              expect.objectContaining({
-                successMessage: undefined,
               }),
             );
           });

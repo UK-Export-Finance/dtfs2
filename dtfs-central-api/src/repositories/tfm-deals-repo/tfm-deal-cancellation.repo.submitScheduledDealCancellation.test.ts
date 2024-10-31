@@ -30,7 +30,6 @@ const mockActivity = { text: 'This is an activity' } as TfmActivity;
 
 describe('tfm-deals-cancellation-repo', () => {
   const updateOneMock = jest.fn();
-  const updateManyMock = jest.fn();
   const findMock = jest.fn();
   const findToArrayMock = jest.fn();
   const getCollectionMock = jest.fn();
@@ -58,7 +57,6 @@ describe('tfm-deals-cancellation-repo', () => {
 
       getCollectionMock.mockResolvedValue({
         updateOne: updateOneMock,
-        updateMany: updateManyMock,
         find: findMock,
       });
       jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);

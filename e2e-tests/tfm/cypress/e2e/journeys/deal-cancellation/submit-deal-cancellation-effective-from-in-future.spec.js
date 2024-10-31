@@ -3,13 +3,14 @@ import relative from '../../relativeURL';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1 } from '../../../../../e2e-fixtures';
 import caseDealPage from '../../pages/caseDealPage';
-import { tomorrow } from '../../../../../e2e-fixtures/dateConstants';
+import { today, tomorrow } from '../../../../../e2e-fixtures/dateConstants';
 import checkDetailsPage from '../../pages/deal-cancellation/check-details';
 import dealsPage from '../../pages/dealsPage';
-import { successBanner } from '../../partials';
+import { caseSubNavigation, successBanner } from '../../partials';
 import facilitiesPage from '../../pages/facilitiesPage';
+import activitiesPage from '../../pages/activities/activitiesPage';
 
-context('Deal cancellation - effective from date in past', () => {
+context('Deal cancellation - submit cancellation with "effectiveFrom" in future', () => {
   let dealId;
   const dealFacilities = [];
   const ukefDealId = 10000001;
@@ -107,6 +108,16 @@ context('Deal cancellation - effective from date in past', () => {
 
         const row = facilitiesPage.facilitiesTable.row(facilityId);
         cy.assertText(row.facilityStage(), TFM_FACILITY_STAGE.ISSUED);
+      });
+
+      it('should add an entry on the activity and comments page', () => {
+        caseSubNavigation.activityLink().click();
+
+        activitiesPage.activitiesTimeline().contains('Deal stage:');
+        activitiesPage.activitiesTimeline().contains('Cancelled');
+        activitiesPage.activitiesTimeline().contains(`Bank request date: ${today.d_MMMM_yyyy}`);
+        activitiesPage.activitiesTimeline().contains(`Date effective from: ${tomorrow.d_MMMM_yyyy}`);
+        activitiesPage.activitiesTimeline().contains(`Comments: -`);
       });
     });
   });

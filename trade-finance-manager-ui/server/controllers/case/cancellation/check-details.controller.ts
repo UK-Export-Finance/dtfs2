@@ -80,8 +80,9 @@ export const postDealCancellationDetails = async (req: PostDealCancellationDetai
 
     const { ukefDealId } = deal.dealSnapshot.details;
     const now = new Date();
+    const effectiveFromDateIsNowOrInPast = new Date(effectiveFrom) <= now;
 
-    if (new Date(effectiveFrom) <= now) {
+    if (effectiveFromDateIsNowOrInPast) {
       req.flash('successMessage', `Deal ${ukefDealId} cancelled`);
     }
 

@@ -49,21 +49,19 @@ const getCaseDeal = async (req, res) => {
 
   let showDealCancelButton = false;
   let hasDraftCancellation = false;
-  let successMessage;
+
+  let successMessage = getFlashSuccessMessage(req);
 
   if (dealCancellationIsEnabled) {
     const cancellation = await api.getDealCancellation(dealId, userToken);
     showDealCancelButton = canDealBeCancelled(cancellation.status);
     hasDraftCancellation = isDealCancellationInDraft(cancellation.status);
 
-    if (cancellation.status === TFM_DEAL_CANCELLATION_STATUS.COMPLETED) {
-      successMessage = getFlashSuccessMessage(req);
-    }
-
     if (cancellation.status === TFM_DEAL_CANCELLATION_STATUS.SCHEDULED) {
       const { ukefDealId } = deal.dealSnapshot.details;
+      const formattedDate = format(new Date(cancellation.effectiveFrom), 'd MMMM yyyy');
 
-      successMessage = `Deal ${ukefDealId} scheduled for cancellation on ${format(new Date(cancellation.effectiveFrom), 'd MMMM yyyy')}`;
+      successMessage = `Deal ${ukefDealId} scheduled for cancellation on ${formattedDate}`;
     }
   }
 
