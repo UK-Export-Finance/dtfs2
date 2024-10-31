@@ -1,5 +1,5 @@
-import { FeeRecordEntity, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { In } from 'typeorm';
+import { FeeRecordEntity, FeeRecordStatus, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { InvalidPayloadError, NotFoundError } from '../../../../errors';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
@@ -45,7 +45,7 @@ export const addPaymentToUtilisationReport = async (
         feeRecords,
         paymentDetails: payment,
         requestSource: {
-          platform: 'TFM',
+          platform: REQUEST_PLATFORM_TYPE.TFM,
           userId: user._id.toString(),
         },
       },

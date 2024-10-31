@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity, Currency, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
+import { FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity, Currency, FEE_RECORD_STATUS, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
 import { getRandomCurrency, getRandomFinancialAmount, getExchangeRate } from '../helpers';
 
 type CreateRandomFeeRecordForReportOverrides = {
@@ -47,7 +47,7 @@ export const createRandomFeeRecordForReport = (report: UtilisationReportEntity, 
   feeRecord.reconciledByUserId = null;
   feeRecord.dateReconciled = null;
 
-  feeRecord.updateLastUpdatedBy({ platform: 'SYSTEM' });
+  feeRecord.updateLastUpdatedBy({ platform: REQUEST_PLATFORM_TYPE.SYSTEM });
 
   return feeRecord;
 };
@@ -84,7 +84,7 @@ export const createAutoMatchedZeroPaymentFeeRecordForReport = (report: Utilisati
   feeRecord.fixedFeeAdjustment = null;
   feeRecord.principalBalanceAdjustment = null;
 
-  feeRecord.updateLastUpdatedBy({ platform: 'SYSTEM' });
+  feeRecord.updateLastUpdatedBy({ platform: REQUEST_PLATFORM_TYPE.SYSTEM });
 
   return feeRecord;
 };

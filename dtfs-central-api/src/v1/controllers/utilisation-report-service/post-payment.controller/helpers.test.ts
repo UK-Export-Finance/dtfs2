@@ -6,6 +6,7 @@ import {
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
+  REQUEST_PLATFORM_TYPE,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { addPaymentToUtilisationReport } from './helpers';
@@ -180,7 +181,7 @@ describe('post-add-payment.controller helpers', () => {
           feeRecords: feeRecordsInPaymentCurrency,
           paymentDetails: newPaymentDetails,
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId: tfmUserId,
           },
         },

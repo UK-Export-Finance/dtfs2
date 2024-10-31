@@ -1,5 +1,5 @@
 import { EntityManager } from 'typeorm';
-import { FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, REQUEST_PLATFORM_TYPE, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { handleFeeRecordPaymentDeletedEvent } from './payment-deleted.event-handler';
 import { aDbRequestSource } from '../../../../../../test-helpers';
 
@@ -89,7 +89,7 @@ describe('handleFeeRecordPaymentDeletedEvent', () => {
       feeRecordsAndPaymentsMatch: false,
       hasAttachedPayments: false,
       requestSource: {
-        platform: 'TFM',
+        platform: REQUEST_PLATFORM_TYPE.TFM,
         userId: '123',
       },
     });

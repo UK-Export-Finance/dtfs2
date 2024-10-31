@@ -1,5 +1,12 @@
 import { faker } from '@faker-js/faker';
-import { AzureFileInfoEntity, MOCK_AZURE_FILE_INFO, ReportPeriod, UtilisationReportEntity, UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
+import {
+  AzureFileInfoEntity,
+  MOCK_AZURE_FILE_INFO,
+  ReportPeriod,
+  REQUEST_PLATFORM_TYPE,
+  UtilisationReportEntity,
+  UtilisationReportReconciliationStatus,
+} from '@ukef/dtfs2-common';
 import { DataSource } from 'typeorm';
 
 export class UtilisationReportSeeder {
@@ -9,7 +16,7 @@ export class UtilisationReportSeeder {
 
   private readonly azureFileInfo = AzureFileInfoEntity.create({
     ...MOCK_AZURE_FILE_INFO,
-    requestSource: { platform: 'SYSTEM' },
+    requestSource: { platform: REQUEST_PLATFORM_TYPE.SYSTEM },
   });
 
   private uploadedByUserId: string | null = null;
@@ -34,7 +41,7 @@ export class UtilisationReportSeeder {
     report.status = status;
     report.bankId = this.bankId;
     report.reportPeriod = this.reportPeriod;
-    report.updateLastUpdatedBy({ platform: 'SYSTEM' });
+    report.updateLastUpdatedBy({ platform: REQUEST_PLATFORM_TYPE.SYSTEM });
 
     if (status === 'REPORT_NOT_RECEIVED') {
       await dataSource.manager.save(UtilisationReportEntity, report);
