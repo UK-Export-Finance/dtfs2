@@ -1,5 +1,5 @@
 import { when, resetAllWhenMocks } from 'jest-when';
-import { aEntraIdUser } from '@ukef/dtfs2-common';
+import { anEntraIdUser } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mapUserData } from './helpers/mapUserData.helper';
 import { UserService } from '../../services/user.service';
@@ -15,7 +15,7 @@ jest.mock('../../services/user.service', () => ({
 
 describe('user controller', () => {
   describe('upsertTfmUserFromEntraIdUser', () => {
-    const entraIdUser = aEntraIdUser();
+    const entraIdUser = anEntraIdUser();
     const auditDetails = generateSystemAuditDetails();
 
     const upsertedUserResponse = userServiceMockResponses.aUpsertTfmUserFromEntraIdUserResponse();

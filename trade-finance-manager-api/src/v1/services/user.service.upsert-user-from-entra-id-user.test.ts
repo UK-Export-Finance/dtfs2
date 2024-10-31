@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { AuditDetails, aEntraIdUser, EntraIdUser, TfmUser, UpsertTfmUserRequest } from '@ukef/dtfs2-common';
+import { AuditDetails, anEntraIdUser, EntraIdUser, TfmUser, UpsertTfmUserRequest } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { ObjectId } from 'mongodb';
 import { USER } from '../../constants';
@@ -28,7 +28,7 @@ describe('user service', () => {
 
     beforeEach(() => {
       jest.resetAllMocks();
-      entraIdUser = aEntraIdUser();
+      entraIdUser = anEntraIdUser();
       auditDetails = generateSystemAuditDetails();
       transformedUser = UserService.transformEntraIdUserToUpsertTfmUserRequest(entraIdUser);
       userId = new ObjectId();

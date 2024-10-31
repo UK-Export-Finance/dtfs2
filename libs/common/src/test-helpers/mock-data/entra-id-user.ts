@@ -1,7 +1,7 @@
 import { TEAMS } from '../../constants';
 import { EntraIdUser } from '../../types';
 
-export function aEntraIdUser(): EntraIdUser {
+export function anEntraIdUser(): EntraIdUser {
   return {
     oid: 'an-oid',
     verified_primary_email: ['a-primary-email'],

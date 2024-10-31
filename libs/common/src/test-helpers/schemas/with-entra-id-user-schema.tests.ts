@@ -1,7 +1,7 @@
 import { ZodSchema } from 'zod';
 import { withSchemaTests } from './with-schema.tests';
 import { TEAMS } from '../../constants';
-import { aEntraIdUser } from '../mock-data';
+import { anEntraIdUser } from '../mock-data';
 
 /**
  * This is a reusable test to allow for complete testing of schemas that
@@ -30,28 +30,28 @@ function getFailureTestCases({ getTestObjectWithUpdatedUserParams }: TestCasesPa
   return [
     {
       aTestCase: () => {
-        const { oid: _oid, ...rest } = aEntraIdUser();
+        const { oid: _oid, ...rest } = anEntraIdUser();
         return getTestObjectWithUpdatedUserParams(rest);
       },
       description: 'the oid is missing',
     },
     {
       aTestCase: () => {
-        const { verified_primary_email: _verifiedPrimaryEmail, ...rest } = aEntraIdUser();
+        const { verified_primary_email: _verifiedPrimaryEmail, ...rest } = anEntraIdUser();
         return getTestObjectWithUpdatedUserParams(rest);
       },
       description: 'the verified primary email is missing',
     },
     {
       aTestCase: () => {
-        const { verified_secondary_email: _verifiedSecondaryEmail, ...rest } = aEntraIdUser();
+        const { verified_secondary_email: _verifiedSecondaryEmail, ...rest } = anEntraIdUser();
         return getTestObjectWithUpdatedUserParams(rest);
       },
       description: 'the verified secondary email is missing',
     },
     {
       aTestCase: () => {
-        const { given_name: _givenName, ...rest } = aEntraIdUser();
+        const { given_name: _givenName, ...rest } = anEntraIdUser();
         return getTestObjectWithUpdatedUserParams(rest);
       },
       description: 'the given name is missing',
@@ -59,56 +59,56 @@ function getFailureTestCases({ getTestObjectWithUpdatedUserParams }: TestCasesPa
 
     {
       aTestCase: () => {
-        const { family_name: _familyName, ...rest } = aEntraIdUser();
+        const { family_name: _familyName, ...rest } = anEntraIdUser();
         return getTestObjectWithUpdatedUserParams(rest);
       },
       description: 'the family name is missing',
     },
     {
       aTestCase: () => {
-        const { roles: _roles, ...rest } = aEntraIdUser();
+        const { roles: _roles, ...rest } = anEntraIdUser();
         return getTestObjectWithUpdatedUserParams(rest);
       },
       description: 'the roles are missing',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aEntraIdUser(), oid: 1 }),
+      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...anEntraIdUser(), oid: 1 }),
       description: 'the oid is not a string',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aEntraIdUser(), verified_primary_email: [] }),
+      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...anEntraIdUser(), verified_primary_email: [] }),
       description: 'the verify primary email array is empty',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aEntraIdUser(), verified_primary_email: [1] }),
+      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...anEntraIdUser(), verified_primary_email: [1] }),
       description: 'the verify primary email is not a string array',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aEntraIdUser(), verified_primary_email: '1' }),
+      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...anEntraIdUser(), verified_primary_email: '1' }),
       description: 'the verify primary email is not an array',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aEntraIdUser(), verified_secondary_email: [1] }),
+      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...anEntraIdUser(), verified_secondary_email: [1] }),
       description: 'the verify secondary email is not a string array',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aEntraIdUser(), verified_secondary_email: '1' }),
+      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...anEntraIdUser(), verified_secondary_email: '1' }),
       description: 'the verify secondary email is not an array',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aEntraIdUser(), given_name: 1 }),
+      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...anEntraIdUser(), given_name: 1 }),
       description: 'the given name is not a string',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aEntraIdUser(), family_name: 1 }),
+      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...anEntraIdUser(), family_name: 1 }),
       description: 'the family name is not a string',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aEntraIdUser(), roles: ['NOT_A_USER_ROLE'] }),
+      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...anEntraIdUser(), roles: ['NOT_A_USER_ROLE'] }),
       description: 'the roles are not an array of user roles',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aEntraIdUser(), roles: TEAMS.BUSINESS_SUPPORT.id }),
+      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...anEntraIdUser(), roles: TEAMS.BUSINESS_SUPPORT.id }),
       description: 'the roles are not an array',
     },
     {
@@ -120,17 +120,17 @@ function getFailureTestCases({ getTestObjectWithUpdatedUserParams }: TestCasesPa
 
 function getSuccessTestCases({ getTestObjectWithUpdatedUserParams }: TestCasesParams) {
   return [
-    { aTestCase: () => getTestObjectWithUpdatedUserParams(aEntraIdUser()), description: 'a complete valid payload is present' },
+    { aTestCase: () => getTestObjectWithUpdatedUserParams(anEntraIdUser()), description: 'a complete valid payload is present' },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aEntraIdUser(), verified_secondary_email: [] }),
+      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...anEntraIdUser(), verified_secondary_email: [] }),
       description: 'the verified secondary email array is empty',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aEntraIdUser(), roles: [] }),
+      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...anEntraIdUser(), roles: [] }),
       description: 'the roles array is empty',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aEntraIdUser(), extraField: 'extra' }),
+      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...anEntraIdUser(), extraField: 'extra' }),
       description: 'there is an extra field',
     },
   ];

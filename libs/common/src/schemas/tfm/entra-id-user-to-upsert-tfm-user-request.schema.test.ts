@@ -1,5 +1,5 @@
 import { afterAll } from '@jest/globals';
-import { aEntraIdUser } from '../../test-helpers';
+import { anEntraIdUser } from '../../test-helpers';
 import { EntraIdUser } from '../../types';
 import { timezoneConfig } from '../timezone';
 import { ENTRA_ID_USER_TO_UPSERT_TFM_USER_REQUEST_SCHEMA } from './entra-id-user-to-upsert-tfm-user-request.schema';
@@ -14,12 +14,12 @@ describe('ENTRA_ID_USER_TO_TFM_UPSERT_REQUEST_SCHEMA', () => {
   });
 
   describe('when provided a valid entra id user', () => {
-    const request = aEntraIdUser();
+    const request = anEntraIdUser();
     itShouldReturnAValidUpsertTfmUserRequest(request);
   });
 
   describe('when provided a valid entra id user with extra fields', () => {
-    const request = { ...aEntraIdUser(), extraField: 'extra-field' };
+    const request = { ...anEntraIdUser(), extraField: 'extra-field' };
     itShouldReturnAValidUpsertTfmUserRequest(request);
   });
 
@@ -29,17 +29,17 @@ describe('ENTRA_ID_USER_TO_TFM_UPSERT_REQUEST_SCHEMA', () => {
   });
 
   describe('when provided with a invalid entra id user with missing fields', () => {
-    const { roles: _roles, ...request } = aEntraIdUser();
+    const { roles: _roles, ...request } = anEntraIdUser();
     itShouldThrowAnError(request);
   });
 
   describe('when provided an invalid entra id user with incorrect fields', () => {
-    const request = { ...aEntraIdUser(), roles: 1 };
+    const request = { ...anEntraIdUser(), roles: 1 };
     itShouldThrowAnError(request);
   });
 
   describe('when no primary email is provided', () => {
-    const request = { ...aEntraIdUser(), verified_primary_email: [] };
+    const request = { ...anEntraIdUser(), verified_primary_email: [] };
     itShouldThrowAnError(request);
   });
 });
