@@ -2,9 +2,10 @@ import { ObjectId } from 'mongodb';
 import { TfmFacility } from '@ukef/dtfs2-common';
 import { generateMockPortalUserAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream/test-helpers';
 import { aFacility } from './facility';
-import { KeyingSheetCalculationTfmFacilityValues } from '../../src/types/tfm/tfm-facility';
+import { KeyingSheetCalculationFacilityValues } from '../../src/types/tfm/tfm-facility';
 
 const facility = aFacility();
+const { dayCountBasis, interestPercentage, coverPercentage, value } = facility;
 
 export const aTfmFacility = (): TfmFacility => {
   const tfmFacilityId = new ObjectId();
@@ -21,11 +22,11 @@ export const aTfmFacility = (): TfmFacility => {
   };
 };
 
-export const keyingSheetCalculationTfmFacilityValues = {
+export const keyingSheetCalculationFacilityValues = {
   coverEndDate: new Date(),
   coverStartDate: new Date(),
-  dayCountBasis: facility.dayCountBasis,
-  interestPercentage: facility.interestPercentage,
-  coverPercentage: facility.coverPercentage,
-  value: facility.value,
-} as KeyingSheetCalculationTfmFacilityValues;
+  dayCountBasis,
+  interestPercentage,
+  coverPercentage,
+  value,
+} as KeyingSheetCalculationFacilityValues;

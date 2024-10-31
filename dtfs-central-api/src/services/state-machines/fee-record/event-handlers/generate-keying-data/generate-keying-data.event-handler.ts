@@ -2,7 +2,7 @@ import { EntityManager } from 'typeorm';
 import { DbRequestSource, FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordStatus, ReportPeriod } from '@ukef/dtfs2-common';
 import { BaseFeeRecordEvent } from '../../event/base-fee-record.event';
 import { calculatePrincipalBalanceAdjustment, calculateFixedFeeAdjustment, updateFacilityUtilisationData, calculateFixedFee } from '../helpers';
-import { calculateUkefShareOfUtilisation, getKeyingSheetCalculationTfmFacilityValues } from '../../../../../helpers';
+import { calculateUkefShareOfUtilisation, getKeyingSheetCalculationFacilityValues } from '../../../../../helpers';
 
 type GenerateKeyingDataEventPayload = {
   transactionEntityManager: EntityManager;
@@ -33,7 +33,7 @@ export const handleFeeRecordGenerateKeyingDataEvent = async (
     return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
   }
 
-  const { coverPercentage, coverEndDate, interestPercentage, dayCountBasis } = await getKeyingSheetCalculationTfmFacilityValues(
+  const { coverPercentage, coverEndDate, interestPercentage, dayCountBasis } = await getKeyingSheetCalculationFacilityValues(
     feeRecord.facilityId,
     reportPeriod,
   );

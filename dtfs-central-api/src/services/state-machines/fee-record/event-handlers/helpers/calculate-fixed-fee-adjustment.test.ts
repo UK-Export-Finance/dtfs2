@@ -8,7 +8,7 @@ import {
 import { calculateFixedFeeAdjustment } from './calculate-fixed-fee-adjustment';
 import { aReportPeriod, aUtilisationReport } from '../../../../../../test-helpers';
 
-const fixedFee = 100;
+const mockFixedFee = 100;
 
 describe('calculateFixedFeeAdjustment', () => {
   it('throws an error if the fee record facility id does not match the facility utilisation data id', () => {
@@ -17,7 +17,7 @@ describe('calculateFixedFeeAdjustment', () => {
     const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('22222222').build();
 
     // Act / Assert
-    expect(() => calculateFixedFeeAdjustment(feeRecord, facilityUtilisationData, aReportPeriod(), fixedFee)).toThrow(
+    expect(() => calculateFixedFeeAdjustment(feeRecord, facilityUtilisationData, aReportPeriod(), mockFixedFee)).toThrow(
       new Error('Fee record facility id does not match the facility utilisation id'),
     );
   });
@@ -35,7 +35,7 @@ describe('calculateFixedFeeAdjustment', () => {
     const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('11111111').withReportPeriod(reportPeriod).build();
 
     // Act / Assert
-    expect(() => calculateFixedFeeAdjustment(feeRecord, facilityUtilisationData, reportPeriod, fixedFee)).toThrow(
+    expect(() => calculateFixedFeeAdjustment(feeRecord, facilityUtilisationData, reportPeriod, mockFixedFee)).toThrow(
       new Error('Fixed fee adjustment must be calculated before the facility utilisation data has been updated'),
     );
   });

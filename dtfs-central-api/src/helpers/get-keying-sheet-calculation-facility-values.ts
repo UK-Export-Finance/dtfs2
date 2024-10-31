@@ -4,7 +4,7 @@ import { TfmFacilitiesRepo } from '../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../errors';
 import { convertTimestampToDate } from './convert-timestamp-to-date';
 import { getEffectiveCoverEndDateAmendment } from './amendments/get-effective-cover-end-date-amendment';
-import { KeyingSheetCalculationTfmFacilityValues } from '../types/tfm/tfm-facility';
+import { KeyingSheetCalculationFacilityValues } from '../types/tfm/tfm-facility';
 
 /**
  * Gets TFM facility values with the supplied facility id for keying sheet calculations
@@ -14,10 +14,10 @@ import { KeyingSheetCalculationTfmFacilityValues } from '../types/tfm/tfm-facili
  * @param reportPeriod - The report period
  * @returns TFM facility values - coverEndDate, coverStartDate, dayCountBasis, interestPercentage, coverPercentage, value
  */
-export const getKeyingSheetCalculationTfmFacilityValues = async (
+export const getKeyingSheetCalculationFacilityValues = async (
   facilityId: string,
   reportPeriod?: ReportPeriod,
-): Promise<KeyingSheetCalculationTfmFacilityValues> => {
+): Promise<KeyingSheetCalculationFacilityValues> => {
   const tfmFacility = await TfmFacilitiesRepo.findOneByUkefFacilityId(facilityId);
 
   if (!tfmFacility) {
