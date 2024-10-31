@@ -23,12 +23,18 @@ export const validateThatAllSelectedFeeRecordsWithPaymentsFormACompletePaymentGr
 
   const firstFeeRecord = selectedFeeRecords[0];
 
-  if (firstFeeRecord.status === FEE_RECORD_STATUS.DOES_NOT_MATCH) {
-    const firstPayment = firstFeeRecord.payments[0];
-    const savedFeeRecordIds = firstPayment.feeRecords.map((feeRecord) => feeRecord.id);
+  if (firstFeeRecord.status !== FEE_RECORD_STATUS.DOES_NOT_MATCH) {
+    return;
+  }
 
-    if (!savedFeeRecordIds.every((id) => feeRecordIds.includes(id)) || !feeRecordIds.every((id) => savedFeeRecordIds.includes(id))) {
-      throw new InvalidPayloadError('Requested fee record IDs do not match the fee record IDs on the existing payment group.');
-    }
+  const firstPayment = firstFeeRecord.payments[0];
+  // Sets would be faster for large volumes but not seen/needed here.
+  const savedFeeRecordIds = firstPayment.feeRecords.map((feeRecord) => feeRecord.id);
+
+  const isPaymentGroupExclusivelyConsistingOfIdsProvided =
+    feeRecordIds.every((id) => savedFeeRecordIds.includes(id)) && savedFeeRecordIds.length === feeRecordIds.length;
+
+  if (!isPaymentGroupExclusivelyConsistingOfIdsProvided) {
+    throw new InvalidPayloadError('Requested fee record IDs do not match the fee record IDs on the existing payment group.');
   }
 };

@@ -60,6 +60,10 @@ describe('selected fee record validator', () => {
   describe('validateThatAllSelectedFeeRecordsWithPaymentsFormACompletePaymentGroup', () => {
     const feeRecordFindBySpy = jest.spyOn(FeeRecordRepo, 'findByIdWithPaymentsAndFeeRecords');
 
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
+
     describe(`when the first fee record has status ${FEE_RECORD_STATUS.TO_DO}`, () => {
       it('should not throw', async () => {
         // Arrange
