@@ -30,8 +30,10 @@ const { isHttpErrorStatus } = require('../../helpers/http');
  * @returns {string} - The loanIdentifier of the first data object if the API request is successful and data is returned.
  * @throws {Error} - Throws an error if the facility ID is not provided, if the API request is not successful, if no data is returned, or if any other error occurs.
  */
-const handler = async (facilityId) => {
+const handler = async (payload) => {
   try {
+    const { facilityId } = payload;
+
     if (!facilityId) {
       throw new Error('Invalid facility ID');
     }
