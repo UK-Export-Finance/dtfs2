@@ -5,7 +5,7 @@ import { Request, Response } from 'express';
 
 dotenv.config();
 
-const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
+const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL, AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED } = process.env;
 const headers = {
   [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
@@ -21,7 +21,7 @@ export const lookup = async (req: Request, res: Response) => {
 
   const response: { status: number; data: unknown } = await axios({
     method: 'get',
-    url: process.env.AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED ? `${APIM_MDM_URL}customers/direct?companyRegistrationNumber=${companyReg}` :  `${APIM_MDM_URL}customers?companyReg=${companyReg}`,
+    url: AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED ? `${APIM_MDM_URL}customers/direct?companyRegistrationNumber=${companyReg}` :  `${APIM_MDM_URL}customers?companyReg=${companyReg}`,
     headers,
   }).catch((error: AxiosError) => {
     console.error('Error calling Party DB API %o', error);
