@@ -42,7 +42,7 @@ df.app.orchestration('acbs-issue-facility', function* issueFacility(context) {
 
     if (facilityId) {
       // 1. GET Facility master record object
-      const { acbsFacility, etag } = yield context.df.callActivityWithRetry('get-facility-master', retryOptions, facilityId);
+      const { acbsFacility, etag } = yield context.df.callActivityWithRetry('get-facility-master', retryOptions, { facilityId });
 
       if (acbsFacility && etag) {
         // 2.1. Create updated facility master record object
