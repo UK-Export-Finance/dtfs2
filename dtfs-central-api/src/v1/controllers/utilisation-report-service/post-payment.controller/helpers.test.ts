@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { EntityManager } from 'typeorm';
+import { EntityManager, In } from 'typeorm';
 import {
   CURRENCY,
   Currency,
@@ -45,8 +45,17 @@ describe('post-add-payment.controller helpers', () => {
     const feeRecordsInPaymentCurrency = feeRecordIds.map((feeRecordId) =>
       FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(feeRecordId).withPaymentCurrency(paymentCurrency).build(),
     );
+    const paymentsWithFeeRecords = [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords(feeRecordsInPaymentCurrency).build()];
+    const feeRecordsInPaymentCurrencyWithFeeRecordsAndPayments = feeRecordIds.map((feeRecordId) =>
+      FeeRecordEntityMockBuilder.forReport(utilisationReport)
+        .withId(feeRecordId)
+        .withPaymentCurrency(paymentCurrency)
+        .withPayments(paymentsWithFeeRecords)
+        .build(),
+    );
 
-    const feeRecordFindBySpy = jest.spyOn(FeeRecordRepo, 'findByIdAndReportIdWithPayments');
+    const feeRecordFindBySpy = jest.spyOn(FeeRecordRepo, 'findBy');
+    const feeRecordFindByIdWithPaymentsAndFeeRecordsSpy = jest.spyOn(FeeRecordRepo, 'findByIdWithPaymentsAndFeeRecords');
 
     const utilisationReportStateMachineConstructorSpy = jest.spyOn(UtilisationReportStateMachine, 'forReportId');
     const handleEventSpy = jest.spyOn(utilisationReportStateMachine, 'handleEvent');
@@ -61,6 +70,7 @@ describe('post-add-payment.controller helpers', () => {
 
     beforeEach(() => {
       feeRecordFindBySpy.mockResolvedValue(feeRecordsInPaymentCurrency);
+      feeRecordFindByIdWithPaymentsAndFeeRecordsSpy.mockResolvedValue(feeRecordsInPaymentCurrencyWithFeeRecordsAndPayments);
       utilisationReportStateMachineConstructorSpy.mockResolvedValue(utilisationReportStateMachine);
       handleEventSpy.mockResolvedValue(utilisationReport);
       feeRecordFindOneByOrFailSpy.mockResolvedValue(FeeRecordEntityMockBuilder.forReport(utilisationReport).build());
@@ -87,7 +97,7 @@ describe('post-add-payment.controller helpers', () => {
       await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
 
       // Assert
-      expect(feeRecordFindBySpy).toHaveBeenCalledWith(feeRecordIds, reportId);
+      expect(feeRecordFindBySpy).toHaveBeenCalledWith({ id: In(feeRecordIds) });
     });
 
     it("throws the 'NotFoundError' if no fee records are found", async () => {
@@ -149,10 +159,13 @@ describe('post-add-payment.controller helpers', () => {
           .withPayments(payments)
           .build(),
       );
-      feeRecordFindBySpy.mockResolvedValue(feeRecordsWithGBPPaymentCurrency);
+      feeRecordFindByIdWithPaymentsAndFeeRecordsSpy.mockResolvedValue(feeRecordsWithGBPPaymentCurrency);
 
       // Act / Assert
       await expect(addPaymentToUtilisationReport(reportId, selectedFeeRecordIds, tfmUser, newPaymentDetails)).rejects.toThrow(InvalidPayloadError);
+
+      expect(feeRecordFindBySpy).toHaveBeenCalledWith({ id: In(selectedFeeRecordIds) });
+      expect(feeRecordFindByIdWithPaymentsAndFeeRecordsSpy).toHaveBeenCalledWith(selectedFeeRecordIds);
     });
 
     it('adds the payment to the utilisation report using the utilisation report state machine', async () => {

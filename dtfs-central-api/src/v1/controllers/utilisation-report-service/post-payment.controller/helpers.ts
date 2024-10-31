@@ -1,4 +1,5 @@
 import { FeeRecordEntity, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { In } from 'typeorm';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { InvalidPayloadError, NotFoundError } from '../../../../errors';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
@@ -24,7 +25,7 @@ export const addPaymentToUtilisationReport = async (
 ): Promise<FeeRecordStatus> => {
   const utilisationReportStateMachine = await UtilisationReportStateMachine.forReportId(reportId);
 
-  const feeRecords = await FeeRecordRepo.findByIdAndReportIdWithPayments(feeRecordIds, reportId);
+  const feeRecords = await FeeRecordRepo.findBy({ id: In(feeRecordIds) });
   if (feeRecords.length === 0) {
     throw new NotFoundError(`No fee records found for report with id ${reportId}`);
   }
@@ -34,7 +35,7 @@ export const addPaymentToUtilisationReport = async (
     throw new InvalidPayloadError(`Payment currency '${payment.currency}' does not match fee record payment currency`);
   }
 
-  validateThatAllSelectedFeeRecordsWithPaymentsFormACompletePaymentGroup(feeRecords, feeRecordIds);
+  await validateThatAllSelectedFeeRecordsWithPaymentsFormACompletePaymentGroup(feeRecordIds);
 
   return await executeWithSqlTransaction<FeeRecordStatus>(async (transactionEntityManager) => {
     await utilisationReportStateMachine.handleEvent({
