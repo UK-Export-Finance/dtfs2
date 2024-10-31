@@ -10,6 +10,7 @@ import {
 import { generateAuditDatabaseRecordFromAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { ObjectId } from 'mongodb';
 import { getUnixTime } from 'date-fns';
+import { when } from 'jest-when';
 import { mongoDbClient as db } from '../../drivers/db-client';
 import { TfmDealCancellationRepo } from './tfm-deal-cancellation.repo';
 import { aTfmUser } from '../../../test-helpers';
@@ -44,21 +45,25 @@ describe('tfm-deals-cancellation-repo', () => {
   });
 
   describe('submitScheduledDealCancellation', () => {
-    const mockUpdateResult = { matchedCount: 1 };
-
     beforeAll(() => {
       jest.useFakeTimers();
     });
 
     beforeEach(() => {
+      const mockUpdateResult = { matchedCount: 1 };
       updateOneMock.mockResolvedValue(mockUpdateResult);
+
+      when(getCollectionMock).calledWith(MONGO_DB_COLLECTIONS.TFM_DEALS).mockResolvedValue({
+        updateOne: updateOneMock,
+      });
+
       findToArrayMock.mockResolvedValue(mockMatchedFacilities);
       findMock.mockReturnValue({ toArray: findToArrayMock });
 
-      getCollectionMock.mockResolvedValue({
-        updateOne: updateOneMock,
+      when(getCollectionMock).calledWith(MONGO_DB_COLLECTIONS.TFM_FACILITIES).mockResolvedValue({
         find: findMock,
       });
+
       jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
     });
 
