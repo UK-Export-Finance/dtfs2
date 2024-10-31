@@ -2,7 +2,9 @@ const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
 const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
 
 const now = new Date().valueOf();
+const nowDay = dateConstants.todayDay.toString();
 const nowMonth = dateConstants.todayMonth.toString();
+const nowYear = dateConstants.todayYear.toString();
 const nowPlusMonthDay = dateConstants.oneMonthDay.toString();
 const nowPlusMonthMonth = dateConstants.oneMonthMonth.toString();
 const nowPlusMonthYear = dateConstants.oneMonthYear.toString();
@@ -211,9 +213,9 @@ const deal = {
       'coverEndDate-day': nowPlusMonthDay,
       'coverEndDate-month': nowPlusMonthMonth,
       'coverEndDate-year': nowPlusMonthYear,
-      'requestedCoverStartDate-day': nowPlusMonthDay,
+      'requestedCoverStartDate-day': nowDay,
       'requestedCoverStartDate-month': nowMonth,
-      'requestedCoverStartDate-year': nowPlusMonthYear,
+      'requestedCoverStartDate-year': nowYear,
       name: '1234',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
@@ -250,9 +252,9 @@ const deal = {
       'coverEndDate-day': nowPlusMonthDay,
       'coverEndDate-month': nowPlusMonthMonth,
       'coverEndDate-year': nowPlusMonthYear,
-      'requestedCoverStartDate-day': nowPlusMonthDay,
+      'requestedCoverStartDate-day': nowDay,
       'requestedCoverStartDate-month': nowMonth,
-      'requestedCoverStartDate-year': nowPlusMonthYear,
+      'requestedCoverStartDate-year': nowYear,
       name: '1234',
       requestedCoverStartDate: now,
       issueFacilityDetailsSubmitted: true,
@@ -307,9 +309,9 @@ const deal = {
       'coverEndDate-day': nowPlusMonthDay,
       'coverEndDate-month': nowPlusMonthMonth,
       'coverEndDate-year': nowPlusMonthYear,
-      'requestedCoverStartDate-day': nowPlusMonthDay,
+      'requestedCoverStartDate-day': nowDay,
       'requestedCoverStartDate-month': nowMonth,
-      'requestedCoverStartDate-year': nowPlusMonthYear,
+      'requestedCoverStartDate-year': nowYear,
       name: '1234',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
@@ -340,9 +342,9 @@ const deal = {
       'coverEndDate-day': nowPlusMonthDay,
       'coverEndDate-month': nowPlusMonthMonth,
       'coverEndDate-year': nowPlusMonthYear,
-      'requestedCoverStartDate-day': nowPlusMonthDay,
+      'requestedCoverStartDate-day': nowDay,
       'requestedCoverStartDate-month': nowMonth,
-      'requestedCoverStartDate-year': nowPlusMonthYear,
+      'requestedCoverStartDate-year': nowYear,
       disbursementAmount: '1,234.00',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
@@ -373,9 +375,9 @@ const deal = {
       'coverEndDate-day': nowPlusMonthDay,
       'coverEndDate-month': nowPlusMonthMonth,
       'coverEndDate-year': nowPlusMonthYear,
-      'requestedCoverStartDate-day': nowPlusMonthDay,
+      'requestedCoverStartDate-day': nowDay,
       'requestedCoverStartDate-month': nowMonth,
-      'requestedCoverStartDate-year': nowPlusMonthYear,
+      'requestedCoverStartDate-year': nowYear,
       disbursementAmount: '1,234.00',
       requestedCoverStartDate: now,
       issueFacilityDetailsSubmitted: true,
@@ -422,9 +424,9 @@ const deal = {
       'coverEndDate-day': nowPlusMonthDay,
       'coverEndDate-month': nowPlusMonthMonth,
       'coverEndDate-year': nowPlusMonthYear,
-      'requestedCoverStartDate-day': nowPlusMonthDay,
+      'requestedCoverStartDate-day': nowDay,
       'requestedCoverStartDate-month': nowMonth,
-      'requestedCoverStartDate-year': nowPlusMonthYear,
+      'requestedCoverStartDate-year': nowYear,
       disbursementAmount: '1,234.00',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
