@@ -43,6 +43,8 @@ export const allFacilitiesAndFacilityCount = ({
         dealType: '$tfmDeals.dealSnapshot.dealType',
         // create the `type` property
         type: '$facilitySnapshot.type',
+        // create the `tfmFacilityStage` property
+        tfmFacilityStage: '$tfm.facilityStage',
         // create the `value` property - this is the facility value
         value: '$facilitySnapshot.value',
         // create the `currency` property

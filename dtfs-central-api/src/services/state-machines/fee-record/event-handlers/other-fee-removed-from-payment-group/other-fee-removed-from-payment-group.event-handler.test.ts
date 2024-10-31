@@ -1,5 +1,5 @@
 import { EntityManager } from 'typeorm';
-import { FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordEntityMockBuilder, REQUEST_PLATFORM_TYPE, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent } from './other-fee-removed-from-payment-group.event-handler';
 import { aDbRequestSource } from '../../../../../../test-helpers';
 
@@ -47,7 +47,7 @@ describe('handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent', () => {
       transactionEntityManager: mockEntityManager,
       feeRecordsAndPaymentsMatch: true,
       requestSource: {
-        platform: 'TFM',
+        platform: REQUEST_PLATFORM_TYPE.TFM,
         userId,
       },
     });

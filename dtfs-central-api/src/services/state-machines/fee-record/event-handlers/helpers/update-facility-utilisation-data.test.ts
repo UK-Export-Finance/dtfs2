@@ -1,5 +1,11 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, FacilityUtilisationDataEntity, FacilityUtilisationDataEntityMockBuilder, ReportPeriod } from '@ukef/dtfs2-common';
+import {
+  DbRequestSource,
+  FacilityUtilisationDataEntity,
+  FacilityUtilisationDataEntityMockBuilder,
+  ReportPeriod,
+  REQUEST_PLATFORM_TYPE,
+} from '@ukef/dtfs2-common';
 import { updateFacilityUtilisationData } from './update-facility-utilisation-data';
 
 describe('updateFacilityUtilisationData', () => {
@@ -29,7 +35,7 @@ describe('updateFacilityUtilisationData', () => {
     };
     const ukefShareOfUtilisation = 1234567.77;
     const requestSource: DbRequestSource = {
-      platform: 'TFM',
+      platform: REQUEST_PLATFORM_TYPE.TFM,
       userId: 'abc123',
     };
     const fixedFee = 12345;

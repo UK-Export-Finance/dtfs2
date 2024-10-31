@@ -6,6 +6,7 @@ import {
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   ReportPeriod,
+  REQUEST_PLATFORM_TYPE,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { handleFeeRecordGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
@@ -31,7 +32,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
 
   const userId = 'abc123';
   const requestSource: DbRequestSource = {
-    platform: 'TFM',
+    platform: REQUEST_PLATFORM_TYPE.TFM,
     userId,
   };
 
