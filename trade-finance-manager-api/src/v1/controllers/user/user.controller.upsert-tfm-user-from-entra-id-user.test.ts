@@ -1,10 +1,11 @@
 import { when, resetAllWhenMocks } from 'jest-when';
-import { anEntraIdUser } from '@ukef/dtfs2-common';
+import { anEntraIdUser, AuditDetails, EntraIdUser } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mapUserData } from './helpers/mapUserData.helper';
-import { UserService } from '../../services/user.service';
+import { UpsertTfmUserFromEntraIdUserResponse, UserService } from '../../services/user.service';
 import { upsertTfmUserFromEntraIdUser } from './user.controller';
 import { userServiceMockResponses } from '../../../../test-helpers';
+import { TfmSessionUser } from '../../../types/tfm-session-user';
 
 jest.mock('../../services/user.service', () => ({
   __esModule: true,
@@ -15,17 +16,22 @@ jest.mock('../../services/user.service', () => ({
 
 describe('user controller', () => {
   describe('upsertTfmUserFromEntraIdUser', () => {
-    const entraIdUser = anEntraIdUser();
-    const auditDetails = generateSystemAuditDetails();
+    let entraIdUser: EntraIdUser;
+    let auditDetails: AuditDetails;
 
-    const upsertedUserResponse = userServiceMockResponses.anUpsertTfmUserFromEntraIdUserResponse();
-    const mappedUserDetails = mapUserData(upsertedUserResponse);
+    let upsertTfmUserFromEntraIdUserResponse: UpsertTfmUserFromEntraIdUserResponse;
+    let mappedUserDetails: TfmSessionUser;
 
     beforeEach(() => {
       jest.resetAllMocks();
       resetAllWhenMocks();
+      entraIdUser = anEntraIdUser();
+      auditDetails = generateSystemAuditDetails();
+
+      upsertTfmUserFromEntraIdUserResponse = userServiceMockResponses.anUpsertTfmUserFromEntraIdUserResponse();
+      mappedUserDetails = mapUserData(upsertTfmUserFromEntraIdUserResponse);
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      when(UserService.upsertTfmUserFromEntraIdUser).calledWith({ entraIdUser, auditDetails }).mockResolvedValue(upsertedUserResponse);
+      when(UserService.upsertTfmUserFromEntraIdUser).calledWith({ entraIdUser, auditDetails }).mockResolvedValue(upsertTfmUserFromEntraIdUserResponse);
     });
 
     it('should upsert user in the database', async () => {
