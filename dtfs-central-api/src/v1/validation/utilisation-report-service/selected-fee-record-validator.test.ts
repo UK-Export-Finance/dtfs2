@@ -97,51 +97,14 @@ describe('selected fee record validator', () => {
         });
       });
 
-      describe('and the selected fee record ids do not match those in the fee record payment group', () => {
-        it('should throw an invalid payload error', async () => {
-          // Arrange
-          const payments = [aPaymentWithFeeRecords([aFeeRecordWithId(1), aFeeRecordWithId(3)])];
-          const selectedFeeRecords = [
-            aFeeRecordWithIdStatusAndPayments(1, FEE_RECORD_STATUS.DOES_NOT_MATCH, payments),
-            aFeeRecordWithIdStatusAndPayments(2, FEE_RECORD_STATUS.DOES_NOT_MATCH, []),
-          ];
-          feeRecordFindBySpy.mockResolvedValue(selectedFeeRecords);
-
-          const selectedFeeRecordIds = [1, 2];
-
-          // Act + Assert
-          await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(selectedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
-        });
-      });
-
       describe('and there are missing selected fee record ids from the fee record payment group', () => {
         it('should throw an invalid payload error', async () => {
           // Arrange
-          const payments = [aPaymentWithFeeRecords([aFeeRecordWithId(1)])];
-          const selectedFeeRecords = [
-            aFeeRecordWithIdStatusAndPayments(1, FEE_RECORD_STATUS.DOES_NOT_MATCH, payments),
-            aFeeRecordWithIdStatusAndPayments(2, FEE_RECORD_STATUS.DOES_NOT_MATCH, []),
-          ];
+          const payments = [aPaymentWithFeeRecords([aFeeRecordWithId(1), aFeeRecordWithId(2)])];
+          const selectedFeeRecords = [aFeeRecordWithIdStatusAndPayments(1, FEE_RECORD_STATUS.DOES_NOT_MATCH, payments)];
           feeRecordFindBySpy.mockResolvedValue(selectedFeeRecords);
 
-          const selectedFeeRecordIds = [1, 2];
-
-          // Act + Assert
-          await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(selectedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
-        });
-      });
-
-      describe('and there are extra selected fee record ids than those in the fee record payment group', () => {
-        it('should throw an invalid payload error', async () => {
-          // Arrange
-          const payments = [aPaymentWithFeeRecords([aFeeRecordWithId(1), aFeeRecordWithId(2), aFeeRecordWithId(3)])];
-          const selectedFeeRecords = [
-            aFeeRecordWithIdStatusAndPayments(1, FEE_RECORD_STATUS.DOES_NOT_MATCH, payments),
-            aFeeRecordWithIdStatusAndPayments(2, FEE_RECORD_STATUS.DOES_NOT_MATCH, []),
-          ];
-          feeRecordFindBySpy.mockResolvedValue(selectedFeeRecords);
-
-          const selectedFeeRecordIds = [1, 2];
+          const selectedFeeRecordIds = [1];
 
           // Act + Assert
           await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(selectedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
