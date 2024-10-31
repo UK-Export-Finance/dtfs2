@@ -72,10 +72,10 @@ describe('selected fee record validator', () => {
         ];
         feeRecordFindBySpy.mockResolvedValue(selectedFeeRecords);
 
-        const requestedFeeRecordIds = [1];
+        const selectedFeeRecordIds = [1];
 
         // Act + Assert
-        await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(requestedFeeRecordIds)).resolves.not.toThrow();
+        await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(selectedFeeRecordIds)).resolves.not.toThrow();
       });
     });
 
@@ -90,10 +90,10 @@ describe('selected fee record validator', () => {
           ];
           feeRecordFindBySpy.mockResolvedValue(selectedFeeRecords);
 
-          const requestedFeeRecordIds = [1, 2];
+          const selectedFeeRecordIds = [1, 2];
 
           // Act + Assert
-          await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(requestedFeeRecordIds)).resolves.not.toThrow();
+          await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(selectedFeeRecordIds)).resolves.not.toThrow();
         });
       });
 
@@ -107,10 +107,10 @@ describe('selected fee record validator', () => {
           ];
           feeRecordFindBySpy.mockResolvedValue(selectedFeeRecords);
 
-          const requestedFeeRecordIds = [1, 2];
+          const selectedFeeRecordIds = [1, 2];
 
           // Act + Assert
-          await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(requestedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
+          await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(selectedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
         });
       });
 
@@ -124,10 +124,10 @@ describe('selected fee record validator', () => {
           ];
           feeRecordFindBySpy.mockResolvedValue(selectedFeeRecords);
 
-          const requestedFeeRecordIds = [1, 2];
+          const selectedFeeRecordIds = [1, 2];
 
           // Act + Assert
-          await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(requestedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
+          await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(selectedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
         });
       });
 
@@ -141,10 +141,10 @@ describe('selected fee record validator', () => {
           ];
           feeRecordFindBySpy.mockResolvedValue(selectedFeeRecords);
 
-          const requestedFeeRecordIds = [1, 2];
+          const selectedFeeRecordIds = [1, 2];
 
           // Act + Assert
-          await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(requestedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
+          await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(selectedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
         });
       });
     });

@@ -267,7 +267,7 @@ describe(`POST ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
-  it(`should respond with a ${HttpStatusCode.BadRequest} when the selected fee record ids do not match those in the existing fee record payment group`, async () => {
+  it(`should respond with a ${HttpStatusCode.BadRequest} when the selected fee record ids are not a complete group`, async () => {
     // Arrange
     await SqlDbHelper.deleteAllEntries('Payment');
     await SqlDbHelper.deleteAllEntries('FeeRecord');
