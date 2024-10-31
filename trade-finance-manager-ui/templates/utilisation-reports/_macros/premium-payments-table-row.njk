@@ -4,15 +4,18 @@
   {% set reportId = params.reportId %}
   {% set feeRecordPaymentGroup = params.feeRecordPaymentGroup %}
   {% set userCanEdit = params.userCanEdit %}
+  {% set showCheckboxColumn = params.showCheckboxColumn %}
   {% set feeRecords = feeRecordPaymentGroup.feeRecords %}
   {% set totalReportedPayments = feeRecordPaymentGroup.totalReportedPayments %}
   {% set paymentsReceived = feeRecordPaymentGroup.paymentsReceived %}
   {% set totalPaymentsReceived = feeRecordPaymentGroup.totalPaymentsReceived %}
   {% set status = feeRecordPaymentGroup.status %}
+  {% set isSelectable = feeRecordPaymentGroup.isSelectable %}
   {% set displayStatus = feeRecordPaymentGroup.displayStatus %}
   {% set checkboxId = feeRecordPaymentGroup.checkboxId %}
   {% set isChecked = feeRecordPaymentGroup.isChecked %}
   {% set checkboxAriaLabel = feeRecordPaymentGroup.checkboxAriaLabel %}
+
   {% for feeRecord in feeRecords %}
     {% set isFirstFeeRecordInGroup = loop.index === 1 %}
     {% set isLastFeeRecordInGroup = loop.index === feeRecords.length %}
@@ -60,9 +63,9 @@
           displayStatus: displayStatus
         }) if isFirstFeeRecordInGroup else "" }}
       </td>
-      {% if userCanEdit %}
+      {% if userCanEdit and showCheckboxColumn %}
         <td class="govuk-table__cell{{ " no-border" if not isLastFeeRecordInGroup }}">
-          {% if status === 'TO_DO' or status === 'DOES_NOT_MATCH' %}
+          {% if isSelectable %}
             {{ tableCellCheckbox.render({
               checkboxId: checkboxId,
               checked: isChecked,

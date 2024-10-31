@@ -1,4 +1,4 @@
-import { AnyObject, TfmDealCancellation, TfmDealCancellationResponse } from '@ukef/dtfs2-common';
+import { AnyObject, DATE_FORMATS, TfmDealCancellation, TfmDealCancellationResponse } from '@ukef/dtfs2-common';
 import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { add, format } from 'date-fns';
 import { CANCEL_DEAL_FUTURE_DATE, CANCEL_DEAL_PAST_DATE } from '../../../constants/email-template-ids';
@@ -69,8 +69,8 @@ describe('deal cancellation service', () => {
         expect(sendTfmEmail).toHaveBeenCalledTimes(1);
         expect(sendTfmEmail).toHaveBeenCalledWith(CANCEL_DEAL_FUTURE_DATE, mockPimEmailAddress, {
           cancelReason: cancellation.reason,
-          bankRequestDate: format(today, 'dd MMMM yyyy'),
-          effectiveFromDate: format(tomorrow, 'dd MMMM yyyy'),
+          bankRequestDate: format(today, DATE_FORMATS.D_MMMM_YYYY),
+          effectiveFromDate: format(tomorrow, DATE_FORMATS.D_MMMM_YYYY),
           formattedFacilitiesList: formatFacilityIds(ukefFacilityIds),
           ukefDealId,
         });
@@ -91,8 +91,8 @@ describe('deal cancellation service', () => {
         expect(sendTfmEmail).toHaveBeenCalledTimes(1);
         expect(sendTfmEmail).toHaveBeenCalledWith(CANCEL_DEAL_PAST_DATE, mockPimEmailAddress, {
           cancelReason: cancellation.reason,
-          bankRequestDate: format(today, 'dd MMMM yyyy'),
-          effectiveFromDate: format(today, 'dd MMMM yyyy'),
+          bankRequestDate: format(today, DATE_FORMATS.D_MMMM_YYYY),
+          effectiveFromDate: format(today, DATE_FORMATS.D_MMMM_YYYY),
           formattedFacilitiesList: formatFacilityIds(ukefFacilityIds),
           ukefDealId,
         });
@@ -119,8 +119,8 @@ describe('deal cancellation service', () => {
         expect(sendTfmEmail).toHaveBeenCalledTimes(1);
         expect(sendTfmEmail).toHaveBeenCalledWith(CANCEL_DEAL_FUTURE_DATE, mockPimEmailAddress, {
           cancelReason: dealCancellation.reason,
-          bankRequestDate: format(today, 'dd MMMM yyyy'),
-          effectiveFromDate: format(tomorrow, 'dd MMMM yyyy'),
+          bankRequestDate: format(today, DATE_FORMATS.D_MMMM_YYYY),
+          effectiveFromDate: format(tomorrow, DATE_FORMATS.D_MMMM_YYYY),
           formattedFacilitiesList: formatFacilityIds(ukefFacilityIds),
           ukefDealId,
         });

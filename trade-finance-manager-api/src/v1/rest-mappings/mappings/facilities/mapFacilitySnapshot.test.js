@@ -86,8 +86,6 @@ describe('mapFacility', () => {
 
     const expectedFacilityValueExportCurrency = `${mockCurrency.id} ${formattedFacilityValue}`;
 
-    const facilityStage = mapBssEwcsFacilityStage(mockFacilityStage, mockFacilityTfm.facilityStage);
-
     const expectedFacilityProduct = mapFacilityProduct(mockFacilitySnapshot.type);
 
     const expectedType = mapFacilityType({
@@ -103,7 +101,6 @@ describe('mapFacility', () => {
     const facilityLatest = {
       facilitySnapshot: {
         ...mockFacilitySnapshot,
-        facilityStage,
         facilityProduct: expectedFacilityProduct,
       },
     };

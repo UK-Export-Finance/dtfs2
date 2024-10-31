@@ -1,5 +1,6 @@
 import { when } from 'jest-when';
 import { CURRENCY, Currency, CurrencyAndAmount, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
+import difference from 'lodash.difference';
 import { mapCurrenciesToRadioItems } from '../../../helpers/map-currencies-to-radio-items';
 import {
   getFormattedDateReconciled,
@@ -8,9 +9,11 @@ import {
   mapPaymentDetailsGroupsToPaymentDetailsViewModel,
   mapKeyingSheetToKeyingSheetViewModel,
   mapPaymentDetailsFiltersToViewModel,
+  premiumPaymentsHasSelectableItems,
 } from './reconciliation-for-report-helper';
 import { FeeRecord, KeyingSheet, KeyingSheetRow, Payment, PaymentDetails, PremiumPaymentsGroup } from '../../../api-response-types';
-import { aPremiumPaymentsGroup, aFeeRecord, aPayment, aPaymentDetails } from '../../../../test-helpers';
+import { aPremiumPaymentsGroup, aFeeRecord, aPayment, aPaymentDetails, aPremiumPaymentsViewModelItem } from '../../../../test-helpers';
+import { PremiumPaymentsViewModelItem } from '../../../types/view-models';
 
 describe('reconciliation-for-report-helper', () => {
   describe('mapPremiumPaymentsToViewModelItems', () => {
@@ -343,6 +346,35 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel).toHaveLength(1);
       expect(viewModel[0].status).toEqual(status);
     });
+
+    const selectableFeeRecordStatuses = [FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.DOES_NOT_MATCH];
+
+    it.each(selectableFeeRecordStatuses)('should set isSelectable to true if the group status is %s', (status: FeeRecordStatus) => {
+      // Arrange
+      const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), status }];
+
+      // Act
+      const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+
+      // Assert
+      expect(viewModel).toHaveLength(1);
+      expect(viewModel[0].isSelectable).toEqual(true);
+    });
+
+    it.each(difference(Object.values(FEE_RECORD_STATUS), selectableFeeRecordStatuses))(
+      'should set isSelectable to false if the group status is %s',
+      (status: FeeRecordStatus) => {
+        // Arrange
+        const premiumPaymentGroups: PremiumPaymentsGroup[] = [{ ...aPremiumPaymentsGroup(), status }];
+
+        // Act
+        const viewModel = mapPremiumPaymentsToViewModelItems(premiumPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+
+        // Assert
+        expect(viewModel).toHaveLength(1);
+        expect(viewModel[0].isSelectable).toEqual(false);
+      },
+    );
 
     it.each([
       { feeRecordStatus: FEE_RECORD_STATUS.TO_DO, feeRecordDisplayStatus: 'TO DO' },
@@ -1043,6 +1075,61 @@ describe('reconciliation-for-report-helper', () => {
           paymentCurrency: mapCurrenciesToRadioItems(),
         });
       });
+    });
+  });
+
+  describe('premiumPaymentsHasSelectableItems', () => {
+    it('should return false if there are no items to display', () => {
+      // Arrange
+      const items: PremiumPaymentsViewModelItem[] = [];
+
+      // Act
+      const result = premiumPaymentsHasSelectableItems(items);
+
+      // Assert
+      expect(result).toEqual(false);
+    });
+
+    it('should return false if all items in the table are not selectable', () => {
+      // Arrange
+      const items = [
+        { ...aPremiumPaymentsViewModelItem(), isSelectable: false },
+        { ...aPremiumPaymentsViewModelItem(), isSelectable: false },
+      ];
+
+      // Act
+      const result = premiumPaymentsHasSelectableItems(items);
+
+      // Assert
+      expect(result).toEqual(false);
+    });
+
+    it('should return true if any item in the table is selectable', () => {
+      // Arrange
+      const items = [
+        { ...aPremiumPaymentsViewModelItem(), isSelectable: false },
+        { ...aPremiumPaymentsViewModelItem(), isSelectable: true },
+      ];
+
+      // Act
+      const result = premiumPaymentsHasSelectableItems(items);
+
+      // Assert
+      expect(result).toEqual(true);
+    });
+
+    it('should return true if all items in the table are selectable', () => {
+      // Arrange
+      const items = [
+        { ...aPremiumPaymentsViewModelItem(), isSelectable: true },
+        { ...aPremiumPaymentsViewModelItem(), isSelectable: true },
+      ];
+
+      // Act
+      const result = premiumPaymentsHasSelectableItems(items);
+
+      // Assert
+      expect(result).toEqual(true);
     });
   });
 });
