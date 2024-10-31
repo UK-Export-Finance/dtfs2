@@ -88,7 +88,7 @@ describe('postDealCancellationDetails', () => {
       );
     });
 
-    describe('when effective from date is in the past', () => {
+    describe('when effectiveFrom is in the past', () => {
       it('adds a successMessage to req.flash', async () => {
         // Arrange
         const session = aRequestSession();
@@ -109,7 +109,7 @@ describe('postDealCancellationDetails', () => {
       });
     });
 
-    describe('when effective from date is in the present', () => {
+    describe('when effectiveFrom is in the present', () => {
       it('adds a successMessage to req.flash', async () => {
         // Arrange
         const session = aRequestSession();
@@ -130,7 +130,7 @@ describe('postDealCancellationDetails', () => {
       });
     });
 
-    describe('when effective from date is in the future', () => {
+    describe('when effectiveFrom is in the future', () => {
       it('does not add a successMessage to req.flash', async () => {
         // Arrange
         const session = aRequestSession();
