@@ -321,6 +321,7 @@ services:
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - ESTORE_CRON_MANAGER_SCHEDULE
+      - AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED
     entrypoint: npx ts-node external-api/src/index.ts
 
   gef-ui:
