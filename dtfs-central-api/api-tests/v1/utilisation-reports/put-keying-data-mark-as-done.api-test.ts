@@ -8,8 +8,8 @@ import {
 } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
-import { MOCK_TFM_USER } from '../../mocks/test-users/mock-tfm-user';
 import { SqlDbHelper } from '../../sql-db-helper';
+import { aTfmSessionUser } from '../../../test-helpers';
 
 console.error = jest.fn();
 
@@ -36,7 +36,7 @@ describe(`PUT ${BASE_URL}`, () => {
   it('returns a 400 when the fee record ids are not a valid ids', async () => {
     // Arrange
     const requestBody = {
-      user: MOCK_TFM_USER,
+      user: aTfmSessionUser(),
       feeRecordIds: ['invalid-id'],
     };
 
@@ -63,7 +63,7 @@ describe(`PUT ${BASE_URL}`, () => {
   it('returns a 404 when no report with the supplied id can be found', async () => {
     // Arrange
     const requestBody = {
-      user: MOCK_TFM_USER,
+      user: aTfmSessionUser(),
       feeRecordIds: [1],
     };
 
@@ -81,7 +81,7 @@ describe(`PUT ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     const requestBody = {
-      user: MOCK_TFM_USER,
+      user: aTfmSessionUser(),
       feeRecordIds: [1],
     };
 
@@ -101,7 +101,7 @@ describe(`PUT ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     const requestBody = {
-      user: MOCK_TFM_USER,
+      user: aTfmSessionUser(),
       feeRecordIds: [1],
     };
 
@@ -126,7 +126,7 @@ describe(`PUT ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     const requestBody = {
-      user: MOCK_TFM_USER,
+      user: aTfmSessionUser(),
       feeRecordIds: [1],
     };
 
@@ -136,7 +136,7 @@ describe(`PUT ${BASE_URL}`, () => {
     // Assert
     const updatedFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: 1 });
     expect(updatedFeeRecord.status).toEqual(FEE_RECORD_STATUS.RECONCILED);
-    expect(updatedFeeRecord.reconciledByUserId).toEqual(MOCK_TFM_USER._id.toString());
+    expect(updatedFeeRecord.reconciledByUserId).toEqual(aTfmSessionUser()._id.toString());
     expect(updatedFeeRecord.dateReconciled).not.toBeNull();
   });
 
@@ -150,7 +150,7 @@ describe(`PUT ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     const requestBody = {
-      user: MOCK_TFM_USER,
+      user: aTfmSessionUser(),
       feeRecordIds: [1],
     };
 
@@ -172,7 +172,7 @@ describe(`PUT ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     const requestBody = {
-      user: MOCK_TFM_USER,
+      user: aTfmSessionUser(),
       feeRecordIds: [1],
     };
 
