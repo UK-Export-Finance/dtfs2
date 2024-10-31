@@ -16,7 +16,7 @@ import { aTfmUser } from '../../../test-helpers';
 const mockCancellationResponse = { cancelledDealUkefId: 'dealId', riskExpiredFacilityUkefIds: ['1', '2'] };
 
 const submitDealCancellationMock = jest.fn(() => Promise.resolve(mockCancellationResponse)) as jest.Mock<Promise<TfmDealCancellationResponse>>;
-const submitScheduledDealCancellationMock = jest.fn(() => Promise.resolve(mockCancellationResponse)) as jest.Mock<Promise<TfmDealCancellationResponse>>;
+const scheduleDealCancellationMock = jest.fn(() => Promise.resolve(mockCancellationResponse)) as jest.Mock<Promise<TfmDealCancellationResponse>>;
 
 const findOneUserByIdMock = jest.fn() as jest.Mock<Promise<TfmUser | null>>;
 
@@ -24,8 +24,8 @@ jest.mock('../../repositories/tfm-deals-repo/tfm-deal-cancellation.repo', () => 
   TfmDealCancellationRepo: {
     submitDealCancellation: (params: { dealId: string; cancellation: TfmDealCancellation; activity: TfmActivity; auditDetails: AuditDetails }) =>
       submitDealCancellationMock(params),
-    submitScheduledDealCancellation: (params: { dealId: string; cancellation: TfmDealCancellation; activity: TfmActivity; auditDetails: AuditDetails }) =>
-      submitScheduledDealCancellationMock(params),
+    scheduleDealCancellation: (params: { dealId: string; cancellation: TfmDealCancellation; activity: TfmActivity; auditDetails: AuditDetails }) =>
+      scheduleDealCancellationMock(params),
   },
 }));
 
@@ -122,7 +122,7 @@ describe('DealCancellationService', () => {
             ...cancellation,
           };
 
-          expect(submitScheduledDealCancellationMock).toHaveBeenCalledTimes(0);
+          expect(scheduleDealCancellationMock).toHaveBeenCalledTimes(0);
 
           expect(submitDealCancellationMock).toHaveBeenCalledTimes(1);
           expect(submitDealCancellationMock).toHaveBeenCalledWith({ dealId, cancellation, activity: expectedActivity, auditDetails });
@@ -162,7 +162,7 @@ describe('DealCancellationService', () => {
       const auditDetails = generateTfmAuditDetails(aTfmUser()._id);
 
       it.each(effectiveFromFutureTestCases)(
-        'calls submitScheduledDealCancellation with the correct params when effectiveFrom is $description',
+        'calls scheduleDealCancellation with the correct params when effectiveFrom is $description',
         async ({ effectiveFrom }) => {
           // Arrange
           const cancellation = { ...aDealCancellation(), effectiveFrom };
@@ -184,8 +184,8 @@ describe('DealCancellationService', () => {
 
           expect(submitDealCancellationMock).toHaveBeenCalledTimes(0);
 
-          expect(submitScheduledDealCancellationMock).toHaveBeenCalledTimes(1);
-          expect(submitScheduledDealCancellationMock).toHaveBeenCalledWith({ dealId, cancellation, activity: expectedActivity, auditDetails });
+          expect(scheduleDealCancellationMock).toHaveBeenCalledTimes(1);
+          expect(scheduleDealCancellationMock).toHaveBeenCalledWith({ dealId, cancellation, activity: expectedActivity, auditDetails });
         },
       );
 

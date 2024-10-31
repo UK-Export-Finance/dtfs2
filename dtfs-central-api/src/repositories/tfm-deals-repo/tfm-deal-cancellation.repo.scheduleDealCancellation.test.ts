@@ -44,7 +44,7 @@ describe('tfm-deals-cancellation-repo', () => {
     jest.resetAllMocks();
   });
 
-  describe('submitScheduledDealCancellation', () => {
+  describe('scheduleDealCancellation', () => {
     beforeAll(() => {
       jest.useFakeTimers();
     });
