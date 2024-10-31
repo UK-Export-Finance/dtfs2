@@ -15,6 +15,7 @@ const featureFlagsSchema = z.object({
   FF_TFM_FACILITY_END_DATE_ENABLED: featureFlagOptions,
   FF_TFM_DEAL_CANCELLATION_ENABLED: featureFlagOptions,
   FF_TFM_SSO_ENABLED: featureFlagOptions,
+  AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED: featureFlagOptions,
 });
 
 export type FeatureFlag = keyof z.infer<typeof featureFlagsSchema>;
@@ -33,3 +34,5 @@ export const isTfmFacilityEndDateFeatureFlagEnabled = isFeatureFlagEnabled('FF_T
 export const isTfmDealCancellationFeatureFlagEnabled = isFeatureFlagEnabled('FF_TFM_DEAL_CANCELLATION_ENABLED');
 
 export const isTfmSsoFeatureFlagEnabled = isFeatureFlagEnabled('FF_TFM_SSO_ENABLED');
+
+export const isAutomaticSfCustomerCreationFeatureFlagEnabled = isFeatureFlagEnabled('AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED');
