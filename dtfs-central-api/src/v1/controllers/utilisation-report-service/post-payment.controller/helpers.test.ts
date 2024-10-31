@@ -47,7 +47,7 @@ describe('post-add-payment.controller helpers', () => {
       FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(feeRecordId).withPaymentCurrency(paymentCurrency).build(),
     );
     const paymentsWithFeeRecords = [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords(feeRecordsInPaymentCurrency).build()];
-    const feeRecordsInPaymentCurrencyWithFeeRecordsAndPayments = feeRecordIds.map((feeRecordId) =>
+    const feeRecordsWithFeeRecordsAndPayments = feeRecordIds.map((feeRecordId) =>
       FeeRecordEntityMockBuilder.forReport(utilisationReport)
         .withId(feeRecordId)
         .withPaymentCurrency(paymentCurrency)
@@ -71,7 +71,7 @@ describe('post-add-payment.controller helpers', () => {
 
     beforeEach(() => {
       feeRecordFindBySpy.mockResolvedValue(feeRecordsInPaymentCurrency);
-      feeRecordFindByIdWithPaymentsAndFeeRecordsSpy.mockResolvedValue(feeRecordsInPaymentCurrencyWithFeeRecordsAndPayments);
+      feeRecordFindByIdWithPaymentsAndFeeRecordsSpy.mockResolvedValue(feeRecordsWithFeeRecordsAndPayments);
       utilisationReportStateMachineConstructorSpy.mockResolvedValue(utilisationReportStateMachine);
       handleEventSpy.mockResolvedValue(utilisationReport);
       feeRecordFindOneByOrFailSpy.mockResolvedValue(FeeRecordEntityMockBuilder.forReport(utilisationReport).build());
@@ -142,7 +142,7 @@ describe('post-add-payment.controller helpers', () => {
       await expect(addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetailsWithGBPCurrency)).rejects.toThrow(InvalidPayloadError);
     });
 
-    it("throws the 'InvalidPayloadError' if the selected fee records have payments and do not match those in the fee record payment group", async () => {
+    it("throws the 'InvalidPayloadError' if the selected fee records have payments and do not match the fee records in the fee record payment group", async () => {
       // Arrange
       const selectedFeeRecordIds = [1, 2];
       const paymentFeeRecordIds = [1, 2, 3];
