@@ -306,6 +306,14 @@ const getCaseFacility = async (req, res) => {
 
   const deal = await api.getDeal(dealId, userToken);
 
+  /**
+   * Ensure imperative deal properties exist before rendering
+   */
+  if (!deal?.dealSnapshot?._id || !deal?.tfm) {
+    console.error('An error occurred while rendering a TFM deal %s', dealId);
+    return res.render('_partials/problem-with-service.njk');
+  }
+
   const hasAmendmentInProgressButton = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
   const showContinueAmendmentButton = hasAmendmentInProgressButton && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
 
@@ -313,14 +321,6 @@ const getCaseFacility = async (req, res) => {
   const hasAmendmentInProgress = hasAmendmentInProgressDealStage(amendments);
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
-  }
-
-  /**
-   * Ensure imperative deal properties exist before rendering
-   */
-  if (!deal?.dealSnapshot?._id || !deal?.tfm) {
-    console.error('An error occurred while rendering a TFM deal %s', dealId);
-    return res.render('_partials/problem-with-service.njk');
   }
 
   return res.render('case/facility/facility.njk', {

@@ -253,7 +253,7 @@ export class TfmFacilitiesRepo {
       const result = await collection.aggregate(facilities).toArray();
       return (result.at(0) as { count: number; facilities: Document[] }) ?? null;
     } catch (error) {
-      console.error('Error while finding all facilities %o', error);
+      console.error('Error finding all facilities and facility count %o', error);
       return null;
     }
   }

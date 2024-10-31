@@ -211,6 +211,22 @@ describe('POST underwriting - assign lead underwriter', () => {
     api.updateLeadUnderwriter = apiUpdateSpy;
   });
 
+  it('should redirect to problem with service page with assigned to property does not exists', async () => {
+    const req = {
+      params: {
+        _id: dealId,
+      },
+      session,
+      body: {
+        test: '123-test',
+      },
+    };
+
+    await underwriterLeadUnderwriterController.postAssignLeadUnderwriter(req, res);
+
+    expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+  });
+
   it('should call api.updateLeadUnderwriter and redirect to /lead-underwriter', async () => {
     const req = {
       params: {
