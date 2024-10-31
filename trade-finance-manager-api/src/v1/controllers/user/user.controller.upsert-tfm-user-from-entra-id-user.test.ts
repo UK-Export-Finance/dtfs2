@@ -18,7 +18,7 @@ describe('user controller', () => {
     const entraIdUser = anEntraIdUser();
     const auditDetails = generateSystemAuditDetails();
 
-    const upsertedUserResponse = userServiceMockResponses.aUpsertTfmUserFromEntraIdUserResponse();
+    const upsertedUserResponse = userServiceMockResponses.anUpsertTfmUserFromEntraIdUserResponse();
     const mappedUserDetails = mapUserData(upsertedUserResponse);
 
     beforeEach(() => {
