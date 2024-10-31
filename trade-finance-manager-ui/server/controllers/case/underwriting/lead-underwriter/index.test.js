@@ -230,6 +230,23 @@ describe('POST underwriting - assign lead underwriter', () => {
     expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
   });
 
+  it('should redirect to problem with service page when req.body.assignedTo does not exist', async () => {
+    const req = {
+      params: {
+        _id: dealId,
+      },
+      session,
+      body: {
+        test: '123-test',
+      },
+    };
+
+    await underwriterLeadUnderwriterController.postAssignLeadUnderwriter(req, res);
+
+    expect(console.error).toHaveBeenCalledWith('Error while assigning lead underwriter to deal %s %o', dealId, req?.body);
+    expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+  });
+
   it('should call api.updateLeadUnderwriter and redirect to /lead-underwriter', async () => {
     const req = {
       params: {
