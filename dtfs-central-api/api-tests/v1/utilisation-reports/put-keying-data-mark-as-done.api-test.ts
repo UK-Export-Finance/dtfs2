@@ -10,18 +10,25 @@ import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-c
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { aTfmSessionUser } from '../../../test-helpers';
+import { TfmSessionUser } from '../../../src/types/tfm/tfm-session-user';
 
 console.error = jest.fn();
 
 const BASE_URL = '/v1/utilisation-reports/:reportId/keying-data/mark-as-done';
 
 describe(`PUT ${BASE_URL}`, () => {
+  let tfmSessionUser: TfmSessionUser;
+
   const getUrl = (reportId: number | string) => BASE_URL.replace(':reportId', reportId.toString());
 
   beforeAll(async () => {
     await SqlDbHelper.initialize();
 
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
+  });
+
+  beforeEach(() => {
+    tfmSessionUser = aTfmSessionUser();
   });
 
   afterEach(async () => {
@@ -36,7 +43,7 @@ describe(`PUT ${BASE_URL}`, () => {
   it('returns a 400 when the fee record ids are not a valid ids', async () => {
     // Arrange
     const requestBody = {
-      user: aTfmSessionUser(),
+      user: tfmSessionUser,
       feeRecordIds: ['invalid-id'],
     };
 
@@ -63,7 +70,7 @@ describe(`PUT ${BASE_URL}`, () => {
   it('returns a 404 when no report with the supplied id can be found', async () => {
     // Arrange
     const requestBody = {
-      user: aTfmSessionUser(),
+      user: tfmSessionUser,
       feeRecordIds: [1],
     };
 
@@ -81,7 +88,7 @@ describe(`PUT ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     const requestBody = {
-      user: aTfmSessionUser(),
+      user: tfmSessionUser,
       feeRecordIds: [1],
     };
 
@@ -101,7 +108,7 @@ describe(`PUT ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     const requestBody = {
-      user: aTfmSessionUser(),
+      user: tfmSessionUser,
       feeRecordIds: [1],
     };
 
@@ -126,7 +133,7 @@ describe(`PUT ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     const requestBody = {
-      user: aTfmSessionUser(),
+      user: tfmSessionUser,
       feeRecordIds: [1],
     };
 
@@ -136,7 +143,7 @@ describe(`PUT ${BASE_URL}`, () => {
     // Assert
     const updatedFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: 1 });
     expect(updatedFeeRecord.status).toEqual(FEE_RECORD_STATUS.RECONCILED);
-    expect(updatedFeeRecord.reconciledByUserId).toEqual(aTfmSessionUser()._id.toString());
+    expect(updatedFeeRecord.reconciledByUserId).toEqual(tfmSessionUser._id.toString());
     expect(updatedFeeRecord.dateReconciled).not.toBeNull();
   });
 
@@ -150,7 +157,7 @@ describe(`PUT ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     const requestBody = {
-      user: aTfmSessionUser(),
+      user: tfmSessionUser,
       feeRecordIds: [1],
     };
 
@@ -172,7 +179,7 @@ describe(`PUT ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     const requestBody = {
-      user: aTfmSessionUser(),
+      user: tfmSessionUser,
       feeRecordIds: [1],
     };
 
