@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import { TFM_DEAL_STAGE, TFM_FACILITY_STAGE } from '@ukef/dtfs2-common';
 import relative from '../../relativeURL';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
@@ -113,8 +112,8 @@ context('Deal cancellation - effective from date in past', () => {
 
         activitiesPage.activitiesTimeline().contains('Deal stage:');
         activitiesPage.activitiesTimeline().contains('Cancelled');
-        activitiesPage.activitiesTimeline().contains(`Bank request date: ${format(today.date, 'd MMMM yyyy')}`);
-        activitiesPage.activitiesTimeline().contains(`Date effective from: ${format(yesterday.date, 'd MMMM yyyy')}`);
+        activitiesPage.activitiesTimeline().contains(`Bank request date: ${today.d_MMMM_yyyy}`);
+        activitiesPage.activitiesTimeline().contains(`Date effective from: ${today.d_MMMM_yyyy}`);
         activitiesPage.activitiesTimeline().contains(`Comments: -`);
       });
     });
