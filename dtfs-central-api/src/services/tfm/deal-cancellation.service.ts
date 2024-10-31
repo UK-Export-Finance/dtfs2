@@ -33,6 +33,6 @@ export class DealCancellationService {
       return await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation, activity, auditDetails });
     }
 
-    return await TfmDealCancellationRepo.submitScheduledDealCancellation({ dealId, cancellation, activity, auditDetails });
+    return await TfmDealCancellationRepo.scheduleDealCancellation({ dealId, cancellation, activity, auditDetails });
   }
 }

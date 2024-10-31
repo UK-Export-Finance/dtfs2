@@ -68,7 +68,7 @@ describe('tfm-deals-cancellation-repo', () => {
 
     it('calls the DB with the correct collection names', async () => {
       // Act
-      await TfmDealCancellationRepo.submitScheduledDealCancellation({ dealId, cancellation: mockDealCancellationObject, auditDetails, activity: mockActivity });
+      await TfmDealCancellationRepo.scheduleDealCancellation({ dealId, cancellation: mockDealCancellationObject, auditDetails, activity: mockActivity });
 
       // Assert
       expect(getCollectionMock).toHaveBeenCalledTimes(2);
@@ -82,7 +82,7 @@ describe('tfm-deals-cancellation-repo', () => {
 
       // Assert
       await expect(
-        TfmDealCancellationRepo.submitScheduledDealCancellation({
+        TfmDealCancellationRepo.scheduleDealCancellation({
           dealId: invalidDealId,
           cancellation: mockDealCancellationObject,
           auditDetails,
@@ -101,14 +101,14 @@ describe('tfm-deals-cancellation-repo', () => {
 
       // Assert
       await expect(
-        TfmDealCancellationRepo.submitScheduledDealCancellation({ dealId, cancellation: mockDealCancellationObject, auditDetails, activity: mockActivity }),
+        TfmDealCancellationRepo.scheduleDealCancellation({ dealId, cancellation: mockDealCancellationObject, auditDetails, activity: mockActivity }),
       ).rejects.toThrow(new DealNotFoundError(dealId.toString()));
     });
 
     describe('updating the deal stage', () => {
       it('calls updateOne with the expected parameters', async () => {
         // Act
-        await TfmDealCancellationRepo.submitScheduledDealCancellation({
+        await TfmDealCancellationRepo.scheduleDealCancellation({
           dealId,
           cancellation: mockDealCancellationObject,
           auditDetails,
@@ -142,7 +142,7 @@ describe('tfm-deals-cancellation-repo', () => {
     describe('finding the matching facilities', () => {
       it('calls find with the expected parameters', async () => {
         // Act
-        await TfmDealCancellationRepo.submitScheduledDealCancellation({
+        await TfmDealCancellationRepo.scheduleDealCancellation({
           dealId,
           cancellation: mockDealCancellationObject,
           auditDetails,
@@ -161,7 +161,7 @@ describe('tfm-deals-cancellation-repo', () => {
 
     it('returns the deal cancellation response object with the deal id and corresponding facility ids', async () => {
       // Act
-      const result = await TfmDealCancellationRepo.submitScheduledDealCancellation({
+      const result = await TfmDealCancellationRepo.scheduleDealCancellation({
         dealId,
         cancellation: mockDealCancellationObject,
         auditDetails,

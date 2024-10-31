@@ -211,14 +211,18 @@ export class TfmDealCancellationRepo {
   }
 
   /**
-   * Submits a scheduled deal cancellation
+   * Schedules a deal cancellation (occurs when a deal cancellation is submitted but the effective from date is in the future).
+   * In this instance, the deal and facility statuses remain the same, but the tfm cancellation object 'status' is updated to 'Scheduled'.
+   * When the effective from date passes, a separate chron job will run to submit the deal cancellation using submitDealCancellation above,
+   * updating the deal and facility statuses to 'Cancelled' / 'Risk expired' respectively.
+   * We still return the deal ID and corresponding facility IDs in this instance to be used on the cancellation confirmation email.
    * @param params
    * @param params.dealId - The deal id
    * @param params.cancellation - The deal cancellation details to submit
    * @param params.activity - Object to add to the activities array
    * @param params.auditDetails - The users audit details
    */
-  public static async submitScheduledDealCancellation({
+  public static async scheduleDealCancellation({
     dealId,
     cancellation,
     activity,
