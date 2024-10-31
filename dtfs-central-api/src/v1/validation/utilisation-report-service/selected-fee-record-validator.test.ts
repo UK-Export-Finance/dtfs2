@@ -12,7 +12,7 @@ import {
 import { FeeRecordRepo } from '../../../repositories/fee-record-repo';
 import {
   validateSelectedFeeRecordsAllHaveSamePaymentCurrency,
-  validateThatAllSelectedFeeRecordsWithPaymentsFormACompletePaymentGroup,
+  validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup,
 } from './selected-fee-record-validator';
 import { InvalidPayloadError } from '../../../errors';
 
@@ -57,7 +57,7 @@ describe('selected fee record validator', () => {
     }
   });
 
-  describe('validateThatAllSelectedFeeRecordsWithPaymentsFormACompletePaymentGroup', () => {
+  describe('validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup', () => {
     const feeRecordFindBySpy = jest.spyOn(FeeRecordRepo, 'findByIdWithPaymentsAndFeeRecords');
 
     afterEach(() => {
@@ -75,7 +75,7 @@ describe('selected fee record validator', () => {
         const requestedFeeRecordIds = [1];
 
         // Act + Assert
-        await expect(validateThatAllSelectedFeeRecordsWithPaymentsFormACompletePaymentGroup(requestedFeeRecordIds)).resolves.not.toThrow();
+        await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(requestedFeeRecordIds)).resolves.not.toThrow();
       });
     });
 
@@ -93,7 +93,7 @@ describe('selected fee record validator', () => {
           const requestedFeeRecordIds = [1, 2];
 
           // Act + Assert
-          await expect(validateThatAllSelectedFeeRecordsWithPaymentsFormACompletePaymentGroup(requestedFeeRecordIds)).resolves.not.toThrow();
+          await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(requestedFeeRecordIds)).resolves.not.toThrow();
         });
       });
 
@@ -110,7 +110,7 @@ describe('selected fee record validator', () => {
           const requestedFeeRecordIds = [1, 2];
 
           // Act + Assert
-          await expect(validateThatAllSelectedFeeRecordsWithPaymentsFormACompletePaymentGroup(requestedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
+          await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(requestedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
         });
       });
 
@@ -127,7 +127,7 @@ describe('selected fee record validator', () => {
           const requestedFeeRecordIds = [1, 2];
 
           // Act + Assert
-          await expect(validateThatAllSelectedFeeRecordsWithPaymentsFormACompletePaymentGroup(requestedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
+          await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(requestedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
         });
       });
 
@@ -144,7 +144,7 @@ describe('selected fee record validator', () => {
           const requestedFeeRecordIds = [1, 2];
 
           // Act + Assert
-          await expect(validateThatAllSelectedFeeRecordsWithPaymentsFormACompletePaymentGroup(requestedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
+          await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(requestedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
         });
       });
     });

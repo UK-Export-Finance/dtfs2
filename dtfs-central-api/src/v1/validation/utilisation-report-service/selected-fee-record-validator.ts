@@ -18,7 +18,7 @@ export const validateSelectedFeeRecordsAllHaveSamePaymentCurrency = (selectedFee
  * this existing payment group.
  * @param feeRecordIds - The fee record IDs
  */
-export const validateThatAllSelectedFeeRecordsWithPaymentsFormACompletePaymentGroup = async (feeRecordIds: number[]) => {
+export const validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup = async (feeRecordIds: number[]) => {
   const selectedFeeRecords = await FeeRecordRepo.findByIdWithPaymentsAndFeeRecords(feeRecordIds);
 
   const firstFeeRecord = selectedFeeRecords[0];
