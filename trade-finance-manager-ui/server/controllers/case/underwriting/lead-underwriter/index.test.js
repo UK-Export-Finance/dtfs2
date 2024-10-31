@@ -47,6 +47,8 @@ const MOCK_DEAL = {
 const dealId = MOCK_DEAL._id;
 const mockToken = 'mockToken';
 
+console.error = jest.fn();
+
 describe('GET underwriting - lead underwriter', () => {
   const userCanEdit = userIsInTeam(session.user, [TEAM_IDS.UNDERWRITER_MANAGERS, TEAM_IDS.UNDERWRITERS]);
 
@@ -224,6 +226,7 @@ describe('POST underwriting - assign lead underwriter', () => {
 
     await underwriterLeadUnderwriterController.postAssignLeadUnderwriter(req, res);
 
+    expect(console.error).toHaveBeenCalledWith('Error while assigning lead underwriter to deal %s %o', dealId, req?.body);
     expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
   });
 
