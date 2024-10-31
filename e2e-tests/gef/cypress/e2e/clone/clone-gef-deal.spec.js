@@ -132,34 +132,23 @@ context('Clone GEF (AIN) deal', () => {
     it('should clone submitted to UKEF AIN deal and reset issueDate on facilities table to -', () => {
       cy.login(BANK1_CHECKER1);
       cy.visit(relative(`/gef/application-details/${AINdealId}`));
-      console.log(1);
       cy.clickSubmitButton();
-      console.log(2);
       submitToUkef.confirmSubmissionCheckbox().click();
-      console.log(3);
       cy.clickSubmitButton();
-      console.log(4);
+
       cy.login(BANK1_MAKER1);
-      console.log(5);
 
       cy.get(`[data-cy="deal__link--${AINdealId}"]`).click();
 
-      console.log(6);
       cloneGEFDeal.cloneGefDealLink().click();
-      console.log(7);
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone`));
-      console.log(8);
       mandatoryCriteria.trueRadio().click();
-      console.log(9);
       form().submit();
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone/name-application`));
-      console.log(10);
       cy.keyboardInput(nameApplication.internalRef(), 'Cloned AIN deal');
-      console.log(11);
       form().submit();
 
       cy.get('[data-cy="success-message-link"]').click();
-      console.log(12);
 
       applicationDetails
         .facilitySummaryListTable(0)
