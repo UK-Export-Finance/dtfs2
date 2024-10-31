@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { EntityManager } from 'typeorm';
-import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { FeeRecordEntityMockBuilder, REQUEST_PLATFORM_TYPE, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { removeFeesFromPaymentGroup } from './helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
@@ -70,7 +70,7 @@ describe('post-remove-fees-from-payment.controller helpers', () => {
           feeRecordsToRemove,
           otherFeeRecordsInGroup,
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId: tfmUserId,
           },
         },

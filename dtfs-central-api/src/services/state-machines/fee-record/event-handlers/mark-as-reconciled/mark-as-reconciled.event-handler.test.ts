@@ -5,6 +5,7 @@ import {
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   FeeRecordStatus,
+  REQUEST_PLATFORM_TYPE,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { handleFeeRecordMarkAsReconciledEvent } from './mark-as-reconciled.event-handler';
@@ -19,7 +20,7 @@ describe('handleFeeRecordMarkAsReconciledEvent', () => {
 
   const userId = 'abc123';
   const requestSource: DbRequestSource = {
-    platform: 'TFM',
+    platform: REQUEST_PLATFORM_TYPE.TFM,
     userId,
   };
 
