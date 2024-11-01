@@ -3,7 +3,7 @@ import {
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
   SelectedFeeRecordsDetails,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UTILISATION_REPORT_STATUS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
@@ -60,7 +60,7 @@ describe('get selected fee records details controller', () => {
   it('responds with a 400 when the requested fee records have differing payment currencies', async () => {
     // Arrange
     const { req, res } = getHttpMocks([1, 2]);
-    const reportEntity = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
+    const reportEntity = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).build();
     const feeRecordWithPaymentCurrencyPounds = FeeRecordEntityMockBuilder.forReport(reportEntity).withId(1).withPaymentCurrency('GBP').build();
     const feeRecordWithPaymentCurrencyEuros = FeeRecordEntityMockBuilder.forReport(reportEntity).withId(2).withPaymentCurrency('EUR').build();
     reportEntity.feeRecords = [feeRecordWithPaymentCurrencyPounds, feeRecordWithPaymentCurrencyEuros];
@@ -89,7 +89,7 @@ describe('get selected fee records details controller', () => {
   it('responds with a 400 when any fee record id does not have a corresponding fee record attached to report', async () => {
     // Arrange
     const { req, res } = getHttpMocks([1, 2]);
-    const reportEntity = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
+    const reportEntity = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).build();
     const feeRecord = FeeRecordEntityMockBuilder.forReport(reportEntity).withId(1).withPaymentCurrency('GBP').build();
     reportEntity.feeRecords = [feeRecord];
     findReportSpy.mockResolvedValue(reportEntity);
@@ -106,7 +106,7 @@ describe('get selected fee records details controller', () => {
     // Arrange
     const { req, res } = getHttpMocks([1, 2]);
     const reportPeriod = aReportPeriod();
-    const reportEntity = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+    const reportEntity = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION)
       .withBankId('999')
       .withReportPeriod(reportPeriod)
       .build();

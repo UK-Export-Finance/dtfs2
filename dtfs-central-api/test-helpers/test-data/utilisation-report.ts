@@ -1,4 +1,4 @@
-import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { UTILISATION_REPORT_STATUS, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 
 /**
  * Test helper which returns a utilisation report entity.
@@ -9,4 +9,4 @@ import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntity, Util
  * @returns a utilisation report entity
  */
 export const aUtilisationReport = (): UtilisationReportEntity =>
-  UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).build();
+  UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).build();

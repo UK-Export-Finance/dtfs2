@@ -13,7 +13,7 @@ import {
   PaymentEntityMockBuilder,
   ReportPeriod,
   TfmFacility,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UTILISATION_REPORT_STATUS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
   UtilisationReportReconciliationStatus,
@@ -41,15 +41,12 @@ describe(`POST ${BASE_URL}`, () => {
   const tfmUserId = tfmUser._id.toString();
 
   const anUploadedReconciliationInProgressUtilisationReport = () =>
-    UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+    UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS)
       .withId(reportId)
       .withUploadedByUserId(portalUserId)
       .build();
   const anUploadedPendingReconciliationUtilisationReport = () =>
-    UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
-      .withId(reportId)
-      .withUploadedByUserId(portalUserId)
-      .build();
+    UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).withId(reportId).withUploadedByUserId(portalUserId).build();
 
   const aValidRequestBody = () => ({
     user: {
@@ -191,7 +188,7 @@ describe(`POST ${BASE_URL}`, () => {
 
     // Assert
     const updatedReport = await SqlDbHelper.manager.findOneByOrFail(UtilisationReportEntity, { id: reportId });
-    expect(updatedReport.status).toBe<UtilisationReportReconciliationStatus>(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS);
+    expect(updatedReport.status).toBe<UtilisationReportReconciliationStatus>(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS);
   });
 
   it('updates the utilisation report audit fields', async () => {
@@ -373,7 +370,7 @@ describe(`POST ${BASE_URL}`, () => {
     const tfmFacilitiesCollection = await mongoDbClient.getCollection('tfm-facilities');
     await tfmFacilitiesCollection.insertOne(tfmFacility);
 
-    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS)
       .withId(reportId)
       .withReportPeriod(reportPeriod)
       .build();
@@ -430,7 +427,7 @@ describe(`POST ${BASE_URL}`, () => {
     const tfmFacilitiesCollection = await mongoDbClient.getCollection('tfm-facilities');
     await tfmFacilitiesCollection.insertOne(tfmFacility);
 
-    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).withId(reportId).build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).withId(reportId).build();
 
     const utilisationData = FacilityUtilisationDataEntityMockBuilder.forId(facilityId).withUtilisation(100).build();
     const feeRecords = [

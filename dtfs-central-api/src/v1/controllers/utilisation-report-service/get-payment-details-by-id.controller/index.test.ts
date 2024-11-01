@@ -5,7 +5,7 @@ import {
   FeeRecordEntityMockBuilder,
   PaymentEntity,
   PaymentEntityMockBuilder,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UTILISATION_REPORT_STATUS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { getPaymentDetailsById, GetPaymentDetailsResponseBody } from '.';
@@ -28,7 +28,7 @@ describe('get-payment-details-by-id.controller', () => {
       });
 
     const aPaymentWithFeeRecordsAndReportAttached = (): PaymentEntity => {
-      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS)
         .withId(Number(reportId))
         .withBankId(bankId)
         .build();

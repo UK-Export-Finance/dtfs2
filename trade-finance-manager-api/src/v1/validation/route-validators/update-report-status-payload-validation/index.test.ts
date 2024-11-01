@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { validationResult } from 'express-validator';
 import { createRequest } from 'node-mocks-http';
-import { ReportWithStatus, UtilisationReportReconciliationStatus, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
+import { ReportWithStatus, UtilisationReportReconciliationStatus, UTILISATION_REPORT_STATUS } from '@ukef/dtfs2-common';
 import { updateReportStatusPayloadValidation } from '.';
 import { TfmSessionUser } from '../../../../types/tfm-session-user';
 import { UpdateUtilisationReportStatusRequestBody } from '../../../controllers/utilisation-reports/update-utilisation-report-status.controller';
@@ -19,7 +19,7 @@ describe('updateReportStatusPayloadValidation', () => {
     user: opts.user ?? MOCK_TFM_SESSION_USER,
     reportsWithStatus: opts.reportsWithStatus ?? [
       {
-        status: opts.status ?? UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+        status: opts.status ?? UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION,
         reportId: opts.reportId ?? 123,
       },
     ],
@@ -34,7 +34,7 @@ describe('updateReportStatusPayloadValidation', () => {
     // Arrange
     const reportsWithStatus = [
       {
-        status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+        status: UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION,
       },
     ];
     // @ts-expect-error `reportsWithStatus` is purposefully missing `reportId`
@@ -107,19 +107,19 @@ describe('updateReportStatusPayloadValidation', () => {
   });
 
   describe('for a valid payload', () => {
-    it.each([
-      { status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED },
-      { status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION },
-    ])('returns no errors when the status is $status', async ({ status }) => {
-      // Arrange
-      const body = getValidPayloadBody({ status });
-      const req = createRequest({ body });
+    it.each([{ status: UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED }, { status: UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION }])(
+      'returns no errors when the status is $status',
+      async ({ status }) => {
+        // Arrange
+        const body = getValidPayloadBody({ status });
+        const req = createRequest({ body });
 
-      // Act
-      const errors = await getUpdateReportStatusPayloadValidationResult(req);
+        // Act
+        const errors = await getUpdateReportStatusPayloadValidationResult(req);
 
-      // Assert
-      expect(errors.length).toEqual(0);
-    });
+        // Assert
+        expect(errors.length).toEqual(0);
+      },
+    );
   });
 });

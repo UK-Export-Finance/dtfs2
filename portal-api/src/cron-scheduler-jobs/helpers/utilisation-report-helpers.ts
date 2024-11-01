@@ -6,7 +6,7 @@ import {
   getCurrentReportPeriodForBankSchedule,
   getOneIndexedMonth,
   getFormattedReportPeriodWithLongMonth,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UTILISATION_REPORT_STATUS,
 } from '@ukef/dtfs2-common';
 import externalApi from '../../external-api/api';
 import api from '../../v1/api';
@@ -64,7 +64,7 @@ export const getIsReportDue = async (bankId: string, reportPeriod: ReportPeriod)
     );
   }
 
-  return reportsInReportPeriod[0].status === UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED;
+  return reportsInReportPeriod[0].status === UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED;
 };
 
 /**

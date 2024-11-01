@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, REQUEST_PLATFORM_TYPE, ReportWithStatus, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
+import { DbRequestSource, REQUEST_PLATFORM_TYPE, ReportWithStatus, UTILISATION_REPORT_STATUS } from '@ukef/dtfs2-common';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { ApiError, InvalidPayloadError } from '../../../../errors';
@@ -43,7 +43,7 @@ const executeEventHandler = async (
 ): Promise<void> => {
   const stateMachine = await UtilisationReportStateMachine.forReportId(reportWithStatus.reportId);
 
-  if (reportWithStatus.status === UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED) {
+  if (reportWithStatus.status === UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED) {
     await stateMachine.handleEvent({
       type: 'MANUALLY_SET_COMPLETED',
       payload: {

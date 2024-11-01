@@ -5,15 +5,13 @@ import {
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   REQUEST_PLATFORM_TYPE,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UTILISATION_REPORT_STATUS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { handleFeeRecordMarkAsReadyToKeyEvent } from './mark-as-ready-to-key.event-handler';
 
 describe('handleFeeRecordMarkAsReadyToKeyEvent', () => {
-  const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus(
-    UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS,
-  ).build();
+  const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).build();
 
   const reconciledFeeRecordBuilder = () =>
     FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT)

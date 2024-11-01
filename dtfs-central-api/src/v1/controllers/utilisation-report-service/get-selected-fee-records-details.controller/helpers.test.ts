@@ -5,7 +5,7 @@ import {
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
   SelectedFeeRecordsPaymentDetails,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UTILISATION_REPORT_STATUS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { getBankNameById } from '../../../../repositories/banks-repo';
@@ -77,7 +77,7 @@ describe('get selected fee record details controller helpers', () => {
       // Arrange
       const bankId = '123';
       const feeRecord = FeeRecordEntityMockBuilder.forReport(
-        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build(),
+        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).build(),
       )
         .withExporter('Test company')
         .withFacilityId('00012345')
@@ -94,7 +94,7 @@ describe('get selected fee record details controller helpers', () => {
       // Arrange
       const bankId = '123';
       const feeRecord = FeeRecordEntityMockBuilder.forReport(
-        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build(),
+        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).build(),
       )
         .withFeesPaidToUkefForThePeriod(200)
         .withFeesPaidToUkefForThePeriodCurrency('USD')
@@ -111,7 +111,7 @@ describe('get selected fee record details controller helpers', () => {
       // Arrange
       const bankId = '123';
       const feeRecord = FeeRecordEntityMockBuilder.forReport(
-        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build(),
+        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).build(),
       )
         .withFeesPaidToUkefForThePeriod(2200)
         .withFeesPaidToUkefForThePeriodCurrency('EUR')
@@ -130,7 +130,7 @@ describe('get selected fee record details controller helpers', () => {
       // Arrange
       const bankId = '123';
       const feeRecord = FeeRecordEntityMockBuilder.forReport(
-        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build(),
+        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).build(),
       )
         .withFeesPaidToUkefForThePeriod(2200)
         .withFeesPaidToUkefForThePeriodCurrency('EUR')
@@ -145,7 +145,7 @@ describe('get selected fee record details controller helpers', () => {
     it('maps fee record payments removing any duplicates', async () => {
       // Arrange
       const bankId = '123';
-      const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
+      const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).build();
       const firstPaymentEntity = PaymentEntityMockBuilder.forCurrency('GBP')
         .withDateReceived(new Date('2022-01-01'))
         .withAmount(100)
@@ -184,7 +184,7 @@ describe('get selected fee record details controller helpers', () => {
     it('sets payments to empty array when fee records have no attached payments', async () => {
       // Arrange
       const bankId = '123';
-      const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
+      const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).build();
       const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('GBP').withPayments([]).build();
       const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('GBP').withPayments([]).build();
 
@@ -204,7 +204,7 @@ describe('get selected fee record details controller helpers', () => {
     it('calculates total reported payments in payment currency by adding up reported payments of all fee records', async () => {
       // Arrange
       const bankId = '123';
-      const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
+      const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).build();
       const feeRecordWithDifferingCurrencies = FeeRecordEntityMockBuilder.forReport(aUtilisationReport)
         .withFeesPaidToUkefForThePeriod(2200)
         .withFeesPaidToUkefForThePeriodCurrency('EUR')
@@ -280,14 +280,14 @@ describe('get selected fee record details controller helpers', () => {
       const thirdPaymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(75).withId(3).withReference('Third payment').build();
 
       const firstFeeRecordEntity = FeeRecordEntityMockBuilder.forReport(
-        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build(),
+        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).build(),
       )
         .withId(1)
         .withPayments([firstPaymentEntity, secondPaymentEntity])
         .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
         .build();
       const secondFeeRecordEntity = FeeRecordEntityMockBuilder.forReport(
-        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build(),
+        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).build(),
       )
         .withId(2)
         .withPayments([thirdPaymentEntity])
@@ -358,7 +358,7 @@ describe('get selected fee record details controller helpers', () => {
     it('returns false when matching payment exists but fee record status is not TO_DO', async () => {
       // Arrange
       const existsUnmatchedPaymentSpy = jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(true);
-      const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).build();
+      const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).build();
       const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('USD').withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
 
       // Act
@@ -383,7 +383,7 @@ describe('get selected fee record details controller helpers', () => {
   });
 
   function aFeeRecordWithStatusToDo(): FeeRecordEntity {
-    const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).build();
+    const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).build();
     return FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('GBP').withStatus(FEE_RECORD_STATUS.TO_DO).build();
   }
 });

@@ -1,5 +1,5 @@
 import httpMocks from 'node-mocks-http';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
+import { UTILISATION_REPORT_STATUS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { getFindReportsByYear } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
@@ -326,7 +326,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
           id: bankQuery,
           name: BANK_NAME_ONE,
         },
-        status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+        status: UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION,
         dateUploaded: '2024-02-15 10:38:01.4033333',
         totalFeesReported: 3,
         reportedFeesLeftToReconcile: 3,
@@ -336,7 +336,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         reportId: '1',
         reportPeriod,
         bank: { id: bankQuery, name: BANK_NAME_ONE },
-        status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+        status: UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION,
         dateUploaded: '2024-02-15 10:38:01.4033333',
         totalFeesReported: 3,
         reportedFeesLeftToReconcile: 3,

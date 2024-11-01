@@ -3,7 +3,7 @@ import {
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
   PaymentMatchingToleranceEntityMockBuilder,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UTILISATION_REPORT_STATUS,
   UtilisationReportEntityMockBuilder,
   CURRENCY,
 } from '@ukef/dtfs2-common';
@@ -31,10 +31,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
     ]);
   };
 
-  const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
-    .withId(REPORT_ID)
-    .withBankId(BANK_ID)
-    .build();
+  const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).withId(REPORT_ID).withBankId(BANK_ID).build();
 
   const payment = PaymentEntityMockBuilder.forCurrency(PAYMENT_CURRENCY)
     .withAmount(60)

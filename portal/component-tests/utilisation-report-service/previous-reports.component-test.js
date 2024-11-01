@@ -1,4 +1,4 @@
-const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
+const { UTILISATION_REPORT_STATUS } = require('@ukef/dtfs2-common');
 const pageRenderer = require('../pageRenderer');
 
 const page = 'utilisation-report-service/previous-reports/previous-reports.njk';
@@ -38,28 +38,28 @@ describe(page, () => {
       linkText: 'January 2023',
       month: 'January',
       downloadPath: 'www.abc.com',
-      status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+      status: UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION,
       displayStatus: 'Pending reconciliation',
     },
     {
       linkText: 'February 2023',
       month: 'February',
       downloadPath: 'www.abc.com',
-      status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+      status: UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION,
       displayStatus: 'Pending reconciliation',
     },
     {
       linkText: 'March 2023',
       month: 'March',
       downloadPath: 'www.abc.com',
-      status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS,
+      status: UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS,
       displayStatus: 'Reconciliation in progress',
     },
     {
       linkText: 'May 2023',
       month: 'May',
       downloadPath: 'www.abc.com',
-      status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+      status: UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED,
       displayStatus: 'Report completed',
     },
   ];

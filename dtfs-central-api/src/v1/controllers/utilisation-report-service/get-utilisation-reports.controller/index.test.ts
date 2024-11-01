@@ -5,7 +5,7 @@ import {
   MOCK_AZURE_FILE_INFO,
   PortalUser,
   ReportPeriod,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UTILISATION_REPORT_STATUS,
   UploadedByUserDetails,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
@@ -209,7 +209,7 @@ describe('getUtilisationReports', () => {
 
       jest.mocked(getUserById).mockResolvedValue(mockGetUserByIdResponse);
 
-      const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+      const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION)
         .withAzureFileInfo(azureFileInfo)
         .withDateUploaded(mockDate)
         .withUploadedByUserId(mockUploadedByUser.id)

@@ -1,5 +1,5 @@
 import httpMocks from 'node-mocks-http';
-import { TEAM_IDS, ReportWithStatus, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
+import { TEAM_IDS, ReportWithStatus, UTILISATION_REPORT_STATUS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import * as getUtilisationReportsController from '..';
 import { UpdateUtilisationReportStatusRequest, UpdateUtilisationReportStatusRequestBody, updateUtilisationReportStatus } from '.';
@@ -83,7 +83,7 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
       const apiUpdateUtilisationReportStatusSpy = jest.spyOn(api, 'updateUtilisationReportStatus');
       const expectedReportsWithStatus: ReportWithStatus[] = [
         {
-          status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+          status: UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED,
           reportId: validSqlId,
         },
       ];

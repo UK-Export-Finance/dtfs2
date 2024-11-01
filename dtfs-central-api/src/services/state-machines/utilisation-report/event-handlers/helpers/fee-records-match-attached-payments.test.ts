@@ -4,7 +4,7 @@ import {
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UTILISATION_REPORT_STATUS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { feeRecordsMatchAttachedPayments } from './fee-records-match-attached-payments';
@@ -28,7 +28,7 @@ describe('feeRecordsMatchAttachedPayments', () => {
 
   it('returns true when the payments attached to the fee records have the same total payments', async () => {
     // Arrange
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).build();
     const payments = [PaymentEntityMockBuilder.forCurrency('GBP').withId(1).build(), PaymentEntityMockBuilder.forCurrency('GBP').withId(2).build()];
     const feeRecordsWithoutTheirAttachedPayments = [
       FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withPayments([]).build(),
@@ -54,7 +54,7 @@ describe('feeRecordsMatchAttachedPayments', () => {
 
   it('returns false when the payments attached to the fee records do not have the same total payments', async () => {
     // Arrange
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).build();
     const payments = [PaymentEntityMockBuilder.forCurrency('GBP').withId(1).build(), PaymentEntityMockBuilder.forCurrency('GBP').withId(2).build()];
     const feeRecordsWithoutTheirAttachedPayments = [
       FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withPayments([]).build(),

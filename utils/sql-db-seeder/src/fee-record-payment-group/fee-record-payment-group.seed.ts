@@ -8,7 +8,7 @@ import {
   toIsoMonthStamp,
   FEE_RECORD_STATUS,
   CURRENCY,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UTILISATION_REPORT_STATUS,
 } from '@ukef/dtfs2-common';
 import { subMonths } from 'date-fns';
 import { FeeRecordPaymentGroupSeeder } from './fee-record-payment-group.seeder';
@@ -43,12 +43,12 @@ const getPrecedingReportPeriod = (reportingSchedule: BankReportPeriodSchedule, r
  */
 export const seedFeeRecordPaymentGroups = async (dataSource: DataSource) => {
   const manuallyCompletedReport = await dataSource.manager.findOneByOrFail(UtilisationReportEntity, {
-    status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+    status: UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED,
   });
   await FeeRecordPaymentGroupSeeder.forManuallyCompletedReport(manuallyCompletedReport).addManyRandomFeeRecords(50).save(dataSource);
 
   const pendingReconciliationReport = await dataSource.manager.findOneByOrFail(UtilisationReportEntity, {
-    status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+    status: UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION,
   });
   const pendingReconciliationBank = await MongoDbDataLoader.getBankByIdOrFail(pendingReconciliationReport.bankId);
   const pendingReconciliationPreviousReportPeriod = getPrecedingReportPeriod(
@@ -61,7 +61,7 @@ export const seedFeeRecordPaymentGroups = async (dataSource: DataSource) => {
     .save(dataSource);
 
   const reconciliationInProgressReport = await dataSource.manager.findOneByOrFail(UtilisationReportEntity, {
-    status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS,
+    status: UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS,
   });
   const reconciliationInProgressBank = await MongoDbDataLoader.getBankByIdOrFail(reconciliationInProgressReport.bankId);
   const reconciliationInProgressPreviousReportPeriod = getPrecedingReportPeriod(

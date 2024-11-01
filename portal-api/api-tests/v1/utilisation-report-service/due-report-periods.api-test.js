@@ -1,4 +1,4 @@
-const { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } = require('@ukef/dtfs2-common');
+const { UTILISATION_REPORT_STATUS, UtilisationReportEntityMockBuilder } = require('@ukef/dtfs2-common');
 const { SqlDbHelper } = require('../../sql-db-helper.ts');
 const app = require('../../../src/createApp');
 const { as, get } = require('../../api')(app);
@@ -25,7 +25,7 @@ describe('GET /v1/banks/:bankId/due-report-periods', () => {
     const { bank } = aPaymentReportOfficer;
     const month = 11;
     const year = 2022;
-    mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+    mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED)
       .withReportPeriod({
         start: {
           month,

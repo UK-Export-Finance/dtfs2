@@ -3,7 +3,7 @@ import {
   DbRequestSource,
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UTILISATION_REPORT_STATUS,
   REQUEST_PLATFORM_TYPE,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
@@ -43,7 +43,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
   beforeEach(() => {
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockReturnValue(aMockFeeRecordStateMachine(aMockEventHandler()));
     mockFindOneOrFail.mockResolvedValue(
-      UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).withFeeRecords([]).build(),
+      UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).withFeeRecords([]).build(),
     );
     sendEmailSpy = jest.fn(() => Promise.resolve({}));
     externalApi.sendEmail = sendEmailSpy;
@@ -56,7 +56,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
 
   describe('when every fee record has to be reconciled', () => {
     // Arrange
-    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).build();
     const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
     const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
 
@@ -118,13 +118,11 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
 
   describe('when all fee records are reconciled', () => {
     // Arrange
-    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).build();
     const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
     const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
 
-    const reportWithUpdatedFeeRecords = UtilisationReportEntityMockBuilder.forStatus(
-      UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS,
-    ).build();
+    const reportWithUpdatedFeeRecords = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).build();
     const feeRecordOneUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
     const feeRecordTwoUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
     const feeRecordThreeUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
@@ -142,13 +140,13 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
       });
     });
 
-    it(`should set the report status to ${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED}`, () => {
+    it(`should set the report status to ${UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED}`, () => {
       // Assert
       expect(mockFindOneOrFail).toHaveBeenCalledWith(UtilisationReportEntity, { where: { id: report.id }, relations: { feeRecords: true } });
       expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
       expect(report).toEqual(
         expect.objectContaining<Partial<UtilisationReportEntity>>({
-          status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+          status: UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED,
           lastUpdatedByTfmUserId: requestSource.userId,
           lastUpdatedByPortalUserId: null,
           lastUpdatedByIsSystemUser: false,
@@ -164,13 +162,11 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
 
   describe('when only some fee records are reconciled', () => {
     // Arrange
-    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).build();
     const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
     const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
 
-    const reportWithUpdatedFeeRecords = UtilisationReportEntityMockBuilder.forStatus(
-      UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS,
-    ).build();
+    const reportWithUpdatedFeeRecords = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).build();
     const feeRecordOneUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
     const feeRecordTwoUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
     const feeRecordThreeUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
@@ -188,13 +184,13 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
       });
     });
 
-    it(`should not set report status to ${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED} if not all fee records are now reconciled`, () => {
+    it(`should not set report status to ${UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED} if not all fee records are now reconciled`, () => {
       // Assert
       expect(mockFindOneOrFail).toHaveBeenCalledWith(UtilisationReportEntity, { where: { id: report.id }, relations: { feeRecords: true } });
       expect(mockSave).not.toHaveBeenCalled();
       expect(report).toEqual(
         expect.objectContaining<Partial<UtilisationReportEntity>>({
-          status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS,
+          status: UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS,
         }),
       );
     });

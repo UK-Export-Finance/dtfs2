@@ -1,4 +1,4 @@
-import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { UTILISATION_REPORT_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
 import { aTfmSessionUser } from '../../../test-helpers';
 import { SqlDbHelper } from '../../sql-db-helper';
@@ -9,7 +9,7 @@ const BASE_URL = '/v1/utilisation-reports/set-status';
 
 describe(`PUT ${BASE_URL}`, () => {
   const reportId = 1;
-  const mockReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).withId(reportId).build();
+  const mockReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).withId(reportId).build();
 
   beforeAll(async () => {
     await SqlDbHelper.initialize();
@@ -18,7 +18,7 @@ describe(`PUT ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', mockReport);
   });
 
-  it(`should return a 404 error when trying to set a non-existent report to '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED}'`, async () => {
+  it(`should return a 404 error when trying to set a non-existent report to '${UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED}'`, async () => {
     // Arrange
     const invalidReportId = reportId + 1;
     const requestBody = {
@@ -26,7 +26,7 @@ describe(`PUT ${BASE_URL}`, () => {
       reportsWithStatus: [
         {
           reportId: invalidReportId,
-          status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+          status: UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED,
         },
       ],
     };
@@ -45,7 +45,7 @@ describe(`PUT ${BASE_URL}`, () => {
       reportsWithStatus: [
         {
           // reportId: missing
-          status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+          status: UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED,
         },
       ],
     };
@@ -83,7 +83,7 @@ describe(`PUT ${BASE_URL}`, () => {
       reportsWithStatus: [
         {
           reportId,
-          status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+          status: UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED,
         },
       ],
     };

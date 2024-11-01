@@ -1,4 +1,4 @@
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
+import { UTILISATION_REPORT_STATUS } from '@ukef/dtfs2-common';
 import app from '../../../src/createApp';
 import { createApi } from '../../api';
 import { initialiseTestUsers } from '../../api-test-users';
@@ -73,7 +73,7 @@ describe('/v1/utilisation-reports/set-status', () => {
       user: tokenUser,
       reportsWithStatus: [
         {
-          status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+          status: UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED,
         },
       ],
     };
@@ -91,7 +91,7 @@ describe('/v1/utilisation-reports/set-status', () => {
       user: tokenUser,
       reportsWithStatus: [
         {
-          status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+          status: UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION,
           reportId: '1',
         },
       ],

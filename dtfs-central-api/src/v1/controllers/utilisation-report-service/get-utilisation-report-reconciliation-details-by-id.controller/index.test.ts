@@ -1,7 +1,7 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
-import { TestApiError, UtilisationReportEntityMockBuilder, PremiumPaymentsFilters, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
+import { TestApiError, UtilisationReportEntityMockBuilder, PremiumPaymentsFilters, UTILISATION_REPORT_STATUS } from '@ukef/dtfs2-common';
 import { GetUtilisationReportReconciliationDetailsByIdRequest, getUtilisationReportReconciliationDetailsById } from '.';
 import { getUtilisationReportReconciliationDetails } from './helpers';
 import { UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
@@ -79,9 +79,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
-        .withId(reportId)
-        .build();
+      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).withId(reportId).build();
       when(utilisationReportRepoFindSpy).calledWith(reportId).mockResolvedValue(utilisationReport);
 
       const reportDetails = aUtilisationReportReconciliationDetails();
@@ -111,9 +109,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       };
       const { req, res } = getHttpMocks(premiumPaymentsFilters);
 
-      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
-        .withId(reportId)
-        .build();
+      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).withId(reportId).build();
       when(utilisationReportRepoFindSpy).calledWith(reportId).mockResolvedValue(utilisationReport);
 
       const reportDetails = aUtilisationReportReconciliationDetails();
@@ -145,7 +141,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
           id: '123',
           name: 'bank',
         },
-        status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+        status: UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION,
         reportPeriod: aReportPeriod(),
         dateUploaded: new Date(),
         premiumPayments: [],

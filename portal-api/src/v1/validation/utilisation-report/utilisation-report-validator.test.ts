@@ -1,4 +1,4 @@
-import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
+import { UTILISATION_REPORT_STATUS, UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
 import { difference } from 'lodash';
 import { InvalidReportStatusError } from '../../errors';
 import { validateReportIsInReportNotReceivedState } from './utilisation-report-validator';
@@ -6,7 +6,7 @@ import { aNotReceivedUtilisationReportResponse, aUtilisationReportResponse } fro
 
 describe('utilisation report validator', () => {
   describe('validateReportIsInReportNotReceivedState', () => {
-    it.each(difference(Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS), [UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED]))(
+    it.each(difference(Object.values(UTILISATION_REPORT_STATUS), [UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED]))(
       'throws InvalidReportStatusError if report has status %s',
       (status: UtilisationReportReconciliationStatus) => {
         // Arrange

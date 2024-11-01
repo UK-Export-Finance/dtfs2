@@ -1,4 +1,4 @@
-const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
+const { UTILISATION_REPORT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 
 /**
@@ -9,9 +9,7 @@ const getDueReportPeriodsByBankId = async (req, res) => {
   try {
     const { bankId } = req.params;
 
-    const notReceivedReports = (await api.getUtilisationReports(bankId)).filter(
-      (report) => report.status === UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
-    );
+    const notReceivedReports = (await api.getUtilisationReports(bankId)).filter((report) => report.status === UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED);
     const dueReportPeriods = notReceivedReports.map((notReceivedReport) => notReceivedReport.reportPeriod);
 
     return res.status(200).send(dueReportPeriods);

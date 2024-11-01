@@ -1,8 +1,4 @@
-import {
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
-  UtilisationReportEntityMockBuilder,
-  getPreviousReportPeriodForBankScheduleByMonth,
-} from '@ukef/dtfs2-common';
+import { UTILISATION_REPORT_STATUS, UtilisationReportEntityMockBuilder, getPreviousReportPeriodForBankScheduleByMonth } from '@ukef/dtfs2-common';
 import { getPreviousReportPeriod } from './get-previous-report-period';
 import { getBankById } from '../repositories/banks-repo';
 import { NotFoundError } from '../errors';
@@ -15,7 +11,7 @@ describe('getPreviousReportPeriod', () => {
     jest.resetAllMocks();
   });
 
-  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
+  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).build();
 
   const mockGetBankByIdResponse = aBank();
   const bankId = '1234';
@@ -48,7 +44,7 @@ describe('getPreviousReportPeriod', () => {
 
     it('should return the result of getPreviousReportPeriodForBankScheduleByMonth', async () => {
       const reportPeriod = { start: { month: 2, year: 2024 }, end: { month: 4, year: 2024 } };
-      const utilisationReportSingleDigitMonth = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+      const utilisationReportSingleDigitMonth = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION)
         .withReportPeriod(reportPeriod)
         .build();
       const response = await getPreviousReportPeriod(bankId, utilisationReportSingleDigitMonth);
@@ -66,7 +62,7 @@ describe('getPreviousReportPeriod', () => {
 
     it('should return the result of getPreviousReportPeriodForBankScheduleByMonth', async () => {
       const reportPeriod = { start: { month: 10, year: 2024 }, end: { month: 4, year: 2024 } };
-      const utilisationReportTwoDigitMonth = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+      const utilisationReportTwoDigitMonth = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION)
         .withReportPeriod(reportPeriod)
         .build();
       const response = await getPreviousReportPeriod(bankId, utilisationReportTwoDigitMonth);
@@ -84,7 +80,7 @@ describe('getPreviousReportPeriod', () => {
 
     it('should return the result of getPreviousReportPeriodForBankScheduleByMonth', async () => {
       const reportPeriod = { start: { month: 0o3, year: 2024 }, end: { month: 4, year: 2024 } };
-      const utilisationReportZeroStartMonth = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+      const utilisationReportZeroStartMonth = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION)
         .withReportPeriod(reportPeriod)
         .build();
       const response = await getPreviousReportPeriod(bankId, utilisationReportZeroStartMonth);

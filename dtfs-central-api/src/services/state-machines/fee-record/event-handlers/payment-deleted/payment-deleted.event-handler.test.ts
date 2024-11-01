@@ -3,14 +3,14 @@ import {
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
   REQUEST_PLATFORM_TYPE,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UTILISATION_REPORT_STATUS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { handleFeeRecordPaymentDeletedEvent } from './payment-deleted.event-handler';
 import { aDbRequestSource } from '../../../../../../test-helpers';
 
 describe('handleFeeRecordPaymentDeletedEvent', () => {
-  const PENDING_RECONCILIATION_REPORT = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
+  const PENDING_RECONCILIATION_REPORT = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).build();
 
   const mockSave = jest.fn();
   const mockEntityManager = {

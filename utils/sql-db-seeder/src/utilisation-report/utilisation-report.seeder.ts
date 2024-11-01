@@ -3,7 +3,7 @@ import {
   AzureFileInfoEntity,
   MOCK_AZURE_FILE_INFO,
   ReportPeriod,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UTILISATION_REPORT_STATUS,
   REQUEST_PLATFORM_TYPE,
   UtilisationReportEntity,
   UtilisationReportReconciliationStatus,
@@ -44,7 +44,7 @@ export class UtilisationReportSeeder {
     report.reportPeriod = this.reportPeriod;
     report.updateLastUpdatedBy({ platform: REQUEST_PLATFORM_TYPE.SYSTEM });
 
-    if (status === UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED) {
+    if (status === UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED) {
       await dataSource.manager.save(UtilisationReportEntity, report);
       return;
     }

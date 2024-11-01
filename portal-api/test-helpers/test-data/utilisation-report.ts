@@ -1,4 +1,4 @@
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
+import { UTILISATION_REPORT_STATUS } from '@ukef/dtfs2-common';
 import { UtilisationReportResponseBody } from '../../src/v1/api-response-types';
 
 export const aUtilisationReportResponse = (): UtilisationReportResponseBody => ({
@@ -27,7 +27,7 @@ export const aUtilisationReportResponse = (): UtilisationReportResponseBody => (
     firstname: 'first',
     surname: 'last',
   },
-  status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+  status: UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED,
 });
 
 export const aNotReceivedUtilisationReportResponse = (): UtilisationReportResponseBody => ({
@@ -44,7 +44,7 @@ export const aNotReceivedUtilisationReportResponse = (): UtilisationReportRespon
     },
   },
   azureFileInfo: null,
-  status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+  status: UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED,
   dateUploaded: null,
   uploadedByUser: null,
 });

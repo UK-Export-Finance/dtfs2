@@ -9,7 +9,7 @@ import {
   PaymentMatchingToleranceEntityMockBuilder,
   SelectedFeeRecordDetails,
   SelectedFeeRecordsDetails,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UTILISATION_REPORT_STATUS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -164,7 +164,7 @@ describe(`GET ${BASE_URL}`, () => {
   });
 
   function aReconciliationInProgressReport() {
-    return UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+    return UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS)
       .withId(reportId)
       .withReportPeriod(reportPeriod)
       .withBankId(bankId)

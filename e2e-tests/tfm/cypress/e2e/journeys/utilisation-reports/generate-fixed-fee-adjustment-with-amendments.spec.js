@@ -1,6 +1,6 @@
 import {
   FeeRecordEntityMockBuilder,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UTILISATION_REPORT_STATUS,
   UtilisationReportEntityMockBuilder,
   FacilityUtilisationDataEntityMockBuilder,
   PaymentEntityMockBuilder,
@@ -25,7 +25,7 @@ context('Fixed fee calculation uses effective amendment to cover end date at rep
   const dateBeforeDateBeforeReportPeriodEnd = new Date('2023-12-01');
   const dateAfterReportPeriodEnd = new Date('2024-03-01');
 
-  const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+  const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS)
     .withId(reportId)
     .withReportPeriod(reportPeriod)
     .withBankId(bankId)

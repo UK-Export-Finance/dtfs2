@@ -6,7 +6,7 @@ import {
   FeeRecordEntityMockBuilder,
   ReportPeriod,
   IsoMonthStamp,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UTILISATION_REPORT_STATUS,
 } from '@ukef/dtfs2-common';
 
 import { UtilisationReportRepo } from '../../../../../repositories/utilisation-reports-repo';
@@ -22,7 +22,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
   const getMockFeeRecordForReport = (report: UtilisationReportEntity): FeeRecordEntity => FeeRecordEntityMockBuilder.forReport(report).build();
 
   const getOpenReportWithReportPeriod = (bank: Bank, reportPeriod: ReportPeriod): UtilisationReportEntity => {
-    const openReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+    const openReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION)
       .withBankId(bank.id)
       .withReportPeriod(reportPeriod)
       .build();
@@ -87,12 +87,12 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
         },
       ];
 
-      const reportOne = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+      const reportOne = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS)
         .withBankId(bankIdOne)
         .withReportPeriod({ start: { month: 12, year: 2023 }, end: { month: 12, year: 2023 } })
         .build();
       reportOne.feeRecords = [getMockFeeRecordForReport(reportOne)];
-      const reportTwo = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+      const reportTwo = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION)
         .withBankId(bankIdTwo)
         .withReportPeriod({ start: { month: 10, year: 2023 }, end: { month: 12, year: 2023 } })
         .build();
@@ -164,7 +164,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
       const banks: Bank[] = [{ ...aBank(), utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule() }];
       const currentSubmissionMonth: IsoMonthStamp = '2023-12';
 
-      const augustPeriodReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+      const augustPeriodReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS)
         .withBankId(banks[0].id)
         .withReportPeriod({
           start: {
@@ -179,7 +179,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
         .build();
       augustPeriodReport.feeRecords = [getMockFeeRecordForReport(augustPeriodReport)];
 
-      const septemberPeriodReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+      const septemberPeriodReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION)
         .withBankId(banks[0].id)
         .withReportPeriod({
           start: {
@@ -194,7 +194,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
         .build();
       septemberPeriodReport.feeRecords = [getMockFeeRecordForReport(septemberPeriodReport)];
 
-      const octoberPeriodReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+      const octoberPeriodReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED)
         .withBankId(banks[0].id)
         .withReportPeriod({
           start: {
@@ -223,7 +223,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
           submissionMonth: '2023-11',
           items: [
             expect.objectContaining<Partial<UtilisationReportReconciliationSummaryItem>>({
-              status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+              status: UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED,
             }),
           ],
         },
@@ -231,7 +231,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
           submissionMonth: '2023-10',
           items: [
             expect.objectContaining<Partial<UtilisationReportReconciliationSummaryItem>>({
-              status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+              status: UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION,
             }),
           ],
         },
@@ -239,7 +239,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
           submissionMonth: '2023-09',
           items: [
             expect.objectContaining<Partial<UtilisationReportReconciliationSummaryItem>>({
-              status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS,
+              status: UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS,
             }),
           ],
         },

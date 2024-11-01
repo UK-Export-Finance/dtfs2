@@ -1,10 +1,4 @@
-import {
-  Currency,
-  FeeRecordEntity,
-  FeeRecordEntityMockBuilder,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
-  UtilisationReportEntityMockBuilder,
-} from '@ukef/dtfs2-common';
+import { Currency, FeeRecordEntity, FeeRecordEntityMockBuilder, UTILISATION_REPORT_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { validateSelectedFeeRecordsAllHaveSamePaymentCurrency } from './selected-fee-record-validator';
 import { InvalidPayloadError } from '../../../errors';
 
@@ -14,7 +8,7 @@ describe('selected fee record validator', () => {
       // Arrange
       const selectedFeeRecords = [
         FeeRecordEntityMockBuilder.forReport(
-          UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).build(),
+          UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).build(),
         ).build(),
       ];
 
@@ -48,9 +42,7 @@ describe('selected fee record validator', () => {
   });
 
   function aFeeRecordWithPaymentCurrency(paymentCurrency: Currency) {
-    return FeeRecordEntityMockBuilder.forReport(
-      UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).build(),
-    )
+    return FeeRecordEntityMockBuilder.forReport(UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).build())
       .withPaymentCurrency(paymentCurrency)
       .build();
   }

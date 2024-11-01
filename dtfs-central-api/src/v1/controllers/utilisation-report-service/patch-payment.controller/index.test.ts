@@ -5,7 +5,7 @@ import {
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
   REQUEST_PLATFORM_TYPE,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UTILISATION_REPORT_STATUS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { patchPayment } from '.';
@@ -30,9 +30,7 @@ describe('patch-payment.controller', () => {
         body: aPatchPaymentRequestBody(),
       });
 
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
-      .withId(reportId)
-      .build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).withId(reportId).build();
 
     const feeRecords = [
       FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build(),

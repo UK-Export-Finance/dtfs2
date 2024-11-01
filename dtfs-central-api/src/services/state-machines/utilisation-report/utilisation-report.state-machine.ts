@@ -1,4 +1,4 @@
-import { UtilisationReportEntity, ReportPeriod, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
+import { UtilisationReportEntity, ReportPeriod, UTILISATION_REPORT_STATUS } from '@ukef/dtfs2-common';
 import { UtilisationReportRepo } from '../../../repositories/utilisation-reports-repo';
 import { InvalidStateMachineTransitionError, NotFoundError } from '../../../errors';
 import {
@@ -98,14 +98,14 @@ export class UtilisationReportStateMachine {
           default:
             return this.handleInvalidTransition(event);
         }
-      case UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED:
+      case UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED:
         switch (event.type) {
           case 'REPORT_UPLOADED':
             return handleUtilisationReportReportUploadedEvent(this.report, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
-      case UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION:
+      case UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION:
         switch (event.type) {
           case 'ADD_A_PAYMENT':
             return handleUtilisationReportAddAPaymentEvent(this.report, event.payload);
@@ -116,7 +116,7 @@ export class UtilisationReportStateMachine {
           default:
             return this.handleInvalidTransition(event);
         }
-      case UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS:
+      case UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS:
         switch (event.type) {
           case 'ADD_A_PAYMENT':
             return handleUtilisationReportAddAPaymentEvent(this.report, event.payload);
@@ -137,7 +137,7 @@ export class UtilisationReportStateMachine {
           default:
             return this.handleInvalidTransition(event);
         }
-      case UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED:
+      case UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED:
         switch (event.type) {
           case 'MANUALLY_SET_INCOMPLETE':
             return handleUtilisationReportManuallySetIncompleteEvent(this.report, event.payload);

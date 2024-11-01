@@ -9,7 +9,7 @@ import {
   FeeRecordStatus,
   PaymentEntity,
   PaymentEntityMockBuilder,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UTILISATION_REPORT_STATUS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -39,8 +39,7 @@ describe(`PATCH ${BASE_URL}`, () => {
 
   const payment = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).build();
 
-  const aReport = () =>
-    UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).withId(reportId).build();
+  const aReport = () => UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).withId(reportId).build();
 
   const feeRecordsForReportWithPayments = (report: UtilisationReportEntity, payments: PaymentEntity[]) => [
     FeeRecordEntityMockBuilder.forReport(report)
@@ -95,7 +94,7 @@ describe(`PATCH ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
-  it.each(difference(Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS), [UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS]))(
+  it.each(difference(Object.values(UTILISATION_REPORT_STATUS), [UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS]))(
     "returns a 400 when the report the payment is attached has the status '%s'",
     async (status) => {
       // Arrange

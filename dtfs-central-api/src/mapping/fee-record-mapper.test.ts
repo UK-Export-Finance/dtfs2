@@ -1,10 +1,4 @@
-import {
-  CURRENCY,
-  Currency,
-  FeeRecordEntityMockBuilder,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
-  UtilisationReportEntityMockBuilder,
-} from '@ukef/dtfs2-common';
+import { CURRENCY, Currency, FeeRecordEntityMockBuilder, UTILISATION_REPORT_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { mapFeeRecordEntityToFeeRecord, mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from './fee-record-mapper';
 import { aUtilisationReport } from '../../test-helpers';
 
@@ -14,7 +8,7 @@ describe('fee record mapper', () => {
       // Arrange
       const currency = CURRENCY.JPY;
       const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(
-        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build(),
+        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).build(),
       )
         .withFeesPaidToUkefForThePeriodCurrency(currency)
         .build();
@@ -29,7 +23,7 @@ describe('fee record mapper', () => {
     it('maps fees paid to ukef for the period to the reported fee amount', () => {
       // Arrange
       const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(
-        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build(),
+        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).build(),
       )
         .withFeesPaidToUkefForThePeriod(123456.78)
         .build();
@@ -46,7 +40,7 @@ describe('fee record mapper', () => {
     it('maps payment currency to reported payment currency', () => {
       // Arrange
       const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(
-        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build(),
+        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).build(),
       )
         .withFeesPaidToUkefForThePeriodCurrency('JPY')
         .withPaymentCurrency('EUR')
@@ -62,7 +56,7 @@ describe('fee record mapper', () => {
     it('maps fees paid to ukef for the period to the reported payment amount when payment currency matches fees paid to ukef for the period currency', () => {
       // Arrange
       const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(
-        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build(),
+        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).build(),
       )
         .withFeesPaidToUkefForThePeriod(123456.78)
         .withFeesPaidToUkefForThePeriodCurrency('JPY')
@@ -79,7 +73,7 @@ describe('fee record mapper', () => {
     it('converts fees paid to ukef for the period to the payment currency and maps to amount when payment currency does not match fees paid to ukef for the period currency', () => {
       // Arrange
       const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(
-        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build(),
+        UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).build(),
       )
         .withFeesPaidToUkefForThePeriod(123.45)
         .withFeesPaidToUkefForThePeriodCurrency('EUR')

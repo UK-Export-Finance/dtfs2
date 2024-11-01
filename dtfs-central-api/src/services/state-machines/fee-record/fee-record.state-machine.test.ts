@@ -5,7 +5,7 @@ import {
   UtilisationReportEntityMockBuilder,
   FEE_RECORD_STATUS,
   FeeRecordStatus,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UTILISATION_REPORT_STATUS,
   REQUEST_PLATFORM_TYPE,
 } from '@ukef/dtfs2-common';
 import { InvalidStateMachineTransitionError } from '../../../errors';
@@ -36,7 +36,7 @@ describe('FeeRecordStateMachine', () => {
     await expect(stateMachine.handleEvent({ type: eventType, payload: null })).rejects.toThrow(InvalidStateMachineTransitionError);
   };
 
-  const UPLOADED_REPORT = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
+  const UPLOADED_REPORT = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).build();
 
   describe(`when the fee record has the '${FEE_RECORD_STATUS.TO_DO}' status`, () => {
     // Arrange

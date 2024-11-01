@@ -1,4 +1,4 @@
-import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { UTILISATION_REPORT_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { SendReportReconciledEmail } from './send-report-reconciled-email';
 import { generateReportReconciledEmailVariables } from './generate-report-reconciled-email-variables';
 import EMAIL_TEMPLATE_IDS from '../../../../../constants/email-template-ids';
@@ -24,7 +24,7 @@ describe('SendReportReconciledEmail', () => {
     jest.resetAllMocks();
   });
 
-  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION).build();
+  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).build();
 
   describe('when getBankById errors', () => {
     beforeEach(() => {

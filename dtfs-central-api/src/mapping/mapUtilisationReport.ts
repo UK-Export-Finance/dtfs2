@@ -1,4 +1,4 @@
-import { AzureFileInfo, AzureFileInfoEntity, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { AzureFileInfo, AzureFileInfoEntity, UTILISATION_REPORT_STATUS, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { GetUtilisationReportResponse } from '../types/utilisation-reports';
 import { getUserById } from '../repositories/users-repo';
 
@@ -35,7 +35,7 @@ export const mapUtilisationReportEntityToGetUtilisationReportResponse = async (
     azureFileInfo: null,
   };
 
-  const isUploadedReport = reportEntity.status !== UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED && reportEntity.azureFileInfo;
+  const isUploadedReport = reportEntity.status !== UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED && reportEntity.azureFileInfo;
   if (!isUploadedReport) {
     return response;
   }

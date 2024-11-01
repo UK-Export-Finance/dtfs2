@@ -1,4 +1,4 @@
-const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
+const { UTILISATION_REPORT_STATUS } = require('@ukef/dtfs2-common');
 const { componentRenderer } = require('../../componentRenderer');
 
 const component = '../templates/utilisation-reports/_macros/report-reconciliation-status.njk';
@@ -13,7 +13,7 @@ describe(component, () => {
 
     // Act
     const wrapper = render({
-      statusCode: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+      statusCode: UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED,
       displayStatus,
     });
 
@@ -22,14 +22,14 @@ describe(component, () => {
   });
 
   it.each([
-    { status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED, expectedColourClass: 'govuk-tag--red' },
-    { status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION, expectedColourClass: undefined },
+    { status: UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED, expectedColourClass: 'govuk-tag--red' },
+    { status: UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION, expectedColourClass: undefined },
     {
-      status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS,
+      status: UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS,
       expectedColourClass: 'govuk-tag--blue',
     },
     {
-      status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+      status: UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED,
       expectedColourClass: 'govuk-tag--green',
     },
   ])("adds colour class '$expectedColourClass' when the status code is '$statusCode'", ({ status, expectedColourClass }) => {

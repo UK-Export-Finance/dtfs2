@@ -6,7 +6,7 @@ import {
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
   ReportPeriod,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UTILISATION_REPORT_STATUS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
@@ -50,7 +50,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   const paymentCurrency: Currency = 'GBP';
 
-  const reconciliationInProgressReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+  const reconciliationInProgressReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS)
     .withId(reportId)
     .withBankId(bankId)
     .withReportPeriod(reportPeriod)
@@ -118,7 +118,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it('returns a 404 when the bank with the same id as the report cannot be found', async () => {
     // Arrange
-    const reportWithDifferentBankId = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+    const reportWithDifferentBankId = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS)
       .withId(2)
       .withBankId('456')
       .build();

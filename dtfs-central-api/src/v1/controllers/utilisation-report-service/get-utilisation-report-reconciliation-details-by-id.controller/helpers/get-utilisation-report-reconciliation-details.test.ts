@@ -4,7 +4,7 @@ import {
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
   ReportPeriod,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UTILISATION_REPORT_STATUS,
   UtilisationReportEntityMockBuilder,
   ValidatedPaymentDetailsFilters,
 } from '@ukef/dtfs2-common';
@@ -49,7 +49,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       jest.resetAllMocks();
     });
 
-    it.each(Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS))(
+    it.each(Object.values(UTILISATION_REPORT_STATUS))(
       "throws an error if the report status is '%s' and the 'dateUploaded' property is null",
       async (status) => {
         // Arrange
@@ -68,7 +68,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
     describe('when a bank with the same id as the report bankId does not exist', () => {
       it('should throw an error', async () => {
         // Arrange
-        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION)
           .withId(reportId)
           .withBankId(bankId)
           .build();
@@ -96,7 +96,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
           end: { month: 1, year: 2024 },
         };
         const dateUploaded = new Date();
-        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION)
           .withId(reportId)
           .withBankId(bankId)
           .withReportPeriod(reportPeriod)
@@ -122,7 +122,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
             id: bankId,
             name: bankName,
           },
-          status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+          status: UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION,
           reportPeriod,
           dateUploaded,
           premiumPayments: [],
@@ -136,9 +136,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
     describe('when calling getPremiumPayments', () => {
       it('should call with expected filters', async () => {
         // Arrange
-        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
-          .withFeeRecords([])
-          .build();
+        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).withFeeRecords([]).build();
 
         const paymentDetailsFilters = {};
         const premiumPaymentsFilters = { facilityId: 'testFacilityId' };
@@ -162,9 +160,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
     describe('when calling getPaymentDetails', () => {
       it('should call with expected filters', async () => {
         // Arrange
-        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
-          .withFeeRecords([])
-          .build();
+        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).withFeeRecords([]).build();
 
         const paymentDetailsFilters = { facilityId: 'testFacilityId', paymentCurrency: CURRENCY.GBP, paymentReference: 'testPaymentReference' };
         const premiumPaymentsFilters = {};
@@ -274,7 +270,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
     });
 
     describe('when there are fee record payment groups with multiple payments', () => {
-      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION)
         .withId(reportId)
         .withBankId(bankId)
         .build();
