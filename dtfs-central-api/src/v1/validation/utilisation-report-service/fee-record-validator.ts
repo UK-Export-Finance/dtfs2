@@ -22,12 +22,12 @@ export const validateFeeRecordsAllHaveSamePaymentCurrency = (feeRecords: FeeReco
  * Validates that all provided fee records with payments have the same fee
  * record payment group and that the fee record IDs match the fee record IDs on
  * this existing payment group.
- * @param feeRecordIds - The fee record IDs
+ * @param ids - The fee record IDs
  * @throws {InvalidPayloadError} If fee records have different statuses
  * @throws {InvalidPayloadError} If fee record IDs do not match the fee record IDs on the existing payment group
  */
-export const validateFeeRecordsFormCompleteGroup = async (feeRecordIds: number[]) => {
-  const feeRecords = await FeeRecordRepo.findByIdWithPaymentsAndFeeRecords(feeRecordIds);
+export const validateFeeRecordsFormCompleteGroup = async (ids: number[]) => {
+  const feeRecords = await FeeRecordRepo.findByIdWithPaymentsAndFeeRecords(ids);
 
   const feeRecordStatuses = feeRecords.reduce((statuses, { status }) => statuses.add(status), new Set<FeeRecordStatus>());
   if (feeRecordStatuses.size !== 1) {
@@ -42,12 +42,12 @@ export const validateFeeRecordsFormCompleteGroup = async (feeRecordIds: number[]
 
   const firstPayment = firstFeeRecord.payments[0];
 
-  const savedFeeRecordIds = firstPayment.feeRecords.map((feeRecord) => feeRecord.id);
+  const savedIds = firstPayment.feeRecords.map((feeRecord) => feeRecord.id);
 
-  const allSavedFeeRecordIdsArePresentInProvidedFeeRecords = savedFeeRecordIds.every((id) => feeRecordIds.includes(id));
-  const allProvidedIdsArePresentInSavedFeeRecords = feeRecordIds.every((id) => savedFeeRecordIds.includes(id));
+  const allSavedIdsAreProvided = savedIds.every((id) => ids.includes(id));
+  const allProvidedIdsAreSaved = ids.every((id) => savedIds.includes(id));
 
-  if (!allSavedFeeRecordIdsArePresentInProvidedFeeRecords || !allProvidedIdsArePresentInSavedFeeRecords) {
+  if (!allSavedIdsAreProvided || !allProvidedIdsAreSaved) {
     throw new InvalidPayloadError('Requested fee record IDs do not match the fee record IDs on the existing payment group.');
   }
 };
