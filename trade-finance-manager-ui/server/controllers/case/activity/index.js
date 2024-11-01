@@ -5,6 +5,8 @@ const { generateValidationErrors } = require('../../../helpers/validation');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
 const CONSTANTS = require('../../../constants');
 const { mapActivities } = require('./helpers/map-activities');
+const { getSuccessBannerMessage } = require('../../helpers/get-success-banner-message.helper');
+const { getFlashSuccessMessage } = require('../../../helpers/getFlashSuccessMessage');
 
 const { DEAL } = CONSTANTS;
 
@@ -36,9 +38,17 @@ const getActivity = async (req, res) => {
 
   const activities = mapActivities(deal.tfm.activities);
 
+  const {
+    submissionType,
+    details: { ukefDealId },
+  } = deal.dealSnapshot;
+
+  const successMessage = (await getSuccessBannerMessage(submissionType, user, userToken, dealId, ukefDealId)) ?? getFlashSuccessMessage(req);
+
   return res.render('case/activity/activity.njk', {
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'activity',
+    successMessage,
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id,

@@ -3,6 +3,8 @@ const { userCanEdit, isEmptyString, partyType } = require('./helpers');
 const validatePartyURN = require('./partyUrnValidation.validate');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
 const CONSTANTS = require('../../../constants');
+const { getSuccessBannerMessage } = require('../../helpers/get-success-banner-message.helper');
+const { getFlashSuccessMessage } = require('../../../helpers/getFlashSuccessMessage');
 
 const { DEAL } = CONSTANTS;
 
@@ -33,11 +35,19 @@ const getAllParties = async (req, res) => {
 
     const canEdit = userCanEdit(user);
 
+    const {
+      submissionType,
+      details: { ukefDealId },
+    } = deal.dealSnapshot;
+
+    const successMessage = (await getSuccessBannerMessage(submissionType, user, userToken, dealId, ukefDealId)) ?? getFlashSuccessMessage(req);
+
     // Render all parties URN page
     return res.render('case/parties/parties.njk', {
       userCanEdit: canEdit,
       renderEditLink: canEdit,
       renderEditForm: false,
+      successMessage,
       deal: deal.dealSnapshot,
       tfm: deal.tfm,
       activePrimaryNavigation: 'manage work',

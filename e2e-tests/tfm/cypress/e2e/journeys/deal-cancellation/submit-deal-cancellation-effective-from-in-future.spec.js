@@ -67,6 +67,8 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in future'
     });
 
     describe('after submitting the cancellation', () => {
+      const expectedSuccessBannerText = `Deal ${ukefDealId} scheduled for cancellation on ${tomorrow.d_MMMM_yyyy}`;
+
       it('should redirect you to the deal summary page', () => {
         cy.url().should('eq', relative(`/case/${dealId}/deal`));
       });
@@ -75,10 +77,11 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in future'
         cy.url().should('eq', relative(`/case/${dealId}/deal`));
 
         successBanner().should('exist');
-        cy.assertText(successBanner(), `Deal ${ukefDealId} scheduled for cancellation on ${tomorrow.d_MMMM_yyyy}`);
+        cy.assertText(successBanner(), expectedSuccessBannerText);
 
         cy.reload();
         successBanner().should('exist');
+        cy.assertText(successBanner(), expectedSuccessBannerText);
       });
 
       it('should not show the "Cancel Deal" button', () => {
@@ -118,6 +121,28 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in future'
         activitiesPage.activitiesTimeline().contains(`Bank request date: ${today.d_MMMM_yyyy}`);
         activitiesPage.activitiesTimeline().contains(`Date effective from: ${tomorrow.d_MMMM_yyyy}`);
         activitiesPage.activitiesTimeline().contains(`Comments: -`);
+      });
+
+      it('should display the cancellation success banner on each of the other sub navigation tabs', () => {
+        caseSubNavigation.tasksLink().click();
+        successBanner().should('exist');
+        cy.assertText(successBanner(), expectedSuccessBannerText);
+
+        caseSubNavigation.partiesLink().click();
+        successBanner().should('exist');
+        cy.assertText(successBanner(), expectedSuccessBannerText);
+
+        caseSubNavigation.documentsLink().click();
+        successBanner().should('exist');
+        cy.assertText(successBanner(), expectedSuccessBannerText);
+
+        caseSubNavigation.activityLink().click();
+        successBanner().should('exist');
+        cy.assertText(successBanner(), expectedSuccessBannerText);
+
+        caseSubNavigation.underwritingLink().click();
+        successBanner().should('exist');
+        cy.assertText(successBanner(), expectedSuccessBannerText);
       });
     });
   });

@@ -12,6 +12,8 @@ const { UNDERWRITER_MANAGER_DECISIONS_TAGS } = require('../../../constants/decis
 const { BANK_DECISIONS_TAGS } = require('../../../constants/amendments');
 const CONSTANTS = require('../../../constants');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
+const { getSuccessBannerMessage } = require('../../helpers/get-success-banner-message.helper');
+const { getFlashSuccessMessage } = require('../../../helpers/getFlashSuccessMessage');
 
 /**
  * controller for underwriting tab
@@ -113,9 +115,17 @@ const getUnderwriterPage = async (req, res) => {
     }
   }
 
+  const {
+    submissionType,
+    details: { ukefDealId },
+  } = deal.dealSnapshot;
+
+  const successMessage = (await getSuccessBannerMessage(submissionType, user, userToken, dealId, ukefDealId)) ?? getFlashSuccessMessage(req);
+
   return res.render('case/underwriting/underwriting.njk', {
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'underwriting',
+    successMessage,
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id,
