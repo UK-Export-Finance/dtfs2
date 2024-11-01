@@ -1,10 +1,16 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  DbRequestSource,
+  REQUEST_PLATFORM_TYPE,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UtilisationReportEntity,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { handleUtilisationReportManuallySetCompletedEvent } from './manually-set-completed.event-handler';
 
 describe('handleUtilisationReportManuallySetCompletedEvent', () => {
   const requestSource: DbRequestSource = {
-    platform: 'TFM',
+    platform: REQUEST_PLATFORM_TYPE.TFM,
     userId: 'abc123',
   };
 

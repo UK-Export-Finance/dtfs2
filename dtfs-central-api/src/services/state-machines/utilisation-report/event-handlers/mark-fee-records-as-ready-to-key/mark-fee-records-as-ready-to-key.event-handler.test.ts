@@ -3,6 +3,7 @@ import {
   DbRequestSource,
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
+  REQUEST_PLATFORM_TYPE,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -12,7 +13,7 @@ import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-mach
 describe('handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent', () => {
   const tfmUserId = 'abc123';
   const requestSource: DbRequestSource = {
-    platform: 'TFM',
+    platform: REQUEST_PLATFORM_TYPE.TFM,
     userId: tfmUserId,
   };
 

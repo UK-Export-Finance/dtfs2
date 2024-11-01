@@ -1,4 +1,4 @@
-import { ApiError } from '@ukef/dtfs2-common';
+import { ApiError, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
@@ -50,7 +50,7 @@ export const deletePayment = async (req: DeletePaymentRequest, res: Response) =>
           transactionEntityManager,
           paymentId: Number(paymentId),
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId: user._id.toString(),
           },
         },

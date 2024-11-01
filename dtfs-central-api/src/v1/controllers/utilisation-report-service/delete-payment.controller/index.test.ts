@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
-import { TestApiError } from '@ukef/dtfs2-common';
+import { REQUEST_PLATFORM_TYPE, TestApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { EntityManager } from 'typeorm';
 import { DeletePaymentRequest, deletePayment } from '.';
@@ -83,7 +83,7 @@ describe('delete-payment.controller', () => {
           transactionEntityManager: mockEntityManager,
           paymentId: Number(paymentId),
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId: tfmUserId,
           },
         },

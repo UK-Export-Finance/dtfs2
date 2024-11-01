@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { ApiError } from '@ukef/dtfs2-common';
+import { ApiError, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { PatchPaymentPayload } from '../../../routes/middleware/payload-validation/validate-patch-payment-payload';
 import { executeWithSqlTransaction } from '../../../../helpers';
@@ -40,7 +40,7 @@ export const patchPayment = async (req: PatchPaymentRequest, res: Response) => {
             datePaymentReceived,
             paymentReference,
             requestSource: {
-              platform: 'TFM',
+              platform: REQUEST_PLATFORM_TYPE.TFM,
               userId: user._id.toString(),
             },
           },
