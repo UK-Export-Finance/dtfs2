@@ -1,4 +1,4 @@
-import { exporterStatus } from '../controllers/validation/exporter';
+import { exporterStatus } from '../../controllers/validation/exporter';
 import { cloneExporter } from './clone-exporter.service';
 
 describe('cloneExporter', () => {

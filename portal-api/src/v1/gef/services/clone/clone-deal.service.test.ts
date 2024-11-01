@@ -11,7 +11,7 @@ import {
 import { Collection, ObjectId } from 'mongodb';
 import { generateAuditDatabaseRecordFromAuditDetails, generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { cloneDealToLatestVersion, generateCloneDeal } from './clone-deal.service';
-import { mongoDbClient } from '../../../drivers/db-client';
+import { mongoDbClient } from '../../../../drivers/db-client';
 import { cloneExporter } from './clone-exporter.service';
 
 const mockLatestEligibilityCriteria = {

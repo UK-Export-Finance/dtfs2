@@ -3,7 +3,7 @@ import { Collection, ObjectId } from 'mongodb';
 import { add } from 'date-fns';
 import { generateAuditDatabaseRecordFromAuditDetails, generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { cloneFacilities, generateCloneFacility } from './clone-facilities.service';
-import { mongoDbClient } from '../../../drivers/db-client';
+import { mongoDbClient } from '../../../../drivers/db-client';
 
 const existingDealId = new ObjectId().toString();
 const newDealId = new ObjectId();

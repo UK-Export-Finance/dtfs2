@@ -13,9 +13,9 @@ import {
   AnyObject,
 } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import { mongoDbClient } from '../../../drivers/db-client';
-import { getLatestEligibilityCriteria } from '../controllers/eligibilityCriteria.controller';
-import { DEAL } from '../../../constants';
+import { mongoDbClient } from '../../../../drivers/db-client';
+import { getLatestEligibilityCriteria } from '../../controllers/eligibilityCriteria.controller';
+import { DEAL } from '../../../../constants';
 import { cloneExporter } from './clone-exporter.service';
 
 const propertiesToRemove: (keyof GefDeal)[] = [

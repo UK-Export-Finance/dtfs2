@@ -3,7 +3,7 @@ import { produce } from 'immer';
 import { isBefore, startOfDay } from 'date-fns';
 import { AuditDetails, Facility } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import { mongoDbClient } from '../../../drivers/db-client';
+import { mongoDbClient } from '../../../../drivers/db-client';
 
 /**
  * Generate a clone of the existing facility

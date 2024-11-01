@@ -1,5 +1,5 @@
 import { AnyObject } from '@ukef/dtfs2-common';
-import { exporterStatus } from '../controllers/validation/exporter';
+import { exporterStatus } from '../../controllers/validation/exporter';
 
 /**
  * Clones the exporter
