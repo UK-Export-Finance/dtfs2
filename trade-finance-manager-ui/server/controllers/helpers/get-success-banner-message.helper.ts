@@ -1,4 +1,4 @@
-import { DealSubmissionType, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
+import { DealSubmissionType, TFM_DEAL_CANCELLATION_STATUS, TfmDealCancellationWithStatus } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
 import { TfmSessionUser } from '../../types/tfm-session-user';
 import api from '../../api';
@@ -23,14 +23,18 @@ export const getSuccessBannerMessage = async (
   const dealCancellationIsEnabled = isDealCancellationEnabled(submissionType, user);
 
   if (dealCancellationIsEnabled) {
-    const cancellation = await api.getDealCancellation(dealId, userToken);
-
-    if (cancellation.status === TFM_DEAL_CANCELLATION_STATUS.SCHEDULED && cancellation.effectiveFrom) {
-      const formattedDate = format(new Date(cancellation.effectiveFrom), 'd MMMM yyyy');
-
-      return `Deal ${ukefDealId} scheduled for cancellation on ${formattedDate}`;
-    }
+    return null;
   }
 
-  return null;
+  const cancellation = (await api.getDealCancellation(dealId, userToken)) as TfmDealCancellationWithStatus;
+
+  const dealIsScheduledToBeCancelled = cancellation.status === TFM_DEAL_CANCELLATION_STATUS.SCHEDULED && cancellation.effectiveFrom;
+
+  if (!dealIsScheduledToBeCancelled) {
+    return null;
+  }
+
+  const formattedDate = format(new Date(cancellation.effectiveFrom), 'd MMMM yyyy');
+
+  return `Deal ${ukefDealId} scheduled for cancellation on ${formattedDate}`;
 };
