@@ -12,9 +12,11 @@ import { GetSelectedFeeRecordDetailsRequest, getSelectedFeeRecordDetails } from 
 import { aReportPeriod } from '../../../../../test-helpers';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { PaymentRepo } from '../../../../repositories/payment-repo';
+import { PaymentMatchingToleranceService } from '../../../../services/payment-matching-tolerance/payment-matching-tolerance.service';
 
 jest.mock('../../../../repositories/utilisation-reports-repo');
 jest.mock('../../../../repositories/banks-repo');
+jest.mock('../../../../services/payment-matching-tolerance/payment-matching-tolerance.service');
 
 console.error = jest.fn();
 
@@ -31,6 +33,11 @@ describe('get selected fee records details controller', () => {
     });
 
   const findReportSpy = jest.spyOn(UtilisationReportRepo, 'findOneByIdWithFeeRecordsFilteredByIdWithPayments');
+  const getGbpToleranceSpy = jest.spyOn(PaymentMatchingToleranceService, 'getGbpPaymentMatchingTolerance');
+
+  beforeEach(() => {
+    getGbpToleranceSpy.mockResolvedValue(1);
+  });
 
   afterEach(() => {
     jest.resetAllMocks();
@@ -129,6 +136,7 @@ describe('get selected fee records details controller', () => {
     reportEntity.feeRecords = [feeRecordOne, feeRecordTwo];
 
     findReportSpy.mockResolvedValue(reportEntity);
+    getGbpToleranceSpy.mockResolvedValue(2);
     jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(true);
     jest.mocked(getBankNameById).mockResolvedValue('Test Bank');
 
@@ -182,6 +190,7 @@ describe('get selected fee records details controller', () => {
         },
       ],
       canAddToExistingPayment: true,
+      gbpTolerance: 2,
     });
   });
 });

@@ -3,6 +3,7 @@ import { EntityManager } from 'typeorm';
 import {
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
+  REQUEST_PLATFORM_TYPE,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -81,7 +82,7 @@ describe('post-fees-to-an-existing-payment-group.controller helpers', () => {
           existingFeeRecordsInPaymentGroup,
           payments,
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId: tfmUserId,
           },
         },

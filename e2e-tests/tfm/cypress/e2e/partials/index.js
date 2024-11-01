@@ -16,4 +16,5 @@ module.exports = {
   errorSummary: () => cy.get('[data-cy="error-summary"]'),
   errorSummaryItems: () => cy.get('[data-cy="error-summary"] li'),
   submitButton: () => cy.get('[data-cy="submit-button"]'),
+  successBanner: () => cy.get('[data-cy="success-banner"]'),
 };

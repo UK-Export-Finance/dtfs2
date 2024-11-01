@@ -1,5 +1,6 @@
 import orderBy from 'lodash.orderby';
 import {
+  FEE_RECORD_STATUS,
   FeeRecordStatus,
   getFormattedCurrencyAndAmount,
   getFormattedMonetaryValue,
@@ -129,6 +130,8 @@ export const mapPremiumPaymentsToViewModelItems = (
     const feeRecordViewModelItems = mapFeeRecordsToFeeRecordViewModelItems(feeRecordsSortedByReportedPayments);
     const paymentViewModelItems = mapPaymentsToPaymentViewModelItems(paymentsReceived);
 
+    const isSelectable = status === FEE_RECORD_STATUS.TO_DO || status === FEE_RECORD_STATUS.DOES_NOT_MATCH;
+
     return {
       feeRecords: feeRecordViewModelItems,
       totalReportedPayments: {
@@ -142,6 +145,7 @@ export const mapPremiumPaymentsToViewModelItems = (
       },
       status,
       displayStatus,
+      isSelectable,
       checkboxId,
       isChecked,
       checkboxAriaLabel,
@@ -323,3 +327,10 @@ export const mapPaymentDetailsFiltersToViewModel = (paymentDetailsFilters: Payme
     paymentCurrency: mapCurrenciesToRadioItems(paymentDetailsFilters.paymentCurrency),
   };
 };
+
+/**
+ * Determines whether any of the premium payments items are selectable
+ * @param items - the items that will be displayed in the table
+ * @returns - whether any of the items are selectable
+ */
+export const premiumPaymentsHasSelectableItems = (items: PremiumPaymentsViewModelItem[]): boolean => items.some((item) => item.isSelectable);

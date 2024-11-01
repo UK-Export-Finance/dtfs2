@@ -5,6 +5,7 @@ import {
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
+  REQUEST_PLATFORM_TYPE,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { handleFeeRecordRemoveFromPaymentGroupEvent } from './remove-from-payment-group.event-handler';
@@ -67,7 +68,7 @@ describe('handleFeeRecordRemoveFromPaymentGroupEvent', () => {
     await handleFeeRecordRemoveFromPaymentGroupEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
       requestSource: {
-        platform: 'TFM',
+        platform: REQUEST_PLATFORM_TYPE.TFM,
         userId,
       },
     });

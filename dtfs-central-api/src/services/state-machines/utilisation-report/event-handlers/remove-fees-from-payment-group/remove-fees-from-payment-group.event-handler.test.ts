@@ -5,6 +5,7 @@ import {
   FeeRecordEntityMockBuilder,
   UtilisationReportEntity,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
+  REQUEST_PLATFORM_TYPE,
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportRemoveFeesFromPaymentGroupEvent } from './remove-fees-from-payment-group.event-handler';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
@@ -15,7 +16,7 @@ jest.mock('../helpers');
 describe('handleUtilisationReportRemoveFeesFromPaymentGroupEvent', () => {
   const tfmUserId = 'abc123';
   const requestSource: DbRequestSource = {
-    platform: 'TFM',
+    platform: REQUEST_PLATFORM_TYPE.TFM,
     userId: tfmUserId,
   };
 

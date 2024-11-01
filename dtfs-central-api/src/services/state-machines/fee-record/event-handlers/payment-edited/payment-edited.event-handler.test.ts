@@ -5,6 +5,7 @@ import {
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
+  REQUEST_PLATFORM_TYPE,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { handleFeeRecordPaymentEditedEvent } from './payment-edited.event-handler';
@@ -19,7 +20,7 @@ describe('handleFeeRecordPaymentEditedEvent', () => {
 
   const userId = 'abc123';
   const requestSource: DbRequestSource = {
-    platform: 'TFM',
+    platform: REQUEST_PLATFORM_TYPE.TFM,
     userId,
   };
 

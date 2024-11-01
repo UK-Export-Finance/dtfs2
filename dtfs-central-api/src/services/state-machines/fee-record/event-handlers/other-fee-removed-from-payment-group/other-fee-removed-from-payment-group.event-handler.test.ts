@@ -3,6 +3,7 @@ import {
   FEE_RECORD_STATUS,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
+  REQUEST_PLATFORM_TYPE,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -55,7 +56,7 @@ describe('handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent', () => {
       transactionEntityManager: mockEntityManager,
       feeRecordsAndPaymentsMatch: true,
       requestSource: {
-        platform: 'TFM',
+        platform: REQUEST_PLATFORM_TYPE.TFM,
         userId,
       },
     });

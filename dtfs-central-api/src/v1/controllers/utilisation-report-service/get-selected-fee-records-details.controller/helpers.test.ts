@@ -31,13 +31,34 @@ describe('get selected fee record details controller helpers', () => {
   });
 
   describe('mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups', () => {
+    const gbpTolerance = 1;
+
     it('sets bank name', async () => {
       // Act
       const bankId = '123';
-      const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(bankId, aReportPeriod(), [aFeeRecordWithStatusToDo()], false);
+      const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(
+        bankId,
+        aReportPeriod(),
+        [aFeeRecordWithStatusToDo()],
+        false,
+        gbpTolerance,
+      );
 
       // Assert
       expect(result.bank).toEqual({ name: BANK_NAME });
+    });
+
+    it('should set the gbpTolerance to the passed in value', async () => {
+      // Arrange
+      const tolerance = 1.12;
+      const bankId = '123';
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build()).build();
+
+      // Act
+      const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(bankId, aReportPeriod(), [feeRecord], false, tolerance);
+
+      // Assert
+      expect(result.gbpTolerance).toEqual(tolerance);
     });
 
     it('maps report period', async () => {
@@ -46,7 +67,7 @@ describe('get selected fee record details controller helpers', () => {
       const reportPeriod = aReportPeriod();
 
       // Act
-      const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(bankId, reportPeriod, [aFeeRecordWithStatusToDo()], false);
+      const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(bankId, reportPeriod, [aFeeRecordWithStatusToDo()], false, gbpTolerance);
 
       // Assert
       expect(result.reportPeriod).toEqual(reportPeriod);
@@ -63,7 +84,7 @@ describe('get selected fee record details controller helpers', () => {
         .withId(2)
         .build();
       // Act
-      const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(bankId, aReportPeriod(), [feeRecord], false);
+      const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(bankId, aReportPeriod(), [feeRecord], false, gbpTolerance);
 
       // Assert
       expect(result.feeRecords[0]).toEqual(expect.objectContaining({ id: 2, facilityId: '00012345', exporter: 'Test company' }));
@@ -80,7 +101,7 @@ describe('get selected fee record details controller helpers', () => {
         .withPaymentCurrency('USD')
         .build();
       // Act
-      const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(bankId, aReportPeriod(), [feeRecord], false);
+      const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(bankId, aReportPeriod(), [feeRecord], false, gbpTolerance);
 
       // Assert
       expect(result.feeRecords[0].reportedPayments).toEqual<CurrencyAndAmount>({ amount: 200, currency: 'USD' });
@@ -99,7 +120,7 @@ describe('get selected fee record details controller helpers', () => {
         .build();
 
       // Act
-      const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(bankId, aReportPeriod(), [feeRecord], false);
+      const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(bankId, aReportPeriod(), [feeRecord], false, gbpTolerance);
 
       // Assert
       expect(result.feeRecords[0].reportedPayments).toEqual<CurrencyAndAmount>({ amount: 2000, currency: 'GBP' });
@@ -115,7 +136,7 @@ describe('get selected fee record details controller helpers', () => {
         .withFeesPaidToUkefForThePeriodCurrency('EUR')
         .build();
       // Act
-      const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(bankId, aReportPeriod(), [feeRecord], false);
+      const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(bankId, aReportPeriod(), [feeRecord], false, gbpTolerance);
 
       // Assert
       expect(result.feeRecords[0].reportedFee).toEqual<CurrencyAndAmount>({ amount: 2200, currency: 'EUR' });
@@ -145,7 +166,13 @@ describe('get selected fee record details controller helpers', () => {
         .build();
 
       // Act
-      const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(bankId, aReportPeriod(), [firstFeeRecord, secondFeeRecord], false);
+      const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(
+        bankId,
+        aReportPeriod(),
+        [firstFeeRecord, secondFeeRecord],
+        false,
+        gbpTolerance,
+      );
 
       // Assert
       expect(result.payments).toEqual<SelectedFeeRecordsPaymentDetails[]>([
@@ -162,7 +189,13 @@ describe('get selected fee record details controller helpers', () => {
       const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('GBP').withPayments([]).build();
 
       // Act
-      const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(bankId, aReportPeriod(), [firstFeeRecord, secondFeeRecord], false);
+      const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(
+        bankId,
+        aReportPeriod(),
+        [firstFeeRecord, secondFeeRecord],
+        false,
+        gbpTolerance,
+      );
 
       // Assert
       expect(result.payments).toEqual([]);
@@ -190,6 +223,7 @@ describe('get selected fee record details controller helpers', () => {
         aReportPeriod(),
         [feeRecordWithDifferingCurrencies, feeRecordWithMatchingCurrencies],
         false,
+        gbpTolerance,
       );
 
       // Assert
@@ -207,6 +241,7 @@ describe('get selected fee record details controller helpers', () => {
         aReportPeriod(),
         [aFeeRecordWithStatusToDo()],
         canAddToExistingPayment,
+        gbpTolerance,
       );
 
       // Assert
@@ -225,6 +260,7 @@ describe('get selected fee record details controller helpers', () => {
           aReportPeriod(),
           [aFeeRecordWithStatusToDo()],
           canAddToExistingPayment,
+          gbpTolerance,
         );
 
         // Assert

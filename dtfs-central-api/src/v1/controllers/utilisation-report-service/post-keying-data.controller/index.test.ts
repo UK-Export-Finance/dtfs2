@@ -7,6 +7,7 @@ import {
   FeeRecordEntityMockBuilder,
   TestApiError,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
+  REQUEST_PLATFORM_TYPE,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -125,7 +126,7 @@ describe('post-keying-data.controller', () => {
           transactionEntityManager: mockEntityManager,
           feeRecordsAtMatchStatusWithPayments: feeRecords,
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId,
           },
         },

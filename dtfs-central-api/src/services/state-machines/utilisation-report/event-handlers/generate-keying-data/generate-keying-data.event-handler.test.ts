@@ -9,6 +9,7 @@ import {
   FeeRecordPaymentJoinTableEntity,
   FEE_RECORD_STATUS,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
+  REQUEST_PLATFORM_TYPE,
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
@@ -19,7 +20,7 @@ jest.mock('../helpers');
 describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
   const tfmUserId = 'abc123';
   const requestSource: DbRequestSource = {
-    platform: 'TFM',
+    platform: REQUEST_PLATFORM_TYPE.TFM,
     userId: tfmUserId,
   };
 

@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, ReportWithStatus, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
+import { DbRequestSource, REQUEST_PLATFORM_TYPE, ReportWithStatus, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { ApiError, InvalidPayloadError } from '../../../../errors';
@@ -88,7 +88,7 @@ export const putUtilisationReportStatus = async (req: PutUtilisationReportStatus
     }
 
     const requestSource: DbRequestSource = {
-      platform: 'TFM',
+      platform: REQUEST_PLATFORM_TYPE.TFM,
       userId: user._id.toString(),
     };
 

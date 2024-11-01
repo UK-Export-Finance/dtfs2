@@ -4,6 +4,7 @@ import {
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
+  REQUEST_PLATFORM_TYPE,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -19,7 +20,7 @@ jest.mock('../../../../../external-api/api');
 describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
   const tfmUserId = 'abc123';
   const requestSource: DbRequestSource = {
-    platform: 'TFM',
+    platform: REQUEST_PLATFORM_TYPE.TFM,
     userId: tfmUserId,
   };
 

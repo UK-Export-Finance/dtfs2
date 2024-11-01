@@ -49,7 +49,7 @@ describe('UtilisationReportEntity', () => {
 
   describe('updateWithStatus', () => {
     const requestSource: DbRequestSource = {
-      platform: 'TFM',
+      platform: REQUEST_PLATFORM_TYPE.TFM,
       userId: 'abc123',
     };
 

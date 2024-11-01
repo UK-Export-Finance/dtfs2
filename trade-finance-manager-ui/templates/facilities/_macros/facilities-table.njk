@@ -102,7 +102,9 @@
             {% endset %}
 
             {% set facilityStage %}
-                {% if facility.hasAmendmentInProgress === true %}
+                {% if facility.tfmFacilityStage %}
+                    {{ facility.tfmFacilityStage }}
+                {% elif facility.hasAmendmentInProgress === true %}
                     {{stage}} (amendment in progress)
                 {% else %}
                     {{stage}}
