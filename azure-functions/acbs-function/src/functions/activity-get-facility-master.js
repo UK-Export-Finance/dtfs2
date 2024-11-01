@@ -14,8 +14,10 @@ const { isHttpErrorStatus } = require('../../helpers/http');
  * @returns {Object} - An object containing the facility data and its etag.
  * @throws {Error} - Throws an error if the facilityIdentifier is not provided, if the API request fails, or if any other error occurs.
  */
-const handler = async (facilityIdentifier) => {
+const handler = async (payload) => {
   try {
+    const { facilityId: facilityIdentifier } = payload;
+
     if (!facilityIdentifier) {
       throw new Error('Invalid facility ID');
     }

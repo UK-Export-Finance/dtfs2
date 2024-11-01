@@ -18,6 +18,7 @@ jest.mock('../helpers', () => ({
 const { DRAFT, COMPLETED, SCHEDULED } = TFM_DEAL_CANCELLATION_STATUS;
 
 const mockSuccessBannerMessage = 'mock success flash message';
+console.error = jest.fn();
 
 const res = mockRes();
 
@@ -889,7 +890,27 @@ describe('controllers - case', () => {
       });
     });
 
-    describe('when deal does NOT exist', () => {
+    describe('when the deal either does not exists or is corrupted', () => {
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve();
+      });
+
+      it('should render problem with service page with a console error', async () => {
+        const req = {
+          params: {
+            _id: '1',
+          },
+          session,
+        };
+
+        await caseController.getCaseFacility(req, res);
+
+        expect(console.error).toHaveBeenCalledWith('An error occurred while rendering a TFM deal %s', req.params._id);
+        expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+      });
+    });
+
+    describe('when the facilities does not exist', () => {
       beforeEach(() => {
         api.getFacility = () => Promise.resolve();
       });
@@ -903,6 +924,7 @@ describe('controllers - case', () => {
         };
 
         await caseController.getCaseFacility(req, res);
+
         expect(res.redirect).toHaveBeenCalledWith('/not-found');
       });
     });

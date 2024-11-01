@@ -16,68 +16,69 @@
     <link rel="apple-touch-icon" sizes="152x152" href="/assets/images/govuk-apple-touch-icon-152x152.png">
     <link rel="apple-touch-icon" href="/assets/images/govuk-apple-touch-icon.png">
     <link rel="stylesheet" href="/assets/css/styles.css"/>
-    <meta property="og:image" content="/assets/images/govuk-opengraph-image.png"> {% block head %}{% endblock %}
-    </head>
-    <body class="govuk-template__body ">
-      <script
+    <meta property="og:image" content="/assets/images/govuk-opengraph-image.png">
+    {% block head %}{% endblock %}
+  </head>
+  <body class="govuk-template__body ">
+    <script
         src="/assets/js/jsEnabled.js"
         type="text/javascript"
-        integrity="sha512-kQ+DapFTlqc9v7ua3U4A9A6fH2w6nmFVTaNc2/MMVvXGJTrlbphfIfIwYGidv1GtFmoR18nbl9Gex7N9Dd/nXg=="
+        integrity="sha512-+oUPyU7P4RBV7u2B6RkjEWzdtDSbzvPyIOKS7YelVhYUftt4L261FozUDCXcQG6ITqkIPfZW91okPyupbLd0xA=="
         crossorigin="anonymous"></script>
-      {% include "_partials/skip-link.njk" %}
-      {% if user and user
+    {% include "_partials/skip-link.njk" %}
+    {% if user and user
       .roles and user
       .roles
       .includes('admin') %}
-        {% include "_partials/admin-header.njk" %}
-      {% endif %}
-      {% include "_partials/header.njk" %}
-      {% include "_partials/beta-banner.njk" %}
-      {% include "_partials/primary-navigation.njk" %}
-      <div class="govuk-width-container">
-        <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
-          {% if backLink and backLink.href %}
-            {{ govukBackLink({
+      {% include "_partials/admin-header.njk" %}
+    {% endif %}
+    {% include "_partials/header.njk" %}
+    {% include "_partials/beta-banner.njk" %}
+    {% include "_partials/primary-navigation.njk" %}
+    <div class="govuk-width-container">
+      <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+        {% if backLink and backLink.href %}
+          {{ govukBackLink({
               text: "Back",
               href: backLink.href,
               attributes: {
                 "data-cy": "back-link"
               }
             }) }}
-          {% endif %}
-          {% block content %}{% endblock %}
-        </main>
-      </div>
-      {% include "_partials/footer.njk" %}
-      <script
+        {% endif %}
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+    {% include "_partials/footer.njk" %}
+    <script
         src="/assets/js/main.js"
         type="text/javascript"
-        integrity="sha512-t6loibI1bPRXQz7cafRrws8RXlk7lfG2C0mpXc5iK38sHohNLE8eVbOEhfLTT2HNdFvWl4n8fMf1g1g/CZ3jhA=="
+        integrity="sha512-HEhxQSphBlHV9OM8V0qLsCylJB4c9LbFdOC7pB9Ujg7ySL8E29ifnmtF+6i5I5ieMJk9+q+WlvhPyvyn0GxdhQ=="
         crossorigin="anonymous"></script>
-      <script
+    <script
         src="/assets/js/govukFrontend.js"
         type="text/javascript"
-        integrity="sha512-YQrWk/4Z6BhyB4H0VUr6e0iWUMPzpNq3NgkkeB08sCOYa2z36TOUqpv76G0Hd3JAWnEddQB5U2OWqbJrH3s9gQ=="
+        integrity="sha512-FCYqqgwMLyRhD+3K520tAkikpg9RfGv3VUQzUqo5CVwjlRxo/Ol56fxOlRhKGRxZ1LvhwYGAkyamg1Y5pX6VFg=="
         crossorigin="anonymous"></script>
-      <script
+    <script
         src="/assets/js/mojFrontend.js"
         type="text/javascript"
-        integrity="sha512-pC+EDr6zEkHWQwb/GmZbDfkYrIY6jU1UPSP0/yX6zNQFHkJuap+qMwD9C/7G17ZqxGIDkexyc3bDf6JpzSLFiw=="
+        integrity="sha512-Ap7qengYJPIRuxlVyln9ThfoCD/SIeefliy26hN7ZG1ywrC9y2YL9o3kpKHAXT5S2gcUOuMi/GkfYLJtAaIJig=="
         crossorigin="anonymous"></script>
-      <script
+    <script
         src="/assets/js/maskedInputs.js"
         type="text/javascript"
-        integrity="sha512-x2Car+vmXPlZ/CFqguRd7U0BshYxOtwtKhk4zc9gmljr+6lobOD4xmWtvWIU5GR/GkP5lEXhF3G/1RUEbjcN/A=="
+        integrity="sha512-4XTH3IT3oQN/60lRAdBZWXMXq4/L1n5kUoGEftu+nY0Bba/7T0RDIZ62es6v+dCyNJ+uaYZTjWl3nPYv0rR6WA=="
         crossorigin="anonymous"></script>
-      <script
+    <script
         src="/assets/js/mojFilters.js"
         type="text/javascript"
-        integrity="sha512-rFceaINaZeNktbB8+cVB1ZcwbGURHgQRLiUdptubCvI4H1I2HcsjCmKUOOuMODESrPlr/ZXeOBeAj8RNJf9XbA=="
+        integrity="sha512-ByfzBGRfJ1AM3hcN4bl0gILRnr3l9IDe8Um0poccVZ5qEfTpNj5r+rbYXQlEk1tL6zTdrIS2U77Kt4Jxi78Usw=="
         crossorigin="anonymous"></script>
-      <script
+    <script
         src="/assets/js/disableFormSubmitOnSubmission.js"
         type="text/javascript"
-        integrity="sha512-ryCvbP8nVO3oCqQnDBAQ7JUSEil6n9GfU0sSYjFD40zzBuamj28K7/kOj3KtW/z8XtEE3VWcozDXWmWfmp0oEw=="
+        integrity="sha512-RwF5ml+CiOHtgzu/uJmiCoytVi+TMCZGAKWvD+meYlY8bxi+kxC2qMDDiAyi17CoSK5rzB9DO4lej7QRXz8sQQ=="
         crossorigin="anonymous"></script>
-    </body>
-  </html>
+  </body>
+</html>

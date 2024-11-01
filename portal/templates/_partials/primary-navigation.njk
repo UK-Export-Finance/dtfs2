@@ -1,12 +1,20 @@
 {%- from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation -%}
 
-{% set isAdmin = user and user.roles.includes("admin") %}
-{% set isChecker = user and user.roles.includes("checker") %}
-{% set isMaker = user and user.roles.includes("maker") %}
-{% set isReadOnly = user and user.roles.includes("read-only") %}
-{% set isPaymentReportOfficer = user and user.roles.includes("payment-report-officer") %}
+{% if user.roles and user.roles.length > 0 %}
 
-{% set homeNavItem = {
+  {% set isAdmin = user and user
+    .roles
+    .includes("admin") %}
+  {% set isChecker = user and user
+    .roles
+    .includes("checker") %}
+  {% set isMaker = user and user
+    .roles
+    .includes("maker") %}
+  {% set isReadOnly = user and user.roles.includes("read-only") %}
+  {% set isPaymentReportOfficer = user and user.roles.includes("payment-report-officer") %}
+
+  {% set homeNavItem = {
     text: "Home",
     href: "/dashboard",
     active: primaryNav == "home",
@@ -14,7 +22,7 @@
       "data-cy": "dashboard"
     }
   } %}
-{% set reportsNavItem = {
+  {% set reportsNavItem = {
     text: "Reports",
     href: "/reports",
     active: primaryNav == "reports",
@@ -22,7 +30,7 @@
       "data-cy": "reports"
     }
   } %}
-{% set reportGefUtilisationAndFeesNavItem = {
+  {% set reportGefUtilisationAndFeesNavItem = {
     text: "Report GEF utilisation and fees",
     href: "/utilisation-report-upload",
     active: primaryNav == "utilisation_report_upload",
@@ -30,7 +38,7 @@
       "data-cy": "upload_report"
     }
   } %}
-{% set previousGefReportsNavItem = {
+  {% set previousGefReportsNavItem = {
     text: "Previous GEF reports",
     href: "/previous-reports",
     active: primaryNav == "previous_reports",
@@ -38,7 +46,7 @@
       "data-cy": "previous_reports"
     }
   } %}
-{% set usersNavItem = {
+  {% set usersNavItem = {
     text: "Users",
     href: "/admin/users",
     active: primaryNav == "users",
@@ -47,27 +55,29 @@
     }
   } %}
 
-{% set navItems = [] %}
+  {% set navItems = [] %}
 
-{% if isAdmin or isReadOnly or isMaker or isChecker %}
-  {% set navItems = (navItems.push(homeNavItem), navItems) %}
-{% endif %}
+  {% if isAdmin or isReadOnly or isMaker or isChecker %}
+    {% set navItems = (navItems.push(homeNavItem), navItems) %}
+  {% endif %}
 
-{% if isAdmin or isMaker or isChecker %}
-  {% set navItems = (navItems.push(reportsNavItem), navItems) %}
-{% endif %}
+  {% if isAdmin or isMaker or isChecker %}
+    {% set navItems = (navItems.push(reportsNavItem), navItems) %}
+  {% endif %}
 
-{% if isPaymentReportOfficer %}
-  {% set navItems = (navItems.push(reportGefUtilisationAndFeesNavItem, previousGefReportsNavItem), navItems) %}
-{% endif %}
+  {% if isPaymentReportOfficer %}
+    {% set navItems = (navItems.push(reportGefUtilisationAndFeesNavItem, previousGefReportsNavItem), navItems) %}
+  {% endif %}
 
-{% if isAdmin %}
-  {% set navItems = (navItems.push(usersNavItem), navItems) %}
-{% endif %}
+  {% if isAdmin %}
+    {% set navItems = (navItems.push(usersNavItem), navItems) %}
+  {% endif %}
 
-{% if navItems.length %}
-  {{ mojPrimaryNavigation({
+  {% if navItems.length %}
+    {{ mojPrimaryNavigation({
     label: "Primary navigation",
     items: navItems
   }) }}
+  {% endif %}
+
 {% endif %}
