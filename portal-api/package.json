@@ -32,7 +32,7 @@
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
-    "@azure/storage-file-share": "12.14.0",
+    "@azure/storage-file-share": "12.25.0",
     "@ukef/dtfs2-common": "1.0.0",
     "axios": "^1.7.7",
     "comma-number": "^2.1.0",
