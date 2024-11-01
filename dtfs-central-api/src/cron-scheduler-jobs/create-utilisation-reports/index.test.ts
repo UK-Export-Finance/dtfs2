@@ -1,4 +1,11 @@
-import { getCurrentReportPeriodForBankSchedule, Bank, ReportPeriod, UtilisationReportEntityMockBuilder, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import {
+  getCurrentReportPeriodForBankSchedule,
+  Bank,
+  ReportPeriod,
+  UtilisationReportEntityMockBuilder,
+  UtilisationReportEntity,
+  REQUEST_PLATFORM_TYPE,
+} from '@ukef/dtfs2-common';
 import { createUtilisationReportForBanksJob } from '.';
 import { getAllBanks } from '../../repositories/banks-repo';
 import { UtilisationReportRepo } from '../../repositories/utilisation-reports-repo';
@@ -134,7 +141,7 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
           bankId: bank.id,
           reportPeriod: mockReportPeriod,
           requestSource: {
-            platform: 'SYSTEM',
+            platform: REQUEST_PLATFORM_TYPE.SYSTEM,
           },
         });
         expect(saveUtilisationReportSpy).toHaveBeenCalledWith(newReport);
@@ -169,7 +176,7 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
         bankId: bankWithoutReport.id,
         reportPeriod: mockReportPeriod,
         requestSource: {
-          platform: 'SYSTEM',
+          platform: REQUEST_PLATFORM_TYPE.SYSTEM,
         },
       });
       expect(saveUtilisationReportSpy).toHaveBeenCalledWith(newReportForBankWithoutReport);

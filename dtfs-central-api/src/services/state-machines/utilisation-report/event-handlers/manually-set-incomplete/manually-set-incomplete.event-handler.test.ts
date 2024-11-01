@@ -1,10 +1,10 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { DbRequestSource, REQUEST_PLATFORM_TYPE, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { handleUtilisationReportManuallySetIncompleteEvent } from '.';
 
 describe('handleUtilisationReportManuallySetIncompleteEvent', () => {
   const requestSource: DbRequestSource = {
-    platform: 'TFM',
+    platform: REQUEST_PLATFORM_TYPE.TFM,
     userId: 'abc123',
   };
 

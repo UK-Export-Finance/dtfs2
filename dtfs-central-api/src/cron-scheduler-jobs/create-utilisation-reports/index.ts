@@ -1,4 +1,4 @@
-import { asString, CronSchedulerJob, getCurrentReportPeriodForBankSchedule, Bank, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { asString, CronSchedulerJob, getCurrentReportPeriodForBankSchedule, Bank, UtilisationReportEntity, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
 import { validateUtilisationReportPeriodSchedule } from './utilisation-report-period-schedule-validator';
 import { UtilisationReportRepo } from '../../repositories/utilisation-reports-repo';
 import { getAllBanks } from '../../repositories/banks-repo';
@@ -63,7 +63,7 @@ const createUtilisationReportForBanks = async (): Promise<void> => {
         bankId: id,
         reportPeriod,
         requestSource: {
-          platform: 'SYSTEM',
+          platform: REQUEST_PLATFORM_TYPE.SYSTEM,
         },
       });
       await UtilisationReportRepo.save(newUtilisationReport);
