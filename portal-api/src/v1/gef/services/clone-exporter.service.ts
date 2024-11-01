@@ -3,8 +3,8 @@ import { exporterStatus } from '../controllers/validation/exporter';
 
 /**
  * Clones the exporter
- * @param currentExporter the existing exporter
- * @returns the exporter with updated at set to now
+ * @param currentExporter the current exporter
+ * @returns the exporter with updatedAt set to now
  */
 export const cloneExporter = (currentExporter: AnyObject) => {
   const clonedExporter = currentExporter;
