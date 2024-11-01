@@ -47,6 +47,16 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
     coverPercentage: facility.coverPercentage,
   };
 
+  const facility = aFacility();
+
+  const tfmFacilityReturnedValues = {
+    coverEndDate: new Date(),
+    coverStartDate: new Date(),
+    dayCountBasis: facility.dayCountBasis,
+    interestPercentage: facility.interestPercentage,
+    coverPercentage: facility.coverPercentage,
+  };
+
   beforeEach(() => {
     jest.mocked(calculateFixedFeeAdjustment).mockResolvedValue(10);
     jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(20);
