@@ -171,6 +171,8 @@ updates:
       - 'chore'
 
   # Git Hub Actions
+  #  Set the directory to `/` for
+  # .github/workflows GHA files
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
