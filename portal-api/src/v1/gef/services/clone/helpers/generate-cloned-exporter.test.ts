@@ -1,7 +1,7 @@
-import { exporterStatus } from '../../controllers/validation/exporter';
-import { cloneExporter } from './clone-exporter.service';
+import { exporterStatus } from '../../../controllers/validation/exporter';
+import { generateClonedExporter } from './generate-cloned-exporter';
 
-describe('cloneExporter', () => {
+describe('generateClonedExporter', () => {
   beforeAll(() => {
     jest.useFakeTimers();
   });
@@ -19,7 +19,7 @@ describe('cloneExporter', () => {
     };
 
     // Act
-    const response = cloneExporter(mockExporter);
+    const response = generateClonedExporter(mockExporter);
 
     // Assert
     expect(response).toEqual({

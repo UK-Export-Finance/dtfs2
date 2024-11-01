@@ -1,24 +1,15 @@
-import {
-  aPortalSessionUser,
-  Bank,
-  Deal,
-  DEAL_STATUS,
-  DealNotFoundError,
-  getCurrentGefDealVersion,
-  InvalidDealIdError,
-  InvalidParameterError,
-} from '@ukef/dtfs2-common';
+import { aPortalSessionUser, Bank, Deal, DEAL_STATUS, DealNotFoundError, InvalidDealIdError, InvalidParameterError } from '@ukef/dtfs2-common';
 import { Collection, ObjectId } from 'mongodb';
-import { generateAuditDatabaseRecordFromAuditDetails, generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import { cloneDealToLatestVersion, generateCloneDeal } from './clone-deal.service';
+import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { cloneDealToLatestVersion } from './clone-deal.service';
 import { mongoDbClient } from '../../../../drivers/db-client';
-import { cloneExporter } from './clone-exporter.service';
+import { generateClonedDeal } from './helpers/generate-cloned-deal';
 
 const mockLatestEligibilityCriteria = {
   eligibility: 'criteria',
 };
 
-jest.mock('../controllers/eligibilityCriteria.controller', () => ({
+jest.mock('../../controllers/eligibilityCriteria.controller', () => ({
   getLatestEligibilityCriteria: jest.fn(() => mockLatestEligibilityCriteria),
 }));
 
@@ -65,7 +56,11 @@ const existingDeal: Deal = {
   dataMigration: 'dataMigration',
 };
 
-describe('clone deal service', () => {
+describe('cloneDealToLatestVersion', () => {
+  let dealsCollection: Collection<Deal>;
+  const findOneMock = jest.fn();
+  const insertOneMock = jest.fn();
+
   beforeAll(() => {
     jest.useFakeTimers();
   });
@@ -74,132 +69,108 @@ describe('clone deal service', () => {
     jest.useRealTimers();
   });
 
-  describe('cloneDealToLatestVersion', () => {
-    let dealsCollection: Collection<Deal>;
-    const findOneMock = jest.fn();
-    const insertOneMock = jest.fn();
+  beforeEach(() => {
+    jest.clearAllMocks();
+    findOneMock.mockResolvedValue(existingDeal);
+    insertOneMock.mockResolvedValue({ insertedId: new ObjectId() });
 
-    beforeEach(() => {
-      jest.clearAllMocks();
-      findOneMock.mockResolvedValue(existingDeal);
-      insertOneMock.mockResolvedValue({ insertedId: new ObjectId() });
+    dealsCollection = {
+      insertOne: insertOneMock,
+      findOne: findOneMock,
+    } as unknown as Collection<Deal>;
 
-      dealsCollection = {
-        insertOne: insertOneMock,
-        findOne: findOneMock,
-      } as unknown as Collection<Deal>;
+    const getCollectionMock = jest.fn().mockResolvedValue(dealsCollection);
 
-      const getCollectionMock = jest.fn().mockResolvedValue(dealsCollection);
-
-      jest.spyOn(mongoDbClient, 'getCollection').mockImplementation(getCollectionMock);
-    });
-
-    it('throws InvalidDealIdError when the dealId is not an ObjectId', async () => {
-      // Arrange
-      const invalidDealId = 'dealId';
-
-      // Act & Assert
-      await expect(() =>
-        cloneDealToLatestVersion({
-          dealId: invalidDealId,
-          bankInternalRefName,
-          additionalRefName,
-          maker,
-          userId: maker._id,
-          bank: mockBank,
-          auditDetails: mockAuditDetails,
-        }),
-      ).rejects.toThrow(new InvalidDealIdError(invalidDealId));
-    });
-
-    it('throws InvalidParameterError when the bank id is not a string', async () => {
-      // Arrange
-      const bankId = 123;
-
-      // Act & Assert
-      await expect(() =>
-        cloneDealToLatestVersion({
-          dealId: existingDealId,
-          bankInternalRefName,
-          additionalRefName,
-          maker,
-          userId: maker._id,
-          bank: { id: bankId } as unknown as Bank,
-          auditDetails: mockAuditDetails,
-        }),
-      ).rejects.toThrow(new InvalidParameterError('bank.id', bankId));
-    });
-
-    it('throws DealNotFoundError when the dealId is valid but does not correspond to a deal', async () => {
-      // Arrange
-      findOneMock.mockResolvedValueOnce(null);
-
-      // Act & Assert
-      await expect(() =>
-        cloneDealToLatestVersion({
-          dealId: existingDealId,
-          bankInternalRefName,
-          additionalRefName,
-          maker,
-          userId: maker._id,
-          bank: mockBank,
-          auditDetails: mockAuditDetails,
-        }),
-      ).rejects.toThrow(new DealNotFoundError(existingDealId));
-    });
-
-    it('gets existing deal', async () => {
-      // Act
-      await cloneDealToLatestVersion({
-        dealId: existingDealId,
-        bankInternalRefName,
-        additionalRefName,
-        maker,
-        userId: maker._id,
-        bank: mockBank,
-        auditDetails: mockAuditDetails,
-      });
-
-      // Assert
-      expect(findOneMock).toHaveBeenCalledTimes(1);
-      expect(findOneMock).toHaveBeenCalledWith({ _id: { $eq: new ObjectId(existingDealId) }, 'bank.id': { $eq: mockBank.id } });
-    });
-
-    it('inserts a cloned deal', async () => {
-      // Act
-      await cloneDealToLatestVersion({
-        dealId: existingDealId,
-        bankInternalRefName,
-        additionalRefName,
-        maker,
-        userId: maker._id,
-        bank: mockBank,
-        auditDetails: mockAuditDetails,
-      });
-
-      // Assert
-      expect(insertOneMock).toHaveBeenCalledTimes(1);
-      expect(insertOneMock).toHaveBeenCalledWith({
-        ...generateCloneDeal({
-          dealId: existingDealId,
-          bankInternalRefName,
-          additionalRefName,
-          maker,
-          userId: maker._id,
-          bank: mockBank,
-          auditDetails: mockAuditDetails,
-          existingDeal,
-          latestEligibilityCriteria: mockLatestEligibilityCriteria,
-        }),
-        _id: expect.any(ObjectId) as ObjectId,
-      });
-    });
+    jest.spyOn(mongoDbClient, 'getCollection').mockImplementation(getCollectionMock);
   });
 
-  describe('generateCloneDeal', () => {
-    it('returns the expected clone deal', () => {
-      // Act
-      const cloneDeal = generateCloneDeal({
+  it('throws InvalidDealIdError when the dealId is not an ObjectId', async () => {
+    // Arrange
+    const invalidDealId = 'dealId';
+
+    // Act & Assert
+    await expect(() =>
+      cloneDealToLatestVersion({
+        dealId: invalidDealId,
+        bankInternalRefName,
+        additionalRefName,
+        maker,
+        userId: maker._id,
+        bank: mockBank,
+        auditDetails: mockAuditDetails,
+      }),
+    ).rejects.toThrow(new InvalidDealIdError(invalidDealId));
+  });
+
+  it('throws InvalidParameterError when the bank id is not a string', async () => {
+    // Arrange
+    const bankId = 123;
+
+    // Act & Assert
+    await expect(() =>
+      cloneDealToLatestVersion({
+        dealId: existingDealId,
+        bankInternalRefName,
+        additionalRefName,
+        maker,
+        userId: maker._id,
+        bank: { id: bankId } as unknown as Bank,
+        auditDetails: mockAuditDetails,
+      }),
+    ).rejects.toThrow(new InvalidParameterError('bank.id', bankId));
+  });
+
+  it('throws DealNotFoundError when the dealId is valid but does not correspond to a deal', async () => {
+    // Arrange
+    findOneMock.mockResolvedValueOnce(null);
+
+    // Act & Assert
+    await expect(() =>
+      cloneDealToLatestVersion({
+        dealId: existingDealId,
+        bankInternalRefName,
+        additionalRefName,
+        maker,
+        userId: maker._id,
+        bank: mockBank,
+        auditDetails: mockAuditDetails,
+      }),
+    ).rejects.toThrow(new DealNotFoundError(existingDealId));
+  });
+
+  it('gets existing deal', async () => {
+    // Act
+    await cloneDealToLatestVersion({
+      dealId: existingDealId,
+      bankInternalRefName,
+      additionalRefName,
+      maker,
+      userId: maker._id,
+      bank: mockBank,
+      auditDetails: mockAuditDetails,
+    });
+
+    // Assert
+    expect(findOneMock).toHaveBeenCalledTimes(1);
+    expect(findOneMock).toHaveBeenCalledWith({ _id: { $eq: new ObjectId(existingDealId) }, 'bank.id': { $eq: mockBank.id } });
+  });
+
+  it('inserts a cloned deal', async () => {
+    // Act
+    await cloneDealToLatestVersion({
+      dealId: existingDealId,
+      bankInternalRefName,
+      additionalRefName,
+      maker,
+      userId: maker._id,
+      bank: mockBank,
+      auditDetails: mockAuditDetails,
+    });
+
+    // Assert
+    expect(insertOneMock).toHaveBeenCalledTimes(1);
+    expect(insertOneMock).toHaveBeenCalledWith({
+      ...generateClonedDeal({
         dealId: existingDealId,
         bankInternalRefName,
         additionalRefName,
@@ -209,37 +180,8 @@ describe('clone deal service', () => {
         auditDetails: mockAuditDetails,
         existingDeal,
         latestEligibilityCriteria: mockLatestEligibilityCriteria,
-      });
-
-      // Assert
-      expect(cloneDeal).toEqual({
-        _id: expect.any(ObjectId) as ObjectId,
-        dealType: existingDeal.dealType,
-        version: getCurrentGefDealVersion(),
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-        facilitiesUpdated: Date.now(),
-        eligibility: {
-          ...mockLatestEligibilityCriteria,
-          updatedAt: Date.now(),
-        },
-        status: DEAL_STATUS.DRAFT,
-        submissionType: null,
-        submissionDate: null,
-        submissionCount: 0,
-        bankInternalRefName,
-        additionalRefName,
-        maker,
-        bank: mockBank,
-        ukefDealId: null,
-        checkerId: null,
-        editedBy: [maker._id],
-        exporter: cloneExporter(existingDeal.exporter),
-        portalActivities: [],
-        supportingInformation: {},
-        clonedDealId: existingDealId,
-        auditRecord: generateAuditDatabaseRecordFromAuditDetails(mockAuditDetails),
-      });
+      }),
+      _id: expect.any(ObjectId) as ObjectId,
     });
   });
 });
