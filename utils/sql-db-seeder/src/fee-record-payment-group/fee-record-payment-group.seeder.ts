@@ -7,6 +7,7 @@ import {
   FacilityUtilisationDataEntity,
   FEE_RECORD_STATUS,
   ReportPeriod,
+  REQUEST_PLATFORM_TYPE,
 } from '@ukef/dtfs2-common';
 import { DataSource } from 'typeorm';
 import Big from 'big.js';
@@ -113,7 +114,7 @@ export class FeeRecordPaymentGroupSeeder {
       facilityUtilisationData.id = facilityId;
       facilityUtilisationData.reportPeriod = this.utilisationDataReportPeriod;
       facilityUtilisationData.utilisation = facilityUtilisation * faker.number.float({ min: 0.8, max: 1.2 });
-      facilityUtilisationData.updateLastUpdatedBy({ platform: 'SYSTEM' });
+      facilityUtilisationData.updateLastUpdatedBy({ platform: REQUEST_PLATFORM_TYPE.SYSTEM });
       await dataSource.manager.save(FacilityUtilisationDataEntity, facilityUtilisationData);
     }
   }
@@ -155,7 +156,7 @@ export class FeeRecordPaymentGroupSeeder {
         dateReceived: faker.date.past({ years: 3 }),
         reference: faker.lorem.words({ min: 0, max: 3 }),
         feeRecords: this.feeRecords,
-        requestSource: { platform: 'SYSTEM' },
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.SYSTEM },
       });
 
     if (this.status === FEE_RECORD_STATUS.DOES_NOT_MATCH) {
@@ -167,7 +168,7 @@ export class FeeRecordPaymentGroupSeeder {
     if (this.status === FEE_RECORD_STATUS.RECONCILED && !this.reportIsManuallyReconciled) {
       const pdcReconcileUser = await MongoDbDataLoader.getPdcReconcileUserOrFail();
       for (const feeRecord of this.feeRecords) {
-        feeRecord.updateLastUpdatedBy({ platform: 'TFM', userId: pdcReconcileUser._id.toString() });
+        feeRecord.updateLastUpdatedBy({ platform: REQUEST_PLATFORM_TYPE.TFM, userId: pdcReconcileUser._id.toString() });
         feeRecord.dateReconciled = faker.date.recent({ days: 15 });
         feeRecord.reconciledByUserId = pdcReconcileUser._id.toString();
       }

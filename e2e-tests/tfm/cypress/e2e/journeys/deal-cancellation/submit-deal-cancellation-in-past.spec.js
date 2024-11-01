@@ -6,6 +6,7 @@ import caseDealPage from '../../pages/caseDealPage';
 import { yesterday } from '../../../../../e2e-fixtures/dateConstants';
 import checkDetailsPage from '../../pages/deal-cancellation/check-details';
 import dealsPage from '../../pages/dealsPage';
+import facilitiesPage from '../../pages/facilitiesPage';
 import { successBanner } from '../../partials';
 
 context('Deal cancellation - effective from date in past', () => {
@@ -95,6 +96,14 @@ context('Deal cancellation - effective from date in past', () => {
 
         const row = dealsPage.dealsTable.row(dealId);
         cy.assertText(row.stage(), TFM_DEAL_STAGE.CANCELLED);
+      });
+
+      it(`should show the facility stage on the "All facilities" page as ${TFM_FACILITY_STAGE.RISK_EXPIRED}`, () => {
+        cy.visit(relative(`/facilities/0`));
+        const facilityId = dealFacilities[0]._id;
+
+        const row = facilitiesPage.facilitiesTable.row(facilityId);
+        cy.assertText(row.facilityStage(), TFM_FACILITY_STAGE.RISK_EXPIRED);
       });
     });
   });
