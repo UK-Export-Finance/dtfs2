@@ -5,7 +5,7 @@ import { ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA } from './entra-id.schema';
 describe('ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA', () => {
   withEntraIdUserSchemaTests({
     schema: ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA,
-    getTestObjectWithUpdatedUserParams: (entraIdUser) => ({
+    getTestObjectWithUpdatedEntraIdUserParams: (entraIdUser) => ({
       ...aValidPayload(),
       account: { idTokenClaims: entraIdUser },
     }),
