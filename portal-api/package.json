@@ -45,7 +45,7 @@
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.11.2",
     "express-validator": "^7.2.0",
-    "filesize": "^8.0.7",
+    "filesize": "^10.1.6",
     "immer": "^10.1.1",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
