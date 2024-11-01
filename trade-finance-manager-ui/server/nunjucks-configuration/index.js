@@ -57,6 +57,7 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('userIsInTeam', (user, teamIdList) => userIsInTeam(user, teamIdList));
   nunjucksEnvironment.addFilter('userIsOnlyInTeams', (user, teamIdList) => userIsOnlyInTeams(user, teamIdList));
   nunjucksEnvironment.addFilter('removeCommasAndFloat', (value) => parseFloat(value.replace(/,/g, '')));
+  nunjucksEnvironment.addFilter('formatPageTitle', (title, pageHasErrors) => (pageHasErrors ? `Error - ${title}` : title));
 
   mojFilters = Object.assign(mojFilters);
   Object.keys(mojFilters).forEach((filterName) => {
