@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/unbound-method */
 import { AuditDetails, anEntraIdUser, EntraIdUser, TfmUser, UpsertTfmUserRequest } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { ObjectId } from 'mongodb';
@@ -41,13 +40,13 @@ describe('user service', () => {
 
     describe('when no users are found with the email addresses', () => {
       beforeEach(() => {
-        jest.mocked(UserRepo.findUsersByEmailAddresses).mockResolvedValue([]);
+        jest.mocked(UserRepo.findUsersByEmailAddresses.bind(UserRepo)).mockResolvedValue([]);
       });
 
       it('creates a new user in the database', async () => {
         await UserService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
 
-        expect(UserRepo.createUser).toHaveBeenCalledWith({
+        expect(UserRepo.createUser.bind(UserRepo)).toHaveBeenCalledWith({
           user: transformedUser,
           auditDetails,
         });
@@ -56,13 +55,13 @@ describe('user service', () => {
 
     describe('when one user is found with the email addresses', () => {
       beforeEach(() => {
-        jest.mocked(UserRepo.findUsersByEmailAddresses).mockResolvedValue([existingUser]);
+        jest.mocked(UserRepo.findUsersByEmailAddresses.bind(UserRepo)).mockResolvedValue([existingUser]);
       });
 
       it('updates the user in the database', async () => {
         await UserService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
 
-        expect(jest.mocked(UserRepo.updateUserById)).toHaveBeenCalledWith({
+        expect(jest.mocked(UserRepo.updateUserById.bind(UserRepo))).toHaveBeenCalledWith({
           userId,
           userUpdate: transformedUser,
           auditDetails,
@@ -72,7 +71,7 @@ describe('user service', () => {
 
     describe('when multiple users are found with the email addresses', () => {
       beforeEach(() => {
-        jest.mocked(UserRepo.findUsersByEmailAddresses).mockResolvedValue([existingUser, existingUser]);
+        jest.mocked(UserRepo.findUsersByEmailAddresses.bind(UserRepo)).mockResolvedValue([existingUser, existingUser]);
       });
 
       it('throws an error', async () => {

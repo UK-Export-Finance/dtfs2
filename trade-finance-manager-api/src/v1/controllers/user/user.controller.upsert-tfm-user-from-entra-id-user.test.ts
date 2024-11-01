@@ -30,15 +30,15 @@ describe('user controller', () => {
 
       upsertTfmUserFromEntraIdUserResponse = userServiceMockResponses.anUpsertTfmUserFromEntraIdUserResponse();
       mappedUserDetails = mapUserData(upsertTfmUserFromEntraIdUserResponse);
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      when(UserService.upsertTfmUserFromEntraIdUser).calledWith({ entraIdUser, auditDetails }).mockResolvedValue(upsertTfmUserFromEntraIdUserResponse);
+      when(UserService.upsertTfmUserFromEntraIdUser.bind(UserService))
+        .calledWith({ entraIdUser, auditDetails })
+        .mockResolvedValue(upsertTfmUserFromEntraIdUserResponse);
     });
 
     it('should upsert user in the database', async () => {
       await makeRequest();
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(UserService.upsertTfmUserFromEntraIdUser).toHaveBeenCalledWith({ entraIdUser, auditDetails });
+      expect(UserService.upsertTfmUserFromEntraIdUser.bind(UserService)).toHaveBeenCalledWith({ entraIdUser, auditDetails });
     });
 
     it('should return the mapped user', async () => {
