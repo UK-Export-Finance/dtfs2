@@ -26,7 +26,7 @@ export const validateFeeRecordsAllHaveSamePaymentCurrency = (feeRecords: FeeReco
  * @throws {InvalidPayloadError} If fee records have different statuses
  * @throws {InvalidPayloadError} If fee record IDs do not match the fee record IDs on the existing payment group
  */
-export const validateFeeRecordsWithPaymentsAreOnePaymentGroup = async (feeRecordIds: number[]) => {
+export const validateFeeRecordsFormCompleteGroup = async (feeRecordIds: number[]) => {
   const feeRecords = await FeeRecordRepo.findByIdWithPaymentsAndFeeRecords(feeRecordIds);
 
   const feeRecordStatuses = feeRecords.reduce((statuses, { status }) => statuses.add(status), new Set<FeeRecordStatus>());
@@ -41,7 +41,7 @@ export const validateFeeRecordsWithPaymentsAreOnePaymentGroup = async (feeRecord
   }
 
   const firstPayment = firstFeeRecord.payments[0];
-  // Sets would be faster for large volumes but not seen/needed here.
+
   const savedFeeRecordIds = firstPayment.feeRecords.map((feeRecord) => feeRecord.id);
 
   const allSavedFeeRecordIdsArePresentInProvidedFeeRecords = savedFeeRecordIds.every((id) => feeRecordIds.includes(id));
