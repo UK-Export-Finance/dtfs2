@@ -19,10 +19,10 @@ describe('generateClonedExporter', () => {
     };
 
     // Act
-    const response = generateClonedExporter(mockExporter);
+    const result = generateClonedExporter(mockExporter);
 
     // Assert
-    expect(response).toEqual({
+    expect(result).toEqual({
       ...mockExporter,
       updatedAt: Date.now(),
       status: exporterStatus(mockExporter),
