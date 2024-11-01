@@ -34,6 +34,7 @@ describe('get-selected-fee-records-details.controller', () => {
       feeRecords: [],
       payments: [aPayment()],
       canAddToExistingPayment: false,
+      gbpTolerance: 2,
     });
 
     afterEach(() => {

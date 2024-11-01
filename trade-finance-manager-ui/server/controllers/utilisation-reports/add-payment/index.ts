@@ -84,6 +84,7 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
       multipleFeeRecordsSelected: selectedFeeRecordDetails.feeRecords.length > 1,
       canAddToExistingPayment: selectedFeeRecordDetails.canAddToExistingPayment,
       backLinkHref: getLinkToPremiumPaymentsTab(reportId, feeRecordIds),
+      gbpTolerance: selectedFeeRecordDetails.gbpTolerance,
     });
   } catch (error) {
     console.error('Failed to add payment', error);

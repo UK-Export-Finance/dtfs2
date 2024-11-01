@@ -3,6 +3,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 {% import "./_macros/recorded-payments-for-selected-fee-records-table.njk" as recordedPaymentsTable %}
 {% import "./_macros/fee-record-details-table.njk" as feeRecordDetailsTable %}
 {% import "./_macros/payment-date-input.njk" as paymentDateInput %}
@@ -55,6 +56,16 @@
         data-cy="add-fees-to-an-existing-payment-button"/>
     </form>
   {% endif %}
+
+  {% if gbpTolerance > 0 %}
+    {{ govukInsetText({
+      text: "Tolerances of £" + gbpTolerance + " or equivalent are applied. You cannot add any additional payments to the record if it is taken to a match status as a result of tolerance.",
+      attributes: {
+        "data-cy": "inset-tolerance-text"
+      }
+    }) }}
+  {% endif %}
+
   <h2 class="govuk-heading-m">
     {% if paymentNumber > 1 %}
       Payment {{ paymentNumber }} details
