@@ -4,10 +4,11 @@ const { requestParams, generateErrorSummary, errorHref, validationErrorHandler }
 const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controllers/login/check-your-email');
 const { loginWithSignInLink } = require('../../controllers/login/login-with-sign-in-link');
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
+const { LANDING_PAGES } = require('../../constants');
 
 const router = express.Router();
 
-router.get('/login', (req, res) => {
+router.get(LANDING_PAGES.LOGIN, (req, res) => {
   const { passwordreset, passwordupdated } = req.query;
   return res.render('login/index.njk', {
     passwordreset,
@@ -16,7 +17,7 @@ router.get('/login', (req, res) => {
   });
 });
 
-router.post('/login', async (req, res) => {
+router.post(LANDING_PAGES.LOGIN, async (req, res) => {
   const { email, password } = req.body;
   const loginErrors = [];
 
@@ -81,7 +82,7 @@ router.post('/login', async (req, res) => {
 
 router.get('/logout', (req, res) => {
   req.session.destroy(() => {
-    res.redirect('/login');
+    res.redirect(LANDING_PAGES.LOGIN);
   });
 });
 
