@@ -60,79 +60,75 @@ describe('fee record validator', () => {
       jest.resetAllMocks();
     });
 
-    describe('when all fee records in the group have the same status', () => {
-      it.each(difference(Object.values(FEE_RECORD_STATUS), [FEE_RECORD_STATUS.DOES_NOT_MATCH]))(
-        'should not throw if all the fee records in the group have status %s',
-        async (status) => {
+    describe(`when all fee records in the group have status ${FEE_RECORD_STATUS.TO_DO}`, () => {
+      it('should not throw', async () => {
+        // Arrange
+        const payments = [
+          PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
+            .withFeeRecords([
+              FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(1).build(),
+              FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(2).build(),
+            ])
+            .build(),
+        ];
+        const feeRecords = [
+          FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(1).withStatus(FEE_RECORD_STATUS.TO_DO).withPayments(payments).build(),
+          FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(2).withStatus(FEE_RECORD_STATUS.TO_DO).withPayments(payments).build(),
+        ];
+        feeRecordFindBySpy.mockResolvedValue(feeRecords);
+
+        const feeRecordIds = [1, 2];
+
+        // Act + Assert
+        await expect(validateFeeRecordsFormCompleteGroup(feeRecordIds)).resolves.not.toThrow();
+      });
+    });
+
+    describe.each(difference(Object.values(FEE_RECORD_STATUS), [FEE_RECORD_STATUS.TO_DO]))('when all fee records in the group have status %s', (status) => {
+      describe('and the fee record ids match those of the fee record payment group', () => {
+        it('should not throw', async () => {
           // Arrange
-          const feeRecords = [FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(1).withStatus(status).build()];
+          const payments = [
+            PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
+              .withFeeRecords([
+                FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(1).build(),
+                FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(2).build(),
+              ])
+              .build(),
+          ];
+          const feeRecords = [
+            FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(1).withStatus(status).withPayments(payments).build(),
+            FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(2).withStatus(status).withPayments(payments).build(),
+          ];
+          feeRecordFindBySpy.mockResolvedValue(feeRecords);
+
+          const feeRecordIds = [1, 2];
+
+          // Act + Assert
+          await expect(validateFeeRecordsFormCompleteGroup(feeRecordIds)).resolves.not.toThrow();
+        });
+      });
+
+      describe('and there are missing fee record ids from the fee record payment group', () => {
+        it('should throw an invalid payload error', async () => {
+          // Arrange
+          const payments = [
+            PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
+              .withFeeRecords([
+                FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(1).build(),
+                FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(2).build(),
+              ])
+              .build(),
+          ];
+          const feeRecords = [
+            FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(1).withStatus(status).withPayments(payments).build(),
+          ];
           feeRecordFindBySpy.mockResolvedValue(feeRecords);
 
           const feeRecordIds = [1];
 
           // Act + Assert
-          await expect(validateFeeRecordsFormCompleteGroup(feeRecordIds)).resolves.not.toThrow();
-        },
-      );
-
-      describe(`when all the fee records in the group have status ${FEE_RECORD_STATUS.DOES_NOT_MATCH}`, () => {
-        describe('and the fee record ids match those of the fee record payment group', () => {
-          it('should not throw', async () => {
-            // Arrange
-            const payments = [
-              PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
-                .withFeeRecords([
-                  FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(1).build(),
-                  FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(2).build(),
-                ])
-                .build(),
-            ];
-            const feeRecords = [
-              FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport())
-                .withId(1)
-                .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
-                .withPayments(payments)
-                .build(),
-              FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport())
-                .withId(2)
-                .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
-                .withPayments(payments)
-                .build(),
-            ];
-            feeRecordFindBySpy.mockResolvedValue(feeRecords);
-
-            const feeRecordIds = [1, 2];
-
-            // Act + Assert
-            await expect(validateFeeRecordsFormCompleteGroup(feeRecordIds)).resolves.not.toThrow();
-          });
-        });
-
-        describe('and there are missing fee record ids from the fee record payment group', () => {
-          it('should throw an invalid payload error', async () => {
-            // Arrange
-            const payments = [
-              PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
-                .withFeeRecords([
-                  FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(1).build(),
-                  FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(2).build(),
-                ])
-                .build(),
-            ];
-            const feeRecords = [
-              FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport())
-                .withId(1)
-                .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
-                .withPayments(payments)
-                .build(),
-            ];
-            feeRecordFindBySpy.mockResolvedValue(feeRecords);
-
-            const feeRecordIds = [1];
-
-            // Act + Assert
-            await expect(validateFeeRecordsFormCompleteGroup(feeRecordIds)).rejects.toThrow(InvalidPayloadError);
-          });
+          await expect(validateFeeRecordsFormCompleteGroup(feeRecordIds)).rejects.toThrow(InvalidPayloadError);
         });
       });
     });

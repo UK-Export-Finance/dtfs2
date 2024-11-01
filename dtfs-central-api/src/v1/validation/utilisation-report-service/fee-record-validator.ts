@@ -36,7 +36,7 @@ export const validateFeeRecordsFormCompleteGroup = async (ids: number[]) => {
 
   const firstFeeRecord = feeRecords[0];
 
-  if (firstFeeRecord.status !== FEE_RECORD_STATUS.DOES_NOT_MATCH) {
+  if (firstFeeRecord.status === FEE_RECORD_STATUS.TO_DO) {
     return;
   }
 
