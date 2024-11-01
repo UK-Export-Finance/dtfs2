@@ -36,10 +36,10 @@ export const validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup = async (f
   // Sets would be faster for large volumes but not seen/needed here.
   const savedFeeRecordIds = firstPayment.feeRecords.map((feeRecord) => feeRecord.id);
 
-  const isPaymentGroupExclusivelyConsistingOfIdsProvided =
-    feeRecordIds.every((id) => savedFeeRecordIds.includes(id)) && savedFeeRecordIds.length === feeRecordIds.length;
+  const allSavedFeeRecordIdsArePresentInProvidedFeeRecords = savedFeeRecordIds.every((id) => feeRecordIds.includes(id));
+  const allProvidedIdsArePresentInSavedFeeRecords = feeRecordIds.every((id) => savedFeeRecordIds.includes(id));
 
-  if (!isPaymentGroupExclusivelyConsistingOfIdsProvided) {
+  if (!allSavedFeeRecordIdsArePresentInProvidedFeeRecords || !allProvidedIdsArePresentInSavedFeeRecords) {
     throw new InvalidPayloadError('Requested fee record IDs do not match the fee record IDs on the existing payment group.');
   }
 };
