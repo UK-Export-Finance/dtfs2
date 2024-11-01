@@ -70,6 +70,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
           },
         ],
         canAddToExistingPayment: true,
+        gbpTolerance: 1,
       };
       jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(selectedFeeRecordDetailsResponse);
 
@@ -437,6 +438,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
             addPaymentFormSubmission: 'true',
           },
         });
+        const gbpTolerance = 1;
         jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue({
           bank: { name: 'Test' },
           reportPeriod: { start: { month: 2, year: 2024 }, end: { month: 4, year: 2024 } },
@@ -459,6 +461,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
             },
           ],
           canAddToExistingPayment: true,
+          gbpTolerance,
         });
 
         // Act
@@ -488,6 +491,25 @@ describe('controllers/utilisation-reports/add-payment', () => {
           },
         ]);
         expect((res._getRenderData() as AddPaymentViewModel).canAddToExistingPayment).toEqual(true);
+      });
+
+      it('should set gbpTolerance to the tolerance value', async () => {
+        // Arrange
+        const { req, res } = httpMocks.createMocks({
+          session: requestSession,
+          params: { reportId: '123' },
+          body: addPaymentFormSubmissionRequestBodyWithIncompleteData,
+        });
+        jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue({
+          ...aSelectedFeeRecordsDetails(),
+          gbpTolerance: 1.23,
+        });
+
+        // Act
+        await addPayment(req, res);
+
+        // Assert
+        expect((res._getRenderData() as AddPaymentViewModel).gbpTolerance).toEqual(1.23);
       });
 
       it('should set selected checkbox ids', async () => {
@@ -826,6 +848,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
       ],
       payments: [],
       canAddToExistingPayment: false,
+      gbpTolerance: 1,
     };
   }
 

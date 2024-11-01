@@ -65,6 +65,7 @@ export const allFacilitiesAndFacilityCount = ({
                 }, // YYYY-MM-DD
               },
             ],
+            default: null,
           },
         },
         // create the `companyName` property - this is inside the `dealSnapshot.exporter` property, NOT `facilities` array
