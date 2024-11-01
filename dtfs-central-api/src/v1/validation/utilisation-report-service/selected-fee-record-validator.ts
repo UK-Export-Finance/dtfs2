@@ -1,4 +1,4 @@
-import { FEE_RECORD_STATUS, FeeRecordEntity } from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { FeeRecordRepo } from '../../../repositories/fee-record-repo';
 import { InvalidPayloadError } from '../../../errors';
 
@@ -20,6 +20,11 @@ export const validateSelectedFeeRecordsAllHaveSamePaymentCurrency = (selectedFee
  */
 export const validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup = async (feeRecordIds: number[]) => {
   const selectedFeeRecords = await FeeRecordRepo.findByIdWithPaymentsAndFeeRecords(feeRecordIds);
+
+  const selectedFeeRecordStatuses = selectedFeeRecords.reduce((statuses, { status }) => statuses.add(status), new Set<FeeRecordStatus>());
+  if (selectedFeeRecordStatuses.size !== 1) {
+    throw new InvalidPayloadError('Fee records must all have the same status');
+  }
 
   const firstFeeRecord = selectedFeeRecords[0];
 

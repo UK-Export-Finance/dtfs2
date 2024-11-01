@@ -112,6 +112,40 @@ describe('selected fee record validator', () => {
       });
     });
 
+    describe('when the fee record statuses do not match', () => {
+      it('should throw an invalid payload error', async () => {
+        // Arrange
+        const selectedFeeRecords = [
+          FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(1).withStatus(FEE_RECORD_STATUS.TO_DO).build(),
+          FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(2).withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH).build(),
+          FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(3).withStatus(FEE_RECORD_STATUS.MATCH).build(),
+        ];
+        feeRecordFindBySpy.mockResolvedValue(selectedFeeRecords);
+
+        const selectedFeeRecordIds = [1, 2, 3];
+
+        // Act / Assert
+        await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(selectedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
+      });
+    });
+
+    describe('when all but one of the fee record statuses do not match', () => {
+      it('should throw an invalid payload error', async () => {
+        // Arrange
+        const selectedFeeRecords = [
+          FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(1).withStatus(FEE_RECORD_STATUS.TO_DO).build(),
+          FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(2).withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH).build(),
+          FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(3).withStatus(FEE_RECORD_STATUS.TO_DO).build(),
+        ];
+        feeRecordFindBySpy.mockResolvedValue(selectedFeeRecords);
+
+        const selectedFeeRecordIds = [1, 2, 3];
+
+        // Act / Assert
+        await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(selectedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
+      });
+    });
+
     function aFeeRecordWithId(id: number) {
       return FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withId(id).build();
     }
