@@ -36,6 +36,7 @@ const baseRules = {
   'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
   'no-unused-vars': ['error', { ignoreRestSiblings: true }],
   'object-curly-newline': 'off',
+  'no-param-reassign': ['error', { props: true, ignorePropertyModificationsFor: ['draft', 'req'] }],
 };
 
 module.exports = {
