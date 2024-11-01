@@ -12,7 +12,8 @@ import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facilit
 
 /**
  * NOTE: These tests check the backwards compatibility with in-flight version 0 deals.
- * A migration may need to be run on production if this test is updated.
+ * If this test needs updating because version 0 deals are no longer being supported,
+ * we need to check if migration needs to be run in production.
  */
 context('Clone version 0 deal to version 1', () => {
   let version0DealId;
