@@ -11,10 +11,10 @@ exports.clone = async (req, res) => {
   } = req;
 
   try {
-    const validateErrs = validateApplicationReferences(req.body);
+    const validationErrors = validateApplicationReferences(req.body);
 
-    if (validateErrs) {
-      return res.status(422).send(validateErrs);
+    if (validationErrors) {
+      return res.status(422).send(validationErrors);
     }
 
     const auditDetails = generatePortalAuditDetails(req.user._id);
@@ -35,7 +35,7 @@ exports.clone = async (req, res) => {
 
     return res.status(200).send({ dealId: insertedId });
   } catch (error) {
-    console.error('Failed to clone deal, %o', error);
+    console.error('Failed to clone deal id %s, %o', existingDealId, error);
 
     if (error instanceof ApiError) {
       return res.status(error.status).send(error.message);
