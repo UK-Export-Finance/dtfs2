@@ -2,6 +2,10 @@ const CONSTANTS = require('../../../../constants');
 
 const mapDeals = (deals, mapBssDealFunc, mapGefDealFunc) => {
   try {
+    if (!deals?.length) {
+      return [];
+    }
+
     return deals.map((deal) => {
       console.info('Mapping deal %s', deal._id);
 

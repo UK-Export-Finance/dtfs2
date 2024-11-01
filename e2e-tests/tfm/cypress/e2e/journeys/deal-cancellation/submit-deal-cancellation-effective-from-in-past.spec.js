@@ -10,7 +10,7 @@ import facilitiesPage from '../../pages/facilitiesPage';
 import { caseSubNavigation, successBanner } from '../../partials';
 import activitiesPage from '../../pages/activities/activitiesPage';
 
-context('Deal cancellation - effective from date in past', () => {
+context('Deal cancellation - submit cancellation with "effectiveFrom" in past', () => {
   let dealId;
   const dealFacilities = [];
   const ukefDealId = 10000001;
