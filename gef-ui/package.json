@@ -50,7 +50,7 @@
     "csurf": "^1.11.0",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.1",
-    "dotenv": "16.0.3",
+    "dotenv": "16.4.5",
     "express": "^4.21.1",
     "express-fileupload": "^1.5.1",
     "express-rate-limit": "^6.11.2",
