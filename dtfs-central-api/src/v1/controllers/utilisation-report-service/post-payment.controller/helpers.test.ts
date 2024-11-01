@@ -90,6 +90,7 @@ describe('post-add-payment.controller helpers', () => {
       await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
 
       // Assert
+      expect(utilisationReportStateMachineConstructorSpy).toHaveBeenCalledTimes(1);
       expect(utilisationReportStateMachineConstructorSpy).toHaveBeenCalledWith(reportId);
     });
 
@@ -98,6 +99,7 @@ describe('post-add-payment.controller helpers', () => {
       await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
 
       // Assert
+      expect(feeRecordFindBySpy).toHaveBeenCalledTimes(1);
       expect(feeRecordFindBySpy).toHaveBeenCalledWith({ id: In(feeRecordIds) });
     });
 
@@ -107,6 +109,7 @@ describe('post-add-payment.controller helpers', () => {
 
       // Act / Assert
       await expect(addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails)).rejects.toThrow(NotFoundError);
+      expect(feeRecordFindBySpy).toHaveBeenCalledTimes(1);
     });
 
     it("throws the 'InvalidPayloadError' if the payment currency does not match the fee record payment currencies", async () => {
@@ -123,6 +126,7 @@ describe('post-add-payment.controller helpers', () => {
 
       // Act / Assert
       await expect(addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetailsWithEURCurrency)).rejects.toThrow(InvalidPayloadError);
+      expect(feeRecordFindBySpy).toHaveBeenCalledTimes(1);
     });
 
     it("throws the 'InvalidPayloadError' if the payment currency matches all but one of the fee record payment currencies", async () => {
@@ -140,6 +144,7 @@ describe('post-add-payment.controller helpers', () => {
 
       // Act / Assert
       await expect(addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetailsWithGBPCurrency)).rejects.toThrow(InvalidPayloadError);
+      expect(feeRecordFindBySpy).toHaveBeenCalledTimes(1);
     });
 
     it("throws the 'InvalidPayloadError' if the selected fee records have payments and do not match the fee records in the fee record payment group", async () => {
@@ -165,7 +170,9 @@ describe('post-add-payment.controller helpers', () => {
       // Act / Assert
       await expect(addPaymentToUtilisationReport(reportId, selectedFeeRecordIds, tfmUser, newPaymentDetails)).rejects.toThrow(InvalidPayloadError);
 
+      expect(feeRecordFindBySpy).toHaveBeenCalledTimes(1);
       expect(feeRecordFindBySpy).toHaveBeenCalledWith({ id: In(selectedFeeRecordIds) });
+      expect(feeRecordFindByIdWithPaymentsAndFeeRecordsSpy).toHaveBeenCalledTimes(1);
       expect(feeRecordFindByIdWithPaymentsAndFeeRecordsSpy).toHaveBeenCalledWith(selectedFeeRecordIds);
     });
 
@@ -174,6 +181,7 @@ describe('post-add-payment.controller helpers', () => {
       await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
 
       // Assert
+      expect(handleEventSpy).toHaveBeenCalledTimes(1);
       expect(handleEventSpy).toHaveBeenCalledWith({
         type: 'ADD_A_PAYMENT',
         payload: {
