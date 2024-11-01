@@ -38,10 +38,21 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
 
     const { facilityId, facility, amendments, fmr } = payload;
     const { amendment } = amendments;
+
     let facilityLoanRecordAmendments;
 
     // 1.1. Facility Loan Record (FLR) amendment mapping
     const flrMApped = mappings.facility.facilityLoanAmend(amendments, facility, fmr);
+
+    /**
+     * When facility amendment is applied on facility type `Loan`,
+     * with only `amount` attribute execution should be terminated.
+     */
+    if (!flrMApped?.length) {
+      facilityLoanRecordAmendments = 'Facility loan amount only amendment, aborting FLR amendment';
+
+      return facilityLoanRecordAmendments;
+    }
 
     // 1.2. Extract loan id for facility id
     const loanId = yield context.df.callActivityWithRetry('get-facility-loan-id', retryOptions, {
