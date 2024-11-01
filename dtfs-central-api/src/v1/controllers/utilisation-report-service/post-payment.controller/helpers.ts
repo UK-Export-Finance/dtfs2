@@ -6,7 +6,7 @@ import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { NewPaymentDetails } from '../../../../types/utilisation-reports';
 import { executeWithSqlTransaction } from '../../../../helpers';
-import { validateFeeRecordsWithPaymentsAreOnePaymentGroup } from '../../../validation/utilisation-report-service/selected-fee-record-validator';
+import { validateFeeRecordsWithPaymentsAreOnePaymentGroup } from '../../../validation/utilisation-report-service/fee-record-validator';
 
 /**
  * Adds a payment to the utilisation report with the specified id and

@@ -10,7 +10,7 @@ import {
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { FeeRecordRepo } from '../../../repositories/fee-record-repo';
-import { validateFeeRecordsAllHaveSamePaymentCurrency, validateFeeRecordsWithPaymentsAreOnePaymentGroup } from './selected-fee-record-validator';
+import { validateFeeRecordsAllHaveSamePaymentCurrency, validateFeeRecordsWithPaymentsAreOnePaymentGroup } from './fee-record-validator';
 import { InvalidPayloadError } from '../../../errors';
 
 jest.mock('../../../repositories/fee-record-repo');
