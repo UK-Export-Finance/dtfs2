@@ -111,6 +111,7 @@ context('Clone GEF (AIN) deal', () => {
 
         applicationDetails.bankRefName().contains('Cloned AIN deal');
         applicationDetails.automaticCoverStatus().contains('Not started');
+        applicationDetails.facilityStatus().contains('In progress');
         applicationDetails.exporterStatus().contains('Completed');
         submitButton().should('not.exist');
         cy.get('[data-cy="facility-summary-list"]').eq(1).find('.govuk-summary-list__row').eq(1).find('.govuk-summary-list__key').contains('Stage');
@@ -303,6 +304,7 @@ context('Clone GEF (MIA) deal', () => {
 
         applicationDetails.bankRefName().contains('Cloned MIA deal');
         applicationDetails.automaticCoverStatus().contains('Not started');
+        applicationDetails.facilityStatus().contains('In progress');
         applicationDetails.exporterStatus().contains('Completed');
         submitButton().should('not.exist');
         cy.get('[data-cy="facility-summary-list"]').eq(1).find('.govuk-summary-list__row').eq(1).find('.govuk-summary-list__key').contains('Stage');
