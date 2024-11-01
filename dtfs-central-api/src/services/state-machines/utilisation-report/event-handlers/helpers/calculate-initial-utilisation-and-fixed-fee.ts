@@ -1,7 +1,7 @@
 import { calculateDrawnAmount, isValidDate } from '@ukef/dtfs2-common';
 import Big from 'big.js';
-import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { calculateInitialFixedFee } from './calculate-initial-fixed-fee';
+import { getKeyingSheetCalculationFacilityValues } from '../../../../../helpers';
 
 export type RequiredParams = {
   value?: number | null;
@@ -58,13 +58,7 @@ export const hasRequiredValues = ({ value, interestPercentage, dayCountBasis, co
  * @returns {Object} fixedFee and utilisation values
  */
 export const calculateInitialUtilisationAndFixedFee = async (facilityId: string) => {
-  const tfmFacility = await TfmFacilitiesRepo.findOneByUkefFacilityId(facilityId);
-
-  if (!tfmFacility?.facilitySnapshot) {
-    throw new Error(`TFM facility ${facilityId} could not be found`);
-  }
-
-  const { value, coverStartDate, coverEndDate, interestPercentage, dayCountBasis, coverPercentage } = tfmFacility.facilitySnapshot;
+  const { value, coverStartDate, coverEndDate, interestPercentage, dayCountBasis, coverPercentage } = await getKeyingSheetCalculationFacilityValues(facilityId);
 
   if (!hasRequiredValues({ value, interestPercentage, dayCountBasis, coverStartDate, coverEndDate, coverPercentage })) {
     throw new Error(`TFM facility values for ${facilityId} are missing`);
