@@ -22,7 +22,12 @@ describe('EntraIdService', () => {
       jest.resetAllMocks();
 
       base64EncodeSpy = jest.spyOn(msalNode.CryptoProvider.prototype, 'base64Encode').mockReturnValue(mockBase64EncodedState);
-      jest.spyOn(msalNode, 'CryptoProvider').mockReturnValue({ createNewGuid: () => mockGuid, base64Encode: base64EncodeSpy as unknown as (string) => string });
+
+      jest.spyOn(msalNode, 'CryptoProvider').mockReturnValue({
+        createNewGuid: () => mockGuid,
+        base64Encode: base64EncodeSpy,
+      } as unknown as msalNode.CryptoProvider);
+
       jest.spyOn(msalNode, 'ConfidentialClientApplication').mockImplementation(() => {
         return {
           getAuthCodeUrl: jest.fn().mockResolvedValue(authCodeUrlFromMsalApp),
