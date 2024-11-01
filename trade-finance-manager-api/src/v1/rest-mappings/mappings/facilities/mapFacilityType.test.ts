@@ -1,23 +1,23 @@
 import { Facility, FACILITY_TYPE, MAPPED_FACILITY_TYPE } from '@ukef/dtfs2-common';
-import { mapFacilityType, mapGefFacilityType } from './mapFacilityType';
+import { mapBssEwcsFacilityType, mapGefFacilityType } from './mapFacilityType';
 
 const { BOND, LOAN, CASH, CONTINGENT } = FACILITY_TYPE;
 
-describe('mapFacilityType', () => {
+describe('mapBssEwcsFacilityType', () => {
   describe(`when the facility type is ${BOND}`, () => {
     it('should return the facility bondType', () => {
       const mockBondFacility = {
         bondType: 'Bid bond',
       };
 
-      const result = mapFacilityType(BOND, mockBondFacility as Facility);
+      const result = mapBssEwcsFacilityType(BOND, mockBondFacility as Facility);
       expect(result).toEqual(mockBondFacility.bondType);
     });
   });
 
   describe(`when the facility type is ${LOAN}`, () => {
     it('should return the correct mapped facility type', () => {
-      const result = mapFacilityType(LOAN, {} as Facility);
+      const result = mapBssEwcsFacilityType(LOAN, {} as Facility);
 
       expect(result).toEqual(MAPPED_FACILITY_TYPE.LOAN);
     });
@@ -25,7 +25,7 @@ describe('mapFacilityType', () => {
 
   describe(`when the facility type is unrecognised`, () => {
     it('should return null', () => {
-      const result = mapFacilityType(CONTINGENT, {} as Facility);
+      const result = mapBssEwcsFacilityType(CONTINGENT, {} as Facility);
 
       expect(result).toEqual(null);
     });

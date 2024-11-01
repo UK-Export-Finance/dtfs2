@@ -3,7 +3,7 @@ import { Facility, FacilityType, FACILITY_TYPE, MAPPED_FACILITY_TYPE } from '@uk
 const { BOND, LOAN, CASH, CONTINGENT } = FACILITY_TYPE;
 
 /**
- * Maps a facility type to a differently worded facility type, to ultimately be rendered in the UI, as per design.
+ * Maps a BSS/EWCS facility type to a differently worded facility type, to ultimately be rendered in the UI, as per design.
  * @param type - the facility type in the database
  * @param facilitySnapshot - the facility snapshot from the database
  * @returns the mapped facility type
@@ -16,7 +16,7 @@ const { BOND, LOAN, CASH, CONTINGENT } = FACILITY_TYPE;
  * // returns 'Loan'
  * mapFacilityType('Loan', facilitySnapshot)
  */
-export const mapFacilityType = (type: FacilityType, facilitySnapshot: Facility): string | null => {
+export const mapBssEwcsFacilityType = (type: FacilityType, facilitySnapshot: Facility): string | null => {
   if (type === BOND) {
     return facilitySnapshot.bondType ?? null;
   }

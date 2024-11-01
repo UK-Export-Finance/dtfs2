@@ -11,7 +11,7 @@ const mapDates = require('./mapDates');
 const mapUkefExposureValue = require('./mapUkefExposureValue');
 const mapFacilityValueExportCurrency = require('./mapFacilityValueExportCurrency');
 const { mapBssEwcsFacilityStage } = require('./mapFacilityStage');
-const { mapFacilityType } = require('./mapFacilityType');
+const { mapBssEwcsFacilityType } = require('./mapFacilityType');
 
 /**
  * Maps a BSS/EWCS facility snapshot in the database to the facility snapshot used in TFM-API and TFM-UI.
@@ -55,7 +55,7 @@ const mapFacilitySnapshot = (facility, dealSnapshot) => {
 
   clonedSnapshot.facilityProduct = mapFacilityProduct(type);
 
-  clonedSnapshot.type = mapFacilityType(type, facilitySnapshot);
+  clonedSnapshot.type = mapBssEwcsFacilityType(type, facilitySnapshot);
 
   const formattedFacilityValue = formattedNumber(value);
 

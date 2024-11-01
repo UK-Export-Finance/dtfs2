@@ -12,7 +12,7 @@ const mapDates = require('./mapDates');
 
 const MOCK_DEAL = require('../../../__mocks__/mock-deal');
 const { mapBssEwcsFacilityStage } = require('./mapFacilityStage');
-const { mapFacilityType } = require('./mapFacilityType');
+const { mapBssEwcsFacilityType } = require('./mapFacilityType');
 
 describe('mapFacility', () => {
   const mockFacilityTfm = {
@@ -88,7 +88,7 @@ describe('mapFacility', () => {
 
     const expectedFacilityProduct = mapFacilityProduct(mockFacilitySnapshot.type);
 
-    const expectedType = mapFacilityType(mockType, mockFacilitySnapshot);
+    const expectedType = mapBssEwcsFacilityType(mockType, mockFacilitySnapshot);
 
     const expectedBanksInterestMargin = mapBanksInterestMargin({
       ...mockFacilitySnapshot,
