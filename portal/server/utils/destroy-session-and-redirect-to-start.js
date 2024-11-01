@@ -1,4 +1,4 @@
-const { PORTAL_URL } = require('../constants');
+const { PORTAL_URL, LANDING_PAGES } = require('../constants');
 
 /**
  * Destroys a user's session and redirects them to the start page.
@@ -8,7 +8,7 @@ const { PORTAL_URL } = require('../constants');
  */
 function destroySessionAndRedirectToStart(req, res) {
   const startPageRedirect = Boolean(process.env.START_PAGE_REDIRECT);
-  const redirectAddress = startPageRedirect ? PORTAL_URL : '/login';
+  const redirectAddress = startPageRedirect ? PORTAL_URL : LANDING_PAGES.LOGIN;
 
   req.session.destroy(() => {
     res.redirect(redirectAddress);

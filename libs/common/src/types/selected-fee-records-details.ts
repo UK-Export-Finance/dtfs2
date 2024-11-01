@@ -30,5 +30,6 @@ export type SelectedFeeRecordsDetails = {
   feeRecords: SelectedFeeRecordDetails[];
   payments: SelectedFeeRecordsPaymentDetails[];
   canAddToExistingPayment: boolean;
+  gbpTolerance: number;
   availablePaymentGroups?: SelectedFeeRecordsAvailablePaymentGroups;
 };

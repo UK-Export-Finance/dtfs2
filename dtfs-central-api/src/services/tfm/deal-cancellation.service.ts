@@ -33,8 +33,6 @@ export class DealCancellationService {
       return await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation, activity, auditDetails });
     }
 
-    // TODO DTFS2-7429: Handle future effective from dates
-
-    return undefined;
+    return await TfmDealCancellationRepo.scheduleDealCancellation({ dealId, cancellation, activity, auditDetails });
   }
 }

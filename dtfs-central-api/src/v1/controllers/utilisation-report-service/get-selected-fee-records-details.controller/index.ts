@@ -10,6 +10,7 @@ import {
   getSelectedFeeRecordsAvailablePaymentGroups,
   mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups,
 } from './helpers';
+import { PaymentMatchingToleranceService } from '../../../../services/payment-matching-tolerance/payment-matching-tolerance.service';
 
 type GetSelectedFeeRecordDetailsRequestBody = {
   feeRecordIds: number[];
@@ -58,11 +59,14 @@ export const getSelectedFeeRecordDetails = async (req: GetSelectedFeeRecordDetai
 
     const canAddToExistingPayment = await canFeeRecordsBeAddedToExistingPayment(reportId, selectedFeeRecords);
 
+    const gbpTolerance = await PaymentMatchingToleranceService.getGbpPaymentMatchingTolerance();
+
     const selectedFeeRecordsDetails = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(
       utilisationReport.bankId,
       utilisationReport.reportPeriod,
       selectedFeeRecords,
       canAddToExistingPayment,
+      gbpTolerance,
     );
 
     if (includeAvailablePaymentGroups === 'true') {

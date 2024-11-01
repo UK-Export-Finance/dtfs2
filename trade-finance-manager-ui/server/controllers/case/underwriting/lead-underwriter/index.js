@@ -86,8 +86,9 @@ const postAssignLeadUnderwriter = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  if (!req.body.assignedTo) {
-    return res.render('partials/problem-with-service.njk');
+  if (!req?.body?.assignedTo) {
+    console.error('Error while assigning lead underwriter to deal %s %o', dealId, req?.body);
+    return res.render('_partials/problem-with-service.njk');
   }
 
   const update = {
