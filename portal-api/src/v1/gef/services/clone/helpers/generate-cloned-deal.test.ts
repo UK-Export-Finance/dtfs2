@@ -62,7 +62,7 @@ describe('generateClonedDeal', () => {
 
   it('returns the expected clone deal', () => {
     // Act
-    const cloneDeal = generateClonedDeal({
+    const result = generateClonedDeal({
       dealId: existingDealId,
       bankInternalRefName,
       additionalRefName,
@@ -75,7 +75,7 @@ describe('generateClonedDeal', () => {
     });
 
     // Assert
-    expect(cloneDeal).toEqual({
+    expect(result).toEqual({
       _id: expect.any(ObjectId) as ObjectId,
       dealType: existingDeal.dealType,
       version: getCurrentGefDealVersion(),
@@ -103,5 +103,29 @@ describe('generateClonedDeal', () => {
       clonedDealId: existingDealId,
       auditRecord: generateAuditDatabaseRecordFromAuditDetails(mockAuditDetails),
     });
+  });
+
+  it('removes the expected properties', () => {
+    // Act
+    const result = generateClonedDeal({
+      dealId: existingDealId,
+      bankInternalRefName,
+      additionalRefName,
+      maker,
+      userId: maker._id,
+      bank: mockBank,
+      auditDetails: mockAuditDetails,
+      existingDeal,
+      latestEligibilityCriteria: mockLatestEligibilityCriteria,
+    });
+
+    // Assert
+    expect(result.ukefDecision).toBeUndefined();
+    expect(result.ukefDecisionAccepted).toBeUndefined();
+    expect(result.checkerMIN).toBeUndefined();
+    expect(result.manualInclusionNoticeSubmissionDate).toBeUndefined();
+    expect(result.comments).toBeUndefined();
+    expect(result.previousStatus).toBeUndefined();
+    expect(result.dataMigration).toBeUndefined();
   });
 });

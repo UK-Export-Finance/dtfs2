@@ -99,10 +99,10 @@ describe('generateClonedFacility', () => {
 
   it('clones an issued facility correctly', () => {
     // Act
-    const clone = generateClonedFacility({ facility: issuedFacility, newDealId, auditDetails: mockAuditDetails });
+    const result = generateClonedFacility({ facility: issuedFacility, newDealId, auditDetails: mockAuditDetails });
 
     // Assert
-    expect(clone).toEqual({
+    expect(result).toEqual({
       ...issuedFacility,
       _id: expect.any(ObjectId) as ObjectId,
       dealId: new ObjectId(newDealId),
@@ -128,10 +128,10 @@ describe('generateClonedFacility', () => {
 
   it('clones an unissued facility correctly', () => {
     // Act
-    const clone = generateClonedFacility({ facility: unissuedFacility, newDealId, auditDetails: mockAuditDetails });
+    const result = generateClonedFacility({ facility: unissuedFacility, newDealId, auditDetails: mockAuditDetails });
 
     // Assert
-    expect(clone).toEqual({
+    expect(result).toEqual({
       ...unissuedFacility,
       _id: expect.any(ObjectId) as ObjectId,
       dealId: new ObjectId(newDealId),
