@@ -1,6 +1,6 @@
 # DTFS Git Hub Actions
 #####################################
-# Automatic weekly dependencies updates
+# Automatic monthly dependencies updates
 # for the following services:
 # 1. NPM
 # 2. Docker
@@ -12,7 +12,7 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
       time: '03:00'
     labels:
       - 'chore'
@@ -21,7 +21,7 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/external-api'
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
       time: '03:00'
     labels:
       - 'chore'
@@ -30,7 +30,7 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/portal-api'
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
       time: '03:00'
     labels:
       - 'chore'
@@ -39,7 +39,7 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/trade-finance-manager-api'
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
       time: '03:00'
     labels:
       - 'chore'
@@ -48,7 +48,7 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/gef-ui'
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
       time: '03:00'
     labels:
       - 'chore'
@@ -57,7 +57,7 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/portal'
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
       time: '03:00'
     labels:
       - 'chore'
@@ -66,7 +66,7 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/trade-finance-manager-ui'
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
       time: '03:00'
     labels:
       - 'chore'
@@ -75,7 +75,7 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/azure-functions/acbs-function'
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
       time: '03:00'
     labels:
       - 'chore'
@@ -84,7 +84,7 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/dtfs-central-api'
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
       time: '03:00'
     labels:
       - 'chore'
@@ -93,7 +93,7 @@ updates:
   - package-ecosystem: 'docker'
     directory: '/external-api'
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
       time: '03:00'
     labels:
       - 'chore'
@@ -102,7 +102,7 @@ updates:
   - package-ecosystem: 'docker'
     directory: '/portal-api'
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
       time: '03:00'
     labels:
       - 'chore'
@@ -111,7 +111,7 @@ updates:
   - package-ecosystem: 'docker'
     directory: '/trade-finance-manager-api'
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
       time: '03:00'
     labels:
       - 'chore'
@@ -120,7 +120,7 @@ updates:
   - package-ecosystem: 'docker'
     directory: '/gef-ui'
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
       time: '03:00'
     labels:
       - 'chore'
@@ -129,7 +129,7 @@ updates:
   - package-ecosystem: 'docker'
     directory: '/portal'
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
       time: '03:00'
     labels:
       - 'chore'
@@ -138,7 +138,7 @@ updates:
   - package-ecosystem: 'docker'
     directory: '/trade-finance-manager-ui'
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
       time: '03:00'
     labels:
       - 'chore'
@@ -147,7 +147,7 @@ updates:
   - package-ecosystem: 'docker'
     directory: '/azure-functions/acbs-function'
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
       time: '03:00'
     labels:
       - 'chore'
@@ -156,7 +156,7 @@ updates:
   - package-ecosystem: 'docker'
     directory: '/dtfs-central-api'
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
       time: '03:00'
     labels:
       - 'chore'
@@ -165,7 +165,7 @@ updates:
   - package-ecosystem: 'docker'
     directory: '/reverse-proxy'
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
       time: '03:00'
     labels:
       - 'chore'
@@ -176,7 +176,7 @@ updates:
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
       time: '03:00'
     labels:
       - 'chore'
