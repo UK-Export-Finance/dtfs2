@@ -1,3 +1,4 @@
+import { REQUEST_PLATFORM_TYPE } from '../../constants';
 import { FeeRecordEntity, FacilityUtilisationDataEntity } from '../../sql-db-entities';
 import { ReportPeriod } from '../../types';
 
@@ -17,7 +18,7 @@ export class FacilityUtilisationDataEntityMockBuilder {
       end: { month: 1, year: 2024 },
     };
     facility.fixedFee = 0;
-    facility.updateLastUpdatedBy({ platform: 'SYSTEM' });
+    facility.updateLastUpdatedBy({ platform: REQUEST_PLATFORM_TYPE.SYSTEM });
     return new FacilityUtilisationDataEntityMockBuilder(facility);
   }
 

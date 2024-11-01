@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { ApiError, CustomExpressRequest, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
+import { ApiError, CustomExpressRequest, FEE_RECORD_STATUS, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { NotFoundError } from '../../../../errors';
 import { executeWithSqlTransaction } from '../../../../helpers';
@@ -35,7 +35,7 @@ export const postKeyingData = async (req: PostKeyingDataRequest, res: Response) 
           transactionEntityManager,
           feeRecordsAtMatchStatusWithPayments,
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId: user._id.toString(),
           },
         },

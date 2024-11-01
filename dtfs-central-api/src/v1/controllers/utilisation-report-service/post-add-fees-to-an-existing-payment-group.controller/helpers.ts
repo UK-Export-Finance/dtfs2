@@ -1,4 +1,4 @@
-import { FeeRecordEntity, PaymentEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { FeeRecordEntity, PaymentEntity, REQUEST_PLATFORM_TYPE, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
@@ -21,7 +21,7 @@ export const addFeesToAnExistingPaymentGroup = async (
         existingFeeRecordsInPaymentGroup,
         payments,
         requestSource: {
-          platform: 'TFM',
+          platform: REQUEST_PLATFORM_TYPE.TFM,
           userId: user._id.toString(),
         },
       },
