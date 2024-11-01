@@ -55,7 +55,8 @@ describe('EntraIdService', () => {
       await service.getAuthCodeUrl({ successRedirect });
 
       // Assert
-      expect(CryptoProvider.prototype.base64Encode.bind(CryptoProvider)).toHaveBeenCalledWith(JSON.stringify({ csrfToken: mockGuid, successRedirect }));
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(CryptoProvider.prototype.base64Encode).toHaveBeenCalledWith(JSON.stringify({ csrfToken: mockGuid, successRedirect }));
     });
 
     it('returns the auth code url from the msal app', async () => {
