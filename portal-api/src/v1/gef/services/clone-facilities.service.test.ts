@@ -2,14 +2,14 @@ import { Facility, FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { Collection, ObjectId } from 'mongodb';
 import { add } from 'date-fns';
 import { generateAuditDatabaseRecordFromAuditDetails, generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import { cloneFacilities } from './clone-facilities.service';
+import { cloneFacilities, generateCloneFacility } from './clone-facilities.service';
 import { mongoDbClient } from '../../../drivers/db-client';
 
 const existingDealId = new ObjectId().toString();
 const newDealId = new ObjectId();
 const mockAuditDetails = generateSystemAuditDetails();
 
-const facilityOne: Facility = {
+const issuedFacility: Facility = {
   _id: new ObjectId(),
   dealId: new ObjectId(existingDealId),
   type: FACILITY_TYPE.CASH,
@@ -49,7 +49,7 @@ const facilityOne: Facility = {
   issueDate: null,
 };
 
-const facilityTwo: Facility = {
+const unissuedFacility: Facility = {
   _id: new ObjectId(),
   dealId: new ObjectId(existingDealId),
   type: FACILITY_TYPE.CASH,
@@ -89,71 +89,90 @@ const facilityTwo: Facility = {
   issueDate: null,
 };
 
-const facilities: Facility[] = [facilityOne, facilityTwo];
+const facilities: Facility[] = [issuedFacility, unissuedFacility];
 
-describe('cloneFacilities', () => {
-  let facilitiesCollection: Collection<Facility>;
-  const findMock = jest.fn();
-  const findToArrayMock = jest.fn();
-  const insertManyMock = jest.fn();
-
+describe('clone facilities service', () => {
   beforeAll(() => {
     jest.useFakeTimers();
-  });
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-    findToArrayMock.mockResolvedValue(facilities);
-    findMock.mockReturnValue({ toArray: findToArrayMock });
-
-    facilitiesCollection = {
-      insertMany: insertManyMock,
-      find: findMock,
-    } as unknown as Collection<Facility>;
-
-    const getCollectionMock = jest.fn().mockResolvedValue(facilitiesCollection);
-
-    jest.spyOn(mongoDbClient, 'getCollection').mockImplementation(getCollectionMock);
   });
 
   afterAll(() => {
     jest.useRealTimers();
   });
 
-  it('gets existing facilities', async () => {
-    // Act
-    await cloneFacilities(existingDealId, newDealId, mockAuditDetails);
+  describe('cloneFacilities', () => {
+    let facilitiesCollection: Collection<Facility>;
+    const findMock = jest.fn();
+    const findToArrayMock = jest.fn();
+    const insertManyMock = jest.fn();
 
-    // Assert
-    expect(findMock).toHaveBeenCalledTimes(1);
-    expect(findMock).toHaveBeenCalledWith({
-      dealId: { $eq: new ObjectId(existingDealId) },
+    beforeEach(() => {
+      jest.clearAllMocks();
+      findToArrayMock.mockResolvedValue(facilities);
+      findMock.mockReturnValue({ toArray: findToArrayMock });
+
+      facilitiesCollection = {
+        insertMany: insertManyMock,
+        find: findMock,
+      } as unknown as Collection<Facility>;
+
+      const getCollectionMock = jest.fn().mockResolvedValue(facilitiesCollection);
+
+      jest.spyOn(mongoDbClient, 'getCollection').mockImplementation(getCollectionMock);
+    });
+
+    it('gets existing facilities', async () => {
+      // Act
+      await cloneFacilities(existingDealId, newDealId, mockAuditDetails);
+
+      // Assert
+      expect(findMock).toHaveBeenCalledTimes(1);
+      expect(findMock).toHaveBeenCalledWith({
+        dealId: { $eq: new ObjectId(existingDealId) },
+      });
+    });
+
+    it('does not insert facilities when there are none on existing deal', async () => {
+      // Arrange
+      findToArrayMock.mockResolvedValueOnce([]);
+
+      // Act
+      await cloneFacilities(existingDealId, newDealId, mockAuditDetails);
+
+      // Assert
+      expect(insertManyMock).toHaveBeenCalledTimes(0);
+    });
+
+    it('inserts mapped facilities', async () => {
+      // Arrange
+      findToArrayMock.mockResolvedValueOnce(facilities);
+
+      // Act
+      await cloneFacilities(existingDealId, newDealId, mockAuditDetails);
+
+      // Assert
+      expect(insertManyMock).toHaveBeenCalledTimes(1);
+      expect(insertManyMock).toHaveBeenCalledWith([
+        {
+          ...generateCloneFacility({ facility: issuedFacility, newDealId, auditDetails: mockAuditDetails }),
+          _id: expect.any(ObjectId) as ObjectId,
+        },
+        {
+          ...generateCloneFacility({ facility: unissuedFacility, newDealId, auditDetails: mockAuditDetails }),
+          _id: expect.any(ObjectId) as ObjectId,
+        },
+      ]);
     });
   });
 
-  it('does not insert facilities when there are none on existing deal', async () => {
-    // Arrange
-    findToArrayMock.mockResolvedValueOnce([]);
+  describe('generateCloneFacility', () => {
+    it('clones an issued facility correctly', () => {
+      // Act
+      const clone = generateCloneFacility({ facility: issuedFacility, newDealId, auditDetails: mockAuditDetails });
 
-    // Act
-    await cloneFacilities(existingDealId, newDealId, mockAuditDetails);
-
-    // Assert
-    expect(insertManyMock).toHaveBeenCalledTimes(0);
-  });
-
-  it('inserts mapped facilities', async () => {
-    // Arrange
-    findToArrayMock.mockResolvedValueOnce(facilities);
-
-    // Act
-    await cloneFacilities(existingDealId, newDealId, mockAuditDetails);
-
-    // Assert
-    expect(insertManyMock).toHaveBeenCalledTimes(1);
-    expect(insertManyMock).toHaveBeenCalledWith([
-      {
-        ...facilityOne,
+      // Assert
+      expect(clone).toEqual({
+        ...issuedFacility,
         _id: expect.any(ObjectId) as ObjectId,
         dealId: new ObjectId(newDealId),
         type: FACILITY_TYPE.CASH,
@@ -173,9 +192,16 @@ describe('cloneFacilities', () => {
         isUsingFacilityEndDate: null,
         facilityEndDate: null,
         bankReviewDate: null,
-      },
-      {
-        ...facilityTwo,
+      });
+    });
+
+    it('clones an unissued facility correctly', () => {
+      // Act
+      const clone = generateCloneFacility({ facility: unissuedFacility, newDealId, auditDetails: mockAuditDetails });
+
+      // Assert
+      expect(clone).toEqual({
+        ...unissuedFacility,
         _id: expect.any(ObjectId) as ObjectId,
         dealId: new ObjectId(newDealId),
         type: FACILITY_TYPE.CASH,
@@ -194,7 +220,7 @@ describe('cloneFacilities', () => {
         isUsingFacilityEndDate: null,
         facilityEndDate: null,
         bankReviewDate: null,
-      },
-    ]);
+      });
+    });
   });
 });
