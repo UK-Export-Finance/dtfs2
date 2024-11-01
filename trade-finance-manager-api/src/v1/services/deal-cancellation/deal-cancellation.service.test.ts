@@ -141,8 +141,8 @@ describe('deal cancellation service', () => {
         expect(sendTfmEmail).toHaveBeenCalledTimes(1);
         expect(sendTfmEmail).toHaveBeenCalledWith(CANCEL_DEAL_PAST_DATE, mockPimEmailAddress, {
           cancelReason: dealCancellation.reason,
-          bankRequestDate: format(today, 'dd MMMM yyyy'),
-          effectiveFromDate: format(today, 'dd MMMM yyyy'),
+          bankRequestDate: format(today, DATE_FORMATS.D_MMMM_YYYY),
+          effectiveFromDate: format(today, DATE_FORMATS.D_MMMM_YYYY),
           formattedFacilitiesList: formatFacilityIds(ukefFacilityIds),
           ukefDealId,
         });
