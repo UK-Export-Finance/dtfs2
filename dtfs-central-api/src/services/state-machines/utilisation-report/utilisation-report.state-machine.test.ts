@@ -138,7 +138,7 @@ describe('UtilisationReportStateMachine', () => {
             reference: 'A payment reference',
           },
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId: 'abc123',
           },
         },
@@ -158,7 +158,7 @@ describe('UtilisationReportStateMachine', () => {
         payload: {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAtMatchStatusWithPayments: [],
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -169,7 +169,7 @@ describe('UtilisationReportStateMachine', () => {
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED}' event`, async () => {
       // Arrange
       const requestSource: DbRequestSource = {
-        platform: 'TFM',
+        platform: REQUEST_PLATFORM_TYPE.TFM,
         userId: 'abc123',
       };
       const transactionEntityManager = {} as unknown as EntityManager;
@@ -226,7 +226,7 @@ describe('UtilisationReportStateMachine', () => {
             reference: 'A payment reference',
           },
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId: 'abc123',
           },
         },
@@ -246,7 +246,7 @@ describe('UtilisationReportStateMachine', () => {
         payload: {
           transactionEntityManager: {} as EntityManager,
           paymentId: 1,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -264,7 +264,7 @@ describe('UtilisationReportStateMachine', () => {
         payload: {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAtMatchStatusWithPayments: [],
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -286,7 +286,7 @@ describe('UtilisationReportStateMachine', () => {
           paymentAmount: 100,
           datePaymentReceived: new Date(),
           paymentReference: undefined,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -305,7 +305,7 @@ describe('UtilisationReportStateMachine', () => {
           transactionEntityManager: {} as EntityManager,
           feeRecordsToRemove: [],
           otherFeeRecordsInGroup: [],
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
       expect(handleUtilisationReportRemoveFeesFromPaymentGroupEvent).toHaveBeenCalledTimes(1);
@@ -322,7 +322,7 @@ describe('UtilisationReportStateMachine', () => {
           transactionEntityManager: {} as unknown as EntityManager,
           feeRecordsToMarkAsReadyToKey: [],
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId: 'abc123',
           },
         },
@@ -344,7 +344,7 @@ describe('UtilisationReportStateMachine', () => {
           feeRecordsToReconcile: [],
           reconciledByUserId: 'abc123',
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId: 'abc123',
           },
         },
@@ -366,7 +366,7 @@ describe('UtilisationReportStateMachine', () => {
           feeRecordsToAdd: [],
           existingFeeRecordsInPaymentGroup: [],
           payments: [],
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
       expect(handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent).toHaveBeenCalledTimes(1);
@@ -401,7 +401,7 @@ describe('UtilisationReportStateMachine', () => {
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_INCOMPLETE}' event`, async () => {
       // Arrange
       const requestSource: DbRequestSource = {
-        platform: 'TFM',
+        platform: REQUEST_PLATFORM_TYPE.TFM,
         userId: 'abc123',
       };
       const transactionEntityManager = {} as unknown as EntityManager;
@@ -431,7 +431,7 @@ describe('UtilisationReportStateMachine', () => {
           transactionEntityManager: {} as unknown as EntityManager,
           feeRecordsToMarkAsReadyToKey: [],
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId: 'abc123',
           },
         },

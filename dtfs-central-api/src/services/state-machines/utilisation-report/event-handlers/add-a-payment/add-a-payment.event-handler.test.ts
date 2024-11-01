@@ -5,6 +5,7 @@ import {
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   PaymentEntity,
+  REQUEST_PLATFORM_TYPE,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
@@ -19,7 +20,7 @@ jest.mock('../helpers');
 describe('handleUtilisationReportAddAPaymentEvent', () => {
   const tfmUserId = 'abc123';
   const requestSource: DbRequestSource = {
-    platform: 'TFM',
+    platform: REQUEST_PLATFORM_TYPE.TFM,
     userId: tfmUserId,
   };
 

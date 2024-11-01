@@ -1,5 +1,12 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  DbRequestSource,
+  FEE_RECORD_STATUS,
+  FeeRecordEntity,
+  FeeRecordEntityMockBuilder,
+  REQUEST_PLATFORM_TYPE,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { handleFeeRecordPaymentAddedEvent } from './payment-added.event-handler';
 
 describe('handleFeeRecordPaymentAddedEvent', () => {
@@ -12,7 +19,7 @@ describe('handleFeeRecordPaymentAddedEvent', () => {
 
   const userId = 'abc123';
   const requestSource: DbRequestSource = {
-    platform: 'TFM',
+    platform: REQUEST_PLATFORM_TYPE.TFM,
     userId,
   };
 
