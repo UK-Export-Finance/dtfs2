@@ -2,31 +2,39 @@ import { FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordStatus } from '@ukef/dtfs2
 import { FeeRecordRepo } from '../../../repositories/fee-record-repo';
 import { InvalidPayloadError } from '../../../errors';
 
-export const validateSelectedFeeRecordsAllHaveSamePaymentCurrency = (selectedFeeRecords: FeeRecordEntity[]) => {
-  if (selectedFeeRecords.length <= 1) {
+/**
+ * Validates that all provided fee records have the same payment currency.
+ * If there is only one fee record or less, validation passes.
+ * @param feeRecords - The fee records to validate
+ * @throws {InvalidPayloadError} If fee records have different payment currencies
+ */
+export const validateFeeRecordsAllHaveSamePaymentCurrency = (feeRecords: FeeRecordEntity[]) => {
+  if (feeRecords.length <= 1) {
     return;
   }
-  const { paymentCurrency } = selectedFeeRecords[0];
-  if (selectedFeeRecords.some((feeRecord) => feeRecord.paymentCurrency !== paymentCurrency)) {
-    throw new InvalidPayloadError('Selected fee records must all have the same payment currency');
+  const { paymentCurrency } = feeRecords[0];
+  if (feeRecords.some((feeRecord) => feeRecord.paymentCurrency !== paymentCurrency)) {
+    throw new InvalidPayloadError('Fee records must all have the same payment currency');
   }
 };
 
 /**
- * Validates that all selected fee records with payments have the same fee
+ * Validates that all provided fee records with payments have the same fee
  * record payment group and that the fee record IDs match the fee record IDs on
  * this existing payment group.
  * @param feeRecordIds - The fee record IDs
+ * @throws {InvalidPayloadError} If fee records have different statuses
+ * @throws {InvalidPayloadError} If fee record IDs do not match the fee record IDs on the existing payment group
  */
-export const validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup = async (feeRecordIds: number[]) => {
-  const selectedFeeRecords = await FeeRecordRepo.findByIdWithPaymentsAndFeeRecords(feeRecordIds);
+export const validateFeeRecordsWithPaymentsAreOnePaymentGroup = async (feeRecordIds: number[]) => {
+  const feeRecords = await FeeRecordRepo.findByIdWithPaymentsAndFeeRecords(feeRecordIds);
 
-  const selectedFeeRecordStatuses = selectedFeeRecords.reduce((statuses, { status }) => statuses.add(status), new Set<FeeRecordStatus>());
-  if (selectedFeeRecordStatuses.size !== 1) {
+  const feeRecordStatuses = feeRecords.reduce((statuses, { status }) => statuses.add(status), new Set<FeeRecordStatus>());
+  if (feeRecordStatuses.size !== 1) {
     throw new InvalidPayloadError('Fee records must all have the same status');
   }
 
-  const firstFeeRecord = selectedFeeRecords[0];
+  const firstFeeRecord = feeRecords[0];
 
   if (firstFeeRecord.status !== FEE_RECORD_STATUS.DOES_NOT_MATCH) {
     return;

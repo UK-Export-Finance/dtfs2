@@ -10,22 +10,19 @@ import {
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { FeeRecordRepo } from '../../../repositories/fee-record-repo';
-import {
-  validateSelectedFeeRecordsAllHaveSamePaymentCurrency,
-  validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup,
-} from './selected-fee-record-validator';
+import { validateFeeRecordsAllHaveSamePaymentCurrency, validateFeeRecordsWithPaymentsAreOnePaymentGroup } from './selected-fee-record-validator';
 import { InvalidPayloadError } from '../../../errors';
 
 jest.mock('../../../repositories/fee-record-repo');
 
 describe('selected fee record validator', () => {
-  describe('validateSelectedFeeRecordsAllHaveSamePaymentCurrency', () => {
+  describe('validateFeeRecordsAllHaveSamePaymentCurrency', () => {
     it('does not throw if only one fee record', () => {
       // Arrange
       const selectedFeeRecords = [FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).build()];
 
       // Act + Assert
-      expect(() => validateSelectedFeeRecordsAllHaveSamePaymentCurrency(selectedFeeRecords)).not.toThrow();
+      expect(() => validateFeeRecordsAllHaveSamePaymentCurrency(selectedFeeRecords)).not.toThrow();
     });
 
     it('does not throw if no fee records provided', () => {
@@ -33,7 +30,7 @@ describe('selected fee record validator', () => {
       const selectedFeeRecords: FeeRecordEntity[] = [];
 
       // Act + Assert
-      expect(() => validateSelectedFeeRecordsAllHaveSamePaymentCurrency(selectedFeeRecords)).not.toThrow();
+      expect(() => validateFeeRecordsAllHaveSamePaymentCurrency(selectedFeeRecords)).not.toThrow();
     });
 
     it('does not throw if no all fee records have the same payment currency', () => {
@@ -41,7 +38,7 @@ describe('selected fee record validator', () => {
       const selectedFeeRecords = [aFeeRecordWithPaymentCurrency('GBP'), aFeeRecordWithPaymentCurrency('GBP')];
 
       // Act + Assert
-      expect(() => validateSelectedFeeRecordsAllHaveSamePaymentCurrency(selectedFeeRecords)).not.toThrow();
+      expect(() => validateFeeRecordsAllHaveSamePaymentCurrency(selectedFeeRecords)).not.toThrow();
     });
 
     it('throws invalid payload error if any two fee records have differing payment currency', () => {
@@ -49,7 +46,7 @@ describe('selected fee record validator', () => {
       const selectedFeeRecords = [aFeeRecordWithPaymentCurrency('GBP'), aFeeRecordWithPaymentCurrency('JPY')];
 
       // Act + Assert
-      expect(() => validateSelectedFeeRecordsAllHaveSamePaymentCurrency(selectedFeeRecords)).toThrow(InvalidPayloadError);
+      expect(() => validateFeeRecordsAllHaveSamePaymentCurrency(selectedFeeRecords)).toThrow(InvalidPayloadError);
     });
 
     function aFeeRecordWithPaymentCurrency(paymentCurrency: Currency) {
@@ -57,7 +54,7 @@ describe('selected fee record validator', () => {
     }
   });
 
-  describe('validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup', () => {
+  describe('validateFeeRecordsWithPaymentsAreOnePaymentGroup', () => {
     const feeRecordFindBySpy = jest.spyOn(FeeRecordRepo, 'findByIdWithPaymentsAndFeeRecords');
 
     afterEach(() => {
@@ -75,7 +72,7 @@ describe('selected fee record validator', () => {
         const selectedFeeRecordIds = [1];
 
         // Act + Assert
-        await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(selectedFeeRecordIds)).resolves.not.toThrow();
+        await expect(validateFeeRecordsWithPaymentsAreOnePaymentGroup(selectedFeeRecordIds)).resolves.not.toThrow();
       });
     });
 
@@ -93,7 +90,7 @@ describe('selected fee record validator', () => {
           const selectedFeeRecordIds = [1, 2];
 
           // Act + Assert
-          await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(selectedFeeRecordIds)).resolves.not.toThrow();
+          await expect(validateFeeRecordsWithPaymentsAreOnePaymentGroup(selectedFeeRecordIds)).resolves.not.toThrow();
         });
       });
 
@@ -107,7 +104,7 @@ describe('selected fee record validator', () => {
           const selectedFeeRecordIds = [1];
 
           // Act + Assert
-          await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(selectedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
+          await expect(validateFeeRecordsWithPaymentsAreOnePaymentGroup(selectedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
         });
       });
     });
@@ -125,7 +122,7 @@ describe('selected fee record validator', () => {
         const selectedFeeRecordIds = [1, 2, 3];
 
         // Act / Assert
-        await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(selectedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
+        await expect(validateFeeRecordsWithPaymentsAreOnePaymentGroup(selectedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
       });
     });
 
@@ -142,7 +139,7 @@ describe('selected fee record validator', () => {
         const selectedFeeRecordIds = [1, 2, 3];
 
         // Act / Assert
-        await expect(validateSelectedFeeRecordsWithPaymentsAreOnePaymentGroup(selectedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
+        await expect(validateFeeRecordsWithPaymentsAreOnePaymentGroup(selectedFeeRecordIds)).rejects.toThrow(InvalidPayloadError);
       });
     });
 
