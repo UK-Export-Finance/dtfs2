@@ -22,11 +22,11 @@ export const aTfmFacility = (): TfmFacility => {
   };
 };
 
-export const keyingSheetCalculationFacilityValues = {
+export const keyingSheetCalculationFacilityValues: KeyingSheetCalculationFacilityValues = {
   coverEndDate: new Date(),
   coverStartDate: new Date(),
   dayCountBasis,
   interestPercentage,
   coverPercentage,
   value,
-} as KeyingSheetCalculationFacilityValues;
+};
