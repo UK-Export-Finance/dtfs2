@@ -525,12 +525,14 @@ jobs:
         run: npm run db:migrate
 
       - name: Execute
-        working-directory: ./e2e-tests
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-          TZ: ${{ vars.TIMEZONE }}
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./portal --record false --spec "./portal/cypress/e2e/journeys/${{ matrix.spec }}"
+        uses: ./.github/modules/retry
+        with:
+          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./portal --record false --spec "./portal/cypress/e2e/journeys/${{ matrix.spec }}"
+          working-directory: ./e2e-tests
+          env:
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            TZ=${{ vars.TIMEZONE }}
 
   # 5. E2E - GEF
   e2e-tests-gef:
@@ -613,12 +615,14 @@ jobs:
         run: npm run db:migrate
 
       - name: Execute
-        working-directory: ./e2e-tests
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-          TZ: ${{ vars.TIMEZONE }}
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./gef --record false --spec "./gef/cypress/e2e/${{ matrix.spec }}"
+        uses: ./.github/modules/retry
+        with:
+          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./gef --record false --spec "./gef/cypress/e2e/${{ matrix.spec }}"
+          working-directory: ./e2e-tests
+          env:
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            TZ=${{ vars.TIMEZONE }}
 
   #6. E2E - TFM
   e2e-tests-tfm:
@@ -719,12 +723,14 @@ jobs:
         run: npm run db:migrate
 
       - name: Execute
-        working-directory: ./e2e-tests
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-          TZ: ${{ vars.TIMEZONE }}
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./tfm --record false --spec "./tfm/cypress/e2e/journeys/${{ matrix.spec }}"
+        uses: ./.github/modules/retry
+        with:
+          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./tfm --record false --spec "./tfm/cypress/e2e/journeys/${{ matrix.spec }}"
+          working-directory: ./e2e-tests
+          env:
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            TZ=${{ vars.TIMEZONE }}
 
   #7. E2E - UKEF
   e2e-tests-ukef:
@@ -808,12 +814,14 @@ jobs:
         run: npm run db:migrate
 
       - name: Execute
-        working-directory: ./e2e-tests
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-          TZ: ${{ vars.TIMEZONE }}
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ukef --record false --spec "./ukef/cypress/e2e/journeys/portal/${{ matrix.spec }}"
+        uses: ./.github/modules/retry
+        with:
+          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ukef --record false --spec "./ukef/cypress/e2e/journeys/portal/${{ matrix.spec }}"
+          working-directory: ./e2e-tests
+          env:
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            TZ=${{ vars.TIMEZONE }}
 
   #8. E2E - FF
   e2e-tests-ff:
@@ -949,12 +957,14 @@ jobs:
           echo "::set-output name=directory::$directory"
 
       - name: Execute
-        working-directory: ./e2e-tests
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-          TZ: ${{ vars.TIMEZONE }}
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./${{ steps.project.outputs.directory }} --record false --spec "${{ matrix.spec }}"
+        uses: ./.github/modules/retry
+        with:
+          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./${{ steps.project.outputs.directory }} --record false --spec "${{ matrix.spec }}"
+          working-directory: ./e2e-tests
+          env:
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            TZ=${{ vars.TIMEZONE }}
 
   #9. Docker build
   build:
