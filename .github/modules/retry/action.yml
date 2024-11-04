@@ -17,7 +17,7 @@ runs:
         env_vars=${{ inputs.env-vars }}
         until [ $run -gt $limit ]
         do
-          cd ${{ inputs.working-directory }} && && eval "$env_vars" ${{ inputs.command }} && break
+          cd ${{ inputs.working-directory }} && eval "$env_vars" ${{ inputs.command }} && break
           run=$((run + 1))
         done
         if [ $run -gt $limit ]; then
