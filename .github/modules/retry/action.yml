@@ -20,7 +20,7 @@ runs:
   using: "composite"
   steps:
     - run: |
-        limit=${{ vars.RETRY_LIMIT }}
+        limit="${{ vars.RETRY_LIMIT }}"
         echo "Retry limit: $limit"
         if [ -z "$limit" ]; then
           limit=3  # Default value if RETRY_LIMIT is not defined
