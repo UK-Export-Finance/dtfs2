@@ -13,7 +13,7 @@ updates:
     directory: '/'
     schedule:
       interval: 'monthly'
-      time: '03:00'
+      time: '00:00'
     labels:
       - 'chore'
 
@@ -22,7 +22,7 @@ updates:
     directory: '/external-api'
     schedule:
       interval: 'monthly'
-      time: '03:00'
+      time: '00:00'
     labels:
       - 'chore'
 
@@ -31,7 +31,7 @@ updates:
     directory: '/portal-api'
     schedule:
       interval: 'monthly'
-      time: '03:00'
+      time: '00:00'
     labels:
       - 'chore'
 
@@ -40,7 +40,7 @@ updates:
     directory: '/trade-finance-manager-api'
     schedule:
       interval: 'monthly'
-      time: '03:00'
+      time: '00:00'
     labels:
       - 'chore'
 
@@ -49,7 +49,7 @@ updates:
     directory: '/gef-ui'
     schedule:
       interval: 'monthly'
-      time: '03:00'
+      time: '00:00'
     labels:
       - 'chore'
 
@@ -58,7 +58,7 @@ updates:
     directory: '/portal'
     schedule:
       interval: 'monthly'
-      time: '03:00'
+      time: '00:00'
     labels:
       - 'chore'
 
@@ -67,7 +67,7 @@ updates:
     directory: '/trade-finance-manager-ui'
     schedule:
       interval: 'monthly'
-      time: '03:00'
+      time: '00:00'
     labels:
       - 'chore'
 
@@ -76,7 +76,7 @@ updates:
     directory: '/azure-functions/acbs-function'
     schedule:
       interval: 'monthly'
-      time: '03:00'
+      time: '00:00'
     labels:
       - 'chore'
 
@@ -85,7 +85,7 @@ updates:
     directory: '/dtfs-central-api'
     schedule:
       interval: 'monthly'
-      time: '03:00'
+      time: '00:00'
     labels:
       - 'chore'
 
@@ -94,7 +94,7 @@ updates:
     directory: '/external-api'
     schedule:
       interval: 'monthly'
-      time: '03:00'
+      time: '00:00'
     labels:
       - 'chore'
 
@@ -103,7 +103,7 @@ updates:
     directory: '/portal-api'
     schedule:
       interval: 'monthly'
-      time: '03:00'
+      time: '00:00'
     labels:
       - 'chore'
 
@@ -112,7 +112,7 @@ updates:
     directory: '/trade-finance-manager-api'
     schedule:
       interval: 'monthly'
-      time: '03:00'
+      time: '00:00'
     labels:
       - 'chore'
 
@@ -121,7 +121,7 @@ updates:
     directory: '/gef-ui'
     schedule:
       interval: 'monthly'
-      time: '03:00'
+      time: '00:00'
     labels:
       - 'chore'
 
@@ -130,7 +130,7 @@ updates:
     directory: '/portal'
     schedule:
       interval: 'monthly'
-      time: '03:00'
+      time: '00:00'
     labels:
       - 'chore'
 
@@ -139,7 +139,7 @@ updates:
     directory: '/trade-finance-manager-ui'
     schedule:
       interval: 'monthly'
-      time: '03:00'
+      time: '00:00'
     labels:
       - 'chore'
 
@@ -148,7 +148,7 @@ updates:
     directory: '/azure-functions/acbs-function'
     schedule:
       interval: 'monthly'
-      time: '03:00'
+      time: '00:00'
     labels:
       - 'chore'
 
@@ -157,7 +157,7 @@ updates:
     directory: '/dtfs-central-api'
     schedule:
       interval: 'monthly'
-      time: '03:00'
+      time: '00:00'
     labels:
       - 'chore'
 
@@ -166,7 +166,7 @@ updates:
     directory: '/reverse-proxy'
     schedule:
       interval: 'monthly'
-      time: '03:00'
+      time: '00:00'
     labels:
       - 'chore'
 
@@ -177,6 +177,6 @@ updates:
     directory: '/'
     schedule:
       interval: 'monthly'
-      time: '03:00'
+      time: '00:00'
     labels:
       - 'chore'
