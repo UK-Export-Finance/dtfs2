@@ -1,4 +1,4 @@
-import { TEAM_IDS } from '@ukef/dtfs2-common';
+import { DEAL_TYPE, TEAM_IDS, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
 import partiesController from '.';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
@@ -27,6 +27,8 @@ const mockCompany = {
   isLegacyRecord: false,
 };
 
+const mockSuccessBannerMessage = 'success message';
+
 describe('PartyURN: controllers - case - parties', () => {
   // GET HTTP METHOD
   describe('GET', () => {
@@ -37,6 +39,8 @@ describe('PartyURN: controllers - case - parties', () => {
           _id: '61f6ac5b02fade01b1e8efef',
           dealSnapshot: {
             _id: '61f6ac5b02fade01b1e8efef',
+            dealType: DEAL_TYPE.GEF,
+            ukefDealId: 'ukefDealId',
           },
           tfm: {
             parties: {
@@ -51,6 +55,13 @@ describe('PartyURN: controllers - case - parties', () => {
         beforeEach(() => {
           api.getDeal = () => Promise.resolve(mockDeal);
           api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+          api.getDealCancellation = () =>
+            Promise.resolve({
+              effectiveFrom: new Date().valueOf(),
+              bankRequestDate: new Date().valueOf(),
+              reason: 'a reason',
+              status: TFM_DEAL_CANCELLATION_STATUS.COMPLETED,
+            });
         });
 
         it('should render deal template with data', async () => {
@@ -59,6 +70,7 @@ describe('PartyURN: controllers - case - parties', () => {
               _id: mockDeal._id,
             },
             session,
+            flash: jest.fn(() => [mockSuccessBannerMessage]),
           };
 
           await partiesController.getAllParties(req, res);
@@ -70,6 +82,7 @@ describe('PartyURN: controllers - case - parties', () => {
             tfm: mockDeal.tfm,
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'parties',
+            successMessage: mockSuccessBannerMessage,
             dealId: req.params._id,
             user: session.user,
             hasAmendmentInProgress: false,

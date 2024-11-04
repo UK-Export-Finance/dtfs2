@@ -22,7 +22,7 @@ export const getSuccessBannerMessage = async (
 ): Promise<string | null> => {
   const dealCancellationIsEnabled = isDealCancellationEnabled(submissionType, user);
 
-  if (dealCancellationIsEnabled) {
+  if (!dealCancellationIsEnabled) {
     return null;
   }
 

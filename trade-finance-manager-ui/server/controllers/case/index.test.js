@@ -1,4 +1,4 @@
-import { AMENDMENT_STATUS, DEAL_SUBMISSION_TYPE, isTfmFacilityEndDateFeatureFlagEnabled, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE, isTfmFacilityEndDateFeatureFlagEnabled, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
@@ -51,6 +51,8 @@ describe('controllers - case', () => {
           _id: '61f6ac5b02fade01b1e8efef',
           details: { ukefDealId: 'ukefDealId' },
           submissionType: DEAL_SUBMISSION_TYPE.AIN,
+          dealType: DEAL_TYPE.GEF,
+          ukefDealId: 'ukefDealId',
         },
         tfm: {
           parties: [],
@@ -126,13 +128,12 @@ describe('controllers - case', () => {
       it('should check whether deal cancellation is enabled', async () => {
         await caseController.getCaseDeal(req, res);
 
-        expect(isDealCancellationEnabled).toHaveBeenCalledTimes(1);
         expect(isDealCancellationEnabled).toHaveBeenCalledWith(DEAL_SUBMISSION_TYPE.AIN, session.user);
       });
 
       describe('when deal cancellation is enabled', () => {
         beforeEach(() => {
-          jest.mocked(isDealCancellationEnabled).mockReturnValueOnce(true);
+          jest.mocked(isDealCancellationEnabled).mockReturnValue(true);
         });
 
         describe('when the deal can still be cancelled', () => {
@@ -197,7 +198,7 @@ describe('controllers - case', () => {
 
         describe('when the deal cancellation is scheduled', () => {
           it('should render the template with the correct success message', async () => {
-            jest.mocked(api.getDealCancellation).mockReturnValueOnce({ effectiveFrom: new Date('2023-01-01').valueOf(), status: SCHEDULED });
+            jest.mocked(api.getDealCancellation).mockReturnValue({ effectiveFrom: new Date('2023-01-01').valueOf(), status: SCHEDULED });
 
             req = {
               params: {
@@ -260,6 +261,8 @@ describe('controllers - case', () => {
         _id: '61f6ac5b02fade01b1e8efef',
         dealSnapshot: {
           _id: '61f6ac5b02fade01b1e8efef',
+          dealType: DEAL_TYPE.GEF,
+          ukefDealId: 'ukefDealId',
         },
         tfm: {
           parties: [],
@@ -285,6 +288,7 @@ describe('controllers - case', () => {
             _id: mockDeal._id,
           },
           session,
+          flash: jest.fn(() => [mockSuccessBannerMessage]),
         };
 
         await caseController.getCaseTasks(req, res);
@@ -302,6 +306,7 @@ describe('controllers - case', () => {
           tasks: mockDeal.tfm.tasks,
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'tasks',
+          successMessage: mockSuccessBannerMessage,
           dealId: req.params._id,
           user: session.user,
           selectedTaskFilter: 'all',
@@ -491,6 +496,7 @@ describe('controllers - case', () => {
             taskId: '456',
           },
           session,
+          flash: jest.fn(() => [mockSuccessBannerMessage]),
         };
 
         const expectedTask = getTask(Number(req.params.groupId), req.params.taskId, mockDeal.tfm.tasks);
@@ -936,6 +942,8 @@ describe('controllers - case', () => {
         _id: '61f6ac5b02fade01b1e8efef',
         dealSnapshot: {
           _id: '61f6ac5b02fade01b1e8efef',
+          dealType: DEAL_TYPE.GEF,
+          ukefDealId: 'ukefDealId',
         },
         mock: true,
       };
@@ -943,6 +951,7 @@ describe('controllers - case', () => {
       beforeEach(() => {
         api.getDeal = () => Promise.resolve(mockDeal);
         api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+        api.getDealCancellation = jest.fn(() => Promise.resolve({}));
       });
 
       it('should render documents template with data', async () => {
@@ -951,6 +960,7 @@ describe('controllers - case', () => {
             _id: mockDeal._id,
           },
           session,
+          flash: jest.fn(() => [mockSuccessBannerMessage]),
         };
 
         await caseController.getCaseDocuments(req, res);
@@ -960,6 +970,7 @@ describe('controllers - case', () => {
           eStoreUrl: process.env.ESTORE_URL,
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'documents',
+          successMessage: mockSuccessBannerMessage,
           dealId: req.params._id,
           user: session.user,
           amendmentsInProgress: [],
