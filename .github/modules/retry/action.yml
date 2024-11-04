@@ -16,14 +16,11 @@ inputs:
   env:
     required: false
     default: ""
-  retry-limit:
-    required: false
-    default: ${{ vars.RETRY_LIMIT }}
 runs:
   using: "composite"
   steps:
     - run: |
-        limit=${{ inputs.retry-limit }}
+        limit=3
         echo "Retry limit: $limit"
         if [ -z "$limit" ]; then
           limit=3  # Default value if RETRY_LIMIT is not defined
