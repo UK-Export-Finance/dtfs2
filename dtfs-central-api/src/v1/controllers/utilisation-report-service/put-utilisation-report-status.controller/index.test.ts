@@ -11,7 +11,7 @@ import {
   PENDING_RECONCILIATION,
   RECONCILIATION_COMPLETED,
   UTILISATION_REPORT_STATUS,
-  UtilisationReportReconciliationStatus,
+  UtilisationReportStatus,
 } from '@ukef/dtfs2-common';
 import { PutUtilisationReportStatusRequest, putUtilisationReportStatus } from '.';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
@@ -134,7 +134,7 @@ describe('put-utilisation-report-status.controller', () => {
 
     it.each([UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED, UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED])(
       "responds with an error if trying to mark a report with status '%s' as completed",
-      async (reportStatus: UtilisationReportReconciliationStatus) => {
+      async (reportStatus: UtilisationReportStatus) => {
         // Arrange
         const reportWithStatus: ReportWithStatus = {
           reportId: 1,
@@ -211,7 +211,7 @@ describe('put-utilisation-report-status.controller', () => {
 
     it.each([UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION, UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED])(
       "responds with an error if trying to mark a report with status '%s' as not completed",
-      async (reportStatus: UtilisationReportReconciliationStatus) => {
+      async (reportStatus: UtilisationReportStatus) => {
         // Arrange
         const reportWithStatus: ReportWithStatus = {
           reportId: 1,

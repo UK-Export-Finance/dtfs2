@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { validationResult } from 'express-validator';
 import { createRequest } from 'node-mocks-http';
-import { ReportWithStatus, UtilisationReportReconciliationStatus, PENDING_RECONCILIATION, RECONCILIATION_COMPLETED } from '@ukef/dtfs2-common';
+import { ReportWithStatus, UtilisationReportStatus, PENDING_RECONCILIATION, RECONCILIATION_COMPLETED } from '@ukef/dtfs2-common';
 import { updateReportStatusPayloadValidation } from '.';
 import { TfmSessionUser } from '../../../../types/tfm-session-user';
 import { UpdateUtilisationReportStatusRequestBody } from '../../../controllers/utilisation-reports/update-utilisation-report-status.controller';
@@ -10,7 +10,7 @@ import { MOCK_TFM_SESSION_USER } from '../../../__mocks__/mock-tfm-session-user'
 type ValidPayloadBodyOpts = {
   user?: TfmSessionUser;
   reportsWithStatus?: ReportWithStatus[];
-  status?: UtilisationReportReconciliationStatus;
+  status?: UtilisationReportStatus;
   reportId?: number;
 };
 
@@ -94,7 +94,7 @@ describe('updateReportStatusPayloadValidation', () => {
 
   it('returns a single error when the status is not a valid status', async () => {
     // Arrange
-    const status = 'INVALID_STATUS' as UtilisationReportReconciliationStatus;
+    const status = 'INVALID_STATUS' as UtilisationReportStatus;
     const body = getValidPayloadBody({ status });
     const req = createRequest({ body });
 

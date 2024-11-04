@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import {
-  UtilisationReportReconciliationStatus,
+  UtilisationReportStatus,
   UTILISATION_REPORT_STATUS,
   ReportWithStatus,
   asString,
@@ -28,12 +28,10 @@ const FORM_BUTTON_VALUES = {
 export type UpdateUtilisationReportStatusRequestBody = {
   _csrf: string;
   'form-button': string;
-  [key: `set-status--reportId-${string}-currentStatus-${UtilisationReportReconciliationStatus}`]: 'on';
+  [key: `set-status--reportId-${string}-currentStatus-${UtilisationReportStatus}`]: 'on';
 };
 
-const getReportIdsAndStatusesFromBody = (
-  body: undefined | UpdateUtilisationReportStatusRequestBody,
-): { id: number; status: UtilisationReportReconciliationStatus }[] => {
+const getReportIdsAndStatusesFromBody = (body: undefined | UpdateUtilisationReportStatusRequestBody): { id: number; status: UtilisationReportStatus }[] => {
   if (!body || typeof body !== 'object') {
     throw new Error('Expected request body to be an object');
   }
@@ -47,7 +45,7 @@ const getReportIdsAndStatusesFromBody = (
       }
 
       const { id, currentStatus } = match.groups;
-      return { id: Number(id), status: currentStatus as UtilisationReportReconciliationStatus };
+      return { id: Number(id), status: currentStatus as UtilisationReportStatus };
     });
 };
 

@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { UtilisationReportReconciliationStatus } from '../../types';
+import { UtilisationReportStatus } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
 import { ReportPeriodPartialEntity } from '../partial-entities';
 import { AzureFileInfoEntity } from '../azure-file-info';
@@ -48,7 +48,7 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
    * Status code representing reconciliation progress of the report
    */
   @Column({ type: 'nvarchar' })
-  status!: UtilisationReportReconciliationStatus;
+  status!: UtilisationReportStatus;
 
   /**
    * The `_id` of the user (from the 'users' MongoDB collection) that uploaded the report

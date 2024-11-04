@@ -5,7 +5,7 @@ import {
   FeeRecordEntityMockBuilder,
   UtilisationReportEntity,
   FeeRecordEntity,
-  UtilisationReportReconciliationStatus,
+  UtilisationReportStatus,
   FeeRecordPaymentJoinTableEntity,
   FEE_RECORD_STATUS,
   REQUEST_PLATFORM_TYPE,
@@ -253,7 +253,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
 
     // Assert
     expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, utilisationReport);
-    expect(utilisationReport.status).toBe<UtilisationReportReconciliationStatus>(RECONCILIATION_IN_PROGRESS);
+    expect(utilisationReport.status).toBe<UtilisationReportStatus>(RECONCILIATION_IN_PROGRESS);
     expect(utilisationReport.lastUpdatedByIsSystemUser).toEqual(false);
     expect(utilisationReport.lastUpdatedByPortalUserId).toBeNull();
     expect(utilisationReport.lastUpdatedByTfmUserId).toEqual(tfmUserId);

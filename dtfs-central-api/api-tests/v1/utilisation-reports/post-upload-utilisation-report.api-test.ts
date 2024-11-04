@@ -14,7 +14,7 @@ import {
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
   UtilisationReportRawCsvData,
-  UtilisationReportReconciliationStatus,
+  UtilisationReportStatus,
 } from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
@@ -110,7 +110,7 @@ describe(`POST ${getUrl()}`, () => {
     expect(response.status).toEqual(HttpStatusCode.Created);
 
     const report = await SqlDbHelper.manager.findOneByOrFail(UtilisationReportEntity, { id: reportId });
-    expect(report.status).toBe<UtilisationReportReconciliationStatus>(PENDING_RECONCILIATION);
+    expect(report.status).toBe<UtilisationReportStatus>(PENDING_RECONCILIATION);
   });
 
   it('creates as many fee records as there are rows in the reportData field', async () => {

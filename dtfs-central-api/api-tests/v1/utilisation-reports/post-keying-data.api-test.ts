@@ -17,7 +17,7 @@ import {
   TfmFacility,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
-  UtilisationReportReconciliationStatus,
+  UtilisationReportStatus,
   withSqlIdPathParameterValidationTests,
 } from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
@@ -186,7 +186,7 @@ describe(`POST ${BASE_URL}`, () => {
 
     // Assert
     const updatedReport = await SqlDbHelper.manager.findOneByOrFail(UtilisationReportEntity, { id: reportId });
-    expect(updatedReport.status).toBe<UtilisationReportReconciliationStatus>(RECONCILIATION_IN_PROGRESS);
+    expect(updatedReport.status).toBe<UtilisationReportStatus>(RECONCILIATION_IN_PROGRESS);
   });
 
   it('updates the utilisation report audit fields', async () => {

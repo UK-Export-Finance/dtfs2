@@ -7,7 +7,7 @@ import {
   REPORT_NOT_RECEIVED,
   UTILISATION_REPORT_STATUS,
   UtilisationReportEntityMockBuilder,
-  UtilisationReportReconciliationStatus,
+  UtilisationReportStatus,
 } from '@ukef/dtfs2-common';
 import { difference } from 'lodash';
 import { mapReportToSummaryItem } from './reconciliation-summary-item-mapper';
@@ -108,7 +108,7 @@ describe('reconciliation-summary-item-mapper', () => {
 
     it.each(difference(Object.values(UTILISATION_REPORT_STATUS), [UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED]))(
       'sets the reconciliation summary count fields if the report has has status %s',
-      (status: UtilisationReportReconciliationStatus) => {
+      (status: UtilisationReportStatus) => {
         // Arrange
         const report = UtilisationReportEntityMockBuilder.forStatus(status).withFeeRecords([]).build();
 

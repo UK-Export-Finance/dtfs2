@@ -1,4 +1,4 @@
-import { BankReportPeriodSchedule, UtilisationReportReconciliationStatus, UTILISATION_REPORT_STATUS, PENDING_RECONCILIATION } from '@ukef/dtfs2-common';
+import { BankReportPeriodSchedule, UtilisationReportStatus, UTILISATION_REPORT_STATUS, PENDING_RECONCILIATION } from '@ukef/dtfs2-common';
 import { difference } from 'lodash';
 import {
   getReportDueDate,
@@ -204,7 +204,7 @@ describe('utilisation-report-helpers', () => {
 
     it.each(difference(Object.values(UTILISATION_REPORT_STATUS), [UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED]))(
       'returns false when there is an existing report with status %s',
-      async (status: UtilisationReportReconciliationStatus) => {
+      async (status: UtilisationReportStatus) => {
         // Arrange
         const reportPeriod = aReportPeriod();
         const existingReport = {

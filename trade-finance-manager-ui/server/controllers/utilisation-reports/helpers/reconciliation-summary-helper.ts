@@ -3,7 +3,7 @@ import {
   IsoMonthStamp,
   REPORT_NOT_RECEIVED,
   ReportPeriod,
-  UtilisationReportReconciliationStatus,
+  UtilisationReportStatus,
   getFormattedReportPeriodWithShortMonth,
   isEqualMonthAndYear,
   isTfmPaymentReconciliationFeatureFlagEnabled,
@@ -15,7 +15,7 @@ import { UtilisationReportSummaryViewModel, ReportPeriodSummariesViewModel } fro
 import { UtilisationReportDisplayFrequency } from '../../../types/utilisation-report-display-frequency';
 import { BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX, UTILISATION_REPORT_DISPLAY_FREQUENCY } from '../../../constants';
 
-export const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportReconciliationStatus, string> = {
+export const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportStatus, string> = {
   REPORT_NOT_RECEIVED: 'Not received',
   PENDING_RECONCILIATION: 'Pending reconciliation',
   RECONCILIATION_IN_PROGRESS: 'Reconciliation in progress',

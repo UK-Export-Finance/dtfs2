@@ -1,12 +1,6 @@
 import { ObjectId } from 'mongodb';
 import axios from 'axios';
-import {
-  Bank,
-  PENDING_RECONCILIATION,
-  REPORT_NOT_RECEIVED,
-  UtilisationReportEntityMockBuilder,
-  UtilisationReportReconciliationStatus,
-} from '@ukef/dtfs2-common';
+import { Bank, PENDING_RECONCILIATION, REPORT_NOT_RECEIVED, UtilisationReportEntityMockBuilder, UtilisationReportStatus } from '@ukef/dtfs2-common';
 import wipeDB from '../../wipeDB';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
@@ -60,17 +54,7 @@ describe(`GET ${BASE_URL}`, () => {
   describe("when the 'includeReportingYears' query is set to 'true'", () => {
     const reportIdGenerator = getSqlIdGenerator();
 
-    const aUtilisationReportFor = ({
-      status,
-      bankId,
-      month,
-      year,
-    }: {
-      status: UtilisationReportReconciliationStatus;
-      bankId: string;
-      month: number;
-      year: number;
-    }) =>
+    const aUtilisationReportFor = ({ status, bankId, month, year }: { status: UtilisationReportStatus; bankId: string; month: number; year: number }) =>
       UtilisationReportEntityMockBuilder.forStatus(status)
         .withId(reportIdGenerator.next().value)
         .withBankId(bankId)

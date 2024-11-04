@@ -5,7 +5,7 @@ import {
   ReportPeriod,
   REQUEST_PLATFORM_TYPE,
   UtilisationReportEntity,
-  UtilisationReportReconciliationStatus,
+  UtilisationReportStatus,
   REPORT_NOT_RECEIVED,
 } from '@ukef/dtfs2-common';
 import { DataSource } from 'typeorm';
@@ -36,7 +36,7 @@ export class UtilisationReportSeeder {
     return this;
   }
 
-  public async saveWithStatus(status: UtilisationReportReconciliationStatus, dataSource: DataSource): Promise<void> {
+  public async saveWithStatus(status: UtilisationReportStatus, dataSource: DataSource): Promise<void> {
     const report = new UtilisationReportEntity();
 
     report.status = status;

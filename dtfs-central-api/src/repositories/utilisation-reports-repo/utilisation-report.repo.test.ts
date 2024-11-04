@@ -1,6 +1,6 @@
 import { when } from 'jest-when';
 import { Not } from 'typeorm';
-import { REPORT_NOT_RECEIVED, UtilisationReportEntity, UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
+import { REPORT_NOT_RECEIVED, UtilisationReportEntity, UtilisationReportStatus } from '@ukef/dtfs2-common';
 import { UtilisationReportRepo } from './utilisation-report.repo';
 
 describe('UtilisationReportRepo', () => {
@@ -44,7 +44,7 @@ describe('UtilisationReportRepo', () => {
         .calledWith({
           where: {
             bankId,
-            status: Not<UtilisationReportReconciliationStatus>(REPORT_NOT_RECEIVED),
+            status: Not<UtilisationReportStatus>(REPORT_NOT_RECEIVED),
           },
           select: ['reportPeriod'],
         })

@@ -3,7 +3,7 @@ import {
   RECONCILIATION_COMPLETED,
   RECONCILIATION_IN_PROGRESS,
   REPORT_NOT_RECEIVED,
-  UtilisationReportReconciliationStatus,
+  UtilisationReportStatus,
   aPortalSessionUser,
 } from '@ukef/dtfs2-common';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
@@ -148,7 +148,7 @@ describe('previous-reports-view-model-mapper', () => {
       ${RECONCILIATION_COMPLETED}   | ${'Report completed'}
     `(
       'maps status and sets display status to $displayStatus when report status is $status',
-      ({ status, displayStatus }: { status: UtilisationReportReconciliationStatus; displayStatus: string }) => {
+      ({ status, displayStatus }: { status: UtilisationReportStatus; displayStatus: string }) => {
         // Arrange
         const user = aPortalSessionUser();
         const report: UtilisationReportResponseBody = {
