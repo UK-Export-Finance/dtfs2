@@ -125,23 +125,18 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in future'
 
       it('should display the cancellation success banner on each of the other sub navigation tabs', () => {
         caseSubNavigation.tasksLink().click();
-        successBanner().should('exist');
         cy.assertText(successBanner(), expectedSuccessBannerText);
 
         caseSubNavigation.partiesLink().click();
-        successBanner().should('exist');
         cy.assertText(successBanner(), expectedSuccessBannerText);
 
         caseSubNavigation.documentsLink().click();
-        successBanner().should('exist');
         cy.assertText(successBanner(), expectedSuccessBannerText);
 
         caseSubNavigation.activityLink().click();
-        successBanner().should('exist');
         cy.assertText(successBanner(), expectedSuccessBannerText);
 
         caseSubNavigation.underwritingLink().click();
-        successBanner().should('exist');
         cy.assertText(successBanner(), expectedSuccessBannerText);
       });
     });
