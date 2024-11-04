@@ -249,4 +249,4 @@ const MOCK_DEAL = {
   },
 };
 
-export default  MOCK_DEAL;
+export default MOCK_DEAL;
