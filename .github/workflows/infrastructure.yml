@@ -17,20 +17,20 @@ jobs:
         creds: ${{ secrets.AZURE_DIGITAL_DEV }}
 
     - name: Defaults
-      uses: Azure/cli@v2.1.0
+      uses: azure/cli@v2.1.0
       with:
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.DEV_RESOURCE_GROUP }}
 
     - name: App Service plan
-      uses: Azure/cli@v2.1.0
+      uses: azure/cli@v2.1.0
       with:
         inlineScript: |
           az appservice plan create --name dev --is-linux --sku p2v2
 
     - name: Container registry
-      uses: Azure/cli@v2.1.0
+      uses: azure/cli@v2.1.0
       with:
         inlineScript: |
           # Admin needs to be enabled for App Service continuous deployment
@@ -45,20 +45,20 @@ jobs:
         creds: ${{ secrets.AZURE_DIGITAL_TEST }}
 
     - name: Defaults
-      uses: Azure/cli@v2.1.0
+      uses: azure/cli@v2.1.0
       with:
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.STAGING_RESOURCE_GROUP }}
 
     - name: App Service plan
-      uses: Azure/cli@v2.1.0
+      uses: azure/cli@v2.1.0
       with:
         inlineScript: |
           az appservice plan create --name staging --is-linux --sku p2v2
 
     - name: Container registry
-      uses: Azure/cli@v2.1.0
+      uses: azure/cli@v2.1.0
       with:
         inlineScript: |
           # Admin needs to be enabled for App Service continuous deployment
@@ -73,20 +73,20 @@ jobs:
         creds: ${{ secrets.AZURE_DIGITAL_PROD }}
 
     - name: Defaults
-      uses: Azure/cli@v2.1.0
+      uses: azure/cli@v2.1.0
       with:
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.PROD_RESOURCE_GROUP }}
 
     - name: App Service plan
-      uses: Azure/cli@v2.1.0
+      uses: azure/cli@v2.1.0
       with:
         inlineScript: |
           az appservice plan create --name prod --is-linux --sku p3v2
 
     - name: Container registry
-      uses: Azure/cli@v2.1.0
+      uses: azure/cli@v2.1.0
       with:
         inlineScript: |
           # Admin needs to be enabled for App Service continuous deployment

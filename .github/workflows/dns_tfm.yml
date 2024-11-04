@@ -26,7 +26,7 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: Defaults
-      uses: Azure/cli@v2.1.0
+      uses: azure/cli@v2.1.0
       with:
         inlineScript: |
           az configure --defaults location=uksouth
@@ -34,40 +34,40 @@ jobs:
           az extension add --name front-door
 
     - name: Create DNS zone
-      uses: Azure/cli@v2.1.0
+      uses: azure/cli@v2.1.0
       with:
         inlineScript: |
           az network dns zone create --name ${{ env.domain_name }}
     
     - name: DNS - A record
-      uses: Azure/cli@v2.1.0
+      uses: azure/cli@v2.1.0
       with:
         inlineScript: |
           front_door_id=$(az network front-door show --name ${{ env.front_door_name }} --query id -o tsv)
           az network dns record-set a create --name "@" --target-resource $front_door_id --zone-name ${{ env.domain_name }}
 
     - name: DNS - CNAME records
-      uses: Azure/cli@v2.1.0
+      uses: azure/cli@v2.1.0
       with:
         inlineScript: |
             az network dns record-set cname set-record --record-set-name afdverify --cname ${{ env.front_door_name }}.azurefd.net --zone ${{ env.domain_name }}
             az network dns record-set cname set-record --record-set-name '*' --cname ${{ env.front_door_name }}.azurefd.net --zone ${{ env.domain_name }}
 
     - name: FD - Add domains
-      uses: Azure/cli@v2.1.0
+      uses: azure/cli@v2.1.0
       with:
         inlineScript: |
           az network front-door frontend-endpoint create --front-door-name ${{ env.front_door_name }} --name "TFM" --host-name ${{ env.domain_name }}
 
     - name: FD - HTTPS
-      uses: Azure/cli@v2.1.0
+      uses: azure/cli@v2.1.0
       with:
         inlineScript: |
           keyvault_id=$(az keyvault show --name ${{ env.key_vault_name }} --query id -o tsv)
           az network front-door frontend-endpoint enable-https --front-door-name ${{ env.front_door_name }} --name "TFM" --certificate-source AzureKeyVault --minimum-tls-version 1.2 --vault-id $keyvault_id --secret-name ${{ env.key_vault_secret }}
 
     - name: FD - Verify mapping
-      uses: Azure/cli@v2.1.0
+      uses: azure/cli@v2.1.0
       with:
         inlineScript: |
           az network front-door check-custom-domain --host-name ${{ env.domain_name }} --name ${{ env.front_door_name }}
