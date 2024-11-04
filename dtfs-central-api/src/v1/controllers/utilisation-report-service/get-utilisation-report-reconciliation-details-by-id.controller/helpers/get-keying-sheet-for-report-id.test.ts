@@ -8,10 +8,10 @@ import {
   FeeRecordStatus,
   KEYING_SHEET_ROW_STATUS,
   PaymentEntityMockBuilder,
+  UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { difference } from 'lodash';
 import { getKeyingSheetForReportId } from './get-keying-sheet-for-report-id';
-import { aUtilisationReport } from '../../../../../../test-helpers';
 
 jest.mock('@ukef/dtfs2-common/sql-db-connection', () => ({
   SqlDbDataSource: {
@@ -38,8 +38,14 @@ describe('getKeyingSheetForReportId', () => {
     const secondPayment = PaymentEntityMockBuilder.forCurrency('GBP').withId(22).build();
     const thirdPayment = PaymentEntityMockBuilder.forCurrency('GBP').withId(33).build();
 
-    const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).withId(12).build();
-    const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).withId(24).build();
+    const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+      .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
+      .withId(12)
+      .build();
+    const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+      .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
+      .withId(24)
+      .build();
 
     const joinTableEntities = [
       aFeeRecordPaymentJoinTableEntityWith({ feeRecord: firstFeeRecord, payment: firstPayment, paymentAmountUsedForFeeRecord: 1 }),
@@ -74,7 +80,7 @@ describe('getKeyingSheetForReportId', () => {
     // Arrange
     const payment = PaymentEntityMockBuilder.forCurrency('GBP').build();
 
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
       .withId(12)
       .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
       .withFacilityId('11111111')
@@ -118,14 +124,20 @@ describe('getKeyingSheetForReportId', () => {
 
   it('creates a keying sheet row fee payments item for each payment attached to the same unique fee record in the join table', async () => {
     // Arrange
-    const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).withId(12).build();
+    const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+      .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
+      .withId(12)
+      .build();
     const firstFeeRecordPayments = [
       PaymentEntityMockBuilder.forCurrency('GBP').withId(11).build(),
       PaymentEntityMockBuilder.forCurrency('GBP').withId(12).build(),
       PaymentEntityMockBuilder.forCurrency('GBP').withId(13).build(),
     ];
 
-    const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).withId(13).build();
+    const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+      .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
+      .withId(13)
+      .build();
     const secondFeeRecordPayments = [
       PaymentEntityMockBuilder.forCurrency('GBP').withId(21).build(),
       PaymentEntityMockBuilder.forCurrency('GBP').withId(22).build(),
@@ -171,7 +183,10 @@ describe('getKeyingSheetForReportId', () => {
     const secondPayment = PaymentEntityMockBuilder.forCurrency('GBP').withId(22).build();
     const thirdPayment = PaymentEntityMockBuilder.forCurrency('GBP').withId(33).build();
 
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).withId(12).build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+      .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
+      .withId(12)
+      .build();
 
     const joinTableEntities = [
       aFeeRecordPaymentJoinTableEntityWith({ feeRecord, payment: firstPayment, paymentAmountUsedForFeeRecord: 1000 }),
@@ -212,7 +227,10 @@ describe('getKeyingSheetForReportId', () => {
     const secondPayment = PaymentEntityMockBuilder.forCurrency('USD').withDateReceived(new Date('2022')).withId(22).build();
     const thirdPayment = PaymentEntityMockBuilder.forCurrency('EUR').withDateReceived(new Date('2023')).withId(33).build();
 
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).withId(12).build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+      .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
+      .withId(12)
+      .build();
 
     const joinTableEntities = [
       aFeeRecordPaymentJoinTableEntityWith({ feeRecord, payment: firstPayment, paymentAmountUsedForFeeRecord: 1000 }),
@@ -255,7 +273,10 @@ describe('getKeyingSheetForReportId', () => {
     const firstPayment = PaymentEntityMockBuilder.forCurrency('GBP').withId(11).withDateReceived(new Date('2021')).build();
     const secondPayment = PaymentEntityMockBuilder.forCurrency('USD').withId(22).withDateReceived(new Date('2022')).build();
 
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).withId(12).build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+      .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
+      .withId(12)
+      .build();
 
     const joinTableEntities = [
       aFeeRecordPaymentJoinTableEntityWith({ feeRecord, payment: firstPayment, paymentAmountUsedForFeeRecord: 1000 }),
@@ -296,7 +317,7 @@ describe('getKeyingSheetForReportId', () => {
       'sets the fee record fee payment to a zero amount fee payment when a %s fee record has no payments',
       async (status) => {
         // Arrange
-        const feeRecordWithoutPayment = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
+        const feeRecordWithoutPayment = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
           .withStatus(status)
           .withPaymentCurrency('EUR')
           .withId(35)
@@ -336,8 +357,11 @@ describe('getKeyingSheetForReportId', () => {
         // Arrange
         const firstPayment = PaymentEntityMockBuilder.forCurrency('GBP').withId(11).withDateReceived(new Date('2021')).build();
 
-        const feeRecordWithPayment = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).withId(12).build();
-        const feeRecordWithoutPayment = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
+        const feeRecordWithPayment = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+          .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
+          .withId(12)
+          .build();
+        const feeRecordWithoutPayment = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
           .withStatus(status)
           .withPaymentCurrency('EUR')
           .withId(35)
@@ -385,7 +409,10 @@ describe('getKeyingSheetForReportId', () => {
         PaymentEntityMockBuilder.forCurrency('GBP').withAmount(1000).build(),
         PaymentEntityMockBuilder.forCurrency('GBP').withAmount(1000).build(),
       ];
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).withPayments(payments).build();
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+        .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
+        .withPayments(payments)
+        .build();
 
       const reportId = 123;
       when(mockFind)
