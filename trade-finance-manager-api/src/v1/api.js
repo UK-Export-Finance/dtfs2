@@ -4,7 +4,14 @@ const { hasValidUri } = require('./helpers/hasValidUri.helper');
 const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
 require('dotenv').config();
 
-const { DTFS_CENTRAL_API_URL, EXTERNAL_API_URL, DTFS_CENTRAL_API_KEY, EXTERNAL_API_KEY, AZURE_ACBS_FUNCTION_URL, AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED } = process.env;
+const {
+  DTFS_CENTRAL_API_URL,
+  EXTERNAL_API_URL,
+  DTFS_CENTRAL_API_KEY,
+  EXTERNAL_API_KEY,
+  AZURE_ACBS_FUNCTION_URL,
+  AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED
+} = process.env;
 
 const headers = {
   central: {
@@ -829,7 +836,7 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
       }
       return { status: error?.status || 500, data: 'Failed to get party' };
     } else {
-      return false
+      return false;
     }
   }
 };

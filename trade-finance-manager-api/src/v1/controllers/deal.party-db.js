@@ -34,14 +34,6 @@ const getPartyUrn = async ({ companyRegNo, companyName }) => {
   }
 
   if (process.env.AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED) {
-    const partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
-    if (!partyDbInfo) {
-      return '';
-    }
-
-    return partyDbInfo[0].partyUrn;
-
-  } else {
     let partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
 
     if (partyDbInfo.status === 404) {
@@ -57,6 +49,13 @@ const getPartyUrn = async ({ companyRegNo, companyName }) => {
     }
 
     return partyDbInfo.data[0].partyUrn || '';
+  } else {
+    const partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
+    if (!partyDbInfo) {
+      return '';
+    }
+
+    return partyDbInfo[0].partyUrn;
   }
 };
 
