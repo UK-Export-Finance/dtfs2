@@ -799,9 +799,7 @@ jobs:
             npm run load
           working-directory: ./utils
           env: |
-            {
-              "MONGODB_URI": "${{ secrets.MONGODB_URI_LOCALHOST }}"
-            }
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
 
       - name: SQL
         working-directory: ./libs/common
