@@ -1,5 +1,5 @@
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { UtilisationReportEntity, ReportPeriod, FeeRecordStatus, REPORT_NOT_RECEIVED } from '@ukef/dtfs2-common';
+import { UtilisationReportEntity, ReportPeriod, FeeRecordStatus, REPORT_NOT_RECEIVED, RECONCILIATION_COMPLETED } from '@ukef/dtfs2-common';
 import { Not, Equal, FindOptionsWhere, LessThan, In } from 'typeorm';
 import { FeeRecordRepo } from '../fee-record-repo';
 
