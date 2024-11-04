@@ -1,0 +1,22 @@
+name: "Retry Steps"
+inputs:
+  command:
+    required: true
+  working-directory:
+    required: false
+    default: "./"
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        limit=3
+        run=1
+        until [ $run -gt $limit ]
+        do
+          cd ${{ inputs.working-directory }} && ${{ inputs.command }} && break
+          run=$((run + 1))
+        done
+        if [ $run -gt $limit ]; then
+          exit 1
+        fi
+      shell: bash
