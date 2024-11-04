@@ -1,38 +1,35 @@
-import { when, resetAllWhenMocks } from 'jest-when';
-import { aEntraIdUser } from '@ukef/dtfs2-common';
+import { anEntraIdUser, AuditDetails, EntraIdUser } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mapUserData } from './helpers/mapUserData.helper';
-import { UserService } from '../../services/user.service';
+import { UpsertTfmUserFromEntraIdUserResponse, UserService } from '../../services/user.service';
 import { upsertTfmUserFromEntraIdUser } from './user.controller';
 import { userServiceMockResponses } from '../../../../test-helpers';
-
-jest.mock('../../services/user.service', () => ({
-  __esModule: true,
-  UserService: {
-    upsertTfmUserFromEntraIdUser: jest.fn(),
-  },
-}));
+import { TfmSessionUser } from '../../../types/tfm-session-user';
 
 describe('user controller', () => {
   describe('upsertTfmUserFromEntraIdUser', () => {
-    const entraIdUser = aEntraIdUser();
-    const auditDetails = generateSystemAuditDetails();
+    let entraIdUser: EntraIdUser;
+    let auditDetails: AuditDetails;
 
-    const upsertedUserResponse = userServiceMockResponses.aUpsertTfmUserFromEntraIdUserResponse();
-    const mappedUserDetails = mapUserData(upsertedUserResponse);
+    let upsertTfmUserFromEntraIdUserResponse: UpsertTfmUserFromEntraIdUserResponse;
+    let mappedUserDetails: TfmSessionUser;
+    let upsertTfmUserFromEntraIdUserSpy: jest.SpyInstance;
 
     beforeEach(() => {
       jest.resetAllMocks();
-      resetAllWhenMocks();
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      when(UserService.upsertTfmUserFromEntraIdUser).calledWith({ entraIdUser, auditDetails }).mockResolvedValue(upsertedUserResponse);
+      entraIdUser = anEntraIdUser();
+      auditDetails = generateSystemAuditDetails();
+
+      upsertTfmUserFromEntraIdUserResponse = userServiceMockResponses.anUpsertTfmUserFromEntraIdUserResponse();
+      mappedUserDetails = mapUserData(upsertTfmUserFromEntraIdUserResponse);
+
+      upsertTfmUserFromEntraIdUserSpy = jest.spyOn(UserService, 'upsertTfmUserFromEntraIdUser').mockResolvedValueOnce(upsertTfmUserFromEntraIdUserResponse);
     });
 
     it('should upsert user in the database', async () => {
       await makeRequest();
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(UserService.upsertTfmUserFromEntraIdUser).toHaveBeenCalledWith({ entraIdUser, auditDetails });
+      expect(upsertTfmUserFromEntraIdUserSpy).toHaveBeenCalledWith({ entraIdUser, auditDetails });
     });
 
     it('should return the mapped user', async () => {

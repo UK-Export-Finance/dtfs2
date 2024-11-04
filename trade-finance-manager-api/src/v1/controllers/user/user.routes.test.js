@@ -1,5 +1,5 @@
 const httpMocks = require('node-mocks-http');
-const { aEntraIdUser, ApiError } = require('@ukef/dtfs2-common');
+const { anEntraIdUser, ApiError } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
 const { upsertTfmUserFromEntraIdUser } = require('./user.routes');
 const userController = require('./user.controller');
@@ -18,7 +18,7 @@ describe('user routes', () => {
       let invalidRequest;
 
       beforeEach(() => {
-        const { oid, ...rest } = aEntraIdUser();
+        const { oid, ...rest } = anEntraIdUser();
         invalidRequest = rest;
       });
 
@@ -36,7 +36,7 @@ describe('user routes', () => {
       let validRequest;
 
       beforeEach(() => {
-        validRequest = aEntraIdUser();
+        validRequest = anEntraIdUser();
       });
 
       it('calls the user controller', async () => {

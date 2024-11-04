@@ -1,3 +1,4 @@
+import { REQUEST_PLATFORM_TYPE } from '../../constants';
 import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '../../test-helpers';
 
 describe('PaymentEntity', () => {
@@ -19,7 +20,7 @@ describe('PaymentEntity', () => {
       // Act
       payment.updateWithAdditionalFeeRecords({
         additionalFeeRecords: [firstNewFeeRecord, secondNewFeeRecord],
-        requestSource: { platform: 'TFM', userId },
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId },
       });
 
       // Assert
@@ -44,7 +45,7 @@ describe('PaymentEntity', () => {
       expect(() => {
         payment.updateWithAdditionalFeeRecords({
           additionalFeeRecords: [feeRecordWithDuplicateId],
-          requestSource: { platform: 'TFM', userId },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId },
         });
       }).toThrow(Error);
 

@@ -66,7 +66,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
   const { premiumPaymentsTab } = pages.utilisationReportPage;
   const { premiumPaymentsTable } = premiumPaymentsTab;
-  const { selectedReportedFeesDetailsTable, recordedPaymentsDetailsTable } = pages.utilisationReportAddPaymentPage;
+  const { selectedReportedFeesDetailsTable, recordedPaymentsDetailsTable, insetToleranceText } = pages.utilisationReportAddPaymentPage;
 
   beforeEach(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
@@ -113,6 +113,14 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
     recordedPaymentsDetailsTable().should('contain', 'GBP 60');
     recordedPaymentsDetailsTable().should('contain', '2 Feb 2023');
     recordedPaymentsDetailsTable().should('contain', 'REF01234');
+  });
+
+  it('should render the inset text explaining tolerances', () => {
+    insetToleranceText().should('exist');
+    cy.assertText(
+      insetToleranceText(),
+      `Tolerances of £${GBP_TOLERANCE} or equivalent are applied. You cannot add any additional payments to the record if it is taken to a match status as a result of tolerance.`,
+    );
   });
 
   it('should display errors when form submitted with invalid values', () => {

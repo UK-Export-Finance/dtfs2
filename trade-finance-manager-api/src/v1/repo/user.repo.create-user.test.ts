@@ -50,7 +50,7 @@ describe('user repo', () => {
     });
     describe('when the create user is successful', () => {
       beforeEach(() => {
-        mockSuccessfulInsertOneResponse();
+        mockInsertOneResponse({ acknowledged: true, insertedId });
       });
 
       it('calls the tfm user collection', async () => {
@@ -74,7 +74,7 @@ describe('user repo', () => {
 
     describe('when the create user is unsuccessful', () => {
       beforeEach(() => {
-        mockUnsuccessfulInsertOneResponse();
+        mockInsertOneResponse({ acknowledged: false, insertedId });
       });
 
       it('throws an error', async () => {
@@ -90,14 +90,6 @@ describe('user repo', () => {
       });
 
       jest.spyOn(mongoDbClient, 'getCollection').mockImplementation(getCollectionMock);
-    }
-
-    function mockSuccessfulInsertOneResponse() {
-      mockInsertOneResponse({ acknowledged: true, insertedId });
-    }
-
-    function mockUnsuccessfulInsertOneResponse() {
-      mockInsertOneResponse({ acknowledged: false, insertedId });
     }
 
     async function makeRequest() {

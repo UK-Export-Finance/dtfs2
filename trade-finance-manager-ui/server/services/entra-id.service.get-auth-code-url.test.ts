@@ -1,21 +1,15 @@
-import { ConfidentialClientApplication, CryptoProvider } from '@azure/msal-node';
+import * as msalNode from '@azure/msal-node';
 import { EntraIdConfigMockBuilder, EntraIdApiMockBuilder } from '../../test-helpers/mocks';
 import { EntraIdConfig } from '../configs/entra-id.config';
 import { EntraIdService } from './entra-id.service';
 import { EntraIdApi } from '../third-party-apis/entra-id.api';
 
-jest.mock('@azure/msal-node', () => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return {
-    ...jest.requireActual('@azure/msal-node'),
-    ConfidentialClientApplication: jest.fn(),
-  };
-});
-
 describe('EntraIdService', () => {
   describe('getAuthCodeUrl', () => {
     let entraIdConfig: EntraIdConfig;
     let entraIdApi: EntraIdApi;
+
+    let base64EncodeSpy: jest.SpyInstance;
 
     const mockScope = ['a-scope'];
     const mockGuid = 'mock-guid';
@@ -25,13 +19,19 @@ describe('EntraIdService', () => {
     const mockRedirectUri = 'a-redirect-uri';
 
     beforeEach(() => {
-      jest.spyOn(CryptoProvider.prototype, 'createNewGuid').mockReturnValue(mockGuid);
-      jest.spyOn(CryptoProvider.prototype, 'base64Encode').mockReturnValue(mockBase64EncodedState);
+      jest.resetAllMocks();
 
-      jest.mocked(ConfidentialClientApplication).mockImplementation(() => {
+      base64EncodeSpy = jest.spyOn(msalNode.CryptoProvider.prototype, 'base64Encode').mockReturnValue(mockBase64EncodedState);
+
+      jest.spyOn(msalNode, 'CryptoProvider').mockReturnValue({
+        createNewGuid: () => mockGuid,
+        base64Encode: base64EncodeSpy,
+      } as unknown as msalNode.CryptoProvider);
+
+      jest.spyOn(msalNode, 'ConfidentialClientApplication').mockImplementation(() => {
         return {
           getAuthCodeUrl: jest.fn().mockResolvedValue(authCodeUrlFromMsalApp),
-        } as unknown as ConfidentialClientApplication;
+        } as unknown as msalNode.ConfidentialClientApplication;
       });
 
       entraIdConfig = new EntraIdConfigMockBuilder()
@@ -55,8 +55,7 @@ describe('EntraIdService', () => {
       await service.getAuthCodeUrl({ successRedirect });
 
       // Assert
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(CryptoProvider.prototype.base64Encode).toHaveBeenCalledWith(JSON.stringify({ csrfToken: mockGuid, successRedirect }));
+      expect(base64EncodeSpy).toHaveBeenCalledWith(JSON.stringify({ csrfToken: mockGuid, successRedirect }));
     });
 
     it('returns the auth code url from the msal app', async () => {

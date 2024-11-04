@@ -1,3 +1,4 @@
+import { REQUEST_PLATFORM_TYPE } from '../../constants';
 import { FacilityUtilisationDataEntityMockBuilder } from '../../test-helpers';
 
 describe('FacilityUtilisationDataEntity', () => {
@@ -23,7 +24,7 @@ describe('FacilityUtilisationDataEntity', () => {
           start: { month: 3, year: 2023 },
           end: { month: 4, year: 2024 },
         },
-        requestSource: { platform: 'TFM', userId },
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId },
       });
 
       // Assert

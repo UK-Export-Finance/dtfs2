@@ -52,6 +52,7 @@ export type Facility = {
   paymentType: string;
   createdAt: UnixTimestamp;
   updatedAt: UnixTimestamp;
+  bondType?: string; // only featured in BOND facilities
   ukefExposure: number;
   guaranteeFee: number;
   submittedAsIssuedDate: UnixTimestampString | null;

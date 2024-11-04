@@ -1,10 +1,10 @@
 const { eachMonthOfInterval, getYear, getMonth, subMonths, addMonths } = require('date-fns');
-const { UtilisationReportEntityMockBuilder, AzureFileInfoEntity, MOCK_AZURE_FILE_INFO } = require('@ukef/dtfs2-common');
+const { UtilisationReportEntityMockBuilder, AzureFileInfoEntity, MOCK_AZURE_FILE_INFO, REQUEST_PLATFORM_TYPE } = require('@ukef/dtfs2-common');
 const { BANK1_PAYMENT_REPORT_OFFICER1, BANK2_PAYMENT_REPORT_OFFICER1 } = require('../../../e2e-fixtures');
 
 const bankId = BANK1_PAYMENT_REPORT_OFFICER1.bank.id;
 
-const createAzureFileInfo = () => AzureFileInfoEntity.create({ ...MOCK_AZURE_FILE_INFO, requestSource: { platform: 'SYSTEM' } });
+const createAzureFileInfo = () => AzureFileInfoEntity.create({ ...MOCK_AZURE_FILE_INFO, requestSource: { platform: REQUEST_PLATFORM_TYPE.SYSTEM } });
 
 function* idGenerator() {
   let id = 0;
@@ -98,8 +98,8 @@ const tfmFacilityForReport = {
   facilitySnapshot: {
     ukefFacilityId: '20001371',
     value: 1000,
-    coverStartDate: new Date(),
-    coverEndDate: addMonths(new Date(), 5),
+    coverStartDate: new Date().getTime(),
+    coverEndDate: addMonths(new Date(), 5).getTime(),
     interestPercentage: 5,
     dayCountBasis: 5,
     coverPercentage: 80,
