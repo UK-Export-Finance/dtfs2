@@ -1,6 +1,6 @@
 const httpMocks = require('node-mocks-http');
 const { AxiosError } = require('axios');
-const { UTILISATION_REPORT_STATUS } = require('@ukef/dtfs2-common');
+const { REPORT_NOT_RECEIVED, PENDING_RECONCILIATION, RECONCILIATION_COMPLETED } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const { getDueReportPeriodsByBankId } = require('./due-report-periods.controller');
 const { aUtilisationReportResponse } = require('../../../../test-helpers/test-data/utilisation-report');
@@ -39,7 +39,7 @@ describe('controllers/utilisation-report-service/due-report-periods', () => {
     it("returns a 200 response when 'api.getUtilisationReports' returns an array of reports", async () => {
       // Arrange
       const { req, res } = getHttpMocks();
-      api.getUtilisationReports.mockResolvedValue([{ ...aUtilisationReportResponse(), status: UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED }]);
+      api.getUtilisationReports.mockResolvedValue([{ ...aUtilisationReportResponse(), status: REPORT_NOT_RECEIVED }]);
 
       // Act
       await getDueReportPeriodsByBankId(req, res);
@@ -51,17 +51,17 @@ describe('controllers/utilisation-report-service/due-report-periods', () => {
       expect(res._getData()).toEqual([aUtilisationReportResponse().reportPeriod]);
     });
 
-    it(`returns an empty array response when 'api.getUtilisationReports' returns no reports with the '${UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED}' status`, async () => {
+    it(`returns an empty array response when 'api.getUtilisationReports' returns no reports with the '${REPORT_NOT_RECEIVED}' status`, async () => {
       // Arrange
       const { req, res } = getHttpMocks();
       api.getUtilisationReports.mockResolvedValue([
         {
           ...aUtilisationReportResponse(),
-          status: UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION,
+          status: PENDING_RECONCILIATION,
         },
         {
           ...aUtilisationReportResponse(),
-          status: UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED,
+          status: RECONCILIATION_COMPLETED,
         },
       ]);
 

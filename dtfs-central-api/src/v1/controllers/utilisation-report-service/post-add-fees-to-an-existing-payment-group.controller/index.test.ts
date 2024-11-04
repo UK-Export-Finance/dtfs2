@@ -6,7 +6,7 @@ import {
   UtilisationReportEntityMockBuilder,
   TestApiError,
   FEE_RECORD_STATUS,
-  UTILISATION_REPORT_STATUS,
+  RECONCILIATION_IN_PROGRESS,
 } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { PostAddFeesToAnExistingPaymentGroupRequest, postAddFeesToAnExistingPaymentGroup } from '.';
@@ -30,7 +30,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
     };
 
     const reportId = 1;
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).withId(reportId).build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
 
     const paymentIds = [3, 4];
     const payments = paymentIds.map((id) => PaymentEntityMockBuilder.forCurrency('GBP').withId(id).withFeeRecords([]).build());

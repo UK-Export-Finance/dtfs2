@@ -4,7 +4,7 @@ import {
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
-  UTILISATION_REPORT_STATUS,
+  RECONCILIATION_IN_PROGRESS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -215,6 +215,6 @@ describe('mapToPaymentDetails', () => {
   });
 
   function utilisationReport(): UtilisationReportEntity {
-    return UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).build();
+    return UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
   }
 });

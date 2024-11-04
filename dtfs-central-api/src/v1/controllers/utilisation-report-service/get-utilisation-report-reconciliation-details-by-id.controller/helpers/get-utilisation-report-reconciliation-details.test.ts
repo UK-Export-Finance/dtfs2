@@ -2,6 +2,7 @@ import {
   CURRENCY,
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
+  PENDING_RECONCILIATION,
   PaymentEntityMockBuilder,
   ReportPeriod,
   UTILISATION_REPORT_STATUS,
@@ -68,10 +69,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
     describe('when a bank with the same id as the report bankId does not exist', () => {
       it('should throw an error', async () => {
         // Arrange
-        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION)
-          .withId(reportId)
-          .withBankId(bankId)
-          .build();
+        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withId(reportId).withBankId(bankId).build();
 
         const paymentDetailsFilters = {};
         const premiumPaymentsFilters = {};
@@ -96,7 +94,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
           end: { month: 1, year: 2024 },
         };
         const dateUploaded = new Date();
-        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION)
+        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
           .withId(reportId)
           .withBankId(bankId)
           .withReportPeriod(reportPeriod)
@@ -122,7 +120,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
             id: bankId,
             name: bankName,
           },
-          status: UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION,
+          status: PENDING_RECONCILIATION,
           reportPeriod,
           dateUploaded,
           premiumPayments: [],
@@ -136,7 +134,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
     describe('when calling getPremiumPayments', () => {
       it('should call with expected filters', async () => {
         // Arrange
-        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).withFeeRecords([]).build();
+        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withFeeRecords([]).build();
 
         const paymentDetailsFilters = {};
         const premiumPaymentsFilters = { facilityId: 'testFacilityId' };
@@ -160,7 +158,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
     describe('when calling getPaymentDetails', () => {
       it('should call with expected filters', async () => {
         // Arrange
-        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION).withFeeRecords([]).build();
+        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withFeeRecords([]).build();
 
         const paymentDetailsFilters = { facilityId: 'testFacilityId', paymentCurrency: CURRENCY.GBP, paymentReference: 'testPaymentReference' };
         const premiumPaymentsFilters = {};
@@ -270,10 +268,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
     });
 
     describe('when there are fee record payment groups with multiple payments', () => {
-      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION)
-        .withId(reportId)
-        .withBankId(bankId)
-        .build();
+      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withId(reportId).withBankId(bankId).build();
 
       const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(uploadedReport).withId(1).withStatus(FEE_RECORD_STATUS.TO_DO).build();
       const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(uploadedReport).withId(2).withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH).build();

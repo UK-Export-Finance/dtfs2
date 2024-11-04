@@ -3,7 +3,8 @@ import {
   DbRequestSource,
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
-  UTILISATION_REPORT_STATUS,
+  RECONCILIATION_COMPLETED,
+  RECONCILIATION_IN_PROGRESS,
   REQUEST_PLATFORM_TYPE,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
@@ -41,7 +42,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent', () => {
 
   it('calls the fee record state machine with the MARK_AS_READY_TO_KEY event for every fee record to reconcile', async () => {
     // Arrange
-    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
     const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
     const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
     const thirdFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
@@ -89,9 +90,9 @@ describe('handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent', () => {
     });
   });
 
-  it(`updates the report status to ${UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS} if report status is ${UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED}`, async () => {
+  it(`updates the report status to ${RECONCILIATION_IN_PROGRESS} if report status is ${RECONCILIATION_COMPLETED}`, async () => {
     // Arrange
-    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED).build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_COMPLETED).build();
     const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
     const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
     const thirdFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
@@ -108,7 +109,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent', () => {
     expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
     expect(report).toEqual(
       expect.objectContaining<Partial<UtilisationReportEntity>>({
-        status: UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS,
+        status: RECONCILIATION_IN_PROGRESS,
         lastUpdatedByTfmUserId: requestSource.userId,
         lastUpdatedByPortalUserId: null,
         lastUpdatedByIsSystemUser: false,
@@ -116,9 +117,9 @@ describe('handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent', () => {
     );
   });
 
-  it(`does not update the report status if the status is already ${UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS}`, async () => {
+  it(`does not update the report status if the status is already ${RECONCILIATION_IN_PROGRESS}`, async () => {
     // Arrange
-    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
     const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
     const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
     const thirdFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
@@ -135,7 +136,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent', () => {
     expect(mockSave).not.toHaveBeenCalled();
     expect(report).toEqual(
       expect.objectContaining<Partial<UtilisationReportEntity>>({
-        status: UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS,
+        status: RECONCILIATION_IN_PROGRESS,
       }),
     );
   });

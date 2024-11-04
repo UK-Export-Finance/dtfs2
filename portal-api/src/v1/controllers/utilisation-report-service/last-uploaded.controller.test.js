@@ -1,6 +1,6 @@
 const httpMocks = require('node-mocks-http');
 const { AxiosError } = require('axios');
-const { UTILISATION_REPORT_STATUS } = require('@ukef/dtfs2-common');
+const { PENDING_RECONCILIATION, RECONCILIATION_COMPLETED, REPORT_NOT_RECEIVED } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const { getLastUploadedReportByBankId } = require('./last-uploaded.controller');
 const { aUtilisationReportResponse } = require('../../../../test-helpers/test-data/utilisation-report');
@@ -33,7 +33,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
       },
     },
     dateUploaded: '2023-02-01T00:00',
-    status: UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION,
+    status: PENDING_RECONCILIATION,
     azureFileInfo,
     bankId,
   };
@@ -53,7 +53,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
         },
       },
       dateUploaded: '2023-01-01T00:00',
-      status: UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION,
+      status: PENDING_RECONCILIATION,
       azureFileInfo,
       bankId,
     },
@@ -73,7 +73,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
         },
       },
       dateUploaded: '2023-03-01T00:00',
-      status: UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED,
+      status: RECONCILIATION_COMPLETED,
       azureFileInfo: null,
       bankId,
     },
@@ -90,7 +90,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
           year: 2023,
         },
       },
-      status: UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED,
+      status: REPORT_NOT_RECEIVED,
       azureFileInfo: null,
       dateUploaded: undefined,
       uploadedBy: undefined,
@@ -150,7 +150,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const uploadedReports = sortedReports.filter((report) => report.status !== UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED && !!report.azureFileInfo);
+      const uploadedReports = sortedReports.filter((report) => report.status !== REPORT_NOT_RECEIVED && !!report.azureFileInfo);
       jest.mocked(api.getUtilisationReports).mockResolvedValue(uploadedReports);
 
       // Act

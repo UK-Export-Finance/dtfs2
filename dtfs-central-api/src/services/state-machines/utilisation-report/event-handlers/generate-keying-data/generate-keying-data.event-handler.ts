@@ -5,7 +5,8 @@ import {
   FeeRecordEntity,
   FeeRecordPaymentJoinTableEntity,
   FeeRecordStatus,
-  UTILISATION_REPORT_STATUS,
+  PENDING_RECONCILIATION,
+  RECONCILIATION_IN_PROGRESS,
   UtilisationReportEntity,
 } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
@@ -98,8 +99,8 @@ export const handleUtilisationReportGenerateKeyingDataEvent = async (
   const KeyingSheetFeePaymentShares = getKeyingSheetFeePaymentSharesForFeeRecords(feeRecordsAtMatchStatusWithPayments);
   await updateFeeRecordPaymentJoinTable(KeyingSheetFeePaymentShares, transactionEntityManager);
 
-  if (report.status === UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION) {
-    report.updateWithStatus({ status: UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS, requestSource });
+  if (report.status === PENDING_RECONCILIATION) {
+    report.updateWithStatus({ status: RECONCILIATION_IN_PROGRESS, requestSource });
   } else {
     report.updateLastUpdatedBy(requestSource);
   }

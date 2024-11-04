@@ -1,4 +1,4 @@
-import { REQUEST_PLATFORM_TYPE, UTILISATION_REPORT_STATUS } from '../../constants';
+import { REPORT_NOT_RECEIVED, REQUEST_PLATFORM_TYPE } from '../../constants';
 import { AzureFileInfoEntity, DbRequestSource, FeeRecordEntity, UtilisationReportEntity, ReportPeriodPartialEntity } from '../../sql-db-entities';
 import { UtilisationReportReconciliationStatus } from '../../types';
 import { MOCK_AZURE_FILE_INFO } from './azure-file-info.mock';
@@ -17,7 +17,7 @@ export class UtilisationReportEntityMockBuilder<ReportStatus extends Utilisation
       end: { month: 11, year: 2023 },
     };
 
-    if (status === UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED) {
+    if (status === REPORT_NOT_RECEIVED) {
       return new UtilisationReportEntityMockBuilder<typeof status>(
         UtilisationReportEntity.createNotReceived({
           bankId,

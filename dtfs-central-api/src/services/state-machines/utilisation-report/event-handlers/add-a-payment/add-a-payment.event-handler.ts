@@ -1,5 +1,12 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, FeeRecordEntity, PaymentEntity, UTILISATION_REPORT_STATUS, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import {
+  DbRequestSource,
+  FeeRecordEntity,
+  PENDING_RECONCILIATION,
+  PaymentEntity,
+  RECONCILIATION_IN_PROGRESS,
+  UtilisationReportEntity,
+} from '@ukef/dtfs2-common';
 import { NewPaymentDetails } from '../../../../../types/utilisation-reports';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
@@ -51,8 +58,8 @@ export const handleUtilisationReportAddAPaymentEvent = async (
     ),
   );
 
-  if (report.status === UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION) {
-    report.updateWithStatus({ status: UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS, requestSource });
+  if (report.status === PENDING_RECONCILIATION) {
+    report.updateWithStatus({ status: RECONCILIATION_IN_PROGRESS, requestSource });
   } else {
     report.updateLastUpdatedBy(requestSource);
   }

@@ -1,9 +1,9 @@
-import { FEE_RECORD_STATUS, REQUEST_PLATFORM_TYPE, UTILISATION_REPORT_STATUS } from '../../constants';
+import { FEE_RECORD_STATUS, RECONCILIATION_IN_PROGRESS, REQUEST_PLATFORM_TYPE } from '../../constants';
 import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '../../test-helpers';
 import { Currency } from '../../types';
 
 describe('FeeRecordEntity', () => {
-  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).build();
+  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
 
   const mockDate = new Date();
 

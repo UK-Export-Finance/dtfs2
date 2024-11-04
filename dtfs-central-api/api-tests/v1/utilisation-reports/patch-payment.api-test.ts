@@ -9,6 +9,7 @@ import {
   FeeRecordStatus,
   PaymentEntity,
   PaymentEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
   UTILISATION_REPORT_STATUS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
@@ -39,7 +40,7 @@ describe(`PATCH ${BASE_URL}`, () => {
 
   const payment = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).build();
 
-  const aReport = () => UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).withId(reportId).build();
+  const aReport = () => UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
 
   const feeRecordsForReportWithPayments = (report: UtilisationReportEntity, payments: PaymentEntity[]) => [
     FeeRecordEntityMockBuilder.forReport(report)

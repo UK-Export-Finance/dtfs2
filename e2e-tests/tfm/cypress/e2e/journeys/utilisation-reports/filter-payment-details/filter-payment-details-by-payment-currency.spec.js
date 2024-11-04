@@ -2,7 +2,7 @@ import {
   CURRENCY,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
-  UTILISATION_REPORT_STATUS,
+  RECONCILIATION_IN_PROGRESS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import pages from '../../../pages';
@@ -15,7 +15,7 @@ context(`users can filter payment details by payment currency`, () => {
   const bankId = '961';
   const reportId = 12;
 
-  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS)
+  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS)
     .withId(reportId)
     .withBankId(bankId)
     .withDateUploaded(new Date())

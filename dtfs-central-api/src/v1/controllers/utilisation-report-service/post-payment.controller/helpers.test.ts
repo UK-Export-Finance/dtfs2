@@ -4,8 +4,8 @@ import {
   Currency,
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
   REQUEST_PLATFORM_TYPE,
-  UTILISATION_REPORT_STATUS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { addPaymentToUtilisationReport } from './helpers';
@@ -39,7 +39,7 @@ describe('post-add-payment.controller helpers', () => {
       reference: 'A payment reference',
     };
 
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).withId(reportId).build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
     const utilisationReportStateMachine = UtilisationReportStateMachine.forReport(utilisationReport);
 
     const feeRecordsInPaymentCurrency = feeRecordIds.map((feeRecordId) =>

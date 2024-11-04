@@ -6,10 +6,10 @@ import {
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   FeeRecordStatus,
+  PENDING_RECONCILIATION,
   PaymentEntity,
   PaymentEntityMockBuilder,
   PaymentMatchingToleranceEntityMockBuilder,
-  UTILISATION_REPORT_STATUS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
@@ -34,7 +34,7 @@ describe(`POST ${BASE_URL}`, () => {
   const tfmUser = aTfmUser();
   const tfmUserId = tfmUser._id.toString();
 
-  const uploadedUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION)
+  const uploadedUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
     .withId(reportId)
     .withUploadedByUserId(portalUserId)
     .build();

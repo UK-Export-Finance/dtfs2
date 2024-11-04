@@ -1,7 +1,7 @@
 import { body, checkSchema } from 'express-validator';
-import { UTILISATION_REPORT_STATUS } from '@ukef/dtfs2-common';
+import { PENDING_RECONCILIATION, RECONCILIATION_COMPLETED } from '@ukef/dtfs2-common';
 
-const VALID_UPDATE_PAYLOAD_STATUSES = [UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED, UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION] as const;
+const VALID_UPDATE_PAYLOAD_STATUSES = [RECONCILIATION_COMPLETED, PENDING_RECONCILIATION] as const;
 
 export const updateReportStatusPayloadValidation = [
   body('user', "Expected body to contain 'user' object").exists().isObject(),

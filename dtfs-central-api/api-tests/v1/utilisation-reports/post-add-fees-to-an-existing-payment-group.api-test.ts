@@ -3,7 +3,7 @@ import {
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
-  UTILISATION_REPORT_STATUS,
+  RECONCILIATION_IN_PROGRESS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
@@ -24,7 +24,7 @@ describe(`POST ${BASE_URL}`, () => {
   const tfmUserId = tfmUser._id.toString();
 
   const reportId = 1;
-  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).withId(reportId).build();
+  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
 
   const paymentIds = [3, 4];
   const payments = paymentIds.map((id) => PaymentEntityMockBuilder.forCurrency('GBP').withId(id).withFeeRecords([]).build());

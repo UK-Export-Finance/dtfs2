@@ -48,7 +48,7 @@ The state machine determines whether the event type is valid for the current sta
 public async handleEvent(event: UtilisationReportEvent): Promise<UtilisationReportEntity> {
   switch (this.report?.status) {
     ...
-    case UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS:
+    case 'RECONCILIATION_IN_PROGRESS':
       switch (event.type) {
         case 'PAYMENT_REMOVED_FROM_FEE_RECORD':
           return handleUtilisationReportPaymentRemovedFromFeeRecordEvent(this.report, event.payload);
@@ -57,7 +57,7 @@ public async handleEvent(event: UtilisationReportEvent): Promise<UtilisationRepo
         default:
           return this.handleInvalidTransition(event);
       }
-    case UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED:
+    case 'RECONCILIATION_COMPLETED':
       switch (event.type) {
         case 'MANUALLY_SET_INCOMPLETE':
           return handleUtilisationReportManuallySetIncompleteEvent(this.report);
@@ -71,7 +71,7 @@ public async handleEvent(event: UtilisationReportEvent): Promise<UtilisationRepo
 
 In this simplified example note how we take a "state-first" approach, as opposed to an "event-first" approach, first switching on `this.report?.status` then `event.type`. This method matches how we would read the visual state machine (see [Utilisation Reports](#utilisation-reports) below), so makes it easier to reason about, and ensure that all scenarios have been accounted for.
 
-In the example above you can see that if the report is in `UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS` status there are only two valid events that can occur, and this matches the two outward arrows in the diagram below. For each of these two valid event types the relevant handler is called to handle the transition. For any other event type the `this.handleInvalidTransition` will be called, resulting in an error.
+In the example above you can see that if the report is in `'RECONCILIATION_IN_PROGRESS'` status there are only two valid events that can occur, and this matches the two outward arrows in the diagram below. For each of these two valid event types the relevant handler is called to handle the transition. For any other event type the `this.handleInvalidTransition` will be called, resulting in an error.
 
 ## Diagrams
 

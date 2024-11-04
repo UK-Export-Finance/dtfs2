@@ -9,6 +9,8 @@ import {
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
   REQUEST_PLATFORM_TYPE,
+  PENDING_RECONCILIATION,
+  REPORT_NOT_RECEIVED,
 } from '@ukef/dtfs2-common';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { GetUtilisationReportResponse } from '../../../../types/utilisation-reports';
@@ -100,7 +102,7 @@ describe('getUtilisationReport', () => {
       } as PortalUser;
       jest.mocked(getUserById).mockResolvedValue(mockGetUserByIdResponse);
 
-      const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION)
+      const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
         .withId(reportId)
         .withUploadedByUserId(uploadedByUser.id)
         .withDateUploaded(mockDate)
@@ -132,7 +134,7 @@ describe('getUtilisationReport', () => {
   });
 
   describe('when a report has not been uploaded', () => {
-    const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED)
+    const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED)
       .withId(reportId)
       .withUploadedByUserId(null)
       .withDateUploaded(null)

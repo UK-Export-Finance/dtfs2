@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { EntityManager } from 'typeorm';
-import { FeeRecordEntityMockBuilder, REQUEST_PLATFORM_TYPE, UTILISATION_REPORT_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { FeeRecordEntityMockBuilder, RECONCILIATION_IN_PROGRESS, REQUEST_PLATFORM_TYPE, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { removeFeesFromPaymentGroup } from './helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
@@ -19,7 +19,7 @@ describe('post-remove-fees-from-payment.controller helpers', () => {
     };
     const tfmUserId = tfmUser._id;
 
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).withId(reportId).build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
     const utilisationReportStateMachine = UtilisationReportStateMachine.forReport(utilisationReport);
 
     const feeRecordIds = [1, 2];

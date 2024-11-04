@@ -1,5 +1,12 @@
 import { Response } from 'express';
-import { UtilisationReportReconciliationStatus, UTILISATION_REPORT_STATUS, ReportWithStatus, asString } from '@ukef/dtfs2-common';
+import {
+  UtilisationReportReconciliationStatus,
+  UTILISATION_REPORT_STATUS,
+  ReportWithStatus,
+  asString,
+  PENDING_RECONCILIATION,
+  RECONCILIATION_COMPLETED,
+} from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { getUtilisationReports } from '..';
@@ -48,12 +55,12 @@ const getReportWithStatus = (reportId: number, formButton: string): ReportWithSt
   switch (formButton) {
     case FORM_BUTTON_VALUES.COMPLETED:
       return {
-        status: UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED,
+        status: RECONCILIATION_COMPLETED,
         reportId,
       };
     case FORM_BUTTON_VALUES.NOT_COMPLETED:
       return {
-        status: UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION,
+        status: PENDING_RECONCILIATION,
         reportId,
       };
     default:

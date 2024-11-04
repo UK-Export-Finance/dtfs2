@@ -2,8 +2,8 @@ import {
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
-  UTILISATION_REPORT_STATUS,
   UtilisationReportEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
 } from '@ukef/dtfs2-common';
 import { errorSummary } from '../../partials';
 import pages from '../../pages';
@@ -20,7 +20,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
   const FEE_RECORD_ID_TWO = '22';
   const PAYMENT_CURRENCY = 'GBP';
 
-  const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).withId(REPORT_ID).withBankId('961').build();
+  const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(REPORT_ID).withBankId('961').build();
 
   const firstPayment = PaymentEntityMockBuilder.forCurrency(PAYMENT_CURRENCY)
     .withAmount(450)

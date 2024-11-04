@@ -1,6 +1,12 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
-import { FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, TestApiError, UTILISATION_REPORT_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FEE_RECORD_STATUS,
+  FeeRecordEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
+  TestApiError,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { EntityManager } from 'typeorm';
 import { aTfmSessionUser } from '../../../../../test-helpers';
@@ -43,7 +49,7 @@ describe('put-keying-data-mark-as-to-do.controller', () => {
         handleEvent: mockHandleEvent,
       });
       UtilisationReportStateMachine.forReport = mockForReport;
-      const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS).build();
+      const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
       const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(feeRecordId).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
       feeRecordRepoFindByIdAndReportIdSpy.mockResolvedValue([feeRecord]);
     });

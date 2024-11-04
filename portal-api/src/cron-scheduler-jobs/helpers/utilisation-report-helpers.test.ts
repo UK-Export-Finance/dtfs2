@@ -1,4 +1,4 @@
-import { BankReportPeriodSchedule, UtilisationReportReconciliationStatus, UTILISATION_REPORT_STATUS } from '@ukef/dtfs2-common';
+import { BankReportPeriodSchedule, UtilisationReportReconciliationStatus, UTILISATION_REPORT_STATUS, PENDING_RECONCILIATION } from '@ukef/dtfs2-common';
 import { difference } from 'lodash';
 import {
   getReportDueDate,
@@ -273,7 +273,7 @@ describe('utilisation-report-helpers', () => {
       // Arrange
       const existingReport: UtilisationReportResponseBody = {
         ...aUtilisationReportResponse(),
-        status: UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION,
+        status: PENDING_RECONCILIATION,
         reportPeriod: {
           start: { month: CURRENT_REPORT_PERIOD_MONTH, year: CURRENT_YEAR },
           end: { month: CURRENT_REPORT_PERIOD_MONTH, year: CURRENT_YEAR },

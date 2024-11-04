@@ -1,4 +1,4 @@
-const { UTILISATION_REPORT_STATUS } = require('@ukef/dtfs2-common');
+const { REPORT_NOT_RECEIVED } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 
 const api = require('../../../src/v1/api');
@@ -88,7 +88,7 @@ describe('/v1/utilisation-reports', () => {
     {
       id: 1,
       bankId: uploadingUser.bank.id,
-      status: UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED,
+      status: REPORT_NOT_RECEIVED,
       uploadedByUserId: undefined,
       reportPeriod: {
         start: {

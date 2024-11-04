@@ -1,8 +1,8 @@
 import { endOfDay, format, isPast, isSameMonth, parseISO, subMonths } from 'date-fns';
 import {
   IsoMonthStamp,
+  REPORT_NOT_RECEIVED,
   ReportPeriod,
-  UTILISATION_REPORT_STATUS,
   UtilisationReportReconciliationStatus,
   getFormattedReportPeriodWithShortMonth,
   isEqualMonthAndYear,
@@ -46,7 +46,7 @@ const getSummaryItemViewModel = (apiItem: UtilisationReportReconciliationSummary
     frequency: getUtilisationReportDisplayFrequency(reportPeriod),
     displayStatus: reconciliationStatusCodeToDisplayStatus[status],
     formattedDateUploaded: dateUploaded ? format(parseISO(dateUploaded), 'd MMM yyyy') : undefined,
-    downloadPath: status !== UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED ? `/utilisation-reports/${reportId}/download` : undefined,
+    downloadPath: status !== REPORT_NOT_RECEIVED ? `/utilisation-reports/${reportId}/download` : undefined,
   };
 };
 

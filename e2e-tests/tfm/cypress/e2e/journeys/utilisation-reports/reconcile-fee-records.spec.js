@@ -1,7 +1,8 @@
 import {
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
-  UTILISATION_REPORT_STATUS,
+  REPORT_NOT_RECEIVED,
+  RECONCILIATION_IN_PROGRESS,
   UtilisationReportEntityMockBuilder,
   toIsoMonthStamp,
   getPreviousReportPeriodForBankScheduleByMonth,
@@ -58,7 +59,7 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
       const reportPeriod = getPreviousReportPeriodForBankScheduleByMonth(bank.utilisationReportPeriodSchedule, SUBMISSION_MONTH);
 
       if (bank.id === BANK_ID) {
-        const reportToReconcile = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS)
+        const reportToReconcile = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS)
           .withId(REPORT_ID)
           .withBankId(BANK_ID)
           .withReportPeriod(reportPeriod)
@@ -95,7 +96,7 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
           .build();
         cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecordOne, feeRecordTwo]);
       } else {
-        const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED)
+        const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED)
           .withId(bank.id)
           .withBankId(bank.id)
           .withReportPeriod(reportPeriod)

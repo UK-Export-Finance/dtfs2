@@ -10,7 +10,7 @@ import {
   UpdateWithUploadDetailsParams,
   UpdateWithFeeRecordsParams,
 } from './utilisation-report.types';
-import { UTILISATION_REPORT_STATUS } from '../../constants';
+import { PENDING_RECONCILIATION, REPORT_NOT_RECEIVED } from '../../constants';
 
 @Entity('UtilisationReport')
 export class UtilisationReportEntity extends AuditableBaseEntity {
@@ -77,7 +77,7 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
     report.bankId = bankId;
     report.reportPeriod = reportPeriod;
     report.dateUploaded = null;
-    report.status = UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED;
+    report.status = REPORT_NOT_RECEIVED;
     report.uploadedByUserId = null;
     report.updateLastUpdatedBy(requestSource);
     return report;
@@ -93,7 +93,7 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
   public updateWithUploadDetails({ azureFileInfo, uploadedByUserId, requestSource }: UpdateWithUploadDetailsParams): void {
     this.dateUploaded = new Date();
     this.azureFileInfo = azureFileInfo;
-    this.status = UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION;
+    this.status = PENDING_RECONCILIATION;
     this.uploadedByUserId = uploadedByUserId;
     this.updateLastUpdatedBy(requestSource);
   }
