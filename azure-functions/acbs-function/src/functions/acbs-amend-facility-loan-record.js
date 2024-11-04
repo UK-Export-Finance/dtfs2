@@ -42,13 +42,13 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
     let facilityLoanRecordAmendments;
 
     // 1.1. Facility Loan Record (FLR) amendment mapping
-    const flrMApped = mappings.facility.facilityLoanAmend(amendments, facility, fmr);
+    const flrMapped = mappings.facility.facilityLoanAmend(amendments, facility, fmr);
 
     /**
      * When facility amendment is applied on facility type `Loan`,
      * with only `amount` attribute execution should be terminated.
      */
-    if (!flrMApped?.length) {
+    if (!flrMapped?.length) {
       facilityLoanRecordAmendments = 'Facility loan amount only amendment, aborting FLR amendment';
 
       return facilityLoanRecordAmendments;
@@ -69,7 +69,7 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
         const amount = yield context.df.callActivityWithRetry('update-facility-loan-amount', retryOptions, {
           loanId,
           facilityId,
-          acbsFacilityLoanInput: flrMApped,
+          acbsFacilityLoanInput: flrMapped,
         });
 
         facilityLoanRecordAmendments = {
@@ -83,7 +83,7 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
         const coverEndDate = yield context.df.callActivityWithRetry('update-facility-loan', retryOptions, {
           loanId,
           facilityId,
-          acbsFacilityLoanInput: flrMApped,
+          acbsFacilityLoanInput: flrMapped,
         });
 
         facilityLoanRecordAmendments = {

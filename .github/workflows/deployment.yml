@@ -145,7 +145,7 @@ jobs:
           ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Defaults ✨
-        uses: azure/cli@v2
+        uses: Azure/cli@v2.1.0
         with:
           inlineScript: |
             # Basic
@@ -192,7 +192,7 @@ jobs:
           docker push ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }}
 
       - name: Slot 🔀
-        uses: azure/cli@v2
+        uses: Azure/cli@v2.1.0
         with:
           inlineScript: |
             # Create new temporary slot
@@ -212,7 +212,7 @@ jobs:
 
       - name: Cleanup 🧹
         if: always()
-        uses: azure/cli@v2
+        uses: Azure/cli@v2.1.0
         with:
           inlineScript: |
             # Delete temporary slot
@@ -249,7 +249,7 @@ jobs:
           ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Defaults ✨
-        uses: azure/cli@v2
+        uses: Azure/cli@v2.1.0
         with:
           inlineScript: |
             # Basic
@@ -291,7 +291,7 @@ jobs:
           docker push ${{ env.ACR }}/${{ matrix.functions }}:${{ env.FROM }}
 
       - name: Slot 🔀
-        uses: azure/cli@v2
+        uses: Azure/cli@v2.1.0
         with:
           inlineScript: |
             # Create new temporary slot
@@ -311,7 +311,7 @@ jobs:
 
       - name: Cleanup 🧹
         if: always()
-        uses: azure/cli@v2
+        uses: Azure/cli@v2.1.0
         with:
           inlineScript: |
             # Delete temporary slot
