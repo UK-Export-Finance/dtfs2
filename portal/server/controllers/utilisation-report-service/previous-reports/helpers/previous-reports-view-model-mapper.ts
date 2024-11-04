@@ -1,5 +1,5 @@
 import {
-  UtilisationReportReconciliationStatus,
+  UtilisationReportStatus,
   getFormattedReportPeriodWithLongMonth,
   getFormattedReportPeriodWithShortMonth,
   isEqualMonthAndYear,
@@ -10,7 +10,7 @@ import { PRIMARY_NAV_KEY } from '../../../../constants';
 import { PreviousUtilisationReportsResponseBody, UtilisationReportResponseBody } from '../../../../api-response-types';
 import { PreviousReportNavItemViewModel, PreviousReportViewModel, PreviousReportsViewModel } from '../../../../types/view-models/previous-reports';
 
-const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportReconciliationStatus, string> = {
+const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportStatus, string> = {
   REPORT_NOT_RECEIVED: 'Not submitted',
   PENDING_RECONCILIATION: 'Pending reconciliation',
   RECONCILIATION_IN_PROGRESS: 'Reconciliation in progress',

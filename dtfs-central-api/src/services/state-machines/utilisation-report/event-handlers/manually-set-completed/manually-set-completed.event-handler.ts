@@ -1,5 +1,5 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { DbRequestSource, RECONCILIATION_COMPLETED, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 
 type ManuallySetCompletedEventPayload = {
@@ -21,6 +21,6 @@ export const handleUtilisationReportManuallySetCompletedEvent = async (
   report: UtilisationReportEntity,
   { requestSource, transactionEntityManager }: ManuallySetCompletedEventPayload,
 ): Promise<UtilisationReportEntity> => {
-  report.updateWithStatus({ status: 'RECONCILIATION_COMPLETED', requestSource });
+  report.updateWithStatus({ status: RECONCILIATION_COMPLETED, requestSource });
   return await transactionEntityManager.save(UtilisationReportEntity, report);
 };

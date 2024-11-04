@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { UtilisationReportReconciliationStatus } from '../../types';
+import { UtilisationReportStatus } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
 import { ReportPeriodPartialEntity } from '../partial-entities';
 import { AzureFileInfoEntity } from '../azure-file-info';
@@ -10,6 +10,7 @@ import {
   UpdateWithUploadDetailsParams,
   UpdateWithFeeRecordsParams,
 } from './utilisation-report.types';
+import { PENDING_RECONCILIATION, REPORT_NOT_RECEIVED } from '../../constants';
 
 @Entity('UtilisationReport')
 export class UtilisationReportEntity extends AuditableBaseEntity {
@@ -47,7 +48,7 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
    * Status code representing reconciliation progress of the report
    */
   @Column({ type: 'nvarchar' })
-  status!: UtilisationReportReconciliationStatus;
+  status!: UtilisationReportStatus;
 
   /**
    * The `_id` of the user (from the 'users' MongoDB collection) that uploaded the report
@@ -76,7 +77,7 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
     report.bankId = bankId;
     report.reportPeriod = reportPeriod;
     report.dateUploaded = null;
-    report.status = 'REPORT_NOT_RECEIVED';
+    report.status = REPORT_NOT_RECEIVED;
     report.uploadedByUserId = null;
     report.updateLastUpdatedBy(requestSource);
     return report;
@@ -92,7 +93,7 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
   public updateWithUploadDetails({ azureFileInfo, uploadedByUserId, requestSource }: UpdateWithUploadDetailsParams): void {
     this.dateUploaded = new Date();
     this.azureFileInfo = azureFileInfo;
-    this.status = 'PENDING_RECONCILIATION';
+    this.status = PENDING_RECONCILIATION;
     this.uploadedByUserId = uploadedByUserId;
     this.updateLastUpdatedBy(requestSource);
   }

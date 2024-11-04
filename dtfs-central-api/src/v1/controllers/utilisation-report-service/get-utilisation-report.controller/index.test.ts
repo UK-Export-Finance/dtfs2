@@ -4,11 +4,13 @@ import {
   AzureFileInfoEntity,
   MOCK_AZURE_FILE_INFO,
   PortalUser,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UTILISATION_REPORT_STATUS,
   UploadedByUserDetails,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
   REQUEST_PLATFORM_TYPE,
+  PENDING_RECONCILIATION,
+  REPORT_NOT_RECEIVED,
 } from '@ukef/dtfs2-common';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { GetUtilisationReportResponse } from '../../../../types/utilisation-reports';
@@ -34,7 +36,7 @@ describe('getUtilisationReport', () => {
       params: { id: reportId.toString() },
     });
 
-  const reportUploadStatuses = Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS).filter((status) => status !== 'REPORT_NOT_RECEIVED');
+  const reportUploadStatuses = Object.values(UTILISATION_REPORT_STATUS).filter((status) => status !== UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED);
 
   describe.each(reportUploadStatuses)("when a report has been uploaded and is in the '%s' state", (status) => {
     const uploadedByUser: UploadedByUserDetails = {
@@ -100,7 +102,7 @@ describe('getUtilisationReport', () => {
       } as PortalUser;
       jest.mocked(getUserById).mockResolvedValue(mockGetUserByIdResponse);
 
-      const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+      const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
         .withId(reportId)
         .withUploadedByUserId(uploadedByUser.id)
         .withDateUploaded(mockDate)
@@ -132,7 +134,7 @@ describe('getUtilisationReport', () => {
   });
 
   describe('when a report has not been uploaded', () => {
-    const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+    const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED)
       .withId(reportId)
       .withUploadedByUserId(null)
       .withDateUploaded(null)
