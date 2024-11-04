@@ -48,7 +48,7 @@ const existingDeal: Deal = {
   manualInclusionNoticeSubmissionDate: 'manualInclusionNoticeSubmissionDate',
   comments: 'comments',
   previousStatus: 'previousStatus',
-  dataMigration: 'dataMigration',
+  dataMigration: { key: 'value' },
 };
 
 describe('generateClonedDeal', () => {

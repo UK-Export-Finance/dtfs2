@@ -47,7 +47,6 @@ const facilityDefaults = {
 const issuedFacility: Facility = {
   ...facilityDefaults,
   _id: new ObjectId(),
-  dealId: new ObjectId(existingDealId),
   hasBeenIssued: false,
   name: 'Facility one',
   coverStartDate: new Date(1638403200000),
@@ -58,7 +57,6 @@ const issuedFacility: Facility = {
 const unissuedFacility: Facility = {
   ...facilityDefaults,
   _id: new ObjectId(),
-  dealId: new ObjectId(existingDealId),
   hasBeenIssued: true,
   name: 'Facility two',
   coverStartDate: add(new Date(), { days: 1 }),
