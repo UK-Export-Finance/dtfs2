@@ -44,8 +44,12 @@ export const generateClonedFacility = ({
     const currentTime = new Date();
     currentTime.setHours(0, 0, 0, 0);
 
+    // If the cover start date is in the past, it should be set to null
     if (draft.coverStartDate) {
-      if (isBefore(new Date(draft.coverStartDate), startOfDay(new Date()))) {
+      const coverStartDate = new Date(draft.coverStartDate);
+      const startOfToday = startOfDay(new Date());
+
+      if (isBefore(coverStartDate, startOfToday)) {
         draft.coverStartDate = null;
       }
     }
