@@ -15,9 +15,11 @@ import { createTfmUser } from '../../../helpers/create-tfm-user';
 
 const originalProcessEnv = { ...process.env };
 
+const mockUkefDealId = 'UkefDealId';
+
 describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
   let dealId: string;
-  let facilityId: string;
+  let ukefFacilityId: string;
   let submitDealCancellationUrl: string;
   let auditDetails: TfmAuditDetails;
   let tfmUserId: string;
@@ -31,6 +33,9 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
   const newDeal = aDeal({
     dealType: DEALS.DEAL_TYPE.BSS_EWCS,
     submissionType: DEALS.SUBMISSION_TYPE.AIN,
+    details: {
+      ukefDealId: mockUkefDealId,
+    },
   }) as AnyObject;
 
   beforeAll(async () => {
@@ -42,15 +47,16 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
 
   beforeEach(async () => {
     const createDealResponse: { body: { _id: string } } = await createDeal({ deal: newDeal, user: aPortalUser() });
-    const createFacilityResponse: { body: { _id: string } } = await createFacility({
+    const createFacilityResponse: { body: { ukefFacilityId: string } } = await createFacility({
       facility: {
         dealId,
+        ukefFacilityId: 'ukefFacilityId',
       },
       user: aPortalUser(),
     });
 
     dealId = createDealResponse.body._id;
-    facilityId = createFacilityResponse.body._id;
+    ukefFacilityId = createFacilityResponse.body.ukefFacilityId;
     auditDetails = generateTfmAuditDetails(tfmUserId);
     submitDealCancellationUrl = `/v1/tfm/deals/${dealId}/cancellation/submit`;
 
@@ -124,7 +130,7 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
       it('should return the submit cancellation response object if a matching deal and cancellation exists', async () => {
         const submitCancellationResponse = await testApi.post({ cancellation, auditDetails }).to(submitDealCancellationUrl);
 
-        expect(submitCancellationResponse.body).toEqual({ cancelledDealUkefId: dealId, riskExpiredFacilityUkefIds: [facilityId] });
+        expect(submitCancellationResponse.body).toEqual({ cancelledDealUkefId: mockUkefDealId, riskExpiredFacilityUkefIds: [ukefFacilityId] });
         expect(submitCancellationResponse.status).toEqual(HttpStatusCode.Ok);
       });
 
