@@ -183,7 +183,7 @@ module.exports = {
   getPartyDbInfo: ({ companyRegNo }) => {
     if(process.env.AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED) {
       companyRegNo === 'NO_MATCH'
-      ? { status: 400, data: 'Failed to get party' }
+      ? { status: 404, data: 'Party not found' }
       : {
         status: 200,
         data: [
