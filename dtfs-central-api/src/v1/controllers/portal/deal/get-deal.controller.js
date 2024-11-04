@@ -2,6 +2,7 @@ const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
+const { mergeTfmValuesIntoPortalDeal } = require('../../../../helpers/combine-tfm-values-into-portal-deal');
 
 const extendDealWithFacilities = async (deal) => {
   const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
@@ -52,9 +53,18 @@ const findOneDeal = async (_id, callback) => {
     throw new Error('Invalid Deal Id');
   }
 
-  const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+  const portalDealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+  const tfmDealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
 
-  const deal = await dealsCollection.findOne({ _id: { $eq: ObjectId(_id) } });
+  const portalDeal = await portalDealsCollection.findOne({ _id: { $eq: ObjectId(_id) } });
+
+  if (!portalDeal) {
+    return null;
+  }
+
+  const tfmDeal = await tfmDealsCollection.findOne({ _id: { $eq: ObjectId(_id) } });
+
+  const deal = mergeTfmValuesIntoPortalDeal(portalDeal, tfmDeal);
 
   if (deal?.facilities) {
     const facilityIds = deal.facilities;
