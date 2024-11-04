@@ -515,7 +515,7 @@ jobs:
             sleep 100s
             npm run load
           working-directory: ./utils
-          env-vars: |
+          env: |
             {
               "MONGODB_URI": "${{ secrets.MONGODB_URI_LOCALHOST }}",
             }
@@ -605,7 +605,7 @@ jobs:
             sleep 100s
             npm run load
           working-directory: ./utils
-          env-vars: |
+          env: |
             {
               "MONGODB_URI": "${{ secrets.MONGODB_URI_LOCALHOST }}",
             }
@@ -713,7 +713,7 @@ jobs:
             sleep 100s
             npm run load
           working-directory: ./utils
-          env-vars: |
+          env: |
             {
               "MONGODB_URI": "${{ secrets.MONGODB_URI_LOCALHOST }}",
             }
@@ -804,7 +804,7 @@ jobs:
             sleep 100s
             npm run load
           working-directory: ./utils
-          env-vars: |
+          env: |
             {
               "MONGODB_URI": "${{ secrets.MONGODB_URI_LOCALHOST }}"
             }
@@ -941,7 +941,7 @@ jobs:
             sleep 100s
             npm run load
           working-directory: ./utils
-          env-vars: |
+          env: |
             {
               "MONGODB_URI": "${{ secrets.MONGODB_URI_LOCALHOST }}",
             }
