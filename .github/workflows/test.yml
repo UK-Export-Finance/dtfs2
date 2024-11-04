@@ -229,6 +229,7 @@ jobs:
           env-vars: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
           command: |
+            sleep 100s
             npm run load
 
       - name: SQL
