@@ -1,6 +1,13 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
-import { PaymentEntityMockBuilder, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, TestApiError, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
+import {
+  PaymentEntityMockBuilder,
+  FeeRecordEntityMockBuilder,
+  UtilisationReportEntityMockBuilder,
+  TestApiError,
+  FEE_RECORD_STATUS,
+  RECONCILIATION_IN_PROGRESS,
+} from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { PostAddFeesToAnExistingPaymentGroupRequest, postAddFeesToAnExistingPaymentGroup } from '.';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
@@ -23,7 +30,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
     };
 
     const reportId = 1;
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
 
     const paymentIds = [3, 4];
     const payments = paymentIds.map((id) => PaymentEntityMockBuilder.forCurrency('GBP').withId(id).withFeeRecords([]).build());

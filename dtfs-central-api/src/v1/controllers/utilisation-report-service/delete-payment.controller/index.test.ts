@@ -1,10 +1,10 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
-import { REQUEST_PLATFORM_TYPE, TestApiError } from '@ukef/dtfs2-common';
+import { REQUEST_PLATFORM_TYPE, TestApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { EntityManager } from 'typeorm';
 import { DeletePaymentRequest, deletePayment } from '.';
-import { aTfmSessionUser, aUtilisationReport } from '../../../../../test-helpers';
+import { aTfmSessionUser } from '../../../../../test-helpers';
 import { DeletePaymentPayload } from '../../../routes/middleware/payload-validation/validate-delete-payment-payload';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
@@ -42,7 +42,7 @@ describe('delete-payment.controller', () => {
         handleEvent: mockHandleEvent,
       });
       UtilisationReportStateMachine.forReport = mockForReport;
-      utilisationReportRepoFindOneSpy.mockResolvedValue(aUtilisationReport());
+      utilisationReportRepoFindOneSpy.mockResolvedValue(new UtilisationReportEntityMockBuilder().build());
     });
 
     afterEach(() => {
@@ -57,7 +57,7 @@ describe('delete-payment.controller', () => {
       });
       const res = httpMocks.createResponse();
 
-      const utilisationReport = aUtilisationReport();
+      const utilisationReport = new UtilisationReportEntityMockBuilder().build();
       utilisationReportRepoFindOneSpy.mockResolvedValue(utilisationReport);
 
       // Act

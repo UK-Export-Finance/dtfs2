@@ -6,6 +6,8 @@ import {
   PortalUser,
   ReportPeriod,
   UtilisationReportEntityMockBuilder,
+  REPORT_NOT_RECEIVED,
+  PENDING_RECONCILIATION,
 } from '@ukef/dtfs2-common';
 import { mapUtilisationReportEntityToGetUtilisationReportResponse } from './mapUtilisationReport';
 import { getUserById } from '../repositories/users-repo';
@@ -30,7 +32,7 @@ describe('mapUtilisationReportEntityToGetUtilisationReportResponse', () => {
   it("maps the report and sets the 'dateUploaded', 'uploadedByUser' and 'azureFileInfo' to null when the report is not uploaded", async () => {
     // Arrange
     const reportId = 312;
-    const nonUploadedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+    const nonUploadedReport = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED)
       .withId(reportId)
       .withBankId(bankId)
       .withReportPeriod(reportPeriod)
@@ -44,7 +46,7 @@ describe('mapUtilisationReportEntityToGetUtilisationReportResponse', () => {
       id: reportId,
       bankId,
       reportPeriod,
-      status: 'REPORT_NOT_RECEIVED',
+      status: REPORT_NOT_RECEIVED,
       dateUploaded: null,
       uploadedByUser: null,
       azureFileInfo: null,
@@ -61,7 +63,7 @@ describe('mapUtilisationReportEntityToGetUtilisationReportResponse', () => {
     });
     const mockDate = new Date('2024-01');
 
-    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
       .withId(reportId)
       .withBankId(bankId)
       .withReportPeriod(reportPeriod)
@@ -81,7 +83,7 @@ describe('mapUtilisationReportEntityToGetUtilisationReportResponse', () => {
       id: reportId,
       bankId,
       reportPeriod,
-      status: 'PENDING_RECONCILIATION',
+      status: PENDING_RECONCILIATION,
       dateUploaded: mockDate,
       uploadedByUser: {
         id: uploadedByUserId,
