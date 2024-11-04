@@ -45,8 +45,11 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
     const flrMapped = mappings.facility.facilityLoanAmend(amendments, facility, fmr);
 
     /**
-     * When facility amendment is applied on facility type `Loan`,
-     * with only `amount` attribute execution should be terminated.
+     * Facility amendment on facility type `loan` with only `amount`
+     * facility attribute, the execution should be terminated.
+     *
+     * However if the facility (Loan) amendment consist of an additional
+     * attribute with `amount` then FLR should be mapped as normal.
      */
     if (!flrMapped?.length) {
       facilityLoanRecordAmendments = 'Facility loan amount only amendment, aborting FLR amendment';
