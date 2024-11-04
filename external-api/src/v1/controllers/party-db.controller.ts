@@ -91,7 +91,7 @@ export const createParty = async (req: CustomExpressRequest<{ reqBody: { partyDb
 };
 
 export const createParty = async (req: CustomExpressRequest<{ reqBody: { companyName: string } }>, res: Response) => {
-  if (req && req.params && req.body && typeof req.params === 'object') {
+  if (req?.params && req.body && typeof req.params === 'object') {
     const { partyDbCompanyRegistrationNumber: companyReg } = req.params;
     const { companyName } = req.body;
 

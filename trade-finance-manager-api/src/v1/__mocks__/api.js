@@ -206,7 +206,7 @@ module.exports = {
       };
     }
   },
-  findUser: (username) => {
+    findUser: (username) => {
     if (username === 'invalidUser') {
       return false;
     }
