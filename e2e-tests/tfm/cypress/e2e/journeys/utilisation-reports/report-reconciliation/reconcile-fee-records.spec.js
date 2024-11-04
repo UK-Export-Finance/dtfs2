@@ -7,9 +7,9 @@ import {
   getPreviousReportPeriodForBankScheduleByMonth,
   FEE_RECORD_STATUS,
 } from '@ukef/dtfs2-common';
-import pages from '../../pages';
-import USERS from '../../../fixtures/users';
-import { NODE_TASKS } from '../../../../../e2e-fixtures';
+import pages from '../../../pages';
+import USERS from '../../../../fixtures/users';
+import { NODE_TASKS } from '../../../../../../e2e-fixtures';
 
 context('PDC_RECONCILE users can reconcile fee records', () => {
   const SUBMISSION_MONTH = toIsoMonthStamp(new Date());

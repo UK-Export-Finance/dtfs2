@@ -6,10 +6,10 @@ import {
   toIsoMonthStamp,
 } from '@ukef/dtfs2-common';
 import { subMonths } from 'date-fns';
-import pages from '../../pages';
-import USERS from '../../../fixtures/users';
-import { NODE_TASKS } from '../../../../../e2e-fixtures';
-import { aliasSelector } from '../../../../../support/alias-selector';
+import pages from '../../../pages';
+import USERS from '../../../../fixtures/users';
+import { NODE_TASKS } from '../../../../../../e2e-fixtures';
+import { aliasSelector } from '../../../../../../support/alias-selector';
 
 context('Users can route to the payments page for a bank', () => {
   const allBanksAlias = 'allBanksAlias';

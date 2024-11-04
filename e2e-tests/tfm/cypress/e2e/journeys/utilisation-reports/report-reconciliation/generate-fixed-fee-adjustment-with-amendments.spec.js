@@ -9,10 +9,10 @@ import {
   FEE_RECORD_STATUS,
   convertMillisecondsToSeconds,
 } from '@ukef/dtfs2-common';
-import pages from '../../pages';
-import USERS from '../../../fixtures/users';
-import { NODE_TASKS } from '../../../../../e2e-fixtures';
-import relative from '../../relativeURL';
+import pages from '../../../pages';
+import USERS from '../../../../fixtures/users';
+import { NODE_TASKS } from '../../../../../../e2e-fixtures';
+import relative from '../../../relativeURL';
 
 context('Fixed fee calculation uses effective amendment to cover end date at report period end', () => {
   const bankId = '961';

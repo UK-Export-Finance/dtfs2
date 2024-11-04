@@ -656,6 +656,8 @@ jobs:
             'header/**/*.spec.js',
             'login/**/*.spec.js',
             'users/**/*.spec.js',
+            'utilisation-reports/report-reconciliation/**/*.spec.js',
+            'utilisation-reports/fee-record-correction/feature-flag-disabled/**/*.spec.js',
           ]
 
     concurrency:
@@ -795,10 +797,10 @@ jobs:
     needs: [setup]
     env:
       # Various feature flags
-      FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
+      FF_FEE_RECORD_CORRECTION_ENABLED: 'true'
       FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
       FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
-      # TODO DTFS2-6892: add FF_TFM_SSO_ENABLED feature flag here when e2e tests implimented
+      # TODO DTFS2-6892: add FF_TFM_SSO_ENABLED feature flag here when e2e tests implemented
       GEF_DEAL_VERSION: 1
     environment:
       name: ${{ needs.setup.outputs.environment }}
@@ -869,7 +871,7 @@ jobs:
             './tfm/cypress/e2e/journeys/header/**/*.spec.js',
             './tfm/cypress/e2e/journeys/login/**/*.spec.js',
             './tfm/cypress/e2e/journeys/users/**/*.spec.js',
-            './tfm/cypress/e2e/journeys/utilisation-reports/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/utilisation-reports/fee-record-correction/feature-flag-enabled/**/*.spec.js',
           ]
 
     concurrency:
