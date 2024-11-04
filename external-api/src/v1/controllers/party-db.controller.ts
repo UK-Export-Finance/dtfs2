@@ -91,8 +91,8 @@ export const createParty = async (req: CustomExpressRequest<{ reqBody: { partyDb
 };
 
 export const createParty = async (req: CustomExpressRequest<{ reqBody: { companyName: string } }>, res: Response) => {
-  const { partyDbCompanyRegistrationNumber: companyReg } = req.params;
-  const { companyName } = req.body;
+  const { partyDbCompanyRegistrationNumber: companyReg } = req?.params;
+  const { companyName } = req?.body;
 
   if (!isValidCompanyRegistrationNumber(companyReg)) {
     console.error('Invalid company registration number provided %s', companyReg);
