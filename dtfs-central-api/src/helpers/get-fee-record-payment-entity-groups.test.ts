@@ -1,4 +1,10 @@
-import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
+  UtilisationReportEntity,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { getFeeRecordPaymentEntityGroups, getPaymentIdKeyFromPaymentEntities } from './get-fee-record-payment-entity-groups';
 
 describe('getPaymentIdKeyFromPaymentEntities', () => {
@@ -94,6 +100,6 @@ describe('getFeeRecordPaymentEntityGroups', () => {
   });
 
   function utilisationReport(): UtilisationReportEntity {
-    return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+    return UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
   }
 });

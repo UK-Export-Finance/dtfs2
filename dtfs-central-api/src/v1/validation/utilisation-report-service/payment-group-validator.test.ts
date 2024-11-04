@@ -2,6 +2,7 @@ import {
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   InvalidPayloadError,
+  PENDING_RECONCILIATION,
   PaymentEntityMockBuilder,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -12,7 +13,7 @@ import {
 } from './payment-group-validator';
 
 describe('payment group validator', () => {
-  const report = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+  const report = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
 
   describe('validateThatRequestedPaymentsMatchSavedPayments', () => {
     it('should not throw an error when requested payment IDs match saved payment IDs', () => {

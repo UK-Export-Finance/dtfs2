@@ -1,5 +1,5 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { DbRequestSource, FeeRecordEntity, RECONCILIATION_COMPLETED, RECONCILIATION_IN_PROGRESS, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 
@@ -40,8 +40,8 @@ export const handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent = async (
     ),
   );
 
-  if (report.status === 'RECONCILIATION_COMPLETED') {
-    report.updateWithStatus({ status: 'RECONCILIATION_IN_PROGRESS', requestSource });
+  if (report.status === RECONCILIATION_COMPLETED) {
+    report.updateWithStatus({ status: RECONCILIATION_IN_PROGRESS, requestSource });
     return await transactionEntityManager.save(UtilisationReportEntity, report);
   }
 
