@@ -1,4 +1,5 @@
-const { componentRenderer } = require('../../../componentRenderer');
+import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { componentRenderer } from '../../../componentRenderer';
 
 const page = '../templates/case/parties/_macros/parties-bond-issuer-edit.njk';
 const render = componentRenderer(page);
@@ -8,7 +9,7 @@ describe(page, () => {
 
   describe('bond issuer edit', () => {
     const params = {
-      bondType: 'bond issuer',
+      bondType: BOND_FACILITY_TYPE.RETENTION_BOND,
       bond: {
         _id: '123',
         facilitySnapshot: {

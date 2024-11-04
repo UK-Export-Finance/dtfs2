@@ -1,4 +1,5 @@
-const { ObjectId } = require('mongodb');
+import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { ObjectId } from 'mongodb';
 
 const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => ({
   _id: new ObjectId(dealObjectId),
@@ -21,7 +22,7 @@ const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => (
           _id: new ObjectId(),
           type: 'Bond',
           bondIssuer: 'Issuer',
-          bondType: 'Advance payment guarantee',
+          bondType: BOND_FACILITY_TYPE.ADVANCE_PAYMENT_GUARANTEE,
           facilityStage: 'Issued',
           hasBeenIssued: true,
           ukefGuaranteeInMonths: '10',
@@ -143,7 +144,7 @@ const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => (
         _id: new ObjectId(),
         type: 'Bond',
         bondIssuer: 'Issuer',
-        bondType: 'Advance payment guarantee',
+        bondType: BOND_FACILITY_TYPE.ADVANCE_PAYMENT_GUARANTEE,
         facilityStage: 'Issued',
         hasBeenIssued: true,
         ukefGuaranteeInMonths: '10',
@@ -201,7 +202,7 @@ const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => (
       {
         type: 'Bond',
         bondIssuer: 'Issuer',
-        bondType: 'Advance payment guarantee',
+        bondType: BOND_FACILITY_TYPE.ADVANCE_PAYMENT_GUARANTEE,
         facilityStage: 'Issued',
         hasBeenIssued: true,
         ukefGuaranteeInMonths: '10',
@@ -393,4 +394,4 @@ const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => (
   },
 });
 
-module.exports = createTfmDealToInsertIntoDb;
+export default  createTfmDealToInsertIntoDb;

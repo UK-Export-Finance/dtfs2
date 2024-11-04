@@ -1,10 +1,12 @@
-const MOCK_FACILITIES = [
+import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+
+export const MOCK_FACILITIES = [
   {
     _id: '61f7a4edcf809301e78fbe53',
     dealId: 'AIN_DEAL',
     type: 'Bond',
     bondIssuer: 'Issuer',
-    bondType: 'Advance payment guarantee',
+    bondType: BOND_FACILITY_TYPE.ADVANCE_PAYMENT_GUARANTEE,
     facilityStage: 'Unissued',
     hasBeenIssued: false,
     ukefGuaranteeInMonths: '10',
@@ -77,7 +79,7 @@ const MOCK_FACILITIES = [
     dealId: 'MOCK_DEAL_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
     type: 'Bond',
     bondIssuer: 'Issuer',
-    bondType: 'Advance payment guarantee',
+    bondType: BOND_FACILITY_TYPE.ADVANCE_PAYMENT_GUARANTEE,
     facilityStage: 'Issued',
     hasBeenIssued: true,
     previousFacilityStage: 'Unissued',
@@ -141,7 +143,7 @@ const MOCK_FACILITIES = [
     dealId: 'MOCK_DEAL_ISSUED_FACILITIES',
     type: 'Bond',
     bondIssuer: 'Issuer',
-    bondType: 'Advance payment guarantee',
+    bondType: BOND_FACILITY_TYPE.ADVANCE_PAYMENT_GUARANTEE,
     facilityStage: 'Issued',
     hasBeenIssued: true,
     previousFacilityStage: 'Unissued',
@@ -240,5 +242,3 @@ const MOCK_FACILITIES = [
     hasBeenIssuedAndAcknowledged: true,
   },
 ];
-
-module.exports = { MOCK_FACILITIES };

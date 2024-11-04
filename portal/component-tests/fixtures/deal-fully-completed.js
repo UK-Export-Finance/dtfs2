@@ -1,5 +1,6 @@
-const { subDays, addMonths, format } = require('date-fns');
-const CONSTANTS = require('../../server/constants');
+import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { subDays, addMonths, format } from 'date-fns';
+import { DATE } from '../../server/constants';
 
 const now = new Date();
 const yesterday = subDays(now, 1);
@@ -31,7 +32,7 @@ const deal = {
     items: [
       {
         bondIssuer: 'my issuer',
-        bondType: 'Retention bond',
+        bondType: BOND_FACILITY_TYPE.RETENTION_BOND,
         facilityStage: 'Issued',
         hasBeenIssued: true,
         ukefGuaranteeInMonths: '12',
@@ -65,7 +66,7 @@ const deal = {
       },
       {
         bondIssuer: 'my issuer',
-        bondType: 'Retention bond',
+        bondType: BOND_FACILITY_TYPE.RETENTION_BOND,
         facilityStage: 'Issued',
         hasBeenIssued: true,
         ukefGuaranteeInMonths: '12',
@@ -303,7 +304,7 @@ const deal = {
       text: 'USD - US Dollars',
     },
     supplyContractValue: '10,000',
-    supplyContractConversionDate: format(now, CONSTANTS.DATE.FULL_DATE),
+    supplyContractConversionDate: format(now, DATE.FULL_DATE),
   },
   summary: {
     totalValue: {
@@ -427,4 +428,4 @@ const deal = {
   },
 };
 
-module.exports = deal;
+export default deal;

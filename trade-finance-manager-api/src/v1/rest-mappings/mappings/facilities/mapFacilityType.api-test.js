@@ -1,4 +1,4 @@
-const { FACILITY_TYPE, MAPPED_FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { BOND_FACILITY_TYPE, FACILITY_TYPE, MAPPED_FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const mapFacilityType = require('./mapFacilityType');
 const CONSTANTS = require('../../../../constants');
 
@@ -6,7 +6,7 @@ describe('mapFacilityType', () => {
   describe('when facilityProduct.code is bond', () => {
     it('should return facility.bondType', () => {
       const mockBondFacility = {
-        bondType: 'Bid bond',
+        bondType: BOND_FACILITY_TYPE.BID_BOND,
         facilityProduct: {
           code: CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.BOND,
         },

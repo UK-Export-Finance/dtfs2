@@ -1,4 +1,5 @@
-const { ObjectId } = require('mongodb');
+import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { ObjectId } from 'mongodb';
 
 const createTfmFacilityToInsertIntoDb = (ukefFacilityId, dealObjectId) => ({
   _id: new ObjectId(),
@@ -6,7 +7,7 @@ const createTfmFacilityToInsertIntoDb = (ukefFacilityId, dealObjectId) => ({
     _id: new ObjectId(),
     bondBeneficiary: 'test',
     bondIssuer: 'Issuer',
-    bondType: 'Advance payment guarantee',
+    bondType: BOND_FACILITY_TYPE.ADVANCE_PAYMENT_GUARANTEE,
     'coverEndDate-day': '11',
     'coverEndDate-month': '04',
     'coverEndDate-year': '2024',
@@ -50,4 +51,4 @@ const createTfmFacilityToInsertIntoDb = (ukefFacilityId, dealObjectId) => ({
   },
 });
 
-module.exports = createTfmFacilityToInsertIntoDb;
+export default createTfmFacilityToInsertIntoDb;

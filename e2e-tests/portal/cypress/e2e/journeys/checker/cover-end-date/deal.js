@@ -1,7 +1,8 @@
-const mockDeal = require('../../../../fixtures/deal');
-const CONSTANTS = require('../../../../fixtures/constants');
-const FIXTURE_CONSTANTS = require('../../../../../../e2e-fixtures/constants.fixture');
-const { today, tomorrow } = require('../../../../../../e2e-fixtures/dateConstants');
+import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import mockDeal from '../../../../fixtures/deal';
+import CONSTANTS from '../../../../fixtures/constants';
+import { CURRENCY, FEE_FREQUENCY, FEE_TYPE, DAY_COUNT_BASIS } from '../../../../../../e2e-fixtures/constants.fixture';
+import { today, tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
 
 const deal = {
   ...mockDeal,
@@ -10,7 +11,7 @@ const deal = {
       type: CONSTANTS.FACILITY.FACILITY_TYPE.BOND,
       createdDate: today.unixMilliseconds,
       bondIssuer: '',
-      bondType: FIXTURE_CONSTANTS.BSS_FACILITY_TYPE.BID_BOND,
+      bondType: BOND_FACILITY_TYPE.BID_BOND,
       facilityStage: CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED,
       hasBeenIssued: true,
       'requestedCoverStartDate-day': '13',
@@ -28,8 +29,8 @@ const deal = {
       currencySameAsSupplyContractCurrency: 'false',
       currency: {
         currencyId: 1,
-        id: FIXTURE_CONSTANTS.CURRENCY.AED,
-        text: FIXTURE_CONSTANTS.CURRENCY.AED_TEXT,
+        id: CURRENCY.AED,
+        text: CURRENCY.AED_TEXT,
       },
       conversionRate: '5.5',
       'conversionRateDate-day': '28',
@@ -39,8 +40,8 @@ const deal = {
       coveredPercentage: '30',
       minimumRiskMarginFee: '',
       ukefExposure: '370.20',
-      feeType: FIXTURE_CONSTANTS.FEE_TYPE.MATURITY,
-      dayCountBasis: FIXTURE_CONSTANTS.DAY_COUNT_BASIS[365],
+      feeType: FEE_TYPE.MATURITY,
+      dayCountBasis: DAY_COUNT_BASIS[365],
       status: CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
     },
     {
@@ -56,14 +57,14 @@ const deal = {
       coveredPercentage: '20',
       minimumQuarterlyFee: '20',
       ukefExposure: '24,624.60',
-      premiumFrequency: FIXTURE_CONSTANTS.FEE_FREQUENCY.MONTHLY,
-      premiumType: FIXTURE_CONSTANTS.FEE_TYPE.ARREAR,
-      dayCountBasis: FIXTURE_CONSTANTS.DAY_COUNT_BASIS[360],
+      premiumFrequency: FEE_FREQUENCY.MONTHLY,
+      premiumType: FEE_TYPE.ARREAR,
+      dayCountBasis: DAY_COUNT_BASIS[360],
       viewedPreviewPage: true,
       currency: {
         currencyId: 1,
-        id: FIXTURE_CONSTANTS.CURRENCY.AED,
-        text: FIXTURE_CONSTANTS.CURRENCY.AED_TEXT,
+        id: CURRENCY.AED,
+        text: CURRENCY.AED_TEXT,
       },
       conversionRate: '5.5',
       'conversionRateDate-day': '28',
@@ -100,8 +101,8 @@ const deal = {
       currencySameAsSupplyContractCurrency: 'true',
       currency: {
         currencyId: 1,
-        id: FIXTURE_CONSTANTS.CURRENCY.AED,
-        text: FIXTURE_CONSTANTS.CURRENCY.AED_TEXT,
+        id: CURRENCY.AED,
+        text: CURRENCY.AED_TEXT,
       },
       conversionRate: '5.5',
       'conversionRateDate-day': '28',
@@ -112,11 +113,11 @@ const deal = {
       coveredPercentage: '60',
       minimumQuarterlyFee: '',
       ukefExposure: '740.40',
-      premiumType: FIXTURE_CONSTANTS.FEE_TYPE.MATURITY,
-      dayCountBasis: FIXTURE_CONSTANTS.DAY_COUNT_BASIS[365],
+      premiumType: FEE_TYPE.MATURITY,
+      dayCountBasis: DAY_COUNT_BASIS[365],
       status: CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
     },
   ],
 };
 
-module.exports = deal;
+export default deal;

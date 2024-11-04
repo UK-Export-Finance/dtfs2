@@ -1,12 +1,12 @@
-const {
-  PORTAL_USER_ROLES: USER_ROLES,
-  PORTAL_USER_SIGN_IN_TOKENS: SIGN_IN_TOKENS,
+import {
+  PORTAL_USER_ROLES as USER_ROLES,
+  PORTAL_USER_SIGN_IN_TOKENS as SIGN_IN_TOKENS,
   DEAL_TYPE,
   DEAL_STATUS,
   SUBMISSION_TYPE,
   FACILITY_TYPE,
   FACILITY_STAGE,
-} = require('../../../e2e-fixtures');
+} from '../../../e2e-fixtures';
 
 const SECTION_STATUS = {
   NOT_STARTED: 'Not started',
@@ -32,7 +32,7 @@ const DB_COLLECTIONS = {
  */
 const LONG_FORM_DATE_FORMAT = 'do MMMM yyyy';
 
-module.exports = {
+export default {
   DEALS: {
     DEAL_TYPE,
     DEAL_STATUS,

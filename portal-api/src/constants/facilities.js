@@ -36,22 +36,10 @@ const DEAL_STATUS = {
   SUBMITTED_TO_UKEF: 'Submitted',
 };
 
-const TYPE = {
-  ADVANCE_PAYMENT_GUARANTEE: 'Advance payment guarantee',
-  BID_BOND: 'Bid bond',
-  MAINTENANCE_BOND: 'Maintenance bond',
-  PERFORMANCE_BOND: 'Performance bond',
-  PROGRESS_PAYMENT_BOND: 'Progress payment bond',
-  RETENTION_BOND: 'Retention bond',
-  STANDBY_LETTER_OF_CREDIT: 'Standby letter of credit',
-  WARRANTY_LETTER: 'Warranty letter',
-};
-
-module.exports = {
+export default {
   FEE_TYPE,
   FEE_FREQUENCY,
   DAY_COUNT_BASIS,
   FACILITIES_STAGE,
-  TYPE,
   DEAL_STATUS,
 };

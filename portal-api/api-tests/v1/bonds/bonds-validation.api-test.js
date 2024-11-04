@@ -1,3 +1,4 @@
+const { BOND_FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { sub, format, add } = require('date-fns');
 const databaseHelper = require('../../database-helper');
 const aDeal = require('../deals/deal-builder');
@@ -25,7 +26,7 @@ describe('/v1/deals/:id/bond', () => {
 
   const allBondFields = {
     bondIssuer: 'issuer',
-    bondType: 'bond type',
+    bondType: BOND_FACILITY_TYPE.BID_BOND,
     facilityStage: 'Unissued',
     hasBeenIssued: false,
     ukefGuaranteeInMonths: '24',

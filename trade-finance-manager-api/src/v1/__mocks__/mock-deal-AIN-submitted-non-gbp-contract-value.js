@@ -1,5 +1,6 @@
-const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
-const { MOCK_FACILITIES } = require('./mock-facilities');
+import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { MOCK_PORTAL_USERS } from './mock-portal-users';
+import { MOCK_FACILITIES } from './mock-facilities';
 
 const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
   _id: 'AIN_DEAL_SUBMITTED_NON_GBP_CONTRACT_VALUE',
@@ -178,7 +179,7 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
         _id: '61f7a71ccf809301e78fbea3',
         type: 'Bond',
         bondIssuer: 'Issuer',
-        bondType: 'Advance payment guarantee',
+        bondType: BOND_FACILITY_TYPE.ADVANCE_PAYMENT_GUARANTEE,
         facilityStage: 'Unissued',
         hasBeenIssued: false,
         ukefGuaranteeInMonths: '10',
@@ -248,4 +249,4 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
   },
 };
 
-module.exports = MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE;
+export default MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE;

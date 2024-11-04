@@ -1,6 +1,7 @@
-const { BANK1_MAKER1 } = require('../../../../../../e2e-fixtures/portal-users.fixture');
+import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 
-exports.BASE_DEAL = {
+export const BASE_DEAL = {
   submissionType: 'Automatic Inclusion Notice',
   bankInternalRefName: 'abc-1-def',
   additionalRefName: 'Additional reference name example',
@@ -150,7 +151,7 @@ exports.BASE_DEAL = {
     {
       type: 'Bond',
       bondIssuer: 'Issuer',
-      bondType: 'Advance payment guarantee',
+      bondType: BOND_FACILITY_TYPE.ADVANCE_PAYMENT_GUARANTEE,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '10',

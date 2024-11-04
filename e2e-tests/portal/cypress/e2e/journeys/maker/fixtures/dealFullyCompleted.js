@@ -1,5 +1,6 @@
-const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
-const { today, oneMonth, yesterday } = require('../../../../../../e2e-fixtures/dateConstants');
+import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { mandatoryCriteria } from '../../../../../../e2e-fixtures';
+import { today, oneMonth, yesterday } from '../../../../../../e2e-fixtures/dateConstants';
 
 const deal = {
   submissionType: 'Automatic Inclusion Notice',
@@ -24,7 +25,7 @@ const deal = {
     {
       type: 'Bond',
       bondIssuer: 'my issuer',
-      bondType: 'Retention bond',
+      bondType: BOND_FACILITY_TYPE.RETENTION_BOND,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '12',
@@ -58,7 +59,7 @@ const deal = {
     {
       type: 'Bond',
       bondIssuer: 'my issuer',
-      bondType: 'Retention bond',
+      bondType: BOND_FACILITY_TYPE.RETENTION_BOND,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '12',
@@ -293,4 +294,4 @@ const deal = {
   supportingInformation: {},
 };
 
-module.exports = deal;
+export default deal;

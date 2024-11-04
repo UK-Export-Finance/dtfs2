@@ -1,3 +1,5 @@
+import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+
 const now = new Date().valueOf();
 
 const deal = {
@@ -174,7 +176,7 @@ const deal = {
     {
       type: 'Bond',
       bondIssuer: '',
-      bondType: 'Bid bond',
+      bondType: BOND_FACILITY_TYPE.BID_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -197,7 +199,7 @@ const deal = {
     {
       type: 'Bond',
       bondIssuer: '',
-      bondType: 'Bid bond',
+      bondType: BOND_FACILITY_TYPE.BID_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -220,7 +222,7 @@ const deal = {
     {
       type: 'Bond',
       bondIssuer: '',
-      bondType: 'Bid bond',
+      bondType: BOND_FACILITY_TYPE.BID_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',

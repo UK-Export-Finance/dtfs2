@@ -1,5 +1,6 @@
-const { MOCK_FACILITIES } = require('./mock-facilities');
-const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
+import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { MOCK_FACILITIES } from './mock-facilities';
+import { MOCK_PORTAL_USERS } from './mock-portal-users';
 
 const MOCK_DEAL_NO_PARTY_DB = {
   _id: 'NO_PARTY_DB',
@@ -177,7 +178,7 @@ const MOCK_DEAL_NO_PARTY_DB = {
         _id: '61f6b18502fade01b1e8f07f',
         type: 'Bond',
         bondIssuer: 'Issuer',
-        bondType: 'Advance payment guarantee',
+        bondType: BOND_FACILITY_TYPE.ADVANCE_PAYMENT_GUARANTEE,
         facilityStage: 'Unissued',
         hasBeenIssued: false,
         ukefGuaranteeInMonths: '10',
@@ -247,4 +248,4 @@ const MOCK_DEAL_NO_PARTY_DB = {
   },
 };
 
-module.exports = MOCK_DEAL_NO_PARTY_DB;
+export default MOCK_DEAL_NO_PARTY_DB;

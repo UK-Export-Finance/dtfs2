@@ -1,9 +1,11 @@
+import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+
 const MOCK_FACILITIES = [
   {
     _id: '61f7a4edcf809301e78fbe43',
     type: 'Bond',
     bondIssuer: 'Issuer',
-    bondType: 'Advance payment guarantee',
+    bondType: BOND_FACILITY_TYPE.ADVANCE_PAYMENT_GUARANTEE,
     facilityStage: 'Unissued',
     hasBeenIssued: false,
     ukefGuaranteeInMonths: '10',
@@ -64,4 +66,4 @@ const MOCK_FACILITIES = [
   },
 ];
 
-module.exports = MOCK_FACILITIES;
+export default MOCK_FACILITIES;

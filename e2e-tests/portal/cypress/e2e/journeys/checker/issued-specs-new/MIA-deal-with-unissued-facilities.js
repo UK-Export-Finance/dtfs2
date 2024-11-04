@@ -1,4 +1,5 @@
-const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
+import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { mandatoryCriteria } from '../../../../../../e2e-fixtures';
 
 const deal = {
   submissionType: 'Manual Inclusion Application',
@@ -201,7 +202,7 @@ const deal = {
       currencySameAsSupplyContractCurrency: 'true',
       createdDate: Date.now(),
       bondIssuer: '',
-      bondType: 'Bid bond',
+      bondType: BOND_FACILITY_TYPE.BID_BOND,
       bondBeneficiary: '',
       guaranteeFeePayableByBank: '10.8000',
       ukefExposure: '296.16',
@@ -281,4 +282,4 @@ const deal = {
   },
 };
 
-module.exports = deal;
+export default deal;

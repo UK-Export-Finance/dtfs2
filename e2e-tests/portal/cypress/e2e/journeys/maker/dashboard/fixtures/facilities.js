@@ -1,4 +1,5 @@
-const CONSTANTS = require('../../../../../fixtures/constants');
+import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import CONSTANTS from '../../../../../fixtures/constants';
 
 const CASH_FACILITY = {
   coverEndDate: '2021-08-12T00:00:00.000Z',
@@ -28,7 +29,7 @@ const CASH_FACILITY = {
 const BOND_FACILITY = {
   type: CONSTANTS.FACILITY.FACILITY_TYPE.BOND,
   bondIssuer: 'Issuer',
-  bondType: 'Advance payment guarantee',
+  bondType: BOND_FACILITY_TYPE.ADVANCE_PAYMENT_GUARANTEE,
   facilityStage: 'Unissued',
   hasBeenIssued: false,
   ukefGuaranteeInMonths: '10',
@@ -56,7 +57,7 @@ const BOND_FACILITY = {
   ukefFacilityId: '1234567890',
 };
 
-module.exports = {
+export default {
   CASH_FACILITY,
   BOND_FACILITY,
 };

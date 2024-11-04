@@ -1,11 +1,12 @@
-const { roundNumber } = require('../../../../../../portal-api/src/utils/number');
-const { oneMonth, today } = require('../../../../../e2e-fixtures/dateConstants');
+import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { roundNumber } from '../../../../../../portal-api/src/utils/number';
+import { oneMonth, today } from '../../../../../e2e-fixtures/dateConstants';
 
 const DETAILS = {
   bondIssuer: 'mock issuer',
   bondType: {
-    value: 'Maintenance bond',
-    text: 'Maintenance bond',
+    value: BOND_FACILITY_TYPE.MAINTENANCE_BOND,
+    text: BOND_FACILITY_TYPE.MAINTENANCE_BOND,
   },
 
   // 'issued' facility stage specifics
@@ -64,7 +65,7 @@ const FINANCIAL_DETAILS = {
   conversionRateDateYear: today.year,
 };
 
-module.exports = {
+export default {
   DETAILS,
   FINANCIAL_DETAILS,
 };

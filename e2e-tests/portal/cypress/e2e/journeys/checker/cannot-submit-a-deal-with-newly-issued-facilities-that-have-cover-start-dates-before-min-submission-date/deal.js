@@ -1,5 +1,6 @@
-const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
-const { BANK1_MAKER1, BANK1_CHECKER1 } = require('../../../../../../e2e-fixtures/portal-users.fixture');
+import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { mandatoryCriteria } from '../../../../../../e2e-fixtures';
+import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 
 const deal = {
   submissionType: 'Manual Inclusion Notice',
@@ -269,7 +270,7 @@ const deal = {
         currencySameAsSupplyContractCurrency: 'true',
         createdDate: '1606900240957',
         bondIssuer: '',
-        bondType: 'Performance bond',
+        bondType: BOND_FACILITY_TYPE.PERFORMANCE_BOND,
         bondBeneficiary: '',
         guaranteeFeePayableByBank: '1.8000',
         ukefExposure: '80,000.00',
@@ -312,7 +313,7 @@ const deal = {
         currencySameAsSupplyContractCurrency: 'true',
         createdDate: '1606900240907',
         bondIssuer: '',
-        bondType: 'Maintenance bond',
+        bondType: BOND_FACILITY_TYPE.MAINTENANCE_BOND,
         bondBeneficiary: '',
         guaranteeFeePayableByBank: '1.8000',
         ukefExposure: '80,000.00',
@@ -528,4 +529,4 @@ const deal = {
   ukefDecision: [],
 };
 
-module.exports = deal;
+export default deal;

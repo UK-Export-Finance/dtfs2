@@ -1,4 +1,5 @@
-const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
+import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { mandatoryCriteria } from '../../../../../../e2e-fixtures';
 
 const now = new Date().valueOf();
 
@@ -191,7 +192,7 @@ const deal = {
         _id: '5f3ab3f705e6630007dcfb21',
         createdDate: now,
         bondIssuer: '',
-        bondType: 'Advance payment guarantee',
+        bondType: BOND_FACILITY_TYPE.ADVANCE_PAYMENT_GUARANTEE,
         facilityStage: 'Unissued',
         hasBeenIssued: false,
         ukefGuaranteeInMonths: '12',

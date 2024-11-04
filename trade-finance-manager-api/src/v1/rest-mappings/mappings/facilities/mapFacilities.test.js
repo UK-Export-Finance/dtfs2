@@ -1,7 +1,8 @@
-const mapFacilities = require('./mapFacilities');
-const mapFacilitySnapshot = require('./mapFacilitySnapshot');
-const mapFacilityTfm = require('./mapFacilityTfm');
-const MOCK_DEAL = require('../../../__mocks__/mock-deal');
+import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import mapFacilities from './mapFacilities';
+import mapFacilitySnapshot from './mapFacilitySnapshot';
+import mapFacilityTfm from './mapFacilityTfm';
+import MOCK_DEAL from '../../../__mocks__/mock-deal';
 
 describe('mapFacilities', () => {
   const mockTfmFacility = {
@@ -40,7 +41,7 @@ describe('mapFacilities', () => {
         type: 'Bond',
         ...mockCoverEndDate,
         coveredPercentage: mockCoveredPercentage,
-        bondType: 'Performance Bond',
+        bondType: BOND_FACILITY_TYPE.PERFORMANCE_BOND,
         currency: mockCurrency,
         value: mockFacilityValue,
         facilityStage: 'Unissued',

@@ -1,6 +1,7 @@
-const { nowTimestamp, twoMonths, twoMonthsTimestamp, threeMonths } = require('../dates');
+import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { nowTimestamp, twoMonths, twoMonthsTimestamp, threeMonths } from '../dates';
 
-module.exports = [
+export default [
   {
     mockDealId: 5,
     type: 'Loan',
@@ -62,7 +63,7 @@ module.exports = [
     'conversionRateDate-year': null,
     createdDate: nowTimestamp,
     bondIssuer: '',
-    bondType: 'Maintenance bond',
+    bondType: BOND_FACILITY_TYPE.MAINTENANCE_BOND,
     'requestedCoverStartDate-day': twoMonths.day,
     'requestedCoverStartDate-month': twoMonths.month,
     'requestedCoverStartDate-year': twoMonths.year,

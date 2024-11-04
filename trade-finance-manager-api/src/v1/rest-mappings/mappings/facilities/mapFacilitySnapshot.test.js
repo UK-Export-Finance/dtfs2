@@ -1,3 +1,4 @@
+const { BOND_FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const mapFacilitySnapshot = require('./mapFacilitySnapshot');
 const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityProduct = require('./mapFacilityProduct');
@@ -48,7 +49,7 @@ describe('mapFacility', () => {
     ukefFacilityType: mockType,
     ...mockCoverEndDate,
     coveredPercentage: mockCoveredPercentage,
-    bondType: 'Performance Bond',
+    bondType: BOND_FACILITY_TYPE.PERFORMANCE_BOND,
     currency: mockCurrency,
     value: mockFacilityValue,
     facilityStage: mockFacilityStage,
