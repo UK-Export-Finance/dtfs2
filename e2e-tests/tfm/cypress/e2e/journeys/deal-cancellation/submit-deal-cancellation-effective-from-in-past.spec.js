@@ -113,7 +113,7 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in past', 
         activitiesPage.activitiesTimeline().contains('Deal stage:');
         activitiesPage.activitiesTimeline().contains('Cancelled');
         activitiesPage.activitiesTimeline().contains(`Bank request date: ${today.d_MMMM_yyyy}`);
-        activitiesPage.activitiesTimeline().contains(`Date effective from: ${today.d_MMMM_yyyy}`);
+        activitiesPage.activitiesTimeline().contains(`Date effective from: ${yesterday.d_MMMM_yyyy}`);
         activitiesPage.activitiesTimeline().contains(`Comments: -`);
       });
     });
