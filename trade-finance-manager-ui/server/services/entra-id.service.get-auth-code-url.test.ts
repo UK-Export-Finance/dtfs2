@@ -5,7 +5,6 @@ import { EntraIdService } from './entra-id.service';
 import { EntraIdApi } from '../third-party-apis/entra-id.api';
 
 jest.mock('@azure/msal-node', () => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return {
     ...jest.requireActual('@azure/msal-node'),
     ConfidentialClientApplication: jest.fn(),
