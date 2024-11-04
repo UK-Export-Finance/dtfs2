@@ -5,7 +5,7 @@ inputs:
   working-directory:
     required: false
     default: "./"
-  env-vars:
+  env:
     required: false
     default: ""
 runs:
@@ -14,10 +14,10 @@ runs:
     - run: |
         limit=3
         run=1
-        env_vars=${{ inputs.env-vars }}
+        env=${{ inputs.env }}
         until [ $run -gt $limit ]
         do
-          cd ${{ inputs.working-directory }} && eval "$env_vars" && bash -c "${{ inputs.command }}" && break
+          cd ${{ inputs.working-directory }} && eval "$env" && bash -c "${{ inputs.command }}" && break
           run=$((run + 1))
         done
         if [ $run -gt $limit ]; then
