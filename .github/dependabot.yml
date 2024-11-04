@@ -1,6 +1,6 @@
 # DTFS Git Hub Actions
 #####################################
-# Automatic monthly dependencies updates
+# Automatic dependencies updates
 # for the following services:
 # 1. NPM
 # 2. Docker
