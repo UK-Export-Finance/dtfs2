@@ -223,12 +223,10 @@ jobs:
       - name: Initialise
         uses: ./.github/modules/retry
         with:
-          command: |
-            sleep 100s
-            npm run load
           working-directory: ./utils
           env-vars: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          command: npm run load
 
       - name: SQL
         working-directory: ./libs/common
