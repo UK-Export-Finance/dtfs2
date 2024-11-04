@@ -1,4 +1,4 @@
-import { PortalSessionUser, UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
+import { PortalSessionUser, UtilisationReportStatus } from '@ukef/dtfs2-common';
 
 export type PreviousReportNavItemViewModel = {
   text: string | number;
@@ -8,7 +8,7 @@ export type PreviousReportNavItemViewModel = {
 };
 
 export type PreviousReportViewModel = {
-  status: UtilisationReportReconciliationStatus;
+  status: UtilisationReportStatus;
   displayStatus: string;
   month: string;
   linkText: string;

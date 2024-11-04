@@ -7,6 +7,7 @@ import {
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
   PaymentMatchingToleranceEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
   SelectedFeeRecordDetails,
   SelectedFeeRecordsDetails,
   UtilisationReportEntity,
@@ -163,11 +164,7 @@ describe(`GET ${BASE_URL}`, () => {
   });
 
   function aReconciliationInProgressReport() {
-    return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
-      .withId(reportId)
-      .withReportPeriod(reportPeriod)
-      .withBankId(bankId)
-      .build();
+    return UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).withReportPeriod(reportPeriod).withBankId(bankId).build();
   }
 
   function aFeeRecordWithReportAndPaymentCurrencyAndStatusToDo(id: number, report: UtilisationReportEntity, paymentCurrency: Currency) {

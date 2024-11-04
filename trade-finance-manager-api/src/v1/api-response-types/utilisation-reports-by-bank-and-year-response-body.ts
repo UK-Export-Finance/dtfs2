@@ -1,4 +1,4 @@
-import { IsoDateTimeStamp, ReportPeriod, UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
+import { IsoDateTimeStamp, ReportPeriod, UtilisationReportStatus } from '@ukef/dtfs2-common';
 
 export type UtilisationReportSummaryItem = {
   reportId: string;
@@ -7,7 +7,7 @@ export type UtilisationReportSummaryItem = {
     id: string;
     name: string;
   };
-  status: UtilisationReportReconciliationStatus;
+  status: UtilisationReportStatus;
   dateUploaded?: IsoDateTimeStamp;
   totalFeesReported?: number;
   reportedFeesLeftToReconcile?: number;

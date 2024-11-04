@@ -3,7 +3,7 @@ import {
   CURRENCY,
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  PENDING_RECONCILIATION,
   UtilisationReportEntityMockBuilder,
   convertMillisecondsToSeconds,
 } from '@ukef/dtfs2-common';
@@ -98,7 +98,7 @@ context('Users can view utilisation', () => {
 
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
 
-    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+    const report = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
       .withId(REPORT_ID)
       .withReportPeriod(reportPeriod)
       .withBankId(BANK_ID)

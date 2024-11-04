@@ -5,13 +5,14 @@ import {
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   FeeRecordStatus,
+  RECONCILIATION_IN_PROGRESS,
   REQUEST_PLATFORM_TYPE,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { handleFeeRecordMarkAsReconciledEvent } from './mark-as-reconciled.event-handler';
 
 describe('handleFeeRecordMarkAsReconciledEvent', () => {
-  const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+  const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
 
   const mockSave = jest.fn();
   const mockEntityManager = {

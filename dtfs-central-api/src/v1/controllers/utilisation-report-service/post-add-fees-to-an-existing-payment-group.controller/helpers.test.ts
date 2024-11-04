@@ -1,6 +1,12 @@
 import { ObjectId } from 'mongodb';
 import { EntityManager } from 'typeorm';
-import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, REQUEST_PLATFORM_TYPE, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
+  REQUEST_PLATFORM_TYPE,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { addFeesToAnExistingPaymentGroup } from './helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
@@ -19,7 +25,7 @@ describe('post-fees-to-an-existing-payment-group.controller helpers', () => {
     };
     const tfmUserId = tfmUser._id;
 
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
     const utilisationReportStateMachine = UtilisationReportStateMachine.forReport(utilisationReport);
 
     const feeRecordIds = [1, 2];
