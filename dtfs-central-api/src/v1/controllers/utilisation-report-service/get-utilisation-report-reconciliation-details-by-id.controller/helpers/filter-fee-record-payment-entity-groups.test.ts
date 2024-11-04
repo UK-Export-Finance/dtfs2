@@ -1,5 +1,11 @@
-import { CURRENCY, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, ValidatedPaymentDetailsFilters } from '@ukef/dtfs2-common';
-import { aUtilisationReport, getSqlIdGenerator } from '../../../../../../test-helpers';
+import {
+  CURRENCY,
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  UtilisationReportEntityMockBuilder,
+  ValidatedPaymentDetailsFilters,
+} from '@ukef/dtfs2-common';
+import { getSqlIdGenerator } from '../../../../../../test-helpers';
 import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-payment-entity-group';
 import {
   filterFeeRecordPaymentEntityGroups,
@@ -11,10 +17,13 @@ import {
 describe('get-utilisation-report-reconciliation-details-by-id.controller helpers', () => {
   const feeRecordIdGenerator = getSqlIdGenerator();
 
-  const aFeeRecord = () => FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).build();
+  const aFeeRecord = () => FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).build();
 
   const aFeeRecordWithFacilityId = (facilityId: string) =>
-    FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withId(feeRecordIdGenerator.next().value).withFacilityId(facilityId).build();
+    FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+      .withId(feeRecordIdGenerator.next().value)
+      .withFacilityId(facilityId)
+      .build();
 
   describe('filterFeeRecordPaymentEntityGroups', () => {
     describe('facility id filter', () => {
