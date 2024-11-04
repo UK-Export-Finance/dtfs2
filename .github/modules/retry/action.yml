@@ -5,15 +5,19 @@ inputs:
   working-directory:
     required: false
     default: "./"
+  env-vars:
+    required: false
+    default: ""
 runs:
   using: "composite"
   steps:
     - run: |
         limit=3
         run=1
+        env_vars=${{ inputs.env-vars }}
         until [ $run -gt $limit ]
         do
-          cd ${{ inputs.working-directory }} && ${{ inputs.command }} && break
+          cd ${{ inputs.working-directory }} && && eval "$env_vars" ${{ inputs.command }} && break
           run=$((run + 1))
         done
         if [ $run -gt $limit ]; then

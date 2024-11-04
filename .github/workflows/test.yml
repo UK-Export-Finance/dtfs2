@@ -221,12 +221,17 @@ jobs:
           command: docker compose up --build -d
 
       - name: Initialise
-        working-directory: ./utils
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-        run: |
-          sleep 100s
-          npm run load
+        uses: ./.github/modules/retry
+        with:
+          command: |
+            sleep 100s
+            npm run load
+          working-directory: ./utils
+          run: |
+            sleep 100s
+            npm run load
+          env-vars: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
 
       - name: SQL
         working-directory: ./libs/common
@@ -507,13 +512,18 @@ jobs:
           command: docker compose up --build -d
 
       - name: Initialise
-        working-directory: ./utils
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-        run: |
-          sleep 100s
-          npm run load
-
+        uses: ./.github/modules/retry
+        with:
+          command: |
+            sleep 100s
+            npm run load
+          working-directory: ./utils
+          run: |
+            sleep 100s
+            npm run load
+          env-vars: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+       
       - name: SQL
         working-directory: ./libs/common
         env:
@@ -593,12 +603,17 @@ jobs:
           command: docker compose up --build -d
 
       - name: Initialise
-        working-directory: ./utils
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-        run: |
-          sleep 100s
-          npm run load
+        uses: ./.github/modules/retry
+        with:
+          command: |
+            sleep 100s
+            npm run load
+          working-directory: ./utils
+          run: |
+            sleep 100s
+            npm run load
+          env-vars: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
 
       - name: SQL
         working-directory: ./libs/common
@@ -697,12 +712,17 @@ jobs:
           command: docker compose up --build -d
 
       - name: Initialise
-        working-directory: ./utils
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-        run: |
-          sleep 100s
-          npm run load
+        uses: ./.github/modules/retry
+        with:
+          command: |
+            sleep 100s
+            npm run load
+          working-directory: ./utils
+          run: |
+            sleep 100s
+            npm run load
+          env-vars: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
 
       - name: SQL
         working-directory: ./libs/common
@@ -784,12 +804,17 @@ jobs:
           command: docker compose up --build -d
 
       - name: Initialise
-        working-directory: ./utils
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-        run: |
-          sleep 100s
-          npm run load
+        uses: ./.github/modules/retry
+        with:
+          command: |
+            sleep 100s
+            npm run load
+          working-directory: ./utils
+          run: |
+            sleep 100s
+            npm run load
+          env-vars: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
 
       - name: SQL
         working-directory: ./libs/common
@@ -917,12 +942,17 @@ jobs:
           command: docker compose up --build -d
 
       - name: Initialise
-        working-directory: ./utils
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-        run: |
-          sleep 100s
-          npm run load
+        uses: ./.github/modules/retry
+        with:
+          command: |
+            sleep 100s
+            npm run load
+          working-directory: ./utils
+          run: |
+            sleep 100s
+            npm run load
+          env-vars: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
 
       - name: SQL
         working-directory: ./libs/common
