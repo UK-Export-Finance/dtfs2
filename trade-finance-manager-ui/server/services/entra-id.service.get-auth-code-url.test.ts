@@ -1,37 +1,37 @@
-import * as msalNode from '@azure/msal-node';
+import { ConfidentialClientApplication, CryptoProvider } from '@azure/msal-node';
 import { EntraIdConfigMockBuilder, EntraIdApiMockBuilder } from '../../test-helpers/mocks';
 import { EntraIdConfig } from '../configs/entra-id.config';
 import { EntraIdService } from './entra-id.service';
 import { EntraIdApi } from '../third-party-apis/entra-id.api';
 
+jest.mock('@azure/msal-node', () => {
+  return {
+    ...jest.requireActual('@azure/msal-node'),
+    ConfidentialClientApplication: jest.fn(),
+  } as unknown as typeof import('@azure/msal-node');
+});
+
 describe('EntraIdService', () => {
   describe('getAuthCodeUrl', () => {
     let entraIdConfig: EntraIdConfig;
     let entraIdApi: EntraIdApi;
-
     let base64EncodeSpy: jest.SpyInstance;
 
     const mockScope = ['a-scope'];
     const mockGuid = 'mock-guid';
     const mockBase64EncodedState = 'mock-base64-encoded-state';
     const mockAuthorityMetaDataUrl = 'mock-authority-metadata-url';
-    const authCodeUrlFromMsalApp = 'mocked-auth-code-url-from-msal-app';
-    const mockRedirectUri = 'a-redirect-uri';
+    const authCodeUrlFromMsalApp = 'mock-auth-code-url-from-msal-app';
+    const mockRedirectUri = 'mock-redirect-uri';
 
     beforeEach(() => {
-      jest.resetAllMocks();
+      jest.spyOn(CryptoProvider.prototype, 'createNewGuid').mockReturnValue(mockGuid);
+      base64EncodeSpy = jest.spyOn(CryptoProvider.prototype, 'base64Encode').mockReturnValue(mockBase64EncodedState);
 
-      base64EncodeSpy = jest.spyOn(msalNode.CryptoProvider.prototype, 'base64Encode').mockReturnValue(mockBase64EncodedState);
-
-      jest.spyOn(msalNode, 'CryptoProvider').mockReturnValue({
-        createNewGuid: () => mockGuid,
-        base64Encode: base64EncodeSpy,
-      } as unknown as msalNode.CryptoProvider);
-
-      jest.spyOn(msalNode, 'ConfidentialClientApplication').mockImplementation(() => {
+      jest.mocked(ConfidentialClientApplication).mockImplementation(() => {
         return {
           getAuthCodeUrl: jest.fn().mockResolvedValue(authCodeUrlFromMsalApp),
-        } as unknown as msalNode.ConfidentialClientApplication;
+        } as unknown as ConfidentialClientApplication;
       });
 
       entraIdConfig = new EntraIdConfigMockBuilder()
@@ -79,7 +79,7 @@ describe('EntraIdService', () => {
       // Assert
       expect(authCodeUrlRequest).toEqual({
         scopes: mockScope,
-        redirectUri: 'a-redirect-uri',
+        redirectUri: mockRedirectUri,
         responseMode: 'form_post',
         state: mockBase64EncodedState,
       });
