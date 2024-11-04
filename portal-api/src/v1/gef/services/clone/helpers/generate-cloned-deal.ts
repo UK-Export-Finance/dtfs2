@@ -5,7 +5,7 @@ import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/
 import { DEAL } from '../../../../../constants';
 import { generateClonedExporter } from './generate-cloned-exporter';
 
-const propertiesToRemove: (keyof GefDeal)[] = [
+export const propertiesToRemove: (keyof GefDeal)[] = [
   'ukefDecision',
   'ukefDecisionAccepted',
   'checkerMIN',

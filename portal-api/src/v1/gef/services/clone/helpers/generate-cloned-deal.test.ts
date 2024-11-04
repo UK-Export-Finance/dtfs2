@@ -2,7 +2,7 @@ import { aPortalSessionUser, Bank, Deal, DEAL_STATUS, getCurrentGefDealVersion }
 import { ObjectId } from 'mongodb';
 import { generateAuditDatabaseRecordFromAuditDetails, generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { generateClonedExporter } from './generate-cloned-exporter';
-import { generateClonedDeal } from './generate-cloned-deal';
+import { generateClonedDeal, propertiesToRemove } from './generate-cloned-deal';
 
 const mockLatestEligibilityCriteria = {
   eligibility: 'criteria',
@@ -127,5 +127,20 @@ describe('generateClonedDeal', () => {
     expect(result.comments).toBeUndefined();
     expect(result.previousStatus).toBeUndefined();
     expect(result.dataMigration).toBeUndefined();
+  });
+});
+
+describe('propertiesToRemove', () => {
+  it('is the expected array', () => {
+    // Assert
+    expect(propertiesToRemove).toEqual([
+      'ukefDecision',
+      'ukefDecisionAccepted',
+      'checkerMIN',
+      'manualInclusionNoticeSubmissionDate',
+      'comments',
+      'previousStatus',
+      'dataMigration',
+    ]);
   });
 });
