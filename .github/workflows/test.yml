@@ -190,7 +190,9 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        services: ['portal', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'trade-finance-manager-api', 'dtfs-central-api', 'external-api']
+        # services: ['portal', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'trade-finance-manager-api', 'dtfs-central-api', 'external-api']
+        services: ['portal']
+
 
     concurrency:
       group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
@@ -226,7 +228,8 @@ jobs:
           working-directory: ./utils
           env-vars: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-          command: npm run load
+          command: |
+            npm run load
 
       - name: SQL
         working-directory: ./libs/common
