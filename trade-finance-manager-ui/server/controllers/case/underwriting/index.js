@@ -1,5 +1,6 @@
 const { format, fromUnixTime } = require('date-fns');
 const { isEmpty } = require('lodash');
+const { getUkefDealId } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 
 const leadUnderwriter = require('./lead-underwriter');
@@ -115,12 +116,10 @@ const getUnderwriterPage = async (req, res) => {
     }
   }
 
-  const {
-    submissionType,
-    details: { ukefDealId },
-  } = deal.dealSnapshot;
+  const { submissionType } = deal.dealSnapshot;
 
-  const successMessage = (await getSuccessBannerMessage(submissionType, user, userToken, dealId, ukefDealId)) ?? getFlashSuccessMessage(req);
+  const successMessage =
+    (await getSuccessBannerMessage(submissionType, user, userToken, dealId, getUkefDealId(deal.dealSnapshot))) ?? getFlashSuccessMessage(req);
 
   return res.render('case/underwriting/underwriting.njk', {
     activePrimaryNavigation: 'manage work',
