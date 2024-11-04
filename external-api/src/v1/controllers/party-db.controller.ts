@@ -91,28 +91,30 @@ export const createParty = async (req: CustomExpressRequest<{ reqBody: { partyDb
 };
 
 export const createParty = async (req: CustomExpressRequest<{ reqBody: { companyName: string } }>, res: Response) => {
-  const { partyDbCompanyRegistrationNumber: companyReg } = req?.params;
-  const { companyName } = req?.body;
+  if (req && req.params && req.body && typeof req.params === 'object') {
+    const { partyDbCompanyRegistrationNumber: companyReg } = req.params;
+    const { companyName } = req.body;
 
-  if (!isValidCompanyRegistrationNumber(companyReg)) {
-    console.error('Invalid company registration number provided %s', companyReg);
-    return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company registration number' });
+    if (!isValidCompanyRegistrationNumber(companyReg)) {
+      console.error('Invalid company registration number provided %s', companyReg);
+      return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company registration number' });
+    }
+
+    const response: { status: number; data: unknown } = await axios({
+      method: 'post',
+      url: `${APIM_MDM_URL}customers`,
+      headers,
+      data: {
+        companyRegistrationNumber: companyReg,
+        companyName,
+      },
+    }).catch((error: AxiosError) => {
+      console.error('Error calling Party DB API %o', error);
+      return { data: 'Failed to call Party DB API', status: error?.response?.status || HttpStatusCode.InternalServerError };
+    });
+
+    const { status, data } = response;
+
+    return res.status(status).send(data);
   }
-
-  const response: { status: number; data: unknown } = await axios({
-    method: 'post',
-    url: `${APIM_MDM_URL}customers`,
-    headers,
-    data: {
-      companyRegistrationNumber: companyReg,
-      companyName,
-    },
-  }).catch((error: AxiosError) => {
-    console.error('Error calling Party DB API %o', error);
-    return { data: 'Failed to call Party DB API', status: error?.response?.status || HttpStatusCode.InternalServerError };
-  });
-
-  const { status, data } = response;
-
-  return res.status(status).send(data);
 };
