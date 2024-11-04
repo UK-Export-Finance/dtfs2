@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { SessionData } from 'express-session';
-import { CURRENCY, FEE_RECORD_STATUS, FeeRecordUtilisation } from '@ukef/dtfs2-common';
+import { CURRENCY, FEE_RECORD_STATUS, FeeRecordUtilisation, isFeeRecordCorrectionFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { getUtilisationReportReconciliationByReportId } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
@@ -19,6 +19,12 @@ import { mapToSelectedPaymentDetailsFiltersViewModel } from './map-to-selected-p
 
 jest.mock('../../../api');
 jest.mock('../../../helpers/date');
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  isFeeRecordCorrectionFeatureFlagEnabled: jest.fn().mockReturnValue(true),
+}));
 
 console.error = jest.fn();
 
@@ -238,6 +244,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       };
 
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
+      jest.mocked(isFeeRecordCorrectionFeatureFlagEnabled).mockReturnValue(true);
 
       // Act
       await getUtilisationReportReconciliationByReportId(req, res);
@@ -255,6 +262,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         paymentDetails: expectedPaymentDetailsViewModel,
         keyingSheet: [],
         utilisationDetails: expectedUtilisationDetails,
+        isFeeRecordCorrectionFeatureFlagEnabled: true,
       });
     });
 
@@ -289,6 +297,54 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(viewModel.premiumPayments.tableDataError?.href).toEqual('#premium-payments-table');
       expect(viewModel.premiumPayments.tableDataError?.text).toEqual('Select a fee or fees with the same status');
       expect(viewModel.premiumPayments.payments[0].isChecked).toEqual(true);
+    });
+
+    it("renders the page with 'isFeeRecordCorrectionFeatureFlagEnabled' set to true if the feature flag is enabled", async () => {
+      // Arrange
+      const { req, res } = httpMocks.createMocks({
+        session,
+        params: {
+          reportId,
+        },
+        query: {
+          matchSuccess: 'true',
+        },
+      });
+
+      jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(aUtilisationReportReconciliationDetailsResponse());
+      jest.mocked(isFeeRecordCorrectionFeatureFlagEnabled).mockReturnValue(true);
+
+      // Act
+      await getUtilisationReportReconciliationByReportId(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
+      const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
+      expect(viewModel.isFeeRecordCorrectionFeatureFlagEnabled).toEqual(true);
+    });
+
+    it("renders the page with 'isFeeRecordCorrectionFeatureFlagEnabled' set to false if the feature flag is not enabled", async () => {
+      // Arrange
+      const { req, res } = httpMocks.createMocks({
+        session,
+        params: {
+          reportId,
+        },
+        query: {
+          matchSuccess: 'true',
+        },
+      });
+
+      jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(aUtilisationReportReconciliationDetailsResponse());
+      jest.mocked(isFeeRecordCorrectionFeatureFlagEnabled).mockReturnValue(false);
+
+      // Act
+      await getUtilisationReportReconciliationByReportId(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
+      const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
+      expect(viewModel.isFeeRecordCorrectionFeatureFlagEnabled).toEqual(false);
     });
 
     it("renders the page with 'showMatchSuccessNotification' set to true if matchSuccess query param is set to 'true'", async () => {

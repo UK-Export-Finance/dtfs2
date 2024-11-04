@@ -45,6 +45,7 @@ describe(page, () => {
       selectedFilters: null,
     },
     utilisationDetails: { utilisationTableRows: [], downloadUrl },
+    isFeeRecordCorrectionFeatureFlagEnabled: true,
   };
 
   const getWrapper = (viewModel: UtilisationReportReconciliationForReportViewModel = params) => render(viewModel);
@@ -177,6 +178,24 @@ describe(page, () => {
 
       const premiumPaymentsTabSelector = 'div#premium-payments';
       wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`).notToExist();
+    });
+
+    it('should not render the create record correction request button when the fee record correction feature flag is not enabled', () => {
+      const wrapper = getWrapper({
+        ...params,
+        isFeeRecordCorrectionFeatureFlagEnabled: false,
+      });
+
+      wrapper.expectElement('[data-cy="create-record-correction-request-button"]').notToExist();
+    });
+
+    it('should render the create record correction request button when the fee record correction feature flag is enabled', () => {
+      const wrapper = getWrapper({
+        ...params,
+        isFeeRecordCorrectionFeatureFlagEnabled: true,
+      });
+
+      wrapper.expectElement('[data-cy="create-record-correction-request-button"]').toExist();
     });
 
     it('should render edit actions within the premium payments table for PDC_RECONCILE users', () => {
