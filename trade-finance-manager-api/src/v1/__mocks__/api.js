@@ -181,27 +181,27 @@ module.exports = {
     exposurePeriodInMonths: 12,
   })),
   getPartyDbInfo: ({ companyRegNo }) => {
-    if(process.env.AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED) {
+    if (process.env.AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED) {
       companyRegNo === 'NO_MATCH'
-      ? { status: 404, data: 'Party not found' }
-      : {
-        status: 200,
-        data: [
+        ? { status: 404, data: 'Party not found' }
+        : {
+          status: 200,
+          data: [
+            {
+              partyUrn: 'testPartyUrn',
+            },
+          ],
+        };
+    } else {
+      companyRegNo === 'NO_MATCH'
+        ? false
+        : [
           {
             partyUrn: 'testPartyUrn',
           },
-        ],
-      }
-    } else {
-      companyRegNo === 'NO_MATCH'
-      ? false
-      : [
-        {
-          partyUrn: 'testPartyUrn',
-        },
-      ]
+        ]
     }
-  }, 
+  },
   findUser: (username) => {
     if (username === 'invalidUser') {
       return false;
