@@ -1,5 +1,5 @@
 const { getUnixTime } = require('date-fns');
-const { ACTIVITY_TYPES } = require('@ukef/dtfs2-common');
+const { ACTIVITY_TYPES, getUkefDealId } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { generateValidationErrors } = require('../../../helpers/validation');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
@@ -38,12 +38,10 @@ const getActivity = async (req, res) => {
 
   const activities = mapActivities(deal.tfm.activities);
 
-  const {
-    submissionType,
-    details: { ukefDealId },
-  } = deal.dealSnapshot;
+  const { submissionType } = deal.dealSnapshot;
 
-  const successMessage = (await getSuccessBannerMessage(submissionType, user, userToken, dealId, ukefDealId)) ?? getFlashSuccessMessage(req);
+  const successMessage =
+    (await getSuccessBannerMessage(submissionType, user, userToken, dealId, getUkefDealId(deal.dealSnapshot))) ?? getFlashSuccessMessage(req);
 
   return res.render('case/activity/activity.njk', {
     activePrimaryNavigation: 'manage work',
@@ -51,7 +49,7 @@ const getActivity = async (req, res) => {
     successMessage,
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id,
+    dealId,
     user,
     selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.ALL,
     activities,
@@ -86,12 +84,18 @@ const filterActivities = async (req, res) => {
 
   const activities = mapActivities(deal.tfm.activities);
 
+  const { submissionType } = deal.dealSnapshot;
+
+  const successMessage =
+    (await getSuccessBannerMessage(submissionType, user, userToken, dealId, getUkefDealId(deal.dealSnapshot))) ?? getFlashSuccessMessage(req);
+
   return res.render('case/activity/activity.njk', {
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'activity',
+    successMessage,
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id,
+    dealId,
     user,
     selectedActivityFilter: filterType,
     activities,

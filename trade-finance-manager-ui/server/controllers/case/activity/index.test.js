@@ -1,4 +1,4 @@
-import { ACTIVITY_TYPES } from '@ukef/dtfs2-common';
+import { ACTIVITY_TYPES, DEAL_TYPE, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
 import activityController from '.';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
@@ -24,9 +24,11 @@ describe('GET activity', () => {
       _id: '61f6ac5b02fade01b1e8efef',
       dealSnapshot: {
         _id: '61f6ac5b02fade01b1e8efef',
+        dealType: DEAL_TYPE.GEF,
         submissionDetails: {
           supplierName: 'test supplier',
         },
+        ukefDealId: 'ukefDealId',
       },
       tfm: {
         activities: [],
@@ -36,14 +38,24 @@ describe('GET activity', () => {
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
       api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+      api.getDealCancellation = () =>
+        Promise.resolve({
+          effectiveFrom: new Date().valueOf(),
+          bankRequestDate: new Date().valueOf(),
+          reason: 'a reason',
+          status: TFM_DEAL_CANCELLATION_STATUS.COMPLETED,
+        });
     });
 
     it('should render template with data', async () => {
+      const mockSuccessMessage = 'mockSuccessMessage';
+
       const req = {
         params: {
           _id: mockDeal._id,
         },
         session,
+        flash: jest.fn(() => [mockSuccessMessage]),
       };
 
       const activities = mapActivities(mockDeal.tfm.activities);
@@ -52,6 +64,7 @@ describe('GET activity', () => {
       expect(res.render).toHaveBeenCalledWith('case/activity/activity.njk', {
         activePrimaryNavigation: 'manage work',
         activeSubNavigation: 'activity',
+        successMessage: mockSuccessMessage,
         deal: mockDeal.dealSnapshot,
         tfm: mockDeal.tfm,
         dealId: mockDeal.dealSnapshot._id,
@@ -95,9 +108,12 @@ describe('POST activity (filter)', () => {
     _id: '61f6ac5b02fade01b1e8efef',
     dealSnapshot: {
       _id: '61f6ac5b02fade01b1e8efef',
+      dealType: DEAL_TYPE.GEF,
+
       submissionDetails: {
         supplierName: 'test supplier',
       },
+      ukefDealId: 'ukefDealId',
     },
     tfm: {
       activities: [
@@ -137,9 +153,18 @@ describe('POST activity (filter)', () => {
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
       api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+      api.getDealCancellation = () =>
+        Promise.resolve({
+          effectiveFrom: new Date().valueOf(),
+          bankRequestDate: new Date().valueOf(),
+          reason: 'a reason',
+          status: TFM_DEAL_CANCELLATION_STATUS.COMPLETED,
+        });
     });
 
     it('should render filtered activities with data', async () => {
+      const mockSuccessMessage = 'mockSuccessMessage';
+
       const req = {
         params: {
           _id: mockDeal._id,
@@ -148,6 +173,7 @@ describe('POST activity (filter)', () => {
           filterType: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.COMMENT,
         },
         session,
+        flash: jest.fn(() => [mockSuccessMessage]),
       };
 
       const activities = mapActivities(mockDeal.tfm.activities);
@@ -156,6 +182,7 @@ describe('POST activity (filter)', () => {
       expect(res.render).toHaveBeenCalledWith('case/activity/activity.njk', {
         activePrimaryNavigation: 'manage work',
         activeSubNavigation: 'activity',
+        successMessage: mockSuccessMessage,
         deal: mockDeal.dealSnapshot,
         tfm: mockDeal.tfm,
         dealId: mockDeal.dealSnapshot._id,
