@@ -1,4 +1,4 @@
-import { REPORT_NOT_RECEIVED, REQUEST_PLATFORM_TYPE } from '../../constants';
+import { RECONCILIATION_IN_PROGRESS, REPORT_NOT_RECEIVED, REQUEST_PLATFORM_TYPE } from '../../constants';
 import { AzureFileInfoEntity, DbRequestSource, FeeRecordEntity, UtilisationReportEntity, ReportPeriodPartialEntity } from '../../sql-db-entities';
 import { UtilisationReportReconciliationStatus } from '../../types';
 import { MOCK_AZURE_FILE_INFO } from './azure-file-info.mock';
@@ -6,8 +6,8 @@ import { MOCK_AZURE_FILE_INFO } from './azure-file-info.mock';
 export class UtilisationReportEntityMockBuilder<ReportStatus extends UtilisationReportReconciliationStatus> {
   private readonly report: UtilisationReportEntity;
 
-  private constructor(report: UtilisationReportEntity) {
-    this.report = report;
+  public constructor(report?: UtilisationReportEntity) {
+    this.report = report ?? UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).report;
   }
 
   public static forStatus<Status extends UtilisationReportReconciliationStatus>(status: Status): UtilisationReportEntityMockBuilder<Status> {

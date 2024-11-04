@@ -1,13 +1,13 @@
 const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityValue = require('../facilities/mapFacilityValue');
 const mapFacilityProduct = require('../facilities/mapFacilityProduct');
-const mapFacilityType = require('../facilities/mapFacilityType');
 const mapGuaranteeFeePayableToUkef = require('../facilities/mapGuaranteeFeePayableToUkef');
 const mapGefUkefFacilityType = require('./mapGefUkefFacilityType');
 const mapGefFacilityDates = require('./mapGefFacilityDates');
 const mapFacilityValueExportCurrency = require('../facilities/mapFacilityValueExportCurrency');
 const mapUkefExposureValue = require('../facilities/mapUkefExposureValue');
 const { mapGefFacilityStage } = require('../facilities/mapFacilityStage');
+const { mapGefFacilityType } = require('../facilities/mapFacilityType');
 
 /**
  * Maps a GEF facility snapshot in the database to the facility snapshot used in TFM-API and TFM-UI.
@@ -42,22 +42,18 @@ const mapGefFacilitySnapshot = (facility, dealSnapshot) => {
 
   const formattedFacilityValue = formattedNumber(value);
 
-  facilitySnapshot.facilityProduct = mapFacilityProduct(type);
-
-  facilitySnapshot.ukefFacilityType = type;
-
   const mappedFacilitySnapshot = {
     // Fields in common with all facility types
     _id,
     ukefFacilityId,
     dealId,
     isGef: true,
-    type: mapFacilityType(facilitySnapshot),
+    type: mapGefFacilityType(type),
     hasBeenIssued,
 
     ukefFacilityType: mapGefUkefFacilityType(type), // TODO: DTFS2-4634 - we shouldn't need type and ukefFacilityType.
     facilityStage: mapGefFacilityStage(hasBeenIssued, facilityTfm?.facilityStage),
-    facilityProduct: facilitySnapshot.facilityProduct,
+    facilityProduct: mapFacilityProduct(type),
 
     bankFacilityReference: name,
     banksInterestMargin: `${interestPercentage}%`,

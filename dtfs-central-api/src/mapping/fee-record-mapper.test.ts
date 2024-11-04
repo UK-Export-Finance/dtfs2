@@ -1,6 +1,5 @@
 import { CURRENCY, Currency, FeeRecordEntityMockBuilder, PENDING_RECONCILIATION, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { mapFeeRecordEntityToFeeRecord, mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from './fee-record-mapper';
-import { aUtilisationReport } from '../../test-helpers';
 
 describe('fee record mapper', () => {
   describe('mapFeeRecordEntityToReportedFees', () => {
@@ -88,7 +87,7 @@ describe('fee record mapper', () => {
   describe('mapFeeRecordEntityToFeeRecord', () => {
     it('maps the fee record entity id to the fee record id', () => {
       // Arrange
-      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withId(10).build();
+      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).withId(10).build();
 
       // Act
       const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
@@ -99,7 +98,7 @@ describe('fee record mapper', () => {
 
     it('maps the fee record entity facility id to the fee record facilityId', () => {
       // Arrange
-      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFacilityId('27182818').build();
+      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).withFacilityId('27182818').build();
 
       // Act
       const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
@@ -110,7 +109,7 @@ describe('fee record mapper', () => {
 
     it('maps the fee record entity exporter to the fee record exporter', () => {
       // Arrange
-      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withExporter('Test exporter').build();
+      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).withExporter('Test exporter').build();
 
       // Act
       const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
@@ -121,7 +120,9 @@ describe('fee record mapper', () => {
 
     it('maps the fee record entity fees paid currency to the fee record reported fees currency', () => {
       // Arrange
-      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFeesPaidToUkefForThePeriodCurrency('EUR').build();
+      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+        .withFeesPaidToUkefForThePeriodCurrency('EUR')
+        .build();
 
       // Act
       const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
@@ -132,7 +133,9 @@ describe('fee record mapper', () => {
 
     it('maps the fee record entity fees paid to the fee record reported fees amount', () => {
       // Arrange
-      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFeesPaidToUkefForThePeriod(314.59).build();
+      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+        .withFeesPaidToUkefForThePeriod(314.59)
+        .build();
 
       // Act
       const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
@@ -146,7 +149,7 @@ describe('fee record mapper', () => {
 
       it('maps the fee record entity fees paid currency to the fee record reported payments currency', () => {
         // Arrange
-        const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
+        const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
           .withFeesPaidToUkefForThePeriodCurrency(currency)
           .withPaymentCurrency(currency)
           .build();
@@ -160,7 +163,7 @@ describe('fee record mapper', () => {
 
       it('maps the fee record entity fees paid to the fee record reported payment amount', () => {
         // Arrange
-        const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
+        const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
           .withFeesPaidToUkefForThePeriodCurrency(currency)
           .withPaymentCurrency(currency)
           .withFeesPaidToUkefForThePeriod(314.59)
@@ -185,7 +188,7 @@ describe('fee record mapper', () => {
 
       it('maps the fee record entity payment currency to the fee record reported payments currency', () => {
         // Arrange
-        const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
+        const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
           .withFeesPaidToUkefForThePeriodCurrency(feesPaidCurrency)
           .withFeesPaidToUkefForThePeriod(feesPaidAmount)
           .withPaymentCurrency(paymentCurrency)
@@ -201,7 +204,7 @@ describe('fee record mapper', () => {
 
       it('maps the fee record entity fees paid to the fee record reported payment amount in the payment currency', () => {
         // Arrange
-        const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
+        const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
           .withFeesPaidToUkefForThePeriodCurrency(feesPaidCurrency)
           .withFeesPaidToUkefForThePeriod(feesPaidAmount)
           .withPaymentCurrency(paymentCurrency)

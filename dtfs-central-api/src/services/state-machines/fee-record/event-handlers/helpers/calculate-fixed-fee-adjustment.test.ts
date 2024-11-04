@@ -6,14 +6,14 @@ import {
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { calculateFixedFeeAdjustment } from './calculate-fixed-fee-adjustment';
-import { aReportPeriod, aUtilisationReport } from '../../../../../../test-helpers';
+import { aReportPeriod } from '../../../../../../test-helpers';
 
 const mockFixedFee = 100;
 
 describe('calculateFixedFeeAdjustment', () => {
   it('throws an error if the fee record facility id does not match the facility utilisation data id', () => {
     // Arrange
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFacilityId('11111111').build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).withFacilityId('11111111').build();
     const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('22222222').build();
 
     // Act / Assert

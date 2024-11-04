@@ -1,7 +1,7 @@
-import { CURRENCY, FeeRecordEntityMockBuilder, FeeRecordUtilisation } from '@ukef/dtfs2-common';
+import { CURRENCY, FeeRecordEntityMockBuilder, FeeRecordUtilisation, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { when } from 'jest-when';
 import { getUtilisationDetails } from './get-utilisation-details';
-import { aReportPeriod, aTfmFacility, aUtilisationReport } from '../../../../../../test-helpers';
+import { aReportPeriod, aTfmFacility } from '../../../../../../test-helpers';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../../../../../errors';
 import { mapToFeeRecordUtilisation } from './map-to-fee-record-utilisation';
@@ -22,7 +22,7 @@ describe('get-utilisation-details', () => {
       it('should throw a NotFoundError', async () => {
         // Arrange
         const facilityId = '12345678';
-        const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFacilityId(facilityId).build();
+        const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).withFacilityId(facilityId).build();
         jest.spyOn(TfmFacilitiesRepo, 'findByUkefFacilityIds').mockResolvedValue([]);
 
         // Act + Assert
@@ -37,8 +37,14 @@ describe('get-utilisation-details', () => {
         // Arrange
         const firstFacilityId = '11111111';
         const secondFacilityId = '22222222';
-        const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withId(1).withFacilityId(firstFacilityId).build();
-        const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withId(2).withFacilityId(secondFacilityId).build();
+        const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+          .withId(1)
+          .withFacilityId(firstFacilityId)
+          .build();
+        const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+          .withId(2)
+          .withFacilityId(secondFacilityId)
+          .build();
 
         const firstTfmFacility = aTfmFacility();
         firstTfmFacility.facilitySnapshot.ukefFacilityId = firstFacilityId;
