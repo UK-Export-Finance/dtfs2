@@ -1,14 +1,14 @@
 import { DEAL_TYPE } from '../../constants';
 import { AnyObject } from '../any-object';
 
-type BssEwcsDeal = AnyObject & {
+export type BssEwcsDeal = AnyObject & {
   dealType: typeof DEAL_TYPE.BSS_EWCS;
   details: {
     ukefDealId: string;
   };
 };
 
-type GefDeal = AnyObject & {
+export type GefDeal = AnyObject & {
   dealType: typeof DEAL_TYPE.GEF;
   ukefDealId: string;
 };
