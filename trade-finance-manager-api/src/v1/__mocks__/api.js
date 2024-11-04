@@ -178,26 +178,28 @@ module.exports = {
   getFacilityExposurePeriod: jest.fn(() => ({
     exposurePeriodInMonths: 12,
   })),
-  getPartyDbInfo: ({ companyRegNo }) =>
-    process.env.AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED ?
+  getPartyDbInfo: ({ companyRegNo }) => {
+    if(process.env.AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED) {
       companyRegNo === 'NO_MATCH'
-        ? false
-        : [
+      ? { status: 400, data: 'Failed to get party' }
+      : {
+        status: 200,
+        data: [
           {
             partyUrn: 'testPartyUrn',
           },
-        ]
-      :
+        ],
+      }
+    } else {
       companyRegNo === 'NO_MATCH'
-        ? { status: 400, data: 'Failed to get party' }
-        : {
-          status: 200,
-          data: [
-            {
-              partyUrn: 'testPartyUrn',
-            },
-          ],
+      ? false
+      : [
+        {
+          partyUrn: 'testPartyUrn',
         },
+      ]
+    }
+  }, 
   findUser: (username) => {
     if (username === 'invalidUser') {
       return false;

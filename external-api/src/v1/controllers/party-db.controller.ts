@@ -21,7 +21,9 @@ export const lookup = async (req: Request, res: Response) => {
 
   const response: { status: number; data: unknown } = await axios({
     method: 'get',
-    url: AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED ? `${APIM_MDM_URL}customers/direct?companyRegistrationNumber=${companyReg}` :  `${APIM_MDM_URL}customers?companyReg=${companyReg}`,
+    url: AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED
+     ? `${APIM_MDM_URL}customers/direct?companyRegistrationNumber=${companyReg}`
+     : `${APIM_MDM_URL}customers?companyReg=${companyReg}`,
     headers,
   }).catch((error: AxiosError) => {
     console.error('Error calling Party DB API %o', error);
@@ -34,8 +36,8 @@ export const lookup = async (req: Request, res: Response) => {
 };
 
 export const createParty = async (req: CustomExpressRequest<{ reqBody: { companyName: string } }>, res: Response) => {
-  const { partyDbCompanyRegistrationNumber: companyReg } = req.params;
-  const { companyName } = req.body;
+  const { partyDbCompanyRegistrationNumber: companyReg } = req?.params;
+  const { companyName } = req?.body;
 
   if (!isValidCompanyRegistrationNumber(companyReg)) {
     console.error('Invalid company registration number provided %s', companyReg);
