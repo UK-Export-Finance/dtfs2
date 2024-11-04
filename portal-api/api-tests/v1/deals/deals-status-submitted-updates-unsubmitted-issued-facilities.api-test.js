@@ -1,4 +1,4 @@
-const { BOND_FACILITY_TYPE } = require('@ukef/dtfs2-common')
+const { BOND_FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { sub, add, format } = require('date-fns');
 
 const app = require('../../../src/createApp');

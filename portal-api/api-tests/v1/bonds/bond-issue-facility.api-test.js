@@ -1,4 +1,4 @@
-const { BOND_FACILITY_TYPE } = require('@ukef/dtfs2-common')
+const { BOND_FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { sub, format, add } = require('date-fns');
 const databaseHelper = require('../../database-helper');
 const aDeal = require('../deals/deal-builder');

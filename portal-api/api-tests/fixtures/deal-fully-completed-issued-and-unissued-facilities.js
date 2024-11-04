@@ -6,7 +6,6 @@ const nowDate = new Date();
 const nowPlusOneMonth = add(nowDate, { months: 1 });
 const yesterday = sub(nowDate, { days: 1 });
 
-
 const deal = {
   ...dealFullyCompleted,
   mockFacilities: [
