@@ -3,6 +3,7 @@ import {
   FEE_RECORD_STATUS,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
+  RECONCILIATION_COMPLETED,
   RECONCILIATION_IN_PROGRESS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
