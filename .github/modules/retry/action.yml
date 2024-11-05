@@ -21,7 +21,7 @@ runs:
   steps:
     - run: |
         limit=3
-        echo "Retry limit: $limit"
+        echo "Retry limit: ${{ vars.RETRY_LIMIT }}"
         if [ -z "$limit" ]; then
           limit=3  # Default value if RETRY_LIMIT is not defined
         fi
