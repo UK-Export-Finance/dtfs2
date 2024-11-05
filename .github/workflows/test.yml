@@ -240,9 +240,12 @@ jobs:
         run: npm run db:migrate
 
       - name: Execute
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-        run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
+        uses: ./.github/modules/retry
+        with:
+          command: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
+          retry-limit: ${{ vars.RETRY_LIMIT }}
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
 
       - name: Stop
         working-directory: ./
@@ -295,8 +298,11 @@ jobs:
           retry-limit: ${{ vars.RETRY_LIMIT }}
 
       - name: ${{ matrix.functions }}
-        working-directory: ./azure-functions/${{ matrix.functions }}
-        run: npm run api-test
+        uses: ./.github/modules/retry
+        with:
+          command: npm run api-test
+          retry-limit: ${{ vars.RETRY_LIMIT }}
+          working-directory: ./azure-functions/${{ matrix.functions }}
 
       - name: Coverage
         uses: codecov/codecov-action@v4
