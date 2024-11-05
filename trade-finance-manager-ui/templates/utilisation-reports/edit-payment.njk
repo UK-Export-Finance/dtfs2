@@ -10,7 +10,7 @@
 {% set pageHasErrors = errors.errorSummary | length %}
 
 {% block pageTitle %}
-  {{ 'Edit payment' | formatPageTitleWithError(pageHasErrors) }}
+  {{ 'Edit payment' | formatPageTitle(pageHasErrors) }}
 {% endblock %}
 
 {% block content %}

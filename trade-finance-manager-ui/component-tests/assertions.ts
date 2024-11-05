@@ -134,7 +134,10 @@ export const assertions = <TParams extends object>(wrapper: CheerioAPI, html: st
   }),
   expectPageTitle: () => ({
     toRead: (text: string) => {
-      expect(wrapper('title').text().replace(', Trade Finance Manager, gov.uk', '').trim()).toEqual(text);
+      const titleText = wrapper('title').text();
+      const result = titleText.replace(', Trade Finance Manager, gov.uk', '').trim();
+
+      expect(result).toEqual(text);
     },
   }),
 });

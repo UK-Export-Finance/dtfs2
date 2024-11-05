@@ -16,7 +16,7 @@
 {% set pageHasErrors = premiumPayments.tableDataError or premiumPayments.filterError or paymentDetails.filterErrors.errorSummary | length %}
 
 {% block pageTitle %}
-  {{ (bank.name + ', ' + formattedReportPeriod) | formatPageTitleWithError(pageHasErrors) }}
+  {{ (bank.name + ', ' + formattedReportPeriod) | formatPageTitle(pageHasErrors) }}
 {% endblock %}
 
 {% set premiumPaymentsHtml %}
