@@ -1,6 +1,13 @@
 import difference from 'lodash/difference';
 import { EntityManager } from 'typeorm';
-import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
+import {
+  FeeRecordEntityMockBuilder,
+  UtilisationReportEntityMockBuilder,
+  FEE_RECORD_STATUS,
+  FeeRecordStatus,
+  REQUEST_PLATFORM_TYPE,
+  PENDING_RECONCILIATION,
+} from '@ukef/dtfs2-common';
 import { InvalidStateMachineTransitionError } from '../../../errors';
 import { FEE_RECORD_EVENT_TYPE, FEE_RECORD_EVENT_TYPES, FeeRecordEventType } from './event/fee-record.event-type';
 import { FeeRecordStateMachine } from './fee-record.state-machine';
@@ -29,11 +36,11 @@ describe('FeeRecordStateMachine', () => {
     await expect(stateMachine.handleEvent({ type: eventType, payload: null })).rejects.toThrow(InvalidStateMachineTransitionError);
   };
 
-  const UPLOADED_REPORT = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+  const UPLOADED_REPORT = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
 
   describe(`when the fee record has the '${FEE_RECORD_STATUS.TO_DO}' status`, () => {
     // Arrange
-    const TO_DO_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus('TO_DO').build();
+    const TO_DO_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus(FEE_RECORD_STATUS.TO_DO).build();
 
     const VALID_TO_DO_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['PAYMENT_ADDED'];
     const INVALID_TO_DO_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_TO_DO_FEE_RECORD_EVENT_TYPES);
@@ -61,7 +68,7 @@ describe('FeeRecordStateMachine', () => {
         payload: {
           transactionEntityManager: {} as unknown as EntityManager,
           feeRecordsAndPaymentsMatch: true,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -72,7 +79,7 @@ describe('FeeRecordStateMachine', () => {
 
   describe(`when the fee record has the '${FEE_RECORD_STATUS.MATCH}' status`, () => {
     // Arrange
-    const MATCH_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus('MATCH').build();
+    const MATCH_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus(FEE_RECORD_STATUS.MATCH).build();
 
     it(`handles the '${FEE_RECORD_EVENT_TYPE.PAYMENT_EDITED}' event`, async () => {
       // Arrange
@@ -84,7 +91,7 @@ describe('FeeRecordStateMachine', () => {
         payload: {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAndPaymentsMatch: true,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -103,7 +110,7 @@ describe('FeeRecordStateMachine', () => {
           transactionEntityManager: {} as unknown as EntityManager,
           feeRecordsAndPaymentsMatch: true,
           hasAttachedPayments: false,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -122,7 +129,7 @@ describe('FeeRecordStateMachine', () => {
           transactionEntityManager: {} as unknown as EntityManager,
           isFinalFeeRecordForFacility: false,
           reportPeriod: aReportPeriod(),
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -139,7 +146,7 @@ describe('FeeRecordStateMachine', () => {
         type: 'REMOVE_FROM_PAYMENT_GROUP',
         payload: {
           transactionEntityManager: {} as EntityManager,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -157,7 +164,7 @@ describe('FeeRecordStateMachine', () => {
         payload: {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAndPaymentsMatch: true,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -190,7 +197,7 @@ describe('FeeRecordStateMachine', () => {
 
   describe(`when the fee record has the '${FEE_RECORD_STATUS.DOES_NOT_MATCH}' status`, () => {
     // Arrange
-    const DOES_NOT_MATCH_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus('DOES_NOT_MATCH').build();
+    const DOES_NOT_MATCH_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH).build();
 
     it(`handles the '${FEE_RECORD_EVENT_TYPE.PAYMENT_EDITED}' event`, async () => {
       // Arrange
@@ -202,7 +209,7 @@ describe('FeeRecordStateMachine', () => {
         payload: {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAndPaymentsMatch: true,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -221,7 +228,7 @@ describe('FeeRecordStateMachine', () => {
           transactionEntityManager: {} as unknown as EntityManager,
           feeRecordsAndPaymentsMatch: true,
           hasAttachedPayments: false,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -239,7 +246,7 @@ describe('FeeRecordStateMachine', () => {
         payload: {
           transactionEntityManager: {} as unknown as EntityManager,
           feeRecordsAndPaymentsMatch: true,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -256,7 +263,7 @@ describe('FeeRecordStateMachine', () => {
         type: 'REMOVE_FROM_PAYMENT_GROUP',
         payload: {
           transactionEntityManager: {} as EntityManager,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -274,7 +281,7 @@ describe('FeeRecordStateMachine', () => {
         payload: {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAndPaymentsMatch: true,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -292,7 +299,7 @@ describe('FeeRecordStateMachine', () => {
         payload: {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAndPaymentsMatch: true,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -327,7 +334,7 @@ describe('FeeRecordStateMachine', () => {
 
   describe(`when the fee record has the '${FEE_RECORD_STATUS.READY_TO_KEY}' status`, () => {
     // Arrange
-    const READY_TO_KEY_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus('READY_TO_KEY').build();
+    const READY_TO_KEY_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
 
     it(`handles the '${FEE_RECORD_EVENT_TYPE.MARK_AS_RECONCILED}' event`, async () => {
       // Arrange
@@ -339,7 +346,7 @@ describe('FeeRecordStateMachine', () => {
         payload: {
           transactionEntityManager: {} as unknown as EntityManager,
           reconciledByUserId: 'abc123',
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -366,7 +373,7 @@ describe('FeeRecordStateMachine', () => {
 
   describe(`when the fee record has the '${FEE_RECORD_STATUS.RECONCILED}' status`, () => {
     // Arrange
-    const RECONCILED_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus('RECONCILED').build();
+    const RECONCILED_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
 
     it(`handles the '${FEE_RECORD_EVENT_TYPE.MARK_AS_READY_TO_KEY}' event`, async () => {
       // Arrange
@@ -377,7 +384,7 @@ describe('FeeRecordStateMachine', () => {
         type: 'MARK_AS_READY_TO_KEY',
         payload: {
           transactionEntityManager: {} as unknown as EntityManager,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 

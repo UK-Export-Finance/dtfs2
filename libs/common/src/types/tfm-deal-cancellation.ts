@@ -6,5 +6,5 @@ export type TfmDealCancellation = z.infer<typeof DEAL_CANCELLATION>;
 
 export type TfmDealCancellationResponse = {
   cancelledDealUkefId: string | ObjectId;
-  riskExpiredFacilityUkefIds?: (string | ObjectId)[];
+  riskExpiredFacilityUkefIds: string[];
 };

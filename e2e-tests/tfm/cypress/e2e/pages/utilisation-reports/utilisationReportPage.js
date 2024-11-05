@@ -2,6 +2,7 @@ const utilisationReportPage = {
   bankReportsNavLink: () => cy.get('a[data-cy="bank-reports-nav-link"]'),
   keyingSheetTabLink: () => cy.get('a[data-cy="bank-report-tab-keying-sheet"]'),
   paymentDetailsTabLink: () => cy.get('a[data-cy="bank-report-tab-payment-details"]'),
+  premiumPaymentsTabLink: () => cy.get('a[data-cy="bank-report-tab-premium-payments"]'),
   utilisationTabLink: () => cy.get('a[data-cy="bank-report-tab-utilisation"]'),
   premiumPaymentsTab: {
     matchSuccessNotificationHeading: () => cy.get('[data-cy="match-success-notification-heading"]'),
@@ -21,6 +22,7 @@ const utilisationReportPage = {
         status: () => cy.get('th[data-cy="premium-payments-table--status"] button'),
       },
       row: (feeRecordId) => cy.get(`tr[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`),
+      selectAllCheckboxContainer: () => cy.get('[data-cy="premium-payments-select-all-checkbox-container"]'),
       checkbox: (feeRecordIds, paymentCurrency, status) =>
         cy.get(`[type="checkbox"][id="feeRecordIds-${feeRecordIds.join(',')}-reportedPaymentsCurrency-${paymentCurrency}-status-${status}"]`),
       status: (feeRecordId) => cy.get(`[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}-status"]`),
@@ -63,12 +65,19 @@ const utilisationReportPage = {
       paymentCurrencyRadioInput: (currencyCode) => cy.get(`input[type="radio"][data-cy="currency-${currencyCode}"]`),
       paymentCurrencyError: () => cy.get('[data-cy="payment-details--filter-payment-currency-error"]'),
       noRecordsMatchingFiltersText: () => cy.get('[data-cy="payment-details-no-records-matching-filters-text"]'),
+      actionBar: () => cy.get('[data-cy="payment-details--filters-action-bar"]'),
+      actionBarItem: (value) => cy.get(`[data-cy="payment-details--filters-action-bar"] a:contains(${value})`),
+      clearFiltersLink: () => cy.get('a:contains("Clear filters")'),
+      selectedFilter: (value) => cy.get(`[data-cy="payment-details--filters-panel"] .moj-filter__tag:contains(${value})`),
     },
   },
   utilisationTab: {
     downloadReportLink: () => cy.get('[data-cy="download-report-link"]'),
     table: {
       row: (feeRecordId) => cy.get(`tr[data-cy="utilisation-table-row-${feeRecordId}"]`),
+      utilisationHeader: () => cy.get('[data-cy="utilisation-header"]'),
+      valueHeader: () => cy.get('[data-cy="value-header"]'),
+      exposureHeader: () => cy.get('[data-cy="exposure-header"]'),
       facilityId: () => cy.get('[data-cy="facility-id"]'),
       exporter: () => cy.get('[data-cy="exporter"]'),
       baseCurrency: () => cy.get('[data-cy="base-currency"]'),

@@ -13,17 +13,20 @@ const findOneDeal = async (_id, callback) => {
 
   const deal = await dealsCollection.findOne({ _id: { $eq: ObjectId(_id) } });
   let returnDeal = deal;
+  let facilityIds = [];
 
   if (deal) {
-    if (deal.dealSnapshot.dealType && deal.dealSnapshot.dealType === DEALS.DEAL_TYPE.GEF) {
+    if (deal?.dealSnapshot?.dealType === DEALS.DEAL_TYPE.GEF) {
       returnDeal = {
         ...deal,
         dealSnapshot: deal.dealSnapshot,
       };
     } else {
-      const facilityIds = deal.dealSnapshot.facilities.map((facility) => ObjectId(facility._id));
+      if (deal?.dealSnapshot?.facilities?.length) {
+        facilityIds = deal.dealSnapshot.facilities.map((facility) => ObjectId(facility._id));
+      }
 
-      if (facilityIds && facilityIds.length > 0) {
+      if (facilityIds?.length > 0) {
         const mappedDeal = deal.dealSnapshot;
         const mappedBonds = [];
         const mappedLoans = [];

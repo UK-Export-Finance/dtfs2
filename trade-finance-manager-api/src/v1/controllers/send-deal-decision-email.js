@@ -1,6 +1,6 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
-const sendTfmEmail = require('./send-tfm-email');
+const sendTfmEmail = require('../services/send-tfm-email');
 
 const sendDealDecisionEmail = async (mappedDeal) => {
   const { tfm } = mappedDeal;

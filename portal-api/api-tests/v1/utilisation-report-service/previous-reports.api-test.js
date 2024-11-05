@@ -1,4 +1,4 @@
-const { UtilisationReportEntityMockBuilder, UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
+const { UtilisationReportEntityMockBuilder, REPORT_NOT_RECEIVED, PENDING_RECONCILIATION, RECONCILIATION_COMPLETED } = require('@ukef/dtfs2-common');
 const { SqlDbHelper } = require('../../sql-db-helper.ts');
 const app = require('../../../src/createApp');
 const { as, get } = require('../../api')(app);
@@ -27,7 +27,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
     const year = 2023;
     const uploadedByUserId = aPaymentReportOfficer._id;
 
-    const aReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+    const aReceivedReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
       .withBankId(bankId)
       .withId(receivedReportIds[0])
       .withReportPeriod({
@@ -44,7 +44,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
       .withUploadedByUserId(uploadedByUserId)
       .build();
 
-    const aNotReceivedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+    const aNotReceivedReport = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED)
       .withId(8)
       .withBankId(bankId)
       .withReportPeriod({
@@ -59,7 +59,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports', () => {
       })
       .build();
 
-    const aReconciliationCompletedReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED)
+    const aReconciliationCompletedReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_COMPLETED)
       .withBankId(bankId)
       .withId(receivedReportIds[1])
       .withReportPeriod({

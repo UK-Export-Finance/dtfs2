@@ -2,6 +2,7 @@ import { HttpStatusCode } from 'axios';
 import { IsNull, Not } from 'typeorm';
 import {
   AMENDMENT_STATUS,
+  convertMillisecondsToSeconds,
   FacilityUtilisationDataEntity,
   FacilityUtilisationDataEntityMockBuilder,
   FEE_RECORD_STATUS,
@@ -10,12 +11,13 @@ import {
   FeeRecordPaymentJoinTableEntity,
   FeeRecordStatus,
   PaymentEntityMockBuilder,
+  PENDING_RECONCILIATION,
+  RECONCILIATION_IN_PROGRESS,
   ReportPeriod,
   TfmFacility,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
-  UtilisationReportReconciliationStatus,
+  UtilisationReportStatus,
   withSqlIdPathParameterValidationTests,
 } from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
@@ -40,9 +42,9 @@ describe(`POST ${BASE_URL}`, () => {
   const tfmUserId = tfmUser._id.toString();
 
   const anUploadedReconciliationInProgressUtilisationReport = () =>
-    UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).withUploadedByUserId(portalUserId).build();
+    UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).withUploadedByUserId(portalUserId).build();
   const anUploadedPendingReconciliationUtilisationReport = () =>
-    UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).withUploadedByUserId(portalUserId).build();
+    UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withId(reportId).withUploadedByUserId(portalUserId).build();
 
   const aValidRequestBody = () => ({
     user: {
@@ -109,8 +111,8 @@ describe(`POST ${BASE_URL}`, () => {
     // Arrange
     const report = anUploadedReconciliationInProgressUtilisationReport();
     const toDoFeeRecords = [
-      FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('TO_DO').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('TO_DO').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.TO_DO).build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus(FEE_RECORD_STATUS.TO_DO).build(),
     ];
     report.feeRecords = toDoFeeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
@@ -126,8 +128,8 @@ describe(`POST ${BASE_URL}`, () => {
     // Arrange
     const report = anUploadedReconciliationInProgressUtilisationReport();
     const feeRecords = [
-      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId('11111111').withStatus('MATCH').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId('22222222').withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId('11111111').withStatus(FEE_RECORD_STATUS.MATCH).build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId('22222222').withStatus(FEE_RECORD_STATUS.MATCH).build(),
     ];
     report.feeRecords = feeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
@@ -148,7 +150,9 @@ describe(`POST ${BASE_URL}`, () => {
     // Arrange
     const report = anUploadedPendingReconciliationUtilisationReport();
     const facilityId = '11111111';
-    report.feeRecords = [FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withPayments([]).withStatus('MATCH').build()];
+    report.feeRecords = [
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withPayments([]).withStatus(FEE_RECORD_STATUS.MATCH).build(),
+    ];
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
     await insertMatchingPaymentsForFeeRecords(report.feeRecords);
 
@@ -167,7 +171,9 @@ describe(`POST ${BASE_URL}`, () => {
     // Arrange
     const report = anUploadedPendingReconciliationUtilisationReport();
     const facilityId = '11111111';
-    report.feeRecords = [FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withPayments([]).withStatus('MATCH').build()];
+    report.feeRecords = [
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withPayments([]).withStatus(FEE_RECORD_STATUS.MATCH).build(),
+    ];
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
     await insertMatchingPaymentsForFeeRecords(report.feeRecords);
 
@@ -180,7 +186,7 @@ describe(`POST ${BASE_URL}`, () => {
 
     // Assert
     const updatedReport = await SqlDbHelper.manager.findOneByOrFail(UtilisationReportEntity, { id: reportId });
-    expect(updatedReport.status).toBe<UtilisationReportReconciliationStatus>('RECONCILIATION_IN_PROGRESS');
+    expect(updatedReport.status).toBe<UtilisationReportStatus>(RECONCILIATION_IN_PROGRESS);
   });
 
   it('updates the utilisation report audit fields', async () => {
@@ -188,8 +194,8 @@ describe(`POST ${BASE_URL}`, () => {
     const report = anUploadedReconciliationInProgressUtilisationReport();
     const facilityId = '11111111';
     const feeRecords = [
-      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withStatus('MATCH').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withStatus(FEE_RECORD_STATUS.MATCH).build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus(FEE_RECORD_STATUS.MATCH).build(),
     ];
     report.feeRecords = feeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
@@ -219,13 +225,13 @@ describe(`POST ${BASE_URL}`, () => {
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(1)
         .withFacilityId(facilityId)
-        .withStatus('TO_DO')
+        .withStatus(FEE_RECORD_STATUS.TO_DO)
         .withLastUpdatedByPortalUserId(portalUserId)
         .withLastUpdatedByTfmUserId(null)
         .withLastUpdatedByIsSystemUser(false)
         .build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus('MATCH').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(facilityId).withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus(FEE_RECORD_STATUS.MATCH).build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(facilityId).withStatus(FEE_RECORD_STATUS.MATCH).build(),
     ];
     report.feeRecords = feeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
@@ -265,11 +271,11 @@ describe(`POST ${BASE_URL}`, () => {
     const secondFacilityId = '22222222';
     const feeRecords = [
       // Fee records for same facility where only one has MATCH status
-      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(firstFacilityId).withStatus('TO_DO').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(firstFacilityId).withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(firstFacilityId).withStatus(FEE_RECORD_STATUS.TO_DO).build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(firstFacilityId).withStatus(FEE_RECORD_STATUS.MATCH).build(),
       // Fee records for same facility where both have MATCH status
-      FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(secondFacilityId).withStatus('MATCH').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(4).withFacilityId(secondFacilityId).withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(secondFacilityId).withStatus(FEE_RECORD_STATUS.MATCH).build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(4).withFacilityId(secondFacilityId).withStatus(FEE_RECORD_STATUS.MATCH).build(),
     ];
     report.feeRecords = feeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
@@ -287,17 +293,17 @@ describe(`POST ${BASE_URL}`, () => {
 
     const allFeeRecords = await SqlDbHelper.manager.find(FeeRecordEntity, {});
     expect(allFeeRecords).toHaveLength(feeRecords.length);
-    expect(allFeeRecords.find(({ id }) => id === 1)!.status).toBe<FeeRecordStatus>('TO_DO');
-    expect(allFeeRecords.find(({ id }) => id === 2)!.status).toBe<FeeRecordStatus>('READY_TO_KEY');
-    expect(allFeeRecords.find(({ id }) => id === 3)!.status).toBe<FeeRecordStatus>('READY_TO_KEY');
-    expect(allFeeRecords.find(({ id }) => id === 4)!.status).toBe<FeeRecordStatus>('READY_TO_KEY');
+    expect(allFeeRecords.find(({ id }) => id === 1)!.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.TO_DO);
+    expect(allFeeRecords.find(({ id }) => id === 2)!.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.READY_TO_KEY);
+    expect(allFeeRecords.find(({ id }) => id === 3)!.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.READY_TO_KEY);
+    expect(allFeeRecords.find(({ id }) => id === 4)!.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.READY_TO_KEY);
   });
 
   it('populates the fee record payment join table paymentAmountUsedForFeeRecord column', async () => {
     // Arrange
     const report = anUploadedReconciliationInProgressUtilisationReport();
     const firstFacilityId = '11111111';
-    const feeRecords = [FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(firstFacilityId).withStatus('MATCH').build()];
+    const feeRecords = [FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(firstFacilityId).withStatus(FEE_RECORD_STATUS.MATCH).build()];
     report.feeRecords = feeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
     await insertMatchingPaymentsForFeeRecords(feeRecords);
@@ -342,7 +348,8 @@ describe(`POST ${BASE_URL}`, () => {
           ...aTfmFacilityAmendment(),
           value: 350000,
           status: AMENDMENT_STATUS.COMPLETED,
-          effectiveDate: dateAfterReportPeriodEnd.getTime(),
+          // Effective dates are stored in unix epoch time in seconds not milliseconds.
+          effectiveDate: convertMillisecondsToSeconds(dateAfterReportPeriodEnd.getTime()),
           // 365 days after report period end
           coverEndDate: new Date('2025-03-01').getTime(),
         },
@@ -350,7 +357,8 @@ describe(`POST ${BASE_URL}`, () => {
           ...aTfmFacilityAmendment(),
           value: 300000,
           status: AMENDMENT_STATUS.COMPLETED,
-          effectiveDate: dateWithinReportPeriod.getTime(),
+          // Effective dates are stored in unix epoch time in seconds not milliseconds.
+          effectiveDate: convertMillisecondsToSeconds(dateWithinReportPeriod.getTime()),
           // 730 days after report period end
           coverEndDate: new Date('2026-03-01').getTime(),
         },
@@ -360,10 +368,7 @@ describe(`POST ${BASE_URL}`, () => {
     const tfmFacilitiesCollection = await mongoDbClient.getCollection('tfm-facilities');
     await tfmFacilitiesCollection.insertOne(tfmFacility);
 
-    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
-      .withId(reportId)
-      .withReportPeriod(reportPeriod)
-      .build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).withReportPeriod(reportPeriod).build();
 
     const utilisationData = FacilityUtilisationDataEntityMockBuilder.forId(facilityId).withFixedFee(1).build();
     const feeRecords = [
@@ -371,7 +376,7 @@ describe(`POST ${BASE_URL}`, () => {
         .withId(1)
         .withFacilityId(facilityId)
         .withFacilityUtilisationData(utilisationData)
-        .withStatus('MATCH')
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withFacilityUtilisation(1)
         .build(),
     ];
@@ -417,7 +422,7 @@ describe(`POST ${BASE_URL}`, () => {
     const tfmFacilitiesCollection = await mongoDbClient.getCollection('tfm-facilities');
     await tfmFacilitiesCollection.insertOne(tfmFacility);
 
-    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).withId(reportId).build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
 
     const utilisationData = FacilityUtilisationDataEntityMockBuilder.forId(facilityId).withUtilisation(100).build();
     const feeRecords = [
@@ -425,7 +430,7 @@ describe(`POST ${BASE_URL}`, () => {
         .withId(1)
         .withFacilityId(facilityId)
         .withFacilityUtilisationData(utilisationData)
-        .withStatus('MATCH')
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withFacilityUtilisation(10000)
         .build(),
     ];
@@ -464,7 +469,7 @@ describe(`POST ${BASE_URL}`, () => {
     const getReadyToKeyFeeRecordsWithNonNullKeyingData = async (): Promise<FeeRecordEntity[]> =>
       await SqlDbHelper.manager.find(FeeRecordEntity, {
         where: {
-          status: 'READY_TO_KEY',
+          status: FEE_RECORD_STATUS.READY_TO_KEY,
           fixedFeeAdjustment: Not(IsNull()),
           principalBalanceAdjustment: Not(IsNull()),
         },
@@ -473,7 +478,7 @@ describe(`POST ${BASE_URL}`, () => {
     const getReadyToKeyFeeRecordsWithNullKeyingData = async (): Promise<FeeRecordEntity[]> =>
       await SqlDbHelper.manager.find(FeeRecordEntity, {
         where: {
-          status: 'READY_TO_KEY',
+          status: FEE_RECORD_STATUS.READY_TO_KEY,
           fixedFeeAdjustment: IsNull(),
           principalBalanceAdjustment: IsNull(),
         },
@@ -484,9 +489,9 @@ describe(`POST ${BASE_URL}`, () => {
       const report = anUploadedReconciliationInProgressUtilisationReport();
 
       const feeRecordsAtMatchStatus = [
-        FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withStatus('MATCH').build(),
-        FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus('MATCH').build(),
-        FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(facilityId).withStatus('MATCH').build(),
+        FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withStatus(FEE_RECORD_STATUS.MATCH).build(),
+        FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus(FEE_RECORD_STATUS.MATCH).build(),
+        FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(facilityId).withStatus(FEE_RECORD_STATUS.MATCH).build(),
       ];
       report.feeRecords = feeRecordsAtMatchStatus;
       await SqlDbHelper.saveNewEntry('UtilisationReport', report);
@@ -535,7 +540,7 @@ describe(`POST ${BASE_URL}`, () => {
         report.reportPeriod = currentReportPeriod;
 
         const toDoFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
-          .withStatus('TO_DO')
+          .withStatus(FEE_RECORD_STATUS.TO_DO)
           .withId(toDoFeeRecordId)
           .withFacilityUtilisation(currentUtilisation)
           .withFacilityId(facilityId)
@@ -546,13 +551,13 @@ describe(`POST ${BASE_URL}`, () => {
             .withId(2)
             .withFacilityId(facilityId)
             .withFacilityUtilisation(currentUtilisation)
-            .withStatus('MATCH')
+            .withStatus(FEE_RECORD_STATUS.MATCH)
             .build(),
           FeeRecordEntityMockBuilder.forReport(report)
             .withId(3)
             .withFacilityId(facilityId)
             .withFacilityUtilisation(currentUtilisation)
-            .withStatus('MATCH')
+            .withStatus(FEE_RECORD_STATUS.MATCH)
             .build(),
         ];
 
@@ -572,8 +577,8 @@ describe(`POST ${BASE_URL}`, () => {
 
       it('generates keying data for the last facility fee record which has been moved to READY_TO_KEY', async () => {
         // Arrange
-        const existingToDoFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: toDoFeeRecordId, status: 'TO_DO' });
-        existingToDoFeeRecord.status = 'MATCH';
+        const existingToDoFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: toDoFeeRecordId, status: FEE_RECORD_STATUS.TO_DO });
+        existingToDoFeeRecord.status = FEE_RECORD_STATUS.MATCH;
         await SqlDbHelper.saveNewEntry('FeeRecord', existingToDoFeeRecord);
         await insertMatchingPaymentsForFeeRecords([existingToDoFeeRecord]);
 
@@ -590,8 +595,8 @@ describe(`POST ${BASE_URL}`, () => {
 
       it('updates the facility utilisation data table once all fee records for the facility have been moved to READY_TO_KEY', async () => {
         // Arrange
-        const existingToDoFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: toDoFeeRecordId, status: 'TO_DO' });
-        existingToDoFeeRecord.status = 'MATCH';
+        const existingToDoFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: toDoFeeRecordId, status: FEE_RECORD_STATUS.TO_DO });
+        existingToDoFeeRecord.status = FEE_RECORD_STATUS.MATCH;
         await SqlDbHelper.saveNewEntry('FeeRecord', existingToDoFeeRecord);
         await insertMatchingPaymentsForFeeRecords([existingToDoFeeRecord]);
 

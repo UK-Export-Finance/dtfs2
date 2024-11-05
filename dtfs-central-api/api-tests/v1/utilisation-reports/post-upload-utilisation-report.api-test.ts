@@ -7,12 +7,14 @@ import {
   FeeRecordEntity,
   MOCK_AZURE_FILE_INFO,
   MONGO_DB_COLLECTIONS,
+  PENDING_RECONCILIATION,
+  REPORT_NOT_RECEIVED,
   ReportPeriod,
   TfmFacility,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
   UtilisationReportRawCsvData,
-  UtilisationReportReconciliationStatus,
+  UtilisationReportStatus,
 } from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
@@ -39,10 +41,11 @@ describe(`POST ${getUrl()}`, () => {
     user: { _id: portalUserId },
   });
 
-  const aNotReceivedReport = () => UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).build();
+  const aNotReceivedReport = () => UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED).withId(reportId).build();
 
   const insertTfmFacilitiesForFacilityIds = async (ukefFacilityIds: string[]): Promise<void> => {
     const tfmFacilities: WithoutId<TfmFacility>[] = ukefFacilityIds.map((ukefFacilityId) => ({
+      ...aTfmFacility(),
       facilitySnapshot: {
         ...aFacility(),
         ukefFacilityId,
@@ -77,7 +80,7 @@ describe(`POST ${getUrl()}`, () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', aNotReceivedReport());
 
     const tfmFacilitiesCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
-    await tfmFacilitiesCollection.insertOne({ facilitySnapshot: { ...aFacility(), ukefFacilityId: facilityId } });
+    await tfmFacilitiesCollection.insertOne({ ...aTfmFacility(), facilitySnapshot: { ...aFacility(), ukefFacilityId: facilityId } });
 
     const banksCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.BANKS);
     await banksCollection.insertOne(bankToInsert);
@@ -99,7 +102,7 @@ describe(`POST ${getUrl()}`, () => {
     expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
-  it("responds with a 201 (Created) with a valid payload and sets the report status to 'PENDING_RECONCILIATION'", async () => {
+  it(`responds with a 201 (Created) with a valid payload and sets the report status to ${PENDING_RECONCILIATION}`, async () => {
     // Act
     const response = await testApi.post(aValidPayload()).to(getUrl());
 
@@ -107,7 +110,7 @@ describe(`POST ${getUrl()}`, () => {
     expect(response.status).toEqual(HttpStatusCode.Created);
 
     const report = await SqlDbHelper.manager.findOneByOrFail(UtilisationReportEntity, { id: reportId });
-    expect(report.status).toBe<UtilisationReportReconciliationStatus>('PENDING_RECONCILIATION');
+    expect(report.status).toBe<UtilisationReportStatus>(PENDING_RECONCILIATION);
   });
 
   it('creates as many fee records as there are rows in the reportData field', async () => {
@@ -271,7 +274,7 @@ describe(`POST ${getUrl()}`, () => {
       start: { month: 4, year: 2023 },
       end: { month: 6, year: 2023 },
     };
-    const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).withReportPeriod(reportPeriod).build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED).withId(reportId).withReportPeriod(reportPeriod).build();
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     const ukefFacilityId = '12345678';
@@ -304,7 +307,7 @@ describe(`POST ${getUrl()}`, () => {
       start: { month: 4, year: 2023 },
       end: { month: 6, year: 2023 },
     };
-    const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).withReportPeriod(reportReportPeriod).build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED).withId(reportId).withReportPeriod(reportReportPeriod).build();
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     const ukefFacilityId = '12345678';

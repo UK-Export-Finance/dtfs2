@@ -1,9 +1,9 @@
-import { TFM_DEAL_CANCELLATION_STATUS } from '../../constants';
 import { TfmDealCancellation } from '../tfm-deal-cancellation';
-import { Prettify, ValuesOf } from '../types-helper';
+import { Prettify } from '../types-helper';
+import { TfmDealCancellationStatus } from '../tfm';
 
 export type TfmDealCancellationWithStatus = Prettify<
   TfmDealCancellation & {
-    status: ValuesOf<typeof TFM_DEAL_CANCELLATION_STATUS>;
+    status: TfmDealCancellationStatus;
   }
 >;

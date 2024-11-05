@@ -8,11 +8,13 @@ import {
   mapPaymentDetailsGroupsToPaymentDetailsViewModel,
   mapKeyingSheetToKeyingSheetViewModel,
   mapPaymentDetailsFiltersToViewModel,
+  premiumPaymentsHasSelectableItems,
 } from '../helpers';
 import { PaymentDetailsViewModel, UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 import { PremiumPaymentsGroup } from '../../../api-response-types';
 import { extractQueryAndSessionData } from './extract-query-and-session-data';
 import { mapToUtilisationDetailsViewModel } from '../helpers/utilisation-details-helper';
+import { mapToSelectedPaymentDetailsFiltersViewModel } from './map-to-selected-payment-details-filters-view-model';
 
 export type GetUtilisationReportReconciliationRequest = CustomExpressRequest<{
   query: {
@@ -91,7 +93,17 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
 
     const enablePaymentsReceivedSorting = premiumPaymentsGroupsHaveAtLeastOnePaymentReceived(premiumPayments);
 
-    const premiumPaymentsViewModel = mapPremiumPaymentsToViewModelItems(premiumPayments, isCheckboxChecked);
+    const premiumPaymentsItems = mapPremiumPaymentsToViewModelItems(premiumPayments, isCheckboxChecked);
+
+    const premiumPaymentsViewModel = {
+      payments: premiumPaymentsItems,
+      filters: premiumPaymentsFilters,
+      filterError: premiumPaymentsFilterError,
+      tableDataError: premiumPaymentsTableDataError,
+      enablePaymentsReceivedSorting,
+      showMatchSuccessNotification: matchSuccess === 'true',
+      hasSelectableRows: premiumPaymentsHasSelectableItems(premiumPaymentsItems),
+    };
 
     const keyingSheetViewModel = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
 
@@ -102,6 +114,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       filters: paymentDetailsFiltersViewModel,
       filterErrors: paymentDetailsFilterErrors,
       isFilterActive: isPaymentDetailsFilterActive,
+      selectedFilters: mapToSelectedPaymentDetailsFiltersViewModel(paymentDetailsFilters, reportId),
     };
 
     const utilisationDetailsViewModel = mapToUtilisationDetailsViewModel(utilisationDetails, reportId);
@@ -112,15 +125,10 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       bank,
       formattedReportPeriod,
       reportId,
-      premiumPaymentsFilters,
-      premiumPaymentsFilterError,
-      premiumPaymentsTableDataError,
-      enablePaymentsReceivedSorting,
       premiumPayments: premiumPaymentsViewModel,
       paymentDetails: paymentDetailsViewModel,
       utilisationDetails: utilisationDetailsViewModel,
       keyingSheet: keyingSheetViewModel,
-      displayMatchSuccessNotification: matchSuccess === 'true',
     });
   } catch (error) {
     console.error(`Failed to render utilisation report with id ${reportId}`, error);

@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb';
 import { UnixTimestamp, UnixTimestampString } from '../date';
 import { Currency } from '../currency';
 import { FacilityType } from '../facility-type';
+import { AuditDatabaseRecord } from '../audit-database-record';
 
 /**
  * These properties will not exist if on a BSS/EWCS deal or the deal version is less than 1
@@ -51,6 +52,7 @@ export type Facility = {
   paymentType: string;
   createdAt: UnixTimestamp;
   updatedAt: UnixTimestamp;
+  bondType?: string; // only featured in BOND facilities
   ukefExposure: number;
   guaranteeFee: number;
   submittedAsIssuedDate: UnixTimestampString | null;
@@ -66,4 +68,5 @@ export type Facility = {
   dataMigration?: {
     drupalFacilityId: string;
   };
+  auditRecord?: AuditDatabaseRecord;
 } & FacilityEndDateProperties;

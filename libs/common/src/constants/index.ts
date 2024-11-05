@@ -2,7 +2,7 @@ export * from './headers';
 export * from './currency';
 export * from './geospatial.constant';
 export * from './utilisation-report-headers';
-export * from './utilisation-report-reconciliation-status';
+export * from './utilisation-report-status';
 export * from './mongo-db-collections';
 export * from './tfm';
 export * from './portal';
@@ -24,6 +24,5 @@ export * from './url-character-allowances';
 export * from './max-character-count';
 export * from './deal-submission-type';
 export * from './floating-point-rounding-decimal-places';
-export * from './cancellation-status';
 
 export * as PAYLOAD_VERIFICATION from './payload-verification';

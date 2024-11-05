@@ -1,8 +1,8 @@
-import { Bank, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { Bank, FEE_RECORD_STATUS, FeeRecordEntity, RECONCILIATION_COMPLETED, REPORT_NOT_RECEIVED, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { UtilisationReportReconciliationSummaryItem } from '../../../../../types/utilisation-reports';
 
 const getCountOfReconciledFeeRecords = (feeRecords: FeeRecordEntity[]): number => {
-  return feeRecords.filter((feeRecord) => feeRecord.status === 'RECONCILED').length;
+  return feeRecords.filter((feeRecord) => feeRecord.status === FEE_RECORD_STATUS.RECONCILED).length;
 };
 
 const getCountOfDistinctFacilities = (feeRecords: FeeRecordEntity[]): number => {
@@ -11,13 +11,13 @@ const getCountOfDistinctFacilities = (feeRecords: FeeRecordEntity[]): number => 
 };
 
 export const mapReportToSummaryItem = (bank: Bank, report: UtilisationReportEntity): UtilisationReportReconciliationSummaryItem => {
-  const reportReceived = report.status !== 'REPORT_NOT_RECEIVED';
+  const reportReceived = report.status !== REPORT_NOT_RECEIVED;
   const totalFacilitiesReported = getCountOfDistinctFacilities(report.feeRecords);
   const totalFeesReported = report.feeRecords.length;
 
   // Reports which were marked as complete before the payment reconciliation journey was built will not have any fee records in the reconciled state,
   // but all fee records should still be considered reconciled.
-  const reportedFeesLeftToReconcile = report.status === 'RECONCILIATION_COMPLETED' ? 0 : totalFeesReported - getCountOfReconciledFeeRecords(report.feeRecords);
+  const reportedFeesLeftToReconcile = report.status === RECONCILIATION_COMPLETED ? 0 : totalFeesReported - getCountOfReconciledFeeRecords(report.feeRecords);
 
   return {
     reportId: report.id,

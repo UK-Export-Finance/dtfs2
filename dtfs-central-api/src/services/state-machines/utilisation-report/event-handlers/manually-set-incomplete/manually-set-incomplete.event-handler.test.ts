@@ -1,10 +1,17 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  DbRequestSource,
+  PENDING_RECONCILIATION,
+  RECONCILIATION_COMPLETED,
+  REQUEST_PLATFORM_TYPE,
+  UtilisationReportEntity,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { handleUtilisationReportManuallySetIncompleteEvent } from '.';
 
 describe('handleUtilisationReportManuallySetIncompleteEvent', () => {
   const requestSource: DbRequestSource = {
-    platform: 'TFM',
+    platform: REQUEST_PLATFORM_TYPE.TFM,
     userId: 'abc123',
   };
 
@@ -14,9 +21,9 @@ describe('handleUtilisationReportManuallySetIncompleteEvent', () => {
     save: mockSave,
   } as unknown as EntityManager;
 
-  it("sets the report status to 'PENDING_RECONCILIATION' and saves the report using the transaction entity manager", async () => {
+  it(`sets the report status to ${PENDING_RECONCILIATION} and saves the report using the transaction entity manager`, async () => {
     // Arrange
-    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_COMPLETED).build();
 
     // Act
     await handleUtilisationReportManuallySetIncompleteEvent(report, {
@@ -28,7 +35,7 @@ describe('handleUtilisationReportManuallySetIncompleteEvent', () => {
     expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
     expect(report).toEqual(
       expect.objectContaining<Partial<UtilisationReportEntity>>({
-        status: 'PENDING_RECONCILIATION',
+        status: PENDING_RECONCILIATION,
         lastUpdatedByTfmUserId: requestSource.userId,
         lastUpdatedByPortalUserId: null,
         lastUpdatedByIsSystemUser: false,

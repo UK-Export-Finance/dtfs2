@@ -1,8 +1,8 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, FeeRecordEntity, FeeRecordStatus, ReportPeriod } from '@ukef/dtfs2-common';
+import { DbRequestSource, FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordStatus, ReportPeriod } from '@ukef/dtfs2-common';
 import { BaseFeeRecordEvent } from '../../event/base-fee-record.event';
-import { calculatePrincipalBalanceAdjustment, calculateFixedFeeAdjustment, updateFacilityUtilisationData } from '../helpers';
-import { calculateUkefShareOfUtilisation, getLatestTfmFacilityValues } from '../../../../../helpers';
+import { calculatePrincipalBalanceAdjustment, calculateFixedFeeAdjustment, updateFacilityUtilisationData, calculateFixedFee } from '../helpers';
+import { calculateUkefShareOfUtilisation, getKeyingSheetCalculationFacilityValues } from '../../../../../helpers';
 
 type GenerateKeyingDataEventPayload = {
   transactionEntityManager: EntityManager;
@@ -33,11 +33,22 @@ export const handleFeeRecordGenerateKeyingDataEvent = async (
     return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
   }
 
-  const { coverPercentage } = await getLatestTfmFacilityValues(feeRecord.facilityId, reportPeriod);
-
-  const fixedFeeAdjustment = await calculateFixedFeeAdjustment(feeRecord, feeRecord.facilityUtilisationData, reportPeriod);
+  const { coverPercentage, coverEndDate, interestPercentage, dayCountBasis } = await getKeyingSheetCalculationFacilityValues(
+    feeRecord.facilityId,
+    reportPeriod,
+  );
 
   const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(feeRecord.facilityUtilisation, coverPercentage);
+
+  const fixedFee = calculateFixedFee({
+    ukefShareOfUtilisation,
+    reportPeriod,
+    coverEndDate,
+    interestPercentage,
+    dayCountBasis,
+  });
+
+  const fixedFeeAdjustment = calculateFixedFeeAdjustment(feeRecord, feeRecord.facilityUtilisationData, reportPeriod, fixedFee);
 
   const principalBalanceAdjustment = calculatePrincipalBalanceAdjustment(ukefShareOfUtilisation, feeRecord.facilityUtilisationData);
 
@@ -54,10 +65,10 @@ export const handleFeeRecordGenerateKeyingDataEvent = async (
 
   await updateFacilityUtilisationData(feeRecord.facilityUtilisationData, {
     reportPeriod,
-    utilisation: feeRecord.facilityUtilisation,
     requestSource,
     ukefShareOfUtilisation,
     entityManager: transactionEntityManager,
+    fixedFee,
   });
 
   return feeRecord;
@@ -68,7 +79,9 @@ function getStatusToUpdateTo(
   fixedFeeAdjustment: number = 0,
   principalBalanceAdjustment: number = 0,
 ): Extract<FeeRecordStatus, 'READY_TO_KEY' | 'RECONCILED'> {
-  return feeRecordCanBeAutoReconciled(feesPaidToUkefForThePeriod, fixedFeeAdjustment, principalBalanceAdjustment) ? 'RECONCILED' : 'READY_TO_KEY';
+  return feeRecordCanBeAutoReconciled(feesPaidToUkefForThePeriod, fixedFeeAdjustment, principalBalanceAdjustment)
+    ? FEE_RECORD_STATUS.RECONCILED
+    : FEE_RECORD_STATUS.READY_TO_KEY;
 }
 
 function feeRecordCanBeAutoReconciled(feesPaidToUkefForThePeriod: number, fixedFeeAdjustment: number, principalBalanceAdjustment: number): boolean {

@@ -3,12 +3,14 @@ import { ObjectId } from 'mongodb';
 import { In } from 'typeorm';
 import { difference } from 'lodash';
 import {
+  FEE_RECORD_STATUS,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   FeeRecordStatus,
   PaymentEntity,
   PaymentEntityMockBuilder,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  RECONCILIATION_IN_PROGRESS,
+  UTILISATION_REPORT_STATUS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -38,18 +40,18 @@ describe(`PATCH ${BASE_URL}`, () => {
 
   const payment = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).build();
 
-  const aReport = () => UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+  const aReport = () => UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
 
   const feeRecordsForReportWithPayments = (report: UtilisationReportEntity, payments: PaymentEntity[]) => [
     FeeRecordEntityMockBuilder.forReport(report)
       .withId(1)
-      .withStatus('DOES_NOT_MATCH')
+      .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
       .withFeesPaidToUkefForThePeriodCurrency('GBP')
       .withPayments(payments)
       .build(),
     FeeRecordEntityMockBuilder.forReport(report)
       .withId(2)
-      .withStatus('DOES_NOT_MATCH')
+      .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
       .withFeesPaidToUkefForThePeriodCurrency('GBP')
       .withPayments(payments)
       .build(),
@@ -93,7 +95,7 @@ describe(`PATCH ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
-  it.each(difference(Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS), [UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS]))(
+  it.each(difference(Object.values(UTILISATION_REPORT_STATUS), [UTILISATION_REPORT_STATUS.RECONCILIATION_IN_PROGRESS]))(
     "returns a 400 when the report the payment is attached has the status '%s'",
     async (status) => {
       // Arrange
@@ -177,7 +179,7 @@ describe(`PATCH ${BASE_URL}`, () => {
     const feeRecords = [
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(1)
-        .withStatus('DOES_NOT_MATCH')
+        .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
         .withFeesPaidToUkefForThePeriod(100)
         .withFeesPaidToUkefForThePeriodCurrency('GBP')
         .withPaymentCurrency('GBP')
@@ -185,7 +187,7 @@ describe(`PATCH ${BASE_URL}`, () => {
         .build(),
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(2)
-        .withStatus('DOES_NOT_MATCH')
+        .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
         .withFeesPaidToUkefForThePeriod(200)
         .withFeesPaidToUkefForThePeriodCurrency('GBP')
         .withPaymentCurrency('GBP')
@@ -211,12 +213,12 @@ describe(`PATCH ${BASE_URL}`, () => {
 
     expect(oldFeeRecords).toHaveLength(feeRecords.length);
     oldFeeRecords.forEach((feeRecord) => {
-      expect(feeRecord.status).toBe<FeeRecordStatus>('DOES_NOT_MATCH');
+      expect(feeRecord.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.DOES_NOT_MATCH);
     });
 
     expect(newFeeRecords).toHaveLength(feeRecords.length);
     newFeeRecords.forEach((feeRecord) => {
-      expect(feeRecord.status).toBe<FeeRecordStatus>('MATCH');
+      expect(feeRecord.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.MATCH);
     });
   });
 
@@ -228,7 +230,7 @@ describe(`PATCH ${BASE_URL}`, () => {
     const feeRecords = [
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(1)
-        .withStatus('MATCH')
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withFeesPaidToUkefForThePeriod(100)
         .withFeesPaidToUkefForThePeriodCurrency('GBP')
         .withPaymentCurrency('GBP')
@@ -236,7 +238,7 @@ describe(`PATCH ${BASE_URL}`, () => {
         .build(),
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(2)
-        .withStatus('MATCH')
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withFeesPaidToUkefForThePeriod(200)
         .withFeesPaidToUkefForThePeriodCurrency('GBP')
         .withPaymentCurrency('GBP')
@@ -262,12 +264,12 @@ describe(`PATCH ${BASE_URL}`, () => {
 
     expect(oldFeeRecords).toHaveLength(feeRecords.length);
     oldFeeRecords.forEach((feeRecord) => {
-      expect(feeRecord.status).toBe<FeeRecordStatus>('MATCH');
+      expect(feeRecord.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.MATCH);
     });
 
     expect(newFeeRecords).toHaveLength(feeRecords.length);
     newFeeRecords.forEach((feeRecord) => {
-      expect(feeRecord.status).toBe<FeeRecordStatus>('DOES_NOT_MATCH');
+      expect(feeRecord.status).toBe<FeeRecordStatus>(FEE_RECORD_STATUS.DOES_NOT_MATCH);
     });
   });
 });

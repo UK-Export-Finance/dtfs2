@@ -1,9 +1,13 @@
 import { Response } from 'supertest';
 import {
   Bank,
+  CURRENCY,
   Currency,
+  FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
+  PaymentMatchingToleranceEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
   SelectedFeeRecordDetails,
   SelectedFeeRecordsDetails,
   UtilisationReportEntity,
@@ -33,14 +37,21 @@ describe(`GET ${BASE_URL}`, () => {
   const reportId = 1;
   const reportPeriod = aReportPeriod();
 
+  const gbpTolerance = 1;
+
   beforeAll(async () => {
     await SqlDbHelper.initialize();
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
+    await SqlDbHelper.deleteAllEntries('PaymentMatchingTolerance');
 
     await wipe(['banks']);
 
     const banksCollection = await mongoDbClient.getCollection('banks');
     await banksCollection.insertOne(bank);
+
+    const gbpToleranceEntity = PaymentMatchingToleranceEntityMockBuilder.forCurrency(CURRENCY.GBP).withIsActive(true).withThreshold(gbpTolerance).build();
+
+    await SqlDbHelper.saveNewEntry('PaymentMatchingTolerance', gbpToleranceEntity);
   });
 
   afterEach(async () => {
@@ -72,7 +83,7 @@ describe(`GET ${BASE_URL}`, () => {
       .withFeesPaidToUkefForThePeriodCurrency('GBP')
       .withPaymentCurrency('GBP')
       .withPayments([aPaymentInGBP])
-      .withStatus('DOES_NOT_MATCH')
+      .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
       .build();
 
     report.feeRecords = [aFeeRecordInGBP, aFeeRecordInGBPWithAPaymentAttached];
@@ -101,10 +112,11 @@ describe(`GET ${BASE_URL}`, () => {
       ],
       payments: [],
       canAddToExistingPayment: true,
+      gbpTolerance,
     });
   });
 
-  it("gets selected fee record details with canAddToExistingPayment set to false when a payment exists in the same currency but has no fee records with the 'DOES_NOT_MATCH' status", async () => {
+  it(`gets selected fee record details with canAddToExistingPayment set to false when a payment exists in the same currency but has no fee records with the ${FEE_RECORD_STATUS.DOES_NOT_MATCH} status`, async () => {
     // Arrange
     const report = aReconciliationInProgressReport();
 
@@ -118,7 +130,7 @@ describe(`GET ${BASE_URL}`, () => {
       .withFeesPaidToUkefForThePeriodCurrency('GBP')
       .withPaymentCurrency('USD')
       .withPayments([aPaymentInUSD])
-      .withStatus('MATCH')
+      .withStatus(FEE_RECORD_STATUS.MATCH)
       .build();
 
     report.feeRecords = [aFeeRecordInUSD, aFeeRecordInUSDWithAPaymentAttached];
@@ -147,15 +159,12 @@ describe(`GET ${BASE_URL}`, () => {
       ],
       payments: [],
       canAddToExistingPayment: false,
+      gbpTolerance,
     });
   });
 
   function aReconciliationInProgressReport() {
-    return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
-      .withId(reportId)
-      .withReportPeriod(reportPeriod)
-      .withBankId(bankId)
-      .build();
+    return UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).withReportPeriod(reportPeriod).withBankId(bankId).build();
   }
 
   function aFeeRecordWithReportAndPaymentCurrencyAndStatusToDo(id: number, report: UtilisationReportEntity, paymentCurrency: Currency) {
@@ -166,7 +175,7 @@ describe(`GET ${BASE_URL}`, () => {
       .withFeesPaidToUkefForThePeriod(100)
       .withFeesPaidToUkefForThePeriodCurrency('GBP')
       .withPaymentCurrency(paymentCurrency)
-      .withStatus('TO_DO')
+      .withStatus(FEE_RECORD_STATUS.TO_DO)
       .build();
   }
 });

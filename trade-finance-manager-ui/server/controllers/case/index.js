@@ -1,8 +1,7 @@
 const { format, fromUnixTime } = require('date-fns');
-const { isEmpty } = require('lodash');
-const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled, TFM_DEAL_CANCELLATION_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../api');
-const { getTask, showAmendmentButton, ukefDecisionRejected, isDealCancellationEnabled } = require('../helpers');
+const { getTask, showAmendmentButton, ukefDecisionRejected, isDealCancellationEnabled, canDealBeCancelled, isDealCancellationInDraft } = require('../helpers');
 const { formattedNumber } = require('../../helpers/number');
 const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-options');
 const CONSTANTS = require('../../constants');
@@ -11,6 +10,7 @@ const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require(
 const validatePartyURN = require('./parties/partyUrnValidation.validate');
 const { bondType, partyType, userCanEdit } = require('./parties/helpers');
 const { asUserSession } = require('../../helpers/express-session');
+const { getFlashSuccessMessage } = require('../../helpers/getFlashSuccessMessage');
 
 const {
   DEAL,
@@ -46,16 +46,29 @@ const getCaseDeal = async (req, res) => {
   const { submissionType } = deal.dealSnapshot;
 
   const dealCancellationIsEnabled = isDealCancellationEnabled(submissionType, user);
+
+  let showDealCancelButton = false;
   let hasDraftCancellation = false;
+
+  let successMessage = getFlashSuccessMessage(req);
 
   if (dealCancellationIsEnabled) {
     const cancellation = await api.getDealCancellation(dealId, userToken);
-    hasDraftCancellation = !isEmpty(cancellation);
+    showDealCancelButton = canDealBeCancelled(cancellation.status);
+    hasDraftCancellation = isDealCancellationInDraft(cancellation.status);
+
+    if (cancellation.status === TFM_DEAL_CANCELLATION_STATUS.SCHEDULED) {
+      const { ukefDealId } = deal.dealSnapshot.details;
+      const formattedDate = format(new Date(cancellation.effectiveFrom), 'd MMMM yyyy');
+
+      successMessage = `Deal ${ukefDealId} scheduled for cancellation on ${formattedDate}`;
+    }
   }
 
   return res.render('case/deal/deal.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
+    successMessage,
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'deal',
     dealId,
@@ -63,7 +76,7 @@ const getCaseDeal = async (req, res) => {
     amendments,
     amendmentsInProgress,
     hasAmendmentInProgress,
-    showDealCancelButton: dealCancellationIsEnabled,
+    showDealCancelButton,
     hasDraftCancellation,
   });
 };
@@ -305,6 +318,14 @@ const getCaseFacility = async (req, res) => {
   const allAmendments = formatAmendmentDetails(allAmendmentsByFacilityId);
 
   const deal = await api.getDeal(dealId, userToken);
+
+  /**
+   * Ensure imperative deal properties exist before rendering
+   */
+  if (!deal?.dealSnapshot?._id || !deal?.tfm) {
+    console.error('An error occurred while rendering a TFM deal %s', dealId);
+    return res.render('_partials/problem-with-service.njk');
+  }
 
   const hasAmendmentInProgressButton = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
   const showContinueAmendmentButton = hasAmendmentInProgressButton && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);

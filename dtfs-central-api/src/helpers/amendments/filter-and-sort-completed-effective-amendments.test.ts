@@ -1,10 +1,24 @@
-import { AMENDMENT_STATUS, TfmFacilityAmendment } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, convertMillisecondsToSeconds, TfmFacilityAmendment } from '@ukef/dtfs2-common';
 import { addDays, subDays } from 'date-fns';
 import { aCompletedTfmFacilityAmendment, aTfmFacilityAmendment } from '../../../test-helpers';
 import { filterAndSortCompletedEffectiveAmendments } from './filter-and-sort-completed-effective-amendments';
 
 describe('filter-and-sort-completed-effective-amendments', () => {
   describe('filterAndSortCompletedEffectiveAmendments', () => {
+    const latestEffectiveDate = new Date('2024-02-28');
+
+    const oneDayBeforeLatestEffectiveDateInMilliseconds = subDays(latestEffectiveDate, 1).getTime();
+    const oneDayBeforeLatestEffectiveDateInSeconds = convertMillisecondsToSeconds(oneDayBeforeLatestEffectiveDateInMilliseconds);
+
+    const oneDayAfterLatestEffectiveDateInMilliseconds = addDays(latestEffectiveDate, 1).getTime();
+    const oneDayAfterLatestEffectiveDateInSeconds = convertMillisecondsToSeconds(oneDayAfterLatestEffectiveDateInMilliseconds);
+
+    const twoDaysBeforeLatestEffectiveDateInMilliseconds = subDays(latestEffectiveDate, 2).getTime();
+    const twoDaysBeforeLatestEffectiveDateInSeconds = convertMillisecondsToSeconds(twoDaysBeforeLatestEffectiveDateInMilliseconds);
+
+    const threeDaysBeforeLatestEffectiveDateInMilliseconds = subDays(latestEffectiveDate, 3).getTime();
+    const threeDaysBeforeLatestEffectiveDateInSeconds = convertMillisecondsToSeconds(threeDaysBeforeLatestEffectiveDateInMilliseconds);
+
     it('should filter out all amendments which are not completed', () => {
       // Arrange
       const now = new Date();
@@ -24,116 +38,133 @@ describe('filter-and-sort-completed-effective-amendments', () => {
       expect(result).toEqual([aCompletedAmendment]);
     });
 
-    it('should filter out all amendments with effective date after latestEffectiveDate', () => {
-      // Arrange
-      const latestEffectiveDate = new Date('2024-02-28');
-      const beforeLatestEffectiveDate = subDays(latestEffectiveDate, 1);
-      const afterLatestEffectiveDate = addDays(latestEffectiveDate, 1);
+    it.each`
+      effectiveDateType | beforeLatestEffectiveDate                        | afterLatestEffectiveDate
+      ${'milliseconds'} | ${oneDayBeforeLatestEffectiveDateInMilliseconds} | ${oneDayAfterLatestEffectiveDateInMilliseconds}
+      ${'seconds'}      | ${oneDayBeforeLatestEffectiveDateInSeconds}      | ${oneDayAfterLatestEffectiveDateInSeconds}
+    `(
+      'should filter out all amendments with effective date after latestEffectiveDate (effective date stored in $effectiveDateType)',
+      ({ beforeLatestEffectiveDate, afterLatestEffectiveDate }: { beforeLatestEffectiveDate: number; afterLatestEffectiveDate: number }) => {
+        // Arrange
+        const amendmentEffectiveBeforeLatestEffectiveDate = {
+          ...aCompletedTfmFacilityAmendment(),
+          effectiveDate: beforeLatestEffectiveDate,
+        };
 
-      const amendmentEffectiveBeforeLatestEffectiveDate = {
-        ...aCompletedTfmFacilityAmendment(),
-        effectiveDate: beforeLatestEffectiveDate.getTime(),
-      };
+        const amendmentEffectiveAfterLatestEffectiveDate = {
+          ...aCompletedTfmFacilityAmendment(),
+          effectiveDate: afterLatestEffectiveDate,
+        };
 
-      const amendmentEffectiveAfterLatestEffectiveDate = {
-        ...aCompletedTfmFacilityAmendment(),
-        effectiveDate: afterLatestEffectiveDate.getTime(),
-      };
+        const amendments: TfmFacilityAmendment[] = [amendmentEffectiveBeforeLatestEffectiveDate, amendmentEffectiveAfterLatestEffectiveDate];
 
-      const amendments: TfmFacilityAmendment[] = [amendmentEffectiveBeforeLatestEffectiveDate, amendmentEffectiveAfterLatestEffectiveDate];
+        // Act
+        const result = filterAndSortCompletedEffectiveAmendments(amendments, latestEffectiveDate);
 
-      // Act
-      const result = filterAndSortCompletedEffectiveAmendments(amendments, latestEffectiveDate);
+        // Assert
+        expect(result).toEqual([amendmentEffectiveBeforeLatestEffectiveDate]);
+      },
+    );
 
-      // Assert
-      expect(result).toEqual([amendmentEffectiveBeforeLatestEffectiveDate]);
-    });
+    it.each`
+      effectiveDateType | beforeLatestEffectiveDate                        | afterLatestEffectiveDate
+      ${'milliseconds'} | ${oneDayBeforeLatestEffectiveDateInMilliseconds} | ${oneDayAfterLatestEffectiveDateInMilliseconds}
+      ${'seconds'}      | ${oneDayBeforeLatestEffectiveDateInSeconds}      | ${oneDayAfterLatestEffectiveDateInSeconds}
+    `(
+      'should filter out amendments with no effective date whose updated at is after the latest effective date (updated at date stored in $effectiveDateType)',
+      ({ beforeLatestEffectiveDate, afterLatestEffectiveDate }: { beforeLatestEffectiveDate: number; afterLatestEffectiveDate: number }) => {
+        // Arrange
+        const amendmentUpdatedAtBeforeLatestEffectiveDate = {
+          ...aCompletedTfmFacilityAmendment(),
+          effectiveDate: undefined,
+          updatedAt: beforeLatestEffectiveDate,
+        };
 
-    it('should filter out amendments with no effective date whose updated at is after the latest effective date', () => {
-      // Arrange
-      const latestEffectiveDate = new Date('2024-02-28');
-      const beforeLatestEffectiveDate = subDays(latestEffectiveDate, 1);
-      const afterLatestEffectiveDate = addDays(latestEffectiveDate, 1);
+        const amendmentUpdatedAtAfterLatestEffectiveDate = {
+          ...aCompletedTfmFacilityAmendment(),
+          effectiveDate: undefined,
+          updatedAt: afterLatestEffectiveDate,
+        };
 
-      const amendmentUpdatedAtBeforeLatestEffectiveDate = {
-        ...aCompletedTfmFacilityAmendment(),
-        effectiveDate: undefined,
-        updatedAt: beforeLatestEffectiveDate.getTime(),
-      };
+        const amendments: TfmFacilityAmendment[] = [amendmentUpdatedAtBeforeLatestEffectiveDate, amendmentUpdatedAtAfterLatestEffectiveDate];
 
-      const amendmentUpdatedAtAfterLatestEffectiveDate = {
-        ...aCompletedTfmFacilityAmendment(),
-        effectiveDate: undefined,
-        updatedAt: afterLatestEffectiveDate.getTime(),
-      };
+        // Act
+        const result = filterAndSortCompletedEffectiveAmendments(amendments, latestEffectiveDate);
 
-      const amendments: TfmFacilityAmendment[] = [amendmentUpdatedAtBeforeLatestEffectiveDate, amendmentUpdatedAtAfterLatestEffectiveDate];
+        // Assert
+        expect(result).toEqual([amendmentUpdatedAtBeforeLatestEffectiveDate]);
+      },
+    );
 
-      // Act
-      const result = filterAndSortCompletedEffectiveAmendments(amendments, latestEffectiveDate);
+    it.each`
+      effectiveDateType                      | oneDayBeforeLatestEffectiveDate                  | twoDaysBeforeLatestEffectiveDate
+      ${'milliseconds'}                      | ${oneDayBeforeLatestEffectiveDateInMilliseconds} | ${twoDaysBeforeLatestEffectiveDateInMilliseconds}
+      ${'seconds'}                           | ${oneDayBeforeLatestEffectiveDateInSeconds}      | ${twoDaysBeforeLatestEffectiveDateInSeconds}
+      ${'a mix of milliseconds and seconds'} | ${oneDayBeforeLatestEffectiveDateInMilliseconds} | ${twoDaysBeforeLatestEffectiveDateInSeconds}
+    `(
+      'should return completed effective amendments in reverse effective date order (effective date stored in $effectiveDateType)',
+      ({
+        oneDayBeforeLatestEffectiveDate,
+        twoDaysBeforeLatestEffectiveDate,
+      }: {
+        oneDayBeforeLatestEffectiveDate: number;
+        twoDaysBeforeLatestEffectiveDate: number;
+      }) => {
+        // Arrange
+        const firstEffectiveAmendment = {
+          ...aTfmFacilityAmendment(),
+          status: AMENDMENT_STATUS.COMPLETED,
+          effectiveDate: twoDaysBeforeLatestEffectiveDate,
+        };
 
-      // Assert
-      expect(result).toEqual([amendmentUpdatedAtBeforeLatestEffectiveDate]);
-    });
+        const secondEffectiveAmendment = {
+          ...aTfmFacilityAmendment(),
+          status: AMENDMENT_STATUS.COMPLETED,
+          effectiveDate: oneDayBeforeLatestEffectiveDate,
+        };
 
-    it('should return completed effective amendments in reverse effective date order', () => {
-      // Arrange
-      const latestEffectiveDate = new Date('2024-05-10');
-      const twoDaysBeforeLatestEffectiveDate = subDays(latestEffectiveDate, 2);
-      const oneDayBeforeLatestEffectiveDate = subDays(latestEffectiveDate, 1);
+        const amendments: TfmFacilityAmendment[] = [firstEffectiveAmendment, secondEffectiveAmendment];
 
-      const firstEffectiveAmendment = {
-        ...aTfmFacilityAmendment(),
-        status: AMENDMENT_STATUS.COMPLETED,
-        effectiveDate: twoDaysBeforeLatestEffectiveDate.getTime(),
-      };
+        // Act
+        const result = filterAndSortCompletedEffectiveAmendments(amendments, latestEffectiveDate);
 
-      const secondEffectiveAmendment = {
-        ...aTfmFacilityAmendment(),
-        status: AMENDMENT_STATUS.COMPLETED,
-        effectiveDate: oneDayBeforeLatestEffectiveDate.getTime(),
-      };
+        // Assert
+        expect(result).toEqual([secondEffectiveAmendment, firstEffectiveAmendment]);
+      },
+    );
 
-      const amendments: TfmFacilityAmendment[] = [firstEffectiveAmendment, secondEffectiveAmendment];
+    it.each`
+      effectiveDateType | twoDaysBeforeLatestEffectiveDate
+      ${'milliseconds'} | ${twoDaysBeforeLatestEffectiveDateInMilliseconds}
+      ${'seconds'}      | ${twoDaysBeforeLatestEffectiveDateInSeconds}
+    `(
+      'should include amendments without effective dates in the ordering by using their updated at instead (updated at date stored in $effectiveDateType)',
+      ({ twoDaysBeforeLatestEffectiveDate }: { oneDayBeforeLatestEffectiveDate: number; twoDaysBeforeLatestEffectiveDate: number }) => {
+        // Arrange
+        const firstEffectiveAmendment = {
+          ...aCompletedTfmFacilityAmendment(),
+          effectiveDate: threeDaysBeforeLatestEffectiveDateInSeconds,
+        };
 
-      // Act
-      const result = filterAndSortCompletedEffectiveAmendments(amendments, latestEffectiveDate);
+        const secondEffectiveAmendment = {
+          ...aCompletedTfmFacilityAmendment(),
+          effectiveDate: oneDayBeforeLatestEffectiveDateInMilliseconds,
+        };
 
-      // Assert
-      expect(result).toEqual([secondEffectiveAmendment, firstEffectiveAmendment]);
-    });
+        const amendmentWithNoEffectiveDate = {
+          ...aCompletedTfmFacilityAmendment(),
+          effectiveDate: undefined,
+          updatedAt: twoDaysBeforeLatestEffectiveDate,
+        };
 
-    it('should include amendments without effective dates in the ordering by using their updated at instead', () => {
-      // Arrange
-      const latestEffectiveDate = new Date('2024-05-10');
-      const threeDaysBeforeLatestEffectiveDate = subDays(latestEffectiveDate, 3);
-      const twoDaysBeforeLatestEffectiveDate = subDays(latestEffectiveDate, 2);
-      const oneDayBeforeLatestEffectiveDate = subDays(latestEffectiveDate, 1);
+        const amendments: TfmFacilityAmendment[] = [firstEffectiveAmendment, secondEffectiveAmendment, amendmentWithNoEffectiveDate];
 
-      const firstEffectiveAmendment = {
-        ...aCompletedTfmFacilityAmendment(),
-        effectiveDate: threeDaysBeforeLatestEffectiveDate.getTime(),
-      };
+        // Act
+        const result = filterAndSortCompletedEffectiveAmendments(amendments, latestEffectiveDate);
 
-      const secondEffectiveAmendment = {
-        ...aCompletedTfmFacilityAmendment(),
-        effectiveDate: undefined,
-        updatedAt: oneDayBeforeLatestEffectiveDate.getTime(),
-      };
-
-      const amendmentWithNoEffectiveDate = {
-        ...aCompletedTfmFacilityAmendment(),
-        effectiveDate: undefined,
-        updatedAt: twoDaysBeforeLatestEffectiveDate.getTime(),
-      };
-
-      const amendments: TfmFacilityAmendment[] = [firstEffectiveAmendment, secondEffectiveAmendment, amendmentWithNoEffectiveDate];
-
-      // Act
-      const result = filterAndSortCompletedEffectiveAmendments(amendments, latestEffectiveDate);
-
-      // Assert
-      expect(result).toEqual([secondEffectiveAmendment, amendmentWithNoEffectiveDate, firstEffectiveAmendment]);
-    });
+        // Assert
+        expect(result).toEqual([secondEffectiveAmendment, amendmentWithNoEffectiveDate, firstEffectiveAmendment]);
+      },
+    );
   });
 });

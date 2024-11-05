@@ -254,7 +254,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
    */
   public removeAllPayments({ requestSource }: RemoveAllPaymentsParams): void {
     this.payments = [];
-    this.status = 'TO_DO';
+    this.status = FEE_RECORD_STATUS.TO_DO;
     this.updateLastUpdatedBy(requestSource);
   }
 

@@ -97,6 +97,31 @@ describe(page, () => {
     wrapper.expectText(tableSelector).toContain('JPY 1');
   });
 
+  it('should not display inset text explaining tolerances if gbpTolerance is 0', () => {
+    // Arrange
+    const addPaymentViewModel = anAddPaymentViewModel();
+    addPaymentViewModel.gbpTolerance = 0;
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    wrapper.expectElement('[data-cy="inset-tolerance-text"]').notToExist();
+  });
+
+  it('should display inset text explaining tolerances if gbpTolerance is greater than 0', () => {
+    // Arrange
+    const addPaymentViewModel = anAddPaymentViewModel();
+    addPaymentViewModel.gbpTolerance = 1.45;
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    wrapper.expectElement('[data-cy="inset-tolerance-text"]').toExist();
+    wrapper
+      .expectText('[data-cy="inset-tolerance-text"]')
+      .toRead(
+        `Tolerances of £${addPaymentViewModel.gbpTolerance} or equivalent are applied. You cannot add any additional payments to the record if it is taken to a match status as a result of tolerance.`,
+      );
+  });
+
   it('should display a currency option for each currency', () => {
     // Arrange
     const addPaymentViewModel = anAddPaymentViewModel();

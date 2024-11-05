@@ -1,9 +1,9 @@
-import { FEE_RECORD_STATUS, REQUEST_PLATFORM_TYPE, UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
+import { FEE_RECORD_STATUS, REQUEST_PLATFORM_TYPE } from '../../constants';
 import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '../../test-helpers';
 import { Currency } from '../../types';
 
 describe('FeeRecordEntity', () => {
-  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).build();
+  const utilisationReport = new UtilisationReportEntityMockBuilder().build();
 
   const mockDate = new Date();
 
@@ -105,14 +105,14 @@ describe('FeeRecordEntity', () => {
   });
 
   describe('removeAllPayments', () => {
-    it("removes all payments, sets the report status to 'TO_DO' and updates the 'lastUpdatedBy...' fields", () => {
+    it(`removes all payments, sets the record status to ${FEE_RECORD_STATUS.TO_DO} and updates the 'lastUpdatedBy...' fields`, () => {
       // Arrange
       const paymentCurrency: Currency = 'GBP';
       const paymentId = 123;
       const payment = PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(paymentId).build();
 
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
-        .withStatus('MATCH')
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withPaymentCurrency(paymentCurrency)
         .withPayments([payment])
         .withLastUpdatedByIsSystemUser(true)
@@ -129,7 +129,7 @@ describe('FeeRecordEntity', () => {
 
       // Assert
       expect(feeRecord.payments).toHaveLength(0);
-      expect(feeRecord.status).toEqual('TO_DO');
+      expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.TO_DO);
       expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
       expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
       expect(feeRecord.lastUpdatedByTfmUserId).toEqual(userId);

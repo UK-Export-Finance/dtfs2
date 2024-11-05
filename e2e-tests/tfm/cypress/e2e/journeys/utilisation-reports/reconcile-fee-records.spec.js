@@ -1,10 +1,12 @@
 import {
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  REPORT_NOT_RECEIVED,
+  RECONCILIATION_IN_PROGRESS,
   UtilisationReportEntityMockBuilder,
   toIsoMonthStamp,
   getPreviousReportPeriodForBankScheduleByMonth,
+  FEE_RECORD_STATUS,
 } from '@ukef/dtfs2-common';
 import pages from '../../pages';
 import USERS from '../../../fixtures/users';
@@ -57,7 +59,7 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
       const reportPeriod = getPreviousReportPeriodForBankScheduleByMonth(bank.utilisationReportPeriodSchedule, SUBMISSION_MONTH);
 
       if (bank.id === BANK_ID) {
-        const reportToReconcile = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+        const reportToReconcile = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS)
           .withId(REPORT_ID)
           .withBankId(BANK_ID)
           .withReportPeriod(reportPeriod)
@@ -77,7 +79,7 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
           .withFeesPaidToUkefForThePeriod(100)
           .withFeesPaidToUkefForThePeriodCurrency('JPY')
           .withPaymentExchangeRate(2)
-          .withStatus('MATCH')
+          .withStatus(FEE_RECORD_STATUS.MATCH)
           .withPayments([paymentMatchingFeeRecordOneAndTwo])
           .build();
 
@@ -89,12 +91,12 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
           .withFeesPaidToUkefForThePeriodCurrency('EUR')
           .withPaymentCurrency('GBP')
           .withPaymentExchangeRate(0.5)
-          .withStatus('MATCH')
+          .withStatus(FEE_RECORD_STATUS.MATCH)
           .withPayments([paymentMatchingFeeRecordOneAndTwo])
           .build();
         cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecordOne, feeRecordTwo]);
       } else {
-        const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+        const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED)
           .withId(bank.id)
           .withBankId(bank.id)
           .withReportPeriod(reportPeriod)
@@ -172,5 +174,14 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
 
     pages.utilisationReportPage.bankReportsNavLink().click();
     pages.utilisationReportsSummaryPage.tableRowSelector(BANK_ID, SUBMISSION_MONTH).should('contain', 'Reconciliation in progress');
+  });
+
+  it('should not display select all checkbox when there are no further actions to take', () => {
+    pages.utilisationReportPage.keyingSheetTab.selectAllCheckbox().click();
+    pages.utilisationReportPage.keyingSheetTab.markAsDoneButton().click();
+
+    pages.utilisationReportPage.premiumPaymentsTabLink().click();
+
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.selectAllCheckboxContainer().should('not.exist');
   });
 });

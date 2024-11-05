@@ -1,5 +1,5 @@
 import httpMocks from 'node-mocks-http';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
+import { PENDING_RECONCILIATION } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { getFindReportsByYear } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
@@ -8,6 +8,7 @@ import { aBank } from '../../../../test-helpers/test-data/bank';
 import { aMonthlyBankReportPeriodSchedule } from '../../../../test-helpers/test-data/bank-report-period-schedule';
 import { BankWithReportingYearsResponseBody } from '../../../api-response-types';
 import { FindUtilisationReportsByYearViewModel, UtilisationReportsByBankAndYearViewModel } from '../../../types/view-models';
+import { UtilisationReportReconciliationSummaryItem } from '../../../types/utilisation-reports';
 
 jest.mock('../../../api');
 
@@ -319,14 +320,14 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
           year: Number(yearQuery),
         },
       };
-      const mockReportSummaryItem = {
+      const mockReportSummaryItem: UtilisationReportReconciliationSummaryItem = {
         reportId: '1',
         reportPeriod,
         bank: {
           id: bankQuery,
           name: BANK_NAME_ONE,
         },
-        status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+        status: PENDING_RECONCILIATION,
         dateUploaded: '2024-02-15 10:38:01.4033333',
         totalFeesReported: 3,
         reportedFeesLeftToReconcile: 3,
@@ -336,7 +337,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         reportId: '1',
         reportPeriod,
         bank: { id: bankQuery, name: BANK_NAME_ONE },
-        status: 'PENDING_RECONCILIATION',
+        status: PENDING_RECONCILIATION,
         dateUploaded: '2024-02-15 10:38:01.4033333',
         totalFeesReported: 3,
         reportedFeesLeftToReconcile: 3,

@@ -1,10 +1,17 @@
 import { EntityManager } from 'typeorm';
-import { FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FEE_RECORD_STATUS,
+  FeeRecordEntity,
+  FeeRecordEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
+  REQUEST_PLATFORM_TYPE,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent } from './other-fee-added-to-payment-group.event-handler';
 import { aDbRequestSource } from '../../../../../../test-helpers/test-data/db-request-source';
 
 describe('handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent', () => {
-  const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+  const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
 
   const mockSave = jest.fn();
   const mockEntityManager = {
@@ -35,7 +42,7 @@ describe('handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent', () => {
   it('updates the last updated by fields to the request source', async () => {
     // Arrange
     const feeRecord = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT)
-      .withStatus('MATCH')
+      .withStatus(FEE_RECORD_STATUS.MATCH)
       .withLastUpdatedByIsSystemUser(true)
       .withLastUpdatedByPortalUserId(null)
       .withLastUpdatedByTfmUserId(null)
@@ -47,7 +54,7 @@ describe('handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent', () => {
       transactionEntityManager: mockEntityManager,
       feeRecordsAndPaymentsMatch: true,
       requestSource: {
-        platform: 'TFM',
+        platform: REQUEST_PLATFORM_TYPE.TFM,
         userId,
       },
     });

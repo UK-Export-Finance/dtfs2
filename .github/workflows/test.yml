@@ -56,7 +56,7 @@ on:
     paths:
       - 'package*.json'
       - 'docker*.yml'
-      - '.github/workflows/**'
+      - '.github/**'
       - 'gef-ui/**'
       - 'portal/**'
       - 'portal-api/**'
@@ -160,6 +160,7 @@ env:
   ENTRA_ID_TENANT_ID: ${{ vars.ENTRA_ID_TENANT_ID }}
   ENTRA_ID_CLIENT_SECRET: ${{ vars.ENTRA_ID_CLIENT_SECRET }}
   ENTRA_ID_REDIRECT_URL: ${{ vars.ENTRA_ID_REDIRECT_URL }}
+  DEAL_CANCELLATION_SCHEDULE: ${{ vars.DEAL_CANCELLATION_SCHEDULE }}
 
 jobs:
   # 1. Setup test infrastructure

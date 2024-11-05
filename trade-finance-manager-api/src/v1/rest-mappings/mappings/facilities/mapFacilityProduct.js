@@ -1,34 +1,37 @@
 const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../../../constants');
 
+const { BOND, LOAN, CASH, CONTINGENT } = FACILITY_TYPE;
+const { FACILITY_PRODUCT_CODE, FACILITY_PRODUCT_NAME } = CONSTANTS.FACILITIES;
+
 const mapFacilityProduct = (type) => {
   let mapped;
 
-  if (type === FACILITY_TYPE.BOND) {
+  if (type === BOND) {
     mapped = {
-      code: CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.BOND,
-      name: CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.BOND,
+      code: FACILITY_PRODUCT_CODE.BOND,
+      name: FACILITY_PRODUCT_NAME.BOND,
     };
   }
 
-  if (type === FACILITY_TYPE.LOAN) {
+  if (type === LOAN) {
     mapped = {
-      code: CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN,
-      name: CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.LOAN,
+      code: FACILITY_PRODUCT_CODE.LOAN,
+      name: FACILITY_PRODUCT_NAME.LOAN,
     };
   }
 
-  if (type === FACILITY_TYPE.CASH) {
+  if (type === CASH) {
     mapped = {
-      code: CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.GEF,
-      name: CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.GEF,
+      code: FACILITY_PRODUCT_CODE.GEF,
+      name: FACILITY_PRODUCT_NAME.GEF,
     };
   }
 
-  if (type === FACILITY_TYPE.CONTINGENT) {
+  if (type === CONTINGENT) {
     mapped = {
-      code: CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.GEF,
-      name: CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.GEF,
+      code: FACILITY_PRODUCT_CODE.GEF,
+      name: FACILITY_PRODUCT_NAME.GEF,
     };
   }
 

@@ -1,4 +1,4 @@
-import { TEAM_IDS, TeamId, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
+import { PENDING_RECONCILIATION, REPORT_NOT_RECEIVED, TEAM_IDS, TeamId } from '@ukef/dtfs2-common';
 import { componentRenderer } from '../../componentRenderer';
 import { MOCK_TFM_SESSION_USER } from '../../../server/test-mocks/mock-tfm-session-user';
 import { UtilisationReportSummaryViewModel } from '../../../server/types/view-models';
@@ -63,7 +63,7 @@ describe(component, () => {
         wrapper.expectLink(`${rowSelector} a:contains("Download")`).toLinkTo(summaryItem.downloadPath, 'Download');
       }
 
-      if (summaryItem.status !== UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED) {
+      if (summaryItem.status !== REPORT_NOT_RECEIVED) {
         const checkboxSelector = `${rowSelector} > td > div > div > input`;
         wrapper.expectElement(checkboxSelector).toExist();
       }
@@ -104,7 +104,7 @@ function aReportNotReceivedReportForBank(bank: { id: string; name: string }): Ut
     reportPeriod: { start: { month: 11, year: 2023 }, end: { month: 11, year: 2023 } },
     reportId: '65784d376fe2fe26168990e8',
     bank,
-    status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+    status: REPORT_NOT_RECEIVED,
   };
 }
 
@@ -121,7 +121,7 @@ function aPendingReconciliationReportForBank(bank: { id: string; name: string })
     reportPeriod: { start: { month: 11, year: 2023 }, end: { month: 11, year: 2023 } },
     reportId: '65784d376fe2fe26168990e8',
     bank,
-    status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+    status: PENDING_RECONCILIATION,
   };
 }
 
@@ -138,7 +138,7 @@ function aReconciliationInProgressReportForBank(bank: { id: string; name: string
     reportPeriod: { start: { month: 11, year: 2023 }, end: { month: 11, year: 2023 } },
     reportId: '65784d376fe2fe26168990e8',
     bank,
-    status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+    status: REPORT_NOT_RECEIVED,
   };
 }
 
@@ -155,6 +155,6 @@ function aReconciliationCompletedReportForBank(bank: { id: string; name: string 
     reportPeriod: { start: { month: 11, year: 2023 }, end: { month: 11, year: 2023 } },
     reportId: '65784d376fe2fe26168990e8',
     bank,
-    status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+    status: REPORT_NOT_RECEIVED,
   };
 }
