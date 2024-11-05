@@ -42,7 +42,7 @@ on:
     paths:
       - 'package*.json'
       - 'docker*.yml'
-      - '.github/workflows/**'
+      - '.github/**'
       - 'gef-ui/**'
       - 'portal/**'
       - 'portal-api/**'
