@@ -36,7 +36,7 @@
     "@ministryofjustice/frontend": "1.8.0",
     "@ukef/dtfs2-common": "1.0.0",
     "axios": "^1.7.7",
-    "cheerio": "1.0.0-rc.12",
+    "cheerio": "1.0.0",
     "clamscan": "^2.4.0",
     "connect-flash": "0.1.1",
     "connect-redis": "5.2.0",
