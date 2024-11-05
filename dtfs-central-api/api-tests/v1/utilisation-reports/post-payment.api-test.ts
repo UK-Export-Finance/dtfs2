@@ -6,6 +6,7 @@ import {
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   FeeRecordStatus,
+  PENDING_RECONCILIATION,
   PaymentEntity,
   PaymentEntityMockBuilder,
   PaymentMatchingToleranceEntityMockBuilder,
@@ -33,7 +34,7 @@ describe(`POST ${BASE_URL}`, () => {
   const tfmUser = aTfmUser();
   const tfmUserId = tfmUser._id.toString();
 
-  const uploadedUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+  const uploadedUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
     .withId(reportId)
     .withUploadedByUserId(portalUserId)
     .build();

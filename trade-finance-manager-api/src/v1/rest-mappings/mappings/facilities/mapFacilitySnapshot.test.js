@@ -1,7 +1,6 @@
 const mapFacilitySnapshot = require('./mapFacilitySnapshot');
 const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityProduct = require('./mapFacilityProduct');
-const mapFacilityType = require('./mapFacilityType');
 const mapFacilityValue = require('./mapFacilityValue');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
@@ -13,6 +12,7 @@ const mapDates = require('./mapDates');
 
 const MOCK_DEAL = require('../../../__mocks__/mock-deal');
 const { mapBssEwcsFacilityStage } = require('./mapFacilityStage');
+const { mapBssEwcsFacilityType } = require('./mapFacilityType');
 
 describe('mapFacility', () => {
   const mockFacilityTfm = {
@@ -88,10 +88,7 @@ describe('mapFacility', () => {
 
     const expectedFacilityProduct = mapFacilityProduct(mockFacilitySnapshot.type);
 
-    const expectedType = mapFacilityType({
-      ...mockFacilitySnapshot,
-      facilityProduct: expectedFacilityProduct,
-    });
+    const expectedType = mapBssEwcsFacilityType(mockType, mockFacilitySnapshot);
 
     const expectedBanksInterestMargin = mapBanksInterestMargin({
       ...mockFacilitySnapshot,

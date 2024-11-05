@@ -1,7 +1,7 @@
 import {
   IsoDateTimeStamp,
   ReportPeriod,
-  UtilisationReportReconciliationStatus,
+  UtilisationReportStatus,
   FeeRecordStatus,
   CurrencyAndAmount,
   KeyingSheetRowStatus,
@@ -54,7 +54,7 @@ export type UtilisationReportReconciliationDetailsResponseBody = {
     id: string;
     name: string;
   };
-  status: UtilisationReportReconciliationStatus;
+  status: UtilisationReportStatus;
   reportPeriod: ReportPeriod;
   dateUploaded: IsoDateTimeStamp;
   premiumPayments: PremiumPaymentsGroup[];
