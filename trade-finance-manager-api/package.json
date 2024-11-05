@@ -73,7 +73,7 @@
     "@types/supertest": "^2.0.16",
     "@types/swagger-ui-express": "^4.1.7",
     "axios-mock-adapter": "^2.1.0",
-    "eslint": "^8.57.1",
+    "eslint": "^9.14.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-import-resolver-typescript": "^3.6.3",
     "eslint-plugin-import": "^2.31.0",
