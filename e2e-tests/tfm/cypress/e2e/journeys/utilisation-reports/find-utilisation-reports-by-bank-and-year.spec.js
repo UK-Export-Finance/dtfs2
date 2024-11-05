@@ -1,4 +1,4 @@
-import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { PENDING_RECONCILIATION, REPORT_NOT_RECEIVED, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import pages from '../../pages';
 import USERS from '../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
@@ -41,14 +41,12 @@ context('PDC_RECONCILE users can search for reports by bank and year', () => {
           };
         };
 
-        const mockPendingReconciliationUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(
-          UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
-        )
+        const mockPendingReconciliationUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
           .withId('1')
           .withBankId(bank.id)
           .withReportPeriod(getReportPeriod(10))
           .build();
-        const mockNotReceivedUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+        const mockNotReceivedUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED)
           .withId('2')
           .withBankId(bank.id)
           .withReportPeriod(getReportPeriod(11))

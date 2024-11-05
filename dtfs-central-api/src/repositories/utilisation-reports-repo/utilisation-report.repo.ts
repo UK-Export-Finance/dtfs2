@@ -1,5 +1,5 @@
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { UtilisationReportEntity, ReportPeriod, FeeRecordStatus, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
+import { UtilisationReportEntity, ReportPeriod, FeeRecordStatus, REPORT_NOT_RECEIVED, RECONCILIATION_COMPLETED } from '@ukef/dtfs2-common';
 import { Not, Equal, FindOptionsWhere, LessThan, In } from 'typeorm';
 import { FeeRecordRepo } from '../fee-record-repo';
 
@@ -38,7 +38,7 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
     }
 
     if (options?.excludeNotReceived) {
-      findByOptionsWhere.status = Not('REPORT_NOT_RECEIVED');
+      findByOptionsWhere.status = Not(REPORT_NOT_RECEIVED);
     }
 
     return await this.find({
@@ -72,7 +72,7 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
   ): Promise<UtilisationReportEntity[]> {
     const bankIdAndStatusFindOptions: FindOptionsWhere<UtilisationReportEntity> = {
       bankId,
-      status: Not('RECONCILIATION_COMPLETED'),
+      status: Not(RECONCILIATION_COMPLETED),
     };
 
     const previousYearFindOptions: FindOptionsWhere<UtilisationReportEntity> = {
@@ -121,7 +121,7 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
   async findSubmittedReportsForBankIdWithReportPeriodEndInYear(bankId: string, year: number): Promise<UtilisationReportEntity[]> {
     const bankIdAndStatusFindOptions: FindOptionsWhere<UtilisationReportEntity> = {
       bankId,
-      status: Not('REPORT_NOT_RECEIVED'),
+      status: Not(REPORT_NOT_RECEIVED),
     };
 
     const sameYearFindOptions: FindOptionsWhere<UtilisationReportEntity> = {
@@ -247,7 +247,7 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
     const utilisationReports = await this.find({
       where: {
         bankId,
-        status: Not(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED),
+        status: Not(REPORT_NOT_RECEIVED),
       },
       select: ['reportPeriod'],
     });

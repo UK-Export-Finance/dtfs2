@@ -1,4 +1,11 @@
-import { UtilisationReportReconciliationStatus, aPortalSessionUser } from '@ukef/dtfs2-common';
+import {
+  PENDING_RECONCILIATION,
+  RECONCILIATION_COMPLETED,
+  RECONCILIATION_IN_PROGRESS,
+  REPORT_NOT_RECEIVED,
+  UtilisationReportStatus,
+  aPortalSessionUser,
+} from '@ukef/dtfs2-common';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import { PreviousUtilisationReportsResponseBody, UtilisationReportResponseBody } from '../../../../api-response-types';
 import { mapToPreviousReportsViewModel } from './previous-reports-view-model-mapper';
@@ -134,14 +141,14 @@ describe('previous-reports-view-model-mapper', () => {
     });
 
     it.each`
-      status                          | displayStatus
-      ${'REPORT_NOT_RECEIVED'}        | ${'Not submitted'}
-      ${'PENDING_RECONCILIATION'}     | ${'Pending reconciliation'}
-      ${'RECONCILIATION_IN_PROGRESS'} | ${'Reconciliation in progress'}
-      ${'RECONCILIATION_COMPLETED'}   | ${'Report completed'}
+      status                        | displayStatus
+      ${REPORT_NOT_RECEIVED}        | ${'Not submitted'}
+      ${PENDING_RECONCILIATION}     | ${'Pending reconciliation'}
+      ${RECONCILIATION_IN_PROGRESS} | ${'Reconciliation in progress'}
+      ${RECONCILIATION_COMPLETED}   | ${'Report completed'}
     `(
       'maps status and sets display status to $displayStatus when report status is $status',
-      ({ status, displayStatus }: { status: UtilisationReportReconciliationStatus; displayStatus: string }) => {
+      ({ status, displayStatus }: { status: UtilisationReportStatus; displayStatus: string }) => {
         // Arrange
         const user = aPortalSessionUser();
         const report: UtilisationReportResponseBody = {

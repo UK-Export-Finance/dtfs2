@@ -2,9 +2,12 @@ import {
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
   FeeRecordStatus,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  PENDING_RECONCILIATION,
+  RECONCILIATION_COMPLETED,
+  REPORT_NOT_RECEIVED,
+  UTILISATION_REPORT_STATUS,
   UtilisationReportEntityMockBuilder,
-  UtilisationReportReconciliationStatus,
+  UtilisationReportStatus,
 } from '@ukef/dtfs2-common';
 import { difference } from 'lodash';
 import { mapReportToSummaryItem } from './reconciliation-summary-item-mapper';
@@ -14,7 +17,7 @@ describe('reconciliation-summary-item-mapper', () => {
   describe('mapReportToSummaryItem', () => {
     it('sets the total facilities reported to the count of distinct facility ids in the reports fee records', () => {
       // Arrange
-      const report = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+      const report = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
       const aFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('1111').build();
       const aFeeRecordWithTheSameFacilityId = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('1111').build();
       const aFeeRecordWithADifferentFacilityId = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('2222').build();
@@ -29,7 +32,7 @@ describe('reconciliation-summary-item-mapper', () => {
 
     it('sets the total fees reported to the count of fee records attached to the report', () => {
       // Arrange
-      const report = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+      const report = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
       const aFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('1111').build();
       const anotherFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('1111').build();
       const oneMoreFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('2222').build();
@@ -44,7 +47,7 @@ describe('reconciliation-summary-item-mapper', () => {
 
     it('does not count reconciled fee records in the reported fees left to reconcile', () => {
       // Arrange
-      const report = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+      const report = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
       const aNotYetReconciledFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('1111').withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
       const anotherNotYetReconciledFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
         .withFacilityId('5555')
@@ -65,7 +68,7 @@ describe('reconciliation-summary-item-mapper', () => {
       'counts fee records with status %s in the reported fees left to reconcile',
       (status: FeeRecordStatus) => {
         // Arrange
-        const report = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+        const report = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
         const aNotYetReconciledFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('1111').withStatus(status).build();
         report.feeRecords = [aNotYetReconciledFeeRecord];
 
@@ -79,7 +82,7 @@ describe('reconciliation-summary-item-mapper', () => {
 
     it('sets the reported fees left to reconcile to zero if the report is reconciled but not all fee records are', () => {
       // Arrange
-      const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withFeeRecords([]).build();
+      const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_COMPLETED).withFeeRecords([]).build();
       const aNotReconciledFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('1111').withStatus(FEE_RECORD_STATUS.TO_DO).build();
       report.feeRecords = [aNotReconciledFeeRecord];
 
@@ -92,7 +95,7 @@ describe('reconciliation-summary-item-mapper', () => {
 
     it('does not set the reconciliation summary count fields if the report has not yet been received', () => {
       // Arrange
-      const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withFeeRecords([]).build();
+      const report = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED).withFeeRecords([]).build();
 
       // Act
       const summaryItem = mapReportToSummaryItem(aBank(), report);
@@ -103,9 +106,9 @@ describe('reconciliation-summary-item-mapper', () => {
       expect(summaryItem.reportedFeesLeftToReconcile).toBeUndefined();
     });
 
-    it.each(difference(Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS), [UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED]))(
+    it.each(difference(Object.values(UTILISATION_REPORT_STATUS), [UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED]))(
       'sets the reconciliation summary count fields if the report has has status %s',
-      (status: UtilisationReportReconciliationStatus) => {
+      (status: UtilisationReportStatus) => {
         // Arrange
         const report = UtilisationReportEntityMockBuilder.forStatus(status).withFeeRecords([]).build();
 

@@ -1,4 +1,4 @@
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
+import { RECONCILIATION_COMPLETED } from '@ukef/dtfs2-common';
 import { UtilisationReportResponseBody } from '../../server/api-response-types';
 
 export const aUtilisationReportResponse = (): UtilisationReportResponseBody => ({
@@ -27,5 +27,5 @@ export const aUtilisationReportResponse = (): UtilisationReportResponseBody => (
     firstname: 'first',
     surname: 'last',
   },
-  status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+  status: RECONCILIATION_COMPLETED,
 });
