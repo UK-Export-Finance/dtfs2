@@ -11,7 +11,7 @@ describe(page, () => {
     addToAnExistingPaymentViewModel.errors.errorSummary = [{ text: 'an error', href: 'error-href' }];
     const wrapper = render(addToAnExistingPaymentViewModel);
 
-    wrapper.expectDocumentTitle().toRead('Error - Add reported fee to an existing payment');
+    wrapper.expectPageTitle().toRead('Error - Add reported fee to an existing payment');
   });
 
   it('should not add error prefix to page title when there are no errors', () => {
@@ -19,7 +19,7 @@ describe(page, () => {
     addToAnExistingPaymentViewModel.errors.errorSummary = [];
     const wrapper = render(addToAnExistingPaymentViewModel);
 
-    wrapper.expectDocumentTitle().toRead('Add reported fee to an existing payment');
+    wrapper.expectPageTitle().toRead('Add reported fee to an existing payment');
   });
 
   it('should display the singular "Add reported fee to an existing payment" heading when only one fee record is selected', () => {

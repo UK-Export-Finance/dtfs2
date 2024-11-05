@@ -52,7 +52,7 @@ describe(page, () => {
   it('should not add error prefix to page title when there are no errors', () => {
     const wrapper = getWrapper();
 
-    wrapper.expectDocumentTitle().toRead('Test Bank, Nov 2023');
+    wrapper.expectPageTitle().toRead('Test Bank, Nov 2023');
   });
 
   it('should render the main heading', () => {
@@ -240,7 +240,7 @@ describe(page, () => {
         },
       });
 
-      wrapper.expectDocumentTitle().toRead('Error - Test Bank, Nov 2023');
+      wrapper.expectPageTitle().toRead('Error - Test Bank, Nov 2023');
     });
 
     it('should add error prefix to page title when there is a filterError', () => {
@@ -252,7 +252,7 @@ describe(page, () => {
         },
       });
 
-      wrapper.expectDocumentTitle().toRead('Error - Test Bank, Nov 2023');
+      wrapper.expectPageTitle().toRead('Error - Test Bank, Nov 2023');
     });
   });
 
@@ -394,7 +394,7 @@ describe(page, () => {
         },
       });
 
-      wrapper.expectDocumentTitle().toRead('Error - Test Bank, Nov 2023');
+      wrapper.expectPageTitle().toRead('Error - Test Bank, Nov 2023');
     });
   });
 

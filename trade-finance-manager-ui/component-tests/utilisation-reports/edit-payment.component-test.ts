@@ -14,7 +14,7 @@ describe(page, () => {
     };
     const wrapper = render(viewModel);
 
-    wrapper.expectDocumentTitle().toRead('Error - Edit payment');
+    wrapper.expectPageTitle().toRead('Error - Edit payment');
   });
 
   it('should not add error prefix to page title when there are no errors', () => {
@@ -24,7 +24,7 @@ describe(page, () => {
     };
     const wrapper = render(viewModel);
 
-    wrapper.expectDocumentTitle().toRead('Edit payment');
+    wrapper.expectPageTitle().toRead('Edit payment');
   });
 
   it('should render the page heading with the caption', () => {

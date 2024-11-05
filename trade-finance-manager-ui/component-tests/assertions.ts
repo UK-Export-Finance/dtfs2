@@ -132,7 +132,7 @@ export const assertions = <TParams extends object>(wrapper: CheerioAPI, html: st
       expect(wrapper(selector).attr('aria-sort')).toEqual(text);
     },
   }),
-  expectDocumentTitle: () => ({
+  expectPageTitle: () => ({
     toRead: (text: string) => {
       expect(wrapper('title').text().replace(', Trade Finance Manager, gov.uk', '').trim()).toEqual(text);
     },
