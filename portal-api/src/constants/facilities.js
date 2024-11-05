@@ -36,7 +36,7 @@ const DEAL_STATUS = {
   SUBMITTED_TO_UKEF: 'Submitted',
 };
 
-export default {
+module.exports = {
   FEE_TYPE,
   FEE_FREQUENCY,
   DAY_COUNT_BASIS,

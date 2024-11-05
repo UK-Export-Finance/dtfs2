@@ -1,6 +1,6 @@
-import { BOND_FACILITY_TYPE, FACILITY_TYPE } from '@ukef/dtfs2-common';
-import { add, format, sub } from 'date-fns';
-import dealFullyCompleted from './deal-fully-completed';
+const { BOND_FACILITY_TYPE, FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { add, format, sub } = require('date-fns');
+const dealFullyCompleted = require('./deal-fully-completed');
 
 const nowDate = new Date();
 const nowPlusOneMonth = add(nowDate, { months: 1 });
@@ -181,4 +181,4 @@ const deal = {
   ],
 };
 
-export default deal;
+module.exports = deal;
