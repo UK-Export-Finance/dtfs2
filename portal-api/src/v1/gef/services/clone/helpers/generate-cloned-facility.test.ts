@@ -77,7 +77,7 @@ describe('generateClonedFacility', () => {
     const result = generateClonedFacility({ facility: issuedFacility, newDealId, auditDetails: mockAuditDetails });
 
     // Assert
-    expect(result).toEqual({
+    const expected = {
       ...issuedFacility,
       _id: expect.any(ObjectId) as ObjectId,
       dealId: new ObjectId(newDealId),
@@ -98,7 +98,9 @@ describe('generateClonedFacility', () => {
       isUsingFacilityEndDate: null,
       facilityEndDate: null,
       bankReviewDate: null,
-    });
+    };
+
+    expect(result).toEqual(expected);
   });
 
   it('clones an unissued facility correctly', () => {
@@ -106,7 +108,7 @@ describe('generateClonedFacility', () => {
     const result = generateClonedFacility({ facility: unissuedFacility, newDealId, auditDetails: mockAuditDetails });
 
     // Assert
-    expect(result).toEqual({
+    const expected = {
       ...unissuedFacility,
       _id: expect.any(ObjectId) as ObjectId,
       dealId: new ObjectId(newDealId),
@@ -126,6 +128,8 @@ describe('generateClonedFacility', () => {
       isUsingFacilityEndDate: null,
       facilityEndDate: null,
       bankReviewDate: null,
-    });
+    };
+
+    expect(result).toEqual(expected);
   });
 });

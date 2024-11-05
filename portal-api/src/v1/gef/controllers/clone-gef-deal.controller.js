@@ -1,5 +1,5 @@
+const { HttpStatusCode } = require('axios');
 const { ApiError } = require('@ukef/dtfs2-common');
-
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { cloneDealToLatestVersion } = require('../services/clone/clone-deal.service');
 const { cloneFacilities } = require('../services/clone/clone-facilities.service');
@@ -14,7 +14,7 @@ exports.clone = async (req, res) => {
     const validationErrors = validateApplicationReferences(req.body);
 
     if (validationErrors) {
-      return res.status(422).send(validationErrors);
+      return res.status(HttpStatusCode.UnprocessableEntity).send(validationErrors);
     }
 
     const auditDetails = generatePortalAuditDetails(req.user._id);
@@ -33,7 +33,7 @@ exports.clone = async (req, res) => {
     // clone the corresponding facilities
     await cloneFacilities(existingDealId, insertedId, auditDetails);
 
-    return res.status(200).send({ dealId: insertedId });
+    return res.status(HttpStatusCode.Ok).send({ dealId: insertedId });
   } catch (error) {
     console.error('Failed to clone deal id %s, %o', existingDealId, error);
 
@@ -41,6 +41,6 @@ exports.clone = async (req, res) => {
       return res.status(error.status).send(error.message);
     }
 
-    return res.status(500).send('Failed to clone deal');
+    return res.status(HttpStatusCode.InternalServerError).send('Failed to clone deal');
   }
 };

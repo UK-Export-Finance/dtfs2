@@ -75,7 +75,7 @@ describe('generateClonedDeal', () => {
     });
 
     // Assert
-    expect(result).toEqual({
+    const expected = {
       _id: expect.any(ObjectId) as ObjectId,
       dealType: existingDeal.dealType,
       version: getCurrentGefDealVersion(),
@@ -102,7 +102,9 @@ describe('generateClonedDeal', () => {
       supportingInformation: {},
       clonedDealId: existingDealId,
       auditRecord: generateAuditDatabaseRecordFromAuditDetails(mockAuditDetails),
-    });
+    };
+
+    expect(result).toEqual(expected);
   });
 
   it('removes the expected properties', () => {
