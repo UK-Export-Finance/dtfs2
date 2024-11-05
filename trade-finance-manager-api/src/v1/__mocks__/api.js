@@ -192,17 +192,16 @@ module.exports = {
               },
             ],
           };
-    } else {
-      return companyRegNo === 'NO_MATCH'
-        ? false
-        : [
-            {
-              partyUrn: 'testPartyUrn',
-            },
-          ];
-    }
+    }  
+    return companyRegNo === 'NO_MATCH'
+      ? false
+      : [
+          {
+            partyUrn: 'testPartyUrn',
+          },
+        ];
   },
-    findUser: (username) => {
+  findUser: (username) => {
     if (username === 'invalidUser') {
       return false;
     }

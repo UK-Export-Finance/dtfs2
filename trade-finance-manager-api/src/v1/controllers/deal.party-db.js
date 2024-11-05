@@ -49,14 +49,13 @@ const getPartyUrn = async ({ companyRegNo, companyName }) => {
     }
 
     return partyDbInfo.data[0].partyUrn || '';
-  } else {
-    const partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
-    if (!partyDbInfo) {
-      return '';
-    }
-
-    return partyDbInfo[0].partyUrn;
   }
+  const partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
+  if (!partyDbInfo) {
+    return '';
+  }
+
+  return partyDbInfo[0].partyUrn;
 };
 
 const identifyDealParties = (deal) => ({
