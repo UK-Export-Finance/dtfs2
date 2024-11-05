@@ -32,7 +32,7 @@ describe('fee record validator', () => {
       expect(() => validateFeeRecordsAllHaveSamePaymentCurrency(feeRecords)).not.toThrow();
     });
 
-    it('does not throw if no all fee records have the same payment currency', () => {
+    it('does not throw if not all of the fee records have the same payment currency', () => {
       // Arrange
       const feeRecords = [aFeeRecordWithPaymentCurrency('GBP'), aFeeRecordWithPaymentCurrency('GBP')];
 

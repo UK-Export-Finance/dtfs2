@@ -12,7 +12,9 @@ export const validateFeeRecordsAllHaveSamePaymentCurrency = (feeRecords: FeeReco
   if (feeRecords.length <= 1) {
     return;
   }
+
   const { paymentCurrency } = feeRecords[0];
+
   if (feeRecords.some((feeRecord) => feeRecord.paymentCurrency !== paymentCurrency)) {
     throw new InvalidPayloadError('Fee records must all have the same payment currency');
   }
@@ -36,6 +38,7 @@ export const validateFeeRecordsFormCompleteGroup = async (ids: number[]) => {
 
   const firstFeeRecord = feeRecords[0];
 
+  // Fee records with TO_DO status do not have any payments attached, so do not have an existing payment group
   if (firstFeeRecord.status === FEE_RECORD_STATUS.TO_DO) {
     return;
   }
