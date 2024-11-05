@@ -1,6 +1,7 @@
 import { ApiError, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
@@ -45,7 +46,7 @@ export const deletePayment = async (req: DeletePaymentRequest, res: Response) =>
 
     await executeWithSqlTransaction(async (transactionEntityManager) => {
       await utilisationReportStateMachine.handleEvent({
-        type: 'DELETE_PAYMENT',
+        type: UTILISATION_REPORT_EVENT_TYPE.DELETE_PAYMENT,
         payload: {
           transactionEntityManager,
           paymentId: Number(paymentId),

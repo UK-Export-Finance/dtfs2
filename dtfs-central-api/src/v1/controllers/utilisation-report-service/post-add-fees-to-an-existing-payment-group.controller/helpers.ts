@@ -2,6 +2,7 @@ import { FeeRecordEntity, PaymentEntity, REQUEST_PLATFORM_TYPE, UtilisationRepor
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 
 export const addFeesToAnExistingPaymentGroup = async (
   utilisationReport: UtilisationReportEntity,
@@ -14,7 +15,7 @@ export const addFeesToAnExistingPaymentGroup = async (
 
   await executeWithSqlTransaction(async (transactionEntityManager) => {
     await utilisationReportStateMachine.handleEvent({
-      type: 'ADD_FEES_TO_AN_EXISTING_PAYMENT_GROUP',
+      type: UTILISATION_REPORT_EVENT_TYPE.ADD_FEES_TO_AN_EXISTING_PAYMENT_GROUP,
       payload: {
         transactionEntityManager,
         feeRecordsToAdd,

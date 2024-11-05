@@ -16,6 +16,7 @@ import { aTfmSessionUser } from '../../../../../test-helpers';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { NewPaymentDetails } from '../../../../types/utilisation-reports';
 import { executeWithSqlTransaction } from '../../../../helpers';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 
 jest.mock('../../../../helpers');
 jest.mock('../../../../repositories/fee-record-repo');
@@ -137,7 +138,7 @@ describe('post-add-payment.controller helpers', () => {
 
       // Assert
       expect(handleEventSpy).toHaveBeenCalledWith({
-        type: 'ADD_A_PAYMENT',
+        type: UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT,
         payload: {
           transactionEntityManager: mockEntityManager,
           feeRecords: feeRecordsInPaymentCurrency,

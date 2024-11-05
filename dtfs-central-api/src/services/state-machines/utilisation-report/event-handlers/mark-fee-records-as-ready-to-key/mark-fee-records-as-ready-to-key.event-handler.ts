@@ -2,6 +2,7 @@ import { EntityManager } from 'typeorm';
 import { DbRequestSource, FeeRecordEntity, RECONCILIATION_COMPLETED, RECONCILIATION_IN_PROGRESS, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../event/utilisation-report.event-type';
 
 type MarkFeeRecordsAsReadyToKeyEventPayload = {
   requestSource: DbRequestSource;
@@ -10,7 +11,7 @@ type MarkFeeRecordsAsReadyToKeyEventPayload = {
 };
 
 export type UtilisationReportMarkFeeRecordsAsReadyToKeyEvent = BaseUtilisationReportEvent<
-  'MARK_FEE_RECORDS_AS_READY_TO_KEY',
+  typeof UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_READY_TO_KEY,
   MarkFeeRecordsAsReadyToKeyEventPayload
 >;
 
