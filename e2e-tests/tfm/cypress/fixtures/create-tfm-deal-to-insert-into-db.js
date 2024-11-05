@@ -394,4 +394,4 @@ const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => (
   },
 });
 
-export default  createTfmDealToInsertIntoDb;
+export default createTfmDealToInsertIntoDb;

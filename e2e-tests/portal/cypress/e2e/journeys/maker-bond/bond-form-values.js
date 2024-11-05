@@ -1,14 +1,13 @@
 import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
-import { roundNumber } from '../../../../../../portal-api/src/utils/number';
+import { roundNumber } from '../../../../../../portal-api/src/utils/number'; // eslint-disable-line import/no-relative-packages
 import { oneMonth, today } from '../../../../../e2e-fixtures/dateConstants';
 
-const DETAILS = {
+export const DETAILS = {
   bondIssuer: 'mock issuer',
   bondType: {
     value: BOND_FACILITY_TYPE.MAINTENANCE_BOND,
     text: BOND_FACILITY_TYPE.MAINTENANCE_BOND,
   },
-
   // 'issued' facility stage specifics
   requestedCoverStartDateDay: today.dayLong,
   requestedCoverStartDateMonth: today.monthLong,
@@ -45,7 +44,7 @@ const expectedUkefExposure = () => {
   return formattedUkefExposure;
 };
 
-const FINANCIAL_DETAILS = {
+export const FINANCIAL_DETAILS = {
   value,
   valueFormatted,
   riskMarginFee,
@@ -63,9 +62,4 @@ const FINANCIAL_DETAILS = {
   conversionRateDateDay: today.dayLong,
   conversionRateDateMonth: today.monthLong,
   conversionRateDateYear: today.year,
-};
-
-export default {
-  DETAILS,
-  FINANCIAL_DETAILS,
 };
