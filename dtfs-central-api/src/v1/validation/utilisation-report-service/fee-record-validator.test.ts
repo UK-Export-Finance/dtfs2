@@ -139,6 +139,41 @@ describe('fee record validator', () => {
           await expect(validateFeeRecordsFormCompleteGroup(feeRecordIds)).rejects.toThrow(InvalidPayloadError);
         });
       });
+
+      describe('and there are additional fee record ids than those in the fee record payment group', () => {
+        it('should throw an invalid payload error', async () => {
+          // Arrange
+          const firstGroupPayments = [
+            PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
+              .withFeeRecords([FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).withId(1).build()])
+              .build(),
+          ];
+          const secondGroupPayments = [
+            PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
+              .withFeeRecords([FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).withId(2).build()])
+              .build(),
+          ];
+
+          const feeRecords = [
+            FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+              .withId(1)
+              .withStatus(status)
+              .withPayments(firstGroupPayments)
+              .build(),
+            FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+              .withId(2)
+              .withStatus(status)
+              .withPayments(secondGroupPayments)
+              .build(),
+          ];
+          feeRecordFindBySpy.mockResolvedValue(feeRecords);
+
+          const feeRecordIds = [1, 2];
+
+          // Act + Assert
+          await expect(validateFeeRecordsFormCompleteGroup(feeRecordIds)).rejects.toThrow(InvalidPayloadError);
+        });
+      });
     });
 
     describe('when the fee record statuses do not match', () => {
