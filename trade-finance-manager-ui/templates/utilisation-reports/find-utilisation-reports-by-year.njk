@@ -7,7 +7,7 @@
 {% set pageHasErrors = errorSummary | length %}
 
 {% block pageTitle %}
-  {{ 'Find reports by year' | formatPageTitle(pageHasErrors) }}
+  {{ 'Find reports by year' | formatPageTitleWithError(pageHasErrors) }}
 {% endblock %}
 
 {% block content %}
