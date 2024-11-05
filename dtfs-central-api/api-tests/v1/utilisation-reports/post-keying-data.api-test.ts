@@ -2,6 +2,7 @@ import { HttpStatusCode } from 'axios';
 import { IsNull, Not } from 'typeorm';
 import {
   AMENDMENT_STATUS,
+  convertMillisecondsToSeconds,
   FacilityUtilisationDataEntity,
   FacilityUtilisationDataEntityMockBuilder,
   FEE_RECORD_STATUS,
@@ -10,12 +11,13 @@ import {
   FeeRecordPaymentJoinTableEntity,
   FeeRecordStatus,
   PaymentEntityMockBuilder,
+  PENDING_RECONCILIATION,
+  RECONCILIATION_IN_PROGRESS,
   ReportPeriod,
   TfmFacility,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
-  UtilisationReportReconciliationStatus,
+  UtilisationReportStatus,
   withSqlIdPathParameterValidationTests,
 } from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
@@ -40,9 +42,9 @@ describe(`POST ${BASE_URL}`, () => {
   const tfmUserId = tfmUser._id.toString();
 
   const anUploadedReconciliationInProgressUtilisationReport = () =>
-    UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).withUploadedByUserId(portalUserId).build();
+    UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).withUploadedByUserId(portalUserId).build();
   const anUploadedPendingReconciliationUtilisationReport = () =>
-    UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).withUploadedByUserId(portalUserId).build();
+    UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withId(reportId).withUploadedByUserId(portalUserId).build();
 
   const aValidRequestBody = () => ({
     user: {
@@ -184,7 +186,7 @@ describe(`POST ${BASE_URL}`, () => {
 
     // Assert
     const updatedReport = await SqlDbHelper.manager.findOneByOrFail(UtilisationReportEntity, { id: reportId });
-    expect(updatedReport.status).toBe<UtilisationReportReconciliationStatus>('RECONCILIATION_IN_PROGRESS');
+    expect(updatedReport.status).toBe<UtilisationReportStatus>(RECONCILIATION_IN_PROGRESS);
   });
 
   it('updates the utilisation report audit fields', async () => {
@@ -346,7 +348,8 @@ describe(`POST ${BASE_URL}`, () => {
           ...aTfmFacilityAmendment(),
           value: 350000,
           status: AMENDMENT_STATUS.COMPLETED,
-          effectiveDate: dateAfterReportPeriodEnd.getTime(),
+          // Effective dates are stored in unix epoch time in seconds not milliseconds.
+          effectiveDate: convertMillisecondsToSeconds(dateAfterReportPeriodEnd.getTime()),
           // 365 days after report period end
           coverEndDate: new Date('2025-03-01').getTime(),
         },
@@ -354,7 +357,8 @@ describe(`POST ${BASE_URL}`, () => {
           ...aTfmFacilityAmendment(),
           value: 300000,
           status: AMENDMENT_STATUS.COMPLETED,
-          effectiveDate: dateWithinReportPeriod.getTime(),
+          // Effective dates are stored in unix epoch time in seconds not milliseconds.
+          effectiveDate: convertMillisecondsToSeconds(dateWithinReportPeriod.getTime()),
           // 730 days after report period end
           coverEndDate: new Date('2026-03-01').getTime(),
         },
@@ -364,10 +368,7 @@ describe(`POST ${BASE_URL}`, () => {
     const tfmFacilitiesCollection = await mongoDbClient.getCollection('tfm-facilities');
     await tfmFacilitiesCollection.insertOne(tfmFacility);
 
-    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
-      .withId(reportId)
-      .withReportPeriod(reportPeriod)
-      .build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).withReportPeriod(reportPeriod).build();
 
     const utilisationData = FacilityUtilisationDataEntityMockBuilder.forId(facilityId).withFixedFee(1).build();
     const feeRecords = [
@@ -421,7 +422,7 @@ describe(`POST ${BASE_URL}`, () => {
     const tfmFacilitiesCollection = await mongoDbClient.getCollection('tfm-facilities');
     await tfmFacilitiesCollection.insertOne(tfmFacility);
 
-    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).withId(reportId).build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
 
     const utilisationData = FacilityUtilisationDataEntityMockBuilder.forId(facilityId).withUtilisation(100).build();
     const feeRecords = [

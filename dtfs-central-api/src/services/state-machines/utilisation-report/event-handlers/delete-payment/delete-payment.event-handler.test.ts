@@ -1,5 +1,12 @@
 import { EntityManager } from 'typeorm';
-import { FeeRecordEntity, FeeRecordEntityMockBuilder, PaymentEntity, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FeeRecordEntity,
+  FeeRecordEntityMockBuilder,
+  PaymentEntity,
+  PaymentEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { when } from 'jest-when';
 import { handleUtilisationReportDeletePaymentEvent } from './delete-payment.event-handler';
 import { NotFoundError } from '../../../../../errors';
@@ -35,7 +42,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
 
   it('throws a NotFoundError if there is no payment for that payment id', async () => {
     // Arrange
-    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
     when(mockFindOne).calledWith(PaymentEntity, expect.anything()).mockResolvedValue(null);
 
     // Act / Assert
@@ -51,7 +58,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
   it('removes payment if there are no linked fee records', async () => {
     // Arrange
     const paymentId = 12;
-    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
     const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).withFeeRecords([]).build();
     when(mockFindOne).calledWith(PaymentEntity, expect.anything()).mockResolvedValue(paymentEntity);
 
@@ -72,7 +79,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
   it('throws a NotFoundError if a fee record with the id of the fee record attached to the payment cannot be found', async () => {
     // Arrange
     const paymentId = 12;
-    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
 
     const firstFeeRecordId = 12;
     const linkedFeeRecords = [
@@ -102,7 +109,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     // Arrange
     const paymentId = 123;
     const feeRecordId = 456;
-    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
     const linkedFeeRecordEntity = FeeRecordEntityMockBuilder.forReport(report).withId(feeRecordId).build();
     const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).withFeeRecords([linkedFeeRecordEntity]).build();
     when(mockFindOne).calledWith(PaymentEntity, expect.anything()).mockResolvedValue(paymentEntity);
@@ -127,7 +134,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     // Arrange
     const requestSource = aDbRequestSource();
     const paymentId = 123;
-    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
     const linkedFeeRecordEntityOne = FeeRecordEntityMockBuilder.forReport(report).withId(456).build();
     const linkedFeeRecordEntityTwo = FeeRecordEntityMockBuilder.forReport(report).withId(789).build();
     const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP')
@@ -174,7 +181,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     // Arrange
     const requestSource = aDbRequestSource();
     const paymentId = 123;
-    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
     const linkedFeeRecordEntity = FeeRecordEntityMockBuilder.forReport(report).withId(456).build();
     const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).withFeeRecords([linkedFeeRecordEntity]).build();
     when(mockFindOne).calledWith(PaymentEntity, expect.anything()).mockResolvedValue(paymentEntity);
@@ -210,7 +217,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     // Arrange
     const requestSource = aDbRequestSource();
     const paymentId = 123;
-    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
     const linkedFeeRecordEntity = FeeRecordEntityMockBuilder.forReport(report).withId(456).build();
     const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).withFeeRecords([linkedFeeRecordEntity]).build();
     when(mockFindOne).calledWith(PaymentEntity, expect.anything()).mockResolvedValue(paymentEntity);
@@ -246,7 +253,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     // Arrange
     const requestSource = aDbRequestSource();
     const paymentId = 123;
-    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
     const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP')
       .withId(paymentId)
       .withFeeRecords([FeeRecordEntityMockBuilder.forReport(report).withId(456).build()])
@@ -286,7 +293,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     // Arrange
     const requestSource = aDbRequestSource();
     const paymentId = 123;
-    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
     const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP')
       .withId(paymentId)
       .withFeeRecords([FeeRecordEntityMockBuilder.forReport(report).withId(456).build()])

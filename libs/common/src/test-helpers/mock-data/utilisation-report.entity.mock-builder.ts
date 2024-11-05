@@ -1,23 +1,23 @@
-import { REQUEST_PLATFORM_TYPE } from '../../constants';
+import { RECONCILIATION_IN_PROGRESS, REPORT_NOT_RECEIVED, REQUEST_PLATFORM_TYPE } from '../../constants';
 import { AzureFileInfoEntity, DbRequestSource, FeeRecordEntity, UtilisationReportEntity, ReportPeriodPartialEntity } from '../../sql-db-entities';
-import { UtilisationReportReconciliationStatus } from '../../types';
+import { UtilisationReportStatus } from '../../types';
 import { MOCK_AZURE_FILE_INFO } from './azure-file-info.mock';
 
-export class UtilisationReportEntityMockBuilder<ReportStatus extends UtilisationReportReconciliationStatus> {
+export class UtilisationReportEntityMockBuilder<ReportStatus extends UtilisationReportStatus> {
   private readonly report: UtilisationReportEntity;
 
-  private constructor(report: UtilisationReportEntity) {
-    this.report = report;
+  public constructor(report?: UtilisationReportEntity) {
+    this.report = report ?? UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).report;
   }
 
-  public static forStatus<Status extends UtilisationReportReconciliationStatus>(status: Status): UtilisationReportEntityMockBuilder<Status> {
+  public static forStatus<Status extends UtilisationReportStatus>(status: Status): UtilisationReportEntityMockBuilder<Status> {
     const bankId = '123';
     const reportPeriod = {
       start: { month: 11, year: 2023 },
       end: { month: 11, year: 2023 },
     };
 
-    if (status === 'REPORT_NOT_RECEIVED') {
+    if (status === REPORT_NOT_RECEIVED) {
       return new UtilisationReportEntityMockBuilder<typeof status>(
         UtilisationReportEntity.createNotReceived({
           bankId,

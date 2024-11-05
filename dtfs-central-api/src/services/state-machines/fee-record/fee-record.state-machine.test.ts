@@ -1,6 +1,13 @@
 import difference from 'lodash/difference';
 import { EntityManager } from 'typeorm';
-import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
+import {
+  FeeRecordEntityMockBuilder,
+  UtilisationReportEntityMockBuilder,
+  FEE_RECORD_STATUS,
+  FeeRecordStatus,
+  REQUEST_PLATFORM_TYPE,
+  PENDING_RECONCILIATION,
+} from '@ukef/dtfs2-common';
 import { InvalidStateMachineTransitionError } from '../../../errors';
 import { FEE_RECORD_EVENT_TYPE, FEE_RECORD_EVENT_TYPES, FeeRecordEventType } from './event/fee-record.event-type';
 import { FeeRecordStateMachine } from './fee-record.state-machine';
@@ -29,7 +36,7 @@ describe('FeeRecordStateMachine', () => {
     await expect(stateMachine.handleEvent({ type: eventType, payload: null })).rejects.toThrow(InvalidStateMachineTransitionError);
   };
 
-  const UPLOADED_REPORT = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+  const UPLOADED_REPORT = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
 
   describe(`when the fee record has the '${FEE_RECORD_STATUS.TO_DO}' status`, () => {
     // Arrange
@@ -61,7 +68,7 @@ describe('FeeRecordStateMachine', () => {
         payload: {
           transactionEntityManager: {} as unknown as EntityManager,
           feeRecordsAndPaymentsMatch: true,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -84,7 +91,7 @@ describe('FeeRecordStateMachine', () => {
         payload: {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAndPaymentsMatch: true,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -103,7 +110,7 @@ describe('FeeRecordStateMachine', () => {
           transactionEntityManager: {} as unknown as EntityManager,
           feeRecordsAndPaymentsMatch: true,
           hasAttachedPayments: false,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -122,7 +129,7 @@ describe('FeeRecordStateMachine', () => {
           transactionEntityManager: {} as unknown as EntityManager,
           isFinalFeeRecordForFacility: false,
           reportPeriod: aReportPeriod(),
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -139,7 +146,7 @@ describe('FeeRecordStateMachine', () => {
         type: 'REMOVE_FROM_PAYMENT_GROUP',
         payload: {
           transactionEntityManager: {} as EntityManager,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -157,7 +164,7 @@ describe('FeeRecordStateMachine', () => {
         payload: {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAndPaymentsMatch: true,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -202,7 +209,7 @@ describe('FeeRecordStateMachine', () => {
         payload: {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAndPaymentsMatch: true,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -221,7 +228,7 @@ describe('FeeRecordStateMachine', () => {
           transactionEntityManager: {} as unknown as EntityManager,
           feeRecordsAndPaymentsMatch: true,
           hasAttachedPayments: false,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -239,7 +246,7 @@ describe('FeeRecordStateMachine', () => {
         payload: {
           transactionEntityManager: {} as unknown as EntityManager,
           feeRecordsAndPaymentsMatch: true,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -256,7 +263,7 @@ describe('FeeRecordStateMachine', () => {
         type: 'REMOVE_FROM_PAYMENT_GROUP',
         payload: {
           transactionEntityManager: {} as EntityManager,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -274,7 +281,7 @@ describe('FeeRecordStateMachine', () => {
         payload: {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAndPaymentsMatch: true,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -292,7 +299,7 @@ describe('FeeRecordStateMachine', () => {
         payload: {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAndPaymentsMatch: true,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -339,7 +346,7 @@ describe('FeeRecordStateMachine', () => {
         payload: {
           transactionEntityManager: {} as unknown as EntityManager,
           reconciledByUserId: 'abc123',
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -377,7 +384,7 @@ describe('FeeRecordStateMachine', () => {
         type: 'MARK_AS_READY_TO_KEY',
         payload: {
           transactionEntityManager: {} as unknown as EntityManager,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 

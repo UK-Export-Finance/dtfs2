@@ -86,7 +86,7 @@
  *           name:
  *             type: string
  *       status:
- *         $ref: '#/definitions/UtilisationReportReconciliationStatus'
+ *         $ref: '#/definitions/UtilisationReportStatus'
  *       reportPeriod:
  *         $ref: '#/definitions/ReportPeriod'
  *       dateUploaded:

@@ -93,6 +93,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
         bank: { name: 'Test' },
         reportPeriod: { start: { month: 2, year: 2024 }, end: { month: 4, year: 2024 } },
         totalReportedPayments: { amount: 1000, currency: 'JPY' },
+        gbpTolerance: 1,
         feeRecords: [
           {
             id: 456,
@@ -153,6 +154,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
         feeRecords: [],
         payments: [],
         canAddToExistingPayment: true,
+        gbpTolerance: 1,
         availablePaymentGroups: [
           [
             {
@@ -407,6 +409,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       feeRecords: [aSelectedFeeRecordDetails()],
       payments: [],
       canAddToExistingPayment: true,
+      gbpTolerance: 1,
       availablePaymentGroups: [
         [
           {

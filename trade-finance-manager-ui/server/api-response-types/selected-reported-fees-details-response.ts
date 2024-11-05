@@ -14,5 +14,6 @@ export type SelectedFeeRecordsDetailsResponseBody = {
   feeRecords: SelectedFeeRecordDetails[];
   payments: SelectedFeeRecordsPaymentDetailsResponse[];
   canAddToExistingPayment: boolean;
+  gbpTolerance: number;
   availablePaymentGroups?: SelectedFeeRecordsAvailablePaymentGroups;
 };

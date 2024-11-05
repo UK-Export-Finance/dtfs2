@@ -1,6 +1,5 @@
 const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityProduct = require('./mapFacilityProduct');
-const mapFacilityType = require('./mapFacilityType');
 const mapFacilityValue = require('./mapFacilityValue');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
@@ -12,6 +11,7 @@ const mapDates = require('./mapDates');
 const mapUkefExposureValue = require('./mapUkefExposureValue');
 const mapFacilityValueExportCurrency = require('./mapFacilityValueExportCurrency');
 const { mapBssEwcsFacilityStage } = require('./mapFacilityStage');
+const { mapBssEwcsFacilityType } = require('./mapFacilityType');
 
 /**
  * Maps a BSS/EWCS facility snapshot in the database to the facility snapshot used in TFM-API and TFM-UI.
@@ -55,11 +55,9 @@ const mapFacilitySnapshot = (facility, dealSnapshot) => {
 
   clonedSnapshot.facilityProduct = mapFacilityProduct(type);
 
-  clonedSnapshot.type = mapFacilityType(clonedSnapshot);
+  clonedSnapshot.type = mapBssEwcsFacilityType(type, facilitySnapshot);
 
   const formattedFacilityValue = formattedNumber(value);
-
-  clonedSnapshot.facilityStage = mapBssEwcsFacilityStage(facilityStage, facilityTfm?.facilityStage);
 
   const mappedFacilitySnapshot = {
     // Fields in common with all facility types
@@ -71,7 +69,7 @@ const mapFacilitySnapshot = (facility, dealSnapshot) => {
     hasBeenIssued,
 
     ukefFacilityType: clonedSnapshot.ukefFacilityType, // TODO: DTFS2-4634 - we shouldn't need facility.type and ukefFacilityType.
-    facilityStage: clonedSnapshot.facilityStage,
+    facilityStage: mapBssEwcsFacilityStage(facilityStage, facilityTfm?.facilityStage),
     facilityProduct: clonedSnapshot.facilityProduct,
 
     bankFacilityReference: mapBankFacilityReference(clonedSnapshot),

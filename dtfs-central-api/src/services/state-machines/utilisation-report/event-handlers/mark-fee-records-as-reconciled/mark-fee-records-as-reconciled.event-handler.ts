@@ -1,5 +1,5 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, FEE_RECORD_STATUS, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { DbRequestSource, FEE_RECORD_STATUS, FeeRecordEntity, RECONCILIATION_COMPLETED, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { SendReportReconciledEmail } from '../helpers/send-report-reconciled-email';
@@ -52,7 +52,7 @@ export const handleUtilisationReportMarkFeeRecordsAsReconciledEvent = async (
     });
 
     if (allFeeRecords.every((record) => record.status === FEE_RECORD_STATUS.RECONCILED)) {
-      report.updateWithStatus({ status: 'RECONCILIATION_COMPLETED', requestSource });
+      report.updateWithStatus({ status: RECONCILIATION_COMPLETED, requestSource });
       await transactionEntityManager.save(UtilisationReportEntity, report);
       await SendReportReconciledEmail(report);
     }
