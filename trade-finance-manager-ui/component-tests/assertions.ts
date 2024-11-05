@@ -107,7 +107,7 @@ export const assertions = <TParams extends object>(wrapper: CheerioAPI, html: st
     },
   }),
   expectInput: (selector: string) => ({
-    toHaveValue: (value: string) => {
+    toHaveValue: (value?: string) => {
       expect(wrapper(selector).attr('value')).toEqual(value);
     },
     toBeChecked: () => {
