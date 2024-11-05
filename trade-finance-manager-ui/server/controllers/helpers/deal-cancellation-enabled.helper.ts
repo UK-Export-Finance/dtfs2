@@ -19,6 +19,13 @@ export const canSubmissionTypeBeCancelled = (submissionType: DealSubmissionType)
   return submissionType === AIN || submissionType === MIN;
 };
 
+export const isDealCancellationEnabled = (submissionType: DealSubmissionType): boolean => {
+  const isDealCancellationFeatureFlagEnabled = isTfmDealCancellationFeatureFlagEnabled();
+  const isAcceptableSubmissionType = canSubmissionTypeBeCancelled(submissionType);
+
+  return isDealCancellationFeatureFlagEnabled && isAcceptableSubmissionType;
+};
+
 /**
  * Checks if deal cancellation is enabled for a deal and user type
  * @param submissionType - the deal submission type
@@ -27,10 +34,9 @@ export const canSubmissionTypeBeCancelled = (submissionType: DealSubmissionType)
  */
 export const isDealCancellationEnabledForUser = (submissionType: DealSubmissionType, user: TfmSessionUser): boolean => {
   const isUserAllowedToCancelDeal = userIsInTeam(user, [TEAM_IDS.PIM]);
-  const isDealCancellationFeatureFlagEnabled = isTfmDealCancellationFeatureFlagEnabled();
-  const isAcceptableSubmissionType = canSubmissionTypeBeCancelled(submissionType);
+  const dealCanBeCancelled = isDealCancellationEnabled(submissionType);
 
-  return isUserAllowedToCancelDeal && isDealCancellationFeatureFlagEnabled && isAcceptableSubmissionType;
+  return isUserAllowedToCancelDeal && dealCanBeCancelled;
 };
 
 /**
