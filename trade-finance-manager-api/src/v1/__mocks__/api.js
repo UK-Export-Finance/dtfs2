@@ -192,7 +192,7 @@ module.exports = {
               },
             ],
           };
-    }  
+    }
     return companyRegNo === 'NO_MATCH'
       ? false
       : [
