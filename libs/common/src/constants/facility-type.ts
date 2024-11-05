@@ -19,5 +19,4 @@ export const BOND_FACILITY_TYPE = {
   WARRANTY_LETTER: 'Warranty letter',
 } as const;
 
-
 export const FACILITY_TYPE = { ...GEF_FACILITY_TYPE, ...BSS_EWCS_FACILITY_TYPE } as const;
