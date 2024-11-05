@@ -28,9 +28,19 @@ runs:
         env=${{ inputs.env }}
         while true; do
           if [ $run -eq 1 ]; then
-            cd ${{ inputs.working-directory }} && eval "$env" && bash -c "${{ inputs.command }}" && break
+            cd ${{ inputs.working-directory }} 
+            && 
+            eval "$env" 
+            && 
+            bash -c "${{ inputs.command }}" 
+            && 
+            break
           else
-            eval "$env" && bash -c "${{ inputs.command }}" && break
+            eval "$env" 
+            && 
+            bash -c "${{ inputs.command }}" 
+            && 
+            break
           fi
           run=$((run + 1))
           if [ $run -gt $limit ]; then
