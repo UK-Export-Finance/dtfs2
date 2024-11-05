@@ -44,7 +44,7 @@
     "core-js": "^3.39.0",
     "csurf": "^1.11.0",
     "csv-parser": "^3.0.0",
-    "date-fns": "^2.30.0",
+    "date-fns": "^4.1.0",
     "date-fns-tz": "^2.0.1",
     "dotenv": "16.0.3",
     "exceljs": "^4.4.0",
