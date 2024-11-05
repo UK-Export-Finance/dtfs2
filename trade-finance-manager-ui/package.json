@@ -81,7 +81,7 @@
   "devDependencies": {
     "@babel/core": "7.21.5",
     "@babel/plugin-transform-runtime": "7.21.4",
-    "@babel/preset-env": "7.21.5",
+    "@babel/preset-env": "7.26.0",
     "@babel/runtime": "7.21.5",
     "@types/connect-flash": "^0.0.40",
     "@types/express": "^4.17.21",
