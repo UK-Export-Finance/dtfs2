@@ -12,10 +12,10 @@ const PORTAL_URL = require('./portalUrl.constant');
 const { PRIMARY_NAV_KEY } = require('./primary-nav-key');
 const PRODUCT = require('./product');
 const STATUS = require('./status');
+const SORT_BY = require('./sort');
 const SUBMISSION_TYPE = require('./submission-type');
 const TRANSACTION_STAGE = require('./transaction-stage');
 const TRANSACTION_TYPE = require('./transaction-type');
-const SORT_BY = require('./sort');
 
 module.exports = {
   ALL_BANKS_ID,
@@ -31,9 +31,9 @@ module.exports = {
   PRIMARY_NAV_KEY,
   PORTAL_URL,
   PRODUCT,
+  SORT_BY,
   STATUS,
   SUBMISSION_TYPE,
   TRANSACTION_STAGE,
   TRANSACTION_TYPE,
-  SORT_BY,
 };
