@@ -58,7 +58,7 @@
     "passport-jwt": "^4.0.1",
     "sanitize-html": "^2.13.1",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^4.6.3",
+    "swagger-ui-express": "^5.0.1",
     "ts-node": "^10.9.2",
     "tslib": "^2.8.1",
     "validator": "^13.12.0",
