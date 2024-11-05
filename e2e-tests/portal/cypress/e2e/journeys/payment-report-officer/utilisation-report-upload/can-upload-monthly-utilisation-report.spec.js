@@ -32,6 +32,14 @@ context('Monthly utilisation report upload', () => {
       utilisationReportUpload.currentUrl().should('contain', '/confirm-and-send');
     });
 
+    it('should use the first visible worksheet in the workbook', () => {
+      utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-hidden-first-sheet-February_2023_monthly.xlsx');
+      cy.clickContinueButton();
+
+      errorSummary().should('not.exist');
+      utilisationReportUpload.utilisationReportFileInputErrorMessage().should('not.exist');
+    });
+
     it('should display an error if the filename of the file selected does not contain the current report period', () => {
       utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-September_2023_monthly.xlsx');
       cy.clickContinueButton();
