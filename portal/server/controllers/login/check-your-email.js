@@ -1,5 +1,6 @@
 const api = require('../../api');
 const { obscureEmail } = require('../../utils/obscure-email');
+const { LANDING_PAGES } = require('../../constants');
 
 module.exports.renderCheckYourEmailPage = (req, res) => {
   const {
@@ -28,7 +29,7 @@ module.exports.renderCheckYourEmailPage = (req, res) => {
     case -1:
       return res.status(403).render('login/temporarily-suspended.njk');
     default:
-      return res.redirect('/login');
+      return res.redirect(LANDING_PAGES.LOGIN);
   }
 };
 

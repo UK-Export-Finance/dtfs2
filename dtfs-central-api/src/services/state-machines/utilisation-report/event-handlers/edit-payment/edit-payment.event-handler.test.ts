@@ -5,8 +5,11 @@ import {
   FeeRecordEntityMockBuilder,
   PaymentEntity,
   PaymentEntityMockBuilder,
+  REQUEST_PLATFORM_TYPE,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
+  PENDING_RECONCILIATION,
+  RECONCILIATION_IN_PROGRESS,
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportEditPaymentEvent } from './edit-payment.event-handler';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
@@ -17,7 +20,7 @@ jest.mock('../helpers');
 describe('handleUtilisationReportAddAPaymentEvent', () => {
   const tfmUserId = 'abc123';
   const requestSource: DbRequestSource = {
-    platform: 'TFM',
+    platform: REQUEST_PLATFORM_TYPE.TFM,
     userId: tfmUserId,
   };
 
@@ -26,7 +29,7 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     save: mockSave,
   } as unknown as EntityManager;
 
-  const aReconciliationInProgressReport = () => UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+  const aReconciliationInProgressReport = () => UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
 
   const aListOfFeeRecordsForReport = (report: UtilisationReportEntity): FeeRecordEntity[] => [
     FeeRecordEntityMockBuilder.forReport(report).withId(1).withPaymentCurrency('GBP').build(),
@@ -197,7 +200,7 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
 
   it('updates and saves the updated report', async () => {
     // Arrange
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
 
     // Act
     await handleUtilisationReportEditPaymentEvent(utilisationReport, {

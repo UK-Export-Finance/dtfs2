@@ -38,6 +38,10 @@ const getFacilities = async (req, res) => {
 
     const { facilities: dbFacilities, pagination } = await api.getAllFacilities({ queryParams });
 
+    if (!dbFacilities?.length) {
+      return res.status(400).send({ dbFacilities, pagination });
+    }
+
     const facilities = dbFacilities.map((dbFacility) => {
       const { tfmFacilities: facility } = dbFacility;
 

@@ -69,7 +69,7 @@ module.exports.loginWithSignInLink = async (req, res) => {
      * 404 is no token found
      * */
     if (error.response?.status === 401 || error.response?.status === 404) {
-      return res.redirect('/login');
+      return res.redirect(LANDING_PAGES.LOGIN);
     }
 
     if (error.response?.status === 403) {

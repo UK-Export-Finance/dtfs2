@@ -5,11 +5,11 @@ import {
   MOCK_AZURE_FILE_INFO,
   PortalUser,
   ReportPeriod,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
   UploadedByUserDetails,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
   REQUEST_PLATFORM_TYPE,
+  PENDING_RECONCILIATION,
 } from '@ukef/dtfs2-common';
 import { GetUtilisationReportsByBankIdAndOptionsRequest, getUtilisationReportsByBankIdAndOptions } from './index';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
@@ -209,7 +209,7 @@ describe('getUtilisationReports', () => {
 
       jest.mocked(getUserById).mockResolvedValue(mockGetUserByIdResponse);
 
-      const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+      const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
         .withAzureFileInfo(azureFileInfo)
         .withDateUploaded(mockDate)
         .withUploadedByUserId(mockUploadedByUser.id)

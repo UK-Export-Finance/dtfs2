@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { ApiError } from '@ukef/dtfs2-common';
+import { ApiError, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
@@ -30,7 +30,7 @@ export const putKeyingDataMarkAsToDo = async (req: PutKeyingDataMarkToDoRequest,
             transactionEntityManager,
             feeRecordsToMarkAsReadyToKey: selectedFeeRecords,
             requestSource: {
-              platform: 'TFM',
+              platform: REQUEST_PLATFORM_TYPE.TFM,
               userId: user._id.toString(),
             },
           },

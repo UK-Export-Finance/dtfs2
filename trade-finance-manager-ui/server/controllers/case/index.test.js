@@ -15,7 +15,10 @@ jest.mock('../helpers', () => ({
   isDealCancellationEnabled: jest.fn().mockReturnValue(false),
 }));
 
+const { DRAFT, COMPLETED, SCHEDULED } = TFM_DEAL_CANCELLATION_STATUS;
+
 const mockSuccessBannerMessage = 'mock success flash message';
+console.error = jest.fn();
 
 const res = mockRes();
 
@@ -46,6 +49,7 @@ describe('controllers - case', () => {
         _id: '61f6ac5b02fade01b1e8efef',
         dealSnapshot: {
           _id: '61f6ac5b02fade01b1e8efef',
+          details: { ukefDealId: 'ukefDealId' },
           submissionType: DEAL_SUBMISSION_TYPE.AIN,
         },
         tfm: {
@@ -78,7 +82,7 @@ describe('controllers - case', () => {
             _id: mockDeal._id,
           },
           session,
-          flash: jest.fn().mockReturnValue([mockSuccessBannerMessage]),
+          flash: jest.fn().mockReturnValue([]),
         };
       });
 
@@ -90,7 +94,6 @@ describe('controllers - case', () => {
           tfm: mockDeal.tfm,
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'deal',
-          successMessage: mockSuccessBannerMessage,
           dealId: req.params._id,
           user: session.user,
           hasDraftCancellation: false,
@@ -99,6 +102,25 @@ describe('controllers - case', () => {
           amendments: mockAmendments,
           amendmentsInProgress: mockAmendments,
         });
+      });
+
+      it('should render the template with the success message from flash storage if it exists', async () => {
+        req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          session,
+          flash: jest.fn().mockReturnValue([mockSuccessBannerMessage]),
+        };
+
+        await caseController.getCaseDeal(req, res);
+
+        expect(res.render).toHaveBeenCalledWith(
+          'case/deal/deal.njk',
+          expect.objectContaining({
+            successMessage: mockSuccessBannerMessage,
+          }),
+        );
       });
 
       it('should check whether deal cancellation is enabled', async () => {
@@ -115,7 +137,7 @@ describe('controllers - case', () => {
 
         describe('when the deal can still be cancelled', () => {
           it('should render the template with showDealCancelButton=true', async () => {
-            jest.mocked(api.getDealCancellation).mockReturnValueOnce({ status: TFM_DEAL_CANCELLATION_STATUS.DRAFT });
+            jest.mocked(api.getDealCancellation).mockReturnValueOnce({ status: DRAFT });
 
             await caseController.getCaseDeal(req, res);
 
@@ -130,7 +152,7 @@ describe('controllers - case', () => {
 
         describe('when the deal is already cancelled', () => {
           it('should render the template with showDealCancelButton=false', async () => {
-            jest.mocked(api.getDealCancellation).mockReturnValueOnce({ status: TFM_DEAL_CANCELLATION_STATUS.COMPLETED });
+            jest.mocked(api.getDealCancellation).mockReturnValueOnce({ status: COMPLETED });
 
             await caseController.getCaseDeal(req, res);
 
@@ -145,7 +167,7 @@ describe('controllers - case', () => {
 
         describe('when the deal cancellation is in draft', () => {
           it('should render the template with hasDraftCancellation=true', async () => {
-            jest.mocked(api.getDealCancellation).mockReturnValueOnce({ status: TFM_DEAL_CANCELLATION_STATUS.DRAFT });
+            jest.mocked(api.getDealCancellation).mockReturnValueOnce({ status: DRAFT });
 
             await caseController.getCaseDeal(req, res);
 
@@ -168,6 +190,29 @@ describe('controllers - case', () => {
               'case/deal/deal.njk',
               expect.objectContaining({
                 hasDraftCancellation: false,
+              }),
+            );
+          });
+        });
+
+        describe('when the deal cancellation is scheduled', () => {
+          it('should render the template with the correct success message', async () => {
+            jest.mocked(api.getDealCancellation).mockReturnValueOnce({ effectiveFrom: new Date('2023-01-01').valueOf(), status: SCHEDULED });
+
+            req = {
+              params: {
+                _id: mockDeal._id,
+              },
+              session,
+              flash: jest.fn().mockReturnValue([mockSuccessBannerMessage]),
+            };
+
+            await caseController.getCaseDeal(req, res);
+
+            expect(res.render).toHaveBeenCalledWith(
+              'case/deal/deal.njk',
+              expect.objectContaining({
+                successMessage: 'Deal ukefDealId scheduled for cancellation on 1 January 2023',
               }),
             );
           });
@@ -845,7 +890,27 @@ describe('controllers - case', () => {
       });
     });
 
-    describe('when deal does NOT exist', () => {
+    describe('when the deal either does not exists or is corrupted', () => {
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve();
+      });
+
+      it('should render problem with service page with a console error', async () => {
+        const req = {
+          params: {
+            _id: '1',
+          },
+          session,
+        };
+
+        await caseController.getCaseFacility(req, res);
+
+        expect(console.error).toHaveBeenCalledWith('An error occurred while rendering a TFM deal %s', req.params._id);
+        expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+      });
+    });
+
+    describe('when the facilities does not exist', () => {
       beforeEach(() => {
         api.getFacility = () => Promise.resolve();
       });
@@ -859,6 +924,7 @@ describe('controllers - case', () => {
         };
 
         await caseController.getCaseFacility(req, res);
+
         expect(res.redirect).toHaveBeenCalledWith('/not-found');
       });
     });

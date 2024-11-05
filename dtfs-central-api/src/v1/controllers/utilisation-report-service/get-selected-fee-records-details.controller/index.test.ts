@@ -1,14 +1,22 @@
 import httpMocks from 'node-mocks-http';
-import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, SelectedFeeRecordsDetails, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FeeRecordEntityMockBuilder,
+  PENDING_RECONCILIATION,
+  PaymentEntityMockBuilder,
+  SelectedFeeRecordsDetails,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { GetSelectedFeeRecordDetailsRequest, getSelectedFeeRecordDetails } from '.';
 import { aReportPeriod } from '../../../../../test-helpers';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { PaymentRepo } from '../../../../repositories/payment-repo';
+import { PaymentMatchingToleranceService } from '../../../../services/payment-matching-tolerance/payment-matching-tolerance.service';
 
 jest.mock('../../../../repositories/utilisation-reports-repo');
 jest.mock('../../../../repositories/banks-repo');
+jest.mock('../../../../services/payment-matching-tolerance/payment-matching-tolerance.service');
 
 console.error = jest.fn();
 
@@ -25,6 +33,11 @@ describe('get selected fee records details controller', () => {
     });
 
   const findReportSpy = jest.spyOn(UtilisationReportRepo, 'findOneByIdWithFeeRecordsFilteredByIdWithPayments');
+  const getGbpToleranceSpy = jest.spyOn(PaymentMatchingToleranceService, 'getGbpPaymentMatchingTolerance');
+
+  beforeEach(() => {
+    getGbpToleranceSpy.mockResolvedValue(1);
+  });
 
   afterEach(() => {
     jest.resetAllMocks();
@@ -47,7 +60,7 @@ describe('get selected fee records details controller', () => {
   it('responds with a 400 when the requested fee records have differing payment currencies', async () => {
     // Arrange
     const { req, res } = getHttpMocks([1, 2]);
-    const reportEntity = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    const reportEntity = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
     const feeRecordWithPaymentCurrencyPounds = FeeRecordEntityMockBuilder.forReport(reportEntity).withId(1).withPaymentCurrency('GBP').build();
     const feeRecordWithPaymentCurrencyEuros = FeeRecordEntityMockBuilder.forReport(reportEntity).withId(2).withPaymentCurrency('EUR').build();
     reportEntity.feeRecords = [feeRecordWithPaymentCurrencyPounds, feeRecordWithPaymentCurrencyEuros];
@@ -76,7 +89,7 @@ describe('get selected fee records details controller', () => {
   it('responds with a 400 when any fee record id does not have a corresponding fee record attached to report', async () => {
     // Arrange
     const { req, res } = getHttpMocks([1, 2]);
-    const reportEntity = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    const reportEntity = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
     const feeRecord = FeeRecordEntityMockBuilder.forReport(reportEntity).withId(1).withPaymentCurrency('GBP').build();
     reportEntity.feeRecords = [feeRecord];
     findReportSpy.mockResolvedValue(reportEntity);
@@ -93,7 +106,7 @@ describe('get selected fee records details controller', () => {
     // Arrange
     const { req, res } = getHttpMocks([1, 2]);
     const reportPeriod = aReportPeriod();
-    const reportEntity = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withBankId('999').withReportPeriod(reportPeriod).build();
+    const reportEntity = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withBankId('999').withReportPeriod(reportPeriod).build();
     const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP')
       .withDateReceived(new Date('2024-01-01'))
       .withAmount(150)
@@ -120,6 +133,7 @@ describe('get selected fee records details controller', () => {
     reportEntity.feeRecords = [feeRecordOne, feeRecordTwo];
 
     findReportSpy.mockResolvedValue(reportEntity);
+    getGbpToleranceSpy.mockResolvedValue(2);
     jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(true);
     jest.mocked(getBankNameById).mockResolvedValue('Test Bank');
 
@@ -173,6 +187,7 @@ describe('get selected fee records details controller', () => {
         },
       ],
       canAddToExistingPayment: true,
+      gbpTolerance: 2,
     });
   });
 });

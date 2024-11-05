@@ -166,7 +166,7 @@ services:
       - UKEF_TFM_API_SYSTEM_KEY=${UKEF_TFM_API_SYSTEM_KEY}
       - UKEF_TFM_API_REPORTS_KEY
       - TFM_UI_URL=http://localhost:5003
-      - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
+      - AZURE_ACBS_FUNCTION_URL=http://acbs
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
       - UKEF_INTERNAL_NOTIFICATION=test
@@ -307,7 +307,7 @@ services:
       - APIM_ESTORE_URL
       - APIM_ESTORE_KEY
       - APIM_ESTORE_VALUE
-      - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
+      - AZURE_ACBS_FUNCTION_URL=http://acbs
       - GOV_NOTIFY_API_KEY
       - MONGO_INITDB_DATABASE
       - MONGODB_URI
@@ -392,7 +392,7 @@ services:
       - TZ
       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
       - FUNCTIONS_WORKER_RUNTIME=node
-      - WEBSITE_HOSTNAME=localhost:7071
+      - WEBSITE_HOSTNAME=acbs:7071
       - APIM_MDM_URL
       - APIM_MDM_KEY
       - APIM_MDM_VALUE

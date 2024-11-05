@@ -9,8 +9,8 @@ import {
   UploadedByUserDetails,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
   FeeRecordEntityMockBuilder,
+  PENDING_RECONCILIATION,
 } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { GetUtilisationReportsByBankIdAndYearRequest, getUtilisationReportsReconciliationSummary, getUtilisationReportSummariesByBankIdAndYear } from './index';
@@ -202,7 +202,7 @@ describe('getReconciliationSummary', () => {
 
       jest.mocked(getBankById).mockResolvedValue(mockGetBankByIdResponse);
 
-      const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+      const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
         .withAzureFileInfo(azureFileInfo)
         .withDateUploaded(mockDate)
         .withUploadedByUserId(mockUploadedByUser.id)
