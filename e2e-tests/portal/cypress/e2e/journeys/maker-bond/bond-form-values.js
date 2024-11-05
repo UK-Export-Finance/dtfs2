@@ -1,6 +1,19 @@
 import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
-import { roundNumber } from '../../../../../../portal-api/src/utils/number'; // eslint-disable-line import/no-relative-packages
 import { oneMonth, today } from '../../../../../e2e-fixtures/dateConstants';
+
+const roundNumber = (value, digits) => {
+  let modifiedValue = value;
+  let d = digits;
+
+  if (!digits) {
+    d = 2;
+  }
+
+  modifiedValue *= 10 ** d;
+  modifiedValue = Math.round(modifiedValue);
+  modifiedValue /= 10 ** d;
+  return modifiedValue;
+};
 
 export const DETAILS = {
   bondIssuer: 'mock issuer',
