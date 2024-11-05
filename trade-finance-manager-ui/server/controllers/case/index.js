@@ -1,7 +1,14 @@
 const { format, fromUnixTime } = require('date-fns');
 const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled, getUkefDealId } = require('@ukef/dtfs2-common');
 const api = require('../../api');
-const { getTask, showAmendmentButton, ukefDecisionRejected, isDealCancellationEnabled, canDealBeCancelled, isDealCancellationInDraft } = require('../helpers');
+const {
+  getTask,
+  showAmendmentButton,
+  ukefDecisionRejected,
+  isDealCancellationEnabledForUser,
+  canDealBeCancelled,
+  isDealCancellationInDraft,
+} = require('../helpers');
 const { formattedNumber } = require('../../helpers/number');
 const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-options');
 const CONSTANTS = require('../../constants');
@@ -46,7 +53,7 @@ const getCaseDeal = async (req, res) => {
 
   const { submissionType } = deal.dealSnapshot;
 
-  const dealCancellationIsEnabled = isDealCancellationEnabled(submissionType, user);
+  const dealCancellationIsEnabled = isDealCancellationEnabledForUser(submissionType, user);
 
   let showDealCancelButton = false;
   let hasDraftCancellation = false;

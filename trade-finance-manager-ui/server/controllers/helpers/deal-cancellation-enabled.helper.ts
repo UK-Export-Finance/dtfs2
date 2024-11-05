@@ -25,7 +25,7 @@ export const canSubmissionTypeBeCancelled = (submissionType: DealSubmissionType)
  * @param user - the session user
  * @returns true or false depending on the feature flag, submission type and user type
  */
-export const isDealCancellationEnabled = (submissionType: DealSubmissionType, user: TfmSessionUser): boolean => {
+export const isDealCancellationEnabledForUser = (submissionType: DealSubmissionType, user: TfmSessionUser): boolean => {
   const isUserAllowedToCancelDeal = userIsInTeam(user, [TEAM_IDS.PIM]);
   const isDealCancellationFeatureFlagEnabled = isTfmDealCancellationFeatureFlagEnabled();
   const isAcceptableSubmissionType = canSubmissionTypeBeCancelled(submissionType);

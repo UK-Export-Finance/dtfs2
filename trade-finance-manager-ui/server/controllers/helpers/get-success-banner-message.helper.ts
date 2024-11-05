@@ -2,7 +2,7 @@ import { DealSubmissionType, TFM_DEAL_CANCELLATION_STATUS, TfmDealCancellationWi
 import { format } from 'date-fns';
 import { TfmSessionUser } from '../../types/tfm-session-user';
 import api from '../../api';
-import { isDealCancellationEnabled } from './index';
+import { isDealCancellationEnabledForUser } from './deal-cancellation-enabled.helper';
 
 /**
  * Determines if a success message should be shown and returns the highest priority message.
@@ -20,7 +20,7 @@ export const getSuccessBannerMessage = async (
   dealId: string,
   ukefDealId: string,
 ): Promise<string | null> => {
-  const dealCancellationIsEnabled = isDealCancellationEnabled(submissionType, user);
+  const dealCancellationIsEnabled = isDealCancellationEnabledForUser(submissionType, user);
 
   if (!dealCancellationIsEnabled) {
     return null;
