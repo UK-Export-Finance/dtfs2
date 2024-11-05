@@ -35,6 +35,8 @@ const isMIAWithoutChangedToIssuedFacilities = (app) =>
 
 // Converts Api errors into more manageable objects
 const apiErrorHandler = ({ code, response }) => {
+  console.error('API error %s %o', code, response);
+
   if (code === 'ECONNABORTED') {
     throw httpError(501, 'Request timed out.');
   }
@@ -43,7 +45,6 @@ const apiErrorHandler = ({ code, response }) => {
     return response;
   }
 
-  console.error(response);
   throw httpError(response.status, response.statusText);
 };
 

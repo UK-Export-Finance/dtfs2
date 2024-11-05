@@ -24,4 +24,5 @@ export type AddPaymentViewModel = BaseViewModel & {
   multipleFeeRecordsSelected: boolean;
   canAddToExistingPayment: boolean;
   backLinkHref: string;
+  gbpTolerance: number;
 };

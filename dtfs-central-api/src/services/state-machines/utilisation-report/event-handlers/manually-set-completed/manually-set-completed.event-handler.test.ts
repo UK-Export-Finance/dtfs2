@@ -1,8 +1,9 @@
 import { EntityManager } from 'typeorm';
 import {
   DbRequestSource,
+  RECONCILIATION_COMPLETED,
+  REPORT_NOT_RECEIVED,
   REQUEST_PLATFORM_TYPE,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -22,7 +23,7 @@ describe('handleUtilisationReportManuallySetCompletedEvent', () => {
       save: mockSave,
     } as unknown as EntityManager;
 
-    const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED).build();
 
     // Act
     await handleUtilisationReportManuallySetCompletedEvent(report, {
@@ -32,7 +33,7 @@ describe('handleUtilisationReportManuallySetCompletedEvent', () => {
 
     // Assert
     expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
-    expect(report.status).toEqual(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED);
+    expect(report.status).toEqual(RECONCILIATION_COMPLETED);
     expect(report.lastUpdatedByIsSystemUser).toEqual(false);
     expect(report.lastUpdatedByPortalUserId).toBeNull();
     expect(report.lastUpdatedByTfmUserId).toEqual(requestSource.userId);
