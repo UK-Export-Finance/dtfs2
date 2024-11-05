@@ -33,7 +33,7 @@
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
-    "@ministryofjustice/frontend": "2.2.4",
+    "@ministryofjustice/frontend": "3.0.1",
     "@ukef/dtfs2-common": "1.0.0",
     "axios": "^1.7.7",
     "cheerio": "1.0.0-rc.12",
