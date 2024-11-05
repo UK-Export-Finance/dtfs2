@@ -57,8 +57,10 @@ const getCaseDeal = async (req, res) => {
     hasDraftCancellation = isDealCancellationInDraft(cancellation.status);
   }
 
-  const successMessage =
-    (await getSuccessBannerMessage(submissionType, user, userToken, dealId, getUkefDealId(deal.dealSnapshot))) ?? getFlashSuccessMessage(req);
+  const successBannerMessage = await getSuccessBannerMessage(submissionType, user, userToken, dealId, getUkefDealId(deal.dealSnapshot));
+  const flashSuccessMessage = getFlashSuccessMessage(req);
+
+  const successMessage = successBannerMessage || flashSuccessMessage;
 
   return res.render('case/deal/deal.njk', {
     deal: deal.dealSnapshot,
@@ -111,8 +113,10 @@ const getCaseTasks = async (req, res) => {
 
   const { user } = asUserSession(req.session);
 
-  const successMessage =
-    (await getSuccessBannerMessage(submissionType, user, userToken, dealId, getUkefDealId(deal.dealSnapshot))) ?? getFlashSuccessMessage(req);
+  const successBannerMessage = await getSuccessBannerMessage(submissionType, user, userToken, dealId, getUkefDealId(deal.dealSnapshot));
+  const flashSuccessMessage = getFlashSuccessMessage(req);
+
+  const successMessage = successBannerMessage || flashSuccessMessage;
 
   return res.render('case/tasks/tasks.njk', {
     deal: deal.dealSnapshot,
@@ -391,8 +395,10 @@ const getCaseDocuments = async (req, res) => {
 
     const { user } = asUserSession(req.session);
 
-    const successMessage =
-      (await getSuccessBannerMessage(submissionType, user, userToken, dealId, getUkefDealId(deal.dealSnapshot))) ?? getFlashSuccessMessage(req);
+    const successBannerMessage = await getSuccessBannerMessage(submissionType, user, userToken, dealId, getUkefDealId(deal.dealSnapshot));
+    const flashSuccessMessage = getFlashSuccessMessage(req);
+
+    const successMessage = successBannerMessage || flashSuccessMessage;
 
     return res.render('case/documents/documents.njk', {
       deal: deal.dealSnapshot,

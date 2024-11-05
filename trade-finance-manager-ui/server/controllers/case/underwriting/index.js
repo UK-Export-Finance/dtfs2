@@ -118,8 +118,10 @@ const getUnderwriterPage = async (req, res) => {
 
   const { submissionType } = deal.dealSnapshot;
 
-  const successMessage =
-    (await getSuccessBannerMessage(submissionType, user, userToken, dealId, getUkefDealId(deal.dealSnapshot))) ?? getFlashSuccessMessage(req);
+  const successBannerMessage = await getSuccessBannerMessage(submissionType, user, userToken, dealId, getUkefDealId(deal.dealSnapshot));
+  const flashSuccessMessage = getFlashSuccessMessage(req);
+
+  const successMessage = successBannerMessage || flashSuccessMessage;
 
   return res.render('case/underwriting/underwriting.njk', {
     activePrimaryNavigation: 'manage work',
