@@ -1,5 +1,6 @@
 import {
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  REPORT_NOT_RECEIVED,
+  PENDING_RECONCILIATION,
   UtilisationReportEntityMockBuilder,
   getOneIndexedMonth,
   getPreviousReportPeriodForBankScheduleByMonth,
@@ -43,14 +44,14 @@ context('Users can route to the payments page for a bank', () => {
       const reportPeriod = getPreviousReportPeriodForBankScheduleByMonth(bank.utilisationReportPeriodSchedule, submissionMonthStamp);
 
       if (bank.id === MONTHLY_REPORTING_BANK_ID) {
-        const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+        const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED)
           .withId(bank.id)
           .withBankId(bank.id)
           .withReportPeriod(reportPeriod)
           .build();
         cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [mockUtilisationReport]);
       } else {
-        const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+        const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
           .withId(bank.id)
           .withBankId(bank.id)
           .withReportPeriod(reportPeriod)
@@ -61,7 +62,7 @@ context('Users can route to the payments page for a bank', () => {
 
     // Insert a report for the previous month for a specific monthly reporting bank
     const previousMonthlyReportPeriod = getMonthlyReportPeriodForPreviousSubmissionMonth();
-    const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+    const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED)
       .withId(99999999)
       .withBankId(MONTHLY_REPORTING_BANK_ID)
       .withReportPeriod(previousMonthlyReportPeriod)

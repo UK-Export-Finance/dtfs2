@@ -1,7 +1,7 @@
 import { AzureFileInfoEntity } from '../azure-file-info';
 import { MOCK_AZURE_FILE_INFO, UtilisationReportEntityMockBuilder } from '../../test-helpers';
 import { DbRequestSource } from '../helpers';
-import { REQUEST_PLATFORM_TYPE, UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
+import { PENDING_RECONCILIATION, REPORT_NOT_RECEIVED, REQUEST_PLATFORM_TYPE, UTILISATION_REPORT_STATUS } from '../../constants';
 
 describe('UtilisationReportEntity', () => {
   describe('updateReportWithUploadDetails', () => {
@@ -26,7 +26,7 @@ describe('UtilisationReportEntity', () => {
     it('populates the report with the upload details and updates the other relevant fields', () => {
       // Arrange
       const azureFileInfo = AzureFileInfoEntity.create({ ...MOCK_AZURE_FILE_INFO, requestSource });
-      const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').build();
+      const report = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED).build();
 
       // Act
       report.updateWithUploadDetails({
@@ -39,7 +39,7 @@ describe('UtilisationReportEntity', () => {
       expect(report.dateUploaded).toEqual(mockDate);
       expect(report.uploadedByUserId).toEqual(uploadedByUserId);
       expect(report.azureFileInfo).toEqual(azureFileInfo);
-      expect(report.status).toEqual(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION);
+      expect(report.status).toEqual(PENDING_RECONCILIATION);
 
       expect(report.lastUpdatedByIsSystemUser).toEqual(false);
       expect(report.lastUpdatedByPortalUserId).toEqual(uploadedByUserId);
@@ -53,10 +53,10 @@ describe('UtilisationReportEntity', () => {
       userId: 'abc123',
     };
 
-    const allStatuses = Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS);
+    const allStatuses = Object.values(UTILISATION_REPORT_STATUS);
     it.each(allStatuses)(`sets the report status to '%s' and updates the 'lastUpdatedBy...' fields`, (status) => {
       // Arrange
-      const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').build();
+      const report = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED).build();
 
       // Act
       report.updateWithStatus({ status, requestSource });
