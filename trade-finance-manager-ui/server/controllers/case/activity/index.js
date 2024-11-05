@@ -40,7 +40,12 @@ const getActivity = async (req, res) => {
 
   const { submissionType } = deal.dealSnapshot;
 
-  const successBannerMessage = await getSuccessBannerMessage(submissionType, user, userToken, dealId, getUkefDealId(deal.dealSnapshot));
+  const successBannerMessage = await getSuccessBannerMessage({
+    submissionType,
+    userToken,
+    dealId,
+    ukefDealId: getUkefDealId(deal.dealSnapshot),
+  });
   const flashSuccessMessage = getFlashSuccessMessage(req);
 
   const successMessage = successBannerMessage || flashSuccessMessage;
@@ -88,7 +93,12 @@ const filterActivities = async (req, res) => {
 
   const { submissionType } = deal.dealSnapshot;
 
-  const successBannerMessage = await getSuccessBannerMessage(submissionType, user, userToken, dealId, getUkefDealId(deal.dealSnapshot));
+  const successBannerMessage = await getSuccessBannerMessage({
+    submissionType,
+    userToken,
+    dealId,
+    ukefDealId: getUkefDealId(deal.dealSnapshot),
+  });
   const flashSuccessMessage = getFlashSuccessMessage(req);
 
   const successMessage = successBannerMessage || flashSuccessMessage;
