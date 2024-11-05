@@ -6,11 +6,12 @@ import {
   FeeRecordEntityMockBuilder,
   REQUEST_PLATFORM_TYPE,
   UtilisationReportEntityMockBuilder,
+  PENDING_RECONCILIATION,
 } from '@ukef/dtfs2-common';
 import { handleFeeRecordPaymentAddedEvent } from './payment-added.event-handler';
 
 describe('handleFeeRecordPaymentAddedEvent', () => {
-  const PENDING_RECONCILIATION_REPORT = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+  const PENDING_RECONCILIATION_REPORT = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
 
   const mockSave = jest.fn();
   const mockEntityManager = {
