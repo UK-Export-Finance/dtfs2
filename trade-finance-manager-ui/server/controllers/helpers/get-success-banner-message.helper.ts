@@ -1,4 +1,4 @@
-import { DealSubmissionType, TFM_DEAL_CANCELLATION_STATUS, TfmDealCancellationWithStatus } from '@ukef/dtfs2-common';
+import { DealSubmissionType, TFM_DEAL_CANCELLATION_STATUS, TfmDealCancellationWithStatus, DATE_FORMATS } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
 import { TfmSessionUser } from '../../types/tfm-session-user';
 import api from '../../api';
@@ -34,7 +34,7 @@ export const getSuccessBannerMessage = async (
     return null;
   }
 
-  const formattedDate = format(new Date(cancellation.effectiveFrom), 'd MMMM yyyy');
+  const formattedDate = format(new Date(cancellation.effectiveFrom), DATE_FORMATS.D_MMMM_YYYY);
 
   return `Deal ${ukefDealId} scheduled for cancellation on ${formattedDate}`;
 };
