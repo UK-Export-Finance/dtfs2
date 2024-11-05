@@ -1,8 +1,8 @@
-import { REQUEST_PLATFORM_TYPE } from '../../constants';
+import { PENDING_RECONCILIATION, REQUEST_PLATFORM_TYPE } from '../../constants';
 import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '../../test-helpers';
 
 describe('PaymentEntity', () => {
-  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
 
   describe('updateWithAdditionalFeeRecords', () => {
     it('adds new fee records to the payment', () => {

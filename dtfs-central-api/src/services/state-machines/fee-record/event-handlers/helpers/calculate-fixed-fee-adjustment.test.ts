@@ -1,8 +1,8 @@
 import {
   FacilityUtilisationDataEntityMockBuilder,
   FeeRecordEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
   ReportPeriod,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { calculateFixedFeeAdjustment } from './calculate-fixed-fee-adjustment';
@@ -28,9 +28,7 @@ describe('calculateFixedFeeAdjustment', () => {
       start: { month: 1, year: 2024 },
       end: { month: 1, year: 2024 },
     };
-    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
-      .withReportPeriod(reportPeriod)
-      .build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withReportPeriod(reportPeriod).build();
     const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('11111111').build();
     const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('11111111').withReportPeriod(reportPeriod).build();
 
@@ -49,9 +47,7 @@ describe('calculateFixedFeeAdjustment', () => {
     ({ previousFixedFee, currentFixedFee, expected }) => {
       // Arrange
       const reportPeriod = aReportPeriod();
-      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
-        .withReportPeriod(reportPeriod)
-        .build();
+      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withReportPeriod(reportPeriod).build();
 
       const currentFacilityUtilisation = 123.456;
       const facilityId = '123456789';

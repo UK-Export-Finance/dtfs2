@@ -1,9 +1,9 @@
 import { ValuesOf } from './types-helper';
 import { MonthAndYear } from './date';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS, UTILISATION_REPORT_HEADERS, FEE_RECORD_STATUS } from '../constants';
+import { UTILISATION_REPORT_STATUS, UTILISATION_REPORT_HEADERS, FEE_RECORD_STATUS } from '../constants';
 import { Currency } from './currency';
 
-export type UtilisationReportReconciliationStatus = ValuesOf<typeof UTILISATION_REPORT_RECONCILIATION_STATUS>;
+export type UtilisationReportStatus = ValuesOf<typeof UTILISATION_REPORT_STATUS>;
 
 export type ReportPeriod = {
   start: MonthAndYear;
@@ -11,7 +11,7 @@ export type ReportPeriod = {
 };
 
 export type ReportWithStatus = {
-  status: UtilisationReportReconciliationStatus;
+  status: UtilisationReportStatus;
   reportId: number;
 };
 

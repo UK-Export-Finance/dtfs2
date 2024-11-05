@@ -1,7 +1,7 @@
 import {
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  RECONCILIATION_IN_PROGRESS,
   UtilisationReportEntityMockBuilder,
   FEE_RECORD_STATUS,
 } from '@ukef/dtfs2-common';
@@ -14,7 +14,7 @@ context(`users can sort premium payments table by total reported payments and to
   const bankId = '961';
   const reportId = 12;
 
-  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS)
     .withId(reportId)
     .withBankId(bankId)
     .withDateUploaded(new Date())

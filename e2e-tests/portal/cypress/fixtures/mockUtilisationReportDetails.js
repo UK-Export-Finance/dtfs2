@@ -1,5 +1,12 @@
 const { eachMonthOfInterval, getYear, getMonth, subMonths, addMonths } = require('date-fns');
-const { UtilisationReportEntityMockBuilder, AzureFileInfoEntity, MOCK_AZURE_FILE_INFO, REQUEST_PLATFORM_TYPE } = require('@ukef/dtfs2-common');
+const {
+  UtilisationReportEntityMockBuilder,
+  AzureFileInfoEntity,
+  MOCK_AZURE_FILE_INFO,
+  REQUEST_PLATFORM_TYPE,
+  PENDING_RECONCILIATION,
+  REPORT_NOT_RECEIVED,
+} = require('@ukef/dtfs2-common');
 const { BANK1_PAYMENT_REPORT_OFFICER1, BANK2_PAYMENT_REPORT_OFFICER1 } = require('../../../e2e-fixtures');
 
 const bankId = BANK1_PAYMENT_REPORT_OFFICER1.bank.id;
@@ -16,7 +23,7 @@ function* idGenerator() {
 const reportIdGenerator = idGenerator();
 
 const generateReportDetails = (year, month) =>
-  UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+  UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
     .withBankId(bankId)
     .withId(reportIdGenerator.next().value)
     .withReportPeriod({
@@ -42,7 +49,7 @@ const generateReports = (startMonthDate, endMonthDate) =>
 const previousReportDetails = generateReports(new Date('2020-01-01'), new Date('2023-01-01')).filter(({ reportPeriod }) => reportPeriod.start.year !== 2021);
 
 const february2023ReportDetails = [
-  UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+  UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED)
     .withId(reportIdGenerator.next().value)
     .withBankId(bankId)
     .withReportPeriod({
@@ -53,7 +60,7 @@ const february2023ReportDetails = [
 ];
 
 const march2023ReportDetails = [
-  UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+  UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED)
     .withId(reportIdGenerator.next().value)
     .withBankId(bankId)
     .withReportPeriod({
@@ -64,7 +71,7 @@ const march2023ReportDetails = [
 ];
 
 const december2023ToFebruary2024ReportDetails = [
-  UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
+  UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED)
     .withId(reportIdGenerator.next().value)
     .withBankId(BANK2_PAYMENT_REPORT_OFFICER1.bank.id)
     .withReportPeriod({
