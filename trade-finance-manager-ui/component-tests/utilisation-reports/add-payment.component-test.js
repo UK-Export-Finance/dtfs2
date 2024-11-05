@@ -5,6 +5,22 @@ const page = '../templates/utilisation-reports/add-payment.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
+  it('should add error prefix to page title when there are errors', () => {
+    const addPaymentViewModel = anAddPaymentViewModel();
+    addPaymentViewModel.errors.errorSummary = [{ text: 'an error', href: 'error-href' }];
+    const wrapper = render(addPaymentViewModel);
+
+    wrapper.expectDocumentTitle().toRead('Error - Add a payment');
+  });
+
+  it('should not add error prefix to page title when there are no errors', () => {
+    const addPaymentViewModel = anAddPaymentViewModel();
+    addPaymentViewModel.errors.errorSummary = [];
+    const wrapper = render(addPaymentViewModel);
+
+    wrapper.expectDocumentTitle().toRead('Add a payment');
+  });
+
   it('should render the main heading', () => {
     // Arrange
     const addPaymentViewModel = anAddPaymentViewModel();
