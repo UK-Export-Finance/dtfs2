@@ -78,7 +78,9 @@ describe('getSuccessBannerMessage', () => {
 
       // Assert
       const expectedFormattedDate = format(effectiveFromDate, DATE_FORMATS.D_MMMM_YYYY);
-      expect(response).toEqual(`Deal ${ukefDealId} scheduled for cancellation on ${expectedFormattedDate}`);
+      const expected = `Deal ${ukefDealId} scheduled for cancellation on ${expectedFormattedDate}`;
+
+      expect(response).toEqual(expected);
     });
   });
 

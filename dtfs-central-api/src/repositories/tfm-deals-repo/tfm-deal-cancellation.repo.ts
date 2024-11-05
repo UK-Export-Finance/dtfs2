@@ -207,7 +207,6 @@ export class TfmDealCancellationRepo {
     const updatedFacilities = await facilityCollection.find({ 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } }).toArray();
 
     const cancelledDealUkefId = getUkefDealId(deal.dealSnapshot);
-
     const riskExpiredFacilityUkefIds = getUkefFacilityIds(updatedFacilities);
 
     return { cancelledDealUkefId, riskExpiredFacilityUkefIds };
@@ -275,8 +274,9 @@ export class TfmDealCancellationRepo {
 
     const cancelledFacilities = await facilityCollection.find({ 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } }).toArray();
 
-    const cancelledFacilityUkefIds = getUkefFacilityIds(cancelledFacilities);
+    const cancelledDealUkefId = getUkefDealId(deal.dealSnapshot);
+    const riskExpiredFacilityUkefIds = getUkefFacilityIds(cancelledFacilities);
 
-    return { cancelledDealUkefId: getUkefDealId(deal.dealSnapshot), riskExpiredFacilityUkefIds: cancelledFacilityUkefIds };
+    return { cancelledDealUkefId, riskExpiredFacilityUkefIds };
   }
 }
