@@ -181,7 +181,7 @@ module.exports = {
     exposurePeriodInMonths: 12,
   })),
   getPartyDbInfo: ({ companyRegNo }) => {
-    if (process.env.AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED) {
+    if (process.env.AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED === 'true') {
       return companyRegNo === 'NO_MATCH'
         ? { status: 404, data: 'Party not found' }
         : {
