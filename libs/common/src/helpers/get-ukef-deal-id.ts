@@ -6,10 +6,4 @@ import { Deal } from '../types';
  * @param deal a BSS/EWCS or GEF deal
  * @returns the ukef deal id
  */
-export const getUkefDealId = (deal: Deal): string => {
-  if (deal.dealType === DEAL_TYPE.GEF) {
-    return deal.ukefDealId;
-  }
-
-  return deal.details.ukefDealId;
-};
+export const getUkefDealId = (deal: Deal): string => (deal.dealType === DEAL_TYPE.GEF ? deal.ukefDealId : deal.details.ukefDealId);
