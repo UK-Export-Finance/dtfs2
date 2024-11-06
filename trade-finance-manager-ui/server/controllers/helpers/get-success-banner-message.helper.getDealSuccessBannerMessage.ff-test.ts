@@ -2,6 +2,7 @@ import { Request } from 'express';
 import { createMocks } from 'node-mocks-http';
 import { AnyObject, DEAL_SUBMISSION_TYPE, TFM_DEAL_CANCELLATION_STATUS, TfmDealCancellationWithStatus, Deal, DEAL_TYPE } from '@ukef/dtfs2-common';
 import { getScheduledCancellationBannerMessage, getDealSuccessBannerMessage } from './get-success-banner-message.helper';
+import { getFlashSuccessMessage } from '../../helpers/get-flash-success-message';
 
 const getDealCancellationMock = jest.fn() as jest.Mock<Promise<Partial<TfmDealCancellationWithStatus>>>;
 
@@ -48,7 +49,7 @@ describe('getDealSuccessBannerMessage', () => {
       const response = await getDealSuccessBannerMessage({ userToken, dealSnapshot, req });
 
       // Assert
-      expect(response).toEqual(flashedMessage);
+      expect(response).toEqual(getFlashSuccessMessage(req));
     });
 
     it('returns scheduled cancellation message if deal is scheduled for cancellation', async () => {
@@ -84,7 +85,7 @@ describe('getDealSuccessBannerMessage', () => {
       const response = await getDealSuccessBannerMessage({ userToken, dealSnapshot, req });
 
       // Assert
-      expect(response).toEqual(flashedMessage);
+      expect(response).toEqual(getFlashSuccessMessage(req));
     });
 
     it('does not call getDealCancellation', async () => {

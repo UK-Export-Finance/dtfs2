@@ -17,4 +17,16 @@ describe('getFlashSuccessMessage', () => {
 
     expect(getFlashSuccessMessage(req)).toEqual(testMessage1);
   });
+
+  it('should return undefined if there is no stored message', () => {
+    const mockFlash = {
+      successMessage: [],
+    };
+
+    const { req } = createMocks<CustomExpressRequest<any>>({
+      flash: (key: 'successMessage') => mockFlash[key],
+    });
+
+    expect(getFlashSuccessMessage(req)).toBeUndefined();
+  });
 });

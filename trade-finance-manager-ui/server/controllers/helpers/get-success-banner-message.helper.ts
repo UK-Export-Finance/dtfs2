@@ -40,9 +40,17 @@ export const getScheduledCancellationBannerMessage = async ({ dealSnapshot, user
  * @param params.dealSnapshot - the deal
  * @param params.userToken - the user token
  * @param params.req the express request object
- * @returns the success message to be shown or null
+ * @returns the success message to be shown
  */
-export const getDealSuccessBannerMessage = async ({ dealSnapshot, userToken, req }: { dealSnapshot: Deal; userToken: string; req: Request }) => {
+export const getDealSuccessBannerMessage = async ({
+  dealSnapshot,
+  userToken,
+  req,
+}: {
+  dealSnapshot: Deal;
+  userToken: string;
+  req: Request;
+}): Promise<string | undefined> => {
   const scheduledCancellationMessage = await getScheduledCancellationBannerMessage({
     dealSnapshot,
     userToken,
