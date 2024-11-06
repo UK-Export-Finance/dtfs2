@@ -240,12 +240,9 @@ jobs:
         run: npm run db:migrate
 
       - name: Execute
-        working-directory: ./e2e-tests
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-          TZ: ${{ vars.TIMEZONE }}
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./portal --record false --spec "./portal/cypress/e2e/journeys/${{ matrix.spec }}"
+        run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
 
       - name: Stop
         working-directory: ./
