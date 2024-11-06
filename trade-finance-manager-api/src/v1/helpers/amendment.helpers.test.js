@@ -511,7 +511,6 @@ describe('sendFirstTaskEmail()', () => {
   beforeEach(() => {
     sendEmailApiSpy.mockClear();
     updateFacilityAmendmentSpy.mockClear();
-    jest.clearAllMocks();
 
     api.sendEmail = sendEmailApiSpy;
     api.updateFacilityAmendment = updateFacilityAmendmentSpy;
