@@ -1,7 +1,7 @@
 import { PENDING_RECONCILIATION, REPORT_NOT_RECEIVED, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import pages from '../../pages';
-import USERS from '../../../fixtures/users';
-import { NODE_TASKS } from '../../../../../e2e-fixtures';
+import pages from '../../../pages';
+import USERS from '../../../../fixtures/users';
+import { NODE_TASKS } from '../../../../../../e2e-fixtures';
 
 context('PDC_RECONCILE users can search for reports by bank and year', () => {
   const allBanksAlias = 'allBanksAlias';
