@@ -113,7 +113,7 @@ const setApplicationStatus = async ({ dealId, status, userToken }) => {
       {
         status,
       },
-      { ...config(userToken), timeout: 10000 },
+      { ...config(userToken), timeout: 30000 },
     ); // Application status has multiple api calls in portal api
     return data;
   } catch (error) {
