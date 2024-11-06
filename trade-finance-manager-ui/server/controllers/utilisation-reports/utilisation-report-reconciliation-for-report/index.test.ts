@@ -299,46 +299,56 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(viewModel.premiumPayments.payments[0].isChecked).toEqual(true);
     });
 
-    it("renders the page with 'isFeeRecordCorrectionFeatureFlagEnabled' set to true if the feature flag is enabled", async () => {
-      // Arrange
-      const { req, res } = httpMocks.createMocks({
-        session,
-        params: {
-          reportId,
-        },
+    describe('when the fee record correction feature flag is enabled', () => {
+      beforeEach(() => {
+        jest.mocked(isFeeRecordCorrectionFeatureFlagEnabled).mockReturnValue(true);
       });
 
-      jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(aUtilisationReportReconciliationDetailsResponse());
-      jest.mocked(isFeeRecordCorrectionFeatureFlagEnabled).mockReturnValue(true);
+      it("renders the page with 'isFeeRecordCorrectionFeatureFlagEnabled' set to true if the feature flag is enabled", async () => {
+        // Arrange
+        const { req, res } = httpMocks.createMocks({
+          session,
+          params: {
+            reportId,
+          },
+        });
 
-      // Act
-      await getUtilisationReportReconciliationByReportId(req, res);
+        jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(aUtilisationReportReconciliationDetailsResponse());
 
-      // Assert
-      expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
-      const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
-      expect(viewModel.isFeeRecordCorrectionFeatureFlagEnabled).toEqual(true);
+        // Act
+        await getUtilisationReportReconciliationByReportId(req, res);
+
+        // Assert
+        expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
+        const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
+        expect(viewModel.isFeeRecordCorrectionFeatureFlagEnabled).toEqual(true);
+      });
     });
 
-    it("renders the page with 'isFeeRecordCorrectionFeatureFlagEnabled' set to false if the feature flag is not enabled", async () => {
-      // Arrange
-      const { req, res } = httpMocks.createMocks({
-        session,
-        params: {
-          reportId,
-        },
+    describe('when the fee record correction feature flag is not enabled', () => {
+      beforeEach(() => {
+        jest.mocked(isFeeRecordCorrectionFeatureFlagEnabled).mockReturnValue(false);
       });
 
-      jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(aUtilisationReportReconciliationDetailsResponse());
-      jest.mocked(isFeeRecordCorrectionFeatureFlagEnabled).mockReturnValue(false);
+      it("renders the page with 'isFeeRecordCorrectionFeatureFlagEnabled' set to false", async () => {
+        // Arrange
+        const { req, res } = httpMocks.createMocks({
+          session,
+          params: {
+            reportId,
+          },
+        });
 
-      // Act
-      await getUtilisationReportReconciliationByReportId(req, res);
+        jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(aUtilisationReportReconciliationDetailsResponse());
 
-      // Assert
-      expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
-      const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
-      expect(viewModel.isFeeRecordCorrectionFeatureFlagEnabled).toEqual(false);
+        // Act
+        await getUtilisationReportReconciliationByReportId(req, res);
+
+        // Assert
+        expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
+        const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
+        expect(viewModel.isFeeRecordCorrectionFeatureFlagEnabled).toEqual(false);
+      });
     });
 
     it("renders the page with 'showMatchSuccessNotification' set to true if matchSuccess query param is set to 'true'", async () => {
