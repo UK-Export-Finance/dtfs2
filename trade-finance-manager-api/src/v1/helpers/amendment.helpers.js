@@ -331,7 +331,7 @@ const firstTaskEmailConfirmation = async (facilityId, amendmentId, auditDetails)
  * @param {string} [deal.dealSnapshot.ukefDealId] - The UKEF deal ID for GEF deals.
  * @param {Object} [deal.dealSnapshot.details] - The details object for BSS deals.
  * @param {string} [deal.dealSnapshot.details.ukefDealId] - The UKEF deal ID for BSS deals.
- * @param {Object} auditDetails - The audit details for logging purposes.
+ * @param {import("@ukef/dtfs2-common").AuditDetails}
  * @returns {Promise<void>} - A promise that resolves when the email has been sent and the flag has been updated.
  */
 const sendFirstTaskEmail = async (deal, auditDetails) => {
