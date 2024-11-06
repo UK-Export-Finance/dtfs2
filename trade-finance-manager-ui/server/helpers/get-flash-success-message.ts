@@ -2,7 +2,7 @@ import { Request } from 'express';
 
 /**
  * Retrieves the first success message from flash storage
- * @param flash the request flash method
+ * @param req the express request object
  * @return the first success message in flash storage
  */
-export const getFlashSuccessMessage = (flash: Request['flash']) => flash('successMessage')[0];
+export const getFlashSuccessMessage = (req: Request) => req.flash('successMessage')[0];

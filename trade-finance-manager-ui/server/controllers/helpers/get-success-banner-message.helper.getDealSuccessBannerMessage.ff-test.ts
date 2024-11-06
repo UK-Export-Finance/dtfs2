@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import { createMocks } from 'node-mocks-http';
 import { AnyObject, DEAL_SUBMISSION_TYPE, TFM_DEAL_CANCELLATION_STATUS, TfmDealCancellationWithStatus, Deal, DEAL_TYPE } from '@ukef/dtfs2-common';
 import { getScheduledCancellationBannerMessage, getDealSuccessBannerMessage } from './get-success-banner-message.helper';
 
@@ -19,6 +20,18 @@ describe('getDealSuccessBannerMessage', () => {
     jest.resetAllMocks();
   });
 
+  const flashedMessage = 'testMessage1';
+
+  const mockFlashResponse = {
+    successMessage: [flashedMessage],
+  };
+
+  const mockFlash = ((key: 'successMessage') => mockFlashResponse[key]) as Request['flash'];
+
+  const { req } = createMocks({
+    flash: mockFlash,
+  });
+
   describe.each([AIN, MIN])('when the deal is %s', (submissionType) => {
     const dealSnapshot = {
       dealType: DEAL_TYPE.GEF,
@@ -27,20 +40,12 @@ describe('getDealSuccessBannerMessage', () => {
       ukefDealId,
     } as unknown as Deal;
 
-    const flashedMessage = 'testMessage1';
-
-    const mockFlashResponse = {
-      successMessage: [flashedMessage],
-    };
-
-    const flash = ((key: 'successMessage') => mockFlashResponse[key]) as Request['flash'];
-
     it('returns flashed message if there is no scheduled cancellation message', async () => {
       // Arrange
       getDealCancellationMock.mockResolvedValue({});
 
       // Act
-      const response = await getDealSuccessBannerMessage({ userToken, dealSnapshot, flash });
+      const response = await getDealSuccessBannerMessage({ userToken, dealSnapshot, req });
 
       // Assert
       expect(response).toEqual(flashedMessage);
@@ -57,7 +62,7 @@ describe('getDealSuccessBannerMessage', () => {
       });
 
       // Act
-      const response = await getDealSuccessBannerMessage({ userToken, dealSnapshot, flash });
+      const response = await getDealSuccessBannerMessage({ userToken, dealSnapshot, req });
 
       // Assert
       const expected = await getScheduledCancellationBannerMessage({ dealSnapshot, userToken });
@@ -74,17 +79,9 @@ describe('getDealSuccessBannerMessage', () => {
       ukefDealId,
     } as unknown as Deal;
 
-    const flashedMessage = 'testMessage1';
-
-    const mockFlashResponse = {
-      successMessage: [flashedMessage],
-    };
-
-    const flash = ((key: 'successMessage') => mockFlashResponse[key]) as Request['flash'];
-
     it('returns flashed message', async () => {
       // Act
-      const response = await getDealSuccessBannerMessage({ userToken, dealSnapshot, flash });
+      const response = await getDealSuccessBannerMessage({ userToken, dealSnapshot, req });
 
       // Assert
       expect(response).toEqual(flashedMessage);
@@ -92,7 +89,7 @@ describe('getDealSuccessBannerMessage', () => {
 
     it('does not call getDealCancellation', async () => {
       // Act
-      await getDealSuccessBannerMessage({ userToken, dealSnapshot, flash });
+      await getDealSuccessBannerMessage({ userToken, dealSnapshot, req });
 
       // Assert
       expect(getDealCancellationMock).toHaveBeenCalledTimes(0);

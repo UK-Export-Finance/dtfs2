@@ -119,7 +119,7 @@ const getUnderwriterPage = async (req, res) => {
   const successMessage = await getDealSuccessBannerMessage({
     dealSnapshot,
     userToken,
-    flash: req.flash,
+    req,
   });
 
   return res.render('case/underwriting/underwriting.njk', {

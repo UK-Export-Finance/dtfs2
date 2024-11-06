@@ -66,7 +66,7 @@ const getCaseDeal = async (req, res) => {
   const successMessage = await getDealSuccessBannerMessage({
     dealSnapshot,
     userToken,
-    flash: req.flash,
+    req,
   });
 
   return res.render('case/deal/deal.njk', {
@@ -121,7 +121,7 @@ const getCaseTasks = async (req, res) => {
   const successMessage = await getDealSuccessBannerMessage({
     dealSnapshot,
     userToken,
-    flash: req.flash,
+    req,
   });
 
   return res.render('case/tasks/tasks.njk', {
@@ -402,7 +402,7 @@ const getCaseDocuments = async (req, res) => {
     const successMessage = await getDealSuccessBannerMessage({
       dealSnapshot,
       userToken,
-      flash: req.flash,
+      req,
     });
 
     return res.render('case/documents/documents.njk', {
