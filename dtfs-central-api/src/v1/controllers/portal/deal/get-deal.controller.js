@@ -2,7 +2,7 @@ const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
-const { mergeTfmValuesIntoPortalDeal } = require('../../../../helpers/combine-tfm-values-into-portal-deal');
+const { mergeTfmValuesIntoPortalDeal } = require('../../../../helpers');
 
 const extendDealWithFacilities = async (deal) => {
   const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);

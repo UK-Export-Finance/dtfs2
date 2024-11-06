@@ -11,3 +11,4 @@ export { getPreviousReportPeriod } from './get-previous-report-period';
 export { calculateUkefShareOfUtilisation } from './calculate-ukef-share-of-utilisation';
 export { getKeyingSheetCalculationFacilityValues } from './get-keying-sheet-calculation-facility-values';
 export * from './amendments';
+export * from './merge-tfm-values-into-portal-deal';

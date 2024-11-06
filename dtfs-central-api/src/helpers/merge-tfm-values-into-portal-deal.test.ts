@@ -1,5 +1,5 @@
 import { Deal, DEAL_STATUS, TFM_DEAL_STAGE, TfmDeal } from '@ukef/dtfs2-common';
-import { mergeTfmValuesIntoPortalDeal } from './combine-tfm-values-into-portal-deal';
+import { mergeTfmValuesIntoPortalDeal } from './merge-tfm-values-into-portal-deal';
 
 const portalDeal = {
   status: DEAL_STATUS.UKEF_ACKNOWLEDGED,
