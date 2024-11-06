@@ -301,7 +301,7 @@ jobs:
         uses: ./.github/modules/retry
         with:
           command: npm run api-test
-          retry-limit: ${{ vars.RETRY_LIMIT }}
+          retry-limit: 2
           working-directory: ./azure-functions/${{ matrix.functions }}
 
       - name: Coverage
