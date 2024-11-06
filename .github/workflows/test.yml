@@ -240,12 +240,12 @@ jobs:
         run: npm run db:migrate
 
       - name: Execute
-        uses: ./.github/modules/retry
-        with:
-          command: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
-          retry-limit: ${{ vars.RETRY_LIMIT }}
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+        working-directory: ./e2e-tests
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+          TZ: ${{ vars.TIMEZONE }}
+        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./portal --record false --spec "./portal/cypress/e2e/journeys/${{ matrix.spec }}"
 
       - name: Stop
         working-directory: ./
@@ -298,11 +298,8 @@ jobs:
           retry-limit: ${{ vars.RETRY_LIMIT }}
 
       - name: ${{ matrix.functions }}
-        uses: ./.github/modules/retry
-        with:
-          command: npm run api-test
-          retry-limit: 2
-          working-directory: ./azure-functions/${{ matrix.functions }}
+        working-directory: ./azure-functions/${{ matrix.functions }}
+        run: npm run api-test
 
       - name: Coverage
         uses: codecov/codecov-action@v4
