@@ -286,7 +286,7 @@ jobs:
 
       - name: Dependencies
         working-directory: ./
-        run: npm i
+        run: npm ci
 
       - name: Start
         working-directory: ./
@@ -309,9 +309,7 @@ jobs:
       - name: Execute
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-          JEST_TOTAL_SHARDS: 2  # Total number of shards
-          JEST_SHARD_INDEX: ${{ matrix.shard }}  # Current shard index
-        run: docker compose exec -T ${{ matrix.services }} npm run api-test:shard --workspace=${{ matrix.services }}
+        run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }} --shard=${{ matrix.shard }}/3  --runInBand
 
       - name: Stop
         working-directory: ./

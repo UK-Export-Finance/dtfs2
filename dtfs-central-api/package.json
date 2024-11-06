@@ -21,7 +21,6 @@
   "scripts": {
     "api-test": "jest --coverage --verbose --forceExit --config=api-test.jest.config.js",
     "api-test-dev": "jest --verbose --forceExit --runInBand --config=api-test.jest.config.js",
-    "api-test:shard": "jest --config=api-test.jest.config.js --shard=${JEST_SHARD_INDEX}/${JEST_TOTAL_SHARDS}",
     "lint": "eslint --color **/*.{js,ts} --ignore-path ../.eslintignore",
     "lint:fix": "eslint --fix --color **/*.{ts,js}",
     "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js} --ignore-path ../.prettierignore",
