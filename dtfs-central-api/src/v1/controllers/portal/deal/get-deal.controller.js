@@ -59,6 +59,9 @@ const findOneDeal = async (_id, callback) => {
   const portalDeal = await portalDealsCollection.findOne({ _id: { $eq: ObjectId(_id) } });
 
   if (!portalDeal) {
+    if (callback) {
+      callback(null);
+    }
     return null;
   }
 

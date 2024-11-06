@@ -11,6 +11,8 @@ const { createDeal } = require('../../helpers/create-deal');
 const { createFacility } = require('../../helpers/create-facility');
 const { createTfmUser } = require('../../helpers/create-tfm-user');
 
+const originalProcessEnv = { ...process.env };
+
 const newDeal = aDeal({
   dealType: DEALS.DEAL_TYPE.BSS_EWCS,
   editedBy: [],
@@ -93,6 +95,8 @@ describe('/v1/portal/deals', () => {
 
     describe('when the deal is cancelled in tfm', () => {
       beforeEach(async () => {
+        process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'true';
+
         await testApi
           .put({
             dealType: DEALS.DEAL_TYPE.BSS_EWCS,
@@ -133,6 +137,10 @@ describe('/v1/portal/deals', () => {
         await testApi
           .post({ cancellation: tfmDealCancellation, auditDetails: generateTfmAuditDetails(tfmUserId) })
           .to(`/v1/tfm/deals/${dealId}/cancellation/submit`);
+      });
+
+      afterAll(() => {
+        process.env = { ...originalProcessEnv };
       });
 
       it('returns deal with status cancelled', async () => {
