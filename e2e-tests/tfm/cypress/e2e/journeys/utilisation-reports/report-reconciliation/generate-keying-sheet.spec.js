@@ -8,10 +8,10 @@ import {
   CURRENCY,
   FEE_RECORD_STATUS,
 } from '@ukef/dtfs2-common';
-import pages from '../../pages';
-import USERS from '../../../fixtures/users';
-import { NODE_TASKS } from '../../../../../e2e-fixtures';
-import relative from '../../relativeURL';
+import pages from '../../../pages';
+import USERS from '../../../../fixtures/users';
+import { NODE_TASKS } from '../../../../../../e2e-fixtures';
+import relative from '../../../relativeURL';
 
 context('PDC_RECONCILE users can generate keying data', () => {
   const BANK_ID = '961';

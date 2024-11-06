@@ -7,6 +7,7 @@ export * from './custom-axios-validate-status';
 export * from './date-validation';
 export {
   isTfmPaymentReconciliationFeatureFlagEnabled,
+  isFeeRecordCorrectionFeatureFlagEnabled,
   isTfmFacilityEndDateFeatureFlagEnabled,
   isTfmDealCancellationFeatureFlagEnabled,
   isTfmSsoFeatureFlagEnabled,
