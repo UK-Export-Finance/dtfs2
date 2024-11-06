@@ -27,19 +27,15 @@ describe('user controller', () => {
     });
 
     it('should upsert user in the database', async () => {
-      await makeRequest();
+      await upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
 
       expect(upsertTfmUserFromEntraIdUserSpy).toHaveBeenCalledWith({ entraIdUser, auditDetails });
     });
 
     it('should return the mapped user', async () => {
-      const result = await makeRequest();
+      const result = await upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
 
       expect(result).toEqual(mappedUserDetails);
     });
-
-    async function makeRequest() {
-      return await upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
-    }
   });
 });
