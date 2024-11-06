@@ -1,7 +1,6 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
-import { isEmpty } from 'lodash';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { asUserSession } from '../../../helpers/express-session';
 import { BankRequestDateViewModel } from '../../../types/view-models';
@@ -9,6 +8,7 @@ import { validateBankRequestDate } from './validation/validate-bank-request-date
 import api from '../../../api';
 import { canSubmissionTypeBeCancelled } from '../../helpers';
 import { getPreviousPageUrlForCancellationFlow } from './helpers/get-previous-page-url';
+import { isDealCancellationInDraft } from '../../helpers/deal-cancellation-enabled.helper';
 
 export type GetBankRequestDateRequest = CustomExpressRequest<{ params: { _id: string }; query: { status?: string } }>;
 export type PostBankRequestDateRequest = CustomExpressRequest<{
@@ -43,7 +43,7 @@ export const getBankRequestDate = async (req: GetBankRequestDateRequest, res: Re
 
     const cancellation = await api.getDealCancellation(_id, userToken);
 
-    if (isEmpty(cancellation)) {
+    if (!isDealCancellationInDraft(cancellation.status)) {
       return res.redirect(`/case/${_id}/deal`);
     }
 

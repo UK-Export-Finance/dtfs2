@@ -1,4 +1,4 @@
-const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { FACILITY_TYPE, ACTIVITY_TYPES } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../constants');
 
 const MOCK_TFM_DEAL_AIN_SUBMITTED = {
@@ -137,7 +137,7 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
   tfm: {
     activities: [
       {
-        type: 'ACTIVITY',
+        type: ACTIVITY_TYPES.ACTIVITY,
         timestamp: 1643727515,
         author: {
           firstName: 'UKEF test bank (Delegated)',
@@ -148,7 +148,7 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
         label: 'Automatic inclusion notice submitted',
       },
       {
-        type: 'ACTIVITY',
+        type: ACTIVITY_TYPES.ACTIVITY,
         timestamp: 1643727569,
         author: {
           firstName: 'UKEF test bank (Delegated)',

@@ -353,7 +353,7 @@ context('Case tasks - AIN deal', () => {
     });
   });
 
-  it.only('updates task `date started` and `date completed` table cells`.', () => {
+  it('updates task `date started` and `date completed` table cells`.', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 

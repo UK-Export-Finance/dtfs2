@@ -5,8 +5,12 @@ import {
   FeeRecordEntityMockBuilder,
   UtilisationReportEntity,
   FeeRecordEntity,
-  UtilisationReportReconciliationStatus,
+  UtilisationReportStatus,
   FeeRecordPaymentJoinTableEntity,
+  FEE_RECORD_STATUS,
+  REQUEST_PLATFORM_TYPE,
+  RECONCILIATION_IN_PROGRESS,
+  PENDING_RECONCILIATION,
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
@@ -17,7 +21,7 @@ jest.mock('../helpers');
 describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
   const tfmUserId = 'abc123';
   const requestSource: DbRequestSource = {
-    platform: 'TFM',
+    platform: REQUEST_PLATFORM_TYPE.TFM,
     userId: tfmUserId,
   };
 
@@ -30,10 +34,10 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
     update: mockUpdate,
   } as unknown as EntityManager;
 
-  const aReconciliationInProgressReport = () => UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+  const aReconciliationInProgressReport = () => UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
 
   const aMatchedFeeRecordForReportWithFacilityId = (report: UtilisationReportEntity, facilityId: string) =>
-    FeeRecordEntityMockBuilder.forReport(report).withStatus('MATCH').withFacilityId(facilityId).build();
+    FeeRecordEntityMockBuilder.forReport(report).withStatus(FEE_RECORD_STATUS.MATCH).withFacilityId(facilityId).build();
 
   const aMockEventHandler = () => jest.fn();
   const aMockFeeRecordStateMachine = (eventHandler: jest.Mock): FeeRecordStateMachine =>
@@ -81,7 +85,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
     expect(mockFind).toHaveBeenCalledWith(FeeRecordEntity, {
       where: {
         report: { id: utilisationReport.id },
-        status: In(['TO_DO', 'DOES_NOT_MATCH']),
+        status: In([FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.DOES_NOT_MATCH]),
       },
     });
 
@@ -132,7 +136,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
       expect(mockFind).toHaveBeenCalledWith(FeeRecordEntity, {
         where: {
           report: { id: utilisationReport.id },
-          status: In(['TO_DO', 'DOES_NOT_MATCH']),
+          status: In([FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.DOES_NOT_MATCH]),
         },
       });
 
@@ -178,7 +182,10 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
 
       jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
 
-      const toDoFeeRecordWithSameFacilityId = FeeRecordEntityMockBuilder.forReport(utilisationReport).withStatus('TO_DO').withFacilityId(facilityId).build();
+      const toDoFeeRecordWithSameFacilityId = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+        .withStatus(FEE_RECORD_STATUS.TO_DO)
+        .withFacilityId(facilityId)
+        .build();
       mockFind.mockResolvedValue([toDoFeeRecordWithSameFacilityId]);
 
       // Act
@@ -192,7 +199,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
       expect(mockFind).toHaveBeenCalledWith(FeeRecordEntity, {
         where: {
           report: { id: utilisationReport.id },
-          status: In(['TO_DO', 'DOES_NOT_MATCH']),
+          status: In([FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.DOES_NOT_MATCH]),
         },
       });
 
@@ -213,7 +220,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
 
   it('updates and saves the updated report', async () => {
     // Arrange
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
 
     mockFind.mockResolvedValue([]);
 
@@ -233,7 +240,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
 
   it('updates and saves the report setting status to RECONCILIATION_IN_PROGRESS when the status is PENDING_RECONCILIATION', async () => {
     // Arrange
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
 
     mockFind.mockResolvedValue([]);
 
@@ -246,7 +253,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
 
     // Assert
     expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, utilisationReport);
-    expect(utilisationReport.status).toBe<UtilisationReportReconciliationStatus>('RECONCILIATION_IN_PROGRESS');
+    expect(utilisationReport.status).toBe<UtilisationReportStatus>(RECONCILIATION_IN_PROGRESS);
     expect(utilisationReport.lastUpdatedByIsSystemUser).toEqual(false);
     expect(utilisationReport.lastUpdatedByPortalUserId).toBeNull();
     expect(utilisationReport.lastUpdatedByTfmUserId).toEqual(tfmUserId);

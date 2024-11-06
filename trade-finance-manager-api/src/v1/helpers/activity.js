@@ -1,3 +1,5 @@
+const { ACTIVITY_TYPES } = require('@ukef/dtfs2-common');
+
 const CONSTANTS = require('../../constants');
 const api = require('../api');
 
@@ -90,7 +92,7 @@ const getLabel = (record, deal) => {
  * @returns {Object} Activity object
  */
 const getObject = (record, deal) => ({
-  type: CONSTANTS.ACTIVITY.TYPE.ACTIVITY,
+  type: ACTIVITY_TYPES.ACTIVITY,
   timestamp: getTimestamp(record),
   author: getAuthor(deal),
   text: getDescription(record, deal),

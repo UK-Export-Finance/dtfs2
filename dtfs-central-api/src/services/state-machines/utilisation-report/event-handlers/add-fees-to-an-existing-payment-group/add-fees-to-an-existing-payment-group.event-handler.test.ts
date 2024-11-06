@@ -6,6 +6,8 @@ import {
   UtilisationReportEntity,
   PaymentEntityMockBuilder,
   PaymentEntity,
+  REQUEST_PLATFORM_TYPE,
+  RECONCILIATION_IN_PROGRESS,
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent } from './add-fees-to-an-existing-payment-group.event-handler';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
@@ -16,7 +18,7 @@ jest.mock('../helpers');
 describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
   const tfmUserId = 'abc123';
   const requestSource: DbRequestSource = {
-    platform: 'TFM',
+    platform: REQUEST_PLATFORM_TYPE.TFM,
     userId: tfmUserId,
   };
 
@@ -25,7 +27,7 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
     save: mockSave,
   } as unknown as EntityManager;
 
-  const aReconciliationInProgressReport = () => UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+  const aReconciliationInProgressReport = () => UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
 
   const aMockEventHandler = () => jest.fn();
   const aMockFeeRecordStateMachine = (eventHandler: jest.Mock): FeeRecordStateMachine =>

@@ -3,7 +3,7 @@ import {
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  RECONCILIATION_IN_PROGRESS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import pages from '../../pages';
@@ -20,7 +20,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
   const paymentCurrency = CURRENCY.GBP;
 
   const aUtilisationReport = () =>
-    UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+    UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS)
       .withId(reportIdGenerator.next().value)
       .withBankId('961')
       .withDateUploaded(new Date())

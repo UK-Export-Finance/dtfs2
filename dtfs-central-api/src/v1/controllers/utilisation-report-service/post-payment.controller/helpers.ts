@@ -1,11 +1,12 @@
 import { In } from 'typeorm';
-import { FeeRecordEntity, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { FeeRecordEntity, FeeRecordStatus, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { InvalidPayloadError, NotFoundError } from '../../../../errors';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { NewPaymentDetails } from '../../../../types/utilisation-reports';
 import { executeWithSqlTransaction } from '../../../../helpers';
+import { validateFeeRecordsFormCompleteGroup } from '../../../validation/utilisation-report-service/fee-record-validator';
 
 /**
  * Adds a payment to the utilisation report with the specified id and
@@ -34,6 +35,8 @@ export const addPaymentToUtilisationReport = async (
     throw new InvalidPayloadError(`Payment currency '${payment.currency}' does not match fee record payment currency`);
   }
 
+  await validateFeeRecordsFormCompleteGroup(feeRecordIds);
+
   return await executeWithSqlTransaction<FeeRecordStatus>(async (transactionEntityManager) => {
     await utilisationReportStateMachine.handleEvent({
       type: 'ADD_A_PAYMENT',
@@ -42,7 +45,7 @@ export const addPaymentToUtilisationReport = async (
         feeRecords,
         paymentDetails: payment,
         requestSource: {
-          platform: 'TFM',
+          platform: REQUEST_PLATFORM_TYPE.TFM,
           userId: user._id.toString(),
         },
       },

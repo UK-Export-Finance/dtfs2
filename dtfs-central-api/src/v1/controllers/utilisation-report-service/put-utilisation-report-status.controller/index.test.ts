@@ -4,11 +4,14 @@ import { FindOptionsWhere, EntityManager } from 'typeorm';
 import {
   AzureFileInfoEntity,
   MOCK_AZURE_FILE_INFO,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
   ReportWithStatus,
   REQUEST_PLATFORM_TYPE,
+  PENDING_RECONCILIATION,
+  RECONCILIATION_COMPLETED,
+  UTILISATION_REPORT_STATUS,
+  UtilisationReportStatus,
 } from '@ukef/dtfs2-common';
 import { PutUtilisationReportStatusRequest, putUtilisationReportStatus } from '.';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
@@ -73,7 +76,7 @@ describe('put-utilisation-report-status.controller', () => {
     condition                                                  | invalidReportsWithStatus
     ${"'req.body.reportsWithStatus' is undefined"}             | ${undefined}
     ${"'req.body.reportsWithStatus[0].status' is undefined"}   | ${[{ reportId: 1, status: undefined }]}
-    ${"'req.body.reportsWithStatus[0].reportId' is undefined"} | ${[{ reportId: undefined, status: 'PENDING_RECONCILIATION' }]}
+    ${"'req.body.reportsWithStatus[0].reportId' is undefined"} | ${[{ reportId: undefined, status: PENDING_RECONCILIATION }]}
   `('responds with an InvalidPayloadError if $condition', async ({ invalidReportsWithStatus }: { invalidReportsWithStatus?: ReportWithStatus[] }) => {
     // Arrange
     const { req, res } = getHttpMocks();
@@ -96,11 +99,11 @@ describe('put-utilisation-report-status.controller', () => {
       const reportsWithStatusForMarkingAsCompleted: ReportWithStatus[] = [
         {
           reportId: 1,
-          status: 'RECONCILIATION_COMPLETED',
+          status: RECONCILIATION_COMPLETED,
         },
         {
           reportId: 2,
-          status: 'RECONCILIATION_COMPLETED',
+          status: RECONCILIATION_COMPLETED,
         },
       ];
 
@@ -108,7 +111,7 @@ describe('put-utilisation-report-status.controller', () => {
       req.body.reportsWithStatus = reportsWithStatusForMarkingAsCompleted;
 
       const existingReports = reportsWithStatusForMarkingAsCompleted.map(({ reportId }) =>
-        UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).build(),
+        UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withId(reportId).build(),
       );
 
       utilisationReportRepoFindOneBySpy.mockImplementation(mockFindOneBy(existingReports));
@@ -121,7 +124,7 @@ describe('put-utilisation-report-status.controller', () => {
       expect(mockSave).toHaveBeenCalledTimes(reportsWithStatusForMarkingAsCompleted.length);
 
       existingReports.forEach((report) => {
-        expect(report.status).toEqual(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED);
+        expect(report.status).toEqual(RECONCILIATION_COMPLETED);
         expect(report.lastUpdatedByIsSystemUser).toEqual(false);
         expect(report.lastUpdatedByPortalUserId).toBeNull();
         expect(report.lastUpdatedByTfmUserId).toEqual(userId);
@@ -129,13 +132,13 @@ describe('put-utilisation-report-status.controller', () => {
       });
     });
 
-    it.each([UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED, UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED])(
+    it.each([UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED, UTILISATION_REPORT_STATUS.RECONCILIATION_COMPLETED])(
       "responds with an error if trying to mark a report with status '%s' as completed",
-      async (reportStatus) => {
+      async (reportStatus: UtilisationReportStatus) => {
         // Arrange
         const reportWithStatus: ReportWithStatus = {
           reportId: 1,
-          status: 'RECONCILIATION_COMPLETED',
+          status: RECONCILIATION_COMPLETED,
         };
 
         const { req, res } = getHttpMocks();
@@ -164,11 +167,11 @@ describe('put-utilisation-report-status.controller', () => {
       const reportsWithStatusForMarkingAsNotCompleted: ReportWithStatus[] = [
         {
           reportId: 1,
-          status: 'PENDING_RECONCILIATION',
+          status: PENDING_RECONCILIATION,
         },
         {
           reportId: 2,
-          status: 'PENDING_RECONCILIATION',
+          status: PENDING_RECONCILIATION,
         },
       ];
 
@@ -184,7 +187,7 @@ describe('put-utilisation-report-status.controller', () => {
       });
 
       const existingReports = reportsWithStatusForMarkingAsNotCompleted.map((reportWithStatus) =>
-        UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withId(reportWithStatus.reportId).withAzureFileInfo(azureFileInfo).build(),
+        UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_COMPLETED).withId(reportWithStatus.reportId).withAzureFileInfo(azureFileInfo).build(),
       );
 
       utilisationReportRepoFindOneBySpy.mockImplementation(mockFindOneBy(existingReports));
@@ -206,13 +209,13 @@ describe('put-utilisation-report-status.controller', () => {
       });
     });
 
-    it.each([UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION, UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED])(
+    it.each([UTILISATION_REPORT_STATUS.PENDING_RECONCILIATION, UTILISATION_REPORT_STATUS.REPORT_NOT_RECEIVED])(
       "responds with an error if trying to mark a report with status '%s' as not completed",
-      async (reportStatus) => {
+      async (reportStatus: UtilisationReportStatus) => {
         // Arrange
         const reportWithStatus: ReportWithStatus = {
           reportId: 1,
-          status: 'PENDING_RECONCILIATION',
+          status: PENDING_RECONCILIATION,
         };
 
         const { req, res } = getHttpMocks();

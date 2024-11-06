@@ -99,7 +99,9 @@
 
       <form method="POST" autocomplete="off">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-        <input type="hidden" name="cancellation" value="{{ cancellation }}">
+        <input type="hidden" name="reason" value="{{ cancellation.reason }}">
+        <input type="hidden" name="bankRequestDate" value="{{ cancellation.bankRequestDate }}">
+        <input type="hidden" name="effectiveFrom" value="{{ cancellation.effectiveFrom }}">
         <div class="govuk-!-margin-bottom-5">
           {{ govukButton({
             text: "Cancel deal",

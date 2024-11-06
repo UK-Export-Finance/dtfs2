@@ -121,7 +121,10 @@
             classes: "govuk-label--m"
           },
           hint: {
-            text: "This is the ongoing percentage you’ll charge the exporter for providing the cash facility. It does not include any upfront fees you charge, such as arrangement fees."
+            text: "This is the annual margin charged as a percentage to the exporter for providing the " + facilityTypeString + " facility. It does not include any upfront fees you charge, such as arrangement fees.",
+            attributes: {
+              'data-cy': 'interest-percentage-hint'
+            }
           },
           id: "interestPercentage",
           name: "interestPercentage",

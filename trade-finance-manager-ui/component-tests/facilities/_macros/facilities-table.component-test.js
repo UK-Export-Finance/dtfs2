@@ -1,4 +1,5 @@
 /* eslint-disable no-underscore-dangle */
+const { TFM_FACILITY_STAGE } = require('@ukef/dtfs2-common');
 const { componentRenderer } = require('../../componentRenderer');
 
 const component = '../templates/facilities/_macros/facilities-table.njk';
@@ -140,6 +141,27 @@ describe(component, () => {
     });
 
     describe('`facility stage` table cell', () => {
+      describe('when the facility has a tfm facility stage', () => {
+        it('should render the tfm facility stage', () => {
+          const facilityWithTfmStage = {
+            ...params.facilities[0],
+            tfmFacilityStage: TFM_FACILITY_STAGE.RISK_EXPIRED,
+          };
+
+          const paramsWithTfmFacilityStage = {
+            facilities: [facilityWithTfmStage],
+            user: params.user,
+          };
+
+          wrapper = render(paramsWithTfmFacilityStage);
+
+          paramsWithTfmFacilityStage.facilities.forEach((facility) => {
+            const cellSelector = `[data-cy="facility-${facility.facilityId}-facilityStage"]`;
+            wrapper.expectText(cellSelector).toRead(TFM_FACILITY_STAGE.RISK_EXPIRED);
+          });
+        });
+      });
+
       describe('when the facility has been issued', () => {
         describe('when the facility has an amendment in progress', () => {
           const issuedFacilityWithAmendmentInProgress = {

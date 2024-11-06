@@ -1,5 +1,5 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, FeeRecordEntity, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { DbRequestSource, FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { BaseFeeRecordEvent } from '../../event/base-fee-record.event';
 
 type PaymentDeletedEventPayload = {
@@ -26,7 +26,7 @@ export const handleFeeRecordPaymentDeletedEvent = async (
   { transactionEntityManager, feeRecordsAndPaymentsMatch, hasAttachedPayments, requestSource }: PaymentDeletedEventPayload,
 ): Promise<FeeRecordEntity> => {
   if (hasAttachedPayments) {
-    const status: FeeRecordStatus = feeRecordsAndPaymentsMatch ? 'MATCH' : 'DOES_NOT_MATCH';
+    const status: FeeRecordStatus = feeRecordsAndPaymentsMatch ? FEE_RECORD_STATUS.MATCH : FEE_RECORD_STATUS.DOES_NOT_MATCH;
     feeRecord.updateWithStatus({ status, requestSource });
     return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
   }
@@ -35,6 +35,6 @@ export const handleFeeRecordPaymentDeletedEvent = async (
     throw new Error('Fee records and payments cannot match when there are no attached payments');
   }
 
-  feeRecord.updateWithStatus({ status: 'TO_DO', requestSource });
+  feeRecord.updateWithStatus({ status: FEE_RECORD_STATUS.TO_DO, requestSource });
   return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
 };

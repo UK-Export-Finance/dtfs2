@@ -12,7 +12,7 @@ const mapDealSnapshot = (deal) => {
     ...dealSnapshot,
     submissionDetails: mapSubmissionDetails(submissionDetails),
     eligibility: eligibility ? mapEligibility(eligibility) : {},
-    facilities: mapFacilities(facilities, dealSnapshot.details, dealTfm),
+    facilities: mapFacilities(facilities, dealSnapshot, dealTfm),
     totals: mapTotals(facilities),
     isFinanceIncreasing: false,
   };

@@ -27,12 +27,12 @@ describe(component, () => {
     wrapper.expectText('th[data-cy="facility-id-header"]').toRead('Facility ID');
     wrapper.expectText('th[data-cy="exporter-header"]').toRead('Exporter');
     wrapper.expectText('th[data-cy="base-currency-header"]').toRead('Base currency');
-    wrapper.expectText('th[data-cy="value-header"]').toRead('Value');
-    wrapper.expectText('th[data-cy="utilisation-header"]').toRead('Utilisation');
+    wrapper.expectText('th[data-cy="value-header"]').toRead('Facility value');
+    wrapper.expectText('th[data-cy="utilisation-header"]').toRead('Bank utilisation');
     wrapper.expectText('th[data-cy="cover-percentage-header"]').toRead('UKEF cover');
     wrapper.expectText('th[data-cy="exposure-header"]').toRead('UKEF exposure');
-    wrapper.expectText('th[data-cy="fees-accrued-header"]').toRead('Fees accrued');
-    wrapper.expectText('th[data-cy="fees-payable-header"]').toRead('Fees payable to UKEF (reported currency)');
+    wrapper.expectText('th[data-cy="fees-accrued-header"]').toRead('Fees accrued for the period');
+    wrapper.expectText('th[data-cy="fees-payable-header"]').toRead('Fees payable to UKEF for the period (reported currency)');
   });
 
   it('should set all columns as sortable with the default sort order as the facility id column ascending', () => {
@@ -82,14 +82,14 @@ describe(component, () => {
     const tableRowSelector = `tbody tr[data-cy="utilisation-table-row-${feeRecordId}"]`;
 
     // Assert
-    wrapper.expectText(`${tableRowSelector} th`).toRead(row.facilityId);
-    wrapper.expectText(`${tableRowSelector} td:nth-of-type(1)`).toRead(row.exporter);
-    wrapper.expectText(`${tableRowSelector} td:nth-of-type(2)`).toRead(row.baseCurrency);
-    wrapper.expectText(`${tableRowSelector} td:nth-of-type(3)`).toRead(row.formattedValue);
-    wrapper.expectText(`${tableRowSelector} td:nth-of-type(4)`).toRead(row.formattedUtilisation);
-    wrapper.expectText(`${tableRowSelector} td:nth-of-type(5)`).toRead(`${row.coverPercentage}%`);
-    wrapper.expectText(`${tableRowSelector} td:nth-of-type(6)`).toRead(row.formattedExposure);
-    wrapper.expectText(`${tableRowSelector} td:nth-of-type(7)`).toRead(row.feesAccrued.formattedCurrencyAndAmount);
-    wrapper.expectText(`${tableRowSelector} td:nth-of-type(8)`).toRead(row.feesPayable.formattedCurrencyAndAmount);
+    wrapper.expectText(`${tableRowSelector} td:nth-of-type(1)`).toRead(row.facilityId);
+    wrapper.expectText(`${tableRowSelector} td:nth-of-type(2)`).toRead(row.exporter);
+    wrapper.expectText(`${tableRowSelector} td:nth-of-type(3)`).toRead(row.baseCurrency);
+    wrapper.expectText(`${tableRowSelector} td:nth-of-type(4)`).toRead(row.formattedValue);
+    wrapper.expectText(`${tableRowSelector} td:nth-of-type(5)`).toRead(row.formattedUtilisation);
+    wrapper.expectText(`${tableRowSelector} td:nth-of-type(6)`).toRead(`${row.coverPercentage}%`);
+    wrapper.expectText(`${tableRowSelector} td:nth-of-type(7)`).toRead(row.formattedExposure);
+    wrapper.expectText(`${tableRowSelector} td:nth-of-type(8)`).toRead(row.feesAccrued.formattedCurrencyAndAmount);
+    wrapper.expectText(`${tableRowSelector} td:nth-of-type(9)`).toRead(row.feesPayable.formattedCurrencyAndAmount);
   });
 });

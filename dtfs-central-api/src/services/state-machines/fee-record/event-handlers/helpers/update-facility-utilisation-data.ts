@@ -1,13 +1,12 @@
 import { EntityManager } from 'typeorm';
 import { DbRequestSource, FacilityUtilisationDataEntity, ReportPeriod } from '@ukef/dtfs2-common';
-import { getFixedFeeForFacility } from './get-fixed-fee-for-facility';
 
 type UpdateFacilityUtilisationDataUpdate = {
   entityManager: EntityManager;
   reportPeriod: ReportPeriod;
-  utilisation: number;
   ukefShareOfUtilisation: number;
   requestSource: DbRequestSource;
+  fixedFee: number;
 };
 
 /**
@@ -20,16 +19,15 @@ type UpdateFacilityUtilisationDataUpdate = {
  * @param update.ukefShareOfUtilisation - UKEF's share of the utilisation as reported by the bank
  * @param update.requestSource - The request source supplying the update
  * @param update.entityManager - The entity manager
+ * @param update.fixedFee - value for the calculated fixed fee
  * @returns The updated entity
  */
 export const updateFacilityUtilisationData = async (
   facilityUtilisationDataEntity: FacilityUtilisationDataEntity,
-  { reportPeriod, utilisation, requestSource, entityManager, ukefShareOfUtilisation }: UpdateFacilityUtilisationDataUpdate,
+  { reportPeriod, requestSource, entityManager, ukefShareOfUtilisation, fixedFee }: UpdateFacilityUtilisationDataUpdate,
 ): Promise<FacilityUtilisationDataEntity> => {
-  const nextReportPeriodFixedFee = await getFixedFeeForFacility(facilityUtilisationDataEntity.id, utilisation, reportPeriod);
-
   facilityUtilisationDataEntity.updateWithCurrentReportPeriodDetails({
-    fixedFee: nextReportPeriodFixedFee,
+    fixedFee,
     utilisation: ukefShareOfUtilisation,
     reportPeriod,
     requestSource,

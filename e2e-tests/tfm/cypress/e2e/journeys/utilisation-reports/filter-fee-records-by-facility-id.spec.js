@@ -1,8 +1,9 @@
 import {
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  RECONCILIATION_IN_PROGRESS,
   UtilisationReportEntityMockBuilder,
+  FEE_RECORD_STATUS,
 } from '@ukef/dtfs2-common';
 import pages from '../../pages';
 import { PDC_TEAMS } from '../../../fixtures/teams';
@@ -15,7 +16,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
   const bankId = '961';
   const reportId = 12;
 
-  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS)
     .withId(reportId)
     .withBankId(bankId)
     .withDateUploaded(new Date())
@@ -141,14 +142,14 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
 
   it('should display the entire fee record payment group when only one of the fee records in the group has a matching facility id', () => {
     const groupedFeeRecords = [
-      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withStatus('DOES_NOT_MATCH').withFacilityId('11111111').build(),
-      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withStatus('DOES_NOT_MATCH').withFacilityId('22222222').build(),
-      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(3).withStatus('DOES_NOT_MATCH').withFacilityId('33333333').build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH).withFacilityId('11111111').build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH).withFacilityId('22222222').build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(3).withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH).withFacilityId('33333333').build(),
     ];
 
     const toDoFeeRecords = [
-      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(4).withStatus('TO_DO').withFacilityId('44444444').build(),
-      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(5).withStatus('TO_DO').withFacilityId('55555555').build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(4).withStatus(FEE_RECORD_STATUS.TO_DO).withFacilityId('44444444').build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(5).withStatus(FEE_RECORD_STATUS.TO_DO).withFacilityId('55555555').build(),
     ];
 
     const allFeeRecords = [...groupedFeeRecords, ...toDoFeeRecords];

@@ -2,11 +2,14 @@ import difference from 'lodash/difference';
 import { EntityManager } from 'typeorm';
 import {
   REQUEST_PLATFORM_TYPE,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
   MOCK_AZURE_FILE_INFO,
   DbRequestSource,
   PaymentEntity,
+  PENDING_RECONCILIATION,
+  RECONCILIATION_COMPLETED,
+  RECONCILIATION_IN_PROGRESS,
+  REPORT_NOT_RECEIVED,
 } from '@ukef/dtfs2-common';
 import {
   handleUtilisationReportDueReportInitialisedEvent,
@@ -78,9 +81,9 @@ describe('UtilisationReportStateMachine', () => {
     );
   });
 
-  describe(`when report is in '${UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED}' status`, () => {
+  describe(`when report is in '${REPORT_NOT_RECEIVED}' status`, () => {
     // Arrange
-    const REPORT_NOT_RECEIVED_REPORT = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').build();
+    const REPORT_NOT_RECEIVED_REPORT = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED).build();
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.REPORT_UPLOADED}' event`, async () => {
       // Arrange
@@ -118,8 +121,8 @@ describe('UtilisationReportStateMachine', () => {
     );
   });
 
-  describe(`when report is in '${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}' status`, () => {
-    const PENDING_RECONCILIATION_REPORT = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+  describe(`when report is in '${PENDING_RECONCILIATION}' status`, () => {
+    const PENDING_RECONCILIATION_REPORT = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT}' event`, async () => {
       // Arrange
@@ -138,7 +141,7 @@ describe('UtilisationReportStateMachine', () => {
             reference: 'A payment reference',
           },
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId: 'abc123',
           },
         },
@@ -158,7 +161,7 @@ describe('UtilisationReportStateMachine', () => {
         payload: {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAtMatchStatusWithPayments: [],
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -169,7 +172,7 @@ describe('UtilisationReportStateMachine', () => {
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED}' event`, async () => {
       // Arrange
       const requestSource: DbRequestSource = {
-        platform: 'TFM',
+        platform: REQUEST_PLATFORM_TYPE.TFM,
         userId: 'abc123',
       };
       const transactionEntityManager = {} as unknown as EntityManager;
@@ -206,8 +209,8 @@ describe('UtilisationReportStateMachine', () => {
     );
   });
 
-  describe(`when report is in '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS}' status`, () => {
-    const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+  describe(`when report is in '${RECONCILIATION_IN_PROGRESS}' status`, () => {
+    const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT}' event`, async () => {
       // Arrange
@@ -226,7 +229,7 @@ describe('UtilisationReportStateMachine', () => {
             reference: 'A payment reference',
           },
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId: 'abc123',
           },
         },
@@ -246,7 +249,7 @@ describe('UtilisationReportStateMachine', () => {
         payload: {
           transactionEntityManager: {} as EntityManager,
           paymentId: 1,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -264,7 +267,7 @@ describe('UtilisationReportStateMachine', () => {
         payload: {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAtMatchStatusWithPayments: [],
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -286,7 +289,7 @@ describe('UtilisationReportStateMachine', () => {
           paymentAmount: 100,
           datePaymentReceived: new Date(),
           paymentReference: undefined,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
 
@@ -305,7 +308,7 @@ describe('UtilisationReportStateMachine', () => {
           transactionEntityManager: {} as EntityManager,
           feeRecordsToRemove: [],
           otherFeeRecordsInGroup: [],
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
       expect(handleUtilisationReportRemoveFeesFromPaymentGroupEvent).toHaveBeenCalledTimes(1);
@@ -322,7 +325,7 @@ describe('UtilisationReportStateMachine', () => {
           transactionEntityManager: {} as unknown as EntityManager,
           feeRecordsToMarkAsReadyToKey: [],
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId: 'abc123',
           },
         },
@@ -344,7 +347,7 @@ describe('UtilisationReportStateMachine', () => {
           feeRecordsToReconcile: [],
           reconciledByUserId: 'abc123',
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId: 'abc123',
           },
         },
@@ -366,7 +369,7 @@ describe('UtilisationReportStateMachine', () => {
           feeRecordsToAdd: [],
           existingFeeRecordsInPaymentGroup: [],
           payments: [],
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
       expect(handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent).toHaveBeenCalledTimes(1);
@@ -395,13 +398,13 @@ describe('UtilisationReportStateMachine', () => {
     );
   });
 
-  describe(`when report is in '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED}' status`, () => {
-    const RECONCILIATION_COMPLETED_REPORT = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').build();
+  describe(`when report is in '${RECONCILIATION_COMPLETED}' status`, () => {
+    const RECONCILIATION_COMPLETED_REPORT = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_COMPLETED).build();
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_INCOMPLETE}' event`, async () => {
       // Arrange
       const requestSource: DbRequestSource = {
-        platform: 'TFM',
+        platform: REQUEST_PLATFORM_TYPE.TFM,
         userId: 'abc123',
       };
       const transactionEntityManager = {} as unknown as EntityManager;
@@ -431,7 +434,7 @@ describe('UtilisationReportStateMachine', () => {
           transactionEntityManager: {} as unknown as EntityManager,
           feeRecordsToMarkAsReadyToKey: [],
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId: 'abc123',
           },
         },

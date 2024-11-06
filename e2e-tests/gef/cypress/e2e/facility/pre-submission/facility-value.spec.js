@@ -40,6 +40,10 @@ context('Facility Value Page', () => {
       facilityValuePage.hiddenFacilityType().should('not.be.visible');
       facilityValuePage.valueLabel().should('contain', 'cash');
       facilityValuePage.valueSuffix().should('contain', 'EUR');
+      cy.assertText(
+        facilityValuePage.interestPercentageHint(),
+        'This is the annual margin charged as a percentage to the exporter for providing the cash facility. It does not include any upfront fees you charge, such as arrangement fees.',
+      );
       continueButton();
     });
 
@@ -62,6 +66,10 @@ context('Facility Value Page', () => {
       facilityValuePage.hiddenFacilityType().should('not.be.visible');
       facilityValuePage.valueLabel().should('contain', 'contingent');
       facilityValuePage.valueSuffix().should('contain', 'JPY');
+      cy.assertText(
+        facilityValuePage.interestPercentageHint(),
+        'This is the annual margin charged as a percentage to the exporter for providing the contingent facility. It does not include any upfront fees you charge, such as arrangement fees.',
+      );
       continueButton();
     });
   });
