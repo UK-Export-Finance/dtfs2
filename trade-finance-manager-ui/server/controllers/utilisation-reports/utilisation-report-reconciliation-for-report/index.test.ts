@@ -306,9 +306,6 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         params: {
           reportId,
         },
-        query: {
-          matchSuccess: 'true',
-        },
       });
 
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(aUtilisationReportReconciliationDetailsResponse());
@@ -329,9 +326,6 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         session,
         params: {
           reportId,
-        },
-        query: {
-          matchSuccess: 'true',
         },
       });
 
