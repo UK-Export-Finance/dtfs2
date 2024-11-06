@@ -218,7 +218,7 @@ const noTaskVariables = {
   },
 };
 
-const noCompanyNameDeal = {
+const dealWithNoCompanyName = {
   ...firstTaskVariables,
   dealSnapshot: {
     ukefDealId,
@@ -227,7 +227,7 @@ const noCompanyNameDeal = {
   },
 };
 
-const noDealId = {
+const dealWithNoId = {
   ...firstTaskVariables,
   _id: null,
 };
@@ -259,7 +259,7 @@ module.exports = {
   wrongAmendments,
   firstTaskVariables,
   noTaskVariables,
-  noDealId,
-  noCompanyNameDeal,
+  dealWithNoId,
+  dealWithNoCompanyName,
   noUkefDealId,
 };

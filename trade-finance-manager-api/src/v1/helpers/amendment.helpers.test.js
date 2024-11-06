@@ -578,12 +578,12 @@ describe('sendFirstTaskEmail()', () => {
   });
 
   it('should throw an error if deal id is missing', async () => {
-    await sendFirstTaskEmail(amendmentVariables.noDealId, mockAuditDetails);
+    await sendFirstTaskEmail(amendmentVariables.dealWithNoId, mockAuditDetails);
 
     expect(sendEmailApiSpy).not.toHaveBeenCalled();
     expect(updateFacilityAmendmentSpy).not.toHaveBeenCalled();
 
-    const error = new Error(`Invalid imperative arguments provided for ${amendmentVariables.noDealId._id}`);
+    const error = new Error(`Invalid imperative arguments provided for ${amendmentVariables.dealWithNoId._id}`);
     expect(console.error).toHaveBeenCalledWith('Error sending first amendment task email %o', error);
   });
 
@@ -598,12 +598,12 @@ describe('sendFirstTaskEmail()', () => {
   });
 
   it('should throw an error if company name is missing', async () => {
-    await sendFirstTaskEmail(amendmentVariables.noCompanyNameDeal, mockAuditDetails);
+    await sendFirstTaskEmail(amendmentVariables.dealWithNoCompanyName, mockAuditDetails);
 
     expect(sendEmailApiSpy).not.toHaveBeenCalled();
     expect(updateFacilityAmendmentSpy).not.toHaveBeenCalled();
 
-    const error = new Error(`Invalid imperative arguments provided for ${amendmentVariables.noCompanyNameDeal._id}`);
+    const error = new Error(`Invalid imperative arguments provided for ${amendmentVariables.dealWithNoCompanyName._id}`);
     expect(console.error).toHaveBeenCalledWith('Error sending first amendment task email %o', error);
   });
 
