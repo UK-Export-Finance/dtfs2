@@ -109,7 +109,7 @@ export const createParty = async (req: CustomExpressRequest<{ reqBody: { company
     },
   }).catch((error: AxiosError) => {
     console.error('Error calling Party DB API %o', error);
-    return { data: 'Failed to call Party DB API', status: error?.response?.status || HttpStatusCode.InternalServerError };
+    return { data: 'Error calling Party DB API', status: error?.response?.status || HttpStatusCode.InternalServerError };
   });
 
   const { status, data } = response;
