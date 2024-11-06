@@ -362,8 +362,11 @@ jobs:
           retry-limit: ${{ vars.RETRY_LIMIT }}
 
       - name: Execute
-        working-directory: ${{ matrix.services }}
-        run: npm run unit-test
+        uses: ./.github/modules/retry
+        with:
+          command: npm run unit-test
+          retry-limit: ${{ vars.RETRY_LIMIT }}
+          working-directory: ${{ matrix.services }}
 
       - name: Coverage
         uses: codecov/codecov-action@v4
@@ -430,8 +433,11 @@ jobs:
           retry-limit: ${{ vars.RETRY_LIMIT }}
 
       - name: Execute
-        working-directory: ${{ matrix.services }}
-        run: npm run unit-test-ff
+        uses: ./.github/modules/retry
+        with:
+          command: npm run unit-test-ff
+          retry-limit: ${{ vars.RETRY_LIMIT }}
+          working-directory: ${{ matrix.services }}
 
       - name: Coverage
         uses: codecov/codecov-action@v4
