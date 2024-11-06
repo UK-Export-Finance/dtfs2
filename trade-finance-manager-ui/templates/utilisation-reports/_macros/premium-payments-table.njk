@@ -46,15 +46,15 @@
   <table class="govuk-table premium-payments-table" data-module="moj-sortable-table" data-cy="premium-payments-table" id="premium-payments-table">
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
-        <th scope="col" class="govuk-visually-hidden">Facility Id and Exporter and Reported fees and Reported Payments</th>
-        {{ tableHeader({ headerText: 'Facility ID', isNumericColumn: false, enableSorting: false, ariaHidden: "true" }) }}
-        {{ tableHeader({ headerText: 'Exporter', isNumericColumn: false, enableSorting: false, ariaHidden: "true" }) }}
-        {{ tableHeader({ headerText: 'Reported fees', isNumericColumn: true, enableSorting: false, ariaHidden: "true" }) }}
-        {{ tableHeader({ headerText: 'Reported payments', isNumericColumn: true, enableSorting: false, ariaHidden: "true" }) }}
-        {{ tableHeader({ headerText: 'Total reported payments', isNumericColumn: true, enableSorting: true, ariaSort: 'ascending', dataCy: 'premium-payments-table--total-reported-payments' }) }}
-        {{ tableHeader({ headerText: 'Payments received', isNumericColumn: true, enableSorting: false }) }}
-        {{ tableHeader({ headerText: 'Total payments received', isNumericColumn: true, enableSorting: enablePaymentsReceivedSorting, ariaSort: 'none', dataCy: 'premium-payments-table--total-payments-received' }) }}
-        {{ tableHeader({ headerText: 'Status', isNumericColumn: false, enableSorting: true, ariaSort: 'none', dataCy: 'premium-payments-table--status' }) }}
+        <th scope="col" class="govuk-visually-hidden" data-cy="premium-payments-table--hidden-header">Facility ID and Exporter and Reported fees and Reported Payments</th>
+        {{ tableHeader({ headerText: 'Facility ID', isNumericColumn: false, enableSorting: false, ariaHidden: "true", dataCy: 'premium-payments-table--facility-id-header' }) }}
+        {{ tableHeader({ headerText: 'Exporter', isNumericColumn: false, enableSorting: false, ariaHidden: "true", dataCy: 'premium-payments-table--exporter-header' }) }}
+        {{ tableHeader({ headerText: 'Reported fees', isNumericColumn: true, enableSorting: false, ariaHidden: "true", dataCy: 'premium-payments-table--reported-fees-header' }) }}
+        {{ tableHeader({ headerText: 'Reported payments', isNumericColumn: true, enableSorting: false, ariaHidden: "true", dataCy: 'premium-payments-table--reported-payments-header' }) }}
+        {{ tableHeader({ headerText: 'Total reported payments', isNumericColumn: true, enableSorting: true, ariaSort: 'ascending', dataCy: 'premium-payments-table--total-reported-payments-header' }) }}
+        {{ tableHeader({ headerText: 'Payments received', isNumericColumn: true, enableSorting: false, dataCy: 'premium-payments-table--payments-received-header' }) }}
+        {{ tableHeader({ headerText: 'Total payments received', isNumericColumn: true, enableSorting: enablePaymentsReceivedSorting, ariaSort: 'none', dataCy: 'premium-payments-table--total-payments-received-header' }) }}
+        {{ tableHeader({ headerText: 'Status', isNumericColumn: false, enableSorting: true, ariaSort: 'none', dataCy: 'premium-payments-table--status-header' }) }}
         {% if userCanEdit and hasSelectableRows %}
           <td class="govuk-table__header" data-cy="premium-payments-select-all-checkbox-container">
             {{ selectAllTableCellCheckbox.render() }}
