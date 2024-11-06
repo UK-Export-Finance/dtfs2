@@ -20,10 +20,15 @@ describe('user routes', () => {
 
     withValidatePayloadTests({
       makeRequest: upsertTfmUserFromEntraIdUser,
-      successTestCases: getEntraIdUserSuccessTestCases({}),
-      failureTestCases: getEntraIdUserFailureTestCases({}),
       givenTheRequestWouldOtherwiseSucceed: mockSuccessfulUpsertTfmUserFromEntraIdUser,
+      successTestCases: getEntraIdUserSuccessTestCases({}),
       successStatusCode: HttpStatusCode.Ok,
+      successResponse: aSuccessfulResponseFromController,
+      failureTestCases: getEntraIdUserFailureTestCases({}),
+      failureResponse: {
+        status: HttpStatusCode.BadRequest,
+        message: 'Error validating payload',
+      },
     });
 
     describe('when the request body is valid', () => {

@@ -17,51 +17,75 @@ export const withValidatePayloadTests = ({
   successTestCases,
   givenTheRequestWouldOtherwiseSucceed,
   successStatusCode,
+  successResponse,
+  failureStatusCode = HttpStatusCode.BadRequest,
+  failureResponse,
 }: {
   makeRequest: (req: Request, res: Response, next: NextFunction) => Promise<void>;
   failureTestCases: ValidatePayloadTestCases;
   successTestCases: ValidatePayloadTestCases;
   givenTheRequestWouldOtherwiseSucceed: () => void;
   successStatusCode: number;
+  successResponse?: unknown;
+  failureStatusCode: number;
+  failureResponse?: unknown;
 }) => {
   describe('when validating the payload', () => {
     beforeEach(() => {
       givenTheRequestWouldOtherwiseSucceed();
     });
 
-    it.each(failureTestCases)(`should respond with a '${HttpStatusCode.BadRequest}' if $description`, async ({ aTestCase }) => {
-      // Arrange
-      const { req, res } = getHttpMocks();
-      const next = jest.fn();
+    describe.each(failureTestCases)('when $description', ({ aTestCase }) => {
+      itShouldReturnTheStatusCode({ aTestCase, statusCode: failureStatusCode });
 
-      req.body = aTestCase();
-
-      // Act
-      await makeRequest(req, res, next);
-
-      // Assert
-      expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
-      expect(res._isEndCalled()).toEqual(true);
-      expect(next).not.toHaveBeenCalled();
+      if (failureResponse) {
+        itShouldReturnTheExpectedResponse({ aTestCase, expectedResponse: failureResponse });
+      }
     });
 
-    it.each(successTestCases)('should return a success status if $description', async ({ aTestCase }) => {
-      // Arrange
-      const { req, res } = getHttpMocks();
-      const next = jest.fn();
+    describe.each(successTestCases)('when $description', ({ aTestCase }) => {
+      itShouldReturnTheStatusCode({ aTestCase, statusCode: successStatusCode });
 
-      req.body = aTestCase();
-
-      // Act
-      await makeRequest(req, res, next);
-
-      // Assert
-      expect(res._getStatusCode()).toEqual(successStatusCode);
-      expect(res._isEndCalled()).toEqual(true);
+      if (failureResponse) {
+        itShouldReturnTheExpectedResponse({ aTestCase, expectedResponse: successResponse });
+      }
     });
   });
 
   function getHttpMocks() {
     return httpMocks.createMocks();
+  }
+
+  function itShouldReturnTheStatusCode({ aTestCase, statusCode }: { aTestCase: () => unknown; statusCode: number }) {
+    it(`should return a ${statusCode}`, async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      const next = jest.fn();
+
+      req.body = aTestCase();
+
+      // Act
+      await makeRequest(req, res, next);
+
+      // Assert
+      expect(res._getStatusCode()).toEqual(statusCode);
+      expect(res._isEndCalled()).toEqual(true);
+    });
+  }
+
+  function itShouldReturnTheExpectedResponse({ aTestCase, expectedResponse }: { aTestCase: () => unknown; expectedResponse: unknown }) {
+    it(`should return the expected response`, async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      const next = jest.fn();
+
+      req.body = aTestCase();
+
+      // Act
+      await makeRequest(req, res, next);
+
+      // Assert
+      expect(res._getData()).toEqual(expectedResponse);
+    });
   }
 };
