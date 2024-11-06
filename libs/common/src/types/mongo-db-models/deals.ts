@@ -3,21 +3,22 @@ import { DEAL_TYPE } from '../../constants';
 import { AnyObject } from '../any-object';
 import { DealSubmissionType } from '..';
 
-export type BssEwcsDeal = AnyObject & {
+type BaseDeal = AnyObject & {
   _id: ObjectId;
+  submissionType: DealSubmissionType;
+};
+
+export interface BssEwcsDeal extends BaseDeal {
   dealType: typeof DEAL_TYPE.BSS_EWCS;
   details: {
     ukefDealId: string;
   };
-  submissionType: DealSubmissionType;
-};
+}
 
-export type GefDeal = AnyObject & {
-  _id: ObjectId;
+export interface GefDeal extends BaseDeal {
   dealType: typeof DEAL_TYPE.GEF;
   ukefDealId: string;
-  submissionType: DealSubmissionType;
-};
+}
 
 /**
  * Type of the mongo db "deal" collection
