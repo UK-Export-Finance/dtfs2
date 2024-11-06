@@ -309,7 +309,7 @@ jobs:
       - name: Execute
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-        run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }} --shard=${{ matrix.shard }}/3  --runInBand
+        run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }} --shard=${{ matrix.shard }}/3
 
       - name: Stop
         working-directory: ./
