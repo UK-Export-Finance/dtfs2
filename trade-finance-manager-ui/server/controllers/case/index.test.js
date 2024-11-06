@@ -2,17 +2,19 @@ import { AMENDMENT_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE, isTfmFacilityEndDate
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
-import { getTask, isDealCancellationEnabledForUser } from '../helpers';
+import { getTask } from '../helpers';
 import mapAssignToSelectOptions from '../../helpers/map-assign-to-select-options';
+import { isDealCancellationEnabled, isDealCancellationEnabledForUser } from '../helpers/deal-cancellation-enabled.helper';
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
   isTfmFacilityEndDateFeatureFlagEnabled: jest.fn(),
 }));
 
-jest.mock('../helpers', () => ({
-  ...jest.requireActual('../helpers'),
+jest.mock('../helpers/deal-cancellation-enabled.helper', () => ({
+  ...jest.requireActual('../helpers/deal-cancellation-enabled.helper'),
   isDealCancellationEnabledForUser: jest.fn().mockReturnValue(false),
+  isDealCancellationEnabled: jest.fn().mockReturnValue(false),
 }));
 
 const { DRAFT, COMPLETED, SCHEDULED } = TFM_DEAL_CANCELLATION_STATUS;
@@ -134,6 +136,7 @@ describe('controllers - case', () => {
       describe('when deal cancellation is enabled', () => {
         beforeEach(() => {
           jest.mocked(isDealCancellationEnabledForUser).mockReturnValue(true);
+          jest.mocked(isDealCancellationEnabled).mockReturnValue(true);
         });
 
         describe('when the deal can still be cancelled', () => {
@@ -222,7 +225,8 @@ describe('controllers - case', () => {
 
       describe('when deal cancellation is disabled', () => {
         it('should render the template with showDealCancelButton=false', async () => {
-          jest.mocked(isDealCancellationEnabledForUser).mockReturnValueOnce(false);
+          jest.mocked(isDealCancellationEnabledForUser).mockReturnValue(false);
+          jest.mocked(isDealCancellationEnabled).mockReturnValue(false);
 
           await caseController.getCaseDeal(req, res);
 
