@@ -19,7 +19,7 @@
   "author": "UK Export Finance",
   "main": "src/index.ts",
   "scripts": {
-    "api-test": "jest --coverage --verbose --forceExit --runInBand --maxWorkers=3 --config=api-test.jest.config.js",
+    "api-test": "jest --coverage --verbose --forceExit --maxWorkers=3 --config=api-test.jest.config.js",
     "api-test-dev": "jest --verbose --forceExit --runInBand --config=api-test.jest.config.js",
     "lint": "eslint --color **/*.{js,ts} --ignore-path ../.eslintignore",
     "lint:fix": "eslint --fix --color **/*.{ts,js}",
