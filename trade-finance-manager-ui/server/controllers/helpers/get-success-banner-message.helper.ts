@@ -6,11 +6,9 @@ import { isDealCancellationEnabled } from './deal-cancellation-enabled.helper';
 import { getFlashSuccessMessage } from '../../helpers/get-flash-success-message';
 
 /**
- * Determines if a success message should be shown and returns the highest priority message.
- * @param submissionType - the deal submission type
+ * Returns deal cancellation message if the deal is scheduled for cancellation
+ * @param dealSnapshot - the deal
  * @param userToken - the user token
- * @param dealId - the deal id
- * @param ukefDealId - the UKEF deal id
  * @returns the success message to be shown or null
  */
 export const getScheduledCancellationBannerMessage = async ({ dealSnapshot, userToken }: { dealSnapshot: Deal; userToken: string }): Promise<string | null> => {
@@ -36,12 +34,20 @@ export const getScheduledCancellationBannerMessage = async ({ dealSnapshot, user
   return `Deal ${ukefDealId} scheduled for cancellation on ${formattedDate}`;
 };
 
+/**
+ * Determines if a success message should be shown and returns the highest priority message.
+ * @param params - the deal
+ * @param params.dealSnapshot - the deal
+ * @param params.userToken - the user token
+ * @param params.flash - the request flash storage method
+ * @returns the success message to be shown or null
+ */
 export const getDealSuccessBannerMessage = async ({ dealSnapshot, userToken, flash }: { dealSnapshot: Deal; userToken: string; flash: Request['flash'] }) => {
-  const successBannerMessage = await getScheduledCancellationBannerMessage({
+  const scheduledCancellationMessage = await getScheduledCancellationBannerMessage({
     dealSnapshot,
     userToken,
   });
   const flashSuccessMessage = getFlashSuccessMessage(flash);
 
-  return successBannerMessage || flashSuccessMessage;
+  return scheduledCancellationMessage || flashSuccessMessage;
 };
