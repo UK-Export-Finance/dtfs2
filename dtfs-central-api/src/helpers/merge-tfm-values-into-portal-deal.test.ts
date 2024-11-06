@@ -40,7 +40,7 @@ describe('mergeTfmValuesIntoPortalDeal', () => {
     // Arrange
     const tfmDeal = {
       tfm: {
-        stage: TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS,
+        stage: TFM_DEAL_STAGE.CANCELLED,
       },
     } as TfmDeal;
 
