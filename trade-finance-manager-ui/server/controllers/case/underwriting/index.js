@@ -1,6 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
 const { isEmpty } = require('lodash');
-const { getUkefDealId } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 
 const leadUnderwriter = require('./lead-underwriter');
@@ -13,8 +12,7 @@ const { UNDERWRITER_MANAGER_DECISIONS_TAGS } = require('../../../constants/decis
 const { BANK_DECISIONS_TAGS } = require('../../../constants/amendments');
 const CONSTANTS = require('../../../constants');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
-const { getSuccessBannerMessage } = require('../../helpers/get-success-banner-message.helper');
-const { getFlashSuccessMessage } = require('../../../helpers/getFlashSuccessMessage');
+const { getDealSuccessBannerMessage } = require('../../helpers/get-success-banner-message.helper');
 
 /**
  * controller for underwriting tab
@@ -116,17 +114,13 @@ const getUnderwriterPage = async (req, res) => {
     }
   }
 
-  const { submissionType } = deal.dealSnapshot;
+  const { dealSnapshot } = deal;
 
-  const successBannerMessage = await getSuccessBannerMessage({
-    submissionType,
+  const successMessage = await getDealSuccessBannerMessage({
+    dealSnapshot,
     userToken,
-    dealId,
-    ukefDealId: getUkefDealId(deal.dealSnapshot),
+    flash: req.flash,
   });
-  const flashSuccessMessage = getFlashSuccessMessage(req);
-
-  const successMessage = successBannerMessage || flashSuccessMessage;
 
   return res.render('case/underwriting/underwriting.njk', {
     activePrimaryNavigation: 'manage work',

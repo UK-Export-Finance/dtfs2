@@ -1,12 +1,11 @@
 const { getUnixTime } = require('date-fns');
-const { ACTIVITY_TYPES, getUkefDealId } = require('@ukef/dtfs2-common');
+const { ACTIVITY_TYPES } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { generateValidationErrors } = require('../../../helpers/validation');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
 const CONSTANTS = require('../../../constants');
 const { mapActivities } = require('./helpers/map-activities');
-const { getSuccessBannerMessage } = require('../../helpers/get-success-banner-message.helper');
-const { getFlashSuccessMessage } = require('../../../helpers/getFlashSuccessMessage');
+const { getDealSuccessBannerMessage } = require('../../helpers/get-success-banner-message.helper');
 
 const { DEAL } = CONSTANTS;
 
@@ -38,17 +37,13 @@ const getActivity = async (req, res) => {
 
   const activities = mapActivities(deal.tfm.activities);
 
-  const { submissionType } = deal.dealSnapshot;
+  const { dealSnapshot } = deal;
 
-  const successBannerMessage = await getSuccessBannerMessage({
-    submissionType,
+  const successMessage = await getDealSuccessBannerMessage({
+    dealSnapshot,
     userToken,
-    dealId,
-    ukefDealId: getUkefDealId(deal.dealSnapshot),
+    flash: req.flash,
   });
-  const flashSuccessMessage = getFlashSuccessMessage(req);
-
-  const successMessage = successBannerMessage || flashSuccessMessage;
 
   return res.render('case/activity/activity.njk', {
     activePrimaryNavigation: 'manage work',
@@ -91,17 +86,13 @@ const filterActivities = async (req, res) => {
 
   const activities = mapActivities(deal.tfm.activities);
 
-  const { submissionType } = deal.dealSnapshot;
+  const { dealSnapshot } = deal;
 
-  const successBannerMessage = await getSuccessBannerMessage({
-    submissionType,
+  const successMessage = await getDealSuccessBannerMessage({
+    dealSnapshot,
     userToken,
-    dealId,
-    ukefDealId: getUkefDealId(deal.dealSnapshot),
+    flash: req.flash,
   });
-  const flashSuccessMessage = getFlashSuccessMessage(req);
-
-  const successMessage = successBannerMessage || flashSuccessMessage;
 
   return res.render('case/activity/activity.njk', {
     activePrimaryNavigation: 'manage work',

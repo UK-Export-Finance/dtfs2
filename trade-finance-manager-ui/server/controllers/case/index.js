@@ -1,5 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
-const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled, getUkefDealId } = require('@ukef/dtfs2-common');
+const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const {
   getTask,
@@ -17,8 +17,7 @@ const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require(
 const validatePartyURN = require('./parties/partyUrnValidation.validate');
 const { bondType, partyType, userCanEdit } = require('./parties/helpers');
 const { asUserSession } = require('../../helpers/express-session');
-const { getFlashSuccessMessage } = require('../../helpers/getFlashSuccessMessage');
-const { getSuccessBannerMessage } = require('../helpers/get-success-banner-message.helper');
+const { getDealSuccessBannerMessage } = require('../helpers/get-success-banner-message.helper');
 
 const {
   DEAL,
@@ -51,9 +50,9 @@ const getCaseDeal = async (req, res) => {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
 
-  const { submissionType } = deal.dealSnapshot;
+  const { dealSnapshot } = deal;
 
-  const dealCancellationIsEnabled = isDealCancellationEnabledForUser(submissionType, user);
+  const dealCancellationIsEnabled = isDealCancellationEnabledForUser(dealSnapshot.submissionType, user);
 
   let showDealCancelButton = false;
   let hasDraftCancellation = false;
@@ -64,15 +63,11 @@ const getCaseDeal = async (req, res) => {
     hasDraftCancellation = isDealCancellationInDraft(cancellation.status);
   }
 
-  const successBannerMessage = await getSuccessBannerMessage({
-    submissionType,
+  const successMessage = await getDealSuccessBannerMessage({
+    dealSnapshot,
     userToken,
-    dealId,
-    ukefDealId: getUkefDealId(deal.dealSnapshot),
+    flash: req.flash,
   });
-  const flashSuccessMessage = getFlashSuccessMessage(req);
-
-  const successMessage = successBannerMessage || flashSuccessMessage;
 
   return res.render('case/deal/deal.njk', {
     deal: deal.dealSnapshot,
@@ -121,17 +116,13 @@ const getCaseTasks = async (req, res) => {
     });
   }
 
-  const { submissionType } = deal.dealSnapshot;
+  const { dealSnapshot } = deal;
 
-  const successBannerMessage = await getSuccessBannerMessage({
-    submissionType,
+  const successMessage = await getDealSuccessBannerMessage({
+    dealSnapshot,
     userToken,
-    dealId,
-    ukefDealId: getUkefDealId(deal.dealSnapshot),
+    flash: req.flash,
   });
-  const flashSuccessMessage = getFlashSuccessMessage(req);
-
-  const successMessage = successBannerMessage || flashSuccessMessage;
 
   return res.render('case/tasks/tasks.njk', {
     deal: deal.dealSnapshot,
@@ -406,17 +397,13 @@ const getCaseDocuments = async (req, res) => {
     }
     const amendmentsInProgress = amendmentsInProgressByDeal(amendments);
 
-    const { submissionType } = deal.dealSnapshot;
+    const { dealSnapshot } = deal;
 
-    const successBannerMessage = await getSuccessBannerMessage({
-      submissionType,
+    const successMessage = await getDealSuccessBannerMessage({
+      dealSnapshot,
       userToken,
-      dealId,
-      ukefDealId: getUkefDealId(deal.dealSnapshot),
+      flash: req.flash,
     });
-    const flashSuccessMessage = getFlashSuccessMessage(req);
-
-    const successMessage = successBannerMessage || flashSuccessMessage;
 
     return res.render('case/documents/documents.njk', {
       deal: deal.dealSnapshot,
