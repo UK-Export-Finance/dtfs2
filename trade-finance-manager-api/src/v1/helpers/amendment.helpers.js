@@ -338,12 +338,14 @@ const sendFirstTaskEmail = async (deal, auditDetails) => {
   try {
     const { amendment, dealSnapshot, facilityId, amendmentId } = deal;
     const { tasks } = amendment;
-    const { _id: dealId } = deal;
+    const { _id } = deal;
     const { exporter } = dealSnapshot;
     const { companyName } = exporter;
 
-    // dealId in snapshot for gef and details for bss
-    const ukefDealId = dealSnapshot.ukefDealId || dealSnapshot?.details?.ukefDealId;
+    // BSS/EWCS or GEF Mongo deal ID
+    const dealId = dealSnapshot?._id || _id;
+    // BSS/EWCS or GEF UKEF deal ID
+    const ukefDealId = dealSnapshot?.details?.ukefDealId || dealSnapshot.ukefDealId;
     const firstTask = getFirstTask(tasks);
     const templateId = EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
 
