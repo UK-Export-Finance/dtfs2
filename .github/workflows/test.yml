@@ -286,7 +286,7 @@ jobs:
 
       - name: Dependencies
         working-directory: ./
-        run: npm ci
+        run: npm i
 
       - name: Start
         working-directory: ./
