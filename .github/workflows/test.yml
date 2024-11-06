@@ -189,7 +189,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        services: ['portal', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'trade-finance-manager-api', 'dtfs-central-api', 'external-api']
+        services: ['portal', 'gef-ui', 'trade-finance-manager-ui', 'trade-finance-manager-api', 'external-api']
 
     concurrency:
       group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
@@ -247,7 +247,80 @@ jobs:
           flags: api-test
           verbose: true
 
-  # 2.2. API tests
+   # 2.2. API tests with sharding
+  api-tests-sharding:
+    name: API 👷
+    needs: [setup]
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        services: ['portal-api', 'dtfs-central-api']
+        shard: [1, 2]
+
+    concurrency:
+      group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}-${{ matrix.shard }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci
+
+      - name: Start
+        working-directory: ./
+        run: docker compose up --build -d
+
+      - name: Initialise
+        working-directory: ./utils
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
+        run: |
+          sleep 100s
+          npm run load
+
+      - name: SQL
+        working-directory: ./libs/common
+        env:
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+        run: npm run db:migrate
+
+      - name: Execute
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
+        run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }} --shard=${{ matrix.shard }}/4
+
+      - name: Stop
+        working-directory: ./
+        run: docker compose down
+
+      - name: Coverage
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: api-test
+          verbose: true
+
+
+  # 2.3. API tests
   dof-api-tests:
     name: DOF API 👷
     needs: [setup]
@@ -308,7 +381,6 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        shard: [1, 2, 3]
         services:
           [
             './portal',
@@ -324,8 +396,7 @@ jobs:
 
     concurrency:
       group: unit-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
-      # cancel-in-progress: true
-      cancel-in-progress: false
+      cancel-in-progress: true
 
     steps:
       - name: Node
@@ -347,8 +418,7 @@ jobs:
 
       - name: Execute
         working-directory: ${{ matrix.services }}
-        # run: npm run unit-test
-        run: npm run unit-test --shard=${{ matrix.shard }}/${{ strategy.job-total }}
+        run: npm run unit-test
 
       - name: Coverage
         uses: codecov/codecov-action@v4
@@ -392,8 +462,7 @@ jobs:
 
     concurrency:
       group: unit-tests-ff-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
-      # cancel-in-progress: true
-      cancel-in-progress: false
+      cancel-in-progress: true
 
     steps:
       - name: Node
