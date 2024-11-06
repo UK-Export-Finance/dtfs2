@@ -35,20 +35,24 @@ export const withValidatePayloadTests = ({
       givenTheRequestWouldOtherwiseSucceed();
     });
 
-    describe.each(failureTestCases)('when $description', ({ aTestCase }) => {
-      itShouldReturnTheStatusCode({ aTestCase, statusCode: failureStatusCode });
+    describe('when the request body is invalid', () => {
+      describe.each(failureTestCases)('when $description', ({ aTestCase }) => {
+        itShouldReturnTheStatusCode({ aTestCase, statusCode: failureStatusCode });
 
-      if (failureResponse) {
-        itShouldReturnTheExpectedResponse({ aTestCase, expectedResponse: failureResponse });
-      }
+        if (failureResponse) {
+          itShouldReturnTheExpectedResponse({ aTestCase, expectedResponse: failureResponse });
+        }
+      });
     });
 
-    describe.each(successTestCases)('when $description', ({ aTestCase }) => {
-      itShouldReturnTheStatusCode({ aTestCase, statusCode: successStatusCode });
+    describe('when the request body is valid', () => {
+      describe.each(successTestCases)('when $description', ({ aTestCase }) => {
+        itShouldReturnTheStatusCode({ aTestCase, statusCode: successStatusCode });
 
-      if (failureResponse) {
-        itShouldReturnTheExpectedResponse({ aTestCase, expectedResponse: successResponse });
-      }
+        if (failureResponse) {
+          itShouldReturnTheExpectedResponse({ aTestCase, expectedResponse: successResponse });
+        }
+      });
     });
   });
 
