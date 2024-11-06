@@ -1,4 +1,3 @@
-import { ObjectId } from 'mongodb';
 import { BssEwcsDeal, GefDeal } from '../types';
 import { getUkefDealId } from './get-ukef-deal-id';
 import { DEAL_TYPE } from '../constants';
@@ -8,11 +7,10 @@ describe('getUkefDealId', () => {
     // Arrange
     const ukefDealId = 'ukefDealId';
 
-    const deal: GefDeal = {
-      _id: new ObjectId(),
+    const deal = {
       dealType: DEAL_TYPE.GEF,
       ukefDealId,
-    };
+    } as GefDeal;
 
     // Act
     const result = getUkefDealId(deal);
@@ -25,13 +23,12 @@ describe('getUkefDealId', () => {
     // Arrange
     const ukefDealId = 'ukefDealId';
 
-    const deal: BssEwcsDeal = {
-      _id: new ObjectId(),
+    const deal = {
       dealType: DEAL_TYPE.BSS_EWCS,
       details: {
         ukefDealId,
       },
-    };
+    } as BssEwcsDeal;
 
     // Act
     const result = getUkefDealId(deal);
