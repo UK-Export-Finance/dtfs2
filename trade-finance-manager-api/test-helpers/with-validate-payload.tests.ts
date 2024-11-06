@@ -12,43 +12,53 @@ type ValidatePayloadTestCases = { aTestCase: () => unknown; description: string 
  */
 
 export const withValidatePayloadTests = ({
-  validatePayload,
+  makeRequest,
   failureTestCases,
   successTestCases,
+  givenTheRequestWouldOtherwiseSucceed,
+  successStatusCode,
 }: {
-  validatePayload: (req: Request, res: Response, next: NextFunction) => void;
+  makeRequest: (req: Request, res: Response, next: NextFunction) => Promise<void>;
   failureTestCases: ValidatePayloadTestCases;
   successTestCases: ValidatePayloadTestCases;
+  givenTheRequestWouldOtherwiseSucceed: () => void;
+  successStatusCode: number;
 }) => {
-  it.each(failureTestCases)(`should respond with a '${HttpStatusCode.BadRequest}' if $description`, ({ aTestCase }) => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-    const next = jest.fn();
+  describe('when validating the payload', () => {
+    beforeEach(() => {
+      givenTheRequestWouldOtherwiseSucceed();
+    });
 
-    req.body = aTestCase();
+    it.each(failureTestCases)(`should respond with a '${HttpStatusCode.BadRequest}' if $description`, async ({ aTestCase }) => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      const next = jest.fn();
 
-    // Act
-    validatePayload(req, res, next);
+      req.body = aTestCase();
 
-    // Assert
-    expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
-    expect(res._isEndCalled()).toEqual(true);
-    expect(next).not.toHaveBeenCalled();
-  });
+      // Act
+      await makeRequest(req, res, next);
 
-  it.each(successTestCases)('should call "next" if $description', ({ aTestCase }) => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-    const next = jest.fn();
+      // Assert
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
+      expect(res._isEndCalled()).toEqual(true);
+      expect(next).not.toHaveBeenCalled();
+    });
 
-    req.body = aTestCase();
+    it.each(successTestCases)('should return a success status if $description', async ({ aTestCase }) => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      const next = jest.fn();
 
-    // Act
-    validatePayload(req, res, next);
+      req.body = aTestCase();
 
-    // Assert
-    expect(next).toHaveBeenCalled();
-    expect(res._isEndCalled()).toEqual(false);
+      // Act
+      await makeRequest(req, res, next);
+
+      // Assert
+      expect(res._getStatusCode()).toEqual(successStatusCode);
+      expect(res._isEndCalled()).toEqual(true);
+    });
   });
 
   function getHttpMocks() {

@@ -30,10 +30,14 @@ export function withUpsertTfmUserRequestSchemaTests({
   });
 }
 
-export function getUpsertTfmUserRequestFailureTestCases({ getTestObjectWithUpdatedUpsertTfmUserRequestParams }: TestCasesParams) {
+export function getUpsertTfmUserRequestFailureTestCases({
+  getTestObjectWithUpdatedUpsertTfmUserRequestParams = (upsertTfmUserRequest) => upsertTfmUserRequest,
+}: TestCasesParams) {
   return getCreateTfmUserRequestFailureTestCases({ getTestObjectWithUpdatedCreateTfmUserRequestParams: getTestObjectWithUpdatedUpsertTfmUserRequestParams });
 }
 
-export function getUpsertTfmUserRequestSuccessTestCases({ getTestObjectWithUpdatedUpsertTfmUserRequestParams }: TestCasesParams) {
+export function getUpsertTfmUserRequestSuccessTestCases({
+  getTestObjectWithUpdatedUpsertTfmUserRequestParams = (upsertTfmUserRequest) => upsertTfmUserRequest,
+}: TestCasesParams) {
   return getCreateTfmUserRequestSuccessTestCases({ getTestObjectWithUpdatedCreateTfmUserRequestParams: getTestObjectWithUpdatedUpsertTfmUserRequestParams });
 }

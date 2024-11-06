@@ -1,8 +1,10 @@
 const httpMocks = require('node-mocks-http');
 const { anEntraIdUser, ApiError } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
+const { getEntraIdUserSuccessTestCases, getEntraIdUserFailureTestCases } = require('@ukef/dtfs2-common');
 const { upsertTfmUserFromEntraIdUser } = require('./user.routes');
 const userController = require('./user.controller');
+const { withValidatePayloadTests } = require('../../../../test-helpers');
 
 jest.mock('../user/user.controller.js', () => ({
   upsertTfmUserFromEntraIdUser: jest.fn(),
@@ -14,22 +16,14 @@ describe('user routes', () => {
   });
 
   describe('upsertTfmUserFromEntraIdUser', () => {
-    describe('when the request body is invalid', () => {
-      let invalidRequest;
+    const aSuccessfulResponseFromController = 'aSuccessfulResponse';
 
-      beforeEach(() => {
-        const { oid, ...rest } = anEntraIdUser();
-        invalidRequest = rest;
-      });
-
-      it('returns a bad request', async () => {
-        const { req, res, next } = getHttpMocks(invalidRequest);
-        const expectedErrorResponse = { message: 'Error validating payload', status: 400 };
-        await upsertTfmUserFromEntraIdUser(req, res, next);
-
-        expect(res._getData()).toEqual(expectedErrorResponse);
-        expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
-      });
+    withValidatePayloadTests({
+      makeRequest: upsertTfmUserFromEntraIdUser,
+      successTestCases: getEntraIdUserSuccessTestCases({}),
+      failureTestCases: getEntraIdUserFailureTestCases({}),
+      givenTheRequestWouldOtherwiseSucceed: mockSuccessfulUpsertTfmUserFromEntraIdUser,
+      successStatusCode: HttpStatusCode.Ok,
     });
 
     describe('when the request body is valid', () => {
@@ -87,10 +81,8 @@ describe('user routes', () => {
       });
 
       describe('when the upsert is successful', () => {
-        const aSuccessfulResponseFromController = 'aSuccessfulResponse';
-
         beforeEach(() => {
-          jest.mocked(userController.upsertTfmUserFromEntraIdUser).mockResolvedValueOnce(aSuccessfulResponseFromController);
+          mockSuccessfulUpsertTfmUserFromEntraIdUser();
         });
 
         it('returns the result of the user controller', async () => {
@@ -109,6 +101,10 @@ describe('user routes', () => {
       });
       const next = jest.fn();
       return { req, res, next };
+    }
+
+    function mockSuccessfulUpsertTfmUserFromEntraIdUser() {
+      jest.mocked(userController.upsertTfmUserFromEntraIdUser).mockResolvedValueOnce(aSuccessfulResponseFromController);
     }
   });
 });

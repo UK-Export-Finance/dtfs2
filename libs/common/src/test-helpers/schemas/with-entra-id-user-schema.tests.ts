@@ -23,13 +23,13 @@ export function withEntraIdUserSchemaTests({
   describe('with ENTRA_ID_USER_SCHEMA tests', () => {
     withSchemaTests({
       schema,
-      failureTestCases: getFailureTestCases({ getTestObjectWithUpdatedEntraIdUserParams }),
-      successTestCases: getSuccessTestCases({ getTestObjectWithUpdatedEntraIdUserParams }),
+      failureTestCases: getEntraIdUserFailureTestCases({ getTestObjectWithUpdatedEntraIdUserParams }),
+      successTestCases: getEntraIdUserSuccessTestCases({ getTestObjectWithUpdatedEntraIdUserParams }),
     });
   });
 }
 
-function getFailureTestCases({ getTestObjectWithUpdatedEntraIdUserParams }: TestCasesParams) {
+export function getEntraIdUserFailureTestCases({ getTestObjectWithUpdatedEntraIdUserParams = (entraIdUser) => entraIdUser }: TestCasesParams) {
   return [
     {
       aTestCase: () => {
@@ -121,7 +121,7 @@ function getFailureTestCases({ getTestObjectWithUpdatedEntraIdUserParams }: Test
   ];
 }
 
-function getSuccessTestCases({ getTestObjectWithUpdatedEntraIdUserParams }: TestCasesParams) {
+export function getEntraIdUserSuccessTestCases({ getTestObjectWithUpdatedEntraIdUserParams = (entraIdUser) => entraIdUser }: TestCasesParams) {
   return [
     { aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams(anEntraIdUser()), description: 'a complete valid payload is present' },
     {
