@@ -1,4 +1,4 @@
-import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { BOND_TYPE } from '@ukef/dtfs2-common';
 import { componentRenderer } from '../../../componentRenderer';
 
 const page = '../templates/case/parties/_macros/parties-bond-issuer-edit.njk';
@@ -9,7 +9,7 @@ describe(page, () => {
 
   describe('bond issuer edit', () => {
     const params = {
-      bondType: BOND_FACILITY_TYPE.RETENTION_BOND,
+      bondType: BOND_TYPE.RETENTION_BOND,
       bond: {
         _id: '123',
         facilitySnapshot: {

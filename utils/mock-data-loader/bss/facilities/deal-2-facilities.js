@@ -1,4 +1,4 @@
-import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { BOND_TYPE } from '@ukef/dtfs2-common';
 import { nowTimestamp, twoMonths, twoMonthsTimestamp, threeMonths } from '../dates';
 
 export default [
@@ -26,7 +26,7 @@ export default [
     'conversionRateDate-year': null,
     createdDate: nowTimestamp,
     bondIssuer: '',
-    bondType: BOND_FACILITY_TYPE.PERFORMANCE_BOND,
+    bondType: BOND_TYPE.PERFORMANCE_BOND,
     'requestedCoverStartDate-day': twoMonths.day,
     'requestedCoverStartDate-month': twoMonths.month,
     'requestedCoverStartDate-year': twoMonths.year,

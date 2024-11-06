@@ -1,4 +1,4 @@
-import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { BOND_TYPE } from '@ukef/dtfs2-common';
 import mapFacilities from './mapFacilities';
 import mapFacilitySnapshot from './mapFacilitySnapshot';
 import mapFacilityTfm from './mapFacilityTfm';
@@ -41,7 +41,7 @@ describe('mapFacilities', () => {
         type: 'Bond',
         ...mockCoverEndDate,
         coveredPercentage: mockCoveredPercentage,
-        bondType: BOND_FACILITY_TYPE.PERFORMANCE_BOND,
+        bondType: BOND_TYPE.PERFORMANCE_BOND,
         currency: mockCurrency,
         value: mockFacilityValue,
         facilityStage: 'Unissued',

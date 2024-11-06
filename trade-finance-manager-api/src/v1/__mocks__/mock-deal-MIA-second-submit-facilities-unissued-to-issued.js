@@ -1,4 +1,4 @@
-import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { BOND_TYPE } from '@ukef/dtfs2-common';
 import { MOCK_PORTAL_USERS } from './mock-portal-users';
 
 const MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
@@ -178,7 +178,7 @@ const MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
         dealId: 'MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
         type: 'Bond',
         bondIssuer: 'Issuer',
-        bondType: BOND_FACILITY_TYPE.ADVANCE_PAYMENT_GUARANTEE,
+        bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
         facilityStage: 'Issued',
         hasBeenIssued: true,
         previousFacilityStage: 'Unissued',

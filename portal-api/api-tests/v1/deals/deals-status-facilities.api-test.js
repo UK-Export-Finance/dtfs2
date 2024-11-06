@@ -1,4 +1,4 @@
-const { BOND_FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { BOND_TYPE } = require('@ukef/dtfs2-common');
 const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { add, format } = require('date-fns');
 const databaseHelper = require('../../database-helper');
@@ -424,7 +424,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       const baseBond = {
         type: 'Bond',
         bondIssuer: 'issuer',
-        bondType: BOND_FACILITY_TYPE.BID_BOND,
+        bondType: BOND_TYPE.BID_BOND,
         bondBeneficiary: 'test',
         value: '123',
         currencySameAsSupplyContractCurrency: 'true',

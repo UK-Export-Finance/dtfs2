@@ -1,4 +1,4 @@
-const { BOND_FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { BOND_TYPE } = require('@ukef/dtfs2-common');
 const { sub, add, format } = require('date-fns');
 
 const app = require('../../../src/createApp');
@@ -74,7 +74,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
     const unsubmittedIssuedBond = () => ({
       type: 'Bond',
       bondIssuer: 'issuer',
-      bondType: BOND_FACILITY_TYPE.RETENTION_BOND,
+      bondType: BOND_TYPE.RETENTION_BOND,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '24',

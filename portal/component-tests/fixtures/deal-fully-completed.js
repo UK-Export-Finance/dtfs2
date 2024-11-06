@@ -1,4 +1,4 @@
-import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { BOND_TYPE } from '@ukef/dtfs2-common';
 import { subDays, addMonths, format } from 'date-fns';
 import { DATE } from '../../server/constants';
 
@@ -32,7 +32,7 @@ const deal = {
     items: [
       {
         bondIssuer: 'my issuer',
-        bondType: BOND_FACILITY_TYPE.RETENTION_BOND,
+        bondType: BOND_TYPE.RETENTION_BOND,
         facilityStage: 'Issued',
         hasBeenIssued: true,
         ukefGuaranteeInMonths: '12',
@@ -66,7 +66,7 @@ const deal = {
       },
       {
         bondIssuer: 'my issuer',
-        bondType: BOND_FACILITY_TYPE.RETENTION_BOND,
+        bondType: BOND_TYPE.RETENTION_BOND,
         facilityStage: 'Issued',
         hasBeenIssued: true,
         ukefGuaranteeInMonths: '12',

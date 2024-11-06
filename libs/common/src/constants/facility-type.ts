@@ -8,7 +8,7 @@ export const BSS_EWCS_FACILITY_TYPE = {
   LOAN: 'Loan',
 } as const;
 
-export const BOND_FACILITY_TYPE = {
+export const BOND_TYPE = {
   ADVANCE_PAYMENT_GUARANTEE: 'Advance payment guarantee',
   BID_BOND: 'Bid bond',
   MAINTENANCE_BOND: 'Maintenance bond',

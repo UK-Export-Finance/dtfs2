@@ -1,4 +1,4 @@
-import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { BOND_TYPE } from '@ukef/dtfs2-common';
 import { nowTimestamp, twoMonths, twoMonthsTimestamp, threeMonths } from '../dates';
 
 export default [
@@ -66,7 +66,7 @@ export default [
     'conversionRateDate-year': null,
     createdDate: nowTimestamp,
     bondIssuer: '',
-    bondType: BOND_FACILITY_TYPE.MAINTENANCE_BOND,
+    bondType: BOND_TYPE.MAINTENANCE_BOND,
     bondBeneficiary: '',
     ukefExposure: '360,000.00',
     updatedAt: nowTimestamp,

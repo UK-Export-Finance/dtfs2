@@ -1,4 +1,4 @@
-import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { BOND_TYPE } from '@ukef/dtfs2-common';
 import { MOCK_FACILITIES } from './mock-facilities';
 import { MOCK_PORTAL_USERS } from './mock-portal-users';
 
@@ -179,7 +179,7 @@ const MOCK_DEAL = {
         type: 'Bond',
         createdDate: 1610369832226.0,
         bondIssuer: 'Issuer',
-        bondType: BOND_FACILITY_TYPE.ADVANCE_PAYMENT_GUARANTEE,
+        bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
         facilityStage: 'Unissued',
         hasBeenIssued: false,
         ukefGuaranteeInMonths: '10',
