@@ -333,27 +333,26 @@ const firstTaskEmailConfirmation = async (facilityId, amendmentId, auditDetails)
  * @param {string} [deal.dealSnapshot.details.ukefDealId] - The UKEF deal ID for BSS deals.
  * @param {Object} auditDetails - The audit details for logging purposes.
  * @returns {Promise<void>} - A promise that resolves when the email has been sent and the flag has been updated.
- * @throws {Error} - Logs the error if any error occurs during the email sending process.
- * */
+ */
 const sendFirstTaskEmail = async (deal, auditDetails) => {
-  const { amendment, dealSnapshot, facilityId, amendmentId } = deal;
-  const { tasks } = amendment;
-  const { _id: dealId } = deal;
-  const { exporter } = dealSnapshot;
-  const { companyName } = exporter;
-
-  // dealId in snapshot for gef and details for bss
-  const ukefDealId = dealSnapshot.ukefDealId || dealSnapshot?.details?.ukefDealId;
-  const firstTask = getFirstTask(tasks);
-  const templateId = EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
-
   try {
-    const { team } = firstTask;
-    const { email: sendToEmailAddress } = await api.findOneTeam(team.id);
+    const { amendment, dealSnapshot, facilityId, amendmentId } = deal;
+    const { tasks } = amendment;
+    const { _id: dealId } = deal;
+    const { exporter } = dealSnapshot;
+    const { companyName } = exporter;
+
+    // dealId in snapshot for gef and details for bss
+    const ukefDealId = dealSnapshot.ukefDealId || dealSnapshot?.details?.ukefDealId;
+    const firstTask = getFirstTask(tasks);
+    const templateId = EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
 
     if (!dealId || !ukefDealId || !firstTask || !companyName) {
-      throw new Error('Invalid imperative arguments %s %s %o %s', dealId, ukefDealId, firstTask, companyName);
+      throw new Error(`Invalid imperative arguments provided for ${dealId}`);
     }
+
+    const { team } = firstTask;
+    const { email: sendToEmailAddress } = await api.findOneTeam(team.id);
 
     const emailVariables = generateTaskEmailVariables(TFM_UI_URL, firstTask, dealId, companyName, ukefDealId);
 

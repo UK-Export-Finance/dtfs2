@@ -232,6 +232,16 @@ const noDealId = {
   _id: null,
 };
 
+const noUkefDealId = {
+  ...firstTaskVariables,
+  dealSnapshot: {
+    exporter: {
+      companyName: 'Tester',
+    },
+    bankInternalRefName: 'UKEF',
+  },
+};
+
 module.exports = {
   approvedWithoutConditionsBothAmendments,
   approvedWithoutConditionsBothAmendmentsBSS,
@@ -251,4 +261,5 @@ module.exports = {
   noTaskVariables,
   noDealId,
   noCompanyNameDeal,
+  noUkefDealId,
 };

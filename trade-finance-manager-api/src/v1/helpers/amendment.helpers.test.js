@@ -511,6 +511,7 @@ describe('sendFirstTaskEmail()', () => {
   beforeEach(() => {
     sendEmailApiSpy.mockClear();
     updateFacilityAmendmentSpy.mockClear();
+    jest.clearAllMocks();
 
     api.sendEmail = sendEmailApiSpy;
     api.updateFacilityAmendment = updateFacilityAmendmentSpy;
@@ -570,33 +571,49 @@ describe('sendFirstTaskEmail()', () => {
     await sendFirstTaskEmail(amendmentVariables.noTaskVariables, mockAuditDetails);
 
     expect(sendEmailApiSpy).not.toHaveBeenCalled();
-
     expect(updateFacilityAmendmentSpy).not.toHaveBeenCalled();
+
+    const error = new Error(`Invalid imperative arguments provided for ${amendmentVariables.noTaskVariables._id}`);
+    expect(console.error).toHaveBeenCalledWith('Error sending first amendment task email %o', error);
   });
 
   it('should throw an error if deal id is missing', async () => {
     await sendFirstTaskEmail(amendmentVariables.noDealId, mockAuditDetails);
 
-    const error = new Error(
-      'Invalid imperative arguments %s %s %o %s',
-      undefined,
-      amendmentVariables.firstTaskVariables.dealSnapshot.ukefDealId,
-      {},
-      amendmentVariables.firstTaskVariables.dealSnapshot.exporter.companyName,
-    );
+    expect(sendEmailApiSpy).not.toHaveBeenCalled();
+    expect(updateFacilityAmendmentSpy).not.toHaveBeenCalled();
+
+    const error = new Error(`Invalid imperative arguments provided for ${amendmentVariables.noDealId._id}`);
+    expect(console.error).toHaveBeenCalledWith('Error sending first amendment task email %o', error);
+  });
+
+  it('should throw an error if UKEF deal ID is missing', async () => {
+    await sendFirstTaskEmail(amendmentVariables.noUkefDealId, mockAuditDetails);
+
+    expect(sendEmailApiSpy).not.toHaveBeenCalled();
+    expect(updateFacilityAmendmentSpy).not.toHaveBeenCalled();
+
+    const error = new Error(`Invalid imperative arguments provided for ${amendmentVariables.noUkefDealId._id}`);
     expect(console.error).toHaveBeenCalledWith('Error sending first amendment task email %o', error);
   });
 
   it('should throw an error if company name is missing', async () => {
     await sendFirstTaskEmail(amendmentVariables.noCompanyNameDeal, mockAuditDetails);
 
-    const error = new Error(
-      'Invalid imperative arguments %s %s %o %s',
-      undefined,
-      amendmentVariables.firstTaskVariables.dealSnapshot.ukefDealId,
-      {},
-      amendmentVariables.firstTaskVariables.dealSnapshot.exporter.companyName,
-    );
+    expect(sendEmailApiSpy).not.toHaveBeenCalled();
+    expect(updateFacilityAmendmentSpy).not.toHaveBeenCalled();
+
+    const error = new Error(`Invalid imperative arguments provided for ${amendmentVariables.noCompanyNameDeal._id}`);
+    expect(console.error).toHaveBeenCalledWith('Error sending first amendment task email %o', error);
+  });
+
+  it('should throw an error if first task is missing', async () => {
+    await sendFirstTaskEmail(amendmentVariables.noTaskVariables, mockAuditDetails);
+
+    expect(sendEmailApiSpy).not.toHaveBeenCalled();
+    expect(updateFacilityAmendmentSpy).not.toHaveBeenCalled();
+
+    const error = new Error(`Invalid imperative arguments provided for ${amendmentVariables.noTaskVariables._id}`);
     expect(console.error).toHaveBeenCalledWith('Error sending first amendment task email %o', error);
   });
 });
