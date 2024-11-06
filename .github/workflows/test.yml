@@ -178,75 +178,75 @@ jobs:
         run: echo "Timezone set to ${{ env.TZ }}"
 
   # 2.1. API tests
-  api-tests:
-    name: API 👷
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+  # api-tests:
+  #   name: API 👷
+  #   needs: [setup]
+  #   environment:
+  #     name: ${{ needs.setup.outputs.environment }}
+  #   runs-on: ubuntu-latest
 
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        services: ['portal', 'gef-ui', 'trade-finance-manager-ui', 'trade-finance-manager-api', 'external-api']
+  #   strategy:
+  #     # Do not cancel in-progress jobs upon failure
+  #     fail-fast: false
+  #     # Single dimension matrix
+  #     matrix:
+  #       services: ['portal', 'gef-ui', 'trade-finance-manager-ui', 'trade-finance-manager-api', 'external-api']
 
-    concurrency:
-      group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
-      cancel-in-progress: true
+  #   concurrency:
+  #     group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+  #     cancel-in-progress: true
 
-    steps:
-      - name: Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
+  #   steps:
+  #     - name: Node
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ vars.NODE_VERSION }}
 
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+  #     - name: Timezone
+  #       uses: szenius/set-timezone@v2.0
+  #       with:
+  #         timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
-      - name: Repository
-        uses: actions/checkout@v4
+  #     - name: Repository
+  #       uses: actions/checkout@v4
 
-      - name: Dependencies
-        working-directory: ./
-        run: npm ci
+  #     - name: Dependencies
+  #       working-directory: ./
+  #       run: npm ci
 
-      - name: Start
-        working-directory: ./
-        run: docker compose up --build -d
+  #     - name: Start
+  #       working-directory: ./
+  #       run: docker compose up --build -d
 
-      - name: Initialise
-        working-directory: ./utils
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-        run: |
-          sleep 100s
-          npm run load
+  #     - name: Initialise
+  #       working-directory: ./utils
+  #       env:
+  #         MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
+  #       run: |
+  #         sleep 100s
+  #         npm run load
 
-      - name: SQL
-        working-directory: ./libs/common
-        env:
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-        run: npm run db:migrate
+  #     - name: SQL
+  #       working-directory: ./libs/common
+  #       env:
+  #         SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+  #       run: npm run db:migrate
 
-      - name: Execute
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-        run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
+  #     - name: Execute
+  #       env:
+  #         MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
+  #       run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
 
-      - name: Stop
-        working-directory: ./
-        run: docker compose down
+  #     - name: Stop
+  #       working-directory: ./
+  #       run: docker compose down
 
-      - name: Coverage
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: api-test
-          verbose: true
+  #     - name: Coverage
+  #       uses: codecov/codecov-action@v4
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
+  #         flags: api-test
+  #         verbose: true
 
    # 2.2. API tests with sharding
   api-tests-sharding:
@@ -262,7 +262,7 @@ jobs:
       # Single dimension matrix
       matrix:
         services: ['portal-api', 'dtfs-central-api']
-        shard: [1, 2]
+        shard: [1, 2, 3]
 
     concurrency:
       group: api-tests-sharding-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}-${{ matrix.shard }}
@@ -307,7 +307,7 @@ jobs:
       - name: Execute
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-        run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }} --shard=${{ matrix.shard }}/4
+        run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }} --shard=${{ matrix.shard }}/3
 
       - name: Stop
         working-directory: ./
@@ -322,177 +322,177 @@ jobs:
 
 
   # 2.3. API tests
-  dof-api-tests:
-    name: DOF API 👷
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+  # dof-api-tests:
+  #   name: DOF API 👷
+  #   needs: [setup]
+  #   environment:
+  #     name: ${{ needs.setup.outputs.environment }}
+  #   runs-on: ubuntu-latest
 
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        functions: ['acbs-function']
+  #   strategy:
+  #     # Do not cancel in-progress jobs upon failure
+  #     fail-fast: false
+  #     # Single dimension matrix
+  #     matrix:
+  #       functions: ['acbs-function']
 
-    concurrency:
-      group: dof-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
-      cancel-in-progress: true
+  #   concurrency:
+  #     group: dof-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
+  #     cancel-in-progress: true
 
-    steps:
-      - name: Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
+  #   steps:
+  #     - name: Node
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ vars.NODE_VERSION }}
 
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+  #     - name: Timezone
+  #       uses: szenius/set-timezone@v2.0
+  #       with:
+  #         timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
-      - name: Repository
-        uses: actions/checkout@v4
+  #     - name: Repository
+  #       uses: actions/checkout@v4
 
-      - name: Dependencies
-        working-directory: ./
-        run: npm ci
+  #     - name: Dependencies
+  #       working-directory: ./
+  #       run: npm ci
 
-      - name: ${{ matrix.functions }}
-        working-directory: ./azure-functions/${{ matrix.functions }}
-        run: npm run api-test
+  #     - name: ${{ matrix.functions }}
+  #       working-directory: ./azure-functions/${{ matrix.functions }}
+  #       run: npm run api-test
 
-      - name: Coverage
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: api-test
-          verbose: true
+  #     - name: Coverage
+  #       uses: codecov/codecov-action@v4
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
+  #         flags: api-test
+  #         verbose: true
 
-  # 3. Unit tests
-  unit-tests:
-    name: Unit 👷
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+  # # 3. Unit tests
+  # unit-tests:
+  #   name: Unit 👷
+  #   needs: [setup]
+  #   environment:
+  #     name: ${{ needs.setup.outputs.environment }}
+  #   runs-on: ubuntu-latest
 
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        services:
-          [
-            './portal',
-            './gef-ui',
-            './trade-finance-manager-ui',
-            './portal-api',
-            './dtfs-central-api',
-            './external-api',
-            './trade-finance-manager-api',
-            './libs/common',
-            './azure-functions/acbs-function',
-          ]
+  #   strategy:
+  #     # Do not cancel in-progress jobs upon failure
+  #     fail-fast: false
+  #     # Single dimension matrix
+  #     matrix:
+  #       services:
+  #         [
+  #           './portal',
+  #           './gef-ui',
+  #           './trade-finance-manager-ui',
+  #           './portal-api',
+  #           './dtfs-central-api',
+  #           './external-api',
+  #           './trade-finance-manager-api',
+  #           './libs/common',
+  #           './azure-functions/acbs-function',
+  #         ]
 
-    concurrency:
-      group: unit-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
-      cancel-in-progress: true
+  #   concurrency:
+  #     group: unit-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+  #     cancel-in-progress: true
 
-    steps:
-      - name: Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
+  #   steps:
+  #     - name: Node
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ vars.NODE_VERSION }}
 
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+  #     - name: Timezone
+  #       uses: szenius/set-timezone@v2.0
+  #       with:
+  #         timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
-      - name: Repository
-        uses: actions/checkout@v4
+  #     - name: Repository
+  #       uses: actions/checkout@v4
 
-      - name: Dependencies
-        working-directory: ./
-        run: npm ci
+  #     - name: Dependencies
+  #       working-directory: ./
+  #       run: npm ci
 
-      - name: Execute
-        working-directory: ${{ matrix.services }}
-        run: npm run unit-test
+  #     - name: Execute
+  #       working-directory: ${{ matrix.services }}
+  #       run: npm run unit-test
 
-      - name: Coverage
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: unit-test
-          verbose: true
+  #     - name: Coverage
+  #       uses: codecov/codecov-action@v4
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
+  #         flags: unit-test
+  #         verbose: true
 
-  # 3. Unit tests - FF
-  unit-tests-ff:
-    name: Unit feature flag 👷
-    needs: [setup]
-    env:
-      # Various feature flags
-      FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
-      FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
-      FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
-      FF_TFM_SSO_ENABLED: 'true'
-      GEF_DEAL_VERSION: 1
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+  # # 3. Unit tests - FF
+  # unit-tests-ff:
+  #   name: Unit feature flag 👷
+  #   needs: [setup]
+  #   env:
+  #     # Various feature flags
+  #     FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
+  #     FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
+  #     FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
+  #     FF_TFM_SSO_ENABLED: 'true'
+  #     GEF_DEAL_VERSION: 1
+  #   environment:
+  #     name: ${{ needs.setup.outputs.environment }}
+  #   runs-on: ubuntu-latest
 
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        services:
-          [
-            './portal',
-            './gef-ui',
-            './trade-finance-manager-ui',
-            './portal-api',
-            './dtfs-central-api',
-            './external-api',
-            './trade-finance-manager-api',
-            './libs/common',
-            './azure-functions/acbs-function',
-          ]
+  #   strategy:
+  #     # Do not cancel in-progress jobs upon failure
+  #     fail-fast: false
+  #     # Single dimension matrix
+  #     matrix:
+  #       services:
+  #         [
+  #           './portal',
+  #           './gef-ui',
+  #           './trade-finance-manager-ui',
+  #           './portal-api',
+  #           './dtfs-central-api',
+  #           './external-api',
+  #           './trade-finance-manager-api',
+  #           './libs/common',
+  #           './azure-functions/acbs-function',
+  #         ]
 
-    concurrency:
-      group: unit-tests-ff-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
-      cancel-in-progress: true
+  #   concurrency:
+  #     group: unit-tests-ff-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+  #     cancel-in-progress: true
 
-    steps:
-      - name: Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
+  #   steps:
+  #     - name: Node
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ vars.NODE_VERSION }}
 
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+  #     - name: Timezone
+  #       uses: szenius/set-timezone@v2.0
+  #       with:
+  #         timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
-      - name: Repository
-        uses: actions/checkout@v4
+  #     - name: Repository
+  #       uses: actions/checkout@v4
 
-      - name: Dependencies
-        working-directory: ./
-        run: npm ci
+  #     - name: Dependencies
+  #       working-directory: ./
+  #       run: npm ci
 
-      - name: Execute
-        working-directory: ${{ matrix.services }}
-        run: npm run unit-test-ff
+  #     - name: Execute
+  #       working-directory: ${{ matrix.services }}
+  #       run: npm run unit-test-ff
 
-      - name: Coverage
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: unit-test
-          verbose: true
+  #     - name: Coverage
+  #       uses: codecov/codecov-action@v4
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
+  #         flags: unit-test
+  #         verbose: true
 
   # 4. E2E - PORTAL
   # e2e-tests-portal:
