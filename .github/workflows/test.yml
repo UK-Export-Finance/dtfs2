@@ -265,7 +265,7 @@ jobs:
         shard: [1, 2]
 
     concurrency:
-      group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}-${{ matrix.shard }}
+      group: api-tests-sharding-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}-${{ matrix.shard }}
       cancel-in-progress: true
 
     steps:
