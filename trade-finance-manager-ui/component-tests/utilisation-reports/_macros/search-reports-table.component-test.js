@@ -1,4 +1,4 @@
-const { UtilisationReportEntityMockBuilder, FeeRecordEntityMockBuilder } = require('@ukef/dtfs2-common');
+const { UtilisationReportEntityMockBuilder, FeeRecordEntityMockBuilder, PENDING_RECONCILIATION, RECONCILIATION_IN_PROGRESS } = require('@ukef/dtfs2-common');
 const { componentRenderer } = require('../../componentRenderer');
 const { getFindReportSummaryItemViewModel } = require('../../../server/controllers/utilisation-reports/helpers/find-reports-by-year-helper');
 const { MOCK_TFM_SESSION_USER } = require('../../../server/test-mocks/mock-tfm-session-user');
@@ -55,13 +55,13 @@ describe(component, () => {
       };
     };
 
-    const pendingMockReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+    const pendingMockReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
       .withDateUploaded('2023-12-01T15:04:53Z')
       .withReportPeriod(getReportPeriod(10))
       .build();
     const pendingFeeRecord = FeeRecordEntityMockBuilder.forReport(pendingMockReport).build();
     pendingMockReport.feeRecords = [pendingFeeRecord];
-    const reconciliationInProgressMockReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
+    const reconciliationInProgressMockReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS)
       .withDateUploaded('2023-12-01T15:04:53Z')
       .withReportPeriod(getReportPeriod(11))
       .build();

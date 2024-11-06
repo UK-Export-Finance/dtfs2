@@ -2,16 +2,16 @@ import {
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
 } from '@ukef/dtfs2-common';
-import { errorSummary } from '../../partials';
-import pages from '../../pages';
-import USERS from '../../../fixtures/users';
-import { PDC_TEAMS } from '../../../fixtures/teams';
-import { NODE_TASKS } from '../../../../../e2e-fixtures';
-import relative from '../../relativeURL';
-import { getMatchingTfmFacilitiesForFeeRecords } from '../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
+import { errorSummary } from '../../../partials';
+import pages from '../../../pages';
+import USERS from '../../../../fixtures/users';
+import { PDC_TEAMS } from '../../../../fixtures/teams';
+import { NODE_TASKS } from '../../../../../../e2e-fixtures';
+import relative from '../../../relativeURL';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing payments`, () => {
   const REPORT_ID = 1;
@@ -20,10 +20,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
   const FEE_RECORD_ID_TWO = '22';
   const PAYMENT_CURRENCY = 'GBP';
 
-  const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
-    .withId(REPORT_ID)
-    .withBankId('961')
-    .build();
+  const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(REPORT_ID).withBankId('961').build();
 
   const firstPayment = PaymentEntityMockBuilder.forCurrency(PAYMENT_CURRENCY)
     .withAmount(450)

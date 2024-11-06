@@ -2,20 +2,20 @@ import {
   CURRENCY,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  RECONCILIATION_IN_PROGRESS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
-import pages from '../../../pages';
-import { NODE_TASKS } from '../../../../../../e2e-fixtures';
-import USERS from '../../../../fixtures/users';
-import relative from '../../../relativeURL';
-import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
+import pages from '../../../../pages';
+import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
+import USERS from '../../../../../fixtures/users';
+import relative from '../../../../relativeURL';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context(`users can filter payment details by facility id and payment reference and currency`, () => {
   const bankId = '961';
   const reportId = 12;
 
-  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS)
     .withId(reportId)
     .withBankId(bankId)
     .withDateUploaded(new Date())

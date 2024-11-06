@@ -3,15 +3,15 @@ import {
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  RECONCILIATION_IN_PROGRESS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
-import pages from '../../pages';
-import { PDC_TEAMS } from '../../../fixtures/teams';
-import { NODE_TASKS } from '../../../../../e2e-fixtures';
-import USERS from '../../../fixtures/users';
-import relative from '../../relativeURL';
-import { getMatchingTfmFacilitiesForFeeRecords } from '../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
+import pages from '../../../pages';
+import { PDC_TEAMS } from '../../../../fixtures/teams';
+import { NODE_TASKS } from '../../../../../../e2e-fixtures';
+import USERS from '../../../../fixtures/users';
+import relative from '../../../relativeURL';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
   const reportIdGenerator = idGenerator();
@@ -20,7 +20,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
   const paymentCurrency = CURRENCY.GBP;
 
   const aUtilisationReport = () =>
-    UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+    UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS)
       .withId(reportIdGenerator.next().value)
       .withBankId('961')
       .withDateUploaded(new Date())

@@ -6,12 +6,13 @@ import {
   PaymentEntityMockBuilder,
   REQUEST_PLATFORM_TYPE,
   UtilisationReportEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
 } from '@ukef/dtfs2-common';
 import { handleFeeRecordRemoveFromPaymentGroupEvent } from './remove-from-payment-group.event-handler';
 import { aDbRequestSource } from '../../../../../../test-helpers';
 
 describe('handleFeeRecordRemoveFromPaymentGroupEvent', () => {
-  const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+  const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
 
   const mockSave = jest.fn();
   const mockEntityManager = {

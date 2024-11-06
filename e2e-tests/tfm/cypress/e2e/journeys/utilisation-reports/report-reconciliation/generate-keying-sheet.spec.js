@@ -2,16 +2,16 @@ import { startOfMonth, subMonths, subYears, addDays } from 'date-fns';
 import {
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  PENDING_RECONCILIATION,
   UtilisationReportEntityMockBuilder,
   FacilityUtilisationDataEntityMockBuilder,
   CURRENCY,
   FEE_RECORD_STATUS,
 } from '@ukef/dtfs2-common';
-import pages from '../../pages';
-import USERS from '../../../fixtures/users';
-import { NODE_TASKS } from '../../../../../e2e-fixtures';
-import relative from '../../relativeURL';
+import pages from '../../../pages';
+import USERS from '../../../../fixtures/users';
+import { NODE_TASKS } from '../../../../../../e2e-fixtures';
+import relative from '../../../relativeURL';
 
 context('PDC_RECONCILE users can generate keying data', () => {
   const BANK_ID = '961';
@@ -26,7 +26,7 @@ context('PDC_RECONCILE users can generate keying data', () => {
     end: { month: START_OF_CURRENT_REPORT_PERIOD.getMonth() + 1, year: START_OF_CURRENT_REPORT_PERIOD.getFullYear() },
   };
   const CURRENT_PERIOD_UTILISATION = 180000;
-  const CURRENT_PERIOD_UTILISATION_REPORT = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+  const CURRENT_PERIOD_UTILISATION_REPORT = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
     .withId(REPORT_ID)
     .withBankId(BANK_ID)
     .withReportPeriod(CURRENT_REPORT_PERIOD)

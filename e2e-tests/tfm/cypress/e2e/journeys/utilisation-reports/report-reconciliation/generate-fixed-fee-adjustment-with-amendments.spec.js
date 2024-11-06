@@ -1,6 +1,6 @@
 import {
   FeeRecordEntityMockBuilder,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  RECONCILIATION_IN_PROGRESS,
   UtilisationReportEntityMockBuilder,
   FacilityUtilisationDataEntityMockBuilder,
   PaymentEntityMockBuilder,
@@ -9,10 +9,10 @@ import {
   FEE_RECORD_STATUS,
   convertMillisecondsToSeconds,
 } from '@ukef/dtfs2-common';
-import pages from '../../pages';
-import USERS from '../../../fixtures/users';
-import { NODE_TASKS } from '../../../../../e2e-fixtures';
-import relative from '../../relativeURL';
+import pages from '../../../pages';
+import USERS from '../../../../fixtures/users';
+import { NODE_TASKS } from '../../../../../../e2e-fixtures';
+import relative from '../../../relativeURL';
 
 context('Fixed fee calculation uses effective amendment to cover end date at report period end', () => {
   const bankId = '961';
@@ -25,7 +25,7 @@ context('Fixed fee calculation uses effective amendment to cover end date at rep
   const dateBeforeDateBeforeReportPeriodEnd = new Date('2023-12-01');
   const dateAfterReportPeriodEnd = new Date('2024-03-01');
 
-  const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
+  const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS)
     .withId(reportId)
     .withReportPeriod(reportPeriod)
     .withBankId(bankId)

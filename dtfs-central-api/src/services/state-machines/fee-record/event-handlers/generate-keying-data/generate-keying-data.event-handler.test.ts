@@ -5,6 +5,7 @@ import {
   FEE_RECORD_STATUS,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
   ReportPeriod,
   REQUEST_PLATFORM_TYPE,
   UtilisationReportEntityMockBuilder,
@@ -499,7 +500,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
   });
 
   function aReconciliationInProgressReport() {
-    return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+    return UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
   }
 
   function aFacilityUtilisationDataEntity() {

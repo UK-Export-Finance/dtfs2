@@ -1,7 +1,13 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
-import { FeeRecordEntityMockBuilder, PaymentEntity, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FeeRecordEntityMockBuilder,
+  PaymentEntity,
+  PaymentEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { getPaymentDetailsById, GetPaymentDetailsResponseBody } from '.';
 import { mapToPaymentDetails } from './helpers';
 import { PaymentRepo } from '../../../../repositories/payment-repo';
@@ -22,7 +28,7 @@ describe('get-payment-details-by-id.controller', () => {
       });
 
     const aPaymentWithFeeRecordsAndReportAttached = (): PaymentEntity => {
-      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(Number(reportId)).withBankId(bankId).build();
+      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(Number(reportId)).withBankId(bankId).build();
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).build();
       return PaymentEntityMockBuilder.forCurrency('GBP').withFeeRecords([feeRecord]).build();
     };

@@ -1,6 +1,6 @@
 import {
   ValuesOf,
-  UtilisationReportReconciliationStatus,
+  UtilisationReportStatus,
   Currency,
   ReportPeriod,
   AzureFileInfo,
@@ -17,7 +17,7 @@ import { Payment } from './payments';
 export type GetUtilisationReportResponse = {
   id: number;
   bankId: string;
-  status: UtilisationReportReconciliationStatus;
+  status: UtilisationReportStatus;
   reportPeriod: ReportPeriod;
 } & (
   | {
@@ -39,7 +39,7 @@ export type UtilisationReportReconciliationSummaryItem = {
     id: string;
     name: string;
   };
-  status: UtilisationReportReconciliationStatus;
+  status: UtilisationReportStatus;
   dateUploaded?: Date;
   totalFacilitiesReported?: number;
   totalFeesReported?: number;
@@ -84,7 +84,7 @@ export type UtilisationReportReconciliationDetails = {
     id: string;
     name: string;
   };
-  status: UtilisationReportReconciliationStatus;
+  status: UtilisationReportStatus;
   reportPeriod: ReportPeriod;
   dateUploaded: Date;
   premiumPayments: PremiumPaymentsGroup[];
