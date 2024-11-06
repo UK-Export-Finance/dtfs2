@@ -194,7 +194,7 @@ jobs:
         shard: [1, 2, 3, 4]
   
     concurrency:
-      group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+      group: api-tests-${{ github.ref }}
       cancel-in-progress: true
 
     steps:
@@ -236,7 +236,7 @@ jobs:
       - name: Execute
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-        run: docker compose exec -T ${{ matrix.service }} jest --config=api-test.jest.config.js --runInBand --workspace=${{ matrix.services }} --shard=${{ matrix.shard }}/4
+        run: docker compose exec -T ${{ matrix.service }} jest --config=api-test.jest.config.js --runInBand --shard=${{ matrix.shard }}/4
 
       - name: Stop
         working-directory: ./
