@@ -51,7 +51,7 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
      * However if the facility (Loan) amendment consist of an additional
      * attribute with `amount` then FLR should be mapped as normal.
      */
-    if (!flrMapped?.length) {
+    if (!Object.values(flrMapped).length) {
       facilityLoanRecordAmendments = 'Facility loan amount only amendment, aborting FLR amendment';
 
       return facilityLoanRecordAmendments;
