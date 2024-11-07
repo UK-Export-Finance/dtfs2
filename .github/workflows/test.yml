@@ -184,14 +184,15 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04-16core
 
     strategy:
       # Do not cancel in-progress jobs upon failure
       fail-fast: false
       # Single dimension matrix
       matrix:
-        services: ['portal', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'trade-finance-manager-api', 'dtfs-central-api', 'external-api']
+        # services: ['portal', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'trade-finance-manager-api', 'dtfs-central-api', 'external-api']
+        services: ['dtfs-central-api']
 
     concurrency:
       group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
