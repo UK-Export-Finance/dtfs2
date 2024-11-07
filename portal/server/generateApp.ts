@@ -1,5 +1,5 @@
 import path from 'path';
-import express, { ErrorRequestHandler } from 'express';
+import express from 'express';
 import morgan from 'morgan';
 import session from 'express-session';
 import redis from 'redis';
@@ -7,8 +7,7 @@ import cookieParser from 'cookie-parser';
 import csrf from 'csurf';
 import flash from 'connect-flash';
 import connectRedis from 'connect-redis';
-import { isHttpError } from 'http-errors';
-import { InvalidEnvironmentVariableError } from '@ukef/dtfs2-common';
+import { getFrontEndErrorHandler, InvalidEnvironmentVariableError } from '@ukef/dtfs2-common';
 import routes from './routes';
 import healthcheck from './healthcheck';
 import configureNunjucks from './nunjucks-configuration';
@@ -131,17 +130,7 @@ export const generateApp = () => {
     return res.render('page-not-found.njk', { user });
   });
 
-  const errorHandler: ErrorRequestHandler = (error: unknown, _req, res, next) => {
-    if (isHttpError(error) && error.code === 'EBADCSRFTOKEN') {
-      console.error("The user's CSRF token is incorrect, redirecting the user to /.");
-      // handle CSRF token errors here
-      res.status(error.statusCode || 500);
-      res.redirect('/');
-    } else {
-      next(error);
-    }
-  };
-  app.use(errorHandler);
+  app.use(getFrontEndErrorHandler());
 
   return app;
 };

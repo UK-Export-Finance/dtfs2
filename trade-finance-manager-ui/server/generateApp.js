@@ -6,7 +6,7 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 const flash = require('connect-flash');
-
+const { getFrontEndErrorHandler } = require('@ukef/dtfs2-common');
 const { getUnauthenticatedAuthRouter } = require('./routes/auth/configs');
 const routes = require('./routes');
 const feedbackRoutes = require('./routes/feedback');
@@ -93,16 +93,8 @@ const generateApp = () => {
   app.use('/', routes);
 
   app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
-  // error handler
-  app.use((error, req, res, next) => {
-    if (error.code === 'EBADCSRFTOKEN') {
-      // handle CSRF token errors here
-      res.status(error.statusCode || 500);
-      res.redirect('/');
-    } else {
-      next(error);
-    }
-  });
+
+  app.use(getFrontEndErrorHandler());
 
   return app;
 };
