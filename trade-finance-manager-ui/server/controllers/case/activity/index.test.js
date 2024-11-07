@@ -66,6 +66,7 @@ describe('activity controller', () => {
         const activities = mapActivities(mockDeal.tfm.activities);
 
         await activityController.getActivity(req, res);
+
         expect(res.render).toHaveBeenCalledWith('case/activity/activity.njk', {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'activity',
