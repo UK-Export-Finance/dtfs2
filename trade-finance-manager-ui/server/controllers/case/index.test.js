@@ -252,6 +252,26 @@ describe('controllers - case', () => {
         expect(res.redirect).toHaveBeenCalledWith('/not-found');
       });
     });
+
+    describe('when an error is thrown', () => {
+      beforeEach(() => {
+        api.getDeal = () => Promise.reject(new Error('An exception has occurred'));
+      });
+
+      it('should render problem with service page with console error', async () => {
+        const req = {
+          params: {
+            _id: '1',
+          },
+          session,
+        };
+
+        await caseController.getCaseDeal(req, res);
+
+        expect(console.error).toHaveBeenCalledWith('Unable to render deal %o', new Error('An exception has occurred'));
+        expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+      });
+    });
   });
 
   describe('GET case tasks', () => {

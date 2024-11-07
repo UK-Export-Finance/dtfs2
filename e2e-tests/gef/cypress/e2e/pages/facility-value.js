@@ -8,6 +8,7 @@ const facilityValue = {
   percentageCover: () => cy.get('[data-cy="percentage-cover"]'),
   percentageCoverError: () => cy.get('[data-cy="percentage-cover-error"]'),
   interestPercentage: () => cy.get('[data-cy="interest-percentage"]'),
+  interestPercentageHint: () => cy.get('[data-cy="interest-percentage-hint"]'),
   interestPercentageError: () => cy.get('[data-cy="interest-percentage-error"]'),
 };
 

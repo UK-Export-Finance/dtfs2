@@ -168,4 +168,5 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   keyingSheet: KeyingSheetViewModel;
   paymentDetails: PaymentDetailsViewModel;
   utilisationDetails: UtilisationDetailsViewModel;
+  isFeeRecordCorrectionFeatureFlagEnabled: boolean;
 };

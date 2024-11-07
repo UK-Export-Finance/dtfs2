@@ -127,6 +127,15 @@
           data-module="govuk-button"
           type="submit"
           data-cy="generate-keying-data-button"/>
+        {% if isFeeRecordCorrectionFeatureFlagEnabled %}
+          <input
+            class="govuk-button govuk-button--secondary govuk-!-margin-right-3"
+            formaction="/utilisation-reports/{{ reportId }}/create-record-correction-request"
+            value="Create record correction request"
+            data-module="govuk-button"
+            type="submit"
+            data-cy="create-record-correction-request-button"/>
+        {% endif %}
       </div>
   {% endif %}
   {{ premiumPaymentsTable.render({

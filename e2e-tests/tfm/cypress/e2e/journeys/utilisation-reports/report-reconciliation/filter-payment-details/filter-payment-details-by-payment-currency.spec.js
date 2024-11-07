@@ -5,11 +5,11 @@ import {
   RECONCILIATION_IN_PROGRESS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
-import pages from '../../../pages';
-import { NODE_TASKS } from '../../../../../../e2e-fixtures';
-import USERS from '../../../../fixtures/users';
-import relative from '../../../relativeURL';
-import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
+import pages from '../../../../pages';
+import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
+import USERS from '../../../../../fixtures/users';
+import relative from '../../../../relativeURL';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context(`users can filter payment details by payment currency`, () => {
   const bankId = '961';
