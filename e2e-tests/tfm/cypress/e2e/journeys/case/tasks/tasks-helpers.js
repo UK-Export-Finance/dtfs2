@@ -24,7 +24,7 @@ const submitTaskInProgress = (groupId, taskId, userId) => {
 
   pages.taskPage.assignedToSelectInput().select(userId);
   pages.taskPage.taskStatusRadioInputInProgress().click();
-  pages.taskPage.submitButton().click();
+  cy.clickSubmitButton();
 };
 
 const submitTaskComplete = (groupId, taskId, userId) => {
@@ -33,7 +33,7 @@ const submitTaskComplete = (groupId, taskId, userId) => {
 
   pages.taskPage.assignedToSelectInput().select(userId);
   pages.taskPage.taskStatusRadioInputDone().click();
-  pages.taskPage.submitButton().click();
+  cy.clickSubmitButton();
 };
 
 const assertCannotClickPreviousTask = (currentGroupId, currentTaskId) => {
@@ -64,21 +64,11 @@ const assertCompleteTask = (groupId, taskId) => {
 
   row.link().should('not.exist');
 
-  row
-    .status()
-    .invoke('text')
-    .then((text) => {
-      expect(text.trim()).to.equal('Done');
-    });
+  cy.assertText(row.status(), 'Done');
 };
 
 const assertTaskStatus = (row, expectedStatus) => {
-  row
-    .status()
-    .invoke('text')
-    .then((text) => {
-      expect(text.trim()).to.equal(expectedStatus);
-    });
+  cy.assertText(row.status(), expectedStatus);
 };
 
 const assertTaskLinkExists = (row) => {
@@ -108,24 +98,14 @@ const assertNextTaskStatus = (currentGroupId, currentTaskId) => {
 
     const nextGroupFirstTaskRow = pages.tasksPage.tasks.row(nextGroupId, 1);
 
-    nextGroupFirstTaskRow
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('To do');
-      });
+    cy.assertText(nextGroupFirstTaskRow.status(), 'To do');
   } else if (!isLastTaskInGroup && !isLastGroup) {
     // check the next task in current group
     const nextTaskId = currentTaskId + 1;
 
     const nextTaskRow = pages.tasksPage.tasks.row(currentGroupId, nextTaskId);
 
-    nextTaskRow
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('To do');
-      });
+    cy.assertText(nextTaskRow.status(), 'To do');
   }
 };
 
@@ -142,12 +122,7 @@ const assertCannotClickNextTask = (currentGroupId, currentTaskId) => {
 
     nextGroupFirstTaskRow.link().should('not.exist');
 
-    nextGroupFirstTaskRow
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Cannot start yet');
-      });
+    cy.assertText(nextGroupFirstTaskRow.status(), 'Cannot start yet');
   } else if (!isLastTaskInGroup && !isLastGroup) {
     // check the next task in current group
     const nextTaskId = currentTaskId + 1;
@@ -156,12 +131,7 @@ const assertCannotClickNextTask = (currentGroupId, currentTaskId) => {
 
     nextTaskRow.link().should('not.exist');
 
-    nextTaskRow
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Cannot start yet');
-      });
+    cy.assertText(nextTaskRow.status(), 'Cannot start yet');
   }
 };
 

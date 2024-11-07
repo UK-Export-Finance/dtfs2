@@ -6,8 +6,8 @@ const { STATUS } = require('../../constants');
 /**
  * Determines if a deal is editable for a given user.
  *
- * @param {object} deal - The deal object.
- * @param {object} user - The user object.
+ * @param {Object} deal - The deal object.
+ * @param {Object} user - The user object.
  * @returns {boolean} - True if the deal is editable, false otherwise.
  */
 const isDealEditable = (deal, user) => {

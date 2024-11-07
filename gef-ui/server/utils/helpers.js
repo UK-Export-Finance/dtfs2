@@ -135,7 +135,7 @@ const returnToMakerNoFacilitiesChanged = (app, hasChangedFacilities) => {
   );
 };
 /**
- * @param {object} params
+ * @param {Object} params
  * @param {string} params.href - the URL to navigate to
  * @param {string} params.visuallyHiddenText - the visually hidden label to make it clear to a screen reader what the link is changing
  * @param {string | undefined} params.text - the text to display, component has class display-none if falsy
@@ -543,7 +543,7 @@ const getCurrentTimePlusMinutes = (minutesToAdd = 0) => new Date(new Date().getT
  * used to display supporting info change or add links
  * should be hidden if checker/MIA/AIN and returning to maker
  * logic done in nunjucks template so needs this function
- * @param {object} application
+ * @param {Object} application
  * @param {boolean} preview
  * @returns {boolean}
  */

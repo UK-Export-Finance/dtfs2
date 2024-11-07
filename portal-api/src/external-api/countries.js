@@ -34,7 +34,7 @@ const getCountries = async () => {
  * Retrieves country information from an external API based on the provided country code.
  *
  * @param {string} code - The country code to retrieve information for.
- * @returns {Promise<object>} - A promise that resolves to an object containing the status and data of the requested country.
+ * @returns {Promise<Object>} - A promise that resolves to an object containing the status and data of the requested country.
  *
  * @example
  * // Returns { status: 200, data: { name: 'United Kingdom' } }

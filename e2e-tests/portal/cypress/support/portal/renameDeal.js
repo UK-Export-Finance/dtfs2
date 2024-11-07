@@ -6,6 +6,7 @@ module.exports = (opts) => {
   pages.contract.visit(deal);
   pages.contract.editDealName().click();
 
-  pages.editDealName.additionalRefName().type(`{selectall}{backspace}${newName}`);
-  pages.editDealName.submit().click();
+  cy.keyboardInput(pages.editDealName.additionalRefName(), `{selectall}{backspace}${newName}`);
+
+  cy.clickSubmitButton();
 };

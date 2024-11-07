@@ -41,44 +41,24 @@ context("A maker is informed of a loan's status before submitting an issued loan
     const loanId = dealFacilities.loans[0]._id;
     const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-    loanRow
-      .loanStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Not started');
-      });
+    cy.assertText(loanRow.loanStatus(), 'Not started');
+    cy.assertText(loanRow.issueFacilityLink(), 'Issue facility');
 
-    loanRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Issue facility');
-      });
     loanRow.issueFacilityLink().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanId}/issue-facility`));
 
     // don't fill anything in. Submit and go back to deal page
-    pages.loanIssueFacility.submit().click();
+    cy.clickSubmitButton();
     cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanId}/issue-facility`));
 
-    pages.loanIssueFacility.cancelButton().click();
+    cy.clickCancelButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     // assert loan status has changed
-    loanRow
-      .loanStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Incomplete');
-      });
+    cy.assertText(loanRow.loanStatus(), 'Incomplete');
 
     // assert `Issue facility link` text has not changed
-    loanRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Issue facility');
-      });
+    cy.assertText(loanRow.issueFacilityLink(), 'Issue facility');
   });
 });

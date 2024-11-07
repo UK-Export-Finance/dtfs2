@@ -1,52 +1,31 @@
 const pages = require('../../../pages');
-const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
+const { oneMonth, today, twoDays } = require('../../../../../../e2e-fixtures/dateConstants');
 
-export const ISSUED_LOAN_DATE_VALUE = dateConstants.today;
-export const COVER_START_DATE_VALUE = dateConstants.twoDays;
-export const COVER_END_DATE_VALUE = dateConstants.oneMonth;
+export const ISSUED_LOAN_DATE_VALUE = today;
+export const COVER_START_DATE_VALUE = twoDays;
+export const COVER_END_DATE_VALUE = oneMonth;
 export const DISBURSEMENT_AMOUNT_VALUE = '50000';
 
 export const fillAndSubmitIssueLoanFacilityFormWithoutRequestedCoverStartDate = () => {
-  pages.loanIssueFacility.issuedDateDayInput().type(dateConstants.todayDay);
-  pages.loanIssueFacility.issuedDateMonthInput().type(dateConstants.todayMonth);
-  pages.loanIssueFacility.issuedDateYearInput().type(dateConstants.todayYear);
+  cy.completeDateFormFields({ idPrefix: 'issuedDate' });
 
-  pages.loanIssueFacility.coverEndDateDayInput().type(dateConstants.oneMonthDay);
-  pages.loanIssueFacility.coverEndDateMonthInput().type(dateConstants.oneMonthMonth);
-  pages.loanIssueFacility.coverEndDateYearInput().type(dateConstants.oneMonthYear);
+  cy.completeDateFormFields({ idPrefix: 'coverEndDate', date: oneMonth });
 
-  pages.loanIssueFacility.disbursementAmount().type(DISBURSEMENT_AMOUNT_VALUE);
-  pages.loanIssueFacility.name().type('5678');
+  cy.keyboardInput(pages.loanIssueFacility.disbursementAmount(), DISBURSEMENT_AMOUNT_VALUE);
+  cy.keyboardInput(pages.loanIssueFacility.name(), '5678');
 
-  pages.loanIssueFacility.submit().click();
+  cy.clickSubmitButton();
 };
 
 export const fillAndSubmitIssueLoanFacilityForm = () => {
-  pages.loanIssueFacility.issuedDateDayInput().type(dateConstants.todayDay);
-  pages.loanIssueFacility.issuedDateMonthInput().type(dateConstants.todayMonth);
-  pages.loanIssueFacility.issuedDateYearInput().type(dateConstants.todayYear);
+  cy.completeDateFormFields({ idPrefix: 'issuedDate' });
 
-  pages.bondIssueFacility.requestedCoverStartDateDayInput().clear();
-  pages.loanIssueFacility.requestedCoverStartDateDayInput().type(dateConstants.twoDaysDay);
+  cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: twoDays });
 
-  pages.bondIssueFacility.requestedCoverStartDateMonthInput().clear();
-  pages.loanIssueFacility.requestedCoverStartDateMonthInput().type(dateConstants.twoDaysMonth);
+  cy.completeDateFormFields({ idPrefix: 'coverEndDate', date: oneMonth });
 
-  pages.bondIssueFacility.requestedCoverStartDateYearInput().clear();
-  pages.loanIssueFacility.requestedCoverStartDateYearInput().type(dateConstants.twoDaysYear);
+  cy.keyboardInput(pages.loanIssueFacility.disbursementAmount(), DISBURSEMENT_AMOUNT_VALUE);
+  cy.keyboardInput(pages.loanIssueFacility.name(), '5678');
 
-  pages.bondIssueFacility.coverEndDateDayInput().clear();
-  pages.loanIssueFacility.coverEndDateDayInput().type(dateConstants.oneMonthDay);
-
-  pages.bondIssueFacility.coverEndDateMonthInput().clear();
-  pages.loanIssueFacility.coverEndDateMonthInput().type(dateConstants.oneMonthMonth);
-
-  pages.bondIssueFacility.coverEndDateYearInput().clear();
-  pages.loanIssueFacility.coverEndDateYearInput().type(dateConstants.oneMonthYear);
-
-  pages.loanIssueFacility.disbursementAmount().clear();
-  pages.loanIssueFacility.disbursementAmount().type(DISBURSEMENT_AMOUNT_VALUE);
-  pages.loanIssueFacility.name().type('5678');
-
-  pages.loanIssueFacility.submit().click();
+  cy.clickSubmitButton();
 };

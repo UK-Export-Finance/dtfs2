@@ -11,11 +11,13 @@ const { isHttpErrorStatus } = require('../../helpers/http');
  * If any other error occurs, it logs the error and throws a new error.
  *
  * @param {string} facilityId - The ID of the facility.
- * @returns {object} - An object containing the facility data and its etag.
+ * @returns {Object} - An object containing the facility data and its etag.
  * @throws {Error} - Throws an error if the facilityId is not provided, if the API request fails, or if any other error occurs.
  */
-const handler = async (facilityId) => {
+const handler = async (payload) => {
   try {
+    const { facilityId } = payload;
+
     if (!facilityId) {
       throw new Error('Invalid facility ID');
     }

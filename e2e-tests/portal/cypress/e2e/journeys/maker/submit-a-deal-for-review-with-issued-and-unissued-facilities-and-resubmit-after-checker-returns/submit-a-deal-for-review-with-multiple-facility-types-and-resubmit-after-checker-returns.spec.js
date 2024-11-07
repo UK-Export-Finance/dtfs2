@@ -46,19 +46,9 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-      bondRow
-        .bondStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Completed');
-        });
+      cy.assertText(bondRow.bondStatus(), 'Completed');
+      cy.assertText(bondRow.facilityStage(), bond.facilityStage);
 
-      bondRow
-        .facilityStage()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(bond.facilityStage);
-        });
       bondRow.deleteLink().should('be.visible');
       bondRow.issueFacilityLink().should('not.exist');
     });
@@ -67,19 +57,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-      loanRow
-        .loanStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Completed');
-        });
-
-      loanRow
-        .facilityStage()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(loan.facilityStage);
-        });
+      cy.assertText(loanRow.loanStatus(), 'Completed');
+      cy.assertText(loanRow.facilityStage(), loan.facilityStage);
 
       loanRow.deleteLink().should('be.visible');
       loanRow.issueFacilityLink().should('not.exist');
@@ -97,19 +76,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-      bondRow
-        .bondStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Completed');
-        });
-
-      bondRow
-        .facilityStage()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(bond.facilityStage);
-        });
+      cy.assertText(bondRow.bondStatus(), 'Completed');
+      cy.assertText(bondRow.facilityStage(), bond.facilityStage);
 
       bondRow.issueFacilityLink().should('not.exist');
       bondRow.deleteLink().should('be.visible');
@@ -119,19 +87,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-      bondRow
-        .bondStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Completed');
-        });
-
-      bondRow
-        .facilityStage()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(bond.facilityStage);
-        });
+      cy.assertText(bondRow.bondStatus(), 'Completed');
+      cy.assertText(bondRow.facilityStage(), bond.facilityStage);
 
       bondRow.issueFacilityLink().should('not.exist');
       bondRow.deleteLink().should('be.visible');
@@ -141,19 +98,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-      loanRow
-        .loanStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Completed');
-        });
-
-      loanRow
-        .facilityStage()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(loan.facilityStage);
-        });
+      cy.assertText(loanRow.loanStatus(), 'Completed');
+      cy.assertText(loanRow.facilityStage(), loan.facilityStage);
 
       loanRow.issueFacilityLink().should('not.exist');
       loanRow.deleteLink().should('be.visible');
@@ -163,19 +109,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-      loanRow
-        .loanStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Completed');
-        });
-
-      loanRow
-        .facilityStage()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(loan.facilityStage);
-        });
+      cy.assertText(loanRow.loanStatus(), 'Completed');
+      cy.assertText(loanRow.facilityStage(), loan.facilityStage);
 
       loanRow.issueFacilityLink().should('not.exist');
       loanRow.deleteLink().should('be.visible');
@@ -193,19 +128,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-      bondRow
-        .bondStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Completed');
-        });
-
-      bondRow
-        .facilityStage()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(bond.facilityStage);
-        });
+      cy.assertText(bondRow.bondStatus(), 'Completed');
+      cy.assertText(bondRow.facilityStage(), bond.facilityStage);
 
       bondRow.issueFacilityLink().should('not.exist');
       bondRow.deleteLink().should('not.exist');
@@ -215,19 +139,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-      bondRow
-        .bondStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Completed');
-        });
-
-      bondRow
-        .facilityStage()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(bond.facilityStage);
-        });
+      cy.assertText(bondRow.bondStatus(), 'Completed');
+      cy.assertText(bondRow.facilityStage(), bond.facilityStage);
 
       bondRow.issueFacilityLink().should('not.exist');
       bondRow.deleteLink().should('not.exist');
@@ -237,19 +150,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-      loanRow
-        .loanStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Completed');
-        });
-
-      loanRow
-        .facilityStage()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(loan.facilityStage);
-        });
+      cy.assertText(loanRow.loanStatus(), 'Completed');
+      cy.assertText(loanRow.facilityStage(), loan.facilityStage);
 
       loanRow.issueFacilityLink().should('not.exist');
       loanRow.deleteLink().should('not.exist');
@@ -259,19 +161,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-      loanRow
-        .loanStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Completed');
-        });
-
-      loanRow
-        .facilityStage()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(loan.facilityStage);
-        });
+      cy.assertText(loanRow.loanStatus(), 'Completed');
+      cy.assertText(loanRow.facilityStage(), loan.facilityStage);
 
       loanRow.issueFacilityLink().should('not.exist');
       loanRow.deleteLink().should('not.exist');
@@ -288,8 +179,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
 
     assertFacilityTableValuesWithDealStatusInDraft();
 
-    pages.contract.proceedToReview().click();
-    pages.contractReadyForReview.comments().type('Ready for review');
+    cy.clickProceedToReviewButton();
+    cy.keyboardInput(pages.contractReadyForReview.comments(), 'Ready for review');
     pages.contractReadyForReview.readyForCheckersApproval().click();
 
     //---------------------------------------------------------------
@@ -299,9 +190,9 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     cy.login(BANK1_CHECKER1);
     pages.contract.visit(deal);
 
-    pages.contract.returnToMaker().click();
-    pages.contractReturnToMaker.comments().type('Nope');
-    pages.contractReturnToMaker.returnToMaker().click();
+    cy.clickReturnToMakerButton();
+    cy.keyboardInput(pages.contractReturnToMaker.comments(), 'Nope');
+    cy.clickReturnToMakerButton();
 
     //---------------------------------------------------------------
     // maker views deal
@@ -315,8 +206,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     // maker re-submits deal with no changes
     //---------------------------------------------------------------
     pages.contract.proceedToReview().should('not.be.disabled');
-    pages.contract.proceedToReview().click();
-    pages.contractReadyForReview.comments().type('Ready for review');
+    cy.clickProceedToReviewButton();
+    cy.keyboardInput(pages.contractReadyForReview.comments(), 'Ready for review');
     pages.contractReadyForReview.readyForCheckersApproval().click();
 
     pages.contract.visit(deal);

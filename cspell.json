@@ -81,6 +81,7 @@
     "EHRC",
     "EJSON",
     "enddate",
+    "Entra",
     "EPSG",
     "ESRA",
     "Estore",
@@ -130,6 +131,7 @@
     "mmaaaaa'm",
     "mmdd",
     "MRUI",
+    "MSAL",
     "Mulesoft",
     "nbsp",
     "nestjs",
@@ -222,23 +224,11 @@
     "wovens",
     "XLXS"
   ],
-  "dictionaries": [
-    "en-gb",
-    "companies",
-    "softwareTerms",
-    "misc",
-    "lorem-ipsum",
-    "typescript",
-    "node",
-    "bash",
-    "npm"
-  ],
+  "dictionaries": ["en-gb", "companies", "softwareTerms", "misc", "lorem-ipsum", "typescript", "node", "bash", "npm"],
   "languageSettings": [
     {
       "languageId": "commit-msg",
-      "ignoreRegExpList": [
-        "/^#.*/gm"
-      ]
+      "ignoreRegExpList": ["/^#.*/gm"]
     }
   ],
   "version": "0.2"

@@ -9,6 +9,7 @@ import {
   IsoMonthStamp,
   FeeRecordStatus,
   CurrencyAndAmount,
+  FeeRecordUtilisation,
 } from '@ukef/dtfs2-common';
 import { FeeRecord, KeyingSheet } from './fee-records';
 import { Payment } from './payments';
@@ -61,11 +62,17 @@ export type FeeRecordReconciledByUser = {
   lastName: string;
 };
 
-export type FeeRecordPaymentGroup = {
+export type PremiumPaymentsGroup = {
   feeRecords: FeeRecord[];
   totalReportedPayments: CurrencyAndAmount;
   paymentsReceived: Payment[] | null;
   totalPaymentsReceived: CurrencyAndAmount | null;
+  status: FeeRecordStatus;
+};
+
+export type PaymentDetails = {
+  feeRecords: FeeRecord[];
+  payment: Payment;
   status: FeeRecordStatus;
   reconciledByUser?: FeeRecordReconciledByUser;
   dateReconciled?: Date;
@@ -80,8 +87,10 @@ export type UtilisationReportReconciliationDetails = {
   status: UtilisationReportReconciliationStatus;
   reportPeriod: ReportPeriod;
   dateUploaded: Date;
-  feeRecordPaymentGroups: FeeRecordPaymentGroup[];
+  premiumPayments: PremiumPaymentsGroup[];
+  paymentDetails: PaymentDetails[];
   keyingSheet: KeyingSheet;
+  utilisationDetails: FeeRecordUtilisation[];
 };
 
 export type NewPaymentDetails = {
@@ -89,4 +98,21 @@ export type NewPaymentDetails = {
   amount: number;
   dateReceived: Date;
   reference?: string;
+};
+
+export type ValidatedPaymentDetailsFilters = {
+  facilityId?: string;
+  paymentCurrency?: Currency;
+  paymentReference?: string;
+};
+
+export type ReportReconciledEmailVariables = {
+  bankRecipient: string;
+  reportReconciledDate: string;
+  reportPeriod: string;
+};
+
+export type ReportReconciledEmail = {
+  emails: Array<string>;
+  variables: ReportReconciledEmailVariables;
 };

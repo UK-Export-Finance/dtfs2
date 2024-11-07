@@ -2,7 +2,7 @@ const pages = require('../../../pages');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { FACILITY } = require('../../../../fixtures/constants');
 const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacilityStatuses');
-const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
+const { oneMonth } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -44,20 +44,16 @@ context('Issue Bond Form - Submit issued bond with inserted element on page', ()
 
     bondRow.issueFacilityLink().click();
 
-    pages.bondIssueFacility.issuedDateDayInput().type(dateConstants.todayDay);
-    pages.bondIssueFacility.issuedDateMonthInput().type(dateConstants.todayMonth);
-    pages.bondIssueFacility.issuedDateYearInput().type(dateConstants.todayYear);
+    cy.completeDateFormFields({ idPrefix: 'issuedDate' });
 
-    pages.bondIssueFacility.coverEndDateDayInput().type(dateConstants.oneMonthDay);
-    pages.bondIssueFacility.coverEndDateMonthInput().type(dateConstants.oneMonthMonth);
-    pages.bondIssueFacility.coverEndDateYearInput().type(dateConstants.oneMonthYear);
+    cy.completeDateFormFields({ idPrefix: 'coverEndDate', date: oneMonth });
 
-    pages.bondIssueFacility.name().type('1234');
+    cy.keyboardInput(pages.bondIssueFacility.name(), '1234');
 
     // insert populated text field on form
     cy.insertElement('issue-bond-form');
 
-    pages.bondIssueFacility.submit().click();
+    cy.clickSubmitButton();
 
     cy.getFacility(deal._id, bondId, BANK1_MAKER1).then((bond) => {
       // check bond does not contain inserted field

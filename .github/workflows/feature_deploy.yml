@@ -5,7 +5,7 @@ name: Feature environment deployment
 on:
   push:
     branches:
-      - main
+      - release-2.4.0
     paths:
       - "portal/**"
       - "portal-api/**"
@@ -131,7 +131,7 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: 6. Slot
-        uses: azure/cli@v2
+        uses: azure/cli@v2.1.0
         with:
           inlineScript: |
             az config get defaults
@@ -141,7 +141,7 @@ jobs:
 
       - name: Cleanup 🧹
         if: always()
-        uses: azure/cli@v2
+        uses: azure/cli@v2.1.0
         with:
           inlineScript: |
             # Delete temporary slot

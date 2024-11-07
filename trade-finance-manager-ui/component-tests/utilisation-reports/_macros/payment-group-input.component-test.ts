@@ -1,6 +1,6 @@
 import { PaymentGroupInputsViewModel } from '../../../server/types/view-models/add-to-an-existing-payment-view-model';
 import { componentRenderer } from '../../componentRenderer';
-import { aPaymentGroupInputsViewModel } from '../../../test-helpers/test-data/payment-group-inputs-view-model';
+import { aPaymentGroupInputsViewModel } from '../../../test-helpers/test-data/view-models';
 
 const component = '../templates/utilisation-reports/_macros/payment-group-input.njk';
 const render = componentRenderer(component);

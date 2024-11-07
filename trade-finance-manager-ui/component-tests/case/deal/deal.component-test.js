@@ -188,3 +188,58 @@ describe(`${page} when deal is NDB`, () => {
     wrapper.expectElement('[data-cy="bank-security-facility-text"]').toExist();
   });
 });
+
+describe(`${page} cancel deal button`, () => {
+  let wrapper;
+
+  describe(`when showDealCancelButton is true and hasDraftCancellation is false`, () => {
+    const dealId = '123';
+
+    beforeEach(() => {
+      params.showDealCancelButton = true;
+      params.hasDraftCancellation = false;
+      params.dealId = dealId;
+      wrapper = render(params);
+    });
+
+    it("should render the 'Cancel deal' button", () => {
+      wrapper.expectElement('[data-cy="cancel-deal-button"]').toExist();
+      wrapper.expectText('[data-cy="cancel-deal-button"]').toRead('Cancel deal');
+    });
+
+    it("should have the correct link attribute on the 'Cancel deal' button", () => {
+      wrapper.expectElement('[data-cy="cancel-deal-button"]').toHaveAttribute('href', `/case/${dealId}/cancellation/reason`);
+    });
+  });
+
+  describe(`when showDealCancelButton is true and hasDraftCancellation is true`, () => {
+    const dealId = '123';
+
+    beforeEach(() => {
+      params.showDealCancelButton = true;
+      params.hasDraftCancellation = true;
+      params.dealId = dealId;
+      wrapper = render(params);
+    });
+
+    it("should render the 'Continue with deal cancellation' button", () => {
+      wrapper.expectElement('[data-cy="cancel-deal-button"]').toExist();
+      wrapper.expectText('[data-cy="cancel-deal-button"]').toRead('Continue with deal cancellation');
+    });
+
+    it("should have the correct link attribute on the 'Continue with deal cancellation' button", () => {
+      wrapper.expectElement('[data-cy="cancel-deal-button"]').toHaveAttribute('href', `/case/${dealId}/cancellation/reason`);
+    });
+  });
+
+  describe(`when showDealCancelButton is false`, () => {
+    beforeEach(() => {
+      params.showDealCancelButton = false;
+      wrapper = render(params);
+    });
+
+    it("should not render the 'Cancel deal' button", () => {
+      wrapper.expectElement('[data-cy="cancel-deal-button"]').notToExist();
+    });
+  });
+});

@@ -3,7 +3,7 @@ const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { AUDIT_USER_TYPES, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const amendmentController = require('../../../src/v1/controllers/amendment.controller');
 const api = require('../../../src/v1/api');
-const updateFacilityAmendment = require('../utils/updateFacilityAmendment.util');
+const { updateFacilityAmendment } = require('../../helpers/updateFacilityAmendment');
 const MOCK_GEF_AIN_DEAL = require('../../../src/v1/__mocks__/mock-TFM-deal-AIN-submitted');
 const { mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 const MOCK_USERS = require('../../../src/v1/__mocks__/mock-users');
@@ -44,9 +44,11 @@ describe('update tfm-deals on amendment completion', () => {
       generateTfmAuditDetails(MOCK_USERS[0]._id),
     );
 
+    const formatted = format(result.tfm.lastUpdated, 'dd/MM/yyyy');
+
     const expected = format(new Date(), 'dd/MM/yyyy');
-    const expectedResult = format(result.tfm.lastUpdated, 'dd/MM/yyyy');
-    expect(expectedResult).toEqual(expected);
+
+    expect(formatted).toEqual(expected);
   });
 
   it('updateTFMDealLastUpdated() - should return null when dealId is null', async () => {

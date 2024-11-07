@@ -1,5 +1,5 @@
-import { COMPANY_REGISTRATION_NUMBER } from '..';
-import { isString } from './string';
+import { COMPANY_REGISTRATION_NUMBER, MAX_PAYMENT_REFERENCE_CHARACTER_COUNT } from '../constants';
+import { isNonEmptyString, isString } from './string';
 
 /**
  * @param value - the value to check
@@ -11,7 +11,11 @@ export const asString = (value: unknown, context: string): string => {
     throw new Error(`Expected ${context} to be a string, but was ${typeof value}`);
   }
 
-  return value;
+  /**
+   * Ensure return is `String` primitive type and
+   * not `unknown`.
+   */
+  return String(value);
 };
 
 /**
@@ -27,3 +31,13 @@ export const matchesRegex = (regex: RegExp, inputToTest: string): boolean => reg
  */
 export const isValidCompanyRegistrationNumber = (registrationNumber: string): boolean =>
   matchesRegex(COMPANY_REGISTRATION_NUMBER.REGEX, registrationNumber.toString());
+
+/**
+ * Checks if the payment reference exceeds
+ * {@link MAX_PAYMENT_REFERENCE_CHARACTER_COUNT} characters.
+ * @param paymentReference - The payment reference to check.
+ * @returns True if the payment reference is a non-empty string and longer than the maximum character count, false otherwise.
+ */
+export const isPaymentReferenceOverMaxCharacterCount = (paymentReference: string | undefined): boolean => {
+  return isNonEmptyString(paymentReference) && paymentReference.length > MAX_PAYMENT_REFERENCE_CHARACTER_COUNT;
+};

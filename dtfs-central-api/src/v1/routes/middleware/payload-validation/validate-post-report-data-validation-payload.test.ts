@@ -15,8 +15,8 @@ describe('validatePostReportDataValidationPayload', () => {
     validatePostReportDataValidationPayload(req, res, next);
 
     // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-    expect(res._isEndCalled()).toBe(true);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
+    expect(res._isEndCalled()).toEqual(true);
     expect(next).not.toHaveBeenCalled();
   });
 
@@ -26,7 +26,7 @@ describe('validatePostReportDataValidationPayload', () => {
     ${'undefined'} | ${undefined}
     ${'number'}    | ${7}
     ${'string'}    | ${''}
-    ${'object'}    | ${{}}
+    ${'Object'}    | ${{}}
   `(`responds with a '${HttpStatusCode.BadRequest}' if the reportData is not a list: $condition`, (testValue: unknown) => {
     // Arrange
     const { req, res } = getHttpMocks();
@@ -38,8 +38,8 @@ describe('validatePostReportDataValidationPayload', () => {
     validatePostReportDataValidationPayload(req, res, next);
 
     // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-    expect(res._isEndCalled()).toBe(true);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
+    expect(res._isEndCalled()).toEqual(true);
     expect(next).not.toHaveBeenCalled();
   });
 
@@ -54,8 +54,8 @@ describe('validatePostReportDataValidationPayload', () => {
     validatePostReportDataValidationPayload(req, res, next);
 
     // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-    expect(res._isEndCalled()).toBe(true);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
+    expect(res._isEndCalled()).toEqual(true);
     expect(next).not.toHaveBeenCalled();
   });
 
@@ -76,6 +76,6 @@ describe('validatePostReportDataValidationPayload', () => {
 
     // Assert
     expect(next).toHaveBeenCalled();
-    expect(res._isEndCalled()).toBe(false);
+    expect(res._isEndCalled()).toEqual(false);
   });
 });

@@ -1,10 +1,12 @@
 const { when } = require('jest-when');
 const app = require('../../../src/createApp');
-const { as, get } = require('../../api')(app);
-const testUserCache = require('../../api-test-users');
+const { createApi } = require('../../api');
+const { initialiseTestUsers } = require('../../api-test-users');
 const api = require('../../../src/v1/api');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { TEAMS } = require('../../../src/constants');
+
+const { as, get } = createApi(app);
 
 describe('GET /teams/:teamId/members', () => {
   const validTeamId = TEAMS.BUSINESS_SUPPORT.id;
@@ -12,7 +14,8 @@ describe('GET /teams/:teamId/members', () => {
   let tokenUser;
 
   beforeAll(async () => {
-    tokenUser = await testUserCache.initialise(app);
+    const testUsers = await initialiseTestUsers(app);
+    tokenUser = testUsers().one();
   });
 
   afterAll(() => {
@@ -32,7 +35,7 @@ describe('GET /teams/:teamId/members', () => {
     const allTeamsSeparatedByComma = Object.values(TEAMS)
       .map((team) => team.id)
       .join(', ');
-    expect(status).toBe(400);
+    expect(status).toEqual(400);
     expect(body).toStrictEqual({
       status: 400,
       errors: [
@@ -57,7 +60,7 @@ describe('GET /teams/:teamId/members', () => {
 
     const { status, body } = await as(tokenUser).get(validUrlToGetTeamMembers);
 
-    expect(status).toBe(statusFromDtfsCentralApiCall);
+    expect(status).toEqual(statusFromDtfsCentralApiCall);
     expect(body).toStrictEqual({
       status: statusFromDtfsCentralApiCall,
       data: dataFromDtfsCentralApiCall,
@@ -103,7 +106,7 @@ describe('GET /teams/:teamId/members', () => {
 
       const { status, body } = await as(tokenUser).get(`/v1/teams/${teamId}/members`);
 
-      expect(status).toBe(200);
+      expect(status).toEqual(200);
       expect(body).toStrictEqual({ teamMembers: expectedTeamMemberDataToReturn });
     });
 
@@ -112,7 +115,7 @@ describe('GET /teams/:teamId/members', () => {
 
       const { status, body } = await as(tokenUser).get(`/v1/teams/${teamId}/members`);
 
-      expect(status).toBe(200);
+      expect(status).toEqual(200);
       expect(body).toStrictEqual({ teamMembers: [] });
     });
   });

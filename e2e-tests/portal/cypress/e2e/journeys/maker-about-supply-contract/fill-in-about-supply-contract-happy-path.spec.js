@@ -35,13 +35,10 @@ context('about-supply-contract', () => {
 
     // go the long way for the first test- actually clicking via the contract page to prove the link..
     contract.visit(deal);
+
     // check the status is displaying correctly
-    contract
-      .aboutSupplierDetailsStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Not started');
-      });
+    cy.assertText(contract.aboutSupplierDetailsStatus(), 'Not started');
+
     contract.aboutSupplierDetailsLink().click();
 
     cy.title().should('eq', `Supplier information - ${deal.additionalRefName}${defaults.pageTitleAppend}`);
@@ -61,7 +58,9 @@ context('about-supply-contract', () => {
     // use companies-house lookup
     //---
     contractAboutSupplier.supplierType().select('Exporter');
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(MOCK_COMPANY_REGISTRATION_NUMBERS.VALID);
+
+    cy.keyboardInput(contractAboutSupplier.supplierCompaniesHouseRegistrationNumber(), MOCK_COMPANY_REGISTRATION_NUMBERS.VALID);
+
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
     // // the search should populate the supplier address fields
@@ -79,28 +78,20 @@ context('about-supply-contract', () => {
     contractAboutSupplier.industryClass().should('have.value', '');
     contractAboutSupplier.industryClass().select('62012'); // Business and domestic software development
     contractAboutSupplier.smeTypeMicro().click();
-    contractAboutSupplier.supplyContractDescription().type('Typing in tests takes time.');
+
+    cy.keyboardInput(contractAboutSupplier.supplyContractDescription(), 'Mock description');
+
     contractAboutSupplier.notLegallyDistinct().click();
 
     contractAboutSupplier.saveAndGoBack().click();
 
     // the deal page should reflect the partially-complete nature of the section
-    contract
-      .aboutSupplierDetailsStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Incomplete');
-      });
+    cy.assertText(contract.aboutSupplierDetailsStatus(), 'Incomplete');
 
     // check that the preview page renders the Submission Details component
     contractAboutPreview.visit(deal);
     contractAboutPreview.submissionDetails().should('be.visible');
 
-    partials.taskListHeader
-      .itemStatus('supplier-and-counter-indemnifier/guarantor')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Completed');
-      });
+    cy.assertText(partials.taskListHeader.itemStatus('supplier-and-counter-indemnifier/guarantor'), 'Completed');
   });
 });

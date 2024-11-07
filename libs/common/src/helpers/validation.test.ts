@@ -1,4 +1,4 @@
-import { asString, isValidCompanyRegistrationNumber } from './validation';
+import { asString, isPaymentReferenceOverMaxCharacterCount, isValidCompanyRegistrationNumber } from './validation';
 import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '..';
 
 const {
@@ -25,8 +25,8 @@ describe('validation helpers', () => {
       const stringValue = asString(value, 'value');
 
       // Assert
-      expect(typeof stringValue).toBe('string');
-      expect(stringValue).toBe(value);
+      expect(typeof stringValue).toEqual('string');
+      expect(stringValue).toEqual(value);
     });
 
     it.each`
@@ -101,6 +101,52 @@ describe('validation helpers', () => {
       const result = isValidCompanyRegistrationNumber(INVALID_WITH_SPACE);
 
       expect(result).toEqual(false);
+    });
+  });
+
+  describe('isPaymentReferenceOverMaxCharacterCount', () => {
+    describe('when payment reference is over 50 characters', () => {
+      it('should return true', () => {
+        const longReference = 'a'.repeat(51);
+        const result = isPaymentReferenceOverMaxCharacterCount(longReference);
+
+        expect(result).toEqual(true);
+      });
+    });
+
+    describe('when payment reference is exactly 50 characters', () => {
+      it('should return false', () => {
+        const fiftyCharReference = 'a'.repeat(50);
+        const result = isPaymentReferenceOverMaxCharacterCount(fiftyCharReference);
+
+        expect(result).toEqual(false);
+      });
+    });
+
+    describe('when payment reference is under 50 characters', () => {
+      it('should return false', () => {
+        const shortReference = 'a'.repeat(49);
+        const result = isPaymentReferenceOverMaxCharacterCount(shortReference);
+
+        expect(result).toEqual(false);
+      });
+    });
+
+    describe('when payment reference is empty', () => {
+      it('should return false', () => {
+        const result = isPaymentReferenceOverMaxCharacterCount('');
+
+        expect(result).toEqual(false);
+      });
+    });
+
+    describe('when payment reference is exactly 51 characters', () => {
+      it('should return true', () => {
+        const fiftyOneCharReference = 'a'.repeat(51);
+        const result = isPaymentReferenceOverMaxCharacterCount(fiftyOneCharReference);
+
+        expect(result).toEqual(true);
+      });
     });
   });
 });

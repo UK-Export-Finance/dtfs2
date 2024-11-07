@@ -9,6 +9,7 @@ import { PDC_TEAMS } from '../../../fixtures/teams';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
 import USERS from '../../../fixtures/users';
 import relative from '../../relativeURL';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`, () => {
   const bankId = '961';
@@ -26,6 +27,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
 
   beforeEach(() => {
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+    cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
 
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [utilisationReport]);
 
@@ -44,6 +46,9 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
     ];
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
 
+    const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
+
     cy.reload();
 
     feeRecords.forEach(({ id, facilityId }) => {
@@ -61,12 +66,15 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
     ];
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
 
+    const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
+
     cy.reload();
 
-    pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput().type('11111111');
+    cy.keyboardInput(pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput(), '11111111');
     pages.utilisationReportPage.premiumPaymentsTab.submitFacilityIdFilter();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}?facilityIdQuery=11111111`));
+    cy.url().should('eq', relative(`/utilisation-reports/${reportId}?premiumPaymentsFacilityId=11111111`));
 
     const [visibleFeeRecord, ...removedFeeRecords] = feeRecords;
 
@@ -87,12 +95,15 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
     ];
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
 
+    const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
+
     cy.reload();
 
-    pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput().type('1111');
+    cy.keyboardInput(pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput(), '1111');
     pages.utilisationReportPage.premiumPaymentsTab.submitFacilityIdFilter();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}?facilityIdQuery=1111`));
+    cy.url().should('eq', relative(`/utilisation-reports/${reportId}?premiumPaymentsFacilityId=1111`));
 
     const [firstVisibleFeeRecord, secondVisibleFeeRecord, ...removedFeeRecords] = feeRecords;
 
@@ -108,10 +119,10 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
   });
 
   it('should display an error if the supplied facility id query is an invalid value and persist the inputted value', () => {
-    pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput().type('nonsense');
+    cy.keyboardInput(pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput(), 'nonsense');
     pages.utilisationReportPage.premiumPaymentsTab.submitFacilityIdFilter();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}?facilityIdQuery=nonsense`));
+    cy.url().should('eq', relative(`/utilisation-reports/${reportId}?premiumPaymentsFacilityId=nonsense`));
 
     pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput().should('have.value', 'nonsense');
 
@@ -121,7 +132,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
   it('should display an error if the facility id is submitted with no value', () => {
     pages.utilisationReportPage.premiumPaymentsTab.submitFacilityIdFilter();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}?facilityIdQuery=`));
+    cy.url().should('eq', relative(`/utilisation-reports/${reportId}?premiumPaymentsFacilityId=`));
 
     pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput().should('be.empty');
 
@@ -148,6 +159,9 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, allFeeRecords);
     cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);
 
+    const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(allFeeRecords);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
+
     cy.reload();
 
     allFeeRecords.forEach(({ id, facilityId }) => {
@@ -157,7 +171,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
 
     pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(paymentId).should('exist');
 
-    pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput().type('1111');
+    cy.keyboardInput(pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput(), '1111');
     pages.utilisationReportPage.premiumPaymentsTab.submitFacilityIdFilter();
 
     toDoFeeRecords.forEach(({ id }) => {
@@ -179,12 +193,15 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
     ];
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
 
+    const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
+
     cy.reload();
 
-    pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput().type('33333333');
+    cy.keyboardInput(pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput(), '33333333');
     pages.utilisationReportPage.premiumPaymentsTab.submitFacilityIdFilter();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}?facilityIdQuery=33333333`));
+    cy.url().should('eq', relative(`/utilisation-reports/${reportId}?premiumPaymentsFacilityId=33333333`));
 
     cy.get('[data-cy="no-matched-facilities-message"]').should('exist');
     cy.get('[data-cy="no-matched-facilities-message"]').should('contain', 'Your search matched no facilities');

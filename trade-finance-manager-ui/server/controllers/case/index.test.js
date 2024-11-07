@@ -2,13 +2,20 @@ import { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } from '@ukef/
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
-import { getTask } from '../helpers';
+import { getTask, isDealCancellationEnabled } from '../helpers';
 import mapAssignToSelectOptions from '../../helpers/map-assign-to-select-options';
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
   isTfmFacilityEndDateFeatureFlagEnabled: jest.fn(),
 }));
+
+jest.mock('../helpers', () => ({
+  ...jest.requireActual('../helpers'),
+  isDealCancellationEnabled: jest.fn().mockReturnValue(false),
+}));
+
+console.error = jest.fn();
 
 const res = mockRes();
 
@@ -27,11 +34,14 @@ const session = {
 
 describe('controllers - case', () => {
   beforeEach(() => {
+    jest.clearAllMocks();
     jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(false);
   });
 
   describe('GET case deal', () => {
     describe('when deal exists', () => {
+      let req;
+
       const mockDeal = {
         _id: '61f6ac5b02fade01b1e8efef',
         dealSnapshot: {
@@ -60,16 +70,17 @@ describe('controllers - case', () => {
             status: 200,
             data: mockAmendments,
           });
-      });
+        api.getDealCancellation = jest.fn(() => ({}));
 
-      it('should render deal template with data', async () => {
-        const req = {
+        req = {
           params: {
             _id: mockDeal._id,
           },
           session,
         };
+      });
 
+      it('should render deal template with data', async () => {
         await caseController.getCaseDeal(req, res);
 
         expect(res.render).toHaveBeenCalledWith('case/deal/deal.njk', {
@@ -79,9 +90,75 @@ describe('controllers - case', () => {
           activeSubNavigation: 'deal',
           dealId: req.params._id,
           user: session.user,
+          hasDraftCancellation: false,
+          showDealCancelButton: false,
           hasAmendmentInProgress: true,
           amendments: mockAmendments,
           amendmentsInProgress: mockAmendments,
+        });
+      });
+
+      it('should check whether deal cancellation is enabled', async () => {
+        await caseController.getCaseDeal(req, res);
+
+        expect(isDealCancellationEnabled).toHaveBeenCalledTimes(1);
+      });
+
+      describe('when deal cancellation is enabled', () => {
+        it('should render the template with showDealCancelButton=true', async () => {
+          jest.mocked(isDealCancellationEnabled).mockReturnValueOnce(true);
+
+          await caseController.getCaseDeal(req, res);
+
+          expect(res.render).toHaveBeenCalledWith(
+            'case/deal/deal.njk',
+            expect.objectContaining({
+              showDealCancelButton: true,
+            }),
+          );
+        });
+
+        it('should render the template with hasDraftCancellation=true when the cancellation object is not empty', async () => {
+          jest.mocked(isDealCancellationEnabled).mockReturnValueOnce(true);
+          jest.mocked(api.getDealCancellation).mockReturnValueOnce({ reason: 'a reason' });
+
+          await caseController.getCaseDeal(req, res);
+
+          expect(res.render).toHaveBeenCalledWith(
+            'case/deal/deal.njk',
+            expect.objectContaining({
+              hasDraftCancellation: true,
+            }),
+          );
+        });
+
+        it('should render the template with hasDraftCancellation=false when the cancellation object is empty', async () => {
+          jest.mocked(isDealCancellationEnabled).mockReturnValueOnce(true);
+          jest.mocked(api.getDealCancellation).mockReturnValueOnce({});
+
+          await caseController.getCaseDeal(req, res);
+
+          expect(res.render).toHaveBeenCalledWith(
+            'case/deal/deal.njk',
+            expect.objectContaining({
+              hasDraftCancellation: false,
+            }),
+          );
+        });
+      });
+
+      describe('when deal cancellation is disabled', () => {
+        it('should render the template with showDealCancelButton=false', async () => {
+          jest.mocked(isDealCancellationEnabled).mockReturnValueOnce(false);
+
+          await caseController.getCaseDeal(req, res);
+
+          expect(res.render).toHaveBeenCalledWith(
+            'case/deal/deal.njk',
+            expect.objectContaining({
+              showDealCancelButton: false,
+            }),
+          );
         });
       });
     });
@@ -101,6 +178,26 @@ describe('controllers - case', () => {
 
         await caseController.getCaseDeal(req, res);
         expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      });
+    });
+
+    describe('when an error is thrown', () => {
+      beforeEach(() => {
+        api.getDeal = () => Promise.reject(new Error('An exception has occurred'));
+      });
+
+      it('should render problem with service page with console error', async () => {
+        const req = {
+          params: {
+            _id: '1',
+          },
+          session,
+        };
+
+        await caseController.getCaseDeal(req, res);
+
+        expect(console.error).toHaveBeenCalledWith('Unable to render deal %o', new Error('An exception has occurred'));
+        expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
       });
     });
   });
@@ -741,7 +838,27 @@ describe('controllers - case', () => {
       });
     });
 
-    describe('when deal does NOT exist', () => {
+    describe('when the deal either does not exists or is corrupted', () => {
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve();
+      });
+
+      it('should render problem with service page with a console error', async () => {
+        const req = {
+          params: {
+            _id: '1',
+          },
+          session,
+        };
+
+        await caseController.getCaseFacility(req, res);
+
+        expect(console.error).toHaveBeenCalledWith('An error occurred while rendering a TFM deal %s', req.params._id);
+        expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+      });
+    });
+
+    describe('when the facilities does not exist', () => {
       beforeEach(() => {
         api.getFacility = () => Promise.resolve();
       });
@@ -755,6 +872,7 @@ describe('controllers - case', () => {
         };
 
         await caseController.getCaseFacility(req, res);
+
         expect(res.redirect).toHaveBeenCalledWith('/not-found');
       });
     });

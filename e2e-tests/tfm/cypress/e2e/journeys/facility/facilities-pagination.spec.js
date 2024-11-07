@@ -84,27 +84,18 @@ context('User can navigate through a paginated table of facilities using the pag
   it('should allow the user to navigate through the paginated facilities table when filtering/search is active', () => {
     const searchString = 'Company 1';
     const expectedNumberOfMatches = Math.ceil(numberOfFacilities / 2);
-    pages.facilitiesPage.searchFormInput().type(searchString);
-    pages.facilitiesPage.searchFormSubmitButton().click();
+    cy.keyboardInput(pages.facilitiesPage.searchFormInput(), searchString);
+    cy.clickSubmitButton();
 
     cy.url().should('eq', relative('/facilities/0?search=Company%201'));
-    pages.facilitiesPage
-      .heading()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`${expectedNumberOfMatches} results for "${searchString}"`);
-      });
+
+    cy.assertText(pages.facilitiesPage.heading(), `${expectedNumberOfMatches} results for "${searchString}"`);
     cy.checkFacilityIdCells({ firstFacilityId: '10000001', increment: 2, numberToCheck: 20 });
     cy.checkFacilitiesTableRowsTotal(20);
 
     pages.facilitiesPage.pagination.next().click();
 
-    pages.facilitiesPage
-      .heading()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`${expectedNumberOfMatches} results for "${searchString}"`);
-      });
+    cy.assertText(pages.facilitiesPage.heading(), `${expectedNumberOfMatches} results for "${searchString}"`);
     cy.checkFacilityIdCells({ firstFacilityId: '10000041', increment: 2, numberToCheck: 10 });
     cy.checkFacilitiesTableRowsTotal(11);
   });
@@ -121,8 +112,8 @@ context('User can navigate through a paginated table of facilities using the pag
   it('should redirect to the first page of the facilities table when the user searches', () => {
     cy.visit('/facilities/2');
     const searchString = 'Company 1';
-    pages.facilitiesPage.searchFormInput().type(searchString);
-    pages.facilitiesPage.searchFormSubmitButton().click();
+    cy.keyboardInput(pages.facilitiesPage.searchFormInput(), searchString);
+    cy.clickSubmitButton();
 
     cy.url().should('eq', relative('/facilities/0?search=Company%201'));
     cy.checkFacilityIdCells({ firstFacilityId: '10000001', increment: 2, numberToCheck: 20 });

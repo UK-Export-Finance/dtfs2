@@ -26,9 +26,9 @@ describe('handleUtilisationReportManuallySetCompletedEvent', () => {
 
     // Assert
     expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
-    expect(report.status).toBe(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED);
-    expect(report.lastUpdatedByIsSystemUser).toBe(false);
+    expect(report.status).toEqual(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED);
+    expect(report.lastUpdatedByIsSystemUser).toEqual(false);
     expect(report.lastUpdatedByPortalUserId).toBeNull();
-    expect(report.lastUpdatedByTfmUserId).toBe(requestSource.userId);
+    expect(report.lastUpdatedByTfmUserId).toEqual(requestSource.userId);
   });
 });

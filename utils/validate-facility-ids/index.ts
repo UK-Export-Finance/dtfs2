@@ -1,6 +1,6 @@
 import { difference } from 'lodash';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { mongoDbClient } from './database-client';
+import { mongoDbClient } from '../drivers/db-client';
 import { getUniqueFeeRecordFacilityIds, getUniqueTfmFacilitiesUkefFacilityIds } from './helpers';
 
 /**

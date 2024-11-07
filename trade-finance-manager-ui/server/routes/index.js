@@ -1,13 +1,13 @@
 const express = require('express');
 
 const homeRoutes = require('./home');
-const loginRoutes = require('./login');
 const caseRoutes = require('./case');
 const dealsRoutes = require('./deals');
 const facilitiesRoutes = require('./facilities');
 const feedbackRoutes = require('./feedback');
 const thankYouFeedbackRoutes = require('./feedback-thank-you');
-const userRoutes = require('./user');
+const { userRoutes } = require('./user');
+const { loginRoutes } = require('./login');
 const { utilisationReportsRoutes } = require('./utilisation-reports');
 const footerRoutes = require('./footer');
 

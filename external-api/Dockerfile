@@ -1,18 +1,17 @@
 # Node Alpine Docker Image
-FROM node:20.8.0-alpine3.17
+FROM node:22.8.0-alpine3.20
 
 # Variables
 ARG GITHUB_SHA
 ENV GITHUB_SHA=$GITHUB_SHA
 
-# Node Setup
+# Directories setup
 WORKDIR /app
-COPY package.json .
-COPY package-lock.json .
 
 COPY libs libs
 COPY external-api external-api
 
+COPY package*.json .
 RUN npm ci
 RUN npm cache clean --force
 

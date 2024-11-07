@@ -14,7 +14,7 @@ const updateSessionAfterLogin = ({ req, newUserToken, loginStatus, user }) => {
 
 /**
  * Gets the redirect url for the user after they have successfully logged in
- * @param {object} user - The user object
+ * @param {Object} user - The user object
  * @returns {import('../../types/landing-pages').LandingPage}
  */
 const getUserRedirectUrl = (user) => {
@@ -69,7 +69,7 @@ module.exports.loginWithSignInLink = async (req, res) => {
      * 404 is no token found
      * */
     if (error.response?.status === 401 || error.response?.status === 404) {
-      return res.redirect('/login');
+      return res.redirect(LANDING_PAGES.LOGIN);
     }
 
     if (error.response?.status === 403) {

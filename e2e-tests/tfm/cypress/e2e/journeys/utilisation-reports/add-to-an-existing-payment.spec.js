@@ -5,11 +5,13 @@ import {
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
+import { errorSummary } from '../../partials';
 import pages from '../../pages';
 import USERS from '../../../fixtures/users';
 import { PDC_TEAMS } from '../../../fixtures/teams';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
 import relative from '../../relativeURL';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing payments`, () => {
   const REPORT_ID = 1;
@@ -58,6 +60,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
   afterEach(() => {
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
     cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
+    cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
   });
 
   const navigateToAddToExistingPaymentScreenForFirstFeeRecord = () => {
@@ -86,9 +89,14 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     beforeEach(() => {
       cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
       cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
+      cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
       cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
 
-      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord]);
+      const feeRecords = [firstFeeRecord, secondFeeRecord];
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
+
+      const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
       navigateToAddToExistingPaymentScreenForFirstFeeRecord();
     });
@@ -98,16 +106,11 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
         .availablePaymentGroups()
         .should('contain', 'There is one existing payment that the reported fees will be added to');
 
-      pages.utilisationReportAddToAnExistingPaymentPage.continueButton().click();
+      cy.clickContinueButton();
 
       pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(PAYMENT_ID_ONE).should('contain', 'GBP 450.00');
 
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
-        .status(FEE_RECORD_ID_ONE)
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(FEE_RECORD_STATUS.MATCH);
-        });
+      cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.status(FEE_RECORD_ID_ONE), FEE_RECORD_STATUS.MATCH);
     });
   });
 
@@ -135,9 +138,15 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
 
       cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
       cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
+      cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
+
       cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
 
-      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord, thirdFeeRecord]);
+      const feeRecords = [firstFeeRecord, secondFeeRecord, thirdFeeRecord];
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
+
+      const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
       navigateToAddToExistingPaymentScreenForFirstFeeRecord();
     });
@@ -155,22 +164,17 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
 
       pages.utilisationReportAddToAnExistingPaymentPage.paymentGroupRadioButton(`paymentIds-${PAYMENT_ID_ONE}`).click();
 
-      pages.utilisationReportAddToAnExistingPaymentPage.continueButton().click();
+      cy.clickContinueButton();
 
       pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(PAYMENT_ID_ONE).should('contain', 'GBP 450.00');
 
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
-        .status(FEE_RECORD_ID_ONE)
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(FEE_RECORD_STATUS.MATCH);
-        });
+      cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.status(FEE_RECORD_ID_ONE), FEE_RECORD_STATUS.MATCH);
     });
 
     it('should display an error message when there are multiple payments to choose from and none have been selected', () => {
-      pages.utilisationReportAddToAnExistingPaymentPage.continueButton().click();
+      cy.clickContinueButton();
 
-      pages.utilisationReportAddToAnExistingPaymentPage.errorSummary().contains('Select a payment to add the fee or fees to');
+      errorSummary().contains('Select a payment to add the fee or fees to');
     });
   });
 
@@ -178,20 +182,20 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
     cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
-    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord]);
+
+    const feeRecords = [firstFeeRecord, secondFeeRecord];
+    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
+
+    const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
     navigateToAddToExistingPaymentScreenForFirstFeeRecord();
 
-    pages.utilisationReportAddToAnExistingPaymentPage.continueButton().click();
+    cy.clickContinueButton();
 
     pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(PAYMENT_ID_ONE).should('contain', 'GBP 450.00');
 
-    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
-      .status(FEE_RECORD_ID_ONE)
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(FEE_RECORD_STATUS.MATCH);
-      });
+    cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.status(FEE_RECORD_ID_ONE), FEE_RECORD_STATUS.MATCH);
   });
 
   describe('when user navigates away', () => {
@@ -212,7 +216,12 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
       cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
       cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
       cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
-      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord, thirdFeeRecord]);
+
+      const feeRecords = [firstFeeRecord, secondFeeRecord, thirdFeeRecord];
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
+
+      const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
     });
 
     describe('by clicking the back button', () => {
@@ -230,7 +239,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
         pages.utilisationReportAddPaymentPage.addFeesToAnExistingPaymentButton().click();
         cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-to-an-existing-payment`));
 
-        pages.utilisationReportAddToAnExistingPaymentPage.backLink().click();
+        cy.clickBackLink();
       });
 
       it('should redirect the user to the premium payments page', () => {
@@ -267,7 +276,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
         pages.utilisationReportAddPaymentPage.addFeesToAnExistingPaymentButton().click();
         cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-to-an-existing-payment`));
 
-        pages.utilisationReportAddToAnExistingPaymentPage.cancelLink().click();
+        cy.clickCancelLink();
       });
 
       it('should redirect the user to the premium payments page', () => {

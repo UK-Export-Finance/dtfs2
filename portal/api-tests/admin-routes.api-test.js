@@ -90,8 +90,8 @@ describe('user routes', () => {
       it("redirects to '/admin/users' if the Portal API call to update the user returns a 200", async () => {
         const response = await post({}, { Cookie: [sessionCookie] }).to(`/admin/users/edit/${_id}`);
 
-        expect(response.status).toBe(302);
-        expect(response.headers.location).toBe('/admin/users');
+        expect(response.status).toEqual(302);
+        expect(response.headers.location).toEqual('/admin/users');
       });
     });
 
@@ -101,7 +101,7 @@ describe('user routes', () => {
 
         const response = await post({}, { Cookie: [sessionCookie] }).to(`/admin/users/edit/${_id}`);
 
-        expect(response.status).toBe(200);
+        expect(response.status).toEqual(200);
       });
     });
   });

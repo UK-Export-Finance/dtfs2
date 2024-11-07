@@ -2,9 +2,13 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% import "./_macros/premium-payments-table.njk" as premiumPaymentsTable %}
 {% import "./_macros/keying-sheet-table.njk" as keyingSheetTable %}
 {% import "./_macros/payment-details-table.njk" as paymentDetailsTable %}
+{% import './_macros/payment-details-filters-panel.njk' as paymentDetailsFiltersPanel %}
+{% import './_macros/payment-details-filters-action-bar.njk' as paymentDetailsFiltersActionBar %}
+{% import './_macros/utilisation-table.njk' as utilisationTable %}
 
 {% extends "index.njk" %}
 
@@ -15,10 +19,27 @@
 {% endblock %}
 
 {% set premiumPaymentsHtml %}
-  {% if tableDataError or filterError %}
+  {% if displayMatchSuccessNotification %}
+    {% set notificationHtml %}
+      <h3 class="govuk-notification-banner__heading" data-cy="match-success-notification-heading">
+        Match payment recorded
+      </h3>
+      <p class="govuk-body" data-cy="match-success-notification-message">The fee(s) are now at a Match state. Further payments cannot be added to the fee record.</p>
+    {% endset %}
+
+    <div class="govuk-grid-row govuk-!-padding-top-7" data-cy="match-success-notification">
+      <div class="govuk-grid-column-one-half-from-desktop">
+        {{ govukNotificationBanner({
+          html: notificationHtml,
+          type: "success"
+        }) }}
+      </div>
+    </div>
+  {% endif %}
+  {% if premiumPaymentsTableDataError or premiumPaymentsFilterError %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
-      errorList: [tableDataError, filterError],
+      errorList: [premiumPaymentsTableDataError, premiumPaymentsFilterError],
       attributes: {
         'data-cy': 'error-summary'
       }
@@ -32,11 +53,15 @@
 
     <div class="govuk-grid-row premium-payments-description-filter-container">
       <div class="govuk-grid-column-one-half premium-payments-description-container">
-        <p class="govuk-body">Enter received payments against reported fees by selecting them and then selecting the 'Add a payment' button.</p>
+        {% if userCanEdit %}
+          <p class="govuk-body" data-cy="how-to-add-payments-text">Received payments are entered against reported fees through selection and then selection of the 'Add a payment' button.</p>
 
-        <p class="govuk-body">
-          When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when you select the 'Generate keying data' button.
-        </p>
+          <p class="govuk-body" data-cy="how-to-generate-keying-data-text">
+            When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when the 'Generate keying data' button is selected.
+          </p>
+        {% else %}
+          <p class="govuk-body" data-cy="received-payments-text">Received payments are entered against reported fees. When payments show as matched, the adjustment data for keying into ACBS will be automatically generated.</p>
+        {% endif %}
       </div>
 
       <div class="govuk-grid-column-one-half govuk-!-text-align-right premium-payments-filter-container">
@@ -47,13 +72,13 @@
                 text: "Filter by facility ID",
                 classes: "govuk-label govuk-!-font-weight-bold"
               },
-              id: "facility-id-filter",
-              name: "facilityIdQuery",
-              value: facilityIdQuery,
-              errorMessage: filterError and {
-                text: filterError.text
+              id: "premium-payments-facility-id-filter",
+              name: "premiumPaymentsFacilityId",
+              value: premiumPaymentsFilters.facilityId,
+              errorMessage: premiumPaymentsFilterError and {
+                text: premiumPaymentsFilterError.text
               },
-              attributes: {'data-cy': 'facility-filter-input'}
+              attributes: {'data-cy': 'premium-payments-facility-filter-input'}
             }) }}
           </div>
           <div class="govuk-!-display-inline-block">
@@ -61,17 +86,17 @@
               {{ govukButton({
                 text: "Filter",
                 classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2 premium-payments-filter-control",
-                id: "facility-id-filter-button",
-                attributes: {'data-cy': 'facility-filter-submit-button'}
+                id: "premium-payments-facility-id-filter-button",
+                attributes: {'data-cy': 'premium-payments-facility-filter-submit-button'}
               }) }}
             </div>
             <div class="govuk-!-display-inline-block">
               {{ govukButton({
                 text: "Clear filter",
                 classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2 premium-payments-filter-control",
-                id: "facility-id-clear-button",
+                id: "premium-payments-facility-id-clear-button",
                 href: clearButtonHref,
-                attributes: {'data-cy': 'facility-filter-clear-button'}
+                attributes: {'data-cy': 'premium-payments-facility-filter-clear-button'}
               }) }}
             </div>
           </div>
@@ -79,7 +104,7 @@
       </div>
     </div>
 
-  {% if tableDataError %}
+  {% if premiumPaymentsTableDataError %}
     <div class="govuk-form-group--error">
   {% endif %}
   {% if userCanEdit %}
@@ -104,14 +129,14 @@
   {% endif %}
   {{ premiumPaymentsTable.render({
     reportId: reportId,
-    feeRecordPaymentGroups: feeRecordPaymentGroups,
+    feeRecordPaymentGroups: premiumPayments,
     enablePaymentsReceivedSorting: enablePaymentsReceivedSorting,
     userCanEdit: userCanEdit
   }) }}
   {% if userCanEdit %}
     </form>
   {% endif %}
-  {% if tableDataError %}
+  {% if premiumPaymentsTableDataError %}
     </div>
   {% endif %}
 {% endset %}
@@ -119,9 +144,10 @@
 {% set keyingSheetHtml %}
   <h2 class="govuk-heading-l" data-cy="keying-sheet-heading">Keying sheet</h2>
 
-  <p class="govuk-body">Select payments and mark as done when the adjustments have been keyed into ACBS.</p>
-
-  <p class="govuk-body">Payments on the premium payments tab will show as reconciled when they have been marked as done here.</p>
+  {% if userCanEdit %}
+    <p class="govuk-body" data-cy="select-payments-text">Select payments and mark as done when the adjustments have been keyed into ACBS.</p>
+   {% endif %}
+  <p class="govuk-body" data-cy="payments-on-premium-payments-tab-text">Payments on the premium payments tab will show as reconciled when they have been marked as done here.</p>
 
   <form method="post" data-cy="keying-sheet-form">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
@@ -153,28 +179,74 @@
 {% endset %}
 
 {% set paymentDetailsHtml %}
+  {% if paymentDetails.filterErrors.errorSummary | length %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: paymentDetails.filterErrors.errorSummary,
+      attributes: {
+        'data-cy': 'payment-details-error-summary'
+      }
+    }) }}
+  {% endif %}
+
   <h2 class="govuk-heading-l" data-cy="payment-details-heading">Payment details</h2>
 
-  {% if paymentDetails.length === 0 %}
-    <p class="govuk-body">Payment details will be displayed when payments have been entered on the premium payments tab.</p>
+  {% if paymentDetails.rows.length === 0 and paymentDetails.isFilterActive === false %}
+    <p class="govuk-body" data-cy="payment-details-no-payments-text">Payment details will be displayed when payments have been entered on the premium payments tab.</p>
   {% else %}
-    {{ govukButton({
-      text: "Show filter",
-      classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2",
-      id: "payment-details-show-filter-button",
-      attributes: {'data-cy': 'payment-details-show-filter-button'}
-    }) }}
+    <div class="moj-filter-layout">
 
-    {{ paymentDetailsTable.render({
-      reportId: reportId,
-      paymentDetails: paymentDetails,
-      userCanEdit: userCanEdit
-    }) }}
+      {{ paymentDetailsFiltersPanel.render({
+        filters: paymentDetails.filters,
+        selectedFilters: paymentDetails.selectedFilters,
+        errors: paymentDetails.filterErrors,
+        reportId: reportId
+      }) }}
+
+      <div class="moj-filter-layout__content">
+
+        {{ paymentDetailsFiltersActionBar.render({
+          selectedFilters: paymentDetails.selectedFilters
+        }) }}
+
+        {% if paymentDetails.rows.length === 0 and paymentDetails.isFilterActive %}
+
+          <p class="govuk-body" data-cy="payment-details-no-records-matching-filters-text">There are no records matching the search criteria</p>
+
+        {% else %}
+
+          <div class="moj-scrollable-pane">
+
+            <div class="moj-scrollable-pane__wrapper">
+
+              {{ paymentDetailsTable.render({
+                reportId: reportId,
+                paymentDetails: paymentDetails.rows,
+                userCanEdit: userCanEdit
+              }) }}
+
+            </div>
+
+          </div>
+
+        {% endif %}
+
+      </div>
+
+    </div>
   {% endif %}
 {% endset %}
 
 {% set utilisationHtml %}
-  <div></div>
+  <h2 class="govuk-heading-l" data-cy="bank-report-heading">Bank report</h2>
+
+  {{ utilisationTable.render({
+    utilisationTableRows: utilisationDetails.utilisationTableRows
+  }) }}
+
+  <a class="govuk-link" href="{{ utilisationDetails.downloadUrl }}" data-cy="download-report-link">
+    Download the report submitted by the bank as a CSV
+  </a>
 {% endset %}
 
 {% block content %}
@@ -236,3 +308,8 @@
 {% endblock %}
 
 {% block sub_content %}{% endblock %}
+
+{% block page_scripts %}
+  <script src="/assets/js/enableSelectAllTableCheckbox.js" type="text/javascript" integrity="sha512-ER/5raNAJX5VTcyrRBjVExC/f39WaVY4r8k1CyGqJUad95QZ0A1H6zHtsFpdf0JDBLV0acXzSA1B2mkKC8g5Tg==" crossorigin="anonymous"></script>
+  <script src="/assets/js/mojFilterHide.js" type="text/javascript" integrity="sha512-HEA7Ob0l4HkVIoI5HflMNQ1PnMLnP8tcNPiO9Mf50dMGS3uUQDCeuIXgPjXRidK3faPUrzTklms5jIM44LQ2kA==" crossorigin="anonymous"></script>
+{% endblock %}

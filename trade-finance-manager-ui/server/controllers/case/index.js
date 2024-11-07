@@ -1,7 +1,8 @@
 const { format, fromUnixTime } = require('date-fns');
+const { isEmpty } = require('lodash');
 const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const api = require('../../api');
-const { getTask, showAmendmentButton, ukefDecisionRejected } = require('../helpers');
+const { getTask, showAmendmentButton, ukefDecisionRejected, isDealCancellationEnabled } = require('../helpers');
 const { formattedNumber } = require('../../helpers/number');
 const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-options');
 const CONSTANTS = require('../../constants');
@@ -9,6 +10,7 @@ const { filterTasks } = require('../helpers/tasks.helper');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../helpers/amendments.helper');
 const validatePartyURN = require('./parties/partyUrnValidation.validate');
 const { bondType, partyType, userCanEdit } = require('./parties/helpers');
+const { asUserSession } = require('../../helpers/express-session');
 
 const {
   DEAL,
@@ -18,38 +20,57 @@ const {
 } = CONSTANTS;
 
 const getCaseDeal = async (req, res) => {
-  const dealId = req.params._id;
-  const { userToken } = req.session;
+  try {
+    const dealId = req.params._id;
+    const { userToken } = req.session;
 
-  const deal = await api.getDeal(dealId, userToken);
-  const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
+    const { user } = asUserSession(req.session);
 
-  if (!deal) {
-    return res.redirect('/not-found');
+    const deal = await api.getDeal(dealId, userToken);
+    const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
+
+    if (!deal) {
+      return res.redirect('/not-found');
+    }
+
+    if (!amendments || !Array.isArray(amendments)) {
+      console.error('Unable to get amendments for deal id %s', dealId);
+      return res.redirect('/not-found');
+    }
+
+    const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENT_STATUS.IN_PROGRESS);
+    const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+    if (hasAmendmentInProgress) {
+      deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+    }
+
+    const { submissionType } = deal.dealSnapshot;
+
+    const dealCancellationIsEnabled = isDealCancellationEnabled(submissionType, user);
+    let hasDraftCancellation = false;
+
+    if (dealCancellationIsEnabled) {
+      const cancellation = await api.getDealCancellation(dealId, userToken);
+      hasDraftCancellation = !isEmpty(cancellation);
+    }
+
+    return res.render('case/deal/deal.njk', {
+      deal: deal.dealSnapshot,
+      tfm: deal.tfm,
+      activePrimaryNavigation: 'manage work',
+      activeSubNavigation: 'deal',
+      dealId,
+      user: req.session.user,
+      amendments,
+      amendmentsInProgress,
+      hasAmendmentInProgress,
+      showDealCancelButton: dealCancellationIsEnabled,
+      hasDraftCancellation,
+    });
+  } catch (error) {
+    console.error('Unable to render deal %o', error);
+    return res.render('_partials/problem-with-service.njk');
   }
-
-  if (!amendments || !Array.isArray(amendments)) {
-    console.error('Unable to get amendments for deal id %s', dealId);
-    return res.redirect('/not-found');
-  }
-
-  const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENT_STATUS.IN_PROGRESS);
-  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
-  if (hasAmendmentInProgress) {
-    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
-  }
-
-  return res.render('case/deal/deal.njk', {
-    deal: deal.dealSnapshot,
-    tfm: deal.tfm,
-    activePrimaryNavigation: 'manage work',
-    activeSubNavigation: 'deal',
-    dealId,
-    user: req.session.user,
-    amendments,
-    amendmentsInProgress,
-    hasAmendmentInProgress,
-  });
 };
 
 const getCaseTasks = async (req, res) => {
@@ -290,6 +311,14 @@ const getCaseFacility = async (req, res) => {
 
   const deal = await api.getDeal(dealId, userToken);
 
+  /**
+   * Ensure imperative deal properties exist before rendering
+   */
+  if (!deal?.dealSnapshot?._id || !deal?.tfm) {
+    console.error('An error occurred while rendering a TFM deal %s', dealId);
+    return res.render('_partials/problem-with-service.njk');
+  }
+
   const hasAmendmentInProgressButton = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
   const showContinueAmendmentButton = hasAmendmentInProgressButton && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
 
@@ -368,7 +397,7 @@ const getCaseDocuments = async (req, res) => {
  * Post party URNs to bond summary page for confirmation
  * @param {Express.Request} req
  * @param {Express.Response} res
- * @returns {Promise<object>} Express response as rendered confirm party URN page.
+ * @returns {Promise<Object>} Express response as rendered confirm party URN page.
  */
 const confirmTfmFacility = async (req, res) => {
   try {
@@ -488,7 +517,7 @@ const confirmTfmFacility = async (req, res) => {
  * Post bond party URNs to the TFM
  * @param {Express.Request} req
  * @param {Express.Response} res
- * @returns {Promise<object>} Express response as rendered confirm party URN page.
+ * @returns {Promise<Object>} Express response as rendered confirm party URN page.
  */
 const postTfmFacility = async (req, res) => {
   try {

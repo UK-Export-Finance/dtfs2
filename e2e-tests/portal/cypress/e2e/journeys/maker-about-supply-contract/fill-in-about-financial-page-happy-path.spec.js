@@ -30,7 +30,7 @@ context('about-supply-contract', () => {
     contractAboutFinancial.supplyContractConversionRateToGBP().should('not.be.visible');
 
     // set a GBP value, so we don't need to fill in the exchange-rate fields
-    contractAboutFinancial.supplyContractValue().type('10000');
+    cy.keyboardInput(contractAboutFinancial.supplyContractValue(), '10000');
     contractAboutFinancial.supplyContractValue().should('have.value', '10,000');
 
     contractAboutFinancial.supplyContractCurrency().select('GBP');
@@ -44,20 +44,11 @@ context('about-supply-contract', () => {
     contractAboutPreview.visit(deal);
     contractAboutPreview.submissionDetails().should('be.visible');
 
-    partials.taskListHeader
-      .itemStatus('financial-information')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Completed');
-      });
+    cy.assertText(partials.taskListHeader.itemStatus('financial-information'), 'Completed');
 
     // since we've cleared all validation at this point the section should show as completed on the deal page
     contract.visit(deal);
-    contract
-      .aboutSupplierDetailsStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Completed');
-      });
+
+    cy.assertText(contract.aboutSupplierDetailsStatus(), 'Completed');
   });
 });

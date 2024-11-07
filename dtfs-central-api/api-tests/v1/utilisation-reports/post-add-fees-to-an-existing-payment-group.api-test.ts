@@ -70,7 +70,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(aPostAddFeesToAnExistingPaymentGroupRequestBody()).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Ok);
+    expect(response.status).toEqual(HttpStatusCode.Ok);
   });
 
   it("returns a 400 when the 'feeRecordIds' list is empty", async () => {
@@ -84,7 +84,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it("returns a 400 when the 'paymentIds' list is empty", async () => {
@@ -98,7 +98,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it("returns a 400 when the 'user' object is an empty object", async () => {
@@ -111,7 +111,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it('returns a 404 when no payments with the supplied ids can be found', async () => {
@@ -125,6 +125,6 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.NotFound);
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 });

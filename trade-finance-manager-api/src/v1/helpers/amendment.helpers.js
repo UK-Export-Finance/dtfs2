@@ -20,6 +20,8 @@ const dealTypeCoverStartDate = require('./dealTypeCoverStartDate.helper');
 const { formattedNumber } = require('../../utils/number');
 const { decimalsCount, roundNumber } = require('./number');
 
+const { TFM_UI_URL } = process.env;
+
 // checks if amendment exists and if eligible to send email
 const amendmentEmailEligible = (amendment) =>
   amendment &&
@@ -44,7 +46,7 @@ const isApprovedWithoutConditions = (ukefDecision) => {
 /**
  * Ascertain whether the requested amendment
  * have been declined or not.
- * @param {object} amendment Amendment object
+ * @param {Object} amendment Amendment object
  * @returns {boolean} Whether both the amendments decision has been declined by the underwriter.
  */
 const amendmentDeclined = (amendment) => {
@@ -276,7 +278,7 @@ const sendManualBankDecisionEmail = async (amendmentVariables, auditDetails) => 
  * Evaluated whether facility amendment is eligible
  * for ACBS interaction based on myriads of conditions.
  * This function evaluated across all amendment types.
- * @param {object} amendment Facility amendments object
+ * @param {Object} amendment Facility amendments object
  */
 const canSendToAcbs = (amendment) => {
   // Ensure at least one of the attribute has been amended
@@ -310,24 +312,50 @@ const firstTaskEmailConfirmation = async (facilityId, amendmentId, auditDetails)
   await api.updateFacilityAmendment(facilityId, amendmentId, payload, auditDetails);
 };
 
-// sends email for first amendment task when pim submit amendment
-const sendFirstTaskEmail = async (taskVariables, auditDetails) => {
-  const { amendment, dealSnapshot, facilityId, amendmentId } = taskVariables;
-  const { tasks } = amendment;
-  const { dealId, exporter } = dealSnapshot;
-
-  // dealId in snapshot for gef and details for bss
-  const ukefDealId = dealSnapshot.ukefDealId || dealSnapshot.details.ukefDealId;
-
-  const firstTask = getFirstTask(tasks);
-  const urlOrigin = process.env.TFM_UI_URL;
-  const templateId = EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
-
+/**
+ * Sends an email notification for the first task of an amendment.
+ *
+ * This function performs the following operations:
+ * 1. Extracts necessary details from the deal and amendment.
+ * 2. Retrieves the first task from the amendment tasks.
+ * 3. Constructs the email variables and sends the email using the TFM email service.
+ * 4. Updates the flag to indicate that the email has been sent if the email is successfully sent.
+ *
+ * @param {Object} deal - The deal object containing deal and amendment details.
+ * @param {Object} deal.amendment - The amendment details.
+ * @param {Object} deal.dealSnapshot - The snapshot of the deal details.
+ * @param {string} deal.facilityId - The ID of the facility.
+ * @param {string} deal.amendmentId - The ID of the amendment.
+ * @param {Object} deal.dealSnapshot.exporter - The exporter details.
+ * @param {string} deal.dealSnapshot.exporter.companyName - The name of the exporter company.
+ * @param {string} [deal.dealSnapshot.ukefDealId] - The UKEF deal ID for GEF deals.
+ * @param {Object} [deal.dealSnapshot.details] - The details object for BSS deals.
+ * @param {string} [deal.dealSnapshot.details.ukefDealId] - The UKEF deal ID for BSS deals.
+ * @param {import("@ukef/dtfs2-common").AuditDetails}
+ * @returns {Promise<void>} - A promise that resolves when the email has been sent and the flag has been updated.
+ */
+const sendFirstTaskEmail = async (deal, auditDetails) => {
   try {
+    const { amendment, dealSnapshot, facilityId, amendmentId } = deal;
+    const { tasks } = amendment;
+    const { exporter } = dealSnapshot;
+    const { companyName } = exporter;
+
+    // BSS/EWCS or GEF Mongo deal ID
+    const dealId = dealSnapshot._id || deal._id;
+    // BSS/EWCS or GEF UKEF deal ID
+    const ukefDealId = dealSnapshot?.details?.ukefDealId || dealSnapshot.ukefDealId;
+    const firstTask = getFirstTask(tasks);
+    const templateId = EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
+
+    if (!dealId || !ukefDealId || !firstTask || !companyName) {
+      throw new Error(`Invalid imperative arguments provided for ${dealId}, unable to send first task email from TFM.`);
+    }
+
     const { team } = firstTask;
     const { email: sendToEmailAddress } = await api.findOneTeam(team.id);
 
-    const emailVariables = generateTaskEmailVariables(urlOrigin, firstTask, dealId, exporter.companyName, ukefDealId);
+    const emailVariables = generateTaskEmailVariables(TFM_UI_URL, firstTask, dealId, companyName, ukefDealId);
 
     const emailResponse = await sendTfmEmail(templateId, sendToEmailAddress, emailVariables);
 
@@ -545,8 +573,8 @@ const addLatestAmendmentFacilityEndDate = async (tfmObject, latestFacilityEndDat
 /**
  * Calculates UKEF Exposure for the defined facility
  * based on updated facility amount and original cover percentage.
- * @param {object} payload Amendment payload
- * @returns {object} Computed payload with `ukefExposure` property calculated.
+ * @param {Object} payload Amendment payload
+ * @returns {Object} Computed payload with `ukefExposure` property calculated.
  */
 const calculateAcbsUkefExposure = (payload) => {
   if (payload?.value && payload?.coveredPercentage) {
@@ -561,8 +589,8 @@ const calculateAcbsUkefExposure = (payload) => {
 
 /**
  * Converts non-ms epoch to ms epoch.
- * @param {object} payload Amendment payload
- * @returns {object} Computed payload with EPOCH sm compatible `coverEndDate`.
+ * @param {Object} payload Amendment payload
+ * @returns {Object} Computed payload with EPOCH sm compatible `coverEndDate`.
  */
 const formatCoverEndDate = (payload) => {
   if (payload?.coverEndDate) {

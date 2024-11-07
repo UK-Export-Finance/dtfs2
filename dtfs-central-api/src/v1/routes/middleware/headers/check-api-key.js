@@ -6,8 +6,8 @@ const { DTFS_CENTRAL_API_KEY } = process.env;
 
 /**
  * Check that the x-api-key header is valid
- * @param {object} req Request object
- * @param {object} res Response object
+ * @param {Object} req Request object
+ * @param {Object} res Response object
  * @param {(input?: unknown) => void} next Callback function name
  * @returns {Express.Response} next() or 401 status and error message
  */

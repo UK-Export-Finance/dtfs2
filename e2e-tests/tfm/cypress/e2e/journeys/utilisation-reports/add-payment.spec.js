@@ -9,6 +9,7 @@ import {
 import pages from '../../pages';
 import USERS from '../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context('PDC_RECONCILE users can add a payment to a report', () => {
   const GBP_TOLERANCE = 2;
@@ -30,6 +31,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
   beforeEach(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
+    cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
     resetTolerances();
 
     const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
@@ -65,7 +67,12 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
       .withStatus('DOES_NOT_MATCH')
       .withPayments([payment])
       .build();
-    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecordOne, feeRecordTwo]);
+
+    const feeRecords = [feeRecordOne, feeRecordTwo];
+    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
+
+    const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords(feeRecords);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
 
     pages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
@@ -104,12 +111,11 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
   });
 
   it('should display errors when form submitted with invalid values', () => {
-    cy.getInputByLabelText('Amount received').type('100');
-    cy.getInputByLabelText('Day').type('56');
-    cy.getInputByLabelText('Month').type('12');
-    cy.getInputByLabelText('Year').type('2023');
+    cy.keyboardInput(cy.getInputByLabelText('Amount received'), '100');
 
-    cy.contains('button', 'Continue').click();
+    cy.completeDateFormFields({ idPrefix: 'payment-date', day: '56', month: '12', year: '2023' });
+
+    cy.clickContinueButton();
 
     cy.get('a').should('contain', 'Select payment currency');
     cy.get('a').should('contain', 'The date payment received must be a real date');
@@ -127,33 +133,52 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
   it('submits form and redirects to premium payments page when user submits form with valid values and user selects no to adding another payment', () => {
     cy.getInputByLabelText('GBP').click();
+
     // 391 = (100 / 2) + (200 / 0.5) - 60 + a little extra under the tolerance
-    cy.getInputByLabelText('Amount received').type('391');
-    cy.getInputByLabelText('Day').type('12');
-    cy.getInputByLabelText('Month').type('12');
-    cy.getInputByLabelText('Year').type('2023');
+    cy.keyboardInput(cy.getInputByLabelText('Amount received'), '391');
+
+    cy.completeDateFormFields({ idPrefix: 'payment-date', day: '12', month: '12', year: '2023' });
+
     cy.getInputByLabelText('No').click();
 
-    cy.contains('button', 'Continue').click();
+    cy.clickContinueButton();
 
     cy.contains('Premium payments').should('exist');
-    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
-      .status(FEE_RECORD_ID_ONE)
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(FEE_RECORD_STATUS.MATCH);
-      });
+
+    cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.status(FEE_RECORD_ID_ONE), FEE_RECORD_STATUS.MATCH);
+  });
+
+  it('redirects user to premium payments tab with match success notification when taken to match whilst trying to add another payment', () => {
+    cy.getInputByLabelText('GBP').click();
+
+    // 391 = (100 / 2) + (200 / 0.5) - 60 + a little extra under the tolerance
+    cy.keyboardInput(cy.getInputByLabelText('Amount received'), '391');
+
+    cy.completeDateFormFields({ idPrefix: 'payment-date', day: '12', month: '12', year: '2023' });
+
+    cy.getInputByLabelText('Yes').click();
+
+    cy.clickContinueButton();
+
+    cy.contains('Premium payments').should('exist');
+
+    cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.status(FEE_RECORD_ID_ONE), FEE_RECORD_STATUS.MATCH);
+
+    cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.matchSuccessNotificationHeading(), 'Match payment recorded');
+
+    cy.assertText(
+      pages.utilisationReportPage.premiumPaymentsTab.matchSuccessNotificationMessage(),
+      'The fee(s) are now at a Match state. Further payments cannot be added to the fee record.',
+    );
   });
 
   it('submits form and reloads the page with no values when user submits form with valid values and user selects yes to adding another payment', () => {
     cy.getInputByLabelText('GBP').click();
-    cy.getInputByLabelText('Amount received').type('100');
-    cy.getInputByLabelText('Day').type('12');
-    cy.getInputByLabelText('Month').type('12');
-    cy.getInputByLabelText('Year').type('2023');
+    cy.keyboardInput(cy.getInputByLabelText('Amount received'), '100');
+    cy.completeDateFormFields({ idPrefix: 'payment-date', day: '12', month: '12', year: '2023' });
     cy.getInputByLabelText('Yes').click();
 
-    cy.contains('button', 'Continue').click();
+    cy.clickContinueButton();
 
     cy.get('h1').invoke('text').should('contain', 'Add a payment');
     cy.getInputByLabelText('GBP').should('not.be.checked');

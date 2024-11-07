@@ -7,7 +7,7 @@ const CONTENT_STRINGS = require('../../../content-strings');
  *
  * @param {string} field heading
  * @param {string} field name
- * @param {array} submitted filters
+ * @param {Array} submitted filters
  * @example ( 'Deal type', 'dealType', ['BSS/EWCS', 'GEF'] )
  * @returns { heading: { text: 'Deal type' }, items: [ { text: 'BSS-EWCS', href: `filters/remove/dealType/BSS-EWCS`, value: 'BSS-EWCS' } ] }
  */
@@ -33,7 +33,7 @@ const generateSelectedFiltersObject = (heading, fieldName, submittedFieldFilters
  *
  * @param {string} field heading
  * @param {string} field name
- * @param {array} submitted filters
+ * @param {Array} submitted filters
  * @example ( 'Bank facility stage', 'hasBeenIssued', [true] )
  * @returns { heading: { text: 'Deal type' }, items: [ { text: 'Issued', href: `filters/remove/hasBeenIssued/true`, value: true } ] }
  */
@@ -57,7 +57,7 @@ const generateSelectedFiltersObjectWithMappedValues = (heading, fieldName, submi
  * This will used in mojFilter component - selectedFilters.categories.
  *
  * @param {string} field name
- * @param {object} submitted submissionType filters
+ * @param {Object} submitted submissionType filters
  * @example ( ['Automatic Inclusion Notice', 'Manual Inclusion Notice'] )
  * @returns generateSelectedFiltersObject('Notice Type', 'submissionType', ['Automatic Inclusion Notice', 'Manual Inclusion Notice'])
  */

@@ -247,9 +247,15 @@ export class TfmFacilitiesRepo {
   public static async findAllFacilitiesAndFacilityCount(
     aggregateOptions: AllFacilitiesAndFacilityCountAggregatePipelineOptions,
   ): Promise<{ count: number; facilities: Document[] } | null> {
-    const collection = await this.getCollection();
-    const result = await collection.aggregate(aggregatePipelines.allFacilitiesAndFacilityCount(aggregateOptions)).toArray();
-    return (result.at(0) as { count: number; facilities: Document[] }) ?? null;
+    try {
+      const collection = await this.getCollection();
+      const facilities = aggregatePipelines.allFacilitiesAndFacilityCount(aggregateOptions);
+      const result = await collection.aggregate(facilities).toArray();
+      return (result.at(0) as { count: number; facilities: Document[] }) ?? null;
+    } catch (error) {
+      console.error('Error finding all facilities and facility count %o', error);
+      return null;
+    }
   }
 
   /**
@@ -262,5 +268,26 @@ export class TfmFacilitiesRepo {
     return await collection.findOne({
       'facilitySnapshot.ukefFacilityId': { $eq: ukefFacilityId },
     });
+  }
+
+  /**
+   * Finds the TFM facilities with the supplied ukef facility ids
+   * @param ukefFacilityIds - The ukef facility ids
+   * @returns The found TFM facilities
+   */
+  public static async findByUkefFacilityIds(ukefFacilityIds: string[]): Promise<TfmFacility[]> {
+    const collection = await this.getCollection();
+    return await collection.find({ 'facilitySnapshot.ukefFacilityId': { $in: ukefFacilityIds } }).toArray();
+  }
+
+  /**
+   * Checks whether or not a facility exists which has a matching UKEF facility ID
+   * @param ukefFacilityId - The UKEF facility ID
+   * @returns Whether a not a facility with that UKEF facility ID exists
+   */
+  public static async ukefFacilityIdExists(ukefFacilityId: string): Promise<boolean> {
+    const collection = await this.getCollection();
+    const numberOfFoundDocuments = await collection.count({ 'facilitySnapshot.ukefFacilityId': { $eq: ukefFacilityId } });
+    return numberOfFoundDocuments > 0;
   }
 }

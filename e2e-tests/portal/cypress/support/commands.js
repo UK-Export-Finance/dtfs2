@@ -1,36 +1,16 @@
 import 'cypress-file-upload';
 import * as api from '../../../gef/cypress/support/commands/api';
 
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add("login", (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add("dismiss", { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
-
 const { downloadFile } = require('./portal-api/fileshare');
 
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
+
+Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
+
+// Assert an element has some exact text
+Cypress.Commands.add('assertText', require('./utils/assertText'));
+
 // create an element in a div
 Cypress.Commands.add('insertElement', require('./utils/insertElement'));
 
@@ -68,6 +48,18 @@ Cypress.Commands.add('updateLoan', require('./portal-api/updateLoan'));
 Cypress.Commands.add('createFacilities', require('./portal-api/createFacilities'));
 
 // commands that abstract common tasks you might perform while clicking round the portal..
+Cypress.Commands.add('clickAddBondButton', require('./portal/click-events/click-add-bond-button'));
+Cypress.Commands.add('clickAddLoanButton', require('./portal/click-events/click-add-loan-button'));
+Cypress.Commands.add('clickBackLink', require('./portal/click-events/click-back-link'));
+Cypress.Commands.add('clickCancelButton', require('./portal/click-events/click-cancel-button'));
+Cypress.Commands.add('clickContinueButton', require('./portal/click-events/click-continue-button'));
+Cypress.Commands.add('clickReturnToMakerButton', require('./portal/click-events/click-return-to-maker-button'));
+Cypress.Commands.add('clickProceedToReviewButton', require('./portal/click-events/click-proceed-to-review-button'));
+Cypress.Commands.add('clickProceedToSubmitButton', require('./portal/click-events/click-proceed-to-submit-button'));
+Cypress.Commands.add('clickSaveGoBackButton', require('./portal/click-events/click-save-go-back-button'));
+Cypress.Commands.add('clickSubmitButton', require('./portal/click-events/click-submit-button'));
+Cypress.Commands.add('completeDateFormFields', require('./portal/completeDateFormFields'));
+
 Cypress.Commands.add('addBondToDeal', require('./portal/addBondToDeal'));
 Cypress.Commands.add('addLoanToDeal', require('./portal/addLoanToDeal'));
 Cypress.Commands.add('createADeal', require('./portal/createADeal'));
@@ -83,6 +75,9 @@ Cypress.Commands.add('renameDeal', require('./portal/renameDeal'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('userSetPassword', require('./portal/userSetPassword'));
 Cypress.Commands.add('disablePortalUserByUsername', require('./portal/disablePortalUserByUsername'));
+
+// command to assert row contents in the utilisation report upload journey
+Cypress.Commands.add('assertValidationErrorTableRowContains', require('./portal/utilisation-reports/assertUploadReportValidationErrorTableRowContains'));
 
 // commands that add/edit facilities directly in central API
 Cypress.Commands.add('deleteFacility', require('./central-api/deleteFacility'));

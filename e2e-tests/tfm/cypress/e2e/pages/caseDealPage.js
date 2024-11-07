@@ -1,6 +1,4 @@
 const caseDealPage = {
-  caseSummary: () => cy.get('[data-cy="case-summary"]'),
-  caseSubNavigation: () => cy.get('[data-cy="case-sub-navigation"]'),
   dealBankDetails: () => cy.get('[data-cy="deal-bank-details"]'),
   dealFacilities: () => cy.get('[data-cy="deal-facilities"]'),
   partiesLink: () => cy.get('[data-cy="parties-link"]'),
@@ -10,6 +8,7 @@ const caseDealPage = {
   bankSecurityFacilitySubHeading: () => cy.get('[data-cy="bank-security-facility-sub-heading"]'),
   bankSecurityText: () => cy.get('[data-cy="bank-security-text"]'),
   bankSecurityFacilityText: () => cy.get('[data-cy="bank-security-facility-text"]'),
+  cancelDealButton: () => cy.get('[data-cy="cancel-deal-button"]'),
 
   dealFacilitiesTable: {
     row: (facilityId) => {

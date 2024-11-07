@@ -46,7 +46,7 @@ context('Portal to TFM deal submission', () => {
     portalPages.contract.proceedToReview().click();
     cy.url().should('eq', relative(`/contract/${dealId}/ready-for-review`));
 
-    portalPages.contractReadyForReview.comments().type('go');
+    cy.keyboardInput(portalPages.contractReadyForReview.comments(), 'go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
 
     //---------------------------------------------------------------
@@ -55,12 +55,7 @@ context('Portal to TFM deal submission', () => {
     cy.login(BANK1_CHECKER1);
     portalPages.contract.visit(deal);
 
-    portalPages.contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal("Ready for Checker's approval");
-      });
+    cy.assertText(portalPages.contract.status(), "Ready for Checker's approval");
 
     portalPages.contract.proceedToSubmit().click();
 
@@ -75,18 +70,8 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     portalPages.contract.visit(deal);
 
-    portalPages.contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Acknowledged');
-      });
+    cy.assertText(portalPages.contract.status(), 'Acknowledged');
 
-    portalPages.contract
-      .previousStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Submitted');
-      });
+    cy.assertText(portalPages.contract.previousStatus(), 'Submitted');
   });
 });

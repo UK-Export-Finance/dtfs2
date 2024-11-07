@@ -4,14 +4,16 @@ import { MOCK_TFM_SESSION_USER } from '../../test-mocks/mock-tfm-session-user';
 import { RemoveFeesFromPaymentErrorKey } from '../../controllers/utilisation-reports/helpers';
 import { EditPaymentsTableCheckboxId } from '../../types/edit-payments-table-checkbox-id';
 import { EditPaymentFormValues } from '../../types/edit-payment-form-values';
+import { RECONCILIATION_FOR_REPORT_TABS } from '../../constants/reconciliation-for-report-tabs';
 
 console.error = jest.fn();
 
 describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
   const REPORT_ID = 1;
   const PAYMENT_ID = 2;
+  const REDIRECT_TAB = RECONCILIATION_FOR_REPORT_TABS.PREMIUM_PAYMENTS;
 
-  const REDIRECT_URL = `/utilisation-reports/${REPORT_ID}/edit-payment/${PAYMENT_ID}`;
+  const REDIRECT_URL = `/utilisation-reports/${REPORT_ID}/edit-payment/${PAYMENT_ID}?redirectTab=${REDIRECT_TAB}`;
 
   const getHttpMocks = () =>
     httpMocks.createMocks({
@@ -22,6 +24,9 @@ describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
       params: {
         reportId: REPORT_ID,
         paymentId: PAYMENT_ID,
+      },
+      query: {
+        redirectTab: REDIRECT_TAB,
       },
     });
 
@@ -35,7 +40,7 @@ describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
     removeFeesFromPaymentErrorKey: RemoveFeesFromPaymentErrorKey,
     editPaymentFormValues: EditPaymentFormValues,
   ) => {
-    expect(req.session.removeFeesFromPaymentErrorKey).toBe(removeFeesFromPaymentErrorKey);
+    expect(req.session.removeFeesFromPaymentErrorKey).toEqual(removeFeesFromPaymentErrorKey);
     expect(req.session.editPaymentFormValues).toEqual(editPaymentFormValues);
   };
 
@@ -54,7 +59,7 @@ describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
     validatePostRemoveFeesFromPaymentRequestBody(req, res, next);
 
     // Assert
-    expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
+    expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
     expect(res._getRenderData()).toEqual({
       user: MOCK_TFM_SESSION_USER,
     });
@@ -72,7 +77,7 @@ describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
     validatePostRemoveFeesFromPaymentRequestBody(req, res, next);
 
     // Assert
-    expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
+    expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
     expect(res._getRenderData()).toEqual({
       user: MOCK_TFM_SESSION_USER,
     });
@@ -116,7 +121,7 @@ describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
       validatePostRemoveFeesFromPaymentRequestBody(req, res, next);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(REDIRECT_URL);
+      expect(res._getRedirectUrl()).toEqual(REDIRECT_URL);
     });
 
     it(`populates the session with the 'no-fee-records-selected' error and the extracted edit payment form values`, () => {
@@ -177,7 +182,7 @@ describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
       validatePostRemoveFeesFromPaymentRequestBody(req, res, next);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(REDIRECT_URL);
+      expect(res._getRedirectUrl()).toEqual(REDIRECT_URL);
     });
 
     it(`populates the session with the 'all-fee-records-selected' error and the extracted edit payment form values`, () => {

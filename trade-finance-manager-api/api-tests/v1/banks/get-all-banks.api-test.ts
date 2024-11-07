@@ -1,8 +1,8 @@
 import { Response } from 'supertest';
 import { Bank } from '@ukef/dtfs2-common';
 import app from '../../../src/createApp';
-import testUserCache from '../../api-test-users';
-import createApi from '../../api';
+import { initialiseTestUsers } from '../../api-test-users';
+import { createApi } from '../../api';
 
 const { as } = createApi(app);
 
@@ -14,7 +14,8 @@ describe('/v1/banks', () => {
   describe('GET /v1/banks', () => {
     it('gets banks for authenticated user', async () => {
       // Arrange
-      const user = await testUserCache.initialise(app);
+      const testUsers = await initialiseTestUsers(app);
+      const user = testUsers().one();
 
       // Act
       const response: CustomResponse = await as(user).get('/v1/banks');

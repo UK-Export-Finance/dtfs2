@@ -1,6 +1,6 @@
 /**
  * Returns facility's amount
- * @param {object} facility Facility object
+ * @param {Object} facility Facility object
  * @param {boolean} overallAmount Facility's overall amount being loaned to exporter by the bank
  * @returns {Float} Facility UKEF exposure amount
  */

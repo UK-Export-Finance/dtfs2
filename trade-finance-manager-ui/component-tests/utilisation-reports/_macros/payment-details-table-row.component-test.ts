@@ -1,12 +1,11 @@
 import difference from 'lodash.difference';
 import { FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
-import { PaymentDetailsPaymentViewModel, PaymentDetailsViewModel } from '../../../server/types/view-models';
 import { componentRenderer } from '../../componentRenderer';
+import { PaymentDetailsPaymentViewModel, PaymentDetailsRowViewModel } from '../../../server/types/view-models';
+import { RECONCILIATION_FOR_REPORT_TABS } from '../../../server/constants/reconciliation-for-report-tabs';
 
 const component = '../templates/utilisation-reports/_macros/payment-details-table-row.njk';
 const render = componentRenderer(component, true);
-
-type PaymentDetailsTableRow = PaymentDetailsViewModel[number];
 
 describe(component, () => {
   const aPaymentDetailsPayment = (): PaymentDetailsPaymentViewModel => ({
@@ -15,17 +14,16 @@ describe(component, () => {
       formattedCurrencyAndAmount: 'GBP 100.00',
       dataSortValue: 0,
     },
-    reference: undefined,
     dateReceived: {
       formattedDateReceived: '9 Mar 2024',
       dataSortValue: 0,
     },
   });
 
-  const aPaymentDetailsTableRow = (): PaymentDetailsTableRow => ({
-    feeRecordPaymentGroupStatus: FEE_RECORD_STATUS.TO_DO,
+  const aPaymentDetailsTableRow = (): PaymentDetailsRowViewModel => ({
     payment: aPaymentDetailsPayment(),
-    feeRecords: [{ facilityId: '12345678', exporter: 'Test exporter' }],
+    feeRecords: [{ id: 1, facilityId: '12345678', exporter: 'Test exporter' }],
+    status: FEE_RECORD_STATUS.TO_DO,
     reconciledBy: '-',
     dateReconciled: {
       formattedDateReconciled: '-',
@@ -33,11 +31,18 @@ describe(component, () => {
     },
   });
 
-  const getWrapper = ({ reportId, paymentDetailsRow, userCanEdit }: { reportId?: number; paymentDetailsRow: PaymentDetailsTableRow; userCanEdit?: boolean }) =>
-    render({ reportId, paymentDetails: paymentDetailsRow, userCanEdit });
+  const getWrapper = ({
+    reportId,
+    paymentDetailsRow,
+    userCanEdit,
+  }: {
+    reportId?: number;
+    paymentDetailsRow: PaymentDetailsRowViewModel;
+    userCanEdit?: boolean;
+  }) => render({ reportId, paymentDetails: paymentDetailsRow, userCanEdit });
 
   it('renders the payment reference and amount', () => {
-    const paymentDetailsRow: PaymentDetailsTableRow = {
+    const paymentDetailsRow: PaymentDetailsRowViewModel = {
       ...aPaymentDetailsTableRow(),
       payment: {
         ...aPaymentDetailsPayment(),
@@ -55,10 +60,11 @@ describe(component, () => {
   });
 
   it('renders the fee record facility ID and exporter', () => {
-    const paymentDetailsRow: PaymentDetailsTableRow = {
+    const paymentDetailsRow: PaymentDetailsRowViewModel = {
       ...aPaymentDetailsTableRow(),
       feeRecords: [
         {
+          id: 1,
           facilityId: 'Some facility id',
           exporter: 'Some exporter',
         },
@@ -71,7 +77,7 @@ describe(component, () => {
   });
 
   it('renders the date reconciled', () => {
-    const paymentDetailsRow: PaymentDetailsTableRow = {
+    const paymentDetailsRow: PaymentDetailsRowViewModel = {
       ...aPaymentDetailsTableRow(),
       dateReconciled: { formattedDateReconciled: '12 May 2024', dataSortValue: 0 },
     };
@@ -81,7 +87,7 @@ describe(component, () => {
   });
 
   it('renders the reconciled by user', () => {
-    const paymentDetailsRow: PaymentDetailsTableRow = {
+    const paymentDetailsRow: PaymentDetailsRowViewModel = {
       ...aPaymentDetailsTableRow(),
       reconciledBy: 'Some reconciled by user',
     };
@@ -96,13 +102,13 @@ describe(component, () => {
     it.each([FEE_RECORD_STATUS.READY_TO_KEY, FEE_RECORD_STATUS.RECONCILED])(
       'renders the payment amount as plain text when the fee record status is %s',
       (status) => {
-        const paymentDetailsRow: PaymentDetailsTableRow = {
+        const paymentDetailsRow: PaymentDetailsRowViewModel = {
           ...aPaymentDetailsTableRow(),
-          feeRecordPaymentGroupStatus: status,
           payment: {
             ...aPaymentDetailsPayment(),
             amount: { formattedCurrencyAndAmount: 'GBP 123.45', dataSortValue: 0 },
           },
+          status,
         };
         const wrapper = getWrapper({ paymentDetailsRow, userCanEdit });
 
@@ -112,21 +118,23 @@ describe(component, () => {
     );
 
     it.each(difference(Object.values(FEE_RECORD_STATUS), [FEE_RECORD_STATUS.READY_TO_KEY, FEE_RECORD_STATUS.RECONCILED]))(
-      'renders the payment amount as a link to the edit payment page when the fee record status is %s',
+      `renders the payment amount as a link to the edit payment page when the fee record status is %s with redirectTab set to ${RECONCILIATION_FOR_REPORT_TABS.PAYMENT_DETAILS}`,
       (status) => {
-        const paymentDetailsRow: PaymentDetailsTableRow = {
+        const paymentDetailsRow: PaymentDetailsRowViewModel = {
           ...aPaymentDetailsTableRow(),
-          feeRecordPaymentGroupStatus: status,
           payment: {
             ...aPaymentDetailsPayment(),
             id: 24,
             amount: { formattedCurrencyAndAmount: 'GBP 123.45', dataSortValue: 0 },
           },
+          status,
         };
         const wrapper = getWrapper({ reportId: 12, paymentDetailsRow, userCanEdit });
 
         wrapper.expectElement('tr td:contains(a)').toExist();
-        wrapper.expectLink('td a').toLinkTo('/utilisation-reports/12/edit-payment/24', 'GBP 123.45');
+        wrapper
+          .expectLink('td a')
+          .toLinkTo(`/utilisation-reports/12/edit-payment/24?redirectTab=${RECONCILIATION_FOR_REPORT_TABS.PAYMENT_DETAILS}`, 'GBP 123.45');
       },
     );
   });
@@ -135,13 +143,13 @@ describe(component, () => {
     const userCanEdit = false;
 
     it.each(Object.values(FEE_RECORD_STATUS))('renders the payment amount as plain text when the fee record status is %s', (status) => {
-      const paymentDetailsRow: PaymentDetailsTableRow = {
+      const paymentDetailsRow: PaymentDetailsRowViewModel = {
         ...aPaymentDetailsTableRow(),
-        feeRecordPaymentGroupStatus: status,
         payment: {
           ...aPaymentDetailsPayment(),
           amount: { formattedCurrencyAndAmount: 'GBP 123.45', dataSortValue: 0 },
         },
+        status,
       };
       const wrapper = getWrapper({ paymentDetailsRow, userCanEdit });
 
@@ -151,13 +159,14 @@ describe(component, () => {
   });
 
   describe('when there are multiple fee records for the payment', () => {
-    const aFeeRecord = (): { facilityId: string; exporter: string } => ({
+    const aFeeRecord = (): { id: number; facilityId: string; exporter: string } => ({
+      id: 1,
       facilityId: '12345678',
       exporter: 'Test exporter',
     });
 
     it('renders as many rows as there are fee records', () => {
-      const paymentDetailsRow: PaymentDetailsTableRow = {
+      const paymentDetailsRow: PaymentDetailsRowViewModel = {
         ...aPaymentDetailsTableRow(),
         feeRecords: [aFeeRecord(), aFeeRecord(), aFeeRecord()],
       };
@@ -167,7 +176,7 @@ describe(component, () => {
     });
 
     it('renders the non-fee record payment details data only in the first row', () => {
-      const paymentDetailsRow: PaymentDetailsTableRow = {
+      const paymentDetailsRow: PaymentDetailsRowViewModel = {
         ...aPaymentDetailsTableRow(),
         feeRecords: [aFeeRecord(), aFeeRecord(), aFeeRecord()],
         payment: {
@@ -214,7 +223,7 @@ describe(component, () => {
     });
 
     it('sets the data sort value for each row to match the value in the first row for the non-fee record columns', () => {
-      const paymentDetailsRow: PaymentDetailsTableRow = {
+      const paymentDetailsRow: PaymentDetailsRowViewModel = {
         ...aPaymentDetailsTableRow(),
         feeRecords: [aFeeRecord(), aFeeRecord(), aFeeRecord()],
         payment: {
@@ -261,7 +270,7 @@ describe(component, () => {
     });
 
     it('renders every cell except those in the last row using the no border class', () => {
-      const paymentDetailsRow: PaymentDetailsTableRow = {
+      const paymentDetailsRow: PaymentDetailsRowViewModel = {
         ...aPaymentDetailsTableRow(),
         feeRecords: [aFeeRecord(), aFeeRecord(), aFeeRecord()],
       };
@@ -273,12 +282,12 @@ describe(component, () => {
     });
 
     it('renders each of the fee records listed in the supplied array', () => {
-      const feeRecords: { facilityId: string; exporter: string }[] = [
-        { facilityId: '11111111', exporter: 'Test exporter 1' },
-        { facilityId: '22222222', exporter: 'Test exporter 2' },
-        { facilityId: '33333333', exporter: 'Test exporter 3' },
+      const feeRecords: { id: number; facilityId: string; exporter: string }[] = [
+        { id: 1, facilityId: '11111111', exporter: 'Test exporter 1' },
+        { id: 1, facilityId: '22222222', exporter: 'Test exporter 2' },
+        { id: 1, facilityId: '33333333', exporter: 'Test exporter 3' },
       ];
-      const paymentDetailsRow: PaymentDetailsTableRow = {
+      const paymentDetailsRow: PaymentDetailsRowViewModel = {
         ...aPaymentDetailsTableRow(),
         feeRecords,
       };

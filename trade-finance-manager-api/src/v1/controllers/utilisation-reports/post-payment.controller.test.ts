@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode, AxiosError, AxiosResponse } from 'axios';
-import { Currency } from '@ukef/dtfs2-common';
+import { Currency, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
 import api from '../../api';
 import { PostPaymentRequest, PostPaymentRequestBody, PostPaymentRequestParams, postPayment } from './post-payment.controller';
 import { aTfmSessionUser } from '../../../../test-helpers/tfm-session-user';
@@ -40,7 +40,7 @@ describe('postPayment', () => {
   });
 
   beforeEach(() => {
-    jest.mocked(api.addPaymentToFeeRecords).mockResolvedValue({});
+    jest.mocked(api.addPaymentToFeeRecords).mockResolvedValue({ feeRecordStatus: FEE_RECORD_STATUS.MATCH });
   });
 
   it('adds a payment to the fee records', async () => {
@@ -71,8 +71,21 @@ describe('postPayment', () => {
     await postPayment(req, res);
 
     // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
-    expect(res._isEndCalled()).toBe(true);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+    expect(res._isEndCalled()).toEqual(true);
+  });
+
+  it('responds with response data', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    const mockResponse = { feeRecordStatus: FEE_RECORD_STATUS.MATCH };
+    jest.mocked(api.addPaymentToFeeRecords).mockResolvedValue(mockResponse);
+
+    // Act
+    await postPayment(req, res);
+
+    // Assert
+    expect(res._getData()).toEqual(mockResponse);
   });
 
   it('responds with a 500 if an unknown error occurs', async () => {
@@ -85,8 +98,8 @@ describe('postPayment', () => {
     await postPayment(req, res);
 
     // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-    expect(res._isEndCalled()).toBe(true);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+    expect(res._isEndCalled()).toEqual(true);
   });
 
   it('responds with a specific error code if an axios error is thrown', async () => {
@@ -102,8 +115,8 @@ describe('postPayment', () => {
     await postPayment(req, res);
 
     // Assert
-    expect(res._getStatusCode()).toBe(errorStatus);
-    expect(res._isEndCalled()).toBe(true);
+    expect(res._getStatusCode()).toEqual(errorStatus);
+    expect(res._isEndCalled()).toEqual(true);
   });
 
   it('responds with an error message', async () => {
@@ -116,7 +129,7 @@ describe('postPayment', () => {
     await postPayment(req, res);
 
     // Assert
-    expect(res._getData()).toBe('Failed to add payment');
-    expect(res._isEndCalled()).toBe(true);
+    expect(res._getData()).toEqual('Failed to add payment');
+    expect(res._isEndCalled()).toEqual(true);
   });
 });

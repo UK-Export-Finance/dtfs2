@@ -26,12 +26,11 @@ const baseEnvFilePath = path.join(basePath, '.env');
  */
 const updateEnvVars = (fileData: string): string => {
   const MONGODB_URI_REGEX = /(MONGODB_URI=.*)(dtfs-mongo)/g;
-  const MONGODB_URI_QA_REGEX = /(MONGODB_URI_QA=.*)(dtfs-mongo)/g;
   const SQL_DB_HOST_REGEX = /(SQL_DB_HOST=.*)(dtfs-sql)/g;
 
   const replacePattern = '$1localhost';
 
-  const regexPatternsToApply = [MONGODB_URI_REGEX, MONGODB_URI_QA_REGEX, SQL_DB_HOST_REGEX];
+  const regexPatternsToApply = [MONGODB_URI_REGEX, SQL_DB_HOST_REGEX];
 
   return regexPatternsToApply.reduce((updatedFileData, regexPattern) => updatedFileData.replace(regexPattern, replacePattern), fileData);
 };

@@ -2,8 +2,8 @@ import relative from '../../relativeURL';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
-import dateConstants from '../../../../../e2e-fixtures/dateConstants';
-import partials from '../../partials';
+import { oneMonthFormattedShort } from '../../../../../e2e-fixtures/dateConstants';
+import { caseSummary } from '../../partials';
 import pages from '../../pages';
 
 context('Facility page', () => {
@@ -78,7 +78,7 @@ context('Facility page', () => {
     [0, 2].forEach((i) => {
       pages.facilitiesPage.typeCell(i).contains(dealOneFacilities[0].type);
       pages.facilitiesPage.valueCell(i).contains('GBP 1,234,567,890.1');
-      pages.facilitiesPage.coverEndDateCell(i).contains(dateConstants.oneMonthFormattedShort);
+      pages.facilitiesPage.coverEndDateCell(i).contains(oneMonthFormattedShort);
       pages.facilitiesPage.facilityStageCell(i).contains('Issued');
     });
 
@@ -95,29 +95,21 @@ context('Facility page', () => {
     cy.visit(relative(`/case/${dealOne._id}/facility/${facilityId}`));
     // check that a couple of case summary elements have data
     // (no need to check all in E2E test)
-    partials.caseSummary.ukefDealId().should('be.visible');
-    partials.caseSummary
-      .ukefDealId()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(MOCK_DEAL_AIN.details.ukefDealId);
-      });
+    caseSummary.ukefDealId().should('be.visible');
 
-    partials.caseSummary.exporterName().should('be.visible');
-    partials.caseSummary
-      .exporterName()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(MOCK_DEAL_AIN.exporter.companyName);
-      });
+    cy.assertText(caseSummary.ukefDealId(), MOCK_DEAL_AIN.details.ukefDealId);
+
+    caseSummary.exporterName().should('be.visible');
+
+    cy.assertText(caseSummary.exporterName(), MOCK_DEAL_AIN.exporter.companyName);
   });
 
   it('performs a search query based on Facility ID', () => {
     cy.visit(relative('/facilities'));
     cy.url().should('eq', relative('/facilities/0'));
     const searchString = '1000000';
-    pages.facilitiesPage.searchFormInput().type(searchString);
-    pages.facilitiesPage.searchFormSubmitButton().click();
+    cy.keyboardInput(pages.facilitiesPage.searchFormInput(), searchString);
+    cy.clickSubmitButton();
 
     cy.checkFacilitiesTableRowsTotal(4);
   });
@@ -127,8 +119,8 @@ context('Facility page', () => {
     cy.url().should('eq', relative('/facilities/0'));
     const searchString = MOCK_DEAL_AIN.exporter.companyName;
 
-    pages.facilitiesPage.searchFormInput().type(searchString);
-    pages.facilitiesPage.searchFormSubmitButton().click();
+    cy.keyboardInput(pages.facilitiesPage.searchFormInput(), searchString);
+    cy.clickSubmitButton();
 
     cy.checkFacilitiesTableRowsTotal(2);
   });
@@ -138,8 +130,8 @@ context('Facility page', () => {
     cy.url().should('eq', relative('/facilities/0'));
     const searchString = MOCK_DEAL_MIA.exporter.companyName;
 
-    pages.facilitiesPage.searchFormInput().type(searchString);
-    pages.facilitiesPage.searchFormSubmitButton().click();
+    cy.keyboardInput(pages.facilitiesPage.searchFormInput(), searchString);
+    cy.clickSubmitButton();
 
     cy.checkFacilitiesTableRowsTotal(2);
   });
@@ -233,8 +225,8 @@ context('Facility page', () => {
 
     pages.facilitiesPage.coverEndDateCell(0).contains('24 Sep 2020');
     pages.facilitiesPage.coverEndDateCell(1).contains('24 Sep 2020');
-    pages.facilitiesPage.coverEndDateCell(2).contains(dateConstants.oneMonthFormattedShort);
-    pages.facilitiesPage.coverEndDateCell(3).contains(dateConstants.oneMonthFormattedShort);
+    pages.facilitiesPage.coverEndDateCell(2).contains(oneMonthFormattedShort);
+    pages.facilitiesPage.coverEndDateCell(3).contains(oneMonthFormattedShort);
   });
 
   it('sorts all columns based on Cover End Date column (DESC)', () => {
@@ -246,8 +238,8 @@ context('Facility page', () => {
     // click again for `descending` order
     pages.facilitiesPage.facilitiesTable.headings.coverEndDateSortButton().click();
 
-    pages.facilitiesPage.coverEndDateCell(0).contains(dateConstants.oneMonthFormattedShort);
-    pages.facilitiesPage.coverEndDateCell(1).contains(dateConstants.oneMonthFormattedShort);
+    pages.facilitiesPage.coverEndDateCell(0).contains(oneMonthFormattedShort);
+    pages.facilitiesPage.coverEndDateCell(1).contains(oneMonthFormattedShort);
     pages.facilitiesPage.coverEndDateCell(2).contains('24 Sep 2020');
     pages.facilitiesPage.coverEndDateCell(3).contains('24 Sep 2020');
   });

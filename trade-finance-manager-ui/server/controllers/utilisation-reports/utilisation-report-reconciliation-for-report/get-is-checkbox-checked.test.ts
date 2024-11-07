@@ -11,7 +11,7 @@ describe('getIsCheckboxChecked', () => {
     const result = isCheckboxChecked(checkboxFeeRecordIds);
 
     // Assert
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when checkbox fee record ids do not match any checked fee record ids', () => {
@@ -24,7 +24,7 @@ describe('getIsCheckboxChecked', () => {
     const result = isCheckboxChecked(checkboxFeeRecordIds);
 
     // Assert
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return false when checkbox fee record ids only partially match checked fee record ids', () => {
@@ -37,7 +37,7 @@ describe('getIsCheckboxChecked', () => {
     const result = isCheckboxChecked(checkboxFeeRecordIds);
 
     // Assert
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return true when all checkbox fee record ids match a checked fee record ids', () => {
@@ -50,6 +50,6 @@ describe('getIsCheckboxChecked', () => {
     const result = isCheckboxChecked(checkboxFeeRecordIds);
 
     // Assert
-    expect(result).toBe(true);
+    expect(result).toEqual(true);
   });
 });

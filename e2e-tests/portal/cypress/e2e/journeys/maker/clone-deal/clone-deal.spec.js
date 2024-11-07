@@ -19,7 +19,7 @@ const goToCloneDealPage = (deal) => {
   cy.url().should('include', '/clone/before-you-start');
 
   pages.beforeYouStart.true().click();
-  pages.beforeYouStart.submit().click();
+  cy.clickSubmitButton();
 
   cy.url().should('include', '/contract');
   cy.url().should('include', '/clone');
@@ -82,11 +82,11 @@ context('Clone a deal', () => {
       pages.cloneDeal.bankInternalRefNameInput().clear();
       pages.cloneDeal.additionalRefNameInput().clear();
 
-      pages.cloneDeal.submit().click();
+      cy.clickSubmitButton();
 
       cy.url().should('include', '/clone');
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_FORM_FIELDS);
+      partials.errorSummaryLinks().should('have.length', TOTAL_FORM_FIELDS);
     });
   });
 
@@ -96,9 +96,10 @@ context('Clone a deal', () => {
 
       pages.cloneDeal.bankInternalRefNameInput().type('-cloned');
       pages.cloneDeal.additionalRefNameInput().type('-cloned');
+
       pages.cloneDeal.cloneTransactionsInput().click();
 
-      pages.cloneDeal.submit().click();
+      cy.clickSubmitButton();
 
       cy.url().should('include', '/dashboard/');
 
@@ -111,51 +112,21 @@ context('Clone a deal', () => {
       cy.url().should('include', '/contract/');
 
       // confirm new supply contract ID
-      pages.contract
-        .bankInternalRefName()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal(`${deal.bankInternalRefName}-cloned`);
-        });
+      cy.assertText(pages.contract.bankInternalRefName(), `${deal.bankInternalRefName}-cloned`);
 
       // confirm new supply contract name
-      pages.contract
-        .additionalRefName()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal(`Copy of ${deal.additionalRefName}-cloned`);
-        });
+      cy.assertText(pages.contract.additionalRefName(), `Copy of ${deal.additionalRefName}-cloned`);
 
       // confirm deal status and previous status are wiped
-      pages.contract
-        .status()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Draft');
-        });
+      cy.assertText(pages.contract.status(), 'Draft');
 
-      pages.contract
-        .previousStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('-');
-        });
+      cy.assertText(pages.contract.previousStatus(), '-');
 
       // confirm About the Supply Contract is retained
-      pages.contract
-        .aboutSupplierDetailsStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
+      cy.assertText(pages.contract.aboutSupplierDetailsStatus(), 'Completed');
 
       // confirm Eligibility is now marked as 'Not started'
-      pages.contract
-        .eligibilityStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Not started');
-        });
+      cy.assertText(pages.contract.eligibilityStatus(), 'Not started');
 
       // confirm bond statuses are 'Incomplete'
       pages.contract.bondTransactionsTableRows().each((bondTableRow) => {
@@ -179,7 +150,7 @@ context('Clone a deal', () => {
       pages.cloneDeal.additionalRefNameInput();
       pages.cloneDeal.cloneTransactionsInput().click();
 
-      pages.cloneDeal.submit().click();
+      cy.clickSubmitButton();
 
       // click link to cloned deal
       partials.successMessage.successMessageLink().click();
@@ -197,8 +168,8 @@ context('Clone a deal', () => {
         cy.url().should('include', '/bond');
         cy.url().should('include', '/details');
 
-        pages.bondDetails.bondIssuerInput().type('test');
-        pages.bondDetails.submit().click();
+        cy.keyboardInput(pages.bondDetails.bondIssuerInput(), 'test');
+        cy.clickSubmitButton();
         cy.url().should('include', '/bond');
         cy.url().should('include', '/financial-details');
         cy.visit(`/contract/${clonedDealId}`);
@@ -212,7 +183,7 @@ context('Clone a deal', () => {
       pages.cloneDeal.additionalRefNameInput();
       pages.cloneDeal.cloneTransactionsInput().click();
 
-      pages.cloneDeal.submit().click();
+      cy.clickSubmitButton();
 
       // click link to cloned deal
       partials.successMessage.successMessageLink().click();
@@ -231,7 +202,7 @@ context('Clone a deal', () => {
         cy.url().should('include', '/guarantee-details');
 
         pages.loanGuaranteeDetails.facilityStageConditionalInput().click();
-        pages.loanGuaranteeDetails.submit().click();
+        cy.clickSubmitButton();
         cy.url().should('include', '/loan');
         cy.url().should('include', '/financial-details');
         cy.visit(`/contract/${clonedDealId}`);
@@ -245,7 +216,7 @@ context('Clone a deal', () => {
       pages.cloneDeal.additionalRefNameInput();
       pages.cloneDeal.cloneTransactionsInput().click();
 
-      pages.cloneDeal.submit().click();
+      cy.clickSubmitButton();
 
       // click link to cloned deal
       partials.successMessage.successMessageLink().click();
@@ -265,7 +236,7 @@ context('Clone a deal', () => {
           const bond = pages.contract.bondTransactionsTable.row(bondId);
           bond.deleteLink().click();
           cy.url().should('eq', relative(`/contract/${clonedDealId}/bond/${bondId}/delete`));
-          pages.loanDelete.submit().click();
+          cy.clickSubmitButton();
           cy.visit(`/contract/${clonedDealId}`);
         });
 
@@ -275,7 +246,7 @@ context('Clone a deal', () => {
           const loan = pages.contract.loansTransactionsTable.row(loanId);
           loan.deleteLink().click();
           cy.url().should('eq', relative(`/contract/${clonedDealId}/loan/${loanId}/delete`));
-          pages.loanDelete.submit().click();
+          cy.clickSubmitButton();
           cy.visit(`/contract/${clonedDealId}`);
         });
 

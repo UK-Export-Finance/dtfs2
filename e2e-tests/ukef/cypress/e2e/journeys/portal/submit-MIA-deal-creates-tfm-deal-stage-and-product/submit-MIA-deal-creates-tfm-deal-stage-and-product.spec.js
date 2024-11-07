@@ -50,7 +50,7 @@ context('Portal to TFM deal submission', () => {
     portalPages.contract.proceedToReview().click();
     cy.url().should('eq', relative(`/contract/${dealId}/ready-for-review`));
 
-    portalPages.contractReadyForReview.comments().type('go');
+    cy.keyboardInput(portalPages.contractReadyForReview.comments(), 'go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
 
     //---------------------------------------------------------------
@@ -82,18 +82,8 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // deal stage and product type is populated
     //---------------------------------------------------------------
-    tfmPartials.caseSummary
-      .ukefDealStage()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.contain('Application');
-      });
+    cy.assertText(tfmPartials.caseSummary.ukefDealStage(), 'Application');
 
-    tfmPartials.caseSummary
-      .ukefProduct()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.contain('BSS & EWCS');
-      });
+    cy.assertText(tfmPartials.caseSummary.ukefProduct(), 'BSS & EWCS');
   });
 });
