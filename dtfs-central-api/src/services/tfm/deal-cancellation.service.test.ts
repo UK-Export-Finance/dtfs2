@@ -13,7 +13,7 @@ import { ObjectId } from 'mongodb';
 import { DealCancellationService } from './deal-cancellation.service';
 import { aTfmUser } from '../../../test-helpers';
 
-const mockCancellationResponse = { cancelledDealUkefId: 'dealId', riskExpiredFacilityUkefIds: ['1', '2'] };
+const mockCancellationResponse = { cancelledDeal: {}, riskExpiredFacilityUkefIds: ['1', '2'] } as TfmDealCancellationResponse;
 
 const submitDealCancellationMock = jest.fn(() => Promise.resolve(mockCancellationResponse)) as jest.Mock<Promise<TfmDealCancellationResponse>>;
 const scheduleDealCancellationMock = jest.fn(() => Promise.resolve(mockCancellationResponse)) as jest.Mock<Promise<TfmDealCancellationResponse>>;

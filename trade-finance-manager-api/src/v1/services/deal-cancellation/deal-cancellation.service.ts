@@ -61,7 +61,7 @@ export class DealCancellationService {
   public static async submitDealCancellation({ dealId, cancellation, auditDetails }: SubmitDealCancellationParams) {
     console.info(`Submitting deal cancellation for ${dealId}`);
 
-    const { cancelledDealUkefId, riskExpiredFacilityUkefIds } = await api.submitDealCancellation({ dealId, cancellation, auditDetails });
+    const { cancelledDeal, riskExpiredFacilityUkefIds } = await api.submitDealCancellation({ dealId, cancellation, auditDetails });
 
     if (!riskExpiredFacilityUkefIds.length) {
       throw new Error(`Failed to find facility ids on deal ${dealId} when submitting deal cancellation`);
@@ -71,6 +71,7 @@ export class DealCancellationService {
       throw new Error(`Some UKEF facility ids were invalid when submitting deal ${dealId} for cancellation. No email has been sent`);
     }
 
-    await this.sendDealCancellationEmail(cancelledDealUkefId.toString(), cancellation, riskExpiredFacilityUkefIds);
+    // TODO: fix this once getUkefDealId is merged in
+    await this.sendDealCancellationEmail(cancelledDeal.dealSnapshot.ukefDealId as string, cancellation, riskExpiredFacilityUkefIds);
   }
 }

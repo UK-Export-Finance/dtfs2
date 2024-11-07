@@ -9,7 +9,7 @@ export class DealCancellationService {
     dealId: ObjectId | string,
     cancellation: TfmDealCancellation,
     auditDetails: TfmAuditDetails,
-  ): Promise<TfmDealCancellationResponse | undefined> {
+  ): Promise<TfmDealCancellationResponse> {
     const isDealCancellationPastOrPresent = new Date().valueOf() >= cancellation.effectiveFrom;
 
     const user = await TfmUsersRepo.findOneUserById(auditDetails.id);
