@@ -47,8 +47,7 @@ const getPartyUrn = async ({ companyRegNo, companyName }) => {
     if (partyDbInfo.status !== 200) {
       return '';
     }
-
-    return partyDbInfo.data[0].partyUrn || '';
+    return partyDbInfo?.data?.[0]?.partyUrn || '';
   }
   const partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
   if (!partyDbInfo) {
