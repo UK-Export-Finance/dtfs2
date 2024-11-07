@@ -50,6 +50,12 @@ describe(page, () => {
 
   const getWrapper = (viewModel: UtilisationReportReconciliationForReportViewModel = params) => render(viewModel);
 
+  it('should not add error prefix to page title when there are no errors', () => {
+    const wrapper = getWrapper();
+
+    wrapper.expectPageTitle().toRead('Test Bank, Nov 2023');
+  });
+
   it('should render the main heading', () => {
     const wrapper = getWrapper();
     wrapper.expectElement('[data-cy="utilisation-report-reconciliation-for-report-heading"]').toExist();
@@ -180,22 +186,30 @@ describe(page, () => {
       wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`).notToExist();
     });
 
-    it('should not render the create record correction request button when the fee record correction feature flag is not enabled', () => {
-      const wrapper = getWrapper({
+    describe('when isFeeRecordCorrectionFeatureFlagEnabled is false', () => {
+      const paramsWithIsFeeRecordCorrectionFeatureFlagEnabledFalse = {
         ...params,
         isFeeRecordCorrectionFeatureFlagEnabled: false,
-      });
+      };
 
-      wrapper.expectElement('[data-cy="create-record-correction-request-button"]').notToExist();
+      it('should not render the create record correction request button', () => {
+        const wrapper = getWrapper(paramsWithIsFeeRecordCorrectionFeatureFlagEnabledFalse);
+
+        wrapper.expectElement('[data-cy="create-record-correction-request-button"]').notToExist();
+      });
     });
 
-    it('should render the create record correction request button when the fee record correction feature flag is enabled', () => {
-      const wrapper = getWrapper({
+    describe('when isFeeRecordCorrectionFeatureFlagEnabled is true', () => {
+      const paramsWithIsFeeRecordCorrectionFeatureFlagEnabledTrue = {
         ...params,
         isFeeRecordCorrectionFeatureFlagEnabled: true,
-      });
+      };
 
-      wrapper.expectElement('[data-cy="create-record-correction-request-button"]').toExist();
+      it('should not render the create record correction request button', () => {
+        const wrapper = getWrapper(paramsWithIsFeeRecordCorrectionFeatureFlagEnabledTrue);
+
+        wrapper.expectElement('[data-cy="create-record-correction-request-button"]').toExist();
+      });
     });
 
     it('should render edit actions within the premium payments table for PDC_RECONCILE users', () => {
@@ -242,6 +256,30 @@ describe(page, () => {
       wrapper
         .expectText('[data-cy="match-success-notification-message"]')
         .toRead('The fee(s) are now at a Match state. Further payments cannot be added to the fee record.');
+    });
+
+    it('should add error prefix to page title when there is a tableDataError', () => {
+      const wrapper = getWrapper({
+        ...params,
+        premiumPayments: {
+          ...params.premiumPayments,
+          tableDataError: { text: 'some error', href: '#error-href' },
+        },
+      });
+
+      wrapper.expectPageTitle().toRead('Error - Test Bank, Nov 2023');
+    });
+
+    it('should add error prefix to page title when there is a filterError', () => {
+      const wrapper = getWrapper({
+        ...params,
+        premiumPayments: {
+          ...params.premiumPayments,
+          filterError: { text: 'some error', href: '#error-href' },
+        },
+      });
+
+      wrapper.expectPageTitle().toRead('Error - Test Bank, Nov 2023');
     });
   });
 
@@ -370,6 +408,20 @@ describe(page, () => {
       wrapper.expectText('a[href="#id"]').toRead("You've done something wrong");
       wrapper.expectElement('a[href="#other"]').toExist();
       wrapper.expectText('a[href="#other"]').toRead("You've done another thing wrong");
+    });
+
+    it('should add error prefix to page title when there is a filter error', () => {
+      const wrapper = getWrapper({
+        ...params,
+        paymentDetails: {
+          ...params.paymentDetails,
+          filterErrors: {
+            errorSummary: [{ text: 'some error', href: '#error-href' }],
+          },
+        },
+      });
+
+      wrapper.expectPageTitle().toRead('Error - Test Bank, Nov 2023');
     });
   });
 

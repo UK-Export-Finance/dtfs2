@@ -65,6 +65,22 @@ export const FeeRecordRepo = SqlDbDataSource.getRepository(FeeRecordEntity).exte
   },
 
   /**
+   * Finds fee record entities with supplied ids, with the payments and their
+   * fee records attached.
+   * @param ids - The fee record ids to search by
+   * @returns The found fee record entities with their associated payments and
+   * their fee records
+   */
+  async findByIdWithPaymentsAndFeeRecords(ids: number[]): Promise<FeeRecordEntity[]> {
+    return await this.find({
+      where: {
+        id: In(ids),
+      },
+      relations: { payments: { feeRecords: true } },
+    });
+  },
+
+  /**
    * Finds fee record entities with status 'DOES_NOT_MATCH' for a given report
    * and payment currency, with the payments attached.
    * @param reportId - The report id of the report attached to the fee records
