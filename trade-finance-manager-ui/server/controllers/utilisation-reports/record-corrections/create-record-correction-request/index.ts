@@ -20,8 +20,8 @@ export const createRecordCorrectionRequest = (req: CreateRecordCorrectionRequest
     const { user } = asUserSession(req.session);
     const { reportId } = req.params;
 
-    // TODO: In a subsequent PR, add a new endpoint which returns minimal data, called getFeeRecord (or other generic)
-    const selectedFeeRecordDetails = {
+    // TODO FN-3573: In a subsequent PR, add a new endpoint which returns minimal data, called getFeeRecord (or other generic naming).
+    const feeRecordDetails = {
       bank: {
         name: 'Test Bank',
       },
@@ -29,14 +29,24 @@ export const createRecordCorrectionRequest = (req: CreateRecordCorrectionRequest
         start: { month: 1, year: 2024 },
         end: { month: 1, year: 2024 },
       },
+      facilityId: '0012345678',
+      exporter: 'Sample Company Ltd',
+      obligorUrn: 'Sample URN',
+      obligorName: 'Sample Obligor',
     };
 
     return renderCreateRecordCorrectionRequestPage(res, {
       user,
-      reportId,
-      bank: selectedFeeRecordDetails.bank,
-      formattedReportPeriod: getFormattedReportPeriodWithLongMonth(selectedFeeRecordDetails.reportPeriod),
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
+      reportId,
+      bank: feeRecordDetails.bank,
+      formattedReportPeriod: getFormattedReportPeriodWithLongMonth(feeRecordDetails.reportPeriod),
+      feeRecord: {
+        facilityId: feeRecordDetails.facilityId,
+        exporter: feeRecordDetails.exporter,
+        obligorUrn: feeRecordDetails.obligorUrn,
+        obligorName: feeRecordDetails.obligorName,
+      },
     });
   } catch (error) {
     console.error('Failed to create record correction request', error);

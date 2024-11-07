@@ -1,0 +1,60 @@
+{% macro render(params) %}
+  {% set facilityId = params.facilityId %}
+  {% set exporter = params.exporter %}
+  {% set obligorUrn = params.obligorUrn %}
+  {% set obligorName = params.obligorName %}
+  {% set user = params.user %}
+
+  {# TODO FN-3573: Ask designers if we can add additional details to better identify a fee record. #}
+
+  <div class="block-header" data-cy="fee-record-summary-block-header">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-column-one-third">
+          <p><strong>Facility ID</strong></p>
+        </div>
+        <div class="govuk-grid-column-two-thirds" data-cy="facility-id">
+          <p>{{ facilityId }}</p>
+        </div>
+      </div>
+      <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-column-one-third">
+          <p><strong>Obligor URN</strong></p>
+        </div>
+        <div class="govuk-grid-column-two-thirds" data-cy="obligor-urn">
+          <p>{{ obligorUrn }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-column-one-third">
+          <p><strong>Exporter</strong></p>
+        </div>
+        <div class="govuk-grid-column-two-thirds" data-cy="exporter">
+          <p>{{ exporter }}</p>
+        </div>
+      </div>
+      <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-column-one-third">
+          <p><strong>Obligor name</strong></p>
+        </div>
+        <div class="govuk-grid-column-two-thirds" data-cy="obligor-name">
+          <p>{{ obligorName }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-column-one-third">
+          <p><strong>Requested by</strong></p>
+        </div>
+        <div class="govuk-grid-column-two-thirds" data-cy="requested-by">
+          <p>{{ (user.firstName + " " + user.lastName) }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endmacro %}

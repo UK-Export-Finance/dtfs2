@@ -2,6 +2,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% import "./_macros/fee-record-summary.njk" as feeRecordSummary %}
 {% extends "index.njk" %}
 {% set backLink = {"href": "/utilisation-reports/" + reportId} %}
 
@@ -24,7 +25,13 @@
     </div>
   </div>
 
-  {# TODO: Add blue box in with details of the facility (id, exporter), add (user.firstName + " " + user.lastName) in requested by field. #}
+  {{ feeRecordSummary.render({
+    facilityId: feeRecord.facilityId,
+    exporter: feeRecord.exporter,
+    obligorUrn: feeRecord.obligorUrn,
+    obligorName: feeRecord.obligorName,
+    user: user
+  }) }}
 
   <div class="govuk-grid-row govuk-!-padding-top-3">
     <div class="govuk-grid-column-one-half-from-desktop">
