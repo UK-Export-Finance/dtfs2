@@ -35,6 +35,8 @@ $govuk-new-link-styles: true;
 
 @import "./utilisation-reports.scss";
 
+@import "./block-header.scss";
+
 .js-enabled .js-hidden {
   display: none;
 }
