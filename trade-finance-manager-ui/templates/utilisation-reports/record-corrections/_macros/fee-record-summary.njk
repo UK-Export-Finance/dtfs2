@@ -5,12 +5,10 @@
   {% set obligorName = params.obligorName %}
   {% set user = params.user %}
 
-  {# TODO FN-3573: Ask designers if we can add additional details to better identify a fee record. #}
-
   <div class="block-header" data-cy="fee-record-summary-block-header">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">
-        <div class="govuk-grid-column-one-third">
+        <div class="govuk-grid-column-one-third" data-cy="facility-id-label">
           <p><strong>Facility ID</strong></p>
         </div>
         <div class="govuk-grid-column-two-thirds" data-cy="facility-id">
@@ -18,7 +16,7 @@
         </div>
       </div>
       <div class="govuk-grid-column-one-half">
-        <div class="govuk-grid-column-one-third">
+        <div class="govuk-grid-column-one-third" data-cy="obligor-urn-label">
           <p><strong>Obligor URN</strong></p>
         </div>
         <div class="govuk-grid-column-two-thirds" data-cy="obligor-urn">
@@ -29,7 +27,7 @@
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">
-        <div class="govuk-grid-column-one-third">
+        <div class="govuk-grid-column-one-third" data-cy="exporter-label">
           <p><strong>Exporter</strong></p>
         </div>
         <div class="govuk-grid-column-two-thirds" data-cy="exporter">
@@ -37,7 +35,7 @@
         </div>
       </div>
       <div class="govuk-grid-column-one-half">
-        <div class="govuk-grid-column-one-third">
+        <div class="govuk-grid-column-one-third" data-cy="obligor-name-label">
           <p><strong>Obligor name</strong></p>
         </div>
         <div class="govuk-grid-column-two-thirds" data-cy="obligor-name">
@@ -48,7 +46,7 @@
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">
-        <div class="govuk-grid-column-one-third">
+        <div class="govuk-grid-column-one-third" data-cy="requested-by-label">
           <p><strong>Requested by</strong></p>
         </div>
         <div class="govuk-grid-column-two-thirds" data-cy="requested-by">

@@ -8,15 +8,6 @@
 
 {% block pageTitle %}Create record correction request{% endblock %}
 {% block content %}
-  {% if errors.errorSummary | length %}
-    {{ govukErrorSummary({
-        titleText: "There is a problem",
-        errorList: errors.errorSummary,
-        attributes: {
-        'data-cy': 'error-summary'
-        }
-    }) }}
-  {% endif %}
   <div class="govuk-grid-row govuk-!-padding-top-7">
     <div class="govuk-grid-column-one-half">
       <span class="govuk-caption-l" data-cy="add-payment-heading-caption">{{ bank.name }},
@@ -88,15 +79,21 @@
             id: "additionalInfo",
             label: {
               text: "Provide more information",
-              classes: "govuk-label--s"
+              classes: "govuk-label--s",
+              attributes: {
+                'data-cy': 'additional-info-label'
+              }
             },
             hint: {
-              text: "For example, is the reported fee higher or lower than expected"
+              text: "For example, is the reported fee higher or lower than expected",
+              attributes: {
+                'data-cy': 'additional-info-hint'
+              }
             },
             maxlength: 500,
             rows: 4,
-            errorMessage: errors.additionalInfoErrorMessage and {
-              text: errors.additionalInfoErrorMessage
+            attributes: {
+              'data-cy': 'additional-info'
             }
         }) }}
 
