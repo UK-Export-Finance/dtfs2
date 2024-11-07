@@ -1,7 +1,7 @@
 import { Deal, DEAL_STATUS, TFM_DEAL_STAGE, TfmDeal } from '@ukef/dtfs2-common';
 import { mergeTfmValuesIntoPortalDeal } from './merge-tfm-values-into-portal-deal';
 
-const portalDeal = {
+const mockPortalDeal = {
   status: DEAL_STATUS.UKEF_ACKNOWLEDGED,
 } as Deal;
 
@@ -11,13 +11,13 @@ describe('mergeTfmValuesIntoPortalDeal', () => {
     const tfmDeal = null;
 
     // Act
-    const result = mergeTfmValuesIntoPortalDeal(portalDeal, tfmDeal);
+    const result = mergeTfmValuesIntoPortalDeal(mockPortalDeal, tfmDeal);
 
     // Assert
-    expect(result).toEqual(portalDeal);
+    expect(result).toEqual(mockPortalDeal);
   });
 
-  it('keeps the portal deal status if the tfm deal has not been cancelled', () => {
+  it(`keeps the portal deal status if the tfm deal stage is not ${TFM_DEAL_STAGE.CANCELLED}`, () => {
     // Arrange
     const tfmDeal = {
       tfm: {
@@ -26,17 +26,13 @@ describe('mergeTfmValuesIntoPortalDeal', () => {
     } as TfmDeal;
 
     // Act
-    const result = mergeTfmValuesIntoPortalDeal(portalDeal, tfmDeal);
+    const result = mergeTfmValuesIntoPortalDeal(mockPortalDeal, tfmDeal);
 
     // Assert
-    expect(result).toEqual(
-      expect.objectContaining({
-        status: portalDeal.status,
-      }),
-    );
+    expect(result).toEqual(mockPortalDeal);
   });
 
-  it('replaces the portal deal status if the tfm deal has been cancelled', () => {
+  it(`sets status to ${DEAL_STATUS.CANCELLED} if the tfm deal stage is ${TFM_DEAL_STAGE.CANCELLED}`, () => {
     // Arrange
     const tfmDeal = {
       tfm: {
@@ -45,13 +41,12 @@ describe('mergeTfmValuesIntoPortalDeal', () => {
     } as TfmDeal;
 
     // Act
-    const result = mergeTfmValuesIntoPortalDeal(portalDeal, tfmDeal);
+    const result = mergeTfmValuesIntoPortalDeal(mockPortalDeal, tfmDeal);
 
     // Assert
-    expect(result).toEqual(
-      expect.objectContaining({
-        status: DEAL_STATUS.CANCELLED,
-      }),
-    );
+    expect(result).toEqual({
+      ...mockPortalDeal,
+      status: DEAL_STATUS.CANCELLED,
+    });
   });
 });
