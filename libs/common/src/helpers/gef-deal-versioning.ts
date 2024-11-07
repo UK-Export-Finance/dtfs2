@@ -26,9 +26,13 @@ type Feature = 'FACILITY_END_DATE';
 /**
  * GEF deals are versioned according to what features they include and support
  *
+ *
  * | Version number | Features introduced |
  * |----------------|---------------------|
  * | 1              | Facility end date   |
+ *
+ * NOTE: If features are added to previous versions then the existing in-flight deals on the previous
+ * versions may not be supported & they will need updating.
  */
 const minimumSupportedVersions: Record<Feature, number> = {
   FACILITY_END_DATE: 1,

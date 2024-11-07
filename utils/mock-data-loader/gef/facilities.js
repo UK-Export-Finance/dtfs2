@@ -1,4 +1,4 @@
-const { add } = require('date-fns');
+const { add, sub } = require('date-fns');
 const { CURRENCY, FACILITY_PROVIDED_DETAILS, FACILITY_TYPE, isFacilityEndDateEnabledOnGefVersion, getCurrentGefDealVersion } = require('@ukef/dtfs2-common');
 
 /**
@@ -111,7 +111,7 @@ const FACILITIES = [
       name: 'This Contingent facility 1',
       startOnDayOfNotice: false,
       shouldCoverStartOnSubmission: false,
-      coverStartDate: new Date(),
+      coverStartDate: sub(new Date(), { days: 1 }),
       coverEndDate: add(new Date(), { months: 1 }),
       monthsOfCover: 48,
       details: [FACILITY_PROVIDED_DETAILS.OTHER],

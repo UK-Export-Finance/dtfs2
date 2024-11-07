@@ -11,7 +11,7 @@ import {
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { handleFeeRecordGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
-import { aReportPeriod, keyingSheetCalculationFacilityValues } from '../../../../../../test-helpers';
+import { aReportPeriod, keyingSheetCalculationFacilityValues, aFacility } from '../../../../../../test-helpers';
 import { calculateFixedFeeAdjustment, calculatePrincipalBalanceAdjustment, updateFacilityUtilisationData, calculateFixedFee } from '../helpers';
 import { calculateUkefShareOfUtilisation, getKeyingSheetCalculationFacilityValues } from '../../../../../helpers';
 
@@ -38,6 +38,16 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
   };
 
   const aMatchingFeeRecord = () => FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withStatus(FEE_RECORD_STATUS.MATCH).build();
+
+  const facility = aFacility();
+
+  const tfmFacilityReturnedValues = {
+    coverEndDate: new Date(),
+    coverStartDate: new Date(),
+    dayCountBasis: facility.dayCountBasis,
+    interestPercentage: facility.interestPercentage,
+    coverPercentage: facility.coverPercentage,
+  };
 
   beforeEach(() => {
     jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(10);
@@ -335,6 +345,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
+      expect(calculateUkefShareOfUtilisation).toHaveBeenCalledWith(feeRecord.facilityUtilisation, tfmFacilityReturnedValues.coverPercentage);
       expect(updateFacilityUtilisationData).toHaveBeenCalledWith(facilityUtilisationDataEntity, {
         fixedFee,
         reportPeriod,

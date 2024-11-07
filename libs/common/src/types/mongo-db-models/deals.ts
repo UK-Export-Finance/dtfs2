@@ -8,9 +8,11 @@ type BssEwcsDeal = AnyObject & {
   };
 };
 
-type GefDeal = AnyObject & {
+export type GefDeal = AnyObject & {
   dealType: typeof DEAL_TYPE.GEF;
-  ukefDealId: string;
+  ukefDealId: string | null;
+  eligibility: AnyObject;
+  exporter: AnyObject;
 };
 
 /**

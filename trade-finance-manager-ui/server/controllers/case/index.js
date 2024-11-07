@@ -20,65 +20,70 @@ const {
 } = CONSTANTS;
 
 const getCaseDeal = async (req, res) => {
-  const dealId = req.params._id;
-  const { userToken } = req.session;
+  try {
+    const dealId = req.params._id;
+    const { userToken } = req.session;
 
-  const { user } = asUserSession(req.session);
+    const { user } = asUserSession(req.session);
 
-  const deal = await api.getDeal(dealId, userToken);
-  const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
+    const deal = await api.getDeal(dealId, userToken);
+    const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
 
-  if (!deal) {
-    return res.redirect('/not-found');
-  }
-
-  if (!amendments || !Array.isArray(amendments)) {
-    console.error('Unable to get amendments for deal id %s', dealId);
-    return res.redirect('/not-found');
-  }
-
-  const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENT_STATUS.IN_PROGRESS);
-  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
-  if (hasAmendmentInProgress) {
-    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
-  }
-
-  const { submissionType } = deal.dealSnapshot;
-
-  const dealCancellationIsEnabled = isDealCancellationEnabled(submissionType, user);
-
-  let showDealCancelButton = false;
-  let hasDraftCancellation = false;
-
-  let successMessage = getFlashSuccessMessage(req);
-
-  if (dealCancellationIsEnabled) {
-    const cancellation = await api.getDealCancellation(dealId, userToken);
-    showDealCancelButton = canDealBeCancelled(cancellation.status);
-    hasDraftCancellation = isDealCancellationInDraft(cancellation.status);
-
-    if (cancellation.status === TFM_DEAL_CANCELLATION_STATUS.SCHEDULED) {
-      const { ukefDealId } = deal.dealSnapshot.details;
-      const formattedDate = format(new Date(cancellation.effectiveFrom), 'd MMMM yyyy');
-
-      successMessage = `Deal ${ukefDealId} scheduled for cancellation on ${formattedDate}`;
+    if (!deal) {
+      return res.redirect('/not-found');
     }
-  }
 
-  return res.render('case/deal/deal.njk', {
-    deal: deal.dealSnapshot,
-    tfm: deal.tfm,
-    successMessage,
-    activePrimaryNavigation: 'manage work',
-    activeSubNavigation: 'deal',
-    dealId,
-    user: req.session.user,
-    amendments,
-    amendmentsInProgress,
-    hasAmendmentInProgress,
-    showDealCancelButton,
-    hasDraftCancellation,
-  });
+    if (!amendments || !Array.isArray(amendments)) {
+      console.error('Unable to get amendments for deal id %s', dealId);
+      return res.redirect('/not-found');
+    }
+
+    const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENT_STATUS.IN_PROGRESS);
+    const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+    if (hasAmendmentInProgress) {
+      deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+    }
+
+    const { submissionType } = deal.dealSnapshot;
+
+    const dealCancellationIsEnabled = isDealCancellationEnabled(submissionType, user);
+
+    let showDealCancelButton = false;
+    let hasDraftCancellation = false;
+
+    let successMessage = getFlashSuccessMessage(req);
+
+    if (dealCancellationIsEnabled) {
+      const cancellation = await api.getDealCancellation(dealId, userToken);
+      showDealCancelButton = canDealBeCancelled(cancellation.status);
+      hasDraftCancellation = isDealCancellationInDraft(cancellation.status);
+
+      if (cancellation.status === TFM_DEAL_CANCELLATION_STATUS.SCHEDULED) {
+        const { ukefDealId } = deal.dealSnapshot.details;
+        const formattedDate = format(new Date(cancellation.effectiveFrom), 'd MMMM yyyy');
+
+        successMessage = `Deal ${ukefDealId} scheduled for cancellation on ${formattedDate}`;
+      }
+    }
+
+    return res.render('case/deal/deal.njk', {
+      deal: deal.dealSnapshot,
+      tfm: deal.tfm,
+      successMessage,
+      activePrimaryNavigation: 'manage work',
+      activeSubNavigation: 'deal',
+      dealId,
+      user: req.session.user,
+      amendments,
+      amendmentsInProgress,
+      hasAmendmentInProgress,
+      showDealCancelButton,
+      hasDraftCancellation,
+    });
+  } catch (error) {
+    console.error('Unable to render deal %o', error);
+    return res.render('_partials/problem-with-service.njk');
+  }
 };
 
 const getCaseTasks = async (req, res) => {
