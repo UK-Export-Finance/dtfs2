@@ -98,6 +98,9 @@ describe('feature flagged getPartyUrn', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+  });
+
+  beforeALL(() => {
     process.env = {
       ...originalEnv,
       AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED: 'true',
