@@ -20,7 +20,7 @@ const utilisationReportPage = {
       header: {
         totalReportedPayments: () => cy.get('th[data-cy="premium-payments-table--total-reported-payments-header"] button'),
         totalPaymentsReceived: () => cy.get('th[data-cy="premium-payments-table--total-payments-received-header"] button'),
-        status: () => cy.get('th[data-cy="premium-payments-table--status"] button'),
+        status: () => cy.get('th[data-cy="premium-payments-table--status-header"] button'),
       },
       row: (feeRecordId) => cy.get(`tr[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`),
       selectAllCheckboxContainer: () => cy.get('[data-cy="premium-payments-select-all-checkbox-container"]'),
