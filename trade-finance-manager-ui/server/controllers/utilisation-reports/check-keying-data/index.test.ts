@@ -6,6 +6,7 @@ import api from '../../../api';
 import { CheckKeyingDataViewModel, FeeRecordToKeyViewModelItem } from '../../../types/view-models';
 import { aFeeRecordsToKeyResponseBody } from '../../../../test-helpers';
 import { FeeRecordToKey, FeeRecordsToKeyResponseBody } from '../../../api-response-types';
+import { GENERATE_KEYING_DATA_ERROR_KEY } from '../../../constants/premium-payment-tab-error-keys';
 
 console.error = jest.fn();
 
@@ -59,7 +60,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
         await postCheckKeyingData(req, res);
 
         // Assert
-        expect(req.session.generateKeyingDataErrorKey).toEqual('no-matching-fee-records');
+        expect(req.session.generateKeyingDataErrorKey).toEqual(GENERATE_KEYING_DATA_ERROR_KEY.NO_MATCHING_FEE_RECORDS);
       });
 
       it("redirects to '/utilisation-reports/:reportId'", async () => {

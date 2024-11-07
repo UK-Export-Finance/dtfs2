@@ -2,8 +2,9 @@ import httpMocks from 'node-mocks-http';
 import { Currency, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { validatePostAddPaymentRequestBody } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../test-mocks/mock-tfm-session-user';
-import { AddPaymentErrorKey } from '../../controllers/utilisation-reports/helpers';
 import { PremiumPaymentsTableCheckboxId } from '../../types/premium-payments-table-checkbox-id';
+import { ADD_PAYMENT_ERROR_KEY } from '../../constants/premium-payment-tab-error-keys';
+import { AddPaymentErrorKey } from '../../types/premium-payments-tab-error-keys';
 
 console.error = jest.fn();
 
@@ -77,12 +78,12 @@ describe('validatePostAddPaymentRequestBody', () => {
       expect(res._getRedirectUrl()).toEqual(REDIRECT_URL);
     });
 
-    it(`populates the session with the 'no-fee-records-selected' error and no checked checkbox ids`, () => {
+    it(`populates the session with the '${ADD_PAYMENT_ERROR_KEY.NO_FEE_RECORDS_SELECTED}' error and no checked checkbox ids`, () => {
       // Act
       validatePostAddPaymentRequestBody(req, res, next);
 
       // Assert
-      assertRequestSessionHasBeenPopulated(req, 'no-fee-records-selected', []);
+      assertRequestSessionHasBeenPopulated(req, ADD_PAYMENT_ERROR_KEY.NO_FEE_RECORDS_SELECTED, []);
     });
 
     it("does not call the 'next' function", () => {
@@ -123,7 +124,7 @@ describe('validatePostAddPaymentRequestBody', () => {
       expect(res._getRedirectUrl()).toEqual(`${REDIRECT_URL}?premiumPaymentsFacilityId=1234`);
     });
 
-    it(`populates the session with the 'different-fee-record-payment-currencies' error and the checked checkbox ids`, () => {
+    it(`populates the session with the '${ADD_PAYMENT_ERROR_KEY.DIFFERENT_PAYMENT_CURRENCIES}' error and the checked checkbox ids`, () => {
       // Arrange
       const { req, res } = getHttpMocks();
       req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
@@ -132,7 +133,7 @@ describe('validatePostAddPaymentRequestBody', () => {
       validatePostAddPaymentRequestBody(req, res, next);
 
       // Assert
-      assertRequestSessionHasBeenPopulated(req, 'different-fee-record-payment-currencies', checkedCheckboxIds);
+      assertRequestSessionHasBeenPopulated(req, ADD_PAYMENT_ERROR_KEY.DIFFERENT_PAYMENT_CURRENCIES, checkedCheckboxIds);
     });
 
     it("does not call the 'next' function", () => {
@@ -177,7 +178,7 @@ describe('validatePostAddPaymentRequestBody', () => {
       expect(res._getRedirectUrl()).toEqual(`${REDIRECT_URL}?premiumPaymentsFacilityId=1234`);
     });
 
-    it(`populates the session with the 'different-fee-record-statuses' error and the checked checkbox ids`, () => {
+    it(`populates the session with the '${ADD_PAYMENT_ERROR_KEY.DIFFERENT_STATUSES}' error and the checked checkbox ids`, () => {
       // Arrange
       const { req, res } = getHttpMocks();
       req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
@@ -186,7 +187,7 @@ describe('validatePostAddPaymentRequestBody', () => {
       validatePostAddPaymentRequestBody(req, res, next);
 
       // Assert
-      assertRequestSessionHasBeenPopulated(req, 'different-fee-record-statuses', checkedCheckboxIds);
+      assertRequestSessionHasBeenPopulated(req, ADD_PAYMENT_ERROR_KEY.DIFFERENT_STATUSES, checkedCheckboxIds);
     });
 
     it("does not call the 'next' function", () => {
@@ -219,12 +220,12 @@ describe('validatePostAddPaymentRequestBody', () => {
       expect(res._getRedirectUrl()).toEqual(REDIRECT_URL);
     });
 
-    it(`populates the session with the 'multiple-does-not-match-selected' error and the checked checkbox ids`, () => {
+    it(`populates the session with the '${ADD_PAYMENT_ERROR_KEY.MULTIPLE_DOES_NOT_MATCH_SELECTED}' error and the checked checkbox ids`, () => {
       // Act
       validatePostAddPaymentRequestBody(req, res, next);
 
       // Assert
-      assertRequestSessionHasBeenPopulated(req, 'multiple-does-not-match-selected', checkedCheckboxIds);
+      assertRequestSessionHasBeenPopulated(req, ADD_PAYMENT_ERROR_KEY.MULTIPLE_DOES_NOT_MATCH_SELECTED, checkedCheckboxIds);
     });
 
     it("does not call the 'next' function", () => {

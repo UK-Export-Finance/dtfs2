@@ -20,6 +20,7 @@ type ComponentRendererParams = {
   feeRecordPaymentGroups: PremiumPaymentsViewModelItem[];
   enablePaymentsReceivedSorting: boolean;
   hasSelectableRows: boolean;
+  errorMessage?: string;
 };
 
 const render = componentRenderer<ComponentRendererParams>(component);
@@ -70,6 +71,21 @@ describe(component, () => {
   const getWrapper = () => render(defaultRendererParams());
 
   const numericCellClass = 'govuk-table__cell--numeric';
+
+  it('should not render error message if none provided', () => {
+    const wrapper = render({ ...defaultRendererParams(), errorMessage: undefined });
+
+    wrapper.expectElement('[data-cy="premium-payments-table--error"]').notToExist();
+  });
+
+  it('should render error message if provided', () => {
+    const wrapper = render({ ...defaultRendererParams(), errorMessage: 'This is an error message' });
+
+    wrapper.expectElement('[data-cy="premium-payments-table--error"]').toExist();
+    wrapper.expectText('[data-cy="premium-payments-table--error"]').toRead('Error: This is an error message');
+    wrapper.expectText('[data-cy="premium-payments-table--error"] span').toRead('Error:');
+    wrapper.expectElement('[data-cy="premium-payments-table--error"] span').hasClass('govuk-visually-hidden');
+  });
 
   it('should render all table headings', () => {
     const wrapper = getWrapper();

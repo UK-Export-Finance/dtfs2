@@ -7,6 +7,7 @@
   {% set enablePaymentsReceivedSorting = params.enablePaymentsReceivedSorting %}
   {% set userCanEdit = params.userCanEdit %}
   {% set hasSelectableRows = params.hasSelectableRows %}
+  {% set errorMessage = params.errorMessage %}
 
   {% macro tableHeader(params) %}
     {% set headerText = params.headerText %}
@@ -40,7 +41,14 @@
     {% endif %}
   {% endmacro %}
 
-  <table class="govuk-table premium-payments-table" data-module="moj-sortable-table" data-cy="premium-payments-table" id="premium-payments-table">
+  <table class="govuk-table premium-payments-table" data-module="moj-sortable-table" data-cy="premium-payments-table">
+    {% if errorMessage %}
+      <caption class="govuk-table__caption govuk-table__caption--m" id="premium-payments-table-error" data-cy="premium-payments-table--error" tabindex="-1">
+        <p class="govuk-error-message govuk-!-margin-bottom-0">
+          <span class="govuk-visually-hidden">Error: </span>{{ errorMessage}}
+        </p>
+      </caption>
+    {% endif %}
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
         {{ tableHeader({ headerText: 'Facility ID', isNumericColumn: false, enableSorting: false }) }}
