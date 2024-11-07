@@ -1,8 +1,17 @@
-import { ACTIVITY_TYPES, InvalidAuditDetailsError, TfmActivity, TfmAuditDetails, TfmDealCancellation, TfmDealCancellationResponse } from '@ukef/dtfs2-common';
+import {
+  ACTIVITY_TYPES,
+  DEAL_STATUS,
+  InvalidAuditDetailsError,
+  TfmActivity,
+  TfmAuditDetails,
+  TfmDealCancellation,
+  TfmDealCancellationResponse,
+} from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
-import { getUnixTime } from 'date-fns';
+import { endOfDay, getUnixTime, isAfter, toDate } from 'date-fns';
 import { TfmDealCancellationRepo } from '../../repositories/tfm-deals-repo';
 import { TfmUsersRepo } from '../../repositories/tfm-users-repo';
+import { PortalDealService } from '../portal/update-deal-status.service';
 
 export class DealCancellationService {
   public static async cancelDeal(
@@ -30,7 +39,16 @@ export class DealCancellationService {
     };
 
     if (isDealCancellationPastOrPresent) {
-      return await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation, activity, auditDetails });
+      const response = await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation, activity, auditDetails });
+
+      const effectiveFromDate = toDate(cancellation.effectiveFrom);
+      const endOfToday = endOfDay(new Date());
+
+      if (!isAfter(effectiveFromDate, endOfToday)) {
+        await PortalDealService.updatePortalDealStatus(dealId, DEAL_STATUS.CANCELLED, auditDetails, response.cancelledDeal.dealSnapshot.dealType);
+      }
+
+      return response;
     }
 
     return await TfmDealCancellationRepo.scheduleDealCancellation({ dealId, cancellation, activity, auditDetails });
