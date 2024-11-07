@@ -13,6 +13,7 @@ export * from './company-registration-number';
 export * from './keying-sheet-row-status';
 export * from './amendments';
 export * from './api-error-code';
+export * from './bond-type';
 export * from './facility-type';
 export * from './deal-type';
 export * from './facility-provided-details';
