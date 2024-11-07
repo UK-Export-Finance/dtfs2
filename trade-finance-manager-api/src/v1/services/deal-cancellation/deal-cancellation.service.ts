@@ -1,5 +1,5 @@
 import { endOfDay, format, isAfter, toDate } from 'date-fns';
-import { AuditDetails, DATE_FORMATS, TEAMS, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { AuditDetails, DATE_FORMATS, DEAL_STATUS, DEAL_TYPE, TEAMS, TfmDealCancellation } from '@ukef/dtfs2-common';
 import sendTfmEmail from '../send-tfm-email';
 import { CANCEL_DEAL_PAST_DATE, CANCEL_DEAL_FUTURE_DATE } from '../../../constants/email-template-ids';
 import * as api from '../../api';
@@ -62,6 +62,17 @@ export class DealCancellationService {
     console.info(`Submitting deal cancellation for ${dealId}`);
 
     const { cancelledDeal, riskExpiredFacilityUkefIds } = await api.submitDealCancellation({ dealId, cancellation, auditDetails });
+
+    const effectiveFromDate = toDate(cancellation.effectiveFrom);
+    const endOfToday = endOfDay(new Date());
+
+    if (!isAfter(effectiveFromDate, endOfToday)) {
+      if (cancelledDeal.dealSnapshot.dealType === DEAL_TYPE.GEF) {
+        await api.updatePortalGefDealStatus({ dealId, status: DEAL_STATUS.CANCELLED, auditDetails });
+      } else {
+        await api.updatePortalBssDealStatus({ dealId, status: DEAL_STATUS.CANCELLED, auditDetails });
+      }
+    }
 
     if (!riskExpiredFacilityUkefIds.length) {
       throw new Error(`Failed to find facility ids on deal ${dealId} when submitting deal cancellation`);
