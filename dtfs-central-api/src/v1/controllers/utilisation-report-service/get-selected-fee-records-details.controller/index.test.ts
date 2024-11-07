@@ -71,7 +71,7 @@ describe('get selected fee records details controller', () => {
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
-    expect(res._getData()).toEqual(expect.stringContaining('Selected fee records must all have the same payment currency'));
+    expect(res._getData()).toEqual(expect.stringContaining('Fee records must all have the same payment currency'));
   });
 
   it('responds with a 400 when no fee records are requested', async () => {

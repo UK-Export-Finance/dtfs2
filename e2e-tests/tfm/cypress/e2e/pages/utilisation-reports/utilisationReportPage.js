@@ -15,6 +15,7 @@ const utilisationReportPage = {
     submitFacilityIdFilter: () => cy.get('button[data-cy="premium-payments-facility-filter-submit-button"]').click(),
     generateKeyingDataButton: () => cy.get('[data-cy="generate-keying-data-button"]'),
     addAPaymentButton: () => cy.get('[data-cy="add-a-payment-button"]'),
+    createRecordCorrectionRequestButton: () => cy.get('[data-cy="create-record-correction-request-button"]'),
     premiumPaymentsTable: {
       header: {
         totalReportedPayments: () => cy.get('th[data-cy="premium-payments-table--total-reported-payments-header"] button'),
