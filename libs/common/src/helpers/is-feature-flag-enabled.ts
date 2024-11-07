@@ -16,7 +16,6 @@ const featureFlagsSchema = z.object({
   FF_TFM_DEAL_CANCELLATION_ENABLED: featureFlagOptions,
   FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: featureFlagOptions,
   FF_TFM_SSO_ENABLED: featureFlagOptions,
-  AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED: featureFlagOptions,
 });
 
 export type FeatureFlag = keyof z.infer<typeof featureFlagsSchema>;
