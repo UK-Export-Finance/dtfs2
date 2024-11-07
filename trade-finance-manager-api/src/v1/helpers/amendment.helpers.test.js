@@ -511,7 +511,6 @@ describe('sendFirstTaskEmail()', () => {
   beforeEach(() => {
     sendEmailApiSpy.mockClear();
     updateFacilityAmendmentSpy.mockClear();
-    jest.clearAllMocks();
 
     api.sendEmail = sendEmailApiSpy;
     api.updateFacilityAmendment = updateFacilityAmendmentSpy;
@@ -573,17 +572,17 @@ describe('sendFirstTaskEmail()', () => {
     expect(sendEmailApiSpy).not.toHaveBeenCalled();
     expect(updateFacilityAmendmentSpy).not.toHaveBeenCalled();
 
-    const error = new Error(`Invalid imperative arguments provided for ${amendmentVariables.noTaskVariables._id}`);
+    const error = new Error(`Invalid imperative arguments provided for ${amendmentVariables.noTaskVariables._id}, unable to send first task email from TFM.`);
     expect(console.error).toHaveBeenCalledWith('Error sending first amendment task email %o', error);
   });
 
-  it('should throw an error if deal id is missing', async () => {
-    await sendFirstTaskEmail(amendmentVariables.dealWithNoId, mockAuditDetails);
+  it('should throw an error if deal id is missing for either deal type', async () => {
+    await sendFirstTaskEmail(amendmentVariables.dealWithNoMongoId, mockAuditDetails);
 
     expect(sendEmailApiSpy).not.toHaveBeenCalled();
     expect(updateFacilityAmendmentSpy).not.toHaveBeenCalled();
 
-    const error = new Error(`Invalid imperative arguments provided for ${amendmentVariables.dealWithNoId._id}`);
+    const error = new Error(`Invalid imperative arguments provided for ${amendmentVariables.dealWithNoMongoId._id}, unable to send first task email from TFM.`);
     expect(console.error).toHaveBeenCalledWith('Error sending first amendment task email %o', error);
   });
 
@@ -593,7 +592,7 @@ describe('sendFirstTaskEmail()', () => {
     expect(sendEmailApiSpy).not.toHaveBeenCalled();
     expect(updateFacilityAmendmentSpy).not.toHaveBeenCalled();
 
-    const error = new Error(`Invalid imperative arguments provided for ${amendmentVariables.noUkefDealId._id}`);
+    const error = new Error(`Invalid imperative arguments provided for ${amendmentVariables.noUkefDealId._id}, unable to send first task email from TFM.`);
     expect(console.error).toHaveBeenCalledWith('Error sending first amendment task email %o', error);
   });
 
@@ -603,7 +602,9 @@ describe('sendFirstTaskEmail()', () => {
     expect(sendEmailApiSpy).not.toHaveBeenCalled();
     expect(updateFacilityAmendmentSpy).not.toHaveBeenCalled();
 
-    const error = new Error(`Invalid imperative arguments provided for ${amendmentVariables.dealWithNoCompanyName._id}`);
+    const error = new Error(
+      `Invalid imperative arguments provided for ${amendmentVariables.dealWithNoCompanyName._id}, unable to send first task email from TFM.`,
+    );
     expect(console.error).toHaveBeenCalledWith('Error sending first amendment task email %o', error);
   });
 
@@ -613,7 +614,7 @@ describe('sendFirstTaskEmail()', () => {
     expect(sendEmailApiSpy).not.toHaveBeenCalled();
     expect(updateFacilityAmendmentSpy).not.toHaveBeenCalled();
 
-    const error = new Error(`Invalid imperative arguments provided for ${amendmentVariables.noTaskVariables._id}`);
+    const error = new Error(`Invalid imperative arguments provided for ${amendmentVariables.noTaskVariables._id}, unable to send first task email from TFM.`);
     expect(console.error).toHaveBeenCalledWith('Error sending first amendment task email %o', error);
   });
 });
