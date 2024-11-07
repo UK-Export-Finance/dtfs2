@@ -184,7 +184,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-20.04-16core
+    runs-on: [self-hosted, shard]
 
     strategy:
       # Do not cancel in-progress jobs upon failure
