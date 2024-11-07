@@ -22,7 +22,7 @@ export const lookup = async (req: Request, res: Response) => {
   const response: { status: number; data: unknown } = await axios({
     method: 'get',
     url: AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED === 'true'
-      ? `${APIM_MDM_URL}customers/direct?companyRegistrationNumber=${companyReg}`
+      ? `${APIM_MDM_URL}customers/salesforce?companyRegistrationNumber=${companyReg}`
       : `${APIM_MDM_URL}customers?companyReg=${companyReg}`,
     headers,
   }).catch((error: AxiosError) => {
