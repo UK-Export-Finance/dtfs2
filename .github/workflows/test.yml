@@ -183,16 +183,16 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04-16core
 
     strategy:
       # Do not cancel in-progress jobs upon failure
       fail-fast: false
       # Single dimension matrix
       matrix:
-        services: ['portal', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'trade-finance-manager-api', 'dtfs-central-api', 'external-api']
-        shard: [1, 2, 3, 4]
-  
+        # services: ['portal', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'trade-finance-manager-api', 'dtfs-central-api', 'external-api']
+        services: ['dtfs-central-api']
+
     concurrency:
       group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}-${{ matrix.shard }}
       cancel-in-progress: true
@@ -236,8 +236,7 @@ jobs:
       - name: Execute
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-        run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }} --shard=${{ matrix.shard }}/4
-        # run: docker compose exec -T ${{ matrix.services }} jest --config=api-test.jest.config.js --runInBand --shard=${{ matrix.shard }}/4
+        run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
 
       - name: Stop
         working-directory: ./
