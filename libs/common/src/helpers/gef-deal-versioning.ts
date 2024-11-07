@@ -31,8 +31,8 @@ type Feature = 'FACILITY_END_DATE';
  * |----------------|---------------------|
  * | 1              | Facility end date   |
  *
- * NOTE: If features are added to previous versions then the existing in-flight deals may not
- * be supported & they will need updating.
+ * NOTE: If features are added to previous versions then the existing in-flight deals on the previous
+ * versions may not be supported & they will need updating.
  */
 const minimumSupportedVersions: Record<Feature, number> = {
   FACILITY_END_DATE: 1,
