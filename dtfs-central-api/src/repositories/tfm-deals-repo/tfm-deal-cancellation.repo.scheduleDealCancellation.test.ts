@@ -1,16 +1,14 @@
 import {
   DEAL_SUBMISSION_TYPE,
-  DEAL_TYPE,
   DealNotFoundError,
   InvalidDealIdError,
   MONGO_DB_COLLECTIONS,
   TFM_DEAL_CANCELLATION_STATUS,
   TFM_DEAL_STAGE,
   TfmActivity,
-  TfmDeal,
 } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import { ObjectId, ModifyResult, WithoutId } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import { getUnixTime } from 'date-fns';
 import { when } from 'jest-when';
 import { mongoDbClient as db } from '../../drivers/db-client';
@@ -18,8 +16,6 @@ import { TfmDealCancellationRepo } from './tfm-deal-cancellation.repo';
 import { aTfmUser } from '../../../test-helpers';
 
 const dealId = new ObjectId();
-
-const mockUkefDealId = 'ukefDealId';
 
 const mockBankRequestDate = getUnixTime(new Date('2024-01-01'));
 const mockEffectiveFrom = getUnixTime(new Date('2025-02-02'));
@@ -34,7 +30,7 @@ const auditDetails = generateTfmAuditDetails(tfmUserId);
 const mockActivity = { text: 'This is an activity' } as TfmActivity;
 
 describe('tfm-deals-cancellation-repo', () => {
-  const findOneAndUpdateMock = jest.fn();
+  const updateOneMock = jest.fn();
   const findMock = jest.fn();
   const findToArrayMock = jest.fn();
   const getCollectionMock = jest.fn();
@@ -54,11 +50,11 @@ describe('tfm-deals-cancellation-repo', () => {
     });
 
     beforeEach(() => {
-      const mockModifyResult = { value: { dealSnapshot: { ukefDealId: mockUkefDealId, dealType: DEAL_TYPE.GEF } } } as ModifyResult<WithoutId<TfmDeal>>;
-      findOneAndUpdateMock.mockResolvedValue(mockModifyResult);
+      const mockUpdateResult = { matchedCount: 1 };
+      updateOneMock.mockResolvedValue(mockUpdateResult);
 
       when(getCollectionMock).calledWith(MONGO_DB_COLLECTIONS.TFM_DEALS).mockResolvedValue({
-        findOneAndUpdate: findOneAndUpdateMock,
+        updateOne: updateOneMock,
       });
 
       findToArrayMock.mockResolvedValue(mockMatchedFacilities);
@@ -102,11 +98,11 @@ describe('tfm-deals-cancellation-repo', () => {
 
     it('throws a DealNotFoundError if no matching deal is found', async () => {
       // Arrange
-      const mockFailedUpdateResult = { value: null } as ModifyResult<WithoutId<TfmDeal>>;
+      const mockFailedUpdateResult = { matchedCount: 0 };
 
-      findOneAndUpdateMock.mockResolvedValue(mockFailedUpdateResult);
+      updateOneMock.mockResolvedValue(mockFailedUpdateResult);
 
-      getCollectionMock.mockResolvedValue({ findOneAndUpdate: findOneAndUpdateMock });
+      getCollectionMock.mockResolvedValue({ updateOne: updateOneMock });
 
       // Assert
       await expect(
@@ -115,7 +111,7 @@ describe('tfm-deals-cancellation-repo', () => {
     });
 
     describe('updating the deal stage', () => {
-      it('calls findOneAndUpdate with the expected parameters', async () => {
+      it('calls updateOne with the expected parameters', async () => {
         // Act
         await TfmDealCancellationRepo.scheduleDealCancellation({
           dealId,
@@ -143,8 +139,8 @@ describe('tfm-deals-cancellation-repo', () => {
           },
         };
 
-        expect(findOneAndUpdateMock).toHaveBeenCalledTimes(1);
-        expect(findOneAndUpdateMock).toHaveBeenCalledWith(expectedFilter, expectedUpdate);
+        expect(updateOneMock).toHaveBeenCalledTimes(1);
+        expect(updateOneMock).toHaveBeenCalledWith(expectedFilter, expectedUpdate);
       });
     });
 
@@ -178,7 +174,7 @@ describe('tfm-deals-cancellation-repo', () => {
       });
 
       // Assert
-      expect(result).toEqual({ cancelledDealUkefId: mockUkefDealId, riskExpiredFacilityUkefIds: [matchingFacilityId1, matchingFacilityId2] });
+      expect(result).toEqual({ cancelledDealUkefId: dealId, riskExpiredFacilityUkefIds: [matchingFacilityId1, matchingFacilityId2] });
     });
   });
 });

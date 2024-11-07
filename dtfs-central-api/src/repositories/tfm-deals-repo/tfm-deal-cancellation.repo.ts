@@ -15,7 +15,6 @@ import {
   TfmDealCancellationWithStatus,
   TfmDealWithCancellation,
   TfmFacility,
-  getUkefDealId,
 } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { flatten } from 'mongo-dot-notation';
@@ -178,7 +177,7 @@ export class TfmDealCancellationRepo {
       };
     }
 
-    const { value: deal } = await dealCollection.findOneAndUpdate(
+    const updateDeal = await dealCollection.updateOne(
       {
         _id: { $eq: new ObjectId(dealId) },
         'tfm.stage': { $ne: TFM_DEAL_STAGE.CANCELLED },
@@ -190,7 +189,7 @@ export class TfmDealCancellationRepo {
       update,
     );
 
-    if (!deal) {
+    if (!updateDeal?.matchedCount) {
       throw new DealNotFoundError(dealId.toString());
     }
 
@@ -206,10 +205,9 @@ export class TfmDealCancellationRepo {
 
     const updatedFacilities = await facilityCollection.find({ 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } }).toArray();
 
-    const cancelledDealUkefId = getUkefDealId(deal.dealSnapshot);
-    const riskExpiredFacilityUkefIds = getUkefFacilityIds(updatedFacilities);
+    const updatedFacilityUkefIds = getUkefFacilityIds(updatedFacilities);
 
-    return { cancelledDealUkefId, riskExpiredFacilityUkefIds };
+    return { cancelledDealUkefId: dealId, riskExpiredFacilityUkefIds: updatedFacilityUkefIds };
   }
 
   /**
@@ -254,7 +252,7 @@ export class TfmDealCancellationRepo {
       };
     }
 
-    const { value: deal } = await dealCollection.findOneAndUpdate(
+    const updateDeal = await dealCollection.updateOne(
       {
         _id: { $eq: new ObjectId(dealId) },
         'tfm.stage': { $ne: TFM_DEAL_STAGE.CANCELLED },
@@ -266,7 +264,7 @@ export class TfmDealCancellationRepo {
       update,
     );
 
-    if (!deal) {
+    if (!updateDeal?.matchedCount) {
       throw new DealNotFoundError(dealId.toString());
     }
 
@@ -274,9 +272,8 @@ export class TfmDealCancellationRepo {
 
     const cancelledFacilities = await facilityCollection.find({ 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } }).toArray();
 
-    const cancelledDealUkefId = getUkefDealId(deal.dealSnapshot);
-    const riskExpiredFacilityUkefIds = getUkefFacilityIds(cancelledFacilities);
+    const cancelledFacilityUkefIds = getUkefFacilityIds(cancelledFacilities);
 
-    return { cancelledDealUkefId, riskExpiredFacilityUkefIds };
+    return { cancelledDealUkefId: dealId, riskExpiredFacilityUkefIds: cancelledFacilityUkefIds };
   }
 }
