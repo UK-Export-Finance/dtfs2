@@ -13,9 +13,10 @@
 {% extends "index.njk" %}
 
 {% set userCanEdit = user | userIsInTeam(['PDC_RECONCILE']) %}
+{% set hasErrors = premiumPayments.tableDataError or premiumPayments.filterError or paymentDetails.filterErrors.errorSummary | length %}
 
 {% block pageTitle %}
-  {{ bank.name }}, {{ formattedReportPeriod }}
+  {{ (bank.name + ', ' + formattedReportPeriod) | formatPageTitle(hasErrors) }}
 {% endblock %}
 
 {% set premiumPaymentsHtml %}

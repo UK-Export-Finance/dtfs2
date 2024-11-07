@@ -9,9 +9,14 @@
 {% import "./_macros/payment-date-input.njk" as paymentDateInput %}
 {% extends "index.njk" %}
 {% set backLink = { "href": backLinkHref } %}
-{% block pageTitle %}Add a payment{% endblock %}
+{% set hasErrors = errors.errorSummary | length %}
+
+{% block pageTitle %}
+  {{ 'Add a payment' | formatPageTitle(hasErrors) }}
+{% endblock %}
+
 {% block content %}
-  {% if errors.errorSummary | length %}
+  {% if hasErrors %}
     {{ govukErrorSummary({
         titleText: "There is a problem",
         errorList: errors.errorSummary,
