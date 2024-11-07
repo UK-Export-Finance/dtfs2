@@ -21,10 +21,6 @@ const req = {
   },
 };
 
-jest.mock('../api.js', () => ({
-  getPartyDbInfo: jest.fn(),
-}));
-
 describe('getCompany returns false', () => {
   it('should return `false` on an empty URN', async () => {
     const result = await api.getCompany(req, res);
@@ -58,6 +54,11 @@ describe('getCompany returns company', () => {
   });
 });
 
+jest.mock('../api.js', () => ({
+  getPartyDbInfo: jest.fn(),
+  createParty: jest.fn(),
+}));
+
 describe('getPartyUrn', () => {
   it('should return an empty string if no companyRegNo is provided', async () => {
     const result = await api.getPartyUrn({});
@@ -87,6 +88,120 @@ describe('getPartyUrn', () => {
 
     expect(getPartyDbInfo).toHaveBeenCalledWith(companyData);
     
+    expect(result).toBe('');
+  });
+});
+
+describe('feature flagged getPartyUrn', () => {
+  const originalEnv = process.env;
+
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    process.env = {
+      ...originalEnv,
+      AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED: 'true',
+    };
+  });
+  
+  it('should return an empty string if no companyRegNo is provided', async () => {
+    const result = await api.getPartyUrn({companyName: 'name'});
+    expect(result).toBe('');
+  });
+
+  it('should call getPartyDbInfo, skip createParty for a company that exists, and return urn', async () => {
+    const { getPartyDbInfo, createParty } = require('../api.js');
+    getPartyDbInfo.mockResolvedValue({status: 200, data: [{ partyUrn: 'TEST_URN' }]});
+    createParty.mockResolvedValue({status: 200, data: [{ partyUrn: 'TEST_URN' }]});
+
+    const companyData = { companyRegNo: '12345678', companyName: 'name' };
+    
+    const result = await api.getPartyUrn(companyData);
+
+    expect(getPartyDbInfo).toHaveBeenCalledWith({ companyRegNo: '12345678' });
+    
+    expect(createParty).toHaveBeenCalledTimes(0);
+
+    expect(result).toBe('TEST_URN');
+  });
+
+  it('should call getPartyDbInfo createParty for a company that does not exist, and return urn', async () => {
+    const { getPartyDbInfo, createParty } = require('../api.js');
+    getPartyDbInfo.mockResolvedValue({status: 404, data: [{ partyUrn: null }]});
+    createParty.mockResolvedValue({status: 200, data: [{ partyUrn: 'TEST_URN' }]});
+
+    const companyData = { companyRegNo: '12345678', companyName: 'name' };
+    
+    const result = await api.getPartyUrn(companyData);
+
+    expect(getPartyDbInfo).toHaveBeenCalledWith({ companyRegNo: '12345678' });
+    
+    expect(createParty).toHaveBeenCalledWith(companyData);
+
+    expect(result).toBe('TEST_URN');
+  });
+
+  it('should return an empty string if the company does not exist but no companyName is provided', async () => {
+    const { getPartyDbInfo, createParty } = require('../api.js');
+    getPartyDbInfo.mockResolvedValue({status: 404, data: [{ partyUrn: null }]});
+
+    const companyData = { companyRegNo: '12345678', companyName: '' };
+    
+    const result = await api.getPartyUrn(companyData);
+
+    expect(getPartyDbInfo).toHaveBeenCalledWith({ companyRegNo: '12345678' });
+    
+    expect(createParty).toHaveBeenCalledTimes(0);
+
+    expect(result).toBe('');
+
+  });
+
+  it('should handle null partyUrn in creation response gracefully', async () => {
+    const { getPartyDbInfo, createParty } = require('../api.js');
+    getPartyDbInfo.mockResolvedValue({status: 404, data: [{ partyUrn: null }]});
+    createParty.mockResolvedValue({status: 200, data: []});
+
+    const companyData = { companyRegNo: '12345678', companyName: 'name' };
+    
+    const result = await api.getPartyUrn(companyData);
+
+    expect(getPartyDbInfo).toHaveBeenCalledWith({ companyRegNo: '12345678' });
+    
+    expect(createParty).toHaveBeenCalledWith(companyData);
+
+    expect(result).toBe('');
+  });
+
+  it('should handle null data in creation response gracefully', async () => {
+    const { getPartyDbInfo, createParty } = require('../api.js');
+    getPartyDbInfo.mockResolvedValue({status: 404, data: [{ partyUrn: null }]});
+    createParty.mockResolvedValue({status: 200});
+
+    const companyData = { companyRegNo: '12345678', companyName: 'name' };
+    
+    const result = await api.getPartyUrn(companyData);
+
+    expect(getPartyDbInfo).toHaveBeenCalledWith({ companyRegNo: '12345678' });
+    
+    expect(createParty).toHaveBeenCalledWith(companyData);
+
+    expect(result).toBe('');
+  });
+
+  it('should handle null response gracefully', async () => {
+    const { getPartyDbInfo, createParty } = require('../api.js');
+    getPartyDbInfo.mockResolvedValue({status: 404, data: [{ partyUrn: null }]});
+    createParty.mockResolvedValue({});
+
+    const companyData = { companyRegNo: '12345678', companyName: 'name' };
+    
+    const result = await api.getPartyUrn(companyData);
+
+    expect(getPartyDbInfo).toHaveBeenCalledWith({ companyRegNo: '12345678' });
+    
+    expect(createParty).toHaveBeenCalledWith(companyData);
+
     expect(result).toBe('');
   });
 });
