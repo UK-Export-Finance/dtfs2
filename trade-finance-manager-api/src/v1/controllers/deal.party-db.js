@@ -106,4 +106,5 @@ const addPartyUrns = async (deal, auditDetails) => {
 module.exports = {
   getCompany,
   addPartyUrns,
+  getPartyUrn,
 };
