@@ -7,14 +7,14 @@
 {% extends "index.njk" %}
 {% set backLink = { "href": backLinkHref } %}
 {% set pageHeading = "Add reported fee" + ("s" if reportedFeeDetails.feeRecords | length > 1 else "") + " to an existing payment" %}
-{% set pageHasErrors = errors.errorSummary | length %}
+{% set hasErrors = errors.errorSummary | length %}
 
 {% block pageTitle %}
-  {{ pageHeading | formatPageTitle(pageHasErrors) }}
+  {{ pageHeading | formatPageTitle(hasErrors) }}
 {% endblock %}
 
 {% block content %}
-  {% if pageHasErrors %}
+  {% if hasErrors %}
     {{ govukErrorSummary({
         titleText: "There is a problem",
         errorList: errors.errorSummary,
