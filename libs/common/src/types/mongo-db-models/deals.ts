@@ -18,6 +18,8 @@ export interface BssEwcsDeal extends BaseDeal {
 export interface GefDeal extends BaseDeal {
   dealType: typeof DEAL_TYPE.GEF;
   ukefDealId: string;
+  eligibility: AnyObject;
+  exporter: AnyObject;
 }
 
 /**

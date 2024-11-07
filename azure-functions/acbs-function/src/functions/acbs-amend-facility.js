@@ -78,7 +78,7 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
     }
 
     // 1. DAF : get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
-    const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry('get-facility-master', retryOptions, facilityIdentifier);
+    const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry('get-facility-master', retryOptions, { facilityIdentifier });
 
     /**
      * Check 1 - Facility stage `07` (issued) only
@@ -138,23 +138,28 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
       amendments,
     });
 
+    /**
+     * TODO: DTFS2-7581
+     * Below have been disabled for release 2.4.0.
+     * Enable below two alongside with investor and fixed fee records.
+     */
     // 3. SOF: Facility Covenant Record (FCR)
-    const facilityCovenantRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-covenant-record', {
-      facilityIdentifier,
-      amendments,
-    });
+    // const facilityCovenantRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-covenant-record', {
+    //   facilityIdentifier,
+    //   amendments,
+    // });
 
     // 4. SOF: Facility Guarantee Record (FGR)
-    const facilityGuaranteeRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-guarantee-record', {
-      facilityIdentifier,
-      amendments,
-    });
+    // const facilityGuaranteeRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-guarantee-record', {
+    //   facilityIdentifier,
+    //   amendments,
+    // });
 
     return {
       facilityIdentifier,
       facilityMasterRecord: facilityMasterRecord.result,
-      facilityCovenantRecord: facilityCovenantRecord.result,
-      facilityGuaranteeRecord: facilityGuaranteeRecord.result,
+      // facilityCovenantRecord: facilityCovenantRecord.result,
+      // facilityGuaranteeRecord: facilityGuaranteeRecord.result,
       facilityLoanRecord: facilityLoanRecord.result,
     };
   } catch (error) {
