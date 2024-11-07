@@ -45,6 +45,7 @@ describe(page, () => {
       selectedFilters: null,
     },
     utilisationDetails: { utilisationTableRows: [], downloadUrl },
+    isFeeRecordCorrectionFeatureFlagEnabled: true,
   };
 
   const getWrapper = (viewModel: UtilisationReportReconciliationForReportViewModel = params) => render(viewModel);
@@ -177,6 +178,32 @@ describe(page, () => {
 
       const premiumPaymentsTabSelector = 'div#premium-payments';
       wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`).notToExist();
+    });
+
+    describe('when isFeeRecordCorrectionFeatureFlagEnabled is false', () => {
+      const paramsWithIsFeeRecordCorrectionFeatureFlagEnabledFalse = {
+        ...params,
+        isFeeRecordCorrectionFeatureFlagEnabled: false,
+      };
+
+      it('should not render the create record correction request button', () => {
+        const wrapper = getWrapper(paramsWithIsFeeRecordCorrectionFeatureFlagEnabledFalse);
+
+        wrapper.expectElement('[data-cy="create-record-correction-request-button"]').notToExist();
+      });
+    });
+
+    describe('when isFeeRecordCorrectionFeatureFlagEnabled is true', () => {
+      const paramsWithIsFeeRecordCorrectionFeatureFlagEnabledTrue = {
+        ...params,
+        isFeeRecordCorrectionFeatureFlagEnabled: true,
+      };
+
+      it('should not render the create record correction request button', () => {
+        const wrapper = getWrapper(paramsWithIsFeeRecordCorrectionFeatureFlagEnabledTrue);
+
+        wrapper.expectElement('[data-cy="create-record-correction-request-button"]').toExist();
+      });
     });
 
     it('should render edit actions within the premium payments table for PDC_RECONCILE users', () => {

@@ -7,10 +7,10 @@ import {
   UtilisationReportEntityMockBuilder,
   convertMillisecondsToSeconds,
 } from '@ukef/dtfs2-common';
-import pages from '../../pages';
-import USERS from '../../../fixtures/users';
-import relative from '../../relativeURL';
-import { NODE_TASKS } from '../../../../../e2e-fixtures';
+import pages from '../../../pages';
+import USERS from '../../../../fixtures/users';
+import relative from '../../../relativeURL';
+import { NODE_TASKS } from '../../../../../../e2e-fixtures';
 
 context('Users can view utilisation', () => {
   const BANK_ID = '961';
