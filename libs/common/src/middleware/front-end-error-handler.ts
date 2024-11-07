@@ -47,7 +47,7 @@ const getErrorType = (error: unknown) => {
  * // Async route in a routes file
  * app.get('*', (req, res) => {
  * // route implementation that can throw errors
- * }.catch(next(error)); // This will be caught by the front-end error handler
+ * }.catch(next); // This will be caught by the front-end error handler
  */
 export const getFrontEndErrorHandler = (problemWithServiceTemplate: string = '_partials/problem-with-service.njk') => {
   const frontEndErrorHandler: ErrorRequestHandler = (error: unknown, _req, res, next) => {
