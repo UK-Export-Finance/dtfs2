@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth, isFeeRecordCorrectionFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
@@ -129,6 +129,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       paymentDetails: paymentDetailsViewModel,
       utilisationDetails: utilisationDetailsViewModel,
       keyingSheet: keyingSheetViewModel,
+      isFeeRecordCorrectionFeatureFlagEnabled: isFeeRecordCorrectionFeatureFlagEnabled(),
     });
   } catch (error) {
     console.error(`Failed to render utilisation report with id ${reportId}`, error);
