@@ -47,6 +47,9 @@
               classes: "govuk-fieldset__legend--m"
             }
           },
+          hint: {
+            text: "Select all that apply"
+          },
           items: [
             {
               value: "facility-id-incorrect",
@@ -91,6 +94,7 @@
               text: "For example, is the reported fee higher or lower than expected"
             },
             maxlength: 500,
+            rows: 4,
             errorMessage: errors.additionalInfoErrorMessage and {
               text: errors.additionalInfoErrorMessage
             }
