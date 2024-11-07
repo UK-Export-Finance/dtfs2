@@ -1,4 +1,5 @@
 const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const { format, add } = require('date-fns');
 const databaseHelper = require('../../database-helper');
 const aDeal = require('../deals/deal-builder');
@@ -18,7 +19,7 @@ describe('/v1/deals/:id/bond', () => {
     bankInternalRefName: 'mock id',
     submissionDetails: {
       supplyContractCurrency: {
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
     eligibility: {

@@ -1,4 +1,5 @@
 import {
+  CURRENCY,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
@@ -30,7 +31,7 @@ context(`users can sort premium payments table by total reported payments and to
   const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
     .withId(2)
     .withFeesPaidToUkefForThePeriod(20)
-    .withFeesPaidToUkefForThePeriodCurrency('GBP')
+    .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
     .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
     .withFacilityId('22222222')
     .build();
@@ -113,7 +114,7 @@ context(`users can sort premium payments table by total reported payments and to
       // Facility 11111111 has reported payment currency 'EUR' (alphabetically first), so it should appear first.
       cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.facilityIdByRowIndex(0), '11111111');
 
-      // Facility 22222222 has reported payment currency 'GBP' (alphabetically second), so it should appear second.
+      // Facility 22222222 has reported payment currency CURRENCY.GBP (alphabetically second), so it should appear second.
       cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.facilityIdByRowIndex(1), '22222222');
 
       // Facility 33333333 has reported payment currency 'USD' (alphabetically last), so it should appear last.

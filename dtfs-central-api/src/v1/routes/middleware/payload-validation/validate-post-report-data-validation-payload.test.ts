@@ -1,5 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { validatePostReportDataValidationPayload } from './validate-post-report-data-validation-payload';
 
 describe('validatePostReportDataValidationPayload', () => {
@@ -66,7 +67,7 @@ describe('validatePostReportDataValidationPayload', () => {
 
     req.body = {
       reportData: [
-        { 'some key': { value: 'GBP', row: 6, column: 'A' }, 'some other key': { value: 'USD', row: 6, column: 'B' } },
+        { 'some key': { value: CURRENCY.GBP, row: 6, column: 'A' }, 'some other key': { value: 'USD', row: 6, column: 'B' } },
         { 'some key': { value: null, row: '7', column: 'A' }, 'some other key': { value: null, row: '7', column: 'B' } },
       ],
     };

@@ -26,7 +26,7 @@ describe('post-add-payment.controller helpers', () => {
   describe('addPaymentToUtilisationReport', () => {
     const reportId = 1;
     const feeRecordIds = [1, 2, 3];
-    const paymentCurrency: Currency = 'GBP';
+    const paymentCurrency: Currency = CURRENCY.GBP;
 
     const tfmUser: TfmSessionUser = {
       ...aTfmSessionUser(),
@@ -116,7 +116,7 @@ describe('post-add-payment.controller helpers', () => {
     it("throws the 'InvalidPayloadError' if the payment currency does not match the fee record payment currencies", async () => {
       // Arrange
       const feeRecordsWithGBPPaymentCurrency = feeRecordIds.map((feeRecordId) =>
-        FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(feeRecordId).withPaymentCurrency('GBP').build(),
+        FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(feeRecordId).withPaymentCurrency(CURRENCY.GBP).build(),
       );
       feeRecordFindBySpy.mockResolvedValue(feeRecordsWithGBPPaymentCurrency);
 
@@ -133,14 +133,14 @@ describe('post-add-payment.controller helpers', () => {
     it("throws the 'InvalidPayloadError' if the payment currency matches all but one of the fee record payment currencies", async () => {
       // Arrange
       const feeRecordsWithGBPPaymentCurrency = feeRecordIds.map((feeRecordId) =>
-        FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(feeRecordId).withPaymentCurrency('GBP').build(),
+        FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(feeRecordId).withPaymentCurrency(CURRENCY.GBP).build(),
       );
       const feeRecordWithEURPaymentCurrency = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(100).withPaymentCurrency('EUR').build();
       feeRecordFindBySpy.mockResolvedValue([...feeRecordsWithGBPPaymentCurrency, feeRecordWithEURPaymentCurrency]);
 
       const newPaymentDetailsWithGBPCurrency: NewPaymentDetails = {
         ...newPaymentDetails,
-        currency: 'GBP',
+        currency: CURRENCY.GBP,
       };
 
       // Act / Assert
@@ -161,7 +161,7 @@ describe('post-add-payment.controller helpers', () => {
       const feeRecordsWithGBPPaymentCurrency = paymentFeeRecordIds.map((feeRecordId) =>
         FeeRecordEntityMockBuilder.forReport(utilisationReport)
           .withId(feeRecordId)
-          .withPaymentCurrency('GBP')
+          .withPaymentCurrency(CURRENCY.GBP)
           .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
           .withPayments(payments)
           .build(),

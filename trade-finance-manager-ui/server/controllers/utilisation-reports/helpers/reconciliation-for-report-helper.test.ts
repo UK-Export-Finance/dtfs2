@@ -96,7 +96,7 @@ describe('reconciliation-for-report-helper', () => {
 
     it('should map the group feeRecords reportedFees to the view model feeRecords reportedFees formatted currency and amount', () => {
       // Arrange
-      const firstFeeRecordReportedFees: CurrencyAndAmount = { currency: 'GBP', amount: 100 };
+      const firstFeeRecordReportedFees: CurrencyAndAmount = { currency: CURRENCY.GBP, amount: 100 };
       const firstFeeRecord: FeeRecord = { ...aFeeRecord(), reportedFees: firstFeeRecordReportedFees };
       const firstFeeRecordFormattedReportedFees = 'GBP 100.00';
 
@@ -127,7 +127,7 @@ describe('reconciliation-for-report-helper', () => {
       const firstFeeRecord: FeeRecord = { ...aFeeRecord(), reportedPayments: firstFeeRecordReportedPayments };
       const firstFeeRecordFormattedReportedPayments = 'EUR 314.59';
 
-      const secondFeeRecordReportedPayments: CurrencyAndAmount = { currency: 'GBP', amount: 100 };
+      const secondFeeRecordReportedPayments: CurrencyAndAmount = { currency: CURRENCY.GBP, amount: 100 };
       const secondFeeRecord: FeeRecord = { ...aFeeRecord(), reportedPayments: secondFeeRecordReportedPayments };
       const secondFeeRecordFormattedReportedPayments = 'GBP 100.00';
 
@@ -151,11 +151,11 @@ describe('reconciliation-for-report-helper', () => {
     it('should sort the view model feeRecords reportedPayments by currency first and amount second in ascending order', () => {
       // Arrange
       const unsortedFeeRecords: FeeRecord[] = [
-        { ...aFeeRecord(), reportedPayments: { currency: 'GBP', amount: 100 } }, // after sorting: 'GBP 100.00' at index 1
+        { ...aFeeRecord(), reportedPayments: { currency: CURRENCY.GBP, amount: 100 } }, // after sorting: 'GBP 100.00' at index 1
         { ...aFeeRecord(), reportedPayments: { currency: 'USD', amount: 200 } }, // after sorting: 'USD 200.00' at index 4
         { ...aFeeRecord(), reportedPayments: { currency: 'EUR', amount: 100 } }, // after sorting: 'EUR 100.00' at index 0
         { ...aFeeRecord(), reportedPayments: { currency: 'USD', amount: 100 } }, // after sorting: 'USD 100.00' at index 3
-        { ...aFeeRecord(), reportedPayments: { currency: 'GBP', amount: 500 } }, // after sorting: 'GBP 500.00' at index 2
+        { ...aFeeRecord(), reportedPayments: { currency: CURRENCY.GBP, amount: 500 } }, // after sorting: 'GBP 500.00' at index 2
       ];
 
       const premiumPaymentGroups: PremiumPaymentsGroup[] = [
@@ -178,7 +178,7 @@ describe('reconciliation-for-report-helper', () => {
 
     it('should map the group totalReportedPayments to the view model totalReportedPayments formattedCurrencyAndAmount', () => {
       // Arrange
-      const totalReportedPayments: CurrencyAndAmount = { currency: 'GBP', amount: 100 };
+      const totalReportedPayments: CurrencyAndAmount = { currency: CURRENCY.GBP, amount: 100 };
       const totalReportedPaymentsFormattedCurrencyAndAmount = 'GBP 100.00';
 
       const premiumPaymentGroups: PremiumPaymentsGroup[] = [
@@ -198,9 +198,9 @@ describe('reconciliation-for-report-helper', () => {
 
     it('should sort the group totalReportedPayments and sets to the view model totalReportedPayments dataSortValue', () => {
       // Arrange
-      const firstTotalReportedPayments: CurrencyAndAmount = { currency: 'GBP', amount: 100 }; // dataSortValue = 2
+      const firstTotalReportedPayments: CurrencyAndAmount = { currency: CURRENCY.GBP, amount: 100 }; // dataSortValue = 2
       const secondTotalReportedPayments: CurrencyAndAmount = { currency: 'EUR', amount: 100 }; // dataSortValue = 1
-      const thirdTotalReportedPayments: CurrencyAndAmount = { currency: 'GBP', amount: 200 }; // dataSortValue = 3
+      const thirdTotalReportedPayments: CurrencyAndAmount = { currency: CURRENCY.GBP, amount: 200 }; // dataSortValue = 3
       const fourthTotalReportedPayments: CurrencyAndAmount = { currency: 'EUR', amount: 50 }; // dataSortValue = 0
 
       const premiumPaymentGroups: PremiumPaymentsGroup[] = [
@@ -235,7 +235,7 @@ describe('reconciliation-for-report-helper', () => {
 
     it('should map the group paymentsReceived to the view model paymentsReceived formatted currency and amount', () => {
       // Arrange
-      const paymentsReceived: Payment[] = [{ ...aPayment(), id: 1, currency: 'GBP', amount: 314.59 }];
+      const paymentsReceived: Payment[] = [{ ...aPayment(), id: 1, currency: CURRENCY.GBP, amount: 314.59 }];
       const paymentsReceivedFormattedCurrencyAndAmount = 'GBP 314.59';
 
       const premiumPaymentGroups: PremiumPaymentsGroup[] = [
@@ -255,7 +255,7 @@ describe('reconciliation-for-report-helper', () => {
 
     it('should map the group paymentsReceived id to the view model paymentsReceived id', () => {
       // Arrange
-      const paymentsReceived: Payment[] = [{ ...aPayment(), id: 1, currency: 'GBP', amount: 100 }];
+      const paymentsReceived: Payment[] = [{ ...aPayment(), id: 1, currency: CURRENCY.GBP, amount: 100 }];
 
       const premiumPaymentGroups: PremiumPaymentsGroup[] = [
         {
@@ -291,7 +291,7 @@ describe('reconciliation-for-report-helper', () => {
 
     it('should map the group totalPaymentsReceived to the view model totalPaymentsReceived formattedCurrencyAndAmount', () => {
       // Arrange
-      const totalPaymentsReceived: CurrencyAndAmount = { currency: 'GBP', amount: 100 };
+      const totalPaymentsReceived: CurrencyAndAmount = { currency: CURRENCY.GBP, amount: 100 };
       const totalPaymentsReceivedFormattedCurrencyAndAmount = 'GBP 100.00';
 
       const premiumPaymentGroups: PremiumPaymentsGroup[] = [
@@ -311,9 +311,9 @@ describe('reconciliation-for-report-helper', () => {
 
     it('should sort the group totalPaymentsReceived and sets to the view model totalPaymentsReceived dataSortValue', () => {
       // Arrange
-      const firstTotalPaymentsReceived: CurrencyAndAmount = { currency: 'GBP', amount: 100 }; // dataSortValue = 2
+      const firstTotalPaymentsReceived: CurrencyAndAmount = { currency: CURRENCY.GBP, amount: 100 }; // dataSortValue = 2
       const secondTotalPaymentsReceived: CurrencyAndAmount = { currency: 'EUR', amount: 100 }; // dataSortValue = 1
-      const thirdTotalPaymentsReceived: CurrencyAndAmount = { currency: 'GBP', amount: 200 }; // dataSortValue = 3
+      const thirdTotalPaymentsReceived: CurrencyAndAmount = { currency: CURRENCY.GBP, amount: 200 }; // dataSortValue = 3
       const fourthTotalPaymentsReceived: CurrencyAndAmount = { currency: 'EUR', amount: 50 }; // dataSortValue = 0
 
       const premiumPaymentGroups: PremiumPaymentsGroup[] = [
@@ -400,7 +400,7 @@ describe('reconciliation-for-report-helper', () => {
       // Arrange
       const feeRecordIds = [1, 20];
 
-      const firstFeeRecordReportedPaymentsCurrency: Currency = 'GBP';
+      const firstFeeRecordReportedPaymentsCurrency: Currency = CURRENCY.GBP;
       const firstFeeRecord: FeeRecord = {
         ...aFeeRecord(),
         id: feeRecordIds[0],
@@ -437,7 +437,7 @@ describe('reconciliation-for-report-helper', () => {
     it('should set isChecked to true if the payment groups fee record ids are recognised by the supplied isCheckboxChecked function', () => {
       // Arrange
       const feeRecordId = 1;
-      const feeRecordReportedPaymentsCurrency: Currency = 'GBP';
+      const feeRecordReportedPaymentsCurrency: Currency = CURRENCY.GBP;
       const feeRecord: FeeRecord = {
         ...aFeeRecord(),
         id: feeRecordId,
@@ -465,7 +465,7 @@ describe('reconciliation-for-report-helper', () => {
       // Arrange
       const feeRecordId = 1;
       const nonMatchingFeeRecordId = 5;
-      const feeRecordReportedPaymentsCurrency: Currency = 'GBP';
+      const feeRecordReportedPaymentsCurrency: Currency = CURRENCY.GBP;
       const feeRecord: FeeRecord = {
         ...aFeeRecord(),
         id: feeRecordId,
@@ -520,7 +520,7 @@ describe('reconciliation-for-report-helper', () => {
       facilityId: '12345678',
       exporter: 'Test exporter',
       feePayments: [],
-      baseCurrency: 'GBP',
+      baseCurrency: CURRENCY.GBP,
       fixedFeeAdjustment: null,
       principalBalanceAdjustment: null,
     });
@@ -574,9 +574,9 @@ describe('reconciliation-for-report-helper', () => {
         {
           ...aKeyingSheetRow(),
           feePayments: [
-            { currency: 'GBP', amount: 100.123, dateReceived: '2024-01-01T12:00:00.000' },
+            { currency: CURRENCY.GBP, amount: 100.123, dateReceived: '2024-01-01T12:00:00.000' },
             { currency: 'EUR', amount: 90.91, dateReceived: '2023-12-05T12:00:00.000' },
-            { currency: 'GBP', amount: 0.0123123, dateReceived: '2024-05-01T12:00:00.000' },
+            { currency: CURRENCY.GBP, amount: 0.0123123, dateReceived: '2024-05-01T12:00:00.000' },
             { currency: 'JPY', amount: 0, dateReceived: null },
           ],
         },
@@ -806,7 +806,7 @@ describe('reconciliation-for-report-helper', () => {
         {
           ...aPaymentDetails(),
           feeRecords: [aFeeRecord()],
-          payment: { ...aPayment(), id: 1, currency: 'GBP', amount: 200 }, // 'GBP 200.00', dataSortValue = 2
+          payment: { ...aPayment(), id: 1, currency: CURRENCY.GBP, amount: 200 }, // 'GBP 200.00', dataSortValue = 2
         },
         {
           ...aPaymentDetails(),
@@ -816,7 +816,7 @@ describe('reconciliation-for-report-helper', () => {
         {
           ...aPaymentDetails(),
           feeRecords: [aFeeRecord()],
-          payment: { ...aPayment(), id: 3, currency: 'GBP', amount: 100 }, // 'GBP 100.00', dataSortValue = 1
+          payment: { ...aPayment(), id: 3, currency: CURRENCY.GBP, amount: 100 }, // 'GBP 100.00', dataSortValue = 1
         },
         {
           ...aPaymentDetails(),
@@ -826,7 +826,7 @@ describe('reconciliation-for-report-helper', () => {
         {
           ...aPaymentDetails(),
           feeRecords: [aFeeRecord()],
-          payment: { ...aPayment(), id: 5, currency: 'GBP', amount: 300 }, // 'GBP 300.00', dataSortValue = 3
+          payment: { ...aPayment(), id: 5, currency: CURRENCY.GBP, amount: 300 }, // 'GBP 300.00', dataSortValue = 3
         },
       ];
 

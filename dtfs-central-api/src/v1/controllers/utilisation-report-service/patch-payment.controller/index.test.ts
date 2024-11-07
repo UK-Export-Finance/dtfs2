@@ -2,6 +2,7 @@ import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { EntityManager } from 'typeorm';
 import {
+  CURRENCY,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
@@ -37,7 +38,7 @@ describe('patch-payment.controller', () => {
       FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).build(),
     ];
 
-    const payment = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).withFeeRecords(feeRecords).build();
+    const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(paymentId).withFeeRecords(feeRecords).build();
 
     const paymentRepoFindSpy = jest.spyOn(PaymentRepo, 'findOneByIdWithFeeRecordsAndReportFilteredById');
     const utilisationReportStateMachineConstructorSpy = jest.spyOn(UtilisationReportStateMachine, 'forReport');

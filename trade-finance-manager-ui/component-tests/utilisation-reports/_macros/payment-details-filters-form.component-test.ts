@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { componentRenderer } from '../../componentRenderer';
 
 const component = '../templates/utilisation-reports/_macros/payment-details-filters-form.njk';
@@ -16,7 +17,7 @@ describe(component, () => {
     const containerSelector = '[data-cy="payment-details--filter-currency"]';
     const filters = {
       paymentCurrency: [
-        { value: 'GBP', text: 'GBP', attributes: { 'data-cy': 'payment-details--filter-currency-input-GBP' } },
+        { value: CURRENCY.GBP, text: CURRENCY.GBP, attributes: { 'data-cy': 'payment-details--filter-currency-input-GBP' } },
         { value: 'USD', text: 'USD', attributes: { 'data-cy': 'payment-details--filter-currency-input-USD' } },
         { value: 'EUR', text: 'EUR', attributes: { 'data-cy': 'payment-details--filter-currency-input-EUR' } },
       ],

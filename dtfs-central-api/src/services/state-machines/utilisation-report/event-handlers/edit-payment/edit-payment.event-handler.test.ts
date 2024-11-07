@@ -1,5 +1,6 @@
 import { EntityManager } from 'typeorm';
 import {
+  CURRENCY,
   DbRequestSource,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
@@ -32,11 +33,11 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
   const aReconciliationInProgressReport = () => UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
 
   const aListOfFeeRecordsForReport = (report: UtilisationReportEntity): FeeRecordEntity[] => [
-    FeeRecordEntityMockBuilder.forReport(report).withId(1).withPaymentCurrency('GBP').build(),
-    FeeRecordEntityMockBuilder.forReport(report).withId(2).withPaymentCurrency('GBP').build(),
+    FeeRecordEntityMockBuilder.forReport(report).withId(1).withPaymentCurrency(CURRENCY.GBP).build(),
+    FeeRecordEntityMockBuilder.forReport(report).withId(2).withPaymentCurrency(CURRENCY.GBP).build(),
   ];
 
-  const aPayment = () => PaymentEntityMockBuilder.forCurrency('GBP').build();
+  const aPayment = () => PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build();
 
   const aMockEventHandler = () => jest.fn();
   const aMockFeeRecordStateMachine = (eventHandler: jest.Mock): FeeRecordStateMachine =>
@@ -63,7 +64,11 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     const newDatePaymentReceived = new Date('2024-01-01');
     const newPaymentReference = 'A new payment reference';
 
-    const payment = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(100).withDateReceived(new Date('2023-12-01')).withReference(undefined).build();
+    const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
+      .withAmount(100)
+      .withDateReceived(new Date('2023-12-01'))
+      .withReference(undefined)
+      .build();
 
     // Act
     await handleUtilisationReportEditPaymentEvent(utilisationReport, {
@@ -85,7 +90,7 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
 
   it('calls the fee record state machine event handler for each fee record in the payload', async () => {
     // Arrange
-    const payment = PaymentEntityMockBuilder.forCurrency('GBP').build();
+    const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build();
 
     const utilisationReport = aReconciliationInProgressReport();
     const feeRecords = aListOfFeeRecordsForReport(utilisationReport);

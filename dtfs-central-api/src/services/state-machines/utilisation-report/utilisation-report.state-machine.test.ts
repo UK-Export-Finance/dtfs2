@@ -4,6 +4,7 @@ import {
   REQUEST_PLATFORM_TYPE,
   UtilisationReportEntityMockBuilder,
   MOCK_AZURE_FILE_INFO,
+  CURRENCY,
   DbRequestSource,
   PaymentEntity,
   PENDING_RECONCILIATION,
@@ -135,7 +136,7 @@ describe('UtilisationReportStateMachine', () => {
           transactionEntityManager: {} as unknown as EntityManager,
           feeRecords: [],
           paymentDetails: {
-            currency: 'GBP',
+            currency: CURRENCY.GBP,
             amount: 100,
             dateReceived: new Date(),
             reference: 'A payment reference',
@@ -223,7 +224,7 @@ describe('UtilisationReportStateMachine', () => {
           transactionEntityManager: {} as unknown as EntityManager,
           feeRecords: [],
           paymentDetails: {
-            currency: 'GBP',
+            currency: CURRENCY.GBP,
             amount: 100,
             dateReceived: new Date(),
             reference: 'A payment reference',

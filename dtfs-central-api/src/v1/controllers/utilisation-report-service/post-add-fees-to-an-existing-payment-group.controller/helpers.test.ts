@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { EntityManager } from 'typeorm';
 import {
+  CURRENCY,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
@@ -32,7 +33,7 @@ describe('post-fees-to-an-existing-payment-group.controller helpers', () => {
     const feeRecords = feeRecordIds.map((id) => FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(id).build());
 
     const paymentIds = [3, 4];
-    const payments = paymentIds.map((id) => PaymentEntityMockBuilder.forCurrency('GBP').withId(id).withFeeRecords([feeRecords[1]]).build());
+    const payments = paymentIds.map((id) => PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(id).withFeeRecords([feeRecords[1]]).build());
 
     const utilisationReportStateMachineConstructorSpy = jest.spyOn(UtilisationReportStateMachine, 'forReport');
     const handleEventSpy = jest.spyOn(utilisationReportStateMachine, 'handleEvent');
