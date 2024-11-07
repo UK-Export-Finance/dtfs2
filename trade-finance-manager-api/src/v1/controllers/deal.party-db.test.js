@@ -24,6 +24,10 @@ const req = {
   },
 };
 
+jest.mock('../api.js', () => ({
+  getPartyDbInfo: jest.fn(),
+}));
+
 describe('getCompany returns false', () => {
   it('should return `false` on an empty URN', async () => {
     const result = await api.getCompany(req, res);
