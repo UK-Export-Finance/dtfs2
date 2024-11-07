@@ -338,19 +338,18 @@ const sendFirstTaskEmail = async (deal, auditDetails) => {
   try {
     const { amendment, dealSnapshot, facilityId, amendmentId } = deal;
     const { tasks } = amendment;
-    const { _id } = deal;
     const { exporter } = dealSnapshot;
     const { companyName } = exporter;
 
     // BSS/EWCS or GEF Mongo deal ID
-    const dealId = dealSnapshot?._id || _id;
+    const dealId = dealSnapshot?._id || deal._id;
     // BSS/EWCS or GEF UKEF deal ID
     const ukefDealId = dealSnapshot?.details?.ukefDealId || dealSnapshot.ukefDealId;
     const firstTask = getFirstTask(tasks);
     const templateId = EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
 
     if (!dealId || !ukefDealId || !firstTask || !companyName) {
-      throw new Error(`Invalid imperative arguments provided for ${dealId}`);
+      throw new Error(`Invalid imperative arguments provided for ${dealId}, unable to send first task email from TFM.`);
     }
 
     const { team } = firstTask;

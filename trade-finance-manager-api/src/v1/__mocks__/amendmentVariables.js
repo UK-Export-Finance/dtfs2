@@ -226,10 +226,17 @@ const dealWithNoCompanyName = {
     bankInternalRefName: 'UKEF',
   },
 };
-
-const dealWithNoId = {
+const dealWithNoMongoId = {
   ...firstTaskVariables,
-  _id: null,
+  _id: undefined,
+  dealSnapshot: {
+    _id: undefined,
+    ukefDealId,
+    exporter: {
+      companyName: 'Tester',
+    },
+    bankInternalRefName: 'UKEF',
+  },
 };
 
 const noUkefDealId = {
@@ -259,7 +266,7 @@ module.exports = {
   wrongAmendments,
   firstTaskVariables,
   noTaskVariables,
-  dealWithNoId,
+  dealWithNoMongoId,
   dealWithNoCompanyName,
   noUkefDealId,
 };
