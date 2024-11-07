@@ -19,10 +19,20 @@ import { api } from '../api';
 const { APIM_MDM_URL } = process.env;
 const { VALID, VALID_WITH_LETTERS } = MOCK_COMPANY_REGISTRATION_NUMBERS;
 const { get } = api(app);
+let axiosMock: MockAdapter;
 
-const axiosMock = new MockAdapter(axios);
-axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID}`).reply(HttpStatusCode.Ok, {});
-axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});
+beforeEach(() => {
+  axiosMock = new MockAdapter(axios);
+
+  axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID}`).reply(HttpStatusCode.Ok, {});
+  axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});
+  axiosMock.onGet(`${APIM_MDM_URL}customers/salesforce?companyRegistrationNumber=${VALID}`).reply(HttpStatusCode.Ok, {});
+  axiosMock.onGet(`${APIM_MDM_URL}customers/salesforce?companyRegistrationNumber=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});
+});
+
+afterEach(() => {
+  axiosMock.resetHistory();
+});
 
 describe('/party-db', () => {
   describe('GET /party-db', () => {
@@ -36,6 +46,13 @@ describe('/party-db', () => {
       const { status } = await get(`/party-db/${VALID_WITH_LETTERS}`);
 
       expect(status).toEqual(HttpStatusCode.Ok);
+    });
+    
+    it(`calls the correct url`, async () => {
+      await get(`/party-db/${VALID}`);
+
+      expect(axiosMock.history.get).toHaveLength(1);
+      expect(axiosMock.history.get[0].url).toBe(`${APIM_MDM_URL}customers?companyReg=${VALID}`);
     });
   });
 
@@ -52,4 +69,47 @@ describe('/party-db', () => {
       },
     );
   });
+
+  describe('when AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED is true', () => {
+    beforeAll(() => {
+      process.env.AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED = 'true';
+    });
+  
+  
+    describe('GET /party-db', () => {
+      it(`returns a ${HttpStatusCode.Ok} response with a valid companies house number`, async () => {
+        const { status } = await get(`/party-db/${VALID}`);
+
+        expect(status).toEqual(HttpStatusCode.Ok);
+      });
+  
+      it(`returns a ${HttpStatusCode.Ok} response with a valid companies house number`, async () => {
+        const { status } = await get(`/party-db/${VALID_WITH_LETTERS}`);
+  
+        expect(status).toEqual(HttpStatusCode.Ok);
+      });
+      
+      it(`calls the correct url`, async () => {
+        await get(`/party-db/${VALID}`);
+
+        expect(axiosMock.history.get).toHaveLength(1);
+        expect(axiosMock.history.get[0].url).toBe(`${APIM_MDM_URL}customers/salesforce?companyRegistrationNumber=${VALID}`);  
+      });
+    });
+  
+    const invalidCompaniesHouseNumberTestCases = [['ABC22'], ['127.0.0.1'], ['{}'], ['[]']];
+  
+    describe('when company house number is invalid', () => {
+      test.each(invalidCompaniesHouseNumberTestCases)(
+        `returns a ${HttpStatusCode.BadRequest} if you provide an invalid company house number %s`,
+        async (companyHouseNumber) => {
+          const { status, body } = await get(`/party-db/${companyHouseNumber}`);
+  
+          expect(status).toEqual(HttpStatusCode.BadRequest);
+          expect(body).toMatchObject({ data: 'Invalid company registration number', status: HttpStatusCode.BadRequest });
+        },
+      );
+    });
+  })
 });
+
