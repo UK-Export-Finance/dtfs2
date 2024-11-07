@@ -4,7 +4,7 @@ const { hasValidUri } = require('./helpers/hasValidUri.helper');
 const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
 require('dotenv').config();
 
-const { DTFS_CENTRAL_API_URL, EXTERNAL_API_URL, DTFS_CENTRAL_API_KEY, EXTERNAL_API_KEY, AZURE_ACBS_FUNCTION_URL, AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED } =
+const { DTFS_CENTRAL_API_URL, EXTERNAL_API_URL, DTFS_CENTRAL_API_KEY, EXTERNAL_API_KEY, AZURE_ACBS_FUNCTION_URL } =
   process.env;
 
 const headers = {
@@ -821,10 +821,10 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
       url: `${EXTERNAL_API_URL}/party-db/${encodeURIComponent(companyRegNo)}`,
       headers: headers.external,
     });
-    return AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED === 'true' ? { status: 200, data: response.data } : response.data;
+    return process.env.AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED === 'true' ? { status: 200, data: response.data } : response.data;
   } catch (error) {
     console.error('Unable to get party DB info %o', error);
-    if (AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED === 'true') {
+    if (process.env.AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED === 'true') {
       if (error?.status === 404) {
         return { status: 404, data: 'Party not found' };
       }
