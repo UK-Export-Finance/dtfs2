@@ -331,24 +331,25 @@ const firstTaskEmailConfirmation = async (facilityId, amendmentId, auditDetails)
  * @param {string} [deal.dealSnapshot.ukefDealId] - The UKEF deal ID for GEF deals.
  * @param {Object} [deal.dealSnapshot.details] - The details object for BSS deals.
  * @param {string} [deal.dealSnapshot.details.ukefDealId] - The UKEF deal ID for BSS deals.
- * @param {Object} auditDetails - The audit details for logging purposes.
+ * @param {import("@ukef/dtfs2-common").AuditDetails}
  * @returns {Promise<void>} - A promise that resolves when the email has been sent and the flag has been updated.
  */
 const sendFirstTaskEmail = async (deal, auditDetails) => {
   try {
     const { amendment, dealSnapshot, facilityId, amendmentId } = deal;
     const { tasks } = amendment;
-    const { _id: dealId } = deal;
     const { exporter } = dealSnapshot;
     const { companyName } = exporter;
 
-    // dealId in snapshot for gef and details for bss
-    const ukefDealId = dealSnapshot.ukefDealId || dealSnapshot?.details?.ukefDealId;
+    // BSS/EWCS or GEF Mongo deal ID
+    const dealId = dealSnapshot._id || deal._id;
+    // BSS/EWCS or GEF UKEF deal ID
+    const ukefDealId = dealSnapshot?.details?.ukefDealId || dealSnapshot.ukefDealId;
     const firstTask = getFirstTask(tasks);
     const templateId = EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
 
     if (!dealId || !ukefDealId || !firstTask || !companyName) {
-      throw new Error(`Invalid imperative arguments provided for ${dealId}`);
+      throw new Error(`Invalid imperative arguments provided for ${dealId}, unable to send first task email from TFM.`);
     }
 
     const { team } = firstTask;

@@ -181,7 +181,7 @@ describe('controllers - case', () => {
       });
     });
 
-    describe('should catch any thrown error', () => {
+    describe('when an error is thrown', () => {
       beforeEach(() => {
         api.getDeal = () => Promise.reject(new Error('An exception has occurred'));
       });
