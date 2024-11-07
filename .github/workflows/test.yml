@@ -193,7 +193,7 @@ jobs:
       matrix:
         # services: ['portal', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'trade-finance-manager-api', 'dtfs-central-api', 'external-api']
         services: ['dtfs-central-api']
-      
+
     concurrency:
       group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
       cancel-in-progress: true
