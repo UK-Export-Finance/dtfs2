@@ -1,5 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
-const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled, FLASH_TYPES } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const {
   getTask,
@@ -67,7 +67,7 @@ const getCaseDeal = async (req, res) => {
     const successMessage = await getDealSuccessBannerMessage({
       dealSnapshot,
       userToken,
-      req,
+      flashedSuccessMessage: req.flash(FLASH_TYPES.SUCCESS_MESSAGE),
     });
 
     return res.render('case/deal/deal.njk', {
@@ -126,7 +126,7 @@ const getCaseTasks = async (req, res) => {
   const successMessage = await getDealSuccessBannerMessage({
     dealSnapshot,
     userToken,
-    req,
+    flashedSuccessMessage: req.flash(FLASH_TYPES.SUCCESS_MESSAGE),
   });
 
   return res.render('case/tasks/tasks.njk', {
@@ -407,7 +407,7 @@ const getCaseDocuments = async (req, res) => {
     const successMessage = await getDealSuccessBannerMessage({
       dealSnapshot,
       userToken,
-      req,
+      flashedSuccessMessage: req.flash(FLASH_TYPES.SUCCESS_MESSAGE),
     });
 
     return res.render('case/documents/documents.njk', {

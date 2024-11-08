@@ -1,5 +1,6 @@
 const { format, fromUnixTime } = require('date-fns');
 const { isEmpty } = require('lodash');
+const { FLASH_TYPES } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 
 const leadUnderwriter = require('./lead-underwriter');
@@ -119,7 +120,7 @@ const getUnderwriterPage = async (req, res) => {
   const successMessage = await getDealSuccessBannerMessage({
     dealSnapshot,
     userToken,
-    req,
+    flashedSuccessMessage: req.flash(FLASH_TYPES.SUCCESS_MESSAGE),
   });
 
   return res.render('case/underwriting/underwriting.njk', {

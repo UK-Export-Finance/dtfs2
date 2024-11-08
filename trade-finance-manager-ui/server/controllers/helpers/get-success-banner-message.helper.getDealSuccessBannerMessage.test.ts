@@ -1,6 +1,4 @@
-import { Request } from 'express';
-import { createMocks } from 'node-mocks-http';
-import { AnyObject, DEAL_SUBMISSION_TYPE, TfmDealCancellationWithStatus, Deal, DEAL_TYPE, FlashTypes } from '@ukef/dtfs2-common';
+import { AnyObject, DEAL_SUBMISSION_TYPE, TfmDealCancellationWithStatus, Deal, DEAL_TYPE } from '@ukef/dtfs2-common';
 import { getDealSuccessBannerMessage } from './get-success-banner-message.helper';
 
 const getDealCancellationMock = jest.fn() as jest.Mock<Promise<Partial<TfmDealCancellationWithStatus>>>;
@@ -16,17 +14,7 @@ const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
 
 describe('getDealSuccessBannerMessage', () => {
-  const flashedMessage = 'testMessage1';
-
-  const mockFlashResponse = {
-    successMessage: [flashedMessage],
-  };
-
-  const mockFlash = ((key: FlashTypes) => mockFlashResponse[key]) as Request['flash'];
-
-  const { req } = createMocks({
-    flash: mockFlash,
-  });
+  const flashedSuccessMessage = 'testMessage1';
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -42,15 +30,15 @@ describe('getDealSuccessBannerMessage', () => {
 
     it('returns flashed message', async () => {
       // Act
-      const response = await getDealSuccessBannerMessage({ userToken, dealSnapshot, req });
+      const response = await getDealSuccessBannerMessage({ userToken, dealSnapshot, flashedSuccessMessage });
 
       // Assert
-      expect(response).toEqual(flashedMessage);
+      expect(response).toEqual(flashedSuccessMessage);
     });
 
     it('does not call getDealCancellation', async () => {
       // Act
-      await getDealSuccessBannerMessage({ userToken, dealSnapshot, req });
+      await getDealSuccessBannerMessage({ userToken, dealSnapshot, flashedSuccessMessage });
 
       // Assert
       expect(getDealCancellationMock).toHaveBeenCalledTimes(0);

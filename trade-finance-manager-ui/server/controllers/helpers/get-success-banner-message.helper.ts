@@ -1,9 +1,7 @@
-import { Request } from 'express';
 import { TFM_DEAL_CANCELLATION_STATUS, TfmDealCancellationWithStatus, DATE_FORMATS, Deal, getUkefDealId } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
 import api from '../../api';
 import { isDealCancellationEnabled } from './deal-cancellation-enabled.helper';
-import { getFlashSuccessMessage } from '../../helpers/get-flash-success-message';
 
 /**
  * Returns deal cancellation message if the deal is scheduled for cancellation
@@ -45,17 +43,16 @@ export const getScheduledCancellationBannerMessage = async ({ dealSnapshot, user
 export const getDealSuccessBannerMessage = async ({
   dealSnapshot,
   userToken,
-  req,
+  flashedSuccessMessage,
 }: {
   dealSnapshot: Deal;
   userToken: string;
-  req: Request;
+  flashedSuccessMessage: string;
 }): Promise<string | undefined> => {
   const scheduledCancellationMessage = await getScheduledCancellationBannerMessage({
     dealSnapshot,
     userToken,
   });
-  const flashSuccessMessage = getFlashSuccessMessage(req);
 
-  return scheduledCancellationMessage || flashSuccessMessage;
+  return scheduledCancellationMessage || flashedSuccessMessage;
 };

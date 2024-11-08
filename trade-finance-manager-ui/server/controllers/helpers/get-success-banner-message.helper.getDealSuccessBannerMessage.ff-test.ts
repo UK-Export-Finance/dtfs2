@@ -1,8 +1,5 @@
-import { Request } from 'express';
-import { createMocks } from 'node-mocks-http';
-import { AnyObject, DEAL_SUBMISSION_TYPE, TFM_DEAL_CANCELLATION_STATUS, TfmDealCancellationWithStatus, Deal, DEAL_TYPE, FlashTypes } from '@ukef/dtfs2-common';
+import { AnyObject, DEAL_SUBMISSION_TYPE, TFM_DEAL_CANCELLATION_STATUS, TfmDealCancellationWithStatus, Deal, DEAL_TYPE } from '@ukef/dtfs2-common';
 import { getScheduledCancellationBannerMessage, getDealSuccessBannerMessage } from './get-success-banner-message.helper';
-import { getFlashSuccessMessage } from '../../helpers/get-flash-success-message';
 
 const getDealCancellationMock = jest.fn() as jest.Mock<Promise<Partial<TfmDealCancellationWithStatus>>>;
 
@@ -21,17 +18,7 @@ describe('getDealSuccessBannerMessage', () => {
     jest.resetAllMocks();
   });
 
-  const flashedMessage = 'testMessage1';
-
-  const mockFlashResponse = {
-    successMessage: [flashedMessage],
-  };
-
-  const mockFlash = ((key: FlashTypes) => mockFlashResponse[key]) as Request['flash'];
-
-  const { req } = createMocks({
-    flash: mockFlash,
-  });
+  const flashedSuccessMessage = 'testMessage1';
 
   describe.each([AIN, MIN])('when the deal is %s', (submissionType) => {
     const dealSnapshot = {
@@ -46,10 +33,10 @@ describe('getDealSuccessBannerMessage', () => {
       getDealCancellationMock.mockResolvedValue({});
 
       // Act
-      const response = await getDealSuccessBannerMessage({ userToken, dealSnapshot, req });
+      const response = await getDealSuccessBannerMessage({ userToken, dealSnapshot, flashedSuccessMessage });
 
       // Assert
-      expect(response).toEqual(getFlashSuccessMessage(req));
+      expect(response).toEqual(flashedSuccessMessage);
     });
 
     it('returns scheduled cancellation message if deal is scheduled for cancellation', async () => {
@@ -63,7 +50,7 @@ describe('getDealSuccessBannerMessage', () => {
       });
 
       // Act
-      const response = await getDealSuccessBannerMessage({ userToken, dealSnapshot, req });
+      const response = await getDealSuccessBannerMessage({ userToken, dealSnapshot, flashedSuccessMessage });
 
       // Assert
       const expected = await getScheduledCancellationBannerMessage({ dealSnapshot, userToken });
@@ -82,15 +69,15 @@ describe('getDealSuccessBannerMessage', () => {
 
     it('returns flashed message', async () => {
       // Act
-      const response = await getDealSuccessBannerMessage({ userToken, dealSnapshot, req });
+      const response = await getDealSuccessBannerMessage({ userToken, dealSnapshot, flashedSuccessMessage });
 
       // Assert
-      expect(response).toEqual(getFlashSuccessMessage(req));
+      expect(response).toEqual(flashedSuccessMessage);
     });
 
     it('does not call getDealCancellation', async () => {
       // Act
-      await getDealSuccessBannerMessage({ userToken, dealSnapshot, req });
+      await getDealSuccessBannerMessage({ userToken, dealSnapshot, flashedSuccessMessage });
 
       // Assert
       expect(getDealCancellationMock).toHaveBeenCalledTimes(0);

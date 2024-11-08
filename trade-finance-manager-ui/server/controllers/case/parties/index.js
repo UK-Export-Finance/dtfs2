@@ -1,3 +1,4 @@
+const { FLASH_TYPES } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { userCanEdit, isEmptyString, partyType } = require('./helpers');
 const validatePartyURN = require('./partyUrnValidation.validate');
@@ -39,7 +40,7 @@ const getAllParties = async (req, res) => {
     const successMessage = await getDealSuccessBannerMessage({
       dealSnapshot,
       userToken,
-      req,
+      flashedSuccessMessage: req.flash(FLASH_TYPES.SUCCESS_MESSAGE),
     });
 
     // Render all parties URN page

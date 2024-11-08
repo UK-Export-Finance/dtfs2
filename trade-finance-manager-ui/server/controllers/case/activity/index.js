@@ -1,5 +1,5 @@
 const { getUnixTime } = require('date-fns');
-const { ACTIVITY_TYPES } = require('@ukef/dtfs2-common');
+const { ACTIVITY_TYPES, FLASH_TYPES } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { generateValidationErrors } = require('../../../helpers/validation');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
@@ -42,7 +42,7 @@ const getActivity = async (req, res) => {
   const successMessage = await getDealSuccessBannerMessage({
     dealSnapshot,
     userToken,
-    req,
+    flashedSuccessMessage: req.flash(FLASH_TYPES.SUCCESS_MESSAGE),
   });
 
   return res.render('case/activity/activity.njk', {
@@ -91,7 +91,7 @@ const filterActivities = async (req, res) => {
   const successMessage = await getDealSuccessBannerMessage({
     dealSnapshot,
     userToken,
-    req,
+    flashedSuccessMessage: req.flash(FLASH_TYPES.SUCCESS_MESSAGE),
   });
 
   return res.render('case/activity/activity.njk', {
