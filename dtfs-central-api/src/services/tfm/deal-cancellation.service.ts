@@ -24,7 +24,7 @@ export class DealCancellationService {
    * @param auditDetails - the users audit details
    * @returns Tfm deal cancellation response
    */
-  public static async cancelDeal(
+  public static async submitDealCancellation(
     dealId: ObjectId | string,
     cancellation: TfmDealCancellation,
     auditDetails: TfmAuditDetails,
@@ -80,7 +80,7 @@ export class DealCancellationService {
    * @param auditDetails - the users audit details
    * @returns Tfm deal cancellation response
    */
-  public static async submitScheduledCancellation(
+  public static async processScheduledCancellation(
     dealId: ObjectId | string,
     cancellation: TfmDealCancellation,
     auditDetails: AuditDetails,

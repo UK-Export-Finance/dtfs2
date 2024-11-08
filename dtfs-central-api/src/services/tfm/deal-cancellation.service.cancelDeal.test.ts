@@ -110,7 +110,7 @@ describe('DealCancellationService', () => {
     jest.useRealTimers();
   });
 
-  describe('cancelDeal', () => {
+  describe('submitDealCancellation', () => {
     beforeEach(() => {
       jest.clearAllMocks();
 
@@ -134,7 +134,7 @@ describe('DealCancellationService', () => {
 
         it('calls submitDealCancellation with the correct params', async () => {
           // Act
-          await DealCancellationService.cancelDeal(dealId, cancellation, auditDetails);
+          await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 
           // Assert
           const expectedActivity: TfmActivity = {
@@ -156,7 +156,7 @@ describe('DealCancellationService', () => {
 
         it('returns the deal cancellation response object', async () => {
           // Act
-          const dealCancellationResponse = await DealCancellationService.cancelDeal(dealId, cancellation, auditDetails);
+          const dealCancellationResponse = await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 
           // Assert
           expect(dealCancellationResponse).toEqual(mockCancellationResponse);
@@ -164,7 +164,7 @@ describe('DealCancellationService', () => {
 
         it('updates the deal status to cancelled', async () => {
           // Act
-          await DealCancellationService.cancelDeal(dealId, cancellation, auditDetails);
+          await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 
           // Assert
           expect(updatePortalDealStatusMock).toHaveBeenCalledTimes(1);
@@ -176,7 +176,7 @@ describe('DealCancellationService', () => {
           findOneUserByIdMock.mockResolvedValueOnce(null);
 
           // Assert
-          await expect(() => DealCancellationService.cancelDeal(dealId, cancellation, auditDetails)).rejects.toThrow(
+          await expect(() => DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails)).rejects.toThrow(
             new InvalidAuditDetailsError(`Supplied auditDetails 'id' ${auditDetails.id.toString()} does not correspond to a valid user`),
           );
         });
@@ -192,7 +192,7 @@ describe('DealCancellationService', () => {
 
         it('calls scheduleDealCancellation with the correct params', async () => {
           // Act
-          await DealCancellationService.cancelDeal(dealId, cancellation, auditDetails);
+          await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 
           // Assert
           const expectedActivity: TfmActivity = {
@@ -214,7 +214,7 @@ describe('DealCancellationService', () => {
 
         it('returns the deal cancellation response object', async () => {
           // Act
-          const dealCancellationResponse = await DealCancellationService.cancelDeal(dealId, cancellation, auditDetails);
+          const dealCancellationResponse = await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 
           // Assert
           expect(dealCancellationResponse).toEqual(mockCancellationResponse);
@@ -222,7 +222,7 @@ describe('DealCancellationService', () => {
 
         it('does not update the deal status', async () => {
           // Act
-          await DealCancellationService.cancelDeal(dealId, cancellation, auditDetails);
+          await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 
           // Assert
           expect(updatePortalDealStatusMock).toHaveBeenCalledTimes(0);
@@ -233,7 +233,7 @@ describe('DealCancellationService', () => {
           findOneUserByIdMock.mockResolvedValueOnce(null);
 
           // Assert
-          await expect(() => DealCancellationService.cancelDeal(dealId, cancellation, auditDetails)).rejects.toThrow(
+          await expect(() => DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails)).rejects.toThrow(
             new InvalidAuditDetailsError(`Supplied auditDetails 'id' ${auditDetails.id.toString()} does not correspond to a valid user`),
           );
         });

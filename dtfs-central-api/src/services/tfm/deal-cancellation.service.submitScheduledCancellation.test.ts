@@ -49,7 +49,7 @@ describe('DealCancellationService', () => {
     jest.useRealTimers();
   });
 
-  describe('submitScheduledCancellation', () => {
+  describe('processScheduledCancellation', () => {
     beforeEach(() => {
       jest.clearAllMocks();
 
@@ -68,7 +68,7 @@ describe('DealCancellationService', () => {
       const cancellation = aDealCancellation();
 
       // Act
-      await DealCancellationService.submitScheduledCancellation(dealId, cancellation, auditDetails);
+      await DealCancellationService.processScheduledCancellation(dealId, cancellation, auditDetails);
 
       // Assert
       expect(submitDealCancellationMock).toHaveBeenCalledTimes(1);
@@ -80,7 +80,7 @@ describe('DealCancellationService', () => {
       const cancellation = aDealCancellation();
 
       // Act
-      const dealCancellationResponse = await DealCancellationService.submitScheduledCancellation(dealId, cancellation, auditDetails);
+      const dealCancellationResponse = await DealCancellationService.processScheduledCancellation(dealId, cancellation, auditDetails);
 
       // Assert
       expect(dealCancellationResponse).toEqual(mockCancellationResponse);
@@ -91,7 +91,7 @@ describe('DealCancellationService', () => {
       const cancellation = aDealCancellation();
 
       // Act
-      await DealCancellationService.submitScheduledCancellation(dealId, cancellation, auditDetails);
+      await DealCancellationService.processScheduledCancellation(dealId, cancellation, auditDetails);
 
       // Assert
       expect(updatePortalDealStatusMock).toHaveBeenCalledTimes(1);

@@ -6,7 +6,7 @@ import { cancelDealJob } from './cancel-deal-job';
 
 const now = new Date();
 
-const submitScheduledCancellationMock = jest.fn() as jest.Mock<Promise<TfmDealCancellationResponse>>;
+const processScheduledCancellationMock = jest.fn() as jest.Mock<Promise<TfmDealCancellationResponse>>;
 const findScheduledDealCancellationsMock = jest.fn() as jest.Mock<Promise<TfmDeal[]>>;
 
 jest.mock('../../repositories/tfm-deals-repo', () => ({
@@ -17,8 +17,8 @@ jest.mock('../../repositories/tfm-deals-repo', () => ({
 
 jest.mock('../../services/tfm/deal-cancellation.service', () => ({
   DealCancellationService: {
-    submitScheduledCancellation: (dealId: string, cancellation: TfmDealCancellation, auditDetails: AuditDetails) =>
-      submitScheduledCancellationMock(dealId, cancellation, auditDetails),
+    processScheduledCancellation: (dealId: string, cancellation: TfmDealCancellation, auditDetails: AuditDetails) =>
+      processScheduledCancellationMock(dealId, cancellation, auditDetails),
   },
 }));
 
@@ -61,18 +61,18 @@ describe('cancelDealJob', () => {
     expect(findScheduledDealCancellationsMock).toHaveBeenCalledTimes(1);
   });
 
-  it('it calls submitScheduledCancellation with the correct arguments', async () => {
+  it('it calls processScheduledCancellation with the correct arguments', async () => {
     // Act
     await cancelDealJob.task('manual');
 
     // Assert
-    expect(submitScheduledCancellationMock).toHaveBeenCalledTimes(2);
-    expect(submitScheduledCancellationMock).toHaveBeenCalledWith(
+    expect(processScheduledCancellationMock).toHaveBeenCalledTimes(2);
+    expect(processScheduledCancellationMock).toHaveBeenCalledWith(
       dealWithCancellationToday._id,
       dealWithCancellationToday.tfm.cancellation,
       generateSystemAuditDetails(),
     );
-    expect(submitScheduledCancellationMock).toHaveBeenCalledWith(
+    expect(processScheduledCancellationMock).toHaveBeenCalledWith(
       dealWithCancellationInPast._id,
       dealWithCancellationInPast.tfm.cancellation,
       generateSystemAuditDetails(),
