@@ -23,14 +23,6 @@ export const deleteFacility = async (
 
     const facility = await findOneFacility(facilityId);
 
-    if (!facility) {
-      return res.status(404).send({ status: 400, message: 'Facility not found' });
-    }
-
-    if (!('dealId' in facility)) {
-      return res.status(500).send({ status: 500, message: 'Facility object missing dealId' });
-    }
-
     await deleteOne({
       documentId: new ObjectId(facilityId),
       collectionName: MONGO_DB_COLLECTIONS.FACILITIES,

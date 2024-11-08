@@ -1,5 +1,5 @@
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS, FacilityNotFoundError, InvalidParameterError, ApiError } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, InvalidParameterError, ApiError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./get-facility.controller');
@@ -12,11 +12,7 @@ const withoutId = (obj) => {
 };
 
 const updateFacilityStatus = async ({ facilityId, status, auditDetails }) => {
-  const existingFacility = findOneFacility(facilityId);
-
-  if (!existingFacility) {
-    throw FacilityNotFoundError(facilityId);
-  }
+  const existingFacility = await findOneFacility(facilityId);
 
   if (existingFacility.status === 400) {
     throw InvalidParameterError('facilityId', facilityId);

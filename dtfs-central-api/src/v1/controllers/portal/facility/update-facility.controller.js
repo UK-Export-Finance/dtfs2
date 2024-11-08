@@ -1,5 +1,5 @@
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS, FacilityNotFoundError, ApiError, InvalidFacilityIdError } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, ApiError, InvalidFacilityIdError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./get-facility.controller');
@@ -58,9 +58,6 @@ exports.updateFacilityPut = async (req, res) => {
 
     const facility = await findOneFacility(facilityId);
 
-    if (!facility) {
-      throw FacilityNotFoundError(facilityId);
-    }
     const { dealId } = facility;
 
     const updatedFacility = await updateFacility({ facilityId, facilityUpdate, dealId, user, routePath, auditDetails });
