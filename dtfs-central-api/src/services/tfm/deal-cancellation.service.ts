@@ -32,7 +32,7 @@ export class DealCancellationService {
     const effectiveFromDate = toDate(cancellation.effectiveFrom);
     const endOfToday = endOfDay(new Date());
 
-    const isDealCancellationPastOrPresent = !isAfter(effectiveFromDate, endOfToday);
+    const isDealCancellationInFuture = isAfter(effectiveFromDate, endOfToday);
 
     const user = await TfmUsersRepo.findOneUserById(auditDetails.id);
 
@@ -51,26 +51,26 @@ export class DealCancellationService {
       ...cancellation,
     };
 
-    if (isDealCancellationPastOrPresent) {
-      const response = await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation, activity, auditDetails });
-
-      const {
-        cancelledDeal: {
-          dealSnapshot: { dealType },
-        },
-      } = response;
-
-      await PortalDealService.updateStatus({
-        dealId,
-        status: DEAL_STATUS.CANCELLED,
-        auditDetails,
-        dealType,
-      });
-
-      return response;
+    if (isDealCancellationInFuture) {
+      return await TfmDealCancellationRepo.scheduleDealCancellation({ dealId, cancellation, activity, auditDetails });
     }
 
-    return await TfmDealCancellationRepo.scheduleDealCancellation({ dealId, cancellation, activity, auditDetails });
+    const response = await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation, activity, auditDetails });
+
+    const {
+      cancelledDeal: {
+        dealSnapshot: { dealType },
+      },
+    } = response;
+
+    await PortalDealService.updateStatus({
+      dealId,
+      status: DEAL_STATUS.CANCELLED,
+      auditDetails,
+      dealType,
+    });
+
+    return response;
   }
 
   /**
