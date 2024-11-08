@@ -76,7 +76,7 @@ describe('when AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED is not true', () => {
     });
   
     it('should call getPartyDbInfo and return urn', async () => {
-      const { getPartyDbInfo } = require('../api.js');
+      const { getPartyDbInfo, createParty } = require('../api.js');
       getPartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
   
       const companyData = { companyRegNo: '12345678' };
@@ -84,12 +84,14 @@ describe('when AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED is not true', () => {
       const result = await api.getPartyUrn(companyData);
   
       expect(getPartyDbInfo).toHaveBeenCalledWith(companyData);
+  
+      expect(createParty).toHaveBeenCalledTimes(0);
       
       expect(result).toBe('TEST_URN');
     });
   
     it('should return an empty string if getPartyDbInfo returns false', async () => {
-      const { getPartyDbInfo } = require('../api.js');
+      const { getPartyDbInfo, createParty } = require('../api.js');
       getPartyDbInfo.mockResolvedValue(false);
   
       const companyData = { companyRegNo: '12345678' };
@@ -97,6 +99,8 @@ describe('when AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED is not true', () => {
       const result = await api.getPartyUrn(companyData);
   
       expect(getPartyDbInfo).toHaveBeenCalledWith(companyData);
+
+      expect(createParty).toHaveBeenCalledTimes(0);
       
       expect(result).toBe('');
     });
