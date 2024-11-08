@@ -6,6 +6,7 @@ import { UtilisationReportStateMachine } from '../../../../services/state-machin
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { executeWithSqlTransaction } from '../../../../helpers';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 
 jest.mock('../../../../helpers');
 
@@ -64,7 +65,7 @@ describe('post-remove-fees-from-payment.controller helpers', () => {
 
       // Assert
       expect(handleEventSpy).toHaveBeenCalledWith({
-        type: 'REMOVE_FEES_FROM_PAYMENT_GROUP',
+        type: UTILISATION_REPORT_EVENT_TYPE.REMOVE_FEES_FROM_PAYMENT_GROUP,
         payload: {
           transactionEntityManager: mockEntityManager,
           feeRecordsToRemove,
