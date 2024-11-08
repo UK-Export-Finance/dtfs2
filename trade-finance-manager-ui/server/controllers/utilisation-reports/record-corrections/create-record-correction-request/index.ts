@@ -4,6 +4,7 @@ import { CreateRecordCorrectionRequestViewModel } from '../../../../types/view-m
 import { asUserSession } from '../../../../helpers/express-session';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
+import api from '../../../../api';
 
 export type CreateRecordCorrectionRequestRequest = CustomExpressRequest<{
   params: {
@@ -15,23 +16,12 @@ export type CreateRecordCorrectionRequestRequest = CustomExpressRequest<{
 const renderCreateRecordCorrectionRequestPage = (res: Response, context: CreateRecordCorrectionRequestViewModel) =>
   res.render('utilisation-reports/record-corrections/create-record-correction-request.njk', context);
 
-export const createRecordCorrectionRequest = (req: CreateRecordCorrectionRequestRequest, res: Response) => {
+export const createRecordCorrectionRequest = async (req: CreateRecordCorrectionRequestRequest, res: Response) => {
   try {
-    const { user } = asUserSession(req.session);
-    const { reportId } = req.params;
+    const { user, userToken } = asUserSession(req.session);
+    const { reportId, feeRecordId } = req.params;
 
-    // TODO FN-3573: In a subsequent PR, add a new endpoint which returns minimal data, called getFeeRecord (or other generic naming).
-    const feeRecordDetails = {
-      bank: {
-        name: 'Test Bank',
-      },
-      reportPeriod: {
-        start: { month: 1, year: 2024 },
-        end: { month: 1, year: 2024 },
-      },
-      facilityId: '0012345678',
-      exporter: 'Sample Company Ltd',
-    };
+    const feeRecordDetails = await api.getFeeRecordDetails(reportId, feeRecordId, userToken);
 
     return renderCreateRecordCorrectionRequestPage(res, {
       user,

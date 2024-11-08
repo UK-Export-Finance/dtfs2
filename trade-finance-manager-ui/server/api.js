@@ -1321,6 +1321,20 @@ const submitDealCancellation = async (dealId, cancellation, userToken) => {
   }
 };
 
+/**
+ * Gets the fee record details
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('./api-response-types').GetFeeRecordDetailsResponseBody>}
+ */
+const getFeeRecordDetails = async (reportId, feeRecordId, userToken) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-record/${feeRecordId}`, {
+    headers: generateHeaders(userToken),
+  });
+  return response.data;
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -1381,4 +1395,5 @@ module.exports = {
   getDealCancellation,
   deleteDealCancellation,
   submitDealCancellation,
+  getFeeRecordDetails,
 };
