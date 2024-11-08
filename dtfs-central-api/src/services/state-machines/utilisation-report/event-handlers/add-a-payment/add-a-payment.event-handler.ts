@@ -11,6 +11,7 @@ import { NewPaymentDetails } from '../../../../../types/utilisation-reports';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { feeRecordsMatchAttachedPayments } from '../helpers';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../event/utilisation-report.event-type';
 
 type AddAPaymentEventPayload = {
   transactionEntityManager: EntityManager;
@@ -19,7 +20,7 @@ type AddAPaymentEventPayload = {
   requestSource: DbRequestSource;
 };
 
-export type UtilisationReportAddAPaymentEvent = BaseUtilisationReportEvent<'ADD_A_PAYMENT', AddAPaymentEventPayload>;
+export type UtilisationReportAddAPaymentEvent = BaseUtilisationReportEvent<typeof UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT, AddAPaymentEventPayload>;
 
 /**
  * Handler for the add a payment event

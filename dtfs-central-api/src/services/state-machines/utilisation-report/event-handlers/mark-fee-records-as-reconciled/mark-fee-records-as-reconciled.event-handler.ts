@@ -3,6 +3,7 @@ import { DbRequestSource, FEE_RECORD_STATUS, FeeRecordEntity, RECONCILIATION_COM
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { SendReportReconciledEmail } from '../helpers/send-report-reconciled-email';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../event/utilisation-report.event-type';
 
 type MarkFeeRecordsAsReconciledEventPayload = {
   requestSource: DbRequestSource;
@@ -12,7 +13,7 @@ type MarkFeeRecordsAsReconciledEventPayload = {
 };
 
 export type UtilisationReportMarkFeeRecordsAsReconciledEvent = BaseUtilisationReportEvent<
-  'MARK_FEE_RECORDS_AS_RECONCILED',
+  typeof UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_RECONCILED,
   MarkFeeRecordsAsReconciledEventPayload
 >;
 
