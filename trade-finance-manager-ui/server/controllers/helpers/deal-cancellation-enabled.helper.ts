@@ -19,6 +19,11 @@ export const canSubmissionTypeBeCancelled = (submissionType: DealSubmissionType 
   return submissionType === AIN || submissionType === MIN;
 };
 
+/**
+ * Checks if deal cancellation is enabled for a deal
+ * @param submissionType the deal submission type
+ * @returns true or false depending on the feature flag & submission type
+ */
 export const isDealCancellationEnabled = (submissionType: DealSubmissionType | null): boolean => {
   const isDealCancellationFeatureFlagEnabled = isTfmDealCancellationFeatureFlagEnabled();
   const isAcceptableSubmissionType = canSubmissionTypeBeCancelled(submissionType);

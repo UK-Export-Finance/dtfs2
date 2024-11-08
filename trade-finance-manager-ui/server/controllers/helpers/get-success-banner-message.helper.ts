@@ -21,7 +21,7 @@ export const getScheduledCancellationBannerMessage = async ({ dealSnapshot, user
 
   const cancellation = (await api.getDealCancellation(dealId.toString(), userToken)) as TfmDealCancellationWithStatus;
 
-  const dealIsScheduledToBeCancelled = cancellation.status === TFM_DEAL_CANCELLATION_STATUS.SCHEDULED && cancellation.effectiveFrom;
+  const dealIsScheduledToBeCancelled = cancellation.status === TFM_DEAL_CANCELLATION_STATUS.SCHEDULED;
 
   if (!dealIsScheduledToBeCancelled) {
     return null;
