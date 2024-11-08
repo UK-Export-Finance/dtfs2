@@ -7,6 +7,7 @@ import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { NewPaymentDetails } from '../../../../types/utilisation-reports';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
+import { validateFeeRecordsFormCompleteGroup } from '../../../validation/utilisation-report-service/fee-record-validator';
 
 /**
  * Adds a payment to the utilisation report with the specified id and
@@ -34,6 +35,8 @@ export const addPaymentToUtilisationReport = async (
   if (!isValidPaymentCurrency) {
     throw new InvalidPayloadError(`Payment currency '${payment.currency}' does not match fee record payment currency`);
   }
+
+  await validateFeeRecordsFormCompleteGroup(feeRecordIds);
 
   return await executeWithSqlTransaction<FeeRecordStatus>(async (transactionEntityManager) => {
     await utilisationReportStateMachine.handleEvent({

@@ -151,6 +151,7 @@ env:
   ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE: ${{ vars.ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE }}
   CONTACT_US_EMAIL_ADDRESS: ${{ vars.CONTACT_US_EMAIL_ADDRESS }}
   FF_TFM_PAYMENT_RECONCILIATION_ENABLED: ${{ vars.FF_TFM_PAYMENT_RECONCILIATION_ENABLED }}
+  FF_FEE_RECORD_CORRECTION_ENABLED: ${{ vars.FF_FEE_RECORD_CORRECTION_ENABLED }}
   FF_TFM_FACILITY_END_DATE_ENABLED: ${{ vars.FF_TFM_FACILITY_END_DATE_ENABLED }}
   FF_TFM_DEAL_CANCELLATION_ENABLED: ${{ vars.FF_TFM_DEAL_CANCELLATION_ENABLED }}
   FF_TFM_SSO_ENABLED: ${{ vars.FF_TFM_SSO_ENABLED }}
@@ -538,7 +539,7 @@ jobs:
             '*.spec.js',
             'application/**/*.spec.js',
             'checker/**/*.spec.js',
-            'clone/**/*.spec.js',
+            'clone/*.spec.js',
             'eligibility/**/*.spec.js',
             'exporter/**/*.spec.js',
             'external/**/*.spec.js',
@@ -656,6 +657,8 @@ jobs:
             'header/**/*.spec.js',
             'login/**/*.spec.js',
             'users/**/*.spec.js',
+            'utilisation-reports/report-reconciliation/**/*.spec.js',
+            'utilisation-reports/fee-record-correction/feature-flag-disabled/**/*.spec.js',
           ]
 
     concurrency:
@@ -795,10 +798,10 @@ jobs:
     needs: [setup]
     env:
       # Various feature flags
-      FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
+      FF_FEE_RECORD_CORRECTION_ENABLED: 'true'
       FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
       FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
-      # TODO DTFS2-6892: add FF_TFM_SSO_ENABLED feature flag here when e2e tests implimented
+      # TODO DTFS2-6892: add FF_TFM_SSO_ENABLED feature flag here when e2e tests implemented
       GEF_DEAL_VERSION: 1
     environment:
       name: ${{ needs.setup.outputs.environment }}
@@ -814,7 +817,8 @@ jobs:
             './gef/cypress/e2e/*.spec.js',
             './gef/cypress/e2e/application/**/*.spec.js',
             './gef/cypress/e2e/checker/**/*.spec.js',
-            './gef/cypress/e2e/clone/**/*.spec.js',
+            './gef/cypress/e2e/clone/*.spec.js',
+            './gef/cypress/e2e/clone/facility-end-date-enabled/*.spec.js',
             './gef/cypress/e2e/eligibility/**/*.spec.js',
             './gef/cypress/e2e/exporter/**/*.spec.js',
             './gef/cypress/e2e/external/**/*.spec.js',
@@ -869,7 +873,7 @@ jobs:
             './tfm/cypress/e2e/journeys/header/**/*.spec.js',
             './tfm/cypress/e2e/journeys/login/**/*.spec.js',
             './tfm/cypress/e2e/journeys/users/**/*.spec.js',
-            './tfm/cypress/e2e/journeys/utilisation-reports/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/utilisation-reports/fee-record-correction/feature-flag-enabled/**/*.spec.js',
           ]
 
     concurrency:
