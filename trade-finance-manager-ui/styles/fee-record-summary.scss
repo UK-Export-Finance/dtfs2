@@ -1,24 +1,9 @@
 .fee-record-summary {
   @extend .block-header;
-  padding: govuk-spacing(4);
-  margin-bottom: govuk-spacing(8);
 
-  .govuk-body,
-  .govuk-link,
-  .govuk-back-link {
+  .govuk-body {
     color: govuk-colour("white");
     margin-bottom: 0;
     line-height: 25px;
-    &:focus {
-      color: $govuk-focus-text-colour;
-    }
-  }
-
-  .govuk-grid-row {
-    padding-top: govuk-spacing(3);
-  }
-
-  .govuk-grid-row:last-child {
-    padding-bottom: govuk-spacing(3);
   }
 }
