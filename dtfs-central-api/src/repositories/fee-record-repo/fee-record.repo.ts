@@ -13,17 +13,18 @@ export const FeeRecordRepo = SqlDbDataSource.getRepository(FeeRecordEntity).exte
   },
 
   /**
-   * Finds one fee record with the supplied id and report id
+   * Finds one fee record with the supplied id and report id with the report attached
    * @param id - The fee record id
    * @param reportId - The report id of the report attached to the fee record
-   * @returns The found fee record
+   * @returns The found fee record with the report attached
    */
-  async findOneByIdAndReportId(id: number, reportId: number): Promise<FeeRecordEntity | null> {
+  async findOneByIdAndReportIdWithReport(id: number, reportId: number): Promise<FeeRecordEntity | null> {
     return await this.findOne({
       where: {
         id,
         report: { id: reportId },
       },
+      relations: { report: true },
     });
   },
 

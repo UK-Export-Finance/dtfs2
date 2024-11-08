@@ -1,9 +1,46 @@
-import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { FeeRecordEntityMockBuilder, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { mapToFeeRecordDetails } from './helpers';
+import { getBankNameById } from '../../../../repositories/banks-repo';
+
+jest.mock('../../../../repositories/banks-repo');
 
 describe('get-fee-record-details-by-id.controller helpers', () => {
   describe('mapToFeeRecordDetails', () => {
-    it('returns an object containing the mapped fee record', () => {
+    const bankId = '123';
+
+    const utilisationReport = new UtilisationReportEntityMockBuilder().withBankId(bankId).build();
+
+    it('returns an object containing the bank', async () => {
+      // Arrange
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).build();
+
+      const bankName = 'Test bank';
+      jest.mocked(getBankNameById).mockResolvedValue(bankName);
+
+      // Act
+      const feeRecordDetails = await mapToFeeRecordDetails(feeRecord);
+
+      // Assert
+      expect(feeRecordDetails.bank).toEqual({ id: bankId, name: bankName });
+    });
+
+    it('returns an object containing the report period', async () => {
+      // Arrange
+      const reportPeriod: ReportPeriod = {
+        start: { month: 1, year: 2024 },
+        end: { month: 1, year: 2024 },
+      };
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).build();
+      feeRecord.report.reportPeriod = reportPeriod;
+
+      // Act
+      const feeRecordDetails = await mapToFeeRecordDetails(feeRecord);
+
+      // Assert
+      expect(feeRecordDetails.reportPeriod).toEqual(reportPeriod);
+    });
+
+    it('returns an object containing the mapped fee record details', async () => {
       // Arrange
       const id = 123;
       const facilityId = '0012345678';
@@ -15,17 +52,13 @@ describe('get-fee-record-details-by-id.controller helpers', () => {
         .withExporter(exporter)
         .build();
 
-      const mappedFeeRecord = {
-        id,
-        facilityId,
-        exporter,
-      };
-
       // Act
-      const feeRecordDetails = mapToFeeRecordDetails(feeRecord);
+      const feeRecordDetails = await mapToFeeRecordDetails(feeRecord);
 
       // Assert
-      expect(feeRecordDetails).toEqual(mappedFeeRecord);
+      expect(feeRecordDetails.id).toEqual(id);
+      expect(feeRecordDetails.facilityId).toEqual(facilityId);
+      expect(feeRecordDetails.exporter).toEqual(exporter);
     });
   });
 });

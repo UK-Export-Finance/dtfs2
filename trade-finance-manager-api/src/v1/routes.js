@@ -197,4 +197,9 @@ authRouter
   .route('/utilisation-reports/:reportId/add-to-an-existing-payment')
   .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.postFeesToAnExistingPayment);
 
+authRouter
+  .route('/utilisation-reports/:reportId/fee-record/:feeRecordId')
+  .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), handleExpressValidatorResult)
+  .get(utilisationReportsController.getFeeRecordDetailsById);
+
 module.exports = { authRouter, openRouter };

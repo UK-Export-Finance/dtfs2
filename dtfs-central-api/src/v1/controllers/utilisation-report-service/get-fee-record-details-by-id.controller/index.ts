@@ -1,3 +1,4 @@
+import { SessionBank, ReportPeriod } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
 import { ApiError, NotFoundError } from '../../../../errors';
@@ -6,6 +7,8 @@ import { mapToFeeRecordDetails } from './helpers';
 
 export type GetFeeRecordDetailsResponseBody = {
   id: number;
+  bank: SessionBank;
+  reportPeriod: ReportPeriod;
   facilityId: string;
   exporter: string;
 };
@@ -16,13 +19,13 @@ export const getFeeRecordDetailsById = async (req: Request, res: GetFeeRecordDet
   const { reportId, feeRecordId } = req.params;
 
   try {
-    const feeRecord = await FeeRecordRepo.findOneByIdAndReportId(Number(feeRecordId), Number(reportId));
+    const feeRecord = await FeeRecordRepo.findOneByIdAndReportIdWithReport(Number(feeRecordId), Number(reportId));
 
     if (!feeRecord) {
       throw new NotFoundError(`Failed to find a fee record with id '${feeRecordId}' attached to report with id '${reportId}'`);
     }
 
-    const feeRecordDetails = mapToFeeRecordDetails(feeRecord);
+    const feeRecordDetails = await mapToFeeRecordDetails(feeRecord);
 
     return res.status(HttpStatusCode.Ok).send(feeRecordDetails);
   } catch (error) {

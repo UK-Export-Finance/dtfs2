@@ -41,6 +41,7 @@ describe('get-fee-record-details-by-id.controller', () => {
             id: feeRecordId,
             report: { id: reportId },
           },
+          relations: { report: true },
         })
         .mockResolvedValue(null);
 
@@ -61,6 +62,7 @@ describe('get-fee-record-details-by-id.controller', () => {
             id: feeRecordId,
             report: { id: reportId },
           },
+          relations: { report: true },
         })
         .mockResolvedValue(FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).build());
 
@@ -81,6 +83,7 @@ describe('get-fee-record-details-by-id.controller', () => {
             id: feeRecordId,
             report: { id: reportId },
           },
+          relations: { report: true },
         })
         .mockResolvedValue(FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).build());
 
@@ -88,7 +91,7 @@ describe('get-fee-record-details-by-id.controller', () => {
         field1: 'Some value',
         field2: 'Another value',
       } as unknown as GetFeeRecordDetailsResponseBody;
-      jest.mocked(mapToFeeRecordDetails).mockReturnValue(feeRecordDetails);
+      jest.mocked(mapToFeeRecordDetails).mockResolvedValue(feeRecordDetails);
 
       // Act
       await getFeeRecordDetailsById(req, res);
