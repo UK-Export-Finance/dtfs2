@@ -11,7 +11,7 @@ import {
   TfmUser,
 } from '@ukef/dtfs2-common';
 import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import { add, getUnixTime, sub } from 'date-fns';
+import { add, endOfDay, getUnixTime, startOfDay, sub } from 'date-fns';
 import { ObjectId } from 'mongodb';
 import { DealCancellationService } from './deal-cancellation.service';
 import { aTfmUser } from '../../../test-helpers';
@@ -57,6 +57,10 @@ const dealId = 'dealId';
 
 const effectiveFromPresentAndPastTestCases = [
   {
+    description: 'the end of today',
+    effectiveFrom: endOfDay(new Date()).valueOf(),
+  },
+  {
     description: 'now',
     effectiveFrom: new Date().valueOf(),
   },
@@ -79,6 +83,10 @@ const effectiveFromPresentAndPastTestCases = [
 ];
 
 const effectiveFromFutureTestCases = [
+  {
+    description: 'the start of tomorrow',
+    effectiveFrom: startOfDay(add(new Date(), { days: 1 })).valueOf(),
+  },
   {
     description: 'tomorrow',
     effectiveFrom: add(new Date(), { days: 1 }).valueOf(),

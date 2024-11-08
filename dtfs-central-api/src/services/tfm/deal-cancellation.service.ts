@@ -19,7 +19,10 @@ export class DealCancellationService {
     cancellation: TfmDealCancellation,
     auditDetails: TfmAuditDetails,
   ): Promise<TfmDealCancellationResponse> {
-    const isDealCancellationPastOrPresent = new Date().valueOf() >= cancellation.effectiveFrom;
+    const effectiveFromDate = toDate(cancellation.effectiveFrom);
+    const endOfToday = endOfDay(new Date());
+
+    const isDealCancellationPastOrPresent = !isAfter(effectiveFromDate, endOfToday);
 
     const user = await TfmUsersRepo.findOneUserById(auditDetails.id);
 
@@ -41,23 +44,18 @@ export class DealCancellationService {
     if (isDealCancellationPastOrPresent) {
       const response = await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation, activity, auditDetails });
 
-      const effectiveFromDate = toDate(cancellation.effectiveFrom);
-      const endOfToday = endOfDay(new Date());
-
       const {
         cancelledDeal: {
           dealSnapshot: { dealType },
         },
       } = response;
 
-      if (!isAfter(effectiveFromDate, endOfToday)) {
-        await PortalDealService.updatePortalDealStatus({
-          dealId,
-          status: DEAL_STATUS.CANCELLED,
-          auditDetails,
-          dealType,
-        });
-      }
+      await PortalDealService.updatePortalDealStatus({
+        dealId,
+        status: DEAL_STATUS.CANCELLED,
+        auditDetails,
+        dealType,
+      });
 
       return response;
     }
