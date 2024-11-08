@@ -21,7 +21,7 @@ const handleCsrfTokenError = (res: Response) => {
  * @param res
  * @param problemWithServiceTemplate
  */
-const handleOtherwiseUnhandledError = (error: unknown, res: Response, problemWithServiceTemplate: string) => {
+const handleUnhandledError = (error: unknown, res: Response, problemWithServiceTemplate: string) => {
   console.error('An unhandled error occurred:', error);
   res.status(HttpStatusCode.InternalServerError);
   res.render(problemWithServiceTemplate);
@@ -66,7 +66,7 @@ export const getFrontEndErrorHandler = (problemWithServiceTemplate: string = '_p
         break;
       case 'UNHANDLED_ERROR':
       default:
-        handleOtherwiseUnhandledError(error, res, problemWithServiceTemplate);
+        handleUnhandledError(error, res, problemWithServiceTemplate);
         break;
     }
   };
