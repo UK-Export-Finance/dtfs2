@@ -28,7 +28,16 @@ const utilisationReportPage = {
         cy.get(`[type="checkbox"][id="feeRecordIds-${feeRecordIds.join(',')}-reportedPaymentsCurrency-${paymentCurrency}-status-${status}"]`),
       status: (feeRecordId) => cy.get(`[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}-status"]`),
       // NOTE: Using the ^= selector to match all table rows starting with the given data-cy value (regardless of the actual fee record id value).
-      facilityIdByRowIndex: (rowIndex) => cy.get('tr[data-cy^="premium-payments-table-row--feeRecordId-"]').eq(rowIndex).find('th').first(),
+      rows: () => cy.get(`tr[data-cy^="premium-payments-table-row--feeRecordId-"]`),
+      facilityIdByRowIndex: (rowIndex) =>
+        cy.get('tr[data-cy^="premium-payments-table-row--feeRecordId-"]').eq(rowIndex).find('[data-cy="facility-id"]').first(),
+      exporterIdByRowIndex: (rowIndex) => cy.get('tr[data-cy^="premium-payments-table-row--feeRecordId-"]').eq(rowIndex).find('[data-cy="exporter"]').first(),
+      reportedFeesByRowIndex: (rowIndex) =>
+        cy.get('tr[data-cy^="premium-payments-table-row--feeRecordId-"]').eq(rowIndex).find('[data-cy="reported-fees"]').first(),
+      reportedPaymentsByRowIndex: (rowIndex) =>
+        cy.get('tr[data-cy^="premium-payments-table-row--feeRecordId-"]').eq(rowIndex).find('[data-cy="reported-payments"]').first(),
+      totalReportedPaymentsByRowIndex: (rowIndex) =>
+        cy.get('tr[data-cy^="premium-payments-table-row--feeRecordId-"]').eq(rowIndex).find('[data-cy="total-reported-payments"]').first(),
     },
   },
   keyingSheetTab: {
@@ -75,6 +84,9 @@ const utilisationReportPage = {
   utilisationTab: {
     downloadReportLink: () => cy.get('[data-cy="download-report-link"]'),
     table: {
+      // NOTE: Using the ^= selector to match all table rows starting with the given data-cy value (regardless of the actual fee record id value).
+      rows: () => cy.get(`tr[data-cy^="utilisation-table-row-"]`),
+      rowByIndex: (rowIndex) => cy.get(`tr[data-cy^="utilisation-table-row-"]`).eq(rowIndex),
       row: (feeRecordId) => cy.get(`tr[data-cy="utilisation-table-row-${feeRecordId}"]`),
       utilisationHeader: () => cy.get('[data-cy="utilisation-header"]'),
       valueHeader: () => cy.get('[data-cy="value-header"]'),
