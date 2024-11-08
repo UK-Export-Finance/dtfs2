@@ -12,7 +12,7 @@ import { ObjectId } from 'mongodb';
 import { endOfDay, getUnixTime, isAfter, toDate } from 'date-fns';
 import { TfmDealCancellationRepo } from '../../repositories/tfm-deals-repo';
 import { TfmUsersRepo } from '../../repositories/tfm-users-repo';
-import { PortalDealService } from '../portal/update-deal-status.service';
+import { PortalDealService } from '../portal/deal.service';
 
 export class DealCancellationService {
   /**
@@ -60,7 +60,7 @@ export class DealCancellationService {
         },
       } = response;
 
-      await PortalDealService.updatePortalDealStatus({
+      await PortalDealService.updateStatus({
         dealId,
         status: DEAL_STATUS.CANCELLED,
         auditDetails,
@@ -93,7 +93,7 @@ export class DealCancellationService {
       },
     } = response;
 
-    await PortalDealService.updatePortalDealStatus({
+    await PortalDealService.updateStatus({
       dealId,
       status: DEAL_STATUS.CANCELLED,
       auditDetails,

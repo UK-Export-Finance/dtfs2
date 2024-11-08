@@ -4,7 +4,7 @@ import { updateBssEwcsDealStatus } from '../../v1/controllers/portal/deal/update
 import { updateGefDealStatus } from '../../v1/controllers/portal/gef-deal/put-gef-deal.status.controller';
 
 export class PortalDealService {
-  public static async updatePortalDealStatus({
+  public static async updateStatus({
     dealId,
     status,
     auditDetails,

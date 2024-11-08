@@ -30,9 +30,9 @@ jest.mock('../../repositories/tfm-users-repo', () => ({
   },
 }));
 
-jest.mock('../portal/update-deal-status.service', () => ({
+jest.mock('../portal/deal.service', () => ({
   PortalDealService: {
-    updatePortalDealStatus: (params: AnyObject) => updatePortalDealStatusMock(params),
+    updateStatus: (params: AnyObject) => updatePortalDealStatusMock(params),
   },
 }));
 
