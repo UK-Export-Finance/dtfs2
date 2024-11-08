@@ -4,6 +4,12 @@ import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 import { userCanEdit } from './helpers';
 
+const mockGetDealSuccessBannerMessage = jest.fn();
+
+jest.mock('../../helpers/get-success-banner-message.helper', () => ({
+  getDealSuccessBannerMessage: (params) => mockGetDealSuccessBannerMessage(params),
+}));
+
 const res = mockRes();
 const user = {
   _id: '12345678',
@@ -62,6 +68,7 @@ describe('PartyURN: controllers - case - parties', () => {
               reason: 'a reason',
               status: TFM_DEAL_CANCELLATION_STATUS.COMPLETED,
             });
+          mockGetDealSuccessBannerMessage.mockResolvedValue(mockSuccessBannerMessage);
         });
 
         it('should render deal template with data', async () => {
@@ -70,7 +77,7 @@ describe('PartyURN: controllers - case - parties', () => {
               _id: mockDeal._id,
             },
             session,
-            flash: jest.fn(() => [mockSuccessBannerMessage]),
+            flash: jest.fn(() => []),
           };
 
           await partiesController.getAllParties(req, res);

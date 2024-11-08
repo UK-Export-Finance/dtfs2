@@ -6,6 +6,12 @@ import CONSTANTS from '../../../constants';
 import { generateValidationErrors } from '../../../helpers/validation';
 import { mapActivities } from './helpers/map-activities';
 
+const mockGetDealSuccessBannerMessage = jest.fn();
+
+jest.mock('../../helpers/get-success-banner-message.helper', () => ({
+  getDealSuccessBannerMessage: (params) => mockGetDealSuccessBannerMessage(params),
+}));
+
 const res = mockRes();
 
 const session = {
@@ -40,6 +46,8 @@ describe('activity controller', () => {
         },
       };
 
+      const mockSuccessMessage = 'mockSuccessMessage';
+
       beforeEach(() => {
         api.getDeal = () => Promise.resolve(mockDeal);
         api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
@@ -50,17 +58,17 @@ describe('activity controller', () => {
             reason: 'a reason',
             status: TFM_DEAL_CANCELLATION_STATUS.COMPLETED,
           });
+
+        mockGetDealSuccessBannerMessage.mockResolvedValue(mockSuccessMessage);
       });
 
       it('should render template with data', async () => {
-        const mockSuccessMessage = 'mockSuccessMessage';
-
         const req = {
           params: {
             _id: mockDeal._id,
           },
           session,
-          flash: jest.fn(() => [mockSuccessMessage]),
+          flash: jest.fn(() => []),
         };
 
         const activities = mapActivities(mockDeal.tfm.activities);

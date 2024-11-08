@@ -6,6 +6,12 @@ import MOCKS from '../../../test-mocks/amendment-test-mocks';
 
 import underwriterController from '.';
 
+const mockGetDealSuccessBannerMessage = jest.fn();
+
+jest.mock('../../helpers/get-success-banner-message.helper', () => ({
+  getDealSuccessBannerMessage: (params) => mockGetDealSuccessBannerMessage(params),
+}));
+
 const mockSuccessBannerMessage = 'success message';
 
 describe('GET getUnderwriterPage', () => {
@@ -63,7 +69,7 @@ describe('GET getUnderwriterPage', () => {
         _id: dealId,
       },
       session: { user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER, userToken: 'session' },
-      flash: jest.fn(() => [mockSuccessBannerMessage]),
+      flash: jest.fn(() => []),
     };
 
     beforeEach(() => {
@@ -76,6 +82,7 @@ describe('GET getUnderwriterPage', () => {
           reason: 'a reason',
           status: TFM_DEAL_CANCELLATION_STATUS.COMPLETED,
         });
+      mockGetDealSuccessBannerMessage.mockResolvedValue(mockSuccessBannerMessage);
     });
 
     it('should render template with data if amendment which is submittedByPim and requireUkefApproval', async () => {
