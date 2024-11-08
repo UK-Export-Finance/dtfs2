@@ -1,4 +1,4 @@
-import { ApiErrorResponseBody, AuditDetails, DocumentNotDeletedError, InvalidAuditDetailsError, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { ApiError, ApiErrorResponseBody, AuditDetails, DocumentNotDeletedError, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { Response } from 'express';
 import { deleteOne, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
@@ -20,28 +20,17 @@ export const deleteFacility = async (
 
   try {
     validateAuditDetailsAndUserType(auditDetails, 'portal');
-  } catch (error) {
-    if (error instanceof InvalidAuditDetailsError) {
-      return res.status(error.status).send({
-        status: error.status,
-        message: error.message,
-        code: error.code,
-      });
+
+    const facility = await findOneFacility(facilityId);
+
+    if (!facility) {
+      return res.status(404).send({ status: 400, message: 'Facility not found' });
     }
-    return res.status(500).send({ status: 500, message: 'An unknown error occurred' });
-  }
 
-  const facility = await findOneFacility(facilityId);
+    if (!('dealId' in facility)) {
+      return res.status(500).send({ status: 500, message: 'Facility object missing dealId' });
+    }
 
-  if (!facility) {
-    return res.status(404).send({ status: 400, message: 'Facility not found' });
-  }
-
-  if (!('dealId' in facility)) {
-    return res.status(500).send({ status: 500, message: 'Facility object missing dealId' });
-  }
-
-  try {
     await deleteOne({
       documentId: new ObjectId(facilityId),
       collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
@@ -54,6 +43,14 @@ export const deleteFacility = async (
   } catch (error) {
     if (error instanceof DocumentNotDeletedError) {
       return res.status(404).send({ status: 400, message: 'Facility not found' });
+    }
+
+    if (error instanceof ApiError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: error.message,
+        code: error.code,
+      });
     }
     return res.status(500).send({ status: 500, message: 'An unknown error occurred' });
   }
