@@ -3,6 +3,7 @@ import { DbRequestSource, FeeRecordEntity, PaymentEntity, UtilisationReportEntit
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { feeRecordsMatchAttachedPayments } from '../helpers';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../event/utilisation-report.event-type';
 
 type AddFeesToAnExistingPaymentGroupEventPayload = {
   transactionEntityManager: EntityManager;
@@ -13,7 +14,7 @@ type AddFeesToAnExistingPaymentGroupEventPayload = {
 };
 
 export type UtilisationReportAddFeesToAnExistingPaymentGroupEvent = BaseUtilisationReportEvent<
-  'ADD_FEES_TO_AN_EXISTING_PAYMENT_GROUP',
+  typeof UTILISATION_REPORT_EVENT_TYPE.ADD_FEES_TO_AN_EXISTING_PAYMENT_GROUP,
   AddFeesToAnExistingPaymentGroupEventPayload
 >;
 
