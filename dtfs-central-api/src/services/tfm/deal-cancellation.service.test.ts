@@ -1,6 +1,7 @@
 import {
   ACTIVITY_TYPES,
   AuditDetails,
+  DEAL_TYPE,
   InvalidAuditDetailsError,
   TfmActivity,
   TfmDealCancellation,
@@ -13,7 +14,10 @@ import { ObjectId } from 'mongodb';
 import { DealCancellationService } from './deal-cancellation.service';
 import { aTfmUser } from '../../../test-helpers';
 
-const mockCancellationResponse = { cancelledDeal: {}, riskExpiredFacilityUkefIds: ['1', '2'] } as TfmDealCancellationResponse;
+const mockCancellationResponse = {
+  cancelledDeal: { dealSnapshot: { dealType: DEAL_TYPE.GEF } },
+  riskExpiredFacilityUkefIds: ['1', '2'],
+} as TfmDealCancellationResponse;
 
 const submitDealCancellationMock = jest.fn(() => Promise.resolve(mockCancellationResponse)) as jest.Mock<Promise<TfmDealCancellationResponse>>;
 const scheduleDealCancellationMock = jest.fn(() => Promise.resolve(mockCancellationResponse)) as jest.Mock<Promise<TfmDealCancellationResponse>>;
@@ -32,6 +36,12 @@ jest.mock('../../repositories/tfm-deals-repo/tfm-deal-cancellation.repo', () => 
 jest.mock('../../repositories/tfm-users-repo', () => ({
   TfmUsersRepo: {
     findOneUserById: (id: string | ObjectId) => findOneUserByIdMock(id),
+  },
+}));
+
+jest.mock('../portal/update-deal-status.service', () => ({
+  PortalDealService: {
+    updatePortalDealStatus: jest.fn(),
   },
 }));
 
