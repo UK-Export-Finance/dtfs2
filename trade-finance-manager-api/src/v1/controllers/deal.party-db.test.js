@@ -80,7 +80,7 @@ describe('when automatic Salesforce customer creation feature flag is disabled',
     });
 
     it('should call getPartyDbInfo and return urn', async () => {
-      const { getPartyDbInfo } = require('../api.js');
+      const { getPartyDbInfo, createParty } = require('../api.js');
       getPartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
 
       const companyData = { companyRegNo: '12345678' };
@@ -106,7 +106,7 @@ describe('when automatic Salesforce customer creation feature flag is disabled',
     });
 
     it('should return an empty string if getPartyDbInfo returns false', async () => {
-      const { getPartyDbInfo } = require('../api.js');
+      const { getPartyDbInfo, createParty } = require('../api.js');
       getPartyDbInfo.mockResolvedValue(false);
 
       const companyData = { companyRegNo: '12345678' };
