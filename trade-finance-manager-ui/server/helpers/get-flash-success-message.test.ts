@@ -1,4 +1,5 @@
 import { createMocks } from 'node-mocks-http';
+import { FlashTypes } from '@ukef/dtfs2-common';
 import { getFlashSuccessMessage } from './get-flash-success-message';
 import { CustomExpressRequest } from '../types/custom-express-request';
 
@@ -12,7 +13,7 @@ describe('getFlashSuccessMessage', () => {
     };
 
     const { req } = createMocks<CustomExpressRequest<any>>({
-      flash: (key: 'successMessage') => mockFlash[key],
+      flash: (key: FlashTypes) => mockFlash[key],
     });
 
     expect(getFlashSuccessMessage(req)).toEqual(testMessage1);
@@ -24,7 +25,7 @@ describe('getFlashSuccessMessage', () => {
     };
 
     const { req } = createMocks<CustomExpressRequest<any>>({
-      flash: (key: 'successMessage') => mockFlash[key],
+      flash: (key: FlashTypes) => mockFlash[key],
     });
 
     expect(getFlashSuccessMessage(req)).toBeUndefined();

@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import { createMocks } from 'node-mocks-http';
-import { AnyObject, DEAL_SUBMISSION_TYPE, TfmDealCancellationWithStatus, Deal, DEAL_TYPE } from '@ukef/dtfs2-common';
+import { AnyObject, DEAL_SUBMISSION_TYPE, TfmDealCancellationWithStatus, Deal, DEAL_TYPE, FlashTypes } from '@ukef/dtfs2-common';
 import { getDealSuccessBannerMessage } from './get-success-banner-message.helper';
 
 const getDealCancellationMock = jest.fn() as jest.Mock<Promise<Partial<TfmDealCancellationWithStatus>>>;
@@ -22,7 +22,7 @@ describe('getDealSuccessBannerMessage', () => {
     successMessage: [flashedMessage],
   };
 
-  const mockFlash = ((key: 'successMessage') => mockFlashResponse[key]) as Request['flash'];
+  const mockFlash = ((key: FlashTypes) => mockFlashResponse[key]) as Request['flash'];
 
   const { req } = createMocks({
     flash: mockFlash,

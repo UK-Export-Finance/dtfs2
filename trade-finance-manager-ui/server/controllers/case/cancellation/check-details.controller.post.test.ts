@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http';
-import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
+import { DEAL_SUBMISSION_TYPE, FLASH_TYPES } from '@ukef/dtfs2-common';
 import { add, sub } from 'date-fns';
 import { aRequestSession } from '../../../../test-helpers';
 import api from '../../../api';
@@ -105,7 +105,7 @@ describe('postDealCancellationDetails', () => {
 
         // Assert
         expect(flashMock).toHaveBeenCalledTimes(1);
-        expect(flashMock).toHaveBeenCalledWith('successMessage', `Deal ${ukefDealId} cancelled`);
+        expect(flashMock).toHaveBeenCalledWith(FLASH_TYPES.SUCCESS_MESSAGE, `Deal ${ukefDealId} cancelled`);
       });
     });
 
@@ -126,7 +126,7 @@ describe('postDealCancellationDetails', () => {
 
         // Assert
         expect(flashMock).toHaveBeenCalledTimes(1);
-        expect(flashMock).toHaveBeenCalledWith('successMessage', `Deal ${ukefDealId} cancelled`);
+        expect(flashMock).toHaveBeenCalledWith(FLASH_TYPES.SUCCESS_MESSAGE, `Deal ${ukefDealId} cancelled`);
       });
     });
 
