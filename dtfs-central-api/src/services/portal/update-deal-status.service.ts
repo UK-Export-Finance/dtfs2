@@ -8,7 +8,7 @@ export class PortalDealService {
     if (dealType === DEAL_TYPE.GEF) {
       await GefStatusController.updateDealStatus({
         dealId,
-        newStatus: status,
+        status,
         auditDetails,
       });
     } else {

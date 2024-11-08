@@ -8,7 +8,7 @@ const { mongoDbClient: db } = require('../../../../drivers/db-client');
  *
  * @param param0
  * @param {string} param0.dealId - the dealId
- * @param {import('@ukef/dtfs2-common').DealStatus} param0.newStatus - the updated status to set
+ * @param {import('@ukef/dtfs2-common').DealStatus} param0.status - the updated status to set
  * @param {import('@ukef/dtfs2-common').AuditDetails} param0.auditDetails - the users audit details
  * @returns {Promise<('@ukef/dtfs2-common').Deal>}
  */

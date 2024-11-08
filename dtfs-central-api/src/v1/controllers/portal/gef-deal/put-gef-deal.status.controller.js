@@ -8,19 +8,19 @@ const { mongoDbClient: db } = require('../../../../drivers/db-client');
  *
  * @param param0
  * @param {string} param0.dealId - the dealId
- * @param {import('@ukef/dtfs2-common').DealStatus} param0.newStatus - the updated status to set
+ * @param {import('@ukef/dtfs2-common').DealStatus} param0.status - the updated status to set
  * @param {import('@ukef/dtfs2-common').AuditDetails} param0.auditDetails - the users audit details
  * @returns {Promise<('@ukef/dtfs2-common').Deal>}
  */
-const updateDealStatus = async ({ dealId, newStatus, auditDetails }) => {
+const updateDealStatus = async ({ dealId, status, auditDetails }) => {
   const existingDeal = await findOneDeal(dealId);
 
   if (!existingDeal) {
     throw new DealNotFoundError(dealId);
   }
 
-  if (existingDeal.status === newStatus) {
-    throw new InvalidParameterError('status', newStatus);
+  if (existingDeal.status === status) {
+    throw new InvalidParameterError('status', status);
   }
 
   const previousStatus = existingDeal.status;
@@ -30,7 +30,7 @@ const updateDealStatus = async ({ dealId, newStatus, auditDetails }) => {
 
   const dealUpdate = {
     previousStatus,
-    status: newStatus,
+    status,
     updatedAt: Date.now(),
   };
 
@@ -40,7 +40,7 @@ const updateDealStatus = async ({ dealId, newStatus, auditDetails }) => {
     { returnNewDocument: true, returnDocument: 'after' },
   );
 
-  console.info('Updated Portal GEF deal status from %s to %s', previousStatus, newStatus);
+  console.info('Updated Portal GEF deal status from %s to %s', previousStatus, status);
 
   return findAndUpdateResponse.value;
 };
@@ -50,7 +50,7 @@ exports.updateDealStatus = updateDealStatus;
 exports.updateDealStatusPut = async (req, res) => {
   const {
     params: { id: dealId },
-    body: { status: newStatus, auditDetails },
+    body: { status, auditDetails },
   } = req;
 
   if (!ObjectId.isValid(dealId)) {
@@ -60,7 +60,7 @@ exports.updateDealStatusPut = async (req, res) => {
   try {
     validateAuditDetails(auditDetails);
 
-    const updatedDeal = await updateDealStatus({ dealId, newStatus, auditDetails });
+    const updatedDeal = await updateDealStatus({ dealId, status, auditDetails });
     return res.status(200).json(updatedDeal);
   } catch (error) {
     if (error instanceof ApiError) {
