@@ -1,15 +1,15 @@
 const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS, DealNotFoundError, InvalidParameterError, ApiError } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, DealNotFoundError, ApiError, InvalidPayloadError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const { findOneDeal } = require('./get-deal.controller');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 
 /**
  * Update the status on a BSS/EWCS deal
- * @param param0
- * @param {string} param0.dealId - the dealId
- * @param {import('@ukef/dtfs2-common').DealStatus} param0.status - the updated status to set
- * @param {import('@ukef/dtfs2-common').AuditDetails} param0.auditDetails - the users audit details
+ * @param updateBssEwcsDealStatusRequest
+ * @param {string} updateBssEwcsDealStatusRequest.dealId - the dealId
+ * @param {import('@ukef/dtfs2-common').DealStatus} updateBssEwcsDealStatusRequest.status - the updated status to set
+ * @param {import('@ukef/dtfs2-common').AuditDetails} updateBssEwcsDealStatusRequest.auditDetails - the users audit details
  * @returns {Promise<('@ukef/dtfs2-common').Deal>}
  */
 const updateBssEwcsDealStatus = async ({ dealId, status, auditDetails }) => {
@@ -20,7 +20,7 @@ const updateBssEwcsDealStatus = async ({ dealId, status, auditDetails }) => {
   }
 
   if (existingDeal.status === status) {
-    throw new InvalidParameterError('status', status);
+    throw new InvalidPayloadError(`Invalid deal status: already set to ${status}`);
   }
 
   const previousStatus = existingDeal.status;

@@ -1,15 +1,15 @@
 const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS, DealNotFoundError, ApiError, InvalidParameterError } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, DealNotFoundError, ApiError, InvalidPayloadError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const { findOneDeal } = require('./get-gef-deal.controller');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 
 /**
  * Update the status on a GEF deal
- * @param param0
- * @param {string} param0.dealId - the dealId
- * @param {import('@ukef/dtfs2-common').DealStatus} param0.status - the updated status to set
- * @param {import('@ukef/dtfs2-common').AuditDetails} param0.auditDetails - the users audit details
+ * @param updateGefDealStatusRequest
+ * @param {string} updateGefDealStatusRequest.dealId - the dealId
+ * @param {import('@ukef/dtfs2-common').DealStatus} updateGefDealStatusRequest.status - the updated status to set
+ * @param {import('@ukef/dtfs2-common').AuditDetails} updateGefDealStatusRequest.auditDetails - the users audit details
  * @returns {Promise<('@ukef/dtfs2-common').Deal>}
  */
 const updateGefDealStatus = async ({ dealId, status, auditDetails }) => {
@@ -20,7 +20,7 @@ const updateGefDealStatus = async ({ dealId, status, auditDetails }) => {
   }
 
   if (existingDeal.status === status) {
-    throw new InvalidParameterError('status', status);
+    throw new InvalidPayloadError(`Invalid deal status: already set to ${status}`);
   }
 
   const previousStatus = existingDeal.status;
