@@ -1,6 +1,8 @@
 import {
   ACTIVITY_TYPES,
+  AnyObject,
   AuditDetails,
+  DEAL_STATUS,
   DEAL_TYPE,
   InvalidAuditDetailsError,
   TfmActivity,
@@ -14,8 +16,10 @@ import { ObjectId } from 'mongodb';
 import { DealCancellationService } from './deal-cancellation.service';
 import { aTfmUser } from '../../../test-helpers';
 
+const dealType = DEAL_TYPE.GEF;
+
 const mockCancellationResponse = {
-  cancelledDeal: { dealSnapshot: { dealType: DEAL_TYPE.GEF } },
+  cancelledDeal: { dealSnapshot: { dealType } },
   riskExpiredFacilityUkefIds: ['1', '2'],
 } as TfmDealCancellationResponse;
 
@@ -23,6 +27,8 @@ const submitDealCancellationMock = jest.fn(() => Promise.resolve(mockCancellatio
 const scheduleDealCancellationMock = jest.fn(() => Promise.resolve(mockCancellationResponse)) as jest.Mock<Promise<TfmDealCancellationResponse>>;
 
 const findOneUserByIdMock = jest.fn() as jest.Mock<Promise<TfmUser | null>>;
+
+const updatePortalDealStatusMock = jest.fn() as jest.Mock<Promise<void>>;
 
 jest.mock('../../repositories/tfm-deals-repo/tfm-deal-cancellation.repo', () => ({
   TfmDealCancellationRepo: {
@@ -41,7 +47,7 @@ jest.mock('../../repositories/tfm-users-repo', () => ({
 
 jest.mock('../portal/update-deal-status.service', () => ({
   PortalDealService: {
-    updatePortalDealStatus: jest.fn(),
+    updatePortalDealStatus: (params: AnyObject) => updatePortalDealStatusMock(params),
   },
 }));
 
@@ -103,20 +109,22 @@ describe('DealCancellationService', () => {
       findOneUserByIdMock.mockResolvedValue(mockUser);
     });
 
+    const aDealCancellation = (): TfmDealCancellation => ({
+      reason: 'a reason',
+      bankRequestDate: new Date().valueOf(),
+      effectiveFrom: new Date().valueOf(),
+    });
+    const auditDetails = generateTfmAuditDetails(aTfmUser()._id);
+
     describe('when effectiveFrom is the present or in the past', () => {
-      const aDealCancellation = (): TfmDealCancellation => ({
-        reason: 'a reason',
-        bankRequestDate: new Date().valueOf(),
-        effectiveFrom: new Date().valueOf(),
-      });
-      const auditDetails = generateTfmAuditDetails(aTfmUser()._id);
+      describe.each(effectiveFromPresentAndPastTestCases)('when effectiveFrom is $description', ({ effectiveFrom }) => {
+        let cancellation: TfmDealCancellation;
 
-      it.each(effectiveFromPresentAndPastTestCases)(
-        'calls submitDealCancellation with the correct params when effectiveFrom is $description',
-        async ({ effectiveFrom }) => {
-          // Arrange
-          const cancellation = { ...aDealCancellation(), effectiveFrom };
+        beforeEach(() => {
+          cancellation = { ...aDealCancellation(), effectiveFrom };
+        });
 
+        it('calls submitDealCancellation with the correct params', async () => {
           // Act
           await DealCancellationService.cancelDeal(dealId, cancellation, auditDetails);
 
@@ -136,47 +144,45 @@ describe('DealCancellationService', () => {
 
           expect(submitDealCancellationMock).toHaveBeenCalledTimes(1);
           expect(submitDealCancellationMock).toHaveBeenCalledWith({ dealId, cancellation, activity: expectedActivity, auditDetails });
-        },
-      );
+        });
 
-      it('returns the deal cancellation response object', async () => {
-        // Arrange
-        const cancellation = aDealCancellation();
+        it('returns the deal cancellation response object', async () => {
+          // Act
+          const dealCancellationResponse = await DealCancellationService.cancelDeal(dealId, cancellation, auditDetails);
 
-        // Act
-        const dealCancellationResponse = await DealCancellationService.cancelDeal(dealId, cancellation, auditDetails);
+          // Assert
+          expect(dealCancellationResponse).toEqual(mockCancellationResponse);
+        });
 
-        // Assert
-        expect(dealCancellationResponse).toEqual(mockCancellationResponse);
-      });
+        it('updates the deal status to cancelled', async () => {
+          // Act
+          await DealCancellationService.cancelDeal(dealId, cancellation, auditDetails);
 
-      it('throws InvalidAuditDetailsError when no user is found', async () => {
-        // Arrange
-        findOneUserByIdMock.mockResolvedValueOnce(null);
+          // Assert
+          expect(updatePortalDealStatusMock).toHaveBeenCalledTimes(1);
+          expect(updatePortalDealStatusMock).toHaveBeenCalledWith({ dealId, dealType, auditDetails, status: DEAL_STATUS.CANCELLED });
+        });
 
-        const cancellation = aDealCancellation();
+        it('throws InvalidAuditDetailsError when no user is found', async () => {
+          // Arrange
+          findOneUserByIdMock.mockResolvedValueOnce(null);
 
-        // Assert
-        await expect(() => DealCancellationService.cancelDeal(dealId, cancellation, auditDetails)).rejects.toThrow(
-          new InvalidAuditDetailsError(`Supplied auditDetails 'id' ${auditDetails.id.toString()} does not correspond to a valid user`),
-        );
+          // Assert
+          await expect(() => DealCancellationService.cancelDeal(dealId, cancellation, auditDetails)).rejects.toThrow(
+            new InvalidAuditDetailsError(`Supplied auditDetails 'id' ${auditDetails.id.toString()} does not correspond to a valid user`),
+          );
+        });
       });
     });
 
     describe('when effectiveFrom is in the future', () => {
-      const aDealCancellation = (): TfmDealCancellation => ({
-        reason: 'a reason',
-        bankRequestDate: new Date().valueOf(),
-        effectiveFrom: new Date().valueOf(),
-      });
-      const auditDetails = generateTfmAuditDetails(aTfmUser()._id);
+      describe.each(effectiveFromFutureTestCases)('when effectiveFrom is $description', ({ effectiveFrom }) => {
+        let cancellation: TfmDealCancellation;
+        beforeEach(() => {
+          cancellation = { ...aDealCancellation(), effectiveFrom };
+        });
 
-      it.each(effectiveFromFutureTestCases)(
-        'calls scheduleDealCancellation with the correct params when effectiveFrom is $description',
-        async ({ effectiveFrom }) => {
-          // Arrange
-          const cancellation = { ...aDealCancellation(), effectiveFrom };
-
+        it('calls scheduleDealCancellation with the correct params', async () => {
           // Act
           await DealCancellationService.cancelDeal(dealId, cancellation, auditDetails);
 
@@ -196,30 +202,33 @@ describe('DealCancellationService', () => {
 
           expect(scheduleDealCancellationMock).toHaveBeenCalledTimes(1);
           expect(scheduleDealCancellationMock).toHaveBeenCalledWith({ dealId, cancellation, activity: expectedActivity, auditDetails });
-        },
-      );
+        });
 
-      it('returns the deal cancellation response object', async () => {
-        // Arrange
-        const cancellation = aDealCancellation();
+        it('returns the deal cancellation response object', async () => {
+          // Act
+          const dealCancellationResponse = await DealCancellationService.cancelDeal(dealId, cancellation, auditDetails);
 
-        // Act
-        const dealCancellationResponse = await DealCancellationService.cancelDeal(dealId, cancellation, auditDetails);
+          // Assert
+          expect(dealCancellationResponse).toEqual(mockCancellationResponse);
+        });
 
-        // Assert
-        expect(dealCancellationResponse).toEqual(mockCancellationResponse);
-      });
+        it('does not update the deal status', async () => {
+          // Act
+          await DealCancellationService.cancelDeal(dealId, cancellation, auditDetails);
 
-      it('throws InvalidAuditDetailsError when no user is found', async () => {
-        // Arrange
-        findOneUserByIdMock.mockResolvedValueOnce(null);
+          // Assert
+          expect(updatePortalDealStatusMock).toHaveBeenCalledTimes(0);
+        });
 
-        const cancellation = aDealCancellation();
+        it('throws InvalidAuditDetailsError when no user is found', async () => {
+          // Arrange
+          findOneUserByIdMock.mockResolvedValueOnce(null);
 
-        // Assert
-        await expect(() => DealCancellationService.cancelDeal(dealId, cancellation, auditDetails)).rejects.toThrow(
-          new InvalidAuditDetailsError(`Supplied auditDetails 'id' ${auditDetails.id.toString()} does not correspond to a valid user`),
-        );
+          // Assert
+          await expect(() => DealCancellationService.cancelDeal(dealId, cancellation, auditDetails)).rejects.toThrow(
+            new InvalidAuditDetailsError(`Supplied auditDetails 'id' ${auditDetails.id.toString()} does not correspond to a valid user`),
+          );
+        });
       });
     });
   });

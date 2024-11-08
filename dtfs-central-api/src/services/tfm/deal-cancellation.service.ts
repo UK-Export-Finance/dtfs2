@@ -44,8 +44,19 @@ export class DealCancellationService {
       const effectiveFromDate = toDate(cancellation.effectiveFrom);
       const endOfToday = endOfDay(new Date());
 
+      const {
+        cancelledDeal: {
+          dealSnapshot: { dealType },
+        },
+      } = response;
+
       if (!isAfter(effectiveFromDate, endOfToday)) {
-        await PortalDealService.updatePortalDealStatus(dealId, DEAL_STATUS.CANCELLED, auditDetails, response.cancelledDeal.dealSnapshot.dealType);
+        await PortalDealService.updatePortalDealStatus({
+          dealId,
+          status: DEAL_STATUS.CANCELLED,
+          auditDetails,
+          dealType,
+        });
       }
 
       return response;
