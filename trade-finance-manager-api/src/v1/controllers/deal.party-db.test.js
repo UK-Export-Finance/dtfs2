@@ -255,9 +255,10 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
 
     expect(result).toBe('');
   });
+  
 });
 
-describe('feature flagged getPartyUrn', () => {
+describe('when AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED is true', () => {
   const originalEnv = process.env;
 
 
@@ -265,7 +266,7 @@ describe('feature flagged getPartyUrn', () => {
     jest.clearAllMocks();
   });
 
-  beforeALL(() => {
+  beforeAll(() => {
     process.env = {
       ...originalEnv,
       AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED: 'true',
