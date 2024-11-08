@@ -61,7 +61,7 @@ describe('cancelDealJob', () => {
     expect(findScheduledDealCancellationsMock).toHaveBeenCalledTimes(1);
   });
 
-  it('it calls submitDealCancellation with the correct arguments', async () => {
+  it('it calls submitScheduledCancellation with the correct arguments', async () => {
     // Act
     await cancelDealJob.task('manual');
 
