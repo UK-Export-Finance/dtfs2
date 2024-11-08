@@ -5,14 +5,14 @@ const { findOneDeal } = require('./get-gef-deal.controller');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 
 /**
- *
+ * Update the status on a GEF deal
  * @param param0
  * @param {string} param0.dealId - the dealId
  * @param {import('@ukef/dtfs2-common').DealStatus} param0.status - the updated status to set
  * @param {import('@ukef/dtfs2-common').AuditDetails} param0.auditDetails - the users audit details
  * @returns {Promise<('@ukef/dtfs2-common').Deal>}
  */
-const updateDealStatus = async ({ dealId, status, auditDetails }) => {
+const updateGefDealStatus = async ({ dealId, status, auditDetails }) => {
   const existingDeal = await findOneDeal(dealId);
 
   if (!existingDeal) {
@@ -45,7 +45,7 @@ const updateDealStatus = async ({ dealId, status, auditDetails }) => {
   return findAndUpdateResponse.value;
 };
 
-exports.updateDealStatus = updateDealStatus;
+exports.updateGefDealStatus = updateGefDealStatus;
 
 exports.updateDealStatusPut = async (req, res) => {
   const {
@@ -60,7 +60,7 @@ exports.updateDealStatusPut = async (req, res) => {
   try {
     validateAuditDetails(auditDetails);
 
-    const updatedDeal = await updateDealStatus({ dealId, status, auditDetails });
+    const updatedDeal = await updateGefDealStatus({ dealId, status, auditDetails });
     return res.status(200).json(updatedDeal);
   } catch (error) {
     if (error instanceof ApiError) {

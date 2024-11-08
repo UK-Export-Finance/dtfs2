@@ -1,7 +1,7 @@
 import { AuditDetails, DEAL_TYPE, DealStatus, DealType } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
-import * as BssEwcsStatusController from '../../v1/controllers/portal/deal/update-deal-status.controller';
-import * as GefStatusController from '../../v1/controllers/portal/gef-deal/put-gef-deal.status.controller';
+import { updateBssEwcsDealStatus } from '../../v1/controllers/portal/deal/update-deal-status.controller';
+import { updateGefDealStatus } from '../../v1/controllers/portal/gef-deal/put-gef-deal.status.controller';
 
 export class PortalDealService {
   public static async updatePortalDealStatus({
@@ -16,13 +16,13 @@ export class PortalDealService {
     dealType: DealType;
   }): Promise<void> {
     if (dealType === DEAL_TYPE.GEF) {
-      await GefStatusController.updateDealStatus({
+      await updateGefDealStatus({
         dealId,
         status,
         auditDetails,
       });
     } else {
-      await BssEwcsStatusController.updateDealStatus({
+      await updateBssEwcsDealStatus({
         dealId,
         status,
         auditDetails,
