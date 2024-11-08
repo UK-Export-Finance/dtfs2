@@ -24,8 +24,6 @@ describe(page, () => {
     const feeRecord = {
       facilityId: '0012345678',
       exporter: 'Sample Company Ltd',
-      obligorUrn: 'Sample URN',
-      obligorName: 'Sample Obligor',
     };
 
     const createRecordCorrectionRequestViewModel = aCreateRecordCorrectionRequestViewModel();
@@ -40,7 +38,5 @@ describe(page, () => {
     wrapper.expectText(`${feeRecordSummarySelector} [data-cy="facility-id"]`).toRead(feeRecord.facilityId);
     wrapper.expectText(`${feeRecordSummarySelector} [data-cy="exporter"]`).toRead(feeRecord.exporter);
     wrapper.expectText(`${feeRecordSummarySelector} [data-cy="requested-by"]`).toRead('Jay Doe');
-    wrapper.expectText(`${feeRecordSummarySelector} [data-cy="obligor-urn"]`).toRead(feeRecord.obligorUrn);
-    wrapper.expectText(`${feeRecordSummarySelector} [data-cy="obligor-name"]`).toRead(feeRecord.obligorName);
   });
 });

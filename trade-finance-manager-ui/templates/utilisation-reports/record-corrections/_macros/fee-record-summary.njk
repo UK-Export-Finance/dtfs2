@@ -1,8 +1,6 @@
 {% macro render(params) %}
   {% set facilityId = params.facilityId %}
   {% set exporter = params.exporter %}
-  {% set obligorUrn = params.obligorUrn %}
-  {% set obligorName = params.obligorName %}
   {% set user = params.user %}
 
   <div class="block-header" data-cy="fee-record-summary-block-header">
@@ -15,14 +13,6 @@
           <p>{{ facilityId }}</p>
         </div>
       </div>
-      <div class="govuk-grid-column-one-half">
-        <div class="govuk-grid-column-one-third" data-cy="obligor-urn-label">
-          <p><strong>Obligor URN</strong></p>
-        </div>
-        <div class="govuk-grid-column-two-thirds" data-cy="obligor-urn">
-          <p>{{ obligorUrn }}</p>
-        </div>
-      </div>
     </div>
 
     <div class="govuk-grid-row">
@@ -32,14 +22,6 @@
         </div>
         <div class="govuk-grid-column-two-thirds" data-cy="exporter">
           <p>{{ exporter }}</p>
-        </div>
-      </div>
-      <div class="govuk-grid-column-one-half">
-        <div class="govuk-grid-column-one-third" data-cy="obligor-name-label">
-          <p><strong>Obligor name</strong></p>
-        </div>
-        <div class="govuk-grid-column-two-thirds" data-cy="obligor-name">
-          <p>{{ obligorName }}</p>
         </div>
       </div>
     </div>

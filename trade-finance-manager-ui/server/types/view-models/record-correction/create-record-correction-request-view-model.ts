@@ -7,7 +7,5 @@ export type CreateRecordCorrectionRequestViewModel = BaseViewModel & {
   feeRecord: {
     facilityId: string;
     exporter: string;
-    obligorUrn: string;
-    obligorName: string;
   };
 };

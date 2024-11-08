@@ -31,8 +31,6 @@ export const createRecordCorrectionRequest = (req: CreateRecordCorrectionRequest
       },
       facilityId: '0012345678',
       exporter: 'Sample Company Ltd',
-      obligorUrn: 'Sample URN',
-      obligorName: 'Sample Obligor',
     };
 
     return renderCreateRecordCorrectionRequestPage(res, {
@@ -44,8 +42,6 @@ export const createRecordCorrectionRequest = (req: CreateRecordCorrectionRequest
       feeRecord: {
         facilityId: feeRecordDetails.facilityId,
         exporter: feeRecordDetails.exporter,
-        obligorUrn: feeRecordDetails.obligorUrn,
-        obligorName: feeRecordDetails.obligorName,
       },
     });
   } catch (error) {

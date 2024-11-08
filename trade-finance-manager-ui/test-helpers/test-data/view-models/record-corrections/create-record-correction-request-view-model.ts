@@ -11,7 +11,5 @@ export const aCreateRecordCorrectionRequestViewModel = (): CreateRecordCorrectio
   feeRecord: {
     facilityId: '0012345678',
     exporter: 'Sample Company Ltd',
-    obligorUrn: 'Sample URN',
-    obligorName: 'Sample Obligor',
   },
 });
