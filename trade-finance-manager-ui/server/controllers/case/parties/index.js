@@ -40,7 +40,7 @@ const getAllParties = async (req, res) => {
     const successMessage = await getDealSuccessBannerMessage({
       dealSnapshot,
       userToken,
-      flashedSuccessMessage: req.flash(FLASH_TYPES.SUCCESS_MESSAGE),
+      flashedSuccessMessage: req.flash(FLASH_TYPES.SUCCESS_MESSAGE)[0],
     });
 
     // Render all parties URN page

@@ -42,7 +42,7 @@ const getActivity = async (req, res) => {
   const successMessage = await getDealSuccessBannerMessage({
     dealSnapshot,
     userToken,
-    flashedSuccessMessage: req.flash(FLASH_TYPES.SUCCESS_MESSAGE),
+    flashedSuccessMessage: req.flash(FLASH_TYPES.SUCCESS_MESSAGE)[0],
   });
 
   return res.render('case/activity/activity.njk', {
@@ -91,7 +91,7 @@ const filterActivities = async (req, res) => {
   const successMessage = await getDealSuccessBannerMessage({
     dealSnapshot,
     userToken,
-    flashedSuccessMessage: req.flash(FLASH_TYPES.SUCCESS_MESSAGE),
+    flashedSuccessMessage: req.flash(FLASH_TYPES.SUCCESS_MESSAGE)[0],
   });
 
   return res.render('case/activity/activity.njk', {
