@@ -1,5 +1,6 @@
 import {
   ACTIVITY_TYPES,
+  AuditDetails,
   DEAL_STATUS,
   InvalidAuditDetailsError,
   TfmActivity,
@@ -14,6 +15,15 @@ import { TfmUsersRepo } from '../../repositories/tfm-users-repo';
 import { PortalDealService } from '../portal/update-deal-status.service';
 
 export class DealCancellationService {
+  /**
+   * Submit a deal cancellation, either cancelling the deal or scheduling it for the
+   * future depending on the effective date
+   *
+   * @param dealId The deal id to be cancelled
+   * @param cancellation - the cancellation
+   * @param auditDetails - the users audit details
+   * @returns Tfm deal cancellation response
+   */
   public static async cancelDeal(
     dealId: ObjectId | string,
     cancellation: TfmDealCancellation,
@@ -61,5 +71,35 @@ export class DealCancellationService {
     }
 
     return await TfmDealCancellationRepo.scheduleDealCancellation({ dealId, cancellation, activity, auditDetails });
+  }
+
+  /**
+   * Submit a scheduled deal cancellation
+   * @param dealId The deal id to be cancelled
+   * @param cancellation - the cancellation
+   * @param auditDetails - the users audit details
+   * @returns Tfm deal cancellation response
+   */
+  public static async submitScheduledCancellation(
+    dealId: ObjectId | string,
+    cancellation: TfmDealCancellation,
+    auditDetails: AuditDetails,
+  ): Promise<TfmDealCancellationResponse> {
+    const response = await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation, auditDetails });
+
+    const {
+      cancelledDeal: {
+        dealSnapshot: { dealType },
+      },
+    } = response;
+
+    await PortalDealService.updatePortalDealStatus({
+      dealId,
+      status: DEAL_STATUS.CANCELLED,
+      auditDetails,
+      dealType,
+    });
+
+    return response;
   }
 }

@@ -1,8 +1,8 @@
-import { asString, CronSchedulerJob, DEAL_STATUS, TfmDealWithCancellation } from '@ukef/dtfs2-common';
+import { asString, CronSchedulerJob, TfmDealWithCancellation } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { endOfDay } from 'date-fns';
 import { TfmDealCancellationRepo } from '../../repositories/tfm-deals-repo';
-import { PortalDealService } from '../../services/portal/update-deal-status.service';
+import { DealCancellationService } from '../../services/tfm/deal-cancellation.service';
 
 const { DEAL_CANCELLATION_SCHEDULE } = process.env;
 
@@ -12,21 +12,7 @@ const { DEAL_CANCELLATION_SCHEDULE } = process.env;
  */
 const cancelDeals = async (deals: TfmDealWithCancellation[]) => {
   await Promise.all(
-    deals.map(async (deal) => {
-      const auditDetails = generateSystemAuditDetails();
-
-      const {
-        cancelledDeal: {
-          dealSnapshot: { dealType },
-        },
-      } = await TfmDealCancellationRepo.submitDealCancellation({
-        dealId: deal._id,
-        cancellation: deal.tfm.cancellation,
-        auditDetails,
-      });
-
-      await PortalDealService.updatePortalDealStatus({ dealId: deal._id, status: DEAL_STATUS.CANCELLED, auditDetails, dealType });
-    }),
+    deals.map(async (deal) => DealCancellationService.submitScheduledCancellation(deal._id, deal.tfm.cancellation, generateSystemAuditDetails())),
   );
 };
 
