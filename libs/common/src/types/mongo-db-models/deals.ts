@@ -5,7 +5,7 @@ import { DealSubmissionType } from '..';
 
 type BaseDeal = AnyObject & {
   _id: ObjectId;
-  submissionType: DealSubmissionType;
+  submissionType: DealSubmissionType | null;
 };
 
 export interface BssEwcsDeal extends BaseDeal {
@@ -17,7 +17,7 @@ export interface BssEwcsDeal extends BaseDeal {
 
 export interface GefDeal extends BaseDeal {
   dealType: typeof DEAL_TYPE.GEF;
-  ukefDealId: string;
+  ukefDealId: string | null;
   eligibility: AnyObject;
   exporter: AnyObject;
 }

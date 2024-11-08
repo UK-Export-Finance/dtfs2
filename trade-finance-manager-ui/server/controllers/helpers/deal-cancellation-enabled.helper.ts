@@ -15,11 +15,11 @@ const { AIN, MIN } = DEAL_SUBMISSION_TYPE;
  * @param submissionType - the deal submission type
  * @returns true if the deal is AIN or MIN
  */
-export const canSubmissionTypeBeCancelled = (submissionType: DealSubmissionType): boolean => {
+export const canSubmissionTypeBeCancelled = (submissionType: DealSubmissionType | null): boolean => {
   return submissionType === AIN || submissionType === MIN;
 };
 
-export const isDealCancellationEnabled = (submissionType: DealSubmissionType): boolean => {
+export const isDealCancellationEnabled = (submissionType: DealSubmissionType | null): boolean => {
   const isDealCancellationFeatureFlagEnabled = isTfmDealCancellationFeatureFlagEnabled();
   const isAcceptableSubmissionType = canSubmissionTypeBeCancelled(submissionType);
 
