@@ -59,40 +59,52 @@ jest.mock('../api.js', () => ({
   createParty: jest.fn(),
 }));
 
-describe('getPartyUrn', () => {
-  it('should return an empty string if no companyRegNo is provided', async () => {
-    const result = await api.getPartyUrn({});
-    expect(result).toBe('');
+describe('when AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED is not true', () => {
+  const originalEnv = process.env;
+
+  beforeAll(() => {
+    process.env = {
+      ...originalEnv,
+      AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED: 'false',
+    };
   });
 
-  it('should call getPartyDbInfo and return urn', async () => {
-    const { getPartyDbInfo } = require('../api.js');
-    getPartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
-
-    const companyData = { companyRegNo: '12345678' };
-    
-    const result = await api.getPartyUrn(companyData);
-
-    expect(getPartyDbInfo).toHaveBeenCalledWith(companyData);
-    
-    expect(result).toBe('TEST_URN');
+  describe('getPartyUrn', () => {
+    it('should return an empty string if no companyRegNo is provided', async () => {
+      const result = await api.getPartyUrn({});
+      expect(result).toBe('');
+    });
+  
+    it('should call getPartyDbInfo and return urn', async () => {
+      const { getPartyDbInfo } = require('../api.js');
+      getPartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
+  
+      const companyData = { companyRegNo: '12345678' };
+      
+      const result = await api.getPartyUrn(companyData);
+  
+      expect(getPartyDbInfo).toHaveBeenCalledWith(companyData);
+      
+      expect(result).toBe('TEST_URN');
+    });
+  
+    it('should return an empty string if getPartyDbInfo returns false', async () => {
+      const { getPartyDbInfo } = require('../api.js');
+      getPartyDbInfo.mockResolvedValue(false);
+  
+      const companyData = { companyRegNo: '12345678' };
+      
+      const result = await api.getPartyUrn(companyData);
+  
+      expect(getPartyDbInfo).toHaveBeenCalledWith(companyData);
+      
+      expect(result).toBe('');
+    });
   });
-
-  it('should return an empty string if getPartyDbInfo returns false', async () => {
-    const { getPartyDbInfo } = require('../api.js');
-    getPartyDbInfo.mockResolvedValue(false);
-
-    const companyData = { companyRegNo: '12345678' };
-    
-    const result = await api.getPartyUrn(companyData);
-
-    expect(getPartyDbInfo).toHaveBeenCalledWith(companyData);
-    
-    expect(result).toBe('');
-  });
+  
 });
 
-describe('feature flagged getPartyUrn', () => {
+describe('when AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED is true', () => {
   const originalEnv = process.env;
 
 
@@ -100,7 +112,7 @@ describe('feature flagged getPartyUrn', () => {
     jest.clearAllMocks();
   });
 
-  beforeALL(() => {
+  beforeAll(() => {
     process.env = {
       ...originalEnv,
       AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED: 'true',
