@@ -59,13 +59,13 @@ jest.mock('../api.js', () => ({
   createParty: jest.fn(),
 }));
 
-describe('when AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED is not true', () => {
+describe('when AUTOMATIC_SALESFORCE_CUSTOMER_CREATION_ENABLED is not true', () => {
   const originalEnv = process.env;
 
   beforeAll(() => {
     process.env = {
       ...originalEnv,
-      AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED: 'false',
+      AUTOMATIC_SALESFORCE_CUSTOMER_CREATION_ENABLED: 'false',
     };
   });
 
@@ -108,7 +108,7 @@ describe('when AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED is not true', () => {
   
 });
 
-describe('when AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED is true', () => {
+describe('when AUTOMATIC_SALESFORCE_CUSTOMER_CREATION_ENABLED is true', () => {
   const originalEnv = process.env;
 
 
@@ -119,7 +119,7 @@ describe('when AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED is true', () => {
   beforeAll(() => {
     process.env = {
       ...originalEnv,
-      AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED: 'true',
+      AUTOMATIC_SALESFORCE_CUSTOMER_CREATION_ENABLED: 'true',
     };
   });
   

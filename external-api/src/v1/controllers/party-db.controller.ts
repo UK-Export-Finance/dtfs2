@@ -21,7 +21,7 @@ export const lookup = async (req: Request, res: Response) => {
 
   const response: { status: number; data: unknown } = await axios({
     method: 'get',
-    url: process.env.AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED === 'true'
+    url: process.env.AUTOMATIC_SALESFORCE_CUSTOMER_CREATION_ENABLED === 'true'
       ? `${APIM_MDM_URL}customers/salesforce?companyRegistrationNumber=${companyReg}`
       : `${APIM_MDM_URL}customers?companyReg=${companyReg}`,
     headers,

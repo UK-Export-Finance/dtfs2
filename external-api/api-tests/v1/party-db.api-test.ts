@@ -34,9 +34,9 @@ afterEach(() => {
   axiosMock.resetHistory();
 });
 
-describe('when AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED is not true', () => {
+describe('when AUTOMATIC_SALESFORCE_CUSTOMER_CREATION_ENABLED is not true', () => {
   beforeAll(() => {
-    process.env.AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED = 'false';
+    process.env.AUTOMATIC_SALESFORCE_CUSTOMER_CREATION_ENABLED = 'false';
   });
   describe('/party-db', () => {
     describe('GET /party-db', () => {
@@ -76,9 +76,9 @@ describe('when AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED is not true', () => {
   });
 });
 
-describe('when AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED is true', () => {
+describe('when AUTOMATIC_SALESFORCE_CUSTOMER_CREATION_ENABLED is true', () => {
   beforeAll(() => {
-    process.env.AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED = 'true';
+    process.env.AUTOMATIC_SALESFORCE_CUSTOMER_CREATION_ENABLED = 'true';
   });
 
 
