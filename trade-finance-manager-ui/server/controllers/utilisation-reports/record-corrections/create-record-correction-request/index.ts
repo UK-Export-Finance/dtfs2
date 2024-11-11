@@ -20,7 +20,6 @@ export const createRecordCorrectionRequest = (req: CreateRecordCorrectionRequest
     const { user } = asUserSession(req.session);
     const { reportId } = req.params;
 
-    // TODO FN-3573: In a subsequent PR, add a new endpoint which returns minimal data, called getFeeRecord (or other generic naming).
     const feeRecordDetails = {
       bank: {
         name: 'Test Bank',
