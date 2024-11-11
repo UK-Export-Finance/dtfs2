@@ -69,6 +69,7 @@ jest.mock('@ukef/dtfs2-common', () => ({
 
 describe('when automatic Salesforce customer creation feature flag is disabled', () => {
   beforeEach(() => {
+    jest.clearAllMocks();
     jest.mocked(isAutomaticSalesforceCustomerCreationFeatureFlagEnabled).mockReturnValue(false);
   });
 
@@ -79,7 +80,7 @@ describe('when automatic Salesforce customer creation feature flag is disabled',
     });
 
     it('should call getPartyDbInfo and return urn', async () => {
-      const { getPartyDbInfo, createParty } = require('../api.js');
+      const { getPartyDbInfo } = require('../api.js');
       getPartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
 
       const companyData = { companyRegNo: '12345678' };
@@ -87,14 +88,25 @@ describe('when automatic Salesforce customer creation feature flag is disabled',
       const result = await api.getPartyUrn(companyData);
 
       expect(getPartyDbInfo).toHaveBeenCalledWith(companyData);
-
-      expect(createParty).toHaveBeenCalledTimes(0);
+      expect(getPartyDbInfo).toHaveBeenCalledTimes(1);
 
       expect(result).toBe('TEST_URN');
     });
 
-    it('should return an empty string if getPartyDbInfo returns false', async () => {
+
+    it('should not call createParty', async () => {
       const { getPartyDbInfo, createParty } = require('../api.js');
+      getPartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
+
+      const companyData = { companyRegNo: '12345678' };
+
+      await api.getPartyUrn(companyData);
+
+      expect(createParty).toHaveBeenCalledTimes(0);
+    });
+
+    it('should return an empty string if getPartyDbInfo returns false', async () => {
+      const { getPartyDbInfo } = require('../api.js');
       getPartyDbInfo.mockResolvedValue(false);
 
       const companyData = { companyRegNo: '12345678' };
@@ -102,8 +114,7 @@ describe('when automatic Salesforce customer creation feature flag is disabled',
       const result = await api.getPartyUrn(companyData);
 
       expect(getPartyDbInfo).toHaveBeenCalledWith(companyData);
-
-      expect(createParty).toHaveBeenCalledTimes(0);
+      expect(getPartyDbInfo).toHaveBeenCalledTimes(1);
 
       expect(result).toBe('');
     });
@@ -122,20 +133,30 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
     expect(result).toBe('');
   });
 
-  it('should call getPartyDbInfo, skip createParty for a company that exists, and return urn', async () => {
-    const { getPartyDbInfo, createParty } = require('../api.js');
+  it('should call getPartyDbInfo for a company that exists, and return urn', async () => {
+    const { getPartyDbInfo } = require('../api.js');
     getPartyDbInfo.mockResolvedValue({ status: 200, data: [{ partyUrn: 'TEST_URN' }] });
-    createParty.mockResolvedValue({ status: 200, data: [{ partyUrn: 'TEST_URN' }] });
 
     const companyData = { companyRegNo: '12345678', companyName: 'name' };
 
     const result = await api.getPartyUrn(companyData);
 
     expect(getPartyDbInfo).toHaveBeenCalledWith({ companyRegNo: '12345678' });
-
-    expect(createParty).toHaveBeenCalledTimes(0);
+    expect(getPartyDbInfo).toHaveBeenCalledTimes(1);
 
     expect(result).toBe('TEST_URN');
+  });
+
+  it('should not call createParty for a company that exists', async () => {
+    const { getPartyDbInfo, createParty } = require('../api.js');
+    getPartyDbInfo.mockResolvedValue({ status: 200, data: [{ partyUrn: 'TEST_URN' }] });
+    createParty.mockResolvedValue({ status: 200, data: [{ partyUrn: 'TEST_URN' }] });
+
+    const companyData = { companyRegNo: '12345678', companyName: 'name' };
+
+    await api.getPartyUrn(companyData);
+
+    expect(createParty).toHaveBeenCalledTimes(0);
   });
 
   it('should call getPartyDbInfo createParty for a company that does not exist, and return urn', async () => {
@@ -148,14 +169,16 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
     const result = await api.getPartyUrn(companyData);
 
     expect(getPartyDbInfo).toHaveBeenCalledWith({ companyRegNo: '12345678' });
+    expect(getPartyDbInfo).toHaveBeenCalledTimes(1);
 
     expect(createParty).toHaveBeenCalledWith(companyData);
+    expect(createParty).toHaveBeenCalledTimes(1);
 
     expect(result).toBe('TEST_URN');
   });
 
   it('should return an empty string if the company does not exist but no companyName is provided', async () => {
-    const { getPartyDbInfo, createParty } = require('../api.js');
+    const { getPartyDbInfo } = require('../api.js');
     getPartyDbInfo.mockResolvedValue({ status: 404, data: [{ partyUrn: null }] });
 
     const companyData = { companyRegNo: '12345678', companyName: '' };
@@ -163,11 +186,20 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
     const result = await api.getPartyUrn(companyData);
 
     expect(getPartyDbInfo).toHaveBeenCalledWith({ companyRegNo: '12345678' });
-
-    expect(createParty).toHaveBeenCalledTimes(0);
+    expect(getPartyDbInfo).toHaveBeenCalledTimes(1);
 
     expect(result).toBe('');
+  });
 
+  it('should not call createParty if the company does not exist but no companyName is provided', async () => {
+    const { getPartyDbInfo, createParty } = require('../api.js');
+    getPartyDbInfo.mockResolvedValue({ status: 404, data: [{ partyUrn: null }] });
+
+    const companyData = { companyRegNo: '12345678', companyName: '' };
+
+    await api.getPartyUrn(companyData);
+
+    expect(createParty).toHaveBeenCalledTimes(0);
   });
 
   it('should handle null partyUrn in creation response gracefully', async () => {
@@ -180,8 +212,10 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
     const result = await api.getPartyUrn(companyData);
 
     expect(getPartyDbInfo).toHaveBeenCalledWith({ companyRegNo: '12345678' });
+    expect(getPartyDbInfo).toHaveBeenCalledTimes(1);
 
     expect(createParty).toHaveBeenCalledWith(companyData);
+    expect(createParty).toHaveBeenCalledTimes(1);
 
     expect(result).toBe('');
   });
@@ -196,8 +230,10 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
     const result = await api.getPartyUrn(companyData);
 
     expect(getPartyDbInfo).toHaveBeenCalledWith({ companyRegNo: '12345678' });
+    expect(getPartyDbInfo).toHaveBeenCalledTimes(1);
 
     expect(createParty).toHaveBeenCalledWith(companyData);
+    expect(createParty).toHaveBeenCalledTimes(1);
 
     expect(result).toBe('');
   });
@@ -212,8 +248,10 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
     const result = await api.getPartyUrn(companyData);
 
     expect(getPartyDbInfo).toHaveBeenCalledWith({ companyRegNo: '12345678' });
+    expect(getPartyDbInfo).toHaveBeenCalledTimes(1);
 
     expect(createParty).toHaveBeenCalledWith(companyData);
+    expect(createParty).toHaveBeenCalledTimes(1);
 
     expect(result).toBe('');
   });
