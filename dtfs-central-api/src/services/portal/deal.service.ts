@@ -4,6 +4,15 @@ import { updateBssEwcsDealStatus } from '../../v1/controllers/portal/deal/update
 import { updateGefDealStatus } from '../../v1/controllers/portal/gef-deal/put-gef-deal.status.controller';
 
 export class PortalDealService {
+  /**
+   * Updates the deal status
+   *
+   * @param updateStatusParams
+   * @param updateStatusParams.dealId - the deal Id to update
+   * @param updateStatusParams.status - the status change to make
+   * @param updateStatusParams.auditDetails - the users audit details
+   * @param updateStatusParams.dealType - the deal type
+   */
   public static async updateStatus({
     dealId,
     status,
@@ -21,12 +30,14 @@ export class PortalDealService {
         status,
         auditDetails,
       });
-    } else {
+    } else if (dealType === DEAL_TYPE.BSS_EWCS) {
       await updateBssEwcsDealStatus({
         dealId,
         status,
         auditDetails,
       });
+    } else {
+      throw new Error(`Invalid dealType ${dealType}`);
     }
   }
 }
