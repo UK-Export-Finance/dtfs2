@@ -1,4 +1,4 @@
-import { CustomExpressRequest, HEADERS, isValidCompanyRegistrationNumber } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, HEADERS, isAutomaticSalesforceCustomerCreationFeatureFlagEnabled, isValidCompanyRegistrationNumber } from '@ukef/dtfs2-common';
 import axios, { AxiosError, HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
@@ -21,7 +21,7 @@ export const lookup = async (req: Request, res: Response) => {
 
   const response: { status: number; data: unknown } = await axios({
     method: 'get',
-    url: process.env.AUTOMATIC_SALESFORCE_CUSTOMER_CREATION_ENABLED === 'true'
+    url: (isAutomaticSalesforceCustomerCreationFeatureFlagEnabled())
       ? `${APIM_MDM_URL}customers/salesforce?companyRegistrationNumber=${companyReg}`
       : `${APIM_MDM_URL}customers?companyReg=${companyReg}`,
     headers,

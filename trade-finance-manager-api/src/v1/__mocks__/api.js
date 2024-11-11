@@ -1,3 +1,5 @@
+import { isAutomaticSalesforceCustomerCreationFeatureFlagEnabled } from '@ukef/dtfs2-common'
+
 const { MOCK_FACILITIES } = require('./mock-facilities');
 const MOCK_BSS_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('./mock-currency-exchange-rate');
@@ -179,25 +181,25 @@ module.exports = {
     exposurePeriodInMonths: 12,
   })),
   getPartyDbInfo: ({ companyRegNo }) => {
-    if (process.env.AUTOMATIC_SALESFORCE_CUSTOMER_CREATION_ENABLED === 'true') {
+    if (isAutomaticSalesforceCustomerCreationFeatureFlagEnabled()) {
       return companyRegNo === 'NO_MATCH'
         ? { status: 404, data: 'Party not found' }
         : {
-            status: 200,
-            data: [
-              {
-                partyUrn: 'testPartyUrn',
-              },
-            ],
-          };
+          status: 200,
+          data: [
+            {
+              partyUrn: 'testPartyUrn',
+            },
+          ],
+        };
     }
     return companyRegNo === 'NO_MATCH'
       ? false
       : [
-          {
-            partyUrn: 'testPartyUrn',
-          },
-        ];
+        {
+          partyUrn: 'testPartyUrn',
+        },
+      ];
   },
   findUser: (username) => {
     if (username === 'invalidUser') {
