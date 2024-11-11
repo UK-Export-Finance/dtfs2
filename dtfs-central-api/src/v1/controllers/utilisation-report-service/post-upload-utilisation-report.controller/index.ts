@@ -1,12 +1,11 @@
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { REQUEST_PLATFORM_TYPE, AzureFileInfo, UtilisationReportEntity } from '@ukef/dtfs2-common';
-import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
+import { REQUEST_PLATFORM_TYPE, AzureFileInfo, UtilisationReportEntity, UtilisationReportRawCsvData } from '@ukef/dtfs2-common';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
-import { UtilisationReportRawCsvData } from '../../../../types/utilisation-reports';
 import { ApiError } from '../../../../errors';
 import { executeWithSqlTransaction } from '../../../../helpers';
+import { UTILISATION_REPORT_EVENT_TYPE } from 'src/services/state-machines/utilisation-report/event/utilisation-report.event-type';
 
 export type PostUploadUtilisationReportRequestBody = {
   reportId: number;
