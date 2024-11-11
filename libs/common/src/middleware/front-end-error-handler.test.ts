@@ -14,7 +14,7 @@ describe('front-end-error-handler', () => {
     beforeEach(() => {
       jest.resetAllMocks();
       frontEndErrorHandler = getFrontEndErrorHandler(problemWithServiceTemplateLocation);
-      ({ res, req } = getHttpMocks());
+      ({ res, req } = httpMocks.createMocks());
       next = jest.fn();
     });
 
@@ -40,8 +40,4 @@ describe('front-end-error-handler', () => {
       });
     });
   });
-
-  function getHttpMocks() {
-    return httpMocks.createMocks();
-  }
 });
