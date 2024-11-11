@@ -52,16 +52,26 @@ export class DealCancellationService {
     };
 
     if (dealCancellationIsInFuture) {
-      return await TfmDealCancellationRepo.scheduleDealCancellation({ dealId, cancellation, activity, auditDetails });
+      const { cancelledDeal, riskExpiredFacilities } = await TfmDealCancellationRepo.scheduleDealCancellation({
+        dealId,
+        cancellation,
+        activity,
+        auditDetails,
+      });
+
+      return {
+        cancelledDeal,
+        riskExpiredFacilityUkefIds: riskExpiredFacilities
+          .map(({ facilitySnapshot }) => facilitySnapshot.ukefFacilityId)
+          .filter((facilityId) => facilityId !== null),
+      };
     }
 
-    const response = await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation, activity, auditDetails });
+    const { cancelledDeal, riskExpiredFacilities } = await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation, activity, auditDetails });
 
     const {
-      cancelledDeal: {
-        dealSnapshot: { dealType },
-      },
-    } = response;
+      dealSnapshot: { dealType },
+    } = cancelledDeal;
 
     await PortalDealService.updateStatus({
       dealId,
@@ -70,7 +80,12 @@ export class DealCancellationService {
       dealType,
     });
 
-    return response;
+    return {
+      cancelledDeal,
+      riskExpiredFacilityUkefIds: riskExpiredFacilities
+        .map(({ facilitySnapshot }) => facilitySnapshot.ukefFacilityId)
+        .filter((facilityId) => facilityId !== null),
+    };
   }
 
   /**
@@ -85,13 +100,11 @@ export class DealCancellationService {
     cancellation: TfmDealCancellation,
     auditDetails: AuditDetails,
   ): Promise<TfmDealCancellationResponse> {
-    const response = await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation, auditDetails });
+    const { cancelledDeal, riskExpiredFacilities } = await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation, auditDetails });
 
     const {
-      cancelledDeal: {
-        dealSnapshot: { dealType },
-      },
-    } = response;
+      dealSnapshot: { dealType },
+    } = cancelledDeal;
 
     await PortalDealService.updateStatus({
       dealId,
@@ -100,6 +113,11 @@ export class DealCancellationService {
       dealType,
     });
 
-    return response;
+    return {
+      cancelledDeal,
+      riskExpiredFacilityUkefIds: riskExpiredFacilities
+        .map(({ facilitySnapshot }) => facilitySnapshot.ukefFacilityId)
+        .filter((facilityId) => facilityId !== null),
+    };
   }
 }
