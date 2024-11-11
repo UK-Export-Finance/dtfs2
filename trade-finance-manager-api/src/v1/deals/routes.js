@@ -86,10 +86,10 @@ dealsAuthRouter
 
 dealsAuthRouter
   .route('/deals/:dealId/cancellation')
-  .all(validateDealCancellationEnabled, validateUserHasAtLeastOneAllowedTeam([TEAM_IDS.PIM]), validation.dealIdValidation, handleExpressValidatorResult)
-  .put(validatePutDealCancellationPayload, updateDealCancellation)
+  .all(validateDealCancellationEnabled, validation.dealIdValidation, handleExpressValidatorResult)
+  .put(validateUserHasAtLeastOneAllowedTeam([TEAM_IDS.PIM]), validatePutDealCancellationPayload, updateDealCancellation)
   .get(getDealCancellation)
-  .delete(deleteDealCancellation);
+  .delete(validateUserHasAtLeastOneAllowedTeam([TEAM_IDS.PIM]), deleteDealCancellation);
 
 dealsAuthRouter
   .route('/deals/:dealId/cancellation/submit')

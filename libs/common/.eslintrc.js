@@ -20,6 +20,7 @@ const baseRules = {
     {
       devDependencies: [
         '**/*.test.{js,ts}',
+        '**/*.ff-test.{js,ts}',
         '**/*.api-test.{js,ts}',
         '**/*.spec.{js,ts}',
         '**/webpack.*.{js,ts}',
