@@ -33,7 +33,7 @@ const getPartyUrn = async ({ companyRegNo, companyName }) => {
     return '';
   }
 
-  if (process.env.AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED === 'true') {
+  if (process.env.AUTOMATIC_SALESFORCE_CUSTOMER_CREATION_ENABLED === 'true') {
     let partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
 
     if (partyDbInfo.status === 404) {
