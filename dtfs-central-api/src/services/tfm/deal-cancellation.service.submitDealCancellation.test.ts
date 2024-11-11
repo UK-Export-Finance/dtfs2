@@ -168,7 +168,7 @@ describe('DealCancellationService', () => {
           expect(dealCancellationResponse).toEqual(mockCancellationResponse);
         });
 
-        it('updates the deal status to cancelled', async () => {
+        it(`it calls PortalDealService.updateStatus with ${DEAL_STATUS.CANCELLED} status`, async () => {
           // Act
           await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 
