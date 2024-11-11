@@ -148,10 +148,16 @@ describe('DealCancellationService', () => {
             ...cancellation,
           };
 
-          expect(scheduleDealCancellationMock).toHaveBeenCalledTimes(0);
-
           expect(submitDealCancellationMock).toHaveBeenCalledTimes(1);
           expect(submitDealCancellationMock).toHaveBeenCalledWith({ dealId, cancellation, activity: expectedActivity, auditDetails });
+        });
+
+        it('does not scheduleDealCancellation', async () => {
+          // Act
+          await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
+
+          // Assert
+          expect(scheduleDealCancellationMock).toHaveBeenCalledTimes(0);
         });
 
         it('returns the deal cancellation response object', async () => {
@@ -206,10 +212,16 @@ describe('DealCancellationService', () => {
             ...cancellation,
           };
 
-          expect(submitDealCancellationMock).toHaveBeenCalledTimes(0);
-
           expect(scheduleDealCancellationMock).toHaveBeenCalledTimes(1);
           expect(scheduleDealCancellationMock).toHaveBeenCalledWith({ dealId, cancellation, activity: expectedActivity, auditDetails });
+        });
+
+        it('does not call submitDealCancellation', async () => {
+          // Act
+          await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
+
+          // Assert
+          expect(submitDealCancellationMock).toHaveBeenCalledTimes(0);
         });
 
         it('returns the deal cancellation response object', async () => {
