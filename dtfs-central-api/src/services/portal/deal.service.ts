@@ -9,31 +9,31 @@ export class PortalDealService {
    *
    * @param updateStatusParams
    * @param updateStatusParams.dealId - the deal Id to update
-   * @param updateStatusParams.status - the status change to make
+   * @param updateStatusParams.newStatus - the status change to make
    * @param updateStatusParams.auditDetails - the users audit details
    * @param updateStatusParams.dealType - the deal type
    */
   public static async updateStatus({
     dealId,
-    status,
+    newStatus,
     auditDetails,
     dealType,
   }: {
     dealId: ObjectId | string;
-    status: DealStatus;
+    newStatus: DealStatus;
     auditDetails: AuditDetails;
     dealType: DealType;
   }): Promise<void> {
     if (dealType === DEAL_TYPE.GEF) {
       await updateGefDealStatus({
         dealId,
-        status,
+        newStatus,
         auditDetails,
       });
     } else if (dealType === DEAL_TYPE.BSS_EWCS) {
       await updateBssEwcsDealStatus({
         dealId,
-        status,
+        newStatus,
         auditDetails,
       });
     } else {

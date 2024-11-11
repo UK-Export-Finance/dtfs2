@@ -65,7 +65,7 @@ export class DealCancellationService {
 
     await PortalDealService.updateStatus({
       dealId,
-      status: DEAL_STATUS.CANCELLED,
+      newStatus: DEAL_STATUS.CANCELLED,
       auditDetails,
       dealType,
     });
@@ -95,7 +95,7 @@ export class DealCancellationService {
 
     await PortalDealService.updateStatus({
       dealId,
-      status: DEAL_STATUS.CANCELLED,
+      newStatus: DEAL_STATUS.CANCELLED,
       auditDetails,
       dealType,
     });
