@@ -32,7 +32,7 @@ export class DealCancellationService {
     const effectiveFromDate = toDate(cancellation.effectiveFrom);
     const endOfToday = endOfDay(new Date());
 
-    const isDealCancellationInFuture = isAfter(effectiveFromDate, endOfToday);
+    const dealCancellationIsInFuture = isAfter(effectiveFromDate, endOfToday);
 
     const user = await TfmUsersRepo.findOneUserById(auditDetails.id);
 
@@ -51,7 +51,7 @@ export class DealCancellationService {
       ...cancellation,
     };
 
-    if (isDealCancellationInFuture) {
+    if (dealCancellationIsInFuture) {
       return await TfmDealCancellationRepo.scheduleDealCancellation({ dealId, cancellation, activity, auditDetails });
     }
 
