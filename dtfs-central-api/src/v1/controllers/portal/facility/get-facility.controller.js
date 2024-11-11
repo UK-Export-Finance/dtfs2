@@ -11,14 +11,14 @@ const { mongoDbClient: db } = require('../../../../drivers/db-client');
  */
 const findOneFacility = async (_id) => {
   if (!ObjectId.isValid(_id)) {
-    throw InvalidFacilityIdError(_id);
+    throw new InvalidFacilityIdError(_id);
   }
 
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
   const facility = await collection.findOne({ _id: { $eq: ObjectId(_id) } });
 
   if (!facility) {
-    throw FacilityNotFoundError(_id);
+    throw new FacilityNotFoundError(_id);
   }
 
   return facility;
@@ -31,7 +31,7 @@ exports.findOneFacilityGet = async (req, res) => {
   } = req;
   try {
     if (!ObjectId.isValid(id)) {
-      throw InvalidFacilityIdError(id);
+      throw new InvalidFacilityIdError(id);
     }
     const facility = await findOneFacility(req.params.id);
 
@@ -44,6 +44,8 @@ exports.findOneFacilityGet = async (req, res) => {
         code: error.code,
       });
     }
+
+    console.error(`Error whilst getting facility, ${error}`);
 
     return res.status(500).send({ status: 500, message: 'An unknown error occurred' });
   }

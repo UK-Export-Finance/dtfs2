@@ -51,7 +51,7 @@ exports.updateFacilityPut = async (req, res) => {
 
   try {
     if (!ObjectId.isValid(facilityId)) {
-      throw InvalidFacilityIdError(facilityId);
+      throw new InvalidFacilityIdError(facilityId);
     }
 
     validateAuditDetails(auditDetails);
@@ -71,6 +71,8 @@ exports.updateFacilityPut = async (req, res) => {
         code: error.code,
       });
     }
+
+    console.error(`Error whilst updating facility, ${error}`);
 
     return res.status(500).send({ status: 500, message: 'An unknown error occurred' });
   }

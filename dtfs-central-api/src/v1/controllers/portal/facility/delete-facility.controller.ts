@@ -44,6 +44,9 @@ export const deleteFacility = async (
         code: error.code,
       });
     }
+
+    console.error(`Error whilst deleting facility, ${JSON.stringify(error)}`);
+
     return res.status(500).send({ status: 500, message: 'An unknown error occurred' });
   }
 };

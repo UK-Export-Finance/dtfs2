@@ -1,5 +1,5 @@
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS, InvalidParameterError, ApiError } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, InvalidParameterError, ApiError, InvalidFacilityIdError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./get-facility.controller');
@@ -15,7 +15,7 @@ const updateFacilityStatus = async ({ facilityId, status, auditDetails }) => {
   const existingFacility = await findOneFacility(facilityId);
 
   if (existingFacility.status === 400) {
-    throw InvalidParameterError('facilityId', facilityId);
+    throw new InvalidParameterError('facilityId', facilityId);
   }
 
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
@@ -52,7 +52,7 @@ exports.updateFacilityStatusPut = async (req, res) => {
 
   try {
     if (!ObjectId.isValid(facilityId)) {
-      throw InvalidParameterError('facilityId', facilityId);
+      throw new InvalidFacilityIdError(facilityId);
     }
 
     validateAuditDetails(auditDetails);
@@ -68,6 +68,8 @@ exports.updateFacilityStatusPut = async (req, res) => {
         code: error.code,
       });
     }
+
+    console.error(`Error whilst updating facility status, ${error}`);
 
     return res.status(500).send({ status: 500, error });
   }
