@@ -6,6 +6,7 @@ import { NotFoundError } from '../../../../errors';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { PostKeyingDataPayload } from '../../../routes/middleware/payload-validation';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 
 export type PostKeyingDataRequest = CustomExpressRequest<{
   reqBody: PostKeyingDataPayload;
@@ -30,7 +31,7 @@ export const postKeyingData = async (req: PostKeyingDataRequest, res: Response) 
     const utilisationReportStateMachine = UtilisationReportStateMachine.forReport(utilisationReport);
     await executeWithSqlTransaction((transactionEntityManager) =>
       utilisationReportStateMachine.handleEvent({
-        type: 'GENERATE_KEYING_DATA',
+        type: UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA,
         payload: {
           transactionEntityManager,
           feeRecordsAtMatchStatusWithPayments,

@@ -11,6 +11,7 @@ import {
   UtilisationReportEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
 } from '@ukef/dtfs2-common';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 import { postKeyingData, PostKeyingDataRequest } from '.';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { executeWithSqlTransaction } from '../../../../helpers';
@@ -117,7 +118,7 @@ describe('post-keying-data.controller', () => {
       expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
       expect(res._isEndCalled()).toEqual(true);
       expect(mockEventHandler).toHaveBeenCalledWith({
-        type: 'GENERATE_KEYING_DATA',
+        type: UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA,
         payload: {
           transactionEntityManager: mockEntityManager,
           feeRecordsAtMatchStatusWithPayments: feeRecords,

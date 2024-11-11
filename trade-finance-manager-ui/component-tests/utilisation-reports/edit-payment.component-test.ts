@@ -7,6 +7,26 @@ const page = '../templates/utilisation-reports/edit-payment.njk';
 const render = pageRenderer<EditPaymentViewModel>(page);
 
 describe(page, () => {
+  it('should add error prefix to page title when there are errors', () => {
+    const viewModel: EditPaymentViewModel = {
+      ...anEditPaymentViewModel(),
+      errors: { errorSummary: [{ text: 'an error', href: 'error-href' }] },
+    };
+    const wrapper = render(viewModel);
+
+    wrapper.expectPageTitle().toRead('Error - Edit payment');
+  });
+
+  it('should not add error prefix to page title when there are no errors', () => {
+    const viewModel: EditPaymentViewModel = {
+      ...anEditPaymentViewModel(),
+      errors: { errorSummary: [] },
+    };
+    const wrapper = render(viewModel);
+
+    wrapper.expectPageTitle().toRead('Edit payment');
+  });
+
   it('should render the page heading with the caption', () => {
     const bankName = 'Test bank';
     const formattedReportPeriod = 'January 2024';

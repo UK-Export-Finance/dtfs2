@@ -9,6 +9,7 @@ import { DeletePaymentPayload } from '../../../routes/middleware/payload-validat
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 
 jest.mock('../../../../helpers');
 jest.mock('../../../../services/state-machines/utilisation-report/utilisation-report.state-machine');
@@ -78,7 +79,7 @@ describe('delete-payment.controller', () => {
       expect(mockForReport).toHaveBeenCalledWith(utilisationReport);
       expect(mockHandleEvent).toHaveBeenCalledTimes(1);
       expect(mockHandleEvent).toHaveBeenCalledWith({
-        type: 'DELETE_PAYMENT',
+        type: UTILISATION_REPORT_EVENT_TYPE.DELETE_PAYMENT,
         payload: {
           transactionEntityManager: mockEntityManager,
           paymentId: Number(paymentId),

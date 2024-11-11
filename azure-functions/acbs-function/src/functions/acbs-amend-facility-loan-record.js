@@ -38,10 +38,24 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
 
     const { facilityIdentifier, facility, amendments, fmr } = payload;
     const { amendment } = amendments;
+
     let facilityLoanRecordAmendments;
 
     // 1.1. Facility Loan Record (FLR) amendment mapping
-    const flrMApped = mappings.facility.facilityLoanAmend(amendments, facility, fmr);
+    const flrMapped = mappings.facility.facilityLoanAmend(amendments, facility, fmr);
+
+    /**
+     * Facility amendment on facility type `loan` with only `amount`
+     * facility attribute, the execution should be terminated.
+     *
+     * However if the facility (Loan) amendment consist of an additional
+     * attribute with `amount` then FLR should be mapped as normal.
+     */
+    if (!Object.values(flrMapped).length) {
+      facilityLoanRecordAmendments = 'Facility loan amount only amendment, aborting FLR amendment';
+
+      return facilityLoanRecordAmendments;
+    }
 
     // 1.2. Extract loan id for facility id
     const loanId = yield context.df.callActivityWithRetry('get-facility-loan-id', retryOptions, {
@@ -58,7 +72,7 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
         const amount = yield context.df.callActivityWithRetry('update-facility-loan-amount', retryOptions, {
           loanId,
           facilityIdentifier,
-          acbsFacilityLoanInput: flrMApped,
+          acbsFacilityLoanInput: flrMapped,
         });
 
         facilityLoanRecordAmendments = {
@@ -72,7 +86,7 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
         const coverEndDate = yield context.df.callActivityWithRetry('update-facility-loan', retryOptions, {
           loanId,
           facilityIdentifier,
-          acbsFacilityLoanInput: flrMApped,
+          acbsFacilityLoanInput: flrMapped,
         });
 
         facilityLoanRecordAmendments = {
