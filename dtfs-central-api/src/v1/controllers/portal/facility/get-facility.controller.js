@@ -3,22 +3,22 @@ const { ObjectId } = require('mongodb');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 
 /**
- * @param {string} _id - the facility Id
+ * @param {string} facilityId - the facility Id
  * @returns {Promise<import('@ukef/dtfs2-common').Facility>} - returns the facility if it is found
  *
  * @throws {InvalidFacilityIdError} if the id is invalid
  * @throws {FacilityNotFoundError} if the id is valid but does not correspond to a facility
  */
-const findOneFacility = async (_id) => {
-  if (!ObjectId.isValid(_id)) {
-    throw new InvalidFacilityIdError(_id);
+const findOneFacility = async (facilityId) => {
+  if (!ObjectId.isValid(facilityId)) {
+    throw new InvalidFacilityIdError(facilityId);
   }
 
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
-  const facility = await collection.findOne({ _id: { $eq: ObjectId(_id) } });
+  const facility = await collection.findOne({ _id: { $eq: ObjectId(facilityId) } });
 
   if (!facility) {
-    throw new FacilityNotFoundError(_id);
+    throw new FacilityNotFoundError(facilityId);
   }
 
   return facility;
@@ -27,13 +27,10 @@ exports.findOneFacility = findOneFacility;
 
 exports.findOneFacilityGet = async (req, res) => {
   const {
-    params: { id },
+    params: { id: facilityId },
   } = req;
   try {
-    if (!ObjectId.isValid(id)) {
-      throw new InvalidFacilityIdError(id);
-    }
-    const facility = await findOneFacility(req.params.id);
+    const facility = await findOneFacility(facilityId);
 
     return res.status(200).send(facility);
   } catch (error) {

@@ -1,4 +1,4 @@
-import { ApiError, ApiErrorResponseBody, AuditDetails, DocumentNotDeletedError, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { ApiError, ApiErrorResponseBody, AuditDetails, DocumentNotDeletedError, InvalidFacilityIdError, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { Response } from 'express';
 import { deleteOne, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
@@ -14,11 +14,11 @@ export const deleteFacility = async (
   const { id: facilityId } = req.params;
   const { auditDetails, user } = req.body;
 
-  if (!ObjectId.isValid(facilityId)) {
-    return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
-  }
-
   try {
+    if (!ObjectId.isValid(facilityId)) {
+      throw new InvalidFacilityIdError(facilityId);
+    }
+
     validateAuditDetailsAndUserType(auditDetails, 'portal');
 
     const facility = await findOneFacility(facilityId);
