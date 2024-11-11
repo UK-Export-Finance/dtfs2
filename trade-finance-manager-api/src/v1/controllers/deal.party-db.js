@@ -1,4 +1,5 @@
 const api = require('../api');
+import { isAutomaticSalesforceCustomerCreationFeatureFlagEnabled } from '@ukef/dtfs2-common'
 
 /**
  * Gets company information from Party URN
@@ -33,7 +34,7 @@ const getPartyUrn = async ({ companyRegNo, companyName }) => {
     return '';
   }
 
-  if (process.env.AUTOMATIC_SALESFORCE_CUSTOMER_CREATION_ENABLED === 'true') {
+  if (isAutomaticSalesforceCustomerCreationFeatureFlagEnabled()) {
     let partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
 
     if (partyDbInfo.status === 404) {
