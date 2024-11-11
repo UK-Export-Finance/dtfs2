@@ -6,7 +6,7 @@ import { isHttpError } from 'http-errors';
  * Handles the CSRF token error by redirecting the user to the root of the application.
  * @param res
  */
-const handleCsrfTokenError = (res: Response) => {
+export const handleCsrfTokenError = (res: Response) => {
   console.error("The user's CSRF token is incorrect, redirecting the user to /.");
   // Redirects always override the status code with 302
   // So there is no purpose setting the status code explicitly to a 500
@@ -19,15 +19,23 @@ const handleCsrfTokenError = (res: Response) => {
  * Handles an otherwise unhandled error by logging the error and rendering the problem with service page.
  * @param error
  * @param res
- * @param problemWithServiceTemplate
+ * @param problemWithServiceTemplateLocation
  */
-const handleUnhandledError = (error: unknown, res: Response, problemWithServiceTemplate: string) => {
+export const handleUnhandledError = ({
+  res,
+  error,
+  problemWithServiceTemplateLocation,
+}: {
+  res: Response;
+  error: unknown;
+  problemWithServiceTemplateLocation: string;
+}) => {
   console.error('An unhandled error occurred:', error);
   res.status(HttpStatusCode.InternalServerError);
-  res.render(problemWithServiceTemplate);
+  res.render(problemWithServiceTemplateLocation);
 };
 
-const getErrorType = (error: unknown) => {
+export const getErrorType = (error: unknown) => {
   if (isHttpError(error) && error.code === 'EBADCSRFTOKEN') {
     return 'CSRF_TOKEN_ERROR';
   }
@@ -42,14 +50,14 @@ const getErrorType = (error: unknown) => {
  * It is required to be added last to the app in generateApp.
  *
  * In Express 4, it only catches async errors if next(error) is called with an error inside the async function.
- * @param [problemWithServiceTemplate]
+ * @param [problemWithServiceTemplateLocation]
  * @example
  * // Async route in a routes file
  * app.get('*', (req, res) => {
  * // route implementation that can throw errors
  * }.catch(next); // This will be caught by the front-end error handler
  */
-export const getFrontEndErrorHandler = (problemWithServiceTemplate: string = '_partials/problem-with-service.njk') => {
+export const getFrontEndErrorHandler = (problemWithServiceTemplateLocation: string = '_partials/problem-with-service.njk') => {
   const frontEndErrorHandler: ErrorRequestHandler = (error: unknown, _req, res, next) => {
     // Delegates to the default Express error handler
     // when the headers have already been sent to the client
@@ -66,7 +74,7 @@ export const getFrontEndErrorHandler = (problemWithServiceTemplate: string = '_p
         break;
       case 'UNHANDLED_ERROR':
       default:
-        handleUnhandledError(error, res, problemWithServiceTemplate);
+        handleUnhandledError({ error, res, problemWithServiceTemplateLocation });
         break;
     }
   };

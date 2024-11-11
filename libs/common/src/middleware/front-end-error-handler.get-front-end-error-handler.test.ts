@@ -6,11 +6,15 @@ import { getFrontEndErrorHandler } from './front-end-error-handler';
 
 describe('front-end-error-handler', () => {
   describe('frontEndErrorHandler', () => {
+    console.error = jest.fn();
+
     const problemWithServiceTemplateLocation = 'problemWithServiceTemplateLocation';
+
     let frontEndErrorHandler: ErrorRequestHandler;
     let res: httpMocks.MockResponse<Response>;
     let req: httpMocks.MockRequest<Request>;
     let next: jest.Mock;
+
     beforeEach(() => {
       jest.resetAllMocks();
       frontEndErrorHandler = getFrontEndErrorHandler(problemWithServiceTemplateLocation);
