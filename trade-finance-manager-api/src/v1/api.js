@@ -1,6 +1,8 @@
 import { isAutomaticSalesforceCustomerCreationFeatureFlagEnabled } from '@ukef/dtfs2-common'
 
 const axios = require('axios');
+const { HttpStatusCode } = require('axios');
+
 const { HEADERS, InvalidDealIdError } = require('@ukef/dtfs2-common');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
 const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
@@ -823,16 +825,21 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
       url: `${EXTERNAL_API_URL}/party-db/${encodeURIComponent(companyRegNo)}`,
       headers: headers.external,
     });
-    return isAutomaticSalesforceCustomerCreationFeatureFlagEnabled() ? { status: 200, data: response.data } : response.data;
+    if (isAutomaticSalesforceCustomerCreationFeatureFlagEnabled()) {
+      return { status: HttpStatusCode.Ok, data: response.data }
+    }
+    return response.data
   } catch (error) {
     console.error('Unable to get party DB info %o', error);
-    if (isAutomaticSalesforceCustomerCreationFeatureFlagEnabled()) {
-      if (error?.status === 404) {
-        return { status: 404, data: 'Party not found' };
-      }
-      return { status: error?.status || 500, data: 'Failed to get party' };
+    if (!isAutomaticSalesforceCustomerCreationFeatureFlagEnabled()) {
+      return false;
     }
-    return false;
+
+    if (error?.status === HttpStatusCode.NotFound) {
+      return { status: HttpStatusCode.NotFound, data: 'Party not found' };
+    }
+
+    return { status: error?.status || HttpStatusCode.InternalServerError, data: 'Failed to get party' };
   }
 };
 
