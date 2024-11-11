@@ -113,7 +113,7 @@ const parseXlsxToCsvArrays = (worksheet) => {
       // If the row has no data in the final columns of the row, we need to fill in the empty cells with
       // null values and cell addresses so that the csv parser library can parse the data correctly
       while (columnCount < headerCount) {
-        rowData.push(null);
+        rowData.push(`${null}`);
         // calculate the cell address here given the last address
         const lastAddressMatch = lastAddress.match(CELL_ADDRESS_REGEX);
         const [lastColumn, lastRow] = lastAddressMatch.slice(1);
