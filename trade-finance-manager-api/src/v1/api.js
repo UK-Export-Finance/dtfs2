@@ -836,6 +836,12 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
   }
 };
 
+/**
+ * Calls createParty in external-api to create a new customer in Salesforce
+ * @param {number} companyRegNo Party URN
+ * @param {number} companyName Company name
+ * @returns {Promise<Object>} Company information
+ */
 const createParty = async ({ companyRegNo, companyName }) => {
   try {
     const response = await axios({
