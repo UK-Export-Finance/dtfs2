@@ -5,6 +5,7 @@ const { addMonths } = require('date-fns');
  * UKEF facility ID to test the valid upload journey.
  * The UKEF facility ID for the below facility is used in the following fixtures files:
  * - valid-utilisation-report-February_2023_monthly.xlsx
+ * - valid-utilisation-report-February_2023_monthly.csv
  */
 export const tfmFacilityForReport = {
   facilitySnapshot: {

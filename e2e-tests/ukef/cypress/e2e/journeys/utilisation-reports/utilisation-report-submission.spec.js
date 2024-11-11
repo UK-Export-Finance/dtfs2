@@ -13,77 +13,13 @@ import tfmPages from '../../../../../tfm/cypress/e2e/pages';
 
 import MOCK_USERS from '../../../../../e2e-fixtures/portal-users.fixture';
 import { tfmFacilityForReport } from '../../../fixtures/tfm-facility';
+import { february2023ExpectedValues } from '../../../fixtures/february-2023-expected-values';
 
 const { BANK1_PAYMENT_REPORT_OFFICER1 } = MOCK_USERS;
 
 context('Portal to TFM utilisation report submission', () => {
   const today = new Date();
   const submissionMonthStamp = toIsoMonthStamp(today);
-
-  /**
-   * These values need to be kept in line with the values in the file
-   * 'valid-utilisation-report-February_2023_monthly.xlsx'
-   * in the features folder as that is the file that is uploaded in this journey.
-   */
-  const expectedParsedReportValues = {
-    firstReportRow: {
-      facilityId: '20001371',
-      exporter: 'Exporter 1',
-      utilisation: '761,579.37',
-      /**
-       * Fees paid to ukef for the period currency followed by fees paid to ukef for the period
-       */
-      reportedFees: 'GBP 123.00',
-      /**
-       * No payment currency provided so this is the same as reported fees.
-       */
-      reportedPayments: 'GBP 123.00',
-      /**
-       * No total fees accrued for the period currency provided so this takes the value:
-       * base currency followed by total fees accrued for the period.
-       */
-      feesAccrued: 'GBP 123.00',
-    },
-    secondReportRow: {
-      facilityId: '20001371',
-      exporter: 'Exporter 2',
-      utilisation: '761,579.37',
-      /**
-       * Fees paid to ukef for the period currency followed by fees paid to ukef for the period.
-       */
-      reportedFees: 'GBP 243.00',
-      /**
-       * The payment currency is the same as the fees paid to ukef for the period currency,
-       * so the reported payments match the reported fees.
-       */
-      reportedPayments: 'GBP 243.00',
-      /**
-       * Total fees accrued for the period currency followed by total fees accrued for the period.
-       */
-      feesAccrued: 'GBP 150.00',
-    },
-    thirdReportRow: {
-      facilityId: '20001371',
-      exporter: 'Potato exporter',
-      utilisation: '761,579.37',
-      /**
-       * Fees paid to ukef for the period currency followed by fees paid to ukef for the period.
-       */
-      reportedFees: 'EUR 45.00',
-      /**
-       * Payment currency is in GBP which is different to the fees paid to UKEF currency.
-       * The payment currency exchange rate is 1.17.
-       * So the reported payments = fees paid to ukef for the period / payment currency exchange rate
-       *                          = 45 / 1.17
-       *                          = 38.46
-       */
-      reportedPayments: 'GBP 38.46',
-      /**
-       * Total fees accrued for the period currency followed by total fees accrued for the period.
-       */
-      feesAccrued: 'GBP 45.00',
-    },
-  };
 
   before(() => {
     cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
@@ -136,14 +72,61 @@ context('Portal to TFM utilisation report submission', () => {
     cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
   });
 
-  it('Bank uploads utilisation report to Portal and report data is displayed correctly in TFM to PDC_RECONCILE user', () => {
+  /**
+   * Asserts the values in a given row of the premium payments table match the expected
+   * values from the report as defined in february2023ExpectedValues
+   * @param {number} premiumPaymentsRowIndex - The index of the row of the premium payments table
+   * @param {object} expectedParsedValuesForReportRow - The expected values to be found in the row
+   */
+  const assertPremiumPaymentsTableRowContainsExpectedValues = (premiumPaymentsRowIndex, expectedParsedValuesForReportRow) => {
+    cy.assertText(
+      tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.facilityIdByRowIndex(premiumPaymentsRowIndex),
+      expectedParsedValuesForReportRow.facilityId,
+    );
+    cy.assertText(
+      tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.exporterIdByRowIndex(premiumPaymentsRowIndex),
+      expectedParsedValuesForReportRow.exporter,
+    );
+    cy.assertText(
+      tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.reportedFeesByRowIndex(premiumPaymentsRowIndex),
+      expectedParsedValuesForReportRow.reportedFees,
+    );
+    cy.assertText(
+      tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.reportedPaymentsByRowIndex(premiumPaymentsRowIndex),
+      expectedParsedValuesForReportRow.reportedPayments,
+    );
+    cy.assertText(
+      tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.totalReportedPaymentsByRowIndex(premiumPaymentsRowIndex),
+      expectedParsedValuesForReportRow.reportedPayments,
+    );
+  };
+
+  /**
+   * Asserts the values in a given row of the utilisation table match the expected
+   * values from the report as defined in february2023ExpectedValues
+   * @param {number} utilisationTableRowIndex - The index of the row of utilisation table
+   * @param {object} expectedParsedValuesForReportRow - The expected values to be found in the row
+   */
+  const assertUtilisationTableRowContainsExpectedValues = (utilisationTableRowIndex, expectedParsedValuesForReportRow) => {
+    tfmPages.utilisationReportPage.utilisationTab.table.rowByIndex(utilisationTableRowIndex).within(() => {
+      cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.facilityId(), expectedParsedValuesForReportRow.facilityId);
+      cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.exporter(), expectedParsedValuesForReportRow.exporter);
+      cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.feesPayable(), expectedParsedValuesForReportRow.reportedFees);
+      cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.feesAccrued(), expectedParsedValuesForReportRow.feesAccrued);
+      cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.utilisation(), expectedParsedValuesForReportRow.utilisation);
+    });
+  };
+
+  const testFebruary2023ReportUploadWithFileType = (filetype) => {
+    const filename = filetype === 'csv' ? 'valid-utilisation-report-February_2023_monthly.csv' : 'valid-utilisation-report-February_2023_monthly.xlsx';
+
     //---------------------------------------------------------------------------------
     // Portal payment report officer submits utilisation report
     //---------------------------------------------------------------------------------
     cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
     cy.visit(relative('/utilisation-report-upload'));
 
-    portalPages.utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-February_2023_monthly.xlsx');
+    portalPages.utilisationReportUpload.utilisationReportFileInput().attachFile(filename);
     cy.clickContinueButton();
     portalPages.confirmAndSend.confirmAndSendButton().click();
 
@@ -171,15 +154,15 @@ context('Portal to TFM utilisation report submission', () => {
         .find('[data-cy="exporter"]')
         .eq(0)
         .then(($cell) => {
-          if ($cell.text().trim() === expectedParsedReportValues.firstReportRow.exporter) {
+          if ($cell.text().trim() === february2023ExpectedValues.firstReportRow.exporter) {
             cy.wrap(index).as('firstReportRowPremiumPaymentsTableIndex');
           }
 
-          if ($cell.text().trim() === expectedParsedReportValues.secondReportRow.exporter) {
+          if ($cell.text().trim() === february2023ExpectedValues.secondReportRow.exporter) {
             cy.wrap(index).as('secondReportRowPremiumPaymentsTableIndex');
           }
 
-          if ($cell.text().trim() === expectedParsedReportValues.thirdReportRow.exporter) {
+          if ($cell.text().trim() === february2023ExpectedValues.thirdReportRow.exporter) {
             cy.wrap(index).as('thirdReportRowPremiumPaymentsTableIndex');
           }
         });
@@ -187,74 +170,17 @@ context('Portal to TFM utilisation report submission', () => {
 
     // Assert first line of report is displayed in the premium payments table
     cy.get('@firstReportRowPremiumPaymentsTableIndex').then((index) => {
-      cy.assertText(
-        tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.facilityIdByRowIndex(index),
-        expectedParsedReportValues.firstReportRow.facilityId,
-      );
-      cy.assertText(
-        tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.exporterIdByRowIndex(index),
-        expectedParsedReportValues.firstReportRow.exporter,
-      );
-      cy.assertText(
-        tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.reportedFeesByRowIndex(index),
-        expectedParsedReportValues.firstReportRow.reportedFees,
-      );
-      cy.assertText(
-        tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.reportedPaymentsByRowIndex(index),
-        expectedParsedReportValues.firstReportRow.reportedPayments,
-      );
-      cy.assertText(
-        tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.totalReportedPaymentsByRowIndex(index),
-        expectedParsedReportValues.firstReportRow.reportedPayments,
-      );
+      assertPremiumPaymentsTableRowContainsExpectedValues(index, february2023ExpectedValues.firstReportRow);
     });
 
     // Assert second line of report is displayed in the premium payments table
     cy.get('@secondReportRowPremiumPaymentsTableIndex').then((index) => {
-      cy.assertText(
-        tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.facilityIdByRowIndex(index),
-        expectedParsedReportValues.secondReportRow.facilityId,
-      );
-      cy.assertText(
-        tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.exporterIdByRowIndex(index),
-        expectedParsedReportValues.secondReportRow.exporter,
-      );
-      cy.assertText(
-        tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.reportedFeesByRowIndex(index),
-        expectedParsedReportValues.secondReportRow.reportedFees,
-      );
-      cy.assertText(
-        tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.reportedPaymentsByRowIndex(index),
-        expectedParsedReportValues.secondReportRow.reportedPayments,
-      );
-      cy.assertText(
-        tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.totalReportedPaymentsByRowIndex(index),
-        expectedParsedReportValues.secondReportRow.reportedPayments,
-      );
+      assertPremiumPaymentsTableRowContainsExpectedValues(index, february2023ExpectedValues.secondReportRow);
     });
 
     // Assert third line of report is displayed in the premium payments table
     cy.get('@thirdReportRowPremiumPaymentsTableIndex').then((index) => {
-      cy.assertText(
-        tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.facilityIdByRowIndex(index),
-        expectedParsedReportValues.thirdReportRow.facilityId,
-      );
-      cy.assertText(
-        tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.exporterIdByRowIndex(index),
-        expectedParsedReportValues.thirdReportRow.exporter,
-      );
-      cy.assertText(
-        tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.reportedFeesByRowIndex(index),
-        expectedParsedReportValues.thirdReportRow.reportedFees,
-      );
-      cy.assertText(
-        tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.reportedPaymentsByRowIndex(index),
-        expectedParsedReportValues.thirdReportRow.reportedPayments,
-      );
-      cy.assertText(
-        tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.totalReportedPaymentsByRowIndex(index),
-        expectedParsedReportValues.thirdReportRow.reportedPayments,
-      );
+      assertPremiumPaymentsTableRowContainsExpectedValues(index, february2023ExpectedValues.thirdReportRow);
     });
 
     tfmPages.utilisationReportPage.utilisationTabLink().click();
@@ -269,15 +195,15 @@ context('Portal to TFM utilisation report submission', () => {
         .find('[data-cy="exporter"]')
         .eq(0)
         .then(($cell) => {
-          if ($cell.text().trim() === expectedParsedReportValues.firstReportRow.exporter) {
+          if ($cell.text().trim() === february2023ExpectedValues.firstReportRow.exporter) {
             cy.wrap(index).as('firstReportRowUtilisationTableIndex');
           }
 
-          if ($cell.text().trim() === expectedParsedReportValues.secondReportRow.exporter) {
+          if ($cell.text().trim() === february2023ExpectedValues.secondReportRow.exporter) {
             cy.wrap(index).as('secondReportRowUtilisationTableIndex');
           }
 
-          if ($cell.text().trim() === expectedParsedReportValues.thirdReportRow.exporter) {
+          if ($cell.text().trim() === february2023ExpectedValues.thirdReportRow.exporter) {
             cy.wrap(index).as('thirdReportRowUtilisationTableIndex');
           }
         });
@@ -285,35 +211,25 @@ context('Portal to TFM utilisation report submission', () => {
 
     // Assert first line of report is displayed in the utilisation table
     cy.get('@firstReportRowUtilisationTableIndex').then((index) => {
-      tfmPages.utilisationReportPage.utilisationTab.table.rowByIndex(index).within(() => {
-        cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.facilityId(), expectedParsedReportValues.firstReportRow.facilityId);
-        cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.exporter(), expectedParsedReportValues.firstReportRow.exporter);
-        cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.feesPayable(), expectedParsedReportValues.firstReportRow.reportedFees);
-        cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.feesAccrued(), expectedParsedReportValues.firstReportRow.feesAccrued);
-        cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.utilisation(), expectedParsedReportValues.firstReportRow.utilisation);
-      });
+      assertUtilisationTableRowContainsExpectedValues(index, february2023ExpectedValues.firstReportRow);
     });
 
     // Assert second line of report is displayed in the utilisation table
     cy.get('@secondReportRowUtilisationTableIndex').then((index) => {
-      tfmPages.utilisationReportPage.utilisationTab.table.rowByIndex(index).within(() => {
-        cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.facilityId(), expectedParsedReportValues.secondReportRow.facilityId);
-        cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.exporter(), expectedParsedReportValues.secondReportRow.exporter);
-        cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.feesPayable(), expectedParsedReportValues.secondReportRow.reportedFees);
-        cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.feesAccrued(), expectedParsedReportValues.secondReportRow.feesAccrued);
-        cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.utilisation(), expectedParsedReportValues.secondReportRow.utilisation);
-      });
+      assertUtilisationTableRowContainsExpectedValues(index, february2023ExpectedValues.secondReportRow);
     });
 
     // Assert third line of report is displayed in the utilisation table
     cy.get('@thirdReportRowUtilisationTableIndex').then((index) => {
-      tfmPages.utilisationReportPage.utilisationTab.table.rowByIndex(index).within(() => {
-        cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.facilityId(), expectedParsedReportValues.thirdReportRow.facilityId);
-        cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.exporter(), expectedParsedReportValues.thirdReportRow.exporter);
-        cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.feesPayable(), expectedParsedReportValues.thirdReportRow.reportedFees);
-        cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.feesAccrued(), expectedParsedReportValues.thirdReportRow.feesAccrued);
-        cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.utilisation(), expectedParsedReportValues.thirdReportRow.utilisation);
-      });
+      assertUtilisationTableRowContainsExpectedValues(index, february2023ExpectedValues.thirdReportRow);
     });
+  };
+
+  it('Bank uploads utilisation report to Portal and report data is displayed correctly in TFM to PDC_RECONCILE user - csv', () => {
+    testFebruary2023ReportUploadWithFileType('csv');
+  });
+
+  it('Bank uploads utilisation report to Portal and report data is displayed correctly in TFM to PDC_RECONCILE user - xlsx', () => {
+    testFebruary2023ReportUploadWithFileType('xlsx');
   });
 });
