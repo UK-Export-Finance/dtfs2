@@ -35,6 +35,28 @@ export const lookup = async (req: Request, res: Response) => {
   return res.status(status).send(data);
 };
 
+
+/**
+ * Creates a new customer in Salesforce by sending a request to APIM,
+ * based on the provided company registration number (from params) and company name (from the request body).
+ * This function validates the company registration number and sends an HTTP POST request to the MDM API
+ * to create the party. If validation fails or an error occurs, it returns the appropriate HTTP status and error message.
+ *
+ * @param {CustomExpressRequest<{ reqBody: { companyName: string } }>} req - The Express request object, which contains:
+ *   - `req.params` - The company registration number (`companyRegNo`).
+ *   - `req.body` - The company name (`companyName`).
+ * @param {Response} res - The Express response object used to send the HTTP response.
+ * 
+ * @returns {Promise<Response>} A promise that resolves to an HTTP response. The response contains:
+ *   - On success: The status and data returned from the MDM API.
+ *   - On failure: An error message with the status `400` (Bad Request) if the company registration number is invalid, or a relevant error message with the corresponding status code if there's an issue with the MDM request.
+ * 
+ * @example
+ * // Example usage:
+ * const req = { params: { companyRegNo: '12345678' }, body: { companyName: 'Test Corp' } };
+ * const res = { status: () => res, send: () => {} };
+ * await createParty(req, res);
+ */
 export const createParty = async (req: CustomExpressRequest<{ reqBody: { companyName: string } }>, res: Response) => {
   const { partyDbCompanyRegistrationNumber: companyReg } = req.params;
   const { companyName } = req.body;

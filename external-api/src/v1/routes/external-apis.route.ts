@@ -372,7 +372,7 @@ apiRoutes.get('/party-db/:partyDbCompanyRegistrationNumber', partyDb.lookup);
  *           type: string
  *           example: '12341234'
  *         required: true
- *         description: Companies House Registration Number to create the UKEF Party
+ *         description: Companies House Registration Number for UKEF Party creation
  *     requestBody:
  *       required: true
  *       description: Company fields
