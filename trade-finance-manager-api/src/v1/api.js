@@ -1,3 +1,5 @@
+import { isAutomaticSalesforceCustomerCreationFeatureFlagEnabled } from '@ukef/dtfs2-common'
+
 const axios = require('axios');
 const { HEADERS, InvalidDealIdError } = require('@ukef/dtfs2-common');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
@@ -821,10 +823,10 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
       url: `${EXTERNAL_API_URL}/party-db/${encodeURIComponent(companyRegNo)}`,
       headers: headers.external,
     });
-    return process.env.AUTOMATIC_SALESFORCE_CUSTOMER_CREATION_ENABLED === 'true' ? { status: 200, data: response.data } : response.data;
+    return isAutomaticSalesforceCustomerCreationFeatureFlagEnabled() ? { status: 200, data: response.data } : response.data;
   } catch (error) {
     console.error('Unable to get party DB info %o', error);
-    if (process.env.AUTOMATIC_SALESFORCE_CUSTOMER_CREATION_ENABLED === 'true') {
+    if (isAutomaticSalesforceCustomerCreationFeatureFlagEnabled()) {
       if (error?.status === 404) {
         return { status: 404, data: 'Party not found' };
       }
