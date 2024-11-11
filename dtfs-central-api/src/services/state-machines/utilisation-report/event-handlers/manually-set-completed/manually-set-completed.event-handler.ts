@@ -1,13 +1,17 @@
 import { EntityManager } from 'typeorm';
 import { DbRequestSource, RECONCILIATION_COMPLETED, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../event/utilisation-report.event-type';
 
 type ManuallySetCompletedEventPayload = {
   requestSource: DbRequestSource;
   transactionEntityManager: EntityManager;
 };
 
-export type UtilisationReportManuallySetCompletedEvent = BaseUtilisationReportEvent<'MANUALLY_SET_COMPLETED', ManuallySetCompletedEventPayload>;
+export type UtilisationReportManuallySetCompletedEvent = BaseUtilisationReportEvent<
+  typeof UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED,
+  ManuallySetCompletedEventPayload
+>;
 
 /**
  * Handler for the manually set complete event
