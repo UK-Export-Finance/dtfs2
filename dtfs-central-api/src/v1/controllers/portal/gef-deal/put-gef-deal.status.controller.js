@@ -8,19 +8,19 @@ const { mongoDbClient: db } = require('../../../../drivers/db-client');
  * Update the status on a GEF deal
  * @param updateGefDealStatusRequest
  * @param {string} updateGefDealStatusRequest.dealId - the dealId
- * @param {import('@ukef/dtfs2-common').DealStatus} updateGefDealStatusRequest.status - the updated status to set
+ * @param {import('@ukef/dtfs2-common').DealStatus} updateGefDealStatusRequest.newStatus - the updated status to set
  * @param {import('@ukef/dtfs2-common').AuditDetails} updateGefDealStatusRequest.auditDetails - the users audit details
  * @returns {Promise<('@ukef/dtfs2-common').Deal>}
  */
-const updateGefDealStatus = async ({ dealId, status, auditDetails }) => {
+const updateGefDealStatus = async ({ dealId, newStatus, auditDetails }) => {
   const existingDeal = await findOneDeal(dealId);
 
   if (!existingDeal) {
     throw new DealNotFoundError(dealId);
   }
 
-  if (existingDeal.status === status) {
-    throw new InvalidPayloadError(`Invalid deal status: already set to ${status}`);
+  if (existingDeal.status === newStatus) {
+    throw new InvalidPayloadError(`Invalid deal status: already set to ${newStatus}`);
   }
 
   const previousStatus = existingDeal.status;
@@ -30,7 +30,7 @@ const updateGefDealStatus = async ({ dealId, status, auditDetails }) => {
 
   const dealUpdate = {
     previousStatus,
-    status,
+    status: newStatus,
     updatedAt: Date.now(),
   };
 
@@ -40,7 +40,7 @@ const updateGefDealStatus = async ({ dealId, status, auditDetails }) => {
     { returnNewDocument: true, returnDocument: 'after' },
   );
 
-  console.info('Updated Portal GEF deal status from %s to %s', previousStatus, status);
+  console.info('Updated Portal GEF deal status from %s to %s', previousStatus, newStatus);
 
   return findAndUpdateResponse.value;
 };
@@ -60,7 +60,7 @@ exports.updateDealStatusPut = async (req, res) => {
   try {
     validateAuditDetails(auditDetails);
 
-    const updatedDeal = await updateGefDealStatus({ dealId, status, auditDetails });
+    const updatedDeal = await updateGefDealStatus({ dealId, newStatus: status, auditDetails });
     return res.status(200).json(updatedDeal);
   } catch (error) {
     if (error instanceof ApiError) {

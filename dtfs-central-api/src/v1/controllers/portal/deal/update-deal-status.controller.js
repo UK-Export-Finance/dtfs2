@@ -8,19 +8,19 @@ const { mongoDbClient: db } = require('../../../../drivers/db-client');
  * Update the status on a BSS/EWCS deal
  * @param updateBssEwcsDealStatusRequest
  * @param {string} updateBssEwcsDealStatusRequest.dealId - the dealId
- * @param {import('@ukef/dtfs2-common').DealStatus} updateBssEwcsDealStatusRequest.status - the updated status to set
+ * @param {import('@ukef/dtfs2-common').DealStatus} updateBssEwcsDealStatusRequest.newStatus - the updated status to set
  * @param {import('@ukef/dtfs2-common').AuditDetails} updateBssEwcsDealStatusRequest.auditDetails - the users audit details
  * @returns {Promise<('@ukef/dtfs2-common').Deal>}
  */
-const updateBssEwcsDealStatus = async ({ dealId, status, auditDetails }) => {
+const updateBssEwcsDealStatus = async ({ dealId, newStatus, auditDetails }) => {
   const existingDeal = await findOneDeal(dealId);
 
   if (!existingDeal) {
     throw new DealNotFoundError(dealId);
   }
 
-  if (existingDeal.status === status) {
-    throw new InvalidPayloadError(`Invalid deal status: already set to ${status}`);
+  if (existingDeal.status === newStatus) {
+    throw new InvalidPayloadError(`Invalid deal status: already set to ${newStatus}`);
   }
 
   const previousStatus = existingDeal.status;
@@ -29,7 +29,7 @@ const updateBssEwcsDealStatus = async ({ dealId, status, auditDetails }) => {
 
   const dealUpdate = {
     updatedAt: Date.now(),
-    status,
+    status: newStatus,
     previousStatus,
   };
 
@@ -41,7 +41,7 @@ const updateBssEwcsDealStatus = async ({ dealId, status, auditDetails }) => {
     { returnNewDocument: true, returnDocument: 'after' },
   );
 
-  console.info('Updated Portal BSS deal status from %s to %s', previousStatus, status);
+  console.info('Updated Portal BSS deal status from %s to %s', previousStatus, newStatus);
 
   return findAndUpdateResponse.value;
 };
@@ -61,7 +61,7 @@ exports.updateDealStatusPut = async (req, res) => {
   try {
     validateAuditDetails(auditDetails);
 
-    const updatedDeal = await updateBssEwcsDealStatus({ dealId, status, auditDetails });
+    const updatedDeal = await updateBssEwcsDealStatus({ dealId, newStatus: status, auditDetails });
     return res.status(200).json(updatedDeal);
   } catch (error) {
     if (error instanceof ApiError) {
