@@ -258,7 +258,7 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
   
 });
 
-describe('when AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED is true', () => {
+describe('when AUTOMATIC_SALESFORCE_CUSTOMER_CREATION_ENABLED is true', () => {
   const originalEnv = process.env;
 
 
@@ -269,7 +269,7 @@ describe('when AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED is true', () => {
   beforeAll(() => {
     process.env = {
       ...originalEnv,
-      AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED: 'true',
+      AUTOMATIC_SALESFORCE_CUSTOMER_CREATION_ENABLED: 'true',
     };
   });
   
