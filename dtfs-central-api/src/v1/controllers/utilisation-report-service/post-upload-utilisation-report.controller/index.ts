@@ -5,7 +5,7 @@ import { UtilisationReportStateMachine } from '../../../../services/state-machin
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { ApiError } from '../../../../errors';
 import { executeWithSqlTransaction } from '../../../../helpers';
-import { UTILISATION_REPORT_EVENT_TYPE } from 'src/services/state-machines/utilisation-report/event/utilisation-report.event-type';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 
 export type PostUploadUtilisationReportRequestBody = {
   reportId: number;
