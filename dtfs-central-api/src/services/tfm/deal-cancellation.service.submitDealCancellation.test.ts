@@ -152,7 +152,7 @@ describe('DealCancellationService', () => {
           expect(submitDealCancellationMock).toHaveBeenCalledWith({ dealId, cancellation, activity: expectedActivity, auditDetails });
         });
 
-        it('does not scheduleDealCancellation', async () => {
+        it('does not call scheduleDealCancellation', async () => {
           // Act
           await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 
@@ -232,7 +232,7 @@ describe('DealCancellationService', () => {
           expect(dealCancellationResponse).toEqual(mockCancellationResponse);
         });
 
-        it('does not update the deal status', async () => {
+        it('does not call PortalDealService.updateStatus', async () => {
           // Act
           await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 
