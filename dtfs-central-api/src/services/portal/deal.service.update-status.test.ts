@@ -14,7 +14,7 @@ jest.mock('../../v1/controllers/portal/gef-deal/put-gef-deal.status.controller',
 }));
 
 const dealId = 'dealId';
-const status = DEAL_STATUS.CANCELLED;
+const newStatus = DEAL_STATUS.CANCELLED;
 const auditDetails = generateSystemAuditDetails();
 
 describe('PortalDealService', () => {
@@ -28,30 +28,30 @@ describe('PortalDealService', () => {
       const dealType = DEAL_TYPE.GEF;
 
       // Act
-      await PortalDealService.updateStatus({ dealId, status, auditDetails, dealType });
+      await PortalDealService.updateStatus({ dealId, newStatus, auditDetails, dealType });
 
       // Assert
       expect(updateGefDealStatusMock).toHaveBeenCalledTimes(1);
       expect(updateGefDealStatusMock).toHaveBeenCalledWith({
         dealId,
-        status,
+        newStatus,
         auditDetails,
       });
       expect(updateBssEwcsDealStatusMock).toHaveBeenCalledTimes(0);
     });
 
-    it(`calls updateGefDealStatus when submissionType is ${DEAL_TYPE.BSS_EWCS}`, async () => {
+    it(`calls updateBssEwcsDealStatus when submissionType is ${DEAL_TYPE.BSS_EWCS}`, async () => {
       // Arrange
       const dealType = DEAL_TYPE.BSS_EWCS;
 
       // Act
-      await PortalDealService.updateStatus({ dealId, status, auditDetails, dealType });
+      await PortalDealService.updateStatus({ dealId, newStatus, auditDetails, dealType });
 
       // Assert
       expect(updateBssEwcsDealStatusMock).toHaveBeenCalledTimes(1);
       expect(updateBssEwcsDealStatusMock).toHaveBeenCalledWith({
         dealId,
-        status,
+        newStatus,
         auditDetails,
       });
       expect(updateGefDealStatusMock).toHaveBeenCalledTimes(0);

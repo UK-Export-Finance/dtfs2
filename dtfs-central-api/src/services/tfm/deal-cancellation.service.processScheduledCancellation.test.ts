@@ -95,7 +95,7 @@ describe('DealCancellationService', () => {
 
       // Assert
       expect(updatePortalDealStatusMock).toHaveBeenCalledTimes(1);
-      expect(updatePortalDealStatusMock).toHaveBeenCalledWith({ dealId, dealType, auditDetails, status: DEAL_STATUS.CANCELLED });
+      expect(updatePortalDealStatusMock).toHaveBeenCalledWith({ dealId, dealType, auditDetails, newStatus: DEAL_STATUS.CANCELLED });
     });
   });
 });
