@@ -180,7 +180,7 @@ module.exports = {
   getFacilityExposurePeriod: jest.fn(() => ({
     exposurePeriodInMonths: 12,
   })),
-  getPartyDbInfo: ({ companyRegNo }) => {
+  getPartyDbInfo: ({ companyRegNo }) =>
     companyRegNo === 'NO_MATCH'
       ? false
       : [

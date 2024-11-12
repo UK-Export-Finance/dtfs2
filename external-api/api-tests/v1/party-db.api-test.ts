@@ -26,8 +26,6 @@ beforeEach(() => {
 
   axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID}`).reply(HttpStatusCode.Ok, {});
   axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});
-  axiosMock.onGet(`${APIM_MDM_URL}customers/salesforce?companyRegistrationNumber=${VALID}`).reply(HttpStatusCode.Ok, {});
-  axiosMock.onGet(`${APIM_MDM_URL}customers/salesforce?companyRegistrationNumber=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});
 });
 
 afterEach(() => {
