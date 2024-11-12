@@ -21,6 +21,7 @@ describe('errorHandlingAdaptor', () => {
       // Act
       const wrappedFunction = errorHandlingAdaptor(initialFunction);
       await wrappedFunction(req, res, next);
+
       // Assert
       expect(initialFunction).toHaveBeenCalledWith(req, res, next);
     });
