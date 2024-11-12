@@ -12,12 +12,12 @@ const withoutId = (obj) => {
 };
 
 /**
- * Update a facility status
+ * Update a BSS/EWCS facility status
  * @param updateFacilityStatusParams
- * @param updateFacilityStatusParams.facilityId - the facility Id
- * @param updateFacilityStatusParams.status - the new status to set
- * @param updateFacilityStatusParams.auditDetails - the logged in users audit details
- * @returns {import('@ukef/dtfs2-common').Facility} - the updated Facility
+ * @param {string | ObjectId} updateFacilityStatusParams.facilityId - the facility Id
+ * @param {import('@ukef/dtfs2-common').FacilityStatus} updateFacilityStatusParams.status - the new status to set
+ * @param {import('@ukef/dtfs2-common').AuditDetails} updateFacilityStatusParams.auditDetails - the logged in users audit details
+ * @returns {Promise<import('@ukef/dtfs2-common').Facility>} - the updated Facility
  */
 const updateFacilityStatus = async ({ facilityId, status, auditDetails }) => {
   const existingFacility = await findOneFacility(facilityId);
