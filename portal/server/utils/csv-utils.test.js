@@ -62,7 +62,7 @@ describe('csv-utils', () => {
       expect(parsedData).toEqual(expectedParsedData);
     });
 
-    it('Parses an excelJS workbook and adds in null values with addresses for any missing cells in a row', async () => {
+    it('Parses an excelJS workbook and adds in addresses for any missing cells in a row', async () => {
       const workbook = new ExcelJS.Workbook();
 
       const worksheet = workbook.addWorksheet('Sheet1');
