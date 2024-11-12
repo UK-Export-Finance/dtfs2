@@ -123,6 +123,12 @@ export class DealCancellationService {
     return this.getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities });
   }
 
+  /**
+   * Maps values returned by repository to return deal cancellation DTO
+   *
+   * @param repositoryResponse - The response from the deal cancellation repository method
+   * @returns Tfm deal cancellation response DTO
+   */
   public static getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities }: { cancelledDeal: TfmDeal; riskExpiredFacilities: TfmFacility[] }) {
     const cancelledDealUkefId = getUkefDealId(cancelledDeal.dealSnapshot) as string;
 
