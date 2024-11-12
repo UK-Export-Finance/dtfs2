@@ -1,10 +1,10 @@
 import z from 'zod';
-import { ObjectId } from 'mongodb';
 import { DEAL_CANCELLATION } from '../schemas/deal-cancellation';
+import { TfmDeal } from './mongo-db-models';
 
 export type TfmDealCancellation = z.infer<typeof DEAL_CANCELLATION>;
 
 export type TfmDealCancellationResponse = {
-  cancelledDealUkefId: string | ObjectId;
+  cancelledDeal: TfmDeal;
   riskExpiredFacilityUkefIds: string[];
 };
