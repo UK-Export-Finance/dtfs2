@@ -1,4 +1,15 @@
-import { AnyObject, AuditDetails, DEAL_STATUS, DEAL_TYPE, TfmActivity, TfmDeal, TfmDealCancellation, TfmFacility, TfmUser } from '@ukef/dtfs2-common';
+import {
+  AnyObject,
+  AuditDetails,
+  DEAL_STATUS,
+  DEAL_TYPE,
+  FACILITY_STATUS,
+  TfmActivity,
+  TfmDeal,
+  TfmDealCancellation,
+  TfmFacility,
+  TfmUser,
+} from '@ukef/dtfs2-common';
 import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { ObjectId } from 'mongodb';
 import { DealCancellationService } from './deal-cancellation.service';
@@ -6,12 +17,14 @@ import { aTfmFacility, aTfmUser } from '../../../test-helpers';
 
 const dealType = DEAL_TYPE.GEF;
 
-const mockCancellationResponse = {
+const riskExpiredFacilityIds = [new ObjectId(), new ObjectId()];
+
+const mockRepositoryResponse = {
   cancelledDeal: { dealSnapshot: { dealType } } as TfmDeal,
-  riskExpiredFacilities: [aTfmFacility()],
+  riskExpiredFacilities: riskExpiredFacilityIds.map((_id) => ({ ...aTfmFacility(), _id })),
 };
 
-const submitDealCancellationMock = jest.fn(() => Promise.resolve(mockCancellationResponse)) as jest.Mock<
+const submitDealCancellationMock = jest.fn(() => Promise.resolve(mockRepositoryResponse)) as jest.Mock<
   Promise<{
     cancelledDeal: TfmDeal;
     riskExpiredFacilities: TfmFacility[];
@@ -21,6 +34,7 @@ const submitDealCancellationMock = jest.fn(() => Promise.resolve(mockCancellatio
 const findOneUserByIdMock = jest.fn() as jest.Mock<Promise<TfmUser | null>>;
 
 const updatePortalDealStatusMock = jest.fn() as jest.Mock<Promise<void>>;
+const updatePortalFacilityStatusMock = jest.fn() as jest.Mock<Promise<void>>;
 
 jest.mock('../../repositories/tfm-deals-repo/tfm-deal-cancellation.repo', () => ({
   TfmDealCancellationRepo: {
@@ -38,6 +52,12 @@ jest.mock('../../repositories/tfm-users-repo', () => ({
 jest.mock('../portal/deal.service', () => ({
   PortalDealService: {
     updateStatus: (params: AnyObject) => updatePortalDealStatusMock(params),
+  },
+}));
+
+jest.mock('../portal/facility.service', () => ({
+  PortalFacilityService: {
+    updateStatus: (params: AnyObject) => updatePortalFacilityStatusMock(params),
   },
 }));
 
@@ -88,7 +108,7 @@ describe('DealCancellationService', () => {
       const dealCancellationResponse = await DealCancellationService.processScheduledCancellation(dealId, cancellation, auditDetails);
 
       // Assert
-      expect(dealCancellationResponse).toEqual(mockCancellationResponse);
+      expect(dealCancellationResponse).toEqual(DealCancellationService.getTfmDealCancellationResponse(mockRepositoryResponse));
     });
 
     it(`it calls PortalDealService.updateStatus with ${DEAL_STATUS.CANCELLED} status`, async () => {
@@ -101,6 +121,30 @@ describe('DealCancellationService', () => {
       // Assert
       expect(updatePortalDealStatusMock).toHaveBeenCalledTimes(1);
       expect(updatePortalDealStatusMock).toHaveBeenCalledWith({ dealId, dealType, auditDetails, newStatus: DEAL_STATUS.CANCELLED });
+    });
+
+    it(`it calls PortalFacilityService.updateStatus with ${DEAL_STATUS.CANCELLED} status for each facility`, async () => {
+      // Arrange
+      const cancellation = aDealCancellation();
+
+      // Act
+      await DealCancellationService.processScheduledCancellation(dealId, cancellation, auditDetails);
+
+      // Assert
+      expect(updatePortalFacilityStatusMock).toHaveBeenCalledTimes(2);
+      expect(updatePortalFacilityStatusMock).toHaveBeenCalledWith({
+        facilityId: riskExpiredFacilityIds[0],
+        dealType,
+        auditDetails,
+        status: FACILITY_STATUS.RISK_EXPIRED,
+      });
+
+      expect(updatePortalFacilityStatusMock).toHaveBeenCalledWith({
+        facilityId: riskExpiredFacilityIds[1],
+        dealType,
+        auditDetails,
+        status: FACILITY_STATUS.RISK_EXPIRED,
+      });
     });
   });
 });

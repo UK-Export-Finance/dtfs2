@@ -123,7 +123,7 @@ export class DealCancellationService {
     return this.getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities });
   }
 
-  private static getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities }: { cancelledDeal: TfmDeal; riskExpiredFacilities: TfmFacility[] }) {
+  public static getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities }: { cancelledDeal: TfmDeal; riskExpiredFacilities: TfmFacility[] }) {
     const cancelledDealUkefId = getUkefDealId(cancelledDeal.dealSnapshot) as string;
 
     return {
