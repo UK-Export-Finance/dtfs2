@@ -1,4 +1,4 @@
-import { AnyObject, DATE_FORMATS, TfmDealCancellation, TfmDealCancellationResponse } from '@ukef/dtfs2-common';
+import { AnyObject, DATE_FORMATS, DEAL_TYPE, TfmDealCancellation, TfmDealCancellationResponse } from '@ukef/dtfs2-common';
 import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { add, format } from 'date-fns';
 import { CANCEL_DEAL_FUTURE_DATE, CANCEL_DEAL_PAST_DATE } from '../../../constants/email-template-ids';
@@ -32,7 +32,7 @@ describe('deal cancellation service', () => {
   describe('submitDealCancellation', () => {
     beforeEach(() => {
       submitDealCancellationMock.mockResolvedValueOnce({
-        cancelledDealUkefId: ukefDealId,
+        cancelledDeal: { dealSnapshot: { dealType: DEAL_TYPE.GEF, ukefDealId } },
         riskExpiredFacilityUkefIds: ukefFacilityIds,
       } as TfmDealCancellationResponse);
     });

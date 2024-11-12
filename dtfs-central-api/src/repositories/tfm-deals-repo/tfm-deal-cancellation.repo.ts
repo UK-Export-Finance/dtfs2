@@ -177,7 +177,7 @@ export class TfmDealCancellationRepo {
       };
     }
 
-    const updateDeal = await dealCollection.updateOne(
+    const { value: deal } = await dealCollection.findOneAndUpdate(
       {
         _id: { $eq: new ObjectId(dealId) },
         'tfm.stage': { $ne: TFM_DEAL_STAGE.CANCELLED },
@@ -189,7 +189,7 @@ export class TfmDealCancellationRepo {
       update,
     );
 
-    if (!updateDeal?.matchedCount) {
+    if (!deal) {
       throw new DealNotFoundError(dealId.toString());
     }
 
@@ -207,7 +207,7 @@ export class TfmDealCancellationRepo {
 
     const updatedFacilityUkefIds = getUkefFacilityIds(updatedFacilities);
 
-    return { cancelledDealUkefId: dealId, riskExpiredFacilityUkefIds: updatedFacilityUkefIds };
+    return { cancelledDeal: deal, riskExpiredFacilityUkefIds: updatedFacilityUkefIds };
   }
 
   /**
@@ -252,7 +252,7 @@ export class TfmDealCancellationRepo {
       };
     }
 
-    const updateDeal = await dealCollection.updateOne(
+    const { value: deal } = await dealCollection.findOneAndUpdate(
       {
         _id: { $eq: new ObjectId(dealId) },
         'tfm.stage': { $ne: TFM_DEAL_STAGE.CANCELLED },
@@ -264,7 +264,7 @@ export class TfmDealCancellationRepo {
       update,
     );
 
-    if (!updateDeal?.matchedCount) {
+    if (!deal) {
       throw new DealNotFoundError(dealId.toString());
     }
 
@@ -274,6 +274,6 @@ export class TfmDealCancellationRepo {
 
     const cancelledFacilityUkefIds = getUkefFacilityIds(cancelledFacilities);
 
-    return { cancelledDealUkefId: dealId, riskExpiredFacilityUkefIds: cancelledFacilityUkefIds };
+    return { cancelledDeal: deal, riskExpiredFacilityUkefIds: cancelledFacilityUkefIds };
   }
 }
