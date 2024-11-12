@@ -8,8 +8,6 @@ describe('front-end-error-handler', () => {
   describe('frontEndErrorHandler', () => {
     console.error = jest.fn();
 
-    const problemWithServiceTemplateLocation = 'problemWithServiceTemplateLocation';
-
     let frontEndErrorHandler: ErrorRequestHandler;
     let res: httpMocks.MockResponse<Response>;
     let req: httpMocks.MockRequest<Request>;
@@ -17,12 +15,15 @@ describe('front-end-error-handler', () => {
 
     beforeEach(() => {
       jest.resetAllMocks();
-      frontEndErrorHandler = getFrontEndErrorHandler(problemWithServiceTemplateLocation);
       ({ res, req } = httpMocks.createMocks());
       next = jest.fn();
     });
 
     describe('when the error is a CSRF token error', () => {
+      beforeEach(() => {
+        frontEndErrorHandler = getFrontEndErrorHandler();
+      });
+
       it('redirects the user to /', () => {
         const error = createHttpError(HttpStatusCode.ImATeapot, { code: 'EBADCSRFTOKEN' });
 
@@ -34,13 +35,37 @@ describe('front-end-error-handler', () => {
     });
 
     describe('when the error is an unhandled error', () => {
-      it('renders the problem with service template', () => {
-        const error = new Error('An error occurred');
+      describe('when the problem with service template is not provided', () => {
+        const defaultProblemWithServiceTemplateLocation = '_partials/problem-with-service.njk';
+        beforeEach(() => {
+          frontEndErrorHandler = getFrontEndErrorHandler();
+        });
 
-        frontEndErrorHandler(error, req, res, next);
+        it('renders the default problem with service template', () => {
+          const error = new Error('An error occurred');
 
-        expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
-        expect(res._getRenderView()).toEqual(problemWithServiceTemplateLocation);
+          frontEndErrorHandler(error, req, res, next);
+
+          expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+          expect(res._getRenderView()).toEqual(defaultProblemWithServiceTemplateLocation);
+        });
+      });
+
+      describe('when the problem with service template is provided', () => {
+        const problemWithServiceTemplateLocation = 'problemWithServiceTemplateLocation';
+
+        beforeEach(() => {
+          frontEndErrorHandler = getFrontEndErrorHandler(problemWithServiceTemplateLocation);
+        });
+
+        it('renders the provided problem with service template', () => {
+          const error = new Error('An error occurred');
+
+          frontEndErrorHandler(error, req, res, next);
+
+          expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+          expect(res._getRenderView()).toEqual(problemWithServiceTemplateLocation);
+        });
       });
     });
   });
