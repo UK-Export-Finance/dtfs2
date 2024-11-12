@@ -1,8 +1,4 @@
-import { isAutomaticSalesforceCustomerCreationFeatureFlagEnabled } from '@ukef/dtfs2-common'
-
 const axios = require('axios');
-const { HttpStatusCode } = require('axios');
-
 const { HEADERS, InvalidDealIdError } = require('@ukef/dtfs2-common');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
 const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
@@ -825,43 +821,10 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
       url: `${EXTERNAL_API_URL}/party-db/${encodeURIComponent(companyRegNo)}`,
       headers: headers.external,
     });
-    if (isAutomaticSalesforceCustomerCreationFeatureFlagEnabled()) {
-      return { status: HttpStatusCode.Ok, data: response.data }
-    }
     return response.data
   } catch (error) {
     console.error('Unable to get party DB info %o', error);
-    if (!isAutomaticSalesforceCustomerCreationFeatureFlagEnabled()) {
-      return false;
-    }
-
-    if (error?.status === HttpStatusCode.NotFound) {
-      return { status: HttpStatusCode.NotFound, data: 'Party not found' };
-    }
-
-    return { status: error?.status || HttpStatusCode.InternalServerError, data: 'Failed to get party' };
-  }
-};
-
-/**
- * Calls createParty in external-api to create a new customer in Salesforce
- * @param {number} companyRegNo Party URN
- * @param {number} companyName Company name
- * @returns {Promise<Object>} Company information
- */
-const createParty = async ({ companyRegNo, companyName }) => {
-  try {
-    const response = await axios({
-      method: 'post',
-      url: `${EXTERNAL_API_URL}/party-db/${encodeURIComponent(companyRegNo)}`,
-      headers: headers.external,
-      data: {
-        companyName,
-      },
-    });
-    return { status: 200, data: response.data };
-  } catch (error) {
-    return { status: error?.status || 500, data: 'Failed to create party' };
+    return false;
   }
 };
 
@@ -1744,7 +1707,6 @@ module.exports = {
   updateGefFacility,
   queryDeals,
   getPartyDbInfo,
-  createParty,
   getCompanyInfo,
   findUser,
   findUserById,

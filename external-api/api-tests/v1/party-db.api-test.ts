@@ -12,7 +12,7 @@
 
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
-import { MOCK_COMPANY_REGISTRATION_NUMBERS, isAutomaticSalesforceCustomerCreationFeatureFlagEnabled } from '@ukef/dtfs2-common';
+import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
 import { app } from '../../src/createApp';
 import { api } from '../api';
 
@@ -20,11 +20,6 @@ const { APIM_MDM_URL } = process.env;
 const { VALID, VALID_WITH_LETTERS } = MOCK_COMPANY_REGISTRATION_NUMBERS;
 const { get } = api(app);
 let axiosMock: MockAdapter;
-
-jest.mock('@ukef/dtfs2-common', () => ({
-  ...jest.requireActual('@ukef/dtfs2-common'),
-  isAutomaticSalesforceCustomerCreationFeatureFlagEnabled: jest.fn(),
-}));
 
 beforeEach(() => {
   axiosMock = new MockAdapter(axios);
@@ -39,55 +34,7 @@ afterEach(() => {
   axiosMock.resetHistory();
 });
 
-describe('when automatic Salesforce customer creation feature flag is disabled', () => {
-  beforeEach(() => {
-    jest.mocked(isAutomaticSalesforceCustomerCreationFeatureFlagEnabled).mockReturnValue(false);
-  });
-
-  describe('/party-db', () => {
-    describe('GET /party-db', () => {
-      it(`returns a ${HttpStatusCode.Ok} response with a valid companies house number`, async () => {
-        const { status } = await get(`/party-db/${VALID}`);
-
-        expect(status).toEqual(HttpStatusCode.Ok);
-      });
-
-      it(`returns a ${HttpStatusCode.Ok} response with a valid companies house number`, async () => {
-        const { status } = await get(`/party-db/${VALID_WITH_LETTERS}`);
-
-        expect(status).toEqual(HttpStatusCode.Ok);
-      });
-
-      it(`calls the correct url`, async () => {
-        await get(`/party-db/${VALID}`);
-
-        expect(axiosMock.history.get).toHaveLength(1);
-        expect(axiosMock.history.get[0].url).toBe(`${APIM_MDM_URL}customers?companyReg=${VALID}`);
-      });
-    });
-
-    const invalidCompaniesHouseNumberTestCases = [['ABC22'], ['127.0.0.1'], ['{}'], ['[]']];
-
-    describe('when company house number is invalid', () => {
-      test.each(invalidCompaniesHouseNumberTestCases)(
-        `returns a ${HttpStatusCode.BadRequest} if you provide an invalid company house number %s`,
-        async (companyHouseNumber) => {
-          const { status, body } = await get(`/party-db/${companyHouseNumber}`);
-
-          expect(status).toEqual(HttpStatusCode.BadRequest);
-          expect(body).toMatchObject({ data: 'Invalid company registration number', status: HttpStatusCode.BadRequest });
-        },
-      );
-    });
-  });
-});
-
-describe('when automatic Salesforce customer creation feature flag is enabled', () => {
-  beforeEach(() => {
-    jest.mocked(isAutomaticSalesforceCustomerCreationFeatureFlagEnabled).mockReturnValue(true);
-  });
-
-
+describe('/party-db', () => {
   describe('GET /party-db', () => {
     it(`returns a ${HttpStatusCode.Ok} response with a valid companies house number`, async () => {
       const { status } = await get(`/party-db/${VALID}`);
@@ -105,7 +52,7 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
       await get(`/party-db/${VALID}`);
 
       expect(axiosMock.history.get).toHaveLength(1);
-      expect(axiosMock.history.get[0].url).toBe(`${APIM_MDM_URL}customers/salesforce?companyRegistrationNumber=${VALID}`);
+      expect(axiosMock.history.get[0].url).toBe(`${APIM_MDM_URL}customers?companyReg=${VALID}`);
     });
   });
 

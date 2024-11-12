@@ -1,5 +1,4 @@
 const api = require('../api');
-import { isAutomaticSalesforceCustomerCreationFeatureFlagEnabled } from '@ukef/dtfs2-common'
 
 /**
  * Gets company information from Party URN
@@ -29,27 +28,11 @@ const getCompany = async (req, res) => {
   }
 };
 
-const getPartyUrn = async ({ companyRegNo, companyName }) => {
+const getPartyUrn = async ({ companyRegNo }) => {
   if (!companyRegNo) {
     return '';
   }
 
-  if (isAutomaticSalesforceCustomerCreationFeatureFlagEnabled()) {
-    let partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
-
-    if (partyDbInfo.status === 404) {
-      if (!companyName) {
-        return '';
-      }
-
-      partyDbInfo = await api.createParty({ companyRegNo, companyName });
-    }
-
-    if (partyDbInfo.status !== 200) {
-      return '';
-    }
-    return partyDbInfo?.data?.[0]?.partyUrn || '';
-  }
   const partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
   if (!partyDbInfo) {
     return '';
@@ -77,7 +60,7 @@ const addPartyUrns = async (deal, auditDetails) => {
       ...deal.tfm,
       parties: {
         exporter: {
-          partyUrn: await getPartyUrn({ companyRegNo: deal.exporter.companiesHouseRegistrationNumber, companyName: deal.exporter.companyName }),
+          partyUrn: await getPartyUrn({ companyRegNo: deal.exporter.companiesHouseRegistrationNumber }),
           partyUrnRequired: hasExporter,
         },
         buyer: {
