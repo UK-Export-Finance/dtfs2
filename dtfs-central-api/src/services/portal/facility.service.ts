@@ -5,11 +5,11 @@ import { updateFacility } from '../../v1/controllers/portal/gef-facility/update-
 
 export class PortalFacilityService {
   /**
-   * Updates the deal status
+   * Updates the facility status
    *
    * @param updateStatusParams
-   * @param updateStatusParams.dealId - the deal Id to update
-   * @param updateStatusParams.newStatus - the status change to make
+   * @param updateStatusParams.facilityId - the facility Id to update
+   * @param updateStatusParams.status - the status change to make
    * @param updateStatusParams.auditDetails - the users audit details
    * @param updateStatusParams.dealType - the deal type
    */
