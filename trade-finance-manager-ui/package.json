@@ -34,7 +34,7 @@
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
-    "@azure/msal-node": "^2.16.0",
+    "@azure/msal-node": "^2.16.1",
     "@babel/polyfill": "^7.12.1",
     "@ministryofjustice/frontend": "1.8.0",
     "@ukef/dtfs2-common": "1.0.0",

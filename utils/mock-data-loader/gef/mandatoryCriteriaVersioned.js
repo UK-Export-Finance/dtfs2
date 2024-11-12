@@ -1,9 +1,9 @@
 const MANDATORY_CRITERIA_VERSIONED = [
   {
-    version: 33,
-    createdAt: new Date('2021-01-03T00:00'),
+    version: 3,
+    createdAt: new Date('2024-11-12T00:00'),
     updatedAt: null,
-    isInDraft: false,
+    isInDraft: true,
     title: 'Confirm eligibility (mandatory criteria)',
     introText: 'You must confirm that all the following will be true for this application on the date that cover starts.',
     criteria: [
@@ -16,8 +16,12 @@ const MANDATORY_CRITERIA_VERSIONED = [
         body: 'Your bank has complied with its policies and procedures in relation to the Facility.',
       },
       {
-        id: '3',
-        body: 'The exporter and its parent obligor (if any) is an eligible person.',
+        id: '3.a',
+        body: 'Where the exporter is not a “Person Within Scope of Windsor Framework”, it is an eligible person OR',
+      },
+      {
+        id: '3.b',
+        body: 'Where the exporter is a “Person Within Scope of Windsor Framework”, both it and its parent obligor (if any) is an eligible person.',
       },
       {
         id: '4',
