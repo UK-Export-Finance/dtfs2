@@ -6,28 +6,44 @@ describe('front-end-error-handler', () => {
   beforeEach(() => {});
 
   describe('getErrorType', () => {
-    it('returns CSRF_TOKEN_ERROR if the error is a CSRF token error', () => {
-      const result = getErrorType(createHttpError(HttpStatusCode.ImATeapot, { code: 'EBADCSRFTOKEN' }));
+    describe('when the error is a CSRF token error', () => {
+      const error = createHttpError(HttpStatusCode.ImATeapot, { code: 'EBADCSRFTOKEN' });
 
-      expect(result).toEqual('CSRF_TOKEN_ERROR');
+      it('returns CSRF_TOKEN_ERROR', () => {
+        const result = getErrorType(error);
+
+        expect(result).toEqual('CSRF_TOKEN_ERROR');
+      });
     });
 
-    it('returns UNHANDLED_ERROR if the error is an a non CSRF http error', () => {
-      const result = getErrorType(createHttpError(HttpStatusCode.ImATeapot, { code: 'NOT_EBADCSRFTOKEN' }));
+    describe('when the error is an a non CSRF http error', () => {
+      const error = createHttpError(HttpStatusCode.ImATeapot, { code: 'NOT_EBADCSRFTOKEN' });
 
-      expect(result).toEqual('UNHANDLED_ERROR');
+      it('returns UNHANDLED_ERROR', () => {
+        const result = getErrorType(error);
+
+        expect(result).toEqual('UNHANDLED_ERROR');
+      });
     });
 
-    it('returns UNHANDLED_ERROR if the error is an a non CSRF http error', () => {
-      const result = getErrorType({ code: 'NOT_EBADCSRFTOKEN' });
+    describe('when the error is an a CSRF non http error', () => {
+      const error = { code: 'NOT_EBADCSRFTOKEN' };
 
-      expect(result).toEqual('UNHANDLED_ERROR');
+      it('returns UNHANDLED_ERROR', () => {
+        const result = getErrorType(error);
+
+        expect(result).toEqual('UNHANDLED_ERROR');
+      });
     });
 
-    it('returns UNHANDLED_ERROR if the error is an unhandled error', () => {
-      const result = getErrorType(new Error('An error occurred'));
+    describe('when the error is an unhandled error', () => {
+      const error = new Error('An error occurred');
 
-      expect(result).toEqual('UNHANDLED_ERROR');
+      it('returns UNHANDLED_ERROR', () => {
+        const result = getErrorType(error);
+
+        expect(result).toEqual('UNHANDLED_ERROR');
+      });
     });
   });
 });
