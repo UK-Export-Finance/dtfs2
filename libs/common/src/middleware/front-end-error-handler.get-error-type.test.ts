@@ -6,20 +6,44 @@ describe('front-end-error-handler', () => {
   beforeEach(() => {});
 
   describe('getErrorType', () => {
-    it('returns CSRF_TOKEN_ERROR if the error is a CSRF token error', () => {
-      getErrorType(createHttpError(HttpStatusCode.ImATeapot, { code: 'EBADCSRFTOKEN' }));
+    describe('when the error is a CSRF token error', () => {
+      const error = createHttpError(HttpStatusCode.ImATeapot, { code: 'EBADCSRFTOKEN' });
+
+      it('returns CSRF_TOKEN_ERROR', () => {
+        const result = getErrorType(error);
+
+        expect(result).toEqual('CSRF_TOKEN_ERROR');
+      });
     });
 
-    it('returns UNHANDLED_ERROR if the error is an a non CSRF http error', () => {
-      getErrorType(createHttpError(HttpStatusCode.ImATeapot, { code: 'NOT_EBADCSRFTOKEN' }));
+    describe('when the error is an a non CSRF http error', () => {
+      const error = createHttpError(HttpStatusCode.ImATeapot, { code: 'NOT_EBADCSRFTOKEN' });
+
+      it('returns UNHANDLED_ERROR', () => {
+        const result = getErrorType(error);
+
+        expect(result).toEqual('UNHANDLED_ERROR');
+      });
     });
 
-    it('returns UNHANDLED_ERROR if the error is an a non CSRF http error', () => {
-      getErrorType({ code: 'NOT_EBADCSRFTOKEN' });
+    describe('when the error is an a CSRF non http error', () => {
+      const error = { code: 'NOT_EBADCSRFTOKEN' };
+
+      it('returns UNHANDLED_ERROR', () => {
+        const result = getErrorType(error);
+
+        expect(result).toEqual('UNHANDLED_ERROR');
+      });
     });
 
-    it('returns UNHANDLED_ERROR if the error is an unhandled error', () => {
-      getErrorType(new Error('An error occurred'));
+    describe('when the error is an unhandled error', () => {
+      const error = new Error('An error occurred');
+
+      it('returns UNHANDLED_ERROR', () => {
+        const result = getErrorType(error);
+
+        expect(result).toEqual('UNHANDLED_ERROR');
+      });
     });
   });
 });

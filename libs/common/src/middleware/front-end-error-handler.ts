@@ -19,7 +19,8 @@ export const handleCsrfTokenError = (res: Response) => {
  * Handles an otherwise unhandled error by logging the error and rendering the problem with service page.
  * @param error
  * @param res
- * @param problemWithServiceTemplateLocation
+ * @param problemWithServiceTemplateLocation Provides the location of the problem with service template.
+ * This parameter is needed as GEF has a different folder structure than TFM-UI and Portal-UI.
  */
 export const handleUnhandledError = ({
   res,
@@ -50,7 +51,8 @@ export const getErrorType = (error: unknown) => {
  * It is required to be added last to the app in generateApp.
  *
  * In Express 4, it only catches async errors if next(error) is called with an error inside the async function.
- * @param [problemWithServiceTemplateLocation]
+ * @param [problemWithServiceTemplateLocation] (Optional) Provides the location of the problem with service template.
+ * This parameter is needed as GEF has a different folder structure than TFM-UI and Portal-UI.
  * @example
  * // Async route in a routes file
  * app.get('*', (req, res) => {
