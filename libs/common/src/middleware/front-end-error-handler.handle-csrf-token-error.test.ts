@@ -10,6 +10,7 @@ describe('front-end-error-handler', () => {
     jest.resetAllMocks();
     ({ res } = httpMocks.createMocks());
   });
+
   describe('handleCsrfTokenError', () => {
     describe('when the error is a CSRF token error', () => {
       it('calls console.error', () => {
