@@ -97,8 +97,8 @@ context('Portal to TFM utilisation report submission', () => {
     cy.assertText(row.utilisation(), expectedValues.utilisation);
   };
 
-  const testFebruary2023ReportUploadWithFileType = (filetype) => {
-    const filename = filetype === 'csv' ? 'valid-utilisation-report-February_2023_monthly.csv' : 'valid-utilisation-report-February_2023_monthly.xlsx';
+  const testFebruary2023ReportUploadWithFileType = (fileType) => {
+    const fileName = fileType === 'csv' ? 'valid-utilisation-report-February_2023_monthly.csv' : 'valid-utilisation-report-February_2023_monthly.xlsx';
 
     //---------------------------------------------------------------------------------
     // Portal payment report officer submits utilisation report
@@ -106,7 +106,7 @@ context('Portal to TFM utilisation report submission', () => {
     cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
     cy.visit(relative('/utilisation-report-upload'));
 
-    portalPages.utilisationReportUpload.utilisationReportFileInput().attachFile(filename);
+    portalPages.utilisationReportUpload.utilisationReportFileInput().attachFile(fileName);
     cy.clickContinueButton();
     portalPages.confirmAndSend.confirmAndSendButton().click();
 
