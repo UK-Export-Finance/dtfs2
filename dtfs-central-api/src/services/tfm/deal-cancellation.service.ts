@@ -2,6 +2,7 @@ import {
   ACTIVITY_TYPES,
   AuditDetails,
   DEAL_STATUS,
+  FACILITY_STATUS,
   InvalidAuditDetailsError,
   TfmActivity,
   TfmAuditDetails,
@@ -13,6 +14,7 @@ import { endOfDay, getUnixTime, isAfter, toDate } from 'date-fns';
 import { TfmDealCancellationRepo } from '../../repositories/tfm-deals-repo';
 import { TfmUsersRepo } from '../../repositories/tfm-users-repo';
 import { PortalDealService } from '../portal/deal.service';
+import { updateFacilityStatus } from '../../v1/controllers/portal/facility/update-facility-status.controller';
 
 export class DealCancellationService {
   /**
@@ -80,6 +82,10 @@ export class DealCancellationService {
       dealType,
     });
 
+    await Promise.all(
+      riskExpiredFacilities.map(({ _id: facilityId }) => updateFacilityStatus({ facilityId, status: FACILITY_STATUS.RISK_EXPIRED, auditDetails })),
+    );
+
     return {
       cancelledDeal,
       riskExpiredFacilityUkefIds: riskExpiredFacilities
@@ -112,6 +118,10 @@ export class DealCancellationService {
       auditDetails,
       dealType,
     });
+
+    await Promise.all(
+      riskExpiredFacilities.map(({ _id: facilityId }) => updateFacilityStatus({ facilityId, status: FACILITY_STATUS.RISK_EXPIRED, auditDetails })),
+    );
 
     return {
       cancelledDeal,
