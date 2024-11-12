@@ -821,7 +821,7 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
       url: `${EXTERNAL_API_URL}/party-db/${encodeURIComponent(companyRegNo)}`,
       headers: headers.external,
     });
-    return response.data
+    return response.data;
   } catch (error) {
     console.error('Unable to get party DB info %o', error);
     return false;

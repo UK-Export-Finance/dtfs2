@@ -181,14 +181,13 @@ module.exports = {
     exposurePeriodInMonths: 12,
   })),
   getPartyDbInfo: ({ companyRegNo }) => {
-    return companyRegNo === 'NO_MATCH'
+    companyRegNo === 'NO_MATCH'
       ? false
       : [
-        {
-          partyUrn: 'testPartyUrn',
-        },
-      ];
-  },
+          {
+            partyUrn: 'testPartyUrn',
+          },
+        ],
   findUser: (username) => {
     if (username === 'invalidUser') {
       return false;
