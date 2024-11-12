@@ -71,28 +71,28 @@ context('Portal to TFM utilisation report submission', () => {
    * Asserts the values in a given row of the premium payments table match the expected
    * values from the report as defined in february2023ExpectedValues
    * @param {number} premiumPaymentsRowIndex - The index of the row of the premium payments table
-   * @param {object} expectedParsedValuesForReportRow - The expected values to be found in the row
+   * @param {object} expectedValues - The expected values to be found in the row
    */
-  const assertPremiumPaymentsTableRowContainsExpectedValues = (premiumPaymentsRowIndex, expectedParsedValuesForReportRow) => {
+  const assertPremiumPaymentsTableRowContainsExpectedValues = (premiumPaymentsRowIndex, expectedValues) => {
     cy.assertText(
       tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.facilityIdByRowIndex(premiumPaymentsRowIndex),
-      expectedParsedValuesForReportRow.facilityId,
+      expectedValues.facilityId,
     );
     cy.assertText(
       tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.exporterIdByRowIndex(premiumPaymentsRowIndex),
-      expectedParsedValuesForReportRow.exporter,
+      expectedValues.exporter,
     );
     cy.assertText(
       tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.reportedFeesByRowIndex(premiumPaymentsRowIndex),
-      expectedParsedValuesForReportRow.reportedFees,
+      expectedValues.reportedFees,
     );
     cy.assertText(
       tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.reportedPaymentsByRowIndex(premiumPaymentsRowIndex),
-      expectedParsedValuesForReportRow.reportedPayments,
+      expectedValues.reportedPayments,
     );
     cy.assertText(
       tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.totalReportedPaymentsByRowIndex(premiumPaymentsRowIndex),
-      expectedParsedValuesForReportRow.reportedPayments,
+      expectedValues.reportedPayments,
     );
   };
 
@@ -100,15 +100,15 @@ context('Portal to TFM utilisation report submission', () => {
    * Asserts the values in a given row of the utilisation table match the expected
    * values from the report as defined in february2023ExpectedValues
    * @param {number} utilisationTableRowIndex - The index of the row of utilisation table
-   * @param {object} expectedParsedValuesForReportRow - The expected values to be found in the row
+   * @param {object} expectedValues - The expected values to be found in the row
    */
-  const assertUtilisationTableRowContainsExpectedValues = (utilisationTableRowIndex, expectedParsedValuesForReportRow) => {
+  const assertUtilisationTableRowContainsExpectedValues = (utilisationTableRowIndex, expectedValues) => {
     tfmPages.utilisationReportPage.utilisationTab.table.rowByIndex(utilisationTableRowIndex).within(() => {
-      cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.facilityId(), expectedParsedValuesForReportRow.facilityId);
-      cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.exporter(), expectedParsedValuesForReportRow.exporter);
-      cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.feesPayable(), expectedParsedValuesForReportRow.reportedFees);
-      cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.feesAccrued(), expectedParsedValuesForReportRow.feesAccrued);
-      cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.utilisation(), expectedParsedValuesForReportRow.utilisation);
+      cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.facilityId(), expectedValues.facilityId);
+      cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.exporter(), expectedValues.exporter);
+      cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.feesPayable(), expectedValues.reportedFees);
+      cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.feesAccrued(), expectedValues.feesAccrued);
+      cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.utilisation(), expectedValues.utilisation);
     });
   };
 
