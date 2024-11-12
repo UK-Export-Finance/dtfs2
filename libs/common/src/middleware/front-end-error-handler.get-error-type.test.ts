@@ -7,19 +7,27 @@ describe('front-end-error-handler', () => {
 
   describe('getErrorType', () => {
     it('returns CSRF_TOKEN_ERROR if the error is a CSRF token error', () => {
-      getErrorType(createHttpError(HttpStatusCode.ImATeapot, { code: 'EBADCSRFTOKEN' }));
+      const result = getErrorType(createHttpError(HttpStatusCode.ImATeapot, { code: 'EBADCSRFTOKEN' }));
+
+      expect(result).toEqual('CSRF_TOKEN_ERROR');
     });
 
     it('returns UNHANDLED_ERROR if the error is an a non CSRF http error', () => {
-      getErrorType(createHttpError(HttpStatusCode.ImATeapot, { code: 'NOT_EBADCSRFTOKEN' }));
+      const result = getErrorType(createHttpError(HttpStatusCode.ImATeapot, { code: 'NOT_EBADCSRFTOKEN' }));
+
+      expect(result).toEqual('UNHANDLED_ERROR');
     });
 
     it('returns UNHANDLED_ERROR if the error is an a non CSRF http error', () => {
-      getErrorType({ code: 'NOT_EBADCSRFTOKEN' });
+      const result = getErrorType({ code: 'NOT_EBADCSRFTOKEN' });
+
+      expect(result).toEqual('UNHANDLED_ERROR');
     });
 
     it('returns UNHANDLED_ERROR if the error is an unhandled error', () => {
-      getErrorType(new Error('An error occurred'));
+      const result = getErrorType(new Error('An error occurred'));
+
+      expect(result).toEqual('UNHANDLED_ERROR');
     });
   });
 });
