@@ -1,4 +1,4 @@
-import { AnyObject, DATE_FORMATS, DEAL_TYPE, TfmDeal, TfmDealCancellation, TfmFacility } from '@ukef/dtfs2-common';
+import { AnyObject, DATE_FORMATS, DEAL_TYPE, TfmDealCancellation, TfmDealCancellationResponse } from '@ukef/dtfs2-common';
 import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { add, format } from 'date-fns';
 import { CANCEL_DEAL_FUTURE_DATE, CANCEL_DEAL_PAST_DATE } from '../../../constants/email-template-ids';
@@ -11,7 +11,7 @@ const mockPimEmailAddress = 'pim@example.com';
 const ukefDealId = 'ukefDealId';
 const ukefFacilityIds = ['aFacilityId'];
 
-const submitDealCancellationMock = jest.fn() as jest.Mock<Promise<{ cancelledDeal: TfmDeal; riskExpiredFacilities: TfmFacility[] }>>;
+const submitDealCancellationMock = jest.fn() as jest.Mock<Promise<TfmDealCancellationResponse>>;
 
 jest.mock('../send-tfm-email');
 jest.mock('../../api', () => ({
@@ -32,9 +32,9 @@ describe('deal cancellation service', () => {
   describe('submitDealCancellation', () => {
     beforeEach(() => {
       submitDealCancellationMock.mockResolvedValueOnce({
-        cancelledDeal: { dealSnapshot: { dealType: DEAL_TYPE.GEF, ukefDealId } } as TfmDeal,
-        riskExpiredFacilities: ukefFacilityIds.map((ukefFacilityId) => ({ facilitySnapshot: { ukefFacilityId } }) as TfmFacility),
-      });
+        cancelledDeal: { dealSnapshot: { dealType: DEAL_TYPE.GEF, ukefDealId } },
+        riskExpiredFacilityUkefIds: ukefFacilityIds,
+      } as TfmDealCancellationResponse);
     });
 
     describe('when effective date is in the future', () => {
