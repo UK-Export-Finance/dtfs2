@@ -1,17 +1,22 @@
-import { AnyObject, AuditDetails, DEAL_STATUS, DEAL_TYPE, TfmActivity, TfmDealCancellation, TfmDealCancellationResponse, TfmUser } from '@ukef/dtfs2-common';
+import { AnyObject, AuditDetails, DEAL_STATUS, DEAL_TYPE, TfmActivity, TfmDeal, TfmDealCancellation, TfmFacility, TfmUser } from '@ukef/dtfs2-common';
 import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { ObjectId } from 'mongodb';
 import { DealCancellationService } from './deal-cancellation.service';
-import { aTfmUser } from '../../../test-helpers';
+import { aTfmFacility, aTfmUser } from '../../../test-helpers';
 
 const dealType = DEAL_TYPE.GEF;
 
 const mockCancellationResponse = {
-  cancelledDeal: { dealSnapshot: { dealType } },
-  riskExpiredFacilityUkefIds: ['1', '2'],
-} as TfmDealCancellationResponse;
+  cancelledDeal: { dealSnapshot: { dealType } } as TfmDeal,
+  riskExpiredFacilities: [aTfmFacility()],
+};
 
-const submitDealCancellationMock = jest.fn(() => Promise.resolve(mockCancellationResponse)) as jest.Mock<Promise<TfmDealCancellationResponse>>;
+const submitDealCancellationMock = jest.fn(() => Promise.resolve(mockCancellationResponse)) as jest.Mock<
+  Promise<{
+    cancelledDeal: TfmDeal;
+    riskExpiredFacilities: TfmFacility[];
+  }>
+>;
 
 const findOneUserByIdMock = jest.fn() as jest.Mock<Promise<TfmUser | null>>;
 

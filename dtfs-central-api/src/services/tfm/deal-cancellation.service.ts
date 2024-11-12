@@ -3,11 +3,14 @@ import {
   AuditDetails,
   DEAL_STATUS,
   FACILITY_STATUS,
+  getUkefDealId,
   InvalidAuditDetailsError,
   TfmActivity,
   TfmAuditDetails,
+  TfmDeal,
   TfmDealCancellation,
   TfmDealCancellationResponse,
+  TfmFacility,
 } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { endOfDay, getUnixTime, isAfter, toDate } from 'date-fns';
@@ -61,12 +64,7 @@ export class DealCancellationService {
         auditDetails,
       });
 
-      return {
-        cancelledDeal,
-        riskExpiredFacilityUkefIds: riskExpiredFacilities
-          .map(({ facilitySnapshot }) => facilitySnapshot.ukefFacilityId)
-          .filter((facilityId) => facilityId !== null),
-      };
+      return this.getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities });
     }
 
     const { cancelledDeal, riskExpiredFacilities } = await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation, activity, auditDetails });
@@ -88,12 +86,7 @@ export class DealCancellationService {
       ),
     );
 
-    return {
-      cancelledDeal,
-      riskExpiredFacilityUkefIds: riskExpiredFacilities
-        .map(({ facilitySnapshot }) => facilitySnapshot.ukefFacilityId)
-        .filter((facilityId) => facilityId !== null),
-    };
+    return this.getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities });
   }
 
   /**
@@ -127,8 +120,14 @@ export class DealCancellationService {
       ),
     );
 
+    return this.getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities });
+  }
+
+  private static getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities }: { cancelledDeal: TfmDeal; riskExpiredFacilities: TfmFacility[] }) {
+    const cancelledDealUkefId = getUkefDealId(cancelledDeal.dealSnapshot) as string;
+
     return {
-      cancelledDeal,
+      cancelledDealUkefId,
       riskExpiredFacilityUkefIds: riskExpiredFacilities
         .map(({ facilitySnapshot }) => facilitySnapshot.ukefFacilityId)
         .filter((facilityId) => facilityId !== null),
