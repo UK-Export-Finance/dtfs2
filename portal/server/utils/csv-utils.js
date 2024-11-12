@@ -111,15 +111,15 @@ const parseXlsxToCsvArrays = (worksheet) => {
 
     if (!firstRow) {
       // If the row has no data in the final columns of the row, we need to fill in the empty cells with
-      // null values and cell addresses so that the csv parser library can parse the data correctly
+      // empty strings and cell addresses so that the csv parser library can parse the data correctly
       while (columnCount < headerCount) {
-        rowData.push(`${null}`);
+        rowData.push('');
         // calculate the cell address here given the last address
         const lastAddressMatch = lastAddress.match(CELL_ADDRESS_REGEX);
         const [lastColumn, lastRow] = lastAddressMatch.slice(1);
         const lastColumnIndex = excelColumnToColumnIndex(lastColumn);
         const newColumn = columnIndexToExcelColumn(lastColumnIndex + 1);
-        rowDataWithCellAddresses.push(`${null}-${newColumn}${lastRow}`);
+        rowDataWithCellAddresses.push(`-${newColumn}${lastRow}`);
         columnCount += 1;
       }
     }

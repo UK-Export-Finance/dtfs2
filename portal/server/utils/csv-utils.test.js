@@ -77,8 +77,8 @@ describe('csv-utils', () => {
       const parsedData = parseXlsxToCsvArrays(worksheet);
 
       const expectedParsedData = {
-        csvData: 'UKEF facility ID,Exporter,Base currency\n20001371,Exporter 1,GBP\n20004872,Exporter 2,null',
-        csvDataWithCellAddresses: ['UKEF facility ID,Exporter,Base currency', '20001371-A2,Exporter 1-B2,GBP-C2', '20004872-A3,Exporter 2-B3,null-C3'],
+        csvData: 'UKEF facility ID,Exporter,Base currency\n20001371,Exporter 1,GBP\n20004872,Exporter 2,',
+        csvDataWithCellAddresses: ['UKEF facility ID,Exporter,Base currency', '20001371-A2,Exporter 1-B2,GBP-C2', '20004872-A3,Exporter 2-B3,-C3'],
       };
 
       expect(parsedData).toEqual(expectedParsedData);
