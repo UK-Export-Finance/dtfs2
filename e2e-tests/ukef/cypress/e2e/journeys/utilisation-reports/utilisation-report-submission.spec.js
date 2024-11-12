@@ -1,9 +1,4 @@
-import {
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
-  UtilisationReportEntityMockBuilder,
-  getPreviousReportPeriodForBankScheduleByMonth,
-  toIsoMonthStamp,
-} from '@ukef/dtfs2-common';
+import { REPORT_NOT_RECEIVED, UtilisationReportEntityMockBuilder, getPreviousReportPeriodForBankScheduleByMonth, toIsoMonthStamp } from '@ukef/dtfs2-common';
 
 import relative from '../../relativeURL';
 import { NODE_TASKS, PDC_RECONCILE, TFM_URL } from '../../../../../e2e-fixtures';
@@ -41,7 +36,7 @@ context('Portal to TFM utilisation report submission', () => {
     // Insert a REPORT_NOT_RECEIVED report for each visible bank for their latest reporting period
     cy.wrap(visibleBanks).each((bank) => {
       const reportPeriod = getPreviousReportPeriodForBankScheduleByMonth(bank.utilisationReportPeriodSchedule, submissionMonthStamp);
-      const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+      const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED)
         .withId(bank.id)
         .withBankId(bank.id)
         .withReportPeriod(reportPeriod)
@@ -50,7 +45,7 @@ context('Portal to TFM utilisation report submission', () => {
     });
 
     // Insert a NOT_RECEIVED report for February 2023 for the bank the portal user belongs to
-    const notReceivedFebruary2023Report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+    const notReceivedFebruary2023Report = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED)
       .withId(BANK1_PAYMENT_REPORT_OFFICER1.bank.id + 10000000)
       .withBankId(BANK1_PAYMENT_REPORT_OFFICER1.bank.id)
       .withReportPeriod({ start: { month: 2, year: 2023 }, end: { month: 2, year: 2023 } })
