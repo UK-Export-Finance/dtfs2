@@ -1,5 +1,5 @@
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, ApiError, InvalidFacilityIdError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./get-facility.controller');
@@ -11,33 +11,40 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-const updateFacilityStatus = async ({ facilityId, status, existingFacility, auditDetails }) => {
-  if (ObjectId.isValid(facilityId)) {
-    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
+/**
+ * Update a facility status
+ * @param updateFacilityStatusParams
+ * @param updateFacilityStatusParams.facilityId - the facility Id
+ * @param updateFacilityStatusParams.status - the new status to set
+ * @param updateFacilityStatusParams.auditDetails - the logged in users audit details
+ * @returns {import('@ukef/dtfs2-common').Facility} - the updated Facility
+ */
+const updateFacilityStatus = async ({ facilityId, status, auditDetails }) => {
+  const existingFacility = await findOneFacility(facilityId);
 
-    console.info('Updating Portal facility status to %s', status);
-    const previousStatus = existingFacility.status;
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
 
-    const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
+  console.info('Updating Portal facility status to %s', status);
+  const previousStatus = existingFacility.status;
 
-    const update = {
-      ...existingFacility,
-      updatedAt: Date.now(),
-      previousStatus,
-      status,
-      auditRecord,
-    };
+  const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
-    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(facilityId) } }, $.flatten(withoutId(update)), {
-      returnNewDocument: true,
-      returnDocument: 'after',
-    });
+  const update = {
+    ...existingFacility,
+    updatedAt: Date.now(),
+    previousStatus,
+    status,
+    auditRecord,
+  };
 
-    console.info('Updated Portal facility status from %s to %s', previousStatus, status);
+  const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(facilityId) } }, $.flatten(withoutId(update)), {
+    returnNewDocument: true,
+    returnDocument: 'after',
+  });
 
-    return findAndUpdateResponse.value;
-  }
-  return { status: 400, message: 'Invalid Facility Id' };
+  console.info('Updated Portal facility status from %s to %s', previousStatus, status);
+
+  return findAndUpdateResponse.value;
 };
 exports.updateFacilityStatus = updateFacilityStatus;
 
@@ -47,29 +54,27 @@ exports.updateFacilityStatusPut = async (req, res) => {
     params: { id: facilityId },
   } = req;
 
-  if (!ObjectId.isValid(facilityId)) {
-    return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
-  }
-
   try {
+    if (!ObjectId.isValid(facilityId)) {
+      throw new InvalidFacilityIdError(facilityId);
+    }
+
     validateAuditDetails(auditDetails);
+
+    const updatedFacility = await updateFacilityStatus({ facilityId, status, auditDetails });
+
+    return res.status(200).json(updatedFacility);
   } catch (error) {
-    if (error instanceof InvalidAuditDetailsError) {
+    if (error instanceof ApiError) {
       return res.status(error.status).send({
         status: error.status,
         message: error.message,
         code: error.code,
       });
     }
+
+    console.error(`Error whilst updating facility status, ${error}`);
+
     return res.status(500).send({ status: 500, error });
   }
-
-  return await findOneFacility(facilityId, async (existingFacility) => {
-    if (existingFacility) {
-      const updatedFacility = await updateFacilityStatus({ facilityId, status, existingFacility, auditDetails });
-      return res.status(200).json(updatedFacility);
-    }
-
-    return res.status(404).send();
-  });
 };
