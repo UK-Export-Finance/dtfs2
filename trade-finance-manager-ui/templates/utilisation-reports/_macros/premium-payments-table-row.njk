@@ -19,7 +19,7 @@
   {% for feeRecord in feeRecords %}
     {% set isFirstFeeRecordInGroup = loop.index === 1 %}
     {% set isLastFeeRecordInGroup = loop.index === feeRecords.length %}
-    <tr class="govuk-table__row" data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }}">
+    <tr class="govuk-table__row" data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }} premium-payments-table-row--exporter-{{ feeRecord.exporter }}">
       <th scope="row" class="govuk-table__header govuk-!-font-weight-regular{{ " no-border" if not isLastFeeRecordInGroup }}" data-cy="facility-id">
         {{ feeRecord.facilityId }}
       </th>

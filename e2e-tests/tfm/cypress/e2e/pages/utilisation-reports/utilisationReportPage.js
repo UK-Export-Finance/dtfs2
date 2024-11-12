@@ -22,22 +22,28 @@ const utilisationReportPage = {
         totalPaymentsReceived: () => cy.get('th[data-cy="premium-payments-table--total-payments-received"] button'),
         status: () => cy.get('th[data-cy="premium-payments-table--status"] button'),
       },
-      row: (feeRecordId) => cy.get(`tr[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`),
+      row: (feeRecordId) => cy.get(`tr[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`),
       selectAllCheckboxContainer: () => cy.get('[data-cy="premium-payments-select-all-checkbox-container"]'),
       checkbox: (feeRecordIds, paymentCurrency, status) =>
         cy.get(`[type="checkbox"][id="feeRecordIds-${feeRecordIds.join(',')}-reportedPaymentsCurrency-${paymentCurrency}-status-${status}"]`),
       status: (feeRecordId) => cy.get(`[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}-status"]`),
-      // NOTE: Using the ^= selector to match all table rows starting with the given data-cy value (regardless of the actual fee record id value).
-      rows: () => cy.get(`tr[data-cy^="premium-payments-table-row--feeRecordId-"]`),
-      facilityIdByRowIndex: (rowIndex) =>
-        cy.get('tr[data-cy^="premium-payments-table-row--feeRecordId-"]').eq(rowIndex).find('[data-cy="facility-id"]').first(),
-      exporterIdByRowIndex: (rowIndex) => cy.get('tr[data-cy^="premium-payments-table-row--feeRecordId-"]').eq(rowIndex).find('[data-cy="exporter"]').first(),
-      reportedFeesByRowIndex: (rowIndex) =>
-        cy.get('tr[data-cy^="premium-payments-table-row--feeRecordId-"]').eq(rowIndex).find('[data-cy="reported-fees"]').first(),
-      reportedPaymentsByRowIndex: (rowIndex) =>
-        cy.get('tr[data-cy^="premium-payments-table-row--feeRecordId-"]').eq(rowIndex).find('[data-cy="reported-payments"]').first(),
-      totalReportedPaymentsByRowIndex: (rowIndex) =>
-        cy.get('tr[data-cy^="premium-payments-table-row--feeRecordId-"]').eq(rowIndex).find('[data-cy="total-reported-payments"]').first(),
+      // NOTE: Using the ^= selector to match all table rows starting with the given data-cy value.
+      rows: () => cy.get(`tr[data-cy^="premium-payments-table-row"]`),
+      rowIndex: (index) => ({
+        facilityId: () => cy.get('tr[data-cy^="premium-payments-table-row"]').eq(index).find('[data-cy="facility-id"]').first(),
+      }),
+      /**
+       * NOTE: this selector should only be used with test data with unique exporters.
+       * If fee record id is known then the preference is to use that selector as it has guaranteed uniqueness.
+       */
+      rowWithExporter: (exporter) => ({
+        facilityId: () => cy.get(`tr[data-cy*="premium-payments-table-row--exporter-${exporter}"]`).find('[data-cy="facility-id"]').first(),
+        exporter: () => cy.get(`tr[data-cy*="premium-payments-table-row--exporter-${exporter}"]`).find('[data-cy="exporter"]').first(),
+        reportedFees: () => cy.get(`tr[data-cy*="premium-payments-table-row--exporter-${exporter}"]`).find('[data-cy="reported-fees"]').first(),
+        reportedPayments: () => cy.get(`tr[data-cy*="premium-payments-table-row--exporter-${exporter}"]`).find('[data-cy="reported-payments"]').first(),
+        totalReportedPayments: () =>
+          cy.get(`tr[data-cy*="premium-payments-table-row--exporter-${exporter}"]`).find('[data-cy="total-reported-payments"]').first(),
+      }),
     },
   },
   keyingSheetTab: {
@@ -86,20 +92,46 @@ const utilisationReportPage = {
     table: {
       // NOTE: Using the ^= selector to match all table rows starting with the given data-cy value (regardless of the actual fee record id value).
       rows: () => cy.get(`tr[data-cy^="utilisation-table-row-"]`),
-      rowByIndex: (rowIndex) => cy.get(`tr[data-cy^="utilisation-table-row-"]`).eq(rowIndex),
-      row: (feeRecordId) => cy.get(`tr[data-cy="utilisation-table-row-${feeRecordId}"]`),
+      /**
+       * NOTE: this selector should only be used with test data with unique exporters.
+       * If fee record id is known then the preference is to use that selector as it has guaranteed uniqueness.
+       */
+      rowWithExporter: (exporter) => ({
+        facilityId: () => cy.get(`tr[data-cy*="utilisation-table-row--exporter-${exporter}"]`).find('[data-cy="facility-id"]').first(),
+        exporter: () => cy.get(`tr[data-cy*="utilisation-table-row--exporter-${exporter}"]`).find('[data-cy="exporter"]').first(),
+        baseCurrency: () => cy.get(`tr[data-cy*="utilisation-table-row--exporter-${exporter}"]`).find('[data-cy="base-currency"]').first(),
+        value: () => cy.get(`tr[data-cy*="utilisation-table-row--exporter-${exporter}"]`).find('[data-cy="value"]').first(),
+        utilisation: () => cy.get(`tr[data-cy*="utilisation-table-row--exporter-${exporter}"]`).find('[data-cy="utilisation"]').first(),
+        coverPercentage: () => cy.get(`tr[data-cy*="utilisation-table-row--exporter-${exporter}"]`).find('[data-cy="cover-percentage"]').first(),
+        exposure: () => cy.get(`tr[data-cy*="utilisation-table-row--exporter-${exporter}"]`).find('[data-cy="exposure"]').first(),
+        feesAccrued: () => cy.get(`tr[data-cy*="utilisation-table-row--exporter-${exporter}"]`).find('[data-cy="fees-accrued"]').first(),
+        feesPayable: () => cy.get(`tr[data-cy*="utilisation-table-row--exporter-${exporter}"]`).find('[data-cy="fees-payable"]').first(),
+      }),
+      rowIndex: (index) => ({
+        facilityId: () => cy.get('tr[data-cy^="utilisation-table-row"]').eq(index).find('[data-cy="facility-id"]').first(),
+        exporter: () => cy.get('tr[data-cy^="utilisation-table-row"]').eq(index).find('[data-cy="exporter"]').first(),
+        baseCurrency: () => cy.get('tr[data-cy^="utilisation-table-row"]').eq(index).find('[data-cy="base-currency"]').first(),
+        value: () => cy.get('tr[data-cy^="utilisation-table-row"]').eq(index).find('[data-cy="value"]').first(),
+        utilisation: () => cy.get('tr[data-cy^="utilisation-table-row"]').eq(index).find('[data-cy="utilisation"]').first(),
+        coverPercentage: () => cy.get('tr[data-cy^="utilisation-table-row"]').eq(index).find('[data-cy="cover-percentage"]').first(),
+        exposure: () => cy.get('tr[data-cy^="utilisation-table-row"]').eq(index).find('[data-cy="exposure"]').first(),
+        feesAccrued: () => cy.get('tr[data-cy^="utilisation-table-row"]').eq(index).find('[data-cy="fees-accrued"]').first(),
+        feesPayable: () => cy.get('tr[data-cy^="utilisation-table-row"]').eq(index).find('[data-cy="fees-payable"]').first(),
+      }),
+      row: (feeRecordId) => ({
+        facilityId: () => cy.get(`tr[data-cy*="utilisation-table-row-${feeRecordId}"]`).find('[data-cy="facility-id"]').first(),
+        exporter: () => cy.get(`tr[data-cy*="utilisation-table-row-${feeRecordId}"]`).find('[data-cy="exporter"]').first(),
+        baseCurrency: () => cy.get(`tr[data-cy*="utilisation-table-row-${feeRecordId}"]`).find('[data-cy="base-currency"]').first(),
+        value: () => cy.get(`tr[data-cy*="utilisation-table-row-${feeRecordId}"]`).find('[data-cy="value"]').first(),
+        utilisation: () => cy.get(`tr[data-cy*="utilisation-table-row-${feeRecordId}"]`).find('[data-cy="utilisation"]').first(),
+        coverPercentage: () => cy.get(`tr[data-cy*="utilisation-table-row-${feeRecordId}"]`).find('[data-cy="cover-percentage"]').first(),
+        exposure: () => cy.get(`tr[data-cy*="utilisation-table-row-${feeRecordId}"]`).find('[data-cy="exposure"]').first(),
+        feesAccrued: () => cy.get(`tr[data-cy*="utilisation-table-row-${feeRecordId}"]`).find('[data-cy="fees-accrued"]').first(),
+        feesPayable: () => cy.get(`tr[data-cy*="utilisation-table-row-${feeRecordId}"]`).find('[data-cy="fees-payable"]').first(),
+      }),
       utilisationHeader: () => cy.get('[data-cy="utilisation-header"]'),
       valueHeader: () => cy.get('[data-cy="value-header"]'),
       exposureHeader: () => cy.get('[data-cy="exposure-header"]'),
-      facilityId: () => cy.get('[data-cy="facility-id"]'),
-      exporter: () => cy.get('[data-cy="exporter"]'),
-      baseCurrency: () => cy.get('[data-cy="base-currency"]'),
-      value: () => cy.get('[data-cy="value"]'),
-      utilisation: () => cy.get('[data-cy="utilisation"]'),
-      coverPercentage: () => cy.get('[data-cy="cover-percentage"]'),
-      exposure: () => cy.get('[data-cy="exposure"]'),
-      feesAccrued: () => cy.get('[data-cy="fees-accrued"]'),
-      feesPayable: () => cy.get('[data-cy="fees-payable"]'),
     },
   },
 };

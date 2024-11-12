@@ -73,27 +73,13 @@ context('Portal to TFM utilisation report submission', () => {
    * @param {number} premiumPaymentsRowIndex - The index of the row of the premium payments table
    * @param {object} expectedValues - The expected values to be found in the row
    */
-  const assertPremiumPaymentsTableRowContainsExpectedValues = (premiumPaymentsRowIndex, expectedValues) => {
-    cy.assertText(
-      tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.facilityIdByRowIndex(premiumPaymentsRowIndex),
-      expectedValues.facilityId,
-    );
-    cy.assertText(
-      tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.exporterIdByRowIndex(premiumPaymentsRowIndex),
-      expectedValues.exporter,
-    );
-    cy.assertText(
-      tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.reportedFeesByRowIndex(premiumPaymentsRowIndex),
-      expectedValues.reportedFees,
-    );
-    cy.assertText(
-      tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.reportedPaymentsByRowIndex(premiumPaymentsRowIndex),
-      expectedValues.reportedPayments,
-    );
-    cy.assertText(
-      tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.totalReportedPaymentsByRowIndex(premiumPaymentsRowIndex),
-      expectedValues.reportedPayments,
-    );
+  const assertPremiumPaymentsTableContainsRowWithExpectedValues = (expectedValues) => {
+    const row = tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rowWithExporter(expectedValues.exporter);
+    cy.assertText(row.facilityId(), expectedValues.facilityId);
+    cy.assertText(row.exporter(), expectedValues.exporter);
+    cy.assertText(row.reportedFees(), expectedValues.reportedFees);
+    cy.assertText(row.reportedPayments(), expectedValues.reportedPayments);
+    cy.assertText(row.totalReportedPayments(), expectedValues.reportedPayments);
   };
 
   /**
@@ -102,14 +88,13 @@ context('Portal to TFM utilisation report submission', () => {
    * @param {number} utilisationTableRowIndex - The index of the row of utilisation table
    * @param {object} expectedValues - The expected values to be found in the row
    */
-  const assertUtilisationTableRowContainsExpectedValues = (utilisationTableRowIndex, expectedValues) => {
-    tfmPages.utilisationReportPage.utilisationTab.table.rowByIndex(utilisationTableRowIndex).within(() => {
-      cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.facilityId(), expectedValues.facilityId);
-      cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.exporter(), expectedValues.exporter);
-      cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.feesPayable(), expectedValues.reportedFees);
-      cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.feesAccrued(), expectedValues.feesAccrued);
-      cy.assertText(tfmPages.utilisationReportPage.utilisationTab.table.utilisation(), expectedValues.utilisation);
-    });
+  const assertUtilisationTableContainsRowWithExpectedValues = (expectedValues) => {
+    const row = tfmPages.utilisationReportPage.utilisationTab.table.rowWithExporter(expectedValues.exporter);
+    cy.assertText(row.facilityId(), expectedValues.facilityId);
+    cy.assertText(row.exporter(), expectedValues.exporter);
+    cy.assertText(row.feesPayable(), expectedValues.reportedFees);
+    cy.assertText(row.feesAccrued(), expectedValues.feesAccrued);
+    cy.assertText(row.utilisation(), expectedValues.utilisation);
   };
 
   const testFebruary2023ReportUploadWithFileType = (filetype) => {
@@ -139,85 +124,15 @@ context('Portal to TFM utilisation report submission', () => {
 
     tfmPages.utilisationReportsSummaryPage.reportLink(BANK1_PAYMENT_REPORT_OFFICER1.bank.id, '2023-03').click();
 
-    /**
-     * Each line of the report will have an entry in the premium payments table,
-     * but they will not be in the same order so first we find the index within
-     * the premium payments tab table for each of the report rows.
-     */
-    tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().each(($row, index) => {
-      cy.wrap($row)
-        .find('[data-cy="exporter"]')
-        .eq(0)
-        .then(($cell) => {
-          if ($cell.text().trim() === february2023ExpectedValues.firstReportRow.exporter) {
-            cy.wrap(index).as('firstReportRowPremiumPaymentsTableIndex');
-          }
-
-          if ($cell.text().trim() === february2023ExpectedValues.secondReportRow.exporter) {
-            cy.wrap(index).as('secondReportRowPremiumPaymentsTableIndex');
-          }
-
-          if ($cell.text().trim() === february2023ExpectedValues.thirdReportRow.exporter) {
-            cy.wrap(index).as('thirdReportRowPremiumPaymentsTableIndex');
-          }
-        });
-    });
-
-    // Assert first line of report is displayed in the premium payments table
-    cy.get('@firstReportRowPremiumPaymentsTableIndex').then((index) => {
-      assertPremiumPaymentsTableRowContainsExpectedValues(index, february2023ExpectedValues.firstReportRow);
-    });
-
-    // Assert second line of report is displayed in the premium payments table
-    cy.get('@secondReportRowPremiumPaymentsTableIndex').then((index) => {
-      assertPremiumPaymentsTableRowContainsExpectedValues(index, february2023ExpectedValues.secondReportRow);
-    });
-
-    // Assert third line of report is displayed in the premium payments table
-    cy.get('@thirdReportRowPremiumPaymentsTableIndex').then((index) => {
-      assertPremiumPaymentsTableRowContainsExpectedValues(index, february2023ExpectedValues.thirdReportRow);
-    });
+    assertPremiumPaymentsTableContainsRowWithExpectedValues(february2023ExpectedValues.firstReportRow);
+    assertPremiumPaymentsTableContainsRowWithExpectedValues(february2023ExpectedValues.secondReportRow);
+    assertPremiumPaymentsTableContainsRowWithExpectedValues(february2023ExpectedValues.thirdReportRow);
 
     tfmPages.utilisationReportPage.utilisationTabLink().click();
 
-    /**
-     * Each line of the report will have an entry in the utilisation tab table,
-     * but they will not be in the same order so first we find the index within
-     * the utilisation tab table for each of the report rows.
-     */
-    tfmPages.utilisationReportPage.utilisationTab.table.rows().each(($row, index) => {
-      cy.wrap($row)
-        .find('[data-cy="exporter"]')
-        .eq(0)
-        .then(($cell) => {
-          if ($cell.text().trim() === february2023ExpectedValues.firstReportRow.exporter) {
-            cy.wrap(index).as('firstReportRowUtilisationTableIndex');
-          }
-
-          if ($cell.text().trim() === february2023ExpectedValues.secondReportRow.exporter) {
-            cy.wrap(index).as('secondReportRowUtilisationTableIndex');
-          }
-
-          if ($cell.text().trim() === february2023ExpectedValues.thirdReportRow.exporter) {
-            cy.wrap(index).as('thirdReportRowUtilisationTableIndex');
-          }
-        });
-    });
-
-    // Assert first line of report is displayed in the utilisation table
-    cy.get('@firstReportRowUtilisationTableIndex').then((index) => {
-      assertUtilisationTableRowContainsExpectedValues(index, february2023ExpectedValues.firstReportRow);
-    });
-
-    // Assert second line of report is displayed in the utilisation table
-    cy.get('@secondReportRowUtilisationTableIndex').then((index) => {
-      assertUtilisationTableRowContainsExpectedValues(index, february2023ExpectedValues.secondReportRow);
-    });
-
-    // Assert third line of report is displayed in the utilisation table
-    cy.get('@thirdReportRowUtilisationTableIndex').then((index) => {
-      assertUtilisationTableRowContainsExpectedValues(index, february2023ExpectedValues.thirdReportRow);
-    });
+    assertUtilisationTableContainsRowWithExpectedValues(february2023ExpectedValues.firstReportRow);
+    assertUtilisationTableContainsRowWithExpectedValues(february2023ExpectedValues.secondReportRow);
+    assertUtilisationTableContainsRowWithExpectedValues(february2023ExpectedValues.thirdReportRow);
   };
 
   it('Bank uploads utilisation report to Portal and report data is displayed correctly in TFM to PDC_RECONCILE user - csv', () => {
