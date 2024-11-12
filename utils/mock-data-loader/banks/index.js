@@ -159,6 +159,19 @@ const MOCK_BANKS = [
     ],
     isVisibleInTfmUtilisationReports: true,
   },
+  {
+    id: '11',
+    name: 'ICICI',
+    mga: [],
+    emails: ['maker4@ukexportfinance.gov.uk'],
+    companiesHouseNo: 'FC011846',
+    partyUrn: '00313097',
+    hasGefAccessOnly: false,
+    paymentOfficerTeam: {
+      teamName: 'Payment Reporting Team',
+      emails: ['payment-officer4@ukexportfinance.gov.uk'],
+    },
+  },
 ];
 
 module.exports = MOCK_BANKS;
