@@ -44,7 +44,7 @@ context('Portal to TFM utilisation report submission', () => {
       cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [mockUtilisationReport]);
     });
 
-    // Insert a NOT_RECEIVED report for February 2023 for the bank the portal user belongs to
+    // Insert a REPORT_NOT_RECEIVED report for February 2023 for the bank the portal user belongs to
     const notReceivedFebruary2023Report = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED)
       .withId(BANK1_PAYMENT_REPORT_OFFICER1.bank.id + 10000000)
       .withBankId(BANK1_PAYMENT_REPORT_OFFICER1.bank.id)
@@ -132,7 +132,7 @@ context('Portal to TFM utilisation report submission', () => {
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
 
-    cy.forceVisit(TFM_URL);
+    cy.visit(TFM_URL);
 
     cy.tfmLogin(PDC_RECONCILE);
     cy.url().should('eq', `${TFM_URL}/utilisation-reports`);

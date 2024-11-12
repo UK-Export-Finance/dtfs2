@@ -11,8 +11,8 @@ export const tfmFacilityForReport = {
   facilitySnapshot: {
     ukefFacilityId: '20001371',
     value: 1000,
-    coverStartDate: new Date(),
-    coverEndDate: addMonths(new Date(), 5),
+    coverStartDate: new Date().getTime(),
+    coverEndDate: addMonths(new Date(), 5).getTime(),
     interestPercentage: 5,
     dayCountBasis: 5,
     coverPercentage: 80,
