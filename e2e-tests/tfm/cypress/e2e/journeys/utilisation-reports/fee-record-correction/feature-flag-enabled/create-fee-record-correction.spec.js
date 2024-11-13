@@ -3,7 +3,7 @@ import pages from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
 import relative from '../../../../relativeURL';
-import { errorSummary } from '../../../../partials';
+import { backLink, errorSummary } from '../../../../partials';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context('When fee record correction feature flag is enabled', () => {
@@ -70,6 +70,23 @@ context('When fee record correction feature flag is enabled', () => {
       premiumPaymentsTab.createRecordCorrectionRequestButton().click();
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}`));
+    });
+
+    describe('when user clicks back on the create record correction request screen', () => {
+      it('should return to premium payments tab with the checkbox selected', () => {
+        premiumPaymentsTab.premiumPaymentsTable
+          .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
+          .click();
+
+        premiumPaymentsTab.createRecordCorrectionRequestButton().click();
+
+        backLink().click();
+
+        cy.url().should('eq', relative(`/utilisation-reports/${reportId}?selectedFeeRecordIds=${feeRecordAtToDoStatus.id}`));
+        premiumPaymentsTab.premiumPaymentsTable
+          .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
+          .should('be.checked');
+      });
     });
   });
 });
