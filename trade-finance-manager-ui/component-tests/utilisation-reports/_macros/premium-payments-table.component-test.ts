@@ -240,7 +240,7 @@ describe(component, () => {
 
     const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
 
-    const firstRowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${firstFeeRecordItem.id}"]`;
+    const firstRowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${firstFeeRecordItem.id}"]`;
     const firstRowHiddenCellSelector = `${firstRowSelector} [data-cy="hidden-record-details"]`;
     wrapper.expectElement(firstRowHiddenCellSelector).toExist();
     wrapper.expectElement(`${firstRowHiddenCellSelector} ul`).toExist();
@@ -256,7 +256,7 @@ describe(component, () => {
         `Facility ID: ${secondFeeRecordItem.facilityId}, Exporter: ${secondFeeRecordItem.exporter}, Reported fees: ${secondFeeRecordItem.reportedFees}, Reported payments: ${secondFeeRecordItem.reportedPayments}`,
       );
 
-    const secondRowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${secondFeeRecordItem.id}"]`;
+    const secondRowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${secondFeeRecordItem.id}"]`;
     const secondRowHiddenCellSelector = `${secondRowSelector} [data-cy="hidden-record-details"]`;
     wrapper.expectElement(secondRowHiddenCellSelector).toExist();
     wrapper.expectElement(`${secondRowHiddenCellSelector} ul`).notToExist();
@@ -264,10 +264,10 @@ describe(component, () => {
 
   it.each`
     columnName             | selector
-    ${'Facility ID'}       | ${'[data-cy="premium-payments-table-row--feeRecordId-1"] [data-cy="facility-id"]'}
-    ${'Exporter'}          | ${'[data-cy="premium-payments-table-row--feeRecordId-1"] [data-cy="exporter"]'}
-    ${'Reported Fees'}     | ${'[data-cy="premium-payments-table-row--feeRecordId-1"] [data-cy="reported-fees"]'}
-    ${'Reported payments'} | ${'[data-cy="premium-payments-table-row--feeRecordId-1"] [data-cy="reported-payments"]'}
+    ${'Facility ID'}       | ${'[data-cy*="premium-payments-table-row--feeRecordId-1"] [data-cy="facility-id"]'}
+    ${'Exporter'}          | ${'[data-cy*="premium-payments-table-row--feeRecordId-1"] [data-cy="exporter"]'}
+    ${'Reported Fees'}     | ${'[data-cy*="premium-payments-table-row--feeRecordId-1"] [data-cy="reported-fees"]'}
+    ${'Reported payments'} | ${'[data-cy*="premium-payments-table-row--feeRecordId-1"] [data-cy="reported-payments"]'}
   `("should set the '$columnName' column cell to be aria-hidden", ({ selector }: { selector: string }) => {
     const feeRecordItem: FeeRecordViewModelItem = {
       ...aFeeRecordViewModelItem(),

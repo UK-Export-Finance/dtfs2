@@ -27,7 +27,6 @@
   {% for feeRecord in feeRecords %}
     {% set isFirstFeeRecordInGroup = loop.index === 1 %}
     {% set isLastFeeRecordInGroup = loop.index === feeRecords.length %}
-    {% set rowDataCy = 'premium-payments-table-row--feeRecordId-' + feeRecord.id %}
 
     {% set paymentsReceivedHtml %}
       {% if isFirstFeeRecordInGroup and paymentsReceived %}
@@ -49,7 +48,9 @@
       {% endif %}
     {% endset%}
 
-    <tr class="govuk-table__row" data-cy="{{ rowDataCy }}" aria-hidden={{ not isFirstFeeRecordInGroup }}>
+    <tr class="govuk-table__row"
+        data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }} premium-payments-table-row--exporter-{{ feeRecord.exporter }}"
+        aria-hidden={{ not isFirstFeeRecordInGroup }}>
       <td class="govuk-visually-hidden" data-cy="hidden-record-details">
         {{ (hiddenRecordDetailsListHtml | safe) if isFirstFeeRecordInGroup }}
       </td>
@@ -90,7 +91,7 @@
       </td>
       <td class="govuk-table__cell{{ " no-border" if not isLastFeeRecordInGroup }}"
           data-sort-value="{{ displayStatus }}"
-          data-cy="{{ rowDataCy }}-status">
+          data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }}-status">
         {{ feeRecordStatus.render({
           status: status,
           displayStatus: displayStatus
