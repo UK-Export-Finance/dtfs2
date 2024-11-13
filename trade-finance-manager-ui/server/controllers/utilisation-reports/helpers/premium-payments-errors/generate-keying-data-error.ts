@@ -12,9 +12,20 @@ const generateKeyingDataErrorMap: Record<GenerateKeyingDataErrorKey, ErrorSummar
   },
 };
 
+/**
+ * Gets generate keying data error
+ * @param generateKeyingDataErrorKey - generate keying data error key
+ * @returns error summary for given key
+ */
 export const getGenerateKeyingDataError = (generateKeyingDataErrorKey: GenerateKeyingDataErrorKey): ErrorSummaryViewModel =>
   generateKeyingDataErrorMap[generateKeyingDataErrorKey];
 
+/**
+ * Validates generate keying data error key
+ * @param generateKeyingDataErrorKey - generate keying data error key
+ * @returns true if key is valid
+ * @throws {Error} if the key is not valid
+ */
 export const validateGenerateKeyingDataErrorKey = (generateKeyingDataErrorKey: string): generateKeyingDataErrorKey is GenerateKeyingDataErrorKey => {
   const allKeys: string[] = Object.values(GENERATE_KEYING_DATA_ERROR_KEY);
   if (allKeys.includes(generateKeyingDataErrorKey)) {

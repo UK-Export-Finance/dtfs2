@@ -21,7 +21,7 @@ export type PostInitiateRecordCorrectionRequest = CustomExpressRequest<{
  * @param req - The Express request object.
  * @param res - The Express response object.
  * @param reportId - The ID of the utilisation report.
- * @param addPaymentError - The error key to be set in the session.
+ * @param initiateRecordCorrectionRequestError - The error key to be set in the session.
  * @param checkedCheckboxIds - An object representing the checked checkbox IDs.
  * @returns The redirect response.
  */
@@ -39,6 +39,20 @@ const redirectToPremiumPaymentsWithError = (
   return res.redirect(axios.getUri({ url: `/utilisation-reports/${reportId}`, params: { premiumPaymentsFacilityId } }));
 };
 
+/**
+ * Controller for the POST initiate record correction request route.
+ *
+ * Validates selected fee records for creating a record correction request.
+ *
+ * Redirects to the premium payments tab with the appropriate error message
+ * if the selections are not valid for record correction request creation.
+ *
+ * Redirects to the create record correction request page for the selected
+ * fee record if the selections are valid for record correction request creation.
+ *
+ * @param req - The request object
+ * @param res - The response object
+ */
 export const postInitiateRecordCorrectionRequest = (req: PostInitiateRecordCorrectionRequest, res: Response) => {
   try {
     const { reportId } = req.params;

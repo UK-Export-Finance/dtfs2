@@ -24,8 +24,19 @@ const addPaymentErrorMap: Record<AddPaymentErrorKey, ErrorSummaryViewModel> = {
   },
 };
 
+/**
+ * Gets add payment error
+ * @param addPaymentErrorKey - add payment error key
+ * @returns error summary for given key
+ */
 export const getAddPaymentError = (addPaymentErrorKey: AddPaymentErrorKey): ErrorSummaryViewModel => addPaymentErrorMap[addPaymentErrorKey];
 
+/**
+ * Validates add payment error key
+ * @param addPaymentErrorKey - add payment error key
+ * @returns true if key is valid
+ * @throws {Error} if the key is not valid
+ */
 export const validateAddPaymentErrorKey = (addPaymentErrorKey: string): addPaymentErrorKey is AddPaymentErrorKey => {
   const allKeys: string[] = Object.values(ADD_PAYMENT_ERROR_KEY);
   if (allKeys.includes(addPaymentErrorKey)) {

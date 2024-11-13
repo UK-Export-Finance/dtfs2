@@ -20,10 +20,21 @@ const initiateRecordCorrectionRequestErrorMap: Record<InitiateRecordCorrectionRe
   },
 };
 
+/**
+ * Gets initiate record correction request error
+ * @param initiateRecordCorrectionRequestErrorKey - initiate record correction request error key
+ * @returns error summary for given key
+ */
 export const getInitiateRecordCorrectionRequestError = (
   initiateRecordCorrectionRequestErrorKey: InitiateRecordCorrectionRequestErrorKey,
 ): ErrorSummaryViewModel => initiateRecordCorrectionRequestErrorMap[initiateRecordCorrectionRequestErrorKey];
 
+/**
+ * Validates initiate record correction request error key
+ * @param initiateRecordCorrectionRequestErrorKey - initiate record correction request error key
+ * @returns true if key is valid
+ * @throws {Error} if the key is not valid
+ */
 export const validateInitiateRecordCorrectionErrorKey = (
   initiateRecordCorrectionRequestErrorKey: string,
 ): initiateRecordCorrectionRequestErrorKey is InitiateRecordCorrectionRequestErrorKey => {
