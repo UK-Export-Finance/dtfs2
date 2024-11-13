@@ -41,6 +41,10 @@ context('When fee record correction feature flag is enabled', () => {
 
     it('should not be able to initiate record correction request', () => {
       premiumPaymentsTab.createRecordCorrectionRequestButton().should('not.exist');
+
+      cy.visit(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}`);
+
+      cy.url().should('eq', relative('/utilisation-reports'));
     });
   });
 
