@@ -1,10 +1,27 @@
-const { pageRenderer } = require('../pageRenderer');
-const { anAddPaymentViewModel, aRecordedPaymentDetailsViewModel } = require('../../test-helpers/test-data/view-models');
+import { CURRENCY, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
+import { pageRenderer } from '../pageRenderer';
+import { anAddPaymentViewModel, aRecordedPaymentDetailsViewModel } from '../../test-helpers/test-data/view-models';
 
 const page = '../templates/utilisation-reports/add-payment.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
+  it('should add error prefix to page title when there are errors', () => {
+    const addPaymentViewModel = anAddPaymentViewModel();
+    addPaymentViewModel.errors.errorSummary = [{ text: 'an error', href: 'error-href' }];
+    const wrapper = render(addPaymentViewModel);
+
+    wrapper.expectPageTitle().toRead('Error - Add a payment');
+  });
+
+  it('should not add error prefix to page title when there are no errors', () => {
+    const addPaymentViewModel = anAddPaymentViewModel();
+    addPaymentViewModel.errors.errorSummary = [];
+    const wrapper = render(addPaymentViewModel);
+
+    wrapper.expectPageTitle().toRead('Add a payment');
+  });
+
   it('should render the main heading', () => {
     // Arrange
     const addPaymentViewModel = anAddPaymentViewModel();
@@ -78,7 +95,7 @@ describe(page, () => {
     addPaymentViewModel.reportedFeeDetails.totalReportedPayments = 'JPY 1';
     addPaymentViewModel.reportedFeeDetails.feeRecords = [
       {
-        feeRecordId: 12,
+        id: 12,
         facilityId: '000123',
         exporter: 'abcde',
         reportedFees: { formattedCurrencyAndAmount: 'EUR 0.01', dataSortValue: 0 },
@@ -357,12 +374,15 @@ describe(page, () => {
   it('should set hidden inputs for each selected checkbox id', () => {
     // Arrange
     const addPaymentViewModel = anAddPaymentViewModel();
-    addPaymentViewModel.selectedFeeRecordCheckboxIds = ['fee-record-5', 'fee-record-20'];
+    addPaymentViewModel.selectedFeeRecordCheckboxIds = [
+      `feeRecordIds-5-reportedPaymentsCurrency-${CURRENCY.GBP}-status-${FEE_RECORD_STATUS.TO_DO}`,
+      `feeRecordIds-20-reportedPaymentsCurrency-${CURRENCY.GBP}-status-${FEE_RECORD_STATUS.TO_DO}`,
+    ];
     const wrapper = render(addPaymentViewModel);
 
     // Assert
-    wrapper.expectElement('input[name="fee-record-5"]').toExist();
-    wrapper.expectElement('input[name="fee-record-20"]').toExist();
+    wrapper.expectElement(`input[name="feeRecordIds-5-reportedPaymentsCurrency-${CURRENCY.GBP}-status-${FEE_RECORD_STATUS.TO_DO}"]`).toExist();
+    wrapper.expectElement(`input[name="feeRecordIds-20-reportedPaymentsCurrency-${CURRENCY.GBP}-status-${FEE_RECORD_STATUS.TO_DO}"]`).toExist();
   });
 
   it('should display error summary', () => {
@@ -402,18 +422,18 @@ describe(page, () => {
   it('should display plural "Add reported fees to an existing payment" button when canAddToExistingPayment is true and multiple payments exist', () => {
     // Arrange
     const addPaymentViewModel = anAddPaymentViewModel();
-    addPaymentViewModel.reportId = 123;
+    addPaymentViewModel.reportId = '123';
     addPaymentViewModel.canAddToExistingPayment = true;
     addPaymentViewModel.reportedFeeDetails.feeRecords = [
       {
-        feeRecordId: 7,
+        id: 7,
         facilityId: '000123',
         exporter: 'abcde',
         reportedFees: { formattedCurrencyAndAmount: 'EUR 0.01', dataSortValue: 0 },
         reportedPayments: { formattedCurrencyAndAmount: 'GBP 7', dataSortValue: 0 },
       },
       {
-        feeRecordId: 8,
+        id: 8,
         facilityId: '000123',
         exporter: 'abcdef',
         reportedFees: { formattedCurrencyAndAmount: 'EUR 0.01', dataSortValue: 0 },

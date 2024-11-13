@@ -1,0 +1,127 @@
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% import "./_macros/fee-record-summary.njk" as feeRecordSummary %}
+{% extends "index.njk" %}
+{% set backLink = {"href": "/utilisation-reports/" + reportId} %}
+
+{% block pageTitle %}Create record correction request{% endblock %}
+{% block content %}
+  <div class="govuk-grid-row govuk-!-padding-top-7">
+    <div class="govuk-grid-column-one-half">
+      <span class="govuk-caption-l" data-cy="heading-caption">{{ bank.name }}, {{ formattedReportPeriod }}</span>
+      <h1 class="govuk-heading-l">Record correction request</h1>
+    </div>
+  </div>
+
+  {{ feeRecordSummary.render({
+    facilityId: feeRecord.facilityId,
+    exporter: feeRecord.exporter,
+    user: user
+  }) }}
+
+  <div class="govuk-grid-row govuk-!-padding-top-3">
+    <div class="govuk-grid-column-one-half-from-desktop">
+      <form method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+        {{ govukCheckboxes({
+          idPrefix: "reasons",
+          name: "reasons",
+          fieldset: {
+            legend: {
+              text: "Select the reason for the record correction request",
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          hint: {
+            text: "Select all that apply"
+          },
+          items: [
+            {
+              value: "facility-id-incorrect",
+              text: "Facility ID is incorrect",
+              hint: {
+                text: "Does not match what is in the system"
+              },
+              attributes: {
+                "data-cy": "reason-facility-id-incorrect"
+              }
+            },
+            {
+              value: "reported-fee-incorrect",
+              text: "Reported fee is incorrect",
+              hint: {
+                text: "The fee is higher or lower than expected"
+              },
+              attributes: {
+                "data-cy": "reason-reported-fee-incorrect"
+              }
+            },
+            {
+              value: "reported-currency-incorrect",
+              text: "Reported currency is incorrect",
+              hint: {
+                text: "The currency does not match the currency we have on record"
+              },
+              attributes: {
+                "data-cy": "reason-reported-currency-incorrect"
+              }
+            },
+            {
+              value: "utilisation-incorrect",
+              text: "Utilisation is incorrect",
+              attributes: {
+                "data-cy": "reason-utilisation-incorrect"
+              }
+            },
+            {
+              value: "other",
+              text: "Other",
+              hint: {
+                text: "Something else"
+              },
+              attributes: {
+                "data-cy": "reason-other"
+              }
+            }
+          ]
+        }) }}
+
+        {{ govukCharacterCount({
+            name: "additionalInfo",
+            id: "additionalInfo",
+            label: {
+              text: "Provide more information",
+              classes: "govuk-label--s",
+              attributes: {
+                "data-cy": "additional-info-label"
+              }
+            },
+            hint: {
+              text: "For example, is the reported fee higher or lower than expected",
+              attributes: {
+                "data-cy": "additional-info-hint"
+              }
+            },
+            maxlength: 500,
+            rows: 4,
+            attributes: {
+              "data-cy": "additional-info"
+            }
+        }) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            attributes: {
+              "data-cy": "continue-button"
+            }
+          })}}
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+{% block sub_content %}{% endblock %}

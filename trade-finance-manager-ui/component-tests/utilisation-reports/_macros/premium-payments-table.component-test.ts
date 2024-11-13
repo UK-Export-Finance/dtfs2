@@ -211,7 +211,7 @@ describe(component, () => {
 
     wrapper.expectElement(`tr`).toHaveCount(feeRecordIds.length + 1); // including table header
     feeRecordIds.forEach((id) => {
-      const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${id}"]`;
+      const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${id}"]`;
       wrapper.expectElement(rowSelector).toExist();
     });
   });
@@ -240,7 +240,8 @@ describe(component, () => {
 
     const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
 
-    const firstRowHiddenCellSelector = `[data-cy="premium-payments-table-row--feeRecordId-${firstFeeRecordItem.id}-hidden-record-details"]`;
+    const firstRowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${firstFeeRecordItem.id}"]`;
+    const firstRowHiddenCellSelector = `${firstRowSelector} [data-cy="hidden-record-details"]`;
     wrapper.expectElement(firstRowHiddenCellSelector).toExist();
     wrapper.expectElement(`${firstRowHiddenCellSelector} ul`).toExist();
     wrapper.expectElement(`${firstRowHiddenCellSelector} li`).toHaveCount(2);
@@ -255,17 +256,18 @@ describe(component, () => {
         `Facility ID: ${secondFeeRecordItem.facilityId}, Exporter: ${secondFeeRecordItem.exporter}, Reported fees: ${secondFeeRecordItem.reportedFees}, Reported payments: ${secondFeeRecordItem.reportedPayments}`,
       );
 
-    const secondRowHiddenCellSelector = `[data-cy="premium-payments-table-row--feeRecordId-${secondFeeRecordItem.id}-hidden-record-details"]`;
+    const secondRowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${secondFeeRecordItem.id}"]`;
+    const secondRowHiddenCellSelector = `${secondRowSelector} [data-cy="hidden-record-details"]`;
     wrapper.expectElement(secondRowHiddenCellSelector).toExist();
     wrapper.expectElement(`${secondRowHiddenCellSelector} ul`).notToExist();
   });
 
   it.each`
     columnName             | selector
-    ${'Facility ID'}       | ${'[data-cy="premium-payments-table-row--feeRecordId-1-facility-id"]'}
-    ${'Exporter'}          | ${'[data-cy="premium-payments-table-row--feeRecordId-1-exporter"]'}
-    ${'Reported Fees'}     | ${'[data-cy="premium-payments-table-row--feeRecordId-1-reported-fees"]'}
-    ${'Reported payments'} | ${'[data-cy="premium-payments-table-row--feeRecordId-1-reported-payments"]'}
+    ${'Facility ID'}       | ${'[data-cy="premium-payments-table-row--feeRecordId-1"] [data-cy="facility-id"]'}
+    ${'Exporter'}          | ${'[data-cy="premium-payments-table-row--feeRecordId-1"] [data-cy="exporter"]'}
+    ${'Reported Fees'}     | ${'[data-cy="premium-payments-table-row--feeRecordId-1"] [data-cy="reported-fees"]'}
+    ${'Reported payments'} | ${'[data-cy="premium-payments-table-row--feeRecordId-1"] [data-cy="reported-payments"]'}
   `("should set the '$columnName' column cell to be aria-hidden", ({ selector }: { selector: string }) => {
     const feeRecordItem: FeeRecordViewModelItem = {
       ...aFeeRecordViewModelItem(),
@@ -296,7 +298,8 @@ describe(component, () => {
 
     const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
 
-    wrapper.expectText(`[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}-facility-id"]`).toRead(facilityId);
+    const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
+    wrapper.expectText(`${rowSelector} [data-cy="facility-id"]`).toRead(facilityId);
   });
 
   it('should render the fee record exporter in the table row with the matching fee record id', () => {
@@ -312,7 +315,8 @@ describe(component, () => {
 
     const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
 
-    wrapper.expectText(`[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}-exporter"]`).toRead(exporter);
+    const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
+    wrapper.expectText(`${rowSelector} [data-cy="exporter"]`).toRead(exporter);
   });
 
   it('should render the fee record reported fees in the table row with the matching fee record id with the numeric cell class', () => {
@@ -328,9 +332,9 @@ describe(component, () => {
 
     const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
 
-    const cellSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}-reported-fees"]`;
-    wrapper.expectText(cellSelector).toRead(reportedFees);
-    wrapper.expectElement(cellSelector).hasClass(numericCellClass);
+    const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
+    wrapper.expectText(`${rowSelector} [data-cy="reported-fees"]`).toRead(reportedFees);
+    wrapper.expectElement(`${rowSelector} [data-cy="reported-fees"]`).hasClass(numericCellClass);
   });
 
   it('should render the fee record reported payments in the table row with the matching fee record id with the numeric cell class', () => {
@@ -346,9 +350,9 @@ describe(component, () => {
 
     const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
 
-    const cellSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}-reported-payments"]`;
-    wrapper.expectText(cellSelector).toRead(reportedPayments);
-    wrapper.expectElement(cellSelector).hasClass(numericCellClass);
+    const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
+    wrapper.expectText(`${rowSelector} [data-cy="reported-payments"]`).toRead(reportedPayments);
+    wrapper.expectElement(`${rowSelector} [data-cy="reported-payments"]`).hasClass(numericCellClass);
   });
 
   it('should only render the total reported payments in the first row of the fee record payment group with the numeric cell class and the data sort value', () => {
@@ -371,17 +375,17 @@ describe(component, () => {
 
     const [firstRowId, ...otherIds] = feeRecordIds;
 
-    const firstRowCellSelector = `[data-cy="premium-payments-table-row--feeRecordId-${firstRowId}-total-reported-payments"]`;
-    wrapper.expectText(firstRowCellSelector).toRead(totalReportedPayments.formattedCurrencyAndAmount!);
-    wrapper.expectElement(firstRowCellSelector).hasClass(numericCellClass);
-    wrapper.expectElement(firstRowCellSelector).toHaveAttribute('data-sort-value', totalReportedPayments.dataSortValue.toString());
+    const firstRowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${firstRowId}"]`;
+    wrapper.expectText(`${firstRowSelector} [data-cy="total-reported-payments"]`).toRead(totalReportedPayments.formattedCurrencyAndAmount!);
+    wrapper.expectElement(`${firstRowSelector} [data-cy="total-reported-payments"]`).hasClass(numericCellClass);
+    wrapper
+      .expectElement(`${firstRowSelector} [data-cy="total-reported-payments"]`)
+      .toHaveAttribute('data-sort-value', totalReportedPayments.dataSortValue.toString());
 
     otherIds.forEach((id) => {
-      const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${id}"]`;
-      wrapper.expectElement(rowSelector).toExist();
-
-      const cellSelector = `[data-cy="premium-payments-table-row--feeRecordId-${id}-total-reported-payments"]`;
-      wrapper.expectText(cellSelector).toRead('');
+      const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${id}"]`;
+      wrapper.expectElement(`${rowSelector}`).toExist();
+      wrapper.expectText(`${rowSelector} [data-cy="total-reported-payments"]`).toRead('');
     });
   });
 
@@ -402,17 +406,16 @@ describe(component, () => {
 
     const [firstRowId, ...otherIds] = feeRecordIds;
 
-    const firstRowCellSelector = `[data-cy="premium-payments-table-row--feeRecordId-${firstRowId}-payments-received"]`;
-    wrapper.expectElement(firstRowCellSelector).toExist();
-    wrapper.expectElement(firstRowCellSelector).hasClass(numericCellClass);
-    wrapper.expectElement(`${firstRowCellSelector} ul`).toExist();
+    const firstRowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${firstRowId}"]`;
+    const cellSelector = '[data-cy="payments-received"]';
+    wrapper.expectElement(`${firstRowSelector} ${cellSelector}`).toExist();
+    wrapper.expectElement(`${firstRowSelector} ${cellSelector}`).hasClass(numericCellClass);
+    wrapper.expectElement(`${firstRowSelector} ${cellSelector} ul`).toExist();
 
     otherIds.forEach((id) => {
-      const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${id}"]`;
-      wrapper.expectElement(rowSelector).toExist();
-
-      const cellSelector = `[data-cy="premium-payments-table-row--feeRecordId-${id}-payments-received"]`;
-      wrapper.expectElement(`${cellSelector} ul`).notToExist();
+      const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${id}"]`;
+      wrapper.expectElement(`${rowSelector}`).toExist();
+      wrapper.expectElement(`${rowSelector} ${cellSelector} ul`).notToExist();
     });
   });
 
@@ -435,8 +438,8 @@ describe(component, () => {
 
     const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
 
-    const cellSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}-payments-received"]`;
-    wrapper.expectElement(`${cellSelector} li`).toHaveCount(paymentsReceived.length);
+    const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
+    wrapper.expectElement(`${rowSelector} [data-cy="payments-received"] li`).toHaveCount(paymentsReceived.length);
   });
 
   const FEE_RECORD_STATUSES_WHERE_PAYMENTS_RECEIVED_SHOULD_BE_LINKS = [FEE_RECORD_STATUS.MATCH, FEE_RECORD_STATUS.DOES_NOT_MATCH];
@@ -465,10 +468,11 @@ describe(component, () => {
 
       const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, reportId, feeRecordPaymentGroups });
 
-      const cellSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}-payments-received"]`;
+      const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
+
       paymentsReceived.forEach((payment) => {
         wrapper
-          .expectLink(`${cellSelector} a:contains(${payment.formattedCurrencyAndAmount})`)
+          .expectLink(`${rowSelector} [data-cy="payments-received"] a:contains(${payment.formattedCurrencyAndAmount})`)
           .toLinkTo(
             `/utilisation-reports/${reportId}/edit-payment/${payment.id}?redirectTab=${RECONCILIATION_FOR_REPORT_TABS.PREMIUM_PAYMENTS}`,
             payment.formattedCurrencyAndAmount,
@@ -499,10 +503,10 @@ describe(component, () => {
 
       const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
 
-      const cellSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}-payments-received"]`;
+      const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
       paymentsReceived.forEach((payment) => {
-        wrapper.expectElement(`${cellSelector} li:contains(${payment.formattedCurrencyAndAmount})`).toExist();
-        wrapper.expectElement(`${cellSelector} a:contains(${payment.formattedCurrencyAndAmount})`).notToExist();
+        wrapper.expectElement(`${rowSelector} [data-cy="payments-received"] li:contains(${payment.formattedCurrencyAndAmount})`).toExist();
+        wrapper.expectElement(`${rowSelector} [data-cy="payments-received"] a:contains(${payment.formattedCurrencyAndAmount})`).notToExist();
       });
     },
   );
@@ -531,10 +535,10 @@ describe(component, () => {
 
       const wrapper = render({ ...defaultRendererParams(), userCanEdit: false, reportId, feeRecordPaymentGroups });
 
-      const cellSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}-payments-received"]`;
+      const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
       paymentsReceived.forEach((payment) => {
-        wrapper.expectElement(`${cellSelector} li:contains(${payment.formattedCurrencyAndAmount})`).toExist();
-        wrapper.expectElement(`${cellSelector} a:contains(${payment.formattedCurrencyAndAmount})`).notToExist();
+        wrapper.expectElement(`${rowSelector} [data-cy="payments-received"] li:contains(${payment.formattedCurrencyAndAmount})`).toExist();
+        wrapper.expectElement(`${rowSelector} [data-cy="payments-received"] a:contains(${payment.formattedCurrencyAndAmount})`).notToExist();
       });
     },
   );
@@ -554,8 +558,8 @@ describe(component, () => {
 
     const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
 
-    const cellSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}-payments-received"]`;
-    wrapper.expectElement(`${cellSelector} ul`).notToExist();
+    const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
+    wrapper.expectElement(`${rowSelector} [data-cy="payments-received"] ul`).notToExist();
   });
 
   it('should only render the total payments received in the first row of the fee record payment group with the numeric cell class and the data sort value', () => {
@@ -578,17 +582,16 @@ describe(component, () => {
 
     const [firstRowId, ...otherIds] = feeRecordIds;
 
-    const firstRowCellSelector = `[data-cy="premium-payments-table-row--feeRecordId-${firstRowId}-total-payments-received"]`;
+    const firstRowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${firstRowId}"]`;
+    const firstRowCellSelector = `${firstRowSelector} [data-cy="total-payments-received"]`;
     wrapper.expectText(firstRowCellSelector).toRead(totalPaymentsReceived.formattedCurrencyAndAmount!);
     wrapper.expectElement(firstRowCellSelector).hasClass(numericCellClass);
     wrapper.expectElement(firstRowCellSelector).toHaveAttribute('data-sort-value', totalPaymentsReceived.dataSortValue.toString());
 
     otherIds.forEach((id) => {
-      const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${id}"]`;
-      wrapper.expectElement(rowSelector).toExist();
-
-      const cellSelector = `[data-cy="premium-payments-table-row--feeRecordId-${id}-total-payments-received"]`;
-      wrapper.expectText(cellSelector).toRead('');
+      const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${id}"]`;
+      wrapper.expectElement(`${rowSelector}`).toExist();
+      wrapper.expectText(`${rowSelector} [data-cy="total-payments-received"]`).toRead('');
     });
   });
 
@@ -685,11 +688,11 @@ describe(component, () => {
 
     const [firstRowId, ...otherIds] = feeRecordIds;
 
-    const firstRowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${firstRowId}"]`;
+    const firstRowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${firstRowId}"]`;
     wrapper.expectElement(`${firstRowSelector} td input[id="${checkboxId}"][type="checkbox"]`).toExist();
 
     otherIds.forEach((id) => {
-      const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${id}"]`;
+      const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${id}"]`;
       wrapper.expectElement(`${rowSelector}`).toExist();
       wrapper.expectElement(`${rowSelector} td input[id="${checkboxId}"][type="checkbox"]`).notToExist();
     });

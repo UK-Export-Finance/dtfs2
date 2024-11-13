@@ -4,6 +4,7 @@ import { NotFoundError } from '../../../../../errors';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { feeRecordsAndPaymentsMatch } from '../../../../../helpers';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../event/utilisation-report.event-type';
 
 type DeletePaymentEventPayload = {
   transactionEntityManager: EntityManager;
@@ -11,7 +12,7 @@ type DeletePaymentEventPayload = {
   requestSource: DbRequestSource;
 };
 
-export type UtilisationReportDeletePaymentEvent = BaseUtilisationReportEvent<'DELETE_PAYMENT', DeletePaymentEventPayload>;
+export type UtilisationReportDeletePaymentEvent = BaseUtilisationReportEvent<typeof UTILISATION_REPORT_EVENT_TYPE.DELETE_PAYMENT, DeletePaymentEventPayload>;
 
 /**
  * Handler for the delete payment event

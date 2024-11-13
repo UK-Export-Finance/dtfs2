@@ -539,7 +539,7 @@ jobs:
             '*.spec.js',
             'application/**/*.spec.js',
             'checker/**/*.spec.js',
-            'clone/**/*.spec.js',
+            'clone/*.spec.js',
             'eligibility/**/*.spec.js',
             'exporter/**/*.spec.js',
             'external/**/*.spec.js',
@@ -723,26 +723,27 @@ jobs:
       matrix:
         spec:
           [
-            'MIA-underwriter-managers-approved-decision-updates-portal-deal-and-submission-type-to-MIN/**/*.spec.js',
-            'MIA-underwriter-managers-decision-updates-portal-deal/**/*.spec.js',
-            'submit-AIN-deal-creates-default-credit-rating-in-tfm/**/*.spec.js',
-            'submit-AIN-deal-creates-tasks-in-tfm/**/*.spec.js',
-            'submit-AIN-deal-creates-tfm-deal-stage-and-product/**/*.spec.js',
-            'submit-AIN-deal-updates-portal-deal-status/**/*.spec.js',
-            'submit-MIA-deal-TFM-approves-resubmit-MIA-deal-becomes-MIN/**/*.spec.js',
-            'submit-MIA-deal-creates-tasks-in-tfm/**/*.spec.js',
-            'submit-MIA-deal-creates-tfm-deal-stage-and-product/**/*.spec.js',
-            'submit-MIA-deal-updates-portal-deal-status/**/*.spec.js',
-            'submit-MIN-changes-tfm-stage-to-confirmed/**/*.spec.js',
-            'submit-MIN-deal-does-not-create-credit-rating-in-tfm/**/*.spec.js',
-            'submit-MIN-deal-updates-portal-deal-status/**/*.spec.js',
-            'submit-MIN-with-unissued-facilities-and-resubmit-issued-facilities-updates-facilities-in-tfm/**/*.spec.js',
-            'submit-deal-adds-risk-profile-to-facilities/**/*.spec.js',
-            'submit-deal-converts-contract-value-to-gbp/**/*.spec.js',
-            'submit-deal-creates-loss-given-and-probability-defaults-in-tfm/**/*.spec.js',
-            'submit-deal-with-issued-facilities/**/*.spec.js',
-            'submit-deal-with-non-gbp-facilities/**/*.spec.js',
-            'submit-deal-with-unissued-facilities-and-resubmit-as-issued/**/*.spec.js',
+            'portal/MIA-underwriter-managers-approved-decision-updates-portal-deal-and-submission-type-to-MIN/**/*.spec.js',
+            'portal/MIA-underwriter-managers-decision-updates-portal-deal/**/*.spec.js',
+            'portal/submit-AIN-deal-creates-default-credit-rating-in-tfm/**/*.spec.js',
+            'portal/submit-AIN-deal-creates-tasks-in-tfm/**/*.spec.js',
+            'portal/submit-AIN-deal-creates-tfm-deal-stage-and-product/**/*.spec.js',
+            'portal/submit-AIN-deal-updates-portal-deal-status/**/*.spec.js',
+            'portal/submit-MIA-deal-TFM-approves-resubmit-MIA-deal-becomes-MIN/**/*.spec.js',
+            'portal/submit-MIA-deal-creates-tasks-in-tfm/**/*.spec.js',
+            'portal/submit-MIA-deal-creates-tfm-deal-stage-and-product/**/*.spec.js',
+            'portal/submit-MIA-deal-updates-portal-deal-status/**/*.spec.js',
+            'portal/submit-MIN-changes-tfm-stage-to-confirmed/**/*.spec.js',
+            'portal/submit-MIN-deal-does-not-create-credit-rating-in-tfm/**/*.spec.js',
+            'portal/submit-MIN-deal-updates-portal-deal-status/**/*.spec.js',
+            'portal/submit-MIN-with-unissued-facilities-and-resubmit-issued-facilities-updates-facilities-in-tfm/**/*.spec.js',
+            'portal/submit-deal-adds-risk-profile-to-facilities/**/*.spec.js',
+            'portal/submit-deal-converts-contract-value-to-gbp/**/*.spec.js',
+            'portal/submit-deal-creates-loss-given-and-probability-defaults-in-tfm/**/*.spec.js',
+            'portal/submit-deal-with-issued-facilities/**/*.spec.js',
+            'portal/submit-deal-with-non-gbp-facilities/**/*.spec.js',
+            'portal/submit-deal-with-unissued-facilities-and-resubmit-as-issued/**/*.spec.js',
+            'utilisation-reports/**/*.spec.js',
           ]
 
     concurrency:
@@ -790,7 +791,7 @@ jobs:
           MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
           TZ: ${{ vars.TIMEZONE }}
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ukef --record false --spec "./ukef/cypress/e2e/journeys/portal/${{ matrix.spec }}"
+        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ukef --record false --spec "./ukef/cypress/e2e/journeys/${{ matrix.spec }}"
 
   #8. E2E - FF
   e2e-tests-ff:
@@ -817,7 +818,8 @@ jobs:
             './gef/cypress/e2e/*.spec.js',
             './gef/cypress/e2e/application/**/*.spec.js',
             './gef/cypress/e2e/checker/**/*.spec.js',
-            './gef/cypress/e2e/clone/**/*.spec.js',
+            './gef/cypress/e2e/clone/*.spec.js',
+            './gef/cypress/e2e/clone/facility-end-date-enabled/*.spec.js',
             './gef/cypress/e2e/eligibility/**/*.spec.js',
             './gef/cypress/e2e/exporter/**/*.spec.js',
             './gef/cypress/e2e/external/**/*.spec.js',

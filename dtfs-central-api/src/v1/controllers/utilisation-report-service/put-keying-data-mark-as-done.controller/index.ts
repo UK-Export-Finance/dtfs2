@@ -6,6 +6,7 @@ import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { PutKeyingDataMarkAsPayload } from '../../../routes/middleware/payload-validation';
 import { getSelectedFeeRecordsAndUtilisationReportForKeyingDataMarkAs } from '../helpers';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 
 export type PutKeyingDataMarkDoneRequest = CustomExpressRequest<{
   reqBody: PutKeyingDataMarkAsPayload;
@@ -25,7 +26,7 @@ export const putKeyingDataMarkAsDone = async (req: PutKeyingDataMarkDoneRequest,
     await executeWithSqlTransaction(
       async (transactionEntityManager) =>
         await utilisationReportStateMachine.handleEvent({
-          type: 'MARK_FEE_RECORDS_AS_RECONCILED',
+          type: UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_RECONCILED,
           payload: {
             transactionEntityManager,
             feeRecordsToReconcile: selectedFeeRecords,

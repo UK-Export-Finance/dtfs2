@@ -6,6 +6,7 @@ import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { NewPaymentDetails } from '../../../../types/utilisation-reports';
 import { executeWithSqlTransaction } from '../../../../helpers';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 import { validateFeeRecordsFormCompleteGroup } from '../../../validation/utilisation-report-service/fee-record-validator';
 
 /**
@@ -39,7 +40,7 @@ export const addPaymentToUtilisationReport = async (
 
   return await executeWithSqlTransaction<FeeRecordStatus>(async (transactionEntityManager) => {
     await utilisationReportStateMachine.handleEvent({
-      type: 'ADD_A_PAYMENT',
+      type: UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT,
       payload: {
         transactionEntityManager,
         feeRecords,

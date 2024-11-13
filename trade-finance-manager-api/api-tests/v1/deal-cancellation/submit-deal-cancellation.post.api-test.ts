@@ -1,5 +1,5 @@
 import { add, format } from 'date-fns';
-import { AnyObject, MAX_CHARACTER_COUNT, TEAM_IDS, TestApiError, TfmDealCancellationResponse, TfmFacility } from '@ukef/dtfs2-common';
+import { AnyObject, DEAL_TYPE, MAX_CHARACTER_COUNT, TEAM_IDS, TestApiError, TfmDealCancellationResponse, TfmFacility } from '@ukef/dtfs2-common';
 import { ObjectId, UpdateResult } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import { createApi } from '../../api';
@@ -80,7 +80,7 @@ describe('POST /v1/deals/:id/cancellation/submit', () => {
 
     beforeEach(() => {
       submitDealCancellationMock.mockResolvedValue({
-        cancelledDealUkefId: ukefDealId,
+        cancelledDeal: { dealSnapshot: { dealType: DEAL_TYPE.GEF, ukefDealId } },
         riskExpiredFacilityUkefIds: ukefFacilityIds,
       } as TfmDealCancellationResponse);
     });

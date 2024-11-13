@@ -76,6 +76,14 @@ export const PIM_USER_1 = {
   ...defaultUserDetails,
 };
 
+export const PDC_RECONCILE = {
+  username: 'PDC_RECONCILE',
+  teams: ['PDC_RECONCILE'],
+  firstName: 'PDC',
+  lastName: 'Reconcile',
+  ...defaultUserDetails,
+};
+
 // This is used when making a direct api request to central api, which needs a user for audit details
 // The given _id is mocked & does not correspond to the value in the database
 export const UNDERWRITER_1_WITH_MOCK_ID = {

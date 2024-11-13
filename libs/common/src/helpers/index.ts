@@ -16,3 +16,4 @@ export * from './gef-deal-versioning';
 export * from './monetary-value';
 export * from './facility-calculations';
 export * from './format-date-for-email';
+export * from './get-ukef-deal-id';

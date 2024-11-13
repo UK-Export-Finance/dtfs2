@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_STAGE, API_ERROR_CODE, TfmAuditDetails } from '@ukef/dtfs2-common';
+import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_STAGE, API_ERROR_CODE, TfmAuditDetails, TfmDeal } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { withMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import wipeDB from '../../../wipeDB';
@@ -17,7 +17,7 @@ const originalProcessEnv = { ...process.env };
 
 describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
   let dealId: string;
-  let facilityId: string;
+  let ukefFacilityId: string;
   let submitDealCancellationUrl: string;
   let auditDetails: TfmAuditDetails;
   let tfmUserId: string;
@@ -42,15 +42,16 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
 
   beforeEach(async () => {
     const createDealResponse: { body: { _id: string } } = await createDeal({ deal: newDeal, user: aPortalUser() });
-    const createFacilityResponse: { body: { _id: string } } = await createFacility({
+    const createFacilityResponse: { body: { ukefFacilityId: string } } = await createFacility({
       facility: {
         dealId,
+        ukefFacilityId: 'ukefFacilityId',
       },
       user: aPortalUser(),
     });
 
     dealId = createDealResponse.body._id;
-    facilityId = createFacilityResponse.body._id;
+    ukefFacilityId = createFacilityResponse.body.ukefFacilityId;
     auditDetails = generateTfmAuditDetails(tfmUserId);
     submitDealCancellationUrl = `/v1/tfm/deals/${dealId}/cancellation/submit`;
 
@@ -124,7 +125,10 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
       it('should return the submit cancellation response object if a matching deal and cancellation exists', async () => {
         const submitCancellationResponse = await testApi.post({ cancellation, auditDetails }).to(submitDealCancellationUrl);
 
-        expect(submitCancellationResponse.body).toEqual({ cancelledDealUkefId: dealId, riskExpiredFacilityUkefIds: [facilityId] });
+        expect(submitCancellationResponse.body).toEqual({
+          cancelledDeal: expect.objectContaining({ _id: dealId }) as TfmDeal,
+          riskExpiredFacilityUkefIds: [ukefFacilityId],
+        });
         expect(submitCancellationResponse.status).toEqual(HttpStatusCode.Ok);
       });
 
