@@ -90,7 +90,7 @@
       </td>
       <td class="govuk-table__cell{{ " no-border" if not isLastFeeRecordInGroup }}"
           data-sort-value="{{ displayStatus }}"
-          data-cy="status">
+          data-cy="{{ rowDataCy }}-status">
         {{ feeRecordStatus.render({
           status: status,
           displayStatus: displayStatus
