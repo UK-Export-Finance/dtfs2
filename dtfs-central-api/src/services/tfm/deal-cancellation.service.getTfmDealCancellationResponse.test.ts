@@ -6,7 +6,7 @@ const dealType = DEAL_TYPE.GEF;
 const ukefDealId = 'ukefDealId';
 
 describe('DealCancellationService', () => {
-  describe('submitDealCancellation', () => {
+  describe('getTfmDealCancellationResponse', () => {
     it('returns the deal and facility ids', () => {
       // Arrange
       const cancelledDeal = { dealSnapshot: { dealType, ukefDealId } } as TfmDeal;

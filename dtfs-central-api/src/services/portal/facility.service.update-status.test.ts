@@ -23,7 +23,7 @@ describe('PortalFacilityService', () => {
   });
 
   describe('updateStatus', () => {
-    it(`calls updateGefDealStatus when submissionType is ${DEAL_TYPE.GEF}`, async () => {
+    it(`calls updateFacility when submissionType is ${DEAL_TYPE.GEF}`, async () => {
       // Arrange
       const dealType = DEAL_TYPE.GEF;
 
@@ -40,7 +40,7 @@ describe('PortalFacilityService', () => {
       expect(updateBssEwcsFacilityStatusMock).toHaveBeenCalledTimes(0);
     });
 
-    it(`calls updateBssEwcsDealStatus when submissionType is ${DEAL_TYPE.BSS_EWCS}`, async () => {
+    it(`calls updateFacilityStatus when submissionType is ${DEAL_TYPE.BSS_EWCS}`, async () => {
       // Arrange
       const dealType = DEAL_TYPE.BSS_EWCS;
 
