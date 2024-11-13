@@ -74,10 +74,21 @@ describe('Deal Cancellation', () => {
       submitDealCancellation({ dealId, effectiveDate: yesterday.date });
     });
 
-    it('displays status `Cancelled` on deal summary page', () => {
+    it('displays deal status `Cancelled` on deal summary page', () => {
       portalPages.contract.visit(deal);
 
       cy.assertText(portalPages.contract.status(), 'Cancelled');
+
+      portalPages.contract.checkDealDetailsTab().click();
+
+      cy.assertText(portalPages.contract.status(), 'Cancelled');
+    });
+
+    it('displays facility status `Risk expired` on deal summary page', () => {
+      portalPages.contract.visit(deal);
+
+      cy.assertText(portalPages.contract.bondTransactionsTable.row(dealFacilities[1]._id).bondStatus(), 'Risk expired');
+      cy.assertText(portalPages.contract.loansTransactionsTable.row(dealFacilities[0]._id).loanStatus(), 'Risk expired');
     });
   });
 });
