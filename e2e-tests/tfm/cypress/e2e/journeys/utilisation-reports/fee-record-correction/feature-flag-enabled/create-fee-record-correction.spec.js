@@ -3,7 +3,7 @@ import pages from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
 import relative from '../../../../relativeURL';
-import { backLink, errorSummary } from '../../../../partials';
+import { errorSummary } from '../../../../partials';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context('When fee record correction feature flag is enabled', () => {
@@ -84,9 +84,10 @@ context('When fee record correction feature flag is enabled', () => {
 
         premiumPaymentsTab.createRecordCorrectionRequestButton().click();
 
-        backLink().click();
+        cy.clickBackLink();
 
         cy.url().should('eq', relative(`/utilisation-reports/${reportId}?selectedFeeRecordIds=${feeRecordAtToDoStatus.id}`));
+
         premiumPaymentsTab.premiumPaymentsTable
           .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
           .should('be.checked');
