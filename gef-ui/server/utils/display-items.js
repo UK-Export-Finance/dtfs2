@@ -81,6 +81,7 @@ const facilityItems = (
         if (status) {
           return status;
         }
+
         return isTrueSet(value) ? STAGE.ISSUED : STAGE.UNISSUED;
       },
     },
