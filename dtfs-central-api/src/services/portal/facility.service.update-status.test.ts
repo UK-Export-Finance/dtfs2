@@ -6,7 +6,7 @@ const updateBssEwcsFacilityStatusMock = jest.fn() as jest.Mock<Deal>;
 const updateGefFacilityMock = jest.fn() as jest.Mock<Deal>;
 
 jest.mock('../../v1/controllers/portal/facility/update-facility-status.controller', () => ({
-  updateFacilityStatus: (params: AnyObject) => updateBssEwcsFacilityStatusMock(params),
+  updateBssEwcsFacilityStatus: (params: AnyObject) => updateBssEwcsFacilityStatusMock(params),
 }));
 
 jest.mock('../../v1/controllers/portal/gef-facility/update-facility.controller', () => ({
@@ -40,7 +40,7 @@ describe('PortalFacilityService', () => {
       expect(updateBssEwcsFacilityStatusMock).toHaveBeenCalledTimes(0);
     });
 
-    it(`calls updateFacilityStatus when submissionType is ${DEAL_TYPE.BSS_EWCS}`, async () => {
+    it(`calls updateBssEwcsFacilityStatus when submissionType is ${DEAL_TYPE.BSS_EWCS}`, async () => {
       // Arrange
       const dealType = DEAL_TYPE.BSS_EWCS;
 

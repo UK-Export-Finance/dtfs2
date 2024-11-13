@@ -1,6 +1,6 @@
 import { AuditDetails, DEAL_TYPE, DealType, FacilityStatus } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
-import { updateFacilityStatus } from '../../v1/controllers/portal/facility/update-facility-status.controller';
+import { updateBssEwcsFacilityStatus } from '../../v1/controllers/portal/facility/update-facility-status.controller';
 import { updateFacility } from '../../v1/controllers/portal/gef-facility/update-facility.controller';
 
 export class PortalFacilityService {
@@ -27,7 +27,7 @@ export class PortalFacilityService {
     if (dealType === DEAL_TYPE.GEF) {
       await updateFacility({ facilityId, facilityUpdate: { status }, auditDetails });
     } else if (dealType === DEAL_TYPE.BSS_EWCS) {
-      await updateFacilityStatus({
+      await updateBssEwcsFacilityStatus({
         facilityId,
         status,
         auditDetails,
