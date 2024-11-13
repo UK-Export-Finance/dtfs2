@@ -19,20 +19,20 @@
   {% for feeRecord in feeRecords %}
     {% set isFirstFeeRecordInGroup = loop.index === 1 %}
     {% set isLastFeeRecordInGroup = loop.index === feeRecords.length %}
-    <tr class="govuk-table__row" data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }}">
-      <th scope="row" class="govuk-table__header govuk-!-font-weight-regular{{ " no-border" if not isLastFeeRecordInGroup }}">
+    <tr class="govuk-table__row" data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }} premium-payments-table-row--exporter-{{ feeRecord.exporter }}">
+      <th scope="row" class="govuk-table__header govuk-!-font-weight-regular{{ " no-border" if not isLastFeeRecordInGroup }}" data-cy="facility-id">
         {{ feeRecord.facilityId }}
       </th>
-      <td class="govuk-table__cell{{ " no-border" if not isLastFeeRecordInGroup }}">
+      <td class="govuk-table__cell{{ " no-border" if not isLastFeeRecordInGroup }}" data-cy="exporter">
         {{ feeRecord.exporter }}
       </td>
-      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}">
+      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}" data-cy="reported-fees">
         {{ feeRecord.reportedFees }}
       </td>
-      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}">
+      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}" data-cy="reported-payments">
         {{ feeRecord.reportedPayments }}
       </td>
-      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}" data-sort-value="{{ totalReportedPayments.dataSortValue }}">
+      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}" data-sort-value="{{ totalReportedPayments.dataSortValue }}" data-cy="total-reported-payments">
         {{ totalReportedPayments.formattedCurrencyAndAmount if isFirstFeeRecordInGroup else "" }}
       </td>
       <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}">
