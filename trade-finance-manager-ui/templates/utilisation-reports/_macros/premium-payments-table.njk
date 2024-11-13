@@ -1,3 +1,4 @@
+{% from "govuk/components/error-message/macro.njk" import govukErrorMessage %}
 {% import "../../_macros/select-all-table-cell-checkbox.njk" as selectAllTableCellCheckbox %}
 {% import "./premium-payments-table-row.njk" as premiumPaymentsTableRow %}
 
@@ -43,11 +44,14 @@
 
   <table class="govuk-table premium-payments-table" data-module="moj-sortable-table" data-cy="premium-payments-table">
     {% if errorMessage %}
-      <caption class="govuk-table__caption govuk-table__caption--m" id="premium-payments-table-error" data-cy="premium-payments-table--error" tabindex="-1">
-        <p class="govuk-error-message govuk-!-margin-bottom-0">
-          <span class="govuk-visually-hidden">Error: </span>{{ errorMessage}}
-        </p>
-      </caption>
+      {{ govukErrorMessage({
+        text: errorMessage,
+        id: "premium-payments-table-error",
+        attributes: {
+          "data-cy": "premium-payments-table--error",
+          "tabindex": "-1"
+        }
+      }) }}
     {% endif %}
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
