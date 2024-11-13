@@ -4,6 +4,7 @@ import { CreateRecordCorrectionRequestViewModel } from '../../../../types/view-m
 import { asUserSession } from '../../../../helpers/express-session';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
+import { getLinkToPremiumPaymentsTab } from '../../helpers';
 
 export type CreateRecordCorrectionRequestRequest = CustomExpressRequest<{
   params: {
@@ -18,7 +19,7 @@ const renderCreateRecordCorrectionRequestPage = (res: Response, context: CreateR
 export const createRecordCorrectionRequest = (req: CreateRecordCorrectionRequestRequest, res: Response) => {
   try {
     const { user } = asUserSession(req.session);
-    const { reportId } = req.params;
+    const { reportId, feeRecordId } = req.params;
 
     const feeRecordDetails = {
       bank: {
@@ -42,6 +43,7 @@ export const createRecordCorrectionRequest = (req: CreateRecordCorrectionRequest
         facilityId: feeRecordDetails.facilityId,
         exporter: feeRecordDetails.exporter,
       },
+      backLinkHref: getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]),
     });
   } catch (error) {
     console.error('Failed to create record correction request', error);

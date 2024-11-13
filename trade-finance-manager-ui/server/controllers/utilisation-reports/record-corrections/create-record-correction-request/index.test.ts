@@ -3,6 +3,7 @@ import { aTfmSessionUser } from '../../../../../test-helpers';
 import { createRecordCorrectionRequest, CreateRecordCorrectionRequestRequest } from '.';
 import { CreateRecordCorrectionRequestViewModel } from '../../../../types/view-models';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
+import { getLinkToPremiumPaymentsTab } from '../../helpers';
 
 console.error = jest.fn();
 
@@ -37,6 +38,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         facilityId: '0012345678',
         exporter: 'Sample Company Ltd',
       },
+      backLinkHref: getLinkToPremiumPaymentsTab(reportId, [456]),
     });
   });
 });
