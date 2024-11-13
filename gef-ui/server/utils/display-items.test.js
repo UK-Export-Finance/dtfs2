@@ -1,13 +1,15 @@
 import { FACILITY_STATUS } from '@ukef/dtfs2-common';
 import { facilityItems } from './display-items';
-import { MOCK_FACILITY } from './mocks/mock-facilities';
+import { MOCK_FACILITY as MOCK_FACILITIES } from './mocks/mock-facilities';
 import { STAGE } from '../constants';
+
+const MOCK_FACILITY_ONE = MOCK_FACILITIES.items[0].details;
 
 describe('facilityItems', () => {
   describe('when the deal version is undefined', () => {
     it('should hide all the facility end date rows', () => {
       // Arrange
-      const facility = { ...MOCK_FACILITY.items[0].details };
+      const facility = { ...MOCK_FACILITY_ONE };
 
       // Act
       const result = facilityItems('testUrl', facility, undefined);
@@ -22,7 +24,7 @@ describe('facilityItems', () => {
   describe('when the deal version is <1', () => {
     it('should hide all the facility end date rows', () => {
       // Arrange
-      const facility = { ...MOCK_FACILITY.items[0].details };
+      const facility = { ...MOCK_FACILITY_ONE };
 
       // Act
       const result = facilityItems('testUrl', facility, 0);
@@ -37,7 +39,7 @@ describe('facilityItems', () => {
   describe('when the deal version is >=1', () => {
     it('should show the "Has a facility end date" field when isUsingFacilityEndDate is null', () => {
       // Arrange
-      const facility = { ...MOCK_FACILITY.items[0].details, isUsingFacilityEndDate: null };
+      const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: null };
 
       // Act
       const result = facilityItems('testUrl', facility, 1);
@@ -48,7 +50,7 @@ describe('facilityItems', () => {
 
     it('should hide the facility end date and bank review date row when the isUsingFacilityEndDate is null', () => {
       // Arrange
-      const facility = { ...MOCK_FACILITY.items[0].details, isUsingFacilityEndDate: null };
+      const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: null };
 
       // Act
       const result = facilityItems('testUrl', facility, 1);
@@ -60,7 +62,7 @@ describe('facilityItems', () => {
 
     it('should show "Has a facility end date" and facility end date row when when isUsingFacilityEndDate is true', () => {
       // Arrange
-      const facility = { ...MOCK_FACILITY.items[0].details, isUsingFacilityEndDate: true };
+      const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: true };
 
       // Act
       const result = facilityItems('testUrl', facility, 1);
@@ -72,7 +74,7 @@ describe('facilityItems', () => {
 
     it('should hide the bank review date row when isUsingFacilityEndDate is true', () => {
       // Arrange
-      const facility = { ...MOCK_FACILITY.items[0].details, isUsingFacilityEndDate: true };
+      const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: true };
 
       // Act
       const result = facilityItems('testUrl', facility, 1);
@@ -83,7 +85,7 @@ describe('facilityItems', () => {
 
     it('should show "Has a facility end date" and bank review date row when isUsingFacilityEndDate is false', () => {
       // Arrange
-      const facility = { ...MOCK_FACILITY.items[0].details, isUsingFacilityEndDate: false };
+      const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: false };
 
       // Act
       const result = facilityItems('testUrl', facility, 1);
@@ -95,7 +97,7 @@ describe('facilityItems', () => {
 
     it('should hide facility end date row when isUsingFacilityEndDate is false', () => {
       // Arrange
-      const facility = { ...MOCK_FACILITY.items[0].details, isUsingFacilityEndDate: false };
+      const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: false };
 
       // Act
       const result = facilityItems('testUrl', facility, 1);
@@ -108,7 +110,7 @@ describe('facilityItems', () => {
       // Arrange
       const testFacilityEndDate = '2025-09-12T00:00:00.000Z';
       const expectedFormat = '12 September 2025';
-      const facility = { ...MOCK_FACILITY.items[0].details, facilityEndDate: testFacilityEndDate };
+      const facility = { ...MOCK_FACILITY_ONE, facilityEndDate: testFacilityEndDate };
 
       // Act
       const result = facilityItems('testUrl', facility, 1);
@@ -121,7 +123,7 @@ describe('facilityItems', () => {
       // Arrange
       const testBankReviewDate = '2026-08-04T00:00:00.000Z';
       const expectedFormat = '4 August 2026';
-      const facility = { ...MOCK_FACILITY.items[0].details, bankReviewDate: testBankReviewDate };
+      const facility = { ...MOCK_FACILITY_ONE, bankReviewDate: testBankReviewDate };
 
       // Act
       const result = facilityItems('testUrl', facility, 1);
@@ -132,7 +134,7 @@ describe('facilityItems', () => {
 
     it('should provide the correct URL for the "Has a facility end date" row', () => {
       // Arrange
-      const facility = { ...MOCK_FACILITY.items[0].details, isUsingFacilityEndDate: true };
+      const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: true };
 
       // Act
       const result = facilityItems('testUrl', facility, 1);
@@ -143,7 +145,7 @@ describe('facilityItems', () => {
 
     it('should provide the correct URL for the "Facility end date" row', () => {
       // Arrange
-      const facility = { ...MOCK_FACILITY.items[0].details, isUsingFacilityEndDate: true, facilityEndDate: '2026-08-04T00:00:00.000Z' };
+      const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: true, facilityEndDate: '2026-08-04T00:00:00.000Z' };
 
       // Act
       const result = facilityItems('testUrl', facility, 1);
@@ -154,7 +156,7 @@ describe('facilityItems', () => {
 
     it('should provide the correct URL for the "Bank review date" row', () => {
       // Arrange
-      const facility = { ...MOCK_FACILITY.items[0].details, isUsingFacilityEndDate: false, bankReviewDate: '2026-08-04T00:00:00.000Z' };
+      const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: false, bankReviewDate: '2026-08-04T00:00:00.000Z' };
 
       // Act
       const result = facilityItems('testUrl', facility, 1);
@@ -168,7 +170,7 @@ describe('facilityItems', () => {
     it(`should show the stage as ${FACILITY_STATUS.RISK_EXPIRED}`, () => {
       // Arrange
       const status = FACILITY_STATUS.RISK_EXPIRED;
-      const facility = { ...MOCK_FACILITY.items[0].details, status };
+      const facility = { ...MOCK_FACILITY_ONE, status };
 
       // Act
       const result = facilityItems('testUrl', facility, 1);
@@ -181,7 +183,7 @@ describe('facilityItems', () => {
   describe(`when the facility does not have a status`, () => {
     it(`should show the stage as ${STAGE.ISSUED} if hasBeenIssued is 'true'`, () => {
       // Arrange
-      const facility = { ...MOCK_FACILITY.items[0].details, hasBeenIssued: 'true' };
+      const facility = { ...MOCK_FACILITY_ONE, hasBeenIssued: 'true' };
 
       // Act
       const result = facilityItems('testUrl', facility, 1);
@@ -192,7 +194,7 @@ describe('facilityItems', () => {
 
     it(`should show the stage as ${STAGE.UNISSUED} if hasBeenIssued is 'false'`, () => {
       // Arrange
-      const facility = { ...MOCK_FACILITY.items[0].details, hasBeenIssued: 'false' };
+      const facility = { ...MOCK_FACILITY_ONE, hasBeenIssued: 'false' };
 
       // Act
       const result = facilityItems('testUrl', facility, 1);
