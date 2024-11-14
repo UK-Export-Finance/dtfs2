@@ -1,6 +1,6 @@
 import portalPages from '../../../../../../../portal/cypress/e2e/pages';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
-import generateMockDealReadyToSubmit from '../../test-data/MIN-deal/dealReadyToSubmit';
+import generateMinReadyToSubmit from '../../test-data/MIN-deal/dealReadyToSubmit';
 import { TFM_URL, PIM_USER_1 } from '../../../../../../../e2e-fixtures';
 import { yesterday } from '../../../../../../../e2e-fixtures/dateConstants';
 import { submitDealCancellation } from '../../../../../support/trade-finance-manager-ui/submit-deal-cancellation';
@@ -13,7 +13,7 @@ describe('Deal Cancellation', () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.insertManyDeals([generateMockDealReadyToSubmit()], BANK1_MAKER1).then((insertedDeals) => {
+    cy.insertManyDeals([generateMinReadyToSubmit()], BANK1_MAKER1).then((insertedDeals) => {
       [deal] = insertedDeals;
       dealId = deal._id;
 
