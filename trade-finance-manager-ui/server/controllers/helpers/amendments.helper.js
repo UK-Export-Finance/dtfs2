@@ -1,4 +1,4 @@
-const { TEAM_IDS, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { TEAM_IDS, AMENDMENT_STATUS, DEAL_STATUS } = require('@ukef/dtfs2-common');
 const { DECISIONS, DEAL } = require('../../constants');
 const { userIsInTeam } = require('../../helpers/user');
 
@@ -7,19 +7,19 @@ const { userIsInTeam } = require('../../helpers/user');
  * @param {Array} userTeams
  * @returns {boolean}
  * function to show amendment button
- * checks submissionType, tfm status and if PIM user
+ * checks submissionType, tfm stages, deal status, and if PIM user
  */
 const showAmendmentButton = (deal, userTeams) => {
   const acceptableSubmissionType = [DEAL.SUBMISSION_TYPE.AIN, DEAL.SUBMISSION_TYPE.MIN];
   const acceptableUserTeamId = TEAM_IDS.PIM;
-  const acceptableStatus = [DEAL.DEAL_STAGE.CONFIRMED, DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS];
-  const isDealCancelled = deal.tfm.status === DEAL.DEAL_STATUS.CANCELLED;
+  const acceptableStages = [DEAL.DEAL_STAGE.CONFIRMED, DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS];
+  const isDealCancelledOrPendingCancellation = deal.status === DEAL_STATUS.CANCELLED || deal.status === DEAL_STATUS.PENDING_CANCELLATION;
 
   return (
     acceptableSubmissionType.includes(deal.dealSnapshot.submissionType) &&
     userTeams.some((teamId) => teamId === acceptableUserTeamId) &&
-    acceptableStatus.includes(deal.tfm.stage) &&
-    !isDealCancelled
+    acceptableStages.includes(deal.tfm.stage) &&
+    !isDealCancelledOrPendingCancellation
   );
 };
 

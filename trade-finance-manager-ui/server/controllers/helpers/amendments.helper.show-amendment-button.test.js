@@ -1,131 +1,90 @@
-import { TEAM_IDS } from '@ukef/dtfs2-common';
+import { TEAM_IDS, DEAL_STATUS } from '@ukef/dtfs2-common';
 import { showAmendmentButton } from './amendments.helper';
-
-const CONSTANTS = require('../../constants');
+import { AmendmentButtonDealBuilder } from '../../test-mocks/show-amendments-button-deal-builder';
+import { DEAL } from '../../constants';
 
 describe('amendments helper', () => {
   describe('showAmendmentButton()', () => {
-    const deal = {
-      dealSnapshot: {},
-      tfm: {},
-    };
-    let userTeam;
+    const defaultUserTeams = [TEAM_IDS.PIM];
 
-    it('return true if AIN and confirmed and PIM', () => {
-      deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
-      userTeam = [TEAM_IDS.PIM];
-      deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED;
-
-      const result = showAmendmentButton(deal, userTeam);
+    it.each(getSuccessTestCases())('should return true when $description', ({ deal, userTeams }) => {
+      const result = showAmendmentButton(deal, userTeams);
       expect(result).toEqual(true);
     });
 
-    it('return true if AIN and amendment in progress and PIM', () => {
-      deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
-      userTeam = [TEAM_IDS.PIM];
-      deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
-
-      const result = showAmendmentButton(deal, userTeam);
-      expect(result).toEqual(true);
-    });
-
-    it('return false if AIN and confirmed and not PIM', () => {
-      deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
-      userTeam = [TEAM_IDS.UNDERWRITER_MANAGERS];
-      deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED;
-
-      const result = showAmendmentButton(deal, userTeam);
+    it.each(getFailureTestCases())('should return false when $description', ({ deal, userTeams }) => {
+      const result = showAmendmentButton(deal, userTeams);
       expect(result).toEqual(false);
     });
 
-    it('return false if AIN and amendment in progress and not PIM', () => {
-      deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
-      userTeam = [TEAM_IDS.UNDERWRITER_MANAGERS];
-      deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+    function getSuccessTestCases() {
+      return [
+        {
+          description: 'submission type is AIN',
+          deal: new AmendmentButtonDealBuilder().withDealSnapshotSubmissionType(DEAL.SUBMISSION_TYPE.AIN).build(),
+          userTeams: defaultUserTeams,
+        },
+        {
+          description: 'submissionType is MIN',
+          deal: new AmendmentButtonDealBuilder().withDealSnapshotSubmissionType(DEAL.SUBMISSION_TYPE.MIN).build(),
+          userTeams: defaultUserTeams,
+        },
+        {
+          description: 'deal stage is confirmed',
+          deal: new AmendmentButtonDealBuilder().withTfmStage(DEAL.DEAL_STAGE.CONFIRMED).build(),
+          userTeams: defaultUserTeams,
+        },
+        {
+          description: 'deal stage is amendment in progress',
+          deal: new AmendmentButtonDealBuilder().withTfmStage(DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS).build(),
+          userTeams: defaultUserTeams,
+        },
+        {
+          description: 'user is in PIM team',
+          deal: new AmendmentButtonDealBuilder().build(),
+          userTeams: defaultUserTeams,
+        },
+        {
+          description: 'user is in PIM team and another team',
+          deal: new AmendmentButtonDealBuilder().build(),
+          userTeams: [...defaultUserTeams, TEAM_IDS.UNDERWRITER_MANAGERS],
+        },
+        {
+          description: 'deal is not cancelled or pending cancellation',
+          deal: new AmendmentButtonDealBuilder().withStatus(DEAL_STATUS.COMPLETED).build(),
+          userTeams: defaultUserTeams,
+        },
+      ];
+    }
 
-      const result = showAmendmentButton(deal, userTeam);
-      expect(result).toEqual(false);
-    });
-
-    it('return false if AIN and not confirmed and PIM', () => {
-      deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
-      userTeam = [TEAM_IDS.PIM];
-      deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.UKEF_APPROVED_WITH_CONDITIONS;
-
-      const result = showAmendmentButton(deal, userTeam);
-      expect(result).toEqual(false);
-    });
-
-    it('return true if MIN and confirmed and PIM', () => {
-      deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
-      userTeam = [TEAM_IDS.PIM];
-      deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED;
-
-      const result = showAmendmentButton(deal, userTeam);
-      expect(result).toEqual(true);
-    });
-
-    it('return true if MIN and amendment in progress and PIM', () => {
-      deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
-      userTeam = [TEAM_IDS.PIM];
-      deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
-
-      const result = showAmendmentButton(deal, userTeam);
-      expect(result).toEqual(true);
-    });
-
-    it('return false if MIN and amendment in progress and not PIM', () => {
-      deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
-      userTeam = [TEAM_IDS.UNDERWRITER_MANAGERS];
-      deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
-
-      const result = showAmendmentButton(deal, userTeam);
-      expect(result).toEqual(false);
-    });
-
-    it('return false if MIN and confirmed and not PIM', () => {
-      deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
-      userTeam = [TEAM_IDS.UNDERWRITER_MANAGERS];
-      deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED;
-
-      const result = showAmendmentButton(deal, userTeam);
-      expect(result).toEqual(false);
-    });
-
-    it('return false if MIN and not confirmed and PIM', () => {
-      deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
-      userTeam = [TEAM_IDS.PIM];
-      deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.UKEF_APPROVED_WITH_CONDITIONS;
-
-      const result = showAmendmentButton(deal, userTeam);
-      expect(result).toEqual(false);
-    });
-
-    it('return false if MIA and confirmed and PIM', () => {
-      deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
-      userTeam = [TEAM_IDS.PIM];
-      deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED;
-
-      const result = showAmendmentButton(deal, userTeam);
-      expect(result).toEqual(false);
-    });
-
-    it('return false if MIA and confirmed and not PIM', () => {
-      deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
-      userTeam = [TEAM_IDS.UNDERWRITER_MANAGERS];
-      deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED;
-
-      const result = showAmendmentButton(deal, userTeam);
-      expect(result).toEqual(false);
-    });
-
-    it('return false if MIA and not confirmed and PIM', () => {
-      deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
-      userTeam = [TEAM_IDS.PIM];
-      deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.UKEF_APPROVED_WITH_CONDITIONS;
-
-      const result = showAmendmentButton(deal, userTeam);
-      expect(result).toEqual(false);
-    });
+    function getFailureTestCases() {
+      return [
+        {
+          description: 'submission type is not AIN or MIN',
+          deal: new AmendmentButtonDealBuilder().withDealSnapshotSubmissionType('MIA').build(),
+          userTeams: defaultUserTeams,
+        },
+        {
+          description: 'user teams is not PIM',
+          deal: new AmendmentButtonDealBuilder().build(),
+          userTeams: [TEAM_IDS.UNDERWRITER_MANAGERS],
+        },
+        {
+          description: 'deal stage is not confirmed or amendment in progress',
+          deal: new AmendmentButtonDealBuilder().withDealSnapshotSubmissionType(DEAL_STATUS.DRAFT).build(),
+          userTeams: defaultUserTeams,
+        },
+        {
+          description: 'deal is cancelled',
+          deal: new AmendmentButtonDealBuilder().withStatus(DEAL_STATUS.CANCELLED).build(),
+          userTeams: defaultUserTeams,
+        },
+        {
+          description: 'deal is pending cancellation',
+          deal: new AmendmentButtonDealBuilder().withStatus(DEAL_STATUS.PENDING_CANCELLATION).build(),
+          userTeams: defaultUserTeams,
+        },
+      ];
+    }
   });
 });
