@@ -69,6 +69,6 @@ export type Facility = {
     drupalFacilityId: string;
   };
   auditRecord?: AuditDatabaseRecord;
-  status: string; // Only equal to Risk expired on GEF facilities
-  previousStatus: string; // BSS/EWCS facilities only
+  status?: string; // Only equal to Risk expired on GEF facilities
+  previousStatus?: string; // BSS/EWCS facilities only
 } & FacilityEndDateProperties;
