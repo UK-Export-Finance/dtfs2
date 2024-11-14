@@ -80,11 +80,7 @@ export class DealCancellationService {
       dealType,
     });
 
-    await Promise.all(
-      riskExpiredFacilities.map(({ _id: facilityId }) =>
-        PortalFacilityService.updateStatus({ facilityId, status: FACILITY_STATUS.RISK_EXPIRED, dealType, auditDetails }),
-      ),
-    );
+    await PortalFacilityService.updateStatusByDealId({ dealId, status: FACILITY_STATUS.RISK_EXPIRED, dealType, auditDetails });
 
     return this.getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities });
   }
@@ -114,11 +110,7 @@ export class DealCancellationService {
       dealType,
     });
 
-    await Promise.all(
-      riskExpiredFacilities.map(({ _id: facilityId }) =>
-        PortalFacilityService.updateStatus({ facilityId, status: FACILITY_STATUS.RISK_EXPIRED, dealType, auditDetails }),
-      ),
-    );
+    await PortalFacilityService.updateStatusByDealId({ dealId, status: FACILITY_STATUS.RISK_EXPIRED, dealType, auditDetails });
 
     return this.getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities });
   }

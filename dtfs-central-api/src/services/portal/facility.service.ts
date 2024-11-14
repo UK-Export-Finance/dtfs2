@@ -1,37 +1,33 @@
 import { AuditDetails, DEAL_TYPE, DealType, FacilityStatus } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
-import { updateBssEwcsFacilityStatus } from '../../v1/controllers/portal/facility/update-facility-status.controller';
-import { updateFacility } from '../../v1/controllers/portal/gef-facility/update-facility.controller';
+import { PortalBssEwcsFacilityRepo } from '../../repositories/portal/bss-ewcs-facilities.repo';
+import { PortalGefFacilityRepo } from '../../repositories/portal/gef-facilities.repo';
 
 export class PortalFacilityService {
   /**
-   * Updates the facility status
+   * Updates the status on all facilities associated with a deal
    *
    * @param updateStatusParams
-   * @param updateStatusParams.facilityId - the facility Id to update
+   * @param updateStatusParams.dealId - the deal Id
    * @param updateStatusParams.status - the status change to make
    * @param updateStatusParams.auditDetails - the users audit details
    * @param updateStatusParams.dealType - the deal type
    */
-  public static async updateStatus({
-    facilityId,
+  public static async updateStatusByDealId({
+    dealId,
     status,
     auditDetails,
     dealType,
   }: {
-    facilityId: ObjectId | string;
+    dealId: ObjectId | string;
     status: FacilityStatus;
     auditDetails: AuditDetails;
     dealType: DealType;
   }): Promise<void> {
     if (dealType === DEAL_TYPE.GEF) {
-      await updateFacility({ facilityId, facilityUpdate: { status }, auditDetails });
+      await PortalGefFacilityRepo.updateByDealId(dealId, { status }, auditDetails);
     } else if (dealType === DEAL_TYPE.BSS_EWCS) {
-      await updateBssEwcsFacilityStatus({
-        facilityId,
-        status,
-        auditDetails,
-      });
+      await PortalBssEwcsFacilityRepo.updateStatusByDealId(dealId, status, auditDetails);
     } else {
       throw new Error(`Invalid dealType ${dealType}`);
     }
