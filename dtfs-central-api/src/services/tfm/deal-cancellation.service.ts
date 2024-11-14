@@ -134,9 +134,7 @@ export class DealCancellationService {
 
     return {
       cancelledDealUkefId,
-      riskExpiredFacilityUkefIds: riskExpiredFacilities
-        .map(({ facilitySnapshot }) => facilitySnapshot.ukefFacilityId)
-        .filter((facilityId) => facilityId !== null),
+      riskExpiredFacilityUkefIds: riskExpiredFacilities.map(({ facilitySnapshot }) => facilitySnapshot.ukefFacilityId as string),
     };
   }
 }
