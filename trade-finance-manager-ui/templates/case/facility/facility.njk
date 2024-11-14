@@ -8,7 +8,7 @@
 
 {% block pageTitle -%}
   Deal {{ deal.details.ukefDealId }} Facility {{ facility.ukefFacilityId }}
-{%- endblock %}
+{%- endblock pageTitle %}
 
 {% block sub_content %}
   {% set facilityDetailsHtml %}
@@ -32,21 +32,21 @@
   {% endset %}
 
   {% set amendmentsHtml %}
-    {% set amendmentsComponentData = {
-      deal: deal,
-      facility: facility,
+    {% set addAmendmentComponentData = {
+      csrfToken: csrfToken,
       facilityId: facilityId,
-      user: user,
       showAmendmentButton: showAmendmentButton,
-      hasAmendmentInProgress: hasAmendmentInProgressButton,
-      showContinueAmendmentButton: showContinueAmendmentButton,
       amendmentId: amendmentId,
       amendmentVersion: amendmentVersion,
-      csrfToken: csrfToken,
-      allAmendments: allAmendments
+      showContinueAmendmentButton: showContinueAmendmentButton
     } %}
-    {{ addAmendment.render(amendmentsComponentData) }}
-    {{ amendmentDetails.render(amendmentsComponentData) }}
+    {% set amendmentDetailsComponentData = {
+      amendmentVersion: amendmentVersion,
+      showContinueAmendmentButton: showContinueAmendmentButton,
+      allAmendments: allAmendments,
+    } %}
+    {{ addAmendment.render(addAmendmentComponentData) }}
+    {{ amendmentDetails.render(amendmentDetailsComponentData) }}
   {% endset %}
 
    {% set amendmentBarParams = {
@@ -97,4 +97,4 @@
   }) }}
   </div>
 
-{% endblock %}
+{% endblock sub_content %}
