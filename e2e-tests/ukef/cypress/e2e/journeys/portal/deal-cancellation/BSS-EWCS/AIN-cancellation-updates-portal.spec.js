@@ -13,8 +13,8 @@ describe('Deal Cancellation status updates', () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.insertManyDeals([generateAinReadyToSubmit()], BANK1_MAKER1).then((insertedDeals) => {
-      [deal] = insertedDeals;
+    cy.insertOneDeal(generateAinReadyToSubmit(), BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
       dealId = deal._id;
 
       const { mockFacilities } = deal;

@@ -12,6 +12,7 @@ Cypress.Commands.add('assertText', require('./utils/assertText'));
 
 // commands used to interact directly with portal-api
 Cypress.Commands.add('insertManyDeals', require('./portal-api/insertManyDeals'));
+Cypress.Commands.add('insertOneDeal', require('./portal-api/insertOneDeal'));
 
 Cypress.Commands.add('createFacilities', require('./portal-api/createFacilities'));
 
