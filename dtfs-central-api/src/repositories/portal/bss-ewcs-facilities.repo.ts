@@ -24,8 +24,8 @@ export class PortalBssEwcsFacilityRepo {
     const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
     const filter: Filter<WithoutId<Facility>> = { dealId: { $eq: new ObjectId(dealId) }, type: { $in: [FACILITY_TYPE.BOND, FACILITY_TYPE.LOAN] } };
-    const update: UpdateFilter<WithoutId<Facility>> = { $set: { updatedAt: Date.now(), previousStatus: '$status', status, auditRecord } };
+    const updatePipeline: UpdateFilter<WithoutId<Facility>> = [{ $set: { updatedAt: Date.now(), previousStatus: '$status', status, auditRecord } }];
 
-    await collection.updateMany(filter, update);
+    await collection.updateMany(filter, updatePipeline);
   }
 }
