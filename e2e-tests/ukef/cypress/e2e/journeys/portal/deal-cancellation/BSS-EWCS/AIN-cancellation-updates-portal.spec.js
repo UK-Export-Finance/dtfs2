@@ -42,9 +42,6 @@ describe('Deal Cancellation', () => {
 
   describe('effective date in the past', () => {
     before(() => {
-      //---------------------------------------------------------------
-      // portal maker submits deal for review
-      //---------------------------------------------------------------
       cy.login(BANK1_MAKER1);
       portalPages.contract.visit(deal);
       portalPages.contract.proceedToReview().click();
@@ -52,9 +49,6 @@ describe('Deal Cancellation', () => {
       cy.keyboardInput(portalPages.contractReadyForReview.comments(), 'go');
       portalPages.contractReadyForReview.readyForCheckersApproval().click();
 
-      //---------------------------------------------------------------
-      // portal checker submits deal to ukef
-      //---------------------------------------------------------------
       cy.login(BANK1_CHECKER1);
       portalPages.contract.visit(deal);
       portalPages.contract.proceedToSubmit().click();
@@ -62,9 +56,6 @@ describe('Deal Cancellation', () => {
       portalPages.contractConfirmSubmission.confirmSubmit().check();
       portalPages.contractConfirmSubmission.acceptAndSubmit().click(deal);
 
-      //---------------------------------------------------------------
-      // user login to TFM
-      //---------------------------------------------------------------
       cy.clearCookie('dtfs-session');
       cy.clearCookie('_csrf');
       cy.getCookies().should('be.empty');
