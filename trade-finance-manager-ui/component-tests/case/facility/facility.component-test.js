@@ -105,5 +105,33 @@ describe(page, () => {
     });
   });
 
-  describe('when show');
+  describe('when showAmendmentButton is true', () => {
+    it('should render the amendment button', () => {
+      wrapper = render({ ...params, showAmendmentButton: true });
+      wrapper.expectElement('[data-cy="amendment--add-amendment-button"]').toExist();
+    });
+  });
+
+  describe('amendments tab', () => {
+    describe('when showAmendmentButton is false', () => {
+      it('should not render the amendment button', () => {
+        wrapper = render({ ...params, showAmendmentButton: false });
+        wrapper.expectElement('[data-cy="amendment--add-amendment-button"]').notToExist();
+      });
+    });
+
+    describe('when showContinueAmendmentButton is true', () => {
+      it('should render the continue amendment button', () => {
+        wrapper = render({ ...params, showContinueAmendmentButton: true });
+        wrapper.expectElement('[data-cy="continue-button"]').toExist();
+      });
+    });
+
+    describe('when showContinueAmendmentButton is false', () => {
+      it('should not render the continue amendment button', () => {
+        wrapper = render({ ...params, showContinueAmendmentButton: false });
+        wrapper.expectElement('[data-cy="continue-button"]').notToExist();
+      });
+    });
+  });
 });
