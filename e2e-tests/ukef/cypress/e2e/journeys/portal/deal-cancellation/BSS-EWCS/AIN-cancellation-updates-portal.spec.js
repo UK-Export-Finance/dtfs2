@@ -1,13 +1,13 @@
+import { DEAL_STATUS, FACILITY_STATUS } from '@ukef/dtfs2-common';
 import portalPages from '../../../../../../../portal/cypress/e2e/pages';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import generateAinReadyToSubmit from '../../test-data/AIN-deal/dealReadyToSubmit';
 import { TFM_URL, PIM_USER_1 } from '../../../../../../../e2e-fixtures';
 import { yesterday } from '../../../../../../../e2e-fixtures/dateConstants';
-import { submitDealCancellation } from '../../../../../support/trade-finance-manager-ui/submit-deal-cancellation';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
-describe('Deal Cancellation', () => {
+describe('Deal Cancellation status updates', () => {
   let deal;
   let dealId;
   const dealFacilities = [];
@@ -62,24 +62,24 @@ describe('Deal Cancellation', () => {
       cy.forceVisit(TFM_URL);
       cy.tfmLogin(PIM_USER_1);
 
-      submitDealCancellation({ dealId, effectiveDate: yesterday.date });
+      cy.submitDealCancellation({ dealId, effectiveDate: yesterday.date });
     });
 
-    it('displays deal status `Cancelled` on deal summary page', () => {
+    it(`displays deal status ${DEAL_STATUS.CANCELLED} on deal summary page`, () => {
       portalPages.contract.visit(deal);
 
-      cy.assertText(portalPages.contract.status(), 'Cancelled');
+      cy.assertText(portalPages.contract.status(), DEAL_STATUS.CANCELLED);
 
       portalPages.contract.checkDealDetailsTab().click();
 
-      cy.assertText(portalPages.contract.status(), 'Cancelled');
+      cy.assertText(portalPages.contract.status(), DEAL_STATUS.CANCELLED);
     });
 
-    it('displays facility status `Risk expired` on deal summary page', () => {
+    it(`displays facility status ${FACILITY_STATUS.RISK_EXPIRED} on deal summary page`, () => {
       portalPages.contract.visit(deal);
 
-      cy.assertText(portalPages.contract.bondTransactionsTable.row(dealFacilities[1]._id).bondStatus(), 'Risk expired');
-      cy.assertText(portalPages.contract.loansTransactionsTable.row(dealFacilities[0]._id).loanStatus(), 'Risk expired');
+      cy.assertText(portalPages.contract.bondTransactionsTable.row(dealFacilities[1]._id).bondStatus(), FACILITY_STATUS.RISK_EXPIRED);
+      cy.assertText(portalPages.contract.loansTransactionsTable.row(dealFacilities[0]._id).loanStatus(), FACILITY_STATUS.RISK_EXPIRED);
     });
   });
 });

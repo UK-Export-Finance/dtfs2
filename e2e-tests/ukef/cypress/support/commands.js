@@ -1,5 +1,6 @@
 import 'cypress-file-upload';
 import './click-events';
+import { submitDealCancellation } from './trade-finance-manager-ui/submit-deal-cancellation';
 
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
@@ -22,6 +23,8 @@ Cypress.Commands.add('getUserByUsername', require('./portal/getUserByUsername'))
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('enterUsernameAndPassword', require('./portal/enterUsernameAndPassword'));
 Cypress.Commands.add('completeDateFormFields', require('./portal/completeDateFormFields'));
+
+Cypress.Commands.add('submitDealCancellation', submitDealCancellation);
 
 Cypress.Commands.add('forceVisit', (url) => {
   cy.window().then((win) => win.open(url, '_self'));
