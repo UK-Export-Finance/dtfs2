@@ -67,7 +67,7 @@
   "dependencies": {
     "axios": "^1.7.7",
     "express": "^4.21.1",
-    "release-please": "^16.14.3"
+    "release-please": "^16.15.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.8.1",
