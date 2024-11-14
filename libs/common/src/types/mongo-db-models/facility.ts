@@ -3,6 +3,7 @@ import { UnixTimestamp, UnixTimestampString } from '../date';
 import { Currency } from '../currency';
 import { FacilityType } from '../facility-type';
 import { AuditDatabaseRecord } from '../audit-database-record';
+import { FacilityStatus } from '../portal';
 
 /**
  * These properties will not exist if on a BSS/EWCS deal or the deal version is less than 1
@@ -69,6 +70,7 @@ export type Facility = {
     drupalFacilityId: string;
   };
   auditRecord?: AuditDatabaseRecord;
-  status?: string; // Only equal to Risk expired on GEF facilities
+  status?: FacilityStatus; // BSS/EWCS facilities only
   previousStatus?: string; // BSS/EWCS facilities only
+  facilityStage?: string;
 } & FacilityEndDateProperties;

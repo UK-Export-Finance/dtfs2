@@ -1,10 +1,10 @@
 import { ObjectId } from 'mongodb';
-import { FACILITY_STATUS, FACILITY_TYPE, InvalidDealIdError, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { Facility, FACILITY_STAGE, InvalidDealIdError, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import { PortalBssEwcsFacilityRepo } from './bss-ewcs-facilities.repo';
 import { mongoDbClient } from '../../drivers/db-client';
+import { PortalFacilityRepo } from './facilities.repo';
 
-describe('PortalBssEwcsFacilityRepo', () => {
+describe('PortalFacilityRepo', () => {
   const updateManyMock = jest.fn();
   const getCollectionMock = jest.fn();
 
@@ -16,9 +16,9 @@ describe('PortalBssEwcsFacilityRepo', () => {
     jest.useRealTimers();
   });
 
-  describe('updateStatusByDealId', () => {
+  describe('updateByDealId', () => {
     const dealId = new ObjectId();
-    const status = FACILITY_STATUS.RISK_EXPIRED;
+    const update: Partial<Facility> = { facilityStage: FACILITY_STAGE.RISK_EXPIRED };
     const auditDetails = generateSystemAuditDetails();
 
     beforeEach(() => {
@@ -33,7 +33,7 @@ describe('PortalBssEwcsFacilityRepo', () => {
 
     it(`calls getCollection with ${MONGO_DB_COLLECTIONS.FACILITIES}`, async () => {
       // Act
-      await PortalBssEwcsFacilityRepo.updateStatusByDealId(dealId, status, auditDetails);
+      await PortalFacilityRepo.updateByDealId(dealId, update, auditDetails);
 
       // Assert
       expect(getCollectionMock).toHaveBeenCalledTimes(1);
@@ -42,17 +42,13 @@ describe('PortalBssEwcsFacilityRepo', () => {
 
     it('calls updateMany with the expected parameters', async () => {
       // Act
-      await PortalBssEwcsFacilityRepo.updateStatusByDealId(dealId, status, auditDetails);
+      await PortalFacilityRepo.updateByDealId(dealId, update, auditDetails);
 
       // Assert
-      const expectedFilter = { dealId: { $eq: dealId }, type: { $in: [FACILITY_TYPE.BOND, FACILITY_TYPE.LOAN] } };
+      const expectedFilter = { dealId: { $eq: dealId } };
       const expectedUpdate = {
-        $set: {
-          status,
-          auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-          previousStatus: '$status',
-          updatedAt: Date.now(),
-        },
+        ...update,
+        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
       };
       expect(updateManyMock).toHaveBeenCalledTimes(1);
       expect(updateManyMock).toHaveBeenCalledWith(expectedFilter, expectedUpdate);
@@ -63,7 +59,7 @@ describe('PortalBssEwcsFacilityRepo', () => {
       const invalidDealId = 'invalidDealId';
 
       // Act + Assert
-      await expect(async () => await PortalBssEwcsFacilityRepo.updateStatusByDealId(invalidDealId, status, auditDetails)).rejects.toThrow(InvalidDealIdError);
+      await expect(async () => await PortalFacilityRepo.updateByDealId(invalidDealId, update, auditDetails)).rejects.toThrow(InvalidDealIdError);
     });
   });
 });
