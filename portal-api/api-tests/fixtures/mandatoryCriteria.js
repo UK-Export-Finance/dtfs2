@@ -1,3 +1,7 @@
+/**
+ * Always ensure to keep index 1.
+ * This is referenced in API test.
+ */
 const MANDATORY_CRITERIA = [
   {
     version: 34,
@@ -77,6 +81,10 @@ const MANDATORY_CRITERIA = [
         ],
       },
     ],
+  },
+  {
+    version: 33,
+    criteria: [],
   },
 ];
 
