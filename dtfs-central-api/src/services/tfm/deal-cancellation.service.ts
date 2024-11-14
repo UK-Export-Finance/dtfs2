@@ -2,17 +2,22 @@ import {
   ACTIVITY_TYPES,
   AuditDetails,
   DEAL_STATUS,
+  FACILITY_STATUS,
+  getUkefDealId,
   InvalidAuditDetailsError,
   TfmActivity,
   TfmAuditDetails,
+  TfmDeal,
   TfmDealCancellation,
   TfmDealCancellationResponse,
+  TfmFacility,
 } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { endOfDay, getUnixTime, isAfter, toDate } from 'date-fns';
 import { TfmDealCancellationRepo } from '../../repositories/tfm-deals-repo';
 import { TfmUsersRepo } from '../../repositories/tfm-users-repo';
 import { PortalDealService } from '../portal/deal.service';
+import { PortalFacilityService } from '../portal/facility.service';
 
 export class DealCancellationService {
   /**
@@ -52,16 +57,21 @@ export class DealCancellationService {
     };
 
     if (dealCancellationIsInFuture) {
-      return await TfmDealCancellationRepo.scheduleDealCancellation({ dealId, cancellation, activity, auditDetails });
+      const { cancelledDeal, riskExpiredFacilities } = await TfmDealCancellationRepo.scheduleDealCancellation({
+        dealId,
+        cancellation,
+        activity,
+        auditDetails,
+      });
+
+      return this.getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities });
     }
 
-    const response = await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation, activity, auditDetails });
+    const { cancelledDeal, riskExpiredFacilities } = await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation, activity, auditDetails });
 
     const {
-      cancelledDeal: {
-        dealSnapshot: { dealType },
-      },
-    } = response;
+      dealSnapshot: { dealType },
+    } = cancelledDeal;
 
     await PortalDealService.updateStatus({
       dealId,
@@ -70,7 +80,13 @@ export class DealCancellationService {
       dealType,
     });
 
-    return response;
+    await Promise.all(
+      riskExpiredFacilities.map(({ _id: facilityId }) =>
+        PortalFacilityService.updateStatus({ facilityId, status: FACILITY_STATUS.RISK_EXPIRED, dealType, auditDetails }),
+      ),
+    );
+
+    return this.getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities });
   }
 
   /**
@@ -85,13 +101,11 @@ export class DealCancellationService {
     cancellation: TfmDealCancellation,
     auditDetails: AuditDetails,
   ): Promise<TfmDealCancellationResponse> {
-    const response = await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation, auditDetails });
+    const { cancelledDeal, riskExpiredFacilities } = await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation, auditDetails });
 
     const {
-      cancelledDeal: {
-        dealSnapshot: { dealType },
-      },
-    } = response;
+      dealSnapshot: { dealType },
+    } = cancelledDeal;
 
     await PortalDealService.updateStatus({
       dealId,
@@ -100,6 +114,27 @@ export class DealCancellationService {
       dealType,
     });
 
-    return response;
+    await Promise.all(
+      riskExpiredFacilities.map(({ _id: facilityId }) =>
+        PortalFacilityService.updateStatus({ facilityId, status: FACILITY_STATUS.RISK_EXPIRED, dealType, auditDetails }),
+      ),
+    );
+
+    return this.getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities });
+  }
+
+  /**
+   * Maps values returned by repository to return deal cancellation DTO
+   *
+   * @param repositoryResponse - The response from the deal cancellation repository method
+   * @returns Tfm deal cancellation response DTO
+   */
+  public static getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities }: { cancelledDeal: TfmDeal; riskExpiredFacilities: TfmFacility[] }) {
+    const cancelledDealUkefId = getUkefDealId(cancelledDeal.dealSnapshot) as string;
+
+    return {
+      cancelledDealUkefId,
+      riskExpiredFacilityUkefIds: riskExpiredFacilities.map(({ facilitySnapshot }) => facilitySnapshot.ukefFacilityId as string),
+    };
   }
 }
