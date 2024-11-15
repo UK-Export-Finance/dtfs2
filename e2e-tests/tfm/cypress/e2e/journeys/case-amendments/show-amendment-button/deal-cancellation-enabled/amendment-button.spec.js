@@ -5,8 +5,8 @@ import MOCK_DEAL_AIN from '../../../../../fixtures/deal-AIN';
 import { T1_USER_1, PIM_USER_1, BANK1_MAKER1 } from '../../../../../../../e2e-fixtures';
 import { submitDealCancellation } from '../../../../../support/trade-finance-manager-ui/submit-deal-cancellation';
 
-context('Amendments page', () => {
-  describe('A cancelled deal', () => {
+context('Amendments page - deal cancellation feature flag enabled', () => {
+  describe('cancelled deal', () => {
     let dealId;
     const dealFacilities = [];
 
