@@ -3,7 +3,6 @@ import facilityPage from '../../../../pages/facilityPage';
 import amendmentsPage from '../../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../../fixtures/deal-AIN';
 import { T1_USER_1, PIM_USER_1, BANK1_MAKER1 } from '../../../../../../../e2e-fixtures';
-import { submitDealCancellation } from '../../../../../support/trade-finance-manager-ui/submit-deal-cancellation';
 
 context('Amendments page - deal cancellation feature flag enabled', () => {
   describe('cancelled deal', () => {
@@ -23,7 +22,7 @@ context('Amendments page - deal cancellation feature flag enabled', () => {
         cy.submitDeal(dealId, dealType, T1_USER_1);
         cy.login(PIM_USER_1);
 
-        submitDealCancellation({ dealId });
+        cy.submitDealCancellation({ dealId });
       });
     });
 
