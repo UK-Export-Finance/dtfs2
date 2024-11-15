@@ -1,4 +1,4 @@
-const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { FACILITY_TYPE, FACILITY_STATUS } = require('@ukef/dtfs2-common');
 const { FIELD_NAMES, FACILITY_HAS_BEEN_ISSUED } = require('../../../constants');
 const {
   DASHBOARD_FILTERS: { BESPOKE_FILTER_VALUES },
@@ -37,6 +37,10 @@ const hasBeenIssuedFilters = (submittedFilters) => {
     {
       text: BESPOKE_FILTER_VALUES.FACILITIES.UNISSUED,
       value: FACILITY_HAS_BEEN_ISSUED.UNISSUED,
+    },
+    {
+      text: FACILITY_STATUS.RISK_EXPIRED,
+      value: FACILITY_STATUS.RISK_EXPIRED,
     },
   ];
 

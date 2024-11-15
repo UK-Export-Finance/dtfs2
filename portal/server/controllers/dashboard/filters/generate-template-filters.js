@@ -12,17 +12,7 @@ const { SUBMISSION_TYPE } = require('../../../constants');
  * @returns { text: 'GEF deals', value: 'GEF', checked: true }
  */
 const generateFilterObject = (field, text, value, submittedFilters) => {
-  let checked = false;
-
-  const hasSubmittedFilters = Object.keys(submittedFilters).length;
-
-  if (hasSubmittedFilters) {
-    const filterHasBeenSubmitted = submittedFilters[field] && String(submittedFilters[field]).includes(String(value));
-
-    if (filterHasBeenSubmitted) {
-      checked = true;
-    }
-  }
+  const checked = Object.keys(submittedFilters).length && submittedFilters[field] && String(submittedFilters[field]).includes(String(value));
 
   const formattedFieldValue = formatFieldValue(value);
 

@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 const escapeStringRegexp = require('escape-string-regexp');
+const { FACILITY_STATUS } = require('@ukef/dtfs2-common');
 
 /**
  * Objective:
@@ -73,6 +74,11 @@ const recursivelyReplaceEscapeOperators = (filters, result = {}) => {
       // These last two if statements handle the lowest level cases
     } else if (key === 'KEYWORD') {
       result.$regex = escapeStringRegexp(filters[key]);
+    } else if (key === 'hasBeenIssued') {
+      result[key] = {
+        $eq: filters[key],
+      };
+      result.facilityStage = { $ne: FACILITY_STATUS.RISK_EXPIRED };
     } else {
       result[key] = {
         $eq: filters[key],

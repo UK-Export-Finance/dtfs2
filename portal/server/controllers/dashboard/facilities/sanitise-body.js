@@ -1,3 +1,5 @@
+const { FACILITY_STATUS } = require('@ukef/dtfs2-common');
+
 /**
  * Transform array of string booleans into array of booleans
  * Or transform string booleans into booleans
@@ -20,6 +22,9 @@ const sanitiseHasBeenIssued = (hasBeenIssued) => {
       }
       if (value === 'false') {
         sanitised.push(false);
+      }
+      if (value === FACILITY_STATUS.RISK_EXPIRED) {
+        sanitised.push(value);
       }
     });
   }

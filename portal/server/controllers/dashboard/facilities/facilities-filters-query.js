@@ -1,3 +1,4 @@
+const { FACILITY_STATUS } = require('@ukef/dtfs2-common');
 const CONTENT_STRINGS = require('../../../content-strings');
 const keywordQuery = require('./facilities-filters-keyword-query');
 
@@ -41,6 +42,7 @@ const dashboardFacilitiesFiltersQuery = (filters, user) => {
       const filterValue = filterObj[fieldName];
 
       const isKeywordField = fieldName === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD;
+      const isHasBeenIssued = fieldName === 'hasBeenIssued';
 
       if (isKeywordField) {
         const keywordValue = filterValue[0];
@@ -51,9 +53,22 @@ const dashboardFacilitiesFiltersQuery = (filters, user) => {
         keywordFilter.OR.push(...keywordFilters);
 
         query.AND.push(keywordFilter);
-      }
+      } else if (isHasBeenIssued) {
+        const fieldFilter = {
+          OR: [],
+        };
+        filterValue.forEach((value) => {
+          if (value === FACILITY_STATUS.RISK_EXPIRED) {
+            fieldFilter.OR.push({ facilityStage: FACILITY_STATUS.RISK_EXPIRED });
+          } else {
+            fieldFilter.OR.push({
+              [fieldName]: value,
+            });
+          }
+        });
 
-      if (!isKeywordField) {
+        query.AND.push(fieldFilter);
+      } else {
         const fieldFilter = {};
         // or for field (eg dealType)
         fieldFilter.OR = [];
