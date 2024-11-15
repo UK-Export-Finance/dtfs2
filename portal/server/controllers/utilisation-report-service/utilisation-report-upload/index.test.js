@@ -6,6 +6,7 @@ const { getUploadErrors } = require('./utilisation-report-upload-errors');
 const { getDueReportPeriodsByBankId } = require('./utilisation-report-status');
 const { extractCsvData } = require('../../../utils/csv-utils');
 const { PRIMARY_NAV_KEY } = require('../../../constants');
+const { filterReportJsonToRelevantKeys } = require('../../../helpers/filterReportJsonToRelevantKeys');
 const api = require('../../../api');
 
 jest.mock('./utilisation-report-upload-errors');
@@ -181,15 +182,6 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
         },
       ];
 
-      const expectedFilteredReportJson = [
-        {
-          [UTILISATION_REPORT_HEADERS.BASE_CURRENCY]: 'GBP',
-        },
-        {
-          [UTILISATION_REPORT_HEADERS.BASE_CURRENCY]: 'USD',
-        },
-      ];
-
       jest.mocked(getUploadErrors).mockReturnValueOnce(null);
 
       jest.mocked(extractCsvData).mockReturnValueOnce({
@@ -204,7 +196,11 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
       await postUtilisationReportUpload(req, res);
 
       // Assert
-      expect(api.generateValidationErrorsForUtilisationReportData).toHaveBeenCalledWith(expectedFilteredReportJson, expect.any(String), expect.any(String));
+      expect(api.generateValidationErrorsForUtilisationReportData).toHaveBeenCalledTimes(1);
+
+      const expected = filterReportJsonToRelevantKeys(reportJsonWithExtraKeys);
+
+      expect(api.generateValidationErrorsForUtilisationReportData).toHaveBeenCalledWith(expected);
     });
   });
 });
