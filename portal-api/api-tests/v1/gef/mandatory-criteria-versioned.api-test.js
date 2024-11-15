@@ -75,17 +75,18 @@ describe(baseUrl, () => {
     });
 
     it('returns the latest mandatory-criteria version', async () => {
+      await as(anAdmin).post(allMandatoryCriteria[0]).to(baseUrl);
       await as(anAdmin).post(allMandatoryCriteria[1]).to(baseUrl);
-      await as(anAdmin).post(allMandatoryCriteria[2]).to(baseUrl);
-      await as(anAdmin).post(allMandatoryCriteria[3]).to(baseUrl);
-      await as(anAdmin).post(allMandatoryCriteria[4]).to(baseUrl);
 
       const { body } = await as(aMaker).get(latestMandatoryCriteriaVersionedUrl);
 
       expect(body).toEqual(
         expect.objectContaining({
-          ...expectMongoId(allMandatoryCriteria[2]),
+          version: 3,
           createdAt: expect.any(Number),
+          updatedAt: null,
+          isInDraft: false,
+          title: 'Confirm eligibility (mandatory criteria)',
           introText: expect.any(String),
           criteria: expect.arrayContaining([
             expect.objectContaining({

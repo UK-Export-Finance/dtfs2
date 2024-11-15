@@ -1,4 +1,4 @@
-import { ValuesOf } from './types-helper';
+import { Prettify, ValuesOf } from './types-helper';
 import { MonthAndYear } from './date';
 import { UTILISATION_REPORT_STATUS, UTILISATION_REPORT_HEADERS, FEE_RECORD_STATUS } from '../constants';
 import { Currency } from './currency';
@@ -17,9 +17,22 @@ export type ReportWithStatus = {
 
 type UtilisationReportHeader = ValuesOf<typeof UTILISATION_REPORT_HEADERS>;
 
-export type UtilisationReportRawCsvData = {
-  [HeaderKey in UtilisationReportHeader]: HeaderKey extends `${string}currency` ? Currency : string;
+type OptionalUtilisationReportHeader = Extract<
+  UtilisationReportHeader,
+  'payment currency' | 'accrual currency' | 'accrual exchange rate' | 'payment exchange rate'
+>;
+
+type RequiredUtilisationReportHeader = Exclude<UtilisationReportHeader, OptionalUtilisationReportHeader>;
+
+type RequiredUtilisationReportRawCsvData = {
+  [HeaderKey in RequiredUtilisationReportHeader]: HeaderKey extends `${string}currency` ? Currency : string;
 };
+
+type OptionalUtilisationReportRawCsvData = {
+  [HeaderKey in OptionalUtilisationReportHeader]?: (HeaderKey extends `${string}currency` ? Currency | '' : string) | null;
+};
+
+export type UtilisationReportRawCsvData = Prettify<RequiredUtilisationReportRawCsvData & OptionalUtilisationReportRawCsvData>;
 
 export type FeeRecordStatus = ValuesOf<typeof FEE_RECORD_STATUS>;
 

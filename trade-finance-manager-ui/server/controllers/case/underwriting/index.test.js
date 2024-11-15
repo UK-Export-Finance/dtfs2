@@ -1,10 +1,18 @@
-import { TEAM_IDS } from '@ukef/dtfs2-common';
+import { TEAM_IDS, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 
 import MOCKS from '../../../test-mocks/amendment-test-mocks';
 
 import underwriterController from '.';
+
+const mockGetDealSuccessBannerMessage = jest.fn();
+
+jest.mock('../../helpers/get-success-banner-message.helper', () => ({
+  getDealSuccessBannerMessage: (params) => mockGetDealSuccessBannerMessage(params),
+}));
+
+const mockSuccessBannerMessage = 'success message';
 
 describe('GET getUnderwriterPage', () => {
   const res = mockRes();
@@ -53,6 +61,7 @@ describe('GET getUnderwriterPage', () => {
         user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
         userCanEdit: true,
       },
+      successMessage: mockSuccessBannerMessage,
     };
 
     const req = {
@@ -60,11 +69,20 @@ describe('GET getUnderwriterPage', () => {
         _id: dealId,
       },
       session: { user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER, userToken: 'session' },
+      flash: jest.fn(() => []),
     };
 
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(MOCKS.MOCK_DEAL);
       api.getUser = apiGetUserSpy;
+      api.getDealCancellation = () =>
+        Promise.resolve({
+          effectiveFrom: new Date().valueOf(),
+          bankRequestDate: new Date().valueOf(),
+          reason: 'a reason',
+          status: TFM_DEAL_CANCELLATION_STATUS.COMPLETED,
+        });
+      mockGetDealSuccessBannerMessage.mockResolvedValue(mockSuccessBannerMessage);
     });
 
     it('should render template with data if amendment which is submittedByPim and requireUkefApproval', async () => {

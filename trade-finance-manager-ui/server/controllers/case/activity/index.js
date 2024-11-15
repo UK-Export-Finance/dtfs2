@@ -1,10 +1,11 @@
 const { getUnixTime } = require('date-fns');
-const { ACTIVITY_TYPES } = require('@ukef/dtfs2-common');
+const { ACTIVITY_TYPES, FLASH_TYPES } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { generateValidationErrors } = require('../../../helpers/validation');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
 const CONSTANTS = require('../../../constants');
 const { mapActivities } = require('./helpers/map-activities');
+const { getDealSuccessBannerMessage } = require('../../helpers/get-success-banner-message.helper');
 
 const { DEAL } = CONSTANTS;
 
@@ -36,12 +37,21 @@ const getActivity = async (req, res) => {
 
   const activities = mapActivities(deal.tfm.activities);
 
+  const { dealSnapshot } = deal;
+
+  const successMessage = await getDealSuccessBannerMessage({
+    dealSnapshot,
+    userToken,
+    flashedSuccessMessage: req.flash(FLASH_TYPES.SUCCESS_MESSAGE)[0],
+  });
+
   return res.render('case/activity/activity.njk', {
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'activity',
+    successMessage,
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id,
+    dealId,
     user,
     selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.ALL,
     activities,
@@ -76,12 +86,21 @@ const filterActivities = async (req, res) => {
 
   const activities = mapActivities(deal.tfm.activities);
 
+  const { dealSnapshot } = deal;
+
+  const successMessage = await getDealSuccessBannerMessage({
+    dealSnapshot,
+    userToken,
+    flashedSuccessMessage: req.flash(FLASH_TYPES.SUCCESS_MESSAGE)[0],
+  });
+
   return res.render('case/activity/activity.njk', {
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'activity',
+    successMessage,
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id,
+    dealId,
     user,
     selectedActivityFilter: filterType,
     activities,

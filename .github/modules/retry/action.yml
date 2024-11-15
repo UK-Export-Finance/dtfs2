@@ -6,21 +6,21 @@
 # command and env can be multiline
 # In do loop, if the run is 1, then should cd to working directory
 # If not 1, then already in working directory so does not need to cd
-name: "Retry Steps"
+name: 'Retry Steps'
 inputs:
   command:
     required: true
   working-directory:
     required: false
-    default: "./"
+    default: './'
   env:
     required: false
-    default: ""
+    default: ''
   retry-limit:
     required: false
     default: 3
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - run: |
         limit=${{ inputs.retry-limit }}

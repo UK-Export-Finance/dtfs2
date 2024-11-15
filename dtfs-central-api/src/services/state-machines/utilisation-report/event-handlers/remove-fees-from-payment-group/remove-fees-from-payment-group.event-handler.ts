@@ -3,6 +3,7 @@ import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity } from '@ukef
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { feeRecordsMatchAttachedPayments } from '../helpers';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../event/utilisation-report.event-type';
 
 type RemoveFeesFromPaymentGroupEventPayload = {
   transactionEntityManager: EntityManager;
@@ -12,7 +13,7 @@ type RemoveFeesFromPaymentGroupEventPayload = {
 };
 
 export type UtilisationReportRemoveFeesFromPaymentGroupEvent = BaseUtilisationReportEvent<
-  'REMOVE_FEES_FROM_PAYMENT_GROUP',
+  typeof UTILISATION_REPORT_EVENT_TYPE.REMOVE_FEES_FROM_PAYMENT_GROUP,
   RemoveFeesFromPaymentGroupEventPayload
 >;
 
