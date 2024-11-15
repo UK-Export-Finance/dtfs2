@@ -114,9 +114,9 @@ const generateApp = () => {
 
   app.use('/', routes);
 
-  app.get('*', (req, res) => res.status(404).render('partials/page-not-found.njk', { user: req.session.user }));
+  app.get('*', (req, res) => res.status(404).render('_partials/page-not-found.njk', { user: req.session.user }));
 
-  app.use(getFrontEndErrorHandler('partials/problem-with-service.njk'));
+  app.use(getFrontEndErrorHandler());
 
   return app;
 };

@@ -26,7 +26,7 @@ describe('GET Ineligible Automatic Cover', () => {
 
     await ineligibleAutomaticCover(mockRequest, mockResponse);
 
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/ineligible-automatic-cover.njk', {
+    expect(mockResponse.render).toHaveBeenCalledWith('_partials/ineligible-automatic-cover.njk', {
       dealId: '123',
     });
   });

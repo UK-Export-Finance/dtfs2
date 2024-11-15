@@ -52,7 +52,7 @@ describe('GET Facility Currency', () => {
     await facilityCurrency(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith(
-      'partials/facility-currency.njk',
+      '_partials/facility-currency.njk',
       expect.objectContaining({
         currencyId: 'EUR',
         facilityTypeString: 'cash',
@@ -69,7 +69,7 @@ describe('GET Facility Currency', () => {
 
     api.getFacility = () => Promise.reject();
     await facilityCurrency(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
   });
 });
 
@@ -108,7 +108,7 @@ describe('Update Facility Currency', () => {
     await updateFacilityCurrency(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith(
-      'partials/facility-currency.njk',
+      '_partials/facility-currency.njk',
       expect.objectContaining({
         errors: expect.objectContaining({
           errorSummary: expect.arrayContaining([{ href: '#currencyId', text: expect.any(String) }]),
@@ -187,6 +187,6 @@ describe('Update Facility Currency', () => {
 
     api.updateFacility = () => Promise.reject();
     await updateFacilityCurrency(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
   });
 });

@@ -69,7 +69,7 @@ describe('controllers/supporting-documents', () => {
       await getSupportingDocuments(mockRequest, mockResponse, mockNext);
 
       expect(mockResponse.redirect).not.toHaveBeenCalled();
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/upload-supporting-documents.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/upload-supporting-documents.njk', {
         formHeaderFragment: 'manualInclusion',
         title: 'Add manual inclusion questionnaire',
         user: {
@@ -128,7 +128,7 @@ describe('controllers/supporting-documents', () => {
         expect(uploadAndSaveToDeal).not.toHaveBeenCalled();
         expect(mockResponse.redirect).not.toHaveBeenCalled();
         expect(mockResponse.render).toHaveBeenCalledWith(
-          'partials/upload-supporting-documents.njk',
+          '_partials/upload-supporting-documents.njk',
           expect.objectContaining({
             errors: expect.objectContaining({
               errorSummary: expect.arrayContaining([{ href: '#mock-file.pdf', text: expect.any(String) }]),
@@ -170,7 +170,7 @@ describe('controllers/supporting-documents', () => {
 
         expect(mockResponse.redirect).not.toHaveBeenCalled();
         expect(mockResponse.render).toHaveBeenCalledWith(
-          'partials/upload-supporting-documents.njk',
+          '_partials/upload-supporting-documents.njk',
           expect.objectContaining({
             errors: expect.objectContaining({
               errorSummary: expect.arrayContaining([{ href: '#mock-file.pdf', text: expect.any(String) }]),
@@ -216,7 +216,7 @@ describe('controllers/supporting-documents', () => {
 
         expect(mockResponse.redirect).not.toHaveBeenCalled();
         expect(mockResponse.render).toHaveBeenCalledWith(
-          'partials/upload-supporting-documents.njk',
+          '_partials/upload-supporting-documents.njk',
           expect.objectContaining({
             errors: expect.objectContaining({
               errorSummary: expect.arrayContaining([{ href: '#documents', text: expect.any(String) }]),
@@ -244,7 +244,7 @@ describe('controllers/supporting-documents', () => {
         await postSupportingDocuments(mockRequest, mockResponse, mockNext);
 
         expect(mockResponse.render).toHaveBeenCalledWith(
-          'partials/upload-supporting-documents.njk',
+          '_partials/upload-supporting-documents.njk',
           expect.not.objectContaining({
             errors: expect.objectContaining({
               errorSummary: expect.arrayContaining([{ href: '#documents', text: expect.any(String) }]),
@@ -264,7 +264,7 @@ describe('controllers/supporting-documents', () => {
 
         expect(mockResponse.redirect).not.toHaveBeenCalled();
         expect(mockResponse.render).toHaveBeenCalledWith(
-          'partials/upload-supporting-documents.njk',
+          '_partials/upload-supporting-documents.njk',
           expect.objectContaining({
             errors: expect.objectContaining({
               errorSummary: expect.arrayContaining([{ href: '#documents', text: expect.any(String) }]),
@@ -289,7 +289,7 @@ describe('controllers/supporting-documents', () => {
 
         expect(mockResponse.redirect).not.toHaveBeenCalled();
         expect(mockResponse.render).toHaveBeenCalledWith(
-          'partials/upload-supporting-documents.njk',
+          '_partials/upload-supporting-documents.njk',
           expect.objectContaining({
             errors: expect.objectContaining({
               errorSummary: expect.arrayContaining([{ href: '#documents', text: expect.any(String) }]),

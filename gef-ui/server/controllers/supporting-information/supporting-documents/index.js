@@ -126,7 +126,7 @@ const getSupportingDocuments = async (req, res, next) => {
     if (Object.prototype.hasOwnProperty.call(application.supportingInformation, fieldName)) {
       files = application.supportingInformation?.[fieldName];
     }
-    return res.render('partials/upload-supporting-documents.njk', {
+    return res.render('_partials/upload-supporting-documents.njk', {
       title,
       formHeaderFragment: fieldName,
       user,
@@ -208,7 +208,7 @@ const postSupportingDocuments = async (req, res, next) => {
     }
 
     if (errors.length || !submit) {
-      return res.render('partials/upload-supporting-documents.njk', {
+      return res.render('_partials/upload-supporting-documents.njk', {
         title,
         formHeaderFragment: fieldName,
         errors: errors.length && validationErrorHandler(errors),

@@ -1,6 +1,6 @@
 const pageRenderer = require('../pageRenderer');
 
-const page = 'partials/bank-review-date.njk';
+const page = '_partials/bank-review-date.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {

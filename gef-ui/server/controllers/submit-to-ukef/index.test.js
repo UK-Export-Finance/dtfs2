@@ -99,7 +99,7 @@ describe('controllers/submit-to-ukef', () => {
       const submissionType = CONSTANTS.DEAL_SUBMISSION_TYPE.AIN;
       mockRequest.body.confirmSubmitUkef = 'true';
       await createSubmissionToUkef(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/submit-to-ukef-confirmation.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/submit-to-ukef-confirmation.njk', {
         submissionType,
         status: mockApplicationResponse.status,
         isNotice: isNotice(submissionType),
@@ -114,7 +114,7 @@ describe('controllers/submit-to-ukef', () => {
       mockRequest.body.confirmSubmitUkef = 'true';
       await createSubmissionToUkef(mockRequest, mockResponse);
       // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/submit-to-ukef-confirmation.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/submit-to-ukef-confirmation.njk', {
         submissionType: mockApplicationResponse.submissionType,
         status: mockApplicationResponse.status,
         isNotice: isNotice(mockApplicationResponse.submissionType),
@@ -129,7 +129,7 @@ describe('controllers/submit-to-ukef', () => {
       await createSubmissionToUkef(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/submit-to-ukef.njk',
+        '_partials/submit-to-ukef.njk',
         expect.objectContaining({
           dealId: expect.any(String),
           errors: expect.any(Object),
@@ -143,7 +143,7 @@ describe('controllers/submit-to-ukef', () => {
       await submitToUkef(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/submit-to-ukef.njk',
+        '_partials/submit-to-ukef.njk',
         expect.objectContaining({
           dealId: expect.any(String),
         }),

@@ -17,7 +17,7 @@ const facilities = async (req, res) => {
   const facilityTypeString = facilityTypeStringGenerator(facilityType);
 
   if (!facilityId) {
-    return res.render('partials/facilities.njk', {
+    return res.render('_partials/facilities.njk', {
       facilityType: facilityTypeString,
       dealId,
       status,
@@ -28,7 +28,7 @@ const facilities = async (req, res) => {
     const { details } = await api.getFacility({ facilityId, userToken });
     const hasBeenIssued = JSON.stringify(details.hasBeenIssued);
 
-    return res.render('partials/facilities.njk', {
+    return res.render('_partials/facilities.njk', {
       facilityType: facilityTypeString,
       hasBeenIssued: hasBeenIssued !== 'null' ? hasBeenIssued : null,
       dealId,
@@ -36,7 +36,7 @@ const facilities = async (req, res) => {
     });
   } catch (error) {
     console.error('Facilities error %o', error);
-    return res.render('partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk');
   }
 };
 
@@ -60,7 +60,7 @@ const createFacility = async (req, res) => {
         errMsg: `Select if your bank has already issued this ${facilityTypeString} facility`,
       });
 
-      return res.render('partials/facilities.njk', {
+      return res.render('_partials/facilities.njk', {
         facilityType: facilityTypeString,
         errors: validationErrorHandler(hasBeenIssuedErrors),
         dealId,
@@ -96,7 +96,7 @@ const createFacility = async (req, res) => {
     return res.redirect(`/gef/application-details/${dealId}/facilities/${facility.details._id}/about-facility`);
   } catch (error) {
     console.error('Error creating a facility %o', error);
-    return res.render('partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk');
   }
 };
 

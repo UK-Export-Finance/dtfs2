@@ -138,7 +138,7 @@ describe('controllers/automatic-cover', () => {
         text: 'Test',
       }));
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/automatic-cover.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/automatic-cover.njk', {
         criteria: expectedCriteria,
         dealId: '123',
       });
@@ -149,7 +149,7 @@ describe('controllers/automatic-cover', () => {
 
       api.getApplication.mockRejectedValueOnce(mockedRejection);
       await automaticCover(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
   });
 
@@ -186,7 +186,7 @@ describe('controllers/automatic-cover', () => {
       }));
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/automatic-cover.njk',
+        '_partials/automatic-cover.njk',
         expect.objectContaining({
           errors: expect.any(Object),
           criteria: expectedCriteria,

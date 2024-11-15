@@ -48,7 +48,7 @@ describe('controllers/select-exporters-correspondence-address', () => {
 
       await selectExportersCorrespondenceAddress(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/select-exporters-correspondence-address.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/select-exporters-correspondence-address.njk', {
         postcode: 'W1 7PD',
         dealId: '123',
         addressesForSelection: [
@@ -68,7 +68,7 @@ describe('controllers/select-exporters-correspondence-address', () => {
 
       await selectExportersCorrespondenceAddress(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
   });
 
@@ -81,7 +81,7 @@ describe('controllers/select-exporters-correspondence-address', () => {
       await validateSelectExportersCorrespondenceAddress(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/select-exporters-correspondence-address.njk',
+        '_partials/select-exporters-correspondence-address.njk',
         expect.objectContaining({
           errors: expect.any(Object),
           dealId: '123',

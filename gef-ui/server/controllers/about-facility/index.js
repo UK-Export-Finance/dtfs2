@@ -32,7 +32,7 @@ const aboutFacility = async (req, res) => {
       isUsingFacilityEndDate = 'false';
     }
 
-    return res.render('partials/about-facility.njk', {
+    return res.render('_partials/about-facility.njk', {
       facilityType: FACILITY_TYPE[details.type.toUpperCase()],
       facilityName: details.name,
       hasBeenIssued: details.hasBeenIssued,
@@ -52,7 +52,7 @@ const aboutFacility = async (req, res) => {
       isUsingFacilityEndDate,
     });
   } catch (error) {
-    return res.render('partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk');
   }
 };
 
@@ -135,7 +135,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
   });
 
   if (aboutFacilityErrors.length > 0) {
-    return res.render('partials/about-facility.njk', {
+    return res.render('_partials/about-facility.njk', {
       errors: validationErrorHandler(aboutFacilityErrors),
       facilityName,
       shouldCoverStartOnSubmission,
@@ -199,7 +199,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
 
     return res.redirect(getNextPage({ dealId, facilityId, dealVersion: deal.version, isUsingFacilityEndDate }));
   } catch (error) {
-    return res.render('partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk');
   }
 };
 

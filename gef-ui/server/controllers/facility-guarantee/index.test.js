@@ -80,7 +80,7 @@ describe('controllers/facility-guarantee', () => {
       await facilityGuarantee(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facility-guarantee.njk',
+        '_partials/facility-guarantee.njk',
         expect.objectContaining({
           inArrearsFrequency: '',
           inAdvanceFrequency: 'Monthly',
@@ -97,7 +97,7 @@ describe('controllers/facility-guarantee', () => {
 
       await facilityGuarantee(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
   });
 
@@ -108,7 +108,7 @@ describe('controllers/facility-guarantee', () => {
       await updateFacilityGuarantee(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facility-guarantee.njk',
+        '_partials/facility-guarantee.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#feeType', text: expect.any(String) }]),
@@ -125,7 +125,7 @@ describe('controllers/facility-guarantee', () => {
       await updateFacilityGuarantee(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facility-guarantee.njk',
+        '_partials/facility-guarantee.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#dayCountBasis', text: expect.any(String) }]),
@@ -181,7 +181,7 @@ describe('controllers/facility-guarantee', () => {
       api.updateFacility.mockRejectedValueOnce();
 
       await updateFacilityGuarantee(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
   });
 });

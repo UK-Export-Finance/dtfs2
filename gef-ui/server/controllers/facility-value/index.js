@@ -29,9 +29,9 @@ const facilityValue = async (req, res) => {
       return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/facility-currency`);
     }
 
-    return res.render('partials/facility-value.njk', facility);
+    return res.render('_partials/facility-value.njk', facility);
   } catch (error) {
-    return res.render('partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk');
   }
 };
 
@@ -69,7 +69,7 @@ const updateFacilityValue = async (req, res) => {
       }
       return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/facility-guarantee`);
     } catch (error) {
-      return res.render('partials/problem-with-service.njk');
+      return res.render('_partials/problem-with-service.njk');
     }
   }
 
@@ -77,7 +77,7 @@ const updateFacilityValue = async (req, res) => {
     facilityValueErrors.push(...validateFacilityValue(body, saveAndReturn));
     //  save the updated values
     if (facilityValueErrors.length > 0) {
-      return res.render('partials/facility-value.njk', {
+      return res.render('_partials/facility-value.njk', {
         errors: validationErrorHandler(facilityValueErrors),
         currency,
         value,
@@ -94,7 +94,7 @@ const updateFacilityValue = async (req, res) => {
   }
   facilityValueErrors.push(...validateFacilityValue(body));
   if (facilityValueErrors.length > 0) {
-    return res.render('partials/facility-value.njk', {
+    return res.render('_partials/facility-value.njk', {
       errors: validationErrorHandler(facilityValueErrors),
       currency,
       value,

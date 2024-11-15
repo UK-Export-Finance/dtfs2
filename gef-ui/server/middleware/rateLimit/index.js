@@ -37,7 +37,7 @@ const createRateLimit = () => {
     // Render the problem with service page when the threshold is exceeded.
     handler: (req, res, _next, options) => {
       console.error('Rate limit threshold exceeded. Rendering error page for request to %s.', req.originalUrl);
-      return res.status(options.statusCode).render('partials/problem-with-service.njk');
+      return res.status(options.statusCode).render('_partials/problem-with-service.njk');
     },
   });
 };

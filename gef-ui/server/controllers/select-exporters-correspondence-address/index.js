@@ -9,13 +9,13 @@ const selectExportersCorrespondenceAddress = async (req, res) => {
 
   try {
     await api.getApplication({ dealId, userToken }); // We fetch application to make sure it exists
-    return res.render('partials/select-exporters-correspondence-address.njk', {
+    return res.render('_partials/select-exporters-correspondence-address.njk', {
       addressesForSelection: selectDropdownAddresses(JSON.parse(addresses)),
       postcode,
       dealId,
     });
   } catch (error) {
-    return res.render('partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk');
   }
 };
 
@@ -33,7 +33,7 @@ const validateSelectExportersCorrespondenceAddress = (req, res) => {
       errMsg: 'Select an address',
     };
 
-    return res.render('partials/select-exporters-correspondence-address.njk', {
+    return res.render('_partials/select-exporters-correspondence-address.njk', {
       errors: validationErrorHandler(selectedAddressError),
       addressesForSelection: selectDropdownAddresses(parseAddresses),
       postcode,

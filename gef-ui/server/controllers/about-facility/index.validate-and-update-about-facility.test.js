@@ -266,7 +266,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#monthsOfCover', text: expect.any(String) }]),
@@ -284,7 +284,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.not.arrayContaining([{ href: '#facilityName', text: expect.any(String) }]),
@@ -297,7 +297,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#facilityName', text: expect.any(String) }]),
@@ -315,7 +315,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.not.arrayContaining([{ href: '#facilityName', text: expect.any(String) }]),
@@ -328,7 +328,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#facilityName', text: expect.any(String) }]),
@@ -346,7 +346,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.not.arrayContaining([{ href: '#facilityName', text: expect.any(String) }]),
@@ -359,7 +359,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#facilityName', text: expect.any(String) }]),
@@ -377,7 +377,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.not.arrayContaining([{ href: '#shouldCoverStartOnSubmission', text: expect.any(String) }]),
@@ -390,7 +390,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#shouldCoverStartOnSubmission', text: expect.any(String) }]),
@@ -411,7 +411,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.not.arrayContaining([{ href: '#coverStartDate', text: expect.any(String) }]),
@@ -424,7 +424,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: expect.any(String) }]),
@@ -438,7 +438,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: expect.any(String) }]),
@@ -459,7 +459,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: expect.any(String) }]),
@@ -480,7 +480,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.not.arrayContaining([{ href: '#coverStartDate', text: expect.any(String) }]),
@@ -501,7 +501,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: expect.any(String) }]),
@@ -522,7 +522,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The day for the cover start date must include 1 or 2 numbers' }]),
@@ -540,7 +540,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The day for the cover start date must include 1 or 2 numbers' }]),
@@ -561,7 +561,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The month for the cover start date must include 1 or 2 numbers' }]),
@@ -579,7 +579,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The month for the cover start date must include 1 or 2 numbers' }]),
@@ -600,7 +600,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The year for the cover start date must include 4 numbers' }]),
@@ -618,7 +618,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The year for the cover start date must include 4 numbers' }]),
@@ -639,7 +639,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The day for the cover end date must include 1 or 2 numbers' }]),
@@ -657,7 +657,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The day for the cover end date must include 1 or 2 numbers' }]),
@@ -678,7 +678,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The month for the cover end date must include 1 or 2 numbers' }]),
@@ -696,7 +696,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The month for the cover end date must include 1 or 2 numbers' }]),
@@ -717,7 +717,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The year for the cover end date must include 4 numbers' }]),
@@ -735,7 +735,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The year for the cover end date must include 4 numbers' }]),
@@ -759,7 +759,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: expect.any(String) }]),
@@ -783,7 +783,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: expect.any(String) }]),
@@ -804,7 +804,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The cover end date must be after the cover start date' }]),
@@ -825,7 +825,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'Cover end date cannot be before cover start date' }]),
@@ -843,7 +843,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#monthsOfCover', text: expect.any(String) }]),
@@ -861,7 +861,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#monthsOfCover', text: expect.any(String) }]),
@@ -879,7 +879,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#monthsOfCover', text: expect.any(String) }]),
@@ -895,7 +895,7 @@ describe('validateAndUpdateAboutFacility', () => {
 
       api.updateFacility.mockRejectedValueOnce();
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
   });
 
@@ -912,7 +912,7 @@ describe('validateAndUpdateAboutFacility', () => {
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
+        '_partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#isUsingFacilityEndDate', text: 'Select if there is an end date for this facility' }]),

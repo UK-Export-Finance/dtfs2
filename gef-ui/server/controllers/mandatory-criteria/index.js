@@ -6,11 +6,11 @@ const getMandatoryCriteria = async (req, res) => {
     const { userToken } = req.session;
     const criteria = await api.getMandatoryCriteria({ userToken });
 
-    return res.render('partials/mandatory-criteria.njk', {
+    return res.render('_partials/mandatory-criteria.njk', {
       criteria,
     });
   } catch (error) {
-    return res.render('partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk');
   }
 };
 
@@ -27,7 +27,7 @@ const validateMandatoryCriteria = async (req, res) => {
         errMsg: 'Select if the mandatory criteria will be true or false on the date that cover starts',
       };
 
-      return res.render('partials/mandatory-criteria.njk', {
+      return res.render('_partials/mandatory-criteria.njk', {
         errors: validationErrorHandler(mandatoryError),
         criteria,
       });
@@ -39,7 +39,7 @@ const validateMandatoryCriteria = async (req, res) => {
 
     return res.redirect('/gef/ineligible-gef');
   } catch (error) {
-    return res.render('partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk');
   }
 };
 

@@ -11,14 +11,14 @@ const companiesHouse = async (req, res) => {
     const { exporter } = await api.getApplication({ dealId, userToken });
     const { companiesHouseRegistrationNumber } = exporter;
 
-    return res.render('partials/companies-house.njk', {
+    return res.render('_partials/companies-house.njk', {
       regNumber: companiesHouseRegistrationNumber,
       dealId,
       status,
     });
   } catch (error) {
     console.error('GEF-UI - Error getting companies house page %o', error);
-    return res.render('partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk');
   }
 };
 
@@ -34,7 +34,7 @@ const validateCompaniesHouse = async (req, res) => {
     const { company: companiesHouseDetails, errRef, errMsg } = await api.getCompanyByRegistrationNumber({ registrationNumber, userToken });
 
     if (!companiesHouseDetails) {
-      return res.render('partials/companies-house.njk', {
+      return res.render('_partials/companies-house.njk', {
         errors: validationErrorHandler([{ errRef, errMsg }]),
         regNumber: registrationNumber,
         dealId,
@@ -73,7 +73,7 @@ const validateCompaniesHouse = async (req, res) => {
     return res.redirect('exporters-address');
   } catch (error) {
     console.error('GEF-UI - Error validating companies house page %o', error);
-    return res.render('partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk');
   }
 };
 

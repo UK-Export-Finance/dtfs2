@@ -20,7 +20,7 @@ exports.cloneDealCreateApplication = async (req, res, next) => {
 
     // Validation errors
     if (application.status === 422) {
-      return res.render('partials/name-application.njk', {
+      return res.render('_partials/name-application.njk', {
         bankInternalRefName: body.bankInternalRefName,
         additionalRefName: body.additionalRefName,
         errors: validationErrorHandler(application.data),
@@ -57,7 +57,7 @@ exports.cloneDealValidateMandatoryCriteria = async (req, res) => {
         errMsg: 'Select if the mandatory criteria will be true or false on the date that cover starts',
       };
 
-      return res.render('partials/mandatory-criteria.njk', {
+      return res.render('_partials/mandatory-criteria.njk', {
         errors: validationErrorHandler(mandatoryError),
         criteria,
       });
@@ -69,7 +69,7 @@ exports.cloneDealValidateMandatoryCriteria = async (req, res) => {
 
     return res.redirect('/gef/ineligible-gef');
   } catch (error) {
-    return res.render('partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk');
   }
 };
 
@@ -85,5 +85,5 @@ exports.cloneDealNameApplication = async (req, res) => {
     dealName: deal.bankInternalRefName,
   };
 
-  return res.render('partials/name-application.njk', viewProps);
+  return res.render('_partials/name-application.njk', viewProps);
 };

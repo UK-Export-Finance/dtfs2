@@ -1,7 +1,7 @@
 const pageRenderer = require('../pageRenderer');
 const { FACILITY_TYPE } = require('../../server/constants');
 
-const page = 'partials/about-facility.njk';
+const page = '_partials/about-facility.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {

@@ -18,13 +18,13 @@ const automaticCover = async (req, res) => {
     const application = await api.getApplication({ dealId, userToken });
     const { eligibility } = application;
 
-    return res.render('partials/automatic-cover.njk', {
+    return res.render('_partials/automatic-cover.njk', {
       criteria: eligibility.criteria,
       dealId,
     });
   } catch (error) {
     console.error('GEF-UI - Error getting automatic cover page %o', error);
-    return res.render('partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk');
   }
 };
 
@@ -53,7 +53,7 @@ const validateAutomaticCover = async (req, res, next) => {
         };
       });
 
-      return res.render('partials/automatic-cover.njk', {
+      return res.render('_partials/automatic-cover.njk', {
         errors: validationErrorHandler(automaticCoverErrors, 'automatic-cover'),
         criteria: mappedCriteria,
         dealId,

@@ -108,7 +108,7 @@ export const postBankReviewDate = async ({ req, res, uris }: PostBankReviewDateP
         previousPage: uris.previousPage,
         status,
       };
-      return res.render('partials/bank-review-date.njk', bankReviewDateViewModel);
+      return res.render('_partials/bank-review-date.njk', bankReviewDateViewModel);
     }
 
     await updateBankReviewDateIfChanged(facility, bankReviewDateErrorsAndDate.date, asLoggedInUserSession(req.session));
@@ -120,7 +120,7 @@ export const postBankReviewDate = async ({ req, res, uris }: PostBankReviewDateP
     return res.redirect(uris.nextPage);
   } catch (error) {
     console.error(error);
-    return res.render('partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk');
   }
 };
 

@@ -66,7 +66,7 @@ describe('controllers/facility-confirm-deletion', () => {
       await facilityConfirmDeletion(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facility-confirm-deletion.njk',
+        '_partials/facility-confirm-deletion.njk',
         expect.objectContaining({
           heading: 'Cash',
           dealId: '123',
@@ -76,7 +76,7 @@ describe('controllers/facility-confirm-deletion', () => {
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
       await facilityConfirmDeletion(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
   });
 
@@ -112,7 +112,7 @@ describe('controllers/facility-confirm-deletion', () => {
 
       await deleteFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
   });
 });

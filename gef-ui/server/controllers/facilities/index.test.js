@@ -69,7 +69,7 @@ describe('controllers/facilities', () => {
     it('renders the `Facilities` template when there is no facility ID provided', async () => {
       await facilities(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facilities.njk',
+        '_partials/facilities.njk',
         expect.objectContaining({
           facilityType: CONSTANTS.FACILITY_TYPE.CASH.toLowerCase(),
           dealId: '123',
@@ -85,7 +85,7 @@ describe('controllers/facilities', () => {
       await facilities(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facilities.njk',
+        '_partials/facilities.njk',
         expect.objectContaining({
           facilityType: CONSTANTS.FACILITY_TYPE.CASH.toLowerCase(),
           dealId: '123',
@@ -100,7 +100,7 @@ describe('controllers/facilities', () => {
       api.getFacility.mockRejectedValueOnce();
 
       await facilities(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
   });
 
@@ -109,7 +109,7 @@ describe('controllers/facilities', () => {
       await createFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facilities.njk',
+        '_partials/facilities.njk',
         expect.objectContaining({
           facilityType: CONSTANTS.FACILITY_TYPE.CASH.toLowerCase(),
           errors: expect.objectContaining({
@@ -172,7 +172,7 @@ describe('controllers/facilities', () => {
 
       await createFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
 
     it('redirects user to `about-facility` page if status query is set to `Change`', async () => {

@@ -180,7 +180,7 @@ describe('postBankReviewDate', () => {
       await postBankReviewDate({ req: mockReq, res: mockRes, uris: mockUris });
 
       // Assert
-      expect(mockRes._getRenderView()).toEqual('partials/bank-review-date.njk');
+      expect(mockRes._getRenderView()).toEqual('_partials/bank-review-date.njk');
       expect(mockRes._getRenderData()).toEqual({
         dealId,
         facilityId,
@@ -255,6 +255,6 @@ describe('postBankReviewDate', () => {
     await postBankReviewDate({ req: mockReq, res: mockRes, uris: mockUris });
 
     // Assert
-    expect(mockRes._getRenderView()).toEqual('partials/problem-with-service.njk');
+    expect(mockRes._getRenderView()).toEqual('_partials/problem-with-service.njk');
   });
 });

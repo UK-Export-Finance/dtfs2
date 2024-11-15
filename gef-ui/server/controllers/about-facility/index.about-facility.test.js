@@ -70,7 +70,7 @@ describe('aboutFacility', () => {
 
     await aboutFacility(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith(
-      'partials/about-facility.njk',
+      '_partials/about-facility.njk',
       expect.objectContaining({
         facilityType: CONSTANTS.FACILITY_TYPE.CASH,
         facilityName: 'UKEF123',
@@ -94,6 +94,6 @@ describe('aboutFacility', () => {
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
     api.getFacility.mockRejectedValueOnce();
     await aboutFacility(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
   });
 });

@@ -60,7 +60,7 @@ describe('controllers/excorters-address', () => {
       api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
       await exportersAddress(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/exporters-address.njk', {
         dealId: '123',
         companyName: 'Test company',
         registeredAddress: expect.any(Object),
@@ -73,7 +73,7 @@ describe('controllers/excorters-address', () => {
       api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
       await exportersAddress(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/exporters-address.njk', {
         dealId: '123',
         companyName: 'Test company',
         registeredAddress: null,
@@ -85,7 +85,7 @@ describe('controllers/excorters-address', () => {
 
       await exportersAddress(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
   });
 
@@ -95,7 +95,7 @@ describe('controllers/excorters-address', () => {
 
       await validateExportersAddress(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/exporters-address.njk', {
         dealId: '123',
         errors: {
           errorSummary: [
@@ -129,7 +129,7 @@ describe('controllers/excorters-address', () => {
 
       await validateExportersAddress(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/exporters-address.njk', {
         dealId: '123',
         errors: {
           errorSummary: [
@@ -179,7 +179,7 @@ describe('controllers/excorters-address', () => {
 
       await validateExportersAddress(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/exporters-address.njk', {
         companyName: '',
         errors: {
           errorSummary: [
@@ -212,7 +212,7 @@ describe('controllers/excorters-address', () => {
 
       await validateExportersAddress(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/exporters-address.njk', {
         errors: {
           errorSummary: [
             {
@@ -238,7 +238,7 @@ describe('controllers/excorters-address', () => {
 
       await validateExportersAddress({}, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
   });
 });

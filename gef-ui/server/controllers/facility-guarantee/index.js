@@ -22,7 +22,7 @@ const facilityGuarantee = async (req, res) => {
       console.error('Facility not found, or not authorised');
       return res.redirect('/');
     }
-    return res.render('partials/facility-guarantee.njk', {
+    return res.render('_partials/facility-guarantee.njk', {
       dealId: facility.dealId,
       facilityId: facility.facilityId,
       feeType: facility.feeType,
@@ -32,7 +32,7 @@ const facilityGuarantee = async (req, res) => {
       status,
     });
   } catch (error) {
-    return res.render('partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk');
   }
 };
 
@@ -79,14 +79,14 @@ const updateFacilityGuarantee = async (req, res) => {
 
       return res.redirect(`/gef/application-details/${dealId}`);
     } catch (error) {
-      return res.render('partials/problem-with-service.njk');
+      return res.render('_partials/problem-with-service.njk');
     }
   }
 
   facilityGuaranteeErrors.push(...validateFacilityGuarantee(body));
 
   if (facilityGuaranteeErrors.length > 0) {
-    return res.render('partials/facility-guarantee.njk', {
+    return res.render('_partials/facility-guarantee.njk', {
       errors: validationErrorHandler(facilityGuaranteeErrors),
       feeType,
       inArrearsFrequency,

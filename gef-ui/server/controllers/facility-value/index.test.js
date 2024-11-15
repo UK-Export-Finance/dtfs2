@@ -80,7 +80,7 @@ describe('controllers/facility-value', () => {
       await facilityValue(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facility-value.njk',
+        '_partials/facility-value.njk',
         expect.objectContaining({
           currency: 'EUR',
           value: '2000',
@@ -104,7 +104,7 @@ describe('controllers/facility-value', () => {
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
       api.getFacility.mockRejectedValueOnce();
       await facilityValue(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
   });
 
@@ -118,7 +118,7 @@ describe('controllers/facility-value', () => {
       await updateFacilityValue(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facility-value.njk',
+        '_partials/facility-value.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
@@ -133,7 +133,7 @@ describe('controllers/facility-value', () => {
       await updateFacilityValue(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facility-value.njk',
+        '_partials/facility-value.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
@@ -148,7 +148,7 @@ describe('controllers/facility-value', () => {
       await updateFacilityValue(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facility-value.njk',
+        '_partials/facility-value.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
@@ -163,7 +163,7 @@ describe('controllers/facility-value', () => {
       await updateFacilityValue(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facility-value.njk',
+        '_partials/facility-value.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
@@ -178,7 +178,7 @@ describe('controllers/facility-value', () => {
       await updateFacilityValue(mockRequest, mockResponse);
 
       expect(mockResponse.render).not.toHaveBeenCalledWith(
-        'partials/facility-value.njk',
+        '_partials/facility-value.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
@@ -193,7 +193,7 @@ describe('controllers/facility-value', () => {
       await updateFacilityValue(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facility-value.njk',
+        '_partials/facility-value.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#interestPercentage', text: expect.any(String) }]),
@@ -208,7 +208,7 @@ describe('controllers/facility-value', () => {
       await updateFacilityValue(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facility-value.njk',
+        '_partials/facility-value.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#interestPercentage', text: expect.any(String) }]),
@@ -223,7 +223,7 @@ describe('controllers/facility-value', () => {
       await updateFacilityValue(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facility-value.njk',
+        '_partials/facility-value.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#interestPercentage', text: expect.any(String) }]),
@@ -237,7 +237,7 @@ describe('controllers/facility-value', () => {
 
       await updateFacilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.render).not.toHaveBeenCalledWith('partials/facility-value.njk');
+      expect(mockResponse.render).not.toHaveBeenCalledWith('_partials/facility-value.njk');
     });
 
     it('calls the update api with the correct data and redirects user back to application page', async () => {
@@ -287,7 +287,7 @@ describe('controllers/facility-value', () => {
       api.updateFacility.mockRejectedValueOnce();
 
       await updateFacilityValue(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
   });
 
@@ -302,7 +302,7 @@ describe('controllers/facility-value', () => {
       await updateFacilityValue(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facility-value.njk',
+        '_partials/facility-value.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
@@ -317,7 +317,7 @@ describe('controllers/facility-value', () => {
       await updateFacilityValue(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facility-value.njk',
+        '_partials/facility-value.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
@@ -332,7 +332,7 @@ describe('controllers/facility-value', () => {
       await updateFacilityValue(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facility-value.njk',
+        '_partials/facility-value.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
@@ -347,7 +347,7 @@ describe('controllers/facility-value', () => {
       await updateFacilityValue(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facility-value.njk',
+        '_partials/facility-value.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
@@ -370,7 +370,7 @@ describe('controllers/facility-value', () => {
       await updateFacilityValue(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facility-value.njk',
+        '_partials/facility-value.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
@@ -385,7 +385,7 @@ describe('controllers/facility-value', () => {
       await updateFacilityValue(mockRequest, mockResponse);
 
       expect(mockResponse.render).not.toHaveBeenCalledWith(
-        'partials/facility-value.njk',
+        '_partials/facility-value.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#coverPercentage', text: expect.any(String) }]),
@@ -400,7 +400,7 @@ describe('controllers/facility-value', () => {
       await updateFacilityValue(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facility-value.njk',
+        '_partials/facility-value.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#interestPercentage', text: expect.any(String) }]),
@@ -415,7 +415,7 @@ describe('controllers/facility-value', () => {
       await updateFacilityValue(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facility-value.njk',
+        '_partials/facility-value.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#interestPercentage', text: expect.any(String) }]),
@@ -430,7 +430,7 @@ describe('controllers/facility-value', () => {
       await updateFacilityValue(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facility-value.njk',
+        '_partials/facility-value.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#interestPercentage', text: expect.any(String) }]),
@@ -444,7 +444,7 @@ describe('controllers/facility-value', () => {
 
       await updateFacilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.render).not.toHaveBeenCalledWith('partials/facility-value.njk');
+      expect(mockResponse.render).not.toHaveBeenCalledWith('_partials/facility-value.njk');
     });
 
     it('calls the update api with the correct data and redirects user to the application page', async () => {
@@ -490,7 +490,7 @@ describe('controllers/facility-value', () => {
       api.updateFacility.mockRejectedValueOnce();
 
       await updateFacilityValue(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
   });
 });

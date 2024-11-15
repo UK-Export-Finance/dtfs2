@@ -17,7 +17,7 @@ const nameApplication = async (req, res, next) => {
   } catch (error) {
     return next(error);
   }
-  return res.render('partials/name-application.njk', viewProps);
+  return res.render('_partials/name-application.njk', viewProps);
 };
 
 const createApplication = async (req, res, next) => {
@@ -40,7 +40,7 @@ const createApplication = async (req, res, next) => {
 
     // Validation errors
     if (application.status === 422) {
-      return res.render('partials/name-application.njk', {
+      return res.render('_partials/name-application.njk', {
         bankInternalRefName: body.bankInternalRefName,
         additionalRefName: body.additionalRefName,
         errors: validationErrorHandler(application.data),
@@ -68,7 +68,7 @@ const updateApplicationReferences = async (req, res, next) => {
     const application = await api.updateApplication({ dealId, application: updateApplicationPayload, userToken });
 
     if (application.status === 422) {
-      return res.render('partials/name-application.njk', {
+      return res.render('_partials/name-application.njk', {
         bankInternalRefName: updateApplicationPayload.bankInternalRefName,
         additionalRefName: updateApplicationPayload.additionalRefName,
         errors: validationErrorHandler(application.data),

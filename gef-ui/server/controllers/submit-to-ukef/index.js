@@ -9,12 +9,12 @@ const submitToUkef = async (req, res) => {
   const { params } = req;
   const { dealId } = params;
   try {
-    return res.render('partials/submit-to-ukef.njk', {
+    return res.render('_partials/submit-to-ukef.njk', {
       dealId,
     });
   } catch (error) {
     console.error('GEF UI - error getting submitToUkef page %o', error);
-    return res.render('partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk');
   }
 };
 
@@ -37,7 +37,7 @@ const createSubmissionToUkef = async (req, res) => {
         errMsg: 'Select that you have reviewed the information given and want to proceed with the submission',
       });
 
-      return res.render('partials/submit-to-ukef.njk', {
+      return res.render('_partials/submit-to-ukef.njk', {
         dealId,
         errors,
       });
@@ -52,7 +52,7 @@ const createSubmissionToUkef = async (req, res) => {
     await api.setApplicationStatus({ dealId, status: CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF, userToken });
 
     // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
-    return res.render('partials/submit-to-ukef-confirmation.njk', {
+    return res.render('_partials/submit-to-ukef-confirmation.njk', {
       submissionType,
       status: application.status,
       isNotice: isDealNotice(ukefDecisionAccepted, submissionType),
@@ -61,7 +61,7 @@ const createSubmissionToUkef = async (req, res) => {
     });
   } catch (error) {
     console.error('Unable to post submit to UKEF %o', error);
-    return res.render('partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk');
   }
 };
 

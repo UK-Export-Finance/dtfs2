@@ -23,7 +23,7 @@ describe('GET Eligible Automatic Cover', () => {
     const mockRequest = MockRequest();
     mockRequest.params.dealId = '123';
     await eligibleAutomaticCover(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/eligible-automatic-cover.njk', {
+    expect(mockResponse.render).toHaveBeenCalledWith('_partials/eligible-automatic-cover.njk', {
       dealId: '123',
     });
   });

@@ -37,7 +37,7 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
       addressForm = correspondenceAddress;
     }
 
-    return res.render('partials/enter-exporters-correspondence-address.njk', {
+    return res.render('_partials/enter-exporters-correspondence-address.njk', {
       addressForm,
       dealId,
       status,
@@ -45,7 +45,7 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
     });
   } catch (error) {
     console.error("GEF-UI - Error getting exporter's correspondence address page %o", error);
-    return res.render('partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk');
   }
 };
 
@@ -76,7 +76,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
     }
 
     if (addressErrors.length > 0) {
-      return res.render('partials/enter-exporters-correspondence-address.njk', {
+      return res.render('_partials/enter-exporters-correspondence-address.njk', {
         errors: validationErrorHandler(addressErrors),
         addressForm: body,
         dealId,
@@ -115,7 +115,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
     return res.redirect(`/gef/application-details/${dealId}/about-exporter`);
   } catch (error) {
     console.error("Error validating exporter's correspondence address %o", error);
-    return res.render('partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk');
   }
 };
 

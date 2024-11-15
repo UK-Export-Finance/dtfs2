@@ -114,7 +114,7 @@ describe('changeUnissuedFacility()', () => {
     await changeUnissuedFacility(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith(
-      'partials/unissued-change-about-facility.njk',
+      '_partials/unissued-change-about-facility.njk',
       expect.objectContaining({
         previousPage: '/gef/application-details/1234567890abcdf123456789/unissued-facilities',
       }),
@@ -124,7 +124,7 @@ describe('changeUnissuedFacility()', () => {
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
     api.getFacility.mockRejectedValueOnce();
     await changeUnissuedFacility(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
   });
 });
 
@@ -153,7 +153,7 @@ describe('changeUnissuedFacilityPreview()', () => {
     await changeUnissuedFacilityPreview(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith(
-      'partials/unissued-change-about-facility.njk',
+      '_partials/unissued-change-about-facility.njk',
       expect.objectContaining({
         previousPage: '/gef/application-details/1234567890abcdf123456789',
       }),
@@ -163,7 +163,7 @@ describe('changeUnissuedFacilityPreview()', () => {
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
     api.getFacility.mockRejectedValueOnce();
     await changeUnissuedFacilityPreview(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
   });
 });
 
@@ -355,7 +355,7 @@ describe('postChangeUnissuedFacility()', () => {
       await postChangeUnissuedFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/unissued-change-about-facility.njk',
+        '_partials/unissued-change-about-facility.njk',
         expect.objectContaining({
           errors: {
             errorSummary: [
@@ -436,7 +436,7 @@ describe('postChangeUnissuedFacility()', () => {
       await postChangeUnissuedFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/unissued-change-about-facility.njk',
+        '_partials/unissued-change-about-facility.njk',
         expect.objectContaining({
           errors: {
             errorSummary: [
@@ -530,7 +530,7 @@ describe('postChangeUnissuedFacility()', () => {
 
       api.updateFacility.mockRejectedValueOnce();
       await postChangeUnissuedFacility(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
   });
 
@@ -561,7 +561,7 @@ describe('postChangeUnissuedFacility()', () => {
       await postChangeUnissuedFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/unissued-change-about-facility.njk',
+        '_partials/unissued-change-about-facility.njk',
         expect.objectContaining({
           errors: {
             errorSummary: [{ href: '#isUsingFacilityEndDate', text: 'Select if there is an end date for this facility' }],
@@ -780,7 +780,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
       await postChangeUnissuedFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/unissued-change-about-facility.njk',
+        '_partials/unissued-change-about-facility.njk',
         expect.objectContaining({
           errors: {
             errorSummary: [
@@ -874,7 +874,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
 
       api.updateFacility.mockRejectedValueOnce();
       await postChangeUnissuedFacilityPreview(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
   });
 
@@ -907,7 +907,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
       await postChangeUnissuedFacilityPreview(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/unissued-change-about-facility.njk',
+        '_partials/unissued-change-about-facility.njk',
         expect.objectContaining({
           errors: {
             errorSummary: [{ href: '#isUsingFacilityEndDate', text: 'Select if there is an end date for this facility' }],
@@ -980,7 +980,7 @@ describe('postChangeIssuedToUnissuedFacility', () => {
     await postChangeIssuedToUnissuedFacility(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith(
-      'partials/issued-facility-to-unissued.njk',
+      '_partials/issued-facility-to-unissued.njk',
       expect.objectContaining({
         errors: {
           errorSummary: [
@@ -1013,7 +1013,7 @@ describe('postChangeIssuedToUnissuedFacility', () => {
 
     api.updateFacility.mockRejectedValueOnce();
     await postChangeIssuedToUnissuedFacility(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
   });
 });
 
@@ -1042,7 +1042,7 @@ describe('changeIssuedToUnissuedFacility()', () => {
     await changeIssuedToUnissuedFacility(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith(
-      'partials/issued-facility-to-unissued.njk',
+      '_partials/issued-facility-to-unissued.njk',
       expect.objectContaining({
         dealId: '1234567890abcdf123456789',
         facilityType: 'contingent',
@@ -1058,7 +1058,7 @@ describe('changeIssuedToUnissuedFacility()', () => {
     await changeIssuedToUnissuedFacility(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith(
-      'partials/issued-facility-to-unissued.njk',
+      '_partials/issued-facility-to-unissued.njk',
       expect.objectContaining({
         dealId: '1234567890abcdf123456789',
         facilityType: 'cash',
@@ -1070,6 +1070,6 @@ describe('changeIssuedToUnissuedFacility()', () => {
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
     api.getFacility.mockRejectedValueOnce();
     await changeIssuedToUnissuedFacility(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
   });
 });

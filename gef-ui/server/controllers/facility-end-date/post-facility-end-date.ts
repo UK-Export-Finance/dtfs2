@@ -101,7 +101,7 @@ const postFacilityEndDate = async ({ req, res, uris }: HandlePostFacilityEndDate
         previousPage: uris.previousPage,
         status,
       };
-      return res.render('partials/facility-end-date.njk', facilityEndDateViewModel);
+      return res.render('_partials/facility-end-date.njk', facilityEndDateViewModel);
     }
 
     await updateFacilityEndDateIfChanged(facility, facilityEndDateErrorsAndDate.date, asLoggedInUserSession(req.session));
@@ -113,7 +113,7 @@ const postFacilityEndDate = async ({ req, res, uris }: HandlePostFacilityEndDate
     return res.redirect(uris.nextPage);
   } catch (error) {
     console.error(error);
-    return res.render('partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk');
   }
 };
 

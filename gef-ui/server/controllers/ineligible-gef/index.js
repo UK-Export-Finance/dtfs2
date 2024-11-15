@@ -1,3 +1,3 @@
-const ineligibleGef = async (req, res) => res.render('partials/ineligible-gef.njk');
+const ineligibleGef = async (req, res) => res.render('_partials/ineligible-gef.njk');
 
 module.exports = ineligibleGef;
