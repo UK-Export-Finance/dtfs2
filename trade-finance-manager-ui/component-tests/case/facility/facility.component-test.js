@@ -104,15 +104,14 @@ describe(page, () => {
       });
     });
   });
-
-  describe('when showAmendmentButton is true', () => {
-    it('should render the amendment button', () => {
-      wrapper = render({ ...params, showAmendmentButton: true });
-      wrapper.expectElement('[data-cy="amendment--add-amendment-button"]').toExist();
-    });
-  });
-
   describe('amendments tab', () => {
+    describe('when showAmendmentButton is true', () => {
+      it('should render the amendment button', () => {
+        wrapper = render({ ...params, showAmendmentButton: true });
+        wrapper.expectElement('[data-cy="amendment--add-amendment-button"]').toExist();
+      });
+    });
+
     describe('when showAmendmentButton is false', () => {
       it('should not render the amendment button', () => {
         wrapper = render({ ...params, showAmendmentButton: false });
