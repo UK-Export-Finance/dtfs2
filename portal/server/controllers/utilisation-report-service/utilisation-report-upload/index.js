@@ -134,6 +134,7 @@ const postUtilisationReportUpload = async (req, res) => {
 
     // We filter down the JSON to only send the necessary data to the API for validation
     const filteredCsvJson = filterReportJsonToRelevantKeys(csvJson);
+
     const { csvValidationErrors } = await api.generateValidationErrorsForUtilisationReportData(filteredCsvJson, bankId, userToken);
 
     if (csvValidationErrors.length > 0) {
