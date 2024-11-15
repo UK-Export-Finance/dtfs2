@@ -66,7 +66,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
       jest.mocked(getUploadErrors).mockReturnValueOnce(null);
 
       jest.mocked(extractCsvData).mockReturnValueOnce({
-        csvJson: null,
+        csvJson: [],
         fileBuffer: null,
         error: true,
       });
@@ -105,7 +105,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
       jest.mocked(getUploadErrors).mockReturnValueOnce(null);
 
       jest.mocked(extractCsvData).mockReturnValueOnce({
-        csvJson: null,
+        csvJson: [],
         fileBuffer: null,
         error: false,
       });
@@ -148,7 +148,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
       jest.mocked(getUploadErrors).mockReturnValueOnce(null);
 
       jest.mocked(extractCsvData).mockReturnValueOnce({
-        csvJson: null,
+        csvJson: [],
         fileBuffer: null,
         error: false,
       });
