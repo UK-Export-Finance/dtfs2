@@ -13,13 +13,13 @@ const showAmendmentButton = (deal, userTeams) => {
   const acceptableSubmissionType = [DEAL.SUBMISSION_TYPE.AIN, DEAL.SUBMISSION_TYPE.MIN];
   const acceptableUserTeamId = TEAM_IDS.PIM;
   const acceptableStages = [DEAL.DEAL_STAGE.CONFIRMED, DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS];
-  const isDealCancelledOrPendingCancellation = deal.status === DEAL_STATUS.CANCELLED || deal.status === DEAL_STATUS.PENDING_CANCELLATION;
+  const unacceptableStatuses = [DEAL_STATUS.CANCELLED, DEAL_STATUS.PENDING_CANCELLATION];
 
   return (
     acceptableSubmissionType.includes(deal.dealSnapshot.submissionType) &&
     userTeams.some((teamId) => teamId === acceptableUserTeamId) &&
     acceptableStages.includes(deal.tfm.stage) &&
-    !isDealCancelledOrPendingCancellation
+    !unacceptableStatuses.includes(deal.status)
   );
 };
 
