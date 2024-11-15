@@ -25,37 +25,37 @@ describe('amendments helper', () => {
     function getSuccessTestCases() {
       return [
         {
-          description: 'submission type is AIN',
+          description: `submission type is ${DEAL.SUBMISSION_TYPE.AIN}`,
           deal: new AmendmentButtonDealBuilder().withDealSnapshotSubmissionType(DEAL.SUBMISSION_TYPE.AIN).build(),
           userTeams: defaultUserTeams,
         },
         {
-          description: 'submissionType is MIN',
+          description: `submission type is ${DEAL.SUBMISSION_TYPE.MIN}`,
           deal: new AmendmentButtonDealBuilder().withDealSnapshotSubmissionType(DEAL.SUBMISSION_TYPE.MIN).build(),
           userTeams: defaultUserTeams,
         },
         {
-          description: 'deal stage is confirmed',
+          description: `deal stage is ${DEAL.DEAL_STAGE.CONFIRMED}`,
           deal: new AmendmentButtonDealBuilder().withTfmStage(DEAL.DEAL_STAGE.CONFIRMED).build(),
           userTeams: defaultUserTeams,
         },
         {
-          description: 'deal stage is amendment in progress',
+          description: `deal stage is ${DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS}`,
           deal: new AmendmentButtonDealBuilder().withTfmStage(DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS).build(),
           userTeams: defaultUserTeams,
         },
         {
-          description: 'user is in PIM team',
+          description: `user is in ${TEAM_IDS.PIM} team`,
           deal: new AmendmentButtonDealBuilder().build(),
           userTeams: defaultUserTeams,
         },
         {
-          description: 'user is in PIM team and another team',
+          description: `user is in ${TEAM_IDS.PIM} team and another team`,
           deal: new AmendmentButtonDealBuilder().build(),
           userTeams: [...defaultUserTeams, TEAM_IDS.UNDERWRITER_MANAGERS],
         },
         {
-          description: 'deal is not cancelled or pending cancellation',
+          description: `deal is not ${DEAL_STATUS.CANCELLED} or ${DEAL_STATUS.PENDING_CANCELLATION}`,
           deal: new AmendmentButtonDealBuilder().withStatus(DEAL_STATUS.COMPLETED).build(),
           userTeams: defaultUserTeams,
         },
@@ -70,27 +70,27 @@ describe('amendments helper', () => {
     function getFailureTestCases() {
       return [
         {
-          description: 'submission type is not AIN or MIN',
-          deal: new AmendmentButtonDealBuilder().withDealSnapshotSubmissionType('MIA').build(),
+          description: `submission type is not ${DEAL.SUBMISSION_TYPE.AIN} or ${DEAL.SUBMISSION_TYPE.MIN}`,
+          deal: new AmendmentButtonDealBuilder().withDealSnapshotSubmissionType(DEAL.SUBMISSION_TYPE.MIA).build(),
           userTeams: defaultUserTeams,
         },
         {
-          description: 'user teams is not PIM',
+          description: `user teams is not ${TEAM_IDS.PIM}`,
           deal: new AmendmentButtonDealBuilder().build(),
           userTeams: [TEAM_IDS.UNDERWRITER_MANAGERS],
         },
         {
-          description: 'deal stage is not confirmed or amendment in progress',
+          description: `deal stage is not ${DEAL_STATUS.CONFIRMED} or ${DEAL_STATUS.AMENDMENT_IN_PROGRESS}`,
           deal: new AmendmentButtonDealBuilder().withDealSnapshotSubmissionType(DEAL_STATUS.DRAFT).build(),
           userTeams: defaultUserTeams,
         },
         {
-          description: 'deal is cancelled',
+          description: `deal is ${DEAL_STATUS.CANCELLED}`,
           deal: new AmendmentButtonDealBuilder().withStatus(DEAL_STATUS.CANCELLED).build(),
           userTeams: defaultUserTeams,
         },
         {
-          description: 'deal is pending cancellation',
+          description: `deal is ${DEAL_STATUS.PENDING_CANCELLATION}`,
           deal: new AmendmentButtonDealBuilder().withStatus(DEAL_STATUS.PENDING_CANCELLATION).build(),
           userTeams: defaultUserTeams,
         },
