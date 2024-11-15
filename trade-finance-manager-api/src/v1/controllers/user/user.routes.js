@@ -72,6 +72,7 @@ module.exports.upsertTfmUserFromEntraIdUser = async (req, res, next) => {
 
     return res.status(HttpStatusCode.Ok).send(tfmUser);
   } catch (error) {
+    console.error('Error calling upsertTfmUserFromEntraIdUser %o', error);
     if (error instanceof ApiError) {
       return res.status(error.status).send({
         status: error.status,
