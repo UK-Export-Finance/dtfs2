@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import * as $ from 'mongo-dot-notation';
 import { Facility, FACILITY_STAGE, InvalidDealIdError, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../drivers/db-client';
@@ -46,10 +47,10 @@ describe('PortalFacilityRepo', () => {
 
       // Assert
       const expectedFilter = { dealId: { $eq: dealId } };
-      const expectedUpdate = {
+      const expectedUpdate = $.flatten({
         ...update,
         auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-      };
+      });
       expect(updateManyMock).toHaveBeenCalledTimes(1);
       expect(updateManyMock).toHaveBeenCalledWith(expectedFilter, expectedUpdate);
     });
