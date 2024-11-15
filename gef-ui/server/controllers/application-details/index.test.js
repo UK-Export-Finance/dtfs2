@@ -216,6 +216,11 @@ describe('controllers/application-details', () => {
           status: DEAL_STATUS.CANCELLED,
           expectObjectContaining: { applicationStatus: DEAL_STATUS.CANCELLED },
         },
+        {
+          template: `application-preview`,
+          status: DEAL_STATUS.PENDING_CANCELLATION,
+          expectObjectContaining: { applicationStatus: DEAL_STATUS.PENDING_CANCELLATION },
+        },
       ];
 
       it.each(templateRenderingTestCases)('renders `$template` when status is $status', async ({ template, status, expectObjectContaining }) => {
