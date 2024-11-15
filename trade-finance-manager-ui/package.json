@@ -34,7 +34,7 @@
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
-    "@azure/msal-node": "^2.15.0",
+    "@azure/msal-node": "^2.16.1",
     "@babel/polyfill": "^7.12.1",
     "@ministryofjustice/frontend": "1.8.0",
     "@ukef/dtfs2-common": "1.0.0",
@@ -108,7 +108,7 @@
     "jest": "29.5.0",
     "jest-when": "^3.6.0",
     "node-mocks-http": "^1.16.1",
-    "sass": "^1.80.5",
+    "sass": "^1.80.7",
     "sass-loader": "13.2.2",
     "style-loader": "3.3.2",
     "terser-webpack-plugin": "^5.3.10",

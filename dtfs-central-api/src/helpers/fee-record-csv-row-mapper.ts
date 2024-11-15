@@ -1,5 +1,12 @@
-import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity, UTILISATION_REPORT_HEADERS, FeeRecordStatus, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
-import { UtilisationReportRawCsvData } from '../types/utilisation-reports';
+import {
+  DbRequestSource,
+  FeeRecordEntity,
+  UtilisationReportEntity,
+  UTILISATION_REPORT_HEADERS,
+  FeeRecordStatus,
+  UtilisationReportRawCsvData,
+  FEE_RECORD_STATUS,
+} from '@ukef/dtfs2-common';
 
 type FeeRecordCsvRowToSqlEntityParams = {
   dataEntry: UtilisationReportRawCsvData;
@@ -13,7 +20,7 @@ type FeeRecordCsvRowToSqlEntityParams = {
  * @param defaultNumber - The number to default the value to
  * @returns Either the `maybeString` as a number or the default number
  */
-const asNumberOrDefault = (maybeString: string | undefined, defaultNumber: number) => (maybeString ? Number(maybeString) : defaultNumber);
+const asNumberOrDefault = (maybeString: string | undefined | null, defaultNumber: number) => (maybeString ? Number(maybeString) : defaultNumber);
 
 /**
  * Converts a csv data row to the SQL entity
@@ -31,11 +38,11 @@ export const feeRecordCsvRowToSqlEntity = ({ dataEntry, requestSource, report }:
     facilityUtilisation: Number(dataEntry[UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION]),
     totalFeesAccruedForThePeriod: Number(dataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED]),
     totalFeesAccruedForThePeriodCurrency:
-      dataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY] ?? dataEntry[UTILISATION_REPORT_HEADERS.BASE_CURRENCY],
+      dataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY] || dataEntry[UTILISATION_REPORT_HEADERS.BASE_CURRENCY],
     totalFeesAccruedForThePeriodExchangeRate: asNumberOrDefault(dataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE], 1),
     feesPaidToUkefForThePeriod,
     feesPaidToUkefForThePeriodCurrency: dataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY],
-    paymentCurrency: dataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY] ?? dataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY],
+    paymentCurrency: dataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY] || dataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY],
     paymentExchangeRate: asNumberOrDefault(dataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE], 1),
     status,
     report,

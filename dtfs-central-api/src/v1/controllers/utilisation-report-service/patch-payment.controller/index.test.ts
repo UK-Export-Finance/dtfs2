@@ -14,6 +14,7 @@ import { aTfmSessionUser } from '../../../../../test-helpers';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { PaymentRepo } from '../../../../repositories/payment-repo';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 
 jest.mock('../../../../helpers');
 
@@ -113,7 +114,7 @@ describe('patch-payment.controller', () => {
       // Assert
       expect(utilisationReportStateMachineConstructorSpy).toHaveBeenCalledWith(utilisationReport);
       expect(mockEventHandler).toHaveBeenCalledWith({
-        type: 'EDIT_PAYMENT',
+        type: UTILISATION_REPORT_EVENT_TYPE.EDIT_PAYMENT,
         payload: {
           transactionEntityManager: mockEntityManager,
           payment,

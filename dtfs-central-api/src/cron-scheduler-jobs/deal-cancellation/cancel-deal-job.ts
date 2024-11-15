@@ -2,6 +2,7 @@ import { asString, CronSchedulerJob, TfmDealWithCancellation } from '@ukef/dtfs2
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { endOfDay } from 'date-fns';
 import { TfmDealCancellationRepo } from '../../repositories/tfm-deals-repo';
+import { DealCancellationService } from '../../services/tfm/deal-cancellation.service';
 
 const { DEAL_CANCELLATION_SCHEDULE } = process.env;
 
@@ -11,13 +12,7 @@ const { DEAL_CANCELLATION_SCHEDULE } = process.env;
  */
 const cancelDeals = async (deals: TfmDealWithCancellation[]) => {
   await Promise.all(
-    deals.map((deal) =>
-      TfmDealCancellationRepo.submitDealCancellation({
-        dealId: deal._id,
-        cancellation: deal.tfm.cancellation,
-        auditDetails: generateSystemAuditDetails(),
-      }),
-    ),
+    deals.map(async (deal) => DealCancellationService.processScheduledCancellation(deal._id, deal.tfm.cancellation, generateSystemAuditDetails())),
   );
 };
 

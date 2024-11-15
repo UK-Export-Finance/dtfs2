@@ -20,11 +20,11 @@ const baseRules = {
     {
       devDependencies: [
         '**/*.test.{js,ts}',
+        '**/*.ff-test.{js,ts}',
         '**/*.api-test{,s}.{js,ts}',
         '**/*.spec.{js,ts}',
         '**/webpack.*.{js,ts}',
         '**/api-test*/**',
-        '**/*.tests.{js,ts}',
         '**/__mocks__/**',
       ],
     },
@@ -44,6 +44,7 @@ const baseRules = {
   'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
   'no-unused-vars': ['error', { ignoreRestSiblings: true }],
   'object-curly-newline': 'off',
+  'no-param-reassign': ['error', { props: true, ignorePropertyModificationsFor: ['draft', 'req', 'res'] }],
 };
 
 module.exports = {

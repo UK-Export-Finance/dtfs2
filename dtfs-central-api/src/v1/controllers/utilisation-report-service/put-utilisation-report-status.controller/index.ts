@@ -2,6 +2,7 @@ import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
 import { EntityManager } from 'typeorm';
 import { DbRequestSource, RECONCILIATION_COMPLETED, REQUEST_PLATFORM_TYPE, ReportWithStatus } from '@ukef/dtfs2-common';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { ApiError, InvalidPayloadError } from '../../../../errors';
@@ -45,7 +46,7 @@ const executeEventHandler = async (
 
   if (reportWithStatus.status === RECONCILIATION_COMPLETED) {
     await stateMachine.handleEvent({
-      type: 'MANUALLY_SET_COMPLETED',
+      type: UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED,
       payload: {
         requestSource,
         transactionEntityManager,
@@ -54,7 +55,7 @@ const executeEventHandler = async (
     return;
   }
   await stateMachine.handleEvent({
-    type: 'MANUALLY_SET_INCOMPLETE',
+    type: UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_INCOMPLETE,
     payload: {
       requestSource,
       transactionEntityManager,

@@ -1,4 +1,4 @@
-const { TEAM_IDS, AMENDMENT_STATUS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { TEAM_IDS, AMENDMENT_STATUS, FACILITY_TYPE, DEAL_TYPE } = require('@ukef/dtfs2-common');
 const { AMENDMENTS, DEAL, DECISIONS } = require('../constants');
 
 const MOCK_DEAL = {
@@ -6,6 +6,8 @@ const MOCK_DEAL = {
   dealSnapshot: {
     _id: '61f6ac5b02fade01b1e8efef',
     submissionType: DEAL.SUBMISSION_TYPE.MIA,
+    dealType: DEAL_TYPE.GEF,
+    ukefDealId: 'ukefDealId',
   },
   tfm: {
     leadUnderwriter: '12345678910',

@@ -187,7 +187,7 @@ describe(component, () => {
 
     wrapper.expectElement(`tr`).toHaveCount(feeRecordIds.length + 1); // including table header
     feeRecordIds.forEach((id) => {
-      const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${id}"]`;
+      const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${id}"]`;
       wrapper.expectElement(rowSelector).toExist();
     });
   });
@@ -205,7 +205,7 @@ describe(component, () => {
 
     const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
 
-    const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
+    const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
     wrapper.expectElement(`${rowSelector} th:contains("${facilityId}")`).toExist();
   });
 
@@ -222,7 +222,7 @@ describe(component, () => {
 
     const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
 
-    const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
+    const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
     wrapper.expectElement(`${rowSelector} td:contains("${exporter}")`).toExist();
   });
 
@@ -239,7 +239,7 @@ describe(component, () => {
 
     const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
 
-    const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
+    const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
     wrapper.expectElement(`${rowSelector} td:contains("${reportedFees}")`).toExist();
     wrapper.expectElement(`${rowSelector} td:contains("${reportedFees}")`).hasClass(numericCellClass);
   });
@@ -257,7 +257,7 @@ describe(component, () => {
 
     const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
 
-    const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
+    const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
     wrapper.expectElement(`${rowSelector} td:contains("${reportedPayments}")`).toExist();
     wrapper.expectElement(`${rowSelector} td:contains("${reportedPayments}")`).hasClass(numericCellClass);
   });
@@ -282,7 +282,7 @@ describe(component, () => {
 
     const [firstRowId, ...otherIds] = feeRecordIds;
 
-    const firstRowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${firstRowId}"]`;
+    const firstRowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${firstRowId}"]`;
     wrapper.expectElement(`${firstRowSelector} td:contains("${totalReportedPayments.formattedCurrencyAndAmount}")`).toExist();
     wrapper.expectElement(`${firstRowSelector} td:contains("${totalReportedPayments.formattedCurrencyAndAmount}")`).hasClass(numericCellClass);
     wrapper
@@ -290,7 +290,7 @@ describe(component, () => {
       .toHaveAttribute('data-sort-value', totalReportedPayments.dataSortValue.toString());
 
     otherIds.forEach((id) => {
-      const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${id}"]`;
+      const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${id}"]`;
       wrapper.expectElement(`${rowSelector}`).toExist();
       wrapper.expectElement(`${rowSelector} td:contains("${totalReportedPayments.formattedCurrencyAndAmount}")`).notToExist();
     });
@@ -313,13 +313,13 @@ describe(component, () => {
 
     const [firstRowId, ...otherIds] = feeRecordIds;
 
-    const firstRowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${firstRowId}"]`;
+    const firstRowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${firstRowId}"]`;
     wrapper.expectElement(`${firstRowSelector} td:has(ul.payments-list)`).toExist();
     wrapper.expectElement(`${firstRowSelector} td:has(ul.payments-list)`).hasClass(numericCellClass);
     wrapper.expectElement(`${firstRowSelector} td > ul.payments-list > li`).toHaveCount(paymentsReceived.length);
 
     otherIds.forEach((id) => {
-      const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${id}"]`;
+      const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${id}"]`;
       wrapper.expectElement(`${rowSelector}`).toExist();
       wrapper.expectElement(`${rowSelector} td:has(ul.payments-list)`).notToExist();
     });
@@ -344,7 +344,7 @@ describe(component, () => {
 
     const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
 
-    const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
+    const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
     wrapper.expectElement(`${rowSelector} td > ul.payments-list > li`).toHaveCount(paymentsReceived.length);
   });
 
@@ -374,7 +374,7 @@ describe(component, () => {
 
       const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, reportId, feeRecordPaymentGroups });
 
-      const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
+      const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
       paymentsReceived.forEach((payment) => {
         wrapper
           .expectLink(`${rowSelector} td a:contains(${payment.formattedCurrencyAndAmount})`)
@@ -408,7 +408,7 @@ describe(component, () => {
 
       const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
 
-      const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
+      const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
       paymentsReceived.forEach((payment) => {
         wrapper.expectElement(`${rowSelector} td li:contains(${payment.formattedCurrencyAndAmount})`).toExist();
         wrapper.expectElement(`${rowSelector} td a:contains(${payment.formattedCurrencyAndAmount})`).notToExist();
@@ -440,7 +440,7 @@ describe(component, () => {
 
       const wrapper = render({ ...defaultRendererParams(), userCanEdit: false, reportId, feeRecordPaymentGroups });
 
-      const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
+      const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
       paymentsReceived.forEach((payment) => {
         wrapper.expectElement(`${rowSelector} td li:contains(${payment.formattedCurrencyAndAmount})`).toExist();
         wrapper.expectElement(`${rowSelector} td a:contains(${payment.formattedCurrencyAndAmount})`).notToExist();
@@ -463,7 +463,7 @@ describe(component, () => {
 
     const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
 
-    const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
+    const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
     wrapper.expectElement(`${rowSelector} td:has(ul.payments-list)`).notToExist();
   });
 
@@ -487,7 +487,7 @@ describe(component, () => {
 
     const [firstRowId, ...otherIds] = feeRecordIds;
 
-    const firstRowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${firstRowId}"]`;
+    const firstRowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${firstRowId}"]`;
     wrapper.expectElement(`${firstRowSelector} td:contains("${totalPaymentsReceived.formattedCurrencyAndAmount}")`).toExist();
     wrapper.expectElement(`${firstRowSelector} td:contains("${totalPaymentsReceived.formattedCurrencyAndAmount}")`).hasClass(numericCellClass);
     wrapper
@@ -495,7 +495,7 @@ describe(component, () => {
       .toHaveAttribute('data-sort-value', totalPaymentsReceived.dataSortValue.toString());
 
     otherIds.forEach((id) => {
-      const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${id}"]`;
+      const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${id}"]`;
       wrapper.expectElement(`${rowSelector}`).toExist();
       wrapper.expectElement(`${rowSelector} td:contains("${totalPaymentsReceived.formattedCurrencyAndAmount}")`).notToExist();
     });
@@ -594,11 +594,11 @@ describe(component, () => {
 
     const [firstRowId, ...otherIds] = feeRecordIds;
 
-    const firstRowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${firstRowId}"]`;
+    const firstRowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${firstRowId}"]`;
     wrapper.expectElement(`${firstRowSelector} td input[id="${checkboxId}"][type="checkbox"]`).toExist();
 
     otherIds.forEach((id) => {
-      const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${id}"]`;
+      const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${id}"]`;
       wrapper.expectElement(`${rowSelector}`).toExist();
       wrapper.expectElement(`${rowSelector} td input[id="${checkboxId}"][type="checkbox"]`).notToExist();
     });
