@@ -15,7 +15,9 @@ describe('filterReportJson', () => {
         [UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION]: '200000',
       },
     ];
+
     const result = filterReportJsonToRelevantKeys(reportData);
+
     const reportDataWithReportHeaderKeysOnly = [
       {
         [UTILISATION_REPORT_HEADERS.BASE_CURRENCY]: 'GBP',
@@ -26,6 +28,7 @@ describe('filterReportJson', () => {
         [UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION]: '200000',
       },
     ];
+
     expect(result).toEqual(reportDataWithReportHeaderKeysOnly);
   });
 });
