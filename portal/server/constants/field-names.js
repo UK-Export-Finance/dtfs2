@@ -11,7 +11,6 @@ const DEAL = {
 
 const FACILITY = {
   TYPE: 'type',
-  HAS_BEEN_ISSUED: 'hasBeenIssued',
   NAME: 'name',
   UKEF_FACILITY_ID: 'ukefFacilityId',
   CURRENCY: 'currency',
@@ -19,6 +18,7 @@ const FACILITY = {
   DEAL_SUBMISSION_TYPE: 'deal.submissionType',
   EXPORTER_COMPANY_NAME: 'deal.exporter.companyName',
   CREATED_BY: 'createdBy',
+  STAGE: 'stage',
 };
 
 module.exports = {

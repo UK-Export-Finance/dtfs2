@@ -13,6 +13,7 @@ const CONSTANTS = require('../../../constants');
  * @example ( true )
  * @returns 'Issued'
  */
+// TODO: delete this function
 const mapIssuedValueToText = (hasBeenIssued) => {
   if (hasBeenIssued) {
     return CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.ISSUED;
@@ -31,10 +32,11 @@ const mapIssuedValueToText = (hasBeenIssued) => {
  * @example ( 'Bank facility stage', 'hasBeenIssued', [ true, false ] )
  * @returns generateSelectedFiltersObjectWithMappedValues('Facility stage', 'hasBeenIssued', [ {value: true, mappedValue: 'Issued' }])
  */
-const selectedHasBeenIssuedFilters = (heading, fieldName, submittedFilters) => {
+const selectedStageFilters = (heading, fieldName, submittedFilters) => {
   const mappedFilters = submittedFilters.map((value) => ({
     value,
-    mappedValue: mapIssuedValueToText(value),
+    // TODO: work out if this is needed
+    mappedValue: value,
   }));
 
   const selectedFiltersObj = generateSelectedFiltersObjectWithMappedValues(heading, fieldName, mappedFilters);
@@ -78,13 +80,9 @@ const selectedFilters = (submittedFilters) => {
     selected.push(obj);
   }
 
-  if (submittedFilters[CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]) {
+  if (submittedFilters.stage) {
     selected.push(
-      selectedHasBeenIssuedFilters(
-        CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.FACILITY_STAGE,
-        CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED,
-        submittedFilters.hasBeenIssued,
-      ),
+      selectedStageFilters(CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.FACILITY_STAGE, CONSTANTS.FIELD_NAMES.FACILITY.STAGE, submittedFilters.stage),
     );
   }
 
@@ -104,5 +102,5 @@ const selectedFilters = (submittedFilters) => {
 module.exports = {
   mapIssuedValueToText,
   selectedFilters,
-  selectedHasBeenIssuedFilters,
+  selectedHasBeenIssuedFilters: selectedStageFilters,
 };

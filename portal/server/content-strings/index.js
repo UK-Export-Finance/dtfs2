@@ -12,6 +12,7 @@ const DASHBOARD_FILTERS = {
   // do not exist in the data.
   BESPOKE_FIELD_NAMES: {
     KEYWORD: 'keyword',
+    STAGE: 'stage',
   },
   BESPOKE_FILTER_VALUES: {
     DEALS: {

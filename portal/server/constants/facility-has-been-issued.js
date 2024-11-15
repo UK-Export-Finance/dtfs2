@@ -1,3 +1,4 @@
+// TODO: this can be deleted now
 const FACILITY_HAS_BEEN_ISSUED = {
   ISSUED: true,
   UNISSUED: false,

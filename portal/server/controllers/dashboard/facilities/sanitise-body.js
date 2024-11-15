@@ -45,6 +45,7 @@ const sanitiseHasBeenIssued = (hasBeenIssued) => {
  * @example ( { keyword: 'mock', hasBeenIssued: ['true', 'false'] } )
  * @returns { keyword: 'mock', hasBeenIssued: [true, false] }
  */
+// TODO: this can be deleted
 const sanitiseBody = (body) => {
   const sanitised = body;
 

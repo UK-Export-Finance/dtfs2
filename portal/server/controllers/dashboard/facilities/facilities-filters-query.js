@@ -1,4 +1,7 @@
 const { FACILITY_STATUS } = require('@ukef/dtfs2-common');
+const {
+  DASHBOARD_FILTERS: { BESPOKE_FILTER_VALUES },
+} = require('../../../content-strings');
 const CONTENT_STRINGS = require('../../../content-strings');
 const keywordQuery = require('./facilities-filters-keyword-query');
 
@@ -42,7 +45,7 @@ const dashboardFacilitiesFiltersQuery = (filters, user) => {
       const filterValue = filterObj[fieldName];
 
       const isKeywordField = fieldName === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD;
-      const isHasBeenIssued = fieldName === 'hasBeenIssued';
+      const isStageField = fieldName === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.STAGE;
 
       if (isKeywordField) {
         const keywordValue = filterValue[0];
@@ -53,7 +56,7 @@ const dashboardFacilitiesFiltersQuery = (filters, user) => {
         keywordFilter.OR.push(...keywordFilters);
 
         query.AND.push(keywordFilter);
-      } else if (isHasBeenIssued) {
+      } else if (isStageField) {
         const fieldFilter = {
           OR: [],
         };
@@ -62,7 +65,7 @@ const dashboardFacilitiesFiltersQuery = (filters, user) => {
             fieldFilter.OR.push({ facilityStage: FACILITY_STATUS.RISK_EXPIRED });
           } else {
             fieldFilter.OR.push({
-              [fieldName]: value,
+              hasBeenIssued: value === BESPOKE_FILTER_VALUES.FACILITIES.ISSUED,
             });
           }
         });
