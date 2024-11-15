@@ -17,6 +17,11 @@ describe('amendments helper', () => {
       expect(result).toEqual(false);
     });
 
+    /**
+     * The builder creates a valid deal object for the amendment button.
+     * The success tests set a specific variable to ensure that given a deal is otherwise valid,
+     * when the testing variable is changed, the button is shown.
+     */
     function getSuccessTestCases() {
       return [
         {
@@ -57,6 +62,11 @@ describe('amendments helper', () => {
       ];
     }
 
+    /**
+     * The builder creates a valid deal object for the amendment button.
+     * The failure tests set a specific variable to ensure that given a deal is otherwise valid,
+     * when the testing variable is changed, the button is not shown.
+     */
     function getFailureTestCases() {
       return [
         {

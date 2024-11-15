@@ -1,6 +1,10 @@
 import { DEAL_STATUS } from '@ukef/dtfs2-common';
 import { DEAL } from '../constants';
 
+/**
+ * The builder creates a valid deal object for the amendment button.
+ * It can then be modified to test different scenarios.
+ */
 export class AmendmentButtonDealBuilder {
   constructor() {
     this.deal = {
