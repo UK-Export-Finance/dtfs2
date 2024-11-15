@@ -70,7 +70,7 @@ module.exports.upsertTfmUserFromEntraIdUser = async (req, res, next) => {
     const entraIdUser = ENTRA_ID_USER_SCHEMA.parse(req.body);
     const tfmUser = await upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails: generateSystemAuditDetails() });
 
-    return res.status(200).send(tfmUser);
+    return res.status(HttpStatusCode.Ok).send(tfmUser);
   } catch (error) {
     if (error instanceof ApiError) {
       return res.status(error.status).send({

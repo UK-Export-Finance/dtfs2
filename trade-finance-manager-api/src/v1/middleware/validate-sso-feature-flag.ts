@@ -13,7 +13,9 @@ const createValidateSsoFeatureFlagMiddleware =
   (req, res, next) => {
     const isFeatureFlagEnabled = isTfmSsoFeatureFlagEnabled();
 
-    if ((desiredFeatureFlagState && !isFeatureFlagEnabled) || (!desiredFeatureFlagState && isFeatureFlagEnabled)) {
+    const isDesiredStateMatchingFeatureFlagState = desiredFeatureFlagState === isFeatureFlagEnabled;
+
+    if (!isDesiredStateMatchingFeatureFlagState) {
       console.error(
         'Tfm SSO feature flag is in incorrect state to access this endpoint, current feature flag state is %s, desired state is %s',
         isFeatureFlagEnabled,
