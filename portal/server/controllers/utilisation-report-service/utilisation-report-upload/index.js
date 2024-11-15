@@ -6,7 +6,7 @@ const { getDueReportPeriodsByBankId, getReportDueDate } = require('./utilisation
 const api = require('../../../api');
 const { getReportAndUserDetails } = require('./utilisation-report-details');
 const { PRIMARY_NAV_KEY } = require('../../../constants');
-const { filterReportJsonToRelevantKeys } = require('../../../helpers/filterReportJson');
+const { filterReportJsonToRelevantKeys } = require('../../../helpers/filterReportJsonToRelevantKeys');
 
 const setSessionUtilisationReport = (req, nextDueReportPeriod) => {
   req.session.utilisationReport = {

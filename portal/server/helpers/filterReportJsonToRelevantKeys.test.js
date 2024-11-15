@@ -1,5 +1,5 @@
 import { UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';
-import { filterReportJsonToRelevantKeys } from './filterReportJson';
+import { filterReportJsonToRelevantKeys } from './filterReportJsonToRelevantKeys';
 
 describe('filterReportJson', () => {
   it('should remove keys from a report json', () => {
