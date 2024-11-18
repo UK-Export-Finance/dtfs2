@@ -21,9 +21,10 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
   it('should render create record correction request page', async () => {
     // Arrange
     const reportId = '123';
+    const feeRecordId = '456';
     const { req, res } = httpMocks.createMocks<CreateRecordCorrectionRequestRequest>({
       session: requestSession,
-      params: { reportId: '123', feeRecordId: '456' },
+      params: { reportId, feeRecordId },
     });
 
     const feeRecordDetailsResponse: GetFeeRecordDetailsResponseBody = {
@@ -57,5 +58,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         exporter: 'Sample Company Ltd',
       },
     });
+    expect(api.getFeeRecordDetails).toHaveBeenCalledTimes(1);
+    expect(api.getFeeRecordDetails).toHaveBeenCalledWith(reportId, feeRecordId, userToken);
   });
 });

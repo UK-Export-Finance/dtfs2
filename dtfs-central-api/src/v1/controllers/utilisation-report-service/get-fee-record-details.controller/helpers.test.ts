@@ -22,6 +22,8 @@ describe('get-fee-record-details.controller helpers', () => {
 
       // Assert
       expect(feeRecordDetails.bank).toEqual({ id: bankId, name: bankName });
+      expect(getBankNameById).toHaveBeenCalledTimes(1);
+      expect(getBankNameById).toHaveBeenCalledWith(bankId);
     });
 
     it('returns an object containing the report period', async () => {
