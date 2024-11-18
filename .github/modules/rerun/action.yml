@@ -37,10 +37,13 @@ runs:
 
         # Retry loop execution
         while [ $run -le $maximum ]; do
+          echo "Run #$run/$maximum"
           eval "$env" && bash -c "${{ inputs.command }}"
           if [ $? -eq 0 ]; then
+            echo "Done";
             exit 0;
           fi
+          echo "Re-running..."
           run = $((run + 1))
         done
 
