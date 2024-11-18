@@ -1,4 +1,4 @@
-import { ApiErrorResponseBody, AuditDetails, DocumentNotDeletedError, InvalidAuditDetailsError, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { ApiError, ApiErrorResponseBody, AuditDetails, DocumentNotDeletedError, InvalidFacilityIdError, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { Response } from 'express';
 import { deleteOne, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
@@ -14,34 +14,15 @@ export const deleteFacility = async (
   const { id: facilityId } = req.params;
   const { auditDetails, user } = req.body;
 
-  if (!ObjectId.isValid(facilityId)) {
-    return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
-  }
-
   try {
-    validateAuditDetailsAndUserType(auditDetails, 'portal');
-  } catch (error) {
-    if (error instanceof InvalidAuditDetailsError) {
-      return res.status(error.status).send({
-        status: error.status,
-        message: error.message,
-        code: error.code,
-      });
+    if (!ObjectId.isValid(facilityId)) {
+      throw new InvalidFacilityIdError(facilityId);
     }
-    return res.status(500).send({ status: 500, message: 'An unknown error occurred' });
-  }
 
-  const facility = await findOneFacility(facilityId);
+    validateAuditDetailsAndUserType(auditDetails, 'portal');
 
-  if (!facility) {
-    return res.status(404).send({ status: 400, message: 'Facility not found' });
-  }
+    const facility = await findOneFacility(facilityId);
 
-  if (!('dealId' in facility)) {
-    return res.status(500).send({ status: 500, message: 'Facility object missing dealId' });
-  }
-
-  try {
     await deleteOne({
       documentId: new ObjectId(facilityId),
       collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
@@ -55,6 +36,17 @@ export const deleteFacility = async (
     if (error instanceof DocumentNotDeletedError) {
       return res.status(404).send({ status: 400, message: 'Facility not found' });
     }
+
+    if (error instanceof ApiError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: error.message,
+        code: error.code,
+      });
+    }
+
+    console.error(`Error whilst deleting facility, ${JSON.stringify(error)}`);
+
     return res.status(500).send({ status: 500, message: 'An unknown error occurred' });
   }
 };

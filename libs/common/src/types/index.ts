@@ -28,3 +28,4 @@ export * from './file';
 export * from './fee-record-utilisation';
 export * from './radio-item';
 export * from './date-iana-timezones';
+export * from './flash';

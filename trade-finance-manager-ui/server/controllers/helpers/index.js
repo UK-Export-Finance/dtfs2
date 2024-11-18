@@ -14,7 +14,7 @@ const { overrideDealsIfAmendmentsInProgress } = require('./overrideDealsIfAmendm
 const { overrideFacilitiesIfAmendmentsInProgress } = require('./overrideFacilitiesIfAmendmentsInProgress.helper');
 const { renderDealsOrFacilitiesPage, queryDealsOrFacilities } = require('./dealsAndFacilities.helper');
 const {
-  isDealCancellationEnabled,
+  isDealCancellationEnabledForUser,
   canSubmissionTypeBeCancelled,
   canDealBeCancelled,
   isDealCancellationInDraft,
@@ -22,7 +22,7 @@ const {
 
 module.exports = {
   showAmendmentButton,
-  isDealCancellationEnabled,
+  isDealCancellationEnabledForUser,
   canDealBeCancelled,
   isDealCancellationInDraft,
   canSubmissionTypeBeCancelled,
