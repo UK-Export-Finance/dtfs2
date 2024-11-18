@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { UtilisationReportCsvRowDataSchema } from './utilisation-report-csv-row-data.schema';
 
 describe('utilisation-report-raw-csv-cell-data-with-location.schema', () => {
@@ -78,7 +79,7 @@ describe('utilisation-report-raw-csv-cell-data-with-location.schema', () => {
       // Arrange
       const validRowData = {
         'some key': { value: null, row: 1, column: 'A' },
-        'some other key': { value: 'GBP', row: 1, column: 'B' },
+        'some other key': { value: CURRENCY.GBP, row: 1, column: 'B' },
       };
 
       // Act
@@ -87,7 +88,7 @@ describe('utilisation-report-raw-csv-cell-data-with-location.schema', () => {
       // Assert
       expect(data).toEqual({
         'some key': { value: null, row: 1, column: 'A' },
-        'some other key': { value: 'GBP', row: 1, column: 'B' },
+        'some other key': { value: CURRENCY.GBP, row: 1, column: 'B' },
       });
     });
   });

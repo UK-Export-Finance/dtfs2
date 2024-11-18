@@ -1,3 +1,5 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
+
 const now = new Date().valueOf();
 
 const deal = {
@@ -163,7 +165,7 @@ const deal = {
     'supplyContractConversionDate-year': '',
     supplyContractConversionRateToGBP: '',
     supplyContractCurrency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
       text: 'GBP - UK Sterling',
     },
     supplyContractValue: '12312323.00',

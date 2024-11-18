@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, FACILITY_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { withDeleteOneTests, generateMockTfmUserAuditDatabaseRecord, withDeleteManyTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { testApi } = require('../../../test-api');
@@ -29,14 +29,14 @@ const newFacilities = [
     ukefFacilityId: '223344',
     value: '2000',
     coverEndDate: '2021-08-12T00:00:00.000Z',
-    currency: { id: 'GBP' },
+    currency: { id: CURRENCY.GBP },
   },
   {
     type: FACILITY_TYPE.LOAN,
     ukefFacilityId: '223345',
     value: '2000',
     coverEndDate: '2021-08-12T00:00:00.000Z',
-    currency: { id: 'GBP' },
+    currency: { id: CURRENCY.GBP },
   },
 ];
 

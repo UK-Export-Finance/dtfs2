@@ -11,7 +11,6 @@ import {
   TFM_FACILITY_STAGE,
   TfmDeal,
   TfmDealCancellation,
-  TfmDealCancellationResponse,
   TfmDealCancellationWithStatus,
   TfmDealWithCancellation,
   TfmFacility,
@@ -19,7 +18,6 @@ import {
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { flatten } from 'mongo-dot-notation';
 import { mongoDbClient } from '../../drivers/db-client';
-import { getUkefFacilityIds } from '../../helpers/get-ukef-facility-ids';
 
 export class TfmDealCancellationRepo {
   private static async getDealCollection(): Promise<Collection<WithoutId<TfmDeal>>> {
@@ -156,7 +154,7 @@ export class TfmDealCancellationRepo {
     cancellation: TfmDealCancellation;
     activity?: TfmActivity;
     auditDetails: AuditDetails;
-  }): Promise<TfmDealCancellationResponse> {
+  }): Promise<{ cancelledDeal: TfmDeal; riskExpiredFacilities: TfmFacility[] }> {
     if (!ObjectId.isValid(dealId)) {
       throw new InvalidDealIdError(dealId.toString());
     }
@@ -203,11 +201,9 @@ export class TfmDealCancellationRepo {
       }),
     );
 
-    const updatedFacilities = await facilityCollection.find({ 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } }).toArray();
+    const riskExpiredFacilities = await facilityCollection.find({ 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } }).toArray();
 
-    const updatedFacilityUkefIds = getUkefFacilityIds(updatedFacilities);
-
-    return { cancelledDeal: deal, riskExpiredFacilityUkefIds: updatedFacilityUkefIds };
+    return { cancelledDeal: deal, riskExpiredFacilities };
   }
 
   /**
@@ -232,7 +228,7 @@ export class TfmDealCancellationRepo {
     cancellation: TfmDealCancellation;
     activity?: TfmActivity;
     auditDetails: AuditDetails;
-  }): Promise<TfmDealCancellationResponse> {
+  }): Promise<{ cancelledDeal: TfmDeal; riskExpiredFacilities: TfmFacility[] }> {
     if (!ObjectId.isValid(dealId)) {
       throw new InvalidDealIdError(dealId.toString());
     }
@@ -270,10 +266,8 @@ export class TfmDealCancellationRepo {
 
     const facilityCollection = await this.getFacilityCollection();
 
-    const cancelledFacilities = await facilityCollection.find({ 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } }).toArray();
+    const riskExpiredFacilities = await facilityCollection.find({ 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } }).toArray();
 
-    const cancelledFacilityUkefIds = getUkefFacilityIds(cancelledFacilities);
-
-    return { cancelledDeal: deal, riskExpiredFacilityUkefIds: cancelledFacilityUkefIds };
+    return { cancelledDeal: deal, riskExpiredFacilities };
   }
 }

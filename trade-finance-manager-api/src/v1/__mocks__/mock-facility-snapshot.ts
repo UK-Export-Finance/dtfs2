@@ -1,4 +1,4 @@
-import { Facility, FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { CURRENCY, Facility, FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { generateMockPortalUserAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream/test-helpers';
 import { ObjectId } from 'mongodb';
 
@@ -16,7 +16,7 @@ export const MOCK_FACILITY_SNAPSHOT: Facility = {
   details: ['Revolving or renewing basis'],
   detailsOther: '',
   currency: {
-    id: 'GBP',
+    id: CURRENCY.GBP,
   },
   value: 50000,
   coverPercentage: 10,

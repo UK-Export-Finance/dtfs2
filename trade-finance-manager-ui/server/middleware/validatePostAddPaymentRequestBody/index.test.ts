@@ -1,5 +1,5 @@
 import httpMocks from 'node-mocks-http';
-import { Currency, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { Currency, CURRENCY, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { validatePostAddPaymentRequestBody } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../test-mocks/mock-tfm-session-user';
 import { PremiumPaymentsTableCheckboxId } from '../../types/premium-payments-table-checkbox-id';
@@ -96,7 +96,7 @@ describe('validatePostAddPaymentRequestBody', () => {
   });
 
   describe('when the body contains checkbox ids with different payment currencies', () => {
-    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', FEE_RECORD_STATUS.TO_DO), getCheckboxId(2, 'EUR', FEE_RECORD_STATUS.TO_DO)];
+    const checkedCheckboxIds = [getCheckboxId(1, CURRENCY.GBP, FEE_RECORD_STATUS.TO_DO), getCheckboxId(2, 'EUR', FEE_RECORD_STATUS.TO_DO)];
     const next = jest.fn();
 
     it(`redirects to '${REDIRECT_URL}'`, () => {
@@ -150,7 +150,7 @@ describe('validatePostAddPaymentRequestBody', () => {
   });
 
   describe('when the body contains checkbox ids with different statuses', () => {
-    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', FEE_RECORD_STATUS.TO_DO), getCheckboxId(2, 'GBP', FEE_RECORD_STATUS.DOES_NOT_MATCH)];
+    const checkedCheckboxIds = [getCheckboxId(1, CURRENCY.GBP, FEE_RECORD_STATUS.TO_DO), getCheckboxId(2, CURRENCY.GBP, FEE_RECORD_STATUS.DOES_NOT_MATCH)];
     const next = jest.fn();
 
     it(`redirects to '${REDIRECT_URL}'`, () => {
@@ -207,7 +207,10 @@ describe('validatePostAddPaymentRequestBody', () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
-    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', FEE_RECORD_STATUS.DOES_NOT_MATCH), getCheckboxId(2, 'GBP', FEE_RECORD_STATUS.DOES_NOT_MATCH)];
+    const checkedCheckboxIds = [
+      getCheckboxId(1, CURRENCY.GBP, FEE_RECORD_STATUS.DOES_NOT_MATCH),
+      getCheckboxId(2, CURRENCY.GBP, FEE_RECORD_STATUS.DOES_NOT_MATCH),
+    ];
     req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
 
     const next = jest.fn();
@@ -241,7 +244,7 @@ describe('validatePostAddPaymentRequestBody', () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
-    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', FEE_RECORD_STATUS.TO_DO), getCheckboxId(2, 'GBP', FEE_RECORD_STATUS.TO_DO)];
+    const checkedCheckboxIds = [getCheckboxId(1, CURRENCY.GBP, FEE_RECORD_STATUS.TO_DO), getCheckboxId(2, CURRENCY.GBP, FEE_RECORD_STATUS.TO_DO)];
     req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
 
     const next = jest.fn();
@@ -257,7 +260,7 @@ describe('validatePostAddPaymentRequestBody', () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
-    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', FEE_RECORD_STATUS.TO_DO)];
+    const checkedCheckboxIds = [getCheckboxId(1, CURRENCY.GBP, FEE_RECORD_STATUS.TO_DO)];
     req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
 
     const next = jest.fn();
@@ -273,7 +276,7 @@ describe('validatePostAddPaymentRequestBody', () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
-    const checkedCheckboxIds = [getCheckboxId(1, 'GBP', FEE_RECORD_STATUS.DOES_NOT_MATCH)];
+    const checkedCheckboxIds = [getCheckboxId(1, CURRENCY.GBP, FEE_RECORD_STATUS.DOES_NOT_MATCH)];
     req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
 
     const next = jest.fn();
