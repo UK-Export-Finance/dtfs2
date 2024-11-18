@@ -39,7 +39,7 @@ const insertMocks = async (mockDataLoaderToken) => {
   }
 
   console.info('inserting BSS facilities');
-  MOCKS.FACILITIES.forEach((facilities) => {
+  MOCKS.FACILITIES.default.forEach((facilities) => {
     facilities.forEach(async (facility) => {
       const associatedDeal = insertedDeals.find((deal) => deal.mockId === facility.mockDealId);
 
