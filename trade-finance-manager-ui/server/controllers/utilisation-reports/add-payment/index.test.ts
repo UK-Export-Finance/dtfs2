@@ -226,7 +226,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
           {
             ...aSelectedFeeRecordDetails(),
             id: 5,
-            reportedFee: { amount: 2000, currency: 'GBP' },
+            reportedFee: { amount: 2000, currency: CURRENCY.GBP },
           },
           {
             ...aSelectedFeeRecordDetails(),
@@ -282,7 +282,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
           {
             ...aSelectedFeeRecordDetails(),
             id: 5,
-            reportedPayments: { amount: 2000, currency: 'GBP' },
+            reportedPayments: { amount: 2000, currency: CURRENCY.GBP },
           },
           {
             ...aSelectedFeeRecordDetails(),
@@ -582,7 +582,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
             {
               ...aSelectedFeeRecordDetails(),
               id: 5,
-              reportedFee: { amount: 2000, currency: 'GBP' },
+              reportedFee: { amount: 2000, currency: CURRENCY.GBP },
             },
             {
               ...aSelectedFeeRecordDetails(),
@@ -638,7 +638,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
             {
               ...aSelectedFeeRecordDetails(),
               id: 5,
-              reportedPayments: { amount: 2000, currency: 'GBP' },
+              reportedPayments: { amount: 2000, currency: CURRENCY.GBP },
             },
             {
               ...aSelectedFeeRecordDetails(),
@@ -864,7 +864,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
 
   function aSelectedFeeRecordsPaymentDetailsResponse(): SelectedFeeRecordsPaymentDetailsResponse {
     return {
-      currency: 'GBP',
+      currency: CURRENCY.GBP,
       amount: 100,
       dateReceived: '1912-12-19T00:00:00.000Z',
     };

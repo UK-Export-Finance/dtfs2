@@ -1,7 +1,7 @@
 /**
  * Unit test cases for `constructPayload` method
  */
-import { ROLES } from '@ukef/dtfs2-common';
+import { CURRENCY, ROLES } from '@ukef/dtfs2-common';
 import constructPayload from './constructPayload';
 
 const { CHECKER, MAKER } = ROLES;
@@ -48,11 +48,11 @@ const mockBodyWithCurrency = {
   _csrf: '3YyRfYmT',
   currentCurrencyValue: 'USD',
   newCurrencyValue: 'EUR',
-  anotherCurrenyValue: 'GBP',
+  anotherCurrenyValue: CURRENCY.GBP,
   isSameAsDeal: false,
   exchangeRate: 1.2,
   currencyObject: { name: 'USD' },
-  currencies: ['USD', 'EUR', 'GBP'],
+  currencies: ['USD', 'EUR', CURRENCY.GBP],
 };
 
 const payloadPropertiesForCurrency = [
@@ -165,10 +165,10 @@ describe('Unit test cases for constructPayload method', () => {
       _csrf: '3YyRfYmT',
       currentCurrencyValue: 'USD',
       newCurrencyValue: 'EUR',
-      anotherCurrenyValue: 'GBP',
+      anotherCurrenyValue: CURRENCY.GBP,
       exchangeRate: 1.2,
       currencyObject: { name: 'USD' },
-      currencies: ['USD', 'EUR', 'GBP'],
+      currencies: ['USD', 'EUR', CURRENCY.GBP],
       isSameAsDeal: false,
     };
     const returned = constructPayload(mockBodyWithCurrency, payloadPropertiesForCurrency);
@@ -181,10 +181,10 @@ describe('Unit test cases for constructPayload method', () => {
       _csrf: '3YyRfYmT',
       currentCurrencyValue: 'USD',
       newCurrencyValue: 'EUR',
-      anotherCurrenyValue: 'GBP',
+      anotherCurrenyValue: CURRENCY.GBP,
       exchangeRate: 1.2,
       currencyObject: { name: 'USD' },
-      currencies: ['USD', 'EUR', 'GBP'],
+      currencies: ['USD', 'EUR', CURRENCY.GBP],
       isSameAsDeal: false,
     };
     const canPropertyBeEmpty = false;

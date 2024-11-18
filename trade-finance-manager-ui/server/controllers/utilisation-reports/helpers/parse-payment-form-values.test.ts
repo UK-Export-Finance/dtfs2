@@ -1,11 +1,11 @@
-import { Currency } from '@ukef/dtfs2-common';
+import { Currency, CURRENCY } from '@ukef/dtfs2-common';
 import { parseValidatedAddPaymentFormValues, parseValidatedEditPaymentFormValues } from './parse-payment-form-values';
 import { ValidatedAddPaymentFormValues } from '../../../types/add-payment-form-values';
 import { ValidatedEditPaymentFormValues } from '../../../types/edit-payment-form-values';
 
 describe('parseValidatedAddPaymentFormValues', () => {
   const aValidatedAddPaymentFormValuesObject = (): Omit<ValidatedAddPaymentFormValues, 'addAnotherPayment'> => ({
-    paymentCurrency: 'GBP',
+    paymentCurrency: CURRENCY.GBP,
     paymentDate: {
       day: '12',
       month: '5',

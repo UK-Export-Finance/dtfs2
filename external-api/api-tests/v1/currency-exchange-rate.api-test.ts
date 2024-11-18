@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { app } from '../../src/createApp';
 import { api } from '../api';
 
@@ -259,13 +259,13 @@ describe('/currency-exchange-rate', () => {
     });
 
     const invalidCurrencyTestCases = [
-      ['abc', 'GBP'],
+      ['abc', CURRENCY.GBP],
       ['EUR', '123'],
-      ['localhost', 'GBP'],
+      ['localhost', CURRENCY.GBP],
       ['EUR', '127.0.0.1'],
-      ['{}', 'GBP'],
+      ['{}', CURRENCY.GBP],
       ['EUR', '{}'],
-      ['[]', 'GBP'],
+      ['[]', CURRENCY.GBP],
       ['EUR', '[]'],
     ];
 

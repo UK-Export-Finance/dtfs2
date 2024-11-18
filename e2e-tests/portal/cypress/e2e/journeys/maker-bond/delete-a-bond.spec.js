@@ -1,3 +1,4 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const pages = require('../../pages');
 const partials = require('../../partials');
 const relative = require('../../relativeURL');
@@ -14,7 +15,7 @@ const MOCK_DEAL = {
   status: 'Draft',
   submissionDetails: {
     supplyContractCurrency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
   },
   mockFacilities: [
@@ -38,7 +39,7 @@ const MOCK_DEAL = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
     {
@@ -61,7 +62,7 @@ const MOCK_DEAL = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
     {
@@ -84,7 +85,7 @@ const MOCK_DEAL = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
   ],
