@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { validateUtilisationReportCsvData } from '.';
 import { validateHeaders } from './utilisation-report-cell-validators/validate-csv-data/headers';
 import { validateCells } from './utilisation-report-cell-validators/validate-csv-data/cells';
@@ -24,13 +25,13 @@ describe('services/utilisation-report-data-validator', () => {
     {
       'ukef facility id': { value: '20001371', column: 'B', row: 1 },
       'bank facility reference': { value: 'test exporter', column: 'C', row: 1 },
-      'base currency': { value: 'GBP', column: 'D', row: 1 },
+      'base currency': { value: CURRENCY.GBP, column: 'D', row: 1 },
       'facility utilisation': { value: '2000a', column: 'F', row: 1 },
     },
     {
       'ukef facility id': { value: '20001372', column: 'B', row: 1 },
       'bank facility reference': { value: 'test exporter', column: 'C', row: 1 },
-      'base currency': { value: 'GBP', column: 'D', row: 1 },
+      'base currency': { value: CURRENCY.GBP, column: 'D', row: 1 },
       'facility utilisation': { value: '3000', column: 'F', row: 1 },
     },
   ];

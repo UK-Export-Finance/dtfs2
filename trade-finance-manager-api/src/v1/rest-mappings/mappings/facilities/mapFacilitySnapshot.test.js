@@ -1,3 +1,4 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const mapFacilitySnapshot = require('./mapFacilitySnapshot');
 const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityProduct = require('./mapFacilityProduct');
@@ -33,7 +34,7 @@ describe('mapFacility', () => {
 
   const mockCurrency = {
     text: 'GBP - UK Sterling',
-    id: 'GBP',
+    id: CURRENCY.GBP,
   };
 
   const mockFacilityValue = '12345.00';

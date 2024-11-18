@@ -1,6 +1,7 @@
 import { EntityManager } from 'typeorm';
 import { when } from 'jest-when';
 import {
+  CURRENCY,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   PENDING_RECONCILIATION,
@@ -29,7 +30,10 @@ describe('feeRecordsMatchAttachedPayments', () => {
   it('returns true when the payments attached to the fee records have the same total payments', async () => {
     // Arrange
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
-    const payments = [PaymentEntityMockBuilder.forCurrency('GBP').withId(1).build(), PaymentEntityMockBuilder.forCurrency('GBP').withId(2).build()];
+    const payments = [
+      PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(1).build(),
+      PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(2).build(),
+    ];
     const feeRecordsWithoutTheirAttachedPayments = [
       FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withPayments([]).build(),
       FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withPayments([]).build(),
@@ -55,7 +59,10 @@ describe('feeRecordsMatchAttachedPayments', () => {
   it('returns false when the payments attached to the fee records do not have the same total payments', async () => {
     // Arrange
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
-    const payments = [PaymentEntityMockBuilder.forCurrency('GBP').withId(1).build(), PaymentEntityMockBuilder.forCurrency('GBP').withId(2).build()];
+    const payments = [
+      PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(1).build(),
+      PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(2).build(),
+    ];
     const feeRecordsWithoutTheirAttachedPayments = [
       FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withPayments([]).build(),
       FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withPayments([]).build(),

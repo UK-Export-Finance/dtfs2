@@ -1,4 +1,5 @@
 import {
+  CURRENCY,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
   REPORT_NOT_RECEIVED,
@@ -66,7 +67,7 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
           .build();
         cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [reportToReconcile]);
 
-        const paymentMatchingFeeRecordOneAndTwo = PaymentEntityMockBuilder.forCurrency('GBP')
+        const paymentMatchingFeeRecordOneAndTwo = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
           .withAmount(450)
           .withDateReceived(new Date('2023-02-02'))
           .withReference('REF01234')
@@ -75,7 +76,7 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
           .withId(FEE_RECORD_ID_ONE)
           .withFacilityId(FACILITY_ID_ONE)
           .withExporter('Exporter 1')
-          .withPaymentCurrency('GBP')
+          .withPaymentCurrency(CURRENCY.GBP)
           .withFeesPaidToUkefForThePeriod(100)
           .withFeesPaidToUkefForThePeriodCurrency('JPY')
           .withPaymentExchangeRate(2)
@@ -89,7 +90,7 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
           .withExporter('Exporter 2')
           .withFeesPaidToUkefForThePeriod(200)
           .withFeesPaidToUkefForThePeriodCurrency('EUR')
-          .withPaymentCurrency('GBP')
+          .withPaymentCurrency(CURRENCY.GBP)
           .withPaymentExchangeRate(0.5)
           .withStatus(FEE_RECORD_STATUS.MATCH)
           .withPayments([paymentMatchingFeeRecordOneAndTwo])

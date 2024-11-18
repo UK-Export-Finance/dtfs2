@@ -44,15 +44,15 @@ describe('mapToPaymentDetails', () => {
     // Arrange
     const firstGroup: FeeRecordPaymentEntityGroup = {
       feeRecords: [FeeRecordEntityMockBuilder.forReport(utilisationReport()).withStatus(FEE_RECORD_STATUS.TO_DO).build()],
-      payments: [PaymentEntityMockBuilder.forCurrency('GBP').build()],
+      payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
     };
     const secondGroup: FeeRecordPaymentEntityGroup = {
       feeRecords: [FeeRecordEntityMockBuilder.forReport(utilisationReport()).withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH).build()],
-      payments: [PaymentEntityMockBuilder.forCurrency('GBP').build()],
+      payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
     };
     const thirdGroup: FeeRecordPaymentEntityGroup = {
       feeRecords: [FeeRecordEntityMockBuilder.forReport(utilisationReport()).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build()],
-      payments: [PaymentEntityMockBuilder.forCurrency('GBP').build()],
+      payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
     };
     const groups = [firstGroup, secondGroup, thirdGroup];
 
@@ -75,7 +75,7 @@ describe('mapToPaymentDetails', () => {
       // Arrange
       const group: FeeRecordPaymentEntityGroup = {
         feeRecords: [FeeRecordEntityMockBuilder.forReport(utilisationReport()).build(), FeeRecordEntityMockBuilder.forReport(utilisationReport()).build()],
-        payments: [PaymentEntityMockBuilder.forCurrency('GBP').build()],
+        payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
       };
 
       // Act
@@ -90,7 +90,7 @@ describe('mapToPaymentDetails', () => {
       const feeRecords = [FeeRecordEntityMockBuilder.forReport(utilisationReport()).build(), FeeRecordEntityMockBuilder.forReport(utilisationReport()).build()];
       const group: FeeRecordPaymentEntityGroup = {
         feeRecords,
-        payments: [PaymentEntityMockBuilder.forCurrency('GBP').build()],
+        payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
       };
 
       // Act

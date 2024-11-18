@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode, AxiosError, AxiosResponse } from 'axios';
-import { Currency, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
+import { Currency, CURRENCY, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
 import api from '../../api';
 import { PostPaymentRequest, PostPaymentRequestBody, PostPaymentRequestParams, postPayment } from './post-payment.controller';
 import { aTfmSessionUser } from '../../../../test-helpers/tfm-session-user';
@@ -13,7 +13,7 @@ describe('postPayment', () => {
   const reportId = '1';
   const feeRecordIds = [1, 2, 3];
   const user = aTfmSessionUser();
-  const paymentCurrency: Currency = 'GBP';
+  const paymentCurrency: Currency = CURRENCY.GBP;
   const paymentAmount = 123.45;
   const datePaymentReceived = new Date().toISOString();
   const paymentReference = 'A payment reference';

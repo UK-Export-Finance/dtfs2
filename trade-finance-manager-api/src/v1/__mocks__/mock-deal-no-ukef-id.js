@@ -1,3 +1,4 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
 
 const MOCK_DEAL_NO_UKEF_ID = {
@@ -98,7 +99,7 @@ const MOCK_DEAL_NO_UKEF_ID = {
     'supplyContractConversionDate-year': '',
     supplyContractConversionRateToGBP: '',
     supplyContractCurrency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
       text: 'GBP - UK Sterling',
     },
     supplyContractValue: '1234.00',

@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { FeeRecord } from '../server/api-response-types';
 
 export const aFeeRecord = (): FeeRecord => ({
@@ -5,7 +6,7 @@ export const aFeeRecord = (): FeeRecord => ({
   facilityId: '12345678',
   exporter: 'Test exporter',
   reportedFees: {
-    currency: 'GBP',
+    currency: CURRENCY.GBP,
     amount: 314.59,
   },
   reportedPayments: {

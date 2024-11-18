@@ -13,6 +13,7 @@ import {
   UTILISATION_REPORT_STATUS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
+  CURRENCY,
 } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
@@ -38,7 +39,7 @@ describe(`PATCH ${BASE_URL}`, () => {
     user: aTfmSessionUser(),
   });
 
-  const payment = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).build();
+  const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(paymentId).build();
 
   const aReport = () => UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
 
@@ -46,13 +47,13 @@ describe(`PATCH ${BASE_URL}`, () => {
     FeeRecordEntityMockBuilder.forReport(report)
       .withId(1)
       .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
-      .withFeesPaidToUkefForThePeriodCurrency('GBP')
+      .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
       .withPayments(payments)
       .build(),
     FeeRecordEntityMockBuilder.forReport(report)
       .withId(2)
       .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
-      .withFeesPaidToUkefForThePeriodCurrency('GBP')
+      .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
       .withPayments(payments)
       .build(),
   ];
@@ -85,7 +86,7 @@ describe(`PATCH ${BASE_URL}`, () => {
   it('returns a 404 when the payment with the supplied id exists but it is not attached to a report with the supplied id', async () => {
     // Arrange
     const differentPaymentId = 25;
-    const differentPayment = PaymentEntityMockBuilder.forCurrency('GBP').withId(differentPaymentId).build();
+    const differentPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(differentPaymentId).build();
     await SqlDbHelper.saveNewEntry('Payment', differentPayment);
 
     // Act
@@ -181,16 +182,16 @@ describe(`PATCH ${BASE_URL}`, () => {
         .withId(1)
         .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
         .withFeesPaidToUkefForThePeriod(100)
-        .withFeesPaidToUkefForThePeriodCurrency('GBP')
-        .withPaymentCurrency('GBP')
+        .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
+        .withPaymentCurrency(CURRENCY.GBP)
         .withPayments([payment])
         .build(),
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(2)
         .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
         .withFeesPaidToUkefForThePeriod(200)
-        .withFeesPaidToUkefForThePeriodCurrency('GBP')
-        .withPaymentCurrency('GBP')
+        .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
+        .withPaymentCurrency(CURRENCY.GBP)
         .withPayments([payment])
         .build(),
     ];
@@ -232,16 +233,16 @@ describe(`PATCH ${BASE_URL}`, () => {
         .withId(1)
         .withStatus(FEE_RECORD_STATUS.MATCH)
         .withFeesPaidToUkefForThePeriod(100)
-        .withFeesPaidToUkefForThePeriodCurrency('GBP')
-        .withPaymentCurrency('GBP')
+        .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
+        .withPaymentCurrency(CURRENCY.GBP)
         .withPayments([payment])
         .build(),
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(2)
         .withStatus(FEE_RECORD_STATUS.MATCH)
         .withFeesPaidToUkefForThePeriod(200)
-        .withFeesPaidToUkefForThePeriodCurrency('GBP')
-        .withPaymentCurrency('GBP')
+        .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
+        .withPaymentCurrency(CURRENCY.GBP)
         .withPayments([payment])
         .build(),
     ];

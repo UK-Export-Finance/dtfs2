@@ -1,4 +1,4 @@
-import { ROLES } from '@ukef/dtfs2-common';
+import { CURRENCY, ROLES } from '@ukef/dtfs2-common';
 import { reportsController } from '.';
 import api from '../../api';
 import mockResponse from '../../helpers/responseMock';
@@ -11,7 +11,7 @@ jest.mock('../../api');
 const defaultUnissuedFacilitiesReportResponse = {
   bankInternalRefName: 'A1 Test',
   companyName: 'Auto Test 1',
-  currency: 'GBP',
+  currency: CURRENCY.GBP,
   currencyAndValue: 'GBP 500,000.00',
   deadlineForIssuing: '18 Apr 2022',
   dealId: '61e54dd5b578247e14575881',
