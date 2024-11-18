@@ -1,177 +1,27 @@
 import difference from 'lodash.difference';
 import { FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
-import { componentRenderer } from '../../componentRenderer';
-import { aPremiumPaymentsViewModelItem, aFeeRecordViewModelItem } from '../../../test-helpers';
+import { componentRenderer } from '../../../componentRenderer';
+import { aPremiumPaymentsViewModelItem, aFeeRecordViewModelItem } from '../../../../test-helpers';
 import {
   PremiumPaymentsViewModelItem,
   FeeRecordViewModelItem,
   PaymentViewModelItem,
   SortedAndFormattedCurrencyAndAmount,
-} from '../../../server/types/view-models';
-import { RECONCILIATION_FOR_REPORT_TABS } from '../../../server/constants/reconciliation-for-report-tabs';
-import { PremiumPaymentsTableCheckboxId } from '../../../server/types/premium-payments-table-checkbox-id';
+} from '../../../../server/types/view-models';
+import { RECONCILIATION_FOR_REPORT_TABS } from '../../../../server/constants/reconciliation-for-report-tabs';
+import { aPremiumPaymentsTableDefaultRendererParams, PremiumPaymentsTableComponentRendererParams } from './helpers';
 
 const component = '../templates/utilisation-reports/_macros/premium-payments-table.njk';
-const tableSelector = '[data-cy="premium-payments-table"]';
 
-type ComponentRendererParams = {
-  reportId: number;
-  userCanEdit: boolean;
-  feeRecordPaymentGroups: PremiumPaymentsViewModelItem[];
-  enablePaymentsReceivedSorting: boolean;
-  hasSelectableRows: boolean;
-};
-
-const render = componentRenderer<ComponentRendererParams>(component);
+const render = componentRenderer<PremiumPaymentsTableComponentRendererParams>(component);
 
 describe(component, () => {
-  const aPremiumPaymentsViewModelList = (): PremiumPaymentsViewModelItem[] => [
-    {
-      ...aPremiumPaymentsViewModelItem(),
-      feeRecords: [
-        {
-          ...aFeeRecordViewModelItem(),
-          id: 1,
-          facilityId: '12345678',
-          exporter: 'Test exporter 1',
-        },
-        {
-          ...aFeeRecordViewModelItem(),
-          id: 2,
-          facilityId: '87654321',
-          exporter: 'Test exporter 2',
-        },
-      ],
-      paymentsReceived: undefined,
-      totalPaymentsReceived: {
-        formattedCurrencyAndAmount: undefined,
-        dataSortValue: 0,
-      },
-      totalReportedPayments: {
-        formattedCurrencyAndAmount: undefined,
-        dataSortValue: 0,
-      },
-      status: FEE_RECORD_STATUS.TO_DO,
-      displayStatus: 'TO DO',
-      checkboxId: 'feeRecordIds-1,2-reportedPaymentsCurrency-GBP-status-TO_DO',
-      isChecked: false,
-      checkboxAriaLabel: '',
-    },
-  ];
-
-  const defaultRendererParams = (): ComponentRendererParams => ({
-    userCanEdit: true,
-    reportId: 1,
-    feeRecordPaymentGroups: aPremiumPaymentsViewModelList(),
-    enablePaymentsReceivedSorting: true,
-    hasSelectableRows: true,
-  });
-
-  const getWrapper = () => render(defaultRendererParams());
-
   const numericCellClass = 'govuk-table__cell--numeric';
-
-  it('should render all table headings', () => {
-    const wrapper = getWrapper();
-    wrapper.expectElement(`${tableSelector} thead th`).toHaveCount(9);
-    wrapper.expectText('[data-cy="premium-payments-table--facility-id-header"]').toRead('Facility ID');
-    wrapper.expectText('[data-cy="premium-payments-table--exporter-header"]').toRead('Exporter');
-    wrapper.expectText('[data-cy="premium-payments-table--reported-fees-header"]').toRead('Reported fees');
-    wrapper.expectText('[data-cy="premium-payments-table--reported-payments-header"]').toRead('Reported payments');
-    wrapper.expectText('[data-cy="premium-payments-table--total-reported-payments-header"]').toRead('Total reported payments');
-    wrapper.expectText('[data-cy="premium-payments-table--payments-received-header"]').toRead('Payments received');
-    wrapper.expectText('[data-cy="premium-payments-table--total-payments-received-header"]').toRead('Total payments received');
-    wrapper.expectText('[data-cy="premium-payments-table--status-header"]').toRead('Status');
-    wrapper.expectText('[data-cy="premium-payments-table--hidden-header"]').toRead('Facility ID and Exporter and Reported fees and Reported Payments');
-  });
-
-  it.each`
-    columnName             | selector
-    ${'Facility ID'}       | ${'[data-cy="premium-payments-table--facility-id-header"]'}
-    ${'Exporter'}          | ${'[data-cy="premium-payments-table--exporter-header"]'}
-    ${'Reported Fees'}     | ${'[data-cy="premium-payments-table--reported-fees-header"]'}
-    ${'Reported payments'} | ${'[data-cy="premium-payments-table--reported-payments-header"]'}
-  `("should set the '$columnName' column header to be aria-hidden", ({ selector }: { selector: string }) => {
-    const wrapper = getWrapper();
-
-    wrapper.expectElement(selector).toHaveAttribute('aria-hidden', 'true');
-  });
-
-  it('should render the alternative hidden header as visually hidden', () => {
-    const wrapper = getWrapper();
-
-    wrapper.expectElement('[data-cy="premium-payments-table--hidden-header"]').hasClass('govuk-visually-hidden');
-  });
-
-  it("should use the 'govuk-table__header--numeric' class for numeric columns", () => {
-    const wrapper = getWrapper();
-    const numericHeaderClass = 'govuk-table__header--numeric';
-    wrapper.expectElement('[data-cy="premium-payments-table--reported-fees-header"]').hasClass(numericHeaderClass);
-    wrapper.expectElement('[data-cy="premium-payments-table--reported-payments-header"]').hasClass(numericHeaderClass);
-    wrapper.expectElement('[data-cy="premium-payments-table--total-reported-payments-header"]').hasClass(numericHeaderClass);
-    wrapper.expectElement('[data-cy="premium-payments-table--payments-received-header"]').hasClass(numericHeaderClass);
-    wrapper.expectElement('[data-cy="premium-payments-table--total-payments-received-header"]').hasClass(numericHeaderClass);
-  });
-
-  it.each`
-    columnName             | selector
-    ${'Reported Fees'}     | ${'[data-cy="premium-payments-table--reported-fees-header"]'}
-    ${'Reported payments'} | ${'[data-cy="premium-payments-table--reported-payments-header"]'}
-    ${'Payments received'} | ${'[data-cy="premium-payments-table--payments-received-header"]'}
-  `("should not make the '$columnName' column header sortable", ({ selector }: { selector: string }) => {
-    const wrapper = getWrapper();
-
-    wrapper.expectElement(selector).notToHaveAttribute('aria-sort');
-  });
-
-  it("should set the 'Total reported payments' column to sortable with 'aria-sort' set to 'ascending'", () => {
-    const wrapper = getWrapper();
-
-    wrapper.expectElement('[data-cy="premium-payments-table--total-reported-payments-header"]').toHaveAttribute('aria-sort', 'ascending');
-  });
-
-  it("should set the 'Status' column to sortable with 'aria-sort' set to 'none'", () => {
-    const wrapper = getWrapper();
-
-    wrapper.expectElement('[data-cy="premium-payments-table--status-header"]').toHaveAttribute('aria-sort', 'none');
-  });
-
-  it("should set the 'Total payments received' column header to sortable if 'enablePaymentsReceivedSorting' is set to true", () => {
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups: aPremiumPaymentsViewModelList(), enablePaymentsReceivedSorting: true });
-
-    wrapper.expectElement('[data-cy="premium-payments-table--total-payments-received-header"]').toHaveAttribute('aria-sort', 'none');
-  });
-
-  it("should not set the total payments received column header to sortable if 'enablePaymentsReceivedSorting' is set to false", () => {
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups: aPremiumPaymentsViewModelList(), enablePaymentsReceivedSorting: false });
-
-    wrapper.expectElement('[data-cy="premium-payments-table--total-payments-received-header"]').notToHaveAttribute('aria-sort');
-  });
-
-  it('should render the select all checkbox in the table headings row when userCanEdit is true and hasSelectableRows is true', () => {
-    const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, hasSelectableRows: true });
-    wrapper.expectElement(`${tableSelector} [data-cy="table-cell-checkbox--select-all"]`).toExist();
-  });
-
-  it('should not render the select all checkbox in the table headings row when userCanEdit is false and hasSelectableRows is true', () => {
-    const wrapper = render({ ...defaultRendererParams(), userCanEdit: false, hasSelectableRows: true });
-    wrapper.expectElement(`${tableSelector} [data-cy="table-cell-checkbox--select-all"]`).notToExist();
-  });
-
-  it('should not render the select all checkbox in the table headings row when userCanEdit is true and hasSelectableRows is false', () => {
-    const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, hasSelectableRows: false });
-    wrapper.expectElement(`${tableSelector} [data-cy="table-cell-checkbox--select-all"]`).notToExist();
-  });
-
-  it('should not render the select all checkbox in the table headings row when userCanEdit is false and hasSelectableRows is false', () => {
-    const wrapper = render({ ...defaultRendererParams(), userCanEdit: false, hasSelectableRows: false });
-    wrapper.expectElement(`${tableSelector} [data-cy="table-cell-checkbox--select-all"]`).notToExist();
-  });
 
   it('should render message informing there are no matched records when no fee record groups', () => {
     const feeRecordPaymentGroups: PremiumPaymentsViewModelItem[] = [];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...aPremiumPaymentsTableDefaultRendererParams(), feeRecordPaymentGroups });
 
     wrapper.expectElement('[data-cy="no-matched-facilities-message"]').toExist();
     wrapper.expectText('[data-cy="no-matched-facilities-message"]').toContain('Your search matched no facilities');
@@ -186,7 +36,7 @@ describe(component, () => {
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...aPremiumPaymentsTableDefaultRendererParams(), feeRecordPaymentGroups });
 
     wrapper.expectElement('[data-cy="no-matched-facilities-message"]').notToExist();
     wrapper.expectText('html').notToContain('Your search matched no facilities');
@@ -207,7 +57,7 @@ describe(component, () => {
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...aPremiumPaymentsTableDefaultRendererParams(), feeRecordPaymentGroups });
 
     wrapper.expectElement(`tr`).toHaveCount(feeRecordIds.length + 1); // including table header
     feeRecordIds.forEach((id) => {
@@ -238,7 +88,7 @@ describe(component, () => {
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...aPremiumPaymentsTableDefaultRendererParams(), feeRecordPaymentGroups });
 
     const firstRowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${firstFeeRecordItem.id}"]`;
     const firstRowHiddenCellSelector = `${firstRowSelector} [data-cy="hidden-record-details"]`;
@@ -280,7 +130,7 @@ describe(component, () => {
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...aPremiumPaymentsTableDefaultRendererParams(), feeRecordPaymentGroups });
 
     wrapper.expectElement(selector).toHaveAttribute('aria-hidden', 'true');
   });
@@ -296,7 +146,7 @@ describe(component, () => {
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...aPremiumPaymentsTableDefaultRendererParams(), feeRecordPaymentGroups });
 
     const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
     wrapper.expectText(`${rowSelector} [data-cy="facility-id"]`).toRead(facilityId);
@@ -313,7 +163,7 @@ describe(component, () => {
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...aPremiumPaymentsTableDefaultRendererParams(), feeRecordPaymentGroups });
 
     const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
     wrapper.expectText(`${rowSelector} [data-cy="exporter"]`).toRead(exporter);
@@ -330,7 +180,7 @@ describe(component, () => {
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...aPremiumPaymentsTableDefaultRendererParams(), feeRecordPaymentGroups });
 
     const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
     wrapper.expectText(`${rowSelector} [data-cy="reported-fees"]`).toRead(reportedFees);
@@ -348,7 +198,7 @@ describe(component, () => {
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...aPremiumPaymentsTableDefaultRendererParams(), feeRecordPaymentGroups });
 
     const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
     wrapper.expectText(`${rowSelector} [data-cy="reported-payments"]`).toRead(reportedPayments);
@@ -371,7 +221,7 @@ describe(component, () => {
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...aPremiumPaymentsTableDefaultRendererParams(), feeRecordPaymentGroups });
 
     const [firstRowId, ...otherIds] = feeRecordIds;
 
@@ -402,7 +252,7 @@ describe(component, () => {
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...aPremiumPaymentsTableDefaultRendererParams(), feeRecordPaymentGroups });
 
     const [firstRowId, ...otherIds] = feeRecordIds;
 
@@ -436,7 +286,7 @@ describe(component, () => {
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...aPremiumPaymentsTableDefaultRendererParams(), feeRecordPaymentGroups });
 
     const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
     wrapper.expectElement(`${rowSelector} [data-cy="payments-received"] li`).toHaveCount(paymentsReceived.length);
@@ -466,7 +316,7 @@ describe(component, () => {
 
       const reportId = 12;
 
-      const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, reportId, feeRecordPaymentGroups });
+      const wrapper = render({ ...aPremiumPaymentsTableDefaultRendererParams(), userCanEdit: true, reportId, feeRecordPaymentGroups });
 
       const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
 
@@ -501,7 +351,7 @@ describe(component, () => {
         },
       ];
 
-      const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+      const wrapper = render({ ...aPremiumPaymentsTableDefaultRendererParams(), feeRecordPaymentGroups });
 
       const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
       paymentsReceived.forEach((payment) => {
@@ -533,7 +383,7 @@ describe(component, () => {
 
       const reportId = 12;
 
-      const wrapper = render({ ...defaultRendererParams(), userCanEdit: false, reportId, feeRecordPaymentGroups });
+      const wrapper = render({ ...aPremiumPaymentsTableDefaultRendererParams(), userCanEdit: false, reportId, feeRecordPaymentGroups });
 
       const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
       paymentsReceived.forEach((payment) => {
@@ -556,7 +406,7 @@ describe(component, () => {
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...aPremiumPaymentsTableDefaultRendererParams(), feeRecordPaymentGroups });
 
     const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
     wrapper.expectElement(`${rowSelector} [data-cy="payments-received"] ul`).notToExist();
@@ -578,7 +428,7 @@ describe(component, () => {
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...aPremiumPaymentsTableDefaultRendererParams(), feeRecordPaymentGroups });
 
     const [firstRowId, ...otherIds] = feeRecordIds;
 
@@ -593,159 +443,5 @@ describe(component, () => {
       wrapper.expectElement(`${rowSelector}`).toExist();
       wrapper.expectText(`${rowSelector} [data-cy="total-payments-received"]`).toRead('');
     });
-  });
-
-  it('should render the checkbox when userCanEdit and hasSelectableRows are true, and the fee record status is selectable', () => {
-    const checkboxId: PremiumPaymentsTableCheckboxId = `feeRecordIds-1-reportedPaymentsCurrency-GBP-status-TO_DO`;
-    const feeRecordPaymentGroups: PremiumPaymentsViewModelItem[] = [
-      {
-        ...aPremiumPaymentsViewModelItem(),
-        isSelectable: true,
-        checkboxId,
-      },
-    ];
-
-    const wrapper = render({
-      ...defaultRendererParams(),
-      userCanEdit: true,
-      hasSelectableRows: true,
-      feeRecordPaymentGroups,
-    });
-
-    wrapper.expectElement(`input#${checkboxId}[type="checkbox"]`).toExist();
-  });
-
-  it('should not render the checkbox when userCanEdit and hasSelectableRows are true, and the fee record is not selectable', () => {
-    const checkboxId = 'feeRecordIds-1,2,3-reportedPaymentsCurrency-GBP-status-TO_DO';
-    const feeRecordPaymentGroups: PremiumPaymentsViewModelItem[] = [
-      {
-        ...aPremiumPaymentsViewModelItem(),
-        isSelectable: false,
-        checkboxId,
-      },
-    ];
-
-    const wrapper = render({
-      ...defaultRendererParams(),
-      userCanEdit: true,
-      hasSelectableRows: true,
-      feeRecordPaymentGroups,
-    });
-
-    wrapper.expectElement(`input#${checkboxId}[type="checkbox"]`).notToExist();
-  });
-
-  it('should not render any checkboxes when userCanEdit is false', () => {
-    const feeRecordPaymentGroups: PremiumPaymentsViewModelItem[] = Object.values(FEE_RECORD_STATUS).map((status) => ({
-      ...aPremiumPaymentsViewModelItem(),
-      status,
-      checkboxId: `feeRecordIds-1,2,3-reportedPaymentsCurrency-GBP-status-${status}`,
-    }));
-    const wrapper = render({
-      ...defaultRendererParams(),
-      userCanEdit: false,
-      hasSelectableRows: true,
-      feeRecordPaymentGroups,
-    });
-
-    feeRecordPaymentGroups.forEach((group) => {
-      wrapper.expectElement(`input#${group.checkboxId}[type="checkbox"]`).notToExist();
-    });
-  });
-
-  it('should not render any checkboxes when hasSelectableRows is false', () => {
-    const feeRecordPaymentGroups: PremiumPaymentsViewModelItem[] = Object.values(FEE_RECORD_STATUS).map((status) => ({
-      ...aPremiumPaymentsViewModelItem(),
-      status,
-      checkboxId: `feeRecordIds-1,2,3-reportedPaymentsCurrency-GBP-status-${status}`,
-    }));
-    const wrapper = render({
-      ...defaultRendererParams(),
-      userCanEdit: true,
-      hasSelectableRows: false,
-      feeRecordPaymentGroups,
-    });
-
-    feeRecordPaymentGroups.forEach((group) => {
-      wrapper.expectElement(`input#${group.checkboxId}[type="checkbox"]`).notToExist();
-    });
-  });
-
-  it('should render a checkbox with the checkbox id specified in the group only in the first row of the group', () => {
-    const feeRecordIds = [1, 2, 3];
-    const feeRecordItems = feeRecordIds.map((id) => ({ ...aFeeRecordViewModelItem(), id }));
-
-    const checkboxId: PremiumPaymentsTableCheckboxId = 'feeRecordIds-1,2,3-reportedPaymentsCurrency-GBP-status-TO_DO';
-    const feeRecordPaymentGroups: PremiumPaymentsViewModelItem[] = [
-      {
-        ...aPremiumPaymentsViewModelItem(),
-        feeRecords: feeRecordItems,
-        checkboxId,
-      },
-    ];
-
-    const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, feeRecordPaymentGroups });
-
-    const [firstRowId, ...otherIds] = feeRecordIds;
-
-    const firstRowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${firstRowId}"]`;
-    wrapper.expectElement(`${firstRowSelector} td input[id="${checkboxId}"][type="checkbox"]`).toExist();
-
-    otherIds.forEach((id) => {
-      const rowSelector = `[data-cy*="premium-payments-table-row--feeRecordId-${id}"]`;
-      wrapper.expectElement(`${rowSelector}`).toExist();
-      wrapper.expectElement(`${rowSelector} td input[id="${checkboxId}"][type="checkbox"]`).notToExist();
-    });
-  });
-
-  it("should render a checked checkbox id when the 'isChecked' property is set to true", () => {
-    const checkboxId = 'feeRecordIds-1,2,3-reportedPaymentsCurrency-GBP-status-TO_DO';
-    const feeRecordPaymentGroups: PremiumPaymentsViewModelItem[] = [
-      {
-        ...aPremiumPaymentsViewModelItem(),
-        status: FEE_RECORD_STATUS.TO_DO,
-        checkboxId,
-        isChecked: true,
-      },
-    ];
-    const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, feeRecordPaymentGroups });
-
-    const checkboxElement = wrapper.expectElement(`input[id="${checkboxId}"][type="checkbox"]`);
-
-    checkboxElement.toExist();
-    checkboxElement.toHaveAttribute('checked', 'checked');
-  });
-
-  it("should render an unchecked checkbox id when the 'isChecked' property is set to false", () => {
-    const checkboxId = 'feeRecordIds-1,2,3-reportedPaymentsCurrency-GBP-status-TO_DO';
-    const feeRecordPaymentGroups: PremiumPaymentsViewModelItem[] = [
-      {
-        ...aPremiumPaymentsViewModelItem(),
-        status: FEE_RECORD_STATUS.TO_DO,
-        checkboxId,
-        isChecked: false,
-      },
-    ];
-    const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, feeRecordPaymentGroups });
-
-    const checkboxElement = wrapper.expectElement(`input[id="${checkboxId}"][type="checkbox"]`);
-
-    checkboxElement.toExist();
-    checkboxElement.notToHaveAttribute('checked');
-  });
-
-  it('should set aria-labels for checkboxes', () => {
-    const checkboxId = 'feeRecordIds-1,2,3-reportedPaymentsCurrency-GBP-status-TO_DO';
-    const feeRecordPaymentGroups: PremiumPaymentsViewModelItem[] = [
-      {
-        ...aPremiumPaymentsViewModelItem(),
-        status: FEE_RECORD_STATUS.TO_DO,
-        checkboxAriaLabel: 'select me!',
-        checkboxId,
-      },
-    ];
-    const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, feeRecordPaymentGroups });
-
-    wrapper.expectElement(`input[id="${checkboxId}"][type="checkbox"]`).toHaveAttribute('aria-label', 'select me!');
   });
 });
