@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
-import { Currency, FEE_RECORD_STATUS, TestApiError } from '@ukef/dtfs2-common';
+import { Currency, CURRENCY, FEE_RECORD_STATUS, TestApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { PostPaymentRequest, postPayment } from '.';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
@@ -26,7 +26,7 @@ describe('post-payment.controller', () => {
     const aValidRequestQuery = () => ({ reportId: reportId.toString() });
 
     const feeRecordIds = [1, 2, 3];
-    const paymentCurrency: Currency = 'GBP';
+    const paymentCurrency: Currency = CURRENCY.GBP;
     const paymentAmount = 100;
     const datePaymentReceived = new Date();
     const paymentReference = 'A payment reference';

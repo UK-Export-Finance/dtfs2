@@ -1,5 +1,5 @@
 import httpMocks from 'node-mocks-http';
-import { Currency, CurrencyAndAmount, ReportPeriod, SessionBank } from '@ukef/dtfs2-common';
+import { Currency, CURRENCY, CurrencyAndAmount, ReportPeriod, SessionBank } from '@ukef/dtfs2-common';
 import { SessionData } from 'express-session';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
 import { PostEditPaymentRequest, getEditPayment, postEditPayment } from '.';
@@ -282,7 +282,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       const { req, res } = getHttpMocks();
 
       const feeRecordReportedFees: CurrencyAndAmount[] = [
-        { currency: 'GBP', amount: 100 },
+        { currency: CURRENCY.GBP, amount: 100 },
         { currency: 'EUR', amount: 50 },
       ];
       const formattedReportedFees: SortedAndFormattedCurrencyAndAmount[] = [
@@ -310,7 +310,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       const { req, res } = getHttpMocks();
 
       const feeRecordReportedPayments: CurrencyAndAmount[] = [
-        { currency: 'GBP', amount: 100 },
+        { currency: CURRENCY.GBP, amount: 100 },
         { currency: 'EUR', amount: 50 },
       ];
       const formattedReportedPayments: SortedAndFormattedCurrencyAndAmount[] = [
@@ -793,7 +793,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         const { req, res } = getHttpMocks();
 
         const feeRecordReportedFees: CurrencyAndAmount[] = [
-          { currency: 'GBP', amount: 100 },
+          { currency: CURRENCY.GBP, amount: 100 },
           { currency: 'EUR', amount: 50 },
         ];
         const formattedReportedFees: SortedAndFormattedCurrencyAndAmount[] = [
@@ -821,7 +821,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         const { req, res } = getHttpMocks();
 
         const feeRecordReportedPayments: CurrencyAndAmount[] = [
-          { currency: 'GBP', amount: 100 },
+          { currency: CURRENCY.GBP, amount: 100 },
           { currency: 'EUR', amount: 50 },
         ];
         const formattedReportedPayments: SortedAndFormattedCurrencyAndAmount[] = [

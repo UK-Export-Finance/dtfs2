@@ -72,16 +72,16 @@ describe(`GET ${BASE_URL}`, () => {
     // Arrange
     const report = aReconciliationInProgressReport();
 
-    const aPaymentInGBP = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(90).withId(123).build();
+    const aPaymentInGBP = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withAmount(90).withId(123).build();
 
-    const aFeeRecordInGBP = aFeeRecordWithReportAndPaymentCurrencyAndStatusToDo(45, report, 'GBP');
+    const aFeeRecordInGBP = aFeeRecordWithReportAndPaymentCurrencyAndStatusToDo(45, report, CURRENCY.GBP);
     const aFeeRecordInGBPWithAPaymentAttached = FeeRecordEntityMockBuilder.forReport(report)
       .withId(46)
       .withFacilityId('000123')
       .withExporter('Test company')
       .withFeesPaidToUkefForThePeriod(100)
-      .withFeesPaidToUkefForThePeriodCurrency('GBP')
-      .withPaymentCurrency('GBP')
+      .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
+      .withPaymentCurrency(CURRENCY.GBP)
       .withPayments([aPaymentInGBP])
       .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
       .build();
@@ -100,14 +100,14 @@ describe(`GET ${BASE_URL}`, () => {
       bank: {
         name: bank.name,
       },
-      totalReportedPayments: { currency: 'GBP', amount: 100 },
+      totalReportedPayments: { currency: CURRENCY.GBP, amount: 100 },
       feeRecords: [
         {
           id: 45,
           facilityId: '000123',
           exporter: 'Test company',
-          reportedFee: { currency: 'GBP', amount: 100 },
-          reportedPayments: { currency: 'GBP', amount: 100 },
+          reportedFee: { currency: CURRENCY.GBP, amount: 100 },
+          reportedPayments: { currency: CURRENCY.GBP, amount: 100 },
         },
       ],
       payments: [],
@@ -127,7 +127,7 @@ describe(`GET ${BASE_URL}`, () => {
       .withFacilityId('000123')
       .withExporter('Test company')
       .withFeesPaidToUkefForThePeriod(75)
-      .withFeesPaidToUkefForThePeriodCurrency('GBP')
+      .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
       .withPaymentCurrency('USD')
       .withPayments([aPaymentInUSD])
       .withStatus(FEE_RECORD_STATUS.MATCH)
@@ -153,7 +153,7 @@ describe(`GET ${BASE_URL}`, () => {
           id: 47,
           facilityId: '000123',
           exporter: 'Test company',
-          reportedFee: { currency: 'GBP', amount: 100 },
+          reportedFee: { currency: CURRENCY.GBP, amount: 100 },
           reportedPayments: { currency: 'USD', amount: 100 },
         },
       ],
@@ -173,7 +173,7 @@ describe(`GET ${BASE_URL}`, () => {
       .withFacilityId('000123')
       .withExporter('Test company')
       .withFeesPaidToUkefForThePeriod(100)
-      .withFeesPaidToUkefForThePeriodCurrency('GBP')
+      .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
       .withPaymentCurrency(paymentCurrency)
       .withStatus(FEE_RECORD_STATUS.TO_DO)
       .build();

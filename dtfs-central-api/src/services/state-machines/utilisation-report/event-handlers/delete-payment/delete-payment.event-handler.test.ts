@@ -1,5 +1,6 @@
 import { EntityManager } from 'typeorm';
 import {
+  CURRENCY,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   PaymentEntity,
@@ -59,7 +60,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     // Arrange
     const paymentId = 12;
     const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
-    const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).withFeeRecords([]).build();
+    const paymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(paymentId).withFeeRecords([]).build();
     when(mockFindOne).calledWith(PaymentEntity, expect.anything()).mockResolvedValue(paymentEntity);
 
     // Act
@@ -89,7 +90,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
         .build(),
     ];
 
-    const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).withFeeRecords(linkedFeeRecords).build();
+    const paymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(paymentId).withFeeRecords(linkedFeeRecords).build();
 
     when(mockFindOne).calledWith(PaymentEntity, expect.anything()).mockResolvedValue(paymentEntity);
     when(mockFindOne).calledWith(FeeRecordEntity, expect.anything()).mockResolvedValue(null);
@@ -111,7 +112,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     const feeRecordId = 456;
     const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
     const linkedFeeRecordEntity = FeeRecordEntityMockBuilder.forReport(report).withId(feeRecordId).build();
-    const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).withFeeRecords([linkedFeeRecordEntity]).build();
+    const paymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(paymentId).withFeeRecords([linkedFeeRecordEntity]).build();
     when(mockFindOne).calledWith(PaymentEntity, expect.anything()).mockResolvedValue(paymentEntity);
     when(mockFindOne).calledWith(FeeRecordEntity, expect.anything()).mockResolvedValue(linkedFeeRecordEntity);
 
@@ -137,7 +138,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
     const linkedFeeRecordEntityOne = FeeRecordEntityMockBuilder.forReport(report).withId(456).build();
     const linkedFeeRecordEntityTwo = FeeRecordEntityMockBuilder.forReport(report).withId(789).build();
-    const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP')
+    const paymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
       .withId(paymentId)
       .withFeeRecords([linkedFeeRecordEntityOne, linkedFeeRecordEntityTwo])
       .build();
@@ -183,7 +184,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     const paymentId = 123;
     const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
     const linkedFeeRecordEntity = FeeRecordEntityMockBuilder.forReport(report).withId(456).build();
-    const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).withFeeRecords([linkedFeeRecordEntity]).build();
+    const paymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(paymentId).withFeeRecords([linkedFeeRecordEntity]).build();
     when(mockFindOne).calledWith(PaymentEntity, expect.anything()).mockResolvedValue(paymentEntity);
     when(mockFindOne).calledWith(FeeRecordEntity, expect.anything()).mockResolvedValue(linkedFeeRecordEntity);
 
@@ -219,7 +220,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     const paymentId = 123;
     const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
     const linkedFeeRecordEntity = FeeRecordEntityMockBuilder.forReport(report).withId(456).build();
-    const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).withFeeRecords([linkedFeeRecordEntity]).build();
+    const paymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(paymentId).withFeeRecords([linkedFeeRecordEntity]).build();
     when(mockFindOne).calledWith(PaymentEntity, expect.anything()).mockResolvedValue(paymentEntity);
     when(mockFindOne).calledWith(FeeRecordEntity, expect.anything()).mockResolvedValue(linkedFeeRecordEntity);
 
@@ -254,12 +255,12 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     const requestSource = aDbRequestSource();
     const paymentId = 123;
     const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
-    const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP')
+    const paymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
       .withId(paymentId)
       .withFeeRecords([FeeRecordEntityMockBuilder.forReport(report).withId(456).build()])
       .build();
     const linkedFeeRecordEntityAfterPaymentDeletion = FeeRecordEntityMockBuilder.forReport(report)
-      .withPayments([PaymentEntityMockBuilder.forCurrency('GBP').withId(9999999).build()])
+      .withPayments([PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(9999999).build()])
       .withId(456)
       .build();
     when(mockFindOne).calledWith(PaymentEntity, expect.anything()).mockResolvedValue(paymentEntity);
@@ -294,7 +295,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     const requestSource = aDbRequestSource();
     const paymentId = 123;
     const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
-    const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP')
+    const paymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
       .withId(paymentId)
       .withFeeRecords([FeeRecordEntityMockBuilder.forReport(report).withId(456).build()])
       .build();

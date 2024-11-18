@@ -1,3 +1,4 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const { mandatoryCriteria } = require('../../../e2e-fixtures');
 const { BANK1_MAKER1, BANK1_CHECKER1 } = require('../../../e2e-fixtures/portal-users.fixture');
 const CONSTANTS = require('./constants');
@@ -248,7 +249,7 @@ const deal = {
     supplyContractValue: '9000000.00',
     supplyContractCurrency: {
       text: 'GBP - UK Sterling',
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
     supplyContractConversionRateToGBP: '',
     'supplyContractConversionDate-day': '',

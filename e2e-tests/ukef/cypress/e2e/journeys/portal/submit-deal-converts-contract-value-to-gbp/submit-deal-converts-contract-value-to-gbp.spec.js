@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import relative from '../../../relativeURL';
 import portalPages from '../../../../../../portal/cypress/e2e/pages';
 import tfmPartials from '../../../../../../tfm/cypress/e2e/partials';
@@ -92,7 +93,7 @@ context('Portal to TFM deal submission', () => {
       .contractValueInGBP()
       .invoke('text')
       .then((text) => {
-        expect(text.trim()).to.contain('GBP');
+        expect(text.trim()).to.contain(CURRENCY.GBP);
       });
   });
 });

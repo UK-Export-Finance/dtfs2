@@ -1,3 +1,4 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const { BANK1_MAKER1 } = require('../../../../../../e2e-fixtures/portal-users.fixture');
 
 exports.BASE_DEAL = {
@@ -166,7 +167,7 @@ exports.BASE_DEAL = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
     {
@@ -187,7 +188,7 @@ exports.BASE_DEAL = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
   ],

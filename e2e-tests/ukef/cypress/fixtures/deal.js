@@ -1,4 +1,5 @@
 import Chance from 'chance';
+import { CURRENCY } from '@ukef/dtfs2-common';
 import * as CONSTANTS from '../../../e2e-fixtures';
 
 const chance = new Chance();
@@ -103,7 +104,7 @@ export const MOCK_DEAL = {
     'supplyContractConversionDate-year': '',
     supplyContractConversionRateToGBP: '',
     supplyContractCurrency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
       text: 'GBP - UK Sterling',
     },
     supplyContractValue: '1234.00',
@@ -189,7 +190,7 @@ export const MOCK_DEAL = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       'coverEndDate-day': '20',
       'coverEndDate-month': '10',
@@ -231,7 +232,7 @@ export const MOCK_DEAL = {
       status: 'Acknowledged',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
   ],

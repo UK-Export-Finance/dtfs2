@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { DEAL_STATUS } from '@ukef/dtfs2-common';
+import { CURRENCY, DEAL_STATUS } from '@ukef/dtfs2-common';
 import {
   userToken,
   isObject,
@@ -279,7 +279,7 @@ describe('mapSummaryList()', () => {
   const MockedData = () => ({
     details: {
       id: '123456',
-      currency: { id: 'GBP' },
+      currency: { id: CURRENCY.GBP },
     },
     validation: {
       required: [],
@@ -504,7 +504,7 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems[0].isCurrency = true;
 
     mockedData.details.price = 200;
-    mockedData.details.currency = { id: 'GBP' };
+    mockedData.details.currency = { id: CURRENCY.GBP };
 
     const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
     expect(text).toEqual('200 GBP');
