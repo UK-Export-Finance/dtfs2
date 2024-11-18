@@ -200,6 +200,6 @@ authRouter
 authRouter
   .route('/utilisation-reports/:reportId/fee-record/:feeRecordId')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), handleExpressValidatorResult)
-  .get(utilisationReportsController.getFeeRecordDetailsById);
+  .get(utilisationReportsController.getFeeRecordDetails);
 
 module.exports = { authRouter, openRouter };

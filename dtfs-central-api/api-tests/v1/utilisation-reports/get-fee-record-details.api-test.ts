@@ -4,7 +4,7 @@ import { FeeRecordEntityMockBuilder, RECONCILIATION_IN_PROGRESS, ReportPeriod, U
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
-import { GetFeeRecordDetailsResponseBody } from '../../../src/v1/controllers/utilisation-report-service/get-fee-record-details-by-id.controller';
+import { GetFeeRecordDetailsResponseBody } from '../../../src/v1/controllers/utilisation-report-service/get-fee-record-details.controller';
 
 interface CustomResponse extends Response {
   body: GetFeeRecordDetailsResponseBody;

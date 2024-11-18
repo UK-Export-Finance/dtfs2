@@ -33,7 +33,7 @@ const { putKeyingDataMarkAsToDo } = require('../controllers/utilisation-report-s
 const { postRemoveFeesFromPaymentGroup } = require('../controllers/utilisation-report-service/post-remove-fees-from-payment-group.controller');
 const { postReportDataValidation } = require('../controllers/utilisation-report-service/post-report-data-validation.controller');
 const { postAddFeesToAnExistingPaymentGroup } = require('../controllers/utilisation-report-service/post-add-fees-to-an-existing-payment-group.controller');
-const { getFeeRecordDetailsById } = require('../controllers/utilisation-report-service/get-fee-record-details-by-id.controller');
+const { getFeeRecordDetails } = require('../controllers/utilisation-report-service/get-fee-record-details.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -762,7 +762,7 @@ utilisationReportsRouter
  *           application/json:
  *             schema:
  *               type: object
- *               $ref: '#/definitions/FeeRecordDetailsByIdResponse'
+ *               $ref: '#/definitions/FeeRecordDetailsResponse'
  *       400:
  *         description: Bad request
  *       404:
@@ -773,6 +773,6 @@ utilisationReportsRouter
 utilisationReportsRouter
   .route('/:reportId/fee-record/:feeRecordId')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), handleExpressValidatorResult)
-  .get(getFeeRecordDetailsById);
+  .get(getFeeRecordDetails);
 
 module.exports = utilisationReportsRouter;

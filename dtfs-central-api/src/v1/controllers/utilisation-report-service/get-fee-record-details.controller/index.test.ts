@@ -2,7 +2,7 @@ import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { getFeeRecordDetailsById, GetFeeRecordDetailsResponseBody } from '.';
+import { getFeeRecordDetails, GetFeeRecordDetailsResponseBody } from '.';
 import { mapToFeeRecordDetails } from './helpers';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 
@@ -10,8 +10,8 @@ console.error = jest.fn();
 
 jest.mock('./helpers');
 
-describe('get-fee-record-details-by-id.controller', () => {
-  describe('getFeeRecordDetailsById', () => {
+describe('get-fee-record-details.controller', () => {
+  describe('getFeeRecordDetails', () => {
     const reportId = 3;
     const feeRecordId = 14;
 
@@ -46,7 +46,7 @@ describe('get-fee-record-details-by-id.controller', () => {
         .mockResolvedValue(null);
 
       // Act
-      await getFeeRecordDetailsById(req, res);
+      await getFeeRecordDetails(req, res);
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
@@ -67,7 +67,7 @@ describe('get-fee-record-details-by-id.controller', () => {
         .mockResolvedValue(FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).build());
 
       // Act
-      await getFeeRecordDetailsById(req, res);
+      await getFeeRecordDetails(req, res);
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
@@ -94,7 +94,7 @@ describe('get-fee-record-details-by-id.controller', () => {
       jest.mocked(mapToFeeRecordDetails).mockResolvedValue(feeRecordDetails);
 
       // Act
-      await getFeeRecordDetailsById(req, res);
+      await getFeeRecordDetails(req, res);
 
       // Assert
       expect(res._getData()).toEqual(feeRecordDetails);

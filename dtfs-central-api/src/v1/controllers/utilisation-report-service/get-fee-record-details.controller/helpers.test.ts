@@ -4,7 +4,7 @@ import { getBankNameById } from '../../../../repositories/banks-repo';
 
 jest.mock('../../../../repositories/banks-repo');
 
-describe('get-fee-record-details-by-id.controller helpers', () => {
+describe('get-fee-record-details.controller helpers', () => {
   describe('mapToFeeRecordDetails', () => {
     const bankId = '123';
 

@@ -13,9 +13,9 @@ export type GetFeeRecordDetailsResponseBody = {
   exporter: string;
 };
 
-type GetFeeRecordDetailsByIdResponse = Response<GetFeeRecordDetailsResponseBody | string>;
+type GetFeeRecordDetailsResponse = Response<GetFeeRecordDetailsResponseBody | string>;
 
-export const getFeeRecordDetailsById = async (req: Request, res: GetFeeRecordDetailsByIdResponse) => {
+export const getFeeRecordDetails = async (req: Request, res: GetFeeRecordDetailsResponse) => {
   const { reportId, feeRecordId } = req.params;
 
   try {

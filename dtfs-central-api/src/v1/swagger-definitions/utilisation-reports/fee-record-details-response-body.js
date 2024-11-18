@@ -1,7 +1,7 @@
 /**
  * @openapi
  * definitions:
- *   FeeRecordDetailsByIdResponse:
+ *   FeeRecordDetailsResponse:
  *     type: object
  *     properties:
  *       id:

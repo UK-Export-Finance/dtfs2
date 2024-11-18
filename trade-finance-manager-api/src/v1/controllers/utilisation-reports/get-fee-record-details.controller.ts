@@ -3,9 +3,9 @@ import { HttpStatusCode, isAxiosError } from 'axios';
 import { FeeRecordDetailsResponseBody } from '../../api-response-types';
 import api from '../../api';
 
-type GetFeeRecordDetailsByIdResponse = Response<FeeRecordDetailsResponseBody | string>;
+type GetFeeRecordDetailsResponse = Response<FeeRecordDetailsResponseBody | string>;
 
-export const getFeeRecordDetailsById = async (req: Request, res: GetFeeRecordDetailsByIdResponse) => {
+export const getFeeRecordDetails = async (req: Request, res: GetFeeRecordDetailsResponse) => {
   const { reportId, feeRecordId } = req.params;
 
   try {

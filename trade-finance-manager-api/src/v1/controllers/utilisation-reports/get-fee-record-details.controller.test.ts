@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { AxiosResponse, HttpStatusCode, AxiosError } from 'axios';
-import { getFeeRecordDetailsById } from './get-fee-record-details-by-id.controller';
+import { getFeeRecordDetails } from './get-fee-record-details.controller';
 import api from '../../api';
 import { FeeRecordDetailsResponseBody } from '../../api-response-types';
 
@@ -9,7 +9,7 @@ console.error = jest.fn();
 jest.mock('../../api');
 
 describe('get-fee-record-details-by-id.controller', () => {
-  describe('getFeeRecordDetailsById', () => {
+  describe('getFeeRecordDetails', () => {
     const reportId = '1';
     const feeRecordId = '2';
 
@@ -37,7 +37,7 @@ describe('get-fee-record-details-by-id.controller', () => {
       jest.mocked(api.getFeeRecordDetails).mockResolvedValue(responseBody);
 
       // Act
-      await getFeeRecordDetailsById(req, res);
+      await getFeeRecordDetails(req, res);
 
       // Assert
       expect(res._getData()).toEqual(responseBody);
@@ -50,7 +50,7 @@ describe('get-fee-record-details-by-id.controller', () => {
       jest.mocked(api.getFeeRecordDetails).mockResolvedValue(aFeeRecordDetailsResponseBody());
 
       // Act
-      await getFeeRecordDetailsById(req, res);
+      await getFeeRecordDetails(req, res);
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
@@ -63,7 +63,7 @@ describe('get-fee-record-details-by-id.controller', () => {
       jest.mocked(api.getFeeRecordDetails).mockRejectedValue(new Error('Some error'));
 
       // Act
-      await getFeeRecordDetailsById(req, res);
+      await getFeeRecordDetails(req, res);
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
@@ -80,7 +80,7 @@ describe('get-fee-record-details-by-id.controller', () => {
       jest.mocked(api.getFeeRecordDetails).mockRejectedValue(axiosError);
 
       // Act
-      await getFeeRecordDetailsById(req, res);
+      await getFeeRecordDetails(req, res);
 
       // Assert
       expect(res._getStatusCode()).toEqual(errorStatus);
@@ -94,7 +94,7 @@ describe('get-fee-record-details-by-id.controller', () => {
       jest.mocked(api.getFeeRecordDetails).mockRejectedValue(new Error('Some error'));
 
       // Act
-      await getFeeRecordDetailsById(req, res);
+      await getFeeRecordDetails(req, res);
 
       // Assert
       expect(res._getData()).toEqual('Failed to get fee record details');
