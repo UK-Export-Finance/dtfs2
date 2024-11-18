@@ -1,5 +1,5 @@
 const { format, add, sub } = require('date-fns');
-const { BOND_TYPE, FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { BOND_TYPE, CURRENCY, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../src/constants');
 
 const nowDate = new Date();
@@ -58,7 +58,7 @@ const deal = {
       currencySameAsSupplyContractCurrency: 'false',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       conversionRate: '100',
       'conversionRateDate-day': format(yesterday, 'dd'),
@@ -225,7 +225,7 @@ const deal = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       issuedDate: nowDate.valueOf(),
       coverDateConfirmed: true,
@@ -255,7 +255,7 @@ const deal = {
       status: 'Ready for check',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       conversionRate: '80',
       'conversionRateDate-day': format(yesterday, 'dd'),
@@ -288,7 +288,7 @@ const deal = {
       status: 'Ready for check',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       issuedDate: nowDate.valueOf(),
       'coverEndDate-day': format(nowPlusOneMonth, 'dd'),
@@ -347,7 +347,7 @@ const deal = {
       status: 'Ready for check',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       issuedDate: nowDate.valueOf(),
       'coverEndDate-day': format(nowPlusOneMonth, 'dd'),

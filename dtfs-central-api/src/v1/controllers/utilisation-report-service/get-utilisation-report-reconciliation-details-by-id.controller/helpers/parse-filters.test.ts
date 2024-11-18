@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { isPaymentReferenceFilterLengthValid, parsePaymentDetailsFilters, parsePremiumPaymentsFilters } from './parse-filters';
 
 describe('parse-filters helper', () => {
@@ -20,7 +21,7 @@ describe('parse-filters helper', () => {
         // Arrange
 
         const validFacilityId = '987654321';
-        const validPaymentCurrency = 'GBP';
+        const validPaymentCurrency = CURRENCY.GBP;
         const validPaymentReference = 'Valid reference';
 
         const paymentDetailsFilters = {
@@ -101,7 +102,7 @@ describe('parse-filters helper', () => {
       describe('when a valid paymentCurrency is provided', () => {
         it('should return an object with valid paymentCurrency', () => {
           // Arrange
-          const paymentDetailsFilters = { paymentCurrency: 'GBP' };
+          const paymentDetailsFilters = { paymentCurrency: CURRENCY.GBP };
           const expected = paymentDetailsFilters;
 
           // Act

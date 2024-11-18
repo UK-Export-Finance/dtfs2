@@ -1,4 +1,4 @@
-import { BOND_TYPE } from '@ukef/dtfs2-common';
+import { BOND_TYPE, CURRENCY } from '@ukef/dtfs2-common';
 import { MOCK_PORTAL_USERS } from './mock-portal-users';
 
 const MOCK_DEAL_ISSUED_FACILITIES = {
@@ -100,7 +100,7 @@ const MOCK_DEAL_ISSUED_FACILITIES = {
     'supplyContractConversionDate-year': '',
     supplyContractConversionRateToGBP: '',
     supplyContractCurrency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
       text: 'GBP - UK Sterling',
     },
     supplyContractValue: '1234.00',
@@ -194,7 +194,7 @@ const MOCK_DEAL_ISSUED_FACILITIES = {
         dayCountBasis: '365',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
         requestedCoverStartDate: 1610369832226.0,
         'coverEndDate-day': '11',
@@ -239,7 +239,7 @@ const MOCK_DEAL_ISSUED_FACILITIES = {
         ukefFacilityId: '65432',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
       },
     ],

@@ -1,4 +1,4 @@
-import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { BOND_FACILITY_TYPE, CURRENCY } from '@ukef/dtfs2-common';
 import pages from '../../pages';
 import partials from '../../partials';
 import relative from '../../relativeURL';
@@ -13,7 +13,7 @@ const MOCK_DEAL = {
   status: 'Draft',
   submissionDetails: {
     supplyContractCurrency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
   },
   mockFacilities: [
@@ -37,7 +37,7 @@ const MOCK_DEAL = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
     {
@@ -60,7 +60,7 @@ const MOCK_DEAL = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
     {
@@ -83,7 +83,7 @@ const MOCK_DEAL = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
   ],

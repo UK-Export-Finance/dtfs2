@@ -1,4 +1,4 @@
-import { BOND_TYPE } from '@ukef/dtfs2-common';
+import { BOND_TYPE, CURRENCY } from '@ukef/dtfs2-common';
 import { subDays, addMonths, format } from 'date-fns';
 import { DATE } from '../../server/constants';
 
@@ -49,7 +49,7 @@ const deal = {
         currencySameAsSupplyContractCurrency: 'true',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
         conversionRate: '100',
         'conversionRateDate-day': `${format(yesterday, 'dd')}`,
@@ -83,7 +83,7 @@ const deal = {
         currencySameAsSupplyContractCurrency: 'true',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
         conversionRate: '100',
         'conversionRateDate-day': `${format(yesterday, 'dd')}`,

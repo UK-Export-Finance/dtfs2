@@ -1,11 +1,11 @@
-import { Currency, PaymentEntityMockBuilder } from '@ukef/dtfs2-common';
+import { Currency, CURRENCY, PaymentEntityMockBuilder } from '@ukef/dtfs2-common';
 import { mapPaymentEntityToPayment } from './payment-mapper';
 
 describe('payment mapper', () => {
   describe('mapPaymentEntityToPayment', () => {
     it('maps the payment entity currency to the payment currency', () => {
       // Arrange
-      const paymentCurrency: Currency = 'GBP';
+      const paymentCurrency: Currency = CURRENCY.GBP;
 
       const paymentEntity = PaymentEntityMockBuilder.forCurrency(paymentCurrency).build();
 
@@ -20,7 +20,7 @@ describe('payment mapper', () => {
       // Arrange
       const paymentAmount = 100;
 
-      const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(paymentAmount).build();
+      const paymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withAmount(paymentAmount).build();
 
       // Act
       const payment = mapPaymentEntityToPayment(paymentEntity);
@@ -33,7 +33,7 @@ describe('payment mapper', () => {
       // Arrange
       const paymentId = 12;
 
-      const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).build();
+      const paymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(paymentId).build();
 
       // Act
       const payment = mapPaymentEntityToPayment(paymentEntity);
@@ -46,7 +46,7 @@ describe('payment mapper', () => {
       // Arrange
       const dateReceived = new Date();
 
-      const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withDateReceived(dateReceived).build();
+      const paymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withDateReceived(dateReceived).build();
 
       // Act
       const payment = mapPaymentEntityToPayment(paymentEntity);
@@ -59,7 +59,7 @@ describe('payment mapper', () => {
       // Arrange
       const reference = 'A reference';
 
-      const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withReference(reference).build();
+      const paymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference(reference).build();
 
       // Act
       const payment = mapPaymentEntityToPayment(paymentEntity);
@@ -70,7 +70,7 @@ describe('payment mapper', () => {
 
     it('maps the payment entity reference to the payment reference when the reference is not defined', () => {
       // Arrange
-      const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withReference(undefined).build();
+      const paymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference(undefined).build();
 
       // Act
       const payment = mapPaymentEntityToPayment(paymentEntity);

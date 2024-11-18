@@ -1,4 +1,4 @@
-import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { BOND_FACILITY_TYPE, CURRENCY } from '@ukef/dtfs2-common';
 
 const now = new Date().valueOf();
 
@@ -166,7 +166,7 @@ const deal = {
     'supplyContractConversionDate-year': '',
     supplyContractConversionRateToGBP: '',
     supplyContractCurrency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
       text: 'GBP - UK Sterling',
     },
     supplyContractValue: '12312323.00',
@@ -192,7 +192,7 @@ const deal = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       status: 'Not started',
     },
@@ -215,7 +215,7 @@ const deal = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       status: 'Not started',
     },
@@ -238,7 +238,7 @@ const deal = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       status: 'Not started',
     },
@@ -261,34 +261,7 @@ const deal = {
       viewedPreviewPage: true,
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
-      },
-      'coverEndDate-day': '',
-      'coverEndDate-month': '',
-      'coverEndDate-year': '',
-      disbursementAmount: '',
-      status: 'Not started',
-    },
-    {
-      type: 'Loan',
-      facilityStage: 'Conditional',
-      hasBeenIssued: false,
-      ukefGuaranteeInMonths: '12',
-      name: '',
-      guaranteeFeePayableByBank: '10.8000',
-      value: '123123.00',
-      currencySameAsSupplyContractCurrency: 'true',
-      interestMarginFee: '12',
-      coveredPercentage: '20',
-      minimumQuarterlyFee: '',
-      ukefExposure: '24,624.60',
-      premiumFrequency: 'Monthly',
-      premiumType: 'In arrear',
-      dayCountBasis: '360',
-      viewedPreviewPage: true,
-      currency: {
-        text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       'coverEndDate-day': '',
       'coverEndDate-month': '',
@@ -315,7 +288,34 @@ const deal = {
       viewedPreviewPage: true,
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
+      },
+      'coverEndDate-day': '',
+      'coverEndDate-month': '',
+      'coverEndDate-year': '',
+      disbursementAmount: '',
+      status: 'Not started',
+    },
+    {
+      type: 'Loan',
+      facilityStage: 'Conditional',
+      hasBeenIssued: false,
+      ukefGuaranteeInMonths: '12',
+      name: '',
+      guaranteeFeePayableByBank: '10.8000',
+      value: '123123.00',
+      currencySameAsSupplyContractCurrency: 'true',
+      interestMarginFee: '12',
+      coveredPercentage: '20',
+      minimumQuarterlyFee: '',
+      ukefExposure: '24,624.60',
+      premiumFrequency: 'Monthly',
+      premiumType: 'In arrear',
+      dayCountBasis: '360',
+      viewedPreviewPage: true,
+      currency: {
+        text: 'GBP - UK Sterling',
+        id: CURRENCY.GBP,
       },
       'coverEndDate-day': '',
       'coverEndDate-month': '',

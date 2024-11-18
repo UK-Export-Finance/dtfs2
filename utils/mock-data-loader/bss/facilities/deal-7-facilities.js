@@ -1,4 +1,4 @@
-import { BOND_TYPE } from '@ukef/dtfs2-common';
+import { BOND_TYPE, CURRENCY } from '@ukef/dtfs2-common';
 import { nowTimestamp, twoMonths, twoMonthsTimestamp, threeMonths } from '../dates';
 
 export default [
@@ -16,7 +16,7 @@ export default [
     currencySameAsSupplyContractCurrency: 'true',
     currency: {
       text: 'GBP - UK Sterling',
-      id: 'GBP',
+      id: CURRENCY.GBP,
       currencyId: 12,
     },
     conversionRate: null,
@@ -57,7 +57,7 @@ export default [
     currencySameAsSupplyContractCurrency: 'true',
     currency: {
       text: 'GBP - UK Sterling',
-      id: 'GBP',
+      id: CURRENCY.GBP,
       currencyId: 12,
     },
     conversionRate: null,

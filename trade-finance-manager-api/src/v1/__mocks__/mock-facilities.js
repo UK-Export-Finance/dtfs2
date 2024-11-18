@@ -1,4 +1,4 @@
-import { BOND_TYPE } from '@ukef/dtfs2-common';
+import { BOND_TYPE, CURRENCY } from '@ukef/dtfs2-common';
 
 export const MOCK_FACILITIES = [
   {
@@ -23,7 +23,7 @@ export const MOCK_FACILITIES = [
     dayCountBasis: '365',
     currency: {
       text: 'GBP - UK Sterling',
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
     'coverEndDate-day': '20',
     'coverEndDate-month': '10',
@@ -68,7 +68,7 @@ export const MOCK_FACILITIES = [
     status: 'Acknowledged',
     currency: {
       text: 'GBP - UK Sterling',
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
     feeType: 'At maturity',
     feeFrequency: '12',
@@ -96,7 +96,7 @@ export const MOCK_FACILITIES = [
     dayCountBasis: '365',
     currency: {
       text: 'GBP - UK Sterling',
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
     'coverEndDate-day': '20',
     'coverEndDate-month': '10',
@@ -135,7 +135,7 @@ export const MOCK_FACILITIES = [
     ukefFacilityId: '1234567890',
     currency: {
       text: 'GBP - UK Sterling',
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
   },
   {
@@ -160,7 +160,7 @@ export const MOCK_FACILITIES = [
     dayCountBasis: '365',
     currency: {
       text: 'GBP - UK Sterling',
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
     requestedCoverStartDate: 1610369832226,
     status: 'Submitted',
@@ -197,7 +197,7 @@ export const MOCK_FACILITIES = [
     ukefFacilityId: '1234567890',
     currency: {
       text: 'GBP - UK Sterling',
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
   },
   {
@@ -235,7 +235,7 @@ export const MOCK_FACILITIES = [
     status: 'Acknowledged',
     currency: {
       text: 'GBP - UK Sterling',
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
     feeType: 'At maturity',
     feeFrequency: '12',

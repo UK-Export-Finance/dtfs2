@@ -1,4 +1,4 @@
-import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { BOND_FACILITY_TYPE, CURRENCY } from '@ukef/dtfs2-common';
 import { mandatoryCriteria } from '../../../../../../e2e-fixtures';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 
@@ -252,7 +252,7 @@ const deal = {
     supplyContractValue: '9000000.00',
     supplyContractCurrency: {
       text: 'GBP - UK Sterling',
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
     supplyContractConversionRateToGBP: '',
     'supplyContractConversionDate-day': '',
@@ -283,7 +283,7 @@ const deal = {
         dayCountBasis: '365',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
         requestedCoverStartDate: '1603292441000',
         ukefFacilityId: '0040004839',
@@ -325,7 +325,7 @@ const deal = {
         dayCountBasis: '360',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
         ukefFacilityId: '0040004846',
         'issuedDate-day': '02',
@@ -369,7 +369,7 @@ const deal = {
         dayCountBasis: '365',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
         requestedCoverStartDate: '1606914111885',
         ukefFacilityId: '0040004833',
@@ -410,7 +410,7 @@ const deal = {
         dayCountBasis: '365',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
         ukefFacilityId: '0040004838',
         'issuedDate-day': '02',

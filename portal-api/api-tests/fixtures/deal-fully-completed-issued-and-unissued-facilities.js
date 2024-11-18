@@ -1,4 +1,4 @@
-const { BOND_TYPE, FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { BOND_TYPE, CURRENCY, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { add, format, sub } = require('date-fns');
 const dealFullyCompleted = require('./deal-fully-completed');
 
@@ -105,7 +105,7 @@ const deal = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       issuedDate: nowDate.valueOf(),
       requestedCoverStartDate: nowDate.valueOf(),
@@ -134,7 +134,7 @@ const deal = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       issuedDate: nowDate.valueOf(),
       'coverEndDate-day': format(nowPlusOneMonth, 'dd'),
@@ -163,7 +163,7 @@ const deal = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       conversionRate: '80',
       'conversionRateDate-day': format(yesterday, 'dd'),

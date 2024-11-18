@@ -1,3 +1,5 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
+
 const MOCK_DEAL_ACBS = {
   _id: '66abb3cdbfbde5d51514678a',
   dealSnapshot: {
@@ -188,7 +190,7 @@ const MOCK_DEAL_ACBS = {
           coverPercentage: 80,
           coverStartDate: null,
           createdAt: 1722528751814,
-          currency: { id: 'GBP' },
+          currency: { id: CURRENCY.GBP },
           dayCountBasis: 360,
           dealId: '66abb3cdbfbde5d51514678a',
           details: ['Term basis'],

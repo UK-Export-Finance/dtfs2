@@ -1,9 +1,10 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { EditPaymentViewModel } from '../server/types/view-models';
 
 export const anEditPaymentViewModel = (): EditPaymentViewModel => ({
   reportId: '1',
   paymentId: '1',
-  paymentCurrency: 'GBP',
+  paymentCurrency: CURRENCY.GBP,
   bank: { id: '123', name: 'Test bank' },
   formattedReportPeriod: 'January 2024',
   feeRecords: [],

@@ -1,5 +1,6 @@
 import {
   CurrencyAndAmount,
+  CURRENCY,
   FEE_RECORD_STATUS,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
@@ -110,7 +111,7 @@ describe('get selected fee record details controller helpers', () => {
       const feeRecord = FeeRecordEntityMockBuilder.forReport(UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build())
         .withFeesPaidToUkefForThePeriod(2200)
         .withFeesPaidToUkefForThePeriodCurrency('EUR')
-        .withPaymentCurrency('GBP')
+        .withPaymentCurrency(CURRENCY.GBP)
         .withPaymentExchangeRate(1.1)
         .build();
 
@@ -118,7 +119,7 @@ describe('get selected fee record details controller helpers', () => {
       const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(bankId, aReportPeriod(), [feeRecord], false, gbpTolerance);
 
       // Assert
-      expect(result.feeRecords[0].reportedPayments).toEqual<CurrencyAndAmount>({ amount: 2000, currency: 'GBP' });
+      expect(result.feeRecords[0].reportedPayments).toEqual<CurrencyAndAmount>({ amount: 2000, currency: CURRENCY.GBP });
     });
 
     it('maps the fees paid to ukef for the period to the reported fee', async () => {
@@ -139,22 +140,22 @@ describe('get selected fee record details controller helpers', () => {
       // Arrange
       const bankId = '123';
       const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
-      const firstPaymentEntity = PaymentEntityMockBuilder.forCurrency('GBP')
+      const firstPaymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
         .withDateReceived(new Date('2022-01-01'))
         .withAmount(100)
         .withReference('First payment')
         .build();
-      const secondPaymentEntity = PaymentEntityMockBuilder.forCurrency('GBP')
+      const secondPaymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
         .withDateReceived(new Date('2022-02-02'))
         .withAmount(200)
         .withReference('Second payment')
         .build();
       const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport)
-        .withPaymentCurrency('GBP')
+        .withPaymentCurrency(CURRENCY.GBP)
         .withPayments([firstPaymentEntity, secondPaymentEntity])
         .build();
       const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport)
-        .withPaymentCurrency('GBP')
+        .withPaymentCurrency(CURRENCY.GBP)
         .withPayments([firstPaymentEntity, secondPaymentEntity])
         .build();
 
@@ -169,8 +170,8 @@ describe('get selected fee record details controller helpers', () => {
 
       // Assert
       expect(result.payments).toEqual<SelectedFeeRecordsPaymentDetails[]>([
-        { currency: 'GBP', amount: 100, dateReceived: new Date('2022-01-01'), reference: 'First payment' },
-        { currency: 'GBP', amount: 200, dateReceived: new Date('2022-02-02'), reference: 'Second payment' },
+        { currency: CURRENCY.GBP, amount: 100, dateReceived: new Date('2022-01-01'), reference: 'First payment' },
+        { currency: CURRENCY.GBP, amount: 200, dateReceived: new Date('2022-02-02'), reference: 'Second payment' },
       ]);
     });
 
@@ -178,8 +179,8 @@ describe('get selected fee record details controller helpers', () => {
       // Arrange
       const bankId = '123';
       const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
-      const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('GBP').withPayments([]).build();
-      const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('GBP').withPayments([]).build();
+      const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency(CURRENCY.GBP).withPayments([]).build();
+      const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency(CURRENCY.GBP).withPayments([]).build();
 
       // Act
       const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(
@@ -201,13 +202,13 @@ describe('get selected fee record details controller helpers', () => {
       const feeRecordWithDifferingCurrencies = FeeRecordEntityMockBuilder.forReport(aUtilisationReport)
         .withFeesPaidToUkefForThePeriod(2200)
         .withFeesPaidToUkefForThePeriodCurrency('EUR')
-        .withPaymentCurrency('GBP')
+        .withPaymentCurrency(CURRENCY.GBP)
         .withPaymentExchangeRate(1.1)
         .build();
       const feeRecordWithMatchingCurrencies = FeeRecordEntityMockBuilder.forReport(aUtilisationReport)
         .withFeesPaidToUkefForThePeriod(1000)
-        .withFeesPaidToUkefForThePeriodCurrency('GBP')
-        .withPaymentCurrency('GBP')
+        .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
+        .withPaymentCurrency(CURRENCY.GBP)
         .build();
 
       // Act
@@ -220,7 +221,7 @@ describe('get selected fee record details controller helpers', () => {
       );
 
       // Assert
-      expect(result.totalReportedPayments).toEqual<CurrencyAndAmount>({ amount: 3000, currency: 'GBP' });
+      expect(result.totalReportedPayments).toEqual<CurrencyAndAmount>({ amount: 3000, currency: CURRENCY.GBP });
     });
 
     it('maps can add to existing payment flag', async () => {
@@ -266,11 +267,11 @@ describe('get selected fee record details controller helpers', () => {
     it('should return mapped available payments', async () => {
       // Arrange
       const reportId = '123';
-      const paymentCurrency = 'GBP';
+      const paymentCurrency = CURRENCY.GBP;
 
-      const firstPaymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(55).withId(1).withReference('First payment').build();
-      const secondPaymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(65).withId(2).withReference('Second payment').build();
-      const thirdPaymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(75).withId(3).withReference('Third payment').build();
+      const firstPaymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withAmount(55).withId(1).withReference('First payment').build();
+      const secondPaymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withAmount(65).withId(2).withReference('Second payment').build();
+      const thirdPaymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withAmount(75).withId(3).withReference('Third payment').build();
 
       const firstFeeRecordEntity = FeeRecordEntityMockBuilder.forReport(UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build())
         .withId(1)
@@ -293,21 +294,21 @@ describe('get selected fee record details controller helpers', () => {
       const result = await getSelectedFeeRecordsAvailablePaymentGroups(reportId, paymentCurrency);
 
       // Assert
-      expect(findAvailableFeeRecordsSpy).toHaveBeenCalledWith(123, 'GBP');
+      expect(findAvailableFeeRecordsSpy).toHaveBeenCalledWith(123, CURRENCY.GBP);
 
       expect(result).toEqual([
         [
-          { amount: 55, currency: 'GBP', id: 1, reference: 'First payment' },
-          { amount: 65, currency: 'GBP', id: 2, reference: 'Second payment' },
+          { amount: 55, currency: CURRENCY.GBP, id: 1, reference: 'First payment' },
+          { amount: 65, currency: CURRENCY.GBP, id: 2, reference: 'Second payment' },
         ],
-        [{ amount: 75, currency: 'GBP', id: 3, reference: 'Third payment' }],
+        [{ amount: 75, currency: CURRENCY.GBP, id: 3, reference: 'Third payment' }],
       ]);
     });
 
     it('should return an empty array when no fee records are found', async () => {
       // Arrange
       const reportId = '123';
-      const paymentCurrency = 'GBP';
+      const paymentCurrency = CURRENCY.GBP;
 
       const findAvailableFeeRecordsSpy = jest.spyOn(FeeRecordRepo, 'findByReportIdAndPaymentCurrencyAndStatusDoesNotMatchWithPayments').mockResolvedValue([]);
 
@@ -315,7 +316,7 @@ describe('get selected fee record details controller helpers', () => {
       const result = await getSelectedFeeRecordsAvailablePaymentGroups(reportId, paymentCurrency);
 
       // Assert
-      expect(findAvailableFeeRecordsSpy).toHaveBeenCalledWith(123, 'GBP');
+      expect(findAvailableFeeRecordsSpy).toHaveBeenCalledWith(123, CURRENCY.GBP);
       expect(result).toEqual([]);
     });
   });
@@ -329,7 +330,7 @@ describe('get selected fee record details controller helpers', () => {
 
       // Assert
       expect(result).toEqual(true);
-      expect(existsUnmatchedPaymentSpy).toHaveBeenCalledWith(123, 'GBP');
+      expect(existsUnmatchedPaymentSpy).toHaveBeenCalledWith(123, CURRENCY.GBP);
     });
 
     it('returns false when no matching payment exists', async () => {
@@ -341,7 +342,7 @@ describe('get selected fee record details controller helpers', () => {
 
       // Assert
       expect(result).toEqual(false);
-      expect(existsUnmatchedPaymentSpy).toHaveBeenCalledWith(123, 'GBP');
+      expect(existsUnmatchedPaymentSpy).toHaveBeenCalledWith(123, CURRENCY.GBP);
     });
 
     it('returns false when matching payment exists but fee record status is not TO_DO', async () => {
@@ -373,6 +374,6 @@ describe('get selected fee record details controller helpers', () => {
 
   function aFeeRecordWithStatusToDo(): FeeRecordEntity {
     const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
-    return FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('GBP').withStatus(FEE_RECORD_STATUS.TO_DO).build();
+    return FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency(CURRENCY.GBP).withStatus(FEE_RECORD_STATUS.TO_DO).build();
   }
 });

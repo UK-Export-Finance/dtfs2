@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { GetPaymentDetailsWithFeeRecordsResponseBody, GetPaymentDetailsWithoutFeeRecordsResponseBody } from '../server/api-response-types';
 import { aFeeRecord } from './fee-record';
 import { aPayment } from './payment';
@@ -14,7 +15,7 @@ export const aPaymentDetailsWithFeeRecordsResponseBody = (): GetPaymentDetailsWi
   payment: aPayment(),
   feeRecords: [aFeeRecord()],
   totalReportedPayments: {
-    currency: 'GBP',
+    currency: CURRENCY.GBP,
     amount: 100,
   },
 });

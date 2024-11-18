@@ -1,4 +1,4 @@
-import { BOND_TYPE } from '@ukef/dtfs2-common';
+import { BOND_TYPE, CURRENCY } from '@ukef/dtfs2-common';
 import mapFacilities from './mapFacilities';
 import mapFacilitySnapshot from './mapFacilitySnapshot';
 import mapFacilityTfm from './mapFacilityTfm';
@@ -26,7 +26,7 @@ describe('mapFacilities', () => {
 
   const mockCurrency = {
     text: 'GBP - UK Sterling',
-    id: 'GBP',
+    id: CURRENCY.GBP,
   };
 
   const mockFacilityValue = '12345.00';

@@ -1,4 +1,4 @@
-import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { BOND_FACILITY_TYPE, CURRENCY } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 
 const createTfmFacilityToInsertIntoDb = (ukefFacilityId, dealObjectId) => ({
@@ -14,7 +14,7 @@ const createTfmFacilityToInsertIntoDb = (ukefFacilityId, dealObjectId) => ({
     coveredPercentage: '20',
     createdDate: 1710159691178,
     currency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
       text: 'GBP - UK Sterling',
     },
     currencySameAsSupplyContractCurrency: 'true',

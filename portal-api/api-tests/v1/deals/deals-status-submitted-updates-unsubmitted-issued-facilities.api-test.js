@@ -1,5 +1,6 @@
 const { BOND_TYPE } = require('@ukef/dtfs2-common');
 const { sub, add, format } = require('date-fns');
+const { CURRENCY } = require('@ukef/dtfs2-common');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -50,7 +51,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       conversionRate: '80',
       'conversionRateDate-day': format(yesterday, 'dd'),
