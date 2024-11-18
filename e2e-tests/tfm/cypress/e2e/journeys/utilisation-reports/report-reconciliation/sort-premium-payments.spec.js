@@ -1,4 +1,5 @@
 import {
+  CURRENCY,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
@@ -30,7 +31,7 @@ context(`users can sort premium payments table by total reported payments and to
   const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
     .withId(2)
     .withFeesPaidToUkefForThePeriod(20)
-    .withFeesPaidToUkefForThePeriodCurrency('GBP')
+    .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
     .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
     .withFacilityId('22222222')
     .build();

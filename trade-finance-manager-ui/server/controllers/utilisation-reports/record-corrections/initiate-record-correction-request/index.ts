@@ -94,7 +94,7 @@ export const postInitiateRecordCorrectionRequest = (req: PostInitiateRecordCorre
 
     const selectedFeeRecordIds = getFeeRecordIdsFromPremiumPaymentsCheckboxIds([checkedCheckboxId]);
 
-    if (selectedFeeRecordIds.length === 0 || selectedFeeRecordIds.length > 1) {
+    if (selectedFeeRecordIds.length !== 1) {
       throw new Error(`Invalid premium payments checkbox id encountered for fee record at ${FEE_RECORD_STATUS.TO_DO} status ${checkedCheckboxId}`);
     }
 

@@ -1,4 +1,5 @@
 const { subDays, addMonths, format } = require('date-fns');
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../server/constants');
 
 const now = new Date();
@@ -48,7 +49,7 @@ const deal = {
         currencySameAsSupplyContractCurrency: 'true',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
         conversionRate: '100',
         'conversionRateDate-day': `${format(yesterday, 'dd')}`,
@@ -82,7 +83,7 @@ const deal = {
         currencySameAsSupplyContractCurrency: 'true',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
         conversionRate: '100',
         'conversionRateDate-day': `${format(yesterday, 'dd')}`,
@@ -351,7 +352,7 @@ const deal = {
     },
   },
   mandatoryCriteria: {
-    version: 33,
+    version: 34,
     criteria: [
       {
         id: 1,
@@ -377,7 +378,11 @@ const deal = {
         items: [
           {
             id: 4,
-            copy: 'The Bank Customer (to include both the Supplier and any Parent Obligor) is an <a href="/assets/files/financial_difficulty_model_1.1.0.xlsx" class="govuk-link">Eligible Person</a>',
+            copy: 'Where the supplier is not a “Person Within Scope of Windsor Framework”, it is an eligible person OR',
+          },
+          {
+            id: 5,
+            copy: 'Where the supplier is a “Person Within Scope of Windsor Framework”, both it and its parent obligor (if any) is an eligible person.',
           },
         ],
       },
@@ -386,7 +391,7 @@ const deal = {
         title: 'Credit',
         items: [
           {
-            id: 5,
+            id: 6,
             copy: 'The Bank Customer (to include both the Supplier and any UK Parent Obligor) has a one-year probability of default of less than 14.1%.',
           },
         ],
@@ -396,7 +401,7 @@ const deal = {
         title: 'Bank Facility Letter',
         items: [
           {
-            id: 6,
+            id: 7,
             copy: 'The Bank Facility Letter is governed by the laws of England and Wales, Scotland or Northern Ireland.',
           },
         ],
@@ -406,19 +411,19 @@ const deal = {
         title: 'Legal',
         items: [
           {
-            id: 7,
+            id: 8,
             copy: 'The Bank is the sole and beneficial owner of, and has legal title to, the Transaction.',
           },
           {
-            id: 8,
+            id: 9,
             copy: 'The Bank has not made a Disposal (other than a Permitted Disposal) or a Risk Transfer (other than a Permitted Risk Transfer) in relation to the Transaction.',
           },
           {
-            id: 9,
+            id: 10,
             copy: 'The Bank’s right, title and interest in relation to the Transaction is clear of any Security and Quasi-Security (other than Permitted Security) and is freely assignable without the need to obtain consent of any Obligor or any other person.',
           },
           {
-            id: 10,
+            id: 11,
             copy: 'The Bank is not restricted or prevented by any agreement with an Obligor from providing information and records relating to the Transaction.',
           },
         ],

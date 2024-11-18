@@ -1,5 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import {
+  CURRENCY,
   FeeRecordEntityMockBuilder,
   PENDING_RECONCILIATION,
   PaymentEntityMockBuilder,
@@ -61,7 +62,7 @@ describe('get selected fee records details controller', () => {
     // Arrange
     const { req, res } = getHttpMocks([1, 2]);
     const reportEntity = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
-    const feeRecordWithPaymentCurrencyPounds = FeeRecordEntityMockBuilder.forReport(reportEntity).withId(1).withPaymentCurrency('GBP').build();
+    const feeRecordWithPaymentCurrencyPounds = FeeRecordEntityMockBuilder.forReport(reportEntity).withId(1).withPaymentCurrency(CURRENCY.GBP).build();
     const feeRecordWithPaymentCurrencyEuros = FeeRecordEntityMockBuilder.forReport(reportEntity).withId(2).withPaymentCurrency('EUR').build();
     reportEntity.feeRecords = [feeRecordWithPaymentCurrencyPounds, feeRecordWithPaymentCurrencyEuros];
     findReportSpy.mockResolvedValue(reportEntity);
@@ -90,7 +91,7 @@ describe('get selected fee records details controller', () => {
     // Arrange
     const { req, res } = getHttpMocks([1, 2]);
     const reportEntity = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(reportEntity).withId(1).withPaymentCurrency('GBP').build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(reportEntity).withId(1).withPaymentCurrency(CURRENCY.GBP).build();
     reportEntity.feeRecords = [feeRecord];
     findReportSpy.mockResolvedValue(reportEntity);
 
@@ -107,7 +108,7 @@ describe('get selected fee records details controller', () => {
     const { req, res } = getHttpMocks([1, 2]);
     const reportPeriod = aReportPeriod();
     const reportEntity = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withBankId('999').withReportPeriod(reportPeriod).build();
-    const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP')
+    const paymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
       .withDateReceived(new Date('2024-01-01'))
       .withAmount(150)
       .withReference('A payment')
@@ -116,8 +117,8 @@ describe('get selected fee records details controller', () => {
       .withId(1)
       .withFacilityId('FACILITY 1')
       .withExporter('EXPORTER 1')
-      .withPaymentCurrency('GBP')
-      .withFeesPaidToUkefForThePeriodCurrency('GBP')
+      .withPaymentCurrency(CURRENCY.GBP)
+      .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
       .withFeesPaidToUkefForThePeriod(100)
       .withPayments([paymentEntity])
       .build();
@@ -125,8 +126,8 @@ describe('get selected fee records details controller', () => {
       .withId(2)
       .withFacilityId('FACILITY 2')
       .withExporter('EXPORTER 2')
-      .withPaymentCurrency('GBP')
-      .withFeesPaidToUkefForThePeriodCurrency('GBP')
+      .withPaymentCurrency(CURRENCY.GBP)
+      .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
       .withFeesPaidToUkefForThePeriod(200)
       .withPayments([paymentEntity])
       .build();
@@ -146,7 +147,7 @@ describe('get selected fee records details controller', () => {
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
     expect(res._getData()).toEqual<SelectedFeeRecordsDetails>({
       reportPeriod,
-      totalReportedPayments: { currency: 'GBP', amount: 300 },
+      totalReportedPayments: { currency: CURRENCY.GBP, amount: 300 },
       bank: {
         name: 'Test Bank',
       },
@@ -156,11 +157,11 @@ describe('get selected fee records details controller', () => {
           facilityId: 'FACILITY 1',
           exporter: 'EXPORTER 1',
           reportedFee: {
-            currency: 'GBP',
+            currency: CURRENCY.GBP,
             amount: 100,
           },
           reportedPayments: {
-            currency: 'GBP',
+            currency: CURRENCY.GBP,
             amount: 100,
           },
         },
@@ -169,11 +170,11 @@ describe('get selected fee records details controller', () => {
           facilityId: 'FACILITY 2',
           exporter: 'EXPORTER 2',
           reportedFee: {
-            currency: 'GBP',
+            currency: CURRENCY.GBP,
             amount: 200,
           },
           reportedPayments: {
-            currency: 'GBP',
+            currency: CURRENCY.GBP,
             amount: 200,
           },
         },
@@ -182,7 +183,7 @@ describe('get selected fee records details controller', () => {
         {
           dateReceived: new Date('2024-01-01'),
           amount: 150,
-          currency: 'GBP',
+          currency: CURRENCY.GBP,
           reference: 'A payment',
         },
       ],

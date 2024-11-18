@@ -1,5 +1,6 @@
 import { EntityManager } from 'typeorm';
 import {
+  CURRENCY,
   FEE_RECORD_STATUS,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
@@ -22,9 +23,9 @@ describe('handleFeeRecordRemoveFromPaymentGroupEvent', () => {
   it('removes all payments from the fee record', async () => {
     // Arrange
     const payments = [
-      PaymentEntityMockBuilder.forCurrency('GBP').withId(1).build(),
-      PaymentEntityMockBuilder.forCurrency('GBP').withId(2).build(),
-      PaymentEntityMockBuilder.forCurrency('GBP').withId(3).build(),
+      PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(1).build(),
+      PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(2).build(),
+      PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(3).build(),
     ];
     const feeRecord = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withPayments(payments).build();
 

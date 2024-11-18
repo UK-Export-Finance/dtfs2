@@ -34,7 +34,7 @@ describe('fee record validator', () => {
 
     it('does not throw if not all of the fee records have the same payment currency', () => {
       // Arrange
-      const feeRecords = [aFeeRecordWithPaymentCurrency('GBP'), aFeeRecordWithPaymentCurrency('GBP')];
+      const feeRecords = [aFeeRecordWithPaymentCurrency(CURRENCY.GBP), aFeeRecordWithPaymentCurrency(CURRENCY.GBP)];
 
       // Act + Assert
       expect(() => validateFeeRecordsAllHaveSamePaymentCurrency(feeRecords)).not.toThrow();
@@ -42,7 +42,7 @@ describe('fee record validator', () => {
 
     it('throws invalid payload error if any two fee records have differing payment currency', () => {
       // Arrange
-      const feeRecords = [aFeeRecordWithPaymentCurrency('GBP'), aFeeRecordWithPaymentCurrency('JPY')];
+      const feeRecords = [aFeeRecordWithPaymentCurrency(CURRENCY.GBP), aFeeRecordWithPaymentCurrency('JPY')];
 
       // Act + Assert
       expect(() => validateFeeRecordsAllHaveSamePaymentCurrency(feeRecords)).toThrow(InvalidPayloadError);

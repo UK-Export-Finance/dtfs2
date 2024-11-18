@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { sub } from 'date-fns';
 import relative from '../../relativeURL';
 
@@ -25,7 +26,7 @@ context('Dashboard: Unissued facilities report', () => {
           name: 'abc-1-def',
           hasBeenIssued: false,
           value: 123,
-          currency: { id: 'GBP' },
+          currency: { id: CURRENCY.GBP },
         },
         BANK1_MAKER1,
       );

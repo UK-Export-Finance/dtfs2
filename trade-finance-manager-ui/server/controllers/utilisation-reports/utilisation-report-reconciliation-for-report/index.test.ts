@@ -104,13 +104,13 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
               id: 1,
               facilityId: '12345678',
               exporter: 'Test exporter',
-              reportedFees: { currency: 'GBP', amount: 100 },
-              reportedPayments: { currency: 'GBP', amount: 100 },
+              reportedFees: { currency: CURRENCY.GBP, amount: 100 },
+              reportedPayments: { currency: CURRENCY.GBP, amount: 100 },
             },
           ],
-          totalReportedPayments: { currency: 'GBP', amount: 100 },
-          paymentsReceived: [{ id: 1, currency: 'GBP', amount: 100, dateReceived: new Date('2024-01-01').toISOString() }],
-          totalPaymentsReceived: { currency: 'GBP', amount: 100 },
+          totalReportedPayments: { currency: CURRENCY.GBP, amount: 100 },
+          paymentsReceived: [{ id: 1, currency: CURRENCY.GBP, amount: 100, dateReceived: new Date('2024-01-01').toISOString() }],
+          totalPaymentsReceived: { currency: CURRENCY.GBP, amount: 100 },
           status: FEE_RECORD_STATUS.MATCH,
         },
       ];
@@ -121,11 +121,11 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
               id: 1,
               facilityId: '12345678',
               exporter: 'Test exporter',
-              reportedFees: { currency: 'GBP', amount: 100 },
-              reportedPayments: { currency: 'GBP', amount: 100 },
+              reportedFees: { currency: CURRENCY.GBP, amount: 100 },
+              reportedPayments: { currency: CURRENCY.GBP, amount: 100 },
             },
           ],
-          payment: { id: 1, currency: 'GBP', amount: 100, dateReceived: new Date('2024-01-01').toISOString() },
+          payment: { id: 1, currency: CURRENCY.GBP, amount: 100, dateReceived: new Date('2024-01-01').toISOString() },
           status: FEE_RECORD_STATUS.MATCH,
           reconciledByUser: undefined,
           dateReconciled: undefined,
@@ -428,8 +428,8 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         aPremiumPaymentsGroupWithoutReceivedPayments(),
         {
           ...aPremiumPaymentsGroup(),
-          paymentsReceived: [{ ...aPayment(), id: 1, currency: 'GBP', amount: 100 }],
-          totalPaymentsReceived: { currency: 'GBP', amount: 100 },
+          paymentsReceived: [{ ...aPayment(), id: 1, currency: CURRENCY.GBP, amount: 100 }],
+          totalPaymentsReceived: { currency: CURRENCY.GBP, amount: 100 },
         },
       ];
       const paymentDetailsGroups = [aPaymentDetails()];
@@ -596,7 +596,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
     it('should clear the redirect session data', async () => {
       // Arrange
       const sessionData: Partial<SessionData> = {
-        addPaymentErrorKey: 'no-fee-records-selected',
+        addPaymentErrorKey: ADD_PAYMENT_ERROR_KEY.NO_FEE_RECORDS_SELECTED,
         checkedCheckboxIds: {
           'feeRecordIds-1-reportedPaymentsCurrency-GBP-status-TO_DO': true,
         },

@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, FACILITY_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const { FACILITIES } = require('../../../src/constants');
 const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
@@ -27,7 +27,7 @@ describe('PUT updateGefFacilities', () => {
     hasBeenIssued: false,
     name: 'Test',
     type: 'Cash',
-    currency: { id: 'GBP' },
+    currency: { id: CURRENCY.GBP },
   };
 
   beforeEach(async () => {
@@ -72,7 +72,7 @@ describe('PUT updateGefFacilities', () => {
     const expected = {
       hasBeenIssued: false,
       name: 'Test',
-      currency: { id: 'GBP' },
+      currency: { id: CURRENCY.GBP },
       dealId: aDeal._id,
       _id: aValidFacilityId,
     };
@@ -91,7 +91,7 @@ describe('PUT updateGefFacilities', () => {
       monthsOfCover: 12,
       details: ['test'],
       detailsOther: null,
-      currency: { id: 'GBP' },
+      currency: { id: CURRENCY.GBP },
       value: '10000000',
       coverPercentage: 80,
       interestPercentage: 40,
@@ -109,7 +109,7 @@ describe('PUT updateGefFacilities', () => {
     const expected = {
       hasBeenIssued: true,
       name: 'test',
-      currency: { id: 'GBP' },
+      currency: { id: CURRENCY.GBP },
       dealId: aDeal._id,
       _id: aValidFacilityId,
       shouldCoverStartOnSubmission: true,

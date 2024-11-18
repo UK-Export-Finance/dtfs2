@@ -1,6 +1,7 @@
 import { EntityManager } from 'typeorm';
 import {
   Currency,
+  CURRENCY,
   DbRequestSource,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
@@ -30,7 +31,7 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     save: mockSave,
   } as unknown as EntityManager;
 
-  const paymentCurrency: Currency = 'GBP';
+  const paymentCurrency: Currency = CURRENCY.GBP;
   const paymentDetails: NewPaymentDetails = {
     currency: paymentCurrency,
     amount: 100,

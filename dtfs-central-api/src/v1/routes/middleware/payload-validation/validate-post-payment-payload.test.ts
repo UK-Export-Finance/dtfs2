@@ -11,7 +11,7 @@ describe('validatePostPaymentPayload', () => {
 
   const aValidPayload = (): PostPaymentPayload => ({
     feeRecordIds: [1],
-    paymentCurrency: 'GBP',
+    paymentCurrency: CURRENCY.GBP,
     paymentAmount: 100,
     datePaymentReceived: new Date(),
     paymentReference: 'a payment reference',
