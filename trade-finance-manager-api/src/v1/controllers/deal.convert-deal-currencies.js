@@ -1,3 +1,4 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const api = require('../api');
 
 const convertDealCurrencies = async (deal, auditDetails) => {
@@ -7,8 +8,8 @@ const convertDealCurrencies = async (deal, auditDetails) => {
 
   const { _id: dealId, dealCurrency, dealValue, tfm } = deal;
 
-  if (dealCurrency && dealCurrency.id !== 'GBP') {
-    const currencyExchange = await api.getCurrencyExchangeRate(dealCurrency.id, 'GBP');
+  if (dealCurrency && dealCurrency.id !== CURRENCY.GBP) {
+    const currencyExchange = await api.getCurrencyExchangeRate(dealCurrency.id, CURRENCY.GBP);
 
     let dealUpdate = {};
 

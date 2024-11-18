@@ -1,4 +1,4 @@
-import { CurrencyAndAmount } from '@ukef/dtfs2-common';
+import { CurrencyAndAmount, CURRENCY } from '@ukef/dtfs2-common';
 import { calculateTotalCurrencyAndAmount } from './calculate-total-currency-and-amount';
 
 describe('calculateTotalCurrencyAndAmount', () => {
@@ -10,8 +10,8 @@ describe('calculateTotalCurrencyAndAmount', () => {
   it('throws an error if the currency values in the list is inconsistent', () => {
     // Arrange
     const currencyAndAmountList: CurrencyAndAmount[] = [
-      { currency: 'GBP', amount: 100 },
-      { currency: 'GBP', amount: 50 },
+      { currency: CURRENCY.GBP, amount: 100 },
+      { currency: CURRENCY.GBP, amount: 50 },
       { currency: 'EUR', amount: 200 },
     ];
 

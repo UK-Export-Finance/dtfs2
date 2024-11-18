@@ -1,5 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { AxiosResponse, HttpStatusCode, AxiosError } from 'axios';
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { getPaymentDetailsById } from './get-payment-details-by-id.controller';
 import api from '../../api';
 import { PaymentDetailsResponseBody } from '../../api-response-types';
@@ -29,7 +30,7 @@ describe('get-payment-details-by-id.controller', () => {
       payment: { ...aPayment(), id: Number(paymentId) },
       feeRecords: [],
       totalReportedPayments: {
-        currency: 'GBP',
+        currency: CURRENCY.GBP,
         amount: 100,
       },
     });

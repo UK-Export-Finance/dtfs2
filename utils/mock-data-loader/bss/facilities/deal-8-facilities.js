@@ -1,3 +1,4 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const { nowTimestamp } = require('../dates');
 
 module.exports = [
@@ -15,7 +16,7 @@ module.exports = [
     currencySameAsSupplyContractCurrency: 'true',
     currency: {
       text: 'GBP - UK Sterling',
-      id: 'GBP',
+      id: CURRENCY.GBP,
       currencyId: 12,
     },
     conversionRate: null,

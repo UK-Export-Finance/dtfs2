@@ -1,5 +1,6 @@
 import {
   Currency,
+  CURRENCY,
   FEE_RECORD_STATUS,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
@@ -13,7 +14,7 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
   describe('when there is one fee record linked to one payment', () => {
     it('creates one fee payment when the fee record amount exactly matches the payment amount', () => {
       // Arrange
-      const paymentCurrency: Currency = 'GBP';
+      const paymentCurrency: Currency = CURRENCY.GBP;
 
       const paymentId = 123;
       const payment = PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(paymentId).withAmount(1000).build();
@@ -41,7 +42,7 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
       { condition: 'the fee record amount is smaller than the payment amount', feeRecordAmount: 100, paymentAmount: 200 },
     ])('sets the fee payment amount to the payment amount when $condition', ({ paymentAmount, feeRecordAmount }) => {
       // Arrange
-      const paymentCurrency: Currency = 'GBP';
+      const paymentCurrency: Currency = CURRENCY.GBP;
 
       const paymentId = 123;
       const payment = PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(paymentId).withAmount(paymentAmount).build();
@@ -67,7 +68,7 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
   });
 
   describe('when there is a single bulk payment linked to many fee records', () => {
-    const paymentCurrency: Currency = 'GBP';
+    const paymentCurrency: Currency = CURRENCY.GBP;
     const paymentId = 123;
 
     const aBulkPayment = () => PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(paymentId).withAmount(1000).build();
@@ -149,7 +150,7 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
   describe('when there are many payments linked to one fee record', () => {
     it('creates a fee payment for each payment linked to the fee record with fee payment amount equal to the payment amount', () => {
       // Arrange
-      const paymentCurrency: Currency = 'GBP';
+      const paymentCurrency: Currency = CURRENCY.GBP;
 
       const feeRecordId = 123;
       const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
@@ -183,7 +184,7 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
     describe('and when the total payment amount is different to the total fee record amount due to tolerance', () => {
       it('creates a fee payment for each payment linked to the fee record when the total payment amount is greater', () => {
         // Arrange
-        const paymentCurrency: Currency = 'GBP';
+        const paymentCurrency: Currency = CURRENCY.GBP;
 
         const feeRecordId = 123;
         const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
@@ -213,7 +214,7 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
 
       it('creates a fee payment for each payment linked to the fee record when the total payment amount is smaller', () => {
         // Arrange
-        const paymentCurrency: Currency = 'GBP';
+        const paymentCurrency: Currency = CURRENCY.GBP;
 
         const feeRecordId = 123;
         const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
@@ -244,7 +245,7 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
   });
 
   describe('when there are many payments linked to many fee records', () => {
-    const paymentCurrency: Currency = 'GBP';
+    const paymentCurrency: Currency = CURRENCY.GBP;
 
     const aFeeRecordWithIdAmountAndPayments = (id: number, amount: number, payments: PaymentEntity[]) =>
       FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())

@@ -1,4 +1,4 @@
-import { UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';
+import { CURRENCY, UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';
 import { validateCells } from '.';
 import {
   generateUkefFacilityIdError,
@@ -28,7 +28,7 @@ describe('validateCells', () => {
       {
         'ukef facility id': { value: '20001371', column: 'B', row: 1 },
         exporter: { value: 'test exporter', column: 'C', row: 1 },
-        'base currency': { value: 'GBP', column: 'D', row: 1 },
+        'base currency': { value: CURRENCY.GBP, column: 'D', row: 1 },
         'facility utilisation': { value: '34538.54', column: 'F', row: 1 },
       },
     ];

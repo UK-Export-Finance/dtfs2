@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { pageRenderer } from '../pageRenderer';
 import { anEditPaymentViewModel } from '../../test-helpers';
 import { EditPaymentViewModel } from '../../server/types/view-models';
@@ -64,10 +65,10 @@ describe(page, () => {
 
   it('should display the amount received input with the supplied payment currency', () => {
     const viewModel = anEditPaymentViewModel();
-    viewModel.paymentCurrency = 'GBP';
+    viewModel.paymentCurrency = CURRENCY.GBP;
     const wrapper = render(viewModel);
 
-    wrapper.expectText('div.govuk-input__prefix').toRead('GBP');
+    wrapper.expectText('div.govuk-input__prefix').toRead(CURRENCY.GBP);
   });
 
   it('should initialise the amount received with the supplied payment amount', () => {

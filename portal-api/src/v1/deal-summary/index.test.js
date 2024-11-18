@@ -1,3 +1,4 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const calculateDealSummary = require('.');
 const { roundNumber, formattedNumber } = require('../../utils/number');
 
@@ -253,7 +254,7 @@ describe('deal-summary', () => {
               ...mockDeal,
               submissionDetails: {
                 supplyContractCurrency: {
-                  id: 'GBP',
+                  id: CURRENCY.GBP,
                 },
               },
             });
@@ -276,7 +277,7 @@ describe('deal-summary', () => {
               {
                 status: 'Completed',
                 value: '123456.45',
-                currency: { id: 'GBP', text: 'UK Sterling' },
+                currency: { id: CURRENCY.GBP, text: 'UK Sterling' },
               },
               {
                 status: 'Completed',
