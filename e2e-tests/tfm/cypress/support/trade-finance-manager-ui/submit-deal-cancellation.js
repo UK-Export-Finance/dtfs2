@@ -2,6 +2,9 @@ import relative from '../../e2e/relativeURL';
 import * as caseDealPage from '../../e2e/pages/caseDealPage';
 import * as checkDetailsPage from '../../e2e/pages/deal-cancellation/check-details';
 
+/**
+ * Submits a deal cancellation for the given dealId and effectiveDate.
+ */
 export const submitDealCancellation = ({ dealId, effectiveDate }) => {
   cy.visit(relative(`/case/${dealId}/deal`));
 
