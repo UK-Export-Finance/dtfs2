@@ -1,6 +1,7 @@
+import MOCK_DEAL from '../../../src/v1/__mocks__/mock-deal';
+
 const { findOneTfmDeal, findOnePortalDeal } = require('../../../src/v1/controllers/deal.controller');
 const mapDeal = require('../../../src/v1/mappings/map-deal');
-const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const { mockFindOneDeal, mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 const api = require('../../../src/v1/api');
 const { dealsLightReducer } = require('../../../src/v1/rest-mappings/deals-light');

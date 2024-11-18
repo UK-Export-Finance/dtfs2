@@ -1,6 +1,7 @@
+import MOCK_DEAL from '../__mocks__/mock-deal';
+
 const { dealHasAllUkefIds, dealHasAllValidUkefIds } = require('./dealHasAllUkefIds');
 const MOCK_DEAL_NO_UKEF_ID = require('../__mocks__/mock-deal-no-ukef-id');
-const MOCK_DEAL = require('../__mocks__/mock-deal');
 const MOCK_DEAL_GEF = require('../__mocks__/mock-gef-deal');
 const api = require('../api');
 const { mockFindOneDeal } = require('../__mocks__/common-api-mocks');

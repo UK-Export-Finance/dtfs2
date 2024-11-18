@@ -1,5 +1,6 @@
+import MOCK_DEAL from '../../../__mocks__/mock-deal-AIN-submitted';
+
 const mapEligibility = require('./mapEligibility');
-const MOCK_DEAL = require('../../../__mocks__/mock-deal-AIN-submitted');
 
 describe('mapEligibility', () => {
   it('should return mapped array of object', () => {

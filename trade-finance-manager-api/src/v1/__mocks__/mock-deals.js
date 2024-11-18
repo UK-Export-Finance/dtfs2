@@ -1,4 +1,5 @@
-const MOCK_DEAL = require('./mock-deal');
+import MOCK_DEAL from './mock-deal';
+
 const MOCK_DEAL_NO_UKEF_ID = require('./mock-deal-no-ukef-id');
 const MOCK_DEAL_NO_PARTY_DB = require('./mock-deal-no-party-db');
 const MOCK_DEAL_NO_COMPANIES_HOUSE = require('./mock-deal-no-companies-house');
@@ -43,4 +44,4 @@ const ALL_MOCK_DEALS = [
   MOCK_GEF_DEAL_MIN,
 ];
 
-module.exports = ALL_MOCK_DEALS;
+export default ALL_MOCK_DEALS;

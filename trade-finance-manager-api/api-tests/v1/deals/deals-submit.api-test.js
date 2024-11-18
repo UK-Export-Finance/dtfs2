@@ -1,3 +1,6 @@
+import MOCK_DEAL from '../../../src/v1/__mocks__/mock-deal';
+import MOCK_DEAL_MIA from '../../../src/v1/__mocks__/mock-deal-MIA-not-submitted';
+
 jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
   issueAcbsFacilities: jest.fn(),
 }));
@@ -12,10 +15,7 @@ const { createDealTasks } = require('../../../src/v1/controllers/deal.tasks');
 const generateDateReceived = require('../../../src/v1/controllers/deal-add-tfm-data/dateReceived');
 const { mockFindOneDeal, mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 const CONSTANTS = require('../../../src/constants');
-
-const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_DEAL_MIN = require('../../../src/v1/__mocks__/mock-deal-MIN');
-const MOCK_DEAL_MIA = require('../../../src/v1/__mocks__/mock-deal-MIA-not-submitted');
 const MOCK_DEAL_NO_PARTY_DB = require('../../../src/v1/__mocks__/mock-deal-no-party-db');
 const MOCK_DEAL_NO_COMPANIES_HOUSE = require('../../../src/v1/__mocks__/mock-deal-no-companies-house');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../src/v1/__mocks__/mock-currency-exchange-rate');

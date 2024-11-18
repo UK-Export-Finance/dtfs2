@@ -1,3 +1,5 @@
+import MOCK_DEAL from '../__mocks__/mock-deal';
+
 const { createMocks } = require('node-mocks-http');
 const api = require('../api');
 const amendmentController = require('./amendment.controller');
@@ -18,7 +20,6 @@ const {
   TASKS_ASSIGNED_TO_UNDERWRITER_MANAGER,
 } = require('../__mocks__/mock-amendment-tasks-assign-by-team');
 const { MOCK_FACILITIES } = require('../__mocks__/mock-facilities');
-const MOCK_DEAL = require('../__mocks__/mock-deal');
 
 const { underwriter, underwriterManager } = MOCK_USERS_FOR_TASKS;
 

@@ -1,5 +1,6 @@
-const { MOCK_FACILITIES } = require('./mock-facilities');
-const MOCK_BSS_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
+import { MOCK_FACILITIES } from './mock-facilities';
+import MOCK_BSS_FACILITIES_USD_CURRENCY from './mock-facilities-USD-currency';
+
 const MOCK_CURRENCY_EXCHANGE_RATE = require('./mock-currency-exchange-rate');
 const MOCK_USERS = require('./mock-users');
 const MOCK_PREMIUM_SCHEDULE_RESPONSE = require('./mock-premium-schedule-response');
@@ -17,7 +18,7 @@ const ALL_MOCK_FACILITIES = [...MOCK_FACILITIES, ...MOCK_BSS_FACILITIES_USD_CURR
  * This is to allow easier bespoke mocking of api functions, aiding in refactoring, and ultimately allow us to just mock the endpoints themselves.
  */
 
-module.exports = {
+export default {
   findBankById: jest.fn(),
   findOneDeal: jest.fn(),
   findOnePortalDeal: (dealId) => {

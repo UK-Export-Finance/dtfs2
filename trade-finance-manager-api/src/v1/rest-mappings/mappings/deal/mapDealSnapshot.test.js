@@ -1,9 +1,10 @@
+import MOCK_DEAL from '../../../__mocks__/mock-deal-AIN-submitted';
+
 const mapDealSnapshot = require('./mapDealSnapshot');
 const mapTotals = require('./mapTotals');
 const mapFacilities = require('../facilities/mapFacilities');
 const mapSubmissionDetails = require('./mapSubmissionDetails');
 const mapEligibility = require('./mapEligibility');
-const MOCK_DEAL = require('../../../__mocks__/mock-deal-AIN-submitted');
 
 describe('mapDealSnapshot', () => {
   it('should return mapped object', () => {

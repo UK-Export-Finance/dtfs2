@@ -1,10 +1,11 @@
+import dealFullyCompleted from '../fixtures/deal-fully-completed';
+
 const { ROLES, timezoneConfig } = require('@ukef/dtfs2-common');
 const { STATUS } = require('../../server/constants');
 const pageRenderer = require('../pageRenderer');
 
 const page = 'contract/contract-view.njk';
 const render = pageRenderer(page);
-const dealFullyCompleted = require('../fixtures/deal-fully-completed');
 const { NON_MAKER_ROLES } = require('../../test-helpers/common-role-lists');
 
 const { MAKER, CHECKER } = ROLES;
