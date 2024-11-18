@@ -13,6 +13,7 @@ import { UtilisationReportStateMachine } from '../../../../services/state-machin
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
 import { executeWithSqlTransaction } from '../../../../helpers';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 
 jest.mock('../../../../helpers');
 
@@ -74,7 +75,7 @@ describe('post-fees-to-an-existing-payment-group.controller helpers', () => {
 
       // Assert
       expect(handleEventSpy).toHaveBeenCalledWith({
-        type: 'ADD_FEES_TO_AN_EXISTING_PAYMENT_GROUP',
+        type: UTILISATION_REPORT_EVENT_TYPE.ADD_FEES_TO_AN_EXISTING_PAYMENT_GROUP,
         payload: {
           transactionEntityManager: mockEntityManager,
           feeRecordsToAdd,

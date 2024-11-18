@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { CURRENCY } from '@ukef/dtfs2-common';
+import { CURRENCY, DEAL_STATUS } from '@ukef/dtfs2-common';
 import {
   userToken,
   isObject,
@@ -25,13 +25,10 @@ import { getFacilityCoverStartDate } from './facility-helpers';
 
 import { MOCK_ISSUED_FACILITY, MOCK_FACILITY, MOCK_ISSUED_FACILITY_UNCHANGED, MOCK_UNISSUED_FACILITY } from './mocks/mock-facilities';
 
-import { makerCanReSubmit } from './deal-helpers';
-
 import {
   MOCK_AIN_APPLICATION,
   MOCK_AIN_APPLICATION_RETURN_MAKER,
   MOCK_AIN_APPLICATION_CHECKER,
-  MOCK_BASIC_DEAL,
   MOCK_AIN_APPLICATION_ISSUED_ONLY,
   MOCK_AIN_APPLICATION_FALSE_COMMENTS,
   MOCK_AIN_APPLICATION_SUPPORTING_INFO,
@@ -39,7 +36,6 @@ import {
 } from './mocks/mock-applications';
 
 import { MOCK_REQUEST } from './mocks/mock-requests';
-import { CHECKER } from '../constants/roles';
 
 const CONSTANTS = require('../constants');
 
@@ -1156,19 +1152,69 @@ describe('summaryItemsConditions()', () => {
     });
   });
 
-  it('Should return FALSE as the Maker is from a different Bank', () => {
-    MOCK_REQUEST.bank.id = 10;
-    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_BASIC_DEAL)).toEqual(false);
-  });
+  describe(`if deal has status ${DEAL_STATUS.CANCELLED}`, () => {
+    describe('if deal is AIN', () => {
+      const deal = {
+        ...MOCK_AIN_APPLICATION,
+        status: DEAL_STATUS.CANCELLED,
+      };
 
-  it('Should return FALSE as the user does not have `maker` role', () => {
-    MOCK_REQUEST.roles = [CHECKER];
-    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_BASIC_DEAL)).toEqual(false);
-  });
+      it.each(['name', 'coverStartDate', 'coverEndDate', 'isUsingFacilityEndDate', 'bankReviewDate', 'facilityEndDate', 'hasBeenIssued'])(
+        'Should not be able to change %s',
+        (id) => {
+          const summaryItemsObj = {
+            preview: true,
+            item: mockDisplayItems[id],
+            details: MOCK_UNISSUED_FACILITY,
+            app: deal,
+            user: MOCK_REQUEST,
+            data: deal.facilities.items[0],
+          };
 
-  it('Should return FALSE as the Application maker is from a different current logged-in maker', () => {
-    MOCK_BASIC_DEAL.bank = { id: 1 };
-    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_BASIC_DEAL)).toEqual(false);
+          const result = summaryItemsConditions(summaryItemsObj);
+          expect(result).toEqual([
+            {
+              attributes: {
+                'data-cy': `${id}-action`,
+              },
+              classes: 'govuk-!-display-none',
+            },
+          ]);
+        },
+      );
+    });
+
+    describe('if deal is MIN', () => {
+      const deal = {
+        ...MOCK_AIN_APPLICATION,
+        submissionType: CONSTANTS.DEAL_SUBMISSION_TYPE.MIN,
+        status: DEAL_STATUS.CANCELLED,
+      };
+
+      it.each(['name', 'coverStartDate', 'coverEndDate', 'isUsingFacilityEndDate', 'bankReviewDate', 'facilityEndDate', 'hasBeenIssued'])(
+        'Should not be able to change %s',
+        (id) => {
+          const summaryItemsObj = {
+            preview: true,
+            item: mockDisplayItems[id],
+            details: MOCK_UNISSUED_FACILITY,
+            app: deal,
+            user: MOCK_REQUEST,
+            data: deal.facilities.items[0],
+          };
+
+          const result = summaryItemsConditions(summaryItemsObj);
+          expect(result).toEqual([
+            {
+              attributes: {
+                'data-cy': `${id}-action`,
+              },
+              classes: 'govuk-!-display-none',
+            },
+          ]);
+        },
+      );
+    });
   });
 });
 

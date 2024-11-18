@@ -13,6 +13,7 @@ import {
   UTILISATION_REPORT_STATUS,
   UtilisationReportStatus,
 } from '@ukef/dtfs2-common';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 import { PutUtilisationReportStatusRequest, putUtilisationReportStatus } from '.';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { executeWithSqlTransaction } from '../../../../helpers';
@@ -154,7 +155,7 @@ describe('put-utilisation-report-status.controller', () => {
         // Assert
         expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
         expect(res._getData()).toEqual(
-          `Failed to update utilisation report statuses: Event type 'MANUALLY_SET_COMPLETED' is invalid for 'UtilisationReportEntity' (ID: '${reportWithStatus.reportId}') in state '${reportStatus}'`,
+          `Failed to update utilisation report statuses: Event type '${UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED}' is invalid for 'UtilisationReportEntity' (ID: '${reportWithStatus.reportId}') in state '${reportStatus}'`,
         );
         expect(mockSave).not.toHaveBeenCalled();
       },
@@ -231,7 +232,7 @@ describe('put-utilisation-report-status.controller', () => {
         // Assert
         expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
         expect(res._getData()).toEqual(
-          `Failed to update utilisation report statuses: Event type 'MANUALLY_SET_INCOMPLETE' is invalid for 'UtilisationReportEntity' (ID: '${reportWithStatus.reportId}') in state '${reportStatus}'`,
+          `Failed to update utilisation report statuses: Event type '${UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_INCOMPLETE}' is invalid for 'UtilisationReportEntity' (ID: '${reportWithStatus.reportId}') in state '${reportStatus}'`,
         );
         expect(mockSave).not.toHaveBeenCalled();
       },

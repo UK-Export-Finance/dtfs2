@@ -1,6 +1,15 @@
-import { REQUEST_PLATFORM_TYPE, DbRequestSource, FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
+import {
+  REQUEST_PLATFORM_TYPE,
+  DbRequestSource,
+  FeeRecordEntity,
+  UtilisationReportRawCsvData,
+  FeeRecordStatus,
+  UtilisationReportEntity,
+  CURRENCY,
+  Currency,
+  FEE_RECORD_STATUS,
+} from '@ukef/dtfs2-common';
 import { feeRecordCsvRowToSqlEntity } from './fee-record-csv-row-mapper';
-import { UtilisationReportRawCsvData } from '../types/utilisation-reports';
 import { aUtilisationReportRawCsvData } from '../../test-helpers';
 
 describe('fee-record-helpers', () => {
@@ -41,11 +50,11 @@ describe('fee-record-helpers', () => {
           baseCurrency: rawCsvData['base currency'],
           facilityUtilisation: Number(rawCsvData['facility utilisation']),
           totalFeesAccruedForThePeriod: Number(rawCsvData['total fees accrued for the period']),
-          totalFeesAccruedForThePeriodCurrency: rawCsvData['accrual currency'],
+          totalFeesAccruedForThePeriodCurrency: rawCsvData['accrual currency'] as Currency,
           totalFeesAccruedForThePeriodExchangeRate: Number(rawCsvData['accrual exchange rate']),
           feesPaidToUkefForThePeriod: Number(rawCsvData['fees paid to ukef for the period']),
           feesPaidToUkefForThePeriodCurrency: rawCsvData['fees paid to ukef currency'],
-          paymentCurrency: rawCsvData['payment currency'],
+          paymentCurrency: rawCsvData['payment currency'] as Currency,
           paymentExchangeRate: Number(rawCsvData['payment exchange rate']),
           lastUpdatedByIsSystemUser: false,
           lastUpdatedByPortalUserId: requestSource.userId,
@@ -53,6 +62,42 @@ describe('fee-record-helpers', () => {
           report,
         }),
       );
+    });
+
+    const emptyValues: ('' | undefined | null)[] = [null, undefined, ''];
+
+    it.each(emptyValues)('sets payment currency to fees paid to ukef currency when not provided: %s', (paymentCurrency?: '' | null) => {
+      // Arrange
+      const rawCsvData = aUtilisationReportRawCsvData();
+      rawCsvData['fees paid to ukef currency'] = CURRENCY.GBP;
+      rawCsvData['payment currency'] = paymentCurrency;
+
+      // Act
+      const feeRecordEntity = feeRecordCsvRowToSqlEntity({
+        dataEntry: rawCsvData,
+        requestSource,
+        report,
+      });
+
+      // Assert
+      expect(feeRecordEntity.paymentCurrency).toEqual(CURRENCY.GBP);
+    });
+
+    it.each(emptyValues)('sets total fees accrued currency to the base currency when not provided: %s', (accrualCurrency?: '' | null) => {
+      // Arrange
+      const rawCsvData = aUtilisationReportRawCsvData();
+      rawCsvData['base currency'] = CURRENCY.GBP;
+      rawCsvData['accrual currency'] = accrualCurrency;
+
+      // Act
+      const feeRecordEntity = feeRecordCsvRowToSqlEntity({
+        dataEntry: rawCsvData,
+        requestSource,
+        report,
+      });
+
+      // Assert
+      expect(feeRecordEntity.totalFeesAccruedForThePeriodCurrency).toEqual(CURRENCY.GBP);
     });
 
     it('sets the entity status to TO_DO when fees paid to ukef for the period is non zero', () => {

@@ -9,12 +9,12 @@ import {
   AzureFileInfoEntity,
   FacilityUtilisationDataEntity,
   ReportPeriod,
+  UtilisationReportRawCsvData,
   REPORT_NOT_RECEIVED,
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportReportUploadedEvent } from './report-uploaded.event-handler';
 import { calculateInitialUtilisationAndFixedFee } from '../helpers';
 import { getPreviousReportPeriod } from '../../../../../helpers';
-import { UtilisationReportRawCsvData } from '../../../../../types/utilisation-reports';
 import { aUtilisationReportRawCsvData, aTfmFacility, aBank } from '../../../../../../test-helpers';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { getBankById } from '../../../../../repositories/banks-repo';

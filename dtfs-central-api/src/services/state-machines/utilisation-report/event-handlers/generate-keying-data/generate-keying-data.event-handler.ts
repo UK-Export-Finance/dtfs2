@@ -12,6 +12,7 @@ import {
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { KeyingSheetFeePaymentShare, getKeyingSheetFeePaymentSharesForFeeRecords } from '../helpers';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../event/utilisation-report.event-type';
 
 /**
  * Gets the facility ids at the TO_DO or DOES_NOT_MATCH status
@@ -51,7 +52,10 @@ type GenerateKeyingDataEventPayload = {
   requestSource: DbRequestSource;
 };
 
-export type UtilisationReportGenerateKeyingDataEvent = BaseUtilisationReportEvent<'GENERATE_KEYING_DATA', GenerateKeyingDataEventPayload>;
+export type UtilisationReportGenerateKeyingDataEvent = BaseUtilisationReportEvent<
+  typeof UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA,
+  GenerateKeyingDataEventPayload
+>;
 
 /**
  * Handler for the generate keying data event
