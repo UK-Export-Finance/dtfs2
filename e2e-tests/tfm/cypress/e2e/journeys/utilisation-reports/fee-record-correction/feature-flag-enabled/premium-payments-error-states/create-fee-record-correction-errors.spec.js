@@ -14,7 +14,7 @@ import { errorSummary } from '../../../../../partials';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context('When fee record correction feature flag is enabled', () => {
-  context('PDC_READ users cannot create record correction requests with invalid fee selections', () => {
+  context('PDC_RECONCILE users cannot create record correction requests with invalid fee selections', () => {
     const bankId = '961';
     const reportId = 1;
 

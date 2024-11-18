@@ -596,7 +596,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
     it('should clear the redirect session data', async () => {
       // Arrange
       const sessionData: Partial<SessionData> = {
-        addPaymentErrorKey: 'no-fee-records-selected',
+        addPaymentErrorKey: ADD_PAYMENT_ERROR_KEY.NO_FEE_RECORDS_SELECTED,
         checkedCheckboxIds: {
           'feeRecordIds-1-reportedPaymentsCurrency-GBP-status-TO_DO': true,
         },
