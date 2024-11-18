@@ -27,7 +27,9 @@ export const createRecordCorrectionRequest = async (req: CreateRecordCorrectionR
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       reportId,
-      bank: feeRecordDetails.bank,
+      bank: {
+        name: feeRecordDetails.bank.name,
+      },
       formattedReportPeriod: getFormattedReportPeriodWithLongMonth(feeRecordDetails.reportPeriod),
       feeRecord: {
         facilityId: feeRecordDetails.facilityId,
