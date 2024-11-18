@@ -215,21 +215,23 @@ jobs:
         uses: ./.github/modules/rerun
         with:
           command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Start
         uses: ./.github/modules/rerun
         with:
           command: docker compose up --build -d
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Initialise
         uses: ./.github/modules/rerun
         with:
-          working-directory: ./utils
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
           command: |
             sleep 100s
             npm run load
+          working-directory: ./utils
+          env: MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
         working-directory: ./libs/common
@@ -290,6 +292,7 @@ jobs:
         uses: ./.github/modules/rerun
         with:
           command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: ${{ matrix.functions }}
         working-directory: ./azure-functions/${{ matrix.functions }}
@@ -350,12 +353,14 @@ jobs:
         uses: ./.github/modules/rerun
         with:
           command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Execute
         uses: ./.github/modules/rerun
         with:
           command: npm run unit-test
           working-directory: ${{ matrix.services }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Coverage
         uses: codecov/codecov-action@v4
@@ -419,12 +424,14 @@ jobs:
         uses: ./.github/modules/rerun
         with:
           command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Execute
         uses: ./.github/modules/rerun
         with:
           command: npm run unit-test-ff
           working-directory: ${{ matrix.services }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Coverage
         uses: codecov/codecov-action@v4
@@ -507,11 +514,13 @@ jobs:
         uses: ./.github/modules/rerun
         with:
           command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Docker
         uses: ./.github/modules/rerun
         with:
           command: docker compose up --build -d
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Initialise
         uses: ./.github/modules/rerun
@@ -520,8 +529,8 @@ jobs:
             sleep 100s
             npm run load
           working-directory: ./utils
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          env: MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
         working-directory: ./libs/common
@@ -534,9 +543,11 @@ jobs:
         with:
           command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./portal --record false --spec "./portal/cypress/e2e/journeys/${{ matrix.spec }}"
           working-directory: ./e2e-tests
-          env: MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             TZ=${{ vars.TIMEZONE }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
   # 5. E2E - GEF
   e2e-tests-gef:
@@ -601,6 +612,7 @@ jobs:
         uses: ./.github/modules/rerun
         with:
           command: docker compose up --build -d
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Initialise
         uses: ./.github/modules/rerun
@@ -609,8 +621,8 @@ jobs:
             sleep 100s
             npm run load
           working-directory: ./utils
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          env: MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
         working-directory: ./libs/common
@@ -627,6 +639,7 @@ jobs:
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             TZ=${{ vars.TIMEZONE }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
   #6. E2E - TFM
   e2e-tests-tfm:
@@ -706,11 +719,13 @@ jobs:
         uses: ./.github/modules/rerun
         with:
           command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Docker
         uses: ./.github/modules/rerun
         with:
           command: docker compose up --build -d
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Initialise
         uses: ./.github/modules/rerun
@@ -719,8 +734,8 @@ jobs:
             sleep 100s
             npm run load
           working-directory: ./utils
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          env: MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
         working-directory: ./libs/common
@@ -733,9 +748,11 @@ jobs:
         with:
           command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./tfm --record false --spec "./tfm/cypress/e2e/journeys/${{ matrix.spec }}"
           working-directory: ./e2e-tests
-          env: MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             TZ=${{ vars.TIMEZONE }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
   #7. E2E - UKEF
   e2e-tests-ukef:
@@ -797,11 +814,13 @@ jobs:
         uses: ./.github/modules/rerun
         with:
           command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Docker
         uses: ./.github/modules/rerun
         with:
           command: docker compose up --build -d
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Initialise
         uses: ./.github/modules/rerun
@@ -810,8 +829,8 @@ jobs:
             sleep 100s
             npm run load
           working-directory: ./utils
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          env: MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
         working-directory: ./libs/common
@@ -828,6 +847,7 @@ jobs:
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             TZ=${{ vars.TIMEZONE }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
   #8. E2E - FF
   e2e-tests-ff:
@@ -936,11 +956,13 @@ jobs:
         uses: ./.github/modules/rerun
         with:
           command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Docker
         uses: ./.github/modules/rerun
         with:
           command: docker compose up --build -d
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Initialise
         uses: ./.github/modules/rerun
@@ -949,8 +971,8 @@ jobs:
             sleep 100s
             npm run load
           working-directory: ./utils
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          env: MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
         working-directory: ./libs/common
@@ -973,6 +995,7 @@ jobs:
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             TZ=${{ vars.TIMEZONE }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
   #9. Docker build
   build:
@@ -1011,6 +1034,7 @@ jobs:
         uses: ./.github/modules/rerun
         with:
           command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Build
         run: docker build -f ./azure-functions/${{ matrix.functions }}/Dockerfile .

@@ -22,7 +22,7 @@ inputs:
   retries:
     description: 'Maximum number of retries upon command failure'
     required: false
-    default: ${{ vars.RETRY_LIMIT }}
+    default: '3'
 runs:
   using: 'composite'
   steps:
