@@ -35,17 +35,17 @@ runs:
         # Change to working directory
         cd ${{ inputs.working-directory }}
 
+        # Specify environment variables
+        eval "$env"
+
         # Retry loop execution
         while [ $run -le $maximum ]; do
-          echo "Run #$run/$maximum"
-          bash -c eval "$env"
           bash -c "${{ inputs.command }}"
 
           if [ $? -eq 0 ]; then
             exit 0;
           fi
           
-          echo "Re-running..."
           run = $((run + 1))
         done
 
