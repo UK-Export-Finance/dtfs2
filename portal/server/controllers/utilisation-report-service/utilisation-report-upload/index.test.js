@@ -198,9 +198,9 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
       // Assert
       expect(api.generateValidationErrorsForUtilisationReportData).toHaveBeenCalledTimes(1);
 
-      const expected = filterReportJsonToRelevantKeys(reportJsonWithExtraKeys, expect.any(String), expect.any(String));
+      const expected = filterReportJsonToRelevantKeys(reportJsonWithExtraKeys);
 
-      expect(api.generateValidationErrorsForUtilisationReportData).toHaveBeenCalledWith(expected);
+      expect(api.generateValidationErrorsForUtilisationReportData).toHaveBeenCalledWith(expected, expect.any(String), expect.any(String));
     });
   });
 });
