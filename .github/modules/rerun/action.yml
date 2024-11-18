@@ -38,7 +38,7 @@ runs:
         # Retry loop execution
         while [ $run -le $maximum ]; do
           echo "Run #$run/$maximum"
-          bach -c eval "$env"
+          bash -c eval "$env"
           bash -c "${{ inputs.command }}"
 
           if [ $? -eq 0 ]; then
