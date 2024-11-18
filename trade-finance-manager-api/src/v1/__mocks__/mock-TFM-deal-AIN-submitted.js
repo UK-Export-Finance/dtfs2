@@ -1,4 +1,4 @@
-const { FACILITY_TYPE, ACTIVITY_TYPES } = require('@ukef/dtfs2-common');
+const { CURRENCY, FACILITY_TYPE, ACTIVITY_TYPES } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../constants');
 
 const MOCK_TFM_DEAL_AIN_SUBMITTED = {
@@ -69,7 +69,7 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
         monthsOfCover: null,
         details: ['TERM'],
         detailsOther: '',
-        currency: { id: 'GBP' },
+        currency: { id: CURRENCY.GBP },
         value: 1000,
         coverPercentage: 80,
         interestPercentage: 1,

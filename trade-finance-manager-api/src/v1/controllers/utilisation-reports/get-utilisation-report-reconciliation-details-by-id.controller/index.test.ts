@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode, AxiosError, AxiosResponse } from 'axios';
-import { PaymentDetailsFilters } from '@ukef/dtfs2-common';
+import { CURRENCY, PaymentDetailsFilters } from '@ukef/dtfs2-common';
 import { GetUtilisationReportReconciliationDetailsByIdRequest, getUtilisationReportReconciliationDetailsById } from '.';
 import api from '../../../api';
 import { aUtilisationReportReconciliationDetailsResponse } from '../../../../../test-helpers';
@@ -68,7 +68,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       const premiumPaymentsFilters = {};
       const paymentDetailsFilters: PaymentDetailsFilters = {
         facilityId: '1234',
-        paymentCurrency: 'GBP',
+        paymentCurrency: CURRENCY.GBP,
         paymentReference: 'A sample payment reference.',
       };
       req.query = { premiumPaymentsFilters, paymentDetailsFilters };

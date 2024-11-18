@@ -1,3 +1,4 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const { MOCK_FACILITIES } = require('./mock-facilities');
 const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
 
@@ -100,7 +101,7 @@ const MOCK_DEAL_NO_COMPANIES_HOUSE = {
     'supplyContractConversionDate-year': '',
     supplyContractConversionRateToGBP: '',
     supplyContractCurrency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
       text: 'GBP - UK Sterling',
     },
     supplyContractValue: '1234.00',
@@ -193,7 +194,7 @@ const MOCK_DEAL_NO_COMPANIES_HOUSE = {
         dayCountBasis: '365',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
         'coverEndDate-day': '20',
         'coverEndDate-month': '10',
@@ -237,7 +238,7 @@ const MOCK_DEAL_NO_COMPANIES_HOUSE = {
         ukefFacilityId: '65432',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
       },
     ],

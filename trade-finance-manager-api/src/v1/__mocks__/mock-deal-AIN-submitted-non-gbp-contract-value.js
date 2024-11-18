@@ -1,3 +1,4 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
 const { MOCK_FACILITIES } = require('./mock-facilities');
 
@@ -194,7 +195,7 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
         dayCountBasis: '365',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
         'coverEndDate-day': '20',
         'coverEndDate-month': '10',
@@ -238,7 +239,7 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
         ukefFacilityId: '65432',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
       },
     ],

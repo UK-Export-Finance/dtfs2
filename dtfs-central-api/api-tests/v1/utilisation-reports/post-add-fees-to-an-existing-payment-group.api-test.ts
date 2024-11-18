@@ -5,6 +5,7 @@ import {
   PaymentEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
   UtilisationReportEntityMockBuilder,
+  CURRENCY,
 } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
@@ -27,7 +28,7 @@ describe(`POST ${BASE_URL}`, () => {
   const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
 
   const paymentIds = [3, 4];
-  const payments = paymentIds.map((id) => PaymentEntityMockBuilder.forCurrency('GBP').withId(id).withFeeRecords([]).build());
+  const payments = paymentIds.map((id) => PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(id).withFeeRecords([]).build());
 
   const aFeeRecordToAdd = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
   const aFeeRecordWithPayments = FeeRecordEntityMockBuilder.forReport(utilisationReport)
