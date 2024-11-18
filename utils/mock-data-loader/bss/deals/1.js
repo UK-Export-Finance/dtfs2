@@ -1,4 +1,4 @@
-const { ROLES } = require('@ukef/dtfs2-common');
+const { CURRENCY, ROLES } = require('@ukef/dtfs2-common');
 const { nowTimestamp } = require('../dates');
 const MANDATORY_CRITERIA = require('../mandatoryCriteria');
 const { BANK1_MAKER1 } = require('../../portal-users');
@@ -185,7 +185,7 @@ module.exports = {
     supplyContractValue: '5000000.00',
     supplyContractCurrency: {
       text: 'GBP - UK Sterling',
-      id: 'GBP',
+      id: CURRENCY.GBP,
       currencyId: 12,
     },
     supplyContractConversionRateToGBP: '',

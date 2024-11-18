@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { generatePaymentExchangeRateError } from './generate-payment-exchange-rate-error';
 import { CSV } from '../../../constants/csv';
 
@@ -11,7 +12,7 @@ describe('generatePaymentExchangeRateError', () => {
         row: 1,
       },
       'fees paid to ukef currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'B',
         row: 1,
       },
@@ -40,7 +41,7 @@ describe('generatePaymentExchangeRateError', () => {
         row: 1,
       },
       'fees paid to ukef currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'B',
         row: 1,
       },
@@ -77,7 +78,7 @@ describe('generatePaymentExchangeRateError', () => {
         row: 1,
       },
       'fees paid to ukef currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'B',
         row: 1,
       },
@@ -114,12 +115,12 @@ describe('generatePaymentExchangeRateError', () => {
         row: 1,
       },
       'fees paid to ukef currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'B',
         row: 1,
       },
       'payment currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'C',
         row: 1,
       },
@@ -143,12 +144,12 @@ describe('generatePaymentExchangeRateError', () => {
         row: 1,
       },
       'fees paid to ukef currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'B',
         row: 1,
       },
       'payment currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'C',
         row: 1,
       },
@@ -172,12 +173,12 @@ describe('generatePaymentExchangeRateError', () => {
         row: 1,
       },
       'fees paid to ukef currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'B',
         row: 1,
       },
       'payment currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'C',
         row: 1,
       },
@@ -209,7 +210,7 @@ describe('generatePaymentExchangeRateError', () => {
         row: 1,
       },
       'fees paid to ukef currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'B',
         row: 1,
       },
@@ -238,7 +239,7 @@ describe('generatePaymentExchangeRateError', () => {
         row: 1,
       },
       'fees paid to ukef currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'B',
         row: 1,
       },
@@ -275,7 +276,7 @@ describe('generatePaymentExchangeRateError', () => {
         row: 1,
       },
       'fees paid to ukef currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'B',
         row: 1,
       },
@@ -312,7 +313,7 @@ describe('generatePaymentExchangeRateError', () => {
         row: 1,
       },
       'fees paid to ukef currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'B',
         row: 1,
       },

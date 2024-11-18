@@ -8,6 +8,7 @@ import {
   RECONCILIATION_IN_PROGRESS,
   ReportPeriod,
   UtilisationReportEntityMockBuilder,
+  CURRENCY,
 } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
@@ -48,7 +49,7 @@ describe(`GET ${BASE_URL}`, () => {
   const reportId = 1;
   const paymentId = 1;
 
-  const paymentCurrency: Currency = 'GBP';
+  const paymentCurrency: Currency = CURRENCY.GBP;
 
   const reconciliationInProgressReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS)
     .withId(reportId)

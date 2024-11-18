@@ -24,7 +24,7 @@ describe('currency.schema', () => {
 
     it("sets the 'data' property to the parsed currency", () => {
       // Arrange
-      const currency: Currency = 'GBP';
+      const currency: Currency = CURRENCY.GBP;
 
       // Act
       const { data } = CurrencySchema.safeParse(currency);

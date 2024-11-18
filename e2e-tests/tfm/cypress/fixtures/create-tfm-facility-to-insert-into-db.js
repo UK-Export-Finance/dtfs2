@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const { CURRENCY } = require('@ukef/dtfs2-common');
 
 const createTfmFacilityToInsertIntoDb = (ukefFacilityId, dealObjectId) => ({
   _id: new ObjectId(),
@@ -13,7 +14,7 @@ const createTfmFacilityToInsertIntoDb = (ukefFacilityId, dealObjectId) => ({
     coveredPercentage: '20',
     createdDate: 1710159691178,
     currency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
       text: 'GBP - UK Sterling',
     },
     currencySameAsSupplyContractCurrency: 'true',

@@ -1,4 +1,5 @@
 const ExcelJS = require('exceljs');
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const {
   columnIndexToExcelColumn,
   excelColumnToColumnIndex,
@@ -49,7 +50,7 @@ describe('csv-utils', () => {
         { header: 'Exporter', key: 'B' },
         { header: 'Base currency', key: 'C' },
       ];
-      worksheet.addRow({ A: '20001371', B: 'Exporter 1', C: 'GBP' });
+      worksheet.addRow({ A: '20001371', B: 'Exporter 1', C: CURRENCY.GBP });
       worksheet.addRow({ A: '20004872', B: 'Exporter 2', C: 'EUR' });
 
       const parsedData = parseXlsxToCsvArrays(worksheet);
@@ -71,7 +72,7 @@ describe('csv-utils', () => {
         { header: 'Exporter', key: 'B' },
         { header: 'Base currency', key: 'C' },
       ];
-      worksheet.addRow({ A: '20001371', B: 'Exporter 1', C: 'GBP' });
+      worksheet.addRow({ A: '20001371', B: 'Exporter 1', C: CURRENCY.GBP });
       worksheet.addRow({ A: '20004872', B: 'Exporter 2' });
 
       const parsedData = parseXlsxToCsvArrays(worksheet);
@@ -94,10 +95,10 @@ describe('csv-utils', () => {
         { header: 'Base currency', key: 'C' },
         { header: 'Facility utilisation', key: 'D' },
       ];
-      worksheet.addRow({ A: '20001371', B: 'Exporter 1', C: 'GBP', D: 3938753.8000000007 });
+      worksheet.addRow({ A: '20001371', B: 'Exporter 1', C: CURRENCY.GBP, D: 3938753.8000000007 });
       worksheet.addRow({ A: '20004872', B: 'Exporter 2', C: 'EUR', D: 761579.3699999999 });
       worksheet.addRow({ A: '20004873', B: 'Exporter 3', C: 'USD', D: 123.456789 });
-      worksheet.addRow({ A: '20004874', B: 'Exporter 4', C: 'GBP', D: 987654321.1200006 });
+      worksheet.addRow({ A: '20004874', B: 'Exporter 4', C: CURRENCY.GBP, D: 987654321.1200006 });
 
       const parsedData = parseXlsxToCsvArrays(worksheet);
 
@@ -129,7 +130,7 @@ describe('csv-utils', () => {
 
       const expectedJsonData = [
         {
-          'base currency': { column: 'C', row: '2', value: 'GBP' },
+          'base currency': { column: 'C', row: '2', value: CURRENCY.GBP },
           exporter: { column: 'B', row: '2', value: 'Exporter 1' },
           'ukef facility id': { column: 'A', row: '2', value: '20001371' },
         },
@@ -148,7 +149,7 @@ describe('csv-utils', () => {
     it('correctly parses the csv array to a json array of data', async () => {
       const csvData = [
         ['UKEF facility ID', 'Exporter', 'Base currency'],
-        ['20001371', 'Exporter 1', 'GBP'],
+        ['20001371', 'Exporter 1', CURRENCY.GBP],
         ['20004872', 'Exporter 2', 'EUR'],
       ];
       const buffer = Buffer.from(csvData.join('\n'));
@@ -157,7 +158,7 @@ describe('csv-utils', () => {
 
       const expectedJsonData = [
         {
-          'base currency': { column: 'C', row: 2, value: 'GBP' },
+          'base currency': { column: 'C', row: 2, value: CURRENCY.GBP },
           exporter: { column: 'B', row: 2, value: 'Exporter 1' },
           'ukef facility id': { column: 'A', row: 2, value: '20001371' },
         },
@@ -176,7 +177,7 @@ describe('csv-utils', () => {
     it('removes the cell addresses from csv json data', async () => {
       const csvJsonData = [
         {
-          'base currency': { column: 'C', row: '2', value: 'GBP' },
+          'base currency': { column: 'C', row: '2', value: CURRENCY.GBP },
           exporter: { column: 'B', row: '2', value: 'Exporter 1' },
           'ukef facility id': { column: 'A', row: '2', value: '20001371' },
         },
@@ -191,7 +192,7 @@ describe('csv-utils', () => {
 
       const expectedJsonData = [
         {
-          'base currency': 'GBP',
+          'base currency': CURRENCY.GBP,
           exporter: 'Exporter 1',
           'ukef facility id': '20001371',
         },
@@ -208,11 +209,11 @@ describe('csv-utils', () => {
 
   describe('extractCellValue', () => {
     it('returns the cell value', async () => {
-      const cellValue = { value: 'GBP' };
+      const cellValue = { value: CURRENCY.GBP };
 
       const extractedValue = extractCellValue(cellValue);
 
-      expect(extractedValue).toEqual('GBP');
+      expect(extractedValue).toEqual(CURRENCY.GBP);
     });
 
     it('returns the cell value without new lines', async () => {
@@ -244,7 +245,7 @@ describe('csv-utils', () => {
 
       const extractedValue = extractCellValue(cellValue);
 
-      expect(extractedValue).toEqual('GBP');
+      expect(extractedValue).toEqual(CURRENCY.GBP);
     });
 
     it('returns the cell value without commas or new lines', async () => {

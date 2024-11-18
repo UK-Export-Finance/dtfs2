@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { generatePaymentCurrencyError } from './generate-payment-currency-error';
 
 describe('generatePaymentCurrencyError', () => {
@@ -10,7 +11,7 @@ describe('generatePaymentCurrencyError', () => {
         row: 1,
       },
       'fees paid to ukef currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'B',
         row: 1,
       },
@@ -46,7 +47,7 @@ describe('generatePaymentCurrencyError', () => {
         row: 1,
       },
       'fees paid to ukef currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'B',
         row: 1,
       },
@@ -82,7 +83,7 @@ describe('generatePaymentCurrencyError', () => {
         row: 1,
       },
       'fees paid to ukef currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'B',
         row: 1,
       },
