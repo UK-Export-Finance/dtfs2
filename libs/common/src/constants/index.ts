@@ -24,5 +24,6 @@ export * from './url-character-allowances';
 export * from './max-character-count';
 export * from './deal-submission-type';
 export * from './floating-point-rounding-decimal-places';
+export * from './flash';
 
 export * as PAYLOAD_VERIFICATION from './payload-verification';

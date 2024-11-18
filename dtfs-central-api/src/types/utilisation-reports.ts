@@ -1,15 +1,13 @@
 import {
-  ValuesOf,
-  UtilisationReportStatus,
   Currency,
   ReportPeriod,
   AzureFileInfo,
   UploadedByUserDetails,
-  UTILISATION_REPORT_HEADERS,
   IsoMonthStamp,
   FeeRecordStatus,
   CurrencyAndAmount,
   FeeRecordUtilisation,
+  UtilisationReportStatus,
 } from '@ukef/dtfs2-common';
 import { FeeRecord, KeyingSheet } from './fee-records';
 import { Payment } from './payments';
@@ -49,12 +47,6 @@ export type UtilisationReportReconciliationSummaryItem = {
 export type UtilisationReportReconciliationSummary = {
   submissionMonth: IsoMonthStamp;
   items: UtilisationReportReconciliationSummaryItem[];
-};
-
-type UtilisationReportHeader = ValuesOf<typeof UTILISATION_REPORT_HEADERS>;
-
-export type UtilisationReportRawCsvData = {
-  [HeaderKey in UtilisationReportHeader]: HeaderKey extends `${string}currency` ? Currency : string;
 };
 
 export type FeeRecordReconciledByUser = {

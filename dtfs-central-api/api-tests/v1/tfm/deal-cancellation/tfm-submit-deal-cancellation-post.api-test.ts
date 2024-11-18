@@ -1,6 +1,14 @@
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_STAGE, API_ERROR_CODE, TfmAuditDetails } from '@ukef/dtfs2-common';
+import {
+  MONGO_DB_COLLECTIONS,
+  AnyObject,
+  TFM_DEAL_STAGE,
+  API_ERROR_CODE,
+  TfmAuditDetails,
+  TfmDealCancellationResponse,
+  FACILITY_TYPE,
+} from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { withMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import wipeDB from '../../../wipeDB';
@@ -17,7 +25,7 @@ const originalProcessEnv = { ...process.env };
 
 describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
   let dealId: string;
-  let facilityId: string;
+  const ukefFacilityId = 'ukefFacilityId';
   let submitDealCancellationUrl: string;
   let auditDetails: TfmAuditDetails;
   let tfmUserId: string;
@@ -28,13 +36,16 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
     effectiveFrom: new Date().valueOf(),
   };
 
+  const ukefDealId = 'ukefDealId';
+
   const newDeal = aDeal({
     dealType: DEALS.DEAL_TYPE.BSS_EWCS,
     submissionType: DEALS.SUBMISSION_TYPE.AIN,
+    details: { ukefDealId },
   }) as AnyObject;
 
   beforeAll(async () => {
-    await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.DEALS]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
 
     const tfmUser = await createTfmUser();
     tfmUserId = tfmUser._id;
@@ -42,15 +53,17 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
 
   beforeEach(async () => {
     const createDealResponse: { body: { _id: string } } = await createDeal({ deal: newDeal, user: aPortalUser() });
-    const createFacilityResponse: { body: { _id: string } } = await createFacility({
+    dealId = createDealResponse.body._id;
+
+    await createFacility({
       facility: {
         dealId,
+        type: FACILITY_TYPE.BOND,
+        ukefFacilityId,
       },
       user: aPortalUser(),
     });
 
-    dealId = createDealResponse.body._id;
-    facilityId = createFacilityResponse.body._id;
     auditDetails = generateTfmAuditDetails(tfmUserId);
     submitDealCancellationUrl = `/v1/tfm/deals/${dealId}/cancellation/submit`;
 
@@ -87,7 +100,7 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
 
   afterEach(async () => {
     process.env = { ...originalProcessEnv };
-    await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.DEALS]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
   });
 
   describe('POST /v1/tfm/deals/:dealId/cancellation/submit', () => {
@@ -124,7 +137,10 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
       it('should return the submit cancellation response object if a matching deal and cancellation exists', async () => {
         const submitCancellationResponse = await testApi.post({ cancellation, auditDetails }).to(submitDealCancellationUrl);
 
-        expect(submitCancellationResponse.body).toEqual({ cancelledDealUkefId: dealId, riskExpiredFacilityUkefIds: [facilityId] });
+        expect(submitCancellationResponse.body).toEqual({
+          cancelledDealUkefId: ukefDealId,
+          riskExpiredFacilityUkefIds: [ukefFacilityId],
+        } as TfmDealCancellationResponse);
         expect(submitCancellationResponse.status).toEqual(HttpStatusCode.Ok);
       });
 

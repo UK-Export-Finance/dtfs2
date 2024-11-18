@@ -1,18 +1,19 @@
+import { FACILITY_STATUS } from '@ukef/dtfs2-common';
 import { isEligibilityComplete, isSubmissionDetailComplete, isEveryDealFormComplete, isEveryFacilityInDealComplete } from './dealFormsCompleted';
 import CONSTANTS from '../constants';
 
 const completeFacilities = {
   items: [
-    { _id: '12345678910', status: CONSTANTS.STATUS.SECTION.COMPLETED },
-    { _id: '12345678911', status: CONSTANTS.STATUS.SECTION.COMPLETED },
-    { _id: '12345678912', status: CONSTANTS.STATUS.SECTION.COMPLETED },
+    { _id: '12345678910', status: FACILITY_STATUS.COMPLETED },
+    { _id: '12345678911', status: FACILITY_STATUS.COMPLETED },
+    { _id: '12345678912', status: FACILITY_STATUS.COMPLETED },
   ],
 };
 
 const incompleteFacilities = {
   items: [
-    { _id: '12345678911', status: CONSTANTS.STATUS.SECTION.COMPLETED },
-    { _id: '12345678910', status: CONSTANTS.STATUS.FACILITY.INCOMPLETE },
+    { _id: '12345678911', status: FACILITY_STATUS.COMPLETED },
+    { _id: '12345678910', status: FACILITY_STATUS.INCOMPLETE },
   ],
 };
 

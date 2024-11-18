@@ -15,8 +15,20 @@ const { AIN, MIN } = DEAL_SUBMISSION_TYPE;
  * @param submissionType - the deal submission type
  * @returns true if the deal is AIN or MIN
  */
-export const canSubmissionTypeBeCancelled = (submissionType: DealSubmissionType): boolean => {
+export const canSubmissionTypeBeCancelled = (submissionType: DealSubmissionType | null): boolean => {
   return submissionType === AIN || submissionType === MIN;
+};
+
+/**
+ * Checks if deal cancellation is enabled for a deal
+ * @param submissionType the deal submission type
+ * @returns true or false depending on the feature flag & submission type
+ */
+export const isDealCancellationEnabled = (submissionType: DealSubmissionType | null): boolean => {
+  const isDealCancellationFeatureFlagEnabled = isTfmDealCancellationFeatureFlagEnabled();
+  const isAcceptableSubmissionType = canSubmissionTypeBeCancelled(submissionType);
+
+  return isDealCancellationFeatureFlagEnabled && isAcceptableSubmissionType;
 };
 
 /**
@@ -25,12 +37,11 @@ export const canSubmissionTypeBeCancelled = (submissionType: DealSubmissionType)
  * @param user - the session user
  * @returns true or false depending on the feature flag, submission type and user type
  */
-export const isDealCancellationEnabled = (submissionType: DealSubmissionType, user: TfmSessionUser): boolean => {
+export const isDealCancellationEnabledForUser = (submissionType: DealSubmissionType, user: TfmSessionUser): boolean => {
   const isUserAllowedToCancelDeal = userIsInTeam(user, [TEAM_IDS.PIM]);
-  const isDealCancellationFeatureFlagEnabled = isTfmDealCancellationFeatureFlagEnabled();
-  const isAcceptableSubmissionType = canSubmissionTypeBeCancelled(submissionType);
+  const dealCanBeCancelled = isDealCancellationEnabled(submissionType);
 
-  return isUserAllowedToCancelDeal && isDealCancellationFeatureFlagEnabled && isAcceptableSubmissionType;
+  return isUserAllowedToCancelDeal && dealCanBeCancelled;
 };
 
 /**
