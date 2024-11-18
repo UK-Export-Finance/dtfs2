@@ -3,7 +3,7 @@ import { HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { getFeeRecordDetails, GetFeeRecordDetailsResponseBody } from '.';
-import { mapToFeeRecordDetails } from './helpers';
+import { mapFeeRecordEntityToDetails } from './helpers';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 
 console.error = jest.fn();
@@ -20,10 +20,10 @@ describe('get-fee-record-details.controller', () => {
         params: { reportId: reportId.toString(), feeRecordId: feeRecordId.toString() },
       });
 
-    const findOneSpy = jest.spyOn(FeeRecordRepo, 'findOne');
+    const findSpy = jest.spyOn(FeeRecordRepo, 'findOneByIdAndReportIdWithReport');
 
     beforeEach(() => {
-      findOneSpy.mockResolvedValue(null);
+      findSpy.mockResolvedValue(null);
     });
 
     afterEach(() => {
@@ -34,36 +34,24 @@ describe('get-fee-record-details.controller', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      findOneSpy.mockResolvedValue(FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).build());
-      when(findOneSpy)
-        .calledWith({
-          where: {
-            id: feeRecordId,
-            report: { id: reportId },
-          },
-          relations: { report: true },
-        })
-        .mockResolvedValue(null);
+      findSpy.mockResolvedValue(FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).build());
+      when(findSpy).calledWith(feeRecordId, reportId).mockResolvedValue(null);
 
       // Act
       await getFeeRecordDetails(req, res);
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
+      expect(findSpy).toHaveBeenCalledTimes(1);
+      expect(findSpy).toHaveBeenCalledWith(feeRecordId, reportId);
     });
 
     it('responds with a 200', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      when(findOneSpy)
-        .calledWith({
-          where: {
-            id: feeRecordId,
-            report: { id: reportId },
-          },
-          relations: { report: true },
-        })
+      when(findSpy)
+        .calledWith(feeRecordId, reportId)
         .mockResolvedValue(FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).build());
 
       // Act
@@ -71,33 +59,31 @@ describe('get-fee-record-details.controller', () => {
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+      expect(findSpy).toHaveBeenCalledTimes(1);
+      expect(findSpy).toHaveBeenCalledWith(feeRecordId, reportId);
     });
 
     it('responds with the fee record details', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      when(findOneSpy)
-        .calledWith({
-          where: {
-            id: feeRecordId,
-            report: { id: reportId },
-          },
-          relations: { report: true },
-        })
+      when(findSpy)
+        .calledWith(feeRecordId, reportId)
         .mockResolvedValue(FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).build());
 
       const feeRecordDetails = {
         field1: 'Some value',
         field2: 'Another value',
       } as unknown as GetFeeRecordDetailsResponseBody;
-      jest.mocked(mapToFeeRecordDetails).mockResolvedValue(feeRecordDetails);
+      jest.mocked(mapFeeRecordEntityToDetails).mockResolvedValue(feeRecordDetails);
 
       // Act
       await getFeeRecordDetails(req, res);
 
       // Assert
       expect(res._getData()).toEqual(feeRecordDetails);
+      expect(findSpy).toHaveBeenCalledTimes(1);
+      expect(findSpy).toHaveBeenCalledWith(feeRecordId, reportId);
     });
   });
 });

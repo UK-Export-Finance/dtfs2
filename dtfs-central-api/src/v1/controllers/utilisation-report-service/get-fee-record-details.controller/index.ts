@@ -3,8 +3,11 @@ import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
 import { ApiError, NotFoundError } from '../../../../errors';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
-import { mapToFeeRecordDetails } from './helpers';
+import { mapFeeRecordEntityToDetails } from './helpers';
 
+/**
+ * Response body type for the GET fee record details endpoint.
+ */
 export type GetFeeRecordDetailsResponseBody = {
   id: number;
   bank: SessionBank;
@@ -15,6 +18,14 @@ export type GetFeeRecordDetailsResponseBody = {
 
 type GetFeeRecordDetailsResponse = Response<GetFeeRecordDetailsResponseBody | string>;
 
+/**
+ * Controller for the GET fee record details route.
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns A promise that resolves to the response containing the fee record details response.
+ * @throws {NotFoundError} When either the fee record is not found for the given IDs or the
+ * bank on the report is not found.
+ */
 export const getFeeRecordDetails = async (req: Request, res: GetFeeRecordDetailsResponse) => {
   const { reportId, feeRecordId } = req.params;
 
@@ -25,7 +36,7 @@ export const getFeeRecordDetails = async (req: Request, res: GetFeeRecordDetails
       throw new NotFoundError(`Failed to find a fee record with id '${feeRecordId}' attached to report with id '${reportId}'`);
     }
 
-    const feeRecordDetails = await mapToFeeRecordDetails(feeRecord);
+    const feeRecordDetails = await mapFeeRecordEntityToDetails(feeRecord);
 
     return res.status(HttpStatusCode.Ok).send(feeRecordDetails);
   } catch (error) {

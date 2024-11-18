@@ -1,5 +1,5 @@
 import { FeeRecordEntityMockBuilder, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { mapToFeeRecordDetails } from './helpers';
+import { mapFeeRecordEntityToDetails } from './helpers';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 
 jest.mock('../../../../repositories/banks-repo');
@@ -18,7 +18,7 @@ describe('get-fee-record-details.controller helpers', () => {
       jest.mocked(getBankNameById).mockResolvedValue(bankName);
 
       // Act
-      const feeRecordDetails = await mapToFeeRecordDetails(feeRecord);
+      const feeRecordDetails = await mapFeeRecordEntityToDetails(feeRecord);
 
       // Assert
       expect(feeRecordDetails.bank).toEqual({ id: bankId, name: bankName });
@@ -34,7 +34,7 @@ describe('get-fee-record-details.controller helpers', () => {
       feeRecord.report.reportPeriod = reportPeriod;
 
       // Act
-      const feeRecordDetails = await mapToFeeRecordDetails(feeRecord);
+      const feeRecordDetails = await mapFeeRecordEntityToDetails(feeRecord);
 
       // Assert
       expect(feeRecordDetails.reportPeriod).toEqual(reportPeriod);
@@ -53,7 +53,7 @@ describe('get-fee-record-details.controller helpers', () => {
         .build();
 
       // Act
-      const feeRecordDetails = await mapToFeeRecordDetails(feeRecord);
+      const feeRecordDetails = await mapFeeRecordEntityToDetails(feeRecord);
 
       // Assert
       expect(feeRecordDetails.id).toEqual(id);

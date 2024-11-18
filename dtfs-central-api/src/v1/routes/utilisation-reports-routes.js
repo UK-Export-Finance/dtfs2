@@ -741,7 +741,7 @@ utilisationReportsRouter
  *   get:
  *     summary: Get the fee record details
  *     tags: [Utilisation Report]
- *     description: Gets the fee record details for the fee record with the supplied id
+ *     description: Gets a fee record by its id, where that fee record must belong to a report with the supplied report id
  *     parameters:
  *       - in: path
  *         name: reportId

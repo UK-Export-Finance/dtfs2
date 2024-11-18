@@ -5,16 +5,16 @@ import { getBankNameById } from '../../../../repositories/banks-repo';
 
 /**
  * Maps the supplied fee record entity to the fee record details
- * @param feeRecord - The fee record entity
+ * @param feeRecordEntity - The fee record entity
  * @returns The fee record details
  */
-export const mapToFeeRecordDetails = async (feeRecord: FeeRecordEntity): Promise<GetFeeRecordDetailsResponseBody> => {
+export const mapFeeRecordEntityToDetails = async (feeRecordEntity: FeeRecordEntity): Promise<GetFeeRecordDetailsResponseBody> => {
   const {
     id,
     report: { bankId, reportPeriod },
     facilityId,
     exporter,
-  } = feeRecord;
+  } = feeRecordEntity;
 
   const bankName = await getBankNameById(bankId);
   if (!bankName) {

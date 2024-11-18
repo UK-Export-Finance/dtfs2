@@ -29,6 +29,10 @@ describe('get-fee-record-details-by-id.controller', () => {
       exporter: 'A sample exporter',
     });
 
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
+
     it('gets the fee record details', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
@@ -41,6 +45,8 @@ describe('get-fee-record-details-by-id.controller', () => {
 
       // Assert
       expect(res._getData()).toEqual(responseBody);
+      expect(api.getFeeRecordDetails).toHaveBeenCalledTimes(1);
+      expect(api.getFeeRecordDetails).toHaveBeenCalledWith(reportId, feeRecordId);
     });
 
     it('responds with a 200', async () => {
@@ -54,6 +60,8 @@ describe('get-fee-record-details-by-id.controller', () => {
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+      expect(api.getFeeRecordDetails).toHaveBeenCalledTimes(1);
+      expect(api.getFeeRecordDetails).toHaveBeenCalledWith(reportId, feeRecordId);
     });
 
     it('responds with a 500 if an unknown error occurs', async () => {
@@ -68,6 +76,8 @@ describe('get-fee-record-details-by-id.controller', () => {
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
       expect(res._isEndCalled()).toEqual(true);
+      expect(api.getFeeRecordDetails).toHaveBeenCalledTimes(1);
+      expect(api.getFeeRecordDetails).toHaveBeenCalledWith(reportId, feeRecordId);
     });
 
     it('responds with a specific error code if an axios error is thrown', async () => {
@@ -85,6 +95,8 @@ describe('get-fee-record-details-by-id.controller', () => {
       // Assert
       expect(res._getStatusCode()).toEqual(errorStatus);
       expect(res._isEndCalled()).toEqual(true);
+      expect(api.getFeeRecordDetails).toHaveBeenCalledTimes(1);
+      expect(api.getFeeRecordDetails).toHaveBeenCalledWith(reportId, feeRecordId);
     });
 
     it('responds with an error message', async () => {
@@ -99,6 +111,8 @@ describe('get-fee-record-details-by-id.controller', () => {
       // Assert
       expect(res._getData()).toEqual('Failed to get fee record details');
       expect(res._isEndCalled()).toEqual(true);
+      expect(api.getFeeRecordDetails).toHaveBeenCalledTimes(1);
+      expect(api.getFeeRecordDetails).toHaveBeenCalledWith(reportId, feeRecordId);
     });
   });
 });
