@@ -22,16 +22,16 @@
   It will not render correctly.
   Therefore, without design changes, we cannot use the GOV summary list component.
 #}
-  <div class="govuk-summary-card__content">
+  <div class="govuk-summary-card__content" data-cy="facility-{{ facility._id }}-pricing-risk-table">
     <dl class="govuk-summary-list">
 
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-!-width-one-third">
-          <span data-cy="facility-{{ facility._id}}-bank-guarantee-fee-heading">Guarantee fee % payable to UKEF</span>
+          <span data-cy="facility-{{ facility._id }}-bank-guarantee-fee-heading">Guarantee fee % payable to UKEF</span>
         </dt>
 
         <dd class="govuk-summary-list__value">
-          <span data-cy="facility-{{ facility._id}}-bank-guarantee-fee-value">{{ facility.facilitySnapshot.guaranteeFeePayableToUkef | dashIfEmpty }}</span>
+          <span data-cy="facility-{{ facility._id }}-bank-guarantee-fee-value">{{ facility.facilitySnapshot.guaranteeFeePayableToUkef | dashIfEmpty }}</span>
         </dd>
 
         <dd class="govuk-summary-list__actions">
@@ -40,11 +40,11 @@
 
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-!-width-one-third">
-          <span data-cy="facility-{{ facility._id}}-bank-interest-heading">Bank's interest margin</span>
+          <span data-cy="facility-{{ facility._id }}-bank-interest-heading">Bank's interest margin</span>
         </dt>
 
         <dd class="govuk-summary-list__value">
-          <span data-cy="facility-{{ facility._id}}-bank-interest-value">{{ facility.facilitySnapshot.banksInterestMargin | dashIfEmpty}}</span>
+          <span data-cy="facility-{{ facility._id }}-bank-interest-value">{{ facility.facilitySnapshot.banksInterestMargin | dashIfEmpty}}</span>
         </dd>
 
         <dd class="govuk-summary-list__actions">
@@ -53,11 +53,11 @@
 
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-!-width-one-third">
-          <span data-cy="facility-{{ facility._id}}-risk-profile-heading">Risk profile</span>
+          <span data-cy="facility-{{ facility._id }}-risk-profile-heading">Risk profile</span>
         </dt>
 
         <dd class="govuk-summary-list__value">
-          <span data-cy="facility-{{ facility._id}}-risk-profile-value">{{ facility.tfm.riskProfile | dashIfEmpty }}</span>
+          <span data-cy="facility-{{ facility._id }}-risk-profile-value">{{ facility.tfm.riskProfile | dashIfEmpty }}</span>
         </dd>
 
         <dd class="govuk-summary-list__actions">
