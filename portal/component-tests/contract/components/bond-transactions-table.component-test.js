@@ -1,5 +1,4 @@
-const { ROLES, timezoneConfig } = require('@ukef/dtfs2-common');
-const { DEAL, FACILITY } = require('../../../server/constants/status');
+const { ROLES, timezoneConfig, FACILITY_STATUS, DEAL_STATUS } = require('@ukef/dtfs2-common');
 const { getNowAsEpoch } = require('../../../server/helpers');
 
 const { NON_MAKER_OR_CHECKER_ROLES } = require('../../../test-helpers/common-role-lists');
@@ -14,13 +13,13 @@ const render = componentRenderer(component);
 describe(component, () => {
   const deal = {
     submissionType: 'Manual Inclusion Application',
-    status: DEAL.READY_FOR_APPROVAL,
+    status: DEAL_STATUS.READY_FOR_APPROVAL,
     bondTransactions: {
       items: [
         {
           _id: '5f3ab3f705e6630007dcfb21',
           ukefFacilityId: '5678',
-          status: FACILITY.INCOMPLETE,
+          status: FACILITY_STATUS.INCOMPLETE,
           value: '100',
           currency: { id: 'GBP' },
           facilityStage: 'Unissued',
@@ -32,7 +31,7 @@ describe(component, () => {
         {
           _id: '5f3ab3f705e6630007dcfb22',
           ukefFacilityId: '5678',
-          status: FACILITY.INCOMPLETE,
+          status: FACILITY_STATUS.INCOMPLETE,
           value: '100',
           currency: { id: 'GBP' },
           facilityStage: 'Unissued',
@@ -46,7 +45,7 @@ describe(component, () => {
   };
 
   const dealWithBondsThatCanChangeCoverDate = JSON.parse(JSON.stringify(deal));
-  dealWithBondsThatCanChangeCoverDate.status = DEAL.UKEF_ACKNOWLEDGED;
+  dealWithBondsThatCanChangeCoverDate.status = DEAL_STATUS.UKEF_ACKNOWLEDGED;
   dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].facilityStage = 'Issued';
   dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].hasBeenIssued = true;
   dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].issueFacilityDetailsSubmitted = true;

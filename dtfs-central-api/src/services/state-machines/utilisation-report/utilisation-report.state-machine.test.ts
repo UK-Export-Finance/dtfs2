@@ -93,7 +93,7 @@ describe('UtilisationReportStateMachine', () => {
 
       // Act
       await stateMachine.handleEvent({
-        type: 'REPORT_UPLOADED',
+        type: UTILISATION_REPORT_EVENT_TYPE.REPORT_UPLOADED,
         payload: {
           azureFileInfo: MOCK_AZURE_FILE_INFO,
           reportCsvData: [],
@@ -130,7 +130,7 @@ describe('UtilisationReportStateMachine', () => {
 
       // Act
       await stateMachine.handleEvent({
-        type: 'ADD_A_PAYMENT',
+        type: UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT,
         payload: {
           transactionEntityManager: {} as unknown as EntityManager,
           feeRecords: [],
@@ -157,7 +157,7 @@ describe('UtilisationReportStateMachine', () => {
 
       // Act
       await stateMachine.handleEvent({
-        type: 'GENERATE_KEYING_DATA',
+        type: UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA,
         payload: {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAtMatchStatusWithPayments: [],
@@ -180,7 +180,7 @@ describe('UtilisationReportStateMachine', () => {
 
       // Act
       await stateMachine.handleEvent({
-        type: 'MANUALLY_SET_COMPLETED',
+        type: UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED,
         payload: {
           requestSource,
           transactionEntityManager,
@@ -263,7 +263,7 @@ describe('UtilisationReportStateMachine', () => {
 
       // Act
       await stateMachine.handleEvent({
-        type: 'GENERATE_KEYING_DATA',
+        type: UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA,
         payload: {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAtMatchStatusWithPayments: [],
@@ -281,7 +281,7 @@ describe('UtilisationReportStateMachine', () => {
 
       // Act
       await stateMachine.handleEvent({
-        type: 'EDIT_PAYMENT',
+        type: UTILISATION_REPORT_EVENT_TYPE.EDIT_PAYMENT,
         payload: {
           transactionEntityManager: {} as EntityManager,
           payment: {} as PaymentEntity,
@@ -303,7 +303,7 @@ describe('UtilisationReportStateMachine', () => {
 
       // Act
       await stateMachine.handleEvent({
-        type: 'REMOVE_FEES_FROM_PAYMENT_GROUP',
+        type: UTILISATION_REPORT_EVENT_TYPE.REMOVE_FEES_FROM_PAYMENT_GROUP,
         payload: {
           transactionEntityManager: {} as EntityManager,
           feeRecordsToRemove: [],
@@ -320,7 +320,7 @@ describe('UtilisationReportStateMachine', () => {
 
       // Act
       await stateMachine.handleEvent({
-        type: 'MARK_FEE_RECORDS_AS_READY_TO_KEY',
+        type: UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_READY_TO_KEY,
         payload: {
           transactionEntityManager: {} as unknown as EntityManager,
           feeRecordsToMarkAsReadyToKey: [],
@@ -341,7 +341,7 @@ describe('UtilisationReportStateMachine', () => {
 
       // Act
       await stateMachine.handleEvent({
-        type: 'MARK_FEE_RECORDS_AS_RECONCILED',
+        type: UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_RECONCILED,
         payload: {
           transactionEntityManager: {} as unknown as EntityManager,
           feeRecordsToReconcile: [],
@@ -363,7 +363,7 @@ describe('UtilisationReportStateMachine', () => {
 
       // Act
       await stateMachine.handleEvent({
-        type: 'ADD_FEES_TO_AN_EXISTING_PAYMENT_GROUP',
+        type: UTILISATION_REPORT_EVENT_TYPE.ADD_FEES_TO_AN_EXISTING_PAYMENT_GROUP,
         payload: {
           transactionEntityManager: {} as EntityManager,
           feeRecordsToAdd: [],
@@ -412,7 +412,7 @@ describe('UtilisationReportStateMachine', () => {
 
       // Act
       await stateMachine.handleEvent({
-        type: 'MANUALLY_SET_INCOMPLETE',
+        type: UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_INCOMPLETE,
         payload: {
           requestSource,
           transactionEntityManager,
@@ -429,7 +429,7 @@ describe('UtilisationReportStateMachine', () => {
 
       // Act
       await stateMachine.handleEvent({
-        type: 'MARK_FEE_RECORDS_AS_READY_TO_KEY',
+        type: UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_READY_TO_KEY,
         payload: {
           transactionEntityManager: {} as unknown as EntityManager,
           feeRecordsToMarkAsReadyToKey: [],

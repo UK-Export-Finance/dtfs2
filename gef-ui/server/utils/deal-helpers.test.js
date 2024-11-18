@@ -1,4 +1,5 @@
 import CONSTANTS from '../constants';
+import { CHECKER } from '../constants/roles';
 
 import { isNotice, isUkefReviewAvailable, isUkefReviewPositive, makerCanReSubmit, isDealNotice } from './deal-helpers';
 
@@ -112,6 +113,21 @@ describe('makerCanReSubmit', () => {
     const result = makerCanReSubmit(MOCK_REQUEST, application);
 
     expect(result).toEqual(false);
+  });
+
+  it('Should return false as the Maker is from a different Bank', () => {
+    MOCK_REQUEST.bank.id = 10;
+    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_BASIC_DEAL)).toEqual(false);
+  });
+
+  it('Should return false as the user does not have `maker` role', () => {
+    MOCK_REQUEST.roles = [CHECKER];
+    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_BASIC_DEAL)).toEqual(false);
+  });
+
+  it('Should return false as the Application maker is from a different current logged-in maker', () => {
+    MOCK_BASIC_DEAL.bank = { id: 1 };
+    expect(makerCanReSubmit(MOCK_REQUEST, MOCK_BASIC_DEAL)).toEqual(false);
   });
 });
 

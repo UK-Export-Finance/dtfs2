@@ -64,7 +64,7 @@ export class DealCancellationService {
     const { cancelledDealUkefId, riskExpiredFacilityUkefIds } = await api.submitDealCancellation({ dealId, cancellation, auditDetails });
 
     if (!riskExpiredFacilityUkefIds.length) {
-      throw new Error(`Failed to find facility ids on deal ${dealId} when submitting deal cancellation`);
+      throw new Error(`Failed to find facility ids on deal ${dealId} when submitting deal cancellation. No email has been sent`);
     }
 
     if (riskExpiredFacilityUkefIds.includes(UKEF_ID.PENDING) || riskExpiredFacilityUkefIds.includes(UKEF_ID.TEST)) {

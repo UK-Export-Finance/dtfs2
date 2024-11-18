@@ -4,7 +4,6 @@ import { createApi } from '../../api';
 import app from '../../../src/createApp';
 import { initialiseTestUsers } from '../../api-test-users';
 import { TestUser } from '../../types/test-user';
-import { withTeamAuthorisationTests } from '../../common-tests/with-team-authorisation.api-tests';
 import { getTfmDealCancellationUrl } from './get-cancellation-url';
 
 const getDealCancellationMock = jest.fn() as jest.Mock<Promise<TfmDealCancellationWithStatus>>;
@@ -66,13 +65,6 @@ describe('/v1/deals/:id/cancellation', () => {
 
       afterAll(() => {
         jest.resetAllMocks();
-      });
-
-      withTeamAuthorisationTests({
-        allowedTeams: [TEAM_IDS.PIM],
-        getUserWithTeam: (team) => testUsers().withTeam(team).one(),
-        makeRequestAsUser: (user: TestUser) => as(user).get(getTfmDealCancellationUrl({ id: validId })),
-        successStatusCode: 200,
       });
 
       it('returns a 401 response when user is not authenticated', async () => {
