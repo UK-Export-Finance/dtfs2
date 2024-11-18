@@ -3,7 +3,7 @@ import { UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';
 /**
  * Iterates through an array of objects and removes any key value pairs
  * from each object where the key isn't in the UTILISATION_REPORT_HEADERS const
- * @param {Array<Object>} reportJson auth token
+ * @param {Array<Object>} reportJson - Array of objects representing the report in JSON format
  * @returns {Object} Filtered down object
  */
 export const filterReportJsonToRelevantKeys = (reportJson) => {
