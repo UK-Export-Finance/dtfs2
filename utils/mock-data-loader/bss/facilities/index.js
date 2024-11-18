@@ -1,15 +1,15 @@
-const facility1 = require('./deal-1-facilities');
-const facility2 = require('./deal-2-facilities');
-const facility3 = require('./deal-3-facilities');
-const facility4 = require('./deal-4-facilities');
-const facility5 = require('./deal-5-facilities');
-const facility6 = require('./deal-6-facilities');
-const facility7 = require('./deal-7-facilities');
-const facility8 = require('./deal-8-facilities');
-const facility9 = require('./deal-9-facilities');
-const facility10 = require('./deal-10-facilities');
-const facility11 = require('./deal-11-facilities');
+import facility1 from './deal-1-facilities';
+import facility2 from './deal-2-facilities';
+import facility3 from './deal-3-facilities';
+import facility4 from './deal-4-facilities';
+import facility5 from './deal-5-facilities';
+import facility6 from './deal-6-facilities';
+import facility7 from './deal-7-facilities';
+import facility8 from './deal-8-facilities';
+import facility9 from './deal-9-facilities';
+import facility10 from './deal-10-facilities';
+import facility11 from './deal-11-facilities';
 
 const facilities = [facility1, facility2, facility3, facility4, facility5, facility6, facility7, facility8, facility9, facility10, facility11];
 
-module.exports = facilities;
+export default facilities;
