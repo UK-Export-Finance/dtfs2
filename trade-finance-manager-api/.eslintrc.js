@@ -18,7 +18,15 @@ const baseRules = {
   'import/no-extraneous-dependencies': [
     'error',
     {
-      devDependencies: ['**/*.test.{js,ts}', '**/*.api-test{,s}.{js,ts}', '**/*.spec.{js,ts}', '**/webpack.*.{js,ts}', '**/api-test*/**', '**/__mocks__/**'],
+      devDependencies: [
+        '**/*.test.{js,ts}',
+        '**/*.ff-test.{js,ts}',
+        '**/*.api-test{,s}.{js,ts}',
+        '**/*.spec.{js,ts}',
+        '**/webpack.*.{js,ts}',
+        '**/api-test*/**',
+        '**/__mocks__/**',
+      ],
     },
   ],
   'import/prefer-default-export': 'off',
@@ -36,6 +44,7 @@ const baseRules = {
   'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
   'no-unused-vars': ['error', { ignoreRestSiblings: true }],
   'object-curly-newline': 'off',
+  'no-param-reassign': ['error', { props: true, ignorePropertyModificationsFor: ['draft', 'req', 'res'] }],
 };
 
 module.exports = {

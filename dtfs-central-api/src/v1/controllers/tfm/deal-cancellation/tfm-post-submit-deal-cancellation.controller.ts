@@ -23,9 +23,9 @@ export const submitTfmDealCancellation = async (req: PostTfmDealCancellationRequ
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.TFM);
 
-    const cancelDealResponse = await DealCancellationService.cancelDeal(dealId, cancellation, auditDetails);
+    const submitDealCancellationResponse = await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 
-    return res.status(HttpStatusCode.Ok).send(cancelDealResponse);
+    return res.status(HttpStatusCode.Ok).send(submitDealCancellationResponse);
   } catch (error) {
     console.error('Error submitting the deal cancellation:', error);
 

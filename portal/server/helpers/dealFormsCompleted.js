@@ -1,3 +1,4 @@
+const { FACILITY_STATUS } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../constants');
 
 /**
@@ -9,9 +10,9 @@ const CONSTANTS = require('../constants');
 const isEveryFacilityComplete = (facilities = []) => {
   const facilityProcessedStatus = [CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED, CONSTANTS.STATUS.DEAL.SUBMITTED_TO_UKEF];
 
-  const completed = facilities.filter((facility) => facility.status === CONSTANTS.STATUS.FACILITY.COMPLETED).length;
-  const incomplete = facilities.filter((facility) => facility.status === CONSTANTS.STATUS.FACILITY.INCOMPLETE).length;
-  const notStarted = facilities.filter((facility) => facility.status === CONSTANTS.STATUS.FACILITY.NOT_STARTED).length;
+  const completed = facilities.filter((facility) => facility.status === FACILITY_STATUS.COMPLETED).length;
+  const incomplete = facilities.filter((facility) => facility.status === FACILITY_STATUS.INCOMPLETE).length;
+  const notStarted = facilities.filter((facility) => facility.status === FACILITY_STATUS.NOT_STARTED).length;
   const acknowledged = facilities.filter(
     (facility) => facilityProcessedStatus.includes(facility.status) && facility.requestedCoverStartDate && facility.coverDateConfirmed,
   ).length;

@@ -4,13 +4,16 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% extends "index.njk" %}
 {% set backLink = { href: "/utilisation-reports" } %}
+{% set hasErrors = errorSummary | length %}
+
 {% block pageTitle %}
-  Find reports by year
+  {{ 'Find reports by year' | formatPageTitle(hasErrors) }}
 {% endblock %}
+
 {% block content %}
   <div class="govuk-grid-row govuk-!-padding-top-7">
     <div class="govuk-grid-column-full">
-      {% if errorSummary | length %}
+      {% if hasErrors %}
         {{ govukErrorSummary({
           titleText: "There is a problem",
           errorList: errorSummary,

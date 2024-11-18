@@ -107,7 +107,7 @@ export const assertions = <TParams extends object>(wrapper: CheerioAPI, html: st
     },
   }),
   expectInput: (selector: string) => ({
-    toHaveValue: (value: string) => {
+    toHaveValue: (value?: string) => {
       expect(wrapper(selector).attr('value')).toEqual(value);
     },
     toBeChecked: () => {
@@ -130,6 +130,14 @@ export const assertions = <TParams extends object>(wrapper: CheerioAPI, html: st
   expectAriaSort: (selector: string) => ({
     toEqual: (text: string) => {
       expect(wrapper(selector).attr('aria-sort')).toEqual(text);
+    },
+  }),
+  expectPageTitle: () => ({
+    toRead: (text: string) => {
+      const titleText = wrapper('title').text();
+      const result = titleText.replace(', Trade Finance Manager, gov.uk', '').trim();
+
+      expect(result).toEqual(text);
     },
   }),
 });
