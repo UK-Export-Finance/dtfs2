@@ -132,6 +132,10 @@ const postUtilisationReportUpload = async (req, res) => {
       return renderPageWithError(req, res, extractDataErrorSummary, extractDataError, dueReportPeriods);
     }
 
+    if (!csvJson.length) {
+      throw new Error('Report data is empty');
+    }
+
     // We filter down the JSON to only send the necessary data to the API for validation
     const filteredCsvJson = filterReportJsonToRelevantKeys(csvJson);
 
