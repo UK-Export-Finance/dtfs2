@@ -86,7 +86,7 @@ context('Dashboard Deals filters - filter by status', () => {
   describe('Ready for checker', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
-      cy.createBssEwcsDeal({ readyForCheck: true });
+      cy.createBssEwcsDeal({ readyForCheck: true, dealType: 'AIN', facilityStage: 'Unissued' });
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 

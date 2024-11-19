@@ -1,4 +1,4 @@
-const { contract, contractAboutFinancial, defaults, header } = require('../../pages');
+const { contract, contractAboutFinancial, defaults, dashboardDeals, contractAboutSupplier, contractAboutBuyer, contractAboutPreview } = require('../../pages');
 const { taskListHeader } = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const { additionalRefName } = require('../../../fixtures/deal');
@@ -36,15 +36,23 @@ context('about-supply-contract', () => {
     contractAboutFinancial.saveAndGoBack().click();
 
     // check that the preview page renders the Submission Details component
-    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
+    contractAboutSupplier.nextPage().click();
+    contractAboutBuyer.nextPage().click();
+    contractAboutFinancial.preview().click();
 
     cy.assertText(taskListHeader.itemStatus('financial-information'), 'Completed');
 
     // since we've cleared all validation at this point the section should show as completed on the deal page
     // go back to dashboard
-    header.dashboard().click();
+    dashboardDeals.visit();
+    cy.clickDashboardDealLink();
+    contract.aboutSupplierDetailsLink().click();
+    contractAboutSupplier.nextPage().click();
+    contractAboutBuyer.nextPage().click();
+    contractAboutFinancial.preview().click();
+    contractAboutPreview.submissionDetails().should('be.visible');
 
-    cy.assertText(contract.aboutSupplierDetailsStatus(), 'Completed');
+    cy.assertText(taskListHeader.itemStatus('financial-information'), 'Completed');
   });
 });

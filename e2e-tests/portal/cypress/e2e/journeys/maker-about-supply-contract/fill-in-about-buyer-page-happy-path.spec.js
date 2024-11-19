@@ -1,4 +1,4 @@
-const { contract, contractAboutSupplier, contractAboutBuyer } = require('../../pages');
+const { contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
@@ -29,8 +29,10 @@ context('about-supply-contract', () => {
     contractAboutBuyer.saveAndGoBack().click();
 
     // check that the preview page renders the Submission Details component
-    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
+    contractAboutSupplier.nextPage().click();
+    contractAboutBuyer.nextPage().click();
+    contractAboutFinancial.preview().click();
 
     cy.assertText(partials.taskListHeader.itemStatus('buyer'), 'Completed');
   });

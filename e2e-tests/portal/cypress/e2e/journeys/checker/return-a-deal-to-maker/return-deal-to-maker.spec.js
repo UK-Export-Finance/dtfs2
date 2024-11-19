@@ -2,15 +2,16 @@ const { contract, contractReturnToMaker, contractComments } = require('../../../
 const { successMessage } = require('../../../partials');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
-const { ADMIN, BANK1_CHECKER1 } = MOCK_USERS;
+const { ADMIN, BANK1_CHECKER1, BANK1_MAKER1 } = MOCK_USERS;
 
 context('A checker selects to return a deal to maker from the view-contract page', () => {
   before(() => {
     cy.deleteDeals(ADMIN);
-    cy.createBssEwcsDeal({ readyForCheck: true });
+    cy.createBssEwcsDeal({ readyForCheck: true, dealType: 'AIN', facilityStage: 'Unissued' });
   });
 
   it('The cancel button returns the user to the view-contract page.', () => {
+    cy.loginGoToDealPage(BANK1_CHECKER1);
     cy.clickReturnToMakerButton();
 
     // cancel
@@ -54,9 +55,10 @@ context('A checker selects to return a deal to maker from the view-contract page
       .successMessageListItem()
       .invoke('text')
       .then((text) => {
-        expect(text.trim()).to.match(/Supply Contract returned to maker./);
+        expect(text.replace(/\s+/g, ' ').trim()).to.match(/Supply Contract returned to maker. View Supply Contract/);
       });
 
+    cy.loginGoToDealPage(BANK1_MAKER1);
     cy.assertText(contract.status(), "Further Maker's input required");
 
     cy.assertText(contract.previousStatus(), "Ready for Checker's approval");

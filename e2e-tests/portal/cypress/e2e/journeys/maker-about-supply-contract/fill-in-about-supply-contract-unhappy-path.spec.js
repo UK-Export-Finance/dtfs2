@@ -15,7 +15,7 @@ context('about-supply-contract', () => {
     cy.loginGoToDealPage(BANK1_MAKER1);
 
     // check the status is displaying correctly
-    cy.assertText(contract.aboutSupplierDetailsStatus(), 'Incomplete');
+    cy.assertText(contract.aboutSupplierDetailsStatus(), 'Not started');
 
     contract.aboutSupplierDetailsLink().click();
 

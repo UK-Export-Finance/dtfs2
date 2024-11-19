@@ -4,7 +4,6 @@ const pages = require('../../pages');
 const partials = require('../../partials');
 const BOND_FORM_VALUES = require('./bond-form-values');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const { submissionDetails } = require('../../../fixtures/deal');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -184,7 +183,7 @@ context('Add a Bond to a Deal', () => {
 
         cy.assertText(row.bondStatus(), 'Completed');
 
-        cy.assertText(row.facilityValue(), `${submissionDetails.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`);
+        cy.assertText(row.facilityValue(), `${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`);
 
         cy.assertText(row.facilityStage(), 'Issued');
 

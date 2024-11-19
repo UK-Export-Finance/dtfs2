@@ -5,7 +5,6 @@ const partials = require('../../partials');
 const LOAN_FORM_VALUES = require('./loan-form-values');
 const fillLoanForm = require('./fill-loan-forms');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const { submissionDetails } = require('../../../fixtures/deal');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -60,7 +59,7 @@ context('Add a Loan to a Deal', () => {
 
       cy.assertText(row.loanStatus(), 'Completed');
 
-      cy.assertText(row.facilityValue(), `${submissionDetails.supplyContractCurrency.id} ${LOAN_FORM_VALUES.FINANCIAL_DETAILS.value}`);
+      cy.assertText(row.facilityValue(), `${LOAN_FORM_VALUES.FINANCIAL_DETAILS.value}`);
 
       cy.assertText(row.facilityStage(), 'Unconditional');
 

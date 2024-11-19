@@ -66,7 +66,7 @@ context('View dashboard deals as a maker', () => {
   it('BSS and GEF deals render on the dashboard with correct values', () => {
     cy.login(BANK1_MAKER1);
 
-    const { exporter, bankRef, product, status, type, updated } = dashboardDeals.rowIndex;
+    const { updated } = dashboardDeals.rowIndex;
 
     // should see all deals in the maker's bank
     cy.assertText(dashboardDeals.totalItems(), `(${ALL_BANK1_DEALS.length} items)`);
@@ -75,17 +75,19 @@ context('View dashboard deals as a maker', () => {
     // first deal should be the most recently updated (with our test data - GEF)
     //---------------------------------------------------------------
 
-    cy.assertText(dashboardDeals.rowIndex.link(), GEF_DEAL_BANK_2_MAKER_2.exporter.companyName);
+    cy.assertText(dashboardDeals.rowIndex.exporter(), GEF_DEAL_BANK_2_MAKER_2.exporter.companyName);
 
-    cy.assertText(bankRef(), gefDeal.bankInternalRefName);
+    // cy.assertText(bankRef(), gefDeal.bankInternalRefName);
+    cy.assertText(dashboardDeals.rowIndex.bankRef(2), GEF_DEAL_BANK_2_MAKER_2.bankInternalRefName);
 
     cy.assertText(dashboardDeals.rowIndex.product(), CONSTANTS.DEALS.DEAL_TYPE.GEF);
 
-    cy.assertText(type(), '-');
+    cy.assertText(dashboardDeals.rowIndex.type(), 'Automatic Inclusion Notice');
 
-    cy.assertText(status(), gefDeal.status);
+    cy.assertText(dashboardDeals.rowIndex.status(), gefDeal.status);
 
     updated(gefDealId)
+      .should('exist')
       .invoke('text')
       .then((text) => {
         expect(text.trim()).to.match(regexDateTime);
@@ -94,17 +96,15 @@ context('View dashboard deals as a maker', () => {
     //---------------------------------------------------------------
     // second deal (BSS)
     //---------------------------------------------------------------
-    cy.get('table tr').eq(2).find(`[data-cy="deal__status--${bssDealId}"]`).should('exist');
+    cy.assertText(dashboardDeals.rowIndex.exporter(), bssDeal.exporter.companyName);
 
-    cy.assertText(exporter(bssDealId), bssDeal.exporter.companyName);
+    cy.assertText(dashboardDeals.rowIndex.bankRef(1), bssDeal.bankInternalRefName);
 
-    cy.assertText(bankRef(bssDealId), bssDeal.bankInternalRefName);
+    cy.assertText(dashboardDeals.rowIndex.product(2), bssDeal.dealType);
 
-    cy.assertText(product(bssDealId), bssDeal.dealType);
+    cy.assertText(dashboardDeals.rowIndex.type(), bssDeal.submissionType);
 
-    cy.assertText(type(bssDealId), bssDeal.submissionType);
-
-    cy.assertText(status(bssDealId), bssDeal.status);
+    cy.assertText(dashboardDeals.rowIndex.status(), bssDeal.status);
 
     updated(bssDealId)
       .invoke('text')

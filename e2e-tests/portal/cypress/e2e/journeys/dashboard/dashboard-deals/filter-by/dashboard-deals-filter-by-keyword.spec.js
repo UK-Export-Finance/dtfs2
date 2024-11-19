@@ -11,17 +11,13 @@ const filters = dashboardFilters;
 context('Dashboard Deals filters - filter by keyword', () => {
   const MOCK_KEYWORD = 'Special exporter';
 
-  const ALL_DEALS = [];
-
   before(() => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.createBssEwcsDeal({});
+    cy.createBssEwcsDeal({ readyForCheck: true, dealType: 'AIN', facilityStage: 'Unissued', exporterCompanyName: MOCK_KEYWORD });
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1);
   });
 
   beforeEach(() => {
@@ -76,10 +72,11 @@ context('Dashboard Deals filters - filter by keyword', () => {
     });
 
     it(`renders only deals that have ${MOCK_KEYWORD} in a field`, () => {
-      const ALL_KEYWORD_DEALS = ALL_DEALS.filter(({ exporter }) => exporter.companyName === MOCK_KEYWORD);
-      dashboardDeals.rows().should('have.length', ALL_KEYWORD_DEALS.length);
+      const expectedLength = 1; // only 1x BSS/EWCS deal has MOCK_KEYWORD.
 
-      cy.assertText(dashboardDeals.rowIndex.link(), MOCK_KEYWORD);
+      dashboardDeals.rows().should('have.length', expectedLength);
+
+      cy.assertText(dashboardDeals.rowIndex.exporter(), MOCK_KEYWORD);
     });
   });
 });

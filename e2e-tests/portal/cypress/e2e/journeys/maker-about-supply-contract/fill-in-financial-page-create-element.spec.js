@@ -6,14 +6,10 @@ const { additionalRefName } = require('../../../fixtures/deal');
 const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('Financial page form - create element and check if inserted into deal', () => {
-  let dealId;
-
   before(() => {
     cy.createBssEwcsDeal({});
 
-    cy.getDealIdFromUrl().then((id) => {
-      dealId = id;
-    });
+    cy.getDealIdFromUrl();
   });
 
   it("should not insert created element's data into the deal", () => {
@@ -36,9 +32,11 @@ context('Financial page form - create element and check if inserted into deal', 
 
     contractAboutFinancial.preview().click();
 
-    cy.getDeal(dealId, BANK1_MAKER1).then((updatedDeal) => {
-      // ensure the updated deal does not contain additional intruder field
-      expect(updatedDeal.submissionDetails.intruder).to.be.an('undefined');
+    cy.getDealIdFromUrl(4).then((id) => {
+      cy.getDeal(id, BANK1_MAKER1).then((updatedDeal) => {
+        // ensure the updated deal does not contain additional intruder field
+        expect(updatedDeal.submissionDetails.intruder).to.be.an('undefined');
+      });
     });
   });
 });

@@ -6,15 +6,11 @@ const LOAN_FORM_VALUES = require('./loan-form-values');
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('Loan form - Submit loan with created element on page', () => {
-  let dealId;
-
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
     cy.createBssEwcsDeal({});
 
-    cy.getDealIdFromUrl().then((id) => {
-      dealId = id;
-    });
+    cy.getDealIdFromUrl();
   });
 
   it("should not insert created element's data into the loan", () => {
@@ -64,10 +60,12 @@ context('Loan form - Submit loan with created element on page', () => {
     cy.insertElement('loan-repayment-form');
     cy.clickSubmitButton();
 
-    cy.getDeal(dealId, BANK1_MAKER1).then((updatedDeal) => {
-      cy.getFacility(dealId, updatedDeal.facilities[0], BANK1_MAKER1).then((loan) => {
-        // checks loan does not have inserted field
-        expect(loan.intruder).to.be.an('undefined');
+    cy.getDealIdFromUrl(4).then((id) => {
+      cy.getDeal(id, BANK1_MAKER1).then((updatedDeal) => {
+        cy.getFacility(id, updatedDeal.facilities[0], BANK1_MAKER1).then((loan) => {
+          // checks loan does not have inserted field
+          expect(loan.intruder).to.be.an('undefined');
+        });
       });
     });
   });

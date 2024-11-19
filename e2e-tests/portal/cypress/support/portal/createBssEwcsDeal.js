@@ -1,3 +1,5 @@
+import { add } from 'date-fns';
+
 const {
   dashboard,
   selectScheme,
@@ -12,17 +14,31 @@ const {
   contractAboutSupplier,
   contractAboutBuyer,
   contractAboutFinancial,
+  eligibilityDocumentation,
 } = require('../../e2e/pages');
 const { submissionDetails } = require('../../fixtures/deal');
 const MOCK_USERS = require('../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
+const tomorrow = add(new Date(), { days: 1 });
+const startDate = {
+  day: tomorrow.getDate(),
+  month: tomorrow.getMonth(),
+  year: tomorrow.getFullYear(),
+};
+
+const endDate = {
+  day: tomorrow.getDate(),
+  month: tomorrow.getMonth(),
+  year: tomorrow.getFullYear() + 1,
+};
+
 /**
  * Create a BSS/EWCS deal via the UI.
  * @param {Boolean} readyForCheck: Conditionally complete all "maker" required forms
  */
-const createBssEwcsDeal = ({ readyForCheck = false }) => {
+const createBssEwcsDeal = ({ readyForCheck = false, dealType, facilityStage, exporterCompanyName }) => {
   cy.login(BANK1_MAKER1);
 
   dashboard.createNewSubmission().click();
@@ -44,16 +60,31 @@ const createBssEwcsDeal = ({ readyForCheck = false }) => {
   if (readyForCheck) {
     contract.aboutSupplierDetailsLink().click();
 
-    // complete "about supplier"
-    contractAboutSupplier.supplierType().select(submissionDetails['supplier-type']);
-    cy.keyboardInput(contractAboutSupplier.supplierCompaniesHouseRegistrationNumber(), '12345678');
-    contractAboutSupplier.supplierSearchCompaniesHouse().click();
-    contractAboutSupplier.supplierAddress().country().select('United Kingdom');
-    contractAboutSupplier.supplierCorrespondenceAddressSame().click();
-    contractAboutSupplier.smeTypeSmall().click();
-    cy.keyboardInput(contractAboutSupplier.supplyContractDescription(), 'Supply Contract Description');
-    contractAboutSupplier.notLegallyDistinct().click();
-    contractAboutSupplier.nextPage().click();
+    if (exporterCompanyName) {
+      contractAboutSupplier.supplierType().select('Exporter');
+      cy.keyboardInput(contractAboutSupplier.supplierName(), exporterCompanyName);
+      contractAboutSupplier.supplierAddress().country().select('United Kingdom');
+      contractAboutSupplier.supplierAddress().line1().type('Test');
+      contractAboutSupplier.supplierPostCode().type('AB1 2CD');
+      contractAboutSupplier.supplierCorrespondenceAddressSame().click();
+      contractAboutSupplier.industrySector().select('Accommodation and food service activities');
+      contractAboutSupplier.industryClass().select('Event catering activities');
+      contractAboutSupplier.smeTypeSmall().click();
+      cy.keyboardInput(contractAboutSupplier.supplyContractDescription(), 'Supply Contract Description');
+      contractAboutSupplier.notLegallyDistinct().click();
+      contractAboutSupplier.nextPage().click();
+    } else {
+      // complete "about supplier"
+      contractAboutSupplier.supplierType().select(submissionDetails['supplier-type']);
+      cy.keyboardInput(contractAboutSupplier.supplierCompaniesHouseRegistrationNumber(), '12345678');
+      contractAboutSupplier.supplierSearchCompaniesHouse().click();
+      contractAboutSupplier.supplierAddress().country().select('United Kingdom');
+      contractAboutSupplier.supplierCorrespondenceAddressSame().click();
+      contractAboutSupplier.smeTypeSmall().click();
+      cy.keyboardInput(contractAboutSupplier.supplyContractDescription(), 'Supply Contract Description');
+      contractAboutSupplier.notLegallyDistinct().click();
+      contractAboutSupplier.nextPage().click();
+    }
 
     // complete "about buyer"
     cy.keyboardInput(contractAboutBuyer.buyerName(), 'Buyer Name');
@@ -73,26 +104,54 @@ const createBssEwcsDeal = ({ readyForCheck = false }) => {
 
     contract.eligibilityCriteriaLink().click();
 
-    // complete "eligibility criteria"
-    eligibilityCriteria.eligibilityCriteriaTrue(11).click();
-    eligibilityCriteria.eligibilityCriteriaTrue(12).click();
-    eligibilityCriteria.eligibilityCriteriaTrue(13).click();
-    eligibilityCriteria.eligibilityCriteriaTrue(14).click();
-    eligibilityCriteria.eligibilityCriteriaTrue(15).click();
-    eligibilityCriteria.eligibilityCriteriaTrue(16).click();
-    eligibilityCriteria.eligibilityCriteriaTrue(17).click();
-    eligibilityCriteria.eligibilityCriteriaTrue(18).click();
-    eligibilityCriteria.nextPageButton().click();
+    if (dealType === 'BSS/EWCS') {
+      // complete "eligibility criteria"
+      eligibilityCriteria.eligibilityCriteriaTrue(11).click();
+      eligibilityCriteria.eligibilityCriteriaFalse(12).click();
+      eligibilityCriteria.eligibilityCriteriaTrue(13).click();
+      eligibilityCriteria.eligibilityCriteriaTrue(14).click();
+      eligibilityCriteria.eligibilityCriteriaTrue(15).click();
+      eligibilityCriteria.eligibilityCriteriaTrue(16).click();
+      eligibilityCriteria.eligibilityCriteriaTrue(17).click();
+      eligibilityCriteria.eligibilityCriteriaTrue(18).click();
+      eligibilityCriteria.nextPageButton().click();
+      eligibilityDocumentation.questionnaireFileInputUpload().attachFile('test-upload.txt');
+    } else if (dealType === 'AIN') {
+      // complete "eligibility criteria"
+      eligibilityCriteria.eligibilityCriteriaTrue(11).click();
+      eligibilityCriteria.eligibilityCriteriaTrue(12).click();
+      eligibilityCriteria.eligibilityCriteriaTrue(13).click();
+      eligibilityCriteria.eligibilityCriteriaTrue(14).click();
+      eligibilityCriteria.eligibilityCriteriaTrue(15).click();
+      eligibilityCriteria.eligibilityCriteriaTrue(16).click();
+      eligibilityCriteria.eligibilityCriteriaTrue(17).click();
+      eligibilityCriteria.eligibilityCriteriaTrue(18).click();
+      eligibilityCriteria.nextPageButton().click();
+    }
 
     cy.clickSaveGoBackButton();
 
     cy.clickAddBondButton();
 
-    // complete "bond details"
-    bondDetails.bondTypeInput().select('Advance payment guarantee');
-    bondDetails.facilityStageUnissuedInput().click();
-    cy.keyboardInput(bondDetails.ukefGuaranteeInMonthsInput(), '12');
-    cy.clickSubmitButton();
+    if (facilityStage === 'Unissued') {
+      // complete "bond details"
+      bondDetails.bondTypeInput().select('Advance payment guarantee');
+      bondDetails.facilityStageUnissuedInput().click();
+      cy.keyboardInput(bondDetails.ukefGuaranteeInMonthsInput(), '12');
+      cy.clickSubmitButton();
+    } else if (facilityStage === 'Issued') {
+      // complete "bond details"
+      bondDetails.bondTypeInput().select('Advance payment guarantee');
+      bondDetails.facilityStageIssuedInput().click();
+      bondDetails.requestedCoverStartDateDayInput().type(startDate.day);
+      bondDetails.requestedCoverStartDateMonthInput().type(startDate.month + 1);
+      bondDetails.requestedCoverStartDateYearInput().type(startDate.year);
+      bondDetails.coverEndDateDayInput().type(endDate.day);
+      bondDetails.coverEndDateMonthInput().type(endDate.month);
+      bondDetails.coverEndDateYearInput().type(endDate.year);
+      cy.keyboardInput(bondDetails.nameInput(), '1234');
+      cy.clickSubmitButton();
+    }
 
     // complete "bond financial details"
     cy.keyboardInput(bondFinancialDetails.facilityValueInput(), '100000');

@@ -19,6 +19,9 @@ const page = {
     updated: (id) => cy.get(`[data-cy*="deal__updated--${id}"]`),
   },
   rowIndex: {
+    exporter: (index = 1) => cy.get(`[data-cy*="deal__exporter--index--${index}"]`),
+    // exporter: (index = 1) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(0),
+
     link: (index = 1) => cy.get(`[data-cy*="deal__link--index--${index}"]`),
     // link: (index = 1) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('a'),
 
@@ -34,7 +37,8 @@ const page = {
     // status: (index = 1) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(4),
 
     // updated: (index = 1) => cy.get(`[data-cy*="deal__updated--index--${index}]`),
-    updated: (index = 1) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(5),
+    // updated: (index = 1) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(5),
+    updated: (dealId) => cy.get(`[data-cy*="deal__updated--${dealId}"]`),
   },
   first: () => cy.get('[data-cy="First"]'),
   previous: () => cy.get('[data-cy="Previous"]'),

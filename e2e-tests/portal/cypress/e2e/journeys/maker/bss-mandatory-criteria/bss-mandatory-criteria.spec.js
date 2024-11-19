@@ -7,12 +7,13 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('BSS Mandatory criteria: Check deal details page', () => {
   before(() => {
-    cy.createBssEwcsDeal({ readyForCheck: true });
+    cy.createBssEwcsDeal({ readyForCheck: true, dealType: 'AIN', facilityStage: 'Unissued' });
   });
 
   it('should render the mandatory criteria checklist when a new deal is created', () => {
     cy.loginGoToDealPage(BANK1_MAKER1);
 
+    pages.contract.checkDealDetailsTab().click();
     pages.contractSubmissionDetails.mandatoryCriteriaBox().should('exist');
     pages.contractSubmissionDetails.mandatoryCriteriaBox().find('ol > li[value="1"]').should('contain', 'Bank with a duly completed Supplier Declaration');
     pages.contractSubmissionDetails
