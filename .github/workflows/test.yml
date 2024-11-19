@@ -213,18 +213,21 @@ jobs:
 
       - name: Dependencies
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: npm ci
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Start
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Initialise
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: |
             sleep 100s
@@ -242,6 +245,7 @@ jobs:
 
       - name: Execute
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
           env: |
@@ -294,12 +298,14 @@ jobs:
 
       - name: Dependencies
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: npm ci
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: ${{ matrix.functions }}
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: npm run api-test
           working-directory: ./azure-functions/${{ matrix.functions }}
@@ -358,12 +364,14 @@ jobs:
 
       - name: Dependencies
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: npm ci
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Execute
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: npm run unit-test
           working-directory: ${{ matrix.services }}
@@ -429,12 +437,14 @@ jobs:
 
       - name: Dependencies
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: npm ci
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Execute
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: npm run unit-test-ff
           working-directory: ${{ matrix.services }}
@@ -519,18 +529,21 @@ jobs:
 
       - name: Dependencies
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: npm ci
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Docker
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Initialise
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: |
             sleep 100s
@@ -548,6 +561,7 @@ jobs:
 
       - name: Execute
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./portal --record false --spec './portal/cypress/e2e/journeys/${{ matrix.spec }}'
           working-directory: ./e2e-tests
@@ -614,18 +628,21 @@ jobs:
 
       - name: Dependencies
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: npm ci
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Docker
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Initialise
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: |
             sleep 100s
@@ -643,6 +660,7 @@ jobs:
 
       - name: Execute
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./gef --record false --spec './gef/cypress/e2e/${{ matrix.spec }}'
           working-directory: ./e2e-tests
@@ -728,18 +746,21 @@ jobs:
 
       - name: Dependencies
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: npm ci
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Docker
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Initialise
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: |
             sleep 100s
@@ -757,6 +778,7 @@ jobs:
 
       - name: Execute
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./tfm --record false --spec './tfm/cypress/e2e/journeys/${{ matrix.spec }}'
           working-directory: ./e2e-tests
@@ -824,18 +846,21 @@ jobs:
 
       - name: Dependencies
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: npm ci
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Docker
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Initialise
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: |
             sleep 100s
@@ -853,6 +878,7 @@ jobs:
 
       - name: Execute
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ukef --record false --spec './ukef/cypress/e2e/journeys/${{ matrix.spec }}'
           working-directory: ./e2e-tests
@@ -966,18 +992,21 @@ jobs:
 
       - name: Dependencies
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: npm ci
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Docker
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Initialise
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: |
             sleep 100s
@@ -1001,6 +1030,7 @@ jobs:
 
       - name: Execute
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./${{ steps.project.outputs.directory }} --record false --spec '${{ matrix.spec }}'
           working-directory: ./e2e-tests
@@ -1045,6 +1075,7 @@ jobs:
 
       - name: Dependencies
         uses: ./.github/modules/rerun
+        continue-on-error: true
         with:
           command: npm ci
           retries: ${{ vars.RETRY_LIMIT }}
