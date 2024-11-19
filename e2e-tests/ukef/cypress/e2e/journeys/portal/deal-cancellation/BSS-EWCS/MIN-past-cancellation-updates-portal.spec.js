@@ -72,6 +72,10 @@ describe('Deal Cancellation status updates', () => {
       portalPages.contract.visit(deal);
 
       cy.assertText(portalPages.contract.status(), DEAL_STATUS.CANCELLED);
+    });
+
+    it(`displays deal status ${DEAL_STATUS.CANCELLED} on check details tab`, () => {
+      portalPages.contract.visit(deal);
 
       portalPages.contract.checkDealDetailsTab().click();
 
