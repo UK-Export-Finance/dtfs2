@@ -1,19 +1,10 @@
-import {
-  AnyObject,
-  AuditDetails,
-  DEAL_STATUS,
-  DEAL_TYPE,
-  FACILITY_STATUS,
-  TfmActivity,
-  TfmDeal,
-  TfmDealCancellation,
-  TfmFacility,
-  TfmUser,
-} from '@ukef/dtfs2-common';
+import { AuditDetails, DEAL_STATUS, DEAL_TYPE, FACILITY_STAGE, TfmActivity, TfmDeal, TfmDealCancellation, TfmFacility, TfmUser } from '@ukef/dtfs2-common';
 import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { ObjectId } from 'mongodb';
 import { DealCancellationService } from './deal-cancellation.service';
 import { aTfmFacility, aTfmUser } from '../../../test-helpers';
+import { PortalFacilityRepo } from '../../repositories/portal/facilities.repo';
+import { PortalDealService } from '../portal/deal.service';
 
 const dealType = DEAL_TYPE.GEF;
 
@@ -34,7 +25,7 @@ const submitDealCancellationMock = jest.fn(() => Promise.resolve(mockRepositoryR
 const findOneUserByIdMock = jest.fn() as jest.Mock<Promise<TfmUser | null>>;
 
 const updatePortalDealStatusMock = jest.fn() as jest.Mock<Promise<void>>;
-const updatePortalFacilityStatusMock = jest.fn() as jest.Mock<Promise<void>>;
+const updatePortalFacilitiesMock = jest.fn() as jest.Mock<Promise<void>>;
 
 jest.mock('../../repositories/tfm-deals-repo/tfm-deal-cancellation.repo', () => ({
   TfmDealCancellationRepo: {
@@ -46,18 +37,6 @@ jest.mock('../../repositories/tfm-deals-repo/tfm-deal-cancellation.repo', () => 
 jest.mock('../../repositories/tfm-users-repo', () => ({
   TfmUsersRepo: {
     findOneUserById: (id: string | ObjectId) => findOneUserByIdMock(id),
-  },
-}));
-
-jest.mock('../portal/deal.service', () => ({
-  PortalDealService: {
-    updateStatus: (params: AnyObject) => updatePortalDealStatusMock(params),
-  },
-}));
-
-jest.mock('../portal/facility.service', () => ({
-  PortalFacilityService: {
-    updateStatus: (params: AnyObject) => updatePortalFacilityStatusMock(params),
   },
 }));
 
@@ -74,11 +53,14 @@ describe('DealCancellationService', () => {
     jest.useRealTimers();
   });
 
-  describe('processScheduledCancellation', () => {
+  describe('processPendingCancellation', () => {
     beforeEach(() => {
       jest.clearAllMocks();
 
       findOneUserByIdMock.mockResolvedValue(mockUser);
+
+      jest.spyOn(PortalDealService, 'updateStatus').mockImplementation(updatePortalDealStatusMock);
+      jest.spyOn(PortalFacilityRepo, 'updateManyByDealId').mockImplementation(updatePortalFacilitiesMock);
     });
 
     const aDealCancellation = (): TfmDealCancellation => ({
@@ -93,7 +75,7 @@ describe('DealCancellationService', () => {
       const cancellation = aDealCancellation();
 
       // Act
-      await DealCancellationService.processScheduledCancellation(dealId, cancellation, auditDetails);
+      await DealCancellationService.processPendingCancellation(dealId, cancellation, auditDetails);
 
       // Assert
       expect(submitDealCancellationMock).toHaveBeenCalledTimes(1);
@@ -105,7 +87,7 @@ describe('DealCancellationService', () => {
       const cancellation = aDealCancellation();
 
       // Act
-      const dealCancellationResponse = await DealCancellationService.processScheduledCancellation(dealId, cancellation, auditDetails);
+      const dealCancellationResponse = await DealCancellationService.processPendingCancellation(dealId, cancellation, auditDetails);
 
       // Assert
       expect(dealCancellationResponse).toEqual(DealCancellationService.getTfmDealCancellationResponse(mockRepositoryResponse));
@@ -116,35 +98,23 @@ describe('DealCancellationService', () => {
       const cancellation = aDealCancellation();
 
       // Act
-      await DealCancellationService.processScheduledCancellation(dealId, cancellation, auditDetails);
+      await DealCancellationService.processPendingCancellation(dealId, cancellation, auditDetails);
 
       // Assert
       expect(updatePortalDealStatusMock).toHaveBeenCalledTimes(1);
       expect(updatePortalDealStatusMock).toHaveBeenCalledWith({ dealId, dealType, auditDetails, newStatus: DEAL_STATUS.CANCELLED });
     });
 
-    it(`it calls PortalFacilityService.updateStatus with ${DEAL_STATUS.CANCELLED} status for each facility`, async () => {
+    it(`it calls PortalFacilityRepo.updateManyByDealId with facilityStage ${DEAL_STATUS.CANCELLED} status for each facility`, async () => {
       // Arrange
       const cancellation = aDealCancellation();
 
       // Act
-      await DealCancellationService.processScheduledCancellation(dealId, cancellation, auditDetails);
+      await DealCancellationService.processPendingCancellation(dealId, cancellation, auditDetails);
 
       // Assert
-      expect(updatePortalFacilityStatusMock).toHaveBeenCalledTimes(2);
-      expect(updatePortalFacilityStatusMock).toHaveBeenCalledWith({
-        facilityId: riskExpiredFacilityIds[0],
-        dealType,
-        auditDetails,
-        status: FACILITY_STATUS.RISK_EXPIRED,
-      });
-
-      expect(updatePortalFacilityStatusMock).toHaveBeenCalledWith({
-        facilityId: riskExpiredFacilityIds[1],
-        dealType,
-        auditDetails,
-        status: FACILITY_STATUS.RISK_EXPIRED,
-      });
+      expect(updatePortalFacilitiesMock).toHaveBeenCalledTimes(1);
+      expect(updatePortalFacilitiesMock).toHaveBeenCalledWith(dealId, { facilityStage: FACILITY_STAGE.RISK_EXPIRED }, auditDetails);
     });
   });
 });

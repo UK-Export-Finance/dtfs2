@@ -132,7 +132,7 @@ describe('tfm-deals-cancellation-repo', () => {
         };
         const expectedUpdate = {
           $set: {
-            'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.SCHEDULED,
+            'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.PENDING,
             auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
           },
           $push: {

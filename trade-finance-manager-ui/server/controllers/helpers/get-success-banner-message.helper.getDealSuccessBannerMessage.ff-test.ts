@@ -39,14 +39,14 @@ describe('getDealSuccessBannerMessage', () => {
       expect(response).toEqual(flashedSuccessMessage);
     });
 
-    it('returns scheduled cancellation message if deal is scheduled for cancellation', async () => {
+    it('returns scheduled cancellation message if deal is pending cancellation', async () => {
       // Arrange
       const effectiveFromDate = new Date();
       getDealCancellationMock.mockResolvedValue({
         bankRequestDate: new Date().valueOf(),
         effectiveFrom: effectiveFromDate.valueOf(),
         reason: '',
-        status: TFM_DEAL_CANCELLATION_STATUS.SCHEDULED,
+        status: TFM_DEAL_CANCELLATION_STATUS.PENDING,
       });
 
       // Act
