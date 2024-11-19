@@ -33,14 +33,14 @@ runs:
         env="${{ inputs.env }}"
 
         # Change to working directory
-        cd ${{ inputs.working-directory }}
+        cd ${{ inputs.working-directory }} || exit 1
 
         # Retry loop execution
         while true; do
           eval "$env" && bash -c "${{ inputs.command }}"
-          echo "========================== $? $run"
+          status=$?
 
-          if [ $? -eq 0 ]; then
+          if [ $status -eq 0 ]; then
             exit 0
           fi
 
@@ -48,6 +48,7 @@ runs:
             exit 1
           fi
 
+          echo "========================== $? $run $maximum"
           run=$((run + 1))
         done
       shell: bash
