@@ -1,19 +1,6 @@
 const { BOND_TYPE } = require('@ukef/dtfs2-common');
+const { roundNumber } = require('../../../../../../portal-api/src/utils/number');
 const { oneMonth, today } = require('../../../../../e2e-fixtures/dateConstants');
-
-const roundNumber = (value, digits) => {
-  let modifiedValue = value;
-  let d = digits;
-
-  if (!digits) {
-    d = 2;
-  }
-
-  modifiedValue *= 10 ** d;
-  modifiedValue = Math.round(modifiedValue);
-  modifiedValue /= 10 ** d;
-  return modifiedValue;
-};
 
 const DETAILS = {
   bondIssuer: 'mock issuer',
