@@ -8,36 +8,12 @@ import {
   getPremiumPaymentsCheckboxIdsFromObjectKeys,
 } from '../../../../helpers/premium-payments-table-checkbox-id-helper';
 import { getPremiumPaymentsFacilityIdQueryFromReferer } from '../../../../helpers/get-premium-payments-facility-id-query-from-referer';
-import { InitiateRecordCorrectionRequestErrorKey } from '../../../../types/premium-payments-tab-error-keys';
 import { INITIATE_RECORD_CORRECTION_ERROR_KEY } from '../../../../constants/premium-payment-tab-error-keys';
 import { mapCheckedCheckboxesToRecord } from '../../../../helpers/map-checked-checkboxes-to-record';
 
 export type PostInitiateRecordCorrectionRequest = CustomExpressRequest<{
   reqBody: PremiumPaymentsTableCheckboxSelectionsRequestBody;
 }>;
-
-/**
- * Redirects the user to the premium payments page with an error message.
- * @param req - The Express request object.
- * @param res - The Express response object.
- * @param reportId - The ID of the utilisation report.
- * @param initiateRecordCorrectionRequestError - The error key to be set in the session.
- * @param checkedCheckboxIds - An object representing the checked checkbox IDs.
- * @returns The redirect response.
- */
-const redirectToPremiumPaymentsWithError = (
-  req: PostInitiateRecordCorrectionRequest,
-  res: Response,
-  reportId: string,
-  initiateRecordCorrectionRequestError: InitiateRecordCorrectionRequestErrorKey,
-  checkedCheckboxIds: Record<string, true | undefined> = {},
-) => {
-  req.session.initiateRecordCorrectionRequestErrorKey = initiateRecordCorrectionRequestError;
-  req.session.checkedCheckboxIds = checkedCheckboxIds;
-
-  const premiumPaymentsFacilityId = getPremiumPaymentsFacilityIdQueryFromReferer(req.headers.referer);
-  return res.redirect(axios.getUri({ url: `/utilisation-reports/${reportId}`, params: { premiumPaymentsFacilityId } }));
-};
 
 /**
  * Controller for the POST initiate record correction request route.
@@ -60,36 +36,30 @@ export const postInitiateRecordCorrectionRequest = (req: PostInitiateRecordCorre
     const checkedCheckboxIds = getPremiumPaymentsCheckboxIdsFromObjectKeys(req.body);
 
     if (checkedCheckboxIds.length === 0) {
-      return redirectToPremiumPaymentsWithError(
-        req,
-        res,
-        reportId,
-        INITIATE_RECORD_CORRECTION_ERROR_KEY.NO_FEE_RECORDS_SELECTED,
-        mapCheckedCheckboxesToRecord(checkedCheckboxIds),
-      );
+      req.session.initiateRecordCorrectionRequestErrorKey = INITIATE_RECORD_CORRECTION_ERROR_KEY.NO_FEE_RECORDS_SELECTED;
+      req.session.checkedCheckboxIds = mapCheckedCheckboxesToRecord(checkedCheckboxIds);
+
+      const premiumPaymentsFacilityId = getPremiumPaymentsFacilityIdQueryFromReferer(req.headers.referer);
+      return res.redirect(axios.getUri({ url: `/utilisation-reports/${reportId}`, params: { premiumPaymentsFacilityId } }));
     }
 
     if (checkedCheckboxIds.length > 1) {
-      return redirectToPremiumPaymentsWithError(
-        req,
-        res,
-        reportId,
-        INITIATE_RECORD_CORRECTION_ERROR_KEY.MULTIPLE_FEE_RECORDS_SELECTED,
-        mapCheckedCheckboxesToRecord(checkedCheckboxIds),
-      );
+      req.session.initiateRecordCorrectionRequestErrorKey = INITIATE_RECORD_CORRECTION_ERROR_KEY.MULTIPLE_FEE_RECORDS_SELECTED;
+      req.session.checkedCheckboxIds = mapCheckedCheckboxesToRecord(checkedCheckboxIds);
+
+      const premiumPaymentsFacilityId = getPremiumPaymentsFacilityIdQueryFromReferer(req.headers.referer);
+      return res.redirect(axios.getUri({ url: `/utilisation-reports/${reportId}`, params: { premiumPaymentsFacilityId } }));
     }
 
     const checkedCheckboxId = checkedCheckboxIds[0];
     const selectedCheckboxStatus = getFeeRecordStatusFromPremiumPaymentsCheckboxId(checkedCheckboxId);
 
     if (selectedCheckboxStatus !== FEE_RECORD_STATUS.TO_DO) {
-      return redirectToPremiumPaymentsWithError(
-        req,
-        res,
-        reportId,
-        INITIATE_RECORD_CORRECTION_ERROR_KEY.INVALID_STATUS,
-        mapCheckedCheckboxesToRecord(checkedCheckboxIds),
-      );
+      req.session.initiateRecordCorrectionRequestErrorKey = INITIATE_RECORD_CORRECTION_ERROR_KEY.INVALID_STATUS;
+      req.session.checkedCheckboxIds = mapCheckedCheckboxesToRecord(checkedCheckboxIds);
+
+      const premiumPaymentsFacilityId = getPremiumPaymentsFacilityIdQueryFromReferer(req.headers.referer);
+      return res.redirect(axios.getUri({ url: `/utilisation-reports/${reportId}`, params: { premiumPaymentsFacilityId } }));
     }
 
     const selectedFeeRecordIds = getFeeRecordIdsFromPremiumPaymentsCheckboxIds([checkedCheckboxId]);
