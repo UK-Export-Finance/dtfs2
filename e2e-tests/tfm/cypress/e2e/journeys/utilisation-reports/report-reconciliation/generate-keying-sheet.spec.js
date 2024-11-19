@@ -171,22 +171,13 @@ context('PDC_RECONCILE users can generate keying data', () => {
     const expectedPrincipalBalanceAdjustment = '128,000.00'; // 200000 - (180000 * 0.4), DECREASE
 
     /**
-     * The fixed fee adjustment is the difference between
-     * the current fixed fee and the previous fixed fee,
-     * where the previous fixed fee is equal to the value
-     * stored on the FacilityUtilisationData table, and the
-     * current fixed fee is given by the product of the below
-     * values:
-     * - utilisation: 180000
-     * - cover percentage: 40
-     * - ukef utilisation: 180000 * 0.4 = 72000
-     * - bank margin: 0.9 (this is a fixed, constant value)
-     * - interest percentage: 0.05
-     * - number of days left in cover period divided by day count basis: 365 / 365 = 1
-     * - (72000 * 0.9 * 0.05 * 1) = 3240
-     * This yields a current utilisation value of 3240
+     * Fixed fee adjustments are currently turned off and so should always be
+     * zero, which is displayed as a dash.
+     *
+     * When fixed fee adjustments are turned back on and can take non-zero values
+     * this test should go back to checking for a calculated value.
      */
-    const expectedFixedFeeAdjustment = '2,240.00'; // 3240  - 1000, INCREASE
+    const expectedFixedFeeAdjustment = '-';
 
     pages.utilisationReportPage.keyingSheetTab.fixedFeeAdjustmentDecrease(FIRST_FEE_RECORD_ID).should('contain', '-');
     pages.utilisationReportPage.keyingSheetTab.fixedFeeAdjustmentIncrease(FIRST_FEE_RECORD_ID).should('contain', expectedFixedFeeAdjustment);
