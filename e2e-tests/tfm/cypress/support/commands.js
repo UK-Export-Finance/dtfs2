@@ -34,3 +34,5 @@ Cypress.Commands.add('deleteFacility', require('./central-api/deleteFacility'));
 Cypress.Commands.add('deleteTfmDeals', require('./central-api/deleteTfmDeals'));
 
 Cypress.Commands.add('updateTFMDeal', require('./central-api/updateTFMDeal'));
+
+Cypress.Commands.add('submitDealCancellation', require('./trade-finance-manager-ui/submit-deal-cancellation'));

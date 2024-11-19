@@ -1,4 +1,4 @@
-const { pageRenderer } = require('../pageRenderer');
+const { pageRenderer } = require('../../pageRenderer');
 
 const page = '../templates/facilities/facilities.njk';
 const render = pageRenderer(page);
