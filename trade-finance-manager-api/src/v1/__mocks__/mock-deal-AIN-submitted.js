@@ -247,4 +247,4 @@ const MOCK_DEAL_AIN_SUBMITTED = {
   },
 };
 
-export default MOCK_DEAL_AIN_SUBMITTED;
+module.exports = MOCK_DEAL_AIN_SUBMITTED;

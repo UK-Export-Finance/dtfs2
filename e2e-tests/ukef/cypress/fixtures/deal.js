@@ -1,4 +1,4 @@
-import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { BOND_TYPE } from '@ukef/dtfs2-common';
 import Chance from 'chance';
 import { CURRENCY, DEAL_STATUS, DEAL_TYPE, SUBMISSION_TYPE, FACILITY_TYPE, FACILITY_STAGE } from '../../../e2e-fixtures';
 
@@ -174,7 +174,7 @@ export const MOCK_DEAL = {
     {
       type: FACILITY_TYPE.BOND,
       bondIssuer: 'Issuer',
-      bondType: BOND_FACILITY_TYPE.ADVANCE_PAYMENT_GUARANTEE,
+      bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
       facilityStage: FACILITY_STAGE.ISSUED,
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '10',

@@ -1,5 +1,5 @@
-import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
-import { oneMonth, today } from '../../../../../e2e-fixtures/dateConstants';
+const { BOND_TYPE } = require('@ukef/dtfs2-common');
+const { oneMonth, today } = require('../../../../../e2e-fixtures/dateConstants');
 
 const roundNumber = (value, digits) => {
   let modifiedValue = value;
@@ -15,11 +15,11 @@ const roundNumber = (value, digits) => {
   return modifiedValue;
 };
 
-export const DETAILS = {
+const DETAILS = {
   bondIssuer: 'mock issuer',
   bondType: {
-    value: BOND_FACILITY_TYPE.MAINTENANCE_BOND,
-    text: BOND_FACILITY_TYPE.MAINTENANCE_BOND,
+    value: BOND_TYPE.MAINTENANCE_BOND,
+    text: BOND_TYPE.MAINTENANCE_BOND,
   },
   // 'issued' facility stage specifics
   requestedCoverStartDateDay: today.dayLong,
@@ -57,7 +57,7 @@ const expectedUkefExposure = () => {
   return formattedUkefExposure;
 };
 
-export const FINANCIAL_DETAILS = {
+const FINANCIAL_DETAILS = {
   value,
   valueFormatted,
   riskMarginFee,
@@ -75,4 +75,9 @@ export const FINANCIAL_DETAILS = {
   conversionRateDateDay: today.dayLong,
   conversionRateDateMonth: today.monthLong,
   conversionRateDateYear: today.year,
+};
+
+module.exports = {
+  DETAILS,
+  FINANCIAL_DETAILS,
 };

@@ -1,10 +1,9 @@
-import deal from '../../fixtures/deal-fully-completed';
-
 const {
   ROLES: { MAKER },
   timezoneConfig,
 } = require('@ukef/dtfs2-common');
 const componentRenderer = require('../../componentRenderer');
+const deal = require('../../fixtures/deal-fully-completed');
 
 const component = 'loan/_macros/loan-submission-details.njk';
 const render = componentRenderer(component);

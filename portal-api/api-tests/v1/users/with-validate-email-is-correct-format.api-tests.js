@@ -39,4 +39,4 @@ const withValidateEmailIsCorrectFormatTests = ({ createPayloadWithUpdatedEmailAd
   });
 };
 
-module.exports = { withValidateEmailIsCorrectFormatTests };
+export default { withValidateEmailIsCorrectFormatTests };

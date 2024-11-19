@@ -1,6 +1,6 @@
-import { BOND_FACILITY_TYPE, CURRENCY } from '@ukef/dtfs2-common';
-import { mandatoryCriteria } from '../../../../../../e2e-fixtures';
-import { sevenDays, twoMonths, oneMonth } from '../../../../../../e2e-fixtures/dateConstants';
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
+const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
+const { sevenDays, twoMonths, oneMonth } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const now = new Date();
 const nowPlusWeek = sevenDays.unixMillisecondsString;
@@ -189,7 +189,7 @@ const deal = {
       currencySameAsSupplyContractCurrency: 'true',
       createdDate: 1599048722968.0,
       bondIssuer: '',
-      bondType: BOND_FACILITY_TYPE.BID_BOND,
+      bondType: BOND_TYPE.BID_BOND,
       bondBeneficiary: '',
       guaranteeFeePayableByBank: '10.8000',
       ukefExposure: '296.16',
@@ -367,4 +367,4 @@ const deal = {
   ],
 };
 
-export default deal;
+module.exports = deal;

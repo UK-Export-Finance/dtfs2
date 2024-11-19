@@ -1,4 +1,4 @@
-import { BOND_FACILITY_TYPE, CURRENCY } from '@ukef/dtfs2-common';
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 
 const now = new Date().valueOf();
 
@@ -176,7 +176,7 @@ const deal = {
     {
       type: 'Bond',
       bondIssuer: '',
-      bondType: BOND_FACILITY_TYPE.BID_BOND,
+      bondType: BOND_TYPE.BID_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -199,7 +199,7 @@ const deal = {
     {
       type: 'Bond',
       bondIssuer: '',
-      bondType: BOND_FACILITY_TYPE.BID_BOND,
+      bondType: BOND_TYPE.BID_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -222,7 +222,7 @@ const deal = {
     {
       type: 'Bond',
       bondIssuer: '',
-      bondType: BOND_FACILITY_TYPE.BID_BOND,
+      bondType: BOND_TYPE.BID_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',

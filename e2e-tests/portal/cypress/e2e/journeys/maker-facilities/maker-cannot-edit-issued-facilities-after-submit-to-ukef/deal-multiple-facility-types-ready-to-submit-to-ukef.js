@@ -1,6 +1,6 @@
-import { BOND_FACILITY_TYPE, CURRENCY } from '@ukef/dtfs2-common';
-import { mandatoryCriteria } from '../../../../../../e2e-fixtures';
-import { oneMonth, twoMonths } from '../../../../../../e2e-fixtures/dateConstants';
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
+const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
+const { oneMonth, twoMonths } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const now = new Date().valueOf();
 const nowPlusOneMonth = oneMonth.unixMillisecondsString;
@@ -204,7 +204,7 @@ const deal = {
         type: 'Bond',
         createdDate: now,
         bondIssuer: '',
-        bondType: BOND_FACILITY_TYPE.ADVANCE_PAYMENT_GUARANTEE,
+        bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
         facilityStage: 'Issued',
         hasBeenIssued: true,
         'requestedCoverStartDate-day': '',
@@ -311,4 +311,4 @@ const deal = {
   },
 };
 
-export default deal;
+module.exports = deal;

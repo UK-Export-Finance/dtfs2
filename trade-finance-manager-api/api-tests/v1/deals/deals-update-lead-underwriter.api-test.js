@@ -1,5 +1,3 @@
-import MOCK_DEAL from '../../../src/v1/__mocks__/mock-deal';
-
 const { when } = require('jest-when');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 
@@ -7,6 +5,7 @@ const app = require('../../../src/createApp');
 const { createApi } = require('../../api');
 const { initialiseTestUsers } = require('../../api-test-users');
 const api = require('../../../src/v1/api');
+const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_USERS = require('../../../src/v1/__mocks__/mock-users');
 const { mockUpdateDeal, mockFindOneDeal, mockFindUserById } = require('../../../src/v1/__mocks__/common-api-mocks');
 

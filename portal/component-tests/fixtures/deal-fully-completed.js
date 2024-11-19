@@ -1,6 +1,6 @@
-import { BOND_TYPE, CURRENCY } from '@ukef/dtfs2-common';
-import { subDays, addMonths, format } from 'date-fns';
-import { DATE } from '../../server/constants';
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
+const { subDays, addMonths, format } = require('date-fns');
+const { DATE } = require('../../server/constants');
 
 const now = new Date();
 const yesterday = subDays(now, 1);
@@ -432,4 +432,4 @@ const deal = {
   },
 };
 
-export default deal;
+module.exports = deal;

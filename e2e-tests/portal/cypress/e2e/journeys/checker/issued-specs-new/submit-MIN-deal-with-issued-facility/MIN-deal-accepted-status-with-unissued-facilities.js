@@ -1,5 +1,5 @@
-import { BOND_FACILITY_TYPE, CURRENCY } from '@ukef/dtfs2-common';
-import { mandatoryCriteria } from '../../../../../../../e2e-fixtures';
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
+const { mandatoryCriteria } = require('../../../../../../../e2e-fixtures');
 
 const deal = {
   submissionType: 'Manual Inclusion Notice',
@@ -214,7 +214,7 @@ const deal = {
       type: 'Bond',
       createdDate: new Date().valueOf(),
       bondIssuer: '',
-      bondType: BOND_FACILITY_TYPE.PERFORMANCE_BOND,
+      bondType: BOND_TYPE.PERFORMANCE_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',

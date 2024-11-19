@@ -1,6 +1,5 @@
-import deal from '../../fixtures/deal-fully-completed';
-
 const componentRenderer = require('../../componentRenderer');
+const deal = require('../../fixtures/deal-fully-completed');
 
 const component = 'contract/components/totals-table.njk';
 const render = componentRenderer(component);

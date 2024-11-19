@@ -1,9 +1,9 @@
-import { BOND_FACILITY_TYPE, CURRENCY } from '@ukef/dtfs2-common';
-import pages from '../../pages';
-import partials from '../../partials';
-import relative from '../../relativeURL';
-import { ADMIN, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
-import { today } from '../../../../../e2e-fixtures/dateConstants';
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
+const pages = require('../../pages');
+const partials = require('../../partials');
+const relative = require('../../relativeURL');
+const { ADMIN, BANK1_MAKER1 } = require('../../../../../e2e-fixtures');
+const { today } = require('../../../../../e2e-fixtures/dateConstants');
 
 const now = today.unixMilliseconds;
 
@@ -21,7 +21,7 @@ const MOCK_DEAL = {
       type: 'Bond',
       createdDate: now,
       bondIssuer: 'test',
-      bondType: BOND_FACILITY_TYPE.BID_BOND,
+      bondType: BOND_TYPE.BID_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -44,7 +44,7 @@ const MOCK_DEAL = {
       type: 'Bond',
       createdDate: now,
       bondIssuer: 'test',
-      bondType: BOND_FACILITY_TYPE.BID_BOND,
+      bondType: BOND_TYPE.BID_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -67,7 +67,7 @@ const MOCK_DEAL = {
       type: 'Bond',
       createdDate: now,
       bondIssuer: 'test',
-      bondType: BOND_FACILITY_TYPE.BID_BOND,
+      bondType: BOND_TYPE.BID_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',

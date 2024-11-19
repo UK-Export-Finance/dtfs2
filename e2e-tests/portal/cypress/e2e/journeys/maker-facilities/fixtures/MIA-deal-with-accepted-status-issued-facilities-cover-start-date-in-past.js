@@ -1,6 +1,6 @@
-import { BOND_FACILITY_TYPE, CURRENCY } from '@ukef/dtfs2-common';
-import { mandatoryCriteria } from '../../../../../../e2e-fixtures';
-import { today, yesterday } from '../../../../../../e2e-fixtures/dateConstants';
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
+const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
+const { today, yesterday } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const now = today.unixMilliseconds;
 const nowMinusDay = yesterday.unixMilliseconds;
@@ -188,7 +188,7 @@ const deal = {
       type: 'Bond',
       createdDate: now,
       bondIssuer: '',
-      bondType: BOND_FACILITY_TYPE.PERFORMANCE_BOND,
+      bondType: BOND_TYPE.PERFORMANCE_BOND,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '12',
@@ -362,4 +362,4 @@ const deal = {
   },
 };
 
-export default deal;
+module.exports = deal;

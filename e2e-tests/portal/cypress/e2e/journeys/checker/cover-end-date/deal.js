@@ -1,8 +1,8 @@
-import { BOND_FACILITY_TYPE } from '@ukef/dtfs2-common';
-import mockDeal from '../../../../fixtures/deal';
-import CONSTANTS from '../../../../fixtures/constants';
-import { CURRENCY, FEE_FREQUENCY, FEE_TYPE, DAY_COUNT_BASIS } from '../../../../../../e2e-fixtures/constants.fixture';
-import { today, tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
+const { BOND_TYPE } = require('@ukef/dtfs2-common');
+const mockDeal = require('../../../../fixtures/deal');
+const CONSTANTS = require('../../../../fixtures/constants');
+const { CURRENCY, FEE_FREQUENCY, FEE_TYPE, DAY_COUNT_BASIS } = require('../../../../../../e2e-fixtures/constants.fixture');
+const { today, tomorrow } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const deal = {
   ...mockDeal,
@@ -11,7 +11,7 @@ const deal = {
       type: CONSTANTS.FACILITY.FACILITY_TYPE.BOND,
       createdDate: today.unixMilliseconds,
       bondIssuer: '',
-      bondType: BOND_FACILITY_TYPE.BID_BOND,
+      bondType: BOND_TYPE.BID_BOND,
       facilityStage: CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED,
       hasBeenIssued: true,
       'requestedCoverStartDate-day': '13',
@@ -120,4 +120,4 @@ const deal = {
   ],
 };
 
-export default deal;
+module.exports = deal;

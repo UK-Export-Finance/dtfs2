@@ -1,6 +1,6 @@
 const { CURRENCY } = require('@ukef/dtfs2-common');
-const MOCK_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
 const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
+const MOCK_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
 
 const MOCK_DEAL = {
   _id: '123',

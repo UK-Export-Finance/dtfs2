@@ -1,8 +1,7 @@
-import MOCK_DEAL from '../../../src/v1/__mocks__/mock-deal';
-
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 const { addPartyUrns } = require('../../../src/v1/controllers/deal.party-db');
+const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const api = require('../../../src/v1/api');
 const { MOCK_PORTAL_USERS } = require('../../../src/v1/__mocks__/mock-portal-users');
 

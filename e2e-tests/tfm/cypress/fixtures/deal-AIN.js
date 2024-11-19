@@ -1,7 +1,7 @@
-import { BOND_FACILITY_TYPE, CURRENCY } from '@ukef/dtfs2-common';
-import CONSTANTS from './constants';
-import { BANK1_MAKER1 } from '../../../e2e-fixtures';
-import { twoYearsAgo, oneMonth } from '../../../e2e-fixtures/dateConstants';
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
+const CONSTANTS = require('./constants');
+const { BANK1_MAKER1 } = require('../../../e2e-fixtures');
+const { twoYearsAgo, oneMonth } = require('../../../e2e-fixtures/dateConstants');
 
 const MOCK_DEAL = {
   dealType: CONSTANTS.DEAL_TYPE.BSS_EWCS,
@@ -181,7 +181,7 @@ const MOCK_DEAL = {
     {
       type: CONSTANTS.FACILITY_TYPE.BOND,
       bondIssuer: 'Issuer',
-      bondType: BOND_FACILITY_TYPE.ADVANCE_PAYMENT_GUARANTEE,
+      bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '10',
@@ -247,4 +247,4 @@ const MOCK_DEAL = {
   ],
 };
 
-export default MOCK_DEAL;
+module.exports = MOCK_DEAL;
