@@ -226,9 +226,7 @@ jobs:
       - name: Initialise
         uses: ./.github/modules/rerun
         with:
-          command: |
-            sleep 100s
-            npm run load
+          command: sleep 100s && npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -532,9 +530,7 @@ jobs:
       - name: Initialise
         uses: ./.github/modules/rerun
         with:
-          command: |
-            sleep 100s
-            npm run load
+          command: sleep 100s && npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -627,9 +623,7 @@ jobs:
       - name: Initialise
         uses: ./.github/modules/rerun
         with:
-          command: |
-            sleep 100s
-            npm run load
+          command: sleep 100s && npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -741,9 +735,7 @@ jobs:
       - name: Initialise
         uses: ./.github/modules/rerun
         with:
-          command: |
-            sleep 100s
-            npm run load
+          command: sleep 100s && npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -837,9 +829,7 @@ jobs:
       - name: Initialise
         uses: ./.github/modules/rerun
         with:
-          command: |
-            sleep 100s
-            npm run load
+          command: sleep 100s && npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -979,9 +969,7 @@ jobs:
       - name: Initialise
         uses: ./.github/modules/rerun
         with:
-          command: |
-            sleep 100s
-            npm run load
+          command: sleep 100s && npm run load
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}

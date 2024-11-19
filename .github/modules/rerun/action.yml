@@ -42,12 +42,10 @@ runs:
           fi
 
           eval "$env"
-          ${{ inputs.command }}
-          
-          status=$?
+          eval "${{ inputs.command }}"
 
           # Exit with success
-          if [ $status -eq 0 ]; then
+          if [ $? -eq 0 ]; then
             exit 0
           fi
         done
