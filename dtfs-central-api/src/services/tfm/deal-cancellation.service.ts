@@ -64,6 +64,17 @@ export class DealCancellationService {
         auditDetails,
       });
 
+      const {
+        dealSnapshot: { dealType },
+      } = cancelledDeal;
+
+      await PortalDealService.updateStatus({
+        dealId,
+        newStatus: DEAL_STATUS.PENDING_CANCELLATION,
+        auditDetails,
+        dealType,
+      });
+
       return this.getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities });
     }
 

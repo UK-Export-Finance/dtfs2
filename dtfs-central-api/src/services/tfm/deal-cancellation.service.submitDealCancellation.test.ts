@@ -254,12 +254,13 @@ describe('DealCancellationService', () => {
           expect(dealCancellationResponse).toEqual(DealCancellationService.getTfmDealCancellationResponse(mockRepositoryResponse));
         });
 
-        it('does not call PortalDealService.updateStatus', async () => {
+        it(`it calls PortalDealService.updateStatus with ${DEAL_STATUS.PENDING_CANCELLATION} status`, async () => {
           // Act
           await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 
           // Assert
-          expect(updatePortalDealStatusMock).toHaveBeenCalledTimes(0);
+          expect(updatePortalDealStatusMock).toHaveBeenCalledTimes(1);
+          expect(updatePortalDealStatusMock).toHaveBeenCalledWith({ dealId, dealType, auditDetails, newStatus: DEAL_STATUS.PENDING_CANCELLATION });
         });
 
         it('does not call PortalFacilityService.updateStatus', async () => {
