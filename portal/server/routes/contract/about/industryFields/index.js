@@ -7,21 +7,31 @@ const industryFields = (postedSubmissionDetails, industrySectors) => {
 
   let industrySectorObj;
 
-  if (industrySectorCode) {
+  if (!industrySectorCode) {
+    submissionDetails['industry-sector'] = {};
+  } else {
     industrySectorObj = getIndustrySectorById(industrySectors, industrySectorCode);
 
-    submissionDetails['industry-sector'] = {
-      code: industrySectorCode,
-      name: getIndustrySectorById(industrySectors, industrySectorCode).name,
-    };
-  } else {
-    submissionDetails['industry-sector'] = {};
+    if (industrySectorObj) {
+      submissionDetails['industry-sector'] = {
+        code: industrySectorCode,
+        name: industrySectorObj.name,
+      };
+    } else {
+      /**
+       * This is required because - if an industry sector is not found
+       * and we save 'industry-sector' as undefined,
+       * the validation thinks that it has a valid value.
+       * Therefore, if no industry sector is found, the object should be wiped.
+       */
+      submissionDetails['industry-sector'] = {};
+    }
   }
 
   // get industry class object from the submitted industry class code
   const industryClassCode = submissionDetails['industry-class'];
 
-  if (industryClassCode && industrySectorObj.classes) {
+  if (industryClassCode && industrySectorObj?.classes) {
     submissionDetails['industry-class'] = {
       code: industryClassCode,
       name: getIndustryClassById(industrySectorObj.classes, industryClassCode).name,
