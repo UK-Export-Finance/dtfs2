@@ -1,6 +1,5 @@
-import { calculateDrawnAmount, isValidDate } from '@ukef/dtfs2-common';
+import { calculateDrawnAmount } from '@ukef/dtfs2-common';
 import Big from 'big.js';
-import { calculateInitialFixedFee } from './calculate-initial-fixed-fee';
 import { getKeyingSheetCalculationFacilityValues } from '../../../../../helpers';
 
 export type RequiredParams = {
@@ -27,25 +26,11 @@ export const parseDate = (date: string | Date | number | null): Date => {
 
 /**
  * checks that all required values are present
- * checks that cover start and end dates are in date format
  * @param value
- * @param interestPercentage
- * @param dayCountBasis
- * @param coverStartDate
- * @param coverEndDate
+ * @param coverPercentage
  * @returns true if all values are present and in the correct format
  */
-export const hasRequiredValues = ({ value, interestPercentage, dayCountBasis, coverStartDate, coverEndDate, coverPercentage }: RequiredParams): boolean =>
-  Boolean(
-    value &&
-      coverStartDate &&
-      coverEndDate &&
-      interestPercentage &&
-      dayCountBasis &&
-      coverPercentage &&
-      isValidDate(new Date(coverStartDate)) &&
-      isValidDate(new Date(coverEndDate)),
-  );
+export const hasRequiredValues = ({ value, coverPercentage }: RequiredParams): boolean => Boolean(value && coverPercentage);
 
 /**
  * calculateInitialUtilisationAndFixedFee
@@ -58,21 +43,15 @@ export const hasRequiredValues = ({ value, interestPercentage, dayCountBasis, co
  * @returns {Object} fixedFee and utilisation values
  */
 export const calculateInitialUtilisationAndFixedFee = async (facilityId: string) => {
-  const { value, coverStartDate, coverEndDate, interestPercentage, dayCountBasis, coverPercentage } = await getKeyingSheetCalculationFacilityValues(facilityId);
+  const { value, coverPercentage } = await getKeyingSheetCalculationFacilityValues(facilityId);
 
-  if (!hasRequiredValues({ value, interestPercentage, dayCountBasis, coverStartDate, coverEndDate, coverPercentage })) {
+  if (!hasRequiredValues({ value, coverPercentage })) {
     throw new Error(`TFM facility values for ${facilityId} are missing`);
   }
 
   const ukefShareOfInitialUtilisation = new Big(calculateDrawnAmount(value, coverPercentage)).round(2).toNumber();
 
-  const fixedFee = calculateInitialFixedFee({
-    ukefShareOfUtilisation: ukefShareOfInitialUtilisation,
-    coverStartDate: parseDate(coverStartDate),
-    coverEndDate: parseDate(coverEndDate),
-    interestPercentage,
-    dayCountBasis,
-  });
+  const fixedFee = 0;
 
   return {
     fixedFee,

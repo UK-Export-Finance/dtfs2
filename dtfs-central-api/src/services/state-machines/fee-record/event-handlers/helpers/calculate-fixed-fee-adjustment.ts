@@ -5,6 +5,8 @@ const hasFacilityUtilisationDataAlreadyBeenUpdated = (facilityUtilisationData: F
   isEqualReportPeriod(facilityUtilisationData.reportPeriod, reportPeriod);
 
 /**
+ * This is currently unused because fixed fee calculations are currently turned off.
+ *
  * Calculates the fixed fee adjustment
  * @param feeRecord - The fee record entity
  * @param facilityUtilisationData - The facility utilisation data entity
