@@ -27,9 +27,6 @@ runs:
   using: 'composite'
   steps:
     - run: |
-        # Specify environment variables
-        eval "$env"
-
         # Set the arguments
         maximum=${{ inputs.retries }}
         run=1
@@ -40,11 +37,17 @@ runs:
 
         # Retry loop execution
         while true; do
-          bash -c "${{ inputs.command }}"
+          eval "$env" && bash -c "${{ inputs.command }}"
           echo "========================== $? $run"
 
           if [ $? -eq 0 ]; then
             exit 0
           fi
+
+          if [ $run -eq $maximum ]; then
+            exit 1
+          fi
+
+          run=$((run + 1))
         done
       shell: bash
