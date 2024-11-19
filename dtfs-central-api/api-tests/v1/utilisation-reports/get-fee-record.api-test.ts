@@ -15,7 +15,7 @@ interface CustomResponse extends Response {
 
 console.error = jest.fn();
 
-const BASE_URL = '/v1/utilisation-reports/:reportId/fee-record/:feeRecordId';
+const BASE_URL = '/v1/utilisation-reports/:reportId/fee-records/:feeRecordId';
 
 describe(`GET ${BASE_URL}`, () => {
   const getUrl = (reportId: number | string, feeRecordId: number | string) =>

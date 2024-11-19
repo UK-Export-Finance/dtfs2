@@ -1681,7 +1681,7 @@ const addFeesToAnExistingPayment = async (reportId, feeRecordIds, paymentIds, us
  * @returns {Promise<import('./api-response-types').FeeRecordResponseBody>}
  */
 const getFeeRecord = async (reportId, feeRecordId) => {
-  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-record/${feeRecordId}`, {
+  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}`, {
     headers: headers.central,
   });
 

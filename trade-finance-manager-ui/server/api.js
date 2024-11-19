@@ -1329,7 +1329,7 @@ const submitDealCancellation = async (dealId, cancellation, userToken) => {
  * @returns {Promise<import('./api-response-types').GetFeeRecordResponseBody>}
  */
 const getFeeRecord = async (reportId, feeRecordId, userToken) => {
-  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-record/${feeRecordId}`, {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}`, {
     headers: generateHeaders(userToken),
   });
   return response.data;

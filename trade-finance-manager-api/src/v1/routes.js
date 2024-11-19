@@ -198,7 +198,7 @@ authRouter
   .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.postFeesToAnExistingPayment);
 
 authRouter
-  .route('/utilisation-reports/:reportId/fee-record/:feeRecordId')
+  .route('/utilisation-reports/:reportId/fee-records/:feeRecordId')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), handleExpressValidatorResult)
   .get(utilisationReportsController.getFeeRecord);
 

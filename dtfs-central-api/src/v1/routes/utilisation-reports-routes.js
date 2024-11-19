@@ -737,7 +737,7 @@ utilisationReportsRouter
 
 /**
  * @openapi
- * /utilisation-reports/:reportId/fee-record/:feeRecordId:
+ * /utilisation-reports/:reportId/fee-records/:feeRecordId:
  *   get:
  *     summary: Get the fee record
  *     tags: [Utilisation Report]
@@ -771,7 +771,7 @@ utilisationReportsRouter
  *         description: Internal Server Error
  */
 utilisationReportsRouter
-  .route('/:reportId/fee-record/:feeRecordId')
+  .route('/:reportId/fee-records/:feeRecordId')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), handleExpressValidatorResult)
   .get(getFeeRecord);
 
