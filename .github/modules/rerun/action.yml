@@ -41,6 +41,10 @@ runs:
         # Retry loop execution
         while true; do
           bash -c "${{ inputs.command }}"
-          echo "---------------STATUS-----------------$? $run"
+          echo "========================== $? $run"
+
+          if [ $? -eq 0 ]; then
+            exit 0
+          fi
         done
       shell: bash
