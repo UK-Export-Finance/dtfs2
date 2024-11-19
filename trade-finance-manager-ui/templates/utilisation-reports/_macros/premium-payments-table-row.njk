@@ -16,48 +16,82 @@
   {% set isChecked = feeRecordPaymentGroup.isChecked %}
   {% set checkboxAriaLabel = feeRecordPaymentGroup.checkboxAriaLabel %}
 
+  {% set hiddenRecordDetailsListHtml %}
+      <ul>
+        {% for feeRecord in feeRecords %}
+         <li>Facility ID: {{ feeRecord.facilityId }}, Exporter: {{ feeRecord.exporter }}, Reported fees: {{ feeRecord.reportedFees }}, Reported payments: {{ feeRecord.reportedPayments }} </li>
+        {% endfor %}
+      </ul>
+  {% endset %}
+
   {% for feeRecord in feeRecords %}
     {% set isFirstFeeRecordInGroup = loop.index === 1 %}
     {% set isLastFeeRecordInGroup = loop.index === feeRecords.length %}
-    <tr class="govuk-table__row" data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }} premium-payments-table-row--exporter-{{ feeRecord.exporter }}">
-      <th scope="row" class="govuk-table__header govuk-!-font-weight-regular{{ " no-border" if not isLastFeeRecordInGroup }}" data-cy="facility-id">
+
+    {% set paymentsReceivedHtml %}
+      {% if isFirstFeeRecordInGroup and paymentsReceived %}
+        <ul class="payments-list">
+          {% for paymentReceived in paymentsReceived %}
+            <li class="payments-list-item">
+              {% if userCanEdit and (status === 'MATCH' or status === 'DOES_NOT_MATCH') %}
+                <a
+                  href="/utilisation-reports/{{ reportId }}/edit-payment/{{ paymentReceived.id }}?redirectTab=premium-payments"
+                  data-cy="premium-payments-tab-edit-payment-link--paymentId-{{ paymentReceived.id }}">
+                  {{ paymentReceived.formattedCurrencyAndAmount }}
+                </a>
+              {% else %}
+                {{ paymentReceived.formattedCurrencyAndAmount }}
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endset%}
+
+    <tr class="govuk-table__row"
+        data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }} premium-payments-table-row--exporter-{{ feeRecord.exporter }}"
+        aria-hidden={{ not isFirstFeeRecordInGroup }}>
+      <td class="govuk-visually-hidden" data-cy="hidden-record-details">
+        {{ (hiddenRecordDetailsListHtml | safe) if isFirstFeeRecordInGroup }}
+      </td>
+      <th aria-hidden="true"
+          scope="row"
+          class="govuk-table__header govuk-!-font-weight-regular{{ " no-border" if not isLastFeeRecordInGroup }}"
+          data-cy="facility-id">
         {{ feeRecord.facilityId }}
       </th>
-      <td class="govuk-table__cell{{ " no-border" if not isLastFeeRecordInGroup }}" data-cy="exporter">
+      <td aria-hidden="true"
+          class="govuk-table__cell{{ "no-border" if not isLastFeeRecordInGroup }}"
+          data-cy="exporter">
         {{ feeRecord.exporter }}
       </td>
-      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}" data-cy="reported-fees">
+      <td aria-hidden="true"
+          class="govuk-table__cell govuk-table__cell--numeric{{ "no-border" if not isLastFeeRecordInGroup }}"
+          data-cy="reported-fees">
         {{ feeRecord.reportedFees }}
       </td>
-      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}" data-cy="reported-payments">
+      <td aria-hidden="true"
+          class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}"
+          data-cy="reported-payments">
         {{ feeRecord.reportedPayments }}
       </td>
-      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}" data-sort-value="{{ totalReportedPayments.dataSortValue }}" data-cy="total-reported-payments">
+      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}"
+          data-sort-value="{{ totalReportedPayments.dataSortValue }}"
+          data-cy="total-reported-payments">
         {{ totalReportedPayments.formattedCurrencyAndAmount if isFirstFeeRecordInGroup else "" }}
       </td>
-      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}">
-        {% if isFirstFeeRecordInGroup and paymentsReceived %}
-          <ul class="payments-list">
-            {% for paymentReceived in paymentsReceived %}
-              <li class="payments-list-item">
-                {% if userCanEdit and (status === 'MATCH' or status === 'DOES_NOT_MATCH') %}
-                  <a
-                    href="/utilisation-reports/{{ reportId }}/edit-payment/{{ paymentReceived.id }}?redirectTab=premium-payments"
-                    data-cy="premium-payments-tab-edit-payment-link--paymentId-{{ paymentReceived.id }}">
-                    {{ paymentReceived.formattedCurrencyAndAmount }}
-                  </a>
-                {% else %}
-                  {{ paymentReceived.formattedCurrencyAndAmount }}
-                {% endif %}
-              </li>
-            {% endfor %}
-          </ul>
-        {% endif %}
+      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}"
+          data-cy="payments-received">
+        {{ (paymentsReceivedHtml | safe) }}
       </td>
-      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}" data-sort-value="{{ totalPaymentsReceived.dataSortValue }}">
+      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}"
+          data-sort-value="{{ totalPaymentsReceived.dataSortValue }}"
+          data-cy="total-payments-received">
         {{ totalPaymentsReceived.formattedCurrencyAndAmount if isFirstFeeRecordInGroup else "" }}
       </td>
-      <td class="govuk-table__cell{{ " no-border" if not isLastFeeRecordInGroup }}" data-sort-value="{{ displayStatus }}" data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }}-status">
+      <td class="govuk-table__cell{{ " no-border" if not isLastFeeRecordInGroup }}"
+          data-sort-value="{{ displayStatus }}"
+          data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }}-status">
         {{ feeRecordStatus.render({
           status: status,
           displayStatus: displayStatus
