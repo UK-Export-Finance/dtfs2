@@ -33,7 +33,7 @@ const { putKeyingDataMarkAsToDo } = require('../controllers/utilisation-report-s
 const { postRemoveFeesFromPaymentGroup } = require('../controllers/utilisation-report-service/post-remove-fees-from-payment-group.controller');
 const { postReportDataValidation } = require('../controllers/utilisation-report-service/post-report-data-validation.controller');
 const { postAddFeesToAnExistingPaymentGroup } = require('../controllers/utilisation-report-service/post-add-fees-to-an-existing-payment-group.controller');
-const { getFeeRecordDetails } = require('../controllers/utilisation-report-service/get-fee-record-details.controller');
+const { getFeeRecord } = require('../controllers/utilisation-report-service/get-fee-record-details.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -773,6 +773,6 @@ utilisationReportsRouter
 utilisationReportsRouter
   .route('/:reportId/fee-record/:feeRecordId')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), handleExpressValidatorResult)
-  .get(getFeeRecordDetails);
+  .get(getFeeRecord);
 
 module.exports = utilisationReportsRouter;

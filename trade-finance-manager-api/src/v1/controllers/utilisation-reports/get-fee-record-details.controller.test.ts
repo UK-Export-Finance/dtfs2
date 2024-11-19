@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { AxiosResponse, HttpStatusCode, AxiosError } from 'axios';
-import { getFeeRecordDetails } from './get-fee-record-details.controller';
+import { getFeeRecord } from './get-fee-record-details.controller';
 import api from '../../api';
 import { FeeRecordDetailsResponseBody } from '../../api-response-types';
 
@@ -9,7 +9,7 @@ console.error = jest.fn();
 jest.mock('../../api');
 
 describe('get-fee-record-details-by-id.controller', () => {
-  describe('getFeeRecordDetails', () => {
+  describe('getFeeRecord', () => {
     const reportId = '1';
     const feeRecordId = '2';
 
@@ -33,51 +33,51 @@ describe('get-fee-record-details-by-id.controller', () => {
       jest.resetAllMocks();
     });
 
-    it('gets the fee record details', async () => {
+    it('gets the fee record', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
       const responseBody = aFeeRecordDetailsResponseBody();
-      jest.mocked(api.getFeeRecordDetails).mockResolvedValue(responseBody);
+      jest.mocked(api.getFeeRecord).mockResolvedValue(responseBody);
 
       // Act
-      await getFeeRecordDetails(req, res);
+      await getFeeRecord(req, res);
 
       // Assert
       expect(res._getData()).toEqual(responseBody);
-      expect(api.getFeeRecordDetails).toHaveBeenCalledTimes(1);
-      expect(api.getFeeRecordDetails).toHaveBeenCalledWith(reportId, feeRecordId);
+      expect(api.getFeeRecord).toHaveBeenCalledTimes(1);
+      expect(api.getFeeRecord).toHaveBeenCalledWith(reportId, feeRecordId);
     });
 
     it('responds with a 200', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      jest.mocked(api.getFeeRecordDetails).mockResolvedValue(aFeeRecordDetailsResponseBody());
+      jest.mocked(api.getFeeRecord).mockResolvedValue(aFeeRecordDetailsResponseBody());
 
       // Act
-      await getFeeRecordDetails(req, res);
+      await getFeeRecord(req, res);
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
-      expect(api.getFeeRecordDetails).toHaveBeenCalledTimes(1);
-      expect(api.getFeeRecordDetails).toHaveBeenCalledWith(reportId, feeRecordId);
+      expect(api.getFeeRecord).toHaveBeenCalledTimes(1);
+      expect(api.getFeeRecord).toHaveBeenCalledWith(reportId, feeRecordId);
     });
 
     it('responds with a 500 if an unknown error occurs', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      jest.mocked(api.getFeeRecordDetails).mockRejectedValue(new Error('Some error'));
+      jest.mocked(api.getFeeRecord).mockRejectedValue(new Error('Some error'));
 
       // Act
-      await getFeeRecordDetails(req, res);
+      await getFeeRecord(req, res);
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
       expect(res._isEndCalled()).toEqual(true);
-      expect(api.getFeeRecordDetails).toHaveBeenCalledTimes(1);
-      expect(api.getFeeRecordDetails).toHaveBeenCalledWith(reportId, feeRecordId);
+      expect(api.getFeeRecord).toHaveBeenCalledTimes(1);
+      expect(api.getFeeRecord).toHaveBeenCalledWith(reportId, feeRecordId);
     });
 
     it('responds with a specific error code if an axios error is thrown', async () => {
@@ -87,32 +87,32 @@ describe('get-fee-record-details-by-id.controller', () => {
       const errorStatus = HttpStatusCode.BadRequest;
       const axiosError = new AxiosError(undefined, undefined, undefined, undefined, { status: errorStatus } as AxiosResponse);
 
-      jest.mocked(api.getFeeRecordDetails).mockRejectedValue(axiosError);
+      jest.mocked(api.getFeeRecord).mockRejectedValue(axiosError);
 
       // Act
-      await getFeeRecordDetails(req, res);
+      await getFeeRecord(req, res);
 
       // Assert
       expect(res._getStatusCode()).toEqual(errorStatus);
       expect(res._isEndCalled()).toEqual(true);
-      expect(api.getFeeRecordDetails).toHaveBeenCalledTimes(1);
-      expect(api.getFeeRecordDetails).toHaveBeenCalledWith(reportId, feeRecordId);
+      expect(api.getFeeRecord).toHaveBeenCalledTimes(1);
+      expect(api.getFeeRecord).toHaveBeenCalledWith(reportId, feeRecordId);
     });
 
     it('responds with an error message', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      jest.mocked(api.getFeeRecordDetails).mockRejectedValue(new Error('Some error'));
+      jest.mocked(api.getFeeRecord).mockRejectedValue(new Error('Some error'));
 
       // Act
-      await getFeeRecordDetails(req, res);
+      await getFeeRecord(req, res);
 
       // Assert
-      expect(res._getData()).toEqual('Failed to get fee record details');
+      expect(res._getData()).toEqual('Failed to get fee record');
       expect(res._isEndCalled()).toEqual(true);
-      expect(api.getFeeRecordDetails).toHaveBeenCalledTimes(1);
-      expect(api.getFeeRecordDetails).toHaveBeenCalledWith(reportId, feeRecordId);
+      expect(api.getFeeRecord).toHaveBeenCalledTimes(1);
+      expect(api.getFeeRecord).toHaveBeenCalledWith(reportId, feeRecordId);
     });
   });
 });

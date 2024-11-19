@@ -6,9 +6,9 @@ import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { mapFeeRecordEntityToDetails } from './helpers';
 
 /**
- * Response body type for the GET fee record details endpoint.
+ * Response body type for the GET fee record endpoint.
  */
-export type GetFeeRecordDetailsResponseBody = {
+export type GetFeeRecordResponseBody = {
   id: number;
   bank: SessionBank;
   reportPeriod: ReportPeriod;
@@ -16,17 +16,17 @@ export type GetFeeRecordDetailsResponseBody = {
   exporter: string;
 };
 
-type GetFeeRecordDetailsResponse = Response<GetFeeRecordDetailsResponseBody | string>;
+type GetFeeRecordResponse = Response<GetFeeRecordResponseBody | string>;
 
 /**
- * Controller for the GET fee record details route.
+ * Controller for the GET fee record route.
  * @param req - The request object.
  * @param res - The response object.
- * @returns A promise that resolves to the response containing the fee record details response.
+ * @returns A promise that resolves to the response containing the fee record response.
  * @throws {NotFoundError} When either the fee record is not found for the given IDs or the
  * bank on the report is not found.
  */
-export const getFeeRecordDetails = async (req: Request, res: GetFeeRecordDetailsResponse) => {
+export const getFeeRecord = async (req: Request, res: GetFeeRecordResponse) => {
   const { reportId, feeRecordId } = req.params;
 
   try {
@@ -40,7 +40,7 @@ export const getFeeRecordDetails = async (req: Request, res: GetFeeRecordDetails
 
     return res.status(HttpStatusCode.Ok).send(feeRecordDetails);
   } catch (error) {
-    const errorMessage = `Failed to get fee record details`;
+    const errorMessage = `Failed to get fee record`;
     console.error(errorMessage, error);
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);

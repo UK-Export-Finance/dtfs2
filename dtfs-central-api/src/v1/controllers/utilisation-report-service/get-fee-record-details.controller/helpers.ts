@@ -1,14 +1,14 @@
 import { FeeRecordEntity } from '@ukef/dtfs2-common';
-import { GetFeeRecordDetailsResponseBody } from '.';
+import { GetFeeRecordResponseBody } from '.';
 import { NotFoundError } from '../../../../errors';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 
 /**
- * Maps the supplied fee record entity to the fee record details
+ * Maps the supplied fee record entity to the fee record
  * @param feeRecordEntity - The fee record entity
- * @returns The fee record details
+ * @returns The fee record
  */
-export const mapFeeRecordEntityToDetails = async (feeRecordEntity: FeeRecordEntity): Promise<GetFeeRecordDetailsResponseBody> => {
+export const mapFeeRecordEntityToDetails = async (feeRecordEntity: FeeRecordEntity): Promise<GetFeeRecordResponseBody> => {
   const {
     id,
     report: { bankId, reportPeriod },

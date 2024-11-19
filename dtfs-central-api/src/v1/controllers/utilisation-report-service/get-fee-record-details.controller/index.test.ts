@@ -2,7 +2,7 @@ import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { getFeeRecordDetails, GetFeeRecordDetailsResponseBody } from '.';
+import { getFeeRecord, GetFeeRecordResponseBody } from '.';
 import { mapFeeRecordEntityToDetails } from './helpers';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 
@@ -11,7 +11,7 @@ console.error = jest.fn();
 jest.mock('./helpers');
 
 describe('get-fee-record-details.controller', () => {
-  describe('getFeeRecordDetails', () => {
+  describe('getFeeRecord', () => {
     const reportId = 3;
     const feeRecordId = 14;
 
@@ -38,7 +38,7 @@ describe('get-fee-record-details.controller', () => {
       when(findSpy).calledWith(feeRecordId, reportId).mockResolvedValue(null);
 
       // Act
-      await getFeeRecordDetails(req, res);
+      await getFeeRecord(req, res);
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
@@ -55,7 +55,7 @@ describe('get-fee-record-details.controller', () => {
         .mockResolvedValue(FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).build());
 
       // Act
-      await getFeeRecordDetails(req, res);
+      await getFeeRecord(req, res);
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
@@ -63,7 +63,7 @@ describe('get-fee-record-details.controller', () => {
       expect(findSpy).toHaveBeenCalledWith(feeRecordId, reportId);
     });
 
-    it('responds with the fee record details', async () => {
+    it('responds with the fee record', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
@@ -74,11 +74,11 @@ describe('get-fee-record-details.controller', () => {
       const feeRecordDetails = {
         field1: 'Some value',
         field2: 'Another value',
-      } as unknown as GetFeeRecordDetailsResponseBody;
+      } as unknown as GetFeeRecordResponseBody;
       jest.mocked(mapFeeRecordEntityToDetails).mockResolvedValue(feeRecordDetails);
 
       // Act
-      await getFeeRecordDetails(req, res);
+      await getFeeRecord(req, res);
 
       // Assert
       expect(res._getData()).toEqual(feeRecordDetails);

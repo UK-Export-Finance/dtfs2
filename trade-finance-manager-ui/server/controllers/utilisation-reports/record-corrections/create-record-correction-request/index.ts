@@ -21,7 +21,7 @@ export const createRecordCorrectionRequest = async (req: CreateRecordCorrectionR
     const { user, userToken } = asUserSession(req.session);
     const { reportId, feeRecordId } = req.params;
 
-    const feeRecordDetails = await api.getFeeRecordDetails(reportId, feeRecordId, userToken);
+    const feeRecordDetails = await api.getFeeRecord(reportId, feeRecordId, userToken);
 
     return renderCreateRecordCorrectionRequestPage(res, {
       user,

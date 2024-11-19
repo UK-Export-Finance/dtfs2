@@ -42,7 +42,7 @@ describe('get-fee-record-details.controller helpers', () => {
       expect(feeRecordDetails.reportPeriod).toEqual(reportPeriod);
     });
 
-    it('returns an object containing the mapped fee record details', async () => {
+    it('returns an object containing the mapped fee record', async () => {
       // Arrange
       const id = 123;
       const facilityId = '0012345678';

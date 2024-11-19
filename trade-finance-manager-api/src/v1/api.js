@@ -1675,12 +1675,12 @@ const addFeesToAnExistingPayment = async (reportId, feeRecordIds, paymentIds, us
 };
 
 /**
- * Gets the fee record details by report id and fee record id
+ * Gets the fee record by report id and fee record id
  * @param {string} reportId - The report id
  * @param {string} feeRecordId - The fee record id
  * @returns {Promise<import('./api-response-types').FeeRecordDetailsResponseBody>}
  */
-const getFeeRecordDetails = async (reportId, feeRecordId) => {
+const getFeeRecord = async (reportId, feeRecordId) => {
   const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-record/${feeRecordId}`, {
     headers: headers.central,
   });
@@ -1765,5 +1765,5 @@ module.exports = {
   editPayment,
   removeFeesFromPayment,
   addFeesToAnExistingPayment,
-  getFeeRecordDetails,
+  getFeeRecord,
 };
