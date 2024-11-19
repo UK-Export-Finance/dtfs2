@@ -85,7 +85,7 @@ describe('getScheduledCancellationBannerMessage', () => {
         bankRequestDate: new Date().valueOf(),
         effectiveFrom: effectiveFromDate.valueOf(),
         reason: '',
-        status: TFM_DEAL_CANCELLATION_STATUS.SCHEDULED,
+        status: TFM_DEAL_CANCELLATION_STATUS.PENDING,
       });
 
       // Act

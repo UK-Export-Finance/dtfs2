@@ -27,7 +27,7 @@ const aDealWithScheduledCancellation = ({ effectiveFrom }: { effectiveFrom: numb
     _id: new ObjectId(),
     tfm: {
       cancellation: {
-        status: TFM_DEAL_CANCELLATION_STATUS.SCHEDULED,
+        status: TFM_DEAL_CANCELLATION_STATUS.PENDING,
         effectiveFrom,
         reason: '',
         bankRequestDate: sub(now, { days: 1 }).valueOf(),

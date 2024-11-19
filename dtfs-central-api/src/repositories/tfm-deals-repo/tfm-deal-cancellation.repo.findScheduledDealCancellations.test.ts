@@ -42,7 +42,7 @@ describe('tfm-deals-cancellation-repo', () => {
       const expectedFilter = {
         'dealSnapshot.submissionType': { $in: [DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN] },
         'tfm.stage': { $ne: TFM_DEAL_STAGE.CANCELLED },
-        'tfm.cancellation.status': { $eq: TFM_DEAL_CANCELLATION_STATUS.SCHEDULED },
+        'tfm.cancellation.status': { $eq: TFM_DEAL_CANCELLATION_STATUS.PENDING },
       };
 
       expect(findMock).toHaveBeenCalledTimes(1);
