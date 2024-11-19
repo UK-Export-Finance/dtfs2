@@ -48,7 +48,7 @@ runs:
             exit 1
           fi
 
-          echo "========================== $? $run $maximum"
+          echo "========================== $status $run $maximum"
           run=$((run + 1))
         done
       shell: bash
