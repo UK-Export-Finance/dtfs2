@@ -185,6 +185,8 @@ const anUnissuedContingentFacility = ({ facilityEndDateEnabled = false } = {}) =
   canResubmitIssuedFacilities: null,
 });
 
+exports.anUnissuedContingentFacility = anUnissuedContingentFacility;
+
 /**
  * @param {{ facilityEndDateEnabled?: boolean}} options
  * @returns {import('@ukef/dtfs2-common').Facility }

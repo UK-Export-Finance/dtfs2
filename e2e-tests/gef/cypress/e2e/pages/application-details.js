@@ -1,8 +1,11 @@
+import relative from '../relativeURL';
+
 const cyGetFacilitySummaryListChild = (tableNum, selector) => cy.get('[data-cy="facility-summary-list"]').eq(tableNum).find(selector);
 const cyGetFacilitySummaryListValue = (tableNum, actionSelector) =>
   cyGetFacilitySummaryListChild(tableNum, actionSelector).parent().parent().find('.govuk-summary-list__value');
 
 const applicationDetails = {
+  visit: (deal) => cy.visit(relative(`/gef/application-details/${deal._id}`)),
   applicationDetailsPage: () => cy.get('[data-cy="application-details-page"]'),
 
   bankRefName: () => cy.get('[data-cy="bank-reference"]'),
