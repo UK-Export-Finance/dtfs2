@@ -1,8 +1,7 @@
 const { FACILITY_STATUS } = require('@ukef/dtfs2-common');
 const {
-  DASHBOARD_FILTERS: { BESPOKE_FILTER_VALUES },
+  DASHBOARD_FILTERS: { BESPOKE_FILTER_VALUES, BESPOKE_FIELD_NAMES },
 } = require('../../../content-strings');
-const CONTENT_STRINGS = require('../../../content-strings');
 const keywordQuery = require('./facilities-filters-keyword-query');
 
 const { isSuperUser } = require('../../../helpers');
@@ -44,8 +43,8 @@ const dashboardFacilitiesFiltersQuery = (filters, user) => {
       const fieldName = Object.keys(filterObj)[0];
       const filterValue = filterObj[fieldName];
 
-      const isKeywordField = fieldName === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD;
-      const isStageField = fieldName === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.STAGE;
+      const isKeywordField = fieldName === BESPOKE_FIELD_NAMES.KEYWORD;
+      const isStageField = fieldName === BESPOKE_FIELD_NAMES.STAGE;
 
       if (isKeywordField) {
         const keywordValue = filterValue[0];
@@ -77,7 +76,7 @@ const dashboardFacilitiesFiltersQuery = (filters, user) => {
         fieldFilter.OR = [];
         filterValue.forEach((value) => {
           // if created by you then adding user id as compared to or statement
-          if (value === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.CREATED_BY_YOU) {
+          if (value === BESPOKE_FILTER_VALUES.FACILITIES.CREATED_BY_YOU) {
             // delete or filter as not needed for created by you
             delete fieldFilter.OR;
             // have to match deal.maker._id (joined table) as maker does not exist in facilities collection
