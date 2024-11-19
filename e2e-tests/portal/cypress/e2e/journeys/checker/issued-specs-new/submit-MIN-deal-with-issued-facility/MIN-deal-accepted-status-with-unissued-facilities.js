@@ -341,4 +341,4 @@ const deal = {
   },
 };
 
-export default deal;
+module.exports = deal;
