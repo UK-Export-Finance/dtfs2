@@ -29,25 +29,24 @@ runs:
     - run: |
         # Set the arguments
         maximum=${{ inputs.retries }}
-        run=1
         env="${{ inputs.env }}"
 
         # Change to working directory
         cd ${{ inputs.working-directory }} || exit 1
 
         # Retry loop execution
-        while true; do
-          eval "$env" && bash -c "${{ inputs.command }}"
+        for((run=1; run<=maximum; run++));do
+          eval "$env" && bash -c "${{ inputs.command }}" && break
           status=$?
 
+          # Exit with success
           if [ $status -eq 0 ]; then
             exit 0
           fi
 
+          # Exit with failure on last run
           if [ $run -eq $maximum ]; then
             exit 1
           fi
-
-          run=$((run + 1))
         done
       shell: bash
