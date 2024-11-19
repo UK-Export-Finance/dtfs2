@@ -1,53 +1,36 @@
 import MOCK_DEAL from '../../../src/v1/__mocks__/mock-deal';
+import { mockFindOneDeal } from '../../../src/v1/__mocks__/common-api-mocks';
 
 const { findOneTfmDeal, findOnePortalDeal } = require('../../../src/v1/controllers/deal.controller');
 const mapDeal = require('../../../src/v1/mappings/map-deal');
-const { mockFindOneDeal, mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
-const api = require('../../../src/v1/api');
-const { dealsLightReducer } = require('../../../src/v1/rest-mappings/deals-light');
-const mapDeals = require('../../../src/v1/mappings/map-deals');
-const acbsController = require('../../../src/v1/controllers/acbs.controller');
-
-jest.mock('../../../src/v1/rest-mappings/deals-light');
-jest.mock('../../../src/v1/mappings/map-deals');
-
-const mappedDeal = mapDeal(MOCK_DEAL);
+const api = require('../../../src/v1/api').default;
 
 describe('deal controller', () => {
-  acbsController.createACBS = jest.fn();
-
   beforeEach(() => {
-    acbsController.createACBS.mockReset();
-
     api.findOneDeal.mockReset();
+
     mockFindOneDeal();
-
-    api.updateDeal.mockReset();
-    mockUpdateDeal();
-
-    dealsLightReducer.mockReset();
-    dealsLightReducer.mockImplementation((deals) => deals.map((deal) => ({ ...deal, reduced: true })));
-
-    mapDeals.mockReset();
-    mapDeals.mockImplementation((deals) => deals.map((deal) => ({ ...deal, mapped: true })));
   });
 
   describe('findOneTfmDeal', () => {
-    it("should return false if deal doesn't exist", async () => {
+    it('should return false if the deal does not exist', async () => {
       const deal = await findOneTfmDeal('NO_DEAL_ID');
       expect(deal).toEqual(false);
     });
 
-    it('should return a deal', async () => {
+    it('should return a deal with mapped dealSnapshot', async () => {
       const deal = await findOneTfmDeal(MOCK_DEAL._id);
+
+      const mappedSnapshot = await mapDeal(MOCK_DEAL);
+
       expect(deal).toMatchObject({
-        dealSnapshot: mappedDeal,
+        dealSnapshot: mappedSnapshot,
       });
     });
   });
 
   describe('findOnePortalDeal', () => {
-    it("should return false if deal doesn't exist", async () => {
+    it('should return false if the deal does not exist', async () => {
       const deal = await findOnePortalDeal('NO_DEAL_ID');
       expect(deal).toEqual(false);
     });

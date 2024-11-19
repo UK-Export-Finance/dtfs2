@@ -1,6 +1,8 @@
 import { MOCK_FACILITIES } from './mock-facilities';
 import MOCK_BSS_FACILITIES_USD_CURRENCY from './mock-facilities-USD-currency';
 
+import ALL_MOCK_DEALS from './mock-deals';
+
 const MOCK_CURRENCY_EXCHANGE_RATE = require('./mock-currency-exchange-rate');
 const MOCK_USERS = require('./mock-users');
 const MOCK_PREMIUM_SCHEDULE_RESPONSE = require('./mock-premium-schedule-response');
@@ -8,8 +10,6 @@ const MOCK_BANK_HOLIDAYS = require('./mock-bank-holidays');
 const { MOCK_UTILISATION_REPORT } = require('./mock-utilisation-report');
 
 const MOCK_CASH_CONTINGENT_FACILITIES = require('./mock-cash-contingent-facilities');
-
-const ALL_MOCK_DEALS = require('./mock-deals');
 
 const ALL_MOCK_FACILITIES = [...MOCK_FACILITIES, ...MOCK_BSS_FACILITIES_USD_CURRENCY, ...MOCK_CASH_CONTINGENT_FACILITIES];
 

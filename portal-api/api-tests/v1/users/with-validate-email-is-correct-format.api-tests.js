@@ -24,6 +24,7 @@ const withValidateEmailIsCorrectFormatTests = ({ createPayloadWithUpdatedEmailAd
         valueToSetField: AN_OBJECT,
       },
     ];
+
     describe('when validating the email', () => {
       it.each(errorTestCases)(`rejects if the provided email $description`, async ({ valueToSetField }) => {
         const request = createPayloadWithUpdatedEmailAddress(valueToSetField);

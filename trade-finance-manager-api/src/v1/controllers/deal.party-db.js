@@ -1,4 +1,4 @@
-const api = require('../api');
+const api = require('../api').default;
 
 /**
  * Gets company information from Party URN
