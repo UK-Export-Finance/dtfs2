@@ -1,6 +1,6 @@
 import { SessionBank, ReportPeriod } from '@ukef/dtfs2-common';
 
-export type FeeRecordDetailsResponseBody = {
+export type FeeRecordResponseBody = {
   id: number;
   bank: SessionBank;
   reportPeriod: ReportPeriod;

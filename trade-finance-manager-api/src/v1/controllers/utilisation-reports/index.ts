@@ -14,4 +14,4 @@ export { postRemoveFeesFromPayment } from './post-remove-fees-from-payment.contr
 export { putKeyingDataMarkAsDone } from './put-keying-data-mark-as-done.controller';
 export { putKeyingDataMarkAsToDo } from './put-keying-data-mark-as-to-do.controller';
 export { postFeesToAnExistingPayment } from './post-fees-to-an-existing-payment.controller';
-export { getFeeRecord } from './get-fee-record-details.controller';
+export { getFeeRecord } from './get-fee-record.controller';

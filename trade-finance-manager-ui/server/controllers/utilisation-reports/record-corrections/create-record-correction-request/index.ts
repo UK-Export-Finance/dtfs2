@@ -21,19 +21,19 @@ export const createRecordCorrectionRequest = async (req: CreateRecordCorrectionR
     const { user, userToken } = asUserSession(req.session);
     const { reportId, feeRecordId } = req.params;
 
-    const feeRecordDetails = await api.getFeeRecord(reportId, feeRecordId, userToken);
+    const feeRecord = await api.getFeeRecord(reportId, feeRecordId, userToken);
 
     return renderCreateRecordCorrectionRequestPage(res, {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       reportId,
       bank: {
-        name: feeRecordDetails.bank.name,
+        name: feeRecord.bank.name,
       },
-      formattedReportPeriod: getFormattedReportPeriodWithLongMonth(feeRecordDetails.reportPeriod),
+      formattedReportPeriod: getFormattedReportPeriodWithLongMonth(feeRecord.reportPeriod),
       feeRecord: {
-        facilityId: feeRecordDetails.facilityId,
-        exporter: feeRecordDetails.exporter,
+        facilityId: feeRecord.facilityId,
+        exporter: feeRecord.exporter,
       },
     });
   } catch (error) {

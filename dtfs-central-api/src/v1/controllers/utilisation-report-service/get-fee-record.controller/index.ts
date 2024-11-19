@@ -3,7 +3,7 @@ import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
 import { ApiError, NotFoundError } from '../../../../errors';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
-import { mapFeeRecordEntityToDetails } from './helpers';
+import { mapFeeRecordEntityToResponse } from './helpers';
 
 /**
  * Response body type for the GET fee record endpoint.
@@ -30,15 +30,15 @@ export const getFeeRecord = async (req: Request, res: GetFeeRecordResponse) => {
   const { reportId, feeRecordId } = req.params;
 
   try {
-    const feeRecord = await FeeRecordRepo.findOneByIdAndReportIdWithReport(Number(feeRecordId), Number(reportId));
+    const feeRecordEntity = await FeeRecordRepo.findOneByIdAndReportIdWithReport(Number(feeRecordId), Number(reportId));
 
-    if (!feeRecord) {
+    if (!feeRecordEntity) {
       throw new NotFoundError(`Failed to find a fee record with id '${feeRecordId}' attached to report with id '${reportId}'`);
     }
 
-    const feeRecordDetails = await mapFeeRecordEntityToDetails(feeRecord);
+    const feeRecord = await mapFeeRecordEntityToResponse(feeRecordEntity);
 
-    return res.status(HttpStatusCode.Ok).send(feeRecordDetails);
+    return res.status(HttpStatusCode.Ok).send(feeRecord);
   } catch (error) {
     const errorMessage = `Failed to get fee record`;
     console.error(errorMessage, error);

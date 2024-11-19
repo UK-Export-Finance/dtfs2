@@ -1,14 +1,14 @@
 import httpMocks from 'node-mocks-http';
 import { AxiosResponse, HttpStatusCode, AxiosError } from 'axios';
-import { getFeeRecord } from './get-fee-record-details.controller';
+import { getFeeRecord } from './get-fee-record.controller';
 import api from '../../api';
-import { FeeRecordDetailsResponseBody } from '../../api-response-types';
+import { FeeRecordResponseBody } from '../../api-response-types';
 
 console.error = jest.fn();
 
 jest.mock('../../api');
 
-describe('get-fee-record-details-by-id.controller', () => {
+describe('get-fee-record.controller', () => {
   describe('getFeeRecord', () => {
     const reportId = '1';
     const feeRecordId = '2';
@@ -18,7 +18,7 @@ describe('get-fee-record-details-by-id.controller', () => {
         params: { reportId, feeRecordId },
       });
 
-    const aFeeRecordDetailsResponseBody = (): FeeRecordDetailsResponseBody => ({
+    const aFeeRecordResponseBody = (): FeeRecordResponseBody => ({
       bank: { id: '123', name: 'Test bank' },
       reportPeriod: {
         start: { month: 1, year: 2024 },
@@ -37,7 +37,7 @@ describe('get-fee-record-details-by-id.controller', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const responseBody = aFeeRecordDetailsResponseBody();
+      const responseBody = aFeeRecordResponseBody();
       jest.mocked(api.getFeeRecord).mockResolvedValue(responseBody);
 
       // Act
@@ -53,7 +53,7 @@ describe('get-fee-record-details-by-id.controller', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      jest.mocked(api.getFeeRecord).mockResolvedValue(aFeeRecordDetailsResponseBody());
+      jest.mocked(api.getFeeRecord).mockResolvedValue(aFeeRecordResponseBody());
 
       // Act
       await getFeeRecord(req, res);

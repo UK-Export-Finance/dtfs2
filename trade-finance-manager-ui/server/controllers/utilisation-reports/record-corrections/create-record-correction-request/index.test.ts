@@ -27,7 +27,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       params: { reportId, feeRecordId },
     });
 
-    const feeRecordDetailsResponse: GetFeeRecordResponseBody = {
+    const feeRecordResponse: GetFeeRecordResponseBody = {
       id: 456,
       bank: {
         id: '789',
@@ -40,7 +40,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       facilityId: '0012345678',
       exporter: 'Sample Company Ltd',
     };
-    jest.mocked(api.getFeeRecord).mockResolvedValue(feeRecordDetailsResponse);
+    jest.mocked(api.getFeeRecord).mockResolvedValue(feeRecordResponse);
 
     // Act
     await createRecordCorrectionRequest(req, res);

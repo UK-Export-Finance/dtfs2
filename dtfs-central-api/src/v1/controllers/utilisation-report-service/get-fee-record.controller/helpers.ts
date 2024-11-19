@@ -4,11 +4,11 @@ import { NotFoundError } from '../../../../errors';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 
 /**
- * Maps the supplied fee record entity to the fee record
+ * Maps the supplied fee record entity to the get fee record response body
  * @param feeRecordEntity - The fee record entity
- * @returns The fee record
+ * @returns The get fee record response body
  */
-export const mapFeeRecordEntityToDetails = async (feeRecordEntity: FeeRecordEntity): Promise<GetFeeRecordResponseBody> => {
+export const mapFeeRecordEntityToResponse = async (feeRecordEntity: FeeRecordEntity): Promise<GetFeeRecordResponseBody> => {
   const {
     id,
     report: { bankId, reportPeriod },

@@ -33,7 +33,7 @@ const { putKeyingDataMarkAsToDo } = require('../controllers/utilisation-report-s
 const { postRemoveFeesFromPaymentGroup } = require('../controllers/utilisation-report-service/post-remove-fees-from-payment-group.controller');
 const { postReportDataValidation } = require('../controllers/utilisation-report-service/post-report-data-validation.controller');
 const { postAddFeesToAnExistingPaymentGroup } = require('../controllers/utilisation-report-service/post-add-fees-to-an-existing-payment-group.controller');
-const { getFeeRecord } = require('../controllers/utilisation-report-service/get-fee-record-details.controller');
+const { getFeeRecord } = require('../controllers/utilisation-report-service/get-fee-record.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -739,7 +739,7 @@ utilisationReportsRouter
  * @openapi
  * /utilisation-reports/:reportId/fee-record/:feeRecordId:
  *   get:
- *     summary: Get the fee record details
+ *     summary: Get the fee record
  *     tags: [Utilisation Report]
  *     description: Gets a fee record by its id, where that fee record must belong to a report with the supplied report id
  *     parameters:
@@ -762,7 +762,7 @@ utilisationReportsRouter
  *           application/json:
  *             schema:
  *               type: object
- *               $ref: '#/definitions/FeeRecordDetailsResponse'
+ *               $ref: '#/definitions/FeeRecordResponse'
  *       400:
  *         description: Bad request
  *       404:

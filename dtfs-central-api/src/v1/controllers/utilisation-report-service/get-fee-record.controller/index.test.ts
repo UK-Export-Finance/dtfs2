@@ -3,14 +3,14 @@ import { HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { getFeeRecord, GetFeeRecordResponseBody } from '.';
-import { mapFeeRecordEntityToDetails } from './helpers';
+import { mapFeeRecordEntityToResponse } from './helpers';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 
 console.error = jest.fn();
 
 jest.mock('./helpers');
 
-describe('get-fee-record-details.controller', () => {
+describe('get-fee-record.controller', () => {
   describe('getFeeRecord', () => {
     const reportId = 3;
     const feeRecordId = 14;
@@ -71,17 +71,17 @@ describe('get-fee-record-details.controller', () => {
         .calledWith(feeRecordId, reportId)
         .mockResolvedValue(FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).build());
 
-      const feeRecordDetails = {
+      const feeRecord = {
         field1: 'Some value',
         field2: 'Another value',
       } as unknown as GetFeeRecordResponseBody;
-      jest.mocked(mapFeeRecordEntityToDetails).mockResolvedValue(feeRecordDetails);
+      jest.mocked(mapFeeRecordEntityToResponse).mockResolvedValue(feeRecord);
 
       // Act
       await getFeeRecord(req, res);
 
       // Assert
-      expect(res._getData()).toEqual(feeRecordDetails);
+      expect(res._getData()).toEqual(feeRecord);
       expect(findSpy).toHaveBeenCalledTimes(1);
       expect(findSpy).toHaveBeenCalledWith(feeRecordId, reportId);
     });
