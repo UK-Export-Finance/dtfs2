@@ -15,6 +15,26 @@ describe('get-fee-record.controller', () => {
     const reportId = 3;
     const feeRecordId = 14;
 
+    const aFeeRecordResponseBody = (): GetFeeRecordResponseBody => ({
+      id: 123,
+      bank: {
+        id: '456',
+        name: 'A bank',
+      },
+      reportPeriod: {
+        start: {
+          month: 1,
+          year: 2024,
+        },
+        end: {
+          month: 1,
+          year: 2024,
+        },
+      },
+      facilityId: '12345678',
+      exporter: 'An exporter',
+    });
+
     const getHttpMocks = () =>
       httpMocks.createMocks({
         params: { reportId: reportId.toString(), feeRecordId: feeRecordId.toString() },
@@ -71,17 +91,14 @@ describe('get-fee-record.controller', () => {
         .calledWith(feeRecordId, reportId)
         .mockResolvedValue(FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).build());
 
-      const feeRecord = {
-        field1: 'Some value',
-        field2: 'Another value',
-      } as unknown as GetFeeRecordResponseBody;
-      jest.mocked(mapFeeRecordEntityToResponse).mockResolvedValue(feeRecord);
+      const feeRecordResponseBody = aFeeRecordResponseBody();
+      jest.mocked(mapFeeRecordEntityToResponse).mockResolvedValue(feeRecordResponseBody);
 
       // Act
       await getFeeRecord(req, res);
 
       // Assert
-      expect(res._getData()).toEqual(feeRecord);
+      expect(res._getData()).toEqual(feeRecordResponseBody);
       expect(findSpy).toHaveBeenCalledTimes(1);
       expect(findSpy).toHaveBeenCalledWith(feeRecordId, reportId);
     });
