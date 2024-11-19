@@ -39,17 +39,15 @@ const insertMocks = async (mockDataLoaderToken) => {
   }
 
   console.info('inserting BSS facilities');
-  MOCKS.FACILITIES.default.forEach((facilities) => {
-    facilities.forEach(async (facility) => {
-      const associatedDeal = insertedDeals.find((deal) => deal.mockId === facility.mockDealId);
+  MOCKS.FACILITIES.forEach(async (facility) => {
+    const associatedDeal = insertedDeals.find((deal) => deal.mockId === facility.mockDealId);
 
-      const facilityToInsert = {
-        ...facility,
-        dealId: associatedDeal._id,
-      };
+    const facilityToInsert = {
+      ...facility,
+      dealId: associatedDeal._id,
+    };
 
-      await centralApi.createFacility(facilityToInsert, facilityToInsert.dealId, makerToken);
-    });
+    await centralApi.createFacility(facilityToInsert, facilityToInsert.dealId, makerToken);
   });
 };
 

@@ -1,7 +1,7 @@
-import { BOND_TYPE, CURRENCY } from '@ukef/dtfs2-common';
-import { nowTimestamp, twoMonths, twoMonthsTimestamp, threeMonths } from '../dates';
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
+const { nowTimestamp, twoMonths, twoMonthsTimestamp, threeMonths } = require('../dates');
 
-export default [
+module.exports = [
   {
     mockDealId: 9,
     type: 'Loan',

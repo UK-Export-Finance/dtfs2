@@ -1,5 +1,5 @@
-import { BOND_TYPE } from '@ukef/dtfs2-common';
-import { componentRenderer } from '../../../componentRenderer';
+const { BOND_TYPE } = require('@ukef/dtfs2-common');
+const { componentRenderer } = require('../../../componentRenderer');
 
 const page = '../templates/case/parties/_macros/parties-bond-beneficiary-edit.njk';
 const render = componentRenderer(page);

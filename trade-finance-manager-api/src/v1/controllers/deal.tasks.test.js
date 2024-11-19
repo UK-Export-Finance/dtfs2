@@ -1,9 +1,8 @@
-import MOCK_DEAL_MIA from '../__mocks__/mock-deal-MIA-submitted';
-
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { shouldCreatePartiesTask, shouldCreateAgentCheckTask, listAdditionalTasks, createDealTasks } = require('./deal.tasks');
 const externalApis = require('../api');
 const CONSTANTS = require('../../constants');
+const MOCK_DEAL_MIA = require('../__mocks__/mock-deal-MIA-submitted');
 const { createTasks } = require('../helpers/create-tasks');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const { MOCK_PORTAL_USERS } = require('../__mocks__/mock-portal-users');

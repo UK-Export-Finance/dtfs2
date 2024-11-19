@@ -1,4 +1,4 @@
-import { BOND_TYPE } from '@ukef/dtfs2-common';
+const { BOND_TYPE } = require('@ukef/dtfs2-common');
 
 const MOCK_FACILITIES = [
   {
@@ -66,4 +66,4 @@ const MOCK_FACILITIES = [
   },
 ];
 
-export default MOCK_FACILITIES;
+module.exports = MOCK_FACILITIES;

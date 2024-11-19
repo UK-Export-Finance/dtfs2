@@ -1,9 +1,8 @@
-import MOCK_BSS_DEAL from '../../__mocks__/mock-deal';
-
 const { generateMiaConfirmationEmailVars, commonEmailVars } = require('./generate-email-variables');
 const mapSubmittedDeal = require('../../mappings/map-submitted-deal');
 const bssEmailVariables = require('./bss-email-variables');
 const CONSTANTS = require('../../../constants');
+const MOCK_BSS_DEAL = require('../../__mocks__/mock-deal');
 const MOCK_GEF_DEAL = require('../../__mocks__/mock-gef-deal');
 
 describe('generate AIN/MIN confirmation email variables', () => {

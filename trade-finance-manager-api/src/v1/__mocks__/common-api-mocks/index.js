@@ -1,3 +1,10 @@
+const { mockFindOneTeam } = require('./find-one-team');
+const { mockFindUserById } = require('./find-user-by-id');
+const { mockFindOneDeal } = require('./find-one-deal');
+const { mockFindOneDealFailure } = require('./find-one-deal-failure');
+const { mockUpdateDeal } = require('./update-deal');
+const { mockQueryDeals } = require('./query-deals');
+
 /*
  * This file contains common mocks for the api (api.js).
  *
@@ -5,9 +12,11 @@
  * or a deal not found. We should look to replace common mocks in ../api.js with jest.fn() and add implementation here.
  */
 
-export * from './find-one-team';
-export * from './find-user-by-id';
-export * from './find-one-deal';
-export * from './find-one-deal-failure';
-export * from './update-deal';
-export * from './query-deals';
+module.exports = {
+  mockFindOneDeal,
+  mockFindOneDealFailure,
+  mockUpdateDeal,
+  mockFindUserById,
+  mockFindOneTeam,
+  mockQueryDeals,
+};

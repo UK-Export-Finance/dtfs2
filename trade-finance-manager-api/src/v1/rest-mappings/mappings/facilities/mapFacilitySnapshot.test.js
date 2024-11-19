@@ -1,5 +1,3 @@
-import MOCK_DEAL from '../../../__mocks__/mock-deal';
-
 const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const mapFacilitySnapshot = require('./mapFacilitySnapshot');
 const { formattedNumber } = require('../../../../utils/number');
@@ -14,6 +12,7 @@ const mapFeeFrequency = require('./mapFeeFrequency');
 const mapDates = require('./mapDates');
 const { mapBssEwcsFacilityStage } = require('./mapFacilityStage');
 const { mapBssEwcsFacilityType } = require('./mapFacilityType');
+const MOCK_DEAL = require('../../../__mocks__/mock-deal');
 
 describe('mapFacility', () => {
   const mockFacilityTfm = {

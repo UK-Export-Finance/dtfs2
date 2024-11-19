@@ -1,6 +1,6 @@
-import { BOND_TYPE, CURRENCY } from '@ukef/dtfs2-common';
-import { MOCK_PORTAL_USERS } from './mock-portal-users';
-import { MOCK_FACILITIES } from './mock-facilities';
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
+const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
+const { MOCK_FACILITIES } = require('./mock-facilities');
 
 const MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
   _id: 'MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',

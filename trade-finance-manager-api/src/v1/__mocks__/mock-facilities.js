@@ -1,6 +1,6 @@
-import { BOND_TYPE, CURRENCY } from '@ukef/dtfs2-common';
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 
-export const MOCK_FACILITIES = [
+const MOCK_FACILITIES = [
   {
     _id: '61f7a4edcf809301e78fbe53',
     dealId: 'AIN_DEAL',
@@ -242,3 +242,5 @@ export const MOCK_FACILITIES = [
     hasBeenIssuedAndAcknowledged: true,
   },
 ];
+
+module.exports = { MOCK_FACILITIES };

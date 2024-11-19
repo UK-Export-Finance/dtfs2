@@ -1,5 +1,5 @@
-import { BOND_TYPE, CURRENCY } from '@ukef/dtfs2-common';
-import { MOCK_PORTAL_USERS } from './mock-portal-users';
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
+const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
 
 const MOCK_DEAL = {
   _id: 'MOCK_MIA_SECOND_SUBMIT',
@@ -249,4 +249,4 @@ const MOCK_DEAL = {
   },
 };
 
-export default MOCK_DEAL;
+module.exports = MOCK_DEAL;

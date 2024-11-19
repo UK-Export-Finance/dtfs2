@@ -3,7 +3,7 @@ import { mockFindOneDeal } from '../../../src/v1/__mocks__/common-api-mocks';
 
 const { findOneTfmDeal, findOnePortalDeal } = require('../../../src/v1/controllers/deal.controller');
 const mapDeal = require('../../../src/v1/mappings/map-deal');
-const api = require('../../../src/v1/api').default;
+const api = require('../../../src/v1/api');
 
 describe('deal controller', () => {
   beforeEach(() => {

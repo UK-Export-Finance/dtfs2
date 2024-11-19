@@ -1,6 +1,6 @@
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const mapDeal = require('../mappings/map-deal');
-const api = require('../api').default;
+const api = require('../api');
 const CONSTANTS = require('../../constants');
 const assignGroupTasksToOneUser = require('../tasks/assign-group-tasks-to-one-user');
 const dealReducer = require('../rest-mappings/deal');

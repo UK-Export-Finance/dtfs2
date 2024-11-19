@@ -1,8 +1,8 @@
-import { BOND_TYPE, CURRENCY } from '@ukef/dtfs2-common';
-import mapFacilities from './mapFacilities';
-import mapFacilitySnapshot from './mapFacilitySnapshot';
-import mapFacilityTfm from './mapFacilityTfm';
-import MOCK_DEAL from '../../../__mocks__/mock-deal';
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
+const mapFacilities = require('./mapFacilities');
+const mapFacilitySnapshot = require('./mapFacilitySnapshot');
+const mapFacilityTfm = require('./mapFacilityTfm');
+const MOCK_DEAL = require('../../../__mocks__/mock-deal');
 
 describe('mapFacilities', () => {
   const mockTfmFacility = {

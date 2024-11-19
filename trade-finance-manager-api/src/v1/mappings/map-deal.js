@@ -1,6 +1,6 @@
 const CONSTANTS = require('../../constants');
 const mapEligibilityCriteriaContentStrings = require('./map-eligibility-criteria-content-strings');
-const api = require('../api').default;
+const api = require('../api');
 
 /*
  * 1) Get facilities associated with a deal

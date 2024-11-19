@@ -1,6 +1,5 @@
-import { CURRENCY } from '@ukef/dtfs2-common';
-import MOCK_FACILITIES_USD_CURRENCY from './mock-facilities-USD-currency';
-
+const { CURRENCY } = require('@ukef/dtfs2-common');
+const MOCK_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
 const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
 
 const MOCK_DEAL = {
@@ -184,4 +183,4 @@ const MOCK_DEAL = {
   },
 };
 
-export default MOCK_DEAL;
+module.exports = MOCK_DEAL;

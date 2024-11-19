@@ -1,6 +1,6 @@
-import { BOND_TYPE, CURRENCY } from '@ukef/dtfs2-common';
-import { MOCK_FACILITIES } from './mock-facilities';
-import { MOCK_PORTAL_USERS } from './mock-portal-users';
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
+const { MOCK_FACILITIES } = require('./mock-facilities');
+const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
 
 const MOCK_DEAL_NO_COMPANIES_HOUSE = {
   _id: 'NO_COMPANIES_HOUSE',
@@ -248,4 +248,4 @@ const MOCK_DEAL_NO_COMPANIES_HOUSE = {
   },
 };
 
-export default MOCK_DEAL_NO_COMPANIES_HOUSE;
+module.exports = MOCK_DEAL_NO_COMPANIES_HOUSE;
