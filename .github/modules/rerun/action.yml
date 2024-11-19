@@ -41,9 +41,9 @@ runs:
             exit 1
           fi
 
-          bash -c "eval $env"
+          eval "$env"
+          ${{ inputs.command }}
           
-          bash -c "${{ inputs.command }}"
           status=$?
 
           # Exit with success
