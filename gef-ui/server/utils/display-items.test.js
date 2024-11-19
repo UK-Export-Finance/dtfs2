@@ -1,4 +1,4 @@
-import { FACILITY_STATUS } from '@ukef/dtfs2-common';
+import { FACILITY_STAGE } from '@ukef/dtfs2-common';
 import { facilityItems } from './display-items';
 import { MOCK_FACILITY as MOCK_FACILITIES } from './mocks/mock-facilities';
 import { STAGE } from '../constants';
@@ -166,17 +166,17 @@ describe('facilityItems', () => {
     });
   });
 
-  describe(`when the facility has status ${FACILITY_STATUS.RISK_EXPIRED}`, () => {
-    it(`should show the stage as ${FACILITY_STATUS.RISK_EXPIRED}`, () => {
+  describe(`when the facility has stage ${FACILITY_STAGE.RISK_EXPIRED}`, () => {
+    it(`should show the stage as ${FACILITY_STAGE.RISK_EXPIRED}`, () => {
       // Arrange
-      const status = FACILITY_STATUS.RISK_EXPIRED;
-      const facility = { ...MOCK_FACILITY_ONE, status };
+      const facilityStage = FACILITY_STAGE.RISK_EXPIRED;
+      const facility = { ...MOCK_FACILITY_ONE, facilityStage };
 
       // Act
       const result = facilityItems('testUrl', facility, 1);
 
       // Assert
-      expect(result.find((item) => item.label === 'Stage').method(facility.hasBeenIssued)).toEqual(status);
+      expect(result.find((item) => item.label === 'Stage').method(facility.hasBeenIssued)).toEqual(facilityStage);
     });
   });
 
