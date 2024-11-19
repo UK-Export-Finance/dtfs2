@@ -1,7 +1,7 @@
-import { FACILITY_TYPE } from '@ukef/dtfs2-common';
-import { typeFilters, hasBeenIssuedFilters, facilitiesTemplateFilters, createdByYouFilter } from './template-filters';
-import { FIELD_NAMES, FACILITY_HAS_BEEN_ISSUED } from '../../../constants';
-import CONTENT_STRINGS from '../../../content-strings';
+import { FACILITY_STATUS, FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { typeFilters, facilitiesTemplateFilters, createdByYouFilter, stageFilters } from './template-filters';
+import { FIELD_NAMES } from '../../../constants';
+import { DASHBOARD_FILTERS } from '../../../content-strings';
 import { generateFiltersArray, submissionTypeFilters } from '../filters/generate-template-filters';
 
 describe('controllers/dashboard/facilities - template-filters', () => {
@@ -26,22 +26,26 @@ describe('controllers/dashboard/facilities - template-filters', () => {
     });
   });
 
-  describe('hasBeenIssuedFilters', () => {
+  describe('stageFilters', () => {
     it('should return generateFiltersArray with all possible `facility stage` field inputs', () => {
       const mockSubmittedFilters = {};
 
-      const result = hasBeenIssuedFilters(mockSubmittedFilters);
+      const result = stageFilters(mockSubmittedFilters);
 
       const expectedFieldName = FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED;
 
       const expectedFieldInputs = [
         {
-          text: CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.ISSUED,
-          value: FACILITY_HAS_BEEN_ISSUED.ISSUED,
+          text: DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.ISSUED,
+          value: DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.ISSUED,
         },
         {
-          text: CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.UNISSUED,
-          value: FACILITY_HAS_BEEN_ISSUED.UNISSUED,
+          text: DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.UNISSUED,
+          value: DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.UNISSUED,
+        },
+        {
+          text: FACILITY_STATUS.RISK_EXPIRED,
+          value: FACILITY_STATUS.RISK_EXPIRED,
         },
       ];
 
@@ -59,7 +63,7 @@ describe('controllers/dashboard/facilities - template-filters', () => {
         createdBy: createdByYouFilter({}),
         type: typeFilters({}),
         'deal.submissionType': submissionTypeFilters(`deal.${FIELD_NAMES.DEAL.SUBMISSION_TYPE}`, {}),
-        hasBeenIssued: hasBeenIssuedFilters({}),
+        stage: stageFilters({}),
       };
 
       expect(result).toEqual(expected);

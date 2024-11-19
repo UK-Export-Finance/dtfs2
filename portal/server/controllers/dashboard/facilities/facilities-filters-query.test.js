@@ -54,7 +54,7 @@ describe('controllers/dashboard/facilities - filters query', () => {
           OR: [{ [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: mockFilters[0].type[0] }, { [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: mockFilters[0].type[1] }],
         },
         {
-          OR: [{ [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: mockFilters[1].hasBeenIssued[0] }],
+          OR: [{ [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: true }],
         },
         {
           OR: [...keywordQuery(mockKeyword)],
@@ -101,7 +101,7 @@ describe('controllers/dashboard/facilities - filters query', () => {
           OR: [{ [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: mockFilters[0].type[0] }, { [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: mockFilters[0].type[1] }],
         },
         {
-          OR: [{ [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: mockFilters[1].hasBeenIssued[0] }],
+          OR: [{ [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: true }],
         },
         {
           OR: [...keywordQuery(mockKeyword)],
