@@ -12,7 +12,7 @@ const pimUser = { teams: [TEAM_IDS.PIM] } as TfmSessionUser;
 const nonPimUser = { teams: [TEAM_IDS.UNDERWRITERS] } as TfmSessionUser;
 
 const { AIN, MIN, MIA } = DEAL_SUBMISSION_TYPE;
-const { COMPLETED, SCHEDULED, DRAFT } = TFM_DEAL_CANCELLATION_STATUS;
+const { COMPLETED, PENDING, DRAFT } = TFM_DEAL_CANCELLATION_STATUS;
 
 describe('isDealCancellationEnabledForUser', () => {
   describe('when `FF_TFM_FACILITY_END_DATE_ENABLED` is set to false', () => {
@@ -75,8 +75,8 @@ describe('canDealStillBeCancelled', () => {
     expect(result).toEqual(false);
   });
 
-  it(`returns false when the cancellation status is ${SCHEDULED}`, () => {
-    const result = canDealBeCancelled(SCHEDULED);
+  it(`returns false when the cancellation status is ${PENDING}`, () => {
+    const result = canDealBeCancelled(PENDING);
 
     expect(result).toEqual(false);
   });
@@ -101,8 +101,8 @@ describe('isDealCancellationInDraft', () => {
     expect(result).toEqual(false);
   });
 
-  it(`returns false when the cancellation status is ${SCHEDULED}`, () => {
-    const result = isDealCancellationInDraft(SCHEDULED);
+  it(`returns false when the cancellation status is ${PENDING}`, () => {
+    const result = isDealCancellationInDraft(PENDING);
 
     expect(result).toEqual(false);
   });

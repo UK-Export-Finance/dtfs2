@@ -12,31 +12,31 @@ const { DEAL_CANCELLATION_SCHEDULE } = process.env;
  */
 const cancelDeals = async (deals: TfmDealWithCancellation[]) => {
   await Promise.all(
-    deals.map(async (deal) => DealCancellationService.processScheduledCancellation(deal._id, deal.tfm.cancellation, generateSystemAuditDetails())),
+    deals.map(async (deal) => DealCancellationService.processPendingCancellation(deal._id, deal.tfm.cancellation, generateSystemAuditDetails())),
   );
 };
 
 /**
- * Gets deal ids with a scheduled cancellation & effective date today or in the past
+ * Gets deal ids with a pending cancellation & effective date today or in the past
  * @returns The deal ids to cancel
  */
-const getDealsWithPastCancellationsScheduled = async (): Promise<TfmDealWithCancellation[]> => {
-  const dealsScheduledForCancellation = await TfmDealCancellationRepo.findScheduledDealCancellations();
+const getDealsWithPastPendingCancellations = async (): Promise<TfmDealWithCancellation[]> => {
+  const dealsPendingCancellation = await TfmDealCancellationRepo.findPendingDealCancellations();
 
-  return dealsScheduledForCancellation.filter((deals) => deals.tfm.cancellation.effectiveFrom < endOfDay(new Date()).valueOf());
+  return dealsPendingCancellation.filter((deals) => deals.tfm.cancellation.effectiveFrom < endOfDay(new Date()).valueOf());
 };
 
 /**
- * Cancels deals scheduled to be cancelled in the past
+ * Cancels deals pending cancellation, with effective from date in the past
  */
-const cancelScheduledDeals = async (): Promise<void> => {
-  const deals = await getDealsWithPastCancellationsScheduled();
+const cancelPendingDeals = async (): Promise<void> => {
+  const deals = await getDealsWithPastPendingCancellations();
 
   await cancelDeals(deals);
 };
 
 export const cancelDealJob: CronSchedulerJob = {
   cronExpression: asString(DEAL_CANCELLATION_SCHEDULE, 'DEAL_CANCELLATION_SCHEDULE'),
-  description: 'Cancel deals in the database that have been scheduled & the effective from date has passed',
-  task: cancelScheduledDeals,
+  description: 'Cancel deals in the database that are pending cancellation & the effective from date has passed',
+  task: cancelPendingDeals,
 };
