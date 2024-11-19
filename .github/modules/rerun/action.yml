@@ -27,6 +27,12 @@ runs:
   using: 'composite'
   steps:
     - run: |
+        # Exit immediately upon failure
+        set -e
+
+        # Specify environment variables
+        eval "$env"
+
         # Set the arguments
         maximum=${{ inputs.retries }}
         run=1
@@ -35,15 +41,13 @@ runs:
         # Change to working directory
         cd ${{ inputs.working-directory }}
 
-        # Specify environment variables
-        eval "$env"
-
-        # Exit immediately upon failure
-        set -e
-
         # Retry loop execution
         while [ $run -le $maximum ]; do
+          echo "**************$run/$maximum"
+
           bash -c "${{ inputs.command }}"
+
+          echo "Status=$?"
 
           if [ $? -eq 0 ]; then
             exit 0

@@ -541,7 +541,7 @@ jobs:
       - name: Execute
         uses: ./.github/modules/rerun
         with:
-          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./portal --record false --spec "./portal/cypress/e2e/journeys/${{ matrix.spec }}"
+          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./portal --record false --spec './portal/cypress/e2e/journeys/${{ matrix.spec }}'
           working-directory: ./e2e-tests
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -633,7 +633,7 @@ jobs:
       - name: Execute
         uses: ./.github/modules/rerun
         with:
-          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./gef --record false --spec "./gef/cypress/e2e/${{ matrix.spec }}"
+          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./gef --record false --spec './gef/cypress/e2e/${{ matrix.spec }}'
           working-directory: ./e2e-tests
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -746,7 +746,7 @@ jobs:
       - name: Execute
         uses: ./.github/modules/rerun
         with:
-          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./tfm --record false --spec "./tfm/cypress/e2e/journeys/${{ matrix.spec }}"
+          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./tfm --record false --spec './tfm/cypress/e2e/journeys/${{ matrix.spec }}'
           working-directory: ./e2e-tests
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -841,7 +841,7 @@ jobs:
       - name: Execute
         uses: ./.github/modules/rerun
         with:
-          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ukef --record false --spec "./ukef/cypress/e2e/journeys/${{ matrix.spec }}"
+          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ukef --record false --spec './ukef/cypress/e2e/journeys/${{ matrix.spec }}'
           working-directory: ./e2e-tests
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -989,7 +989,7 @@ jobs:
       - name: Execute
         uses: ./.github/modules/rerun
         with:
-          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./${{ steps.project.outputs.directory }} --record false --spec "${{ matrix.spec }}"
+          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./${{ steps.project.outputs.directory }} --record false --spec '${{ matrix.spec }}'
           working-directory: ./e2e-tests
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
