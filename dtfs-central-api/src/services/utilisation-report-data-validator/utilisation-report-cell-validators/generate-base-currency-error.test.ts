@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { generateBaseCurrencyError } from './generate-base-currency-error';
 
 describe('generateBaseCurrencyError', () => {
@@ -42,7 +43,7 @@ describe('generateBaseCurrencyError', () => {
 
   it('returns null if the value is a valid currency', () => {
     const validBaseCurrency = {
-      value: 'GBP',
+      value: CURRENCY.GBP,
       column: 'C',
       row: 1,
     };

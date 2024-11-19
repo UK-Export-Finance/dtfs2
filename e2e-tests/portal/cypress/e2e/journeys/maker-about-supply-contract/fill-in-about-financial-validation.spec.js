@@ -1,3 +1,4 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const { contractAboutBuyer, contractAboutFinancial, contractAboutPreview } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
@@ -34,7 +35,7 @@ context('about-buyer', () => {
 
     // fill in value + pick currency=GBP to clear validation warnings
     cy.keyboardInput(contractAboutFinancial.supplyContractValue(), '123.45');
-    contractAboutFinancial.supplyContractCurrency().select('GBP');
+    contractAboutFinancial.supplyContractCurrency().select(CURRENCY.GBP);
     contractAboutFinancial.preview().click();
 
     // check the errors have been cleared..

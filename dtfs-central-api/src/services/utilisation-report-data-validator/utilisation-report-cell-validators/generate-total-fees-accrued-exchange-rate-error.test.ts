@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { generateTotalFeesAccruedExchangeRateError } from './generate-total-fees-accrued-exchange-rate-error';
 import { CSV } from '../../../constants/csv';
 
@@ -99,12 +100,12 @@ describe('generateTotalFeesAccruedExchangeRateError', () => {
         row: 1,
       },
       'accrual currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'D',
         row: 1,
       },
       'base currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'E',
         row: 1,
       },
@@ -128,12 +129,12 @@ describe('generateTotalFeesAccruedExchangeRateError', () => {
         row: 1,
       },
       'accrual currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'D',
         row: 1,
       },
       'base currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'E',
         row: 1,
       },
@@ -157,12 +158,12 @@ describe('generateTotalFeesAccruedExchangeRateError', () => {
         row: 1,
       },
       'accrual currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'D',
         row: 1,
       },
       'base currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'E',
         row: 1,
       },
@@ -194,7 +195,7 @@ describe('generateTotalFeesAccruedExchangeRateError', () => {
         row: 1,
       },
       'accrual currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'D',
         row: 1,
       },
@@ -223,7 +224,7 @@ describe('generateTotalFeesAccruedExchangeRateError', () => {
         row: 1,
       },
       'accrual currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'D',
         row: 1,
       },
@@ -260,7 +261,7 @@ describe('generateTotalFeesAccruedExchangeRateError', () => {
         row: 1,
       },
       'accrual currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'D',
         row: 1,
       },
@@ -297,7 +298,7 @@ describe('generateTotalFeesAccruedExchangeRateError', () => {
         row: 1,
       },
       'accrual currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'D',
         row: 1,
       },

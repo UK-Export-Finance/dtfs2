@@ -10,5 +10,4 @@ export { convertTimestampToDate } from './convert-timestamp-to-date';
 export { getPreviousReportPeriod } from './get-previous-report-period';
 export { calculateUkefShareOfUtilisation } from './calculate-ukef-share-of-utilisation';
 export { getKeyingSheetCalculationFacilityValues } from './get-keying-sheet-calculation-facility-values';
-export { getLatestTfmFacilityValues } from './get-latest-tfm-facility-values';
 export * from './amendments';

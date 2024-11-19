@@ -1,6 +1,7 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
 import {
+  CURRENCY,
   PaymentEntityMockBuilder,
   FeeRecordEntityMockBuilder,
   UtilisationReportEntityMockBuilder,
@@ -33,17 +34,21 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
 
     const paymentIds = [3, 4];
-    const payments = paymentIds.map((id) => PaymentEntityMockBuilder.forCurrency('GBP').withId(id).withFeeRecords([]).build());
+    const payments = paymentIds.map((id) => PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(id).withFeeRecords([]).build());
 
     const aFeeRecordToAdd = FeeRecordEntityMockBuilder.forReport(utilisationReport)
       .withId(1)
-      .withPaymentCurrency('GBP')
+      .withPaymentCurrency(CURRENCY.GBP)
       .withStatus(FEE_RECORD_STATUS.TO_DO)
       .build();
-    const aFeeRecordWithPayments = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withPaymentCurrency('GBP').withPayments(payments).build();
+    const aFeeRecordWithPayments = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+      .withId(2)
+      .withPaymentCurrency(CURRENCY.GBP)
+      .withPayments(payments)
+      .build();
 
     const paymentsWithFeeRecords = paymentIds.map((id) =>
-      PaymentEntityMockBuilder.forCurrency('GBP').withId(id).withFeeRecords([aFeeRecordWithPayments]).build(),
+      PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(id).withFeeRecords([aFeeRecordWithPayments]).build(),
     );
 
     const paymentRepoFindSpy = jest.spyOn(PaymentRepo, 'findPaymentsInGroupByPaymentIdAndReportIdWithFeeRecords');
@@ -171,7 +176,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
 
       const feeRecordInDifferentCurrencyToExistingPayment = FeeRecordEntityMockBuilder.forReport(utilisationReport)
         .withId(1)
-        .withPaymentCurrency('GBP')
+        .withPaymentCurrency(CURRENCY.GBP)
         .withStatus(FEE_RECORD_STATUS.TO_DO)
         .build();
 

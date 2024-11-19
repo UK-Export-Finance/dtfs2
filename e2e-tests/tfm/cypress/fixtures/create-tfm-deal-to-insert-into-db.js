@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const { CURRENCY } = require('@ukef/dtfs2-common');
 
 const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => ({
   _id: new ObjectId(dealObjectId),
@@ -38,7 +39,7 @@ const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => (
           dayCountBasis: '365',
           currency: {
             text: 'GBP - UK Sterling',
-            id: 'GBP',
+            id: CURRENCY.GBP,
           },
           'coverEndDate-day': '06',
           'coverEndDate-month': '03',
@@ -160,7 +161,7 @@ const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => (
         dayCountBasis: '365',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
         'coverEndDate-day': '06',
         'coverEndDate-month': '03',
@@ -218,7 +219,7 @@ const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => (
         dayCountBasis: '365',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
         'coverEndDate-day': '06',
         'coverEndDate-month': '03',
@@ -305,7 +306,7 @@ const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => (
       'supplyContractConversionDate-year': '',
       supplyContractConversionRateToGBP: '',
       supplyContractCurrency: {
-        id: 'GBP',
+        id: CURRENCY.GBP,
         text: 'GBP - UK Sterling',
       },
       supplyContractValue: '1234.00',

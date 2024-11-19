@@ -51,7 +51,7 @@ describe('mapTotals', () => {
       facilitySnapshot: {
         type: 'Loan',
         value: '1234.56',
-        currency: { id: 'GBP' },
+        currency: { id: CURRENCY.GBP },
         coverPercentage: 25,
       },
       tfm: {
@@ -67,7 +67,7 @@ describe('mapTotals', () => {
       facilitySnapshot: {
         type: 'Cash',
         value: '1234.56',
-        currency: { id: 'GBP' },
+        currency: { id: CURRENCY.GBP },
         coverPercentage: 25,
       },
       tfm: {},
@@ -78,7 +78,7 @@ describe('mapTotals', () => {
       facilitySnapshot: {
         type: 'Contingent',
         value: '1234.56',
-        currency: { id: 'GBP' },
+        currency: { id: CURRENCY.GBP },
         coverPercentage: 25,
       },
       tfm: {},

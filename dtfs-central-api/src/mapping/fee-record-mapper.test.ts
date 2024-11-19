@@ -179,7 +179,7 @@ describe('fee record mapper', () => {
 
     describe('when the fee record entity payment currency does not match the fees paid currency', () => {
       const feesPaidCurrency: Currency = 'EUR';
-      const paymentCurrency: Currency = 'GBP';
+      const paymentCurrency: Currency = CURRENCY.GBP;
 
       const paymentExchangeRate = 1.1;
 

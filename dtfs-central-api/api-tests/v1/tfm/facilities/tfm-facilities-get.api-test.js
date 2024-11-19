@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, FACILITY_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
@@ -18,7 +18,7 @@ const newFacility = {
   ukefFacilityId: '223344',
   value: '2000',
   coverEndDate: '2021-08-12T00:00:00.000Z',
-  currency: { id: 'GBP' },
+  currency: { id: CURRENCY.GBP },
 };
 describe('/v1/tfm/facilities', () => {
   beforeAll(async () => {

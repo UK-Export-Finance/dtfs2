@@ -1,3 +1,4 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
 const { yesterday, oneMonth, today } = require('../../../../../../e2e-fixtures/dateConstants');
 
@@ -40,7 +41,7 @@ const deal = {
       currencySameAsSupplyContractCurrency: 'false',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       conversionRate: '100',
       'conversionRateDate-day': yesterday.dayLong,
@@ -103,7 +104,7 @@ const deal = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
     {

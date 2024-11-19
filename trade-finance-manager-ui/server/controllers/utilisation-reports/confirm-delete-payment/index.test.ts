@@ -1,4 +1,5 @@
 import httpMocks from 'node-mocks-http';
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { getConfirmDeletePayment, postConfirmDeletePayment } from '.';
 import api from '../../../api';
 import { ConfirmDeletePaymentViewModel } from '../../../types/view-models';
@@ -69,7 +70,7 @@ describe('controllers/utilisation-reports/confirm-delete-payment', () => {
         ...aPaymentDetailsWithoutFeeRecordsResponseBody(),
         payment: {
           ...aPayment(),
-          currency: 'GBP',
+          currency: CURRENCY.GBP,
           amount: 100,
         },
       };

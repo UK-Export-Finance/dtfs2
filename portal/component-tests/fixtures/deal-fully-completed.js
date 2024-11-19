@@ -1,4 +1,5 @@
 const { subDays, addMonths, format } = require('date-fns');
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../server/constants');
 
 const now = new Date();
@@ -48,7 +49,7 @@ const deal = {
         currencySameAsSupplyContractCurrency: 'true',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
         conversionRate: '100',
         'conversionRateDate-day': `${format(yesterday, 'dd')}`,
@@ -82,7 +83,7 @@ const deal = {
         currencySameAsSupplyContractCurrency: 'true',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
         conversionRate: '100',
         'conversionRateDate-day': `${format(yesterday, 'dd')}`,
