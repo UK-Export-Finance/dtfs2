@@ -230,7 +230,8 @@ jobs:
             sleep 100s
             npm run load
           working-directory: ./utils
-          env: MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
@@ -243,7 +244,8 @@ jobs:
         uses: ./.github/modules/rerun
         with:
           command: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
-          env: MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Stop
@@ -534,7 +536,8 @@ jobs:
             sleep 100s
             npm run load
           working-directory: ./utils
-          env: MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
@@ -628,7 +631,8 @@ jobs:
             sleep 100s
             npm run load
           working-directory: ./utils
-          env: MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
@@ -741,7 +745,8 @@ jobs:
             sleep 100s
             npm run load
           working-directory: ./utils
-          env: MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
@@ -836,7 +841,8 @@ jobs:
             sleep 100s
             npm run load
           working-directory: ./utils
-          env: MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
@@ -977,7 +983,8 @@ jobs:
             sleep 100s
             npm run load
           working-directory: ./utils
-          env: MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
