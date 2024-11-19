@@ -1,14 +1,16 @@
-import { FeeRecordEntityMockBuilder, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { mapFeeRecordEntityToResponse } from './helpers';
 import { getBankNameById } from '../../../../repositories/banks-repo';
+import { aReportPeriod } from '../../../../../test-helpers';
 
 jest.mock('../../../../repositories/banks-repo');
 
 describe('get-fee-record.controller helpers', () => {
   describe('mapFeeRecordEntityToResponse', () => {
     const bankId = '123';
+    const reportPeriod = aReportPeriod();
 
-    const utilisationReport = new UtilisationReportEntityMockBuilder().withBankId(bankId).build();
+    const utilisationReport = new UtilisationReportEntityMockBuilder().withBankId(bankId).withReportPeriod(reportPeriod).build();
 
     it('returns an object containing the bank', async () => {
       // Arrange
@@ -28,12 +30,7 @@ describe('get-fee-record.controller helpers', () => {
 
     it('returns an object containing the report period', async () => {
       // Arrange
-      const reportPeriod: ReportPeriod = {
-        start: { month: 1, year: 2024 },
-        end: { month: 1, year: 2024 },
-      };
       const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(utilisationReport).build();
-      feeRecordEntity.report.reportPeriod = reportPeriod;
 
       // Act
       const feeRecord = await mapFeeRecordEntityToResponse(feeRecordEntity);

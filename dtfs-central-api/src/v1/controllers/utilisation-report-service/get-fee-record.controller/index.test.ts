@@ -5,6 +5,7 @@ import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '
 import { getFeeRecord, GetFeeRecordResponseBody } from '.';
 import { mapFeeRecordEntityToResponse } from './helpers';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
+import { aReportPeriod, aSessionBank } from '../../../../../test-helpers';
 
 console.error = jest.fn();
 
@@ -17,20 +18,8 @@ describe('get-fee-record.controller', () => {
 
     const aFeeRecordResponseBody = (): GetFeeRecordResponseBody => ({
       id: 123,
-      bank: {
-        id: '456',
-        name: 'A bank',
-      },
-      reportPeriod: {
-        start: {
-          month: 1,
-          year: 2024,
-        },
-        end: {
-          month: 1,
-          year: 2024,
-        },
-      },
+      bank: aSessionBank(),
+      reportPeriod: aReportPeriod(),
       facilityId: '12345678',
       exporter: 'An exporter',
     });

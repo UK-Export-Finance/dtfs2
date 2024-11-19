@@ -11,3 +11,4 @@ export * from './tfm-facility-amendment';
 export * from './tfm-facility';
 export * from './payment-matching-tolerances';
 export * from './fee-record-payment-entity-group';
+export * from './session-bank';
