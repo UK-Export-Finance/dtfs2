@@ -78,7 +78,7 @@ describe('getScheduledCancellationBannerMessage', () => {
       expect(response).toEqual(null);
     });
 
-    it('returns correct message if deal is scheduled for cancellation', async () => {
+    it('returns correct message if deal is pending cancellation', async () => {
       // Arrange
       const effectiveFromDate = new Date();
       getDealCancellationMock.mockResolvedValueOnce({

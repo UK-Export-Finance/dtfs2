@@ -4,7 +4,7 @@ import api from '../../api';
 import { isDealCancellationEnabled } from './deal-cancellation-enabled.helper';
 
 /**
- * Returns deal cancellation message if the deal is scheduled for cancellation
+ * Returns deal cancellation message if the deal is pending cancellation
  * @param dealSnapshot - the deal
  * @param userToken - the user token
  * @returns the success message to be shown or null
@@ -21,9 +21,9 @@ export const getScheduledCancellationBannerMessage = async ({ dealSnapshot, user
 
   const cancellation = (await api.getDealCancellation(dealId.toString(), userToken)) as TfmDealCancellationWithStatus;
 
-  const dealIsScheduledToBeCancelled = cancellation.status === TFM_DEAL_CANCELLATION_STATUS.PENDING;
+  const dealIsPendingCancellation = cancellation.status === TFM_DEAL_CANCELLATION_STATUS.PENDING;
 
-  if (!dealIsScheduledToBeCancelled) {
+  if (!dealIsPendingCancellation) {
     return null;
   }
 
