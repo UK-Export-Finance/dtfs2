@@ -15,8 +15,9 @@ import { NODE_TASKS } from '../../../../../../e2e-fixtures';
 import relative from '../../../relativeURL';
 
 /**
- * This skip should be removed when the fixed fee adjustments are turned back on
- * and can take non-zero values.
+ * This test is skipped because fixed fee adjustments are temporarily turned off.
+ *
+ * TODO FN-3639: Remove this skip and update with new calculation requirements.
  */
 context.skip('Fixed fee calculation uses effective amendment to cover end date at report period end', () => {
   const bankId = '961';

@@ -14,6 +14,8 @@ export const getNumberOfDaysInCoverPeriod = (coverStartDate: Date, coverEndDate:
 /**
  * This is currently unused because fixed fee calculations are currently turned off.
  *
+ * TODO FN-3639: Remove this function if unused with new calculation requirements.
+ *
  * calculateFixedFee
  * Calculates the fixed fee for the utilisation report
  * gets the number of days in the cover period

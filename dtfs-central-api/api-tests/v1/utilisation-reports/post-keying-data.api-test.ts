@@ -372,8 +372,9 @@ describe(`POST ${BASE_URL}`, () => {
   });
 
   /**
-   * This skip should be removed when the fixed fee adjustments are turned back on
-   * and can take non-zero values.
+   * This test is skipped because fixed fee adjustments are temporarily turned off.
+   *
+   * TODO FN-3639: Remove this skip and update with new calculation requirements.
    */
   it.skip('calculates the new fixed fee using the effective amendment at the report period end', async () => {
     // Arrange

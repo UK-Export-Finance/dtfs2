@@ -20,6 +20,8 @@ const getNumberOfDaysRemainingInCoverPeriod = (reportPeriodEnd: MonthAndYear, co
 /**
  * This is currently unused because fixed fee calculations are currently turned off.
  *
+ * TODO FN-3639: Remove this function if unused with new calculation requirements.
+ *
  * Calculates the fixed fee for the given parameters
  * @param param - The parameters to calculate the fixed fee with
  * @param param.utilisation - The facility utilisation

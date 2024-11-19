@@ -174,8 +174,7 @@ context('PDC_RECONCILE users can generate keying data', () => {
      * Fixed fee adjustments are currently turned off and so should always be
      * zero, which is displayed as a dash.
      *
-     * When fixed fee adjustments are turned back on and can take non-zero values
-     * this test should go back to checking for a calculated value.
+     * TODO FN-3639: update with new calculation requirements.
      */
     const expectedFixedFeeAdjustment = '-';
 

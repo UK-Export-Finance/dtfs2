@@ -140,8 +140,9 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
     });
 
     /**
-     * This skip should be removed and the mocks reinstated when the fixed fee adjustments
-     * are turned back on and can take non-zero values.
+     * This test is skipped because fixed fee adjustments are temporarily turned off.
+     *
+     * TODO FN-3639: Remove this skip and reenable mocks.
      */
     it.skip(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the fixed fee adjustment is greater than zero`, async () => {
       // Arrange
@@ -165,8 +166,9 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
     });
 
     /**
-     * This skip should be removed and the mocks reinstated when the fixed fee adjustments
-     * are turned back on and can take non-zero values.
+     * This test is skipped because fixed fee adjustments are temporarily turned off.
+     *
+     * TODO FN-3639: Remove this skip and reenable mocks.
      */
     it.skip(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the fixed fee adjustment is less than zero`, async () => {
       // Arrange
