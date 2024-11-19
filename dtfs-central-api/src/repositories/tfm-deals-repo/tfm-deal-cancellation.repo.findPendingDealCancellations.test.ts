@@ -12,7 +12,7 @@ describe('tfm-deals-cancellation-repo', () => {
     jest.resetAllMocks();
   });
 
-  describe('findScheduledDealCancellations', () => {
+  describe('findPendingDealCancellations', () => {
     const mockDeals = [{ _id: new ObjectId() }];
 
     beforeEach(() => {
@@ -27,7 +27,7 @@ describe('tfm-deals-cancellation-repo', () => {
 
     it('calls the DB with the correct collection name', async () => {
       // Act
-      await TfmDealCancellationRepo.findScheduledDealCancellations();
+      await TfmDealCancellationRepo.findPendingDealCancellations();
 
       // Assert
       expect(getCollectionMock).toHaveBeenCalledTimes(1);
@@ -36,7 +36,7 @@ describe('tfm-deals-cancellation-repo', () => {
 
     it('calls find with the expected filter', async () => {
       // Act
-      await TfmDealCancellationRepo.findScheduledDealCancellations();
+      await TfmDealCancellationRepo.findPendingDealCancellations();
 
       // Assert
       const expectedFilter = {
@@ -51,7 +51,7 @@ describe('tfm-deals-cancellation-repo', () => {
 
     it('returns found deals', async () => {
       // Act
-      const result = await TfmDealCancellationRepo.findScheduledDealCancellations();
+      const result = await TfmDealCancellationRepo.findPendingDealCancellations();
 
       // Assert
       expect(result).toEqual(mockDeals);

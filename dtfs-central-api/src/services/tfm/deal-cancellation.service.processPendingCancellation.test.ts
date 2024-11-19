@@ -74,7 +74,7 @@ describe('DealCancellationService', () => {
     jest.useRealTimers();
   });
 
-  describe('processScheduledCancellation', () => {
+  describe('processPendingCancellation', () => {
     beforeEach(() => {
       jest.clearAllMocks();
 
@@ -93,7 +93,7 @@ describe('DealCancellationService', () => {
       const cancellation = aDealCancellation();
 
       // Act
-      await DealCancellationService.processScheduledCancellation(dealId, cancellation, auditDetails);
+      await DealCancellationService.processPendingCancellation(dealId, cancellation, auditDetails);
 
       // Assert
       expect(submitDealCancellationMock).toHaveBeenCalledTimes(1);
@@ -105,7 +105,7 @@ describe('DealCancellationService', () => {
       const cancellation = aDealCancellation();
 
       // Act
-      const dealCancellationResponse = await DealCancellationService.processScheduledCancellation(dealId, cancellation, auditDetails);
+      const dealCancellationResponse = await DealCancellationService.processPendingCancellation(dealId, cancellation, auditDetails);
 
       // Assert
       expect(dealCancellationResponse).toEqual(DealCancellationService.getTfmDealCancellationResponse(mockRepositoryResponse));
@@ -116,7 +116,7 @@ describe('DealCancellationService', () => {
       const cancellation = aDealCancellation();
 
       // Act
-      await DealCancellationService.processScheduledCancellation(dealId, cancellation, auditDetails);
+      await DealCancellationService.processPendingCancellation(dealId, cancellation, auditDetails);
 
       // Assert
       expect(updatePortalDealStatusMock).toHaveBeenCalledTimes(1);
@@ -128,7 +128,7 @@ describe('DealCancellationService', () => {
       const cancellation = aDealCancellation();
 
       // Act
-      await DealCancellationService.processScheduledCancellation(dealId, cancellation, auditDetails);
+      await DealCancellationService.processPendingCancellation(dealId, cancellation, auditDetails);
 
       // Assert
       expect(updatePortalFacilityStatusMock).toHaveBeenCalledTimes(2);

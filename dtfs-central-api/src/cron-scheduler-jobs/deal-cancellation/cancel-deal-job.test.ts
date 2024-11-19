@@ -6,23 +6,23 @@ import { cancelDealJob } from './cancel-deal-job';
 
 const now = new Date();
 
-const processScheduledCancellationMock = jest.fn() as jest.Mock<Promise<TfmDealCancellationResponse>>;
-const findScheduledDealCancellationsMock = jest.fn() as jest.Mock<Promise<TfmDeal[]>>;
+const processPendingCancellationMock = jest.fn() as jest.Mock<Promise<TfmDealCancellationResponse>>;
+const findPendingDealCancellationsMock = jest.fn() as jest.Mock<Promise<TfmDeal[]>>;
 
 jest.mock('../../repositories/tfm-deals-repo', () => ({
   TfmDealCancellationRepo: {
-    findScheduledDealCancellations: () => findScheduledDealCancellationsMock(),
+    findPendingDealCancellations: () => findPendingDealCancellationsMock(),
   },
 }));
 
 jest.mock('../../services/tfm/deal-cancellation.service', () => ({
   DealCancellationService: {
-    processScheduledCancellation: (dealId: string, cancellation: TfmDealCancellation, auditDetails: AuditDetails) =>
-      processScheduledCancellationMock(dealId, cancellation, auditDetails),
+    processPendingCancellation: (dealId: string, cancellation: TfmDealCancellation, auditDetails: AuditDetails) =>
+      processPendingCancellationMock(dealId, cancellation, auditDetails),
   },
 }));
 
-const aDealWithScheduledCancellation = ({ effectiveFrom }: { effectiveFrom: number }) =>
+const aDealWithPendingCancellation = ({ effectiveFrom }: { effectiveFrom: number }) =>
   ({
     _id: new ObjectId(),
     tfm: {
@@ -36,13 +36,13 @@ const aDealWithScheduledCancellation = ({ effectiveFrom }: { effectiveFrom: numb
   }) as TfmDeal;
 
 describe('cancelDealJob', () => {
-  const dealWithCancellationInFuture = aDealWithScheduledCancellation({ effectiveFrom: add(now, { days: 1 }).valueOf() });
-  const dealWithCancellationToday = aDealWithScheduledCancellation({ effectiveFrom: now.valueOf() });
-  const dealWithCancellationInPast = aDealWithScheduledCancellation({ effectiveFrom: sub(now, { days: 1 }).valueOf() });
+  const dealWithCancellationInFuture = aDealWithPendingCancellation({ effectiveFrom: add(now, { days: 1 }).valueOf() });
+  const dealWithCancellationToday = aDealWithPendingCancellation({ effectiveFrom: now.valueOf() });
+  const dealWithCancellationInPast = aDealWithPendingCancellation({ effectiveFrom: sub(now, { days: 1 }).valueOf() });
 
   beforeEach(() => {
     jest.resetAllMocks();
-    findScheduledDealCancellationsMock.mockResolvedValueOnce([dealWithCancellationInFuture, dealWithCancellationToday, dealWithCancellationInPast]);
+    findPendingDealCancellationsMock.mockResolvedValueOnce([dealWithCancellationInFuture, dealWithCancellationToday, dealWithCancellationInPast]);
   });
 
   it('is scheduled to run', () => {
@@ -50,29 +50,29 @@ describe('cancelDealJob', () => {
   });
 
   it('is has correct description', () => {
-    expect(cancelDealJob.description).toEqual('Cancel deals in the database that have been scheduled & the effective from date has passed');
+    expect(cancelDealJob.description).toEqual('Cancel deals in the database that are pending cancellation & the effective from date has passed');
   });
 
-  it('it calls findScheduledDealCancellations', async () => {
+  it('it calls findPendingDealCancellations', async () => {
     // Act
     await cancelDealJob.task('manual');
 
     // Assert
-    expect(findScheduledDealCancellationsMock).toHaveBeenCalledTimes(1);
+    expect(findPendingDealCancellationsMock).toHaveBeenCalledTimes(1);
   });
 
-  it('it calls processScheduledCancellation with the correct arguments', async () => {
+  it('it calls processPendingCancellation with the correct arguments', async () => {
     // Act
     await cancelDealJob.task('manual');
 
     // Assert
-    expect(processScheduledCancellationMock).toHaveBeenCalledTimes(2);
-    expect(processScheduledCancellationMock).toHaveBeenCalledWith(
+    expect(processPendingCancellationMock).toHaveBeenCalledTimes(2);
+    expect(processPendingCancellationMock).toHaveBeenCalledWith(
       dealWithCancellationToday._id,
       dealWithCancellationToday.tfm.cancellation,
       generateSystemAuditDetails(),
     );
-    expect(processScheduledCancellationMock).toHaveBeenCalledWith(
+    expect(processPendingCancellationMock).toHaveBeenCalledWith(
       dealWithCancellationInPast._id,
       dealWithCancellationInPast.tfm.cancellation,
       generateSystemAuditDetails(),

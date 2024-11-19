@@ -56,10 +56,10 @@ export class TfmDealCancellationRepo {
   }
 
   /**
-   * Find deals with scheduled cancellations
+   * Find deals with pending cancellations
    * @returns the deals
    */
-  public static async findScheduledDealCancellations(): Promise<TfmDealWithCancellation[]> {
+  public static async findPendingDealCancellations(): Promise<TfmDealWithCancellation[]> {
     const dealCollection = await this.getDealCollection();
 
     return await dealCollection
@@ -208,7 +208,7 @@ export class TfmDealCancellationRepo {
 
   /**
    * Schedules a deal cancellation (occurs when a deal cancellation is submitted but the effectiveFrom is in the future).
-   * In this instance, the deal and facility statuses remain the same, but the tfm cancellation object 'status' is updated to 'Scheduled'.
+   * In this instance, the deal and facility statuses remain the same, but the tfm cancellation object 'status' is updated to 'pending'.
    * When the effectiveFrom date passes, a separate chron job will run to submit the deal cancellation using submitDealCancellation above,
    * updating the deal and facility statuses to 'Cancelled' / 'Risk expired' respectively.
    * We still return the deal ID and corresponding facility IDs in this instance to be used on the cancellation confirmation email.
