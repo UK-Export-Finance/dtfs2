@@ -27,32 +27,6 @@ const generateSelectedFiltersObject = (heading, fieldName, submittedFieldFilters
 });
 
 /**
- * Create an object for a single, selected filter
- * With differentiation between text value and actual field value.
- * This will used in mojFilter component - selectedFilters.categories.
- *
- * @param {string} field heading
- * @param {string} field name
- * @param {Array} submitted filters
- * @example ( 'Bank facility stage', 'hasBeenIssued', [true] )
- * @returns { heading: { text: 'Deal type' }, items: [ { text: 'Issued', href: `filters/remove/hasBeenIssued/true`, value: true } ] }
- */
-const generateSelectedFiltersObjectWithMappedValues = (heading, fieldName, submittedFieldFilters) => ({
-  heading: {
-    text: heading,
-  },
-  items: submittedFieldFilters.map(({ value, mappedValue }) => {
-    const textValue = formatFieldValue(mappedValue);
-
-    return {
-      text: textValue,
-      href: `filters/remove/${fieldName}/${value}`,
-      formattedValue: textValue,
-    };
-  }),
-});
-
-/**
  * Create an object for all selected submissionType filters.
  * This will used in mojFilter component - selectedFilters.categories.
  *
@@ -66,6 +40,5 @@ const selectedSubmissionTypeFilters = (fieldName, submittedFilters) =>
 
 module.exports = {
   generateSelectedFiltersObject,
-  generateSelectedFiltersObjectWithMappedValues,
   selectedSubmissionTypeFilters,
 };
