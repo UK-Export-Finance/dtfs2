@@ -126,7 +126,7 @@ describe('DealCancellationService', () => {
 
       findOneUserByIdMock.mockResolvedValue(mockUser);
       jest.spyOn(PortalDealService, 'updateStatus').mockImplementation(updatePortalDealStatusMock);
-      jest.spyOn(PortalFacilityRepo, 'updateByDealId').mockImplementation(updatePortalFacilitiesMock);
+      jest.spyOn(PortalFacilityRepo, 'updateManyByDealId').mockImplementation(updatePortalFacilitiesMock);
     });
 
     const aDealCancellation = (): TfmDealCancellation => ({
@@ -189,7 +189,7 @@ describe('DealCancellationService', () => {
           expect(updatePortalDealStatusMock).toHaveBeenCalledWith({ dealId, dealType, auditDetails, newStatus: DEAL_STATUS.CANCELLED });
         });
 
-        it(`it calls PortalFacilityRepo.updateByDealId with facilityStage ${DEAL_STATUS.CANCELLED} status for each facility`, async () => {
+        it(`it calls PortalFacilityRepo.updateManyByDealId with facilityStage ${DEAL_STATUS.CANCELLED} status for each facility`, async () => {
           // Act
           await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 

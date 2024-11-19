@@ -15,7 +15,7 @@ export class PortalFacilityRepo {
    * @param update - the updates to make
    * @param auditDetails - the users audit details
    */
-  public static async updateByDealId(dealId: string | ObjectId, update: Partial<Facility>, auditDetails: AuditDetails): Promise<void> {
+  public static async updateManyByDealId(dealId: string | ObjectId, update: Partial<Facility>, auditDetails: AuditDetails): Promise<void> {
     if (!ObjectId.isValid(dealId)) {
       throw new InvalidDealIdError(dealId.toString());
     }

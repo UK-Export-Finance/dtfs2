@@ -10,14 +10,14 @@ describe('PortalFacilityRepo', () => {
   const getCollectionMock = jest.fn();
 
   beforeAll(() => {
-    jest.useFakeTimers().setSystemTime(1727876437063);
+    jest.useFakeTimers().setSystemTime(new Date());
   });
 
   afterAll(() => {
     jest.useRealTimers();
   });
 
-  describe('updateByDealId', () => {
+  describe('updateManyByDealId', () => {
     const dealId = new ObjectId();
     const update: Partial<Facility> = { facilityStage: FACILITY_STAGE.RISK_EXPIRED };
     const auditDetails = generateSystemAuditDetails();
@@ -34,7 +34,7 @@ describe('PortalFacilityRepo', () => {
 
     it(`calls getCollection with ${MONGO_DB_COLLECTIONS.FACILITIES}`, async () => {
       // Act
-      await PortalFacilityRepo.updateByDealId(dealId, update, auditDetails);
+      await PortalFacilityRepo.updateManyByDealId(dealId, update, auditDetails);
 
       // Assert
       expect(getCollectionMock).toHaveBeenCalledTimes(1);
@@ -43,14 +43,16 @@ describe('PortalFacilityRepo', () => {
 
     it('calls updateMany with the expected parameters', async () => {
       // Act
-      await PortalFacilityRepo.updateByDealId(dealId, update, auditDetails);
+      await PortalFacilityRepo.updateManyByDealId(dealId, update, auditDetails);
 
       // Assert
       const expectedFilter = { dealId: { $eq: dealId } };
+
       const expectedUpdate = $.flatten({
         ...update,
         auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
       });
+
       expect(updateManyMock).toHaveBeenCalledTimes(1);
       expect(updateManyMock).toHaveBeenCalledWith(expectedFilter, expectedUpdate);
     });
@@ -60,7 +62,7 @@ describe('PortalFacilityRepo', () => {
       const invalidDealId = 'invalidDealId';
 
       // Act + Assert
-      await expect(async () => await PortalFacilityRepo.updateByDealId(invalidDealId, update, auditDetails)).rejects.toThrow(InvalidDealIdError);
+      await expect(async () => await PortalFacilityRepo.updateManyByDealId(invalidDealId, update, auditDetails)).rejects.toThrow(InvalidDealIdError);
     });
   });
 });
