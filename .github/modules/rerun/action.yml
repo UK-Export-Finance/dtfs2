@@ -36,13 +36,9 @@ runs:
 
         # Retry loop execution
         for((run=1; run<=maximum; run++));do
-          eval "$env" && bash -c "${{ inputs.command }}" && break
-          status=$?
+          bash -c "eval $env"
 
-          # Exit with success
-          if [ $status -eq 0 ]; then
-            exit 0
-          fi
+          bash -c "${{ inputs.command }}"
 
           # Exit with failure on last run
           if [ $run -eq $maximum ]; then
