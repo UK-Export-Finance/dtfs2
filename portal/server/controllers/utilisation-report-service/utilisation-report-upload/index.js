@@ -137,6 +137,7 @@ const postUtilisationReportUpload = async (req, res) => {
     }
 
     // We filter down the JSON to only send the necessary data to the API for validation
+    // An array of empty objects is a valid payload to send to the API to get missing headers errors
     const filteredCsvJson = filterReportJsonToRelevantKeys(csvJson);
 
     const { csvValidationErrors } = await api.generateValidationErrorsForUtilisationReportData(filteredCsvJson, bankId, userToken);
