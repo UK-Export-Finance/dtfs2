@@ -71,13 +71,14 @@ const recursivelyReplaceEscapeOperators = (filters, result = {}) => {
     } else if (typeof filters[key] === 'object' && filters[key] !== null) {
       result[key] = {};
       recursivelyReplaceEscapeOperators(filters[key], result[key]);
-      // These last two if statements handle the lowest level cases
+      // These last three if statements handle the lowest level cases
     } else if (key === 'KEYWORD') {
       result.$regex = escapeStringRegexp(filters[key]);
     } else if (key === 'hasBeenIssued') {
-      result[key] = {
-        $eq: filters[key],
+      result.hasBeenIssued = {
+        $eq: filters.hasBeenIssued,
       };
+      // When filtering by `hasBeenIssued`, want to exclude cases where `facilityStage` is'Risk expired'
       result.facilityStage = { $ne: FACILITY_STATUS.RISK_EXPIRED };
     } else {
       result[key] = {
