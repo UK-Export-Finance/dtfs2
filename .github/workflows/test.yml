@@ -240,9 +240,11 @@ jobs:
         run: npm run db:migrate
 
       - name: Execute
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-        run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
+        uses: ./.github/modules/rerun
+        with:
+          command: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
+          env: MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Stop
         working-directory: ./
@@ -295,8 +297,11 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: ${{ matrix.functions }}
-        working-directory: ./azure-functions/${{ matrix.functions }}
-        run: npm run api-test
+        uses: ./.github/modules/rerun
+        with:
+          command: npm run api-test
+          working-directory: ./azure-functions/${{ matrix.functions }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Coverage
         uses: codecov/codecov-action@v4
@@ -605,8 +610,10 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
       - name: Dependencies
-        working-directory: ./
-        run: npm ci
+        uses: ./.github/modules/rerun
+        with:
+          command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Docker
         uses: ./.github/modules/rerun
@@ -858,7 +865,6 @@ jobs:
       FF_FEE_RECORD_CORRECTION_ENABLED: 'true'
       FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
       FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
-      # TODO DTFS2-6892: add FF_TFM_SSO_ENABLED feature flag here when e2e tests implemented
       GEF_DEAL_VERSION: 1
     environment:
       name: ${{ needs.setup.outputs.environment }}

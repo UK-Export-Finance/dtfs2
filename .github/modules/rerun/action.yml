@@ -27,9 +27,6 @@ runs:
   using: 'composite'
   steps:
     - run: |
-        # Exit immediately upon failure
-        set -e
-
         # Specify environment variables
         eval "$env"
 
@@ -43,11 +40,7 @@ runs:
 
         # Retry loop execution
         while true; do
-          echo "**************$run/$maximum"
-
           bash -c "${{ inputs.command }}"
-
-          echo "Status=$?"
 
           if [ $? -eq 0 ]; then
             exit 0
