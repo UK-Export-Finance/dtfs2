@@ -58,7 +58,7 @@ const eligibilityCriteriaItems = (coverUrl) => [
 
 const facilityItems = (
   facilityUrl,
-  { type, hasBeenIssued, shouldCoverStartOnSubmission, ukefFacilityId, feeType, issueDate, isUsingFacilityEndDate, status },
+  { type, hasBeenIssued, shouldCoverStartOnSubmission, ukefFacilityId, feeType, issueDate, isUsingFacilityEndDate, facilityStage },
   dealVersion,
 ) => {
   const AT_MATURITY = 'At maturity';
@@ -78,8 +78,8 @@ const facilityItems = (
       id: 'hasBeenIssued',
       href: `${facilityUrl}?status=change`,
       method: (value) => {
-        if (status) {
-          return status;
+        if (facilityStage) {
+          return facilityStage;
         }
 
         return isTrueSet(value) ? STAGE.ISSUED : STAGE.UNISSUED;

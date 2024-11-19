@@ -1,4 +1,4 @@
-import { DEAL_STATUS, FACILITY_STATUS } from '@ukef/dtfs2-common';
+import { DEAL_STATUS, FACILITY_STAGE } from '@ukef/dtfs2-common';
 import portalPages from '../../../../../../../portal/cypress/e2e/pages';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import generateAinReadyToSubmit from '../../test-data/AIN-deal/dealReadyToSubmit';
@@ -75,11 +75,11 @@ describe('Deal Cancellation status updates', () => {
       cy.assertText(portalPages.contract.status(), DEAL_STATUS.CANCELLED);
     });
 
-    it(`displays facility status ${FACILITY_STATUS.RISK_EXPIRED} on deal summary page`, () => {
+    it(`displays facility status ${FACILITY_STAGE.RISK_EXPIRED} on deal summary page`, () => {
       portalPages.contract.visit(deal);
 
-      cy.assertText(portalPages.contract.bondTransactionsTable.row(dealFacilities[1]._id).bondStatus(), FACILITY_STATUS.RISK_EXPIRED);
-      cy.assertText(portalPages.contract.loansTransactionsTable.row(dealFacilities[0]._id).loanStatus(), FACILITY_STATUS.RISK_EXPIRED);
+      cy.assertText(portalPages.contract.bondTransactionsTable.row(dealFacilities[1]._id).facilityStage(), FACILITY_STAGE.RISK_EXPIRED);
+      cy.assertText(portalPages.contract.loansTransactionsTable.row(dealFacilities[0]._id).facilityStage(), FACILITY_STAGE.RISK_EXPIRED);
     });
   });
 });
