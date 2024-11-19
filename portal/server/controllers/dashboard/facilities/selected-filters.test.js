@@ -4,31 +4,11 @@ import {
   generateSelectedFiltersObjectWithMappedValues,
   selectedSubmissionTypeFilters,
 } from '../filters/generate-selected-filters';
-import { mapIssuedValueToText, selectedHasBeenIssuedFilters, selectedFilters } from './selected-filters';
+import { selectedHasBeenIssuedFilters, selectedFilters } from './selected-filters';
 import CONTENT_STRINGS from '../../../content-strings';
 import CONSTANTS from '../../../constants';
 
 describe('controllers/dashboard/facilities - selected-filters', () => {
-  describe('mapIssuedValueToText', () => {
-    it(`should return ${CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.ISSUED} when true string is passed`, () => {
-      const mockValue = true;
-
-      const result = mapIssuedValueToText(mockValue);
-
-      const expected = CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.ISSUED;
-      expect(result).toEqual(expected);
-    });
-
-    it(`should return ${CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.UNISSUED} when false string is passed`, () => {
-      const mockValue = false;
-
-      const result = mapIssuedValueToText(mockValue);
-
-      const expected = CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.UNISSUED;
-      expect(result).toEqual(expected);
-    });
-  });
-
   describe('selectedHasBeenIssuedFilters', () => {
     it('should return result of generateSelectedFiltersObject with mapped hasBeenIssuedValues', () => {
       const mockHeading = CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.FACILITY_STAGE;
@@ -39,7 +19,7 @@ describe('controllers/dashboard/facilities - selected-filters', () => {
 
       const mappedSubmittedFieldFilters = mockSubmittedFieldFilters.map((value) => ({
         value,
-        mappedValue: mapIssuedValueToText(value),
+        mappedValue: value,
       }));
 
       const expected = generateSelectedFiltersObjectWithMappedValues(mockHeading, mockFieldName, mappedSubmittedFieldFilters);

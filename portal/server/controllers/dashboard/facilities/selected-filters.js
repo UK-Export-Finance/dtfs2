@@ -7,22 +7,6 @@ const CONTENT_STRINGS = require('../../../content-strings');
 const CONSTANTS = require('../../../constants');
 
 /**
- * Map true/false boolean to Issued/Unissued string.
- *
- * @param {boolean} the submitted filter value
- * @example ( true )
- * @returns 'Issued'
- */
-// TODO: delete this function
-const mapIssuedValueToText = (hasBeenIssued) => {
-  if (hasBeenIssued) {
-    return CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.ISSUED;
-  }
-
-  return CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.UNISSUED;
-};
-
-/**
  * Create an object for all selected hasBeenIssued filters.
  * This will used in mojFilter component - selectedFilters.categories.
  *
@@ -100,7 +84,6 @@ const selectedFilters = (submittedFilters) => {
 };
 
 module.exports = {
-  mapIssuedValueToText,
   selectedFilters,
   selectedHasBeenIssuedFilters: selectedStageFilters,
 };

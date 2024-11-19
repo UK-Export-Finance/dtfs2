@@ -16,7 +16,6 @@ import { removeSessionFilter } from '../filters/remove-filter-from-session';
 import { facilitiesTemplateFilters as templateFilters } from './template-filters';
 import { selectedFilters } from './selected-filters';
 import CONSTANTS from '../../../constants';
-import { sanitiseBody } from './sanitise-body';
 
 const { CHECKER, MAKER } = ROLES;
 
@@ -155,7 +154,7 @@ describe('controllers/dashboard/facilities', () => {
 
   describe('allFacilities', () => {
     describe('when there is req.body', () => {
-      it('should set req.session.dashboardFilters to provided values with sanitised body', async () => {
+      it('should set req.session.dashboardFilters to the request body', async () => {
         mockReq = {
           ...mockReq,
           body: {
@@ -165,9 +164,7 @@ describe('controllers/dashboard/facilities', () => {
 
         await allFacilities(mockReq, mockRes);
 
-        const expected = sanitiseBody(mockReq.body);
-
-        expect(mockReq.session.dashboardFilters).toEqual(expected);
+        expect(mockReq.session.dashboardFilters).toEqual(mockReq.body);
       });
     });
 
