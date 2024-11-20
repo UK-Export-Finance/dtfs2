@@ -6,6 +6,7 @@ const {
   REQUEST_PLATFORM_TYPE,
   PENDING_RECONCILIATION,
   REPORT_NOT_RECEIVED,
+  GEF_FACILITY_TYPE,
 } = require('@ukef/dtfs2-common');
 const { BANK1_PAYMENT_REPORT_OFFICER1, BANK2_PAYMENT_REPORT_OFFICER1 } = require('../../../e2e-fixtures');
 
@@ -110,7 +111,7 @@ const tfmFacilityForReport = {
     interestPercentage: 5,
     dayCountBasis: 5,
     coverPercentage: 80,
-    type: 'Cash',
+    type: GEF_FACILITY_TYPE.CASH,
   },
 };
 
