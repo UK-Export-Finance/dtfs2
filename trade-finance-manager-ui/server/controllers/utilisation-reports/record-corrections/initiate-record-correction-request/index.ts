@@ -10,10 +10,54 @@ import {
 import { getPremiumPaymentsFacilityIdQueryFromReferer } from '../../../../helpers/get-premium-payments-facility-id-query-from-referer';
 import { INITIATE_RECORD_CORRECTION_ERROR_KEY } from '../../../../constants/premium-payment-tab-error-keys';
 import { mapCheckedCheckboxesToRecord } from '../../../../helpers/map-checked-checkboxes-to-record';
+import { InitiateRecordCorrectionRequestErrorKey } from '../../../../types/premium-payments-tab-error-keys';
+import { PremiumPaymentsTableCheckboxId } from '../../../../types/premium-payments-table-checkbox-id';
 
 export type PostInitiateRecordCorrectionRequest = CustomExpressRequest<{
   reqBody: PremiumPaymentsTableCheckboxSelectionsRequestBody;
 }>;
+
+type ValidationResult =
+  | {
+      errorKey: InitiateRecordCorrectionRequestErrorKey;
+      selectedFeeRecordId: null;
+    }
+  | {
+      errorKey: null;
+      selectedFeeRecordId: number;
+    };
+
+/**
+ * Parses and validates fee selections for initiating a create record correction request journey
+ * @param checkedCheckboxIds - The checked checkbox ids
+ * @returns an object containing an error key for redirecting to premium payments tab if the
+ * fee selections are not valid, or an object containing the selected fee record id if the fee
+ * selections are valid.
+ */
+export const parseAndValidateInitiateRecordCorrectionRequestFeeSelections = (checkedCheckboxIds: PremiumPaymentsTableCheckboxId[]): ValidationResult => {
+  if (checkedCheckboxIds.length === 0) {
+    return { errorKey: INITIATE_RECORD_CORRECTION_ERROR_KEY.NO_FEE_RECORDS_SELECTED, selectedFeeRecordId: null };
+  }
+
+  if (checkedCheckboxIds.length > 1) {
+    return { errorKey: INITIATE_RECORD_CORRECTION_ERROR_KEY.MULTIPLE_FEE_RECORDS_SELECTED, selectedFeeRecordId: null };
+  }
+
+  const checkedCheckboxId = checkedCheckboxIds[0];
+  const selectedCheckboxStatus = getFeeRecordStatusFromPremiumPaymentsCheckboxId(checkedCheckboxId);
+
+  if (selectedCheckboxStatus !== FEE_RECORD_STATUS.TO_DO) {
+    return { errorKey: INITIATE_RECORD_CORRECTION_ERROR_KEY.INVALID_STATUS, selectedFeeRecordId: null };
+  }
+
+  const selectedFeeRecordIds = getFeeRecordIdsFromPremiumPaymentsCheckboxIds([checkedCheckboxId]);
+
+  if (selectedFeeRecordIds.length !== 1) {
+    throw new Error(`Invalid premium payments checkbox id encountered for fee record at ${FEE_RECORD_STATUS.TO_DO} status ${checkedCheckboxId}`);
+  }
+
+  return { selectedFeeRecordId: selectedFeeRecordIds[0], errorKey: null };
+};
 
 /**
  * Controller for the POST initiate record correction request route.
@@ -35,40 +79,15 @@ export const postInitiateRecordCorrectionRequest = (req: PostInitiateRecordCorre
 
     const checkedCheckboxIds = getPremiumPaymentsCheckboxIdsFromObjectKeys(req.body);
 
-    if (checkedCheckboxIds.length === 0) {
-      req.session.initiateRecordCorrectionRequestErrorKey = INITIATE_RECORD_CORRECTION_ERROR_KEY.NO_FEE_RECORDS_SELECTED;
+    const { errorKey, selectedFeeRecordId } = parseAndValidateInitiateRecordCorrectionRequestFeeSelections(checkedCheckboxIds);
+
+    if (errorKey) {
+      req.session.initiateRecordCorrectionRequestErrorKey = errorKey;
       req.session.checkedCheckboxIds = mapCheckedCheckboxesToRecord(checkedCheckboxIds);
 
       const premiumPaymentsFacilityId = getPremiumPaymentsFacilityIdQueryFromReferer(req.headers.referer);
       return res.redirect(axios.getUri({ url: `/utilisation-reports/${reportId}`, params: { premiumPaymentsFacilityId } }));
     }
-
-    if (checkedCheckboxIds.length > 1) {
-      req.session.initiateRecordCorrectionRequestErrorKey = INITIATE_RECORD_CORRECTION_ERROR_KEY.MULTIPLE_FEE_RECORDS_SELECTED;
-      req.session.checkedCheckboxIds = mapCheckedCheckboxesToRecord(checkedCheckboxIds);
-
-      const premiumPaymentsFacilityId = getPremiumPaymentsFacilityIdQueryFromReferer(req.headers.referer);
-      return res.redirect(axios.getUri({ url: `/utilisation-reports/${reportId}`, params: { premiumPaymentsFacilityId } }));
-    }
-
-    const checkedCheckboxId = checkedCheckboxIds[0];
-    const selectedCheckboxStatus = getFeeRecordStatusFromPremiumPaymentsCheckboxId(checkedCheckboxId);
-
-    if (selectedCheckboxStatus !== FEE_RECORD_STATUS.TO_DO) {
-      req.session.initiateRecordCorrectionRequestErrorKey = INITIATE_RECORD_CORRECTION_ERROR_KEY.INVALID_STATUS;
-      req.session.checkedCheckboxIds = mapCheckedCheckboxesToRecord(checkedCheckboxIds);
-
-      const premiumPaymentsFacilityId = getPremiumPaymentsFacilityIdQueryFromReferer(req.headers.referer);
-      return res.redirect(axios.getUri({ url: `/utilisation-reports/${reportId}`, params: { premiumPaymentsFacilityId } }));
-    }
-
-    const selectedFeeRecordIds = getFeeRecordIdsFromPremiumPaymentsCheckboxIds([checkedCheckboxId]);
-
-    if (selectedFeeRecordIds.length !== 1) {
-      throw new Error(`Invalid premium payments checkbox id encountered for fee record at ${FEE_RECORD_STATUS.TO_DO} status ${checkedCheckboxId}`);
-    }
-
-    const selectedFeeRecordId = selectedFeeRecordIds[0];
 
     return res.redirect(`/utilisation-reports/${reportId}/create-record-correction-request/${selectedFeeRecordId}`);
   } catch (error) {
