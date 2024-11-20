@@ -83,7 +83,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.2.10",
     "prettier": "3.0.3",
-    "sort-package-json": "^2.10.1",
+    "sort-package-json": "^2.11.0",
     "yaml-lint": "^1.7.0"
   },
   "engines": {
