@@ -36,7 +36,7 @@ runs:
 
         # Retry loop execution
          for((run=0; run<=maximum; run++)); do
-            eval "$env"
-            eval "${{ inputs.command }}"
+            echo "Running #$run/$maximum"
+            eval "$env" && ${{ inputs.command }}
         done
       shell: bash
