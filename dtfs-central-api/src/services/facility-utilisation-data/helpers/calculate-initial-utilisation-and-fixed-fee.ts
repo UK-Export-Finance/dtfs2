@@ -1,6 +1,6 @@
 import { calculateDrawnAmount } from '@ukef/dtfs2-common';
 import Big from 'big.js';
-import { getKeyingSheetCalculationFacilityValues } from '../../../../../helpers';
+import { getKeyingSheetCalculationFacilityValues } from '../../../helpers';
 
 export type RequiredParams = {
   value?: number | null;

@@ -5,3 +5,4 @@ export * from './amendments';
 export * as REGEX from './regex';
 export * from './activityConstants';
 export * from './csv';
+export * from './batch-saving';
