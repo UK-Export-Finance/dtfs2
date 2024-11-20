@@ -70,6 +70,7 @@ describe('user service', () => {
           userUpdate: transformedUser,
           auditDetails,
         });
+        expect(updateUserByIdSpy).toHaveBeenCalledTimes(1);
       });
     });
 
