@@ -144,6 +144,20 @@ describe('executeWithSqlTransaction', () => {
     await expect(executeWithSqlTransaction(functionToExecute)).rejects.toThrow(TransactionFailedError.forApiError(customError));
   });
 
+  it('logs error even if rolling back the transaction fails', async () => {
+    // Arrange
+    const originalError = new Error('Some error');
+    const functionToExecute = jest.fn().mockRejectedValue(originalError);
+    const consoleErrorSpy = jest.spyOn(console, 'error');
+    const secondaryError = new Error('Cannot rollback transaction');
+    mockRollbackTransaction.mockRejectedValueOnce(secondaryError);
+
+    // Act / Assert
+    await expect(executeWithSqlTransaction(functionToExecute)).rejects.toThrow(secondaryError);
+    expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+    expect(consoleErrorSpy).toHaveBeenCalledWith('Error thrown within SQL transaction: %s', originalError);
+  });
+
   it('returns the return value of the supplied function', async () => {
     // Arrange
     const returnValue = {
