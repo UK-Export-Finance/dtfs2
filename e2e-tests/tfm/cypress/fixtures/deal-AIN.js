@@ -1,6 +1,6 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('./constants');
-const { BANK1_MAKER1 } = require('../../../e2e-fixtures/portal-users.fixture');
+const { BANK1_MAKER1 } = require('../../../e2e-fixtures');
 const { twoYearsAgo, oneMonth } = require('../../../e2e-fixtures/dateConstants');
 
 const MOCK_DEAL = {
@@ -181,7 +181,7 @@ const MOCK_DEAL = {
     {
       type: CONSTANTS.FACILITY_TYPE.BOND,
       bondIssuer: 'Issuer',
-      bondType: 'Advance payment guarantee',
+      bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '10',

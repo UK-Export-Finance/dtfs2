@@ -1,5 +1,5 @@
 const { format, add, sub } = require('date-fns');
-const { CURRENCY, FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { BOND_TYPE, CURRENCY, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../src/constants');
 
 const nowDate = new Date();
@@ -42,7 +42,7 @@ const deal = {
     {
       type: FACILITY_TYPE.BOND,
       bondIssuer: 'my issuer',
-      bondType: 'Retention bond',
+      bondType: BOND_TYPE.RETENTION_BOND,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '12',
@@ -76,7 +76,7 @@ const deal = {
     {
       type: FACILITY_TYPE.BOND,
       bondIssuer: 'my issuer',
-      bondType: 'Retention bond',
+      bondType: BOND_TYPE.RETENTION_BOND,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '12',
@@ -106,7 +106,7 @@ const deal = {
     {
       type: FACILITY_TYPE.BOND,
       bondIssuer: 'issuer',
-      bondType: 'Retention bond',
+      bondType: BOND_TYPE.RETENTION_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '24',
@@ -133,7 +133,7 @@ const deal = {
     {
       type: FACILITY_TYPE.BOND,
       bondIssuer: 'issuer',
-      bondType: 'Retention bond',
+      bondType: BOND_TYPE.RETENTION_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '24',
@@ -158,7 +158,7 @@ const deal = {
     {
       type: FACILITY_TYPE.BOND,
       bondIssuer: 'issuer',
-      bondType: 'Retention bond',
+      bondType: BOND_TYPE.RETENTION_BOND,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       previousFacilityStage: 'Unissued',
@@ -184,7 +184,7 @@ const deal = {
     {
       type: FACILITY_TYPE.BOND,
       bondIssuer: 'issuer',
-      bondType: 'Retention bond',
+      bondType: BOND_TYPE.RETENTION_BOND,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       previousFacilityStage: 'Unissued',
