@@ -36,7 +36,7 @@ runs:
 
         # Retry loop execution
          for((run=0; run<=maximum; run++))
-            eval "$env"
+            eval $env
             ${{ inputs.command }}
         done
       shell: bash
