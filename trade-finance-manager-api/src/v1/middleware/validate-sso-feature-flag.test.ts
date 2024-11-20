@@ -1,6 +1,6 @@
 import { isTfmSsoFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
-import { RequestHandler, Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import httpMocks, { MockRequest, MockResponse } from 'node-mocks-http';
 import { validateSsoFeatureFlagIsOff, validateSsoFeatureFlagIsOn } from './validate-sso-feature-flag';
 
@@ -28,7 +28,12 @@ describe('validateSsoFeatureFlag', () => {
         mockIsTfmSsoFeatureFlag(false);
       });
 
-      itReturnsAnErrorResponse({ makeRequest });
+      it('returns an error response', () => {
+        makeRequest(req, res, next);
+
+        expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
+        expect(res._isEndCalled()).toEqual(true);
+      });
     });
 
     describe('when the SSO feature flag is enabled', () => {
@@ -36,8 +41,11 @@ describe('validateSsoFeatureFlag', () => {
         mockIsTfmSsoFeatureFlag(true);
       });
 
-      itCallsTheNextMiddleware({
-        makeRequest,
+      it('calls the next middleware', () => {
+        makeRequest(req, res, next);
+
+        expect(next).toHaveBeenCalled();
+        expect(next).toHaveBeenCalledTimes(1);
       });
     });
   });
@@ -50,8 +58,11 @@ describe('validateSsoFeatureFlag', () => {
         mockIsTfmSsoFeatureFlag(false);
       });
 
-      itCallsTheNextMiddleware({
-        makeRequest,
+      it('calls the next middleware', () => {
+        makeRequest(req, res, next);
+
+        expect(next).toHaveBeenCalled();
+        expect(next).toHaveBeenCalledTimes(1);
       });
     });
 
@@ -60,28 +71,16 @@ describe('validateSsoFeatureFlag', () => {
         mockIsTfmSsoFeatureFlag(true);
       });
 
-      itReturnsAnErrorResponse({ makeRequest });
+      it('returns an error response', () => {
+        makeRequest(req, res, next);
+
+        expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
+        expect(res._isEndCalled()).toEqual(true);
+      });
     });
   });
 
   function mockIsTfmSsoFeatureFlag(value: boolean) {
     jest.mocked(isTfmSsoFeatureFlagEnabled).mockReturnValue(value);
-  }
-
-  function itCallsTheNextMiddleware({ makeRequest }: { makeRequest: RequestHandler }) {
-    it('calls the next middleware', () => {
-      makeRequest(req, res, next);
-
-      expect(next).toHaveBeenCalled();
-    });
-  }
-
-  function itReturnsAnErrorResponse({ makeRequest }: { makeRequest: RequestHandler }) {
-    it('returns an error response', () => {
-      makeRequest(req, res, next);
-
-      expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
-      expect(res._isEndCalled()).toEqual(true);
-    });
   }
 });
