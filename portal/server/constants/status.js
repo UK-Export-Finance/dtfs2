@@ -9,6 +9,7 @@ const DEAL = {
   UKEF_APPROVED_WITHOUT_CONDITIONS: 'Accepted by UKEF (without conditions)',
   UKEF_APPROVED_WITH_CONDITIONS: 'Accepted by UKEF (with conditions)',
   UKEF_REFUSED: 'Rejected by UKEF',
+  CANCELLED: 'Cancelled',
 };
 
 const SECTION = {

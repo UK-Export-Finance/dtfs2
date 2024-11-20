@@ -81,6 +81,10 @@ const statusFilters = (submittedFilters) => {
       value: STATUS.DEAL.UKEF_REFUSED,
     },
     {
+      text: STATUS.DEAL.CANCELLED,
+      value: STATUS.DEAL.CANCELLED,
+    },
+    {
       text: STATUS.DEAL.ABANDONED,
       value: STATUS.DEAL.ABANDONED,
     },

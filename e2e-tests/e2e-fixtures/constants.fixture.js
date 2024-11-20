@@ -33,6 +33,7 @@ export const DEAL_STATUS = {
   // statuses specific to the entire deal
   READY_FOR_APPROVAL: "Ready for Checker's approval",
   CHANGES_REQUIRED: "Further Maker's input required",
+  CANCELLED: 'Cancelled',
   ABANDONED: 'Abandoned',
   SUBMITTED_TO_UKEF: 'Submitted',
   UKEF_ACKNOWLEDGED: 'Acknowledged',
