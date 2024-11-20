@@ -27,16 +27,11 @@ runs:
   using: 'composite'
   steps:
     - run: |
-        # Set the arguments
-        maximum=${{ inputs.retries }}
-        env="${{ inputs.env }}"
-
         # Change to working directory
         cd ${{ inputs.working-directory }} || exit 1
 
-        # Retry loop execution
-         for((run=0; run<=maximum; run++)); do
-            echo "Running #$run/$maximum"
-            eval "$env" && ${{ inputs.command }}
+         for((run=0; run<=${{ inputs.retries }}; run++)); do
+            echo "Running #$run"
+            eval "${{ inputs.env }}" && bash -c "${{ inputs.command }}"
         done
       shell: bash
