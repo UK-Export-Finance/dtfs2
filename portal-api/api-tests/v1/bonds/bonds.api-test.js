@@ -1,3 +1,4 @@
+const { BOND_TYPE } = require('@ukef/dtfs2-common');
 const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { CURRENCY } = require('@ukef/dtfs2-common');
 const { format, add } = require('date-fns');
@@ -29,7 +30,7 @@ describe('/v1/deals/:id/bond', () => {
 
   const allBondFields = {
     bondIssuer: 'issuer',
-    bondType: 'bond type',
+    bondType: BOND_TYPE.BID_BOND,
     facilityStage: 'unissued',
     hasBeenIssued: 'false',
     ukefGuaranteeInMonths: '24',

@@ -1,4 +1,4 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
 
 const MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = {
@@ -178,7 +178,7 @@ const MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = {
         dealId: 'MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED',
         type: 'Bond',
         bondIssuer: 'Issuer',
-        bondType: 'Advance payment guarantee',
+        bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
         facilityStage: 'Issued',
         hasBeenIssued: true,
         previousFacilityStage: 'Unissued',

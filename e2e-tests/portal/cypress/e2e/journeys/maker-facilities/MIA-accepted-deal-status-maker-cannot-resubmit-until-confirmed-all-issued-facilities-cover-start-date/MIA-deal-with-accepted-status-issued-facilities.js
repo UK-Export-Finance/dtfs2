@@ -1,4 +1,4 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
 const { oneMonth, today } = require('../../../../../../e2e-fixtures/dateConstants');
 
@@ -186,7 +186,7 @@ const deal = {
       type: 'Bond',
       createdDate: now,
       bondIssuer: '',
-      bondType: 'Performance bond',
+      bondType: BOND_TYPE.PERFORMANCE_BOND,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '12',
@@ -225,7 +225,7 @@ const deal = {
       type: 'Bond',
       createdDate: now,
       bondIssuer: '',
-      bondType: 'Performance bond',
+      bondType: BOND_TYPE.PERFORMANCE_BOND,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '12',
@@ -258,7 +258,7 @@ const deal = {
       type: 'Bond',
       createdDate: now,
       bondIssuer: '',
-      bondType: 'Bid bond',
+      bondType: BOND_TYPE.BID_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -282,7 +282,7 @@ const deal = {
       type: 'Bond',
       createdDate: now,
       bondIssuer: '',
-      bondType: 'Performance bond',
+      bondType: BOND_TYPE.PERFORMANCE_BOND,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '12',

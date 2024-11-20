@@ -12,7 +12,6 @@ const { createDealTasks } = require('../../../src/v1/controllers/deal.tasks');
 const generateDateReceived = require('../../../src/v1/controllers/deal-add-tfm-data/dateReceived');
 const { mockFindOneDeal, mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 const CONSTANTS = require('../../../src/constants');
-
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_DEAL_MIN = require('../../../src/v1/__mocks__/mock-deal-MIN');
 const MOCK_DEAL_MIA = require('../../../src/v1/__mocks__/mock-deal-MIA-not-submitted');
