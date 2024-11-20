@@ -38,7 +38,7 @@ const selectedFilters = (submittedFilters) => {
     selected.push(obj);
   }
 
-  if (submittedFilters.stage) {
+  if (submittedFilters[CONSTANTS.FIELD_NAMES.FACILITY.STAGE]) {
     selected.push(
       generateSelectedFiltersObject(
         CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.FACILITY_STAGE,
