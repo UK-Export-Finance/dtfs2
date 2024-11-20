@@ -146,7 +146,6 @@ describe(component, () => {
 
         wrapper = render(params);
 
-        // const expectedLink = `/case/${params.caseId}/underwriting/pricing-and-risk/facility/${params.facility._id}/risk-profile`;
         const expectedLink = `/case/${params.caseId}/facility/${params.facility._id}`;
 
         const expectedText = `Change ${params.facility.facilitySnapshot.type} ${params.facility.facilitySnapshot.ukefFacilityId}`;
