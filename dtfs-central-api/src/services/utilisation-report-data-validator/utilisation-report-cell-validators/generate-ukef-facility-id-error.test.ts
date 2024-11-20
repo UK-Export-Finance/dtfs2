@@ -5,10 +5,10 @@ import { TfmFacilitiesRepo } from '../../../repositories/tfm-facilities-repo';
 describe('generateUkefFacilityIdError', () => {
   const testExporterName = 'test exporter';
 
-  const facilityIdExistsSpy = jest.spyOn(TfmFacilitiesRepo, 'ukefFacilityIdExists');
+  const gefFacilityExistsSpy = jest.spyOn(TfmFacilitiesRepo, 'ukefGefFacilityExists');
 
   beforeEach(() => {
-    facilityIdExistsSpy.mockResolvedValue(true);
+    gefFacilityExistsSpy.mockResolvedValue(true);
   });
 
   afterEach(() => {
@@ -67,14 +67,14 @@ describe('generateUkefFacilityIdError', () => {
       row: 1,
     };
     const expectedError = {
-      errorMessage: 'The Facility ID has not been recognised. Enter a valid Facility ID between 8 and 10 characters.',
+      errorMessage: 'The facility ID has not been recognised. Enter a facility ID for a general export facility.',
       column: 'Z',
       row: 1,
       value: '12345678',
       exporter: testExporterName,
     };
 
-    when(facilityIdExistsSpy).calledWith('12345678').mockResolvedValue(false);
+    when(gefFacilityExistsSpy).calledWith('12345678').mockResolvedValue(false);
 
     // Act
     const ukefFacilityIdError = await generateUkefFacilityIdError(validFacilityId, testExporterName);
@@ -83,7 +83,7 @@ describe('generateUkefFacilityIdError', () => {
     expect(ukefFacilityIdError).toEqual(expectedError);
   });
 
-  it('returns null if the value is a valid UKEF Facility ID', async () => {
+  it('returns null if the value is a valid UKEF GEF Facility ID', async () => {
     // Arrange
     const validFacilityId = {
       value: '12345678',
