@@ -35,12 +35,8 @@ runs:
         cd ${{ inputs.working-directory }} || exit 1
 
         # Retry loop execution
-         while true; do
-            eval "$env" && bash -c "${{ inputs.command }}" && break
-
-          run=$((run + 1))
-          if [ $run -gt $limit ]; then
-            exit 1
-          fi
+         for((run=0; run<=maximum; r++))
+            eval "$env"
+            eval "${{ inputs.command }}""
         done
       shell: bash
