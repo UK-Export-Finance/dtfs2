@@ -30,8 +30,9 @@ runs:
         # Change to working directory
         cd ${{ inputs.working-directory }} || exit 1
 
-         for((run=0; run<=${{ inputs.retries }}; run++)); do
+        # Loop execution
+         for((run=0; run<${{ inputs.retries }}; run++)); do
             echo "Running #$run"
-            eval "${{ inputs.env }}" && bash -c "${{ inputs.command }}"
+            eval "${{ inputs.env }}" && bash -c "${{ inputs.command }}" && break
         done
       shell: bash
