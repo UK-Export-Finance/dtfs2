@@ -1,4 +1,4 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
 const { BANK1_MAKER1, BANK1_CHECKER1 } = require('../../../../../../e2e-fixtures/portal-users.fixture');
 
@@ -270,7 +270,7 @@ const deal = {
         currencySameAsSupplyContractCurrency: 'true',
         createdDate: '1606900240957',
         bondIssuer: '',
-        bondType: 'Performance bond',
+        bondType: BOND_TYPE.PERFORMANCE_BOND,
         bondBeneficiary: '',
         guaranteeFeePayableByBank: '1.8000',
         ukefExposure: '80,000.00',
@@ -313,7 +313,7 @@ const deal = {
         currencySameAsSupplyContractCurrency: 'true',
         createdDate: '1606900240907',
         bondIssuer: '',
-        bondType: 'Maintenance bond',
+        bondType: BOND_TYPE.MAINTENANCE_BOND,
         bondBeneficiary: '',
         guaranteeFeePayableByBank: '1.8000',
         ukefExposure: '80,000.00',
