@@ -7,7 +7,7 @@ class TestAuditableBaseEntity extends AuditableBaseEntity {}
 
 describe('AuditableBaseEntity', () => {
   describe('updateLastUpdatedBy', () => {
-    it("updates the portal audit details and resets the rest when the request source platform is 'PORTAL'", () => {
+    it(`updates the portal audit details and resets the rest when the request source platform is '${REQUEST_PLATFORM_TYPE.PORTAL}'`, () => {
       // Arrange
       const testAuditableBaseEntity = new TestAuditableBaseEntity();
       const userId = 'abc123';
@@ -25,13 +25,13 @@ describe('AuditableBaseEntity', () => {
       );
     });
 
-    it("updates the tfm audit details and resets the rest when the request source platform is 'TFM'", () => {
+    it(`updates the tfm audit details and resets the rest when the request source platform is '${REQUEST_PLATFORM_TYPE.TFM}'`, () => {
       // Arrange
       const testAuditableBaseEntity = new TestAuditableBaseEntity();
       const userId = 'def456';
 
       // Act
-      testAuditableBaseEntity.updateLastUpdatedBy({ platform: 'TFM', userId });
+      testAuditableBaseEntity.updateLastUpdatedBy({ platform: REQUEST_PLATFORM_TYPE.TFM, userId });
 
       // Assert
       expect(testAuditableBaseEntity).toEqual(
@@ -43,12 +43,12 @@ describe('AuditableBaseEntity', () => {
       );
     });
 
-    it("updates the system audit details and resets the rest when the request source platform is 'SYSTEM'", () => {
+    it(`updates the system audit details and resets the rest when the request source platform is '${REQUEST_PLATFORM_TYPE.SYSTEM}'`, () => {
       // Arrange
       const testAuditableBaseEntity = new TestAuditableBaseEntity();
 
       // Act
-      testAuditableBaseEntity.updateLastUpdatedBy({ platform: 'SYSTEM' });
+      testAuditableBaseEntity.updateLastUpdatedBy({ platform: REQUEST_PLATFORM_TYPE.SYSTEM });
 
       // Assert
       expect(testAuditableBaseEntity).toEqual(

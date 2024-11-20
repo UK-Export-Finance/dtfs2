@@ -1,5 +1,6 @@
 import { createMocks } from 'node-mocks-http';
-import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
+import { DEAL_SUBMISSION_TYPE, FLASH_TYPES } from '@ukef/dtfs2-common';
+import { add, sub } from 'date-fns';
 import { aRequestSession } from '../../../../test-helpers';
 import api from '../../../api';
 import { postDealCancellationDetails, PostDealCancellationDetailsRequest } from './check-details.controller';
@@ -9,6 +10,8 @@ jest.mock('../../../api', () => ({
   submitDealCancellation: jest.fn(),
 }));
 
+const flashMock = jest.fn();
+
 const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
 
@@ -16,7 +19,7 @@ const reason = 'reason';
 const bankRequestDate = new Date().valueOf().toString();
 const effectiveFrom = new Date().valueOf().toString();
 
-describe('postBankRequestDate', () => {
+describe('postDealCancellationDetails', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
@@ -29,6 +32,7 @@ describe('postBankRequestDate', () => {
       params: { _id: dealId },
       session: aRequestSession(),
       body: { reason, bankRequestDate, effectiveFrom },
+      flash: flashMock,
     });
 
     // Act
@@ -46,6 +50,7 @@ describe('postBankRequestDate', () => {
       params: { _id: dealId },
       session: aRequestSession(),
       body: { reason, bankRequestDate, effectiveFrom },
+      flash: flashMock,
     });
 
     // Act
@@ -68,6 +73,7 @@ describe('postBankRequestDate', () => {
         params: { _id: dealId },
         session,
         body: { reason, bankRequestDate, effectiveFrom },
+        flash: flashMock,
       });
 
       // Act
@@ -82,12 +88,75 @@ describe('postBankRequestDate', () => {
       );
     });
 
+    describe('when effectiveFrom is in the past', () => {
+      it('adds a successMessage to req.flash', async () => {
+        // Arrange
+        const session = aRequestSession();
+
+        const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
+          params: { _id: dealId },
+          session,
+          body: { reason, bankRequestDate, effectiveFrom: sub(new Date(), { days: 1 }).valueOf() },
+          flash: flashMock,
+        });
+
+        // Act
+        await postDealCancellationDetails(req, res);
+
+        // Assert
+        expect(flashMock).toHaveBeenCalledTimes(1);
+        expect(flashMock).toHaveBeenCalledWith(FLASH_TYPES.SUCCESS_MESSAGE, `Deal ${ukefDealId} cancelled`);
+      });
+    });
+
+    describe('when effectiveFrom is in the present', () => {
+      it('adds a successMessage to req.flash', async () => {
+        // Arrange
+        const session = aRequestSession();
+
+        const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
+          params: { _id: dealId },
+          session,
+          body: { reason, bankRequestDate, effectiveFrom: new Date().valueOf() },
+          flash: flashMock,
+        });
+
+        // Act
+        await postDealCancellationDetails(req, res);
+
+        // Assert
+        expect(flashMock).toHaveBeenCalledTimes(1);
+        expect(flashMock).toHaveBeenCalledWith(FLASH_TYPES.SUCCESS_MESSAGE, `Deal ${ukefDealId} cancelled`);
+      });
+    });
+
+    describe('when effectiveFrom is in the future', () => {
+      it('does not add a successMessage to req.flash', async () => {
+        // Arrange
+        const session = aRequestSession();
+
+        const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
+          params: { _id: dealId },
+          session,
+          body: { reason, bankRequestDate, effectiveFrom: add(new Date(), { days: 1 }).valueOf() },
+          flash: flashMock,
+        });
+
+        // Act
+        await postDealCancellationDetails(req, res);
+
+        // Assert
+        expect(flashMock).toHaveBeenCalledTimes(0);
+      });
+    });
+
     it('redirects to the deal summary', async () => {
       // Arrange
       const { req, res } = createMocks<PostDealCancellationDetailsRequest>({
         params: { _id: dealId },
         session: aRequestSession(),
         body: { reason, bankRequestDate, effectiveFrom },
+        flash: flashMock,
       });
 
       // Act

@@ -1,3 +1,4 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const calculateUkefExposure = require('../helpers/calculateUkefExposure');
 
@@ -6,8 +7,8 @@ const convertFacilityCurrency = async (facility, dealSubmissionDate) => {
 
   let facilityUpdate;
 
-  if (currencyCode && currencyCode !== 'GBP') {
-    const currencyExchange = await api.getCurrencyExchangeRate(currencyCode, 'GBP');
+  if (currencyCode && currencyCode !== CURRENCY.GBP) {
+    const currencyExchange = await api.getCurrencyExchangeRate(currencyCode, CURRENCY.GBP);
 
     const { exchangeRate } = currencyExchange;
 

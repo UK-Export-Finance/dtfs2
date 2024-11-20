@@ -19,12 +19,18 @@ context('BSS Mandatory criteria: Check deal details page', () => {
     pages.contractSubmissionDetails
       .mandatoryCriteriaBox()
       .find('ol > li[value="2"]')
-      .should('contain', 'The Bank has complied with its policies and procedures');
+      .should('contain', 'The Bank has complied with its policies and procedures in relation to the Transaction.');
     pages.contractSubmissionDetails
       .mandatoryCriteriaBox()
       .find('ol > li[value="3"]')
-      .should('contain', 'the Supplier has provided the Bank with a duly completed UK Supplier Declaration');
-    pages.contractSubmissionDetails.mandatoryCriteriaBox().find('ol > li[value="7"]').should('contain', 'The Bank is the sole and beneficial owner');
+      .should(
+        'contain',
+        'Where the Supplier is a UK Supplier, the Supplier has provided the Bank with a duly completed UK Supplier Declaration, and the Bank is not aware that any of the information contained within it is inaccurate. (Conditional for UK Supplier)',
+      );
+    pages.contractSubmissionDetails
+      .mandatoryCriteriaBox()
+      .find('ol > li[value="7"]')
+      .should('contain', 'The Bank Facility Letter is governed by the laws of England and Wales, Scotland or Northern Ireland.');
   });
 
   it('should render the mandatory criteria checklist when a deal is cloned', () => {
@@ -61,18 +67,30 @@ context('BSS Mandatory criteria: Check deal details page', () => {
 
     pages.contract.checkDealDetailsTab().click();
     pages.contractSubmissionDetails.mandatoryCriteriaBox().should('exist');
-    pages.contractSubmissionDetails.mandatoryCriteriaBox().find('ol > li[value="1"]').should('contain', 'Bank with a duly completed Supplier Declaration');
+    pages.contractSubmissionDetails
+      .mandatoryCriteriaBox()
+      .find('ol > li[value="1"]')
+      .should(
+        'contain',
+        'The Supplier has provided the Bank with a duly completed Supplier Declaration, and the Bank is not aware that any of the information contained within it is inaccurate.',
+      );
     pages.contractSubmissionDetails
       .mandatoryCriteriaBox()
       .find('ol > li[value="2"]')
-      .should('contain', 'The Bank has complied with its policies and procedures');
+      .should('contain', 'The Bank has complied with its policies and procedures in relation to the Transaction.');
     pages.contractSubmissionDetails
       .mandatoryCriteriaBox()
       .find('ol > li[value="3"]')
-      .should('contain', 'the Supplier has provided the Bank with a duly completed UK Supplier Declaration');
+      .should(
+        'contain',
+        'Where the Supplier is a UK Supplier, the Supplier has provided the Bank with a duly completed UK Supplier Declaration, and the Bank is not aware that any of the information contained within it is inaccurate. (Conditional for UK Supplier)',
+      );
     pages.contractSubmissionDetails
       .mandatoryCriteriaBox()
       .find('ol > li[value="10"]')
-      .should('contain', 'The Bank is not restricted or prevented by any agreement');
+      .should(
+        'contain',
+        'The Bank’s right, title and interest in relation to the Transaction is clear of any Security and Quasi-Security (other than Permitted Security) and is freely assignable without the need to obtain consent of any Obligor or any other person.',
+      );
   });
 });

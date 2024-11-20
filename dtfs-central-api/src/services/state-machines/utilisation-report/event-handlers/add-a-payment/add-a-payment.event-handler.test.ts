@@ -1,11 +1,14 @@
 import { EntityManager } from 'typeorm';
 import {
   Currency,
+  CURRENCY,
   DbRequestSource,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
+  PENDING_RECONCILIATION,
   PaymentEntity,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  RECONCILIATION_IN_PROGRESS,
+  REQUEST_PLATFORM_TYPE,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -19,7 +22,7 @@ jest.mock('../helpers');
 describe('handleUtilisationReportAddAPaymentEvent', () => {
   const tfmUserId = 'abc123';
   const requestSource: DbRequestSource = {
-    platform: 'TFM',
+    platform: REQUEST_PLATFORM_TYPE.TFM,
     userId: tfmUserId,
   };
 
@@ -28,7 +31,7 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     save: mockSave,
   } as unknown as EntityManager;
 
-  const paymentCurrency: Currency = 'GBP';
+  const paymentCurrency: Currency = CURRENCY.GBP;
   const paymentDetails: NewPaymentDetails = {
     currency: paymentCurrency,
     amount: 100,
@@ -59,7 +62,7 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
 
   it('creates and saves the new payment entity using the supplied entity manager', async () => {
     // Arrange
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
 
     const feeRecords = aListOfFeeRecordsForReport(utilisationReport);
 
@@ -83,7 +86,7 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
 
   it('calls the fee record state machine event handler for each fee record in the payload', async () => {
     // Arrange
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
 
     const feeRecords = aListOfFeeRecordsForReport(utilisationReport);
     const eventHandlers = feeRecords.reduce((obj, { id }) => ({ ...obj, [id]: aMockEventHandler() }), {} as { [id: number]: jest.Mock });
@@ -118,7 +121,7 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
 
   it("calls the fee record state machine event handler with 'feeRecordsAndPaymentsMatch' set to true if the fee records match the payments", async () => {
     // Arrange
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
 
     const feeRecords = aListOfFeeRecordsForReport(utilisationReport);
     const eventHandlers = feeRecords.reduce((obj, { id }) => ({ ...obj, [id]: aMockEventHandler() }), {} as { [id: number]: jest.Mock });
@@ -155,7 +158,7 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
 
   it("calls the fee record state machine event handler with 'feeRecordsAndPaymentsMatch' set to false if the fee records do not match the payments", async () => {
     // Arrange
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
 
     const feeRecords = aListOfFeeRecordsForReport(utilisationReport);
     const eventHandlers = feeRecords.reduce((obj, { id }) => ({ ...obj, [id]: aMockEventHandler() }), {} as { [id: number]: jest.Mock });
@@ -192,7 +195,7 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
 
   it('saves the updated report', async () => {
     // Arrange
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
 
     const feeRecords = aListOfFeeRecordsForReport(utilisationReport);
 
@@ -208,9 +211,9 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, utilisationReport);
   });
 
-  it(`only updates the report audit fields if the report status is '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS}'`, async () => {
+  it(`only updates the report audit fields if the report status is '${RECONCILIATION_IN_PROGRESS}'`, async () => {
     // Arrange
-    const reconciliationInProgressReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+    const reconciliationInProgressReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
 
     const feeRecords = aListOfFeeRecordsForReport(reconciliationInProgressReport);
 
@@ -228,9 +231,9 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     expect(reconciliationInProgressReport.lastUpdatedByTfmUserId).toEqual(tfmUserId);
   });
 
-  it(`updates the report audit fields and status if the report status is '${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}'`, async () => {
+  it(`updates the report audit fields and status if the report status is '${PENDING_RECONCILIATION}'`, async () => {
     // Arrange
-    const pendingReconciliationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    const pendingReconciliationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
 
     const feeRecords = aListOfFeeRecordsForReport(pendingReconciliationReport);
 
@@ -246,6 +249,6 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     expect(pendingReconciliationReport.lastUpdatedByIsSystemUser).toEqual(false);
     expect(pendingReconciliationReport.lastUpdatedByPortalUserId).toBeNull();
     expect(pendingReconciliationReport.lastUpdatedByTfmUserId).toEqual(tfmUserId);
-    expect(pendingReconciliationReport.status).toEqual(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS);
+    expect(pendingReconciliationReport.status).toEqual(RECONCILIATION_IN_PROGRESS);
   });
 });

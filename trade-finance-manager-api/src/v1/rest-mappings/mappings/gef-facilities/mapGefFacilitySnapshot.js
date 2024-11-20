@@ -1,13 +1,13 @@
 const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityValue = require('../facilities/mapFacilityValue');
 const mapFacilityProduct = require('../facilities/mapFacilityProduct');
-const mapFacilityType = require('../facilities/mapFacilityType');
 const mapGuaranteeFeePayableToUkef = require('../facilities/mapGuaranteeFeePayableToUkef');
 const mapGefUkefFacilityType = require('./mapGefUkefFacilityType');
 const mapGefFacilityDates = require('./mapGefFacilityDates');
 const mapFacilityValueExportCurrency = require('../facilities/mapFacilityValueExportCurrency');
 const mapUkefExposureValue = require('../facilities/mapUkefExposureValue');
 const { mapGefFacilityStage } = require('../facilities/mapFacilityStage');
+const { mapGefFacilityType } = require('../facilities/mapFacilityType');
 
 /**
  * Maps a GEF facility snapshot in the database to the facility snapshot used in TFM-API and TFM-UI.
@@ -21,46 +21,64 @@ const { mapGefFacilityStage } = require('../facilities/mapFacilityStage');
 const mapGefFacilitySnapshot = (facility, dealSnapshot) => {
   const { facilitySnapshot, tfm: facilityTfm } = facility;
 
-  const { dealId, coverPercentage, currency, value, interestPercentage, feeType, feeFrequency, hasBeenIssued, name, type, ukefFacilityId, guaranteeFee } =
-    facilitySnapshot;
+  const {
+    _id,
+    ukefFacilityId,
+    dealId,
+    type,
+    hasBeenIssued,
+    value,
+    guaranteeFee,
+    currency,
+    coverPercentage,
+    interestPercentage,
+    feeType,
+    feeFrequency,
+    name,
+    dayCountBasis,
+    details,
+    detailsOther,
+  } = facilitySnapshot;
 
   const formattedFacilityValue = formattedNumber(value);
 
-  facilitySnapshot.facilityProduct = mapFacilityProduct(type);
-
-  facilitySnapshot.facilityStage = mapGefFacilityStage(hasBeenIssued);
-
-  facilitySnapshot.ukefFacilityType = type;
-
-  const mapped = {
-    _id: facility._id,
-    isGef: true,
+  const mappedFacilitySnapshot = {
+    // Fields in common with all facility types
+    _id,
+    ukefFacilityId,
     dealId,
+    isGef: true,
+    type: mapGefFacilityType(type),
+    hasBeenIssued,
+
+    ukefFacilityType: mapGefUkefFacilityType(type), // TODO: DTFS2-4634 - we shouldn't need type and ukefFacilityType.
+    facilityStage: mapGefFacilityStage(hasBeenIssued, facilityTfm?.facilityStage),
+    facilityProduct: mapFacilityProduct(type),
+
     bankFacilityReference: name,
     banksInterestMargin: `${interestPercentage}%`,
-    coveredPercentage: `${coverPercentage}%`,
-    dates: mapGefFacilityDates(facility, facilityTfm, dealSnapshot),
-    facilityProduct: facilitySnapshot.facilityProduct,
-    facilityStage: facilitySnapshot.facilityStage,
-    hasBeenIssued: facilitySnapshot.hasBeenIssued,
-    type: mapFacilityType(facilitySnapshot),
+
     currency: currency.id,
+    coveredPercentage: `${coverPercentage}%`,
+    dayCountBasis,
+
     facilityValueExportCurrency: mapFacilityValueExportCurrency(facility),
     value: mapFacilityValue(currency.id, formattedFacilityValue, facility),
+
+    ukefExposure: mapUkefExposureValue(facilityTfm, facility),
+    guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFee),
+
     feeType,
     feeFrequency,
-    guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFee),
-    dayCountBasis: facilitySnapshot.dayCountBasis,
 
-    // TODO: DTFS2-4634 - we shouldn't need type and ukefFacilityType.
-    ukefFacilityType: mapGefUkefFacilityType(type),
-    ukefFacilityId,
-    ukefExposure: mapUkefExposureValue(facilityTfm, facility),
-    providedOn: facilitySnapshot.details,
-    providedOnOther: facilitySnapshot.detailsOther,
+    dates: mapGefFacilityDates(facility, facilityTfm, dealSnapshot),
+
+    // Mapped fields unique to GEF facilities
+    providedOn: details,
+    providedOnOther: detailsOther,
   };
 
-  return mapped;
+  return mappedFacilitySnapshot;
 };
 
 module.exports = mapGefFacilitySnapshot;

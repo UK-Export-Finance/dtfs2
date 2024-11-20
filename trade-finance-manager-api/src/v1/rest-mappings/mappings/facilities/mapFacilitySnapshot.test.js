@@ -1,7 +1,7 @@
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const mapFacilitySnapshot = require('./mapFacilitySnapshot');
 const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityProduct = require('./mapFacilityProduct');
-const mapFacilityType = require('./mapFacilityType');
 const mapFacilityValue = require('./mapFacilityValue');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
@@ -10,9 +10,9 @@ const mapFirstDrawdownAmountInExportCurrency = require('./mapFirstDrawdownAmount
 const mapFeeType = require('./mapFeeType');
 const mapFeeFrequency = require('./mapFeeFrequency');
 const mapDates = require('./mapDates');
-
-const MOCK_DEAL = require('../../../__mocks__/mock-deal');
 const { mapBssEwcsFacilityStage } = require('./mapFacilityStage');
+const { mapBssEwcsFacilityType } = require('./mapFacilityType');
+const MOCK_DEAL = require('../../../__mocks__/mock-deal');
 
 describe('mapFacility', () => {
   const mockFacilityTfm = {
@@ -33,7 +33,7 @@ describe('mapFacility', () => {
 
   const mockCurrency = {
     text: 'GBP - UK Sterling',
-    id: 'GBP',
+    id: CURRENCY.GBP,
   };
 
   const mockFacilityValue = '12345.00';
@@ -48,7 +48,7 @@ describe('mapFacility', () => {
     ukefFacilityType: mockType,
     ...mockCoverEndDate,
     coveredPercentage: mockCoveredPercentage,
-    bondType: 'Performance Bond',
+    bondType: BOND_TYPE.PERFORMANCE_BOND,
     currency: mockCurrency,
     value: mockFacilityValue,
     facilityStage: mockFacilityStage,
@@ -86,14 +86,9 @@ describe('mapFacility', () => {
 
     const expectedFacilityValueExportCurrency = `${mockCurrency.id} ${formattedFacilityValue}`;
 
-    const facilityStage = mapBssEwcsFacilityStage(mockFacilityStage, mockFacilityTfm.facilityStage);
-
     const expectedFacilityProduct = mapFacilityProduct(mockFacilitySnapshot.type);
 
-    const expectedType = mapFacilityType({
-      ...mockFacilitySnapshot,
-      facilityProduct: expectedFacilityProduct,
-    });
+    const expectedType = mapBssEwcsFacilityType(mockType, mockFacilitySnapshot);
 
     const expectedBanksInterestMargin = mapBanksInterestMargin({
       ...mockFacilitySnapshot,
@@ -103,7 +98,6 @@ describe('mapFacility', () => {
     const facilityLatest = {
       facilitySnapshot: {
         ...mockFacilitySnapshot,
-        facilityStage,
         facilityProduct: expectedFacilityProduct,
       },
     };

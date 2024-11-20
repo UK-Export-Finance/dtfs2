@@ -1,3 +1,4 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const pages = require('../../pages');
 const partials = require('../../partials');
 const relative = require('../../relativeURL');
@@ -15,7 +16,7 @@ const MOCK_DEAL = {
   details: {},
   submissionDetails: {
     supplyContractCurrency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
   },
   mockFacilities: [

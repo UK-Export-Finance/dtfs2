@@ -1,4 +1,4 @@
-import { CurrencyAndAmountString } from '@ukef/dtfs2-common';
+import { CURRENCY, CurrencyAndAmountString } from '@ukef/dtfs2-common';
 import { KeyingSheetViewModel } from '../../../server/types/view-models';
 import { componentRenderer } from '../../componentRenderer';
 
@@ -14,7 +14,7 @@ describe(component, () => {
     feeRecordId: 12,
     facilityId: '12345678',
     exporter: 'Test exporter',
-    baseCurrency: 'GBP',
+    baseCurrency: CURRENCY.GBP,
     feePayments: [
       {
         formattedCurrencyAndAmount: 'GBP 100.00',

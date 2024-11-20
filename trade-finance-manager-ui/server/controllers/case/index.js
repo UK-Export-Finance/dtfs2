@@ -1,7 +1,14 @@
 const { format, fromUnixTime } = require('date-fns');
-const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled, FLASH_TYPES } = require('@ukef/dtfs2-common');
 const api = require('../../api');
-const { getTask, showAmendmentButton, ukefDecisionRejected, isDealCancellationEnabled, canDealBeCancelled, isDealCancellationInDraft } = require('../helpers');
+const {
+  getTask,
+  showAmendmentButton,
+  ukefDecisionRejected,
+  isDealCancellationEnabledForUser,
+  canDealBeCancelled,
+  isDealCancellationInDraft,
+} = require('../helpers');
 const { formattedNumber } = require('../../helpers/number');
 const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-options');
 const CONSTANTS = require('../../constants');
@@ -10,6 +17,7 @@ const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require(
 const validatePartyURN = require('./parties/partyUrnValidation.validate');
 const { bondType, partyType, userCanEdit } = require('./parties/helpers');
 const { asUserSession } = require('../../helpers/express-session');
+const { getDealSuccessBannerMessage } = require('../helpers/get-success-banner-message.helper');
 
 const {
   DEAL,
@@ -19,55 +27,67 @@ const {
 } = CONSTANTS;
 
 const getCaseDeal = async (req, res) => {
-  const dealId = req.params._id;
-  const { userToken } = req.session;
+  try {
+    const dealId = req.params._id;
+    const { userToken } = req.session;
 
-  const { user } = asUserSession(req.session);
+    const { user } = asUserSession(req.session);
 
-  const deal = await api.getDeal(dealId, userToken);
-  const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
+    const deal = await api.getDeal(dealId, userToken);
+    const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
 
-  if (!deal) {
-    return res.redirect('/not-found');
+    if (!deal) {
+      return res.redirect('/not-found');
+    }
+
+    if (!amendments || !Array.isArray(amendments)) {
+      console.error('Unable to get amendments for deal id %s', dealId);
+      return res.redirect('/not-found');
+    }
+
+    const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENT_STATUS.IN_PROGRESS);
+    const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+    if (hasAmendmentInProgress) {
+      deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+    }
+
+    const { dealSnapshot } = deal;
+
+    const dealCancellationIsEnabled = isDealCancellationEnabledForUser(dealSnapshot.submissionType, user);
+
+    let showDealCancelButton = false;
+    let hasDraftCancellation = false;
+
+    if (dealCancellationIsEnabled) {
+      const cancellation = await api.getDealCancellation(dealId, userToken);
+      showDealCancelButton = canDealBeCancelled(cancellation.status);
+      hasDraftCancellation = isDealCancellationInDraft(cancellation.status);
+    }
+
+    const successMessage = await getDealSuccessBannerMessage({
+      dealSnapshot,
+      userToken,
+      flashedSuccessMessage: req.flash(FLASH_TYPES.SUCCESS_MESSAGE)[0],
+    });
+
+    return res.render('case/deal/deal.njk', {
+      deal: deal.dealSnapshot,
+      tfm: deal.tfm,
+      successMessage,
+      activePrimaryNavigation: 'manage work',
+      activeSubNavigation: 'deal',
+      dealId,
+      user: req.session.user,
+      amendments,
+      amendmentsInProgress,
+      hasAmendmentInProgress,
+      showDealCancelButton,
+      hasDraftCancellation,
+    });
+  } catch (error) {
+    console.error('Unable to render deal %o', error);
+    return res.render('_partials/problem-with-service.njk');
   }
-
-  if (!amendments || !Array.isArray(amendments)) {
-    console.error('Unable to get amendments for deal id %s', dealId);
-    return res.redirect('/not-found');
-  }
-
-  const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENT_STATUS.IN_PROGRESS);
-  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
-  if (hasAmendmentInProgress) {
-    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
-  }
-
-  const { submissionType } = deal.dealSnapshot;
-
-  const dealCancellationIsEnabled = isDealCancellationEnabled(submissionType, user);
-
-  let showDealCancelButton = false;
-  let hasDraftCancellation = false;
-
-  if (dealCancellationIsEnabled) {
-    const cancellation = await api.getDealCancellation(dealId, userToken);
-    showDealCancelButton = canDealBeCancelled(cancellation.status);
-    hasDraftCancellation = isDealCancellationInDraft(cancellation.status);
-  }
-
-  return res.render('case/deal/deal.njk', {
-    deal: deal.dealSnapshot,
-    tfm: deal.tfm,
-    activePrimaryNavigation: 'manage work',
-    activeSubNavigation: 'deal',
-    dealId,
-    user: req.session.user,
-    amendments,
-    amendmentsInProgress,
-    hasAmendmentInProgress,
-    showDealCancelButton,
-    hasDraftCancellation,
-  });
 };
 
 const getCaseTasks = async (req, res) => {
@@ -101,10 +121,19 @@ const getCaseTasks = async (req, res) => {
     });
   }
 
+  const { dealSnapshot } = deal;
+
+  const successMessage = await getDealSuccessBannerMessage({
+    dealSnapshot,
+    userToken,
+    flashedSuccessMessage: req.flash(FLASH_TYPES.SUCCESS_MESSAGE)[0],
+  });
+
   return res.render('case/tasks/tasks.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
     tasks: deal.tfm.tasks,
+    successMessage,
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'tasks',
     dealId,
@@ -308,6 +337,14 @@ const getCaseFacility = async (req, res) => {
 
   const deal = await api.getDeal(dealId, userToken);
 
+  /**
+   * Ensure imperative deal properties exist before rendering
+   */
+  if (!deal?.dealSnapshot?._id || !deal?.tfm) {
+    console.error('An error occurred while rendering a TFM deal %s', dealId);
+    return res.render('_partials/problem-with-service.njk');
+  }
+
   const hasAmendmentInProgressButton = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
   const showContinueAmendmentButton = hasAmendmentInProgressButton && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
 
@@ -365,9 +402,18 @@ const getCaseDocuments = async (req, res) => {
     }
     const amendmentsInProgress = amendmentsInProgressByDeal(amendments);
 
+    const { dealSnapshot } = deal;
+
+    const successMessage = await getDealSuccessBannerMessage({
+      dealSnapshot,
+      userToken,
+      flashedSuccessMessage: req.flash(FLASH_TYPES.SUCCESS_MESSAGE)[0],
+    });
+
     return res.render('case/documents/documents.njk', {
       deal: deal.dealSnapshot,
       tfm: deal.tfm,
+      successMessage,
       eStoreUrl: process.env.ESTORE_URL,
       activePrimaryNavigation: 'manage work',
       activeSubNavigation: 'documents',

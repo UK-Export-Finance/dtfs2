@@ -6,6 +6,7 @@ import {
   PaymentEntity,
   PaymentEntityMockBuilder,
   PaymentMatchingToleranceEntityMockBuilder,
+  PENDING_RECONCILIATION,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { EntityManager } from 'typeorm';
@@ -39,7 +40,7 @@ describe('fee-record-matching', () => {
 
     it('throws an error if no active tolerance found for currency', async () => {
       // Arrange
-      const feeRecords = getFeeRecordsWithReportedPayments([100], 'GBP');
+      const feeRecords = getFeeRecordsWithReportedPayments([100], CURRENCY.GBP);
       const payments: PaymentEntity[] = [];
 
       mockFindOneByCurrencyAndIsActiveTrue.mockResolvedValue(null);
@@ -50,10 +51,10 @@ describe('fee-record-matching', () => {
 
     it('fetches payment matching tolerance within the transaction', async () => {
       // Arrange
-      const feeRecords = getFeeRecordsWithReportedPayments([100], 'GBP');
+      const feeRecords = getFeeRecordsWithReportedPayments([100], CURRENCY.GBP);
       const payments: PaymentEntity[] = [];
 
-      mockFindOneByCurrencyAndIsActiveTrue.mockResolvedValue(PaymentMatchingToleranceEntityMockBuilder.forCurrency('GBP').build());
+      mockFindOneByCurrencyAndIsActiveTrue.mockResolvedValue(PaymentMatchingToleranceEntityMockBuilder.forCurrency(CURRENCY.GBP).build());
       const withTransactionSpy = jest
         .spyOn(PaymentMatchingToleranceRepo, 'withTransaction')
         .mockReturnValue({ findOneByCurrencyAndIsActiveTrue: mockFindOneByCurrencyAndIsActiveTrue });
@@ -69,7 +70,7 @@ describe('fee-record-matching', () => {
     it.each(Object.values(CURRENCY))('uses fee record payment currency to fetch tolerance (currency: %s)', async (currency: Currency) => {
       // Arrange
       const feeRecords = [
-        FeeRecordEntityMockBuilder.forReport(UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build())
+        FeeRecordEntityMockBuilder.forReport(UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build())
           .withPaymentCurrency(currency)
           .build(),
       ];
@@ -160,10 +161,10 @@ describe('fee-record-matching', () => {
 
       it('returns true if fee record payment amount is zero and there are no payments', async () => {
         // Arrange
-        const feeRecords = getFeeRecordsWithReportedPayments([0], 'GBP');
+        const feeRecords = getFeeRecordsWithReportedPayments([0], CURRENCY.GBP);
         const payments: PaymentEntity[] = [];
 
-        mockFindOneByCurrencyAndIsActiveTrue.mockResolvedValue(PaymentMatchingToleranceEntityMockBuilder.forCurrency('GBP').withThreshold(0).build());
+        mockFindOneByCurrencyAndIsActiveTrue.mockResolvedValue(PaymentMatchingToleranceEntityMockBuilder.forCurrency(CURRENCY.GBP).withThreshold(0).build());
 
         // Act
         const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
@@ -174,10 +175,10 @@ describe('fee-record-matching', () => {
 
       it('returns false if fee record payment amount is non-zero and there are no payments', async () => {
         // Arrange
-        const feeRecords = getFeeRecordsWithReportedPayments([0.01], 'GBP');
+        const feeRecords = getFeeRecordsWithReportedPayments([0.01], CURRENCY.GBP);
         const payments: PaymentEntity[] = [];
 
-        mockFindOneByCurrencyAndIsActiveTrue.mockResolvedValue(PaymentMatchingToleranceEntityMockBuilder.forCurrency('GBP').withThreshold(0).build());
+        mockFindOneByCurrencyAndIsActiveTrue.mockResolvedValue(PaymentMatchingToleranceEntityMockBuilder.forCurrency(CURRENCY.GBP).withThreshold(0).build());
 
         // Act
         const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
@@ -206,7 +207,7 @@ describe('fee-record-matching', () => {
 
             const paymentCurrency: Currency = 'USD';
 
-            const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+            const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
             const feeRecords = [
               FeeRecordEntityMockBuilder.forReport(utilisationReport)
                 .withPaymentCurrency(paymentCurrency)
@@ -243,7 +244,7 @@ describe('fee-record-matching', () => {
           // 0.1 / 200 = 0.0005 = 0 (to 2 decimal places)
           const feesPaidAmount = 0.1;
           const exchangeRate = 200;
-          const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+          const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
           const feeRecords = [
             FeeRecordEntityMockBuilder.forReport(utilisationReport)
               .withId(1)
@@ -273,7 +274,7 @@ describe('fee-record-matching', () => {
           // 1 / 200 = 0.005 = 0.1 (to 2 decimal places)
           const feesPaidAmount = 1;
           const exchangeRate = 200;
-          const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+          const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
           const feeRecords = [
             FeeRecordEntityMockBuilder.forReport(utilisationReport)
               .withId(1)
@@ -452,10 +453,12 @@ describe('fee-record-matching', () => {
       it('returns true if fee record payment amount does not exceed the tolerance and there are no payments', async () => {
         // Arrange
         const tolerance = 3;
-        const feeRecords = getFeeRecordsWithReportedPayments([tolerance], 'GBP');
+        const feeRecords = getFeeRecordsWithReportedPayments([tolerance], CURRENCY.GBP);
         const payments: PaymentEntity[] = [];
 
-        mockFindOneByCurrencyAndIsActiveTrue.mockResolvedValue(PaymentMatchingToleranceEntityMockBuilder.forCurrency('GBP').withThreshold(tolerance).build());
+        mockFindOneByCurrencyAndIsActiveTrue.mockResolvedValue(
+          PaymentMatchingToleranceEntityMockBuilder.forCurrency(CURRENCY.GBP).withThreshold(tolerance).build(),
+        );
 
         // Act
         const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
@@ -467,10 +470,12 @@ describe('fee-record-matching', () => {
       it('returns false if fee record payment amount exceeds the tolerance and there are no payments', async () => {
         // Arrange
         const tolerance = 3;
-        const feeRecords = getFeeRecordsWithReportedPayments([3.01], 'GBP');
+        const feeRecords = getFeeRecordsWithReportedPayments([3.01], CURRENCY.GBP);
         const payments: PaymentEntity[] = [];
 
-        mockFindOneByCurrencyAndIsActiveTrue.mockResolvedValue(PaymentMatchingToleranceEntityMockBuilder.forCurrency('GBP').withThreshold(tolerance).build());
+        mockFindOneByCurrencyAndIsActiveTrue.mockResolvedValue(
+          PaymentMatchingToleranceEntityMockBuilder.forCurrency(CURRENCY.GBP).withThreshold(tolerance).build(),
+        );
 
         // Act
         const result = await feeRecordsAndPaymentsMatch(feeRecords, payments, mockEntityManager);
@@ -488,7 +493,7 @@ describe('fee-record-matching', () => {
           // 600.1 / 200 = 3.00005, rounded to 2 decimal places = 3 = tolerance
           const feesPaidAmount = 600.1;
           const exchangeRate = 200;
-          const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+          const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
           const feeRecords = [
             FeeRecordEntityMockBuilder.forReport(utilisationReport)
               .withId(1)
@@ -519,7 +524,7 @@ describe('fee-record-matching', () => {
           // 601 / 200 = 3.005, rounded to 2 decimal places = 3.01 > tolerance
           const feesPaidAmount = 601;
           const exchangeRate = 200;
-          const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+          const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
           const feeRecords = [
             FeeRecordEntityMockBuilder.forReport(utilisationReport)
               .withId(1)
@@ -560,9 +565,9 @@ describe('fee-record-matching', () => {
             const secondFeeRecordPaymentExchangeRate = 200;
             const secondFeeRecordAmount = 1000; // = 5 GBP
 
-            const paymentCurrency: Currency = 'GBP';
+            const paymentCurrency: Currency = CURRENCY.GBP;
 
-            const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+            const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
             const feeRecords = [
               FeeRecordEntityMockBuilder.forReport(utilisationReport)
                 .withId(1)
@@ -612,9 +617,9 @@ describe('fee-record-matching', () => {
             const secondFeeRecordPaymentExchangeRate = 200;
             const secondFeeRecordAmount = 1000; // = 5 GBP
 
-            const paymentCurrency: Currency = 'GBP';
+            const paymentCurrency: Currency = CURRENCY.GBP;
 
-            const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+            const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
             const feeRecords = [
               FeeRecordEntityMockBuilder.forReport(utilisationReport)
                 .withId(1)
@@ -650,7 +655,7 @@ describe('fee-record-matching', () => {
   });
 
   function getFeeRecordsWithReportedPayments(reportedPaymentAmounts: number[], paymentCurrency: Currency): FeeRecordEntity[] {
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
     return reportedPaymentAmounts.map((paymentAmount) =>
       FeeRecordEntityMockBuilder.forReport(utilisationReport)
         .withPaymentCurrency(paymentCurrency)

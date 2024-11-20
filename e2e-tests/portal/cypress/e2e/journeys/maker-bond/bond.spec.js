@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { DETAILS } from './bond-form-values';
 
 const pages = require('../../pages');
@@ -12,7 +13,7 @@ const MOCK_DEAL = {
   additionalRefName: 'someDealName',
   submissionDetails: {
     supplyContractCurrency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
   },
 };

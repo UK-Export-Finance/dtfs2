@@ -6,11 +6,12 @@ import {
   AzureFileInfoEntity,
   FeeRecordEntity,
   FacilityUtilisationDataEntity,
+  UtilisationReportRawCsvData,
 } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
-import { UtilisationReportRawCsvData } from '../../../../../types/utilisation-reports';
 import { feeRecordCsvRowToSqlEntity, getPreviousReportPeriod } from '../../../../../helpers';
 import { calculateInitialUtilisationAndFixedFee } from '../helpers';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../event/utilisation-report.event-type';
 
 type ReportUploadedEventPayload = {
   azureFileInfo: AzureFileInfo;
@@ -60,7 +61,7 @@ const createFacilityUtilisationDataEntityIfNotExists = async (
 
 const CHUNK_SIZE_FOR_BATCH_SAVING = 100;
 
-export type UtilisationReportReportUploadedEvent = BaseUtilisationReportEvent<'REPORT_UPLOADED', ReportUploadedEventPayload>;
+export type UtilisationReportReportUploadedEvent = BaseUtilisationReportEvent<typeof UTILISATION_REPORT_EVENT_TYPE.REPORT_UPLOADED, ReportUploadedEventPayload>;
 
 /**
  * Handler for the report uploaded event

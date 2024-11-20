@@ -1,18 +1,24 @@
 import { DEAL_SUBMISSION_TYPE, TEAM_IDS, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
-import { canDealBeCancelled, canSubmissionTypeBeCancelled, isDealCancellationEnabled, isDealCancellationInDraft } from './deal-cancellation-enabled.helper';
+import {
+  canDealBeCancelled,
+  canSubmissionTypeBeCancelled,
+  isDealCancellationEnabledForUser,
+  isDealCancellationInDraft,
+  isDealCancellationEnabled,
+} from './deal-cancellation-enabled.helper';
 import { TfmSessionUser } from '../../types/tfm-session-user';
 
 const pimUser = { teams: [TEAM_IDS.PIM] } as TfmSessionUser;
 const nonPimUser = { teams: [TEAM_IDS.UNDERWRITERS] } as TfmSessionUser;
 
 const { AIN, MIN, MIA } = DEAL_SUBMISSION_TYPE;
-const { COMPLETED, SCHEDULED, DRAFT } = TFM_DEAL_CANCELLATION_STATUS;
+const { COMPLETED, PENDING, DRAFT } = TFM_DEAL_CANCELLATION_STATUS;
 
-describe('dealCancellationEnabled', () => {
+describe('isDealCancellationEnabledForUser', () => {
   describe('when `FF_TFM_FACILITY_END_DATE_ENABLED` is set to false', () => {
     describe('when user is a PIM user', () => {
       it.each([MIA, MIN, AIN])('should return false if the deal type is %s', (type) => {
-        const result = isDealCancellationEnabled(type, pimUser);
+        const result = isDealCancellationEnabledForUser(type, pimUser);
 
         expect(result).toEqual(false);
       });
@@ -20,7 +26,27 @@ describe('dealCancellationEnabled', () => {
 
     describe('when user is not a PIM user', () => {
       it.each([MIA, MIN, AIN])('should return false if the deal type is %s', (type) => {
-        const result = isDealCancellationEnabled(type, nonPimUser);
+        const result = isDealCancellationEnabledForUser(type, nonPimUser);
+
+        expect(result).toEqual(false);
+      });
+    });
+  });
+});
+
+describe('isDealCancellationEnabled', () => {
+  describe('when `FF_TFM_FACILITY_END_DATE_ENABLED` is set to false', () => {
+    describe('when user is a PIM user', () => {
+      it.each([MIA, MIN, AIN])('should return false if the deal type is %s', (type) => {
+        const result = isDealCancellationEnabled(type);
+
+        expect(result).toEqual(false);
+      });
+    });
+
+    describe('when user is not a PIM user', () => {
+      it.each([MIA, MIN, AIN])('should return false if the deal type is %s', (type) => {
+        const result = isDealCancellationEnabled(type);
 
         expect(result).toEqual(false);
       });
@@ -49,8 +75,8 @@ describe('canDealStillBeCancelled', () => {
     expect(result).toEqual(false);
   });
 
-  it(`returns false when the cancellation status is ${SCHEDULED}`, () => {
-    const result = canDealBeCancelled(SCHEDULED);
+  it(`returns false when the cancellation status is ${PENDING}`, () => {
+    const result = canDealBeCancelled(PENDING);
 
     expect(result).toEqual(false);
   });
@@ -75,8 +101,8 @@ describe('isDealCancellationInDraft', () => {
     expect(result).toEqual(false);
   });
 
-  it(`returns false when the cancellation status is ${SCHEDULED}`, () => {
-    const result = isDealCancellationInDraft(SCHEDULED);
+  it(`returns false when the cancellation status is ${PENDING}`, () => {
+    const result = isDealCancellationInDraft(PENDING);
 
     expect(result).toEqual(false);
   });

@@ -1,3 +1,4 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../constants');
 
 const MOCK_UNISSUED_FACILITY = {
@@ -14,7 +15,7 @@ const MOCK_UNISSUED_FACILITY = {
     monthsOfCover: null,
     details: [],
     detailsOther: '',
-    currency: 'GBP',
+    currency: CURRENCY.GBP,
     value: 2000,
     coverPercentage: 80,
     interestPercentage: 1,
@@ -47,7 +48,7 @@ const MOCK_ISSUED_FACILITY = {
     monthsOfCover: null,
     details: [],
     detailsOther: '',
-    currency: 'GBP',
+    currency: CURRENCY.GBP,
     value: 2000,
     coverPercentage: 80,
     interestPercentage: 1,
@@ -81,7 +82,7 @@ const MOCK_ISSUED_FACILITY_UNCHANGED = {
     monthsOfCover: null,
     details: [],
     detailsOther: '',
-    currency: 'GBP',
+    currency: CURRENCY.GBP,
     value: 2000,
     coverPercentage: 80,
     interestPercentage: 1,
@@ -117,7 +118,7 @@ const MOCK_FACILITY = {
         monthsOfCover: null,
         details: [],
         detailsOther: '',
-        currency: { id: 'GBP' },
+        currency: { id: CURRENCY.GBP },
         value: 1000,
         coverPercentage: 80,
         interestPercentage: 1,
@@ -149,7 +150,7 @@ const MOCK_FACILITY = {
         monthsOfCover: null,
         details: [],
         detailsOther: '',
-        currency: 'GBP',
+        currency: CURRENCY.GBP,
         value: 2000,
         coverPercentage: 80,
         interestPercentage: 1,
@@ -181,7 +182,7 @@ const MOCK_FACILITY = {
         monthsOfCover: null,
         details: [],
         detailsOther: '',
-        currency: { id: 'GBP' },
+        currency: { id: CURRENCY.GBP },
         value: 1000,
         coverPercentage: 80,
         interestPercentage: 1,

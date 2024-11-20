@@ -5,10 +5,13 @@ import {
   MONGO_DB_COLLECTIONS,
   TFM_DEAL_CANCELLATION_STATUS,
   TFM_DEAL_STAGE,
+  TfmActivity,
   TFM_FACILITY_STAGE,
+  TfmDeal,
+  DEAL_TYPE,
 } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import { ObjectId } from 'mongodb';
+import { ObjectId, ModifyResult, WithoutId, UpdateResult } from 'mongodb';
 import { flatten } from 'mongo-dot-notation';
 import { getUnixTime } from 'date-fns';
 import { mongoDbClient as db } from '../../drivers/db-client';
@@ -16,6 +19,8 @@ import { TfmDealCancellationRepo } from './tfm-deal-cancellation.repo';
 import { aTfmUser } from '../../../test-helpers';
 
 const dealId = new ObjectId();
+
+const mockDeal = { dealSnapshot: { dealType: DEAL_TYPE.GEF } } as TfmDeal;
 
 const mockBankRequestDate = getUnixTime(new Date('2024-01-01'));
 const mockEffectiveFrom = getUnixTime(new Date('2025-02-02'));
@@ -27,37 +32,36 @@ const tfmUserId = aTfmUser()._id;
 
 const auditDetails = generateTfmAuditDetails(tfmUserId);
 
+const mockActivity = { text: 'This is an activity' } as TfmActivity;
+
 describe('tfm-deals-cancellation-repo', () => {
-  const updateOneMock = jest.fn();
+  const findOneAndUpdateMock = jest.fn();
   const updateManyMock = jest.fn();
   const findMock = jest.fn();
   const findToArrayMock = jest.fn();
   const getCollectionMock = jest.fn();
 
-  const matchingFacilityId1 = new ObjectId();
-  const matchingFacilityId2 = new ObjectId();
-
-  const mockMatchedFacilities = [{ facilitySnapshot: { ukefFacilityId: matchingFacilityId1 } }, { facilitySnapshot: { ukefFacilityId: matchingFacilityId2 } }];
+  const mockMatchedFacilities = [{ facilitySnapshot: { _id: new ObjectId() } }, { facilitySnapshot: { _id: new ObjectId() } }];
 
   afterEach(() => {
     jest.resetAllMocks();
   });
 
   describe('submitDealCancellation', () => {
-    const mockUpdateResult = { matchedCount: 1 };
-
+    const mockUpdateResult = { matchedCount: 1 } as UpdateResult;
+    const mockModifyResult = { value: mockDeal } as ModifyResult<WithoutId<TfmDeal>>;
     beforeAll(() => {
       jest.useFakeTimers();
     });
 
     beforeEach(() => {
-      updateOneMock.mockResolvedValue(mockUpdateResult);
+      findOneAndUpdateMock.mockResolvedValue(mockModifyResult);
       updateManyMock.mockResolvedValue(mockUpdateResult);
       findToArrayMock.mockResolvedValue(mockMatchedFacilities);
       findMock.mockReturnValue({ toArray: findToArrayMock });
 
       getCollectionMock.mockResolvedValue({
-        updateOne: updateOneMock,
+        findOneAndUpdate: findOneAndUpdateMock,
         updateMany: updateManyMock,
         find: findMock,
       });
@@ -70,7 +74,7 @@ describe('tfm-deals-cancellation-repo', () => {
 
     it('calls the DB with the correct collection names', async () => {
       // Act
-      await TfmDealCancellationRepo.submitDealCancellation(dealId, mockDealCancellationObject, auditDetails);
+      await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation: mockDealCancellationObject, auditDetails, activity: mockActivity });
 
       // Assert
       expect(getCollectionMock).toHaveBeenCalledTimes(2);
@@ -83,29 +87,34 @@ describe('tfm-deals-cancellation-repo', () => {
       const invalidDealId = 'xyz';
 
       // Assert
-      await expect(TfmDealCancellationRepo.submitDealCancellation(invalidDealId, mockDealCancellationObject, auditDetails)).rejects.toThrow(
-        new InvalidDealIdError(invalidDealId.toString()),
-      );
+      await expect(
+        TfmDealCancellationRepo.submitDealCancellation({
+          dealId: invalidDealId,
+          cancellation: mockDealCancellationObject,
+          auditDetails,
+          activity: mockActivity,
+        }),
+      ).rejects.toThrow(new InvalidDealIdError(invalidDealId.toString()));
     });
 
     it('throws a DealNotFoundError if no matching deal is found', async () => {
       // Arrange
-      const mockFailedUpdateResult = { matchedCount: 0 };
+      const mockFailedModifyResult = { value: null } as ModifyResult<WithoutId<TfmDeal>>;
 
-      updateOneMock.mockResolvedValue(mockFailedUpdateResult);
+      findOneAndUpdateMock.mockResolvedValue(mockFailedModifyResult);
 
-      getCollectionMock.mockResolvedValue({ updateOne: updateOneMock });
+      getCollectionMock.mockResolvedValue({ findOneAndUpdate: findOneAndUpdateMock });
 
       // Assert
-      await expect(TfmDealCancellationRepo.submitDealCancellation(dealId, mockDealCancellationObject, auditDetails)).rejects.toThrow(
-        new DealNotFoundError(dealId.toString()),
-      );
+      await expect(
+        TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation: mockDealCancellationObject, auditDetails, activity: mockActivity }),
+      ).rejects.toThrow(new DealNotFoundError(dealId.toString()));
     });
 
     describe('updating the deal stage', () => {
-      it('calls updateOne with the expected parameters', async () => {
+      it('calls findOneAndUpdate with the expected parameters', async () => {
         // Act
-        await TfmDealCancellationRepo.submitDealCancellation(dealId, mockDealCancellationObject, auditDetails);
+        await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation: mockDealCancellationObject, auditDetails, activity: mockActivity });
 
         // Assert
         const expectedFilter = {
@@ -116,21 +125,26 @@ describe('tfm-deals-cancellation-repo', () => {
           'tfm.cancellation.bankRequestDate': { $eq: mockBankRequestDate },
           'tfm.cancellation.effectiveFrom': { $eq: mockEffectiveFrom },
         };
-        const expectedUpdate = flatten({
-          'tfm.stage': TFM_DEAL_STAGE.CANCELLED,
-          'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.COMPLETED,
-          auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-        });
+        const expectedUpdate = {
+          $set: {
+            'tfm.stage': TFM_DEAL_STAGE.CANCELLED,
+            'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.COMPLETED,
+            auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+          },
+          $push: {
+            'tfm.activities': mockActivity,
+          },
+        };
 
-        expect(updateOneMock).toHaveBeenCalledTimes(1);
-        expect(updateOneMock).toHaveBeenCalledWith(expectedFilter, expectedUpdate);
+        expect(findOneAndUpdateMock).toHaveBeenCalledTimes(1);
+        expect(findOneAndUpdateMock).toHaveBeenCalledWith(expectedFilter, expectedUpdate);
       });
     });
 
     describe('updating and finding the matching facilities', () => {
       it('calls updateMany with the expected parameters', async () => {
         // Act
-        await TfmDealCancellationRepo.submitDealCancellation(dealId, mockDealCancellationObject, auditDetails);
+        await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation: mockDealCancellationObject, auditDetails, activity: mockActivity });
 
         // Assert
         const expectedFilter = {
@@ -147,7 +161,7 @@ describe('tfm-deals-cancellation-repo', () => {
 
       it('calls find with the expected parameters', async () => {
         // Act
-        await TfmDealCancellationRepo.submitDealCancellation(dealId, mockDealCancellationObject, auditDetails);
+        await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation: mockDealCancellationObject, auditDetails, activity: mockActivity });
 
         // Assert
         const expectedFilter = {
@@ -161,10 +175,15 @@ describe('tfm-deals-cancellation-repo', () => {
 
     it('returns the deal cancellation response object with the deal ids and corresponding facility ids', async () => {
       // Act
-      const result = await TfmDealCancellationRepo.submitDealCancellation(dealId, mockDealCancellationObject, auditDetails);
+      const result = await TfmDealCancellationRepo.submitDealCancellation({
+        dealId,
+        cancellation: mockDealCancellationObject,
+        auditDetails,
+        activity: mockActivity,
+      });
 
       // Assert
-      expect(result).toEqual({ cancelledDealUkefId: dealId, riskExpiredFacilityUkefIds: [matchingFacilityId1, matchingFacilityId2] });
+      expect(result).toEqual({ cancelledDeal: mockDeal, riskExpiredFacilities: mockMatchedFacilities });
     });
   });
 });

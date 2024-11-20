@@ -1,4 +1,4 @@
-import { TfmFacilityAmendment } from '@ukef/dtfs2-common';
+import { CURRENCY, TfmFacilityAmendment } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 
 export const MOCK_AMENDMENT: TfmFacilityAmendment = {
@@ -18,7 +18,7 @@ export const MOCK_AMENDMENT: TfmFacilityAmendment = {
       ukefExposureValue: 0.5,
     },
     value: {
-      currency: 'GBP',
+      currency: CURRENCY.GBP,
       value: 5,
     },
   },

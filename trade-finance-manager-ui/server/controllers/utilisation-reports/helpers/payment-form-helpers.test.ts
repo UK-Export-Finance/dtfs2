@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { PaymentErrorsViewModel } from '../../../types/view-models';
 import {
   AddPaymentFormRequestBody,
@@ -31,7 +32,7 @@ describe('payment-form-helpers', () => {
         const body = getBodyWithoutAddPaymentFormSubmissionField();
 
         // Act
-        const { isAddingPayment } = extractAddPaymentFormValuesAndValidateIfPresent(body, 'GBP');
+        const { isAddingPayment } = extractAddPaymentFormValuesAndValidateIfPresent(body, CURRENCY.GBP);
 
         // Assert
         expect(isAddingPayment).toEqual(false);
@@ -42,7 +43,7 @@ describe('payment-form-helpers', () => {
         const body = getBodyWithoutAddPaymentFormSubmissionField();
 
         // Act
-        const { errors } = extractAddPaymentFormValuesAndValidateIfPresent(body, 'GBP');
+        const { errors } = extractAddPaymentFormValuesAndValidateIfPresent(body, CURRENCY.GBP);
 
         // Assert
         expect(errors).toEqual(EMPTY_PAYMENT_ERRORS_VIEW_MODEL);
@@ -53,7 +54,7 @@ describe('payment-form-helpers', () => {
         const body = getBodyWithoutAddPaymentFormSubmissionField();
 
         // Act
-        const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, 'GBP');
+        const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, CURRENCY.GBP);
 
         // Assert
         expect(formValues).toEqual(EMPTY_ADD_PAYMENT_FORM_VALUES);
@@ -71,7 +72,7 @@ describe('payment-form-helpers', () => {
         };
 
         // Act
-        const { isAddingPayment } = extractAddPaymentFormValuesAndValidateIfPresent(body, 'GBP');
+        const { isAddingPayment } = extractAddPaymentFormValuesAndValidateIfPresent(body, CURRENCY.GBP);
 
         // Assert
         expect(isAddingPayment).toEqual(true);
@@ -86,7 +87,7 @@ describe('payment-form-helpers', () => {
         };
 
         // Act
-        const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, 'GBP');
+        const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, CURRENCY.GBP);
 
         // Assert
         expect(formValues.paymentCurrency).toEqual('USD');
@@ -101,7 +102,7 @@ describe('payment-form-helpers', () => {
         };
 
         // Act
-        const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, 'GBP');
+        const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, CURRENCY.GBP);
 
         // Assert
         expect(formValues.paymentAmount).toEqual('314.59');
@@ -116,7 +117,7 @@ describe('payment-form-helpers', () => {
         };
 
         // Act
-        const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, 'GBP');
+        const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, CURRENCY.GBP);
 
         // Assert
         expect(formValues.paymentDate.day).toEqual('10');
@@ -131,7 +132,7 @@ describe('payment-form-helpers', () => {
         };
 
         // Act
-        const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, 'GBP');
+        const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, CURRENCY.GBP);
 
         // Assert
         expect(formValues.paymentDate.month).toEqual('6');
@@ -146,7 +147,7 @@ describe('payment-form-helpers', () => {
         };
 
         // Act
-        const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, 'GBP');
+        const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, CURRENCY.GBP);
 
         // Assert
         expect(formValues.paymentDate.year).toEqual('2024');
@@ -161,7 +162,7 @@ describe('payment-form-helpers', () => {
         };
 
         // Act
-        const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, 'GBP');
+        const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, CURRENCY.GBP);
 
         // Assert
         expect(formValues.paymentReference).toEqual('A payment reference');
@@ -176,7 +177,7 @@ describe('payment-form-helpers', () => {
         };
 
         // Act
-        const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, 'GBP');
+        const { formValues } = extractAddPaymentFormValuesAndValidateIfPresent(body, CURRENCY.GBP);
 
         // Assert
         expect(formValues.addAnotherPayment).toEqual('true');
@@ -195,7 +196,7 @@ describe('payment-form-helpers', () => {
         jest.mocked(validateAddPaymentRequestFormValues).mockReturnValue(paymentErrors);
 
         // Act
-        const { errors } = extractAddPaymentFormValuesAndValidateIfPresent(body, 'GBP');
+        const { errors } = extractAddPaymentFormValuesAndValidateIfPresent(body, CURRENCY.GBP);
 
         // Assert
         expect(errors).toEqual(paymentErrors);
@@ -204,7 +205,7 @@ describe('payment-form-helpers', () => {
 
     function aValidAddPaymentFormRequestBody(): AddPaymentFormRequestBody {
       return {
-        paymentCurrency: 'GBP',
+        paymentCurrency: CURRENCY.GBP,
         paymentAmount: '100',
         'paymentDate-day': '1',
         'paymentDate-month': '5',

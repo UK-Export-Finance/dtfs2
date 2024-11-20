@@ -6,6 +6,22 @@ const page = '../templates/utilisation-reports/add-to-an-existing-payment.njk';
 const render = pageRenderer<AddToAnExistingPaymentViewModel>(page);
 
 describe(page, () => {
+  it('should add error prefix to page title when there are errors', () => {
+    const addToAnExistingPaymentViewModel = anAddToAnExistingPaymentViewModel();
+    addToAnExistingPaymentViewModel.errors.errorSummary = [{ text: 'an error', href: 'error-href' }];
+    const wrapper = render(addToAnExistingPaymentViewModel);
+
+    wrapper.expectPageTitle().toRead('Error - Add reported fee to an existing payment');
+  });
+
+  it('should not add error prefix to page title when there are no errors', () => {
+    const addToAnExistingPaymentViewModel = anAddToAnExistingPaymentViewModel();
+    addToAnExistingPaymentViewModel.errors.errorSummary = [];
+    const wrapper = render(addToAnExistingPaymentViewModel);
+
+    wrapper.expectPageTitle().toRead('Add reported fee to an existing payment');
+  });
+
   it('should display the singular "Add reported fee to an existing payment" heading when only one fee record is selected', () => {
     const addToAnExistingPaymentViewModel = anAddToAnExistingPaymentViewModel();
     addToAnExistingPaymentViewModel.bank.name = 'My bank';

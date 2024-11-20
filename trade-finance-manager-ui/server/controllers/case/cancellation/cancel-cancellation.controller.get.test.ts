@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http';
-import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
+import { DEAL_SUBMISSION_TYPE, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
 import { aRequestSession } from '../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { CancelCancellationViewModel } from '../../../types/view-models';
@@ -106,9 +106,25 @@ describe('getCancelCancellation', () => {
       expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
     });
 
+    it('redirects to deal summary page if the deal cancellation is not in draft', async () => {
+      // Arrange
+      jest.mocked(api.getDealCancellation).mockResolvedValue({ status: TFM_DEAL_CANCELLATION_STATUS.COMPLETED });
+
+      const { req, res } = createMocks<GetCancelCancellationRequest>({
+        params: { _id: dealId },
+        session: aRequestSession(),
+      });
+
+      // Act
+      await getCancelCancellation(req, res);
+
+      // Assert
+      expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
+    });
+
     it('renders the cancel cancellation page', async () => {
       // Arrange
-      jest.mocked(api.getDealCancellation).mockResolvedValue({ reason: 'reason' });
+      jest.mocked(api.getDealCancellation).mockResolvedValue({ reason: 'reason', status: TFM_DEAL_CANCELLATION_STATUS.DRAFT });
 
       const previousPage = 'previousPage';
       const session = aRequestSession();

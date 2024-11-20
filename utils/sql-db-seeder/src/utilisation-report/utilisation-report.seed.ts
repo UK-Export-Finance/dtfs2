@@ -1,5 +1,12 @@
 import { DataSource } from 'typeorm';
-import { getCurrentReportPeriodForBankSchedule, getPreviousReportPeriodForBankScheduleByMonth } from '@ukef/dtfs2-common';
+import {
+  getCurrentReportPeriodForBankSchedule,
+  getPreviousReportPeriodForBankScheduleByMonth,
+  PENDING_RECONCILIATION,
+  RECONCILIATION_COMPLETED,
+  RECONCILIATION_IN_PROGRESS,
+  REPORT_NOT_RECEIVED,
+} from '@ukef/dtfs2-common';
 import { UtilisationReportSeeder } from './utilisation-report.seeder';
 import { MongoDbDataLoader } from '../mongo-db-client';
 
@@ -22,19 +29,19 @@ export const seedUtilisationReports = async (dataSource: DataSource): Promise<vo
 
   await UtilisationReportSeeder.forBankIdAndReportPeriod(bankIdAndReportPeriodForPastManuallyCompletedReport)
     .withUploadedByUserId(uploadedByUserId)
-    .saveWithStatus('RECONCILIATION_COMPLETED', dataSource);
+    .saveWithStatus(RECONCILIATION_COMPLETED, dataSource);
 
   await UtilisationReportSeeder.forBankIdAndReportPeriod(pendingReconciliationBankIdWithReportPeriod)
     .withUploadedByUserId(uploadedByUserId)
-    .saveWithStatus('PENDING_RECONCILIATION', dataSource);
+    .saveWithStatus(PENDING_RECONCILIATION, dataSource);
 
   await UtilisationReportSeeder.forBankIdAndReportPeriod(reconciliationInProgressBankIdWithReportPeriod)
     .withUploadedByUserId(uploadedByUserId)
-    .saveWithStatus('RECONCILIATION_IN_PROGRESS', dataSource);
+    .saveWithStatus(RECONCILIATION_IN_PROGRESS, dataSource);
 
   await Promise.all(
     notReceivedBankIdsWithReportPeriod.map((bankIdWithReportPeriod) =>
-      UtilisationReportSeeder.forBankIdAndReportPeriod(bankIdWithReportPeriod).saveWithStatus('REPORT_NOT_RECEIVED', dataSource),
+      UtilisationReportSeeder.forBankIdAndReportPeriod(bankIdWithReportPeriod).saveWithStatus(REPORT_NOT_RECEIVED, dataSource),
     ),
   );
 };

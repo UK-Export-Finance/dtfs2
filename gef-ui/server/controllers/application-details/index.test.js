@@ -1,4 +1,4 @@
-import { DEAL_TYPE, FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { DEAL_STATUS, DEAL_TYPE, FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { applicationDetails, postApplicationDetails } from '.';
 import api from '../../services/api';
 import { NON_MAKER_ROLES } from '../../../test-helpers/common-role-lists';
@@ -160,103 +160,76 @@ describe('controllers/application-details', () => {
     });
 
     describe('template rendering from deal.status', () => {
-      it('renders `application-details` when status is DRAFT', async () => {
-        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.DRAFT;
+      const templateRenderingTestCases = [
+        {
+          template: `application-details`,
+          status: DEAL_STATUS.DRAFT,
+          expectObjectContaining: { abandon: true },
+        },
+        {
+          template: `application-details`,
+          status: DEAL_STATUS.CHANGES_REQUIRED,
+          expectObjectContaining: { applicationStatus: DEAL_STATUS.CHANGES_REQUIRED },
+        },
+        {
+          template: `application-preview`,
+          status: DEAL_STATUS.READY_FOR_APPROVAL,
+          expectObjectContaining: { applicationStatus: DEAL_STATUS.READY_FOR_APPROVAL, abandon: false },
+        },
+        {
+          template: `application-preview`,
+          status: DEAL_STATUS.SUBMITTED_TO_UKEF,
+          expectObjectContaining: { applicationStatus: DEAL_STATUS.SUBMITTED_TO_UKEF },
+        },
+        {
+          template: `application-preview`,
+          status: DEAL_STATUS.ABANDONED,
+          expectObjectContaining: { applicationStatus: DEAL_STATUS.ABANDONED },
+        },
+        {
+          template: `application-preview`,
+          status: DEAL_STATUS.UKEF_ACKNOWLEDGED,
+          expectObjectContaining: { applicationStatus: DEAL_STATUS.UKEF_ACKNOWLEDGED },
+        },
+        {
+          template: `application-details`,
+          status: DEAL_STATUS.IN_PROGRESS_BY_UKEF,
+          expectObjectContaining: { applicationStatus: DEAL_STATUS.IN_PROGRESS_BY_UKEF },
+        },
+        {
+          template: `application-preview`,
+          status: DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
+          expectObjectContaining: { applicationStatus: DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS },
+        },
+        {
+          template: `application-preview`,
+          status: DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
+          expectObjectContaining: { applicationStatus: DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS },
+        },
+        {
+          template: `application-preview`,
+          status: DEAL_STATUS.UKEF_REFUSED,
+          expectObjectContaining: { applicationStatus: DEAL_STATUS.UKEF_REFUSED },
+        },
+        {
+          template: `application-preview`,
+          status: DEAL_STATUS.CANCELLED,
+          expectObjectContaining: { applicationStatus: DEAL_STATUS.CANCELLED },
+        },
+        {
+          template: `application-preview`,
+          status: DEAL_STATUS.PENDING_CANCELLATION,
+          expectObjectContaining: { applicationStatus: DEAL_STATUS.PENDING_CANCELLATION },
+        },
+      ];
+
+      it.each(templateRenderingTestCases)('renders `$template` when status is $status', async ({ template, status, expectObjectContaining }) => {
+        mockApplicationResponse.status = status;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);
 
-        expect(mockResponse.render).toHaveBeenCalledWith(
-          'partials/application-details.njk',
-          expect.objectContaining({
-            abandon: true,
-          }),
-        );
-      });
-
-      it('renders `application-details` when status is CHANGES_REQUIRED', async () => {
-        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED;
-        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
-
-        await applicationDetails(mockRequest, mockResponse);
-
-        expect(mockResponse.render).toHaveBeenCalledWith(
-          'partials/application-details.njk',
-          expect.objectContaining({
-            applicationStatus: mockApplicationResponse.status,
-          }),
-        );
-      });
-
-      it('renders `application-preview` when status is READY_FOR_APPROVAL', async () => {
-        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL;
-        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
-
-        await applicationDetails(mockRequest, mockResponse);
-
-        expect(mockResponse.render).toHaveBeenCalledWith(
-          'partials/application-preview.njk',
-          expect.objectContaining({
-            applicationStatus: mockApplicationResponse.status,
-            abandon: false,
-          }),
-        );
-      });
-
-      it('renders `application-preview` when status is SUBMITTED_TO_UKEF', async () => {
-        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF;
-        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
-
-        await applicationDetails(mockRequest, mockResponse);
-
-        expect(mockResponse.render).toHaveBeenCalledWith(
-          'partials/application-preview.njk',
-          expect.objectContaining({
-            applicationStatus: mockApplicationResponse.status,
-          }),
-        );
-      });
-
-      it('renders `application-preview` when status is ABANDONED', async () => {
-        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.ABANDONED;
-        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
-
-        await applicationDetails(mockRequest, mockResponse);
-
-        expect(mockResponse.render).toHaveBeenCalledWith(
-          'partials/application-preview.njk',
-          expect.objectContaining({
-            applicationStatus: mockApplicationResponse.status,
-          }),
-        );
-      });
-
-      it('renders `application-preview` when status is UKEF_ACKNOWLEDGED', async () => {
-        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED;
-        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
-
-        await applicationDetails(mockRequest, mockResponse);
-
-        expect(mockResponse.render).toHaveBeenCalledWith(
-          'partials/application-preview.njk',
-          expect.objectContaining({
-            applicationStatus: mockApplicationResponse.status,
-          }),
-        );
-      });
-
-      it('renders `application-details` when status is IN_PROGRESS_BY_UKEF', async () => {
-        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.IN_PROGRESS_BY_UKEF;
-        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
-
-        await applicationDetails(mockRequest, mockResponse);
-
-        expect(mockResponse.render).toHaveBeenCalledWith(
-          'partials/application-details.njk',
-          expect.objectContaining({
-            applicationStatus: mockApplicationResponse.status,
-          }),
-        );
+        expect(mockResponse.render).toHaveBeenCalledWith(`partials/${template}.njk`, expect.objectContaining(expectObjectContaining));
       });
 
       it('renders `application-details` with hasChangedFacilities as true when changed facilities present', async () => {
@@ -346,48 +319,6 @@ describe('controllers/application-details', () => {
           'partials/application-details.njk',
           expect.objectContaining({
             displayChangeSupportingInfo: false,
-          }),
-        );
-      });
-
-      it('renders `application-preview` when status is UKEF_APPROVED_WITH_CONDITIONS', async () => {
-        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
-        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
-
-        await applicationDetails(mockRequest, mockResponse);
-
-        expect(mockResponse.render).toHaveBeenCalledWith(
-          'partials/application-preview.njk',
-          expect.objectContaining({
-            applicationStatus: mockApplicationResponse.status,
-          }),
-        );
-      });
-
-      it('renders `application-preview` when status is UKEF_APPROVED_WITHOUT_CONDITIONS', async () => {
-        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS;
-        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
-
-        await applicationDetails(mockRequest, mockResponse);
-
-        expect(mockResponse.render).toHaveBeenCalledWith(
-          'partials/application-preview.njk',
-          expect.objectContaining({
-            applicationStatus: mockApplicationResponse.status,
-          }),
-        );
-      });
-
-      it('renders `application-preview` when status is UKEF_REFUSED', async () => {
-        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_REFUSED;
-        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
-
-        await applicationDetails(mockRequest, mockResponse);
-
-        expect(mockResponse.render).toHaveBeenCalledWith(
-          'partials/application-preview.njk',
-          expect.objectContaining({
-            applicationStatus: mockApplicationResponse.status,
           }),
         );
       });

@@ -1,6 +1,14 @@
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_STAGE, AuditDetails, API_ERROR_CODE } from '@ukef/dtfs2-common';
+import {
+  MONGO_DB_COLLECTIONS,
+  AnyObject,
+  TFM_DEAL_STAGE,
+  API_ERROR_CODE,
+  TfmAuditDetails,
+  TfmDealCancellationResponse,
+  FACILITY_TYPE,
+} from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { withMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import wipeDB from '../../../wipeDB';
@@ -8,18 +16,19 @@ import { testApi } from '../../../test-api';
 import { DEALS } from '../../../../src/constants';
 import aDeal from '../../deal-builder';
 import { createDeal } from '../../../helpers/create-deal';
-import { aPortalUser, aTfmUser } from '../../../../test-helpers';
+import { aPortalUser } from '../../../../test-helpers';
 import { MOCK_PORTAL_USER } from '../../../mocks/test-users/mock-portal-user';
 import { createFacility } from '../../../helpers/create-facility';
+import { createTfmUser } from '../../../helpers/create-tfm-user';
 
 const originalProcessEnv = { ...process.env };
 
 describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
   let dealId: string;
-  let facilityId: string;
+  const ukefFacilityId = 'ukefFacilityId';
   let submitDealCancellationUrl: string;
-  let auditDetails: AuditDetails;
-  let tfmUserId: ObjectId;
+  let auditDetails: TfmAuditDetails;
+  let tfmUserId: string;
 
   const cancellation = {
     reason: 'test reason',
@@ -27,27 +36,34 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
     effectiveFrom: new Date().valueOf(),
   };
 
+  const ukefDealId = 'ukefDealId';
+
   const newDeal = aDeal({
     dealType: DEALS.DEAL_TYPE.BSS_EWCS,
     submissionType: DEALS.SUBMISSION_TYPE.AIN,
+    details: { ukefDealId },
   }) as AnyObject;
 
   beforeAll(async () => {
-    await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.DEALS]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
+
+    const tfmUser = await createTfmUser();
+    tfmUserId = tfmUser._id;
   });
 
   beforeEach(async () => {
     const createDealResponse: { body: { _id: string } } = await createDeal({ deal: newDeal, user: aPortalUser() });
-    const createFacilityResponse: { body: { _id: string } } = await createFacility({
+    dealId = createDealResponse.body._id;
+
+    await createFacility({
       facility: {
         dealId,
+        type: FACILITY_TYPE.BOND,
+        ukefFacilityId,
       },
       user: aPortalUser(),
     });
 
-    dealId = createDealResponse.body._id;
-    facilityId = createFacilityResponse.body._id;
-    tfmUserId = aTfmUser()._id;
     auditDetails = generateTfmAuditDetails(tfmUserId);
     submitDealCancellationUrl = `/v1/tfm/deals/${dealId}/cancellation/submit`;
 
@@ -84,7 +100,7 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
 
   afterEach(async () => {
     process.env = { ...originalProcessEnv };
-    await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.DEALS]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
   });
 
   describe('POST /v1/tfm/deals/:dealId/cancellation/submit', () => {
@@ -121,7 +137,10 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
       it('should return the submit cancellation response object if a matching deal and cancellation exists', async () => {
         const submitCancellationResponse = await testApi.post({ cancellation, auditDetails }).to(submitDealCancellationUrl);
 
-        expect(submitCancellationResponse.body).toEqual({ cancelledDealUkefId: dealId, riskExpiredFacilityUkefIds: [facilityId] });
+        expect(submitCancellationResponse.body).toEqual({
+          cancelledDealUkefId: ukefDealId,
+          riskExpiredFacilityUkefIds: [ukefFacilityId],
+        } as TfmDealCancellationResponse);
         expect(submitCancellationResponse.status).toEqual(HttpStatusCode.Ok);
       });
 
@@ -159,6 +178,21 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
         expect(submitCancellationResponse.body).toEqual({
           code: 'INVALID_MONGO_ID_PATH_PARAMETER',
           message: "Expected path parameter 'dealId' to be a valid mongo id",
+        });
+      });
+
+      it('should return 400 if auditDetails are valid but do not correspond to a user', async () => {
+        const invalidAuditDetails = generateTfmAuditDetails(new ObjectId());
+
+        const submitCancellationResponse = await testApi
+          .post({ cancellation, auditDetails: invalidAuditDetails })
+          .to(`/v1/tfm/deals/${dealId}/cancellation/submit`);
+
+        expect(submitCancellationResponse.status).toEqual(400);
+        expect(submitCancellationResponse.body).toEqual({
+          code: 'INVALID_AUDIT_DETAILS',
+          message: `Supplied auditDetails 'id' ${invalidAuditDetails.id.toString()} does not correspond to a valid user`,
+          status: 400,
         });
       });
 

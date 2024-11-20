@@ -1,4 +1,4 @@
-const { FACILITY_PROVIDED_DETAILS } = require('@ukef/dtfs2-common');
+const { FACILITY_PROVIDED_DETAILS, DEAL_STATUS } = require('@ukef/dtfs2-common');
 const httpError = require('http-errors');
 const lodashIsEmpty = require('lodash/isEmpty');
 const commaNumber = require('comma-number');
@@ -31,10 +31,12 @@ const userToken = (req) => {
 const isObject = (el) => typeof el === 'object' && el !== null && !(el instanceof Array);
 
 const isMIAWithoutChangedToIssuedFacilities = (app) =>
-  app.status === CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED && app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIA && app.submissionCount > 0;
+  app.status === DEAL_STATUS.CHANGES_REQUIRED && app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIA && app.submissionCount > 0;
 
 // Converts Api errors into more manageable objects
 const apiErrorHandler = ({ code, response }) => {
+  console.error('API error %s %o', code, response);
+
   if (code === 'ECONNABORTED') {
     throw httpError(501, 'Request timed out.');
   }
@@ -43,7 +45,6 @@ const apiErrorHandler = ({ code, response }) => {
     return response;
   }
 
-  console.error(response);
   throw httpError(response.status, response.statusText);
 };
 
@@ -125,7 +126,7 @@ const calculateShouldDisplayChangeLinkOnceIssued = (id) => {
 };
 
 const returnToMakerNoFacilitiesChanged = (app, hasChangedFacilities) => {
-  const acceptableStatus = [CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED];
+  const acceptableStatus = [DEAL_STATUS.CHANGES_REQUIRED];
 
   return (
     (app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN || app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIN) &&
@@ -173,8 +174,8 @@ const generateActionsArrayForItem = ({ href, visuallyHiddenText, text, id }) => 
 const previewItemConditions = (previewParams) => {
   const { issuedHref, unissuedHref, issuedToUnissuedHref, shouldDisplayChangeLinkIfIssued, shouldDisplayChangeLinkIfUnissued, item, app } = previewParams;
   let summaryItems = [];
-  const statusMIA = [CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF];
-  const statusAIN = [...statusMIA, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF, CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED];
+  const statusMIA = [DEAL_STATUS.READY_FOR_APPROVAL, DEAL_STATUS.SUBMITTED_TO_UKEF];
+  const statusAIN = [...statusMIA, DEAL_STATUS.UKEF_ACKNOWLEDGED, DEAL_STATUS.SUBMITTED_TO_UKEF, DEAL_STATUS.CHANGES_REQUIRED, DEAL_STATUS.CANCELLED];
 
   const validStatus =
     app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN
@@ -284,10 +285,10 @@ const detailItemConditions = (params) => {
 const summaryItemsConditions = (summaryItemsObj) => {
   const { preview, item, details, app, user, data, hasChangedFacilities } = summaryItemsObj;
   const acceptableStatus = [
-    CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
-    CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED,
-    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
-    CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
+    DEAL_STATUS.UKEF_ACKNOWLEDGED,
+    DEAL_STATUS.CHANGES_REQUIRED,
+    DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
+    DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
   ];
   const acceptableRole = [MAKER];
   const { id, href, shouldCoverStartOnSubmission } = item;

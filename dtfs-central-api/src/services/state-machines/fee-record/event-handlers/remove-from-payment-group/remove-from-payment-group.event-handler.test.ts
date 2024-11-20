@@ -1,16 +1,19 @@
 import { EntityManager } from 'typeorm';
 import {
+  CURRENCY,
   FEE_RECORD_STATUS,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
+  REQUEST_PLATFORM_TYPE,
   UtilisationReportEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
 } from '@ukef/dtfs2-common';
 import { handleFeeRecordRemoveFromPaymentGroupEvent } from './remove-from-payment-group.event-handler';
 import { aDbRequestSource } from '../../../../../../test-helpers';
 
 describe('handleFeeRecordRemoveFromPaymentGroupEvent', () => {
-  const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+  const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
 
   const mockSave = jest.fn();
   const mockEntityManager = {
@@ -20,9 +23,9 @@ describe('handleFeeRecordRemoveFromPaymentGroupEvent', () => {
   it('removes all payments from the fee record', async () => {
     // Arrange
     const payments = [
-      PaymentEntityMockBuilder.forCurrency('GBP').withId(1).build(),
-      PaymentEntityMockBuilder.forCurrency('GBP').withId(2).build(),
-      PaymentEntityMockBuilder.forCurrency('GBP').withId(3).build(),
+      PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(1).build(),
+      PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(2).build(),
+      PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(3).build(),
     ];
     const feeRecord = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withPayments(payments).build();
 
@@ -64,7 +67,7 @@ describe('handleFeeRecordRemoveFromPaymentGroupEvent', () => {
     await handleFeeRecordRemoveFromPaymentGroupEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
       requestSource: {
-        platform: 'TFM',
+        platform: REQUEST_PLATFORM_TYPE.TFM,
         userId,
       },
     });

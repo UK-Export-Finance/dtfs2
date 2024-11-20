@@ -1,5 +1,13 @@
 import { HttpStatusCode } from 'axios';
-import { Currency, FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  Currency,
+  FEE_RECORD_STATUS,
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
+  UtilisationReportEntityMockBuilder,
+  CURRENCY,
+} from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
@@ -23,9 +31,9 @@ describe(`DELETE ${BASE_URL}`, () => {
   const tfmUser = aTfmUser();
   const tfmUserId = tfmUser._id.toString();
 
-  const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).withUploadedByUserId(portalUserId).build();
+  const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).withUploadedByUserId(portalUserId).build();
 
-  const paymentCurrency: Currency = 'GBP';
+  const paymentCurrency: Currency = CURRENCY.GBP;
   const paymentId = 123;
   const payment = PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(paymentId).build();
 

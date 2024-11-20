@@ -1,5 +1,12 @@
 import { HttpStatusCode } from 'axios';
-import { FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FEE_RECORD_STATUS,
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
+  UtilisationReportEntityMockBuilder,
+  CURRENCY,
+} from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
@@ -18,10 +25,10 @@ describe(`POST ${BASE_URL}`, () => {
   const tfmUserId = tfmUser._id.toString();
 
   const reportId = 1;
-  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
 
   const paymentIds = [3, 4];
-  const payments = paymentIds.map((id) => PaymentEntityMockBuilder.forCurrency('GBP').withId(id).withFeeRecords([]).build());
+  const payments = paymentIds.map((id) => PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(id).withFeeRecords([]).build());
 
   const aFeeRecordToAdd = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
   const aFeeRecordWithPayments = FeeRecordEntityMockBuilder.forReport(utilisationReport)

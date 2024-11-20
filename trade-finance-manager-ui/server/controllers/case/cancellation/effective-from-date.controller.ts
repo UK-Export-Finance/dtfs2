@@ -1,12 +1,11 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
-import { isEmpty } from 'lodash';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { asUserSession } from '../../../helpers/express-session';
 import { EffectiveFromDateViewModel } from '../../../types/view-models';
 import { validateEffectiveFromDate } from './validation/validate-effective-from-date';
-import { canSubmissionTypeBeCancelled } from '../../helpers/deal-cancellation-enabled.helper';
+import { canSubmissionTypeBeCancelled, isDealCancellationInDraft } from '../../helpers/deal-cancellation-enabled.helper';
 import api from '../../../api';
 import { getPreviousPageUrlForCancellationFlow } from './helpers/get-previous-page-url';
 
@@ -43,7 +42,7 @@ export const getEffectiveFromDate = async (req: GetEffectiveFromDateRequest, res
 
     const cancellation = await api.getDealCancellation(_id, userToken);
 
-    if (isEmpty(cancellation)) {
+    if (!isDealCancellationInDraft(cancellation.status)) {
       return res.redirect(`/case/${_id}/deal`);
     }
 

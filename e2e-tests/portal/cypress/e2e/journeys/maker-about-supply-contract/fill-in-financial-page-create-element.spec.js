@@ -1,3 +1,4 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const { contract, contractAboutFinancial, defaults } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
@@ -26,7 +27,7 @@ context('Financial page form - create element and check if inserted into deal', 
     cy.keyboardInput(contractAboutFinancial.supplyContractValue(), '10000');
     contractAboutFinancial.supplyContractValue().should('have.value', '10,000');
 
-    contractAboutFinancial.supplyContractCurrency().select('GBP');
+    contractAboutFinancial.supplyContractCurrency().select(CURRENCY.GBP);
 
     cy.insertElement('financial-form');
 

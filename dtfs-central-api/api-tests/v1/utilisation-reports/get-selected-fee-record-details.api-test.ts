@@ -1,10 +1,13 @@
 import { Response } from 'supertest';
 import {
   Bank,
+  CURRENCY,
   Currency,
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
+  PaymentMatchingToleranceEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
   SelectedFeeRecordDetails,
   SelectedFeeRecordsDetails,
   UtilisationReportEntity,
@@ -34,14 +37,21 @@ describe(`GET ${BASE_URL}`, () => {
   const reportId = 1;
   const reportPeriod = aReportPeriod();
 
+  const gbpTolerance = 1;
+
   beforeAll(async () => {
     await SqlDbHelper.initialize();
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
+    await SqlDbHelper.deleteAllEntries('PaymentMatchingTolerance');
 
     await wipe(['banks']);
 
     const banksCollection = await mongoDbClient.getCollection('banks');
     await banksCollection.insertOne(bank);
+
+    const gbpToleranceEntity = PaymentMatchingToleranceEntityMockBuilder.forCurrency(CURRENCY.GBP).withIsActive(true).withThreshold(gbpTolerance).build();
+
+    await SqlDbHelper.saveNewEntry('PaymentMatchingTolerance', gbpToleranceEntity);
   });
 
   afterEach(async () => {
@@ -62,16 +72,16 @@ describe(`GET ${BASE_URL}`, () => {
     // Arrange
     const report = aReconciliationInProgressReport();
 
-    const aPaymentInGBP = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(90).withId(123).build();
+    const aPaymentInGBP = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withAmount(90).withId(123).build();
 
-    const aFeeRecordInGBP = aFeeRecordWithReportAndPaymentCurrencyAndStatusToDo(45, report, 'GBP');
+    const aFeeRecordInGBP = aFeeRecordWithReportAndPaymentCurrencyAndStatusToDo(45, report, CURRENCY.GBP);
     const aFeeRecordInGBPWithAPaymentAttached = FeeRecordEntityMockBuilder.forReport(report)
       .withId(46)
       .withFacilityId('000123')
       .withExporter('Test company')
       .withFeesPaidToUkefForThePeriod(100)
-      .withFeesPaidToUkefForThePeriodCurrency('GBP')
-      .withPaymentCurrency('GBP')
+      .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
+      .withPaymentCurrency(CURRENCY.GBP)
       .withPayments([aPaymentInGBP])
       .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
       .build();
@@ -90,18 +100,19 @@ describe(`GET ${BASE_URL}`, () => {
       bank: {
         name: bank.name,
       },
-      totalReportedPayments: { currency: 'GBP', amount: 100 },
+      totalReportedPayments: { currency: CURRENCY.GBP, amount: 100 },
       feeRecords: [
         {
           id: 45,
           facilityId: '000123',
           exporter: 'Test company',
-          reportedFee: { currency: 'GBP', amount: 100 },
-          reportedPayments: { currency: 'GBP', amount: 100 },
+          reportedFee: { currency: CURRENCY.GBP, amount: 100 },
+          reportedPayments: { currency: CURRENCY.GBP, amount: 100 },
         },
       ],
       payments: [],
       canAddToExistingPayment: true,
+      gbpTolerance,
     });
   });
 
@@ -116,7 +127,7 @@ describe(`GET ${BASE_URL}`, () => {
       .withFacilityId('000123')
       .withExporter('Test company')
       .withFeesPaidToUkefForThePeriod(75)
-      .withFeesPaidToUkefForThePeriodCurrency('GBP')
+      .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
       .withPaymentCurrency('USD')
       .withPayments([aPaymentInUSD])
       .withStatus(FEE_RECORD_STATUS.MATCH)
@@ -142,21 +153,18 @@ describe(`GET ${BASE_URL}`, () => {
           id: 47,
           facilityId: '000123',
           exporter: 'Test company',
-          reportedFee: { currency: 'GBP', amount: 100 },
+          reportedFee: { currency: CURRENCY.GBP, amount: 100 },
           reportedPayments: { currency: 'USD', amount: 100 },
         },
       ],
       payments: [],
       canAddToExistingPayment: false,
+      gbpTolerance,
     });
   });
 
   function aReconciliationInProgressReport() {
-    return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
-      .withId(reportId)
-      .withReportPeriod(reportPeriod)
-      .withBankId(bankId)
-      .build();
+    return UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).withReportPeriod(reportPeriod).withBankId(bankId).build();
   }
 
   function aFeeRecordWithReportAndPaymentCurrencyAndStatusToDo(id: number, report: UtilisationReportEntity, paymentCurrency: Currency) {
@@ -165,7 +173,7 @@ describe(`GET ${BASE_URL}`, () => {
       .withFacilityId('000123')
       .withExporter('Test company')
       .withFeesPaidToUkefForThePeriod(100)
-      .withFeesPaidToUkefForThePeriodCurrency('GBP')
+      .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
       .withPaymentCurrency(paymentCurrency)
       .withStatus(FEE_RECORD_STATUS.TO_DO)
       .build();
