@@ -7,8 +7,16 @@ const isEmptyString = (str) => {
   return false;
 };
 
+/**
+ * Check if a string has a value, i.e
+ * - String is defined
+ * - String is not empty
+ * - String is not 'Select value'
+ * @param {string}
+ * @returns Boolean
+ */
 const hasValue = (str) => {
-  if (str && !isEmptyString(str)) {
+  if (str && !isEmptyString(str) && str !== 'Select value') {
     return true;
   }
   return false;
