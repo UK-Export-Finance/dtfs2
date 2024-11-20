@@ -2,7 +2,12 @@ const { errorSummary, mainHeading } = require('../../../partials');
 const { utilisationReportUpload } = require('../../../pages');
 const { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../e2e-fixtures');
 const relativeURL = require('../../../relativeURL');
-const { february2023ReportDetails, march2023ReportDetails, tfmFacilityForReport } = require('../../../../fixtures/mockUtilisationReportDetails');
+const {
+  february2023ReportDetails,
+  march2023ReportDetails,
+  tfmFacilityForReport,
+  ewcsTfmFacilityForReport,
+} = require('../../../../fixtures/mockUtilisationReportDetails');
 
 context('Monthly utilisation report upload', () => {
   beforeEach(() => {
@@ -101,6 +106,8 @@ context('Monthly utilisation report upload', () => {
 
   describe('Failing data validation on file upload', () => {
     it('should display a summary of errors for an invalid .xlsx file', () => {
+      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, [ewcsTfmFacilityForReport]);
+
       utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report-February_2023_monthly.xlsx');
       cy.clickContinueButton();
 
@@ -235,6 +242,8 @@ context('Monthly utilisation report upload', () => {
     });
 
     it('should display a summary of errors for an invalid .csv file', () => {
+      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, [ewcsTfmFacilityForReport]);
+
       utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report-February_2023_monthly.csv');
       cy.clickContinueButton();
 
