@@ -13,7 +13,7 @@ context('Monthly utilisation report upload', () => {
   beforeEach(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [march2023ReportDetails, february2023ReportDetails]);
-    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, [tfmFacilityForReport]);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, [tfmFacilityForReport, ewcsTfmFacilityForReport]);
 
     cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
     cy.visit(relativeURL('/utilisation-report-upload'));
@@ -106,8 +106,6 @@ context('Monthly utilisation report upload', () => {
 
   describe('Failing data validation on file upload', () => {
     it('should display a summary of errors for an invalid .xlsx file', () => {
-      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, [ewcsTfmFacilityForReport]);
-
       utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report-February_2023_monthly.xlsx');
       cy.clickContinueButton();
 
@@ -242,8 +240,6 @@ context('Monthly utilisation report upload', () => {
     });
 
     it('should display a summary of errors for an invalid .csv file', () => {
-      cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, [ewcsTfmFacilityForReport]);
-
       utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report-February_2023_monthly.csv');
       cy.clickContinueButton();
 
