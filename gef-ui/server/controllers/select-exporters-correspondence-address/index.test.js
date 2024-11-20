@@ -73,9 +73,12 @@ describe('controllers/select-exporters-correspondence-address', () => {
   });
 
   describe('Validate Select Exporters Correspondence Address', () => {
-    it('returns error object if address from select dropdown has not been selected', async () => {
+    beforeEach(() => {
       mockRequest.session.postcode = 'W1 7PD';
       mockRequest.session.addresses = JSON.stringify([{ addressLine1: 'line1' }]);
+    });
+
+    it('returns error object if address from select dropdown has not been selected', async () => {
       mockRequest.body.selectedAddress = '';
 
       await validateSelectExportersCorrespondenceAddress(mockRequest, mockResponse);
@@ -89,9 +92,21 @@ describe('controllers/select-exporters-correspondence-address', () => {
       );
     });
 
+    it('returns error object if address from select dropdown contains `Addresses Found`', async () => {
+      mockRequest.body.selectedAddress = 'Addresses Found';
+
+      await validateSelectExportersCorrespondenceAddress(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/select-exporters-correspondence-address.njk',
+        expect.objectContaining({
+          errors: expect.any(Object),
+          dealId: '123',
+        }),
+      );
+    });
+
     it('sets address object into session string', async () => {
-      mockRequest.session.postcode = 'W1 7PD';
-      mockRequest.session.addresses = JSON.stringify([{ addressLine1: 'line1' }]);
       mockRequest.body.selectedAddress = '0';
 
       await validateSelectExportersCorrespondenceAddress(mockRequest, mockResponse);
@@ -100,8 +115,6 @@ describe('controllers/select-exporters-correspondence-address', () => {
     });
 
     it('redirects user to `enter-exporters-correspondence-address` page if  successful', async () => {
-      mockRequest.session.postcode = 'W1 7PD';
-      mockRequest.session.addresses = JSON.stringify([{ addressLine1: 'line1' }]);
       mockRequest.body.selectedAddress = '0';
 
       await validateSelectExportersCorrespondenceAddress(mockRequest, mockResponse);
