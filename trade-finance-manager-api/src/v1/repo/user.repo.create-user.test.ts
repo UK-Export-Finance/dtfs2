@@ -48,6 +48,7 @@ describe('user repo', () => {
     afterAll(() => {
       jest.useRealTimers();
     });
+
     describe('when the create user is successful', () => {
       beforeEach(() => {
         mockInsertOneResponse({ acknowledged: true, insertedId });
