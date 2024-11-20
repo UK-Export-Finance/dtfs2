@@ -46,8 +46,8 @@ context('Bond Details', () => {
 
       partials.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
 
-      pages.bondDetails.bondTypeInputErrorMessage().should('be.visible');
-      pages.bondDetails.facilityStageInputErrorMessage().should('be.visible');
+      cy.assertText(pages.bondDetails.bondTypeInputErrorMessage(), 'Error: Enter the Bond type');
+      cy.assertText(pages.bondDetails.facilityStageInputErrorMessage(), 'Error: Enter the Bond stage');
     });
   });
 
