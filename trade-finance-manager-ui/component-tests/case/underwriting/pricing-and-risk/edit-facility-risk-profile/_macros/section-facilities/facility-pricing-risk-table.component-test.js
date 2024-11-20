@@ -127,7 +127,7 @@ describe(component, () => {
       it('should NOT render `change` link', () => {
         wrapper = render(params);
 
-        wrapper.expectElement(`[data-cy="facility-${params.facility._id}-change-link"]`).notToExist();
+        wrapper.expectElement(`[data-cy="facility-${params.facility._id}-change-risk-profile-link"]`).notToExist();
       });
     });
 
@@ -144,7 +144,7 @@ describe(component, () => {
 
         const expectedText = `Change ${params.facility.facilitySnapshot.type} ${params.facility.facilitySnapshot.ukefFacilityId} risk profile`;
 
-        wrapper.expectLink(`[data-cy="facility-${params.facility._id}-change-link"]`).toLinkTo(expectedLink, expectedText);
+        wrapper.expectLink(`[data-cy="facility-${params.facility._id}-change-risk-profile-link"]`).toLinkTo(expectedLink, expectedText);
       });
     });
   });
