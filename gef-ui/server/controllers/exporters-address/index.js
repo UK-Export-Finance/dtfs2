@@ -10,14 +10,14 @@ const exportersAddress = async (req, res) => {
     const { exporter } = await api.getApplication({ dealId, userToken });
     const { companyName, registeredAddress } = exporter;
 
-    return res.render('_partials/exporters-address.njk', {
+    return res.render('partials/exporters-address.njk', {
       companyName,
       registeredAddress,
       dealId,
     });
   } catch (error) {
     console.error('GEF-UI - Error getting exporters address page %o', error);
-    return res.render('_partials/problem-with-service.njk');
+    return res.render('partials/problem-with-service.njk');
   }
 };
 
@@ -73,7 +73,7 @@ const validateExportersAddress = async (req, res) => {
     }
 
     if (correspondenceError.length > 0) {
-      return res.render('_partials/exporters-address.njk', {
+      return res.render('partials/exporters-address.njk', {
         errors: validationErrorHandler(correspondenceError),
         companyName,
         postcode: postcode ? postcode.toUpperCase() : '',
@@ -90,7 +90,7 @@ const validateExportersAddress = async (req, res) => {
     return res.redirect('select-exporters-correspondence-address');
   } catch (error) {
     console.error('GEF-UI - Error validating exporters address page %o', error);
-    return res.render('_partials/problem-with-service.njk');
+    return res.render('partials/problem-with-service.njk');
   }
 };
 

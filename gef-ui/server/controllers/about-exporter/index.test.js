@@ -90,7 +90,7 @@ describe('controllers/about-exporter', () => {
     it('renders the `About Exporter` template', async () => {
       await aboutExporter(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith(
-        '_partials/about-exporter.njk',
+        'partials/about-exporter.njk',
         expect.objectContaining({
           dealId: '123',
           smeType: mockApplication.exporter.smeType,
@@ -106,7 +106,7 @@ describe('controllers/about-exporter', () => {
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
       api.getApplication.mockRejectedValueOnce();
       await aboutExporter(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
   });
 
@@ -125,7 +125,7 @@ describe('controllers/about-exporter', () => {
 
       await validateAboutExporter(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/about-exporter.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', {
         errors: {
           errorSummary: [
             {
@@ -155,7 +155,7 @@ describe('controllers/about-exporter', () => {
 
       await validateAboutExporter(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/about-exporter.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', {
         errors: expect.any(Object),
         dealId: '123',
         smeType: mockApplication.exporter.smeType,
@@ -171,7 +171,7 @@ describe('controllers/about-exporter', () => {
       await validateAboutExporter(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        '_partials/about-exporter.njk',
+        'partials/about-exporter.njk',
         expect.objectContaining({
           errors: expect.any(Object),
           dealId: '123',
@@ -208,7 +208,7 @@ describe('controllers/about-exporter', () => {
       api.getApplication.mockResolvedValueOnce(mockApplication);
       await validateAboutExporter(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/about-exporter.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', {
         errors: {
           errorSummary: [
             {
@@ -248,7 +248,7 @@ describe('controllers/about-exporter', () => {
 
       await validateAboutExporter(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/about-exporter.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', {
         errors: expect.objectContaining({
           errorSummary: expect.arrayContaining([{ href: '#probabilityOfDefault', text: expect.any(String) }]),
         }),
@@ -265,7 +265,7 @@ describe('controllers/about-exporter', () => {
 
       await validateAboutExporter(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/about-exporter.njk', expect.objectContaining({
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
         errors: expect.objectContaining({
           errorSummary: expect.arrayContaining([{ href: '#probabilityOfDefault', text: expect.any(String) }]),
         }),
@@ -276,7 +276,7 @@ describe('controllers/about-exporter', () => {
 
       await validateAboutExporter(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/about-exporter.njk', expect.objectContaining({
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
         errors: expect.objectContaining({
           errorSummary: expect.arrayContaining([{ href: '#probabilityOfDefault', text: expect.any(String) }]),
         }),
@@ -287,7 +287,7 @@ describe('controllers/about-exporter', () => {
 
       await validateAboutExporter(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/about-exporter.njk', expect.objectContaining({
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
         errors: expect.objectContaining({
           errorSummary: expect.arrayContaining([{ href: '#probabilityOfDefault', text: expect.any(String) }]),
         }),
@@ -298,7 +298,7 @@ describe('controllers/about-exporter', () => {
 
       await validateAboutExporter(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/about-exporter.njk', expect.objectContaining({
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
         errors: expect.objectContaining({
           errorSummary: expect.not.arrayContaining([{ href: '#probabilityOfDefault', text: expect.any(String) }]),
         }),
@@ -309,7 +309,7 @@ describe('controllers/about-exporter', () => {
 
       await validateAboutExporter(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/about-exporter.njk', expect.objectContaining({
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-exporter.njk', expect.objectContaining({
         errors: expect.objectContaining({
           errorSummary: expect.arrayContaining([{ href: '#probabilityOfDefault', text: expect.any(String) }]),
         }),
@@ -355,7 +355,7 @@ describe('controllers/about-exporter', () => {
       api.getApplication.mockRejectedValueOnce(mockedRejection);
 
       await validateAboutExporter(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
   });
 });

@@ -65,10 +65,10 @@ const getFacilityEndDate = async ({ req, res, previousPage }: GetFacilityEndDate
       return res.redirect(previousPage);
     }
 
-    return res.render('_partials/facility-end-date.njk', getFacilityEndDateViewModel(facility, previousPage, status));
+    return res.render('partials/facility-end-date.njk', getFacilityEndDateViewModel(facility, previousPage, status));
   } catch (error) {
     console.error('Error in getFacilityEndDate %o', error);
-    return res.render('_partials/problem-with-service.njk');
+    return res.render('partials/problem-with-service.njk');
   }
 };
 

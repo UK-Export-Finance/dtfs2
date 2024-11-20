@@ -2,7 +2,7 @@ const ineligibleAutomaticCover = async (req, res) => {
   const { params } = req;
   const { dealId } = params;
 
-  res.render('_partials/ineligible-automatic-cover.njk', {
+  res.render('partials/ineligible-automatic-cover.njk', {
     dealId,
   });
 };

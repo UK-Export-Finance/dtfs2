@@ -75,9 +75,9 @@ const changeUnissuedFacility = async (req, res) => {
       userToken,
     });
 
-    return res.render('_partials/unissued-change-about-facility.njk', body);
+    return res.render('partials/unissued-change-about-facility.njk', body);
   } catch (error) {
-    return res.render('_partials/problem-with-service.njk');
+    return res.render('partials/problem-with-service.njk');
   }
 };
 
@@ -98,9 +98,9 @@ const changeUnissuedFacilityPreview = async (req, res) => {
       userToken,
     });
 
-    return res.render('_partials/unissued-change-about-facility.njk', body);
+    return res.render('partials/unissued-change-about-facility.njk', body);
   } catch (error) {
-    return res.render('_partials/problem-with-service.njk');
+    return res.render('partials/problem-with-service.njk');
   }
 };
 
@@ -121,14 +121,14 @@ const changeIssuedToUnissuedFacility = async (req, res) => {
     const { details } = await api.getFacility({ facilityId, userToken });
     const hasBeenIssued = JSON.stringify(details.hasBeenIssued);
 
-    return res.render('_partials/issued-facility-to-unissued.njk', {
+    return res.render('partials/issued-facility-to-unissued.njk', {
       facilityType: facilityTypeString,
       hasBeenIssued: hasBeenIssued !== 'null' ? hasBeenIssued : null,
       dealId,
     });
   } catch (error) {
     console.error('Facilities error %o', error);
-    return res.render('_partials/problem-with-service.njk');
+    return res.render('partials/problem-with-service.njk');
   }
 };
 
@@ -163,7 +163,7 @@ const postChangeUnissuedFacility = async (req, res) => {
     });
 
     if (aboutFacilityErrors.length > 0) {
-      return res.render('_partials/unissued-change-about-facility.njk', {
+      return res.render('partials/unissued-change-about-facility.njk', {
         errors: errorsObject.errors,
         facilityName: errorsObject.facilityName,
         shouldCoverStartOnSubmission: errorsObject.shouldCoverStartOnSubmission,
@@ -242,7 +242,7 @@ const postChangeUnissuedFacility = async (req, res) => {
     return res.redirect(redirectUri);
   } catch (error) {
     console.error('Cannot update unissued facility %o', error);
-    return res.render('_partials/problem-with-service.njk');
+    return res.render('partials/problem-with-service.njk');
   }
 };
 
@@ -275,7 +275,7 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
     });
 
     if (aboutFacilityErrors.length > 0) {
-      return res.render('_partials/unissued-change-about-facility.njk', {
+      return res.render('partials/unissued-change-about-facility.njk', {
         errors: errorsObject.errors,
         facilityName: errorsObject.facilityName,
         shouldCoverStartOnSubmission: errorsObject.shouldCoverStartOnSubmission,
@@ -345,7 +345,7 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
     return res.redirect(redirectUri);
   } catch (error) {
     console.error('Cannot update unissued facility from application preview %o', error);
-    return res.render('_partials/problem-with-service.njk');
+    return res.render('partials/problem-with-service.njk');
   }
 };
 
@@ -373,7 +373,7 @@ const postChangeIssuedToUnissuedFacility = async (req, res) => {
       errMsg: `Select if your bank has already issued this ${facilityTypeString} facility`,
     });
 
-    return res.render('_partials/issued-facility-to-unissued.njk', {
+    return res.render('partials/issued-facility-to-unissued.njk', {
       facilityType: facilityTypeString,
       errors: validationErrorHandler(hasBeenIssuedErrors),
       dealId,
@@ -412,7 +412,7 @@ const postChangeIssuedToUnissuedFacility = async (req, res) => {
     return res.redirect(`/gef/application-details/${dealId}`);
   } catch (error) {
     console.error('Error creating a facility %o', error);
-    return res.render('_partials/problem-with-service.njk');
+    return res.render('partials/problem-with-service.njk');
   }
 };
 

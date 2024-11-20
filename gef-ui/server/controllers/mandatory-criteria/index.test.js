@@ -43,7 +43,7 @@ describe('controllers/mandatory-criteria', () => {
   describe('GET Mandatory Criteria', () => {
     it('renders the `mandatory-criteria` template', async () => {
       await getMandatoryCriteria(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/mandatory-criteria.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/mandatory-criteria.njk', {
         criteria: mockCriteriaResponse,
       });
     });
@@ -51,7 +51,7 @@ describe('controllers/mandatory-criteria', () => {
     it('redirects user to `problem with service` page if there is an issue with the api', async () => {
       api.getMandatoryCriteria.mockRejectedValueOnce({ response: { status: 400, message: 'Whoops' } });
       await getMandatoryCriteria(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
   });
 
@@ -61,7 +61,7 @@ describe('controllers/mandatory-criteria', () => {
 
       await validateMandatoryCriteria(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith(
-        '_partials/mandatory-criteria.njk',
+        'partials/mandatory-criteria.njk',
         expect.objectContaining({
           criteria: expect.any(Object),
           errors: expect.any(Object),
@@ -87,7 +87,7 @@ describe('controllers/mandatory-criteria', () => {
       api.getMandatoryCriteria.mockRejectedValueOnce({ response: { status: 400, message: 'Whoops' } });
 
       await validateMandatoryCriteria(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
   });
 });

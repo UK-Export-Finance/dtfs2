@@ -16,7 +16,7 @@ const facilityCurrency = async (req, res) => {
     const facilityTypeConst = FACILITY_TYPE[details.type.toUpperCase()];
     const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
 
-    return res.render('_partials/facility-currency.njk', {
+    return res.render('partials/facility-currency.njk', {
       // currency: details.currency.id,
       currencyId: details.currency?.id,
       facilityType: facilityTypeConst,
@@ -26,7 +26,7 @@ const facilityCurrency = async (req, res) => {
       status,
     });
   } catch (error) {
-    return res.render('_partials/problem-with-service.njk');
+    return res.render('partials/problem-with-service.njk');
   }
 };
 
@@ -77,7 +77,7 @@ const updateFacilityCurrency = async (req, res) => {
   }
 
   if (facilityCurrencyErrors.length > 0) {
-    return res.render('_partials/facility-currency.njk', {
+    return res.render('partials/facility-currency.njk', {
       errors: validationErrorHandler(facilityCurrencyErrors),
       currencyId,
       facilityTypeString,
@@ -110,7 +110,7 @@ const updateFacilityCurrency = async (req, res) => {
 
     return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/facility-value`);
   } catch (error) {
-    return res.render('_partials/problem-with-service.njk');
+    return res.render('partials/problem-with-service.njk');
   }
 };
 

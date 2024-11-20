@@ -66,7 +66,7 @@ describe('controllers/provided-facility', () => {
       await providedFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        '_partials/provided-facility.njk',
+        'partials/provided-facility.njk',
         expect.objectContaining({
           details: ['Term basis', 'Revolving or renewing basis'],
           facilityTypeString: 'cash',
@@ -89,7 +89,7 @@ describe('controllers/provided-facility', () => {
 
       // Assert
       expect(mockResponse.render).toHaveBeenCalledWith(
-        '_partials/provided-facility.njk',
+        'partials/provided-facility.njk',
         expect.objectContaining({
           previousPage: `/gef/application-details/${mockRequest.params.dealId}/facilities/${mockRequest.params.facilityId}/about-facility`,
         }),
@@ -109,7 +109,7 @@ describe('controllers/provided-facility', () => {
 
       // Assert
       expect(mockResponse.render).toHaveBeenCalledWith(
-        '_partials/provided-facility.njk',
+        'partials/provided-facility.njk',
         expect.objectContaining({
           previousPage: `/gef/application-details/${mockRequest.params.dealId}/facilities/${mockRequest.params.facilityId}/about-facility`,
         }),
@@ -129,7 +129,7 @@ describe('controllers/provided-facility', () => {
 
       // Assert
       expect(mockResponse.render).toHaveBeenCalledWith(
-        '_partials/provided-facility.njk',
+        'partials/provided-facility.njk',
         expect.objectContaining({
           previousPage: `/gef/application-details/${mockRequest.params.dealId}/facilities/${mockRequest.params.facilityId}/bank-review-date`,
         }),
@@ -150,7 +150,7 @@ describe('controllers/provided-facility', () => {
       await providedFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        '_partials/provided-facility.njk',
+        'partials/provided-facility.njk',
         expect.objectContaining({
           previousPage: `/gef/application-details/${mockRequest.params.dealId}/facilities/${mockRequest.params.facilityId}/facility-end-date`,
         }),
@@ -160,7 +160,7 @@ describe('controllers/provided-facility', () => {
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
       api.getFacility.mockRejectedValueOnce();
       await providedFacility(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
   });
 
@@ -169,7 +169,7 @@ describe('controllers/provided-facility', () => {
       await validateProvidedFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        '_partials/provided-facility.njk',
+        'partials/provided-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#details', text: expect.any(String) }]),
@@ -201,7 +201,7 @@ describe('controllers/provided-facility', () => {
       await validateProvidedFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        '_partials/provided-facility.njk',
+        'partials/provided-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#detailsOther', text: expect.any(String) }]),
@@ -214,7 +214,7 @@ describe('controllers/provided-facility', () => {
       await validateProvidedFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        '_partials/provided-facility.njk',
+        'partials/provided-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([{ href: '#detailsOther', text: expect.any(String) }]),
@@ -258,7 +258,7 @@ describe('controllers/provided-facility', () => {
       mockRequest.body.details = ['Term basis'];
       api.updateFacility.mockRejectedValueOnce();
       await validateProvidedFacility(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
   });
 });

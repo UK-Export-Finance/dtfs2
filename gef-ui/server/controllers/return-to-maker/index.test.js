@@ -63,7 +63,7 @@ describe('controllers/return-to-maker', () => {
 
       expect(mockResponse.redirect).not.toHaveBeenCalled();
       expect(mockResponse.render).toHaveBeenCalledWith(
-        '_partials/return-to-maker.njk',
+        'partials/return-to-maker.njk',
         expect.objectContaining({
           dealId: 'mock-id',
           maxCommentLength: MAX_COMMENT_LENGTH,
@@ -139,7 +139,7 @@ describe('controllers/return-to-maker', () => {
 
       expect(mockResponse.redirect).not.toHaveBeenCalled();
       expect(mockResponse.render).toHaveBeenCalledWith(
-        '_partials/return-to-maker.njk',
+        'partials/return-to-maker.njk',
         expect.objectContaining({
           dealId: '1234',
           comment: longComment,

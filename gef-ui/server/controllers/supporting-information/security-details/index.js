@@ -22,7 +22,7 @@ const getSecurityDetails = async (req, res) => {
       supportingInformation: { securityDetails = {} },
     } = application;
 
-    return res.render('_partials/security-details.njk', {
+    return res.render('partials/security-details.njk', {
       dealId,
       inputMaxLength: MAX_INPUT_LENGTH,
       exporterSecurity: securityDetails.exporter,
@@ -84,7 +84,7 @@ const postSecurityDetails = async (req, res) => {
     });
 
     if (securityDetailsErrors.length) {
-      return res.render('_partials/security-details.njk', {
+      return res.render('partials/security-details.njk', {
         errors: validationErrorHandler(securityDetailsErrors),
         dealId,
         inputMaxLength: MAX_INPUT_LENGTH,

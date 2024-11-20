@@ -26,7 +26,7 @@ const providedFacility = async (req, res) => {
       isUsingFacilityEndDate: details.isUsingFacilityEndDate,
     });
 
-    return res.render('_partials/provided-facility.njk', {
+    return res.render('partials/provided-facility.njk', {
       facilityType: FACILITY_TYPE[details.type.toUpperCase()],
       details: details.details || [],
       detailsOther: details.detailsOther,
@@ -37,7 +37,7 @@ const providedFacility = async (req, res) => {
       previousPage,
     });
   } catch (error) {
-    return res.render('_partials/problem-with-service.njk');
+    return res.render('partials/problem-with-service.njk');
   }
 };
 
@@ -70,7 +70,7 @@ const validateProvidedFacility = async (req, res) => {
   }
 
   if (providedFacilityErrors.length > 0) {
-    return res.render('_partials/provided-facility.njk', {
+    return res.render('partials/provided-facility.njk', {
       errors: validationErrorHandler(providedFacilityErrors),
       details,
       facilityType,
@@ -105,7 +105,7 @@ const validateProvidedFacility = async (req, res) => {
 
     return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/facility-currency`);
   } catch (error) {
-    return res.render('_partials/problem-with-service.njk');
+    return res.render('partials/problem-with-service.njk');
   }
 };
 

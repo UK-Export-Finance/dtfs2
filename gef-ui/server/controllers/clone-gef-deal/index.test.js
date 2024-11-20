@@ -51,7 +51,7 @@ describe('clone-gef-deal/mandatory-criteria', () => {
 
       await cloneDealValidateMandatoryCriteria(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith(
-        '_partials/mandatory-criteria.njk',
+        'partials/mandatory-criteria.njk',
         expect.objectContaining({
           criteria: expect.any(Object),
           errors: expect.any(Object),
@@ -77,7 +77,7 @@ describe('clone-gef-deal/mandatory-criteria', () => {
       api.getMandatoryCriteria.mockRejectedValueOnce({ response: { status: 400, message: 'Whoops' } });
 
       await cloneDealValidateMandatoryCriteria(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
   });
 });
@@ -122,7 +122,7 @@ describe('clone-gef-deal/name-application', () => {
 
   it('renders the `name-application` template when no application id is passed', async () => {
     await cloneDealNameApplication({ session: { userToken: 'test-token' } }, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('_partials/name-application.njk', {
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', {
       cloneDeal: true,
       dealName: 'Cloned deal',
     });
@@ -131,7 +131,7 @@ describe('clone-gef-deal/name-application', () => {
   it('calls the appropriate api and renders the `name-application` template with correct data', async () => {
     await cloneDealNameApplication(mockRequestWithIdParam, mockResponse);
 
-    expect(mockResponse.render).toHaveBeenCalledWith('_partials/name-application.njk', {
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', {
       cloneDeal: true,
       dealName: 'Cloned deal',
     });
@@ -143,7 +143,7 @@ describe('clone-gef-deal/name-application', () => {
     api.cloneApplication.mockResolvedValueOnce({ status: 422, data: [] });
 
     await cloneDealCreateApplication(mockRequest, mockResponse, mockNext);
-    expect(mockResponse.render).toHaveBeenCalledWith('_partials/name-application.njk', {
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', {
       bankInternalRefName: mockRequest.body.bankInternalRefName,
       additionalRefName: undefined,
       errors: { errorSummary: [], fieldErrors: {} },

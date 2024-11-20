@@ -15,7 +15,7 @@ const getReturnToMaker = async (req, res) => {
     return res.redirect('/dashboard');
   }
 
-  return res.render('_partials/return-to-maker.njk', { dealId, maxCommentLength: MAX_COMMENT_LENGTH });
+  return res.render('partials/return-to-maker.njk', { dealId, maxCommentLength: MAX_COMMENT_LENGTH });
 };
 
 const postReturnToMaker = async (req, res, next) => {
@@ -33,7 +33,7 @@ const postReturnToMaker = async (req, res, next) => {
         errMsg: `You have entered more than ${MAX_COMMENT_LENGTH} characters`,
       });
 
-      return res.render('_partials/return-to-maker.njk', {
+      return res.render('partials/return-to-maker.njk', {
         dealId,
         maxCommentLength: MAX_COMMENT_LENGTH,
         errors,

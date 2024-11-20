@@ -24,7 +24,7 @@ const aboutExporter = async (req, res) => {
     const isFinanceIncreasing = JSON.stringify(exporter.isFinanceIncreasing);
     const probabilityOfDefault = Number(exporter.probabilityOfDefault);
 
-    return res.render('_partials/about-exporter.njk', {
+    return res.render('partials/about-exporter.njk', {
       dealId,
       smeType: exporter?.smeType,
       isFinanceIncreasing,
@@ -34,7 +34,7 @@ const aboutExporter = async (req, res) => {
       status,
     });
   } catch (error) {
-    return res.render('_partials/problem-with-service.njk');
+    return res.render('partials/problem-with-service.njk');
   }
 };
 
@@ -93,7 +93,7 @@ const validateAboutExporter = async (req, res) => {
     const industries = mappedIndustries(exporter.industries, body.selectedIndustry || exporter.selectedIndustry);
 
     if (aboutExporterErrors.length > 0) {
-      return res.render('_partials/about-exporter.njk', {
+      return res.render('partials/about-exporter.njk', {
         errors: validationErrorHandler(aboutExporterErrors),
         smeType: body.smeType,
         probabilityOfDefault: Number(body.probabilityOfDefault),
@@ -120,7 +120,7 @@ const validateAboutExporter = async (req, res) => {
 
     return res.redirect(`/gef/application-details/${dealId}`);
   } catch (error) {
-    return res.render('_partials/problem-with-service.njk');
+    return res.render('partials/problem-with-service.njk');
   }
 };
 

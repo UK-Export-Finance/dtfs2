@@ -35,7 +35,7 @@ const acceptUkefDecision = async (req, res) => {
     return applicationDetails(req, res);
   } catch (error) {
     console.error('Error accepting UKEF decision %o', error);
-    return res.render('_partials/problem-with-service.njk');
+    return res.render('partials/problem-with-service.njk');
   }
 };
 

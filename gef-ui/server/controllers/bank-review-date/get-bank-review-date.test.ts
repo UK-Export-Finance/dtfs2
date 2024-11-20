@@ -53,7 +53,7 @@ describe('getBankReviewDate', () => {
       await getBankReviewDate({ req: mockReq, res: mockRes, previousPage });
 
       // Assert
-      expect(mockRes._getRenderView()).toEqual('_partials/bank-review-date.njk');
+      expect(mockRes._getRenderView()).toEqual('partials/bank-review-date.njk');
       expect(mockRes._getRenderData()).toEqual({
         dealId,
         facilityId,
@@ -75,7 +75,7 @@ describe('getBankReviewDate', () => {
       await getBankReviewDate({ req: mockReq, res: mockRes, previousPage });
 
       // Assert
-      expect(mockRes._getRenderView()).toEqual('_partials/bank-review-date.njk');
+      expect(mockRes._getRenderView()).toEqual('partials/bank-review-date.njk');
       expect(mockRes._getRenderData()).toEqual({
         dealId,
         facilityId,
@@ -143,6 +143,6 @@ describe('getBankReviewDate', () => {
     await getBankReviewDate({ req: mockReq, res: mockRes, previousPage });
 
     // Assert
-    expect(mockRes._getRenderView()).toEqual('_partials/problem-with-service.njk');
+    expect(mockRes._getRenderView()).toEqual('partials/problem-with-service.njk');
   });
 });

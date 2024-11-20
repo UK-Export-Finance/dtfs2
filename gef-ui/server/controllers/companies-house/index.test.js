@@ -77,7 +77,7 @@ describe('controllers/about-exporter', () => {
       mockApplicationResponse.exporter.companiesHouseRegistrationNumber = '';
       await companiesHouse(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/companies-house.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', {
         regNumber: '',
         dealId: '123',
         status: undefined,
@@ -88,7 +88,7 @@ describe('controllers/about-exporter', () => {
       mockApplicationResponse.exporter.companiesHouseRegistrationNumber = MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_WITH_SPECIAL_CHARACTER;
       await companiesHouse(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/companies-house.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', {
         regNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_WITH_SPECIAL_CHARACTER,
         dealId: '123',
         status: undefined,
@@ -99,7 +99,7 @@ describe('controllers/about-exporter', () => {
       const mockedRejection = { response: { status: HttpStatusCode.BadRequest, message: 'Whoops' } };
       api.getApplication.mockRejectedValueOnce(mockedRejection);
       await companiesHouse(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
   });
 
@@ -216,7 +216,7 @@ describe('controllers/about-exporter', () => {
 
       await validateCompaniesHouse(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/companies-house.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', {
         errors: mappedErrorObject,
         regNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_SHORT,
         dealId: '123',
@@ -232,7 +232,7 @@ describe('controllers/about-exporter', () => {
 
       await validateCompaniesHouse(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
 
     it.each([{ status: HttpStatusCode.BadRequest }, { status: HttpStatusCode.InternalServerError }])(

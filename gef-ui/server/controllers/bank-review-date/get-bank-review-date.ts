@@ -63,10 +63,10 @@ export const getBankReviewDate = async ({ req, res, previousPage }: HandleGetBan
       return res.redirect(previousPage);
     }
 
-    return res.render('_partials/bank-review-date.njk', getBankReviewDateViewModel(facility, previousPage, status));
+    return res.render('partials/bank-review-date.njk', getBankReviewDateViewModel(facility, previousPage, status));
   } catch (error) {
     console.error(error);
-    return res.render('_partials/problem-with-service.njk');
+    return res.render('partials/problem-with-service.njk');
   }
 };
 

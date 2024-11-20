@@ -160,7 +160,7 @@ describe('getPortalActivities()', () => {
 
     const mappedPortalActivities = mapPortalActivities(mockApplicationResponse.portalActivities);
 
-    expect(mockResponse.render).toHaveBeenCalledWith('_partials/application-activity.njk', {
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/application-activity.njk', {
       activeSubNavigation: 'activities',
       dealId: '1234567890abcdf123456789',
       portalActivities: mappedPortalActivities,

@@ -115,7 +115,7 @@ describe('controller/ukef-cover-start-date', () => {
     it('Render the expected behaviour', async () => {
       expect(await processCoverStartDate(mockRequest, mockResponse));
       expect(mockResponse.render).toHaveBeenCalledWith(
-        '_partials/cover-start-date.njk',
+        'partials/cover-start-date.njk',
         expect.objectContaining({
           applicationStatus: mockApplicationResponse.status,
         }),

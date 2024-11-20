@@ -41,7 +41,7 @@ describe('controllers/supporting-information/security-details', () => {
       await getSecurityDetails(mockRequest, mockResponse);
 
       expect(mockResponse.sendStatus).not.toHaveBeenCalled();
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/security-details.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/security-details.njk', {
         dealId: 'mock-id',
         inputMaxLength: MAX_INPUT_LENGTH,
       });
@@ -60,7 +60,7 @@ describe('controllers/supporting-information/security-details', () => {
       await getSecurityDetails(mockRequest, mockResponse);
 
       expect(mockResponse.sendStatus).not.toHaveBeenCalled();
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/security-details.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/security-details.njk', {
         dealId: 'mock-id',
         inputMaxLength: MAX_INPUT_LENGTH,
         facilitySecurity: 'mock applications security details',
@@ -111,7 +111,7 @@ describe('controllers/supporting-information/security-details', () => {
       expect(mockResponse.redirect).not.toHaveBeenCalled();
       expect(mockResponse.sendStatus).not.toHaveBeenCalled();
       expect(mockResponse.render).toHaveBeenCalledWith(
-        '_partials/security-details.njk',
+        'partials/security-details.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([
@@ -138,7 +138,7 @@ describe('controllers/supporting-information/security-details', () => {
       expect(mockResponse.redirect).not.toHaveBeenCalled();
       expect(mockResponse.sendStatus).not.toHaveBeenCalled();
       expect(mockResponse.render).toHaveBeenCalledWith(
-        '_partials/security-details.njk',
+        'partials/security-details.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([
@@ -165,7 +165,7 @@ describe('controllers/supporting-information/security-details', () => {
       expect(mockResponse.redirect).not.toHaveBeenCalled();
       expect(mockResponse.sendStatus).not.toHaveBeenCalled();
       expect(mockResponse.render).toHaveBeenCalledWith(
-        '_partials/security-details.njk',
+        'partials/security-details.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
             errorSummary: expect.arrayContaining([

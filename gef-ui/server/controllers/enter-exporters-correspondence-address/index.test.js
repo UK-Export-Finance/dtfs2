@@ -63,7 +63,7 @@ describe('controllers/enter-exporters-correspondence-address', () => {
     it('renders the `enter-exporters-correspondence-address` template with empty field', async () => {
       await enterExportersCorrespondenceAddress(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/enter-exporters-correspondence-address.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/enter-exporters-correspondence-address.njk', {
         addressForm: {},
         dealId: '123',
         backUrl: '/gef/application-details/123',
@@ -74,7 +74,7 @@ describe('controllers/enter-exporters-correspondence-address', () => {
       mockRequest.session.address = JSON.stringify({ addressLine1: 'line1', addressLine2: 'line2' });
       await enterExportersCorrespondenceAddress(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/enter-exporters-correspondence-address.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/enter-exporters-correspondence-address.njk', {
         addressForm: {
           addressLine1: 'line1',
           addressLine2: 'line2',
@@ -92,7 +92,7 @@ describe('controllers/enter-exporters-correspondence-address', () => {
       mockApplicationResponse.exporter.correspondenceAddress = { addressLine1: 'LINE1', addressLine2: 'LINE2' };
       await enterExportersCorrespondenceAddress(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/enter-exporters-correspondence-address.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/enter-exporters-correspondence-address.njk', {
         addressForm: {
           addressLine1: 'LINE1',
           addressLine2: 'LINE2',
@@ -107,7 +107,7 @@ describe('controllers/enter-exporters-correspondence-address', () => {
       api.getApplication.mockRejectedValueOnce(mockedRejection);
 
       await enterExportersCorrespondenceAddress(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
   });
 
@@ -119,7 +119,7 @@ describe('controllers/enter-exporters-correspondence-address', () => {
       await validateEnterExportersCorrespondenceAddress(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        '_partials/enter-exporters-correspondence-address.njk',
+        'partials/enter-exporters-correspondence-address.njk',
         expect.objectContaining({
           errors: expect.any(Object),
           dealId: '123',
@@ -135,7 +135,7 @@ describe('controllers/enter-exporters-correspondence-address', () => {
       await validateEnterExportersCorrespondenceAddress(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
-        '_partials/enter-exporters-correspondence-address.njk',
+        'partials/enter-exporters-correspondence-address.njk',
         expect.objectContaining({
           errors: expect.any(Object),
           dealId: '123',
@@ -205,7 +205,7 @@ describe('controllers/enter-exporters-correspondence-address', () => {
 
       await validateEnterExportersCorrespondenceAddress(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
   });
 });

@@ -1,7 +1,7 @@
 const { READ_ONLY } = require('../../server/constants/roles');
 const pageRenderer = require('../pageRenderer');
 
-const page = '_partials/application-activity.njk';
+const page = 'partials/application-activity.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {

@@ -64,13 +64,13 @@ describe('controllers/name-application', () => {
 
     it('renders the `name-application` template when no application id is passed', async () => {
       await nameApplication({ session: { userToken: 'test-token' } }, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/name-application.njk', {});
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', {});
     });
 
     it('calls the appropriate api and renders the `name-application` template with correct data', async () => {
       await nameApplication(mockRequestWithIdParam, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/name-application.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', {
         bankInternalRefName: mockApplicationResponse.bankInternalRefName,
         additionalRefName: mockApplicationResponse.additionalRefName,
       });
@@ -97,7 +97,7 @@ describe('controllers/name-application', () => {
       });
 
       await createApplication(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/name-application.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', {
         bankInternalRefName: mockRequest.body.bankInternalRefName,
         additionalRefName: undefined,
         errors: { errorSummary: [], fieldErrors: {} },
@@ -145,7 +145,7 @@ describe('controllers/name-application', () => {
       });
 
       await updateApplicationReferences(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/name-application.njk', {
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', {
         bankInternalRefName: mockRequest.body.bankInternalRefName,
         additionalRefName: '',
         errors: { errorSummary: [], fieldErrors: {} },

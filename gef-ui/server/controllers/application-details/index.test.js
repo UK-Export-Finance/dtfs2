@@ -51,7 +51,7 @@ describe('controllers/application-details', () => {
       api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
       await applicationDetails(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
 
     it('renders the `Application Details` template', async () => {
@@ -72,7 +72,7 @@ describe('controllers/application-details', () => {
 
       await applicationDetails(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith(
-        '_partials/application-details.njk',
+        'partials/application-details.njk',
         expect.objectContaining({
           // header
           ukefDealId: mockApplicationResponse.ukefDealId,
@@ -240,7 +240,7 @@ describe('controllers/application-details', () => {
         await applicationDetails(mockRequest, mockResponse);
 
         expect(mockResponse.render).toHaveBeenCalledWith(
-          '_partials/application-details.njk',
+          'partials/application-details.njk',
           expect.objectContaining({
             hasChangedFacilities: true,
           }),
@@ -255,7 +255,7 @@ describe('controllers/application-details', () => {
         await applicationDetails(mockRequest, mockResponse);
 
         expect(mockResponse.render).toHaveBeenCalledWith(
-          '_partials/application-details.njk',
+          'partials/application-details.njk',
           expect.objectContaining({
             hasChangedFacilities: false,
           }),
@@ -270,7 +270,7 @@ describe('controllers/application-details', () => {
         await applicationDetails(mockRequest, mockResponse);
 
         expect(mockResponse.render).toHaveBeenCalledWith(
-          '_partials/application-details.njk',
+          'partials/application-details.njk',
           expect.objectContaining({
             displayChangeSupportingInfo: true,
           }),
@@ -285,7 +285,7 @@ describe('controllers/application-details', () => {
         await applicationDetails(mockRequest, mockResponse);
 
         expect(mockResponse.render).toHaveBeenCalledWith(
-          '_partials/application-details.njk',
+          'partials/application-details.njk',
           expect.objectContaining({
             displayChangeSupportingInfo: false,
           }),
@@ -300,7 +300,7 @@ describe('controllers/application-details', () => {
         await applicationDetails(mockRequest, mockResponse);
 
         expect(mockResponse.render).toHaveBeenCalledWith(
-          '_partials/application-details.njk',
+          'partials/application-details.njk',
           expect.objectContaining({
             displayChangeSupportingInfo: true,
           }),
@@ -316,7 +316,7 @@ describe('controllers/application-details', () => {
         await applicationDetails(mockRequest, mockResponse);
 
         expect(mockResponse.render).toHaveBeenCalledWith(
-          '_partials/application-details.njk',
+          'partials/application-details.njk',
           expect.objectContaining({
             displayChangeSupportingInfo: false,
           }),
@@ -333,7 +333,7 @@ describe('controllers/application-details', () => {
         await applicationDetails(req, mockResponse);
 
         expect(mockResponse.render).toHaveBeenCalledWith(
-          '_partials/review-decision.njk',
+          'partials/review-decision.njk',
           expect.objectContaining({ applicationStatus: mockApplicationResponse.status }),
         );
       });
@@ -348,7 +348,7 @@ describe('controllers/application-details', () => {
         await applicationDetails(req, mockResponse);
 
         expect(mockResponse.render).toHaveBeenCalledWith(
-          '_partials/unissued-facilities.njk',
+          'partials/unissued-facilities.njk',
           expect.objectContaining({
             applicationStatus: mockApplicationResponse.status,
             unissuedFacilitiesPresent: false,

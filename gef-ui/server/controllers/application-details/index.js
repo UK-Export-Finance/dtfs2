@@ -203,7 +203,7 @@ const applicationDetails = async (req, res, next) => {
     // Ensure application is `GEF` type
     if (application.dealType !== DEAL_TYPE.GEF) {
       console.error('Deal ID %s specified is not a GEF deal', dealId);
-      return res.render('_partials/problem-with-service.njk');
+      return res.render('partials/problem-with-service.njk');
     }
 
     const userAuthorisationLevels = getUserAuthorisationLevelsToApplication(user, application);

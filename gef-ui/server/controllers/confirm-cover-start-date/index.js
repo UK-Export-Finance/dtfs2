@@ -99,7 +99,7 @@ const processCoverStartDate = async (req, res) => {
     return applicationDetails(req, res);
   } catch (error) {
     console.error('Unable to process cover start date %o', error);
-    return res.render('_partials/problem-with-service.njk');
+    return res.render('partials/problem-with-service.njk');
   }
 };
 
