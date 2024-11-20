@@ -1,3 +1,4 @@
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const mapFacilities = require('./mapFacilities');
 const mapFacilitySnapshot = require('./mapFacilitySnapshot');
 const mapFacilityTfm = require('./mapFacilityTfm');
@@ -25,7 +26,7 @@ describe('mapFacilities', () => {
 
   const mockCurrency = {
     text: 'GBP - UK Sterling',
-    id: 'GBP',
+    id: CURRENCY.GBP,
   };
 
   const mockFacilityValue = '12345.00';
@@ -40,7 +41,7 @@ describe('mapFacilities', () => {
         type: 'Bond',
         ...mockCoverEndDate,
         coveredPercentage: mockCoveredPercentage,
-        bondType: 'Performance Bond',
+        bondType: BOND_TYPE.PERFORMANCE_BOND,
         currency: mockCurrency,
         value: mockFacilityValue,
         facilityStage: 'Unissued',

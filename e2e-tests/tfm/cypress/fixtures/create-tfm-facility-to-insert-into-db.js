@@ -1,3 +1,4 @@
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 
 const createTfmFacilityToInsertIntoDb = (ukefFacilityId, dealObjectId) => ({
@@ -6,14 +7,14 @@ const createTfmFacilityToInsertIntoDb = (ukefFacilityId, dealObjectId) => ({
     _id: new ObjectId(),
     bondBeneficiary: 'test',
     bondIssuer: 'Issuer',
-    bondType: 'Advance payment guarantee',
+    bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
     'coverEndDate-day': '11',
     'coverEndDate-month': '04',
     'coverEndDate-year': '2024',
     coveredPercentage: '20',
     createdDate: 1710159691178,
     currency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
       text: 'GBP - UK Sterling',
     },
     currencySameAsSupplyContractCurrency: 'true',

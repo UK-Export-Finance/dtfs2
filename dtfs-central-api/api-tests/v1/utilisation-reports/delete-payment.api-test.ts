@@ -6,6 +6,7 @@ import {
   PaymentEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
   UtilisationReportEntityMockBuilder,
+  CURRENCY,
 } from '@ukef/dtfs2-common';
 import { aTfmUser } from '@ukef/dtfs2-common/mock-data-backend';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
@@ -33,7 +34,7 @@ describe(`DELETE ${BASE_URL}`, () => {
 
   const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).withUploadedByUserId(portalUserId).build();
 
-  const paymentCurrency: Currency = 'GBP';
+  const paymentCurrency: Currency = CURRENCY.GBP;
   const paymentId = 123;
   const payment = PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(paymentId).build();
 

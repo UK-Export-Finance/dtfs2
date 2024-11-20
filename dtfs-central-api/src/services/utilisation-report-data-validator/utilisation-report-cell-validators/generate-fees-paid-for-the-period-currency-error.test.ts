@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { generateFeesPaidForThePeriodCurrencyError } from './generate-fees-paid-for-the-period-currency-error';
 
 describe('generateMonthlyFeesPaidCurrencyError', () => {
@@ -42,7 +43,7 @@ describe('generateMonthlyFeesPaidCurrencyError', () => {
 
   it('returns null if the value is a valid currency', () => {
     const validBaseCurrency = {
-      value: 'GBP',
+      value: CURRENCY.GBP,
       column: 'A',
       row: 1,
     };

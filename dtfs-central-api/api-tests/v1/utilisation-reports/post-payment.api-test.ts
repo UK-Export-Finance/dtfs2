@@ -40,7 +40,7 @@ describe(`POST ${BASE_URL}`, () => {
     .withUploadedByUserId(portalUserId)
     .build();
 
-  const paymentCurrency: Currency = 'GBP';
+  const paymentCurrency: Currency = CURRENCY.GBP;
 
   const feeRecordIds = [1, 2];
   const feeRecords = feeRecordIds.map((id) =>
@@ -66,7 +66,7 @@ describe(`POST ${BASE_URL}`, () => {
     await SqlDbHelper.deleteAllEntries('PaymentMatchingTolerance');
 
     const tolerances = [
-      PaymentMatchingToleranceEntityMockBuilder.forCurrency('GBP').withId(1).withThreshold(1).withIsActive(true).build(),
+      PaymentMatchingToleranceEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(1).withThreshold(1).withIsActive(true).build(),
       PaymentMatchingToleranceEntityMockBuilder.forCurrency('EUR').withId(2).withThreshold(2).withIsActive(true).build(),
       PaymentMatchingToleranceEntityMockBuilder.forCurrency('JPY').withId(3).withThreshold(3).withIsActive(true).build(),
       PaymentMatchingToleranceEntityMockBuilder.forCurrency('USD').withId(4).withThreshold(4).withIsActive(true).build(),
@@ -253,7 +253,7 @@ describe(`POST ${BASE_URL}`, () => {
     await SqlDbHelper.deleteAllEntries('FeeRecord');
 
     const feeRecordsInGBP = feeRecordIds.map((id) =>
-      FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport).withId(id).withPaymentCurrency('GBP').build(),
+      FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport).withId(id).withPaymentCurrency(CURRENCY.GBP).build(),
     );
     await SqlDbHelper.saveNewEntries('FeeRecord', feeRecordsInGBP);
 
@@ -277,9 +277,17 @@ describe(`POST ${BASE_URL}`, () => {
     const selectedFeeRecordIds = [1, 2, 3];
 
     const feeRecordsWithPayments = [
-      FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport).withId(1).withPaymentCurrency('GBP').withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH).build(),
-      FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport).withId(2).withPaymentCurrency('GBP').withStatus(FEE_RECORD_STATUS.TO_DO).build(),
-      FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport).withId(3).withPaymentCurrency('GBP').withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH).build(),
+      FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport)
+        .withId(1)
+        .withPaymentCurrency(CURRENCY.GBP)
+        .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
+        .build(),
+      FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport).withId(2).withPaymentCurrency(CURRENCY.GBP).withStatus(FEE_RECORD_STATUS.TO_DO).build(),
+      FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport)
+        .withId(3)
+        .withPaymentCurrency(CURRENCY.GBP)
+        .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
+        .build(),
     ];
 
     const payments = [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords(feeRecordsWithPayments).build()];
@@ -309,7 +317,7 @@ describe(`POST ${BASE_URL}`, () => {
     const feeRecordsWithPayments = paymentFeeRecordIds.map((feeRecordId) =>
       FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport)
         .withId(feeRecordId)
-        .withPaymentCurrency('GBP')
+        .withPaymentCurrency(CURRENCY.GBP)
         .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
         .build(),
     );

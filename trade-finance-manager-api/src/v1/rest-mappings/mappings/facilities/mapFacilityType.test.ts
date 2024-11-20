@@ -1,4 +1,4 @@
-import { Facility, FACILITY_TYPE, MAPPED_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { BOND_TYPE, Facility, FACILITY_TYPE, MAPPED_FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { mapBssEwcsFacilityType, mapGefFacilityType } from './mapFacilityType';
 
 const { BOND, LOAN, CASH, CONTINGENT } = FACILITY_TYPE;
@@ -7,7 +7,7 @@ describe('mapBssEwcsFacilityType', () => {
   describe(`when the facility type is ${BOND}`, () => {
     it('should return the facility bondType', () => {
       const mockBondFacility = {
-        bondType: 'Bid bond',
+        bondType: BOND_TYPE.BID_BOND,
       };
 
       const result = mapBssEwcsFacilityType(BOND, mockBondFacility as Facility);

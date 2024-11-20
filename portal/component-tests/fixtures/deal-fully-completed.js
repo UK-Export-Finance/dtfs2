@@ -1,5 +1,6 @@
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { subDays, addMonths, format } = require('date-fns');
-const CONSTANTS = require('../../server/constants');
+const { DATE } = require('../../server/constants');
 
 const now = new Date();
 const yesterday = subDays(now, 1);
@@ -31,7 +32,7 @@ const deal = {
     items: [
       {
         bondIssuer: 'my issuer',
-        bondType: 'Retention bond',
+        bondType: BOND_TYPE.RETENTION_BOND,
         facilityStage: 'Issued',
         hasBeenIssued: true,
         ukefGuaranteeInMonths: '12',
@@ -48,7 +49,7 @@ const deal = {
         currencySameAsSupplyContractCurrency: 'true',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
         conversionRate: '100',
         'conversionRateDate-day': `${format(yesterday, 'dd')}`,
@@ -65,7 +66,7 @@ const deal = {
       },
       {
         bondIssuer: 'my issuer',
-        bondType: 'Retention bond',
+        bondType: BOND_TYPE.RETENTION_BOND,
         facilityStage: 'Issued',
         hasBeenIssued: true,
         ukefGuaranteeInMonths: '12',
@@ -82,7 +83,7 @@ const deal = {
         currencySameAsSupplyContractCurrency: 'true',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
         conversionRate: '100',
         'conversionRateDate-day': `${format(yesterday, 'dd')}`,
@@ -303,7 +304,7 @@ const deal = {
       text: 'USD - US Dollars',
     },
     supplyContractValue: '10,000',
-    supplyContractConversionDate: format(now, CONSTANTS.DATE.FULL_DATE),
+    supplyContractConversionDate: format(now, DATE.FULL_DATE),
   },
   summary: {
     totalValue: {

@@ -1,4 +1,4 @@
-const { sub, add, format, getUnixTime } = require('date-fns');
+import { sub, add, format, getUnixTime } from 'date-fns';
 
 export const SHORT_DAY_FORMAT = 'd';
 export const LONG_DAY_FORMAT = 'dd';

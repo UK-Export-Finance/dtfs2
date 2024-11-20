@@ -1,4 +1,5 @@
 import {
+  CURRENCY,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
@@ -155,7 +156,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
     const allFeeRecords = [...groupedFeeRecords, ...toDoFeeRecords];
 
     const paymentId = 15;
-    const payment = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).withAmount(100).withFeeRecords(groupedFeeRecords).build();
+    const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(paymentId).withAmount(100).withFeeRecords(groupedFeeRecords).build();
 
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, allFeeRecords);
     cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, [payment]);

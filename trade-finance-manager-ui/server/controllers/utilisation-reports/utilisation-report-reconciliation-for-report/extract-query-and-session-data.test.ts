@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { extractQueryAndSessionData } from './extract-query-and-session-data';
 import { handleRedirectSessionData } from './handle-redirect-session-data';
 import { validatePaymentDetailsFilters } from './validate-payment-details-filters';
@@ -79,7 +80,7 @@ describe('extractQueryAndSessionData', () => {
 
   describe('payment details filters', () => {
     const PAYMENT_DETAILS_FACILITY_ID_QUERY = '5678';
-    const PAYMENT_DETAILS_PAYMENT_CURRENCY_QUERY = 'GBP';
+    const PAYMENT_DETAILS_PAYMENT_CURRENCY_QUERY = CURRENCY.GBP;
     const PAYMENT_DETAILS_PAYMENT_REFERENCE_QUERY = 'some-payment-reference';
 
     describe('when extracting facility id filter', () => {

@@ -1,4 +1,4 @@
-import { UtilisationReportDataValidationError } from '@ukef/dtfs2-common';
+import { CURRENCY, UtilisationReportDataValidationError } from '@ukef/dtfs2-common';
 import { generateErrorsForMismatchedFacilityValues } from '.';
 
 describe('services/utilisation-report-data-validator/utilisation-report-cell-validators/helpers/generate-errors-for-mismatched-facility-values', () => {
@@ -16,7 +16,7 @@ describe('services/utilisation-report-data-validator/utilisation-report-cell-val
     {
       'ukef facility id': { value: '20001371', column: 'B', row: 2 },
       'bank facility reference': { value: 'test exporter 1', column: 'C', row: 2 },
-      'base currency': { value: 'GBP', column: 'D', row: 2 },
+      'base currency': { value: CURRENCY.GBP, column: 'D', row: 2 },
       'facility utilisation': { value: '20003', column: 'F', row: 2 },
       exporter: { value: 'test exporter 1', column: 'C', row: 2 },
     },
@@ -30,7 +30,7 @@ describe('services/utilisation-report-data-validator/utilisation-report-cell-val
     {
       'ukef facility id': { value: '20001372', column: 'B', row: 4 },
       'bank facility reference': { value: 'test exporter 2', column: 'C', row: 4 },
-      'base currency': { value: 'GBP', column: 'D', row: 4 },
+      'base currency': { value: CURRENCY.GBP, column: 'D', row: 4 },
       'facility utilisation': { value: '3000', column: 'F', row: 4 },
       exporter: { value: 'test exporter 2', column: 'C', row: 4 },
     },

@@ -3,3 +3,4 @@ export * from './facility-end-date';
 export * from './login-status';
 export * from './deal-status';
 export * from './facility-status';
+export * from './facility-stage';

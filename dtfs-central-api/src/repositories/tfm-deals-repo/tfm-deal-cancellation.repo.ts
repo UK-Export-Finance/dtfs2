@@ -56,17 +56,17 @@ export class TfmDealCancellationRepo {
   }
 
   /**
-   * Find deals with scheduled cancellations
+   * Find deals with pending cancellations
    * @returns the deals
    */
-  public static async findScheduledDealCancellations(): Promise<TfmDealWithCancellation[]> {
+  public static async findPendingDealCancellations(): Promise<TfmDealWithCancellation[]> {
     const dealCollection = await this.getDealCollection();
 
     return await dealCollection
       .find<TfmDealWithCancellation>({
         'dealSnapshot.submissionType': { $in: [DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN] },
         'tfm.stage': { $ne: TFM_DEAL_STAGE.CANCELLED },
-        'tfm.cancellation.status': { $eq: TFM_DEAL_CANCELLATION_STATUS.SCHEDULED },
+        'tfm.cancellation.status': { $eq: TFM_DEAL_CANCELLATION_STATUS.PENDING },
       })
       .toArray();
   }
@@ -208,7 +208,7 @@ export class TfmDealCancellationRepo {
 
   /**
    * Schedules a deal cancellation (occurs when a deal cancellation is submitted but the effectiveFrom is in the future).
-   * In this instance, the deal and facility statuses remain the same, but the tfm cancellation object 'status' is updated to 'Scheduled'.
+   * In this instance, the deal and facility statuses remain the same, but the tfm cancellation object 'status' is updated to 'pending'.
    * When the effectiveFrom date passes, a separate chron job will run to submit the deal cancellation using submitDealCancellation above,
    * updating the deal and facility statuses to 'Cancelled' / 'Risk expired' respectively.
    * We still return the deal ID and corresponding facility IDs in this instance to be used on the cancellation confirmation email.
@@ -237,7 +237,7 @@ export class TfmDealCancellationRepo {
 
     const update: UpdateFilter<WithoutId<TfmDeal>> = {
       $set: {
-        'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.SCHEDULED,
+        'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.PENDING,
         auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
       },
     };

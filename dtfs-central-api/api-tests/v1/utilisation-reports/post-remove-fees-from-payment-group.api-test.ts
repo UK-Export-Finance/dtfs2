@@ -1,6 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import {
   Currency,
+  CURRENCY,
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
@@ -30,7 +31,7 @@ describe(`POST ${BASE_URL}`, () => {
 
   const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
 
-  const paymentCurrency: Currency = 'GBP';
+  const paymentCurrency: Currency = CURRENCY.GBP;
   const paymentId = 2;
   const payment = PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(paymentId).build();
 
