@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { aTfmSessionUser } from '../../../../../test-helpers';
-import { createRecordCorrectionRequest, CreateRecordCorrectionRequestRequest } from '.';
+import { getCreateRecordCorrectionRequest, GetCreateRecordCorrectionRequestRequest } from '.';
 import { CreateRecordCorrectionRequestViewModel } from '../../../../types/view-models';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 
@@ -17,13 +17,13 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
   it('should render create record correction request page', () => {
     // Arrange
     const reportId = '123';
-    const { req, res } = httpMocks.createMocks<CreateRecordCorrectionRequestRequest>({
+    const { req, res } = httpMocks.createMocks<GetCreateRecordCorrectionRequestRequest>({
       session: requestSession,
       params: { reportId, feeRecordId: '456' },
     });
 
     // Act
-    createRecordCorrectionRequest(req, res);
+    getCreateRecordCorrectionRequest(req, res);
 
     // Assert
     expect(res._getRenderView()).toEqual('utilisation-reports/record-corrections/create-record-correction-request.njk');
@@ -37,6 +37,8 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         facilityId: '0012345678',
         exporter: 'Sample Company Ltd',
       },
+      // TODO: Add in empty errorSummary here
+      errors: [],
     });
   });
 });

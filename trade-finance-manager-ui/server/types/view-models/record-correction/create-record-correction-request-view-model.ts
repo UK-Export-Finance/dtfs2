@@ -1,4 +1,5 @@
 import { BaseViewModel } from '../base-view-model';
+import { CreateRecordCorrectionRequestErrorsViewModel } from './create-record-correction-request-errors-view-model';
 
 export type CreateRecordCorrectionRequestViewModel = BaseViewModel & {
   reportId: string;
@@ -8,4 +9,5 @@ export type CreateRecordCorrectionRequestViewModel = BaseViewModel & {
     facilityId: string;
     exporter: string;
   };
+  errors: CreateRecordCorrectionRequestErrorsViewModel;
 };
