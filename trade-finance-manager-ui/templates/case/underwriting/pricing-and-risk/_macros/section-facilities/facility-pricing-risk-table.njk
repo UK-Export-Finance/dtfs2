@@ -64,16 +64,9 @@
           {% if userCanEdit %}
             <a
               class="govuk-link govuk-link--no-visited-state"
-              href="/case/{{ caseId }}/facility/{{ facility._id }}"
-              data-cy="facility-{{ facility._id }}-change-link">
-              Change <span data-cy="facility-{{ facility._id }}-change-link-visually-hidden-text" class="govuk-visually-hidden">{{ facility.facilitySnapshot.type }} {{ facility.facilitySnapshot.ukefFacilityId }}</span>
-            </a>
-
-            <a
-              class="govuk-link govuk-link--no-visited-state"
               href="/case/{{ caseId }}/underwriting/pricing-and-risk/facility/{{ facility._id }}/risk-profile"
-              data-cy="facility-{{ facility._id }}-change-risk-profile-link">
-              {{ facility.facilitySnapshot.ukefFacilityId }} <span data-cy="facility-{{ facility._id }}-change-risk-profile-link-visually-hidden-text" class="govuk-visually-hidden">Change {{ facility.facilitySnapshot.type }} {{ facility.facilitySnapshot.ukefFacilityId }} risk profile</span>
+              data-cy="facility-{{ facility._id }}-change-link">
+              Change <span data-cy="facility-{{ facility._id }}-change-link-visually-hidden-text" class="govuk-visually-hidden">{{ facility.facilitySnapshot.type }} {{ facility.facilitySnapshot.ukefFacilityId }} risk profile</span>
             </a>
           {% endif %}
         </dd>

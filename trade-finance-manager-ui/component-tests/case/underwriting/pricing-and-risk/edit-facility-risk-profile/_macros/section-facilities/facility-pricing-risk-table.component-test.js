@@ -129,12 +129,6 @@ describe(component, () => {
 
         wrapper.expectElement(`[data-cy="facility-${params.facility._id}-change-link"]`).notToExist();
       });
-
-      it('should NOT render `change risk profile` link', () => {
-        wrapper = render(params);
-
-        wrapper.expectElement(`[data-cy="facility-${params.facility._id}-change-risk-profile-link"]`).notToExist();
-      });
     });
 
     describe('when params.userCanEdit is true', () => {
@@ -146,26 +140,11 @@ describe(component, () => {
 
         wrapper = render(params);
 
-        const expectedLink = `/case/${params.caseId}/facility/${params.facility._id}`;
-
-        const expectedText = `Change ${params.facility.facilitySnapshot.type} ${params.facility.facilitySnapshot.ukefFacilityId}`;
-
-        wrapper.expectLink(`[data-cy="facility-${params.facility._id}-change-link"]`).toLinkTo(expectedLink, expectedText);
-      });
-
-      it('should render `change risk profile` link', () => {
-        params = {
-          ...params,
-          userCanEdit: true,
-        };
-
-        wrapper = render(params);
-
         const expectedLink = `/case/${params.caseId}/underwriting/pricing-and-risk/facility/${params.facility._id}/risk-profile`;
 
-        const expectedText = `${params.facility.facilitySnapshot.ukefFacilityId} Change ${params.facility.facilitySnapshot.type} ${params.facility.facilitySnapshot.ukefFacilityId} risk profile`;
+        const expectedText = `Change ${params.facility.facilitySnapshot.type} ${params.facility.facilitySnapshot.ukefFacilityId} risk profile`;
 
-        wrapper.expectLink(`[data-cy="facility-${params.facility._id}-change-risk-profile-link"]`).toLinkTo(expectedLink, expectedText);
+        wrapper.expectLink(`[data-cy="facility-${params.facility._id}-change-link"]`).toLinkTo(expectedLink, expectedText);
       });
     });
   });
