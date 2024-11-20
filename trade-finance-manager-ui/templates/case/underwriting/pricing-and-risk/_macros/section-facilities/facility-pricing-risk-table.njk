@@ -17,8 +17,10 @@
 
 {# 
   NOTE: This summary list has to be hard coded, rather than using the GOV summary list.
-  This is because one of the rows has a custom "change" link.
-  If the GOV summary list component is used and we pass in custom HTML for the "change" link,
+  This is because the card title has a custom title (with text and link).
+  If the GOV summary list component is used,
+  The final summary list row (that contains a "change" link),
+  Will have some values from the custom card title HTML appended.
   It will not render correctly.
   Therefore, without design changes, we cannot use the GOV summary list component.
 #}
