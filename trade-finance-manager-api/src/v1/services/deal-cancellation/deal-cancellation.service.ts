@@ -1,5 +1,5 @@
 import { endOfDay, format, isAfter, toDate } from 'date-fns';
-import { AuditDetails, DATE_FORMATS, getUkefDealId, TEAMS, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { AuditDetails, DATE_FORMATS, TEAMS, TfmDealCancellation } from '@ukef/dtfs2-common';
 import sendTfmEmail from '../send-tfm-email';
 import { CANCEL_DEAL_PAST_DATE, CANCEL_DEAL_FUTURE_DATE } from '../../../constants/email-template-ids';
 import * as api from '../../api';
@@ -61,13 +61,7 @@ export class DealCancellationService {
   public static async submitDealCancellation({ dealId, cancellation, auditDetails }: SubmitDealCancellationParams) {
     console.info(`Submitting deal cancellation for ${dealId}`);
 
-    const { cancelledDeal, riskExpiredFacilityUkefIds } = await api.submitDealCancellation({ dealId, cancellation, auditDetails });
-
-    const ukefDealId = getUkefDealId(cancelledDeal.dealSnapshot);
-
-    if (!ukefDealId) {
-      throw new Error(`Failed to find deal Id on deal ${dealId} when submitting deal cancellation. No email has been sent`);
-    }
+    const { cancelledDealUkefId, riskExpiredFacilityUkefIds } = await api.submitDealCancellation({ dealId, cancellation, auditDetails });
 
     if (!riskExpiredFacilityUkefIds.length) {
       throw new Error(`Failed to find facility ids on deal ${dealId} when submitting deal cancellation. No email has been sent`);
@@ -77,6 +71,6 @@ export class DealCancellationService {
       throw new Error(`Some UKEF facility ids were invalid when submitting deal ${dealId} for cancellation. No email has been sent`);
     }
 
-    await this.sendDealCancellationEmail(ukefDealId, cancellation, riskExpiredFacilityUkefIds);
+    await this.sendDealCancellationEmail(cancelledDealUkefId.toString(), cancellation, riskExpiredFacilityUkefIds);
   }
 }

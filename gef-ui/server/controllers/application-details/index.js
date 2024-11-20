@@ -166,6 +166,7 @@ const stateToPartial = (status, url) => {
     [DEAL_STATUS.EXPIRED]: '',
     [DEAL_STATUS.WITHDRAWN]: '',
     [DEAL_STATUS.CANCELLED]: 'application-preview',
+    [DEAL_STATUS.PENDING_CANCELLATION]: 'application-preview',
   };
 
   const partials = {

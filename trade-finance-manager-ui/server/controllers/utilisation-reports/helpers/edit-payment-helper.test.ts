@@ -1,5 +1,5 @@
 import { when } from 'jest-when';
-import { Currency, CurrencyAndAmount } from '@ukef/dtfs2-common';
+import { Currency, CURRENCY, CurrencyAndAmount } from '@ukef/dtfs2-common';
 import { getEditPaymentViewModel, getEditPaymentViewModelWithFormValues } from './edit-payment-helper';
 import { aPaymentDetailsWithFeeRecordsResponseBody, aPayment, aFeeRecord } from '../../../../test-helpers';
 import { GetPaymentDetailsWithFeeRecordsResponseBody } from '../../../api-response-types';
@@ -164,7 +164,7 @@ describe('edit-payment-helper', () => {
     it('sets the render view model feeRecords reportedFees to the edit payment details response feeRecords sorted and formatted reportedFees', () => {
       // Arrange
       const feeRecordReportedFees: CurrencyAndAmount[] = [
-        { currency: 'GBP', amount: 100 },
+        { currency: CURRENCY.GBP, amount: 100 },
         { currency: 'EUR', amount: 50 },
       ];
       const formattedReportedFees: SortedAndFormattedCurrencyAndAmount[] = [
@@ -189,7 +189,7 @@ describe('edit-payment-helper', () => {
     it('sets the render view model feeRecords reportedPayments to the edit payment details response feeRecords sorted and formatted reportedPayments', () => {
       // Arrange
       const feeRecordReportedPayments: CurrencyAndAmount[] = [
-        { currency: 'GBP', amount: 100 },
+        { currency: CURRENCY.GBP, amount: 100 },
         { currency: 'EUR', amount: 50 },
       ];
       const formattedReportedPayments: SortedAndFormattedCurrencyAndAmount[] = [
@@ -622,7 +622,7 @@ describe('edit-payment-helper', () => {
     it('sets the render view model feeRecords reportedFees to the edit payment details response feeRecords sorted and formatted reportedFees', () => {
       // Arrange
       const feeRecordReportedFees: CurrencyAndAmount[] = [
-        { currency: 'GBP', amount: 100 },
+        { currency: CURRENCY.GBP, amount: 100 },
         { currency: 'EUR', amount: 50 },
       ];
       const formattedReportedFees: SortedAndFormattedCurrencyAndAmount[] = [
@@ -655,7 +655,7 @@ describe('edit-payment-helper', () => {
     it('sets the render view model feeRecords reportedPayments to the edit payment details response feeRecords sorted and formatted reportedPayments', () => {
       // Arrange
       const feeRecordReportedPayments: CurrencyAndAmount[] = [
-        { currency: 'GBP', amount: 100 },
+        { currency: CURRENCY.GBP, amount: 100 },
         { currency: 'EUR', amount: 50 },
       ];
       const formattedReportedPayments: SortedAndFormattedCurrencyAndAmount[] = [

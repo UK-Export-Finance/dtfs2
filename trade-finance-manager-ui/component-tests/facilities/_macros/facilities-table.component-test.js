@@ -1,5 +1,4 @@
-/* eslint-disable no-underscore-dangle */
-const { TFM_FACILITY_STAGE } = require('@ukef/dtfs2-common');
+const { CURRENCY, TFM_FACILITY_STAGE } = require('@ukef/dtfs2-common');
 const { componentRenderer } = require('../../componentRenderer');
 
 const component = '../templates/facilities/_macros/facilities-table.njk';
@@ -16,7 +15,7 @@ describe(component, () => {
         dealType: 'BSS/EWCS',
         type: 'Bond',
         value: 1234567890,
-        currency: 'GBP',
+        currency: CURRENCY.GBP,
         coverEndDate: '11 Apr 2024',
         companyName: 'Company 1',
         hasBeenIssued: true,
@@ -31,7 +30,7 @@ describe(component, () => {
         dealType: 'BSS/EWCS',
         type: 'Bond',
         value: 1234567890,
-        currency: 'GBP',
+        currency: CURRENCY.GBP,
         coverEndDate: '11 Apr 2024',
         companyName: 'Company 1',
         hasBeenIssued: true,

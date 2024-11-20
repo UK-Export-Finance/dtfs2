@@ -1,3 +1,4 @@
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { nowTimestamp, twoMonths, twoMonthsTimestamp, threeMonths } = require('../dates');
 
 module.exports = [
@@ -15,7 +16,7 @@ module.exports = [
     currencySameAsSupplyContractCurrency: 'true',
     currency: {
       text: 'GBP - UK Sterling',
-      id: 'GBP',
+      id: CURRENCY.GBP,
       currencyId: 12,
     },
     conversionRate: null,
@@ -53,7 +54,7 @@ module.exports = [
     currencySameAsSupplyContractCurrency: 'true',
     currency: {
       text: 'GBP - UK Sterling',
-      id: 'GBP',
+      id: CURRENCY.GBP,
       currencyId: 12,
     },
     conversionRate: null,
@@ -62,7 +63,7 @@ module.exports = [
     'conversionRateDate-year': null,
     createdDate: nowTimestamp,
     bondIssuer: '',
-    bondType: 'Maintenance bond',
+    bondType: BOND_TYPE.MAINTENANCE_BOND,
     'requestedCoverStartDate-day': twoMonths.day,
     'requestedCoverStartDate-month': twoMonths.month,
     'requestedCoverStartDate-year': twoMonths.year,

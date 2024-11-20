@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { processCoverStartDate } from './index';
 import api from '../../services/api';
 import CONSTANTS from '../../constants';
@@ -59,7 +60,7 @@ const MockFacilityResponse = () => {
         monthsOfCover: null,
         details: [],
         detailsOther: '',
-        currency: { id: 'GBP' },
+        currency: { id: CURRENCY.GBP },
         value: 1000,
         coverPercentage: 80,
         interestPercentage: 1,

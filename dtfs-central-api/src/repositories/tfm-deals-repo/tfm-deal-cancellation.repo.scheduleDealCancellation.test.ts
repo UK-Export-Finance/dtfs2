@@ -39,10 +39,7 @@ describe('tfm-deals-cancellation-repo', () => {
   const findToArrayMock = jest.fn();
   const getCollectionMock = jest.fn();
 
-  const matchingFacilityId1 = new ObjectId();
-  const matchingFacilityId2 = new ObjectId();
-
-  const mockMatchedFacilities = [{ facilitySnapshot: { ukefFacilityId: matchingFacilityId1 } }, { facilitySnapshot: { ukefFacilityId: matchingFacilityId2 } }];
+  const mockMatchedFacilities = [{ facilitySnapshot: { _id: new ObjectId() } }, { facilitySnapshot: { _id: new ObjectId() } }];
 
   afterEach(() => {
     jest.resetAllMocks();
@@ -135,7 +132,7 @@ describe('tfm-deals-cancellation-repo', () => {
         };
         const expectedUpdate = {
           $set: {
-            'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.SCHEDULED,
+            'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.PENDING,
             auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
           },
           $push: {
@@ -178,7 +175,7 @@ describe('tfm-deals-cancellation-repo', () => {
       });
 
       // Assert
-      expect(result).toEqual({ cancelledDeal: mockDeal, riskExpiredFacilityUkefIds: [matchingFacilityId1, matchingFacilityId2] });
+      expect(result).toEqual({ cancelledDeal: mockDeal, riskExpiredFacilities: mockMatchedFacilities });
     });
   });
 });

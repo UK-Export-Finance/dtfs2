@@ -1,4 +1,4 @@
-import { InvalidDealIdError } from '@ukef/dtfs2-common';
+import { CURRENCY, InvalidDealIdError } from '@ukef/dtfs2-common';
 
 const { ObjectId } = require('mongodb');
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
@@ -959,7 +959,7 @@ describe('API is protected against SSRF attacks', () => {
 
     it('Makes an axios request when the currencies are valid', async () => {
       const validCurrencyCodeUSD = 'USD';
-      const validCurrencyCodeGBP = 'GBP';
+      const validCurrencyCodeGBP = CURRENCY.GBP;
 
       const response = await api.getCurrencyExchangeRate(validCurrencyCodeGBP, validCurrencyCodeUSD);
 
