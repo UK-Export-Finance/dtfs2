@@ -9,8 +9,6 @@ context('Loan form - Submit loan with created element on page', () => {
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
     cy.createBssEwcsDeal({});
-
-    cy.getDealIdFromUrl();
   });
 
   it("should not insert created element's data into the loan", () => {
