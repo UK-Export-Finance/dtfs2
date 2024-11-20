@@ -1,7 +1,7 @@
-import { ROLES, FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { ROLES, FACILITY_TYPE, FACILITY_STATUS } from '@ukef/dtfs2-common';
 import { dashboardFacilitiesFiltersQuery } from './facilities-filters-query';
 import CONSTANTS, { ALL_BANKS_ID } from '../../../constants';
-import CONTENT_STRINGS from '../../../content-strings';
+import { DASHBOARD_FILTERS } from '../../../content-strings';
 import keywordQuery from './facilities-filters-keyword-query';
 
 const { ADMIN, MAKER } = ROLES;
@@ -38,10 +38,10 @@ describe('controllers/dashboard/facilities - filters query', () => {
         [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: [FACILITY_TYPE.CASH, FACILITY_TYPE.BOND],
       },
       {
-        [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: [true],
+        [CONSTANTS.FIELD_NAMES.FACILITY.STAGE]: ['Unissued'],
       },
       {
-        [CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD]: [mockKeyword],
+        [DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD]: [mockKeyword],
       },
     ];
 
@@ -54,7 +54,7 @@ describe('controllers/dashboard/facilities - filters query', () => {
           OR: [{ [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: mockFilters[0].type[0] }, { [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: mockFilters[0].type[1] }],
         },
         {
-          OR: [{ [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: true }],
+          OR: [{ hasBeenIssued: false }],
         },
         {
           OR: [...keywordQuery(mockKeyword)],
@@ -84,10 +84,10 @@ describe('controllers/dashboard/facilities - filters query', () => {
         [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: [FACILITY_TYPE.CASH, FACILITY_TYPE.BOND],
       },
       {
-        [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: [true],
+        [CONSTANTS.FIELD_NAMES.FACILITY.STAGE]: [DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.ISSUED],
       },
       {
-        [CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD]: [mockKeyword],
+        [DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD]: [mockKeyword],
       },
       { [CONSTANTS.FIELD_NAMES.FACILITY.CREATED_BY]: ['Created by you'] },
     ];
@@ -101,12 +101,75 @@ describe('controllers/dashboard/facilities - filters query', () => {
           OR: [{ [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: mockFilters[0].type[0] }, { [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: mockFilters[0].type[1] }],
         },
         {
-          OR: [{ [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: true }],
+          OR: [{ hasBeenIssued: true }],
         },
         {
           OR: [...keywordQuery(mockKeyword)],
         },
         { 'deal.maker._id': mockUser._id },
+      ],
+    };
+
+    expect(result).toEqual(expected);
+  });
+
+  it(`should return hasBeenIssued filter when stage is ${DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.ISSUED}`, () => {
+    const mockFilters = [
+      {
+        [CONSTANTS.FIELD_NAMES.FACILITY.STAGE]: [DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.ISSUED],
+      },
+    ];
+
+    const result = dashboardFacilitiesFiltersQuery(mockFilters, mockUser);
+
+    const expected = {
+      AND: [
+        { 'deal.bank.id': mockUser.bank.id },
+        {
+          OR: [{ hasBeenIssued: true }],
+        },
+      ],
+    };
+
+    expect(result).toEqual(expected);
+  });
+
+  it(`should return hasBeenIssued filter when stage is ${DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.UNISSUED}`, () => {
+    const mockFilters = [
+      {
+        [CONSTANTS.FIELD_NAMES.FACILITY.STAGE]: [[DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.UNISSUED]],
+      },
+    ];
+
+    const result = dashboardFacilitiesFiltersQuery(mockFilters, mockUser);
+
+    const expected = {
+      AND: [
+        { 'deal.bank.id': mockUser.bank.id },
+        {
+          OR: [{ hasBeenIssued: false }],
+        },
+      ],
+    };
+
+    expect(result).toEqual(expected);
+  });
+
+  it(`should return facilityStage filter when stage is ${FACILITY_STATUS.RISK_EXPIRED}`, () => {
+    const mockFilters = [
+      {
+        [CONSTANTS.FIELD_NAMES.FACILITY.STAGE]: [FACILITY_STATUS.RISK_EXPIRED],
+      },
+    ];
+
+    const result = dashboardFacilitiesFiltersQuery(mockFilters, mockUser);
+
+    const expected = {
+      AND: [
+        { 'deal.bank.id': mockUser.bank.id },
+        {
+          OR: [{ facilityStage: FACILITY_STATUS.RISK_EXPIRED }],
+        },
       ],
     };
 
