@@ -43,52 +43,55 @@ const dashboardFacilitiesFiltersQuery = (filters, user) => {
       const fieldName = Object.keys(filterObj)[0];
       const filterValue = filterObj[fieldName];
 
-      const isKeywordField = fieldName === BESPOKE_FIELD_NAMES.KEYWORD;
-      const isStageField = fieldName === BESPOKE_FIELD_NAMES.STAGE;
+      switch (fieldName) {
+        case BESPOKE_FIELD_NAMES.KEYWORD: {
+          const keywordValue = filterValue[0];
+          const keywordFilters = keywordQuery(keywordValue);
 
-      if (isKeywordField) {
-        const keywordValue = filterValue[0];
-        const keywordFilters = keywordQuery(keywordValue);
+          const keywordFilter = {};
+          keywordFilter.OR = [];
+          keywordFilter.OR.push(...keywordFilters);
 
-        const keywordFilter = {};
-        keywordFilter.OR = [];
-        keywordFilter.OR.push(...keywordFilters);
+          query.AND.push(keywordFilter);
+          break;
+        }
+        case BESPOKE_FIELD_NAMES.STAGE: {
+          const fieldFilter = {
+            OR: [],
+          };
+          filterValue.forEach((value) => {
+            if (value === FACILITY_STATUS.RISK_EXPIRED) {
+              fieldFilter.OR.push({ facilityStage: FACILITY_STATUS.RISK_EXPIRED });
+            } else {
+              fieldFilter.OR.push({
+                hasBeenIssued: value === BESPOKE_FILTER_VALUES.FACILITIES.ISSUED,
+              });
+            }
+          });
 
-        query.AND.push(keywordFilter);
-      } else if (isStageField) {
-        const fieldFilter = {
-          OR: [],
-        };
-        filterValue.forEach((value) => {
-          if (value === FACILITY_STATUS.RISK_EXPIRED) {
-            fieldFilter.OR.push({ facilityStage: FACILITY_STATUS.RISK_EXPIRED });
-          } else {
-            fieldFilter.OR.push({
-              hasBeenIssued: value === BESPOKE_FILTER_VALUES.FACILITIES.ISSUED,
-            });
-          }
-        });
-
-        query.AND.push(fieldFilter);
-      } else {
-        const fieldFilter = {};
-        // or for field (eg dealType)
-        fieldFilter.OR = [];
-        filterValue.forEach((value) => {
-          // if created by you then adding user id as compared to or statement
-          if (value === BESPOKE_FILTER_VALUES.FACILITIES.CREATED_BY_YOU) {
-            // delete or filter as not needed for created by you
-            delete fieldFilter.OR;
-            // have to match deal.maker._id (joined table) as maker does not exist in facilities collection
-            fieldFilter['deal.maker._id'] = user._id;
-          } else {
-            fieldFilter.OR.push({
-              [fieldName]: value,
-            });
-          }
-        });
-        // adds OR to AND query
-        query.AND.push(fieldFilter);
+          query.AND.push(fieldFilter);
+          break;
+        }
+        default: {
+          const fieldFilter = {};
+          // or for field (eg dealType)
+          fieldFilter.OR = [];
+          filterValue.forEach((value) => {
+            // if created by you then adding user id as compared to or statement
+            if (value === BESPOKE_FILTER_VALUES.FACILITIES.CREATED_BY_YOU) {
+              // delete or filter as not needed for created by you
+              delete fieldFilter.OR;
+              // have to match deal.maker._id (joined table) as maker does not exist in facilities collection
+              fieldFilter['deal.maker._id'] = user._id;
+            } else {
+              fieldFilter.OR.push({
+                [fieldName]: value,
+              });
+            }
+          });
+          query.AND.push(fieldFilter);
+          break;
+        }
       }
     });
   }
