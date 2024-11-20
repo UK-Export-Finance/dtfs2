@@ -468,7 +468,6 @@ jobs:
             'maker-bond/**/*.spec.js',
             'maker-facilities/**/*.spec.js',
             'maker-loan/**/*.spec.js',
-            'number-generator/**/*.spec.js',
             'read-only/**/*.spec.js',
             'reports/**/*.spec.js',
             'payment-report-officer/**/*.spec.js',

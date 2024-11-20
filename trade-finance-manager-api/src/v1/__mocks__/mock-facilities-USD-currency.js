@@ -1,9 +1,11 @@
+const { BOND_TYPE } = require('@ukef/dtfs2-common');
+
 const MOCK_FACILITIES = [
   {
     _id: '61f7a4edcf809301e78fbe43',
     type: 'Bond',
     bondIssuer: 'Issuer',
-    bondType: 'Advance payment guarantee',
+    bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
     facilityStage: 'Unissued',
     hasBeenIssued: false,
     ukefGuaranteeInMonths: '10',

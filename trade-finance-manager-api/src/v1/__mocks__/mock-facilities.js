@@ -1,4 +1,4 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 
 const MOCK_FACILITIES = [
   {
@@ -6,7 +6,7 @@ const MOCK_FACILITIES = [
     dealId: 'AIN_DEAL',
     type: 'Bond',
     bondIssuer: 'Issuer',
-    bondType: 'Advance payment guarantee',
+    bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
     facilityStage: 'Unissued',
     hasBeenIssued: false,
     ukefGuaranteeInMonths: '10',
@@ -79,7 +79,7 @@ const MOCK_FACILITIES = [
     dealId: 'MOCK_DEAL_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
     type: 'Bond',
     bondIssuer: 'Issuer',
-    bondType: 'Advance payment guarantee',
+    bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
     facilityStage: 'Issued',
     hasBeenIssued: true,
     previousFacilityStage: 'Unissued',
@@ -143,7 +143,7 @@ const MOCK_FACILITIES = [
     dealId: 'MOCK_DEAL_ISSUED_FACILITIES',
     type: 'Bond',
     bondIssuer: 'Issuer',
-    bondType: 'Advance payment guarantee',
+    bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
     facilityStage: 'Issued',
     hasBeenIssued: true,
     previousFacilityStage: 'Unissued',
