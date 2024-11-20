@@ -110,6 +110,7 @@ const tfmFacilityForReport = {
     interestPercentage: 5,
     dayCountBasis: 5,
     coverPercentage: 80,
+    type: 'Cash',
   },
 };
 

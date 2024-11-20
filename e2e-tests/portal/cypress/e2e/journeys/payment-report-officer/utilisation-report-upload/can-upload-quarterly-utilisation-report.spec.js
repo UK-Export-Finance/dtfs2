@@ -136,7 +136,7 @@ context('Quarterly utilisation report upload', () => {
       });
       cy.assertValidationErrorTableRowContains({
         tableRowIndex: 7,
-        message: 'The Facility ID has not been recognised. Enter a valid Facility ID between 8 and 10 characters.',
+        message: 'The facility ID has not been recognised. Enter a facility ID for a general export facility.',
         exporter: 'Fish Exporter',
         row: '4',
         column: 'B',
@@ -152,7 +152,7 @@ context('Quarterly utilisation report upload', () => {
       });
       cy.assertValidationErrorTableRowContains({
         tableRowIndex: 9,
-        message: 'The Facility ID has not been recognised. Enter a valid Facility ID between 8 and 10 characters.',
+        message: 'The facility ID has not been recognised. Enter a facility ID for a general export facility.',
         exporter: 'Potato Exporter',
         row: '5',
         column: 'B',
@@ -209,7 +209,7 @@ context('Quarterly utilisation report upload', () => {
       });
       cy.assertValidationErrorTableRowContains({
         tableRowIndex: 7,
-        message: 'The Facility ID has not been recognised. Enter a valid Facility ID between 8 and 10 characters.',
+        message: 'The facility ID has not been recognised. Enter a facility ID for a general export facility.',
         exporter: 'Fish Exporter',
         row: '4',
         column: 'B',
@@ -217,7 +217,7 @@ context('Quarterly utilisation report upload', () => {
       });
       cy.assertValidationErrorTableRowContains({
         tableRowIndex: 8,
-        message: 'The Facility ID has not been recognised. Enter a valid Facility ID between 8 and 10 characters.',
+        message: 'The facility ID has not been recognised. Enter a facility ID for a general export facility.',
         exporter: 'Potato Exporter',
         row: '5',
         column: 'B',
