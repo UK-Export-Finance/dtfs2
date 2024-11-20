@@ -1,11 +1,12 @@
-const { hasValue } = require('../../../../utils/string');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
 const { currencyIsDisabled } = require('../currency');
+
+// TODO - unit test
 
 module.exports = (facility, errorList) => {
   const newErrorList = { ...errorList };
 
-  if (!hasValue(facility.currency)) {
+  if (!facility.currency?.id) {
     newErrorList.currency = {
       order: orderNumber(newErrorList),
       text: 'Enter the Currency',

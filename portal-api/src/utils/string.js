@@ -8,11 +8,11 @@ const isEmptyString = (str) => {
 };
 
 /**
- * Check if a string has a value, i.e
- * - String is defined
- * - String is not empty
- * - String is not 'Select value'
- * @param {string}
+ * Check if a param has a value, i.e
+ * - the param is defined
+ * - the param is not an empty string
+ * - the param is not a 'Select value' string
+ * @param {unknown}
  * @returns Boolean
  */
 const hasValue = (str) => {
