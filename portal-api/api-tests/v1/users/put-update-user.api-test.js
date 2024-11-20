@@ -14,7 +14,7 @@ const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { ADMIN } = require('../../../src/v1/roles/roles');
 const { STATUS } = require('../../../src/constants/user');
 const { withValidateUsernameAndEmailMatchTests } = require('./with-validate-username-and-email-match.api-tests');
-const { withValidateEmailIsCorrectFormatTests } = require('./with-validate-email-is-correct-format.api-tests').default;
+const { withValidateEmailIsCorrectFormatTests } = require('./with-validate-email-is-correct-format.api-tests');
 const { withValidateEmailIsUniqueTests } = require('./with-validate-email-is-unique.api-tests');
 const { withValidatePasswordWhenUpdateUserWithoutCurrentPasswordTests } = require('./with-validate-password.api-tests');
 

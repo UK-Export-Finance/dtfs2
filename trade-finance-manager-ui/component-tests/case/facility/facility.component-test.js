@@ -52,6 +52,32 @@ describe(page, () => {
     wrapper.expectElement('[data-cy="facility-tenor"]').toExist();
   });
 
+  it('should render pricing and risk', () => {
+    wrapper.expectElement('[data-cy="facility-banks-interest-margin"]').toExist();
+    wrapper.expectElement('[data-cy="facility-guarantee-fee-payable-to-ukef"]').toExist();
+  });
+
+  it('should render footer', () => {
+    wrapper.expectElement('[data-cy="contact-us-footer"]').toExist();
+    wrapper.expectElement('[data-cy="cookies-link"]').toExist();
+    wrapper.expectElement('[data-cy="accessibility-statement-link"]').toExist();
+  });
+
+  it('should render premium schedule section', () => {
+    wrapper.expectElement('[data-cy="premium-schedule"]').toExist();
+    wrapper.expectElement('[data-cy="facility-premium-type"]').toExist();
+    wrapper.expectElement('[data-cy="facility-premium-frequency"]').toExist();
+    wrapper.expectElement('[data-cy="facility-premium-day-count-basis"]').toExist();
+  });
+
+  it('should render dates and amounts', () => {
+    wrapper.expectElement('[data-cy="facility-premium-schedule"]').toExist();
+    wrapper.expectElement('[data-cy="total-to-be-paid-to-ukef"]').toExist();
+    wrapper.expectElement('[data-cy="facilities-table-heading-facility-id"]').toExist();
+    wrapper.expectElement('[data-cy="facilities-table-heading-cover-end-date"]').toExist();
+    wrapper.expectElement('[data-cy="facilities-table-heading-value-gbp"]').toExist();
+  });
+
   describe('when showFacilityEndDate is false', () => {
     it('should not render facility end date', () => {
       wrapper = render({ ...params, showFacilityEndDate: false });
@@ -78,30 +104,33 @@ describe(page, () => {
       });
     });
   });
+  describe('amendments tab', () => {
+    describe('when showAmendmentButton is true', () => {
+      it('should render the amendment button', () => {
+        wrapper = render({ ...params, showAmendmentButton: true });
+        wrapper.expectElement('[data-cy="amendment--add-amendment-button"]').toExist();
+      });
+    });
 
-  it('should render pricing and risk', () => {
-    wrapper.expectElement('[data-cy="facility-banks-interest-margin"]').toExist();
-    wrapper.expectElement('[data-cy="facility-guarantee-fee-payable-to-ukef"]').toExist();
-  });
+    describe('when showAmendmentButton is false', () => {
+      it('should not render the amendment button', () => {
+        wrapper = render({ ...params, showAmendmentButton: false });
+        wrapper.expectElement('[data-cy="amendment--add-amendment-button"]').notToExist();
+      });
+    });
 
-  it('should render footer', () => {
-    wrapper.expectElement('[data-cy="contact-us-footer"]').toExist();
-    wrapper.expectElement('[data-cy="cookies-link"]').toExist();
-    wrapper.expectElement('[data-cy="accessibility-statement-link"]').toExist();
-  });
+    describe('when showContinueAmendmentButton is true', () => {
+      it('should render the continue amendment button', () => {
+        wrapper = render({ ...params, showContinueAmendmentButton: true });
+        wrapper.expectElement('[data-cy="continue-button"]').toExist();
+      });
+    });
 
-  it('should render premium schedule section', () => {
-    wrapper.expectElement('[data-cy="premium-schedule"]').toExist();
-    wrapper.expectElement('[data-cy="facility-premium-type"]').toExist();
-    wrapper.expectElement('[data-cy="facility-premium-frequency"]').toExist();
-    wrapper.expectElement('[data-cy="facility-premium-day-count-basis"]').toExist();
-  });
-
-  it('should render dates and amounts', () => {
-    wrapper.expectElement('[data-cy="facility-premium-schedule"]').toExist();
-    wrapper.expectElement('[data-cy="total-to-be-paid-to-ukef"]').toExist();
-    wrapper.expectElement('[data-cy="facilities-table-heading-facility-id"]').toExist();
-    wrapper.expectElement('[data-cy="facilities-table-heading-cover-end-date"]').toExist();
-    wrapper.expectElement('[data-cy="facilities-table-heading-value-gbp"]').toExist();
+    describe('when showContinueAmendmentButton is false', () => {
+      it('should not render the continue amendment button', () => {
+        wrapper = render({ ...params, showContinueAmendmentButton: false });
+        wrapper.expectElement('[data-cy="continue-button"]').notToExist();
+      });
+    });
   });
 });

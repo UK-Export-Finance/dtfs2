@@ -1,13 +1,13 @@
+const { BOND_TYPE } = require('@ukef/dtfs2-common');
 const { roundNumber } = require('../../../../../../portal-api/src/utils/number');
 const { oneMonth, today } = require('../../../../../e2e-fixtures/dateConstants');
 
 const DETAILS = {
   bondIssuer: 'mock issuer',
   bondType: {
-    value: 'Maintenance bond',
-    text: 'Maintenance bond',
+    value: BOND_TYPE.MAINTENANCE_BOND,
+    text: BOND_TYPE.MAINTENANCE_BOND,
   },
-
   // 'issued' facility stage specifics
   requestedCoverStartDateDay: today.dayLong,
   requestedCoverStartDateMonth: today.monthLong,

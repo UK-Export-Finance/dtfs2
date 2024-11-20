@@ -1,5 +1,5 @@
+const { BOND_TYPE, CURRENCY, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { add, format, sub } = require('date-fns');
-const { CURRENCY, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const dealFullyCompleted = require('./deal-fully-completed');
 
 const nowDate = new Date();
@@ -12,7 +12,7 @@ const deal = {
     {
       type: FACILITY_TYPE.BOND,
       bondIssuer: 'issuer',
-      bondType: 'Retention bond',
+      bondType: BOND_TYPE.RETENTION_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '24',
@@ -38,7 +38,7 @@ const deal = {
     {
       type: FACILITY_TYPE.BOND,
       bondIssuer: 'issuer',
-      bondType: 'Retention bond',
+      bondType: BOND_TYPE.RETENTION_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '24',
@@ -63,7 +63,7 @@ const deal = {
     {
       type: FACILITY_TYPE.BOND,
       bondIssuer: 'issuer',
-      bondType: 'Retention bond',
+      bondType: BOND_TYPE.RETENTION_BOND,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       previousFacilityStage: 'Unissued',

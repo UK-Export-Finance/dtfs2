@@ -51,9 +51,9 @@ export const isDealCancellationEnabledForUser = (submissionType: DealSubmissionT
  */
 export const canDealBeCancelled = (cancellationStatus?: TfmDealCancellationStatus): boolean => {
   const isCompleted = cancellationStatus === TFM_DEAL_CANCELLATION_STATUS.COMPLETED;
-  const isScheduled = cancellationStatus === TFM_DEAL_CANCELLATION_STATUS.SCHEDULED;
+  const isPending = cancellationStatus === TFM_DEAL_CANCELLATION_STATUS.PENDING;
 
-  const canBeCancelled = !isCompleted && !isScheduled;
+  const canBeCancelled = !isCompleted && !isPending;
 
   return canBeCancelled;
 };

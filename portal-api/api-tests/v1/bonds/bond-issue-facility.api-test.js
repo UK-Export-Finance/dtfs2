@@ -1,3 +1,4 @@
+const { BOND_TYPE } = require('@ukef/dtfs2-common');
 const { sub, format, add } = require('date-fns');
 const { CURRENCY } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
@@ -38,7 +39,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
 
   const allBondFields = {
     bondIssuer: 'issuer',
-    bondType: 'bond type',
+    bondType: BOND_TYPE.BID_BOND,
     facilityStage: 'Unissued',
     hasBeenIssued: false,
     previousFacilityStage: 'Unissued',
