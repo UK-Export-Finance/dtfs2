@@ -1,3 +1,7 @@
+/**
+ * These are the field names used on the deal filter query object
+ * This is sent to portal-api to query the database
+ */
 const DEAL = {
   DEAL_TYPE: 'dealType',
   SUBMISSION_TYPE: 'submissionType',
@@ -9,6 +13,10 @@ const DEAL = {
   BSS_EWCS_UKEF_DEAL_ID: 'details.ukefDealId',
 };
 
+/**
+ * These are the field names used on the facility filter query object
+ * This is sent to portal-api to query the database
+ */
 const FACILITY = {
   TYPE: 'type',
   NAME: 'name',
