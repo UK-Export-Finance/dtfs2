@@ -4,16 +4,13 @@ import { generateMockPortalUserAuditDatabaseRecord } from '@ukef/dtfs2-common/ch
 import { aFacility } from './facility';
 import { KeyingSheetCalculationFacilityValues } from '../../src/types/tfm/tfm-facility';
 
-const facility = aFacility();
-const { dayCountBasis, interestPercentage, coverPercentage, value } = facility;
-
 export const aTfmFacility = (): TfmFacility => {
   const tfmFacilityId = new ObjectId();
 
   return {
     _id: tfmFacilityId,
     facilitySnapshot: {
-      ...facility,
+      ...aFacility(),
       _id: tfmFacilityId,
     },
     amendments: [],
@@ -23,10 +20,6 @@ export const aTfmFacility = (): TfmFacility => {
 };
 
 export const keyingSheetCalculationFacilityValues: KeyingSheetCalculationFacilityValues = {
-  coverEndDate: new Date(),
-  coverStartDate: new Date(),
-  dayCountBasis,
-  interestPercentage,
-  coverPercentage,
-  value,
+  coverPercentage: 80,
+  value: 500000,
 };
