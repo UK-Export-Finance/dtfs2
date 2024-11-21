@@ -903,7 +903,6 @@ jobs:
             './portal/cypress/e2e/journeys/maker-bond/**/*.spec.js',
             './portal/cypress/e2e/journeys/maker-facilities/**/*.spec.js',
             './portal/cypress/e2e/journeys/maker-loan/**/*.spec.js',
-            './portal/cypress/e2e/journeys/number-generator/**/*.spec.js',
             './portal/cypress/e2e/journeys/read-only/**/*.spec.js',
             './portal/cypress/e2e/journeys/reports/**/*.spec.js',
             './portal/cypress/e2e/journeys/payment-report-officer/**/*.spec.js',
