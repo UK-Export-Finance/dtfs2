@@ -155,7 +155,7 @@ describe('executeWithSqlTransaction', () => {
     // Act / Assert
     await expect(executeWithSqlTransaction(functionToExecute)).rejects.toThrow(secondaryError);
     expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-    expect(consoleErrorSpy).toHaveBeenCalledWith('Error thrown within SQL transaction: %s', originalError);
+    expect(consoleErrorSpy).toHaveBeenCalledWith('Error thrown within SQL transaction: %o', originalError);
   });
 
   it('returns the return value of the supplied function', async () => {
