@@ -1,8 +1,8 @@
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { calculateInitialUtilisationAndFixedFee, parseDate, hasRequiredValues, RequiredParams } from './calculate-initial-utilisation-and-fixed-fee';
-import { NotFoundError } from '../../../../../errors';
-import { aTfmFacility } from '../../../../../../test-helpers';
-import * as helpers from '../../../../../helpers';
+import { NotFoundError } from '../../../errors';
+import { aTfmFacility } from '../../../../test-helpers';
+import * as helpers from '../../../helpers';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('@ukef/dtfs2-common', () => ({

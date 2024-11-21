@@ -1,6 +1,6 @@
 import { differenceInDays } from 'date-fns';
 import { CalculateFixedFeeUtilisationReportParams } from '@ukef/dtfs2-common';
-import { calculateFixedFeeFromDaysRemaining } from '../../../../../helpers/calculate-fixed-fee-from-days-remaining';
+import { calculateFixedFeeFromDaysRemaining } from '../../../helpers/calculate-fixed-fee-from-days-remaining';
 
 /**
  * getNumberOfDaysInCoverPeriod
