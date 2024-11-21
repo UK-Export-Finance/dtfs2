@@ -152,6 +152,11 @@ context('Dashboard Deals filters', () => {
       dashboardDeals.filters.panel.form.status.rejectedByUKEF.checkbox().should('exist');
       dashboardDeals.filters.panel.form.status.rejectedByUKEF.checkbox().should('not.be.checked');
 
+      // cancelled
+      dashboardDeals.filters.panel.form.status.cancelled.label().contains(CONSTANTS.DEALS.DEAL_STATUS.CANCELLED);
+      dashboardDeals.filters.panel.form.status.cancelled.checkbox().should('exist');
+      dashboardDeals.filters.panel.form.status.cancelled.checkbox().should('not.be.checked');
+
       // abandoned
       dashboardDeals.filters.panel.form.status.abandoned.label().contains(CONSTANTS.DEALS.DEAL_STATUS.ABANDONED);
       dashboardDeals.filters.panel.form.status.abandoned.checkbox().should('exist');

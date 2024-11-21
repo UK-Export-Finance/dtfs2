@@ -34,6 +34,12 @@ const BSS_DEAL_READY_FOR_CHECK = {
   bankInternalRefName: 'Ready Check BSS',
 };
 
+const BSS_DEAL_CANCELLED = {
+  ...BSS_DEAL_BASE,
+  status: CONSTANTS.DEALS.DEAL_STATUS.CANCELLED,
+  bankInternalRefName: 'Cancelled deal',
+};
+
 const BSS_DEAL_AIN = {
   ...BSS_DEAL_BASE,
   status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
@@ -84,6 +90,7 @@ module.exports = {
   BSS_DEAL_AIN,
   BSS_DEAL_MIA,
   GEF_DEAL_DRAFT,
+  BSS_DEAL_CANCELLED,
   BSS_FACILITY_BOND,
   BSS_FACILITY_BOND_ISSUED,
   BSS_FACILITY_BOND_UNISSUED,

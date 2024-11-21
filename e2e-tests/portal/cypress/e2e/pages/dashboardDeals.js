@@ -89,6 +89,10 @@ const page = {
             label: () => cy.get('[data-cy="filter-label-Rejected-by-UKEF"]'),
             checkbox: () => cy.get('[data-cy="filter-input-Rejected-by-UKEF"]'),
           },
+          cancelled: {
+            label: () => cy.get('[data-cy="filter-label-Cancelled"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Cancelled"]'),
+          },
           abandoned: {
             label: () => cy.get('[data-cy="filter-label-Abandoned"]'),
             checkbox: () => cy.get('[data-cy="filter-input-Abandoned"]'),
