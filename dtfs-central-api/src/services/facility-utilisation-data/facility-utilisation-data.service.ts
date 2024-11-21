@@ -23,6 +23,13 @@ export class FacilityUtilisationDataService {
   ) {
     const facilityIdsToInitialise = await this.filterOutFacilityIdsWithExistingUtilisationData(facilityIds, entityManager);
 
+    /**
+     * If all facilities have existing utilisation data then we would expect there to
+     * not be any facility ids needing initialisation.
+     * In this case we return early to avoid making any unnecessary db calls,
+     * e.g. we don't need to fetch previous report period from the bank's
+     * utilisation reporting schedule stored in mongo.
+     */
     if (facilityIdsToInitialise.size === 0) {
       return;
     }

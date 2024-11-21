@@ -144,7 +144,7 @@ describe('executeWithSqlTransaction', () => {
     await expect(executeWithSqlTransaction(functionToExecute)).rejects.toThrow(TransactionFailedError.forApiError(customError));
   });
 
-  it('logs error even if rolling back the transaction fails', async () => {
+  it('logs error if rolling back the transaction fails', async () => {
     // Arrange
     const originalError = new Error('Some error');
     const functionToExecute = jest.fn().mockRejectedValue(originalError);

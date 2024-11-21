@@ -5,6 +5,7 @@ import { FacilityUtilisationDataService } from './facility-utilisation-data.serv
 import { aDbRequestSource, aReportPeriod } from '../../../test-helpers';
 import { calculateInitialUtilisationAndFixedFee } from './helpers';
 import { getPreviousReportPeriod } from '../../helpers/get-previous-report-period';
+import { CHUNK_SIZE_FOR_SQL_BATCH_SAVING } from '../../constants';
 
 jest.mock('./helpers');
 jest.mock('../../helpers/get-previous-report-period');
@@ -86,7 +87,7 @@ describe('FacilityUtilisationDataService', () => {
             fixedFee,
           }),
         ];
-        expect(mockSave).toHaveBeenCalledWith(FacilityUtilisationDataEntity, expectedEntities, { chunk: 100 });
+        expect(mockSave).toHaveBeenCalledWith(FacilityUtilisationDataEntity, expectedEntities, { chunk: CHUNK_SIZE_FOR_SQL_BATCH_SAVING });
       });
     });
 
@@ -138,7 +139,7 @@ describe('FacilityUtilisationDataService', () => {
             fixedFee: secondFixedFee,
           }),
         ];
-        expect(mockSave).toHaveBeenCalledWith(FacilityUtilisationDataEntity, expectedEntities, { chunk: 100 });
+        expect(mockSave).toHaveBeenCalledWith(FacilityUtilisationDataEntity, expectedEntities, { chunk: CHUNK_SIZE_FOR_SQL_BATCH_SAVING });
       });
     });
   });

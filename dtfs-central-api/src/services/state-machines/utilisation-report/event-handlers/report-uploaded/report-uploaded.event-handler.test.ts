@@ -96,7 +96,8 @@ describe('handleUtilisationReportReportUploadedEvent', () => {
     });
 
     // Assert
+    const expectedFacilityIds = new Set(allFacilityIds);
     expect(initialiseFacilityUtilisationDataSpy).toHaveBeenCalledTimes(1);
-    expect(initialiseFacilityUtilisationDataSpy).toHaveBeenCalledWith(new Set(allFacilityIds), bankId, reportPeriod, requestSource, mockEntityManager);
+    expect(initialiseFacilityUtilisationDataSpy).toHaveBeenCalledWith(expectedFacilityIds, bankId, reportPeriod, requestSource, mockEntityManager);
   });
 });
