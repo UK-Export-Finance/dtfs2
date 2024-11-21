@@ -8,6 +8,10 @@ const { BSS_DEAL_READY_FOR_CHECK, GEF_DEAL_DRAFT, BSS_DEAL_CANCELLED } = require
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
+const { DEAL_STATUS } = CONSTANTS.DEALS;
+const { ALL_STATUSES } = CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES;
+const statusCheckboxSelectors = dashboardDeals.filters.panel.form.status;
+
 const filters = dashboardFilters;
 
 context('Dashboard Deals filters - filter by status', () => {
@@ -30,181 +34,96 @@ context('Dashboard Deals filters - filter by status', () => {
     });
   });
 
-  describe('Draft', () => {
-    before(() => {
-      cy.login(BANK1_MAKER1);
-      dashboardDeals.visit();
-      cy.url().should('eq', relative('/dashboard/deals/0'));
-    });
+  describe('Status filters', () => {
+    const statusesToTest = [
+      {
+        status: DEAL_STATUS.DRAFT,
+        label: 'Draft',
+        checkboxSelector: statusCheckboxSelectors.draft,
+      },
+      {
+        status: DEAL_STATUS.READY_FOR_APPROVAL,
+        label: 'Ready-for-Checkers-approval',
+        checkboxSelector: statusCheckboxSelectors.readyForChecker,
+      },
+      {
+        status: DEAL_STATUS.CANCELLED,
+        label: 'Cancelled',
+        checkboxSelector: statusCheckboxSelectors.cancelled,
+      },
+      {
+        status: ALL_STATUSES,
+        label: 'All-statuses',
+        checkboxSelector: statusCheckboxSelectors.all,
+      },
+    ];
 
-    beforeEach(() => {
-      cy.saveSession();
-      dashboardDeals.visit();
+    statusesToTest.forEach(({ status, label, checkboxSelector }) => {
+      describe(status, () => {
+        before(() => {
+          cy.login(BANK1_MAKER1);
+          dashboardDeals.visit();
+          cy.url().should('eq', relative('/dashboard/deals/0'));
+        });
 
-      // toggle to show filters (hidden by default)
-      filters.showHideButton().click();
-    });
+        beforeEach(() => {
+          cy.saveSession();
+          dashboardDeals.visit();
 
-    it('submits the filter and redirects to the dashboard', () => {
-      // apply filter
-      dashboardDeals.filters.panel.form.status.draft.checkbox().click();
-      filters.panel.form.applyFiltersButton().click();
+          // toggle to show filters (hidden by default)
+          filters.showHideButton().click();
+        });
 
-      cy.url().should('eq', relative('/dashboard/deals/0'));
-    });
+        it('submits the filter and redirects to the dashboard', () => {
+          // apply filter
+          checkboxSelector.checkbox().click();
+          filters.panel.form.applyFiltersButton().click();
 
-    it('renders checked checkbox', () => {
-      dashboardDeals.filters.panel.form.status.draft.checkbox().should('be.checked');
-    });
+          cy.url().should('eq', relative('/dashboard/deals/0'));
+        });
 
-    it('renders the applied filter in the `applied filters` section', () => {
-      filters.panel.selectedFilters.container().should('be.visible');
-      filters.panel.selectedFilters.list().should('be.visible');
+        it('renders checked checkbox', () => {
+          checkboxSelector.checkbox().should('be.checked');
+        });
 
-      const firstAppliedFilterHeading = filters.panel.selectedFilters.heading().first();
+        it('renders the applied filter in the `applied filters` section', () => {
+          filters.panel.selectedFilters.container().should('be.visible');
+          filters.panel.selectedFilters.list().should('be.visible');
 
-      firstAppliedFilterHeading.should('be.visible');
-      firstAppliedFilterHeading.should('have.text', 'Status');
+          const firstAppliedFilterHeading = filters.panel.selectedFilters.heading().first();
 
-      const firstAppliedFilter = filters.panel.selectedFilters.listItem().first();
+          firstAppliedFilterHeading.should('be.visible');
+          cy.assertText(firstAppliedFilterHeading, 'Status');
 
-      firstAppliedFilter.should('be.visible');
+          const firstAppliedFilter = filters.panel.selectedFilters.listItem().first();
 
-      const expectedText = `Remove this filter ${CONSTANTS.DEALS.DEAL_STATUS.DRAFT}`;
-      firstAppliedFilter.should('have.text', expectedText);
-    });
+          firstAppliedFilter.should('be.visible');
+          const expectedText = `Remove this filter ${status}`;
+          cy.assertText(firstAppliedFilter, expectedText);
+        });
 
-    it('renders the applied filter in the `main container selected filters` section', () => {
-      dashboardDeals.filters.mainContainer.selectedFilters.statusDraft().should('be.visible');
+        it('renders the applied filter in the `main container selected filters` section', () => {
+          cy.get(`[data-cy=main-container-selected-filter-${label}`).should('be.visible');
 
-      const expectedText = `Remove this filter ${CONSTANTS.DEALS.DEAL_STATUS.DRAFT}`;
-      dashboardDeals.filters.mainContainer.selectedFilters.statusDraft().contains(expectedText);
-    });
+          const expectedText = `Remove this filter ${status}`;
+          cy.get(`[data-cy=main-container-selected-filter-${label}`).contains(expectedText);
+        });
 
-    it('renders only draft deals', () => {
-      const ALL_DRAFT_DEALS = ALL_DEALS.filter(({ status }) => status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT);
-      dashboardDeals.rows().should('have.length', ALL_DRAFT_DEALS.length);
+        if (status === ALL_STATUSES) {
+          it('renders all deals regardless of status', () => {
+            dashboardDeals.rows().should('have.length', ALL_DEALS.length);
+          });
+        } else {
+          it(`renders only ${status} deals`, () => {
+            const expectedDeals = ALL_DEALS.filter(({ status: dealStatus }) => dealStatus === status);
+            dashboardDeals.rows().should('have.length', expectedDeals.length);
 
-      const firstDraftDeal = ALL_DRAFT_DEALS[0];
+            const firstExpectedDeal = expectedDeals[0];
 
-      dashboardDeals.row.status(firstDraftDeal._id).should('have.text', CONSTANTS.DEALS.DEAL_STATUS.DRAFT);
-    });
-  });
-
-  describe('Ready for checker', () => {
-    before(() => {
-      cy.login(BANK1_MAKER1);
-      dashboardDeals.visit();
-      cy.url().should('eq', relative('/dashboard/deals/0'));
-    });
-
-    beforeEach(() => {
-      cy.saveSession();
-      dashboardDeals.visit();
-
-      // toggle to show filters (hidden by default)
-      filters.showHideButton().click();
-    });
-
-    it('submits the filter and redirects to the dashboard', () => {
-      // apply filter
-      dashboardDeals.filters.panel.form.status.readyForChecker.checkbox().click();
-      filters.panel.form.applyFiltersButton().click();
-
-      cy.url().should('eq', relative('/dashboard/deals/0'));
-    });
-
-    it('renders checked checkbox', () => {
-      dashboardDeals.filters.panel.form.status.readyForChecker.checkbox().should('be.checked');
-    });
-
-    it('renders the applied filter in the `applied filters` section', () => {
-      filters.panel.selectedFilters.container().should('be.visible');
-      filters.panel.selectedFilters.list().should('be.visible');
-
-      const firstAppliedFilterHeading = filters.panel.selectedFilters.heading().first();
-
-      firstAppliedFilterHeading.should('be.visible');
-      firstAppliedFilterHeading.should('have.text', 'Status');
-
-      const firstAppliedFilter = filters.panel.selectedFilters.listItem().first();
-
-      firstAppliedFilter.should('be.visible');
-
-      const expectedText = `Remove this filter ${CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL}`;
-      firstAppliedFilter.should('have.text', expectedText);
-    });
-
-    it('renders the applied filter in the `main container selected filters` section', () => {
-      dashboardDeals.filters.mainContainer.selectedFilters.statusReadyForChecker().should('be.visible');
-
-      const expectedText = `Remove this filter ${CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL}`;
-      dashboardDeals.filters.mainContainer.selectedFilters.statusReadyForChecker().contains(expectedText);
-    });
-
-    it('renders only Ready for Check deals', () => {
-      const ALL_READY_FOR_CHECK_DEALS = ALL_DEALS.filter(({ status }) => status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
-      dashboardDeals.rows().should('have.length', ALL_READY_FOR_CHECK_DEALS.length);
-
-      const firstReadyToCheckDeal = ALL_READY_FOR_CHECK_DEALS[0];
-
-      dashboardDeals.row.status(firstReadyToCheckDeal._id).should('have.text', CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
-    });
-  });
-
-  describe('All statuses', () => {
-    before(() => {
-      cy.login(BANK1_MAKER1);
-      dashboardDeals.visit();
-      cy.url().should('eq', relative('/dashboard/deals/0'));
-    });
-
-    beforeEach(() => {
-      cy.saveSession();
-      dashboardDeals.visit();
-
-      // toggle to show filters (hidden by default)
-      filters.showHideButton().click();
-    });
-
-    it('submits the filter and redirects to the dashboard', () => {
-      // apply filter
-      dashboardDeals.filters.panel.form.status.all.checkbox().click();
-      filters.panel.form.applyFiltersButton().click();
-
-      cy.url().should('eq', relative('/dashboard/deals/0'));
-    });
-
-    it('renders checked checkbox', () => {
-      dashboardDeals.filters.panel.form.status.all.checkbox().should('be.checked');
-    });
-
-    it('renders the applied filter in the `applied filters` section', () => {
-      filters.panel.selectedFilters.container().should('be.visible');
-      filters.panel.selectedFilters.list().should('be.visible');
-
-      const firstAppliedFilterHeading = filters.panel.selectedFilters.heading().first();
-
-      firstAppliedFilterHeading.should('be.visible');
-      firstAppliedFilterHeading.should('have.text', 'Status');
-
-      const firstAppliedFilter = filters.panel.selectedFilters.listItem().first();
-
-      firstAppliedFilter.should('be.visible');
-
-      const expectedText = `Remove this filter ${CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.ALL_STATUSES}`;
-      firstAppliedFilter.should('have.text', expectedText);
-    });
-
-    it('renders the applied filter in the `main container selected filters` section', () => {
-      dashboardDeals.filters.mainContainer.selectedFilters.statusAll().should('be.visible');
-
-      const expectedText = `Remove this filter ${CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.ALL_STATUSES}`;
-      dashboardDeals.filters.mainContainer.selectedFilters.statusAll().contains(expectedText);
-    });
-
-    it('renders all deals regardless of status', () => {
-      dashboardDeals.rows().should('have.length', ALL_DEALS.length);
+            cy.assertText(dashboardDeals.row.status(firstExpectedDeal._id), status);
+          });
+        }
+      });
     });
   });
 });
