@@ -48,9 +48,9 @@ const dashboardFacilitiesFiltersQuery = (filters, user) => {
           const keywordValue = filterValue[0];
           const keywordFilters = keywordQuery(keywordValue);
 
-          const keywordFilter = {};
-          keywordFilter.OR = [];
-          keywordFilter.OR.push(...keywordFilters);
+          const keywordFilter = {
+            OR: keywordFilters,
+          };
 
           query.AND.push(keywordFilter);
           break;
