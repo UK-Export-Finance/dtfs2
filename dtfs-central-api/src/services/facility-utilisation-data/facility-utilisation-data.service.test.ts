@@ -1,4 +1,4 @@
-import { EntityManager } from 'typeorm';
+import { EntityManager, In } from 'typeorm';
 import { FacilityUtilisationDataEntity, FacilityUtilisationDataEntityMockBuilder } from '@ukef/dtfs2-common';
 import { when } from 'jest-when';
 import { FacilityUtilisationDataService } from './facility-utilisation-data.service';
@@ -143,7 +143,7 @@ describe('FacilityUtilisationDataService', () => {
     });
   });
 
-  describe('filterOutFacilitiesWithExistingUtilisationData', () => {
+  describe('filterOutFacilityIdsWithExistingUtilisationData', () => {
     describe('when all facility ids are associated with existing FacilityUtilisationDataEntities', () => {
       const facilityIds = new Set(['01', '02', '03']);
 
@@ -157,10 +157,12 @@ describe('FacilityUtilisationDataService', () => {
 
       it('should return an empty set', async () => {
         // Act
-        const result = await FacilityUtilisationDataService.filterOutFacilitiesWithExistingUtilisationData(facilityIds, mockEntityManager);
+        const result = await FacilityUtilisationDataService.filterOutFacilityIdsWithExistingUtilisationData(facilityIds, mockEntityManager);
 
         // Assert
         expect(result).toEqual(new Set());
+        expect(mockFindBy).toHaveBeenCalledTimes(1);
+        expect(mockFindBy).toHaveBeenCalledWith(FacilityUtilisationDataEntity, { id: In(Array.from(facilityIds)) });
       });
     });
 
@@ -175,10 +177,12 @@ describe('FacilityUtilisationDataService', () => {
 
       it('should return the facility ids not associated with existing FacilityUtilisationDataEntities', async () => {
         // Act
-        const result = await FacilityUtilisationDataService.filterOutFacilitiesWithExistingUtilisationData(facilityIds, mockEntityManager);
+        const result = await FacilityUtilisationDataService.filterOutFacilityIdsWithExistingUtilisationData(facilityIds, mockEntityManager);
 
         // Assert
         expect(result).toEqual(new Set([facilityIdWithoutExistingUtilisationData]));
+        expect(mockFindBy).toHaveBeenCalledTimes(1);
+        expect(mockFindBy).toHaveBeenCalledWith(FacilityUtilisationDataEntity, { id: In(Array.from(facilityIds)) });
       });
     });
 
@@ -193,10 +197,12 @@ describe('FacilityUtilisationDataService', () => {
 
       it('should return all facility ids', async () => {
         // Act
-        const result = await FacilityUtilisationDataService.filterOutFacilitiesWithExistingUtilisationData(facilityIds, mockEntityManager);
+        const result = await FacilityUtilisationDataService.filterOutFacilityIdsWithExistingUtilisationData(facilityIds, mockEntityManager);
 
         // Assert
         expect(result).toEqual(facilityIds);
+        expect(mockFindBy).toHaveBeenCalledTimes(1);
+        expect(mockFindBy).toHaveBeenCalledWith(FacilityUtilisationDataEntity, { id: In(Array.from(facilityIds)) });
       });
     });
   });

@@ -21,7 +21,7 @@ export class FacilityUtilisationDataService {
     requestSource: DbRequestSource,
     entityManager: EntityManager,
   ) {
-    const facilityIdsToInitialise = await this.filterOutFacilitiesWithExistingUtilisationData(facilityIds, entityManager);
+    const facilityIdsToInitialise = await this.filterOutFacilityIdsWithExistingUtilisationData(facilityIds, entityManager);
 
     if (facilityIdsToInitialise.size === 0) {
       return;
@@ -47,7 +47,13 @@ export class FacilityUtilisationDataService {
     await entityManager.save(FacilityUtilisationDataEntity, entities, { chunk: CHUNK_SIZE_FOR_SQL_BATCH_SAVING });
   }
 
-  public static async filterOutFacilitiesWithExistingUtilisationData(facilityIds: Set<string>, entityManager: EntityManager): Promise<Set<string>> {
+  /**
+   * Filter out facility ids with existing facility utilisation data
+   * @param facilityIds - facility ids to filter
+   * @param entityManager - transaction entity manager
+   * @returns the filtered set
+   */
+  public static async filterOutFacilityIdsWithExistingUtilisationData(facilityIds: Set<string>, entityManager: EntityManager): Promise<Set<string>> {
     const existingFacilityUtilisationDataEntities = await entityManager.findBy(FacilityUtilisationDataEntity, { id: In(Array.from(facilityIds)) });
 
     const facilityIdsWithExistingUtilisationData = new Set(existingFacilityUtilisationDataEntities.map((entity) => entity.id));

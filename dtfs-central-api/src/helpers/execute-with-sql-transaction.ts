@@ -71,7 +71,7 @@ export const executeWithSqlTransaction = async <ReturnValue>(functionToExecute: 
 
     return result;
   } catch (error) {
-    console.error('Error thrown within SQL transaction: %s', error);
+    console.error('Error thrown within SQL transaction: %o', error);
 
     await queryRunner.rollbackTransaction();
     if (error instanceof ApiError) {
