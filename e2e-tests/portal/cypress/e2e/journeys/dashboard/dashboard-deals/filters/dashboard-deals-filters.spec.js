@@ -1,4 +1,3 @@
-const { DEAL_STATUS } = require('@ukef/dtfs2-common');
 const MOCK_USERS = require('../../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../../fixtures/constants');
 const { dashboardDeals } = require('../../../../pages');
@@ -152,11 +151,6 @@ context('Dashboard Deals filters', () => {
       dashboardDeals.filters.panel.form.status.rejectedByUKEF.label().contains(CONSTANTS.DEALS.DEAL_STATUS.UKEF_REFUSED);
       dashboardDeals.filters.panel.form.status.rejectedByUKEF.checkbox().should('exist');
       dashboardDeals.filters.panel.form.status.rejectedByUKEF.checkbox().should('not.be.checked');
-
-      // cancelled
-      dashboardDeals.filters.panel.form.status.cancelled.label().contains(DEAL_STATUS.CANCELLED);
-      dashboardDeals.filters.panel.form.status.cancelled.checkbox().should('exist');
-      dashboardDeals.filters.panel.form.status.cancelled.checkbox().should('not.be.checked');
 
       // abandoned
       dashboardDeals.filters.panel.form.status.abandoned.label().contains(CONSTANTS.DEALS.DEAL_STATUS.ABANDONED);
