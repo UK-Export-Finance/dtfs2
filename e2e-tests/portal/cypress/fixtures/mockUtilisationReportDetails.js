@@ -6,6 +6,7 @@ const {
   REQUEST_PLATFORM_TYPE,
   PENDING_RECONCILIATION,
   REPORT_NOT_RECEIVED,
+  FACILITY_TYPE,
 } = require('@ukef/dtfs2-common');
 const { BANK1_PAYMENT_REPORT_OFFICER1, BANK2_PAYMENT_REPORT_OFFICER1 } = require('../../../e2e-fixtures');
 
@@ -103,6 +104,7 @@ const upToDateReportDetails = generateUpToDateReportDetails();
  */
 const tfmFacilityForReport = {
   facilitySnapshot: {
+    type: FACILITY_TYPE.CASH,
     ukefFacilityId: '20001371',
     value: 1000,
     coverStartDate: new Date().getTime(),
@@ -113,6 +115,23 @@ const tfmFacilityForReport = {
   },
 };
 
+/**
+ * There are multiple reports in the fixtures which require an existing EWCS facility with
+ * matching UKEF facility ID to test the invalid upload journey.
+ * The UKEF facility ID for the below facility is used in the following fixtures files:
+ * - invalid-utilisation-report-February_2023_monthly.xlsx
+ * - invalid-utilisation-report-February_2023_monthly.csv
+ * - invalid-utilisation-report-February_2024_quarterly.xlsx
+ * - invalid-utilisation-report-February_2024_quarterly.csv
+ */
+const ewcsTfmFacilityForReport = {
+  facilitySnapshot: {
+    ...tfmFacilityForReport.facilitySnapshot,
+    type: FACILITY_TYPE.LOAN,
+    ukefFacilityId: '20001507',
+  },
+};
+
 module.exports = {
   previousReportDetails,
   february2023ReportDetails,
@@ -120,4 +139,5 @@ module.exports = {
   upToDateReportDetails,
   december2023ToFebruary2024ReportDetails,
   tfmFacilityForReport,
+  ewcsTfmFacilityForReport,
 };
