@@ -1,6 +1,6 @@
 /**
- * These are the field names used on the deal filter query object
- * This is sent to portal-api to query the database
+ * These are the field names used on the deal filter query object received by the portal endpoint
+ * These are mapped into a query to send to portal-api
  */
 const DEAL = {
   DEAL_TYPE: 'dealType',
@@ -14,8 +14,8 @@ const DEAL = {
 };
 
 /**
- * These are the field names used on the facility filter query object
- * This is sent to portal-api to query the database
+ * These are the field names used on the facility filter query object received by the portal endpoint
+ * These are mapped into a query to send to portal-api
  */
 const FACILITY = {
   TYPE: 'type',

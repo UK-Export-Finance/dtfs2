@@ -55,6 +55,7 @@ const dashboardFacilitiesFiltersQuery = (filters, user) => {
           query.AND.push(keywordFilter);
           break;
         }
+
         case BESPOKE_FIELD_NAMES.STAGE: {
           const fieldFilter = {
             OR: [],
@@ -72,6 +73,7 @@ const dashboardFacilitiesFiltersQuery = (filters, user) => {
           query.AND.push(fieldFilter);
           break;
         }
+
         default: {
           const fieldFilter = {};
           // or for field (eg dealType)
