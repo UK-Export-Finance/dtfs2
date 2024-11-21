@@ -1,5 +1,4 @@
-import { RECORD_CORRECTION_REQUEST_REASON, RecordCorrectionRequestReason } from '@ukef/dtfs2-common';
-import { RecordCorrectionRequestReasonCheckboxId } from '../../../../types/record-correction-request-reason-checkbox-id';
+import { isNonEmptyString, RECORD_CORRECTION_REQUEST_REASON, RecordCorrectionRequestReason } from '@ukef/dtfs2-common';
 import { CreateRecordCorrectionRequestFormValues } from '../../../../types/view-models';
 
 export type CreateRecordCorrectionRequestFormRequestBody = {
@@ -7,32 +6,32 @@ export type CreateRecordCorrectionRequestFormRequestBody = {
   additionalInfo?: string;
 };
 
-// TODO FN-3575: Can we remove all of this ID stuff and just keep the RECORD_CORRECTION_REQUEST_REASON type given the way this is passed through in the body
+/**
+ * Checks if the provided reason is a valid RecordCorrectionRequestReason.
+ * @param reason - The reason to validate.
+ * @returns True if the reason is valid, otherwise false.
+ */
+const isRecordCorrectionRequestReasonValid = (reason: string): reason is RecordCorrectionRequestReason => {
+  return isNonEmptyString(reason) && (Object.values(RECORD_CORRECTION_REQUEST_REASON) as string[]).includes(reason);
+};
 
 /**
- * Regular expression group to match a record correction reason from a checkbox id.
+ * Retrieves valid record correction request reasons from the provided input.
+ *
+ * @param reasons - The reasons to validate. Can be a single reason as a string or an array of reasons.
+ * @returns An array of valid record correction request reasons. If no valid reasons are found, returns an empty array.
  */
-const RECORD_CORRECTION_REASON_CHECKBOX_ID_REGEX_GROUP = `reasons-(?<reason>${Object.values(RECORD_CORRECTION_REQUEST_REASON).join('|')})`;
-const RECORD_CORRECTION_REASON_CHECKBOX_ID_REGEX = new RegExp(RECORD_CORRECTION_REASON_CHECKBOX_ID_REGEX_GROUP);
+const getValidRecordCorrectionRequestReasons = (reasons?: string | string[]): RecordCorrectionRequestReason[] => {
+  if (!reasons) {
+    return [];
+  }
 
-/**
- * Filters object keys to find checkbox IDs that match the record correction reason pattern.
- * @param object - The object whose keys should be filtered.
- * @returns Array of record correction request reason checkbox IDs.
- */
-export const getRecordCorrectionReasonCheckboxIdsFromObjectKeys = (object: object): RecordCorrectionRequestReasonCheckboxId[] =>
-  Object.keys(object).filter((key) => RECORD_CORRECTION_REASON_CHECKBOX_ID_REGEX.test(key)) as RecordCorrectionRequestReasonCheckboxId[];
+  if (Array.isArray(reasons)) {
+    return reasons.filter((reason) => isRecordCorrectionRequestReasonValid(reason));
+  }
 
-/**
- * Extracts the reason from each record correction request reason checkbox ID in the provided array.
- * @param checkboxIds - Array of checkbox IDs to process.
- * @returns Array of record correction request reasons extracted from the checkbox IDs.
- */
-export const getReasonFromRecordCorrectionReasonCheckboxIds = (checkboxIds: RecordCorrectionRequestReasonCheckboxId[]): RecordCorrectionRequestReason[] =>
-  checkboxIds.map((checkboxId) => {
-    const { reason } = RECORD_CORRECTION_REASON_CHECKBOX_ID_REGEX.exec(checkboxId)!.groups!;
-    return reason as RecordCorrectionRequestReason;
-  });
+  return isRecordCorrectionRequestReasonValid(reasons) ? [reasons] : [];
+};
 
 /**
  * Extracts form values from the request body for creating a record correction request.
@@ -42,8 +41,6 @@ export const getReasonFromRecordCorrectionReasonCheckboxIds = (checkboxIds: Reco
 export const extractCreateRecordCorrectionRequestFormValues = (
   requestBody: CreateRecordCorrectionRequestFormRequestBody,
 ): CreateRecordCorrectionRequestFormValues => ({
-  reasons: requestBody.reasons, // TODO: Improve? Convert into nicer type?
+  reasons: getValidRecordCorrectionRequestReasons(requestBody.reasons),
   additionalInfo: requestBody.additionalInfo,
 });
-
-// TODO FN-3575: Do we need a parse function to convert the reasons into a typed array?

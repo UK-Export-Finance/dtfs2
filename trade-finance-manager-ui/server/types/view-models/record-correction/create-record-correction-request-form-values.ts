@@ -1,4 +1,6 @@
+import { RecordCorrectionRequestReason } from '@ukef/dtfs2-common';
+
 export type CreateRecordCorrectionRequestFormValues = {
-  reasons?: string | string[]; // TODO FN-3575: Can we transform these to an array of type correction reason?
+  reasons?: RecordCorrectionRequestReason[];
   additionalInfo?: string;
 };

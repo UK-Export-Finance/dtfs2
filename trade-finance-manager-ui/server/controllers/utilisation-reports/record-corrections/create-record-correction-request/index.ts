@@ -79,7 +79,6 @@ export const postCreateRecordCorrectionRequest = (req: PostCreateRecordCorrectio
     const { reportId, feeRecordId } = req.params;
 
     const formValues = extractCreateRecordCorrectionRequestFormValues(req.body);
-    // TODO FN-3575: Do we need a parsing function too?
 
     const errors = validateCreateRecordCorrectionRequestFormValues(formValues);
     const formHasErrors = errors.errorSummary.length !== 0;

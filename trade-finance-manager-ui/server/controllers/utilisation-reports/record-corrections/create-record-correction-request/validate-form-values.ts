@@ -27,7 +27,7 @@ export const validateCreateRecordCorrectionRequestFormValues = (
 ): CreateRecordCorrectionRequestErrorsViewModel => {
   const errorSummary: ErrorSummaryViewModel[] = [];
 
-  const reasonsErrorMessage = !formValues.reasons ? 'You must select a reason for the record correction request' : undefined;
+  const reasonsErrorMessage = formValues.reasons?.length === 0 ? 'You must select a reason for the record correction request' : undefined;
   if (reasonsErrorMessage) {
     errorSummary.push({ text: reasonsErrorMessage, href: '#reasons' });
   }
