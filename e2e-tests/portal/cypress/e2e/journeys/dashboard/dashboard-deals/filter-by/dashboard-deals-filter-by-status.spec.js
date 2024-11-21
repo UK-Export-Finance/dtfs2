@@ -1,6 +1,6 @@
+const { DEAL_STATUS } = require('@ukef/dtfs2-common');
 const relative = require('../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../e2e-fixtures');
-const CONSTANTS = require('../../../../../fixtures/constants');
 const CONTENT_STRINGS = require('../../../../../fixtures/content-strings');
 const { dashboardDeals } = require('../../../../pages');
 const { dashboardFilters } = require('../../../../partials');
@@ -8,7 +8,6 @@ const { BSS_DEAL_READY_FOR_CHECK, GEF_DEAL_DRAFT, BSS_DEAL_CANCELLED } = require
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
-const { DEAL_STATUS } = CONSTANTS.DEALS;
 const { ALL_STATUSES } = CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES;
 const statusCheckboxSelectors = dashboardDeals.filters.panel.form.status;
 
