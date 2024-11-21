@@ -32,7 +32,7 @@ const updateDeal = async ({ dealId, dealUpdate, existingDeal, auditDetails }) =>
   const dealTfmUpdate = { tfm: dealUpdate.tfm };
 
   if (!dealTfmUpdate.tfm) {
-    throw new Error(`Invalid dealUpdate - ${dealUpdate}`);
+    throw new Error(`Invalid dealUpdate - ${JSON.stringify(dealUpdate)}`);
   }
 
   /**
