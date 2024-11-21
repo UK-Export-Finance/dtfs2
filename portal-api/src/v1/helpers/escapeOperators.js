@@ -78,7 +78,7 @@ const recursivelyReplaceEscapeOperators = (filters, result = {}) => {
       result.hasBeenIssued = {
         $eq: filters.hasBeenIssued,
       };
-      // When filtering by `hasBeenIssued`, want to exclude cases where `facilityStage` is'Risk expired'
+      // When filtering by `hasBeenIssued`, want to exclude cases where `facilityStage` is 'Risk expired'
       result.facilityStage = { $ne: FACILITY_STATUS.RISK_EXPIRED };
     } else {
       result[key] = {
