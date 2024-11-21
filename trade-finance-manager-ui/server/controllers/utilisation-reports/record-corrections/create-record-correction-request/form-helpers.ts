@@ -11,7 +11,7 @@ export type CreateRecordCorrectionRequestFormRequestBody = {
  * @param reason - The reason to validate.
  * @returns True if the reason is valid, otherwise false.
  */
-const isRecordCorrectionRequestReasonValid = (reason: string): reason is RecordCorrectionRequestReason => {
+export const isRecordCorrectionRequestReasonValid = (reason: string): reason is RecordCorrectionRequestReason => {
   return isNonEmptyString(reason) && (Object.values(RECORD_CORRECTION_REQUEST_REASON) as string[]).includes(reason);
 };
 
@@ -21,7 +21,7 @@ const isRecordCorrectionRequestReasonValid = (reason: string): reason is RecordC
  * @param reasons - The reasons to validate. Can be a single reason as a string or an array of reasons.
  * @returns An array of valid record correction request reasons. If no valid reasons are found, returns an empty array.
  */
-const getValidRecordCorrectionRequestReasons = (reasons?: string | string[]): RecordCorrectionRequestReason[] => {
+export const getValidRecordCorrectionRequestReasons = (reasons?: string | string[]): RecordCorrectionRequestReason[] => {
   if (!reasons) {
     return [];
   }

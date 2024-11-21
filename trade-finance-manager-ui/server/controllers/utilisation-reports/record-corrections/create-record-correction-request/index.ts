@@ -14,10 +14,10 @@ export type GetCreateRecordCorrectionRequestRequest = CustomExpressRequest<{
   };
 }>;
 
+export const EMPTY_CREATE_RECORD_CORRECTION_REQUEST_ERRORS_VIEW_MODEL: CreateRecordCorrectionRequestErrorsViewModel = Object.freeze({ errorSummary: [] });
+
 const renderCreateRecordCorrectionRequestPage = (res: Response, viewModel: CreateRecordCorrectionRequestViewModel) =>
   res.render('utilisation-reports/record-corrections/create-record-correction-request.njk', viewModel);
-
-const EMPTY_CREATE_RECORD_CORRECTION_REQUEST_ERRORS_VIEW_MODEL: CreateRecordCorrectionRequestErrorsViewModel = Object.freeze({ errorSummary: [] });
 
 /**
  * Controller for the GET create record correction request route

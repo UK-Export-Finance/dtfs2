@@ -5,7 +5,7 @@ import { CreateRecordCorrectionRequestFormValues, CreateRecordCorrectionRequestE
  * @param additionalInfo - The additional information text to validate.
  * @returns An error message if validation fails, undefined otherwise.
  */
-const getAdditionalInfoValidationErrors = (additionalInfo: string | undefined): string | undefined => {
+export const getAdditionalInfoValidationErrors = (additionalInfo: string | undefined): string | undefined => {
   if (!additionalInfo) {
     return 'You must provide more information for the record correction request';
   }
@@ -27,7 +27,8 @@ export const validateCreateRecordCorrectionRequestFormValues = (
 ): CreateRecordCorrectionRequestErrorsViewModel => {
   const errorSummary: ErrorSummaryViewModel[] = [];
 
-  const reasonsErrorMessage = formValues.reasons?.length === 0 ? 'You must select a reason for the record correction request' : undefined;
+  const reasonsErrorMessage =
+    !formValues.reasons || formValues.reasons?.length === 0 ? 'You must select a reason for the record correction request' : undefined;
   if (reasonsErrorMessage) {
     errorSummary.push({ text: reasonsErrorMessage, href: '#reasons' });
   }
