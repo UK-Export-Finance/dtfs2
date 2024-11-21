@@ -1,4 +1,4 @@
-const { FACILITY_TYPE, FACILITY_STATUS, isTfmDealCancellationFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { FACILITY_TYPE, FACILITY_STAGE, isTfmDealCancellationFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const { FIELD_NAMES } = require('../../../constants');
 const {
   DASHBOARD_FILTERS: { BESPOKE_FILTER_VALUES },
@@ -42,8 +42,8 @@ const stageFilters = (submittedFilters) => {
 
   if (isTfmDealCancellationFeatureFlagEnabled()) {
     fieldInputs.push({
-      text: FACILITY_STATUS.RISK_EXPIRED,
-      value: FACILITY_STATUS.RISK_EXPIRED,
+      text: FACILITY_STAGE.RISK_EXPIRED,
+      value: FACILITY_STAGE.RISK_EXPIRED,
     });
   }
 

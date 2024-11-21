@@ -1,4 +1,4 @@
-import { FACILITY_STATUS } from '@ukef/dtfs2-common';
+import { FACILITY_STAGE } from '@ukef/dtfs2-common';
 import { stageFilters } from './template-filters';
 import { FIELD_NAMES } from '../../../constants';
 import { DASHBOARD_FILTERS } from '../../../content-strings';
@@ -23,8 +23,8 @@ describe('controllers/dashboard/facilities - template-filters', () => {
           value: DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.UNISSUED,
         },
         {
-          text: FACILITY_STATUS.RISK_EXPIRED,
-          value: FACILITY_STATUS.RISK_EXPIRED,
+          text: FACILITY_STAGE.RISK_EXPIRED,
+          value: FACILITY_STAGE.RISK_EXPIRED,
         },
       ];
 

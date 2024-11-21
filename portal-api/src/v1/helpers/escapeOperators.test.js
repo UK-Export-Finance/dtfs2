@@ -1,4 +1,4 @@
-const { FACILITY_STATUS } = require('@ukef/dtfs2-common');
+const { FACILITY_STAGE } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../constants');
 const { escapeOperators } = require('./escapeOperators');
 
@@ -144,8 +144,8 @@ describe('escapeOperators function', () => {
         },
         {
           $or: [
-            { hasBeenIssued: { $eq: true }, facilityStage: { $ne: FACILITY_STATUS.RISK_EXPIRED } },
-            { hasBeenIssued: { $eq: false }, facilityStage: { $ne: FACILITY_STATUS.RISK_EXPIRED } },
+            { hasBeenIssued: { $eq: true }, facilityStage: { $ne: FACILITY_STAGE.RISK_EXPIRED } },
+            { hasBeenIssued: { $eq: false }, facilityStage: { $ne: FACILITY_STAGE.RISK_EXPIRED } },
           ],
         },
       ],

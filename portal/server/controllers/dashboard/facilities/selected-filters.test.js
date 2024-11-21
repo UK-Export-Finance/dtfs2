@@ -1,4 +1,4 @@
-import { FACILITY_STATUS, FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { FACILITY_STAGE, FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { generateSelectedFiltersObject, selectedSubmissionTypeFilters } from '../filters/generate-selected-filters';
 import { selectedFilters } from './selected-filters';
 import CONTENT_STRINGS from '../../../content-strings';
@@ -11,7 +11,7 @@ describe('controllers/dashboard/facilities - selected-filters', () => {
         keyword: ['Testing'],
         type: [FACILITY_TYPE.BOND, FACILITY_TYPE.LOAN],
         'deal.submissionType': [CONSTANTS.SUBMISSION_TYPE.AIN],
-        stage: [FACILITY_STATUS.RISK_EXPIRED],
+        stage: [FACILITY_STAGE.RISK_EXPIRED],
       };
 
       const result = selectedFilters(mockSubmittedFilters);

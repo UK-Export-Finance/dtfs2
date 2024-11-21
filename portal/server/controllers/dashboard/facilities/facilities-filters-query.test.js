@@ -1,4 +1,4 @@
-import { ROLES, FACILITY_TYPE, FACILITY_STATUS } from '@ukef/dtfs2-common';
+import { ROLES, FACILITY_TYPE, FACILITY_STAGE } from '@ukef/dtfs2-common';
 import { dashboardFacilitiesFiltersQuery } from './facilities-filters-query';
 import CONSTANTS, { ALL_BANKS_ID } from '../../../constants';
 import { DASHBOARD_FILTERS } from '../../../content-strings';
@@ -155,10 +155,10 @@ describe('controllers/dashboard/facilities - filters query', () => {
     expect(result).toEqual(expected);
   });
 
-  it(`should return facilityStage filter when stage is ${FACILITY_STATUS.RISK_EXPIRED}`, () => {
+  it(`should return facilityStage filter when stage is ${FACILITY_STAGE.RISK_EXPIRED}`, () => {
     const mockFilters = [
       {
-        [CONSTANTS.FIELD_NAMES.FACILITY.STAGE]: [FACILITY_STATUS.RISK_EXPIRED],
+        [CONSTANTS.FIELD_NAMES.FACILITY.STAGE]: [FACILITY_STAGE.RISK_EXPIRED],
       },
     ];
 
@@ -168,7 +168,7 @@ describe('controllers/dashboard/facilities - filters query', () => {
       AND: [
         { 'deal.bank.id': mockUser.bank.id },
         {
-          OR: [{ facilityStage: FACILITY_STATUS.RISK_EXPIRED }],
+          OR: [{ facilityStage: FACILITY_STAGE.RISK_EXPIRED }],
         },
       ],
     };

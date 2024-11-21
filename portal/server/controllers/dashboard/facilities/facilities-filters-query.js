@@ -1,4 +1,4 @@
-const { FACILITY_STATUS } = require('@ukef/dtfs2-common');
+const { FACILITY_STAGE } = require('@ukef/dtfs2-common');
 const {
   DASHBOARD_FILTERS: { BESPOKE_FILTER_VALUES, BESPOKE_FIELD_NAMES },
 } = require('../../../content-strings');
@@ -61,8 +61,8 @@ const dashboardFacilitiesFiltersQuery = (filters, user) => {
             OR: [],
           };
           filterValue.forEach((value) => {
-            if (value === FACILITY_STATUS.RISK_EXPIRED) {
-              fieldFilter.OR.push({ facilityStage: FACILITY_STATUS.RISK_EXPIRED });
+            if (value === FACILITY_STAGE.RISK_EXPIRED) {
+              fieldFilter.OR.push({ facilityStage: FACILITY_STAGE.RISK_EXPIRED });
             } else {
               fieldFilter.OR.push({
                 hasBeenIssued: value === BESPOKE_FILTER_VALUES.FACILITIES.ISSUED,
