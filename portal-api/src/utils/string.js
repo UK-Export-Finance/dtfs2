@@ -15,12 +15,7 @@ const isEmptyString = (str) => {
  * @param {unknown}
  * @returns Boolean
  */
-const hasValue = (str) => {
-  if (str && !isEmptyString(str) && str !== 'Select value') {
-    return true;
-  }
-  return false;
-};
+const hasValue = (str) => str && !isEmptyString(str) && str !== 'Select value';
 
 /**
  * Objective:

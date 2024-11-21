@@ -29,10 +29,10 @@
 
     {% include "_partials/skip-link.njk" %}
 
-    {% if user and user
-    .roles and user
-    .roles
-    .includes('admin') %}
+    {% if user and
+      user.roles and
+      user.roles.includes('admin')
+    %}
       {% include "_partials/admin-header.njk" %}
     {% endif %}
 

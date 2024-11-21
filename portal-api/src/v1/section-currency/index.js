@@ -8,17 +8,17 @@ const { findOneCurrency } = require('../controllers/currencies.controller');
 const getCurrencyObject = async (currencyCode) => {
   const { data } = await findOneCurrency(currencyCode);
 
-  if (data) {
-    const { text, id, currencyId } = data;
-
-    return {
-      text,
-      id,
-      currencyId,
-    };
+  if (!data) {
+    return {};
   }
 
-  return {};
+  const { text, id, currencyId } = data;
+
+  return {
+    text,
+    id,
+    currencyId,
+  };
 };
 
 const handleTransactionCurrencyFields = async (dealSection, deal) => {

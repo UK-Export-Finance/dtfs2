@@ -42,9 +42,15 @@ describe('validation - currency', () => {
   });
 
   describe('when the facility has a currency that is disabled', () => {
-    it('should return validation error', () => {
-      jest.mocked(currencyIsDisabled).mockResolvedValueOnce(true);
+    beforeEach(() => {
+      jest.mocked(currencyIsDisabled).mockReturnValueOnce(true);
+    });
 
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
+
+    it('should return validation error', () => {
       const mockFacility = {
         currency: {
           id: 'GBP',
