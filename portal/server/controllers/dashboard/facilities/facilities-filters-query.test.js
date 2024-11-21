@@ -38,7 +38,7 @@ describe('controllers/dashboard/facilities - filters query', () => {
         [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: [FACILITY_TYPE.CASH, FACILITY_TYPE.BOND],
       },
       {
-        [CONSTANTS.FIELD_NAMES.FACILITY.STAGE]: ['Unissued'],
+        [CONSTANTS.FIELD_NAMES.FACILITY.STAGE]: [DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.UNISSUED],
       },
       {
         [DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD]: [mockKeyword],
@@ -89,7 +89,7 @@ describe('controllers/dashboard/facilities - filters query', () => {
       {
         [DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD]: [mockKeyword],
       },
-      { [CONSTANTS.FIELD_NAMES.FACILITY.CREATED_BY]: ['Created by you'] },
+      { [CONSTANTS.FIELD_NAMES.FACILITY.CREATED_BY]: [DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.CREATED_BY_YOU] },
     ];
 
     const result = dashboardFacilitiesFiltersQuery(mockFilters, mockUser);
