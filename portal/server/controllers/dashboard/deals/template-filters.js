@@ -1,4 +1,4 @@
-const { DEAL_STATUS } = require('@ukef/dtfs2-common');
+const { DEAL_STATUS, isTfmDealCancellationFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const { FIELD_NAMES, PRODUCT } = require('../../../constants');
 const {
   DASHBOARD_FILTERS: { BESPOKE_FILTER_VALUES },
@@ -82,14 +82,17 @@ const statusFilters = (submittedFilters) => {
       value: DEAL_STATUS.UKEF_REFUSED,
     },
     {
-      text: DEAL_STATUS.CANCELLED,
-      value: DEAL_STATUS.CANCELLED,
-    },
-    {
       text: DEAL_STATUS.ABANDONED,
       value: DEAL_STATUS.ABANDONED,
     },
   ];
+
+  if (isTfmDealCancellationFeatureFlagEnabled()) {
+    fieldInputs.push({
+      text: DEAL_STATUS.CANCELLED,
+      value: DEAL_STATUS.CANCELLED,
+    });
+  }
 
   return generateFiltersArray(fieldName, fieldInputs, submittedFilters);
 };
