@@ -17,10 +17,10 @@ const applyFilters = () => {
   dashboardFacilities.filters.panel.form.submissionType.MIA.checkbox().click();
 
   // apply filter 3
-  dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().click();
+  dashboardFacilities.filters.panel.form.stage.issued.checkbox().click();
 
   // apply filter 4
-  dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().click();
+  dashboardFacilities.filters.panel.form.stage.unissued.checkbox().click();
 
   // submit filters
   filters.panel.form.applyFiltersButton().click();
@@ -95,8 +95,8 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
 
     dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().should('be.checked');
     dashboardFacilities.filters.panel.form.submissionType.MIA.checkbox().should('be.checked');
-    dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().should('be.checked');
-    dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().should('be.checked');
+    dashboardFacilities.filters.panel.form.stage.issued.checkbox().should('be.checked');
+    dashboardFacilities.filters.panel.form.stage.unissued.checkbox().should('be.checked');
   });
 
   it('renders the applied filters in the `applied filters` section', () => {
@@ -221,8 +221,8 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
     dashboardFacilities.filters.panel.form.type.loan.checkbox().click();
     dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().click();
     dashboardFacilities.filters.panel.form.submissionType.MIA.checkbox().click();
-    dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().click();
-    dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().click();
+    dashboardFacilities.filters.panel.form.stage.issued.checkbox().click();
+    dashboardFacilities.filters.panel.form.stage.unissued.checkbox().click();
     filters.panel.form.applyFiltersButton().click();
 
     const EXPECTED_FACILITIES = ALL_FACILITIES.filter(
@@ -247,8 +247,8 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
     dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().click();
     dashboardFacilities.filters.panel.form.submissionType.MIA.checkbox().click();
     dashboardFacilities.filters.panel.form.submissionType.MIN.checkbox().click();
-    dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().click();
-    dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().click();
+    dashboardFacilities.filters.panel.form.stage.issued.checkbox().click();
+    dashboardFacilities.filters.panel.form.stage.unissued.checkbox().click();
     filters.panel.form.applyFiltersButton().click();
 
     const EXPECTED_FACILITIES = ALL_FACILITIES.filter(
