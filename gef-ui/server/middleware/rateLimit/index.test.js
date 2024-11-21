@@ -182,7 +182,7 @@ describe('createRateLimit', () => {
 
       await handleRequestTimes(1);
 
-      expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+      expect(res.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
 
     it('logs a rate limiting error message for a request that happens immediately after the threshold is reached', async () => {
@@ -225,7 +225,7 @@ describe('createRateLimit', () => {
       jest.advanceTimersByTime(59 * 1000);
       await handleRequestTimes(1);
 
-      expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+      expect(res.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
 
     it('logs a rate limiting error message for a request that happens 59 seconds after the threshold is reached', async () => {
