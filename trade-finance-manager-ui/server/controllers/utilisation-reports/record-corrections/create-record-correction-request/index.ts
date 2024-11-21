@@ -4,14 +4,8 @@ import { CreateRecordCorrectionRequestErrorsViewModel, CreateRecordCorrectionReq
 import { asUserSession } from '../../../../helpers/express-session';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
-import {
-  CreateRecordCorrectionRequestFormRequestBody,
-  extractCreateRecordCorrectionRequestFormValues,
-  getReasonFromRecordCorrectionReasonCheckboxIds,
-  getRecordCorrectionReasonCheckboxIdsFromObjectKeys,
-} from './form-helpers';
-import { validateCreateRecordCorrectionRequest } from './validate-form-values';
-import { RecordCorrectionRequestReasonCheckboxId } from '../../../../types/record-correction-request-reason-checkbox-id';
+import { CreateRecordCorrectionRequestFormRequestBody, extractCreateRecordCorrectionRequestFormValues } from './form-helpers';
+import { validateCreateRecordCorrectionRequestFormValues } from './validate-form-values';
 
 export type GetCreateRecordCorrectionRequestRequest = CustomExpressRequest<{
   params: {
@@ -25,7 +19,11 @@ const renderCreateRecordCorrectionRequestPage = (res: Response, viewModel: Creat
 
 const EMPTY_CREATE_RECORD_CORRECTION_REQUEST_ERRORS_VIEW_MODEL: CreateRecordCorrectionRequestErrorsViewModel = Object.freeze({ errorSummary: [] });
 
-// TODO FN-3575: Add TSDOC
+/**
+ * Controller for the GET create record correction request route
+ * @param req - The request object
+ * @param res - The response object
+ */
 export const getCreateRecordCorrectionRequest = (req: GetCreateRecordCorrectionRequestRequest, res: Response) => {
   try {
     const { user } = asUserSession(req.session);
@@ -53,6 +51,7 @@ export const getCreateRecordCorrectionRequest = (req: GetCreateRecordCorrectionR
         facilityId: feeRecordDetails.facilityId,
         exporter: feeRecordDetails.exporter,
       },
+      formValues: {},
       errors: EMPTY_CREATE_RECORD_CORRECTION_REQUEST_ERRORS_VIEW_MODEL,
     });
   } catch (error) {
@@ -62,24 +61,27 @@ export const getCreateRecordCorrectionRequest = (req: GetCreateRecordCorrectionR
 };
 
 export type PostCreateRecordCorrectionRequest = CustomExpressRequest<{
-  reqBody: CreateRecordCorrectionRequestFormRequestBody & Partial<Record<RecordCorrectionRequestReasonCheckboxId, 'on'>>;
+  reqBody: CreateRecordCorrectionRequestFormRequestBody;
   params: {
     reportId: string;
     feeRecordId: string;
   };
 }>;
 
-// TODO FN-3575: Add TSDOC
+/**
+ * Controller for the POST create record correction request route
+ * @param req - The request object
+ * @param res - The response object
+ */
 export const postCreateRecordCorrectionRequest = (req: PostCreateRecordCorrectionRequest, res: Response) => {
   try {
     const { user } = asUserSession(req.session);
     const { reportId, feeRecordId } = req.params;
 
     const formValues = extractCreateRecordCorrectionRequestFormValues(req.body);
-    const checkedReasonCheckboxIds = getRecordCorrectionReasonCheckboxIdsFromObjectKeys(req.body);
-    const reasons = getReasonFromRecordCorrectionReasonCheckboxIds(checkedReasonCheckboxIds);
+    // TODO FN-3575: Do we need a parsing function too?
 
-    const errors = validateCreateRecordCorrectionRequest(formValues, reasons);
+    const errors = validateCreateRecordCorrectionRequestFormValues(formValues);
     const formHasErrors = errors.errorSummary.length !== 0;
 
     if (!formHasErrors) {
@@ -99,7 +101,6 @@ export const postCreateRecordCorrectionRequest = (req: PostCreateRecordCorrectio
       exporter: 'Sample Company Ltd',
     };
 
-    // TODO FN-3575: Add checkedReasonCheckboxIds to the view model so we can keep these checked upon error.
     return renderCreateRecordCorrectionRequestPage(res, {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
@@ -110,6 +111,7 @@ export const postCreateRecordCorrectionRequest = (req: PostCreateRecordCorrectio
         facilityId: feeRecordDetails.facilityId,
         exporter: feeRecordDetails.exporter,
       },
+      formValues,
       errors,
     });
   } catch (error) {

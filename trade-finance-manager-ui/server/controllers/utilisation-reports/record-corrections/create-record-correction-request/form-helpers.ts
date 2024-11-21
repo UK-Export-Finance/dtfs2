@@ -3,8 +3,11 @@ import { RecordCorrectionRequestReasonCheckboxId } from '../../../../types/recor
 import { CreateRecordCorrectionRequestFormValues } from '../../../../types/view-models';
 
 export type CreateRecordCorrectionRequestFormRequestBody = {
+  reasons?: string | string[];
   additionalInfo?: string;
 };
+
+// TODO FN-3575: Can we remove all of this ID stuff and just keep the RECORD_CORRECTION_REQUEST_REASON type given the way this is passed through in the body
 
 /**
  * Regular expression group to match a record correction reason from a checkbox id.
@@ -39,5 +42,8 @@ export const getReasonFromRecordCorrectionReasonCheckboxIds = (checkboxIds: Reco
 export const extractCreateRecordCorrectionRequestFormValues = (
   requestBody: CreateRecordCorrectionRequestFormRequestBody,
 ): CreateRecordCorrectionRequestFormValues => ({
+  reasons: requestBody.reasons, // TODO: Improve? Convert into nicer type?
   additionalInfo: requestBody.additionalInfo,
 });
+
+// TODO FN-3575: Do we need a parse function to convert the reasons into a typed array?

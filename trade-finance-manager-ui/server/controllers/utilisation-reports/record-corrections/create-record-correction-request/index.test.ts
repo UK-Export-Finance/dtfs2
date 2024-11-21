@@ -14,31 +14,37 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
     user,
   };
 
-  it('should render create record correction request page', () => {
-    // Arrange
-    const reportId = '123';
-    const { req, res } = httpMocks.createMocks<GetCreateRecordCorrectionRequestRequest>({
-      session: requestSession,
-      params: { reportId, feeRecordId: '456' },
-    });
+  describe('getCreateRecordCorrectionRequest', () => {
+    it('should render create record correction request page', () => {
+      // Arrange
+      const reportId = '123';
+      const { req, res } = httpMocks.createMocks<GetCreateRecordCorrectionRequestRequest>({
+        session: requestSession,
+        params: { reportId, feeRecordId: '456' },
+      });
 
-    // Act
-    getCreateRecordCorrectionRequest(req, res);
+      // Act
+      getCreateRecordCorrectionRequest(req, res);
 
-    // Assert
-    expect(res._getRenderView()).toEqual('utilisation-reports/record-corrections/create-record-correction-request.njk');
-    expect(res._getRenderData() as CreateRecordCorrectionRequestViewModel).toEqual<CreateRecordCorrectionRequestViewModel>({
-      bank: { name: 'Test Bank' },
-      user,
-      activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
-      reportId,
-      formattedReportPeriod: 'January 2024',
-      feeRecord: {
-        facilityId: '0012345678',
-        exporter: 'Sample Company Ltd',
-      },
-      // TODO: Add in empty errorSummary here
-      errors: [],
+      // Assert
+      expect(res._getRenderView()).toEqual('utilisation-reports/record-corrections/create-record-correction-request.njk');
+      expect(res._getRenderData() as CreateRecordCorrectionRequestViewModel).toEqual<CreateRecordCorrectionRequestViewModel>({
+        bank: { name: 'Test Bank' },
+        user,
+        activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
+        reportId,
+        formattedReportPeriod: 'January 2024',
+        feeRecord: {
+          facilityId: '0012345678',
+          exporter: 'Sample Company Ltd',
+        },
+        formValues: {},
+        errors: { errorSummary: [] },
+      });
     });
+  });
+
+  describe('postCreateRecordCorrectionRequest', () => {
+    // TODO FN-3575: Add tests
   });
 });

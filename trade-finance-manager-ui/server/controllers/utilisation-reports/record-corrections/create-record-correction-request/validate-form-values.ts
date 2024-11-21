@@ -1,4 +1,3 @@
-import { RecordCorrectionRequestReason } from '@ukef/dtfs2-common';
 import { CreateRecordCorrectionRequestFormValues, CreateRecordCorrectionRequestErrorsViewModel, ErrorSummaryViewModel } from '../../../../types/view-models';
 
 /**
@@ -21,16 +20,14 @@ const getAdditionalInfoValidationErrors = (additionalInfo: string | undefined): 
 /**
  * Validates the form submission for creating a record correction request.
  * @param formValues - The form values to validate.
- * @param checkedReasons - Array of checked record correction request reasons.
  * @returns An object containing an error summary and individual validation error messages (if applicable).
  */
-export const validateCreateRecordCorrectionRequest = (
+export const validateCreateRecordCorrectionRequestFormValues = (
   formValues: CreateRecordCorrectionRequestFormValues,
-  checkedReasons: RecordCorrectionRequestReason[],
 ): CreateRecordCorrectionRequestErrorsViewModel => {
   const errorSummary: ErrorSummaryViewModel[] = [];
 
-  const reasonsErrorMessage = !checkedReasons ? 'You must select a reason for the record correction request' : undefined;
+  const reasonsErrorMessage = !formValues.reasons ? 'You must select a reason for the record correction request' : undefined;
   if (reasonsErrorMessage) {
     errorSummary.push({ text: reasonsErrorMessage, href: '#reasons' });
   }

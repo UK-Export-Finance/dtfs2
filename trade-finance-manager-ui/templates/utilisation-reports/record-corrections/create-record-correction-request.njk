@@ -5,9 +5,23 @@
 {% import "./_macros/fee-record-summary.njk" as feeRecordSummary %}
 {% extends "index.njk" %}
 {% set backLink = {"href": "/utilisation-reports/" + reportId} %}
+{% set hasErrors = errors.errorSummary | length %}
 
-{% block pageTitle %}Create record correction request{% endblock %}
+{% block pageTitle %}
+  {{ 'Create record correction request' | formatPageTitle(hasErrors) }}
+{% endblock %}
+
 {% block content %}
+  {% if hasErrors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
   <div class="govuk-grid-row govuk-!-padding-top-7">
     <div class="govuk-grid-column-one-half">
       <span class="govuk-caption-l" data-cy="heading-caption">{{ bank.name }}, {{ formattedReportPeriod }}</span>
@@ -42,6 +56,7 @@
             {
               value: "facility-id-incorrect",
               text: "Facility ID is incorrect",
+              checked: formValues.reasons and "facility-id-incorrect" in formValues.reasons,
               hint: {
                 text: "Does not match what is in the system"
               },
@@ -52,6 +67,7 @@
             {
               value: "reported-fee-incorrect",
               text: "Reported fee is incorrect",
+              checked: formValues.reasons and "reported-fee-incorrect" in formValues.reasons,
               hint: {
                 text: "The fee is higher or lower than expected"
               },
@@ -62,6 +78,7 @@
             {
               value: "reported-currency-incorrect",
               text: "Reported currency is incorrect",
+              checked: formValues.reasons and "reported-currency-incorrect" in formValues.reasons,
               hint: {
                 text: "The currency does not match the currency we have on record"
               },
@@ -72,6 +89,7 @@
             {
               value: "utilisation-incorrect",
               text: "Utilisation is incorrect",
+              checked: formValues.reasons and "utilisation-incorrect" in formValues.reasons,
               attributes: {
                 "data-cy": "reason-utilisation-incorrect"
               }
@@ -79,6 +97,7 @@
             {
               value: "other",
               text: "Other",
+              checked: formValues.reasons and "other" in formValues.reasons,
               hint: {
                 text: "Something else"
               },
@@ -86,30 +105,43 @@
                 "data-cy": "reason-other"
               }
             }
-          ]
+          ],
+          errorMessage: errors and errors.reasonsErrorMessage and {
+            text: errors.reasonsErrorMessage,
+            attributes: {
+              'data-cy': 'reasons-error'
+            }
+          }
         }) }}
 
         {{ govukCharacterCount({
-            name: "additionalInfo",
-            id: "additionalInfo",
-            label: {
-              text: "Provide more information",
-              classes: "govuk-label--s",
-              attributes: {
-                "data-cy": "additional-info-label"
-              }
-            },
-            hint: {
-              text: "For example, is the reported fee higher or lower than expected",
-              attributes: {
-                "data-cy": "additional-info-hint"
-              }
-            },
-            maxlength: 500,
-            rows: 4,
+          name: "additionalInfo",
+          id: "additionalInfo",
+          label: {
+            text: "Provide more information",
+            classes: "govuk-label--s",
             attributes: {
-              "data-cy": "additional-info"
+              "data-cy": "additional-info-label"
             }
+          },
+          hint: {
+            text: "For example, is the reported fee higher or lower than expected",
+            attributes: {
+              "data-cy": "additional-info-hint"
+            }
+          },
+          maxlength: 500,
+          rows: 4,
+          value: formValues.additionalInfo,
+          errorMessage: errors and errors.additionalInfoErrorMessage and {
+            text: errors.additionalInfoErrorMessage,
+            attributes: {
+              'data-cy': 'additional-info-error'
+            }
+          },
+          attributes: {
+            "data-cy": "additional-info"
+          }
         }) }}
 
         <div class="govuk-button-group">
