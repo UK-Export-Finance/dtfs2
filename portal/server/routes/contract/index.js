@@ -1,5 +1,6 @@
 const express = require('express');
 const {
+  CURRENCY,
   ROLES: { CHECKER, MAKER },
 } = require('@ukef/dtfs2-common');
 const api = require('../../api');
@@ -45,7 +46,7 @@ router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) =
     const { supplyContractCurrency, supplyContractConversionRateToGBP } = submissionDetails;
 
     const hasRelevantSupplyContractValues =
-      supplyContractCurrency && supplyContractCurrency.id && (supplyContractCurrency.id === 'GBP' || supplyContractConversionRateToGBP);
+      supplyContractCurrency && supplyContractCurrency.id && (supplyContractCurrency.id === CURRENCY.GBP || supplyContractConversionRateToGBP);
 
     if (hasRelevantSupplyContractValues) {
       return true;

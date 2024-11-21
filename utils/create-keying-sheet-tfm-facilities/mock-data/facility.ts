@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { ObjectId } from 'mongodb';
 import { addMonths, subMonths } from 'date-fns';
-import { Facility } from '@ukef/dtfs2-common';
+import { CURRENCY, Facility } from '@ukef/dtfs2-common';
 
 const TODAY = new Date();
 
@@ -34,7 +34,7 @@ export const aFacility = (facilityId: ObjectId, dealId: ObjectId, portalUserId: 
   details: ['Committed basis'],
   detailsOther: '',
   currency: {
-    id: 'GBP',
+    id: CURRENCY.GBP,
   },
   value: 500000,
   coverPercentage: 80,

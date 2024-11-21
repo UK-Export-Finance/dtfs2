@@ -1,6 +1,6 @@
+import { BOND_TYPE } from '@ukef/dtfs2-common';
 import { oneMonth, tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
-
-const CONSTANTS = require('../../../../fixtures/constants');
+import CONSTANTS from '../../../../fixtures/constants';
 
 const date = new Date();
 
@@ -178,7 +178,7 @@ const deal = {
       type: CONSTANTS.FACILITY.FACILITY_TYPE.BOND,
       createdDate: date.valueOf(),
       bondIssuer: '',
-      bondType: 'Bid bond',
+      bondType: BOND_TYPE.BID_BOND,
       facilityStage: CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED,
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -215,7 +215,7 @@ const deal = {
       type: CONSTANTS.FACILITY.FACILITY_TYPE.BOND,
       createdDate: date.valueOf(),
       bondIssuer: '',
-      bondType: 'Bid bond',
+      bondType: BOND_TYPE.BID_BOND,
       facilityStage: CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED,
       hasBeenIssued: true,
       'requestedCoverStartDate-day': '',

@@ -1,4 +1,4 @@
-const { ROLES, timezoneConfig, FACILITY_STATUS, DEAL_STATUS } = require('@ukef/dtfs2-common');
+const { CURRENCY, ROLES, FACILITY_STATUS, DEAL_STATUS, timezoneConfig } = require('@ukef/dtfs2-common');
 const { getNowAsEpoch } = require('../../../server/helpers');
 
 const { NON_MAKER_OR_CHECKER_ROLES } = require('../../../test-helpers/common-role-lists');
@@ -21,7 +21,7 @@ describe(component, () => {
           ukefFacilityId: '5678',
           status: FACILITY_STATUS.INCOMPLETE,
           value: '100',
-          currency: { id: 'GBP' },
+          currency: { id: CURRENCY.GBP },
           facilityStage: 'Unissued',
           hasBeenIssued: false,
           requestedCoverStartDate: getNowAsEpoch(),
@@ -33,7 +33,7 @@ describe(component, () => {
           ukefFacilityId: '5678',
           status: FACILITY_STATUS.INCOMPLETE,
           value: '100',
-          currency: { id: 'GBP' },
+          currency: { id: CURRENCY.GBP },
           facilityStage: 'Unissued',
           hasBeenIssued: false,
           requestedCoverStartDate: getNowAsEpoch(),

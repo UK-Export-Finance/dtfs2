@@ -11,7 +11,7 @@ import { PaymentDateErrorViewModel } from '../../../types/view-models';
 
 describe('validate-payment-form-values', () => {
   describe('validateAddPaymentRequestFormValues', () => {
-    const paymentCurrency: Currency = 'GBP';
+    const paymentCurrency: Currency = CURRENCY.GBP;
     const feeRecordPaymentCurrency = paymentCurrency;
 
     it('should set payment currency error when no payment currency is provided', () => {

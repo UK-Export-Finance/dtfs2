@@ -29,9 +29,9 @@
   },
   "devDependencies": {
     "@ukef/dtfs2-common": "1.0.0",
-    "bson": "^6.9.0",
+    "bson": "^6.10.0",
     "chance": "^1.1.12",
-    "cypress": "^13.15.2",
+    "cypress": "^13.16.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-plugin-tab": "^1.0.5",
     "cypress-v10-preserve-cookie": "^1.2.1",

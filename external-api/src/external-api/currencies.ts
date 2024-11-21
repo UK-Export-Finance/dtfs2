@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { Currency } from '../interfaces';
 
 export const CURRENCIES: Currency[] = [
@@ -60,7 +61,7 @@ export const CURRENCIES: Currency[] = [
   {
     currencyId: 12,
     text: 'GBP - UK Sterling',
-    id: 'GBP',
+    id: CURRENCY.GBP,
   },
   {
     currencyId: 13,

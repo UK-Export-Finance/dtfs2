@@ -1,3 +1,4 @@
+import { BOND_TYPE, CURRENCY } from '@ukef/dtfs2-common';
 import { oneMonth, tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
 
 const date = new Date();
@@ -172,7 +173,7 @@ const deal = {
     'supplyContractConversionDate-year': '',
     supplyContractConversionRateToGBP: '',
     supplyContractCurrency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
       text: 'GBP - UK Sterling',
     },
     supplyContractValue: '12312323.00',
@@ -183,7 +184,7 @@ const deal = {
       type: 'Bond',
       createdDate: date.valueOf(),
       bondIssuer: '',
-      bondType: 'Bid bond',
+      bondType: BOND_TYPE.BID_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -199,7 +200,7 @@ const deal = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       issuedDate: tomorrow.unixMillisecondsString,
       'coverEndDate-day': oneMonth.day,
@@ -215,7 +216,7 @@ const deal = {
       type: 'Bond',
       createdDate: date.valueOf(),
       bondIssuer: '',
-      bondType: 'Bid bond',
+      bondType: BOND_TYPE.BID_BOND,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       'requestedCoverStartDate-day': '',
@@ -256,7 +257,7 @@ const deal = {
       viewedPreviewPage: true,
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       issuedDate: tomorrow.unixMillisecondsString,
       'coverEndDate-day': oneMonth.day,

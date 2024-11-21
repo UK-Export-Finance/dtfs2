@@ -1,3 +1,4 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const { isValidMongoId, isValidRegex, isValidCurrencyCode, isValidMonth, isValidYear } = require('./validateIds');
 
 describe('validateIds', () => {
@@ -45,7 +46,7 @@ describe('validateIds', () => {
     });
 
     it('should return true if input is a valid currency code', () => {
-      const result = isValidCurrencyCode('GBP');
+      const result = isValidCurrencyCode(CURRENCY.GBP);
 
       expect(result).toEqual(true);
     });

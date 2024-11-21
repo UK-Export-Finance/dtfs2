@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { Facility } from '@ukef/dtfs2-common';
+import { CURRENCY, Facility } from '@ukef/dtfs2-common';
 import { generateMockPortalUserAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream/test-helpers';
 
 export const aFacility = (): Facility => ({
@@ -16,7 +16,7 @@ export const aFacility = (): Facility => ({
   details: [],
   detailsOther: '',
   currency: {
-    id: 'GBP',
+    id: CURRENCY.GBP,
   },
   value: 100000,
   coverPercentage: 80,
