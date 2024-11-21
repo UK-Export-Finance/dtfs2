@@ -55,12 +55,12 @@ describe('controllers/dashboard/deals - template-filters', () => {
           value: DEAL_STATUS.UKEF_REFUSED,
         },
         {
-          text: DEAL_STATUS.CANCELLED,
-          value: DEAL_STATUS.CANCELLED,
-        },
-        {
           text: DEAL_STATUS.ABANDONED,
           value: DEAL_STATUS.ABANDONED,
+        },
+        {
+          text: DEAL_STATUS.CANCELLED,
+          value: DEAL_STATUS.CANCELLED,
         },
       ];
 
