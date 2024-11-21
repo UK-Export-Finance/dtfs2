@@ -110,7 +110,7 @@ const page = {
         productGEF: () => cy.get('[data-cy="main-container-selected-filter-GEF'),
 
         statusDraft: () => cy.get('[data-cy="main-container-selected-filter-Draft'),
-        statusCancelled: () => cy.get('[data-cy="main-container-selected-filter-Draft'),
+        statusCancelled: () => cy.get('[data-cy="main-container-selected-filter-Cancelled'),
         statusReadyForChecker: () => cy.get('[data-cy="main-container-selected-filter-Ready-for-Checkers-approval'),
         statusAll: () => cy.get('[data-cy="main-container-selected-filter-All-statuses'),
       },

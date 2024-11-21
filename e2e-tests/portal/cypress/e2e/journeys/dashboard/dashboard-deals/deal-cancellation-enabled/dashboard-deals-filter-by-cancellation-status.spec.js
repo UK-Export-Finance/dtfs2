@@ -11,23 +11,13 @@ const filters = dashboardFilters;
 const statusCheckboxSelectors = dashboardDeals.filters.panel.form.status;
 
 context('Dashboard Deals Cancellation status filter - Deal cancellation enabled', () => {
-  const ALL_DEALS = [];
-
   before(() => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.insertOneDeal(BSS_DEAL_READY_FOR_CHECK, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
-
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
-
-    cy.insertOneGefApplication(BSS_DEAL_CANCELLED, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.insertOneDeal(BSS_DEAL_READY_FOR_CHECK, BANK1_MAKER1);
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1);
+    cy.insertOneGefApplication(BSS_DEAL_CANCELLED, BANK1_MAKER1);
   });
 
   describe('Cancelled status filter', () => {
@@ -64,13 +54,13 @@ context('Dashboard Deals Cancellation status filter - Deal cancellation enabled'
       const firstAppliedFilterHeading = filters.panel.selectedFilters.heading().first();
 
       firstAppliedFilterHeading.should('be.visible');
-      firstAppliedFilterHeading.should('have.text', 'Status');
+      cy.assertText(firstAppliedFilterHeading, 'Status');
 
       const firstAppliedFilter = filters.panel.selectedFilters.listItem().first();
 
       firstAppliedFilter.should('be.visible');
       const expectedText = `Remove this filter ${TFM_DEAL_STAGE.CANCELLED}`;
-      firstAppliedFilter.should('have.text', expectedText);
+      cy.assertText(firstAppliedFilter, expectedText);
     });
 
     it('renders the applied filter in the `main container selected filters` section', () => {
