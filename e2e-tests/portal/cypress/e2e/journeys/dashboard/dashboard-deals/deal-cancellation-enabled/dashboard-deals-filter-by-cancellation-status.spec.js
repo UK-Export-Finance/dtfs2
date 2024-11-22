@@ -11,13 +11,23 @@ const filters = dashboardFilters;
 const statusCheckboxSelectors = dashboardDeals.filters.panel.form.status;
 
 context('Dashboard Deals Cancellation status filter - Deal cancellation enabled', () => {
+  const ALL_DEALS = [];
+
   before(() => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.insertOneDeal(BSS_DEAL_READY_FOR_CHECK, BANK1_MAKER1);
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1);
-    cy.insertOneGefApplication(BSS_DEAL_CANCELLED, BANK1_MAKER1);
+    cy.insertOneDeal(BSS_DEAL_READY_FOR_CHECK, BANK1_MAKER1).then((deal) => {
+      ALL_DEALS.push(deal);
+    });
+
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
+      ALL_DEALS.push(deal);
+    });
+
+    cy.insertOneDeal(BSS_DEAL_CANCELLED, BANK1_MAKER1).then((deal) => {
+      ALL_DEALS.push(deal);
+    });
   });
 
   describe('Cancelled status filter', () => {
@@ -71,9 +81,13 @@ context('Dashboard Deals Cancellation status filter - Deal cancellation enabled'
     });
 
     it('renders only cancelled deals', () => {
-      dashboardDeals.rows().should('have.length', 1);
+      const expectedCancelledDeals = ALL_DEALS.filter(({ status }) => status === TFM_DEAL_STAGE.CANCELLED);
 
-      cy.assertText(dashboardDeals.row.status(BSS_DEAL_CANCELLED._id), TFM_DEAL_STAGE.CANCELLED);
+      dashboardDeals.rows().should('have.length', expectedCancelledDeals.length);
+
+      const firstCancelledDeal = expectedCancelledDeals[0];
+
+      cy.assertText(dashboardDeals.row.status(firstCancelledDeal._id), TFM_DEAL_STAGE.CANCELLED);
     });
   });
 });
