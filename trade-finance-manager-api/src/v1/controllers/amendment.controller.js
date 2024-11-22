@@ -227,7 +227,16 @@ const updateFacilityAmendment = async (req, res) => {
       if (payload?.taskUpdate?.updateTask) {
         const tasks = await updateAmendmentTasks(facilityId, amendmentId, payload.taskUpdate);
         payload.tasks = tasks;
-        payload.ukefDecision = { isReadyForApproval: isRiskAnalysisCompleted(tasks) };
+
+        /**
+         * Only write amendment UKEF decision if not
+         * already written by underwriters, otherwise
+         * UW's decision will be removed.
+         */
+        if (!amendment.ukefDecision) {
+          payload.ukefDecision = { isReadyForApproval: isRiskAnalysisCompleted(tasks) };
+        }
+
         delete payload.taskUpdate;
       }
 
