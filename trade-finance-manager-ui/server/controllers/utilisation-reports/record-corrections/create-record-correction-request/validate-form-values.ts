@@ -1,6 +1,11 @@
 import { CreateRecordCorrectionRequestFormValues, CreateRecordCorrectionRequestErrorsViewModel, ErrorSummaryViewModel } from '../../../../types/view-models';
 
 /**
+ * The maximum length of the additional information field for a record correction request.
+ */
+export const MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH = 500;
+
+/**
  * Validates the additional information field for a record correction request.
  * @param additionalInfo - The additional information text to validate.
  * @returns An error message if validation fails, undefined otherwise.
@@ -10,8 +15,8 @@ export const getAdditionalInfoValidationErrors = (additionalInfo: string | undef
     return 'You must provide more information for the record correction request';
   }
 
-  if (additionalInfo.length > 500) {
-    return 'You cannot enter more than 500 characters in the provide more information box';
+  if (additionalInfo.length > MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH) {
+    return `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH} characters in the provide more information box`;
   }
 
   return undefined;

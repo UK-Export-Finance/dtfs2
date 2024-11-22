@@ -1,6 +1,10 @@
 import { RECORD_CORRECTION_REQUEST_REASON } from '@ukef/dtfs2-common';
 import { CreateRecordCorrectionRequestFormValues } from '../../../../types/view-models';
-import { getAdditionalInfoValidationErrors, validateCreateRecordCorrectionRequestFormValues } from './validate-form-values';
+import {
+  getAdditionalInfoValidationErrors,
+  MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH,
+  validateCreateRecordCorrectionRequestFormValues,
+} from './validate-form-values';
 
 console.error = jest.fn();
 
@@ -97,7 +101,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         });
       });
 
-      describe('when additional info is more than 0 and less than 500 characters', () => {
+      describe(`when additional info is more than 0 and less than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH} characters`, () => {
         it('should not set additional info error', () => {
           // Arrange
           const formValues: CreateRecordCorrectionRequestFormValues = {
@@ -114,14 +118,14 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         });
       });
 
-      describe('when additional info is more than 500 characters', () => {
+      describe(`when additional info is more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH} characters`, () => {
         it('should set additional info error ', () => {
           // Arrange
           const formValues: CreateRecordCorrectionRequestFormValues = {
             ...aValidSetOfFormValues(),
-            additionalInfo: 'a'.repeat(501),
+            additionalInfo: 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH + 1),
           };
-          const expectedErrorMessage = 'You cannot enter more than 500 characters in the provide more information box';
+          const expectedErrorMessage = `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH} characters in the provide more information box`;
 
           // Act
           const errors = validateCreateRecordCorrectionRequestFormValues(formValues);
@@ -184,10 +188,10 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       });
     });
 
-    describe('when the additional info input is exactly 500 characters', () => {
+    describe(`when the additional info input is exactly ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH} characters`, () => {
       it('should return undefined', () => {
         // Arrange
-        const additionalInfo = 'a'.repeat(500);
+        const additionalInfo = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH);
 
         // Act
         const errorMessage = getAdditionalInfoValidationErrors(additionalInfo);
@@ -197,16 +201,18 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       });
     });
 
-    describe('when the additional info input is more than 500 characters', () => {
+    describe(`when the additional info input is more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH} characters`, () => {
       it('should return "character limit" error message', () => {
         // Arrange
-        const additionalInfo = 'a'.repeat(501);
+        const additionalInfo = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH + 1);
 
         // Act
         const errorMessage = getAdditionalInfoValidationErrors(additionalInfo);
 
         // Assert
-        expect(errorMessage).toEqual('You cannot enter more than 500 characters in the provide more information box');
+        expect(errorMessage).toEqual(
+          `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH} characters in the provide more information box`,
+        );
       });
     });
   });
