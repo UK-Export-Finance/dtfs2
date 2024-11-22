@@ -53,7 +53,7 @@ describe('user service', () => {
           user: transformedUser,
           auditDetails,
         });
-        expect(updateUserByIdSpy).toHaveBeenCalledTimes(1);
+        expect(createUserSpy).toHaveBeenCalledTimes(1);
       });
     });
 
