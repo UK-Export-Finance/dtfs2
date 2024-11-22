@@ -13,10 +13,10 @@ context('Dashboard Deals filters - Deal cancellation enabled', () => {
   });
 
   describe('When deal cancellation is enabled on the dashboard deals page', () => {
-    dashboardDeals.visit();
-    filters.showHideButton().click();
-
     it('displays the deal cancellation status filter', () => {
+      dashboardDeals.visit();
+      filters.showHideButton().click();
+
       dashboardDeals.filters.panel.form.status.cancelled.label().contains(DEAL_STATUS.CANCELLED);
       dashboardDeals.filters.panel.form.status.cancelled.checkbox().should('exist');
       dashboardDeals.filters.panel.form.status.cancelled.checkbox().should('not.be.checked');
