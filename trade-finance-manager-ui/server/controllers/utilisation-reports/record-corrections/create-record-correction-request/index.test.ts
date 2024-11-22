@@ -5,16 +5,20 @@ import {
   EMPTY_CREATE_RECORD_CORRECTION_REQUEST_ERRORS_VIEW_MODEL,
   getCreateRecordCorrectionRequest,
   GetCreateRecordCorrectionRequestRequest,
+  PostCreateRecordCorrectionRequestRequest,
   postCreateRecordCorrectionRequest,
 } from '.';
 import { CreateRecordCorrectionRequestErrorsViewModel, CreateRecordCorrectionRequestViewModel } from '../../../../types/view-models';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import { CreateRecordCorrectionRequestFormRequestBody } from './form-helpers';
 import { validateCreateRecordCorrectionRequestFormValues } from './validate-form-values';
+import api from '../../../../api';
+import { GetFeeRecordResponseBody } from '../../../../api-response-types';
+
+jest.mock('../../../../api');
+jest.mock('./validate-form-values');
 
 console.error = jest.fn();
-
-jest.mock('./validate-form-values');
 
 describe('controllers/utilisation-reports/record-corrections/create-record-correction-request', () => {
   const userToken = 'user-token';
@@ -28,6 +32,21 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
   const feeRecordId = '456';
 
   beforeEach(() => {
+    const feeRecordResponse: GetFeeRecordResponseBody = {
+      id: 456,
+      bank: {
+        id: '789',
+        name: 'Test Bank',
+      },
+      reportPeriod: {
+        start: { month: 1, year: 2024 },
+        end: { month: 1, year: 2024 },
+      },
+      facilityId: '0012345678',
+      exporter: 'Sample Company Ltd',
+    };
+    jest.mocked(api.getFeeRecord).mockResolvedValue(feeRecordResponse);
+
     jest.mocked(validateCreateRecordCorrectionRequestFormValues).mockReturnValue(EMPTY_CREATE_RECORD_CORRECTION_REQUEST_ERRORS_VIEW_MODEL);
   });
 
@@ -42,12 +61,12 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         session: requestSession,
       });
 
-    it('should render create record correction request page', () => {
+    it('should render the create record correction request page', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
       // Act
-      getCreateRecordCorrectionRequest(req, res);
+      await getCreateRecordCorrectionRequest(req, res);
 
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/record-corrections/create-record-correction-request.njk');
@@ -64,27 +83,31 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         formValues: {},
         errors: { errorSummary: [] },
       });
+
+      expect(api.getFeeRecord).toHaveBeenCalledTimes(1);
+      expect(api.getFeeRecord).toHaveBeenCalledWith(reportId, feeRecordId, userToken);
     });
   });
 
   describe('postCreateRecordCorrectionRequest', () => {
     describe('when the form values are valid', () => {
       const getHttpMocks = () =>
-        httpMocks.createMocks<GetCreateRecordCorrectionRequestRequest>({
+        httpMocks.createMocks<PostCreateRecordCorrectionRequestRequest>({
           params: { reportId, feeRecordId },
           session: requestSession,
           body: aPostCreateRecordCorrectionRequestBody(),
         });
 
-      it('redirects to the "check the information" page', () => {
+      it('redirects to the "check the information" page', async () => {
         // Arrange
         const { req, res } = getHttpMocks();
 
         // Act
-        postCreateRecordCorrectionRequest(req, res);
+        await postCreateRecordCorrectionRequest(req, res);
 
         // Assert
         expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}/check-the-information`);
+        expect(api.getFeeRecord).not.toHaveBeenCalled();
       });
 
       function aPostCreateRecordCorrectionRequestBody(): CreateRecordCorrectionRequestFormRequestBody {
@@ -104,19 +127,20 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         jest.mocked(validateCreateRecordCorrectionRequestFormValues).mockReturnValue(errors);
       });
 
-      const getHttpMocks = () =>
-        httpMocks.createMocks<GetCreateRecordCorrectionRequestRequest>({
+      const getHttpMocks = (body?: CreateRecordCorrectionRequestFormRequestBody) =>
+        httpMocks.createMocks<PostCreateRecordCorrectionRequestRequest>({
           params: { reportId, feeRecordId },
           session: requestSession,
-          body: {},
+          body,
         });
 
-      it('should render the create record correction request page', () => {
+      it('should render the create record correction request page', async () => {
         // Arrange
-        const { req, res } = getHttpMocks();
+        const body = {};
+        const { req, res } = getHttpMocks(body);
 
         // Act
-        postCreateRecordCorrectionRequest(req, res);
+        await postCreateRecordCorrectionRequest(req, res);
 
         // Assert
         expect(res._getRenderView()).toEqual('utilisation-reports/record-corrections/create-record-correction-request.njk');
@@ -133,36 +157,54 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
           formValues: { reasons: [] },
           errors,
         });
+
+        expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledTimes(1);
+        expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledWith({ reasons: [] });
+
+        expect(api.getFeeRecord).toHaveBeenCalledTimes(1);
+        expect(api.getFeeRecord).toHaveBeenCalledWith(reportId, feeRecordId, userToken);
       });
 
-      it('should set the render view model formValues reasons to the valid request body reasons', () => {
+      it('should set the render view model formValues "reasons" to the valid request body reasons', async () => {
         // Arrange
         const validReasons = [RECORD_CORRECTION_REQUEST_REASON.OTHER, RECORD_CORRECTION_REQUEST_REASON.REPORTED_FEE_INCORRECT];
 
-        const { req, res } = getHttpMocks();
-        req.body = { reasons: [...validReasons, 'invalid-reason'] };
+        const body = { reasons: [...validReasons, 'invalid-reason'] };
+        const { req, res } = getHttpMocks(body);
 
         // Act
-        postCreateRecordCorrectionRequest(req, res);
+        await postCreateRecordCorrectionRequest(req, res);
 
         // Assert
         const viewModel = res._getRenderData() as CreateRecordCorrectionRequestViewModel;
         expect(viewModel.formValues.reasons).toEqual(validReasons);
+
+        expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledTimes(1);
+        expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledWith({ reasons: validReasons });
+
+        expect(api.getFeeRecord).toHaveBeenCalledTimes(1);
+        expect(api.getFeeRecord).toHaveBeenCalledWith(reportId, feeRecordId, userToken);
       });
 
-      it('should set the render view model formValues additionalInfo to the request body additionalInfo', () => {
+      it('should set the render view model formValues "additionalInfo" to the request body additionalInfo', async () => {
         // Arrange
         const additionalInfo = 'Some additional info';
 
-        const { req, res } = getHttpMocks();
-        req.body = { additionalInfo };
+        const body = { additionalInfo };
+        const { req, res } = getHttpMocks(body);
 
         // Act
-        postCreateRecordCorrectionRequest(req, res);
+        await postCreateRecordCorrectionRequest(req, res);
 
         // Assert
         const viewModel = res._getRenderData() as CreateRecordCorrectionRequestViewModel;
         expect(viewModel.formValues.additionalInfo).toEqual(additionalInfo);
+
+        expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledTimes(1);
+        expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledWith({ additionalInfo, reasons: [] });
+
+        expect(api.getFeeRecord).toHaveBeenCalledTimes(1);
+        expect(api.getFeeRecord).toHaveBeenCalledWith(reportId, feeRecordId, userToken);
       });
     });
   });

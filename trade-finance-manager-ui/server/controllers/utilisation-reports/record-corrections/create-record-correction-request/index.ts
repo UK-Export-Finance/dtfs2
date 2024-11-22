@@ -4,6 +4,7 @@ import { CreateRecordCorrectionRequestErrorsViewModel, CreateRecordCorrectionReq
 import { asUserSession } from '../../../../helpers/express-session';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
+import api from '../../../../api';
 import { CreateRecordCorrectionRequestFormRequestBody, extractCreateRecordCorrectionRequestFormValues } from './form-helpers';
 import { validateCreateRecordCorrectionRequestFormValues } from './validate-form-values';
 
@@ -24,32 +25,24 @@ const renderCreateRecordCorrectionRequestPage = (res: Response, viewModel: Creat
  * @param req - The request object
  * @param res - The response object
  */
-export const getCreateRecordCorrectionRequest = (req: GetCreateRecordCorrectionRequestRequest, res: Response) => {
+export const getCreateRecordCorrectionRequest = async (req: GetCreateRecordCorrectionRequestRequest, res: Response) => {
   try {
-    const { user } = asUserSession(req.session);
-    const { reportId } = req.params;
+    const { user, userToken } = asUserSession(req.session);
+    const { reportId, feeRecordId } = req.params;
 
-    const feeRecordDetails = {
-      bank: {
-        name: 'Test Bank',
-      },
-      reportPeriod: {
-        start: { month: 1, year: 2024 },
-        end: { month: 1, year: 2024 },
-      },
-      facilityId: '0012345678',
-      exporter: 'Sample Company Ltd',
-    };
+    const feeRecord = await api.getFeeRecord(reportId, feeRecordId, userToken);
 
     return renderCreateRecordCorrectionRequestPage(res, {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       reportId,
-      bank: feeRecordDetails.bank,
-      formattedReportPeriod: getFormattedReportPeriodWithLongMonth(feeRecordDetails.reportPeriod),
+      bank: {
+        name: feeRecord.bank.name,
+      },
+      formattedReportPeriod: getFormattedReportPeriodWithLongMonth(feeRecord.reportPeriod),
       feeRecord: {
-        facilityId: feeRecordDetails.facilityId,
-        exporter: feeRecordDetails.exporter,
+        facilityId: feeRecord.facilityId,
+        exporter: feeRecord.exporter,
       },
       formValues: {},
       errors: EMPTY_CREATE_RECORD_CORRECTION_REQUEST_ERRORS_VIEW_MODEL,
@@ -60,7 +53,7 @@ export const getCreateRecordCorrectionRequest = (req: GetCreateRecordCorrectionR
   }
 };
 
-export type PostCreateRecordCorrectionRequest = CustomExpressRequest<{
+export type PostCreateRecordCorrectionRequestRequest = CustomExpressRequest<{
   reqBody: CreateRecordCorrectionRequestFormRequestBody;
   params: {
     reportId: string;
@@ -73,9 +66,9 @@ export type PostCreateRecordCorrectionRequest = CustomExpressRequest<{
  * @param req - The request object
  * @param res - The response object
  */
-export const postCreateRecordCorrectionRequest = (req: PostCreateRecordCorrectionRequest, res: Response) => {
+export const postCreateRecordCorrectionRequest = async (req: PostCreateRecordCorrectionRequestRequest, res: Response) => {
   try {
-    const { user } = asUserSession(req.session);
+    const { user, userToken } = asUserSession(req.session);
     const { reportId, feeRecordId } = req.params;
 
     const formValues = extractCreateRecordCorrectionRequestFormValues(req.body);
@@ -87,28 +80,19 @@ export const postCreateRecordCorrectionRequest = (req: PostCreateRecordCorrectio
       return res.redirect(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}/check-the-information`);
     }
 
-    // TODO: Change from this hardcoded version to using the new API endpoint once FN-3573 backend work is merged.
-    const feeRecordDetails = {
-      bank: {
-        name: 'Test Bank',
-      },
-      reportPeriod: {
-        start: { month: 1, year: 2024 },
-        end: { month: 1, year: 2024 },
-      },
-      facilityId: '0012345678',
-      exporter: 'Sample Company Ltd',
-    };
+    const feeRecord = await api.getFeeRecord(reportId, feeRecordId, userToken);
 
     return renderCreateRecordCorrectionRequestPage(res, {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       reportId,
-      bank: feeRecordDetails.bank,
-      formattedReportPeriod: getFormattedReportPeriodWithLongMonth(feeRecordDetails.reportPeriod),
+      bank: {
+        name: feeRecord.bank.name,
+      },
+      formattedReportPeriod: getFormattedReportPeriodWithLongMonth(feeRecord.reportPeriod),
       feeRecord: {
-        facilityId: feeRecordDetails.facilityId,
-        exporter: feeRecordDetails.exporter,
+        facilityId: feeRecord.facilityId,
+        exporter: feeRecord.exporter,
       },
       formValues,
       errors,
