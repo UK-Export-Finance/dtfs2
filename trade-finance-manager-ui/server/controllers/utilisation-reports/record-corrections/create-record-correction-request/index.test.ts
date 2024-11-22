@@ -46,8 +46,6 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       exporter: 'Sample Company Ltd',
     };
     jest.mocked(api.getFeeRecord).mockResolvedValue(feeRecordResponse);
-
-    jest.mocked(validateCreateRecordCorrectionRequestFormValues).mockReturnValue(EMPTY_CREATE_RECORD_CORRECTION_REQUEST_ERRORS_VIEW_MODEL);
   });
 
   afterEach(() => {
@@ -90,12 +88,21 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
   });
 
   describe('postCreateRecordCorrectionRequest', () => {
+    beforeEach(() => {
+      jest.mocked(validateCreateRecordCorrectionRequestFormValues).mockReturnValue(EMPTY_CREATE_RECORD_CORRECTION_REQUEST_ERRORS_VIEW_MODEL);
+    });
+
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
+
     describe('when the form values are valid', () => {
+      const validBody = aPostCreateRecordCorrectionRequestBody();
       const getHttpMocks = () =>
         httpMocks.createMocks<PostCreateRecordCorrectionRequestRequest>({
           params: { reportId, feeRecordId },
           session: requestSession,
-          body: aPostCreateRecordCorrectionRequestBody(),
+          body: validBody,
         });
 
       it('redirects to the "check the information" page', async () => {
@@ -108,6 +115,9 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         // Assert
         expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}/check-the-information`);
         expect(api.getFeeRecord).not.toHaveBeenCalled();
+
+        expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledTimes(1);
+        expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledWith(validBody);
       });
 
       function aPostCreateRecordCorrectionRequestBody(): CreateRecordCorrectionRequestFormRequestBody {
@@ -125,6 +135,10 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
 
       beforeEach(() => {
         jest.mocked(validateCreateRecordCorrectionRequestFormValues).mockReturnValue(errors);
+      });
+
+      afterEach(() => {
+        jest.resetAllMocks();
       });
 
       const getHttpMocks = (body?: CreateRecordCorrectionRequestFormRequestBody) =>

@@ -70,7 +70,6 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       });
     });
 
-    // TODO: Finish these tests.
     describe('when reasons is a string list', () => {
       describe('and the reasons are all valid', () => {
         it('should return the input array', () => {
