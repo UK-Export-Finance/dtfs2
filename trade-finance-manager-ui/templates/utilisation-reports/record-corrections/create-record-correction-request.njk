@@ -50,7 +50,10 @@
             }
           },
           hint: {
-            text: "Select all that apply"
+            text: "Select all that apply",
+            attributes: {
+              "data-cy": "reasons-hint"
+            }
           },
           items: [
             {
@@ -58,7 +61,10 @@
               text: "Facility ID is incorrect",
               checked: formValues.reasons and "facility-id-incorrect" in formValues.reasons,
               hint: {
-                text: "Does not match what is in the system"
+                text: "Does not match what is in the system",
+                attributes: {
+                  "data-cy": "reason-facility-id-incorrect-hint"
+                }
               },
               attributes: {
                 "data-cy": "reason-facility-id-incorrect"
@@ -69,7 +75,10 @@
               text: "Reported fee is incorrect",
               checked: formValues.reasons and "reported-fee-incorrect" in formValues.reasons,
               hint: {
-                text: "The fee is higher or lower than expected"
+                text: "The fee is higher or lower than expected",
+                attributes: {
+                  "data-cy": "reason-reported-fee-incorrect-hint"
+                }
               },
               attributes: {
                 "data-cy": "reason-reported-fee-incorrect"
@@ -80,7 +89,10 @@
               text: "Reported currency is incorrect",
               checked: formValues.reasons and "reported-currency-incorrect" in formValues.reasons,
               hint: {
-                text: "The currency does not match the currency we have on record"
+                text: "The currency does not match the currency we have on record",
+                attributes: {
+                  "data-cy": "reason-reported-currency-incorrect-hint"
+                }
               },
               attributes: {
                 "data-cy": "reason-reported-currency-incorrect"
@@ -99,7 +111,10 @@
               text: "Other",
               checked: formValues.reasons and "other" in formValues.reasons,
               hint: {
-                text: "Something else"
+                text: "Something else",
+                attributes: {
+                  "data-cy": "reason-other-hint"
+                }
               },
               attributes: {
                 "data-cy": "reason-other"

@@ -210,4 +210,43 @@ describe(page, () => {
     wrapper.expectElement('[data-cy="continue-button"]').toExist();
     wrapper.expectText('[data-cy="continue-button"]').toRead('Continue');
   });
+
+  it('should render the main reasons hint', () => {
+    // Arrange
+    const viewModel = aCreateRecordCorrectionRequestViewModel();
+
+    // Act
+    const wrapper = render(viewModel);
+
+    // Assert
+    wrapper.expectText('[data-cy="reasons-hint"]').toRead('Select all that apply');
+  });
+
+  it.each`
+    reasonId                         | hint
+    ${'facility-id-incorrect'}       | ${'Does not match what is in the system'}
+    ${'reported-fee-incorrect'}      | ${'The fee is higher or lower than expected'}
+    ${'reported-currency-incorrect'} | ${'The currency does not match the currency we have on record'}
+    ${'other'}                       | ${'Something else'}
+  `('should render the "$reasonId" reason hint', ({ reasonId, hint }: { reasonId: string; hint: string }) => {
+    // Arrange
+    const viewModel = aCreateRecordCorrectionRequestViewModel();
+
+    // Act
+    const wrapper = render(viewModel);
+
+    // Assert
+    wrapper.expectText(`[data-cy="reason-${reasonId}-hint"]`).toRead(hint);
+  });
+
+  it('should render the additional info hint', () => {
+    // Arrange
+    const viewModel = aCreateRecordCorrectionRequestViewModel();
+
+    // Act
+    const wrapper = render(viewModel);
+
+    // Assert
+    wrapper.expectText('[data-cy="additional-info-hint"]').toRead('For example, is the reported fee higher or lower than expected');
+  });
 });
