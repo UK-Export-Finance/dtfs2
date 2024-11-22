@@ -18,16 +18,14 @@ function getFailureTestCases() {
   return [
     {
       aTestCase: () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { code, ...rest } = aValidPayload();
+        const { code: _code, ...rest } = aValidPayload();
         return rest;
       },
       description: 'the code is missing',
     },
     {
       aTestCase: () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { state, ...rest } = aValidPayload();
+        const { state: _state, ...rest } = aValidPayload();
         return rest;
       },
       description: 'the state is missing',
@@ -61,24 +59,21 @@ function getSuccessTestCases() {
     { aTestCase: aValidPayload, description: 'a complete valid payload is present' },
     {
       aTestCase: () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars, camelcase
-        const { client_info, ...rest } = aValidPayload();
+        const { client_info: _clientInfo, ...rest } = aValidPayload();
         return rest;
       },
       description: 'the optional client_info is missing',
     },
     {
       aTestCase: () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars, camelcase
-        const { session_state, ...rest } = aValidPayload();
+        const { session_state: _sessionState, ...rest } = aValidPayload();
         return rest;
       },
       description: 'the optional session_state is missing',
     },
     {
       aTestCase: () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars, camelcase
-        const { client_info, session_state, ...rest } = aValidPayload();
+        const { client_info: _clientInfo, session_state: _sessionState, ...rest } = aValidPayload();
         return rest;
       },
       description: 'the optional client_info and session_state is missing',

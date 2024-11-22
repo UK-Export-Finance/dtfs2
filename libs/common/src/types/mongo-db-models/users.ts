@@ -1,6 +1,6 @@
 import { WithId } from 'mongodb';
 import { Bank } from './banks';
-import { UnixTimestamp } from '../date';
+import { UnixTimestampMilliseconds } from '../date';
 import { Prettify } from '../types-helper';
 
 export type PortalRole = 'maker' | 'checker' | 'admin' | 'read-only' | 'payment-report-officer';
@@ -20,10 +20,10 @@ export type PortalUser = Prettify<
     hash: string;
     resetPwdToken?: string;
     resetPwdTimestamp?: string;
-    lastLogin?: UnixTimestamp;
+    lastLogin?: UnixTimestampMilliseconds;
     loginFailureCount?: number;
     sessionIdentifier?: string;
-    signInLinkSendDate?: UnixTimestamp;
+    signInLinkSendDate?: UnixTimestampMilliseconds;
     signInLinkSendCount?: number;
   }>
 >;

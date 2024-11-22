@@ -1,5 +1,5 @@
-import { TfmUser } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
+import { TfmUser } from '../../types';
 
 export const aTfmUser = (): TfmUser => ({
   _id: new ObjectId(),

@@ -47,16 +47,16 @@ describe('user validation', () => {
 
   describe('applyUpdateRules', () => {
     const baseExistingUser = {};
-    const baseUpdateUserRequestWithoutCurrentPassword = {};
-    const updateUserRequestWithPassword = {
-      ...baseUpdateUserRequestWithoutCurrentPassword,
+    const baseUpdateTfmUserRequestWithoutCurrentPassword = {};
+    const UpdateTfmUserRequestWithPassword = {
+      ...baseUpdateTfmUserRequestWithoutCurrentPassword,
       currentPassword: 'currentPassword',
     };
 
     const testCases = [
       {
         description: 'current password is not provided',
-        makeApplyRulesCall: async () => await applyUpdateRules(baseExistingUser, baseUpdateUserRequestWithoutCurrentPassword),
+        makeApplyRulesCall: async () => await applyUpdateRules(baseExistingUser, baseUpdateTfmUserRequestWithoutCurrentPassword),
         allRules: {
           expectedRules: {
             passwordAtLeast8Characters,
@@ -75,11 +75,11 @@ describe('user validation', () => {
             currentPasswordMustMatch,
           },
         },
-        expectedArgumentsToCallRuleWith: [baseExistingUser, baseUpdateUserRequestWithoutCurrentPassword],
+        expectedArgumentsToCallRuleWith: [baseExistingUser, baseUpdateTfmUserRequestWithoutCurrentPassword],
       },
       {
         description: 'current password is provided',
-        makeApplyRulesCall: async () => await applyUpdateRules(baseExistingUser, updateUserRequestWithPassword),
+        makeApplyRulesCall: async () => await applyUpdateRules(baseExistingUser, UpdateTfmUserRequestWithPassword),
         allRules: {
           expectedRules: {
             passwordAtLeast8Characters,
@@ -97,7 +97,7 @@ describe('user validation', () => {
           },
           otherRules: {},
         },
-        expectedArgumentsToCallRuleWith: [baseExistingUser, updateUserRequestWithPassword],
+        expectedArgumentsToCallRuleWith: [baseExistingUser, UpdateTfmUserRequestWithPassword],
       },
     ];
 
