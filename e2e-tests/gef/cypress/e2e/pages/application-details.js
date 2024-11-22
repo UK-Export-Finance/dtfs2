@@ -5,7 +5,7 @@ const cyGetFacilitySummaryListValue = (tableNum, actionSelector) =>
   cyGetFacilitySummaryListChild(tableNum, actionSelector).parent().parent().find('.govuk-summary-list__value');
 
 const applicationDetails = {
-  visit: (deal) => cy.visit(relative(`/gef/application-details/${deal._id}`)),
+  visit: (dealId) => cy.visit(relative(`/gef/application-details/${dealId}`)),
   applicationDetailsPage: () => cy.get('[data-cy="application-details-page"]'),
 
   bankRefName: () => cy.get('[data-cy="bank-reference"]'),

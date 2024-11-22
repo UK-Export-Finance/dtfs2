@@ -97,6 +97,7 @@ module.exports.updateGefDeal = (dealId, update, token) =>
       expect(resp.status).to.equal(200);
       return resp.body;
     });
+
 module.exports.getDeal = (dealId, token) =>
   cy
     .request({

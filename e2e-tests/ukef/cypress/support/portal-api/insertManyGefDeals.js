@@ -1,16 +1,16 @@
 const { insertGefDeal, logIn } = require('./api');
 const { getIdFromNumberGenerator } = require('../external-api/api');
 
-module.exports = (deals, opts) => {
+module.exports = (deals, userDetails) => {
   console.info('createManyGefDeals::');
-  logIn(opts).then((token) => {
+  logIn(userDetails).then((token) => {
     deals.forEach((dealToInsert) => {
       const ukefId = getIdFromNumberGenerator();
 
       const dealWithId = dealToInsert;
       dealWithId.ukefDealId = ukefId;
 
-      insertGefDeal(dealWithId, opts, token).then((insertedDeal) => insertedDeal);
+      insertGefDeal(dealWithId, userDetails, token).then((insertedDeal) => insertedDeal);
     });
   });
 };

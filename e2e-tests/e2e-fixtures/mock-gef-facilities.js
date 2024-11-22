@@ -58,8 +58,6 @@ const anUnissuedCashFacility = ({ facilityEndDateEnabled = false } = {}) => ({
   canResubmitIssuedFacilities: null,
 });
 
-exports.anUnissuedCashFacility = anUnissuedCashFacility;
-
 /**
  * @param {{ facilityEndDateEnabled?: boolean}} options
  * @returns {import('@ukef/dtfs2-common').Facility }
@@ -100,7 +98,6 @@ const anIssuedCashFacility = ({ facilityEndDateEnabled = false } = {}) => ({
   coverDateConfirmed: true,
   canResubmitIssuedFacilities: null,
 });
-exports.anIssuedCashFacility = anIssuedCashFacility;
 
 /**
  * @param {{ facilityEndDateEnabled?: boolean}} options
@@ -143,8 +140,6 @@ const anIssuedCashFacilityWithCoverDateConfirmed = ({ facilityEndDateEnabled = f
   canResubmitIssuedFacilities: null,
 });
 
-exports.anIssuedCashFacilityWithCoverDateConfirmed = anIssuedCashFacilityWithCoverDateConfirmed;
-
 /**
  * @param {{ facilityEndDateEnabled?: boolean}} options
  * @returns {import('@ukef/dtfs2-common').Facility }
@@ -186,8 +181,6 @@ const anUnissuedContingentFacility = ({ facilityEndDateEnabled = false } = {}) =
   canResubmitIssuedFacilities: null,
 });
 
-exports.anUnissuedContingentFacility = anUnissuedContingentFacility;
-
 /**
  * @param {{ facilityEndDateEnabled?: boolean}} options
  * @returns {import('@ukef/dtfs2-common').Facility }
@@ -228,6 +221,9 @@ const anUnissuedCashFacilityWith20MonthsOfCover = ({ facilityEndDateEnabled = fa
   coverDateConfirmed: false,
   canResubmitIssuedFacilities: null,
 });
+exports.anUnissuedCashFacility = anUnissuedCashFacility;
+exports.anIssuedCashFacility = anIssuedCashFacility;
+exports.anIssuedCashFacilityWithCoverDateConfirmed = anIssuedCashFacilityWithCoverDateConfirmed;
 
 exports.multipleMockGefFacilities = ({ facilityEndDateEnabled = false } = {}) => ({
   unissuedCashFacility: anUnissuedCashFacility({ facilityEndDateEnabled }),
