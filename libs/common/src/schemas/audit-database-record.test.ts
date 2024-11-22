@@ -45,8 +45,7 @@ function getFailureTestCases() {
     {
       description: 'a matching object with a missing parameter',
       aTestCase: () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { lastUpdatedAt, ...rest } = aValidAuditRecord();
+        const { lastUpdatedAt: _lastUpdatedAt, ...rest } = aValidAuditRecord();
         return rest;
       },
     },

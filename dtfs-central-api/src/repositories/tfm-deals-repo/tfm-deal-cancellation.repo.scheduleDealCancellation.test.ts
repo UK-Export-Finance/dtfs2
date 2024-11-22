@@ -13,9 +13,9 @@ import { generateAuditDatabaseRecordFromAuditDetails, generateTfmAuditDetails } 
 import { ObjectId, ModifyResult, WithoutId } from 'mongodb';
 import { getUnixTime } from 'date-fns';
 import { when } from 'jest-when';
+import { aTfmUser } from '@ukef/dtfs2-common/mock-data-backend';
 import { mongoDbClient as db } from '../../drivers/db-client';
 import { TfmDealCancellationRepo } from './tfm-deal-cancellation.repo';
-import { aTfmUser } from '../../../test-helpers';
 
 const dealId = new ObjectId();
 

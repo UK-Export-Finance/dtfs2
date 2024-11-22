@@ -10,13 +10,13 @@ import {
   TfmDeal,
   DEAL_TYPE,
 } from '@ukef/dtfs2-common';
+import { aTfmUser } from '@ukef/dtfs2-common/mock-data-backend';
 import { generateAuditDatabaseRecordFromAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { ObjectId, ModifyResult, WithoutId, UpdateResult } from 'mongodb';
 import { flatten } from 'mongo-dot-notation';
 import { getUnixTime } from 'date-fns';
 import { mongoDbClient as db } from '../../drivers/db-client';
 import { TfmDealCancellationRepo } from './tfm-deal-cancellation.repo';
-import { aTfmUser } from '../../../test-helpers';
 
 const dealId = new ObjectId();
 

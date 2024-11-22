@@ -12,10 +12,11 @@ import {
   TfmUser,
 } from '@ukef/dtfs2-common';
 import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { aTfmUser } from '@ukef/dtfs2-common/mock-data-backend';
 import { add, endOfDay, getUnixTime, startOfDay, sub } from 'date-fns';
 import { ObjectId } from 'mongodb';
 import { DealCancellationService } from './deal-cancellation.service';
-import { aTfmFacility, aTfmUser } from '../../../test-helpers';
+import { aTfmFacility } from '../../../test-helpers';
 import { PortalFacilityRepo } from '../../repositories/portal/facilities.repo';
 import { PortalDealService } from '../portal/deal.service';
 
