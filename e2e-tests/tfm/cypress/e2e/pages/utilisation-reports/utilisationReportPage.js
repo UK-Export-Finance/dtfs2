@@ -18,9 +18,9 @@ const utilisationReportPage = {
     createRecordCorrectionRequestButton: () => cy.get('[data-cy="create-record-correction-request-button"]'),
     premiumPaymentsTable: {
       header: {
-        totalReportedPayments: () => cy.get('th[data-cy="premium-payments-table--total-reported-payments"] button'),
-        totalPaymentsReceived: () => cy.get('th[data-cy="premium-payments-table--total-payments-received"] button'),
-        status: () => cy.get('th[data-cy="premium-payments-table--status"] button'),
+        totalReportedPayments: () => cy.get('th[data-cy="premium-payments-table--total-reported-payments-header"] button'),
+        totalPaymentsReceived: () => cy.get('th[data-cy="premium-payments-table--total-payments-received-header"] button'),
+        status: () => cy.get('th[data-cy="premium-payments-table--status-header"] button'),
       },
       row: (feeRecordId) => cy.get(`tr[data-cy*="premium-payments-table-row--feeRecordId-${feeRecordId}"]`),
       selectAllCheckboxContainer: () => cy.get('[data-cy="premium-payments-select-all-checkbox-container"]'),

@@ -1,4 +1,4 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../../../../fixtures/constants');
 
 const CASH_FACILITY = {
@@ -29,7 +29,7 @@ const CASH_FACILITY = {
 const BOND_FACILITY = {
   type: CONSTANTS.FACILITY.FACILITY_TYPE.BOND,
   bondIssuer: 'Issuer',
-  bondType: 'Advance payment guarantee',
+  bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
   facilityStage: 'Unissued',
   hasBeenIssued: false,
   ukefGuaranteeInMonths: '10',

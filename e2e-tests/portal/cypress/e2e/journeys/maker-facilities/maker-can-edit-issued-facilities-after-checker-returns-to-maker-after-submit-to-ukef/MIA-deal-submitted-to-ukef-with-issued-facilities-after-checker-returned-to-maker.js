@@ -1,4 +1,4 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
 const { sevenDays, twoMonths, oneMonth } = require('../../../../../../e2e-fixtures/dateConstants');
 
@@ -189,7 +189,7 @@ const deal = {
       currencySameAsSupplyContractCurrency: 'true',
       createdDate: 1599048722968.0,
       bondIssuer: '',
-      bondType: 'Bid bond',
+      bondType: BOND_TYPE.BID_BOND,
       bondBeneficiary: '',
       guaranteeFeePayableByBank: '10.8000',
       ukefExposure: '296.16',

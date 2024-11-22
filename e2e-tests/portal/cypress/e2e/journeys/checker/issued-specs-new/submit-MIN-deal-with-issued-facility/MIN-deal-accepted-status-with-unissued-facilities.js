@@ -1,4 +1,4 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { mandatoryCriteria } = require('../../../../../../../e2e-fixtures');
 
 const deal = {
@@ -214,7 +214,7 @@ const deal = {
       type: 'Bond',
       createdDate: new Date().valueOf(),
       bondIssuer: '',
-      bondType: 'Performance bond',
+      bondType: BOND_TYPE.PERFORMANCE_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',

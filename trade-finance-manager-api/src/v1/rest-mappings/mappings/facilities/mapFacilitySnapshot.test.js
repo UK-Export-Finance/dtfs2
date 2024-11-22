@@ -1,4 +1,4 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const mapFacilitySnapshot = require('./mapFacilitySnapshot');
 const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityProduct = require('./mapFacilityProduct');
@@ -10,10 +10,9 @@ const mapFirstDrawdownAmountInExportCurrency = require('./mapFirstDrawdownAmount
 const mapFeeType = require('./mapFeeType');
 const mapFeeFrequency = require('./mapFeeFrequency');
 const mapDates = require('./mapDates');
-
-const MOCK_DEAL = require('../../../__mocks__/mock-deal');
 const { mapBssEwcsFacilityStage } = require('./mapFacilityStage');
 const { mapBssEwcsFacilityType } = require('./mapFacilityType');
+const MOCK_DEAL = require('../../../__mocks__/mock-deal');
 
 describe('mapFacility', () => {
   const mockFacilityTfm = {
@@ -49,7 +48,7 @@ describe('mapFacility', () => {
     ukefFacilityType: mockType,
     ...mockCoverEndDate,
     coveredPercentage: mockCoveredPercentage,
-    bondType: 'Performance Bond',
+    bondType: BOND_TYPE.PERFORMANCE_BOND,
     currency: mockCurrency,
     value: mockFacilityValue,
     facilityStage: mockFacilityStage,

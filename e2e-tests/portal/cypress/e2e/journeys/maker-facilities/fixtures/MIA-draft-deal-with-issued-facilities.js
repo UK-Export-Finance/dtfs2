@@ -1,4 +1,4 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
 const { oneMonth, today } = require('../../../../../../e2e-fixtures/dateConstants');
 
@@ -183,7 +183,7 @@ const deal = {
       type: 'Bond',
       createdDate: now,
       bondIssuer: '',
-      bondType: 'Advance payment guarantee',
+      bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       'requestedCoverStartDate-day': '',
