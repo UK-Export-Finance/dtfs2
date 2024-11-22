@@ -7,6 +7,8 @@ const authRouter = express.Router();
 const passport = require('passport');
 
 const { swaggerSpec, swaggerUiOptions } = require('./swagger');
+const { validateSsoFeatureFlagIsOff, validateSsoFeatureFlagIsOn } = require('./middleware/validate-sso-feature-flag');
+const { validateTfmPutUserPayload } = require('./middleware/validate-put-tfm-user-payload');
 const feedbackController = require('./controllers/feedback-controller');
 const amendmentController = require('./controllers/amendment.controller');
 const facilityController = require('./controllers/facility.controller');
@@ -68,14 +70,17 @@ authRouter.use('/', tasksRouter);
  */
 openRouter.route('/feedback').post(feedbackController.create);
 
-openRouter.route('/user').post(users.createTfmUser);
-authRouter.route('/users').post(users.createTfmUser);
+openRouter.route('/user').post(validateSsoFeatureFlagIsOff, users.createTfmUser);
+authRouter
+  .route('/users')
+  .post(validateSsoFeatureFlagIsOff, users.createTfmUser)
+  .put(validateSsoFeatureFlagIsOn, validateTfmPutUserPayload, users.upsertTfmUserFromEntraIdUser);
 
 authRouter
   .route('/users/:user')
   .get(validation.userIdEscapingSanitization, handleExpressValidatorResult, users.findTfmUser)
-  .put(validation.userIdValidation, handleExpressValidatorResult, users.updateTfmUserById)
-  .delete(validation.userIdValidation, handleExpressValidatorResult, users.removeTfmUserById);
+  .put(validateSsoFeatureFlagIsOff, validation.userIdValidation, handleExpressValidatorResult, users.updateTfmUserById)
+  .delete(validateSsoFeatureFlagIsOff, validation.userIdValidation, handleExpressValidatorResult, users.removeTfmUserById);
 
 authRouter.route('/facilities').get(facilityController.getFacilities);
 
