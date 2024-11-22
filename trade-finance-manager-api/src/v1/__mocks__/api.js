@@ -251,4 +251,5 @@ module.exports = {
   deleteDealCancellation: jest.fn(),
   getSelectedFeeRecordsDetails: jest.fn(),
   addFeesToAnExistingPayment: jest.fn(),
+  getFeeRecord: jest.fn(),
 };
