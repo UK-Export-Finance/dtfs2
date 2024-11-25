@@ -1,6 +1,7 @@
 import { TfmSessionUser } from './tfm-session-user';
-import { AddPaymentErrorKey, RemoveFeesFromPaymentErrorKey, GenerateKeyingDataErrorKey } from '../controllers/utilisation-reports/helpers';
+import { RemoveFeesFromPaymentErrorKey } from '../controllers/utilisation-reports/helpers';
 import { EditPaymentFormValues } from './edit-payment-form-values';
+import { AddPaymentErrorKey, InitiateRecordCorrectionRequestErrorKey, GenerateKeyingDataErrorKey } from './premium-payments-tab-error-keys';
 
 type UserSessionLoginData = {
   authCodeUrlRequest: AuthorizationUrlRequest;
@@ -16,6 +17,7 @@ export type UserSessionData = {
 declare module 'express-session' {
   interface SessionData extends UserSessionData {
     addPaymentErrorKey: AddPaymentErrorKey;
+    initiateRecordCorrectionRequestErrorKey: InitiateRecordCorrectionRequestErrorKey;
     checkedCheckboxIds: Record<string, true | undefined>;
     generateKeyingDataErrorKey: GenerateKeyingDataErrorKey;
     removeFeesFromPaymentErrorKey: RemoveFeesFromPaymentErrorKey;

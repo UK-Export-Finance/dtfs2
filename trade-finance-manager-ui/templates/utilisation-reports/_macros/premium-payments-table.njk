@@ -1,3 +1,4 @@
+{% from "govuk/components/error-message/macro.njk" import govukErrorMessage %}
 {% import "../../_macros/select-all-table-cell-checkbox.njk" as selectAllTableCellCheckbox %}
 {% import "./premium-payments-table-row.njk" as premiumPaymentsTableRow %}
 
@@ -7,6 +8,7 @@
   {% set enablePaymentsReceivedSorting = params.enablePaymentsReceivedSorting %}
   {% set userCanEdit = params.userCanEdit %}
   {% set hasSelectableRows = params.hasSelectableRows %}
+  {% set errorMessage = params.errorMessage %}
 
   {% macro tableHeader(params) %}
     {% set headerText = params.headerText %}
@@ -43,7 +45,17 @@
     {% endif %}
   {% endmacro %}
 
-  <table class="govuk-table premium-payments-table" data-module="moj-sortable-table" data-cy="premium-payments-table" id="premium-payments-table">
+  <table class="govuk-table premium-payments-table" data-module="moj-sortable-table" data-cy="premium-payments-table">
+    {% if errorMessage %}
+      {{ govukErrorMessage({
+        text: errorMessage,
+        id: "premium-payments-table-error",
+        attributes: {
+          "data-cy": "premium-payments-table--error",
+          "tabindex": "-1"
+        }
+      }) }}
+    {% endif %}
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
         <th scope="col" class="govuk-visually-hidden" data-cy="premium-payments-table--hidden-header">Facility ID and Exporter and Reported fees and Reported Payments</th>
