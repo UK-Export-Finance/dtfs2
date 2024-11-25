@@ -1,5 +1,4 @@
 const createFeeRecordCorrectionRequestPage = {
-  mainHeading: () => cy.get(`[data-cy="main-heading"]`),
   reasonCheckbox: (reasonId) => cy.get(`input[data-cy="reason-${reasonId}"]`),
   reasonsInputError: () => cy.get(`[data-cy="reasons-error"]`),
   additionalInfoInput: () => cy.get(`textarea[data-cy="additional-info"]`),

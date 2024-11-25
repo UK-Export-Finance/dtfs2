@@ -9,7 +9,7 @@ import pages from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
 import relative from '../../../../relativeURL';
-import partials from '../../../../partials';
+import { feeRecordSummary, mainHeading } from '../../../../partials';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context('When fee record correction feature flag is enabled', () => {
@@ -56,7 +56,6 @@ context('When fee record correction feature flag is enabled', () => {
 
   context('PDC_RECONCILE users can create record correction requests', () => {
     const { createFeeRecordCorrectionRequestPage } = pages;
-    const { feeRecordSummary } = partials;
 
     beforeEach(() => {
       pages.landingPage.visit();
@@ -76,7 +75,7 @@ context('When fee record correction feature flag is enabled', () => {
       //---------------------------------------------------------------
       // Create record correction
       //---------------------------------------------------------------
-      cy.assertText(createFeeRecordCorrectionRequestPage.mainHeading(), 'Record correction request');
+      cy.assertText(mainHeading(), 'Record correction request');
 
       feeRecordSummary.container().should('exist');
       cy.assertText(feeRecordSummary.facilityId(), feeRecordAtToDoStatus.facilityId);
