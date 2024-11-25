@@ -478,6 +478,15 @@ const getUser = async (userId, token) => {
   }
 };
 
+const upsertUserFromEntraUser = (entraUser, token) => {
+  return axios({
+    method: 'put',
+    url: `${TFM_API_URL}/v1/users`,
+    headers: generateHeaders(token),
+    data: entraUser,
+  });
+};
+
 const createFacilityAmendment = async (facilityId, token) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
@@ -1396,4 +1405,5 @@ module.exports = {
   deleteDealCancellation,
   submitDealCancellation,
   getFeeRecord,
+  upsertUserFromEntraUser,
 };
