@@ -1,6 +1,17 @@
+import { RecordCorrectionRequestReason } from '@ukef/dtfs2-common';
 import { BaseViewModel } from '../base-view-model';
-import { CreateRecordCorrectionRequestErrorsViewModel } from './create-record-correction-request-errors-view-model';
-import { CreateRecordCorrectionRequestFormValues } from './create-record-correction-request-form-values';
+import { ErrorSummaryViewModel } from '../error-summary-view-model';
+
+export type CreateRecordCorrectionRequestErrorsViewModel = {
+  reasonsErrorMessage?: string;
+  additionalInfoErrorMessage?: string;
+  errorSummary: ErrorSummaryViewModel[];
+};
+
+export type CreateRecordCorrectionRequestFormValues = {
+  reasons?: RecordCorrectionRequestReason[];
+  additionalInfo?: string;
+};
 
 export type CreateRecordCorrectionRequestViewModel = BaseViewModel & {
   reportId: string;
