@@ -99,12 +99,17 @@ export const createParty = async (req: CustomExpressRequest<{ reqBody: { company
     return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company registration number' });
   }
 
+  if (!companyName) {
+    console.error('No company name provided');
+    return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company name' });
+  }
+  
   const response: { status: number; data: unknown } = await axios({
     method: 'post',
     url: `${APIM_MDM_URL}customers`,
     headers,
     data: {
-      companyRegistrationNumber: companyReg,
+      companyReg,
       companyName,
     },
   }).catch((error: AxiosError) => {

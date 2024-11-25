@@ -1,5 +1,3 @@
-import { isAutomaticSalesforceCustomerCreationFeatureFlagEnabled } from '@ukef/dtfs2-common'
-
 const axios = require('axios');
 const { HttpStatusCode } = require('axios');
 
