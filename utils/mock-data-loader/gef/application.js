@@ -1,7 +1,5 @@
 const { EXPORTER_COMPLETED, EXPORTER_NO_INDUSTRIES } = require('./exporter');
-const USERS = require('../portal-users');
-
-const A_MAKER = USERS.BANK1_MAKER1;
+const { BANK1_MAKER1 } = require('../portal-users');
 
 const APPLICATION = [
   {
@@ -11,7 +9,7 @@ const APPLICATION = [
     additionalRefName: null,
     mandatoryVersionId: 33,
     exporter: EXPORTER_COMPLETED,
-    maker: A_MAKER,
+    maker: BANK1_MAKER1,
   },
   {
     // in progress
@@ -20,7 +18,7 @@ const APPLICATION = [
     additionalRefName: '',
     mandatoryVersionId: 33,
     exporter: EXPORTER_NO_INDUSTRIES,
-    maker: A_MAKER,
+    maker: BANK1_MAKER1,
   },
   {
     // completed
@@ -29,7 +27,7 @@ const APPLICATION = [
     additionalRefName: 'Some Additional Reference',
     mandatoryVersionId: 33,
     exporter: EXPORTER_COMPLETED,
-    maker: A_MAKER,
+    maker: BANK1_MAKER1,
   },
   {
     // in progress - no exporter
@@ -38,7 +36,7 @@ const APPLICATION = [
     additionalRefName: '',
     mandatoryVersionId: 33,
     exporter: {},
-    maker: A_MAKER,
+    maker: BANK1_MAKER1,
   },
 ];
 

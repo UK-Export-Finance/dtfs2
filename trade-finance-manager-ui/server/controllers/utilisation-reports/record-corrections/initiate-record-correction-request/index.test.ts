@@ -1,7 +1,7 @@
 import httpMocks from 'node-mocks-http';
 import { FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
 import difference from 'lodash.difference';
-import { parseAndValidateInitiateRecordCorrectionRequestFeeSelections, postInitiateRecordCorrectionRequest, PostInitiateRecordCorrectionRequest } from '.';
+import { validateRecordCorrectionRequestFeeSelections, postInitiateRecordCorrectionRequest, PostInitiateRecordCorrectionRequest } from '.';
 import { INITIATE_RECORD_CORRECTION_ERROR_KEY } from '../../../../constants/premium-payment-tab-error-keys';
 import { PremiumPaymentsTableCheckboxSelectionsRequestBody } from '../../helpers';
 import { PremiumPaymentsTableCheckboxId } from '../../../../types/premium-payments-table-checkbox-id';
@@ -10,13 +10,13 @@ import { aTfmSessionUser } from '../../../../../test-helpers';
 console.error = jest.fn();
 
 describe('controllers/utilisation-reports/record-corrections/initiate-record-correction-request', () => {
-  describe('parseAndValidateInitiateRecordCorrectionRequestFeeSelections', () => {
+  describe('validateRecordCorrectionRequestFeeSelections', () => {
     describe('when no checkboxes are selected', () => {
       const checkedCheckboxIds: PremiumPaymentsTableCheckboxId[] = [];
 
       it(`should return '${INITIATE_RECORD_CORRECTION_ERROR_KEY.NO_FEE_RECORDS_SELECTED}' error key`, () => {
         // Act
-        const result = parseAndValidateInitiateRecordCorrectionRequestFeeSelections(checkedCheckboxIds);
+        const result = validateRecordCorrectionRequestFeeSelections(checkedCheckboxIds);
 
         // Assert
         expect(result).toEqual({ errorKey: INITIATE_RECORD_CORRECTION_ERROR_KEY.NO_FEE_RECORDS_SELECTED, selectedFeeRecordId: null });
@@ -31,7 +31,7 @@ describe('controllers/utilisation-reports/record-corrections/initiate-record-cor
 
       it(`should return '${INITIATE_RECORD_CORRECTION_ERROR_KEY.MULTIPLE_FEE_RECORDS_SELECTED}' error key`, () => {
         // Act
-        const result = parseAndValidateInitiateRecordCorrectionRequestFeeSelections(checkedCheckboxIds);
+        const result = validateRecordCorrectionRequestFeeSelections(checkedCheckboxIds);
 
         // Assert
         expect(result).toEqual({ errorKey: INITIATE_RECORD_CORRECTION_ERROR_KEY.MULTIPLE_FEE_RECORDS_SELECTED, selectedFeeRecordId: null });
@@ -46,7 +46,7 @@ describe('controllers/utilisation-reports/record-corrections/initiate-record-cor
 
         it(`should return '${INITIATE_RECORD_CORRECTION_ERROR_KEY.INVALID_STATUS}' error key`, () => {
           // Act
-          const result = parseAndValidateInitiateRecordCorrectionRequestFeeSelections(checkedCheckboxIds);
+          const result = validateRecordCorrectionRequestFeeSelections(checkedCheckboxIds);
 
           // Assert
           expect(result).toEqual({ errorKey: INITIATE_RECORD_CORRECTION_ERROR_KEY.INVALID_STATUS, selectedFeeRecordId: null });
@@ -59,7 +59,7 @@ describe('controllers/utilisation-reports/record-corrections/initiate-record-cor
 
       it(`should return selected fee record id`, () => {
         // Act
-        const result = parseAndValidateInitiateRecordCorrectionRequestFeeSelections(checkedCheckboxIds);
+        const result = validateRecordCorrectionRequestFeeSelections(checkedCheckboxIds);
 
         // Assert
         expect(result).toEqual({ errorKey: null, selectedFeeRecordId: 456 });
@@ -71,7 +71,7 @@ describe('controllers/utilisation-reports/record-corrections/initiate-record-cor
 
       it(`should throw an error`, () => {
         // Act + Assert
-        expect(() => parseAndValidateInitiateRecordCorrectionRequestFeeSelections(checkedCheckboxIds)).toThrow(
+        expect(() => validateRecordCorrectionRequestFeeSelections(checkedCheckboxIds)).toThrow(
           new Error(`Invalid premium payments checkbox id encountered for fee record at ${FEE_RECORD_STATUS.TO_DO} status ${checkedCheckboxIds[0]}`),
         );
       });

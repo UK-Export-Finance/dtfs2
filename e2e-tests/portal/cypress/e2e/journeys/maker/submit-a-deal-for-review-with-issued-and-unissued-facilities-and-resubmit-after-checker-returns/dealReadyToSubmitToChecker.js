@@ -1,5 +1,5 @@
-import { CURRENCY } from '@ukef/dtfs2-common';
-import { oneMonth, today } from '../../../../../../e2e-fixtures/dateConstants';
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
+const { oneMonth, today } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const now = today.unixMilliseconds;
 
@@ -182,7 +182,7 @@ const deal = {
       type: 'Bond',
       createdDate: now,
       bondIssuer: '',
-      bondType: 'Bid bond',
+      bondType: BOND_TYPE.BID_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -205,7 +205,7 @@ const deal = {
       type: 'Bond',
       createdDate: now,
       bondIssuer: '',
-      bondType: 'Bid bond',
+      bondType: BOND_TYPE.BID_BOND,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       requestedCoverStartDate: today.unixMillisecondsString,

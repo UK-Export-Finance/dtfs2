@@ -1,123 +1,118 @@
 import { ZodSchema } from 'zod';
-import { EntraIdUser } from '../../types/tfm/entra-id-user';
-import { ENTRA_ID_USER_GROUP } from '../../constants';
 import { withSchemaTests } from './with-schema.tests';
+import { TEAMS } from '../../constants';
+import { anEntraIdUser } from '../mock-data';
+
+/**
+ * This is a reusable test to allow for complete testing of schemas that
+ * utilise the ENTRA_ID_USER_SCHEMA as part of their definition
+ */
 
 type TestCasesParams = {
-  getTestObjectWithUpdatedUserParams: (entraIdUser: unknown) => unknown;
+  getTestObjectWithUpdatedEntraIdUserParams: (entraIdUser: unknown) => unknown;
 };
 
-type withEntraIdUserSchemaTestsParams = {
+type WithEntraIdUserSchemaTestsParams = {
   schema: ZodSchema;
-} & TestCasesParams;
+} & Partial<TestCasesParams>;
 
-export function aValidEntraIdUser(): EntraIdUser {
-  return {
-    oid: 'an-oid',
-    verified_primary_email: ['a-primary-email'],
-    verified_secondary_email: ['a-secondary-email'],
-    given_name: 'a-given-name',
-    family_name: 'a-family-name',
-    groups: [ENTRA_ID_USER_GROUP.AZURE_SSO_GROUP_BUSINESS_SUPPORT],
-  };
-}
-
-export function withEntraIdUserSchemaTests({ schema, getTestObjectWithUpdatedUserParams }: withEntraIdUserSchemaTestsParams) {
+export function withEntraIdUserSchemaTests({
+  schema,
+  getTestObjectWithUpdatedEntraIdUserParams = (entraIdUser) => entraIdUser,
+}: WithEntraIdUserSchemaTestsParams) {
   describe('with ENTRA_ID_USER_SCHEMA tests', () => {
     withSchemaTests({
       schema,
-      failureTestCases: getFailureTestCases({ getTestObjectWithUpdatedUserParams }),
-      successTestCases: getSuccessTestCases({ getTestObjectWithUpdatedUserParams }),
+      failureTestCases: getEntraIdUserFailureTestCases({ getTestObjectWithUpdatedEntraIdUserParams }),
+      successTestCases: getEntraIdUserSuccessTestCases({ getTestObjectWithUpdatedEntraIdUserParams }),
     });
   });
 }
 
-function getFailureTestCases({ getTestObjectWithUpdatedUserParams }: TestCasesParams) {
+export function getEntraIdUserFailureTestCases({ getTestObjectWithUpdatedEntraIdUserParams = (entraIdUser) => entraIdUser }: TestCasesParams) {
   return [
     {
       aTestCase: () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { oid, ...rest } = aValidEntraIdUser();
-        return getTestObjectWithUpdatedUserParams(rest);
+        const { oid: _oid, ...rest } = anEntraIdUser();
+        return getTestObjectWithUpdatedEntraIdUserParams(rest);
       },
       description: 'the oid is missing',
     },
     {
       aTestCase: () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars, camelcase
-        const { verified_primary_email, ...rest } = aValidEntraIdUser();
-        return getTestObjectWithUpdatedUserParams(rest);
+        const { verified_primary_email: _verifiedPrimaryEmail, ...rest } = anEntraIdUser();
+        return getTestObjectWithUpdatedEntraIdUserParams(rest);
       },
       description: 'the verified primary email is missing',
     },
     {
       aTestCase: () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars, camelcase
-        const { verified_secondary_email, ...rest } = aValidEntraIdUser();
-        return getTestObjectWithUpdatedUserParams(rest);
+        const { verified_secondary_email: _verifiedSecondaryEmail, ...rest } = anEntraIdUser();
+        return getTestObjectWithUpdatedEntraIdUserParams(rest);
       },
       description: 'the verified secondary email is missing',
     },
     {
       aTestCase: () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars, camelcase
-        const { given_name, ...rest } = aValidEntraIdUser();
-        return getTestObjectWithUpdatedUserParams(rest);
+        const { given_name: _givenName, ...rest } = anEntraIdUser();
+        return getTestObjectWithUpdatedEntraIdUserParams(rest);
       },
       description: 'the given name is missing',
     },
 
     {
       aTestCase: () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars, camelcase
-        const { family_name, ...rest } = aValidEntraIdUser();
-        return getTestObjectWithUpdatedUserParams(rest);
+        const { family_name: _familyName, ...rest } = anEntraIdUser();
+        return getTestObjectWithUpdatedEntraIdUserParams(rest);
       },
       description: 'the family name is missing',
     },
     {
       aTestCase: () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars, camelcase
-        const { groups, ...rest } = aValidEntraIdUser();
-        return getTestObjectWithUpdatedUserParams(rest);
+        const { roles: _roles, ...rest } = anEntraIdUser();
+        return getTestObjectWithUpdatedEntraIdUserParams(rest);
       },
-      description: 'the groups are missing',
+      description: 'the roles are missing',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), oid: 1 }),
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), oid: 1 }),
       description: 'the oid is not a string',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), verified_primary_email: [1] }),
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), verified_primary_email: [] }),
+      description: 'the verify primary email array is empty',
+    },
+    {
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), verified_primary_email: [1] }),
       description: 'the verify primary email is not a string array',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), verified_primary_email: '1' }),
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), verified_primary_email: '1' }),
       description: 'the verify primary email is not an array',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), verified_secondary_email: [1] }),
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), verified_secondary_email: [1] }),
       description: 'the verify secondary email is not a string array',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), verified_secondary_email: '1' }),
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), verified_secondary_email: '1' }),
       description: 'the verify secondary email is not an array',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), given_name: 1 }),
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), given_name: 1 }),
       description: 'the given name is not a string',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), family_name: 1 }),
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), family_name: 1 }),
       description: 'the family name is not a string',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), groups: ['NOT_A_USER_GROUP'] }),
-      description: 'the groups are not an array of user groups',
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), roles: ['NOT_A_USER_ROLE'] }),
+      description: 'the roles are not an array of user roles',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), groups: ENTRA_ID_USER_GROUP.AZURE_SSO_GROUP_BUSINESS_SUPPORT }),
-      description: 'the groups are not an array',
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), roles: TEAMS.BUSINESS_SUPPORT.id }),
+      description: 'the roles are not an array',
     },
     {
       aTestCase: () => ({}),
@@ -126,23 +121,19 @@ function getFailureTestCases({ getTestObjectWithUpdatedUserParams }: TestCasesPa
   ];
 }
 
-function getSuccessTestCases({ getTestObjectWithUpdatedUserParams }: TestCasesParams) {
+export function getEntraIdUserSuccessTestCases({ getTestObjectWithUpdatedEntraIdUserParams = (entraIdUser) => entraIdUser }: TestCasesParams) {
   return [
-    { aTestCase: () => getTestObjectWithUpdatedUserParams(aValidEntraIdUser()), description: 'a complete valid payload is present' },
+    { aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams(anEntraIdUser()), description: 'a complete valid payload is present' },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), verified_primary_email: [] }),
-      description: 'the verified primary email array is empty',
-    },
-    {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), verified_secondary_email: [] }),
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), verified_secondary_email: [] }),
       description: 'the verified secondary email array is empty',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), groups: [] }),
-      description: 'the groups array is empty',
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), roles: [] }),
+      description: 'the roles array is empty',
     },
     {
-      aTestCase: () => getTestObjectWithUpdatedUserParams({ ...aValidEntraIdUser(), extraField: 'extra' }),
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), extraField: 'extra' }),
       description: 'there is an extra field',
     },
   ];

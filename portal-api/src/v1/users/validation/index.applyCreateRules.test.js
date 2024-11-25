@@ -47,9 +47,9 @@ describe('user validation', () => {
   });
 
   describe('applyCreateRules', () => {
-    const mockCreateUserRequest = TEST_USER;
+    const mockCreateTfmUserRequest = TEST_USER;
 
-    const makeApplyRulesCall = async () => await applyCreateRules(mockCreateUserRequest);
+    const makeApplyRulesCall = async () => await applyCreateRules(mockCreateTfmUserRequest);
     const allRules = {
       expectedRules: {
         passwordAtLeast8Characters,
@@ -74,7 +74,7 @@ describe('user validation', () => {
     whenApplyingRulesItAppliesOnlyTheExpectedRules({
       makeApplyRulesCall,
       allRulesTestCases,
-      expectedArgumentsToCallRuleWith: [null, mockCreateUserRequest],
+      expectedArgumentsToCallRuleWith: [null, mockCreateTfmUserRequest],
     });
 
     whenNoRulesReturnAnErrorItReturnsAnEmptyArray({ makeApplyRulesCall, allRulesTestCases });

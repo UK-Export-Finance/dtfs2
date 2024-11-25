@@ -16,7 +16,7 @@ const { withClientAuthenticationTests } = require('../../common-tests/client-aut
 const { withValidateEmailIsUniqueTests } = require('./with-validate-email-is-unique.api-tests');
 const { withValidateUsernameAndEmailMatchTests } = require('./with-validate-username-and-email-match.api-tests');
 const { withValidatePasswordWhenCreatingUserTests } = require('./with-validate-password.api-tests');
-const { withValidateEmailIsCorrectFormatTests } = require('./with-validate-email-is-correct-format.api-tests').default;
+const { withValidateEmailIsCorrectFormatTests } = require('./with-validate-email-is-correct-format.api-tests');
 
 const MOCK_USER = users.barclaysBankMaker1;
 

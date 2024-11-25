@@ -34,7 +34,7 @@ type ValidationResult =
  * fee selections are not valid, or an object containing the selected fee record id if the fee
  * selections are valid.
  */
-export const parseAndValidateInitiateRecordCorrectionRequestFeeSelections = (checkedCheckboxIds: PremiumPaymentsTableCheckboxId[]): ValidationResult => {
+export const validateRecordCorrectionRequestFeeSelections = (checkedCheckboxIds: PremiumPaymentsTableCheckboxId[]): ValidationResult => {
   if (checkedCheckboxIds.length === 0) {
     return { errorKey: INITIATE_RECORD_CORRECTION_ERROR_KEY.NO_FEE_RECORDS_SELECTED, selectedFeeRecordId: null };
   }
@@ -79,7 +79,7 @@ export const postInitiateRecordCorrectionRequest = (req: PostInitiateRecordCorre
 
     const checkedCheckboxIds = getPremiumPaymentsCheckboxIdsFromObjectKeys(req.body);
 
-    const { errorKey, selectedFeeRecordId } = parseAndValidateInitiateRecordCorrectionRequestFeeSelections(checkedCheckboxIds);
+    const { errorKey, selectedFeeRecordId } = validateRecordCorrectionRequestFeeSelections(checkedCheckboxIds);
 
     if (errorKey) {
       req.session.initiateRecordCorrectionRequestErrorKey = errorKey;
