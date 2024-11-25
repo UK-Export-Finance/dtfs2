@@ -98,7 +98,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     cy.visit(`/utilisation-reports/${report.id}`);
 
-    cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
+    cy.get('strong[data-cy="fee-record-status"]:contains("Match)').should('exist');
     pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(firstPayment.id);
 
     cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
@@ -148,7 +148,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
     cy.url().should('eq', relative(`/utilisation-reports/${report.id}#premium-payments`));
 
     pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(firstPayment.id).should('not.exist');
-    cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
+    cy.get('strong[data-cy="fee-record-status"]:contains("Match")').should('exist');
   });
 
   it(`allows the user to delete the payment and resets the status to '${FEE_RECORD_STATUS.TO_DO}' when all payments are deleted`, () => {

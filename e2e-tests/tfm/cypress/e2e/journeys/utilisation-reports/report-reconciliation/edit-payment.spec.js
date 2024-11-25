@@ -254,7 +254,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
       cy.reload();
 
-      cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
+      cy.get('strong[data-cy="fee-record-status"]:contains("Match")').should('exist');
       pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
       cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
@@ -293,7 +293,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}#premium-payments`));
       cy.get('strong[data-cy="fee-record-status"]:contains("Does not match")').should('not.exist');
-      cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
+      cy.get('strong[data-cy="fee-record-status"]:contains("Match")').should('exist');
     });
   });
 
