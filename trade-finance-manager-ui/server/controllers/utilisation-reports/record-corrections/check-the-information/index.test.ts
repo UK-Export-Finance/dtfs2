@@ -37,7 +37,7 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
         exporter: 'Test company',
         formattedReportPeriod: 'July 2024',
         reasonForRecordCorrection: 'Facility ID is incorrect',
-        moreInformation: 'The facility ID does not match the facility ID held on file',
+        additionalInfo: 'The facility ID does not match the facility ID held on file',
         contactEmailAddress: 'email address',
         cancelLink: getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]),
       });

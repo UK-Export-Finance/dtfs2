@@ -90,17 +90,17 @@ describe('page', () => {
 
   it('should render the provided more information', () => {
     // Arrange
-    const moreInformation = 'The record needs changing because of the provided reason. Please correct as per the reason.';
+    const additionalInfo = 'The record needs changing because of the provided reason. Please correct as per the reason.';
     const viewModel: RecordCorrectionRequestInformationViewModel = {
       ...aRecordCorrectionRequestInformationViewModel(),
-      moreInformation,
+      additionalInfo,
     };
 
     // Act
     const wrapper = render(viewModel);
 
     // Assert
-    wrapper.expectText(definitionDescriptionSelector('Provide more information')).toRead(moreInformation);
+    wrapper.expectText(definitionDescriptionSelector('Provide more information')).toRead(additionalInfo);
   });
 
   it('should render the contact email address', () => {

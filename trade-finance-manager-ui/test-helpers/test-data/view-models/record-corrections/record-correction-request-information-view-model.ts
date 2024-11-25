@@ -12,7 +12,7 @@ export const aRecordCorrectionRequestInformationViewModel = (): RecordCorrection
   facilityId: '12345678',
   exporter: 'exporter name',
   reasonForRecordCorrection: 'not valid',
-  moreInformation: 'this is some more information',
-  contactEmailAddress: 'an email',
+  additionalInfo: 'this is some more information',
+  contactEmailAddress: 'test@testing.com',
   cancelLink: 'a cancel link',
 });
