@@ -266,7 +266,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
       pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}#premium-payments`));
-      cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('exist');
+      cy.get('strong[data-cy="fee-record-status"]:contains("Does not match")').should('exist');
     });
 
     it(`should set the fee record status to '${FEE_RECORD_STATUS.MATCH}' if the new amount matches the fee record amount`, () => {
@@ -279,7 +279,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
       cy.reload();
 
-      cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('exist');
+      cy.get('strong[data-cy="fee-record-status"]:contains("Does not match")').should('exist');
 
       pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
@@ -292,7 +292,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
       pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}#premium-payments`));
-      cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('not.exist');
+      cy.get('strong[data-cy="fee-record-status"]:contains("Does not match")').should('not.exist');
       cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
     });
   });
