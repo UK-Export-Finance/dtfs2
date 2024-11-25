@@ -43,7 +43,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
     });
 
     describe('when reasons is a string', () => {
-      describe('and the reason is valid', () => {
+      describe('and the reason is a RECORD_CORRECTION_REQUEST_REASON', () => {
         it('should return the reason in an array', () => {
           // Arrange
           const reason = RECORD_CORRECTION_REQUEST_REASON.FACILITY_ID_INCORRECT;
@@ -56,7 +56,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         });
       });
 
-      describe('and the reason is invalid', () => {
+      describe('and the reason is not a RECORD_CORRECTION_REQUEST_REASON', () => {
         it('should return an empty array', () => {
           // Arrange
           const reason = 'invalid-reason';
@@ -71,7 +71,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
     });
 
     describe('when reasons is a string list', () => {
-      describe('and the reasons are all valid', () => {
+      describe('and the reasons are all a RECORD_CORRECTION_REQUEST_REASON', () => {
         it('should return the input array', () => {
           // Arrange
           const reasons = Object.values(RECORD_CORRECTION_REQUEST_REASON);
@@ -84,8 +84,8 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         });
       });
 
-      describe('and some of the reasons are invalid', () => {
-        it('should return an array with only the valid reasons', () => {
+      describe('and some of the reasons are not a RECORD_CORRECTION_REQUEST_REASON', () => {
+        it('should return an array with only the reasons contained within RECORD_CORRECTION_REQUEST_REASON', () => {
           // Arrange
           const reasons = [
             'invalid-reason',
@@ -102,7 +102,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         });
       });
 
-      describe('and the reasons are all invalid', () => {
+      describe('and the reasons are all not a RECORD_CORRECTION_REQUEST_REASON', () => {
         it('should return an empty array', () => {
           // Arrange
           const reasons = ['invalid-reason', 'another-invalid-reason'];
@@ -131,7 +131,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       });
     });
 
-    describe('when the reason is valid', () => {
+    describe('when the reason is a RECORD_CORRECTION_REQUEST_REASON', () => {
       it.each(Object.values(RECORD_CORRECTION_REQUEST_REASON))('should return true for "%s"', (reason) => {
         // Act
         const isValid = isRecordCorrectionRequestReason(reason);
@@ -141,7 +141,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       });
     });
 
-    describe('when the reason is invalid', () => {
+    describe('when the reason is not a RECORD_CORRECTION_REQUEST_REASON', () => {
       it('should return false', () => {
         // Arrange
         const reason = 'invalid-reason';
