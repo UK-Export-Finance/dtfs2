@@ -125,6 +125,11 @@ describe(component, () => {
 
     describe('when params.userCanEdit is false', () => {
       it('should NOT render `change` link', () => {
+        params = {
+          ...params,
+          userCanEdit: false,
+        };
+
         wrapper = render(params);
 
         wrapper.expectElement(`[data-cy="facility-${params.facility._id}-change-risk-profile-link"]`).notToExist();

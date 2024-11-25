@@ -47,7 +47,7 @@ describe('validation - currency', () => {
     });
 
     afterEach(() => {
-      jest.resetAllMocks();
+      currencyIsDisabled.mockRestore();
     });
 
     it('should return validation error', () => {
