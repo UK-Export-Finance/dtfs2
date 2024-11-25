@@ -173,6 +173,7 @@ describe(page, () => {
       it('should not initialise the field', () => {
         // Arrange
         const viewModel = aCreateRecordCorrectionRequestViewModel();
+        viewModel.formValues.additionalInfo = undefined;
 
         // Act
         const wrapper = render(viewModel);
