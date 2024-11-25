@@ -11,9 +11,9 @@ export type CreateRecordCorrectionRequestFormRequestBody = {
  * @param reason - The reason to validate.
  * @returns True if the reason is valid, otherwise false.
  */
-export const isRecordCorrectionRequestReasonValid = (reason: string): reason is RecordCorrectionRequestReason => {
+export function isRecordCorrectionRequestReason(reason: string): reason is RecordCorrectionRequestReason {
   return isNonEmptyString(reason) && (Object.values(RECORD_CORRECTION_REQUEST_REASON) as string[]).includes(reason);
-};
+}
 
 /**
  * Retrieves valid record correction request reasons from the provided input.
@@ -21,16 +21,16 @@ export const isRecordCorrectionRequestReasonValid = (reason: string): reason is 
  * @param reasons - The reasons to validate. Can be a single reason as a string or an array of reasons.
  * @returns An array of valid record correction request reasons. If no valid reasons are found, returns an empty array.
  */
-export const getValidRecordCorrectionRequestReasons = (reasons?: string | string[]): RecordCorrectionRequestReason[] => {
+export const extractRecordCorrectionRequestReasons = (reasons?: string | string[]): RecordCorrectionRequestReason[] => {
   if (!reasons) {
     return [];
   }
 
   if (Array.isArray(reasons)) {
-    return reasons.filter((reason) => isRecordCorrectionRequestReasonValid(reason));
+    return reasons.filter((reason) => isRecordCorrectionRequestReason(reason));
   }
 
-  return isRecordCorrectionRequestReasonValid(reasons) ? [reasons] : [];
+  return isRecordCorrectionRequestReason(reasons) ? [reasons] : [];
 };
 
 /**
@@ -41,6 +41,6 @@ export const getValidRecordCorrectionRequestReasons = (reasons?: string | string
 export const extractCreateRecordCorrectionRequestFormValues = (
   requestBody: CreateRecordCorrectionRequestFormRequestBody,
 ): CreateRecordCorrectionRequestFormValues => ({
-  reasons: getValidRecordCorrectionRequestReasons(requestBody.reasons),
+  reasons: extractRecordCorrectionRequestReasons(requestBody.reasons),
   additionalInfo: requestBody.additionalInfo,
 });
