@@ -1,12 +1,10 @@
-import relative from '../../../../relativeURL';
 import gefPages from '../../../../../../../gef/cypress/e2e/pages';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anUnissuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
-import { PIM_USER_1, TFM_URL } from '../../../../../../../e2e-fixtures';
 import { tomorrow } from '../../../../../../../e2e-fixtures/dateConstants';
 
-const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
+const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('Deal cancellation', () => {
   let dealId;
@@ -19,7 +17,7 @@ context('Deal cancellation', () => {
       // updates a gef deal so has relevant fields
       cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1);
 
-      cy.createGefFacilities(dealId, [anUnissuedCashFacility()], BANK1_MAKER1).then((createdFacilities) => {
+      cy.createGefFacilities(dealId, [anUnissuedCashFacility({ facilityEndDateEnabled: true })], BANK1_MAKER1).then((createdFacilities) => {
         dealFacilities.push(createdFacilities.details);
       });
     });
@@ -40,42 +38,7 @@ context('Deal cancellation', () => {
 
   describe('effective date in the future', () => {
     before(() => {
-      //---------------------------------------------------------------
-      // portal maker submits gef deal for review
-      //---------------------------------------------------------------
-
-      cy.login(BANK1_MAKER1);
-      gefPages.applicationDetails.visit(dealId);
-      cy.clickSubmitButton();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit`));
-      cy.keyboardInput(gefPages.applicationSubmission.commentsField(), 'go');
-      cy.clickSubmitButton();
-
-      //---------------------------------------------------------------
-      // portal checker submits gef deal to ukef
-      //---------------------------------------------------------------
-
-      cy.login(BANK1_CHECKER1);
-      gefPages.applicationDetails.visit(dealId);
-      cy.clickSubmitButton();
-      gefPages.applicationSubmission.confirmSubmissionCheckbox().check();
-      cy.clickSubmitButton();
-
-      // expect to land on the /submit-to-ukef with a success message
-      cy.url().should('include', '/submit-to-ukef');
-
-      //---------------------------------------------------------------
-      // user login to TFM and schedule a cancellation gef deal for tomorrow
-      //----------------------------------------------------------------
-
-      cy.clearCookie('dtfs-session');
-      cy.clearCookie('_csrf');
-      cy.getCookies().should('be.empty');
-      cy.forceVisit(TFM_URL);
-
-      cy.tfmLogin(PIM_USER_1);
-      cy.forceVisit(`${TFM_URL}/case/${dealId}/deal`);
-      cy.submitDealCancellation({ dealId, effectiveDate: tomorrow.date });
+      cy.gefDealCancellationFlow(dealId, tomorrow.date);
     });
 
     it('Gef AIN deal with unissued facilities is submitted to UKEF, user cancel deal in TFM. Maker unable to issue facility on portal', () => {

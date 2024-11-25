@@ -29,6 +29,8 @@ Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./p
 Cypress.Commands.add('enterUsernameAndPassword', require('./portal/enterUsernameAndPassword'));
 Cypress.Commands.add('completeDateFormFields', require('./portal/completeDateFormFields'));
 
+Cypress.Commands.add('gefDealCancellationFlow', require('./portal/gefDealCancellationFlow'));
+
 Cypress.Commands.add('submitDealCancellation', submitDealCancellation);
 
 Cypress.Commands.add('forceVisit', (url) => {
