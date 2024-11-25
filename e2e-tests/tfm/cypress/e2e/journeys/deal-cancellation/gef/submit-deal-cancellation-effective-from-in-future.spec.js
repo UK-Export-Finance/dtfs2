@@ -3,7 +3,6 @@ import relative from '../../../relativeURL';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../e2e-fixtures';
 import caseDealPage from '../../../pages/caseDealPage';
 import { today, tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
-import checkDetailsPage from '../../../pages/deal-cancellation/check-details';
 import dealsPage from '../../../pages/dealsPage';
 import { caseSubNavigation, successBanner } from '../../../partials';
 import facilitiesPage from '../../../pages/facilitiesPage';
@@ -41,29 +40,11 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in future'
     cy.deleteFacility(facility._id, BANK1_MAKER1);
   });
 
-  const submitDealCancellation = () => {
-    caseDealPage.cancelDealButton().click();
-
-    cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
-    cy.clickContinueButton();
-
-    cy.url().should('eq', relative(`/case/${dealId}/cancellation/bank-request-date`));
-    cy.completeDateFormFields({ idPrefix: 'bank-request-date' });
-    cy.clickContinueButton();
-
-    cy.url().should('eq', relative(`/case/${dealId}/cancellation/effective-from-date`));
-    cy.completeDateFormFields({ idPrefix: 'effective-from-date', date: tomorrow.date });
-    cy.clickContinueButton();
-
-    cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
-    checkDetailsPage.dealDeletionButton().click();
-  };
-
   describe('when logged in as a PIM user', () => {
     before(() => {
       cy.login(PIM_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
-      submitDealCancellation();
+      caseDealPage.submitDealCancellation(dealId, tomorrow.date);
     });
 
     describe('after submitting the cancellation', () => {
