@@ -190,6 +190,7 @@ describe(page, () => {
       const paramsWithIsFeeRecordCorrectionFeatureFlagEnabledFalse = {
         ...params,
         isFeeRecordCorrectionFeatureFlagEnabled: false,
+        user: aPdcReconcileUser(),
       };
 
       it('should not render the create record correction request button', () => {
@@ -205,10 +206,22 @@ describe(page, () => {
         isFeeRecordCorrectionFeatureFlagEnabled: true,
       };
 
-      it('should not render the create record correction request button', () => {
-        const wrapper = getWrapper(paramsWithIsFeeRecordCorrectionFeatureFlagEnabledTrue);
+      it('should render the create record correction request button for PDC_RECONCILE users', () => {
+        const wrapper = getWrapper({
+          ...paramsWithIsFeeRecordCorrectionFeatureFlagEnabledTrue,
+          user: aPdcReconcileUser(),
+        });
 
         wrapper.expectElement('[data-cy="create-record-correction-request-button"]').toExist();
+      });
+
+      it('should not render the create record correction request button for PDC_READ users', () => {
+        const wrapper = getWrapper({
+          ...paramsWithIsFeeRecordCorrectionFeatureFlagEnabledTrue,
+          user: aPdcReadUser(),
+        });
+
+        wrapper.expectElement('[data-cy="create-record-correction-request-button"]').notToExist();
       });
     });
 

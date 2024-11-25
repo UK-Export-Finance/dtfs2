@@ -2,13 +2,16 @@ import { Currency, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common
 import { NextFunction, Request, Response } from 'express';
 import axios from 'axios';
 import { asUserSession } from '../../helpers/express-session';
-import { AddPaymentErrorKey } from '../../controllers/utilisation-reports/helpers';
 import {
   getFeeRecordPaymentCurrencyFromPremiumPaymentsCheckboxId,
   getFeeRecordStatusFromPremiumPaymentsCheckboxId,
   getPremiumPaymentsCheckboxIdsFromObjectKeys,
 } from '../../helpers/premium-payments-table-checkbox-id-helper';
 import { PremiumPaymentsTableCheckboxId } from '../../types/premium-payments-table-checkbox-id';
+import { getPremiumPaymentsFacilityIdQueryFromReferer } from '../../helpers/get-premium-payments-facility-id-query-from-referer';
+import { AddPaymentErrorKey } from '../../types/premium-payments-tab-error-keys';
+import { mapCheckedCheckboxesToRecord } from '../../helpers/map-checked-checkboxes-to-record';
+import { ADD_PAYMENT_ERROR_KEY } from '../../constants/premium-payment-tab-error-keys';
 
 /**
  * Checks if the given value is an object.
@@ -17,31 +20,6 @@ import { PremiumPaymentsTableCheckboxId } from '../../types/premium-payments-tab
  */
 const isRequestBodyAnObject = (body: unknown): body is object => !body || typeof body === 'object';
 
-/**
- * Regular expression to extract the premium payments facility ID from a URL query string.
- * The pattern uses {4,10} to match between 4 and 10 digits, ensuring the facility ID
- * is at least 4 digits long but no more than 10 digits.
- * The matched digits are captured in a named group 'premiumPaymentsFacilityId'.
- */
-const PREMIUM_PAYMENTS_FACILITY_ID_QUERY_REGEX = /premiumPaymentsFacilityId=(?<premiumPaymentsFacilityId>\d{4,10})/;
-
-/**
- * Extracts the premium payments facility ID from the referer header.
- * @param req - The Express request object.
- * @returns The extracted facility ID or undefined if not found or invalid.
- */
-const getPremiumPaymentsFacilityIdQueryFromReferer = (req: Request): string | undefined => {
-  const { referer } = req.headers;
-  if (!referer) {
-    return undefined;
-  }
-
-  const captureGroups = PREMIUM_PAYMENTS_FACILITY_ID_QUERY_REGEX.exec(referer)?.groups;
-  if (!captureGroups) {
-    return undefined;
-  }
-  return captureGroups.premiumPaymentsFacilityId;
-};
 /**
  * Redirects the user to the utilisation report page with an error message.
  * @param req - The Express request object.
@@ -60,17 +38,8 @@ const redirectWithError = (
 ) => {
   req.session.addPaymentErrorKey = addPaymentError;
   req.session.checkedCheckboxIds = checkedCheckboxIds;
-  const premiumPaymentsFacilityId = getPremiumPaymentsFacilityIdQueryFromReferer(req);
+  const premiumPaymentsFacilityId = getPremiumPaymentsFacilityIdQueryFromReferer(req.headers.referer);
   return res.redirect(axios.getUri({ url: `/utilisation-reports/${reportId}`, params: { premiumPaymentsFacilityId } }));
-};
-
-/**
- * Converts an array of checkbox IDs to a record object.
- * @param checkedCheckboxIds - An array of checkbox IDs.
- * @returns A record object with checkbox IDs as keys and true as values.
- */
-const mapCheckedCheckboxesToRecord = (checkedCheckboxIds: string[]): Record<string, true | undefined> => {
-  return checkedCheckboxIds.reduce((obj, checkboxId) => ({ ...obj, [checkboxId]: true }), {});
 };
 
 /**
@@ -126,20 +95,20 @@ export const validatePostAddPaymentRequestBody = (req: Request, res: Response, n
   const checkedCheckboxIds = getPremiumPaymentsCheckboxIdsFromObjectKeys(body);
 
   if (checkedCheckboxIds.length === 0) {
-    return redirectWithError(req, res, reportId, 'no-fee-records-selected');
+    return redirectWithError(req, res, reportId, ADD_PAYMENT_ERROR_KEY.NO_FEE_RECORDS_SELECTED);
   }
 
   if (!allSelectedFeeRecordsHaveSameCurrency(checkedCheckboxIds)) {
-    return redirectWithError(req, res, reportId, 'different-fee-record-payment-currencies', mapCheckedCheckboxesToRecord(checkedCheckboxIds));
+    return redirectWithError(req, res, reportId, ADD_PAYMENT_ERROR_KEY.DIFFERENT_PAYMENT_CURRENCIES, mapCheckedCheckboxesToRecord(checkedCheckboxIds));
   }
 
   const selectedFeeRecordStatuses = getSetOfSelectedFeeRecordStatuses(checkedCheckboxIds);
   if (!allStatusesMatch(selectedFeeRecordStatuses)) {
-    return redirectWithError(req, res, reportId, 'different-fee-record-statuses', mapCheckedCheckboxesToRecord(checkedCheckboxIds));
+    return redirectWithError(req, res, reportId, ADD_PAYMENT_ERROR_KEY.DIFFERENT_STATUSES, mapCheckedCheckboxesToRecord(checkedCheckboxIds));
   }
 
   if (selectedFeeRecordStatuses.has(FEE_RECORD_STATUS.DOES_NOT_MATCH) && checkedCheckboxIds.length > 1) {
-    return redirectWithError(req, res, reportId, 'multiple-does-not-match-selected', mapCheckedCheckboxesToRecord(checkedCheckboxIds));
+    return redirectWithError(req, res, reportId, ADD_PAYMENT_ERROR_KEY.MULTIPLE_DOES_NOT_MATCH_SELECTED, mapCheckedCheckboxesToRecord(checkedCheckboxIds));
   }
 
   return next();
