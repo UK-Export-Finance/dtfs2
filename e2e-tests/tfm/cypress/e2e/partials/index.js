@@ -3,6 +3,7 @@ const caseSummary = require('./caseSummary');
 const header = require('./header');
 const underwritingSubNav = require('./underwritingSubNav');
 const primaryNavigation = require('./primaryNavigation');
+const feeRecordSummary = require('./feeRecordSummary');
 
 module.exports = {
   caseSubNavigation,
@@ -10,6 +11,7 @@ module.exports = {
   header,
   underwritingSubNav,
   primaryNavigation,
+  feeRecordSummary,
   backLink: () => cy.get('[data-cy="back-link"]'),
   cancelLink: () => cy.get('[data-cy="cancel-link"]'),
   continueButton: () => cy.get('[data-cy="continue-button"]'),
