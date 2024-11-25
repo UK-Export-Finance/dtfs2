@@ -1,9 +1,9 @@
-import { RECORD_CORRECTION_REQUEST_REASON } from '@ukef/dtfs2-common';
+import { RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import {
   CreateRecordCorrectionRequestFormRequestBody,
   extractCreateRecordCorrectionRequestFormValues,
-  getValidRecordCorrectionRequestReasons,
-  isRecordCorrectionRequestReasonValid,
+  extractRecordCorrectionReasons,
+  isRecordCorrectionReason,
 } from './form-helpers';
 
 console.error = jest.fn();
@@ -12,7 +12,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
   describe('extractCreateRecordCorrectionRequestFormValues', () => {
     it('should extract the expected form values', () => {
       // Arrange
-      const validReasons = [RECORD_CORRECTION_REQUEST_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REQUEST_REASON.REPORTED_CURRENCY_INCORRECT];
+      const validReasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT];
       const additionalInfo = 'additional info';
 
       const requestBody: CreateRecordCorrectionRequestFormRequestBody = {
@@ -31,11 +31,11 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
     });
   });
 
-  describe('getValidRecordCorrectionRequestReasons', () => {
+  describe('extractRecordCorrectionReasons', () => {
     describe('when reasons is undefined', () => {
       it('should return an empty array', () => {
         // Act
-        const validReasons = getValidRecordCorrectionRequestReasons();
+        const validReasons = extractRecordCorrectionReasons();
 
         // Assert
         expect(validReasons).toEqual([]);
@@ -43,26 +43,26 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
     });
 
     describe('when reasons is a string', () => {
-      describe('and the reason is valid', () => {
-        it('should return an empty array', () => {
+      describe('and the reason is a RECORD_CORRECTION_REASON', () => {
+        it('should return the reason in an array', () => {
           // Arrange
-          const reason = RECORD_CORRECTION_REQUEST_REASON.FACILITY_ID_INCORRECT;
+          const reason = RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT;
 
           // Act
-          const validReasons = getValidRecordCorrectionRequestReasons(reason);
+          const validReasons = extractRecordCorrectionReasons(reason);
 
           // Assert
           expect(validReasons).toEqual([reason]);
         });
       });
 
-      describe('and the reason is invalid', () => {
+      describe('and the reason is not a RECORD_CORRECTION_REASON', () => {
         it('should return an empty array', () => {
           // Arrange
           const reason = 'invalid-reason';
 
           // Act
-          const validReasons = getValidRecordCorrectionRequestReasons(reason);
+          const validReasons = extractRecordCorrectionReasons(reason);
 
           // Assert
           expect(validReasons).toEqual([]);
@@ -71,44 +71,39 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
     });
 
     describe('when reasons is a string list', () => {
-      describe('and the reasons are all valid', () => {
+      describe('and the reasons are all a RECORD_CORRECTION_REASON', () => {
         it('should return the input array', () => {
           // Arrange
-          const reasons = Object.values(RECORD_CORRECTION_REQUEST_REASON);
+          const reasons = Object.values(RECORD_CORRECTION_REASON);
 
           // Act
-          const validReasons = getValidRecordCorrectionRequestReasons(reasons);
+          const validReasons = extractRecordCorrectionReasons(reasons);
 
           // Assert
           expect(validReasons).toEqual(reasons);
         });
       });
 
-      describe('and some of the reasons are invalid', () => {
-        it('should return an array with only the valid reasons', () => {
+      describe('and some of the reasons are not a RECORD_CORRECTION_REASON', () => {
+        it('should return an array with only the reasons contained within RECORD_CORRECTION_REASON', () => {
           // Arrange
-          const reasons = [
-            'invalid-reason',
-            RECORD_CORRECTION_REQUEST_REASON.REPORTED_CURRENCY_INCORRECT,
-            'another-invalid-reason',
-            RECORD_CORRECTION_REQUEST_REASON.OTHER,
-          ];
+          const reasons = ['invalid-reason', RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT, 'another-invalid-reason', RECORD_CORRECTION_REASON.OTHER];
 
           // Act
-          const validReasons = getValidRecordCorrectionRequestReasons(reasons);
+          const validReasons = extractRecordCorrectionReasons(reasons);
 
           // Assert
-          expect(validReasons).toEqual([RECORD_CORRECTION_REQUEST_REASON.REPORTED_CURRENCY_INCORRECT, RECORD_CORRECTION_REQUEST_REASON.OTHER]);
+          expect(validReasons).toEqual([RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT, RECORD_CORRECTION_REASON.OTHER]);
         });
       });
 
-      describe('and the reasons are all invalid', () => {
+      describe('and the reasons are all not a RECORD_CORRECTION_REASON', () => {
         it('should return an empty array', () => {
           // Arrange
           const reasons = ['invalid-reason', 'another-invalid-reason'];
 
           // Act
-          const validReasons = getValidRecordCorrectionRequestReasons(reasons);
+          const validReasons = extractRecordCorrectionReasons(reasons);
 
           // Assert
           expect(validReasons).toEqual([]);
@@ -117,37 +112,37 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
     });
   });
 
-  describe('isRecordCorrectionRequestReasonValid', () => {
+  describe('isRecordCorrectionReason', () => {
     describe('when the reason is an empty string', () => {
       it('should return false', () => {
         // Arrange
         const reason = '';
 
         // Act
-        const isValid = isRecordCorrectionRequestReasonValid(reason);
+        const isValid = isRecordCorrectionReason(reason);
 
         // Assert
         expect(isValid).toEqual(false);
       });
     });
 
-    describe('when the reason is valid', () => {
-      it.each(Object.values(RECORD_CORRECTION_REQUEST_REASON))('should return true for "%s"', (reason) => {
+    describe('when the reason is a RECORD_CORRECTION_REASON', () => {
+      it.each(Object.values(RECORD_CORRECTION_REASON))('should return true for "%s"', (reason) => {
         // Act
-        const isValid = isRecordCorrectionRequestReasonValid(reason);
+        const isValid = isRecordCorrectionReason(reason);
 
         // Assert
         expect(isValid).toEqual(true);
       });
     });
 
-    describe('when the reason is invalid', () => {
+    describe('when the reason is not a RECORD_CORRECTION_REASON', () => {
       it('should return false', () => {
         // Arrange
         const reason = 'invalid-reason';
 
         // Act
-        const isValid = isRecordCorrectionRequestReasonValid(reason);
+        const isValid = isRecordCorrectionReason(reason);
 
         // Assert
         expect(isValid).toEqual(false);

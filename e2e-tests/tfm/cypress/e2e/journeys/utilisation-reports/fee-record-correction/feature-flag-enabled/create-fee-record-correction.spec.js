@@ -3,7 +3,7 @@ import {
   FeeRecordEntityMockBuilder,
   PENDING_RECONCILIATION,
   UtilisationReportEntityMockBuilder,
-  RECORD_CORRECTION_REQUEST_REASON,
+  RECORD_CORRECTION_REASON,
 } from '@ukef/dtfs2-common';
 import pages from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
@@ -82,6 +82,24 @@ context('When fee record correction feature flag is enabled', () => {
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}`));
     });
 
+    context('when user clicks back on the create record correction request screen', () => {
+      it('should return to premium payments tab with the checkbox selected', () => {
+        premiumPaymentsTab.premiumPaymentsTable
+          .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
+          .click();
+
+        premiumPaymentsTab.createRecordCorrectionRequestButton().click();
+
+        cy.clickBackLink();
+
+        cy.url().should('eq', relative(`/utilisation-reports/${reportId}?selectedFeeRecordIds=${feeRecordAtToDoStatus.id}`));
+
+        premiumPaymentsTab.premiumPaymentsTable
+          .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
+          .should('be.checked');
+      });
+    });
+
     context('when the user navigates to the "create record correction request" page', () => {
       const { mainHeading } = pages.createFeeRecordCorrectionRequestPage;
       const { feeRecordSummary } = partials;
@@ -150,8 +168,8 @@ context('When fee record correction feature flag is enabled', () => {
       });
 
       it('should redirect the user to the "check the information" page', () => {
-        reasonCheckbox(RECORD_CORRECTION_REQUEST_REASON.FACILITY_ID_INCORRECT).check();
-        reasonCheckbox(RECORD_CORRECTION_REQUEST_REASON.OTHER).check();
+        reasonCheckbox(RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT).check();
+        reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).check();
         cy.keyboardInput(additionalInfoInput(), 'Some additional info.');
 
         cy.clickContinueButton();

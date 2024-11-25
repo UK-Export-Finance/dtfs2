@@ -1,5 +1,5 @@
 import httpMocks from 'node-mocks-http';
-import { RECORD_CORRECTION_REQUEST_REASON } from '@ukef/dtfs2-common';
+import { RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import {
   EMPTY_CREATE_RECORD_CORRECTION_REQUEST_ERRORS_VIEW_MODEL,
@@ -14,6 +14,7 @@ import { CreateRecordCorrectionRequestFormRequestBody } from './form-helpers';
 import { validateCreateRecordCorrectionRequestFormValues } from './validate-form-values';
 import api from '../../../../api';
 import { GetFeeRecordResponseBody } from '../../../../api-response-types';
+import { getLinkToPremiumPaymentsTab } from '../../helpers';
 
 jest.mock('../../../../api');
 jest.mock('./validate-form-values');
@@ -80,6 +81,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         },
         formValues: {},
         errors: { errorSummary: [] },
+        backLinkHref: getLinkToPremiumPaymentsTab(reportId, [456]),
       });
 
       expect(api.getFeeRecord).toHaveBeenCalledTimes(1);
@@ -122,7 +124,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
 
       function aPostCreateRecordCorrectionRequestBody(): CreateRecordCorrectionRequestFormRequestBody {
         return {
-          reasons: [RECORD_CORRECTION_REQUEST_REASON.OTHER],
+          reasons: [RECORD_CORRECTION_REASON.OTHER],
           additionalInfo: 'Some additional info',
         };
       }
@@ -170,6 +172,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
           },
           formValues: { reasons: [] },
           errors,
+          backLinkHref: getLinkToPremiumPaymentsTab(reportId, [456]),
         });
 
         expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledTimes(1);
@@ -181,7 +184,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
 
       it('should set the render view model formValues "reasons" to the valid request body reasons', async () => {
         // Arrange
-        const validReasons = [RECORD_CORRECTION_REQUEST_REASON.OTHER, RECORD_CORRECTION_REQUEST_REASON.REPORTED_FEE_INCORRECT];
+        const validReasons = [RECORD_CORRECTION_REASON.OTHER, RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT];
 
         const body = { reasons: [...validReasons, 'invalid-reason'] };
         const { req, res } = getHttpMocks(body);
