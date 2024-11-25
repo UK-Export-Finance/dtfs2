@@ -7,7 +7,7 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
-context('Dashboard Deals filters - Deal cancellation enabled', () => {
+context('Dashboard Deals filters - Deal cancellation feature flag enabled', () => {
   before(() => {
     cy.login(BANK1_MAKER1);
   });
@@ -17,7 +17,7 @@ context('Dashboard Deals filters - Deal cancellation enabled', () => {
       dashboardDeals.visit();
       filters.showHideButton().click();
 
-      dashboardDeals.filters.panel.form.status.cancelled.label().contains(DEAL_STATUS.CANCELLED);
+      cy.assertText(dashboardDeals.filters.panel.form.status.cancelled.label(), DEAL_STATUS.CANCELLED);
       dashboardDeals.filters.panel.form.status.cancelled.checkbox().should('exist');
       dashboardDeals.filters.panel.form.status.cancelled.checkbox().should('not.be.checked');
     });
