@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_STAGE, TFM_DEAL_CANCELLATION_STATUS, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { aTfmUser } from '@ukef/dtfs2-common/mock-data-backend';
 import { generatePortalAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { withMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import wipeDB from '../../../wipeDB';
@@ -8,7 +9,7 @@ import { testApi } from '../../../test-api';
 import { DEALS } from '../../../../src/constants';
 import aDeal from '../../deal-builder';
 import { createDeal } from '../../../helpers/create-deal';
-import { aPortalUser, aTfmUser } from '../../../../test-helpers';
+import { aPortalUser } from '../../../../test-helpers';
 import { MOCK_PORTAL_USER } from '../../../mocks/test-users/mock-portal-user';
 
 const originalProcessEnv = { ...process.env };
