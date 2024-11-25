@@ -1,6 +1,11 @@
 import { isNonEmptyString, RECORD_CORRECTION_REQUEST_REASON, RecordCorrectionRequestReason } from '@ukef/dtfs2-common';
 import { CreateRecordCorrectionRequestFormValues } from '../../../../types/view-models';
 
+/**
+ * Values for the record correction request reasons as a string array.
+ */
+const RECORD_CORRECTION_REQUEST_REASON_VALUES = Object.values(RECORD_CORRECTION_REQUEST_REASON) as string[];
+
 export type CreateRecordCorrectionRequestFormRequestBody = {
   reasons?: string | string[];
   additionalInfo?: string;
@@ -12,12 +17,11 @@ export type CreateRecordCorrectionRequestFormRequestBody = {
  * @returns True if the reason is valid, otherwise false.
  */
 export function isRecordCorrectionRequestReason(reason: string): reason is RecordCorrectionRequestReason {
-  return isNonEmptyString(reason) && (Object.values(RECORD_CORRECTION_REQUEST_REASON) as string[]).includes(reason);
+  return isNonEmptyString(reason) && RECORD_CORRECTION_REQUEST_REASON_VALUES.includes(reason);
 }
 
 /**
  * Retrieves valid record correction request reasons from the provided input.
- *
  * @param reasons - The reasons to validate. Can be a single reason as a string or an array of reasons.
  * @returns An array of valid record correction request reasons. If no valid reasons are found, returns an empty array.
  */
