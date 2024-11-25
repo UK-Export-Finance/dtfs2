@@ -1,4 +1,4 @@
-import { TFM_DEAL_CANCELLATION_STATUS, TfmDealCancellationWithStatus, DATE_FORMATS, Deal, getUkefDealId } from '@ukef/dtfs2-common';
+import { TFM_DEAL_CANCELLATION_STATUS, TfmDealCancellationWithStatus, DATE_FORMATS, Deal } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
 import api from '../../api';
 import { isDealCancellationEnabled } from './deal-cancellation-enabled.helper';
@@ -11,7 +11,7 @@ import { isDealCancellationEnabled } from './deal-cancellation-enabled.helper';
  */
 export const getScheduledCancellationBannerMessage = async ({ dealSnapshot, userToken }: { dealSnapshot: Deal; userToken: string }): Promise<string | null> => {
   const { submissionType, _id: dealId } = dealSnapshot;
-  const ukefDealId = getUkefDealId(dealSnapshot);
+  const { ukefDealId } = dealSnapshot.details;
 
   const dealCancellationIsEnabled = isDealCancellationEnabled(submissionType);
 
