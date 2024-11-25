@@ -1,4 +1,4 @@
-import { RECORD_CORRECTION_REQUEST_REASON } from '@ukef/dtfs2-common';
+import { RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import { aCreateRecordCorrectionRequestViewModel } from '../../../test-helpers/test-data/view-models';
 import { pageRenderer } from '../../pageRenderer';
 import { CreateRecordCorrectionRequestErrorsViewModel, CreateRecordCorrectionRequestViewModel } from '../../../server/types/view-models';
@@ -122,7 +122,7 @@ describe(page, () => {
     describe('has no pre-existing values', () => {
       it('should not check any reason checkboxes', () => {
         // Arrange
-        const allValidReasons = Object.values(RECORD_CORRECTION_REQUEST_REASON);
+        const allValidReasons = Object.values(RECORD_CORRECTION_REASON);
 
         const viewModel = aCreateRecordCorrectionRequestViewModel();
         viewModel.formValues.reasons = undefined;
@@ -138,7 +138,7 @@ describe(page, () => {
     });
 
     describe('has pre-existing checked values', () => {
-      it.each(Object.values(RECORD_CORRECTION_REQUEST_REASON))('should check the "%s" reason checkbox when it is in the form values', (reason) => {
+      it.each(Object.values(RECORD_CORRECTION_REASON))('should check the "%s" reason checkbox when it is in the form values', (reason) => {
         // Arrange
         const viewModel = aCreateRecordCorrectionRequestViewModel();
         viewModel.formValues.reasons = [reason];
@@ -224,11 +224,11 @@ describe(page, () => {
   });
 
   it.each`
-    reasonId                                                        | hint
-    ${RECORD_CORRECTION_REQUEST_REASON.FACILITY_ID_INCORRECT}       | ${'Does not match what is in the system'}
-    ${RECORD_CORRECTION_REQUEST_REASON.REPORTED_FEE_INCORRECT}      | ${'The fee is higher or lower than expected'}
-    ${RECORD_CORRECTION_REQUEST_REASON.REPORTED_CURRENCY_INCORRECT} | ${'The currency does not match the currency we have on record'}
-    ${RECORD_CORRECTION_REQUEST_REASON.OTHER}                       | ${'Something else'}
+    reasonId                                                | hint
+    ${RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT}       | ${'Does not match what is in the system'}
+    ${RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT}      | ${'The fee is higher or lower than expected'}
+    ${RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT} | ${'The currency does not match the currency we have on record'}
+    ${RECORD_CORRECTION_REASON.OTHER}                       | ${'Something else'}
   `('should render the "$reasonId" reason hint', ({ reasonId, hint }: { reasonId: string; hint: string }) => {
     // Arrange
     const viewModel = aCreateRecordCorrectionRequestViewModel();

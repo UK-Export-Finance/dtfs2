@@ -1,4 +1,4 @@
-import { RECORD_CORRECTION_REQUEST_REASON } from '@ukef/dtfs2-common';
+import { RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import { CreateRecordCorrectionRequestFormValues } from '../../../../types/view-models';
 import {
   getAdditionalInfoValidationError,
@@ -48,7 +48,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       });
 
       describe('when reasons is an array of a single valid reason', () => {
-        it.each(Object.values(RECORD_CORRECTION_REQUEST_REASON))('should not set reasons error for "%s"', (reason) => {
+        it.each(Object.values(RECORD_CORRECTION_REASON))('should not set reasons error for "%s"', (reason) => {
           // Arrange
           const formValues: CreateRecordCorrectionRequestFormValues = {
             ...aValidSetOfFormValues(),
@@ -69,7 +69,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
           // Arrange
           const formValues: CreateRecordCorrectionRequestFormValues = {
             ...aValidSetOfFormValues(),
-            reasons: [RECORD_CORRECTION_REQUEST_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REQUEST_REASON.OTHER],
+            reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER],
           };
 
           // Act
@@ -155,7 +155,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
 
     function aValidSetOfFormValues(): CreateRecordCorrectionRequestFormValues {
       return {
-        reasons: [RECORD_CORRECTION_REQUEST_REASON.OTHER],
+        reasons: [RECORD_CORRECTION_REASON.OTHER],
         additionalInfo: 'Some additional info',
       };
     }
