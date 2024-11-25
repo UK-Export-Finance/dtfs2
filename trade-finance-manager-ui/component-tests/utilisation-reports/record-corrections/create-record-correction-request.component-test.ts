@@ -224,11 +224,11 @@ describe(page, () => {
   });
 
   it.each`
-    reasonId                         | hint
-    ${'facility-id-incorrect'}       | ${'Does not match what is in the system'}
-    ${'reported-fee-incorrect'}      | ${'The fee is higher or lower than expected'}
-    ${'reported-currency-incorrect'} | ${'The currency does not match the currency we have on record'}
-    ${'other'}                       | ${'Something else'}
+    reasonId                                                        | hint
+    ${RECORD_CORRECTION_REQUEST_REASON.FACILITY_ID_INCORRECT}       | ${'Does not match what is in the system'}
+    ${RECORD_CORRECTION_REQUEST_REASON.REPORTED_FEE_INCORRECT}      | ${'The fee is higher or lower than expected'}
+    ${RECORD_CORRECTION_REQUEST_REASON.REPORTED_CURRENCY_INCORRECT} | ${'The currency does not match the currency we have on record'}
+    ${RECORD_CORRECTION_REQUEST_REASON.OTHER}                       | ${'Something else'}
   `('should render the "$reasonId" reason hint', ({ reasonId, hint }: { reasonId: string; hint: string }) => {
     // Arrange
     const viewModel = aCreateRecordCorrectionRequestViewModel();
