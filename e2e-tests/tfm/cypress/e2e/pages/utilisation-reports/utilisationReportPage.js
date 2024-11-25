@@ -17,6 +17,7 @@ const utilisationReportPage = {
     addAPaymentButton: () => cy.get('[data-cy="add-a-payment-button"]'),
     createRecordCorrectionRequestButton: () => cy.get('[data-cy="create-record-correction-request-button"]'),
     premiumPaymentsTable: {
+      error: () => cy.get('[data-cy="premium-payments-table--error"]'),
       header: {
         totalReportedPayments: () => cy.get('th[data-cy="premium-payments-table--total-reported-payments-header"] button'),
         totalPaymentsReceived: () => cy.get('th[data-cy="premium-payments-table--total-payments-received-header"] button'),

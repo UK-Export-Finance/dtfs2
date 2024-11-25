@@ -5,6 +5,7 @@ import { asUserSession } from '../../../helpers/express-session';
 import api from '../../../api';
 import { CheckKeyingDataViewModel, FeeRecordToKeyViewModelItem } from '../../../types/view-models';
 import { getFeeRecordDisplayStatus, getKeyToCurrencyAndAmountSortValueMap } from '../helpers';
+import { GENERATE_KEYING_DATA_ERROR_KEY } from '../../../constants/premium-payment-tab-error-keys';
 
 const renderCheckKeyingDataPage = (res: Response, viewModel: CheckKeyingDataViewModel) => res.render('utilisation-reports/check-keying-data.njk', viewModel);
 
@@ -42,7 +43,7 @@ export const postCheckKeyingData = async (req: Request, res: Response) => {
     const numberOfMatchingFacilities = feeRecords.length;
 
     if (numberOfMatchingFacilities === 0) {
-      req.session.generateKeyingDataErrorKey = 'no-matching-fee-records';
+      req.session.generateKeyingDataErrorKey = GENERATE_KEYING_DATA_ERROR_KEY.NO_MATCHING_FEE_RECORDS;
       return res.redirect(`/utilisation-reports/${reportId}`);
     }
 
