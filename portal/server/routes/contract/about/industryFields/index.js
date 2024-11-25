@@ -32,9 +32,11 @@ const industryFields = (postedSubmissionDetails, industrySectors) => {
   const industryClassCode = submissionDetails['industry-class'];
 
   if (industryClassCode && industrySectorObj?.classes) {
+    const industryClass = getIndustryClassById(industrySectorObj.classes, industryClassCode);
+
     submissionDetails['industry-class'] = {
       code: industryClassCode,
-      name: getIndustryClassById(industrySectorObj.classes, industryClassCode).name,
+      name: industryClass?.name,
     };
   } else {
     submissionDetails['industry-class'] = {};
