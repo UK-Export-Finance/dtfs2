@@ -10,7 +10,7 @@ export const MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH = 500;
  * @param additionalInfo - The additional information text to validate.
  * @returns An error message if validation fails, undefined otherwise.
  */
-export const getAdditionalInfoValidationErrors = (additionalInfo: string | undefined): string | undefined => {
+export const getAdditionalInfoValidationError = (additionalInfo: string | undefined): string | undefined => {
   if (!additionalInfo) {
     return 'You must provide more information for the record correction request';
   }
@@ -38,7 +38,7 @@ export const validateCreateRecordCorrectionRequestFormValues = (
     errorSummary.push({ text: reasonsErrorMessage, href: '#reasons' });
   }
 
-  const additionalInfoErrorMessage = getAdditionalInfoValidationErrors(formValues.additionalInfo);
+  const additionalInfoErrorMessage = getAdditionalInfoValidationError(formValues.additionalInfo);
   if (additionalInfoErrorMessage) {
     errorSummary.push({ text: additionalInfoErrorMessage, href: '#additionalInfo' });
   }

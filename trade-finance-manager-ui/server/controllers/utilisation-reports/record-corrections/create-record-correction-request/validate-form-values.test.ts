@@ -1,7 +1,7 @@
 import { RECORD_CORRECTION_REQUEST_REASON } from '@ukef/dtfs2-common';
 import { CreateRecordCorrectionRequestFormValues } from '../../../../types/view-models';
 import {
-  getAdditionalInfoValidationErrors,
+  getAdditionalInfoValidationError,
   MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH,
   validateCreateRecordCorrectionRequestFormValues,
 } from './validate-form-values';
@@ -161,14 +161,14 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
     }
   });
 
-  describe('getAdditionalInfoValidationErrors', () => {
+  describe('getAdditionalInfoValidationError', () => {
     describe('when the additional info is undefined', () => {
       it('should return "provide more information" error message', () => {
         // Arrange
         const additionalInfo = undefined;
 
         // Act
-        const errorMessage = getAdditionalInfoValidationErrors(additionalInfo);
+        const errorMessage = getAdditionalInfoValidationError(additionalInfo);
 
         // Assert
         expect(errorMessage).toEqual('You must provide more information for the record correction request');
@@ -181,7 +181,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         const additionalInfo = '';
 
         // Act
-        const errorMessage = getAdditionalInfoValidationErrors(additionalInfo);
+        const errorMessage = getAdditionalInfoValidationError(additionalInfo);
 
         // Assert
         expect(errorMessage).toEqual('You must provide more information for the record correction request');
@@ -194,7 +194,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         const additionalInfo = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH);
 
         // Act
-        const errorMessage = getAdditionalInfoValidationErrors(additionalInfo);
+        const errorMessage = getAdditionalInfoValidationError(additionalInfo);
 
         // Assert
         expect(errorMessage).toBeUndefined();
@@ -207,7 +207,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         const additionalInfo = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH + 1);
 
         // Act
-        const errorMessage = getAdditionalInfoValidationErrors(additionalInfo);
+        const errorMessage = getAdditionalInfoValidationError(additionalInfo);
 
         // Assert
         expect(errorMessage).toEqual(
