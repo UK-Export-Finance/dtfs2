@@ -5,6 +5,7 @@ import { CreateRecordCorrectionRequestViewModel } from '../../../../types/view-m
 import api from '../../../../api';
 import { GetFeeRecordResponseBody } from '../../../../api-response-types';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
+import { getLinkToPremiumPaymentsTab } from '../../helpers';
 
 jest.mock('../../../../api');
 
@@ -57,6 +58,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         facilityId: '0012345678',
         exporter: 'Sample Company Ltd',
       },
+      backLinkHref: getLinkToPremiumPaymentsTab(reportId, [456]),
     });
     expect(api.getFeeRecord).toHaveBeenCalledTimes(1);
     expect(api.getFeeRecord).toHaveBeenCalledWith(reportId, feeRecordId, userToken);
