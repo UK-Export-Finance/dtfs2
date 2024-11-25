@@ -9,7 +9,7 @@ import { PremiumPaymentsTableCheckboxSelectionsRequestBody } from '../helpers';
 import { getLinkToPremiumPaymentsTab } from '../helpers/get-link-to-premium-payments-tab';
 
 jest.mock('../../../api');
-jest.mock('./get-link-to-premium-payments-tab');
+jest.mock('../helpers/get-link-to-premium-payments-tab');
 
 console.error = jest.fn();
 
