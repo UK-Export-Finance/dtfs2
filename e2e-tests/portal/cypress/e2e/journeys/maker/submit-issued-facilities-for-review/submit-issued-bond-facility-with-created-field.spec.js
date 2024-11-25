@@ -58,7 +58,7 @@ context('Issue Bond Form - Submit issued bond with inserted element on page', ()
 
     const bondId = dealFacilities.bonds[0]._id;
 
-    pages.contract.bondTransactionsTable.row(bondId).issueFacilityLink().click();
+    pages.contract.bondTransactionsTable.row(bondId).uniqueNumberLink().click();
 
     pages.bondDetails.facilityStageIssuedInput().click();
 
