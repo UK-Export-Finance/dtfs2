@@ -1,4 +1,4 @@
-import { TFM_DEAL_CANCELLATION_STATUS, TfmDealCancellationWithStatus, DATE_FORMATS, Deal } from '@ukef/dtfs2-common';
+import { TFM_DEAL_CANCELLATION_STATUS, TfmDealCancellationWithStatus, DATE_FORMATS, MappedDealSnapshot } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
 import api from '../../api';
 import { isDealCancellationEnabled } from './deal-cancellation-enabled.helper';
@@ -9,7 +9,13 @@ import { isDealCancellationEnabled } from './deal-cancellation-enabled.helper';
  * @param userToken - the user token
  * @returns the success message to be shown or null
  */
-export const getScheduledCancellationBannerMessage = async ({ dealSnapshot, userToken }: { dealSnapshot: Deal; userToken: string }): Promise<string | null> => {
+export const getScheduledCancellationBannerMessage = async ({
+  dealSnapshot,
+  userToken,
+}: {
+  dealSnapshot: MappedDealSnapshot;
+  userToken: string;
+}): Promise<string | null> => {
   const { submissionType, _id: dealId } = dealSnapshot;
   const { ukefDealId } = dealSnapshot.details;
 
@@ -37,7 +43,7 @@ export const getScheduledCancellationBannerMessage = async ({ dealSnapshot, user
  * @param params - the deal
  * @param params.dealSnapshot - the deal
  * @param params.userToken - the user token
- * @param params.req the express request object
+ * @param params.flashedSuccessMessage - the success message from flash storage
  * @returns the success message to be shown
  */
 export const getDealSuccessBannerMessage = async ({
@@ -45,7 +51,7 @@ export const getDealSuccessBannerMessage = async ({
   userToken,
   flashedSuccessMessage,
 }: {
-  dealSnapshot: Deal;
+  dealSnapshot: MappedDealSnapshot;
   userToken: string;
   flashedSuccessMessage: string;
 }): Promise<string | undefined> => {
