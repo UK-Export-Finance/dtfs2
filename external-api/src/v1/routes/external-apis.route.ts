@@ -392,8 +392,10 @@ apiRoutes.get('/party-db/:partyDbCompanyRegistrationNumber', partyDb.lookup);
  *               $ref: '#/definitions/PartyDB'
  *       404:
  *         description: Not found
+ *       500:
+ *         description: Internal server error
  */
-apiRoutes.post('/party-db/:partyDbCompanyRegistrationNumber', partyDb.createParty);
+apiRoutes.post('/party-db', partyDb.createParty);
 
 /**
  * @openapi

@@ -123,7 +123,7 @@ const setApplicationStatus = async ({ dealId, status, userToken }) => {
       {
         status,
       },
-      { ...config(userToken), timeout: 20000 },
+      { ...config(userToken), timeout: 30000 },
     );
     return data;
   } catch (error) {

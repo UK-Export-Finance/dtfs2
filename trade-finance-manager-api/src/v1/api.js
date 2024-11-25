@@ -1,9 +1,7 @@
-import { isAutomaticSalesforceCustomerCreationFeatureFlagEnabled } from '@ukef/dtfs2-common'
-
 const axios = require('axios');
 const { HttpStatusCode } = require('axios');
 
-const { HEADERS, InvalidDealIdError } = require('@ukef/dtfs2-common');
+const { HEADERS, InvalidDealIdError, isAutomaticSalesforceCustomerCreationFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
 const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
 require('dotenv').config();
@@ -820,18 +818,19 @@ const queryDeals = async ({ queryParams }) => {
 
 const getPartyDbInfo = async ({ companyRegNo }) => {
   try {
+    const creationEnabled = isAutomaticSalesforceCustomerCreationFeatureFlagEnabled();
     const response = await axios({
       method: 'get',
       url: `${EXTERNAL_API_URL}/party-db/${encodeURIComponent(companyRegNo)}`,
       headers: headers.external,
     });
-    if (isAutomaticSalesforceCustomerCreationFeatureFlagEnabled()) {
+    if (creationEnabled) {
       return { status: HttpStatusCode.Ok, data: response.data }
     }
     return response.data
   } catch (error) {
     console.error('Unable to get party DB info %o', error);
-    if (!isAutomaticSalesforceCustomerCreationFeatureFlagEnabled()) {
+    if (!creationEnabled) {
       return false;
     }
 
@@ -853,14 +852,16 @@ const createParty = async ({ companyRegNo, companyName }) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${EXTERNAL_API_URL}/party-db/${encodeURIComponent(companyRegNo)}`,
+      url: `${EXTERNAL_API_URL}/party-db`,
       headers: headers.external,
       data: {
-        companyName,
+        companyRegNo,
+        companyName
       },
     });
     return { status: 200, data: response.data };
   } catch (error) {
+    console.error('Failed to create party');
     return { status: error?.status || 500, data: 'Failed to create party' };
   }
 };

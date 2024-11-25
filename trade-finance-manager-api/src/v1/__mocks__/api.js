@@ -181,25 +181,30 @@ module.exports = {
     exposurePeriodInMonths: 12,
   })),
   getPartyDbInfo: ({ companyRegNo }) => {
+    const noCompanyMatch = companyRegNo === 'NO_MATCH';
+
     if (isAutomaticSalesforceCustomerCreationFeatureFlagEnabled()) {
-      return companyRegNo === 'NO_MATCH'
-        ? { status: 404, data: 'Party not found' }
-        : {
-          status: 200,
-          data: [
-            {
-              partyUrn: 'testPartyUrn',
-            },
-          ],
-        };
+      if (noCompanyMatch) {
+        return { status: 404, data: 'Party not found' };
+      }
+
+      return {
+        status: 200,
+        data: [
+          {
+            partyUrn: 'testPartyUrn',
+          },
+        ],
+      };
+    } else {
+      if (noCompanyMatch) {
+        return false;
+      }
+
+      return {
+        partyUrn: 'testPartyUrn',
+      };
     }
-    return companyRegNo === 'NO_MATCH'
-      ? false
-      : [
-        {
-          partyUrn: 'testPartyUrn',
-        },
-      ];
   },
   findUser: (username) => {
     if (username === 'invalidUser') {
