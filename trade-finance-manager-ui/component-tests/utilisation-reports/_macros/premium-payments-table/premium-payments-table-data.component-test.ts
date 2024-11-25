@@ -18,6 +18,21 @@ const render = componentRenderer<PremiumPaymentsTableComponentRendererParams>(co
 describe(component, () => {
   const numericCellClass = 'govuk-table__cell--numeric';
 
+  it('should not render error message if none provided', () => {
+    const wrapper = render({ ...aPremiumPaymentsTableDefaultRendererParams(), errorMessage: undefined });
+
+    wrapper.expectElement('[data-cy="premium-payments-table--error"]').notToExist();
+  });
+
+  it('should render error message if provided', () => {
+    const wrapper = render({ ...aPremiumPaymentsTableDefaultRendererParams(), errorMessage: 'This is an error message' });
+
+    wrapper.expectElement('[data-cy="premium-payments-table--error"]').toExist();
+    wrapper.expectText('[data-cy="premium-payments-table--error"]').toRead('Error: This is an error message');
+    wrapper.expectText('[data-cy="premium-payments-table--error"] span').toRead('Error:');
+    wrapper.expectElement('[data-cy="premium-payments-table--error"] span').hasClass('govuk-visually-hidden');
+  });
+
   it('should render message informing there are no matched records when no fee record groups', () => {
     const feeRecordPaymentGroups: PremiumPaymentsViewModelItem[] = [];
 
