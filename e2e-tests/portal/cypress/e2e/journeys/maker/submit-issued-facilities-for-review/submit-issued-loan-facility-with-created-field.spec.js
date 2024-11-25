@@ -48,7 +48,7 @@ context('Issue Loan Form - Submit issued loan with inserted element on page', ()
 
     const loanId = dealFacilities.loans[0]._id;
 
-    pages.contract.loansTransactionsTable.row(loanId).issueFacilityLink().click();
+    pages.contract.loansTransactionsTable.row(loanId).nameLink().click();
 
     // inserts populated text form into the form
     cy.insertElement('issue-loan-form');

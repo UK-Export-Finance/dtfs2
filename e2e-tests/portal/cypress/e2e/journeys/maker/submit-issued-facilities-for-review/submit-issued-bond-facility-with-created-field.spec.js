@@ -57,14 +57,15 @@ context('Issue Bond Form - Submit issued bond with inserted element on page', ()
     pages.contract.proceedToReview().should('not.exist');
 
     const bondId = dealFacilities.bonds[0]._id;
+    const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-    pages.contract.bondTransactionsTable.row(bondId).uniqueNumberLink().click();
+    bondRow.uniqueNumberLink().click();
 
     pages.bondDetails.facilityStageIssuedInput().click();
 
-    pages.bondDetails.requestedCoverStartDateDayInput().clear().type(startDate.day);
-    pages.bondDetails.requestedCoverStartDateMonthInput().clear().type(startDate.month);
-    pages.bondDetails.requestedCoverStartDateYearInput().clear().type(startDate.year);
+    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateDayInput(), startDate.day);
+    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateMonthInput(), startDate.month);
+    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateYearInput(), startDate.year);
 
     cy.completeDateFormFields({ idPrefix: 'coverEndDate', date: oneMonth.date });
 
