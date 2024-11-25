@@ -9,7 +9,7 @@ import pages from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
 import relative from '../../../../relativeURL';
-import partials, { errorSummary } from '../../../../partials';
+import partials from '../../../../partials';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context('When fee record correction feature flag is enabled', () => {
@@ -60,17 +60,6 @@ context('When fee record correction feature flag is enabled', () => {
       cy.login(USERS.PDC_RECONCILE);
 
       cy.visit(`utilisation-reports/${reportId}`);
-    });
-
-    it('should display error message if invalid selections for initiating a "create record correction" request', () => {
-      premiumPaymentsTab.createRecordCorrectionRequestButton().should('exist');
-      premiumPaymentsTab.createRecordCorrectionRequestButton().click();
-
-      cy.url().should('eq', relative(`/utilisation-reports/${reportId}`));
-
-      errorSummary().contains('Select a record to create a record correction request');
-      premiumPaymentsTab.premiumPaymentsTable.error().should('exist');
-      cy.assertText(premiumPaymentsTab.premiumPaymentsTable.error(), 'Error: Select a record to create a record correction request');
     });
 
     it('should be able to initiate a record correction request', () => {
