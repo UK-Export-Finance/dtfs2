@@ -1,7 +1,7 @@
 import httpMocks from 'node-mocks-http';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
-import { getLinkToPremiumPaymentsTab } from '../../add-to-an-existing-payment/get-link-to-premium-payments-tab';
+import { getLinkToPremiumPaymentsTab } from '../../helpers/get-link-to-premium-payments-tab';
 import { getRecordCorrectionRequestInformation } from '.';
 
 describe('controllers/utilisation-reports/record-corrections/check-the-information', () => {

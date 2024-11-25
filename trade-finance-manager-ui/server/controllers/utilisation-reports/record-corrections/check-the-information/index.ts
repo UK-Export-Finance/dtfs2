@@ -2,7 +2,7 @@ import { Response, Request } from 'express';
 import { RecordCorrectionRequestInformationViewModel } from '../../../../types/view-models';
 import { asUserSession } from '../../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
-import { getLinkToPremiumPaymentsTab } from '../../add-to-an-existing-payment/get-link-to-premium-payments-tab';
+import { getLinkToPremiumPaymentsTab } from '../../helpers/get-link-to-premium-payments-tab';
 
 const renderCheckTheInformationPage = (res: Response, viewModel: RecordCorrectionRequestInformationViewModel) =>
   res.render('utilisation-reports/record-corrections/check-the-information.njk', viewModel);
