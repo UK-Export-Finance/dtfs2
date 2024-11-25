@@ -201,6 +201,24 @@ const createFacilityAmendment = async (req, res) => {
   return res.status(422).send({ data: 'Unable to create amendment' });
 };
 
+/**
+ * Updates a facility amendment with the provided details.
+ *
+ * This function performs the following operations:
+ * 1. Extracts the facility ID and amendment ID from the request parameters.
+ * 2. Extracts the amendment details from the request body.
+ * 3. Calls the API to update the facility amendment with the provided details.
+ * 4. Sends a response back to the client indicating the success or failure of the operation.
+ *
+ * @param {Object} req - The request object containing the parameters and body.
+ * @param {Object} req.params - The request parameters.
+ * @param {string} req.params.facilityId - The ID of the facility to be amended.
+ * @param {string} req.params.amendmentId - The ID of the amendment.
+ * @param {Object} req.body - The request body containing the amendment details.
+ * @param {Object} res - The response object used to send a response back to the client.
+ * @returns {Promise<void>} - A promise that resolves when the facility amendment has been updated and the response has been sent.
+ * @throws {Error} - Sends an error response if any error occurs during the update process.
+ */
 const updateFacilityAmendment = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
   let payload = req.body;
