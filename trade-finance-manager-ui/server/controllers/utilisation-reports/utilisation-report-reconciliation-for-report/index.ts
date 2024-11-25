@@ -62,11 +62,12 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       matchSuccess,
     } = req.query;
 
-    const { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds } = req.session;
+    const { addPaymentErrorKey, generateKeyingDataErrorKey, initiateRecordCorrectionRequestErrorKey, checkedCheckboxIds } = req.session;
 
     delete req.session.addPaymentErrorKey;
     delete req.session.checkedCheckboxIds;
     delete req.session.generateKeyingDataErrorKey;
+    delete req.session.initiateRecordCorrectionRequestErrorKey;
 
     const {
       premiumPaymentsFilters,
@@ -78,7 +79,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       isCheckboxChecked,
     } = extractQueryAndSessionData(
       { premiumPaymentsFacilityId, paymentDetailsFacilityId, paymentDetailsPaymentReference, paymentDetailsPaymentCurrency, selectedFeeRecordIdsQuery },
-      { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds },
+      { addPaymentErrorKey, generateKeyingDataErrorKey, initiateRecordCorrectionRequestErrorKey, checkedCheckboxIds },
       req.originalUrl,
     );
 

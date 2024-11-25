@@ -16,6 +16,8 @@ import {
 } from '../../../types/view-models';
 import { mapPaymentDetailsFiltersToViewModel } from '../helpers';
 import { mapToSelectedPaymentDetailsFiltersViewModel } from './map-to-selected-payment-details-filters-view-model';
+import { ADD_PAYMENT_ERROR_KEY, GENERATE_KEYING_DATA_ERROR_KEY } from '../../../constants/premium-payment-tab-error-keys';
+import { PREMIUM_PAYMENTS_TABLE_ERROR_HREF } from '../../../constants/premium-payments-table-error-href';
 
 jest.mock('../../../api');
 jest.mock('../../../helpers/date');
@@ -269,7 +271,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
     it('should set the add payment error to contain passed in session data and checks selected checkboxes', async () => {
       // Arrange
       const sessionData: Partial<SessionData> = {
-        addPaymentErrorKey: 'different-fee-record-statuses',
+        addPaymentErrorKey: ADD_PAYMENT_ERROR_KEY.DIFFERENT_STATUSES,
         checkedCheckboxIds: {
           'feeRecordIds-1-reportedPaymentsCurrency-GBP-status-TO_DO': true,
         },
@@ -294,7 +296,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
       expect(viewModel.premiumPayments.tableDataError).toBeDefined();
-      expect(viewModel.premiumPayments.tableDataError?.href).toEqual('#premium-payments-table');
+      expect(viewModel.premiumPayments.tableDataError?.href).toEqual(PREMIUM_PAYMENTS_TABLE_ERROR_HREF);
       expect(viewModel.premiumPayments.tableDataError?.text).toEqual('Select a fee or fees with the same status');
       expect(viewModel.premiumPayments.payments[0].isChecked).toEqual(true);
     });
@@ -594,11 +596,11 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
     it('should clear the redirect session data', async () => {
       // Arrange
       const sessionData: Partial<SessionData> = {
-        addPaymentErrorKey: 'no-fee-records-selected',
+        addPaymentErrorKey: ADD_PAYMENT_ERROR_KEY.NO_FEE_RECORDS_SELECTED,
         checkedCheckboxIds: {
           'feeRecordIds-1-reportedPaymentsCurrency-GBP-status-TO_DO': true,
         },
-        generateKeyingDataErrorKey: 'no-matching-fee-records',
+        generateKeyingDataErrorKey: GENERATE_KEYING_DATA_ERROR_KEY.NO_MATCHING_FEE_RECORDS,
       };
       const { req, res } = getHttpMocksWithSessionData(sessionData);
 
