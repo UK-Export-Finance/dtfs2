@@ -25,7 +25,8 @@
     "./change-stream/test-helpers": "./src/change-stream/test-helpers/index.ts",
     "./payload-verification": "./src/helpers/payload-verification/index.ts",
     "./schemas": "./src/schemas/index.ts",
-    "./test-cases-backend": "./src/test-helpers/test-cases-backend/index.ts"
+    "./test-cases-backend": "./src/test-helpers/test-cases-backend/index.ts",
+    "./mock-data-backend": "./src/test-helpers/mock-data-backend/index.ts"
   },
   "main": "src/index.ts",
   "scripts": {
