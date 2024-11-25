@@ -4,6 +4,7 @@ import { CreateRecordCorrectionRequestErrorsViewModel, CreateRecordCorrectionReq
 import { asUserSession } from '../../../../helpers/express-session';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
+import { getLinkToPremiumPaymentsTab } from '../../helpers';
 import api from '../../../../api';
 import { CreateRecordCorrectionRequestFormRequestBody, extractCreateRecordCorrectionRequestFormValues } from './form-helpers';
 import { validateCreateRecordCorrectionRequestFormValues } from './validate-form-values';
@@ -46,6 +47,7 @@ export const getCreateRecordCorrectionRequest = async (req: GetCreateRecordCorre
       },
       formValues: {},
       errors: EMPTY_CREATE_RECORD_CORRECTION_REQUEST_ERRORS_VIEW_MODEL,
+      backLinkHref: getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]),
     });
   } catch (error) {
     console.error('Failed to get create record correction request', error);
@@ -96,6 +98,7 @@ export const postCreateRecordCorrectionRequest = async (req: PostCreateRecordCor
       },
       formValues,
       errors,
+      backLinkHref: getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]),
     });
   } catch (error) {
     console.error('Failed to post create record correction request', error);

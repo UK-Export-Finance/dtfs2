@@ -23,4 +23,5 @@ export type CreateRecordCorrectionRequestViewModel = BaseViewModel & {
   };
   formValues: CreateRecordCorrectionRequestFormValues;
   errors: CreateRecordCorrectionRequestErrorsViewModel;
+  backLinkHref: string;
 };

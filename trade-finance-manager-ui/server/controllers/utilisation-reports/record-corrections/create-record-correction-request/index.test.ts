@@ -14,6 +14,7 @@ import { CreateRecordCorrectionRequestFormRequestBody } from './form-helpers';
 import { validateCreateRecordCorrectionRequestFormValues } from './validate-form-values';
 import api from '../../../../api';
 import { GetFeeRecordResponseBody } from '../../../../api-response-types';
+import { getLinkToPremiumPaymentsTab } from '../../helpers';
 
 jest.mock('../../../../api');
 jest.mock('./validate-form-values');
@@ -80,6 +81,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         },
         formValues: {},
         errors: { errorSummary: [] },
+        backLinkHref: getLinkToPremiumPaymentsTab(reportId, [456]),
       });
 
       expect(api.getFeeRecord).toHaveBeenCalledTimes(1);
@@ -170,6 +172,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
           },
           formValues: { reasons: [] },
           errors,
+          backLinkHref: getLinkToPremiumPaymentsTab(reportId, [456]),
         });
 
         expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledTimes(1);

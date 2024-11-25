@@ -6,10 +6,10 @@ import { AddToAnExistingPaymentViewModel } from '../../../types/view-models';
 import { SelectedFeeRecordsDetailsResponseBody } from '../../../api-response-types';
 import { aTfmSessionUser } from '../../../../test-helpers';
 import { PremiumPaymentsTableCheckboxSelectionsRequestBody } from '../helpers';
-import { getLinkToPremiumPaymentsTab } from './get-link-to-premium-payments-tab';
+import { getLinkToPremiumPaymentsTab } from '../helpers/get-link-to-premium-payments-tab';
 
 jest.mock('../../../api');
-jest.mock('./get-link-to-premium-payments-tab');
+jest.mock('../helpers/get-link-to-premium-payments-tab');
 
 console.error = jest.fn();
 
