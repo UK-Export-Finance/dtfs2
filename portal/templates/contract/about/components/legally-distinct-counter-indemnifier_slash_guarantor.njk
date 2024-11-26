@@ -41,7 +41,7 @@
 
   {% set renderByDefault=deal.submissionDetails.legallyDistinct %}
   {% if renderByDefault !=='true' %}
-    {% set renderByDefault='false'%}
+    {% set renderByDefault='false' %}
   {% endif %}
   <div id="additional-form-fields-indemnifier" class="{% if renderByDefault === 'false' %}display-none{% endif %}">
 

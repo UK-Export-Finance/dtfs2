@@ -36,9 +36,9 @@
 
     {% set renderByDefault=deal.submissionDetails["supplier-correspondence-address-is-different"] %}
     {% if renderByDefault !=='true' %}
-      {% set renderByDefault='false'%}
+      {% set renderByDefault='false' %}
     {% endif %}
-    <div id="additional-form-fields-supplier-correspondence" class="{% if renderByDefault === 'false'%}display-none{% endif %}">
+    <div id="additional-form-fields-supplier-correspondence" class="{% if renderByDefault === 'false' %}display-none{% endif %}">
       {{ address.fields(
         deal = deal,
         validationErrors = validationErrors,
