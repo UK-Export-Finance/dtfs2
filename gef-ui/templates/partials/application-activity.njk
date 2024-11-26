@@ -21,8 +21,6 @@
 
   <h1 class="govuk-heading-xl" data-cy="main-activity-heading">Activity and comments</h1>
 
-
-
     {% set portalActivitiesWithHTML = [] %}
 
     {% for activity in portalActivities %}
@@ -66,11 +64,11 @@
       {% set portalActivitiesWithHTML = (portalActivitiesWithHTML.push(activityToAdd), portalActivitiesWithHTML) %}
     {% endfor %}
 
-   {{ mojTimeline({
-        items: portalActivitiesWithHTML,
-        attributes: {
-          'data-cy': 'portal-activities-timeline'
-        }
-      }) }}
+    {{ mojTimeline({
+      items: portalActivitiesWithHTML,
+      attributes: {
+        'data-cy': 'portal-activities-timeline'
+      }
+    }) }}
 
 {% endblock %}
