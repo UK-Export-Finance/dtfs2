@@ -207,4 +207,6 @@ authRouter
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), handleExpressValidatorResult)
   .get(utilisationReportsController.getFeeRecord);
 
+authRouter.route('/utilisation-reports/fee-record-correction-transient-form-data').put(utilisationReportsController.putFeeRecordCorrectionTransientFormData);
+
 module.exports = { authRouter, openRouter };

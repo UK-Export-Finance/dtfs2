@@ -1688,6 +1688,25 @@ const getFeeRecord = async (reportId, feeRecordId) => {
   return response.data;
 };
 
+/**
+ * Updates the fee record correction transient form data associated with the user
+ * @param {import('@ukef/dtfs2-common').RecordCorrectionTransientFormData} formData
+ * @param {import('../types/tfm-session-user').TfmSessionUser} user - The current user stored in the session
+ * @returns {Promise<{ status: number }>}
+ */
+const updateFeeRecordCorrectionTransientFormData = async (formData, user) => {
+  const response = await axios({
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/fee-record-correction-transient-form-data`,
+    method: 'put',
+    headers: headers.central,
+    data: {
+      formData,
+      user,
+    },
+  });
+  return response.data;
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -1766,4 +1785,5 @@ module.exports = {
   removeFeesFromPayment,
   addFeesToAnExistingPayment,
   getFeeRecord,
+  updateFeeRecordCorrectionTransientFormData,
 };
