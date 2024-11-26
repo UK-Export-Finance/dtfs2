@@ -10,7 +10,7 @@ api.updateAmendment = jest.fn(() => {
 });
 console.error = jest.fn();
 
-describe('await postAmendmentTask', () => {
+describe('postAmendmentTask', () => {
   const mockRequest = {
     params: {
       _id: MOCKS.MOCK_DEAL._id,
@@ -45,8 +45,8 @@ describe('await postAmendmentTask', () => {
     },
   };
 
-  describe('should throw an error when one of the mandatory arguments are invalid', () => {
-    it('when deal id is invalid', async () => {
+  describe('when a mandatory argument is invalid', () => {
+    it('should throw an error and redirect to problem with service page with an invalid deal id', async () => {
       const modifiedRequest = cloneDeep(mockRequest);
       delete modifiedRequest.params._id;
 
@@ -62,7 +62,7 @@ describe('await postAmendmentTask', () => {
       expect(mockResponse.redirect).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
 
-    it('when facility id is invalid', async () => {
+    it('should throw an error and redirect to problem with service page with an invalid deal id', async () => {
       const modifiedRequest = cloneDeep(mockRequest);
       delete modifiedRequest.params.facilityId;
 
@@ -78,7 +78,7 @@ describe('await postAmendmentTask', () => {
       expect(mockResponse.redirect).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
 
-    it('when amendment id is invalid', async () => {
+    it('should throw an error and redirect to problem with service page with an invalid amendment id', async () => {
       const modifiedRequest = cloneDeep(mockRequest);
       delete modifiedRequest.params.amendmentId;
 
@@ -94,7 +94,7 @@ describe('await postAmendmentTask', () => {
       expect(mockResponse.redirect).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
 
-    it('when task group id is invalid', async () => {
+    it('should throw an error and redirect to problem with service page with an invalid group id', async () => {
       const modifiedRequest = cloneDeep(mockRequest);
       delete modifiedRequest.params.groupId;
 
@@ -110,7 +110,7 @@ describe('await postAmendmentTask', () => {
       expect(mockResponse.redirect).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
 
-    it('when task id is invalid', async () => {
+    it('should throw an error and redirect to problem with service page with an invalid task id', async () => {
       const modifiedRequest = cloneDeep(mockRequest);
       delete modifiedRequest.params.taskId;
 
@@ -126,7 +126,7 @@ describe('await postAmendmentTask', () => {
       expect(mockResponse.redirect).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
 
-    it('when various ids are invalid', async () => {
+    it('should throw an error and redirect to problem with service page with an invalid ids', async () => {
       const modifiedRequest = cloneDeep(mockRequest);
 
       modifiedRequest.params._id = null;

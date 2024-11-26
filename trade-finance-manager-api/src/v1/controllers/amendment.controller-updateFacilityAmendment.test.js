@@ -184,7 +184,7 @@ describe('updated facility amendment API call', () => {
     });
 
     describe('when UKEF decision does exist for the facility amendment', () => {
-      it('should not update UKEF decision object if present', async () => {
+      it('should not update UKEF decision', async () => {
         // Arrange
         const mockRequest = cloneDeep(TASKS_UPDATE_MOCK_REQUEST);
 
