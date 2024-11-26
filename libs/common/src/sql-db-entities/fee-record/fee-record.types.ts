@@ -1,7 +1,6 @@
 import { DbRequestSource, DbRequestSourceParam } from '../helpers';
 import { Currency, FeeRecordStatus } from '../../types';
 import { UtilisationReportEntity } from '../utilisation-report';
-import { FeeRecordCorrectionEntity } from '../fee-record-correction';
 
 export type CreateFeeRecordParams = DbRequestSourceParam & {
   facilityId: string;
@@ -42,9 +41,4 @@ export type MarkAsReconciledParams = {
 
 export type MarkAsReadyToKeyParams = {
   requestSource: DbRequestSource;
-};
-
-export type AddCorrectionParams = {
-  requestSource: DbRequestSource;
-  correction: FeeRecordCorrectionEntity;
 };

@@ -1,5 +1,5 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, FeeRecordCorrectionEntity, FeeRecordEntity, RequestedByUser } from '@ukef/dtfs2-common';
+import { DbRequestSource, FEE_RECORD_STATUS, FeeRecordCorrectionEntity, FeeRecordEntity, RequestedByUser } from '@ukef/dtfs2-common';
 import { BaseFeeRecordEvent } from '../../event/base-fee-record.event';
 
 type CorrectionRequestedEventPayload = {
@@ -35,7 +35,9 @@ export const handleFeeRecordCorrectionRequestedEvent = async (
     requestSource,
   });
 
-  feeRecord.addCorrection({ requestSource, correction });
+  await transactionEntityManager.save(FeeRecordCorrectionEntity, correction);
+
+  feeRecord.updateWithStatus({ status: FEE_RECORD_STATUS.PENDING_CORRECTION, requestSource });
 
   return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
 };

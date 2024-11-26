@@ -4,7 +4,6 @@ import { UtilisationReportEntity } from '../utilisation-report';
 import { Currency, FeeRecordStatus } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
 import {
-  AddCorrectionParams,
   CreateFeeRecordParams,
   MarkAsReadyToKeyParams,
   MarkAsReconciledParams,
@@ -291,16 +290,5 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     this.reconciledByUserId = null;
     this.dateReconciled = null;
     this.status = FEE_RECORD_STATUS.READY_TO_KEY;
-  }
-
-  /**
-   * Adds a correction
-   * @param param - The update parameters
-   * @param param.requestSource - The request source making the update
-   */
-  public addCorrection({ requestSource, correction }: AddCorrectionParams): void {
-    this.updateLastUpdatedBy(requestSource);
-    this.corrections.push(correction);
-    this.status = FEE_RECORD_STATUS.PENDING_CORRECTION;
   }
 }
