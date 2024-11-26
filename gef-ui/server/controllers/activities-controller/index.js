@@ -4,25 +4,35 @@ const { getApplication, getUserDetails } = require('../../services/api');
 
 // maps portalActivities array to create array in correct format for mojTimeline
 const mapPortalActivities = (portalActivities) =>
-  portalActivities.map((portalActivity) => ({
-    label: {
-      text: portalActivity.label,
-    },
-    text: portalActivity.text,
-    datetime: {
-      timestamp: fromUnixTime(new Date(portalActivity.timestamp)),
-      type: 'datetime',
-    },
-    byline: {
-      text: `${portalActivity.author.firstName} ${portalActivity.author.lastName}`,
-    },
-    html: portalActivity.html,
-    facilityType: portalActivity.facilityType,
-    ukefFacilityId: portalActivity.ukefFacilityId,
-    facilityId: portalActivity.facilityId,
-    maker: portalActivity.maker,
-    checker: portalActivity.checker,
-  }));
+  portalActivities.map(({ label, text, timestamp, author, html, facilityType, ukefFacilityId, facilityId, maker, checker }) => {
+    let bylineText = author.firstName;
+
+    if (author.lastName) {
+      bylineText += ` ${author.lastName}`;
+    }
+
+    const mapped = {
+      label: {
+        text: label,
+      },
+      text,
+      datetime: {
+        timestamp: fromUnixTime(new Date(timestamp)),
+        type: 'datetime',
+      },
+      byline: {
+        text: bylineText,
+      },
+      html,
+      facilityType,
+      ukefFacilityId,
+      facilityId,
+      maker,
+      checker,
+    };
+
+    return mapped;
+  });
 
 const getPortalActivities = async (req, res) => {
   const { params, session } = req;
