@@ -464,6 +464,7 @@ jobs:
             'homepage/**/*.spec.js',
             'admin/**/*.spec.js',
             'checker/**/*.spec.js',
+            'dashboard/dashboard-deals/deal-cancellation-disabled/*.spec.js',
             'dashboard/dashboard-deals/filter-by/*.spec.js',
             'dashboard/dashboard-deals/filters/*.spec.js',
             'dashboard/dashboard-deals/sort/*.spec.js',
@@ -872,6 +873,10 @@ jobs:
       matrix:
         spec:
           [
+            './portal/cypress/e2e/journeys/dashboard/dashboard-deals/filter-by/*.spec.js',
+            './portal/cypress/e2e/journeys/dashboard/dashboard-deals/filters/*.spec.js',
+            './portal/cypress/e2e/journeys/dashboard/dashboard-deals/sort/*.spec.js',
+            './portal/cypress/e2e/journeys/dashboard/dashboard-deals/deal-cancellation-enabled/*.spec.js',
             './gef/cypress/e2e/*.spec.js',
             './gef/cypress/e2e/application/**/*.spec.js',
             './gef/cypress/e2e/checker/**/*.spec.js',
