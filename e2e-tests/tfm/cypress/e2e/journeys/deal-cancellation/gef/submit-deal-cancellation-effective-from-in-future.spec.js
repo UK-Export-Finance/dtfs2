@@ -44,7 +44,7 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in future'
     before(() => {
       cy.login(PIM_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
-      caseDealPage.submitDealCancellation(dealId, tomorrow.date);
+      cy.submitDealCancellation({ dealId, effectiveDate: tomorrow.date });
     });
 
     describe('after submitting the cancellation', () => {

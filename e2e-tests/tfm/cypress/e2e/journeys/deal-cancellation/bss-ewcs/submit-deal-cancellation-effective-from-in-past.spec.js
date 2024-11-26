@@ -48,7 +48,7 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in past', 
 
     describe('after submitting the cancellation', () => {
       it('should redirect you to the deal summary page with the success banner visible once', () => {
-        caseDealPage.submitDealCancellation(dealId, yesterday.date);
+        cy.submitDealCancellation({ dealId, effectiveDate: yesterday.date });
 
         cy.url().should('eq', relative(`/case/${dealId}/deal`));
 

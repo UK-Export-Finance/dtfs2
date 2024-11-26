@@ -1,6 +1,3 @@
-const relative = require('../relativeURL');
-const checkDetailsPage = require('./deal-cancellation/check-details');
-
 const caseDealPage = {
   dealBankDetails: () => cy.get('[data-cy="deal-bank-details"]'),
   dealFacilities: () => cy.get('[data-cy="deal-facilities"]'),
@@ -41,24 +38,6 @@ const caseDealPage = {
         heading: (criterionId) => cy.get(`@eligibilityCriteriaRow${index}`).get(`[data-cy="criterion-${criterionId}-heading"]`),
       };
     },
-  },
-
-  submitDealCancellation: (dealId, effectiveFromDate) => {
-    caseDealPage.cancelDealButton().click();
-
-    cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
-    cy.clickContinueButton();
-
-    cy.url().should('eq', relative(`/case/${dealId}/cancellation/bank-request-date`));
-    cy.completeDateFormFields({ idPrefix: 'bank-request-date' });
-    cy.clickContinueButton();
-
-    cy.url().should('eq', relative(`/case/${dealId}/cancellation/effective-from-date`));
-    cy.completeDateFormFields({ idPrefix: 'effective-from-date', date: effectiveFromDate });
-    cy.clickContinueButton();
-
-    cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
-    checkDetailsPage.dealDeletionButton().click();
   },
 };
 
