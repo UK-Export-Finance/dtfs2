@@ -4,7 +4,7 @@ const { updateDeal } = require('./update-deal');
 const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../../constants');
 
 /**
- * @param {string} addGefDealCancelledActivity.dealId - the dealId
+ * @param {string | ObjectId} addGefDealCancelledActivity.dealId - the dealId
  * @param {import('@ukef/dtfs2-common').Activity[]} addGefDealCancelledActivity.portalActivities - previous/existing portal activities
  * @param {import('@ukef/dtfs2-common').ActivityAuthor} addGefDealCancelledActivity.author - the activities author
  * @param {import('@ukef/dtfs2-common').AuditDetails} addGefDealCancelledActivity.auditDetails - the users audit details
