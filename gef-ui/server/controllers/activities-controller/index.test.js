@@ -105,7 +105,7 @@ describe('mapPortalActivities', () => {
   });
 
   describe('when author.lastName does not exist', () => {
-    it('should return a mapped array for mojTimeline for `facility stage changed`', () => {
+    it('should return a mapped array for mojTimeline without lastName in byline.text`', () => {
       const mockActivity = dealSubmissionActivity;
       mockActivity[0].author.lastName = '';
 
