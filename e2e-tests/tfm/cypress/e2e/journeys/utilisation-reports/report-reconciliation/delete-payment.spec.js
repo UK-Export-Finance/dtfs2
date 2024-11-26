@@ -98,7 +98,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     cy.visit(`/utilisation-reports/${report.id}`);
 
-    cy.get('strong[data-cy="fee-record-status"]:contains("Match)').should('exist');
+    cy.get('strong[data-cy="fee-record-status"]:contains("Match")').should('exist');
     pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(firstPayment.id);
 
     cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
@@ -178,7 +178,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
     pages.utilisationReportConfirmDeletePaymentPage.clickContinueButton();
 
     pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(payment.id).should('not.exist');
-    cy.get('strong[data-cy="fee-record-status"]:contains("TO DO")').should('exist');
+    cy.get('strong[data-cy="fee-record-status"]:contains("To do")').should('exist');
   });
 
   function* idGenerator() {
