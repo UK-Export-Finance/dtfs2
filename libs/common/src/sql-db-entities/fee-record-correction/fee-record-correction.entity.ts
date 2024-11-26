@@ -25,15 +25,15 @@ export class FeeRecordCorrectionEntity extends AuditableBaseEntity {
   requestedByUser!: RequestedByUserPartialEntity;
 
   /**
-   * The reasons for the correction
+   * The reasons for the correction, comma separated
    */
-  @Column({ type: 'simple-array' })
-  reasons!: string[];
+  @Column({ type: 'nvarchar', length: '500' })
+  private reasonsStringified!: string;
 
   /**
    * Additional information about the reasons for the correction
    */
-  @Column({ type: 'ntext' })
+  @Column({ type: 'nvarchar', length: '500' })
   additionalInfo!: string;
 
   /**
@@ -47,6 +47,20 @@ export class FeeRecordCorrectionEntity extends AuditableBaseEntity {
    */
   @Column()
   isCompleted!: boolean;
+
+  /**
+   * The reasons for the record correction
+   */
+  get reasons(): string[] {
+    return this.reasonsStringified.split(',');
+  }
+
+  /**
+   * The reasons for the record correction
+   */
+  set reasons(reasons: string[]) {
+    this.reasonsStringified = reasons.join(',');
+  }
 
   /**
    * Creates a newly requested correction

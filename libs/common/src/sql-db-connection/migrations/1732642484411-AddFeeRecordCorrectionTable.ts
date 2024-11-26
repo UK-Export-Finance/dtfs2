@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddFeeRecordCorrectionTable1732623840277 implements MigrationInterface {
-  name = 'AddFeeRecordCorrectionTable1732623840277';
+export class AddFeeRecordCorrectionTable1732642484411 implements MigrationInterface {
+  name = 'AddFeeRecordCorrectionTable1732642484411';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
@@ -11,8 +11,8 @@ export class AddFeeRecordCorrectionTable1732623840277 implements MigrationInterf
                 "lastUpdatedByTfmUserId" nvarchar(255),
                 "lastUpdatedByIsSystemUser" bit NOT NULL CONSTRAINT "DF_da9ebf56aea47e1ca26c5d38cff" DEFAULT 0,
                 "id" int NOT NULL IDENTITY(1, 1),
-                "reasons" ntext NOT NULL,
-                "additionalInfo" ntext NOT NULL,
+                "reasonsStringified" nvarchar(500) NOT NULL,
+                "additionalInfo" nvarchar(500) NOT NULL,
                 "dateRequested" datetime2 NOT NULL CONSTRAINT "DF_489233b45b51a528c7c12d9e999" DEFAULT getdate(),
                 "isCompleted" bit NOT NULL,
                 "feeRecordId" int NOT NULL,
