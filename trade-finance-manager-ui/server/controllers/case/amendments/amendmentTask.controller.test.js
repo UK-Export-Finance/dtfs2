@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash';
 import MOCKS from '../../../test-mocks/amendment-test-mocks';
 import CONSTANTS from '../../../constants';
 import { postAmendmentTask } from './amendmentTasks.controller';
@@ -46,15 +47,8 @@ describe('await postAmendmentTask', () => {
 
   describe('should throw an error when one of the mandatory arguments are invalid', () => {
     it('when deal id is invalid', async () => {
-      const modifiedRequest = {
-        ...mockRequest,
-        params: {
-          facilityId: MOCKS.MOCK_AMENDMENT.facilityId,
-          amendmentId: MOCKS.MOCK_AMENDMENT.amendmentId,
-          groupId: '1',
-          taskId: '1',
-        },
-      };
+      const modifiedRequest = cloneDeep(mockRequest);
+      delete modifiedRequest.params._id;
 
       await postAmendmentTask(modifiedRequest, mockResponse);
 
@@ -69,15 +63,8 @@ describe('await postAmendmentTask', () => {
     });
 
     it('when facility id is invalid', async () => {
-      const modifiedRequest = {
-        ...mockRequest,
-        params: {
-          _id: MOCKS.MOCK_DEAL._id,
-          amendmentId: MOCKS.MOCK_AMENDMENT.amendmentId,
-          groupId: '1',
-          taskId: '1',
-        },
-      };
+      const modifiedRequest = cloneDeep(mockRequest);
+      delete modifiedRequest.params.facilityId;
 
       await postAmendmentTask(modifiedRequest, mockResponse);
 
@@ -92,15 +79,8 @@ describe('await postAmendmentTask', () => {
     });
 
     it('when amendment id is invalid', async () => {
-      const modifiedRequest = {
-        ...mockRequest,
-        params: {
-          _id: MOCKS.MOCK_DEAL._id,
-          facilityId: MOCKS.MOCK_AMENDMENT.facilityId,
-          groupId: '1',
-          taskId: '1',
-        },
-      };
+      const modifiedRequest = cloneDeep(mockRequest);
+      delete modifiedRequest.params.amendmentId;
 
       await postAmendmentTask(modifiedRequest, mockResponse);
 
@@ -115,15 +95,8 @@ describe('await postAmendmentTask', () => {
     });
 
     it('when task group id is invalid', async () => {
-      const modifiedRequest = {
-        ...mockRequest,
-        params: {
-          _id: MOCKS.MOCK_DEAL._id,
-          facilityId: MOCKS.MOCK_AMENDMENT.facilityId,
-          amendmentId: MOCKS.MOCK_AMENDMENT.amendmentId,
-          taskId: '1',
-        },
-      };
+      const modifiedRequest = cloneDeep(mockRequest);
+      delete modifiedRequest.params.groupId;
 
       await postAmendmentTask(modifiedRequest, mockResponse);
 
@@ -138,15 +111,8 @@ describe('await postAmendmentTask', () => {
     });
 
     it('when task id is invalid', async () => {
-      const modifiedRequest = {
-        ...mockRequest,
-        params: {
-          _id: MOCKS.MOCK_DEAL._id,
-          facilityId: MOCKS.MOCK_AMENDMENT.facilityId,
-          amendmentId: MOCKS.MOCK_AMENDMENT.amendmentId,
-          groupId: '1',
-        },
-      };
+      const modifiedRequest = cloneDeep(mockRequest);
+      delete modifiedRequest.params.taskId;
 
       await postAmendmentTask(modifiedRequest, mockResponse);
 
@@ -160,17 +126,13 @@ describe('await postAmendmentTask', () => {
       expect(mockResponse.redirect).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
 
-    it('when task id is invalid', async () => {
-      const modifiedRequest = {
-        ...mockRequest,
-        params: {
-          _id: MOCKS.MOCK_DEAL._id,
-          facilityId: MOCKS.MOCK_AMENDMENT.facilityId,
-          amendmentId: undefined,
-          groupId: '',
-          taskId: null,
-        },
-      };
+    it('when various ids are invalid', async () => {
+      const modifiedRequest = cloneDeep(mockRequest);
+
+      modifiedRequest.params._id = null;
+      modifiedRequest.params.facilityId = '';
+      modifiedRequest.params.groupId = undefined;
+      modifiedRequest.params.amendmentId = '';
 
       await postAmendmentTask(modifiedRequest, mockResponse);
 
@@ -185,7 +147,7 @@ describe('await postAmendmentTask', () => {
     });
   });
 
-  describe('should call update amendment API function when all mandatory arguments are valid', () => {
+  describe('when all mandatory arguments are valid', () => {
     it('should update the amendment and render the task page', async () => {
       await postAmendmentTask(mockRequest, mockResponse);
 

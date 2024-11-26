@@ -3,8 +3,8 @@ import { ObjectId } from 'mongodb';
 
 export const MOCK_AMENDMENT: TfmFacilityAmendment = {
   version: 1,
-  amendmentId: new ObjectId(),
-  facilityId: new ObjectId(),
+  facilityId: new ObjectId('6745bd3719238444fa59f308'),
+  amendmentId: new ObjectId('6745bd3719238444fa59f307'),
   dealId: new ObjectId(),
   createdAt: 1723653619,
   updatedAt: 1723653634,

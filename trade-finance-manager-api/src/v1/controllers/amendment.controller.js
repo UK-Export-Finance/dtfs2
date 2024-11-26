@@ -222,6 +222,7 @@ const createFacilityAmendment = async (req, res) => {
 const updateFacilityAmendment = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
   let payload = req.body;
+
   // set to true if payload contains updateTfmLastUpdated else null
   const tfmLastUpdated = payload.updateTfmLastUpdated;
 
@@ -230,6 +231,7 @@ const updateFacilityAmendment = async (req, res) => {
   try {
     if (amendmentId && facilityId && payload) {
       let amendment = await api.getAmendmentById(facilityId, amendmentId);
+
       if (payload.createTasks && payload.submittedByPim) {
         const { tfm } = await api.findOneFacility(facilityId);
         payload.tasks = createAmendmentTasks(payload.requireUkefApproval, tfm);
