@@ -1,31 +1,12 @@
 import { DEAL_STATUS } from '@ukef/dtfs2-common';
-import { dealTypeFilters, statusFilters, dealsTemplateFilters, createdByYouFilter } from './template-filters';
-import { FIELD_NAMES, PRODUCT } from '../../../constants';
+import { statusFilters } from './template-filters';
+import { FIELD_NAMES } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
-import { generateFiltersArray, submissionTypeFilters } from '../filters/generate-template-filters';
+import { generateFiltersArray } from '../filters/generate-template-filters';
 
 describe('controllers/dashboard/deals - template-filters', () => {
-  describe('dealTypeFilters', () => {
-    it('should return generateFiltersArray with all possible `product` field inputs', () => {
-      const mockSubmittedFilters = {};
-
-      const result = dealTypeFilters(mockSubmittedFilters);
-
-      const expectedFieldName = FIELD_NAMES.DEAL.DEAL_TYPE;
-
-      const expectedFieldInputs = [
-        { text: PRODUCT.BSS_EWCS, value: PRODUCT.BSS_EWCS },
-        { text: PRODUCT.GEF, value: PRODUCT.GEF },
-      ];
-
-      const expected = generateFiltersArray(expectedFieldName, expectedFieldInputs, mockSubmittedFilters);
-
-      expect(result).toEqual(expected);
-    });
-  });
-
-  describe('statusFilters', () => {
-    it('should return generateFiltersArray with all possible `product` field inputs', () => {
+  describe('deal status filters - FF_TFM_FACILITY_END_DATE_ENABLED enabled', () => {
+    it('should return generateFiltersArray with all possible `deal status` field inputs', () => {
       const mockSubmittedFilters = {};
 
       const result = statusFilters(mockSubmittedFilters);
@@ -77,24 +58,13 @@ describe('controllers/dashboard/deals - template-filters', () => {
           text: DEAL_STATUS.ABANDONED,
           value: DEAL_STATUS.ABANDONED,
         },
+        {
+          text: DEAL_STATUS.CANCELLED,
+          value: DEAL_STATUS.CANCELLED,
+        },
       ];
 
       const expected = generateFiltersArray(expectedFieldName, expectedFieldInputs, mockSubmittedFilters);
-
-      expect(result).toEqual(expected);
-    });
-  });
-
-  describe('dealsTemplateFilters', () => {
-    it('should return an object of all filters', () => {
-      const result = dealsTemplateFilters();
-
-      const expected = {
-        createdBy: createdByYouFilter({}),
-        dealType: dealTypeFilters({}),
-        submissionType: submissionTypeFilters(FIELD_NAMES.DEAL.SUBMISSION_TYPE, {}),
-        status: statusFilters({}),
-      };
 
       expect(result).toEqual(expected);
     });

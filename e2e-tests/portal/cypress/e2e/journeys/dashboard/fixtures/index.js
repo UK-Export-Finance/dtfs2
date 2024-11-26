@@ -1,3 +1,4 @@
+const { DEAL_STATUS } = require('@ukef/dtfs2-common');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../fixtures/constants');
 
@@ -32,6 +33,12 @@ const BSS_DEAL_READY_FOR_CHECK = {
   ...BSS_DEAL_BASE,
   status: CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL,
   bankInternalRefName: 'Ready Check BSS',
+};
+
+const BSS_DEAL_CANCELLED = {
+  ...BSS_DEAL_BASE,
+  status: DEAL_STATUS.CANCELLED,
+  bankInternalRefName: 'Cancelled deal',
 };
 
 const BSS_DEAL_AIN = {
@@ -84,6 +91,7 @@ module.exports = {
   BSS_DEAL_AIN,
   BSS_DEAL_MIA,
   GEF_DEAL_DRAFT,
+  BSS_DEAL_CANCELLED,
   BSS_FACILITY_BOND,
   BSS_FACILITY_BOND_ISSUED,
   BSS_FACILITY_BOND_UNISSUED,
