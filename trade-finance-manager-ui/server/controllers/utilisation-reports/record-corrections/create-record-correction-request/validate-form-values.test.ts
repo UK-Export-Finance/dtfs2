@@ -1,10 +1,6 @@
-import { RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
+import { MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import { CreateRecordCorrectionRequestFormValues } from '../../../../types/view-models';
-import {
-  getAdditionalInfoValidationError,
-  MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH,
-  validateCreateRecordCorrectionRequestFormValues,
-} from './validate-form-values';
+import { getAdditionalInfoValidationError, validateCreateRecordCorrectionRequestFormValues } from './validate-form-values';
 
 console.error = jest.fn();
 
@@ -101,7 +97,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         });
       });
 
-      describe(`when additional info is more than 0 and less than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH} characters`, () => {
+      describe(`when additional info is more than 0 and less than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters`, () => {
         it('should not set additional info error', () => {
           // Arrange
           const formValues: CreateRecordCorrectionRequestFormValues = {
@@ -118,14 +114,14 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         });
       });
 
-      describe(`when additional info is more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH} characters`, () => {
+      describe(`when additional info is more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters`, () => {
         it('should set additional info error ', () => {
           // Arrange
           const formValues: CreateRecordCorrectionRequestFormValues = {
             ...aValidSetOfFormValues(),
-            additionalInfo: 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH + 1),
+            additionalInfo: 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT + 1),
           };
-          const expectedErrorMessage = `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH} characters in the provide more information box`;
+          const expectedErrorMessage = `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters in the provide more information box`;
 
           // Act
           const errors = validateCreateRecordCorrectionRequestFormValues(formValues);
@@ -188,10 +184,10 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       });
     });
 
-    describe(`when the additional info input is exactly ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH} characters`, () => {
+    describe(`when the additional info input is exactly ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters`, () => {
       it('should return undefined', () => {
         // Arrange
-        const additionalInfo = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH);
+        const additionalInfo = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT);
 
         // Act
         const errorMessage = getAdditionalInfoValidationError(additionalInfo);
@@ -201,17 +197,17 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       });
     });
 
-    describe(`when the additional info input is more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH} characters`, () => {
+    describe(`when the additional info input is more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters`, () => {
       it('should return "character limit" error message', () => {
         // Arrange
-        const additionalInfo = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH + 1);
+        const additionalInfo = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT + 1);
 
         // Act
         const errorMessage = getAdditionalInfoValidationError(additionalInfo);
 
         // Assert
         expect(errorMessage).toEqual(
-          `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH} characters in the provide more information box`,
+          `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters in the provide more information box`,
         );
       });
     });

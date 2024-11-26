@@ -1,9 +1,5 @@
+import { MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT } from '@ukef/dtfs2-common';
 import { CreateRecordCorrectionRequestFormValues, CreateRecordCorrectionRequestErrorsViewModel, ErrorSummaryViewModel } from '../../../../types/view-models';
-
-/**
- * The maximum length of the additional information field for a record correction request.
- */
-export const MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH = 500;
 
 /**
  * Validates the additional information field for a record correction request.
@@ -15,8 +11,8 @@ export const getAdditionalInfoValidationError = (additionalInfo: string | undefi
     return 'You must provide more information for the record correction request';
   }
 
-  if (additionalInfo.length > MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH) {
-    return `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH} characters in the provide more information box`;
+  if (additionalInfo.length > MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT) {
+    return `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters in the provide more information box`;
   }
 
   return undefined;
