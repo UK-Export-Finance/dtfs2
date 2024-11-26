@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { getFormattedReportPeriodWithLongMonth, RecordCorrectionTransientFormData } from '@ukef/dtfs2-common';
 import { CreateRecordCorrectionRequestErrorsViewModel, CreateRecordCorrectionRequestViewModel } from '../../../../types/view-models';
 import { asUserSession } from '../../../../helpers/express-session';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
@@ -79,6 +79,10 @@ export const postCreateRecordCorrectionRequest = async (req: PostCreateRecordCor
     const formHasErrors = errors.errorSummary.length !== 0;
 
     if (!formHasErrors) {
+      const parsedFormValues = formValues as RecordCorrectionTransientFormData;
+
+      await api.updateFeeRecordCorrectionTransientFormData(parsedFormValues, user, userToken);
+
       return res.redirect(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}/check-the-information`);
     }
 
