@@ -88,6 +88,7 @@ const facilityChangePortalActivity = async (application, facilities) => {
       if (facility.canResubmitIssuedFacilities) {
         // creates user object to add to array
         const maker = facility.unissuedToIssuedByMaker;
+
         const activityParams = {
           type: PORTAL_ACTIVITY_LABEL.FACILITY_CHANGED_ISSUED,
           user: '',
@@ -98,8 +99,10 @@ const facilityChangePortalActivity = async (application, facilities) => {
           maker,
           checker,
         };
+
         // generates an activities object
         const activityObj = portalActivityGenerator(activityParams);
+
         // adds to beginning of portalActivities array so most recent displayed first
         portalActivities.unshift(activityObj);
       }
@@ -124,8 +127,10 @@ const ukefSubmissionPortalActivity = async (application) => {
 
     // generates the label for activity array
     const applicationType = PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION;
+
     // creates user object to add to array
     const user = await getUserInfo(checkerId);
+
     const activityParams = {
       type: applicationType,
       user,
@@ -136,8 +141,10 @@ const ukefSubmissionPortalActivity = async (application) => {
       maker: '',
       checker: '',
     };
+
     // generates an activities object
     const activityObj = portalActivityGenerator(activityParams);
+
     // adds to beginning of portalActivities array so most recent displayed first
     portalActivities.unshift(activityObj);
 
