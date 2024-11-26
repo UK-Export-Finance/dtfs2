@@ -48,12 +48,30 @@ export class FeeRecordCorrectionEntity extends AuditableBaseEntity {
   @Column()
   isCompleted!: boolean;
 
-  static createRequestedCorrection({ feeRecord, requestedByUser, reasons, additionalInfo }: CreateFeeRecordCorrectionParams): FeeRecordCorrectionEntity {
+  /**
+   * Creates a newly requested correction
+   * @param param - The details of correction
+   * @param param.feeRecord - The fee record the correction is for
+   * @param param.requestedByUser - The user who requested the correction
+   * @param param.reasons - The reasons for the correction
+   * @param param.additionalInfo - The user provided additional information
+   * @param param.requestSource - The request source
+   * @returns The fee record correction
+   */
+  static createRequestedCorrection({
+    feeRecord,
+    requestedByUser,
+    reasons,
+    additionalInfo,
+    requestSource,
+  }: CreateFeeRecordCorrectionParams): FeeRecordCorrectionEntity {
     const recordCorrection = new FeeRecordCorrectionEntity();
     recordCorrection.feeRecord = feeRecord;
     recordCorrection.reasons = reasons;
     recordCorrection.requestedByUser = requestedByUser;
     recordCorrection.additionalInfo = additionalInfo;
+    recordCorrection.isCompleted = false;
+    recordCorrection.updateLastUpdatedBy(requestSource);
     return recordCorrection;
   }
 }
