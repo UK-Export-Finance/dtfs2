@@ -157,46 +157,50 @@ describe('updated facility amendment API call', () => {
     const { res } = createMocks({ params: { amendmentId, facilityId }, user: underwriter, body: requestBody });
     const auditDetails = { id: undefined, userType: 'tfm' };
 
-    it('should add isReadyForApproval property to ukefDecision object, if no UKEF decision has been added to the amendment', async () => {
-      // Arrange
-      const mockRequest = cloneDeep(TASKS_UPDATE_MOCK_REQUEST);
+    describe('when UKEF decision does not exist for the facility amendment', () => {
+      it('should add isReadyForApproval property to ukefDecision object', async () => {
+        // Arrange
+        const mockRequest = cloneDeep(TASKS_UPDATE_MOCK_REQUEST);
 
-      // Act
-      await amendmentController.updateFacilityAmendment(mockRequest, res);
+        // Act
+        await amendmentController.updateFacilityAmendment(mockRequest, res);
 
-      // Assert
-      expect(api.updateFacilityAmendment).toHaveBeenCalledTimes(1);
-      expect(api.updateFacilityAmendment).toHaveBeenCalledWith(
-        facilityId,
-        amendmentId,
-        {
-          tasks: MOCK_TASKS,
-          ukefDecision: {
-            isReadyForApproval: isRiskAnalysisCompleted(MOCK_TASKS),
+        // Assert
+        expect(api.updateFacilityAmendment).toHaveBeenCalledTimes(1);
+        expect(api.updateFacilityAmendment).toHaveBeenCalledWith(
+          facilityId,
+          amendmentId,
+          {
+            tasks: MOCK_TASKS,
+            ukefDecision: {
+              isReadyForApproval: isRiskAnalysisCompleted(MOCK_TASKS),
+            },
           },
-        },
-        auditDetails,
-      );
+          auditDetails,
+        );
 
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+        expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      });
     });
 
-    it('should not update UKEF decision object if present', async () => {
-      // Arrange
-      const mockRequest = cloneDeep(TASKS_UPDATE_MOCK_REQUEST);
+    describe('when UKEF decision does exist for the facility amendment', () => {
+      it('should not update UKEF decision object if present', async () => {
+        // Arrange
+        const mockRequest = cloneDeep(TASKS_UPDATE_MOCK_REQUEST);
 
-      api.getAmendmentById = jest.fn().mockResolvedValue(MOCK_AMENDMENT_WITH_UKEF_DECISION);
-      api.updateFacilityAmendment = jest.fn().mockResolvedValue(MOCK_AMENDMENT_WITH_UKEF_DECISION);
+        api.getAmendmentById = jest.fn().mockResolvedValue(MOCK_AMENDMENT_WITH_UKEF_DECISION);
+        api.updateFacilityAmendment = jest.fn().mockResolvedValue(MOCK_AMENDMENT_WITH_UKEF_DECISION);
 
-      // Act
-      await amendmentController.updateFacilityAmendment(mockRequest, res);
+        // Act
+        await amendmentController.updateFacilityAmendment(mockRequest, res);
 
-      // Assert
-      expect(api.updateFacilityAmendment).toHaveBeenCalledTimes(1);
-      expect(api.updateFacilityAmendment).toHaveBeenCalledWith(facilityId, amendmentId, { tasks: MOCK_TASKS }, auditDetails);
+        // Assert
+        expect(api.updateFacilityAmendment).toHaveBeenCalledTimes(1);
+        expect(api.updateFacilityAmendment).toHaveBeenCalledWith(facilityId, amendmentId, { tasks: MOCK_TASKS }, auditDetails);
 
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
-      expect(res._getData().ukefDecision).toEqual(MOCK_AMENDMENT_WITH_UKEF_DECISION.ukefDecision);
+        expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+        expect(res._getData().ukefDecision).toEqual(MOCK_AMENDMENT_WITH_UKEF_DECISION.ukefDecision);
+      });
     });
   });
 });
