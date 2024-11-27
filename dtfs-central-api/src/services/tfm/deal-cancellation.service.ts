@@ -95,7 +95,6 @@ export class DealCancellationService {
 
     await PortalFacilityRepo.updateManyByDealId(dealId, { facilityStage: FACILITY_STAGE.RISK_EXPIRED }, auditDetails);
 
-    // @ts-ignore
     await PortalDealService.addDealCancelledActivity({ dealId, dealType, portalActivities, author, auditDetails });
 
     return this.getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities });

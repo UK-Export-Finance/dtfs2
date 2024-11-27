@@ -7,6 +7,7 @@ import { Activity } from '../portal';
 type BaseDeal = AnyObject & {
   _id: ObjectId;
   submissionType: DealSubmissionType | null;
+  portalActivities: Array<Activity>;
 };
 
 export interface BssEwcsDeal extends BaseDeal {
@@ -21,7 +22,6 @@ export interface GefDeal extends BaseDeal {
   ukefDealId: string | null;
   eligibility: AnyObject;
   exporter: AnyObject;
-  portalActivities: Array<Activity>;
 }
 
 /**
