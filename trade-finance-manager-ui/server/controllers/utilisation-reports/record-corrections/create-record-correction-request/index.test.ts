@@ -2,13 +2,12 @@ import httpMocks from 'node-mocks-http';
 import { RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import {
-  EMPTY_CREATE_RECORD_CORRECTION_REQUEST_ERRORS_VIEW_MODEL,
   getCreateRecordCorrectionRequest,
   GetCreateRecordCorrectionRequestRequest,
   PostCreateRecordCorrectionRequestRequest,
   postCreateRecordCorrectionRequest,
 } from '.';
-import { CreateRecordCorrectionRequestErrorsViewModel, CreateRecordCorrectionRequestViewModel } from '../../../../types/view-models';
+import { CreateRecordCorrectionRequestViewModel } from '../../../../types/view-models';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import { CreateRecordCorrectionRequestFormRequestBody } from './form-helpers';
 import { validateCreateRecordCorrectionRequestFormValues } from './validate-form-values';
@@ -17,7 +16,6 @@ import { GetFeeRecordResponseBody } from '../../../../api-response-types';
 import { getLinkToPremiumPaymentsTab } from '../../helpers';
 
 jest.mock('../../../../api');
-jest.mock('./validate-form-values');
 
 console.error = jest.fn();
 
@@ -99,14 +97,6 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
   });
 
   describe('postCreateRecordCorrectionRequest', () => {
-    beforeEach(() => {
-      jest.mocked(validateCreateRecordCorrectionRequestFormValues).mockReturnValue(EMPTY_CREATE_RECORD_CORRECTION_REQUEST_ERRORS_VIEW_MODEL);
-    });
-
-    afterEach(() => {
-      jest.resetAllMocks();
-    });
-
     describe('when the form values are valid', () => {
       const validBody = {
         reasons: [RECORD_CORRECTION_REASON.OTHER],
@@ -130,25 +120,10 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         // Assert
         expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}/check-the-information`);
         expect(api.getFeeRecord).not.toHaveBeenCalled();
-
-        expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledTimes(1);
-        expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledWith(validBody);
       });
     });
 
     describe('when the form values are not valid', () => {
-      const errors: CreateRecordCorrectionRequestErrorsViewModel = {
-        errorSummary: [{ text: 'Some text', href: '#some-href' }],
-      };
-
-      beforeEach(() => {
-        jest.mocked(validateCreateRecordCorrectionRequestFormValues).mockReturnValue(errors);
-      });
-
-      afterEach(() => {
-        jest.resetAllMocks();
-      });
-
       const getHttpMocks = (body?: CreateRecordCorrectionRequestFormRequestBody) =>
         httpMocks.createMocks<PostCreateRecordCorrectionRequestRequest>({
           params: { reportId, feeRecordId },
@@ -177,12 +152,9 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
             exporter: 'Sample Company Ltd',
           },
           formValues: { reasons: [] },
-          errors,
+          errors: validateCreateRecordCorrectionRequestFormValues(body),
           backLinkHref: getLinkToPremiumPaymentsTab(reportId, [456]),
         });
-
-        expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledTimes(1);
-        expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledWith({ reasons: [] });
       });
 
       it('should fetch the fee record details using the reportId and feeRecordId', async () => {
@@ -210,9 +182,6 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         // Assert
         const viewModel = res._getRenderData() as CreateRecordCorrectionRequestViewModel;
         expect(viewModel.formValues.reasons).toEqual(validReasons);
-
-        expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledTimes(1);
-        expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledWith({ reasons: validReasons });
       });
 
       it('should set the render view model formValues "additionalInfo" to the request body additionalInfo', async () => {
@@ -228,9 +197,6 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         // Assert
         const viewModel = res._getRenderData() as CreateRecordCorrectionRequestViewModel;
         expect(viewModel.formValues.additionalInfo).toEqual(additionalInfo);
-
-        expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledTimes(1);
-        expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledWith({ additionalInfo, reasons: [] });
       });
     });
   });
