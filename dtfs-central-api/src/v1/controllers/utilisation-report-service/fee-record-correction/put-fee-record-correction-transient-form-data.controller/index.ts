@@ -6,6 +6,9 @@ import { PutFeeRecordCorrectionTransientFormDataSchema } from '../../../../route
 import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-transient-form-data-repo';
 
 export type PutFeeRecordCorrectionTransientFormDataRequest = CustomExpressRequest<{
+  params: {
+    feeRecordId: string;
+  };
   reqBody: PutFeeRecordCorrectionTransientFormDataSchema;
 }>;
 
@@ -16,11 +19,13 @@ export type PutFeeRecordCorrectionTransientFormDataRequest = CustomExpressReques
  */
 export const putFeeRecordCorrectionTransientFormData = async (req: PutFeeRecordCorrectionTransientFormDataRequest, res: Response) => {
   try {
+    const { feeRecordId } = req.params;
     const { user, formData } = req.body;
     const userId = user._id.toString();
 
     const newTransientFormData = FeeRecordCorrectionTransientFormDataEntity.create({
       userId,
+      feeRecordId: Number(feeRecordId),
       formData,
       requestSource: {
         platform: REQUEST_PLATFORM_TYPE.TFM,

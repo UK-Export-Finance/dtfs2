@@ -1689,14 +1689,16 @@ const getFeeRecord = async (reportId, feeRecordId) => {
 };
 
 /**
- * Updates the fee record correction transient form data associated with the user
+ * Updates the fee record correction transient form data associated with the given fee record id and user
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
  * @param {import('@ukef/dtfs2-common').RecordCorrectionTransientFormData} formData
  * @param {import('../types/tfm-session-user').TfmSessionUser} user - The current user stored in the session
  * @returns {Promise<{ status: number }>}
  */
-const updateFeeRecordCorrectionTransientFormData = async (formData, user) => {
+const updateFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, formData, user) => {
   const response = await axios({
-    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/fee-record-correction-transient-form-data`,
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-transient-form-data`,
     method: 'put',
     headers: headers.central,
     data: {

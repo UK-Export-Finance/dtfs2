@@ -781,11 +781,24 @@ utilisationReportsRouter
 
 /**
  * @openapi
- * /fee-record-correction-transient-form-data:
+ * /utilisation-reports/:reportId/fee-records/:feeRecordId/correction-transient-form-data:
  *   put:
- *     summary: Save fee record correction transient form data
+ *     summary: Save fee record correction transient form data against a user and fee record
  *     tags: [Utilisation Report]
- *     description: Save fee record correction transient form data
+ *     description: Save fee record correction transient form data against a user and fee record
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report
+ *       - in: path
+ *         name: feeRecordId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the fee record
  *     requestBody:
  *       required: true
  *       content:
@@ -799,8 +812,8 @@ utilisationReportsRouter
  *                   reasons:
  *                     description: The record correction reasons
  *                     type: array
- *                      items:
- *                        $ref: '#/definitions/RecordCorrectionReason'
+ *                     items:
+ *                       $ref: '#/definitions/RecordCorrectionReason'
  *                   additionalInfo:
  *                     description: Additional record correction information
  *                     type: string
@@ -815,7 +828,8 @@ utilisationReportsRouter
  *         description: Internal Server Error
  */
 utilisationReportsRouter
-  .route('/fee-record-correction-transient-form-data')
+  .route('/:reportId/fee-records/:feeRecordId/correction-transient-form-data')
+  .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), handleExpressValidatorResult)
   .put(validatePutFeeRecordCorrectionTransientFormDataSchema, putFeeRecordCorrectionTransientFormData);
 
 module.exports = utilisationReportsRouter;

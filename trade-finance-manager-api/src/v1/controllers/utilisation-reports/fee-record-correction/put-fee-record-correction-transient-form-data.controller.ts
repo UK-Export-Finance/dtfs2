@@ -21,9 +21,10 @@ export type PutFeeRecordCorrectionTransientFormDataRequest = CustomExpressReques
  */
 export const putFeeRecordCorrectionTransientFormData = async (req: PutFeeRecordCorrectionTransientFormDataRequest, res: Response) => {
   try {
+    const { reportId, feeRecordId } = req.params;
     const { formData, user } = req.body;
 
-    await api.updateFeeRecordCorrectionTransientFormData(formData, user);
+    await api.updateFeeRecordCorrectionTransientFormData(reportId, feeRecordId, formData, user);
 
     return res.sendStatus(HttpStatusCode.Ok);
   } catch (error) {
