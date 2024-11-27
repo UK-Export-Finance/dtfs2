@@ -5,30 +5,6 @@
  * creation and update operations. The rules are applied asynchronously and return
  * any validation errors encountered.
  *
- * Rules:
- * - passwordAtLeast8Characters
- * - passwordAtLeastOneNumber
- * - passwordAtLeastOneUppercase
- * - passwordAtLeastOneLowercase
- * - passwordAtLeastOneSpecialCharacter
- * - passwordsCannotBeReUsed
- * - passwordsMustMatch
- * - currentPasswordMustMatch
- * - readOnlyRoleCannotBeAssignedWithOtherRoles
- * - usernameAndEmailMustMatch
- * - emailMustBeValidEmailAddress
- * - emailMustBeUnique
- * - firstNameMustNotBeEmpty
- * - surnameMustNotBeEmpty
- * - selectAtLeastOneRole
- * - selectAtLeastOneBank
- * - adminFromUkefOnly
- *
- * Functions:
- * - applyRules(ruleset, existingUser, candidateChange): Applies the given set of rules to the candidate change.
- * - applyCreateRules(candidateChange): Applies the creation rules to the candidate change.
- * - applyUpdateRules(existingUser, candidateChange): Applies the update rules to the candidate change.
- *
  * @module validationRules
  */
 
