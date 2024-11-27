@@ -25,9 +25,6 @@ const addGefDealCancelledActivity = async ({ dealId, portalActivities, author, a
     portalActivities: [newActivity, ...portalActivities],
   };
 
-  // TODO: do we need to update TFM deal snapshot as well, for portalActivities
-  // ^ yes, we should.
-
   const response = await updateDeal({ dealId, dealUpdate: update, auditDetails });
 
   return response;
