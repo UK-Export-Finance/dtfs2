@@ -9,12 +9,9 @@ import {
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
-import { aTfmUser } from '@ukef/dtfs2-common/mock-data-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { aTfmSessionUser } from '../../../test-helpers';
-import { mongoDbClient } from '../../../src/drivers/db-client';
-import { wipe } from '../../wipeDB';
 import { PutFeeRecordCorrectionTransientFormDataSchema } from '../../../src/v1/routes/middleware/payload-validation';
 
 console.error = jest.fn();
@@ -25,7 +22,6 @@ describe(`PUT ${BASE_URL}`, () => {
   const getUrl = (reportId: number | string, feeRecordId: number | string) =>
     BASE_URL.replace(':reportId', reportId.toString()).replace(':feeRecordId', feeRecordId.toString());
 
-  const tfmUser = aTfmUser();
   const reportId = 1;
   const feeRecordId = 2;
 
@@ -41,11 +37,6 @@ describe(`PUT ${BASE_URL}`, () => {
     await SqlDbHelper.initialize();
 
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
-
-    await wipe(['tfm-users']);
-
-    const tfmUsersCollection = await mongoDbClient.getCollection('tfm-users');
-    await tfmUsersCollection.insertOne(tfmUser);
   });
 
   beforeEach(async () => {
@@ -62,7 +53,6 @@ describe(`PUT ${BASE_URL}`, () => {
 
   afterAll(async () => {
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
-    await wipe(['tfm-users']);
   });
 
   withSqlIdPathParameterValidationTests({
