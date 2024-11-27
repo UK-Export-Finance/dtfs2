@@ -1,3 +1,4 @@
+const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('@ukef/dtfs2-common');
 const { format, fromUnixTime } = require('date-fns');
 const { mongoDbClient: db } = require('../../../src/drivers/db-client');
 
@@ -10,8 +11,6 @@ const {
   getUserInfo,
   facilityChangePortalActivity,
 } = require('../../../src/v1/gef/controllers/portal-activities.controller');
-
-const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../src/v1/portalActivity-object-generator/activityConstants');
 
 const mockApplications = require('../../fixtures/gef/application');
 

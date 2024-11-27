@@ -1,6 +1,6 @@
 const { getUnixTime } = require('date-fns');
+const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('@ukef/dtfs2-common');
 const { updateDeal } = require('./update-deal');
-const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../../constants');
 
 /**
  * Add a "deal cancelled" activity to a GEF deal.

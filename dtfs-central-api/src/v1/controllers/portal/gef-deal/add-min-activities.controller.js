@@ -1,5 +1,5 @@
 const { validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError, PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('@ukef/dtfs2-common');
 const { getUnixTime } = require('date-fns');
 const { ObjectId } = require('mongodb');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
@@ -9,7 +9,6 @@ const { updateDeal } = require('./update-deal.controller');
 const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
 const { updateFacility } = require('../gef-facility/update-facility.controller');
 const { isNumber } = require('../../../../helpers');
-const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../../constants');
 
 /**
  * canResubmitIssuedFacilities - changes flags to false
