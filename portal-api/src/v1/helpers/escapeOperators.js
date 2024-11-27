@@ -71,7 +71,7 @@ const recursivelyReplaceEscapeOperators = (filters, result = {}) => {
     } else if (typeof filters[key] === 'object' && filters[key] !== null) {
       result[key] = {};
       recursivelyReplaceEscapeOperators(filters[key], result[key]);
-      // These last three if statements handle the lowest level cases
+      // These last few statements handle the lowest level cases
     } else if (key === 'KEYWORD') {
       result.$regex = escapeStringRegexp(filters[key]);
     } else if (key === 'hasBeenIssued') {

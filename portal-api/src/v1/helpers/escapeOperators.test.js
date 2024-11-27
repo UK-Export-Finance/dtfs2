@@ -3,7 +3,7 @@ const CONSTANTS = require('../../constants');
 const { escapeOperators } = require('./escapeOperators');
 
 describe('escapeOperators function', () => {
-  it('returns the original input when input it is null', () => {
+  it('should return the original input when input is null', () => {
     // Arrange
     const input = null;
 
@@ -14,7 +14,7 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(input);
   });
 
-  it('returns the original input if it is not an object', () => {
+  it('should return the original input if it is not an object', () => {
     // Arrange
     const input = 'not an object';
 
@@ -25,7 +25,7 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(input);
   });
 
-  it('returns the original input if it is an empty object', () => {
+  it('should return the original input if it is an empty object', () => {
     // Arrange
     const input = {};
 
@@ -36,7 +36,7 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(input);
   });
 
-  it('returns the original input, wrapped with `$eq`, if it is an object containing no operators', () => {
+  it('should return the original input, wrapped with `$eq`, if it is an object containing no operators', () => {
     // Arrange
     const filter = { name: 'ABC' };
 
@@ -48,7 +48,7 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(expected);
   });
 
-  it('escapes the AND operator correctly', () => {
+  it('should escape the AND operator correctly', () => {
     // Arrange
     const filter = { AND: [{ name: 'ABC' }, { age: 30 }] };
 
@@ -60,7 +60,7 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(expected);
   });
 
-  it('handles cases with multiple operators', () => {
+  it('should handle cases with multiple operators', () => {
     // Arrange
     const filter = {
       AND: [
@@ -90,7 +90,7 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(expected);
   });
 
-  it('handles mixed string KEYWORD', () => {
+  it('should handle mixed string KEYWORD', () => {
     // Arrange
     const filter = {
       AND: [
@@ -120,7 +120,7 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(expected);
   });
 
-  it('handles `hasBeenIssued`, filtering out risk expired facilities', () => {
+  it('should handle `hasBeenIssued`, filtering out risk expired facilities', () => {
     // Arrange
     const filter = {
       AND: [
@@ -153,7 +153,7 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(expected);
   });
 
-  it('transforms multiple keywords correctly', () => {
+  it('should transform multiple keywords correctly', () => {
     // Arrange
     const filter = {
       AND: [
@@ -183,7 +183,7 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(expected);
   });
 
-  it('escapes nested OR operator inside AND operator', () => {
+  it('should escape nested OR operator inside AND operator', () => {
     // Arrange
     const filter = {
       AND: [
@@ -221,7 +221,7 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(expected);
   });
 
-  it('handles empty OR array inside AND operator', () => {
+  it('should handle empty OR array inside AND operator', () => {
     // Arrange
     const filter = { AND: [{ OR: [] }] };
 
@@ -233,7 +233,7 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(expected);
   });
 
-  it('deletes the AND operator key after escaping', () => {
+  it('should delete the AND operator key after escaping', () => {
     // Arrange
     const filter = { AND: [{ key: 'value' }] };
 
@@ -244,7 +244,7 @@ describe('escapeOperators function', () => {
     expect(result).not.toHaveProperty('AND');
   });
 
-  it('returns the same object for an empty filter object', () => {
+  it('should return the same object for an empty filter object', () => {
     // Arrange
     const filter = {};
 
@@ -255,7 +255,7 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(filter);
   });
 
-  it('returns the same object wrapped with $eq if there is no AND operator', () => {
+  it('should return the same object wrapped with $eq if there is no AND operator', () => {
     // Arrange
     const filter = {
       'bank.id': '9',
@@ -271,7 +271,7 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(expected);
   });
 
-  it('returns the same object wrapped with $eq for invalid operator key', () => {
+  it('should return the same object wrapped with $eq for invalid operator key', () => {
     // Arrange
     const filter = {
       INVALID: [
@@ -295,7 +295,7 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(expected);
   });
 
-  it('escapes filter object with only AND operator', () => {
+  it('should escape filter object with only AND operator', () => {
     // Arrange
     const filter = {
       AND: [
@@ -319,7 +319,7 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(expected);
   });
 
-  it('escapes nested OR operator inside AND operator', () => {
+  it('should escape nested OR operator inside AND operator', () => {
     // Arrange
     const filter = {
       AND: [
@@ -357,7 +357,7 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(expected);
   });
 
-  it('returns null for null input', () => {
+  it('should return null for null input', () => {
     // Arrange
     const filter = null;
 
@@ -368,7 +368,7 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(filter);
   });
 
-  it('returns undefined for undefined input', () => {
+  it('should return undefined for undefined input', () => {
     // Arrange
     const filter = undefined;
 
@@ -379,7 +379,7 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(filter);
   });
 
-  it('returns the same input for non-object input', () => {
+  it('should return the same input for non-object input', () => {
     // Arrange
     const filter = 'not an object';
 
@@ -390,7 +390,7 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(filter);
   });
 
-  it('handles empty OR array inside AND operator', () => {
+  it('should handle empty OR array inside AND operator', () => {
     // Arrange
     const filter = {
       AND: [
@@ -420,7 +420,7 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(expected);
   });
 
-  it('deletes AND operator key after escaping', () => {
+  it('should delete AND operator key after escaping', () => {
     // Arrange
     const filter = {
       AND: [
