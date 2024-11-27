@@ -1,4 +1,4 @@
-import { isNonEmptyString, RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
+import { RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import { CreateRecordCorrectionRequestFormValues } from '../../../../types/view-models';
 
 /**
@@ -17,7 +17,7 @@ export type CreateRecordCorrectionRequestFormRequestBody = {
  * @returns True if the reason is valid, otherwise false.
  */
 export function isRecordCorrectionReason(reason: string): reason is RecordCorrectionReason {
-  return isNonEmptyString(reason) && RECORD_CORRECTION_REASON_VALUES.includes(reason);
+  return RECORD_CORRECTION_REASON_VALUES.includes(reason);
 }
 
 /**
