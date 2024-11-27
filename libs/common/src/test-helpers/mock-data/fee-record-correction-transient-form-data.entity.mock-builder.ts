@@ -5,7 +5,7 @@ import { RecordCorrectionTransientFormData } from '../../types';
 export class FeeRecordCorrectionTransientFormDataEntityMockBuilder {
   private readonly transientFormData: FeeRecordCorrectionTransientFormDataEntity;
 
-  private constructor() {
+  public constructor() {
     const data = new FeeRecordCorrectionTransientFormDataEntity();
 
     data.userId = 'abc123';
