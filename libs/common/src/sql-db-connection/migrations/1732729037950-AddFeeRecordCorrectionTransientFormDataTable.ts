@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddFeeRecordCorrectionTransientFormDataTable1732718429532 implements MigrationInterface {
-  name = 'AddFeeRecordCorrectionTransientFormDataTable1732718429532';
+export class AddFeeRecordCorrectionTransientFormDataTable1732729037950 implements MigrationInterface {
+  name = 'AddFeeRecordCorrectionTransientFormDataTable1732729037950';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`

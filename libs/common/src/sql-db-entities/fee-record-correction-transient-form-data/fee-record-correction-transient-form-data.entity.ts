@@ -17,7 +17,7 @@ export class FeeRecordCorrectionTransientFormDataEntity extends AuditableBaseEnt
   /**
    * The id of the linked fee record (Primary Key)
    */
-  @PrimaryColumn({ nullable: false, foreignKeyConstraintName: 'FK_7a9b7aa849fc3bb09d80fa1f812' })
+  @PrimaryColumn({ nullable: false })
   feeRecordId!: number;
 
   /**
