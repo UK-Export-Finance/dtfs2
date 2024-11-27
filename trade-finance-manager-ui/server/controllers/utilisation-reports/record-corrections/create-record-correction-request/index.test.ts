@@ -99,7 +99,11 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
     });
 
     describe('when the form values are valid', () => {
-      const validBody = aPostCreateRecordCorrectionRequestBody();
+      const validBody = {
+        reasons: [RECORD_CORRECTION_REASON.OTHER],
+        additionalInfo: 'Some additional info',
+      };
+
       const getHttpMocks = () =>
         httpMocks.createMocks<PostCreateRecordCorrectionRequestRequest>({
           params: { reportId, feeRecordId },
@@ -121,13 +125,6 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledTimes(1);
         expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledWith(validBody);
       });
-
-      function aPostCreateRecordCorrectionRequestBody(): CreateRecordCorrectionRequestFormRequestBody {
-        return {
-          reasons: [RECORD_CORRECTION_REASON.OTHER],
-          additionalInfo: 'Some additional info',
-        };
-      }
     });
 
     describe('when the form values are not valid', () => {
