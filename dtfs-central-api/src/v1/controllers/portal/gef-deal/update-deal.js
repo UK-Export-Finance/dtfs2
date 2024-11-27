@@ -4,7 +4,13 @@ const { ObjectId } = require('mongodb');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const { findOneDeal } = require('./get-gef-deal.controller');
 
-// TODO - unit test
+/**
+ * Update a deal
+ * @param {string | ObjectId} updateDeal.dealId - the dealId
+ * @param {object} updateDeal.dealUpdate - the deal update
+ * @param {import('@ukef/dtfs2-common').AuditDetails} updateDeal.auditDetails - the users audit details
+ * @returns {Promise<('@ukef/dtfs2-common').Deal>}
+ */
 const updateDeal = async ({ dealId, dealUpdate, auditDetails }) => {
   try {
     if (!ObjectId.isValid(dealId)) {
