@@ -4,7 +4,7 @@ import { PortalDealService } from './deal.service';
 
 const addGefDealCancelledActivityMock = jest.fn() as jest.Mock<Deal>;
 
-jest.mock('../../v1/controllers/portal/gef-deal/add-gef-deal-cancelled-activity.controller', () => ({
+jest.mock('../../v1/controllers/portal/gef-deal/add-gef-deal-cancelled-activity', () => ({
   addGefDealCancelledActivity: (params: AnyObject) => addGefDealCancelledActivityMock(params),
 }));
 

@@ -208,7 +208,7 @@ const generateMINActivities = async (req, res) => {
     }
     return res.status(404).send();
   } catch (error) {
-    console.error('Central-API - Error generating MIN activities %o', error);
+    console.error('Error generating MIN activities %o', error);
     return res.status(400).send();
   }
 };
