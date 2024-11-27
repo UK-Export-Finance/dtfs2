@@ -45,8 +45,8 @@ describe('PortalDealService - addDealCancelledActivity', () => {
     // Arrange
     const dealType = DEAL_TYPE.BSS_EWCS;
 
-    // Act + Assert
-    await expect(PortalDealService.addDealCancelledActivity({ dealId, dealType, portalActivities, author, auditDetails })).rejects.toThrow();
+    // Act
+    await PortalDealService.addDealCancelledActivity({ dealId, dealType, portalActivities, author, auditDetails });
 
     // Assert
     expect(addGefDealCancelledActivityMock).toHaveBeenCalledTimes(0);

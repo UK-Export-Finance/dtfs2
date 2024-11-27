@@ -57,8 +57,6 @@ export class PortalDealService {
   }): Promise<void> {
     if (dealType === DEAL_TYPE.GEF) {
       await addGefDealCancelledActivity({ dealId, portalActivities, author, auditDetails });
-    } else {
-      throw new Error(`Invalid dealType ${dealType}`);
     }
   }
 }
