@@ -12,4 +12,4 @@ const entraIdService = new EntraIdService({ entraIdConfig, entraIdApi });
 const ssoController = new SsoController({ entraIdService });
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-ssoOpenRouter.route('/sso/auth-code-url').get(ssoController.getAuthCodeUrl.bind(ssoController));
+ssoOpenRouter.route('/auth-code-url').get(ssoController.getAuthCodeUrl.bind(ssoController));
