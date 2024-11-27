@@ -7,6 +7,7 @@ export type PremiumPaymentsTableComponentRendererParams = {
   feeRecordPaymentGroups: PremiumPaymentsViewModelItem[];
   enablePaymentsReceivedSorting: boolean;
   hasSelectableRows: boolean;
+  errorMessage?: string;
 };
 
 export const aPremiumPaymentsTableDefaultRendererParams = (): PremiumPaymentsTableComponentRendererParams => ({

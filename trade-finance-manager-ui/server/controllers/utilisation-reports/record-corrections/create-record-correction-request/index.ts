@@ -4,6 +4,7 @@ import { CreateRecordCorrectionRequestViewModel } from '../../../../types/view-m
 import { asUserSession } from '../../../../helpers/express-session';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
+import { getLinkToPremiumPaymentsTab } from '../../helpers';
 import api from '../../../../api';
 
 export type CreateRecordCorrectionRequestRequest = CustomExpressRequest<{
@@ -35,6 +36,7 @@ export const createRecordCorrectionRequest = async (req: CreateRecordCorrectionR
         facilityId: feeRecord.facilityId,
         exporter: feeRecord.exporter,
       },
+      backLinkHref: getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]),
     });
   } catch (error) {
     console.error('Failed to create record correction request', error);
