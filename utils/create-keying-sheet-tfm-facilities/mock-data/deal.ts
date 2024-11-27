@@ -235,15 +235,14 @@ export const aDeal = (ukefDealId: string, dealId: ObjectId, portalUserId: Object
   portalActivities: [
     {
       type: 'NOTICE',
+      activityType: 'Automatic inclusion notice submitted to UKEF',
       timestamp: 1726061293,
       author: {
         firstName: 'Checker',
         lastName: 'Checker',
         _id: '66e19aa9673666208812336e',
       },
-      text: '',
       label: 'Automatic inclusion notice submitted to UKEF',
-      html: '',
       facilityType: '',
       ukefFacilityId: '',
       facilityId: '',
