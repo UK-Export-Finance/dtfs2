@@ -43,8 +43,8 @@ describe(page, () => {
     wrapper.expectText(`${feeRecordSummarySelector} [data-cy="requested-by"]`).toRead('Jay Doe');
   });
 
-  describe('when there are errors', () => {
-    it('should add error prefix to page title', () => {
+  describe('when there are page errors', () => {
+    it('should add "error" prefix to the page title', () => {
       // Arrange
       const viewModel = aCreateRecordCorrectionRequestViewModel();
       viewModel.errors.errorSummary = [{ text: 'an error', href: 'error-href' }];
@@ -76,8 +76,8 @@ describe(page, () => {
     });
   });
 
-  describe('when there are no errors', () => {
-    it('should not add error prefix to page title ', () => {
+  describe('when there are no page errors', () => {
+    it('should not add "error" prefix to the page title', () => {
       // Arrange
       const viewModel = aCreateRecordCorrectionRequestViewModel();
       viewModel.errors.errorSummary = [];
@@ -102,101 +102,97 @@ describe(page, () => {
     });
   });
 
-  describe('when the reasons field', () => {
-    describe('has an error', () => {
-      it('should display an inline error message', () => {
-        // Arrange
-        const errorMessage = 'Select reason(s)';
+  describe('when the reasons field has an error', () => {
+    it('should display an inline error message', () => {
+      // Arrange
+      const errorMessage = 'Select reason(s)';
 
-        const viewModel = aCreateRecordCorrectionRequestViewModel();
-        viewModel.errors.reasonsErrorMessage = errorMessage;
+      const viewModel = aCreateRecordCorrectionRequestViewModel();
+      viewModel.errors.reasonsErrorMessage = errorMessage;
 
-        // Act
-        const wrapper = render(viewModel);
+      // Act
+      const wrapper = render(viewModel);
 
-        // Assert
-        wrapper.expectText('[data-cy="reasons-error"]').toContain(errorMessage);
-      });
+      // Assert
+      wrapper.expectText('[data-cy="reasons-error"]').toContain(errorMessage);
     });
+  });
 
-    describe('has no pre-existing values', () => {
-      it('should not check any reason checkboxes', () => {
-        // Arrange
-        const allValidReasons = Object.values(RECORD_CORRECTION_REASON);
+  describe('when the reasons field has no value', () => {
+    it('should not check any reason checkboxes', () => {
+      // Arrange
+      const allValidReasons = Object.values(RECORD_CORRECTION_REASON);
 
-        const viewModel = aCreateRecordCorrectionRequestViewModel();
-        viewModel.formValues.reasons = undefined;
+      const viewModel = aCreateRecordCorrectionRequestViewModel();
+      viewModel.formValues.reasons = undefined;
 
-        // Act
-        const wrapper = render(viewModel);
+      // Act
+      const wrapper = render(viewModel);
 
-        // Assert
-        allValidReasons.forEach((reasonId) => {
-          wrapper.expectInput(`input[data-cy="reason-${reasonId}"]`).notToBeChecked();
-        });
-      });
-    });
-
-    describe('has pre-existing checked values', () => {
-      it.each(Object.values(RECORD_CORRECTION_REASON))('should check the "%s" reason checkbox when it is in the form values', (reason) => {
-        // Arrange
-        const viewModel = aCreateRecordCorrectionRequestViewModel();
-        viewModel.formValues.reasons = [reason];
-
-        // Act
-        const wrapper = render(viewModel);
-
-        // Assert
-        wrapper.expectInput(`input[data-cy="reason-${reason}"]`).toBeChecked();
+      // Assert
+      allValidReasons.forEach((reasonId) => {
+        wrapper.expectInput(`input[data-cy="reason-${reasonId}"]`).notToBeChecked();
       });
     });
   });
 
-  describe('when the additional info field', () => {
-    describe('has an error', () => {
-      it('should display an inline error message', () => {
-        // Arrange
-        const errorMessage = 'Enter additional info';
+  describe('when the reasons field has checked values', () => {
+    it.each(Object.values(RECORD_CORRECTION_REASON))('should check the "%s" reason checkbox when it is in the form values', (reason) => {
+      // Arrange
+      const viewModel = aCreateRecordCorrectionRequestViewModel();
+      viewModel.formValues.reasons = [reason];
 
-        const viewModel = aCreateRecordCorrectionRequestViewModel();
-        viewModel.errors.additionalInfoErrorMessage = errorMessage;
+      // Act
+      const wrapper = render(viewModel);
 
-        // Act
-        const wrapper = render(viewModel);
-
-        // Assert
-        wrapper.expectText('[data-cy="additional-info-error"]').toContain(errorMessage);
-      });
+      // Assert
+      wrapper.expectInput(`input[data-cy="reason-${reason}"]`).toBeChecked();
     });
+  });
 
-    describe('has no pre-existing value', () => {
-      it('should not initialise the field', () => {
-        // Arrange
-        const viewModel = aCreateRecordCorrectionRequestViewModel();
-        viewModel.formValues.additionalInfo = undefined;
+  describe('when the additional info field has an error', () => {
+    it('should display an inline error message', () => {
+      // Arrange
+      const errorMessage = 'Enter additional info';
 
-        // Act
-        const wrapper = render(viewModel);
+      const viewModel = aCreateRecordCorrectionRequestViewModel();
+      viewModel.errors.additionalInfoErrorMessage = errorMessage;
 
-        // Assert
-        wrapper.expectTextArea('[data-cy="additional-info"]').toHaveValue('');
-      });
+      // Act
+      const wrapper = render(viewModel);
+
+      // Assert
+      wrapper.expectText('[data-cy="additional-info-error"]').toContain(errorMessage);
     });
+  });
 
-    describe('has a pre-existing value', () => {
-      it('should initialise the field to the provided value', () => {
-        // Arrange
-        const fieldValue = 'Some additional info';
+  describe('when the additional info field has no value', () => {
+    it('should not initialise the field', () => {
+      // Arrange
+      const viewModel = aCreateRecordCorrectionRequestViewModel();
+      viewModel.formValues.additionalInfo = undefined;
 
-        const viewModel = aCreateRecordCorrectionRequestViewModel();
-        viewModel.formValues.additionalInfo = fieldValue;
+      // Act
+      const wrapper = render(viewModel);
 
-        // Act
-        const wrapper = render(viewModel);
+      // Assert
+      wrapper.expectTextArea('[data-cy="additional-info"]').toHaveValue('');
+    });
+  });
 
-        // Assert
-        wrapper.expectTextArea('[data-cy="additional-info"]').toHaveValue(fieldValue);
-      });
+  describe('when the additional info field has a value', () => {
+    it('should initialise the field to the provided value', () => {
+      // Arrange
+      const fieldValue = 'Some additional info';
+
+      const viewModel = aCreateRecordCorrectionRequestViewModel();
+      viewModel.formValues.additionalInfo = fieldValue;
+
+      // Act
+      const wrapper = render(viewModel);
+
+      // Assert
+      wrapper.expectTextArea('[data-cy="additional-info"]').toHaveValue(fieldValue);
     });
   });
 
