@@ -111,7 +111,19 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
           body: validBody,
         });
 
-      it('redirects to the "check the information" page', async () => {
+      it('should make an api call to update the transient form data', async () => {
+        // Arrange
+        const { req, res } = getHttpMocks();
+
+        // Act
+        await postCreateRecordCorrectionRequest(req, res);
+
+        // Assert
+        expect(api.updateFeeRecordCorrectionTransientFormData).toHaveBeenCalledTimes(1);
+        expect(api.updateFeeRecordCorrectionTransientFormData).toHaveBeenCalledWith(reportId, feeRecordId, validBody, user, userToken);
+      });
+
+      it('should redirect to the "check the information" page', async () => {
         // Arrange
         const { req, res } = getHttpMocks();
 
