@@ -23,6 +23,7 @@ export type ActivityType = ValuesOf<typeof PORTAL_ACTIVITY_LABEL>;
 export type Activity = {
   type: ApplicationType;
   activityType: ActivityType;
+  timestamp: number;
   user: any; // TODO
   activityText: string;
   activityHTML: string;
