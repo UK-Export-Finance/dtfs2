@@ -1,4 +1,4 @@
-import { DEAL_STATUS, DEAL_TYPE, FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE, FACILITY_TYPE, ROLES } from '@ukef/dtfs2-common';
 import { applicationDetails, postApplicationDetails } from '.';
 import api from '../../services/api';
 import { NON_MAKER_ROLES } from '../../../test-helpers/common-role-lists';
@@ -319,6 +319,73 @@ describe('controllers/application-details', () => {
           'partials/application-details.njk',
           expect.objectContaining({
             displayChangeSupportingInfo: false,
+          }),
+        );
+      });
+
+      it(`renders 'application-preview' with canIssuedFacilitiesBeAmended as true when the deal status is ${DEAL_STATUS.UKEF_ACKNOWLEDGED} and the submission type is valid`, async () => {
+        api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseNotChangedIssued);
+        mockApplicationResponse.status = DEAL_STATUS.UKEF_ACKNOWLEDGED;
+        mockApplicationResponse.submissionType = DEAL_SUBMISSION_TYPE.AIN;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-preview.njk',
+          expect.objectContaining({
+            canIssuedFacilitiesBeAmended: true,
+          }),
+        );
+      });
+
+      it(`renders 'application-preview' without the canIssuedFacilitiesBeAmended param when the deal status is not ${DEAL_STATUS.UKEF_ACKNOWLEDGED}`, async () => {
+        api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseNotChangedIssued);
+        mockApplicationResponse.status = DEAL_STATUS.CANCELLED;
+        mockApplicationResponse.submissionType = DEAL_SUBMISSION_TYPE.AIN;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-preview.njk',
+          expect.objectContaining({
+            canIssuedFacilitiesBeAmended: false,
+          }),
+        );
+      });
+
+      it(`renders 'application-preview' without the canIssuedFacilitiesBeAmended param when the submission type is ${DEAL_SUBMISSION_TYPE.MIA}`, async () => {
+        api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseNotChangedIssued);
+        mockApplicationResponse.status = DEAL_STATUS.UKEF_ACKNOWLEDGED;
+        mockApplicationResponse.submissionType = DEAL_SUBMISSION_TYPE.MIA;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-preview.njk',
+          expect.objectContaining({
+            canIssuedFacilitiesBeAmended: false,
+          }),
+        );
+      });
+
+      it(`renders 'application-preview' without the canIssuedFacilitiesBeAmended param when the user type is not ${ROLES.MAKER}`, async () => {
+        api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseNotChangedIssued);
+        mockApplicationResponse.status = DEAL_STATUS.UKEF_ACKNOWLEDGED;
+        mockApplicationResponse.submissionType = DEAL_SUBMISSION_TYPE.AIN;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        const mockCheckerRequest = MOCKS.MockRequestChecker();
+        mockCheckerRequest.flash = mockSuccessfulFlashResponse();
+
+        await applicationDetails(mockCheckerRequest, mockResponse);
+
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-preview.njk',
+          expect.objectContaining({
+            canIssuedFacilitiesBeAmended: false,
           }),
         );
       });

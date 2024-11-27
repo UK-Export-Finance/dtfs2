@@ -21,9 +21,10 @@ const {
 const { isUkefReviewAvailable, isUkefReviewPositive, makerCanReSubmit } = require('../../utils/deal-helpers');
 const { exporterItems, facilityItems } = require('../../utils/display-items');
 const getUserAuthorisationLevelsToApplication = require('../../utils/user-authorisation-level');
-const { FACILITY_TYPE, AUTHORISATION_LEVEL, DEAL_SUBMISSION_TYPE } = require('../../constants');
+const { FACILITY_TYPE, AUTHORISATION_LEVEL, DEAL_SUBMISSION_TYPE, STAGE } = require('../../constants');
 const Application = require('../../models/application');
 const { MAKER } = require('../../constants/roles');
+const { canIssuedFacilitiesBeAmended } = require('../../utils/canIssuedFacilitiesBeAmended');
 
 let userSession;
 
@@ -102,6 +103,7 @@ function buildBody(app, previewMode, user) {
           facilityName: item.details.name,
           // ukefFacilityId required for html facility summary table id
           ukefFacilityId: item.details.ukefFacilityId,
+          stage: item.details?.facilityStage ?? (item.details.hasBeenIssued ? STAGE.ISSUED : STAGE.UNISSUED),
         }))
         .sort((a, b) => b.createdAt - a.createdAt), // latest facility appears at top
     },
@@ -261,6 +263,8 @@ const applicationDetails = async (req, res, next) => {
     if (params.unissuedFacilitiesPresent) {
       params.link += '/unissued-facilities';
     }
+
+    params.canIssuedFacilitiesBeAmended = canIssuedFacilitiesBeAmended(application.submissionType, application.status, userRoles);
 
     return res.render(`partials/${partial}.njk`, params);
   } catch (error) {
