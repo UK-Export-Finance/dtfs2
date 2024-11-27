@@ -40,9 +40,11 @@
   }}
 
   {% set renderByDefault=deal.submissionDetails.legallyDistinct %}
-  {% if renderByDefault !=='true' %}
-    {% set renderByDefault='false' %}
+
+  {% if renderByDefault !== 'true' %}
+    {% set renderByDefault = 'false' %}
   {% endif %}
+
   <div id="additional-form-fields-indemnifier" class="{% if renderByDefault === 'false' %}display-none{% endif %}">
 
     {{ companiesHouse.input({
