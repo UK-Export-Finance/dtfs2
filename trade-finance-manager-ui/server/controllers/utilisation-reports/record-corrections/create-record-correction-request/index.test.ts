@@ -83,7 +83,16 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         errors: { errorSummary: [] },
         backLinkHref: getLinkToPremiumPaymentsTab(reportId, [456]),
       });
+    });
 
+    it('should fetch the fee record details using the reportId and feeRecordId', async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+
+      // Act
+      await getCreateRecordCorrectionRequest(req, res);
+
+      // Assert
       expect(api.getFeeRecord).toHaveBeenCalledTimes(1);
       expect(api.getFeeRecord).toHaveBeenCalledWith(reportId, feeRecordId, userToken);
     });
@@ -174,7 +183,16 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
 
         expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledTimes(1);
         expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledWith({ reasons: [] });
+      });
 
+      it('should fetch the fee record details using the reportId and feeRecordId', async () => {
+        // Arrange
+        const { req, res } = getHttpMocks();
+
+        // Act
+        await getCreateRecordCorrectionRequest(req, res);
+
+        // Assert
         expect(api.getFeeRecord).toHaveBeenCalledTimes(1);
         expect(api.getFeeRecord).toHaveBeenCalledWith(reportId, feeRecordId, userToken);
       });
@@ -195,9 +213,6 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
 
         expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledTimes(1);
         expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledWith({ reasons: validReasons });
-
-        expect(api.getFeeRecord).toHaveBeenCalledTimes(1);
-        expect(api.getFeeRecord).toHaveBeenCalledWith(reportId, feeRecordId, userToken);
       });
 
       it('should set the render view model formValues "additionalInfo" to the request body additionalInfo', async () => {
@@ -216,9 +231,6 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
 
         expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledTimes(1);
         expect(validateCreateRecordCorrectionRequestFormValues).toHaveBeenCalledWith({ additionalInfo, reasons: [] });
-
-        expect(api.getFeeRecord).toHaveBeenCalledTimes(1);
-        expect(api.getFeeRecord).toHaveBeenCalledWith(reportId, feeRecordId, userToken);
       });
     });
   });
