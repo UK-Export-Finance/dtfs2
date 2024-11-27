@@ -7,6 +7,7 @@ import {
   FeeRecordStatus,
   REQUEST_PLATFORM_TYPE,
   PENDING_RECONCILIATION,
+  RECORD_CORRECTION_REASON,
 } from '@ukef/dtfs2-common';
 import { InvalidStateMachineTransitionError } from '../../../errors';
 import { FEE_RECORD_EVENT_TYPE, FEE_RECORD_EVENT_TYPES, FeeRecordEventType } from './event/fee-record.event-type';
@@ -87,7 +88,7 @@ describe('FeeRecordStateMachine', () => {
         payload: {
           transactionEntityManager: {} as unknown as EntityManager,
           requestedByUser: { id: '10000', firstName: 'Test', lastName: 'User' },
-          reasons: ['first reason', 'second reason'],
+          reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT],
           additionalInfo: 'some additional information',
           requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },

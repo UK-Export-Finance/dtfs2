@@ -3,6 +3,7 @@ import { FeeRecordEntity } from '../fee-record/fee-record.entity';
 import { RequestedByUserPartialEntity } from '../partial-entities';
 import { AuditableBaseEntity } from '../base-entities';
 import { CreateFeeRecordCorrectionParams } from './fee-record-correction.types';
+import { RecordCorrectionReason } from '../../types';
 
 @Entity('FeeRecordCorrection')
 export class FeeRecordCorrectionEntity extends AuditableBaseEntity {
@@ -51,14 +52,14 @@ export class FeeRecordCorrectionEntity extends AuditableBaseEntity {
   /**
    * The reasons for the record correction
    */
-  get reasons(): string[] {
-    return this.reasonsStringified.split(',');
+  get reasons(): RecordCorrectionReason[] {
+    return this.reasonsStringified.split(',') as RecordCorrectionReason[];
   }
 
   /**
    * The reasons for the record correction
    */
-  set reasons(reasons: string[]) {
+  set reasons(reasons: RecordCorrectionReason[]) {
     this.reasonsStringified = reasons.join(',');
   }
 

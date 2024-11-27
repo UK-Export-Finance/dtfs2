@@ -1,11 +1,11 @@
-import { RequestedByUser } from '../../types';
+import { RecordCorrectionReason, RequestedByUser } from '../../types';
 import { FeeRecordEntity } from '../fee-record/fee-record.entity';
 import { DbRequestSource } from '../helpers';
 
 export type CreateFeeRecordCorrectionParams = {
   feeRecord: FeeRecordEntity;
   requestedByUser: RequestedByUser;
-  reasons: string[];
+  reasons: RecordCorrectionReason[];
   additionalInfo: string;
   requestSource: DbRequestSource;
 };

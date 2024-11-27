@@ -1,7 +1,7 @@
 import { DbRequestSource, FeeRecordEntity, FeeRecordCorrectionEntity } from '../../sql-db-entities';
-import { REQUEST_PLATFORM_TYPE } from '../../constants';
+import { RECORD_CORRECTION_REASON, REQUEST_PLATFORM_TYPE } from '../../constants';
 import { FeeRecordEntityMockBuilder } from './fee-record.entity.mock-builder';
-import { RequestedByUser } from '../../types';
+import { RecordCorrectionReason, RequestedByUser } from '../../types';
 
 export class FeeRecordCorrectionEntityMockBuilder {
   private readonly correction: FeeRecordCorrectionEntity;
@@ -26,7 +26,7 @@ export class FeeRecordCorrectionEntityMockBuilder {
       lastName: 'last',
     };
     data.additionalInfo = 'some info';
-    data.reasons = ['a reason'];
+    data.reasons = [RECORD_CORRECTION_REASON.UTILISATION_INCORRECT];
     data.isCompleted = false;
     data.updateLastUpdatedBy(requestSource);
     return new FeeRecordCorrectionEntityMockBuilder(data);
@@ -37,7 +37,7 @@ export class FeeRecordCorrectionEntityMockBuilder {
     return this;
   }
 
-  public withReasons(reasons: string[]): FeeRecordCorrectionEntityMockBuilder {
+  public withReasons(reasons: RecordCorrectionReason[]): FeeRecordCorrectionEntityMockBuilder {
     this.correction.reasons = reasons;
     return this;
   }

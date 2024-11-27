@@ -1,12 +1,12 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, FEE_RECORD_STATUS, FeeRecordCorrectionEntity, FeeRecordEntity, RequestedByUser } from '@ukef/dtfs2-common';
+import { DbRequestSource, FEE_RECORD_STATUS, FeeRecordCorrectionEntity, FeeRecordEntity, RecordCorrectionReason, RequestedByUser } from '@ukef/dtfs2-common';
 import { BaseFeeRecordEvent } from '../../event/base-fee-record.event';
 
 type CorrectionRequestedEventPayload = {
   transactionEntityManager: EntityManager;
   requestSource: DbRequestSource;
   requestedByUser: RequestedByUser;
-  reasons: string[];
+  reasons: RecordCorrectionReason[];
   additionalInfo: string;
 };
 

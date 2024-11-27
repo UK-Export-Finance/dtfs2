@@ -5,6 +5,7 @@ import {
   FeeRecordCorrectionEntity,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
+  RECORD_CORRECTION_REASON,
   REQUEST_PLATFORM_TYPE,
 } from '@ukef/dtfs2-common';
 import { FeeRecordCorrectionRequestedEvent, handleFeeRecordCorrectionRequestedEvent } from './correction-requested.event-handler';
@@ -18,7 +19,7 @@ describe('handleFeeRecordCorrectionRequestedEvent', () => {
 
   const aCorrectionRequestedEventPayload = (): FeeRecordCorrectionRequestedEvent['payload'] => ({
     transactionEntityManager: mockEntityManager,
-    reasons: ['a reason'],
+    reasons: [RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT],
     additionalInfo: 'info',
     requestedByUser: {
       id: 'aaa111',
@@ -95,7 +96,7 @@ describe('handleFeeRecordCorrectionRequestedEvent', () => {
       userId: 'abc123',
       platform: REQUEST_PLATFORM_TYPE.TFM,
     };
-    const reasons = ['a reason'];
+    const reasons = [RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT];
     const additionalInfo = 'more information about the reason for record correction';
 
     // Act

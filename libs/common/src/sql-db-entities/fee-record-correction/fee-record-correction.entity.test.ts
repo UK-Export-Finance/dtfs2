@@ -1,4 +1,4 @@
-import { REQUEST_PLATFORM_TYPE } from '../../constants';
+import { RECORD_CORRECTION_REASON, REQUEST_PLATFORM_TYPE } from '../../constants';
 import { FeeRecordEntityMockBuilder } from '../../test-helpers';
 import { RequestedByUser } from '../../types';
 import { DbRequestSource } from '../helpers';
@@ -9,7 +9,7 @@ describe('FeeRecordEntity', () => {
     it('initiates object with passed in parameters and isCompleted set to false', () => {
       // Arrange
       const feeRecord = new FeeRecordEntityMockBuilder().build();
-      const reasons = ['some reasons'];
+      const reasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER];
       const additionalInfo = 'additional information for the correction';
       const requestedByUser: RequestedByUser = {
         id: 'def456',
