@@ -1,9 +1,9 @@
 import { DEAL_SUBMISSION_TYPE, DealNotFoundError, InvalidDealIdError, MONGO_DB_COLLECTIONS, TFM_DEAL_STAGE } from '@ukef/dtfs2-common';
+import { aTfmUser } from '@ukef/dtfs2-common/mock-data-backend';
 import { generateAuditDatabaseRecordFromAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { ObjectId } from 'mongodb';
 import { mongoDbClient as db } from '../../drivers/db-client';
 import { TfmDealCancellationRepo } from './tfm-deal-cancellation.repo';
-import { aTfmUser } from '../../../test-helpers';
 
 const dealId = new ObjectId();
 

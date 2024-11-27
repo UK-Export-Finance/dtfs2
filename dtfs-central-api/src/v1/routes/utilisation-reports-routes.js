@@ -33,6 +33,7 @@ const { putKeyingDataMarkAsToDo } = require('../controllers/utilisation-report-s
 const { postRemoveFeesFromPaymentGroup } = require('../controllers/utilisation-report-service/post-remove-fees-from-payment-group.controller');
 const { postReportDataValidation } = require('../controllers/utilisation-report-service/post-report-data-validation.controller');
 const { postAddFeesToAnExistingPaymentGroup } = require('../controllers/utilisation-report-service/post-add-fees-to-an-existing-payment-group.controller');
+const { getFeeRecord } = require('../controllers/utilisation-report-service/get-fee-record.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -733,5 +734,45 @@ utilisationReportsRouter
     validatePostAddFeesToAnExistingPaymentGroupPayload,
     postAddFeesToAnExistingPaymentGroup,
   );
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/fee-records/:feeRecordId:
+ *   get:
+ *     summary: Get the fee record
+ *     tags: [Utilisation Report]
+ *     description: Gets a fee record by its id, where that fee record must belong to a report with the supplied report id
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report
+ *       - in: path
+ *         name: feeRecordId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the fee record
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/definitions/FeeRecordResponse'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/:reportId/fee-records/:feeRecordId')
+  .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), handleExpressValidatorResult)
+  .get(getFeeRecord);
 
 module.exports = utilisationReportsRouter;

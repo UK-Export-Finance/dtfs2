@@ -8,4 +8,5 @@ export type CreateRecordCorrectionRequestViewModel = BaseViewModel & {
     facilityId: string;
     exporter: string;
   };
+  backLinkHref: string;
 };

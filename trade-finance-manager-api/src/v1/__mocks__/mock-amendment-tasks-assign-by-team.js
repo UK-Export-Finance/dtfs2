@@ -1,6 +1,9 @@
+const { ObjectId } = require('mongodb');
+
 const { getUnixTime } = require('date-fns');
 const { TEAMS } = require('../../constants');
 const MOCK_USERS = require('./mock-users');
+const MOCK_DEAL = require('./mock-deal');
 
 const underwriter = MOCK_USERS.find((user) => user.teams.includes(TEAMS.UNDERWRITERS.id));
 const underwriterManager = MOCK_USERS.find((user) => user.teams.includes(TEAMS.UNDERWRITER_MANAGERS.id));
@@ -392,6 +395,35 @@ const TASKS_UNASSIGNED_FOR_UNDERWRITER = [
   },
 ];
 
+const TASKS_UPDATE_MOCK_REQUEST = {
+  params: {
+    _id: MOCK_DEAL._id,
+    facilityId: new ObjectId('6745bd3719238444fa59f308'),
+    amendmentId: new ObjectId('6745bd3719238444fa59f307'),
+    groupId: '1',
+    taskId: '1',
+  },
+  user: MOCK_USERS,
+  session: {
+    user: underwriter,
+    userToken: '',
+  },
+  headers: {
+    origin: '',
+  },
+  body: {
+    taskUpdate: {
+      id: '1',
+      groupId: 1,
+      status: 'Done',
+      assignedTo: { userId: underwriter._id },
+      updatedBy: underwriter._id,
+      urlOrigin: '',
+      updateTask: true,
+    },
+  },
+};
+
 module.exports = {
   MOCK_USERS_FOR_TASKS: {
     underwriter,
@@ -403,4 +435,5 @@ module.exports = {
   TASKS_ASSIGNED_TO_UNDERWRITER_AND_UNDERWRITER_MANAGER,
   TASKS_ASSIGNED_TO_UNDERWRITER,
   TASKS_UNASSIGNED_FOR_UNDERWRITER,
+  TASKS_UPDATE_MOCK_REQUEST,
 };

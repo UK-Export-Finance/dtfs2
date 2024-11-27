@@ -1,0 +1,93 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% extends "index.njk" %}
+
+{% set backLink = { "href": "/utilisation-reports/" + reportId + "/create-record-correction-request/" + feeRecordId } %}
+
+{% block pageTitle %}Check the information before submitting the record correction request{% endblock %}
+
+{% block content %}
+  <div class="govuk-!-padding-top-7">
+      <span class="govuk-caption-l" data-cy="heading-caption">{{ bank.name }}, {{ formattedReportPeriod }}</span>
+      <h1 class="govuk-heading-l">Check the information before submitting the record correction request</h1>
+  </div>
+
+  {{ govukSummaryList({
+    rows: [
+      {
+        key: {
+          text: "Facility ID"
+        },
+        value: {
+          text: facilityId
+        }
+      },
+      {
+        key: {
+          text: "Exporter"
+        },
+        value: {
+          text: exporter
+        }
+      },
+      {
+        key: {
+          text: "Requested by"
+        },
+        value: {
+          text: user.firstName + " " + user.lastName
+        }
+      },
+      {
+        key: {
+          text: "Reason for record correction"
+        },
+        value: {
+          text: reasonForRecordCorrection
+        }
+      },
+      {
+        key: {
+          text: "Provide more information"
+        },
+        value: {
+          text: additionalInfo
+        }
+      },
+      {
+        key: {
+          text: "Contact email address"
+        },
+        value: {
+          text: contactEmailAddress
+        }
+      }
+    ],
+    attributes: { 
+      'data-cy': 'summary-list' 
+    }
+  }) }}
+
+  <form method="post">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+    <div class="govuk-button-group">
+      {{ govukButton({
+        text: "Send record correction request",
+        attributes: { 
+          'data-cy': 'continue-button'
+        }
+      }) }}
+
+      {{ govukButton({
+        text: "Cancel record correction request",
+        href: cancelLink,
+        classes: "govuk-button--secondary",
+        attributes: { 
+          'data-cy': 'cancel-button'
+        }
+      }) }}
+    </div>
+  </form>
+
+{% endblock %}
+{% block sub_content %}{% endblock %}

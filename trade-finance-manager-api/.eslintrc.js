@@ -19,7 +19,7 @@ const baseRules = {
     'error',
     {
       devDependencies: [
-        '**/*.test.{js,ts}',
+        '**/*.test{,s}.{js,ts}',
         '**/*.ff-test.{js,ts}',
         '**/*.api-test{,s}.{js,ts}',
         '**/*.spec.{js,ts}',
