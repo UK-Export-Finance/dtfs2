@@ -126,7 +126,15 @@ const applyCreateRules = async (candidateChange) => await applyRules(createRules
  */
 const applyUpdateRules = async (existingUser, candidateChange) => {
   const rules = !candidateChange.currentPassword ? updateWithoutCurrentPasswordRules : updateWithCurrentPasswordRules;
-  return await applyRules(rules, candidateChange, existingUser);
+  /**
+   * Below is to satisfy any email address pertinent rules.
+   */
+  const change = {
+    ...candidateChange,
+    email: existingUser.username,
+  };
+
+  return await applyRules(rules, change, existingUser);
 };
 
 module.exports = {

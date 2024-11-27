@@ -3,9 +3,9 @@ const { MAKER, PAYMENT_REPORT_OFFICER, ADMIN } = require('../../../roles/roles')
 
 const error = [
   {
-    email: {
+    roles: {
       order: '1',
-      text: 'Admin role can only be associated with an UKEF email address',
+      text: 'The admin role can only be associated with a UKEF email address',
     },
   },
 ];
