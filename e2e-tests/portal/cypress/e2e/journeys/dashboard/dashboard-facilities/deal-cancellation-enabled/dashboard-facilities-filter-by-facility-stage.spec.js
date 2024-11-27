@@ -1,22 +1,28 @@
+const { FACILITY_STATUS } = require('@ukef/dtfs2-common');
 const relative = require('../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../../fixtures/constants');
 const { dashboardFacilities } = require('../../../../pages');
 const { dashboardFilters } = require('../../../../partials');
-const { BSS_DEAL_AIN, BSS_FACILITY_BOND_ISSUED, BSS_FACILITY_BOND_UNISSUED } = require('../../fixtures');
+const {
+  BSS_DEAL_AIN,
+  BSS_FACILITY_BOND_ISSUED,
+  BSS_FACILITY_BOND_UNISSUED,
+  BSS_FACILITY_BOND_ISSUED_RISK_EXPIRED,
+  BSS_FACILITY_BOND_UNISSUED_RISK_EXPIRED,
+} = require('../../fixtures');
 const {
   submitRedirectsToDashboard,
   shouldRenderCheckedCheckbox,
   shouldRenderAppliedFilterInPanelSelectedFilters,
   shouldRenderAppliedFilterInMainContainerSelectedFilters,
-  shouldRenderOnlyGivenTypes,
 } = require('../_actions-and-assertions');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
-context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued', () => {
+context('Dashboard Facilities filters - filter by facility stage', () => {
   const ALL_FACILITIES = [];
 
   before(() => {
@@ -26,7 +32,7 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
     cy.insertOneDeal(BSS_DEAL_AIN, BANK1_MAKER1).then((deal) => {
       const dealId = deal._id;
 
-      const facilities = [BSS_FACILITY_BOND_ISSUED, BSS_FACILITY_BOND_UNISSUED];
+      const facilities = [BSS_FACILITY_BOND_ISSUED, BSS_FACILITY_BOND_UNISSUED, BSS_FACILITY_BOND_ISSUED_RISK_EXPIRED, BSS_FACILITY_BOND_UNISSUED_RISK_EXPIRED];
 
       cy.createFacilities(dealId, facilities, BANK1_MAKER1).then((insertedFacilities) => {
         insertedFacilities.forEach((facility) => {
@@ -89,7 +95,15 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
         CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED,
       );
 
-      shouldRenderOnlyGivenTypes(ALL_FACILITIES, 'hasBeenIssued', true);
+      const expectedFacilities = ALL_FACILITIES.filter(
+        (facility) => facility.hasBeenIssued === true && facility.facilityStage !== FACILITY_STATUS.RISK_EXPIRED,
+      );
+
+      dashboardFacilities.rows().should('have.length', expectedFacilities.length);
+
+      expectedFacilities.forEach((facility) => {
+        dashboardFacilities.row.type(facility._id).should('exist');
+      });
     });
   });
 
@@ -138,7 +152,70 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
         CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED,
       );
 
-      shouldRenderOnlyGivenTypes(ALL_FACILITIES, 'hasBeenIssued', false);
+      const expectedFacilities = ALL_FACILITIES.filter(
+        (facility) => facility.hasBeenIssued === false && facility.facilityStage !== FACILITY_STATUS.RISK_EXPIRED,
+      );
+
+      dashboardFacilities.rows().should('have.length', expectedFacilities.length);
+
+      expectedFacilities.forEach((facility) => {
+        dashboardFacilities.row.type(facility._id).should('exist');
+      });
+    });
+  });
+
+  describe('Risk expired', () => {
+    before(() => {
+      cy.login(BANK1_MAKER1);
+      dashboardFacilities.visit();
+      cy.url().should('eq', relative('/dashboard/facilities/0'));
+    });
+
+    it('submits the filter and redirects to the dashboard', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.riskExpired.checkbox());
+    });
+
+    it('renders checked checkbox', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.riskExpired.checkbox());
+      shouldRenderCheckedCheckbox(dashboardFacilities.filters.panel.form.stage.riskExpired.checkbox());
+    });
+
+    it('renders the applied filter in the `applied filters` section', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.riskExpired.checkbox());
+
+      filters.showHideButton().click();
+
+      shouldRenderAppliedFilterInPanelSelectedFilters("Bank's facility stage", FACILITY_STATUS.RISK_EXPIRED);
+    });
+
+    it('renders the applied filter in the `main container selected filters` section', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.riskExpired.checkbox());
+
+      filters.showHideButton().click();
+
+      shouldRenderAppliedFilterInMainContainerSelectedFilters(
+        dashboardFacilities.filters.mainContainer.selectedFilters.typeriskExpired(),
+        FACILITY_STATUS.RISK_EXPIRED,
+      );
+    });
+
+    it('renders only facilities that are Risk expired', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.riskExpired.checkbox());
+
+      filters.showHideButton().click();
+
+      shouldRenderAppliedFilterInMainContainerSelectedFilters(
+        dashboardFacilities.filters.mainContainer.selectedFilters.typeRiskExpired(),
+        FACILITY_STATUS.RISK_EXPIRED,
+      );
+
+      const expectedFacilities = ALL_FACILITIES.filter((facility) => facility.facilityStage === FACILITY_STATUS.RISK_EXPIRED);
+
+      dashboardFacilities.rows().should('have.length', expectedFacilities.length);
+
+      expectedFacilities.forEach((facility) => {
+        dashboardFacilities.row.type(facility._id).should('exist');
+      });
     });
   });
 });

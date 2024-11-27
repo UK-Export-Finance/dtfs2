@@ -1,4 +1,5 @@
 const { DEAL_STATUS } = require('@ukef/dtfs2-common');
+const { FACILITY_STATUS } = require('@ukef/dtfs2-common');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../fixtures/constants');
 
@@ -73,6 +74,18 @@ const BSS_FACILITY_BOND_UNISSUED = {
   hasBeenIssued: false,
 };
 
+const BSS_FACILITY_BOND_ISSUED_RISK_EXPIRED = {
+  type: CONSTANTS.FACILITY.FACILITY_TYPE.BOND,
+  hasBeenIssued: true,
+  facilityStage: FACILITY_STATUS.RISK_EXPIRED,
+};
+
+const BSS_FACILITY_BOND_UNISSUED_RISK_EXPIRED = {
+  type: CONSTANTS.FACILITY.FACILITY_TYPE.BOND,
+  hasBeenIssued: false,
+  facilityStage: FACILITY_STATUS.RISK_EXPIRED,
+};
+
 const BSS_FACILITY_LOAN = {
   type: CONSTANTS.FACILITY.FACILITY_TYPE.LOAN,
 };
@@ -95,6 +108,8 @@ module.exports = {
   BSS_FACILITY_BOND,
   BSS_FACILITY_BOND_ISSUED,
   BSS_FACILITY_BOND_UNISSUED,
+  BSS_FACILITY_BOND_ISSUED_RISK_EXPIRED,
+  BSS_FACILITY_BOND_UNISSUED_RISK_EXPIRED,
   BSS_FACILITY_LOAN,
   GEF_FACILITY_CASH,
   GEF_FACILITY_CONTINGENT,
