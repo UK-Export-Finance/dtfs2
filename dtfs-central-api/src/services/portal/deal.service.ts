@@ -2,7 +2,7 @@ import { Activity, AuditDetails, ActivityAuthor, DEAL_TYPE, DealStatus, DealType
 import { ObjectId } from 'mongodb';
 import { updateBssEwcsDealStatus } from '../../v1/controllers/portal/deal/update-deal-status.controller';
 import { updateGefDealStatus } from '../../v1/controllers/portal/gef-deal/put-gef-deal.status.controller';
-import { addGefDealCancelledActivity } from '../../v1/controllers/portal/gef-deal/add-gef-deal-cancelled-activity.controller';
+import { addGefDealCancelledActivity } from '../../v1/controllers/portal/gef-deal/add-gef-deal-cancelled-activity';
 
 export class PortalDealService {
   /**
