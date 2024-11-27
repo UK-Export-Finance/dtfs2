@@ -1,5 +1,6 @@
+const { isAutomaticSalesforceCustomerCreationFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+
 const api = require('../api');
-import { isAutomaticSalesforceCustomerCreationFeatureFlagEnabled } from '@ukef/dtfs2-common'
 
 /**
  * Gets company information from Party URN
@@ -34,23 +35,16 @@ const getPartyUrn = async ({ companyRegNo, companyName }) => {
     return '';
   }
 
+  let partyDbInfo = null;
   if (isAutomaticSalesforceCustomerCreationFeatureFlagEnabled()) {
-    let partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
-
-    if (partyDbInfo.status === 404) {
-      if (!companyName) {
-        return '';
-      }
-
-      partyDbInfo = await api.createParty({ companyRegNo, companyName });
-    }
-
-    if (partyDbInfo.status !== 200) {
+    if (!companyName) {
       return '';
     }
-    return partyDbInfo?.data?.[0]?.partyUrn || '';
+
+    partyDbInfo = await api.getOrCreatePartyDbInfo({ companyRegNo, companyName });
+  } else {
+    partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
   }
-  const partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
   if (!partyDbInfo) {
     return '';
   }
