@@ -817,17 +817,17 @@ const queryDeals = async ({ queryParams }) => {
 };
 
 const getPartyDbInfo = async ({ companyRegNo }) => {
+  const creationEnabled = isAutomaticSalesforceCustomerCreationFeatureFlagEnabled();
   try {
-    const creationEnabled = isAutomaticSalesforceCustomerCreationFeatureFlagEnabled();
     const response = await axios({
       method: 'get',
       url: `${EXTERNAL_API_URL}/party-db/${encodeURIComponent(companyRegNo)}`,
       headers: headers.external,
     });
     if (creationEnabled) {
-      return { status: HttpStatusCode.Ok, data: response.data }
+      return { status: HttpStatusCode.Ok, data: response.data };
     }
-    return response.data
+    return response.data;
   } catch (error) {
     console.error('Unable to get party DB info %o', error);
     if (!creationEnabled) {
@@ -856,7 +856,7 @@ const createParty = async ({ companyRegNo, companyName }) => {
       headers: headers.external,
       data: {
         companyRegNo,
-        companyName
+        companyName,
       },
     });
     return { status: 200, data: response.data };
