@@ -204,7 +204,7 @@ describe('DealCancellationService', () => {
           expect(updatePortalFacilitiesMock).toHaveBeenCalledWith(dealId, { facilityStage: FACILITY_STAGE.RISK_EXPIRED }, auditDetails);
         });
 
-        it('it calls PortalDealService.addDealCancelledActivity with relevant params', async () => {
+        it('calls PortalDealService.addDealCancelledActivity with relevant params', async () => {
           // Act
           await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 

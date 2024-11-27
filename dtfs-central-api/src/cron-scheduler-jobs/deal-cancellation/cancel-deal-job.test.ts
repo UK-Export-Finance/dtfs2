@@ -53,7 +53,7 @@ describe('cancelDealJob', () => {
     expect(cancelDealJob.description).toEqual('Cancel deals in the database that are pending cancellation & the effective from date has passed');
   });
 
-  it('it calls findPendingDealCancellations', async () => {
+  it('calls findPendingDealCancellations', async () => {
     // Act
     await cancelDealJob.task('manual');
 
@@ -61,7 +61,7 @@ describe('cancelDealJob', () => {
     expect(findPendingDealCancellationsMock).toHaveBeenCalledTimes(1);
   });
 
-  it('it calls processPendingCancellation with the correct arguments', async () => {
+  it('calls processPendingCancellation with the correct arguments', async () => {
     // Act
     await cancelDealJob.task('manual');
 
