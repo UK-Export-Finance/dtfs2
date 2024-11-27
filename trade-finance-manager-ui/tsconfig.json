@@ -100,6 +100,21 @@
   "ts-node": {
     "files": true
   },
-  "include": ["**/*.ts"],
+  "include": [
+    "**/*.ts",
+    "../trade-finance-manager-api/src/v1/services/entra-id.service.get-auth-code-url.test.ts",
+    "../trade-finance-manager-api/src/v1/services/entra-id.service.ts",
+    "../trade-finance-manager-api/src/v1/configs/entra-id.config.ts",
+    "../trade-finance-manager-api/src/v1/configs/entra-id.config.test.ts",
+    "../libs/common/src/types/tfm/entra-id.ts",
+    "../libs/common/src/schemas/tfm/entra-id.schema.decoded-auth-code-request-state-schema.test.ts",
+    "../libs/common/src/schemas/tfm/entra-id.schema.entra-id-auth-code-redirect-response-body-schema.test.ts",
+    "../libs/common/src/schemas/tfm/entra-id.schema.entra-id-authentication-result-schema.test.ts",
+    "../libs/common/src/schemas/tfm/entra-id.schema.ts",
+    "../libs/common/src/test-helpers/mock-builders/mock-builder.mock.builder.ts",
+    "../trade-finance-manager-api/src/v1/__mocks__/builders/entra-id.api.mock.builder.ts",
+    "../trade-finance-manager-api/src/v1/__mocks__/builders/extra-id.service.mock.builder.ts",
+    "../trade-finance-manager-api/src/v1/__mocks__/builders/entra-id.config.mock.builder.ts"
+  ],
   "exclude": ["./node_modules/*", "node_modules"]
 }

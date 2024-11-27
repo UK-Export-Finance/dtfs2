@@ -1,4 +1,4 @@
-import { GetAuthCodeUrlParams, GetAuthCodeUrlResponse } from '../types/login/get-auth-code';
+import { GetAuthCodeUrlParams, GetAuthCodeUrlResponse } from '@ukef/dtfs2-common';
 import * as api from '../api';
 
 export class LoginService {

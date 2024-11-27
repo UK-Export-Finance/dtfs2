@@ -1,7 +1,7 @@
 import { AuthorizationCodeRequest } from '@azure/msal-node';
+import { GetAuthCodeUrlResponse } from '@ukef/dtfs2-common';
 import { LoginService } from './login.service';
 import * as api from '../api';
-import { GetAuthCodeUrlResponse } from '../types/login/get-auth-code';
 
 jest.mock('../api');
 

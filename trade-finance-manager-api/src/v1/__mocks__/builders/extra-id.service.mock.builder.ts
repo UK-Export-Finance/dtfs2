@@ -1,6 +1,6 @@
 import { AuthorizationCodeRequest } from '@azure/msal-node';
-import { EntraIdService } from '../../server/services/entra-id.service';
-import { BaseMockBuilder } from './mock-builder.mock.builder';
+import { BaseMockBuilder } from '@ukef/dtfs2-common';
+import { EntraIdService } from '../../services/entra-id.service';
 
 export class EntraIdServiceMockBuilder extends BaseMockBuilder<EntraIdService> {
   constructor() {

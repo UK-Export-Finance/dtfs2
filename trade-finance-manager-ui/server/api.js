@@ -423,8 +423,8 @@ const login = async (username, password) => {
 
 /**
  * Gets the auth code URL for the SSO login process
- * @param {import('./types/login/get-auth-code').GetAuthCodeUrlParams} getAuthCodeUrlParams
- * @returns {Promise<import('./types/login/get-auth-code').GetAuthCodeUrlResponse>}
+ * @param {import('@ukef/dtfs2-common').GetAuthCodeUrlRequest} getAuthCodeUrlParams
+ * @returns {Promise<import('@ukef/dtfs2-common').GetAuthCodeUrlResponse>}
  */
 const getAuthCodeUrl = async ({ successRedirect }) => {
   try {

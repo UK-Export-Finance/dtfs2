@@ -1,6 +1,6 @@
 import { AuthorizationCodeRequest } from '@azure/msal-node';
+import { BaseMockBuilder } from '@ukef/dtfs2-common';
 import { LoginService } from '../../server/services/login.service';
-import { BaseMockBuilder } from './mock-builder.mock.builder';
 
 export class LoginServiceMockBuilder extends BaseMockBuilder<LoginService> {
   constructor() {
