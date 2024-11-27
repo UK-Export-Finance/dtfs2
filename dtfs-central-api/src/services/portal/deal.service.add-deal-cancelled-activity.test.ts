@@ -9,7 +9,9 @@ jest.mock('../../v1/controllers/portal/gef-deal/add-gef-deal-cancelled-activity.
 }));
 
 const dealId = 'dealId';
+
 const portalActivities: Array<Activity> = [];
+
 const author = {
   firstName: 'First name',
   lastName: 'Last name',
