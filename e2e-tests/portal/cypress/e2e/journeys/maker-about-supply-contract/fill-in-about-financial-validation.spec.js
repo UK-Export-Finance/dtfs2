@@ -1,7 +1,6 @@
 const { contractAboutBuyer, contractAboutFinancial, contractAboutPreview, dashboardDeals, contract, contractAboutSupplier } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const { thirtyFiveDaysAgo } = require('../../../../../e2e-fixtures/dateConstants');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -125,7 +124,8 @@ context('about-buyer', () => {
 
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion date cannot be in the future');
 
-    const dateTooFarInThePast = thirtyFiveDaysAgo;
+    const dateTooFarInThePast = new Date();
+    dateTooFarInThePast.setDate(dateTooFarInThePast.getDate() - 35);
 
     dashboardDeals.visit();
     cy.clickDashboardDealLink();
