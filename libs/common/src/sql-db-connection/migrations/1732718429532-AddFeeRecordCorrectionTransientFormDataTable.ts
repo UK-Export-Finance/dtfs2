@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddFeeRecordCorrectionTransientFormDataTable1732717161385 implements MigrationInterface {
-  name = 'AddFeeRecordCorrectionTransientFormDataTable1732717161385';
+export class AddFeeRecordCorrectionTransientFormDataTable1732718429532 implements MigrationInterface {
+  name = 'AddFeeRecordCorrectionTransientFormDataTable1732718429532';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
@@ -13,7 +13,7 @@ export class AddFeeRecordCorrectionTransientFormDataTable1732717161385 implement
                 "userId" nvarchar(255) NOT NULL,
                 "feeRecordId" int NOT NULL,
                 "formDataSerialized" nvarchar(1000) NOT NULL,
-                CONSTRAINT "PK_6c363929602c71162b5e6bbc3ca" PRIMARY KEY ("userId")
+                CONSTRAINT "PK_855c980bb868625619b90895a6f" PRIMARY KEY ("userId", "feeRecordId")
             )
         `);
   }
