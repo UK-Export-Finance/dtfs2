@@ -1421,5 +1421,4 @@ module.exports = {
   deleteDealCancellation,
   submitDealCancellation,
   getFeeRecord,
-  upsertUserFromEntraUser,
 };
