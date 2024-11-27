@@ -1,7 +1,6 @@
 const axios = require('axios');
-const { HttpStatusCode } = require('axios');
 
-const { HEADERS, InvalidDealIdError, isAutomaticSalesforceCustomerCreationFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { HEADERS, InvalidDealIdError } = require('@ukef/dtfs2-common');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
 const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
 require('dotenv').config();
@@ -830,25 +829,17 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
     return response.data
   } catch (error) {
     console.error('Unable to get party DB info %o', error);
-    if (!creationEnabled) {
-      return false;
-    }
-
-    if (error?.status === HttpStatusCode.NotFound) {
-      return { status: HttpStatusCode.NotFound, data: 'Party not found' };
-    }
-
-    return { status: error?.status || HttpStatusCode.InternalServerError, data: 'Failed to get party' };
+    return false;
   }
 };
 
 /**
- * Calls createParty in external-api to create a new customer in Salesforce
+ * Calls getOrCreatePartyDbInfo in external-api to get a customer in Salesforce, and create it if it doesn't exist
  * @param {number} companyRegNo Party URN
  * @param {number} companyName Company name
  * @returns {Promise<Object>} Company information
  */
-const createParty = async ({ companyRegNo, companyName }) => {
+const getOrCreatePartyDbInfo = async ({ companyRegNo, companyName }) => {
   try {
     const response = await axios({
       method: 'post',
@@ -859,10 +850,10 @@ const createParty = async ({ companyRegNo, companyName }) => {
         companyName
       },
     });
-    return { status: 200, data: response.data };
+    return response.data;
   } catch (error) {
-    console.error('Failed to create party');
-    return { status: error?.status || 500, data: 'Failed to create party' };
+    console.error('Unable to get or create party %o', error);
+    return false;
   }
 };
 
@@ -1780,7 +1771,7 @@ module.exports = {
   updateGefFacility,
   queryDeals,
   getPartyDbInfo,
-  createParty,
+  getOrCreatePartyDbInfo,
   getCompanyInfo,
   findUser,
   findUserById,
