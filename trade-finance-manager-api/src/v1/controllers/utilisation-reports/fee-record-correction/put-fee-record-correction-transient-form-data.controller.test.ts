@@ -2,7 +2,10 @@ import httpMocks from 'node-mocks-http';
 import { AxiosResponse, HttpStatusCode, AxiosError } from 'axios';
 import api from '../../../api';
 import { aTfmSessionUser } from '../../../../../test-helpers';
-import { putFeeRecordCorrectionTransientFormData } from './put-fee-record-correction-transient-form-data.controller';
+import {
+  putFeeRecordCorrectionTransientFormData,
+  PutFeeRecordCorrectionTransientFormDataRequest,
+} from './put-fee-record-correction-transient-form-data.controller';
 
 console.error = jest.fn();
 
@@ -20,7 +23,7 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
     const user = aTfmSessionUser();
 
     const getHttpMocks = () =>
-      httpMocks.createMocks({
+      httpMocks.createMocks<PutFeeRecordCorrectionTransientFormDataRequest>({
         params: { reportId, feeRecordId },
         body: {
           formData,
