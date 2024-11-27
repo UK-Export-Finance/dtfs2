@@ -47,13 +47,13 @@ context('Deal cancellation - reason for cancelling', () => {
       reasonForCancellingPage.reasonForCancellingTextBox();
     });
 
-    it('should validate submitting more than 1200 characters', () => {
+    it('should validate submitting more than 1,200 characters', () => {
       cy.keyboardInput(reasonForCancellingPage.reasonForCancellingTextBox(), 'x'.repeat(1201));
 
       cy.clickContinueButton();
 
-      errorSummary().contains('Reason for cancelling must be 1200 characters or less');
-      reasonForCancellingPage.reasonForCancellingError().contains('Reason for cancelling must be 1200 characters or less');
+      errorSummary().contains('Reason for cancelling must be 1,200 characters or less');
+      reasonForCancellingPage.reasonForCancellingError().contains('Reason for cancelling must be 1,200 characters or less');
     });
 
     it('back link should take you to deal summary page', () => {
