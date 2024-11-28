@@ -33,6 +33,7 @@ context('Admin user creates a new user', () => {
   };
 
   beforeEach(() => {
+    // Remove users
     cy.removeUserIfPresent(validUser, AN_ADMIN);
     cy.removeUserIfPresent(userWithInvalidPassword, AN_ADMIN);
     cy.removeUserIfPresent(ukefEmailUser, AN_ADMIN);
@@ -274,6 +275,24 @@ context('Admin user creates a new user', () => {
       cy.url().should('eq', relative('/admin/users/'));
       // Assert user existence
       cy.assertText(users.row(ukefEmailUser).roles(), ADMIN);
+    });
+
+    it('should create a new non-admin user with a UKEF email address.', () => {
+      // Fill in all the fields
+      cy.keyboardInput(createUser.firstname(), validUser.firstname);
+      cy.keyboardInput(createUser.surname(), validUser.surname);
+      createUser.isTrustedFalse().click();
+      createUser.role(PAYMENT_REPORT_OFFICER).click();
+      cy.keyboardInput(createUser.username(), validUser.username);
+      createUser.bank().select(validUser.bank);
+
+      // Create user
+      createUser.createUser().click();
+
+      // Assert URL
+      cy.url().should('eq', relative('/admin/users/'));
+      // Assert user existence
+      cy.assertText(users.row(validUser).roles(), PAYMENT_REPORT_OFFICER);
     });
   });
 });

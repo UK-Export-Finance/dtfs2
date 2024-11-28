@@ -20,7 +20,7 @@ describe('adminFromUkefOnly', () => {
       // Arrange
       const mockUser = {
         roles: mockRoles,
-        email: 'maker1@example.com',
+        emailAddress: 'maker1@example.com',
       };
 
       // Act
@@ -34,7 +34,7 @@ describe('adminFromUkefOnly', () => {
       // Arrange
       const mockUser = {
         roles: mockRoles,
-        email: 'maker1@ukexportfinance.gov.uk',
+        emailAddress: 'maker1@ukexportfinance.gov.uk',
       };
 
       // Act
@@ -53,7 +53,7 @@ describe('adminFromUkefOnly', () => {
       // Arrange
       const mockUser = {
         roles,
-        email: 'maker1@example.com',
+        emailAddress: 'maker1@example.com',
       };
 
       // Act
@@ -67,7 +67,7 @@ describe('adminFromUkefOnly', () => {
       // Arrange
       const mockUser = {
         roles: mockRoles,
-        email: 'maker1@example.com',
+        emailAddress: 'maker1@example.com',
       };
 
       // Act
@@ -81,7 +81,7 @@ describe('adminFromUkefOnly', () => {
       // Arrange
       const mockUser = {
         roles: mockRoles,
-        email: 'maker1@ukexportfinance.gov.uk',
+        emailAddress: 'maker1@ukexportfinance.gov.uk',
       };
 
       // Act

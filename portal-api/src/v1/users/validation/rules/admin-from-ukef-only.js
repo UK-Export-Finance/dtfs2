@@ -9,7 +9,7 @@ const { ADMIN } = require('../../../roles/roles');
  * @returns {Array<Object>} An array of validation error messages, or an empty array if no errors.
  */
 const adminFromUkefOnly = (user, change) => {
-  const { roles, email } = change;
+  const { roles, emailAddress } = change;
   const error = [
     {
       roles: {
@@ -31,7 +31,7 @@ const adminFromUkefOnly = (user, change) => {
   }
 
   // UKEF email address validation
-  if (!isUkefEmail(email)) {
+  if (!isUkefEmail(emailAddress)) {
     return error;
   }
 
