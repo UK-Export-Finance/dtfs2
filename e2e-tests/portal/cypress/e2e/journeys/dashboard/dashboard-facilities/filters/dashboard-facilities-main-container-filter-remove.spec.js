@@ -37,7 +37,7 @@ context('Dashboard Facilities - main container selected filters - remove a filte
     filters.showHideButton().click();
 
     // apply filter
-    dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().click();
+    dashboardFacilities.filters.panel.form.stage.issued.checkbox().click();
     filters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/facilities/0'));
@@ -55,7 +55,7 @@ context('Dashboard Facilities - main container selected filters - remove a filte
     dashboardFacilities.filters.mainContainer.selectedFilters.typeIssued().should('not.exist');
 
     // checkbox should be NOT be checked
-    dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().should('not.be.checked');
+    dashboardFacilities.filters.panel.form.stage.issued.checkbox().should('not.be.checked');
 
     // should render all facilities
     dashboardFacilities.rows().should('have.length', ALL_FACILITIES.length);
@@ -69,8 +69,8 @@ context('Dashboard Facilities - main container selected filters - remove a filte
     filters.showHideButton().click();
 
     // apply filters
-    dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().click();
-    dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().click();
+    dashboardFacilities.filters.panel.form.stage.issued.checkbox().click();
+    dashboardFacilities.filters.panel.form.stage.unissued.checkbox().click();
     filters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/facilities/0'));
@@ -88,8 +88,8 @@ context('Dashboard Facilities - main container selected filters - remove a filte
     filters.showHideButton().click();
 
     // check checkboxes
-    dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().should('not.be.checked');
-    dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().should('be.checked');
+    dashboardFacilities.filters.panel.form.stage.issued.checkbox().should('not.be.checked');
+    dashboardFacilities.filters.panel.form.stage.unissued.checkbox().should('be.checked');
   });
 
   it('should remove both issued and unissued filters when they are selected and removed', () => {
@@ -100,8 +100,8 @@ context('Dashboard Facilities - main container selected filters - remove a filte
     filters.showHideButton().click();
 
     // apply filters
-    dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().click();
-    dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().click();
+    dashboardFacilities.filters.panel.form.stage.issued.checkbox().click();
+    dashboardFacilities.filters.panel.form.stage.unissued.checkbox().click();
     filters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/facilities/0'));
@@ -120,7 +120,7 @@ context('Dashboard Facilities - main container selected filters - remove a filte
     filters.showHideButton().click();
 
     // check checkboxes
-    dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().should('not.be.checked');
-    dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().should('not.be.checked');
+    dashboardFacilities.filters.panel.form.stage.issued.checkbox().should('not.be.checked');
+    dashboardFacilities.filters.panel.form.stage.unissued.checkbox().should('not.be.checked');
   });
 });
