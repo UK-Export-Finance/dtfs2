@@ -47,6 +47,21 @@ describe('adminFromUkefOnly', () => {
 
   describe('Without an admin role', () => {
     const mockRoles = [MAKER, PAYMENT_REPORT_OFFICER];
+    const invalidRoles = [undefined, null, [], {}, ''];
+
+    it.each(invalidRoles)('should throw an error with an invalid role %o', (roles) => {
+      // Arrange
+      const mockUser = {
+        roles,
+        email: 'maker1@example.com',
+      };
+
+      // Act
+      const response = adminFromUkefOnly(null, mockUser);
+
+      // Assert
+      expect(response).toStrictEqual(error);
+    });
 
     it('should not throw an error with a non UKEF email address', () => {
       // Arrange

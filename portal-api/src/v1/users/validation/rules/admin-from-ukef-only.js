@@ -10,6 +10,19 @@ const { ADMIN } = require('../../../roles/roles');
  */
 const adminFromUkefOnly = (user, change) => {
   const { roles, email } = change;
+  const error = [
+    {
+      roles: {
+        order: '1',
+        text: 'The admin role can only be associated with a UKEF email address',
+      },
+    },
+  ];
+
+  if (!roles?.length) {
+    return error;
+  }
+
   const admin = roles.includes(ADMIN);
 
   // Admin role validation
@@ -19,14 +32,7 @@ const adminFromUkefOnly = (user, change) => {
 
   // UKEF email address validation
   if (!isUkefEmail(email)) {
-    return [
-      {
-        roles: {
-          order: '1',
-          text: 'The admin role can only be associated with a UKEF email address',
-        },
-      },
-    ];
+    return error;
   }
 
   // No error to be thrown
