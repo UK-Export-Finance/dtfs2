@@ -1,3 +1,4 @@
+import { DEAL_STATUS, DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
 import portalPages from '../../../../../../../portal/cypress/e2e/pages';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { generateAinUnissuedDealWithDates } from '../../test-data/AIN-deal-unissued-facilities/dealReadyToSubmit';
@@ -54,14 +55,14 @@ context('Deal cancellation', () => {
 
   describe('Deal cancellations on tfm with effective dates in the past', () => {
     it('AIN deal with unissued facilities is submitted to UKEF, user cancelled the deal in the past in TFM. Maker unable to issue facility on portal', () => {
-      const ainDealPast = deals.find((deal) => deal.submissionType === 'Automatic Inclusion Notice' && deal.status === 'Cancelled');
+      const ainDealPast = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.AIN && deal.status === DEAL_STATUS.CANCELLED);
       const ainDealfacilityPast = ainDealPast.facilities.find((facility) => facility.type === 'Bond')._id;
       portalPages.contract.visit(ainDealPast);
       portalPages.contract.bondTransactionsTable.row(ainDealfacilityPast).issueFacilityLink().should('not.exist');
     });
 
     it('MIN deal with unissued facilities is submitted to UKEF, user cancelled the deal in the past in TFM. Maker unable to issue facility on portal', () => {
-      const minDealPast = deals.find((deal) => deal.submissionType === 'Manual Inclusion Notice' && deal.status === 'Cancelled');
+      const minDealPast = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.MIN && deal.status === DEAL_STATUS.CANCELLED);
       const minDealfacilityPast = minDealPast.facilities.find((facility) => facility.type === 'Bond')._id;
       portalPages.contract.visit(minDealPast);
       portalPages.contract.bondTransactionsTable.row(minDealfacilityPast).issueFacilityLink().should('not.exist');
@@ -70,14 +71,14 @@ context('Deal cancellation', () => {
 
   describe('Deal cancellations on tfm with effective dates in the future', () => {
     it('AIN deal with unissued facilities is submitted to UKEF, user schedule cancellation in the future in TFM. Maker unable to issue facility on portal', () => {
-      const ainDealFuture = deals.find((deal) => deal.submissionType === 'Automatic Inclusion Notice' && deal.status === 'Pending cancellation');
+      const ainDealFuture = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.AIN && deal.status === DEAL_STATUS.PENDING_CANCELLATION);
       const ainDealFacilityFuture = ainDealFuture.facilities.find((facility) => facility.type === 'Bond')._id;
       portalPages.contract.visit(ainDealFuture);
       portalPages.contract.bondTransactionsTable.row(ainDealFacilityFuture).issueFacilityLink().should('not.exist');
     });
 
     it('MIN deal with unissued facilities is submitted to UKEF, user schedule cancellation deal in the future in TFM. Maker unable to issue facility on portal', () => {
-      const minDealFuture = deals.find((deal) => deal.submissionType === 'Manual Inclusion Notice' && deal.status === 'Pending cancellation');
+      const minDealFuture = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.MIN && deal.status === DEAL_STATUS.PENDING_CANCELLATION);
       const minDealFacilityFuture = minDealFuture.facilities.find((facility) => facility.type === 'Bond')._id;
       portalPages.contract.visit(minDealFuture);
       portalPages.contract.bondTransactionsTable.row(minDealFacilityFuture).issueFacilityLink().should('not.exist');
