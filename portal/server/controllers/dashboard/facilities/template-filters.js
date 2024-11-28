@@ -1,5 +1,5 @@
-const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
-const { FIELD_NAMES, FACILITY_HAS_BEEN_ISSUED } = require('../../../constants');
+const { FACILITY_TYPE, FACILITY_STAGE, isTfmDealCancellationFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { FIELD_NAMES } = require('../../../constants');
 const {
   DASHBOARD_FILTERS: { BESPOKE_FILTER_VALUES },
 } = require('../../../content-strings');
@@ -26,19 +26,26 @@ const typeFilters = (submittedFilters) => {
  * Create filters array for the 'facility stage' field.
  * This will used in the checkboxes component 'items' array.
  */
-const hasBeenIssuedFilters = (submittedFilters) => {
-  const fieldName = FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED;
+const stageFilters = (submittedFilters) => {
+  const fieldName = FIELD_NAMES.FACILITY.STAGE;
 
   const fieldInputs = [
     {
       text: BESPOKE_FILTER_VALUES.FACILITIES.ISSUED,
-      value: FACILITY_HAS_BEEN_ISSUED.ISSUED,
+      value: BESPOKE_FILTER_VALUES.FACILITIES.ISSUED,
     },
     {
       text: BESPOKE_FILTER_VALUES.FACILITIES.UNISSUED,
-      value: FACILITY_HAS_BEEN_ISSUED.UNISSUED,
+      value: BESPOKE_FILTER_VALUES.FACILITIES.UNISSUED,
     },
   ];
+
+  if (isTfmDealCancellationFeatureFlagEnabled()) {
+    fieldInputs.push({
+      text: FACILITY_STAGE.RISK_EXPIRED,
+      value: FACILITY_STAGE.RISK_EXPIRED,
+    });
+  }
 
   return generateFiltersArray(fieldName, fieldInputs, submittedFilters);
 };
@@ -64,12 +71,12 @@ const facilitiesTemplateFilters = (submittedFilters = {}) => ({
   createdBy: createdByYouFilter(submittedFilters),
   type: typeFilters(submittedFilters),
   'deal.submissionType': submissionTypeFilters(`deal.${FIELD_NAMES.DEAL.SUBMISSION_TYPE}`, submittedFilters),
-  hasBeenIssued: hasBeenIssuedFilters(submittedFilters),
+  stage: stageFilters(submittedFilters),
 });
 
 module.exports = {
   typeFilters,
-  hasBeenIssuedFilters,
+  stageFilters,
   facilitiesTemplateFilters,
   createdByYouFilter,
 };
