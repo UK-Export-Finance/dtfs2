@@ -1,15 +1,15 @@
 import { createMocks } from 'node-mocks-http';
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import { validateDealCancellationEnabled } from './deal-cancellation';
+import { validatePortalFacilityAmendmentsEnabled } from './portal-facility-amendments';
 
-describe('validateDealCancellationEnabled', () => {
+describe('validatePortalFacilityAmendmentsEnabled', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
 
-  describe('when deal cancellation is enabled', () => {
+  describe('when portal facility amendments is enabled', () => {
     beforeEach(() => {
-      jest.spyOn(dtfsCommon, 'isTfmDealCancellationFeatureFlagEnabled').mockReturnValueOnce(true);
+      jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValueOnce(true);
     });
 
     it('calls next', () => {
@@ -18,7 +18,7 @@ describe('validateDealCancellationEnabled', () => {
       const next = jest.fn();
 
       // Act
-      validateDealCancellationEnabled(req, res, next);
+      validatePortalFacilityAmendmentsEnabled(req, res, next);
 
       // Assert
       expect(next).toHaveBeenCalledTimes(1);
@@ -30,15 +30,15 @@ describe('validateDealCancellationEnabled', () => {
       const next = jest.fn();
 
       // Act
-      validateDealCancellationEnabled(req, res, next);
+      validatePortalFacilityAmendmentsEnabled(req, res, next);
 
       expect(res._getRedirectUrl()).toEqual('');
     });
   });
 
-  describe('when deal cancellation is disabled', () => {
+  describe('when portal facility amendments is disabled', () => {
     beforeEach(() => {
-      jest.spyOn(dtfsCommon, 'isTfmDealCancellationFeatureFlagEnabled').mockReturnValueOnce(false);
+      jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValueOnce(false);
     });
 
     it('does not call next', () => {
@@ -48,7 +48,7 @@ describe('validateDealCancellationEnabled', () => {
       const next = jest.fn();
 
       // Act
-      validateDealCancellationEnabled(req, res, next);
+      validatePortalFacilityAmendmentsEnabled(req, res, next);
 
       // Assert
       expect(next).toHaveBeenCalledTimes(0);
@@ -60,7 +60,7 @@ describe('validateDealCancellationEnabled', () => {
       const next = jest.fn();
 
       // Act
-      validateDealCancellationEnabled(req, res, next);
+      validatePortalFacilityAmendmentsEnabled(req, res, next);
 
       expect(res._getRedirectUrl()).toEqual('/not-found');
     });

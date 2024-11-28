@@ -1,15 +1,15 @@
 import { createMocks } from 'node-mocks-http';
 import * as featureFlags from '../../helpers/is-feature-flag-enabled';
-import { validateDealCancellationEnabled } from './deal-cancellation';
+import { validatePortalFacilityAmendmentsEnabled } from './portal-facility-amendments';
 
-describe('validateDealCancellationEnabled', () => {
+describe('validatePortalFacilityAmendmentsEnabled', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
 
-  describe('when deal cancellation is enabled', () => {
+  describe('when portal facility amendments is enabled', () => {
     beforeEach(() => {
-      jest.spyOn(featureFlags, 'isTfmDealCancellationFeatureFlagEnabled').mockReturnValueOnce(true);
+      jest.spyOn(featureFlags, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValueOnce(true);
     });
 
     it('calls next', () => {
@@ -18,7 +18,7 @@ describe('validateDealCancellationEnabled', () => {
       const next = jest.fn();
 
       // Act
-      validateDealCancellationEnabled(req, res, next);
+      validatePortalFacilityAmendmentsEnabled(req, res, next);
 
       // Assert
       expect(next).toHaveBeenCalledTimes(1);
@@ -30,26 +30,26 @@ describe('validateDealCancellationEnabled', () => {
       const next = jest.fn();
 
       // Act
-      validateDealCancellationEnabled(req, res, next);
+      validatePortalFacilityAmendmentsEnabled(req, res, next);
 
       // Assert
       expect(res.statusCode).toEqual(200);
     });
   });
 
-  describe('when deal cancellation is disabled', () => {
+  describe('when portal facility amendments is disabled', () => {
     beforeEach(() => {
-      jest.spyOn(featureFlags, 'isTfmDealCancellationFeatureFlagEnabled').mockReturnValueOnce(false);
+      jest.spyOn(featureFlags, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValueOnce(false);
     });
 
-    it('does not call next when deal cancellation is enabled', () => {
+    it('does not call next', () => {
       // Arrange
 
       const { req, res } = createMocks();
       const next = jest.fn();
 
       // Act
-      validateDealCancellationEnabled(req, res, next);
+      validatePortalFacilityAmendmentsEnabled(req, res, next);
 
       // Assert
       expect(next).toHaveBeenCalledTimes(0);
@@ -61,7 +61,7 @@ describe('validateDealCancellationEnabled', () => {
       const next = jest.fn();
 
       // Act
-      validateDealCancellationEnabled(req, res, next);
+      validatePortalFacilityAmendmentsEnabled(req, res, next);
 
       expect(res.statusCode).toEqual(404);
     });
