@@ -15,7 +15,7 @@ import { aPortalUser, aTfmSessionUser } from '../../../../test-helpers';
 
 console.error = jest.fn();
 
-const BASE_URL = '/v1/utilisation-reports/:reportId/feeRecords/:feeRecordId/corrections';
+const BASE_URL = '/v1/utilisation-reports/:reportId/fee-records/:feeRecordId/corrections';
 
 describe(`POST ${BASE_URL}`, () => {
   const getUrl = (reportId: number | string, feeRecordId: number | string) =>
