@@ -113,4 +113,19 @@ export const FeeRecordRepo = SqlDbDataSource.getRepository(FeeRecordEntity).exte
       relations: { payments: true },
     });
   },
+
+  /**
+   * Checks if a fee record exists with the supplied id and report id
+   * @param id - The fee record id
+   * @param reportId - The report id
+   * @returns True if a matching fee record exists, false otherwise
+   */
+  async existsByIdAndReportId(id: number, reportId: number): Promise<boolean> {
+    return await this.exists({
+      where: {
+        id,
+        report: { id: reportId },
+      },
+    });
+  },
 });
