@@ -11,6 +11,7 @@ export {
   isTfmFacilityEndDateFeatureFlagEnabled,
   isTfmDealCancellationFeatureFlagEnabled,
   isTfmSsoFeatureFlagEnabled,
+  isPortalFacilityAmendmentsFeatureFlagEnabled,
 } from './is-feature-flag-enabled';
 export * from './gef-deal-versioning';
 export * from './monetary-value';
