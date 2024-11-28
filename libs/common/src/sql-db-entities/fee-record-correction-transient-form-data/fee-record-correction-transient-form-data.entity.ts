@@ -21,15 +21,23 @@ export class FeeRecordCorrectionTransientFormDataEntity extends AuditableBaseEnt
   feeRecordId!: number;
 
   /**
-   * Form data stored as a JSON object
+   * Form data stored as a serialized JSON object
    */
   @Column({ type: 'nvarchar', length: 1000 })
   private formDataSerialized!: string;
 
+  /**
+   * Gets the form data by deserializing the stored JSON string
+   * @returns The deserialized form data as RecordCorrectionTransientFormData
+   */
   get formData(): RecordCorrectionTransientFormData {
     return JSON.parse(this.formDataSerialized) as RecordCorrectionTransientFormData;
   }
 
+  /**
+   * Sets the form data by serializing it to a JSON string
+   * @param value - The form data to be serialized and stored
+   */
   set formData(value: RecordCorrectionTransientFormData) {
     this.formDataSerialized = JSON.stringify(value);
   }
