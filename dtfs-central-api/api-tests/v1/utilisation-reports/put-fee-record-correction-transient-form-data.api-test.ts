@@ -48,10 +48,7 @@ describe(`PUT ${BASE_URL}`, () => {
   });
 
   afterEach(async () => {
-    await SqlDbHelper.deleteAllEntries('UtilisationReport');
-  });
-
-  afterAll(async () => {
+    await SqlDbHelper.deleteAllEntries('FeeRecordCorrectionTransientFormData');
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
   });
 
