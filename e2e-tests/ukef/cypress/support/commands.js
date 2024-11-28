@@ -3,6 +3,7 @@ import './click-events';
 import { submitDealCancellation } from './trade-finance-manager-ui/submit-deal-cancellation';
 import { makerSubmitDealForReview } from './portal/makerSubmitDealForReview';
 import { checkerSubmitDealToUkef } from './portal/checkerSubmitDealToUkef';
+import { getOneDeal } from './portal-api/getOneDeal';
 
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
@@ -23,6 +24,8 @@ Cypress.Commands.add('login', require('./portal/logIn'));
 Cypress.Commands.add('tfmLogin', require('./trade-finance-manager-ui/login'));
 Cypress.Commands.add('overridePortalUserSignInTokenWithValidTokenByUsername', require('./portal/overridePortalUserSignInTokenWithValidTokenByUsername'));
 Cypress.Commands.add('getUserByUsername', require('./portal/getUserByUsername'));
+
+Cypress.Commands.add('getOneDeal', getOneDeal);
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('enterUsernameAndPassword', require('./portal/enterUsernameAndPassword'));
 Cypress.Commands.add('completeDateFormFields', require('./portal/completeDateFormFields'));
