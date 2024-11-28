@@ -52,16 +52,16 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
     });
 
     it('submits the filter and redirects to the dashboard', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox());
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.issued.checkbox());
     });
 
     it('renders checked checkbox', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox());
-      shouldRenderCheckedCheckbox(dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox());
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.issued.checkbox());
+      shouldRenderCheckedCheckbox(dashboardFacilities.filters.panel.form.stage.issued.checkbox());
     });
 
     it('renders the applied filter in the `applied filters` section', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox());
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.issued.checkbox());
 
       filters.showHideButton().click();
 
@@ -69,7 +69,7 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
     });
 
     it('renders the applied filter in the `main container selected filters` section', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox());
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.issued.checkbox());
 
       filters.showHideButton().click();
 
@@ -80,7 +80,7 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
     });
 
     it('renders only facilities that are Issued', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox());
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.issued.checkbox());
 
       filters.showHideButton().click();
 
@@ -101,16 +101,16 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
     });
 
     it('submits the filter and redirects to the dashboard', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox());
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.unissued.checkbox());
     });
 
     it('renders checked checkbox', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox());
-      shouldRenderCheckedCheckbox(dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox());
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.unissued.checkbox());
+      shouldRenderCheckedCheckbox(dashboardFacilities.filters.panel.form.stage.unissued.checkbox());
     });
 
     it('renders the applied filter in the `applied filters` section', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox());
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.unissued.checkbox());
 
       filters.showHideButton().click();
 
@@ -118,7 +118,7 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
     });
 
     it('renders the applied filter in the `main container selected filters` section', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox());
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.unissued.checkbox());
 
       filters.showHideButton().click();
 
@@ -129,7 +129,7 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
     });
 
     it('renders only facilities that are Unissued', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox());
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.unissued.checkbox());
 
       filters.showHideButton().click();
 

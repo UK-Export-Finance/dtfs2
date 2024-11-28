@@ -1,7 +1,8 @@
-import { RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
+import { RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import { CreateRecordCorrectionRequestFormValues } from '../../../../types/view-models';
 import {
   getAdditionalInfoValidationError,
+  getRecordCorrectionReasonsValidationError,
   MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH,
   validateCreateRecordCorrectionRequestFormValues,
 } from './validate-form-values';
@@ -159,6 +160,47 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         additionalInfo: 'Some additional info',
       };
     }
+  });
+
+  describe('getRecordCorrectionReasonsValidationError', () => {
+    describe('when reasons is undefined', () => {
+      it('should return "select a reason" error message', () => {
+        // Arrange
+        const reasons = undefined;
+
+        // Act
+        const errorMessage = getRecordCorrectionReasonsValidationError(reasons);
+
+        // Assert
+        expect(errorMessage).toEqual('You must select a reason for the record correction request');
+      });
+    });
+
+    describe('when reasons is an empty array', () => {
+      it('should return "select a reason" error message', () => {
+        // Arrange
+        const reasons: RecordCorrectionReason[] = [];
+
+        // Act
+        const errorMessage = getRecordCorrectionReasonsValidationError(reasons);
+
+        // Assert
+        expect(errorMessage).toEqual('You must select a reason for the record correction request');
+      });
+    });
+
+    describe(`when reasons is a non-empty array`, () => {
+      it('should return undefined', () => {
+        // Arrange
+        const reasons = [RECORD_CORRECTION_REASON.OTHER];
+
+        // Act
+        const errorMessage = getRecordCorrectionReasonsValidationError(reasons);
+
+        // Assert
+        expect(errorMessage).toBeUndefined();
+      });
+    });
   });
 
   describe('getAdditionalInfoValidationError', () => {
