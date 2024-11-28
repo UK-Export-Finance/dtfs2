@@ -2,14 +2,17 @@ import { ApiError, FeeRecordCorrectionTransientFormDataEntity, REQUEST_PLATFORM_
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { CustomExpressRequest } from '../../../../../types/custom-express-request';
-import { PutFeeRecordCorrectionTransientFormDataSchema } from '../../../../routes/middleware/payload-validation';
+import { PutFeeRecordCorrectionTransientFormDataPayload } from '../../../../routes/middleware/payload-validation';
 import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-transient-form-data-repo';
+import { FeeRecordRepo } from '../../../../../repositories/fee-record-repo';
+import { NotFoundError } from '../../../../../errors';
 
 export type PutFeeRecordCorrectionTransientFormDataRequest = CustomExpressRequest<{
   params: {
+    reportId: string;
     feeRecordId: string;
   };
-  reqBody: PutFeeRecordCorrectionTransientFormDataSchema;
+  reqBody: PutFeeRecordCorrectionTransientFormDataPayload;
 }>;
 
 /**
@@ -19,9 +22,15 @@ export type PutFeeRecordCorrectionTransientFormDataRequest = CustomExpressReques
  */
 export const putFeeRecordCorrectionTransientFormData = async (req: PutFeeRecordCorrectionTransientFormDataRequest, res: Response) => {
   try {
-    const { feeRecordId } = req.params;
+    const { reportId, feeRecordId } = req.params;
     const { user, formData } = req.body;
     const userId = user._id.toString();
+
+    const feeRecordExists = await FeeRecordRepo.existsByIdAndReportId(Number(feeRecordId), Number(reportId));
+
+    if (!feeRecordExists) {
+      throw new NotFoundError(`Failed to find a fee record with id '${feeRecordId}' attached to report with id '${reportId}'`);
+    }
 
     const newTransientFormData = FeeRecordCorrectionTransientFormDataEntity.create({
       userId,

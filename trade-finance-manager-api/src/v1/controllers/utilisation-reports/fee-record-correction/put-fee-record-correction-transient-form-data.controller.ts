@@ -11,6 +11,10 @@ export type PutFeeRecordCorrectionTransientFormDataRequestBody = {
 };
 
 export type PutFeeRecordCorrectionTransientFormDataRequest = CustomExpressRequest<{
+  params: {
+    reportId: string;
+    feeRecordId: string;
+  };
   reqBody: PutFeeRecordCorrectionTransientFormDataRequestBody;
 }>;
 
