@@ -1,7 +1,7 @@
 import { MAX_CHARACTER_COUNT } from '@ukef/dtfs2-common';
 import { ErrorSummaryViewModel, ReasonForCancellingErrorsViewModel } from '../../../../types/view-models';
 
-const REASON_TOO_LONG_MESSAGE = `Reason for cancelling must be ${MAX_CHARACTER_COUNT} characters or less`;
+const REASON_TOO_LONG_MESSAGE = `Reason for cancelling must be ${MAX_CHARACTER_COUNT.toLocaleString('en-GB')} characters or less`;
 
 /**
  * @param reason The reason for cancelling
