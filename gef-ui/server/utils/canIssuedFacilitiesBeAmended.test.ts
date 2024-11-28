@@ -3,7 +3,7 @@ import { canIssuedFacilitiesBeAmended } from './canIssuedFacilitiesBeAmended.ts'
 
 const { AIN, MIN, MIA } = DEAL_SUBMISSION_TYPE;
 const { UKEF_ACKNOWLEDGED, DRAFT } = DEAL_STATUS;
-const { MAKER, ADMIN } = ROLES;
+const { MAKER, CHECKER, ADMIN } = ROLES;
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('@ukef/dtfs2-common', () => ({
@@ -42,13 +42,13 @@ describe('canIssuedFacilitiesBeAmended', () => {
     });
 
     it(`returns false when the user is not a ${MAKER}`, () => {
-      const result = canIssuedFacilitiesBeAmended(MIN, DRAFT, [ADMIN]);
+      const result = canIssuedFacilitiesBeAmended(MIN, UKEF_ACKNOWLEDGED, [ADMIN, CHECKER]);
 
       expect(result).toEqual(false);
     });
 
     it(`returns true when the submission type is ${MIN}, the deal status is ${UKEF_ACKNOWLEDGED} and the user roles include ${MAKER}`, () => {
-      const result = canIssuedFacilitiesBeAmended(MIN, UKEF_ACKNOWLEDGED, [MAKER]);
+      const result = canIssuedFacilitiesBeAmended(MIN, UKEF_ACKNOWLEDGED, [MAKER, CHECKER, ADMIN]);
 
       expect(result).toEqual(true);
     });

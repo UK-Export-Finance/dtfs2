@@ -6,7 +6,9 @@ import { BANK1_MAKER1, BANK1_CHECKER1_WITH_MOCK_ID, READ_ONLY } from '../../../.
 import { multipleMockGefFacilities } from '../../../../../e2e-fixtures/mock-gef-facilities';
 import applicationPreview from '../../pages/application-preview';
 
-const { unissuedCashFacility, unissuedContingentFacility, anIssuedContingentFacility, issuedCashFacility } = multipleMockGefFacilities();
+const { unissuedCashFacility, unissuedContingentFacility, anIssuedContingentFacility, issuedCashFacility } = multipleMockGefFacilities({
+  facilityEndDateEnabled: true,
+});
 
 let dealId;
 let token;
