@@ -185,7 +185,7 @@ context('Admin user creates a new user', () => {
   });
 
   context('Happy paths', () => {
-    it('Admin user adds a new user and confirms the new user works once user sets password', () => {
+    it.only('Admin user adds a new user and confirms the new user works once user sets password', () => {
       validUser.roles.forEach((role) => {
         createUser.role(role).click();
       });

@@ -104,13 +104,13 @@ const applyUpdateRules = async (existingUser, candidateChange) => {
   const rules = !candidateChange.currentPassword ? updateWithoutCurrentPasswordRules : updateWithCurrentPasswordRules;
   /**
    * Below is to satisfy any email address pertinent rules.
-   * The property has been set to `emailAddress` instead of using
+   * The property has been set to `updateEmail` instead of using
    * existing property `username` and `email` for current
    * rules processing.
    */
   const change = {
     ...candidateChange,
-    emailAddress: existingUser.username,
+    updateEmail: existingUser.username,
   };
 
   return await applyRules(rules, change, existingUser);
