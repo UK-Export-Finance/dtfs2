@@ -24,7 +24,7 @@ const getUserAuthorisationLevelsToApplication = require('../../utils/user-author
 const { FACILITY_TYPE, AUTHORISATION_LEVEL, DEAL_SUBMISSION_TYPE, STAGE } = require('../../constants');
 const Application = require('../../models/application');
 const { MAKER } = require('../../constants/roles');
-const { canIssuedFacilitiesBeAmended } = require('../../utils/canIssuedFacilitiesBeAmended');
+const { canUserAmendIssuedFacilities } = require('../../utils/canUserAmendIssuedFacilities');
 
 let userSession;
 
@@ -264,7 +264,7 @@ const applicationDetails = async (req, res, next) => {
       params.link += '/unissued-facilities';
     }
 
-    params.canIssuedFacilitiesBeAmended = canIssuedFacilitiesBeAmended(application.submissionType, application.status, userRoles);
+    params.canIssuedFacilitiesBeAmended = canUserAmendIssuedFacilities(application.submissionType, application.status, userRoles);
 
     return res.render(`partials/${partial}.njk`, params);
   } catch (error) {
