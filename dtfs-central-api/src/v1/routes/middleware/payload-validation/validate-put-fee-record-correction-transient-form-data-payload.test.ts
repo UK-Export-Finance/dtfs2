@@ -3,17 +3,17 @@ import { HttpStatusCode } from 'axios';
 import { MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, RECORD_CORRECTION_REASON, RecordCorrectionTransientFormData } from '@ukef/dtfs2-common';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import {
-  PutFeeRecordCorrectionTransientFormDataSchema,
-  validatePutFeeRecordCorrectionTransientFormDataSchema,
+  PutFeeRecordCorrectionTransientFormDataPayload,
+  validatePutFeeRecordCorrectionTransientFormDataPayload,
 } from './validate-put-fee-record-correction-transient-form-data-payload';
 
-describe('validatePutFeeRecordCorrectionTransientFormDataSchema', () => {
+describe('validatePutFeeRecordCorrectionTransientFormDataPayload', () => {
   const getHttpMocks = () => httpMocks.createMocks();
 
-  const requiredPayloadKeys: (keyof PutFeeRecordCorrectionTransientFormDataSchema)[] = ['formData', 'user'];
+  const requiredPayloadKeys: (keyof PutFeeRecordCorrectionTransientFormDataPayload)[] = ['formData', 'user'];
   const requiredFormDataPayloadKeys: (keyof RecordCorrectionTransientFormData)[] = ['reasons', 'additionalInfo'];
 
-  const aValidPayload = (): PutFeeRecordCorrectionTransientFormDataSchema => ({
+  const aValidPayload = (): PutFeeRecordCorrectionTransientFormDataPayload => ({
     formData: {
       reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER],
       additionalInfo: 'Some additional info',
@@ -33,7 +33,7 @@ describe('validatePutFeeRecordCorrectionTransientFormDataSchema', () => {
     req.body = invalidPayload;
 
     // Act
-    validatePutFeeRecordCorrectionTransientFormDataSchema(req, res, next);
+    validatePutFeeRecordCorrectionTransientFormDataPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
@@ -60,7 +60,7 @@ describe('validatePutFeeRecordCorrectionTransientFormDataSchema', () => {
       req.body = invalidPayload;
 
       // Act
-      validatePutFeeRecordCorrectionTransientFormDataSchema(req, res, next);
+      validatePutFeeRecordCorrectionTransientFormDataPayload(req, res, next);
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
@@ -86,7 +86,7 @@ describe('validatePutFeeRecordCorrectionTransientFormDataSchema', () => {
     req.body = invalidPayload;
 
     // Act
-    validatePutFeeRecordCorrectionTransientFormDataSchema(req, res, next);
+    validatePutFeeRecordCorrectionTransientFormDataPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
@@ -105,7 +105,7 @@ describe('validatePutFeeRecordCorrectionTransientFormDataSchema', () => {
     req.body = invalidPayload;
 
     // Act
-    validatePutFeeRecordCorrectionTransientFormDataSchema(req, res, next);
+    validatePutFeeRecordCorrectionTransientFormDataPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
@@ -124,7 +124,7 @@ describe('validatePutFeeRecordCorrectionTransientFormDataSchema', () => {
     req.body = invalidPayload;
 
     // Act
-    validatePutFeeRecordCorrectionTransientFormDataSchema(req, res, next);
+    validatePutFeeRecordCorrectionTransientFormDataPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
@@ -143,7 +143,7 @@ describe('validatePutFeeRecordCorrectionTransientFormDataSchema', () => {
     req.body = invalidPayload;
 
     // Act
-    validatePutFeeRecordCorrectionTransientFormDataSchema(req, res, next);
+    validatePutFeeRecordCorrectionTransientFormDataPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);

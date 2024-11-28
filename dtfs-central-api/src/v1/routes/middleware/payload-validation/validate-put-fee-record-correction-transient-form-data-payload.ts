@@ -9,7 +9,7 @@ import { TfmSessionUserSchema } from './schemas';
 
 const RecordCorrectionReasonSchema = z.enum(Object.values(RECORD_CORRECTION_REASON) as [RecordCorrectionReason, ...RecordCorrectionReason[]]);
 
-const PutFeeRecordCorrectionTransientFormDataSchema = z.object({
+const PutFeeRecordCorrectionTransientFormDataPayload = z.object({
   user: TfmSessionUserSchema,
   formData: z.object({
     reasons: z.array(RecordCorrectionReasonSchema).min(1),
@@ -17,6 +17,6 @@ const PutFeeRecordCorrectionTransientFormDataSchema = z.object({
   }),
 });
 
-export type PutFeeRecordCorrectionTransientFormDataSchema = z.infer<typeof PutFeeRecordCorrectionTransientFormDataSchema>;
+export type PutFeeRecordCorrectionTransientFormDataPayload = z.infer<typeof PutFeeRecordCorrectionTransientFormDataPayload>;
 
-export const validatePutFeeRecordCorrectionTransientFormDataSchema = createValidationMiddlewareForSchema(PutFeeRecordCorrectionTransientFormDataSchema);
+export const validatePutFeeRecordCorrectionTransientFormDataPayload = createValidationMiddlewareForSchema(PutFeeRecordCorrectionTransientFormDataPayload);

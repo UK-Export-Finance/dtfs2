@@ -11,7 +11,7 @@ const {
   validatePostReportDataValidationPayload,
   validatePostAddFeesToAnExistingPaymentGroupPayload,
   validatePostUploadUtilisationReportPayload,
-  validatePutFeeRecordCorrectionTransientFormDataSchema,
+  validatePutFeeRecordCorrectionTransientFormDataPayload,
 } = require('./middleware/payload-validation');
 const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
 const { postUploadUtilisationReport } = require('../controllers/utilisation-report-service/post-upload-utilisation-report.controller');
@@ -830,6 +830,6 @@ utilisationReportsRouter
 utilisationReportsRouter
   .route('/:reportId/fee-records/:feeRecordId/correction-transient-form-data')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), handleExpressValidatorResult)
-  .put(validatePutFeeRecordCorrectionTransientFormDataSchema, putFeeRecordCorrectionTransientFormData);
+  .put(validatePutFeeRecordCorrectionTransientFormDataPayload, putFeeRecordCorrectionTransientFormData);
 
 module.exports = utilisationReportsRouter;

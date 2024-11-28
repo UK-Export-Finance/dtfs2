@@ -2,7 +2,7 @@ import { ApiError, FeeRecordCorrectionTransientFormDataEntity, REQUEST_PLATFORM_
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { CustomExpressRequest } from '../../../../../types/custom-express-request';
-import { PutFeeRecordCorrectionTransientFormDataSchema } from '../../../../routes/middleware/payload-validation';
+import { PutFeeRecordCorrectionTransientFormDataPayload } from '../../../../routes/middleware/payload-validation';
 import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-transient-form-data-repo';
 import { FeeRecordRepo } from '../../../../../repositories/fee-record-repo';
 import { NotFoundError } from '../../../../../errors';
@@ -12,7 +12,7 @@ export type PutFeeRecordCorrectionTransientFormDataRequest = CustomExpressReques
     reportId: string;
     feeRecordId: string;
   };
-  reqBody: PutFeeRecordCorrectionTransientFormDataSchema;
+  reqBody: PutFeeRecordCorrectionTransientFormDataPayload;
 }>;
 
 /**

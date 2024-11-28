@@ -12,7 +12,7 @@ import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-c
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { aTfmSessionUser } from '../../../test-helpers';
-import { PutFeeRecordCorrectionTransientFormDataSchema } from '../../../src/v1/routes/middleware/payload-validation';
+import { PutFeeRecordCorrectionTransientFormDataPayload } from '../../../src/v1/routes/middleware/payload-validation';
 
 console.error = jest.fn();
 
@@ -60,7 +60,7 @@ describe(`PUT ${BASE_URL}`, () => {
     makeRequest: (url) => testApi.put({}).to(url),
   });
 
-  const requiredPayloadKeys: (keyof PutFeeRecordCorrectionTransientFormDataSchema)[] = ['formData', 'user'];
+  const requiredPayloadKeys: (keyof PutFeeRecordCorrectionTransientFormDataPayload)[] = ['formData', 'user'];
   const requiredFormDataPayloadKeys: (keyof RecordCorrectionTransientFormData)[] = ['reasons', 'additionalInfo'];
 
   it.each([requiredPayloadKeys])(`returns a '${HttpStatusCode.BadRequest}' when the '%s' field is missing`, async (payloadKey) => {

@@ -79,7 +79,7 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
       expect(api.updateFeeRecordCorrectionTransientFormData).toHaveBeenCalledTimes(1);
     });
 
-    it('should return an error message fi an error occurs', async () => {
+    it('should return an error message if an error occurs', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 

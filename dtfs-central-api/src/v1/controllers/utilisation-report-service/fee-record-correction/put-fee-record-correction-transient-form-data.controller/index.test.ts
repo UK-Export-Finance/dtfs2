@@ -10,7 +10,7 @@ import {
 import { HttpStatusCode } from 'axios';
 import { aTfmSessionUser } from '../../../../../../test-helpers';
 import { PutFeeRecordCorrectionTransientFormDataRequest, putFeeRecordCorrectionTransientFormData } from '.';
-import { PutFeeRecordCorrectionTransientFormDataSchema } from '../../../../routes/middleware/payload-validation';
+import { PutFeeRecordCorrectionTransientFormDataPayload } from '../../../../routes/middleware/payload-validation';
 import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-transient-form-data-repo';
 import { FeeRecordRepo } from '../../../../../repositories/fee-record-repo';
 
@@ -33,7 +33,7 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
 
     const aValidRequestQuery = () => ({ reportId: reportId.toString(), feeRecordId: feeRecordId.toString() });
 
-    const aValidRequestBody = (): PutFeeRecordCorrectionTransientFormDataSchema => ({
+    const aValidRequestBody = (): PutFeeRecordCorrectionTransientFormDataPayload => ({
       user: { ...aTfmSessionUser(), _id: tfmUserId },
       formData,
     });
