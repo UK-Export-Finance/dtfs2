@@ -15,7 +15,7 @@ describe(component, () => {
 
   const getWrapper = (viewModel: { facilityId: string; exporter: string; user: { firstName: string; lastName: string } }) => render(viewModel);
 
-  const feeRecordSummarySelector = '[data-cy="fee-record-summary-block-header"]';
+  const feeRecordSummarySelector = '[data-cy="fee-record-summary"]';
 
   it('should render the fee record facility id and label', () => {
     // Arrange
