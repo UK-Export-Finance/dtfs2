@@ -1,21 +1,21 @@
-import { DEAL_STATUS, DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
+import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, FACILITY_TYPE } from '@ukef/dtfs2-common';
 import portalPages from '../../../../../../../portal/cypress/e2e/pages';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
-import { generateAinUnissuedDealWithDates } from '../../test-data/AIN-deal-unissued-facilities/dealReadyToSubmit';
-import generateMinUnissuedDealWithDates from '../../test-data/MIN-deal-unissued-facilities/dealReadyToSubmit';
-import { TFM_URL, PIM_USER_1 } from '../../../../../../../e2e-fixtures';
+import { generateAinDealUnissuedFacilitiesWithDates } from '../../test-data/AIN-deal-unissued-facilities/dealReadyToSubmit';
+import generateMinDealUnissuedFacilitiesWithDates from '../../test-data/MIN-deal-unissued-facilities/dealReadyToSubmit';
 
+import { TFM_URL, PIM_USER_1 } from '../../../../../../../e2e-fixtures';
 import { yesterday, tomorrow } from '../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('Deal cancellation', () => {
-  const ainUnissuedDeals = Array(2).fill(generateAinUnissuedDealWithDates());
-  const minUnissuedDeals = Array(2).fill(generateMinUnissuedDealWithDates());
+  const ainDealWithUnissuedFacilities = Array(2).fill(generateAinDealUnissuedFacilitiesWithDates());
+  const minDealWithUnissuedFacilities = Array(2).fill(generateMinDealUnissuedFacilitiesWithDates());
   const deals = [];
 
   before(() => {
-    cy.insertManyDeals([...ainUnissuedDeals, ...minUnissuedDeals], BANK1_MAKER1).then((insertedDeals) => {
+    cy.insertManyDeals([...ainDealWithUnissuedFacilities, ...minDealWithUnissuedFacilities], BANK1_MAKER1).then((insertedDeals) => {
       insertedDeals.forEach((insertedDeal, index) => {
         const deal = { ...insertedDeal };
         cy.createFacilities(insertedDeal._id, deal.mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
@@ -56,14 +56,14 @@ context('Deal cancellation', () => {
   describe('Deal cancellations on tfm with effective dates in the past', () => {
     it('AIN deal with unissued facilities is submitted to UKEF, user cancelled the deal in the past in TFM. Maker unable to issue facility on portal', () => {
       const ainDealPast = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.AIN && deal.status === DEAL_STATUS.CANCELLED);
-      const ainDealfacilityPast = ainDealPast.facilities.find((facility) => facility.type === 'Bond')._id;
+      const ainDealfacilityPast = ainDealPast.facilities.find((facility) => facility.type === FACILITY_TYPE.BOND)._id;
       portalPages.contract.visit(ainDealPast);
       portalPages.contract.bondTransactionsTable.row(ainDealfacilityPast).issueFacilityLink().should('not.exist');
     });
 
     it('MIN deal with unissued facilities is submitted to UKEF, user cancelled the deal in the past in TFM. Maker unable to issue facility on portal', () => {
       const minDealPast = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.MIN && deal.status === DEAL_STATUS.CANCELLED);
-      const minDealfacilityPast = minDealPast.facilities.find((facility) => facility.type === 'Bond')._id;
+      const minDealfacilityPast = minDealPast.facilities.find((facility) => facility.type === FACILITY_TYPE.BOND)._id;
       portalPages.contract.visit(minDealPast);
       portalPages.contract.bondTransactionsTable.row(minDealfacilityPast).issueFacilityLink().should('not.exist');
     });
@@ -72,14 +72,14 @@ context('Deal cancellation', () => {
   describe('Deal cancellations on tfm with effective dates in the future', () => {
     it('AIN deal with unissued facilities is submitted to UKEF, user schedule cancellation in the future in TFM. Maker unable to issue facility on portal', () => {
       const ainDealFuture = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.AIN && deal.status === DEAL_STATUS.PENDING_CANCELLATION);
-      const ainDealFacilityFuture = ainDealFuture.facilities.find((facility) => facility.type === 'Bond')._id;
+      const ainDealFacilityFuture = ainDealFuture.facilities.find((facility) => facility.type === FACILITY_TYPE.BOND)._id;
       portalPages.contract.visit(ainDealFuture);
       portalPages.contract.bondTransactionsTable.row(ainDealFacilityFuture).issueFacilityLink().should('not.exist');
     });
 
     it('MIN deal with unissued facilities is submitted to UKEF, user schedule cancellation deal in the future in TFM. Maker unable to issue facility on portal', () => {
       const minDealFuture = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.MIN && deal.status === DEAL_STATUS.PENDING_CANCELLATION);
-      const minDealFacilityFuture = minDealFuture.facilities.find((facility) => facility.type === 'Bond')._id;
+      const minDealFacilityFuture = minDealFuture.facilities.find((facility) => facility.type === FACILITY_TYPE.BOND)._id;
       portalPages.contract.visit(minDealFuture);
       portalPages.contract.bondTransactionsTable.row(minDealFacilityFuture).issueFacilityLink().should('not.exist');
     });

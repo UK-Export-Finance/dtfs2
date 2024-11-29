@@ -1,7 +1,7 @@
 const dealThatJustNeedsDates = require('./dealThatJustNeedsDates.json');
 const { today } = require('../../../../../../../e2e-fixtures/dateConstants');
 
-export const generateAinUnissuedDealWithDates = () => {
+export const generateAinDealUnissuedFacilitiesWithDates = () => {
   const nowDay = today.dayLong;
   const nowMonth = today.monthLong;
   const nowYear = today.year;
