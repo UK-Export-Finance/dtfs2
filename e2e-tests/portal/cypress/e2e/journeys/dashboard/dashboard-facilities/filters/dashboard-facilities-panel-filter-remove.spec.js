@@ -37,7 +37,7 @@ context('Dashboard Facilities - panel selected filters - remove a filter', () =>
     filters.showHideButton().click();
 
     // apply filter
-    dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().click();
+    dashboardFacilities.filters.panel.form.stage.issued.checkbox().click();
     filters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/facilities/0'));
@@ -64,7 +64,7 @@ context('Dashboard Facilities - panel selected filters - remove a filter', () =>
     filters.panel.selectedFilters.list().should('not.exist');
 
     // checkbox should be NOT be checked
-    dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().should('not.be.checked');
+    dashboardFacilities.filters.panel.form.stage.issued.checkbox().should('not.be.checked');
 
     // should render all facilities
     dashboardFacilities.rows().should('have.length', ALL_FACILITIES.length);

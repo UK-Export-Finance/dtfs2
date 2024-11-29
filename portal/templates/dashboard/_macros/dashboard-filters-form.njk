@@ -110,10 +110,10 @@
     }) }}
   {% endif %}
 
-  {% if filters.hasBeenIssued %}
+  {% if filters.stage %}
     {{ govukCheckboxes({
-      idPrefix: 'hasBeenIssued',
-      name: 'hasBeenIssued',
+      idPrefix: 'stage',
+      name: 'stage',
       classes: 'govuk-checkboxes--small',
       fieldset: {
         legend: {
@@ -121,7 +121,7 @@
           classes: 'govuk-fieldset__legend--m'
         }
       },
-      items: filters.hasBeenIssued
+      items: filters.stage
     }) }}
   {% endif %}
 
