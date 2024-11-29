@@ -9,6 +9,7 @@ describe('get-fee-record-display-status-helper', () => {
       { status: FEE_RECORD_STATUS.TO_DO, expectedDisplayStatus: 'TO DO' },
       { status: FEE_RECORD_STATUS.READY_TO_KEY, expectedDisplayStatus: 'READY TO KEY' },
       { status: FEE_RECORD_STATUS.RECONCILED, expectedDisplayStatus: 'RECONCILED' },
+      { status: FEE_RECORD_STATUS.PENDING_CORRECTION, expectedDisplayStatus: 'RECORD CORRECTION REQUESTED' },
     ])("returns '$expectedDisplayStatus' when the status is '$status'", ({ status, expectedDisplayStatus }) => {
       // Act
       const displayStatus = getFeeRecordDisplayStatus(status);

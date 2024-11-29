@@ -19,7 +19,7 @@ export type SortedAndFormattedCurrencyAndAmount = {
   dataSortValue: number;
 };
 
-export type FeeRecordDisplayStatus = 'TO DO' | 'MATCH' | 'DOES NOT MATCH' | 'READY TO KEY' | 'RECONCILED';
+export type FeeRecordDisplayStatus = 'TO DO' | 'MATCH' | 'DOES NOT MATCH' | 'READY TO KEY' | 'RECONCILED' | 'RECORD CORRECTION REQUESTED';
 
 export type FeeRecordViewModelItem = {
   id: number;
