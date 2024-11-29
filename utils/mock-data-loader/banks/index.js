@@ -159,6 +159,36 @@ const MOCK_BANKS = [
     ],
     isVisibleInTfmUtilisationReports: true,
   },
+  {
+    id: '12',
+    name: 'ICICI',
+    mga: ['Test.pdf'],
+    emails: ['maker1@ukexportfinance.gov.uk'],
+    companiesHouseNo: 'FC011846',
+    partyUrn: '00313097',
+    hasGefAccessOnly: false,
+    paymentOfficerTeam: {
+      teamName: 'Payment Reporting Team',
+      emails: ['payment-officer4@ukexportfinance.gov.uk'],
+    },
+    utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
+    isVisibleInTfmUtilisationReports: true,
+  },
+  {
+    id: '12',
+    name: 'ABC Bank',
+    mga: ['Test.pdf'],
+    emails: ['maker1@ukexportfinance.gov.uk'],
+    companiesHouseNo: '02564490',
+    partyUrn: '00313709',
+    hasGefAccessOnly: false,
+    paymentOfficerTeam: {
+      teamName: 'Payment Reporting Team',
+      emails: ['payment-officer4@ukexportfinance.gov.uk'],
+    },
+    utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
+    isVisibleInTfmUtilisationReports: true,
+  },
 ];
 
 module.exports = MOCK_BANKS;
