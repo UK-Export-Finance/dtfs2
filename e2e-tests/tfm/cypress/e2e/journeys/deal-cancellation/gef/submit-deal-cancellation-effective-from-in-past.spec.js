@@ -1,31 +1,32 @@
 import { TFM_DEAL_STAGE, TFM_FACILITY_STAGE } from '@ukef/dtfs2-common';
-import relative from '../../relativeURL';
-import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
-import { ADMIN, BANK1_MAKER1, PIM_USER_1 } from '../../../../../e2e-fixtures';
-import caseDealPage from '../../pages/caseDealPage';
-import { today, yesterday } from '../../../../../e2e-fixtures/dateConstants';
-import checkDetailsPage from '../../pages/deal-cancellation/check-details';
-import dealsPage from '../../pages/dealsPage';
-import facilitiesPage from '../../pages/facilitiesPage';
-import { caseSubNavigation, successBanner } from '../../partials';
-import activitiesPage from '../../pages/activities/activitiesPage';
+import relative from '../../../relativeURL';
+import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../e2e-fixtures';
+import caseDealPage from '../../../pages/caseDealPage';
+import { today, yesterday } from '../../../../../../e2e-fixtures/dateConstants';
+import dealsPage from '../../../pages/dealsPage';
+import facilitiesPage from '../../../pages/facilitiesPage';
+import { caseSubNavigation, successBanner } from '../../../partials';
+import activitiesPage from '../../../pages/activities/activitiesPage';
+import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mock-gef-deals';
+import { anIssuedCashFacility } from '../../../../../../e2e-fixtures/mock-gef-facilities';
+import { DEAL_TYPE } from '../../../../../../gef/cypress/fixtures/constants';
 
 context('Deal cancellation - submit cancellation with "effectiveFrom" in past', () => {
   let dealId;
-  const dealFacilities = [];
+  let facility;
   const ukefDealId = 10000001;
 
   before(() => {
-    cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
+    cy.insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1).then((insertedDeal) => {
       dealId = insertedDeal._id;
+      // updates a gef deal so has relevant fields
+      cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
 
-      const { dealType, mockFacilities } = MOCK_DEAL_AIN;
-
-      cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1).then((createdFacilities) => {
-        dealFacilities.push(...createdFacilities);
+      cy.createGefFacilities(dealId, [anIssuedCashFacility()], BANK1_MAKER1).then((createdFacility) => {
+        facility = createdFacility.details;
       });
 
-      cy.submitDeal(dealId, dealType, PIM_USER_1);
+      cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
     });
   });
 
@@ -36,28 +37,8 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in past', 
 
   after(() => {
     cy.deleteDeals(dealId, ADMIN);
-    dealFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, BANK1_MAKER1);
-    });
+    cy.deleteFacility(facility._id, BANK1_MAKER1);
   });
-
-  const submitDealCancellation = () => {
-    caseDealPage.cancelDealButton().click();
-
-    cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
-    cy.clickContinueButton();
-
-    cy.url().should('eq', relative(`/case/${dealId}/cancellation/bank-request-date`));
-    cy.completeDateFormFields({ idPrefix: 'bank-request-date' });
-    cy.clickContinueButton();
-
-    cy.url().should('eq', relative(`/case/${dealId}/cancellation/effective-from-date`));
-    cy.completeDateFormFields({ idPrefix: 'effective-from-date', date: yesterday.date });
-    cy.clickContinueButton();
-
-    cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
-    checkDetailsPage.dealDeletionButton().click();
-  };
 
   describe('when logged in as a PIM user', () => {
     before(() => {
@@ -67,7 +48,7 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in past', 
 
     describe('after submitting the cancellation', () => {
       it('should redirect you to the deal summary page with the success banner visible once', () => {
-        submitDealCancellation();
+        cy.submitDealCancellation({ dealId, effectiveDate: yesterday.date });
 
         cy.url().should('eq', relative(`/case/${dealId}/deal`));
 
@@ -87,7 +68,7 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in past', 
       });
 
       it(`should show the facility statuses as ${TFM_FACILITY_STAGE.RISK_EXPIRED}`, () => {
-        const facilityId = dealFacilities[0]._id;
+        const facilityId = facility._id;
 
         cy.assertText(caseDealPage.dealFacilitiesTable.row(facilityId).facilityStage(), TFM_FACILITY_STAGE.RISK_EXPIRED);
       });
@@ -101,7 +82,7 @@ context('Deal cancellation - submit cancellation with "effectiveFrom" in past', 
 
       it(`should show the facility stage on the "All facilities" page as ${TFM_FACILITY_STAGE.RISK_EXPIRED}`, () => {
         cy.visit(relative(`/facilities/0`));
-        const facilityId = dealFacilities[0]._id;
+        const facilityId = facility._id;
 
         const row = facilitiesPage.facilitiesTable.row(facilityId);
         cy.assertText(row.facilityStage(), TFM_FACILITY_STAGE.RISK_EXPIRED);
