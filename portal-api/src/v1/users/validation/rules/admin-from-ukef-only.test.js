@@ -30,7 +30,7 @@ const existingUser = {
 };
 
 describe('adminFromUkefOnly', () => {
-  describe('With an admin role', () => {
+  describe('with an admin role', () => {
     const mockRoles = [MAKER, PAYMENT_REPORT_OFFICER, ADMIN];
 
     describe('New user', () => {
@@ -94,7 +94,7 @@ describe('adminFromUkefOnly', () => {
     });
   });
 
-  describe('Without an admin role', () => {
+  describe('without an admin role', () => {
     const mockRoles = [MAKER, PAYMENT_REPORT_OFFICER];
     const invalidRoles = [undefined, null, [], {}, ''];
 

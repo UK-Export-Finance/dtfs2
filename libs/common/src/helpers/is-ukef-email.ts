@@ -8,7 +8,7 @@ import { UKEF } from '../constants';
  */
 export const isUkefEmail = (email: string): boolean => {
   const domain = new RegExp(`@${UKEF.DOMAIN}$`);
-  const match = email.match(domain);
+  const match = email.trim().match(domain);
 
   return Boolean(match?.length);
 };

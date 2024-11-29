@@ -6,5 +6,7 @@
  */
 export const UKEF = {
   DOMAIN: 'ukexportfinance.gov.uk',
-  ACRONYM: 'UK Export Finance',
+  ACRONYM: 'UKEF',
+  EXPANSION: 'UK Export Finance',
+  FULL_EXPANSION: 'United Kingdom Export Finance',
 } as const;
