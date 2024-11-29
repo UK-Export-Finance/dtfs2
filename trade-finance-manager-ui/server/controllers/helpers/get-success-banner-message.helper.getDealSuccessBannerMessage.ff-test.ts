@@ -1,4 +1,11 @@
-import { AnyObject, DEAL_SUBMISSION_TYPE, TFM_DEAL_CANCELLATION_STATUS, TfmDealCancellationWithStatus, Deal, DEAL_TYPE } from '@ukef/dtfs2-common';
+import {
+  AnyObject,
+  DEAL_SUBMISSION_TYPE,
+  TFM_DEAL_CANCELLATION_STATUS,
+  TfmDealCancellationWithStatus,
+  DEAL_TYPE,
+  MappedDealSnapshot,
+} from '@ukef/dtfs2-common';
 import { getScheduledCancellationBannerMessage, getDealSuccessBannerMessage } from './get-success-banner-message.helper';
 
 const getDealCancellationMock = jest.fn() as jest.Mock<Promise<Partial<TfmDealCancellationWithStatus>>>;
@@ -21,12 +28,7 @@ describe('getDealSuccessBannerMessage', () => {
   const flashedSuccessMessage = 'testMessage1';
 
   describe.each([AIN, MIN])('when the deal is %s', (submissionType) => {
-    const dealSnapshot = {
-      dealType: DEAL_TYPE.GEF,
-      submissionType,
-      _id: dealId,
-      ukefDealId,
-    } as unknown as Deal;
+    const dealSnapshot = { dealType: DEAL_TYPE.GEF, submissionType, _id: dealId, details: { ukefDealId } } as unknown as MappedDealSnapshot;
 
     it('returns flashed message if there is no scheduled cancellation message', async () => {
       // Arrange
@@ -64,8 +66,8 @@ describe('getDealSuccessBannerMessage', () => {
       dealType: DEAL_TYPE.GEF,
       submissionType: MIA,
       _id: dealId,
-      ukefDealId,
-    } as unknown as Deal;
+      details: { ukefDealId },
+    } as unknown as MappedDealSnapshot;
 
     it('returns flashed message', async () => {
       // Act
