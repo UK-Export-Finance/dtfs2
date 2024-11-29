@@ -1,7 +1,7 @@
 /**
  * @openapi
  * definitions:
- *   RecordCorrectionReason:
+ *   FeeRecordCorrectionReason:
  *     type: string
  *     enum:
  *       - FACILITY_ID_INCORRECT

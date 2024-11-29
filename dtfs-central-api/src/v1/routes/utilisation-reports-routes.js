@@ -38,6 +38,9 @@ const { getFeeRecord } = require('../controllers/utilisation-report-service/get-
 const {
   putFeeRecordCorrectionTransientFormData,
 } = require('../controllers/utilisation-report-service/fee-record-correction/put-fee-record-correction-transient-form-data.controller');
+const {
+  getFeeRecordCorrectionTransientFormData,
+} = require('../controllers/utilisation-report-service/fee-record-correction/get-fee-record-correction-transient-form-data.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -808,16 +811,9 @@ utilisationReportsRouter
  *             properties:
  *               formData:
  *                 type: object
- *                 properties:
- *                   reasons:
- *                     description: The record correction reasons
- *                     type: array
- *                     items:
- *                       $ref: '#/definitions/RecordCorrectionReason'
- *                   additionalInfo:
- *                     description: Additional record correction information
- *                     type: string
+ *                 $ref: '#/definitions/FeeRecordCorrectionTransientFormData'
  *               user:
+ *                 type: object
  *                 $ref: '#/definitions/TFMUser'
  *     responses:
  *       200:
@@ -831,5 +827,51 @@ utilisationReportsRouter
   .route('/:reportId/fee-records/:feeRecordId/correction-transient-form-data')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), handleExpressValidatorResult)
   .put(validatePutFeeRecordCorrectionTransientFormDataPayload, putFeeRecordCorrectionTransientFormData);
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/fee-records/:feeRecordId/correction-transient-form-data/:userId:
+ *   get:
+ *     summary: Gets the fee record correction transient form data against a user and fee record
+ *     tags: [Utilisation Report]
+ *     description: Gets the fee record correction transient form data against a user and fee record
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report
+ *       - in: path
+ *         name: feeRecordId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the fee record
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the user
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/definitions/FeeRecordCorrectionResponse'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/:reportId/fee-records/:feeRecordId/correction-transient-form-data/:userId')
+  .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), validation.mongoIdValidation('userId'), handleExpressValidatorResult)
+  .get(getFeeRecordCorrectionTransientFormData);
 
 module.exports = utilisationReportsRouter;
