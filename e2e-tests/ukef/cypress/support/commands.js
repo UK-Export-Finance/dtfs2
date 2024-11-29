@@ -1,6 +1,8 @@
 import 'cypress-file-upload';
 import './click-events';
 import { submitDealCancellation } from './trade-finance-manager-ui/submit-deal-cancellation';
+import { makerSubmitGefDealForReview } from './portal/makerSubmitGefDealForReview';
+import { checkerSubmitGefDealToUkef } from './portal/checkerSubmitGefDealToUkef';
 
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
@@ -29,7 +31,8 @@ Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./p
 Cypress.Commands.add('enterUsernameAndPassword', require('./portal/enterUsernameAndPassword'));
 Cypress.Commands.add('completeDateFormFields', require('./portal/completeDateFormFields'));
 
-Cypress.Commands.add('gefDealCancellationFlow', require('./portal/gefDealCancellationFlow'));
+Cypress.Commands.add('makerSubmitGefDealForReview', makerSubmitGefDealForReview);
+Cypress.Commands.add('checkerSubmitGefDealToUkef', checkerSubmitGefDealToUkef);
 
 Cypress.Commands.add('submitDealCancellation', submitDealCancellation);
 
