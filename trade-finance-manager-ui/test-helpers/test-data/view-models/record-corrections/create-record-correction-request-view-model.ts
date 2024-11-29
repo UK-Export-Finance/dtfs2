@@ -12,5 +12,7 @@ export const aCreateRecordCorrectionRequestViewModel = (): CreateRecordCorrectio
     facilityId: '0012345678',
     exporter: 'Sample Company Ltd',
   },
+  formValues: {},
+  errors: { errorSummary: [] },
   backLinkHref: 'a link',
 });
