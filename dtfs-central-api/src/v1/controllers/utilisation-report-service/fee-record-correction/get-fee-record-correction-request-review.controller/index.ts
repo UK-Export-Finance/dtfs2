@@ -25,13 +25,12 @@ export type GetFeeRecordCorrectionRequestReviewResponseBody = {
     exporter: string;
     reasons: string[];
     additionalInfo: string;
-    contactEmailAddress: string;
+    contactEmailAddresses: string[];
   };
 };
 
 type GetFeeRecordCorrectionRequestReviewResponse = Response<GetFeeRecordCorrectionRequestReviewResponseBody | string>;
 
-// QQ unit tests
 /**
  * Controller for the GET fee record correction request review route.
  * @param req - The request object.
@@ -82,7 +81,7 @@ export const getFeeRecordCorrectionRequestReview = async (
         exporter: feeRecord.exporter,
         reasons,
         additionalInfo,
-        contactEmailAddress: bank.paymentOfficerTeam.emails[0],
+        contactEmailAddresses: bank.paymentOfficerTeam.emails,
       },
     });
   } catch (error) {

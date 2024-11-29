@@ -8,6 +8,6 @@ export type FeeRecordCorrectionRequestReviewResponseBody = {
     exporter: string;
     reasons: string[];
     additionalInfo: string;
-    contactEmailAddress: string;
+    contactEmailAddresses: string[];
   };
 };

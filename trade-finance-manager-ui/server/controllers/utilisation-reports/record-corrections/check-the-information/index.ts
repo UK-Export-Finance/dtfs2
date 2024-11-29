@@ -21,7 +21,7 @@ export const getRecordCorrectionRequestInformation = async (req: Request, res: R
     const { user, userToken } = asUserSession(req.session);
 
     const { bank, reportPeriod, correctionRequestDetails } = await api.getFeeRecordCorrectionRequestReview(reportId, feeRecordId, user._id, userToken);
-    const { facilityId, exporter, reasons, additionalInfo, contactEmailAddress } = correctionRequestDetails;
+    const { facilityId, exporter, reasons, additionalInfo, contactEmailAddresses } = correctionRequestDetails;
 
     return renderCheckTheInformationPage(res, {
       user,
@@ -36,7 +36,7 @@ export const getRecordCorrectionRequestInformation = async (req: Request, res: R
       formattedReportPeriod: getFormattedReportPeriodWithLongMonth(reportPeriod),
       reasonForRecordCorrection: mapReasonsToDisplayValues(reasons).join(', '),
       additionalInfo,
-      contactEmailAddress,
+      contactEmailAddresses: contactEmailAddresses.join(', '),
       cancelLink: getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]),
     });
   } catch (error) {

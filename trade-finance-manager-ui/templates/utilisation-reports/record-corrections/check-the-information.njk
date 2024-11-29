@@ -59,12 +59,12 @@
           text: "Contact email address"
         },
         value: {
-          text: contactEmailAddress
+          text: contactEmailAddresses
         }
       }
     ],
-    attributes: { 
-      'data-cy': 'summary-list' 
+    attributes: {
+      'data-cy': 'summary-list'
     }
   }) }}
 
@@ -73,7 +73,7 @@
     <div class="govuk-button-group">
       {{ govukButton({
         text: "Send record correction request",
-        attributes: { 
+        attributes: {
           'data-cy': 'continue-button'
         }
       }) }}
@@ -82,7 +82,7 @@
         text: "Cancel record correction request",
         href: cancelLink,
         classes: "govuk-button--secondary",
-        attributes: { 
+        attributes: {
           'data-cy': 'cancel-button'
         }
       }) }}

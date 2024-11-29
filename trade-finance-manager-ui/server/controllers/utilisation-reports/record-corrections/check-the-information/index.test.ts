@@ -1,8 +1,13 @@
 import httpMocks from 'node-mocks-http';
+import { getFormattedReportPeriodWithLongMonth, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import { getLinkToPremiumPaymentsTab } from '../../helpers/get-link-to-premium-payments-tab';
 import { getRecordCorrectionRequestInformation } from '.';
+import api from '../../../../api';
+import { mapReasonsToDisplayValues } from '../helpers';
+
+jest.mock('../../../../api');
 
 describe('controllers/utilisation-reports/record-corrections/check-the-information', () => {
   const userToken = 'user-token';
@@ -12,8 +17,12 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
     user,
   };
 
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
   describe('getRecordCorrectionRequestInformation', () => {
-    it('should render check the information page', () => {
+    it('should render check the information page', async () => {
       // Arrange
       const reportId = '123';
       const feeRecordId = '456';
@@ -22,23 +31,44 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
         params: { reportId, feeRecordId: feeRecordId.toString() },
       });
 
+      const bank = { name: 'Test bank', id: '129' };
+      const reportPeriod = { start: { month: 7, year: 2024 }, end: { month: 7, year: 2024 } };
+      const correctionRequestDetails = {
+        facilityId: '0012345678',
+        exporter: 'Test company',
+        reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER],
+        additionalInfo: 'The facility ID does not match the facility ID held on file',
+        contactEmailAddresses: ['one@email.com', 'two@email.com'],
+      };
+
+      const mockApiResponse = {
+        bank,
+        reportPeriod,
+        correctionRequestDetails,
+      };
+
+      jest.mocked(api.getFeeRecordCorrectionRequestReview).mockResolvedValue(mockApiResponse);
+
       // Act
-      getRecordCorrectionRequestInformation(req, res);
+      await getRecordCorrectionRequestInformation(req, res);
 
       // Assert
+      const expectedReasons = mapReasonsToDisplayValues(correctionRequestDetails.reasons).join(', ');
+      const expectedContactEmailAddresses = correctionRequestDetails.contactEmailAddresses.join(', ');
+
       expect(res._getRenderView()).toEqual('utilisation-reports/record-corrections/check-the-information.njk');
       expect(res._getRenderData()).toEqual({
         user,
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
-        bank: { name: 'Test bank' },
+        bank: { name: bank.name },
         reportId,
-        feeRecordId: '456',
-        facilityId: '0012345678',
-        exporter: 'Test company',
-        formattedReportPeriod: 'July 2024',
-        reasonForRecordCorrection: 'Facility ID is incorrect',
-        additionalInfo: 'The facility ID does not match the facility ID held on file',
-        contactEmailAddress: 'email address',
+        feeRecordId,
+        facilityId: correctionRequestDetails.facilityId,
+        exporter: correctionRequestDetails.exporter,
+        formattedReportPeriod: getFormattedReportPeriodWithLongMonth(reportPeriod),
+        reasonForRecordCorrection: expectedReasons,
+        additionalInfo: correctionRequestDetails.additionalInfo,
+        contactEmailAddresses: expectedContactEmailAddresses,
         cancelLink: getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]),
       });
     });

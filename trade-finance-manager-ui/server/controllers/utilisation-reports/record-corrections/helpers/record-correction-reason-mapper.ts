@@ -1,6 +1,5 @@
 import { RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
 
-// QQ unit tests
 /**
  * Maps a record correction reason to a display value
  * @param reason - the record correction reason
