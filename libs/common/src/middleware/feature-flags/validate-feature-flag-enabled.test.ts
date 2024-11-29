@@ -12,7 +12,7 @@ describe('feature flag middleware', () => {
     withMiddlewareFeatureFlagTests('isTfmDealCancellationFeatureFlagEnabled', validateDealCancellationEnabled);
   });
 
-  describe('validateDealCancellationEnabled', () => {
+  describe('validatePortalFacilityAmendmentsEnabled', () => {
     withMiddlewareFeatureFlagTests('isPortalFacilityAmendmentsFeatureFlagEnabled', validatePortalFacilityAmendmentsEnabled);
   });
 });
