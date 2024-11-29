@@ -5,6 +5,7 @@ import { ErrorResponse } from './types';
 type WithSqlIdPathParameterValidationTestsParams = {
   baseUrl: string;
   makeRequest: (url: string) => Promise<ErrorResponse>;
+  pathParameters?: string[];
 };
 
 const VALID_SQL_ID = '123';
@@ -20,9 +21,10 @@ const extractParameters = (url: string): string[] =>
  * @param params - The test parameters
  * @param params.baseUrl - The base url with format '/v1/path/:pathParamater'
  * @param params.makeRequest - The function to make the request with
+ * @param params.pathParameters - The path parameters to test
  */
-export const withSqlIdPathParameterValidationTests = ({ baseUrl, makeRequest }: WithSqlIdPathParameterValidationTestsParams): void => {
-  const parameters = extractParameters(baseUrl);
+export const withSqlIdPathParameterValidationTests = ({ baseUrl, makeRequest, pathParameters }: WithSqlIdPathParameterValidationTestsParams): void => {
+  const parameters = pathParameters ?? extractParameters(baseUrl);
 
   describe.each(parameters)("when the ':%s' path parameter is not a valid sql id", (parameter) => {
     const baseUrlWithTestParamater = baseUrl.replace(`:${parameter}`, 'invalid-id');
