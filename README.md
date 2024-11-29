@@ -53,7 +53,7 @@ This documentation provides a comprehensive overview of the UKEF Digital TradeFi
 6. Set UKEF TFM environment variables in your terminal: `UKEF_TFM_API_SYSTEM_KEY` and `UKEF_TFM_API_REPORTS_KEY`.
 7. Run `npm run env:copy` to copy your root .env file into all the individual projects that need it.
 8. Run `npm ci` in the root folder of the repository. (note: this will install dependencies for the entire project, including those specified in sub-packages. More details on this in the [npm workspaces](./doc/npm-workspaces.md) docs)
-9. Start your local environment with `npm run start`.
+9. Start your local environment with `docker-compose up --build`.
 10. Run migrations on the MSSQL Server database (see [SQL DB docs](./doc/sql-db.md#--run-migrations) for details)
 11. Create mock data by running `npm run load` from the root folder of the repository. This should generate mocks in your database (both Mongo and MSSQL). (for more details on what this does please see [utils docs](./utils/README.md)).
     - To run migrations on the MSSQL Server database, create mock data for both MongoDB and MSSQL all in one step, this can be done by running the command `npm run load:init`. This runs `npm run db:migrate` in the `libs/common` directory which creates the SQL database tables. This is followed by `npm run load:sql` in the `utils` directory which inserts mock data for MongoDB and MSSQL. This is especially useful for utilisation report work and E2E tests
