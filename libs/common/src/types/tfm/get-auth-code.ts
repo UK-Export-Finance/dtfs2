@@ -6,6 +6,8 @@ export type GetAuthCodeUrlParams = {
   successRedirect: string;
 };
 
+export type GetAuthCodeUrlRequest = GetAuthCodeUrlParams;
+
 export type GetAuthCodeUrlResponse = {
   authCodeUrl: string;
   authCodeUrlRequest: AuthorizationUrlRequest;
