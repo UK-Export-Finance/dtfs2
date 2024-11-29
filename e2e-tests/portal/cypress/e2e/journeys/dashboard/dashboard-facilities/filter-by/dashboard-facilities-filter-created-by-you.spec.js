@@ -150,8 +150,8 @@ context('Dashboard Facilities filters - Created by you', () => {
     dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().click();
     dashboardFacilities.filters.panel.form.submissionType.MIA.checkbox().click();
     dashboardFacilities.filters.panel.form.submissionType.MIN.checkbox().click();
-    dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().click();
-    dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().click();
+    dashboardFacilities.filters.panel.form.stage.issued.checkbox().click();
+    dashboardFacilities.filters.panel.form.stage.unissued.checkbox().click();
     filters.panel.form.applyFiltersButton().click();
 
     const EXPECTED_FACILITIES = ALL_FACILITIES.filter(
