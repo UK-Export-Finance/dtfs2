@@ -30,8 +30,10 @@ const adminFromUkefOnly = (user, change) => {
   if (!admin) {
     return [];
   }
+
   // UKEF email address validation
   const username = updateEmail ?? email;
+
   if (!isUkefEmail(username)) {
     return error;
   }

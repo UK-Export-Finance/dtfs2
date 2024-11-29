@@ -13,6 +13,7 @@ describe('isUkefEmail', () => {
     'admin@ukexportfinance.com',
     'admin@ukexportfinance.co.uk',
     'maker1@ukef.co.uk',
+    'maker1@ukef.gov.uk',
   ];
   const validEmails = [
     'maker1@ukexportfinance.gov.uk',
