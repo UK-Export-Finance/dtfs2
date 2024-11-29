@@ -9,7 +9,7 @@ describe('UserPartialLoginDataNotDefinedError', () => {
     const exception = new UserPartialLoginDataNotDefinedError();
 
     // Assert
-    expect(exception.message).toEqual('Expected session.user to be defined');
+    expect(exception.message).toEqual('Expected session.loginData to be defined');
   });
 
   it('exposes the 401 (Unauthorised) status code', () => {
