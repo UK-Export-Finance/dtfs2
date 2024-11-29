@@ -30,6 +30,40 @@ const existingUser = {
 };
 
 describe('adminFromUkefOnly', () => {
+  describe('without any role', () => {
+    describe('Existing user', () => {
+      it('should not throw an error with a non UKEF email address', () => {
+        // Arrange
+        const mockUser = {
+          updateEmail: 'maker1@example.com',
+          password: 'AbC!2345',
+          passwordConfirm: 'AbC!2345',
+        };
+
+        // Act
+        const response = adminFromUkefOnly(existingUser, mockUser);
+
+        // Assert
+        expect(response).toStrictEqual(noError);
+      });
+
+      it('should not throw an error with a UKEF email address', () => {
+        // Arrange
+        const mockUser = {
+          password: 'AbC!2345',
+          passwordConfirm: 'AbC!2345',
+          updateEmail: 'maker1@ukexportfinance.gov.uk',
+        };
+
+        // Act
+        const response = adminFromUkefOnly(existingUser, mockUser);
+
+        // Assert
+        expect(response).toStrictEqual(noError);
+      });
+    });
+  });
+
   describe('with an admin role', () => {
     const mockRoles = [MAKER, PAYMENT_REPORT_OFFICER, ADMIN];
 
@@ -99,7 +133,7 @@ describe('adminFromUkefOnly', () => {
     const invalidRoles = [undefined, null, [], {}, ''];
 
     describe('New user', () => {
-      it.each(invalidRoles)('should throw an error with an invalid role %o', (roles) => {
+      it.each(invalidRoles)('should not throw an error with an invalid role %o', (roles) => {
         // Arrange
         const mockUser = {
           roles,
@@ -110,7 +144,7 @@ describe('adminFromUkefOnly', () => {
         const response = adminFromUkefOnly(null, mockUser);
 
         // Assert
-        expect(response).toStrictEqual(error);
+        expect(response).toStrictEqual(noError);
       });
 
       it('should not throw an error with a non UKEF email address', () => {
@@ -143,7 +177,7 @@ describe('adminFromUkefOnly', () => {
     });
 
     describe('Existing user', () => {
-      it.each(invalidRoles)('should throw an error with an invalid role %o', (roles) => {
+      it.each(invalidRoles)('should not throw an error with an invalid role %o', (roles) => {
         // Arrange
         const mockUser = {
           roles,
@@ -154,7 +188,7 @@ describe('adminFromUkefOnly', () => {
         const response = adminFromUkefOnly(existingUser, mockUser);
 
         // Assert
-        expect(response).toStrictEqual(error);
+        expect(response).toStrictEqual(noError);
       });
 
       it('should not throw an error with a non UKEF email address', () => {

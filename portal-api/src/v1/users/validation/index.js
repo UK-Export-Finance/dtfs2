@@ -101,7 +101,7 @@ const applyCreateRules = async (candidateChange) => await applyRules(createRules
  * @returns {Promise<Array<string>>} A promise that resolves to an array of validation error messages.
  */
 const applyUpdateRules = async (existingUser, candidateChange) => {
-  const rules = !candidateChange.currentPassword ? updateWithoutCurrentPasswordRules : updateWithCurrentPasswordRules;
+  const rules = candidateChange.currentPassword ? updateWithCurrentPasswordRules : updateWithoutCurrentPasswordRules;
   /**
    * Below is to satisfy any email address pertinent rules.
    * The property has been set to `updateEmail` instead of using

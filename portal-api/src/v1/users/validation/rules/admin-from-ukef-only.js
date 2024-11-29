@@ -19,8 +19,9 @@ const adminFromUkefOnly = (user, change) => {
     },
   ];
 
+  // If role is not being updated
   if (!roles?.length) {
-    return error;
+    return [];
   }
 
   const admin = roles.includes(ADMIN);
