@@ -4,8 +4,10 @@ import { isPortalFacilityAmendmentsFeatureFlagEnabled, isTfmDealCancellationFeat
 
 /**
  * Creates a middleware function to check if the given feature flag is enabled
+ *
+ * This will send status `404` if the feature flag is disabled and call `next` otherwise
  */
-const generateFeatureFlagMiddleware =
+const generateBackendFeatureFlagMiddleware =
   (isFeatureFlagEnabled: () => boolean): RequestHandler =>
   (req, res, next) => {
     if (!isFeatureFlagEnabled()) {
@@ -17,11 +19,27 @@ const generateFeatureFlagMiddleware =
   };
 
 /**
- * Middleware to check if the deal cancellation feature flag is enabled
+ * Creates a middleware function to check if the given feature flag is enabled
+ *
+ * This will redirect to `/not-found` if the feature flag is disabled and call `next` otherwise
  */
-export const validateDealCancellationEnabled = generateFeatureFlagMiddleware(() => isTfmDealCancellationFeatureFlagEnabled());
+export const generateFrontendFeatureFlagMiddleware =
+  (isFeatureFlagEnabled: () => boolean): RequestHandler =>
+  (req, res, next) => {
+    if (!isFeatureFlagEnabled()) {
+      console.info(`Feature flag disabled, accessing ${req.originalUrl}`);
+      return res.redirect('/not-found');
+    }
+
+    return next();
+  };
 
 /**
- * Middleware to check if the portal amendments feature flag is enabled
+ * Backend middleware to check if the deal cancellation feature flag is enabled
  */
-export const validatePortalFacilityAmendmentsEnabled = generateFeatureFlagMiddleware(() => isPortalFacilityAmendmentsFeatureFlagEnabled());
+export const validateDealCancellationEnabled = generateBackendFeatureFlagMiddleware(() => isTfmDealCancellationFeatureFlagEnabled());
+
+/**
+ * Backend middleware to check if the portal amendments feature flag is enabled
+ */
+export const validatePortalFacilityAmendmentsEnabled = generateBackendFeatureFlagMiddleware(() => isPortalFacilityAmendmentsFeatureFlagEnabled());
