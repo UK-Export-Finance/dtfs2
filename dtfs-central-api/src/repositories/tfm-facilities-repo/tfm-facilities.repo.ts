@@ -170,7 +170,10 @@ export class TfmFacilitiesRepo {
       throw new FacilityNotFoundError(facilityId.toString());
     }
 
-    const amendment = facility.amendments?.find((value) => value.amendmentId === amendmentId);
+    const amendment = facility.amendments?.find((value) => {
+      return new ObjectId(amendmentId).equals(value.amendmentId);
+    });
+
     const { ukefFacilityId } = facility.facilitySnapshot;
 
     return (
