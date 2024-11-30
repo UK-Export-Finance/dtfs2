@@ -51,26 +51,21 @@ context('Dashboard Facilities filters - filter by facility stage', () => {
       cy.url().should('eq', relative('/dashboard/facilities/0'));
     });
 
-    it('submits the filter and redirects to the dashboard', () => {
+    beforeEach(() => {
       submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.issued.checkbox());
     });
 
     it('renders checked checkbox', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.issued.checkbox());
       shouldRenderCheckedCheckbox(dashboardFacilities.filters.panel.form.stage.issued.checkbox());
     });
 
     it('renders the applied filter in the `applied filters` section', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.issued.checkbox());
-
       filters.showHideButton().click();
 
       shouldRenderAppliedFilterInPanelSelectedFilters("Bank's facility stage", CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED);
     });
 
     it('renders the applied filter in the `main container selected filters` section', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.issued.checkbox());
-
       filters.showHideButton().click();
 
       shouldRenderAppliedFilterInMainContainerSelectedFilters(
@@ -80,8 +75,6 @@ context('Dashboard Facilities filters - filter by facility stage', () => {
     });
 
     it('renders only facilities that are Issued', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.issued.checkbox());
-
       filters.showHideButton().click();
 
       shouldRenderAppliedFilterInMainContainerSelectedFilters(
@@ -100,26 +93,21 @@ context('Dashboard Facilities filters - filter by facility stage', () => {
       cy.url().should('eq', relative('/dashboard/facilities/0'));
     });
 
-    it('submits the filter and redirects to the dashboard', () => {
+    beforeEach(() => {
       submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.unissued.checkbox());
     });
 
     it('renders checked checkbox', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.unissued.checkbox());
       shouldRenderCheckedCheckbox(dashboardFacilities.filters.panel.form.stage.unissued.checkbox());
     });
 
     it('renders the applied filter in the `applied filters` section', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.unissued.checkbox());
-
       filters.showHideButton().click();
 
       shouldRenderAppliedFilterInPanelSelectedFilters("Bank's facility stage", CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED);
     });
 
     it('renders the applied filter in the `main container selected filters` section', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.unissued.checkbox());
-
       filters.showHideButton().click();
 
       shouldRenderAppliedFilterInMainContainerSelectedFilters(
@@ -129,8 +117,6 @@ context('Dashboard Facilities filters - filter by facility stage', () => {
     });
 
     it('renders only facilities that are Unissued', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.unissued.checkbox());
-
       filters.showHideButton().click();
 
       shouldRenderAppliedFilterInMainContainerSelectedFilters(
