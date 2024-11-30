@@ -1,4 +1,4 @@
-import { AMENDMENT_TYPES, CustomExpressRequest } from '@ukef/dtfs2-common';
+import { AMENDMENT_TYPES, ApiError, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
@@ -18,8 +18,15 @@ export const getAmendment = async (req: GetAmendmentRequest, res: Response) => {
 
     return res.status(HttpStatusCode.Ok).send(amendment);
   } catch (error) {
+    if (error instanceof ApiError) {
+      const { status, message, code } = error;
+      return res.status(status).send({ status, message, code });
+    }
     console.error(`Error getting amendment with facilityId ${facilityId} and amendment id ${amendmentId}: %o`, error);
 
-    return res.sendStatus(HttpStatusCode.InternalServerError);
+    return res.status(HttpStatusCode.InternalServerError).send({
+      status: HttpStatusCode.InternalServerError,
+      message: 'Unknown error occurred when getting amendment',
+    });
   }
 };

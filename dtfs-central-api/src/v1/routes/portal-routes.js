@@ -1,5 +1,6 @@
 const express = require('express');
 const { validatePortalFacilityAmendmentsEnabled } = require('@ukef/dtfs2-common');
+const validation = require('../validation/route-validators/route-validators');
 
 const portalRouter = express.Router();
 const createDealController = require('../controllers/portal/deal/create-deal.controller');
@@ -831,13 +832,13 @@ portalRouter.route('/gef/facilities/:id').put(updateGefFacilityController.update
  *           application/json:
  *             schema:
  *               allOf:
- *                 - $ref: '#/definitions/PortalAmendment' // TODO add a new definition for GEF amendments
+ *                 - $ref: '#/definitions/PortalAmendment'
  *       404:
  *         description: Not found
  */
 portalRouter
   .route('/gef/facilities/:facilityId/amendments/:amendmentId')
-  .all(validatePortalFacilityAmendmentsEnabled)
+  .all(validatePortalFacilityAmendmentsEnabled, validation.mongoIdValidation('facilityId'), validation.mongoIdValidation('amendmentId'))
   .get(getGefPortalFacilityAmendmentController.getAmendment);
 
 /**
