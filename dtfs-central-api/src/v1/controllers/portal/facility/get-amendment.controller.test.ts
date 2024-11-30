@@ -1,0 +1,139 @@
+import httpMocks from 'node-mocks-http';
+import { ObjectId } from 'mongodb';
+import { HttpStatusCode } from 'axios';
+import { AMENDMENT_TYPES, FacilityAmendment, TestApiError } from '@ukef/dtfs2-common';
+import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
+import { getAmendment, GetAmendmentRequest } from './get-amendment.controller';
+
+const mockFindOneAmendmentByFacilityIdAndAmendmentId = jest.fn() as jest.Mock<Promise<(FacilityAmendment & { ukefFacilityId: string }) | undefined>>;
+
+const facilityId = new ObjectId().toString();
+const amendmentId = new ObjectId().toString();
+
+describe('getAmendment', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+
+    jest.spyOn(TfmFacilitiesRepo, 'findOneAmendmentByFacilityIdAndAmendmentId').mockImplementation(mockFindOneAmendmentByFacilityIdAndAmendmentId);
+  });
+
+  it('calls TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId with the facility and amendment id', async () => {
+    // Arrange
+    const { req, res } = httpMocks.createMocks<GetAmendmentRequest>({ params: { facilityId, amendmentId } });
+
+    // Act
+    await getAmendment(req, res);
+
+    // Assert
+    expect(mockFindOneAmendmentByFacilityIdAndAmendmentId).toHaveBeenCalledTimes(1);
+    expect(mockFindOneAmendmentByFacilityIdAndAmendmentId).toHaveBeenCalledWith(facilityId, amendmentId);
+  });
+
+  it(`sets the status to ${HttpStatusCode.NotFound} if the amendment is undefined`, async () => {
+    // Arrange
+    mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValue(undefined);
+
+    const { req, res } = httpMocks.createMocks<GetAmendmentRequest>({ params: { facilityId, amendmentId } });
+
+    // Act
+    await getAmendment(req, res);
+
+    // Assert
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
+  });
+
+  it(`sets the status to ${HttpStatusCode.NotFound} if the amendment is of type ${AMENDMENT_TYPES.TFM}`, async () => {
+    // Arrange
+    const amendment = { amendmentId: new ObjectId(), type: AMENDMENT_TYPES.TFM, ukefFacilityId: 'ukefFacilityId' } as FacilityAmendment & {
+      ukefFacilityId: string;
+    };
+    mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValue(amendment);
+
+    const { req, res } = httpMocks.createMocks<GetAmendmentRequest>({ params: { facilityId, amendmentId } });
+
+    // Act
+    await getAmendment(req, res);
+
+    // Assert
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
+  });
+
+  it(`sets the status to ${HttpStatusCode.NotFound} if the amendment type is undefined`, async () => {
+    // Arrange
+    const amendment = { amendmentId: new ObjectId(), ukefFacilityId: 'ukefFacilityId' } as FacilityAmendment & { ukefFacilityId: string };
+    mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValue(amendment);
+
+    const { req, res } = httpMocks.createMocks<GetAmendmentRequest>({ params: { facilityId, amendmentId } });
+
+    // Act
+    await getAmendment(req, res);
+
+    // Assert
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
+  });
+
+  it(`sets the status to ${HttpStatusCode.Ok} if the amendment is of type ${AMENDMENT_TYPES.PORTAL}`, async () => {
+    // Arrange
+    const amendment = { amendmentId: new ObjectId(), type: AMENDMENT_TYPES.PORTAL, ukefFacilityId: 'ukefFacilityId' } as FacilityAmendment & {
+      ukefFacilityId: string;
+    };
+    mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValue(amendment);
+
+    const { req, res } = httpMocks.createMocks<GetAmendmentRequest>({ params: { facilityId, amendmentId } });
+
+    // Act
+    await getAmendment(req, res);
+
+    // Assert
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+  });
+
+  it(`it returns the amendment if the amendment is of type ${AMENDMENT_TYPES.PORTAL}`, async () => {
+    // Arrange
+    const amendment = { amendmentId: new ObjectId(), type: AMENDMENT_TYPES.PORTAL, ukefFacilityId: 'ukefFacilityId' } as FacilityAmendment & {
+      ukefFacilityId: string;
+    };
+    mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValue(amendment);
+
+    const { req, res } = httpMocks.createMocks<GetAmendmentRequest>({ params: { facilityId, amendmentId } });
+
+    // Act
+    await getAmendment(req, res);
+
+    // Assert
+    expect(res._getData()).toEqual(amendment);
+  });
+
+  it(`returns the correct status & body if TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId throws an ApiError`, async () => {
+    // Arrange
+    const testErrorStatus = HttpStatusCode.Forbidden;
+    const testErrorMessage = 'An error';
+    mockFindOneAmendmentByFacilityIdAndAmendmentId.mockRejectedValue(new TestApiError(testErrorStatus, testErrorMessage));
+
+    const { req, res } = httpMocks.createMocks<GetAmendmentRequest>({ params: { facilityId, amendmentId } });
+
+    // Act
+    await getAmendment(req, res);
+
+    // Assert
+    expect(res._getStatusCode()).toEqual(testErrorStatus);
+    expect(res._getData()).toEqual({ status: testErrorStatus, message: testErrorMessage });
+  });
+
+  it(`returns status ${HttpStatusCode.InternalServerError} & correct body if TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId throws an unknown Error`, async () => {
+    // Arrange
+    mockFindOneAmendmentByFacilityIdAndAmendmentId.mockRejectedValue(new Error());
+
+    const { req, res } = httpMocks.createMocks<GetAmendmentRequest>({ params: { facilityId, amendmentId } });
+
+    // Act
+    await getAmendment(req, res);
+
+    // Assert
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+    expect(res._getData()).toEqual({
+      status: HttpStatusCode.InternalServerError,
+      message: 'Unknown error occurred when getting amendment',
+    });
+  });
+});

@@ -4,7 +4,7 @@ import { Response } from 'express';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 
 type GetAmendmentRequestParams = { facilityId: string; amendmentId: string };
-type GetAmendmentRequest = CustomExpressRequest<{ params: GetAmendmentRequestParams }>;
+export type GetAmendmentRequest = CustomExpressRequest<{ params: GetAmendmentRequestParams }>;
 
 export const getAmendment = async (req: GetAmendmentRequest, res: Response) => {
   const { facilityId, amendmentId } = req.params;
