@@ -1,5 +1,5 @@
 import { ObjectId, UpdateFilter, WithoutId, FindOneAndUpdateOptions, Collection, Document, UpdateResult, Filter } from 'mongodb';
-import { AuditDetails, TfmFacility, FacilityAmendment, AmendmentStatus } from '@ukef/dtfs2-common';
+import { AuditDetails, TfmFacility, FacilityAmendment, AmendmentStatus, FacilityNotFoundError } from '@ukef/dtfs2-common';
 import { deleteMany } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../drivers/db-client';
 import { aggregatePipelines, AllFacilitiesAndFacilityCountAggregatePipelineOptions } from './aggregate-pipelines';
@@ -154,33 +154,23 @@ export class TfmFacilitiesRepo {
   }
 
   /**
-   * Finds amendments by the facility id and amendment id
-   * @param facilityId - The facility id
-   * @param amendmentId - The amendment id
-   * @returns The found amendments
-   */
-  public static async findAmendmentsByFacilityIdAndAmendmentId(facilityId: string | ObjectId, amendmentId: string | ObjectId): Promise<Document[]> {
-    const collection = await this.getCollection();
-    return await collection
-      .aggregate(aggregatePipelines.amendmentsByFacilityIdAndAmendmentId(facilityId, amendmentId))
-      .map<Document>((doc) => doc.amendments as Document)
-      .toArray();
-  }
-
-  /**
-   * Finds the amendment with the supplied facility id and amendment id
+   * Finds amendment by facility id and amendment id
    * @param facilityId - The facility id
    * @param amendmentId - The amendment id
    * @returns The found amendment
    */
-  public static async findAmendmentByFacilityIdAndAmendmentId(facilityId: string | ObjectId, amendmentId: string | ObjectId): Promise<Document | null> {
+  public static async findOneAmendmentByFacilityIdAndAmendmentId(
+    facilityId: string | ObjectId,
+    amendmentId: string | ObjectId,
+  ): Promise<FacilityAmendment | undefined> {
     const collection = await this.getCollection();
-    const results = await collection
-      .aggregate(aggregatePipelines.amendmentsByFacilityIdAndAmendmentId(facilityId, amendmentId))
-      .map<Document>((doc) => doc.amendments as Document)
-      .limit(1)
-      .toArray();
-    return results.at(0) ?? null;
+    const facility = await collection.findOne({ _id: { $eq: new ObjectId(facilityId) } });
+
+    if (!facility) {
+      throw new FacilityNotFoundError(facilityId.toString());
+    }
+
+    return facility.amendments?.find((amendment) => amendment.amendmentId === amendmentId);
   }
 
   /**

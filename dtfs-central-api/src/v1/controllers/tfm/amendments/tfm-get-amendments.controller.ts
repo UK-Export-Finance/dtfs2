@@ -118,7 +118,7 @@ export const getAmendmentsByFacilityId = async (req: Request, res: Response) => 
           if (!ObjectId.isValid(amendmentIdOrStatus)) {
             return res.status(400).send({ status: 400, message: 'Invalid amendment Id', code: API_ERROR_CODE.INVALID_MONGO_ID_PATH_PARAMETER });
           }
-          amendment = (await TfmFacilitiesRepo.findAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentIdOrStatus)) ?? {};
+          amendment = (await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentIdOrStatus)) ?? {};
         } else {
           amendment = await TfmFacilitiesRepo.findAmendmentsByFacilityId(facilityId);
         }
