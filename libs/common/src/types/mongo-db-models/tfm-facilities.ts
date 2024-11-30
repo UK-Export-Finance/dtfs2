@@ -36,14 +36,10 @@ export type FacilityAmendmentTfmObject = {
   isUsingFacilityEndDate?: boolean;
 };
 
-/**
- * Type of the mongo db "tfm-facilities" collection
- * "amendments" property
- *
- * This type is likely incomplete and should be added
- * to as and when new properties are discovered
+/*
+ * Properties common to all amendments
  */
-export type TfmFacilityAmendment = {
+interface BaseAmendment {
   amendmentId: ObjectId;
   facilityId: ObjectId;
   dealId: ObjectId;
@@ -66,12 +62,31 @@ export type TfmFacilityAmendment = {
   coveredPercentage?: number;
   requireUkefApproval?: boolean;
   submissionType?: string;
-  submittedByPim?: boolean;
   submittedAt?: UnixTimestamp;
   submissionDate?: UnixTimestamp;
+  effectiveDate?: number;
+  createdBy?: {
+    username: string;
+    name: string;
+    email: string;
+  };
+  leadUnderwriter?: {
+    _id: ObjectId | 'Unassigned';
+    firstName: string;
+    lastName: string;
+  };
+}
+
+/**
+ * Amendments created in TFM
+ *
+ * This type is likely incomplete and should be added
+ * to as and when new properties are discovered
+ */
+export interface TfmFacilityAmendment extends BaseAmendment {
+  submittedByPim?: boolean;
   sendFirstTaskEmail?: boolean;
   firstTaskEmailSent?: boolean;
-  effectiveDate?: number;
   automaticApprovalEmail?: boolean;
   ukefDecision?: {
     coverEndDate?: string;
@@ -95,23 +110,24 @@ export type TfmFacilityAmendment = {
     submittedAt?: UnixTimestamp;
     submittedBy?: SubmittedByUser;
   };
-  createdBy?: {
-    username: string;
-    name: string;
-    email: string;
-  };
   tfm?: FacilityAmendmentTfmObject;
   tasks?: {
     groupTitle: string;
     id: number;
     groupTasks: AnyObject[];
   }[];
-  leadUnderwriter?: {
-    _id: ObjectId | 'Unassigned';
-    firstName: string;
-    lastName: string;
-  };
-};
+}
+
+/**
+ * Amendments created in Portal
+ */
+export interface PortalFacilityAmendment extends BaseAmendment {}
+
+/**
+ * Type of the mongo db "tfm-facilities" collection
+ * "amendments" property
+ */
+export type FacilityAmendment = TfmFacilityAmendment | PortalFacilityAmendment;
 
 /**
  * Type of the mongo db "tfm-facilities" collection
@@ -122,7 +138,7 @@ export type TfmFacilityAmendment = {
 export type TfmFacility = {
   _id: ObjectId;
   facilitySnapshot: Facility;
-  amendments?: TfmFacilityAmendment[];
+  amendments?: FacilityAmendment[];
   tfm: object;
   auditRecord?: AuditDatabaseRecord;
 };
