@@ -162,7 +162,7 @@ export class TfmFacilitiesRepo {
   public static async findOneAmendmentByFacilityIdAndAmendmentId(
     facilityId: string | ObjectId,
     amendmentId: string | ObjectId,
-  ): Promise<FacilityAmendment | undefined> {
+  ): Promise<(FacilityAmendment & { ukefFacilityId: string | null }) | undefined> {
     const collection = await this.getCollection();
     const facility = await collection.findOne({ _id: { $eq: new ObjectId(facilityId) } });
 
@@ -170,7 +170,15 @@ export class TfmFacilitiesRepo {
       throw new FacilityNotFoundError(facilityId.toString());
     }
 
-    return facility.amendments?.find((amendment) => amendment.amendmentId === amendmentId);
+    const amendment = facility.amendments?.find((value) => value.amendmentId === amendmentId);
+    const { ukefFacilityId } = facility.facilitySnapshot;
+
+    return (
+      amendment && {
+        ...amendment,
+        ukefFacilityId,
+      }
+    );
   }
 
   /**
