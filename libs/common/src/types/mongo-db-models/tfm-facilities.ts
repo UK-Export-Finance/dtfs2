@@ -5,6 +5,7 @@ import { Currency } from '../currency';
 import { Facility } from './facility';
 import { AnyObject } from '../any-object';
 import { AuditDatabaseRecord } from '../audit-database-record';
+import { AMENDMENT_TYPES } from '../../constants';
 
 type SubmittedByUser = {
   _id: ObjectId;
@@ -84,6 +85,7 @@ interface BaseAmendment {
  * to as and when new properties are discovered
  */
 export interface TfmFacilityAmendment extends BaseAmendment {
+  type: typeof AMENDMENT_TYPES.TFM | undefined;
   submittedByPim?: boolean;
   sendFirstTaskEmail?: boolean;
   firstTaskEmailSent?: boolean;
@@ -121,7 +123,9 @@ export interface TfmFacilityAmendment extends BaseAmendment {
 /**
  * Amendments created in Portal
  */
-export interface PortalFacilityAmendment extends BaseAmendment {}
+export interface PortalFacilityAmendment extends BaseAmendment {
+  type: typeof AMENDMENT_TYPES.PORTAL;
+}
 
 /**
  * Type of the mongo db "tfm-facilities" collection

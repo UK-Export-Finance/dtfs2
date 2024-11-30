@@ -1,5 +1,5 @@
 import { ObjectId, UpdateFilter, WithoutId, FindOneAndUpdateOptions, Collection, Document, UpdateResult, Filter } from 'mongodb';
-import { AuditDetails, TfmFacility, TfmFacilityAmendment, AmendmentStatus } from '@ukef/dtfs2-common';
+import { AuditDetails, TfmFacility, FacilityAmendment, AmendmentStatus } from '@ukef/dtfs2-common';
 import { deleteMany } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../drivers/db-client';
 import { aggregatePipelines, AllFacilitiesAndFacilityCountAggregatePipelineOptions } from './aggregate-pipelines';
@@ -145,11 +145,11 @@ export class TfmFacilitiesRepo {
    * @param status - The amendment status
    * @returns The found amendments
    */
-  public static async findAmendmentsByFacilityIdAndStatus(facilityId: string | ObjectId, status: AmendmentStatus): Promise<TfmFacilityAmendment[]> {
+  public static async findAmendmentsByFacilityIdAndStatus(facilityId: string | ObjectId, status: AmendmentStatus): Promise<FacilityAmendment[]> {
     const collection = await this.getCollection();
     return await collection
       .aggregate(aggregatePipelines.amendmentsByFacilityIdAndStatus(facilityId, status))
-      .map<TfmFacilityAmendment>((doc) => doc.amendments as TfmFacilityAmendment)
+      .map<FacilityAmendment>((doc) => doc.amendments as FacilityAmendment)
       .toArray();
   }
 
@@ -215,11 +215,11 @@ export class TfmFacilitiesRepo {
    * @param facilityId - The facility id
    * @returns The latest completed amendment
    */
-  public static async findLatestCompletedAmendmentByFacilityId(facilityId: string | ObjectId): Promise<TfmFacilityAmendment | null> {
+  public static async findLatestCompletedAmendmentByFacilityId(facilityId: string | ObjectId): Promise<FacilityAmendment | null> {
     const collection = await this.getCollection();
     const amendments = await collection
       .aggregate(aggregatePipelines.latestCompletedAmendmentByFacilityId(facilityId))
-      .map<TfmFacilityAmendment>((doc) => doc.amendments as TfmFacilityAmendment)
+      .map<FacilityAmendment>((doc) => doc.amendments as FacilityAmendment)
       .toArray();
     return amendments.at(0) ?? null;
   }
@@ -229,11 +229,11 @@ export class TfmFacilitiesRepo {
    * @param dealId - The deal id
    * @returns The latest completed amendment
    */
-  public static async findLatestCompletedAmendmentByDealId(dealId: string | ObjectId): Promise<TfmFacilityAmendment | null> {
+  public static async findLatestCompletedAmendmentByDealId(dealId: string | ObjectId): Promise<FacilityAmendment | null> {
     const collection = await this.getCollection();
     const amendments = await collection
       .aggregate(aggregatePipelines.latestCompletedAmendmentByDealId(dealId))
-      .map<TfmFacilityAmendment>((doc) => doc.amendments as TfmFacilityAmendment)
+      .map<FacilityAmendment>((doc) => doc.amendments as FacilityAmendment)
       .toArray();
     return amendments.at(0) ?? null;
   }
