@@ -85,7 +85,7 @@ interface BaseAmendment {
  * to as and when new properties are discovered
  */
 export interface TfmFacilityAmendment extends BaseAmendment {
-  type: typeof AMENDMENT_TYPES.TFM | undefined;
+  type?: typeof AMENDMENT_TYPES.TFM;
   submittedByPim?: boolean;
   sendFirstTaskEmail?: boolean;
   firstTaskEmailSent?: boolean;
