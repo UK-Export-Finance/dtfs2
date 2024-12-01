@@ -86,7 +86,7 @@
     "@types/jest-when": "^3.5.5",
     "@types/lodash": "^4.17.13",
     "babel-jest": "29.5.0",
-    "babel-loader": "9.1.2",
+    "babel-loader": "9.2.1",
     "cookie-signature": "^1.2.2",
     "css-minimizer-webpack-plugin": "^5.0.1",
     "eslint": "^8.57.1",
