@@ -37,7 +37,7 @@
     "cypress-v10-preserve-cookie": "^1.2.1",
     "date-fns": "^2.30.0",
     "eslint": "^8.57.1",
-    "eslint-plugin-cypress": "^2.15.2",
+    "eslint-plugin-cypress": "^4.1.0",
     "mongodb": "^4.17.2"
   },
   "engines": {
