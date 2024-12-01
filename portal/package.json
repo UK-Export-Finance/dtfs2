@@ -39,7 +39,7 @@
     "cheerio": "1.0.0-rc.12",
     "clamscan": "^2.4.0",
     "connect-flash": "0.1.1",
-    "connect-redis": "5.2.0",
+    "connect-redis": "8.0.0",
     "cookie-parser": "^1.4.7",
     "core-js": "^3.39.0",
     "csurf": "^1.11.0",
