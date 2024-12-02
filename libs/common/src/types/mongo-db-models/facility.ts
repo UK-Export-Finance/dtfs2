@@ -1,9 +1,11 @@
 import { ObjectId } from 'mongodb';
 import { UnixTimestamp, UnixTimestampString } from '../date';
 import { Currency } from '../currency';
-import { FacilityType } from '../facility-type';
 import { AuditDatabaseRecord } from '../audit-database-record';
 import { FacilityStatus } from '../portal';
+import { AnyObject } from '../any-object';
+import { FACILITY_TYPE, GEF_FACILITY_TYPE } from '../../constants';
+import { TfmFacilityStage } from '../tfm';
 
 /**
  * These properties will not exist if on a BSS/EWCS deal or the deal version is less than 1
@@ -25,16 +27,9 @@ type FacilityEndDateProperties =
       bankReviewDate?: null;
     };
 
-/**
- * Type of the mongo db "facilities" collection
- *
- * This type is likely incomplete and should be added
- * to as and when new properties are discovered
- */
-export type Facility = {
+type BaseFacility = AnyObject & {
   _id: ObjectId;
   dealId: ObjectId;
-  type: FacilityType;
   hasBeenIssued: boolean;
   name: string;
   shouldCoverStartOnSubmission: boolean;
@@ -53,7 +48,6 @@ export type Facility = {
   paymentType: string;
   createdAt: UnixTimestamp;
   updatedAt: UnixTimestamp;
-  bondType?: string; // only featured in BOND facilities
   ukefExposure: number;
   guaranteeFee: number;
   submittedAsIssuedDate: UnixTimestampString | null;
@@ -65,12 +59,38 @@ export type Facility = {
   hasBeenIssuedAndAcknowledged: boolean | null;
   canResubmitIssuedFacilities: boolean | null;
   unissuedToIssuedByMaker?: object;
-  // Legacy data from migrating old GEF Facilities into DTFS
-  dataMigration?: {
-    drupalFacilityId: string;
-  };
   auditRecord?: AuditDatabaseRecord;
-  status?: FacilityStatus; // BSS/EWCS facilities only
-  previousStatus?: string; // BSS/EWCS facilities only
-  facilityStage?: string;
-} & FacilityEndDateProperties;
+  facilityStage?: TfmFacilityStage;
+};
+
+export type GefFacility = BaseFacility &
+  FacilityEndDateProperties & {
+    type: typeof GEF_FACILITY_TYPE;
+    // Legacy data from migrating old GEF Facilities into DTFS
+    dataMigration?: {
+      drupalFacilityId: string;
+    };
+  };
+
+export interface BondFacility extends BaseFacility {
+  type: typeof FACILITY_TYPE.BOND;
+  status?: FacilityStatus;
+  previousStatus?: string;
+  bondType?: string;
+}
+
+export interface LoanFacility extends BaseFacility {
+  type: typeof FACILITY_TYPE.LOAN;
+  status?: FacilityStatus;
+  previousStatus?: string;
+}
+
+export type BssEwcsFacility = LoanFacility | BondFacility;
+
+/**
+ * Type of the mongo db "facilities" collection
+ *
+ * This type is likely incomplete and should be added
+ * to as and when new properties are discovered
+ */
+export type Facility = GefFacility | BssEwcsFacility;

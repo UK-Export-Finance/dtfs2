@@ -5,6 +5,7 @@ import { Currency } from '../currency';
 import { Facility } from './facility';
 import { AnyObject } from '../any-object';
 import { AuditDatabaseRecord } from '../audit-database-record';
+import { TfmFacilityStage } from '../tfm';
 
 type SubmittedByUser = {
   _id: ObjectId;
@@ -113,6 +114,22 @@ export type TfmFacilityAmendment = {
   };
 };
 
+export type FacilityTfmObject = {
+  hasBeenIssuedAndAcknowledged: boolean;
+  feeRecord: number;
+  ukefExposure: number;
+  ukefExposureCalculationTimestamp: string;
+  expourePeriodInMonths: number;
+  facilityGuaranteeDates: {
+    guaranteeCommencementDate: string;
+    guaranteeExpiryDate: string;
+    effectiveDate: string;
+  };
+  riskProfile: string;
+  premiumSchedule: Array<AnyObject>;
+  facilityStage?: TfmFacilityStage;
+};
+
 /**
  * Type of the mongo db "tfm-facilities" collection
  *
@@ -123,6 +140,6 @@ export type TfmFacility = {
   _id: ObjectId;
   facilitySnapshot: Facility;
   amendments?: TfmFacilityAmendment[];
-  tfm: object;
+  tfm: FacilityTfmObject;
   auditRecord?: AuditDatabaseRecord;
 };
