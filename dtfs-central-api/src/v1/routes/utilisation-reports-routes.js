@@ -835,7 +835,6 @@ utilisationReportsRouter
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), handleExpressValidatorResult)
   .put(validatePutFeeRecordCorrectionTransientFormDataPayload, putFeeRecordCorrectionTransientFormData);
 
-// QQ api tests
 /**
  * @openapi
  * /utilisation-reports/:reportId/fee-records/:feeRecordId/correction-request-review/:userId:
@@ -869,7 +868,6 @@ utilisationReportsRouter
  *           application/json:
  *             schema:
  *               type: object
- * // QQ need to create a definition for this
  *               $ref: '#/definitions/FeeRecordCorrectionRequestReview'
  *       400:
  *         description: Bad request

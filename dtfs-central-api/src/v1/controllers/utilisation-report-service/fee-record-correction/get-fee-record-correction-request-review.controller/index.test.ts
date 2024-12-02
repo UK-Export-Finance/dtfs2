@@ -36,7 +36,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
       jest.resetAllMocks();
     });
 
-    it(`responds with a ${HttpStatusCode.NotFound} when no form data is found for the fee record and user combination`, async () => {
+    it(`should respond with a ${HttpStatusCode.NotFound} when no form data is found for the fee record and user combination`, async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
@@ -55,7 +55,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
       expect(findFormDataSpy).toHaveBeenCalledWith(userId, feeRecordId);
     });
 
-    it(`responds with a ${HttpStatusCode.NotFound} when the fee record cannot be found`, async () => {
+    it(`should respond with a ${HttpStatusCode.NotFound} when the fee record cannot be found`, async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
@@ -74,7 +74,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
       expect(findFeeRecordSpy).toHaveBeenCalledWith(feeRecordId, reportId);
     });
 
-    it(`responds with a ${HttpStatusCode.NotFound} when the bank cannot be found`, async () => {
+    it(`should respond with a ${HttpStatusCode.NotFound} when the bank cannot be found`, async () => {
       // Arrange
       const bankId = '1234567';
       const { req, res } = getHttpMocks();
@@ -94,7 +94,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
       expect(findBankSpy).toHaveBeenCalledWith(bankId);
     });
 
-    it(`responds with a ${HttpStatusCode.Ok} and the correction request details`, async () => {
+    it(`should respond with a ${HttpStatusCode.Ok} and the correction request details`, async () => {
       // Arrange
       const { req, res } = getHttpMocks();
       const bankId = '12356';
@@ -151,7 +151,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
       });
     });
 
-    it("responds with the specific error status if fetching the review throws an 'ApiError'", async () => {
+    it("should respond with the specific error status if fetching the review throws an 'ApiError'", async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
@@ -179,7 +179,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
       expect(res._getData()).toEqual(`Failed to get fee record correction request review: ${errorMessage}`);
     });
 
-    it(`responds with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, async () => {
+    it(`should respond with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
@@ -192,7 +192,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
       expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
     });
 
-    it('responds with a generic error message if an unknown error occurs', async () => {
+    it('should respond with a generic error message if an unknown error occurs', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
