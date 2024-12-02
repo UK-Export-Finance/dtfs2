@@ -1,4 +1,3 @@
-// @ts-check
 const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityValue = require('../facilities/mapFacilityValue');
 const mapFacilityProduct = require('../facilities/mapFacilityProduct');
@@ -20,8 +19,7 @@ const { mapGefFacilityType } = require('../facilities/mapFacilityType');
  * @returns {import('@ukef/dtfs2-common').MappedGefFacilitySnapshot}
  */
 const mapGefFacilitySnapshot = (facility, dealSnapshot) => {
-  const { facilitySnapshot, tfm: facilityTfm } = facility;
-  const gefFacilitySnapshot = /** @type { import('@ukef/dtfs2-common').GefFacility } */ (facilitySnapshot);
+  const { /** @type { import('@ukef/dtfs2-common').GefFacility } */ facilitySnapshot, tfm: facilityTfm } = facility;
 
   const {
     _id,
@@ -40,7 +38,7 @@ const mapGefFacilitySnapshot = (facility, dealSnapshot) => {
     dayCountBasis,
     details,
     detailsOther,
-  } = gefFacilitySnapshot;
+  } = facilitySnapshot;
 
   const formattedFacilityValue = formattedNumber(value);
 
@@ -49,7 +47,7 @@ const mapGefFacilitySnapshot = (facility, dealSnapshot) => {
     _id,
     ukefFacilityId,
     dealId,
-    isGef: /** @type {true} */ (true),
+    isGef: true,
     type: mapGefFacilityType(type),
     hasBeenIssued,
 

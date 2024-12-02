@@ -1,9 +1,8 @@
 import { ObjectId } from 'mongodb';
 import { DEAL_TYPE } from '../../constants';
 import { AnyObject } from '../any-object';
-import { DealSubmissionType, DealType, TfmActivity, TfmDealCancellationWithStatus } from '..';
+import { DealSubmissionType, DealType, MappedBssEwcsFacility, MappedGefFacility, TfmActivity, TfmDealCancellationWithStatus } from '..';
 import { TfmDealStage } from './deal-stage';
-import { MappedBssEwcsFacilitySnapshot, MappedGefFacilitySnapshot } from './mapped-facility';
 
 /**
  * In TFM we map deals from the database to take on a different structure which is then passed around TFM-UI and TFM-API.
@@ -24,12 +23,12 @@ type MappedBaseDealSnapshot = AnyObject & {
 
 export interface MappedBssEwcsDealSnapshot extends MappedBaseDealSnapshot {
   dealType: typeof DEAL_TYPE.BSS_EWCS;
-  facilities: MappedBssEwcsFacilitySnapshot[];
+  facilities: MappedBssEwcsFacility[];
 }
 
 export interface MappedGefDealSnapshot extends MappedBaseDealSnapshot {
   dealType: typeof DEAL_TYPE.GEF;
-  facilities: MappedGefFacilitySnapshot[];
+  facilities: MappedGefFacility[];
   status: string;
   updatedAt: number;
   maker: AnyObject;

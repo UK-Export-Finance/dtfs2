@@ -20,12 +20,12 @@ const { mapBssEwcsFacilityType } = require('./mapFacilityType');
  * These values may differ from the facility snapshot in the database.
  * @param {import('@ukef/dtfs2-common').TfmFacility} facility the full facility object from the database
  * @param {import('@ukef/dtfs2-common').BssEwcsDeal} dealSnapshot the deal.dealSnapshot object from the database corresponding to the facility
- * @returns {import('@ukef/dtfs2-common').MappedBssEwcsDealSnapshot}
+ * @returns {import('@ukef/dtfs2-common').MappedBssEwcsFacilitySnapshot}
  */
 const mapFacilitySnapshot = (facility, dealSnapshot) => {
   const { details: dealDetails } = dealSnapshot;
 
-  const { facilitySnapshot, tfm: facilityTfm } = facility;
+  const { /** @type { import('@ukef/dtfs2-common').BssEwcsFacility } */ facilitySnapshot, tfm: facilityTfm } = facility;
 
   // Ensure facility is valid
   if (!facilitySnapshot) {

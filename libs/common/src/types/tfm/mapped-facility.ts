@@ -92,8 +92,6 @@ export interface MappedGefFacilitySnapshot extends MappedBaseFacilitySnapshot {
   providedOn: string[];
 }
 
-export type MappedFacilitySnapshot = MappedBssEwcsFacilitySnapshot | MappedGefFacilitySnapshot;
-
 export type MappedFacilityTfm = {
   hasBeenIssuedAndAcknowledged: boolean;
   feeRecord: number;
@@ -114,8 +112,16 @@ export type MappedFacilityTfm = {
   creditRating: string;
 };
 
-export type MappedFacility = {
+export type MappedGefFacility = {
   _id: ObjectId;
-  facilitySnapshot: MappedFacilitySnapshot;
+  facilitySnapshot: MappedGefFacilitySnapshot;
   tfm: MappedFacilityTfm;
 };
+
+export type MappedBssEwcsFacility = {
+  _id: ObjectId;
+  facilitySnapshot: MappedGefFacilitySnapshot;
+  tfm: MappedFacilityTfm;
+};
+
+export type MappedFacility = MappedGefFacility | MappedBssEwcsFacility;
