@@ -39,7 +39,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
       jest.resetAllMocks();
     });
 
-    it('gets the fee record correction request review', async () => {
+    it('should respond with the fee record correction request review', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
@@ -55,7 +55,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
       expect(api.getFeeRecordCorrectionRequestReview).toHaveBeenCalledWith(reportId, feeRecordId, user);
     });
 
-    it('responds with a 200', async () => {
+    it('should respond with a 200', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
@@ -70,7 +70,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
       expect(api.getFeeRecordCorrectionRequestReview).toHaveBeenCalledWith(reportId, feeRecordId, user);
     });
 
-    it('responds with a 500 if an unknown error occurs', async () => {
+    it('should respond with a 500 if an unknown error occurs', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
@@ -86,7 +86,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
       expect(api.getFeeRecordCorrectionRequestReview).toHaveBeenCalledWith(reportId, feeRecordId, user);
     });
 
-    it('responds with a specific error code if an axios error is thrown', async () => {
+    it('should respond with a specific error code if an axios error is thrown', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
@@ -105,7 +105,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
       expect(api.getFeeRecordCorrectionRequestReview).toHaveBeenCalledWith(reportId, feeRecordId, user);
     });
 
-    it('responds with an error message', async () => {
+    it('should respond with an error message', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 

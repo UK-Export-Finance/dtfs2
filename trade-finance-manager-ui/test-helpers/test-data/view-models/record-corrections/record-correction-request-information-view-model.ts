@@ -13,6 +13,6 @@ export const aRecordCorrectionRequestInformationViewModel = (): RecordCorrection
   exporter: 'exporter name',
   reasonForRecordCorrection: 'not valid',
   additionalInfo: 'this is some more information',
-  contactEmailAddresses: 'test@testing.com',
+  contactEmailAddresses: 'test@testing.com, email@email.com',
   cancelLink: 'a cancel link',
 });

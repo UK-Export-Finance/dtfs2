@@ -14,6 +14,12 @@ export type GetFeeRecordCorrectionRequestReviewRequest = CustomExpressRequest<{
 
 type GetFeeRecordCorrectionRequestReviewResponse = Response<FeeRecordCorrectionRequestReviewResponseBody | string>;
 
+/**
+ * Controller for the GET fee record correction request review route.
+ * @param req - The request object
+ * @param res - The response object
+ * @returns The fee record correction request review
+ */
 export const getFeeRecordCorrectionRequestReview = async (
   req: GetFeeRecordCorrectionRequestReviewRequest,
   res: GetFeeRecordCorrectionRequestReviewResponse,

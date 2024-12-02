@@ -91,7 +91,7 @@ describe(`GET ${BASE_URL}`, () => {
     makeRequest: (url) => testApi.get(url),
   });
 
-  it(`returns '${HttpStatusCode.NotFound}' when no fee record with the supplied id can be found`, async () => {
+  it(`should return '${HttpStatusCode.NotFound}' when no fee record with the supplied id can be found`, async () => {
     // Arrange
     const transientFormDataEntity = new FeeRecordCorrectionTransientFormDataEntityMockBuilder().withFeeRecordId(feeRecordId).withUserId(userId).build();
     await SqlDbHelper.saveNewEntry('FeeRecordCorrectionTransientFormData', transientFormDataEntity);
@@ -103,7 +103,7 @@ describe(`GET ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
-  it(`returns '${HttpStatusCode.NotFound}' when no correction form data can be found`, async () => {
+  it(`should return '${HttpStatusCode.NotFound}' when no correction form data can be found`, async () => {
     // Act
     const response = await testApi.get(getUrl(reportId, feeRecordId, userId));
 
@@ -111,7 +111,7 @@ describe(`GET ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
-  it(`returns '${HttpStatusCode.NotFound}' when no bank can be found matching the bank id on the report`, async () => {
+  it(`should return '${HttpStatusCode.NotFound}' when no bank can be found matching the bank id on the report`, async () => {
     // Arrange
     const transientFormDataEntity = new FeeRecordCorrectionTransientFormDataEntityMockBuilder()
       .withFeeRecordId(feeRecordIdWithNoMatchingBank)
@@ -126,7 +126,7 @@ describe(`GET ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
-  it(`returns '${HttpStatusCode.Ok}' and the details of the fee record correction request`, async () => {
+  it(`should return '${HttpStatusCode.Ok}' and the details of the fee record correction request`, async () => {
     // Arrange
     const formData: RecordCorrectionTransientFormData = {
       reasons: [RECORD_CORRECTION_REASON.OTHER],
