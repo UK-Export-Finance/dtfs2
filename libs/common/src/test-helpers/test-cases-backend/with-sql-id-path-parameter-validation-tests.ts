@@ -9,6 +9,7 @@ type WithSqlIdPathParameterValidationTestsParams = {
 };
 
 const VALID_SQL_ID = '123';
+const VALID_MONGO_OBJECT_ID = '5c0a7922c9d89830f4911426';
 
 const extractParameters = (url: string): string[] =>
   url
@@ -21,15 +22,19 @@ const extractParameters = (url: string): string[] =>
  * @param params - The test parameters
  * @param params.baseUrl - The base url with format '/v1/path/:pathParamater'
  * @param params.makeRequest - The function to make the request with
- * @param params.pathParameters - The path parameters to test
+ * @param params.pathParameters - All of the SQL path parameters
  */
 export const withSqlIdPathParameterValidationTests = ({ baseUrl, makeRequest, pathParameters }: WithSqlIdPathParameterValidationTestsParams): void => {
-  const parameters = pathParameters ?? extractParameters(baseUrl);
+  const allParameters = extractParameters(baseUrl);
+  const sqlParameters = pathParameters ?? allParameters;
 
-  describe.each(parameters)("when the ':%s' path parameter is not a valid sql id", (parameter) => {
-    const baseUrlWithTestParamater = baseUrl.replace(`:${parameter}`, 'invalid-id');
+  const mongoParameters = allParameters.filter((parameter) => !pathParameters?.includes(parameter));
+  const baseUrlWithoutMongoParameters = mongoParameters.reduce((url, parameter) => url.replace(`:${parameter}`, VALID_MONGO_OBJECT_ID), baseUrl);
 
-    const testUrl = parameters.reduce((url, validParameter) => url.replace(`:${validParameter}`, VALID_SQL_ID), baseUrlWithTestParamater);
+  describe.each(sqlParameters)("when the ':%s' path parameter is not a valid sql id", (parameter) => {
+    const baseUrlWithTestParamater = baseUrlWithoutMongoParameters.replace(`:${parameter}`, 'invalid-id');
+
+    const testUrl = sqlParameters.reduce((url, validParameter) => url.replace(`:${validParameter}`, VALID_SQL_ID), baseUrlWithTestParamater);
 
     it('returns a 400 (Bad request)', async () => {
       // Act
