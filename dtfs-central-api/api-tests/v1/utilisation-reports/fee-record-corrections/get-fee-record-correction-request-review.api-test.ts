@@ -9,7 +9,7 @@ import {
   RecordCorrectionTransientFormData,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
-import { withMongoIdPathParameterValidationTests, withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
+import { withSqlAndMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../../test-api';
 import { SqlDbHelper } from '../../../sql-db-helper';
 import { aBank } from '../../../../test-helpers';
@@ -81,14 +81,11 @@ describe(`GET ${BASE_URL}`, () => {
     await wipe(['banks']);
   });
 
-  withSqlIdPathParameterValidationTests({
-    baseUrl: BASE_URL.replace(':userId', '5c0a7922c9d89830f4911426'),
+  withSqlAndMongoIdPathParameterValidationTests({
+    baseUrl: BASE_URL,
     makeRequest: (url) => testApi.get(url),
-  });
-
-  withMongoIdPathParameterValidationTests({
-    baseUrl: BASE_URL.replace(':reportId', '1').replace(':feeRecordId', '2'),
-    makeRequest: (url) => testApi.get(url),
+    sqlPathParameters: ['reportId', 'feeRecordId'],
+    mongoPathParameters: ['userId'],
   });
 
   it(`should return '${HttpStatusCode.NotFound}' when no fee record with the supplied id can be found`, async () => {
