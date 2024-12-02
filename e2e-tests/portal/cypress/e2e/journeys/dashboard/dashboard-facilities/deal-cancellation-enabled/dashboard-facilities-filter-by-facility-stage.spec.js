@@ -95,7 +95,7 @@ context('Dashboard Facilities filters - filter by facility stage', () => {
       dashboardFacilities.rows().should('have.length', expectedFacilities.length);
 
       expectedFacilities.forEach((facility) => {
-        dashboardFacilities.row.type(facility._id).should('exist');
+        dashboardFacilities.row.type(facility._id).should('be.visible');
       });
     });
   });
@@ -145,7 +145,7 @@ context('Dashboard Facilities filters - filter by facility stage', () => {
       dashboardFacilities.rows().should('have.length', expectedFacilities.length);
 
       expectedFacilities.forEach((facility) => {
-        dashboardFacilities.row.type(facility._id).should('exist');
+        dashboardFacilities.row.type(facility._id).should('be.visible');
       });
     });
   });
@@ -193,7 +193,7 @@ context('Dashboard Facilities filters - filter by facility stage', () => {
       dashboardFacilities.rows().should('have.length', expectedFacilities.length);
 
       expectedFacilities.forEach((facility) => {
-        dashboardFacilities.row.type(facility._id).should('exist');
+        dashboardFacilities.row.type(facility._id).should('be.visible');
       });
     });
   });
