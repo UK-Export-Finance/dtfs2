@@ -22,7 +22,11 @@ import { getEditPayment, postEditPayment } from '../../controllers/utilisation-r
 import { getConfirmDeletePayment, postConfirmDeletePayment } from '../../controllers/utilisation-reports/confirm-delete-payment';
 import { postRemoveFeesFromPayment } from '../../controllers/utilisation-reports/remove-fees-from-payment';
 import { addToAnExistingPayment } from '../../controllers/utilisation-reports/add-to-an-existing-payment';
-import { createRecordCorrectionRequest } from '../../controllers/utilisation-reports/record-corrections/create-record-correction-request';
+import {
+  getCreateRecordCorrectionRequest,
+  postCreateRecordCorrectionRequest,
+} from '../../controllers/utilisation-reports/record-corrections/create-record-correction-request';
+import { getRecordCorrectionRequestInformation } from '../../controllers/utilisation-reports/record-corrections/check-the-information';
 import { postInitiateRecordCorrectionRequest } from '../../controllers/utilisation-reports/record-corrections/initiate-record-correction-request';
 
 export const utilisationReportsRoutes = express.Router();
@@ -157,5 +161,23 @@ utilisationReportsRoutes.get(
   validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   validateSqlId('feeRecordId'),
-  createRecordCorrectionRequest,
+  getCreateRecordCorrectionRequest,
+);
+
+utilisationReportsRoutes.post(
+  '/:reportId/create-record-correction-request/:feeRecordId',
+  validateTfmFeeRecordCorrectionFeatureFlagIsEnabled,
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
+  validateSqlId('reportId'),
+  validateSqlId('feeRecordId'),
+  postCreateRecordCorrectionRequest,
+);
+
+utilisationReportsRoutes.get(
+  '/:reportId/create-record-correction-request/:feeRecordId/check-the-information',
+  validateTfmFeeRecordCorrectionFeatureFlagIsEnabled,
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
+  validateSqlId('reportId'),
+  validateSqlId('feeRecordId'),
+  getRecordCorrectionRequestInformation,
 );
