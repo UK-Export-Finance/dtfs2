@@ -24,23 +24,37 @@ type FacilityEndDateProperties =
 
 type MappedBaseFacilitySnapshot = AnyObject & {
   _id: ObjectId;
-  ukefFacilityId: string;
+  /**
+   * This null is due to existing patterns of mappers returning null if there is no matching mapping.
+   */
+  ukefFacilityId: string | null;
   dealId: ObjectId;
   hasBeenIssued: boolean;
   ukefFacilityType: string;
   facilityStage: TfmFacilityStage;
-  facilityProduct: {
-    code: string;
-    name: string;
-  };
+  /**
+   * This undefined is due to existing patterns of mappers returning an unassigned variable if there is no matching mapping.
+   */
+  facilityProduct:
+    | {
+        code: string;
+        name: string;
+      }
+    | undefined;
   bankFacilityReference: string;
   banksInterestMargin: string;
   currency: Currency;
   coveredPercentage: string;
   dayCountBasis: number;
-  facilityValueExportCurrency: string;
+  /**
+   * This null is due to existing patterns of mappers returning null if there is no matching mapping.
+   */
+  facilityValueExportCurrency: string | null;
   value: string;
-  ukefExposure: string;
+  /**
+   * This undefined is due to existing patterns of mappers returning an unassigned variable if there is no matching mapping.
+   */
+  ukefExposure: string | undefined;
   guaranteeFeePayableToUkef: string;
   feeType: string;
   feeFrequency: string;
@@ -63,7 +77,10 @@ export interface MappedBssEwcsFacilitySnapshot extends MappedBaseFacilitySnapsho
 
 export interface MappedGefFacilitySnapshot extends MappedBaseFacilitySnapshot {
   isGef: true;
-  type: typeof MAPPED_FACILITY_TYPE.CASH | typeof MAPPED_FACILITY_TYPE.CONTINGENT;
+  /**
+   * This null is due to existing patterns of mappers returning null if there is no matching mapping.
+   */
+  type: typeof MAPPED_FACILITY_TYPE.CASH | typeof MAPPED_FACILITY_TYPE.CONTINGENT | null;
   dates: FacilityEndDateProperties & {
     inclusionNoticeReceived?: string | number;
     bankIssueNoticedReceived?: string | number;

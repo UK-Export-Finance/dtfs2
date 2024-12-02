@@ -4,8 +4,9 @@ import { Currency } from '../currency';
 import { AuditDatabaseRecord } from '../audit-database-record';
 import { FacilityStatus } from '../portal';
 import { AnyObject } from '../any-object';
-import { FACILITY_TYPE, GEF_FACILITY_TYPE } from '../../constants';
+import { FACILITY_TYPE } from '../../constants';
 import { TfmFacilityStage } from '../tfm';
+import { GefFacilityType } from '../facility-type';
 
 /**
  * These properties will not exist if on a BSS/EWCS deal or the deal version is less than 1
@@ -65,7 +66,7 @@ type BaseFacility = AnyObject & {
 
 export type GefFacility = BaseFacility &
   FacilityEndDateProperties & {
-    type: typeof GEF_FACILITY_TYPE;
+    type: GefFacilityType;
     // Legacy data from migrating old GEF Facilities into DTFS
     dataMigration?: {
       drupalFacilityId: string;
