@@ -110,7 +110,19 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
           body: validBody,
         });
 
-      it('redirects to the "check the information" page', async () => {
+      it('should make an api call to update the transient form data', async () => {
+        // Arrange
+        const { req, res } = getHttpMocks();
+
+        // Act
+        await postCreateRecordCorrectionRequest(req, res);
+
+        // Assert
+        expect(api.updateFeeRecordCorrectionTransientFormData).toHaveBeenCalledTimes(1);
+        expect(api.updateFeeRecordCorrectionTransientFormData).toHaveBeenCalledWith(reportId, feeRecordId, validBody, user, userToken);
+      });
+
+      it('should redirect to the "check the information" page', async () => {
         // Arrange
         const { req, res } = getHttpMocks();
 
@@ -136,6 +148,8 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         const body = {};
         const { req, res } = getHttpMocks(body);
 
+        const { errors } = validateCreateRecordCorrectionRequestFormValues(body);
+
         // Act
         await postCreateRecordCorrectionRequest(req, res);
 
@@ -152,7 +166,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
             exporter: 'Sample Company Ltd',
           },
           formValues: { reasons: [] },
-          errors: validateCreateRecordCorrectionRequestFormValues(body),
+          errors,
           backLinkHref: getLinkToPremiumPaymentsTab(reportId, [456]),
         });
       });

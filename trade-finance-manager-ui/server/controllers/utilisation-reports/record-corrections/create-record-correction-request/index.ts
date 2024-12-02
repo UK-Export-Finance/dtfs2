@@ -75,10 +75,11 @@ export const postCreateRecordCorrectionRequest = async (req: PostCreateRecordCor
 
     const formValues = extractCreateRecordCorrectionRequestFormValues(req.body);
 
-    const errors = validateCreateRecordCorrectionRequestFormValues(formValues);
-    const formHasErrors = errors.errorSummary.length !== 0;
+    const { errors, validatedFormValues } = validateCreateRecordCorrectionRequestFormValues(formValues);
 
-    if (!formHasErrors) {
+    if (!errors) {
+      await api.updateFeeRecordCorrectionTransientFormData(reportId, feeRecordId, validatedFormValues, user, userToken);
+
       return res.redirect(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}/check-the-information`);
     }
 
