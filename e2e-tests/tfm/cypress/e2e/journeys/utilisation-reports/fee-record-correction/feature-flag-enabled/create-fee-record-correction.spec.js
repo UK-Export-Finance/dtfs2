@@ -1,9 +1,15 @@
-import { FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, PENDING_RECONCILIATION, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FEE_RECORD_STATUS,
+  FeeRecordEntityMockBuilder,
+  PENDING_RECONCILIATION,
+  UtilisationReportEntityMockBuilder,
+  RECORD_CORRECTION_REASON,
+} from '@ukef/dtfs2-common';
 import pages from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
 import relative from '../../../../relativeURL';
-import { errorSummary } from '../../../../partials';
+import { feeRecordSummary, mainHeading } from '../../../../partials';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context('When fee record correction feature flag is enabled', () => {
@@ -49,6 +55,8 @@ context('When fee record correction feature flag is enabled', () => {
   });
 
   context('PDC_RECONCILE users can create record correction requests', () => {
+    const { createFeeRecordCorrectionRequestPage } = pages;
+
     beforeEach(() => {
       pages.landingPage.visit();
       cy.login(USERS.PDC_RECONCILE);
@@ -56,27 +64,34 @@ context('When fee record correction feature flag is enabled', () => {
       cy.visit(`utilisation-reports/${reportId}`);
     });
 
-    it('should display error message if invalid selections for creating fee record correction request', () => {
-      premiumPaymentsTab.createRecordCorrectionRequestButton().should('exist');
-      premiumPaymentsTab.createRecordCorrectionRequestButton().click();
-
-      cy.url().should('eq', relative(`/utilisation-reports/${reportId}`));
-
-      errorSummary().contains('Select a record to create a record correction request');
-      premiumPaymentsTab.premiumPaymentsTable.error().should('exist');
-      cy.assertText(premiumPaymentsTab.premiumPaymentsTable.error(), 'Error: Select a record to create a record correction request');
-    });
-
-    it('should be able to initiate record correction request', () => {
+    it('should be able to create a record correction request', () => {
       premiumPaymentsTab.premiumPaymentsTable.checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status).click();
 
       premiumPaymentsTab.createRecordCorrectionRequestButton().should('exist');
       premiumPaymentsTab.createRecordCorrectionRequestButton().click();
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}`));
+
+      //---------------------------------------------------------------
+      // Check the "Create record correction request" page
+      //---------------------------------------------------------------
+      cy.assertText(mainHeading(), 'Record correction request');
+
+      feeRecordSummary.container().should('exist');
+      cy.assertText(feeRecordSummary.facilityId(), feeRecordAtToDoStatus.facilityId);
+      cy.assertText(feeRecordSummary.exporter(), feeRecordAtToDoStatus.exporter);
+      cy.assertText(feeRecordSummary.requestedBy(), `${USERS.PDC_RECONCILE.firstName} ${USERS.PDC_RECONCILE.lastName}`);
+
+      createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT).check();
+      createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).check();
+      cy.keyboardInput(createFeeRecordCorrectionRequestPage.additionalInfoInput(), 'Some additional info.');
+
+      cy.clickContinueButton();
+
+      cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}/check-the-information`));
     });
 
-    describe('when user clicks back on the create record correction request screen', () => {
+    context('when user clicks back on the create record correction request screen', () => {
       it('should return to premium payments tab with the checkbox selected', () => {
         premiumPaymentsTab.premiumPaymentsTable
           .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
