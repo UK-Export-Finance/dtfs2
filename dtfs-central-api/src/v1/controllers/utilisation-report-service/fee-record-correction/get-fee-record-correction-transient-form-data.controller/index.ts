@@ -1,4 +1,4 @@
-import { ApiError } from '@ukef/dtfs2-common';
+import { ApiError, RecordCorrectionTransientFormData } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { CustomExpressRequest } from '../../../../../types/custom-express-request';
@@ -14,12 +14,17 @@ export type GetFeeRecordCorrectionTransientFormDataRequest = CustomExpressReques
   };
 }>;
 
+export type GetFeeRecordCorrectionTransientFormDataResponse = Response<RecordCorrectionTransientFormData | Record<string, never> | string>;
+
 /**
  * Controller for the GET fee record correction transient form data route
  * @param req - The request object
  * @param res - The response object
  */
-export const getFeeRecordCorrectionTransientFormData = async (req: GetFeeRecordCorrectionTransientFormDataRequest, res: Response) => {
+export const getFeeRecordCorrectionTransientFormData = async (
+  req: GetFeeRecordCorrectionTransientFormDataRequest,
+  res: GetFeeRecordCorrectionTransientFormDataResponse,
+) => {
   try {
     const { reportId, feeRecordId, userId } = req.params;
 

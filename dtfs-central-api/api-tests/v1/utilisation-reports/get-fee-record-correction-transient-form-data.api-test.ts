@@ -1,0 +1,95 @@
+import { HttpStatusCode } from 'axios';
+import {
+  FEE_RECORD_STATUS,
+  FeeRecordCorrectionTransientFormDataEntityMockBuilder,
+  FeeRecordEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
+  RECORD_CORRECTION_REASON,
+  RecordCorrectionTransientFormData,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
+import { withMongoIdPathParameterValidationTests, withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
+import { testApi } from '../../test-api';
+import { SqlDbHelper } from '../../sql-db-helper';
+
+console.error = jest.fn();
+
+const BASE_URL = '/v1/utilisation-reports/:reportId/fee-records/:feeRecordId/correction-transient-form-data/:userId';
+
+describe(`GET ${BASE_URL}`, () => {
+  const getUrl = (reportId: number | string, feeRecordId: number | string, userId: string) =>
+    BASE_URL.replace(':reportId', reportId.toString()).replace(':feeRecordId', feeRecordId.toString()).replace(':userId', userId);
+
+  const reportId = 1;
+  const feeRecordId = 2;
+  const userId = '5c0a7922c9d89830f4911426';
+
+  beforeAll(async () => {
+    await SqlDbHelper.initialize();
+
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
+  });
+
+  beforeEach(async () => {
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(feeRecordId).withStatus(FEE_RECORD_STATUS.TO_DO).build();
+    report.feeRecords = [feeRecord];
+
+    await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+  });
+
+  afterEach(async () => {
+    await SqlDbHelper.deleteAllEntries('FeeRecordCorrectionTransientFormData');
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
+  });
+
+  withSqlIdPathParameterValidationTests({
+    baseUrl: BASE_URL,
+    makeRequest: (url) => testApi.get(url),
+    pathParameters: ['reportId', 'feeRecordId'],
+  });
+
+  withMongoIdPathParameterValidationTests({
+    baseUrl: BASE_URL,
+    makeRequest: (url) => testApi.get(url),
+    pathParameters: ['userId'],
+  });
+
+  it(`returns '${HttpStatusCode.NotFound}' when no fee record with the supplied id can be found`, async () => {
+    // Act
+    const response = await testApi.get(getUrl(reportId, feeRecordId + 1, userId));
+
+    // Assert
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
+  });
+
+  it(`returns '${HttpStatusCode.Ok}' with the form data if the request is valid and transient form data exists`, async () => {
+    // Arrange
+    const formData: RecordCorrectionTransientFormData = {
+      reasons: [RECORD_CORRECTION_REASON.OTHER],
+      additionalInfo: 'Some additional information',
+    };
+    const transientFormDataEntity = new FeeRecordCorrectionTransientFormDataEntityMockBuilder()
+      .withFeeRecordId(feeRecordId)
+      .withUserId(userId)
+      .withFormData(formData)
+      .build();
+    await SqlDbHelper.saveNewEntry('FeeRecordCorrectionTransientFormData', transientFormDataEntity);
+
+    // Act
+    const response = await testApi.get(getUrl(reportId, feeRecordId, userId));
+
+    // Assert
+    expect(response.status).toEqual(HttpStatusCode.Ok);
+    expect(response.body).toEqual(formData);
+  });
+
+  it(`returns '${HttpStatusCode.Ok}' with empty form data if the request is valid but transient form data does not exist`, async () => {
+    // Act
+    const response = await testApi.get(getUrl(reportId, feeRecordId, userId));
+
+    // Assert
+    expect(response.status).toEqual(HttpStatusCode.Ok);
+    expect(response.body).toEqual({});
+  });
+});
