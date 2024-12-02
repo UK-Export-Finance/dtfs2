@@ -4,10 +4,11 @@
 
   {% set previousStatus = params.previousStatus %}
   {% set newStatus = params.newStatus %}
+  {% set id = params.id %}
   {% set tagColour = params.tagColour %}
 
-  <strong class="govuk-tag govuk-tag--{{ tagColour }} govuk-!-margin-left-2 govuk-!-margin-right-2" data-cy="previous-status-tag"> {{ previousStatus }} </strong>
+  <strong class="govuk-tag govuk-tag--{{ tagColour }} govuk-!-margin-left-2 govuk-!-margin-right-2" data-cy="previous-status-tag-{{ id }}"> {{ previousStatus }} </strong>
   &gt;
-  <strong class="govuk-tag govuk-tag--{{ tagColour }} govuk-!-margin-left-2 govuk-!-margin-right-2" data-cy="status-tag"> {{ newStatus }} </strong>
+  <strong class="govuk-tag govuk-tag--{{ tagColour }} govuk-!-margin-left-2 govuk-!-margin-right-2" data-cy="new-status-tag-{{ id }}"> {{ newStatus }} </strong>
 
 {% endmacro %}

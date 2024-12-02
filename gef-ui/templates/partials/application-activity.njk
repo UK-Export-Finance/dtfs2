@@ -37,6 +37,7 @@
         {{ statusChange.render({
           previousStatus: "Unissued",
           newStatus: "Issued",
+          id: activity.ukefFacilityId,
           tagColour: "purple"
         }) }}
       </p>
@@ -51,6 +52,7 @@
         {{ statusChange.render({
           previousStatus: previousStatus,
           newStatus: "Cancelled",
+          id: dealId,
           tagColour: "blue"
         }) }}
       </p>
