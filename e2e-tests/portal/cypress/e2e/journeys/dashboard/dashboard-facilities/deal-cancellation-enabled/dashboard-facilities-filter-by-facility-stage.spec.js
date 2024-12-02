@@ -1,4 +1,4 @@
-const { FACILITY_STATUS } = require('@ukef/dtfs2-common');
+const { FACILITY_STATUS, FACILITY_STAGE } = require('@ukef/dtfs2-common');
 const relative = require('../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../../fixtures/constants');
@@ -50,7 +50,7 @@ context('Dashboard Facilities filters - filter by facility stage', () => {
     filters.showHideButton().click();
   });
 
-  describe('Issued', () => {
+  describe(CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED, () => {
     before(() => {
       cy.login(BANK1_MAKER1);
       dashboardFacilities.visit();
@@ -100,7 +100,7 @@ context('Dashboard Facilities filters - filter by facility stage', () => {
     });
   });
 
-  describe('Unissued', () => {
+  describe(CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED, () => {
     before(() => {
       cy.login(BANK1_MAKER1);
       dashboardFacilities.visit();
@@ -150,7 +150,7 @@ context('Dashboard Facilities filters - filter by facility stage', () => {
     });
   });
 
-  describe('Risk expired', () => {
+  describe(FACILITY_STAGE.RISK_EXPIRED, () => {
     before(() => {
       cy.login(BANK1_MAKER1);
       dashboardFacilities.visit();

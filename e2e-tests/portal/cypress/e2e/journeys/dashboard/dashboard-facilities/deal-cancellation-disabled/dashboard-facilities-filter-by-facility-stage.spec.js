@@ -44,7 +44,7 @@ context('Dashboard Facilities filters - filter by facility stage', () => {
     filters.showHideButton().click();
   });
 
-  describe('Issued', () => {
+  describe(CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED, () => {
     before(() => {
       cy.login(BANK1_MAKER1);
       dashboardFacilities.visit();
@@ -86,7 +86,7 @@ context('Dashboard Facilities filters - filter by facility stage', () => {
     });
   });
 
-  describe('Unissued', () => {
+  describe(CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED, () => {
     before(() => {
       cy.login(BANK1_MAKER1);
       dashboardFacilities.visit();
