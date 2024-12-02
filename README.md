@@ -55,7 +55,7 @@ This documentation provides a comprehensive overview of the UKEF Digital TradeFi
 8. Run `npm ci` in the root folder of the repository. (note: this will install dependencies for the entire project, including those specified in sub-packages. More details on this in the [npm workspaces](./doc/npm-workspaces.md) docs)
 9. Start your local environment with `docker-compose up --build`.
 10. Create mock data
-    - If not working on utilisation reports:
+    - If your work does not involve utilisation reports:
       1. Run migrations on the MSSQL Server database by running `npm run db:migrate` in the `libs/common` directory (see [SQL DB docs](./doc/sql-db.md#--run-migrations) for details)
       2. Create mock data by running `npm run load` from the root folder of the repository. This should generate mocks in your database (both Mongo and MSSQL). (for more details on what this does please see [utils docs](./utils/README.md)).
     - If working on utilisation reports or E2E tests for utilisation reports:
