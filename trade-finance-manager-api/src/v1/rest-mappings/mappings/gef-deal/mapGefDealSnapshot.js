@@ -3,6 +3,12 @@ const mapGefFacilities = require('../gef-facilities/mapGefFacilities');
 const mapTotals = require('../deal/mapTotals');
 const mapGefSubmissionDetails = require('./mapGefSubmissionDetails');
 
+/**
+ * Maps GEF deal snapshot from the database to a deal snapshot containing important and/or modified fields for use in TFM-UI and TFM-API.
+ * @param {GefDeal} dealSnapshot
+ * @param {TfmDeal} dealTfm
+ * @returns {MappedGefDealSnapshot} The mapped deal to be used across TFM-UI and TFM-API.
+ */
 const mapGefDealSnapshot = (dealSnapshot, dealTfm) => ({
   _id: dealSnapshot._id,
   dealType: dealSnapshot.dealType,

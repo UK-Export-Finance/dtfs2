@@ -19,8 +19,8 @@ const { mapBssEwcsFacilityType } = require('./mapFacilityType');
  * This returns a facility object that represent the current facility state with all changes applied e.g. when amendments are added in TFM.
  * These values may differ from the facility snapshot in the database.
  * @param {import('@ukef/dtfs2-common').TfmFacility} facility the full facility object from the database
- * @param {import('@ukef/dtfs2-common').Deal} dealSnapshot the deal.dealSnapshot object from the database corresponding to the facility
- * @returns mapped facility snapshot
+ * @param {import('@ukef/dtfs2-common').BssEwcsDeal} dealSnapshot the deal.dealSnapshot object from the database corresponding to the facility
+ * @returns {import('@ukef/dtfs2-common').MappedBssEwcsDealSnapshot}
  */
 const mapFacilitySnapshot = (facility, dealSnapshot) => {
   const { details: dealDetails } = dealSnapshot;
