@@ -3,7 +3,6 @@ import { getUnixTime } from 'date-fns';
 import { ObjectId } from 'mongodb';
 import { updateBssEwcsDealStatus } from '../../v1/controllers/portal/deal/update-deal-status.controller';
 import { updateGefDealStatus } from '../../v1/controllers/portal/gef-deal/put-gef-deal.status.controller';
-// import { addGefDealCancelledActivity } from '../../v1/controllers/portal/gef-deal/add-gef-deal-cancelled-activity';
 import { updateDeal } from '../../v1/controllers/portal/gef-deal/update-deal';
 
 export class PortalDealService {

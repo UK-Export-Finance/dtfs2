@@ -49,7 +49,7 @@ const findOneUserByIdMock = jest.fn() as jest.Mock<Promise<TfmUser | null>>;
 
 const updatePortalDealStatusMock = jest.fn() as jest.Mock<Promise<void>>;
 const updatePortalFacilitiesMock = jest.fn() as jest.Mock<Promise<void>>;
-const addDealCancelledActivityMock = jest.fn() as jest.Mock<Promise<void>>;
+const addGefDealCancelledActivityMock = jest.fn() as jest.Mock<Promise<void>>;
 
 jest.mock('../../repositories/tfm-deals-repo/tfm-deal-cancellation.repo', () => ({
   TfmDealCancellationRepo: {
@@ -132,7 +132,7 @@ describe('DealCancellationService', () => {
       findOneUserByIdMock.mockResolvedValue(mockUser);
       jest.spyOn(PortalDealService, 'updateStatus').mockImplementation(updatePortalDealStatusMock);
       jest.spyOn(PortalFacilityRepo, 'updateManyByDealId').mockImplementation(updatePortalFacilitiesMock);
-      jest.spyOn(PortalDealService, 'addDealCancelledActivity').mockImplementation(addDealCancelledActivityMock);
+      jest.spyOn(PortalDealService, 'addGefDealCancelledActivity').mockImplementation(addGefDealCancelledActivityMock);
     });
 
     const aDealCancellation = (): TfmDealCancellation => ({
@@ -204,7 +204,7 @@ describe('DealCancellationService', () => {
           expect(updatePortalFacilitiesMock).toHaveBeenCalledWith(dealId, { facilityStage: FACILITY_STAGE.RISK_EXPIRED }, auditDetails);
         });
 
-        it('calls PortalDealService.addDealCancelledActivity with relevant params', async () => {
+        it('calls PortalDealService.addGefDealCancelledActivity with relevant params', async () => {
           // Act
           await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 
@@ -215,8 +215,8 @@ describe('DealCancellationService', () => {
             _id: mockUser._id.toString(),
           };
 
-          expect(addDealCancelledActivityMock).toHaveBeenCalledTimes(1);
-          expect(addDealCancelledActivityMock).toHaveBeenCalledWith({ dealId, dealType, portalActivities, author: expectedAuthor, auditDetails });
+          expect(addGefDealCancelledActivityMock).toHaveBeenCalledTimes(1);
+          expect(addGefDealCancelledActivityMock).toHaveBeenCalledWith({ dealId, dealType, portalActivities, author: expectedAuthor, auditDetails });
         });
 
         it('throws InvalidAuditDetailsError when no user is found', async () => {
@@ -291,12 +291,12 @@ describe('DealCancellationService', () => {
           expect(updatePortalFacilitiesMock).toHaveBeenCalledTimes(0);
         });
 
-        it('does not call PortalDealService.addDealCancelledActivity', async () => {
+        it('does not call PortalDealService.addGefDealCancelledActivity', async () => {
           // Act
           await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 
           // Assert
-          expect(addDealCancelledActivityMock).toHaveBeenCalledTimes(0);
+          expect(addGefDealCancelledActivityMock).toHaveBeenCalledTimes(0);
         });
 
         it('throws InvalidAuditDetailsError when no user is found', async () => {

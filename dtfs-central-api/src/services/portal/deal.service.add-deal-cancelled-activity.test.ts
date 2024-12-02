@@ -21,7 +21,7 @@ const author = {
 
 const auditDetails = generateSystemAuditDetails();
 
-describe('PortalDealService - addDealCancelledActivity', () => {
+describe('PortalDealService - addGefDealCancelledActivity', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
