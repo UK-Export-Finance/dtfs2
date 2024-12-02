@@ -252,4 +252,5 @@ module.exports = {
   getSelectedFeeRecordsDetails: jest.fn(),
   addFeesToAnExistingPayment: jest.fn(),
   getFeeRecord: jest.fn(),
+  updateFeeRecordCorrectionTransientFormData: jest.fn(),
 };
