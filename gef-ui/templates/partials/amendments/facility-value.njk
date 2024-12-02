@@ -12,7 +12,7 @@
 {% set headingHtml %}
   <header>
     <span class="govuk-caption-l" data-cy="heading-caption">
-      // TODO: Update this with the correct company name
+      {{ exporterName }}
     </span>
     <h1 class="govuk-label-wrapper">
       <label class="govuk-label govuk-label--xl" for="facility-value">
@@ -54,6 +54,7 @@
             html: headingHtml,
             isPageHeading: true
           },
+          value: facilityValue,
           prefix: {
             text: "£"
           },
