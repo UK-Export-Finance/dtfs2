@@ -8,7 +8,7 @@ import {
   RecordCorrectionTransientFormData,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
-import { withMongoIdPathParameterValidationTests, withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
+import { withSqlAndMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 
@@ -43,19 +43,14 @@ describe(`GET ${BASE_URL}`, () => {
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
   });
 
-  withSqlIdPathParameterValidationTests({
+  withSqlAndMongoIdPathParameterValidationTests({
     baseUrl: BASE_URL,
     makeRequest: (url) => testApi.get(url),
-    pathParameters: ['reportId', 'feeRecordId'],
+    sqlPathParameters: ['reportId', 'feeRecordId'],
+    mongoPathParameters: ['userId'],
   });
 
-  withMongoIdPathParameterValidationTests({
-    baseUrl: BASE_URL,
-    makeRequest: (url) => testApi.get(url),
-    pathParameters: ['userId'],
-  });
-
-  it(`returns '${HttpStatusCode.NotFound}' when no fee record with the supplied id can be found`, async () => {
+  it(`should return '${HttpStatusCode.NotFound}' when no fee record with the supplied id can be found`, async () => {
     // Act
     const response = await testApi.get(getUrl(reportId, feeRecordId + 1, userId));
 
@@ -63,7 +58,7 @@ describe(`GET ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
-  it(`returns '${HttpStatusCode.Ok}' with the form data if the request is valid and transient form data exists`, async () => {
+  it(`should return '${HttpStatusCode.Ok}' with the form data if the request is valid and transient form data exists`, async () => {
     // Arrange
     const formData: RecordCorrectionTransientFormData = {
       reasons: [RECORD_CORRECTION_REASON.OTHER],
@@ -84,7 +79,7 @@ describe(`GET ${BASE_URL}`, () => {
     expect(response.body).toEqual(formData);
   });
 
-  it(`returns '${HttpStatusCode.Ok}' with empty form data if the request is valid but transient form data does not exist`, async () => {
+  it(`should return '${HttpStatusCode.Ok}' with empty form data if the request is valid but transient form data does not exist`, async () => {
     // Act
     const response = await testApi.get(getUrl(reportId, feeRecordId, userId));
 
