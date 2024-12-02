@@ -4,7 +4,7 @@ const mapDealTfm = (deal) => {
   const { tfm: dealTfm } = deal;
 
   if (!dealTfm) {
-    return false;
+    return null;
   }
 
   const { supplyContractValueInGBP } = dealTfm;
