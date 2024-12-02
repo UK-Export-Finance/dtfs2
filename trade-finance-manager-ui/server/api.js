@@ -1368,7 +1368,7 @@ const updateFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId,
  * @param {string} feeRecordId - The fee record id
  * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
  * @param {string} userToken - The user token
- * @returns {Promise<import('@ukef/dtfs2-common').RecordCorrectionTransientFormData}
+ * @returns {Promise<import('@ukef/dtfs2-common').RecordCorrectionTransientFormData | {}>}
  */
 const getFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, user, userToken) => {
   try {

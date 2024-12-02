@@ -8,7 +8,6 @@ import { getLinkToPremiumPaymentsTab } from '../../helpers';
 import api from '../../../../api';
 import { CreateRecordCorrectionRequestFormRequestBody, extractCreateRecordCorrectionRequestFormValues } from './form-helpers';
 import { validateCreateRecordCorrectionRequestFormValues } from './validate-form-values';
-import { getFeeRecordCorrectionTransientFormDataIfExistsElseNull } from './request-helpers';
 
 export type GetCreateRecordCorrectionRequestRequest = CustomExpressRequest<{
   params: {
@@ -33,7 +32,7 @@ export const getCreateRecordCorrectionRequest = async (req: GetCreateRecordCorre
     const { reportId, feeRecordId } = req.params;
 
     const feeRecord = await api.getFeeRecord(reportId, feeRecordId, userToken);
-    const formValues = (await getFeeRecordCorrectionTransientFormDataIfExistsElseNull(reportId, feeRecordId, user, userToken)) ?? {};
+    const formValues = await api.getFeeRecordCorrectionTransientFormData(reportId, feeRecordId, user, userToken);
 
     return renderCreateRecordCorrectionRequestPage(res, {
       user,

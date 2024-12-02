@@ -860,8 +860,11 @@ utilisationReportsRouter
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               $ref: '#/definitions/FeeRecordCorrectionResponse'
+ *               oneOf:
+ *                 - type: object
+ *                   $ref: '#/definitions/FeeRecordCorrectionResponse'
+ *                 - type: object
+ *                   properties: {}
  *       400:
  *         description: Bad request
  *       404:

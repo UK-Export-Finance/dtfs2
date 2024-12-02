@@ -1714,7 +1714,7 @@ const updateFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId,
  * @param {string} reportId - The report id
  * @param {string} feeRecordId - The fee record id
  * @param {string} userId - The user id
- * @returns {Promise<import('@ukef/dtfs2-common').RecordCorrectionTransientFormData}
+ * @returns {Promise<import('@ukef/dtfs2-common').RecordCorrectionTransientFormData | {}>}
  */
 const getFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, userId) => {
   const response = await axios.get(
