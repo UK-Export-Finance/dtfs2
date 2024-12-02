@@ -958,7 +958,7 @@ jobs:
             './tfm/cypress/e2e/journeys/case-amendments/facility-end-date/feature-flag-enabled/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/in-progress/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/request-when-previously-submitted/*.spec.js',
-            './tfm/cypress/e2e/journeys/case-amendments/show-amendment-button/*.spec.js',
+            './tfm/cypress/e2e/journeys/case-amendments/show-amendment-button/**/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/tasks/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/underwriting-page-unassigned/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/user-flow/*.spec.js',
