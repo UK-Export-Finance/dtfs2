@@ -1,4 +1,4 @@
-import { AuditDetails, ActivityAuthor, DEAL_TYPE, DealStatus, DealType, PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE, TfmDeal } from '@ukef/dtfs2-common';
+import { AuditDetails, ActivityAuthor, DEAL_TYPE, DealStatus, DealType, PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE, TfmDeal, UKEF } from '@ukef/dtfs2-common';
 import { getUnixTime } from 'date-fns';
 import { ObjectId } from 'mongodb';
 import { updateBssEwcsDealStatus } from '../../v1/controllers/portal/deal/update-deal-status.controller';
@@ -66,7 +66,7 @@ export class PortalDealService {
         timestamp: getUnixTime(new Date()),
         author: {
           _id: author._id,
-          firstName: 'UKEF',
+          firstName: UKEF.ACRONYM,
         },
         label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
       };

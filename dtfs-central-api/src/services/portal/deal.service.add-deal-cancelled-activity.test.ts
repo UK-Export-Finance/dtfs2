@@ -1,4 +1,4 @@
-import { Activity, AnyObject, Deal, DEAL_TYPE, GefDeal, PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE, TfmDeal } from '@ukef/dtfs2-common';
+import { Activity, AnyObject, Deal, DEAL_TYPE, GefDeal, PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE, TfmDeal, UKEF } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { ObjectId } from 'mongodb';
 import { getUnixTime } from 'date-fns';
@@ -57,7 +57,7 @@ describe('PortalDealService - addGefDealCancelledActivity', () => {
         timestamp: getUnixTime(new Date()),
         author: {
           _id: author._id,
-          firstName: 'UKEF',
+          firstName: UKEF.ACRONYM,
         },
         label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
       };
