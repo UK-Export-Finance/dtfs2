@@ -7,9 +7,10 @@ import {
 } from '@ukef/dtfs2-common';
 import pages from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
+import BANKS from '../../../../../fixtures/banks';
 import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
 import relative from '../../../../relativeURL';
-import { feeRecordSummary, mainHeading } from '../../../../partials';
+import { feeRecordSummary, mainHeading, summaryList } from '../../../../partials';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context('When fee record correction feature flag is enabled', () => {
@@ -88,7 +89,20 @@ context('When fee record correction feature flag is enabled', () => {
 
       cy.clickContinueButton();
 
-      cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}/check-the-information`));
+      //---------------------------------------------------------------
+      // "Check the information" page
+      //---------------------------------------------------------------
+      cy.assertText(mainHeading(), 'Check the information before submitting the record correction request');
+
+      summaryList().should('exist');
+      summaryList().should('contain', feeRecordAtToDoStatus.facilityId);
+      summaryList().should('contain', feeRecordAtToDoStatus.exporter);
+      summaryList().should('contain', `${USERS.PDC_RECONCILE.firstName} ${USERS.PDC_RECONCILE.lastName}`);
+      summaryList().should('contain', 'Facility ID is incorrect, Other');
+      summaryList().should('contain', 'Some additional info.');
+
+      const expectedEmails = BANKS.find((bank) => bank.id === bankId).paymentOfficerTeam.emails;
+      summaryList().should('contain', expectedEmails.join(', '));
     });
 
     context('when user clicks back on the create record correction request screen', () => {
