@@ -13,6 +13,7 @@ export * from './company-registration-number';
 export * from './keying-sheet-row-status';
 export * from './amendments';
 export * from './api-error-code';
+export * from './bond-type';
 export * from './facility-type';
 export * from './deal-type';
 export * from './facility-provided-details';
@@ -24,5 +25,7 @@ export * from './url-character-allowances';
 export * from './max-character-count';
 export * from './deal-submission-type';
 export * from './floating-point-rounding-decimal-places';
+export * from './flash';
+export * from './record-correction-reason';
 
 export * as PAYLOAD_VERIFICATION from './payload-verification';

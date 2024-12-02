@@ -1,15 +1,15 @@
 import httpMocks from 'node-mocks-http';
-import { SelectedFeeRecordDetails } from '@ukef/dtfs2-common';
+import { CURRENCY, SelectedFeeRecordDetails } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { addToAnExistingPayment } from '.';
 import { AddToAnExistingPaymentViewModel } from '../../../types/view-models';
 import { SelectedFeeRecordsDetailsResponseBody } from '../../../api-response-types';
 import { aTfmSessionUser } from '../../../../test-helpers';
 import { PremiumPaymentsTableCheckboxSelectionsRequestBody } from '../helpers';
-import { getLinkToPremiumPaymentsTab } from './get-link-to-premium-payments-tab';
+import { getLinkToPremiumPaymentsTab } from '../helpers/get-link-to-premium-payments-tab';
 
 jest.mock('../../../api');
-jest.mock('./get-link-to-premium-payments-tab');
+jest.mock('../helpers/get-link-to-premium-payments-tab');
 
 console.error = jest.fn();
 
@@ -302,7 +302,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
           {
             ...aSelectedFeeRecordDetails(),
             id: 5,
-            reportedFee: { amount: 2000, currency: 'GBP' },
+            reportedFee: { amount: 2000, currency: CURRENCY.GBP },
           },
           {
             ...aSelectedFeeRecordDetails(),
@@ -358,7 +358,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
           {
             ...aSelectedFeeRecordDetails(),
             id: 5,
-            reportedPayments: { amount: 2000, currency: 'GBP' },
+            reportedPayments: { amount: 2000, currency: CURRENCY.GBP },
           },
           {
             ...aSelectedFeeRecordDetails(),
@@ -422,7 +422,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
         [
           {
             amount: 2000,
-            currency: 'GBP',
+            currency: CURRENCY.GBP,
             id: 2,
             reference: 'REF002',
           },

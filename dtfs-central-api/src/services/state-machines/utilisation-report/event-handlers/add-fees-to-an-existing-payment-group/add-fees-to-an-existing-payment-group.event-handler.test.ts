@@ -1,6 +1,7 @@
 import { EntityManager } from 'typeorm';
 import {
   UtilisationReportEntityMockBuilder,
+  CURRENCY,
   DbRequestSource,
   FeeRecordEntityMockBuilder,
   UtilisationReportEntity,
@@ -65,8 +66,8 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
     const expectedExistingFeeRecordsInPaymentGroup = [feeRecords[3]];
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
 
-    const firstPayment = PaymentEntityMockBuilder.forCurrency('GBP').withId(1).withFeeRecords([feeRecords[0]]).build();
-    const secondPayment = PaymentEntityMockBuilder.forCurrency('GBP').withId(2).withFeeRecords([feeRecords[1]]).build();
+    const firstPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(1).withFeeRecords([feeRecords[0]]).build();
+    const secondPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(2).withFeeRecords([feeRecords[1]]).build();
 
     const payments = [firstPayment, secondPayment];
 

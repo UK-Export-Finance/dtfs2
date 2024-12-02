@@ -6,9 +6,9 @@ import {
   AzureFileInfoEntity,
   FeeRecordEntity,
   FacilityUtilisationDataEntity,
+  UtilisationReportRawCsvData,
 } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
-import { UtilisationReportRawCsvData } from '../../../../../types/utilisation-reports';
 import { feeRecordCsvRowToSqlEntity, getPreviousReportPeriod } from '../../../../../helpers';
 import { calculateInitialUtilisationAndFixedFee } from '../helpers';
 import { UTILISATION_REPORT_EVENT_TYPE } from '../../event/utilisation-report.event-type';

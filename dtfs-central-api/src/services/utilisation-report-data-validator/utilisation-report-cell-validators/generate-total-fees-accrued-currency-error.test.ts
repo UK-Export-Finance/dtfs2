@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { generateTotalFeesAccruedCurrencyError } from './generate-total-fees-accrued-currency-error';
 
 describe('generateTotalFeesAccruedCurrencyError', () => {
@@ -72,7 +73,7 @@ describe('generateTotalFeesAccruedCurrencyError', () => {
         row: 1,
       },
       'accrual currency': {
-        value: 'GBP',
+        value: CURRENCY.GBP,
         column: 'B',
         row: 1,
       },

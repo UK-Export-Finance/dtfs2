@@ -1,5 +1,5 @@
 const { sub, format, add } = require('date-fns');
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { CURRENCY, MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
@@ -25,7 +25,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
     },
     submissionDetails: {
       supplyContractCurrency: {
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
   });

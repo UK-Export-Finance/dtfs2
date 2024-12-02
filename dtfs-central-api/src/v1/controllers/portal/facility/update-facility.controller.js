@@ -1,5 +1,5 @@
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, ApiError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./get-facility.controller');
@@ -49,30 +49,27 @@ exports.updateFacilityPut = async (req, res) => {
     routePath,
   } = req;
 
-  if (!ObjectId.isValid(facilityId)) {
-    return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
-  }
-
   try {
     validateAuditDetails(auditDetails);
+
+    const facility = await findOneFacility(facilityId);
+
+    const { dealId } = facility;
+
+    const updatedFacility = await updateFacility({ facilityId, facilityUpdate, dealId, user, routePath, auditDetails });
+
+    return res.status(200).json(updatedFacility);
   } catch (error) {
-    if (error instanceof InvalidAuditDetailsError) {
+    if (error instanceof ApiError) {
       return res.status(error.status).send({
         status: error.status,
         message: error.message,
         code: error.code,
       });
     }
+
+    console.error(`Error whilst updating facility, ${error}`);
+
+    return res.status(500).send({ status: 500, message: 'An unknown error occurred' });
   }
-  const facility = await findOneFacility(facilityId);
-
-  if (!facility) {
-    return res.status(404).send();
-  }
-
-  const { dealId } = facility;
-
-  const updatedFacility = await updateFacility({ facilityId, facilityUpdate, dealId, user, routePath, auditDetails });
-
-  return res.status(200).json(updatedFacility);
 };

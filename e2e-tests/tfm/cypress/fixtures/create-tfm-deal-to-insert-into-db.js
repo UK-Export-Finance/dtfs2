@@ -1,3 +1,4 @@
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 
 const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => ({
@@ -21,7 +22,7 @@ const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => (
           _id: new ObjectId(),
           type: 'Bond',
           bondIssuer: 'Issuer',
-          bondType: 'Advance payment guarantee',
+          bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
           facilityStage: 'Issued',
           hasBeenIssued: true,
           ukefGuaranteeInMonths: '10',
@@ -38,7 +39,7 @@ const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => (
           dayCountBasis: '365',
           currency: {
             text: 'GBP - UK Sterling',
-            id: 'GBP',
+            id: CURRENCY.GBP,
           },
           'coverEndDate-day': '06',
           'coverEndDate-month': '03',
@@ -143,7 +144,7 @@ const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => (
         _id: new ObjectId(),
         type: 'Bond',
         bondIssuer: 'Issuer',
-        bondType: 'Advance payment guarantee',
+        bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
         facilityStage: 'Issued',
         hasBeenIssued: true,
         ukefGuaranteeInMonths: '10',
@@ -160,7 +161,7 @@ const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => (
         dayCountBasis: '365',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
         'coverEndDate-day': '06',
         'coverEndDate-month': '03',
@@ -201,7 +202,7 @@ const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => (
       {
         type: 'Bond',
         bondIssuer: 'Issuer',
-        bondType: 'Advance payment guarantee',
+        bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
         facilityStage: 'Issued',
         hasBeenIssued: true,
         ukefGuaranteeInMonths: '10',
@@ -218,7 +219,7 @@ const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => (
         dayCountBasis: '365',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
         'coverEndDate-day': '06',
         'coverEndDate-month': '03',
@@ -305,7 +306,7 @@ const createTfmDealToInsertIntoDb = (ukefDealId, companyName, dealObjectId) => (
       'supplyContractConversionDate-year': '',
       supplyContractConversionRateToGBP: '',
       supplyContractCurrency: {
-        id: 'GBP',
+        id: CURRENCY.GBP,
         text: 'GBP - UK Sterling',
       },
       supplyContractValue: '1234.00',

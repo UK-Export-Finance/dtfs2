@@ -1,6 +1,7 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
 import {
+  CURRENCY,
   PaymentEntityMockBuilder,
   FeeRecordEntityMockBuilder,
   UtilisationReportEntityMockBuilder,
@@ -35,7 +36,7 @@ describe('post-remove-fees-from-payment-group.controller', () => {
     const feeRecordIds = [1, 2];
     const feeRecords = feeRecordIds.map((id) => FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(id).build());
 
-    const payment = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).withFeeRecords(feeRecords).build();
+    const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(paymentId).withFeeRecords(feeRecords).build();
 
     const paymentRepoFindSpy = jest.spyOn(PaymentRepo, 'findOneByIdWithFeeRecordsAndReportFilteredById');
 

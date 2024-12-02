@@ -1,9 +1,9 @@
 const { when } = require('jest-when');
+const ALL_MOCK_DEALS = require('../mock-deals');
 const MOCK_MIA_TASKS = require('../mock-MIA-tasks');
 const MOCK_AIN_TASKS = require('../mock-AIN-tasks');
 
 const api = require('../../api');
-const ALL_MOCK_DEALS = require('../mock-deals');
 
 module.exports = {
   mockFindOneDeal: (mockDealToReturn = undefined) => {

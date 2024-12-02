@@ -1,3 +1,4 @@
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
 const { oneMonth, today } = require('../../../../../../e2e-fixtures/dateConstants');
 
@@ -175,7 +176,7 @@ const deal = {
     'supplyContractConversionDate-year': '',
     supplyContractConversionRateToGBP: '',
     supplyContractCurrency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
       text: 'GBP - UK Sterling',
     },
     supplyContractValue: '1234.00',
@@ -185,7 +186,7 @@ const deal = {
       type: 'Bond',
       createdDate: now,
       bondIssuer: '',
-      bondType: 'Performance bond',
+      bondType: BOND_TYPE.PERFORMANCE_BOND,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '12',
@@ -202,7 +203,7 @@ const deal = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       'coverEndDate-day': oneMonth.day,
       'coverEndDate-month': oneMonth.month,
@@ -224,7 +225,7 @@ const deal = {
       type: 'Bond',
       createdDate: now,
       bondIssuer: '',
-      bondType: 'Performance bond',
+      bondType: BOND_TYPE.PERFORMANCE_BOND,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '12',
@@ -241,7 +242,7 @@ const deal = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       'coverEndDate-day': oneMonth.day,
       'coverEndDate-month': oneMonth.month,
@@ -257,7 +258,7 @@ const deal = {
       type: 'Bond',
       createdDate: now,
       bondIssuer: '',
-      bondType: 'Bid bond',
+      bondType: BOND_TYPE.BID_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -274,14 +275,14 @@ const deal = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
     {
       type: 'Bond',
       createdDate: now,
       bondIssuer: '',
-      bondType: 'Performance bond',
+      bondType: BOND_TYPE.PERFORMANCE_BOND,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '12',
@@ -298,7 +299,7 @@ const deal = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       'coverEndDate-day': oneMonth.day,
       'coverEndDate-month': oneMonth.month,
@@ -395,7 +396,7 @@ const deal = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
     {

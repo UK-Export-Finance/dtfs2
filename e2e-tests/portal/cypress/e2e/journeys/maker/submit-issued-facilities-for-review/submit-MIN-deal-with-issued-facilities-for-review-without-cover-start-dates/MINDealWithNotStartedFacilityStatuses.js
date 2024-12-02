@@ -1,3 +1,5 @@
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
+
 const now = new Date().valueOf();
 
 const deal = {
@@ -164,7 +166,7 @@ const deal = {
     'supplyContractConversionDate-year': '',
     supplyContractConversionRateToGBP: '',
     supplyContractCurrency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
       text: 'GBP - UK Sterling',
     },
     supplyContractValue: '12312323.00',
@@ -174,7 +176,7 @@ const deal = {
     {
       type: 'Bond',
       bondIssuer: '',
-      bondType: 'Bid bond',
+      bondType: BOND_TYPE.BID_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -190,7 +192,7 @@ const deal = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       status: 'Not started',
     },
@@ -213,7 +215,7 @@ const deal = {
       viewedPreviewPage: true,
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       'coverEndDate-day': '',
       'coverEndDate-month': '',

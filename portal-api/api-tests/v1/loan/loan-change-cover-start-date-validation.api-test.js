@@ -1,4 +1,5 @@
 const { format, sub, add } = require('date-fns');
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const aDeal = require('../deals/deal-builder');
 const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
@@ -22,7 +23,7 @@ describe('/v1/deals/:id/loan/:loanId', () => {
     },
     submissionDetails: {
       supplyContractCurrency: {
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
   });

@@ -1,6 +1,7 @@
 import { difference } from 'lodash';
 import {
   Currency,
+  CURRENCY,
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
   KeyingSheetRowStatus,
@@ -128,13 +129,13 @@ describe('keying sheet mapping', () => {
   describe('mapPaymentEntityToKeyingSheetFeePayment', () => {
     it('maps the payment entity date received, amount and currency', () => {
       // Arrange
-      const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(123.45).withDateReceived(new Date('2024-05-06')).build();
+      const paymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withAmount(123.45).withDateReceived(new Date('2024-05-06')).build();
 
       // Act
       const feePayment = mapPaymentEntityToKeyingSheetFeePayment(paymentEntity);
 
       // Assert
-      expect(feePayment.currency).toBe<Currency>('GBP');
+      expect(feePayment.currency).toBe<Currency>(CURRENCY.GBP);
       expect(feePayment.amount).toEqual(123.45);
       expect(feePayment.dateReceived).toEqual(new Date('2024-05-06'));
     });

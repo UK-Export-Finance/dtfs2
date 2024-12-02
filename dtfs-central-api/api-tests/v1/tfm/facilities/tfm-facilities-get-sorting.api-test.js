@@ -1,5 +1,5 @@
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { FACILITY_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
 const getObjectPropertyValueFromStringPath = require('../../../../src/utils/getObjectPropertyValueFromStringPath');
@@ -135,7 +135,7 @@ describe('/v1/tfm/facilities', () => {
       ukefFacilityId: '10000001',
       type: FACILITY_TYPE.CASH,
       value: '1000',
-      currency: { id: 'GBP' },
+      currency: { id: CURRENCY.GBP },
       coverEndDate: '2021-08-12T00:00:00.000Z',
       hasBeenIssued: true,
       ...overrides,

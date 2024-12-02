@@ -1,4 +1,6 @@
+const { BOND_TYPE } = require('@ukef/dtfs2-common');
 const { sub, format, add } = require('date-fns');
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
@@ -21,7 +23,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
     },
     submissionDetails: {
       supplyContractCurrency: {
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
     eligibility: {
@@ -37,7 +39,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
 
   const allBondFields = {
     bondIssuer: 'issuer',
-    bondType: 'bond type',
+    bondType: BOND_TYPE.BID_BOND,
     facilityStage: 'Unissued',
     hasBeenIssued: false,
     previousFacilityStage: 'Unissued',

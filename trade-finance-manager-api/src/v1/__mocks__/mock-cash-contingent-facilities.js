@@ -1,3 +1,5 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
+
 const MOCK_CASH_FACILITY = {
   dealId: 'MOCK_GEF_DEAL',
   coverEndDate: '2021-08-12T00:00:00.000Z',
@@ -6,7 +8,7 @@ const MOCK_CASH_FACILITY = {
   facilityEndDate: '2021-08-12T00:00:00.000Z',
   coverPercentage: 12,
   createdAt: 1628693855675.0,
-  currency: { id: 'GBP' },
+  currency: { id: CURRENCY.GBP },
   details: ['RESOLVING'],
   detailsOther: '',
   interestPercentage: 24,
@@ -32,7 +34,7 @@ const MOCK_CONTINGENT_FACILITY = {
   bankReviewDate: '2021-08-12T00:00:00.000Z',
   coverPercentage: 12,
   createdAt: 1628693855675.0,
-  currency: { id: 'GBP' },
+  currency: { id: CURRENCY.GBP },
   details: ['RESOLVING'],
   detailsOther: '',
   interestPercentage: 24,
