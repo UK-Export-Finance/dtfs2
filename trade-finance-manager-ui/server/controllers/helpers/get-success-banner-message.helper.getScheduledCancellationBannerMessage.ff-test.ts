@@ -5,8 +5,8 @@ import {
   TFM_DEAL_CANCELLATION_STATUS,
   TfmDealCancellationWithStatus,
   DATE_FORMATS,
-  Deal,
   DEAL_TYPE,
+  MappedDealSnapshot,
 } from '@ukef/dtfs2-common';
 import { getScheduledCancellationBannerMessage } from './get-success-banner-message.helper';
 
@@ -32,8 +32,8 @@ describe('getScheduledCancellationBannerMessage', () => {
       dealType: DEAL_TYPE.GEF,
       submissionType,
       _id: dealId,
-      ukefDealId,
-    } as unknown as Deal;
+      details: { ukefDealId },
+    } as unknown as MappedDealSnapshot;
 
     it('returns null if deal cancellation is in draft', async () => {
       // Arrange
@@ -104,8 +104,8 @@ describe('getScheduledCancellationBannerMessage', () => {
       dealType: DEAL_TYPE.GEF,
       submissionType: MIA,
       _id: dealId,
-      ukefDealId,
-    } as unknown as Deal;
+      details: { ukefDealId },
+    } as unknown as MappedDealSnapshot;
 
     it('returns null', async () => {
       // Act

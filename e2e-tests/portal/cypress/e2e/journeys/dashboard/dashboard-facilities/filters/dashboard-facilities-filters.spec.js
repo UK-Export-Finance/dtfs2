@@ -149,14 +149,14 @@ context('Dashboard Deals filters', () => {
 
     it('bank facility stage/hasBeenIssued', () => {
       // Issued
-      dashboardFacilities.filters.panel.form.hasBeenIssued.issued.label().contains(CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED);
-      dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().should('exist');
-      dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().should('not.be.checked');
+      dashboardFacilities.filters.panel.form.stage.issued.label().contains(CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED);
+      dashboardFacilities.filters.panel.form.stage.issued.checkbox().should('exist');
+      dashboardFacilities.filters.panel.form.stage.issued.checkbox().should('not.be.checked');
 
       // Unissued
-      dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.label().contains(CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED);
-      dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().should('exist');
-      dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().should('not.be.checked');
+      dashboardFacilities.filters.panel.form.stage.unissued.label().contains(CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED);
+      dashboardFacilities.filters.panel.form.stage.unissued.checkbox().should('exist');
+      dashboardFacilities.filters.panel.form.stage.unissued.checkbox().should('not.be.checked');
     });
 
     it('contains the correct aria-label for no facility filters selected', () => {

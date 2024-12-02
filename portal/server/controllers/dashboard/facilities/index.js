@@ -5,7 +5,6 @@ const { selectedFilters } = require('./selected-filters');
 const { submittedFiltersArray, submittedFiltersObject, filtersToText } = require('../filters/helpers');
 const { removeSessionFilter } = require('../filters/remove-filter-from-session');
 const { getApiData, requestParams, getFlashSuccessMessage } = require('../../../helpers');
-const { sanitiseBody } = require('./sanitise-body');
 const CONSTANTS = require('../../../constants');
 const { isChecker } = require('../../../helpers/isChecker.helper');
 const { dashboardSortQuery } = require('../sort/helpers');
@@ -70,8 +69,7 @@ exports.allFacilities = async (req, res) => {
   let activeSortByOrder = req.session.sortBy ?? CONSTANTS.SORT_BY.DEFAULT;
 
   if (Object.keys(req.body).length) {
-    const sanitisedBody = sanitiseBody(req.body);
-    req.session.dashboardFilters = sanitisedBody;
+    req.session.dashboardFilters = req.body;
     req.session.sortBy = req.body.sortBy ?? CONSTANTS.SORT_BY.DEFAULT;
   }
 
