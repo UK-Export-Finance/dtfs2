@@ -3,7 +3,7 @@ import { getUnixTime } from 'date-fns';
 import { ObjectId } from 'mongodb';
 import { updateBssEwcsDealStatus } from '../../v1/controllers/portal/deal/update-deal-status.controller';
 import { updateGefDealStatus } from '../../v1/controllers/portal/gef-deal/put-gef-deal.status.controller';
-import { updateDeal } from '../../v1/controllers/portal/gef-deal/update-deal';
+import { PortalActivityRepo } from '../../repositories/portal/portal-activity.repo';
 
 export class PortalDealService {
   /**
@@ -59,7 +59,7 @@ export class PortalDealService {
     auditDetails: AuditDetails;
   }): Promise<void> {
     if (deal.dealSnapshot.dealType === DEAL_TYPE.GEF) {
-      const { _id: dealId, portalActivities } = deal.dealSnapshot;
+      const { _id: dealId } = deal.dealSnapshot;
 
       const newActivity = {
         type: PORTAL_ACTIVITY_TYPE.DEAL_CANCELLED,
@@ -71,11 +71,10 @@ export class PortalDealService {
         label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
       };
 
-      const update = {
-        portalActivities: [newActivity, ...portalActivities],
-      };
+      // TODO, can revert this change now.
+      // await updateDeal({ dealId, dealUpdate: update, auditDetails });
 
-      await updateDeal({ dealId, dealUpdate: update, auditDetails });
+      await PortalActivityRepo.addPortalActivity(dealId, newActivity, auditDetails);
     }
   }
 }

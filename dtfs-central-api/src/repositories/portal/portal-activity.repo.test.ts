@@ -19,7 +19,7 @@ describe('PortalActivityRepo', () => {
 
   describe('addPortalActivity', () => {
     const dealId = new ObjectId();
-    // const newActivity: Partial<Activity> = {  };
+
     const newActivity: Activity = {
       type: PORTAL_ACTIVITY_TYPE.DEAL_CANCELLED,
       timestamp: getUnixTime(new Date()),
@@ -42,7 +42,7 @@ describe('PortalActivityRepo', () => {
       jest.spyOn(mongoDbClient, 'getCollection').mockImplementation(getCollectionMock);
     });
 
-    it(`calls getCollection with ${MONGO_DB_COLLECTIONS.FACILITIES}`, async () => {
+    it(`should call getCollection with ${MONGO_DB_COLLECTIONS.FACILITIES}`, async () => {
       // Act
       await PortalActivityRepo.addPortalActivity(dealId, newActivity, auditDetails);
 
@@ -51,7 +51,7 @@ describe('PortalActivityRepo', () => {
       expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.DEALS);
     });
 
-    it('calls updateOne with the expected parameters', async () => {
+    it('should call updateOne with the expected parameters', async () => {
       // Act
       await PortalActivityRepo.addPortalActivity(dealId, newActivity, auditDetails);
 
@@ -71,7 +71,7 @@ describe('PortalActivityRepo', () => {
       expect(updateOneMock).toHaveBeenCalledWith(expectedIdFilter, expectedUpdate);
     });
 
-    it('throws InvalidDealIdError if the dealId is not a valid ObjectId', async () => {
+    it('should throw InvalidDealIdError if the dealId is not a valid ObjectId', async () => {
       // Arrange
       const invalidDealId = 'invalidDealId';
 

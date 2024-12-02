@@ -1,14 +1,11 @@
-import { Activity, AnyObject, Deal, DEAL_TYPE, GefDeal, PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE, TfmDeal, UKEF } from '@ukef/dtfs2-common';
+import { Activity, DEAL_TYPE, GefDeal, PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE, TfmDeal, UKEF } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { ObjectId } from 'mongodb';
 import { getUnixTime } from 'date-fns';
 import { PortalDealService } from './deal.service';
+import { PortalActivityRepo } from '../../repositories/portal/portal-activity.repo';
 
-const updateDealMock = jest.fn() as jest.Mock<Deal>;
-
-jest.mock('../../v1/controllers/portal/gef-deal/update-deal', () => ({
-  updateDeal: (params: AnyObject) => updateDealMock(params),
-}));
+const addPortalActivityMock = jest.fn();
 
 const dealId = new ObjectId();
 
@@ -41,8 +38,12 @@ describe('PortalDealService - addGefDealCancelledActivity', () => {
   });
 
   describe(`when dealType is ${DEAL_TYPE.GEF}`, () => {
-    it('should call updateDeal', async () => {
+    it('should call addPortalActivity', async () => {
       // Arrange
+      addPortalActivityMock.mockResolvedValue({ matchedCount: 1 });
+
+      jest.spyOn(PortalActivityRepo, 'addPortalActivity').mockImplementation(addPortalActivityMock);
+
       const mockDeal = deal;
       mockDeal.dealSnapshot.dealType = DEAL_TYPE.GEF;
 
@@ -50,7 +51,7 @@ describe('PortalDealService - addGefDealCancelledActivity', () => {
       await PortalDealService.addGefDealCancelledActivity({ deal: mockDeal, author, auditDetails });
 
       // Assert
-      expect(updateDealMock).toHaveBeenCalledTimes(1);
+      expect(addPortalActivityMock).toHaveBeenCalledTimes(1);
 
       const expectedActivity = {
         type: PORTAL_ACTIVITY_TYPE.DEAL_CANCELLED,
@@ -62,20 +63,12 @@ describe('PortalDealService - addGefDealCancelledActivity', () => {
         label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
       };
 
-      const dealUpdate = {
-        portalActivities: [expectedActivity, ...portalActivities],
-      };
-
-      expect(updateDealMock).toHaveBeenCalledWith({
-        dealId,
-        dealUpdate,
-        auditDetails,
-      });
+      expect(addPortalActivityMock).toHaveBeenCalledWith(dealId, expectedActivity, auditDetails);
     });
   });
 
   describe(`when dealType is not ${DEAL_TYPE.GEF}`, () => {
-    it(`does not call updateDeal when dealType is not ${DEAL_TYPE.GEF}`, async () => {
+    it(`does not call addPortalActivity when dealType is not ${DEAL_TYPE.GEF}`, async () => {
       // Arrange
       const mockDeal = deal;
       mockDeal.dealSnapshot.dealType = DEAL_TYPE.BSS_EWCS;
@@ -84,7 +77,7 @@ describe('PortalDealService - addGefDealCancelledActivity', () => {
       await PortalDealService.addGefDealCancelledActivity({ deal: mockDeal, author, auditDetails });
 
       // Assert
-      expect(updateDealMock).toHaveBeenCalledTimes(0);
+      expect(addPortalActivityMock).toHaveBeenCalledTimes(0);
     });
   });
 });
