@@ -53,7 +53,7 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
     { startMonth: 12, endMonth: 12 },
   ];
 
-  const bank = {
+  const mockBank = {
     id: '123',
     name: 'Test bank',
     isVisibleInTfmUtilisationReports: true,
@@ -62,22 +62,19 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
 
   const banks = [
     {
+      ...mockBank,
       id: '1',
       name: 'Bank 1',
-      isVisibleInTfmUtilisationReports: true,
-      utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
     },
     {
+      ...mockBank,
       id: '2',
       name: 'Bank 2',
-      isVisibleInTfmUtilisationReports: true,
-      utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
     },
     {
+      ...mockBank,
       id: '3',
       name: 'Bank 3',
-      isVisibleInTfmUtilisationReports: true,
-      utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
     },
   ] as Bank[];
 
@@ -140,16 +137,16 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
 
     it('does not try to create any utilisation reports when reports for all banks in the current period already exist', async () => {
       // Arrange
-      jest.mocked(getAllBanks).mockResolvedValue([bank]);
+      jest.mocked(getAllBanks).mockResolvedValue([mockBank]);
 
-      const existingReport = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED).withBankId(bank.id).build();
+      const existingReport = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED).withBankId(mockBank.id).build();
       findOneByBankIdAndReportPeriodSpy.mockResolvedValue(existingReport);
 
       // Act
       await createUtilisationReportForBanksJob.task(new Date());
 
       // Assert
-      expect(findOneByBankIdAndReportPeriodSpy).toHaveBeenCalledWith(bank.id, mockReportPeriod);
+      expect(findOneByBankIdAndReportPeriodSpy).toHaveBeenCalledWith(mockBank.id, mockReportPeriod);
       expect(saveUtilisationReportSpy).not.toHaveBeenCalled();
     });
 
@@ -180,9 +177,9 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
       banks.forEach(({ id }) => expect(findOneByBankIdAndReportPeriodSpy).toHaveBeenCalledWith(id, mockReportPeriod));
       expect(saveUtilisationReportSpy).toHaveBeenCalledTimes(banks.length);
 
-      banks.forEach((eachBank) => {
+      banks.forEach((bank) => {
         const newReport = UtilisationReportEntity.createNotReceived({
-          bankId: eachBank.id,
+          bankId: bank.id,
           reportPeriod: mockReportPeriod,
           requestSource: {
             platform: REQUEST_PLATFORM_TYPE.SYSTEM,
