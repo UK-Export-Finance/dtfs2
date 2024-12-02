@@ -241,5 +241,5 @@ exports.multipleMockGefFacilities = ({ facilityEndDateEnabled = false } = {}) =>
   issuedCashFacility: anIssuedCashFacility({ facilityEndDateEnabled }),
   unissuedContingentFacility: anUnissuedContingentFacility({ facilityEndDateEnabled }),
   unissuedCashFacilityWith20MonthsOfCover: anUnissuedCashFacilityWith20MonthsOfCover({ facilityEndDateEnabled }),
-  anIssuedContingentFacility: anIssuedContingentFacility({ facilityEndDateEnabled }),
+  issuedContingentFacility: anIssuedContingentFacility({ facilityEndDateEnabled }),
 });
