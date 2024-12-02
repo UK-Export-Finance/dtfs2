@@ -174,6 +174,7 @@ describe('getPortalActivities()', () => {
     expect(mockResponse.render).toHaveBeenCalledWith('partials/application-activity.njk', {
       activeSubNavigation: 'activities',
       dealId: '1234567890abcdf123456789',
+      previousStatus: mockApplicationResponse.previousStatus,
       portalActivities: mappedPortalActivities,
       bankInternalRefName: mockApplicationResponse.bankInternalRefName,
       additionalRefName: mockApplicationResponse.additionalRefName,

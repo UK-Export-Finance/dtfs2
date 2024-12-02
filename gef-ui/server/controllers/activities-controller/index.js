@@ -52,6 +52,7 @@ const getPortalActivities = async (req, res) => {
   return res.render('partials/application-activity.njk', {
     activeSubNavigation: 'activities',
     dealId,
+    previousStatus: deal.previousStatus,
     portalActivities: mappedPortalActivities,
     bankInternalRefName: deal.bankInternalRefName,
     additionalRefName: deal.additionalRefName,

@@ -1,0 +1,13 @@
+{# TODO: does this need a paragraph parent tag #}
+
+{% macro render(params) %}
+
+  {% set previousStatus = params.previousStatus %}
+  {% set newStatus = params.newStatus %}
+  {% set tagColour = params.tagColour %}
+
+  <strong class="govuk-tag govuk-tag--{{ tagColour }} govuk-!-margin-left-2 govuk-!-margin-right-2" data-cy="previous-status-tag"> {{ previousStatus }} </strong>
+  &gt;
+  <strong class="govuk-tag govuk-tag--{{ tagColour }} govuk-!-margin-left-2 govuk-!-margin-right-2" data-cy="status-tag"> {{ newStatus }} </strong>
+
+{% endmacro %}

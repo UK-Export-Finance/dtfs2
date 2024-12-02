@@ -73,6 +73,7 @@ export class PortalDealService {
           firstName: 'UKEF',
         },
         label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
+        html: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
       };
 
       const update = {
