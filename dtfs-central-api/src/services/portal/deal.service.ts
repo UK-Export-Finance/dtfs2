@@ -71,9 +71,6 @@ export class PortalDealService {
         label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
       };
 
-      // TODO, can revert this change now.
-      // await updateDeal({ dealId, dealUpdate: update, auditDetails });
-
       await PortalActivityRepo.addPortalActivity(dealId, newActivity, auditDetails);
     }
   }

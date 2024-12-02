@@ -68,7 +68,7 @@ describe('PortalDealService - addGefDealCancelledActivity', () => {
   });
 
   describe(`when dealType is not ${DEAL_TYPE.GEF}`, () => {
-    it(`does not call addPortalActivity when dealType is not ${DEAL_TYPE.GEF}`, async () => {
+    it(`should not call addPortalActivity when dealType is not ${DEAL_TYPE.GEF}`, async () => {
       // Arrange
       const mockDeal = deal;
       mockDeal.dealSnapshot.dealType = DEAL_TYPE.BSS_EWCS;
