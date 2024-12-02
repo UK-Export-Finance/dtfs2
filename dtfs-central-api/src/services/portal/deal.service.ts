@@ -8,11 +8,10 @@ export class PortalDealService {
   /**
    * Updates the deal status
    *
-   * @param updateStatus
-   * @param updateStatus.dealId - the deal Id to update
-   * @param updateStatus.newStatus - the status change to make
-   * @param updateStatus.auditDetails - the users audit details
-   * @param updateStatus.dealType - the deal type
+   * @param dealId - the deal Id to update
+   * @param newStatus - the status change to make
+   * @param auditDetails - the users audit details
+   * @param dealType - the deal type
    */
   public static async updateStatus({
     dealId,
@@ -45,12 +44,11 @@ export class PortalDealService {
   /**
    * Add a "deal cancelled" activity
    *
-   * @param addDealCancelledActivity
-   * @param addDealCancelledActivity.dealId - the deal Id to update
-   * @param addDealCancelledActivity.dealType - the deal type
-   * @param addDealCancelledActivity.portalActivities - previous/existing deal activities
-   * @param addDealCancelledActivity.author - the activity's author
-   * @param addDealCancelledActivity.auditDetails - the users audit details
+   * @param dealId - the deal Id to update
+   * @param dealType - the deal type
+   * @param portalActivities - previous/existing deal activities
+   * @param author - the activity's author
+   * @param auditDetails - the users audit details
    */
   public static async addDealCancelledActivity({
     dealId,
