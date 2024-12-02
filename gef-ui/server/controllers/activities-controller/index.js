@@ -11,7 +11,7 @@ const mapPortalActivities = (portalActivities) =>
       bylineText += ` ${author.lastName}`;
     }
 
-    const mapped = {
+    const mappedActivity = {
       label: {
         text: label,
       },
@@ -31,7 +31,7 @@ const mapPortalActivities = (portalActivities) =>
       checker,
     };
 
-    return mapped;
+    return mappedActivity;
   });
 
 const getPortalActivities = async (req, res) => {

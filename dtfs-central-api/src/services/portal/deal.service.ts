@@ -1,17 +1,19 @@
-import { Activity, AuditDetails, ActivityAuthor, DEAL_TYPE, DealStatus, DealType } from '@ukef/dtfs2-common';
+import { Activity, AuditDetails, ActivityAuthor, DEAL_TYPE, DealStatus, DealType, PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } from '@ukef/dtfs2-common';
+import { getUnixTime } from 'date-fns';
 import { ObjectId } from 'mongodb';
 import { updateBssEwcsDealStatus } from '../../v1/controllers/portal/deal/update-deal-status.controller';
 import { updateGefDealStatus } from '../../v1/controllers/portal/gef-deal/put-gef-deal.status.controller';
-import { addGefDealCancelledActivity } from '../../v1/controllers/portal/gef-deal/add-gef-deal-cancelled-activity';
+// import { addGefDealCancelledActivity } from '../../v1/controllers/portal/gef-deal/add-gef-deal-cancelled-activity';
+import { updateDeal } from '../../v1/controllers/portal/gef-deal/update-deal';
 
 export class PortalDealService {
   /**
    * Updates the deal status
-   *
-   * @param dealId - the deal Id to update
-   * @param newStatus - the status change to make
-   * @param auditDetails - the users audit details
-   * @param dealType - the deal type
+   * @param updateStatusParams
+   * @param updateStatusParams.dealId - the deal Id to update
+   * @param updateStatusParams.newStatus - the status change to make
+   * @param updateStatusParams.auditDetails - the users audit details
+   * @param updateStatusParams.dealType - the deal type
    */
   public static async updateStatus({
     dealId,
@@ -42,15 +44,15 @@ export class PortalDealService {
   }
 
   /**
-   * Add a "deal cancelled" activity
-   *
-   * @param dealId - the deal Id to update
-   * @param dealType - the deal type
-   * @param portalActivities - previous/existing deal activities
-   * @param author - the activity's author
-   * @param auditDetails - the users audit details
+   * Add a "GEF deal cancelled" activity
+   * @param addGefDealCancelledActivityParams
+   * @param addGefDealCancelledActivityParams.dealId - the deal Id to update
+   * @param addGefDealCancelledActivityParams.dealType - the deal type
+   * @param addGefDealCancelledActivityParams.portalActivities - previous/existing deal activities
+   * @param addGefDealCancelledActivityParams.author - the activity's author
+   * @param addGefDealCancelledActivityParams.auditDetails - the users audit details
    */
-  public static async addDealCancelledActivity({
+  public static async addGefDealCancelledActivity({
     dealId,
     dealType,
     portalActivities,
@@ -64,7 +66,21 @@ export class PortalDealService {
     auditDetails: AuditDetails;
   }): Promise<void> {
     if (dealType === DEAL_TYPE.GEF) {
-      await addGefDealCancelledActivity({ dealId, portalActivities, author, auditDetails });
+      const newActivity = {
+        type: PORTAL_ACTIVITY_TYPE.DEAL_CANCELLED,
+        timestamp: getUnixTime(new Date()),
+        author: {
+          _id: author._id,
+          firstName: 'UKEF',
+        },
+        label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
+      };
+
+      const update = {
+        portalActivities: [newActivity, ...portalActivities],
+      };
+
+      await updateDeal({ dealId, dealUpdate: update, auditDetails });
     }
   }
 }

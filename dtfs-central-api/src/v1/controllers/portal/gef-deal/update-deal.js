@@ -6,6 +6,7 @@ const { findOneDeal } = require('./get-gef-deal.controller');
 
 /**
  * Update a deal
+ * @param updateDeal
  * @param {string | ObjectId} updateDeal.dealId - the dealId
  * @param {object} updateDeal.dealUpdate - the deal update
  * @param {import('@ukef/dtfs2-common').AuditDetails} updateDeal.auditDetails - the users audit details

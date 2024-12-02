@@ -106,12 +106,19 @@ describe('mapPortalActivities', () => {
 
   describe('when author.lastName does not exist', () => {
     it('should return a mapped array for mojTimeline without lastName in byline.text`', () => {
-      const mockActivity = dealSubmissionActivity;
-      mockActivity[0].author.lastName = '';
+      const mockActivity = {
+        ...dealSubmissionActivity,
+        author: {
+          ...dealSubmissionActivity,
+          lastName: '',
+        },
+      };
 
-      const result = mapPortalActivities(mockActivity);
+      const mockActivities = [mockActivity];
 
-      const expected = mockActivity[0].author.firstName;
+      const result = mapPortalActivities(mockActivities);
+
+      const expected = mockActivity.author.firstName;
 
       expect(result[0].byline.text).toEqual(expected);
     });

@@ -7,7 +7,7 @@ import { Activity } from '../portal';
 type BaseDeal = AnyObject & {
   _id: ObjectId;
   submissionType: DealSubmissionType | null;
-  portalActivities: Array<Activity>;
+  portalActivities: Activity[];
 };
 
 export interface BssEwcsDeal extends BaseDeal {
