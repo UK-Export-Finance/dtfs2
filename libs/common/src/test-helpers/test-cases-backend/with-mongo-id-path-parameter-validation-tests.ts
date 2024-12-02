@@ -8,8 +8,7 @@ type WithMongoIdPathParameterValidationTestsParams = {
   pathParameters?: string[];
 };
 
-const VALID_SQL_ID = '1';
-const VALID_MONGO_OBJECT_ID = '5c0a7922c9d89830f4911426';
+const VALID_OBJECT_ID = '5c0a7922c9d89830f4911426';
 
 const extractParameters = (url: string): string[] =>
   url
@@ -22,19 +21,15 @@ const extractParameters = (url: string): string[] =>
  * @param params - The test parameters
  * @param params.baseUrl - The base url with format '/v1/path/:pathParamater'
  * @param params.makeRequest - The function to make the request with
- * @param params.pathParameters - All of the Mongo path parameters
+ * @param params.pathParameters - The path parameters to test
  */
 export const withMongoIdPathParameterValidationTests = ({ baseUrl, makeRequest, pathParameters }: WithMongoIdPathParameterValidationTestsParams): void => {
-  const allParameters = extractParameters(baseUrl);
-  const mongoParameters = pathParameters ?? allParameters;
+  const parameters = pathParameters ?? extractParameters(baseUrl);
 
-  const sqlParameters = allParameters.filter((parameter) => !pathParameters?.includes(parameter));
-  const baseUrlWithoutSqlParameters = sqlParameters.reduce((url, parameter) => url.replace(`:${parameter}`, VALID_SQL_ID), baseUrl);
+  describe.each(parameters)("when the ':%s' path parameter is not a valid mongo id", (parameter) => {
+    const baseUrlWithTestParamater = baseUrl.replace(`:${parameter}`, 'invalid-id');
 
-  describe.each(mongoParameters)("when the ':%s' path parameter is not a valid mongo id", (parameter) => {
-    const baseUrlWithTestParamater = baseUrlWithoutSqlParameters.replace(`:${parameter}`, 'invalid-id');
-
-    const testUrl = mongoParameters.reduce((url, validParameter) => url.replace(`:${validParameter}`, VALID_MONGO_OBJECT_ID), baseUrlWithTestParamater);
+    const testUrl = parameters.reduce((url, validParameter) => url.replace(`:${validParameter}`, VALID_OBJECT_ID), baseUrlWithTestParamater);
 
     it('returns a 400 (Bad request)', async () => {
       // Act
