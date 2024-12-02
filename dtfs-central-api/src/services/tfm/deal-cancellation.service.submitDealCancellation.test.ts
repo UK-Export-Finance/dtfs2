@@ -204,7 +204,7 @@ describe('DealCancellationService', () => {
           expect(updatePortalFacilitiesMock).toHaveBeenCalledWith(dealId, { facilityStage: FACILITY_STAGE.RISK_EXPIRED }, auditDetails);
         });
 
-        it('calls PortalDealService.addGefDealCancelledActivity with relevant params', async () => {
+        it('should call PortalDealService.addGefDealCancelledActivity with relevant params', async () => {
           // Act
           await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 
@@ -238,7 +238,7 @@ describe('DealCancellationService', () => {
           cancellation = { ...aDealCancellation(), effectiveFrom };
         });
 
-        it('calls scheduleDealCancellation with the correct params', async () => {
+        it('should call scheduleDealCancellation with the correct params', async () => {
           // Act
           await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 
