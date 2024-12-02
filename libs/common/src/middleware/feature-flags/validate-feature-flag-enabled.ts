@@ -7,12 +7,14 @@ import { FeatureFlag } from '../../helpers/is-feature-flag-enabled';
  * Creates a middleware function to check if the given feature flag is enabled
  *
  * This will send status `404` if the feature flag is disabled and call `next` otherwise
- */
+ *
+ * @param featureFlagName - the feature flag
+ * @param isFeatureFlagEnabled - function to check if the feature flag is enabled */
 const generateBackendFeatureFlagMiddleware =
   (featureFlagName: FeatureFlag, isFeatureFlagEnabled: () => boolean): RequestHandler =>
   (req, res, next) => {
     if (!isFeatureFlagEnabled()) {
-      console.info(`Feature flag ${featureFlagName} disabled, accessing ${req.originalUrl}`);
+      console.info(`Feature flag ${featureFlagName} disabled whilst accessing ${req.originalUrl}`);
       return res.sendStatus(HttpStatusCode.NotFound);
     }
 
@@ -23,12 +25,15 @@ const generateBackendFeatureFlagMiddleware =
  * Creates a middleware function to check if the given feature flag is enabled
  *
  * This will redirect to `/not-found` if the feature flag is disabled and call `next` otherwise
+ *
+ * @param featureFlagName - the feature flag
+ * @param isFeatureFlagEnabled - function to check if the feature flag is enabled
  */
 export const generateFrontendFeatureFlagMiddleware =
   (featureFlagName: FeatureFlag, isFeatureFlagEnabled: () => boolean): RequestHandler =>
   (req, res, next) => {
     if (!isFeatureFlagEnabled()) {
-      console.info(`Feature flag ${featureFlagName} disabled, accessing ${req.originalUrl}`);
+      console.info(`Feature flag ${featureFlagName} disabled whilst accessing ${req.originalUrl}`);
       return res.redirect('/not-found');
     }
 
