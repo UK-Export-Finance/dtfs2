@@ -4,6 +4,6 @@ import { generateFrontendFeatureFlagMiddleware, isPortalFacilityAmendmentsFeatur
 /**
  * Middleware to check if the portal facility amendments feature flag is enabled
  */
-export const validatePortalFacilityAmendmentsEnabled: RequestHandler = generateFrontendFeatureFlagMiddleware(() =>
+export const validatePortalFacilityAmendmentsEnabled: RequestHandler = generateFrontendFeatureFlagMiddleware('FF_PORTAL_FACILITY_AMENDMENTS_ENABLED', () =>
   isPortalFacilityAmendmentsFeatureFlagEnabled(),
 );

@@ -4,4 +4,6 @@ import { generateFrontendFeatureFlagMiddleware, isTfmDealCancellationFeatureFlag
 /**
  * Middleware to check if the deal cancellation feature flag is enabled
  */
-export const validateDealCancellationEnabled: RequestHandler = generateFrontendFeatureFlagMiddleware(() => isTfmDealCancellationFeatureFlagEnabled());
+export const validateDealCancellationEnabled: RequestHandler = generateFrontendFeatureFlagMiddleware('FF_TFM_DEAL_CANCELLATION_ENABLED', () =>
+  isTfmDealCancellationFeatureFlagEnabled(),
+);
