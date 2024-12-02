@@ -1,11 +1,19 @@
 import { ObjectId } from 'mongodb';
 import { DEAL_TYPE } from '../../constants';
 import { AnyObject } from '../any-object';
-import { DealSubmissionType } from '..';
+import { AuditDatabaseRecord, DealStatus, DealSubmissionType } from '..';
 
 type BaseDeal = AnyObject & {
   _id: ObjectId;
+  status: DealStatus;
   submissionType: DealSubmissionType | null;
+  updatedAt: number;
+  eligibility: AnyObject;
+  bankInternalRefName: string;
+  additionalRefName: string;
+  maker: AnyObject;
+  bank: AnyObject;
+  auditRecord: AuditDatabaseRecord;
 };
 
 export interface BssEwcsDeal extends BaseDeal {
@@ -13,13 +21,28 @@ export interface BssEwcsDeal extends BaseDeal {
   details: {
     ukefDealId: string;
   };
+  submissionDetails: AnyObject;
+  facilities: (ObjectId | string)[];
+  summary: AnyObject;
+  comments: string[];
+  editedBy: AnyObject[];
+  exporter: { companyName: string };
+  bondTransactions: AnyObject;
+  loanTransactions: AnyObject;
+  supportingInformation: AnyObject;
 }
 
 export interface GefDeal extends BaseDeal {
   dealType: typeof DEAL_TYPE.GEF;
   ukefDealId: string | null;
-  eligibility: AnyObject;
-  exporter: AnyObject;
+  exporter: {
+    isFinanceIncreasing: boolean;
+    companyName: string;
+  };
+  supportingInformation: {
+    status: string;
+  };
+  createdAt: number;
 }
 
 /**
