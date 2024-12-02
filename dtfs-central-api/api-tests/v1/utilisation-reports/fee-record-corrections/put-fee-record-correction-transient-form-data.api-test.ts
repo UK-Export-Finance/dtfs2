@@ -19,8 +19,10 @@ console.error = jest.fn();
 const BASE_URL = '/v1/utilisation-reports/:reportId/fee-records/:feeRecordId/correction-transient-form-data';
 
 describe(`PUT ${BASE_URL}`, () => {
-  const getUrl = (reportId: number | string, feeRecordId: number | string) =>
-    BASE_URL.replace(':reportId', reportId.toString()).replace(':feeRecordId', feeRecordId.toString());
+  const getUrl = (reportId: number | string, feeRecordId: number | string) => {
+    const replacedReportId = BASE_URL.replace(':reportId', reportId.toString());
+    return replacedReportId.replace(':feeRecordId', feeRecordId.toString());
+  };
 
   const reportId = 1;
   const feeRecordId = 2;
@@ -60,7 +62,7 @@ describe(`PUT ${BASE_URL}`, () => {
   const requiredPayloadKeys: (keyof PutFeeRecordCorrectionTransientFormDataPayload)[] = ['formData', 'user'];
   const requiredFormDataPayloadKeys: (keyof RecordCorrectionTransientFormData)[] = ['reasons', 'additionalInfo'];
 
-  it.each([requiredPayloadKeys])(`returns a '${HttpStatusCode.BadRequest}' when the '%s' field is missing`, async (payloadKey) => {
+  it.each([requiredPayloadKeys])(`should return '${HttpStatusCode.BadRequest}' when the '%s' field is missing`, async (payloadKey) => {
     // Arrange
     const requestBody = {
       ...aValidRequestBody(),
@@ -74,25 +76,28 @@ describe(`PUT ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
-  it.each(requiredFormDataPayloadKeys)(`returns a '${HttpStatusCode.BadRequest}' when the formData field is missing its '%s' field`, async (payloadKey) => {
-    // Arrange
-    const validRequestBody = aValidRequestBody();
-    const requestBody = {
-      ...validRequestBody,
-      formData: {
-        ...validRequestBody.formData,
-        [payloadKey]: undefined,
-      },
-    };
+  it.each(requiredFormDataPayloadKeys)(
+    `should return a '${HttpStatusCode.BadRequest}' when the formData field is missing its '%s' field`,
+    async (payloadKey) => {
+      // Arrange
+      const validRequestBody = aValidRequestBody();
+      const requestBody = {
+        ...validRequestBody,
+        formData: {
+          ...validRequestBody.formData,
+          [payloadKey]: undefined,
+        },
+      };
 
-    // Act
-    const response = await testApi.put(requestBody).to(getUrl(reportId, feeRecordId));
+      // Act
+      const response = await testApi.put(requestBody).to(getUrl(reportId, feeRecordId));
 
-    // Assert
-    expect(response.status).toEqual(HttpStatusCode.BadRequest);
-  });
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.BadRequest);
+    },
+  );
 
-  it(`returns '${HttpStatusCode.BadRequest}' when one of the formData 'reasons' items is not a RECORD_CORRECTION_REASON`, async () => {
+  it(`should return '${HttpStatusCode.BadRequest}' when one of the formData 'reasons' items is not a RECORD_CORRECTION_REASON`, async () => {
     // Arrange
     const validRequestBody = aValidRequestBody();
     const requestBody = {
@@ -110,7 +115,7 @@ describe(`PUT ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
-  it(`returns '${HttpStatusCode.BadRequest}' when the formData 'reasons' array is empty`, async () => {
+  it(`should return '${HttpStatusCode.BadRequest}' when the formData 'reasons' array is empty`, async () => {
     // Arrange
     const validRequestBody = aValidRequestBody();
     const requestBody = {
@@ -128,7 +133,7 @@ describe(`PUT ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
-  it(`returns '${HttpStatusCode.BadRequest}' when the formData 'additionalInfo' field is an empty string`, async () => {
+  it(`should return '${HttpStatusCode.BadRequest}' when the formData 'additionalInfo' field is an empty string`, async () => {
     // Arrange
     const validRequestBody = aValidRequestBody();
     const requestBody = {
@@ -146,7 +151,7 @@ describe(`PUT ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
-  it(`returns '${HttpStatusCode.BadRequest}' when the formData 'additionalInfo' field is a string with more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters`, async () => {
+  it(`should return '${HttpStatusCode.BadRequest}' when the formData 'additionalInfo' field is a string with more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters`, async () => {
     // Arrange
     const validRequestBody = aValidRequestBody();
     const requestBody = {
@@ -164,7 +169,7 @@ describe(`PUT ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
-  it(`returns '${HttpStatusCode.NotFound}' when no fee record with the supplied id can be found`, async () => {
+  it(`should return '${HttpStatusCode.NotFound}' when no fee record with the supplied id can be found`, async () => {
     // Arrange
     const requestBody = aValidRequestBody();
 
@@ -175,7 +180,7 @@ describe(`PUT ${BASE_URL}`, () => {
     expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
-  it(`returns '${HttpStatusCode.Ok}' if the request body is valid`, async () => {
+  it(`should return '${HttpStatusCode.Ok}' if the request body is valid`, async () => {
     // Arrange
     const requestBody = aValidRequestBody();
 
