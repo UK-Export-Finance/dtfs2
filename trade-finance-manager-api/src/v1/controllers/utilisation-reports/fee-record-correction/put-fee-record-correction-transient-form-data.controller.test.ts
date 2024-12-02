@@ -1,5 +1,6 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { MockResponse } from 'node-mocks-http';
 import { AxiosResponse, HttpStatusCode, AxiosError } from 'axios';
+import { Response } from 'express';
 import api from '../../../api';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import {
@@ -13,10 +14,6 @@ jest.mock('../../../api');
 
 describe('put-fee-record-correction-transient-form-data.controller', () => {
   describe('putFeeRecordCorrectionTransientFormData', () => {
-    afterEach(() => {
-      jest.resetAllMocks();
-    });
-
     const reportId = '1';
     const feeRecordId = '2';
     const formData = {};
@@ -31,25 +28,44 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
         },
       });
 
-    it(`should return a ${HttpStatusCode.Ok} status code if the api request is successful`, async () => {
-      // Arrange
-      const { req, res } = getHttpMocks();
+    let req: PutFeeRecordCorrectionTransientFormDataRequest;
+    let res: MockResponse<Response>;
 
+    beforeEach(() => {
+      ({ req, res } = getHttpMocks());
+    });
+
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
+
+    it(`should return a ${HttpStatusCode.Ok} status code if the api request is successful`, async () => {
       // Act
       await putFeeRecordCorrectionTransientFormData(req, res);
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
       expect(res._isEndCalled()).toEqual(true);
+    });
 
+    it('should call the update transient form data api endpoint once', async () => {
+      // Act
+      await putFeeRecordCorrectionTransientFormData(req, res);
+
+      // Assert
       expect(api.updateFeeRecordCorrectionTransientFormData).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call the update transient form data api endpoint with the correct parameters', async () => {
+      // Act
+      await putFeeRecordCorrectionTransientFormData(req, res);
+
+      // Assert
       expect(api.updateFeeRecordCorrectionTransientFormData).toHaveBeenCalledWith(reportId, feeRecordId, formData, user);
     });
 
     it(`should return a ${HttpStatusCode.InternalServerError} status code if an unknown error occurs`, async () => {
       // Arrange
-      const { req, res } = getHttpMocks();
-
       jest.mocked(api.updateFeeRecordCorrectionTransientFormData).mockRejectedValue(new Error('Some error'));
 
       // Act
@@ -58,13 +74,10 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
       expect(res._isEndCalled()).toEqual(true);
-      expect(api.updateFeeRecordCorrectionTransientFormData).toHaveBeenCalledTimes(1);
     });
 
     it('should return a specific error code if an axios error is thrown', async () => {
       // Arrange
-      const { req, res } = getHttpMocks();
-
       const errorStatus = HttpStatusCode.BadRequest;
       const axiosError = new AxiosError(undefined, undefined, undefined, undefined, { status: errorStatus } as AxiosResponse);
 
@@ -76,13 +89,10 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
       // Assert
       expect(res._getStatusCode()).toEqual(errorStatus);
       expect(res._isEndCalled()).toEqual(true);
-      expect(api.updateFeeRecordCorrectionTransientFormData).toHaveBeenCalledTimes(1);
     });
 
     it('should return an error message if an error occurs', async () => {
       // Arrange
-      const { req, res } = getHttpMocks();
-
       jest.mocked(api.updateFeeRecordCorrectionTransientFormData).mockRejectedValue(new Error('Some error'));
 
       // Act
@@ -91,7 +101,6 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
       // Assert
       expect(res._getData()).toEqual('Failed to put fee record correction transient form data');
       expect(res._isEndCalled()).toEqual(true);
-      expect(api.updateFeeRecordCorrectionTransientFormData).toHaveBeenCalledTimes(1);
     });
   });
 });

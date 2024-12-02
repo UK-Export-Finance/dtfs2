@@ -1,4 +1,4 @@
-import { MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, RecordCorrectionTransientFormData } from '@ukef/dtfs2-common';
+import { MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, RecordCorrectionTransientFormData, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import { CreateRecordCorrectionRequestFormValues, CreateRecordCorrectionRequestErrorsViewModel, ErrorSummaryViewModel } from '../../../../types/view-models';
 
 /** Represents validation response with either errors or validated form values */
@@ -13,11 +13,24 @@ type ValidationResponse =
     };
 
 /**
+ * Validates the reasons field for a record correction request.
+ * @param reasons - The record correction reasons to validate.
+ * @returns An error message if validation fails, undefined otherwise.
+ */
+export const getRecordCorrectionReasonsValidationError = (reasons?: RecordCorrectionReason[]): string | undefined => {
+  if (!reasons || reasons?.length === 0) {
+    return 'You must select a reason for the record correction request';
+  }
+
+  return undefined;
+};
+
+/**
  * Validates the additional information field for a record correction request.
  * @param additionalInfo - The additional information text to validate.
  * @returns An error message if validation fails, undefined otherwise.
  */
-export const getAdditionalInfoValidationError = (additionalInfo: string | undefined): string | undefined => {
+export const getAdditionalInfoValidationError = (additionalInfo?: string): string | undefined => {
   if (!additionalInfo) {
     return 'You must provide more information for the record correction request';
   }
@@ -40,7 +53,7 @@ export const getCreateRecordCorrectionRequestFormErrors = ({
 }: CreateRecordCorrectionRequestFormValues): CreateRecordCorrectionRequestErrorsViewModel => {
   const errorSummary: ErrorSummaryViewModel[] = [];
 
-  const reasonsErrorMessage = !reasons || reasons?.length === 0 ? 'You must select a reason for the record correction request' : undefined;
+  const reasonsErrorMessage = getRecordCorrectionReasonsValidationError(reasons);
   if (reasonsErrorMessage) {
     errorSummary.push({ text: reasonsErrorMessage, href: '#reasons' });
   }

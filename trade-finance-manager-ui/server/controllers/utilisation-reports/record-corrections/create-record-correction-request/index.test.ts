@@ -169,6 +169,8 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         const body = {};
         const { req, res } = getHttpMocks(body);
 
+        const { errors } = validateCreateRecordCorrectionRequestFormValues(body);
+
         // Act
         await postCreateRecordCorrectionRequest(req, res);
 
@@ -185,7 +187,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
             exporter: 'Sample Company Ltd',
           },
           formValues: { reasons: [] },
-          errors: validateCreateRecordCorrectionRequestFormValues(body),
+          errors,
           backLinkHref: getLinkToPremiumPaymentsTab(reportId, [456]),
         });
       });
