@@ -1,4 +1,4 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { MockResponse } from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
 import {
   FeeRecordCorrectionTransientFormDataEntity,
@@ -8,6 +8,7 @@ import {
   TestApiError,
 } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
+import { Response } from 'express';
 import { aTfmSessionUser } from '../../../../../../test-helpers';
 import { PutFeeRecordCorrectionTransientFormDataRequest, putFeeRecordCorrectionTransientFormData } from '.';
 import { PutFeeRecordCorrectionTransientFormDataPayload } from '../../../../routes/middleware/payload-validation';
@@ -41,26 +42,29 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
     const mockFeeRecordExists = jest.fn();
     const mockSave = jest.fn();
 
+    let req: PutFeeRecordCorrectionTransientFormDataRequest;
+    let res: MockResponse<Response>;
+
     beforeEach(() => {
       FeeRecordRepo.existsByIdAndReportId = mockFeeRecordExists;
       mockFeeRecordExists.mockReturnValue(true);
 
       FeeRecordCorrectionTransientFormDataRepo.save = mockSave;
       mockSave.mockResolvedValue(undefined);
+
+      req = httpMocks.createRequest<PutFeeRecordCorrectionTransientFormDataRequest>({
+        params: aValidRequestQuery(),
+        body: aValidRequestBody(),
+      });
+      res = httpMocks.createResponse();
     });
 
     afterEach(() => {
       jest.resetAllMocks();
     });
 
-    it(`responds with a '${HttpStatusCode.Ok}' if the transient form data is saved successfully`, async () => {
+    it(`should respond with a '${HttpStatusCode.Ok}' if the transient form data is saved successfully`, async () => {
       // Arrange
-      const req = httpMocks.createRequest<PutFeeRecordCorrectionTransientFormDataRequest>({
-        params: aValidRequestQuery(),
-        body: aValidRequestBody(),
-      });
-      const res = httpMocks.createResponse();
-
       const expectedTransientFormDataEntity = FeeRecordCorrectionTransientFormDataEntity.create({
         userId: tfmUserId,
         feeRecordId,
@@ -77,21 +81,28 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
 
-      expect(mockFeeRecordExists).toHaveBeenCalledTimes(1);
-      expect(mockFeeRecordExists).toHaveBeenCalledWith(feeRecordId, reportId);
-
       expect(mockSave).toHaveBeenCalledTimes(1);
       expect(mockSave).toHaveBeenCalledWith(expectedTransientFormDataEntity);
     });
 
-    it(`responds with a '${HttpStatusCode.NotFound}' if no fee record with the provided fee record id and report id is found`, async () => {
-      // Arrange
-      const req = httpMocks.createRequest<PutFeeRecordCorrectionTransientFormDataRequest>({
-        params: aValidRequestQuery(),
-        body: aValidRequestBody(),
-      });
-      const res = httpMocks.createResponse();
+    it('should call fee record exists once', async () => {
+      // Act
+      await putFeeRecordCorrectionTransientFormData(req, res);
 
+      // Assert
+      expect(mockFeeRecordExists).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call fee record exists with the correct parameters', async () => {
+      // Act
+      await putFeeRecordCorrectionTransientFormData(req, res);
+
+      // Assert
+      expect(mockFeeRecordExists).toHaveBeenCalledWith(feeRecordId, reportId);
+    });
+
+    it(`should respond with a '${HttpStatusCode.NotFound}' if no fee record with the provided fee record id and report id is found`, async () => {
+      // Arrange
       mockFeeRecordExists.mockReturnValue(false);
 
       // Act
@@ -100,20 +111,11 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
 
-      expect(mockFeeRecordExists).toHaveBeenCalledTimes(1);
-      expect(mockFeeRecordExists).toHaveBeenCalledWith(feeRecordId, reportId);
-
       expect(mockSave).not.toHaveBeenCalled();
     });
 
-    it("responds with the specific error status if updating the transient form data throws an 'ApiError'", async () => {
+    it("should respond with the specific error status if updating the transient form data throws an 'ApiError'", async () => {
       // Arrange
-      const req = httpMocks.createRequest<PutFeeRecordCorrectionTransientFormDataRequest>({
-        params: aValidRequestQuery(),
-        body: aValidRequestBody(),
-      });
-      const res = httpMocks.createResponse();
-
       const errorStatus = HttpStatusCode.NotFound;
       mockFeeRecordExists.mockRejectedValue(new TestApiError(errorStatus, undefined));
 
@@ -123,20 +125,11 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
       // Assert
       expect(res._getStatusCode()).toEqual(errorStatus);
 
-      expect(mockFeeRecordExists).toHaveBeenCalledTimes(1);
-      expect(mockFeeRecordExists).toHaveBeenCalledWith(feeRecordId, reportId);
-
       expect(mockSave).not.toHaveBeenCalled();
     });
 
-    it("responds with the specific error message if updating the transient form data throws an 'ApiError'", async () => {
+    it("should respond with the specific error message if updating the transient form data throws an 'ApiError'", async () => {
       // Arrange
-      const req = httpMocks.createRequest<PutFeeRecordCorrectionTransientFormDataRequest>({
-        params: aValidRequestQuery(),
-        body: aValidRequestBody(),
-      });
-      const res = httpMocks.createResponse();
-
       const errorMessage = 'Some error message';
       mockFeeRecordExists.mockRejectedValue(new TestApiError(undefined, errorMessage));
 
@@ -146,20 +139,11 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
       // Assert
       expect(res._getData()).toEqual(`Failed to put fee record correction transient form data: ${errorMessage}`);
 
-      expect(mockFeeRecordExists).toHaveBeenCalledTimes(1);
-      expect(mockFeeRecordExists).toHaveBeenCalledWith(feeRecordId, reportId);
-
       expect(mockSave).not.toHaveBeenCalled();
     });
 
-    it(`responds with a '${HttpStatusCode.InternalServerError}' if an unknown error occurs`, async () => {
+    it(`should respond with a '${HttpStatusCode.InternalServerError}' if an unknown error occurs`, async () => {
       // Arrange
-      const req = httpMocks.createRequest<PutFeeRecordCorrectionTransientFormDataRequest>({
-        params: aValidRequestQuery(),
-        body: aValidRequestBody(),
-      });
-      const res = httpMocks.createResponse();
-
       mockFeeRecordExists.mockRejectedValue(new Error('Some error'));
 
       // Act
@@ -168,20 +152,11 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
 
-      expect(mockFeeRecordExists).toHaveBeenCalledTimes(1);
-      expect(mockFeeRecordExists).toHaveBeenCalledWith(feeRecordId, reportId);
-
       expect(mockSave).not.toHaveBeenCalled();
     });
 
-    it('responds with a generic error message if an unknown error occurs', async () => {
+    it('should respond with a generic error message if an unknown error occurs', async () => {
       // Arrange
-      const req = httpMocks.createRequest<PutFeeRecordCorrectionTransientFormDataRequest>({
-        params: aValidRequestQuery(),
-        body: aValidRequestBody(),
-      });
-      const res = httpMocks.createResponse();
-
       mockFeeRecordExists.mockRejectedValue(new Error('Some error'));
 
       // Act
@@ -189,9 +164,6 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
 
       // Assert
       expect(res._getData()).toEqual(`Failed to put fee record correction transient form data`);
-
-      expect(mockFeeRecordExists).toHaveBeenCalledTimes(1);
-      expect(mockFeeRecordExists).toHaveBeenCalledWith(feeRecordId, reportId);
 
       expect(mockSave).not.toHaveBeenCalled();
     });

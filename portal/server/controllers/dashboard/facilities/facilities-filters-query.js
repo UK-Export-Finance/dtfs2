@@ -1,4 +1,7 @@
-const CONTENT_STRINGS = require('../../../content-strings');
+const { FACILITY_STAGE } = require('@ukef/dtfs2-common');
+const {
+  DASHBOARD_FILTERS: { BESPOKE_FILTER_VALUES, BESPOKE_FIELD_NAMES },
+} = require('../../../content-strings');
 const keywordQuery = require('./facilities-filters-keyword-query');
 
 const { isSuperUser } = require('../../../helpers');
@@ -40,38 +43,57 @@ const dashboardFacilitiesFiltersQuery = (filters, user) => {
       const fieldName = Object.keys(filterObj)[0];
       const filterValue = filterObj[fieldName];
 
-      const isKeywordField = fieldName === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD;
+      switch (fieldName) {
+        case BESPOKE_FIELD_NAMES.KEYWORD: {
+          const keywordValue = filterValue[0];
+          const keywordFilters = keywordQuery(keywordValue);
 
-      if (isKeywordField) {
-        const keywordValue = filterValue[0];
-        const keywordFilters = keywordQuery(keywordValue);
+          const keywordFilter = {
+            OR: keywordFilters,
+          };
 
-        const keywordFilter = {};
-        keywordFilter.OR = [];
-        keywordFilter.OR.push(...keywordFilters);
+          query.AND.push(keywordFilter);
+          break;
+        }
 
-        query.AND.push(keywordFilter);
-      }
+        case BESPOKE_FIELD_NAMES.STAGE: {
+          const fieldFilter = {
+            OR: [],
+          };
+          filterValue.forEach((value) => {
+            if (value === FACILITY_STAGE.RISK_EXPIRED) {
+              fieldFilter.OR.push({ facilityStage: FACILITY_STAGE.RISK_EXPIRED });
+            } else {
+              fieldFilter.OR.push({
+                hasBeenIssued: value === BESPOKE_FILTER_VALUES.FACILITIES.ISSUED,
+              });
+            }
+          });
 
-      if (!isKeywordField) {
-        const fieldFilter = {};
-        // or for field (eg dealType)
-        fieldFilter.OR = [];
-        filterValue.forEach((value) => {
-          // if created by you then adding user id as compared to or statement
-          if (value === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.CREATED_BY_YOU) {
-            // delete or filter as not needed for created by you
-            delete fieldFilter.OR;
-            // have to match deal.maker._id (joined table) as maker does not exist in facilities collection
-            fieldFilter['deal.maker._id'] = user._id;
-          } else {
-            fieldFilter.OR.push({
-              [fieldName]: value,
-            });
-          }
-        });
-        // adds OR to AND query
-        query.AND.push(fieldFilter);
+          query.AND.push(fieldFilter);
+          break;
+        }
+
+        default: {
+          const fieldFilter = {};
+          // or for field (eg dealType)
+          fieldFilter.OR = [];
+          filterValue.forEach((value) => {
+            // if created by you then adding user id as compared to or statement
+            if (value === BESPOKE_FILTER_VALUES.FACILITIES.CREATED_BY_YOU) {
+              // delete or filter as not needed for created by you
+              delete fieldFilter.OR;
+              // have to match deal.maker._id (joined table) as maker does not exist in facilities collection
+              fieldFilter['deal.maker._id'] = user._id;
+            } else {
+              fieldFilter.OR.push({
+                [fieldName]: value,
+              });
+            }
+          });
+          query.AND.push(fieldFilter);
+          break;
+        }
       }
     });
   }

@@ -16,8 +16,11 @@ export type PutFeeRecordCorrectionTransientFormDataRequest = CustomExpressReques
 }>;
 
 /**
- * Controller for the PUT fee record correction transient form data route
- * @param req - The request object
+ * Controller for the PUT fee record correction transient form data route.
+ * Validates the fee record exists, then creates a new fee record correction
+ * transient form data entity with the fee record id, user id and form data,
+ * and saves it.
+ * @param req - The {@link PutFeeRecordCorrectionTransientFormDataRequest} request object
  * @param res - The response object
  */
 export const putFeeRecordCorrectionTransientFormData = async (req: PutFeeRecordCorrectionTransientFormDataRequest, res: Response) => {

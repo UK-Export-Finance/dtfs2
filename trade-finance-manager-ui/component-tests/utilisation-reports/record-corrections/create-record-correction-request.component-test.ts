@@ -37,7 +37,7 @@ describe(page, () => {
     const wrapper = render(viewModel);
 
     // Assert
-    const feeRecordSummarySelector = '[data-cy="fee-record-summary-block-header"]';
+    const feeRecordSummarySelector = '[data-cy="fee-record-summary"]';
     wrapper.expectText(`${feeRecordSummarySelector} [data-cy="facility-id"]`).toRead(feeRecord.facilityId);
     wrapper.expectText(`${feeRecordSummarySelector} [data-cy="exporter"]`).toRead(feeRecord.exporter);
     wrapper.expectText(`${feeRecordSummarySelector} [data-cy="requested-by"]`).toRead('Jay Doe');

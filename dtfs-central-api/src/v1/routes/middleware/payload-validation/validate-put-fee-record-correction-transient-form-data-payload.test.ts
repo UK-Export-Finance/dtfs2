@@ -21,7 +21,7 @@ describe('validatePutFeeRecordCorrectionTransientFormDataPayload', () => {
     user: aTfmSessionUser(),
   });
 
-  it.each(requiredPayloadKeys)(`responds with a '${HttpStatusCode.BadRequest}' if the '%s' field is missing`, (payloadKey) => {
+  it.each(requiredPayloadKeys)(`should respond with a '${HttpStatusCode.BadRequest}' if the '%s' field is missing`, (payloadKey) => {
     // Arrange
     const { req, res } = getHttpMocks();
     const next = jest.fn();
@@ -42,7 +42,7 @@ describe('validatePutFeeRecordCorrectionTransientFormDataPayload', () => {
   });
 
   it.each(requiredFormDataPayloadKeys)(
-    `responds with a '${HttpStatusCode.BadRequest}' if the '%s' field is missing from the 'formData' object field`,
+    `should respond with a '${HttpStatusCode.BadRequest}' if the '%s' field is missing from the 'formData' object field`,
     (payloadKey) => {
       // Arrange
       const { req, res } = getHttpMocks();
@@ -69,7 +69,7 @@ describe('validatePutFeeRecordCorrectionTransientFormDataPayload', () => {
     },
   );
 
-  it(`responds with a '${HttpStatusCode.BadRequest}' if one of the formData 'reasons' items is not a RECORD_CORRECTION_REASON`, () => {
+  it(`should respond with a '${HttpStatusCode.BadRequest}' if one of the formData 'reasons' items is not a RECORD_CORRECTION_REASON`, () => {
     // Arrange
     const { req, res } = getHttpMocks();
     const next = jest.fn();
@@ -94,7 +94,7 @@ describe('validatePutFeeRecordCorrectionTransientFormDataPayload', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it(`responds with a '${HttpStatusCode.BadRequest}' if the formData 'reasons' array is empty`, () => {
+  it(`should respond with a '${HttpStatusCode.BadRequest}' if the formData 'reasons' array is empty`, () => {
     // Arrange
     const { req, res } = getHttpMocks();
     const next = jest.fn();
@@ -113,7 +113,7 @@ describe('validatePutFeeRecordCorrectionTransientFormDataPayload', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it(`responds with a '${HttpStatusCode.BadRequest}' if the formData 'additionalInfo' field is an empty string`, () => {
+  it(`should respond with a '${HttpStatusCode.BadRequest}' if the formData 'additionalInfo' field is an empty string`, () => {
     // Arrange
     const { req, res } = getHttpMocks();
     const next = jest.fn();
@@ -132,7 +132,7 @@ describe('validatePutFeeRecordCorrectionTransientFormDataPayload', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it(`responds with a '${HttpStatusCode.BadRequest}' if the formData 'additionalInfo' field is a string with more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters`, () => {
+  it(`should respond with a '${HttpStatusCode.BadRequest}' if the formData 'additionalInfo' field is a string with more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters`, () => {
     // Arrange
     const { req, res } = getHttpMocks();
     const next = jest.fn();
