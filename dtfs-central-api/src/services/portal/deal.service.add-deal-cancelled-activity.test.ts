@@ -26,7 +26,7 @@ describe('PortalDealService - addGefDealCancelledActivity', () => {
     jest.clearAllMocks();
   });
 
-  it(`when dealType is ${DEAL_TYPE.GEF}`, () => {
+  describe(`when dealType is ${DEAL_TYPE.GEF}`, () => {
     it('should call updateDeal', async () => {
       // Arrange
       const dealType = DEAL_TYPE.GEF;
