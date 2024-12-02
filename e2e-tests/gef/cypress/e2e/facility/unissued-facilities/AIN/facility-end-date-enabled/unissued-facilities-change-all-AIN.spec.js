@@ -3,7 +3,7 @@ import CONSTANTS from '../../../../../fixtures/constants';
 import {
   fourDaysAgo,
   threeDaysAgo,
-  threeMonthsMinusThreeDays,
+  threeDaysAgoPlusThreeMonths,
   threeMonthsOneDay,
   threeMonths,
   today,
@@ -100,7 +100,10 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.rows().contains(threeMonthsMinusThreeDays.dd_MMM_yyyy);
+
+      const deadlineForIssuing = threeDaysAgoPlusThreeMonths.dd_MMM_yyyy;
+      unissuedFacilityTable.rows().contains(deadlineForIssuing);
+
       statusBanner.applicationBanner().should('exist');
     });
 
