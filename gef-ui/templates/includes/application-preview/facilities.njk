@@ -2,6 +2,7 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "moj/components/banner/macro.njk" import mojBanner %}
 
 {% import '../../_macros/facility-guidance.njk' as facilityGuidance %}
 
@@ -19,6 +20,12 @@
   attributes: {
     'data-cy': 'facility-guidance'
   }
+}) }}
+
+{{ mojBanner({
+  type: 'information',
+  text: 'Check your records for the most up-to-date facility details.',
+  iconFallbackText: 'information'
 }) }}
 
 {% if facilities.data.length > 0 %}
