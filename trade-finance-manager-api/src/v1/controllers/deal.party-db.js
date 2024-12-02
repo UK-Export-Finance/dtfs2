@@ -30,6 +30,12 @@ const getCompany = async (req, res) => {
   }
 };
 
+/**
+ * Gets a PartyURN
+ * @param {string} companyRegNo The company registration number
+ * @param {string} companyName The company name
+ * @returns {Promise<string>} PartyURN or '' if there is an error
+ */
 const getPartyUrn = async ({ companyRegNo, companyName }) => {
   if (!companyRegNo) {
     return '';
