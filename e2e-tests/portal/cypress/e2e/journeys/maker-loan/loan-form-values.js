@@ -10,7 +10,7 @@ const GUARANTEE_DETAILS = {
   requestedCoverStartDateMonth: today.monthLong,
   requestedCoverStartDateYear: today.year,
   coverEndDateDay: oneMonth.dayLong,
-  coverEndDateMonth: oneMonth.month,
+  coverEndDateMonth: oneMonth.monthLong,
   coverEndDateYear: oneMonth.year,
 };
 
