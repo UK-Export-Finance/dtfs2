@@ -10,10 +10,11 @@ type BaseDeal = AnyObject & {
   updatedAt: number;
   eligibility: AnyObject;
   bankInternalRefName: string;
-  additionalRefName: string;
+  additionalRefName: string | null;
   maker: AnyObject;
   bank: AnyObject;
   auditRecord: AuditDatabaseRecord;
+  exporter: AnyObject;
 };
 
 export interface BssEwcsDeal extends BaseDeal {
@@ -26,7 +27,6 @@ export interface BssEwcsDeal extends BaseDeal {
   summary: AnyObject;
   comments: string[];
   editedBy: AnyObject[];
-  exporter: { companyName: string };
   bondTransactions: AnyObject;
   loanTransactions: AnyObject;
   supportingInformation: AnyObject;
@@ -35,10 +35,6 @@ export interface BssEwcsDeal extends BaseDeal {
 export interface GefDeal extends BaseDeal {
   dealType: typeof DEAL_TYPE.GEF;
   ukefDealId: string | null;
-  exporter: {
-    isFinanceIncreasing: boolean;
-    companyName: string;
-  };
   supportingInformation: {
     status: string;
   };

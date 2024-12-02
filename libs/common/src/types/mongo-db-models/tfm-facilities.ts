@@ -119,14 +119,14 @@ export type FacilityTfmObject = {
   feeRecord: number;
   ukefExposure: number;
   ukefExposureCalculationTimestamp: string;
-  expourePeriodInMonths: number;
+  exposurePeriodInMonths: number;
   facilityGuaranteeDates: {
     guaranteeCommencementDate: string;
     guaranteeExpiryDate: string;
     effectiveDate: string;
   };
   riskProfile: string;
-  premiumSchedule: Array<AnyObject>;
+  premiumSchedule?: Array<AnyObject>;
   facilityStage?: TfmFacilityStage;
 };
 
