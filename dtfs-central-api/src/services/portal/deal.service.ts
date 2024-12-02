@@ -1,4 +1,4 @@
-import { Activity, AuditDetails, ActivityAuthor, DEAL_TYPE, DealStatus, DealType, PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } from '@ukef/dtfs2-common';
+import { AuditDetails, ActivityAuthor, DEAL_TYPE, DealStatus, DealType, PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE, TfmDeal } from '@ukef/dtfs2-common';
 import { getUnixTime } from 'date-fns';
 import { ObjectId } from 'mongodb';
 import { updateBssEwcsDealStatus } from '../../v1/controllers/portal/deal/update-deal-status.controller';
@@ -45,26 +45,22 @@ export class PortalDealService {
   /**
    * Add a "GEF deal cancelled" activity
    * @param addGefDealCancelledActivityParams
-   * @param addGefDealCancelledActivityParams.dealId - the deal Id to update
-   * @param addGefDealCancelledActivityParams.dealType - the deal type
-   * @param addGefDealCancelledActivityParams.portalActivities - previous/existing deal activities
+   * @param addGefDealCancelledActivityParams.dealId - the deal
    * @param addGefDealCancelledActivityParams.author - the activity's author
    * @param addGefDealCancelledActivityParams.auditDetails - the users audit details
    */
   public static async addGefDealCancelledActivity({
-    dealId,
-    dealType,
-    portalActivities,
+    deal,
     author,
     auditDetails,
   }: {
-    dealId: ObjectId | string;
-    dealType: DealType;
-    portalActivities: Array<Activity>;
+    deal: TfmDeal;
     author: ActivityAuthor;
     auditDetails: AuditDetails;
   }): Promise<void> {
-    if (dealType === DEAL_TYPE.GEF) {
+    if (deal.dealSnapshot.dealType === DEAL_TYPE.GEF) {
+      const { _id: dealId, portalActivities } = deal.dealSnapshot;
+
       const newActivity = {
         type: PORTAL_ACTIVITY_TYPE.DEAL_CANCELLED,
         timestamp: getUnixTime(new Date()),

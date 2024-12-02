@@ -1,5 +1,6 @@
-import { Activity, AnyObject, Deal, DEAL_TYPE, PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } from '@ukef/dtfs2-common';
+import { Activity, AnyObject, Deal, DEAL_TYPE, GefDeal, PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE, TfmDeal } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { ObjectId } from 'mongodb';
 import { getUnixTime } from 'date-fns';
 import { PortalDealService } from './deal.service';
 
@@ -9,9 +10,22 @@ jest.mock('../../v1/controllers/portal/gef-deal/update-deal', () => ({
   updateDeal: (params: AnyObject) => updateDealMock(params),
 }));
 
-const dealId = 'dealId';
+const dealId = new ObjectId();
 
-const portalActivities: Array<Activity> = [];
+const portalActivities: Activity[] = [];
+
+const dealSnapshot = {
+  _id: dealId,
+  portalActivities,
+} as GefDeal;
+
+const deal = {
+  _id: dealId,
+  dealSnapshot,
+  tfm: {
+    cancellation: {},
+  },
+} as TfmDeal;
 
 const author = {
   firstName: 'First name',
@@ -29,10 +43,11 @@ describe('PortalDealService - addGefDealCancelledActivity', () => {
   describe(`when dealType is ${DEAL_TYPE.GEF}`, () => {
     it('should call updateDeal', async () => {
       // Arrange
-      const dealType = DEAL_TYPE.GEF;
+      const mockDeal = deal;
+      mockDeal.dealSnapshot.dealType = DEAL_TYPE.GEF;
 
       // Act
-      await PortalDealService.addGefDealCancelledActivity({ dealId, dealType, portalActivities, author, auditDetails });
+      await PortalDealService.addGefDealCancelledActivity({ deal: mockDeal, author, auditDetails });
 
       // Assert
       expect(updateDealMock).toHaveBeenCalledTimes(1);
@@ -62,10 +77,11 @@ describe('PortalDealService - addGefDealCancelledActivity', () => {
   describe(`when dealType is not ${DEAL_TYPE.GEF}`, () => {
     it(`does not call updateDeal when dealType is not ${DEAL_TYPE.GEF}`, async () => {
       // Arrange
-      const dealType = DEAL_TYPE.BSS_EWCS;
+      const mockDeal = deal;
+      mockDeal.dealSnapshot.dealType = DEAL_TYPE.BSS_EWCS;
 
       // Act
-      await PortalDealService.addGefDealCancelledActivity({ dealId, dealType, portalActivities, author, auditDetails });
+      await PortalDealService.addGefDealCancelledActivity({ deal: mockDeal, author, auditDetails });
 
       // Assert
       expect(updateDealMock).toHaveBeenCalledTimes(0);
