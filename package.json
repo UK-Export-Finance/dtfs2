@@ -33,7 +33,7 @@
     "lint:all": "npm run lint --workspaces --if-present",
     "lint:fix:all": "npm run lint --workspaces --if-present -- --fix",
     "load": "(cd utils && npm run load)",
-    "load:utilisation-reports": "(cd libs/common && npm run db:migrate && cd ../../utils && npm run load:sql)",
+    "load:utilisation": "(cd libs/common && npm run db:migrate && cd ../../utils && npm run load:sql)",
     "prepare": "husky",
     "prettier:all": "npm run prettier --workspaces --if-present",
     "prettier:fix:all": "npm run prettier:fix --workspaces --if-present",

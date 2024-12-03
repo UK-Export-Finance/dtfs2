@@ -58,7 +58,7 @@ This documentation provides a comprehensive overview of the UKEF Digital TradeFi
     - If your work does not involve utilisation reports:
       1. Create mock data by running `npm run load` from the root folder of the repository. This should generate mocks in your database (both Mongo and MSSQL). (for more details on what this does please see [utils docs](./utils/README.md)).
     - If your work involves utilisation reports (including utilisation report E2E tests):
-      1. Run the command `npm run load:utilisation-reports` from the root folder of the repository.
+      1. Run the command `npm run load:utilisation` from the root folder of the repository.
          - This runs `npm run db:migrate` in the `libs/common` directory which creates the SQL database tables. This is followed by `npm run load:sql` in the `utils` directory which inserts mock data for MongoDB and MSSQL. This is especially useful for utilisation report work and E2E tests
 
 Recommended: Install a MongoDB client such as Compass or Robo 3T and a MSSQL DB client such as Azure Data Studio.
