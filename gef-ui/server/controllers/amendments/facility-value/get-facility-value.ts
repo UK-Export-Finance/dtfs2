@@ -16,6 +16,9 @@ export const getFacilityValue = async (req: GetFacilityValueRequest, res: Respon
     const deal = await api.getApplication({ dealId, userToken });
 
     const viewModel: FacilityValueViewModel = {
+      dealId,
+      facilityId,
+      amendmentId,
       exporterName: deal.exporter.companyName,
       facilityValue: 0,
       previousPage: `/case/${dealId}/facility/${facilityId}/amendments/${amendmentId}/bank-review-date`,

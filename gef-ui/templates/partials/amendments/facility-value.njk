@@ -58,7 +58,10 @@
           prefix: {
             text: "£"
           },
-          spellcheck: false
+          spellcheck: false,
+          attributes: {
+            'data-cy': 'facility-value'
+          }
         }) }}
 
         <div class="govuk-button-group">
@@ -69,7 +72,7 @@
             }
           }) }}
 
-          <a href="{{ previousPage }}" data-cy="cancel-link" class="govuk-link">Cancel</a>
+          <a href= {{"/case/" + dealId + "/facilities/" + facilityId + "/amendment/" + amendmentId + "/cancel"}} data-cy="cancel-link" class="govuk-link">Cancel</a>
         </div>
       </form>
     </div>
