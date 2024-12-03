@@ -7,8 +7,14 @@ jest.mock('../currency');
 describe('validation - currency', () => {
   const errorList = {};
 
+  const mockValidFacility = {
+    currency: {
+      id: 'GBP',
+    },
+  };
+
   describe('when the facility has no currency object', () => {
-    it('should return validation error', () => {
+    it('should return a validation error', () => {
       const result = currencyRule({});
 
       const expected = {
@@ -23,7 +29,7 @@ describe('validation - currency', () => {
   });
 
   describe('when the facility has no currency.id property', () => {
-    it('should return validation error', () => {
+    it('should return a validation error', () => {
       const mockFacility = {
         currency: {},
       };
@@ -50,14 +56,8 @@ describe('validation - currency', () => {
       currencyIsDisabled.mockRestore();
     });
 
-    it('should return validation error', () => {
-      const mockFacility = {
-        currency: {
-          id: 'GBP',
-        },
-      };
-
-      const result = currencyRule(mockFacility);
+    it('should return a validation error', () => {
+      const result = currencyRule(mockValidFacility);
 
       const expected = {
         currency: {
@@ -67,6 +67,22 @@ describe('validation - currency', () => {
       };
 
       expect(result).toEqual(expected);
+    });
+  });
+
+  describe('when the facility has a currency.id property', () => {
+    beforeEach(() => {
+      jest.mocked(currencyIsDisabled).mockReturnValueOnce(false);
+    });
+
+    afterEach(() => {
+      currencyIsDisabled.mockRestore();
+    });
+
+    it('should return the provided validation errors', () => {
+      const result = currencyRule(mockValidFacility);
+
+      expect(result).toEqual(errorList);
     });
   });
 });
