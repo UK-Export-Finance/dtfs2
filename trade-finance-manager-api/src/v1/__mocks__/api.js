@@ -1,5 +1,4 @@
-import { isAutomaticSalesforceCustomerCreationFeatureFlagEnabled } from '@ukef/dtfs2-common'
-
+const { isAutomaticSalesforceCustomerCreationFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const { MOCK_FACILITIES } = require('./mock-facilities');
 const MOCK_BSS_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('./mock-currency-exchange-rate');

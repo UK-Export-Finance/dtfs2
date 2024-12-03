@@ -85,35 +85,3 @@ export const getOrCreateParty = async (
 
   return res.status(status).send(data);
 };
-
-export const createParty = async (req: CustomExpressRequest<{ reqBody: { companyName: string } }>, res: Response) => {
-  const { partyDbCompanyRegistrationNumber: companyReg } = req.params;
-  const { companyName } = req.body;
-
-  if (!isValidCompanyRegistrationNumber(companyReg)) {
-    console.error('Invalid company registration number provided %s', companyReg);
-    return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company registration number' });
-  }
-
-  if (!companyName) {
-    console.error('No company name provided');
-    return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company name' });
-  }
-  
-  const response: { status: number; data: unknown } = await axios({
-    method: 'post',
-    url: `${APIM_MDM_URL}customers`,
-    headers,
-    data: {
-      companyReg,
-      companyName,
-    },
-  }).catch((error: AxiosError) => {
-    console.error('Error calling Party DB API %o', error);
-    return { data: 'Error calling Party DB API', status: error?.response?.status || HttpStatusCode.InternalServerError };
-  });
-
-  const { status, data } = response;
-
-  return res.status(status).send(data);
-};
