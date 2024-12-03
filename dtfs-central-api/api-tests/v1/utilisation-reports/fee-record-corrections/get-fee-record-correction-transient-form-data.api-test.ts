@@ -9,8 +9,8 @@ import {
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { withSqlAndMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
-import { testApi } from '../../test-api';
-import { SqlDbHelper } from '../../sql-db-helper';
+import { testApi } from '../../../test-api';
+import { SqlDbHelper } from '../../../sql-db-helper';
 
 console.error = jest.fn();
 
