@@ -17,7 +17,7 @@ describe(component, () => {
     keyingSheet: [
       {
         status: 'TO_DO',
-        displayStatus: 'TO DO',
+        displayStatus: 'To do',
         facilityId: '12345678',
         feeRecordId: 12,
         exporter: 'Test exporter',

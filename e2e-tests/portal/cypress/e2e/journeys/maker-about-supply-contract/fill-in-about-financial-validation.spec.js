@@ -29,9 +29,13 @@ context('about-buyer', () => {
 
     // prove the errors are on the about-financial page
     contractAboutFinancial.visit(deal);
-    partials.errorSummaryLinks().should('have.length', 2);
+
+    partials.errorSummaryLinks().should('have.length', 4);
+
     contractAboutFinancial.expectError('Supply Contract value is required');
     contractAboutFinancial.expectError('Supply Contract currency is required');
+    contractAboutFinancial.expectError('Supply Contract conversion rate is required for non-GBP currencies');
+    contractAboutFinancial.expectError('Supply Contract conversion date is required for non-GBP currencies');
 
     // fill in value + pick currency=GBP to clear validation warnings
     cy.keyboardInput(contractAboutFinancial.supplyContractValue(), '123.45');

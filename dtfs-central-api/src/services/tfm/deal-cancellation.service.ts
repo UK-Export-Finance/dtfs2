@@ -83,7 +83,7 @@ export class DealCancellationService {
     const { cancelledDeal, riskExpiredFacilities } = await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation, activity, auditDetails });
 
     const {
-      dealSnapshot: { dealType, portalActivities },
+      dealSnapshot: { dealType },
     } = cancelledDeal;
 
     await PortalDealService.updateStatus({
@@ -95,7 +95,7 @@ export class DealCancellationService {
 
     await PortalFacilityRepo.updateManyByDealId(dealId, { facilityStage: FACILITY_STAGE.RISK_EXPIRED }, auditDetails);
 
-    await PortalDealService.addGefDealCancelledActivity({ dealId, dealType, portalActivities, author, auditDetails });
+    await PortalDealService.addGefDealCancelledActivity({ deal: cancelledDeal, author, auditDetails });
 
     return this.getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities });
   }
