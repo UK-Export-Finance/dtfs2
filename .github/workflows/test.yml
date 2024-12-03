@@ -154,6 +154,7 @@ env:
   FF_FEE_RECORD_CORRECTION_ENABLED: ${{ vars.FF_FEE_RECORD_CORRECTION_ENABLED }}
   FF_TFM_FACILITY_END_DATE_ENABLED: ${{ vars.FF_TFM_FACILITY_END_DATE_ENABLED }}
   FF_TFM_DEAL_CANCELLATION_ENABLED: ${{ vars.FF_TFM_DEAL_CANCELLATION_ENABLED }}
+  FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: ${{ vars.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED }}
   FF_TFM_SSO_ENABLED: ${{ vars.FF_TFM_SSO_ENABLED }}
   GEF_DEAL_VERSION: ${{ vars.GEF_DEAL_VERSION }}
   ENTRA_ID_CLIENT_ID: ${{ vars.ENTRA_ID_CLIENT_ID }}
@@ -383,6 +384,7 @@ jobs:
       FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
       FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
       FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
+      FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
       FF_TFM_SSO_ENABLED: 'true'
       GEF_DEAL_VERSION: 1
     environment:
@@ -861,6 +863,7 @@ jobs:
       FF_FEE_RECORD_CORRECTION_ENABLED: 'true'
       FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
       FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
+      FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
       GEF_DEAL_VERSION: 1
     environment:
       name: ${{ needs.setup.outputs.environment }}
@@ -873,10 +876,41 @@ jobs:
       matrix:
         spec:
           [
+            './portal/cypress/e2e/journeys/*.spec.js',
+            './portal/cypress/e2e/journeys/homepage/**/*.spec.js',
+            './portal/cypress/e2e/journeys/admin/**/*.spec.js',
+            './portal/cypress/e2e/journeys/checker/**/*.spec.js',
             './portal/cypress/e2e/journeys/dashboard/dashboard-deals/filter-by/*.spec.js',
             './portal/cypress/e2e/journeys/dashboard/dashboard-deals/filters/*.spec.js',
             './portal/cypress/e2e/journeys/dashboard/dashboard-deals/sort/*.spec.js',
             './portal/cypress/e2e/journeys/dashboard/dashboard-deals/deal-cancellation-enabled/*.spec.js',
+            './portal/cypress/e2e/journeys/dashboard/dashboard-facilities/filter-by/*.spec.js',
+            './portal/cypress/e2e/journeys/dashboard/dashboard-facilities/filters/*.spec.js',
+            './portal/cypress/e2e/journeys/dashboard/dashboard-facilities/sort/*.spec.js',
+            './portal/cypress/e2e/journeys/feedback/**/*.spec.js',
+            './portal/cypress/e2e/journeys/login/**/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/check-deal-details/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/clone-deal/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/dashboard/**/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/submit-a-deal-for-review/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/submit-a-deal-for-review-with-issued-and-unissued-facilities-and-resubmit-after-checker-returns/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/submit-issued-facilities-for-review/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/bank-details/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/eligibility/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/abandon-a-deal/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/before-you-start/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/bss-mandatory-criteria/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/edit-deal-name/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/proceed-to-review/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/select-scheme/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/xss/*.spec.js',
+            './portal/cypress/e2e/journeys/maker-about-supply-contract/**/*.spec.js',
+            './portal/cypress/e2e/journeys/maker-bond/**/*.spec.js',
+            './portal/cypress/e2e/journeys/maker-facilities/**/*.spec.js',
+            './portal/cypress/e2e/journeys/maker-loan/**/*.spec.js',
+            './portal/cypress/e2e/journeys/read-only/**/*.spec.js',
+            './portal/cypress/e2e/journeys/reports/**/*.spec.js',
+            './portal/cypress/e2e/journeys/payment-report-officer/**/*.spec.js',
             './gef/cypress/e2e/*.spec.js',
             './gef/cypress/e2e/application/**/*.spec.js',
             './gef/cypress/e2e/checker/**/*.spec.js',
@@ -923,7 +957,7 @@ jobs:
             './tfm/cypress/e2e/journeys/case-amendments/facility-end-date/feature-flag-enabled/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/in-progress/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/request-when-previously-submitted/*.spec.js',
-            './tfm/cypress/e2e/journeys/case-amendments/show-amendment-button/*.spec.js',
+            './tfm/cypress/e2e/journeys/case-amendments/show-amendment-button/**/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/tasks/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/underwriting-page-unassigned/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/user-flow/*.spec.js',

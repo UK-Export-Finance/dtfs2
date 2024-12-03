@@ -5,6 +5,7 @@ import {
   PaymentEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
   UtilisationReportEntityMockBuilder,
+  PaymentMatchingToleranceEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import pages from '../../../pages';
 import { PDC_TEAMS } from '../../../../fixtures/teams';
@@ -40,7 +41,12 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
       .build();
 
   before(() => {
-    cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
+    cy.task(NODE_TASKS.INSERT_PAYMENT_MATCHING_TOLERANCES_INTO_DB, [
+      PaymentMatchingToleranceEntityMockBuilder.forCurrency(CURRENCY.GBP).withThreshold(1).withIsActive(true).withId(1).build(),
+      PaymentMatchingToleranceEntityMockBuilder.forCurrency(CURRENCY.EUR).withThreshold(1).withIsActive(true).withId(2).build(),
+      PaymentMatchingToleranceEntityMockBuilder.forCurrency(CURRENCY.JPY).withThreshold(1).withIsActive(true).withId(3).build(),
+      PaymentMatchingToleranceEntityMockBuilder.forCurrency(CURRENCY.USD).withThreshold(1).withIsActive(true).withId(4).build(),
+    ]);
   });
 
   beforeEach(() => {
@@ -179,6 +185,37 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(payment.id).should('not.exist');
     cy.get('strong[data-cy="fee-record-status"]:contains("To do")').should('exist');
+  });
+
+  it(`allows the user to delete all payments from a fee record with reported payments below the tolerance and resets the status to '${FEE_RECORD_STATUS.TO_DO}'`, () => {
+    const report = aUtilisationReport();
+
+    const payment = aPaymentWithAmount(0.9);
+
+    // The amount here is chosen to be below the tolerance of 1
+    const feeRecord = aFeeRecordForReportWithAmountStatusAndPayments(report, 0.9, FEE_RECORD_STATUS.MATCH, [payment]);
+
+    const editPaymentUrl = `/utilisation-reports/${report.id}/edit-payment/${payment.id}`;
+
+    cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
+    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, getMatchingTfmFacilitiesForFeeRecords([feeRecord]));
+
+    cy.visit(`/utilisation-reports/${report.id}`);
+
+    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(payment.id);
+
+    cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
+
+    pages.utilisationReportEditPaymentPage.clickDeletePaymentButton();
+
+    cy.url().should('eq', relative(`${editPaymentUrl}/confirm-delete?redirectTab=premium-payments`));
+
+    pages.utilisationReportConfirmDeletePaymentPage.selectYesRadio();
+    pages.utilisationReportConfirmDeletePaymentPage.clickContinueButton();
+
+    pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(payment.id).should('not.exist');
+    cy.get('strong[data-cy="fee-record-status"]:contains("TO DO")').should('exist');
   });
 
   function* idGenerator() {
