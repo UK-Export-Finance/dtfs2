@@ -1048,6 +1048,25 @@ const addPaymentToFeeRecords = async (reportId, parsedAddPaymentFormValues, feeR
 };
 
 /**
+ * Create a record correction
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user
+ * @param {string} userToken - The user token
+ */
+const createFeeRecordCorrection = async (reportId, feeRecordId, user, userToken) => {
+  const response = await axios({
+    method: 'post',
+    url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/corrections`,
+    headers: generateHeaders(userToken),
+    data: {
+      user,
+    },
+  });
+  return response.data;
+};
+
+/**
  * Generates keying data for the utilisation report
  * with the supplied id
  * @param {string} reportId - The report id
@@ -1408,6 +1427,7 @@ module.exports = {
   getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups,
   getReportSummariesByBankAndYear,
   addPaymentToFeeRecords,
+  createFeeRecordCorrection,
   generateKeyingData,
   markKeyingDataAsDone,
   markKeyingDataAsToDo,

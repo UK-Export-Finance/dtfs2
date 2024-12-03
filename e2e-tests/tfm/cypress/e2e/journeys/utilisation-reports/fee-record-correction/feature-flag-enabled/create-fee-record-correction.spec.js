@@ -73,7 +73,7 @@ context('When fee record correction feature flag is enabled', () => {
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}`));
 
       //---------------------------------------------------------------
-      // Check the "Create record correction request" page
+      // "Create record correction request" page
       //---------------------------------------------------------------
       cy.assertText(mainHeading(), 'Record correction request');
 
@@ -88,7 +88,17 @@ context('When fee record correction feature flag is enabled', () => {
 
       cy.clickContinueButton();
 
+      //---------------------------------------------------------------
+      // "Check the information" page
+      //---------------------------------------------------------------
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}/check-the-information`));
+
+      cy.clickContinueButton();
+
+      //---------------------------------------------------------------
+      // "Request sent" page
+      //---------------------------------------------------------------
+      cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}/request-sent`));
     });
 
     context('when user clicks back on the create record correction request screen', () => {

@@ -212,4 +212,9 @@ authRouter
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), handleExpressValidatorResult)
   .put(utilisationReportsController.putFeeRecordCorrectionTransientFormData);
 
+authRouter
+  .route('/utilisation-reports/:reportId/fee-records/:feeRecordId/corrections')
+  .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), handleExpressValidatorResult)
+  .post(utilisationReportsController.postFeeRecordCorrection);
+
 module.exports = { authRouter, openRouter };
