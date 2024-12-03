@@ -5,6 +5,7 @@ export type FacilityValueViewModel = {
   facilityId: string;
   amendmentId: string;
   facilityValue: number | undefined;
+  currencySymbol: string;
   exporterName: string;
   previousPage: string;
   errors?: ViewModelErrors | null;
