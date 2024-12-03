@@ -1374,8 +1374,7 @@ const getFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, us
   try {
     const userId = user._id;
 
-    const { data } = await axios.get({
-      url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-transient-form-data/${userId}`,
+    const { data } = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-transient-form-data/${userId}`, {
       headers: generateHeaders(userToken),
     });
 
