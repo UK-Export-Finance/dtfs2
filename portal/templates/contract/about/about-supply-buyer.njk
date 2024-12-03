@@ -31,7 +31,7 @@
   <form method="POST" autocomplete="off">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
-    <div class="govuk-form-group govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
+    <div class="govuk-form-group govuk-character-count" data-module="govuk-character-count" data-maxlength="150" id="buyer-name-div">
       {{ govukInput({
         label: {
           html: 'Buyer name <span id="buyerName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">You can enter up to 150 characters</span>'
