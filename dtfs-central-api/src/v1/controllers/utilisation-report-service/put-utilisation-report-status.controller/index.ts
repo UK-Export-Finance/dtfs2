@@ -1,9 +1,8 @@
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, RECONCILIATION_COMPLETED, REQUEST_PLATFORM_TYPE, ReportWithStatus } from '@ukef/dtfs2-common';
+import { DbRequestSource, RECONCILIATION_COMPLETED, REQUEST_PLATFORM_TYPE, ReportWithStatus, TfmSessionUser } from '@ukef/dtfs2-common';
 import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
-import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { ApiError, InvalidPayloadError } from '../../../../errors';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
