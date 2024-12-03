@@ -31,6 +31,7 @@ const originalProcessEnv = { ...process.env };
 describe('scheduler/jobs/create-utilisation-reports', () => {
   afterEach(() => {
     process.env = originalProcessEnv;
+    jest.resetAllMocks();
   });
 
   let sendEmailSpy = jest.fn();
@@ -85,6 +86,7 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
       jest.resetAllMocks();
       jest.mocked(getCurrentReportPeriodForBankSchedule).mockReturnValue(mockReportPeriod);
       sendEmailSpy = jest.fn(() => Promise.resolve({}));
+      jest.mocked(getAllBanks).mockResolvedValue(banks);
       externalApi.sendEmail = sendEmailSpy;
     });
 
@@ -133,8 +135,6 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
 
     it('tries to create utilisation reports for all banks when reports for all banks in the current period do not exist', async () => {
       // Arrange
-      jest.mocked(getAllBanks).mockResolvedValue(banks);
-
       findOneByBankIdAndReportPeriodSpy.mockResolvedValue(null);
 
       // Act
@@ -159,8 +159,6 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
 
     it('only tries to create reports for banks which do not have a report for the current report period', async () => {
       // Arrange
-      jest.mocked(getAllBanks).mockResolvedValue(banks);
-
       const bankWithoutReport = banks[0];
 
       const existingReport = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED).build();
@@ -201,7 +199,7 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
 
     it('should send an email when UtilisationReportRepo.save fails', async () => {
       // Arrange
-      UtilisationReportRepo.save = jest.fn().mockImplementationOnce(() => Promise.reject());
+      saveUtilisationReportSpy.mockRejectedValueOnce(new Error('Test error'));
 
       // Act
       await createUtilisationReportForBanksJob.task(new Date());
