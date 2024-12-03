@@ -45,14 +45,16 @@ export class DealCancellationService {
       throw new InvalidAuditDetailsError(`Supplied auditDetails 'id' ${auditDetails.id.toString()} does not correspond to a valid user`);
     }
 
+    const author = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      _id: user._id.toString(),
+    };
+
     const activity: TfmActivity = {
       type: ACTIVITY_TYPES.CANCELLATION,
       timestamp: getUnixTime(new Date()),
-      author: {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        _id: user._id.toString(),
-      },
+      author,
       ...cancellation,
     };
 
@@ -92,6 +94,8 @@ export class DealCancellationService {
     });
 
     await PortalFacilityRepo.updateManyByDealId(dealId, { facilityStage: FACILITY_STAGE.RISK_EXPIRED }, auditDetails);
+
+    await PortalDealService.addGefDealCancelledActivity({ deal: cancelledDeal, author, auditDetails });
 
     return this.getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities });
   }

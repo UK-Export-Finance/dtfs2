@@ -2,17 +2,14 @@
 
 {% macro render(message) %}
 
-  <div class="govuk-!-padding-top-7">
-
-    {{ mojBanner({
-      type: 'success',
-      text: message,
-      iconFallbackText: 'Success',
-      attributes: {
-        'data-cy': 'success-banner'
-      }
-    }) }}
-
-  <div />
+  {{ mojBanner({
+    type: 'success',
+    classes: 'govuk-!-padding-top-7',
+    text: message,
+    iconFallbackText: 'Success',
+    attributes: {
+      'data-cy': 'success-banner'
+    }
+  }) }}
 
 {% endmacro %}

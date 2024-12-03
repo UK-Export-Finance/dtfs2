@@ -179,7 +179,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
             dataSortValue: 0,
           },
           status: FEE_RECORD_STATUS.MATCH,
-          displayStatus: 'MATCH',
+          displayStatus: 'Match',
           isSelectable: false,
           checkboxId: 'feeRecordIds-1-reportedPaymentsCurrency-GBP-status-MATCH',
           isChecked: false,

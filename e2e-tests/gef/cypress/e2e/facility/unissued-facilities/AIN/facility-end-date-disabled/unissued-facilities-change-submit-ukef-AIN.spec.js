@@ -1,3 +1,4 @@
+import { PORTAL_ACTIVITY_LABEL } from '@ukef/dtfs2-common';
 import relative from '../../../../relativeURL';
 import CONSTANTS from '../../../../../fixtures/constants';
 import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mocks/mock-deals';
@@ -510,9 +511,9 @@ context('Submit to UKEF with unissued to issued facilities - feature flag disabl
     it('should not contain already issued facility or submission message', () => {
       applicationActivities.subNavigationBarActivities().click();
 
-      applicationActivities.activityTimeline().should('not.contain', CONSTANTS.PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION);
-      applicationActivities.activityTimeline().should('not.contain', CONSTANTS.PORTAL_ACTIVITY_LABEL.MIA_SUBMISSION);
-      applicationActivities.activityTimeline().should('not.contain', CONSTANTS.PORTAL_ACTIVITY_LABEL.AIN_SUBMISSION);
+      applicationActivities.activityTimeline().should('not.contain', PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION);
+      applicationActivities.activityTimeline().should('not.contain', PORTAL_ACTIVITY_LABEL.MIA_SUBMISSION);
+      applicationActivities.activityTimeline().should('not.contain', PORTAL_ACTIVITY_LABEL.AIN_SUBMISSION);
 
       // already issued facility should not appear in the activity list
       applicationActivities.facilityActivityChangedBy(issuedCashFacility.ukefFacilityId).should('not.exist');

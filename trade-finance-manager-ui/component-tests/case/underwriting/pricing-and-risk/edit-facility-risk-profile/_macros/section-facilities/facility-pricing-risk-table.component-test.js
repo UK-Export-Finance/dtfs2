@@ -123,14 +123,21 @@ describe(component, () => {
       wrapper.expectText(`[data-cy="facility-${params.facility._id}-risk-profile-value"]`).toRead(paramsWithRiskProfile.facility.tfm.riskProfile);
     });
 
-    it('should NOT render change link', () => {
-      wrapper = render(params);
+    describe('when params.userCanEdit is false', () => {
+      it('should NOT render `change` link', () => {
+        params = {
+          ...params,
+          userCanEdit: false,
+        };
 
-      wrapper.expectElement(`[data-cy="facility-${params.facility._id}-change-risk-profile-link"]`).notToExist();
+        wrapper = render(params);
+
+        wrapper.expectElement(`[data-cy="facility-${params.facility._id}-change-risk-profile-link"]`).notToExist();
+      });
     });
 
-    describe('with params.userCanEdit', () => {
-      it('should render change link', () => {
+    describe('when params.userCanEdit is true', () => {
+      it('should render `change` link', () => {
         params = {
           ...params,
           userCanEdit: true,
@@ -140,7 +147,9 @@ describe(component, () => {
 
         const expectedLink = `/case/${params.caseId}/underwriting/pricing-and-risk/facility/${params.facility._id}/risk-profile`;
 
-        wrapper.expectLink(`[data-cy="facility-${params.facility._id}-change-risk-profile-link"]`).toLinkTo(expectedLink, 'Change risk profile');
+        const expectedText = `Change ${params.facility.facilitySnapshot.type} ${params.facility.facilitySnapshot.ukefFacilityId} risk profile`;
+
+        wrapper.expectLink(`[data-cy="facility-${params.facility._id}-change-risk-profile-link"]`).toLinkTo(expectedLink, expectedText);
       });
     });
   });
