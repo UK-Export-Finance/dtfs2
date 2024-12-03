@@ -12,7 +12,7 @@ describe('validatePostFeeRecordCorrectionPayload', () => {
     user: aTfmSessionUser(),
   });
 
-  it(`responds with a '${HttpStatusCode.BadRequest}' if the user field is missing`, () => {
+  it(`should respond with a '${HttpStatusCode.BadRequest}' if the user field is missing`, () => {
     // Arrange
     const { req, res } = getHttpMocks();
     const next = jest.fn();
@@ -32,7 +32,7 @@ describe('validatePostFeeRecordCorrectionPayload', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it(`responds with a '${HttpStatusCode.BadRequest}' if the user field is invalid`, () => {
+  it(`should respond with a '${HttpStatusCode.BadRequest}' if the user field is invalid`, () => {
     // Arrange
     const { req, res } = getHttpMocks();
     const next = jest.fn();
@@ -52,7 +52,7 @@ describe('validatePostFeeRecordCorrectionPayload', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it("calls the 'next' function if the payload is valid", () => {
+  it("should call the 'next' function if the payload is valid", () => {
     // Arrange
     const { req, res } = getHttpMocks();
     const next = jest.fn();

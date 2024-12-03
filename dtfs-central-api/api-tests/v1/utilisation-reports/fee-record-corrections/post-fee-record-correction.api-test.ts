@@ -24,7 +24,7 @@ describe(`POST ${BASE_URL}`, () => {
   const reportId = 1;
   const otherReportId = 2;
   const feeRecordId = 11;
-  const nonExistantFeeRecordId = 12;
+  const nonExistentFeeRecordId = 12;
 
   const portalUser = aPortalUser();
   const portalUserId = portalUser._id.toString();
@@ -49,8 +49,6 @@ describe(`POST ${BASE_URL}`, () => {
     .withUserId(tfmUserId)
     .withFeeRecordId(feeRecordId)
     .build();
-  const transientFormDataForOtherUser = new FeeRecordCorrectionTransientFormDataEntityMockBuilder().withUserId('abc123').withFeeRecordId(feeRecordId).build();
-  const transientFormDataForOtherFeeRecord = new FeeRecordCorrectionTransientFormDataEntityMockBuilder().withUserId(tfmUserId).withFeeRecordId(888).build();
 
   const aValidRequestBody = () => ({
     user: {
@@ -127,7 +125,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId, nonExistantFeeRecordId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId, nonExistentFeeRecordId));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -159,6 +157,7 @@ describe(`POST ${BASE_URL}`, () => {
 
   it(`should respond with a ${HttpStatusCode.NotFound} when there is no saved form data for the requesting user`, async () => {
     // Arrange
+    const transientFormDataForOtherUser = new FeeRecordCorrectionTransientFormDataEntityMockBuilder().withUserId('abc123').withFeeRecordId(feeRecordId).build();
     await SqlDbHelper.saveNewEntry('FeeRecordCorrectionTransientFormData', transientFormDataForOtherUser);
 
     const requestBody = aValidRequestBody();
@@ -172,6 +171,7 @@ describe(`POST ${BASE_URL}`, () => {
 
   it(`should respond with a ${HttpStatusCode.NotFound} when there is no saved form data for the fee record`, async () => {
     // Arrange
+    const transientFormDataForOtherFeeRecord = new FeeRecordCorrectionTransientFormDataEntityMockBuilder().withUserId(tfmUserId).withFeeRecordId(888).build();
     await SqlDbHelper.saveNewEntry('FeeRecordCorrectionTransientFormData', transientFormDataForOtherFeeRecord);
 
     const requestBody = aValidRequestBody();

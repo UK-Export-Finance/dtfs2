@@ -6,7 +6,7 @@ import { FeeRecordCorrectionEntity } from './fee-record-correction.entity';
 
 describe('FeeRecordEntity', () => {
   describe('createRequestedCorrection', () => {
-    it('initiates object with passed in parameters and isCompleted set to false', () => {
+    it('should initialise object with passed in parameters and isCompleted set to false', () => {
       // Arrange
       const feeRecord = new FeeRecordEntityMockBuilder().build();
       const reasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER];

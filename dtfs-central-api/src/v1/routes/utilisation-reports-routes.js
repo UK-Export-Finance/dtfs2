@@ -868,6 +868,8 @@ utilisationReportsRouter
  *         description: OK
  *       400:
  *         description: Bad request
+ *       404:
+ *         description: Not found
  *       500:
  *         description: Internal Server Error
  */

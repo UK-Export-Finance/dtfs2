@@ -17,14 +17,18 @@ describe('handleFeeRecordCorrectionRequestedEvent', () => {
     save: mockSave,
   } as unknown as EntityManager;
 
+  const requestedByUser = {
+    id: 'aaa111',
+    firstName: 'Test',
+    lastName: 'User',
+  };
+
   const aCorrectionRequestedEventPayload = (): FeeRecordCorrectionRequestedEvent['payload'] => ({
     transactionEntityManager: mockEntityManager,
     reasons: [RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT],
     additionalInfo: 'info',
     requestedByUser: {
-      id: 'aaa111',
-      firstName: 'Test',
-      lastName: 'User',
+      ...requestedByUser,
     },
     requestSource: aDbRequestSource(),
   });
@@ -33,7 +37,7 @@ describe('handleFeeRecordCorrectionRequestedEvent', () => {
     jest.resetAllMocks();
   });
 
-  it('saves the updated fee record with the supplied entity manager', async () => {
+  it('should save the updated fee record with the supplied entity manager', async () => {
     // Arrange
     const feeRecord = new FeeRecordEntityMockBuilder().build();
 
@@ -47,7 +51,7 @@ describe('handleFeeRecordCorrectionRequestedEvent', () => {
     expect(mockSave).toHaveBeenCalledWith(FeeRecordEntity, feeRecord);
   });
 
-  it(`sets the fee record status ${FEE_RECORD_STATUS.PENDING_CORRECTION} `, async () => {
+  it(`should set the fee record status ${FEE_RECORD_STATUS.PENDING_CORRECTION} `, async () => {
     // Arrange
     const feeRecord = new FeeRecordEntityMockBuilder().withStatus(FEE_RECORD_STATUS.TO_DO).build();
 
@@ -58,7 +62,7 @@ describe('handleFeeRecordCorrectionRequestedEvent', () => {
     expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.PENDING_CORRECTION);
   });
 
-  it('updates the last updated by user fields using the db request source', async () => {
+  it('should update the last updated by user fields using the db request source', async () => {
     // Arrange
     const feeRecord = new FeeRecordEntityMockBuilder()
       .withLastUpdatedByIsSystemUser(true)
@@ -83,15 +87,9 @@ describe('handleFeeRecordCorrectionRequestedEvent', () => {
     expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
   });
 
-  it('creates new correction for the fee record', async () => {
+  it('should create new correction for the fee record', async () => {
     // Arrange
     const feeRecord = new FeeRecordEntityMockBuilder().build();
-
-    const requestedByUser = {
-      id: 'aaa111',
-      firstName: 'Test',
-      lastName: 'User',
-    };
     const requestSource: DbRequestSource = {
       userId: 'abc123',
       platform: REQUEST_PLATFORM_TYPE.TFM,

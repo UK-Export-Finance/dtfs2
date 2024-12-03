@@ -18,7 +18,13 @@ export type PostFeeRecordCorrectionRequest = CustomExpressRequest<{
 }>;
 
 /**
- * Controller for the POST add a payment route
+ * Controller for the POST fee record correction endpoint
+ *
+ * Creates a new fee record correction based on the saved transient form data
+ * for the requesting user and fee record.
+ *
+ * Updates the fee record status to PENDING_CORRECTION.
+ *
  * @param req - The request object
  * @param res - The response object
  */

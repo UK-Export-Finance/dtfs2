@@ -22,7 +22,7 @@ describe('post-fee-record-correction.controller', () => {
     const feeRecordId = 1;
 
     const mockFindByUserIdAndFeeRecordId = jest.fn();
-    const mockEntityManager = {} as unknown as EntityManager;
+    const mockEntityManager = {} as EntityManager;
     const mockHandleEvent = jest.fn();
     const mockForFeeRecordIdAndReportId = jest.fn();
 
@@ -94,7 +94,7 @@ describe('post-fee-record-correction.controller', () => {
       });
     });
 
-    it("responds with a '200' if the record correction request is successful", async () => {
+    it(`should respond with a '${HttpStatusCode.Ok}' if the record correction request is successful`, async () => {
       // Arrange
       const req = httpMocks.createRequest<PostFeeRecordCorrectionRequest>({
         params: { reportId, feeRecordId },
@@ -127,11 +127,12 @@ describe('post-fee-record-correction.controller', () => {
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
+
       const expectedNotFoundMessage = `Failed to find record correction form data for user id: ${userId} and fee record id: ${feeRecordId}`;
       expect(res._getData()).toEqual(`Failed to create record correction: ${expectedNotFoundMessage}`);
     });
 
-    it("responds with the specific error status if requesting the correction throws an 'ApiError'", async () => {
+    it("should respond with the specific error status if requesting the correction throws an 'ApiError'", async () => {
       // Arrange
       const req = httpMocks.createRequest<PostFeeRecordCorrectionRequest>({
         params: { reportId, feeRecordId },
@@ -151,7 +152,7 @@ describe('post-fee-record-correction.controller', () => {
       expect(res._getStatusCode()).toEqual(errorStatus);
     });
 
-    it("responds with the specific error message if requesting the correction throws an 'ApiError'", async () => {
+    it("should respond with the specific error message if requesting the correction throws an 'ApiError'", async () => {
       // Arrange
       const req = httpMocks.createRequest<PostFeeRecordCorrectionRequest>({
         params: { reportId, feeRecordId },
@@ -171,7 +172,7 @@ describe('post-fee-record-correction.controller', () => {
       expect(res._getData()).toEqual(`Failed to create record correction: ${errorMessage}`);
     });
 
-    it(`responds with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, async () => {
+    it(`should respond with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, async () => {
       // Arrange
       const req = httpMocks.createRequest<PostFeeRecordCorrectionRequest>({
         params: { reportId, feeRecordId },
@@ -190,7 +191,7 @@ describe('post-fee-record-correction.controller', () => {
       expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
     });
 
-    it('responds with a generic error message if an unknown error occurs', async () => {
+    it('should respond with a generic error message if an unknown error occurs', async () => {
       // Arrange
       const req = httpMocks.createRequest<PostFeeRecordCorrectionRequest>({
         params: { reportId, feeRecordId },
