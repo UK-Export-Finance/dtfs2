@@ -871,6 +871,8 @@ utilisationReportsRouter
  *               $ref: '#/definitions/FeeRecordCorrectionRequestReview'
  *       400:
  *         description: Bad request
+ *       404:
+ *         description: Not Found
  *       500:
  *         description: Internal Server Error
  */

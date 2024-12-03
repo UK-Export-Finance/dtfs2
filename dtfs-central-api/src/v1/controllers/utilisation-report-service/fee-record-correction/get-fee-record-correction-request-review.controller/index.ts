@@ -1,4 +1,4 @@
-import { ApiError, CustomExpressRequest, ReportPeriod, SessionBank } from '@ukef/dtfs2-common';
+import { ApiError, CustomExpressRequest, RecordCorrectionReason, ReportPeriod, SessionBank } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
 import { getBankById } from '../../../../../repositories/banks-repo';
@@ -23,7 +23,7 @@ export type GetFeeRecordCorrectionRequestReviewResponseBody = {
   correctionRequestDetails: {
     facilityId: string;
     exporter: string;
-    reasons: string[];
+    reasons: RecordCorrectionReason[];
     additionalInfo: string;
     contactEmailAddresses: string[];
   };

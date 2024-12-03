@@ -55,7 +55,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
       expect(api.getFeeRecordCorrectionRequestReview).toHaveBeenCalledWith(reportId, feeRecordId, user);
     });
 
-    it('should respond with a 200', async () => {
+    it(`should respond with a ${HttpStatusCode.Ok}`, async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 

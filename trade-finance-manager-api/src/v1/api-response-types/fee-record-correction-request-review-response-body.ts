@@ -1,4 +1,4 @@
-import { ReportPeriod, SessionBank } from '@ukef/dtfs2-common';
+import { RecordCorrectionReason, ReportPeriod, SessionBank } from '@ukef/dtfs2-common';
 
 export type FeeRecordCorrectionRequestReviewResponseBody = {
   bank: SessionBank;
@@ -6,7 +6,7 @@ export type FeeRecordCorrectionRequestReviewResponseBody = {
   correctionRequestDetails: {
     facilityId: string;
     exporter: string;
-    reasons: string[];
+    reasons: RecordCorrectionReason[];
     additionalInfo: string;
     contactEmailAddresses: string[];
   };

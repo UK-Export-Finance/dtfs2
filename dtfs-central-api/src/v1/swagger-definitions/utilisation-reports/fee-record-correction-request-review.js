@@ -24,7 +24,7 @@
  *           reasons:
  *             type: array
  *             items:
- *               type: string
+ *               $ref: '#/definitions/RecordCorrectionReason'
  *           additionalInfo:
  *             type: string
  *           contactEmailAddresses:
