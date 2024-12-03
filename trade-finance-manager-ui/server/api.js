@@ -423,8 +423,8 @@ const login = async (username, password) => {
 
 /**
  *
- * @param {import('@ukef/dtfs2-common').handleSsoRedirectFormRequest} handleSsoRedirectFormRequest
- * @returns {Promise<import('@ukef/dtfs2-common').handleSsoRedirectFormResponse>}
+ * @param {import('@ukef/dtfs2-common').HandleSsoRedirectFormRequest} handleSsoRedirectFormRequest
+ * @returns {Promise<import('@ukef/dtfs2-common').HandleSsoRedirectFormResponse>}
  */
 const handleSsoRedirectForm = async (handleSsoRedirectFormRequest) => {
   try {

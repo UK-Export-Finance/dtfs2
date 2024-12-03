@@ -4,6 +4,7 @@ import {
   GetAuthCodeUrlApiResponse,
   HandleSsoRedirectFormApiRequest,
   HandleSsoRedirectFormApiResponse,
+  HandleSsoRedirectFormResponse,
   InvalidPayloadError,
 } from '@ukef/dtfs2-common';
 import { ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA } from '@ukef/dtfs2-common/schemas';
@@ -60,7 +61,7 @@ export class SsoController {
 
       await this.userService.saveUserLoginInformation({ userId: user._id, sessionIdentifier, auditDetails });
 
-      const response = {
+      const response: HandleSsoRedirectFormResponse = {
         user,
         successRedirect,
         token,

@@ -1,12 +1,12 @@
-import { GetAuthCodeUrlParams, GetAuthCodeUrlResponse, handleSsoRedirectFormRequest } from '@ukef/dtfs2-common';
+import { GetAuthCodeUrlParams, GetAuthCodeUrlResponse, HandleSsoRedirectFormRequest } from '@ukef/dtfs2-common';
 import { PartiallyLoggedInUserSessionData } from '../types/express-session';
 import * as api from '../api';
 
-type handleSsoRedirectFormAndCreateTokenRequest = {
+type HandleSsoRedirectFormAndCreateTokenRequest = {
   session: PartiallyLoggedInUserSessionData;
-} & handleSsoRedirectFormRequest;
+} & HandleSsoRedirectFormRequest;
 
-type handleSsoRedirectFormAndCreateTokenResponse = {
+type HandleSsoRedirectFormAndCreateTokenResponse = {
   successRedirect: string;
 };
 
@@ -24,9 +24,10 @@ export class LoginService {
     // TODO as part of this ticket: uncomment the session parameter
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     session,
-  }: handleSsoRedirectFormAndCreateTokenRequest): Promise<handleSsoRedirectFormAndCreateTokenResponse> => {
+    auditDetails,
+  }: HandleSsoRedirectFormAndCreateTokenRequest): Promise<HandleSsoRedirectFormAndCreateTokenResponse> => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { user, userToken, successRedirect } = await api.handleSsoRedirectForm({ authCodeResponse, originalAuthCodeUrlRequest });
+    const { user, userToken, successRedirect } = await api.handleSsoRedirectForm({ authCodeResponse, originalAuthCodeUrlRequest, auditDetails });
 
     // TODO: This can be moved into a separate session service
     // delete session.loginData;

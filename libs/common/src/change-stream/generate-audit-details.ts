@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { AuditDetails, PortalAuditDetails, TfmAuditDetails } from '../types/audit-details';
 
-export const generateSystemAuditDetails = (): AuditDetails => ({
+export const generateSystemAuditDetails = (): AuditDetails<'system'> => ({
   userType: 'system',
 });
 
@@ -15,6 +15,6 @@ export const generateTfmAuditDetails = (id: string | ObjectId): TfmAuditDetails 
   id,
 });
 
-export const generateNoUserLoggedInAuditDetails = (): AuditDetails => ({
+export const generateNoUserLoggedInAuditDetails = (): AuditDetails<'none'> => ({
   userType: 'none',
 });

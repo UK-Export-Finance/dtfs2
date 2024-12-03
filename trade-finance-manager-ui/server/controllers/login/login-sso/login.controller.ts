@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { CustomExpressRequest, EntraIdAuthCodeRedirectResponseBody, InvalidPayloadError } from '@ukef/dtfs2-common';
+import { HandleSsoRedirectFormUiRequest, InvalidPayloadError } from '@ukef/dtfs2-common';
 import { isVerifiedPayload } from '@ukef/dtfs2-common/payload-verification';
 import { ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA } from '@ukef/dtfs2-common/schemas';
+import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { asPartiallyLoggedInUserSession } from '../../../helpers/express-session';
 import { LoginService } from '../../../services/login.service';
 
@@ -32,10 +33,11 @@ export class LoginController {
     }
   }
 
-  async handleSsoRedirectForm(req: CustomExpressRequest<{ reqBody: EntraIdAuthCodeRedirectResponseBody }>, res: Response, next: NextFunction) {
+  async handleSsoRedirectForm(req: HandleSsoRedirectFormUiRequest, res: Response, next: NextFunction) {
     try {
       const { body, session: partiallyLoggedInSession } = req;
       const session = asPartiallyLoggedInUserSession(partiallyLoggedInSession);
+      const auditDetails = generateSystemAuditDetails();
 
       if (!isVerifiedPayload({ payload: body, template: ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA })) {
         throw new InvalidPayloadError('Invalid payload from SSO redirect');
@@ -45,6 +47,7 @@ export class LoginController {
         authCodeResponse: body,
         originalAuthCodeUrlRequest: session.loginData.authCodeUrlRequest,
         session,
+        auditDetails,
       });
 
       return res.redirect(successRedirect ?? '/');
