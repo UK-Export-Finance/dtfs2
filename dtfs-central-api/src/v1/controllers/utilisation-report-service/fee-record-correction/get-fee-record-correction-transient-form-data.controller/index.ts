@@ -17,7 +17,10 @@ export type GetFeeRecordCorrectionTransientFormDataRequest = CustomExpressReques
 export type GetFeeRecordCorrectionTransientFormDataResponse = Response<RecordCorrectionTransientFormData | Record<string, never> | string>;
 
 /**
- * Controller for the GET fee record correction transient form data route
+ * Controller for the GET fee record correction transient form data route.
+ * Validates the fee record exists, then retrieves the fee record correction
+ * transient form data entity with the fee record id and user id.
+ * If form data doesn't exist, returns an empty object.
  * @param req - The request object
  * @param res - The response object
  */

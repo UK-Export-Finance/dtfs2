@@ -1694,10 +1694,9 @@ const getFeeRecord = async (reportId, feeRecordId) => {
  * @param {string} feeRecordId - The fee record id
  * @param {import('@ukef/dtfs2-common').RecordCorrectionTransientFormData} formData
  * @param {import('../types/tfm-session-user').TfmSessionUser} user - The current user stored in the session
- * @returns {Promise<{ status: number }>}
  */
 const updateFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, formData, user) => {
-  const response = await axios({
+  await axios({
     url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-transient-form-data`,
     method: 'put',
     headers: headers.central,
@@ -1706,7 +1705,6 @@ const updateFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId,
       user,
     },
   });
-  return response.data;
 };
 
 /**

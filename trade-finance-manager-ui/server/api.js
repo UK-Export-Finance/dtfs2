@@ -1374,13 +1374,12 @@ const getFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, us
   try {
     const userId = user._id;
 
-    const response = await axios({
-      method: 'get',
+    const { data } = await axios.get({
       url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-transient-form-data/${userId}`,
       headers: generateHeaders(userToken),
     });
 
-    return response.data;
+    return data;
   } catch (error) {
     console.error('Failed to get fee record correction transient form data', error);
     throw error;

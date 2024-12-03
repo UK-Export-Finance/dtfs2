@@ -5,7 +5,6 @@ import { ErrorResponse } from './types';
 type WithSqlIdPathParameterValidationTestsParams = {
   baseUrl: string;
   makeRequest: (url: string) => Promise<ErrorResponse>;
-  pathParameters?: string[];
 };
 
 const VALID_SQL_ID = '123';
