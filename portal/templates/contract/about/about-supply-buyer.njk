@@ -1,6 +1,5 @@
 {% extends "index.njk" %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
-{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
@@ -32,22 +31,22 @@
   <form method="POST" autocomplete="off">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
-    {{ govukCharacterCount({
-        name: "buyer-name",
-        id: "buyer-name",
-        value: deal.submissionDetails["buyer-name"],
-        maxlength: 150,
-        classes: "govuk-!-width-one-half",
+    <div class="govuk-form-group govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
+      {{ govukInput({
         label: {
           html: 'Buyer name <span id="buyerName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">You can enter up to 150 characters</span>'
         },
-        errorMessage: validationErrors and {
-          text: validationErrors.errorList["buyer-name"].text
-        },
+        classes: "govuk-!-width-one-half govuk-!-margin-bottom-1 govuk-js-character-count",
+        id: 'buyer-name',
+        name: 'buyer-name',
+        value: deal.submissionDetails["buyer-name"],
         attributes: {
-          "data-cy": "buyer-name"
-        }
+          "data-cy": "buyer-name",
+          "maxlength": "150"
+        },
+        errorMessage: validationErrors.errorList["buyer-name"]
       }) }}
+    </div>
 
     {{ address.fields(
       deal = deal,

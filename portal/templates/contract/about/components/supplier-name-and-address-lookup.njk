@@ -1,4 +1,4 @@
-{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 {% import './address-fields.njk' as address %}
 {% import './input-companies-house-reg-number.njk' as companiesHouse %}
 
@@ -14,22 +14,22 @@
     validationErrors: validationErrors
   }) }}
 
-  {{ govukCharacterCount({
-      name: "supplier-name",
-      id: "supplier-name",
-      value: deal.submissionDetails["supplier-name"],
-      maxlength: 150,
-      classes: "govuk-!-width-one-half",
+   <div class="govuk-form-group govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
+    {{ govukInput({
       label: {
         text: "Supplier name"
       },
-      errorMessage: validationErrors.errorList["supplier-name"] and {
-        text: validationErrors.errorList["supplier-name"].text
-      },
+      classes: "govuk-!-width-one-half govuk-!-margin-bottom-1 govuk-js-character-count",
+      id: "supplier-name",
+      name: "supplier-name",
+      value: deal.submissionDetails["supplier-name"],
       attributes: {
-        "data-cy": "supplier-name"
-      }
+        "data-cy": "supplier-name",
+        "maxlength": "150"
+      },
+      errorMessage: validationErrors.errorList["supplier-name"]
     }) }}
+  </div>
 
   {{ address.fields(
     deal = deal,

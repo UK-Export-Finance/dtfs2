@@ -1,5 +1,4 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 {% import './address-fields.njk' as address %}
 {% import './input-companies-house-reg-number.njk' as companiesHouse %}
 {% import './indemnifier-correspondence-address.njk' as indemnifierCorrespondenceAddress %}
@@ -54,24 +53,20 @@
       validationErrors: validationErrors
     }) }}
 
-    {# TODO - the component has "you have X characters remaining" at the bottom. Do we really need the hint as well? #}
-
-    {{ govukCharacterCount({
-      name: "indemnifier-name",
-      id: "indemnifier-name",
-      value: deal.submissionDetails["indemnifier-name"],
-      maxlength: 150,
-      classes: "govuk-!-width-one-half",
-      label: {
-        text: "Indemnifier name"
-      },
-      errorMessage: validationErrors["indemnifier-name"] and {
-        text: validationErrors.errorList["indemnifier-name"].text
-      },
-      attributes: {
-        "data-cy": "indemnifier-name"
-      }
-    }) }}
+    <div class="govuk-form-group govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
+      {{ govukInput({
+        label: { text: 'Indemnifier name' },
+        hint: { text: 'You can enter up to 150 characters'},
+        classes: "govuk-!-width-one-half govuk-!-margin-bottom-1 govuk-js-character-count",
+        id: 'indemnifier-name',
+        name: 'indemnifier-name',
+        value: deal.submissionDetails["indemnifier-name"],
+        attributes: {
+          "data-cy": "indemnifier-name"
+        },
+        errorMessage: validationErrors.errorList["indemnifier-name"]
+      }) }}
+    </div>
 
     {{ address.fields(
       deal = deal,
