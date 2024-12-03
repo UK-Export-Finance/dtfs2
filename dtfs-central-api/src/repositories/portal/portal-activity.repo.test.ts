@@ -42,7 +42,7 @@ describe('PortalActivityRepo', () => {
       jest.spyOn(mongoDbClient, 'getCollection').mockImplementation(getCollectionMock);
     });
 
-    it(`should call getCollection with ${MONGO_DB_COLLECTIONS.FACILITIES}`, async () => {
+    it(`should call getCollection with ${MONGO_DB_COLLECTIONS.DEALS}`, async () => {
       // Act
       await PortalActivityRepo.addPortalActivity(dealId, newActivity, auditDetails);
 
