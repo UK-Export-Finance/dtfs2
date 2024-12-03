@@ -54,10 +54,6 @@ export const lookup = async (req: Request, res: Response) => {
  */
 export const getOrCreateParty = async (req: CustomExpressRequest<{ reqBody: { companyRegNo: string; companyName: string } }>, res: Response) => {
   const { companyRegNo, companyName } = req.body;
-  console.log('asdfasdfasdf');
-  console.log(companyRegNo);
-  console.log(companyName);
-  console.log(req.body);
 
   if (!isValidCompanyRegistrationNumber(companyRegNo)) {
     console.error('Invalid company registration number provided %s', companyRegNo);
