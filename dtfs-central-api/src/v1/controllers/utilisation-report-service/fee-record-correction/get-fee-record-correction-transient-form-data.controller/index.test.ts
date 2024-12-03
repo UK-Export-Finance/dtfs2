@@ -34,10 +34,7 @@ describe('get-fee-record-correction-transient-form-data.controller', () => {
 
     beforeEach(() => {
       FeeRecordRepo.existsByIdAndReportId = mockFeeRecordExists;
-      mockFeeRecordExists.mockReturnValue(true);
-
       FeeRecordCorrectionTransientFormDataRepo.findByUserIdAndFeeRecordId = mockTransientFormDataFind;
-      mockTransientFormDataFind.mockResolvedValue(null);
 
       req = httpMocks.createRequest<GetFeeRecordCorrectionTransientFormDataRequest>({
         params: aValidRequestQuery(),
@@ -57,6 +54,7 @@ describe('get-fee-record-correction-transient-form-data.controller', () => {
       };
       const transientFormDataEntity = new FeeRecordCorrectionTransientFormDataEntityMockBuilder().withFormData(formData).build();
 
+      mockFeeRecordExists.mockReturnValue(true);
       mockTransientFormDataFind.mockResolvedValue(transientFormDataEntity);
 
       // Act
@@ -74,6 +72,7 @@ describe('get-fee-record-correction-transient-form-data.controller', () => {
 
     it(`should respond with a '${HttpStatusCode.Ok}' and an empty form data object if a fee record exists but a transient form data entity does not exist`, async () => {
       // Arrange
+      mockFeeRecordExists.mockReturnValue(true);
       mockTransientFormDataFind.mockResolvedValue(null);
 
       // Act
@@ -164,6 +163,9 @@ describe('get-fee-record-correction-transient-form-data.controller', () => {
     });
 
     it('should call fee record correction transient form data find once if a fee record exists', async () => {
+      // Arrange
+      mockFeeRecordExists.mockReturnValue(true);
+
       // Act
       await getFeeRecordCorrectionTransientFormData(req, res);
 
@@ -172,6 +174,9 @@ describe('get-fee-record-correction-transient-form-data.controller', () => {
     });
 
     it('should call fee record correction transient form data find with the correct parameters if a fee record exists', async () => {
+      // Arrange
+      mockFeeRecordExists.mockReturnValue(true);
+
       // Act
       await getFeeRecordCorrectionTransientFormData(req, res);
 

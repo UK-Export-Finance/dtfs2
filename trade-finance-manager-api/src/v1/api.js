@@ -1708,7 +1708,7 @@ const updateFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId,
 };
 
 /**
- * Gets the fee record by report id, fee record id and user id
+ * Gets the fee record correction transient form data by report id, fee record id, and user id
  * @param {string} reportId - The report id
  * @param {string} feeRecordId - The fee record id
  * @param {string} userId - The user id

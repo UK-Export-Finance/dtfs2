@@ -862,7 +862,7 @@ utilisationReportsRouter
  *             schema:
  *               oneOf:
  *                 - type: object
- *                   $ref: '#/definitions/FeeRecordCorrectionResponse'
+ *                   $ref: '#/definitions/FeeRecordCorrectionTransientFormDataResponse'
  *                 - type: object
  *                   properties: {}
  *       400:
