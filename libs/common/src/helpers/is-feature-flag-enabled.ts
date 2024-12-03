@@ -38,4 +38,4 @@ export const isPortalFacilityAmendmentsFeatureFlagEnabled = isFeatureFlagEnabled
 
 export const isTfmSsoFeatureFlagEnabled = isFeatureFlagEnabled('FF_TFM_SSO_ENABLED');
 
-export const isAutomaticSfCustomerCreationFeatureFlagEnabled = isFeatureFlagEnabled('AUTOMATIC_SF_CUSTOMER_CREATION_ENABLED');
+export const isAutomaticSalesforceCustomerCreationFeatureFlagEnabled = isFeatureFlagEnabled('AUTOMATIC_SALESFORCE_CUSTOMER_CREATION_ENABLED');

@@ -12,6 +12,7 @@ export {
   isTfmDealCancellationFeatureFlagEnabled,
   isTfmSsoFeatureFlagEnabled,
   isPortalFacilityAmendmentsFeatureFlagEnabled,
+  isAutomaticSalesforceCustomerCreationFeatureFlagEnabled,
 } from './is-feature-flag-enabled';
 export * from './gef-deal-versioning';
 export * from './monetary-value';

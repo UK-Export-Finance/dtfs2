@@ -5,8 +5,7 @@ const { hasValidUri } = require('./helpers/hasValidUri.helper');
 const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
 require('dotenv').config();
 
-const { DTFS_CENTRAL_API_URL, EXTERNAL_API_URL, DTFS_CENTRAL_API_KEY, EXTERNAL_API_KEY, AZURE_ACBS_FUNCTION_URL } =
-  process.env;
+const { DTFS_CENTRAL_API_URL, EXTERNAL_API_URL, DTFS_CENTRAL_API_KEY, EXTERNAL_API_KEY, AZURE_ACBS_FUNCTION_URL } = process.env;
 
 const headers = {
   central: {
@@ -817,16 +816,12 @@ const queryDeals = async ({ queryParams }) => {
 
 const getPartyDbInfo = async ({ companyRegNo }) => {
   try {
-    const creationEnabled = isAutomaticSalesforceCustomerCreationFeatureFlagEnabled();
     const response = await axios({
       method: 'get',
       url: `${EXTERNAL_API_URL}/party-db/${encodeURIComponent(companyRegNo)}`,
       headers: headers.external,
     });
-    if (creationEnabled) {
-      return { status: HttpStatusCode.Ok, data: response.data }
-    }
-    return response.data
+    return response.data;
   } catch (error) {
     console.error('Unable to get party DB info %o', error);
     return false;
@@ -847,7 +842,7 @@ const getOrCreatePartyDbInfo = async ({ companyRegNo, companyName }) => {
       headers: headers.external,
       data: {
         companyRegNo,
-        companyName
+        companyName,
       },
     });
     return response.data;
