@@ -57,7 +57,6 @@
     <div class="govuk-form-group govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
       {{ govukInput({
         label: { text: 'Indemnifier name' },
-        hint: { text: 'You can enter up to 150 characters'},
         classes: "govuk-!-width-one-half govuk-!-margin-bottom-1 govuk-js-character-count",
         id: 'indemnifier-name',
         name: 'indemnifier-name',
@@ -67,6 +66,10 @@
         },
         errorMessage: validationErrors.errorList["indemnifier-name"]
       }) }}
+
+      <span id="indemnifier-name-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+        You can enter up to 150 characters
+      </span>
     </div>
 
     {{ address.fields(
