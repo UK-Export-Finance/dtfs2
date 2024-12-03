@@ -84,7 +84,7 @@ context('Submit AIN deal and check portalActivities', () => {
     });
   });
 
-  describe('check portalActivity Page', () => {
+  describe('check "activity" Page', () => {
     beforeEach(() => {
       cy.saveSession();
       cy.login(BANK1_MAKER1);
