@@ -7,10 +7,10 @@ import {
   UtilisationReportEntityMockBuilder,
   TestApiError,
   RECONCILIATION_IN_PROGRESS,
+  TfmSessionUser,
 } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { PostRemoveFeesFromPaymentGroupRequest, postRemoveFeesFromPaymentGroup } from '.';
-import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { removeFeesFromPaymentGroup } from './helpers';
 import { PostRemoveFeesFromPaymentGroupPayload } from '../../../routes/middleware/payload-validation/validate-post-remove-fees-from-payment-group-payload';

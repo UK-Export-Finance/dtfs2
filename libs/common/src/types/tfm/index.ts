@@ -10,3 +10,4 @@ export * from './create-tfm-user-request';
 export * from './update-tfm-user-request';
 export * from './upsert-tfm-user-request';
 export * from './mapped-deal';
+export * from './tfm-session-user';

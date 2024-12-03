@@ -6,11 +6,11 @@ import {
   PaymentEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
   REQUEST_PLATFORM_TYPE,
+  TfmSessionUser,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { addFeesToAnExistingPaymentGroup } from './helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
-import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
