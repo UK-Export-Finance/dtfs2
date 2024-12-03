@@ -12,7 +12,7 @@ context('Dashboard facilities filters - Deal cancellation feature flag disabled'
   });
 
   describe('When deal cancellation is disabled on the dashboard facilities page', () => {
-    it('does not display the risk expired status filter', () => {
+    it('should not display the risk expired status filter', () => {
       dashboardFacilities.visit();
       filters.showHideButton().click();
 
