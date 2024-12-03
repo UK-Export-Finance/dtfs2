@@ -52,14 +52,15 @@ export const lookup = async (req: Request, res: Response) => {
  * const res = { status: () => res, send: () => {} };
  * await getOrCreateParty(req, res);
  */
-export const getOrCreateParty = async (
-  req: CustomExpressRequest<{ reqBody: { partyDbCompanyRegistrationNumber: string; companyName: string } }>,
-  res: Response,
-) => {
-  const { partyDbCompanyRegistrationNumber: companyReg, companyName } = req.body;
+export const getOrCreateParty = async (req: CustomExpressRequest<{ reqBody: { companyRegNo: string; companyName: string } }>, res: Response) => {
+  const { companyRegNo, companyName } = req.body;
+  console.log('asdfasdfasdf');
+  console.log(companyRegNo);
+  console.log(companyName);
+  console.log(req.body);
 
-  if (!isValidCompanyRegistrationNumber(companyReg)) {
-    console.error('Invalid company registration number provided %s', companyReg);
+  if (!isValidCompanyRegistrationNumber(companyRegNo)) {
+    console.error('Invalid company registration number provided %s', companyRegNo);
     return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company registration number' });
   }
 
@@ -73,7 +74,7 @@ export const getOrCreateParty = async (
     url: `${APIM_MDM_URL}customers`,
     headers,
     data: {
-      companyReg,
+      companyRegistrationNumber: companyRegNo,
       companyName,
     },
   }).catch((error: AxiosError) => {
