@@ -1,5 +1,4 @@
-import { TEAM_IDS } from '@ukef/dtfs2-common';
-import { TfmSessionUser } from '../../server/types/tfm-session-user';
+import { TEAM_IDS, TfmSessionUser } from '@ukef/dtfs2-common';
 
 export const aTfmSessionUser = (): TfmSessionUser => ({
   _id: '65954cc526d3899694cafff2',

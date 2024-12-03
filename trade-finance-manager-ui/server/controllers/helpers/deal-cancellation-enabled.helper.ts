@@ -5,9 +5,9 @@ import {
   TEAM_IDS,
   TFM_DEAL_CANCELLATION_STATUS,
   TfmDealCancellationStatus,
+  TfmSessionUser,
 } from '@ukef/dtfs2-common';
 import { userIsInTeam } from '../../helpers/user';
-import { TfmSessionUser } from '../../types/tfm-session-user';
 
 const { AIN, MIN } = DEAL_SUBMISSION_TYPE;
 /**
