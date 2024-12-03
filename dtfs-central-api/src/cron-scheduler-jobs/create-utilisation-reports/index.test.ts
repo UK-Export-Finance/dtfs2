@@ -80,38 +80,6 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
 
   const mockReportPeriod = {} as ReportPeriod;
 
-  describe('errors on save', () => {
-    beforeEach(() => {
-      jest.mocked(getAllBanks).mockResolvedValue(banks);
-      sendEmailSpy = jest.fn(() => Promise.resolve({}));
-      externalApi.sendEmail = sendEmailSpy;
-    });
-
-    it('should send an email when UtilisationReportRepo.save fails', async () => {
-      // Arrange
-      const bankWithoutReport = banks[0];
-
-      const existingReport = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED).build();
-      findOneByBankIdAndReportPeriodSpy.mockImplementation((bankId: string) => {
-        switch (bankId) {
-          case bankWithoutReport.id:
-            return Promise.resolve(null);
-          default:
-            return Promise.resolve(existingReport);
-        }
-      });
-
-      // Act
-      await createUtilisationReportForBanksJob.task(new Date());
-
-      // Assert
-      expect(sendEmailSpy).toHaveBeenCalledTimes(1);
-      expect(sendEmailSpy).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.REPORT_INSERTION_CRON_FAILURE, UTILISATION_REPORT_CREATION_FAILURE_EMAIL_ADDRESS, {
-        bank_id: banks[0].id,
-      });
-    });
-  });
-
   describe('the task', () => {
     beforeEach(() => {
       jest.resetAllMocks();
@@ -221,6 +189,28 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
         },
       });
       expect(saveUtilisationReportSpy).toHaveBeenCalledWith(newReportForBankWithoutReport);
+    });
+  });
+
+  describe('errors on save', () => {
+    beforeEach(() => {
+      jest.mocked(getAllBanks).mockResolvedValue(banks);
+      sendEmailSpy = jest.fn(() => Promise.resolve({}));
+      externalApi.sendEmail = sendEmailSpy;
+    });
+
+    it('should send an email when UtilisationReportRepo.save fails', async () => {
+      // Arrange
+      UtilisationReportRepo.save = jest.fn().mockImplementationOnce(() => Promise.reject());
+
+      // Act
+      await createUtilisationReportForBanksJob.task(new Date());
+
+      // Assert
+      expect(sendEmailSpy).toHaveBeenCalledTimes(1);
+      expect(sendEmailSpy).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.REPORT_INSERTION_CRON_FAILURE, UTILISATION_REPORT_CREATION_FAILURE_EMAIL_ADDRESS, {
+        bank_id: banks[0].id,
+      });
     });
   });
 });
