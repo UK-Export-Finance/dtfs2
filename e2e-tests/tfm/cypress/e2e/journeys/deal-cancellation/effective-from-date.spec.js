@@ -1,11 +1,10 @@
-import { format } from 'date-fns';
 import relative from '../../relativeURL';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
-import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../e2e-fixtures';
+import { ADMIN, BANK1_MAKER1, PIM_USER_1 } from '../../../../../e2e-fixtures';
 import caseDealPage from '../../pages/caseDealPage';
 import { backLink, cancelLink, continueButton, errorSummary } from '../../partials';
 import effectiveFromDatePage from '../../pages/deal-cancellation/effective-from-date';
-import { today, todayYear, twelveMonthsOneDay, twelveMonthsOneDayAgo } from '../../../../../e2e-fixtures/dateConstants';
+import { today, twelveMonthsOneDay, twelveMonthsOneDayAgo } from '../../../../../e2e-fixtures/dateConstants';
 
 context('Deal cancellation - effective from date', () => {
   let dealId;
@@ -61,14 +60,14 @@ context('Deal cancellation - effective from date', () => {
     });
 
     it('should validate submitting a date more than 12 months in the future', () => {
-      cy.completeDateFormFields({ idPrefix: 'effective-from-date', date: twelveMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'effective-from-date', date: twelveMonthsOneDay.date });
 
       cy.clickContinueButton();
       errorSummary().contains('The effective date cannot exceed 12 months in the future from the submission date');
     });
 
     it('should validate submitting a date more than 12 months in the past', () => {
-      cy.completeDateFormFields({ idPrefix: 'effective-from-date', date: twelveMonthsOneDayAgo });
+      cy.completeDateFormFields({ idPrefix: 'effective-from-date', date: twelveMonthsOneDayAgo.date });
 
       cy.clickContinueButton();
       errorSummary().contains('The effective date cannot exceed 12 months in the past from the submission date');
@@ -100,21 +99,9 @@ context('Deal cancellation - effective from date', () => {
       cy.clickContinueButton();
       cy.visit(relative(`/case/${dealId}/cancellation/effective-from-date`));
 
-      effectiveFromDatePage.effectiveFromDateDay().should('have.value', format(today, 'd'));
-      effectiveFromDatePage.effectiveFromDateMonth().should('have.value', format(today, 'M'));
-      effectiveFromDatePage.effectiveFromDateYear().should('have.value', todayYear);
-    });
-  });
-
-  describe('when logged in as a non-PIM user', () => {
-    beforeEach(() => {
-      cy.login(T1_USER_1);
-
-      cy.visit(relative(`/case/${dealId}/cancellation/effective-from-date`));
-    });
-
-    it('should redirect when visiting effective from date page ', () => {
-      cy.url().should('eq', relative('/deals/0'));
+      effectiveFromDatePage.effectiveFromDateDay().should('have.value', today.day);
+      effectiveFromDatePage.effectiveFromDateMonth().should('have.value', today.month);
+      effectiveFromDatePage.effectiveFromDateYear().should('have.value', today.year);
     });
   });
 });

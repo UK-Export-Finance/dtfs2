@@ -1,10 +1,19 @@
 import { EntityManager } from 'typeorm';
-import { FeeRecordEntity, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  CURRENCY,
+  FEE_RECORD_STATUS,
+  FeeRecordEntity,
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  REQUEST_PLATFORM_TYPE,
+  UtilisationReportEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
+} from '@ukef/dtfs2-common';
 import { handleFeeRecordRemoveFromPaymentGroupEvent } from './remove-from-payment-group.event-handler';
 import { aDbRequestSource } from '../../../../../../test-helpers';
 
 describe('handleFeeRecordRemoveFromPaymentGroupEvent', () => {
-  const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+  const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
 
   const mockSave = jest.fn();
   const mockEntityManager = {
@@ -14,9 +23,9 @@ describe('handleFeeRecordRemoveFromPaymentGroupEvent', () => {
   it('removes all payments from the fee record', async () => {
     // Arrange
     const payments = [
-      PaymentEntityMockBuilder.forCurrency('GBP').withId(1).build(),
-      PaymentEntityMockBuilder.forCurrency('GBP').withId(2).build(),
-      PaymentEntityMockBuilder.forCurrency('GBP').withId(3).build(),
+      PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(1).build(),
+      PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(2).build(),
+      PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(3).build(),
     ];
     const feeRecord = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withPayments(payments).build();
 
@@ -30,9 +39,9 @@ describe('handleFeeRecordRemoveFromPaymentGroupEvent', () => {
     expect(feeRecord.payments).toHaveLength(0);
   });
 
-  it("sets the fee record status to 'TO_DO'", async () => {
+  it(`sets the fee record status to ${FEE_RECORD_STATUS.TO_DO}`, async () => {
     // Arrange
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withStatus('MATCH').build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withStatus(FEE_RECORD_STATUS.MATCH).build();
 
     // Act
     await handleFeeRecordRemoveFromPaymentGroupEvent(feeRecord, {
@@ -41,13 +50,13 @@ describe('handleFeeRecordRemoveFromPaymentGroupEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.status).toEqual('TO_DO');
+    expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.TO_DO);
   });
 
   it('updates the last updated by fields to the request source', async () => {
     // Arrange
     const feeRecord = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT)
-      .withStatus('MATCH')
+      .withStatus(FEE_RECORD_STATUS.MATCH)
       .withLastUpdatedByIsSystemUser(true)
       .withLastUpdatedByPortalUserId(null)
       .withLastUpdatedByTfmUserId(null)
@@ -58,7 +67,7 @@ describe('handleFeeRecordRemoveFromPaymentGroupEvent', () => {
     await handleFeeRecordRemoveFromPaymentGroupEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
       requestSource: {
-        platform: 'TFM',
+        platform: REQUEST_PLATFORM_TYPE.TFM,
         userId,
       },
     });

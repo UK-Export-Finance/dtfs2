@@ -5,24 +5,16 @@ const { SUBMISSION_TYPE } = require('../../../constants');
  * Generate an object to be consumed by GOVUK component.
  * This will be an object in items array for checkboxes component.
  *
- * @param {string} field name
- * @param {string} field value
- * @param {Object} submitted filters
+ * @param {string} field the field name
+ * @param {string} text the field text to display
+ * @param {boolean | string} value the filter value
+ * @param {Object} submittedFilters the submitted field object
  * @example ( field: 'dealType', text: 'GEF deals', value: 'GEF', submittedFilters: { dealType: ['GEF', 'BSS/EWCS'] })
  * @returns { text: 'GEF deals', value: 'GEF', checked: true }
  */
 const generateFilterObject = (field, text, value, submittedFilters) => {
-  let checked = false;
-
-  const hasSubmittedFilters = Object.keys(submittedFilters).length;
-
-  if (hasSubmittedFilters) {
-    const filterHasBeenSubmitted = submittedFilters[field] && String(submittedFilters[field]).includes(String(value));
-
-    if (filterHasBeenSubmitted) {
-      checked = true;
-    }
-  }
+  const isFieldInSubmittedFilters = !!(Object.keys(submittedFilters).length && submittedFilters[field]);
+  const isChecked = isFieldInSubmittedFilters && String(submittedFilters[field]).includes(String(value));
 
   const formattedFieldValue = formatFieldValue(value);
 
@@ -34,7 +26,7 @@ const generateFilterObject = (field, text, value, submittedFilters) => {
     },
     text,
     value,
-    checked,
+    checked: isChecked,
     attributes: {
       'data-cy': `filter-input-${formattedFieldValue}`,
     },

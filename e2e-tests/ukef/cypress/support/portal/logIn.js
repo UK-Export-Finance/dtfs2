@@ -1,9 +1,10 @@
+const { ROLES } = require('@ukef/dtfs2-common');
 const { signInLink } = require('../../../../portal/cypress/e2e/pages');
 const { SIGN_IN_TOKENS } = require('../../../../portal/cypress/fixtures/constants');
 const relative = require('../../e2e/relativeURL');
 
 module.exports = (opts) => {
-  const { username, password } = opts;
+  const { username, password, roles } = opts;
   cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
   cy.enterUsernameAndPassword({ username, password });
 
@@ -15,5 +16,16 @@ module.exports = (opts) => {
     signInLink.visit({ token: signInToken, userId: _id });
   });
 
-  cy.url().should('eq', relative('/dashboard/deals/0'));
+  /**
+   * If the user has a single role, and that role is payment report officer,
+   * the landing page should be the report upload page.
+   *
+   * If a user has multiple roles, or a single role that isn't payment report officer,
+   * then the landing page should be the deals page.
+   */
+  if (roles?.length === 1 && roles?.at(0) === ROLES.PAYMENT_REPORT_OFFICER) {
+    cy.url().should('eq', relative('/utilisation-report-upload'));
+  } else {
+    cy.url().should('eq', relative('/dashboard/deals/0'));
+  }
 };

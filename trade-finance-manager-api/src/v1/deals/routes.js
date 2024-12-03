@@ -6,11 +6,13 @@ const dealController = require('../controllers/deal.controller');
 const { getDealCancellation } = require('../controllers/deal-cancellation/get-deal-cancellation.controller');
 const { updateDealCancellation } = require('../controllers/deal-cancellation/update-deal-cancellation.controller');
 const { deleteDealCancellation } = require('../controllers/deal-cancellation/delete-deal-cancellation.controller');
+const { submitDealCancellation } = require('../controllers/deal-cancellation/submit-deal-cancellation.controller');
 const dealUnderwriterManagersDecisionController = require('../controllers/deal-underwriter-managers-decision.controller');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
 const { validateUserHasAtLeastOneAllowedTeam } = require('../middleware/validate-user-is-in-at-least-one-allowed-team');
 const { validatePutDealCancellationPayload } = require('../middleware/validate-put-deal-cancellation-payload');
+const { validatePostSubmitDealCancellationPayload } = require('../middleware/validate-post-submit-deal-cancellation-payload');
 
 const dealsOpenRouter = express.Router();
 
@@ -84,10 +86,21 @@ dealsAuthRouter
 
 dealsAuthRouter
   .route('/deals/:dealId/cancellation')
-  .all(validateDealCancellationEnabled, validateUserHasAtLeastOneAllowedTeam([TEAM_IDS.PIM]), validation.dealIdValidation, handleExpressValidatorResult)
-  .put(validatePutDealCancellationPayload, updateDealCancellation)
+  .all(validateDealCancellationEnabled, validation.dealIdValidation, handleExpressValidatorResult)
+  .put(validateUserHasAtLeastOneAllowedTeam([TEAM_IDS.PIM]), validatePutDealCancellationPayload, updateDealCancellation)
   .get(getDealCancellation)
-  .delete(deleteDealCancellation);
+  .delete(validateUserHasAtLeastOneAllowedTeam([TEAM_IDS.PIM]), deleteDealCancellation);
+
+dealsAuthRouter
+  .route('/deals/:dealId/cancellation/submit')
+  .post(
+    validateDealCancellationEnabled,
+    validateUserHasAtLeastOneAllowedTeam([TEAM_IDS.PIM]),
+    validation.dealIdValidation,
+    handleExpressValidatorResult,
+    validatePostSubmitDealCancellationPayload,
+    submitDealCancellation,
+  );
 
 dealsAuthRouter
   .route('/deals/:dealId/amendments/:status?/:type?')

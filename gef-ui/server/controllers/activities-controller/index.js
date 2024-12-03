@@ -1,27 +1,38 @@
 const { fromUnixTime } = require('date-fns');
+const { timeZoneConfig } = require('@ukef/dtfs2-common');
 const { getApplication, getUserDetails } = require('../../services/api');
 
 // maps portalActivities array to create array in correct format for mojTimeline
 const mapPortalActivities = (portalActivities) =>
-  portalActivities.map((portalActivity) => ({
-    label: {
-      text: portalActivity.label,
-    },
-    text: portalActivity.text,
-    datetime: {
-      timestamp: fromUnixTime(new Date(portalActivity.timestamp)),
-      type: 'datetime',
-    },
-    byline: {
-      text: `${portalActivity.author.firstName} ${portalActivity.author.lastName}`,
-    },
-    html: portalActivity.html,
-    facilityType: portalActivity.facilityType,
-    ukefFacilityId: portalActivity.ukefFacilityId,
-    facilityId: portalActivity.facilityId,
-    maker: portalActivity.maker,
-    checker: portalActivity.checker,
-  }));
+  portalActivities.map(({ label, text, timestamp, author, html, facilityType, ukefFacilityId, facilityId, maker, checker }) => {
+    let bylineText = author.firstName;
+
+    if (author.lastName) {
+      bylineText += ` ${author.lastName}`;
+    }
+
+    const mappedActivity = {
+      label: {
+        text: label,
+      },
+      text,
+      datetime: {
+        timestamp: fromUnixTime(new Date(timestamp)),
+        type: 'datetime',
+      },
+      byline: {
+        text: bylineText,
+      },
+      html,
+      facilityType,
+      ukefFacilityId,
+      facilityId,
+      maker,
+      checker,
+    };
+
+    return mappedActivity;
+  });
 
 const getPortalActivities = async (req, res) => {
   const { params, session } = req;
@@ -52,7 +63,7 @@ const getPortalActivities = async (req, res) => {
     createdBy: `${deal.maker.firstname} ${deal.maker.surname}`,
     companyName: deal.exporter.companyName,
     dateCreated: deal.createdAt,
-    timezone: deal.maker.timezone || 'Europe/London',
+    timezone: deal.maker.timezone || timeZoneConfig.DEFAULT,
     submissionDate: deal.submissionDate,
     manualInclusionNoticeSubmissionDate: deal?.manualInclusionNoticeSubmissionDate,
   });

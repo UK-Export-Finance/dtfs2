@@ -5,18 +5,18 @@ name: Feature environment deployment
 on:
   push:
     branches:
-      - main
+      - release-2.6.0
     paths:
-      - "portal/**"
-      - "portal-api/**"
-      - "gef-ui/**"
-      - "trade-finance-manager-ui/**"
-      - "trade-finance-manager-api/**"
-      - "dtfs-central-api/**"
-      - "external-api/**"
-      - "azure-functions/acbs-function/**"
-      - "libs/common/**"
-      - ".github/**"
+      - 'portal/**'
+      - 'portal-api/**'
+      - 'gef-ui/**'
+      - 'trade-finance-manager-ui/**'
+      - 'trade-finance-manager-api/**'
+      - 'dtfs-central-api/**'
+      - 'external-api/**'
+      - 'azure-functions/acbs-function/**'
+      - 'libs/common/**'
+      - '.github/**'
 
 env:
   environment: feature
@@ -131,7 +131,7 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: 6. Slot
-        uses: azure/cli@v2
+        uses: azure/cli@v2.1.0
         with:
           inlineScript: |
             az config get defaults
@@ -141,7 +141,7 @@ jobs:
 
       - name: Cleanup 🧹
         if: always()
-        uses: azure/cli@v2
+        uses: azure/cli@v2.1.0
         with:
           inlineScript: |
             # Delete temporary slot

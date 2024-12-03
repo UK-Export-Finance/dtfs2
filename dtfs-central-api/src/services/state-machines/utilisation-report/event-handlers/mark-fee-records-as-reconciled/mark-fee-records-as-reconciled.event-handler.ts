@@ -1,8 +1,9 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { DbRequestSource, FEE_RECORD_STATUS, FeeRecordEntity, RECONCILIATION_COMPLETED, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { SendReportReconciledEmail } from '../helpers/send-report-reconciled-email';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../event/utilisation-report.event-type';
 
 type MarkFeeRecordsAsReconciledEventPayload = {
   requestSource: DbRequestSource;
@@ -12,7 +13,7 @@ type MarkFeeRecordsAsReconciledEventPayload = {
 };
 
 export type UtilisationReportMarkFeeRecordsAsReconciledEvent = BaseUtilisationReportEvent<
-  'MARK_FEE_RECORDS_AS_RECONCILED',
+  typeof UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_RECONCILED,
   MarkFeeRecordsAsReconciledEventPayload
 >;
 
@@ -51,8 +52,8 @@ export const handleUtilisationReportMarkFeeRecordsAsReconciledEvent = async (
       relations: { feeRecords: true },
     });
 
-    if (allFeeRecords.every((record) => record.status === 'RECONCILED')) {
-      report.updateWithStatus({ status: 'RECONCILIATION_COMPLETED', requestSource });
+    if (allFeeRecords.every((record) => record.status === FEE_RECORD_STATUS.RECONCILED)) {
+      report.updateWithStatus({ status: RECONCILIATION_COMPLETED, requestSource });
       await transactionEntityManager.save(UtilisationReportEntity, report);
       await SendReportReconciledEmail(report);
     }

@@ -1,11 +1,19 @@
 import { ObjectId } from 'mongodb';
 import { EntityManager } from 'typeorm';
-import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  CURRENCY,
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
+  REQUEST_PLATFORM_TYPE,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { addFeesToAnExistingPaymentGroup } from './helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
 import { executeWithSqlTransaction } from '../../../../helpers';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 
 jest.mock('../../../../helpers');
 
@@ -19,14 +27,14 @@ describe('post-fees-to-an-existing-payment-group.controller helpers', () => {
     };
     const tfmUserId = tfmUser._id;
 
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
     const utilisationReportStateMachine = UtilisationReportStateMachine.forReport(utilisationReport);
 
     const feeRecordIds = [1, 2];
     const feeRecords = feeRecordIds.map((id) => FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(id).build());
 
     const paymentIds = [3, 4];
-    const payments = paymentIds.map((id) => PaymentEntityMockBuilder.forCurrency('GBP').withId(id).withFeeRecords([feeRecords[1]]).build());
+    const payments = paymentIds.map((id) => PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(id).withFeeRecords([feeRecords[1]]).build());
 
     const utilisationReportStateMachineConstructorSpy = jest.spyOn(UtilisationReportStateMachine, 'forReport');
     const handleEventSpy = jest.spyOn(utilisationReportStateMachine, 'handleEvent');
@@ -67,14 +75,14 @@ describe('post-fees-to-an-existing-payment-group.controller helpers', () => {
 
       // Assert
       expect(handleEventSpy).toHaveBeenCalledWith({
-        type: 'ADD_FEES_TO_AN_EXISTING_PAYMENT_GROUP',
+        type: UTILISATION_REPORT_EVENT_TYPE.ADD_FEES_TO_AN_EXISTING_PAYMENT_GROUP,
         payload: {
           transactionEntityManager: mockEntityManager,
           feeRecordsToAdd,
           existingFeeRecordsInPaymentGroup,
           payments,
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId: tfmUserId,
           },
         },

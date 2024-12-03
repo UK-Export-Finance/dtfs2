@@ -13,6 +13,22 @@ export const FeeRecordRepo = SqlDbDataSource.getRepository(FeeRecordEntity).exte
   },
 
   /**
+   * Finds one fee record with the supplied id and report id with the report attached
+   * @param id - The fee record id
+   * @param reportId - The report id of the report attached to the fee record
+   * @returns The found fee record with the report attached
+   */
+  async findOneByIdAndReportIdWithReport(id: number, reportId: number): Promise<FeeRecordEntity | null> {
+    return await this.findOne({
+      where: {
+        id,
+        report: { id: reportId },
+      },
+      relations: { report: true },
+    });
+  },
+
+  /**
    * Finds fee record entities attached to a report with the
    * supplied id which match the supplied statuses with the
    * report attached
@@ -65,6 +81,22 @@ export const FeeRecordRepo = SqlDbDataSource.getRepository(FeeRecordEntity).exte
   },
 
   /**
+   * Finds fee record entities with supplied ids, with the payments and their
+   * fee records attached.
+   * @param ids - The fee record ids to search by
+   * @returns The found fee record entities with their associated payments and
+   * their fee records
+   */
+  async findByIdWithPaymentsAndFeeRecords(ids: number[]): Promise<FeeRecordEntity[]> {
+    return await this.find({
+      where: {
+        id: In(ids),
+      },
+      relations: { payments: { feeRecords: true } },
+    });
+  },
+
+  /**
    * Finds fee record entities with status 'DOES_NOT_MATCH' for a given report
    * and payment currency, with the payments attached.
    * @param reportId - The report id of the report attached to the fee records
@@ -79,6 +111,21 @@ export const FeeRecordRepo = SqlDbDataSource.getRepository(FeeRecordEntity).exte
         paymentCurrency,
       },
       relations: { payments: true },
+    });
+  },
+
+  /**
+   * Checks if a fee record exists with the supplied id and report id
+   * @param id - The fee record id
+   * @param reportId - The report id
+   * @returns True if a matching fee record exists, false otherwise
+   */
+  async existsByIdAndReportId(id: number, reportId: number): Promise<boolean> {
+    return await this.exists({
+      where: {
+        id,
+        report: { id: reportId },
+      },
     });
   },
 });

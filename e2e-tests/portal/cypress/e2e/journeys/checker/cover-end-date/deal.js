@@ -1,16 +1,17 @@
+const { BOND_TYPE } = require('@ukef/dtfs2-common');
 const mockDeal = require('../../../../fixtures/deal');
 const CONSTANTS = require('../../../../fixtures/constants');
-const FIXTURE_CONSTANTS = require('../../../../../../e2e-fixtures/constants.fixture');
-const DATE_CONSTANTS = require('../../../../../../e2e-fixtures/dateConstants');
+const { CURRENCY, FEE_FREQUENCY, FEE_TYPE, DAY_COUNT_BASIS } = require('../../../../../../e2e-fixtures/constants.fixture');
+const { today, tomorrow } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const deal = {
   ...mockDeal,
   mockFacilities: [
     {
       type: CONSTANTS.FACILITY.FACILITY_TYPE.BOND,
-      createdDate: DATE_CONSTANTS.today.valueOf(),
+      createdDate: today.unixMilliseconds,
       bondIssuer: '',
-      bondType: FIXTURE_CONSTANTS.BSS_FACILITY_TYPE.BID_BOND,
+      bondType: BOND_TYPE.BID_BOND,
       facilityStage: CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED,
       hasBeenIssued: true,
       'requestedCoverStartDate-day': '13',
@@ -28,8 +29,8 @@ const deal = {
       currencySameAsSupplyContractCurrency: 'false',
       currency: {
         currencyId: 1,
-        id: FIXTURE_CONSTANTS.CURRENCY.AED,
-        text: FIXTURE_CONSTANTS.CURRENCY.AED_TEXT,
+        id: CURRENCY.AED,
+        text: CURRENCY.AED_TEXT,
       },
       conversionRate: '5.5',
       'conversionRateDate-day': '28',
@@ -39,13 +40,13 @@ const deal = {
       coveredPercentage: '30',
       minimumRiskMarginFee: '',
       ukefExposure: '370.20',
-      feeType: FIXTURE_CONSTANTS.FEE_TYPE.MATURITY,
-      dayCountBasis: FIXTURE_CONSTANTS.DAY_COUNT_BASIS[365],
+      feeType: FEE_TYPE.MATURITY,
+      dayCountBasis: DAY_COUNT_BASIS[365],
       status: CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
     },
     {
       type: CONSTANTS.FACILITY.FACILITY_TYPE.LOAN,
-      createdDate: DATE_CONSTANTS.today.valueOf(),
+      createdDate: today.unixMilliseconds,
       facilityStage: CONSTANTS.FACILITY.FACILITY_STAGE.CONDITIONAL,
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -56,20 +57,20 @@ const deal = {
       coveredPercentage: '20',
       minimumQuarterlyFee: '20',
       ukefExposure: '24,624.60',
-      premiumFrequency: FIXTURE_CONSTANTS.FEE_FREQUENCY.MONTHLY,
-      premiumType: FIXTURE_CONSTANTS.FEE_TYPE.ARREAR,
-      dayCountBasis: FIXTURE_CONSTANTS.DAY_COUNT_BASIS[360],
+      premiumFrequency: FEE_FREQUENCY.MONTHLY,
+      premiumType: FEE_TYPE.ARREAR,
+      dayCountBasis: DAY_COUNT_BASIS[360],
       viewedPreviewPage: true,
       currency: {
         currencyId: 1,
-        id: FIXTURE_CONSTANTS.CURRENCY.AED,
-        text: FIXTURE_CONSTANTS.CURRENCY.AED_TEXT,
+        id: CURRENCY.AED,
+        text: CURRENCY.AED_TEXT,
       },
       conversionRate: '5.5',
       'conversionRateDate-day': '28',
       'conversionRateDate-month': '04',
       'conversionRateDate-year': '2022',
-      issuedDate: DATE_CONSTANTS.tomorrow.valueOf(),
+      issuedDate: tomorrow.unixMilliseconds,
       'coverEndDate-day': '06',
       'coverEndDate-month': '01',
       'coverEndDate-year': '2021',
@@ -83,7 +84,7 @@ const deal = {
     },
     {
       type: CONSTANTS.FACILITY.FACILITY_TYPE.LOAN,
-      createdDate: DATE_CONSTANTS.today.valueOf(),
+      createdDate: today.unixMilliseconds,
       facilityStage: CONSTANTS.FACILITY.FACILITY_STAGE.UNCONDITIONAL,
       hasBeenIssued: true,
       'requestedCoverStartDate-day': '13',
@@ -100,8 +101,8 @@ const deal = {
       currencySameAsSupplyContractCurrency: 'true',
       currency: {
         currencyId: 1,
-        id: FIXTURE_CONSTANTS.CURRENCY.AED,
-        text: FIXTURE_CONSTANTS.CURRENCY.AED_TEXT,
+        id: CURRENCY.AED,
+        text: CURRENCY.AED_TEXT,
       },
       conversionRate: '5.5',
       'conversionRateDate-day': '28',
@@ -112,8 +113,8 @@ const deal = {
       coveredPercentage: '60',
       minimumQuarterlyFee: '',
       ukefExposure: '740.40',
-      premiumType: FIXTURE_CONSTANTS.FEE_TYPE.MATURITY,
-      dayCountBasis: FIXTURE_CONSTANTS.DAY_COUNT_BASIS[365],
+      premiumType: FEE_TYPE.MATURITY,
+      dayCountBasis: DAY_COUNT_BASIS[365],
       status: CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
     },
   ],

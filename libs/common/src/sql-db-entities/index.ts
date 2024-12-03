@@ -6,4 +6,5 @@ export { MonthAndYearPartialEntity, ReportPeriodPartialEntity } from './partial-
 export { FacilityUtilisationDataEntity } from './facility-utilisation-data';
 export { PaymentMatchingToleranceEntity } from './payment-matching-tolerance';
 export { FeeRecordPaymentJoinTableEntity } from './join-tables';
+export { FeeRecordCorrectionTransientFormDataEntity } from './fee-record-correction-transient-form-data';
 export * from './helpers';

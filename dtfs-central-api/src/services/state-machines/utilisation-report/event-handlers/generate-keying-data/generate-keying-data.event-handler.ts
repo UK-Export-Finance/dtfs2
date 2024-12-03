@@ -1,8 +1,18 @@
 import { EntityManager, In } from 'typeorm';
-import { DbRequestSource, FeeRecordEntity, FeeRecordPaymentJoinTableEntity, FeeRecordStatus, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import {
+  DbRequestSource,
+  FEE_RECORD_STATUS,
+  FeeRecordEntity,
+  FeeRecordPaymentJoinTableEntity,
+  FeeRecordStatus,
+  PENDING_RECONCILIATION,
+  RECONCILIATION_IN_PROGRESS,
+  UtilisationReportEntity,
+} from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { KeyingSheetFeePaymentShare, getKeyingSheetFeePaymentSharesForFeeRecords } from '../helpers';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../event/utilisation-report.event-type';
 
 /**
  * Gets the facility ids at the TO_DO or DOES_NOT_MATCH status
@@ -14,7 +24,7 @@ const getFacilityIdsAtToDoOrDoesNotMatchStatus = async (entityManager: EntityMan
   const feeRecordsAtToDoOrDoesNotMatchStatus = await entityManager.find(FeeRecordEntity, {
     where: {
       report: { id: reportId },
-      status: In<FeeRecordStatus>(['TO_DO', 'DOES_NOT_MATCH']),
+      status: In<FeeRecordStatus>([FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.DOES_NOT_MATCH]),
     },
   });
   return feeRecordsAtToDoOrDoesNotMatchStatus.reduce((facilityIds, { facilityId }) => facilityIds.add(facilityId), new Set<string>());
@@ -42,7 +52,10 @@ type GenerateKeyingDataEventPayload = {
   requestSource: DbRequestSource;
 };
 
-export type UtilisationReportGenerateKeyingDataEvent = BaseUtilisationReportEvent<'GENERATE_KEYING_DATA', GenerateKeyingDataEventPayload>;
+export type UtilisationReportGenerateKeyingDataEvent = BaseUtilisationReportEvent<
+  typeof UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA,
+  GenerateKeyingDataEventPayload
+>;
 
 /**
  * Handler for the generate keying data event
@@ -90,8 +103,8 @@ export const handleUtilisationReportGenerateKeyingDataEvent = async (
   const KeyingSheetFeePaymentShares = getKeyingSheetFeePaymentSharesForFeeRecords(feeRecordsAtMatchStatusWithPayments);
   await updateFeeRecordPaymentJoinTable(KeyingSheetFeePaymentShares, transactionEntityManager);
 
-  if (report.status === 'PENDING_RECONCILIATION') {
-    report.updateWithStatus({ status: 'RECONCILIATION_IN_PROGRESS', requestSource });
+  if (report.status === PENDING_RECONCILIATION) {
+    report.updateWithStatus({ status: RECONCILIATION_IN_PROGRESS, requestSource });
   } else {
     report.updateLastUpdatedBy(requestSource);
   }

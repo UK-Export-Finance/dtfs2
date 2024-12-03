@@ -7,18 +7,20 @@ import {
   FeeRecordEntity,
   MOCK_AZURE_FILE_INFO,
   MONGO_DB_COLLECTIONS,
+  PENDING_RECONCILIATION,
+  REPORT_NOT_RECEIVED,
   ReportPeriod,
   TfmFacility,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
   UtilisationReportRawCsvData,
-  UtilisationReportReconciliationStatus,
+  UtilisationReportStatus,
 } from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
-import { aUtilisationReportRawCsvData, aPortalUser, aFacility, aBank } from '../../../test-helpers';
+import { aUtilisationReportRawCsvData, aPortalUser, aFacility, aBank, aTfmFacility } from '../../../test-helpers';
 import { PostUploadUtilisationReportRequestBody } from '../../../src/v1/controllers/utilisation-report-service/post-upload-utilisation-report.controller';
 
 console.error = jest.fn();
@@ -39,10 +41,11 @@ describe(`POST ${getUrl()}`, () => {
     user: { _id: portalUserId },
   });
 
-  const aNotReceivedReport = () => UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).build();
+  const aNotReceivedReport = () => UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED).withId(reportId).build();
 
   const insertTfmFacilitiesForFacilityIds = async (ukefFacilityIds: string[]): Promise<void> => {
     const tfmFacilities: WithoutId<TfmFacility>[] = ukefFacilityIds.map((ukefFacilityId) => ({
+      ...aTfmFacility(),
       facilitySnapshot: {
         ...aFacility(),
         ukefFacilityId,
@@ -77,7 +80,7 @@ describe(`POST ${getUrl()}`, () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', aNotReceivedReport());
 
     const tfmFacilitiesCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
-    await tfmFacilitiesCollection.insertOne({ facilitySnapshot: { ...aFacility(), ukefFacilityId: facilityId } });
+    await tfmFacilitiesCollection.insertOne({ ...aTfmFacility(), facilitySnapshot: { ...aFacility(), ukefFacilityId: facilityId } });
 
     const banksCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.BANKS);
     await banksCollection.insertOne(bankToInsert);
@@ -99,7 +102,7 @@ describe(`POST ${getUrl()}`, () => {
     expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
-  it("responds with a 201 (Created) with a valid payload and sets the report status to 'PENDING_RECONCILIATION'", async () => {
+  it(`responds with a 201 (Created) with a valid payload and sets the report status to ${PENDING_RECONCILIATION}`, async () => {
     // Act
     const response = await testApi.post(aValidPayload()).to(getUrl());
 
@@ -107,7 +110,7 @@ describe(`POST ${getUrl()}`, () => {
     expect(response.status).toEqual(HttpStatusCode.Created);
 
     const report = await SqlDbHelper.manager.findOneByOrFail(UtilisationReportEntity, { id: reportId });
-    expect(report.status).toBe<UtilisationReportReconciliationStatus>('PENDING_RECONCILIATION');
+    expect(report.status).toBe<UtilisationReportStatus>(PENDING_RECONCILIATION);
   });
 
   it('creates as many fee records as there are rows in the reportData field', async () => {
@@ -150,6 +153,58 @@ describe(`POST ${getUrl()}`, () => {
 
     const facilityIdExists = await Promise.all(facilityIds.map((id) => SqlDbHelper.manager.existsBy(FacilityUtilisationDataEntity, { id })));
     expect(facilityIdExists).toEqual([true, true, true]);
+  });
+
+  it('should calculate and save initial utilisation and fixed fee using facility values from facility creation', async () => {
+    // Arrange
+    const ukefFacilityId = '11111111';
+    const reportData: UtilisationReportRawCsvData[] = [
+      {
+        ...aUtilisationReportRawCsvData(),
+        'ukef facility id': ukefFacilityId,
+      },
+    ];
+
+    const tfmFacility: WithoutId<TfmFacility> = {
+      ...aTfmFacility(),
+      facilitySnapshot: {
+        ...aTfmFacility().facilitySnapshot,
+        ukefFacilityId,
+        coverPercentage: 80,
+        coverStartDate: new Date('2024-01-01'),
+        // 366 days after cover start date because 2024 is a leap year
+        coverEndDate: new Date('2025-01-01'),
+        value: 500000,
+        interestPercentage: 5,
+        dayCountBasis: 360,
+      },
+    };
+
+    const tfmFacilitiesCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
+    await tfmFacilitiesCollection.insertOne(tfmFacility);
+
+    const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
+
+    // Act
+    const response = await testApi.post(payload).to(getUrl());
+
+    // Assert
+    expect(response.status).toEqual(HttpStatusCode.Created);
+
+    const facilityUtilisationData = await SqlDbHelper.manager.findOneBy(FacilityUtilisationDataEntity, { id: ukefFacilityId });
+    expect(facilityUtilisationData).not.toBeNull();
+    /**
+     * Initial utilisation is 10% of the facility value * (cover percentage / 100) thus,
+     * utilisation = 0.1 * 500000 * (80 / 100)
+     *             = 40000
+     */
+    expect(facilityUtilisationData?.utilisation).toEqual(40000);
+    /**
+     * Initial fixed fee = initial utilisation * bank margin rate * interest * days in cover period / day count basis
+     *                   = 40000 * 0.9 * (5 / 100) * 366 / 360
+     *                   = 1830
+     */
+    expect(facilityUtilisationData?.fixedFee).toEqual(1830);
   });
 
   it('creates an entry in the AzureFileInfo table', async () => {
@@ -211,7 +266,7 @@ describe(`POST ${getUrl()}`, () => {
     });
   });
 
-  it('creates a new FacilityUtilisationData row using the report reportPeriod if the report data has a facility id which does not already exist', async () => {
+  it('creates a new FacilityUtilisationData row using the previous reportPeriod if the report data has a facility id which does not already exist', async () => {
     // Arrange
     await SqlDbHelper.deleteAll();
 
@@ -219,7 +274,7 @@ describe(`POST ${getUrl()}`, () => {
       start: { month: 4, year: 2023 },
       end: { month: 6, year: 2023 },
     };
-    const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).withReportPeriod(reportPeriod).build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED).withId(reportId).withReportPeriod(reportPeriod).build();
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     const ukefFacilityId = '12345678';
@@ -252,7 +307,7 @@ describe(`POST ${getUrl()}`, () => {
       start: { month: 4, year: 2023 },
       end: { month: 6, year: 2023 },
     };
-    const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).withReportPeriod(reportReportPeriod).build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED).withId(reportId).withReportPeriod(reportReportPeriod).build();
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     const ukefFacilityId = '12345678';

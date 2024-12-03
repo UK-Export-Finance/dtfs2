@@ -11,6 +11,7 @@ const conditions = 'ABCD';
 const declined = 'EFGH';
 
 const approvedWithoutConditionsBothAmendments = {
+  _id: 'test',
   user: {
     firstname: 'Bob',
     surname: 'Smith',
@@ -217,6 +218,37 @@ const noTaskVariables = {
   },
 };
 
+const dealWithNoCompanyName = {
+  ...firstTaskVariables,
+  dealSnapshot: {
+    ukefDealId,
+    exporter: {},
+    bankInternalRefName: 'UKEF',
+  },
+};
+const dealWithNoMongoId = {
+  ...firstTaskVariables,
+  _id: undefined,
+  dealSnapshot: {
+    _id: undefined,
+    ukefDealId,
+    exporter: {
+      companyName: 'Tester',
+    },
+    bankInternalRefName: 'UKEF',
+  },
+};
+
+const noUkefDealId = {
+  ...firstTaskVariables,
+  dealSnapshot: {
+    exporter: {
+      companyName: 'Tester',
+    },
+    bankInternalRefName: 'UKEF',
+  },
+};
+
 module.exports = {
   approvedWithoutConditionsBothAmendments,
   approvedWithoutConditionsBothAmendmentsBSS,
@@ -234,4 +266,7 @@ module.exports = {
   wrongAmendments,
   firstTaskVariables,
   noTaskVariables,
+  dealWithNoMongoId,
+  dealWithNoCompanyName,
+  noUkefDealId,
 };

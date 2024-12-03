@@ -1,13 +1,12 @@
-import { AnyObject, TEAM_IDS, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { AnyObject, TFM_DEAL_CANCELLATION_STATUS, TEAM_IDS, TfmDealCancellationWithStatus } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { createApi } from '../../api';
 import app from '../../../src/createApp';
 import { initialiseTestUsers } from '../../api-test-users';
 import { TestUser } from '../../types/test-user';
-import { withTeamAuthorisationTests } from '../../common-tests/with-team-authorisation.api-tests';
 import { getTfmDealCancellationUrl } from './get-cancellation-url';
 
-const getDealCancellationMock = jest.fn() as jest.Mock<Promise<TfmDealCancellation>>;
+const getDealCancellationMock = jest.fn() as jest.Mock<Promise<TfmDealCancellationWithStatus>>;
 
 jest.mock('../../../src/v1/api', () => ({
   ...jest.requireActual<AnyObject>('../../../src/v1/api'),
@@ -68,13 +67,6 @@ describe('/v1/deals/:id/cancellation', () => {
         jest.resetAllMocks();
       });
 
-      withTeamAuthorisationTests({
-        allowedTeams: [TEAM_IDS.PIM],
-        getUserWithTeam: (team) => testUsers().withTeam(team).one(),
-        makeRequestAsUser: (user: TestUser) => as(user).get(getTfmDealCancellationUrl({ id: validId })),
-        successStatusCode: 200,
-      });
-
       it('returns a 401 response when user is not authenticated', async () => {
         // Arrange
         const url = getTfmDealCancellationUrl({ id: validId });
@@ -99,13 +91,14 @@ describe('/v1/deals/:id/cancellation', () => {
 
       it('returns the deal cancellation object for an authenticated user', async () => {
         // Arrange
-        const tfmDealCancellation: TfmDealCancellation = {
+        const dealCancellation: TfmDealCancellationWithStatus = {
+          status: TFM_DEAL_CANCELLATION_STATUS.DRAFT,
           reason: 'Test Reason',
           bankRequestDate: new Date().valueOf(),
           effectiveFrom: new Date().valueOf(),
         };
 
-        jest.mocked(getDealCancellationMock).mockResolvedValue(tfmDealCancellation);
+        jest.mocked(getDealCancellationMock).mockResolvedValue(dealCancellation);
         const url = getTfmDealCancellationUrl({ id: validId });
 
         // Act
@@ -113,7 +106,7 @@ describe('/v1/deals/:id/cancellation', () => {
 
         // Assert
         expect(response.status).toEqual(200);
-        expect(response.body).toEqual(tfmDealCancellation);
+        expect(response.body).toEqual(dealCancellation);
       });
     });
   });

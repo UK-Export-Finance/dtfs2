@@ -1,295 +1,76 @@
-const { sub, add, format, getUnixTime } = require('date-fns');
+import { sub, add, format, getUnixTime } from 'date-fns';
 
-const shortDayFormat = 'd';
-const longDayFormat = 'dd';
-const shortMonthFormat = 'M';
-const longMonthFormat = 'MM';
-const longYearFormat = 'yyyy';
+export const SHORT_DAY_FORMAT = 'd';
+export const LONG_DAY_FORMAT = 'dd';
+export const SHORT_MONTH_FORMAT = 'M';
+export const LONG_MONTH_FORMAT = 'MM';
+export const LONG_YEAR_FORMAT = 'yyyy';
+export const DD_MMM_YYYY_FORMAT = 'dd MMM yyyy';
+export const D_MMMM_YYYY_FORMAT = 'd MMMM yyyy';
+export const DD_MMMM_YYYY_FORMAT = 'dd MMMM yyyy';
+export const TIME_HOURS_FORMAT = 'h';
+export const TIME_AM_PM_FORMAT = 'aaa';
 
-const today = new Date();
-const todayDay = format(today, longDayFormat);
-const todayMonth = format(today, longMonthFormat);
-const todayYear = format(today, longYearFormat);
-const todayFullString = format(today, 'dd MMM yyyy');
+const getFormattedValues = (date) => ({
+  date,
+  day: format(date, SHORT_DAY_FORMAT),
+  dayLong: format(date, LONG_DAY_FORMAT),
+  month: format(date, SHORT_MONTH_FORMAT),
+  monthLong: format(date, LONG_MONTH_FORMAT),
+  year: format(date, LONG_YEAR_FORMAT),
+  dd_MMM_yyyy: format(date, DD_MMM_YYYY_FORMAT),
+  d_MMMM_yyyy: format(date, D_MMMM_YYYY_FORMAT),
+  dd_MMMM_yyyy: format(date, DD_MMMM_YYYY_FORMAT),
+  unixSecondsString: getUnixTime(date).toString(),
+  unixMillisecondsString: date.valueOf().toString(),
+  unixMilliseconds: date.valueOf(),
+});
 
-// to test cannot be issued in past
-const fourDaysAgo = sub(today, { days: 4 });
-const fourDaysAgoDay = format(fourDaysAgo, longDayFormat);
-const fourDaysAgoMonth = format(fourDaysAgo, longMonthFormat);
-const fourDaysAgoYear = format(fourDaysAgo, longYearFormat);
-const fourDaysAgoFull = format(fourDaysAgo, 'd MMMM yyyy');
+const todayDate = new Date();
 
-const yesterday = sub(today, { days: 1 });
-const yesterdayUnix = getUnixTime(yesterday).toString();
-const yesterdayDay = format(yesterday, longDayFormat);
-const yesterdayMonth = format(yesterday, longMonthFormat);
-const yesterdayYear = format(yesterday, longYearFormat);
+// Today
+export const today = getFormattedValues(todayDate);
 
-const twoDaysAgo = sub(today, { days: 2 });
+// Dates in the future
+export const tomorrow = getFormattedValues(add(todayDate, { days: 1 }));
+export const twoDays = getFormattedValues(add(todayDate, { days: 2 }));
+export const threeDays = getFormattedValues(add(todayDate, { days: 3 }));
+export const sevenDays = getFormattedValues(add(todayDate, { days: 7 }));
+export const twentyEightDays = getFormattedValues(add(todayDate, { days: 28 }));
+export const oneMonth = getFormattedValues(add(todayDate, { months: 1 }));
+export const twoMonths = getFormattedValues(add(todayDate, { months: 2 }));
+export const threeMonths = getFormattedValues(add(todayDate, { months: 3 }));
+export const threeMonthsOneDay = getFormattedValues(add(todayDate, { months: 3, days: 1 }));
+export const oneYear = getFormattedValues(add(todayDate, { years: 1 }));
+export const twelveMonthsOneDay = getFormattedValues(add(todayDate, { months: 12, days: 1 }));
+export const twoYears = getFormattedValues(add(todayDate, { years: 2 }));
+export const threeYears = getFormattedValues(add(todayDate, { years: 3 }));
+export const sixYearsOneDay = getFormattedValues(add(todayDate, { years: 6, months: 0, days: 1 }));
 
-const oneMonth = add(today, { months: 1 });
-const oneMonthUnix = getUnixTime(oneMonth).toString();
-const oneMonthFormattedFull = format(oneMonth, 'dd MMMM yyyy');
-const oneMonthFormattedTable = format(oneMonth, 'd MMMM yyyy');
-const oneMonthFormattedShort = format(oneMonth, 'dd MMM yyyy');
-const oneMonthDay = format(oneMonth, longDayFormat);
-const oneMonthMonth = format(oneMonth, longMonthFormat);
-const oneMonthYear = format(oneMonth, longYearFormat);
+// Dates in the past
+export const yesterday = getFormattedValues(sub(todayDate, { days: 1 }));
+export const twoDaysAgo = getFormattedValues(sub(todayDate, { days: 2 }));
+export const threeDaysAgo = getFormattedValues(sub(todayDate, { days: 3 }));
+export const fourDaysAgo = getFormattedValues(sub(todayDate, { days: 4 }));
+export const sevenDaysAgo = getFormattedValues(sub(todayDate, { days: 7 }));
+export const twentyFiveDaysAgo = getFormattedValues(sub(todayDate, { days: 25 }));
+export const thirtyFiveDaysAgo = getFormattedValues(sub(todayDate, { days: 35 }));
+export const twelveMonthsOneDayAgo = getFormattedValues(sub(todayDate, { months: 12, days: 1 }));
+export const oneYearAgo = getFormattedValues(sub(todayDate, { years: 1 }));
+export const twoYearsAgo = getFormattedValues(sub(todayDate, { years: 2 }));
 
-const twoMonths = add(today, { months: 2 });
-const twoMonthsDay = format(twoMonths, longDayFormat);
-const twoMonthsMonth = format(twoMonths, longMonthFormat);
-const twoMonthsYear = format(twoMonths, longYearFormat);
-const twoMonthsFormatted = format(twoMonths, 'dd MMM yyyy');
-const twoMonthsFormattedFull = format(twoMonths, 'dd MMMM yyyy');
-const twoMonthsFormattedTable = format(twoMonths, 'd MMMM yyyy');
+// Dates calculated from other values
+/**
+ * This constant is used for calculating the deadling for issuing a facility with submission date three days ago.
+ */
+export const threeDaysAgoPlusThreeMonths = getFormattedValues(add(threeDaysAgo.date, { months: 3 }));
 
-// to test that if beyond issue/ cover start date limit
-const tomorrow = add(today, { days: 1 });
-const tomorrowDay = format(tomorrow, longDayFormat);
-const tomorrowMonth = format(tomorrow, longMonthFormat);
-const tomorrowYear = format(tomorrow, longYearFormat);
-
-const twoDays = add(today, { days: 2 });
-const twoDaysDay = format(twoDays, longDayFormat);
-const twoDaysMonth = format(twoDays, longMonthFormat);
-const twoDaysYear = format(twoDays, longYearFormat);
-
-// 25 days ago
-const twentyFiveDaysAgo = sub(today, { days: 25 });
-const twentyFiveDaysAgoUnix = getUnixTime(twentyFiveDaysAgo).toString();
-const twentyFiveDaysAgoFormatted = format(twentyFiveDaysAgo, 'dd MMM yyyy');
-
-// 35 days ago
-const thirtyFiveDaysAgo = sub(today, { days: 35 });
-const thirtyFiveDaysAgoUnix = getUnixTime(thirtyFiveDaysAgo).toString();
-const thirtyFiveDaysAgoFormatted = format(thirtyFiveDaysAgo, 'dd MMM yyyy');
-
-const threeMonths = add(today, { months: 3 });
-const threeMonthsDay = format(threeMonths, longDayFormat);
-const threeMonthsMonth = format(threeMonths, longMonthFormat);
-const threeMonthsYear = format(threeMonths, longYearFormat);
-
-const threeMonthsOneDay = add(today, { months: 3, days: 1 });
-const threeMonthsOneDayDay = format(threeMonthsOneDay, longDayFormat);
-const threeMonthsOneDayMonth = format(threeMonthsOneDay, longMonthFormat);
-const threeMonthsOneDayYear = format(threeMonthsOneDay, longYearFormat);
-const threeMonthsOneDayFullString = format(threeMonthsOneDay, 'dd MMM yyyy');
-const threeMonthsOneDayFullMonthString = format(threeMonthsOneDay, 'd MMMM yyyy');
-
-const twentyEight = add(today, { days: 28 });
-const twentyEightDay = format(twentyEight, longDayFormat);
-const twentyEightMonth = format(twentyEight, longMonthFormat);
-const twentyEightYear = format(twentyEight, longYearFormat);
-
-const threeDaysAgo = sub(today, { days: 3 });
-const threeDaysAgoUnix = getUnixTime(threeDaysAgo).toString();
-const threeDaysDay = format(threeDaysAgo, longDayFormat);
-const threeDaysMonth = format(threeDaysAgo, longMonthFormat);
-const threeDaysYear = format(threeDaysAgo, longYearFormat);
-
-const sevenDaysAgo = sub(today, { days: 7 });
-const sevenDaysAgoUnix = getUnixTime(sevenDaysAgo).toString();
-const sevenDaysAgoDay = format(sevenDaysAgo, longDayFormat);
-const sevenDaysAgoMonth = format(sevenDaysAgo, longMonthFormat);
-const sevenDaysAgoYear = format(sevenDaysAgo, longYearFormat);
-
-const sevenDays = add(today, { days: 7 });
-const sevenDaysUnix = getUnixTime(sevenDays).toString();
-const sevenDaysDay = format(sevenDays, longDayFormat);
-const sevenDaysMonth = format(sevenDays, longMonthFormat);
-const sevenDaysYear = format(sevenDays, longYearFormat);
-
-const twoYears = add(today, { years: 2, months: 3, days: 1 });
-const twoYearsDay = format(twoYears, longDayFormat);
-const twoYearsMonth = format(twoYears, longMonthFormat);
-const twoYearsYear = format(twoYears, longYearFormat);
-
-const twoYearsAgo = sub(today, { years: 2 });
-const twoYearsAgoUnix = getUnixTime(twoYearsAgo).toString();
-const twoYearsAgoDay = format(twoYearsAgo, longDayFormat);
-const twoYearsAgoMonth = format(twoYearsAgo, longMonthFormat);
-const twoYearsAgoYear = format(twoYearsAgo, longYearFormat);
-
-const threeYearsAgo = sub(today, { years: 3 });
-const threeYearsAgoDay = format(threeYearsAgo, longDayFormat);
-const threeYearsAgoMonth = format(threeYearsAgo, longMonthFormat);
-const threeYearsAgoYear = format(threeYearsAgo, longYearFormat);
-
-const oneYearAgo = sub(today, { years: 1 });
-const oneYearUnix = getUnixTime(oneYearAgo).toString();
-const oneYearAgoDay = format(oneYearAgo, longDayFormat);
-const oneYearAgoMonth = format(oneYearAgo, longMonthFormat);
-const oneYearAgoYear = format(oneYearAgo, longYearFormat);
-
-const threeYears = add(today, { years: 3, months: 3, days: 1 });
-const threeYearsDay = format(threeYears, longDayFormat);
-const threeYearsMonth = format(threeYears, longMonthFormat);
-const threeYearsYear = format(threeYears, longYearFormat);
-
-const threeDaysAgoPlusMonth = add(threeDaysAgo, { months: 3 });
-
-const sixYearsOneDay = add(today, { years: 6, months: 0, days: 1 });
-const sixYearsOneDayDay = format(sixYearsOneDay, longDayFormat);
-const sixYearsOneDayMonth = format(sixYearsOneDay, longMonthFormat);
-const sixYearsOneDayYear = format(sixYearsOneDay, longYearFormat);
-
-const twelveMonthsOneDay = add(today, { months: 12, days: 1 });
-const twelveMonthsOneDayDay = format(twelveMonthsOneDay, longDayFormat);
-const twelveMonthsOneDayMonth = format(twelveMonthsOneDay, longMonthFormat);
-const twelveMonthsOneDayYear = format(twelveMonthsOneDay, longYearFormat);
-
-const twelveMonthsOneDayAgo = sub(today, { months: 12, days: 1 });
-const twelveMonthsOneDayAgoDay = format(twelveMonthsOneDayAgo, longDayFormat);
-const twelveMonthsOneDayAgoMonth = format(twelveMonthsOneDayAgo, longMonthFormat);
-const twelveMonthsOneDayAgoYear = format(twelveMonthsOneDayAgo, longYearFormat);
-
-const todayUnix = getUnixTime(today).toString();
-const todayUnixDay = format(threeDaysAgo, longDayFormat);
-const todayUnixMonth = format(threeDaysAgo, longMonthFormat);
-const todayUnixYear = format(threeDaysAgo, longYearFormat);
-
-const todayFormattedFull = format(today, 'dd MMMM yyyy');
-const todayFormatted = format(today, 'd MMMM yyyy');
-const todayFormattedShort = format(today, 'dd MMM yyyy');
-const tomorrowFormattedFull = format(tomorrow, 'd MMMM yyyy');
-const tomorrowFormattedFacilityPage = format(tomorrow, 'dd MMM yyyy');
-const tomorrowUnix = getUnixTime(tomorrow).toString();
-
-const todayFormattedTimeHours = format(today, 'h');
-const todayFormattedTimeAmPm = format(today, 'aaa');
+// Times
+export const todayTimeHours = format(todayDate, TIME_HOURS_FORMAT);
+export const todayTimeAmPm = format(todayDate, TIME_AM_PM_FORMAT);
 
 /**
  * Some tests check that validation errors appear,
  * If a year is entered with zero as a letter. I.e, O, instead of 0.
  */
-const yearWithZeroLetter = '2O22';
-
-module.exports = {
-  shortDayFormat,
-  longDayFormat,
-  shortMonthFormat,
-  longMonthFormat,
-  longYearFormat,
-  today,
-  todayDay,
-  todayMonth,
-  todayYear,
-  tomorrow,
-  tomorrowDay,
-  tomorrowMonth,
-  tomorrowYear,
-  tomorrowUnix,
-  twoDays,
-  twoDaysDay,
-  twoDaysMonth,
-  twoDaysYear,
-  twentyFiveDaysAgo,
-  twentyFiveDaysAgoUnix,
-  twentyFiveDaysAgoFormatted,
-  thirtyFiveDaysAgo,
-  thirtyFiveDaysAgoUnix,
-  thirtyFiveDaysAgoFormatted,
-  yesterday,
-  yesterdayDay,
-  yesterdayMonth,
-  yesterdayYear,
-  yesterdayUnix,
-  twoDaysAgo,
-  fourDaysAgo,
-  fourDaysAgoDay,
-  fourDaysAgoMonth,
-  fourDaysAgoYear,
-  fourDaysAgoFull,
-  oneMonth,
-  oneMonthUnix,
-  oneMonthFormattedTable,
-  oneMonthFormattedFull,
-  oneMonthFormattedShort,
-  oneMonthDay,
-  oneMonthMonth,
-  oneMonthYear,
-  twoMonths,
-  twoMonthsDay,
-  twoMonthsMonth,
-  twoMonthsYear,
-  twoMonthsFormatted,
-  twoMonthsFormattedFull,
-  twoMonthsFormattedTable,
-  threeMonths,
-  threeMonthsDay,
-  threeMonthsMonth,
-  threeMonthsYear,
-  threeMonthsOneDay,
-  threeMonthsOneDayDay,
-  threeMonthsOneDayMonth,
-  threeMonthsOneDayYear,
-  sixYearsOneDay,
-  threeMonthsOneDayFullString,
-  threeMonthsOneDayFullMonthString,
-  sixYearsOneDayDay,
-  sixYearsOneDayMonth,
-  sixYearsOneDayYear,
-  twentyEight,
-  twentyEightDay,
-  twentyEightMonth,
-  twentyEightYear,
-  threeDaysAgo,
-  threeDaysAgoUnix,
-  threeDaysDay,
-  threeDaysMonth,
-  threeDaysYear,
-  sevenDaysAgo,
-  sevenDaysAgoUnix,
-  sevenDaysAgoDay,
-  sevenDaysAgoMonth,
-  sevenDaysAgoYear,
-  sevenDays,
-  sevenDaysUnix,
-  sevenDaysDay,
-  sevenDaysMonth,
-  sevenDaysYear,
-  todayUnix,
-  todayUnixDay,
-  todayUnixMonth,
-  todayUnixYear,
-  threeDaysAgoPlusMonth,
-  todayFullString,
-  todayFormattedFull,
-  todayFormatted,
-  todayFormattedShort,
-  tomorrowFormattedFull,
-  tomorrowFormattedFacilityPage,
-  todayFormattedTimeHours,
-  todayFormattedTimeAmPm,
-  twoYears,
-  twoYearsDay,
-  twoYearsMonth,
-  twoYearsYear,
-  twoYearsAgo,
-  twoYearsAgoUnix,
-  twoYearsAgoDay,
-  twoYearsAgoMonth,
-  twoYearsAgoYear,
-  threeYearsAgoDay,
-  threeYearsAgoMonth,
-  threeYearsAgoYear,
-  threeYears,
-  threeYearsDay,
-  threeYearsMonth,
-  threeYearsYear,
-  oneYearAgo,
-  oneYearUnix,
-  oneYearAgoDay,
-  oneYearAgoMonth,
-  oneYearAgoYear,
-  twelveMonthsOneDayAgo,
-  twelveMonthsOneDay,
-  twelveMonthsOneDayDay,
-  twelveMonthsOneDayMonth,
-  twelveMonthsOneDayYear,
-  twelveMonthsOneDayAgoDay,
-  twelveMonthsOneDayAgoMonth,
-  twelveMonthsOneDayAgoYear,
-  yearWithZeroLetter,
-};
+export const yearWithZeroLetter = '2O22';

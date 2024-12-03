@@ -1,10 +1,10 @@
+import { withSchemaTests } from '@ukef/dtfs2-common';
 import { DecodedAuthCodeRequestState } from '../types/entra-id';
-import { withSchemaTests } from '../../test-helpers';
-import { DecodedAuthCodeRequestStateSchema } from './entra-id.schema';
+import { DECODED_AUTH_CODE_REQUEST_STATE_SCHEMA } from './entra-id.schema';
 
-describe('DecodedAuthCodeRequestStateSchema', () => {
+describe('DECODED_AUTH_CODE_REQUEST_STATE_SCHEMA', () => {
   withSchemaTests({
-    schema: DecodedAuthCodeRequestStateSchema,
+    schema: DECODED_AUTH_CODE_REQUEST_STATE_SCHEMA,
     failureTestCases: getFailureTestCases(),
     successTestCases: getSuccessTestCases(),
   });
@@ -21,8 +21,7 @@ function getFailureTestCases() {
   return [
     {
       aTestCase: () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { csrfToken, ...rest } = aValidPayload();
+        const { csrfToken: _csrfToken, ...rest } = aValidPayload();
         return rest;
       },
       description: 'the csrf token is missing',
@@ -47,8 +46,7 @@ function getSuccessTestCases() {
     { aTestCase: aValidPayload, description: 'a complete valid payload is present' },
     {
       aTestCase: () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { successRedirect, ...rest } = aValidPayload();
+        const { successRedirect: _successRedirect, ...rest } = aValidPayload();
         return rest;
       },
       description: 'the optional success redirect is missing',

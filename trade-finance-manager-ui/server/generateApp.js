@@ -5,6 +5,7 @@ const session = require('express-session');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
+const flash = require('connect-flash');
 
 const { getUnauthenticatedAuthRouter } = require('./routes/auth/configs');
 const routes = require('./routes');
@@ -37,6 +38,8 @@ const generateApp = () => {
 
   app.use(seo);
   app.use(security);
+
+  app.use(flash());
 
   configureNunjucks({
     autoescape: true,
@@ -83,7 +86,7 @@ const generateApp = () => {
     }),
   );
 
-  app.use('/assets', express.static('node_modules/govuk-frontend/govuk/assets'), express.static(path.join(__dirname, '..', 'public')));
+  app.use('/assets', express.static('node_modules/govuk-frontend/dist/govuk/assets'), express.static(path.join(__dirname, '..', 'public')));
 
   app.use(createRateLimit());
   app.use(healthcheck);

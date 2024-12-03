@@ -1,4 +1,4 @@
-const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
+const { CURRENCY, REPORT_NOT_RECEIVED } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 
 const api = require('../../../src/v1/api');
@@ -57,7 +57,7 @@ describe('/v1/utilisation-reports', () => {
         'bank facility reference': 'abc',
         'ukef facility id': '20001371',
         exporter: 'test exporter',
-        'base currency': 'GBP',
+        'base currency': CURRENCY.GBP,
         'facility limit': 600000,
         'facility utilisation': 300000,
         'total fees accrued for the period': 367.23,
@@ -88,7 +88,7 @@ describe('/v1/utilisation-reports', () => {
     {
       id: 1,
       bankId: uploadingUser.bank.id,
-      status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+      status: REPORT_NOT_RECEIVED,
       uploadedByUserId: undefined,
       reportPeriod: {
         start: {

@@ -2,6 +2,8 @@ import { ObjectId } from 'mongodb';
 import { UnixTimestamp, UnixTimestampString } from '../date';
 import { Currency } from '../currency';
 import { FacilityType } from '../facility-type';
+import { AuditDatabaseRecord } from '../audit-database-record';
+import { FacilityStatus } from '../portal';
 
 /**
  * These properties will not exist if on a BSS/EWCS deal or the deal version is less than 1
@@ -51,6 +53,7 @@ export type Facility = {
   paymentType: string;
   createdAt: UnixTimestamp;
   updatedAt: UnixTimestamp;
+  bondType?: string; // only featured in BOND facilities
   ukefExposure: number;
   guaranteeFee: number;
   submittedAsIssuedDate: UnixTimestampString | null;
@@ -61,9 +64,13 @@ export type Facility = {
   coverDateConfirmed: boolean | null;
   hasBeenIssuedAndAcknowledged: boolean | null;
   canResubmitIssuedFacilities: boolean | null;
-  unissuedToIssuedByMaker: object;
+  unissuedToIssuedByMaker?: object;
   // Legacy data from migrating old GEF Facilities into DTFS
   dataMigration?: {
     drupalFacilityId: string;
   };
+  auditRecord?: AuditDatabaseRecord;
+  status?: FacilityStatus; // BSS/EWCS facilities only
+  previousStatus?: string; // BSS/EWCS facilities only
+  facilityStage?: string;
 } & FacilityEndDateProperties;

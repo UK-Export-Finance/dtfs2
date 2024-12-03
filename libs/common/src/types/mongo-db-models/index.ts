@@ -1,3 +1,4 @@
+export * from './activity-author';
 export * from './banks';
 export * from './mongo-db-collection-name';
 export * from './db-model';
@@ -9,3 +10,5 @@ export * from './tfm-facilities';
 export * from './facility';
 export * from './tfm-deals';
 export * from './deals';
+export * from './tfm-deal-cancellation';
+export * from './tfm-activity';

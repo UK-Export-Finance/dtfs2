@@ -1,11 +1,9 @@
 .case-summary {
-  background-color:#1D70B8;
-  color: white;
+  @extend .block-header;
+  padding: govuk-spacing(4) govuk-spacing(4) 0 govuk-spacing(4);
   font-family: Helvetica;
   font-size: 16px;
   line-height: 20px;
-  padding: govuk-spacing(4) govuk-spacing(4) 0 govuk-spacing(4);
-
 
   .case-summary-deal-id {
     display: inline-block;

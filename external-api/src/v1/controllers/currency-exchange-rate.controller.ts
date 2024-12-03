@@ -1,14 +1,6 @@
-/* eslint-disable @typescript-eslint/unbound-method */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable no-param-reassign */
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable import/no-extraneous-dependencies */
 
 /**
 Objective:
@@ -40,7 +32,7 @@ Additional aspects:
 import { Request, Response } from 'express';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
-import { HEADERS } from '@ukef/dtfs2-common';
+import { CURRENCY, HEADERS } from '@ukef/dtfs2-common';
 import { isValidCurrency, isValidDate } from '../../helpers';
 
 dotenv.config();
@@ -67,7 +59,7 @@ export const getExchangeRate = async (req: Request, res: Response) => {
     // and is not used in production
     const date = req.params?.date ?? false;
     // TODO: centralised constants
-    const GBP = 'GBP';
+    const { GBP } = CURRENCY;
 
     let sourceCurrency = source;
     let targetCurrency = target;

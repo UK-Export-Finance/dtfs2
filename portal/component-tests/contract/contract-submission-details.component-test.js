@@ -1,12 +1,10 @@
 const {
   ROLES: { MAKER },
+  timezoneConfig,
 } = require('@ukef/dtfs2-common');
 
 const pageRenderer = require('../pageRenderer');
 const dealFullyCompleted = require('../fixtures/deal-fully-completed');
-const {
-  DATE: { LONDON_TIMEZONE },
-} = require('../../server/constants');
 
 const deal = { _id: '61f6fbaea2460c018a4189d7', ...dealFullyCompleted };
 deal.bondTransactions.items[0]._id = '61f6fbaea2460c018a4189e1';
@@ -23,7 +21,7 @@ describe(page, () => {
     wrapper = render({
       deal,
       user: {
-        timezone: LONDON_TIMEZONE,
+        timezone: timezoneConfig.DEFAULT,
         roles: [MAKER],
       },
       editable: true,
@@ -86,7 +84,7 @@ describe(page, () => {
             mandatoryCriteria: [],
           },
           user: {
-            timezone: LONDON_TIMEZONE,
+            timezone: timezoneConfig.DEFAULT,
             roles: [MAKER],
           },
           editable: true,

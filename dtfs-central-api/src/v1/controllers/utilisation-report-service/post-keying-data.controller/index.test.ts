@@ -2,7 +2,16 @@ import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
 import { EntityManager } from 'typeorm';
-import { FeeRecordEntityMockBuilder, TestApiError, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FEE_RECORD_STATUS,
+  FeeRecordEntityMockBuilder,
+  TestApiError,
+  REQUEST_PLATFORM_TYPE,
+  UtilisationReportEntity,
+  UtilisationReportEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
+} from '@ukef/dtfs2-common';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 import { postKeyingData, PostKeyingDataRequest } from '.';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { executeWithSqlTransaction } from '../../../../helpers';
@@ -17,7 +26,7 @@ describe('post-keying-data.controller', () => {
   describe('postKeyingData', () => {
     const reportId = 12;
 
-    const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+    const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
 
     const getHttpMocks = () =>
       httpMocks.createMocks<PostKeyingDataRequest>({
@@ -26,8 +35,8 @@ describe('post-keying-data.controller', () => {
       });
 
     const someFeeRecordsForReport = (report: UtilisationReportEntity) => [
-      FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('MATCH').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.MATCH).build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus(FEE_RECORD_STATUS.MATCH).build(),
     ];
 
     const feeRecordRepoFindSpy = jest.spyOn(FeeRecordRepo, 'findByReportIdAndStatusesWithReportAndPayments');
@@ -58,7 +67,7 @@ describe('post-keying-data.controller', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      when(feeRecordRepoFindSpy).calledWith(reportId, ['MATCH']).mockResolvedValue([]);
+      when(feeRecordRepoFindSpy).calledWith(reportId, [FEE_RECORD_STATUS.MATCH]).mockResolvedValue([]);
 
       // Act
       await postKeyingData(req, res);
@@ -72,13 +81,13 @@ describe('post-keying-data.controller', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const feeRecords = someFeeRecordsForReport(UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build());
+      const feeRecords = someFeeRecordsForReport(UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build());
       feeRecords.forEach((feeRecord) => {
         // @ts-expect-error We are setting the report to be undefined purposefully
         // eslint-disable-next-line no-param-reassign
         delete feeRecord.report;
       });
-      when(feeRecordRepoFindSpy).calledWith(reportId, ['MATCH']).mockResolvedValue(feeRecords);
+      when(feeRecordRepoFindSpy).calledWith(reportId, [FEE_RECORD_STATUS.MATCH]).mockResolvedValue(feeRecords);
 
       // Act
       await postKeyingData(req, res);
@@ -96,11 +105,11 @@ describe('post-keying-data.controller', () => {
       req.body.user._id = userId;
 
       const feeRecords = [
-        FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withStatus('MATCH').build(),
-        FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withStatus('MATCH').build(),
+        FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withStatus(FEE_RECORD_STATUS.MATCH).build(),
+        FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withStatus(FEE_RECORD_STATUS.MATCH).build(),
       ];
 
-      when(feeRecordRepoFindSpy).calledWith(reportId, ['MATCH']).mockResolvedValue(feeRecords);
+      when(feeRecordRepoFindSpy).calledWith(reportId, [FEE_RECORD_STATUS.MATCH]).mockResolvedValue(feeRecords);
 
       // Act
       await postKeyingData(req, res);
@@ -109,12 +118,12 @@ describe('post-keying-data.controller', () => {
       expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
       expect(res._isEndCalled()).toEqual(true);
       expect(mockEventHandler).toHaveBeenCalledWith({
-        type: 'GENERATE_KEYING_DATA',
+        type: UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA,
         payload: {
           transactionEntityManager: mockEntityManager,
           feeRecordsAtMatchStatusWithPayments: feeRecords,
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId,
           },
         },

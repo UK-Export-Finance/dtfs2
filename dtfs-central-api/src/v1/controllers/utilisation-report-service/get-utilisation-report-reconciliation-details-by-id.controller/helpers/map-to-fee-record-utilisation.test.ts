@@ -1,5 +1,5 @@
-import { CURRENCY, FeeRecordEntityMockBuilder } from '@ukef/dtfs2-common';
-import { aTfmFacility, aUtilisationReport } from '../../../../../../test-helpers';
+import { CURRENCY, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { aReportPeriod, aTfmFacility } from '../../../../../../test-helpers';
 import { calculateExposure, mapToFeeRecordUtilisation } from './map-to-fee-record-utilisation';
 import * as helpers from '../../../../../helpers';
 
@@ -44,14 +44,14 @@ describe('map-to-fee-record-utilisation', () => {
       const coverPercentage = 80;
       const facilityId = '12345678';
 
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFacilityId(facilityId).build();
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).withFacilityId(facilityId).build();
 
       const tfmFacility = aTfmFacility();
       tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
       tfmFacility.facilitySnapshot.coverPercentage = coverPercentage;
 
       // Act
-      const feeRecordUtilisation = mapToFeeRecordUtilisation(feeRecord, tfmFacility);
+      const feeRecordUtilisation = mapToFeeRecordUtilisation(feeRecord, tfmFacility, aReportPeriod());
 
       // Assert
       expect(feeRecordUtilisation.coverPercentage).toEqual(coverPercentage);
@@ -59,23 +59,32 @@ describe('map-to-fee-record-utilisation', () => {
 
     it('should check for amendments to the facility value', () => {
       // Arrange
-      const value = 200000;
-      const facilityId = '12345678';
-
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFacilityId(facilityId).build();
-
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).build();
       const tfmFacility = aTfmFacility();
-      tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
-      tfmFacility.facilitySnapshot.value = value;
 
-      const getLatestCompletedAmendmentFacilityValueSpy = jest.spyOn(helpers, 'getLatestCompletedAmendmentToFacilityValue').mockReturnValue(null);
+      const getValueAmendmentSpy = jest.spyOn(helpers, 'getEffectiveFacilityValueAmendment').mockReturnValue(null);
 
       // Act
-      mapToFeeRecordUtilisation(feeRecord, tfmFacility);
+      mapToFeeRecordUtilisation(feeRecord, tfmFacility, aReportPeriod());
 
       // Assert
-      expect(getLatestCompletedAmendmentFacilityValueSpy).toHaveBeenCalledTimes(1);
-      expect(getLatestCompletedAmendmentFacilityValueSpy).toHaveBeenCalledWith(tfmFacility);
+      expect(getValueAmendmentSpy).toHaveBeenCalledTimes(1);
+      expect(getValueAmendmentSpy).toHaveBeenCalledWith(tfmFacility, expect.any(Date));
+    });
+
+    it('should get amendment to value that is effective at the report period end', () => {
+      // Arrange
+      const reportPeriod = { start: { month: 12, year: 2023 }, end: { month: 2, year: 2024 } };
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).build();
+
+      const getValueAmendmentSpy = jest.spyOn(helpers, 'getEffectiveFacilityValueAmendment').mockReturnValue(null);
+
+      // Act
+      mapToFeeRecordUtilisation(feeRecord, aTfmFacility(), reportPeriod);
+
+      // Assert
+      expect(getValueAmendmentSpy).toHaveBeenCalledTimes(1);
+      expect(getValueAmendmentSpy).toHaveBeenCalledWith(expect.any(Object), new Date('2024-02-29T23:59:59.999Z'));
     });
 
     it('should set the value to the corresponding field in the facility snapshot when there are no amendments to the value', () => {
@@ -83,16 +92,16 @@ describe('map-to-fee-record-utilisation', () => {
       const value = 200000;
       const facilityId = '12345678';
 
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFacilityId(facilityId).build();
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).withFacilityId(facilityId).build();
 
       const tfmFacility = aTfmFacility();
       tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
       tfmFacility.facilitySnapshot.value = value;
 
-      jest.spyOn(helpers, 'getLatestCompletedAmendmentToFacilityValue').mockReturnValue(null);
+      jest.spyOn(helpers, 'getEffectiveFacilityValueAmendment').mockReturnValue(null);
 
       // Act
-      const feeRecordUtilisation = mapToFeeRecordUtilisation(feeRecord, tfmFacility);
+      const feeRecordUtilisation = mapToFeeRecordUtilisation(feeRecord, tfmFacility, aReportPeriod());
 
       // Assert
       expect(feeRecordUtilisation.value).toEqual(value);
@@ -104,16 +113,16 @@ describe('map-to-fee-record-utilisation', () => {
       const amendedValue = 300000;
       const facilityId = '12345678';
 
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFacilityId(facilityId).build();
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).withFacilityId(facilityId).build();
 
       const tfmFacility = aTfmFacility();
       tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
       tfmFacility.facilitySnapshot.value = originalValue;
 
-      jest.spyOn(helpers, 'getLatestCompletedAmendmentToFacilityValue').mockReturnValue(amendedValue);
+      jest.spyOn(helpers, 'getEffectiveFacilityValueAmendment').mockReturnValue(amendedValue);
 
       // Act
-      const feeRecordUtilisation = mapToFeeRecordUtilisation(feeRecord, tfmFacility);
+      const feeRecordUtilisation = mapToFeeRecordUtilisation(feeRecord, tfmFacility, aReportPeriod());
 
       // Assert
       expect(feeRecordUtilisation.value).toEqual(amendedValue);
@@ -125,14 +134,17 @@ describe('map-to-fee-record-utilisation', () => {
       const utilisation = 1000;
       const coverPercentage = 60;
 
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFacilityId(facilityId).withFacilityUtilisation(utilisation).build();
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+        .withFacilityId(facilityId)
+        .withFacilityUtilisation(utilisation)
+        .build();
 
       const tfmFacility = aTfmFacility();
       tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
       tfmFacility.facilitySnapshot.coverPercentage = coverPercentage;
 
       // Act
-      const feeRecordUtilisation = mapToFeeRecordUtilisation(feeRecord, tfmFacility);
+      const feeRecordUtilisation = mapToFeeRecordUtilisation(feeRecord, tfmFacility, aReportPeriod());
 
       // Assert
       expect(feeRecordUtilisation.exposure).toEqual(calculateExposure(utilisation, coverPercentage));
@@ -143,13 +155,13 @@ describe('map-to-fee-record-utilisation', () => {
       const facilityId = '12345678';
       const id = 123;
 
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFacilityId(facilityId).withId(id).build();
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).withFacilityId(facilityId).withId(id).build();
 
       const tfmFacility = aTfmFacility();
       tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
 
       // Act
-      const feeRecordUtilisation = mapToFeeRecordUtilisation(feeRecord, tfmFacility);
+      const feeRecordUtilisation = mapToFeeRecordUtilisation(feeRecord, tfmFacility, aReportPeriod());
 
       // Assert
       expect(feeRecordUtilisation.feeRecordId).toEqual(id);
@@ -162,7 +174,7 @@ describe('map-to-fee-record-utilisation', () => {
       const baseCurrency = CURRENCY.EUR;
       const utilisation = 1000;
 
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
         .withFacilityId(facilityId)
         .withFacilityUtilisation(utilisation)
         .withBaseCurrency(baseCurrency)
@@ -173,7 +185,7 @@ describe('map-to-fee-record-utilisation', () => {
       tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
 
       // Act
-      const feeRecordUtilisation = mapToFeeRecordUtilisation(feeRecord, tfmFacility);
+      const feeRecordUtilisation = mapToFeeRecordUtilisation(feeRecord, tfmFacility, aReportPeriod());
 
       // Assert
       expect(feeRecordUtilisation.facilityId).toEqual(facilityId);
@@ -188,7 +200,7 @@ describe('map-to-fee-record-utilisation', () => {
       const totalFeesAccruedForThePeriod = 123.45;
       const totalFeesAccruedForThePeriodCurrency = CURRENCY.EUR;
 
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
         .withFacilityId(facilityId)
         .withTotalFeesAccruedForThePeriod(totalFeesAccruedForThePeriod)
         .withTotalFeesAccruedForThePeriodCurrency(totalFeesAccruedForThePeriodCurrency)
@@ -199,7 +211,7 @@ describe('map-to-fee-record-utilisation', () => {
       tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
 
       // Act
-      const feeRecordUtilisation = mapToFeeRecordUtilisation(feeRecord, tfmFacility);
+      const feeRecordUtilisation = mapToFeeRecordUtilisation(feeRecord, tfmFacility, aReportPeriod());
 
       // Assert
       expect(feeRecordUtilisation.feesAccrued).toEqual({ currency: totalFeesAccruedForThePeriodCurrency, amount: totalFeesAccruedForThePeriod });
@@ -211,7 +223,7 @@ describe('map-to-fee-record-utilisation', () => {
       const feesPaidToUkefForThePeriod = 4444.44;
       const feesPaidToUkefForThePeriodCurrency = CURRENCY.JPY;
 
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
         .withFacilityId(facilityId)
         .withFeesPaidToUkefForThePeriod(feesPaidToUkefForThePeriod)
         .withFeesPaidToUkefForThePeriodCurrency(feesPaidToUkefForThePeriodCurrency)
@@ -222,7 +234,7 @@ describe('map-to-fee-record-utilisation', () => {
       tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
 
       // Act
-      const feeRecordUtilisation = mapToFeeRecordUtilisation(feeRecord, tfmFacility);
+      const feeRecordUtilisation = mapToFeeRecordUtilisation(feeRecord, tfmFacility, aReportPeriod());
       // Assert
       expect(feeRecordUtilisation.feesPayable).toEqual({ currency: feesPaidToUkefForThePeriodCurrency, amount: feesPaidToUkefForThePeriod });
     });

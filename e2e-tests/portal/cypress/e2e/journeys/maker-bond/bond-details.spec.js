@@ -1,3 +1,4 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const pages = require('../../pages');
 const partials = require('../../partials');
 const fillBondForm = require('./fill-bond-forms');
@@ -12,7 +13,7 @@ const MOCK_DEAL = {
   additionalRefName: 'someDealName',
   submissionDetails: {
     supplyContractCurrency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
   },
 };
@@ -45,8 +46,8 @@ context('Bond Details', () => {
 
       partials.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
 
-      pages.bondDetails.bondTypeInputErrorMessage().should('be.visible');
-      pages.bondDetails.facilityStageInputErrorMessage().should('be.visible');
+      cy.assertText(pages.bondDetails.bondTypeInputErrorMessage(), 'Error: Enter the Bond type');
+      cy.assertText(pages.bondDetails.facilityStageInputErrorMessage(), 'Error: Enter the Bond stage');
     });
   });
 

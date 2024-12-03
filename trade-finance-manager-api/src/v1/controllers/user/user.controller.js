@@ -2,6 +2,7 @@ const { ObjectId } = require('mongodb');
 const { generateAuditDatabaseRecordFromAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
 const { PAYLOAD_VERIFICATION, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
+const { UserService } = require('../../services/user.service');
 const { mongoDbClient: db } = require('../../../drivers/db-client');
 const { mapUserData } = require('./helpers/mapUserData.helper');
 const { USER } = require('../../../constants');
@@ -104,6 +105,19 @@ exports.update = async (_id, update, auditDetails, callback) => {
 
     callback(null, userUpdate);
   });
+};
+
+/**
+ * Used during the SSO login process to keep the TFM user in sync with the Entra ID user.
+ * Upserts (Creates or updates) a TFM user from an Entra ID user.
+ * @param {object} upsertTfmUserFromEntraIdUserParams
+ * @param {import('@ukef/dtfs2-common').EntraIdUser} upsertTfmUserFromEntraIdUserParams.entraIdUser
+ * @param {import('@ukef/dtfs2-common').AuditDetails} upsertTfmUserFromEntraIdUserParams.auditDetails
+ */
+exports.upsertTfmUserFromEntraIdUser = async ({ entraIdUser, auditDetails }) => {
+  const upsertedUser = await UserService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
+  const tfmSessionUser = mapUserData(upsertedUser);
+  return tfmSessionUser;
 };
 
 exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, auditDetails, callback) => {

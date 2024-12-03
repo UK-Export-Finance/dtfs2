@@ -1,19 +1,18 @@
+import { anEntraIdUser, withEntraIdUserSchemaTests, withSchemaTests } from '@ukef/dtfs2-common';
 import { EntraIdAuthenticationResult } from '../types/entra-id';
-import { withSchemaTests } from '../../test-helpers';
-import { EntraIdAuthenticationResultSchema } from './entra-id.schema';
-import { aValidEntraIdUser, withEntraIdUserSchemaTests } from './with-entra-id-user-schema.tests';
+import { ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA } from './entra-id.schema';
 
-describe('EntraIdAuthenticationResultSchema', () => {
+describe('ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA', () => {
   withEntraIdUserSchemaTests({
-    schema: EntraIdAuthenticationResultSchema,
-    getTestObjectWithUpdatedUserParams: (entraIdUser) => ({
+    schema: ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA,
+    getTestObjectWithUpdatedEntraIdUserParams: (entraIdUser) => ({
       ...aValidPayload(),
       account: { idTokenClaims: entraIdUser },
     }),
   });
 
   withSchemaTests({
-    schema: EntraIdAuthenticationResultSchema,
+    schema: ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA,
     failureTestCases: getFailureTestCases(),
     successTestCases: getSuccessTestCases(),
   });
@@ -22,7 +21,7 @@ describe('EntraIdAuthenticationResultSchema', () => {
 function aValidPayload(): EntraIdAuthenticationResult {
   return {
     accessToken: 'an-access-token',
-    account: { idTokenClaims: aValidEntraIdUser() },
+    account: { idTokenClaims: anEntraIdUser() },
   };
 }
 
@@ -30,8 +29,7 @@ function getFailureTestCases() {
   return [
     {
       aTestCase: () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { accessToken, ...rest } = aValidPayload();
+        const { accessToken: _accessToken, ...rest } = aValidPayload();
         return rest;
       },
       description: 'the access token is missing',
@@ -42,7 +40,6 @@ function getFailureTestCases() {
     },
     {
       aTestCase: () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { accessToken } = aValidPayload();
         return { accessToken, account: {} };
       },

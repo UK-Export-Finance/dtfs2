@@ -1,7 +1,9 @@
 import {
+  CURRENCY,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   InvalidPayloadError,
+  PENDING_RECONCILIATION,
   PaymentEntityMockBuilder,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -12,7 +14,7 @@ import {
 } from './payment-group-validator';
 
 describe('payment group validator', () => {
-  const report = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+  const report = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
 
   describe('validateThatRequestedPaymentsMatchSavedPayments', () => {
     it('should not throw an error when requested payment IDs match saved payment IDs', () => {
@@ -58,7 +60,7 @@ describe('payment group validator', () => {
     });
 
     function aPaymentWithId(id: number) {
-      return PaymentEntityMockBuilder.forCurrency('GBP').withId(id).build();
+      return PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(id).build();
     }
   });
 
@@ -108,7 +110,7 @@ describe('payment group validator', () => {
       // Arrange
       const selectedFeeRecords = [
         FeeRecordEntityMockBuilder.forReport(report).withPaymentCurrency('USD').build(),
-        FeeRecordEntityMockBuilder.forReport(report).withPaymentCurrency('GBP').build(),
+        FeeRecordEntityMockBuilder.forReport(report).withPaymentCurrency(CURRENCY.GBP).build(),
       ];
       const paymentGroupCurrency = 'USD';
 
@@ -124,7 +126,7 @@ describe('payment group validator', () => {
         FeeRecordEntityMockBuilder.forReport(report).withPaymentCurrency('USD').build(),
         FeeRecordEntityMockBuilder.forReport(report).withPaymentCurrency('USD').build(),
       ];
-      const paymentGroupCurrency = 'GBP';
+      const paymentGroupCurrency = CURRENCY.GBP;
 
       // Act & Assert
       expect(() => validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency(selectedFeeRecords, paymentGroupCurrency)).toThrow(

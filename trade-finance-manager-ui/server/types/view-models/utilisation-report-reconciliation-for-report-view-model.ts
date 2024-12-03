@@ -19,7 +19,7 @@ export type SortedAndFormattedCurrencyAndAmount = {
   dataSortValue: number;
 };
 
-export type FeeRecordDisplayStatus = 'TO DO' | 'MATCH' | 'DOES NOT MATCH' | 'READY TO KEY' | 'RECONCILED';
+export type FeeRecordDisplayStatus = 'To do' | 'Match' | 'Does not match' | 'Ready to key' | 'Reconciled';
 
 export type FeeRecordViewModelItem = {
   id: number;
@@ -34,7 +34,7 @@ export type PaymentViewModelItem = {
   formattedCurrencyAndAmount: CurrencyAndAmountString;
 };
 
-export type KeyingSheetDisplayStatus = 'TO DO' | 'DONE';
+export type KeyingSheetDisplayStatus = 'To do' | 'Done';
 
 export type KeyingSheetAdjustmentViewModel = {
   amount: string | undefined;
@@ -78,6 +78,7 @@ export type PremiumPaymentsViewModelItem = {
   totalPaymentsReceived: SortedAndFormattedCurrencyAndAmount;
   status: FeeRecordStatus;
   displayStatus: FeeRecordDisplayStatus;
+  isSelectable: boolean;
   checkboxId: PremiumPaymentsTableCheckboxId;
   isChecked: boolean;
   checkboxAriaLabel: string;
@@ -95,13 +96,13 @@ export type PaymentDetailsFilterErrorsViewModel = {
 };
 
 export type PaymentDetailsRowViewModel = {
-  feeRecordPaymentGroupStatus: FeeRecordStatus;
   payment: PaymentDetailsPaymentViewModel;
   feeRecords: {
     id: number;
     facilityId: string;
     exporter: string;
   }[];
+  status: FeeRecordStatus;
   reconciledBy: string;
   dateReconciled: {
     formattedDateReconciled: string;
@@ -109,9 +110,18 @@ export type PaymentDetailsRowViewModel = {
   };
 };
 
+export type SelectedFilter = { value: string; removeHref: string };
+
+export type SelectedPaymentDetailsFiltersViewModel = {
+  facilityId?: SelectedFilter;
+  paymentCurrency?: SelectedFilter;
+  paymentReference?: SelectedFilter;
+};
+
 export type PaymentDetailsViewModel = {
   rows: PaymentDetailsRowViewModel[];
   filters?: PaymentDetailsFiltersViewModel;
+  selectedFilters: SelectedPaymentDetailsFiltersViewModel | null;
   filterErrors?: PaymentDetailsFilterErrorsViewModel;
   isFilterActive?: boolean;
 };
@@ -137,19 +147,26 @@ export type UtilisationTableRowViewModel = {
 
 export type UtilisationDetailsViewModel = {
   utilisationTableRows: UtilisationTableRowViewModel[];
+  downloadUrl: string;
+};
+
+export type PremiumPaymentsViewModel = {
+  payments: PremiumPaymentsViewModelItem[];
+  filters?: PremiumPaymentsFilters;
+  filterError?: ErrorSummaryViewModel;
+  tableDataError?: ErrorSummaryViewModel;
+  enablePaymentsReceivedSorting: boolean;
+  showMatchSuccessNotification: boolean;
+  hasSelectableRows: boolean;
 };
 
 export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & {
   bank: SessionBank;
   formattedReportPeriod: string;
   reportId: string;
-  premiumPayments: PremiumPaymentsViewModelItem[];
-  premiumPaymentsFilters?: PremiumPaymentsFilters;
-  premiumPaymentsFilterError?: ErrorSummaryViewModel;
-  premiumPaymentsTableDataError?: ErrorSummaryViewModel;
-  enablePaymentsReceivedSorting: boolean;
+  premiumPayments: PremiumPaymentsViewModel;
   keyingSheet: KeyingSheetViewModel;
   paymentDetails: PaymentDetailsViewModel;
   utilisationDetails: UtilisationDetailsViewModel;
-  displayMatchSuccessNotification: boolean;
+  isFeeRecordCorrectionFeatureFlagEnabled: boolean;
 };

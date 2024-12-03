@@ -1,12 +1,4 @@
-const dateConstants = require('../../../../../e2e-fixtures/dateConstants');
-
-const nowDay = dateConstants.todayDay.toString();
-const nowMonth = dateConstants.todayMonth.toString();
-const nowYear = dateConstants.todayYear.toString();
-
-const nowPlusMonthDay = dateConstants.oneMonthDay.toString();
-const nowPlusMonthMonth = dateConstants.oneMonthMonth.toString();
-const nowPlusMonthYear = dateConstants.oneMonthYear.toString();
+const { today, oneMonth } = require('../../../../../e2e-fixtures/dateConstants');
 
 const GUARANTEE_DETAILS = {
   // 'Conditional' facility stage specifics
@@ -14,12 +6,12 @@ const GUARANTEE_DETAILS = {
 
   // 'Unconditional' facility stage specifics
   name: '123456',
-  requestedCoverStartDateDay: nowDay,
-  requestedCoverStartDateMonth: nowMonth,
-  requestedCoverStartDateYear: nowYear,
-  coverEndDateDay: nowPlusMonthDay,
-  coverEndDateMonth: nowPlusMonthMonth,
-  coverEndDateYear: nowPlusMonthYear,
+  requestedCoverStartDateDay: today.dayLong,
+  requestedCoverStartDateMonth: today.monthLong,
+  requestedCoverStartDateYear: today.year,
+  coverEndDateDay: oneMonth.dayLong,
+  coverEndDateMonth: oneMonth.monthLong,
+  coverEndDateYear: oneMonth.year,
 };
 
 const FINANCIAL_DETAILS = {
@@ -30,9 +22,9 @@ const FINANCIAL_DETAILS = {
     text: 'EUR - Euros',
   },
   conversionRate: '100',
-  conversionRateDateDay: nowDay,
-  conversionRateDateMonth: nowMonth,
-  conversionRateDateYear: nowYear,
+  conversionRateDateDay: today.dayLong,
+  conversionRateDateMonth: today.monthLong,
+  conversionRateDateYear: today.year,
   disbursementAmount: '10.00',
   interestMarginFee: '20',
   coveredPercentage: '5',

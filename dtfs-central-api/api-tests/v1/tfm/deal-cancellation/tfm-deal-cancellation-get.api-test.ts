@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_STAGE } from '@ukef/dtfs2-common';
+import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_STAGE, TFM_DEAL_CANCELLATION_STATUS, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { aTfmUser } from '@ukef/dtfs2-common/mock-data-backend';
 import { generatePortalAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { withMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import wipeDB from '../../../wipeDB';
@@ -8,7 +9,7 @@ import { testApi } from '../../../test-api';
 import { DEALS } from '../../../../src/constants';
 import aDeal from '../../deal-builder';
 import { createDeal } from '../../../helpers/create-deal';
-import { aPortalUser, aTfmUser } from '../../../../test-helpers';
+import { aPortalUser } from '../../../../test-helpers';
 import { MOCK_PORTAL_USER } from '../../../mocks/test-users/mock-portal-user';
 
 const originalProcessEnv = { ...process.env };
@@ -98,7 +99,7 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
       });
 
       it('should return the deal cancellation object if it exists', async () => {
-        const dealCancellation = {
+        const dealCancellation: TfmDealCancellation = {
           reason: 'test reason',
           bankRequestDate: 1794418807,
           effectiveFrom: 1794419907,
@@ -108,7 +109,7 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
 
         const getCancellationResponse = await testApi.get(dealCancellationUrl);
 
-        expect(getCancellationResponse.body).toEqual(dealCancellation);
+        expect(getCancellationResponse.body).toEqual({ ...dealCancellation, status: TFM_DEAL_CANCELLATION_STATUS.DRAFT });
         expect(getCancellationResponse.status).toEqual(HttpStatusCode.Ok);
       });
 
@@ -119,7 +120,7 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
         expect(getCancellationResponse.status).toEqual(HttpStatusCode.Ok);
       });
 
-      it('should return 404 if dealId is valid but not associated to a record', async () => {
+      it('should return 404 if dealId is valid but not associated to a deal', async () => {
         const validButNonExistentDealId = new ObjectId();
 
         const getCancellationResponse = await testApi.get(`/v1/tfm/deals/${validButNonExistentDealId.toString()}/cancellation`);

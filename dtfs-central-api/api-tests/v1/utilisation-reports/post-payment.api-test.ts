@@ -6,17 +6,19 @@ import {
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   FeeRecordStatus,
+  PENDING_RECONCILIATION,
   PaymentEntity,
   PaymentEntityMockBuilder,
   PaymentMatchingToleranceEntityMockBuilder,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
+import { aTfmUser } from '@ukef/dtfs2-common/mock-data-backend';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
-import { aPortalUser, aTfmUser, aTfmSessionUser } from '../../../test-helpers';
+import { aPortalUser, aTfmSessionUser } from '../../../test-helpers';
 
 console.error = jest.fn();
 
@@ -33,12 +35,12 @@ describe(`POST ${BASE_URL}`, () => {
   const tfmUser = aTfmUser();
   const tfmUserId = tfmUser._id.toString();
 
-  const uploadedUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+  const uploadedUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
     .withId(reportId)
     .withUploadedByUserId(portalUserId)
     .build();
 
-  const paymentCurrency: Currency = 'GBP';
+  const paymentCurrency: Currency = CURRENCY.GBP;
 
   const feeRecordIds = [1, 2];
   const feeRecords = feeRecordIds.map((id) =>
@@ -64,7 +66,7 @@ describe(`POST ${BASE_URL}`, () => {
     await SqlDbHelper.deleteAllEntries('PaymentMatchingTolerance');
 
     const tolerances = [
-      PaymentMatchingToleranceEntityMockBuilder.forCurrency('GBP').withId(1).withThreshold(1).withIsActive(true).build(),
+      PaymentMatchingToleranceEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(1).withThreshold(1).withIsActive(true).build(),
       PaymentMatchingToleranceEntityMockBuilder.forCurrency('EUR').withId(2).withThreshold(2).withIsActive(true).build(),
       PaymentMatchingToleranceEntityMockBuilder.forCurrency('JPY').withId(3).withThreshold(3).withIsActive(true).build(),
       PaymentMatchingToleranceEntityMockBuilder.forCurrency('USD').withId(4).withThreshold(4).withIsActive(true).build(),
@@ -251,7 +253,7 @@ describe(`POST ${BASE_URL}`, () => {
     await SqlDbHelper.deleteAllEntries('FeeRecord');
 
     const feeRecordsInGBP = feeRecordIds.map((id) =>
-      FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport).withId(id).withPaymentCurrency('GBP').build(),
+      FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport).withId(id).withPaymentCurrency(CURRENCY.GBP).build(),
     );
     await SqlDbHelper.saveNewEntries('FeeRecord', feeRecordsInGBP);
 
@@ -262,6 +264,75 @@ describe(`POST ${BASE_URL}`, () => {
 
     // Act
     const response = await testApi.post(requestBodyWithEURPaymentCurrency).to(getUrl(reportId));
+
+    // Assert
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
+  });
+
+  it(`should respond with a ${HttpStatusCode.BadRequest} when the selected fee record statuses do not match`, async () => {
+    // Arrange
+    await SqlDbHelper.deleteAllEntries('Payment');
+    await SqlDbHelper.deleteAllEntries('FeeRecord');
+
+    const selectedFeeRecordIds = [1, 2, 3];
+
+    const feeRecordsWithPayments = [
+      FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport)
+        .withId(1)
+        .withPaymentCurrency(CURRENCY.GBP)
+        .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
+        .build(),
+      FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport).withId(2).withPaymentCurrency(CURRENCY.GBP).withStatus(FEE_RECORD_STATUS.TO_DO).build(),
+      FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport)
+        .withId(3)
+        .withPaymentCurrency(CURRENCY.GBP)
+        .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
+        .build(),
+    ];
+
+    const payments = [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords(feeRecordsWithPayments).build()];
+
+    await SqlDbHelper.saveNewEntries('Payment', payments);
+
+    const requestBodyWithFeeRecordIds = {
+      ...aValidRequestBody(),
+      feeRecordIds: selectedFeeRecordIds,
+    };
+
+    // Act
+    const response = await testApi.post(requestBodyWithFeeRecordIds).to(getUrl(reportId));
+
+    // Assert
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
+  });
+
+  it(`should respond with a ${HttpStatusCode.BadRequest} when the selected fee record ids are not a complete group`, async () => {
+    // Arrange
+    await SqlDbHelper.deleteAllEntries('Payment');
+    await SqlDbHelper.deleteAllEntries('FeeRecord');
+
+    const selectedFeeRecordIds = [1, 2];
+    const paymentFeeRecordIds = [1, 2, 3];
+
+    const feeRecordsWithPayments = paymentFeeRecordIds.map((feeRecordId) =>
+      FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport)
+        .withId(feeRecordId)
+        .withPaymentCurrency(CURRENCY.GBP)
+        .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
+        .build(),
+    );
+
+    const payments = [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords(feeRecordsWithPayments).build()];
+
+    await SqlDbHelper.saveNewEntries('Payment', payments);
+
+    const requestBodyWithPartialFeeRecordIds = {
+      ...aValidRequestBody(),
+      feeRecordIds: selectedFeeRecordIds,
+    };
+
+    // Act
+    const response = await testApi.post(requestBodyWithPartialFeeRecordIds).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.BadRequest);

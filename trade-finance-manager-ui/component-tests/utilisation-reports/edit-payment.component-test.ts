@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { pageRenderer } from '../pageRenderer';
 import { anEditPaymentViewModel } from '../../test-helpers';
 import { EditPaymentViewModel } from '../../server/types/view-models';
@@ -7,6 +8,26 @@ const page = '../templates/utilisation-reports/edit-payment.njk';
 const render = pageRenderer<EditPaymentViewModel>(page);
 
 describe(page, () => {
+  it('should add error prefix to page title when there are errors', () => {
+    const viewModel: EditPaymentViewModel = {
+      ...anEditPaymentViewModel(),
+      errors: { errorSummary: [{ text: 'an error', href: 'error-href' }] },
+    };
+    const wrapper = render(viewModel);
+
+    wrapper.expectPageTitle().toRead('Error - Edit payment');
+  });
+
+  it('should not add error prefix to page title when there are no errors', () => {
+    const viewModel: EditPaymentViewModel = {
+      ...anEditPaymentViewModel(),
+      errors: { errorSummary: [] },
+    };
+    const wrapper = render(viewModel);
+
+    wrapper.expectPageTitle().toRead('Edit payment');
+  });
+
   it('should render the page heading with the caption', () => {
     const bankName = 'Test bank';
     const formattedReportPeriod = 'January 2024';
@@ -44,10 +65,10 @@ describe(page, () => {
 
   it('should display the amount received input with the supplied payment currency', () => {
     const viewModel = anEditPaymentViewModel();
-    viewModel.paymentCurrency = 'GBP';
+    viewModel.paymentCurrency = CURRENCY.GBP;
     const wrapper = render(viewModel);
 
-    wrapper.expectText('div.govuk-input__prefix').toRead('GBP');
+    wrapper.expectText('div.govuk-input__prefix').toRead(CURRENCY.GBP);
   });
 
   it('should initialise the amount received with the supplied payment amount', () => {

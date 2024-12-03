@@ -59,6 +59,7 @@
     "codeql",
     "commitlintrc",
     "commonised",
+    "commonisation",
     "corejs",
     "creds",
     "crsf",
@@ -104,6 +105,7 @@
     "healthcheck",
     "HSTS",
     "huskyrc",
+    "ICICI",
     "IIFE",
     "imask",
     "immer",
@@ -201,6 +203,7 @@
     "unsubmitted",
     "UPRN",
     "upserted",
+    "upserts",
     "venv",
     "VNET",
     "WCAG",
@@ -208,11 +211,23 @@
     "wovens",
     "XLXS"
   ],
-  "dictionaries": ["en-gb", "companies", "softwareTerms", "misc", "lorem-ipsum", "typescript", "node", "bash", "npm"],
+  "dictionaries": [
+    "en-gb",
+    "companies",
+    "softwareTerms",
+    "misc",
+    "lorem-ipsum",
+    "typescript",
+    "node",
+    "bash",
+    "npm"
+  ],
   "languageSettings": [
     {
       "languageId": "commit-msg",
-      "ignoreRegExpList": ["/^#.*/gm"]
+      "ignoreRegExpList": [
+        "/^#.*/gm"
+      ]
     }
   ],
   "version": "0.2"

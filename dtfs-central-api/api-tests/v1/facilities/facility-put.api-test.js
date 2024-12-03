@@ -76,9 +76,9 @@ describe('/v1/portal/facilities', () => {
       expect(body.auditRecord).toEqual(expectedAuditRecord);
     });
 
-    it('returns 404 when adding facility to non-existent deal', async () => {
-      const aValidButIncorrectDealId = new ObjectId();
-      const { status } = await testApi.put(aValidUpdateRequest).to(`/v1/portal/facilities/${aValidButIncorrectDealId}`);
+    it('returns 404 when facility id is valid but does not exist', async () => {
+      const aValidButIncorrectFacilityId = new ObjectId();
+      const { status } = await testApi.put(aValidUpdateRequest).to(`/v1/portal/facilities/${aValidButIncorrectFacilityId}`);
 
       expect(status).toEqual(404);
     });

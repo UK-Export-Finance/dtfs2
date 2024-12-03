@@ -1,14 +1,15 @@
+import { BOND_TYPE } from '@ukef/dtfs2-common';
 import Chance from 'chance';
-import * as CONSTANTS from '../../../e2e-fixtures';
+import { CURRENCY, DEAL_STATUS, DEAL_TYPE, SUBMISSION_TYPE, FACILITY_TYPE, FACILITY_STAGE } from '../../../e2e-fixtures';
 
 const chance = new Chance();
 
 export const MOCK_DEAL = {
-  dealType: CONSTANTS.DEAL_TYPE.BSS_EWCS,
-  submissionType: CONSTANTS.SUBMISSION_TYPE.AIN,
+  dealType: DEAL_TYPE.BSS_EWCS,
+  submissionType: SUBMISSION_TYPE.AIN,
   bankInternalRefName: 'Mock supply contract ID',
   additionalRefName: 'Mock supply contract name',
-  status: CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
+  status: DEAL_STATUS.UKEF_ACKNOWLEDGED,
   previousStatus: 'Submitted',
   bank: {
     id: '123',
@@ -103,7 +104,7 @@ export const MOCK_DEAL = {
     'supplyContractConversionDate-year': '',
     supplyContractConversionRateToGBP: '',
     supplyContractCurrency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
       text: 'GBP - UK Sterling',
     },
     supplyContractValue: '1234.00',
@@ -171,10 +172,10 @@ export const MOCK_DEAL = {
   },
   mockFacilities: [
     {
-      type: CONSTANTS.FACILITY_TYPE.BOND,
+      type: FACILITY_TYPE.BOND,
       bondIssuer: 'Issuer',
-      bondType: 'Advance payment guarantee',
-      facilityStage: CONSTANTS.FACILITY_STAGE.ISSUED,
+      bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
+      facilityStage: FACILITY_STAGE.ISSUED,
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '10',
       bondBeneficiary: 'test',
@@ -189,7 +190,7 @@ export const MOCK_DEAL = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       'coverEndDate-day': '20',
       'coverEndDate-month': '10',
@@ -200,9 +201,9 @@ export const MOCK_DEAL = {
       updatedAt: Date.now(),
     },
     {
-      type: CONSTANTS.FACILITY_TYPE.LOAN,
+      type: FACILITY_TYPE.LOAN,
       createdDate: 1610369832226,
-      facilityStage: CONSTANTS.FACILITY_STAGE.CONDITIONAL,
+      facilityStage: FACILITY_STAGE.CONDITIONAL,
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
       name: chance.word(),
@@ -231,7 +232,7 @@ export const MOCK_DEAL = {
       status: 'Acknowledged',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
   ],

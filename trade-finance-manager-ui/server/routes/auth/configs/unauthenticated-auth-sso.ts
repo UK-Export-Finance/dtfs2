@@ -6,8 +6,8 @@ export const getUnauthenticatedAuthSsoRouter: GetRouter = () => {
   const unauthenticatedAuthSsoController = new UnauthenticatedAuthController();
 
   const unauthenticatedAuthSsoRouter = express.Router();
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises, @typescript-eslint/unbound-method
-  unauthenticatedAuthSsoRouter.post('auth/accept-sso-redirect', unauthenticatedAuthSsoController.postSsoRedirect);
+
+  unauthenticatedAuthSsoRouter.post('auth/accept-sso-redirect', unauthenticatedAuthSsoController.postSsoRedirect.bind(unauthenticatedAuthSsoController));
 
   return unauthenticatedAuthSsoRouter;
 };

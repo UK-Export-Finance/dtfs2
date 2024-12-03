@@ -3,7 +3,7 @@ import { calculateFixedFeeFromDaysRemaining } from './calculate-fixed-fee-from-d
 describe('calculateFixedFeeFromDaysRemaining', () => {
   it('should return the product of the utilisation, interest percentage (divided by 100), bank admin fee percentage (fixed at 0.9) and number of days remaining in the cover period divided by the day count basis and rounds to 2 decimal places', () => {
     // Arrange
-    const utilisation = 100000;
+    const ukefShareOfUtilisation = 100000;
     const interestPercentage = 5;
     const dayCountBasis = 365;
 
@@ -12,7 +12,7 @@ describe('calculateFixedFeeFromDaysRemaining', () => {
 
     // Act
     const result = calculateFixedFeeFromDaysRemaining({
-      utilisation,
+      ukefShareOfUtilisation,
       numberOfDaysRemainingInCoverPeriod,
       interestPercentage,
       dayCountBasis,

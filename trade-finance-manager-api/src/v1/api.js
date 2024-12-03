@@ -164,6 +164,10 @@ const updatePortalFacility = async (facilityId, update, auditDetails) => {
   }
 };
 
+/**
+ * @param {string} dealId
+ * @returns {Promise<import('@ukef/dtfs2-common').TfmDeal}
+ */
 const findOneDeal = async (dealId) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -305,7 +309,7 @@ const updateDealCancellation = async ({ dealId, dealCancellationUpdate, auditDet
 /**
  * Gets the deal cancellation object on a TFM deal
  * @param {string} dealId - deal cancellation to update
- * @returns {Promise<Partial<import('@ukef/dtfs2-common').TfmDealCancellation>>} - Deal cancellation object
+ * @returns {Promise<Partial<import('@ukef/dtfs2-common').TfmDealCancellationWithStatus>>} - Deal cancellation object
  */
 const getDealCancellation = async (dealId) => {
   try {
@@ -357,6 +361,39 @@ const deleteDealCancellation = async ({ dealId, auditDetails }) => {
   }
 };
 
+/**
+ * Submits the deal cancellation
+ * @param {Object} params
+ * @param {string} params.dealId - id of deal to cancel
+ * @param {import('@ukef/dtfs2-common').TfmDealCancellation} params.cancellation - the cancellation details to submit
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
+ * @returns {Promise<import('@ukef/dtfs2-common').TfmDealCancellationResponse>} update result object
+ */
+const submitDealCancellation = async ({ dealId, cancellation, auditDetails }) => {
+  try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      throw new InvalidDealIdError(dealId);
+    }
+
+    const response = await axios({
+      method: 'post',
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/cancellation/submit`,
+      headers: headers.central,
+      data: {
+        cancellation,
+        auditDetails,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 const findOneFacility = async (facilityId) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
@@ -379,6 +416,10 @@ const findOneFacility = async (facilityId) => {
   }
 };
 
+/**
+ * @param {string} dealId
+ * @returns {Promise<import('@ukef/dtfs2-common').TfmFacility[]>}
+ */
 const findFacilitiesByDealId = async (dealId) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
@@ -895,6 +936,11 @@ const updateUserTasks = async (userId, updatedTasks) => {
   }
 };
 
+/**
+ * find one team
+ * @param {string} teamId - the team id
+ * @returns {Promise<import('@ukef/dtfs2-common').Team>}
+ */
 const findOneTeam = async (teamId) => {
   try {
     const isValidId = isValidTeamId(teamId);
@@ -1016,7 +1062,7 @@ const createACBS = async (deal, bank) => {
   return {};
 };
 
-const updateACBSfacility = async (facility, deal) => {
+const issueACBSfacility = async (facility, deal) => {
   if (!!facility && !!deal) {
     try {
       const response = await axios({
@@ -1628,6 +1674,41 @@ const addFeesToAnExistingPayment = async (reportId, feeRecordIds, paymentIds, us
   return response.data;
 };
 
+/**
+ * Gets the fee record by report id and fee record id
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
+ * @returns {Promise<import('./api-response-types').FeeRecordResponseBody>}
+ */
+const getFeeRecord = async (reportId, feeRecordId) => {
+  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}`, {
+    headers: headers.central,
+  });
+
+  return response.data;
+};
+
+/**
+ * Updates the fee record correction transient form data associated with the given fee record id and user
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
+ * @param {import('@ukef/dtfs2-common').RecordCorrectionTransientFormData} formData
+ * @param {import('../types/tfm-session-user').TfmSessionUser} user - The current user stored in the session
+ * @returns {Promise<{ status: number }>}
+ */
+const updateFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, formData, user) => {
+  const response = await axios({
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-transient-form-data`,
+    method: 'put',
+    headers: headers.central,
+    data: {
+      formData,
+      user,
+    },
+  });
+  return response.data;
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -1666,6 +1747,7 @@ module.exports = {
   updateDealCancellation,
   getDealCancellation,
   deleteDealCancellation,
+  submitDealCancellation,
   findPortalUserById,
   updateUserTasks,
   findOneTeam,
@@ -1674,7 +1756,7 @@ module.exports = {
   getFacilityExposurePeriod,
   getPremiumSchedule,
   createACBS,
-  updateACBSfacility,
+  issueACBSfacility,
   amendACBSfacility,
   getFunctionsAPI,
   createEstoreSite,
@@ -1704,4 +1786,6 @@ module.exports = {
   editPayment,
   removeFeesFromPayment,
   addFeesToAnExistingPayment,
+  getFeeRecord,
+  updateFeeRecordCorrectionTransientFormData,
 };

@@ -1,3 +1,4 @@
+import { PORTAL_ACTIVITY_LABEL } from '@ukef/dtfs2-common';
 import relative from '../../../relativeURL';
 import CONSTANTS from '../../../../fixtures/constants';
 import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_DRAFT, UKEF_DECISION, underwriterManagersDecision } from '../../../../fixtures/mocks/mock-deals';
@@ -17,8 +18,6 @@ import applicationActivities from '../../../pages/application-activities';
 
 const { unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities();
 const issuedCashFacilityWithCoverDateConfirmed = anIssuedCashFacilityWithCoverDateConfirmed();
-
-const { format } = require('date-fns');
 
 let dealId;
 let token;
@@ -175,7 +174,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.rows().contains(format(threeMonths, 'dd MMM yyyy'));
+      unissuedFacilityTable.rows().contains(threeMonths.dd_MMM_yyyy);
       unissuedFacilityTable.updateFacilitiesLater().click();
 
       // link on application preview exists
@@ -189,7 +188,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: threeDaysAgo });
+      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: threeDaysAgo.date });
 
       cy.clickContinueButton();
 
@@ -204,7 +203,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 
@@ -221,8 +220,8 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 
@@ -493,9 +492,7 @@ context('Check activity feed', () => {
       applicationActivities.activityTimeline().contains('Bank facility stage changed');
 
       // contains submission message
-      applicationActivities
-        .activityTimeline()
-        .contains(`${CONSTANTS.PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION} by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
+      applicationActivities.activityTimeline().contains(`${PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION} by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
 
       // first facility issued activity
       applicationActivities

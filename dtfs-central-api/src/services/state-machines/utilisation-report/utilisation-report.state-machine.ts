@@ -1,4 +1,11 @@
-import { UtilisationReportEntity, ReportPeriod } from '@ukef/dtfs2-common';
+import {
+  UtilisationReportEntity,
+  ReportPeriod,
+  PENDING_RECONCILIATION,
+  RECONCILIATION_COMPLETED,
+  RECONCILIATION_IN_PROGRESS,
+  REPORT_NOT_RECEIVED,
+} from '@ukef/dtfs2-common';
 import { UtilisationReportRepo } from '../../../repositories/utilisation-reports-repo';
 import { InvalidStateMachineTransitionError, NotFoundError } from '../../../errors';
 import {
@@ -16,6 +23,7 @@ import {
   handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent,
 } from './event-handlers';
 import { UtilisationReportEvent } from './event/utilisation-report.event';
+import { UTILISATION_REPORT_EVENT_TYPE } from './event/utilisation-report.event-type';
 
 /**
  * The utilisation report state machine class
@@ -93,55 +101,55 @@ export class UtilisationReportStateMachine {
     switch (this.report?.status) {
       case undefined:
         switch (event.type) {
-          case 'DUE_REPORT_INITIALISED':
+          case UTILISATION_REPORT_EVENT_TYPE.DUE_REPORT_INITIALISED:
             return handleUtilisationReportDueReportInitialisedEvent(event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
-      case 'REPORT_NOT_RECEIVED':
+      case REPORT_NOT_RECEIVED:
         switch (event.type) {
-          case 'REPORT_UPLOADED':
+          case UTILISATION_REPORT_EVENT_TYPE.REPORT_UPLOADED:
             return handleUtilisationReportReportUploadedEvent(this.report, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
-      case 'PENDING_RECONCILIATION':
+      case PENDING_RECONCILIATION:
         switch (event.type) {
-          case 'ADD_A_PAYMENT':
+          case UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT:
             return handleUtilisationReportAddAPaymentEvent(this.report, event.payload);
-          case 'MANUALLY_SET_COMPLETED':
+          case UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED:
             return handleUtilisationReportManuallySetCompletedEvent(this.report, event.payload);
-          case 'GENERATE_KEYING_DATA':
+          case UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA:
             return handleUtilisationReportGenerateKeyingDataEvent(this.report, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
-      case 'RECONCILIATION_IN_PROGRESS':
+      case RECONCILIATION_IN_PROGRESS:
         switch (event.type) {
-          case 'ADD_A_PAYMENT':
+          case UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT:
             return handleUtilisationReportAddAPaymentEvent(this.report, event.payload);
-          case 'DELETE_PAYMENT':
+          case UTILISATION_REPORT_EVENT_TYPE.DELETE_PAYMENT:
             return handleUtilisationReportDeletePaymentEvent(this.report, event.payload);
-          case 'GENERATE_KEYING_DATA':
+          case UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA:
             return handleUtilisationReportGenerateKeyingDataEvent(this.report, event.payload);
-          case 'EDIT_PAYMENT':
+          case UTILISATION_REPORT_EVENT_TYPE.EDIT_PAYMENT:
             return handleUtilisationReportEditPaymentEvent(this.report, event.payload);
-          case 'MARK_FEE_RECORDS_AS_READY_TO_KEY':
+          case UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_READY_TO_KEY:
             return handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent(this.report, event.payload);
-          case 'MARK_FEE_RECORDS_AS_RECONCILED':
+          case UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_RECONCILED:
             return handleUtilisationReportMarkFeeRecordsAsReconciledEvent(this.report, event.payload);
-          case 'REMOVE_FEES_FROM_PAYMENT_GROUP':
+          case UTILISATION_REPORT_EVENT_TYPE.REMOVE_FEES_FROM_PAYMENT_GROUP:
             return handleUtilisationReportRemoveFeesFromPaymentGroupEvent(this.report, event.payload);
-          case 'ADD_FEES_TO_AN_EXISTING_PAYMENT_GROUP':
+          case UTILISATION_REPORT_EVENT_TYPE.ADD_FEES_TO_AN_EXISTING_PAYMENT_GROUP:
             return handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent(this.report, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
-      case 'RECONCILIATION_COMPLETED':
+      case RECONCILIATION_COMPLETED:
         switch (event.type) {
-          case 'MANUALLY_SET_INCOMPLETE':
+          case UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_INCOMPLETE:
             return handleUtilisationReportManuallySetIncompleteEvent(this.report, event.payload);
-          case 'MARK_FEE_RECORDS_AS_READY_TO_KEY':
+          case UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_READY_TO_KEY:
             return handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent(this.report, event.payload);
           default:
             return this.handleInvalidTransition(event);

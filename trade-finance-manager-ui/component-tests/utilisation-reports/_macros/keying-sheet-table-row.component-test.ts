@@ -1,4 +1,4 @@
-import { CurrencyAndAmountString } from '@ukef/dtfs2-common';
+import { CURRENCY, CurrencyAndAmountString } from '@ukef/dtfs2-common';
 import { KeyingSheetViewModel } from '../../../server/types/view-models';
 import { componentRenderer } from '../../componentRenderer';
 
@@ -10,11 +10,11 @@ type KeyingSheetTableRow = KeyingSheetViewModel[number];
 describe(component, () => {
   const aKeyingSheetTableRow = (): KeyingSheetTableRow => ({
     status: 'TO_DO',
-    displayStatus: 'TO DO',
+    displayStatus: 'To do',
     feeRecordId: 12,
     facilityId: '12345678',
     exporter: 'Test exporter',
-    baseCurrency: 'GBP',
+    baseCurrency: CURRENCY.GBP,
     feePayments: [
       {
         formattedCurrencyAndAmount: 'GBP 100.00',
@@ -43,7 +43,7 @@ describe(component, () => {
     const keyingSheetRow: KeyingSheetTableRow = {
       ...aKeyingSheetTableRow(),
       status: 'TO_DO',
-      displayStatus: 'TO DO',
+      displayStatus: 'To do',
       facilityId: 'some facility id',
       exporter: 'some exporter',
       baseCurrency: 'EUR',
@@ -56,7 +56,7 @@ describe(component, () => {
     };
     const wrapper = getWrapper({ keyingSheetRow });
 
-    wrapper.expectElement(`tr td:contains("TO DO")`).toExist();
+    wrapper.expectElement(`tr td:contains("To do")`).toExist();
     wrapper.expectElement(`tr td:contains("some facility id")`).toExist();
     wrapper.expectElement(`tr td:contains("some exporter")`).toExist();
     wrapper.expectElement(`tr td:contains("EUR")`).toExist();
@@ -66,7 +66,7 @@ describe(component, () => {
     const keyingSheetRow: KeyingSheetTableRow = {
       ...aKeyingSheetTableRow(),
       status: 'TO_DO',
-      displayStatus: 'TO DO',
+      displayStatus: 'To do',
       facilityId: 'some facility id',
       exporter: 'some exporter',
       baseCurrency: 'EUR',
@@ -74,7 +74,7 @@ describe(component, () => {
     };
     const wrapper = getWrapper({ keyingSheetRow });
 
-    wrapper.expectElement(`tr td:contains("TO DO")`).toExist();
+    wrapper.expectElement(`tr td:contains("To do")`).toExist();
     wrapper.expectElement(`tr td:contains("some facility id")`).toExist();
     wrapper.expectElement(`tr td:contains("some exporter")`).toExist();
     wrapper.expectElement(`tr td:contains("EUR")`).toExist();
@@ -138,7 +138,7 @@ describe(component, () => {
   describe('when the keying sheet adjustment value change field is set to INCREASE', () => {
     const change = 'INCREASE';
 
-    it('renders the fixed fee adjustment amount in the increase column with the numeric cell class', () => {
+    it('renders the fixed fee adjustment amount in the increase column with the numeric cell class and does not use the text align right class', () => {
       const keyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         fixedFeeAdjustment: { change, amount: '111.11' },
@@ -147,9 +147,10 @@ describe(component, () => {
 
       wrapper.expectElement(`${getFixedFeeAdjustmentSelector('increase')}:contains("111.11")`).toExist();
       wrapper.expectElement(`${getFixedFeeAdjustmentSelector('increase')}:contains("111.11")`).hasClass('govuk-table__cell--numeric');
+      wrapper.expectElement(`${getFixedFeeAdjustmentSelector('increase')}:contains("111.11")`).doesNotHaveClass('govuk-!-text-align-right');
     });
 
-    it('renders the principal balance adjustment in the increase column with the numeric cell class', () => {
+    it('renders the principal balance adjustment in the increase column with the numeric cell class and does not use the text align right class', () => {
       const keyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         principalBalanceAdjustment: { change, amount: '333.33' },
@@ -158,9 +159,10 @@ describe(component, () => {
 
       wrapper.expectElement(`${getPrincipalBalanceAdjustmentSelector('increase')}:contains("333.33")`).toExist();
       wrapper.expectElement(`${getPrincipalBalanceAdjustmentSelector('increase')}:contains("333.33")`).hasClass('govuk-table__cell--numeric');
+      wrapper.expectElement(`${getPrincipalBalanceAdjustmentSelector('increase')}:contains("333.33")`).doesNotHaveClass('govuk-!-text-align-right');
     });
 
-    it("sets all the decrease columns to the '-' character and does not use the numeric cell class", () => {
+    it("sets all the decrease columns to the '-' character with the text align right class and does not use the numeric cell class", () => {
       const keyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         fixedFeeAdjustment: { change, amount: '111.11' },
@@ -169,8 +171,10 @@ describe(component, () => {
       const wrapper = getWrapper({ keyingSheetRow });
 
       wrapper.expectElement(`tr ${getFixedFeeAdjustmentSelector('decrease')}:contains("-")`).toExist();
+      wrapper.expectElement(`tr ${getFixedFeeAdjustmentSelector('decrease')}:contains("-")`).hasClass('govuk-!-text-align-right');
       wrapper.expectElement(`tr ${getFixedFeeAdjustmentSelector('decrease')}:contains("-")`).doesNotHaveClass('govuk-table__cell--numeric');
       wrapper.expectElement(`tr ${getPrincipalBalanceAdjustmentSelector('decrease')}:contains("-")`).toExist();
+      wrapper.expectElement(`tr ${getPrincipalBalanceAdjustmentSelector('decrease')}:contains("-")`).hasClass('govuk-!-text-align-right');
       wrapper.expectElement(`tr ${getPrincipalBalanceAdjustmentSelector('decrease')}:contains("-")`).doesNotHaveClass('govuk-table__cell--numeric');
     });
   });
@@ -178,7 +182,7 @@ describe(component, () => {
   describe('when the keying sheet adjustment value change field is set to DECREASE', () => {
     const change = 'DECREASE';
 
-    it('renders the fixed fee adjustment amount in the decrease column with the numeric cell class', () => {
+    it('renders the fixed fee adjustment amount in the decrease column with the numeric cell class and does not use the text align right class', () => {
       const keyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         fixedFeeAdjustment: { change, amount: '111.11' },
@@ -187,9 +191,10 @@ describe(component, () => {
 
       wrapper.expectElement(`${getFixedFeeAdjustmentSelector('decrease')}:contains("111.11")`).toExist();
       wrapper.expectElement(`${getFixedFeeAdjustmentSelector('decrease')}:contains("111.11")`).hasClass('govuk-table__cell--numeric');
+      wrapper.expectElement(`${getFixedFeeAdjustmentSelector('decrease')}:contains("111.11")`).doesNotHaveClass('govuk-!-text-align-right');
     });
 
-    it('renders the principal balance adjustment in the decrease column with the numeric cell class', () => {
+    it('renders the principal balance adjustment in the decrease column with the numeric cell class and does not use the text align right class', () => {
       const keyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         principalBalanceAdjustment: { change, amount: '333.33' },
@@ -198,9 +203,10 @@ describe(component, () => {
 
       wrapper.expectElement(`${getPrincipalBalanceAdjustmentSelector('decrease')}:contains("333.33")`).toExist();
       wrapper.expectElement(`${getPrincipalBalanceAdjustmentSelector('decrease')}:contains("333.33")`).hasClass('govuk-table__cell--numeric');
+      wrapper.expectElement(`${getPrincipalBalanceAdjustmentSelector('decrease')}:contains("333.33")`).doesNotHaveClass('govuk-!-text-align-right');
     });
 
-    it("sets all the increase columns to the '-' character and does not use the numeric cell class", () => {
+    it("sets all the increase columns to the '-' character with the text align right class and does not use the numeric cell class", () => {
       const keyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         fixedFeeAdjustment: { change, amount: '111.11' },
@@ -209,8 +215,10 @@ describe(component, () => {
       const wrapper = getWrapper({ keyingSheetRow });
 
       wrapper.expectElement(`tr ${getFixedFeeAdjustmentSelector('increase')}:contains("-")`).toExist();
+      wrapper.expectElement(`tr ${getFixedFeeAdjustmentSelector('increase')}:contains("-")`).hasClass('govuk-!-text-align-right');
       wrapper.expectElement(`tr ${getFixedFeeAdjustmentSelector('increase')}:contains("-")`).doesNotHaveClass('govuk-table__cell--numeric');
       wrapper.expectElement(`tr ${getPrincipalBalanceAdjustmentSelector('increase')}:contains("-")`).toExist();
+      wrapper.expectElement(`tr ${getPrincipalBalanceAdjustmentSelector('increase')}:contains("-")`).hasClass('govuk-!-text-align-right');
       wrapper.expectElement(`tr ${getPrincipalBalanceAdjustmentSelector('increase')}:contains("-")`).doesNotHaveClass('govuk-table__cell--numeric');
     });
   });
@@ -274,7 +282,7 @@ describe(component, () => {
         facilityId: '12345678',
         exporter: 'Test exporter 1',
         status: 'TO_DO',
-        displayStatus: 'TO DO',
+        displayStatus: 'To do',
         baseCurrency: 'EUR',
         checkboxId: 'feeRecordId-123-status-TO_DO',
         fixedFeeAdjustment: { change: 'NONE', amount: '0' },
@@ -285,9 +293,9 @@ describe(component, () => {
 
       wrapper.expectElement('tr').toHaveCount(3);
 
-      wrapper.expectElement('tr:eq(0) td:contains("TO DO")').toExist();
-      wrapper.expectElement('tr:eq(1) td:contains("TO DO")').notToExist();
-      wrapper.expectElement('tr:eq(2) td:contains("TO DO")').notToExist();
+      wrapper.expectElement('tr:eq(0) td:contains("To do")').toExist();
+      wrapper.expectElement('tr:eq(1) td:contains("To do")').notToExist();
+      wrapper.expectElement('tr:eq(2) td:contains("To do")').notToExist();
 
       wrapper.expectElement('tr:eq(0) td:contains("12345678")').toExist();
       wrapper.expectElement('tr:eq(1) td:contains("12345678")').notToExist();
@@ -314,7 +322,7 @@ describe(component, () => {
       const keyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         status: 'TO_DO',
-        displayStatus: 'TO DO',
+        displayStatus: 'To do',
         facilityId: '12345678',
         exporter: 'Test exporter 1',
         feePayments: [aFeePayment(), aFeePayment(), aFeePayment()],
@@ -323,7 +331,7 @@ describe(component, () => {
 
       wrapper.expectElement('tr').toHaveCount(3);
 
-      wrapper.expectElement('tr:eq(0) td:contains("TO DO")').toHaveAttribute('data-sort-value', 'TO_DO');
+      wrapper.expectElement('tr:eq(0) td:contains("To do")').toHaveAttribute('data-sort-value', 'TO_DO');
       wrapper.expectElement('tr:eq(1) td[data-sort-value="TO_DO"]').toExist();
       wrapper.expectElement('tr:eq(2) td[data-sort-value="TO_DO"]').toExist();
 

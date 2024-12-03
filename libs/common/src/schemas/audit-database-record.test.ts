@@ -5,43 +5,50 @@ import {
   generateSystemAuditDatabaseRecord,
   generateTfmUserAuditDatabaseRecord,
 } from '../change-stream';
-import { withSchemaValidationTests } from './with-schema-validation.tests';
 import { AUDIT_DATABASE_RECORD } from './audit-database-record';
+import { withSchemaTests } from '../test-helpers';
 
 describe('AUDIT_DATABASE_RECORD', () => {
-  const A_VALID_AUDIT_RECORD = generateTfmUserAuditDatabaseRecord(new ObjectId());
-  const { lastUpdatedAt: _lastUpdatedAt, ...AN_AUDIT_RECORD_WITH_MISSING_PARAMETER } = { ...A_VALID_AUDIT_RECORD };
-  const AN_AUDIT_RECORD_WITH_INCORRECT_PARAMETER_TYPE = { ...A_VALID_AUDIT_RECORD, lastUpdatedAt: 1 };
+  withSchemaTests({
+    successTestCases: getSuccessTestCases(),
+    failureTestCases: getFailureTestCases(),
+    schema: AUDIT_DATABASE_RECORD,
+  });
+});
 
-  const successTestCases = [
+const aValidAuditRecord = () => generateTfmUserAuditDatabaseRecord(new ObjectId());
+
+function getSuccessTestCases() {
+  return [
     {
       description: 'a valid tfm user audit database record',
-      testCase: generateTfmUserAuditDatabaseRecord(new ObjectId()),
+      aTestCase: () => generateTfmUserAuditDatabaseRecord(new ObjectId()),
     },
     {
       description: 'a valid portal user audit database record',
-      testCase: generatePortalUserAuditDatabaseRecord(new ObjectId()),
+      aTestCase: () => generatePortalUserAuditDatabaseRecord(new ObjectId()),
     },
     {
       description: 'a valid system audit database record',
-      testCase: generateSystemAuditDatabaseRecord(),
+      aTestCase: () => generateSystemAuditDatabaseRecord(),
     },
-    { description: 'a valid audit record with no user logged in', testCase: generateNoUserLoggedInAuditDatabaseRecord() },
+    { description: 'a valid audit record with no user logged in', aTestCase: () => generateNoUserLoggedInAuditDatabaseRecord() },
   ];
+}
 
-  const failureTestCases = [
-    { description: 'a string', testCase: 'string' },
-    { description: 'an object', testCase: { An: 'object' } },
-    { description: 'an array', testCase: ['array'] },
-    { description: 'a matching object with an incorrect parameter type', testCase: AN_AUDIT_RECORD_WITH_INCORRECT_PARAMETER_TYPE },
-    { description: 'a matching object with a missing parameter', testCase: AN_AUDIT_RECORD_WITH_MISSING_PARAMETER },
-    { description: 'a matching object with an additional parameter', testCase: { ...A_VALID_AUDIT_RECORD, invalidField: true } },
+function getFailureTestCases() {
+  return [
+    { description: 'a string', aTestCase: () => 'string' },
+    { description: 'an object', aTestCase: () => ({ An: 'object' }) },
+    { description: 'an array', aTestCase: () => ['array'] },
+    { description: 'a matching object with an incorrect parameter type', aTestCase: () => ({ ...aValidAuditRecord(), _lastUpdatedAt: 1 }) },
+    {
+      description: 'a matching object with a missing parameter',
+      aTestCase: () => {
+        const { lastUpdatedAt: _lastUpdatedAt, ...rest } = aValidAuditRecord();
+        return rest;
+      },
+    },
+    { description: 'a matching object with an additional parameter', aTestCase: () => ({ ...aValidAuditRecord(), invalidField: true }) },
   ];
-
-  withSchemaValidationTests({
-    successTestCases,
-    failureTestCases,
-    schema: AUDIT_DATABASE_RECORD,
-    schemaName: 'AUDIT_DATABASE_RECORD',
-  });
-});
+}

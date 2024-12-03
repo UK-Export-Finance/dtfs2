@@ -36,16 +36,30 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
       throw new Error('Facility Loan Record amendment SOF - Invalid payload provided');
     }
 
-    const { facilityId, facility, amendments, fmr } = payload;
+    const { facilityIdentifier, facility, amendments, fmr } = payload;
     const { amendment } = amendments;
+
     let facilityLoanRecordAmendments;
 
     // 1.1. Facility Loan Record (FLR) amendment mapping
-    const flrMApped = mappings.facility.facilityLoanAmend(amendments, facility, fmr);
+    const flrMapped = mappings.facility.facilityLoanAmend(amendments, facility, fmr);
+
+    /**
+     * Facility amendment on facility type `loan` with only `amount`
+     * facility attribute, the execution should be terminated.
+     *
+     * However if the facility (Loan) amendment consist of an additional
+     * attribute with `amount` then FLR should be mapped as normal.
+     */
+    if (!Object.values(flrMapped).length) {
+      facilityLoanRecordAmendments = 'Facility loan amount only amendment, aborting FLR amendment';
+
+      return facilityLoanRecordAmendments;
+    }
 
     // 1.2. Extract loan id for facility id
     const loanId = yield context.df.callActivityWithRetry('get-facility-loan-id', retryOptions, {
-      facilityId,
+      facilityIdentifier,
     });
 
     if (loanId) {
@@ -57,8 +71,8 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
       if (amendment.amount) {
         const amount = yield context.df.callActivityWithRetry('update-facility-loan-amount', retryOptions, {
           loanId,
-          facilityId,
-          acbsFacilityLoanInput: flrMApped,
+          facilityIdentifier,
+          acbsFacilityLoanInput: flrMapped,
         });
 
         facilityLoanRecordAmendments = {
@@ -71,8 +85,8 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
       if (amendment.coverEndDate) {
         const coverEndDate = yield context.df.callActivityWithRetry('update-facility-loan', retryOptions, {
           loanId,
-          facilityId,
-          acbsFacilityLoanInput: flrMApped,
+          facilityIdentifier,
+          acbsFacilityLoanInput: flrMapped,
         });
 
         facilityLoanRecordAmendments = {

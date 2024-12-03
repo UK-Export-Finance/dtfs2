@@ -31,6 +31,8 @@ export const anAddPaymentViewModel = (): AddPaymentViewModel => ({
   recordedPaymentsDetails: [],
   multipleFeeRecordsSelected: false,
   canAddToExistingPayment: false,
+  backLinkHref: '/utilisation-reports/12',
+  gbpTolerance: 1.23,
 });
 
 export const aRecordedPaymentDetailsViewModel = (): RecordedPaymentDetailsViewModel => ({

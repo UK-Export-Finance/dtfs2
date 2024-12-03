@@ -13,13 +13,14 @@
 {% extends "index.njk" %}
 
 {% set userCanEdit = user | userIsInTeam(['PDC_RECONCILE']) %}
+{% set hasErrors = premiumPayments.tableDataError or premiumPayments.filterError or paymentDetails.filterErrors.errorSummary | length %}
 
 {% block pageTitle %}
-  {{ bank.name }}, {{ formattedReportPeriod }}
+  {{ (bank.name + ', ' + formattedReportPeriod) | formatPageTitle(hasErrors) }}
 {% endblock %}
 
 {% set premiumPaymentsHtml %}
-  {% if displayMatchSuccessNotification %}
+  {% if premiumPayments.showMatchSuccessNotification %}
     {% set notificationHtml %}
       <h3 class="govuk-notification-banner__heading" data-cy="match-success-notification-heading">
         Match payment recorded
@@ -36,10 +37,11 @@
       </div>
     </div>
   {% endif %}
-  {% if premiumPaymentsTableDataError or premiumPaymentsFilterError %}
+
+  {% if premiumPayments.tableDataError or premiumPayments.filterError %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
-      errorList: [premiumPaymentsTableDataError, premiumPaymentsFilterError],
+      errorList: [premiumPayments.tableDataError, premiumPayments.filterError],
       attributes: {
         'data-cy': 'error-summary'
       }
@@ -74,9 +76,9 @@
               },
               id: "premium-payments-facility-id-filter",
               name: "premiumPaymentsFacilityId",
-              value: premiumPaymentsFilters.facilityId,
-              errorMessage: premiumPaymentsFilterError and {
-                text: premiumPaymentsFilterError.text
+              value: premiumPayments.filters.facilityId,
+              errorMessage: premiumPayments.filterError and {
+                text: premiumPayments.filterError.text
               },
               attributes: {'data-cy': 'premium-payments-facility-filter-input'}
             }) }}
@@ -104,7 +106,7 @@
       </div>
     </div>
 
-  {% if premiumPaymentsTableDataError %}
+  {% if premiumPayments.tableDataError %}
     <div class="govuk-form-group--error">
   {% endif %}
   {% if userCanEdit %}
@@ -125,18 +127,29 @@
           data-module="govuk-button"
           type="submit"
           data-cy="generate-keying-data-button"/>
+        {% if isFeeRecordCorrectionFeatureFlagEnabled %}
+          <input
+            class="govuk-button govuk-button--secondary govuk-!-margin-right-3"
+            formaction="/utilisation-reports/{{ reportId }}/create-record-correction-request"
+            value="Create record correction request"
+            data-module="govuk-button"
+            type="submit"
+            data-cy="create-record-correction-request-button"/>
+        {% endif %}
       </div>
   {% endif %}
   {{ premiumPaymentsTable.render({
     reportId: reportId,
-    feeRecordPaymentGroups: premiumPayments,
-    enablePaymentsReceivedSorting: enablePaymentsReceivedSorting,
-    userCanEdit: userCanEdit
+    feeRecordPaymentGroups: premiumPayments.payments,
+    enablePaymentsReceivedSorting: premiumPayments.enablePaymentsReceivedSorting,
+    userCanEdit: userCanEdit,
+    hasSelectableRows: premiumPayments.hasSelectableRows,
+    errorMessage: premiumPayments.tableDataError.text
   }) }}
   {% if userCanEdit %}
     </form>
   {% endif %}
-  {% if premiumPaymentsTableDataError %}
+  {% if premiumPayments.tableDataError %}
     </div>
   {% endif %}
 {% endset %}
@@ -243,6 +256,10 @@
   {{ utilisationTable.render({
     utilisationTableRows: utilisationDetails.utilisationTableRows
   }) }}
+
+  <a class="govuk-link" href="{{ utilisationDetails.downloadUrl }}" data-cy="download-report-link">
+    Download the report submitted by the bank as a CSV
+  </a>
 {% endset %}
 
 {% block content %}
@@ -306,6 +323,6 @@
 {% block sub_content %}{% endblock %}
 
 {% block page_scripts %}
-  <script src="/assets/js/enableSelectAllTableCheckbox.js" type="text/javascript" integrity="sha512-ER/5raNAJX5VTcyrRBjVExC/f39WaVY4r8k1CyGqJUad95QZ0A1H6zHtsFpdf0JDBLV0acXzSA1B2mkKC8g5Tg==" crossorigin="anonymous"></script>
-  <script src="/assets/js/mojFilterHide.js" type="text/javascript" integrity="sha512-xSkZAX17gyhHPS0ZaZi3omWv2zCwsKeSnOerRl73ezzLwPTW/To/5OYsAGKZfazTq/H2/XXyAAagkJFuWT+G/g==" crossorigin="anonymous"></script>
+  <script src="/assets/js/enableSelectAllTableCheckbox.js" type="module" integrity="sha512-ER/5raNAJX5VTcyrRBjVExC/f39WaVY4r8k1CyGqJUad95QZ0A1H6zHtsFpdf0JDBLV0acXzSA1B2mkKC8g5Tg==" crossorigin="anonymous"></script>
+  <script src="/assets/js/mojFilterHide.js" type="module" integrity="sha512-PEcpyC2nOfeheShjzW6IwjAKJz81ukNVxu2rAJOfe827ExO/xu/BM/ysFJSo+EL/PTva/yWFVgu5mXSrlnKzEQ==" crossorigin="anonymous"></script>
 {% endblock %}

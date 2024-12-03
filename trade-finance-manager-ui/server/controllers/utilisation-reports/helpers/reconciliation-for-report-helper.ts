@@ -1,7 +1,15 @@
 import orderBy from 'lodash.orderby';
-import { FeeRecordStatus, getFormattedCurrencyAndAmount, IsoDateTimeStamp, KeyingSheetAdjustment, PaymentDetailsFilters } from '@ukef/dtfs2-common';
+import {
+  FEE_RECORD_STATUS,
+  FeeRecordStatus,
+  getFormattedCurrencyAndAmount,
+  getFormattedMonetaryValue,
+  IsoDateTimeStamp,
+  KeyingSheetAdjustment,
+  PaymentDetailsFilters,
+} from '@ukef/dtfs2-common';
 import { format, parseISO } from 'date-fns';
-import { FeeRecord, FeeRecordPaymentGroup, KeyingSheet, KeyingSheetRow, Payment } from '../../../api-response-types';
+import { FeeRecord, KeyingSheet, KeyingSheetRow, Payment, PaymentDetails, PremiumPaymentsGroup } from '../../../api-response-types';
 import {
   PremiumPaymentsViewModelItem,
   FeeRecordViewModelItem,
@@ -61,19 +69,16 @@ const mapPaymentsToPaymentViewModelItems = (paymentsReceived: Payment[] | null):
   }));
 };
 
-type SortableFeeRecordPaymentGroupProperty = 'totalReportedPayments' | 'totalPaymentsReceived';
+type SortablePremiumPaymentsGroupProperty = 'totalReportedPayments' | 'totalPaymentsReceived';
 
 /**
- * Gets the data sort value map for the fee record payment group by property
- * @param feeRecordPaymentGroups - The fee record payment groups
+ * Gets the data sort value map for the premium payments groups by property
+ * @param premiumPaymentGroups - The premium payments groups
  * @param property - The property to sort by
  * @returns The data sort value map
  */
-const getDataSortValueMapForFeeRecordPaymentGroupProperty = (
-  feeRecordPaymentGroups: FeeRecordPaymentGroup[],
-  property: SortableFeeRecordPaymentGroupProperty,
-) => {
-  const propertyWithIndexAsKey = feeRecordPaymentGroups.map((group, index) => ({ ...group[property], key: index }));
+const getDataSortValueMapForPremiumPaymentsGroupProperty = (premiumPaymentGroups: PremiumPaymentsGroup[], property: SortablePremiumPaymentsGroupProperty) => {
+  const propertyWithIndexAsKey = premiumPaymentGroups.map((group, index) => ({ ...group[property], key: index }));
   return getKeyToCurrencyAndAmountSortValueMap(propertyWithIndexAsKey);
 };
 
@@ -100,20 +105,20 @@ const getCheckboxAriaLabel = (feeRecords: FeeRecord[]): string => {
 };
 
 /**
- * Maps the fee record payment groups to the premium payment items
- * @param feeRecordPaymentGroups - The fee record payment groups
- * @param isCheckboxChecked - Whether or not the fee record payment group checkbox is checked
+ * Maps the premium payments groups to the premium payment items
+ * @param premiumPaymentGroups - The premium payments groups
+ * @param isCheckboxChecked - Whether or not the premium payments group checkbox is checked
  * @returns The premium payments view model items
  */
-export const mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems = (
-  feeRecordPaymentGroups: FeeRecordPaymentGroup[],
+export const mapPremiumPaymentsToViewModelItems = (
+  premiumPaymentGroups: PremiumPaymentsGroup[],
   isCheckboxChecked: (feeRecordIds: number[]) => boolean = () => false,
 ): PremiumPaymentsViewModelItem[] => {
-  const totalReportedPaymentsDataSortValueMap = getDataSortValueMapForFeeRecordPaymentGroupProperty(feeRecordPaymentGroups, 'totalReportedPayments');
-  const totalPaymentsReceivedDataSortValueMap = getDataSortValueMapForFeeRecordPaymentGroupProperty(feeRecordPaymentGroups, 'totalPaymentsReceived');
+  const totalReportedPaymentsDataSortValueMap = getDataSortValueMapForPremiumPaymentsGroupProperty(premiumPaymentGroups, 'totalReportedPayments');
+  const totalPaymentsReceivedDataSortValueMap = getDataSortValueMapForPremiumPaymentsGroupProperty(premiumPaymentGroups, 'totalPaymentsReceived');
 
-  return feeRecordPaymentGroups.map((feeRecordPaymentGroup, index) => {
-    const { status, feeRecords, paymentsReceived, totalReportedPayments, totalPaymentsReceived } = feeRecordPaymentGroup;
+  return premiumPaymentGroups.map((premiumPaymentGroup, index) => {
+    const { status, feeRecords, paymentsReceived, totalReportedPayments, totalPaymentsReceived } = premiumPaymentGroup;
 
     const displayStatus = getFeeRecordDisplayStatus(status);
 
@@ -124,6 +129,8 @@ export const mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems = (
     const feeRecordsSortedByReportedPayments = sortFeeRecordsByReportedPayments(feeRecords);
     const feeRecordViewModelItems = mapFeeRecordsToFeeRecordViewModelItems(feeRecordsSortedByReportedPayments);
     const paymentViewModelItems = mapPaymentsToPaymentViewModelItems(paymentsReceived);
+
+    const isSelectable = status === FEE_RECORD_STATUS.TO_DO || status === FEE_RECORD_STATUS.DOES_NOT_MATCH;
 
     return {
       feeRecords: feeRecordViewModelItems,
@@ -138,6 +145,7 @@ export const mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems = (
       },
       status,
       displayStatus,
+      isSelectable,
       checkboxId,
       isChecked,
       checkboxAriaLabel,
@@ -155,7 +163,7 @@ const getKeyingSheetAdjustmentViewModel = (adjustment: KeyingSheetAdjustment | n
     return { amount: undefined, change: 'NONE' };
   }
   return {
-    amount: adjustment.amount.toFixed(2),
+    amount: getFormattedMonetaryValue(adjustment.amount),
     change: adjustment.change,
   };
 };
@@ -244,20 +252,20 @@ export const getFormattedDateReconciled = (dateReconciled: IsoDateTimeStamp | un
   dateReconciled ? format(parseISO(dateReconciled), DATE_FORMAT.DAY_SHORT_MONTH_YEAR_AT_TIME) : '-';
 
 /**
- * Maps the fee record payment groups to the payment details view model
- * @param feeRecordPaymentGroups - The fee record payment groups
+ * Maps the payment details groups to the payment details view model
+ * @param paymentDetailsGroups - The payment details groups
  * @returns The payment details view model
  */
-export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): PaymentDetailsRowViewModel[] => {
+export const mapPaymentDetailsGroupsToPaymentDetailsViewModel = (paymentDetailsGroups: PaymentDetails[]): PaymentDetailsRowViewModel[] => {
   // Flatten the groups to a list of payments with the date reconciled of the group existing on
   // the payment which can be used to determine the sort orders for the columns with custom sorting
-  const allPaymentsWithDateReconciled = feeRecordPaymentGroups.reduce(
-    (payments, { paymentsReceived, dateReconciled }) => {
-      if (!paymentsReceived) {
+  const allPaymentsWithDateReconciled = paymentDetailsGroups.reduce(
+    (payments, { payment, dateReconciled }) => {
+      if (!payment) {
         return payments;
       }
 
-      return [...payments, ...paymentsReceived.map((payment) => ({ ...payment, dateReconciled }))];
+      return [...payments, { ...payment, dateReconciled }];
     },
     [] as (Payment & { dateReconciled?: IsoDateTimeStamp })[],
   );
@@ -278,33 +286,30 @@ export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaym
   );
 
   // Construct and return payment details view models for each payment in each group
-  return feeRecordPaymentGroups.reduce(
-    (paymentDetails, { feeRecords, paymentsReceived, status: feeRecordPaymentGroupStatus, reconciledByUser, dateReconciled }) => {
-      if (!paymentsReceived) {
-        return paymentDetails;
-      }
+  return paymentDetailsGroups.reduce((paymentDetails, { feeRecords, payment, status, reconciledByUser, dateReconciled }) => {
+    if (!payment) {
+      return paymentDetails;
+    }
 
-      const mappedFeeRecords = feeRecords.map(({ id, facilityId, exporter }) => ({ id, facilityId, exporter }));
-      return [
-        ...paymentDetails,
-        ...paymentsReceived.map((payment) => ({
-          feeRecordPaymentGroupStatus,
-          payment: mapPaymentToPaymentDetailsPaymentViewModel(
-            payment,
-            paymentIdToAmountDataSortValueMap[payment.id],
-            paymentIdToDateReceivedDataSortValueMap[payment.id],
-          ),
-          feeRecords: mappedFeeRecords,
-          reconciledBy: getFormattedReconciledByUser(reconciledByUser),
-          dateReconciled: {
-            formattedDateReconciled: getFormattedDateReconciled(dateReconciled),
-            dataSortValue: paymentIdToDateReconciledDataSortValueMap[payment.id],
-          },
-        })),
-      ];
-    },
-    [] as PaymentDetailsRowViewModel[],
-  );
+    const mappedFeeRecords = feeRecords.map(({ id, facilityId, exporter }) => ({ id, facilityId, exporter }));
+    return [
+      ...paymentDetails,
+      {
+        payment: mapPaymentToPaymentDetailsPaymentViewModel(
+          payment,
+          paymentIdToAmountDataSortValueMap[payment.id],
+          paymentIdToDateReceivedDataSortValueMap[payment.id],
+        ),
+        feeRecords: mappedFeeRecords,
+        status,
+        reconciledBy: getFormattedReconciledByUser(reconciledByUser),
+        dateReconciled: {
+          formattedDateReconciled: getFormattedDateReconciled(dateReconciled),
+          dataSortValue: paymentIdToDateReconciledDataSortValueMap[payment.id],
+        },
+      },
+    ];
+  }, [] as PaymentDetailsRowViewModel[]);
 };
 
 /**
@@ -322,3 +327,10 @@ export const mapPaymentDetailsFiltersToViewModel = (paymentDetailsFilters: Payme
     paymentCurrency: mapCurrenciesToRadioItems(paymentDetailsFilters.paymentCurrency),
   };
 };
+
+/**
+ * Determines whether any of the premium payments items are selectable
+ * @param items - the items that will be displayed in the table
+ * @returns - whether any of the items are selectable
+ */
+export const premiumPaymentsHasSelectableItems = (items: PremiumPaymentsViewModelItem[]): boolean => items.some((item) => item.isSelectable);

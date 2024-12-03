@@ -1,3 +1,4 @@
+import { PORTAL_ACTIVITY_LABEL } from '@ukef/dtfs2-common';
 import relative from '../../../relativeURL';
 import CONSTANTS from '../../../../fixtures/constants';
 import { tomorrow, threeDaysAgo, threeMonthsOneDay } from '../../../../../../e2e-fixtures/dateConstants';
@@ -157,7 +158,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: tomorrow });
+      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: tomorrow.date });
 
       cy.clickContinueButton();
 
@@ -172,7 +173,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: threeDaysAgo });
+      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: threeDaysAgo.date });
 
       cy.clickContinueButton();
 
@@ -187,7 +188,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: threeMonthsOneDay.date });
 
       cy.clickContinueButton();
 
@@ -467,9 +468,7 @@ context('Check activity feed', () => {
       applicationActivities.subNavigationBarActivities().click();
 
       // contains submission message
-      applicationActivities
-        .activityTimeline()
-        .contains(`${CONSTANTS.PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION} by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
+      applicationActivities.activityTimeline().contains(`${PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION} by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
 
       applicationActivities.subNavigationBarActivities().click();
     });

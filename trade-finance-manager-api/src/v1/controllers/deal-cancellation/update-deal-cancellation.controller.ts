@@ -1,14 +1,15 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { ApiError, CustomExpressRequest, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { ApiError, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import api from '../../api';
+import { PutDealCancellationPayload } from '../../middleware/validate-put-deal-cancellation-payload';
 
 export type UpdateDealCancellationRequest = CustomExpressRequest<{
   params: {
     dealId: string;
   };
-  reqBody: TfmDealCancellation;
+  reqBody: PutDealCancellationPayload;
 }>;
 
 /**

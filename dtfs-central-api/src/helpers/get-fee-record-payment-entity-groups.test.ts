@@ -1,13 +1,20 @@
-import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  CURRENCY,
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
+  UtilisationReportEntity,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { getFeeRecordPaymentEntityGroups, getPaymentIdKeyFromPaymentEntities } from './get-fee-record-payment-entity-groups';
 
 describe('getPaymentIdKeyFromPaymentEntities', () => {
   it('should concatenate payment ids in ascending order after payment id prefix', () => {
     // Arrange
     const payments = [
-      PaymentEntityMockBuilder.forCurrency('GBP').withId(67).build(),
-      PaymentEntityMockBuilder.forCurrency('GBP').withId(7).build(),
-      PaymentEntityMockBuilder.forCurrency('GBP').withId(13).build(),
+      PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(67).build(),
+      PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(7).build(),
+      PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(13).build(),
     ];
 
     // Act
@@ -45,9 +52,9 @@ describe('getFeeRecordPaymentEntityGroups', () => {
     const report = utilisationReport();
 
     const payments = [
-      PaymentEntityMockBuilder.forCurrency('GBP').withId(1).build(),
-      PaymentEntityMockBuilder.forCurrency('GBP').withId(2).build(),
-      PaymentEntityMockBuilder.forCurrency('GBP').withId(3).build(),
+      PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(1).build(),
+      PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(2).build(),
+      PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(3).build(),
     ];
 
     const feeRecords = [
@@ -69,9 +76,12 @@ describe('getFeeRecordPaymentEntityGroups', () => {
     // Arrange
     const report = utilisationReport();
 
-    const firstPayments = [PaymentEntityMockBuilder.forCurrency('GBP').withId(1).build(), PaymentEntityMockBuilder.forCurrency('GBP').withId(3).build()];
+    const firstPayments = [
+      PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(1).build(),
+      PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(3).build(),
+    ];
 
-    const secondPayments = [PaymentEntityMockBuilder.forCurrency('GBP').withId(2).build()];
+    const secondPayments = [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(2).build()];
 
     const firstFeeRecords = [FeeRecordEntityMockBuilder.forReport(report).withId(1).withPayments(firstPayments).build()];
 
@@ -94,6 +104,6 @@ describe('getFeeRecordPaymentEntityGroups', () => {
   });
 
   function utilisationReport(): UtilisationReportEntity {
-    return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+    return UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
   }
 });

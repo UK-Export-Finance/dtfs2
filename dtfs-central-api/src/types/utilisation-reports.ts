@@ -1,15 +1,13 @@
 import {
-  ValuesOf,
-  UtilisationReportReconciliationStatus,
   Currency,
   ReportPeriod,
   AzureFileInfo,
   UploadedByUserDetails,
-  UTILISATION_REPORT_HEADERS,
   IsoMonthStamp,
   FeeRecordStatus,
   CurrencyAndAmount,
   FeeRecordUtilisation,
+  UtilisationReportStatus,
 } from '@ukef/dtfs2-common';
 import { FeeRecord, KeyingSheet } from './fee-records';
 import { Payment } from './payments';
@@ -17,7 +15,7 @@ import { Payment } from './payments';
 export type GetUtilisationReportResponse = {
   id: number;
   bankId: string;
-  status: UtilisationReportReconciliationStatus;
+  status: UtilisationReportStatus;
   reportPeriod: ReportPeriod;
 } & (
   | {
@@ -39,7 +37,7 @@ export type UtilisationReportReconciliationSummaryItem = {
     id: string;
     name: string;
   };
-  status: UtilisationReportReconciliationStatus;
+  status: UtilisationReportStatus;
   dateUploaded?: Date;
   totalFacilitiesReported?: number;
   totalFeesReported?: number;
@@ -51,22 +49,22 @@ export type UtilisationReportReconciliationSummary = {
   items: UtilisationReportReconciliationSummaryItem[];
 };
 
-type UtilisationReportHeader = ValuesOf<typeof UTILISATION_REPORT_HEADERS>;
-
-export type UtilisationReportRawCsvData = {
-  [HeaderKey in UtilisationReportHeader]: HeaderKey extends `${string}currency` ? Currency : string;
-};
-
 export type FeeRecordReconciledByUser = {
   firstName: string;
   lastName: string;
 };
 
-export type FeeRecordPaymentGroup = {
+export type PremiumPaymentsGroup = {
   feeRecords: FeeRecord[];
   totalReportedPayments: CurrencyAndAmount;
   paymentsReceived: Payment[] | null;
   totalPaymentsReceived: CurrencyAndAmount | null;
+  status: FeeRecordStatus;
+};
+
+export type PaymentDetails = {
+  feeRecords: FeeRecord[];
+  payment: Payment;
   status: FeeRecordStatus;
   reconciledByUser?: FeeRecordReconciledByUser;
   dateReconciled?: Date;
@@ -78,11 +76,11 @@ export type UtilisationReportReconciliationDetails = {
     id: string;
     name: string;
   };
-  status: UtilisationReportReconciliationStatus;
+  status: UtilisationReportStatus;
   reportPeriod: ReportPeriod;
   dateUploaded: Date;
-  premiumPayments: FeeRecordPaymentGroup[];
-  paymentDetails: FeeRecordPaymentGroup[];
+  premiumPayments: PremiumPaymentsGroup[];
+  paymentDetails: PaymentDetails[];
   keyingSheet: KeyingSheet;
   utilisationDetails: FeeRecordUtilisation[];
 };
