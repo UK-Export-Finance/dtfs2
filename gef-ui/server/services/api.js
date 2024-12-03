@@ -103,12 +103,12 @@ const updateSupportingInformation = async ({ dealId, application, field, user, u
 
 /**
  * Updates the application status for a specific deal.
- * 
- * Notably, the timeout is so long because in the event that the deal status is being updated to 'Submitted', 
- * multiple API calls are triggered, and the user has to wait for the completion of these in the UI in the 
+ *
+ * Notably, the timeout is so long because in the event that the deal status is being updated to 'Submitted',
+ * multiple API calls are triggered, and the user has to wait for the completion of these in the UI in the
  * current implementation.
- * 
- * In the future, these operations should instead be run as part of a fail-safe background process, as discussed 
+ *
+ * In the future, these operations should instead be run as part of a fail-safe background process, as discussed
  * in the root README. At that point, the timeout can be reduced.
  */
 const setApplicationStatus = async ({ dealId, status, userToken }) => {

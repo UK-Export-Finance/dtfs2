@@ -87,7 +87,6 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
     jest.mocked(isAutomaticSalesforceCustomerCreationFeatureFlagEnabled).mockReturnValue(true);
   });
 
-
   describe('GET /party-db', () => {
     it(`returns a ${HttpStatusCode.Ok} response with a valid companies house number`, async () => {
       const { status } = await get(`/party-db/${VALID}`);

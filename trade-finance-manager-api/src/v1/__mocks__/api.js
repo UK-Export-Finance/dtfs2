@@ -195,15 +195,14 @@ module.exports = {
           },
         ],
       };
-    } else {
-      if (noCompanyMatch) {
-        return false;
-      }
-
-      return {
-        partyUrn: 'testPartyUrn',
-      };
     }
+    if (noCompanyMatch) {
+      return false;
+    }
+
+    return {
+      partyUrn: 'testPartyUrn',
+    };
   },
   findUser: (username) => {
     if (username === 'invalidUser') {
