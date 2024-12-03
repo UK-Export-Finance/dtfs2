@@ -10,7 +10,7 @@
   {{ companiesHouse.input({
     deal: deal,
     prefix: 'supplier',
-    label: 'UK Supplier’s Companies House registration number, if UK registered (optional)',
+    label: "UK Supplier's Companies House registration number, if UK registered (optional)",
     validationErrors: validationErrors
   }) }}
 
@@ -21,9 +21,9 @@
       maxlength: 150,
       classes: "govuk-!-width-one-half",
       label: {
-        html: 'Supplier name <span id="supplier-name-info" class="govuk-hint govuk-character-count__message" aria-live="polite">You can enter up to 150 characters</span>'
+        text: "Supplier name"
       },
-      errorMessage: validationErrors and {
+      errorMessage: validationErrors.errorList["supplier-name"] and {
         text: validationErrors.errorList["supplier-name"].text
       },
       attributes: {

@@ -39,24 +39,28 @@
 
       <div class="govuk-grid-column-full">
 
-        {{ govukCharacterCount({
-          name: "bondIssuer",
-          id: "bondIssuer",
-          value: bond.bondIssuer,
-          maxlength: 150,
-          label: {
-            text: "Bond issuer (optional)"
-          },
-          hint: {
-            text: "Only enter if Bond issuer differs from the bank"
-          },
-          errorMessage: validationErrors and {
-            text: validationErrors.errorList.bondIssuer.text
-          },
-          attributes: {
-            "data-cy": "bond-issuer"
-          }
-        }) }}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-half">
+            {{ govukCharacterCount({
+              name: "bondIssuer",
+              id: "bondIssuer",
+              value: bond.bondIssuer,
+              maxlength: 150,
+              label: {
+                text: "Bond issuer (optional)"
+              },
+              hint: {
+                text: "Only enter if Bond issuer differs from the bank"
+              },
+              errorMessage: validationErrors.errorList.bondIssuer and {
+                text: validationErrors.errorList.bondIssuer.text
+              },
+              attributes: {
+                "data-cy": "bond-issuer"
+              }
+            }) }}
+          </div>
+        </div>
 
         {{ govukSelect({
           id: "bondType",
@@ -167,24 +171,28 @@
           }
         }) }}
 
-        {{ govukCharacterCount({
-          name: "bondBeneficiary",
-          id: "bondBeneficiary",
-          value: bond.bondBeneficiary,
-          maxlength: 150,
-          label: {
-            text: "Bond beneficiary (optional)"
-          },
-          hint: {
-            text: "Only enter if different from (but related to) the overseas buyer in line with the MGA"
-          },
-          errorMessage: validationErrors and {
-            text: validationErrors.errorList.bondBeneficiary.text
-          },
-          attributes: {
-            "data-cy": "bond-beneficiary"
-          }
-        }) }}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-half">
+            {{ govukCharacterCount({
+              name: "bondBeneficiary",
+              id: "bondBeneficiary",
+              value: bond.bondBeneficiary,
+              maxlength: 150,
+              label: {
+                text: "Bond beneficiary (optional)"
+              },
+              hint: {
+                text: "Only enter if different from (but related to) the overseas buyer in line with the MGA"
+              },
+              errorMessage: validationErrors.errorList.bondBeneficiary and {
+                text: validationErrors.errorList.bondBeneficiary.text
+              },
+              attributes: {
+                "data-cy": "bond-beneficiary"
+              }
+            }) }}
+          </div>
+        </div>
 
       </div>
     </div>
