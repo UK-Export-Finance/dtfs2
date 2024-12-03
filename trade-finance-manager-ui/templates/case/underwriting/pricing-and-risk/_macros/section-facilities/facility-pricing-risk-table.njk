@@ -1,88 +1,81 @@
-{% from 'govuk/components/summary-list/macro.njk' import govukSummaryList %}
-
 {% macro render(params) %}
   {% set facility = params.facility %}
   {% set caseId = params.caseId %}
   {% set userCanEdit = params.userCanEdit %}
 
-  {% set feePayableToUkefHeadingHtml %}
-    <span data-cy="facility-{{ facility._id}}-bank-guarantee-fee-heading">Guarantee fee % payable to UKEF</span>
-  {% endset %}
+  <div class="govuk-summary-card">
+  <div class="govuk-summary-card__title-wrapper">
+    <h5 class="govuk-summary-card__title">
+      <a
+        class="govuk-link govuk-link--no-visited-state"
+        href="/case/{{ caseId }}/facility/{{ facility._id }}"
+        data-cy="facility-{{ facility._id }}-ukef-facility-id-link"
+      ><span class="govuk-visually-hidden">View facility </span><span data-cy="facility-{{ facility._id }}-ukef-facility-id-link-text">{{ facility.facilitySnapshot.ukefFacilityId }}</span><span class="govuk-visually-hidden"> details</span></a>
+      <span data-cy="facility-{{ facility._id }}-type">&nbsp;&nbsp;{{ facility.facilitySnapshot.type }}</span>
+    </h5>
+  </div>
 
-  {% set feePayableToUkefValueHtml %}
-    <span data-cy="facility-{{ facility._id}}-bank-guarantee-fee-value">{{ facility.facilitySnapshot.guaranteeFeePayableToUkef | dashIfEmpty }}</span>
-  {% endset %}
+{# 
+  NOTE: This summary list has to be hard coded, rather than using the GOV summary list.
+  This is because the card title has a custom title (with text and link).
+  If the GOV summary list component is used,
+  The final summary list row (that contains a "change" link),
+  Will have some values from the custom card title HTML appended.
+  It will not render correctly.
+  Therefore, without design changes, we cannot use the GOV summary list component.
+#}
+  <div class="govuk-summary-card__content" data-cy="facility-{{ facility._id }}-pricing-risk-table">
+    <dl class="govuk-summary-list">
 
-  {% set feePayableToUkefRow = {
-    key: { html: feePayableToUkefHeadingHtml },
-    value: { html: feePayableToUkefValueHtml }
-  } %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          <span data-cy="facility-{{ facility._id }}-bank-guarantee-fee-heading">Guarantee fee % payable to UKEF</span>
+        </dt>
 
-  {% set banksInterestMarginHeadingHtml %}
-    <span data-cy="facility-{{ facility._id}}-bank-interest-heading">Bank's interest margin</span>
-  {% endset %}
+        <dd class="govuk-summary-list__value">
+          <span data-cy="facility-{{ facility._id }}-bank-guarantee-fee-value">{{ facility.facilitySnapshot.guaranteeFeePayableToUkef | dashIfEmpty }}</span>
+        </dd>
 
-  {% set banksInterestMarginValueHtml %}
-    <span data-cy="facility-{{ facility._id}}-bank-interest-value">{{ facility.facilitySnapshot.banksInterestMargin | dashIfEmpty}}</span>
-  {% endset %}
+        <dd class="govuk-summary-list__actions">
+        </dd>
+      </div>
 
-  {% set banksInterestMarginRow = {
-    key: { html: banksInterestMarginHeadingHtml },
-    value: { html: banksInterestMarginValueHtml }
-  } %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          <span data-cy="facility-{{ facility._id }}-bank-interest-heading">Bank's interest margin</span>
+        </dt>
 
-  {% set riskProfileHeadingHtml %}
-    <span data-cy="facility-{{ facility._id}}-risk-profile-heading">Risk profile</span>
-  {% endset %}
+        <dd class="govuk-summary-list__value">
+          <span data-cy="facility-{{ facility._id }}-bank-interest-value">{{ facility.facilitySnapshot.banksInterestMargin | dashIfEmpty}}</span>
+        </dd>
 
-  {% set riskProfileValueHtml %}
-    <span data-cy="facility-{{ facility._id}}-risk-profile-value">{{ facility.tfm.riskProfile | dashIfEmpty }}</span>
-  {% endset %}
+        <dd class="govuk-summary-list__actions">
+        </dd>
+      </div>
 
-  {% if userCanEdit %}
-    {% set riskProfileRow = {
-      key: { html: riskProfileHeadingHtml },
-      value: { html: riskProfileValueHtml },
-      actions: {
-        items: [
-        {
-          href: '/case/' + caseId + '/underwriting/pricing-and-risk/facility/' + facility._id + '/risk-profile',
-          html: 'Change <span class="govuk-visually-hidden">risk profile</span>',
-          attributes: {
-            'data-cy': 'facility-' + facility._id + '-change-risk-profile-link'
-          }
-        }]
-      }
-    } %}
-  {% else %}
-    {% set riskProfileRow = {
-      key: { html: riskProfileHeadingHtml },
-      value: { html: riskProfileValueHtml }
-    } %}
-  {% endif %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          <span data-cy="facility-{{ facility._id }}-risk-profile-heading">Risk profile</span>
+        </dt>
 
-  {% set cardTitleHtml %}
-    <a
-      class="govuk-link govuk-link--no-visited-state"
-      href="/case/{{ caseId }}/facility/{{ facility._id }}"
-      data-cy="facility-{{ facility._id }}-ukef-facility-id-link">
-      <span class="govuk-visually-hidden">View facility </span><span data-cy="facility-{{ facility._id }}-ukef-facility-id-link-text">{{ facility.facilitySnapshot.ukefFacilityId }}</span><span class="govuk-visually-hidden"> details</span>
-    </a>
-    <span data-cy="facility-{{ facility._id }}-type">&nbsp;&nbsp;{{ facility.facilitySnapshot.type }}</span>
-  {% endset %}
+        <dd class="govuk-summary-list__value">
+          <span data-cy="facility-{{ facility._id }}-risk-profile-value">{{ facility.tfm.riskProfile | dashIfEmpty }}</span>
+        </dd>
 
-  {{ govukSummaryList({
-    card: {
-      title: {
-        html: cardTitleHtml,
-        headingLevel: 5
-      }
-    },
-    rows: [ feePayableToUkefRow, banksInterestMarginRow, riskProfileRow ],
-    attributes: {
-      'data-cy': 'facility-' + facility._id + '-pricing-risk-table'
-    }
-  })
-  }}
+        <dd class="govuk-summary-list__actions">
+          {% if userCanEdit %}
+            <a
+              class="govuk-link govuk-link--no-visited-state"
+              href="/case/{{ caseId }}/underwriting/pricing-and-risk/facility/{{ facility._id }}/risk-profile"
+              data-cy="facility-{{ facility._id }}-change-risk-profile-link">
+              Change <span data-cy="facility-{{ facility._id }}-change-link-visually-hidden-text" class="govuk-visually-hidden">{{ facility.facilitySnapshot.type }} {{ facility.facilitySnapshot.ukefFacilityId }} risk profile</span>
+            </a>
+          {% endif %}
+        </dd>
+      </div>
+
+    </dl>
+  </div>
+</div>
 
 {% endmacro %}
