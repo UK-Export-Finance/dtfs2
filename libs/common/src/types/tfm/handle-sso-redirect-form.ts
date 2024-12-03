@@ -15,7 +15,7 @@ export type HandleSsoRedirectFormResponse = {
   user: TfmSessionUser;
   userToken: string;
   expires: string;
-  successRedirect: string;
+  successRedirect?: string;
 };
 
 export type HandleSsoRedirectFormUiRequest = CustomExpressRequest<{ reqBody: EntraIdAuthCodeRedirectResponseBody }>;

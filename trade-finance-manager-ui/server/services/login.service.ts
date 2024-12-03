@@ -6,9 +6,7 @@ type HandleSsoRedirectFormAndCreateTokenRequest = {
   session: PartiallyLoggedInUserSessionData;
 } & HandleSsoRedirectFormRequest;
 
-type HandleSsoRedirectFormAndCreateTokenResponse = {
-  successRedirect: string;
-};
+type HandleSsoRedirectFormAndCreateTokenResponse = { successRedirect?: string };
 
 export class LoginService {
   /**
