@@ -11,6 +11,7 @@ describe(page, () => {
   const previousPage = 'previousPage';
   const facilityValue = 7000;
   const exporterName = 'exporterName';
+  const currencySymbol = '£';
 
   const params: FacilityValueViewModel = {
     dealId,
@@ -19,6 +20,7 @@ describe(page, () => {
     previousPage,
     facilityValue,
     exporterName,
+    currencySymbol,
   };
 
   it(`renders the 'Back' link`, () => {
@@ -49,5 +51,11 @@ describe(page, () => {
     const wrapper = render(params);
 
     wrapper.expectText('[data-cy="heading-caption"]').toRead(exporterName);
+  });
+
+  it('should render the curency symbol', () => {
+    const wrapper = render(params);
+
+    wrapper.expectText('[data-cy="facility-value-prefix"]').toRead(currencySymbol);
   });
 });

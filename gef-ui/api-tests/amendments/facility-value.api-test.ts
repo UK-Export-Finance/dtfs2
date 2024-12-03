@@ -13,9 +13,7 @@ const originalEnv = { ...process.env };
 const { get } = createApi(app);
 
 jest.mock('csurf', () => () => (_req: Request, _res: Response, next: NextFunction) => next());
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('../../server/middleware/csrf', () => ({
-  ...jest.requireActual('../../server/routes/middleware/csrf'),
   csrfToken: () => (_req: Request, _res: Response, next: NextFunction) => next(),
 }));
 
