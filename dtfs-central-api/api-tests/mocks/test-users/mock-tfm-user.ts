@@ -1,5 +1,4 @@
 import { TfmSessionUser } from '@ukef/dtfs2-common';
-import { ObjectId } from 'mongodb';
 
 export const MOCK_TFM_USER: TfmSessionUser = {
   _id: '5ce819935e539c343f141ece',

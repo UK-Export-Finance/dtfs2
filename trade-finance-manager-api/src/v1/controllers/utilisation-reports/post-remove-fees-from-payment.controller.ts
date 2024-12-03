@@ -1,8 +1,8 @@
 import { isAxiosError, HttpStatusCode } from 'axios';
 import { Response } from 'express';
+import { TfmSessionUser } from '@ukef/dtfs2-common';
 import api from '../../api';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
-import { TfmSessionUser } from '@ukef/dtfs2-common';
 
 export type PostRemoveFeesFromPaymentRequestBody = {
   selectedFeeRecordIds: number[];
