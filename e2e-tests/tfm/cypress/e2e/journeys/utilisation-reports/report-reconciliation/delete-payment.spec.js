@@ -215,7 +215,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
     pages.utilisationReportConfirmDeletePaymentPage.clickContinueButton();
 
     pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(payment.id).should('not.exist');
-    cy.get('strong[data-cy="fee-record-status"]:contains("TO DO")').should('exist');
+    cy.get('strong[data-cy="fee-record-status"]:contains("To do")').should('exist');
   });
 
   function* idGenerator() {
