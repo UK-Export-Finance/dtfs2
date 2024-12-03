@@ -27,10 +27,10 @@ describe(page, () => {
         canIssuedFacilitiesBeAmended: false,
       });
 
-      wrapper.expectElement(makeAChangeButtonSelector('issuedCash')).notToExist();
-      wrapper.expectElement(makeAChangeButtonSelector('unissuedCash')).notToExist();
-      wrapper.expectElement(makeAChangeButtonSelector('issuedContingent')).notToExist();
-      wrapper.expectElement(makeAChangeButtonSelector('unissuedContingent')).notToExist();
+      wrapper.expectElement(makeAChangeButtonSelector(issuedCashFacility.facilityId)).notToExist();
+      wrapper.expectElement(makeAChangeButtonSelector(unissuedCashFacility.facilityId)).notToExist();
+      wrapper.expectElement(makeAChangeButtonSelector(issuedContingentFacility.facilityId)).notToExist();
+      wrapper.expectElement(makeAChangeButtonSelector(unissuedContingentFacility.facilityId)).notToExist();
     });
 
     it('should not be rendered when showFacilityAmendmentButton is not passed in', () => {

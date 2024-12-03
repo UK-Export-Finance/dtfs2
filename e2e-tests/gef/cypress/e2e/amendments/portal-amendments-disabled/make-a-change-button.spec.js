@@ -59,7 +59,7 @@ context('Amendments - Make a change button - FF_PORTAL_FACILITY_AMENDMENTS_ENABL
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
-    it('does not display the make a change button for any facilities', () => {
+    it('should not display the make a change button for any facilities', () => {
       applicationPreview.makeAChangeButton(issuedCashFacilityId).should('not.exist');
       applicationPreview.makeAChangeButton(issuedContingentFacilityId).should('not.exist');
       applicationPreview.makeAChangeButton(unissuedCashFacilityId).should('not.exist');
@@ -73,7 +73,7 @@ context('Amendments - Make a change button - FF_PORTAL_FACILITY_AMENDMENTS_ENABL
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
-    it('does not display the make a change button', () => {
+    it('should not display the make a change button', () => {
       applicationPreview.makeAChangeButton(issuedCashFacilityId).should('not.exist');
       applicationPreview.makeAChangeButton(issuedContingentFacilityId).should('not.exist');
       applicationPreview.makeAChangeButton(unissuedCashFacilityId).should('not.exist');

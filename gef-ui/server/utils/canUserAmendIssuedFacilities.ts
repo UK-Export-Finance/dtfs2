@@ -17,9 +17,9 @@ import {
  */
 export const canUserAmendIssuedFacilities = (submissionType: DealSubmissionType, dealStatus: DealStatus, userRoles: Role[]) => {
   const isPortalAmendmentsEnabled = isPortalFacilityAmendmentsFeatureFlagEnabled();
-  const isUserAllowedToAmendFacilities = userRoles.includes(ROLES.MAKER);
+  const userHasMakerRole = userRoles.includes(ROLES.MAKER);
   const isValidSubmissionType = submissionType === DEAL_SUBMISSION_TYPE.MIN || submissionType === DEAL_SUBMISSION_TYPE.AIN;
   const isValidDealStatus = dealStatus === DEAL_STATUS.UKEF_ACKNOWLEDGED;
 
-  return isPortalAmendmentsEnabled && isUserAllowedToAmendFacilities && isValidSubmissionType && isValidDealStatus;
+  return isPortalAmendmentsEnabled && userHasMakerRole && isValidSubmissionType && isValidDealStatus;
 };
