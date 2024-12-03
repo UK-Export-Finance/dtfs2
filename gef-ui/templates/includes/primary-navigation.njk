@@ -1,0 +1,83 @@
+{%- from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation -%}
+
+{% if user.roles and user.roles.length > 0 %}
+
+  {% set isAdmin = user and user
+    .roles
+    .includes("admin") %}
+  {% set isChecker = user and user
+    .roles
+    .includes("checker") %}
+  {% set isMaker = user and user
+    .roles
+    .includes("maker") %}
+  {% set isReadOnly = user and user.roles.includes("read-only") %}
+  {% set isPaymentReportOfficer = user and user.roles.includes("payment-report-officer") %}
+
+  {% set homeNavItem =  {
+    text: "Dashboard",
+    href: "/dashboard",
+    active: primaryNav == "dashboard",
+    attributes: {
+      "data-cy": "dashboard"
+    }
+  } %}
+  {% set reportsNavItem = {
+    text: "Reports",
+    href: "/reports",
+    active: primaryNav == "reports",
+    attributes: {
+      "data-cy": "reports"
+    }
+  } %}
+  {% set reportGefUtilisationAndFeesNavItem = {
+    text: "Report GEF utilisation and fees",
+    href: "/utilisation-report-upload",
+    active: primaryNav == "utilisation_report_upload",
+    attributes: {
+      "data-cy": "upload_report"
+    }
+  } %}
+  {% set previousGefReportsNavItem = {
+    text: "Previous GEF reports",
+    href: "/previous-reports",
+    active: primaryNav == "previous_reports",
+    attributes: {
+      "data-cy": "previous_reports"
+    }
+  } %}
+  {% set usersNavItem = {
+    text: "Users",
+    href: "/admin/users",
+    active: primaryNav == "users",
+    attributes: {
+      "data-cy": "users"
+    }
+  } %}
+
+  {% set navItems = [] %}
+
+  {% if isAdmin or isReadOnly or isMaker or isChecker %}
+    {% set navItems = (navItems.push(homeNavItem), navItems) %}
+  {% endif %}
+
+  {% if isAdmin or isMaker or isChecker %}
+    {% set navItems = (navItems.push(reportsNavItem), navItems) %}
+  {% endif %}
+
+  {% if isPaymentReportOfficer %}
+    {% set navItems = (navItems.push(reportGefUtilisationAndFeesNavItem, previousGefReportsNavItem), navItems) %}
+  {% endif %}
+
+  {% if isAdmin %}
+    {% set navItems = (navItems.push(usersNavItem), navItems) %}
+  {% endif %}
+
+  {% if navItems.length %}
+    {{ mojPrimaryNavigation({
+    label: "Primary navigation",
+    items: navItems
+  }) }}
+  {% endif %}
+
+{% endif %}

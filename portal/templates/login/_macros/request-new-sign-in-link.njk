@@ -1,0 +1,10 @@
+{% macro render(params) %}
+  <form method="POST">
+    <input type="hidden" name="_csrf" value="{{ params.csrfToken }}" data-cy="csrf-input">
+    <button type="submit"
+        class="{{ 'govuk-button' if params.isPrimaryActionOnPage else 'button-as-link' }}"
+        data-cy="request-new-sign-in-link">
+      Request a new sign in link
+    </button>
+  </form>
+{% endmacro %}

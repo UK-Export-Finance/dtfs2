@@ -1,0 +1,401 @@
+/**
+ * @openapi
+ * definitions:
+ *   DealBSS:
+ *     type: object
+ *     properties:
+ *       _id:
+ *         type: string
+ *         example: 123abc
+ *       dealType:
+ *         type: string
+ *         example: 'BSS/EWCS'
+ *       submissionType:
+ *         type: string
+ *         example: Automatic Inclusion Notice
+ *       updatedAt:
+ *         type: integer
+ *         example: 1639675204629.0
+ *       bankInternalRefName:
+ *         type: string
+ *         example: a1
+ *       additionalRefName:
+ *         type: string
+ *         example: Test
+ *       status:
+ *         type: string
+ *         example: Submitted
+ *       previousStatus:
+ *         type: string
+ *         example: Ready for Checker's approval
+ *       bank:
+ *         $ref: '#/definitions/Bank'
+ *       details:
+ *         type: object
+ *         properties:
+ *           maker:
+ *             $ref: '#/definitions/User'
+ *           created:
+ *             type: string
+ *             example: '1632389070727'
+ *           submissionCount:
+ *             type: integer
+ *             example: 1
+ *           checker:
+ *             $ref: '#/definitions/User'
+ *           submissionDate:
+ *             type: string
+ *             example: '1632389070727'
+ *           ukefDealId:
+ *             type: string
+ *             example: '0030034426'
+ *       eligibility:
+ *         type: object
+ *         properties:
+ *           status:
+ *             type: string
+ *             example: 'Completed'
+ *           criteria:
+ *             type: array
+ *             items:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                   example: 123abc
+ *                 id:
+ *                   type: integer
+ *                   example: 11
+ *                 description:
+ *                   type: string
+ *                   example: The Supplier has confirmed in its Supplier Declaration that....
+ *                 answer:
+ *                   type: boolean
+ *                   example: true
+ *           agentName:
+ *             type: string
+ *             example: Joe Bloggs
+ *           agentAddressLine1:
+ *             type: string
+ *             example: 1A
+ *           agentAddressLine2:
+ *             type: string
+ *             example: Test Road
+ *           agentAddressLine3:
+ *             type: string
+ *             example: 'Line 3'
+ *           agentAddressTown:
+ *             type: string
+ *             example: London
+ *           agentAddressPostcode:
+ *             type: string
+ *             example: SW1A 2HQ
+ *           agentAddressCountry:
+ *             type: object
+ *             properties:
+ *              code:
+ *                type: string
+ *                example: GBR
+ *              name:
+ *                type: string
+ *                example: United Kingdom
+ *       submissionDetails:
+ *         type: object
+ *         properties:
+ *           indemnifier-address-line-1:
+ *             type: string
+ *             example: 1A
+ *           indemnifier-address-line-2:
+ *             type: string
+ *             example: Test Road
+ *           indemnifier-address-line-3:
+ *             type: string
+ *             example: 'Line 3'
+ *           indemnifier-address-town:
+ *             type: string
+ *             example: London
+ *           indemnifier-address-postcode:
+ *             type: string
+ *             example: SW1A 2HQ
+ *           indemnifier-address-country:
+ *             type: object
+ *             properties:
+ *              code:
+ *                type: string
+ *                example: GBR
+ *              name:
+ *                type: string
+ *                example: United Kingdom
+ *           indemnifier-companies-house-registration-number:
+ *             type: string
+ *             example: '06771815'
+ *           indemnifier-correspondence-address-line-1:
+ *             type: string
+ *             example: Test address
+ *           indemnifier-correspondence-address-line-2:
+ *             type: string
+ *             example: Test Road
+ *           indemnifier-correspondence-address-line-3:
+ *             type: string
+ *             example: Essex
+ *           indemnifier-correspondence-address-town:
+ *             type: string
+ *             example: London
+ *           indemnifier-correspondence-address-postcode:
+ *             type: string
+ *             example: SW1A 2HQ
+ *           indemnifier-correspondence-address-country:
+ *             type: object
+ *             properties:
+ *              code:
+ *                type: string
+ *                example: GBR
+ *              name:
+ *                type: string
+ *                example: United Kingdom
+ *           indemnifier-name:
+ *             type: string
+ *             example: COMPANY TRADING LTD
+ *           indemnifierCorrespondenceAddressDifferent:
+ *             type: string
+ *             example: 'true'
+ *           industry-sector:
+ *             type: object
+ *             properties:
+ *              code:
+ *                type: string
+ *                example: '1008'
+ *              name:
+ *                type: string
+ *                example: Accommodation and food service activities
+ *           industry-class:
+ *             type: object
+ *             properties:
+ *              code:
+ *                type: string
+ *                example: '56101'
+ *              name:
+ *                type: string
+ *                example: Licensed restaurants
+ *           legallyDistinct:
+ *             type: string
+ *             example: 'true'
+ *           sme-type:
+ *             type: string
+ *             example: Small
+ *           supplier-address-line-1:
+ *             type: string
+ *             example: Test address
+ *           supplier-address-line-2:
+ *             type: string
+ *             example: Test Road
+ *           supplier-address-line-3:
+ *             type: string
+ *             example: Essex
+ *           supplier-address-town:
+ *             type: string
+ *             example: London
+ *           supplier-address-postcode:
+ *             type: string
+ *             example: SW1A 2HQ
+ *           supplier-address-country:
+ *             type: object
+ *             properties:
+ *              code:
+ *                type: string
+ *                example: 'GBR'
+ *              name:
+ *                type: string
+ *                example: United Kingdom
+ *           supplier-companies-house-registration-number:
+ *             type: string
+ *             example: '06771815'
+ *           supplier-correspondence-line-1:
+ *             type: string
+ *             example: Test address
+ *           supplier-correspondence-line-2:
+ *             type: string
+ *             example: Test Road
+ *           supplier-correspondence-line-3:
+ *             type: string
+ *             example: Essex
+ *           supplier-correspondence-town:
+ *             type: string
+ *             example: London
+ *           supplier-correspondence-postcode:
+ *             type: string
+ *             example: SW1A 2HQ
+ *           supplier-correspondence-country:
+ *             type: object
+ *             properties:
+ *              code:
+ *                type: string
+ *                example: 'GBR'
+ *              name:
+ *                type: string
+ *                example: United Kingdom
+ *           supplier-name:
+ *             type: string
+ *             example: Mock Supplier
+ *           supplier-type:
+ *             type: string
+ *             example: Exporter
+ *           supplier-correspondence-address-is-different:
+ *             type: string
+ *             example: 'true'
+ *           supply-contract-description:
+ *             type: string
+ *             example: Mock free text
+ *           buyer-address-line-1:
+ *             type: string
+ *             example: Test address
+ *           buyer-address-line-2:
+ *             type: string
+ *             example: Test Road
+ *           buyer-address-line-3:
+ *             type: string
+ *             example: Essex
+ *           buyer-address-town:
+ *             type: string
+ *             example: London
+ *           buyer-address-postcode:
+ *             type: string
+ *             example: SW1A 2HQ
+ *           buyer-address-country:
+ *             type: object
+ *             properties:
+ *              code:
+ *                type: string
+ *                example: 'USA'
+ *              name:
+ *                type: string
+ *                example: United States
+ *           buyer-name:
+ *             type: string
+ *             example: Harry Bear
+ *           destinationOfGoodsAndServices:
+ *             type: object
+ *             properties:
+ *              code:
+ *                type: string
+ *                example: 'USA'
+ *              name:
+ *                type: string
+ *                example: United States
+ *           viewedPreviewPage:
+ *             type: boolean
+ *             example: true
+ *           supplyContractConversionRateToGBP:
+ *             type: string
+ *             example: '1.123456'
+ *           supplyContractCurrency:
+ *             type: object
+ *             properties:
+ *              id:
+ *                type: string
+ *                example: 'USD'
+ *              text:
+ *                type: string
+ *                example: 'USD - US Dollars'
+ *           supplyContractValue:
+ *             type: string
+ *             example: '10,000'
+ *           supplyContractConversionDate-day:
+ *             type: string
+ *             example: '23'
+ *           supplyContractConversionDate-month:
+ *             type: string
+ *             example: '09'
+ *           supplyContractConversionDate-year:
+ *             type: string
+ *             example: '2021'
+ *       facilities:
+ *         type: array
+ *         items:
+ *           type: string
+ *           example: 123abc
+ *       bondTransactions:
+ *         type: object
+ *         properties:
+ *           items:
+ *             type: array
+ *             items:
+ *               $ref: '#/definitions/FacilityBSS'
+ *       loanTransactions:
+ *         type: object
+ *         properties:
+ *           items:
+ *             type: array
+ *             items:
+ *               $ref: '#/definitions/FacilityEWCS'
+ *       summary:
+ *         type: object
+ *         properties:
+ *           totalValue:
+ *             type: object
+ *             properties:
+ *               dealInDealCurrency:
+ *                 type: string
+ *                 example: '10,000'
+ *               dealInGbp:
+ *                 type: string
+ *                 example: '12,000'
+ *               bondInDealCurrency:
+ *                 type: string
+ *                 example: '8,000'
+ *               bondInGbp:
+ *                 type: string
+ *                 example: '16,000'
+ *               loanInDealCurrency:
+ *                 type: string
+ *                 example: '4,000'
+ *               loanInGbp:
+ *                 type: string
+ *                 example: '8,000'
+ *       comments:
+ *         type: array
+ *         items:
+ *           type: object
+ *           properties:
+ *             text:
+ *               type: string
+ *               example: Amazing comment
+ *             timestamp:
+ *               type: string
+ *               example: '1632763411621'
+ *             user:
+ *               type: object
+ *               $ref: '#/definitions/User'
+ *       editedBy:
+ *         type: array
+ *         items:
+ *           type: object
+ *           properties:
+ *             date:
+ *               type: string
+ *               example: '1632233768694'
+ *             username:
+ *               type: string
+ *               example: BANK1_MAKER1
+ *             roles:
+ *               type: array
+ *               items:
+ *                 type: string
+ *               example: ['maker']
+ *             bank:
+ *               $ref: '#/definitions/Bank'
+ *             userId:
+ *               type: string
+ *               example: 123abc
+ *   DealsBSS:
+ *     type: object
+ *     properties:
+ *       deals:
+ *         type: array
+ *         items:
+ *           type: object
+ *           $ref: '#/definitions/DealBSS'
+ *       count:
+ *         type: integer
+ *         example: 1
+ */

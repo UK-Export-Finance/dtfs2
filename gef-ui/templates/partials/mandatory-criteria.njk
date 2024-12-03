@@ -1,0 +1,103 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle -%}
+  Confirm eligibility (mandatory criteria)
+{%- endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  <span class="govuk-caption-xl" data-cy="heading-caption">
+    Create new application
+  </span>
+
+  <h1 class="govuk-heading-xl" data-cy="main-heading">
+    {{ criteria.title }}
+  </h1>
+
+  <p>{{ criteria.introText }}</p>
+
+  <div data-cy="mandatory-criteria">
+    <ol class="govuk-list govuk-list--spaced">
+      {% for criterion in criteria.criteria %}
+        <li class="govuk-body">
+          {{ criterion.id}}. {{ criterion.body }}
+
+          {% if criterion.childList %}
+            <ol class="govuk-list govuk-list--bullet govuk-!-padding-left-7">
+              {% for childCriterion in criterion.childList %}
+                <li class="govuk-body">{{ childCriterion }}</li>
+              {% endfor %}
+            </ol>
+          {% endif %}
+
+        </li>
+      {% endfor %}
+
+    </ol>
+  </div>
+
+  <form method="post" data-cy="form">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    {{ govukRadios({
+      classes: "govuk-radios--inline",
+      idPrefix: "confirm",
+      name: "mandatoryCriteria",
+      fieldset: {
+        legend: {
+          text: "Can you confirm that the mandatory criteria will be true for this General Export Facility?",
+          isPageHeading: false,
+          classes: "govuk-fieldset__legend--s"
+        }
+      },
+      errorMessage: errors and {
+        text: errors.fieldErrors.confirm.text,
+        attributes: {
+          'data-cy': 'mandatory-criteria-error'
+        }
+      },
+      items: [
+        {
+          value: true,
+          text: "Yes",
+          attributes: {
+            'data-cy': 'mandatory-criteria-yes'
+          }
+        },
+        {
+          value: false,
+          text: "No",
+          attributes: {
+            'data-cy': 'mandatory-criteria-no'
+          }
+        }
+      ] })
+    }}
+
+    <div class="govuk-button-group">
+      {{ govukButton({
+        text: "Continue",
+        attributes: {
+            'data-cy': 'continue-button'
+          }
+      }) }}
+
+      <a
+        class="govuk-link"
+        href="/dashboard"
+        data-cy="cancel-button">Abandon</a>
+    </div>
+  </form>
+
+{% endblock %}

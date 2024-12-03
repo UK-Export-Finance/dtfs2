@@ -1,0 +1,98 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% import '_macros/date-field.njk' as dateField %}
+{% import './_macros/name-field.njk' as nameField %}
+
+{% block pageTitle -%}
+  Loan Issue Facility
+{%- endblock %}
+
+{% block content %}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
+
+  <h1 class="govuk-heading-l">Loan Issue Facility</h1>
+
+  <form method="POST" autocomplete="off" novalidate>
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <div id="issue-loan-form">
+      {{ dateField.render(
+        legend = 'Issued Date',
+        id = 'issuedDate',
+        hint = 'For example, 31 05 2017',
+        dayValue = loan['issuedDate-day'] or loan.issuedDate and loan.issuedDate | localiseTimestamp('dd', user.timezone),
+        monthValue = loan['issuedDate-month'] or loan.issuedDate and loan.issuedDate | localiseTimestamp('MM', user.timezone),
+        yearValue = loan['issuedDate-year'] or loan.issuedDate and loan.issuedDate | localiseTimestamp('yyyy', user.timezone),
+        error = validationErrors.errorList.issuedDate
+      )}}
+
+      {{ dateField.render(
+        legend = 'Requested Cover Start Date (optional)',
+        id = 'requestedCoverStartDate',
+        hint = 'For example, 31 05 2017',
+        dayValue = loan['requestedCoverStartDate-day'] or loan.requestedCoverStartDate and loan.requestedCoverStartDate | localiseTimestamp('dd', user.timezone),
+        monthValue = loan['requestedCoverStartDate-month'] or loan.requestedCoverStartDate and loan.requestedCoverStartDate | localiseTimestamp('MM', user.timezone),
+        yearValue = loan['requestedCoverStartDate-year'] or loan.requestedCoverStartDate and loan.requestedCoverStartDate | localiseTimestamp('yyyy', user.timezone),
+        error = validationErrors.errorList.requestedCoverStartDate
+      )}}
+
+      {{ dateField.render(
+        legend = 'Cover End Date',
+        id = 'coverEndDate',
+        hint = 'For example, 31 05 2017',
+        dayValue = loan['coverEndDate-day'],
+        monthValue = loan['coverEndDate-month'],
+        yearValue = loan['coverEndDate-year'],
+        error = validationErrors.errorList.coverEndDate
+      )}}
+
+      {{ govukInput({
+        label: {
+          text: "Disbursement amount"
+        },
+        id: "disbursementAmount",
+        name: "disbursementAmount",
+        value: loan.disbursementAmount,
+        pattern: '[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)',
+        attributes: {
+          size: "60",
+          maxlength: "255",
+          placeholder: "0.00",
+          'data-cy': 'disbursement-amount',
+          "data-mask": "currency"
+        },
+        classes: "govuk-input--width-10",
+        errorMessage: validationErrors.errorList.disbursementAmount and {
+          text: validationErrors.errorList.disbursementAmount.text,
+          attributes: {
+            'data-cy': 'disbursement-amount-error-message'
+          }
+        }
+      }) }}
+
+      {% set nameRequiredForIssuance = loan.nameRequiredForIssuance or not loan.name %}
+
+      {% if nameRequiredForIssuance %}
+        {{nameField.render(
+          id = 'name',
+          label = 'Bank reference number',
+          value = loan.name,
+          error = validationErrors.errorList.name
+        )}}
+      {% endif %}
+
+      <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">Save</button>
+
+      <a href="/contract/{{ dealId }}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button" data-cy="cancel-button">Cancel</a>
+    </div>
+  </form>
+
+{% endblock %}

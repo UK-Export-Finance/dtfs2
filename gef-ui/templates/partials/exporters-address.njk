@@ -1,0 +1,72 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% block pageTitle -%}
+  Exporter’s address
+{%- endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  {{ govukBackLink({
+    text: "Back to previous page",
+    href: '/gef/application-details/' + dealId + '/companies-house',
+    attributes: {
+      'data-cy': 'back-link'
+    }
+  }) }}
+
+  <header data-cy="application-details-page">
+    <span class="govuk-caption-xl" data-cy="heading-caption">
+      About the exporter
+    </span>
+    <h1 class="govuk-heading-xl" data-cy="main-heading">
+      Exporter's address
+    </h1>
+  </header>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <div class="govuk-grid-column-one-half">
+      <p class="govuk-body" data-cy="company-name-title"><strong>Company Name</strong></p>
+      {% if companyName %}
+        <p class="govuk-body" data-cy="company-name">{{ companyName }}</p>
+      {% else %}
+        <p class="govuk-body">—</p>
+      {% endif %}
+
+      <p class="govuk-body" data-cy="registered-company-address-title"><strong>Registered company address</strong></p>
+
+      {% for key, address in registeredAddress %}
+        <p class="govuk-body">{{ address }}</p>
+      {% endfor %}
+
+    </div>
+  </div>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-4">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukDetails({
+        summaryText: "How do I change the registered company address?",
+        text: "You cannot change the registered company address in this service. This information is sent to us from Companies House. Check with the exporter if you have a query about their registered address.",
+        attributes: {
+          'data-cy': 'change-details'
+        }
+      }) }}
+    </div>
+  </div>
+
+  {% include "includes/exporters-address/separate-correspondence.njk" %}
+{% endblock %}

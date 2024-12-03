@@ -1,0 +1,67 @@
+
+<p class="govuk-body">UK Export Finance (UKEF) puts small files (known as ‘cookies’) onto your computer to make this site work.</p>
+
+
+<p class="govuk-body">Our cookies aren’t used to identify you personally.</p>
+
+<h3 class="govuk-heading-m" data-cy="essential-cookies-heading">Essential Cookies</h3>
+
+<p class="govuk-body">Essential cookies keep your information secure while you use this service. We do not need to ask permission to use them.</p>
+
+<!-- Table -->
+
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{{ govukTable({
+  firstCellIsHeader: true,
+  head: [
+    {
+      text: "Name",
+      attributes: {
+            "data-cy": "essential-cookies-name"
+          }
+    },
+    {
+      text: "Purpose",
+      attributes: {
+            "data-cy": "essential-cookies-purpose"
+          }
+    },
+    {
+      text: "Expires",
+      attributes: {
+            "data-cy": "essential-cookies-expires"
+          }
+    }
+  ],
+  rows: [
+    [
+      {
+        text: "Security",
+        attributes: {
+            "data-cy": "essential-cookies-name-security"
+          }
+      },
+      {
+        text: "This is an essential security cookie, which authenticates your requests with our service."
+      },
+      {
+        text: "12 hours"
+      }
+    ],
+    [
+      {
+        text: "Session",
+        attributes: {
+            "data-cy": "essential-cookies-name-session"
+          }
+      },
+      {
+        text: "This is an essential session cookie, necessary for basic web application operation."
+      },
+      {
+        text: "7 days"
+      }
+    ]
+  ]
+}) }}

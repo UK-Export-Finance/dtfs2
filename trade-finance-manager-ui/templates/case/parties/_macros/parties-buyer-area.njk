@@ -1,0 +1,115 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% import './parties-key-value-grid-row.njk' as keyValueGridRow %}
+{% import './parties-key-value-array-grid-row.njk' as keyValueArrayGridRow %}
+{% import './parties-edit-unique-reference-link.njk' as uniqueReferenceNumberEditLink %}
+{% import '../../../_macros/not-applicable.njk' as notApplicable %}
+
+{% macro render(params) %}
+  {% set deal = params.deal %}
+  {% set userCanEdit = params.userCanEdit %}
+  {% set renderEditLink = params.renderEditLink %}
+  {% set renderEditForm = params.renderEditForm %}
+  {% set buyer = params.tfm.parties.buyer %}
+  {% set urn = params.urn %}
+  {% set errors = params.errors %}
+
+  {% if not buyer.partyUrn %}
+    {% set uniqueRefStyle = "govuk-tag govuk-tag--red govuk-!-margin-top-2" %}
+  {% endif %}
+
+    {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row {% if renderEditLink %}ukef-flex-container deal{% endif %}" data-cy="parties-buyer">
+    <div class="govuk-grid-column-one-half">
+        {% if userCanEdit and renderEditForm %}
+          <h1 class="ukef-heading-l govuk-!-margin-top-0" data-cy="edit-heading">Edit buyer details</h1>
+        {% else %}
+          <h2 class="ukef-heading-l" data-cy="edit-heading">Buyer</h2>
+        {% endif %}
+      </h2>
+    </div>
+
+    {% if renderEditLink and deal.dealType === 'BSS/EWCS' %}
+      <div class="govuk-grid-column-one-half ukef-flex-container--align-center-right">
+        {{ uniqueReferenceNumberEditLink.render({dealId: deal._id, type: 'buyer'}) }}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+
+      {% if deal.dealType === 'GEF' %}
+        {{ notApplicable.render({ id: 'buyer' })}}
+      {% else %}
+
+        <div data-cy="buyer-details">
+          {{ keyValueGridRow.render({
+            key: 'Name',
+            value: deal.submissionDetails.buyerName,
+            dataCy: 'buyer-name'
+          }) }}
+
+          {% if userCanEdit and renderEditForm %}
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-one-half govuk-!-margin-top-4">
+              {{ govukInput({
+                label: {
+                  text: "Unique reference number (URN)"
+                },
+                id: "partyUrn",
+                name: "partyUrn",
+                attributes: {
+                  "data-cy": "urn-input"
+                },
+                value: urn,
+                errorMessage: errors and errors.fieldErrors.partyUrn and {
+                  text: errors.fieldErrors.partyUrn.text,
+                  attributes: {
+                    'data-cy': 'partyUrn--inline-error'
+                  }
+                }
+              }) }}
+              </div>
+            </div>
+          {% else %}
+            {{ keyValueGridRow.render({
+              key: 'Unique reference number',
+              value: buyer.partyUrn or "NOT MATCHED",
+              valueStyle: uniqueRefStyle,
+              dataCy: 'buyer-unique-ref'
+            }) }}
+          {% endif %}
+
+          {{ keyValueArrayGridRow.render({
+            key: 'Address',
+            values:  [ deal.submissionDetails.buyerAddressLine1,
+                    deal.submissionDetails.buyerAddressLine2,
+                    deal.submissionDetails.buyerAddressLine3,
+                    deal.submissionDetails.buyerAddressTown,
+                    deal.submissionDetails.buyerAddressPostcode],
+            dataCy: 'buyer-address'
+          }) }}
+          {{ keyValueGridRow.render({
+            key: 'Country',
+            value: deal.submissionDetails.buyerAddressCountry,
+            dataCy: 'buyer-address-country'
+          }) }}
+
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+{% endmacro %}

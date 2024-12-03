@@ -1,0 +1,24 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% macro render(bond, validationErrors) %}
+
+  {{ govukInput({
+    label: {
+      text: "Length of time that the UKEF's guarantee will be in place for (in months, rounded up)"
+    },
+    classes: "govuk-input--width-5",
+    id: "ukefGuaranteeInMonths",
+    name: "ukefGuaranteeInMonths",
+    value: bond.ukefGuaranteeInMonths,
+    attributes: {
+      'data-cy': 'ukef-guarantee-in-months'
+    },
+    errorMessage: validationErrors.errorList.ukefGuaranteeInMonths.text and {
+      text: validationErrors.errorList.ukefGuaranteeInMonths.text,
+      attributes: {
+        'data-cy': 'ukef-guarantee-in-months-error-message'
+      }
+    }
+  }) }}
+
+{% endmacro %}

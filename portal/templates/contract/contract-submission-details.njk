@@ -1,0 +1,99 @@
+{% extends "index.njk" %}
+{% import './components/contract-tabs.njk' as contractTabs %}
+{% import './components/contract-overview-table.njk' as contractOverviewTable %}
+{% import './components/edit-link.njk' as editLink %}
+{% import 'contract/about/components/about-submission-details.njk' as aboutSubmissionDetails %}
+{% import '_macros/mandatory-criteria-box.njk' as mandatoryCriteriaBox %}
+{% import '_macros/eligibility-criteria-answers.njk' as eligibilityCriteriaAnswers %}
+{% import '_macros/eligibility-documentation-preview.njk' as eligibilityDocumentation %}
+{% import 'bond/_macros/bond-submission-details.njk' as bondSubmissionDetails %}
+{% import 'loan/_macros/loan-submission-details.njk' as loanSubmissionDetails %}
+{% import './components/ukef-comments.njk' as ukefComments %}
+
+{% block pageTitle -%}
+  Check deal details - {{ deal.additionalRefName }}
+{%- endblock %}
+
+{% block content %}
+  {% set componentData = {user: user, deal: deal, editable: editable, selected: 'submission-details'} %}
+
+  <h1 data-cy="heading" class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ deal.additionalRefName }}</span></h1>
+
+  {{ contractTabs.render(componentData) }}
+
+  {{ contractOverviewTable.render(componentData) }}
+
+  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8">
+
+  {{ ukefComments.render(deal.status, deal.ukefComments, deal.ukefDecision) }}
+
+  <h2 class="govuk-heading-l">
+    <span data-cy="general-deal-info-heading">General deal information</span>
+
+    {{ editLink.render({
+          editable: editable,
+          href: '/contract/' + deal._id + '/about/supplier',
+          dataCy: 'edit-about-link'
+        })}}
+  </h2>
+
+  {% if deal.submissionDetails %}
+    {{ aboutSubmissionDetails.render(deal.submissionDetails) }}
+  {% endif %}
+
+  <h3 class="govuk-heading-l">
+    <span data-cy="confirm-eligibility-heading">Confirm eligibility</span>
+    {{ editLink.render({
+          editable: editable,
+          href: '/contract/' + deal._id + '/eligibility/criteria',
+          dataCy: 'edit-eligibility-link'
+        })}}
+  </h3>
+
+  {% if deal.mandatoryCriteria %}
+    {{ mandatoryCriteriaBox.render({ mandatoryCriteria: deal.mandatoryCriteria }) }}
+  {% endif %}
+
+  {% if deal.eligibility.criteria %}
+    {{ eligibilityCriteriaAnswers.render(deal.eligibility, deal.mandatoryCriteria | length) }}
+  {% endif %}
+
+  {% if deal.supportingInformation %}
+    {{ eligibilityDocumentation.render(deal.supportingInformation, deal._id) }}
+  {% endif %}
+
+  {% for bond in deal.bondTransactions.items %}
+    <div id="bond-{{ bond._id }}" data-cy="bond-{{ bond._id }}">
+      <h3 class="govuk-heading-l">
+        <span data-cy="bond-heading">Bond</span>
+        {{ editLink.render({
+              editable: editable,
+              href: '/contract/' + deal._id + '/bond/' + bond._id + '/details',
+              dataCy: 'edit-bond-' + bond._id + '-link'
+            })}}
+      </h3>
+
+      {{ bondSubmissionDetails.render({ bond: bond, user: user })}}
+    </div>
+  {% endfor %}
+
+  {% for loan in deal.loanTransactions.items %}
+    <div id="loan-{{ loan._id }}" data-cy="loan-{{ loan._id }}">
+      <h3 class="govuk-heading-l">
+        <span data-cy="loan-heading">Loan</span>
+        {{ editLink.render({
+              editable: editable,
+              href: '/contract/' + deal._id + '/loan/' + loan._id + '/guarantee-details',
+              dataCy: 'edit-loan-' + loan._id + '-link'
+            })}}
+      </h3>
+
+      {{ loanSubmissionDetails.render({ loan: loan, user: user })}}
+    </div>
+  {% endfor %}
+
+  <p class="govuk-body">
+    <a href="/contract/{{ deal._id }}" class="govuk-link" data-cy="go-back-link">Back to Supply Contract page</a>
+  </p>
+
+{% endblock %}

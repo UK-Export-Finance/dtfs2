@@ -1,0 +1,54 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% import '_macros/date-field.njk' as dateField %}
+
+{% macro render(bond, validationErrors, user) %}
+
+  {{ dateField.render(
+    legend = 'Requested Cover Start Date (optional)',
+    id = 'requestedCoverStartDate',
+    hint = '<p>For example, 27 11 2019</p><p>This must be within the next month. If this field is left blank it will default to the later of the Issued date or Inclusion Notice submission date</p>',
+    dayValue = bond['requestedCoverStartDate-day'] or bond.requestedCoverStartDate and bond.requestedCoverStartDate | localiseTimestamp('dd', user.timezone),
+      monthValue = bond['requestedCoverStartDate-month'] or bond.requestedCoverStartDate and bond.requestedCoverStartDate | localiseTimestamp('MM', user.timezone),
+      yearValue = bond['requestedCoverStartDate-year'] or bond.requestedCoverStartDate and bond.requestedCoverStartDate | localiseTimestamp('yyyy', user.timezone),
+    error = validationErrors.errorList.requestedCoverStartDate
+  )}}
+
+  {{ dateField.render(
+    legend = 'Cover End Date',
+    id = 'coverEndDate',
+    hint = 'For example, 27 11 2025',
+    dayValue = bond['coverEndDate-day'],
+    monthValue = bond['coverEndDate-month'],
+    yearValue = bond['coverEndDate-year'],
+    error = validationErrors.errorList.coverEndDate
+  )}}
+
+  <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="30">
+    {{ govukInput({
+      label: {
+        text: "Bond's unique identification number"
+      },
+      id: 'name',
+      name: 'name',
+      value: bond.name,
+      classes: 'govuk-!-width-one-half govuk-js-character-count',
+      attributes: {
+        maxlength: '30',
+        'aria-describedby': 'name-info',
+        'data-cy': 'name'
+      },
+      errorMessage: validationErrors.errorList.name.text and {
+        text: validationErrors.errorList.name.text,
+        attributes: {
+          'data-cy': 'name-error-message'
+        }
+      }
+    }) }} 
+    <span id="name-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+      You can enter up to 30 characters
+    </span>
+  </div>
+
+
+
+{% endmacro %}

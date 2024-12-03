@@ -1,0 +1,94 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+{% block pageTitle -%}
+  Select exporter’s correspondence address
+{%- endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  {{ govukBackLink({
+    text: "Back to previous page",
+    href: '/gef/application-details/' + dealId + '/exporters-address',
+    attributes: {
+      'data-cy': 'back-link'
+    }
+  }) }}
+
+  <header data-cy="application-details-page">
+    <span class="govuk-caption-xl" data-cy="heading-caption">
+      About the exporter
+    </span>
+    <h1 class="govuk-heading-xl" data-cy="main-heading">
+      Select exporter's correspondence address
+    </h1>
+  </header>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <div class="govuk-grid-column-one-half">
+      <p class="govuk-body" data-cy="postcode-title"><strong>Postcode</strong></p>
+      {% if postcode %}
+        <p class="govuk-body" data-cy="postcode">
+          {{ postcode }}
+          <a class="govuk-link govuk-!-margin-left-6"
+            href="/gef/application-details/{{dealId}}/exporters-address"
+            data-cy="change-link">
+            Change
+          </a>
+        </p>
+      {% else %}
+        <p class="govuk-body">—</p>
+      {% endif %}
+
+      <form method="post" data-cy="form">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        {{ govukSelect({
+          id: "selectedAddresses",
+          name: "selectedAddress",
+          label: {
+            text: "Select address"
+          },
+          items: addressesForSelection,
+          errorMessage: errors and errors.fieldErrors.selectedAddress and {
+            text: errors.fieldErrors.selectedAddress.text,
+            attributes: {
+              'data-cy': 'select-address-error'
+            }
+          },
+          attributes: {
+            'data-cy': 'select-address'
+          }
+        }) }}
+
+        <div class="govuk-!-margin-bottom-6">
+        <a class="govuk-link"
+          href="/gef/application-details/{{dealId}}/enter-exporters-correspondence-address"
+          data-cy="cant-find-address">
+          I can't find the address in the list
+        </a>
+        </div>
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            attributes: {
+              'data-cy': 'continue-button'
+            }
+          }) }}
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

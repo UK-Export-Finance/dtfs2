@@ -1,0 +1,67 @@
+{% macro render(params) %}
+  {% set totalPages = params.totalPages %}
+  {% set currentPage = params.currentPage %}
+  {% set totalItems = params.totalItems %}
+  {% set paginationRoute = params.paginationRoute %}
+  {% set queryString = params.queryString %}
+
+  <div class="pagination" role="navigation">
+
+    {% if totalPages > 1 %}
+
+      <div data-cy="pagination" role="navigation">
+        <h4 class="govuk-visually-hidden">Pagination</h4>
+
+        <ul class="govuk-!-margin-bottom-0">
+
+          {% if currentPage !== 0 %}
+            <li data-cy="First_listItem" class="govuk-body govuk-!-margin-bottom-3">
+              <a data-cy="First" href="{{paginationRoute}}/0{{queryString}}" class="govuk-link">First</a>
+            </li>
+
+            <li data-cy="Previous_listItem" class="govuk-body govuk-!-margin-bottom-3">
+              <a data-cy="Previous" href="{{paginationRoute}}/{{currentPage-1}}{{queryString}}" class="govuk-link">Previous</a>
+            </li>
+          {% endif %}
+
+          {% if currentPage > 4 %}
+            <li data-cy="firstPreviousEllipsis" class="govuk-body govuk-!-margin-bottom-3">
+              ...
+            </li>
+          {% endif %}
+
+          {% for i in range(currentPage - 4, totalPages) %}
+            {% if loop.index < 10 and i + 1 > 0 %}
+              <li data-cy="Page_{{i}}_listItem" class="govuk-body govuk-!-margin-bottom-3 {%if i === currentPage %}active{% endif %}">
+                <a data-cy="Page_{{i}}" href="{{paginationRoute}}/{{i}}{{queryString}}" class="govuk-link">{{ i + 1 }}</a>
+              </li>
+            {% endif %}
+          {%- endfor %}
+
+          {% if totalPages - currentPage > 5 %}
+            <li data-cy="nextLastEllipsis" class="govuk-body govuk-!-margin-bottom-3">
+              ...
+            </li>
+          {% endif %}
+
+
+          {% if currentPage !== (totalPages-1) %}
+            <li data-cy="Next_listItem" class="govuk-body govuk-!-margin-bottom-3">
+              <a data-cy="Next" href="{{paginationRoute}}/{{currentPage+1}}{{queryString}}" class="govuk-link">Next</a>
+            </li>
+
+            <li data-cy="Last_listItem" class="govuk-body govuk-!-margin-bottom-3">
+              <a data-cy="Last" href="{{paginationRoute}}/{{totalPages-1}}{{queryString}}" class="govuk-link">Last</a>
+            </li>
+          {% endif %}
+
+        </ul>
+
+      </div>
+    {% endif %}
+
+    <p data-cy="totalItems" class="govuk-body-s">({{ totalItems }} items)</p>
+
+  </div>
+
+{% endmacro %}

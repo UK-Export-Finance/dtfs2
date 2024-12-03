@@ -1,0 +1,36 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
+{% import './components/about-submission-details.njk' as aboutSubmissionDetails %}
+
+{% block pageTitle -%}
+  Check your answers - About Supply Contract - {{ deal.additionalRefName }}
+{%- endblock %}
+
+{% block content %}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
+
+  {{ taskListHeader.render({
+    title: 'About the Supply Contract',
+    dealId: deal._id,
+    items: taskListItems,
+    entityName: 'about'
+  })}}
+
+  {% include "_partials/print-button.njk" %}
+
+  {% if deal.submissionDetails %}
+    {{ aboutSubmissionDetails.render(deal.submissionDetails) }}
+  {% endif %}
+
+  <p class="govuk-body"><a class="govuk-link" href="/contract/{{ deal._id }}">Save and go back to deal</a></p>
+
+{% endblock %}

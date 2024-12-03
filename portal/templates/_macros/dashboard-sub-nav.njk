@@ -1,0 +1,33 @@
+{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+
+{% macro render(params) %}
+
+  {% set items = [
+    {
+      id: 'deals',
+      href: '/dashboard/deals',
+      text: 'Deals',
+      active: 'deals' === params.selected,
+      attributes: {
+        'data-cy': 'dashboard-sub-nav-link-deals',
+        'aria-label': 'deals: ,' + params.selectedFiltersString if 'deals' === params.selected
+      }
+    },
+    {
+      id: 'facilities',
+      href: '/dashboard/facilities',
+      text: 'Facilities',
+      active: 'facilities' === params.selected,
+      attributes: {
+        'data-cy': 'dashboard-sub-nav-link-facilities',
+        'aria-label': 'facilities: ,' + params.selectedFiltersString if 'facilities' === params.selected
+      }
+    }
+  ] %}
+
+  {{ mojSubNavigation({
+    label: 'Sub navigation',
+    items: items
+  }) }}
+
+{% endmacro %}

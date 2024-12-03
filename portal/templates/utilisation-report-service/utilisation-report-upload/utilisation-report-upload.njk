@@ -1,0 +1,110 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% set nextDueReport = dueReportPeriods[0] %}
+{% set genericWarningText = "There are overdue reports, please send them as soon as possible." %}
+{% set warningText %}
+    {{ genericWarningText if dueReportPeriods.length > 2 else [nextDueReport.formattedReportPeriod, " report is overdue, please send it as soon as possible."] | join }}
+{% endset %}
+{% block pageTitle %}Utilisation Report Upload{% endblock %}
+{% block content %}
+    {% if errorSummary %}
+        {{ govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: errorSummary,
+          attributes: {
+            'data-cy': 'error-summary'
+          }
+        }) }}
+    {% endif %}
+    <h1 class="govuk-heading-l" data-cy="main-heading">
+        {% if dueReportPeriods.length > 0 %}
+            Report GEF utilisation and fees
+        {% else %}
+            Report not currently due for upload
+        {% endif %}
+    </h1>
+    {% if dueReportPeriods.length === 0 %}
+        <p class="govuk-body" data-cy="next-due-report-text">
+            The {{ formattedNextReportPeriod }} report can be uploaded from {{ nextReportPeriodSubmissionStart }}.
+        </p>
+        <p class="govuk-body" data-cy="uploaded-report-details">
+            The {{ lastUploadedReportPeriod }} report was sent to UKEF by {{ uploadedByFullName }} on {{ formattedDateAndTimeUploaded }}.
+        </p>
+    {% elif dueReportPeriods.length === 1 %}
+        <h2 class="govuk-heading-m" data-cy="sub-heading">
+            {{ nextDueReport.formattedReportPeriod }} report is due
+        </h2>
+        <div class="govuk-inset-text" data-cy="report-due-date">
+            All issued facilities must be updated and sent to UKEF by {{ nextDueReportDueDate }}.
+        </div>
+    {% elif dueReportPeriods.length > 1 %}
+        {{ govukWarningText({
+        text: warningText,
+        iconFallbackText: "Warning.",
+        attributes: {
+            'data-cy': 'warning-text' }
+        }) }}
+        <ul class="govuk-list govuk-list--bullet" data-cy="due-reports-list">
+            {% for dueReport in dueReportPeriods.slice(0, -1) %}
+                <li data-cy="list-item-{{ dueReport.start.month }}-{{ dueReport.start.year }}__overdue">
+                    {{ dueReport.formattedReportPeriod }} report is overdue
+                </li>
+            {% endfor %}
+            <li data-cy="list-item-{{ dueReportPeriods.at(-1).start.month }}-{{ dueReportPeriods.at(-1).start.year }}__now-due">
+                {{ dueReportPeriods.at(-1).formattedReportPeriod }} report is now due
+            </li>
+        </ul>
+        <div class="govuk-inset-text" data-cy="inset-text">
+            {% if dueReportPeriods.length > 2 %}
+                Once you've sent the {{ nextDueReport.formattedReportPeriod }} report, you can send subsequent reports.
+            {% else %}
+                Once you've sent the {{ nextDueReport.formattedReportPeriod }} report, you can send the {{ dueReportPeriods.at(-1).formattedReportPeriod }} report.
+            {% endif %}
+        </div>
+    {% endif %}
+    {% if dueReportPeriods.length > 0 %}
+        <p class="govuk-body">For each issued facility you must provide:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>facility utilisation accurate for the report month-end date</li>
+            <li>the total fees accrued</li>
+            <li>the fee payable to UKEF</li>
+        </ul>
+        <p class="govuk-body">If there has been no movement against a facility you must still report this.</p>
+        <form method="POST" data-cy="form" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+            <div class="govuk-form-group {% if validationError %}govuk-form-group--error{% endif %}">
+                <label class="govuk-label govuk-label--m" for="utilisation-report-file-upload" data-cy="upload-report-text">
+                    Upload {{ nextDueReport.formattedReportPeriod }} report
+                    <div id="utilisation-report-file-upload-hint" class="govuk-hint">
+                        The file must be an XLSX or CSV
+                    </div>
+                </label>
+                {% if validationError %}
+                    <span class="govuk-error-message" data-cy="utilisation-report-file-upload-error-message">
+                        <span class="govuk-visually-hidden">Error:</span>
+                        {{ validationError.text }}
+                    </span>
+                {% endif %}
+                <input
+                    class="govuk-file-upload govuk-!-width-one-half"
+                    id="utilisation-report-file-upload"
+                    name="utilisation-report-file-upload"
+                    data-cy="utilisation-report-file-upload"
+                    data-tag="govuk-file-upload"
+                    type="file"
+                    accept=".xlsx, .csv"/>
+            </div>
+            <div class="govuk-button-group">
+                <input
+                    formaction="?_csrf={{ csrfToken }}"
+                    type="submit"
+                    class="govuk-button govuk-!-margin-right-1"
+                    data-module="govuk-button"
+                    value="Continue"
+                    data-cy="continue-button"/>
+            </div>
+        </form>
+    {% endif %}
+{% endblock %}

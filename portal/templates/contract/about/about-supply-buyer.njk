@@ -1,0 +1,86 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
+{% import './components/address-fields.njk' as address %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+{% block pageTitle -%}
+  Buyer information - {{ deal.additionalRefName }}
+{%- endblock %}
+
+{% block content %}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
+
+  {{ taskListHeader.render({
+    title: 'Add buyer details',
+    dealId: deal._id,
+    items: taskListItems,
+    entityName: 'about'
+  })}}
+
+  <form method="POST" autocomplete="off">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150" id="buyer-name-div">
+      {{ govukInput({
+        label: {
+          html: 'Buyer name <span id="buyerName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">You can enter up to 150 characters</span>'
+        },
+        classes: "govuk-!-width-one-half",
+        id: 'buyer-name',
+        name: 'buyer-name',
+        value: deal.submissionDetails["buyer-name"],
+        attributes: {
+          "data-cy": "buyer-name",
+          "maxlength": "150"
+        },
+        errorMessage: validationErrors.errorList["buyer-name"]
+      }) }}
+    </div>
+
+    {{ address.fields(
+      deal = deal,
+      validationErrors = validationErrors,
+      id = "buyer-address",
+      legend = "Buyer address",
+      countries = mappedCountries,
+      hint = "This should be the buyer's principal place of business"
+    )}}
+
+    {{ govukSelect({
+      id: "destinationOfGoodsAndServices",
+      name: "destinationOfGoodsAndServices",
+      label: { text: "Destination of goods and services" },
+      hint: { text: "Destination country of the goods covered by this Supply Contract" },
+      attributes: { "data-cy": "destinationOfGoodsAndServices" },
+      classes: "govuk-!-width-one-half",
+      items: mappedCountries["destinationOfGoodsAndServices"]  | countriesWithEmptyInitialOption,
+      errorMessage: validationErrors.errorList["destinationOfGoodsAndServices"]
+    }) }}
+
+    {{ govukButton({
+      "text": "Next Page",
+      "attributes" : { "data-cy" : "NextPage" }
+    }) }}
+
+    {{ govukButton({
+      "text": "Save and go back to deal",
+      "classes" : "govuk-button govuk-button--secondary",
+      "attributes" : {
+        "data-cy" : "SaveAndGoBack",
+        "formaction" : "/contract/"+ deal._id +"/about/buyer/save-go-back"
+      }
+    }) }}
+
+  </form>
+
+{% endblock %}

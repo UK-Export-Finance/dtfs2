@@ -1,0 +1,19 @@
+const CONSTANTS = require('../../constants');
+
+const mapTfmDealStageToPortalStatus = (tfmStatus) => {
+  if (tfmStatus === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS) {
+    return CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
+  }
+
+  if (tfmStatus === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS) {
+    return CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS;
+  }
+
+  if (tfmStatus === CONSTANTS.DEALS.DEAL_STAGE_TFM.DECLINED) {
+    return CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_REFUSED;
+  }
+
+  return null;
+};
+
+module.exports = mapTfmDealStageToPortalStatus;

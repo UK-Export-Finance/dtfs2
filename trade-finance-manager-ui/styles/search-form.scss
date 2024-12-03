@@ -1,0 +1,18 @@
+.ukef-search-form {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+
+  .govuk-form-group {
+    float: left;
+    width: 80%;
+    max-width: 268px;
+    margin-bottom: 0;
+  }
+}
+
+.ukef-search-form__button {
+  white-space: nowrap;
+  margin-left: 10px;
+}
+

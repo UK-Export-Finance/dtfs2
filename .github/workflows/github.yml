@@ -1,0 +1,72 @@
+# This GitHub Actions workflow ensures that any pull request targeting the main or main-*
+# branches meets certain criteria before it is merged. The workflow sets up the necessary infrastructure,
+# configures the environment, and performs checks on the pull request title, body, labels
+# and assignee to ensure that it adheres to predefined standards. If any of these checks fail,
+# the workflow will exit with an error, preventing the pull request from proceeding.
+
+name: GitHub
+run-name: 🔬Pull request inspection on ${{ github.event.number }}
+
+on:
+  pull_request:
+    branches:
+      - main
+      - 'release-*'
+
+env:
+  environment: dev
+  timezone: ${{ vars.TIMEZONE }}
+
+jobs:
+  # 1. Setup test infrastructure
+  setup:
+    name: Infrastructure setup 🔧
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ env.environment }}
+      timezone: ${{ env.timezone }}
+    steps:
+      - name: Environment 🧪
+        run: echo "Environment set to ${{ env.environment }}"
+
+      - name: Timezone 🌐
+        run: echo "Timezone set to ${{ env.timezone }}"
+
+  # 2. Pull request
+  pullrequest:
+    name: Pull request ⬇️
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci
+
+      - name: Title
+        run: echo "${{ github.event.pull_request.title }}" | npx commitlint --color --verbose $1
+
+      - name: Body
+        if: ${{ github.event.pull_request.body == '' }}
+        run: exit 1
+
+      - name: Label
+        if: ${{ github.event.pull_request.labels == '[]' }}
+        run: exit 1
+
+      - name: Assignee
+        if: ${{ github.event.pull_request.assignee == '[]' }}
+        run: exit 1

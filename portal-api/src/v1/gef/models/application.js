@@ -1,0 +1,99 @@
+const { getCurrentGefDealVersion } = require('@ukef/dtfs2-common');
+const { DEAL_TYPE, DEAL_STATUS } = require('../enums');
+
+class Application {
+  constructor(req, eligibility = null) {
+    const editedBy = [];
+
+    if (eligibility) {
+      // New Application
+      this.dealType = DEAL_TYPE;
+
+      this.version = getCurrentGefDealVersion();
+
+      // ensure we don't consume any sensitive fields
+      const { token: _token, password: _password, lastLogin: _lastLogin, ...sanitisedMaker } = req.maker;
+
+      this.maker = sanitisedMaker;
+
+      this.status = DEAL_STATUS.DRAFT;
+      this.bank = req.bank;
+
+      this.exporter = req.exporter
+        ? req.exporter
+        : {
+            status: DEAL_STATUS.NOT_STARTED,
+          };
+
+      this.eligibility = {
+        ...eligibility,
+        criteria: eligibility.criteria.map((term) => ({
+          ...term,
+          answer: null,
+        })),
+      };
+
+      this.bankInternalRefName = req.bankInternalRefName ? String(req.bankInternalRefName) : null;
+      if (req.mandatoryVersionId) {
+        this.mandatoryVersionId = req.mandatoryVersionId;
+      }
+      this.createdAt = Date.now();
+      this.updatedAt = Date.now();
+      this.submissionType = null;
+      this.submissionCount = 0;
+      this.submissionDate = null;
+      this.supportingInformation = {};
+      this.ukefDealId = null;
+      this.checkerId = null;
+      editedBy.push(this.maker._id);
+      this.editedBy = editedBy;
+      this.additionalRefName = req.additionalRefName ? String(req.additionalRefName) : null;
+      this.facilitiesUpdated = null;
+      this.portalActivities = [];
+    } else {
+      // Update
+      this.updatedAt = Date.now();
+
+      // Only set properties if they are part of the request otherwise they get cleared
+      // `ukefDecision` and 'manualInclusionNoticeSubmissionDate` in particular should not be changed in portal/gef but rather from tfm api
+      const updatable = [
+        'exporter',
+        'comments',
+        'submissionType',
+        'submissionCount',
+        'submissionDate',
+        'ukefDealId',
+        'editorId',
+        'checkerId',
+        'supportingInformation',
+        'bankInternalRefName',
+        'additionalRefName',
+        'eligibility',
+        'facilitiesUpdated',
+        'ukefDecisionAccepted',
+        'portalActivities',
+        'ukefDecision',
+        'manualInclusionNoticeSubmissionDate',
+      ];
+
+      if (req.exporter) {
+        req.exporter.updatedAt = Date.now();
+      }
+
+      if (req.eligibility) {
+        req.eligibility.updatedAt = Date.now();
+      }
+
+      Object.entries(req).forEach(([key, value]) => {
+        if (updatable.includes(key)) {
+          this[key] = value;
+        }
+      });
+    }
+    this.auditRecord = req.auditRecord;
+  }
+}
+
+module.exports = {
+  Application,
+};

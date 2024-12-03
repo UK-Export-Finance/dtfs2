@@ -1,0 +1,85 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-half">
+    <form method="post" data-cy="form">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+      <div id="separate-correspondence-form">
+        {{ govukRadios({
+          classes: "govuk-radios--inline",
+          idPrefix: "correspondence",
+          name: "correspondence",
+          fieldset: {
+            legend: {
+              text: "Is there a separate correspondence address for the exporter?",
+              classes: "govuk-fieldset__legend--s"
+            }
+          },
+          errorMessage: errors and errors.fieldErrors.correspondence and {
+            text: errors.fieldErrors.correspondence.text,
+            attributes: {
+              'data-cy': 'correspondence-error'
+            }
+          },
+          items: [
+            {
+              value: true,
+              text: "Yes",
+              checked: correspondence === "true",
+              attributes: {
+                'data-cy': 'correspondence-yes'
+              }
+            },
+            {
+              value: false,
+              text: "No",
+              checked: correspondence === "false",
+              attributes: {
+                'data-cy': 'correspondence-no'
+              }
+            }
+          ] }) }}
+        <div id="conditional-correspondence">
+          {{ govukInput({
+            label: {
+              text: "Correspondence address",
+              classes: "govuk-label--s"
+            },
+            value: postcode,
+            id: "postcode",
+            name: "postcode",
+            hint: {
+              text: "Postcode"
+            },
+            attributes: {
+              'data-cy': 'correspondence-address'
+            },
+            errorMessage: errors and errors.fieldErrors.postcode and {
+              text: errors.fieldErrors.postcode.text,
+              attributes: {
+                'data-cy': 'postcode-error'
+              }
+            }
+          }) }}
+          {% if errors and errors.fieldErrors.postcode %}
+            <p class="govuk-!-margin-bottom-6">
+              <a
+                class="govuk-link"
+                href="/gef/application-details/{{ dealId }}/enter-exporters-correspondence-address"
+                data-cy="enter-address-manually">
+                Enter address manually
+              </a>
+            </p>
+          {% endif %}
+        </div>
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            attributes: {
+              'data-cy': 'continue-button'
+            }
+          }) }}
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<script src="/gef/assets/js/correspondenceAddress.js" type="text/javascript" integrity="sha512-5TMwFHB7aPSrOdryVr5BpzoNlK+qL4IO3tFe6G3qstTAPkZ06CiGwNYwWnkUMnuYBLV+DkaAJXXNfJ+vDSPKEw==" crossorigin="anonymous"></script>

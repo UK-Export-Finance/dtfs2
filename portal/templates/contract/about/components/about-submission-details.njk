@@ -1,0 +1,360 @@
+{% macro supplierAndCounterIndemnifier(submissionDetails) %}
+
+  <h2 class="govuk-heading-m">Supplier and counter-indemnifier/guarantor</h2>
+
+  <dl class="govuk-summary-list govuk-summary-list--no-border">
+
+    {% if submissionDetails['supplier-type'] %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Supplier type
+        </dt>
+        <dd data-cy="supplier-type" class="govuk-summary-list__value govuk-body-s">
+          {{ submissionDetails['supplier-type'] }}
+        </dd>
+      </div>
+    {% endif %}
+
+    {% if submissionDetails["supplier-name"] %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Supplier name
+        </dt>
+        <dd data-cy="supplier-name" class="govuk-summary-list__value govuk-body-s">
+          {{ submissionDetails["supplier-name"] }}
+        </dd>
+      </div>
+    {% endif %}
+
+    {% set hasSupplierAddressLine = submissionDetails["supplier-address-line-1"] | length or submissionDetails["supplier-address-line-2"] | length or submissionDetails["supplier-address-line-3"] | length %}
+    {% set renderSupplierAddress = hasSupplierAddressLine or submissionDetails["supplier-address-town"] | length or submissionDetails["supplier-address-postcode"] | length %}
+
+    {% if renderSupplierAddress %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Supplier address
+        </dt>
+        <dd class="govuk-summary-list__value govuk-body-s">
+          <p data-cy="supplier-address-line-1">{{ submissionDetails["supplier-address-line-1"]}}</p>
+          <p data-cy="supplier-address-line-2">{{ submissionDetails["supplier-address-line-2"]}}</p>
+          <p data-cy="supplier-address-line-3">{{ submissionDetails["supplier-address-line-3"]}}</p>
+          <p data-cy="supplier-address-town">{{ submissionDetails["supplier-address-town"]}}</p>
+          <p data-cy="supplier-address-postcode">{{ submissionDetails["supplier-address-postcode"]}}</p>
+          <p data-cy="supplier-address-country">{{ submissionDetails["supplier-address-country"].name}}</p>
+        </dd>
+      </div>
+    {% endif %}
+
+    {% if submissionDetails["supplier-correspondence-address-is-different"] %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Is the Supplier's correspondence address different from the Company's Registered Address?
+        </dt>
+        <dd data-cy="supplier-correspondence-address-is-different" class="govuk-summary-list__value govuk-body-s">
+        {% if submissionDetails["supplier-correspondence-address-is-different"]==='true' %}
+          Yes
+        {% else %}
+          No
+        {% endif %}
+        </dd>
+      </div>
+    {% endif %}
+
+    {% if submissionDetails["supplier-companies-house-registration-number"]%}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          UK Supplier’s Companies House registration number, if UK registered
+        </dt>
+        <dd data-cy="supplier-companies-house-registration-number" class="govuk-summary-list__value govuk-body-s">
+          {{ submissionDetails["supplier-companies-house-registration-number"] }}
+        </dd>
+      </div>
+    {% endif %}
+
+    {% set hasSupplierCorrespondenceAddressLine = submissionDetails["supplier-correspondence-address-line-1"] | length or submissionDetails["supplier-correspondence-address-line-2"] | length or submissionDetails["supplier-correspondence-address-line-3"] | length %}
+    {% set renderSupplierCorrespondenceAddress = hasIndemnifierCorrespondenceAddressLine or submissionDetails["supplier-correspondence-address-town"] | length or submissionDetails["supplier-correspondence-address-postcode"] | length %}
+
+    {% if renderSupplierCorrespondenceAddress %}
+      <div class="govuk-summary-list__row {% if submissionDetails["supplier-correspondence-address-is-different"]==='false' %}govuk-visually-hidden{% endif %}">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Supplier correspondence address
+        </dt>
+        <dd class="govuk-summary-list__value govuk-body-s">
+          <p data-cy="supplier-correspondence-address-line-1">{{ submissionDetails["supplier-correspondence-address-line-1"]}}</p>
+          <p data-cy="supplier-correspondence-address-line-2">{{ submissionDetails["supplier-correspondence-address-line-2"]}}</p>
+          <p data-cy="supplier-correspondence-address-line-3">{{ submissionDetails["supplier-correspondence-address-line-3"]}}</p>
+          <p data-cy="supplier-correspondence-address-town">{{ submissionDetails["supplier-correspondence-address-town"]}}</p>
+          <p data-cy="supplier-correspondence-address-postcode">{{ submissionDetails["supplier-correspondence-address-postcode"]}}</p>
+          <p data-cy="supplier-correspondence-address-country">{{ submissionDetails["supplier-correspondence-address-country"].name}}</p>
+        </dd>
+      </div>
+    {% endif %}
+
+    {% if submissionDetails["industry-sector"] %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Industry sector
+        </dt>
+        <dd data-cy="industry-sector" class="govuk-summary-list__value govuk-body-s">
+          {{ submissionDetails["industry-sector"].name }}
+        </dd>
+      </div>
+    {% endif %}
+
+    {% if submissionDetails["industry-class"] %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Industry class
+        </dt>
+        <dd data-cy="industry-class" class="govuk-summary-list__value govuk-body-s">
+          {{ submissionDetails["industry-class"].name }}
+        </dd>
+      </div>
+    {% endif %}
+
+    {% if submissionDetails["sme-type"] %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          SME type
+        </dt>
+        <dd data-cy="sme-type" class="govuk-summary-list__value govuk-body-s">
+          {{ submissionDetails["sme-type"] }}
+        </dd>
+      </div>
+    {% endif %}
+
+    {% if submissionDetails["supply-contract-description"] %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Description of supply contract
+        </dt>
+        <dd data-cy="supply-contract-description" class="govuk-summary-list__value govuk-body-s preserve-white-space">{{ submissionDetails["supply-contract-description"] }}</dd>
+      </div>
+    {% endif %}
+
+    {% if submissionDetails.legallyDistinct %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Is the counter-indemnifier (for bonds) or guarantor (for loans) legally distinct from the supplier?
+        </dt>
+        <dd data-cy="legallyDistinct" class="govuk-summary-list__value govuk-body-s">
+          {% if submissionDetails.legallyDistinct ==='true' %}
+            Yes
+          {% else %}
+            No
+          {% endif %}
+        </dd>
+      </div>
+    {% endif %}
+
+    {% if submissionDetails["indemnifier-companies-house-registration-number"] %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Indemnifier's Companies House registration number, if UK registered
+        </dt>
+        <dd data-cy="indemnifier-companies-house-registration-number" class="govuk-summary-list__value govuk-body-s">
+          {{ submissionDetails["indemnifier-companies-house-registration-number"] }}
+        </dd>
+      </div>
+    {% endif %}
+
+    {% if submissionDetails.legallyDistinct === 'true' %}
+
+      {% if submissionDetails["indemnifier-name"] %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            Indemnifier name
+          </dt>
+          <dd data-cy="indemnifier-name" class="govuk-summary-list__value govuk-body-s">
+            {{ submissionDetails["indemnifier-name"] }}
+          </dd>
+        </div>
+      {% endif %}
+
+    {% set hasIndemnifierAddressLine = submissionDetails["indemnifier-address-line-1"] | length or submissionDetails["indemnifier-address-line-2"] | length or submissionDetails["indemnifier-address-line-3"] | length %}
+    {% set renderIndemnifierAddress = hasIndemnifierCorrespondenceAddressLine or submissionDetails["indemnifier-address-town"] | length or submissionDetails["indemnifier-address-postcode"] | length %}
+
+    {% if renderIndemnifierAddress %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Indemnifier address
+        </dt>
+        <dd class="govuk-summary-list__value govuk-body-s">
+          <p data-cy="indemnifier-address-line-1">{{ submissionDetails["indemnifier-address-line-1"]}}</p>
+          <p data-cy="indemnifier-address-line-2">{{ submissionDetails["indemnifier-address-line-2"]}}</p>
+          <p data-cy="indemnifier-address-line-3">{{ submissionDetails["indemnifier-address-line-3"]}}</p>
+          <p data-cy="indemnifier-address-town">{{ submissionDetails["indemnifier-address-town"]}}</p>
+          <p data-cy="indemnifier-address-postcode">{{ submissionDetails["indemnifier-address-postcode"]}}</p>
+          <p data-cy="indemnifier-address-country">{{ submissionDetails["indemnifier-address-country"].name}}</p>
+        </dd>
+      </div>
+    {% endif %}
+
+      {% if submissionDetails.indemnifierCorrespondenceAddressDifferent %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            Is the Indemnifier's correspondence address different from the Company's Registered Address?
+          </dt>
+          <dd data-cy="indemnifierCorrespondenceAddressDifferent" class="govuk-summary-list__value govuk-body-s">
+            {% if submissionDetails.indemnifierCorrespondenceAddressDifferent ==='true' %}
+              Yes
+            {% else %}
+              No
+            {% endif %}
+          </dd>
+        </div>
+      {% endif %}
+
+    {% endif %}
+
+    {% set hasIndemnifierCorrespondenceAddressLine = submissionDetails["indemnifier-correspondence-address-line-1"] | length or submissionDetails["indemnifier-correspondence-address-line-2"] | length or submissionDetails["indemnifier-correspondence-address-line-3"] | length %}
+    {% set renderIndemnifierCorrespondenceAddress = hasIndemnifierCorrespondenceAddressLine or submissionDetails["indemnifier-correspondence-address-town"] | length or submissionDetails["indemnifier-correspondence-address-postcode"] | length %}
+
+    {% if renderIndemnifierCorrespondenceAddress %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Indemnifier correspondence address
+        </dt>
+        <dd class="govuk-summary-list__value govuk-body-s">
+          <p data-cy="indemnifier-correspondence-address-line-1">{{ submissionDetails["indemnifier-correspondence-address-line-1"]}}</p>
+          <p data-cy="indemnifier-correspondence-address-line-2">{{ submissionDetails["indemnifier-correspondence-address-line-2"]}}</p>
+          <p data-cy="indemnifier-correspondence-address-line-3">{{ submissionDetails["indemnifier-correspondence-address-line-3"]}}</p>
+          <p data-cy="indemnifier-correspondence-address-town">{{ submissionDetails["indemnifier-correspondence-address-town"]}}</p>
+          <p data-cy="indemnifier-correspondence-address-postcode">{{ submissionDetails["indemnifier-correspondence-address-postcode"]}}</p>
+          <p data-cy="indemnifier-correspondence-address-country">{{ submissionDetails["indemnifier-correspondence-address-country"].name}}</p>
+        </dd>
+      </div>
+    {% endif %}
+
+  </dl>
+{% endmacro %}
+
+{% macro buyer(submissionDetails) %}
+
+  <h2 class="govuk-heading-m">Buyer</h2>
+
+  <dl class="govuk-summary-list govuk-summary-list--no-border">
+
+    {% if submissionDetails["buyer-name"] %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Buyer name
+        </dt>
+        <dd data-cy="buyer-name" class="govuk-summary-list__value govuk-body-s">
+          {{ submissionDetails["buyer-name"] }}
+        </dd>
+      </div>
+    {% endif %}
+
+    {% set hasBuyerAddressLine = submissionDetails["buyer-address-line-1"] | length or submissionDetails["buyer-address-line-2"] | length or submissionDetails["buyer-address-line-3"] | length %}
+    {% set renderBuyerAddress = hasIndemnifierCorrespondenceAddressLine or submissionDetails["buyer-address-town"] | length or submissionDetails["buyer-address-postcode"] | length %}
+
+    {% if renderBuyerAddress %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Buyer address
+        </dt>
+        <dd class="govuk-summary-list__value govuk-body-s">
+          <p data-cy="buyer-address-line-1">{{ submissionDetails["buyer-address-line-1"]}}</p>
+          <p data-cy="buyer-address-line-2">{{ submissionDetails["buyer-address-line-2"]}}</p>
+          <p data-cy="buyer-address-line-3">{{ submissionDetails["buyer-address-line-3"]}}</p>
+          <p data-cy="buyer-address-town">{{ submissionDetails["buyer-address-town"]}}</p>
+          <p data-cy="buyer-address-postcode">{{ submissionDetails["buyer-address-postcode"]}}</p>
+        </dd>
+      </div>
+    {% endif %}
+
+    {% if submissionDetails['buyer-address-country'].name %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Country of buyer
+        </dt>
+        <dd data-cy="buyer-address-country" class="govuk-summary-list__value govuk-body-s">
+          {{ submissionDetails['buyer-address-country'].name }}
+        </dd>
+      </div>
+    {% endif %}
+
+    {% if submissionDetails.destinationOfGoodsAndServices.name %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Destination of goods and services
+        </dt>
+        <dd data-cy="destinationOfGoodsAndServices" class="govuk-summary-list__value govuk-body-s">
+          {{ submissionDetails.destinationOfGoodsAndServices.name }}
+        </dd>
+      </div>
+    {% endif %}
+
+  </dl>
+{% endmacro %}
+
+{% macro financial(submissionDetails) %}
+
+  <h2 class="govuk-heading-m">Financial information</h2>
+
+  <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-9">
+
+    {% if submissionDetails.supplyContractValue %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Supply Contract value (in Supply Contract currency)
+        </dt>
+        <dd data-cy="supplyContractValue" class="govuk-summary-list__value govuk-body-s" data-mask="currency">
+          {{ submissionDetails.supplyContractValue }}
+        </dd>
+      </div>
+    {% endif %}
+
+    {% if submissionDetails.supplyContractCurrency.text %}
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-body-s">
+          Supply Contract currency
+        </dt>
+        <dd data-cy="supplyContractCurrency" class="govuk-summary-list__value govuk-body-s">
+          {{ submissionDetails.supplyContractCurrency.text }}
+        </dd>
+      </div>
+    {% endif %}
+
+    {% if submissionDetails.supplyContractCurrency.id != null and submissionDetails.supplyContractCurrency.id !== 'GBP'%}
+
+      {% if submissionDetails.supplyContractConversionRateToGBP %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            Conversion rate from Supply Contract currency to GBP
+          </dt>
+          <dd data-cy="supplyContractConversionRateToGBP" class="govuk-summary-list__value govuk-body-s">
+            {{ submissionDetails.supplyContractConversionRateToGBP }}
+          </dd>
+        </div>
+      {% endif %}
+
+      {% if submissionDetails.supplyContractConversionDate %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            Supply Contract conversion date, as determined by the bank(Supply Contract currency to GBP)
+          </dt>
+          <dd data-cy="supplyContractConversionDate" class="govuk-summary-list__value govuk-body-s">
+            {{ submissionDetails.supplyContractConversionDate }}
+          </dd>
+        </div>
+      {% endif %}
+
+    {% endif %}
+  </dl>
+{% endmacro %}
+
+{% macro render(submissionDetails) %}
+
+  <div data-cy="contract-about-submission-details">
+
+    {{ supplierAndCounterIndemnifier(submissionDetails)}}
+
+    {{ buyer(submissionDetails)}}
+
+    {{ financial(submissionDetails) }}
+
+  </div>
+
+{% endmacro %}

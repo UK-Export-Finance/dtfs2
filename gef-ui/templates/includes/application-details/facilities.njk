@@ -1,0 +1,78 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% import '../../_macros/facility-guidance.njk' as facilityGuidance %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-half">
+    <h2 class="govuk-heading-l" data-cy="facility-heading">
+      Facilities
+    </h2>
+  </div>
+
+  <div class="govuk-grid-column-one-half">
+    {{ govukTag({
+      text: facilities.status.text,
+      classes: 'govuk-!-margin-top-2 govuk-!-margin-bottom-4' + ' ' + facilities.status.class,
+      attributes: {
+        'data-cy': 'facility-status'
+      }
+    }) }}
+  </div>
+</div>
+{% if not previewMode and not hasChangedFacilities and not MIAReturnToMaker and not returnToMakerNoFacilitiesChanged%}
+  <div class="govuk-button-group">
+    {{ govukButton({
+      text: "Add a cash facility",
+      classes: "govuk-button--secondary",
+      href: dealId + "/facilities",
+      attributes: {
+        'data-cy': 'add-cash-facility-button'
+      }
+    }) }}
+    {{ govukButton({
+      text: "Add a contingent facility",
+      classes: "govuk-button--secondary",
+      href: dealId + "/facilities?facilityType=Contingent",
+      attributes: {
+        'data-cy': 'add-contingent-facility-button'
+      }
+    }) }}
+  </div>
+{% endif %}
+
+{{ govukDetails({
+  summaryText: "Guidance on cash and contingent facilities",
+  text: facilityGuidance.render(),
+  attributes: {
+    'data-cy': 'facility-guidance'
+  }
+}) }}
+
+{% if facilities.data.length > 0 %}
+  {% for item in facilities.data %}
+    <header class="is-flex is-justify-content-space-between">
+      <h3 class="govuk-heading-m" data-cy="facility-type-heading">
+        {{item.heading}} facility
+      </h3>
+      {% if not previewMode and not hasChangedFacilities and not MIAReturnToMaker and not returnToMakerNoFacilitiesChanged%}
+        <a
+          class="govuk-link"
+          href="/gef/application-details/{{dealId}}/facilities/{{item.facilityId}}/confirm-deletion"
+          aria-label="Delete facility {{item.facilityName}}"
+          data-cy="delete-facility">Delete facility</a>
+      {% endif %}
+    </header>
+    {{ govukSummaryList({
+      rows: item.rows,
+      attributes: {
+        'data-cy': 'facility-summary-list',
+        id: item.facilityId
+      }
+    }) }}
+  {% endfor %}
+{% endif %}
+
+<hr class="govuk-section-break govuk-section-break--bold govuk-section-break--m govuk-!-margin-bottom-7 govuk-section-break--visible">

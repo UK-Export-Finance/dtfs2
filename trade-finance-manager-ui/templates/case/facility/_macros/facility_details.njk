@@ -1,0 +1,159 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% import './credit-rating.njk' as creditRating %}
+
+{% macro render(params) %}
+  {% set deal = params.deal %}
+  {% set facility = params.facility %}
+  {% set user = params.user %}
+  {% set facilityTfm = params.facilityTfm %}
+  {% set showFacilityEndDate = params.showFacilityEndDate %}
+
+  <div class="govuk-grid-row" data-cy="facility-overview">
+
+    <div class="govuk-grid-column-full">
+
+      <h3 class="govuk-heading-l">Overview</h3>
+
+      <dl class="govuk-grid-row ukef-list ukef-list-one-column">
+        <dt class="govuk-grid-column-one-quarter govuk-body-s">Product</dt>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-product">{{ facility.facilityProduct.name | dashIfEmpty}}</dd>
+
+        <dt class="govuk-grid-column-one-quarter govuk-body-s">Type</dt>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-type">{{ facility.type | dashIfEmpty }}</dd>
+
+        <dt class="govuk-grid-column-one-quarter govuk-body-s">Facility stage</dt>
+        <dd class="govuk-grid-column-three-quarters">
+          {{govukTag({
+            text: facility.facilityStage,
+            classes: "govuk-tag--blue",
+            attributes: {
+              'data-cy': 'facility-stage'
+            }
+          })}}
+        </dd>
+
+      {% if facility.firstDrawdownAmountInExportCurrency %}
+        <dt class="govuk-grid-column-one-quarter govuk-body-s">First drawdown amount (export currency)</dt>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="first-drawdown-amount-in-export-currency">{{ facility.firstDrawdownAmountInExportCurrency | dashIfEmpty }}</dd>
+      {% endif %}
+
+        <dt class="govuk-grid-column-one-quarter govuk-body-s">Bank facility reference</dt>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="bank-facility-reference">{{ facility.bankFacilityReference | dashIfEmpty }}</dd>
+      </dl>
+
+      {% if deal.dealType === 'GEF'%}
+        <dl class="govuk-grid-row ukef-list ukef-list-one-column" data-cy="facility-provided">
+          <dt class="govuk-grid-column-one-quarter govuk-body-s" data-cy="facility-provided-heading">Facility provided on</dt>
+          <dd class="govuk-grid-column-three-quarters">
+
+            {% for basis in facility.providedOn %}
+              <p class="govuk-body-s" data-cy="facility-provided-{{ basis }}">{{ basis }}</p>
+            {% endfor %}
+
+            {% if facility.providedOnOther %}
+              <p class="govuk-body-s" data-cy="facility-provided-other-details">Other - {{ facility.providedOnOther }}</p>
+            {% endif %}
+          </dd>
+        </dl>
+      {% endif %}
+
+    </div>
+  </div>
+
+  <div class="govuk-grid-row separator-line govuk-!-padding-top-6 govuk-!-margin-top-7" data-cy="facility-value-and-exposure">
+
+    <div class="govuk-grid-column-full">
+
+      <h3 class="govuk-heading-l">Value and exposure</h3>
+
+      <dl class="govuk-grid-row ukef-list ukef-list-one-column">
+        <dt class="govuk-grid-column-one-quarter govuk-body-s">Value (export currency)</dt>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-value-export-currency">{{ facility.facilityValueExportCurrency | dashIfEmpty}}</dd>
+
+        <dt class="govuk-grid-column-one-quarter govuk-body-s">Exchange rate</dt>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-exchange-rate">{{ facilityTfm.exchangeRate | dashIfEmpty}}</dd>
+
+        <dt class="govuk-grid-column-one-quarter govuk-body-s">Value (GBP)</dt>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-value-gbp">{{ facility.value | dashIfEmpty }}</dd>
+
+        <dt class="govuk-grid-column-one-quarter govuk-body-s">UKEF cover</dt>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-ukef-cover">{{ facility.coveredPercentage | dashIfEmpty }}</dd>
+
+        <dt class="govuk-grid-column-one-quarter govuk-body-s ukef-list-highlight">Maximum UKEF exposure</dt>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s ukef-list-highlight" data-cy="facility-maximum-ukef-exposure">
+          {% if facilityTfm.ukefExposure.exposure and facilityTfm.ukefExposure.timestamp %}
+            {{ facilityTfm.ukefExposure.exposure }} as at {{ facilityTfm.ukefExposure.timestamp | localiseTimestamp("d MMMM yyyy", user.timezone) }}
+
+            {% else %}
+            -
+          {% endif %}
+        </dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row separator-line govuk-!-padding-top-6 govuk-!-margin-top-7" data-cy="facility-dates">
+
+    <div class="govuk-grid-column-full">
+
+      <h3 class="govuk-heading-l">Dates</h3>
+
+      <dl class="govuk-grid-row ukef-list ukef-list-one-column">
+        <dt class="govuk-grid-column-one-quarter govuk-body-s">Inclusion notice received</dt>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-inclusion-notice-received">{{ facility.dates.inclusionNoticeReceived | localiseTimestamp("d MMMM yyyy", user.timezone) | dashIfEmpty }}</dd>
+
+        <dt class="govuk-grid-column-one-quarter govuk-body-s">Bank issue notice received</dt>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-bank-issue-notice-received">{{ facility.dates.bankIssueNoticeReceived | localiseTimestamp('d MMMM yyyy', user.timezone) | dashIfEmpty }}</dd>
+
+        <dt class="govuk-grid-column-one-quarter govuk-body-s">Cover start date</dt>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-cover-start-date">{{ facility.dates.coverStartDate | localiseTimestamp('d MMMM yyyy', user.timezone) | dashIfEmpty }}</dd>
+
+        <dt class="govuk-grid-column-one-quarter govuk-body-s">Cover end date</dt>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-cover-end-date">{{ facility.dates.coverEndDate | dashIfEmpty }}</dd>
+
+        {% if showFacilityEndDate %}
+          <dt class="govuk-grid-column-one-quarter govuk-body-s">Bank has provided a facility end date</dt>
+          <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="is-using-facility-end-date">{{ facility.dates.isUsingFacilityEndDate | formatBooleanAsString }}</dd>
+
+          {% if (facility.dates.isUsingFacilityEndDate === false) %}
+            <dt class="govuk-grid-column-one-quarter govuk-body-s">Bank review date</dt>
+            <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="bank-review-date">{{ facility.dates.bankReviewDate | formatIsoDateString("d MMMM yyyy") | dashIfEmpty }}</dd>
+
+          {% else %}
+            <dt class="govuk-grid-column-one-quarter govuk-body-s">Facility end date</dt>
+            <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-end-date">{{ facility.dates.facilityEndDate | formatIsoDateString("d MMMM yyyy") | dashIfEmpty }}</dd>
+
+          {% endif %}
+        {% endif %}
+
+        <dt class="govuk-grid-column-one-quarter govuk-body-s">Tenor</dt>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-tenor">{{ facility.dates.tenor | dashIfEmpty }}</dd>
+      </dl>
+
+    </div>
+  </div>
+
+  <div class="govuk-grid-row separator-line govuk-!-padding-top-6 govuk-!-margin-top-7" data-cy="facility-pricing-and-risk">
+
+    <div class="govuk-grid-column-full">
+
+      <h3 class="govuk-heading-l">Pricing and risk</h3>
+
+      <dl class="govuk-grid-row ukef-list ukef-list-one-column">
+        <dt class="govuk-grid-column-one-quarter govuk-body-s">Bank’s interest margin</dt>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-banks-interest-margin">{{ facility.banksInterestMargin | dashIfEmpty}}</dd>
+
+        <dt class="govuk-grid-column-one-quarter govuk-body-s">Guarantee fee payable to UKEF</dt>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-guarantee-fee-payable-to-ukef">{{ facility.guaranteeFeePayableToUkef | dashIfEmpty}}</dd>
+
+        <dt class="govuk-grid-column-one-quarter govuk-body-s">Credit rating</dt>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s">
+          {% set componentData = { creditRating: facilityTfm.creditRating } %}
+          {{creditRating.render(componentData)}}
+        </dd>
+      </dl>
+
+    </div>
+  </div>
+
+{% endmacro %}

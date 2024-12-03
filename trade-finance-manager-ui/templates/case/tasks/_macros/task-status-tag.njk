@@ -1,0 +1,46 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% macro render(params) %}
+  {% set status = params.status %}
+
+  {% if status === 'Cannot start yet' %}
+    {{govukTag({
+      text: status,
+      attributes: {
+        'data-cy': 'status-tag'
+      },
+      classes: 'govuk-tag--grey'
+    })}}
+  {% endif %}
+
+  {% if status === 'To do' %}
+    {{govukTag({
+      text: status,
+      attributes: {
+        'data-cy': 'status-tag'
+      }
+    })}}
+  {% endif %}
+
+  {% if status === 'In progress' %}
+    {{govukTag({
+      text: status,
+      attributes: {
+        'data-cy': 'status-tag'
+      },
+      classes: 'govuk-tag--yellow'
+    })}}
+  {% endif %}
+
+  {% if status === 'Done' %}
+    {{govukTag({
+      text: status,
+      attributes: {
+        'data-cy': 'status-tag'
+      },
+      classes: 'govuk-tag--green'
+    })}}
+  {% endif %}
+
+
+{% endmacro %}

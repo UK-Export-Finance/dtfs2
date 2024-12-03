@@ -1,0 +1,209 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "_macros/fileList.njk" import fileList %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-half">
+    <h2 class="govuk-heading-l" data-cy="supportingInfo-heading">
+      Supporting information
+    </h2>
+  </div>
+
+  <div class="govuk-grid-column-one-half">
+    {% if not previewMode%}
+      {{ govukTag({
+        text: supportingInfo.status.text,
+        classes: 'govuk-!-margin-top-2 govuk-!-margin-bottom-4' + ' ' + supportingInfo.status.class,
+        attributes: {
+          'data-cy': 'supportingInfo-status'
+        }
+      }) }}
+    {% endif %}
+  </div>
+</div>
+
+{% if supportingInfo.status.code === 'Not started' and not previewMode %}
+  <a class="govuk-link" href="/gef/application-details/{{dealId}}/supporting-information/document/manual-inclusion-questionnaire" data-cy="supportingInfo-start-link">Add supporting information</a>
+{% else %}
+  {% set securityDetailsHtml %}
+    {{ govukDetails({
+      summaryText: "General security",
+      text: supportingInfo.securityDetails.exporter
+    }) }}
+    {{ govukDetails({
+      summaryText: "Specific security for facilities",
+      text: supportingInfo.securityDetails.facility
+    }) }}
+  {% endset %}
+
+  {{ govukSummaryList({
+    attributes: {
+      'data-cy': 'supportingInfo-summary-list'
+    },
+    rows: [
+      {
+        key: {
+          text: "Manual inclusion questionnaire"
+        },
+        value: {
+          text: "Required" if not supportingInfo.manualInclusion[0],
+          classes: "has-text-danger" if not supportingInfo.manualInclusion[0],
+          html: fileList(supportingInfo.manualInclusion, "/files/") if supportingInfo.manualInclusion[0]
+        },
+        actions: {
+          items: [
+            {
+              href: "/gef/application-details/" + dealId + "/supporting-information/document/manual-inclusion-questionnaire",
+              text: "Change" if supportingInfo.manualInclusion[0] else "Add",
+              visuallyHiddenText: "security details",
+              attributes: { 'data-cy': 'supportingInfo__manual-inclusion-cta' }
+            }
+          ] if displayChangeSupportingInfo
+        }
+      } if supportingInfo.requiredFields.includes('manualInclusion'),
+      {
+        key: {
+          text: "Year-to-date management accounts"
+        },
+        value: {
+          text: "Required" if not supportingInfo.yearToDateManagement[0],
+          classes: "has-text-danger" if not supportingInfo.yearToDateManagement[0],
+          html: fileList(supportingInfo.yearToDateManagement, "/files/") if supportingInfo.yearToDateManagement[0]
+        },
+        actions: {
+          items: [
+            {
+              href: "/gef/application-details/" + dealId + "/supporting-information/document/management-accounts",
+              text: "Change" if supportingInfo.yearToDateManagement[0] else "Add",
+              visuallyHiddenText: "security details",
+              attributes: { 'data-cy': 'supportingInfo__management-accounts-cta' }
+            }
+          ] if displayChangeSupportingInfo
+        }
+      } if supportingInfo.requiredFields.includes('yearToDateManagement'),
+      {
+        key: {
+          text: "Financial statements for the past 3 years"
+        },
+        value: {
+          text: "Required" if not supportingInfo.auditedFinancialStatements[0],
+          classes: "has-text-danger" if not supportingInfo.auditedFinancialStatements[0],
+          html: fileList(supportingInfo.auditedFinancialStatements, "/files/") if supportingInfo.auditedFinancialStatements[0]
+        },
+        actions: {
+          items: [
+            {
+              href: "/gef/application-details/" + dealId + "/supporting-information/document/financial-statements",
+              text: "Change" if supportingInfo.auditedFinancialStatements[0] else "Add",
+              visuallyHiddenText: "financial statements",
+              attributes: { 'data-cy': 'supportingInfo__financial-statements-cta' }
+            }
+          ] if displayChangeSupportingInfo
+        }
+      } if supportingInfo.requiredFields.includes('auditedFinancialStatements'),
+      {
+        key: {
+          text: "Financial forecasts"
+        },
+        value: {
+          text: "Required" if not supportingInfo.financialForecasts[0],
+          classes: "has-text-danger" if not supportingInfo.financialForecasts[0],
+          html: fileList(supportingInfo.financialForecasts, "/files/") if supportingInfo.financialForecasts[0]
+        },
+        actions: {
+          items: [
+            {
+              href: "/gef/application-details/" + dealId + "/supporting-information/document/financial-forecasts",
+              text: "Change" if supportingInfo.financialForecasts[0] else "Add",
+              visuallyHiddenText: "financial forecasts",
+              attributes: { 'data-cy': 'supportingInfo__financial-forecasts-cta' }
+            }
+          ] if displayChangeSupportingInfo
+        }
+      } if supportingInfo.requiredFields.includes('financialForecasts'),
+      {
+        key: {
+          text: "Brief commentary on the financial information"
+        },
+        value: {
+          text: "Required" if not supportingInfo.financialInformationCommentary[0],
+          classes: "has-text-danger" if not supportingInfo.financialInformationCommentary[0],
+          html: fileList(supportingInfo.financialInformationCommentary, "/files/") if supportingInfo.financialInformationCommentary[0]
+        },
+        actions: {
+          items: [
+            {
+              href: "/gef/application-details/" + dealId + "/supporting-information/document/financial-commentary",
+              text: "Change" if supportingInfo.financialInformationCommentary[0] else "Add",
+              visuallyHiddenText: "financial commentary",
+              attributes: { 'data-cy': 'supportingInfo__financial-commentary-cta' }
+            }
+          ] if displayChangeSupportingInfo
+        }
+      } if supportingInfo.requiredFields.includes('financialInformationCommentary'),
+      {
+        key: {
+          text: "Corporate structure diagram"
+        },
+        value: {
+          text: "Required" if not supportingInfo.corporateStructure[0],
+          classes: "has-text-danger" if not supportingInfo.corporateStructure[0],
+          html: fileList(supportingInfo.corporateStructure, "/files/") if supportingInfo.corporateStructure[0]
+        },
+        actions: {
+          items: [
+            {
+              href: "/gef/application-details/" + dealId + "/supporting-information/document/corporate-structure",
+              text: "Change" if supportingInfo.corporateStructure[0] else "Add",
+              visuallyHiddenText: "corporate structure",
+              attributes: { 'data-cy': 'supportingInfo__corporate-structure-cta' }
+            }
+          ] if displayChangeSupportingInfo
+        }
+      } if supportingInfo.requiredFields.includes('corporateStructure'),
+      {
+        key: {
+          text: "Aged debtor and aged creditor listing"
+        },
+        value: {
+          text: "Required" if not supportingInfo.debtorAndCreditorReports[0],
+          classes: "has-text-danger" if not supportingInfo.debtorAndCreditorReports[0],
+          html: fileList(supportingInfo.debtorAndCreditorReports, "/files/") if supportingInfo.debtorAndCreditorReports[0]
+        },
+        actions: {
+          items: [
+            {
+              href: "/gef/application-details/" + dealId + "/supporting-information/document/debtor-creditor-reports",
+              text: "Change" if supportingInfo.debtorAndCreditorReports[0] else "Add",
+              visuallyHiddenText: "aged debtor and creditor listing",
+              attributes: { 'data-cy': 'supportingInfo__debtor-creditor-cta' }
+            }
+          ] if displayChangeSupportingInfo
+        }
+      } if supportingInfo.requiredFields.includes('debtorAndCreditorReports'),
+      {
+        key: {
+          text: "Security details"
+        },
+        value: {
+          text: "Required" if not supportingInfo.securityDetails,
+          classes: "has-text-danger" if not supportingInfo.securityDetails,
+          html: securityDetailsHtml if supportingInfo.securityDetails
+        },
+        actions: {
+          items: [
+            {
+              href: "/gef/application-details/" + dealId + "/supporting-information/security-details",
+              text: "Change" if supportingInfo.securityDetails else "Add",
+              visuallyHiddenText: "security details",
+              attributes: { 'data-cy': 'security-details-cta' }
+            }
+          ] if displayChangeSupportingInfo
+        }
+      }
+    ]
+  }) }}
+{% endif %}
+
+<hr class="govuk-section-break govuk-section-break--bold govuk-section-break--l govuk-section-break--visible">

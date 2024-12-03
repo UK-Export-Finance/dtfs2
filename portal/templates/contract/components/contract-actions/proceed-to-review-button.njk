@@ -1,0 +1,75 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro render(params) %}
+
+  {% if params.isEveryDealFormComplete and params.user.roles.includes('maker') and  not ["Submitted", "Rejected by UKEF"].includes(params.deal.status) %}
+
+    {% if ["Draft", "Further Maker's input required"].includes(params.deal.status) and params.isEveryDealFormComplete %}
+
+      {{ govukButton({
+        "disabled": false,
+        "text": "Proceed to review",
+        "attributes" : {
+          "data-cy" : "ProceedToReview"
+        },
+        "href": "/contract/" + params.deal._id + "/ready-for-review"
+      }) }}
+
+    {% elseif ["Ready for Checker's approval"].includes(params.deal.status) and not params.user.roles.includes('checker')%}
+
+      {{ govukButton({
+        "disabled": true,
+        "text": "Proceed to review",
+        "attributes" : {
+          "data-cy" : "ProceedToReview"
+        },
+        "href": ""
+      }) }}
+
+    {% elseif  ["Draft", "Further Maker's input required", "Abandoned", "Acknowledged"].includes(params.deal.status) and not params.dealHasIssuedFacilitiesToSubmit %}
+
+      {{ govukButton({
+        "disabled": true,
+        "text": "Proceed to review",
+        "attributes" : {
+          "data-cy" : "ProceedToReview"
+        },
+        "href": ""
+      }) }}
+
+    {% elseif ["Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)"].includes(params.deal.status) %}
+
+      {% if params.dealHasIssuedFacilitiesToSubmit or params.allRequestedCoverStartDatesConfirmed %}
+        {{ govukButton({
+          "disabled": false,
+          "text": "Proceed to review",
+          "attributes" : {
+            "data-cy" : "ProceedToReview"
+          },
+          "href": "/contract/" + params.deal._id + "/ready-for-review"
+        }) }}
+      {% else %}
+        {{ govukButton({
+          "disabled": true,
+          "text": "Proceed to review",
+          "attributes" : {
+            "data-cy" : "ProceedToReview"
+          },
+          "href": ""
+        }) }}
+      {% endif %}
+
+    {% elseif ["Acknowledged", "Ready for Checker's approval", "Further Maker's input required"].includes(params.deal.status) and params.dealHasIssuedFacilitiesToSubmit %}
+      {{ govukButton({
+        "disabled": false,
+        "text": "Proceed to review",
+        "attributes" : {
+          "data-cy" : "ProceedToReview"
+        },
+        "href": "/contract/" + params.deal._id + "/ready-for-review"
+      }) }}
+
+    {% endif %}
+
+  {% endif %}
+{% endmacro %}

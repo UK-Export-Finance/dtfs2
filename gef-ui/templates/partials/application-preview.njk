@@ -1,0 +1,44 @@
+{% extends "index.njk" %}
+
+{% block pageTitle %}
+  {{ applicationType }}
+{% endblock %}
+
+{% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
+{{ govukPhaseBanner({
+  tag: {
+    text: "beta"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+
+{% block content %}
+  {% include "includes/application-preview/summary.njk" %}
+  {% include "includes/application-preview/application-sub-navigation.njk" %}
+  {% include "includes/application-preview/task-comments.njk" %}
+
+  <h1 class="govuk-heading-xl" data-cy="main-heading">{{ applicationType }}</h1>
+
+   {% if not isUkefReviewPositive and isUkefReviewAvailable %}
+      {% include "includes/application-preview/ukef-decision.njk" %}
+   {% endif %}
+
+  <hr class="govuk-section-break govuk-section-break--bold govuk-section-break--l govuk-section-break--visible">
+
+  {% include "includes/application-preview/about-exporter.njk" %}
+  {% include "includes/application-preview/automatic-cover.njk" %}
+  {% include "includes/application-preview/facilities.njk" %}
+  {% if not isAutomaticCover %}
+    {% include "includes/application-details/supporting-information.njk" %}
+  {% endif %}
+
+  {% if makerCanReSubmit %}
+    <form method="post" data-cy="form">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+      {% include "includes/submit/submit-to-checker-post-ukef-approval.njk" %}
+    </form>
+  {% elif checkerCanSubmit %}
+    {% include "includes/submit/submit-to-ukef.njk" %}
+  {% endif %}
+
+{% endblock %}

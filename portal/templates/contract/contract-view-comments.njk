@@ -1,0 +1,51 @@
+{% extends "index.njk" %}
+{% import './components/contract-overview-table.njk' as contractOverviewTable %}
+{% import './components/contract-tabs.njk' as contractTabs %}
+{% import './components/ukef-comments.njk' as ukefComments %}
+
+{% block pageTitle -%}
+  Comments - {{ additionalRefName }}
+{%- endblock %}
+
+{% block content %}
+
+  {% set componentData = {user: user, deal: deal, selected: 'comments'} %}
+  {% set comments = deal.comments %}
+
+  <h1 class="govuk-heading-l">Supply Contract name: <span class="govuk-body govuk-!-font-size-24">{{ deal.additionalRefName }}</span></h1>
+
+  {{ contractTabs.render(componentData) }}
+
+  <div class="govuk-!-margin-bottom-6">
+    {{ contractOverviewTable.render(componentData) }}
+
+  </div>
+
+ {{ ukefComments.render(deal.status, deal.ukefComments, deal.ukefDecision) }}
+
+  <h2 class="govuk-heading-s">Maker/Checker comments:</h2>
+
+  {% if comments.length %}
+
+    <ul class="govuk-list">
+      {% set count=0 %}
+      {% for comment in comments %}
+        <li class="govuk-!-padding-3 govuk-!-margin-bottom-3 comment" data-cy="comments-{{count}}">
+
+          <p class="govuk-body">
+            <span class="govuk-!-font-weight-bold" data-cy="commentor-name-{{count}}">{{ comment.user.firstname }} {{ comment.user.surname }}</span>
+            {{ comment.timestamp | localiseTimestamp("dd/MM/yyyy HH:mm", user.timezone) }}
+          </p>
+
+          <div class="govuk-body govuk-!-padding-left-3 preserve-white-space" data-cy="comment-{{count}}">{{ comment.text | safe }}</div>
+          {% set count = count+1 %}
+        </li>
+      {% endfor %}
+    </ul>
+
+    {% else %}
+      <p class="govuk-body">No comments between Maker and Checker</p>
+
+  {% endif %}
+
+{% endblock %}

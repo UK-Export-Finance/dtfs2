@@ -1,0 +1,16 @@
+module.exports = {
+  validateToken: jest.fn(),
+  getMandatoryCriteria: jest.fn(),
+  createApplication: jest.fn(),
+  updateApplication: jest.fn(),
+  getApplication: jest.fn(),
+  getFacilities: jest.fn(),
+  createFacility: jest.fn(),
+  getFacility: jest.fn(),
+  updateFacility: jest.fn(),
+  deleteFacility: jest.fn(),
+  getCompaniesHouseDetails: jest.fn(),
+  getAddressesByPostcode: jest.fn(),
+  getUserDetails: jest.fn(),
+  setApplicationStatus: jest.fn(),
+};

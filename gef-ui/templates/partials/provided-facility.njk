@@ -1,0 +1,160 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle -%}
+  Provided facility
+{%- endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  {% if status !== 'change' %}
+    {{ govukBackLink({
+      text: "Back to previous page",
+      href: previousPage,
+      attributes: {
+        'data-cy': 'back-link'
+      }
+    }) }}
+  {% endif %}
+
+  <header data-cy="application-details-page">
+    <span class="govuk-caption-xl" data-cy="heading-caption">
+      Add a facility
+    </span>
+  </header>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <div class="govuk-grid-column-three-quarters">
+      <form method="post" data-cy="form">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <input type="hidden" name="previousPage" value="{{ previousPage }}">
+        <input
+          class="govuk-visually-hidden"
+          id="facilityType"
+          name="facilityType"
+          hidden="true"
+          value="{{facilityType}}"
+          data-cy="hidden-facility-type">
+
+        {% set other %}
+        {{ govukCharacterCount({
+            name: "detailsOther",
+            id: "detailsOther",
+            value: detailsOther,
+            maxlength: 300,
+            label: {
+              text: "Enter details"
+            },
+            errorMessage: errors and errors.fieldErrors.detailsOther and {
+              text: errors.fieldErrors.detailsOther.text,
+              attributes: {
+                'data-cy': 'details-other-error'
+              }
+            },
+            attributes: {
+              'data-cy': 'details-other'
+            }
+          }) }}
+        {% endset -%}
+
+        {{ govukCheckboxes({
+          idPrefix: "details",
+          name: "details",
+          fieldset: {
+            legend: {
+              text: "Have you provided the " + facilityTypeString + " facility on any of the following?",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--xl"
+            },
+            attributes: {
+              'data-cy': 'main-heading'
+            }
+          },
+          attributes: {
+            'data-cy': 'details'
+          },
+          hint: {
+            text: "Tick all that apply. You must select at least one option."
+          },
+          items: [
+            {
+              value: "Term basis",
+              text: "Term basis",
+              checked: details.includes('Term basis')
+            },
+            {
+              value: "Revolving or renewing basis",
+              text: "Revolving or renewing basis",
+              checked: details.includes('Revolving or renewing basis')
+            },
+            {
+              value: "Committed basis",
+              text: "Committed basis",
+              checked: details.includes('Committed basis')
+            },
+            {
+              value: "Uncommitted basis",
+              text: "Uncommitted basis",
+              checked: details.includes('Uncommitted basis')
+            },
+            {
+              value: "On demand or overdraft basis",
+              text: "On demand or overdraft basis",
+              checked: details.includes('On demand or overdraft basis')
+            },
+            {
+              value: "Factoring on a  with-recourse basis",
+              text: "Factoring facility on a with-recourse basis",
+              checked: details.includes('Factoring on a  with-recourse basis')
+            },
+            {
+              value: "Other",
+              text: "Other",
+              checked: details.includes('Other'),
+              conditional: {
+                html: other
+              },
+              attributes: {
+                'data-cy': 'other-checkbox'
+              }
+            }
+          ],
+          errorMessage: errors.fieldErrors.details
+        }) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            attributes: {
+              'data-cy': 'continue-button'
+            }
+          }) }}
+
+          {{ govukButton({
+            text: "Save and return",
+            classes: "govuk-button--secondary",
+            attributes: {
+              formaction: "provided-facility?saveAndReturn=true",
+              'data-cy': 'save-and-return-button'
+            }
+          }) }}
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

@@ -1,0 +1,130 @@
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% import '../amendments/_macros/amendment-in-progress-bar.njk' as amendmentInProgressBar %}
+{% import './_macros/eligibility-criteria-answers.njk' as eligibilityCriteriaAnswers %}
+{% import './_macros/facilities-table.njk' as facilitiesTable %}
+
+{% extends "case/case.njk" %}
+
+{% block pageTitle -%}
+  Deal {{ deal.details.ukefDealId | dashIfEmpty }}
+{%- endblock %}
+
+{% block sub_content %}
+   {% set amendmentBarParams = {
+    hasAmendmentInProgress: hasAmendmentInProgress,
+    amendmentsInProgress: amendmentsInProgress
+  } %}
+  {{ amendmentInProgressBar.render(amendmentBarParams) }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+      <h1 class="govuk-heading-xl govuk-!-margin-top-6" data-cy="page-title">Deal</h1>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row" data-cy="deal-facilities">
+    <div class="govuk-grid-column-full separator-line deal">
+      <h2 class="ukef-heading-l" id="deal-ukef-heading">Facilities</h2>
+
+        {% if deal.dealType == 'GEF' %}
+          {% if deal.isFinanceIncreasing %}
+              {{ govukWarningText({
+                  text: "The bank's financing to this exporter is increasing with this deal",
+                  iconFallbackText: "Warning",
+                  classes: 'ukef-warning',
+                  attributes: { 'data-cy': 'finance-increasing' }
+              }) }}
+          {% else %}
+              {{ govukWarningText({
+                  text: "The bank's financing to this exporter is not increasing with this deal",
+                  iconFallbackText: "Warning",
+                  classes: 'ukef-warning',
+                  attributes: { 'data-cy': 'finance-increasing' }
+              }) }}
+          {% endif %}
+        {% endif %}
+
+      {% set componentData = {
+        facilities: deal.facilities,
+        totals: deal.totals,
+        caseId: deal._id,
+        submissionType: deal.submissionType
+      } %}
+
+      {{ facilitiesTable.render(componentData) }}
+
+    </div>
+  </div>
+
+  {% if deal.supportingInformation.securityDetails.exporter %}
+    <div class="govuk-grid-row" data-cy="deal-bank-security-details">
+
+      <div class="govuk-grid-column-full separator-line deal">
+        <h2 class="ukef-heading-l" id="deal-supporting-information-bank-security" data-cy="bank-security-section-heading">Bank security</h2>
+        <h4 class="govuk-heading-s govuk-!-padding-top-3 govuk-!-padding-bottom-0 govuk-!-margin-top-0" data-cy="bank-security-sub-heading">
+        General bank security for this exporter
+        </h4>
+
+        <p id="deal-bank-security-text" data-cy="bank-security-text">{{ deal.supportingInformation.securityDetails.exporter }}</p>
+        {% if deal.dealType === 'GEF' and deal.supportingInformation.securityDetails.facility %}
+          <h4 class="govuk-heading-s govuk-!-padding-top-3 govuk-!-padding-bottom-0 govuk-!-margin-top-0" data-cy="bank-security-facility-sub-heading">
+          Specific bank security for the facilities listed in this application
+          </h4>
+
+          <p id="deal-bank-security-facility-text" data-cy="bank-security-facility-text">{{ deal.supportingInformation.securityDetails.facility }}</p>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="govuk-grid-row" data-cy="deal-bank-details">
+
+    <div class="govuk-grid-column-full separator-line deal">
+      <h2 class="ukef-heading-l" id="deal-bank-details-ukef-heading" data-cy="deal-bank-details-ukef-heading">Bank application or notice</h2>
+
+      <dl class="ukef-list ukef-list-grid ukef-list-grid-five-columns">
+        <dt class="ukef-heading-xs">Bank</dt>
+        <dd class="ukef-body-s" data-cy="deal-bank">{{ deal.bank.name | dashIfEmpty }}</dd>
+
+        <dt class="ukef-heading-xs">Contact name</dt>
+        <dd class="ukef-body-s" data-cy="contact-name">{{ deal.maker.firstname }} {{ deal.maker.surname | dashIfEmpty }}</dd>
+
+        <dt class="ukef-heading-xs">Email</dt>
+        <dd class="ukef-body-s" data-cy="email">{{ deal.maker.email | dashIfEmpty }}</dd>
+
+        <dt class="ukef-heading-xs">Bank reference</dt>
+        <dd class="ukef-body-s" data-cy="bank-reference">{{ deal.bankInternalRefName | dashIfEmpty }}</dd>
+
+        <dt class="ukef-heading-xs">Bank's additional reference</dt>
+        <dd class="ukef-body-s" data-cy="bank-additional-reference">{{ deal.additionalRefName | dashIfEmpty }}</dd>
+      </dl>
+
+      {% if not tfm.nonDelegatedBank %}
+        {% set componentData = {
+          eligibilityCriteria: deal.eligibility.criteria
+        } %}
+
+        {{ govukDetails({
+          summaryText: "Eligibility criteria",
+          html: eligibilityCriteriaAnswers.render(componentData)
+        }) }}
+      {% endif %}
+    </div>
+  </div>
+
+  {% if showDealCancelButton %}
+    <div class="govuk-!-padding-top-7">
+      {{ govukButton({
+        text: "Continue with deal cancellation" if hasDraftCancellation else "Cancel deal",
+        classes: "govuk-button--warning",
+        attributes: {
+          'data-cy': 'cancel-deal-button'
+        },
+        href: "/case/" + dealId + "/cancellation/reason"
+      }) }}
+    </div>
+  {% endif %}
+
+{% endblock %}

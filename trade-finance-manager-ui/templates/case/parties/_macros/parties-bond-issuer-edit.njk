@@ -1,0 +1,59 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% import './parties-key-value-grid-row.njk' as keyValueGridRow %}
+{% import './parties-key-value-array-grid-row.njk' as keyValueArrayGridRow %}
+
+{% macro render(params) %}
+  {% set bond = params.bond %}
+  {% set errors = params.errors %}
+  {% set urn = params.urn %}
+  {% set index = params.index %}
+
+  <div class="govuk-grid-row separator-line govuk-!-margin-top-4 govuk-!-padding-top-4">
+    <div class="govuk-grid-column-one-half">
+      {{ keyValueGridRow.render({
+        key: 'Name',
+        value: bond.facilitySnapshot.bondIssuer,
+        dataCy: 'bond-issuer-name'
+      }) }}
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half govuk-!-margin-top-4">
+        {{ govukInput({
+          label: {
+            text: "Unique reference number (URN)"
+          },
+          attributes: {
+            "data-cy": "urn-input-" + index
+          },
+          id: "partyUrn-" + index,
+          name: "bondIssuerPartyUrn[]",
+          value: urn[index - 1] or bond.tfm.bondIssuerPartyUrn,
+          errorMessage: errors and errors.fieldErrors["partyUrn-" + index] and {
+            text: errors.fieldErrors["partyUrn-" + index].text,
+            attributes: {
+              'data-cy': 'partyUrn--inline-error-' + index
+            }
+          }
+        }) }}
+        </div>
+      </div>
+
+      {{ keyValueArrayGridRow.render({
+        key: 'Address',
+        values:  [ bond.facilitySnapshot.bondIssuerAddressLine1,
+                bond.facilitySnapshot.bondIssuerAddressLine2,
+                bond.facilitySnapshot.bondIssuerAddressLine3,
+                bond.facilitySnapshot.bondIssuerAddressTown,
+                bond.facilitySnapshot.bondIssuerAddressPostcode],
+        dataCy: 'bond-issuer-address'
+      }) }}
+      {{ keyValueGridRow.render({
+        key: 'Country',
+        value: bond.facilitySnapshot.agentAddressCountry,
+        dataCy: 'bond-issuer-address-country'
+      }) }}
+    </div>
+  </div>
+
+{% endmacro %}

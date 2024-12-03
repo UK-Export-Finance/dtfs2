@@ -1,0 +1,91 @@
+{% macro render(params) %}
+  {% set facility = params.facility %}
+  {% set facilityTfm = params.facilityTfm %}
+  {% set premiumFrequency = facility.feeFrequency or facility.premiumFrequency %}
+  {% set user = params.user %}
+
+  {% set isGefFacility = (facility.type === 'Cash facility' or facility.type === 'Contingent facility') %}
+
+  <!-- Set currency symbol -->
+  {% if facility.currency %}
+    {% set currencySymbol = facility.currency %}
+  {% else %}
+    {% set currencySymbol = 'GBP' %}
+  {% endif %}
+
+  <div class="govuk-grid-row" data-cy="premium-schedule">
+    <div class="govuk-grid-column-full">
+      <h3 class="govuk-heading-l">Premium Schedule</h3>
+    </div>
+  </div>
+
+  <dl class="govuk-grid-row ukef-list">
+    <dt class="govuk-grid-column-one-quarter govuk-body-s">How bank will pay</dt>
+    <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-premium-type">{{ facility.feeType | dashIfEmpty }}</dd>
+    <dt class="govuk-grid-column-one-quarter govuk-body-s">How often</dt>
+    <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-premium-frequency">{{ premiumFrequency | dashIfEmpty }}</dd>
+    <dt class="govuk-grid-column-one-quarter govuk-body-s">Day count basis</dt>
+    <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-premium-day-count-basis">{{ facility.dayCountBasis | dashIfEmpty }}</dd>
+  </dl>
+
+  <div class="govuk-grid-row separator-line govuk-!-margin-top-7 govuk-!-padding-top-6" data-cy="facility-premium-schedule">
+    <div class="govuk-grid-column-full">
+      <h3 class="govuk-heading-l">Dates and amounts</h3>
+      <dl class="ukef-list govuk-grid-row ukef-list-one-column">
+        <dt class="govuk-grid-column-one-quarter govuk-body-s ukef-list-highlight">Total to be paid to UKEF</dt>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s ukef-list-highlight" data-cy="total-to-be-paid-to-ukef">
+          {% if isGefFacility %}
+
+              {{ facilityTfm.feeRecord | formatAsCurrency | dashIfEmpty }}
+
+              {% else %}
+
+              {% if facilityTfm.premiumTotals %}
+                {{ facilityTfm.premiumTotals | formatAsCurrency  }}
+                {% else %}
+                -
+              {% endif %}
+
+            {% endif %}
+        </dd>
+      </dl>
+
+      {% if not isGefFacility %}
+
+        <table class="govuk-table govuk-!-margin-top-9" data-cy="facility-premium-schedule-table">
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header govuk-!-width-one-quarter govuk-table__header--numeric govuk-body-s" data-cy="facilities-table-heading-facility-id">Payment</th>
+              <th scope="col" class="govuk-table__header govuk-!-width-one-quarter govuk-table__header--numeric govuk-body-s" data-cy="facilities-table-heading-cover-end-date">Due date</th>
+              <th scope="col" class="govuk-table__header govuk-!-width-one-quarter govuk-table__header--numeric govuk-body-s" data-cy="facilities-table-heading-value-gbp">Amount to be paid to UKEF (GBP)</th>
+              <th class="govuk-table__header govuk-!-width-one-quarter"></th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            {% for schedule_item in facilityTfm.premiumSchedule %}
+              <tr class="govuk-table__row" data-cy="schedule_item">
+                <th scope="row" class="govuk-table__cell govuk-body-s govuk-table__cell--numeric" data-cy="facility-{{ schedule_item.id }}-payment">{{ schedule_item.period }}</th>
+                <td class="govuk-table__cell govuk-!-width-one-quarter govuk-body-s govuk-table__cell--numeric" data-cy="facility-{{ schedule_item.id }}-dueDate">{{ schedule_item.calculationDate | formatDateString('yyyy-MM-dd', 'dd MMM yyyy') }}</td>
+                <td class="govuk-table__cell govuk-!-width-one-quarter govuk-body-s govuk-table__cell--numeric" data-cy="facility-{{ schedule_item.id }}-amount">{{ schedule_item.income | formatAsCurrency }}</td>
+                <td class="govuk-table__cell govuk-!-width-one-quarter"></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+
+          {% if facilityTfm.premiumTotals %}
+            <tfoot>
+              <tr>
+                <td colspan="3" class="govuk-table__cell govuk-body-s govuk-!-font-weight-bold govuk-table__cell--numeric" data-cy="premium-total">
+                  Total {{ facilityTfm.premiumTotals | formatAsCurrency }}
+                </td>
+                <td class="govuk-table__cell govuk-!-width-one-quarter"></td>
+              </tr>
+            </tfoot>
+          {% endif %}
+        </table>
+
+      {% endif %}
+
+    </div>
+  </div>
+  {% endmacro %}

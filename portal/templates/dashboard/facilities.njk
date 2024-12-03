@@ -1,0 +1,32 @@
+{% extends "index.njk" %}
+
+{% import './_macros/dashboard-page-content.njk' as dashboardPageContent %}
+{% import './_macros/dashboard-facilities-table.njk' as facilitiesTable %}
+
+{% block pageTitle -%}
+  Facilities
+{%- endblock %}
+
+{% block content %}
+
+  {{dashboardPageContent.render({
+    successMessage: successMessage,
+    user: user,
+    tab: tab,
+    filters: filters,
+    selectedFilters: selectedFilters,
+    selectedFiltersString: selectedFiltersString,
+    keyword: keyword,
+    table: facilitiesTable.render({
+      facilities: facilities,
+      userTimezone: user.timezone,
+      isChecker: isChecker,
+      activeSortByOrder: activeSortByOrder,
+      csrfToken: csrfToken
+    }),
+    pages: pages,
+    route: '/facilities',
+    csrfToken: csrfToken
+  })}}
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% import '../_macros/back-link.njk' as back %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "index.njk" %}
+{% set edit = "/case/" + dealId + "/parties/" + party %}
+
+{% block pageTitle -%}
+  The unique reference number (URN) does not exist
+{%- endblock %}
+
+{% block content %}
+
+  {{
+      back.render({
+        return: edit
+      })
+    }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="ukef-heading-l govuk-!-margin-top-0" data-cy="partyurn-non-existent-heading">The unique reference number (URN) does not exist</h1>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <p class="" data-cy="partyurn-non-existent-body">
+                You need to create {{ urn }} unique reference number (URN), also know as party URN,  in the Master Customer Database before you can match against it in Trade Finance Manager.
+            </p>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <div class="govuk-!-margin-top-4">
+        {{ govukButton({
+                text: "Back to parties",
+                href: "/case/" + dealId + "/parties",
+                attributes: {
+                    'data-cy': 'partyurn-non-existent-button'
+                }
+                }) }}
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

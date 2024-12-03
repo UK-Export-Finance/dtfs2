@@ -1,0 +1,46 @@
+{% import "./keying-sheet-table-row.njk" as keyingSheetTableRow %}
+{% macro render(params) %}
+  {% set utilisationTableRows = params.utilisationTableRows %}
+  <table class="govuk-table" data-module="moj-sortable-table" data-cy="utilisation-table">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header" aria-sort="ascending" data-cy="facility-id-header">Facility ID</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none" data-cy="exporter-header">Exporter</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none" data-cy="base-currency-header">Base currency</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric" aria-sort="none" data-cy="value-header">Facility value</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric" aria-sort="none" data-cy="utilisation-header">Bank utilisation</th>
+        <th scope="colgroup" class="govuk-table__header govuk-table__header--numeric" aria-sort="none" data-cy="cover-percentage-header">UKEF cover</th>
+        <th scope="colgroup" class="govuk-table__header govuk-table__header--numeric" aria-sort="none" data-cy="exposure-header">UKEF exposure</th>
+        <th scope="colgroup" class="govuk-table__header govuk-table__header--numeric" aria-sort="none" data-cy="fees-accrued-header">Fees accrued for the period</th>
+        <th scope="colgroup" class="govuk-table__header govuk-table__header--numeric" aria-sort="none" data-cy="fees-payable-header">Fees payable to UKEF for the period (reported currency)</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+      {% for utilisationTableRow in utilisationTableRows %}
+        <tr class="govuk-table__row" data-cy="utilisation-table-row-{{ utilisationTableRow.feeRecordId }} utilisation-table-row--exporter-{{ utilisationTableRow.exporter }}">
+          <td class="govuk-table__cell" data-cy="facility-id">{{ utilisationTableRow.facilityId }}</td>
+          <td class="govuk-table__cell" data-cy="exporter">{{ utilisationTableRow.exporter }}</td>
+          <td class="govuk-table__cell" data-cy="base-currency">{{ utilisationTableRow.baseCurrency }}</td>
+          <td class="govuk-table__cell govuk-table__cell--numeric" data-cy="value" data-sort-value="{{ utilisationTableRow.formattedValue | removeCommasAndFloat }}">
+            {{ utilisationTableRow.formattedValue }}
+          </td>
+          <td class="govuk-table__cell govuk-table__cell--numeric" data-cy="utilisation" data-sort-value="{{ utilisationTableRow.formattedUtilisation | removeCommasAndFloat }}">
+            {{ utilisationTableRow.formattedUtilisation }}
+          </td>
+          <td class="govuk-table__cell govuk-table__cell--numeric" data-cy="cover-percentage" data-sort-value="{{ utilisationTableRow.coverPercentage }}">
+            {{ utilisationTableRow.coverPercentage }}%
+          </td>
+          <td class="govuk-table__cell govuk-table__cell--numeric" data-cy="exposure" data-sort-value="{{ utilisationTableRow.formattedExposure | removeCommasAndFloat }}">
+            {{ utilisationTableRow.formattedExposure }}
+          </td>
+          <td class="govuk-table__cell govuk-table__cell--numeric" data-cy="fees-accrued" data-sort-value="{{ utilisationTableRow.feesAccrued.dataSortValue }}">
+            {{ utilisationTableRow.feesAccrued.formattedCurrencyAndAmount }}
+          </td>
+          <td class="govuk-table__cell govuk-table__cell--numeric" data-cy="fees-payable" data-sort-value="{{ utilisationTableRow.feesPayable.dataSortValue }}">
+            {{ utilisationTableRow.feesPayable.formattedCurrencyAndAmount }}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endmacro %}

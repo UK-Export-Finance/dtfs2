@@ -1,0 +1,61 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro render(params) %}
+  {% set selectedTaskFilter = params.selectedTaskFilter %}
+  {% set csrfToken = params.csrfToken %}
+
+  <section id="task-filters" data-cy="task-filters">
+
+    <form method="post" autocomplete="off">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+      {{govukRadios({
+        classes: "govuk-radios--inline govuk-radios--small task-filters__radios",
+        idPrefix: "filterType",
+        name: "filterType",
+        fieldset: {
+          legend: {
+            text: "Filter tasks for this deal",
+            classes: "govuk-visually-hidden"
+          }
+        },
+        items: [
+          {
+            value: "all",
+            text: "All tasks",
+            checked: selectedTaskFilter === "all",
+            attributes: {
+              "data-cy": "task-radio-button-all"
+            }
+          },
+          {
+            value: "team",
+            text: "Your team's tasks",
+            checked: selectedTaskFilter === "team",
+            attributes: {
+              "data-cy": "task-radio-button-your-team"
+            }
+          },
+          {
+            value: "user",
+            text: "Your tasks",
+            checked: selectedTaskFilter === "user",
+            attributes: {
+              "data-cy": "task-radio-button-your-tasks"
+            }
+          }
+        ]
+      })}}
+
+      {{ govukButton({
+        text: "Filter results",
+        attributes: {
+          "data-cy": "submit-button"
+        }
+      }) }}
+
+    </form>
+
+  </section>
+
+{% endmacro %}

@@ -1,0 +1,33 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro input(opts) %}
+
+  {% set prefix=opts.prefix %}
+  {% set label=opts.label %}
+  {% set deal=opts.deal %}
+  {% set errorMessage=opts.validationErrors.errorList[prefix+'-companies-house-registration-number'] %}
+
+  {{ govukInput({
+    label: { text: label },
+    hint: { text: 'We use a Companies House service to provide you with company details. If the company is not UK registered or the Companies House service is unavailable, then you will need to complete the company details fields manually.' },
+    classes: "govuk-!-width-one-half",
+    id: prefix+'-companies-house-registration-number',
+    name: prefix+'-companies-house-registration-number',
+    value: deal.submissionDetails[prefix+'-companies-house-registration-number'],
+    attributes: {
+      "data-cy": prefix+'-companies-house-registration-number'
+    },
+    errorMessage: errorMessage
+  }) }}
+
+  {{ govukButton({
+    "text": "Search",
+    "attributes" : {
+      "data-cy" : "DoSearch-" + prefix+'-companies-house-registration-number',
+      "formaction" : "/contract/" + deal._id + "/about/supplier/companies-house-search/" + prefix
+    }
+  }) }}
+
+
+{% endmacro %}

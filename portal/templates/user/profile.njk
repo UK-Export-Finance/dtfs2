@@ -1,0 +1,94 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% extends "index.njk" %}
+
+{% block pageTitle -%}
+  Profile for {{ user.firstname }} {{ user.surname }}
+{%- endblock %}
+
+{% block content %}
+
+  <h1 class="govuk-heading-l">Logged in as {{ user.firstname }} {{ user.surname }}</h1>
+
+  <h2 class="govuk-heading-m">Account information</h2>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+      <p class="govuk-body">First name:</p>
+    </div>
+    <div class="govuk-grid-column-one-quarter">
+       <p class="govuk-body">{{ user.firstname }} </p>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+      <p class="govuk-body">Surname:</p>
+    </div>
+    <div class="govuk-grid-column-one-quarter">
+       <p class="govuk-body">{{ user.surname }}</p>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+      <p class="govuk-body">Email:</p>
+    </div>
+    <div class="govuk-grid-column-one-quarter">
+       <p class="govuk-body" data-cy="user-email">{{ user.username }}</p>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+      <p class="govuk-body">User roles:</p>
+    </div>
+    <div class="govuk-grid-column-one-quarter">
+       <p class="govuk-body">
+        {% for role in user.roles %}
+          {{ role }}{% if not loop.last%}, {% endif %}
+        {% endfor %}
+        </p>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+      <p class="govuk-body">Bank:</p>
+    </div>
+    <div class="govuk-grid-column-one-quarter">
+       <p class="govuk-body">{{ user.bank.name }}</p>
+    </div>
+  </div>
+
+    <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+      <p class="govuk-body">Last logged in:</p>
+    </div>
+    <div class="govuk-grid-column-one-quarter">
+       <p class="govuk-body">{{ user.lastLogin | localiseTimestamp("dd/MM/yyyy HH:mm", user.timezone) }}</p>
+    </div>
+  </div>
+
+      {{
+          govukButton({
+          text: "Change password",
+          classes: "govuk-!-margin-right-1",
+          href: "/user/" + user._id + "/change-password",
+          attributes: {
+            'data-cy': 'submit-button'
+          }
+        })
+      }}
+
+      {{
+          govukButton({
+          text: "Cancel",
+          classes: "govuk-button--secondary govuk-!-margin-right-1",
+          href: "/dashboard",
+          attributes: {
+            'data-cy': 'cancel-button'
+          }
+        })
+      }}
+
+{% endblock %}

@@ -1,0 +1,170 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle -%}
+  Amendment - Check your answers
+{%- endblock %}
+
+{% block sub_content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      },
+      classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+    }) }}
+  {% endif %}
+
+  {% set optionsWithHTML = [] %}
+
+  {% set defaultBankRequestDate =
+    {
+      key: { text: 'Bank requested change' },
+      value: { html: '<span data-cy="amendment--bank-request-date-response">' + requestDate + '</span>' },
+      actions: { items: [ {
+        html: '<span data-cy="amendment--bank-request-date-link">Change</span>',
+        href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/request-date',
+        visuallyHiddenText: 'bank requested change'
+      } ] }
+    }
+  %}
+  {{- optionsWithHTML.push(defaultBankRequestDate) | reject() }}
+
+  {% set defaultRequireUkefApproval =
+    {
+      key: { text: 'UKEF approval needed' },
+      value: { html: '<span data-cy="amendment--require-approval-response">' + ( "Yes" if requireUkefApproval === true else "No") + '</span>' },
+      actions: { items: [ {
+        html: '<span data-cy="amendment--require-approval-link">Change</span>',
+        href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/request-approval',
+        visuallyHiddenText: 'UKEF approval needed'
+      } ] }
+    }
+  %}
+  {{- optionsWithHTML.push(defaultRequireUkefApproval) | reject() }}
+
+  {% if requireUkefApproval === false %}
+    {% set effectiveDateUrl -%}
+
+    {%- endset %}
+    {% set defaultEffectiveDate =
+      {
+        key: { text: 'Date the amendment will be effective from' },
+        value: { html:  '<span data-cy="amendment--effective-date-response">' + effectiveDate + '</span>' },
+        actions: { items: [ {
+          html: '<span data-cy="amendment--effective-date-response">Change</span>',
+          href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/amendment-effective-date',
+          visuallyHiddenText: 'date the amendment will be effective from'
+        } ] }
+      }
+    %}
+    {{- optionsWithHTML.push(defaultEffectiveDate) | reject() }}
+  {% endif %}
+
+  {% if changeCoverEndDate === true %}
+    {% set defaultCoverEndDate =
+      {
+        key:{ text: 'New cover date' },
+        value: { html: '<span data-cy="amendment--cover-end-date-response">' + coverEndDate + '</span>' },
+        actions: { items: [ {
+          html: '<span data-cy="amendment--cover-end-date-link">Change</span>',
+          href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/cover-end-date',
+          visuallyHiddenText: 'new cover date'
+        } ] }
+      }
+    %}
+    {{- optionsWithHTML.push(defaultCoverEndDate) | reject() }}
+
+    {% if showFacilityEndDate %}
+      {% set defaultIsUsingFacilityEndDate =
+        {
+          key:{ text: 'Bank provided a facility end date' },
+          value: { html: '<span data-cy="amendment--is-using-facility-end-date-response">' + ( "Yes" if isUsingFacilityEndDate === true else "No") + '</span>' },
+          actions: { items: [ {
+            html: '<span data-cy="amendment--is-using-facility-end-date-link">Change</span>',
+            href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/is-using-facility-end-date',
+            visuallyHiddenText: 'bank provided a facility end date'
+          } ] }
+        }
+      %}
+      {{- optionsWithHTML.push(defaultIsUsingFacilityEndDate) | reject() }}
+
+      {% if isUsingFacilityEndDate %}
+        {% set defaultFacilityEndDate =
+          {
+            key:{ text: 'Facility end date' },
+            value: { html: '<span data-cy="amendment--facility-end-date-response">' + facilityEndDate + '</span>' },
+            actions: { items: [ {
+              html: '<span data-cy="amendment--facility-end-date-link">Change</span>',
+              href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/facility-end-date',
+              visuallyHiddenText: 'facility end date'
+            } ] }
+          }
+        %}
+        {{- optionsWithHTML.push(defaultFacilityEndDate) | reject() }}
+      {% endif %}
+
+      {% if isUsingFacilityEndDate === false %}
+        {% set defaultBankReviewDate =
+          {
+            key:{ text: 'Bank review date' },
+            value: { html: '<span data-cy="amendment--bank-review-date-response">' + bankReviewDate + '</span>' },
+            actions: { items: [ {
+              html: '<span data-cy="amendment--bank-review-date-link">Change</span>',
+              href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/bank-review-date',
+              visuallyHiddenText: 'bank review date'
+            } ] }
+          }
+        %}
+        {{- optionsWithHTML.push(defaultBankReviewDate) | reject() }}
+      {% endif %}
+    {% endif %}
+  {% endif %}
+
+  {% if changeFacilityValue === true %}
+    {% set defaultFacilityValue =
+      {
+        key: { text: 'New facility value' },
+        value: { html: '<span data-cy="amendment--facility-value-response">' + value + '</span>' },
+        actions: { items: [ {
+          html: '<span data-cy="amendment--facility-value-link">Change</span>',
+          href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/facility-value',
+          visuallyHiddenText: 'new facility value'
+        } ] }
+      }
+    %}
+    {{- optionsWithHTML.push(defaultFacilityValue) | reject() }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-4" data-cy="amendment--answers-heading" aria-label="Check your answers">Check your answers</h1>
+
+      <form method="POST" autocomplete="off">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukSummaryList({
+          rows: optionsWithHTML
+        }) }}
+
+
+
+        <div class="govuk-button-group govuk-!-margin-top-4">
+          {% if isEditable %}
+            {{ govukButton({
+              text: "Submit",
+              attributes: { "data-cy": "continue-button" }
+              })
+            }}
+          {% endif %}
+          <a class="govuk-link" href="/case/{{ dealId }}/facility/{{ facilityId }}#amendments" data-cy="cancel-link">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

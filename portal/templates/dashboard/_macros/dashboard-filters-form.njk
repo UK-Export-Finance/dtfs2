@@ -1,0 +1,128 @@
+{% from 'govuk/components/input/macro.njk' import govukInput %}
+{% from 'govuk/components/checkboxes/macro.njk' import govukCheckboxes %}
+
+{% macro render(params) %}
+  {% set filters = params.filters %}
+  {% set keyword = params.keyword %}
+
+  {{ govukInput({
+    id: 'keyword',
+    name: 'keyword',
+    value: keyword,
+    label: {
+      text: 'Keyword',
+      classes: 'govuk-label--m',
+      attributes: {
+        'data-cy': 'filter-label-keyword'
+      }
+    },
+    attributes: {
+      'data-cy': 'filter-input-keyword'
+    }
+  }) }}
+
+   {% if filters.createdBy %}
+    {{ govukCheckboxes({
+      idPrefix: 'createdBy',
+      name: 'createdBy',
+      classes: 'govuk-checkboxes--small',
+      fieldset: {
+        legend: {
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      items: filters.createdBy
+    }) }}
+  {% endif %}
+
+  {% if filters.dealType %}
+    {{ govukCheckboxes({
+      idPrefix: 'dealType',
+      name: 'dealType',
+      classes: 'govuk-checkboxes--small',
+      fieldset: {
+        legend: {
+          text: 'Product',
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      items: filters.dealType
+    }) }}
+  {% endif %}
+
+  {% if filters.type %}
+    {{ govukCheckboxes({
+      idPrefix: 'type',
+      name: 'type',
+      classes: 'govuk-checkboxes--small',
+      fieldset: {
+        legend: {
+          text: 'Product',
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      items: filters.type
+    }) }}
+  {% endif %}
+
+  {% if filters.submissionType %}
+    {{ govukCheckboxes({
+      idPrefix: 'submissionType',
+      name: 'submissionType',
+      classes: 'govuk-checkboxes--small',
+      fieldset: {
+        legend: {
+          text: 'Notice type',
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      items: filters.submissionType
+    }) }}
+  {% endif %}
+
+  {% if filters['deal.submissionType'] %}
+    {{ govukCheckboxes({
+      idPrefix: 'deal.submissionType',
+      name: 'deal.submissionType',
+      classes: 'govuk-checkboxes--small',
+      fieldset: {
+        legend: {
+          text: 'Notice type',
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      items: filters['deal.submissionType']
+    }) }}
+  {% endif %}
+
+  {% if filters.status %}
+    {{ govukCheckboxes({
+      idPrefix: 'status',
+      name: 'status',
+      classes: 'govuk-checkboxes--small',
+      fieldset: {
+        legend: {
+          text: 'Status',
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      items: filters.status
+    }) }}
+  {% endif %}
+
+  {% if filters.stage %}
+    {{ govukCheckboxes({
+      idPrefix: 'stage',
+      name: 'stage',
+      classes: 'govuk-checkboxes--small',
+      fieldset: {
+        legend: {
+          text: "Bank’s facility stage",
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      items: filters.stage
+    }) }}
+  {% endif %}
+
+{% endmacro %}

@@ -1,0 +1,22 @@
+.ukef-activity-feed__list-item {
+  padding-left: govuk-spacing(2);
+}
+
+.ukef-activity-feed__list-item-heading::before {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  width: 15px;
+  height: 5px;
+  background: govuk-colour('blue');
+  margin-right: govuk-spacing(2);
+  margin-left: -#{govuk-spacing(2)};
+}
+
+.ukef-activity-feed__list-item-heading-user {
+  color: govuk-colour('dark-grey');
+}
+
+.ukef-activity-feed__list-item-content {
+  padding-left: govuk-spacing(3);
+}

@@ -1,0 +1,139 @@
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% import './_macros/comments.njk' as comments %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle -%}
+  Underwriter manager’s decision
+{%- endblock %}
+
+{% block content %}
+  <section class="govuk-!-margin-top-9">
+
+    {% if validationErrors.count %}
+      {{
+        govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: validationErrors.summary,
+          attributes: {
+            'data-cy': 'error-summary'
+          }
+        })
+      }}
+    {% endif %}
+
+    <div class="govuk-grid-row">
+
+      <div class="govuk-grid-column-three-quarters">
+
+        <h3 class="govuk-heading-l ukef-heading-grey govuk-!-margin-bottom-3" data-cy="managers-decision-heading">Underwriter manager’s decision</h3>
+
+        <form method="POST" autocomplete="off" data-cy="managers-decision-form">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          {% set approveWithConditionsCommentsComponentData = {
+            id: 'approveWithConditionsComments',
+            label: 'Enter conditions (these will be sent to the bank)',
+            validationError: validationErrors.errorList.approveWithConditionsComments,
+            value: submittedValues.approveWithConditionsComments
+          } %}
+
+          {% set declineCommentsComponentData = {
+            id: 'declineComments',
+            label: 'Enter reasons (these will be sent to the bank)',
+            validationError: validationErrors.errorList.declineComments,
+            value: submittedValues.declineComments
+          } %}
+
+          {{govukRadios({
+              fieldset: {
+                legend: {
+                  text: "What's your decision?",
+                  isPageHeading: true,
+                  classes: "govuk-fieldset__legend--xl"
+                }
+              },
+              name: "decision",
+              items: [
+                {
+                  value: "Approved without conditions",
+                  text: "Approve without conditions",
+                  attributes: {
+                    'data-cy': 'approve-without-conditions-radio-button'
+                  }
+                },
+                {
+                  value: "Approved with conditions",
+                  text: "Approve with conditions",
+                  checked: submittedValues.decision === 'Approved with conditions',
+                  attributes: {
+                    'data-cy': 'approve-with-conditions-radio-button'
+                  },
+                  conditional: {
+                    html: comments.render(approveWithConditionsCommentsComponentData)
+                  }
+                },
+                {
+                  value: "Declined",
+                  text: "Declined",
+                  checked: submittedValues.decision === 'Declined',
+                  attributes: {
+                    'data-cy': 'decline-radio-button'
+                  },
+                  conditional: {
+                    html: comments.render(declineCommentsComponentData)
+                  }
+                }
+              ],
+              errorMessage: validationErrors and validationErrors.errorList.decision and {
+                text: validationErrors.errorList.decision.text,
+                attributes: {
+                  'data-cy': 'decision-input-error'
+                }
+              }
+            })
+          }}
+
+          {{ govukCharacterCount({
+            name: "internalComments",
+            id: "internalComments",
+            maxlength: 8000,
+            rows: 9,
+            label: {
+              text: "Comments (optional)"
+            },
+            hint: {
+              text: "Only UKEF staff will see this. "
+            },
+            attributes: {
+              'data-cy': 'internalComments-input'
+            },
+            value: submittedValues.internalComments,
+            errorMessage: validationErrors.errorList.internalComments and {
+              text: validationErrors.errorList.internalComments.text,
+              attributes: {
+                'data-cy': 'internalComments-input-error'
+              }
+            }
+          }) }}
+
+          {{ govukButton({
+            text: "Save",
+            attributes: {
+              'data-cy': 'submit-button'
+            }
+          }) }}
+
+          <a class="govuk-body govuk-link govuk-!-margin-left-6 close-link" href="/case/{{ dealId }}/underwriting" data-cy="cancel-link">Cancel</a>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </section>
+
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle -%}
+  Facility currency
+{%- endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  {% if status !== 'change' %}
+    {{ govukBackLink({
+      text: "Back to previous page",
+      href: "/gef/application-details/" + dealId + "/facilities/" + facilityId + "/provided-facility",
+      attributes: {
+        'data-cy': 'back-link'
+      }
+    }) }}
+  {% endif %}
+
+  <header data-cy="application-details-page">
+    <span class="govuk-caption-xl" data-cy="heading-caption">
+      Add a facility
+    </span>
+  </header>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <div class="govuk-grid-column-three-quarters">
+      <form method="post" data-cy="form">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <input
+          class="govuk-visually-hidden"
+          id="facilityType"
+          name="facilityType"
+          hidden="true"
+          value="{{facilityType}}"
+          data-cy="hidden-facility-type">
+
+        {{ govukRadios({
+          idPrefix: "currencyId",
+          name: "currencyId",
+          fieldset: {
+            legend: {
+              text: "Select currency of your " + facilityTypeString + " facility",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--xl"
+            },
+            attributes: {
+              'data-cy': 'main-heading'
+            }
+          },
+          errorMessage: errors and errors.fieldErrors.currencyId and {
+            text: errors.fieldErrors.currencyId.text,
+            attributes: {
+              'data-cy': 'currency-error'
+            }
+          },
+          items: [
+            {
+              value: "GBP",
+              text: "UK sterling (GBP)",
+              checked: currencyId === "GBP",
+              attributes: {
+                'data-cy': 'gbp-radio-button'
+              }
+            },
+            {
+              value: "EUR",
+              text: "Euros (EUR)",
+              checked: currencyId === "EUR",
+              attributes: {
+                'data-cy': 'eur-radio-button'
+              }
+            },
+            {
+              value: "USD",
+              text: "US dollars (USD)",
+              checked: currencyId === "USD",
+              attributes: {
+                'data-cy': 'usd-radio-button'
+              }
+            },
+            {
+              value: "JPY",
+              text: "Japanese yen (YEN)",
+              checked: currencyId === "JPY",
+              attributes: {
+                'data-cy': 'yen-checkbox'
+              }
+            }
+          ]
+        }) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            attributes: {
+              'data-cy': 'continue-button'
+            }
+          }) }}
+
+          {{ govukButton({
+            text: "Save and return",
+            classes: "govuk-button--secondary",
+            attributes: {
+              formaction: "facility-currency?saveAndReturn=true",
+              'data-cy': 'save-and-return-button'
+            }
+          }) }}
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

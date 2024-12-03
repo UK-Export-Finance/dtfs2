@@ -1,0 +1,21 @@
+{% macro render(params) %}
+
+  <div data-cy="forms-incomplete-text">
+    {% if params.deal.status %}
+      {% if params.user.roles.includes('maker') %}
+          {% if ["Draft", "Further Maker's input required"].includes(params.deal.status) and not params.canFullyCalculateDealSummary %}
+
+            <div class="govuk-error-summary govuk-!-padding-0 forms-incomplete-summary" data-module="govuk-error-summary">
+              <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list forms-incomplete-summary__list">
+                  <li data-cy="forms-incomplete">Warning: Only the completed facilities will be processed in the financial summary data below.</li>
+                </ul>
+              </div>
+            </div>
+
+          {% endif %}
+      {% endif %}
+    {% endif %}
+  </div>
+
+{% endmacro %}

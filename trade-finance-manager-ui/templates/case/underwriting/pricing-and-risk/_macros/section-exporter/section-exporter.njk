@@ -1,0 +1,27 @@
+{% import './exporter-table.njk' as exporterTable %}
+
+{% macro render(params) %}
+  {% set caseId = params.caseId %}
+  {% set supplierName = params.supplierName %}
+  {% set exporterCreditRating = params.exporterCreditRating %}
+  {% set lossGivenDefault = params.lossGivenDefault %}
+  {% set probabilityOfDefault = params.probabilityOfDefault %}
+  {% set userCanEditGeneral = params.userCanEditGeneral %}
+
+  <section data-cy="section-exporter">
+
+    <h4 class="govuk-heading-m govuk-!-padding-top-3 govuk-!-padding-bottom-2 govuk-!-margin-top-0" data-cy="exporter-heading">Exporter</h4>
+
+    {% set componentData = {
+      caseId: caseId,
+      exporterCreditRating: exporterCreditRating,
+      lossGivenDefault: lossGivenDefault,
+      probabilityOfDefault: probabilityOfDefault,
+      userCanEditGeneral: userCanEditGeneral
+    } %}
+
+    {{ exporterTable.render(componentData) }}
+
+  </section>
+
+{% endmacro %}

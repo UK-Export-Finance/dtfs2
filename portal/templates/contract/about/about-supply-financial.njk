@@ -1,0 +1,146 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
+{% import '_macros/date-field.njk' as dateField %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+{% block pageTitle -%}
+  Financial information - {{ deal.additionalRefName }}
+{%- endblock %}
+
+{% block content %}
+
+{% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
+
+
+  {{ taskListHeader.render({
+    title: 'Add financial information',
+    dealId: deal._id,
+    items: taskListItems,
+    entityName: 'about'
+  })}}
+
+  <form method="POST" autocomplete="off">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <div id="financial-form">
+      {{ govukInput({
+        label: { text: 'Supply Contract value (in Supply Contract currency)' },
+        id: "supplyContractValue",
+        name: "supplyContractValue",
+        value: deal.submissionDetails["supplyContractValue"],
+        classes: "govuk-!-width-one-half",
+        attributes: {
+          size: "60",
+          maxlength: "255",
+          placeholder: "0.00",
+          "data-cy": "supplyContractValue",
+          "data-mask": "currency"
+        },
+        errorMessage: validationErrors.errorList["supplyContractValue"]
+      }) }}
+
+      {{ govukSelect({
+          id: "supplyContractCurrency",
+          name: "supplyContractCurrency",
+          label: { text: "Supply Contract currency" },
+          attributes: {
+            "data-cy": "supplyContractCurrency"
+          },
+          items: currencies,
+          errorMessage: validationErrors.errorList["supplyContractCurrency"]
+        }) }}
+
+      {% if deal.submissionDetails["supplyContractCurrency"] == null %}
+        {% set hideByDefault = true %}
+      {% else %}
+        {% set hideByDefault = (deal.submissionDetails["supplyContractCurrency"].id and deal.submissionDetails["supplyContractCurrency"].id==='GBP') %}
+      {% endif %}
+    </div>
+
+    <div id="supply-contract-currency-conversion-fields" class="{% if hideByDefault %}display-none{% endif %}">
+
+      {{ govukInput({
+        label: { text: 'Conversion rate from Supply Contract currency to GBP' },
+        hint: { text: 'E.g. USD to GBP (100 USD /1.3 = 76.92 GBP)' },
+        classes: "govuk-!-width-one-half govuk-input--width-8",
+        id: "supplyContractConversionRateToGBP",
+        name: "supplyContractConversionRateToGBP",
+        value: deal.submissionDetails["supplyContractConversionRateToGBP"],
+        attributes: {
+          placeholder: "0.000000",
+          'data-cy': 'supplyContractConversionRateToGBP',
+          size: '60'
+        },
+        errorMessage: validationErrors.errorList["supplyContractConversionRateToGBP"]
+      }) }}
+
+
+      {{ govukDateInput({
+        id: "supplyContractConversionDate",
+        namePrefix: "supplyContractConversionDate",
+        fieldset: {
+          legend: {
+            text: "Conversion rate date"
+          }
+        },
+        hint: {
+          text: "For example, 27 11 2019"
+        },
+        errorMessage: validationErrors.errorList["supplyContractConversionDate"],
+        items: [
+          {
+            classes: ( validationErrors.errorList['supplyContractConversionDate-day']) and "govuk-input--width-2 govuk-input--error" or "govuk-input--width-2",
+            name: "day",
+            value: deal.submissionDetails['supplyContractConversionDate-day'],
+            attributes: {
+              'data-cy': "supplyContractConversionDate-day"
+            }
+          },
+          {
+            classes: ( validationErrors.errorList['supplyContractConversionDate-month']) and "govuk-input--width-2 govuk-input--error" or "govuk-input--width-2",
+            name: "month",
+            value: deal.submissionDetails['supplyContractConversionDate-month'],
+            attributes: {
+              'data-cy': "supplyContractConversionDate-month"
+            }
+          },
+          {
+            classes: ( validationErrors.errorList['supplyContractConversionDate-year']) and "govuk-input--width-4 govuk-input--error" or "govuk-input--width-4",
+            name: "year",
+            value: deal.submissionDetails['supplyContractConversionDate-year'],
+            attributes: {
+              'data-cy': "supplyContractConversionDate-year"
+            }
+          }
+        ]
+      }) }}
+
+    </div>
+
+    {{ govukButton({
+      "text": "Preview",
+      "attributes" : { "data-cy" : "Preview" }
+    }) }}
+
+    {{ govukButton({
+      "text": "Save and go back to deal",
+      "classes" : "govuk-button govuk-button--secondary",
+      "attributes" : {
+        "data-cy" : "SaveAndGoBack",
+        "formaction" : "/contract/"+ deal._id +"/about/financial/save-go-back"
+      }
+    }) }}
+
+  </form>
+
+{% endblock %}

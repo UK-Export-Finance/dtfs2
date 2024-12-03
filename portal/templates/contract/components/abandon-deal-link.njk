@@ -1,0 +1,20 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro render(params) %}
+  {% if params.deal.status %}
+
+    {% if params.user.roles.includes('maker') %}
+      {% if ["Draft", "Further Maker's input required"].includes(params.deal.status) %}
+        <a
+          data-cy="AbandonLink"
+          href="/contract/{{ params.deal._id }}/delete"
+          class="govuk-link govuk-!-font-size-14 govuk-!-margin-left-2"
+          title="Abandon Deal {{ params.deal.bankInternalRefName }}"
+          aria-label="Abandon Deal {{ params.deal.bankInternalRefName }}"
+        >Abandon</a>
+      {% endif %}
+
+    {% endif %}
+
+  {% endif %}
+{% endmacro %}

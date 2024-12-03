@@ -1,0 +1,26 @@
+{% import './facility-pricing-risk-table.njk' as facilityPricingRiskTable %}
+
+{% macro render(params) %}
+  {% set facilities = params.facilities %}
+  {% set caseId = params.caseId %}
+  {% set userCanEdit = params.userCanEdit %}
+
+  <section data-cy="section-facilities">
+
+    <h4 class="govuk-heading-m govuk-!-padding-top-2" data-cy="facilities-heading">Facilities</h4>
+
+    {% for facility in facilities %}
+
+      {% set componentData = {
+        caseId: caseId,
+        facility: facility,
+        userCanEdit: userCanEdit
+      } %}
+
+      {{facilityPricingRiskTable.render(componentData)}}
+
+    {% endfor %}
+
+  </section>
+
+{% endmacro %}

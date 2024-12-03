@@ -1,0 +1,36 @@
+{% import '../_macros/parties-buyer-area.njk' as buyerArea %}
+{% import '../../_macros/save-close-buttons.njk' as saveCloseButtons %}
+{% import '../../_macros/back-link.njk' as back %}
+
+{% extends "index.njk" %}
+{% set primary = 'cases' %}
+
+{% block pageTitle -%}
+  Edit Buyer Details: {{ deal.submissionDetails.buyerName }}
+{%- endblock %}
+
+{% block content %}
+
+  {{ back.render({
+      return: "/case/" + deal._id + "/parties"
+  }) }}
+
+  <form autocomplete="off" method="POST">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    {{ buyerArea.render({
+        deal: deal,
+        tfm: tfm,
+        userCanEdit: userCanEdit,
+        renderEditForm: renderEditForm,
+        errors: errors,
+        urn: urn
+      }) }}
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        {{ saveCloseButtons.render({returnTo: "/case/" + deal._id + "/parties"}) }}
+      </div>
+    </form>
+  {% endblock %}
+
+  {% block sub_content %}{% endblock %}

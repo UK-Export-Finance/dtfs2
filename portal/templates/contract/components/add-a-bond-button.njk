@@ -1,0 +1,7 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro render(params) %}
+  {% if params.editable %}
+    <a href="/contract/{{ params.deal._id }}/bond/create" class="govuk-link govuk-body-s" data-cy="link-add-bond">Add a Bond</a>
+  {% endif %}
+{% endmacro %}

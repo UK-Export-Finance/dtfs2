@@ -1,0 +1,25 @@
+{% import "./_macros/request-new-sign-in-link.njk" as requestNewSignInLink %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle -%}
+  Check your email
+{%- endblock %}
+
+{% block content %}
+  <h1 class="govuk-heading-xl">
+    Check your email
+  </h1>
+
+  <div class="govuk-grid-row govuk-body">
+    <div class="govuk-grid-column-three-quarters">
+      <p class="govuk-!-margin-bottom-6">We've sent you an email with a link to sign in. This link will expire after 30 minutes.</p>
+      <p class="govuk-!-margin-bottom-6" data-cy="attempts-remaining">You have <b>2</b> attempts remaining.</p>
+      <p class="govuk-!-margin-bottom-6">If you request too many links your account will be suspended for security purposes and you will be prompted to contact us.</p>
+      {{ requestNewSignInLink.render({
+        isPrimaryActionOnPage: false,
+        csrfToken: csrfToken
+      }) }}
+    </div>
+  </div>
+{% endblock %}

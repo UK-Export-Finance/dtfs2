@@ -1,0 +1,16 @@
+{% macro render(params) %}
+  {% if params.deal.status %}
+    {% if params.user.roles.includes('checker') or params.user.roles.includes('maker') %}
+        {% if ["Ready for Checker's approval"].includes(params.deal.status) %}
+
+          <p class="govuk-body">
+             <a data-cy="reviewEligibilityChecklistForm" href="/contract/{{ params.deal._id }}/submission-details#eligibility-criteria" class="govuk-body govuk-link">
+               Review your eligibility checklist form
+             </a>
+          </p>
+
+        {% endif %}
+    {% endif %}
+
+  {% endif %}
+{% endmacro %}

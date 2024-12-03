@@ -1,0 +1,30 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% macro render(hintText, value) %}
+
+  {{ govukInput({
+    formGroup: {
+      classes: "form-group-disabled"
+    },
+    label: {
+      text: "Guarantee fee payable by bank"
+    },
+    hint: {
+      text: hintText
+    },
+    id: "guaranteeFeePayableByBank",
+    name: "guaranteeFeePayableByBank",
+    value: value,
+    classes: "form-group-disabled--input govuk-input--width-5",
+    type: "number",
+    attributes: {
+      step: "0.0001",
+      min: "0",
+      max: "100",
+      placeholder: "0",
+      disabled: "true",
+      'data-cy': "guarantee-fee-payable-by-bank"
+    }
+  }) }}
+  <script src="/assets/js/guaranteeFeePayableByBank.js" type="text/javascript" integrity="sha512-Azl0Omtr6fZwXgibiAILdzFgDgcJmQOZIhfpz6tSSN16/cPtVkuxg7Moi4zG4XLN/Q6HibqY3p8EvMPI+XQcEQ==" crossorigin="anonymous"></script>
+{% endmacro %}

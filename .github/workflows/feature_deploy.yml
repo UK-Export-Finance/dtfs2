@@ -1,0 +1,216 @@
+# TODO: Remove file post MSSQL migration
+
+name: Feature environment deployment
+
+on:
+  push:
+    branches:
+      - release-2.6.0
+    paths:
+      - 'portal/**'
+      - 'portal-api/**'
+      - 'gef-ui/**'
+      - 'trade-finance-manager-ui/**'
+      - 'trade-finance-manager-api/**'
+      - 'dtfs-central-api/**'
+      - 'external-api/**'
+      - 'azure-functions/acbs-function/**'
+      - 'libs/common/**'
+      - '.github/**'
+
+env:
+  environment: feature
+  credentials: ${{ secrets.AZURE_CREDENTIALS }}
+  from: latest
+  acr: ${{ secrets.ACR_REGISTRY }}
+  acr_username: ${{ secrets.ACR_USERNAME }}
+  acr_password: ${{ secrets.ACR_PASSWORD }}
+  # TODO: FN-1077 NOTE: While we are using the dev GH environment, we can't use the RESOURCE_GROUP secret
+  # (It doesn't need to be a secret anyway.) So we define our resource group in an environment variable
+  # here and use that. The Azure region is the same so I've left that as using the secret.
+  resource_group: Digital-Feature
+
+jobs:
+  deployment-environment:
+    name: Environment setup
+    runs-on: [self-hosted, linux, deployment]
+    outputs:
+      environment: ${{ env.environment }}
+    steps:
+      - name: Initialise Environment
+        run: echo "Setting up ${{ env.environment }} environment"
+
+  run-sql-migrations:
+    needs: deployment-environment
+    name: Run SQL Migrations
+    runs-on: [self-hosted, linux, deployment]
+    environment:
+      name: ${{ needs.deployment-environment.outputs.environment }}
+    env:
+      SQL_DB_HOST: ${{ secrets.SQL_DB_HOST }}
+      SQL_DB_PORT: ${{ secrets.SQL_DB_PORT }}
+      SQL_DB_USERNAME: ${{ secrets.SQL_DB_USERNAME }}
+      SQL_DB_PASSWORD: ${{ secrets.SQL_DB_PASSWORD }}
+      SQL_DB_NAME: ${{ secrets.SQL_DB_NAME }}
+      SQL_DB_LOGGING_ENABLED: ${{ vars.SQL_DB_LOGGING_ENABLED }}
+
+    steps:
+      - name: 1. Latest commit hash
+        uses: actions/checkout@v4
+
+      - name: 2. Install node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: 3. Install dependencies
+        working-directory: ./
+        run: npm ci
+
+      - name: 4. Run migrations
+        working-directory: ./libs/common
+        run: npm run db:migrate
+
+  deploy-webapps:
+    needs: [deployment-environment, run-sql-migrations]
+    name: Deploy Webapps
+    runs-on: [self-hosted, linux, deployment]
+    # TODO: FN-1077 NOTE: we don't currently have a `feature` GitHub environment yet so use the `dev` one while we're not doing much.
+    # Restore the parameterised version throughout!
+    environment:
+      name: ${{ needs.deployment-environment.outputs.environment }}
+    strategy:
+      max-parallel: 1
+      matrix:
+        repository:
+          - portal-ui
+          - portal-api
+          - gef-ui
+          - trade-finance-manager-ui
+          - trade-finance-manager-api
+          - dtfs-central-api
+          - external-api
+        include:
+          - path: portal
+            repository: portal-ui
+    steps:
+      - name: 1. Latest commit hash
+        uses: actions/checkout@v4
+
+      - name: 2. Build and push
+        uses: docker/build-push-action@v1
+        with:
+          registry: ${{ env.acr }}
+          username: ${{ env.acr_username }}
+          password: ${{ env.acr_password }}
+          repository: ${{ matrix.repository }}
+          context: .
+          dockerfile: ${{ matrix.path || matrix.repository }}/Dockerfile
+          tags: latest
+          build_args: GITHUB_SHA=${{ github.sha }}
+          add_git_labels: true
+
+      - name: 3. ACR login
+        uses: azure/docker-login@v2
+        with:
+          login-server: ${{ env.acr }}
+          username: ${{ env.acr_username }}
+          password: ${{ env.acr_password }}
+
+      - name: 4. Tag images
+        run: |
+          from=${{ env.from }}
+          to=${{ env.environment }}
+          docker pull ${{ env.acr }}/${{ matrix.repository }}:$from
+          docker tag ${{ env.acr }}/${{ matrix.repository }}:$from ${{ env.acr }}/${{ matrix.repository }}:$to
+          docker push ${{ env.acr }}/${{ matrix.repository }}:$to
+
+      - name: 5. Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ env.credentials }}
+
+      - name: 6. Slot
+        uses: azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            az config get defaults
+            az webapp deployment slot create --name tfs-${{ env.environment }}-${{ matrix.repository }} --resource-group ${{ env.resource_group }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ matrix.repository }}
+            az webapp deployment slot swap --name tfs-${{ env.environment }}-${{ matrix.repository }} --resource-group ${{ env.resource_group }}  --slot ${{ github.sha }} --action swap
+            az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ matrix.repository }} --resource-group ${{ env.resource_group }}  --slot ${{ github.sha }}
+
+      - name: Cleanup 🧹
+        if: always()
+        uses: azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            # Delete temporary slot
+            az webapp deployment slot delete \
+            --slot ${{ github.sha }} \
+            --name tfs-${{ env.environment }}-${{ matrix.repository }} \
+            --resource-group ${{ env.resource_group }}
+
+  deploy-functionapps:
+    # Disable for now
+    if: false
+    # We depend on deploy-webapps to reduce the chances of being throttled
+    needs: [deployment-environment, deploy-webapps]
+    name: Deploy Functionapps
+    runs-on: [self-hosted, linux, deployment]
+    # TODO: FN-1077 NOTE: we don't currently have a `feature` GitHub environment yet so use the `dev` one while we're not doing much.
+    # Restore the parameterised version throughout!
+    environment:
+      name: ${{ needs.deployment-environment.outputs.environment }}
+    strategy:
+      matrix:
+        repository:
+          - azure-function-acbs
+        include:
+          - path: azure-functions/acbs-function
+            repository: azure-function-acbs
+            name: function-acbs
+
+    steps:
+      - name: 1. Latest commit hash
+        uses: actions/checkout@v4
+
+      - name: 2. Build and push
+        uses: docker/build-push-action@v1
+        with:
+          registry: ${{ env.acr }}
+          username: ${{ env.acr_username }}
+          password: ${{ env.acr_password }}
+          repository: ${{ matrix.repository }}
+          path: ${{ matrix.path }}
+          tags: latest
+          build_args: GITHUB_SHA=${{ github.sha }}
+          add_git_labels: true
+
+      - name: 3. ACR login
+        uses: azure/docker-login@v2
+        with:
+          login-server: ${{ env.acr }}
+          username: ${{ env.acr_username }}
+          password: ${{ env.acr_password }}
+
+      - name: 4. Tag images
+        run: |
+          from=${{ env.from }}
+          to=${{ env.environment }}
+          docker pull ${{ env.acr }}/${{ matrix.repository }}:$from
+          docker tag ${{ env.acr }}/${{ matrix.repository }}:$from ${{ env.acr }}/${{ matrix.repository }}:$to
+          docker push ${{ env.acr }}/${{ matrix.repository }}:$to
+
+      - name: 5. Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ env.credentials }}
+
+      - name: 6. Slot
+        uses: azure/cli@v1.0.0
+        with:
+          inlineScript: |
+            az config get defaults
+            az functionapp deployment slot create --name tfs-${{ env.environment }}-${{ matrix.name }} --resource-group ${{ env.resource_group }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ matrix.name }}
+            az functionapp deployment slot swap --name tfs-${{ env.environment }}-${{ matrix.name }} --resource-group ${{ env.resource_group }} --slot ${{ github.sha }} --action swap
+            az functionapp deployment slot delete --name tfs-${{ env.environment }}-${{ matrix.name }} --resource-group ${{ env.resource_group }} --slot ${{ github.sha }}

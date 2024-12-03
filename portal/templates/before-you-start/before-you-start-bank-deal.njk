@@ -1,0 +1,86 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% block pageTitle -%}
+  Before you start
+{%- endblock %}
+
+{% block content %}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
+
+  <h1 class="govuk-heading-l">Before you start</h1>
+
+  <p class="govuk-body">To use this service you’ll need to provide details about:</p>
+
+  <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-6">
+    <li>parties</li>
+    <li>supply contracts</li>
+    <li>bond and/or working capital loans</li>
+  </ul>
+
+  <p class="govuk-body">Supply Contracts must meet overall scheme requirements for the <a href="https://www.gov.uk/guidance/bond-support-scheme-overview-and-how-to-apply#eligibility" class="govuk-link">Bond Support Scheme</a> and/or the <a href="https://www.gov.uk/guidance/export-working-capital-scheme-overview-and-how-to-apply#eligibility" class="govuk-link">Export Working Capital Scheme</a>.</p>
+
+  <p class="govuk-body">You’ll also be asked to confirm whether the bonds or loan transactions meet the eligibility criteria for UKEF’s automatic inclusion model. Transactions that don’t meet these requirements can still be submitted through this service, but they will proceed as a Manual Inclusion Application. If accepted, these transactions will require submission as a Manual Inclusion Notice.</p>
+
+  <form method="POST" autocomplete="off">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="30" id="before-you-start-form">
+      {{ govukInput({
+        label: {
+          text: "Bank deal ID"
+        },
+        id: "bankInternalRefName",
+        name: "bankInternalRefName",
+        value: bankInternalRefName,
+        classes: "govuk-!-width-one-third govuk-js-character-count",
+        attributes: {
+          "data-cy": "bankInternalRefName",
+          "maxlength": "30"
+        },
+        errorMessage: validationErrors.errorList.bankInternalRefName
+      }) }}
+
+      <span id="bankInternalRefName-info" class="govuk-hint govuk-character-count__message" aria-live="polite" data-cy="bankInternalRefName-count">
+        You can enter up to 30 characters
+      </span>
+    </div>
+
+    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="100">
+      {{ govukInput({
+        label: {
+          text: "Bank deal Name"
+        },
+        id: "additionalRefName",
+        name: "additionalRefName",
+        value: additionalRefName,
+        classes: "govuk-!-width-one-third govuk-js-character-count",
+        attributes: {
+          "data-cy": "additionalRefName",
+          "maxlength": "100"
+        },
+        errorMessage: validationErrors.errorList.additionalRefName
+      }) }}
+
+      <span id="additionalRefName-info" class="govuk-hint govuk-character-count__message" aria-live="polite" data-cy="additionalRefName-count">
+        You can enter up to 100 characters
+      </span>
+
+    </div>
+
+    <button class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">Create</button>
+
+    <a data-cy="Cancel" href="/dashboard" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
+
+  </form>
+
+{% endblock %}

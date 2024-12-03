@@ -1,0 +1,75 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% if not hideBack %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full-from-desktop">
+      {{ govukBackLink({
+        text: "Back",
+        href: "/dashboard",
+        attributes: {
+          'data-cy': 'back-link'
+        }
+      }) }}
+    </div>
+  </div>
+{% endif %}
+
+{% include "includes/application-details/applicationReferenceAndActions.njk" %}
+
+<div class="application-banner preview-banner" data-cy="application-banner">
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-column-one-third">
+          <div><p><strong>Status</strong></p></div>
+        </div>
+        <div class="govuk-grid-column-two-thirds"><p>
+            {{ govukTag({ text: applicationStatus, attributes: { 'data-cy': 'status' },
+              classes: 'govuk-tag--blue'}) }}</p></div>
+      </div>
+      <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-column-one-third"><p><strong>Product</strong></p></div>
+        <div class="govuk-grid-column-two-thirds" data-cy="product"><p>General Export Facility</p></div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-column-one-third"><p><strong>Date created</strong></p></div>
+        <div class="govuk-grid-column-two-thirds" data-cy="date-created"><p>{{ dateCreated | localiseTimestamp('dd MMM yyyy', timezone)  | dashIfEmpty }}</p>
+        </div>
+      </div>
+      <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-column-one-third"><p><strong>Type</strong></p></div>
+        <div class="govuk-grid-column-two-thirds" data-cy="submission-type"><p>{{ applicationType | dashIfEmpty }}</p></div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-column-one-third"><p><strong>Created by</strong></p></div>
+        <div class="govuk-grid-column-two-thirds" data-cy="created-by"><p>{{ createdBy | dashIfEmpty }}</p></div>
+      </div>
+      <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-column-one-third"><p><strong>Exporter</strong></p></div>
+        <div class="govuk-grid-column-two-thirds" data-cy="exporter"><p>{{ companyName | dashIfEmpty }}</p></div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-column-one-third"><p><strong>Checked by</strong></p></div>
+        <div class="govuk-grid-column-two-thirds" data-cy="checked-by"><p>{{ checkedBy | dashIfEmpty }}</p></div>
+      </div>
+      <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-column-one-third"><p><strong>Buyer</strong></p></div>
+        <div class="govuk-grid-column-two-thirds"><p data-cy="buyer">{{ buyer | dashIfEmpty }}</p></div>
+      </div>
+    </div>
+  </div>
+
+  {% if submissionCount > 0 %}
+    {% include "includes/application-preview/deal-submission-details.njk" %}
+  {% endif %}
+</div>

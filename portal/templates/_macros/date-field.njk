@@ -1,0 +1,60 @@
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+
+{% macro render(id, legend, hint, dayValue, monthValue, yearValue, error) %}
+
+  {% set inputClass = "govuk-input--width-2" %}
+  {% set inputErrorClass = "govuk-input--width-2 govuk-input--error" %}
+
+  {% set dateHasAllValues = (dayValue and monthValue and yearValue) %}
+  {% set dateDoesNotHaveAllValues = (not dayValue) or (not monthValue) or (not yearValue) %}
+
+  {% set dayError = (error and not dayValue) %}
+  {% set monthError = (error and not monthValue) %}
+  {% set yearError = (error and not yearValue) %}
+
+  {{ govukDateInput({
+    id: id,
+    namePrefix: id,
+    fieldset: {
+      legend: {
+        text: legend
+      }
+    },
+    hint: {
+      html: hint
+    },
+    errorMessage: error and {
+      text: error.text,
+      attributes: {
+        'data-cy': id + "-error-message"
+      }
+    },
+    items: [
+      {
+        classes: (dayError and inputErrorClass) or inputClass,
+        name: "day",
+        value: dayValue,
+        attributes: {
+          'data-cy': id + "-day"
+        }
+      },
+      {
+        classes: (monthError and inputErrorClass) or inputClass,
+        name: "month",
+        value: monthValue,
+        attributes: {
+          'data-cy': id + "-month"
+        }
+      },
+      {
+        classes: (yearError and "govuk-input--width-4 govuk-input--error") or "govuk-input--width-4",
+        name: "year",
+        value: yearValue,
+        attributes: {
+          'data-cy': id + "-year"
+        }
+      }
+    ]
+  }) }}      
+
+{% endmacro %}

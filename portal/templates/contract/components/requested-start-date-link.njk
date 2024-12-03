@@ -1,0 +1,29 @@
+{% macro render(params) %}
+
+  {% set dealId = params.deal._id %}
+  {% set dealStatus = params.deal.status %}
+  {% set dealSubmissionType = params.deal.submissionType %}
+  {% set userIsMaker = params.user.roles.includes('maker') %}
+
+  {% set facilityId = params.facility._id %}
+  {% set facilityName = params.facilityName %}
+  
+   {% if userIsMaker %}
+      <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facilityId}}/confirm-requested-cover-start-date" class="govuk-link" data-cy="{{ facilityName }}-change-or-confirm-cover-start-date-{{ facilityId }}">
+         {% if params.hasConfirmedCoverStartDate %} 
+            Start date confirmed
+         {% else %}
+            Confirm start date
+         {% endif %}
+      </a>
+   {% else %}
+      <span data-cy="{{ facilityName }}-change-or-confirm-cover-start-date-{{ facilityId }}">
+         {% if params.hasConfirmedCoverStartDate %} 
+            Start date confirmed
+         {% else %}
+            Start date not confirmed
+         {% endif %}
+      </span>
+   {% endif %}
+
+{% endmacro %}

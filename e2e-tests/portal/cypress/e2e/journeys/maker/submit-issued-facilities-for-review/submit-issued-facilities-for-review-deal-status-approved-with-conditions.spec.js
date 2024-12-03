@@ -1,0 +1,157 @@
+const pages = require('../../../pages');
+const relative = require('../../../relativeURL');
+const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacilityStatuses');
+const MOCK_USERS = require('../../../../../../e2e-fixtures');
+const { fillAndSubmitIssueBondFacilityForm } = require('../fill-and-submit-issue-facility-form/fillAndSubmitIssueBondFacilityForm');
+const { fillAndSubmitIssueLoanFacilityForm } = require('../fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm');
+
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
+
+const dealWithStatus = {
+  ...dealWithNotStartedFacilityStatuses,
+  status: 'Accepted by UKEF (with conditions)',
+};
+
+context('A maker can issue and submit issued bond & loan facilities with a deal in `Accepted by UKEF (with conditions)` status', () => {
+  let deal;
+  let dealId;
+  const dealFacilities = {
+    bonds: [],
+    loans: [],
+  };
+
+  before(() => {
+    cy.insertOneDeal(dealWithStatus, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+      dealId = deal._id;
+
+      const { mockFacilities } = dealWithStatus;
+
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+        const loans = createdFacilities.filter((f) => f.type === 'Loan');
+
+        dealFacilities.bonds = bonds;
+        dealFacilities.loans = loans;
+      });
+    });
+  });
+
+  after(() => {
+    cy.deleteDeals(ADMIN);
+
+    dealFacilities.bonds.forEach((facility) => {
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
+    });
+
+    dealFacilities.loans.forEach((facility) => {
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
+    });
+  });
+
+  it('Completing an Issue bond & Issue loan Facility form allows maker to re-submit the deal for review. Deal/facilities should be updated after submitting for review', () => {
+    cy.login(BANK1_MAKER1);
+    pages.contract.visit(deal);
+    pages.contract.proceedToReview().should('not.exist');
+
+    const bondId = dealFacilities.bonds[0]._id;
+    const bondRow = pages.contract.bondTransactionsTable.row(bondId);
+
+    cy.assertText(bondRow.issueFacilityLink(), 'Issue facility');
+
+    bondRow.issueFacilityLink().click();
+    cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
+
+    fillAndSubmitIssueBondFacilityForm();
+    cy.url().should('eq', relative(`/contract/${dealId}`));
+
+    // expect issue facility link text to be changed
+    cy.assertText(bondRow.issueFacilityLink(), 'Facility issued');
+
+    // maker should still be able to navigate to Issue Facility form
+    bondRow
+      .issueFacilityLink()
+      .invoke('attr', 'href')
+      .then((href) => {
+        expect(href).to.equal(`/contract/${dealId}/bond/${bondId}/issue-facility`);
+      });
+
+    pages.contract.proceedToReview().should('not.be.disabled');
+
+    const loanId = dealFacilities.loans[0]._id;
+    const loanRow = pages.contract.loansTransactionsTable.row(loanId);
+
+    loanRow.issueFacilityLink().click();
+    cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanId}/issue-facility`));
+
+    fillAndSubmitIssueLoanFacilityForm();
+    cy.url().should('eq', relative(`/contract/${dealId}`));
+
+    // expect issue facility link text to be changed
+    cy.assertText(loanRow.issueFacilityLink(), 'Facility issued');
+
+    // maker should still be able to navigate to Issue Facility form
+    loanRow
+      .issueFacilityLink()
+      .invoke('attr', 'href')
+      .then((href) => {
+        expect(href).to.equal(`/contract/${dealId}/loan/${loanId}/issue-facility`);
+      });
+
+    pages.contract.proceedToReview().should('not.be.disabled');
+
+    // submit deal for review
+    cy.clickProceedToReviewButton();
+
+    cy.keyboardInput(pages.contractReadyForReview.comments(), 'Issued facilities');
+    pages.contractReadyForReview.readyForCheckersApproval().click();
+
+    // expect to land on the /dashboard page
+    cy.url().should('include', '/dashboard');
+
+    pages.contract.visit(deal);
+
+    // expect the deal status to be updated
+    cy.assertText(pages.contract.status(), "Ready for Checker's approval");
+    cy.assertText(pages.contract.previousStatus(), 'Accepted by UKEF (with conditions)');
+
+    // expect the bond status to be updated
+    cy.assertText(bondRow.bondStatus(), 'Ready for check');
+
+    // expect bond issue facility link text to be changed
+    cy.assertText(bondRow.issueFacilityLink(), 'Facility issued');
+
+    // maker should now not be able to navigate to Issue Facility form
+    bondRow
+      .issueFacilityLink()
+      .invoke('attr', 'href')
+      .then((href) => {
+        expect(href).to.equal(`/contract/${dealId}/submission-details#bond-${bondId}`);
+      });
+
+    bondRow.deleteLink().should('not.exist');
+
+    // expect the loan status to be updated
+    cy.assertText(loanRow.loanStatus(), 'Ready for check');
+
+    // expect loan issue facility link text to be changed
+    cy.assertText(loanRow.issueFacilityLink(), 'Facility issued');
+
+    // maker should not be able to navigate to Issue Facility form
+    loanRow
+      .issueFacilityLink()
+      .invoke('attr', 'href')
+      .then((href) => {
+        expect(href).to.equal(`/contract/${dealId}/submission-details#loan-${loanId}`);
+      });
+
+    loanRow.deleteLink().should('not.exist');
+
+    // since no other facilities have had their details/forms completed
+    // and the deal is now has `Ready for Checker\'s approval` status
+    // Proceed to Review button should not exist,
+    // Abandon button should be disabled.
+    pages.contract.proceedToReview().should('not.exist');
+    pages.contract.abandonButton().should('be.disabled');
+  });
+});

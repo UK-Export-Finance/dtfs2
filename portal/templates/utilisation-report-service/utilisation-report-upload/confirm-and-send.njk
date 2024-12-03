@@ -1,0 +1,32 @@
+{% extends "index.njk" %}
+{% set backLink = { href: "/utilisation-report-upload" } %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% block pageTitle %}File successfully validated{% endblock %}
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-l" data-cy="main-heading">
+                File successfully validated
+            </h1>
+            <p class="govuk-body" data-cy="paragraph">Check it's the correct file before sending.</p>
+            <dl class="govuk-summary-list">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">File name</dt>
+                    <dd class="govuk-summary-list__value" data-cy="file-name">{{ filename }}</dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link--no-visited-state" href='/utilisation-report-upload' data-cy="change-link">Change</a>
+                    </dd>
+                </div>
+            </dl>
+            <form method="POST" data-cy="form">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+                {{ govukButton({
+                    text: "Confirm and send",
+                    attributes: {
+                        'data-cy': 'confirm-and-send-button'
+                    }
+                }) }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

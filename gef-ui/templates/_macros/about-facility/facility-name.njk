@@ -1,0 +1,32 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% macro render(params) %}
+
+  {% set facilityName = params.facilityName %}
+  {% set errors = params.errors %}
+  {% set text = params.text %}
+
+  {{ govukInput({
+      label: {
+        text: text,
+        classes: "govuk-label--m",
+        attributes: {
+          'data-cy': 'facility-name-label'
+        }
+        },
+        id: "facilityName",
+        name: "facilityName",
+        value: facilityName,
+        attributes: {
+          'data-cy': 'facility-name'
+        },
+        errorMessage: errors and errors.fieldErrors.facilityName and {
+          text: errors.fieldErrors.facilityName.text,
+          attributes: {
+            'data-cy': 'facility-name-error'
+          }
+        }
+    }) }}
+
+
+{% endmacro %}

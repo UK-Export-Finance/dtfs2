@@ -1,0 +1,157 @@
+{% extends "index.njk" %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+
+{% block pageTitle %}
+    Do you want UKEF cover to start when the notice is submitted to UKE?
+{% endblock %}
+
+{% block content %}
+
+    {% if errors %}
+        {{
+            govukErrorSummary({
+            titleText: "There is a problem",
+            errorList: errors.errorSummary,
+            attributes: {
+                'data-cy': 'error-summary'
+                }
+            })
+        }}
+    {% endif %}
+
+    {% set hideBack = true %}
+    {% include "includes/application-preview/summary.njk" %}
+
+    <div class="govuk-!-margin-bottom-6 govuk-grid-row">
+        <div class="govuk-grid-column-full-from-desktop">
+            {{ govukBackLink({
+                text: "Back",
+                href: "/gef/application-details/" + dealId + "/cover-start-date",
+                attributes: {
+                'data-cy': 'back-link'
+                }
+            }) }}
+        </div>
+    </div>
+
+    {% if isUkefReviewPositive and isUkefReviewAvailable %}
+        <div class="govuk-grid-row govuk-body">
+            <div class="govuk-grid-column-two-thirds">
+                <form method="POST" autocomplete="off">
+                    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+                    {# Custom cover start date #}
+                    {% set coverStartDate %}
+                        {{ govukDateInput({
+                            id: "ukefCoverStartDateInput",
+                            name: "ukefCoverStartDateInput",
+                            fieldset: {
+                                legend: {
+                                    text: "Enter a cover start date",
+                                    classes: "govuk-fieldset__legend--m"
+                                }
+                            },
+                            hint: {
+                                html: "<p class='govuk-!-margin-0'>For example, 12 03 2021. This must be within 3 months after you submit the inclusion notice.</p>"
+                            },
+                            errorMessage: errors and errors.fieldErrors.ukefCoverStartDateInput and {
+                            text: errors.fieldErrors.ukefCoverStartDateInput.text,
+                                attributes: {
+                                "data-cy": "ukefCoverStartDateInput-error"
+                                }
+                            },
+                            items: [
+                                {
+                                    Label: "day",
+                                    classes: errors and errors.fieldErrors['coverStartDate-day'] and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+                                    name: "day",
+                                    value: facility.date,
+                                    attributes: {
+                                        "data-cy": "ukef-cover-start-date-day"
+                                    }
+                                },
+                                {
+                                    Label: "month",
+                                    classes: errors and errors.fieldErrors['coverStartDate-month'] and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+                                    name: "month",
+                                    value: facility.month,
+                                    attributes: {
+                                        "data-cy": "ukef-cover-start-date-month"
+                                    }
+                                },
+                                {
+                                    Label: "year",
+                                    classes: errors and errors.fieldErrors['coverStartDate-year'] and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
+                                    name: "year",
+                                    value: facility.year,
+                                    attributes: {
+                                        "data-cy": "ukef-cover-start-date-year"
+                                    }
+                                }
+                            ]
+                        }) }}
+                    {% endset %}
+
+                    {{ govukRadios({
+                        idPrefix: "ukefCoverStartDate",
+                        name: "ukefCoverStartDate",
+                        fieldset: {
+                            legend: {
+                                text: "Do you want UKEF cover to start when the notice is submitted to UKEF?",
+                                isPageHeading: true,
+                                classes: "govuk-fieldset__legend--xl"
+                            },
+                            attributes: {
+                              "data-cy": "ukefCoverStartDate-confirm"
+                            }
+                        },
+                        errorMessage: errors.fieldErrors.ukefCoverStartDate and {
+                        text: errors.fieldErrors.ukefCoverStartDate.text,
+                        attributes: {
+                            "data-cy": "ukefCoverStartDate-error"
+                        }
+                        },
+                        items: [
+                            {
+                                value: "true",
+                                text: "Yes",
+                                attributes: {
+                                    "data-cy": "ukef-cover-start-date-true"
+                                }
+                            },
+                            {
+                                value: "false",
+                                text: "No",
+                                conditional: {
+                                    html: coverStartDate
+                                },
+                                attributes: {
+                                    "data-cy": "ukef-cover-start-date-false"
+                                }
+                            }
+                        ]
+                    }) }}
+
+                    <div class="govuk-button-group">
+                        {{ govukButton({
+                            text: "Save",
+                            attributes: {
+                                "data-cy": "continue-button"
+                            }
+                            })
+                        }}
+                        <a class="govuk-link" href="/gef/application-details/{{ dealId }}/cover-start-date" data-cy="cancel-button">Cancel</a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    {% else %}
+        Pending UKEF decision.
+    {% endif %}
+
+{% endblock %}

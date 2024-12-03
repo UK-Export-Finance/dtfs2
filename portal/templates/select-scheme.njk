@@ -1,0 +1,79 @@
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle -%}
+  What scheme do you want to apply for?
+{%- endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  <span class="govuk-caption-xl">Create new application</span>
+
+  <div class="govuk-grid-row govuk-body">
+    <div class="govuk-grid-column-two-thirds">
+      <form method="POST" autocomplete="off">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          {{ govukRadios({
+            idPrefix: "scheme",
+            name: "scheme",
+            fieldset: {
+              legend: {
+                text: "What scheme do you want to apply for?",
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--xl"
+              }
+            },
+            attributes: {
+              "data-cy": "scheme"
+            },
+            errorMessage: errors.fieldErrors.scheme and {
+              text: errors.fieldErrors.scheme.text,
+              attributes: {
+                "data-cy": "scheme-error"
+              }
+            },
+            items: [
+              {
+                value: "bss",
+                text: "Bond Support and Export Working Capital schemes",
+                attributes: {
+                  "data-cy": "scheme-bss"
+                }
+              },
+              {
+                value: "gef",
+                text: "General Export Facility scheme",
+                attributes: {
+                  "data-cy": "scheme-gef"
+                }
+              }
+            ]
+          }) }}
+
+          <div class="govuk-button-group">
+            {{ govukButton({
+              text: "Continue",
+              attributes: {
+                'data-cy': 'continue-button'
+              }
+            }) }}
+
+            <a class="govuk-link" href="/dashboard" data-cy="cancel-button">Cancel</a>
+          </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

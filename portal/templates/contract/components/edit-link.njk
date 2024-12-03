@@ -1,0 +1,7 @@
+{% macro render(params) %}
+  <span data-cy="{{ params.dataCy }}-{{ params.href }}">
+    {% if params.editable %}
+      <a class="govuk-link govuk-!-font-size-16 govuk-!-font-weight-regular" href="{{ params.href }}" data-cy="{{ params.dataCy }}">edit</a>
+    {% endif %}
+  </span>
+{% endmacro %}

@@ -1,0 +1,114 @@
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% import './_macros/pricing-and-risk-other-input.njk' as pricingAndRiskOtherInput %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle -%}
+  Add a credit rating for {{ deal.submissionDetails.supplierName}}
+{%- endblock %}
+
+{% block content %}
+  <section class="govuk-!-margin-top-9">
+
+    {% if validationErrors.count %}
+      {{
+        govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: validationErrors.summary,
+          attributes: {
+            'data-cy': 'error-summary'
+          }
+        })
+      }}
+    {% endif %}
+
+    <div class="govuk-grid-row">
+
+      <div class="govuk-grid-column-three-quarters">
+
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-half">
+
+            <form method="POST" autocomplete="off">
+              <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+              {% set legendText = 'Add a credit rating for ' + deal.submissionDetails.supplierName %}
+
+              {% set exporterCreditRatingOtherChecked = tfm.exporterCreditRating.length > 0 and tfm.exporterCreditRating !== 'Good (BB-)' and tfm.exporterCreditRating !== 'Acceptable (B+)' %}
+              {% set exporterCreditRatingOtherTextInputValue = tfm.exporterCreditRating.length > 0 and tfm.exporterCreditRating !== 'Good (BB-)' and tfm.exporterCreditRating !== 'Acceptable (B+)' and tfm.exporterCreditRating %}
+
+              {% set exporterCreditRatingOtherComponentData = {
+                validationError: validationErrors.errorList.exporterCreditRatingOther,
+                value: exporterCreditRatingOtherTextInputValue
+              } %}
+
+              {{govukRadios({
+                  fieldset: {
+                    legend: {
+                      text: legendText,
+                      isPageHeading: true,
+                      classes: "govuk-fieldset__legend--l"
+                    }
+                  },
+                  name: "exporterCreditRating",
+                  items: [
+                    {
+                      value: "Good (BB-)",
+                      text: "Good (BB-)",
+                      checked: tfm.exporterCreditRating === 'Good (BB-)',
+                      attributes: {
+                        'data-cy': 'credit-rating-good'
+                      }
+                    },
+                    {
+                      value: "Acceptable (B+)",
+                      text: "Acceptable (B+)",
+                      checked: tfm.exporterCreditRating === 'Acceptable (B+)',
+                      attributes: {
+                        'data-cy': 'credit-rating-acceptable'
+                      }
+                    },
+                    {
+                      value: "Other",
+                      text: "Other",
+                      checked: exporterCreditRatingOtherChecked,
+                      attributes: {
+                        'data-cy': 'credit-rating-other'
+                      },
+                      conditional: {
+                        html: pricingAndRiskOtherInput.render(exporterCreditRatingOtherComponentData)
+                      }
+                    }
+                  ],
+                  errorMessage: validationErrors and {
+                    text: validationErrors.errorList.exporterCreditRating.text,
+                    attributes: {
+                      'data-cy': 'credit-rating-input-validation-error'
+                    }
+                  }
+                })
+              }}
+
+              {{ govukButton({
+                text: "Save",
+                attributes: {
+                  'data-cy': 'submit-button'
+                }
+              }) }}
+
+              <a class="govuk-body govuk-link govuk-!-margin-left-6 close-link" href="/case/{{ dealId }}/underwriting" data-cy="close-link">Cancel</a>
+
+            </form>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+{% endblock %}

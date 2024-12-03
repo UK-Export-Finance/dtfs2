@@ -1,0 +1,69 @@
+{%- from "moj/components/timeline/macro.njk" import mojTimeline -%}
+{% import './_macros/deal-submitted.njk' as dealSubmitted %}
+{% import './_macros/activity-comment-filter.njk' as activityCommentFilter %}
+{% import '../amendments/_macros/amendment-in-progress-bar.njk' as amendmentInProgressBar %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% import  "./_macros/cancellation-activity-html.njk" as cancellationActivityHtml %}
+
+{% extends "case/case.njk" %}
+
+{% block pageTitle -%}
+  Deal {{ deal.details.ukefDealId }} - Activity and comments
+{%- endblock %}
+
+{% set items = [] %}
+
+{% for activity in activities %}
+  {% if activity.type === 'CANCELLATION' %}
+    {{ items.push({
+      label: activity.label,
+      html: cancellationActivityHtml.render(activity),
+      datetime: activity.datetime,
+      byline: activity.byline
+    }) }}
+  {% else %}
+    {{ items.push(activity) }}
+  {% endif %}
+{% endfor %}
+
+{% block sub_content %}
+  {% set amendmentBarParams = {
+    hasAmendmentInProgress: hasAmendmentInProgress,
+    amendmentsInProgress: amendmentsInProgress
+  } %}
+  {{ amendmentInProgressBar.render(amendmentBarParams) }}
+
+  <div class="govuk-grid-row" data-cy="case-activity">
+
+    <div class="govuk-grid-column-full">
+
+      <h2 class="govuk-heading-xl govuk-!-margin-top-6" data-cy="activity-heading">Activity and comments</h2>
+
+      {% set filterCommentData = {
+        selectedActivityFilter: selectedActivityFilter,
+        csrfToken: csrfToken
+      } %}
+
+      {{ activityCommentFilter.render(filterCommentData) }}
+
+      {{ govukButton({
+        text: "Add a comment",
+        classes: "govuk-button--secondary",
+        href: "/case/" + dealId + "/activity" + "/post-comment",
+        attributes: {
+          'data-cy': 'add-comment-button'
+        }
+      }) }}
+
+      {{ mojTimeline({
+        items: items,
+        attributes: {
+          'data-cy': 'activities-timeline'
+        }
+      }) }}
+
+    </div>
+
+  </div>
+
+{% endblock %}

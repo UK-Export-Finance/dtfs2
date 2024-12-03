@@ -1,0 +1,51 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% block pageTitle %}
+  Abandon application
+{% endblock %}
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+  <div class="govuk-grid-row" data-cy="application-submit-page">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-6" data-cy="main-heading">
+        Confirm that you want to abandon
+      </h1>
+      <p class="govuk-body govuk-!-margin-bottom-6">
+        You’ll still be able to find this deal in the abandoned folder.
+      </p>
+    </div>
+    <div class="govuk-grid-column-one-half-from-desktop">
+      <form method="post" data-cy="form">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <div class="govuk-button-group govuk-!-margin-top-7">
+          {{ govukButton({
+            text: "Yes, abandon",
+            attributes: {
+              'data-cy': 'submit-button'
+            },
+            classes: "govuk-!-margin-right-6"
+          }) }}
+          {{ govukButton({
+            text: "No, keep",
+            attributes: {
+              'data-cy': 'cancel-button'
+            },
+            classes: "govuk-button--secondary govuk-!-margin-right-6",
+            href: "/gef/application-details/"+application._id
+          }) }}
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

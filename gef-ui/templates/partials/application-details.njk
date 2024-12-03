@@ -1,0 +1,62 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}
+  {% if application.submissionType %}
+    {{ application.submissionType }}
+  {% else %}
+    Application Details
+  {% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  {% include "includes/application-preview/summary.njk" %}
+  {% if application.submissionType %}
+  {% include "includes/application-preview/application-sub-navigation.njk" %}
+  {% endif %}
+  {% include "includes/application-preview/task-comments.njk" %}
+
+  <header data-cy="application-details-page">
+    <span class="govuk-caption-xl" data-cy="heading-caption">
+      General export facility
+    </span>
+    <h1 class="govuk-heading-xl" data-cy="main-heading">
+      {% if application.submissionType %}
+        {{ application.submissionType }}
+      {% else %}
+        Application Details
+      {% endif %}
+    </h1>
+  </header>
+
+  <hr class="govuk-section-break govuk-section-break--bold govuk-section-break--l govuk-section-break--visible">
+
+  {% include "includes/application-details/about-exporter.njk" %}
+  {% include "includes/application-details/automatic-cover.njk" %}
+  {% include "includes/application-details/facilities.njk" %}
+
+  {% if isAutomaticCover === false %}
+    {% include "includes/application-details/supporting-information.njk" %}
+  {% endif %}
+
+  {%if not previewMode %}
+    <form method="post" data-cy="form">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+      {% include "includes/submit/submit-to-checker.njk" %}
+    </form>
+  {% endif %}
+
+{% endblock %}

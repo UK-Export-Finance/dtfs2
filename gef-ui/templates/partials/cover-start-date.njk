@@ -1,0 +1,112 @@
+{% extends "index.njk" %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "moj/components/banner/macro.njk" import mojBanner %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}
+    Confirm cover start date for issued facilities
+{% endblock %}
+
+{% block content %}
+
+    {% if errors %}
+        {{
+            govukErrorSummary({
+            titleText: "There is a problem",
+            errorList: errors.errorSummary,
+            attributes: {
+                'data-cy': 'error-summary'
+                }
+            })
+        }}
+    {% endif %}
+
+    {% set hideBack = true %}
+    {% include "includes/application-preview/summary.njk" %}
+
+    <div class="govuk-!-margin-bottom-6 govuk-grid-row">
+        <div class="govuk-grid-column-full-from-desktop">
+            {{ govukBackLink({
+                text: "Back",
+                href: "/gef/application-details/" + dealId + "/review-decision",
+                attributes: {
+                'data-cy': 'back-link'
+                }
+            }) }}
+        </div>
+    </div>
+
+    {% if facility.length > 0 %}
+        {% if success %}
+            {{
+                mojBanner({
+                type: 'success',
+                text: success.message,
+                iconFallbackText: 'Success'
+                })
+            }}
+        {% endif %}
+    {% endif %}
+
+    {% if isUkefReviewPositive and isUkefReviewAvailable %}
+        <div class="govuk-grid-row govuk-body">
+            <div class="govuk-grid-column-two-thirds">
+                {% if facility.length > 0 %}
+                    {{ govukTable
+                        ({
+                            caption: "Confirm cover start date for issued facilities",
+                            captionClasses: "govuk-table__caption--xl",
+                            firstCellIsHeader: false,
+                            classes: "govuk-table__vertical-align",
+                            attributes: {
+                              'data-cy': 'confirm-cover-start-table'
+                            },
+                            head: [
+                                {
+                                text: "Facility name"
+                                },
+                                {
+                                text: "UKEF Facility ID"
+                                },
+                                {
+                                text: "Value"
+                                },
+                                {
+                                }
+                            ],
+                            rows: facility
+                        })
+                    }}
+                {% else %}
+                    {{
+                        mojBanner({
+                        type: 'success',
+                        text: 'All cover start dates confirmed for issued facilities',
+                        iconFallbackText: 'Success',
+                        attributes: {
+                          'data-cy': 'confirm-cover-start-success'
+                        }
+                        })
+                    }}
+
+                    <div class="govuk-button-group">
+                        {{
+                            govukButton({
+                            text: "Continue",
+                            href: link,
+                            attributes: {
+                              'data-cy': 'continue-button'
+                            }
+                            })
+                        }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% else %}
+        Pending UKEF decision.
+    {% endif %}
+
+{% endblock %}

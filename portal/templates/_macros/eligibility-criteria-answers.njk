@@ -1,0 +1,80 @@
+{% macro render(eligibility, hasMandatoryCriteria) %}
+{% if hasMandatoryCriteria == 0 %}
+  {% set agentCriteria = 1 %}
+{% else %}
+  {% set agentCriteria = 11 %}
+{% endif %}
+
+  <div data-cy="eligibility-criteria-answers">
+    <h4 class="govuk-heading-m" id="eligibility-criteria">Eligibility criteria</h4>
+
+    <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-4">
+      {% set previousGroup = "" %}
+      {% for criterion in eligibility.criteria %}
+
+        {% if criterion.group and criterion.group != previousGroup %}
+            {# Need to display criteria group for v2 migrated deals submitted before 2020-02-03 #}
+            <h5 class="govuk-heading-m govuk-!-margin-top-5 govuk-!-margin-bottom-2">{{ criterion.group}}</h5>
+          {% set previousGroup = criterion.group %}
+        {% endif %}
+
+        <div class="eligibility-criteria-row govuk-!-margin-bottom-2">
+          <dt class="govuk-!-margin-bottom-1 criterion-heading">
+            <span data-cy="criterion-{{ criterion.id }}-heading">Eligibility criterion {{ criterion.id }}</span>
+            {% if criterion.answer != undefined %}
+              <span class="govuk-body govuk-!-margin-left-4" data-cy="criterion-{{ criterion.id }}-answer">{{ criterion.answer | string | capitalize }}</span>
+            {% endif %}
+          </dt>
+
+          <dd class="govuk-hint govuk-!-margin-left-0" data-cy="criterion-{{ criterion.id }}-description">{{ criterion.description }}
+            {% if criterion.group and criterion.answer | string | capitalize === "False" %}
+              <div class="eligibility-criteria-waived">Eligibility criterion waived by UKEF</div>
+            {% endif %}
+          </dd>
+        </div>
+
+        {% if criterion.id === agentCriteria %}
+
+          {% set hasAgentAddressLine = eligibility.agentAddressLine1 | length or eligibility.agentAddressLine2 | length or eligibility.agentAddressLine3 | length %}
+          {% set renderAgentAddress = hasAgentAddressLine or eligibility.agentAddressTown | length or eligibilityagentAddressPostcode | length %}
+   
+          {% if eligibility.agentName or renderAgentAddress %}
+            <div class="eligibility-criteria-row govuk-!-margin-bottom-2" data-cy="eligibility-agent-details-criteria-{{ agentCriteria }}">
+
+              {% if eligibility.agentName %}
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key govuk-body-s">
+                    Agent's corporate name
+                  </dt>
+                  <dd class="govuk-summary-list__value govuk-body-s">
+                    {{ eligibility.agentName }}
+                  </dd>
+                </div>
+              {% endif %}
+
+              {% if renderAgentAddress %}
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key govuk-body-s">
+                    Agent's corporate address
+                  </dt>
+                  <dd class="govuk-summary-list__value govuk-body-s">
+                    <p>{{ eligibility.agentAddressLine1 }}</p>
+                    <p>{{ eligibility.agentAddressLine2 }}</p>
+                    <p>{{ eligibility.agentAddressLine3 }}</p>
+                    <p>{{ eligibility.agentAddressTown }}</p>
+                    <p>{{ eligibility.agentAddressPostcode }}</p>
+                    <p>{{ eligibility.agentAddressCountry.name }}</p>
+                  </dd>
+                </div>
+                {% endif %}
+            </div>
+
+          {% endif %}
+
+        {% endif %}
+
+      {% endfor %}
+    </dl>
+  </div>
+      
+{% endmacro %}

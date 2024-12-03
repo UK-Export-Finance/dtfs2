@@ -1,0 +1,142 @@
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% import '../../_macros/table-heading.njk' as tableHeading %}
+
+{% macro render(params) %}
+  {% set facilities = params.facilities %}
+  {% set user = params.user %}
+  {% set activeSortByOrder = params.activeSortByOrder %}
+  {% set activeSortByField = params.activeSortByField %}
+  {% set csrfToken = params.csrfToken %}
+  {% set sortButtonWasClicked = params.sortButtonWasClicked %}
+
+  <form method="POST" autocomplete="off" novalidate>
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <input type="hidden" name="formId" value="facilities-table-sorting">
+    <table class="govuk-table facilities-table sortable" data-cy="facilities-table">
+      <caption class="govuk-visually-hidden">
+        Facility results table, column headers with buttons are sortable.
+      </caption>
+      <thead class="govuk-table__head">
+        <tr>
+
+          {{tableHeading.render({
+            tableName: 'facilities',
+            fieldName: 'ukefFacilityId',
+            buttonText: 'Facility ID',
+            buttonValue: 'ukefFacilityId',
+            sortButtonWasClicked: sortButtonWasClicked,
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
+
+          {{tableHeading.render({
+            tableName: 'facilities',
+            fieldName: 'dealType',
+            buttonText: 'Product',
+            buttonValue: 'tfmFacilities.dealType',
+            sortButtonWasClicked: sortButtonWasClicked,
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
+
+          {{tableHeading.render({
+            tableName: 'facilities',
+            fieldName: 'type',
+            buttonText: 'Type',
+            buttonValue: 'tfmFacilities.type',
+            sortButtonWasClicked: sortButtonWasClicked,
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
+
+          {{tableHeading.render({
+            tableName: 'facilities',
+            fieldName: 'companyName',
+            buttonText: 'Exporter',
+            buttonValue: 'tfmFacilities.companyName',
+            sortButtonWasClicked: sortButtonWasClicked,
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
+
+          {{tableHeading.render({
+            tableName: 'facilities',
+            fieldName: 'value',
+            buttonText: 'Value (export currency)',
+            buttonValue: 'tfmFacilities.value',
+            sortButtonWasClicked: sortButtonWasClicked,
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
+
+          {{tableHeading.render({
+            tableName: 'facilities',
+            fieldName: 'coverEndDate',
+            buttonText: 'Cover end date',
+            buttonValue: 'tfmFacilities.coverEndDate',
+            sortButtonWasClicked: sortButtonWasClicked,
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
+
+          {{tableHeading.render({
+            tableName: 'facilities',
+            fieldName: 'facilityStage',
+            buttonText: 'Facility stage',
+            buttonValue: 'facilityStage',
+            sortButtonWasClicked: sortButtonWasClicked,
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
+        </tr>
+      </thead>
+
+      <tbody class="govuk-table__body">
+        {% for facility in facilities %}
+            {% set stage %}
+                {% if facility.hasBeenIssued %}
+                    Issued
+                {% else %}
+                    Unissued
+                {% endif %}
+            {% endset %}
+
+            {% set facilityStage %}
+                {% if facility.tfmFacilityStage %}
+                    {{ facility.tfmFacilityStage }}
+                {% elif facility.hasAmendmentInProgress === true %}
+                    {{stage}} (amendment in progress)
+                {% else %}
+                    {{stage}}
+                {% endif %}
+            {% endset %}
+
+          <tr class="govuk-table__row tfm-facility-table-row" data-cy="facility-{{ facility.facilityId }}">
+            <td class="govuk-table__cell govuk-body-s">
+              <a
+                class="govuk-link"
+                href="/case/{{ facility.dealId }}/facility/{{ facility.facilityId }}"
+                data-cy="facility-{{ facility.facilityId }}-ukefFacilityId-link">
+                <span class="govuk-visually-hidden">View facility</span> <span data-cy="facility-{{ facility.facilityId }}-ukefFacilityId-link-text">{{ facility.ukefFacilityId }}</span> <span class="govuk-visually-hidden">details</span>
+
+              </a>
+            </td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility.facilityId }}-dealType">{{ facility.dealType | dashIfEmpty }}</td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility.facilityId }}-type">{{ facility.type | dashIfEmpty}}</td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility.facilityId }}-companyName">{{ facility.companyName | dashIfEmpty}}</td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility.facilityId }}-value">{{ facility.currencyAndValue | dashIfEmpty}}</td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility.facilityId }}-coverEndDate">{{ facility.coverEndDate | dashIfEmpty }}</td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility.facilityId }}-facilityStage">
+              {{govukTag({
+                text: facilityStage | dashIfEmpty,
+                classes: "govuk-tag--blue"
+              })}}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+  </form>
+
+{% endmacro %}

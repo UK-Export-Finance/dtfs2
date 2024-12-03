@@ -1,0 +1,76 @@
+{%- from "moj/components/timeline/macro.njk" import mojTimeline -%}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}
+  Application Activities
+{% endblock %}
+
+{% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
+{{ govukPhaseBanner({
+  tag: {
+    text: "beta"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+
+{% block content %}
+
+  {% include "includes/application-preview/summary.njk" %}
+  {% include "includes/application-preview/application-sub-navigation.njk" %}
+
+  <h1 class="govuk-heading-xl" data-cy="main-activity-heading">Activity and comments</h1>
+
+
+
+    {% set portalActivitiesWithHTML = [] %}
+
+    {% for activity in portalActivities %}
+
+      {% set facilityHtml %}
+        <p class="colour-light-grey" data-cy="facility-changed-by-{{activity.ukefFacilityId}}">Changed by {{activity.maker.firstname}} {{activity.maker.surname}}</p>
+        <p class="colour-light-grey" data-cy="facility-checked-by-{{activity.ukefFacilityId}}">Checked by {{activity.checker.firstname}} {{activity.checker.surname}} </p>
+
+        <a href=/gef/application-details/{{dealId}}#{{activity.facilityId}} class="govuk-link" data-cy="facility-link-{{activity.ukefFacilityId}}">{{activity.facilityType}}  {{activity.ukefFacilityId}}</a>
+        <strong class="govuk-tag govuk-tag--purple govuk-!-margin-left-2 govuk-!-margin-right-2" data-cy="facility-unissued-tag-{{activity.ukefFacilityId}}"> Unissued </strong>
+        >
+        <strong class="govuk-tag govuk-tag--purple govuk-!-margin-left-2 govuk-!-margin-right-2" data-cy="facility-issued-tag-{{activity.ukefFacilityId}}"> Issued </strong>
+      {% endset %}
+
+      {% if activity.html === 'facility'%}
+
+        {% set activityToAdd =
+          {
+            label: activity.label,
+            text: activity.text,
+            datetime: activity.datetime,
+            byline:'',
+            html: facilityHtml
+          }
+        %}
+
+      {% else %}
+
+        {% set activityToAdd =
+          {
+            label: activity.label,
+            text: activity.text,
+            datetime: activity.datetime,
+            byline: activity.byline,
+            html: activity.html
+          }
+        %}
+
+      {% endif %}
+
+      {% set portalActivitiesWithHTML = (portalActivitiesWithHTML.push(activityToAdd), portalActivitiesWithHTML) %}
+    {% endfor %}
+
+   {{ mojTimeline({
+        items: portalActivitiesWithHTML,
+        attributes: {
+          'data-cy': 'portal-activities-timeline'
+        }
+      }) }}
+
+{% endblock %}

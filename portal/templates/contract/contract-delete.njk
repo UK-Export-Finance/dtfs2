@@ -1,0 +1,45 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+
+{% block pageTitle -%}
+  Abandon Deal
+{%- endblock %}
+
+{% block content %}
+
+  <h1 class="govuk-heading-l">Are you sure you want to abandon {{ deal.additionalRefName }}?</h1>
+
+  <form method="POST" autocomplete="off">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <div class="govuk-grid-row">
+
+      <div class="govuk-grid-column-three-quarters">
+
+      {{ govukTextarea({
+        name: "comments",
+        id: "comments",
+        "attributes" : {
+          "data-cy" : "comments"
+        },
+        label: {
+          text: "Comments"
+        },
+        hint: {
+          text: "Explain why you are abandoning this Supply Contract?"
+        },
+        errorMessage: validationErrors.errorList.comments
+      }) }}
+
+      </div>
+    </div>
+
+    <button data-cy="Abandon" class="govuk-button govuk-button--warning govuk-!-margin-right-1" data-module="govuk-button">
+      Abandon
+    </button>
+
+    <a data-cy="Cancel" href="/contract/{{deal._id}}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
+
+  </form>
+
+{% endblock %}

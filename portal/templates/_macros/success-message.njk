@@ -1,0 +1,15 @@
+{% macro message(message) %}
+
+  <div class="success-message govuk-!-padding-left-2 govuk-!-padding-right-2 govuk-!-margin-bottom-7" data-cy="success-message">
+    <h2 class="govuk-visually-hidden">Status message</h2>
+
+    <ul class="govuk-!-padding-left-4 govuk-!-padding-left-5 govuk-!-margin-0">
+      <li class="success-message__list-item govuk-body govuk-!-margin-bottom-0 govuk-!-padding-top-4 govuk-!-padding-bottom-4" data-cy="success-message-list-item">
+        {{ message.text }} <br />
+        <a class="success-message__link govuk-!-font-weight-bold" href="{{ message.href }}" data-cy="success-message-link">{{ message.hrefText }}</a>
+      </li>
+    </ul>
+
+  </div>
+
+{% endmacro %}

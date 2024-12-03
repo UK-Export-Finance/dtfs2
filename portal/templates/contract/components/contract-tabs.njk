@@ -1,0 +1,42 @@
+{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+
+{% macro render(params) %}
+  {% set id = params.deal._id %}
+  {% set selected = params.selected %}
+
+  {% set items = [
+    {
+      id: 'view',
+      href: '/contract/' + id,
+      text: 'View',
+      attributes: {
+        'data-cy': 'view-tab'
+      },
+      active: 'view' === selected
+    },
+    {
+      id: 'comments',
+      href: '/contract/' + id + '/comments',
+      text: 'Comments',
+      attributes: {
+        'data-cy': 'comments-tab'
+      },
+      active: 'comments' === selected
+    },
+    {
+      id: 'checkDetails',
+      href: '/contract/' + id + '/submission-details',
+      text: 'Check deal details',
+      attributes: {
+        'data-cy': 'check-deal-details-tab'
+      },
+      active: 'submission-details' === selected
+    }
+  ] %}
+
+  {{ mojSubNavigation({
+    label: 'Sub navigation',
+    items: items
+  }) }}
+
+{% endmacro %}

@@ -1,0 +1,19 @@
+{% extends "index.njk" %}
+
+{% block pageTitle -%}
+  Problem with the service
+{%- endblock %}
+
+{% block content %}
+
+  <div class="govuk-grid-row" data-cy="problem-with-service">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl" data-cy="problem-with-service-heading">Sorry, there is a problem with the service</h1>
+      <p class="govuk-body">
+        {{error.message}} 
+      </p>
+      
+    </div>
+  </div>
+
+{% endblock %}

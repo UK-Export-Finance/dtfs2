@@ -1,0 +1,215 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
+{% import './_macros/bond-stage-issued-form-fields.njk' as bondStageIssuedFormFields %}
+{% import './_macros/bond-stage-unissued-form-fields.njk' as bondStageUnissuedFormFields %}
+
+{% block pageTitle -%}
+  Bond Details
+{%- endblock %}
+
+{% block content %}
+
+  {% set showUnissuedFormFieldsByDefault = bond.facilityStage === "Unissued" %}
+  {% set showIssuedFormFieldsByDefault = bond.facilityStage === "Issued" %}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
+
+  {{ taskListHeader.render({
+    title: 'Bond',
+    dealId: dealId,
+    entityName: 'bond',
+    entityId: bond._id,
+    items: taskListItems
+  })}}
+
+  <form method="POST" autocomplete="off" novalidate>
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <div class="govuk-grid-row" id="bond-form">
+
+      <div class="govuk-grid-column-full">
+
+        <div class="govuk-form-group">
+
+          <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
+            <div class="govuk-form-group">
+              <label class="govuk-label" for="bondIssuer">
+                Bond issuer (optional)
+              </label>
+              <span id="bond-issuer-hint" class="govuk-hint">
+                Only enter if Bond issuer differs from the bank
+              </span>
+
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                  <input class="govuk-input govuk-js-character-count" id="bondIssuer" name="bondIssuer" type="text" maxlength="150" aria-describedby="bond-issuer-hint" value="{{ bond.bondIssuer }}" data-cy="bond-issuer">
+                </div>
+              </div>
+            </div>
+
+            <span id="bond-issuer-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+              You can enter up to 150 characters
+            </span>
+          </div>
+        </div>
+
+        {{ govukSelect({
+          id: "bondType",
+          name: "bondType",
+          label: {
+            text: "Bond type"
+          },
+          attributes: {
+            'data-cy': 'bond-type'
+          },
+          items: [
+            {
+              text: "Select value"
+            },
+            {
+              text: "Advance payment guarantee",
+              value: "Advance payment guarantee",
+              selected: bond.bondType === "Advance payment guarantee"
+            },
+            {
+              text: "Bid bond",
+              value: "Bid bond",
+              selected: bond.bondType === "Bid bond"
+            },
+
+            {
+              text: "Maintenance bond",
+              value: "Maintenance bond",
+              selected: bond.bondType === "Maintenance bond"
+            },
+
+            {
+              text: "Performance bond",
+              value: "Performance bond",
+              selected: bond.bondType === "Performance bond"
+            },
+
+            {
+              text: "Progress payment bond",
+              value: "Progress payment bond",
+              selected: bond.bondType === "Progress payment bond"
+            },
+
+            {
+              text: "Retention bond",
+              value: "Retention bond",
+              selected: bond.bondType === "Retention bond"
+            },
+
+            {
+              text: "Standby letter of credit",
+              value: "Standby letter of credit",
+              selected: bond.bondType === "Standby letter of credit"
+            },
+
+            {
+              text: "Warranty letter",
+              value: "Warranty letter",
+              selected: bond.bondType === "Warranty letter"
+            }
+          ],
+          errorMessage: validationErrors.errorList.bondType and {
+            text: validationErrors.errorList.bondType.text,
+            attributes: {
+              'data-cy': 'bond-type-error-message'
+            }
+          }
+
+        }) }}
+
+        {{ govukRadios({
+          idPrefix: "facilityStage",
+          name: "facilityStage",
+          fieldset: {
+            legend: {
+              text: "Bond stage"
+            }
+          },
+          items: [
+            {
+              value: "Unissued",
+              text: "Unissued",
+              checked: bond.facilityStage === "Unissued",
+              attributes: {
+                'data-cy': "facility-stage-unissued"
+              },
+              conditional: {
+                html: bondStageUnissuedFormFields.render(bond, validationErrors, user)
+              }
+            },
+            {
+              value: "Issued",
+              text: "Issued",
+              checked: bond.facilityStage === "Issued",
+              attributes: {
+                'data-cy': "facility-stage-issued"
+              },
+              conditional: {
+                html: bondStageIssuedFormFields.render(bond, validationErrors, user)
+              }
+            }
+          ],
+          errorMessage: validationErrors.errorList.facilityStage and {
+            text: validationErrors.errorList.facilityStage.text,
+            attributes: {
+              'data-cy': 'facility-stage-error-message'
+            }
+          }
+        }) }}
+
+        <div class="govuk-form-group">
+
+          <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
+            <div class="govuk-form-group">
+              <label class="govuk-label" for="bondBeneficiary">
+                Bond beneficiary (optional)
+              </label>
+              <span id="bond-beneficiary-hint" class="govuk-hint">
+                Only enter if different from (but related to) the overseas buyer in line with the MGA
+              </span>
+
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                  <input class="govuk-input govuk-js-character-count" id="bondBeneficiary" name="bondBeneficiary" type="text" maxlength="150" aria-describedby="bond-beneficiary-info bond-beneficiary-hint" value="{{ bond.bondBeneficiary }}" data-cy="bond-beneficiary">
+                </div>
+              </div>
+
+            </div>
+
+            <span id="bond-beneficiary-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+              You can enter up to 150 characters
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">Next page</button>
+
+    <input
+      type="submit"
+      formaction="/contract/{{ dealId }}/bond/{{ bond._id }}/details/save-go-back"
+      class="govuk-button govuk-button--secondary"
+      data-module="govuk-button"
+      value="Save and go back to deal"
+      data-cy="save-go-back-button"
+    />
+
+  </form>
+
+{% endblock %}

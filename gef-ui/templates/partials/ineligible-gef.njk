@@ -1,0 +1,25 @@
+{% extends "index.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle -%}
+  Not eligible
+{%- endblock %}
+
+{% block content %}
+  <h1 class="govuk-heading-xl" data-cy="main-heading">
+    This is not eligible for a GEF guarantee
+  </h1>
+
+  <div data-cy="content">
+    <p class="govuk-body govuk-!-margin-bottom-6">If you need more information, you can contact us using the details at the bottom of this page.</p>
+  </div>
+
+
+  {{ govukButton({
+    text: "Back to applications and notices",
+    href: "/dashboard",
+    attributes: {
+      'data-cy': 'back-link'
+    }
+  }) }}
+{% endblock %}

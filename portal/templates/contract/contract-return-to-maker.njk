@@ -1,0 +1,45 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+
+{% block pageTitle -%}
+  Return to Maker?
+{%- endblock %}
+
+{% block content %}
+
+  <h1 class="govuk-heading-l">Are you sure you want to return to Maker?</h1>
+
+  <form method="POST" autocomplete="off">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <div class="govuk-grid-row">
+
+      <div class="govuk-grid-column-three-quarters">
+
+        {{ govukTextarea({
+          name: "comments",
+          id: "comments",
+          "attributes" : {
+            "data-cy" : "comments"
+          },
+          label: {
+            text: "Comments"
+          },
+          hint: {
+            text: "This information will be visible to the Maker."
+          },
+          errorMessage: validationErrors.errorList.comments
+        }) }}
+
+      </div>
+    </div>
+
+    <button data-cy="ReturnToMaker" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">
+      Return to Maker
+    </button>
+
+    <a data-cy="Cancel" href="/contract/{{ _id }}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
+
+  </form>
+
+{% endblock %}

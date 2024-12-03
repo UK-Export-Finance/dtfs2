@@ -1,0 +1,28 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% macro render(value, validationError) %}
+
+  {{ govukInput({
+    label: {
+      text: "Covered Percentage"
+    },
+    hint: {
+      text: "Percentage of UKEF cover requested by the bank. This can be any value up to 80%."
+    },
+    classes: "govuk-input--width-5",
+    id: "coveredPercentage",
+    name: "coveredPercentage",
+    value: value,
+    attributes: {
+      'data-cy': 'covered-percentage'
+    },
+    errorMessage: validationError and {
+      text: validationError.text,
+      attributes: {
+        'data-cy': 'covered-percentage-error-message'
+      }
+    }
+  }) }}
+
+    
+{% endmacro %}

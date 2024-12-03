@@ -1,0 +1,133 @@
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% import '../../_macros/table-heading.njk' as tableHeading %}
+
+{% macro render(params) %}
+  {% set deals = params.deals %}
+  {% set user = params.user %}
+  {% set activeSortByOrder = params.activeSortByOrder %}
+  {% set activeSortByField = params.activeSortByField %}
+  {% set csrfToken = params.csrfToken %}
+  {% set sortButtonWasClicked = params.sortButtonWasClicked %}
+
+  <form method="POST" autocomplete="off" novalidate>
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <input type="hidden" name="formId" value="deals-table-sorting">
+    <table class="govuk-table deals-table sortable" data-cy="deals-table">
+      <caption class="govuk-visually-hidden">
+        Deal results table, column headers with buttons are sortable.
+      </caption>
+      <thead class="govuk-table__head">
+        <tr>
+
+          {{tableHeading.render({
+            tableName: 'deals',
+            fieldName: 'ukefDealId',
+            buttonText: 'Deal ID',
+            buttonValue: 'dealSnapshot.ukefDealId',
+            sortButtonWasClicked: sortButtonWasClicked,
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
+
+          {{tableHeading.render({
+            tableName: 'deals',
+            fieldName: 'product',
+            buttonText: 'Product',
+            buttonValue: 'tfm.product',
+            sortButtonWasClicked: sortButtonWasClicked,
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
+
+          <th class="govuk-table__header" data-cy="deals-table-heading-type">Type</th>
+
+          {{tableHeading.render({
+            tableName: 'deals',
+            fieldName: 'exporter',
+            buttonText: 'Exporter',
+            buttonValue: 'dealSnapshot.exporter.companyName',
+            sortButtonWasClicked: sortButtonWasClicked,
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
+
+          {{tableHeading.render({
+            tableName: 'deals',
+            fieldName: 'buyer',
+            buttonText: 'Buyer',
+            buttonValue: 'dealSnapshot.buyer.companyName',
+            sortButtonWasClicked: sortButtonWasClicked,
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
+
+          {{tableHeading.render({
+            tableName: 'deals',
+            fieldName: 'bank',
+            buttonText: 'Bank',
+            buttonValue: 'dealSnapshot.bank.name',
+            sortButtonWasClicked: sortButtonWasClicked,
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
+
+          {{tableHeading.render({
+            tableName: 'deals',
+            fieldName: 'stage',
+            buttonText: 'Stage',
+            buttonValue: 'tfm.stage',
+            sortButtonWasClicked: sortButtonWasClicked,
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
+
+          {{tableHeading.render({
+            tableName: 'deals',
+            fieldName: 'dateReceived',
+            buttonText: 'Date received',
+            buttonValue: 'tfm.dateReceivedTimestamp',
+            sortButtonWasClicked: sortButtonWasClicked,
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
+        </tr>
+      </thead>
+
+      <tbody class="govuk-table__body">
+        {% for deal in deals %}
+          <tr class="govuk-table__row tfm-deal-table-row" data-cy="deal-{{ deal._id }}">
+            <td class="govuk-table__cell govuk-body-s">
+              <a
+                class="govuk-link"
+                href="/case/{{ deal._id }}/deal"
+                data-cy="deal-{{ deal._id }}-ukef-deal-id-link">
+                <span class="govuk-visually-hidden">View deal</span> <span data-cy="deal-{{ deal._id }}-ukef-deal-id-link-text">{{ deal.dealSnapshot.details.ukefDealId }}</span> <span class="govuk-visually-hidden">details</span>
+
+              </a>
+            </td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-product">{{ deal.tfm.product | dashIfEmpty }}</td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-type">{{ deal.dealSnapshot.submissionType | dashIfEmpty}}</td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-exporterName">{{ deal.dealSnapshot.exporter.companyName | dashIfEmpty}}</td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-buyerName">{{ deal.dealSnapshot.submissionDetails.buyerName | dashIfEmpty}}</td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-bank">{{ deal.dealSnapshot.bank.name | dashIfEmpty }}</td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-stage">
+              {{govukTag({
+                text: deal.tfm.stage | dashIfEmpty,
+                classes: "govuk-tag--blue"
+              })}}
+            </td>
+            <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-date-received">
+              {% if deal.tfm.dateReceived %}
+                {{ deal.tfm.dateReceived | formatDateString("dd-MM-yyyy", "d MMM yyyy") }}
+              {% else %}
+                -
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+  </form>
+
+{% endmacro %}

@@ -1,0 +1,107 @@
+{% extends "index.njk" %}
+{% set backLink = { href: "/utilisation-report-upload" } %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% block pageTitle %}Error - Utilisation Report Upload{% endblock %}
+{% block content %}
+    {% if errorSummary %}
+        {{ govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: errorSummary,
+          attributes: {
+            'data-cy': 'error-summary'
+          }
+        }) }}
+    {% endif %}
+    <h1 class="govuk-heading-l" data-cy="check-the-report-title">
+        Check the report
+    </h1>
+    {% if validationErrors %}
+        <div class="govuk-form-group govuk-form-group--error govuk-!-margin-top-7">
+            <h2 class="govuk-heading-m" id="validation-errors-table" tabindex="-1">Errors found in {{ filename }}</h2>
+            <p class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span>
+                You must correct these errors before you can upload the report
+            </p>
+            <table class="govuk-table" data-cy="validation-errors-table">
+                <caption class="govuk-table__caption govuk-table__caption--m"></caption>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header">Exporter</th>
+                        <th scope="col" class="govuk-table__header">Row</th>
+                        <th scope="col" class="govuk-table__header">Column</th>
+                        <th scope="col" class="govuk-table__header">Entry</th>
+                        <th scope="col" class="govuk-table__header">Error</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    {% for item in validationErrors %}
+                        <tr class="govuk-table__row" data-cy="validation-errors-table-row">
+                            <td class="govuk-table__cell" data-cy="exporter-{{ loop.index }}">
+                                {% if item.exporter !== null and item.exporter !== undefined %}
+                                    {{ item.exporter }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="govuk-table__cell" data-cy="row-{{ loop.index }}">
+                                {% if item.row !== null and item.row !== undefined %}
+                                    {{ item.row }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="govuk-table__cell" data-cy="column-{{ loop.index }}">
+                                {% if item.column !== null and item.column !== undefined %}
+                                    {{ item.column }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="govuk-table__cell" data-cy="value-{{ loop.index }}">{{ item.value }}</td>
+                            <td class="govuk-table__cell" data-cy="message-{{ loop.index }}">
+                                <span class="govuk-error-message govuk-!-margin-bottom-0">{{ item.errorMessage }}</span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+    <form method="POST" data-cy="form" enctype="multipart/form-data">
+        <div class="govuk-form-group {% if fileUploadError %}govuk-form-group--error{% endif %}">
+            <label class="govuk-label govuk-label--m" for="utilisation-report-file-upload">
+                Upload the report again
+                <div id="utilisation-report-file-upload-hint" class="govuk-hint">
+                    The file must be an XLSX or CSV
+                </div>
+            </label>
+            <div id="utilisation-report-file-upload-hint" class="govuk-hint">
+                You can upload the corrected report now or come back later and upload it
+            </div>
+            {% if fileUploadError %}
+                <span class="govuk-error-message" data-cy="utilisation-report-file-upload-error-message">
+                    <span class="govuk-visually-hidden">Error:</span>
+                    {{ fileUploadError.text }}
+                </span>
+            {% endif %}
+            <input
+                class="govuk-file-upload govuk-!-width-one-half"
+                id="utilisation-report-file-upload"
+                name="utilisation-report-file-upload"
+                data-cy="utilisation-report-file-upload"
+                data-tag="govuk-file-upload"
+                type="file"
+                accept=".xls, .xlsx, .csv"/>
+        </div>
+        <div class="govuk-button-group">
+            <input
+                formaction="?check_the_report=true&_csrf={{ csrfToken }}"
+                type="submit"
+                class="govuk-button govuk-!-margin-right-1"
+                data-module="govuk-button"
+                value="Continue"
+                data-cy="continue-button"/>
+        </div>
+    </form>
+{% endblock %}

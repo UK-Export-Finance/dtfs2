@@ -1,0 +1,16 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% macro render(status) %}
+
+  {% set greyColourStatus = (status === "Not started" or status === "Incomplete" or status === "Ready for check" or status === "Acknowledged" or status === "Maker's input required") %}
+
+  {% if status %}
+    {{govukTag({
+      text: status,
+      classes: greyColourStatus and "govuk-tag--grey",
+      attributes: {
+        'data-cy': 'status-tag'
+      }
+    })}}
+  {% endif %}
+{% endmacro %}

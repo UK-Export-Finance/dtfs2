@@ -1,0 +1,108 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% import "./_macros/fee-record-details-table.njk" as feeRecordDetailsTable %}
+{% import "./_macros/payment-date-input.njk" as paymentDateInput %}
+{% extends "index.njk" %}
+{% set backLink = {"href": backLinkHref} %}
+{% set hasErrors = errors.errorSummary | length %}
+
+{% block pageTitle %}
+  {{ 'Edit payment' | formatPageTitle(hasErrors) }}
+{% endblock %}
+
+{% block content %}
+  {% if hasErrors %}
+    {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errors.errorSummary,
+        attributes: {
+        'data-cy': 'error-summary'
+        }
+    }) }}
+  {% endif %}
+  <div class="govuk-grid-row govuk-!-padding-top-7">
+    <div class="govuk-grid-column-one-half">
+      <span class="govuk-caption-l" data-cy="edit-payment-heading-caption">{{ bank.name }},
+      {{ formattedReportPeriod }}</span>
+      <h1 class="govuk-heading-l" data-cy="edit-payment-heading">Edit payment</h1>
+    </div>
+  </div>
+  <form method="post">
+    {{ feeRecordDetailsTable.render({
+      captionText: "Added reported fees details",
+      feeRecords: feeRecords,
+      totalReportedPayments: totalReportedPayments,
+      enableSelectingFeeRecords: true,
+      reportId: reportId,
+      paymentId: paymentId,
+      csrfToken: csrfToken,
+      errorMessage: errors.removeSelectedFeesErrorMessage,
+      redirectTab: redirectTab
+    }) }}
+    <h2 class="govuk-heading-m govuk-!-margin-top-6">
+      Payment details
+    </h2>
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+    {{ govukInput({
+        label: {
+          text: "Amount received",
+          classes: "govuk-label--s"
+        },
+        classes: "govuk-input--width-20",
+        hint: {
+          text: "The currency cannot be changed"
+        },
+        prefix: {
+          text: paymentCurrency,
+          attributes: {
+            "data-cy": "payment-currency-prefix"
+          }
+        },
+        id: "paymentAmount",
+        name: "paymentAmount",
+        value: formValues.paymentAmount,
+        errorMessage: errors.paymentAmountErrorMessage and {
+          text: errors.paymentAmountErrorMessage
+        }
+    }) }}
+    {{ paymentDateInput.render({
+      paymentDate: formValues.paymentDate,
+      paymentDateError: errors.paymentDateError
+    }) }}
+    {{ govukInput({
+        label: {
+          text: "Payment reference (optional)",
+          classes: "govuk-label--s"
+        },
+        classes: "govuk-input--width-20 govuk-input--extra-letter-spacing",
+        errorMessage: errors.paymentReferenceErrorMessage and {
+          text: errors.paymentReferenceErrorMessage
+        },
+        id: "paymentReference",
+        name: "paymentReference",
+        value: formValues.paymentReference
+    }) }}
+    <div class="govuk-button-group">
+      <input
+        class="govuk-button govuk-!-margin-right-3"
+        formaction="/utilisation-reports/{{ reportId }}/edit-payment/{{ paymentId }}?redirectTab={{ redirectTab }}"
+        value="Save changes"
+        data-module="govuk-button"
+        type="submit"
+        data-cy="save-changes-button"/>
+      {{ govukButton({
+        text: "Delete payment",
+        classes: "govuk-button--warning",
+        href: ["/utilisation-reports/", reportId, "/edit-payment/", paymentId, "/confirm-delete?redirectTab=", redirectTab] | join,
+        attributes: {
+          "data-cy": "delete-payment-button"
+        }
+      }) }}
+      <a href="{{ backLinkHref }}" data-cy="cancel-edit-payment-link">Cancel</a>
+    </div>
+  </form>
+{% endblock %}
+{% block sub_content %}{% endblock %}

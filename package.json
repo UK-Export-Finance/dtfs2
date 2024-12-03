@@ -1,0 +1,94 @@
+{
+  "name": "dtfs",
+  "version": "2.5.0",
+  "private": true,
+  "description": "DTFS",
+  "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
+  "bugs": {
+    "url": "https://github.com/UK-Export-Finance/dtfs2/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UK-Export-Finance/dtfs2.git"
+  },
+  "license": "MIT",
+  "author": "UK Export Finance",
+  "workspaces": [
+    "azure-functions/*",
+    "dtfs-central-api",
+    "e2e-tests",
+    "external-api",
+    "gef-ui",
+    "libs/*",
+    "portal",
+    "portal-api",
+    "trade-finance-manager-api",
+    "trade-finance-manager-ui",
+    "utils"
+  ],
+  "scripts": {
+    "audit:fix:all": "npm audit --fix --if-present",
+    "env:copy": "(cd utils && npm run env:copy)",
+    "housekeeping": "npm update --save && npm i && npm run type-check:all && npm run prettier:fix:all && npm run lint:fix:all && npm run validate:yml && npm run audit:fix:all && npm run spellcheck",
+    "lint:all": "npm run lint --workspaces --if-present",
+    "lint:fix:all": "npm run lint --workspaces --if-present -- --fix",
+    "load": "(cd utils && npm run load)",
+    "load:init": "(cd libs/common && npm run db:migrate && cd ../../utils && npm run load:sql)",
+    "load:sql": "(cd utils && npm run load:sql)",
+    "prepare": "husky",
+    "prettier:all": "npm run prettier --workspaces --if-present",
+    "prettier:fix:all": "npm run prettier:fix --workspaces --if-present",
+    "spellcheck": "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color **/*",
+    "start": "docker compose up",
+    "start:build": "npm run start -- --build",
+    "start:build:detach": "npm run start:build -- --detach",
+    "start:detach": "npm run start -- --detach",
+    "stop": "docker compose down",
+    "type-check:all": "npm run type-check --workspaces --if-present",
+    "validate:all": "npm run lint:all && npm run prettier:all && npm run type-check:all && npm run validate:yml",
+    "validate:yml": "npx yaml-lint **/*.yml --ignore=**/node_modules --ignore=dtfs-mongo-volume-dtfs-submissions"
+  },
+  "lint-staged": {
+    "**/package.json": "sort-package-json",
+    "**/*.{js,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "**/*.md": [
+      "prettier --write"
+    ],
+    "**/*.yml": [
+      "npm run validate:yml"
+    ],
+    "**/*": [
+      "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color"
+    ]
+  },
+  "dependencies": {
+    "axios": "^1.7.8",
+    "express": "^4.21.1",
+    "release-please": "^16.15.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.8.1",
+    "@commitlint/config-conventional": "^17.8.1",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "cspell": "^8.16.0",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.10",
+    "prettier": "3.0.3",
+    "sort-package-json": "^2.12.0",
+    "yaml-lint": "^1.7.0"
+  },
+  "engines": {
+    "node": ">=22.8.0",
+    "npm": ">=10.8.2"
+  },
+  "engineStrict": true
+}

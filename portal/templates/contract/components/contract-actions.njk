@@ -1,0 +1,40 @@
+{% import './contract-actions/abandon-deal-button.njk' as abandonButton %}
+{% import './contract-actions/proceed-to-review-button.njk' as proceedToReviewButton %}
+{% import './contract-actions/proceed-to-submit-button.njk' as proceedToSubmitButton %}
+{% import './contract-actions/return-to-maker-button.njk' as returnToMakerButton %}
+{% import './contract-actions/review-eligibility-checklist-link.njk' as reviewLink %}
+
+{% macro render(params) %}
+
+  {% if params.isEveryDealFormComplete %}
+
+    {% if params.deal.status %}
+      {% if params.user.roles.includes('maker') %}
+          {% if ["Draft", "Further Maker's input required"].includes(params.deal.status) %}
+            <p data-cy="canProceed" class="govuk-body">You may now proceed to submit an {{params.deal.submissionType}}.</p>
+          {% endif %}
+      {% endif %}
+
+      {% if params.user.roles.includes('checker') %}
+          {% if ["Ready for Checker's approval"].includes(params.deal.status) %}
+            <p data-cy="canProceed" class="govuk-body">You may now proceed to submit an {{params.deal.submissionType}}.</p>
+          {% endif %}
+      {% endif %}
+    {% endif %}
+
+  {% else %}
+
+    {% if params.user.roles.includes('maker') %}
+        {% if ["Draft", "Further Maker's input required"].includes(params.deal.status) %}
+          <p data-cy="canProceed" class="govuk-body">Please complete all form sections in order to submit your Supply Contract.</p>
+        {% endif %}
+    {% endif %}
+
+  {% endif %}
+
+  {{ reviewLink.render(params)}}
+  {{ proceedToReviewButton.render(params)}}
+  {{ proceedToSubmitButton.render(params)}}
+  {{ abandonButton.render(params)}}
+  {{ returnToMakerButton.render(params)}}
+{% endmacro %}

@@ -1,0 +1,98 @@
+{% extends "case/case.njk" %}
+{% import './_macros/facility_details.njk' as details %}
+{% import './_macros/premium_schedule.njk' as schedule %}
+{% import './_macros/add-amendment.njk' as addAmendment %}
+{% import './_macros/amendment-details.njk' as amendmentDetails %}
+{% import '../amendments/_macros/amendment-in-progress-bar.njk' as amendmentInProgressBar %}
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+
+{% block pageTitle -%}
+  Deal {{ deal.details.ukefDealId }} Facility {{ facility.ukefFacilityId }}
+{%- endblock %}
+
+{% block sub_content %}
+  {% set facilityDetailsHtml %}
+    {% set detailsComponentData = {
+      deal: deal,
+      facility: facility,
+      user: user,
+      facilityTfm: facilityTfm,
+      showFacilityEndDate: showFacilityEndDate
+    } %}
+    {{ details.render(detailsComponentData) }}
+  {% endset %}
+
+  {% set premiumScheduleHtml %}
+    {% set scheduleComponentData = {
+      facility: facility,
+      facilityTfm: facilityTfm,
+      user: user
+    } %}
+    {{ schedule.render(scheduleComponentData) }}
+  {% endset %}
+
+  {% set amendmentsHtml %}
+    {% set addAmendmentComponentData = {
+      csrfToken: csrfToken,
+      facilityId: facilityId,
+      showAmendmentButton: showAmendmentButton,
+      amendmentId: amendmentId,
+      amendmentVersion: amendmentVersion,
+      showContinueAmendmentButton: showContinueAmendmentButton
+    } %}
+    {% set amendmentDetailsComponentData = {
+      allAmendments: allAmendments
+    } %}
+    {{ addAmendment.render(addAmendmentComponentData) }}
+    {{ amendmentDetails.render(amendmentDetailsComponentData) }}
+  {% endset %}
+
+   {% set amendmentBarParams = {
+    hasAmendmentInProgress: hasAmendmentInProgress,
+    amendmentsInProgress: amendmentsInProgress
+  } %}
+  {{ amendmentInProgressBar.render(amendmentBarParams) }}
+
+  <hgroup>
+    <h1 class="ukef-heading-grey">Facility {{ facility.ukefFacilityId }}</h1>
+    <p class="govuk-heading-l" data-cy="facility-type">{{ facility.type }}</p>
+  </hgroup>
+
+  <div class="ukef-tabs--no-border">
+  {{ govukTabs({
+    items: [
+      {
+        label: "Details",
+        id: "details",
+         panel: {
+          html: facilityDetailsHtml
+        },
+        attributes: {
+          'data-cy': 'facility-details-tab-details'
+        }
+      },
+      {
+        label: "Premium schedule",
+        id: "premium-schedule",
+        panel: {
+          html: premiumScheduleHtml
+        },
+        attributes: {
+          'data-cy': 'facility-details-tab-premium-schedule'
+        }
+      },
+      {
+        label: "Amendments",
+        id: "amendments",
+        panel: {
+          html: amendmentsHtml
+        },
+        attributes: {
+          'data-cy': 'facility-details-tab-amendments'
+        }
+      }
+    ]
+  }) }}
+  </div>
+
+{% endblock %}

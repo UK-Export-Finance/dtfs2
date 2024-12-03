@@ -1,0 +1,63 @@
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+
+{% macro render(params) %}
+  {% set coverStartDateDay = params.coverStartDateDay %}
+  {% set coverStartDateMonth = params.coverStartDateMonth %}
+  {% set coverStartDateYear = params.coverStartDateYear %}
+  {% set errors = params.errors %}
+  {% set hint = params.hint %}
+  {% set hintHTML = "<p class='govuk-!-margin-0'>" + hint + "</p>"%}
+
+  {{ govukDateInput({
+      id: "coverStartDate",
+      namePrefix: "cover-start-date",
+      fieldset: {
+        legend: {
+          text: "Enter a cover start date",
+          classes: "govuk-fieldset__legend--s"
+        }
+      },
+      hint: {
+        html: hintHTML
+      },
+      attributes: {
+        'data-cy': "cover-start-date"
+      },
+      errorMessage: errors and errors.fieldErrors.coverStartDate and {
+        text: errors.fieldErrors.coverStartDate.text,
+        attributes: {
+          'data-cy': 'cover-start-date-error'
+        }
+      },
+      items: [
+        {
+          label: "Day",
+          classes: errors and errors.fieldErrors['coverStartDate-day'] and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+          name: "day",
+          value: coverStartDateDay,
+          attributes: {
+            'data-cy': "cover-start-date-day"
+          }
+        },
+        {
+          label: "Month",
+          classes: errors and errors.fieldErrors['coverStartDate-month'] and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+          name: "month",
+          value: coverStartDateMonth,
+          attributes: {
+            'data-cy': "cover-start-date-month"
+          }
+        },
+        {
+          label: "Year",
+          classes: errors and errors.fieldErrors['coverStartDate-year'] and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
+          name: "year",
+          value: coverStartDateYear,
+          attributes: {
+            'data-cy': "cover-start-date-year"
+          }
+        }
+      ]
+  }) }}
+
+{% endmacro %}

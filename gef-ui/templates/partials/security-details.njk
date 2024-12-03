@@ -1,0 +1,97 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle -%}
+  Enter security details
+{%- endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <div class="govuk-grid-column-three-quarters">
+      <h1 class="govuk-heading-xl" data-cy="main-heading">
+        Enter security details
+      </h1>
+
+      <form method="post" data-cy="form">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        {{ govukCharacterCount({
+          name: "exporterSecurity",
+          id: "exporterSecurity",
+          value: exporterSecurity,
+          maxlength: inputMaxLength,
+          rows: "8",
+          classes: "govuk-!-width-three-quarters",
+          label: {
+            text: "General security for this exporter",
+            classes: "govuk-label--l"
+          },
+          hint: {
+            text: "Give details about the general security your bank holds to secure all  its facilities for this exporter. This is also known as ‘credit support’ in the Master Guarantee Agreement (MGA)."
+          },
+          errorMessage: errors and {
+            text: errors.fieldErrors.exporterSecurity.text,
+            attributes: {
+              'data-cy': 'exporter-security-error'
+            }
+          },
+          attributes: {
+            'data-cy': 'exporter-security'
+          }
+        }) }}
+
+        {{ govukCharacterCount({
+          name: "facilitySecurity",
+          id: "facilitySecurity",
+          value: facilitySecurity,
+          maxlength: inputMaxLength,
+          rows: "8",
+          classes: "govuk-!-width-three-quarters",
+          label: {
+            text: "Specific security for facilities in this application",
+            classes: "govuk-label--l"
+          },
+          hint: {
+            text: "Give details of the specific security  your bank holds, or will ask for, to secure only the facilities listed in this application. This is also known as ‘facility credit support’ in the MGA."
+          },
+          errorMessage: errors and {
+            text: errors.fieldErrors.facilitySecurity.text,
+            attributes: {
+              'data-cy': 'facility-security-error'
+            }
+          },
+          attributes: {
+            'data-cy': 'facility-security'
+          }
+        }) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            attributes: {
+              'data-cy': 'submit-button'
+            }
+          }) }}
+
+          <a
+            class="govuk-link"
+            href="/gef/application-details/{{dealId}}"
+            data-cy="cancel-button">
+            Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

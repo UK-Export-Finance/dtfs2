@@ -1,0 +1,22 @@
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+{% macro render(opts) %}
+  {% set deal = opts.deal %}
+  {% set validationErrors = opts.validationErrors %}
+  {% set mappedIndustrySectors = opts.mappedIndustrySectors %}
+  {% set industrySectors = opts.industrySectors | dump %}
+
+  {{ govukSelect({
+    id: "industry-sector",
+    name: "industry-sector",
+    label: { text: "Industry sector" },
+    classes: "govuk-!-width-one-half",
+    attributes: {
+      "data-cy": "industry-sector",
+      "data-industry-sectors": industrySectors
+    },
+    items: mappedIndustrySectors,
+    errorMessage: validationErrors.errorList["industry-sector"]
+  }) }}
+
+{% endmacro %}

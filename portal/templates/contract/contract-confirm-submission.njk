@@ -1,0 +1,60 @@
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle -%}
+  Confirm submission
+{%- endblock %}
+
+{% block content %}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
+
+  <form method="POST" autocomplete="off">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <div class="govuk-grid-row">
+
+      <div class="govuk-grid-column-three-quarters">
+
+        {{ govukCheckboxes({
+          idPrefix: "confirmSubmit",
+          name: "confirmSubmit",
+          attributes: {
+            "data-cy": "confirmSubmit"
+          },
+          fieldset: {
+            legend: {
+              text: "Confirm your submission",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            }
+          },
+          items: [
+            {
+              value: "carcasses",
+              text: "I understand that by clicking 'Accept and submit' below, I confirm that I have reviewed all of the information provided and would like to proceed with the submission."
+            }
+          ],
+          errorMessage: validationErrors.errorList.confirmSubmit
+        }) }}
+
+      </div>
+    </div>
+
+    <button data-cy="AcceptAndSubmit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">
+      Accept and submit
+    </button>
+
+    <a data-cy="Cancel" href="/contract/{{ _id }}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
+
+  </form>
+
+{% endblock %}

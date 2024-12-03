@@ -1,0 +1,15 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% macro render(params) %}
+  {% set stage = params.stage %}
+
+  <dt class="ukef-heading-xs ukef-deal-stage ukef-deal-stage__title">Deal stage</dt>
+
+  <dd class="ukef-deal-stage" data-cy="ukef-deal-stage" >{{ govukTag({
+    text: stage | dashIfEmpty,
+    classes: 'govuk-tag--blue ukef-body-s govuk-!-font-weight-bold',
+    attributes: {
+      'data-cy': 'ukef-deal-stage-value'
+    }
+    }) }}</dd>
+
+{% endmacro %}

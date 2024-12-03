@@ -1,0 +1,26 @@
+{% import '../amendments/_macros/amendment-in-progress-bar.njk' as amendmentInProgressBar %}
+
+{% extends "case/case.njk" %}
+
+{% block pageTitle -%}
+  Deal {{ deal.details.ukefDealId }} - Documents
+{%- endblock %}
+
+{% block sub_content %}
+   {% set amendmentBarParams = {
+    hasAmendmentInProgress: hasAmendmentInProgress,
+    amendmentsInProgress: amendmentsInProgress
+  } %}
+  {{ amendmentInProgressBar.render(amendmentBarParams) }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+      <h2 class="govuk-heading-xl govuk-!-margin-top-6" data-cy="documents-heading">Documents</h2>
+      {% if tfm.estore and tfm.estore.siteName %}
+        <a class="govuk-link" target="_blank" rel="noreferrer noopener nofollow" href="{{eStoreUrl}}/sites/{{ tfm.estore.siteName }}/CaseLibrary" data-cy="estore-link">View in eStore</a>
+      {% else %}
+        <p>The Documents are being uploaded</p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

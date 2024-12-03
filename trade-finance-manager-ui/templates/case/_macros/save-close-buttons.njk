@@ -1,0 +1,18 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro render(params) %}
+  
+  <div class="govuk-!-margin-top-4">
+    {{ govukButton({
+      text: "Save and continue",
+      attributes: {
+        'data-cy': 'save-button'
+      }
+    }) }}
+
+    <a class="govuk-link govuk-!-margin-left-6 govuk-link--no-visited-state close-link" href="{{ params.returnTo }}" data-cy="close-link">
+      Close without saving
+    </a>
+  </div>
+
+{% endmacro %}

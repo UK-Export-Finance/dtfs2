@@ -1,0 +1,54 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% import "./report-reconciliation-status.njk" as reconciliationStatus %}
+
+{% macro render(params) %}
+  {% set user = params.user %}
+  {% set reports = params.reports %}
+  {% set isTfmPaymentReconciliationFeatureFlagEnabled = params.isTfmPaymentReconciliationFeatureFlagEnabled %}
+  {% set reportRows = [] %}
+
+  {% for report in reports %}
+    {% set reportPeriodHtml %}
+      {% if isTfmPaymentReconciliationFeatureFlagEnabled %}
+        <a class="govuk-link govuk-link--no-visited-state" href="/utilisation-reports/{{report.reportId}}"> {{report.formattedReportPeriod}}</a>
+      {% else %}
+        <p class="govuk-body govuk-!-margin-0"> {{report.formattedReportPeriod}} </p>
+      {% endif %}
+    {% endset %}
+
+    {% set reportRows = (reportRows.push([
+      {html: reportPeriodHtml }, 
+      {text: reconciliationStatus.render({
+        status: report.status,
+        displayStatus: report.displayStatus
+      }) }, 
+      {text: report.formattedDateUploaded},
+      {text: report.totalFeesReported},
+      {text: report.reportedFeesLeftToReconcile}
+    ]), reportRows) %}
+  {% endfor %}
+
+  {{ govukTable({
+    head: [
+      {
+        text: "Reporting Period"
+      },
+      {
+        text: "Status"
+      },
+      {
+        text: "Date report received"
+      },
+      {
+        text: "Total fees reported"
+      },
+      {
+        text: "Reported fees left to reconcile"
+      }
+    ],
+    rows: reportRows,
+    attributes: {
+      'data-cy': "utilisation-reports-by-bank-and-year-table"
+    }
+  }) }}
+{% endmacro %}

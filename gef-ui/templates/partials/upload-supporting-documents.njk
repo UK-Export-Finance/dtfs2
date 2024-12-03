@@ -1,0 +1,113 @@
+{% extends "index.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
+{% from "moj/components/multi-file-upload/macro.njk" import mojMultiFileUpload %}
+{% from "../_macros/fileSuccess.njk" import fileSuccess %}
+{% from "../_macros/fileError.njk" import fileError %}
+
+{% block pageTitle %}
+  {{ title }}
+{% endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  <header data-cy="application-details-page">
+    <div class="govuk-grid-row govuk-!-margin-bottom-3">
+      <div class="govuk-grid-column-three-quarters">
+        <span class="govuk-caption-xl" data-cy="heading-caption">
+        </span>
+        <h1 class="govuk-heading-xl" data-cy="main-heading">
+          {{ title }}
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <div class="govuk-grid-column-three-quarters">
+      <form method="post" data-cy="form" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        {% if formHeaderFragment %}{% include 'includes/supporting-documents/'+ formHeaderFragment +'.njk'  %}{% endif %}
+
+        {% if files.length %}
+          <p class="govuk-label--s">Uploaded</p>
+        {% endif %}
+
+        {% set uploadedFiles = [] %}
+        {% for file in files %}
+          {% set upload = {
+            deleteButton: {
+              text: 'Delete'
+            },
+            fileName: file.filename,
+            originalFileName: file.filename,
+            message: {
+              html: fileError(file) if file.error else fileSuccess(file)
+            }
+          } %}
+
+          {% set uploadedFiles = (uploadedFiles.push(upload), uploadedFiles) %}
+        {% endfor %}
+
+        {% set uploadHtml %}
+          {{ govukFileUpload({
+            id: "documents",
+            name: "documents",
+            classes: 'moj-multi-file-upload__input',
+            label: {
+              text: "Add a document",
+              classes: 'govuk-label--s'
+            },
+            attributes: {
+              multiple: '',
+              accept: '.gif, .jpg, .jpeg, .png, .bmp, .tif, .txt, .pdf, .doc, .docx, .ppt, .pptx, .xls, .xlsx',
+              'data-cy': 'file-upload-component'
+            },
+            errorMessage: errorMessage
+          }) }}
+
+          {{govukButton({
+            text: 'Upload file',
+            classes: 'govuk-button--secondary moj-multi-file-upload__button'
+          })}}
+        {% endset %}
+
+        {{ mojMultiFileUpload({
+          uploadedFiles: {
+            items: uploadedFiles
+          },
+          uploadHtml: uploadHtml
+        }) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: 'Continue',
+            classes: 'govuk-button--primary moj-multi-file-upload__button',
+            name: 'submit',
+            value: 'true',
+            attributes: {
+              formAction: '?_csrf=' + csrfToken,
+              'data-cy': 'continue-button'
+            }
+          }) }}
+          <a class="govuk-link" href="/gef/application-details/{{ dealId }}" data-cy="cancel-link">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block scripts %}
+  <script id="multi-file-upload" src="/assets/js/multiFileUpload.js" integrity="sha512-20FWOk4snpPkXsXgn1/AumRC2VDLABGWYHoPDTRPpFfuf/hwmsctkx5eenEG4f8+Xp7Otwd2BcZXXCBks3E0rg==" crossorigin="anonymous" data-csrf="{{ uploadCsrf }}" ></script>
+{% endblock %}

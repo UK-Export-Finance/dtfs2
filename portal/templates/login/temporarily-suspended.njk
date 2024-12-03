@@ -1,0 +1,20 @@
+{% extends "index.njk" %}
+
+{% block pageTitle -%}
+  This account has been temporarily suspended
+{%- endblock %}
+
+{% block content %}
+  <h1 class="govuk-heading-xl" data-cy="account-suspended">
+    This account has been temporarily suspended
+  </h1>
+
+  <div class="govuk-grid-row govuk-body">
+    <div class="govuk-grid-column-three-quarters">
+      <p class="govuk-!-margin-bottom-6">This can happen if there are too many failed attempts to login or sign in link requests.</p>
+    </div>
+  </div>
+
+  <h2 class="govuk-heading-m">Contact us to reactivate your account</h2>
+  {% include "../_partials/contact-us.njk" %}
+{% endblock %}

@@ -1,0 +1,12 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters">
+    <h3 class="govuk-heading-m has-text-danger">Overdue</h3>
+    {% if pastDeadlineUnissuedFacilitiesCount == 1%}
+      <p class="govuk-body govuk-!-margin-bottom-0" data-cy="past-deadline-unissued-facilities">You have 1 facility that has past the deadline for issuing </p>
+    {% elif pastDeadlineUnissuedFacilitiesCount > 1 %}
+      <p class="govuk-body govuk-!-margin-bottom-0" data-cy="past-deadline-unissued-facilities">You have {{ pastDeadlineUnissuedFacilitiesCount }} facilities that have past the deadline for issuing </p>
+    {% else %}
+      <p class="govuk-body govuk-!-margin-bottom-0" data-cy="past-deadline-unissued-facilities">You have 0 facilities that have past the deadline for issuing </p>
+    {% endif %}
+  </div>
+</div>

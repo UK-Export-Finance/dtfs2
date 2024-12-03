@@ -1,0 +1,35 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
+{% import './_macros/bond-submission-details.njk' as bondSubmissionDetails %}
+
+{% block pageTitle -%}
+  Check your answers - Bond - {{ bond._id }}
+{%- endblock %}
+
+{% block content %}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
+
+  {{ taskListHeader.render({
+    title: 'Bond',
+    dealId: dealId,
+    entityName: 'bond',
+    entityId: bond._id,
+    items: taskListItems
+  })}}
+
+  {% include "_partials/print-button.njk" %}
+
+  {{ bondSubmissionDetails.render({ bond: bond, user: user })}}
+
+  <p class="govuk-body"><a class="govuk-link" href="/contract/{{ dealId }}" data-cy="save-go-back-button">Save and go back to deal</a></p>
+
+{% endblock %}

@@ -1,0 +1,92 @@
+name: Supporting infrastructure build
+
+on:
+  push:
+    branches: [infrastructure]
+    paths:
+      - '.github/workflows/infrastructure.yml'
+
+jobs:
+  dev-rg:
+    name: 1. Dev resource group
+    runs-on: [self-hosted, linux, deployment, infra]
+    steps:
+      - uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_DIGITAL_DEV }}
+
+      - name: Defaults
+        uses: azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            az configure --defaults location=uksouth
+            az configure --defaults group=${{ secrets.DEV_RESOURCE_GROUP }}
+
+      - name: App Service plan
+        uses: azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            az appservice plan create --name dev --is-linux --sku p2v2
+
+      - name: Container registry
+        uses: azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            # Admin needs to be enabled for App Service continuous deployment
+            az acr create --name tfsdev --sku Standard --admin-enabled true
+
+  staging-rg:
+    name: 2. Staging resource group
+    runs-on: [self-hosted, linux, deployment, infra]
+    steps:
+      - uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_DIGITAL_TEST }}
+
+      - name: Defaults
+        uses: azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            az configure --defaults location=uksouth
+            az configure --defaults group=${{ secrets.STAGING_RESOURCE_GROUP }}
+
+      - name: App Service plan
+        uses: azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            az appservice plan create --name staging --is-linux --sku p2v2
+
+      - name: Container registry
+        uses: azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            # Admin needs to be enabled for App Service continuous deployment
+            az acr create --name tfsstaging --sku Standard --admin-enabled true
+
+  prod-rg:
+    name: 3. Production resource group
+    runs-on: [self-hosted, linux, deployment, infra]
+    steps:
+      - uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_DIGITAL_PROD }}
+
+      - name: Defaults
+        uses: azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            az configure --defaults location=uksouth
+            az configure --defaults group=${{ secrets.PROD_RESOURCE_GROUP }}
+
+      - name: App Service plan
+        uses: azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            az appservice plan create --name prod --is-linux --sku p3v2
+
+      - name: Container registry
+        uses: azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            # Admin needs to be enabled for App Service continuous deployment
+            az acr create --name tfsproduction --sku Standard --admin-enabled true

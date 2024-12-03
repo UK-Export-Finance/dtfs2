@@ -1,0 +1,19 @@
+const CONSTANTS = require('../../../../constants');
+
+const mapGefFacilityFeeType = (feeType) => {
+  if (feeType === CONSTANTS.FACILITIES.FACILITY_FEE_TYPE_GEF.IN_ARREARS_QUARTERLY) {
+    return CONSTANTS.FACILITIES.FACILITY_FEE_TYPE.IN_ARREARS;
+  }
+
+  if (feeType === CONSTANTS.FACILITIES.FACILITY_FEE_TYPE_GEF.IN_ADVANCE_QUARTERLY) {
+    return CONSTANTS.FACILITIES.FACILITY_FEE_TYPE.IN_ADVANCE;
+  }
+
+  if (feeType === CONSTANTS.FACILITIES.FACILITY_FEE_TYPE_GEF.AT_MATURITY) {
+    return CONSTANTS.FACILITIES.FACILITY_FEE_TYPE.AT_MATURITY;
+  }
+
+  return feeType;
+};
+
+module.exports = mapGefFacilityFeeType;

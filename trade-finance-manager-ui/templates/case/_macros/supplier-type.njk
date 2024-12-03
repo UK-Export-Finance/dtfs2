@@ -1,0 +1,9 @@
+{% macro render(supplierType) %}
+  <span data-cy="supplier-type">
+  {% if supplierType == 'UK Supplier'%}
+    Tier 1 supplier
+  {% else %}
+    Exporter
+  {% endif %}
+  </span>
+{% endmacro %}

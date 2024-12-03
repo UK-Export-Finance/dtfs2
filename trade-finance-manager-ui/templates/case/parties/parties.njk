@@ -1,0 +1,85 @@
+{% import './_macros/parties-key-value-array-grid-row.njk' as keyValueArrayGridRow %}
+{% import './_macros/parties-exporter-area.njk' as exporterArea %}
+{% import './_macros/parties-buyer-area.njk' as buyerArea %}
+{% import './_macros/parties-agent-area.njk' as agentArea %}
+{% import './_macros/parties-indemnifier-area.njk' as indemnifierArea %}
+{% import './_macros/parties-bond-issuer-area.njk' as bondIssuerArea %}
+{% import './_macros/parties-bond-beneficiary-area.njk' as bondBeneficiaryArea %}
+{% import '../amendments/_macros/amendment-in-progress-bar.njk' as amendmentInProgressBar %}
+
+{% extends "case/case.njk" %}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+
+{% block pageTitle -%}
+  Deal {{ deal.details.ukefDealId }} - Parties
+{%- endblock %}
+
+{% block sub_content %}
+  {% set amendmentBarParams = {
+    hasAmendmentInProgress: hasAmendmentInProgress,
+    amendmentsInProgress: amendmentsInProgress
+  } %}
+  {{ amendmentInProgressBar.render(amendmentBarParams) }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+      <h2 class="govuk-heading-xl govuk-!-margin-top-6" data-cy="parties-heading">Parties</h2>
+    </div>
+  </div>
+
+  <section class="deal-parties-section separator-line">
+    {{ exporterArea.render({
+      deal: deal,
+      tfm: tfm,
+      userCanEdit: userCanEdit,
+      renderEditLink: renderEditLink
+    }) }}
+  </section>
+
+  <section class="deal-parties-section separator-line">
+    {{ buyerArea.render({
+      deal: deal,
+      tfm: tfm,
+      userCanEdit: userCanEdit,
+      renderEditLink: renderEditLink
+    }) }}
+  </section>
+
+  <section class="deal-parties-section separator-line">
+    {{ agentArea.render({
+      deal: deal,
+      tfm: tfm,
+      userCanEdit: userCanEdit,
+      renderEditLink: renderEditLink,
+      renderEditForm: renderEditForm
+    }) }}
+  </section>
+
+  <section class="deal-parties-section separator-line">
+    {{ indemnifierArea.render({
+      deal: deal,
+      tfm: tfm,
+      userCanEdit: userCanEdit,
+      renderEditLink: renderEditLink
+    }) }}
+  </section>
+
+  <section class="deal-parties-section separator-line">
+    {{ bondIssuerArea.render({
+      deal: deal,
+      tfm: tfm,
+      userCanEdit: userCanEdit,
+      renderEditLink: renderEditLink
+    }) }}
+  </section>
+
+  <section class="deal-parties-section separator-line">
+    {{ bondBeneficiaryArea.render({
+      deal: deal,
+      tfm: tfm,
+      userCanEdit: userCanEdit,
+      renderEditLink: renderEditLink
+    }) }}
+  </section>
+
+{% endblock %}

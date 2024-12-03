@@ -1,0 +1,33 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% import './name-field.njk' as nameField %}
+
+{% macro render(loan, validationErrors) %}
+
+  {{nameField.render(
+    id = 'facilityStageConditional-name',
+    label = 'Bank reference number (optional)',
+    value = loan.name,
+    error = validationErrors.errorList.name
+  )}}
+
+  {{ govukInput({
+    inputmode: 'numeric',
+    label: {
+      text: "Length of time that the UKEF's guarantee will be in place for (in months, rounded up)"
+    },
+    classes: "govuk-input--width-5",
+    id: "ukefGuaranteeInMonths",
+    name: "ukefGuaranteeInMonths",
+    value: loan.ukefGuaranteeInMonths,
+    attributes: {
+      'data-cy': 'ukef-guarantee-in-months'
+    },
+    errorMessage: validationErrors.errorList.ukefGuaranteeInMonths.text and {
+      text: validationErrors.errorList.ukefGuaranteeInMonths.text,
+      attributes: {
+        'data-cy': 'ukef-guarantee-in-months-error-message'
+      }
+    }
+  }) }}
+
+{% endmacro %}

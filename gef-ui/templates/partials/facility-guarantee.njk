@@ -1,0 +1,234 @@
+{% extends "index.njk" %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% block pageTitle -%}
+  Add a {{ "cash" if facilityType === "Cash" else "contingent" }} guarantee fee
+{%- endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  {% if status !== 'change' %}
+    {{ govukBackLink({
+      text: "Back to previous page",
+      href: "/gef/application-details/" + dealId + "/facilities/" + facilityId + "/facility-value",
+      attributes: {
+        'data-cy': 'back-link'
+      }
+    }) }}
+  {% endif %}
+
+  <header data-cy="application-details-page">
+    <span class="govuk-caption-xl" data-cy="heading-caption">
+      Add a facility
+    </span>
+    <h1 class="govuk-heading-xl" data-cy="main-heading">
+      UKEF guarantee fee
+    </h1>
+  </header>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <div class="govuk-grid-column-three-quarters">
+      <form method="post" data-cy="form">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {% set inAdvanceFrequencyHtml %}
+          {{ govukRadios({
+            idPrefix: "inAdvanceFrequency",
+            name: "inAdvanceFrequency",
+            fieldset: {
+              legend: {
+                text: "How often?",
+                isPageHeading: false,
+                classes: "govuk-fieldset__legend--s"
+              }
+            },
+            errorMessage: errors and errors.fieldErrors.inAdvanceFrequency and {
+              text: errors.fieldErrors.inAdvanceFrequency.text,
+              attributes: {
+                'data-cy': 'fee-frequency-error-message'
+              }
+            },
+            items: [
+              {
+                value: "Monthly",
+                text: "Monthly",
+                checked: inAdvanceFrequency === 'Monthly',
+                attributes: { 'data-cy': 'frequency-monthly' }
+              },
+              {
+                value: "Quarterly",
+                text: "Quarterly",
+                checked: inAdvanceFrequency === 'Quarterly',
+                attributes: {'data-cy': 'frequency-quarterly'}
+              },
+              {
+                value: "Semi-annually",
+                text: "Semi-annually",
+                checked: inAdvanceFrequency === 'Semi-annually',
+                attributes: {'data-cy': 'frequency-semi-annually'}
+              },
+              {
+                value: "Annually",
+                text: "Annually",
+                checked: inAdvanceFrequency === 'Annually',
+                attributes: {'data-cy': 'frequency-annually'}
+              }
+            ]
+          }) }}
+
+        {% endset -%}
+
+        {% set inArrearsFrequencyHtml %}
+          {{ govukRadios({
+            idPrefix: "inArrearsFrequency",
+            name: "inArrearsFrequency",
+            fieldset: {
+              legend: {
+                text: "How often?",
+                isPageHeading: false,
+                classes: "govuk-fieldset__legend--s"
+              }
+            },
+            errorMessage: errors and errors.fieldErrors.inArrearsFrequency and {
+              text: errors.fieldErrors.inArrearsFrequency.text,
+              attributes: {
+                'data-cy': 'fee-frequency-error-message'
+              }
+            },
+            items: [
+              {
+                value: "Monthly",
+                text: "Monthly",
+                checked: inArrearsFrequency === 'Monthly',
+                attributes: { 'data-cy': 'frequency-monthly' }
+              },
+              {
+                value: "Quarterly",
+                text: "Quarterly",
+                checked: inArrearsFrequency === 'Quarterly',
+                attributes: {'data-cy': 'frequency-quarterly'}
+              },
+              {
+                value: "Semi-annually",
+                text: "Semi-annually",
+                checked: inArrearsFrequency === 'Semi-annually',
+                attributes: {'data-cy': 'frequency-semi-annually'}
+              },
+              {
+                value: "Annually",
+                text: "Annually",
+                checked: inArrearsFrequency === 'Annually',
+                attributes: {'data-cy': 'frequency-annually'}
+              }
+            ]
+          }) }}
+
+        {% endset -%}
+
+
+        {{ govukRadios({
+          idPrefix: "feeType",
+          name: "feeType",
+          fieldset: {
+            legend: {
+              text: "How will your bank pay the fee to UKEF?",
+              isPageHeading: false,
+              classes: "govuk-fieldset__legend--s"
+            }
+          },
+          errorMessage: errors and errors.fieldErrors.feeType and {
+            text: errors.fieldErrors.feeType.text,
+            attributes: {
+              'data-cy': 'fee-type-error-message'
+            }
+          },
+          items: [
+            {
+              value: "In advance",
+              text: "In advance",
+              conditional: {
+                html: inAdvanceFrequencyHtml
+              },
+              checked: feeType === 'In advance',
+              attributes: { 'data-cy': 'fee-type-in-advance' }
+            },
+            {
+              value: "In arrears",
+              text: "In arrears",
+              conditional: {
+                html: inArrearsFrequencyHtml
+              },
+              checked: feeType === 'In arrears',
+              attributes: {'data-cy': 'fee-type-in-arrears'}
+            },
+            {
+              value: "At maturity",
+              text: "At maturity",
+              checked: feeType === 'At maturity',
+              attributes: {'data-cy': 'fee-type-at-maturity'}
+            }
+          ]
+        }) }}
+
+
+        {{ govukRadios({
+          idPrefix: "dayCountBasis",
+          name: "dayCountBasis",
+          fieldset: {
+            legend: {
+              text: "Select day count basis",
+              isPageHeading: false,
+              classes: "govuk-fieldset__legend--s"
+            }
+          },
+          hint: {
+            text: "This can significantly affect how the guarantee fee is calculated.  If you're not sure, check with your operations team."
+          },
+          errorMessage: errors and errors.fieldErrors.dayCountBasis and {
+            text: errors.fieldErrors.dayCountBasis.text,
+            attributes: {
+              'data-cy': 'day-count-basis-error-message'
+            }
+          },
+          items: [
+            {
+              value: "360",
+              text: "360",
+              checked: dayCountBasis === 360,
+              attributes: { 'data-cy': 'day-count-basis-360' }
+            },
+            {
+              value: "365",
+              text: "365",
+              checked: dayCountBasis === 365,
+              attributes: {'data-cy': 'day-count-basis-365'}
+            }
+          ]
+        }) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Done",
+            attributes: {
+              'data-cy': 'done-button'
+            }
+          }) }}
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

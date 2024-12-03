@@ -1,0 +1,56 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% import './parties-key-value-grid-row.njk' as keyValueGridRow %}
+{% import './parties-key-value-array-grid-row.njk' as keyValueArrayGridRow %}
+{% import './parties-edit-unique-reference-link.njk' as uniqueReferenceNumberEditLink %}
+
+{% macro render(params) %}
+  {% set bond = params.bond %}
+  {% set errors = params.errors %}
+  {% set urn = params.urn %}
+  {% set index = params.index %}
+
+  <div class="govuk-grid-row separator-line govuk-!-margin-top-4 govuk-!-padding-top-4">
+    <div class="govuk-grid-column-one-half">
+      {{ keyValueGridRow.render({
+        key: 'Name',
+        value: bond.facilitySnapshot.bondBeneficiary,
+        dataCy: 'bond-beneficiary-name'
+      }) }}
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half govuk-!-margin-top-4">
+        {{ govukInput({
+          label: {
+            text: "Unique reference number (URN)"
+          },
+          attributes: {
+            "data-cy": "urn-input-" + index
+          },
+          id: "partyUrn-" + index,
+          name: "bondBeneficiaryPartyUrn[]",
+          value: urn[index - 1] or bond.tfm.bondBeneficiaryPartyUrn,
+          errorMessage: errors and errors.fieldErrors["partyUrn-" + index] and {
+            text: errors.fieldErrors["partyUrn-" + index].text,
+            attributes: {
+              'data-cy': 'partyUrn--inline-error-' + index
+            }
+          }
+        }) }}
+        </div>
+      </div>
+
+      {{ keyValueArrayGridRow.render({
+        key: 'Address',
+        values:  [ ],
+        dataCy: 'bond-beneficiary-address'
+      }) }}
+      {{ keyValueGridRow.render({
+        key: 'Country',
+        value: '',
+        dataCy: 'bond-beneficiary-address-country'
+      }) }}
+    </div>
+  </div>
+
+{% endmacro %}

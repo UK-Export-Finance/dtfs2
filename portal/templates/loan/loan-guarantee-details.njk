@@ -1,0 +1,99 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
+{% import './_macros/facility-stage-conditional-form-fields.njk' as facilityStageConditionalFormFields %}
+{% import './_macros/facility-stage-unconditional-form-fields.njk' as facilityStageUnconditionalFormFields %}
+
+{% block pageTitle -%}
+  Loan Guarantee Details
+{%- endblock %}
+
+{% block content %}
+
+  {% set showConditionalFormFieldsByDefault = loan.facilityStage === "Conditional" %}
+  {% set showUnconditionalFormFieldsByDefault = loan.facilityStage === "Unconditional" %}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
+
+  {{ taskListHeader.render({
+    title: 'Loan',
+    dealId: dealId,
+    entityName: 'loan',
+    entityId: loan._id,
+    items: taskListItems
+  })}}
+
+  <form method="POST" autocomplete="off" novalidate>
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <div class="govuk-grid-row">
+
+      <div class="govuk-grid-column-full" id="loan-guarantee-form">
+
+        {{ govukRadios({
+          idPrefix: "facilityStage",
+          name: "facilityStage",
+          fieldset: {
+            legend: {
+              text: "Facility stage"
+            }
+          },
+          hint: {
+            text: "Conditional where Conditions Precedent are not yet satisfied (uncommitted) or unconditional when Conditions Precedent are satisfied (committed)."
+          },
+          items: [
+            {
+              value: "Conditional",
+              text: "Conditional",
+              checked: loan.facilityStage === "Conditional",
+              attributes: {
+                'data-cy': "facility-stage-conditional"
+              },
+              conditional: {
+                html: facilityStageConditionalFormFields.render(loan, validationErrors)
+              }
+            },
+            {
+              value: "Unconditional",
+              text: "Unconditional",
+              checked: loan.facilityStage === "Unconditional",
+              attributes: {
+                'data-cy': "facility-stage-unconditional"
+              },
+              conditional: {
+                html: facilityStageUnconditionalFormFields.render(user, loan, validationErrors)
+              }
+            }
+          ],
+          errorMessage: validationErrors.errorList.facilityStage and {
+            text: validationErrors.errorList.facilityStage.text,
+            attributes: {
+              'data-cy': 'facility-stage-error-message'
+            }
+          }
+        }) }}
+
+        <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">Next page</button>
+
+        <input
+          type="submit"
+          formaction="/contract/{{ dealId }}/loan/{{ loan._id }}/guarantee-details/save-go-back"
+          class="govuk-button govuk-button--secondary"
+          data-module="govuk-button"
+          value="Save and go back to deal"
+          data-cy="save-go-back-button"
+        />
+
+      </div>
+    </div>
+
+  </form>
+
+{% endblock %}

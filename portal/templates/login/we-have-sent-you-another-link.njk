@@ -1,0 +1,23 @@
+{% extends "index.njk" %}
+
+{% block pageTitle -%}
+  We've sent you another link
+{%- endblock %}
+
+{% block content %}
+  <h1 class="govuk-heading-xl">
+    We've sent you another link
+  </h1>
+
+  <div class="govuk-grid-row govuk-body">
+    <div class="govuk-grid-column-three-quarters">
+      <p class="govuk-!-margin-bottom-6" data-cy="obscured-sign-in-link-target-email-address">We've sent you another email with a link to {{ obscuredSignInLinkTargetEmailAddress }}.</p>
+      <p class="govuk-!-margin-bottom-6"> This link will expire after 30 minutes. Any previous sign in links we have sent will no longer be valid. </p>
+      <p class="govuk-!-margin-bottom-6"> Please check your spam or junk folders and be aware emails may sometimes take a few minutes to arrive.</p>
+      <p class="govuk-!-margin-bottom-6"> If you are still having problems signing in, contact us for support.</p>
+    </div>
+  </div>
+
+  <h2 class="govuk-heading-m">Contact us</h2>
+  {% include "../_partials/contact-us.njk" %}
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "index.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle -%}
+  Eligible for automatic cover
+{%- endblock %}
+
+{% block content %}
+  <h1 class="govuk-heading-xl" data-cy="main-heading">
+    This is eligible for automatic cover
+  </h1>
+
+  {{ govukButton({
+    text: "Continue",
+    href: "/gef/application-details/" + dealId,
+    attributes: {
+      'data-cy': 'continue-button'
+    }
+  }) }}
+{% endblock %}

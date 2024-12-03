@@ -1,0 +1,42 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
+{% import '_macros/mandatory-criteria-box.njk' as mandatoryCriteriaBox %}
+{% import '_macros/eligibility-criteria-answers.njk' as eligibilityCriteriaAnswers %}
+{% import '_macros/eligibility-documentation-preview.njk' as eligibilityDocumentation %}
+
+{% block pageTitle -%}
+  Check your answers - Eligibility - {{ deal.additionalRefName }}
+{%- endblock %}
+
+{% block content %}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
+
+  {{ taskListHeader.render({
+    title: 'Confirm eligibility',
+    dealId: deal._id,
+    entityName: 'eligibility',
+    items: taskListItems
+  })}}
+
+  {% include "_partials/print-button.njk" %}
+
+  {{ mandatoryCriteriaBox.render({ mandatoryCriteria: deal.mandatoryCriteria }) }}
+
+  {{ eligibilityCriteriaAnswers.render(deal.eligibility, deal.mandatoryCriteria | length)}}
+
+  {{ eligibilityDocumentation.render(deal.supportingInformation, deal._id)}}
+
+  <hr class="govuk-section-break govuk-!-margin-bottom-8">
+
+  <p class="govuk-body"><a href="/contract/{{ deal._id }}" class="govuk-link" data-cy="save-go-back-button">Save and go back to deal</a></p>
+
+{% endblock %}

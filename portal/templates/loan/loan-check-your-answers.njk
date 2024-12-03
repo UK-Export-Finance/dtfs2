@@ -1,0 +1,37 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
+{% import './_macros/loan-submission-details.njk' as submissionDetails %}
+
+{% block pageTitle -%}
+  Check your answers - Loan - {{ loan._id }}
+{%- endblock %}
+
+{% block content %}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
+
+  {{ taskListHeader.render({
+    title: 'Loan',
+    dealId: dealId,
+    entityName: 'loan',
+    entityId: loan._id,
+    items: taskListItems
+  })}}
+
+  <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8" />
+
+  {% include "_partials/print-button.njk" %}
+
+  {{ submissionDetails.render({ loan: loan, user: user })}}
+
+  <p class="govuk-body"><a class="govuk-link" href="/contract/{{ dealId }}" data-cy="save-go-back-button">Save and go back to deal</a></p>
+
+{% endblock %}

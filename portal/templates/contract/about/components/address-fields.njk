@@ -1,0 +1,116 @@
+{% import '_macros/progress-nav.njk' as progressNav %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+{% macro fields(deal, validationErrors, id, legend, hint, countries, showCountryPleaseSelect) %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <fieldset data-cy="{{ id }}" class="govuk-fieldset">
+        <legend
+          class="govuk-fieldset__legend govuk-fieldset__legend--m"
+          aria-describedby="address-hint"
+          {% if hint %}
+            aria-describedby="address-hint"
+          {% endif %}}
+        >
+          <h2 class="govuk-fieldset__heading">{{ legend }}</h2>
+        </legend>
+
+        {% if hint %}
+          <span id="address-hint" class="govuk-hint">{{hint}}</span>
+        {% endif %}
+
+        {% set thisField=id+"-country" %}
+        {{ govukSelect({
+          id: thisField,
+          name: thisField,
+          label: { text: "Country" },
+          attributes: {
+            "data-cy": thisField
+          },
+          items: countries[thisField] | countriesWithEmptyInitialOption,
+          errorMessage: validationErrors.errorList[thisField]
+        }) }}
+
+        {% set thisField=id+"-line-1" %}
+        {{ govukInput({
+          label: {
+            html: '<span class="govuk-visually-hidden">Building and street line 1 of 3</span>'
+          },
+          id: thisField,
+          name: thisField,
+          value: deal.submissionDetails[thisField],
+          attributes: {
+            "data-cy": thisField,
+            "maxlength": "50"
+          },
+          errorMessage: validationErrors.errorList[thisField]
+        }) }}
+
+        {% set thisField=id+"-line-2" %}
+        {{ govukInput({
+          label: {
+            html: '<span class="govuk-visually-hidden">Building and street line 2 of 3</span>'
+          },
+          id: thisField,
+          name: thisField,
+          value: deal.submissionDetails[thisField],
+          attributes: {
+            "data-cy": thisField,
+            "maxlength": "50"
+          },
+          errorMessage: validationErrors.errorList[thisField]
+        }) }}
+
+        {% set thisField=id+"-line-3" %}
+        {{ govukInput({
+          label: {
+            html: '<span class="govuk-visually-hidden">Building and street line 3 of 3</span>'
+          },
+          id: thisField,
+          name: thisField,
+          value: deal.submissionDetails[thisField],
+          attributes: {
+            "data-cy": thisField,
+            "maxlength": "50"
+          },
+          errorMessage: validationErrors.errorList[thisField]
+        }) }}
+
+        {% set thisField=id+"-town" %}
+        {{ govukInput({
+          label: {
+            text: 'Town or city'
+          },
+          id: thisField,
+          name: thisField,
+          value: deal.submissionDetails[thisField],
+          attributes: {
+            "data-cy": thisField,
+            "maxlength": "50"
+          },
+          errorMessage: validationErrors.errorList[thisField]
+        }) }}
+
+        {% set thisField=id+"-postcode" %}
+        {{ govukInput({
+          label: {
+            text: 'Post Code or Zip Code'
+          },
+          id: thisField,
+          name: thisField,
+          value: deal.submissionDetails[thisField],
+          attributes: {
+            "data-cy": thisField,
+            "maxlength": "12"
+          },
+          errorMessage: validationErrors.errorList[thisField]
+        }) }}
+
+      </fieldset>
+    </div>
+  </div>
+
+{% endmacro %}

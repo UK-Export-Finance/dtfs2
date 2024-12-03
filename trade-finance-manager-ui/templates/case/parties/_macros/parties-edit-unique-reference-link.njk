@@ -1,0 +1,10 @@
+{% macro render(params) %}
+{% if params.linkText %}
+  {% set linkText = params.linkText %}
+{% else %}
+  {% set linkText = "Add or edit unique reference number" %}
+{% endif %}
+<p>
+  <a class="govuk-link govuk-!-font-size-19" href="/case/{{ params.dealId }}/parties/{{ params.type }}" data-cy="edit-party-link">{{ linkText }}</a>
+</p>
+{% endmacro %}

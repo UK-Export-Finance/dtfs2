@@ -1,0 +1,30 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% macro render(hintText, value) %}
+
+  {{ govukInput({
+    formGroup: {
+      classes: "form-group-disabled"
+    },
+    label: {
+      text: "UKEF exposure"
+    },
+    hint: {
+      text: hintText
+    },
+    id: "ukefExposure",
+    name: "ukefExposure",
+    value: value,
+    classes: "form-group-disabled--input govuk-input--width-10",
+    type: "text",
+    attributes: {
+      size: "60",
+      maxlength: "255",
+      placeholder: "0.00",
+      disabled: "true",
+      'data-cy': "ukef-exposure"
+    }
+  }) }}
+
+  <script src="/assets/js/ukefexposure.js" type="text/javascript" integrity="sha512-4v8Sc9yH5kibPIf3dZD2s4ujyGeWDouPyX1863q+LrKNLnuUIR9lHYwf5tuuvTS2UQHhBKrMdmaIcW52QEtt0w==" crossorigin="anonymous"></script>
+{% endmacro %}

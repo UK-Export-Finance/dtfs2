@@ -1,0 +1,208 @@
+{% extends "index.njk" %}
+{% import '_macros/success-message.njk' as success %}
+{% import '_macros/status-tag.njk' as statusTag %}
+{% import './components/abandon-deal-link.njk' as abandonLink %}
+{% import './components/about-supply-contract-link.njk' as aboutSupplyContractLink %}
+{% import './components/add-a-bond-button.njk' as addABondButton %}
+{% import './components/add-a-loan-button.njk' as addALoanButton %}
+{% import './components/bond-transactions-table.njk' as bondTransactionsTable %}
+{% import './components/clone-deal-link.njk' as cloneLink %}
+{% import './components/contract-actions.njk' as contractActions %}
+{% import './components/contract-overview-table.njk' as contractOverviewTable %}
+{% import './components/contract-tabs.njk' as contractTabs %}
+{% import './components/edit-deal-name-link.njk' as editDealNameLink %}
+{% import './components/eligibility-criteria-link.njk' as eligibilityCriteriaLink %}
+{% import './components/loan-transactions-table.njk' as loanTransactionsTable %}
+{% import './components/summary-table.njk' as summaryTable %}
+{% import './components/forms-incomplete-text.njk' as formsIncompleteText %}
+{% import './components/totals-table.njk' as totalsTable %}
+{% import './components/ukef-comments.njk' as ukefComments %}
+
+{% block pageTitle -%}
+  {{ deal.additionalRefName }}
+{%- endblock %}
+
+{% block content %}
+
+  {% set componentData = {
+    user: user,
+    deal: deal,
+    editable: editable,
+    isEveryDealFormComplete: isEveryDealFormComplete,
+    canFullyCalculateDealSummary: canFullyCalculateDealSummary,
+    selected: 'view',
+    userCanSubmit: userCanSubmit,
+    dealHasIssuedFacilitiesToSubmit: dealHasIssuedFacilitiesToSubmit,
+    confirmedRequestedCoverStartDates: confirmedRequestedCoverStartDates,
+    allRequestedCoverStartDatesConfirmed: allRequestedCoverStartDatesConfirmed
+  } %}
+
+  {% if successMessage %}
+    {{ success.message(
+      message = successMessage
+    )}}
+  {% endif %}
+
+  <h1 class="govuk-heading-l">
+      Supply Contract name:
+      <span data-cy="additionalRefName" class="govuk-body govuk-!-font-size-24">{{ deal.additionalRefName }}</span>
+
+    {{ editDealNameLink.render(componentData) }}
+  </h1>
+
+  {{ contractTabs.render(componentData) }}
+
+  <section>
+    <div class="govuk-grid-row govuk-!-margin-bottom-2">
+      <div class="govuk-grid-column-three-quarters">
+        {{ ukefComments.render(deal.status, deal.ukefComments, deal.ukefDecision) }} &nbsp;</div>
+      <div class="govuk-grid-column-one-quarter box__header-link">
+        {{ cloneLink.render(componentData) }}
+        {{ abandonLink.render(componentData) }}
+      </div>
+    </div>
+
+    <hr class="govuk-section-break"/>
+
+    <div class="govuk-grid-row govuk-!-padding-2 govuk-!-margin-bottom-8 box">
+      {{ contractOverviewTable.render(componentData) }}
+    </div>
+
+    <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
+      <div class="box__header">
+        <div class="govuk-grid-column-three-quarters">
+          <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
+            <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
+                  About the Supply Contract
+                </span>
+            <span data-cy="aboutSupplierDetailsStatus" class="govuk-grid-column-one-quarter">
+              {{ statusTag.render(deal.submissionDetails.status) }}
+            </span>
+          </h2>
+        </div>
+        <div class="govuk-grid-column-one-quarter box__header-link">
+          {{ aboutSupplyContractLink.render(componentData) }}
+        </div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
+      <div class="box__header">
+        <div class="govuk-grid-column-three-quarters">
+          <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
+
+            <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
+                  Confirm eligibility
+                </span>
+
+            {% if deal.eligibility.status %}
+              <span class="govuk-grid-column-one-quarter" data-cy="eligibility-status">
+                {{ statusTag.render(deal.eligibility.status) }}
+              </span>
+            {% endif %}
+
+            {% if deal.submissionType %}
+              <span class="govuk-grid-column-one-quarter govuk-!-font-weight-regular govuk-!-font-size-16"  data-cy="eligibility-submission-type">
+                <span class="govuk-!-font-weight-bold">Submission type: </span>
+                <br/>
+                {{ deal.submissionType }}
+              </span>
+            {% endif %}
+
+          </h2>
+        </div>
+
+        {% if deal.details.manualInclusionNoticeSubmissionDate %}
+          <span class="govuk-heading-m govuk-grid-column-one-quarter govuk-!-font-weight-regular govuk-!-font-size-16 govuk-!-padding-right-0 govuk-!-padding-left-0 width-auto"  data-cy="manual-inclusion-notice-submission-date">
+            <span class="govuk-!-font-weight-bold">Submission date: </span>
+            <br/>
+            {{ deal.details.manualInclusionNoticeSubmissionDate | localiseTimestamp('dd/MM/yyyy', user.timezone) }}
+          </span>
+        {% endif %}
+
+        {% if deal.details.submissionDate %}
+          {% set submissionDateClass = "govuk-grid-column-one-quarter govuk-!-padding-right-0 box__header-link width-auto" %}
+
+        {% else %}
+          {% set submissionDateClass = "govuk-grid-column-one-quarter box__header-link" %}
+        {% endif %}
+
+        <div class="{{ submissionDateClass }}">
+          {{ eligibilityCriteriaLink.render(componentData) }}
+        </div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
+      <div class="box__header">
+        <div class="govuk-grid-column-three-quarters">
+          <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
+            <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
+                  Bond transactions
+                </span>
+            <span class="govuk-!-margin-left-6">
+              {{ statusTag.render(deal.bondTransactions.status) }}
+            </span>
+          </h2>
+        </div>
+
+        <div class="govuk-grid-column-one-quarter box__header-link">
+          {{ addABondButton.render(componentData) }}
+        </div>
+
+        {% if deal.bondTransactions.items.length %}
+          {{ bondTransactionsTable.render(componentData) }}
+        {% endif %}
+
+      </div>
+    </div>
+
+    <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
+      <div class="box__header">
+        <div class="govuk-grid-column-three-quarters">
+          <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
+            <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
+                  Loan transactions
+                </span>
+
+            <span class="govuk-!-margin-left-6">
+              {{ statusTag.render(deal.loanTransactions.status) }}
+            </span>
+
+          </h2>
+        </div>
+
+        <div class="govuk-grid-column-one-quarter box__header-link">
+          {{ addALoanButton.render(componentData) }}
+        </div>
+
+        {% if deal.loanTransactions.items.length %}
+          {{ loanTransactionsTable.render(componentData) }}
+        {% endif %}
+
+      </div>
+    </div>
+
+    <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
+
+      <div class="govuk-grid-column-one-half">
+        {{ summaryTable.render(deal)}}
+      </div>
+
+      <div class="govuk-grid-column-full">
+        {{ formsIncompleteText.render(componentData)}}
+      </div>
+
+      {# DTFS2-5570 hidden as not accurate #}
+      {#
+      <div class="govuk-grid-column-full">
+        {{ totalsTable.render(deal.summary)}}
+      </div> #}
+
+    </div>
+
+    {{ contractActions.render(componentData)}}
+
+  </section>
+
+{% endblock %}

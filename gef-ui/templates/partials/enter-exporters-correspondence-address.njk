@@ -1,0 +1,137 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% block pageTitle -%}
+  Enter exporter’s correspondence address
+{%- endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  {% if status !== 'change' %}
+    {{ govukBackLink({
+      text: "Back",
+      href: backUrl,
+      attributes: {
+        'data-cy': 'back-link'
+      }
+    }) }}
+  {% endif %}
+
+  <header data-cy="application-details-page">
+    <span class="govuk-caption-xl" data-cy="heading-caption">
+      About the exporter
+    </span>
+    <h1 class="govuk-heading-xl" data-cy="main-heading">
+      Enter exporter's correspondence address
+    </h1>
+  </header>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <div class="govuk-grid-column-one-half">
+      <form method="post" data-cy="form">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        {{ govukInput({
+          label: {
+            text: "Address line 1"
+          },
+          id: "addressLine1",
+          name: "addressLine1",
+          value: addressForm.addressLine1,
+          errorMessage: errors and errors.fieldErrors.addressLine1 and {
+            text: errors.fieldErrors.addressLine1.text,
+            attributes: {
+              'data-cy': 'address-line-1-error'
+            }
+          },
+          attributes: {
+            'data-cy': 'address-line-1'
+          }
+        }) }}
+
+        {{ govukInput({
+          label: {
+            text: "Address line 2 (optional)"
+          },
+          id: "addressLine2",
+          name: "addressLine2",
+          value: addressForm.addressLine2,
+          attributes: {
+            'data-cy': 'address-line-2'
+          }
+        }) }}
+
+        {{ govukInput({
+          label: {
+            text: "Address line 3 (optional)"
+          },
+          id: "addressLine3",
+          name: "addressLine3",
+          value: addressForm.addressLine3,
+          attributes: {
+            'data-cy': 'address-line-3'
+          }
+        }) }}
+
+        {{ govukInput({
+          label: {
+            text: "City or town (optional)"
+          },
+          id: "locality",
+          name: "locality",
+          value: addressForm.locality,
+          attributes: {
+            'data-cy': 'locality'
+          }
+        }) }}
+
+        {{ govukInput({
+          label: {
+            text: "Postcode"
+          },
+          id: "postalCode",
+          name: "postalCode",
+          value: addressForm.postalCode,
+           errorMessage: errors and errors.fieldErrors.postalCode and {
+            text: errors.fieldErrors.postalCode.text,
+            attributes: {
+              'data-cy': 'postcode-error'
+            }
+          },
+          attributes: {
+            'data-cy': 'postcode'
+          }
+        }) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            attributes: {
+              'data-cy': 'continue-button'
+            }
+          }) }}
+
+          {{ govukButton({
+            text: "Save and return",
+            classes: "govuk-button--secondary",
+            attributes: {
+              formaction: "enter-exporters-correspondence-address?saveAndReturn=true",
+              'data-cy': 'save-and-return-button'
+            }
+          }) }}
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

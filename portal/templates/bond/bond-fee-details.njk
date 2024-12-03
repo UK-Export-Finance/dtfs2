@@ -1,0 +1,119 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
+{% import './_macros/fee-frequency-radios.njk' as feeFrequencyRadios %}
+{% import '../_macros/facility-inputs/day-count-radios.njk' as dayCountRadios %}
+
+{% block pageTitle -%}
+  Bond Fee Details
+{%- endblock %}
+
+{% block content %}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
+
+  {{ taskListHeader.render({
+    title: 'Add fee details',
+    dealId: dealId,
+    entityName: 'bond',
+    entityId: bond._id,
+    items: taskListItems
+  })}}
+
+  <form method="POST" autocomplete="off" novalidate>
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <input type="hidden" name="feeFrequency" value="{{ bond.feeFrequency }}" />
+
+    <div class="govuk-grid-row" id="bond-fee-form">
+
+      <div class="govuk-grid-column-three-quarters">
+
+        {{ govukRadios({
+          idPrefix: "feeType",
+          name: "feeType",
+          fieldset: {
+            legend: {
+              text: "Fee type"
+            }
+          },
+          items: [
+            {
+              value: "In advance",
+              text: "In advance",
+              checked: bond.feeType === "In advance",
+              conditional: {
+                html: feeFrequencyRadios.render(
+                  'inAdvance',
+                  'in-advance',
+                  bond.feeFrequency,
+                  validationErrors.errorList.feeFrequency
+                )
+              },
+              attributes: {
+                'data-cy': 'fee-type-in-advance'
+              }
+            },
+            {
+              value: "In arrear",
+              text: "In arrear",
+              checked: bond.feeType === "In arrear",
+              conditional: {
+                html: feeFrequencyRadios.render(
+                  'inArrear',
+                  'in-arrear',
+                  bond.feeFrequency,
+                  validationErrors.errorList.feeFrequency
+                )
+              },
+              attributes: {
+                'data-cy': 'fee-type-in-arrear'
+              }
+            },
+            {
+              value: "At maturity",
+              text: "At maturity",
+              checked: bond.feeType === "At maturity",
+              attributes: {
+                'data-cy': 'fee-type-at-maturity'
+              }
+            }
+          ],
+          errorMessage: validationErrors.errorList.feeType and {
+            text: validationErrors.errorList.feeType.text,
+            attributes: {
+              "data-cy": "fee-type-error-message"
+            }
+          }
+        }) }}
+
+        {{dayCountRadios.render(
+          checkedValue = bond.dayCountBasis,
+          errorObj = validationErrors.errorList.dayCountBasis
+        )}}
+
+      </div>
+
+    </div>
+
+    <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">Preview</button>
+
+    <input
+      type="submit"
+      formaction="/contract/{{ dealId }}/bond/{{ bond._id }}/fee-details/save-go-back"
+      class="govuk-button govuk-button--secondary"
+      data-module="govuk-button"
+      value="Save and go back to deal"
+      data-cy="save-go-back-button"
+    />
+
+  </form>
+
+{% endblock %}

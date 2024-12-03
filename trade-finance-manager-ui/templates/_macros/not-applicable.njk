@@ -1,0 +1,6 @@
+{% macro render(params) %}
+  {% set id = params.id %}
+
+  <p class="govuk-body-s" data-cy="{{ id }}-not-applicable">Not applicable</p>
+
+{% endmacro %}

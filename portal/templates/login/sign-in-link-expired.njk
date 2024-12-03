@@ -1,0 +1,23 @@
+{% import "./_macros/request-new-sign-in-link.njk" as requestNewSignInLink %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle -%}
+  Expired sign in link
+{%- endblock %}
+
+{% block content %}
+  <h1 class="govuk-heading-xl">
+    Your sign in link has expired
+  </h1>
+
+  <div class="govuk-grid-row govuk-body">
+    <div class="govuk-grid-column-three-quarters">
+      <p class="govuk-!-margin-bottom-6">For security, links expire after 30 minutes. You can request for a new sign in link to be sent to your email address.</p>
+      {{ requestNewSignInLink.render({
+        isPrimaryActionOnPage: true,
+        csrfToken: csrfToken
+      }) }}
+    </div>
+  </div>
+{% endblock %}

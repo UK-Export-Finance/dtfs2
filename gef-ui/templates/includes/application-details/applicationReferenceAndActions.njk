@@ -1,0 +1,68 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set isMaker = userRoles and userRoles.includes('maker') %}
+
+<div class="govuk-width-container" data-cy="application-banner">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full" id="application-reference-and-actions-actions">
+      {% if status and isMaker %}
+         {{ govukButton({
+            text: "Clone",
+            attributes: {
+              "data-cy": "clone-gef-deal-link",
+              "aria-label": "Clone deal " + bankInternalRefName
+              },
+            classes: "govuk-button--secondary govuk-!-margin-right-2",
+            href: dealId + "/clone"
+         }) }}
+      {% endif %}
+      {% if abandon and not hasChangedFacilities and not MIAReturnToMaker and not returnToMakerNoFacilitiesChanged %}
+        {{ govukButton({
+          text: "Abandon",
+          attributes: {
+            "data-cy": "abandon-link",
+            "aria-label": "Abandon deal " + bankInternalRefName
+          },
+          classes: "govuk-button--secondary",
+          href: "/gef/application-details/"+dealId+"/abandon"
+        }) }}
+      {% endif %}
+    </div>
+  </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-column-one-third"><p class="govuk-body"><strong>Bank's reference</strong></p></div>
+      <div class="govuk-grid-column-two-thirds">
+        {% if abandon and not hasChangedFacilities and not MIAReturnToMaker and not returnToMakerNoFacilitiesChanged %}
+        <p class="govuk-body" data-cy="bank-reference">
+          <a class="govuk-link" href="/gef/applications/{{dealId}}/name" data-cy="edit-refname-link">{{ bankInternalRefName }}</a>
+        </p>
+        {%else%}
+        <p class="govuk-body" data-cy="bank-reference">
+          <a>{{ bankInternalRefName }}</a>
+        </p>
+        {%endif%}
+      </div>
+    </div>
+    <div class="govuk-grid-column-one-half">
+    {% if abandon and not hasChangedFacilities and not MIAReturnToMaker and not returnToMakerNoFacilitiesChanged %}
+      <div class="govuk-grid-column-one-third"><p class="govuk-body"><strong>Additional reference</strong></p></div>
+      <div class="govuk-grid-column-two-thirds">
+        <p class="govuk-body" data-cy="additional-reference">
+          <a class="govuk-link" href="/gef/applications/{{dealId}}/name" data-cy="edit-addrefname-link">{{ additionalRefName or 'Add' }}</a>
+        </p>
+      </div>
+    </div>
+    {%else%}
+      {%if additionalRefName %}
+         <div class="govuk-grid-column-one-third"><p class="govuk-body"><strong>Additional reference</strong></p></div>
+            <div class="govuk-grid-column-two-thirds">
+            <p class="govuk-body" data-cy="additional-reference">
+               <a> {{ additionalRefName }}</a>
+            </p>
+            </div>
+         </div>
+      {%endif%}
+    {%endif%}
+  </div>
+</div>

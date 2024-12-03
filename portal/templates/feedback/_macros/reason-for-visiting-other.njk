@@ -1,0 +1,28 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% macro render(params) %}
+  {% set value = params.value %}
+  {% set validationError = params.validationError %}
+
+  {{ govukInput({
+    label: {
+      text: "Other"
+    },
+    id: "reasonForVisitingOther",
+    name: "reasonForVisitingOther",
+    value: value,
+    classes: "govuk-input--width-20",
+    attributes: {
+      'data-cy': 'reason-for-visiting-other'
+    },
+    errorMessage: validationError.text and {
+      text: validationError.text,
+      attributes: {
+        'data-cy': 'reason-for-visiting-other-error-message'
+      }
+    }
+  }) }}
+
+{% endmacro %}
+

@@ -1,0 +1,100 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% import '../_macros/eligibility-criterion.njk' as eligibilityCriterion %}
+
+{% block pageTitle -%}
+  Automatic cover
+{%- endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+
+  <h1 class="govuk-heading-xl" data-cy="main-heading">
+    Check if this is eligible for automatic cover
+  </h1>
+
+  {{ govukDetails({
+    summaryText: "What is automatic cover?",
+    text: "If you’re eligible for automatic cover, you can submit all the application details as an automatic inclusion notice (AIN). Once you’ve submitted the AIN, your cover will be available immediately for you to use."
+  }) }}
+
+
+  <form method="post" data-cy="form">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    {% for criterion in criteria %}
+      {{ govukRadios({
+        classes: "govuk-radios--inline",
+        idPrefix: criterion.id,
+        name: criterion.id,
+        fieldset: {
+          legend: {
+            html: eligibilityCriterion.render({
+              id: criterion.id,
+              text: criterion.text,
+              textList: criterion.textList
+            })
+          },
+          attributes: { 'aria-label': criterion.text }
+        },
+        attributes: {
+          'data-cy': 'automatic-cover-term-' + criterion.id
+        },
+        errorMessage: errors and errors.fieldErrors[criterion.id] and  {
+          text: errors.fieldErrors[criterion.id].text,
+          attributes: {
+            'data-cy': 'automatic-cover-error'
+          }
+        },
+        items: [
+          {
+            value: "true",
+            text: "True",
+            checked: criterion.answer === true,
+            attributes: {
+              'data-cy': 'automatic-cover-true-' + criterion.id,
+              'aria-label': 'Eligibility criterion, ' + criterion.id + ', ' + criterion.text + ', true'
+            }
+          },
+          {
+            value: "false",
+            text: "False",
+            checked: criterion.answer === false,
+            attributes: {
+              'data-cy': 'automatic-cover-false-' + criterion.id,
+              'aria-label': 'Eligibility criterion, ' + criterion.id + ', ' + criterion.text + ', false'
+            }
+          }
+        ]
+      }) }}
+    {% endfor %}
+    <div class="govuk-button-group">
+      {{ govukButton({
+        text: "Continue",
+        attributes: {
+          'data-cy': 'continue-button'
+        }
+      }) }}
+
+      {{ govukButton({
+        text: "Save and return",
+        classes: "govuk-button--secondary",
+        attributes: {
+          formaction: "automatic-cover?saveAndReturn=true",
+          'data-cy': 'save-and-return-button'
+        }
+      }) }}
+    </div>
+  </form>
+{% endblock %}

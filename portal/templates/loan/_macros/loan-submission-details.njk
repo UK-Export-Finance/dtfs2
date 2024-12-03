@@ -1,0 +1,252 @@
+{% macro render(params) %}
+  {% set loan = params.loan %}
+  {% set user = params.user %}
+
+  <div data-cy="loan-submission-details">
+    <h2 class="govuk-heading-m">Loan guarantee details</h2>
+
+    <dl class="govuk-summary-list govuk-summary-list--no-border">
+
+      {% if loan.name %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            Bank reference number
+          </dt>
+          <dd class="govuk-summary-list__value govuk-body-s" data-cy="bank-reference-number">
+            {{ loan.name }}
+          </dd>
+        </div>
+      {% endif %}
+
+      {% if loan.facilityStage %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            Facility stage
+          </dt>
+          <dd class="govuk-summary-list__value govuk-body-s" data-cy="facility-stage">
+            {{ loan.facilityStage }}
+          </dd>
+        </div>
+      {% endif %}
+
+      {# TODO: component test. Need to think component test data for different statuses/data. #}
+      {% if loan.issuedDate %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            Issued Date
+          </dt>
+          <dd class="govuk-summary-list__value govuk-body-s" data-cy="issued-date">
+            {{ loan.issuedDate | localiseTimestamp('dd/MM/yyyy', user.timezone) }}
+          </dd>
+        </div>
+      {% endif %}
+
+      {% if loan.ukefGuaranteeInMonths %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            Length of time that the UKEF's guarantee will be in place for (in months, rounded up)
+          </dt>
+          <dd class="govuk-summary-list__value govuk-body-s" data-cy="ukef-guarantee-length-in-months">
+            {{ loan.ukefGuaranteeInMonths }}
+          </dd>
+        </div>
+      {% endif %}
+
+      {% if loan.requestedCoverStartDate %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            Requested Cover Start Date
+          </dt>
+          <dd class="govuk-summary-list__value govuk-body-s" data-cy="requested-cover-start-date">
+            {{ loan.requestedCoverStartDate | localiseTimestamp('dd/MM/yyyy', user.timezone) }}
+          </dd>
+        </div>
+      {% endif %}
+
+      {% if loan['coverEndDate-day'] and loan['coverEndDate-month'] and loan['coverEndDate-year'] %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            Cover End Date
+          </dt>
+          <dd class="govuk-summary-list__value govuk-body-s" data-cy="cover-end-date">
+            {{ loan['coverEndDate-day'] }}/{{ loan['coverEndDate-month'] }}/{{ loan['coverEndDate-year'] }}
+          </dd>
+        </div>
+      {% endif %}
+
+    </dl>
+
+    <h2 class="govuk-heading-m">Loan financial details</h2>
+
+    <dl class="govuk-summary-list govuk-summary-list--no-border">
+
+      {% if loan.value %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            Loan facility value
+          </dt>
+          <dd class="govuk-summary-list__value govuk-body-s" data-cy="facility-value" data-mask="currency">
+            {{ loan.value }}
+          </dd>
+        </div>
+      {% endif %}
+
+      {% if loan.currencySameAsSupplyContractCurrency %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            Is the currency of this loan the same as your Supply Contract currency?
+          </dt>
+          <dd class="govuk-summary-list__value govuk-body-s" data-cy="currency-same-as-supply-contract-currency">
+            {% if loan.currencySameAsSupplyContractCurrency === "true" %}
+              Yes
+            {% elif loan.currencySameAsSupplyContractCurrency === "false" %}
+              No
+            {% endif %}
+          </dd>
+        </div>
+      {% endif %}
+
+      {% if loan.currencySameAsSupplyContractCurrency !== "true" %}
+        {% if loan.currency %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-body-s">
+              Currency
+            </dt>
+            <dd class="govuk-summary-list__value govuk-body-s" data-cy="currency">
+              {{ loan.currency.text }}
+            </dd>
+          </div>
+        {% endif %}
+
+        {% if loan.conversionRate %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-body-s">
+              Conversion rate to the supply contract currency
+            </dt>
+            <dd class="govuk-summary-list__value govuk-body-s" data-cy="conversion-rate">
+              {{ loan.conversionRate }}
+            </dd>
+          </div>
+        {% endif %}
+
+        {% if loan['conversionRateDate-day'] and loan['conversionRateDate-month'] and loan['conversionRateDate-year'] %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-body-s">
+              Conversion rate date
+            </dt>
+            <dd class="govuk-summary-list__value govuk-body-s" data-cy="conversion-rate-date">
+              {{ loan['conversionRateDate-day'] }}/{{ loan['conversionRateDate-month'] }}/{{ loan['conversionRateDate-year'] }}
+            </dd>
+          </div>
+        {% endif %}
+      {% endif %}
+
+      {% if loan.disbursementAmount %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            Disbursement amount
+          </dt>
+          <dd class="govuk-summary-list__value govuk-body-s" data-cy="disbursement-amount">
+            {{ loan.disbursementAmount }}
+          </dd>
+        </div>
+      {% endif %}
+
+      {% if loan.interestMarginFee %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            Interest Margin %
+          </dt>
+          <dd class="govuk-summary-list__value govuk-body-s" data-cy="interest-margin-fee">
+            {{ loan.interestMarginFee }}%
+          </dd>
+        </div>
+      {% endif %}
+
+      {% if loan.coveredPercentage %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            Covered Percentage
+          </dt>
+          <dd class="govuk-summary-list__value govuk-body-s" data-cy="covered-percentage">
+            {{ loan.coveredPercentage }}%
+          </dd>
+        </div>
+      {% endif %}
+
+      {% if loan.minimumQuarterlyFee %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            Minimum quarterly fee
+          </dt>
+          <dd class="govuk-summary-list__value govuk-body-s" data-cy="minimum-quarterly-fee">
+            {{ loan.minimumQuarterlyFee  }}
+          </dd>
+        </div>
+      {% endif %}
+
+      {% if loan.guaranteeFeePayableByBank %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            Guarantee fee payable by bank
+          </dt>
+          <dd class="govuk-summary-list__value govuk-body-s" data-cy="guarantee-fee-payable-by-bank">
+            {{ loan.guaranteeFeePayableByBank }}
+          </dd>
+        </div>
+      {% endif %}
+
+      {% if loan.ukefExposure %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            UKEF Exposure
+          </dt>
+          <dd class="govuk-summary-list__value govuk-body-s" data-cy="ukef-exposure">
+            {{ loan.ukefExposure }}
+          </dd>
+        </div>
+      {% endif %}
+
+    </dl>
+
+    <h2 class="govuk-heading-m">Dates and repayments</h2>
+
+    <dl class="govuk-summary-list govuk-summary-list--no-border">
+
+      {% if loan.premiumType %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            Premium type
+          </dt>
+          <dd class="govuk-summary-list__value govuk-body-s" data-cy="premium-type">
+            {{ loan.premiumType }}
+          </dd>
+        </div>
+      {% endif %}
+
+      {% if loan.premiumFrequency %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            Premium frequency
+          </dt>
+          <dd class="govuk-summary-list__value govuk-body-s" data-cy="premium-frequency">
+            {{ loan.premiumFrequency }}
+          </dd>
+        </div>
+      {% endif %}
+
+      {% if loan.dayCountBasis %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body-s">
+            Day count basis
+          </dt>
+          <dd class="govuk-summary-list__value govuk-body-s" data-cy="day-count-basis">
+            {{ loan.dayCountBasis  }}
+          </dd>
+        </div>
+      {% endif %}
+
+    </dl>
+  </div>
+
+{% endmacro %}

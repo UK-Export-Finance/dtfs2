@@ -1,0 +1,83 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% block pageTitle -%}
+  Name application
+{%- endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  <h1 class="govuk-heading-xl" data-cy="main-heading">
+     {% if cloneDeal %}
+         Clone '{{ dealName }}' deal
+     {% else %}
+         Name your application
+     {% endif %}
+  </h1>
+
+  <form method="post" data-cy="form">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <div id="name-application-form">
+      {{ govukInput({
+        label: {
+          text: "Enter your bank’s internal reference or name"
+        },
+        classes: "govuk-!-width-one-half",
+        id: "bankInternalRefName",
+        name: "bankInternalRefName",
+        value:  dealName if cloneDeal else bankInternalRefName,
+        errorMessage: errors and errors.fieldErrors.bankInternalRefName and{
+          text: errors.fieldErrors.bankInternalRefName.text,
+          attributes: {
+            'data-cy': 'internal-ref-error'
+          }
+        },
+        attributes: {
+          'data-cy': 'internal-ref'
+        }
+      }) }}
+
+      {{ govukInput({
+        label: {
+          text: "Additional reference or name (optional)"
+        },
+        classes: "govuk-!-width-one-half",
+        id: "additionalRefName",
+        name: "additionalRefName",
+        value: additionalRefName,
+        errorMessage: errors and errors.fieldErrors.additionalRefName and{
+          text: errors.fieldErrors.additionalRefName.text,
+          attributes: {
+            'data-cy': 'internal-ref-error'
+          }
+        },
+        attributes: {
+          'data-cy': 'additional-ref'
+        }
+      }) }}
+
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: "Continue",
+          attributes: {
+          'data-cy': 'continue-button'
+        }
+        }) }}
+
+        <a class="govuk-link" href="/dashboard" data-cy="cancel-link">Abandon</a>
+      </div>
+    </div>
+  </form>
+
+{% endblock %}

@@ -1,0 +1,46 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% macro render(opts) %}
+  {% set deal = opts.deal %}
+  {% set validationErrors = opts.validationErrors %}
+
+  {{
+    govukRadios({
+      fieldset: {
+        legend: { text: "SME type" }
+      },
+      hint: { html: 'Confirm the SME type based on the <a href="https://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition" target="_blank">European Commission definitions</a>' },
+      idPrefix: "sme-type-",
+      name: "sme-type",
+      classes: "govuk-radios--inline",
+      items: [
+        {
+          value: "Micro",
+          text: "Micro",
+          attributes: { "data-cy": "sme-type-Micro" },
+          checked: deal.submissionDetails["sme-type"] === 'Micro'
+        },
+        {
+          value: "Small",
+          text: "Small",
+          attributes: { "data-cy": "sme-type-Small" },
+          checked: deal.submissionDetails["sme-type"] === 'Small'
+        },
+        {
+          value: "Medium",
+          text: "Medium",
+          attributes: { "data-cy": "sme-type-Medium" },
+          checked: deal.submissionDetails["sme-type"] === 'Medium'
+        },
+        {
+          value: "Non-SME",
+          text: "Non-SME",
+          attributes: { "data-cy": "sme-type-Non-SME" },
+          checked: deal.submissionDetails["sme-type"] === 'Non-SME'
+        }
+      ],
+      errorMessage: validationErrors.errorList["sme-type"]
+    })
+  }}
+
+{% endmacro %}

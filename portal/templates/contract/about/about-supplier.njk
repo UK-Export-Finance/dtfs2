@@ -1,0 +1,103 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
+{% import './components/supplier-type-dropdown.njk' as supplierTypeDropdown %}
+{% import './components/supplier-name-and-address-lookup.njk' as supplierNameAndAddressLookup %}
+{% import './components/supplier-correspondence-address.njk' as supplierCorrespondenceAddress %}
+{% import './components/legally-distinct-counter-indemnifier_slash_guarantor.njk' as legallyDistinct %}
+{% import './components/industry-sectors-dropdown.njk' as industrySectorsDropdown %}
+{% import './components/industry-classes-dropdown.njk' as industryClassesDropdown %}
+{% import './components/sme-type-radios.njk' as smeTypeRadios %}
+{% import './components/supply-contract-description.njk' as supplyContractDescription %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle -%}
+  Supplier information - {{ deal.additionalRefName }}
+{%- endblock %}
+
+{% block content %}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
+
+  {{ taskListHeader.render({
+    title: 'About the Supply Contract',
+    dealId: deal._id,
+    items: taskListItems,
+    entityName: 'about'
+  })}}
+
+  <form method="POST" autocomplete="off">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <div id="supplier-form">
+      {{ supplierTypeDropdown.render({
+        deal: deal,
+        validationErrors: validationErrors
+      }) }}
+
+      {{ supplierNameAndAddressLookup.render({
+        deal: deal,
+        mappedCountries: mappedCountries,
+        validationErrors: validationErrors
+      }) }}
+
+      {{ supplierCorrespondenceAddress.render({
+        deal: deal,
+        mappedCountries: mappedCountries,
+        validationErrors: validationErrors
+      }) }}
+
+      {{ industrySectorsDropdown.render({
+        industrySectors: industrySectors,
+        mappedIndustrySectors: mappedIndustrySectors,
+        deal: deal,
+        validationErrors: validationErrors
+      }) }}
+
+      {{ industryClassesDropdown.render({
+        mappedIndustryClasses: mappedIndustryClasses,
+        deal: deal,
+        validationErrors: validationErrors
+      }) }}
+
+      {{ smeTypeRadios.render({
+        deal: deal,
+        validationErrors: validationErrors
+      }) }}
+
+      {{ supplyContractDescription.render({
+        deal: deal,
+        validationErrors: validationErrors
+      }) }}
+
+      {{ legallyDistinct.render({
+        deal: deal,
+        mappedCountries: mappedCountries,
+        validationErrors: validationErrors
+      }) }}
+
+      {{ govukButton({
+        "text": "Next Page",
+        "attributes" : { "data-cy" : "NextPage" }
+      }) }}
+
+      {{ govukButton({
+        "text": "Save and go back to deal",
+        "classes" : "govuk-button govuk-button--secondary",
+        "attributes" : {
+          "data-cy" : "SaveAndGoBack",
+          "formaction" : "/contract/"+ deal._id +"/about/supplier/save-go-back"
+        }
+      }) }}
+    </div>
+
+  </form>
+
+{% endblock %}

@@ -1,0 +1,80 @@
+$govuk-new-link-styles: true;
+
+@import "node_modules/govuk-frontend/govuk/all";
+@import "node_modules/@ministryofjustice/frontend/moj/all";
+
+// custom styles
+@import "./moj-sub-navigation.scss";
+@import "./moj-primary-navigation.scss";
+
+@import "./pagination.scss";
+@import "./buttons.scss";
+
+@import "./typography.scss";
+
+@import "./accordion.scss";
+@import "./layout.scss";
+@import "./icons";
+@import "./table.scss";
+@import "./tabs.scss";
+@import "./list.scss";
+@import "./components/separator.scss";
+
+@import "./activity-feed.scss";
+@import "./case-summary.scss";
+
+@import "./header.scss";
+
+@import "./task-filters.scss";
+@import "./tasks-table.scss";
+@import "./deal-parties.scss";
+@import "./search-form.scss";
+
+@import "./accessibility.scss";
+@import "./footer.scss";
+
+@import "./utilisation-reports.scss";
+@import "./fee-record-summary.scss";
+
+@import "./block-header.scss";
+
+.js-enabled .js-hidden {
+  display: none;
+}
+
+.govuk-summary-list {
+  &__key {
+    width: 50%;
+  }
+  &__value {
+    padding-left: 15px;
+    width: 40%;
+  }
+  &__actions {
+    width: 10%;
+  }
+}
+
+#deal-ukef-heading,
+#deal-supporting-information-bank-security,
+#deal-bank-details-ukef-heading {
+  padding-top: 30px;
+}
+
+#deal-bank-security-text,
+#deal-bank-security-facility-text {
+  white-space: pre-line;
+}
+
+#facility-ukef-heading-grey {
+padding-top: 90px;
+}
+
+#facility-covered-percentage {
+  float: right;
+}
+
+#parties-bond-beneficiary-area-ukef-hint,
+#parties-bond-issuer-area-ukef-hint {
+margin-top: -36px;
+}

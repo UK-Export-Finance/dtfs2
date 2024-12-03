@@ -1,0 +1,16 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+<p class="govuk-heading-l" data-cy="submit-heading">
+  Submit
+</p>
+
+{% if submit %}
+  {{ govukButton({
+    text: "Submit to be checked at your bank",
+    attributes: {
+      'data-cy': 'submit-button'
+    }
+  }) }}
+{% else %}
+  <p class="govuk-body" data-cy="submit-validation-text">You cannot submit yet - you must complete all required sections first.</p>
+{% endif %}

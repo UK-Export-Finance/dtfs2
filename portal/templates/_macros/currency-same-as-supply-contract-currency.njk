@@ -1,0 +1,107 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% import '_macros/date-field.njk' as dateField %}
+
+{% macro render(facility, radioFieldsetText, currencies, validationErrors) %}
+
+  {% set showAdditionalFieldsByDefault = facility.currencySameAsSupplyContractCurrency === "false" %}
+
+  {{ govukRadios({
+    classes: "govuk-radios--inline",
+    idPrefix: "currencySameAsSupplyContractCurrency",
+    name: "currencySameAsSupplyContractCurrency",
+    fieldset: {
+      legend: {
+        text: radioFieldsetText
+      }
+    },
+    items: [
+      {
+        value: "true",
+        text: "Yes",
+        checked: facility.currencySameAsSupplyContractCurrency === "true",
+        attributes: {
+          'data-cy': 'currency-same-as-supply-contract-currency-yes'
+        }
+      },
+      {
+        value: "false",
+        text: "No",
+        checked: facility.currencySameAsSupplyContractCurrency === "false",
+        attributes: {
+          'data-cy': 'currency-same-as-supply-contract-currency-no'
+        }
+      }
+    ],
+    errorMessage: validationErrors.errorList.currencySameAsSupplyContractCurrency and {
+      text: validationErrors.errorList.currencySameAsSupplyContractCurrency.text,
+      attributes: {
+        'data-cy': 'currencySameAsSupplyContractCurrency-error-message'
+      }
+    }
+  }) }}
+
+  <div
+    id="additional-form-fields"
+    {% if showAdditionalFieldsByDefault === false %}
+    class="govuk-visually-hidden"
+    {% endif %}
+  >
+
+    {{ govukSelect({
+      id: "currency",
+      name: "currency",
+      label: {
+        text: "Currency"
+      },
+      attributes: {
+        'data-cy': 'currency'
+      },
+      items: currencies,
+      errorMessage: validationErrors.errorList.currency and {
+        attributes: {
+          "data-cy": "currency-error-message"
+        },
+        text: validationErrors.errorList.currency.text
+      }
+    }) }}
+
+    {{ govukInput({
+      inputmode: 'numeric',
+      label: {
+        text: "Conversion rate to the Supply Contract currency"
+      },
+      hint: {
+        text: "E.g. EUR to USD (100 EUR/ 0.91 = 109.89 USD)"
+      },
+      classes: "govuk-input--width-10",
+      id: "conversionRate",
+      name: "conversionRate",
+      value: facility.conversionRate,
+      pattern: '[0-9]*\.[0-9]{0,6}',
+      attributes: {
+        'data-cy': 'conversion-rate',
+        maxlength: '13'
+      },
+      errorMessage: validationErrors.errorList.conversionRate and {
+        text: validationErrors.errorList.conversionRate.text,
+        attributes: {
+          'data-cy': 'conversion-rate-error-message'
+        }
+      }
+    }) }}
+
+    {{ dateField.render(
+      legend = 'Conversion rate date',
+      id = 'conversionRateDate',
+      hint = 'For example, 27 11 2019',
+      dayValue = facility['conversionRateDate-day'],
+      monthValue = facility['conversionRateDate-month'],
+      yearValue = facility['conversionRateDate-year'],
+      error = validationErrors.errorList.conversionRateDate
+    )}}
+
+  </div>
+
+{% endmacro %}

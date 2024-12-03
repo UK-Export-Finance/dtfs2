@@ -1,0 +1,187 @@
+# Workflow Name: Lint
+# Trigger: Pull requests to the main branch that modify specific files (listed in paths).
+#
+# Environment:
+# environment: set to dev
+# timezone: retrieved from vars.TIMEZONE
+#
+# Setup Test Infrastructure:
+# Name: Infrastructure setup
+# Runs on: ubuntu-latest
+# Outputs environment and timezone variables for use in subsequent jobs.
+# Steps:
+# Echoes the environment and timezone for verification.
+#
+# Lint:
+# Name: Scanning
+# Depends on: setup
+# Runs on: ubuntu-latest
+# Steps:
+# Sets the timezone using the specified value.
+# Checks out the repository code.
+# Sets up the specified Node.js version.
+# Installs dependencies using npm ci.
+# Runs linting using the command npm run lint:all.
+#
+# Key Points:
+# The workflow focuses on linting, which checks code for potential errors, style issues, and adherence to best practices.
+# It uses a sequential structure, with the linting job depending on the setup job.
+# Environment variables are shared between jobs for consistency.
+# The workflow leverages actions from the GitHub Marketplace for setting the timezone and installing Node.js.
+#
+
+name: Lint
+run-name: 🎨 Lint checking on ${{ github.event.number }}
+
+on:
+  pull_request:
+    branches:
+      - main
+      - 'release-*'
+
+    paths:
+      - 'package*.json'
+      - 'docker*.yml'
+      - '.github/**'
+      - 'gef-ui/**'
+      - 'portal/**'
+      - 'portal-api/**'
+      - 'trade-finance-manager-ui/**'
+      - 'trade-finance-manager-api/**'
+      - 'external-api/**'
+      - 'dtfs-central-api/**'
+      - 'azure-functions/**'
+      - 'e2e-tests/**'
+      - 'utils/**'
+      - 'libs/**'
+
+env:
+  environment: dev
+  timezone: ${{ vars.TIMEZONE }}
+
+jobs:
+  # 1. Setup test infrastructure
+  setup:
+    name: Infrastructure setup 🔧
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ env.environment }}
+      timezone: ${{ env.timezone }}
+    steps:
+      - name: Environment 🧪
+        run: echo "Environment set to ${{ env.environment }}"
+
+      - name: Timezone 🌐
+        run: echo "Timezone set to ${{ env.timezone }}"
+
+  # 2. Lint
+  lint:
+    name: Scanning 🎨
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci
+
+      - name: Linting
+        working-directory: ./
+        run: npm run lint:all
+
+  # 3. Prettier
+  prettier:
+    name: Prettier 🎨
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci
+
+      - name: Linting
+        working-directory: ./
+        run: npm run prettier:all
+
+  # 4. Type check
+  typecheck:
+    name: TypeScript ⌨️
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci
+
+      - name: Validate
+        working-directory: ./
+        run: npm run type-check:all
+
+  # 5. YAML check
+  yaml:
+    name: YAML ⌨️
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci
+
+      - name: Validate
+        working-directory: ./
+        run: npm run validate:yml

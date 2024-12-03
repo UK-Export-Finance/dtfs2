@@ -1,0 +1,20 @@
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+{% macro render(opts) %}
+  {% set deal = opts.deal %}
+  {% set validationErrors = opts.validationErrors %}
+  {% set mappedIndustryClasses = opts.mappedIndustryClasses %}
+
+  {{ govukSelect({
+    id: "industry-class",
+    name: "industry-class",
+    label: { text: "Industry class" },
+    classes: "govuk-!-width-one-half",
+    attributes: {
+      "data-cy": "industry-class"
+    },
+    items: mappedIndustryClasses,
+    errorMessage: validationErrors.errorList["industry-class"]
+  }) }}
+
+{% endmacro %}

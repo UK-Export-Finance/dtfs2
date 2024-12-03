@@ -1,0 +1,406 @@
+services:
+  clamav:
+    image: mkodockx/docker-clamav:alpine
+    restart: always
+    ports:
+      - '3310:3310'
+
+  dtfs-sql:
+    build: ./libs/common/src/sql-db-connection
+    restart: always
+    environment:
+      - ACCEPT_EULA
+      - MSSQL_SA_PASSWORD
+      - SQL_DB_USERNAME
+      - SQL_DB_PASSWORD
+      - SQL_DB_NAME
+    ports:
+      - '1433:1433'
+    volumes:
+      - ./dtfs-sql-volume-dtfs-submissions:/data/db
+    healthcheck:
+      test: ['CMD', '/opt/mssql-tools18/bin/sqlcmd', '-C -S', 'localhost', '-U', 'sa', '-P', MSSQL_SA_PASSWORD, '-Q', 'SELECT 1;']
+      retries: 3
+      interval: 60s
+      timeout: 10s
+      start_period: 60s
+
+  dtfs-mongo:
+    build:
+      context: ./mongodb
+      dockerfile: Dockerfile
+      args:
+        MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+        MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+        MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    environment:
+      - MONGO_INITDB_DATABASE
+      - MONGO_INITDB_ROOT_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD
+    restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./dtfs-mongo-volume-dtfs-submissions:/data/db
+
+  dtfs-central-api:
+    build:
+      context: .
+      dockerfile: ./dtfs-central-api/Dockerfile
+    image: dtfs/dtfs-central-api
+    restart: always
+    depends_on:
+      - dtfs-sql
+      - dtfs-mongo
+      - external-api
+    ports:
+      - '5005:5005' # http
+      - '9223:9223' # debug
+    volumes:
+      - ./dtfs-central-api/src:/app/dtfs-central-api/src:ro
+      - ./libs:/app/libs:ro
+    environment:
+      - TZ
+      - PORT=5005
+      - CORS_ORIGIN
+      - EXTERNAL_API_URL=http://external-api:5002
+      - MONGO_INITDB_DATABASE
+      - MONGODB_URI
+      - PORTAL_API_KEY
+      - TFM_API_KEY
+      - DTFS_CENTRAL_API_KEY
+      - EXTERNAL_API_KEY
+      - NODE_ENV
+      - RATE_LIMIT_THRESHOLD
+      - AUDIT_API_URL
+      - AUDIT_API_USERNAME
+      - AUDIT_API_PASSWORD
+      - CHANGE_STREAM_ENABLED
+      - UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
+      - SQL_DB_HOST
+      - SQL_DB_PORT
+      - SQL_DB_USERNAME
+      - SQL_DB_PASSWORD
+      - SQL_DB_NAME
+      - SQL_DB_LOGGING_ENABLED
+      - ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE
+      - DELETION_AUDIT_LOGS_TTL_SECONDS
+      - FF_TFM_DEAL_CANCELLATION_ENABLED
+      - DEAL_CANCELLATION_SCHEDULE
+      - FF_PORTAL_FACILITY_AMENDMENTS_ENABLED
+
+  trade-finance-manager-ui:
+    build:
+      context: .
+      dockerfile: ./trade-finance-manager-ui/Dockerfile
+    image: dtfs/trade-finance-manager-ui
+    depends_on:
+      - trade-finance-manager-api
+    ports:
+      - '5003:5003' # http
+      - '9224:9224' # debug
+    volumes:
+      - ./trade-finance-manager-ui/server:/app/trade-finance-manager-ui/server:ro
+      - ./trade-finance-manager-ui/public:/app/trade-finance-manager-ui/public:ro
+      - ./trade-finance-manager-ui/templates:/app/trade-finance-manager-ui/templates:ro
+      - ./libs:/app/libs:ro
+    environment:
+      - TZ
+      - PORT=5003
+      - PORTAL_API_KEY
+      - TFM_API_KEY
+      - DTFS_CENTRAL_API_KEY
+      - EXTERNAL_API_KEY
+      - TFM_API_URL=http://trade-finance-manager-api:5004
+      - EXTERNAL_API_URL=http://external-api:5002
+      - UKEF_TFM_API_SYSTEM_KEY
+      - ESTORE_URL
+      - REDIS_HOSTNAME=redis
+      - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
+      - SESSION_SECRET
+      - NODE_ENV
+      - RATE_LIMIT_THRESHOLD
+      - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
+      - CONTACT_US_SELF_SERVICE_PORTAL_URL
+      - CONTACT_US_EMAIL_ADDRESS
+      - FF_TFM_PAYMENT_RECONCILIATION_ENABLED
+      - FF_FEE_RECORD_CORRECTION_ENABLED
+      - FF_TFM_FACILITY_END_DATE_ENABLED
+      - FF_TFM_DEAL_CANCELLATION_ENABLED
+      - FF_TFM_SSO_ENABLED
+      - ENTRA_ID_CLIENT_ID
+      - ENTRA_ID_CLOUD_INSTANCE
+      - ENTRA_ID_TENANT_ID
+      - ENTRA_ID_CLIENT_SECRET
+      - ENTRA_ID_REDIRECT_URL
+
+  trade-finance-manager-api:
+    build:
+      context: .
+      dockerfile: ./trade-finance-manager-api/Dockerfile
+    image: dtfs/trade-finance-manager-api
+    restart: always
+    depends_on:
+      - portal-api
+      - dtfs-central-api
+      - external-api
+    ports:
+      - '5004:5004' # http
+      - '9225:9225' # debug
+    volumes:
+      - ./trade-finance-manager-api/src:/app/trade-finance-manager-api/src:ro
+      - ./libs:/app/libs:ro
+    environment:
+      - TZ
+      - PORT=5004
+      - CORS_ORIGIN
+      - EXTERNAL_API_URL=http://external-api:5002
+      - PORTAL_API_KEY
+      - TFM_API_KEY
+      - DTFS_CENTRAL_API_KEY
+      - EXTERNAL_API_KEY
+      - MONGO_INITDB_DATABASE
+      - MONGODB_URI
+      - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
+      - AZURE_PORTAL_STORAGE_ACCOUNT
+      - AZURE_PORTAL_STORAGE_ACCESS_KEY
+      - AZURE_UTILISATION_REPORTS_FILESHARE_NAME
+      - UKEF_TFM_API_SYSTEM_KEY=${UKEF_TFM_API_SYSTEM_KEY}
+      - UKEF_TFM_API_REPORTS_KEY
+      - TFM_UI_URL=http://localhost:5003
+      - AZURE_ACBS_FUNCTION_URL=http://acbs
+      - JWT_SIGNING_KEY
+      - JWT_VALIDATING_KEY
+      - UKEF_INTERNAL_NOTIFICATION=test
+      - NODE_ENV
+      - RATE_LIMIT_THRESHOLD
+      - CHANGE_STREAM_ENABLED
+      - DELETION_AUDIT_LOGS_TTL_SECONDS
+      - FF_TFM_FACILITY_END_DATE_ENABLED
+      - FF_TFM_DEAL_CANCELLATION_ENABLED
+      - ENTRA_ID_CLIENT_ID
+      - ENTRA_ID_CLOUD_INSTANCE
+      - ENTRA_ID_TENANT_ID
+      - ENTRA_ID_CLIENT_SECRET
+      - ENTRA_ID_REDIRECT_URL
+
+  portal:
+    build:
+      context: .
+      dockerfile: ./portal/Dockerfile
+    image: dtfs/portal
+    restart: always
+    depends_on:
+      - redis
+      - portal-api
+      - clamav
+    ports:
+      - '5000:5000' # http
+      - '9226:9226' # debug
+    volumes:
+      - ./portal/server:/app/portal/server:ro
+      - ./portal/public:/app/portal/public:ro
+      - ./portal/templates:/app/portal/templates:ro
+      - ./libs:/app/libs:ro
+    environment:
+      - TZ
+      - PORTAL_API_URL=http://portal-api:5001
+      - EXTERNAL_API_URL=http://external-api:5002
+      - PORTAL_API_KEY
+      - TFM_API_KEY
+      - DTFS_CENTRAL_API_KEY
+      - EXTERNAL_API_KEY
+      - REDIS_HOSTNAME=redis
+      - SESSION_SECRET
+      - NODE_ENV
+      - RATE_LIMIT_THRESHOLD
+      - CLAMAV_PORT=3310
+      - CLAMAV_HOST=clamav
+      - CLAMAV_DEBUG_MODE_ENABLED=true
+      - CLAMAV_SCANNING_ENABLED
+      - UTILISATION_REPORT_MAX_FILE_SIZE_BYTES=1048576
+      - CONTACT_US_EMAIL_ADDRESS
+      - FF_TFM_DEAL_CANCELLATION_ENABLED
+      - FF_PORTAL_FACILITY_AMENDMENTS_ENABLED
+
+  portal-api:
+    build:
+      context: .
+      dockerfile: ./portal-api/Dockerfile
+    image: dtfs/portal-api
+    restart: always
+    depends_on:
+      - dtfs-central-api
+      - external-api
+    ports:
+      - '5001:5001' # http
+      - '9227:9227' # debug
+    volumes:
+      - ./portal-api/src:/app/portal-api/src:ro
+      - ./libs:/app/libs:ro
+    environment:
+      - TZ
+      - PORT=5001
+      - CORS_ORIGIN
+      - JWT_SIGNING_KEY
+      - JWT_VALIDATING_KEY
+      - MONGO_INITDB_DATABASE
+      - MONGODB_URI
+      - AZURE_PORTAL_STORAGE_ACCOUNT
+      - AZURE_PORTAL_STORAGE_ACCESS_KEY
+      - AZURE_PORTAL_FILESHARE_NAME
+      - AZURE_PORTAL_EXPORT_FOLDER
+      - AZURE_UTILISATION_REPORTS_FILESHARE_NAME
+      - GOV_NOTIFY_API_KEY
+      - GOV_NOTIFY_EMAIL_RECIPIENT
+      - EXTERNAL_API_URL=http://external-api:5002
+      - PORTAL_API_KEY
+      - TFM_API_KEY
+      - DTFS_CENTRAL_API_KEY
+      - EXTERNAL_API_KEY
+      - PORTAL_UI_URL
+      - TFM_UI_URL=http://localhost:5003
+      - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
+      - TFM_API_URL=http://trade-finance-manager-api:5004
+      - NODE_ENV
+      - RATE_LIMIT_THRESHOLD
+      - UKEF_GEF_REPORTING_EMAIL_RECIPIENT
+      - UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE
+      - UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
+      - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
+      - UTILISATION_REPORT_DUE_EMAIL_SCHEDULE
+      - UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE
+      - SQL_DB_HOST
+      - SQL_DB_PORT
+      - SQL_DB_USERNAME
+      - SQL_DB_PASSWORD
+      - SQL_DB_NAME
+      - SQL_DB_LOGGING_ENABLED
+      - CHANGE_STREAM_ENABLED
+      - DELETION_AUDIT_LOGS_TTL_SECONDS
+      - GEF_DEAL_VERSION
+      - FF_PORTAL_FACILITY_AMENDMENTS_ENABLED
+
+  external-api:
+    build:
+      context: .
+      dockerfile: ./external-api/Dockerfile
+    image: dtfs/external-api
+    restart: always
+    depends_on:
+      - dtfs-mongo
+    ports:
+      - '5002:5002' # http
+      - '9228:9228' # debug
+    volumes:
+      - ./external-api/src:/app/external-api/src:ro
+      - ./libs:/app/libs:ro
+    environment:
+      - TZ
+      - PORT=5002
+      - PORTAL_API_KEY
+      - TFM_API_KEY
+      - DTFS_CENTRAL_API_KEY
+      - EXTERNAL_API_KEY
+      - CORS_ORIGIN
+      - APIM_TFS_URL
+      - APIM_TFS_KEY
+      - APIM_TFS_VALUE
+      - APIM_MDM_URL
+      - APIM_MDM_KEY
+      - APIM_MDM_VALUE
+      - APIM_ESTORE_URL
+      - APIM_ESTORE_KEY
+      - APIM_ESTORE_VALUE
+      - AZURE_ACBS_FUNCTION_URL=http://acbs
+      - GOV_NOTIFY_API_KEY
+      - MONGO_INITDB_DATABASE
+      - MONGODB_URI
+      - EXTERNAL_API_URL=http://external-api:5002
+      - NODE_ENV
+      - RATE_LIMIT_THRESHOLD
+      - ESTORE_CRON_MANAGER_SCHEDULE
+    entrypoint: npx ts-node external-api/src/index.ts
+
+  gef-ui:
+    build:
+      context: .
+      dockerfile: ./gef-ui/Dockerfile
+    image: dtfs/gef-ui
+    restart: always
+    depends_on:
+      - redis
+      - portal-api
+    ports:
+      - '5006:5006' # http
+      - '9229:9229' # debug
+    volumes:
+      - ./gef-ui/server:/app/gef-ui/server:ro
+      - ./gef-ui/public:/app/gef-ui/public:ro
+      - ./gef-ui/templates:/app/gef-ui/templates:ro
+      - ./libs:/app/libs:ro
+    environment:
+      - TZ
+      - PORTAL_API_URL=http://portal-api:5001
+      - EXTERNAL_API_URL=http://external-api:5002
+      - REDIS_HOSTNAME=redis
+      - SESSION_SECRET
+      - AZURE_PORTAL_STORAGE_ACCOUNT
+      - AZURE_PORTAL_STORAGE_ACCESS_KEY
+      - NODE_ENV
+      - PORTAL_API_KEY
+      - TFM_API_KEY
+      - DTFS_CENTRAL_API_KEY
+      - EXTERNAL_API_KEY
+      - RATE_LIMIT_THRESHOLD
+      - CONTACT_US_EMAIL_ADDRESS
+      - GEF_DEAL_VERSION
+
+  redis:
+    image: 'redis:alpine'
+    ports:
+      - '6379:6379'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 300M
+
+  reverse-proxy:
+    build: ./reverse-proxy
+    image: 'dtfs/reverse-proxy'
+    depends_on:
+      - portal
+      - gef-ui
+    ports:
+      - '80:80'
+    environment:
+      - PORTAL_UI=portal:5000
+      - GEF_UI=gef-ui:5006
+    deploy:
+      resources:
+        limits:
+          cpus: '0.01'
+          memory: 150M
+
+  acbs:
+    build:
+      context: .
+      dockerfile: ./azure-functions/acbs-function/Dockerfile
+    image: dtfs/acbs
+    profiles:
+      - acbs
+    restart: always
+    ports:
+      - '7071:80'
+    environment:
+      - TZ
+      - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
+      - FUNCTIONS_WORKER_RUNTIME=node
+      - WEBSITE_HOSTNAME=acbs:7071
+      - APIM_MDM_URL
+      - APIM_MDM_KEY
+      - APIM_MDM_VALUE
+      - APIM_TFS_URL
+      - APIM_TFS_KEY
+      - APIM_TFS_VALUE

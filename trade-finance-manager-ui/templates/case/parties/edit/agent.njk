@@ -1,0 +1,38 @@
+{% import '../_macros/parties-agent-area.njk' as agentArea %}
+{% import '../../_macros/save-close-buttons.njk' as saveCloseButtons %}
+{% import '../../_macros/back-link.njk' as back %}
+
+{% extends "index.njk" %}
+{% set primary = 'cases' %}
+
+{% block pageTitle -%}
+  Edit agent details: {{ deal.eligibility.agentName }}
+{%- endblock %}
+
+{% block content %}
+
+  {{ back.render({
+      return: "/case/" + deal._id + "/parties"
+  }) }}
+
+  <form autocomplete="off" method="POST">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    {{ agentArea.render({
+      deal: deal,
+      tfm: tfm,
+      userCanEdit: userCanEdit,
+      renderEditLink: renderEditLink,
+      renderEditForm: renderEditForm,
+      errors: errors,
+      urn: urn
+    }) }}
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        {{ saveCloseButtons.render({returnTo: "/case/" + deal._id + "/parties"}) }}
+      </div>
+    </div>
+  </form>
+{% endblock %}
+
+{% block sub_content %}{% endblock %}

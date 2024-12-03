@@ -1,0 +1,59 @@
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% import '../_macros/parties-bond-issuer-edit.njk' as bondIssuerEdit %}
+{% import '../../_macros/save-close-buttons.njk' as saveCloseButtons %}
+{% import '../../_macros/back-link.njk' as back %}
+
+{% extends "index.njk" %}
+{% set primary = 'cases' %}
+
+{% block pageTitle -%}
+  Edit bond issuer details
+{%- endblock %}
+
+{% block content %}
+
+  {{ back.render({
+      return: "/case/" + deal._id + "/parties"
+  }) }}
+
+  {% set filteredFacilities = deal.facilities | bondIssuerFacilities %}
+
+  {% if errors %}
+    {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errors.errorSummary,
+        attributes: {
+          'data-cy': 'error-summary'
+        }
+      }) }}
+  {% endif %}
+
+  <form autocomplete="off" method="POST">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <div class="govuk-grid-row {% if params.renderEditLink %}ukef-flex-container deal{% endif %}">
+      <div class="govuk-grid-column-one-half">
+        <h1 class="ukef-heading-l govuk-!-margin-top-2" data-cy="edit-heading">Edit bond issuer details</h1>
+      </div>
+    </div>
+
+    {% for facility in filteredFacilities %}
+      <input name="facilityId[]" type="hidden" value="{{ facility._id }}"/>
+      {{ bondIssuerEdit.render({
+        bond: facility,
+        userCanEdit: userCanEdit,
+        renderEditForm: renderEditForm,
+        errors: errors,
+        urn: urn,
+        index: loop.index
+      }) }}
+    {% endfor %}
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        {{ saveCloseButtons.render({returnTo: "/case/" + deal._id + "/parties"}) }}
+      </div>
+    </div>
+  </form>
+{% endblock %}
+
+{% block sub_content %}{% endblock %}

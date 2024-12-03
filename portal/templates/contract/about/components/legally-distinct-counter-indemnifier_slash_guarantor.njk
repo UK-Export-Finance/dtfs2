@@ -1,0 +1,87 @@
+{% import './address-fields.njk' as address %}
+{% import './input-companies-house-reg-number.njk' as companiesHouse %}
+{% import './indemnifier-correspondence-address.njk' as indemnifierCorrespondenceAddress %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% macro render(opts) %}
+  {% set deal = opts.deal %}
+  {% set countries = opts.mappedCountries %}
+  {% set validationErrors = opts.validationErrors %}
+
+  {{
+    govukRadios({
+      fieldset: {
+        legend: { text: "Is the counter-indemnifier (for bonds) or guarantor (for loans) legally distinct from the supplier?" }
+      },
+      idPrefix: "legallyDistinct-",
+      name: "legallyDistinct",
+      classes: "govuk-radios--inline",
+      items: [
+        {
+          value: "true",
+          text: "Yes",
+          attributes: {
+            "data-cy": "legallyDistinct-true"
+          },
+          checked: deal.submissionDetails.legallyDistinct === 'true'
+        },
+        {
+          value: "false",
+          text: "No",
+          attributes: {
+            "data-cy": "legallyDistinct-false"
+          },
+          checked: deal.submissionDetails.legallyDistinct === 'false'
+        }
+      ],
+      errorMessage: validationErrors.errorList.legallyDistinct
+    })
+  }}
+
+  {% set renderByDefault=deal.submissionDetails.legallyDistinct %}
+  {% if renderByDefault !=='true' %}
+    {% set renderByDefault='false'%}
+  {% endif %}
+  <div id="additional-form-fields-indemnifier" class="{% if renderByDefault === 'false' %}display-none{% endif %}">
+
+    {{ companiesHouse.input({
+      label: 'Indemnifier Companies House registration number (optional)',
+      deal: deal,
+      prefix: 'indemnifier',
+      validationErrors: validationErrors
+    }) }}
+
+    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
+      {{ govukInput({
+        label: { text: 'Indemnifier name' },
+        hint: { text: 'You can enter up to 150 characters'},
+        classes: "govuk-!-width-one-half",
+        id: 'indemnifier-name',
+        name: 'indemnifier-name',
+        value: deal.submissionDetails["indemnifier-name"],
+        attributes: {
+          "data-cy": "indemnifier-name"
+        },
+        errorMessage: validationErrors.errorList["indemnifier-name"]
+      }) }}
+    </div>
+
+    {{ address.fields(
+      deal = deal,
+      validationErrors = validationErrors,
+      id = "indemnifier-address",
+      legend = "Indemnifier address",
+      countries = countries,
+      showCountryPleaseSelect = true
+    )}}
+
+    {{ indemnifierCorrespondenceAddress.render({
+      deal: deal,
+      countries: countries,
+      validationErrors: validationErrors
+    }) }}
+
+  </div>
+
+{% endmacro %}

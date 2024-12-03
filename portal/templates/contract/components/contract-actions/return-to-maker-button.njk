@@ -1,0 +1,48 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro render(params) %}
+  {% if params.deal.status and params.userCanSubmit %}
+
+    {% if not ["Draft", "Further Maker's input required", "Acknowledged", "In progress by UKEF", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)"].includes(params.deal.status) and params.user.roles.includes('checker') and params.user.roles.includes('maker') %}
+      {{ govukButton({
+        "disabled": false,
+        "text": "Return to Maker",
+        "classes": "govuk-button--secondary",
+        "attributes" : {
+          "data-cy" : "ReturnToMaker"
+        },
+        "href": "/contract/" + params.deal._id + "/return-to-maker"
+      }) }}
+    {% endif %}
+
+    {% if params.user.roles.includes('checker') and not params.user.roles.includes('maker') %}
+
+        {% if ["Ready for Checker's approval"].includes(params.deal.status) %}
+
+          {{ govukButton({
+            "disabled": false,
+            "text": "Return to Maker",
+            "classes": "govuk-button--secondary",
+            "attributes" : {
+              "data-cy" : "ReturnToMaker"
+            },
+            "href": "/contract/" + params.deal._id + "/return-to-maker"
+          }) }}
+
+        {% elseif  ["Draft", "Abandoned", "Acknowledged", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)", "In progress by UKEF"].includes(params.deal.status) %}
+
+          {{ govukButton({
+            "disabled": true,
+            "text": "Return to Maker",
+            "classes": "govuk-button--secondary",
+            "attributes" : {
+              "data-cy" : "ReturnToMaker"
+            },
+            "href":""
+          }) }}
+
+        {% endif %}
+    {% endif %}
+
+  {% endif %}
+{% endmacro %}

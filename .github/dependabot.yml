@@ -1,0 +1,182 @@
+# DTFS Git Hub Actions
+#####################################
+# Automatic dependencies updates
+# for the following services:
+# 1. NPM
+# 2. Docker
+# 3. GHA
+
+version: 2
+updates:
+  # NPM
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'monthly'
+      time: '00:00'
+    labels:
+      - 'chore'
+
+  # NPM
+  - package-ecosystem: 'npm'
+    directory: '/external-api'
+    schedule:
+      interval: 'monthly'
+      time: '00:00'
+    labels:
+      - 'chore'
+
+  # NPM
+  - package-ecosystem: 'npm'
+    directory: '/portal-api'
+    schedule:
+      interval: 'monthly'
+      time: '00:00'
+    labels:
+      - 'chore'
+
+  # NPM
+  - package-ecosystem: 'npm'
+    directory: '/trade-finance-manager-api'
+    schedule:
+      interval: 'monthly'
+      time: '00:00'
+    labels:
+      - 'chore'
+
+  # NPM
+  - package-ecosystem: 'npm'
+    directory: '/gef-ui'
+    schedule:
+      interval: 'monthly'
+      time: '00:00'
+    labels:
+      - 'chore'
+
+  # NPM
+  - package-ecosystem: 'npm'
+    directory: '/portal'
+    schedule:
+      interval: 'monthly'
+      time: '00:00'
+    labels:
+      - 'chore'
+
+  # NPM
+  - package-ecosystem: 'npm'
+    directory: '/trade-finance-manager-ui'
+    schedule:
+      interval: 'monthly'
+      time: '00:00'
+    labels:
+      - 'chore'
+
+  # NPM
+  - package-ecosystem: 'npm'
+    directory: '/azure-functions/acbs-function'
+    schedule:
+      interval: 'monthly'
+      time: '00:00'
+    labels:
+      - 'chore'
+
+  # NPM
+  - package-ecosystem: 'npm'
+    directory: '/dtfs-central-api'
+    schedule:
+      interval: 'monthly'
+      time: '00:00'
+    labels:
+      - 'chore'
+
+  # Dockerfile
+  - package-ecosystem: 'docker'
+    directory: '/external-api'
+    schedule:
+      interval: 'monthly'
+      time: '00:00'
+    labels:
+      - 'chore'
+
+  # Dockerfile
+  - package-ecosystem: 'docker'
+    directory: '/portal-api'
+    schedule:
+      interval: 'monthly'
+      time: '00:00'
+    labels:
+      - 'chore'
+
+  # Dockerfile
+  - package-ecosystem: 'docker'
+    directory: '/trade-finance-manager-api'
+    schedule:
+      interval: 'monthly'
+      time: '00:00'
+    labels:
+      - 'chore'
+
+  # Dockerfile
+  - package-ecosystem: 'docker'
+    directory: '/gef-ui'
+    schedule:
+      interval: 'monthly'
+      time: '00:00'
+    labels:
+      - 'chore'
+
+  # Dockerfile
+  - package-ecosystem: 'docker'
+    directory: '/portal'
+    schedule:
+      interval: 'monthly'
+      time: '00:00'
+    labels:
+      - 'chore'
+
+  # Dockerfile
+  - package-ecosystem: 'docker'
+    directory: '/trade-finance-manager-ui'
+    schedule:
+      interval: 'monthly'
+      time: '00:00'
+    labels:
+      - 'chore'
+
+  # Dockerfile
+  - package-ecosystem: 'docker'
+    directory: '/azure-functions/acbs-function'
+    schedule:
+      interval: 'monthly'
+      time: '00:00'
+    labels:
+      - 'chore'
+
+  # Dockerfile
+  - package-ecosystem: 'docker'
+    directory: '/dtfs-central-api'
+    schedule:
+      interval: 'monthly'
+      time: '00:00'
+    labels:
+      - 'chore'
+
+  # Dockerfile
+  - package-ecosystem: 'docker'
+    directory: '/reverse-proxy'
+    schedule:
+      interval: 'monthly'
+      time: '00:00'
+    labels:
+      - 'chore'
+
+  # Git Hub Actions
+  #  Set the directory to `/` for
+  # .github/workflows GHA files
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'monthly'
+      time: '00:00'
+    labels:
+      - 'chore'

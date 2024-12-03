@@ -1,0 +1,47 @@
+{% from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation %}
+
+{% set allDealsNavItem = {
+  text: "All deals",
+  href: "/deals",
+  active: (activePrimaryNavigation == "all deals"),
+  attributes: {
+    "data-cy": "all-deals-nav-link"
+  }
+} %}
+
+{% set allFacilitiesNavItem = {
+  text: "All facilities",
+  href: "/facilities",
+  active: (activePrimaryNavigation == "all facilities"),
+  attributes: {
+    "data-cy": "all-facilities-nav-link"
+  }
+} %}
+
+{% set bankReportsNavItem = {
+  text: "Bank reports",
+  href: "/utilisation-reports",
+  active: (activePrimaryNavigation == "utilisation reports"),
+  attributes: {
+    "data-cy": "bank-reports-nav-link"
+  }
+} %}
+
+{% set navItems = [] %}
+
+{% if user %}
+  {% if user | userIsOnlyInTeams(['PDC_READ']) or user | userIsOnlyInTeams(['PDC_RECONCILE']) or user | userIsOnlyInTeams(['PDC_READ', 'PDC_RECONCILE']) %}
+    {% set navItems = [bankReportsNavItem] %}
+  {% elif user | userIsInTeam(['PDC_READ', 'PDC_RECONCILE']) %}
+    {% set navItems = [allDealsNavItem, allFacilitiesNavItem, bankReportsNavItem] %}
+  {% else %}
+    {% set navItems = [allDealsNavItem, allFacilitiesNavItem] %}
+  {% endif %}
+{% endif %}
+
+{% if navItems.length %}
+  {{ mojPrimaryNavigation({
+    label: "Primary navigation",
+    items: navItems
+  }) }}
+{% endif %}

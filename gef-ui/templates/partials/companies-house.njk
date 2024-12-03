@@ -1,0 +1,93 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% block pageTitle -%}
+  Companies House registration number
+{%- endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  {% if status !== 'change' %}
+    {{ govukBackLink({
+      text: "Back to previous page",
+      href: "/gef/application-details/" + dealId,
+      attributes: {
+        'data-cy': 'back-link'
+      }
+    }) }}
+  {% endif %}
+
+  <header data-cy="application-details-page">
+    <span class="govuk-caption-xl" data-cy="heading-caption">
+      About the exporter
+    </span>
+    <h1 class="govuk-heading-xl" data-cy="main-heading">
+      Companies House registration number
+    </h1>
+  </header>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <form method="post" data-cy="form">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        {{ govukInput({
+          label: {
+            text: "The correct format has 8 characters, for example, 89898989 or SC907816."
+          },
+          id: "regNumber",
+          name: "regNumber",
+          value: regNumber,
+          attributes: {
+            'data-cy': 'reg-number-field'
+          },
+          errorMessage: errors and {
+            text: errors.fieldErrors.regNumber.text,
+            attributes: {
+              'data-cy': 'reg-number-field-error'
+            }
+          }
+        }) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            attributes: {
+              'data-cy': 'continue-button'
+            }
+          }) }}
+
+          <a
+            class="govuk-link"
+            href="/gef/application-details/{{dealId}}"
+            data-cy="cancel-link">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukDetails({
+        summaryText: "I do not have a Companies House registration number for the exporter",
+        text: "You must ask the exporter to provide a Companies House registration number to continue.",
+        attributes: {
+          'data-cy': 'summary-details'
+        }
+      }) }}
+    </div>
+  </div>
+
+{% endblock %}

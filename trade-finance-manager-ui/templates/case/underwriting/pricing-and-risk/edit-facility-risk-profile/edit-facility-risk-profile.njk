@@ -1,0 +1,92 @@
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% import './_macros/legend-html.njk' as legendHtml %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle -%}
+  What’s the risk profile for this facility?
+{%- endblock %}
+
+{% block content %}
+  <section class="govuk-!-margin-top-9">
+
+    {% if validationErrors.count %}
+      {{
+        govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: validationErrors.summary,
+          attributes: {
+            'data-cy': 'error-summary'
+          }
+        })
+      }}
+    {% endif %}
+
+    <div class="govuk-grid-row">
+
+      <div class="govuk-grid-column-three-quarters">
+
+        <h1 class="govuk-heading-l govuk-!-margin-bottom-3" data-cy="edit-facility-risk-profile-heading">What’s the risk profile for this facility?</h1>
+
+        <form method="POST" autocomplete="off">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {% set legendHtmlComponentData = {
+          caseId: dealId,
+          facilityId: facility._id,
+          ukefFacilityId: facility.facilitySnapshot.ukefFacilityId,
+          type: facility.facilitySnapshot.type
+        }%}
+
+          {{govukRadios({
+            classes: 'govuk-radios--inline',
+            fieldset: {
+              legend: {
+                html: legendHtml.render(legendHtmlComponentData)
+              }
+            },
+            name: "riskProfile",
+            items: [
+              {
+                value: "Flat",
+                text: "Flat",
+                attributes: {
+                  'data-cy': 'facility-risk-profile-input-flat'
+                }
+              },
+              {
+                value: "Variable",
+                text: "Variable",
+                attributes: {
+                  'data-cy': 'facility-risk-profile-input-variable'
+                }
+              }
+            ],
+            errorMessage: validationErrors.errorList.riskProfile and {
+              text: validationErrors.errorList.riskProfile.text,
+              attributes: {
+                'data-cy': 'facility-risk-profile-input-error'
+              }
+            }
+          }) }}
+
+          {{ govukButton({
+            text: "Save",
+            attributes: {
+              'data-cy': 'submit-button'
+            }
+          }) }}
+
+          <a class="govuk-body govuk-link govuk-!-margin-left-6 close-link" href="/case/{{ dealId }}/underwriting" data-cy="cancel-link">Cancel</a>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </section>
+
+{% endblock %}

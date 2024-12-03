@@ -1,0 +1,51 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro render(params) %}
+    {% set selectedActivityFilter = params.selectedActivityFilter %}
+    {% set csrfToken = params.csrfToken %}
+
+  <section id="activity-filters" data-cy="activity-filters">
+
+    <form method="post" autocomplete="off">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        {{ govukRadios({
+        classes: "govuk-radios--inline",
+        idPrefix: "filterType",
+        name: "filterType",
+        fieldset: {
+            legend: {
+            text: "Filter all activities and comments",
+            classes: "govuk-visually-hidden"
+            }
+        },
+        items: [
+            {
+            value: "all-activity",
+            text: "All activity",
+            checked: selectedActivityFilter === "all-activity",
+            attributes: {
+                "data-cy": "activity-comment-radio-button-all-activities"
+                }
+            },
+            {
+            value: "comments-only",
+            text: "Comments only",
+            checked: selectedActivityFilter === "comments-only",
+            attributes: {
+                "data-cy": "activity-comment-radio-button-comments-only"
+                }
+            }
+        ]
+        }) }}
+
+        {{ govukButton({
+        text: "Filter results",
+        attributes: {
+          "data-cy": "submit-button"
+        }
+      }) }}
+     </form>
+  </section>
+
+{% endmacro %}

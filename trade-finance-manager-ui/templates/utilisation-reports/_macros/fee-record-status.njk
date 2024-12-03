@@ -1,0 +1,31 @@
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+
+{% macro render(params) %}
+  {% set status = params.status %}
+  {% set displayStatus = params.displayStatus %}
+
+  {% set tagColourClassForStatus = {
+    'TO_DO': '',
+    'MATCH': 'govuk-tag--green',
+    'DOES_NOT_MATCH': 'govuk-tag--red',
+    'READY_TO_KEY': 'govuk-tag--yellow',
+    'RECONCILED': 'govuk-tag--grey',
+    'REPORT_COMPLETED': 'govuk-tag--green'
+  } %}
+
+  {% set tagColourClass = tagColourClassForStatus[status] %}
+
+  {% if tagColourClass === '' %}
+    {% set tagClasses = 'status-tag' %}
+  {% else %}
+    {% set tagClasses = ['status-tag', tagColourClass] | join(' ') %}
+  {% endif %}
+
+  {{ govukTag({
+    text: displayStatus,
+    classes: tagClasses,
+    attributes: {
+      'data-cy': 'fee-record-status'
+    }
+  }) }}
+{% endmacro %}

@@ -1,0 +1,20 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% macro render(params) %}
+  {% if params.answer === true %}
+    {% set answerText = 'Passed' %}
+    {% set answerClass = 'govuk-tag--green' %}
+  {% else %}
+    {% set answerText = 'Failed' %}
+    {% set answerClass = 'govuk-tag--red' %}
+  {% endif %}
+
+  {{govukTag({
+    text: answerText,
+    classes: answerClass,
+    attributes: {
+      'data-cy': 'eligibility-criteria-answer-tag'
+    }
+  })}}
+
+{% endmacro %}

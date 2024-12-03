@@ -1,0 +1,24 @@
+@import "node_modules/govuk-frontend/govuk/settings/_colours-organisations.scss";
+
+.form-group-disabled {
+  opacity: .7;
+}
+
+.form-group-disabled--input {
+  opacity: .7;
+  background: none;
+  color: $govuk-text-colour;
+}
+
+.form-group--input-container {
+  @include govuk-media-query($from: tablet) {
+    position: relative;
+  }
+}
+
+.created-by-you-form {
+  float: right;
+  .govuk-form-group {
+    margin-bottom: govuk-spacing(3);
+  }
+}

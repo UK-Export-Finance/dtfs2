@@ -1,0 +1,21 @@
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+
+{% macro render(opts) %}
+  {% set deal = opts.deal %}
+  {% set validationErrors = opts.validationErrors %}
+
+  {{ govukCharacterCount({
+    label: { text: "Description of supply contract" },
+    maxlength: 300,
+    attributes : {
+      "data-cy" : "supply-contract-description",
+      "maxLength" : "300"
+    },
+    name: "supply-contract-description",
+    id: "supply-contract-description",
+    value: deal.submissionDetails["supply-contract-description"],
+    errorMessage: validationErrors.errorList["supply-contract-description"]
+  }) }}
+
+{% endmacro %}

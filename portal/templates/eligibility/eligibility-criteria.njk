@@ -1,0 +1,226 @@
+{% extends "index.njk" %}
+
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+
+{% block pageTitle -%}
+  Eligibility Criteria - {{ additionalRefName }}
+{%- endblock %}
+
+{% block content %}
+
+    {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+    {% endif %}
+
+  {{ taskListHeader.render({
+    title: 'Confirm eligibility',
+    dealId: _id,
+    entityName: 'eligibility',
+    items: taskListItems
+  })}}
+
+  <form method="POST" autocomplete="off">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    {% for criterion in eligibility.criteria %}
+      {% set hasValidationError = validationErrors.errorList[criterion.id] %}
+
+      <div id="criterion-group-{{criterion.id}}" class="govuk-form-group {% if hasValidationError %}govuk-form-group--error{% endif %}" data-cy="eligibility-criteria-item">
+
+        <fieldset class="govuk-fieldset">
+
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend" tabindex=0 aria-label="Eligibility criterion {{ criterion.id }}">
+            Eligibility criterion {{ criterion.id }}
+          </legend>
+
+          <p class="govuk-body govuk-hint" tabindex=0 aria-label="{{ criterion.description }}">{{ criterion.description }}</p>
+          {% if hasValidationError %}
+          <span class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> Eligibility criterion {{ criterion.id }} is required
+          </span>
+          {% endif %}
+
+          <div class="govuk-radios govuk-radios--inline">
+
+            <div class="govuk-radios__item">
+              <input  class="govuk-radios__input"
+                      id="criterion-{{ criterion.id }}"
+                      name="criterion-{{ criterion.id }}"
+                      type="radio"
+                      value="true"
+                      {% if criterion.answer %}checked{% endif %}
+                      data-cy="criteria-true"
+                      data-id="criteria-{{ criterion.id }}-true"
+                      aria-label="Eligibility criterion {{ criterion.id }} {{ criterion.description }} true"
+                      >
+              <label class="govuk-label govuk-radios__label" for="criterion-{{ criterion.id }}">
+                True
+              </label>
+            </div>
+
+            <div class="govuk-radios__item">
+              <input  class="govuk-radios__input"
+                      id="criterion-{{ criterion.id }}-2"
+                      name="criterion-{{ criterion.id }}"
+                      type="radio"
+                      value="false"
+                      {% if criterion.answer === false %}checked{% endif %}
+                      data-cy="criteria-false"
+                      data-id="criteria-{{ criterion.id }}-false"
+                      aria-label="Eligibility criterion {{ criterion.id }}  {{ criterion.description }} false"
+                      >
+              <label class="govuk-label govuk-radios__label" for="criterion-{{ criterion.id }}-2">
+                False
+              </label>
+            </div>
+          </div>
+
+        </fieldset>
+
+      </div>
+
+      {% if criterion.id == "11" %}
+        <div id="criterion-group-additional-{{criterion.id}}" {% if criterion.answer != false  %}hidden{% endif %} aria-hidden="{% if criterion.answer != false %}true{% else %}false{% endif %}" data-cy="criteria-11-extra-info">
+
+          {% set hasAgentNameValidationError = validationErrors.errorList.agentName %}
+
+          <div id="criterion-group-agent-name" class="govuk-form-group{% if hasAgentNameValidationError %} govuk-form-group--error{% endif %}">
+
+            {{ govukCharacterCount({
+              name: "agentName",
+              id: "agentName",
+              value: eligibility.agentName,
+              maxlength: 150,
+              classes: "govuk-input govuk-!-width-one-half govuk-js-character-count",
+              attributes: {
+                "data-cy": "agents-name-input"
+              },
+              label: {
+                text: "Agent's corporate name",
+                classes: "govuk-label",
+                isPageHeading: false
+              },
+              hint: {
+                text: "This should be the legal name of the entity."
+              }
+            }) }}
+
+          </div>
+
+          {% call govukFieldset({
+            classes: "govuk-!-padding-3 box-solid",
+            legend: {
+              text: "Agent's corporate address",
+              classes: "govuk-!-margin-2",
+              isPageHeading: false
+            }
+          }) %}
+
+            {{ govukSelect({
+                id: "criterion-group-agentAddressCountry",
+                name: "agentAddressCountry",
+                label: {
+                  text: "Country"
+                },
+                items: countries,
+                errorMessage: validationErrors.errorList.agentAddressCountry,
+                attributes: {
+                  "data-cy":"agent-country"
+                }
+              }) }}
+
+            {{ govukInput({
+              id: "criterion-group-agentAddressLine1",
+              label: {
+                html: 'Address line 1 <span class="govuk-visually-hidden">line 1 of 4</span>'
+              },
+              classes: "govuk-!-width-one-half",
+              name: "agentAddressLine1",
+              value: eligibility.agentAddressLine1,
+              attributes: {
+                "maxlength": "50"
+              },
+              errorMessage: validationErrors.errorList.agentAddressLine1
+
+            }) }}
+
+            {{ govukInput({
+              id: "criterion-group-agentAddressLine2",
+              label: {
+                html: 'Address line 2 (optional) <span class="govuk-visually-hidden">line 2 of 4</span>'
+              },
+              classes: "govuk-!-width-one-half",
+              name: "agentAddressLine2",
+              value: eligibility.agentAddressLine2,
+              attributes: {
+                "maxlength": "50"
+              }
+            }) }}
+
+            {{ govukInput({
+              id: "criterion-group-agentAddressLine3",
+              label: {
+                html: 'Address line 3 (optional) <span class="govuk-visually-hidden">line 3 of 4</span>'
+              },
+              classes: "govuk-!-width-one-half",
+              name: "agentAddressLine3",
+              value: eligibility.agentAddressLine3,
+              attributes: {
+                "maxlength": "50"
+              }
+            }) }}
+
+            {{ govukInput({
+              id: "criterion-group-agentAddressTown",
+              label: {
+                html: 'City/Town<span class="govuk-visually-hidden">line 4 of 4</span>'
+              },
+              classes: "govuk-!-width-one-half",
+              name: "agentAddressTown",
+              value: eligibility.agentAddressTown,
+              errorMessage: validationErrors.errorList.agentAddressTown
+            }) }}
+
+            {{ govukInput({
+              id: "criterion-group-agentAddresspostcode",
+              label: {
+                text: "Postcode"
+              },
+              classes: "govuk-input--width-10",
+              name: "agentAddressPostcode",
+              value: eligibility.agentAddressPostcode,
+              attributes: {
+                "maxlength": "12"
+              },
+              errorMessage: validationErrors.errorList.agentAddressPostcode
+            }) }}
+
+          {% endcall %}
+        </div>
+      {% endif %}
+
+    {% endfor %}
+
+    <input type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" value="Next page" data-cy="next-page" />
+
+    <input
+      type="submit"
+      formaction="/contract/{{ _id }}/eligibility/criteria/save-go-back"
+      class="govuk-button govuk-button--secondary"
+      data-module="govuk-button"
+      value="Save and go back to deal"
+      data-cy="save-go-back-button"
+    />
+
+  </form>
+
+{% endblock %}

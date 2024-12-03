@@ -1,0 +1,54 @@
+{% from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full  {{ 'govuk-!-padding-top-8' if not successMessage }} ">
+      {{ mojSubNavigation({
+        label: 'Sub navigation',
+        items: [{
+          text: 'Tasks',
+          href: '/case/' + dealId + '/tasks',
+          active: (activeSubNavigation=='tasks'),
+          attributes: {
+            "data-cy": "tasks-link"
+          }
+        }, {
+          text: 'Deal',
+          href: '/case/' + dealId + '/deal',
+          active: (activeSubNavigation=='deal'),
+          attributes: {
+            "data-cy": "deal-link"
+          }
+        }, {
+          text: 'Parties',
+          href: '/case/' + dealId + '/parties',
+          active: (activeSubNavigation=='parties'),
+          attributes: {
+            "data-cy": "parties-link"
+          }
+        }, {
+          text: 'Documents',
+          href: '/case/' + dealId + '/documents',
+          active: (activeSubNavigation=='documents'),
+          attributes: {
+            "data-cy": "documents-link"
+          }
+        }, {
+          text: 'Activity and comments',
+          href: '/case/' + dealId + '/activity',
+          active: (activeSubNavigation=='activity'),
+          attributes: {
+            "data-cy": "activity-link"
+          }
+        }, {
+          text: 'Underwriting',
+          href: '/case/' + dealId + '/underwriting',
+          active: (activeSubNavigation=='underwriting'),
+          attributes: {
+            "data-cy": "underwriting-link"
+          }
+        }],
+        attributes: {
+          'data-cy': 'case-sub-navigation'
+        }
+      }) }}
+    </div>
+  </div>

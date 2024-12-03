@@ -1,0 +1,11 @@
+{% macro fileList(files) %}
+
+  <ul class="govuk-list">
+    {% for file in files %}
+    <li>
+      <a class="govuk-link" href="/gef/file/{{ file._id }}?filename={{ file.filename }}">{{ file.filename }} ({{ file.size }})</a>
+    </li>
+    {% endfor %}
+  </ul>
+
+{% endmacro %}

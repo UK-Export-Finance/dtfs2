@@ -1,0 +1,36 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% macro render(id, checkedValue, errorObj) %}
+
+  {{ govukRadios({
+    idPrefix: "dayCountBasis",
+    name: "dayCountBasis",
+    fieldset: {
+      legend: {
+        text: "Day count basis"
+      }
+    },
+    items: [
+      {
+        value: "360",
+        text: "360",
+        checked: checkedValue === "360"
+      },
+      {
+        value: "365",
+        text: "365",
+        checked: checkedValue === "365",
+        attributes: {
+          'data-cy': 'day-count-basis-365'
+        }
+      }
+    ],
+    errorMessage: errorObj and {
+      text: errorObj.text,
+      attributes: {
+        "data-cy": "day-count-basis-error-message"
+      }
+    }
+  }) }}
+
+{% endmacro %}

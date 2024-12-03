@@ -1,0 +1,25 @@
+{% extends "index.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle -%}
+  Not eligible
+{%- endblock %}
+
+{% block content %}
+  <h1 class="govuk-heading-xl" data-cy="main-heading">
+    This is not eligible for automatic cover
+  </h1>
+
+  <div data-cy="content">
+    <p class="govuk-body"><strong>You'll now need to complete a manual inclusion application.</strong></p>
+    <p class="govuk-body">Our underwriters will review this and let you know if we can provide cover.</p>
+  </div>
+
+  {{ govukButton({
+    text: "Continue",
+    href: "/gef/application-details/" + dealId + "/supporting-information/document/manual-inclusion-questionnaire",
+    attributes: {
+      'data-cy': 'continue-button'
+    }
+  }) }}
+{% endblock %}

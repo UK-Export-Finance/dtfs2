@@ -1,0 +1,62 @@
+{% import './_macros/report-reconciliation-table-manual-reconciliation.njk' as reportReconciliationTable %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}
+  Bank Reports
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row govuk-!-padding-top-7">
+    <div class="govuk-grid-column-one-half">
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-6" data-cy="utilisation-report-heading">
+        Bank reports
+      </h1>
+    </div>
+    <div class="govuk-grid-column-one-half govuk-!-text-align-right">
+      <a href="/utilisation-reports/find-reports-by-year" class="govuk-link govuk-link--no-visited-state" data-cy="find-reports-by-year-link">Find reports by year</a>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div
+      class="
+        govuk-grid-column-full
+        ukef-stack
+        {% if user | userIsInTeam(["PDC_RECONCILE"]) %}
+          ukef-stack-divider
+          ukef-stack-spacing-7
+        {% else %}
+          ukef-stack-spacing-2
+        {% endif %}
+      "
+    >
+      {% for reportPeriodSummary in reportPeriodSummaries %}
+        <div>
+          <h2
+            class="govuk-heading-m"
+            data-cy="{{ reportPeriodSummary.submissionMonth }}-submission-month-report-period-heading"
+          >
+            {{ reportPeriodSummary.reportPeriodHeading }}
+          </h2>
+
+          <p
+            class="govuk-body"
+            data-cy="{{ reportPeriodSummary.submissionMonth }}-submission-month-report-due-date-text"
+          >
+            {{ reportPeriodSummary.dueDateText }}
+          </p>
+
+          {{ reportReconciliationTable.render({
+            user: user,
+            summaryItems: reportPeriodSummary.items,
+            submissionMonth: reportPeriodSummary.submissionMonth,
+            csrfToken: csrfToken
+          }) }}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block sub_content %}{% endblock %}

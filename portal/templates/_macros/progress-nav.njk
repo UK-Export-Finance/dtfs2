@@ -1,0 +1,99 @@
+{% macro navItem(title, id, step, completed, status, href, childId, childHref, contractId, current, ariaLabel) %}
+
+  <div
+    {% if completed and current === id %}
+      class="govuk-!-margin-bottom-2 govuk-!-padding-0 criteria__nav-item criteria__nav-item--completed criteria__nav-item--current"
+
+    {% elif completed %}
+      class="govuk-!-margin-bottom-2 govuk-!-padding-0 criteria__nav-item criteria__nav-item--completed"
+
+    {% elif current === id %}
+      class="govuk-!-margin-bottom-2 govuk-!-padding-0 criteria__nav-item criteria__nav-item--current"
+
+    {% else %}
+      class="govuk-!-margin-bottom-2 govuk-!-padding-0 criteria__nav-item"
+    {% endif %}
+  >
+
+    {% if completed %}
+      <div class="govuk-checkboxes__item">
+        <input
+          class="govuk-checkboxes__input"
+          id="{{ id }}"
+          name="{{ id }}"
+          type="checkbox"
+          value="{{ id }}"
+          checked="true"
+          disabled
+          data-cy="progress-nav-item-{{ href }}-{{ childHref }}-completed-checkbox"
+        >
+        <label class="govuk-label govuk-checkboxes__label" for="{{ id }}">
+          {% if current === id %}
+            {{ title }}
+          {% else %}
+
+            {% if childId and childHref %}
+              <a
+                class="govuk-link"
+                href="/contract/{{ contractId }}/{{ href }}/{{ childId }}/{{ childHref }}"
+                data-cy="progress-nav-item-link-{{ href }}-{{ childHref }}"
+                aria-label="{{ ariaLabel }}"
+              >
+                {{ title }}
+              </a>
+            {% else %}
+            <a
+              class="govuk-link"
+              href="/contract/{{ contractId }}/{{ href }}"
+              data-cy="progress-nav-item-link-{{ href }}"
+              aria-label="{{ ariaLabel }}"
+            >
+              {{ title }}
+            </a>
+            {% endif %}
+
+          {% endif %}
+        </label>
+      </div>
+
+    {% else %}
+      <p class="govuk-body govuk-!-margin-bottom-0" data-cy="progress-nav-item-{{ href }}-{{ childHref }}">
+        <span class="govuk-!-font-weight-bold criteria__nav-item-progress-number">
+          {% if step %}
+            {{ step }}
+          {% else %}
+            &nbsp;
+          {% endif %}
+        </span>
+        {% if (id === 'preview' and status === 'Completed') or current === id %}
+          <span aria-label="{{ ariaLabel }}">
+            {{ title }}
+          </span>
+        {% else %}
+
+            {% if childId and childHref %}
+            <a
+              class="govuk-link"
+              href="/contract/{{ contractId }}/{{ href }}/{{ childId }}/{{ childHref }}"
+              data-cy="progress-nav-item-link-{{ href }}-{{ childHref }}"
+              aria-label="{{ ariaLabel }}"
+            >
+              {{ title }}
+            </a>
+            {% else %}
+            <a
+              class="govuk-link"
+              href="/contract/{{ contractId }}/{{ href }}"
+              data-cy="progress-nav-item-link-{{ href }}"
+              aria-label="{{ ariaLabel }}"
+            >
+              {{ title }}
+            </a>
+
+          {% endif %}
+        {% endif %}
+      </p>
+    {% endif %}
+  </div>
+
+{% endmacro %}

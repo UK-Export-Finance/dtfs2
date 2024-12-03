@@ -1,0 +1,23 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro render(params) %}
+  {% if params.deal.status %}
+
+    {% if params.user.roles.includes('maker') %}
+      {% if params.user._id === params.deal.maker._id %}
+
+        {% if ["Draft", "Further Maker's input required"].includes(params.deal.status) %}
+          <a
+            data-cy="EditDealName"
+            class="govuk-link govuk-!-font-size-14"
+            href="/contract/{{ params.deal._id }}/edit-name"
+            title="Edit Deal name"
+            aria-label="Edit Deal name"
+          >Edit deal name</a>
+        {% endif %}
+
+      {% endif %}
+    {% endif %}
+
+  {% endif %}
+{% endmacro %}

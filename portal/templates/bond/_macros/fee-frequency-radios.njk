@@ -1,0 +1,48 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% macro render(parentId, dataCyValue, checkedValue, errorObj) %}
+
+  {{ govukRadios({
+    idPrefix: parentId + "FeeFrequency",
+    name: parentId + "FeeFrequency",
+    fieldset: {
+      legend: {
+        text: "Fee frequency"
+      }
+    },
+    attributes: {
+      'data-cy': dataCyValue + "-fee-frequency-radios"
+    },
+    items: [
+      {
+        value: "Monthly",
+        text: "Monthly",
+        checked: checkedValue === "Monthly"
+      },
+      {
+        value: "Quarterly",
+        text: "Quarterly",
+        checked: checkedValue === "Quarterly"
+      },
+      {
+        value: "Semi-annually",
+        text: "Semi-annually",
+        checked: checkedValue === "Semi-annually"
+      },
+      {
+        value: "Annually",
+        text: "Annually",
+        checked: checkedValue === "Annually",
+        attributes: {
+          "data-cy": "fee-frequency-annually"
+        }
+      }
+    ],
+    errorMessage: errorObj and {
+      text: errorObj.text,
+      attributes: {
+        "data-cy": "fee-frequency-error-message"
+      }
+    }
+  }) }}
+{% endmacro %}

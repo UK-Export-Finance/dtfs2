@@ -1,0 +1,12 @@
+.pagination {
+  text-align: center;
+}
+
+.pagination li {
+  display: inline-block;
+  padding: 0 10px;
+}
+
+.pagination li.active {
+  background: lightgrey;
+}

@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    /* Type Checking */
+    "allowUnreachableCode": false,
+    "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true,
+
+    /* Modules */
+    "module": "node16",
+    "moduleResolution": "node16",
+
+    /* Emit */
+    "noEmit": true,
+
+    /* Interop Constraints */
+    "esModuleInterop": true,
+    "isolatedModules": false,
+
+    /* Language and Environment */
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": ["dom", "es2022"],
+    "target": "ES2018",
+
+    /* Completeness */
+    "skipLibCheck": true
+  },
+  "ts-node": {
+    "files": true
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["./node_modules/*", "node_modules"]
+}

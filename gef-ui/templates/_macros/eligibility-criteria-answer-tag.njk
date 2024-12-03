@@ -1,0 +1,21 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% macro render(params) %}
+
+  {% set answerText = params.answer %}
+  {% if params.answer %}
+    {% set answerClass = 'govuk-tag--green' %}
+
+    {% else %}
+    {% set answerClass = 'govuk-tag--red' %}
+  {% endif %}
+
+  {{govukTag({
+    text: answerText,
+    classes: answerClass,
+    attributes: {
+      'data-cy': 'eligibility-criteria-answer-tag'
+    }
+  })}}
+
+{% endmacro %}

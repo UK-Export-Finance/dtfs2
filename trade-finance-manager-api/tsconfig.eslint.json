@@ -1,0 +1,11 @@
+{
+    "extends": "./tsconfig.json",
+    "include": [
+        "src",
+        "api-tests",
+        "test-helpers",
+        "./*.jest.config.js/",
+        ".eslintrc.js"
+    ],
+    "exclude": []
+}

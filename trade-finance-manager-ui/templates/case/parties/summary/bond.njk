@@ -1,0 +1,111 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% import '../../_macros/back-link.njk' as back %}
+
+{% extends "index.njk" %}
+{% set edit = "/case/" + deal._id + "/parties/" + party %}
+
+{% block pageTitle -%}
+  Check the unique reference number
+{%- endblock %}
+
+{% block content %}
+
+  {{
+      back.render({
+        return: edit
+      })
+    }}
+
+  <!-- Heading -->
+  <div class="govuk-grid-row" data-cy="parties-confirm">
+    <div class="govuk-grid-column-one-half">
+      <h1 class="ukef-heading-l govuk-!-margin-top-0" data-cy="confirm-heading">Check the unique reference number</h1>
+    </div>
+  </div>
+
+  <!-- Party details table -->
+  <div class="govuk-grid-row govuk-body">
+    <div class="govuk-grid-column-two-thirds">
+
+      {% set change = '<a href = "' + edit + '" data-cy="change-party-urn">Change <span class="govuk-visually-hidden">unique reference number</span></a>' %}
+
+      {% for partyUrn in urn %}
+        {% if loop.index0 === 0 %}
+            {% set caption = [
+                party | sentence,
+                ' ',
+                'details'
+            ] | join %}
+        {% else %}
+            {% set caption = '' %}
+        {% endif %}
+
+
+        {{ govukTable ({
+          caption: caption,
+          captionClasses: "govuk-table__caption--l govuk-!-margin-top-1",
+          firstCellIsHeader: true,
+          classes: "govuk-table__vertical-align",
+          attributes: {
+            'data-cy': 'party-urn-summary-table'
+          },
+          rows: [
+            [
+            {
+              text: 'Name',
+              classes: 'govuk-!-width-one-quarter'
+            },
+            {
+              text: name[loop.index0],
+              classes: 'govuk-!-width-one-third'
+            },
+            {
+              text: '',
+              classes: 'govuk-!-width-one-quarter'
+            }
+            ],
+            [
+            {
+              text: 'Unique reference number'
+            },
+            {
+              text: partyUrn
+            },
+            {
+              html: change
+            }
+            ]
+          ]
+        }) }}
+
+
+      {% endfor %}
+
+    </div>
+  </div>
+
+  <!-- User with edit privileges only -->
+  <form autocomplete="off" method="POST">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+    {% if userCanEdit %}
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+          <div class="govuk-!-margin-top-4">
+            {{ govukButton({
+              text: "Save and close",
+              attributes: {
+                'data-cy': 'save-button'
+              }
+            }) }}
+          </div>
+        </div>
+      </div>
+
+    {% endif %}
+
+  </form>
+
+{% endblock %}

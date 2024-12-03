@@ -1,0 +1,31 @@
+{% import './_macros/section-exporter/section-exporter.njk' as sectionExporter %}
+{% import './_macros/section-facilities/section-facilities.njk' as sectionFacilities %}
+
+{% macro render(params) %}
+  {% set pricingAndRisk = params.pricingAndRisk %}
+
+  {% block underwriting_content %}
+
+    {% set componentData = {
+      caseId: pricingAndRisk.dealId,
+      supplierName: pricingAndRisk.deal.submissionDetails.supplierName,
+      exporterCreditRating: pricingAndRisk.tfm.exporterCreditRating,
+      lossGivenDefault: pricingAndRisk.tfm.lossGivenDefault,
+      probabilityOfDefault: pricingAndRisk.tfm.probabilityOfDefault,
+      userCanEditGeneral: pricingAndRisk.userCanEditGeneral
+    } %}
+
+    {{sectionExporter.render(componentData)}}
+
+    {% set componentData = {
+      caseId: pricingAndRisk.dealId,
+      facilities: pricingAndRisk.deal.facilities,
+      userCanEdit: pricingAndRisk.userCanEditGeneral
+    } %}
+
+    {{sectionFacilities.render(componentData)}}
+
+  {% endblock %}
+
+{% endmacro %}
+

@@ -1,0 +1,27 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle -%}
+  Disable account {{ user.username }}
+{%- endblock %}
+
+{% block content %}
+
+  <h1 class="govuk-heading-l">
+  Are you sure you want to disable the account<br/>{{ user.username }}?
+  </h1>
+
+{{ govukButton({
+  text: "Confirm",
+  classes: "govuk-!-margin-right-1",
+  href: "/admin/users/"
+}) }}
+
+{{ govukButton({
+  text: "Cancel and go back",
+  classes: "govuk-button--secondary",
+  href: "/admin/users/"
+}) }}
+
+{% endblock %}

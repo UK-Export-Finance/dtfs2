@@ -1,0 +1,15 @@
+{% macro list(title, fieldname, fileList, dealId) %}
+     <li class="govuk-body-s">
+       <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third govuk-!-font-weight-bold govuk-!-margin-bottom-1">{{ title }}</div>
+        <div class="govuk-grid-column-one-third">
+        {% for file in fileList %}
+          <ul class="govuk-list--bullet">
+            <li>
+              <a download="{{file.filename}}" href="/contract/{{dealId}}/eligibility-documentation/{{fieldname}}/{{file.filename}}">{{file.filename}}</a>
+            </li>
+          </ul>
+        {% endfor %}
+        </div>
+    </li>
+{% endmacro %}

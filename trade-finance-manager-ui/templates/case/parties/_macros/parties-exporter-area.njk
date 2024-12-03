@@ -1,0 +1,153 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% import './parties-key-value-grid-row.njk' as keyValueGridRow %}
+{% import './parties-key-value-array-grid-row.njk' as keyValueArrayGridRow %}
+{% import './parties-edit-unique-reference-link.njk' as uniqueReferenceNumberEditLink %}
+{% import '../../_macros/supplier-type.njk' as supplierType %}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+
+{% macro render(params) %}
+  {% set deal = params.deal %}
+  {% set userCanEdit = params.userCanEdit %}
+  {% set renderEditLink = params.renderEditLink %}
+  {% set renderEditForm = params.renderEditForm %}
+  {% set exporter = params.tfm.parties.exporter %}
+  {% set urn = params.urn %}
+  {% set errors = params.errors %}
+
+  {% if not exporter.partyUrn %}
+    {% set uniqueRefStyle = "govuk-tag govuk-tag--red govuk-!-margin-top-2" %}
+  {% endif %}
+
+  {% if errors %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errors.errorSummary,
+        attributes: {
+          'data-cy': 'error-summary'
+        }
+      }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row {% if renderEditLink %}ukef-flex-container deal{% endif %}" data-cy="parties-exporter">
+    <div class="govuk-grid-column-one-half">
+      {% if userCanEdit and renderEditForm %}
+        <h1 class="ukef-heading-l govuk-!-margin-top-0" data-cy="edit-heading">Edit exporter details</h1>
+      {% else %}
+        <h2 class="ukef-heading-l" data-cy="edit-heading">
+          {{ supplierType.render(deal.submissionDetails.supplierType) }}
+        </h2>
+      {% endif %}
+    </div>
+
+    {% if renderEditLink %}
+        <div class="govuk-grid-column-one-half ukef-flex-container--align-center-right">
+        {{ uniqueReferenceNumberEditLink.render({dealId: deal._id, type: 'exporter'}) }}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      {{ keyValueGridRow.render({
+        key: 'Name',
+        value: deal.exporter.companyName,
+        dataCy: 'exporter-name'
+      }) }}
+
+      {% if userCanEdit and renderEditForm %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-half govuk-!-margin-top-4">
+          {{ govukInput({
+            label: {
+              text: "Unique reference number (URN)",
+              classes: "ukef-heading-xs"
+            },
+            id: "partyUrn",
+            name: "partyUrn",
+            attributes: {
+              "data-cy": "urn-input"
+            },
+            value: urn,
+            errorMessage: errors and errors.fieldErrors.partyUrn and {
+              text: errors.fieldErrors.partyUrn.text,
+              attributes: {
+                'data-cy': 'partyUrn--inline-error'
+              }
+            }
+          }) }}
+          </div>
+        </div>
+      {% else %}
+        {{ keyValueGridRow.render({
+          key: 'Unique reference number',
+          value: exporter.partyUrn or "NOT MATCHED",
+          valueStyle: uniqueRefStyle,
+          dataCy: 'exporter-unique-ref'
+        }) }}
+      {% endif %}
+
+      {{ keyValueArrayGridRow.render({
+        key: 'Address',
+        values:  [ deal.submissionDetails.supplierAddressLine1,
+                deal.submissionDetails.supplierAddressLine2,
+                deal.submissionDetails.supplierAddressLine3,
+                deal.submissionDetails.supplierAddressTown,
+                deal.submissionDetails.supplierAddressPostcode],
+        dataCy: 'exporter-address'
+
+      }) }}
+      {{ keyValueGridRow.render({
+        key: 'Country',
+        value: deal.submissionDetails.supplierCountry,
+        dataCy: 'exporter-country'
+      }) }}
+      {{ keyValueGridRow.render({
+        key: 'Industry sector',
+        value: deal.submissionDetails.industrySector,
+        dataCy: 'industry-sector'
+      }) }}
+      {{ keyValueGridRow.render({
+        key: 'Industry class',
+        value: deal.submissionDetails.industryClass,
+        dataCy: 'industry-class'
+      }) }}
+      {{ keyValueGridRow.render({
+        key: 'Companies house<br/>registration number',
+        value: deal.submissionDetails.supplierCompaniesHouseRegistrationNumber,
+        dataCy: 'exporter-companies-house-registration-number'
+      }) }}
+      {{ keyValueGridRow.render({
+        key: 'SME size',
+        value: deal.submissionDetails.smeType,
+        dataCy: 'sme-size'
+      }) }}
+    {% if not userCanEdit %}
+      </div>
+      <div class="govuk-grid-column-one-half">
+    {% endif %}
+
+      {% if deal.submissionDetails.supplierCorrespondenceAddressLine1 %}
+
+        {{ keyValueArrayGridRow.render({
+          key: 'Correspondence address',
+          values:  [ deal.submissionDetails.supplierCorrespondenceAddressLine1,
+                  deal.submissionDetails.supplierCorrespondenceAddressLine2,
+                  deal.submissionDetails.supplierCorrespondenceAddressLine3,
+                  deal.submissionDetails.supplierCorrespondenceAddressTown,
+                  deal.submissionDetails.supplierCorrespondenceAddressPostcode],
+          dataCy: 'exporter-correspondence-address'
+        }) }}
+
+        {{ keyValueGridRow.render({
+          key: 'Correspondence country',
+          value: deal.submissionDetails.supplierCorrespondenceAddressCountry,
+          dataCy: 'exporter-correspondence-address-country'
+        }) }}
+
+      {% endif %}
+    </div>
+  </div>
+
+  {% endmacro %}

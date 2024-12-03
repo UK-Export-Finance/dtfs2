@@ -1,0 +1,15 @@
+{% macro render(params) %}
+  {% set submissionType = params.submissionType %}
+  {% set submittedBy = params.submittedBy %}
+  {% set submissionDate = params.submissionDate %}
+  {% set userTimezone = params.userTimezone %}
+
+  <li class="list-style-type-none ukef-activity-feed__list-item" data-cy="activity-deal-submitted">
+    <h3 class="govuk-heading-s govuk-!-margin-bottom-1 ukef-activity-feed__list-item-heading" data-cy="activity-feed-list-item-heading">{{ submissionType }} submitted <span class="govuk-!-font-weight-regular ukef-activity-feed__list-item-heading-user" data-cy="activity-feed-list-item-heading-user">by {{ submittedBy }}</span></h3>
+
+    <div class="ukef-activity-feed__list-item-content">
+      <p class="govuk-body-s" data-cy="activity-feed-list-item-submission-date">{{ submissionDate | localiseTimestamp("d MMMM yyyy", userTimezone) }} at {{ submissionDate | localiseTimestamp("HH:mmaaa", userTimezone) }}</p>
+    </div>
+  </li>
+
+{% endmacro %}

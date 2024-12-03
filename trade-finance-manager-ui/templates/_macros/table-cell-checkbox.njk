@@ -1,0 +1,20 @@
+{% macro render(params) %}
+  {% set checkboxId = params.checkboxId %}
+  {% set label = params.label %}
+  {% set ariaLabel = params.ariaLabel %}
+  {% set checked = params.checked %}
+  <div class="govuk-checkboxes govuk-checkboxes--small">
+    <div class="govuk-checkboxes__item">
+      <input class="govuk-checkboxes__input govuk-!-top-0 table-cell-checkbox-input"
+             id="{{ checkboxId }}"
+             data-cy="table-cell-checkbox--{{ checkboxId }}"
+             name="{{ checkboxId }}"
+             type="checkbox"
+             {% if ariaLabel %}aria-label="{{ ariaLabel }}"{% endif %}
+             {% if checked %}checked{% endif %}
+      />
+      <label class="govuk-label govuk-checkboxes__label govuk-!-padding-0 table-cell-checkbox-label"
+             for="{{ checkboxId }}">{{ label | safe }}</label>
+    </div>
+  </div>
+{% endmacro %}

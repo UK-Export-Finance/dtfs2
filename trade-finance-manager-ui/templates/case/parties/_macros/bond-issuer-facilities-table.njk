@@ -1,0 +1,57 @@
+{% import '../../../_macros/facility-link.njk' as facilityLink %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% macro render(params) %}
+  {% set facilities = params.facilities %}
+  {% set caseId = params.caseId %}
+
+  <table class="govuk-table" data-cy="bond-issuer-facilities-table">
+    <thead class="govuk-table__head">
+      <tr>
+        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-facility-id">Facility ID</th>
+        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-bond-issuer">Bond issuer</th>
+        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-unique-reference-number">Unique Reference Number</th>
+      </tr>
+    </thead>
+
+    <tbody class="govuk-table__body">
+      {% for facility in facilities %}
+
+        <tr class="govuk-table__row" data-cy="facility-{{ facility._id }}">
+          <td class="govuk-table__cell govuk-body-s">
+
+            {% set componentData = {
+              caseId: caseId,
+              facilityId: facility._id,
+              ukefFacilityId: facility.facilitySnapshot.ukefFacilityId
+            } %}
+
+            {{ facilityLink.render(componentData) }}
+          </td>
+
+          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-bond-issuer">{{ facility.facilitySnapshot.bondIssuer }}</td>
+
+          <td class="govuk-table__cell govuk-body-s">
+
+            {% if facility.tfm.bondIssuerPartyUrn %}
+
+              <span data-cy="facility-{{ facility._id }}-unique-reference-number">{{ facility.tfm.bondIssuerPartyUrn }}</span>
+
+            {% else %}
+              {{govukTag({
+                text: 'Not matched',
+                classes: "govuk-tag--red",
+                attributes: {
+                  'data-cy': 'facility-unique-reference-number-not-matched'
+                }
+              })}}
+            {% endif %}
+          </td>
+        </tr>
+
+      {% endfor %}
+    </tbody>
+
+  </table>
+
+{% endmacro %}

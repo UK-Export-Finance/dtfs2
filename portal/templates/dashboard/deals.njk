@@ -1,0 +1,31 @@
+{% extends "index.njk" %}
+
+{% import './_macros/dashboard-page-content.njk' as dashboardPageContent %}
+{% import './_macros/dashboard-deals-table.njk' as dealsTable %}
+
+{% block pageTitle -%}
+  Deals
+{%- endblock %}
+
+{% block content %}
+
+  {{dashboardPageContent.render({
+    successMessage: successMessage,
+    user: user,
+    tab: tab,
+    filters: filters,
+    selectedFilters: selectedFilters,
+    selectedFiltersString: selectedFiltersString,
+    keyword: keyword,
+    table: dealsTable.render({
+      deals: deals,
+      userTimezone: user.timezone,
+      activeSortByOrder: activeSortByOrder,
+      csrfToken: csrfToken
+    }),
+    pages: pages,
+    route: '/deals',
+    csrfToken: csrfToken
+  })}}
+
+{% endblock %}

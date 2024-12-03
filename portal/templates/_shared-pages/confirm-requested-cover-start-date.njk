@@ -1,0 +1,78 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% import '../_macros/facility-inputs/new-cover-start-date-field.njk' as newCoverStartDateField %}
+
+{% block content %}
+
+  <h1 class="govuk-heading-l">Confirm Requested Cover Start Date</h1>
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
+
+  <form method="POST" autocomplete="off">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    {% if needToChangeRequestedCoverStartDate %}
+
+      <input type="hidden" name="needToChangeRequestedCoverStartDate" value="true" />
+
+      {{newCoverStartDateField.render(
+        enteredValues,
+        validationErrors.errorList.requestedCoverStartDate
+      )}}
+
+      {% else %}
+
+      {{ govukRadios({
+        idPrefix: "needToChangeRequestedCoverStartDate",
+        name: "needToChangeRequestedCoverStartDate",
+        fieldset: {
+          legend: {
+            text: 'Do you need to change "Requested Cover Start Date"?',
+            classes: "govuk-fieldset__legend"
+          }
+        },
+        items: [
+          {
+            value: "true",
+            text: "Yes",
+            checked: needToChangeRequestedCoverStartDate === "true",
+            attributes: {
+              'data-cy': 'need-to-change-cover-start-date-yes'
+            },
+            conditional: {
+              html: newCoverStartDateField.render(
+                enteredValues,
+                validationErrors.errorList.requestedCoverStartDate
+              )
+            }
+          },
+          {
+            value: "false",
+            text: "No, keep current date value (" + facility['requestedCoverStartDate-day'] +"/" + facility['requestedCoverStartDate-month'] +"/" + facility['requestedCoverStartDate-year'] +")",
+            checked: needToChangeRequestedCoverStartDate === "false",
+            attributes: {
+              'data-cy': 'need-to-change-cover-start-date-no'
+            }
+          }
+        ]
+      }) }}
+
+    {% endif %}
+
+
+    <button data-cy="submit-button" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button">
+      Save
+    </button>
+
+    <a href="/contract/{{ dealId }}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button" data-cy="cancel-button">Cancel</a>
+
+  </form>
+
+{% endblock %}

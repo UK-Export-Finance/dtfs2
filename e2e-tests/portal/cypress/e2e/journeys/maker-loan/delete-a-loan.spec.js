@@ -1,0 +1,136 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
+const pages = require('../../pages');
+const partials = require('../../partials');
+const relative = require('../../relativeURL');
+const MOCK_USERS = require('../../../../../e2e-fixtures');
+const { today } = require('../../../../../e2e-fixtures/dateConstants');
+
+const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
+
+const now = today.unixMilliseconds;
+
+const MOCK_DEAL = {
+  bankInternalRefName: 'someDealId',
+  additionalRefName: 'someDealName',
+  status: 'Draft',
+  details: {},
+  submissionDetails: {
+    supplyContractCurrency: {
+      id: CURRENCY.GBP,
+    },
+  },
+  mockFacilities: [
+    {
+      type: 'Loan',
+      _id: '5f3ab3f705e6630007dcfb21',
+      createdDate: now,
+      facilityStage: 'Conditional',
+      hasBeenIssued: false,
+      ukefGuaranteeInMonths: '12',
+      name: '',
+      guaranteeFeePayableByBank: '18.0000',
+      updatedAt: now,
+      value: '1234.00',
+      currencySameAsSupplyContractCurrency: 'true',
+      interestMarginFee: '20',
+      coveredPercentage: '40',
+      minimumQuarterlyFee: '',
+      ukefExposure: '493.60',
+      premiumType: 'At maturity',
+      dayCountBasis: '365',
+    },
+    {
+      type: 'Loan',
+      _id: '5f3ab3f705e6630007dcfb22',
+      createdDate: now,
+      facilityStage: 'Conditional',
+      hasBeenIssued: false,
+      ukefGuaranteeInMonths: '12',
+      name: '',
+      guaranteeFeePayableByBank: '18.0000',
+      updatedAt: now,
+      value: '1234.00',
+      currencySameAsSupplyContractCurrency: 'true',
+      interestMarginFee: '20',
+      coveredPercentage: '40',
+      minimumQuarterlyFee: '',
+      ukefExposure: '493.60',
+      premiumType: 'At maturity',
+      dayCountBasis: '365',
+    },
+    {
+      type: 'Loan',
+      _id: '5f3ab3f705e6630007dcfb23',
+      createdDate: now,
+      facilityStage: 'Conditional',
+      hasBeenIssued: false,
+      ukefGuaranteeInMonths: '12',
+      name: '',
+      guaranteeFeePayableByBank: '18.0000',
+      updatedAt: now,
+      value: '1234.00',
+      currencySameAsSupplyContractCurrency: 'true',
+      interestMarginFee: '20',
+      coveredPercentage: '40',
+      minimumQuarterlyFee: '',
+      ukefExposure: '493.60',
+      premiumType: 'At maturity',
+      dayCountBasis: '365',
+    },
+  ],
+};
+
+context('Delete a Loan', () => {
+  let deal;
+  let dealId;
+  let loanToDeleteId;
+  const dealFacilities = {
+    loans: [],
+  };
+
+  beforeEach(() => {
+    cy.deleteDeals(ADMIN);
+    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+      dealId = deal._id;
+
+      const { mockFacilities } = MOCK_DEAL;
+
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        const loans = createdFacilities.filter((f) => f.type === 'Loan');
+
+        dealFacilities.loans = loans;
+      });
+    });
+  });
+
+  after(() => {
+    dealFacilities.loans.forEach((facility) => {
+      if (facility._id !== loanToDeleteId) {
+        cy.deleteFacility(facility._id, BANK1_MAKER1);
+      }
+    });
+  });
+
+  it('Deleting a loan via the Deal page should remove the loan and redirect back to the Deal page with a success message', () => {
+    cy.login(BANK1_MAKER1);
+    pages.contract.visit(deal);
+
+    pages.contract.loansTransactionsTableRows().should('have.length', 3);
+
+    loanToDeleteId = dealFacilities.loans[1]._id;
+    const loanToDeleteRow = pages.contract.loansTransactionsTable.row(loanToDeleteId);
+
+    loanToDeleteRow.deleteLink().contains('Delete loan');
+    loanToDeleteRow.deleteLink().click();
+    cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanToDeleteId}/delete`));
+
+    cy.clickSubmitButton();
+
+    cy.url().should('eq', relative(`/contract/${dealId}`));
+
+    cy.assertText(partials.successMessage.successMessageListItem(), `Loan #${loanToDeleteId} has been deleted`);
+
+    pages.contract.loansTransactionsTableRows().should('have.length', 2);
+  });
+});

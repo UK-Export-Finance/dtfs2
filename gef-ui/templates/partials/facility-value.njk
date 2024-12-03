@@ -1,0 +1,167 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle -%}
+  Facility value, cover and {{ "interest" if facilityType === "Cash" else "risk" }} margin
+{%- endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  {% if status === 'change' %}
+    {{ govukBackLink({
+      text: "Back to previous page",
+      href: "/gef/application-details/" + dealId + "/facilities/" + facilityId + "/facility-currency?status=change",
+      attributes: {
+        'data-cy': 'back-link'
+      }
+    }) }}
+  {% else %}
+    {{ govukBackLink({
+      text: "Back to previous page",
+      href: "/gef/application-details/" + dealId + "/facilities/" + facilityId + "/facility-currency",
+      attributes: {
+        'data-cy': 'back-link'
+      }
+    }) }}
+  {% endif %}
+
+  <header data-cy="application-details-page">
+    <span class="govuk-caption-xl" data-cy="heading-caption">
+      Add a facility
+    </span>
+    <h1 class="govuk-heading-xl" data-cy="main-heading">
+      Value, cover and {{ "interest" if facilityType === "Cash" else "risk" }} margin
+    </h1>
+  </header>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <div class="govuk-grid-column-three-quarters">
+      <form method="post" data-cy="form">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        <input
+          class="govuk-visually-hidden"
+          id="facilityType"
+          name="facilityType"
+          type="hidden"
+          value="{{facilityType}}"
+          data-cy="hidden-facility-type">
+
+        {{ govukInput({
+          label: {
+            text: "Enter value of your " + facilityTypeString + " facility",
+            classes: "govuk-label--m",
+            attributes: {
+              'data-cy': 'value-label'
+            }
+          },
+          id: "value",
+          name: "value",
+          classes: "govuk-input--width-10",
+          value: value,
+          suffix: {
+            text: currency,
+            attributes: {
+              'data-cy': 'value-suffix'
+            }
+          },
+          attributes: {
+            'data-cy': 'value',
+            'data-mask': "currency"
+          },
+          errorMessage: errors and errors.fieldErrors.value and {
+            text: errors.fieldErrors.value.text,
+            attributes: {
+              'data-cy': 'value-error'
+            }
+          }
+        }) }}
+
+        {{ govukInput({
+          label: {
+            text: "What percentage of cover would you like from UKEF?",
+            classes: "govuk-label--m"
+          },
+          hint: {
+            text: "You can ask for up to 80%"
+          },
+          id: "coverPercentage",
+          name: "coverPercentage",
+          classes: "govuk-input--width-4",
+          value: coverPercentage,
+          suffix: {
+            text: "%"
+          },
+          attributes: {
+            'data-cy': 'percentage-cover'
+          },
+          errorMessage: errors and errors.fieldErrors.coverPercentage and {
+            text: errors.fieldErrors.coverPercentage.text,
+            attributes: {
+              'data-cy': 'percentage-cover-error'
+            }
+          }
+        }) }}
+
+        {{ govukInput({
+          label: {
+            text: "Enter your interest margin percentage",
+            classes: "govuk-label--m"
+          },
+          hint: {
+            text: "This is the annual margin charged as a percentage to the exporter for providing the " + facilityTypeString + " facility. It does not include any upfront fees you charge, such as arrangement fees.",
+            attributes: {
+              'data-cy': 'interest-percentage-hint'
+            }
+          },
+          id: "interestPercentage",
+          name: "interestPercentage",
+          classes: "govuk-input--width-4",
+          value: interestPercentage,
+          suffix: {
+            text: "%"
+          },
+          attributes: {
+            'data-cy': 'interest-percentage'
+          },
+          errorMessage: errors and errors.fieldErrors.interestPercentage and {
+            text: errors.fieldErrors.interestPercentage.text,
+            attributes: {
+              'data-cy': 'interest-percentage-error'
+            }
+          }
+        }) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            attributes: {
+              'data-cy': 'continue-button'
+            }
+          }) }}
+          {{ govukButton({
+            text: "Save and return",
+            classes: "govuk-button--secondary",
+            attributes: {
+              formaction: "facility-value?saveAndReturn=true",
+              'data-cy': 'save-and-return-button'
+            }
+          }) }}
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

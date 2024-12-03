@@ -1,0 +1,26 @@
+{#
+  at the time of writing,
+  task-list is not an official govuk component
+  this is mimicked based on:
+  https://govuk-prototype-kit.herokuapp.com/docs/templates/task-list
+#}
+
+{% import '_macros/task-list-item.njk' as taskListItem %}
+
+{% macro render(params) %}
+
+  <div class="task-list">
+    <ul class="govuk-list task-list__items">
+      {% for item in params.items %}
+        
+        {{taskListItem.render({
+          title: item.title,
+          completed: item.completed,
+          href: params.hrefRoute + item.href
+        })}}
+
+      {% endfor %}
+    </ul>
+  </div>
+
+{% endmacro %}

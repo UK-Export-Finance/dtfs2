@@ -1,0 +1,124 @@
+{% extends "index.njk" %}
+{% from "moj/components/banner/macro.njk" import mojBanner %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% block pageTitle%}
+    Review UKEF decision
+{% endblock %}
+
+{% block content %}
+
+    {% if errors %}
+        {{
+            govukErrorSummary({
+            titleText: "There is a problem",
+            errorList: errors.errorSummary,
+            attributes: {
+                'data-cy': 'error-summary'
+                }
+            })
+        }}
+    {% endif %}
+
+    {% set hideBack = true %}
+    {% include "includes/application-preview/summary.njk" %}
+
+    <div class="govuk-!-margin-bottom-6 govuk-grid-row">
+        <div class="govuk-grid-column-full-from-desktop">
+            {{ govukBackLink({
+                text: "Back",
+                href: "/gef/application-details/" + dealId,
+                attributes: {
+                'data-cy': 'back-link'
+                }
+            }) }}
+        </div>
+    </div>
+
+    {% if isUkefReviewAvailable %}
+
+    <header>
+        {% set bannerHtml %}
+            <h2 data-cy="ukef-review-decision-heading">Review UKEF decision</h2>
+            {% if applicationStatus == 'Accepted by UKEF (without conditions)' %}
+                <p>UKEF has approved your application without conditions.</p>
+            {% elif applicationStatus == 'Accepted by UKEF (with conditions)' %}
+                <p>UKEF has approved your application with the following conditions:</p>
+                <p>{{ ukefDecision[0].text | safe }}</p>
+            {% elif applicationStatus == 'Rejected by UKEF' %}
+                <p>The manual inclusion application was rejected for the following reasons:</p>
+                <p>{{ ukefDecision[0].text | safe }}</p>
+            {% endif %}
+        {% endset %}
+
+        {{
+            mojBanner({
+                type: 'no-icon',
+                html: bannerHtml
+            })
+        }}
+    </header>
+
+    {% if isUkefReviewPositive and isUkefReviewAvailable %}
+        <div class="govuk-grid-row govuk-body">
+            <div class="govuk-grid-column-two-thirds">
+                <form method="POST" autocomplete="off">
+                    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+                    {{ govukRadios({
+                        idPrefix: "decision",
+                        name: "decision",
+                        fieldset: {
+                            legend: {
+                                text: "Do you want to accept these conditions and proceed with UKEF cover?",
+                                isPageHeading: true,
+                                classes: "govuk-fieldset__legend--xl"
+                            },
+                            attributes: {
+                                  "data-cy": "review-decision-text"
+                            }
+                        },
+                        errorMessage: errors.fieldErrors.decision and {
+                        text: errors.fieldErrors.decision.text,
+                        attributes: {
+                            "data-cy": "decision-error"
+                        }
+                        },
+                        items: [
+                            {
+                                value: "true",
+                                text: "Yes, accept and proceed",
+                                checked: ukefDecisionAccepted,
+                                attributes: {
+                                    "data-cy": "review-decision-true"
+                                },
+                                hint: {
+                                    "text": "We'll change your application to a manual inclusion notice."
+                                }
+                            }
+                        ]
+                    }) }}
+
+                    <div class="govuk-button-group">
+                        {{ govukButton({
+                            text: "Continue",
+                            attributes: {
+                                "data-cy": "continue-button"
+                            }
+                            })
+                        }}
+
+                        <a class="govuk-link" href="/gef/application-details/{{ dealId }}" data-cy="cancel-button">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+
+    {% else %}
+        <h2>Pending UKEF decision</h2>
+    {% endif %}
+
+{% endblock %}

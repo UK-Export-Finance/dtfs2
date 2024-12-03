@@ -1,0 +1,130 @@
+$govuk-new-link-styles: true;
+
+@import "node_modules/govuk-frontend/govuk/all";
+@import "node_modules/@ministryofjustice/frontend/moj/all";
+@import "./helpers.scss";
+@import "./footer.scss";
+@import "./accessibility.scss";
+
+.govuk-section-break {
+  &--bold {
+    border: 0;
+    border-bottom: 3px solid $govuk-text-colour;
+  }
+}
+
+.govuk-summary-list {
+  &__key {
+    width: 50%;
+  }
+  &__value {
+    padding-left: 15px;
+    width: 40%;
+  }
+  &__actions {
+    width: 10%;
+  }
+}
+
+.govuk-form-group {
+  &.govuk-form-group--error {
+    &.govuk-form-group {
+      padding-left: 15px;
+      border-left: 5px solid $govuk-error-colour;
+    }
+  }
+}
+
+.application-banner {
+  background-color: $govuk-brand-colour;
+  padding: 10px;
+  color: govuk-colour("white");
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+
+  .govuk-body,
+  .govuk-link,
+  .govuk-back-link {
+    color: govuk-colour("white");
+    margin-bottom: 0;
+    line-height: 25px;
+    &:focus {
+      color: $govuk-focus-text-colour;
+    }
+  }
+}
+
+.application-banner-hr {
+  border-color: govuk-colour("white");
+  width: 94%;
+}
+
+.preview-banner {
+  display: block;
+}
+
+.preview-status {
+  color: $govuk-brand-colour;
+  background-color: govuk-colour("white");
+}
+
+.lower-roman-with-parens {
+  ol {
+    counter-reset: list;
+  }
+
+  ol > li {
+    list-style: none;
+    position: relative;
+  }
+
+  ol > li:before {
+    counter-increment: list;
+    content: "(" counter(list, lower-roman) ") ";
+    position: absolute;
+    left: -2em;
+  }
+}
+
+.ukef-decision-formatted {
+  p {
+    white-space: pre-line;
+    word-break: break-word;
+  }
+}
+
+.moj-banner {
+  .moj-banner__message {
+    p {
+      &:first-child {
+        margin-top: 0;
+      }
+      white-space: pre-line;
+      word-break: break-word;
+    }
+    > h2 {
+      margin-top: 0;
+    }
+  }
+}
+
+.govuk-table__vertical-align {
+  .govuk-table__header, .govuk-table__cell {
+    vertical-align: middle;
+  }
+}
+
+.colour-light-grey {
+  color: govuk-colour("dark-grey");
+}
+
+#application-details-comments-submit,
+#return-to-maker-submit,
+#submit-to-ukef-submit {
+  vertical-align: middle;
+}
+
+#application-reference-and-actions-actions {
+  text-align: right;
+}

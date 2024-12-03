@@ -1,0 +1,27 @@
+{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      {{ mojSubNavigation({
+         label: 'Sub navigation',
+         items: [{
+            text: 'Application/notice',
+            href: '/gef/application-details/' + dealId,
+            active: (activeSubNavigation=='/'),
+            attributes: {
+               "data-cy": "application-preview-link"
+            }
+         }, {
+            text: 'Activity',
+            href: '/gef/application-details/' + dealId + '/activities',
+            active: (activeSubNavigation=='activities'),
+            attributes: {
+               "data-cy": "application-activities-link"
+            }
+         }],
+         attributes: {
+          'data-cy': 'application-preview-sub-navigation'
+        }
+         }) }}
+    </div>
+  </div>

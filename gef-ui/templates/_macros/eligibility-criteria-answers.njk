@@ -1,0 +1,44 @@
+{% import './eligibility-criteria-answer-tag.njk' as eligibilityCriteriaAnswerTag %}
+
+{% macro render(params) %}
+  {% set criteria = params.eligibilityCriteria %}
+
+  <table class="govuk-table" data-cy="eligibility-criteria-answers">
+    <tbody class="govuk-table__body">
+      {% for criterion in criteria %}
+
+      {% if loop.last %}
+        {% set tableCellClass = 'govuk-table__cell--last' %}
+
+        {% else %}
+          {% set tableCellClass = 'govuk-table__cell' %}
+      {% endif %}
+
+        <tr class="govuk-table__row" data-cy="criterion-{{ loop.index }}-row">
+          <th class="govuk-table__header govuk-!-font-weight-regular govuk-!-padding-right-6 {{ tableCellClass }}" data-cy="criterion-{{criterion.id}}-heading">EC{{ criterion.id }}</th>
+
+          <td class="govuk-table__cell {{ tableCellClass }}">
+            {{eligibilityCriteriaAnswerTag.render({ answer: criterion.answer })}}
+          </td>
+
+          <td class="govuk-table__cell govuk-!-padding-left-8 {{ tableCellClass }}">
+            <div class="govuk-grid-column-three-quarters govuk-!-padding-0">
+              <p class="govuk-body govuk-!-margin-bottom-2" data-cy="criterion-{{criterion.id}}-text">{{ criterion.text }}</p>
+
+              {% if criterion.textList.length > 0 %}
+                <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-2">
+                  {% for item in criterion.textList %}
+                    <li data-cy="criterion-{{criterion.id}}-textList-{{ loop.index }}">{{ item }}</li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </div>
+          </td>
+
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+
+{% endmacro %}

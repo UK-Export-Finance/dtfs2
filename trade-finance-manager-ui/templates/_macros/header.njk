@@ -1,0 +1,32 @@
+{% from "moj/components/header/macro.njk" import mojHeader %}
+{% macro render(params) %}
+  <header class="moj-header" role="banner">
+    <div class="moj-header__container">
+      <div class="moj-header__logo">
+        <img
+          src="/assets/images/UK-Export-Finance-logo.svg"
+          class="moj-header__logotype-crest ukef-header-logo govuk-!-margin-right-5" data-cy="header-ukef-logo"
+          title="UK Export Finance"
+          alt="UK Export Finance">
+          <a class="moj-header__link moj-header__link--service-name" data-cy="header-TFM-header-name" href="/deals">Trade Finance Manager</a>
+        </div>
+        {% if params.user %}
+          <div class="moj-header__content">
+            <nav class="moj-header__navigation" aria-label="Account navigation">
+              <ul class="moj-header__navigation-list">
+                <li class="moj-header__navigation-item">
+                  <span data-cy="header-user-link">{{ params.user.firstName + ' ' + params.user.lastName }}</span>
+                </li>
+                <li class="moj-header__navigation-item">
+                  <a class="moj-header__navigation-link" href="/user/change-password" data-cy="header-user-link">Profile</a>
+                </li>
+                <li class="moj-header__navigation-item">
+                  <a class="moj-header__navigation-link" href="/logout" data-cy="header-sign-out-link">Sign out</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        {% endif %}
+      </div>
+  </header>
+{% endmacro %}

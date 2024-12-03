@@ -1,0 +1,15 @@
+{% import '_macros/date-field.njk' as dateField %}
+
+{% macro render(values, validationError) %}
+
+  {{ dateField.render(
+    legend = 'New Requested Cover Start Date',
+    id = 'requestedCoverStartDate',
+    hint = 'For example, 27 11 2019',
+    error = validationError,
+    dayValue = values['requestedCoverStartDate-day'],
+    monthValue = values['requestedCoverStartDate-month'],
+    yearValue = values['requestedCoverStartDate-year']
+  )}}
+
+{% endmacro %}

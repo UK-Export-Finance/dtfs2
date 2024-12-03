@@ -1,0 +1,36 @@
+<footer class="govuk-footer " role="contentinfo" data-cy="footer">
+  <div class="govuk-body">
+    <div class="govuk-main-wrapper govuk-main-wrapper--auto-spacing tfm-width govuk-!-padding-top-0">
+      <div class="govuk-footer__meta">
+        <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+          <h2 data-cy="contact-us-footer">Contact us</h2>
+          <dl class="contact-details">
+            {% if CONTACT_US_SELF_SERVICE_PORTAL_URL %}
+              <dd>
+                <a class="govuk-footer__link" href="{{ CONTACT_US_SELF_SERVICE_PORTAL_URL }}">Get support from IT Service Desk</a>
+              </dd>
+            {% else %}
+              <dt>Email:</dt>
+              <dd>{{ CONTACT_US_EMAIL_ADDRESS }}</dd>
+            {% endif %}
+            <dt>Opening times:</dt>
+            <dd>Monday to Friday, 9am to 5pm (excluding public holidays)</dd>
+          </dl>
+          <h2 class="govuk-visually-hidden">Support links</h2>
+          <ul class="govuk-footer__inline-list">
+            <li class="govuk-footer__inline-list-item">
+              <a class="govuk-footer__link" href="/cookies" data-cy="cookies-link">
+                Cookies
+              </a>
+            </li>
+            <li class="govuk-footer__inline-list-item">
+              <a class="govuk-footer__link" href="/accessibility-statement" data-cy="accessibility-statement-link">
+                Accessibility statement
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,84 @@
+{% macro render(params) %}
+  {% set facilities = params.facilities %}
+  {% set totals = params.totals %}
+  {% set caseId = params.caseId %}
+  {% set submissionType = params.submissionType %}
+
+  <table class="govuk-table" data-cy="facilities-table">
+    <thead class="govuk-table__head">
+      <tr>
+        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-facility-id">Facility ID</th>
+        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-product">Product</th>
+        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-type">Type</th>
+        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-stage">Stage</th>
+        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-tenor">Tenor</th>
+        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-cover-end-date">Cover end date</th>
+        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-value-export-currency">Value (export currency)</th>
+        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-value-gbp">Value (GBP)</th>
+        <th class="govuk-table__header govuk-body-s" data-cy="facilities-table-heading-ukef-exposure">UKEF exposure</th>
+      </tr>
+    </thead>
+
+    <tbody class="govuk-table__body">
+      {% for facility in facilities %}
+        <tr class="govuk-table__row" data-cy="facility-{{ facility._id }}">
+
+          <td class="govuk-table__cell govuk-body-s">
+            <a
+              class="govuk-link"
+              href="/case/{{ caseId }}/facility/{{ facility._id }}"
+              data-cy="facility-{{ facility._id }}-ukef-facility-id-link">
+              <span class="govuk-visually-hidden">View facility</span> <span data-cy="facility-{{ facility._id }}-ukef-facility-id-link-text">{{ facility.facilitySnapshot.ukefFacilityId | dashIfEmpty }}</span> <span class="govuk-visually-hidden">details</span>
+            </a>
+          </td>
+
+          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-product">{{ facility.facilitySnapshot.facilityProduct.code | dashIfEmpty }}</td>
+
+          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-type">{{ facility.facilitySnapshot.type | dashIfEmpty}}</td>
+
+          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-stage">{{ facility.facilitySnapshot.facilityStage | dashIfEmpty}}</td>
+
+          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-tenor">{{ facility.facilitySnapshot.dates.tenor | dashIfEmpty }}</td>
+
+          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-cover-end-date">
+            {% if facility.facilitySnapshot.dates.coverEndDate %}
+              {% if submissionType === 'Manual Inclusion Application' %}
+                {{ facility.facilitySnapshot.dates.coverEndDate }} (expected)
+              {% else %}
+                {{ facility.facilitySnapshot.dates.coverEndDate }}
+              {% endif %}
+            {% else %}
+              -
+            {% endif %}
+          </td>
+
+          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-value-export-currency">{{ facility.facilitySnapshot.facilityValueExportCurrency | dashIfEmpty }}</td>
+
+          <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-value-gbp">{{ facility.facilitySnapshot.value | dashIfEmpty}}</td>
+          <td class="govuk-table__cell govuk-body-s">
+            <span data-cy="facility-{{ facility._id }}-ukef-exposure">{{ facility.tfm.ukefExposure.exposure | dashIfEmpty }}</span>
+            <span data-cy="facility-{{ facility._id }}-covered-percentage" class="govuk-!-padding-right-4" id="facility-covered-percentage">
+            ({{ facility.facilitySnapshot.coveredPercentage | dashIfEmpty }})
+            </span>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+
+    <tfoot>
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__cell govuk-body-s govuk-!-font-weight-bold">Totals</td>
+        <td class="govuk-table__cell govuk-body-s">&nbsp;</td>
+        <td class="govuk-table__cell govuk-body-s">&nbsp;</td>
+        <td class="govuk-table__cell govuk-body-s">&nbsp;</td>
+        <td class="govuk-table__cell govuk-body-s">&nbsp;</td>
+        <td class="govuk-table__cell govuk-body-s">&nbsp;</td>
+        <td class="govuk-table__cell govuk-body-s">&nbsp;</td>
+        <td class="govuk-table__cell govuk-body-s govuk-!-font-weight-bold" data-cy="facilities-total-value">{{ totals.facilitiesValueInGBP | dashIfEmpty }}</td>
+        <td class="govuk-table__cell govuk-body-s govuk-!-font-weight-bold" data-cy="facilities-total-ukef-exposure">{{ totals.facilitiesUkefExposure | dashIfEmpty }}</td>
+      </tr>
+    </tfoot>
+
+  </table>
+
+{% endmacro %}

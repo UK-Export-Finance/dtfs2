@@ -1,0 +1,93 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% import './ukef-deal-stage.njk' as ukefDealStage %}
+{% import './supplier-type.njk' as supplierType %}
+
+{% macro render(params) %}
+  {% set deal = params.deal %}
+  {% set tfm = params.tfm %}
+  {% set user = params.user %}
+
+  <div data-cy="case-summary" class="case-summary">
+    <dl>
+      <div class="case-summary-deal-id">
+        <dt class="label">Deal ID</dt>
+        <dd class="ukef-heading-l" data-cy="ukef-deal-id">{{ deal.details.ukefDealId | dashIfEmpty }}</dd>
+      </div>
+
+      {% set supplierColumnClassName = 'case-summary-supplier' %}
+
+      {% if deal.submissionDetails.buyerName %}
+        {% set supplierColumnClassName = 'case-summary-supplier chevron-right' %}
+      {% endif %}
+
+      <div class="{{ supplierColumnClassName }}" data-cy="supplier-column">
+        <dt class="label">
+          {{ supplierType.render(deal.submissionDetails.supplierType) }}
+        </dt>
+        <dd class="ukef-heading-l" data-cy="exporter-name">{{ deal.exporter.companyName | dashIfEmpty }}</dd>
+      </div>
+
+      {% if deal.submissionDetails.buyerName %}
+        <div class="case-summary-buyer" data-cy="buyer-name-column">
+          <dt class="label">Buyer</dt>
+          <dd class="ukef-heading-l" data-cy="buyer-name">{{ deal.submissionDetails.buyerName }}</dd>
+        </div>
+      {% endif %}
+    </dl>
+    <dl class="ukef-list case-summary-overview-container">
+      <div class="ukef-grid-column-one-sixth case-summary-overview-column">
+        {% set componentData = {
+          stage: tfm.stage
+        }%}
+
+        {{ukefDealStage.render(componentData)}}
+
+        <dt>Date received</dt>
+        <dd data-cy="date-received">
+          {{ tfm.dateReceived | formatDateString("dd-MM-yyyy", "d MMMM yyyy") | dashIfEmpty}}
+        </dd>
+      </div>
+
+      <div class="case-summary-overview-column ukef-grid-column-one-sixth">
+        <dt>Product</dt>
+        <dd data-cy="ukef-product">{{ tfm.product | dashIfEmpty }}</dd>
+
+        <dt>Type</dt>
+        <dd data-cy="submission-type">{{ deal.submissionType | dashIfEmpty }}</dd>
+
+        <dt>Bank</dt>
+        <dd data-cy="bank-name">{{ deal.bank.name | dashIfEmpty }}</dd>
+      </div>
+
+      <div class="case-summary-overview-column govuk-grid-column-one-third">
+        <dt>Export description</dt>
+        <dd data-cy="export-description">{{ deal.submissionDetails.supplyContractDescription | dashIfEmpty }}</dd>
+
+        <dt>Destination Country</dt>
+        <dd data-cy="destination-country">{{ deal.submissionDetails.destinationCountry | dashIfEmpty }}</dd>
+
+        <dt>Agent</dt>
+        <dd data-cy="agent">{{ deal.eligibility.agentName | dashIfEmpty }}</dd>
+      </div>
+
+      <div class="case-summary-overview-column govuk-grid-column-one-third">
+        <dt>Export contract value</dt>
+        <dd>
+          <span data-cy="contract-value">
+            {{ deal.submissionDetails.supplyContractCurrency }} {{ deal.submissionDetails.supplyContractValue | formatAsCurrency | dashIfEmpty }}
+          </span>
+          {% if tfm.supplyContractValueInGBP %}
+            <span data-cy="contract-value-in-gbp">{{ tfm.supplyContractValueInGBP | dashIfEmpty }}</span>
+          {% endif %}
+        </dd>
+
+        <dt>Total facilities in this deal</dt>
+        <dd data-cy="total-facilities-in-gbp">{{ deal.totals.facilitiesValueInGBP | dashIfEmpty }}</dd>
+
+        <dt>UKEF exposure for this deal</dt>
+        <dd data-cy="total-ukef-exposure">{{ deal.totals.facilitiesUkefExposure | dashIfEmpty }}</dd>
+
+      </div>
+    </dl>
+  </div>
+{% endmacro %}

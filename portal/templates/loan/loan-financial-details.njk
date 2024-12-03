@@ -1,0 +1,170 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
+{% import '_macros/currency-same-as-supply-contract-currency.njk' as currencySameAsSupplyContractCurrency %}
+{% import '_macros/facility-inputs/covered-percentage.njk' as coveredPercentage %}
+{% import '_macros/facility-inputs/guarantee-fee-payable-by-bank.njk' as guaranteeFeePayableByBank %}
+{% import '_macros/facility-inputs/ukef-exposure.njk' as ukefExposure %}
+
+{% block pageTitle -%}
+  Loan Financial Details
+{%- endblock %}
+
+{% block content %}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary
+      })
+    }}
+  {% endif %}
+
+  {{ taskListHeader.render({
+    title: 'Add loan financial details',
+    dealId: dealId,
+    entityName: 'loan',
+    entityId: loan._id,
+    items: taskListItems
+  })}}
+
+  <form method="POST" autocomplete="off" novalidate>
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+      <div id="loan-financial-details-form">
+        {{ govukInput({
+          label: {
+            text: "Loan facility value"
+          },
+          id: "facilityValue",
+          name: "value",
+          value: loan.value,
+          pattern: '[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)',
+          attributes: {
+            size: "60",
+            maxlength: "255",
+            placeholder: "0.00",
+            'data-cy': 'facility-value',
+            "data-mask": "currency"
+          },
+          classes: "govuk-input--width-10",
+          errorMessage: validationErrors.errorList.value and {
+            text: validationErrors.errorList.value.text,
+            attributes: {
+              'data-cy': 'facility-value-error-message'
+            }
+          }
+        }) }}
+
+        {{ currencySameAsSupplyContractCurrency.render(
+          facility = loan,
+          radioFieldsetText = "Is the currency of this loan the same as your Supply Contract currency?",
+          currencies = currencies,
+          validationErrors = validationErrors
+        )}}
+
+        {% if loan.facilityStage === 'Unconditional' %}
+          {{ govukInput({
+            label: {
+              text: "Disbursement amount"
+            },
+            id: "disbursementAmount",
+            name: "disbursementAmount",
+            value: loan.disbursementAmount,
+            pattern: '[0-9][0-9,]{0,20}(\.?\d{0,2}|\d\.?\d{0,1}|\d{2}\.?)',
+            attributes: {
+              size: "60",
+              maxlength: "255",
+              placeholder: "0.00",
+              'data-cy': 'disbursement-amount',
+              "data-mask": "currency"
+            },
+            classes: "govuk-input--width-10",
+            errorMessage: validationErrors.errorList.disbursementAmount and {
+              text: validationErrors.errorList.disbursementAmount.text,
+              attributes: {
+                'data-cy': 'disbursement-amount-error-message'
+              }
+            }
+          }) }}
+        {% endif %}
+
+        {{ govukInput({
+          label: {
+            text: "Interest Margin %"
+          },
+          hint: {
+            text: "The ongoing fee charged by the bank to the Supplier for the provision of the loan to the beneficiary. This excludes any arrangement, issuance or other up-front fees."
+          },
+          classes: "govuk-input--width-5",
+          id: "interestMarginFee",
+          name: "interestMarginFee",
+          value: loan.interestMarginFee,
+          attributes: {
+            'data-cy': 'interest-margin-fee'
+          },
+          errorMessage: validationErrors.errorList.interestMarginFee and {
+            text: validationErrors.errorList.interestMarginFee.text,
+            attributes: {
+              'data-cy': 'interest-margin-fee-error-message'
+            }
+          }
+        }) }}
+
+        {{ coveredPercentage.render(
+          value = loan.coveredPercentage,
+          validationError = validationErrors.errorList.coveredPercentage
+        )}}
+
+        {{ govukInput({
+          inputmode: 'numeric',
+            label: {
+              text: "Minimum quarterly fee (optional)"
+            },
+            hint: {
+              text: "The minimum fee payable in the currency of the loan, if any, by the supplier."
+            },
+            id: "minimumQuarterlyFee",
+            name: "minimumQuarterlyFee",
+            value: loan.minimumQuarterlyFee,
+            classes: "govuk-input--width-10",
+            attributes: {
+              size: "60",
+              maxlength: "255",
+              placeholder: "0.00",
+              'data-cy': 'minimum-quarterly-fee'
+            },
+            errorMessage: validationErrors.errorList.minimumQuarterlyFee and {
+              text: validationErrors.errorList.minimumQuarterlyFee.text,
+              attributes: {
+                'data-cy': 'minimum-quarterly-fee-error-message'
+              }
+            }
+          }) }}
+
+        {{ guaranteeFeePayableByBank.render(
+          value = loan.guaranteeFeePayableByBank,
+          hintText = "The fee to be paid by the bank to UKEF, which represents the Interest Margin multiplied by the Covered Percentage, minus the 10% retained by the bank as an administrative fee. It is a calculated field. No input is required."
+        )}}
+
+        {{ ukefExposure.render(
+          value = loan.ukefExposure,
+          hintText = "The amount of UKEF's exposure for this Transaction in the loan currency. It is the loan value multiplied by the Covered Percentage. It is a calculated field. No input is required."
+        )}}
+
+        <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">Next page</button>
+
+        <input
+          type="submit"
+          formaction="/contract/{{ dealId }}/loan/{{ loan._id }}/financial-details/save-go-back"
+          class="govuk-button govuk-button--secondary"
+          data-module="govuk-button"
+          value="Save and go back to deal"
+          data-cy="save-go-back-button"
+        />
+    </div>
+
+  </form>
+
+{% endblock %}

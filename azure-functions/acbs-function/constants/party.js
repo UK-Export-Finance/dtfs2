@@ -1,0 +1,23 @@
+const CITIZENSHIP_CLASS = {
+  UNITED_KINGDOM: '1',
+  ROW: '2',
+};
+
+const SME_TYPE = {
+  NON_SME: '20',
+  MICRO: '40',
+  SMALL: '50',
+  MEDIUM: '60',
+  NOT_KNOWN: '70',
+};
+
+const INDUSTRY_CLASSIFICATION = {
+  DEFAULT: '0001',
+  BANK: '2501',
+};
+
+module.exports = {
+  CITIZENSHIP_CLASS,
+  SME_TYPE,
+  INDUSTRY_CLASSIFICATION,
+};

@@ -1,0 +1,87 @@
+.case-summary {
+  @extend .block-header;
+  padding: govuk-spacing(4) govuk-spacing(4) 0 govuk-spacing(4);
+  font-family: Helvetica;
+  font-size: 16px;
+  line-height: 20px;
+
+  .case-summary-deal-id {
+    display: inline-block;
+    vertical-align: top;
+    width: 228px;
+    margin-right: 30px;
+  }
+
+  .case-summary-supplier {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+
+    &.chevron-right {
+      padding-right: 45px;
+
+      &:after {
+        content: url('/assets/images/chevron-right.svg');
+        width: 15px;
+        height: 30px;
+        position: absolute;
+        right: 0;
+        top: 20px;
+        opacity: 0.5;
+      }
+    }
+  }
+
+  .case-summary-buyer {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 30px;
+  }
+
+  dl.case-summary-overview-container {
+    margin-top: 30px;
+
+    .case-summary-overview-column {
+      border-right: 1px solid white;
+      padding-left: 30px;
+      padding-right: 10px;
+
+      &:first-child {
+        padding-left:0;
+        padding-right: 0;
+      }
+
+      &:last-child {
+        border-right: none;
+      }
+    }
+
+    dd {
+      margin-bottom: 30px;
+    }
+
+    .ukef-deal-stage {
+      background: govuk-colour('white');
+      padding: govuk-spacing(2);
+      margin-left: -10px;
+    }
+
+    dt.ukef-deal-stage {
+      padding-bottom: 1px;
+      margin-bottom: -1px;
+    }
+    dd.ukef-deal-stage {
+      padding-top: 0;
+    }
+
+    .ukef-deal-stage__title {
+      color: govuk-colour('blue');
+    }
+  }
+
+  @media (min-width:40.0625em) {
+    .case-summary-overview-container {
+      display: flex;
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{% import '_macros/status-tag.njk' as statusTag %}
+
+{% macro render(params) %}
+
+  {% if params.completed %}
+    {% set statusTagText = 'Completed' %}
+
+    {% else %}
+    {% set statusTagText = 'Incomplete' %}
+  {% endif %}
+
+  <li
+    class="task-list__item"
+    data-cy="task-list-item-{{ params.title.toLowerCase() | replaceWhiteSpaceWithDash }}"
+  >
+    <span class="task-list__task-name">
+      <a
+        class="govuk-link"
+        href="{{ params.href }}"
+        data-cy="task-list-link-{{ params.title.toLowerCase() | replaceWhiteSpaceWithDash }}"
+      >
+        {{ params.title }}
+      </a>
+    </span>
+
+    <span class="task-list__task-tag">
+      {{ statusTag.render(statusTagText) }}
+    </span>
+  </li>
+
+{% endmacro %}

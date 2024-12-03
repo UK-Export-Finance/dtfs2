@@ -1,0 +1,52 @@
+{% import './address-fields.njk' as address %}
+{% import './input-companies-house-reg-number.njk' as companiesHouse %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% macro render(opts) %}
+  {% set deal = opts.deal %}
+  {% set countries = opts.countries %}
+  {% set validationErrors = opts.validationErrors %}
+
+  {{
+    govukRadios({
+      fieldset: {
+        legend: { text: "Is the Indemnifier's correspondence address different from the Company's Registered Address?" }
+      },
+      idPrefix: "indemnifierCorrespondenceAddressDifferent",
+      name: "indemnifierCorrespondenceAddressDifferent",
+      classes: "govuk-radios--inline",
+      items: [
+        {
+          value: "true",
+          text: "Yes",
+          attributes: {
+            "data-cy": "indemnifierCorrespondenceAddressDifferent-true"
+          },
+          checked: deal.submissionDetails.indemnifierCorrespondenceAddressDifferent === 'true'
+        },
+        {
+          value: "false",
+          text: "No",
+          attributes: {
+            "data-cy": "indemnifierCorrespondenceAddressDifferent-false"
+          },
+          checked: deal.submissionDetails.indemnifierCorrespondenceAddressDifferent === 'false'
+        }
+      ],
+      errorMessage: validationErrors.errorList.indemnifierCorrespondenceAddress
+    })
+  }}
+
+  <div id="additional-form-fields-indemnifier-correspondence-address" class="{% if deal.submissionDetails.indemnifierCorrespondenceAddressDifferent !== 'true' %}display-none{% endif %}">
+    {{ address.fields(
+      deal = deal,
+      validationErrors = validationErrors,
+      id = "indemnifier-correspondence-address",
+      legend = "Indemnifier correspondence address",
+      countries = countries,
+      showCountryPleaseSelect = true
+    )}}
+  </div>
+
+{% endmacro %}

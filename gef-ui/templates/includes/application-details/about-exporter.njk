@@ -1,0 +1,33 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-half">
+    <h2 class="govuk-heading-l" data-cy="exporter-heading">
+      About the exporter
+    </h2>
+  </div>
+
+  <div class="govuk-grid-column-one-half">
+    {{ govukTag({
+      text: exporter.status.text,
+      classes: 'govuk-!-margin-top-2 govuk-!-margin-bottom-4' + ' ' + exporter.status.class,
+      attributes: {
+        'data-cy': 'exporter-status'
+      }
+    }) }}
+  </div>
+</div>
+
+{% if exporter.status.code === 'Not started' and not previewMode %}
+  <a class="govuk-link" href="/gef/application-details/{{dealId}}/companies-house" data-cy="exporter-details-link">Enter details</a>
+{% else %}
+  {{ govukSummaryList({
+    rows: exporter.rows,
+    attributes: {
+      'data-cy': 'exporter-summary-list'
+    }
+  }) }}
+{% endif %}
+
+<hr class="govuk-section-break govuk-section-break--bold govuk-section-break--l govuk-section-break--visible">

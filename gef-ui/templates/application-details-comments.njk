@@ -1,0 +1,72 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% block pageTitle %}
+  Submit to be checked at your bank
+{% endblock %}
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+  <div class="govuk-grid-row" data-cy="application-submit-page">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+      {{ govukBackLink({
+        text: "Back to application",
+        href: "/gef/application-details/"+dealId,
+        classes: "govuk-!-margin-bottom-6",
+        attributes: {"data-cy": "back-link"}
+      }) }}
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-6" data-cy="main-heading">
+        Submit to be checked at your bank
+      </h1>
+      {% if hasIssuedFacility %}
+        <p class="govuk-body govuk-!-margin-bottom-6" data-cy="application-submission-text">
+          Someone at your bank must check your update before they can submit it to UKEF.
+        </p>
+      {% else %}
+        <p class="govuk-body govuk-!-margin-bottom-6" data-cy="application-submission-text">
+          Someone at your bank must check your {{ submissionType | capitalize }} before they can submit it to UKEF.
+        </p>
+      {% endif %}
+    </div>
+    <div class="govuk-grid-column-one-half-from-desktop">
+      <form method="post" data-cy="form">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        {{ govukCharacterCount({
+          name: "comment",
+          id: "comment",
+          value: comment,
+          maxlength: maxCommentLength,
+          label: {
+            text: "Comments (optional)",
+            classes: "govuk-body"
+          },
+          hint: {
+            text: "This will only be seen at your bank."
+          },
+          attributes: {
+            'data-cy': 'application-comments'
+          }
+        }) }}
+        <p class="govuk-button-group govuk-!-margin-top-7" id="application-details-comments-submit">
+          {{ govukButton({
+            text: "Submit",
+            attributes: {
+              'data-cy': 'submit-button'
+            },
+            classes: "govuk-!-margin-right-6"
+          }) }}
+          <a class="govuk-link" href="/gef/application-details/{{ dealId }}" data-cy="cancel-link">Cancel</a>
+        </p>
+      </form>
+    </div>
+  </div>
+{% endblock %}

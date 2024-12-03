@@ -1,0 +1,38 @@
+# The Rerun Command action is a custom GitHub Actions composite module designed to
+# execute a shell command with optional environment variables and retry logic.
+#
+# This is particularly useful for scenarios such as flakey tests or intermittent runner issues,
+# where a command might fail due to transient errors. The action retries the command a specified
+# number of times before reporting failure.
+
+name: 'Rerun command'
+description: 'This custom GitHub Actions module re-runs a command with specified environment variables for a maximum of two times. This is specially useful for re-running flakey tests and public runners abrupt connections.'
+inputs:
+  command:
+    description: 'The command required to be executed'
+    required: true
+  working-directory:
+    description: 'Working directory for the command execution'
+    required: false
+    default: './'
+  env:
+    description: 'Environment variables required for command execution'
+    required: false
+    default: ''
+  retries:
+    description: 'Maximum number of retries upon command failure'
+    required: false
+    default: '3'
+runs:
+  using: 'composite'
+  steps:
+    - run: |
+        # Change to working directory
+        cd ${{ inputs.working-directory }} || exit 1
+
+        # Loop execution
+         for((run=0; run<${{ inputs.retries }}; run++)); do
+            echo "Running #$run"
+            eval "${{ inputs.env }}" && bash -c "${{ inputs.command }}" && break
+        done
+      shell: bash

@@ -1,0 +1,79 @@
+name: Production TFM DNS
+
+on:
+  push:
+    branches: [dns]
+    paths:
+      - '.github/workflows/dns_tfm.yml'
+
+env:
+  credentials: ${{ secrets.AZURE_DIGITAL_PROD }}
+  resource_group: ${{ secrets.PROD_RESOURCE_GROUP }}
+  key_vault_name: ${{ secrets.PROD_KEYVAULT_NAME }}
+  key_vault_secret: ${{ secrets.PROD_KEYVAULT_TFM_SECRET }}
+  front_door_name: ${{ secrets.PROD_FRONTDOOR_TFM_NAME }}
+  domain_name: 'trade-finance-manager.ukexportfinance.gov.uk'
+
+jobs:
+  zone:
+    name: DNS Zone
+    runs-on: [self-hosted, linux]
+    steps:
+      - uses: azure/login@v2
+        with:
+          creds: ${{ env.credentials }}
+
+      - name: Defaults
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az configure --defaults location=uksouth
+            az configure --defaults group=${{ env.resource_group }}
+            az extension add --name front-door
+
+      - name: Defaults
+        uses: azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            az configure --defaults location=uksouth
+            az configure --defaults group=${{ env.resource_group }}
+            az extension add --name front-door
+
+      - name: Create DNS zone
+        uses: azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            az network dns zone create --name ${{ env.domain_name }}
+
+      - name: DNS - A record
+        uses: azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            front_door_id=$(az network front-door show --name ${{ env.front_door_name }} --query id -o tsv)
+            az network dns record-set a create --name "@" --target-resource $front_door_id --zone-name ${{ env.domain_name }}
+
+      - name: DNS - CNAME records
+        uses: azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            az network dns record-set cname set-record --record-set-name afdverify --cname ${{ env.front_door_name }}.azurefd.net --zone ${{ env.domain_name }}
+            az network dns record-set cname set-record --record-set-name '*' --cname ${{ env.front_door_name }}.azurefd.net --zone ${{ env.domain_name }}
+
+      - name: FD - Add domains
+        uses: azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            az network front-door frontend-endpoint create --front-door-name ${{ env.front_door_name }} --name "TFM" --host-name ${{ env.domain_name }}
+
+      - name: FD - HTTPS
+        uses: azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            keyvault_id=$(az keyvault show --name ${{ env.key_vault_name }} --query id -o tsv)
+            az network front-door frontend-endpoint enable-https --front-door-name ${{ env.front_door_name }} --name "TFM" --certificate-source AzureKeyVault --minimum-tls-version 1.2 --vault-id $keyvault_id --secret-name ${{ env.key_vault_secret }}
+
+      - name: FD - Verify mapping
+        uses: azure/cli@v2.1.0
+        with:
+          inlineScript: |
+            az network front-door check-custom-domain --host-name ${{ env.domain_name }} --name ${{ env.front_door_name }}

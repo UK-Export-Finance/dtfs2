@@ -1,0 +1,12 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro render(params) %}
+  {% if params.editable %}
+    <a
+      data-cy="ViewAboutSupplierDetails"
+      href="/contract/{{ params.deal._id }}/about/supplier"
+      class="govuk-link"
+      aria-label="View About Supplier"
+    >View details</a>
+  {% endif %}
+{% endmacro %}
