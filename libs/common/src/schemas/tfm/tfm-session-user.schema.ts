@@ -1,7 +1,7 @@
 import { TFM_USER_SCHEMA } from './tfm-user.schema';
+import { OBJECT_ID_STRING } from '../object-id';
 
 export const TFM_SESSION_USER_SCHEMA = TFM_USER_SCHEMA.pick({
-  _id: true,
   username: true,
   email: true,
   teams: true,
@@ -10,4 +10,4 @@ export const TFM_SESSION_USER_SCHEMA = TFM_USER_SCHEMA.pick({
   lastName: true,
   status: true,
   lastLogin: true,
-});
+}).extend({ _id: OBJECT_ID_STRING }); // _id is extended as a string as apposed to objectId due to existing implimentation of TFM session user
