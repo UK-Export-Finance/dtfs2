@@ -9,7 +9,6 @@ import securityDetails from '../pages/security-details';
 import applicationSubmission from '../pages/application-submission';
 import submitToUkef from '../pages/submit-to-ukef';
 import statusBanner from '../pages/application-status-banner';
-
 import CONSTANTS from '../../fixtures/constants';
 import { toTitleCase } from '../../fixtures/helpers';
 import { today } from '../../../../e2e-fixtures/dateConstants';
@@ -51,17 +50,22 @@ context('Submit AIN deal and check portalActivities', () => {
 
       cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
+
       cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
+
       cy.uploadFile('upload-file-valid.doc', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadSuccess('upload_file_valid.doc');
+
       securityDetails.visit(dealId);
+
       cy.keyboardInput(securityDetails.exporterSecurity(), 'test');
       cy.keyboardInput(securityDetails.facilitySecurity(), 'test2');
       cy.clickSubmitButton();
 
       cy.clickSubmitButton();
       cy.clickSubmitButton();
+
       applicationSubmission.confirmationPanelTitle();
     });
   });
@@ -90,35 +94,49 @@ context('Submit AIN deal and check portalActivities', () => {
     // ensures that can click between both tabs and correct info is shown
     it('check that subnavigation banner exists and that links work', () => {
       applicationActivities.subNavigationBar().should('exist');
+
       applicationActivities.subNavigationBarApplication().click();
+
       mainHeading().should('exist');
+
       applicationActivities.activityTimeline().should('not.exist');
+
       applicationActivities.subNavigationBarActivities().click();
+
       mainHeading().should('not.exist');
+
       applicationActivities.activityTimeline().should('exist');
     });
 
-    // ensures that timeline has relevant information
     it('should display the activity timeline with submission information', () => {
       applicationActivities.subNavigationBarActivities().click();
+
       applicationActivities.activityTimeline().should('exist');
+
       applicationActivities.activityTimeline().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)}`);
+
       applicationActivities
         .activityTimeline()
         .contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)}`)
         .should('not.exist');
+
       applicationActivities.activityTimeline().contains(today.d_MMMM_yyyy);
+
       applicationActivities.activityTimeline().contains(BANK1_CHECKER1.firstname);
     });
 
     // ensures that banner is populated correctly
-    it('should display the blue status banner', () => {
+    it('should display the application banner', () => {
       applicationActivities.subNavigationBarActivities().click();
+
       statusBanner.applicationBanner().should('exist');
+
       statusBanner.bannerDateCreated().contains(today.dd_MMM_yyyy);
       statusBanner.bannerDateSubmitted().contains(today.dd_MMM_yyyy);
+
       statusBanner.bannerCreatedBy().contains(deal.maker.firstname);
       statusBanner.bannerCheckedBy().contains(BANK1_CHECKER1.firstname);
+
       statusBanner.bannerSubmissionType().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA);
     });
   });
