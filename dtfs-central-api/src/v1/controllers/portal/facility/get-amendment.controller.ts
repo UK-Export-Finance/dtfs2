@@ -13,7 +13,7 @@ export const getAmendment = async (req: GetAmendmentRequest, res: Response) => {
     const amendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
 
     if (!amendment || amendment.type !== AMENDMENT_TYPES.PORTAL) {
-      return res.sendStatus(HttpStatusCode.NotFound);
+      return res.status(HttpStatusCode.NotFound).send({ status: HttpStatusCode.NotFound, message: `Amendment not found: ${amendmentId}` });
     }
 
     return res.status(HttpStatusCode.Ok).send(amendment);
