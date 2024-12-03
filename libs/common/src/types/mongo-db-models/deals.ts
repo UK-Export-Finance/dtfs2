@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb';
 import { DEAL_TYPE } from '../../constants';
 import { AnyObject } from '../any-object';
 import { DealSubmissionType } from '..';
+import { PortalActivity } from '../portal';
 
 type BaseDeal = AnyObject & {
   _id: ObjectId;
@@ -20,6 +21,7 @@ export interface GefDeal extends BaseDeal {
   ukefDealId: string | null;
   eligibility: AnyObject;
   exporter: AnyObject;
+  portalActivities: PortalActivity[];
 }
 
 /**
