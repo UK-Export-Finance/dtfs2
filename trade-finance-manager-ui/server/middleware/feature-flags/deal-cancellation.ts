@@ -1,13 +1,9 @@
 import { RequestHandler } from 'express';
-import { isTfmDealCancellationFeatureFlagEnabled } from '@ukef/dtfs2-common';
+import { generateFrontendFeatureFlagMiddleware, isTfmDealCancellationFeatureFlagEnabled } from '@ukef/dtfs2-common';
 
 /**
  * Middleware to check if the deal cancellation feature flag is enabled
  */
-export const validateDealCancellationEnabled: RequestHandler = (_req, res, next) => {
-  if (!isTfmDealCancellationFeatureFlagEnabled()) {
-    return res.redirect('/not-found');
-  }
-
-  return next();
-};
+export const validateDealCancellationEnabled: RequestHandler = generateFrontendFeatureFlagMiddleware('FF_TFM_DEAL_CANCELLATION_ENABLED', () =>
+  isTfmDealCancellationFeatureFlagEnabled(),
+);

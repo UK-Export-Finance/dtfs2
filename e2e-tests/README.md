@@ -74,7 +74,7 @@ Where 'PaymentMatchingTolerance' will be replaced by whichever SQL table is tryi
 
 ## Cypress configuration ⚙️
 
-Each test suite has its own `cypress.json` configuration file in its root directory. This JSON file contains URLs for the relevant UI and API endpoints.
+Each test suite has its own `cypress.config.js` file in its root directory. This JSON file contains URLs for the relevant UI and API endpoints.
 
 Additionally, it includes values for handling timeouts and retries: `pageLoadTimeout` and `retries`.
 

@@ -4,12 +4,12 @@ import { getFeeRecordDisplayStatus } from './get-fee-record-display-status';
 describe('get-fee-record-display-status-helper', () => {
   describe('getFeeRecordDisplayStatus', () => {
     it.each([
-      { status: FEE_RECORD_STATUS.DOES_NOT_MATCH, expectedDisplayStatus: 'DOES NOT MATCH' },
-      { status: FEE_RECORD_STATUS.MATCH, expectedDisplayStatus: 'MATCH' },
-      { status: FEE_RECORD_STATUS.TO_DO, expectedDisplayStatus: 'TO DO' },
-      { status: FEE_RECORD_STATUS.READY_TO_KEY, expectedDisplayStatus: 'READY TO KEY' },
-      { status: FEE_RECORD_STATUS.RECONCILED, expectedDisplayStatus: 'RECONCILED' },
-      { status: FEE_RECORD_STATUS.PENDING_CORRECTION, expectedDisplayStatus: 'RECORD CORRECTION REQUESTED' },
+      { status: FEE_RECORD_STATUS.DOES_NOT_MATCH, expectedDisplayStatus: 'Does not match' },
+      { status: FEE_RECORD_STATUS.MATCH, expectedDisplayStatus: 'Match' },
+      { status: FEE_RECORD_STATUS.TO_DO, expectedDisplayStatus: 'To do' },
+      { status: FEE_RECORD_STATUS.READY_TO_KEY, expectedDisplayStatus: 'Ready to key' },
+      { status: FEE_RECORD_STATUS.RECONCILED, expectedDisplayStatus: 'Reconciled' },
+      { status: FEE_RECORD_STATUS.PENDING_CORRECTION, expectedDisplayStatus: 'Record correction requested' },
     ])("returns '$expectedDisplayStatus' when the status is '$status'", ({ status, expectedDisplayStatus }) => {
       // Act
       const displayStatus = getFeeRecordDisplayStatus(status);
