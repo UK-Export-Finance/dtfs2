@@ -1,6 +1,8 @@
 const relative = require('../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../e2e-fixtures');
-const CONSTANTS = require('../../../../../fixtures/constants');
+const {
+  FACILITY: { FACILITY_STAGE },
+} = require('../../../../../fixtures/constants');
 const { dashboardFacilities } = require('../../../../pages');
 const { dashboardFilters } = require('../../../../partials');
 const { BSS_DEAL_AIN, BSS_FACILITY_BOND_ISSUED, BSS_FACILITY_BOND_UNISSUED } = require('../../fixtures');
@@ -44,7 +46,7 @@ context('Dashboard Facilities filters - filter by facility stage', () => {
     filters.showHideButton().click();
   });
 
-  describe(CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED, () => {
+  describe(FACILITY_STAGE.ISSUED, () => {
     before(() => {
       cy.login(BANK1_MAKER1);
       dashboardFacilities.visit();
@@ -62,31 +64,25 @@ context('Dashboard Facilities filters - filter by facility stage', () => {
     it('renders the applied filter in the `applied filters` section', () => {
       filters.showHideButton().click();
 
-      shouldRenderAppliedFilterInPanelSelectedFilters("Bank's facility stage", CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED);
+      shouldRenderAppliedFilterInPanelSelectedFilters("Bank's facility stage", FACILITY_STAGE.ISSUED);
     });
 
     it('renders the applied filter in the `main container selected filters` section', () => {
       filters.showHideButton().click();
 
-      shouldRenderAppliedFilterInMainContainerSelectedFilters(
-        dashboardFacilities.filters.mainContainer.selectedFilters.typeIssued(),
-        CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED,
-      );
+      shouldRenderAppliedFilterInMainContainerSelectedFilters(dashboardFacilities.filters.mainContainer.selectedFilters.typeIssued(), FACILITY_STAGE.ISSUED);
     });
 
     it('renders only facilities that are Issued', () => {
       filters.showHideButton().click();
 
-      shouldRenderAppliedFilterInMainContainerSelectedFilters(
-        dashboardFacilities.filters.mainContainer.selectedFilters.typeIssued(),
-        CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED,
-      );
+      shouldRenderAppliedFilterInMainContainerSelectedFilters(dashboardFacilities.filters.mainContainer.selectedFilters.typeIssued(), FACILITY_STAGE.ISSUED);
 
       shouldRenderOnlyGivenTypes(ALL_FACILITIES, 'hasBeenIssued', true);
     });
   });
 
-  describe(CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED, () => {
+  describe(FACILITY_STAGE.UNISSUED, () => {
     before(() => {
       cy.login(BANK1_MAKER1);
       dashboardFacilities.visit();
@@ -104,7 +100,7 @@ context('Dashboard Facilities filters - filter by facility stage', () => {
     it('renders the applied filter in the `applied filters` section', () => {
       filters.showHideButton().click();
 
-      shouldRenderAppliedFilterInPanelSelectedFilters("Bank's facility stage", CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED);
+      shouldRenderAppliedFilterInPanelSelectedFilters("Bank's facility stage", FACILITY_STAGE.UNISSUED);
     });
 
     it('renders the applied filter in the `main container selected filters` section', () => {
@@ -112,7 +108,7 @@ context('Dashboard Facilities filters - filter by facility stage', () => {
 
       shouldRenderAppliedFilterInMainContainerSelectedFilters(
         dashboardFacilities.filters.mainContainer.selectedFilters.typeUnissued(),
-        CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED,
+        FACILITY_STAGE.UNISSUED,
       );
     });
 
@@ -121,7 +117,7 @@ context('Dashboard Facilities filters - filter by facility stage', () => {
 
       shouldRenderAppliedFilterInMainContainerSelectedFilters(
         dashboardFacilities.filters.mainContainer.selectedFilters.typeUnissued(),
-        CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED,
+        FACILITY_STAGE.UNISSUED,
       );
 
       shouldRenderOnlyGivenTypes(ALL_FACILITIES, 'hasBeenIssued', false);

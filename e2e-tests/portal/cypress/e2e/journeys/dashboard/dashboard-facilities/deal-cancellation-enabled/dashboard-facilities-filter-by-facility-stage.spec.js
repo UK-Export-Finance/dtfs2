@@ -22,7 +22,7 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
-context('Dashboard Facilities filters - filter by facility stage', () => {
+context('Dashboard Facilities filters - filter by facility stage with deal cancellation enabled', () => {
   const ALL_FACILITIES = [];
 
   before(() => {
