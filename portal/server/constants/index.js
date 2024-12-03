@@ -1,7 +1,6 @@
 const ALL_BANKS_ID = require('./all-banks-id');
 const DASHBOARD = require('./dashboard');
 const DATE = require('./date');
-const FACILITY_HAS_BEEN_ISSUED = require('./facility-has-been-issued');
 const FACILITY_STAGE = require('./facility-stage');
 const FIELD_NAMES = require('./field-names');
 const { FILE_UPLOAD } = require('./file-upload');
@@ -21,7 +20,6 @@ module.exports = {
   ALL_BANKS_ID,
   DASHBOARD,
   DATE,
-  FACILITY_HAS_BEEN_ISSUED,
   FACILITY_STAGE,
   FIELD_NAMES,
   FILE_UPLOAD,
