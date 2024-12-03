@@ -1,14 +1,24 @@
 import { AuthorizationUrlRequest } from '@azure/msal-node';
+import { Response } from 'express';
 import { EntraIdAuthCodeRedirectResponseBody } from './entra-id';
 import { TfmSessionUser } from './tfm-session-user';
+import { AuditDetails } from '../audit-details';
+import { CustomExpressRequest } from '../express-custom-request';
 
-export type handleSsoRedirectFormRequest = {
+export type HandleSsoRedirectFormRequest = {
   authCodeResponse: EntraIdAuthCodeRedirectResponseBody;
   originalAuthCodeUrlRequest: AuthorizationUrlRequest;
+  auditDetails: AuditDetails<'system'>;
 };
 
-export type handleSsoRedirectFormResponse = {
+export type HandleSsoRedirectFormResponse = {
   user: TfmSessionUser;
   userToken: string;
   successRedirect: string;
 };
+
+export type HandleSsoRedirectFormUiRequest = CustomExpressRequest<{ reqBody: EntraIdAuthCodeRedirectResponseBody }>;
+
+export type HandleSsoRedirectFormApiRequest = CustomExpressRequest<{ reqBody: HandleSsoRedirectFormRequest }>;
+
+export type HandleSsoRedirectFormApiResponse = Response<HandleSsoRedirectFormResponse>;

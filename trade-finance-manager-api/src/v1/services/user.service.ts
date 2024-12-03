@@ -1,5 +1,6 @@
 import { AuditDetails, EntraIdUser, MultipleUsersFoundError, TfmUser, UpsertTfmUserRequest } from '@ukef/dtfs2-common';
 import { ENTRA_ID_USER_TO_UPSERT_TFM_USER_REQUEST_SCHEMA } from '@ukef/dtfs2-common/schemas';
+import { ObjectId } from 'mongodb';
 import { UserRepo } from '../repo/user.repo';
 
 type UpsertTfmUserFromEntraIdUserParams = {
@@ -40,10 +41,7 @@ export class UserService {
    * @returns The upserted user
    * @throws MultipleUsersFoundError if multiple users are found
    */
-  public static async upsertTfmUserFromEntraIdUser({
-    entraIdUser,
-    auditDetails,
-  }: UpsertTfmUserFromEntraIdUserParams): Promise<UpsertTfmUserFromEntraIdUserResponse> {
+  public async upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails }: UpsertTfmUserFromEntraIdUserParams): Promise<UpsertTfmUserFromEntraIdUserResponse> {
     const upsertTfmUserRequest = UserService.transformEntraIdUserToUpsertTfmUserRequest(entraIdUser);
     const findResult = await UserRepo.findUsersByEmailAddresses([...entraIdUser.verified_primary_email, ...entraIdUser.verified_secondary_email]);
 
@@ -59,5 +57,24 @@ export class UserService {
         throw new MultipleUsersFoundError({ userIdsFound: findResult.map((user) => user._id.toString()) });
     }
     return upsertedUser;
+  }
+
+  public async saveUserLoginInformation({
+    userId,
+    sessionIdentifier,
+    auditDetails,
+  }: {
+    userId: ObjectId;
+    sessionIdentifier: string;
+    auditDetails: AuditDetails;
+  }) {
+    await UserRepo.updateUserById({
+      userId,
+      userUpdate: {
+        lastLogin: Date.now(),
+        sessionIdentifier,
+      },
+      auditDetails,
+    });
   }
 }

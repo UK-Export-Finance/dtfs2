@@ -1,12 +1,8 @@
-const { HttpStatusCode } = require('axios');
-const { ZodError } = require('zod');
-const { ApiError } = require('@ukef/dtfs2-common');
-const { ENTRA_ID_USER_SCHEMA } = require('@ukef/dtfs2-common/schemas');
 const { ObjectId } = require('mongodb');
-const { generateTfmAuditDetails, generateNoUserLoggedInAuditDetails, generateSystemAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateTfmAuditDetails, generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const utils = require('../../../utils/crypto.util');
 const { userIsDisabled, usernameOrPasswordIncorrect, userIsBlocked } = require('../../../constants/login-results.constant');
-const { create, update, removeTfmUserById, findOne, findByUsername, upsertTfmUserFromEntraIdUser } = require('./user.controller');
+const { create, update, removeTfmUserById, findOne, findByUsername } = require('./user.controller');
 
 const { mapUserData } = require('./helpers/mapUserData.helper');
 const { loginCallback } = require('./helpers/loginCallback.helper');
@@ -63,34 +59,6 @@ module.exports.createTfmUser = (req, res, next) => {
       user,
     });
   });
-};
-
-module.exports.upsertTfmUserFromEntraIdUser = async (req, res, next) => {
-  try {
-    const entraIdUser = ENTRA_ID_USER_SCHEMA.parse(req.body);
-    const tfmUser = await upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails: generateSystemAuditDetails() });
-
-    return res.status(HttpStatusCode.Ok).send(tfmUser);
-  } catch (error) {
-    console.error('Error calling upsertTfmUserFromEntraIdUser %o', error);
-
-    if (error instanceof ApiError) {
-      return res.status(error.status).send({
-        status: error.status,
-        message: error.message,
-        code: error.code,
-      });
-    }
-
-    if (error instanceof ZodError) {
-      return res.status(HttpStatusCode.BadRequest).send({
-        status: HttpStatusCode.BadRequest,
-        message: 'Error validating payload',
-      });
-    }
-
-    return next(error);
-  }
 };
 
 module.exports.findTfmUser = (req, res, next) => {
