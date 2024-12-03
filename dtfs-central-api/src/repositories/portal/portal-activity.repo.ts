@@ -1,5 +1,5 @@
 import { Collection, ObjectId, WithoutId, UpdateResult } from 'mongodb';
-import { InvalidDealIdError, MONGO_DB_COLLECTIONS, Deal, Activity, AuditDetails } from '@ukef/dtfs2-common';
+import { AuditDetails, Deal, InvalidDealIdError, MONGO_DB_COLLECTIONS, PortalActivity } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../drivers/db-client';
 
@@ -14,7 +14,7 @@ export class PortalActivityRepo {
    * @param newActivity - the new activity to add
    * @param auditDetails - the users audit details
    */
-  public static async addPortalActivity(dealId: string | ObjectId, newActivity: Activity, auditDetails: AuditDetails): Promise<UpdateResult> {
+  public static async addPortalActivity(dealId: string | ObjectId, newActivity: PortalActivity, auditDetails: AuditDetails): Promise<UpdateResult> {
     if (!ObjectId.isValid(dealId)) {
       throw new InvalidDealIdError(dealId.toString());
     }

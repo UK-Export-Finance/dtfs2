@@ -1,11 +1,11 @@
 import {
-  Activity,
   ACTIVITY_TYPES,
   AuditDetails,
   DEAL_STATUS,
   DEAL_TYPE,
   FACILITY_STAGE,
   InvalidAuditDetailsError,
+  PortalActivity,
   TfmActivity,
   TfmDeal,
   TfmDealCancellation,
@@ -23,7 +23,7 @@ import { PortalDealService } from '../portal/deal.service';
 
 const dealType = DEAL_TYPE.GEF;
 
-const portalActivities: Activity[] = [];
+const portalActivities: PortalActivity[] = [];
 
 const riskExpiredFacilityIds = [new ObjectId(), new ObjectId()];
 

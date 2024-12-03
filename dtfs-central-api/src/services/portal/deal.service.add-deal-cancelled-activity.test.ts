@@ -1,4 +1,4 @@
-import { Activity, DEAL_TYPE, GefDeal, PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE, TfmDeal, UKEF } from '@ukef/dtfs2-common';
+import { DEAL_TYPE, GefDeal, PortalActivity, PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE, TfmDeal, UKEF } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { ObjectId } from 'mongodb';
 import { getUnixTime } from 'date-fns';
@@ -9,7 +9,7 @@ const addPortalActivityMock = jest.fn();
 
 const dealId = new ObjectId();
 
-const portalActivities: Activity[] = [];
+const portalActivities: PortalActivity[] = [];
 
 const dealSnapshot = {
   _id: dealId,

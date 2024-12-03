@@ -1,8 +1,8 @@
 import { ActivityAuthor, ValuesOf } from '..';
 import { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } from '../../constants';
 
-export type ActivityType = ValuesOf<typeof PORTAL_ACTIVITY_TYPE>;
-export type ActivityLabel = ValuesOf<typeof PORTAL_ACTIVITY_LABEL>;
+export type PortalActivityType = ValuesOf<typeof PORTAL_ACTIVITY_TYPE>;
+export type PortalActivityLabel = ValuesOf<typeof PORTAL_ACTIVITY_LABEL>;
 
 /**
  * NOTE: type and activityType are confusing.
@@ -13,9 +13,9 @@ export type ActivityLabel = ValuesOf<typeof PORTAL_ACTIVITY_LABEL>;
  * - The "activityType" field uses an "ActivityLabel" type to help clarify.
  * Ideally, we would run some data migration to rename one or both of these fields.
  */
-export type Activity = {
-  type: ActivityType;
-  activityType?: ActivityLabel;
+export type PortalActivity = {
+  type: PortalActivityType;
+  activityType?: PortalActivityLabel;
   author: ActivityAuthor;
   timestamp: number;
   label: string;
