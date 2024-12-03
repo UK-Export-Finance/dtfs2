@@ -1,5 +1,16 @@
-import { RecordCorrectionReason } from '@ukef/dtfs2-common';
+import { MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, RecordCorrectionTransientFormData, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import { CreateRecordCorrectionRequestFormValues, CreateRecordCorrectionRequestErrorsViewModel, ErrorSummaryViewModel } from '../../../../types/view-models';
+
+/** Represents validation response with either errors or validated form values */
+type ValidationResponse =
+  | {
+      errors: CreateRecordCorrectionRequestErrorsViewModel;
+      validatedFormValues: null;
+    }
+  | {
+      errors: null;
+      validatedFormValues: RecordCorrectionTransientFormData;
+    };
 
 /**
  * The maximum length of the additional information field for a record correction request.
@@ -29,38 +40,65 @@ export const getAdditionalInfoValidationError = (additionalInfo?: string): strin
     return 'You must provide more information for the record correction request';
   }
 
-  if (additionalInfo.length > MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH) {
-    return `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH} characters in the provide more information box`;
+  if (additionalInfo.length > MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT) {
+    return `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters in the provide more information box`;
   }
 
   return undefined;
 };
 
 /**
- * Validates the form submission for creating a record correction request.
+ * Gets validation errors for the record correction request form values.
  * @param formValues - The form values to validate.
- * @returns An object containing an error summary and individual validation error messages (if applicable).
+ * @returns An object containing field-specific validation error messages and an error summary array.
  */
-export const validateCreateRecordCorrectionRequestFormValues = (
-  formValues: CreateRecordCorrectionRequestFormValues,
-): CreateRecordCorrectionRequestErrorsViewModel => {
+export const getCreateRecordCorrectionRequestFormErrors = ({
+  reasons,
+  additionalInfo,
+}: CreateRecordCorrectionRequestFormValues): CreateRecordCorrectionRequestErrorsViewModel => {
   const errorSummary: ErrorSummaryViewModel[] = [];
 
-  const reasonsErrorMessage = getRecordCorrectionReasonsValidationError(formValues.reasons);
-
+  const reasonsErrorMessage = !reasons || reasons?.length === 0 ? 'You must select a reason for the record correction request' : undefined;
   if (reasonsErrorMessage) {
     errorSummary.push({ text: reasonsErrorMessage, href: '#reasons' });
   }
 
-  const additionalInfoErrorMessage = getAdditionalInfoValidationError(formValues.additionalInfo);
-
+  const additionalInfoErrorMessage = getAdditionalInfoValidationError(additionalInfo);
   if (additionalInfoErrorMessage) {
     errorSummary.push({ text: additionalInfoErrorMessage, href: '#additionalInfo' });
   }
 
   return {
-    errorSummary,
     reasonsErrorMessage,
     additionalInfoErrorMessage,
+    errorSummary,
+  };
+};
+
+/**
+ * Validates the form submission for creating a record correction request.
+ * @param formValues - The form values to validate.
+ * @returns A ValidationResponse object containing either validation errors or validated form values.
+ */
+export const validateCreateRecordCorrectionRequestFormValues = ({ reasons, additionalInfo }: CreateRecordCorrectionRequestFormValues): ValidationResponse => {
+  const errors = getCreateRecordCorrectionRequestFormErrors({ reasons, additionalInfo });
+
+  if (errors.errorSummary.length > 0) {
+    return {
+      errors,
+      validatedFormValues: null,
+    };
+  }
+
+  if (!reasons || !additionalInfo) {
+    throw new Error('Unexpected error: validation passed but required form values are missing');
+  }
+
+  return {
+    errors: null,
+    validatedFormValues: {
+      reasons,
+      additionalInfo,
+    },
   };
 };
