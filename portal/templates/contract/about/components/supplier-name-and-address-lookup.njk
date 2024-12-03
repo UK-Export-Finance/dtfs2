@@ -29,6 +29,11 @@
       },
       errorMessage: validationErrors.errorList["supplier-name"]
     }) }}
+
+    <span id="supplier-name-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+      You can enter up to 150 characters
+    </span>
+  </div>
   </div>
 
   {{ address.fields(
