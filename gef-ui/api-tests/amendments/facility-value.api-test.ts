@@ -8,6 +8,8 @@ import { createApi } from '../create-api';
 import api from '../../server/services/api';
 import * as storage from '../test-helpers/storage/storage';
 
+const originalEnv = { ...process.env };
+
 const { get } = createApi(app);
 
 jest.mock('csurf', () => () => (_req: Request, _res: Response, next: NextFunction) => next());
@@ -39,12 +41,59 @@ describe('bank review date routes', () => {
   const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-value`;
 
   describe(url, () => {
+    let sessionCookie: string;
+
+    beforeEach(async () => {
+      ({ sessionCookie } = await storage.saveUserSession([MAKER]));
+    });
+
+    afterAll(() => {
+      process.env = originalEnv;
+    });
+
+    describe('with portal facility amendments disabled', () => {
+      beforeEach(() => {
+        process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'false';
+      });
+
+      it('should redirect to /not-found', async () => {
+        // Act
+        const response = await getWithSessionCookie(url, sessionCookie);
+
+        // Assert
+        expect(response.status).toEqual(302);
+        expect(response.headers.location).toEqual('/not-found');
+      });
+    });
+
     describe('with portal facility amendments enabled', () => {
+      beforeEach(() => {
+        process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'true';
+      });
+
       withRoleValidationApiTests({
         makeRequestWithHeaders: (headers: Headers) => get(url, {}, headers),
         whitelistedRoles: [MAKER],
         successCode: 200,
       });
+
+      it('should return status 200 when user logged in as maker', async () => {
+        // Act
+        const response = await getWithSessionCookie(url, sessionCookie);
+
+        // Assert
+        expect(response.status).toEqual(200);
+      });
     });
   });
 });
+
+function getWithSessionCookie(url: string, sessionCookie: string) {
+  return get(
+    url,
+    {},
+    {
+      Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`],
+    },
+  );
+}
