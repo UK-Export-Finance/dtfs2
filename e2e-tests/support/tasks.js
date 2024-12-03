@@ -8,6 +8,7 @@ const {
   AzureFileInfoEntity,
   FacilityUtilisationDataEntity,
   PaymentMatchingToleranceEntity,
+  FeeRecordCorrectionTransientFormDataEntity,
 } = require('@ukef/dtfs2-common');
 const createTfmDealToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-deal-to-insert-into-db');
 const createTfmFacilityToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-facility-to-insert-into-db');
@@ -169,6 +170,7 @@ module.exports = {
         await SqlDbDataSource.manager.delete(AzureFileInfoEntity, {}),
         await SqlDbDataSource.manager.delete(FacilityUtilisationDataEntity, {}),
         await SqlDbDataSource.manager.delete(PaymentMatchingToleranceEntity, {}),
+        await SqlDbDataSource.manager.delete(FeeRecordCorrectionTransientFormDataEntity, {}),
       ]);
 
     const getAllBanks = async () => {
