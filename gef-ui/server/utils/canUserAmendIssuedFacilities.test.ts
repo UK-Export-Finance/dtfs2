@@ -17,7 +17,7 @@ describe('canUserAmendIssuedFacilities', () => {
       jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(false);
     });
 
-    it(`returns false`, () => {
+    it(`should return false`, () => {
       const result = canUserAmendIssuedFacilities(DEAL_SUBMISSION_TYPE.MIN, UKEF_ACKNOWLEDGED, [MAKER]);
 
       expect(result).toEqual(false);
@@ -29,31 +29,31 @@ describe('canUserAmendIssuedFacilities', () => {
       jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(true);
     });
 
-    it(`returns false when the submission type is ${MIA}`, () => {
+    it(`should return false when the submission type is ${MIA}`, () => {
       const result = canUserAmendIssuedFacilities(MIA, UKEF_ACKNOWLEDGED, [MAKER]);
 
       expect(result).toEqual(false);
     });
 
-    it(`returns false when the deal status is not ${UKEF_ACKNOWLEDGED}`, () => {
+    it(`should return false when the deal status is not ${UKEF_ACKNOWLEDGED}`, () => {
       const result = canUserAmendIssuedFacilities(MIN, DRAFT, [MAKER]);
 
       expect(result).toEqual(false);
     });
 
-    it(`returns false when the user is not a ${MAKER}`, () => {
+    it(`should return false when the user is not a ${MAKER}`, () => {
       const result = canUserAmendIssuedFacilities(MIN, UKEF_ACKNOWLEDGED, [ADMIN, CHECKER]);
 
       expect(result).toEqual(false);
     });
 
-    it(`returns true when the submission type is ${MIN}, the deal status is ${UKEF_ACKNOWLEDGED} and the user roles include ${MAKER}`, () => {
+    it(`should return true when the submission type is ${MIN}, the deal status is ${UKEF_ACKNOWLEDGED} and the user roles include ${MAKER}`, () => {
       const result = canUserAmendIssuedFacilities(MIN, UKEF_ACKNOWLEDGED, [MAKER, CHECKER, ADMIN]);
 
       expect(result).toEqual(true);
     });
 
-    it(`returns true when the submission type is ${AIN}, the deal status is ${UKEF_ACKNOWLEDGED} and the user roles include ${MAKER}`, () => {
+    it(`should return true when the submission type is ${AIN}, the deal status is ${UKEF_ACKNOWLEDGED} and the user roles include ${MAKER}`, () => {
       const result = canUserAmendIssuedFacilities(AIN, UKEF_ACKNOWLEDGED, [MAKER]);
 
       expect(result).toEqual(true);
