@@ -13,7 +13,7 @@ export type HandleSsoRedirectFormRequest = {
 
 export type HandleSsoRedirectFormResponse = {
   user: TfmSessionUser;
-  userToken: string;
+  token: string;
   expires: string;
   successRedirect?: string;
 };

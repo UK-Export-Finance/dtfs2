@@ -7,7 +7,7 @@ import {
   HandleSsoRedirectFormResponse,
   InvalidPayloadError,
 } from '@ukef/dtfs2-common';
-import { ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA } from '@ukef/dtfs2-common/schemas';
+import { ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA, TFM_SESSION_USER_SCHEMA } from '@ukef/dtfs2-common/schemas';
 import { isVerifiedPayload } from '@ukef/dtfs2-common/payload-verification';
 import { validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
 import { EntraIdService } from '../services/entra-id.service';
@@ -62,13 +62,13 @@ export class SsoController {
       await this.userService.saveUserLoginInformation({ userId: user._id, sessionIdentifier, auditDetails });
 
       const response: HandleSsoRedirectFormResponse = {
-        user,
-        successRedirect,
+        user: TFM_SESSION_USER_SCHEMA.parse(user),
         token,
         expires,
+        successRedirect,
       };
 
-      return response;
+      return res.send(response);
     } catch (error) {
       return next(error);
     }
