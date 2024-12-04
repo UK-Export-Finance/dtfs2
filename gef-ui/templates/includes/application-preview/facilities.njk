@@ -23,10 +23,18 @@
 
 {% if facilities.data.length > 0 %}
   {% for item in facilities.data %}
-    <header class="is-flex is-justify-content-space-between">
-      <h3 class="govuk-heading-m" data-cy="facility-type-heading">
+    <header class="is-flex">
+      <h3 class="govuk-heading-m govuk-grid-column-one-half govuk-!-padding-left-0" data-cy="facility-type-heading">
         {{item.heading}} facility
       </h3>
+      {% if canIssuedFacilitiesBeAmended and item.stage === "Issued" %}
+        {{ govukButton({
+          text: "Make a change",
+          attributes: {
+            'data-cy': "facility-" + item.facilityId + "-make-change-button"
+          }
+        }) }}
+     {% endif %}
     </header>
     {{ govukSummaryList({
       rows: item.rows,
