@@ -1,12 +1,12 @@
 import { decodeHtmlEntities } from './decode-html-entities';
 
 describe('decodeHtmlEntities', () => {
-  it('should return empty string when input is undefined', () => {
+  it('should return undefined when input is undefined', () => {
     // Act
     const result = decodeHtmlEntities();
 
     // Assert
-    expect(result).toEqual('');
+    expect(result).toEqual(undefined);
   });
 
   it('should return empty string when input is empty string', () => {
