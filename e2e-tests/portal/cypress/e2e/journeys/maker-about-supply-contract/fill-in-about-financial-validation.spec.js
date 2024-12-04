@@ -2,11 +2,15 @@ const { contractAboutBuyer, contractAboutFinancial, contractAboutPreview, dashbo
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
-const { BANK1_MAKER1 } = MOCK_USERS;
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('about-buyer', () => {
   before(() => {
     cy.createBssEwcsDeal({});
+  });
+
+  after(() => {
+    cy.deleteDeals(ADMIN);
   });
 
   it('A maker picks up a deal with the first 2 pages of about-supply-contract complete, and triggers all validation errors on the financial page.', () => {
@@ -27,9 +31,11 @@ context('about-buyer', () => {
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
-    partials.errorSummaryLinks().should('have.length', 2);
+    partials.errorSummaryLinks().should('have.length', 4);
     contractAboutFinancial.expectError('Supply Contract value is required');
     contractAboutFinancial.expectError('Supply Contract currency is required');
+    contractAboutPreview.errors().should('contain', 'Supply Contract conversion rate is required for non-GBP currencies');
+    contractAboutPreview.errors().should('contain', 'Supply Contract conversion date is required for non-GBP currencies');
 
     // fill in value + pick currency=GBP to clear validation warnings
     cy.keyboardInput(contractAboutFinancial.supplyContractValue(), '123.45');
