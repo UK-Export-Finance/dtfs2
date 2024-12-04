@@ -14,4 +14,4 @@ export const AMENDMENT_QUERIES = {
 export const AMENDMENT_TYPES = {
   PORTAL: 'PORTAL',
   TFM: 'TFM',
-};
+} as const;

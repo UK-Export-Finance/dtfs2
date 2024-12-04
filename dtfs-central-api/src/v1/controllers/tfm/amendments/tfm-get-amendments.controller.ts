@@ -1,7 +1,7 @@
 import { ObjectId, Document } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
-import { Currency, TfmFacilityAmendment, AMENDMENT_STATUS, AMENDMENT_QUERIES, ApiError, API_ERROR_CODE } from '@ukef/dtfs2-common';
+import { Currency, AMENDMENT_STATUS, AMENDMENT_QUERIES, ApiError, API_ERROR_CODE, FacilityAmendment } from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 import { AMENDMENT_QUERY_STATUSES } from '../../../../constants';
 
@@ -29,7 +29,7 @@ export const getAllAmendmentsInProgress = async (_req: Request, res: Response) =
 };
 
 const mapAmendmentToLatestValue = (
-  amendment: TfmFacilityAmendment,
+  amendment: FacilityAmendment,
 ): {
   amendmentId: string;
   value: number;
@@ -46,7 +46,7 @@ const mapAmendmentToLatestValue = (
 };
 
 const mapAmendmentToLatestCompletedDate = (
-  amendment: TfmFacilityAmendment,
+  amendment: FacilityAmendment,
 ): {
   amendmentId: string;
   coverEndDate: number;
@@ -61,7 +61,7 @@ const mapAmendmentToLatestCompletedDate = (
   };
 };
 
-const mapAmendmentToFacilityEndDateValues = (amendment: TfmFacilityAmendment): CompletedFacilityEndDate => {
+const mapAmendmentToFacilityEndDateValues = (amendment: FacilityAmendment): CompletedFacilityEndDate => {
   const { amendmentId, isUsingFacilityEndDate, facilityEndDate, bankReviewDate } = amendment;
   if (isUsingFacilityEndDate) {
     if (!facilityEndDate) {
