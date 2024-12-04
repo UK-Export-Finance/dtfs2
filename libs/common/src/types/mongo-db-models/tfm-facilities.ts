@@ -71,11 +71,6 @@ interface BaseAmendment {
     name: string;
     email: string;
   };
-  leadUnderwriter?: {
-    _id: ObjectId | 'Unassigned';
-    firstName: string;
-    lastName: string;
-  };
 }
 
 /**
@@ -118,6 +113,11 @@ export interface TfmFacilityAmendment extends BaseAmendment {
     id: number;
     groupTasks: AnyObject[];
   }[];
+  leadUnderwriter?: {
+    _id: ObjectId | 'Unassigned';
+    firstName: string;
+    lastName: string;
+  };
 }
 
 /**
