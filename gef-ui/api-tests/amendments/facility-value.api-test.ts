@@ -1,12 +1,15 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Headers } from 'node-mocks-http';
 import { NextFunction, Request, Response } from 'express';
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { MAKER } from '../../server/constants/roles';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
 import app from '../../server/createApp';
 import { createApi } from '../create-api';
 import api from '../../server/services/api';
 import * as storage from '../test-helpers/storage/storage';
+import { Deal } from '../../server/types/deal';
+import { Facility } from '../../server/types/facility';
 
 const originalEnv = { ...process.env };
 
@@ -17,76 +20,67 @@ jest.mock('../../server/middleware/csrf', () => ({
   csrfToken: () => (_req: Request, _res: Response, next: NextFunction) => next(),
 }));
 
-api.getFacility = jest.fn();
-api.getApplication = jest.fn();
-api.updateFacility = jest.fn();
-api.updateApplication = jest.fn();
-
 const dealId = '123';
 const facilityId = '111';
 const amendmentId = '111';
 
-describe('bank review date routes', () => {
+const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-value`;
+
+describe(`GET ${url}`, () => {
+  let sessionCookie: string;
+
   beforeEach(async () => {
     await storage.flush();
+    jest.resetAllMocks();
+
+    ({ sessionCookie } = await storage.saveUserSession([MAKER]));
+    jest.spyOn(api, 'getFacility').mockResolvedValue({ details: { currency: { id: CURRENCY.GBP } } } as { details: Facility });
+    jest.spyOn(api, 'getApplication').mockResolvedValue({ exporter: { companyName: 'test exporter' } } as Deal);
   });
 
   afterAll(async () => {
     jest.resetAllMocks();
     await storage.flush();
+    process.env = originalEnv;
   });
 
-  const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-value`;
-
-  describe(url, () => {
-    let sessionCookie: string;
-
-    beforeEach(async () => {
-      ({ sessionCookie } = await storage.saveUserSession([MAKER]));
+  describe('with portal facility amendments disabled', () => {
+    beforeEach(() => {
+      process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'false';
     });
 
-    afterAll(() => {
-      process.env = originalEnv;
+    it('should redirect to /not-found', async () => {
+      // Act
+      const response = await getWithSessionCookie(sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(302);
+      expect(response.headers.location).toEqual('/not-found');
+    });
+  });
+
+  describe('with portal facility amendments enabled', () => {
+    beforeEach(() => {
+      process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'true';
     });
 
-    describe('with portal facility amendments disabled', () => {
-      beforeEach(() => {
-        process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'false';
-      });
-
-      it('should redirect to /not-found', async () => {
-        // Act
-        const response = await getWithSessionCookie(url, sessionCookie);
-
-        // Assert
-        expect(response.status).toEqual(302);
-        expect(response.headers.location).toEqual('/not-found');
-      });
+    withRoleValidationApiTests({
+      makeRequestWithHeaders: (headers: Headers) => get(url, {}, headers),
+      whitelistedRoles: [MAKER],
+      successCode: 200,
     });
 
-    describe('with portal facility amendments enabled', () => {
-      beforeEach(() => {
-        process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'true';
-      });
+    it('should return status 200 when user logged in as maker', async () => {
+      // Act
+      const response = await getWithSessionCookie(sessionCookie);
 
-      withRoleValidationApiTests({
-        makeRequestWithHeaders: (headers: Headers) => get(url, {}, headers),
-        whitelistedRoles: [MAKER],
-        successCode: 200,
-      });
-
-      it('should return status 200 when user logged in as maker', async () => {
-        // Act
-        const response = await getWithSessionCookie(url, sessionCookie);
-
-        // Assert
-        expect(response.status).toEqual(200);
-      });
+      // Assert
+      expect(response.status).toEqual(200);
     });
   });
 });
 
-function getWithSessionCookie(url: string, sessionCookie: string) {
+function getWithSessionCookie(sessionCookie: string) {
   return get(
     url,
     {},
