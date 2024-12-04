@@ -1,9 +1,12 @@
 const utilisationReportPage = {
+  heading: () => cy.get('[data-cy="utilisation-report-reconciliation-for-report-heading"]'),
+  reportPeriodHeading: () => cy.get('[data-cy="report-period-heading"]'),
   bankReportsNavLink: () => cy.get('a[data-cy="bank-reports-nav-link"]'),
   keyingSheetTabLink: () => cy.get('a[data-cy="bank-report-tab-keying-sheet"]'),
   paymentDetailsTabLink: () => cy.get('a[data-cy="bank-report-tab-payment-details"]'),
   premiumPaymentsTabLink: () => cy.get('a[data-cy="bank-report-tab-premium-payments"]'),
   utilisationTabLink: () => cy.get('a[data-cy="bank-report-tab-utilisation"]'),
+  recordCorrectionHistoryLink: () => cy.get('a[data-cy="bank-report-tab-record-correction-history"]'),
   premiumPaymentsTab: {
     matchSuccessNotificationHeading: () => cy.get('[data-cy="match-success-notification-heading"]'),
     matchSuccessNotificationMessage: () => cy.get('[data-cy="match-success-notification-message"]'),
@@ -133,6 +136,12 @@ const utilisationReportPage = {
       valueHeader: () => cy.get('[data-cy="value-header"]'),
       exposureHeader: () => cy.get('[data-cy="exposure-header"]'),
     },
+  },
+  recordCorrectionHistoryTab: {
+    heading: () => cy.get('[data-cy="record-correction-history-heading"]'),
+    viewHistoricSubmissionsText: () => cy.get('[data-cy="view-historic-resubmissions-text"]'),
+    resubmissionAutomaticallyNotifiedText: () => cy.get('[data-cy="resubmission-automatic-notification-text"]'),
+    noRecordCorrectionHistoryText: () => cy.get('[data-cy="no-record-corrections-text"]'),
   },
 };
 

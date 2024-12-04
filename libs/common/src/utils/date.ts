@@ -17,6 +17,15 @@ export const isValidIsoMonth = (value: unknown): value is IsoMonthStamp => isStr
 export const toIsoMonthStamp = (date: Date): IsoMonthStamp => format(date, 'yyyy-MM');
 
 /**
+ * generates string of month and year from MonthAndYear object
+ * eg. November 2024 from { month: 11, year: 2024 }
+ */
+export const toMonthYearString = ({ month, year }: MonthAndYear): IsoMonthStamp => {
+  const date = new Date(year, month - 1);
+  return format(date, 'MMMM yyyy');
+};
+
+/**
  * Checks if the {@link MonthAndYear} objects are equal
  */
 export const isEqualMonthAndYear = (monthAndYear1: MonthAndYear, monthAndYear2: MonthAndYear): boolean =>
