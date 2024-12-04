@@ -10,6 +10,10 @@ context('Input is cleaned to avoid Cross Site Scripting', () => {
     cy.createBssEwcsDeal({});
   });
 
+  afterEach(() => {
+    cy.deleteDeals(ADMIN);
+  });
+
   it('Does not allow <script> tag', () => {
     // log in, visit a deal, select abandon
     cy.loginGoToDealPage(BANK1_MAKER1);

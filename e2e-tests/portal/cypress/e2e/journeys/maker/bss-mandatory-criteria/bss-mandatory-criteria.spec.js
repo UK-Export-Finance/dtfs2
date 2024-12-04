@@ -3,17 +3,21 @@ const partials = require('../../../partials');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { bankInternalRefName } = require('../../../../fixtures/deal');
 
-const { BANK1_MAKER1 } = MOCK_USERS;
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('BSS Mandatory criteria: Check deal details page', () => {
   before(() => {
     cy.createBssEwcsDeal({ readyForCheck: true, dealType: 'AIN', facilityStage: 'Unissued' });
   });
 
+  after(() => {
+    cy.deleteDeals(ADMIN);
+  });
+
   it('should render the mandatory criteria checklist when a new deal is created', () => {
     cy.loginGoToDealPage(BANK1_MAKER1);
 
-    pages.contract.checkDealDetailsTab().eq(0).click();
+    pages.contract.checkDealDetailsTab().click();
     pages.contractSubmissionDetails.mandatoryCriteriaBox().should('exist');
     pages.contractSubmissionDetails.mandatoryCriteriaBox().find('ol > li[value="1"]').should('contain', 'Bank with a duly completed Supplier Declaration');
     pages.contractSubmissionDetails
