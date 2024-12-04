@@ -1,7 +1,7 @@
 const { getDeal, logIn } = require('./api');
 
 /**
- * User get a deal on portal
+ * Get a deal from the portal API
  * @param {string} deal id
  * @param {Object} userDetails
  * @returns {Promise<Object>} an object deal from the API
