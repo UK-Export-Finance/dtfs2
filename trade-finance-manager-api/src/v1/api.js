@@ -1409,7 +1409,7 @@ const getUtilisationReportById = async (id) => {
  * Sends a payload to DTFS central API to update
  * the status of one or more utilisation reports
  * @param {import('@ukef/dtfs2-common').ReportWithStatus[]} reportsWithStatus
- * @param {import('../types/tfm-session-user').TfmSessionUser} user - The current user stored in the session
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The current user stored in the session
  * @returns {Promise<{ status: number }>}
  */
 const updateUtilisationReportStatus = async (reportsWithStatus, user) => {
@@ -1485,7 +1485,7 @@ const getUtilisationReportSummariesByBankIdAndYear = async (bankId, year) => {
  * Adds a new payment to the supplied fee records
  * @param {string} reportId - The report id
  * @param {number[]} feeRecordIds - The list of fee record ids to add the payment to
- * @param {import('../types/tfm-session-user').TfmSessionUser} user - The user adding the payment
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The user adding the payment
  * @param {import('@ukef/dtfs2-common').Currency} paymentCurrency - The payment currency
  * @param {number} paymentAmount - The payment amount
  * @param {import('@ukef/dtfs2-common').IsoDateTimeStamp} datePaymentReceived - The date the payment was received
@@ -1513,7 +1513,7 @@ const addPaymentToFeeRecords = async (reportId, feeRecordIds, user, paymentCurre
  * Generates keying data for the utilisation report
  * with the supplied id
  * @param {string} reportId - The report id
- * @param {import('../types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The session user
  * @returns {Promise<void>}
  */
 const generateKeyingData = async (reportId, user) => {
@@ -1531,7 +1531,7 @@ const generateKeyingData = async (reportId, user) => {
  * Updates keying sheet fee records with supplied ids to DONE
  * @param {string} reportId - The report id
  * @param {number[]} feeRecordIds - The ids of the fee records to mark as DONE
- * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The session user
  * @returns {Promise<{}>}
  */
 const markKeyingDataAsDone = async (reportId, feeRecordIds, user) => {
@@ -1550,7 +1550,7 @@ const markKeyingDataAsDone = async (reportId, feeRecordIds, user) => {
  * Updates keying sheet fee records with supplied ids to TO_DO
  * @param {string} reportId - The report id
  * @param {number[]} feeRecordIds - The ids of the fee records to mark as TO_DO
- * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The session user
  * @returns {Promise<{}>}
  */
 const markKeyingDataAsToDo = async (reportId, feeRecordIds, user) => {
@@ -1599,7 +1599,7 @@ const getPaymentDetails = async (reportId, paymentId, includeFeeRecords) => {
  * Deletes the payment with the specified id
  * @param {string} reportId - The report id
  * @param {string} paymentId - The payment id
- * @param {import('../types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The session user
  * @returns {Promise<void>}
  */
 const deletePaymentById = async (reportId, paymentId, user) => {
@@ -1618,7 +1618,7 @@ const deletePaymentById = async (reportId, paymentId, user) => {
  * @param {number} paymentAmount - The payment amount
  * @param {import('@ukef/dtfs2-common').IsoDateTimeStamp} datePaymentReceived - The date the payment was received
  * @param {string | null} paymentReference - The payment reference
- * @param {import('../types/tfm-session-user').TfmSessionUser} user - The user
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The user
  */
 const editPayment = async (reportId, paymentId, paymentAmount, datePaymentReceived, paymentReference, user) => {
   await axios({
@@ -1639,7 +1639,7 @@ const editPayment = async (reportId, paymentId, paymentAmount, datePaymentReceiv
  * @param {string} reportId - The report id
  * @param {string} paymentId - The payment id
  * @param {number[]} selectedFeeRecordIds - The list of fee record ids to remove from the payment
- * @param {import('../types/tfm-session-user').TfmSessionUser} user - The user
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The user
  */
 const removeFeesFromPayment = async (reportId, paymentId, selectedFeeRecordIds, user) => {
   await axios({
@@ -1658,7 +1658,7 @@ const removeFeesFromPayment = async (reportId, paymentId, selectedFeeRecordIds, 
  * @param {string} reportId - The report id
  * @param {number[]} feeRecordIds - The list of fee record ids to add to the payment
  * @param {number[]} paymentIds - The list of payment ids for the fee records to be added to
- * @param {import('../types/tfm-session-user').TfmSessionUser} user - The user
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The user
  */
 const addFeesToAnExistingPayment = async (reportId, feeRecordIds, paymentIds, user) => {
   const response = await axios({

@@ -1,9 +1,14 @@
 import { ObjectId } from 'mongodb';
 import { EntityManager } from 'typeorm';
-import { FeeRecordEntityMockBuilder, RECONCILIATION_IN_PROGRESS, REQUEST_PLATFORM_TYPE, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FeeRecordEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
+  REQUEST_PLATFORM_TYPE,
+  TfmSessionUser,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { removeFeesFromPaymentGroup } from './helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
-import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
