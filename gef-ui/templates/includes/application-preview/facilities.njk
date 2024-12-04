@@ -25,7 +25,10 @@
 {{ mojBanner({
   type: 'information',
   text: 'Check your records for the most up-to-date facility details.',
-  iconFallbackText: 'information'
+  iconFallbackText: 'information',
+  attributes: {
+    'data-cy': 'facility-information-banner'
+  }
 }) }}
 
 {% if facilities.data.length > 0 %}

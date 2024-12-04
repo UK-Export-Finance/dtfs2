@@ -3,6 +3,7 @@ import { mainHeading } from '../partials';
 import applicationActivities from '../pages/application-activities';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import applicationDetails from '../pages/application-details';
+import applicationPreview from '../pages/application-preview';
 import statusBanner from '../pages/application-status-banner';
 import submitToUkef from '../pages/submit-to-ukef';
 
@@ -105,6 +106,12 @@ context('Submit AIN deal and check portalActivities', () => {
       statusBanner.bannerCreatedBy().contains(deal.maker.firstname);
       statusBanner.bannerCheckedBy().contains(BANK1_CHECKER1.firstname);
       statusBanner.bannerSubmissionType().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
+    });
+
+    // ensures that banner is populated correctly
+    it('should display the information banner', () => {
+      applicationPreview.facilityInformationBanner().should('exist');
+      cy.assertText(applicationPreview.facilityInformationBanner(), 'Check your records for the most up-to-date facility details.');
     });
   });
 });
