@@ -4,6 +4,7 @@ import {
   PENDING_RECONCILIATION,
   UtilisationReportEntityMockBuilder,
   RECORD_CORRECTION_REASON,
+  MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT,
 } from '@ukef/dtfs2-common';
 import pages from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
@@ -84,7 +85,7 @@ context('When fee record correction feature flag is enabled', () => {
 
       createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT).check();
       createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).check();
-      cy.keyboardInput(createFeeRecordCorrectionRequestPage.additionalInfoInput(), 'Some additional info.');
+      cy.keyboardInput(createFeeRecordCorrectionRequestPage.additionalInfoInput(), 'Some additional info & some more!');
 
       cy.clickContinueButton();
 
@@ -107,6 +108,23 @@ context('When fee record correction feature flag is enabled', () => {
           .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
           .should('be.checked');
       });
+    });
+
+    it('should not encode special characters as HTML entities in additionalInfo field when creating a record correction request at the character limit', () => {
+      premiumPaymentsTab.premiumPaymentsTable.checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status).click();
+
+      premiumPaymentsTab.createRecordCorrectionRequestButton().click();
+
+      createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).check();
+
+      const specialCharactersToTest = '&!?$£¥€¢^*()_+=-%:;@~/><,.';
+      const paddingToReachMaxLength = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT - specialCharactersToTest.length);
+      const additionalInfo = `${specialCharactersToTest}${paddingToReachMaxLength}`;
+      cy.keyboardInput(createFeeRecordCorrectionRequestPage.additionalInfoInput(), additionalInfo);
+
+      cy.clickContinueButton();
+
+      cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}/check-the-information`));
     });
   });
 });
