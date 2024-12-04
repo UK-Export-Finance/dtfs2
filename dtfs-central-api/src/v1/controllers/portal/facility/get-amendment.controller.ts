@@ -22,6 +22,7 @@ export const getAmendment = async (req: GetAmendmentRequest, res: Response) => {
       const { status, message, code } = error;
       return res.status(status).send({ status, message, code });
     }
+
     console.error(`Error getting amendment with facilityId ${facilityId} and amendment id ${amendmentId}: %o`, error);
 
     return res.status(HttpStatusCode.InternalServerError).send({

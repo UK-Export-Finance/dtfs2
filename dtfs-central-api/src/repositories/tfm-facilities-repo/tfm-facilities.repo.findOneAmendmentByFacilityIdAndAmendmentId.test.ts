@@ -21,7 +21,7 @@ describe('TfmFacilitiesRepo', () => {
       });
     });
 
-    it(`calls getCollection with ${MONGO_DB_COLLECTIONS.TFM_FACILITIES}`, async () => {
+    it(`should call getCollection with ${MONGO_DB_COLLECTIONS.TFM_FACILITIES}`, async () => {
       // Arrange
       mockFindOne.mockResolvedValue(aTfmFacility());
 
@@ -33,12 +33,12 @@ describe('TfmFacilitiesRepo', () => {
       expect(mockGetCollection).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
     });
 
-    it('throws FacilityNotFoundError if the facility does not exist', async () => {
+    it('should throw FacilityNotFoundError if the facility does not exist', async () => {
       // Act + Assert
       await expect(() => TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId)).rejects.toThrow(FacilityNotFoundError);
     });
 
-    it('returns the correct amendment with the ukefFacilityId', async () => {
+    it('should return the correct amendment with the ukefFacilityId', async () => {
       // Arrange
       const amendment = {
         amendmentId,
@@ -71,7 +71,7 @@ describe('TfmFacilitiesRepo', () => {
       });
     });
 
-    it('returns the correct amendment with the ukefFacilityId when the amendmentId is given as a string', async () => {
+    it('should return the correct amendment with the ukefFacilityId when the amendmentId is given as a string', async () => {
       // Arrange
       const amendment = {
         amendmentId,
@@ -104,28 +104,30 @@ describe('TfmFacilitiesRepo', () => {
       });
     });
 
-    it('returns undefined if the amendmentId does not correspond to an amendment', async () => {
-      // Arrange
-      const facility = aTfmFacility({
-        amendments: [
-          {
-            amendmentId: new ObjectId(),
-            facilityId,
-          } as FacilityAmendment,
-          {
-            amendmentId: new ObjectId(),
-            facilityId,
-          } as FacilityAmendment,
-        ],
+    describe('when the amendment is not found', () => {
+      it('should return undefined', async () => {
+        // Arrange
+        const facility = aTfmFacility({
+          amendments: [
+            {
+              amendmentId: new ObjectId(),
+              facilityId,
+            } as FacilityAmendment,
+            {
+              amendmentId: new ObjectId(),
+              facilityId,
+            } as FacilityAmendment,
+          ],
+        });
+
+        mockFindOne.mockResolvedValue(facility);
+
+        // Act
+        const result = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
+
+        // Assert
+        expect(result).toEqual(undefined);
       });
-
-      mockFindOne.mockResolvedValue(facility);
-
-      // Act
-      const result = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
-
-      // Assert
-      expect(result).toEqual(undefined);
     });
   });
 });
