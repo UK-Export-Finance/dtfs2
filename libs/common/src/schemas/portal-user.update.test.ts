@@ -8,38 +8,35 @@ describe('PORTAL_USER', () => {
   describe('UPDATE', () => {
     withSchemaValidationTests({
       schema: UPDATE,
+      schemaTestOptions: {
+        isPartial: true,
+      },
       aValidPayload,
       testCases: [
         {
           parameterPath: 'username',
           type: 'string',
-          options: { isOptional: true },
         },
         {
           parameterPath: 'firstname',
           type: 'string',
-          options: { isOptional: true },
         },
         {
           parameterPath: 'surname',
           type: 'string',
-          options: { isOptional: true },
         },
         {
           parameterPath: 'email',
           type: 'string',
-          options: { isOptional: true },
         },
         {
           parameterPath: 'timezone',
           type: 'string',
-          options: { isOptional: true },
         },
         {
           parameterPath: 'roles',
           type: 'Array',
           options: {
-            isOptional: true,
             arrayTypeTestCase: {
               type: 'string',
             },
@@ -48,38 +45,59 @@ describe('PORTAL_USER', () => {
         {
           parameterPath: 'user-status',
           type: 'string',
-
-          options: { isOptional: true },
         },
 
         {
           parameterPath: 'salt',
           type: 'string',
-
-          options: { isOptional: true },
         },
         {
           parameterPath: 'hash',
           type: 'string',
-
-          options: { isOptional: true },
         },
         {
           parameterPath: 'auditRecord',
           type: 'AUDIT_DATABASE_RECORD_SCHEMA',
-
-          options: { isOptional: true },
         },
         {
           parameterPath: 'isTrusted',
           type: 'boolean',
-
-          options: { isOptional: true },
         },
         {
           parameterPath: 'disabled',
           type: 'boolean',
-          options: { isOptional: true },
+        },
+        {
+          parameterPath: 'lastLogin',
+          type: 'number',
+        },
+        {
+          parameterPath: 'loginFailureCount',
+          type: 'number',
+        },
+        {
+          parameterPath: 'passwordUpdatedAt',
+          type: 'number',
+        },
+        {
+          parameterPath: 'resetPwdToken',
+          type: 'string',
+        },
+        {
+          parameterPath: 'resetPwdTimestamp',
+          type: 'string',
+        },
+        {
+          parameterPath: 'sessionIdentifier',
+          type: 'string',
+        },
+        {
+          parameterPath: 'signInLinkSendDate',
+          type: 'number',
+        },
+        {
+          parameterPath: 'signInLinkSendCount',
+          type: 'number',
         },
       ],
     });
@@ -104,5 +122,13 @@ function aValidPayload(): z.infer<typeof UPDATE> {
     salt: '01',
     hash: '02',
     auditRecord: generatePortalUserAuditDatabaseRecord(new ObjectId()),
+    lastLogin: 1620000000000,
+    loginFailureCount: 0,
+    passwordUpdatedAt: 1620000000000,
+    resetPwdToken: 'resetPwdToken',
+    resetPwdTimestamp: 'resetPwdTimestamp',
+    sessionIdentifier: 'sessionIdentifier',
+    signInLinkSendDate: 1620000000000,
+    signInLinkSendCount: 0,
   };
 }
