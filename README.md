@@ -54,7 +54,7 @@ This documentation provides a comprehensive overview of the UKEF Digital TradeFi
 7. Run `npm run env:copy` to copy your root .env file into all the individual projects that need it.
 8. Run `npm ci` in the root folder of the repository. (note: this will install dependencies for the entire project, including those specified in sub-packages. More details on this in the [npm workspaces](./doc/npm-workspaces.md) docs)
 9. Start your local environment with `npm run start`.
-10. Run migrations on the MSSQL Server database (see [SQL DB docs](./doc/sql-db.md#--run-migrations) for details)
+10. Run migrations on the MSSQL Server database: `npm run db:migrate -w libs/common` (see [SQL DB docs](./doc/sql-db.md#--run-migrations) for more details)
 11. Create mock data by running `npm run load` from the root folder of the repository. This should generate mocks in your database (both Mongo and MSSQL). (for more details on what this does please see [utils docs](./utils/README.md))
 
 Recommended: Install a MongoDB client such as Compass or Robo 3T and a MSSQL DB client such as Azure Data Studio.
