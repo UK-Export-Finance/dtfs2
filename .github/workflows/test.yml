@@ -74,6 +74,7 @@ on:
       - dev
       - feature
       - release-*
+      - '!release-please*'
 
   create:
     branches:
