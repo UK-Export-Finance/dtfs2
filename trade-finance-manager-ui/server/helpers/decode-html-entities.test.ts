@@ -3,7 +3,7 @@ import { decodeHtmlEntities } from './decode-html-entities';
 describe('decodeHtmlEntities', () => {
   it('should return empty string when input is undefined', () => {
     // Act
-    const result = decodeHtmlEntities(undefined);
+    const result = decodeHtmlEntities();
 
     // Assert
     expect(result).toEqual('');
