@@ -22,33 +22,34 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
   });
 
   describe('getRecordCorrectionRequestInformation', () => {
-    it('should render check the information page', async () => {
-      // Arrange
-      const reportId = '123';
-      const feeRecordId = '456';
-      const { req, res } = httpMocks.createMocks({
-        session: requestSession,
-        params: { reportId, feeRecordId: feeRecordId.toString() },
-      });
+    const reportId = '123';
+    const feeRecordId = '456';
+    const { req, res } = httpMocks.createMocks({
+      session: requestSession,
+      params: { reportId, feeRecordId: feeRecordId.toString() },
+    });
 
-      const bank = { name: 'Test bank', id: '129' };
-      const reportPeriod = { start: { month: 7, year: 2024 }, end: { month: 7, year: 2024 } };
-      const correctionRequestDetails = {
-        facilityId: '0012345678',
-        exporter: 'Test company',
-        reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER],
-        additionalInfo: 'The facility ID does not match the facility ID held on file',
-        contactEmailAddresses: ['one@email.com', 'two@email.com'],
-      };
+    const bank = { name: 'Test bank', id: '129' };
+    const reportPeriod = { start: { month: 7, year: 2024 }, end: { month: 7, year: 2024 } };
+    const correctionRequestDetails = {
+      facilityId: '0012345678',
+      exporter: 'Test company',
+      reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER],
+      additionalInfo: 'The facility ID does not match the facility ID held on file',
+      contactEmailAddresses: ['one@email.com', 'two@email.com'],
+    };
 
-      const mockApiResponse = {
-        bank,
-        reportPeriod,
-        correctionRequestDetails,
-      };
+    const mockApiResponse = {
+      bank,
+      reportPeriod,
+      correctionRequestDetails,
+    };
 
+    beforeEach(() => {
       jest.mocked(api.getFeeRecordCorrectionRequestReview).mockResolvedValue(mockApiResponse);
+    });
 
+    it('should render check the information page', async () => {
       // Act
       await getRecordCorrectionRequestInformation(req, res);
 

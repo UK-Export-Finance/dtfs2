@@ -33,6 +33,10 @@ type GetFeeRecordCorrectionRequestReviewResponse = Response<GetFeeRecordCorrecti
 
 /**
  * Controller for the GET fee record correction request review route.
+ *
+ * Fetches the transient form data for the user and fee record id along
+ * with the other information used for the record correction email for
+ * the requesting user to review before sending their request.
  * @param req - The request object.
  * @param res - The response object.
  * @returns A promise that resolves to the response containing the fee record correction request review.
