@@ -1,5 +1,6 @@
 import { RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import { CreateRecordCorrectionRequestFormValues } from '../../../../types/view-models';
+import { decodeHtmlEntities } from '../../../../helpers/decode-html-entities';
 
 /**
  * Values for the record correction reasons as a string array.
@@ -46,5 +47,5 @@ export const extractCreateRecordCorrectionRequestFormValues = (
   requestBody: CreateRecordCorrectionRequestFormRequestBody,
 ): CreateRecordCorrectionRequestFormValues => ({
   reasons: extractRecordCorrectionReasons(requestBody.reasons),
-  additionalInfo: requestBody.additionalInfo,
+  additionalInfo: decodeHtmlEntities(requestBody.additionalInfo),
 });
