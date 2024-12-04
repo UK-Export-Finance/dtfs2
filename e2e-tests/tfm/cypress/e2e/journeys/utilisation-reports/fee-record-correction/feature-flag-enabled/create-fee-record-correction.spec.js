@@ -106,6 +106,13 @@ context('When fee record correction feature flag is enabled', () => {
       // "Request sent" page
       //---------------------------------------------------------------
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}/request-sent`));
+
+      //---------------------------------------------------------------
+      // "Premium payments" page - fee record status update
+      //---------------------------------------------------------------
+      cy.visit(`utilisation-reports/${reportId}`);
+
+      cy.assertText(premiumPaymentsTab.premiumPaymentsTable.status(feeRecordAtToDoStatus.id), 'Record correction sent');
     });
 
     context('when user clicks back on the create record correction request screen', () => {
