@@ -1,11 +1,11 @@
 import { ObjectId } from 'mongodb';
 import { generatePortalUserAuditDatabaseRecord } from '../change-stream';
 import { CREATE } from './portal-user';
-import { withSchemaTests } from '../test-helpers';
+import { withSchemaValidationTests } from '../test-helpers';
 
 describe('PORTAL_USER', () => {
   describe('CREATE', () => {
-    withSchemaTests({
+    withSchemaValidationTests({
       successTestCases: getSuccessTestCases(),
       failureTestCases: getFailureTestCases(),
       schema: CREATE,

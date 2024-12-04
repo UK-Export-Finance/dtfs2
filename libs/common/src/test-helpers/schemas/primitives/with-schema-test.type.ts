@@ -1,0 +1,10 @@
+import { ZodSchema } from 'zod';
+import { DefaultOptions } from './with-default-options.tests';
+
+export type SchemaTestOptionsRequired = 'Options Required';
+export type SchemaTestOptionsOptional = 'Options Optional';
+
+export type WithSchemaTestParams<Schema extends ZodSchema, SchemaTestOptions = false> = {
+  schema: Schema;
+  getTestObjectWithUpdatedField: (newValue: unknown) => unknown;
+} & (SchemaTestOptions extends false ? { options?: Partial<DefaultOptions> } : { options: SchemaTestOptions & Partial<DefaultOptions> });

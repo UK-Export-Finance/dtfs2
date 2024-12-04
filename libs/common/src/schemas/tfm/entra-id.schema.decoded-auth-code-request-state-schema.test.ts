@@ -1,9 +1,9 @@
-import { withSchemaTests } from '../../test-helpers';
+import { withSchemaValidationTests } from '../../test-helpers';
 import { DecodedAuthCodeRequestState } from '../../types/tfm/entra-id';
 import { DECODED_AUTH_CODE_REQUEST_STATE_SCHEMA } from './entra-id.schema';
 
 describe('DECODED_AUTH_CODE_REQUEST_STATE_SCHEMA', () => {
-  withSchemaTests({
+  withSchemaValidationTests({
     schema: DECODED_AUTH_CODE_REQUEST_STATE_SCHEMA,
     failureTestCases: getFailureTestCases(),
     successTestCases: getSuccessTestCases(),
