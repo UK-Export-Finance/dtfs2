@@ -20,10 +20,9 @@
 
   <body class="govuk-template__body ">
 
-    <script src="/assets/js/jsEnabled.js" type="text/javascript" integrity="sha512-G3pP3ak2WgWPJjJvKjAkSXa+s0+MHVrKTxZ8YklCPvT/SG9Gt91yti+2KeK9KTCEkdWUUz5dnIGDz1w3Zu7JrA==" crossorigin="anonymous"></script>
+    <script src="/assets/js/jsEnabled.js" type="module" integrity="sha512-QtyPZKCSdWv9d3aKHJP6AL3dY/EbEFAAp4c6Hc/QOIvHcOXTu+P2TGqIlcIeieOvkWq1bKw3zehbKqH7Gv0fAQ==" crossorigin="anonymous"></script>
 
     {% include "_partials/skip-link.njk" %}
-
     {% include "_partials/header.njk" %}
     {% include "_partials/beta-banner.njk" %}
     {% include "_partials/primary-navigation.njk" %}
@@ -52,10 +51,11 @@
 
     {% include "_partials/footer.njk" %}
 
-    <script src="/assets/js/main.js" type="text/javascript" integrity="sha512-BLhltBWOGogiNck88Bgk9ZP60WzkF0M4UDKNXASvMQ0XBcLRtMCqs77xMkkL+crGcCqpKtuOkkeuTvpTQFuzIA==" crossorigin="anonymous"></script>
-    <script src="/assets/js/govukFrontend.js" type="text/javascript" integrity="sha512-BlSKFkwy/7rAHvMRdTX1Kdk/6KgF2exLAH18xCPxd2ukztWA9adhCM/PczucxxNq29j8gvfAaEcGmgg3BbJufA==" crossorigin="anonymous"></script>
-    <script src="/assets/js/mojFrontend.js" type="text/javascript" integrity="sha512-VJYfsojYZY4stpSFP22EQ/CXqqrW9BWYWKaiEnYGmyw22rggV4DCe+Lzn8L7Gt+bRq3AyWuNYFadfrCmao0o+A==" crossorigin="anonymous"></script>
-    <script src="/assets/js/disableFormSubmitOnSubmission.js" type="text/javascript" integrity="sha512-tCINlYTcYERel2bdysTMl5KaemDdEyog5JSS3hYQqHS6ZIyT4ATLu4oTPerbZ+vAOn4AAzDEsRBSQVacGhoieQ==" crossorigin="anonymous"></script>
+    <script src="/assets/js/main.js" type="module" integrity="sha512-BLhltBWOGogiNck88Bgk9ZP60WzkF0M4UDKNXASvMQ0XBcLRtMCqs77xMkkL+crGcCqpKtuOkkeuTvpTQFuzIA==" crossorigin="anonymous"></script>
+    <script src="/assets/js/govukFrontend.js" type="module" integrity="sha512-Vk2b9tAD+b3UW0QRRQYYlVt7TYXoL25A8HrougokdITdzQLR6oWerqvbggafTBDYOtpO64j3n8zKjujsJkY91Q==" crossorigin="anonymous"></script>
+    <script src="/assets/js/mojFrontend.js" type="module" integrity="sha512-Qk6Yl7rQlrEMujbcG1eTJ+aqZvUDj8FP4Xexy9FeU1SrY302u2vD7fqq3rq7BGvwhOcTdAlUKi1zmEOqHgU+1w==" crossorigin="anonymous"></script>
+    <script src="/assets/js/disableFormSubmitOnSubmission.js" type="module" integrity="sha512-tCINlYTcYERel2bdysTMl5KaemDdEyog5JSS3hYQqHS6ZIyT4ATLu4oTPerbZ+vAOn4AAzDEsRBSQVacGhoieQ==" crossorigin="anonymous"></script>
+
     {% block page_scripts %}{% endblock %}
   </body>
 </html>

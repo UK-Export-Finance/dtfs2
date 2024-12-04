@@ -104,7 +104,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     cy.visit(`/utilisation-reports/${report.id}`);
 
-    cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
+    cy.get('strong[data-cy="fee-record-status"]:contains("Match")').should('exist');
     pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(firstPayment.id);
 
     cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
@@ -119,7 +119,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
     cy.url().should('eq', relative(`/utilisation-reports/${report.id}#premium-payments`));
 
     pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(firstPayment.id).should('not.exist');
-    cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('exist');
+    cy.get('strong[data-cy="fee-record-status"]:contains("Does not match")').should('exist');
   });
 
   it(`allows the user to delete the payment and resets the status to '${FEE_RECORD_STATUS.MATCH}' when the remaining payments match`, () => {
@@ -139,7 +139,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     cy.visit(`/utilisation-reports/${report.id}`);
 
-    cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('exist');
+    cy.get('strong[data-cy="fee-record-status"]:contains("Does not match")').should('exist');
     pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(firstPayment.id);
 
     cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
@@ -154,7 +154,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
     cy.url().should('eq', relative(`/utilisation-reports/${report.id}#premium-payments`));
 
     pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(firstPayment.id).should('not.exist');
-    cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
+    cy.get('strong[data-cy="fee-record-status"]:contains("Match")').should('exist');
   });
 
   it(`allows the user to delete the payment and resets the status to '${FEE_RECORD_STATUS.TO_DO}' when all payments are deleted`, () => {
@@ -184,7 +184,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
     pages.utilisationReportConfirmDeletePaymentPage.clickContinueButton();
 
     pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(payment.id).should('not.exist');
-    cy.get('strong[data-cy="fee-record-status"]:contains("TO DO")').should('exist');
+    cy.get('strong[data-cy="fee-record-status"]:contains("To do")').should('exist');
   });
 
   it(`allows the user to delete all payments from a fee record with reported payments below the tolerance and resets the status to '${FEE_RECORD_STATUS.TO_DO}'`, () => {
@@ -215,7 +215,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
     pages.utilisationReportConfirmDeletePaymentPage.clickContinueButton();
 
     pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(payment.id).should('not.exist');
-    cy.get('strong[data-cy="fee-record-status"]:contains("TO DO")').should('exist');
+    cy.get('strong[data-cy="fee-record-status"]:contains("To do")').should('exist');
   });
 
   function* idGenerator() {
