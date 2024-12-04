@@ -12,7 +12,7 @@ export type WithArrayTestsOptions = {
 export const withArrayTests = <Schema extends ZodSchema>({
   schema,
   options,
-  getTestObjectWithUpdatedField,
+  getTestObjectWithUpdatedParameter,
 }: WithSchemaTestParams<Schema, WithArrayTestsOptions>) => {
   const arrayTestOptionsDefaults = { isAllowEmpty: true };
   const arrayTestOptions = {
@@ -24,22 +24,22 @@ export const withArrayTests = <Schema extends ZodSchema>({
     withDefaultOptionsTests({
       schema,
       options,
-      getTestObjectWithUpdatedField,
+      getTestObjectWithUpdatedParameter,
     });
 
     it('should fail parsing if the parameter is not a array', () => {
-      const { success } = schema.safeParse(getTestObjectWithUpdatedField('not an array'));
+      const { success } = schema.safeParse(getTestObjectWithUpdatedParameter('not an array'));
       expect(success).toBe(false);
     });
 
     if (arrayTestOptions.isAllowEmpty) {
       it('should pass parsing if the parameter is an empty array', () => {
-        const { success } = schema.safeParse(getTestObjectWithUpdatedField([]));
+        const { success } = schema.safeParse(getTestObjectWithUpdatedParameter([]));
         expect(success).toBe(true);
       });
     } else {
       it('should fail parsing if the parameter is an empty array', () => {
-        const { success } = schema.safeParse(getTestObjectWithUpdatedField([]));
+        const { success } = schema.safeParse(getTestObjectWithUpdatedParameter([]));
         expect(success).toBe(false);
       });
     }
@@ -48,7 +48,7 @@ export const withArrayTests = <Schema extends ZodSchema>({
       withTestsForTestcase({
         schema,
         testCase: arrayTestOptions.arrayTypeTestCase,
-        getTestObjectWithUpdatedField: (value) => getTestObjectWithUpdatedField([value]),
+        getTestObjectWithUpdatedParameter: (value) => getTestObjectWithUpdatedParameter([value]),
       });
     });
   });

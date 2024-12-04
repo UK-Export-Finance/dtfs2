@@ -6,24 +6,24 @@ import { withDefaultOptionsTests } from '../primitive-object-tests/with-default-
 export const withObjectIdStringSchemaTests = <Schema extends ZodSchema>({
   schema,
   options = {},
-  getTestObjectWithUpdatedField,
+  getTestObjectWithUpdatedParameter,
 }: WithSchemaTestParams<Schema>) => {
   describe('with OBJECT_ID_STRING_SCHEMA tests', () => {
     withDefaultOptionsTests({
       schema,
       options,
-      getTestObjectWithUpdatedField,
+      getTestObjectWithUpdatedParameter,
     });
 
     it('should fail parsing if the parameter is not an ObjectId', () => {
-      const { success } = schema.safeParse(getTestObjectWithUpdatedField('string'));
+      const { success } = schema.safeParse(getTestObjectWithUpdatedParameter('string'));
       expect(success).toBe(false);
     });
 
     it('should pass parsing if the parameter is a valid string representation of an ObjectId', () => {
       const stringObjectId = new ObjectId().toString();
 
-      const { success } = schema.safeParse(getTestObjectWithUpdatedField(stringObjectId));
+      const { success } = schema.safeParse(getTestObjectWithUpdatedParameter(stringObjectId));
 
       expect(success).toBe(true);
     });
@@ -32,18 +32,18 @@ export const withObjectIdStringSchemaTests = <Schema extends ZodSchema>({
       const stringObjectId = new ObjectId().toString();
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const { data } = schema.safeParse(getTestObjectWithUpdatedField(stringObjectId));
+      const { data } = schema.safeParse(getTestObjectWithUpdatedParameter(stringObjectId));
 
-      expect(data).toEqual(getTestObjectWithUpdatedField(stringObjectId));
+      expect(data).toEqual(getTestObjectWithUpdatedParameter(stringObjectId));
     });
 
     it('should transform a valid ObjectId to a string', () => {
       const objectId = new ObjectId();
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const { data } = schema.safeParse(getTestObjectWithUpdatedField(objectId));
+      const { data } = schema.safeParse(getTestObjectWithUpdatedParameter(objectId));
 
-      expect(data).toEqual(getTestObjectWithUpdatedField(objectId.toString()));
+      expect(data).toEqual(getTestObjectWithUpdatedParameter(objectId.toString()));
     });
   });
 };

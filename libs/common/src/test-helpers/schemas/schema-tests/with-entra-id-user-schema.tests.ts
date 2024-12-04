@@ -4,11 +4,15 @@ import { withDefaultOptionsTests } from '../primitive-object-tests';
 import { withSchemaValidationTests } from '../with-schema-validation.tests';
 import { WithSchemaTestParams } from '../with-schema-test.type';
 
-export const withEntraIdUserSchemaTests = <Schema extends ZodSchema>({ schema, options = {}, getTestObjectWithUpdatedField }: WithSchemaTestParams<Schema>) => {
+export const withEntraIdUserSchemaTests = <Schema extends ZodSchema>({
+  schema,
+  options = {},
+  getTestObjectWithUpdatedParameter,
+}: WithSchemaTestParams<Schema>) => {
   describe('with ENTRA_ID_USER_SCHEMA tests', () => {
     withDefaultOptionsTests({
       schema,
-      getTestObjectWithUpdatedField,
+      getTestObjectWithUpdatedParameter,
       options,
     });
 
@@ -20,7 +24,7 @@ export const withEntraIdUserSchemaTests = <Schema extends ZodSchema>({ schema, o
           parameterPath: 'oid',
           type: 'string',
           options: {
-            overrideGetTestObjectWithUpdatedField: (newValue: unknown) => getTestObjectWithUpdatedField({ ...aValidEntraIdUser(), oid: newValue }),
+            overrideGetTestObjectWithUpdatedField: (newValue: unknown) => getTestObjectWithUpdatedParameter({ ...aValidEntraIdUser(), oid: newValue }),
           },
         },
         {
@@ -31,7 +35,7 @@ export const withEntraIdUserSchemaTests = <Schema extends ZodSchema>({ schema, o
               type: 'string',
             },
             overrideGetTestObjectWithUpdatedField: (newValue: unknown) =>
-              getTestObjectWithUpdatedField({ ...aValidEntraIdUser(), verified_primary_email: newValue }),
+              getTestObjectWithUpdatedParameter({ ...aValidEntraIdUser(), verified_primary_email: newValue }),
             isAllowEmpty: false,
           },
         },
@@ -43,21 +47,21 @@ export const withEntraIdUserSchemaTests = <Schema extends ZodSchema>({ schema, o
               type: 'string',
             },
             overrideGetTestObjectWithUpdatedField: (newValue: unknown) =>
-              getTestObjectWithUpdatedField({ ...aValidEntraIdUser(), verified_secondary_email: newValue }),
+              getTestObjectWithUpdatedParameter({ ...aValidEntraIdUser(), verified_secondary_email: newValue }),
           },
         },
         {
           parameterPath: 'given_name',
           type: 'string',
           options: {
-            overrideGetTestObjectWithUpdatedField: (newValue: unknown) => getTestObjectWithUpdatedField({ ...aValidEntraIdUser(), given_name: newValue }),
+            overrideGetTestObjectWithUpdatedField: (newValue: unknown) => getTestObjectWithUpdatedParameter({ ...aValidEntraIdUser(), given_name: newValue }),
           },
         },
         {
           parameterPath: 'family_name',
           type: 'string',
           options: {
-            overrideGetTestObjectWithUpdatedField: (newValue: unknown) => getTestObjectWithUpdatedField({ ...aValidEntraIdUser(), family_name: newValue }),
+            overrideGetTestObjectWithUpdatedField: (newValue: unknown) => getTestObjectWithUpdatedParameter({ ...aValidEntraIdUser(), family_name: newValue }),
           },
         },
         {
@@ -67,7 +71,7 @@ export const withEntraIdUserSchemaTests = <Schema extends ZodSchema>({ schema, o
             arrayTypeTestCase: {
               type: 'TfmTeamSchema',
             },
-            overrideGetTestObjectWithUpdatedField: (newValue: unknown) => getTestObjectWithUpdatedField({ ...aValidEntraIdUser(), roles: newValue }),
+            overrideGetTestObjectWithUpdatedField: (newValue: unknown) => getTestObjectWithUpdatedParameter({ ...aValidEntraIdUser(), roles: newValue }),
           },
         },
       ],

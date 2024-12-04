@@ -20,11 +20,11 @@ import { TestCase } from './with-test-for-test-case.type';
 export const withTestsForTestcase = <Schema extends ZodSchema>({
   schema,
   testCase,
-  getTestObjectWithUpdatedField,
+  getTestObjectWithUpdatedParameter,
 }: {
   schema: Schema;
   testCase: TestCase;
-  getTestObjectWithUpdatedField: (newValue: unknown) => unknown;
+  getTestObjectWithUpdatedParameter: (newValue: unknown) => unknown;
 }) => {
   const { type, options } = testCase;
 
@@ -33,7 +33,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
       withStringTests({
         schema,
         options,
-        getTestObjectWithUpdatedField,
+        getTestObjectWithUpdatedParameter,
       });
       break;
 
@@ -41,7 +41,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
       withNumberTests({
         schema,
         options,
-        getTestObjectWithUpdatedField,
+        getTestObjectWithUpdatedParameter,
       });
       break;
 
@@ -49,7 +49,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
       withBooleanTests({
         schema,
         options,
-        getTestObjectWithUpdatedField,
+        getTestObjectWithUpdatedParameter,
       });
       break;
 
@@ -57,7 +57,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
       withArrayTests({
         schema,
         options,
-        getTestObjectWithUpdatedField,
+        getTestObjectWithUpdatedParameter,
       });
       break;
 
@@ -65,7 +65,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
       withTfmTeamSchemaTests({
         schema,
         options,
-        getTestObjectWithUpdatedField,
+        getTestObjectWithUpdatedParameter,
       });
       break;
 
@@ -73,7 +73,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
       withUnixTimestampMillisecondsSchemaTests({
         schema,
         options,
-        getTestObjectWithUpdatedField,
+        getTestObjectWithUpdatedParameter,
       });
       break;
 
@@ -81,7 +81,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
       withUnixTimestampSecondsSchemaTests({
         schema,
         options,
-        getTestObjectWithUpdatedField,
+        getTestObjectWithUpdatedParameter,
       });
       break;
 
@@ -89,7 +89,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
       withUnixTimestampSchemaTests({
         schema,
         options,
-        getTestObjectWithUpdatedField,
+        getTestObjectWithUpdatedParameter,
       });
       break;
 
@@ -97,7 +97,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
       withObjectIdSchemaTests({
         schema,
         options,
-        getTestObjectWithUpdatedField,
+        getTestObjectWithUpdatedParameter,
       });
       break;
 
@@ -105,7 +105,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
       withObjectIdStringSchemaTests({
         schema,
         options,
-        getTestObjectWithUpdatedField,
+        getTestObjectWithUpdatedParameter,
       });
       break;
 
@@ -113,7 +113,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
       withObjectIdOrObjectIdStringSchemaTests({
         schema,
         options,
-        getTestObjectWithUpdatedField,
+        getTestObjectWithUpdatedParameter,
       });
       break;
 
@@ -121,7 +121,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
       withIsoDateTimeStampSchemaTests({
         schema,
         options,
-        getTestObjectWithUpdatedField,
+        getTestObjectWithUpdatedParameter,
       });
       break;
 
@@ -129,7 +129,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
       withAuditDatabaseRecordSchemaTests({
         schema,
         options,
-        getTestObjectWithUpdatedField,
+        getTestObjectWithUpdatedParameter,
       });
       break;
 
@@ -137,7 +137,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
       withEntraIdUserSchemaTests({
         schema,
         options,
-        getTestObjectWithUpdatedField,
+        getTestObjectWithUpdatedParameter,
       });
       break;
 

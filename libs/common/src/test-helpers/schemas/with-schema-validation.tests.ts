@@ -11,7 +11,7 @@ type SchemaTestOptions = {
 };
 
 /**
- * Test cases with the path parameter, used to create the getTestObjectWithUpdatedField function
+ * Test cases with the path parameter, used to create the getTestObjectWithUpdatedParameter function
  */
 export type TestCaseWithPathParameter = {
   parameterPath: string;
@@ -50,7 +50,7 @@ export const withSchemaValidationTests = <Schema extends ZodSchema>({
       testCase.options.isOptional = true;
     }
 
-    const getTestObjectWithUpdatedField =
+    const getTestObjectWithUpdatedParameter =
       testCase.options?.overrideGetTestObjectWithUpdatedField !== undefined
         ? testCase.options.overrideGetTestObjectWithUpdatedField
         : (newValue: unknown): unknown => ({ ...aValidPayload(), [parameterPath]: newValue });
@@ -59,7 +59,7 @@ export const withSchemaValidationTests = <Schema extends ZodSchema>({
       withTestsForTestcase({
         schema,
         testCase,
-        getTestObjectWithUpdatedField,
+        getTestObjectWithUpdatedParameter,
       });
     });
   });

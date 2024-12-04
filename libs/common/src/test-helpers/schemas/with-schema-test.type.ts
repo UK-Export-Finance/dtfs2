@@ -3,5 +3,5 @@ import { DefaultOptions } from './primitive-object-tests/with-default-options.te
 
 export type WithSchemaTestParams<Schema extends ZodSchema, SchemaTestOptions = false> = {
   schema: Schema;
-  getTestObjectWithUpdatedField: (newValue: unknown) => unknown;
+  getTestObjectWithUpdatedParameter: (newValue: unknown) => unknown;
 } & (SchemaTestOptions extends false ? { options?: Partial<DefaultOptions> } : { options: SchemaTestOptions & Partial<DefaultOptions> });

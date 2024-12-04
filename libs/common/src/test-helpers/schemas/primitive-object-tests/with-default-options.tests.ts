@@ -16,7 +16,7 @@ export type DefaultOptions = {
 
 export const withDefaultOptionsTests = <Schema extends ZodSchema>({
   schema,
-  getTestObjectWithUpdatedField,
+  getTestObjectWithUpdatedParameter,
   options = {},
 }: WithSchemaTestParams<Schema, DefaultOptions>) => {
   const defaultOptions: DefaultOptions = {
@@ -40,28 +40,28 @@ export const withDefaultOptionsTests = <Schema extends ZodSchema>({
 
   function withIsOptionalTests() {
     it('should pass parsing if the parameter is missing', () => {
-      const { success } = schema.safeParse(getTestObjectWithUpdatedField(undefined));
+      const { success } = schema.safeParse(getTestObjectWithUpdatedParameter(undefined));
       expect(success).toBe(true);
     });
   }
 
   function withIsRequiredTests() {
     it('should fail parsing if the parameter is missing', () => {
-      const { success } = schema.safeParse(getTestObjectWithUpdatedField(undefined));
+      const { success } = schema.safeParse(getTestObjectWithUpdatedParameter(undefined));
       expect(success).toBe(false);
     });
   }
 
   function withIsNullableTrueTests() {
     it('should pass parsing if the parameter is null', () => {
-      const { success } = schema.safeParse(getTestObjectWithUpdatedField(null));
+      const { success } = schema.safeParse(getTestObjectWithUpdatedParameter(null));
       expect(success).toBe(true);
     });
   }
 
   function withIsNullableFalseTests() {
     it('should fail parsing if the parameter is null', () => {
-      const { success } = schema.safeParse(getTestObjectWithUpdatedField(null));
+      const { success } = schema.safeParse(getTestObjectWithUpdatedParameter(null));
       expect(success).toBe(false);
     });
   }

@@ -8,12 +8,12 @@ import { withDefaultOptionsTests } from '../primitive-object-tests/with-default-
 export const withAuditDatabaseRecordSchemaTests = <Schema extends ZodSchema>({
   schema,
   options = {},
-  getTestObjectWithUpdatedField,
+  getTestObjectWithUpdatedParameter,
 }: WithSchemaTestParams<Schema>) => {
   describe('with AUDIT_DATABASE_RECORD_SCHEMA tests', () => {
     withDefaultOptionsTests({
       schema,
-      getTestObjectWithUpdatedField,
+      getTestObjectWithUpdatedParameter,
       options,
     });
 
@@ -25,7 +25,8 @@ export const withAuditDatabaseRecordSchemaTests = <Schema extends ZodSchema>({
           parameterPath: 'lastUpdatedAt',
           type: 'ISO_DATE_TIME_STAMP_SCHEMA',
           options: {
-            overrideGetTestObjectWithUpdatedField: (newValue: unknown) => getTestObjectWithUpdatedField({ ...aValidAuditRecord(), lastUpdatedAt: newValue }),
+            overrideGetTestObjectWithUpdatedField: (newValue: unknown) =>
+              getTestObjectWithUpdatedParameter({ ...aValidAuditRecord(), lastUpdatedAt: newValue }),
           },
         },
         {
@@ -33,7 +34,7 @@ export const withAuditDatabaseRecordSchemaTests = <Schema extends ZodSchema>({
           type: 'OBJECT_ID_OR_OBJECT_ID_STRING_SCHEMA',
           options: {
             overrideGetTestObjectWithUpdatedField: (newValue: unknown) =>
-              getTestObjectWithUpdatedField({ ...aValidAuditRecord(), lastUpdatedByPortalUserId: newValue }),
+              getTestObjectWithUpdatedParameter({ ...aValidAuditRecord(), lastUpdatedByPortalUserId: newValue }),
             isNullable: true,
           },
         },
@@ -42,7 +43,7 @@ export const withAuditDatabaseRecordSchemaTests = <Schema extends ZodSchema>({
           type: 'OBJECT_ID_OR_OBJECT_ID_STRING_SCHEMA',
           options: {
             overrideGetTestObjectWithUpdatedField: (newValue: unknown) =>
-              getTestObjectWithUpdatedField({ ...aValidAuditRecord(), lastUpdatedByPortalUserId: newValue }),
+              getTestObjectWithUpdatedParameter({ ...aValidAuditRecord(), lastUpdatedByPortalUserId: newValue }),
             isNullable: true,
           },
         },
@@ -51,7 +52,7 @@ export const withAuditDatabaseRecordSchemaTests = <Schema extends ZodSchema>({
           type: 'boolean',
           options: {
             overrideGetTestObjectWithUpdatedField: (newValue: unknown) =>
-              getTestObjectWithUpdatedField({ ...aValidAuditRecord(), lastUpdatedByIsSystem: newValue }),
+              getTestObjectWithUpdatedParameter({ ...aValidAuditRecord(), lastUpdatedByIsSystem: newValue }),
             isNullable: true,
           },
         },
@@ -59,7 +60,8 @@ export const withAuditDatabaseRecordSchemaTests = <Schema extends ZodSchema>({
           parameterPath: 'noUserLoggedIn',
           type: 'boolean',
           options: {
-            overrideGetTestObjectWithUpdatedField: (newValue: unknown) => getTestObjectWithUpdatedField({ ...aValidAuditRecord(), noUserLoggedIn: newValue }),
+            overrideGetTestObjectWithUpdatedField: (newValue: unknown) =>
+              getTestObjectWithUpdatedParameter({ ...aValidAuditRecord(), noUserLoggedIn: newValue }),
             isNullable: true,
           },
         },

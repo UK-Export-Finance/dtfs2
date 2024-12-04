@@ -3,21 +3,25 @@ import { ZodSchema } from 'zod';
 import { WithSchemaTestParams } from '../with-schema-test.type';
 import { withDefaultOptionsTests } from '../primitive-object-tests/with-default-options.tests';
 
-export const withObjectIdSchemaTests = <Schema extends ZodSchema>({ schema, options = {}, getTestObjectWithUpdatedField }: WithSchemaTestParams<Schema>) => {
+export const withObjectIdSchemaTests = <Schema extends ZodSchema>({
+  schema,
+  options = {},
+  getTestObjectWithUpdatedParameter,
+}: WithSchemaTestParams<Schema>) => {
   describe('with OBJECT_ID_SCHEMA tests', () => {
     withDefaultOptionsTests({
       schema,
       options,
-      getTestObjectWithUpdatedField,
+      getTestObjectWithUpdatedParameter,
     });
 
     it('should fail parsing if the parameter is not an ObjectId', () => {
-      const { success } = schema.safeParse(getTestObjectWithUpdatedField('string'));
+      const { success } = schema.safeParse(getTestObjectWithUpdatedParameter('string'));
       expect(success).toBe(false);
     });
 
     it('should pass parsing if the parameter is an ObjectId', () => {
-      const { success } = schema.safeParse(getTestObjectWithUpdatedField(new ObjectId()));
+      const { success } = schema.safeParse(getTestObjectWithUpdatedParameter(new ObjectId()));
       expect(success).toBe(true);
     });
 
@@ -25,18 +29,18 @@ export const withObjectIdSchemaTests = <Schema extends ZodSchema>({ schema, opti
       const objectId = new ObjectId();
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const { data } = schema.safeParse(getTestObjectWithUpdatedField(objectId));
+      const { data } = schema.safeParse(getTestObjectWithUpdatedParameter(objectId));
 
-      expect(data).toEqual(getTestObjectWithUpdatedField(objectId));
+      expect(data).toEqual(getTestObjectWithUpdatedParameter(objectId));
     });
 
     it('should transform a valid string ObjectId to an ObjectId', () => {
       const stringObjectId = new ObjectId().toString();
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const { data } = schema.safeParse(getTestObjectWithUpdatedField(stringObjectId));
+      const { data } = schema.safeParse(getTestObjectWithUpdatedParameter(stringObjectId));
 
-      expect(data).toEqual(getTestObjectWithUpdatedField(new ObjectId(stringObjectId)));
+      expect(data).toEqual(getTestObjectWithUpdatedParameter(new ObjectId(stringObjectId)));
     });
   });
 };

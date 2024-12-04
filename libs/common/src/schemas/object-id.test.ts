@@ -6,20 +6,20 @@ import { withObjectIdStringSchemaTests } from '../test-helpers/schemas/custom-ob
 describe('OBJECT_ID_SCHEMA', () => {
   withObjectIdSchemaTests({
     schema: OBJECT_ID_SCHEMA,
-    getTestObjectWithUpdatedField: (newValue) => newValue,
+    getTestObjectWithUpdatedParameter: (newValue) => newValue,
   });
 });
 
 describe('OBJECT_ID_STRING', () => {
   withObjectIdStringSchemaTests({
     schema: OBJECT_ID_STRING_SCHEMA,
-    getTestObjectWithUpdatedField: (newValue) => newValue,
+    getTestObjectWithUpdatedParameter: (newValue) => newValue,
   });
 });
 
 describe('OBJECT_ID_OR_OBJECT_ID_STRING', () => {
   withObjectIdOrObjectIdStringSchemaTests({
     schema: OBJECT_ID_OR_OBJECT_ID_STRING_SCHEMA,
-    getTestObjectWithUpdatedField: (newValue) => newValue,
+    getTestObjectWithUpdatedParameter: (newValue) => newValue,
   });
 });
