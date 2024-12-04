@@ -1,19 +1,25 @@
-import { fromUnixTime } from 'date-fns';
+import { fromUnixTime, format } from 'date-fns';
+import { timeZoneConfig, DATE_FORMATS } from '@ukef/dtfs2-common';
 import { mapPortalActivities, getPortalActivities } from '.';
 import api from '../../services/api';
 import mocks from '../mocks';
 
 jest.mock('../../services/api');
 
+const timestamp = 1733311320;
+const date = fromUnixTime(new Date(timestamp));
+
+const mockAuthor = {
+  firstName: 'Bob',
+  lastName: 'Smith',
+  _id: 12345,
+};
+
 const dealSubmissionActivity = [
   {
     type: 'NOTICE',
-    timestamp: 1638458265,
-    author: {
-      firstName: 'Bob',
-      lastName: 'Smith',
-      _id: 12345,
-    },
+    timestamp,
+    author: mockAuthor,
     text: '',
     label: 'Automatic inclusion notice submitted to UKEF',
     html: '',
@@ -28,12 +34,8 @@ const dealSubmissionActivity = [
 const facilityActivity = [
   {
     type: 'FACILITY_STAGE',
-    timestamp: 1638458265,
-    author: {
-      firstName: 'Bob',
-      lastName: 'Smith',
-      _id: 12345,
-    },
+    timestamp,
+    author: mockAuthor,
     text: '',
     label: 'Bank facility stage changed',
     html: 'facility',
@@ -59,11 +61,10 @@ describe('mapPortalActivities', () => {
 
     const expected = [
       {
-        label: { text: 'Automatic inclusion notice submitted to UKEF' },
-        text: '',
-        datetime: { timestamp: fromUnixTime(1638458265), type: 'datetime' },
-        byline: { text: 'Bob Smith' },
-        html: '',
+        title: 'Automatic inclusion notice submitted to UKEF',
+        date: format(date, DATE_FORMATS.D_MMMM_YYYY),
+        time: format(date, DATE_FORMATS.H_MMAAA),
+        byline: 'Bob Smith',
         facilityType: '',
         ukefFacilityId: '',
         facilityId: '',
@@ -80,11 +81,10 @@ describe('mapPortalActivities', () => {
 
     const expected = [
       {
-        label: { text: 'Bank facility stage changed' },
-        text: '',
-        datetime: { timestamp: fromUnixTime(1638458265), type: 'datetime' },
-        byline: { text: 'Bob Smith' },
-        html: 'facility',
+        title: 'Bank facility stage changed',
+        date: format(date, DATE_FORMATS.D_MMMM_YYYY),
+        time: format(date, DATE_FORMATS.H_MMAAA),
+        byline: 'Bob Smith',
         facilityType: 'Cash facility',
         ukefFacilityId: '12345',
         facilityId: '123456',
@@ -107,9 +107,9 @@ describe('mapPortalActivities', () => {
   describe('when author.lastName does not exist', () => {
     it('should return a mapped array for mojTimeline without lastName in byline.text`', () => {
       const mockActivity = {
-        ...dealSubmissionActivity,
+        ...dealSubmissionActivity[0],
         author: {
-          ...dealSubmissionActivity,
+          ...dealSubmissionActivity[0].author,
           lastName: '',
         },
       };
@@ -120,15 +120,11 @@ describe('mapPortalActivities', () => {
 
       const expected = mockActivity.author.firstName;
 
-      expect(result[0].byline.text).toEqual(expected);
+      expect(result[0].byline).toEqual(expected);
     });
   });
 });
 
-/*
-   tests that getPortalActivities makes the required API calls
-   and that the correct template is rendered with the required fields
-*/
 describe('getPortalActivities()', () => {
   let mockResponse;
   let mockRequest;
@@ -186,7 +182,7 @@ describe('getPortalActivities()', () => {
       createdBy: `${mockApplicationResponse.maker.firstname} ${mockApplicationResponse.maker.surname}`,
       companyName: mockApplicationResponse.exporter.companyName,
       dateCreated: mockApplicationResponse.createdAt,
-      timezone: mockApplicationResponse.maker.timezone || 'Europe/London',
+      timezone: mockApplicationResponse.maker.timezone || timeZoneConfig.DEFAULT,
       submissionDate: mockApplicationResponse.submissionDate,
       manualInclusionNoticeSubmissionDate: mockApplicationResponse.manualInclusionNoticeSubmissionDate,
     });

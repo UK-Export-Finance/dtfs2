@@ -1,5 +1,4 @@
-{%- from "moj/components/timeline/macro.njk" import mojTimeline -%}
-{% import '../_macros/status-change.njk' as statusChange %}
+{% import '../_macros/application-activity/activity-html.njk' as activityHtml %}
 
 {% extends "index.njk" %}
 
@@ -8,12 +7,13 @@
 {% endblock %}
 
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
-{{ govukPhaseBanner({
-  tag: {
-    text: "beta"
-  },
-  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
-}) }}
+
+  {{ govukPhaseBanner({
+    tag: {
+      text: "beta"
+    },
+    html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+  }) }}
 
 {% block content %}
 
@@ -22,86 +22,47 @@
 
   <h1 class="govuk-heading-xl" data-cy="main-activity-heading">Activity and comments</h1>
 
-  {% set portalActivitiesWithHTML = [] %}
+  {# 
+    NOTE: we need to use MOJ timeline HTML rather than the nunjucks component.
+    This is because we have conditional custom HTML for different timeline items/activities
+    See the "activity-html" / activityHtml component for examples.
+    The alternative to this is to have complex array mapping, object creation and creation.
+    inside this nunjucks template, which we found to be very hard to read and maintain.
+  #}
+  <div class="moj-timeline" data-cy="portal-activities-timeline">
 
-  {% for activity in portalActivities %}
+    {% for activity in portalActivities %}
 
-    {% set facilityHtml %}
+      <div class="moj-timeline__item">
 
-      <p class="colour-light-grey" data-cy="facility-changed-by-{{activity.ukefFacilityId}}">Changed by {{activity.maker.firstname}} {{activity.maker.surname}}</p>
-      <p class="colour-light-grey" data-cy="facility-checked-by-{{activity.ukefFacilityId}}">Checked by {{activity.checker.firstname}} {{activity.checker.surname}} </p>
+        <div class="moj-timeline__header">
+          <h2 class="moj-timeline__title">{{ activity.title }}</h2>
 
-      <p class="govuk-!-margin-bottom-0">
-        <a href="/gef/application-details/{{dealId}}#{{ activity.facilityId }}" class="govuk-link" data-cy="facility-link-{{activity.ukefFacilityId}}">{{activity.facilityType}}  {{activity.ukefFacilityId}}</a>
+          {% if activity.byline %}
+            <p class="moj-timeline__byline">by {{ activity.byline }}</p>
+          {% endif %}
+        </div>
 
-        {{ statusChange.render({
-          previousStatus: "Unissued",
-          newStatus: "Issued",
-          id: activity.ukefFacilityId,
-          tagColour: "purple"
-        }) }}
-      </p>
+        <p class="moj-timeline__date">
+          <time>{{ activity.date }} {{ activity.time }}</time>
+        </p>
 
-    {% endset %}
-
-    {% set dealCancelledHtml %}
-
-      <p class="govuk-!-margin-bottom-0">
-        <a href="/gef/application-details/{{ dealId }}" class="govuk-link" data-cy="deal-link-{{ dealId }}">Deal ID {{ ukefDealId }}</a>
-
-        {{ statusChange.render({
+        {{ activityHtml.render({
+          title: activity.title,
+          dealId: dealId,
+          ukefDealId: ukefDealId,
+          facilityId: activity.facilityId,
+          ukefFacilityId: activity.ukefFacilityId,
           previousStatus: previousStatus,
-          newStatus: "Cancelled",
-          id: dealId,
-          tagColour: "blue"
+          facilityType: activity.facilityType,
+          maker: activity.maker,
+          checker: activity.checker
         }) }}
-      </p>
 
-    {% endset %}
+      </div>
 
-    {% if activity.html === 'facility' %}
-      {% set activityToAdd =
-        {
-          label: activity.label,
-          text: activity.text,
-          datetime: activity.datetime,
-          byline: '',
-          html: facilityHtml
-        }
-      %}
+    {% endfor %}
 
-      {% elif activity.html === 'Deal cancelled' %}
-        {% set activityToAdd =
-          {
-            label: activity.label,
-            text: activity.text,
-            datetime: activity.datetime,
-            byline: '',
-            html: dealCancelledHtml
-          }
-        %}
-      {% else %}
-
-      {% set activityToAdd =
-        {
-          label: activity.label,
-          text: activity.text,
-          datetime: activity.datetime,
-          byline: activity.byline,
-          html: activity.html
-        }
-      %}
-
-    {% endif %}
-
-    {% set portalActivitiesWithHTML = (portalActivitiesWithHTML.push(activityToAdd), portalActivitiesWithHTML) %}
-  {% endfor %}
-
-  {{ mojTimeline({
-    items: portalActivitiesWithHTML,
-    attributes: {
-      'data-cy': 'portal-activities-timeline'
-    }
-  }) }}
+  </div>
 
 {% endblock %}

@@ -1,0 +1,43 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% import './facility.njk' as facilityActivity %}
+{% import './deal-cancelled.njk' as dealCancelledActivity %}
+
+{% macro render(params) %}
+
+  {% set title = params.title %}
+  {% set dealId = params.dealId %}
+  {% set ukefDealId = params.ukefDealId %}
+  {% set previousStatus = params.previousStatus %}
+  {% set facilityId = params.facilityId %}
+  {% set ukefFacilityId = params.ukefFacilityId %}
+  {% set maker = params.maker %}
+  {% set checker = params.checker %}
+
+  {% if title === 'facility' %}
+
+    <div class="moj-timeline__description">
+      {{ facilityActivity.render({
+        facilityId: facilityId,
+        ukefFacilityId: ukefFacilityId,
+        previousStatus: previousStatus,
+        facilityType: facilityType,
+        maker: maker,
+        checker: checker
+      }) }}
+    </div>
+
+  {% endif %}
+
+  {% if title === 'Deal cancelled' %}
+
+    <div class="moj-timeline__description">
+      {{ dealCancelledActivity.render({
+        dealId: dealId,
+        ukefDealId: ukefDealId,
+        previousStatus: previousStatus
+      }) }}
+    </div>
+
+  {% endif %}
+
+{% endmacro %}
