@@ -50,7 +50,7 @@ describe('getWhatNeedsToChange', () => {
     expect(mockRes._getRenderView()).toEqual('partials/amendments/what-needs-to-change.njk');
     expect(mockRes._getRenderData()).toEqual({
       exporterName,
-      previousPage: `/application-details/${dealId}`,
+      previousPage: `/gef/application-details/${dealId}`,
     });
   });
 

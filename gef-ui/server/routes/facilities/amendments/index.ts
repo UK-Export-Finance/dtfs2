@@ -7,7 +7,7 @@ import { getWhatNeedsToChange } from '../../../controllers/amendments/what-needs
 const router = express.Router();
 
 router
-  .route('/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/what-needs-to-change')
+  .route('/application-details/:dealId/facilities/:facilityId/amendments/what-needs-to-change')
   .all([validateToken, validateBank, validateRole({ role: [MAKER] })])
   .get(getWhatNeedsToChange);
 

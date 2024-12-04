@@ -17,7 +17,7 @@ export const getWhatNeedsToChange = async (req: GetWhatNeedsToChangeRequest, res
 
     const viewModel: WhatNeedsToChangeViewModel = {
       exporterName: deal.exporter.companyName,
-      previousPage: `/application-details/${dealId}`,
+      previousPage: `/gef/application-details/${dealId}`,
     };
 
     return res.render('partials/amendments/what-needs-to-change.njk', viewModel);
