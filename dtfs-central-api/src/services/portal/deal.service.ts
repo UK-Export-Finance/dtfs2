@@ -64,9 +64,9 @@ export class PortalDealService {
     if (deal.dealSnapshot.dealType === DEAL_TYPE.GEF) {
       const { _id: dealId } = deal.dealSnapshot;
 
-      const type = cancellationIsInFuture ? PORTAL_ACTIVITY_TYPE.DEAL_CANCELLATION_SCHEDULED : PORTAL_ACTIVITY_TYPE.DEAL_CANCELLED;
+      const type = cancellationIsInFuture ? PORTAL_ACTIVITY_TYPE.DEAL_CANCELLATION_PENDING : PORTAL_ACTIVITY_TYPE.DEAL_CANCELLED;
 
-      const label = cancellationIsInFuture ? PORTAL_ACTIVITY_LABEL.DEAL_CANCELLATION_SCHEDULED : PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED;
+      const label = cancellationIsInFuture ? PORTAL_ACTIVITY_LABEL.DEAL_CANCELLATION_PENDING : PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED;
 
       const newActivity = {
         type,
