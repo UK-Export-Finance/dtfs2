@@ -831,8 +831,7 @@ portalRouter.route('/gef/facilities/:id').put(updateGefFacilityController.update
  *         content:
  *           application/json:
  *             schema:
- *               allOf:
- *                 - $ref: '#/definitions/PortalAmendment'
+ *                $ref: '#/definitions/PortalAmendment'
  *       404:
  *         description: Not found
  */
