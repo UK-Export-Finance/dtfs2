@@ -116,6 +116,7 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
       await createUtilisationReportForBanksJob.task(new Date());
 
       // Assert
+      expect(findOneByBankIdAndReportPeriodSpy).toHaveBeenCalledTimes(1);
       expect(findOneByBankIdAndReportPeriodSpy).toHaveBeenCalledWith(mockBank.id, mockReportPeriod);
       expect(saveUtilisationReportSpy).not.toHaveBeenCalled();
     });
@@ -190,14 +191,14 @@ describe('scheduler/jobs/create-utilisation-reports', () => {
     });
   });
 
-  describe('errors on save', () => {
+  describe('when UtilisationReportRepo.save errors', () => {
     beforeEach(() => {
       jest.mocked(getAllBanks).mockResolvedValue(banks);
       sendEmailSpy = jest.fn(() => Promise.resolve({}));
       externalApi.sendEmail = sendEmailSpy;
     });
 
-    it('should send an email when UtilisationReportRepo.save fails', async () => {
+    it('should send an email', async () => {
       // Arrange
       saveUtilisationReportSpy.mockRejectedValueOnce(new Error('Test error'));
 
