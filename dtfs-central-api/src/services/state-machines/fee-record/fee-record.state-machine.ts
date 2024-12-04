@@ -12,6 +12,7 @@ import {
   handleFeeRecordRemoveFromPaymentGroupEvent,
   handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent,
   handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent,
+  handleFeeRecordCorrectionRequestedEvent,
 } from './event-handlers';
 
 /**
@@ -48,6 +49,21 @@ export class FeeRecordStateMachine {
   }
 
   /**
+   * Creates a fee record state machine for the fee record with the supplied id with the attached report id
+   * @param feeRecordId - The fee record id
+   * @param reportId - The report id
+   * @returns A state machine
+   * @throws {NotFoundError} If a fee record with the supplied ids cannot be found
+   */
+  public static async forFeeRecordIdAndReportId(feeRecordId: number, reportId: number): Promise<FeeRecordStateMachine> {
+    const feeRecord = await FeeRecordRepo.findOneBy({ id: feeRecordId, report: { id: reportId } });
+    if (!feeRecord) {
+      throw new NotFoundError(`Failed to find a fee record with id ${feeRecordId} and report id ${reportId}`);
+    }
+    return new FeeRecordStateMachine(feeRecord);
+  }
+
+  /**
    * Handles an invalid transition event
    * @param param - The event
    * @param param.type - The event type
@@ -74,9 +90,13 @@ export class FeeRecordStateMachine {
         switch (event.type) {
           case 'PAYMENT_ADDED':
             return handleFeeRecordPaymentAddedEvent(this.feeRecord, event.payload);
+          case 'CORRECTION_REQUESTED':
+            return handleFeeRecordCorrectionRequestedEvent(this.feeRecord, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
+      case FEE_RECORD_STATUS.PENDING_CORRECTION:
+        return this.handleInvalidTransition(event);
       case FEE_RECORD_STATUS.MATCH:
         switch (event.type) {
           case 'PAYMENT_DELETED':

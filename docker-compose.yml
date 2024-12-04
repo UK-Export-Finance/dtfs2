@@ -355,6 +355,7 @@ services:
       - RATE_LIMIT_THRESHOLD
       - CONTACT_US_EMAIL_ADDRESS
       - GEF_DEAL_VERSION
+      - FF_PORTAL_FACILITY_AMENDMENTS_ENABLED
 
   redis:
     image: 'redis:alpine'

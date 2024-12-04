@@ -11,6 +11,7 @@ const {
   validatePostReportDataValidationPayload,
   validatePostAddFeesToAnExistingPaymentGroupPayload,
   validatePostUploadUtilisationReportPayload,
+  validatePostFeeRecordCorrectionPayload,
   validatePutFeeRecordCorrectionTransientFormDataPayload,
 } = require('./middleware/payload-validation');
 const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
@@ -41,6 +42,7 @@ const {
 const {
   getFeeRecordCorrectionTransientFormData,
 } = require('../controllers/utilisation-report-service/fee-record-correction/get-fee-record-correction-transient-form-data.controller');
+const { postFeeRecordCorrection } = require('../controllers/utilisation-report-service/fee-record-correction/post-fee-record-correction.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -876,5 +878,49 @@ utilisationReportsRouter
   .route('/:reportId/fee-records/:feeRecordId/correction-transient-form-data/:userId')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), validation.mongoIdValidation('userId'), handleExpressValidatorResult)
   .get(getFeeRecordCorrectionTransientFormData);
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/fee-records/:feeRecordId/corrections:
+ *   post:
+ *     summary: Create a fee record correction
+ *     tags: [Utilisation Report]
+ *     description: Create a fee record correction
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report
+ *       - in: path
+ *         name: feeRecordId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the fee record
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user:
+ *                 $ref: '#/definitions/TFMUser'
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/:reportId/fee-records/:feeRecordId/corrections')
+  .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), handleExpressValidatorResult)
+  .post(validatePostFeeRecordCorrectionPayload, postFeeRecordCorrection);
 
 module.exports = utilisationReportsRouter;
