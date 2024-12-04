@@ -4,6 +4,7 @@ import * as api from '../../../services/api';
 import { FacilityValueViewModel } from '../../../types/view-models/amendments/facility-value-view-model';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { getCurrencySymbol } from './getCurrencySymbol';
+import { canUserAmendFacility } from '../../../utils/canUserAmendIssuedFacilities';
 
 export type GetFacilityValueRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
@@ -12,12 +13,20 @@ export type GetFacilityValueRequest = CustomExpressRequest<{
 export const getFacilityValue = async (req: GetFacilityValueRequest, res: Response) => {
   try {
     const { dealId, facilityId, amendmentId } = req.params;
-    const { userToken } = asLoggedInUserSession(req.session);
+    const { userToken, user } = asLoggedInUserSession(req.session);
 
     const deal = await api.getApplication({ dealId, userToken });
-    const facility = await api.getFacility({ facilityId, userToken });
+    const { details: facility } = await api.getFacility({ facilityId, userToken });
 
-    const currencySymbol = getCurrencySymbol(facility.details.currency?.id ?? CURRENCY.GBP);
+    if (!deal || !facility) {
+      return res.redirect('/not-found');
+    }
+
+    if (canUserAmendFacility(facility, deal, user.roles)) {
+      return res.redirect(`/case/${dealId}`);
+    }
+
+    const currencySymbol = getCurrencySymbol(facility.currency?.id ?? CURRENCY.GBP);
 
     const viewModel: FacilityValueViewModel = {
       dealId,
