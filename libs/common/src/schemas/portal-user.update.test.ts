@@ -69,7 +69,7 @@ describe('PORTAL_USER', () => {
         },
         {
           parameterPath: 'lastLogin',
-          type: 'number',
+          type: 'UNIX_TIMESTAMP_MILLISECONDS_SCHEMA',
         },
         {
           parameterPath: 'loginFailureCount',

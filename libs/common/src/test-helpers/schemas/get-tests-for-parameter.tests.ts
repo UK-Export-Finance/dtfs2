@@ -1,16 +1,15 @@
 import { ZodSchema } from 'zod';
-import { withNumberTests } from './primitive-object-tests/with-number.tests';
-import { withObjectIdSchemaTests } from './schema-tests/with-object-id-schema.tests';
-import { withStringTests } from './primitive-object-tests/with-string.tests';
-import { withTfmTeamSchemaTests } from './schema-tests/with-tfm-team-schema.tests';
-import { withArrayTests, WithArrayTestsOptions } from './primitive-object-tests/with-array.tests';
-import { withIsoDateTimeStampSchemaTests } from './schema-tests/with-iso-date-time-stamp-schema.tests';
-import { withAuditDatabaseRecordSchemaTests } from './schema-tests/with-audit-database-record-schema.tests';
-import { withObjectIdOrObjectIdStringSchemaTests } from './schema-tests/with-object-id-or-object-id-string-schema.tests';
-import { withObjectIdStringSchemaTests } from './schema-tests/with-object-id-string-schema.tests';
-import { DefaultOptions } from './primitive-object-tests/with-default-options.tests';
-import { withBooleanTests } from './primitive-object-tests/with-boolean.tests';
-import { withEntraIdUserSchemaTests } from './schema-tests/with-entra-id-user-schema.tests';
+import {
+  withUnixTimestampMillisecondsSchemaTests,
+  withUnixTimestampSecondsSchemaTests,
+  withUnixTimestampSchemaTests,
+  withObjectIdSchemaTests,
+  withObjectIdStringSchemaTests,
+  withObjectIdOrObjectIdStringSchemaTests,
+  withIsoDateTimeStampSchemaTests,
+} from './custom-objects-tests';
+import { DefaultOptions, WithArrayTestsOptions, withStringTests, withNumberTests, withBooleanTests, withArrayTests } from './primitive-object-tests';
+import { withTfmTeamSchemaTests, withAuditDatabaseRecordSchemaTests, withEntraIdUserSchemaTests } from './schema-tests';
 
 export type TestCaseTypes =
   | 'string'
@@ -18,6 +17,9 @@ export type TestCaseTypes =
   | 'boolean'
   | 'Array'
   | 'TfmTeamSchema'
+  | 'UNIX_TIMESTAMP_MILLISECONDS_SCHEMA'
+  | 'UNIX_TIMESTAMP_SECONDS_SCHEMA'
+  | 'UNIX_TIMESTAMP_SCHEMA'
   | 'OBJECT_ID_SCHEMA'
   | 'OBJECT_ID_STRING_SCHEMA'
   | 'OBJECT_ID_OR_OBJECT_ID_STRING_SCHEMA'
@@ -39,6 +41,9 @@ export type TestCase =
   | TestCaseWithType<'boolean'>
   | TestCaseWithTypeAndRequiredOptions<'Array', WithArrayTestsOptions>
   | TestCaseWithType<'TfmTeamSchema'>
+  | TestCaseWithType<'UNIX_TIMESTAMP_MILLISECONDS_SCHEMA'>
+  | TestCaseWithType<'UNIX_TIMESTAMP_SECONDS_SCHEMA'>
+  | TestCaseWithType<'UNIX_TIMESTAMP_SCHEMA'>
   | TestCaseWithType<'OBJECT_ID_SCHEMA'>
   | TestCaseWithType<'OBJECT_ID_STRING_SCHEMA'>
   | TestCaseWithType<'OBJECT_ID_OR_OBJECT_ID_STRING_SCHEMA'>
@@ -92,6 +97,30 @@ export const getTestsForParameter = <Schema extends ZodSchema>({
 
     case 'TfmTeamSchema':
       withTfmTeamSchemaTests({
+        schema,
+        options,
+        getTestObjectWithUpdatedField,
+      });
+      break;
+
+    case 'UNIX_TIMESTAMP_MILLISECONDS_SCHEMA':
+      withUnixTimestampMillisecondsSchemaTests({
+        schema,
+        options,
+        getTestObjectWithUpdatedField,
+      });
+      break;
+
+    case 'UNIX_TIMESTAMP_SECONDS_SCHEMA':
+      withUnixTimestampSecondsSchemaTests({
+        schema,
+        options,
+        getTestObjectWithUpdatedField,
+      });
+      break;
+
+    case 'UNIX_TIMESTAMP_SCHEMA':
+      withUnixTimestampSchemaTests({
         schema,
         options,
         getTestObjectWithUpdatedField,
