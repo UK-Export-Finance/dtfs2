@@ -36,31 +36,50 @@ context('about-supply-contract', () => {
 
     contractAboutSupplier.visit(deal);
     contractAboutSupplier.supplierName().clear();
+
     contractAboutSupplier.nextPage().click();
+
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
 
-    partials.errorSummaryLinks().should('have.length', 18);
+    partials.errorSummaryLinks().should('have.length', 20);
 
     // prove validation of all non-conditional pieces
     contractAboutPreview.expectError('Supplier type is required');
     contractAboutPreview.expectError('Supplier name is required');
     contractAboutPreview.expectError('Supplier address line 1 is required');
+    contractAboutPreview.expectError('Supplier town is required for non-UK addresses');
+    contractAboutPreview.expectError('Supplier country is required');
     contractAboutPreview.expectError('Supplier correspondence address is required');
     contractAboutPreview.expectError('Industry Sector is required');
     contractAboutPreview.expectError('Industry Class is required');
     contractAboutPreview.expectError('SME type is required');
+    contractAboutPreview.expectError('Supply Contract Description is required');
+    contractAboutPreview.expectError('Guarantor/Indemnifier is required');
+    contractAboutPreview.expectError('Buyer name is required');
+    contractAboutPreview.expectError('Buyer country is required');
+    contractAboutPreview.expectError('Buyer address line 1 is required');
+    contractAboutPreview.expectError('Buyer town is required for non-UK addresses');
+    contractAboutPreview.expectError('Destination of Goods and Services is required');
+    contractAboutPreview.expectError('Supply Contract value is required');
+    contractAboutPreview.expectError('Supply Contract currency is required');
+    contractAboutPreview.expectError('Supply Contract conversion rate is required for non-GBP currencies');
+    contractAboutPreview.expectError('Supply Contract conversion date is required for non-GBP currencies');
 
     // prove the errors are on the about-supplier page
     contractAboutSupplier.visit(deal);
     contractAboutSupplier.expectError('Supplier type is required');
     contractAboutSupplier.expectError('Supplier name is required');
     contractAboutSupplier.expectError('Supplier address line 1 is required');
+    contractAboutSupplier.expectError('Supplier town is required for non-UK addresses');
+    contractAboutSupplier.expectError('Supplier country is required');
     contractAboutSupplier.expectError('Supplier correspondence address is required');
     contractAboutSupplier.expectError('Industry Sector is required');
     contractAboutSupplier.expectError('Industry Class is required');
     contractAboutSupplier.expectError('SME type is required');
-    contractAboutSupplier.expectError('Supplier town is required for non-UK addresses');
+    contractAboutSupplier.expectError('Supply Contract Description is required');
+
+    contractAboutSupplier.expectError('Guarantor/Indemnifier is required');
 
     // switch to UK country
     contractAboutSupplier.supplierAddress().country().select('GBR');

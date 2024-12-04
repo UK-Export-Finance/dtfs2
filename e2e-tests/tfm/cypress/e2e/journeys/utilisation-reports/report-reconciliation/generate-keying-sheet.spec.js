@@ -113,7 +113,7 @@ context('PDC_RECONCILE users can generate keying data', () => {
 
     cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}#keying-sheet`));
 
-    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FIRST_FEE_RECORD_ID).should('contain', 'TO DO');
+    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FIRST_FEE_RECORD_ID).should('contain', 'To do');
     pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(SECOND_FEE_RECORD_ID).should('not.exist');
 
     pages.utilisationReportPage.keyingSheetTab.fixedFeeAdjustmentDecrease(FIRST_FEE_RECORD_ID).should('contain', '-');
@@ -160,8 +160,8 @@ context('PDC_RECONCILE users can generate keying data', () => {
 
     cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}#keying-sheet`));
 
-    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FIRST_FEE_RECORD_ID).should('contain', 'TO DO');
-    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(SECOND_FEE_RECORD_ID).should('contain', 'TO DO');
+    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FIRST_FEE_RECORD_ID).should('contain', 'To do');
+    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(SECOND_FEE_RECORD_ID).should('contain', 'To do');
 
     /**
      * The principal balance adjustment is simply the
