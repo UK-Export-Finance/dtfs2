@@ -29,7 +29,7 @@ const getGefFacilitiesController = require('../controllers/portal/gef-facility/g
 const createGefFacilityController = require('../controllers/portal/gef-facility/create-gef-facility.controller');
 const updateGefFacilityController = require('../controllers/portal/gef-facility/update-facility.controller');
 
-const getGefPortalFacilityAmendmentController = require('../controllers/portal/facility/get-amendment.controller');
+const getGefFacilityAmendmentController = require('../controllers/portal/facility/get-amendment.controller');
 
 const durableFunctionsController = require('../controllers/durable-functions/durable-functions.controller');
 const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controller');
@@ -839,7 +839,7 @@ portalRouter.route('/gef/facilities/:id').put(updateGefFacilityController.update
 portalRouter
   .route('/gef/facilities/:facilityId/amendments/:amendmentId')
   .all(validatePortalFacilityAmendmentsEnabled, validation.mongoIdValidation('facilityId'), validation.mongoIdValidation('amendmentId'))
-  .get(getGefPortalFacilityAmendmentController.getAmendment);
+  .get(getGefFacilityAmendmentController.getAmendment);
 
 /**
  * @openapi
