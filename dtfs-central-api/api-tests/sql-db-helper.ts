@@ -1,6 +1,7 @@
 import {
   AzureFileInfoEntity,
   FacilityUtilisationDataEntity,
+  FeeRecordCorrectionEntity,
   FeeRecordCorrectionTransientFormDataEntity,
   FeeRecordEntity,
   PaymentEntity,
@@ -17,7 +18,8 @@ type SqlTableName =
   | 'Payment'
   | 'FacilityUtilisationData'
   | 'PaymentMatchingTolerance'
-  | 'FeeRecordCorrectionTransientFormData';
+  | 'FeeRecordCorrectionTransientFormData'
+  | 'FeeRecordCorrection';
 
 const deleteAllEntries = async (tableName: SqlTableName): Promise<void> => {
   switch (tableName) {
@@ -39,6 +41,9 @@ const deleteAllEntries = async (tableName: SqlTableName): Promise<void> => {
     case 'PaymentMatchingTolerance':
       await SqlDbDataSource.manager.delete(PaymentMatchingToleranceEntity, {});
       return;
+    case 'FeeRecordCorrection':
+      await SqlDbDataSource.manager.delete(FeeRecordCorrectionEntity, {});
+      return;
     case 'FeeRecordCorrectionTransientFormData':
       await SqlDbDataSource.manager.delete(FeeRecordCorrectionTransientFormDataEntity, {});
       return;
@@ -55,6 +60,7 @@ const deleteAll = async (): Promise<void> => {
   await deleteAllEntries('FacilityUtilisationData');
   await deleteAllEntries('PaymentMatchingTolerance');
   await deleteAllEntries('FeeRecordCorrectionTransientFormData');
+  await deleteAllEntries('FeeRecordCorrection');
 };
 
 type Entity<TableName extends SqlTableName> = TableName extends 'UtilisationReport'
@@ -69,6 +75,8 @@ type Entity<TableName extends SqlTableName> = TableName extends 'UtilisationRepo
   ? FacilityUtilisationDataEntity
   : TableName extends 'PaymentMatchingTolerance'
   ? PaymentMatchingToleranceEntity
+  : TableName extends 'FeeRecordCorrection'
+  ? FeeRecordCorrectionEntity
   : TableName extends 'FeeRecordCorrectionTransientFormData'
   ? FeeRecordCorrectionTransientFormDataEntity
   : never;
@@ -96,6 +104,8 @@ const saveNewEntry = async <TableName extends SqlTableName>(tableName: TableName
       return (await SqlDbDataSource.manager.save(FacilityUtilisationDataEntity, entityToInsert as FacilityUtilisationDataEntity)) as Entity<TableName>;
     case 'PaymentMatchingTolerance':
       return (await SqlDbDataSource.manager.save(PaymentMatchingToleranceEntity, entityToInsert as PaymentMatchingToleranceEntity)) as Entity<TableName>;
+    case 'FeeRecordCorrection':
+      return (await SqlDbDataSource.manager.save(FeeRecordCorrectionEntity, entityToInsert as FeeRecordCorrectionEntity)) as Entity<TableName>;
     case 'FeeRecordCorrectionTransientFormData':
       return (await SqlDbDataSource.manager.save(
         FeeRecordCorrectionTransientFormDataEntity,
@@ -123,6 +133,8 @@ const saveNewEntries = async <TableName extends SqlTableName>(tableName: TableNa
       return (await SqlDbDataSource.manager.save(FacilityUtilisationDataEntity, entitiesToInsert as FacilityUtilisationDataEntity[])) as Entity<TableName>[];
     case 'PaymentMatchingTolerance':
       return (await SqlDbDataSource.manager.save(PaymentMatchingToleranceEntity, entitiesToInsert as PaymentMatchingToleranceEntity[])) as Entity<TableName>[];
+    case 'FeeRecordCorrection':
+      return (await SqlDbDataSource.manager.save(FeeRecordCorrectionEntity, entitiesToInsert as FeeRecordCorrectionEntity[])) as Entity<TableName>[];
     case 'FeeRecordCorrectionTransientFormData':
       return (await SqlDbDataSource.manager.save(
         FeeRecordCorrectionTransientFormDataEntity,
