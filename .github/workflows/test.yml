@@ -73,9 +73,12 @@ on:
     branches:
       - dev
       - feature
-      - staging
-      - prod
       - release-*
+
+  create:
+    branches:
+      # Production ready release candidates
+      - release-*-rc
 
     paths:
       - '.github/workflows/deployment.yml'
