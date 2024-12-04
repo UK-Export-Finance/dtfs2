@@ -1,5 +1,5 @@
 import { ZodSchema } from 'zod';
-import { DefaultOptions } from './with-default-options.tests';
+import { DefaultOptions } from './primitive-object-tests/with-default-options.tests';
 
 export type SchemaTestOptionsRequired = 'Options Required';
 export type SchemaTestOptionsOptional = 'Options Optional';

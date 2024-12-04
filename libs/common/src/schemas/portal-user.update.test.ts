@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import z from 'zod';
 import { generatePortalUserAuditDatabaseRecord } from '../change-stream';
 import { UPDATE } from './portal-user';
 import { withSchemaValidationTests } from '../test-helpers';
@@ -6,36 +7,86 @@ import { withSchemaValidationTests } from '../test-helpers';
 describe('PORTAL_USER', () => {
   describe('UPDATE', () => {
     withSchemaValidationTests({
-      successTestCases: getSuccessTestCases(),
-      failureTestCases: getFailureTestCases(),
       schema: UPDATE,
+      aValidPayload,
+      testCases: [
+        {
+          parameterPath: 'username',
+          type: 'string',
+          options: { isOptional: true },
+        },
+        {
+          parameterPath: 'firstname',
+          type: 'string',
+          options: { isOptional: true },
+        },
+        {
+          parameterPath: 'surname',
+          type: 'string',
+          options: { isOptional: true },
+        },
+        {
+          parameterPath: 'email',
+          type: 'string',
+          options: { isOptional: true },
+        },
+        {
+          parameterPath: 'timezone',
+          type: 'string',
+          options: { isOptional: true },
+        },
+        {
+          parameterPath: 'roles',
+          type: 'Array',
+          options: {
+            isOptional: true,
+            arrayTypeTestCase: {
+              type: 'string',
+            },
+          },
+        },
+        {
+          parameterPath: 'user-status',
+          type: 'string',
+
+          options: { isOptional: true },
+        },
+
+        {
+          parameterPath: 'salt',
+          type: 'string',
+
+          options: { isOptional: true },
+        },
+        {
+          parameterPath: 'hash',
+          type: 'string',
+
+          options: { isOptional: true },
+        },
+        {
+          parameterPath: 'auditRecord',
+          type: 'AUDIT_DATABASE_RECORD_SCHEMA',
+
+          options: { isOptional: true },
+        },
+        {
+          parameterPath: 'isTrusted',
+          type: 'boolean',
+
+          options: { isOptional: true },
+        },
+        {
+          parameterPath: 'disabled',
+          type: 'boolean',
+          options: { isOptional: true },
+        },
+      ],
     });
   });
 });
 
-function getSuccessTestCases() {
-  return [
-    { description: 'a valid user', aTestCase: () => aValidPortalUser() },
-    {
-      description: 'a partial user',
-      aTestCase: () => {
-        const { username: _username, ...rest } = aValidPortalUser();
-        return rest;
-      },
-    },
-  ];
-}
-
-function getFailureTestCases() {
-  return [
-    { description: 'a string', aTestCase: () => 'string' },
-    { description: 'an object', aTestCase: () => ({ An: 'object' }) },
-    { description: 'an array', aTestCase: () => ['array'] },
-    { description: 'a user with an additional parameter', aTestCase: () => ({ ...aValidPortalUser(), invalidField: true }) },
-  ];
-}
-
-function aValidPortalUser() {
+function aValidPayload(): z.infer<typeof UPDATE> {
   return {
     username: 'HSBC-maker-1',
     firstname: 'Mister',

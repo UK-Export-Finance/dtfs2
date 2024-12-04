@@ -1,16 +1,16 @@
 import { ZodSchema } from 'zod';
-import { withNumberTests } from './with-number.tests';
-import { withObjectIdSchemaTests } from './with-object-id-schema.tests';
-import { withStringTests } from './with-string.tests';
-import { withTfmTeamSchemaTests } from './with-tfm-team-schema.tests';
-import { withArrayTests, WithArrayTestsOptions } from './with-array.tests';
-import { withIsoDateTimeStampSchemaTests } from './with-iso-date-time-stamp-schema.tests';
-import { withAuditDatabaseRecordSchemaTests } from './with-audit-database-record-schema.tests';
-import { withObjectIdOrObjectIdStringSchemaTests } from './with-object-id-or-object-id-string-schema.tests';
-import { withObjectIdStringSchemaTests } from './with-object-id-string-schema.tests';
-import { DefaultOptions } from './with-default-options.tests';
-import { withBooleanTests } from './with-boolean.tests';
-import { withEntraIdUserSchemaTests } from './with-entra-id-user-schema.tests';
+import { withNumberTests } from './primitive-object-tests/with-number.tests';
+import { withObjectIdSchemaTests } from './schema-tests/with-object-id-schema.tests';
+import { withStringTests } from './primitive-object-tests/with-string.tests';
+import { withTfmTeamSchemaTests } from './schema-tests/with-tfm-team-schema.tests';
+import { withArrayTests, WithArrayTestsOptions } from './primitive-object-tests/with-array.tests';
+import { withIsoDateTimeStampSchemaTests } from './schema-tests/with-iso-date-time-stamp-schema.tests';
+import { withAuditDatabaseRecordSchemaTests } from './schema-tests/with-audit-database-record-schema.tests';
+import { withObjectIdOrObjectIdStringSchemaTests } from './schema-tests/with-object-id-or-object-id-string-schema.tests';
+import { withObjectIdStringSchemaTests } from './schema-tests/with-object-id-string-schema.tests';
+import { DefaultOptions } from './primitive-object-tests/with-default-options.tests';
+import { withBooleanTests } from './primitive-object-tests/with-boolean.tests';
+import { withEntraIdUserSchemaTests } from './schema-tests/with-entra-id-user-schema.tests';
 
 export type TestCaseTypes =
   | 'string'

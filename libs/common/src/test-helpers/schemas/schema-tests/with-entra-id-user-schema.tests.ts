@@ -1,8 +1,8 @@
 import { ZodSchema } from 'zod';
 import { anEntraIdUser } from '../../mock-data';
-import { withSchemaValidationTests } from '.';
-import { withDefaultOptionsTests } from './with-default-options.tests';
-import { WithSchemaTestParams } from './with-schema-test.type';
+import { withDefaultOptionsTests } from '../primitive-object-tests';
+import { withSchemaValidationTests } from '../with-schema-validation.tests';
+import { WithSchemaTestParams } from '../with-schema-test.type';
 
 export const withEntraIdUserSchemaTests = <Schema extends ZodSchema>({ schema, options = {}, getTestObjectWithUpdatedField }: WithSchemaTestParams<Schema>) => {
   describe('with ENTRA_ID_USER_SCHEMA tests', () => {

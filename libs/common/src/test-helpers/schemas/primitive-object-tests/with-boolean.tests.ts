@@ -1,5 +1,5 @@
 import { ZodSchema } from 'zod';
-import { WithSchemaTestParams } from './with-schema-test.type';
+import { WithSchemaTestParams } from '../with-schema-test.type';
 import { withDefaultOptionsTests } from './with-default-options.tests';
 
 export const withBooleanTests = <Schema extends ZodSchema>({ schema, options = {}, getTestObjectWithUpdatedField }: WithSchemaTestParams<Schema>) => {

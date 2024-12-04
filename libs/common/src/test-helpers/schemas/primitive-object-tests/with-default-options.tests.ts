@@ -1,5 +1,5 @@
 import { ZodSchema } from 'zod';
-import { WithSchemaTestParams } from './with-schema-test.type';
+import { WithSchemaTestParams } from '../with-schema-test.type';
 
 export type DefaultOptions = {
   isOptional?: boolean;

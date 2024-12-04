@@ -1,6 +1,6 @@
 import { ZodSchema } from 'zod';
-import { WithSchemaTestParams } from './with-schema-test.type';
-import { getTestsForParameter, TestCase } from './get-tests-for-parameter.tests';
+import { WithSchemaTestParams } from '../with-schema-test.type';
+import { getTestsForParameter, TestCase } from '../get-tests-for-parameter.tests';
 import { withDefaultOptionsTests } from './with-default-options.tests';
 
 export type WithArrayTestsOptions = {

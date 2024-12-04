@@ -1,6 +1,6 @@
 import { ZodSchema } from 'zod';
-import { WithSchemaTestParams } from './with-schema-test.type';
-import { withDefaultOptionsTests } from './with-default-options.tests';
+import { WithSchemaTestParams } from '../with-schema-test.type';
+import { withDefaultOptionsTests } from '../primitive-object-tests/with-default-options.tests';
 
 export const withIsoDateTimeStampSchemaTests = <Schema extends ZodSchema>({
   schema,
