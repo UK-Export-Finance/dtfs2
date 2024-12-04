@@ -24,9 +24,13 @@ const deal = {
   },
 } as TfmDeal;
 
-const author = {
+const authorWithNoId = {
   firstName: 'First name',
   lastName: 'Last name',
+};
+
+const author = {
+  ...authorWithNoId,
   _id: '1',
 };
 
@@ -38,32 +42,90 @@ describe('PortalDealService - addGefDealCancelledActivity', () => {
   });
 
   describe(`when dealType is ${DEAL_TYPE.GEF}`, () => {
-    it('should call addPortalActivity', async () => {
-      // Arrange
-      addPortalActivityMock.mockResolvedValue({ matchedCount: 1 });
+    jest.spyOn(PortalActivityRepo, 'addPortalActivity').mockImplementation(addPortalActivityMock);
 
-      jest.spyOn(PortalActivityRepo, 'addPortalActivity').mockImplementation(addPortalActivityMock);
+    const mockDeal = deal;
+    mockDeal.dealSnapshot.dealType = DEAL_TYPE.GEF;
 
-      const mockDeal = deal;
-      mockDeal.dealSnapshot.dealType = DEAL_TYPE.GEF;
+    describe('when cancellationIsInFuture is false', () => {
+      it('should call addPortalActivity with the correct params', async () => {
+        // Act
+        await PortalDealService.addGefDealCancelledActivity({
+          deal: mockDeal,
+          author,
+          cancellationIsInFuture: false,
+          auditDetails,
+        });
 
-      // Act
-      await PortalDealService.addGefDealCancelledActivity({ deal: mockDeal, author, auditDetails });
+        // Assert
+        expect(addPortalActivityMock).toHaveBeenCalledTimes(1);
 
-      // Assert
-      expect(addPortalActivityMock).toHaveBeenCalledTimes(1);
+        const expectedActivity = {
+          type: PORTAL_ACTIVITY_TYPE.DEAL_CANCELLED,
+          label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
+          timestamp: getUnixTime(new Date()),
+          author: {
+            _id: author._id,
+            firstName: UKEF.ACRONYM,
+          },
+        };
 
-      const expectedActivity = {
-        type: PORTAL_ACTIVITY_TYPE.DEAL_CANCELLED,
-        timestamp: getUnixTime(new Date()),
-        author: {
-          _id: author._id,
-          firstName: UKEF.ACRONYM,
-        },
-        label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
-      };
+        expect(addPortalActivityMock).toHaveBeenCalledWith(dealId, expectedActivity, auditDetails);
+      });
+    });
 
-      expect(addPortalActivityMock).toHaveBeenCalledWith(dealId, expectedActivity, auditDetails);
+    describe('when cancellationIsInFuture is true', () => {
+      it('should call addPortalActivity with the correct params', async () => {
+        // Act
+        await PortalDealService.addGefDealCancelledActivity({
+          deal: mockDeal,
+          author,
+          cancellationIsInFuture: true,
+          auditDetails,
+        });
+
+        // Assert
+        expect(addPortalActivityMock).toHaveBeenCalledTimes(1);
+
+        const expectedActivity = {
+          type: PORTAL_ACTIVITY_TYPE.DEAL_CANCELLATION_SCHEDULED,
+          label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLATION_SCHEDULED,
+          timestamp: getUnixTime(new Date()),
+          author: {
+            _id: author._id,
+            firstName: UKEF.ACRONYM,
+          },
+        };
+
+        expect(addPortalActivityMock).toHaveBeenCalledWith(dealId, expectedActivity, auditDetails);
+      });
+    });
+
+    describe('when the provided author does not have an ID', () => {
+      it('should call addPortalActivity with an empty author._id string', async () => {
+        // Act
+        await PortalDealService.addGefDealCancelledActivity({
+          deal: mockDeal,
+          author: authorWithNoId,
+          cancellationIsInFuture: false,
+          auditDetails,
+        });
+
+        // Assert
+        expect(addPortalActivityMock).toHaveBeenCalledTimes(1);
+
+        const expectedActivity = {
+          type: PORTAL_ACTIVITY_TYPE.DEAL_CANCELLED,
+          label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
+          timestamp: getUnixTime(new Date()),
+          author: {
+            _id: '',
+            firstName: UKEF.ACRONYM,
+          },
+        };
+
+        expect(addPortalActivityMock).toHaveBeenCalledWith(dealId, expectedActivity, auditDetails);
+      });
     });
   });
 
@@ -74,7 +136,12 @@ describe('PortalDealService - addGefDealCancelledActivity', () => {
       mockDeal.dealSnapshot.dealType = DEAL_TYPE.BSS_EWCS;
 
       // Act
-      await PortalDealService.addGefDealCancelledActivity({ deal: mockDeal, author, auditDetails });
+      await PortalDealService.addGefDealCancelledActivity({
+        deal: mockDeal,
+        author,
+        cancellationIsInFuture: false,
+        auditDetails,
+      });
 
       // Assert
       expect(addPortalActivityMock).toHaveBeenCalledTimes(0);

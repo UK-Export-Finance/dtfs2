@@ -47,28 +47,35 @@ export class PortalDealService {
    * @param addGefDealCancelledActivityParams
    * @param addGefDealCancelledActivityParams.dealId - the deal
    * @param addGefDealCancelledActivityParams.author - the activity's author
+   * @param addGefDealCancelledActivityParams.cancellationIsInFuture - cancellation is in the future
    * @param addGefDealCancelledActivityParams.auditDetails - the users audit details
    */
   public static async addGefDealCancelledActivity({
     deal,
     author,
+    cancellationIsInFuture,
     auditDetails,
   }: {
     deal: TfmDeal;
     author: ActivityAuthor;
+    cancellationIsInFuture?: boolean;
     auditDetails: AuditDetails;
   }): Promise<void> {
     if (deal.dealSnapshot.dealType === DEAL_TYPE.GEF) {
       const { _id: dealId } = deal.dealSnapshot;
 
+      const type = cancellationIsInFuture ? PORTAL_ACTIVITY_TYPE.DEAL_CANCELLATION_SCHEDULED : PORTAL_ACTIVITY_TYPE.DEAL_CANCELLED;
+
+      const label = cancellationIsInFuture ? PORTAL_ACTIVITY_LABEL.DEAL_CANCELLATION_SCHEDULED : PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED;
+
       const newActivity = {
-        type: PORTAL_ACTIVITY_TYPE.DEAL_CANCELLED,
+        type,
+        label,
         timestamp: getUnixTime(new Date()),
         author: {
-          _id: author._id,
+          _id: author._id ?? '',
           firstName: UKEF.ACRONYM,
         },
-        label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
       };
 
       await PortalActivityRepo.addPortalActivity(dealId, newActivity, auditDetails);

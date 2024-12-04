@@ -140,6 +140,7 @@ describe('DealCancellationService', () => {
       bankRequestDate: new Date().valueOf(),
       effectiveFrom: new Date().valueOf(),
     });
+
     const auditDetails = generateTfmAuditDetails(aTfmUser()._id);
 
     describe('when effectiveFrom is the present or in the past', () => {
@@ -216,7 +217,12 @@ describe('DealCancellationService', () => {
           };
 
           expect(addGefDealCancelledActivityMock).toHaveBeenCalledTimes(1);
-          expect(addGefDealCancelledActivityMock).toHaveBeenCalledWith({ deal: mockRepositoryResponse.cancelledDeal, author: expectedAuthor, auditDetails });
+          expect(addGefDealCancelledActivityMock).toHaveBeenCalledWith({
+            deal: mockRepositoryResponse.cancelledDeal,
+            author: expectedAuthor,
+            auditDetails,
+            cancellationIsInFuture: false,
+          });
         });
 
         it('should throw InvalidAuditDetailsError when no user is found', async () => {
@@ -291,12 +297,24 @@ describe('DealCancellationService', () => {
           expect(updatePortalFacilitiesMock).toHaveBeenCalledTimes(0);
         });
 
-        it('should not call PortalDealService.addGefDealCancelledActivity', async () => {
+        it('should call PortalDealService.addGefDealCancelledActivity with the correct params', async () => {
           // Act
           await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 
           // Assert
-          expect(addGefDealCancelledActivityMock).toHaveBeenCalledTimes(0);
+          const expectedAuthor = {
+            firstName: mockUser.firstName,
+            lastName: mockUser.lastName,
+            _id: mockUser._id.toString(),
+          };
+
+          expect(addGefDealCancelledActivityMock).toHaveBeenCalledTimes(1);
+          expect(addGefDealCancelledActivityMock).toHaveBeenCalledWith({
+            deal: mockRepositoryResponse.cancelledDeal,
+            author: expectedAuthor,
+            auditDetails,
+            cancellationIsInFuture: true,
+          });
         });
 
         it('should throw InvalidAuditDetailsError when no user is found', async () => {
