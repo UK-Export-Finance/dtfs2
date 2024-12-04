@@ -1,8 +1,8 @@
 module.exports = (getWrapper) => {
-  it("should render a div with a role of 'navigation'", () => {
+  it('should not render a navigation element', () => {
     const wrapper = getWrapper();
 
-    wrapper.expectElement('[data-cy="pagination"]').toHaveAttribute('role', 'navigation');
+    wrapper.expectElement('[data-cy="pagination"]').notToExist();
   });
 
   it("should render a visually hidden header with the text 'Pagination'", () => {
