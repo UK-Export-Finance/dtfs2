@@ -70,7 +70,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
       expect(api.getFeeRecordCorrectionRequestReview).toHaveBeenCalledWith(reportId, feeRecordId, user);
     });
 
-    it('should respond with a 500 if an unknown error occurs', async () => {
+    it(`should respond with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
