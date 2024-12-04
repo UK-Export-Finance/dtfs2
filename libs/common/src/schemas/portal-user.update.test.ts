@@ -1,41 +1,110 @@
 import { ObjectId } from 'mongodb';
+import z from 'zod';
 import { generatePortalUserAuditDatabaseRecord } from '../change-stream';
 import { UPDATE } from './portal-user';
-import { withSchemaTests } from '../test-helpers';
+import { withSchemaValidationTests } from '../test-helpers';
 
 describe('PORTAL_USER', () => {
   describe('UPDATE', () => {
-    withSchemaTests({
-      successTestCases: getSuccessTestCases(),
-      failureTestCases: getFailureTestCases(),
+    withSchemaValidationTests({
       schema: UPDATE,
+      schemaTestOptions: {
+        isPartial: true,
+      },
+      aValidPayload,
+      testCases: [
+        {
+          parameterPath: 'username',
+          type: 'string',
+        },
+        {
+          parameterPath: 'firstname',
+          type: 'string',
+        },
+        {
+          parameterPath: 'surname',
+          type: 'string',
+        },
+        {
+          parameterPath: 'email',
+          type: 'string',
+        },
+        {
+          parameterPath: 'timezone',
+          type: 'string',
+        },
+        {
+          parameterPath: 'roles',
+          type: 'Array',
+          options: {
+            arrayTypeTestCase: {
+              type: 'string',
+            },
+          },
+        },
+        {
+          parameterPath: 'user-status',
+          type: 'string',
+        },
+
+        {
+          parameterPath: 'salt',
+          type: 'string',
+        },
+        {
+          parameterPath: 'hash',
+          type: 'string',
+        },
+        {
+          parameterPath: 'auditRecord',
+          type: 'AUDIT_DATABASE_RECORD_SCHEMA',
+        },
+        {
+          parameterPath: 'isTrusted',
+          type: 'boolean',
+        },
+        {
+          parameterPath: 'disabled',
+          type: 'boolean',
+        },
+        {
+          parameterPath: 'lastLogin',
+          type: 'UNIX_TIMESTAMP_MILLISECONDS_SCHEMA',
+        },
+        {
+          parameterPath: 'loginFailureCount',
+          type: 'number',
+        },
+        {
+          parameterPath: 'passwordUpdatedAt',
+          type: 'number',
+        },
+        {
+          parameterPath: 'resetPwdToken',
+          type: 'string',
+        },
+        {
+          parameterPath: 'resetPwdTimestamp',
+          type: 'string',
+        },
+        {
+          parameterPath: 'sessionIdentifier',
+          type: 'string',
+        },
+        {
+          parameterPath: 'signInLinkSendDate',
+          type: 'number',
+        },
+        {
+          parameterPath: 'signInLinkSendCount',
+          type: 'number',
+        },
+      ],
     });
   });
 });
 
-function getSuccessTestCases() {
-  return [
-    { description: 'a valid user', aTestCase: () => aValidPortalUser() },
-    {
-      description: 'a partial user',
-      aTestCase: () => {
-        const { username: _username, ...rest } = aValidPortalUser();
-        return rest;
-      },
-    },
-  ];
-}
-
-function getFailureTestCases() {
-  return [
-    { description: 'a string', aTestCase: () => 'string' },
-    { description: 'an object', aTestCase: () => ({ An: 'object' }) },
-    { description: 'an array', aTestCase: () => ['array'] },
-    { description: 'a user with an additional parameter', aTestCase: () => ({ ...aValidPortalUser(), invalidField: true }) },
-  ];
-}
-
-function aValidPortalUser() {
+function aValidPayload(): z.infer<typeof UPDATE> {
   return {
     username: 'HSBC-maker-1',
     firstname: 'Mister',
@@ -53,5 +122,13 @@ function aValidPortalUser() {
     salt: '01',
     hash: '02',
     auditRecord: generatePortalUserAuditDatabaseRecord(new ObjectId()),
+    lastLogin: 1620000000000,
+    loginFailureCount: 0,
+    passwordUpdatedAt: 1620000000000,
+    resetPwdToken: 'resetPwdToken',
+    resetPwdTimestamp: 'resetPwdTimestamp',
+    sessionIdentifier: 'sessionIdentifier',
+    signInLinkSendDate: 1620000000000,
+    signInLinkSendCount: 0,
   };
 }
