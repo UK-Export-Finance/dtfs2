@@ -45,15 +45,15 @@ describe('cancelDealJob', () => {
     findPendingDealCancellationsMock.mockResolvedValueOnce([dealWithCancellationInFuture, dealWithCancellationToday, dealWithCancellationInPast]);
   });
 
-  it('is scheduled to run', () => {
+  it('should be scheduled to run', () => {
     expect(cancelDealJob.cronExpression).toEqual(process.env.DEAL_CANCELLATION_SCHEDULE);
   });
 
-  it('is has correct description', () => {
+  it('should have the correct description', () => {
     expect(cancelDealJob.description).toEqual('Cancel deals in the database that are pending cancellation & the effective from date has passed');
   });
 
-  it('it calls findPendingDealCancellations', async () => {
+  it('should call findPendingDealCancellations', async () => {
     // Act
     await cancelDealJob.task('manual');
 
@@ -61,7 +61,7 @@ describe('cancelDealJob', () => {
     expect(findPendingDealCancellationsMock).toHaveBeenCalledTimes(1);
   });
 
-  it('it calls processPendingCancellation with the correct arguments', async () => {
+  it('should call processPendingCancellation with the correct arguments', async () => {
     // Act
     await cancelDealJob.task('manual');
 

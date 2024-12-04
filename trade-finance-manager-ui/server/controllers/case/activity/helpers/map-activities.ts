@@ -16,6 +16,7 @@ export const mapActivities = (activities?: TfmActivity[]) => {
       timestamp: fromUnixTime(activity.timestamp),
       type: 'datetime',
     };
+
     const byline = {
       text: `${activity.author.firstName} ${activity.author.lastName}`,
     };
