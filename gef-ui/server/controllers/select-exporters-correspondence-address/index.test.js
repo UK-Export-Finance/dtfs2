@@ -42,7 +42,7 @@ describe('controllers/select-exporters-correspondence-address', () => {
   });
 
   describe('GET Select Exporters Correspondence Address', () => {
-    it('renders the `select-exporters-correspondence-address` template', async () => {
+    it('should render the `select-exporters-correspondence-address` template', async () => {
       mockRequest.session.postcode = 'W1 7PD';
       mockRequest.session.addresses = JSON.stringify([{ addressLine1: 'line1' }]);
 
@@ -73,9 +73,12 @@ describe('controllers/select-exporters-correspondence-address', () => {
   });
 
   describe('Validate Select Exporters Correspondence Address', () => {
-    it('returns error object if address from select dropdown has not been selected', async () => {
+    beforeEach(() => {
       mockRequest.session.postcode = 'W1 7PD';
       mockRequest.session.addresses = JSON.stringify([{ addressLine1: 'line1' }]);
+    });
+
+    it('should return an error object if address from select dropdown has not been selected', async () => {
       mockRequest.body.selectedAddress = '';
 
       await validateSelectExportersCorrespondenceAddress(mockRequest, mockResponse);
@@ -89,19 +92,31 @@ describe('controllers/select-exporters-correspondence-address', () => {
       );
     });
 
-    it('sets address object into session string', async () => {
-      mockRequest.session.postcode = 'W1 7PD';
-      mockRequest.session.addresses = JSON.stringify([{ addressLine1: 'line1' }]);
+    it('should return an error object if address from select dropdown contains `Addresses Found`', async () => {
+      mockRequest.body.selectedAddress = 'Addresses Found';
+
+      await validateSelectExportersCorrespondenceAddress(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/select-exporters-correspondence-address.njk',
+        expect.objectContaining({
+          errors: expect.any(Object),
+          dealId: '123',
+        }),
+      );
+    });
+
+    it('should add the address object into session string', async () => {
       mockRequest.body.selectedAddress = '0';
 
       await validateSelectExportersCorrespondenceAddress(mockRequest, mockResponse);
 
-      expect(mockRequest.session.address).toEqual(JSON.stringify({ addressLine1: 'line1' }));
+      const expected = JSON.stringify({ addressLine1: 'line1' });
+
+      expect(mockRequest.session.address).toEqual(expected);
     });
 
-    it('redirects user to `enter-exporters-correspondence-address` page if  successful', async () => {
-      mockRequest.session.postcode = 'W1 7PD';
-      mockRequest.session.addresses = JSON.stringify([{ addressLine1: 'line1' }]);
+    it('should redirect to `enter-exporters-correspondence-address` page if successful', async () => {
       mockRequest.body.selectedAddress = '0';
 
       await validateSelectExportersCorrespondenceAddress(mockRequest, mockResponse);
