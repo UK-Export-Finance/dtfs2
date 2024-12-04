@@ -22,6 +22,7 @@
   }
 }) }}
 
+{% if applicationStatus === 'Acknowledged' %}
 {{ mojBanner({
   type: 'information',
   text: 'Check your records for the most up-to-date facility details.',
@@ -30,6 +31,7 @@
     'data-cy': 'facility-information-banner'
   }
 }) }}
+{% endif %}
 
 {% if facilities.data.length > 0 %}
   {% for item in facilities.data %}
