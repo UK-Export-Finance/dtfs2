@@ -102,7 +102,7 @@ describe('PortalDealService - addGefDealCancelledActivity', () => {
     });
 
     describe('when the provided author does not have an ID', () => {
-      it('should call addPortalActivity with an empty author._id string', async () => {
+      it('should call addPortalActivity with an undefined author._id string', async () => {
         // Act
         await PortalDealService.addGefDealCancelledActivity({
           deal: mockDeal,
@@ -119,7 +119,7 @@ describe('PortalDealService - addGefDealCancelledActivity', () => {
           label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
           timestamp: getUnixTime(new Date()),
           author: {
-            _id: '',
+            _id: undefined,
             firstName: UKEF.ACRONYM,
           },
         };

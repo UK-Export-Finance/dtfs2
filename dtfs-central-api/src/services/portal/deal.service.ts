@@ -73,7 +73,7 @@ export class PortalDealService {
         label,
         timestamp: getUnixTime(new Date()),
         author: {
-          _id: author._id ?? '',
+          _id: author._id,
           firstName: UKEF.ACRONYM,
         },
       };

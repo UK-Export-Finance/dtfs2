@@ -67,6 +67,18 @@ describe('DealCancellationService', () => {
   });
 
   describe('processPendingCancellation', () => {
+    let cancellation: TfmDealCancellation = {
+      reason: 'a reason',
+      bankRequestDate: 0,
+      effectiveFrom: 0,
+    };
+
+    const aDealCancellation = (): TfmDealCancellation => ({
+      ...cancellation,
+      bankRequestDate: new Date().valueOf(),
+      effectiveFrom: new Date().valueOf(),
+    });
+
     beforeEach(() => {
       jest.clearAllMocks();
 
@@ -75,15 +87,9 @@ describe('DealCancellationService', () => {
       jest.spyOn(PortalDealService, 'updateStatus').mockImplementation(updatePortalDealStatusMock);
       jest.spyOn(PortalFacilityRepo, 'updateManyByDealId').mockImplementation(updatePortalFacilitiesMock);
       jest.spyOn(PortalDealService, 'addGefDealCancelledActivity').mockImplementation(addGefDealCancelledActivityMock);
-    });
 
-    const aDealCancellation = (): TfmDealCancellation => ({
-      reason: 'a reason',
-      bankRequestDate: new Date().valueOf(),
-      effectiveFrom: new Date().valueOf(),
+      cancellation = aDealCancellation();
     });
-
-    const cancellation = aDealCancellation();
 
     const auditDetails = generateTfmAuditDetails(aTfmUser()._id);
 
