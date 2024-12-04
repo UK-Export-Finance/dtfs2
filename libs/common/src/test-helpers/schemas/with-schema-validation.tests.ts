@@ -1,24 +1,26 @@
 /* eslint-disable no-param-reassign */
 import { z, ZodSchema } from 'zod';
-import { getTestsForParameter, TestCase } from './get-tests-for-parameter.tests';
+import { withTestsForTestcase } from './with-tests-for-testcase';
+import { TestCase } from './with-test-for-test-case.type';
 
 /**
- * This base option allows for overriding of the automatically generated getTestObjectWithUpdatedField function.
- * It is useful when looking at testing nested objects, but otherwise can be ignored
+ * Options that are specific to the schema as a whole, for instance, if the schema is a partial
  */
-type BaseOptions = {
-  overrideGetTestObjectWithUpdatedField?: (newValue: unknown) => unknown;
-};
-
 type SchemaTestOptions = {
   isPartial?: boolean;
 };
 
+/**
+ * Test cases with the path parameter, used to create the getTestObjectWithUpdatedField function
+ */
 export type TestCaseWithPathParameter = {
   parameterPath: string;
-  options?: BaseOptions;
 } & TestCase;
 
+/**
+ * With schema validation tests allows for the passing in of a schema, a valid payload, and test cases to test the schema.
+ * It calls pre made test cases through withTestsForTestcase, after applying schema specific options and overrides
+ */
 export const withSchemaValidationTests = <Schema extends ZodSchema>({
   schema,
   schemaTestOptions = {},
@@ -54,7 +56,7 @@ export const withSchemaValidationTests = <Schema extends ZodSchema>({
         : (newValue: unknown): unknown => ({ ...aValidPayload(), [parameterPath]: newValue });
 
     describe(`${parameterPath} parameter tests`, () => {
-      getTestsForParameter({
+      withTestsForTestcase({
         schema,
         testCase,
         getTestObjectWithUpdatedField,

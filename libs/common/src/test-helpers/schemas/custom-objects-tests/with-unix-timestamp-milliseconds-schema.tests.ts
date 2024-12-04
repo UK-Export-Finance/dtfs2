@@ -20,6 +20,7 @@ export const withUnixTimestampMillisecondsSchemaTests = <Schema extends ZodSchem
       options,
       getTestObjectWithUpdatedField,
     });
+
     it('should fail parsing if the parameter is not positive number', () => {
       const { success } = schema.safeParse(getTestObjectWithUpdatedField(-1));
       expect(success).toBe(false);

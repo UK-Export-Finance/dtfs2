@@ -1,7 +1,15 @@
 import { ZodSchema } from 'zod';
 import { WithSchemaTestParams } from '../with-schema-test.type';
 
+/**
+ * A list of default options
+ *
+ * Theses options are used to determine the behavior of the schema, and run the default tests accordingly
+ *
+ * Also includes the ability to override how the test object is created, which is useful when creating schema tests.
+ */
 export type DefaultOptions = {
+  overrideGetTestObjectWithUpdatedField?: (newValue: unknown) => unknown;
   isOptional?: boolean;
   isNullable?: boolean;
 };

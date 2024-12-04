@@ -8,50 +8,16 @@ import {
   withObjectIdOrObjectIdStringSchemaTests,
   withIsoDateTimeStampSchemaTests,
 } from './custom-objects-tests';
-import { DefaultOptions, WithArrayTestsOptions, withStringTests, withNumberTests, withBooleanTests, withArrayTests } from './primitive-object-tests';
+import { withStringTests, withNumberTests, withBooleanTests, withArrayTests } from './primitive-object-tests';
 import { withTfmTeamSchemaTests, withAuditDatabaseRecordSchemaTests, withEntraIdUserSchemaTests } from './schema-tests';
+import { TestCase } from './with-test-for-test-case.type';
 
-export type TestCaseTypes =
-  | 'string'
-  | 'number'
-  | 'boolean'
-  | 'Array'
-  | 'TfmTeamSchema'
-  | 'UNIX_TIMESTAMP_MILLISECONDS_SCHEMA'
-  | 'UNIX_TIMESTAMP_SECONDS_SCHEMA'
-  | 'UNIX_TIMESTAMP_SCHEMA'
-  | 'OBJECT_ID_SCHEMA'
-  | 'OBJECT_ID_STRING_SCHEMA'
-  | 'OBJECT_ID_OR_OBJECT_ID_STRING_SCHEMA'
-  | 'ISO_DATE_TIME_STAMP_SCHEMA'
-  | 'AUDIT_DATABASE_RECORD_SCHEMA'
-  | 'ENTRA_ID_USER_SCHEMA';
-
-type TestCaseWithType<Type extends TestCaseTypes> = {
-  type: Type;
-  options?: Partial<DefaultOptions>;
-};
-
-type TestCaseWithTypeAndRequiredOptions<Type extends TestCaseTypes, OptionsType> = TestCaseWithType<Type> & {
-  options: OptionsType;
-};
-export type TestCase =
-  | TestCaseWithType<'string'>
-  | TestCaseWithType<'number'>
-  | TestCaseWithType<'boolean'>
-  | TestCaseWithTypeAndRequiredOptions<'Array', WithArrayTestsOptions>
-  | TestCaseWithType<'TfmTeamSchema'>
-  | TestCaseWithType<'UNIX_TIMESTAMP_MILLISECONDS_SCHEMA'>
-  | TestCaseWithType<'UNIX_TIMESTAMP_SECONDS_SCHEMA'>
-  | TestCaseWithType<'UNIX_TIMESTAMP_SCHEMA'>
-  | TestCaseWithType<'OBJECT_ID_SCHEMA'>
-  | TestCaseWithType<'OBJECT_ID_STRING_SCHEMA'>
-  | TestCaseWithType<'OBJECT_ID_OR_OBJECT_ID_STRING_SCHEMA'>
-  | TestCaseWithType<'ISO_DATE_TIME_STAMP_SCHEMA'>
-  | TestCaseWithType<'AUDIT_DATABASE_RECORD_SCHEMA'>
-  | TestCaseWithType<'ENTRA_ID_USER_SCHEMA'>;
-
-export const getTestsForParameter = <Schema extends ZodSchema>({
+/**
+ * Gets tests for a test case, using the test case type to determine which tests to run
+ *
+ * These tests are all available tests that can be easily used to test a parameter, and should be extended
+ */
+export const withTestsForTestcase = <Schema extends ZodSchema>({
   schema,
   testCase,
   getTestObjectWithUpdatedField,

@@ -40,6 +40,7 @@ describe('TFM_USER_SCHEMA', () => {
       {
         parameterPath: 'lastLogin',
         type: 'UNIX_TIMESTAMP_MILLISECONDS_SCHEMA',
+        options: { isOptional: true },
       },
       {
         parameterPath: 'sessionIdentifier',

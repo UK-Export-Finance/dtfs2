@@ -1,7 +1,8 @@
 import { ZodSchema } from 'zod';
 import { WithSchemaTestParams } from '../with-schema-test.type';
-import { getTestsForParameter, TestCase } from '../get-tests-for-parameter.tests';
+import { withTestsForTestcase } from '../with-tests-for-testcase';
 import { withDefaultOptionsTests } from './with-default-options.tests';
+import { TestCase } from '../with-test-for-test-case.type';
 
 export type WithArrayTestsOptions = {
   arrayTypeTestCase: TestCase;
@@ -44,7 +45,7 @@ export const withArrayTests = <Schema extends ZodSchema>({
     }
 
     describe('when configuring the objects in the array', () => {
-      getTestsForParameter({
+      withTestsForTestcase({
         schema,
         testCase: arrayTestOptions.arrayTypeTestCase,
         getTestObjectWithUpdatedField: (value) => getTestObjectWithUpdatedField([value]),
