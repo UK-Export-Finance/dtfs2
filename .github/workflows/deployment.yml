@@ -74,7 +74,9 @@ jobs:
       - name: Environment 🧪
         id: environment
         run: |
-          if [[ "${{ env.ENVIRONMENT }}" == *release* ]]; then
+          if [[ "${{ env.ENVIRONMENT }}" =~ ^release-.*-rc$ ]]; then
+            echo "environment=prod" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ env.ENVIRONMENT }}" == *release* ]]; then
             echo "environment=staging" >> "$GITHUB_OUTPUT"
           else
             echo "environment=${{ github.event.workflow_run.head_branch }}" >> "$GITHUB_OUTPUT"
