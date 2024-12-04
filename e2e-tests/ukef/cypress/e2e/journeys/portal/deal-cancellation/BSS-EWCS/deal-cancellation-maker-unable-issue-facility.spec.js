@@ -55,34 +55,36 @@ context('When a deal has been cancelled on TFM, maker unable to issue facility',
 
   describe('when a deal has unissued facilities submitted to UKEF and the deal has already been cancelled', () => {
     describe('AIN deal', () => {
-      it('AIN deal with unissued facilities is submitted to UKEF, user cancelled the deal in the past in TFM. Maker unable to issue facility on portal', () => {
+      it('should not allow a Maker to issue facilities in portal', () => {
         const ainDealPast = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.AIN && deal.status === DEAL_STATUS.CANCELLED);
         const ainDealfacilityPast = ainDealPast.facilities.find((facility) => facility.type === FACILITY_TYPE.BOND)._id;
         portalPages.contract.visit(ainDealPast);
         portalPages.contract.bondTransactionsTable.row(ainDealfacilityPast).issueFacilityLink().should('not.exist');
       });
-      describe('MIN deal', () => {
-        it('MIN deal with unissued facilities is submitted to UKEF, user cancelled the deal in the past in TFM. Maker unable to issue facility on portal', () => {
-          const minDealPast = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.MIN && deal.status === DEAL_STATUS.CANCELLED);
-          const minDealfacilityPast = minDealPast.facilities.find((facility) => facility.type === FACILITY_TYPE.BOND)._id;
-          portalPages.contract.visit(minDealPast);
-          portalPages.contract.bondTransactionsTable.row(minDealfacilityPast).issueFacilityLink().should('not.exist');
-        });
+    });
+
+    describe('MIN deal', () => {
+      it('should not allow a Maker to issue facilities in portal', () => {
+        const minDealPast = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.MIN && deal.status === DEAL_STATUS.CANCELLED);
+        const minDealfacilityPast = minDealPast.facilities.find((facility) => facility.type === FACILITY_TYPE.BOND)._id;
+        portalPages.contract.visit(minDealPast);
+        portalPages.contract.bondTransactionsTable.row(minDealfacilityPast).issueFacilityLink().should('not.exist');
       });
     });
   });
 
   describe('when a deal has unissued facilities submitted to UKEF and the deal has been scheduled for cancellation', () => {
     describe('AIN deal', () => {
-      it('AIN deal with unissued facilities is submitted to UKEF, user schedule cancellation in the future in TFM. Maker unable to issue facility on portal', () => {
+      it('should not allow a Maker to issue facilities in portal', () => {
         const ainDealFuture = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.AIN && deal.status === DEAL_STATUS.PENDING_CANCELLATION);
         const ainDealFacilityFuture = ainDealFuture.facilities.find((facility) => facility.type === FACILITY_TYPE.BOND)._id;
         portalPages.contract.visit(ainDealFuture);
         portalPages.contract.bondTransactionsTable.row(ainDealFacilityFuture).issueFacilityLink().should('not.exist');
       });
     });
+
     describe('MIN deal', () => {
-      it('MIN deal with unissued facilities is submitted to UKEF, user schedule cancellation deal in the future in TFM. Maker unable to issue facility on portal', () => {
+      it('should not allow a Maker to issue facilities in portal', () => {
         const minDealFuture = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.MIN && deal.status === DEAL_STATUS.PENDING_CANCELLATION);
         const minDealFacilityFuture = minDealFuture.facilities.find((facility) => facility.type === FACILITY_TYPE.BOND)._id;
         portalPages.contract.visit(minDealFuture);
