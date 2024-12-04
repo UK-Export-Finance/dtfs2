@@ -73,9 +73,12 @@ on:
     branches:
       - dev
       - feature
-      - staging
-      - prod
       - release-*
+
+  create:
+    branches:
+      # Production ready release candidates
+      - release-*-rc
 
     paths:
       - '.github/workflows/deployment.yml'
@@ -140,6 +143,7 @@ env:
   AUDIT_API_USERNAME: ${{ secrets.AUDIT_API_USERNAME }}
   AUDIT_API_PASSWORD: ${{ secrets.AUDIT_API_PASSWORD }}
   UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: ${{ vars.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }}
+  UTILISATION_REPORT_CREATION_FAILURE_EMAIL_ADDRESS: ${{ secrets. UTILISATION_REPORT_CREATION_FAILURE_EMAIL_ADDRESS }}
   ACCEPT_EULA: ${{ vars.ACCEPT_EULA }}
   MSSQL_SA_PASSWORD: ${{ secrets.MSSQL_SA_PASSWORD }}
   SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_QA }}
@@ -571,6 +575,7 @@ jobs:
         spec:
           [
             '*.spec.js',
+            'amendments/portal-amendments-disabled/**/*.spec.js',
             'application/**/*.spec.js',
             'checker/**/*.spec.js',
             'clone/*.spec.js',
@@ -932,6 +937,7 @@ jobs:
             './gef/cypress/e2e/security/**/*.spec.js',
             './gef/cypress/e2e/ukef/**/*.spec.js',
             './gef/cypress/e2e/upload/**/*.spec.js',
+            './gef/cypress/e2e/amendments/portal-amendments-enabled/**/*.spec.js',
             './tfm/cypress/e2e/journeys/case/activities/*.spec.js',
             './tfm/cypress/e2e/journeys/case/AIN/*.spec.js',
             './tfm/cypress/e2e/journeys/case/deal-cancellation-enabled/*.spec.js',
