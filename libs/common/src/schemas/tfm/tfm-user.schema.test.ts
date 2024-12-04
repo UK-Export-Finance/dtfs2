@@ -71,40 +71,26 @@ describe('TFM_USER_SCHEMA', () => {
           },
         },
       },
+      {
+        parameterPath: 'auditRecord',
+        type: 'AUDIT_DATABASE_RECORD_SCHEMA',
+        options: { isOptional: true },
+      },
     ],
   });
 
-  // withTeamIdSchemaTests({
-  //   parameterName: 'teams',
-  //   schema: TFM_USER_SCHEMA,
-  //   getTestObjectWithUpdatedField: (newValue) => ({ ...aValidPayload(), teams: newValue }),
-  // });
-
-  // withUnixTimestampMillisecondsSchemaTests({
-  //   parameterName: 'lastLogin',
-  //   schema: TFM_USER_SCHEMA,
-  //   getTestObjectWithUpdatedField: (newValue) => ({ ...aValidPayload(), lastLogin: newValue }),
-  // });
-
-  //     withAuditDatabaseRecordSchemaTests({});
-  //   withSchemaTests({
-  //     schema: TFM_USER_SCHEMA,
-  //     failureTestCases: getFailureTestCases(),
-  //     successTestCases: getSuccessTestCases(),
-  //   });
-
   function aValidPayload(): TfmUser {
     return {
-      _id: new ObjectId(), // done
-      username: 'test-user', // done
-      email: 'test-user@test.com', // done
-      teams: [TEAM_IDS.PIM], // done,
-      timezone: 'Europe/London', // done
-      firstName: 'FirstName', // done
-      lastName: 'LastName', // done
-      status: 'active', // done
+      _id: new ObjectId(),
+      username: 'test-user',
+      email: 'test-user@test.com',
+      teams: [TEAM_IDS.PIM],
+      timezone: 'Europe/London',
+      firstName: 'FirstName',
+      lastName: 'LastName',
+      status: 'active',
       lastLogin: 1234567890123,
-      sessionIdentifier: 'a-session-identifier', // done,
+      sessionIdentifier: 'a-session-identifier',
       auditRecord: {
         lastUpdatedAt: '2024-05-17T15:35:32.496 +00:00',
         lastUpdatedByIsSystem: true,
@@ -112,10 +98,10 @@ describe('TFM_USER_SCHEMA', () => {
         lastUpdatedByTfmUserId: null,
         noUserLoggedIn: null,
       },
-      salt: 'a-salt', // done
-      hash: 'a-hash', // done
-      loginFailureCount: 0, // done
-      azureOid: 'a-azure-oid', // done
+      salt: 'a-salt',
+      hash: 'a-hash',
+      loginFailureCount: 0,
+      azureOid: 'a-azure-oid',
     };
   }
 });

@@ -10,6 +10,7 @@ import { withObjectIdOrObjectIdStringSchemaTests } from './with-object-id-or-obj
 import { withObjectIdStringSchemaTests } from './with-object-id-string-schema.tests';
 import { DefaultOptions } from './with-default-options.tests';
 import { withBooleanTests } from './with-boolean.tests';
+import { withEntraIdUserSchemaTests } from './with-entra-id-user-schema.tests';
 
 export type TestCaseTypes =
   | 'string'
@@ -21,27 +22,29 @@ export type TestCaseTypes =
   | 'OBJECT_ID_STRING_SCHEMA'
   | 'OBJECT_ID_OR_OBJECT_ID_STRING_SCHEMA'
   | 'ISO_DATE_TIME_STAMP_SCHEMA'
-  | 'AUDIT_DATABASE_RECORD_SCHEMA';
+  | 'AUDIT_DATABASE_RECORD_SCHEMA'
+  | 'ENTRA_ID_USER_SCHEMA';
 
-type BaseTestCaseWithType<Type extends TestCaseTypes> = {
+type TestCaseWithType<Type extends TestCaseTypes> = {
   type: Type;
   options?: Partial<DefaultOptions>;
 };
 
-type BaseTestCaseWithTypeRequiredOptions<Type extends TestCaseTypes, OptionsType> = BaseTestCaseWithType<Type> & {
+type TestCaseWithTypeAndRequiredOptions<Type extends TestCaseTypes, OptionsType> = TestCaseWithType<Type> & {
   options: OptionsType;
 };
 export type TestCase =
-  | BaseTestCaseWithType<'string'>
-  | BaseTestCaseWithType<'number'>
-  | BaseTestCaseWithType<'boolean'>
-  | BaseTestCaseWithTypeRequiredOptions<'Array', WithArrayTestsOptions>
-  | BaseTestCaseWithType<'TfmTeamSchema'>
-  | BaseTestCaseWithType<'OBJECT_ID_SCHEMA'>
-  | BaseTestCaseWithType<'OBJECT_ID_STRING_SCHEMA'>
-  | BaseTestCaseWithType<'OBJECT_ID_OR_OBJECT_ID_STRING_SCHEMA'>
-  | BaseTestCaseWithType<'ISO_DATE_TIME_STAMP_SCHEMA'>
-  | BaseTestCaseWithType<'AUDIT_DATABASE_RECORD_SCHEMA'>;
+  | TestCaseWithType<'string'>
+  | TestCaseWithType<'number'>
+  | TestCaseWithType<'boolean'>
+  | TestCaseWithTypeAndRequiredOptions<'Array', WithArrayTestsOptions>
+  | TestCaseWithType<'TfmTeamSchema'>
+  | TestCaseWithType<'OBJECT_ID_SCHEMA'>
+  | TestCaseWithType<'OBJECT_ID_STRING_SCHEMA'>
+  | TestCaseWithType<'OBJECT_ID_OR_OBJECT_ID_STRING_SCHEMA'>
+  | TestCaseWithType<'ISO_DATE_TIME_STAMP_SCHEMA'>
+  | TestCaseWithType<'AUDIT_DATABASE_RECORD_SCHEMA'>
+  | TestCaseWithType<'ENTRA_ID_USER_SCHEMA'>;
 
 export const getTestsForParameter = <Schema extends ZodSchema>({
   schema,
@@ -129,6 +132,14 @@ export const getTestsForParameter = <Schema extends ZodSchema>({
 
     case 'AUDIT_DATABASE_RECORD_SCHEMA':
       withAuditDatabaseRecordSchemaTests({
+        schema,
+        options,
+        getTestObjectWithUpdatedField,
+      });
+      break;
+
+    case 'ENTRA_ID_USER_SCHEMA':
+      withEntraIdUserSchemaTests({
         schema,
         options,
         getTestObjectWithUpdatedField,

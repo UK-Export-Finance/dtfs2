@@ -1,19 +1,12 @@
 import { TEAM_IDS } from '../../constants';
 import { withSchemaValidationTests } from '../../test-helpers';
+import { CreateTfmUserRequest } from '../../types';
 import { CREATE_TFM_USER_REQUEST_SCHEMA } from './create-tfm-user-request.schema';
 
 describe('CREATE_TFM_USER_REQUEST_SCHEMA', () => {
   withSchemaValidationTests({
     schema: CREATE_TFM_USER_REQUEST_SCHEMA,
-    aValidPayload: () => ({
-      username: 'username',
-      email: 'email',
-      teams: [TEAM_IDS.PIM],
-      timezone: 'timezone',
-      firstName: 'firstName',
-      lastName: 'lastName',
-      azureOid: 'azureOid',
-    }),
+    aValidPayload,
     testCases: [
       {
         parameterPath: 'username',
@@ -22,6 +15,15 @@ describe('CREATE_TFM_USER_REQUEST_SCHEMA', () => {
       {
         parameterPath: 'email',
         type: 'string',
+      },
+      {
+        parameterPath: 'teams',
+        type: 'Array',
+        options: {
+          arrayTypeTestCase: {
+            type: 'TfmTeamSchema',
+          },
+        },
       },
       {
         parameterPath: 'timezone',
@@ -41,4 +43,16 @@ describe('CREATE_TFM_USER_REQUEST_SCHEMA', () => {
       },
     ],
   });
+
+  function aValidPayload(): CreateTfmUserRequest {
+    return {
+      username: 'test-user',
+      email: 'test-user@test.com',
+      teams: [TEAM_IDS.PIM],
+      timezone: 'Europe/London',
+      firstName: 'FirstName',
+      lastName: 'LastName',
+      azureOid: 'test-azure-oid',
+    };
+  }
 });

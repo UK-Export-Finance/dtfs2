@@ -5,6 +5,7 @@ import { withDefaultOptionsTests } from './with-default-options.tests';
 
 export type WithArrayTestsOptions = {
   arrayTypeTestCase: TestCase;
+  isAllowEmpty?: boolean;
 };
 
 export const withArrayTests = <Schema extends ZodSchema>({
@@ -12,6 +13,12 @@ export const withArrayTests = <Schema extends ZodSchema>({
   options,
   getTestObjectWithUpdatedField,
 }: WithSchemaTestParams<Schema, WithArrayTestsOptions>) => {
+  const arrayTestOptionsDefaults = { isAllowEmpty: true };
+  const arrayTestOptions = {
+    ...arrayTestOptionsDefaults,
+    ...options,
+  };
+
   describe('with array tests', () => {
     withDefaultOptionsTests({
       schema,
@@ -24,15 +31,22 @@ export const withArrayTests = <Schema extends ZodSchema>({
       expect(success).toBe(false);
     });
 
-    it('should pass parsing if the parameter is an empty array', () => {
-      const { success } = schema.safeParse(getTestObjectWithUpdatedField([]));
-      expect(success).toBe(true);
-    });
+    if (arrayTestOptions.isAllowEmpty) {
+      it('should pass parsing if the parameter is an empty array', () => {
+        const { success } = schema.safeParse(getTestObjectWithUpdatedField([]));
+        expect(success).toBe(true);
+      });
+    } else {
+      it('should fail parsing if the parameter is an empty array', () => {
+        const { success } = schema.safeParse(getTestObjectWithUpdatedField([]));
+        expect(success).toBe(false);
+      });
+    }
 
     describe('when configuring the objects in the array', () => {
       getTestsForParameter({
         schema,
-        testCase: options.arrayTypeTestCase,
+        testCase: arrayTestOptions.arrayTypeTestCase,
         getTestObjectWithUpdatedField: (value) => getTestObjectWithUpdatedField([value]),
       });
     });
