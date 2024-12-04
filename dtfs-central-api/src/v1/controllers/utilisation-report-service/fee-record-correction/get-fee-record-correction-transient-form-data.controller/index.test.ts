@@ -88,6 +88,44 @@ describe('get-fee-record-correction-transient-form-data.controller', () => {
       expect(mockTransientFormDataFind).toHaveBeenCalledWith(tfmUserId, feeRecordId);
     });
 
+    it('should call fee record exists once', async () => {
+      // Act
+      await getFeeRecordCorrectionTransientFormData(req, res);
+
+      // Assert
+      expect(mockFeeRecordExists).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call fee record exists with the correct parameters', async () => {
+      // Act
+      await getFeeRecordCorrectionTransientFormData(req, res);
+
+      // Assert
+      expect(mockFeeRecordExists).toHaveBeenCalledWith(feeRecordId, reportId);
+    });
+
+    it('should call fee record correction transient form data find once if a fee record exists', async () => {
+      // Arrange
+      mockFeeRecordExists.mockReturnValue(true);
+
+      // Act
+      await getFeeRecordCorrectionTransientFormData(req, res);
+
+      // Assert
+      expect(mockTransientFormDataFind).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call fee record correction transient form data find with the correct parameters if a fee record exists', async () => {
+      // Arrange
+      mockFeeRecordExists.mockReturnValue(true);
+
+      // Act
+      await getFeeRecordCorrectionTransientFormData(req, res);
+
+      // Assert
+      expect(mockTransientFormDataFind).toHaveBeenCalledWith(tfmUserId, feeRecordId);
+    });
+
     it(`should respond with a '${HttpStatusCode.NotFound}' if no fee record with the provided fee record id and report id is found`, async () => {
       // Arrange
       mockFeeRecordExists.mockReturnValue(false);
@@ -144,44 +182,6 @@ describe('get-fee-record-correction-transient-form-data.controller', () => {
 
       // Assert
       expect(res._getData()).toEqual(`Failed to get fee record correction transient form data`);
-    });
-
-    it('should call fee record exists once', async () => {
-      // Act
-      await getFeeRecordCorrectionTransientFormData(req, res);
-
-      // Assert
-      expect(mockFeeRecordExists).toHaveBeenCalledTimes(1);
-    });
-
-    it('should call fee record exists with the correct parameters', async () => {
-      // Act
-      await getFeeRecordCorrectionTransientFormData(req, res);
-
-      // Assert
-      expect(mockFeeRecordExists).toHaveBeenCalledWith(feeRecordId, reportId);
-    });
-
-    it('should call fee record correction transient form data find once if a fee record exists', async () => {
-      // Arrange
-      mockFeeRecordExists.mockReturnValue(true);
-
-      // Act
-      await getFeeRecordCorrectionTransientFormData(req, res);
-
-      // Assert
-      expect(mockTransientFormDataFind).toHaveBeenCalledTimes(1);
-    });
-
-    it('should call fee record correction transient form data find with the correct parameters if a fee record exists', async () => {
-      // Arrange
-      mockFeeRecordExists.mockReturnValue(true);
-
-      // Act
-      await getFeeRecordCorrectionTransientFormData(req, res);
-
-      // Assert
-      expect(mockTransientFormDataFind).toHaveBeenCalledWith(tfmUserId, feeRecordId);
     });
   });
 });

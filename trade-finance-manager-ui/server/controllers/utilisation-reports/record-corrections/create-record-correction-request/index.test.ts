@@ -1,5 +1,6 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { MockResponse } from 'node-mocks-http';
 import { RECORD_CORRECTION_REASON, RecordCorrectionTransientFormData } from '@ukef/dtfs2-common';
+import { Response } from 'express';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import {
   getCreateRecordCorrectionRequest,
@@ -60,17 +61,19 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
 
     const transientFormDataResponse: RecordCorrectionTransientFormData = {
       reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT],
-      additionalInfo: '',
+      additionalInfo: 'Some additional info',
     };
+
+    let req: GetCreateRecordCorrectionRequestRequest;
+    let res: MockResponse<Response>;
 
     beforeEach(() => {
       jest.mocked(api.getFeeRecordCorrectionTransientFormData).mockResolvedValue(transientFormDataResponse);
+
+      ({ req, res } = getHttpMocks());
     });
 
     it('should render the create record correction request page', async () => {
-      // Arrange
-      const { req, res } = getHttpMocks();
-
       // Act
       await getCreateRecordCorrectionRequest(req, res);
 
@@ -93,9 +96,6 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
     });
 
     it('should fetch the fee record details using the reportId and feeRecordId', async () => {
-      // Arrange
-      const { req, res } = getHttpMocks();
-
       // Act
       await getCreateRecordCorrectionRequest(req, res);
 
@@ -105,9 +105,6 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
     });
 
     it('should fetch the fee record correction transient form data using the reportId, feeRecordId, and user', async () => {
-      // Arrange
-      const { req, res } = getHttpMocks();
-
       // Act
       await getCreateRecordCorrectionRequest(req, res);
 
