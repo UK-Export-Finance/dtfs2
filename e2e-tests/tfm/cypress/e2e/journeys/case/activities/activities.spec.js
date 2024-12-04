@@ -122,7 +122,7 @@ context('Users can create and submit comments', () => {
     });
 
     it('should not be allowed to add comment over 1000 characters', () => {
-      const longComment = 'aaaaaaaaaa'.repeat(101);
+      const longComment = 'a'.repeat(1001);
       activitiesPage.addACommentButton().click();
 
       cy.keyboardInput(activityCommentBoxPage.activityCommentBox(), longComment);
