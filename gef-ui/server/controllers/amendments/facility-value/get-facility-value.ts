@@ -22,7 +22,7 @@ export const getFacilityValue = async (req: GetFacilityValueRequest, res: Respon
       return res.redirect('/not-found');
     }
 
-    if (canUserAmendFacility(facility, deal, user.roles)) {
+    if (!canUserAmendFacility(facility, deal, user.roles)) {
       return res.redirect(`/case/${dealId}`);
     }
 
