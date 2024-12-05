@@ -17,7 +17,7 @@ describe('getAmendment', () => {
     jest.spyOn(TfmFacilitiesRepo, 'findOneAmendmentByFacilityIdAndAmendmentId').mockImplementation(mockFindOneAmendmentByFacilityIdAndAmendmentId);
   });
 
-  it('calls TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId with the facility and amendment id', async () => {
+  it('should call TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId with the facility and amendment id', async () => {
     // Arrange
     const { req, res } = httpMocks.createMocks<GetAmendmentRequest>({ params: { facilityId, amendmentId } });
 
@@ -29,7 +29,7 @@ describe('getAmendment', () => {
     expect(mockFindOneAmendmentByFacilityIdAndAmendmentId).toHaveBeenCalledWith(facilityId, amendmentId);
   });
 
-  it(`sets the status to ${HttpStatusCode.NotFound} if the amendment is undefined`, async () => {
+  it(`should set the status to ${HttpStatusCode.NotFound} if the amendment is undefined`, async () => {
     // Arrange
     mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValue(undefined);
 
@@ -42,7 +42,7 @@ describe('getAmendment', () => {
     expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
   });
 
-  it(`sets the status to ${HttpStatusCode.NotFound} if the amendment is of type ${AMENDMENT_TYPES.TFM}`, async () => {
+  it(`should set the status to ${HttpStatusCode.NotFound} if the amendment is of type ${AMENDMENT_TYPES.TFM}`, async () => {
     // Arrange
     const amendment = { amendmentId: new ObjectId(), type: AMENDMENT_TYPES.TFM, ukefFacilityId: 'ukefFacilityId' } as FacilityAmendment & {
       ukefFacilityId: string;
@@ -58,7 +58,7 @@ describe('getAmendment', () => {
     expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
   });
 
-  it(`sets the status to ${HttpStatusCode.NotFound} if the amendment type is undefined`, async () => {
+  it(`should set the status to ${HttpStatusCode.NotFound} if the amendment type is undefined`, async () => {
     // Arrange
     const amendment = { amendmentId: new ObjectId(), ukefFacilityId: 'ukefFacilityId' } as FacilityAmendment & { ukefFacilityId: string };
     mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValue(amendment);
@@ -72,7 +72,7 @@ describe('getAmendment', () => {
     expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
   });
 
-  it(`sets the status to ${HttpStatusCode.Ok} if the amendment is of type ${AMENDMENT_TYPES.PORTAL}`, async () => {
+  it(`should set the status to ${HttpStatusCode.Ok} if the amendment is of type ${AMENDMENT_TYPES.PORTAL}`, async () => {
     // Arrange
     const amendment = { amendmentId: new ObjectId(), type: AMENDMENT_TYPES.PORTAL, ukefFacilityId: 'ukefFacilityId' } as FacilityAmendment & {
       ukefFacilityId: string;
@@ -88,7 +88,7 @@ describe('getAmendment', () => {
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
   });
 
-  it(`it returns the amendment if the amendment is of type ${AMENDMENT_TYPES.PORTAL}`, async () => {
+  it(`should return the amendment if the amendment is of type ${AMENDMENT_TYPES.PORTAL}`, async () => {
     // Arrange
     const amendment = { amendmentId: new ObjectId(), type: AMENDMENT_TYPES.PORTAL, ukefFacilityId: 'ukefFacilityId' } as FacilityAmendment & {
       ukefFacilityId: string;
@@ -104,7 +104,7 @@ describe('getAmendment', () => {
     expect(res._getData()).toEqual(amendment);
   });
 
-  it(`returns the correct status & body if TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId throws an ApiError`, async () => {
+  it(`should return the correct status & body if TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId throws an ApiError`, async () => {
     // Arrange
     const testErrorStatus = HttpStatusCode.Forbidden;
     const testErrorMessage = 'An error';
@@ -120,7 +120,7 @@ describe('getAmendment', () => {
     expect(res._getData()).toEqual({ status: testErrorStatus, message: testErrorMessage });
   });
 
-  it(`returns status ${HttpStatusCode.InternalServerError} & correct body if TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId throws an unknown Error`, async () => {
+  it(`should return status ${HttpStatusCode.InternalServerError} & correct body if TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId throws an unknown Error`, async () => {
     // Arrange
     mockFindOneAmendmentByFacilityIdAndAmendmentId.mockRejectedValue(new Error());
 
