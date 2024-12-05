@@ -1,7 +1,16 @@
 const { findOneCurrency } = require('../controllers/currencies.controller');
 
+/**
+ * Find a currency by currency code and return a simple object
+ * @param currencyCode - The currency code
+ * @returns {Promise<Object>} Empty object or object with currency properties
+ */
 const getCurrencyObject = async (currencyCode) => {
   const { data } = await findOneCurrency(currencyCode);
+
+  if (!data) {
+    return {};
+  }
 
   const { text, id, currencyId } = data;
 

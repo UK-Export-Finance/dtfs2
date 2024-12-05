@@ -1,70 +1,62 @@
 import { fromUnixTime } from 'date-fns';
-import { mapPortalActivities, getPortalActivities } from './index';
-
+import { mapPortalActivities, getPortalActivities } from '.';
 import api from '../../services/api';
-
 import mocks from '../mocks';
 
 jest.mock('../../services/api');
 
-/*
-   ensures that the mapPortalActivities returns an array
-   in the correct format for mojTimeline
-*/
+const dealSubmissionActivity = [
+  {
+    type: 'NOTICE',
+    timestamp: 1638458265,
+    author: {
+      firstName: 'Bob',
+      lastName: 'Smith',
+      _id: 12345,
+    },
+    text: '',
+    label: 'Automatic inclusion notice submitted to UKEF',
+    html: '',
+    facilityType: '',
+    ukefFacilityId: '',
+    facilityId: '',
+    maker: '',
+    checker: '',
+  },
+];
+
+const facilityActivity = [
+  {
+    type: 'FACILITY_STAGE',
+    timestamp: 1638458265,
+    author: {
+      firstName: 'Bob',
+      lastName: 'Smith',
+      _id: 12345,
+    },
+    text: '',
+    label: 'Bank facility stage changed',
+    html: 'facility',
+    facilityType: 'Cash facility',
+    ukefFacilityId: '12345',
+    facilityId: '123456',
+    maker: {
+      firstname: 'Joe',
+      surname: 'Bloggs',
+      id: '12345',
+    },
+    checker: {
+      firstname: 'Bob',
+      surname: 'Smith',
+      id: '4567',
+    },
+  },
+];
 
 describe('mapPortalActivities', () => {
-  const gefActivity = [
-    {
-      type: 'NOTICE',
-      timestamp: 1638458265,
-      author: {
-        firstName: 'Bob',
-        lastName: 'Smith',
-        _id: 12345,
-      },
-      text: '',
-      label: 'Automatic inclusion notice submitted to UKEF',
-      html: '',
-      facilityType: '',
-      ukefFacilityId: '',
-      facilityId: '',
-      maker: '',
-      checker: '',
-    },
-  ];
+  it('should return a mapped array for mojTimeline for `AIN deal submission`', () => {
+    const result = mapPortalActivities(dealSubmissionActivity);
 
-  const facilityActivity = [
-    {
-      type: 'FACILITY_STAGE',
-      timestamp: 1638458265,
-      author: {
-        firstName: 'Bob',
-        lastName: 'Smith',
-        _id: 12345,
-      },
-      text: '',
-      label: 'Bank facility stage changed',
-      html: 'facility',
-      facilityType: 'Cash facility',
-      ukefFacilityId: '12345',
-      facilityId: '123456',
-      maker: {
-        firstname: 'Joe',
-        surname: 'Bloggs',
-        id: '12345',
-      },
-      checker: {
-        firstname: 'Bob',
-        surname: 'Smith',
-        id: '4567',
-      },
-    },
-  ];
-
-  it('should return formatted array for mojTimeline for first submission', () => {
-    const response = mapPortalActivities(gefActivity);
-
-    // expected format
     const expected = [
       {
         label: { text: 'Automatic inclusion notice submitted to UKEF' },
@@ -80,13 +72,12 @@ describe('mapPortalActivities', () => {
       },
     ];
 
-    expect(response).toEqual(expected);
+    expect(result).toEqual(expected);
   });
 
-  it('should return formatted array for mojTimeline for facility submission', () => {
-    const response = mapPortalActivities(facilityActivity);
+  it('should return a mapped array for mojTimeline for `facility stage changed`', () => {
+    const result = mapPortalActivities(facilityActivity);
 
-    // expected format
     const expected = [
       {
         label: { text: 'Bank facility stage changed' },
@@ -110,7 +101,27 @@ describe('mapPortalActivities', () => {
       },
     ];
 
-    expect(response).toEqual(expected);
+    expect(result).toEqual(expected);
+  });
+
+  describe('when author.lastName does not exist', () => {
+    it('should return a mapped array for mojTimeline without lastName in byline.text`', () => {
+      const mockActivity = {
+        ...dealSubmissionActivity,
+        author: {
+          ...dealSubmissionActivity,
+          lastName: '',
+        },
+      };
+
+      const mockActivities = [mockActivity];
+
+      const result = mapPortalActivities(mockActivities);
+
+      const expected = mockActivity.author.firstName;
+
+      expect(result[0].byline.text).toEqual(expected);
+    });
   });
 });
 

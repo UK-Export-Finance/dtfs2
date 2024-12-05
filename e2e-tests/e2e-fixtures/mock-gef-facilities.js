@@ -225,9 +225,19 @@ exports.anUnissuedCashFacility = anUnissuedCashFacility;
 exports.anIssuedCashFacility = anIssuedCashFacility;
 exports.anIssuedCashFacilityWithCoverDateConfirmed = anIssuedCashFacilityWithCoverDateConfirmed;
 
+/**
+ * @param {{ facilityEndDateEnabled?: boolean}} options
+ * @returns {import('@ukef/dtfs2-common').Facility }
+ */
+const anIssuedContingentFacility = ({ facilityEndDateEnabled = false } = {}) => ({
+  ...anUnissuedContingentFacility({ facilityEndDateEnabled }),
+  hasBeenIssued: true,
+});
+
 exports.multipleMockGefFacilities = ({ facilityEndDateEnabled = false } = {}) => ({
   unissuedCashFacility: anUnissuedCashFacility({ facilityEndDateEnabled }),
   issuedCashFacility: anIssuedCashFacility({ facilityEndDateEnabled }),
   unissuedContingentFacility: anUnissuedContingentFacility({ facilityEndDateEnabled }),
   unissuedCashFacilityWith20MonthsOfCover: anUnissuedCashFacilityWith20MonthsOfCover({ facilityEndDateEnabled }),
+  issuedContingentFacility: anIssuedContingentFacility({ facilityEndDateEnabled }),
 });

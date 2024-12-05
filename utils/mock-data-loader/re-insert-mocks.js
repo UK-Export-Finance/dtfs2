@@ -53,7 +53,7 @@ const init = async () => {
   }
   await db.close();
 
-  console.info('✅ Insertion successfull');
+  console.info('✅ Insertion successful');
 };
 
 init();
