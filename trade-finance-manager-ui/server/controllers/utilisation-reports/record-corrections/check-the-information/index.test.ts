@@ -8,6 +8,9 @@ import api from '../../../../api';
 jest.mock('../../../../api');
 
 describe('controllers/utilisation-reports/record-corrections/check-the-information', () => {
+  const reportId = '123';
+  const feeRecordId = '456';
+
   const userToken = 'user-token';
   const user = aTfmSessionUser();
   const requestSession = {
@@ -18,8 +21,6 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
   describe('getRecordCorrectionRequestInformation', () => {
     it('should render check the information page', () => {
       // Arrange
-      const reportId = '123';
-      const feeRecordId = '456';
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
         params: { reportId, feeRecordId },
@@ -50,8 +51,6 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
   describe('postRecordCorrectionRequestInformation', () => {
     it('should redirect to request sent page on success', async () => {
       // Arrange
-      const reportId = '123';
-      const feeRecordId = '456';
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
         params: { reportId, feeRecordId },
@@ -68,8 +67,6 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
 
     it('should render problem with service page on error', async () => {
       // Arrange
-      const reportId = '123';
-      const feeRecordId = '456';
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
         params: { reportId, feeRecordId },

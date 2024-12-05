@@ -8,6 +8,13 @@ import api from '../../../../api';
 const renderCheckTheInformationPage = (res: Response, viewModel: RecordCorrectionRequestInformationViewModel) =>
   res.render('utilisation-reports/record-corrections/check-the-information.njk', viewModel);
 
+/**
+ * Controller for the GET record correction request check the info route.
+ *
+ * Renders the check the info page of the create record correction request flow.
+ * @param req - The request object
+ * @param res - The response object
+ */
 export const getRecordCorrectionRequestInformation = (req: Request, res: Response) => {
   try {
     const { reportId, feeRecordId } = req.params;
@@ -35,6 +42,13 @@ export const getRecordCorrectionRequestInformation = (req: Request, res: Respons
   }
 };
 
+/**
+ * Controller for the POST record correction request check the info route.
+ *
+ * Creates the record correction and sends the request to the bank.
+ * @param req - The request object
+ * @param res - The response object
+ */
 export const postRecordCorrectionRequestInformation = async (req: Request, res: Response) => {
   try {
     const { reportId, feeRecordId } = req.params;
