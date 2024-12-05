@@ -17,7 +17,7 @@ interface FacilityAmendmentResponse extends Response {
 }
 
 const generateUrl = (facilityId: string, amendmentId: string): string => {
-  return `/v1/portal/gef/facilities/${facilityId}/amendments/${amendmentId}`;
+  return `/v1/portal/facilities/${facilityId}/amendments/${amendmentId}`;
 };
 
 const newDeal = aDeal({
