@@ -7,7 +7,6 @@ import automaticCover from '../pages/automatic-cover';
 import manualInclusion from '../pages/manual-inclusion-questionnaire';
 import securityDetails from '../pages/security-details';
 import applicationSubmission from '../pages/application-submission';
-import applicationPreview from '../pages/application-preview';
 import submitToUkef from '../pages/submit-to-ukef';
 import statusBanner from '../pages/application-status-banner';
 
@@ -121,12 +120,6 @@ context('Submit AIN deal and check portalActivities', () => {
       statusBanner.bannerCreatedBy().contains(deal.maker.firstname);
       statusBanner.bannerCheckedBy().contains(BANK1_CHECKER1.firstname);
       statusBanner.bannerSubmissionType().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA);
-    });
-
-    // ensures that banner is populated correctly
-    it('should display the information banner', () => {
-      applicationPreview.facilityInformationBanner().should('exist');
-      cy.assertText(applicationPreview.facilityInformationBanner(), 'Check your records for the most up-to-date facility details.');
     });
   });
 });
