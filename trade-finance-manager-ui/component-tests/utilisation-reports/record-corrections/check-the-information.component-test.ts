@@ -88,7 +88,7 @@ describe('page', () => {
     wrapper.expectText(definitionDescriptionSelector('Reason for record correction')).toRead(reason);
   });
 
-  it('should render the reason for record correction change link', () => {
+  it('should render the "reason for record correction" change link', () => {
     // Arrange
     const reportId = '123';
     const feeRecordId = '456';
@@ -106,7 +106,7 @@ describe('page', () => {
     wrapper.expectLink('[data-cy="change-record-correction-reason"]').toLinkTo(expectedHref, 'Change reason for record correction');
   });
 
-  it('should render the provide more information', () => {
+  it('should render the "provide more information" text', () => {
     // Arrange
     const additionalInfo = 'The record needs changing because of the provided reason. Please correct as per the reason.';
     const viewModel: RecordCorrectionRequestInformationViewModel = {
@@ -121,7 +121,7 @@ describe('page', () => {
     wrapper.expectText(definitionDescriptionSelector('Provide more information')).toRead(additionalInfo);
   });
 
-  it('should render the provide more information change link', () => {
+  it('should render the "provide more information" change link', () => {
     // Arrange
     const reportId = '123';
     const feeRecordId = '456';
