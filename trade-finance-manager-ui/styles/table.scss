@@ -114,24 +114,20 @@ table.sortable {
   .table-cell-checkbox-input {
     top: -9px;
   }
-  
+
   .table-cell-checkbox-label {
     &::before {
       top: 1px;
     }
-    
+
     &::after {
       top: 9px;
     }
   }
-  
+
   .table-cell-checkbox-text {
     display: inline-block;
     vertical-align: middle;
-  }
-  
-  .status-tag {
-    white-space: nowrap;
   }
 
   div.select-all-table-cell-checkbox {
@@ -160,7 +156,7 @@ table.premium-payments-table {
 
 table.utilisation-report-reconciliation-table {
   table-layout: fixed;
-  /* 
+  /*
    * Column widths are percentage-based, totalling 100%, but when translated into pixels,
    * they sum to 1440.02px, slightly exceeding the 1440px maximum scrollable pane width
    * which wraps the table.

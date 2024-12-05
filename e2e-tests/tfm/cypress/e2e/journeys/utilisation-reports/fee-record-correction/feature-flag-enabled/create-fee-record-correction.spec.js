@@ -22,18 +22,23 @@ context('When fee record correction feature flag is enabled', () => {
 
   const { premiumPaymentsTab } = pages.utilisationReportPage;
 
-  beforeEach(() => {
+  before(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
     cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
-
-    cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
-    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecordAtToDoStatus]);
 
     const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([feeRecordAtToDoStatus]);
     cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
   });
 
-  afterEach(() => {
+  beforeEach(() => {
+    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+    cy.task(NODE_TASKS.REMOVE_ALL_FEE_RECORD_CORRECTION_TRANSIENT_FORM_DATA_FROM_DB);
+
+    cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
+    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecordAtToDoStatus]);
+  });
+
+  after(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
     cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
   });
@@ -71,7 +76,7 @@ context('When fee record correction feature flag is enabled', () => {
       premiumPaymentsTab.createRecordCorrectionRequestButton().should('exist');
       premiumPaymentsTab.createRecordCorrectionRequestButton().click();
 
-      cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}`));
+      cy.assertText(mainHeading(), 'Record correction request');
     });
 
     context('when a user has initiated the correction request journey', () => {
@@ -122,6 +127,13 @@ context('When fee record correction feature flag is enabled', () => {
           // The contact email addresses are taken from the bank payment officer team
           const expectedEmails = BANKS.find((bank) => bank.id === bankId).paymentOfficerTeam.emails;
           summaryList().should('contain', expectedEmails.join(', '));
+        });
+
+        it('should be able to send the record correction request', () => {
+          cy.clickContinueButton();
+
+          cy.visit(`utilisation-reports/${reportId}`);
+          cy.assertText(premiumPaymentsTab.premiumPaymentsTable.status(feeRecordAtToDoStatus.id), 'Record correction sent');
         });
       });
     });

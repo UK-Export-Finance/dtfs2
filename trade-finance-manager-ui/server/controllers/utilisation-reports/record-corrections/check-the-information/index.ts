@@ -44,3 +44,24 @@ export const getRecordCorrectionRequestInformation = async (req: Request, res: R
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };
+
+/**
+ * Controller for the POST record correction request check the info route.
+ *
+ * Creates the record correction and sends the request to the bank.
+ * @param req - The request object
+ * @param res - The response object
+ */
+export const postRecordCorrectionRequestInformation = async (req: Request, res: Response) => {
+  try {
+    const { reportId, feeRecordId } = req.params;
+    const { user, userToken } = asUserSession(req.session);
+
+    await api.createFeeRecordCorrection(reportId, feeRecordId, user, userToken);
+
+    return res.redirect(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}/request-sent`);
+  } catch (error) {
+    console.error('Failed to create record correction', error);
+    return res.render('_partials/problem-with-service.njk', { user: req.session.user });
+  }
+};
