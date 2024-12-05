@@ -103,7 +103,7 @@ describe('page', () => {
 
     // Assert
     const expectedHref = `/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}`;
-    wrapper.expectLink('[data-cy="change-record-correction-reason"]').toLinkTo(expectedHref, 'Change reason for record correction');
+    wrapper.expectLink('[data-cy="change-record-correction-reason-link"]').toLinkTo(expectedHref, 'Change reason for record correction');
   });
 
   it('should render the "provide more information" text', () => {
@@ -136,7 +136,7 @@ describe('page', () => {
 
     // Assert
     const expectedHref = `/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}`;
-    wrapper.expectLink('[data-cy="change-record-correction-additional-info"]').toLinkTo(expectedHref, 'Change more information for record correction');
+    wrapper.expectLink('[data-cy="change-record-correction-additional-info-link"]').toLinkTo(expectedHref, 'Change more information for record correction');
   });
 
   it('should render the contact email address', () => {
