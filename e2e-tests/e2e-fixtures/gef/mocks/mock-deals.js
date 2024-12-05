@@ -1,5 +1,5 @@
 import Chance from 'chance';
-import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE } from '../constants';
+import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE } from '@ukef/dtfs2-common';
 import { BANK1_MAKER1 } from '../../portal-users.fixture';
 
 const chance = new Chance();
@@ -8,7 +8,7 @@ const eligibilityCriteria = (type) => ({
   version: 2.1,
   isInDraft: false,
   createdAt: 1648073920642.0,
-  product: 'GEF',
+  product: DEAL_TYPE.GEF,
   criteria: [
     {
       id: 12,
@@ -91,7 +91,7 @@ const eligibilityCriteria = (type) => ({
     },
   ],
   updatedAt: 1638535562287,
-  status: 'COMPLETED',
+  status: DEAL_STATUS.COMPLETED,
 });
 
 const commonApplicationDetails = {
@@ -129,9 +129,9 @@ const commonApplicationDetails = {
     smeType: 'Micro',
     probabilityOfDefault: 14,
     isFinanceIncreasing: true,
-    status: 'COMPLETED',
+    status: DEAL_STATUS.COMPLETED,
   },
-  facilities: { status: 'COMPLETED', items: [] },
+  facilities: { status: DEAL_STATUS.COMPLETED, items: [] },
   maker: {
     username: BANK1_MAKER1.username,
     firstname: chance.first(),
@@ -148,7 +148,7 @@ const commonApplicationDetails = {
 export const MOCK_APPLICATION_AIN_DRAFT = {
   submissionType: DEAL_SUBMISSION_TYPE.AIN,
   eligibility: eligibilityCriteria(true),
-  supportingInformation: { manualInclusion: [], securityDetails: {}, status: 'IN_PROGRESS', requiredFields: [] },
+  supportingInformation: { manualInclusion: [], securityDetails: {}, status: DEAL_STATUS.IN_PROGRESS, requiredFields: [] },
   ukefDecision: [],
   ...commonApplicationDetails,
 };
@@ -170,7 +170,7 @@ export const MOCK_APPLICATION_MIN_DRAFT = {
       },
     ],
     securityDetails: { exporter: '456465', application: '4564' },
-    status: 'In progress',
+    status: DEAL_STATUS.IN_PROGRESS,
     requiredFields: ['manualInclusion'],
   },
   ukefDecision: [],

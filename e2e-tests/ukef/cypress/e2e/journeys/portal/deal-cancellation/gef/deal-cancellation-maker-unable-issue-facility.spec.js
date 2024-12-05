@@ -9,7 +9,7 @@ import { TFM_URL, PIM_USER_1 } from '../../../../../../../e2e-fixtures';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('Deal cancellation', () => {
+context('When a deal has been cancelled on TFM, maker unable to issue facility', () => {
   const ainDeals = Array(4).fill(MOCK_APPLICATION_AIN_DRAFT);
   const minDeals = Array(4).fill(MOCK_APPLICATION_MIN_DRAFT);
   const gefDeals = [...ainDeals, ...minDeals];
@@ -38,9 +38,7 @@ context('Deal cancellation', () => {
           deal.facilities = createdFacilities;
           cy.makerSubmitGefDealForReview(deal);
           cy.checkerSubmitGefDealToUkef(deal);
-          cy.clearCookie('dtfs-session');
-          cy.clearCookie('_csrf');
-          cy.getCookies().should('be.empty');
+          cy.clearSessionCookies();
 
           cy.forceVisit(TFM_URL);
           cy.tfmLogin(PIM_USER_1);
@@ -54,108 +52,120 @@ context('Deal cancellation', () => {
   });
 
   beforeEach(() => {
-    cy.clearCookie('dtfs-session');
-    cy.clearCookie('_csrf');
-    cy.getCookies().should('be.empty');
+    cy.clearSessionCookies();
     cy.login(BANK1_MAKER1);
   });
 
   after(() => {
     cy.clearCookies();
-    cy.clearCookie('dtfs-session');
-    cy.clearCookie('_csrf');
-    cy.getCookies().should('be.empty');
+    cy.clearSessionCookies();
   });
 
-  describe('Deal cancellations on tfm with effective dates in the past', () => {
-    it('Gef AIN deal with issued facilities is submitted to UKEF, user cancel deal in the past in TFM. Maker unable to issue facility on portal', () => {
-      const ainDealIssuedFacilitiesPast = deals.find(
-        (deal) =>
-          deal.submissionType === DEAL_SUBMISSION_TYPE.AIN &&
-          deal.status === DEAL_STATUS.CANCELLED &&
-          deal.facilities.find((facility) => facility.hasBeenIssued),
-      );
-      gefPages.applicationDetails.visit(ainDealIssuedFacilitiesPast._id);
-      gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
+  describe('when a deal has unissued facilities submitted to UKEF and the deal has already been cancelled', () => {
+    describe('AIN deal', () => {
+      it('should not allow a Maker to issue facilities in portal', () => {
+        const ainDealUnissuedFacilitiesPast = deals.find(
+          (deal) =>
+            deal.submissionType === DEAL_SUBMISSION_TYPE.AIN &&
+            deal.status === DEAL_STATUS.CANCELLED &&
+            deal.facilities.find((facility) => !facility.hasBeenIssued),
+        );
+        gefPages.applicationDetails.visit(ainDealUnissuedFacilitiesPast._id);
+        gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
+      });
     });
-
-    it('Gef AIN deal with unissued facilities is submitted to UKEF, user cancel deal in the past in TFM. Maker unable to issue facility on portal', () => {
-      const ainDealUnissuedFacilitiesPast = deals.find(
-        (deal) =>
-          deal.submissionType === DEAL_SUBMISSION_TYPE.AIN &&
-          deal.status === DEAL_STATUS.CANCELLED &&
-          deal.facilities.find((facility) => !facility.hasBeenIssued),
-      );
-      gefPages.applicationDetails.visit(ainDealUnissuedFacilitiesPast._id);
-      gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
+    describe('MIN deal', () => {
+      it('should not allow a Maker to issue facilities in portal', () => {
+        const minDealUnissuedFacilitiesPast = deals.find(
+          (deal) =>
+            deal.submissionType === DEAL_SUBMISSION_TYPE.MIN &&
+            deal.status === DEAL_STATUS.CANCELLED &&
+            deal.facilities.find((facility) => !facility.hasBeenIssued),
+        );
+        gefPages.applicationDetails.visit(minDealUnissuedFacilitiesPast._id);
+        gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
+      });
     });
-
-    it('Gef MIN deal with issued facilities is submitted to UKEF, user cancel deal in the past in TFM. Maker unable to issue facility on portal', () => {
-      const minDealIssuedFacilitiesPast = deals.find(
-        (deal) =>
-          deal.submissionType === DEAL_SUBMISSION_TYPE.MIN &&
-          deal.status === DEAL_STATUS.CANCELLED &&
-          deal.facilities.find((facility) => facility.hasBeenIssued),
-      );
-      gefPages.applicationDetails.visit(minDealIssuedFacilitiesPast._id);
-      gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
+  });
+  describe('when a deal has issued facilities submitted to UKEF and the deal has already been cancelled', () => {
+    describe('AIN Deal', () => {
+      it('should not allow a Maker to issue facilities in portal', () => {
+        const ainDealIssuedFacilitiesPast = deals.find(
+          (deal) =>
+            deal.submissionType === DEAL_SUBMISSION_TYPE.AIN &&
+            deal.status === DEAL_STATUS.CANCELLED &&
+            deal.facilities.find((facility) => facility.hasBeenIssued),
+        );
+        gefPages.applicationDetails.visit(ainDealIssuedFacilitiesPast._id);
+        gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
+      });
     });
-
-    it('Gef MIN deal with unissued facilities is submitted to UKEF, user cancel deal in the past in TFM. Maker unable issue facility on portal', () => {
-      const minDealUnissuedFacilitiesPast = deals.find(
-        (deal) =>
-          deal.submissionType === DEAL_SUBMISSION_TYPE.MIN &&
-          deal.status === DEAL_STATUS.CANCELLED &&
-          deal.facilities.find((facility) => !facility.hasBeenIssued),
-      );
-      gefPages.applicationDetails.visit(minDealUnissuedFacilitiesPast._id);
-      gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
+    describe('MIN Deal', () => {
+      it('should not allow a Maker to issue facilities in portal', () => {
+        const minDealIssuedFacilitiesPast = deals.find(
+          (deal) =>
+            deal.submissionType === DEAL_SUBMISSION_TYPE.MIN &&
+            deal.status === DEAL_STATUS.CANCELLED &&
+            deal.facilities.find((facility) => facility.hasBeenIssued),
+        );
+        gefPages.applicationDetails.visit(minDealIssuedFacilitiesPast._id);
+        gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
+      });
     });
   });
 
-  describe('Deal cancellations on tfm with effective dates in the future', () => {
-    it('Gef AIN deal with issued facilities is submitted to UKEF, user cancel deal in the future in TFM. Maker unable to issue facility on portal', () => {
-      const ainDealIssuedFacilitiesFuture = deals.find(
-        (deal) =>
-          deal.submissionType === DEAL_SUBMISSION_TYPE.AIN &&
-          deal.status === DEAL_STATUS.PENDING_CANCELLATION &&
-          deal.facilities.find((facility) => facility.hasBeenIssued),
-      );
-      gefPages.applicationDetails.visit(ainDealIssuedFacilitiesFuture._id);
-      gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
+  describe('when a deal has unissued facilities submitted to UKEF and the deal has been scheduled for cancellation', () => {
+    describe('AIN Deal', () => {
+      it('should not allow a Maker to issue facilities in portal', () => {
+        const ainDealUnissuedFacilitiesFuture = deals.find(
+          (deal) =>
+            deal.submissionType === DEAL_SUBMISSION_TYPE.AIN &&
+            deal.status === DEAL_STATUS.PENDING_CANCELLATION &&
+            deal.facilities.find((facility) => !facility.hasBeenIssued),
+        );
+        gefPages.applicationDetails.visit(ainDealUnissuedFacilitiesFuture._id);
+        gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
+      });
+    });
+    describe('MIN Deal', () => {
+      it('should not allow a Maker to issue facilities in portal', () => {
+        const minDealUnissuedFacilitiesFuture = deals.find(
+          (deal) =>
+            deal.submissionType === DEAL_SUBMISSION_TYPE.MIN &&
+            deal.status === DEAL_STATUS.PENDING_CANCELLATION &&
+            deal.facilities.find((facility) => !facility.hasBeenIssued),
+        );
+        gefPages.applicationDetails.visit(minDealUnissuedFacilitiesFuture._id);
+        gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
+      });
+    });
+  });
+
+  describe('when a deal has issued facilities submitted to UKEF and the deal has been scheduled for cancellation', () => {
+    describe('AIN Deal', () => {
+      it('should not allow a Maker to issue facilities in portal', () => {
+        const ainDealIssuedFacilitiesFuture = deals.find(
+          (deal) =>
+            deal.submissionType === DEAL_SUBMISSION_TYPE.AIN &&
+            deal.status === DEAL_STATUS.PENDING_CANCELLATION &&
+            deal.facilities.find((facility) => facility.hasBeenIssued),
+        );
+        gefPages.applicationDetails.visit(ainDealIssuedFacilitiesFuture._id);
+        gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
+      });
     });
 
-    it('Gef AIN deal with unissued facilities is submitted to UKEF, user cancel deal in the future in TFM. Maker unable to issue facility on portal', () => {
-      const ainDealUnissuedFacilitiesFuture = deals.find(
-        (deal) =>
-          deal.submissionType === DEAL_SUBMISSION_TYPE.AIN &&
-          deal.status === DEAL_STATUS.PENDING_CANCELLATION &&
-          deal.facilities.find((facility) => !facility.hasBeenIssued),
-      );
-      gefPages.applicationDetails.visit(ainDealUnissuedFacilitiesFuture._id);
-      gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
-    });
-
-    it('Gef MIN deal with issued facilities is submitted to UKEF, user cancel deal in the future in TFM. Maker unable to issue facility on portal', () => {
-      const minDealIssuedFacilitiesFuture = deals.find(
-        (deal) =>
-          deal.submissionType === DEAL_SUBMISSION_TYPE.MIN &&
-          deal.status === DEAL_STATUS.PENDING_CANCELLATION &&
-          deal.facilities.find((facility) => facility.hasBeenIssued),
-      );
-      gefPages.applicationDetails.visit(minDealIssuedFacilitiesFuture._id);
-      gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
-    });
-
-    it('Gef MIN deal with unissued facilities is submitted to UKEF, user cancel deal in the future in TFM. Maker unable issue facility on portal', () => {
-      const minDealUnissuedFacilitiesFuture = deals.find(
-        (deal) =>
-          deal.submissionType === DEAL_SUBMISSION_TYPE.MIN &&
-          deal.status === DEAL_STATUS.PENDING_CANCELLATION &&
-          deal.facilities.find((facility) => !facility.hasBeenIssued),
-      );
-      gefPages.applicationDetails.visit(minDealUnissuedFacilitiesFuture._id);
-      gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
+    describe('MIN Deal', () => {
+      it('should not allow a Maker to issue facilities in portal', () => {
+        const minDealIssuedFacilitiesFuture = deals.find(
+          (deal) =>
+            deal.submissionType === DEAL_SUBMISSION_TYPE.MIN &&
+            deal.status === DEAL_STATUS.PENDING_CANCELLATION &&
+            deal.facilities.find((facility) => facility.hasBeenIssued),
+        );
+        gefPages.applicationDetails.visit(minDealIssuedFacilitiesFuture._id);
+        gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
+      });
     });
   });
 });

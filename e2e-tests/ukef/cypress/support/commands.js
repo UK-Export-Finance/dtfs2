@@ -6,9 +6,12 @@ import { checkerSubmitGefDealToUkef } from './portal/checkerSubmitGefDealToUkef'
 import { makerSubmitDealForReview } from './portal/makerSubmitDealForReview';
 import { checkerSubmitDealToUkef } from './portal/checkerSubmitDealToUkef';
 import { getOneDeal } from './portal-api/getOneDeal';
+import { clearSessionCookies } from './utils/clearSessionCookies';
 
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
+// Resets the session
+Cypress.Commands.add('clearSessionCookies', clearSessionCookies);
 
 Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
 

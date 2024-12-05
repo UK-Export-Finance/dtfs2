@@ -2,8 +2,6 @@ const { logIn, createGefFacilities, updateGefFacilities } = require('./api');
 const { getIdFromNumberGenerator } = require('../external-api/api');
 
 module.exports = (dealId, facilities, user) => {
-  console.info('createGEfFacilities::');
-
   logIn(user).then((token) => {
     facilities.forEach((facilityToInsert) => {
       const ukefId = getIdFromNumberGenerator();

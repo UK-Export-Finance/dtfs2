@@ -2,7 +2,6 @@ const { insertGefDeal, logIn } = require('./api');
 const { getIdFromNumberGenerator } = require('../external-api/api');
 
 module.exports = (deals, userDetails) => {
-  console.info('createManyGefDeals::');
   logIn(userDetails).then((token) => {
     const persistedDeals = [];
     deals.forEach((dealToInsert) => {
