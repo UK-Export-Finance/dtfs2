@@ -1,11 +1,9 @@
 <h2 class="govuk-heading-l" data-cy="record-correction-history-heading">Record correction history</h2>
 
-<p class="govuk-body" data-cy="view-historic-resubmissions-text">View historic resubmissions</p>
-
-<p class="govuk-body" data-cy="resubmission-automatic-notification-text">You will be automatically notified via email when the resubmission comes through from the bank</p>
-
 {% if recordCorrectionHistory %} 
-
+  <p class="govuk-body" data-cy="view-historic-record-corrections-text">View historic record corrections</p>
 {% else %}
-  <p class="govuk-body" data-cy="no-record-corrections-text">You have no made any record correction requests. Once a record correction request has been sent it will appear here</p>
+  <p class="govuk-body" data-cy="no-record-corrections-text">When a request for a record correction is made and submitted, it will appear here.</p>
 {% endif %}
+
+<p class="govuk-body" data-cy="record-correction-automatic-notification-text">You will be automatically notified via email when the record correction comes through from the bank.</p>

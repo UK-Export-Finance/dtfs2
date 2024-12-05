@@ -42,20 +42,21 @@ context('Record correction history page - no corrections', () => {
     it('should display the tab heading and text', () => {
       cy.assertText(recordCorrectionHistoryTab.heading(), 'Record correction history');
 
-      cy.assertText(recordCorrectionHistoryTab.viewHistoricSubmissionsText(), 'View historic resubmissions');
-
       cy.assertText(
-        recordCorrectionHistoryTab.resubmissionAutomaticallyNotifiedText(),
-        'You will be automatically notified via email when the resubmission comes through from the bank',
+        recordCorrectionHistoryTab.recordCorrectionAutomaticallyNotifiedText(),
+        'You will be automatically notified via email when the record correction comes through from the bank.',
       );
     });
 
     describe('when no record corrections are present', () => {
       it('should display the "no record corrections" text', () => {
-        recordCorrectionHistoryTab.noRecordCorrectionHistoryText().should('be.visible');
+        recordCorrectionHistoryTab.viewHistoricRecordCorrectionText().should('not.to.exist');
+
+        recordCorrectionHistoryTab.noRecordCorrectionsText().should('be.visible');
+
         cy.assertText(
-          recordCorrectionHistoryTab.noRecordCorrectionHistoryText(),
-          'You have no made any record correction requests. Once a record correction request has been sent it will appear here',
+          recordCorrectionHistoryTab.noRecordCorrectionsText(),
+          'When a request for a record correction is made and submitted, it will appear here.',
         );
       });
     });

@@ -139,9 +139,9 @@ const utilisationReportPage = {
   },
   recordCorrectionHistoryTab: {
     heading: () => cy.get('[data-cy="record-correction-history-heading"]'),
-    viewHistoricSubmissionsText: () => cy.get('[data-cy="view-historic-resubmissions-text"]'),
-    resubmissionAutomaticallyNotifiedText: () => cy.get('[data-cy="resubmission-automatic-notification-text"]'),
-    noRecordCorrectionHistoryText: () => cy.get('[data-cy="no-record-corrections-text"]'),
+    viewHistoricRecordCorrectionText: () => cy.get('[data-cy="view-historic-record-corrections-text"]'),
+    recordCorrectionAutomaticallyNotifiedText: () => cy.get('[data-cy="record-correction-automatic-notification-text"]'),
+    noRecordCorrectionsText: () => cy.get('[data-cy="no-record-corrections-text"]'),
   },
 };
 
