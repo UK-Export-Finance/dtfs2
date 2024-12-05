@@ -17,7 +17,7 @@ describe('decodeHtmlEntities', () => {
     expect(result).toEqual('');
   });
 
-  it('should decode a string containing multiple HTML entities', () => {
+  it('should decode a string containing HTML entities', () => {
     // Arrange
     const input = '7 &lt; 77 &amp; some other information&#33;';
     const expected = '7 < 77 & some other information!';

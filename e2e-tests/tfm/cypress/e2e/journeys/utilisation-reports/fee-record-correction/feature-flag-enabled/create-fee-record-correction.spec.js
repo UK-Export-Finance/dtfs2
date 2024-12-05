@@ -110,7 +110,7 @@ context('When fee record correction feature flag is enabled', () => {
       });
     });
 
-    it('should not encode special characters as HTML entities in additionalInfo field when creating a record correction request at the character limit', () => {
+    it('should let the user enter additional info equal to the character limit containing special characters', () => {
       premiumPaymentsTab.premiumPaymentsTable.checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status).click();
 
       premiumPaymentsTab.createRecordCorrectionRequestButton().click();
