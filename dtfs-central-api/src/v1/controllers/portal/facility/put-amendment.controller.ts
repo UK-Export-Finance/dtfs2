@@ -1,0 +1,39 @@
+import { ApiError, AUDIT_USER_TYPES, AuditDetails, CustomExpressRequest, PortalFacilityAmendment } from '@ukef/dtfs2-common';
+import { HttpStatusCode } from 'axios';
+import { Response } from 'express';
+import { validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
+import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
+
+type PutAmendmentRequestParams = { dealId: string; facilityId: string };
+type PutAmendmentRequestBody = { amendment: PortalFacilityAmendment; auditDetails: AuditDetails };
+export type PutAmendmentRequest = CustomExpressRequest<{ params: PutAmendmentRequestParams; reqBody: PutAmendmentRequestBody }>;
+
+/**
+ * get portal facility amendment
+ * @param req - request
+ * @param res - response
+ */
+export const putAmendmentDraft = async (req: PutAmendmentRequest, res: Response) => {
+  const { dealId, facilityId } = req.params;
+  const { auditDetails, amendment } = req.body;
+
+  try {
+    validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.PORTAL);
+
+    const response = await PortalFacilityAmendmentService.upsertPortalFacilityAmendmentDraft({ dealId, facilityId, amendment, auditDetails });
+
+    return res.status(HttpStatusCode.Ok).send(response);
+  } catch (error) {
+    if (error instanceof ApiError) {
+      const { status, message, code } = error;
+      return res.status(status).send({ status, message, code });
+    }
+
+    console.error(`Error upserting draft amendment on facilityId ${facilityId}: %o`, error);
+
+    return res.status(HttpStatusCode.InternalServerError).send({
+      status: HttpStatusCode.InternalServerError,
+      message: 'Unknown error occurred when getting amendment',
+    });
+  }
+};

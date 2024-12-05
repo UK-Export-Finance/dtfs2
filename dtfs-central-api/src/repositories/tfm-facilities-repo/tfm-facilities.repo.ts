@@ -1,6 +1,15 @@
 import { ObjectId, UpdateFilter, WithoutId, FindOneAndUpdateOptions, Collection, Document, UpdateResult, Filter } from 'mongodb';
-import { AuditDetails, TfmFacility, FacilityAmendment, AmendmentStatus, FacilityNotFoundError } from '@ukef/dtfs2-common';
-import { deleteMany } from '@ukef/dtfs2-common/change-stream';
+import {
+  AuditDetails,
+  TfmFacility,
+  FacilityAmendment,
+  AmendmentStatus,
+  FacilityNotFoundError,
+  AMENDMENT_TYPES,
+  AMENDMENT_STATUS,
+  PortalFacilityAmendment,
+} from '@ukef/dtfs2-common';
+import { deleteMany, generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../drivers/db-client';
 import { aggregatePipelines, AllFacilitiesAndFacilityCountAggregatePipelineOptions } from './aggregate-pipelines';
 
@@ -292,5 +301,29 @@ export class TfmFacilitiesRepo {
     const collection = await this.getCollection();
     const numberOfFoundDocuments = await collection.count({ 'facilitySnapshot.ukefFacilityId': { $eq: ukefFacilityId } });
     return numberOfFoundDocuments > 0;
+  }
+
+  public static async upsertPortalFacilityAmendmentDraft(amendment: PortalFacilityAmendment, auditDetails: AuditDetails): Promise<UpdateResult> {
+    const collection = await this.getCollection();
+
+    const removeDraftAmendmentsFilter = {
+      $pull: { amendments: { type: AMENDMENT_TYPES.PORTAL, status: { $ne: AMENDMENT_STATUS.COMPLETED } } },
+    };
+
+    const pushDraftAmendmentFilter = {
+      $push: { amendments: amendment },
+      $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
+    };
+
+    const updateResult = await collection.updateOne({ _id: { $eq: new ObjectId(amendment.facilityId) }, dealId: { $eq: new ObjectId(amendment.dealId) } }, [
+      removeDraftAmendmentsFilter,
+      pushDraftAmendmentFilter,
+    ]);
+
+    if (updateResult.modifiedCount === 0) {
+      throw new FacilityNotFoundError(amendment.facilityId.toString());
+    }
+
+    return updateResult;
   }
 }
