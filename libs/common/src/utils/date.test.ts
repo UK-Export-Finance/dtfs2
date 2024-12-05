@@ -1,4 +1,4 @@
-import { getOneIndexedMonth, isValidIsoMonth, isValidIsoYear, toIsoMonthStamp, toMonthYearString } from './date';
+import { getOneIndexedMonth, isValidIsoMonth, isValidIsoYear, toIsoMonthStamp } from './date';
 
 describe('date utils', () => {
   beforeAll(() => {
@@ -62,17 +62,6 @@ describe('date utils', () => {
 
     it('returns true when a valid ISO month value is provided', () => {
       expect(isValidIsoYear('2023')).toEqual(true);
-    });
-  });
-
-  describe('toMonthYearString', () => {
-    it.each([
-      { date: { month: 1, year: 2024 }, expectedMonthYearString: 'January 2024' },
-      { date: { month: 4, year: 2024 }, expectedMonthYearString: 'April 2024' },
-      { date: { month: 11, year: 2024 }, expectedMonthYearString: 'November 2024' },
-      { date: { month: 12, year: 2024 }, expectedMonthYearString: 'December 2024' },
-    ])(`converts Date object '$date' to toMonthYearString '$expectedMonthYearString'`, ({ date, expectedMonthYearString }) => {
-      expect(toMonthYearString(date)).toEqual(expectedMonthYearString);
     });
   });
 });

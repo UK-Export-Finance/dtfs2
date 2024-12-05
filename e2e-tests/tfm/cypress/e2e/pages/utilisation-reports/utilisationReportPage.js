@@ -6,7 +6,7 @@ const utilisationReportPage = {
   paymentDetailsTabLink: () => cy.get('a[data-cy="bank-report-tab-payment-details"]'),
   premiumPaymentsTabLink: () => cy.get('a[data-cy="bank-report-tab-premium-payments"]'),
   utilisationTabLink: () => cy.get('a[data-cy="bank-report-tab-utilisation"]'),
-  recordCorrectionHistoryLink: () => cy.get('a[data-cy="bank-report-tab-record-correction-history"]'),
+  recordCorrectionHistoryTabLink: () => cy.get('a[data-cy="bank-report-tab-record-correction-history"]'),
   premiumPaymentsTab: {
     matchSuccessNotificationHeading: () => cy.get('[data-cy="match-success-notification-heading"]'),
     matchSuccessNotificationMessage: () => cy.get('[data-cy="match-success-notification-message"]'),
