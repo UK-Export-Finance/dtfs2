@@ -1362,6 +1362,29 @@ const updateFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId,
   }
 };
 
+/**
+ * Gets the fee record by report id, fee record id and user
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('@ukef/dtfs2-common').RecordCorrectionTransientFormData | {}>}
+ */
+const getFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, user, userToken) => {
+  try {
+    const userId = user._id;
+
+    const { data } = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-transient-form-data/${userId}`, {
+      headers: generateHeaders(userToken),
+    });
+
+    return data;
+  } catch (error) {
+    console.error('Failed to get fee record correction transient form data', error);
+    throw error;
+  }
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -1424,4 +1447,5 @@ module.exports = {
   submitDealCancellation,
   getFeeRecord,
   updateFeeRecordCorrectionTransientFormData,
+  getFeeRecordCorrectionTransientFormData,
 };
