@@ -1,4 +1,4 @@
-import * as cheerio from 'cheerio';
+import { decode } from 'html-entities';
 
 /**
  * Decodes HTML entities in the provided string.
@@ -11,5 +11,5 @@ export const decodeHtmlEntities = (input?: string): string | undefined => {
     return input;
   }
 
-  return cheerio.load(input).text();
+  return decode(input);
 };

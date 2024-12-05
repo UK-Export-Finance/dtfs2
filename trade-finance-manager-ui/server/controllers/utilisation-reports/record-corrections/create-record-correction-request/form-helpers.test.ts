@@ -1,11 +1,10 @@
-import { RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
+import { decodeHtmlEntities, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import {
   CreateRecordCorrectionRequestFormRequestBody,
   extractCreateRecordCorrectionRequestFormValues,
   extractRecordCorrectionReasons,
   isRecordCorrectionReason,
 } from './form-helpers';
-import { decodeHtmlEntities } from '../../../../helpers/decode-html-entities';
 
 console.error = jest.fn();
 
