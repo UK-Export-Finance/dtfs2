@@ -8,9 +8,10 @@ import {
 } from '@ukef/dtfs2-common';
 import pages from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
+import BANKS from '../../../../../fixtures/banks';
 import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
 import relative from '../../../../relativeURL';
-import { feeRecordSummary, mainHeading } from '../../../../partials';
+import { feeRecordSummary, mainHeading, summaryList } from '../../../../partials';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context('When fee record correction feature flag is enabled', () => {
@@ -65,31 +66,65 @@ context('When fee record correction feature flag is enabled', () => {
       cy.visit(`utilisation-reports/${reportId}`);
     });
 
-    it('should be able to create a record correction request', () => {
+    it('should be able to initiate a record correction request', () => {
       premiumPaymentsTab.premiumPaymentsTable.checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status).click();
 
       premiumPaymentsTab.createRecordCorrectionRequestButton().should('exist');
       premiumPaymentsTab.createRecordCorrectionRequestButton().click();
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}`));
+    });
 
-      //---------------------------------------------------------------
-      // Check the "Create record correction request" page
-      //---------------------------------------------------------------
-      cy.assertText(mainHeading(), 'Record correction request');
+    context('when a user has initiated the correction request journey', () => {
+      beforeEach(() => {
+        premiumPaymentsTab.premiumPaymentsTable
+          .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
+          .click();
+        premiumPaymentsTab.createRecordCorrectionRequestButton().click();
+      });
 
-      feeRecordSummary.container().should('exist');
-      cy.assertText(feeRecordSummary.facilityId(), feeRecordAtToDoStatus.facilityId);
-      cy.assertText(feeRecordSummary.exporter(), feeRecordAtToDoStatus.exporter);
-      cy.assertText(feeRecordSummary.requestedBy(), `${USERS.PDC_RECONCILE.firstName} ${USERS.PDC_RECONCILE.lastName}`);
+      it('should be able to view the fee record summary on the create record correction request screen', () => {
+        cy.assertText(mainHeading(), 'Record correction request');
 
-      createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT).check();
-      createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).check();
-      cy.keyboardInput(createFeeRecordCorrectionRequestPage.additionalInfoInput(), 'Some additional info & some more!');
+        feeRecordSummary.container().should('exist');
+        cy.assertText(feeRecordSummary.facilityId(), feeRecordAtToDoStatus.facilityId);
+        cy.assertText(feeRecordSummary.exporter(), feeRecordAtToDoStatus.exporter);
+        cy.assertText(feeRecordSummary.requestedBy(), `${USERS.PDC_RECONCILE.firstName} ${USERS.PDC_RECONCILE.lastName}`);
+      });
 
-      cy.clickContinueButton();
+      it('should be able to fill in the form and get redirected to the check the info page', () => {
+        createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT).check();
+        createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).check();
+        cy.keyboardInput(createFeeRecordCorrectionRequestPage.additionalInfoInput(), 'Some additional info.');
 
-      cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}/check-the-information`));
+        cy.clickContinueButton();
+
+        cy.assertText(mainHeading(), 'Check the information before submitting the record correction request');
+      });
+
+      context('and when they have filled in the record correction reasons form', () => {
+        beforeEach(() => {
+          createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT).check();
+          createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).check();
+          cy.keyboardInput(createFeeRecordCorrectionRequestPage.additionalInfoInput(), 'Some additional info.');
+
+          cy.clickContinueButton();
+        });
+
+        it('should be able to view the form values and other details of correction request on the check the info page', () => {
+          summaryList().should('exist');
+          summaryList().should('contain', feeRecordAtToDoStatus.facilityId);
+          summaryList().should('contain', feeRecordAtToDoStatus.exporter);
+          summaryList().should('contain', `${USERS.PDC_RECONCILE.firstName} ${USERS.PDC_RECONCILE.lastName}`);
+          // These values are the display values corresponding to the reasons selected in the beforeEach
+          summaryList().should('contain', 'Facility ID is incorrect, Other');
+          summaryList().should('contain', 'Some additional info.');
+
+          // The contact email addresses are taken from the bank payment officer team
+          const expectedEmails = BANKS.find((bank) => bank.id === bankId).paymentOfficerTeam.emails;
+          summaryList().should('contain', expectedEmails.join(', '));
+        });
+      });
     });
 
     context('when user clicks back on the create record correction request screen', () => {
