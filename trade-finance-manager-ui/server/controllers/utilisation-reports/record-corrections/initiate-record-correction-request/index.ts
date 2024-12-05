@@ -89,6 +89,8 @@ export const postInitiateRecordCorrectionRequest = (req: PostInitiateRecordCorre
       return res.redirect(axios.getUri({ url: `/utilisation-reports/${reportId}`, params: { premiumPaymentsFacilityId } }));
     }
 
+    // TODO FN-3690: Add in call to delete endpoint here.
+
     return res.redirect(`/utilisation-reports/${reportId}/create-record-correction-request/${selectedFeeRecordId}`);
   } catch (error) {
     console.error('Failed to initiate record correction request', error);

@@ -2,7 +2,6 @@ import { Response, Request } from 'express';
 import { RecordCorrectionRequestInformationViewModel } from '../../../../types/view-models';
 import { asUserSession } from '../../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
-import { getLinkToPremiumPaymentsTab } from '../../helpers/get-link-to-premium-payments-tab';
 
 const renderCheckTheInformationPage = (res: Response, viewModel: RecordCorrectionRequestInformationViewModel) =>
   res.render('utilisation-reports/record-corrections/check-the-information.njk', viewModel);
@@ -26,7 +25,6 @@ export const getRecordCorrectionRequestInformation = (req: Request, res: Respons
       reasonForRecordCorrection: 'Facility ID is incorrect',
       additionalInfo: 'The facility ID does not match the facility ID held on file',
       contactEmailAddress: 'email address',
-      cancelLink: getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]),
     });
   } catch (error) {
     console.error('Failed to render create record correction request - "check the information" page', error);

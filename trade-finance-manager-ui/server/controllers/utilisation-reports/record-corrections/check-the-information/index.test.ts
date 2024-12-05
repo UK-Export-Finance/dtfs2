@@ -1,7 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
-import { getLinkToPremiumPaymentsTab } from '../../helpers/get-link-to-premium-payments-tab';
 import { getRecordCorrectionRequestInformation } from '.';
 
 describe('controllers/utilisation-reports/record-corrections/check-the-information', () => {
@@ -39,7 +38,6 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
         reasonForRecordCorrection: 'Facility ID is incorrect',
         additionalInfo: 'The facility ID does not match the facility ID held on file',
         contactEmailAddress: 'email address',
-        cancelLink: getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]),
       });
     });
   });

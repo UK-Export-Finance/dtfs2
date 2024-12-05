@@ -80,7 +80,7 @@
 
       {{ govukButton({
         text: "Cancel record correction request",
-        href: cancelLink,
+        href: "/utilisation-reports/" + reportId + "/create-record-correction-request/" + feeRecordId + "/cancel",
         classes: "govuk-button--secondary",
         attributes: { 
           'data-cy': 'cancel-button'
