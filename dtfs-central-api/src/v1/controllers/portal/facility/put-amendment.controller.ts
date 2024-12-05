@@ -5,7 +5,7 @@ import { validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-strea
 import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
 import { PutPortalFacilityAmendmentPayload } from '../../../routes/middleware/payload-validation/validate-put-portal-facility-amendment-payload';
 
-type PutAmendmentRequestParams = { dealId: string; facilityId: string };
+type PutAmendmentRequestParams = { facilityId: string };
 export type PutAmendmentRequest = CustomExpressRequest<{ params: PutAmendmentRequestParams; reqBody: PutPortalFacilityAmendmentPayload }>;
 
 /**
@@ -14,8 +14,8 @@ export type PutAmendmentRequest = CustomExpressRequest<{ params: PutAmendmentReq
  * @param res - response
  */
 export const putAmendmentDraft = async (req: PutAmendmentRequest, res: Response) => {
-  const { dealId, facilityId } = req.params;
-  const { auditDetails, amendment } = req.body;
+  const { facilityId } = req.params;
+  const { auditDetails, amendment, dealId } = req.body;
 
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.PORTAL);

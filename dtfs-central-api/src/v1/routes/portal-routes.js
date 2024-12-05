@@ -556,12 +556,6 @@ portalRouter
  *     description: Get a Portal GEF facility amendment
  *     parameters:
  *       - in: path
- *         name: dealId
- *         schema:
- *           type: string
- *         required: true
- *         description: Deal ID facility exists on
- *       - in: path
  *         name: facilityId
  *         schema:
  *           type: string
@@ -590,13 +584,8 @@ portalRouter
  *         description: Not found
  */
 portalRouter
-  .route('/deals/:dealId/facilities/:facilityId/amendments/draft')
-  .all(
-    validatePortalFacilityAmendmentsEnabled,
-    validation.mongoIdValidation('dealId'),
-    validation.mongoIdValidation('facilityId'),
-    validatePutPortalFacilityAmendmentPayload,
-  )
+  .route('/facilities/:facilityId/amendments/draft')
+  .all(validatePortalFacilityAmendmentsEnabled, validation.mongoIdValidation('facilityId'), validatePutPortalFacilityAmendmentPayload)
   .put(putFacilityAmendmentController.putAmendmentDraft);
 
 /**
