@@ -28,6 +28,7 @@ export const withSqlAndMongoIdPathParameterValidationTests = ({
 }: WithSqlAndMongoIdPathParameterValidationTestsParams): void => {
   const baseUrlWithoutMongoParameters = mongoPathParameters.reduce((url, parameter) => url.replace(`:${parameter}`, VALID_MONGO_OBJECT_ID), baseUrl);
   withSqlIdPathParameterValidationTests({ baseUrl: baseUrlWithoutMongoParameters, makeRequest });
+
   const baseUrlWithoutSqlParameters = sqlPathParameters.reduce((url, parameter) => url.replace(`:${parameter}`, VALID_SQL_ID), baseUrl);
   withMongoIdPathParameterValidationTests({ baseUrl: baseUrlWithoutSqlParameters, makeRequest });
 };
