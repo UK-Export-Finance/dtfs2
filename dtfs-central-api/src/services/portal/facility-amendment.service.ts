@@ -3,6 +3,7 @@ import { ObjectId, UpdateResult } from 'mongodb';
 import { getUnixTime } from 'date-fns';
 import { findOneUser } from '../../v1/controllers/user/get-user.controller';
 import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
+import { PutPortalFacilityAmendmentPayload } from '../../v1/routes/middleware/payload-validation/validate-put-portal-facility-amendment-payload';
 
 export class PortalFacilityAmendmentService {
   /**
@@ -22,7 +23,7 @@ export class PortalFacilityAmendmentService {
   }: {
     dealId: string;
     facilityId: string;
-    amendment: PortalFacilityAmendment;
+    amendment: PutPortalFacilityAmendmentPayload['amendment'];
     auditDetails: PortalAuditDetails;
   }): Promise<UpdateResult> {
     const user = await findOneUser(auditDetails.id);
@@ -45,6 +46,7 @@ export class PortalFacilityAmendmentService {
         name: `${user.firstname} ${user.surname}`,
         email: user.email,
       },
+      version: 0,
     };
 
     return await TfmFacilitiesRepo.upsertPortalFacilityAmendmentDraft(amendmentToInsert, auditDetails);

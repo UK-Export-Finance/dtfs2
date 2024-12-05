@@ -1,12 +1,12 @@
-import { ApiError, AUDIT_USER_TYPES, AuditDetails, CustomExpressRequest, PortalFacilityAmendment } from '@ukef/dtfs2-common';
+import { ApiError, AUDIT_USER_TYPES, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
 import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
+import { PutPortalFacilityAmendmentPayload } from '../../../routes/middleware/payload-validation/validate-put-portal-facility-amendment-payload';
 
 type PutAmendmentRequestParams = { dealId: string; facilityId: string };
-type PutAmendmentRequestBody = { amendment: PortalFacilityAmendment; auditDetails: AuditDetails };
-export type PutAmendmentRequest = CustomExpressRequest<{ params: PutAmendmentRequestParams; reqBody: PutAmendmentRequestBody }>;
+export type PutAmendmentRequest = CustomExpressRequest<{ params: PutAmendmentRequestParams; reqBody: PutPortalFacilityAmendmentPayload }>;
 
 /**
  * get portal facility amendment

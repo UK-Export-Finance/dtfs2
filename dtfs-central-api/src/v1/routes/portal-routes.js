@@ -1,6 +1,7 @@
 const express = require('express');
 const { validatePortalFacilityAmendmentsEnabled } = require('@ukef/dtfs2-common');
 const validation = require('../validation/route-validators/route-validators');
+const { validatePutPortalFacilityAmendmentPayload } = require('./middleware/payload-validation/validate-put-portal-facility-amendment-payload');
 
 const portalRouter = express.Router();
 const createDealController = require('../controllers/portal/deal/create-deal.controller');
@@ -590,8 +591,13 @@ portalRouter
  */
 portalRouter
   .route('/deals/:dealId/facilities/:facilityId/amendments/draft')
-  .all(validatePortalFacilityAmendmentsEnabled, validation.mongoIdValidation('dealId'), validation.mongoIdValidation('facilityId'))
-  .get(putFacilityAmendmentController.putAmendmentDraft);
+  .all(
+    validatePortalFacilityAmendmentsEnabled,
+    validation.mongoIdValidation('dealId'),
+    validation.mongoIdValidation('facilityId'),
+    validatePutPortalFacilityAmendmentPayload,
+  )
+  .put(putFacilityAmendmentController.putAmendmentDraft);
 
 /**
  * @openapi
