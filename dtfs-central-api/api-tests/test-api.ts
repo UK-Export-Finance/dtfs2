@@ -39,30 +39,30 @@ class TestApi {
 
   public post(data: object) {
     this.assertIsInitialised();
-    const to = async <T extends Response>(url: string): Promise<T> => (await request(this.app).post(url).send(data).set(headers)) as T;
+    const to = async (url: string): Promise<Response> => await request(this.app).post(url).send(data).set(headers);
     return { to };
   }
 
   public put(data: object) {
     this.assertIsInitialised();
-    const to = async <T extends Response>(url: string): Promise<T> => (await request(this.app).put(url).send(data).set(headers)) as T;
+    const to = async (url: string): Promise<Response> => await request(this.app).put(url).send(data).set(headers);
     return { to };
   }
 
-  public async get<T extends Response>(url: string, data?: object): Promise<T> {
+  public async get(url: string, data?: object): Promise<Response> {
     this.assertIsInitialised();
-    return (await request(this.app).get(url).send(data).set(headers)) as T;
+    return await request(this.app).get(url).send(data).set(headers);
   }
 
   public remove(data: object) {
     this.assertIsInitialised();
-    const to = async <T extends Response>(url: string): Promise<T> => (await request(this.app).delete(url).send(data).set(headers)) as T;
+    const to = async (url: string): Promise<Response> => await request(this.app).delete(url).send(data).set(headers);
     return { to };
   }
 
   public patch(data: object) {
     this.assertIsInitialised();
-    const to = async <T extends Response>(url: string): Promise<T> => (await request(this.app).patch(url).send(data).set(headers)) as T;
+    const to = async (url: string): Promise<Response> => await request(this.app).patch(url).send(data).set(headers);
     return { to };
   }
 }

@@ -67,7 +67,7 @@ describe('/v1/portal/facilities/:facilityId/amendments/:amendmentId', () => {
     });
 
     it('returns 404 when the amendment does not exist', async () => {
-      const { status } = await testApi.get<FacilityAmendmentResponse>(generateUrl(facilityId, amendmentId));
+      const { status } = (await testApi.get(generateUrl(facilityId, amendmentId))) as FacilityAmendmentResponse;
 
       expect(status).toEqual(HttpStatusCode.NotFound);
     });
@@ -82,7 +82,7 @@ describe('/v1/portal/facilities/:facilityId/amendments/:amendmentId', () => {
       it('returns 400 when the facility id is invalid', async () => {
         const anInvalidFacilityId = 'InvalidId';
 
-        const { status, body } = await testApi.get<FacilityAmendmentResponse>(generateUrl(anInvalidFacilityId, amendmentId));
+        const { status, body } = (await testApi.get(generateUrl(anInvalidFacilityId, amendmentId))) as FacilityAmendmentResponse;
 
         expect(status).toEqual(HttpStatusCode.BadRequest);
 
@@ -95,7 +95,7 @@ describe('/v1/portal/facilities/:facilityId/amendments/:amendmentId', () => {
       it('returns 400 when the amendment id is invalid', async () => {
         const anInvalidAmendmentId = 'InvalidId';
 
-        const { status, body } = await testApi.get<FacilityAmendmentResponse>(generateUrl(facilityId, anInvalidAmendmentId));
+        const { status, body } = (await testApi.get(generateUrl(facilityId, anInvalidAmendmentId))) as FacilityAmendmentResponse;
 
         expect(status).toEqual(HttpStatusCode.BadRequest);
 
@@ -108,7 +108,7 @@ describe('/v1/portal/facilities/:facilityId/amendments/:amendmentId', () => {
       it('returns 404 when the facility does not exist', async () => {
         const aValidButNonExistentFacilityId = new ObjectId().toString();
 
-        const { status, body } = await testApi.get<FacilityAmendmentResponse>(generateUrl(aValidButNonExistentFacilityId, amendmentId));
+        const { status, body } = (await testApi.get(generateUrl(aValidButNonExistentFacilityId, amendmentId))) as FacilityAmendmentResponse;
 
         expect(status).toEqual(HttpStatusCode.NotFound);
         expect(body).toEqual({
@@ -120,7 +120,7 @@ describe('/v1/portal/facilities/:facilityId/amendments/:amendmentId', () => {
       it('returns 404 when the amendment does not exist', async () => {
         const aValidButNonExistentAmendmentId = new ObjectId().toString();
 
-        const { status, body } = await testApi.get<FacilityAmendmentResponse>(generateUrl(facilityId, aValidButNonExistentAmendmentId));
+        const { status, body } = (await testApi.get(generateUrl(facilityId, aValidButNonExistentAmendmentId))) as FacilityAmendmentResponse;
 
         expect(status).toEqual(HttpStatusCode.NotFound);
         expect(body).toEqual({
