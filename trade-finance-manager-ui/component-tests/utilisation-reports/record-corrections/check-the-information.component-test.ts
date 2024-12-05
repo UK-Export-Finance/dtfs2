@@ -139,12 +139,12 @@ describe('page', () => {
     wrapper.expectLink('[data-cy="change-record-correction-additional-info-link"]').toLinkTo(expectedHref, 'Change more information for record correction');
   });
 
-  it('should render the contact email address', () => {
+  it('should render the contact email addresses', () => {
     // Arrange
-    const email = 'this is my email';
+    const email = 'one@email.com, two@email.com';
     const viewModel: RecordCorrectionRequestInformationViewModel = {
       ...aRecordCorrectionRequestInformationViewModel(),
-      contactEmailAddress: email,
+      contactEmailAddresses: email,
     };
 
     // Act
