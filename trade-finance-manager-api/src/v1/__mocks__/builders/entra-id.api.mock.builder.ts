@@ -1,5 +1,5 @@
-import { EntraIdApi } from '../../server/third-party-apis/entra-id.api';
-import { BaseMockBuilder } from './mock-builder.mock.builder';
+import { BaseMockBuilder } from '@ukef/dtfs2-common';
+import { EntraIdApi } from '../../third-party-apis/entra-id.api';
 
 export class EntraIdApiMockBuilder extends BaseMockBuilder<EntraIdApi> {
   constructor() {

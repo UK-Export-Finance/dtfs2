@@ -1,10 +1,9 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { resetAllWhenMocks } from 'jest-when';
 import { isVerifiedPayload } from '@ukef/dtfs2-common/payload-verification';
-import { CustomExpressRequest, InvalidPayloadError } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, EntraIdAuthCodeRedirectResponseBody, InvalidPayloadError } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { UnauthenticatedAuthController } from './unauthenticated-auth.controller';
-import { EntraIdAuthCodeRedirectResponseBody } from '../../../types/entra-id';
 
 jest.mock('@ukef/dtfs2-common/payload-verification', () => ({
   isVerifiedPayload: jest.fn(),
