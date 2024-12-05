@@ -1,5 +1,5 @@
 import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, isPortalFacilityAmendmentsFeatureFlagEnabled, ROLES } from '@ukef/dtfs2-common';
-import { canUserAmendIssuedFacilities } from './canUserAmendIssuedFacilities.ts';
+import { canUserAmendIssuedFacilities } from './facility-amendments.helper';
 
 const { AIN, MIN, MIA } = DEAL_SUBMISSION_TYPE;
 const { UKEF_ACKNOWLEDGED, DRAFT } = DEAL_STATUS;

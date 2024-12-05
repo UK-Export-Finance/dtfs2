@@ -4,7 +4,7 @@ import * as api from '../../../services/api';
 import { FacilityValueViewModel } from '../../../types/view-models/amendments/facility-value-view-model';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { getCurrencySymbol } from './getCurrencySymbol';
-import { canUserAmendFacility } from '../../../utils/canUserAmendIssuedFacilities';
+import { canUserAmendFacility } from '../../../utils/facility-amendments.helper';
 
 export type GetFacilityValueRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
