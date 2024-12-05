@@ -1713,7 +1713,7 @@ const updateFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId,
  * Creates a fee record correction
  * @param {string} reportId - The report id
  * @param {string} feeRecordId - The fee record id
- * @param {import('@ukef/dtfs2-common').RecordCorrectionTransientFormData} formData
+ * @param {import('../types/tfm-session-user').TfmSessionUser} user - The requesting user
  */
 const createFeeRecordCorrection = async (reportId, feeRecordId, user) => {
   await axios({

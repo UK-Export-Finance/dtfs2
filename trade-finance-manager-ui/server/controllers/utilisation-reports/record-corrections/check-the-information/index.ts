@@ -44,7 +44,7 @@ export const postRecordCorrectionRequestInformation = async (req: Request, res: 
 
     return res.redirect(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}/request-sent`);
   } catch (error) {
-    console.error('Failed to render create record correction request - "check the information" page', error);
+    console.error('Failed to create record correction', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };
