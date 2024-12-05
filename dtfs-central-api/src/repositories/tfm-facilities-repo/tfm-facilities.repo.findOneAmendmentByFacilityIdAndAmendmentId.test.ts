@@ -70,37 +70,38 @@ describe('TfmFacilitiesRepo', () => {
         ukefFacilityId: facility.facilitySnapshot.ukefFacilityId,
       });
     });
+    describe('when when the amendmentId is given as a string', () => {
+      it('should return the correct amendment with the ukefFacilityId ', async () => {
+        // Arrange
+        const amendment = {
+          amendmentId,
+          facilityId,
+        } as FacilityAmendment;
 
-    it('should return the correct amendment with the ukefFacilityId when the amendmentId is given as a string', async () => {
-      // Arrange
-      const amendment = {
-        amendmentId,
-        facilityId,
-      } as FacilityAmendment;
+        const facility = aTfmFacility({
+          amendments: [
+            {
+              amendmentId: new ObjectId(),
+              facilityId,
+            } as FacilityAmendment,
+            amendment,
+            {
+              amendmentId: new ObjectId(),
+              facilityId,
+            } as FacilityAmendment,
+          ],
+        });
 
-      const facility = aTfmFacility({
-        amendments: [
-          {
-            amendmentId: new ObjectId(),
-            facilityId,
-          } as FacilityAmendment,
-          amendment,
-          {
-            amendmentId: new ObjectId(),
-            facilityId,
-          } as FacilityAmendment,
-        ],
-      });
+        mockFindOne.mockResolvedValue(facility);
 
-      mockFindOne.mockResolvedValue(facility);
+        // Act
+        const result = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId.toString());
 
-      // Act
-      const result = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId.toString());
-
-      // Assert
-      expect(result).toEqual({
-        ...amendment,
-        ukefFacilityId: facility.facilitySnapshot.ukefFacilityId,
+        // Assert
+        expect(result).toEqual({
+          ...amendment,
+          ukefFacilityId: facility.facilitySnapshot.ukefFacilityId,
+        });
       });
     });
 
