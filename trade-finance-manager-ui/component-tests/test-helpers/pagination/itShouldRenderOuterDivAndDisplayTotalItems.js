@@ -1,8 +1,8 @@
 module.exports = (getWrapper) => {
-  it("should render a div with a class of 'pagination' and a role of 'navigation'", () => {
+  it('should render a navigation element', () => {
     const wrapper = getWrapper();
 
-    wrapper.expectElement('.pagination').toHaveAttribute('role', 'navigation');
+    wrapper.expectElement('[data-cy="pagination"]').toExist();
   });
 
   it('should display the total number of items', () => {

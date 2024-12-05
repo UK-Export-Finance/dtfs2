@@ -8,7 +8,7 @@ context('Dashboard deals', () => {
     cy.deleteDeals(ADMIN);
   });
 
-  it('Can display an empty dashboard', () => {
+  it('should render an empty dashboard', () => {
     cy.login(BANK1_MAKER1);
     dashboardDeals.visit();
     cy.title().should('eq', `Deals${defaults.pageTitleAppend}`);
