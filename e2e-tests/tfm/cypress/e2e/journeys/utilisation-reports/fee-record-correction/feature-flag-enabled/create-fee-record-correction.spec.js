@@ -55,7 +55,7 @@ context('When fee record correction feature flag is enabled', () => {
   });
 
   context('PDC_RECONCILE users can create record correction requests', () => {
-    const { createFeeRecordCorrectionRequestPage } = pages;
+    const { createFeeRecordCorrectionRequestPage, checkFeeRecordCorrectionRequestPage } = pages;
 
     beforeEach(() => {
       pages.landingPage.visit();
@@ -171,6 +171,40 @@ context('When fee record correction feature flag is enabled', () => {
         cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}/check-the-information`));
 
         cy.clickBackLink();
+      });
+
+      it('should return to the "create record correction request" screen with the form populated with the prior form data', () => {
+        cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}`));
+
+        createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT).should('be.checked');
+        createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).should('be.checked');
+        createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT).should('not.be.checked');
+        createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT).should('not.be.checked');
+        createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.UTILISATION_INCORRECT).should('not.be.checked');
+
+        cy.assertText(createFeeRecordCorrectionRequestPage.additionalInfoInput(), 'Some additional info.');
+      });
+    });
+
+    context('when user clicks change on the "check the information" screen', () => {
+      beforeEach(() => {
+        premiumPaymentsTab.premiumPaymentsTable
+          .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
+          .click();
+
+        premiumPaymentsTab.createRecordCorrectionRequestButton().click();
+
+        cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}`));
+
+        createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT).check();
+        createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).check();
+        cy.keyboardInput(createFeeRecordCorrectionRequestPage.additionalInfoInput(), 'Some additional info.');
+
+        cy.clickContinueButton();
+
+        cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}/check-the-information`));
+
+        checkFeeRecordCorrectionRequestPage.clickReasonsChangeLink();
       });
 
       it('should return to the "create record correction request" screen with the form populated with the prior form data', () => {
