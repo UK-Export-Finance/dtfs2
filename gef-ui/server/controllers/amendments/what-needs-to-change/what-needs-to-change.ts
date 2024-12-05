@@ -18,6 +18,7 @@ export const getWhatNeedsToChange = async (req: GetWhatNeedsToChangeRequest, res
     const viewModel: WhatNeedsToChangeViewModel = {
       exporterName: deal.exporter.companyName,
       previousPage: `/gef/application-details/${dealId}`,
+      // TODO: DTFS2-7685 - Pass in existing checkbox values from GET endpoint
     };
 
     return res.render('partials/amendments/what-needs-to-change.njk', viewModel);

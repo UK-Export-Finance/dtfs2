@@ -6,6 +6,8 @@ import { getWhatNeedsToChange } from '../../../controllers/amendments/what-needs
 
 const router = express.Router();
 
+// TODO: DTFS2-7683 - Include generated amendment ID in URLs as well
+
 router
   .route('/application-details/:dealId/facilities/:facilityId/amendments/what-needs-to-change')
   .all([validateToken, validateBank, validateRole({ role: [MAKER] })])
