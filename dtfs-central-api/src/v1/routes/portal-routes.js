@@ -29,7 +29,7 @@ const getGefFacilitiesController = require('../controllers/portal/gef-facility/g
 const createGefFacilityController = require('../controllers/portal/gef-facility/create-gef-facility.controller');
 const updateGefFacilityController = require('../controllers/portal/gef-facility/update-facility.controller');
 
-const getGefFacilityAmendmentController = require('../controllers/portal/facility/get-amendment.controller');
+const getFacilityAmendmentController = require('../controllers/portal/facility/get-amendment.controller');
 
 const durableFunctionsController = require('../controllers/durable-functions/durable-functions.controller');
 const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controller');
@@ -512,6 +512,41 @@ portalRouter.route('/facilities/:id/status').put(updateFacilityStatusController.
 
 /**
  * @openapi
+ * /facilities/:facilityId/amendments/:amendmentId:
+ *   get:
+ *     summary: Get a Portal GEF facility amendment
+ *     tags: [Portal - GEF]
+ *     description: Get a Portal GEF facility amendment
+ *     parameters:
+ *       - in: path
+ *         name: facilityId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Facility ID amendment exists on
+ *       - in: path
+ *         name: amendmentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Amendment ID to get
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/definitions/PortalAmendment'
+ *       404:
+ *         description: Not found
+ */
+portalRouter
+  .route('/facilities/:facilityId/amendments/:amendmentId')
+  .all(validatePortalFacilityAmendmentsEnabled, validation.mongoIdValidation('facilityId'), validation.mongoIdValidation('amendmentId'))
+  .get(getFacilityAmendmentController.getAmendment);
+
+/**
+ * @openapi
  * /gef/deals:
  *   post:
  *     summary: Create a GEF deal in Portal deals collection
@@ -804,41 +839,6 @@ portalRouter.route('/gef/facilities').get(getGefFacilitiesController.findAllFaci
  *         description: Not found
  */
 portalRouter.route('/gef/facilities/:id').put(updateGefFacilityController.updateFacilityPut);
-
-/**
- * @openapi
- * /gef/facilities/:facilityId/amendments/:amendmentId:
- *   get:
- *     summary: Get a Portal GEF facility amendment
- *     tags: [Portal - GEF]
- *     description: Get a Portal GEF facility amendment
- *     parameters:
- *       - in: path
- *         name: facilityId
- *         schema:
- *           type: string
- *         required: true
- *         description: Facility ID amendment exists on
- *       - in: path
- *         name: amendmentId
- *         schema:
- *           type: string
- *         required: true
- *         description: Amendment ID to get
- *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *                $ref: '#/definitions/PortalAmendment'
- *       404:
- *         description: Not found
- */
-portalRouter
-  .route('/gef/facilities/:facilityId/amendments/:amendmentId')
-  .all(validatePortalFacilityAmendmentsEnabled, validation.mongoIdValidation('facilityId'), validation.mongoIdValidation('amendmentId'))
-  .get(getGefFacilityAmendmentController.getAmendment);
 
 /**
  * @openapi
