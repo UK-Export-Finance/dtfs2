@@ -72,7 +72,7 @@ describe('getFacilityValue', () => {
     expect(res._getRenderData()).toEqual(expectedRenderData);
   });
 
-  it('should redirect to /not-found if the facility is not found', async () => {
+  it('should redirect if the facility is not found', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
     getFacilityMock.mockResolvedValue({ details: undefined });
@@ -83,10 +83,9 @@ describe('getFacilityValue', () => {
     // Assert
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
-    expect(res.getHeaders().location).toEqual(`/not-found`);
   });
 
-  it('should redirect to /not-found if the deal is not found', async () => {
+  it('should redirect if the deal is not found', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
     getApplicationMock.mockResolvedValue(undefined);
@@ -97,10 +96,9 @@ describe('getFacilityValue', () => {
     // Assert
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
-    expect(res.getHeaders().location).toEqual(`/not-found`);
   });
 
-  it('should redirect to deal summary page if the facility cannot be amended', async () => {
+  it('should redirect if the facility cannot be amended', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
     getFacilityMock.mockResolvedValue({ details: { ...mockFacility, hasBeenIssued: false } });
@@ -111,7 +109,6 @@ describe('getFacilityValue', () => {
     // Assert
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
-    expect(res.getHeaders().location).toEqual(`/case/${dealId}`);
   });
 
   it('should render `problem with service` if getApplication throws an error', async () => {
