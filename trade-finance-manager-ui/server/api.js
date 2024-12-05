@@ -1355,6 +1355,21 @@ const getFeeRecord = async (reportId, feeRecordId, userToken) => {
 };
 
 /**
+ * Gets the fee record correction request review
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
+ * @param {string} userId - The id of the user requesting the correction
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('./api-response-types').FeeRecordCorrectionRequestReviewResponseBody>}
+ */
+const getFeeRecordCorrectionRequestReview = async (reportId, feeRecordId, userId, userToken) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-request-review/${userId}`, {
+    headers: generateHeaders(userToken),
+  });
+  return response.data;
+};
+
+/**
  * Updates the fee record correction transient form data associated with the user
  * @param {string} reportId - The report id
  * @param {string} feeRecordId - The fee record id
@@ -1466,6 +1481,7 @@ module.exports = {
   deleteDealCancellation,
   submitDealCancellation,
   getFeeRecord,
+  getFeeRecordCorrectionRequestReview,
   updateFeeRecordCorrectionTransientFormData,
   getFeeRecordCorrectionTransientFormData,
 };

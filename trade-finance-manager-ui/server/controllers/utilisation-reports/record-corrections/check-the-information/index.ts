@@ -1,39 +1,42 @@
 import { Response, Request } from 'express';
+import { getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import { RecordCorrectionRequestInformationViewModel } from '../../../../types/view-models';
 import { asUserSession } from '../../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import { getLinkToPremiumPaymentsTab } from '../../helpers/get-link-to-premium-payments-tab';
 import api from '../../../../api';
+import { mapReasonsToDisplayValues } from '../helpers';
 
 const renderCheckTheInformationPage = (res: Response, viewModel: RecordCorrectionRequestInformationViewModel) =>
   res.render('utilisation-reports/record-corrections/check-the-information.njk', viewModel);
 
 /**
- * Controller for the GET record correction request check the info route.
- *
- * Renders the check the info page of the create record correction request flow.
- * @param req - The request object
- * @param res - The response object
+ * Renders the "check the information" page for a record correction request
+ * @param req - the request
+ * @param res - the response
  */
-export const getRecordCorrectionRequestInformation = (req: Request, res: Response) => {
+export const getRecordCorrectionRequestInformation = async (req: Request, res: Response) => {
   try {
     const { reportId, feeRecordId } = req.params;
-    const { user } = asUserSession(req.session);
+    const { user, userToken } = asUserSession(req.session);
+
+    const { bank, reportPeriod, correctionRequestDetails } = await api.getFeeRecordCorrectionRequestReview(reportId, feeRecordId, user._id, userToken);
+    const { facilityId, exporter, reasons, additionalInfo, contactEmailAddresses } = correctionRequestDetails;
 
     return renderCheckTheInformationPage(res, {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       bank: {
-        name: 'Test bank',
+        name: bank.name,
       },
       reportId,
       feeRecordId,
-      facilityId: '0012345678',
-      exporter: 'Test company',
-      formattedReportPeriod: 'July 2024',
-      reasonForRecordCorrection: 'Facility ID is incorrect',
-      additionalInfo: 'The facility ID does not match the facility ID held on file',
-      contactEmailAddress: 'email address',
+      facilityId,
+      exporter,
+      formattedReportPeriod: getFormattedReportPeriodWithLongMonth(reportPeriod),
+      reasonForRecordCorrection: mapReasonsToDisplayValues(reasons).join(', '),
+      additionalInfo,
+      contactEmailAddresses: contactEmailAddresses.join(', '),
       cancelLink: getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]),
     });
   } catch (error) {
