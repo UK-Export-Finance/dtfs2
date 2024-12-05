@@ -888,6 +888,19 @@ utilisationReportsRouter
  *     summary: Get correction request review information to check before sending
  *     tags: [Utilisation Report]
  *     description: Get correction request review information to check before sending
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report
+ *       - in: path
+ *         name: feeRecordId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the fee record
  *       - in: path
  *         name: userId
  *         schema:
