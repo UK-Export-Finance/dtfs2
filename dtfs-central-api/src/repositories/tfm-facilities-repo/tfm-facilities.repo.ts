@@ -176,12 +176,14 @@ export class TfmFacilitiesRepo {
 
     const { ukefFacilityId } = facility.facilitySnapshot;
 
-    return (
-      amendment && {
-        ...amendment,
-        ukefFacilityId,
-      }
-    );
+    if (!amendment) {
+      return undefined;
+    }
+
+    return {
+      ...amendment,
+      ukefFacilityId,
+    };
   }
 
   /**
