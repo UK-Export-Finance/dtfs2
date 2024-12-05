@@ -73,9 +73,13 @@ on:
     branches:
       - dev
       - feature
-      - staging
-      - prod
       - release-*
+      - '!release-please*'
+
+  create:
+    branches:
+      # Production ready release candidates
+      - release-*-rc
 
     paths:
       - '.github/workflows/deployment.yml'
@@ -140,6 +144,7 @@ env:
   AUDIT_API_USERNAME: ${{ secrets.AUDIT_API_USERNAME }}
   AUDIT_API_PASSWORD: ${{ secrets.AUDIT_API_PASSWORD }}
   UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: ${{ vars.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }}
+  UTILISATION_REPORT_CREATION_FAILURE_EMAIL_ADDRESS: ${{ secrets. UTILISATION_REPORT_CREATION_FAILURE_EMAIL_ADDRESS }}
   ACCEPT_EULA: ${{ vars.ACCEPT_EULA }}
   MSSQL_SA_PASSWORD: ${{ secrets.MSSQL_SA_PASSWORD }}
   SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_QA }}
