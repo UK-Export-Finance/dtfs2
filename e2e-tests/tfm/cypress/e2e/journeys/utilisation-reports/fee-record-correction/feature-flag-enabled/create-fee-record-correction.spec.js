@@ -4,6 +4,7 @@ import {
   PENDING_RECONCILIATION,
   UtilisationReportEntityMockBuilder,
   RECORD_CORRECTION_REASON,
+  MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT,
 } from '@ukef/dtfs2-common';
 import pages from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
@@ -22,18 +23,23 @@ context('When fee record correction feature flag is enabled', () => {
 
   const { premiumPaymentsTab } = pages.utilisationReportPage;
 
-  beforeEach(() => {
+  before(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
     cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
-
-    cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
-    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecordAtToDoStatus]);
 
     const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([feeRecordAtToDoStatus]);
     cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
   });
 
-  afterEach(() => {
+  beforeEach(() => {
+    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+    cy.task(NODE_TASKS.REMOVE_ALL_FEE_RECORD_CORRECTION_TRANSIENT_FORM_DATA_FROM_DB);
+
+    cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
+    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecordAtToDoStatus]);
+  });
+
+  after(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
     cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
   });
@@ -72,7 +78,7 @@ context('When fee record correction feature flag is enabled', () => {
       premiumPaymentsTab.createRecordCorrectionRequestButton().should('exist');
       premiumPaymentsTab.createRecordCorrectionRequestButton().click();
 
-      cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}`));
+      cy.assertText(mainHeading(), 'Record correction request');
     });
 
     context('when a user has initiated the correction request journey', () => {
@@ -124,6 +130,13 @@ context('When fee record correction feature flag is enabled', () => {
           const expectedEmails = BANKS.find((bank) => bank.id === bankId).paymentOfficerTeam.emails;
           summaryList().should('contain', expectedEmails.join(', '));
         });
+
+        it('should be able to send the record correction request', () => {
+          cy.clickContinueButton();
+
+          cy.visit(`utilisation-reports/${reportId}`);
+          cy.assertText(premiumPaymentsTab.premiumPaymentsTable.status(feeRecordAtToDoStatus.id), 'Record correction sent');
+        });
       });
     });
 
@@ -143,6 +156,23 @@ context('When fee record correction feature flag is enabled', () => {
           .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
           .should('be.checked');
       });
+    });
+
+    it('should let the user enter additional info equal to the character limit containing special characters', () => {
+      premiumPaymentsTab.premiumPaymentsTable.checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status).click();
+
+      premiumPaymentsTab.createRecordCorrectionRequestButton().click();
+
+      createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).check();
+
+      const specialCharactersToTest = '&!?$£¥€¢^*()_+=-%:;@~/><,.';
+      const paddingToReachMaxLength = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT - specialCharactersToTest.length);
+      const additionalInfo = `${specialCharactersToTest}${paddingToReachMaxLength}`;
+      cy.keyboardInput(createFeeRecordCorrectionRequestPage.additionalInfoInput(), additionalInfo);
+
+      cy.clickContinueButton();
+
+      cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}/check-the-information`));
     });
 
     context('when user abandons their journey on the "check the information" screen and then starts again', () => {

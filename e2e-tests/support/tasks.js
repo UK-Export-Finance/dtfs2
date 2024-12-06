@@ -9,6 +9,7 @@ const {
   FacilityUtilisationDataEntity,
   PaymentMatchingToleranceEntity,
   FeeRecordCorrectionTransientFormDataEntity,
+  FeeRecordCorrectionEntity,
 } = require('@ukef/dtfs2-common');
 const createTfmDealToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-deal-to-insert-into-db');
 const createTfmFacilityToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-facility-to-insert-into-db');
@@ -155,9 +156,15 @@ module.exports = {
     const removeAllPaymentsFromDb = async () => await SqlDbDataSource.manager.delete(PaymentEntity, {});
 
     /**
-     * Deletes all the rows from the payment table
+     * Deletes all the rows from the fee record table
      */
     const removeAllFeeRecordsFromDb = async () => await SqlDbDataSource.manager.delete(FeeRecordEntity, {});
+
+    /**
+     * Deletes all rows from the fee record correction transient form data table
+     */
+    const removeAllFeeRecordCorrectionTransientFormDataFromDb = async () =>
+      await SqlDbDataSource.manager.delete(FeeRecordCorrectionTransientFormDataEntity, {});
 
     /**
      * Deletes all data from the SQL database
@@ -171,6 +178,7 @@ module.exports = {
         await SqlDbDataSource.manager.delete(FacilityUtilisationDataEntity, {}),
         await SqlDbDataSource.manager.delete(PaymentMatchingToleranceEntity, {}),
         await SqlDbDataSource.manager.delete(FeeRecordCorrectionTransientFormDataEntity, {}),
+        await SqlDbDataSource.manager.delete(FeeRecordCorrectionEntity, {}),
       ]);
 
     const getAllBanks = async () => {
@@ -302,6 +310,7 @@ module.exports = {
       removeAllPaymentsFromDb,
       removeAllFeeRecordsFromDb,
       deleteAllFromSqlDb,
+      removeAllFeeRecordCorrectionTransientFormDataFromDb,
     };
   },
 };
