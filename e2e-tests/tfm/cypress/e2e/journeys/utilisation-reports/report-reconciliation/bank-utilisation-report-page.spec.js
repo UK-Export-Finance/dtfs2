@@ -31,7 +31,7 @@ context('Bank utilisation report page', () => {
 
     cy.task(NODE_TASKS.GET_ALL_BANKS).then((getAllBanksResult) => {
       const reportBank = getAllBanksResult.filter((bank) => bank.id === report.bankId);
-      bankName = reportBank.bankName;
+      bankName = reportBank[0].name;
     });
 
     const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([feeRecordAtToDoStatus]);
