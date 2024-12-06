@@ -17,44 +17,46 @@ const dealId = 'dealId';
 const newStatus = DEAL_STATUS.CANCELLED;
 const auditDetails = generateSystemAuditDetails();
 
-describe('PortalDealService', () => {
+describe('PortalDealService - updateStatus', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('updateStatus', () => {
-    it(`calls updateGefDealStatus when submissionType is ${DEAL_TYPE.GEF}`, async () => {
-      // Arrange
-      const dealType = DEAL_TYPE.GEF;
+  it(`should call updateGefDealStatus when submissionType is ${DEAL_TYPE.GEF}`, async () => {
+    // Arrange
+    const dealType = DEAL_TYPE.GEF;
 
-      // Act
-      await PortalDealService.updateStatus({ dealId, newStatus, auditDetails, dealType });
+    // Act
+    await PortalDealService.updateStatus({ dealId, newStatus, auditDetails, dealType });
 
-      // Assert
-      expect(updateGefDealStatusMock).toHaveBeenCalledTimes(1);
-      expect(updateGefDealStatusMock).toHaveBeenCalledWith({
-        dealId,
-        newStatus,
-        auditDetails,
-      });
-      expect(updateBssEwcsDealStatusMock).toHaveBeenCalledTimes(0);
+    // Assert
+    expect(updateGefDealStatusMock).toHaveBeenCalledTimes(1);
+
+    expect(updateGefDealStatusMock).toHaveBeenCalledWith({
+      dealId,
+      newStatus,
+      auditDetails,
     });
 
-    it(`calls updateBssEwcsDealStatus when submissionType is ${DEAL_TYPE.BSS_EWCS}`, async () => {
-      // Arrange
-      const dealType = DEAL_TYPE.BSS_EWCS;
+    expect(updateBssEwcsDealStatusMock).toHaveBeenCalledTimes(0);
+  });
 
-      // Act
-      await PortalDealService.updateStatus({ dealId, newStatus, auditDetails, dealType });
+  it(`should call updateBssEwcsDealStatus when submissionType is ${DEAL_TYPE.BSS_EWCS}`, async () => {
+    // Arrange
+    const dealType = DEAL_TYPE.BSS_EWCS;
 
-      // Assert
-      expect(updateBssEwcsDealStatusMock).toHaveBeenCalledTimes(1);
-      expect(updateBssEwcsDealStatusMock).toHaveBeenCalledWith({
-        dealId,
-        newStatus,
-        auditDetails,
-      });
-      expect(updateGefDealStatusMock).toHaveBeenCalledTimes(0);
+    // Act
+    await PortalDealService.updateStatus({ dealId, newStatus, auditDetails, dealType });
+
+    // Assert
+    expect(updateBssEwcsDealStatusMock).toHaveBeenCalledTimes(1);
+
+    expect(updateBssEwcsDealStatusMock).toHaveBeenCalledWith({
+      dealId,
+      newStatus,
+      auditDetails,
     });
+
+    expect(updateGefDealStatusMock).toHaveBeenCalledTimes(0);
   });
 });

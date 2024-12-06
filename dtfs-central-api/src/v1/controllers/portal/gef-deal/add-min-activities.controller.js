@@ -1,5 +1,5 @@
 const { validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError, PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('@ukef/dtfs2-common');
 const { getUnixTime } = require('date-fns');
 const { ObjectId } = require('mongodb');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
@@ -9,7 +9,6 @@ const { updateDeal } = require('./update-deal.controller');
 const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
 const { updateFacility } = require('../gef-facility/update-facility.controller');
 const { isNumber } = require('../../../../helpers');
-const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../../constants');
 
 /**
  * canResubmitIssuedFacilities - changes flags to false
@@ -88,6 +87,7 @@ const facilityChangePortalActivity = async (application, facilities) => {
       if (facility.canResubmitIssuedFacilities) {
         // creates user object to add to array
         const maker = facility.unissuedToIssuedByMaker;
+
         const activityParams = {
           type: PORTAL_ACTIVITY_LABEL.FACILITY_CHANGED_ISSUED,
           user: '',
@@ -98,8 +98,10 @@ const facilityChangePortalActivity = async (application, facilities) => {
           maker,
           checker,
         };
+
         // generates an activities object
         const activityObj = portalActivityGenerator(activityParams);
+
         // adds to beginning of portalActivities array so most recent displayed first
         portalActivities.unshift(activityObj);
       }
@@ -124,8 +126,10 @@ const ukefSubmissionPortalActivity = async (application) => {
 
     // generates the label for activity array
     const applicationType = PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION;
+
     // creates user object to add to array
     const user = await getUserInfo(checkerId);
+
     const activityParams = {
       type: applicationType,
       user,
@@ -136,8 +140,10 @@ const ukefSubmissionPortalActivity = async (application) => {
       maker: '',
       checker: '',
     };
+
     // generates an activities object
     const activityObj = portalActivityGenerator(activityParams);
+
     // adds to beginning of portalActivities array so most recent displayed first
     portalActivities.unshift(activityObj);
 
@@ -201,7 +207,7 @@ const generateMINActivities = async (req, res) => {
     }
     return res.status(404).send();
   } catch (error) {
-    console.error('Central-API - Error generating MIN activities %o', error);
+    console.error('Error generating MIN activities %o', error);
     return res.status(400).send();
   }
 };

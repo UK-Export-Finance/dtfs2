@@ -1,3 +1,4 @@
+export * from './activity-author';
 export * from './banks';
 export * from './mongo-db-collection-name';
 export * from './db-model';

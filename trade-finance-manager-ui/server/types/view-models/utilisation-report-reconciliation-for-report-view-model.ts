@@ -19,7 +19,7 @@ export type SortedAndFormattedCurrencyAndAmount = {
   dataSortValue: number;
 };
 
-export type FeeRecordDisplayStatus = 'TO DO' | 'MATCH' | 'DOES NOT MATCH' | 'READY TO KEY' | 'RECONCILED';
+export type FeeRecordDisplayStatus = 'To do' | 'Match' | 'Does not match' | 'Ready to key' | 'Reconciled' | 'Record correction sent';
 
 export type FeeRecordViewModelItem = {
   id: number;
@@ -34,7 +34,7 @@ export type PaymentViewModelItem = {
   formattedCurrencyAndAmount: CurrencyAndAmountString;
 };
 
-export type KeyingSheetDisplayStatus = 'TO DO' | 'DONE';
+export type KeyingSheetDisplayStatus = 'To do' | 'Done';
 
 export type KeyingSheetAdjustmentViewModel = {
   amount: string | undefined;
