@@ -549,7 +549,7 @@ portalRouter
 
 /**
  * @openapi
- * /deals/dealId/facilities/:facilityId/amendments/draft
+ * /facilities/:facilityId/amendments
  *   put:
  *     summary: Get a Portal GEF facility amendment
  *     tags: [Portal - Amendments]
@@ -560,7 +560,7 @@ portalRouter
  *         schema:
  *           type: string
  *         required: true
- *         description: Facility ID amendment will exist on
+ *         description: Facility ID amendment should exist on
  *     requestBody:
  *       required: true
  *       content:
@@ -580,11 +580,13 @@ portalRouter
  *         content:
  *           application/json:
  *             schema:
+ *               type: object
+ *               $ref: '#/definitions/PortalAmendment'
  *       404:
  *         description: Not found
  */
 portalRouter
-  .route('/facilities/:facilityId/amendments/draft')
+  .route('/facilities/:facilityId/amendments')
   .all(validatePortalFacilityAmendmentsEnabled, validation.mongoIdValidation('facilityId'), validatePutPortalFacilityAmendmentPayload)
   .put(putFacilityAmendmentController.putAmendmentDraft);
 

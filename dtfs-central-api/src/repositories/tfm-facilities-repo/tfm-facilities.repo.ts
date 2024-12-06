@@ -306,19 +306,24 @@ export class TfmFacilitiesRepo {
   public static async upsertPortalFacilityAmendmentDraft(amendment: PortalFacilityAmendment, auditDetails: AuditDetails): Promise<UpdateResult> {
     const collection = await this.getCollection();
 
-    const removeDraftAmendmentsFilter = {
+    const removeDraftAmendmentsFilter: UpdateFilter<TfmFacility> = {
       $pull: { amendments: { type: AMENDMENT_TYPES.PORTAL, status: { $ne: AMENDMENT_STATUS.COMPLETED } } },
     };
 
-    const pushDraftAmendmentFilter = {
+    const pushDraftAmendmentFilter: UpdateFilter<TfmFacility> = {
       $push: { amendments: amendment },
       $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
     };
 
-    const updateResult = await collection.updateOne({ _id: { $eq: new ObjectId(amendment.facilityId) }, dealId: { $eq: new ObjectId(amendment.dealId) } }, [
+    await collection.updateOne(
+      { _id: { $eq: new ObjectId(amendment.facilityId) }, 'facilitySnapshot.dealId': { $eq: new ObjectId(amendment.dealId) } },
       removeDraftAmendmentsFilter,
+    );
+
+    const updateResult = await collection.updateOne(
+      { _id: { $eq: new ObjectId(amendment.facilityId) }, 'facilitySnapshot.dealId': { $eq: new ObjectId(amendment.dealId) } },
       pushDraftAmendmentFilter,
-    ]);
+    );
 
     if (updateResult.modifiedCount === 0) {
       throw new FacilityNotFoundError(amendment.facilityId.toString());

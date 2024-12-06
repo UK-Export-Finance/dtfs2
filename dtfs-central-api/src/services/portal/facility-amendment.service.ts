@@ -1,5 +1,5 @@
 import { AMENDMENT_STATUS, AMENDMENT_TYPES, InvalidAuditDetailsError, PortalAuditDetails, PortalFacilityAmendment } from '@ukef/dtfs2-common';
-import { ObjectId, UpdateResult } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import { getUnixTime } from 'date-fns';
 import { findOneUser } from '../../v1/controllers/user/get-user.controller';
 import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
@@ -25,7 +25,7 @@ export class PortalFacilityAmendmentService {
     facilityId: string;
     amendment: PutPortalFacilityAmendmentPayload['amendment'];
     auditDetails: PortalAuditDetails;
-  }): Promise<UpdateResult> {
+  }): Promise<PortalFacilityAmendment> {
     const user = await findOneUser(auditDetails.id);
 
     if (!user || `status` in user) {
@@ -49,6 +49,8 @@ export class PortalFacilityAmendmentService {
       version: 0,
     };
 
-    return await TfmFacilitiesRepo.upsertPortalFacilityAmendmentDraft(amendmentToInsert, auditDetails);
+    await TfmFacilitiesRepo.upsertPortalFacilityAmendmentDraft(amendmentToInsert, auditDetails);
+
+    return amendmentToInsert;
   }
 }
