@@ -44,6 +44,18 @@
         },
         value: {
           text: reasonForRecordCorrection
+        },
+        actions: {
+          items: [
+            {
+              href: backLink.href,
+              text: "Change",
+              visuallyHiddenText: "reason for record correction",
+              attributes: {
+                'data-cy': 'change-record-correction-reason-link'
+              }
+            }
+          ]
         }
       },
       {
@@ -52,6 +64,18 @@
         },
         value: {
           text: additionalInfo
+        },
+        actions: {
+          items: [
+            {
+              href: backLink.href,
+              text: "Change",
+              visuallyHiddenText: "more information for record correction",
+              attributes: {
+                'data-cy': 'change-record-correction-additional-info-link'
+              }
+            }
+          ]
         }
       },
       {
