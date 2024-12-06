@@ -1,5 +1,6 @@
 import { HttpStatusCode } from 'axios';
 import {
+  Bank,
   FeeRecordCorrectionTransientFormDataEntityMockBuilder,
   FeeRecordEntityMockBuilder,
   PENDING_RECONCILIATION,
@@ -11,7 +12,7 @@ import { testApi } from '../../../test-api';
 import { SqlDbHelper } from '../../../sql-db-helper';
 import { mongoDbClient } from '../../../../src/drivers/db-client';
 import { wipe } from '../../../wipeDB';
-import { aPortalUser, aTfmSessionUser } from '../../../../test-helpers';
+import { aBank, aPortalUser, aTfmSessionUser } from '../../../../test-helpers';
 
 console.error = jest.fn();
 
@@ -22,7 +23,6 @@ describe(`POST ${BASE_URL}`, () => {
     BASE_URL.replace(':reportId', reportId.toString()).replace(':feeRecordId', feeRecordId.toString());
 
   const reportId = 1;
-  const otherReportId = 2;
   const feeRecordId = 11;
   const nonExistentFeeRecordId = 12;
 
@@ -32,18 +32,22 @@ describe(`POST ${BASE_URL}`, () => {
   const tfmUser = aTfmUser();
   const tfmUserId = tfmUser._id.toString();
 
+  const bankId = '123';
+  const bankName = 'Test bank';
+  const bank: Bank = {
+    ...aBank(),
+    id: bankId,
+    name: bankName,
+  };
+
   const uploadedUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
     .withId(reportId)
     .withUploadedByUserId(portalUserId)
+    .withBankId(bankId)
     .build();
 
   const feeRecord = FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport).withId(feeRecordId).withCorrections([]).build();
   uploadedUtilisationReport.feeRecords = [feeRecord];
-
-  const otherUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
-    .withId(otherReportId)
-    .withUploadedByUserId(portalUserId)
-    .build();
 
   const transientFormDataForUserAndFeeRecord = new FeeRecordCorrectionTransientFormDataEntityMockBuilder()
     .withUserId(tfmUserId)
@@ -53,6 +57,7 @@ describe(`POST ${BASE_URL}`, () => {
   const aValidRequestBody = () => ({
     user: {
       ...aTfmSessionUser(),
+      email: 'payment-officer2@ukexportfinance.gov.uk',
       _id: tfmUserId,
     },
   });
@@ -61,17 +66,20 @@ describe(`POST ${BASE_URL}`, () => {
     await SqlDbHelper.initialize();
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
 
-    await wipe(['users', 'tfm-users']);
+    await wipe(['users', 'tfm-users', 'banks']);
 
     const usersCollection = await mongoDbClient.getCollection('users');
     await usersCollection.insertOne(portalUser);
 
     const tfmUsersCollection = await mongoDbClient.getCollection('tfm-users');
     await tfmUsersCollection.insertOne(tfmUser);
+
+    const banksCollection = await mongoDbClient.getCollection('banks');
+    await banksCollection.insertOne(bank);
   });
 
   beforeEach(async () => {
-    await SqlDbHelper.saveNewEntries('UtilisationReport', [uploadedUtilisationReport, otherUtilisationReport]);
+    await SqlDbHelper.saveNewEntries('UtilisationReport', [uploadedUtilisationReport]);
   });
 
   afterEach(async () => {
@@ -133,6 +141,13 @@ describe(`POST ${BASE_URL}`, () => {
 
   it(`should respond with a ${HttpStatusCode.NotFound} when the fee record requested does not belong to the report`, async () => {
     // Arrange
+    const otherReportId = reportId + 1;
+    const otherUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
+      .withId(otherReportId)
+      .withUploadedByUserId(portalUserId)
+      .withBankId(bankId)
+      .build();
+    await SqlDbHelper.saveNewEntries('UtilisationReport', [otherUtilisationReport]);
     await SqlDbHelper.saveNewEntry('FeeRecordCorrectionTransientFormData', transientFormDataForUserAndFeeRecord);
 
     const requestBody = aValidRequestBody();
@@ -149,7 +164,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(otherReportId, feeRecordId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId, feeRecordId));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -163,7 +178,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(otherReportId, feeRecordId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId, feeRecordId));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -177,7 +192,33 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(otherReportId, feeRecordId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId, feeRecordId));
+
+    // Assert
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
+  });
+
+  it(`should respond with a ${HttpStatusCode.NotFound} when the bank the report belongs to cannot be found`, async () => {
+    // Arrange
+    const reportWithNonExistentBank = new UtilisationReportEntityMockBuilder()
+      .withBankId(`${bankId}222`)
+      .withId(reportId + 1)
+      .build();
+    const reportFeeRecordId = feeRecordId + 10;
+    const reportFeeRecord = FeeRecordEntityMockBuilder.forReport(reportWithNonExistentBank).withId(reportFeeRecordId).build();
+    reportWithNonExistentBank.feeRecords = [reportFeeRecord];
+    await SqlDbHelper.saveNewEntries('UtilisationReport', [reportWithNonExistentBank]);
+
+    const transientFormDataForReportFeeRecord = new FeeRecordCorrectionTransientFormDataEntityMockBuilder()
+      .withUserId(tfmUserId)
+      .withFeeRecordId(reportFeeRecordId)
+      .build();
+    await SqlDbHelper.saveNewEntry('FeeRecordCorrectionTransientFormData', transientFormDataForReportFeeRecord);
+
+    const requestBody = aValidRequestBody();
+
+    // Act
+    const response = await testApi.post(requestBody).to(getUrl(reportWithNonExistentBank.id, reportFeeRecordId));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);

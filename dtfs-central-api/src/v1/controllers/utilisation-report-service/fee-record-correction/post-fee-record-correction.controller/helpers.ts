@@ -1,4 +1,4 @@
-import { getFormattedReportPeriodWithLongMonth, RecordCorrectionReason, ReportPeriod } from '@ukef/dtfs2-common';
+import { getFormattedReportPeriodWithLongMonth, mapReasonToDisplayValue, RecordCorrectionReason, ReportPeriod } from '@ukef/dtfs2-common';
 import externalApi from '../../../../../external-api/api';
 import EMAIL_TEMPLATE_IDS from '../../../../../constants/email-template-ids';
 import { FeeRecordCorrectionRequestEmails } from '../../../../../types/utilisation-reports';
@@ -6,11 +6,9 @@ import { getBankById } from '../../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../../errors';
 
 export const formatReasonsAsBulletedListForEmail = (reasons: RecordCorrectionReason[]) => {
-  // QQ need to move the map to display reason function into common and call it here once merged..
-  return reasons.map((reason) => `*${reason}`).join('\n');
+  return reasons.map((reason) => `*${mapReasonToDisplayValue(reason)}`).join('\n');
 };
 
-// QQ tests
 /**
  * Generates variables for the fee record correction request emails.
  *
@@ -49,7 +47,6 @@ export const generateFeeRecordCorrectionRequestEmailParameters = async (
       recipient: teamName,
       reportPeriod: reportPeriodString,
       exporterName: exporter,
-      // QQ this needs to be a bulleted list
       reasonsList: formatReasonsAsBulletedListForEmail(reasons),
     },
   };

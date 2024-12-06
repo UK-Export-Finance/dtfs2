@@ -51,7 +51,6 @@ export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionReques
 
       const { reasons, additionalInfo } = formDataEntity.formData;
 
-      // QQ update tests
       const feeRecord = await FeeRecordRepo.withTransaction(transactionEntityManager).findOneByIdAndReportIdWithReport(feeRecordId, reportId);
 
       if (!feeRecord) {
