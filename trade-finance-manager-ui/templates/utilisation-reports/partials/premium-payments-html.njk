@@ -61,6 +61,7 @@
             attributes: {'data-cy': 'premium-payments-facility-filter-input'}
           }) }}
         </div>
+
         <div class="govuk-!-display-inline-block">
           <div class="govuk-!-display-inline-block">
             {{ govukButton({
@@ -70,6 +71,7 @@
               attributes: {'data-cy': 'premium-payments-facility-filter-submit-button'}
             }) }}
           </div>
+
           <div class="govuk-!-display-inline-block">
             {{ govukButton({
               text: "Clear filter",
@@ -87,6 +89,7 @@
 {% if premiumPayments.tableDataError %}
   <div class="govuk-form-group--error">
 {% endif %}
+
 {% if userCanEdit %}
   <form method="post" data-cy="premium-payments-form">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
@@ -97,14 +100,18 @@
         value="Add a payment"
         data-module="govuk-button"
         type="submit"
-        data-cy="add-a-payment-button"/>
+        data-cy="add-a-payment-button"
+      />
+
       <input
         class="govuk-button govuk-button--secondary govuk-!-margin-right-3"
         formaction="/utilisation-reports/{{ reportId }}/check-keying-data"
         value="Generate keying data"
         data-module="govuk-button"
         type="submit"
-        data-cy="generate-keying-data-button"/>
+        data-cy="generate-keying-data-button"
+      />
+
       {% if isFeeRecordCorrectionFeatureFlagEnabled %}
         <input
           class="govuk-button govuk-button--secondary govuk-!-margin-right-3"
@@ -112,10 +119,12 @@
           value="Create record correction request"
           data-module="govuk-button"
           type="submit"
-          data-cy="create-record-correction-request-button"/>
+          data-cy="create-record-correction-request-button"
+        />
       {% endif %}
     </div>
 {% endif %}
+
 {{ premiumPaymentsTable.render({
   reportId: reportId,
   feeRecordPaymentGroups: premiumPayments.payments,
@@ -124,9 +133,11 @@
   hasSelectableRows: premiumPayments.hasSelectableRows,
   errorMessage: premiumPayments.tableDataError.text
 }) }}
+
 {% if userCanEdit %}
   </form>
 {% endif %}
+
 {% if premiumPayments.tableDataError %}
   </div>
 {% endif %}
