@@ -135,7 +135,7 @@ describe('post-keying-data.controller', () => {
       const { req, res } = getHttpMocks();
 
       const errorMessage = 'Some error message';
-      feeRecordRepoFindSpy.mockRejectedValue(new TestApiError(undefined, errorMessage));
+      feeRecordRepoFindSpy.mockRejectedValue(new TestApiError({ message: errorMessage }));
 
       // Act
       await postKeyingData(req, res);

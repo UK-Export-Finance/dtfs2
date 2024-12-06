@@ -136,7 +136,7 @@ describe('executeWithSqlTransaction', () => {
 
   it("throws a specific 'TransactionFailedError' if the supplied function throws an 'ApiError'", async () => {
     // Arrange
-    const customError = new TestApiError(HttpStatusCode.BadRequest);
+    const customError = new TestApiError({ status: HttpStatusCode.BadRequest });
 
     const functionToExecute = jest.fn().mockRejectedValue(customError);
 

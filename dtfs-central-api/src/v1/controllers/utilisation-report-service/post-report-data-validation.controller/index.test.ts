@@ -47,7 +47,7 @@ describe('post-report-data-validation.controller', () => {
 
       const errorStatus = HttpStatusCode.BadRequest;
       jest.mocked(validateUtilisationReportCsvData).mockImplementation(() => {
-        throw new TestApiError(errorStatus, undefined);
+        throw new TestApiError({ status: errorStatus });
       });
 
       // Act
@@ -66,7 +66,7 @@ describe('post-report-data-validation.controller', () => {
 
       const errorMessage = 'Some error message';
       jest.mocked(validateUtilisationReportCsvData).mockImplementation(() => {
-        throw new TestApiError(undefined, errorMessage);
+        throw new TestApiError({ message: errorMessage });
       });
 
       // Act

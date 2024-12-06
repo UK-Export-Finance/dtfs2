@@ -67,7 +67,7 @@ describe('put-keying-data-mark-as-to-do.controller', () => {
       const res = httpMocks.createResponse();
 
       const errorStatus = 404;
-      mockHandleEvent.mockRejectedValue(new TestApiError(errorStatus, undefined));
+      mockHandleEvent.mockRejectedValue(new TestApiError({ status: errorStatus }));
 
       // Act
       await putKeyingDataMarkAsToDo(req, res);
@@ -85,7 +85,7 @@ describe('put-keying-data-mark-as-to-do.controller', () => {
       const res = httpMocks.createResponse();
 
       const errorMessage = 'Some error message';
-      mockHandleEvent.mockRejectedValue(new TestApiError(undefined, errorMessage));
+      mockHandleEvent.mockRejectedValue(new TestApiError({ message: errorMessage }));
 
       // Act
       await putKeyingDataMarkAsToDo(req, res);

@@ -210,7 +210,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       const res = httpMocks.createResponse();
 
       const errorStatus = 404;
-      jest.mocked(addFeesToAnExistingPaymentGroup).mockRejectedValue(new TestApiError(errorStatus, undefined));
+      jest.mocked(addFeesToAnExistingPaymentGroup).mockRejectedValue(new TestApiError({ status: errorStatus }));
 
       // Act
       await postAddFeesToAnExistingPaymentGroup(req, res);
@@ -228,7 +228,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       const res = httpMocks.createResponse();
 
       const errorMessage = 'Some error message';
-      jest.mocked(addFeesToAnExistingPaymentGroup).mockRejectedValue(new TestApiError(undefined, errorMessage));
+      jest.mocked(addFeesToAnExistingPaymentGroup).mockRejectedValue(new TestApiError({ message: errorMessage }));
 
       // Act
       await postAddFeesToAnExistingPaymentGroup(req, res);

@@ -46,7 +46,9 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       const { req, res } = getHttpMocks();
 
       const errorMessage = 'Some error message';
-      when(utilisationReportRepoFindSpy).calledWith(reportId).mockRejectedValue(new TestApiError(undefined, errorMessage));
+      when(utilisationReportRepoFindSpy)
+        .calledWith(reportId)
+        .mockRejectedValue(new TestApiError({ message: errorMessage }));
 
       // Act
       await getUtilisationReportReconciliationDetailsById(req, res);

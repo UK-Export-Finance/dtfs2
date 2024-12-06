@@ -1,10 +1,13 @@
 import { AuthorizationUrlRequest } from '@azure/msal-node';
 import { Response } from 'express';
 import { CustomExpressRequest } from '../express-custom-request';
+import { ApiErrorResponseBody } from '../api-error-response-body';
 
 export type GetAuthCodeUrlParams = {
   successRedirect: string;
 };
+
+export type GetAuthCodeUrlRequest = GetAuthCodeUrlParams;
 
 export type GetAuthCodeUrlResponse = {
   authCodeUrl: string;
@@ -13,4 +16,4 @@ export type GetAuthCodeUrlResponse = {
 
 export type GetAuthCodeUrlApiRequest = CustomExpressRequest<{ params: GetAuthCodeUrlParams }>;
 
-export type GetAuthCodeUrlApiResponse = Response<GetAuthCodeUrlResponse>;
+export type GetAuthCodeUrlApiResponse = Response<GetAuthCodeUrlResponse | ApiErrorResponseBody>;
