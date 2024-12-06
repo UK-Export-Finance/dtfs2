@@ -99,7 +99,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
       const { req, res } = getHttpMocks();
 
       const errorStatus = HttpStatusCode.RequestTimeout;
-      findFormDataSpy.mockRejectedValue(new TestApiError(errorStatus, undefined));
+      findFormDataSpy.mockRejectedValue(new TestApiError({ status: errorStatus }));
 
       // Act
       await getFeeRecordCorrectionRequestReview(req, res);
@@ -113,7 +113,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
       const { req, res } = getHttpMocks();
 
       const errorMessage = 'Some error message';
-      findFormDataSpy.mockRejectedValue(new TestApiError(undefined, errorMessage));
+      findFormDataSpy.mockRejectedValue(new TestApiError({ message: errorMessage }));
 
       // Act
       await getFeeRecordCorrectionRequestReview(req, res);

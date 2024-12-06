@@ -167,7 +167,7 @@ describe('POST /v1/deals/:id/cancellation/submit', () => {
       // Arrange
       const errorStatus = HttpStatusCode.BadRequest;
       const errorMessage = 'An error occurred';
-      submitDealCancellationMock.mockRejectedValueOnce(new TestApiError(errorStatus, errorMessage));
+      submitDealCancellationMock.mockRejectedValueOnce(new TestApiError({ status: errorStatus, message: errorMessage }));
 
       const url = getSubmitTfmDealCancellationUrl({ id: validId });
 

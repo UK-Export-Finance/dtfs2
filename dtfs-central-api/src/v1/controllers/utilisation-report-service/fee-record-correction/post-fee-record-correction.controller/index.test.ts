@@ -236,7 +236,7 @@ describe('post-fee-record-correction.controller', () => {
       mockFindFeeRecordWithReport.mockResolvedValue(new FeeRecordEntityMockBuilder().build());
 
       const errorStatus = HttpStatusCode.NotFound;
-      mockHandleEvent.mockRejectedValue(new TestApiError(errorStatus, undefined));
+      mockHandleEvent.mockRejectedValue(new TestApiError({ status: errorStatus }));
 
       // Act
       await postFeeRecordCorrection(req, res);
@@ -257,7 +257,7 @@ describe('post-fee-record-correction.controller', () => {
       mockFindFeeRecordWithReport.mockResolvedValue(new FeeRecordEntityMockBuilder().build());
 
       const errorMessage = 'Some error message';
-      mockHandleEvent.mockRejectedValue(new TestApiError(undefined, errorMessage));
+      mockHandleEvent.mockRejectedValue(new TestApiError({ message: errorMessage }));
 
       // Act
       await postFeeRecordCorrection(req, res);

@@ -50,7 +50,12 @@ describe('controllers - deal cancellation', () => {
       // Arrange
       const errorStatus = HttpStatusCode.BadRequest;
       const errorMessage = 'An error occurred';
-      submitDealCancellationMock.mockRejectedValueOnce(new TestApiError(errorStatus, errorMessage));
+      submitDealCancellationMock.mockRejectedValueOnce(
+        new TestApiError({
+          status: errorStatus,
+          message: errorMessage,
+        }),
+      );
 
       const { req, res } = httpMocks.createMocks<SubmitDealCancellationRequest>({
         params: { dealId: mockDealId },
