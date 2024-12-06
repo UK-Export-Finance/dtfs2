@@ -1,7 +1,7 @@
-import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
+import { DEAL_STATUS, DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
 import relative from '../relativeURL';
 import applicationPreview from '../pages/application-preview';
-import { MOCK_APPLICATION_AIN, MOCK_APPLICATION_MIN } from '../../fixtures/mocks/mock-deals';
+import { MOCK_APPLICATION_AIN, MOCK_APPLICATION_MIN, MOCK_APPLICATION_MIA } from '../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import { multipleMockGefFacilities } from '../../../../e2e-fixtures/mock-gef-facilities';
 
@@ -9,7 +9,7 @@ const { unissuedCashFacility, unissuedContingentFacility } = multipleMockGefFaci
 
 const deals = [];
 let token;
-const mockDeals = [MOCK_APPLICATION_AIN, MOCK_APPLICATION_MIN];
+const mockDeals = [MOCK_APPLICATION_AIN, MOCK_APPLICATION_MIN, MOCK_APPLICATION_MIA];
 
 context('Application preview page', () => {
   before(() => {
@@ -19,7 +19,14 @@ context('Application preview page', () => {
       })
       .then(() => {
         mockDeals.forEach((mockDeal) => {
-          cy.createAndConfigureApplicationStatus(BANK1_MAKER1, token, mockDeal, unissuedCashFacility, unissuedContingentFacility).then((response) => {
+          cy.createAndConfigureApplicationStatus(
+            BANK1_MAKER1,
+            token,
+            mockDeal,
+            unissuedCashFacility,
+            unissuedContingentFacility,
+            mockDeal.submissionType === DEAL_SUBMISSION_TYPE.MIA ? DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS : DEAL_STATUS.UKEF_ACKNOWLEDGED,
+          ).then((response) => {
             deals.push(response.body);
           });
         });
@@ -48,6 +55,14 @@ context('Application preview page', () => {
       cy.visit(relative(`/gef/application-details/${minDeal._id}`));
       applicationPreview.facilityInformationBanner().should('exist');
       cy.assertText(applicationPreview.facilityInformationBanner(), 'Check your records for the most up-to-date facility details.');
+    });
+  });
+  describe('Application preview page with MIA Deal and status Accepted by UKEF (with conditions)', () => {
+    // ensures that banner is not displayed
+    it('should not display the information banner', () => {
+      const miaDeal = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.MIA);
+      cy.visit(relative(`/gef/application-details/${miaDeal._id}`));
+      applicationPreview.facilityInformationBanner().should('not.exist');
     });
   });
 });
