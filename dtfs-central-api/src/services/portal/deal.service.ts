@@ -69,6 +69,7 @@ export class PortalDealService {
           firstName: UKEF.ACRONYM,
         },
         label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
+        html: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
       };
 
       await PortalActivityRepo.addPortalActivity(dealId, newActivity, auditDetails);

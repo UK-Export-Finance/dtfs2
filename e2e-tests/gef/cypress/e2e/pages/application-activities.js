@@ -8,8 +8,8 @@ const applicationActivities = {
   facilityActivityChangedBy: (id) => cy.get(`[data-cy="facility-changed-by-${id}"]`),
   facilityActivityCheckedBy: (id) => cy.get(`[data-cy="facility-checked-by-${id}"]`),
   facilityActivityLink: (id) => cy.get(`[data-cy="facility-link-${id}"]`),
-  facilityActivityUnissuedTag: (id) => cy.get(`[data-cy="facility-unissued-tag-${id}"]`),
-  facilityActivityIssuedTag: (id) => cy.get(`[data-cy="facility-issued-tag-${id}"]`),
+  previousStatusTag: (id) => cy.get(`[data-cy="previous-status-tag-${id}"]`),
+  newStatusTag: (id) => cy.get(`[data-cy="new-status-tag-${id}"]`),
 };
 
 module.exports = applicationActivities;

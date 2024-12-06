@@ -61,6 +61,7 @@ describe('PortalDealService - addGefDealCancelledActivity', () => {
           firstName: UKEF.ACRONYM,
         },
         label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
+        html: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
       };
 
       expect(addPortalActivityMock).toHaveBeenCalledWith(dealId, expectedActivity, auditDetails);
