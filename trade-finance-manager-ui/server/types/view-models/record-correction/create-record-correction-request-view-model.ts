@@ -20,7 +20,7 @@ export type CreateRecordCorrectionRequestViewModel = BaseViewModel & {
   feeRecord: {
     facilityId: string;
     exporter: string;
-  };
+  } | null;
   formValues: CreateRecordCorrectionRequestFormValues;
   errors: CreateRecordCorrectionRequestErrorsViewModel;
   backLinkHref: string;

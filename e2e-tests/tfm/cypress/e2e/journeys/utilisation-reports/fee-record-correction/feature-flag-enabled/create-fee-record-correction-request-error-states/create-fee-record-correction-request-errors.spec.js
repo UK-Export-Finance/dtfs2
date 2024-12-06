@@ -4,6 +4,7 @@ import {
   FeeRecordEntityMockBuilder,
   PENDING_RECONCILIATION,
   UtilisationReportEntityMockBuilder,
+  MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT,
 } from '@ukef/dtfs2-common';
 import pages from '../../../../../pages';
 import USERS from '../../../../../../fixtures/users';
@@ -63,15 +64,15 @@ context('When fee record correction feature flag is enabled', () => {
       cy.assertText(additionalInfoInputError(), `Error: ${expectedAdditionalInfoErrorMessage}`);
     });
 
-    it('should not allow user to create fee record correction request with more than 500 characters in the provide more information box', () => {
+    it(`should not allow user to create fee record correction request with more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters in the provide more information box`, () => {
       reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).check();
 
-      const additionalInfo = 'a'.repeat(501);
+      const additionalInfo = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT + 1);
       cy.keyboardInput(additionalInfoInput(), additionalInfo);
 
       cy.clickContinueButton();
 
-      const errorMessage = 'You cannot enter more than 500 characters in the provide more information box';
+      const errorMessage = `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters in the provide more information box`;
 
       errorSummaryErrors().should('have.length', 1);
       cy.assertText(errorSummaryErrors().eq(0), errorMessage);

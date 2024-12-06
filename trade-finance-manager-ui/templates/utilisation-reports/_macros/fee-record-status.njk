@@ -10,20 +10,15 @@
     'DOES_NOT_MATCH': 'govuk-tag--red',
     'READY_TO_KEY': 'govuk-tag--yellow',
     'RECONCILED': 'govuk-tag--grey',
-    'REPORT_COMPLETED': 'govuk-tag--green'
+    'REPORT_COMPLETED': 'govuk-tag--green',
+    'PENDING_CORRECTION': 'govuk-tag--pink'
   } %}
 
   {% set tagColourClass = tagColourClassForStatus[status] %}
 
-  {% if tagColourClass === '' %}
-    {% set tagClasses = 'status-tag' %}
-  {% else %}
-    {% set tagClasses = ['status-tag', tagColourClass] | join(' ') %}
-  {% endif %}
-
   {{ govukTag({
     text: displayStatus,
-    classes: tagClasses,
+    classes: tagColourClass,
     attributes: {
       'data-cy': 'fee-record-status'
     }

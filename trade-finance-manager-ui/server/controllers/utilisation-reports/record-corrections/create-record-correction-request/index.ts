@@ -32,6 +32,7 @@ export const getCreateRecordCorrectionRequest = async (req: GetCreateRecordCorre
     const { reportId, feeRecordId } = req.params;
 
     const feeRecord = await api.getFeeRecord(reportId, feeRecordId, userToken);
+    const formValues = await api.getFeeRecordCorrectionTransientFormData(reportId, feeRecordId, user, userToken);
 
     return renderCreateRecordCorrectionRequestPage(res, {
       user,
@@ -45,7 +46,7 @@ export const getCreateRecordCorrectionRequest = async (req: GetCreateRecordCorre
         facilityId: feeRecord.facilityId,
         exporter: feeRecord.exporter,
       },
-      formValues: {},
+      formValues,
       errors: EMPTY_CREATE_RECORD_CORRECTION_REQUEST_ERRORS_VIEW_MODEL,
       backLinkHref: getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]),
     });

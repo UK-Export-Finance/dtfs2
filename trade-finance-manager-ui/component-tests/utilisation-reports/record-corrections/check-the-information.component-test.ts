@@ -103,12 +103,12 @@ describe('page', () => {
     wrapper.expectText(definitionDescriptionSelector('Provide more information')).toRead(additionalInfo);
   });
 
-  it('should render the contact email address', () => {
+  it('should render the contact email addresses', () => {
     // Arrange
-    const email = 'this is my email';
+    const email = 'one@email.com, two@email.com';
     const viewModel: RecordCorrectionRequestInformationViewModel = {
       ...aRecordCorrectionRequestInformationViewModel(),
-      contactEmailAddress: email,
+      contactEmailAddresses: email,
     };
 
     // Act

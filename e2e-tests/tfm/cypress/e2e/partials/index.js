@@ -12,6 +12,7 @@ module.exports = {
   underwritingSubNav,
   primaryNavigation,
   feeRecordSummary,
+  summaryList: () => cy.get('[data-cy="summary-list"]'),
   backLink: () => cy.get('[data-cy="back-link"]'),
   cancelLink: () => cy.get('[data-cy="cancel-link"]'),
   continueButton: () => cy.get('[data-cy="continue-button"]'),

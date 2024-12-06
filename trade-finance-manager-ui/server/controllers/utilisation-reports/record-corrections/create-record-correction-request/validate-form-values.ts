@@ -13,11 +13,6 @@ type ValidationResponse =
     };
 
 /**
- * The maximum length of the additional information field for a record correction request.
- */
-export const MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH = 500;
-
-/**
  * Validates the reasons field for a record correction request.
  * @param reasons - The record correction reasons to validate.
  * @returns An error message if validation fails, undefined otherwise.
@@ -58,7 +53,7 @@ export const getCreateRecordCorrectionRequestFormErrors = ({
 }: CreateRecordCorrectionRequestFormValues): CreateRecordCorrectionRequestErrorsViewModel => {
   const errorSummary: ErrorSummaryViewModel[] = [];
 
-  const reasonsErrorMessage = !reasons || reasons?.length === 0 ? 'You must select a reason for the record correction request' : undefined;
+  const reasonsErrorMessage = getRecordCorrectionReasonsValidationError(reasons);
   if (reasonsErrorMessage) {
     errorSummary.push({ text: reasonsErrorMessage, href: '#reasons' });
   }
