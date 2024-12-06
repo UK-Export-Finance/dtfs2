@@ -3,13 +3,16 @@ import { getFormattedReportPeriodWithLongMonth, RECORD_CORRECTION_REASON } from 
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import { getLinkToPremiumPaymentsTab } from '../../helpers/get-link-to-premium-payments-tab';
-import { getRecordCorrectionRequestInformation } from '.';
+import { getRecordCorrectionRequestInformation, postRecordCorrectionRequestInformation } from '.';
 import api from '../../../../api';
 import { mapReasonsToDisplayValues } from '../helpers';
 
 jest.mock('../../../../api');
 
 describe('controllers/utilisation-reports/record-corrections/check-the-information', () => {
+  const reportId = '123';
+  const feeRecordId = '456';
+
   const userToken = 'user-token';
   const user = aTfmSessionUser();
   const requestSession = {
@@ -22,11 +25,9 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
   });
 
   describe('getRecordCorrectionRequestInformation', () => {
-    const reportId = '123';
-    const feeRecordId = '456';
     const { req, res } = httpMocks.createMocks({
       session: requestSession,
-      params: { reportId, feeRecordId: feeRecordId.toString() },
+      params: { reportId, feeRecordId },
     });
 
     const bank = { name: 'Test bank', id: '129' };
@@ -72,6 +73,41 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
         contactEmailAddresses: expectedContactEmailAddresses,
         cancelLink: getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]),
       });
+    });
+  });
+
+  describe('postRecordCorrectionRequestInformation', () => {
+    it('should redirect to request sent page on success', async () => {
+      // Arrange
+      const { req, res } = httpMocks.createMocks({
+        session: requestSession,
+        params: { reportId, feeRecordId },
+      });
+
+      // Act
+      await postRecordCorrectionRequestInformation(req, res);
+
+      // Assert
+      expect(api.createFeeRecordCorrection).toHaveBeenCalledTimes(1);
+      expect(api.createFeeRecordCorrection).toHaveBeenCalledWith(reportId, feeRecordId, user, userToken);
+      expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}/request-sent`);
+    });
+
+    it('should render problem with service page on error', async () => {
+      // Arrange
+      const { req, res } = httpMocks.createMocks({
+        session: requestSession,
+        params: { reportId, feeRecordId },
+      });
+
+      jest.mocked(api.createFeeRecordCorrection).mockRejectedValue(new Error('API Error'));
+
+      // Act
+      await postRecordCorrectionRequestInformation(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
+      expect(res._getRenderData()).toEqual({ user });
     });
   });
 });

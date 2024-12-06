@@ -1743,6 +1743,23 @@ const getFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, us
   return response.data;
 };
 
+/**
+ * Creates a fee record correction
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
+ * @param {import('../types/tfm-session-user').TfmSessionUser} user - The requesting user
+ */
+const createFeeRecordCorrection = async (reportId, feeRecordId, user) => {
+  await axios({
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/corrections`,
+    method: 'post',
+    headers: headers.central,
+    data: {
+      user,
+    },
+  });
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -1823,5 +1840,6 @@ module.exports = {
   getFeeRecord,
   getFeeRecordCorrectionRequestReview,
   updateFeeRecordCorrectionTransientFormData,
+  createFeeRecordCorrection,
   getFeeRecordCorrectionTransientFormData,
 };

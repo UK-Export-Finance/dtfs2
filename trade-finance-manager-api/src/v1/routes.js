@@ -218,6 +218,11 @@ authRouter
   .put(utilisationReportsController.putFeeRecordCorrectionTransientFormData);
 
 authRouter
+  .route('/utilisation-reports/:reportId/fee-records/:feeRecordId/corrections')
+  .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), handleExpressValidatorResult)
+  .post(utilisationReportsController.postFeeRecordCorrection);
+
+authRouter
   .route('/utilisation-reports/:reportId/fee-records/:feeRecordId/correction-transient-form-data/:user')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), validation.userIdValidation, handleExpressValidatorResult)
   .get(utilisationReportsController.getFeeRecordCorrectionTransientFormData);

@@ -123,4 +123,5 @@ export const NODE_TASKS = {
   DELETE_ALL_FROM_SQL_DB: 'deleteAllFromSqlDb',
   INSERT_TFM_FACILITIES_INTO_DB: 'insertManyTfmFacilities',
   DELETE_ALL_TFM_FACILITIES_FROM_DB: 'deleteAllTfmFacilities',
+  REMOVE_ALL_FEE_RECORD_CORRECTION_TRANSIENT_FORM_DATA_FROM_DB: 'removeAllFeeRecordCorrectionTransientFormDataFromDb',
 };
