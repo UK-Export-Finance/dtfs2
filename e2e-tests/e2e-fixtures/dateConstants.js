@@ -61,7 +61,7 @@ export const twoYearsAgo = getFormattedValues(sub(todayDate, { years: 2 }));
 
 // Dates calculated from other values
 /**
- * This constant is used for calculating the deadling for issuing a facility with submission date three days ago.
+ * This constant is used for calculating the deadline for issuing a facility with submission date three days ago.
  */
 export const threeDaysAgoPlusThreeMonths = getFormattedValues(add(threeDaysAgo.date, { months: 3 }));
 

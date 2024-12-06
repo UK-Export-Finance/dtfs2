@@ -20,3 +20,4 @@ export * from './format-date-for-email';
 export * from './get-ukef-deal-id';
 export * from './is-ukef-email';
 export * from './fee-record-corrections';
+export * from './decode-html-entities';
