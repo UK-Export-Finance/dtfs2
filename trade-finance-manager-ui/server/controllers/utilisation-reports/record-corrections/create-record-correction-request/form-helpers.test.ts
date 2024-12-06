@@ -1,4 +1,4 @@
-import { RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
+import { decodeHtmlEntities, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import {
   CreateRecordCorrectionRequestFormRequestBody,
   extractCreateRecordCorrectionRequestFormValues,
@@ -13,7 +13,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
     it('should extract the expected form values', () => {
       // Arrange
       const validReasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT];
-      const additionalInfo = 'additional info';
+      const additionalInfo = 'additional info &amp; some html entities&#33;';
 
       const requestBody: CreateRecordCorrectionRequestFormRequestBody = {
         reasons: [...validReasons, 'invalid-reason'],
@@ -26,7 +26,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       // Assert
       expect(formValues).toEqual({
         reasons: validReasons,
-        additionalInfo,
+        additionalInfo: decodeHtmlEntities(additionalInfo),
       });
     });
   });

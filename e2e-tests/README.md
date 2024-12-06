@@ -25,9 +25,15 @@ To run the end-to-end tests locally, follow these steps:
 npm run start
 ```
 
-2. In a second terminal, navigate to the `e2e-tests` folder
-3. Make sure you have a copy of your `.env` file within the folder for the service you want to test. (e.g. if you want to test the `gef` service, copy your top level `.env` file into the `./gef` directory)
-4. Run one of the following commands to start Cypress:
+2. If SQL db migrations have not been run since you last rebuilt your SQL container or if there are new migrations, then you need to run from the main root:
+
+```shell
+npm run db:migrate -w libs/common
+```
+
+3. In a second terminal, navigate to the `e2e-tests` folder
+4. Make sure you have a copy of your `.env` file within the folder for the service you want to test. (e.g. if you want to test the `gef` service, copy your top level `.env` file into the `./gef` directory)
+5. Run one of the following commands to start Cypress:
 
 ### **Running the E2E tests using the GUI**
 
@@ -54,6 +60,17 @@ If you want to run a specific E2E test file, you can use the following command b
 ```shell
 npx cypress run --spec "cypress/e2e/**/my-test.spec.js"
 ```
+
+## Gotchas
+
+If you haven't run migrations then any tests depending on the SQL database will fail.
+Most commonly this will cause the test to fail with the slightly obscure message:
+
+```shell
+Error: Invalid object name 'PaymentMatchingTolerance'.
+```
+
+Where 'PaymentMatchingTolerance' will be replaced by whichever SQL table is trying to be accessed but does not exist.
 
 ## Cypress configuration ⚙️
 
