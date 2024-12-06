@@ -23,7 +23,7 @@ export class UserService {
    * @param entraIdUser
    * @returns The upsert user request
    */
-  private static transformEntraIdUserToUpsertTfmUserRequest(entraIdUser: EntraIdUser): UpsertTfmUserRequest {
+  public transformEntraIdUserToUpsertTfmUserRequest(entraIdUser: EntraIdUser): UpsertTfmUserRequest {
     return ENTRA_ID_USER_TO_UPSERT_TFM_USER_REQUEST_SCHEMA.parse(entraIdUser);
   }
 
@@ -48,7 +48,7 @@ export class UserService {
    * @throws MultipleUsersFoundError if multiple users are found
    */
   public async upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails }: UpsertTfmUserFromEntraIdUserParams): Promise<UpsertTfmUserFromEntraIdUserResponse> {
-    const upsertTfmUserRequest = UserService.transformEntraIdUserToUpsertTfmUserRequest(entraIdUser);
+    const upsertTfmUserRequest = this.transformEntraIdUserToUpsertTfmUserRequest(entraIdUser);
     const findResult = await UserRepo.findUsersByEmailAddresses([...entraIdUser.verified_primary_email, ...entraIdUser.verified_secondary_email]);
 
     let upsertedUser: TfmUser;
