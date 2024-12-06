@@ -2,7 +2,6 @@ import { Response } from 'supertest';
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import {
-  AMENDMENT_TYPES,
   AnyObject,
   API_ERROR_CODE,
   DEAL_SUBMISSION_TYPE,
@@ -28,8 +27,8 @@ interface FacilityAmendmentResponse extends Response {
   body: PortalFacilityAmendment;
 }
 
-const generateUrl = (facilityId: string, amendmentId: string): string => {
-  return `/v1/portal/facilities/${facilityId}/amendments/${amendmentId}`;
+const generateUrl = (facilityId: string): string => {
+  return `/v1/portal/facilities/${facilityId}/amendments/`;
 };
 
 const newDeal = aDeal({
@@ -37,9 +36,8 @@ const newDeal = aDeal({
   submissionType: DEAL_SUBMISSION_TYPE.AIN,
 }) as AnyObject;
 
-describe('GET /v1/portal/facilities/:facilityId/amendments/:amendmentId', () => {
+describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
   let dealId: string;
-  let amendmentId: string;
   let facilityId: string;
   let portalUserId: string;
 
@@ -87,10 +85,6 @@ describe('GET /v1/portal/facilities/:facilityId/amendments/:amendmentId', () => 
         auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
       })
       .to(`/v1/tfm/deals/${dealId}`);
-
-    const amendment = await createPortalFacilityAmendment({ dealId, facilityId, userId: portalUserId });
-
-    amendmentId = amendment.amendmentId.toString();
   });
 
   afterAll(() => {
@@ -103,7 +97,9 @@ describe('GET /v1/portal/facilities/:facilityId/amendments/:amendmentId', () => 
     });
 
     it('should return 404', async () => {
-      const { status } = (await testApi.get(generateUrl(facilityId, amendmentId))) as FacilityAmendmentResponse;
+      const { status } = (await testApi
+        .put({ dealId, amendment: {}, auditDetails: generatePortalAuditDetails(portalUserId) })
+        .to(generateUrl(facilityId))) as FacilityAmendmentResponse;
 
       expect(status).toEqual(HttpStatusCode.NotFound);
     });
@@ -117,7 +113,9 @@ describe('GET /v1/portal/facilities/:facilityId/amendments/:amendmentId', () => 
     it('should return 400 when the facility id is invalid', async () => {
       const anInvalidFacilityId = 'InvalidId';
 
-      const { status, body } = (await testApi.get(generateUrl(anInvalidFacilityId, amendmentId))) as FacilityAmendmentResponse;
+      const { body, status } = (await testApi
+        .put({ dealId, amendment: {}, auditDetails: generatePortalAuditDetails(portalUserId) })
+        .to(generateUrl(anInvalidFacilityId))) as FacilityAmendmentResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
 
@@ -127,23 +125,12 @@ describe('GET /v1/portal/facilities/:facilityId/amendments/:amendmentId', () => 
       });
     });
 
-    it('should return 400 when the amendment id is invalid', async () => {
-      const anInvalidAmendmentId = 'InvalidId';
-
-      const { status, body } = (await testApi.get(generateUrl(facilityId, anInvalidAmendmentId))) as FacilityAmendmentResponse;
-
-      expect(status).toEqual(HttpStatusCode.BadRequest);
-
-      expect(body).toEqual({
-        message: "Expected path parameter 'amendmentId' to be a valid mongo id",
-        code: API_ERROR_CODE.INVALID_MONGO_ID_PATH_PARAMETER,
-      });
-    });
-
     it('should return 404 when the facility does not exist', async () => {
       const aValidButNonExistentFacilityId = new ObjectId().toString();
 
-      const { status, body } = (await testApi.get(generateUrl(aValidButNonExistentFacilityId, amendmentId))) as FacilityAmendmentResponse;
+      const { body, status } = (await testApi
+        .put({ dealId, amendment: {}, auditDetails: generatePortalAuditDetails(portalUserId) })
+        .to(generateUrl(aValidButNonExistentFacilityId))) as FacilityAmendmentResponse;
 
       expect(status).toEqual(HttpStatusCode.NotFound);
       expect(body).toEqual({
@@ -152,30 +139,52 @@ describe('GET /v1/portal/facilities/:facilityId/amendments/:amendmentId', () => 
       });
     });
 
-    it('should return 404 when the amendment does not exist', async () => {
-      const aValidButNonExistentAmendmentId = new ObjectId().toString();
+    it('should return 400 when the payload has extra fields', async () => {
+      const { body, status } = (await testApi
+        .put({ dealId, amendment: { extraField: 'This field should not exist' }, auditDetails: generatePortalAuditDetails(portalUserId) })
+        .to(generateUrl(facilityId))) as FacilityAmendmentResponse;
 
-      const { status, body } = (await testApi.get(generateUrl(facilityId, aValidButNonExistentAmendmentId))) as FacilityAmendmentResponse;
-
-      expect(status).toEqual(HttpStatusCode.NotFound);
+      expect(status).toEqual(HttpStatusCode.BadRequest);
       expect(body).toEqual({
-        status: HttpStatusCode.NotFound,
-        message: `Amendment not found: ${aValidButNonExistentAmendmentId}`,
+        status: HttpStatusCode.BadRequest,
+        message: ["amendment: Unrecognized key(s) in object: 'extraField' (unrecognized_keys)"],
+        code: API_ERROR_CODE.INVALID_PAYLOAD,
       });
     });
 
-    it('should return the amendment when it exists', async () => {
-      const { status, body } = (await testApi.get(generateUrl(facilityId, amendmentId))) as FacilityAmendmentResponse;
+    it('should return the new amendment', async () => {
+      // Act
+      const { body, status } = (await testApi
+        .put({ dealId, amendment: {}, auditDetails: generatePortalAuditDetails(portalUserId) })
+        .to(generateUrl(facilityId))) as FacilityAmendmentResponse;
+
+      // Assert
+      expect(status).toEqual(HttpStatusCode.Ok);
+      expect(body).toEqual(expect.objectContaining({ amendmentId: expect.any(String) as string, facilityId, dealId }));
+    });
+
+    it('should overwrite any existing amendment', async () => {
+      // Arrange
+      const existingAmendment = await createPortalFacilityAmendment({ facilityId, dealId, userId: portalUserId });
+      const existingAmendmentId = existingAmendment.amendmentId.toString();
+
+      // Act
+      const { status } = (await testApi
+        .put({ dealId, amendment: {}, auditDetails: generatePortalAuditDetails(portalUserId) })
+        .to(generateUrl(facilityId))) as FacilityAmendmentResponse;
 
       expect(status).toEqual(HttpStatusCode.Ok);
-      expect(body).toEqual(
-        expect.objectContaining({
-          amendmentId,
-          dealId,
-          facilityId,
-          type: AMENDMENT_TYPES.PORTAL,
-        } as AnyObject),
-      );
+
+      // Assert
+      const getExistingAmendmentResponse = (await testApi.get(
+        `/v1/portal/facilities/${facilityId}/amendments/${existingAmendmentId}`,
+      )) as FacilityAmendmentResponse;
+
+      expect(getExistingAmendmentResponse.status).toEqual(HttpStatusCode.NotFound);
+      expect(getExistingAmendmentResponse.body).toEqual({
+        status: HttpStatusCode.NotFound,
+        message: `Amendment not found: ${existingAmendmentId}`,
+      });
     });
   });
 });
