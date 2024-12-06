@@ -1,5 +1,60 @@
 # Changelog
 
+## [2.6.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.5.0...v2.6.0) (2024-12-06)
+
+
+### Features
+
+* **DTFS2-6892:** add tfm api upsert user endpoint ([#3687](https://github.com/UK-Export-Finance/dtfs2/issues/3687)) ([40214f8](https://github.com/UK-Export-Finance/dtfs2/commit/40214f841fb416add4f48bb14d6d515fc0db6008))
+* **dtfs2-7295:** update cancellation reason too long message to have comma delimiter([#3955](https://github.com/UK-Export-Finance/dtfs2/issues/3955)) ([15ea4ec](https://github.com/UK-Export-Finance/dtfs2/commit/15ea4ec2354942948d89f562452ded23d9d1afbf))
+* **DTFS2-7430:** remove amendment button for facilities of cancelled deals ([#3930](https://github.com/UK-Export-Finance/dtfs2/issues/3930)) ([defd15a](https://github.com/UK-Export-Finance/dtfs2/commit/defd15a53f588cf7c870bd69f6307c920c0d6cbe))
+* **DTFS2-7466:** add cancellation filter to portal deals ([#3943](https://github.com/UK-Export-Finance/dtfs2/issues/3943)) ([a3732e0](https://github.com/UK-Export-Finance/dtfs2/commit/a3732e01d872354567a8711c16c42936a9b8c609))
+* **DTFS2-7467:** add risk expired to facilities filter ([#3936](https://github.com/UK-Export-Finance/dtfs2/issues/3936)) ([7ab8310](https://github.com/UK-Export-Finance/dtfs2/commit/7ab83100660c272e57af5f426db79fde5407c4e2))
+* **DTFS2-7525:** add portal amendments feature flag ([#3958](https://github.com/UK-Export-Finance/dtfs2/issues/3958)) ([8a4f37d](https://github.com/UK-Export-Finance/dtfs2/commit/8a4f37d5b2025c3ed9993e7a9bd179220c748e0e))
+* **DTFS2-7525:** add portal GEF facility amendments button ([#3962](https://github.com/UK-Export-Finance/dtfs2/issues/3962)) ([ec53a29](https://github.com/UK-Export-Finance/dtfs2/commit/ec53a2984b125e6d10fabf16581abf21a3f2c438))
+* **DTFS2-7531:** bump gov design library ([#3684](https://github.com/UK-Export-Finance/dtfs2/issues/3684)) ([1e25bba](https://github.com/UK-Export-Finance/dtfs2/commit/1e25bbafe84edc28bce7b62b1c1ec8af2fbf0c80))
+* **DTFS2-7543:** add e2e deal cancellation maker unable issue facility ([#3957](https://github.com/UK-Export-Finance/dtfs2/issues/3957)) ([c3c246b](https://github.com/UK-Export-Finance/dtfs2/commit/c3c246bc79c43699d15cd6025de214b3b14c21a7))
+* **DTFS2-7598:** display risk expired facility status in GEF ui ([#3926](https://github.com/UK-Export-Finance/dtfs2/issues/3926)) ([d4731c0](https://github.com/UK-Export-Finance/dtfs2/commit/d4731c0f1ea497eb22bec03560e03a752c3189fa))
+* **DTFS2-7601:** add e2e coverage for cancelled bss ewcs in portal ([#3928](https://github.com/UK-Export-Finance/dtfs2/issues/3928)) ([fc1c992](https://github.com/UK-Export-Finance/dtfs2/commit/fc1c992ac357471ed23ee13a3e885a8ee9bdf1e7))
+* **DTFS2-7612:** update portal facility status to risk expired ([#3923](https://github.com/UK-Export-Finance/dtfs2/issues/3923)) ([36aa547](https://github.com/UK-Export-Finance/dtfs2/commit/36aa5471bd574f4332c7c02189071605fbbfe9db))
+* **DTFS2-7616:** avoid release please branches for deployment ([#4036](https://github.com/UK-Export-Finance/dtfs2/issues/4036)) ([b8d6eba](https://github.com/UK-Export-Finance/dtfs2/commit/b8d6ebac3cdacacb20dd040cf8d3eb3baaa62c6e))
+* **DTFS2-7616:** production ready release candidate deployment ([#4035](https://github.com/UK-Export-Finance/dtfs2/issues/4035)) ([538bd1d](https://github.com/UK-Export-Finance/dtfs2/commit/538bd1d0902ed232e02ab2b67bd09f195a8deacc))
+* **DTFS2-7617:** admin role creation ([#3959](https://github.com/UK-Export-Finance/dtfs2/issues/3959)) ([fcda39c](https://github.com/UK-Export-Finance/dtfs2/commit/fcda39c24734b05dcafed6b201ae766968a7eda9))
+* **DTFS2-7625:** add update facilities by deal ([#3931](https://github.com/UK-Export-Finance/dtfs2/issues/3931)) ([81e6b20](https://github.com/UK-Export-Finance/dtfs2/commit/81e6b205a8e63f41718ebaf7fa5784f4f2165bab))
+* **DTFS2-7637:** replace scheduled status with pending ([#3934](https://github.com/UK-Export-Finance/dtfs2/issues/3934)) ([06d6534](https://github.com/UK-Export-Finance/dtfs2/commit/06d65344f27dbfbe08f60d5680f8ad1c0ee0446a))
+* **DTFS2-7638:** update portal status to pending ([#3935](https://github.com/UK-Export-Finance/dtfs2/issues/3935)) ([b08103e](https://github.com/UK-Export-Finance/dtfs2/commit/b08103e9976fda10f57e488157d32215806525fe))
+* **DTFS2-7644:** add e2e test for risk expired filter ([#3956](https://github.com/UK-Export-Finance/dtfs2/issues/3956)) ([437b1e6](https://github.com/UK-Export-Finance/dtfs2/commit/437b1e6770005f74e070100b2752afad2c0b508e))
+* **DTFS2-7652:** deal cancellation - gef activity entry - past/present ([#3954](https://github.com/UK-Export-Finance/dtfs2/issues/3954)) ([9a287ab](https://github.com/UK-Export-Finance/dtfs2/commit/9a287abc5bbc8921c6fedaf14066d3c02b8f50d0))
+* **DTFS2-7669:** add portal amendments feature flag middleware ([#3963](https://github.com/UK-Export-Finance/dtfs2/issues/3963)) ([4fe6da4](https://github.com/UK-Export-Finance/dtfs2/commit/4fe6da40d77cafbd3d3dc5be653d2530be1fbabc))
+* **DTFS2-7673:** create get portal amendment endpoint ([#3968](https://github.com/UK-Export-Finance/dtfs2/issues/3968)) ([587ae5f](https://github.com/UK-Export-Finance/dtfs2/commit/587ae5f9d8158ae02f11d2080c51ed427bb9bfcb))
+* **FN-2870:** send email if create utilisation report job fails ([#3915](https://github.com/UK-Export-Finance/dtfs2/issues/3915)) ([b6bc048](https://github.com/UK-Export-Finance/dtfs2/commit/b6bc0481af59ff74dad265eef69c97fd7efd2ce4))
+* **FN-3541:** remove unused fixed fee code ([#3933](https://github.com/UK-Export-Finance/dtfs2/issues/3933)) ([2c6043c](https://github.com/UK-Export-Finance/dtfs2/commit/2c6043c77b094c4cfab78fe854f1f8894874cc58))
+* **FN-3566:** create record correction request button ([#3925](https://github.com/UK-Export-Finance/dtfs2/issues/3925)) ([02a83fb](https://github.com/UK-Export-Finance/dtfs2/commit/02a83fbcaaaed4df7f6fbae2c5dec4625b5192f0))
+* **FN-3567:** fix no-border style not applying to reported fees ([#3951](https://github.com/UK-Export-Finance/dtfs2/issues/3951)) ([ed8267e](https://github.com/UK-Export-Finance/dtfs2/commit/ed8267e0608a2ee513b9a48ff06fb85e70f0fecf))
+* **FN-3567:** screenreader alternative for grouped column rows ([#3900](https://github.com/UK-Export-Finance/dtfs2/issues/3900)) ([aeec425](https://github.com/UK-Export-Finance/dtfs2/commit/aeec4259af4d61f6300f6cbfcbe113b9af4e0d5f))
+* **FN-3573:** get fee record details for correction request ([#3916](https://github.com/UK-Export-Finance/dtfs2/issues/3916)) ([c29d75f](https://github.com/UK-Export-Finance/dtfs2/commit/c29d75f7d9330182b1cadfd07ed02d7bb3d056fb))
+* **FN-3575:** add initial record correction creation E2E tests ([#3950](https://github.com/UK-Export-Finance/dtfs2/issues/3950)) ([d303acd](https://github.com/UK-Export-Finance/dtfs2/commit/d303acd108bd730fab5c7c1bb078d5c15c403115))
+* **FN-3575:** decode html entities in additional info field ([#4031](https://github.com/UK-Export-Finance/dtfs2/issues/4031)) ([eba1fb4](https://github.com/UK-Export-Finance/dtfs2/commit/eba1fb411c176a3220baed59c282a2301c5d0c46))
+* **FN-3575:** validate create record correction request inputs ([#3948](https://github.com/UK-Export-Finance/dtfs2/issues/3948)) ([72c98c5](https://github.com/UK-Export-Finance/dtfs2/commit/72c98c598b64ac6e921fe5e6de2cbfed203acafb))
+* **FN-3576:** create record correction request page backlink ([#3927](https://github.com/UK-Export-Finance/dtfs2/issues/3927)) ([1e07739](https://github.com/UK-Export-Finance/dtfs2/commit/1e07739a4e9203715ca1da824d76d4f63169f50d))
+* **FN-3577:** persist transient record correction values (GET) ([#4022](https://github.com/UK-Export-Finance/dtfs2/issues/4022)) ([50b28f0](https://github.com/UK-Export-Finance/dtfs2/commit/50b28f0eaf0a73b6e8172b8cd6be9267acdbadb7))
+* **FN-3577:** persist transient record correction values (PUT) ([#3961](https://github.com/UK-Export-Finance/dtfs2/issues/3961)) ([ab3173a](https://github.com/UK-Export-Finance/dtfs2/commit/ab3173a8e702fa5592e786daf2e386f15e82bc2b))
+* **FN-3578:** add record correction check the information page ([#3945](https://github.com/UK-Export-Finance/dtfs2/issues/3945)) ([4488b28](https://github.com/UK-Export-Finance/dtfs2/commit/4488b284b19724e984c4cd368a6c4355586aab18))
+* **FN-3578:** confirmation screen data ([#4020](https://github.com/UK-Export-Finance/dtfs2/issues/4020)) ([a87e2c1](https://github.com/UK-Export-Finance/dtfs2/commit/a87e2c14a455790b4d6b6c7740b0efd87ca48cbe))
+* **FN-3579:** add record correction data change links ([#4038](https://github.com/UK-Export-Finance/dtfs2/issues/4038)) ([d5d80cf](https://github.com/UK-Export-Finance/dtfs2/commit/d5d80cf004771abe2744d2a2f38125f0bdcec085))
+* **FN-3582:** record correction request emails ([#4041](https://github.com/UK-Export-Finance/dtfs2/issues/4041)) ([be684aa](https://github.com/UK-Export-Finance/dtfs2/commit/be684aa20a4b3f54e07d4e1f604b77c38c7dac24))
+* **FN-3612:** record correction history tab setup ([#4037](https://github.com/UK-Export-Finance/dtfs2/issues/4037)) ([5997972](https://github.com/UK-Export-Finance/dtfs2/commit/59979728709fd5c93410235cf7bd93e29362714e))
+* **FN-3614:** add post controller for check the info page ([#4029](https://github.com/UK-Export-Finance/dtfs2/issues/4029)) ([f97d9ad](https://github.com/UK-Export-Finance/dtfs2/commit/f97d9addccf8627abe225e7197b9ae375ffb63ca))
+* **FN-3614:** create fee record correction endpoint ([#3964](https://github.com/UK-Export-Finance/dtfs2/issues/3964)) ([f4efd66](https://github.com/UK-Export-Finance/dtfs2/commit/f4efd66dd626e7908369fd62ca44b522e6afb2dc))
+
+
+### Bug Fixes
+
+* **DTFS2-7614:** facility amendment ukef decision object validation ([#3949](https://github.com/UK-Export-Finance/dtfs2/issues/3949)) ([ac1ac06](https://github.com/UK-Export-Finance/dtfs2/commit/ac1ac06a8486fc3c079fe7fd969680daedd7e3b6))
+* **DTFS2-7647:** add missing test to yml file ([#4018](https://github.com/UK-Export-Finance/dtfs2/issues/4018)) ([6d11d69](https://github.com/UK-Export-Finance/dtfs2/commit/6d11d694ef2b21c4b24fab79de18c6e9e2ead5de))
+* **DTFS2-7647:** fix gef deal cancellation success message ([#3952](https://github.com/UK-Export-Finance/dtfs2/issues/3952)) ([0b4b726](https://github.com/UK-Export-Finance/dtfs2/commit/0b4b726264bbda4b77fedc9181bfe6b56073e18a))
+* **FN-3631:** enable deletion of payments against fees below tolerance ([#3953](https://github.com/UK-Export-Finance/dtfs2/issues/3953)) ([6fc3465](https://github.com/UK-Export-Finance/dtfs2/commit/6fc34653c10ff0b309dccbdb672182e442807f01))
+
 ## [2.5.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.4.0...v2.5.0) (2024-11-14)
 
 ### Features
