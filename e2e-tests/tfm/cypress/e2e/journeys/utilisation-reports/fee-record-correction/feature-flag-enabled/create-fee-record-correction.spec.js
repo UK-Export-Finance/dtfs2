@@ -272,7 +272,7 @@ context('When fee record correction feature flag is enabled', () => {
 
         cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}/check-the-information`));
 
-        checkFeeRecordCorrectionRequestPage.reasonsChangeLink();
+        checkFeeRecordCorrectionRequestPage.reasonsChangeLink().click();
       });
 
       it('should return to the "create record correction request" screen with the form populated with the prior form data', () => {
