@@ -4,6 +4,7 @@ import {
   PENDING_RECONCILIATION,
   UtilisationReportEntityMockBuilder,
   RECORD_CORRECTION_REASON,
+  MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT,
 } from '@ukef/dtfs2-common';
 import pages from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
@@ -154,6 +155,23 @@ context('When fee record correction feature flag is enabled', () => {
           .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
           .should('be.checked');
       });
+    });
+
+    it('should let the user enter additional info equal to the character limit containing special characters', () => {
+      premiumPaymentsTab.premiumPaymentsTable.checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status).click();
+
+      premiumPaymentsTab.createRecordCorrectionRequestButton().click();
+
+      createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).check();
+
+      const specialCharactersToTest = '&!?$£¥€¢^*()_+=-%:;@~/><,.';
+      const paddingToReachMaxLength = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT - specialCharactersToTest.length);
+      const additionalInfo = `${specialCharactersToTest}${paddingToReachMaxLength}`;
+      cy.keyboardInput(createFeeRecordCorrectionRequestPage.additionalInfoInput(), additionalInfo);
+
+      cy.clickContinueButton();
+
+      cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}/check-the-information`));
     });
 
     context('when user abandons their journey on the "check the information" screen and then starts again', () => {
