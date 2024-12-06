@@ -39,6 +39,7 @@ const applicationPreview = {
   facilityHeading: () => cy.get('[data-cy="facility-heading"]'),
   facilityGuidance: () => cy.get('[data-cy="facility-guidance"]'),
   facilitySummaryList: () => cy.get('[data-cy="facility-summary-list"]'),
+  facilityInformationBanner: () => cy.get('[data-cy="facility-information-banner"]'),
 
   facilitySummaryListTable: (tableNum) => ({
     nameAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="name-action"]'),
