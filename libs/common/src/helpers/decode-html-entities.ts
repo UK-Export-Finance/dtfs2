@@ -7,9 +7,5 @@ import { decode } from 'html-entities';
  * corresponding characters, or undefined if input undefined.
  */
 export const decodeHtmlEntities = (input?: string): string | undefined => {
-  if (!input) {
-    return input;
-  }
-
-  return decode(input);
+  return !input ? input : decode(input);
 };
