@@ -1,6 +1,6 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
 {% import './address-fields.njk' as address %}
 {% import './input-companies-house-reg-number.njk' as companiesHouse %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% macro render(opts) %}
   {% set deal = opts.deal %}
@@ -10,18 +10,18 @@
   {{ companiesHouse.input({
     deal: deal,
     prefix: 'supplier',
-    label: 'UK Supplier’s Companies House registration number, if UK registered (optional)',
+    label: "UK Supplier's Companies House registration number, if UK registered (optional)",
     validationErrors: validationErrors
   }) }}
 
-  <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
+   <div class="govuk-form-group govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
     {{ govukInput({
       label: {
-        html: 'Supplier name <span id="supplier-name-info" class="govuk-hint govuk-character-count__message" aria-live="polite">You can enter up to 150 characters</span>'
+        text: "Supplier name"
       },
-      classes: "govuk-!-width-one-half govuk-js-character-count",
-      id: 'supplier-name',
-      name: 'supplier-name',
+      classes: "govuk-!-width-one-half govuk-!-margin-bottom-1 govuk-js-character-count",
+      id: "supplier-name",
+      name: "supplier-name",
       value: deal.submissionDetails["supplier-name"],
       attributes: {
         "data-cy": "supplier-name",
@@ -29,6 +29,11 @@
       },
       errorMessage: validationErrors.errorList["supplier-name"]
     }) }}
+
+    <span id="supplier-name-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+      You can enter up to 150 characters
+    </span>
+  </div>
   </div>
 
   {{ address.fields(

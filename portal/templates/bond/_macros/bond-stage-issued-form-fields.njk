@@ -23,7 +23,7 @@
     error = validationErrors.errorList.coverEndDate
   )}}
 
-  <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="30">
+  <div class="govuk-form-group govuk-character-count" data-module="govuk-character-count" data-maxlength="30">
     {{ govukInput({
       label: {
         text: "Bond's unique identification number"
@@ -31,7 +31,7 @@
       id: 'name',
       name: 'name',
       value: bond.name,
-      classes: 'govuk-!-width-one-half govuk-js-character-count',
+      classes: 'govuk-!-width-one-half govuk-!-margin-bottom-1 govuk-js-character-count',
       attributes: {
         maxlength: '30',
         'aria-describedby': 'name-info',
@@ -43,12 +43,10 @@
           'data-cy': 'name-error-message'
         }
       }
-    }) }} 
+    }) }}
     <span id="name-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
       You can enter up to 30 characters
     </span>
   </div>
-
-
 
 {% endmacro %}

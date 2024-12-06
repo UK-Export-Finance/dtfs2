@@ -5,7 +5,7 @@
   {% set errorText = (error and error.text) %}
   {% set conditionalErrorText = conditionalError and conditionalError.text %}
 
-  <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="30">
+  <div class="govuk-form-group govuk-character-count" data-module="govuk-character-count" data-maxlength="30">
     {{ govukInput({
       label: {
         text: label
@@ -13,7 +13,7 @@
       id: id,
       name: id,
       value: value,
-      classes: 'govuk-input--width-20 govuk-js-character-count',
+      classes: 'govuk-input--width-20 govuk-!-margin-bottom-1 govuk-js-character-count',
       attributes: {
         maxlength: '30',
         'aria-describedby': id +'-info',
