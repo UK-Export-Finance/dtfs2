@@ -9,6 +9,9 @@ const render = pageRenderer<RecordCorrectionRequestInformationViewModel>(page);
 const definitionDescriptionSelector = (definitionTerm: string) => `[data-cy="summary-list"] dt:contains("${definitionTerm}") + dd`;
 
 describe('page', () => {
+  const reportId = '123';
+  const feeRecordId = '456';
+
   it('should render the page heading', () => {
     // Arrange
     const viewModel: RecordCorrectionRequestInformationViewModel = {
@@ -90,8 +93,6 @@ describe('page', () => {
 
   it('should render the "reason for record correction" change link', () => {
     // Arrange
-    const reportId = '123';
-    const feeRecordId = '456';
     const viewModel: RecordCorrectionRequestInformationViewModel = {
       ...aRecordCorrectionRequestInformationViewModel(),
       reportId,
@@ -123,8 +124,6 @@ describe('page', () => {
 
   it('should render the "provide more information" change link', () => {
     // Arrange
-    const reportId = '123';
-    const feeRecordId = '456';
     const viewModel: RecordCorrectionRequestInformationViewModel = {
       ...aRecordCorrectionRequestInformationViewModel(),
       reportId,
@@ -180,8 +179,6 @@ describe('page', () => {
 
   it('should render the back link', () => {
     // Arrange
-    const reportId = '123';
-    const feeRecordId = '456';
     const viewModel: RecordCorrectionRequestInformationViewModel = {
       ...aRecordCorrectionRequestInformationViewModel(),
       reportId,
