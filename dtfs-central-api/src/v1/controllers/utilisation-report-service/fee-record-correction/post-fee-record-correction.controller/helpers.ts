@@ -5,6 +5,11 @@ import { FeeRecordCorrectionRequestEmails } from '../../../../../types/utilisati
 import { getBankById } from '../../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../../errors';
 
+/**
+ * Formats the reasons for record correction into a bulleted list.
+ * @param reasons - The reasons for the record correction
+ * @returns the formatted reasons
+ */
 export const formatReasonsAsBulletedListForEmail = (reasons: RecordCorrectionReason[]) =>
   reasons.map((reason) => `*${mapReasonToDisplayValue(reason)}`).join('\n');
 
