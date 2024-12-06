@@ -1,4 +1,3 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
 const pages = require('../../pages');
 const partials = require('../../partials');
 const fillBondForm = require('./fill-bond-forms');
@@ -8,29 +7,16 @@ const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
-const MOCK_DEAL = {
-  bankInternalRefName: 'someDealId',
-  additionalRefName: 'someDealName',
-  submissionDetails: {
-    supplyContractCurrency: {
-      id: CURRENCY.GBP,
-    },
-  },
-};
-
 context('Bond Details', () => {
-  let deal;
-
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
-    });
+
+    cy.createBssEwcsDeal({});
   });
 
   describe('after submitting one form field and navigating back to `Bond Details` page', () => {
     it('should display validation errors for all required fields', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal);
+      cy.loginGoToDealPage(BANK1_MAKER1);
 
       cy.clickAddBondButton();
 
@@ -52,7 +38,7 @@ context('Bond Details', () => {
   });
 
   it('should display the correct title for bond details', () => {
-    cy.loginGoToDealPage(BANK1_MAKER1, deal);
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
     cy.clickAddBondButton();
 
@@ -60,7 +46,7 @@ context('Bond Details', () => {
   });
 
   it('form submit with extra characters in coverStart and coverEnd dates must show a validation error', () => {
-    cy.loginGoToDealPage(BANK1_MAKER1, deal);
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
     cy.clickAddBondButton();
 
@@ -163,7 +149,7 @@ context('Bond Details', () => {
   });
 
   it('form submit of all required fields should display a `completed` status tag only for `Bond Details` in task list header', () => {
-    cy.loginGoToDealPage(BANK1_MAKER1, deal);
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
     cy.clickAddBondButton();
 
@@ -178,7 +164,7 @@ context('Bond Details', () => {
 
   describe('When a user selects `unissued` facility stage', () => {
     it('should render additional form fields', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal);
+      cy.loginGoToDealPage(BANK1_MAKER1);
 
       cy.clickAddBondButton();
       pages.bondDetails.facilityStageUnissuedInput().click();
@@ -188,7 +174,7 @@ context('Bond Details', () => {
 
     describe('after form submit and navigating back to `Bond Details` page', () => {
       it('should display validation errors for required fields and `unissued` required fields', () => {
-        cy.loginGoToDealPage(BANK1_MAKER1, deal);
+        cy.loginGoToDealPage(BANK1_MAKER1);
 
         cy.clickAddBondButton();
         pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
@@ -207,7 +193,7 @@ context('Bond Details', () => {
     });
 
     it('form submit should progess to `Bond Financial Details` page', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal);
+      cy.loginGoToDealPage(BANK1_MAKER1);
 
       cy.clickAddBondButton();
 
@@ -221,7 +207,7 @@ context('Bond Details', () => {
     });
 
     it('form submit should populate Deal page with `unissued` specific text/values and link to `Bond Details` page', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal);
+      cy.loginGoToDealPage(BANK1_MAKER1);
 
       cy.clickAddBondButton();
 
@@ -250,7 +236,7 @@ context('Bond Details', () => {
     });
 
     it('form submit should prepopulate submitted form fields when returning back to `Bond Details` page', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal);
+      cy.loginGoToDealPage(BANK1_MAKER1);
 
       cy.clickAddBondButton();
 
@@ -271,7 +257,7 @@ context('Bond Details', () => {
 
   describe('When a user selects `issued` facility stage', () => {
     it('should render additional form fields', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal);
+      cy.loginGoToDealPage(BANK1_MAKER1);
 
       cy.clickAddBondButton();
 
@@ -288,7 +274,7 @@ context('Bond Details', () => {
 
     describe('after form submit and navigating back to `Bond Details` page', () => {
       it('should display validation errors for required fields and `issued` required fields', () => {
-        cy.loginGoToDealPage(BANK1_MAKER1, deal);
+        cy.loginGoToDealPage(BANK1_MAKER1);
 
         cy.clickAddBondButton();
         pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
@@ -308,7 +294,7 @@ context('Bond Details', () => {
     });
 
     it('form submit should progress to `Bond Financial Details` page and prepopulate submitted form fields when returning back to `Bond Details` page', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal);
+      cy.loginGoToDealPage(BANK1_MAKER1);
 
       cy.clickAddBondButton();
 
@@ -327,7 +313,7 @@ context('Bond Details', () => {
 
     describe('When a user clicks `save and go back` button', () => {
       it('should save the form data, return to Deal page and prepopulate form fields when returning back to `Bond Details` page', () => {
-        cy.loginGoToDealPage(BANK1_MAKER1, deal);
+        cy.loginGoToDealPage(BANK1_MAKER1);
 
         cy.clickAddBondButton();
 
