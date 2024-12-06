@@ -23,13 +23,13 @@ export class SsoController {
     this.userService = userService;
   }
 
-  async getAuthCodeUrl(req: GetAuthCodeUrlApiRequest, res: GetAuthCodeUrlApiResponse, next: NextFunction) {
+  public async getAuthCodeUrl(req: GetAuthCodeUrlApiRequest, res: GetAuthCodeUrlApiResponse, next: NextFunction) {
     try {
       const { successRedirect } = req.params;
       const getAuthCodeUrlResponse = await this.entraIdService.getAuthCodeUrl({ successRedirect });
-      return res.json(getAuthCodeUrlResponse);
+      res.json(getAuthCodeUrlResponse);
     } catch (error) {
-      return next(error);
+      next(error);
     }
   }
 
@@ -40,7 +40,7 @@ export class SsoController {
    * It takes the response from the Entra Id service and processes it to create or update a user in the TFM-API database.
    * It then issues a JWT token for the user and returns it to the client.
    */
-  async handleSsoRedirectForm(req: HandleSsoRedirectFormApiRequest, res: HandleSsoRedirectFormApiResponse, next: NextFunction) {
+  public async handleSsoRedirectForm(req: HandleSsoRedirectFormApiRequest, res: HandleSsoRedirectFormApiResponse, next: NextFunction) {
     try {
       const { body } = req;
       const { authCodeResponse, originalAuthCodeUrlRequest, auditDetails } = body;
@@ -68,9 +68,9 @@ export class SsoController {
         successRedirect,
       };
 
-      return res.send(response);
+      res.send(response);
     } catch (error) {
-      return next(error);
+      next(error);
     }
   }
 }

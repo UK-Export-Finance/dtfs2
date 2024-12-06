@@ -3,8 +3,14 @@ import { ENTRA_ID_USER_TO_UPSERT_TFM_USER_REQUEST_SCHEMA } from '@ukef/dtfs2-com
 import { ObjectId } from 'mongodb';
 import { UserRepo } from '../repo/user.repo';
 
-type UpsertTfmUserFromEntraIdUserParams = {
+export type UpsertTfmUserFromEntraIdUserParams = {
   entraIdUser: EntraIdUser;
+  auditDetails: AuditDetails;
+};
+
+export type saveUserLoginInformationParams = {
+  userId: ObjectId;
+  sessionIdentifier: string;
   auditDetails: AuditDetails;
 };
 
@@ -17,7 +23,7 @@ export class UserService {
    * @param entraIdUser
    * @returns The upsert user request
    */
-  public static transformEntraIdUserToUpsertTfmUserRequest(entraIdUser: EntraIdUser): UpsertTfmUserRequest {
+  private static transformEntraIdUserToUpsertTfmUserRequest(entraIdUser: EntraIdUser): UpsertTfmUserRequest {
     return ENTRA_ID_USER_TO_UPSERT_TFM_USER_REQUEST_SCHEMA.parse(entraIdUser);
   }
 
@@ -59,15 +65,7 @@ export class UserService {
     return upsertedUser;
   }
 
-  public async saveUserLoginInformation({
-    userId,
-    sessionIdentifier,
-    auditDetails,
-  }: {
-    userId: ObjectId;
-    sessionIdentifier: string;
-    auditDetails: AuditDetails;
-  }) {
+  public async saveUserLoginInformation({ userId, sessionIdentifier, auditDetails }: saveUserLoginInformationParams) {
     await UserRepo.updateUserById({
       userId,
       userUpdate: {

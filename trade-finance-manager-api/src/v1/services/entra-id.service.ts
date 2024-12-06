@@ -1,18 +1,13 @@
 import { AuthorizationUrlRequest, ConfidentialClientApplication, Configuration as MsalAppConfig, CryptoProvider } from '@azure/msal-node';
-import { EntraIdUser, DecodedAuthCodeRequestState, EntraIdAuthCodeRedirectResponseBody } from '@ukef/dtfs2-common';
+import { EntraIdUser, DecodedAuthCodeRequestState, EntraIdAuthCodeRedirectResponseBody, GetAuthCodeUrlResponse } from '@ukef/dtfs2-common';
 import { DECODED_AUTH_CODE_REQUEST_STATE_SCHEMA, ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA } from '@ukef/dtfs2-common/schemas';
 import { EntraIdConfig } from '../configs/entra-id.config';
 import { EntraIdApi } from '../third-party-apis/entra-id.api';
 
-type GetAuthCodeUrlParams = {
+// Todo remove this and commonise
+export type GetAuthCodeUrlParams = {
   successRedirect?: string;
 };
-
-type GetAuthCodeUrlResponse = {
-  authCodeUrl: string;
-  authCodeUrlRequest: AuthorizationUrlRequest;
-};
-
 type HandleRedirectParams = {
   authCodeResponse: EntraIdAuthCodeRedirectResponseBody;
   originalAuthCodeUrlRequest?: AuthorizationUrlRequest;
