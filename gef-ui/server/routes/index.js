@@ -32,6 +32,7 @@ const cloneGefDeal = require('./clone-gef-deal');
 const unissuedFacilities = require('./unissued-facilities');
 const { default: bankReviewDate } = require('./facilities/bank-review-date');
 const { default: facilityEndDate } = require('./facilities/facility-end-date');
+const { default: amendments } = require('./facilities/amendments/index');
 
 const router = express.Router();
 
@@ -54,6 +55,7 @@ router.use(aboutExporterRoutes);
 router.use(facilitiesRoutes);
 router.use(bankReviewDate);
 router.use(facilityEndDate);
+router.use(amendments);
 router.use(aboutFacilityRoutes);
 router.use(providedFacilityRoutes);
 router.use(facilityCurrencyRoutes);

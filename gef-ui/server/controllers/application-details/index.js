@@ -24,7 +24,7 @@ const getUserAuthorisationLevelsToApplication = require('../../utils/user-author
 const { FACILITY_TYPE, AUTHORISATION_LEVEL, DEAL_SUBMISSION_TYPE, STAGE } = require('../../constants');
 const Application = require('../../models/application');
 const { MAKER } = require('../../constants/roles');
-const { canUserAmendIssuedFacilities } = require('../../utils/canUserAmendIssuedFacilities');
+const { canUserAmendIssuedFacilities } = require('../../utils/facility-amendments.helper');
 
 let userSession;
 
