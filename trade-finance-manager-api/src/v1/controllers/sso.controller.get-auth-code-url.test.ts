@@ -5,6 +5,7 @@ import {
   GetAuthCodeUrlApiResponse,
   GetAuthCodeUrlParams,
   GetAuthCodeUrlResponse,
+  withApiErrorTests,
 } from '@ukef/dtfs2-common';
 import { EntraIdServiceMockBuilder, UserServiceMockBuilder } from '../__mocks__/builders';
 import { EntraIdService } from '../services/entra-id.service';
@@ -18,7 +19,6 @@ describe('SsoController', () => {
     let ssoController: SsoController;
     let req: MockRequest<GetAuthCodeUrlApiRequest>;
     let res: MockResponse<GetAuthCodeUrlApiResponse>;
-    let next: jest.Mock;
 
     const getAuthCodeUrlMock = jest.fn();
 
@@ -36,50 +36,47 @@ describe('SsoController', () => {
       ssoController = new SsoController({ entraIdService, userService });
 
       ({ req, res } = getHttpMocks());
-      next = jest.fn();
     });
 
-    it('should call entraIdService.getAuthCodeUrl with the correct params', async () => {
-      // Arrange
-      const expectedGetAuthCodeUrlParams: GetAuthCodeUrlParams = {
-        successRedirect: aSuccessRedirect,
-      };
-      // Act
-      await ssoController.getAuthCodeUrl(req, res, next);
-
-      // Assert
-      expect(getAuthCodeUrlMock).toHaveBeenCalledWith(expectedGetAuthCodeUrlParams);
+    withApiErrorTests({
+      makeRequest: async () => ssoController.getAuthCodeUrl(req, res),
+      mockAnError: (error: unknown) => getAuthCodeUrlMock.mockRejectedValue(error),
+      getRes: () => res,
+      endpointErrorMessage: 'Failed to get auth code url',
     });
 
-    it('should return the result of entraIdService.getAuthCodeUrl', async () => {
-      // Arrange
-      const expectedGetAuthCodeUrlResult: GetAuthCodeUrlResponse = { authCodeUrl: 'a-auth-code-url', authCodeUrlRequest: anAuthorisationCodeRequest() };
-      getAuthCodeUrlMock.mockResolvedValue(expectedGetAuthCodeUrlResult);
-      // Act
-      await ssoController.getAuthCodeUrl(req, res, next);
+    describe('when getAuthCodeUrl is successful', () => {
+      it('should call entraIdService.getAuthCodeUrl with the correct params', async () => {
+        // Arrange
+        const expectedGetAuthCodeUrlParams: GetAuthCodeUrlParams = {
+          successRedirect: aSuccessRedirect,
+        };
+        // Act
+        await ssoController.getAuthCodeUrl(req, res);
 
-      // Assert
-      expect(res._getJSONData()).toEqual(expectedGetAuthCodeUrlResult);
-      expect(res._getStatusCode()).toEqual(200);
-    });
+        // Assert
+        expect(getAuthCodeUrlMock).toHaveBeenCalledWith(expectedGetAuthCodeUrlParams);
+      });
 
-    it('should return a 200', async () => {
-      // Act
-      await ssoController.getAuthCodeUrl(req, res, next);
+      it('should return the result of entraIdService.getAuthCodeUrl', async () => {
+        // Arrange
+        const expectedGetAuthCodeUrlResult: GetAuthCodeUrlResponse = { authCodeUrl: 'a-auth-code-url', authCodeUrlRequest: anAuthorisationCodeRequest() };
+        getAuthCodeUrlMock.mockResolvedValue(expectedGetAuthCodeUrlResult);
+        // Act
+        await ssoController.getAuthCodeUrl(req, res);
 
-      // Assert
-      expect(res._getStatusCode()).toEqual(200);
-    });
+        // Assert
+        expect(res._getJSONData()).toEqual(expectedGetAuthCodeUrlResult);
+        expect(res._getStatusCode()).toEqual(200);
+      });
 
-    it('should call next with the error if an error is thrown', async () => {
-      // Arrange
-      const expectedError = new Error('an-error');
-      getAuthCodeUrlMock.mockRejectedValue(expectedError);
-      // Act
-      await ssoController.getAuthCodeUrl(req, res, next);
+      it('should return a 200', async () => {
+        // Act
+        await ssoController.getAuthCodeUrl(req, res);
 
-      // Assert
-      expect(next).toHaveBeenCalledWith(expectedError);
+        // Assert
+        expect(res._getStatusCode()).toEqual(200);
+      });
     });
   });
 });

@@ -1,5 +1,5 @@
-import { NextFunction } from 'express';
 import {
+  ApiError,
   GetAuthCodeUrlApiRequest,
   GetAuthCodeUrlApiResponse,
   HandleSsoRedirectFormApiRequest,
@@ -10,6 +10,7 @@ import {
 import { ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA, TFM_SESSION_USER_SCHEMA } from '@ukef/dtfs2-common/schemas';
 import { isVerifiedPayload } from '@ukef/dtfs2-common/payload-verification';
 import { validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
+import { HttpStatusCode } from 'axios';
 import { EntraIdService } from '../services/entra-id.service';
 import { UserService } from '../services/user.service';
 import utils from '../../utils/crypto.util';
@@ -23,13 +24,27 @@ export class SsoController {
     this.userService = userService;
   }
 
-  public async getAuthCodeUrl(req: GetAuthCodeUrlApiRequest, res: GetAuthCodeUrlApiResponse, next: NextFunction) {
+  public async getAuthCodeUrl(req: GetAuthCodeUrlApiRequest, res: GetAuthCodeUrlApiResponse) {
     try {
       const { successRedirect } = req.params;
       const getAuthCodeUrlResponse = await this.entraIdService.getAuthCodeUrl({ successRedirect });
       res.json(getAuthCodeUrlResponse);
     } catch (error) {
-      next(error);
+      const errorMessage = 'Failed to get auth code url';
+      console.error(errorMessage, error);
+
+      if (error instanceof ApiError) {
+        res.status(error.status).send({
+          status: error.status,
+          message: `${errorMessage}: ${error.message}`,
+          code: error.code,
+        });
+        return;
+      }
+      res.status(HttpStatusCode.InternalServerError).send({
+        status: HttpStatusCode.InternalServerError,
+        message: errorMessage,
+      });
     }
   }
 
@@ -40,13 +55,18 @@ export class SsoController {
    * It takes the response from the Entra Id service and processes it to create or update a user in the TFM-API database.
    * It then issues a JWT token for the user and returns it to the client.
    */
-  public async handleSsoRedirectForm(req: HandleSsoRedirectFormApiRequest, res: HandleSsoRedirectFormApiResponse, next: NextFunction) {
+  public async handleSsoRedirectForm(req: HandleSsoRedirectFormApiRequest, res: HandleSsoRedirectFormApiResponse) {
     try {
       const { body } = req;
       const { authCodeResponse, originalAuthCodeUrlRequest, auditDetails } = body;
       validateAuditDetailsAndUserType(auditDetails, 'system');
 
-      if (!isVerifiedPayload({ payload: body, template: ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA })) {
+      /**
+       * We only validate the authCodeResponse here as the originalAuthCodeUrlRequest type (AuthorizationUrlRequest) is
+       * part of the MSAL auth library, so we allow the MSAL library to handle this for us, and
+       * we've already validated the auditDetails.
+       */
+      if (!isVerifiedPayload({ payload: authCodeResponse, template: ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA })) {
         throw new InvalidPayloadError('Invalid payload from SSO redirect');
       }
 
@@ -70,7 +90,21 @@ export class SsoController {
 
       res.send(response);
     } catch (error) {
-      next(error);
+      const errorMessage = 'Failed to handle redirect form';
+      console.error(errorMessage, error);
+
+      if (error instanceof ApiError) {
+        res.status(error.status).send({
+          status: error.status,
+          message: `${errorMessage}: ${error.message}`,
+          code: error.code,
+        });
+      }
+
+      res.status(HttpStatusCode.InternalServerError).send({
+        status: HttpStatusCode.InternalServerError,
+        message: errorMessage,
+      });
     }
   }
 }
