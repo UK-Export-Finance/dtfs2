@@ -1,4 +1,5 @@
 import * as api from './commands/api';
+import { createAndConfigureApplicationStatus } from './commands/createAndConfigureApplicationStatus';
 
 import './commands/click-events';
 
@@ -32,6 +33,7 @@ Cypress.Commands.add('apiLogin', api.login);
 Cypress.Commands.add('apiFetchAllApplications', api.fetchAllApplications);
 Cypress.Commands.add('apiFetchAllGefApplications', api.fetchAllGefApplications);
 Cypress.Commands.add('apiFetchAllFacilities', api.fetchAllFacilities);
+Cypress.Commands.add('createAndConfigureApplicationStatus', createAndConfigureApplicationStatus);
 Cypress.Commands.add('apiUpdateApplication', api.updateApplication);
 Cypress.Commands.add('apiSetApplicationStatus', api.setApplicationStatus);
 Cypress.Commands.add('apiCreateApplication', api.createApplication);

@@ -23,7 +23,7 @@
 }) }}
 
 {% if applicationStatus === 'Acknowledged' %}
-{{ mojBanner({
+  {{ mojBanner({
   type: 'information',
   text: 'Check your records for the most up-to-date facility details.',
   iconFallbackText: 'information',
@@ -46,7 +46,7 @@
             'data-cy': "facility-" + item.facilityId + "-make-change-button"
           }
         }) }}
-     {% endif %}
+      {% endif %}
     </header>
     {{ govukSummaryList({
       rows: item.rows,
