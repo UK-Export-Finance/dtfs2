@@ -103,6 +103,7 @@ describe('post-fee-record-correction.controller', () => {
         await postFeeRecordCorrection(req, res);
 
         // Assert
+        expect(mockFindTransientFormData).toHaveBeenCalledTimes(1);
         expect(mockFindTransientFormData).toHaveBeenCalledWith(userId, feeRecordId);
       });
 
@@ -114,6 +115,7 @@ describe('post-fee-record-correction.controller', () => {
         await postFeeRecordCorrection(req, res);
 
         // Assert
+        expect(mockFindFeeRecordWithReport).toHaveBeenCalledTimes(1);
         expect(mockFindFeeRecordWithReport).toHaveBeenCalledWith(feeRecordId, reportId);
       });
 
@@ -139,28 +141,31 @@ describe('post-fee-record-correction.controller', () => {
         // Arrange
         const { req, res } = getHttpMocks();
 
+        const expectedEventPayload = {
+          transactionEntityManager: mockEntityManager,
+          requestedByUser: {
+            id: userId,
+            firstName: user.firstName,
+            lastName: user.lastName,
+          },
+          reasons,
+          additionalInfo,
+          requestSource: {
+            platform: REQUEST_PLATFORM_TYPE.TFM,
+            userId,
+          },
+        };
+
         // Act
         await postFeeRecordCorrection(req, res);
 
         // Assert
+        expect(mockForFeeRecordStateMachineConstructor).toHaveBeenCalledTimes(1);
         expect(mockForFeeRecordStateMachineConstructor).toHaveBeenCalledWith(mockFeeRecord);
         expect(mockHandleEvent).toHaveBeenCalledTimes(1);
         expect(mockHandleEvent).toHaveBeenCalledWith({
           type: FEE_RECORD_EVENT_TYPE.CORRECTION_REQUESTED,
-          payload: {
-            transactionEntityManager: mockEntityManager,
-            requestedByUser: {
-              id: userId,
-              firstName: user.firstName,
-              lastName: user.lastName,
-            },
-            reasons,
-            additionalInfo,
-            requestSource: {
-              platform: REQUEST_PLATFORM_TYPE.TFM,
-              userId,
-            },
-          },
+          payload: expectedEventPayload,
         });
       });
 

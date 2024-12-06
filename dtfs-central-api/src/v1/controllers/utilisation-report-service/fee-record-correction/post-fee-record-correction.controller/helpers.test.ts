@@ -16,6 +16,18 @@ describe('post-fee-record-correction.controller helpers', () => {
     jest.resetAllMocks();
   });
 
+  const firstPaymentOfficerEmail = 'officer-1@example.com';
+  const secondPaymentOfficerEmail = 'officer-2@example.com';
+  const teamName = 'Payment Officer Team';
+
+  const bank = {
+    ...aBank(),
+    paymentOfficerTeam: {
+      teamName,
+      emails: [firstPaymentOfficerEmail, secondPaymentOfficerEmail],
+    },
+  };
+
   describe('formatReasonsAsBulletedListForEmail', () => {
     it('should format reasons as a bulleted list when there is a single reasons', () => {
       // Arrange
@@ -54,15 +66,6 @@ describe('post-fee-record-correction.controller helpers', () => {
 
     it('should generate email parameters', async () => {
       // Arrange
-      const firstPaymentOfficerEmail = 'officer-1@example.com';
-      const secondPaymentOfficerEmail = 'officer-2@example.com';
-      const bank = {
-        ...aBank(),
-        paymentOfficerTeam: {
-          teamName: 'Payment Officer Team',
-          emails: [firstPaymentOfficerEmail, secondPaymentOfficerEmail],
-        },
-      };
       jest.mocked(getBankById).mockResolvedValue(bank);
 
       // Act
@@ -72,7 +75,7 @@ describe('post-fee-record-correction.controller helpers', () => {
       expect(result).toEqual({
         emails: [firstPaymentOfficerEmail, secondPaymentOfficerEmail, requestedByUserEmail],
         variables: {
-          recipient: 'Payment Officer Team',
+          recipient: teamName,
           reportPeriod: getFormattedReportPeriodWithLongMonth(reportPeriod),
           exporterName: exporter,
           reasonsList: formatReasonsAsBulletedListForEmail(reasons),
@@ -101,15 +104,6 @@ describe('post-fee-record-correction.controller helpers', () => {
       const bankId = '567';
       const requestedByUserEmail = 'tfm-user@email.com';
 
-      const firstPaymentOfficerEmail = 'officer-1@example.com';
-      const secondPaymentOfficerEmail = 'officer-2@example.com';
-      const bank = {
-        ...aBank(),
-        paymentOfficerTeam: {
-          teamName: 'Payment Officer Team',
-          emails: [firstPaymentOfficerEmail, secondPaymentOfficerEmail],
-        },
-      };
       jest.mocked(getBankById).mockResolvedValue(bank);
 
       // Act
@@ -142,8 +136,8 @@ describe('post-fee-record-correction.controller helpers', () => {
       jest.mocked(getBankById).mockResolvedValue({
         ...aBank(),
         paymentOfficerTeam: {
-          teamName: 'Team name',
-          emails: ['test@test.com'],
+          teamName,
+          emails: ['test1@test.com'],
         },
       });
 
@@ -151,7 +145,7 @@ describe('post-fee-record-correction.controller helpers', () => {
       jest.mocked(externalApi.sendEmail).mockResolvedValueOnce().mockRejectedValueOnce(error);
 
       // Act + Assert
-      await expect(sendFeeRecordCorrectionRequestEmails([], aReportPeriod(), 'test exporter', bankId, 'test@test.com')).rejects.toThrow(error);
+      await expect(sendFeeRecordCorrectionRequestEmails([], aReportPeriod(), 'test exporter', bankId, 'test2@test.com')).rejects.toThrow(error);
       expect(console.error).toHaveBeenCalledWith('Error sending fee record correction request email: %o', error);
     });
   });
