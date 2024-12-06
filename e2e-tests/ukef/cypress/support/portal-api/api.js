@@ -110,6 +110,18 @@ module.exports.getDeal = (dealId, token) =>
     })
     .then((resp) => resp.body);
 
+module.exports.getGefDeal = (dealId, token) =>
+  cy
+    .request({
+      url: `${api()}/v1/gef/application/${dealId}`,
+      method: 'GET',
+      headers: {
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+        Authorization: token,
+      },
+    })
+    .then((resp) => resp.body);
+
 module.exports.createFacilities = (dealId, facilities, user, token) =>
   cy
     .request({

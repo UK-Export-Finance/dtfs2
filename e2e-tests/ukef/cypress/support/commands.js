@@ -6,6 +6,7 @@ import { checkerSubmitGefDealToUkef } from './portal/checkerSubmitGefDealToUkef'
 import { makerSubmitDealForReview } from './portal/makerSubmitDealForReview';
 import { checkerSubmitDealToUkef } from './portal/checkerSubmitDealToUkef';
 import { getOneDeal } from './portal-api/getOneDeal';
+import { getOneGefDeal } from './portal-api/getOneGefDeal';
 import { clearSessionCookies } from './utils/clearSessionCookies';
 
 // Preserve session cookie
@@ -35,6 +36,7 @@ Cypress.Commands.add('overridePortalUserSignInTokenWithValidTokenByUsername', re
 Cypress.Commands.add('getUserByUsername', require('./portal/getUserByUsername'));
 
 Cypress.Commands.add('getOneDeal', getOneDeal);
+Cypress.Commands.add('getOneGefDeal', getOneGefDeal);
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('enterUsernameAndPassword', require('./portal/enterUsernameAndPassword'));
 Cypress.Commands.add('completeDateFormFields', require('./portal/completeDateFormFields'));
