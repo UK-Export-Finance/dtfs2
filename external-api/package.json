@@ -40,7 +40,7 @@
     "cron": "^3.2.1",
     "date-fns": "^2.30.0",
     "dotenv": "16.3.1",
-    "express": "^4.21.1",
+    "express": "^4.21.2",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.11.2",
     "joi": "^17.13.3",
