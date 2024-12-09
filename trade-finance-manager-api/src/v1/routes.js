@@ -8,7 +8,6 @@ const passport = require('passport');
 
 const { swaggerSpec, swaggerUiOptions } = require('./swagger');
 const { validateSsoFeatureFlagIsOff, validateSsoFeatureFlagIsOn } = require('./middleware/validate-sso-feature-flag');
-const { validateTfmPutUserPayload } = require('./middleware/validate-put-tfm-user-payload');
 const feedbackController = require('./controllers/feedback-controller');
 const amendmentController = require('./controllers/amendment.controller');
 const facilityController = require('./controllers/facility.controller');
@@ -28,7 +27,7 @@ const { ssoOpenRouter } = require('./sso/routes');
 
 openRouter.use(checkApiKey);
 
-openRouter.use('/sso', ssoOpenRouter);
+openRouter.use('/sso', validateSsoFeatureFlagIsOn, ssoOpenRouter);
 
 authRouter.use(passport.authenticate('jwt', { session: false }));
 
@@ -75,10 +74,7 @@ authRouter.use('/', tasksRouter);
 openRouter.route('/feedback').post(feedbackController.create);
 
 openRouter.route('/user').post(validateSsoFeatureFlagIsOff, users.createTfmUser);
-authRouter
-  .route('/users')
-  .post(validateSsoFeatureFlagIsOff, users.createTfmUser)
-  .put(validateSsoFeatureFlagIsOn, validateTfmPutUserPayload, users.upsertTfmUserFromEntraIdUser);
+authRouter.route('/users').post(validateSsoFeatureFlagIsOff, users.createTfmUser);
 
 authRouter
   .route('/users/:user')
