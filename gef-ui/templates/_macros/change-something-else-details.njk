@@ -1,8 +1,6 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
-{% macro render() %}
-
-{% set AMENDMENT_FORM_EMAIL = "stb.pim@ukexportfinance.gov.uk" %}
+{% macro render(amendmentFormEmail) %}
 
 {% set bodyHtml %}
   <span class="govuk-body">
@@ -12,7 +10,7 @@
         <li>UKEF exposure percentage</li>
         <li>UKEF guarantee fee frequency</li>
       </ul>
-    <p>Use the Schedule 8 (Form of Amendment and Notification Request Form) and email the completed form to {{ AMENDMENT_FORM_EMAIL }}</p>
+    <p>Use the Schedule 8 (Form of Amendment and Notification Request Form) and email the completed form to {{ amendmentFormEmail }}</p>
   </span>
 {% endset %}
 
