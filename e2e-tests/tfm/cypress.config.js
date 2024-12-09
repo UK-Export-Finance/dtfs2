@@ -27,7 +27,6 @@ module.exports = defineConfig({
   apiKey: TFM_API_KEY,
   dbName: 'dtfs-submissions',
   dbConnectionString: 'mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true',
-  defaultCommandTimeout: 100000,
   responseTimeout: 100000,
   pageLoadTimeout: 120000,
   redirectionLimit: 100,
