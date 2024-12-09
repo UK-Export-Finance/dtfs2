@@ -1,5 +1,5 @@
 import { fromUnixTime, format } from 'date-fns';
-import { timeZoneConfig, DATE_FORMATS } from '@ukef/dtfs2-common';
+import { timeZoneConfig, DATE_FORMATS, MAPPED_FACILITY_TYPE, PORTAL_ACTIVITY_TYPE, PORTAL_ACTIVITY_LABEL } from '@ukef/dtfs2-common';
 import { mapPortalActivities, getPortalActivities } from '.';
 import api from '../../services/api';
 import mocks from '../mocks';
@@ -7,7 +7,7 @@ import mocks from '../mocks';
 jest.mock('../../services/api');
 
 const timestamp = 1733311320;
-const date = fromUnixTime(new Date(timestamp));
+const date = fromUnixTime(timestamp);
 
 const mockAuthor = {
   firstName: 'Bob',
@@ -17,11 +17,11 @@ const mockAuthor = {
 
 const dealSubmissionActivity = [
   {
-    type: 'NOTICE',
+    type: PORTAL_ACTIVITY_TYPE.NOTICE,
     timestamp,
     author: mockAuthor,
     text: '',
-    label: 'Automatic inclusion notice submitted to UKEF',
+    label: PORTAL_ACTIVITY_LABEL.AIN_SUBMISSION,
     html: '',
     facilityType: '',
     ukefFacilityId: '',
@@ -33,13 +33,13 @@ const dealSubmissionActivity = [
 
 const facilityActivity = [
   {
-    type: 'FACILITY_STAGE',
+    type: PORTAL_ACTIVITY_TYPE.FACILITY_STAGE,
     timestamp,
     author: mockAuthor,
     text: '',
-    label: 'Bank facility stage changed',
+    label: PORTAL_ACTIVITY_LABEL.FACILITY_CHANGED_ISSUED,
     html: 'facility',
-    facilityType: 'Cash facility',
+    facilityType: MAPPED_FACILITY_TYPE.CASH,
     ukefFacilityId: '12345',
     facilityId: '123456',
     maker: {
@@ -61,10 +61,10 @@ describe('mapPortalActivities', () => {
 
     const expected = [
       {
-        title: 'Automatic inclusion notice submitted to UKEF',
+        title: PORTAL_ACTIVITY_LABEL.AIN_SUBMISSION,
         date: format(date, DATE_FORMATS.D_MMMM_YYYY),
         time: format(date, DATE_FORMATS.H_MMAAA),
-        byline: 'Bob Smith',
+        byline: `${mockAuthor.firstName} ${mockAuthor.lastName}`,
         facilityType: '',
         ukefFacilityId: '',
         facilityId: '',
@@ -81,11 +81,11 @@ describe('mapPortalActivities', () => {
 
     const expected = [
       {
-        title: 'Bank facility stage changed',
+        title: PORTAL_ACTIVITY_LABEL.FACILITY_CHANGED_ISSUED,
         date: format(date, DATE_FORMATS.D_MMMM_YYYY),
         time: format(date, DATE_FORMATS.H_MMAAA),
-        byline: 'Bob Smith',
-        facilityType: 'Cash facility',
+        byline: `${mockAuthor.firstName} ${mockAuthor.lastName}`,
+        facilityType: MAPPED_FACILITY_TYPE.CASH,
         ukefFacilityId: '12345',
         facilityId: '123456',
         maker: {
