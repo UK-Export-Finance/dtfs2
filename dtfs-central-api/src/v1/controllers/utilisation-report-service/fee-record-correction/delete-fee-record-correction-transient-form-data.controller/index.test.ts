@@ -106,7 +106,7 @@ describe('delete-fee-record-correction-transient-form-data.controller', () => {
     it("should respond with the specific error status if deleting the transient form data throws an 'ApiError'", async () => {
       // Arrange
       const errorStatus = HttpStatusCode.NotFound;
-      mockFeeRecordExists.mockRejectedValue(new TestApiError(errorStatus, undefined));
+      mockFeeRecordExists.mockRejectedValue(new TestApiError({ status: errorStatus }));
 
       // Act
       await deleteFeeRecordCorrectionTransientFormData(req, res);
@@ -118,7 +118,7 @@ describe('delete-fee-record-correction-transient-form-data.controller', () => {
     it("should respond with the specific error message if deleting the transient form data throws an 'ApiError'", async () => {
       // Arrange
       const errorMessage = 'Some error message';
-      mockFeeRecordExists.mockRejectedValue(new TestApiError(undefined, errorMessage));
+      mockFeeRecordExists.mockRejectedValue(new TestApiError({ message: errorMessage }));
 
       // Act
       await deleteFeeRecordCorrectionTransientFormData(req, res);
