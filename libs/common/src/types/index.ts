@@ -30,3 +30,5 @@ export * from './radio-item';
 export * from './date-iana-timezones';
 export * from './flash';
 export * from './record-correction-reason';
+export * from './record-correction-transient-form-data';
+export * from './fee-record-correction';

@@ -15,6 +15,6 @@ const hasReadOnlyRole = (target) => target?.roles?.includes(READ_ONLY);
  * @param {Object} change the changes to make
  * @returns {Array} either an empty array or an array containing an error object
  */
-const readOnlyRoleCannotBeAssignedWithOtherRoles = (_user, change) => (hasReadOnlyRole(change) && hasANonReadOnlyRole(change) ? [error] : []);
+const readOnlyRoleCannotBeAssignedWithOtherRoles = (user, change) => (hasReadOnlyRole(change) && hasANonReadOnlyRole(change) ? [error] : []);
 
 module.exports = readOnlyRoleCannotBeAssignedWithOtherRoles;

@@ -1688,6 +1688,78 @@ const getFeeRecord = async (reportId, feeRecordId) => {
   return response.data;
 };
 
+/**
+ * Gets the fee record correction request review details
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
+ * @param {string} userId - The id of the user making the correction request
+ * @returns {Promise<import('./api-response-types').FeeRecordCorrectionRequestReviewResponseBody>}
+ */
+const getFeeRecordCorrectionRequestReview = async (reportId, feeRecordId, userId) => {
+  const response = await axios.get(
+    `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-request-review/${userId}`,
+    {
+      headers: headers.central,
+    },
+  );
+
+  return response.data;
+};
+
+/**
+ * Updates the fee record correction transient form data associated with the given fee record id and user
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
+ * @param {import('@ukef/dtfs2-common').RecordCorrectionTransientFormData} formData
+ * @param {import('../types/tfm-session-user').TfmSessionUser} user - The current user stored in the session
+ */
+const updateFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, formData, user) => {
+  await axios({
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-transient-form-data`,
+    method: 'put',
+    headers: headers.central,
+    data: {
+      formData,
+      user,
+    },
+  });
+};
+
+/**
+ * Gets the fee record correction transient form data by report id, fee record id, and user id
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
+ * @param {string} userId - The user id
+ * @returns {Promise<import('@ukef/dtfs2-common').RecordCorrectionTransientFormData | {}>}
+ */
+const getFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, userId) => {
+  const response = await axios.get(
+    `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-transient-form-data/${userId}`,
+    {
+      headers: headers.central,
+    },
+  );
+
+  return response.data;
+};
+
+/**
+ * Creates a fee record correction
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
+ * @param {import('../types/tfm-session-user').TfmSessionUser} user - The requesting user
+ */
+const createFeeRecordCorrection = async (reportId, feeRecordId, user) => {
+  await axios({
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/corrections`,
+    method: 'post',
+    headers: headers.central,
+    data: {
+      user,
+    },
+  });
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -1766,4 +1838,8 @@ module.exports = {
   removeFeesFromPayment,
   addFeesToAnExistingPayment,
   getFeeRecord,
+  getFeeRecordCorrectionRequestReview,
+  updateFeeRecordCorrectionTransientFormData,
+  createFeeRecordCorrection,
+  getFeeRecordCorrectionTransientFormData,
 };

@@ -1,4 +1,4 @@
-@import "node_modules/govuk-frontend/govuk/all";
+@import "node_modules/govuk-frontend/dist/govuk/all";
 @import "node_modules/@ministryofjustice/frontend/moj/all";
 
 // custom styles
@@ -10,7 +10,6 @@
 @import "./contract-table.scss";
 @import "./contract-transactions-table.scss";
 @import "./eligibility-criteria.scss";
-@import "./totals-table.scss";
 @import "./file-upload.scss";
 @import "./form.scss";
 @import "./forms-task-list.scss";

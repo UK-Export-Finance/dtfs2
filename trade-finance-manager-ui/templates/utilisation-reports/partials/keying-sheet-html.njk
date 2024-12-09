@@ -1,0 +1,38 @@
+<h2 class="govuk-heading-l" data-cy="keying-sheet-heading">Keying sheet</h2>
+
+{% if userCanEdit %}
+  <p class="govuk-body" data-cy="select-payments-text">Select payments and mark as done when the adjustments have been keyed into ACBS.</p>
+{% endif %}
+
+<p class="govuk-body" data-cy="payments-on-premium-payments-tab-text">Payments on the premium payments tab will show as reconciled when they have been marked as done here.</p>
+
+<form method="post" data-cy="keying-sheet-form">
+  <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+  {% if userCanEdit %}
+    <div class="govuk-button-group">
+      <input
+        class="govuk-button govuk-!-margin-right-3"
+        formaction="/utilisation-reports/{{ reportId }}/keying-data/mark-as-done"
+        value="Mark as done"
+        data-module="govuk-button"
+        type="submit"
+        data-cy="keying-sheet-mark-as-done-button"
+      />
+
+      <input
+        class="govuk-button govuk-button--secondary"
+        formaction="/utilisation-reports/{{ reportId }}/keying-data/mark-as-to-do"
+        value="Mark as to do"
+        data-module="govuk-button"
+        type="submit"
+        data-cy="keying-sheet-mark-as-to-do-button"
+      />
+    </div>
+  {% endif %}
+
+  {{ keyingSheetTable.render({
+    keyingSheet: keyingSheet,
+    userCanEdit: userCanEdit
+  }) }}
+</form>
