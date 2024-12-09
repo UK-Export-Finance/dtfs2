@@ -42,7 +42,9 @@ describe('PortalDealService - addGefDealCancelledActivity', () => {
   });
 
   describe(`when dealType is ${DEAL_TYPE.GEF}`, () => {
-    jest.spyOn(PortalActivityRepo, 'addPortalActivity').mockImplementation(addPortalActivityMock);
+    beforeEach(() => {
+      jest.spyOn(PortalActivityRepo, 'addPortalActivity').mockImplementation(addPortalActivityMock);
+    });
 
     const mockDeal = deal;
     mockDeal.dealSnapshot.dealType = DEAL_TYPE.GEF;
@@ -130,7 +132,7 @@ describe('PortalDealService - addGefDealCancelledActivity', () => {
   });
 
   describe(`when dealType is not ${DEAL_TYPE.GEF}`, () => {
-    it(`should not call addPortalActivity when dealType is not ${DEAL_TYPE.GEF}`, async () => {
+    it('should not call addPortalActivity', async () => {
       // Arrange
       const mockDeal = deal;
       mockDeal.dealSnapshot.dealType = DEAL_TYPE.BSS_EWCS;
