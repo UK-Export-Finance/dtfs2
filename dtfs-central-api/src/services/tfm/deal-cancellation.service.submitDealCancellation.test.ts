@@ -156,6 +156,8 @@ describe('DealCancellationService', () => {
           await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 
           // Assert
+          expect(submitDealCancellationMock).toHaveBeenCalledTimes(1);
+
           const expectedActivity: TfmActivity = {
             type: ACTIVITY_TYPES.CANCELLATION,
             timestamp: getUnixTime(new Date()),
@@ -167,7 +169,6 @@ describe('DealCancellationService', () => {
             ...cancellation,
           };
 
-          expect(submitDealCancellationMock).toHaveBeenCalledTimes(1);
           expect(submitDealCancellationMock).toHaveBeenCalledWith({ dealId, cancellation, activity: expectedActivity, auditDetails });
         });
 
@@ -184,7 +185,9 @@ describe('DealCancellationService', () => {
           const dealCancellationResponse = await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 
           // Assert
-          expect(dealCancellationResponse).toEqual(DealCancellationService.getTfmDealCancellationResponse(mockRepositoryResponse));
+          const expected = DealCancellationService.getTfmDealCancellationResponse(mockRepositoryResponse);
+
+          expect(dealCancellationResponse).toEqual(expected);
         });
 
         it(`should call PortalDealService.updateStatus with ${DEAL_STATUS.CANCELLED} status`, async () => {

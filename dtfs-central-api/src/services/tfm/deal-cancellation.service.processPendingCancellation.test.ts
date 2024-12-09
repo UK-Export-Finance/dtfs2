@@ -142,7 +142,9 @@ describe('DealCancellationService', () => {
       const dealCancellationResponse = await DealCancellationService.processPendingCancellation(dealId, cancellation, auditDetails);
 
       // Assert
-      expect(dealCancellationResponse).toEqual(DealCancellationService.getTfmDealCancellationResponse(mockRepositoryResponse));
+      const expected = DealCancellationService.getTfmDealCancellationResponse(mockRepositoryResponse);
+
+      expect(dealCancellationResponse).toEqual(expected);
     });
   });
 });
