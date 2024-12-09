@@ -12,6 +12,8 @@ import { INITIATE_RECORD_CORRECTION_ERROR_KEY } from '../../../../constants/prem
 import { mapCheckedCheckboxesToRecord } from '../../../../helpers/map-checked-checkboxes-to-record';
 import { InitiateRecordCorrectionRequestErrorKey } from '../../../../types/premium-payments-tab-error-keys';
 import { PremiumPaymentsTableCheckboxId } from '../../../../types/premium-payments-table-checkbox-id';
+import { asUserSession } from '../../../../helpers/express-session';
+import api from '../../../../api';
 
 export type PostInitiateRecordCorrectionRequest = CustomExpressRequest<{
   reqBody: PremiumPaymentsTableCheckboxSelectionsRequestBody;
@@ -59,6 +61,7 @@ export const validateRecordCorrectionRequestFeeSelections = (checkedCheckboxIds:
   return { selectedFeeRecordId: selectedFeeRecordIds[0], errorKey: null };
 };
 
+// TODO FN-3690: Need to update tests for this controller to ensure the delete endpoint is called.
 /**
  * Controller for the POST initiate record correction request route.
  *
@@ -73,9 +76,10 @@ export const validateRecordCorrectionRequestFeeSelections = (checkedCheckboxIds:
  * @param req - The request object
  * @param res - The response object
  */
-export const postInitiateRecordCorrectionRequest = (req: PostInitiateRecordCorrectionRequest, res: Response) => {
+export const postInitiateRecordCorrectionRequest = async (req: PostInitiateRecordCorrectionRequest, res: Response) => {
   try {
     const { reportId } = req.params;
+    const { user, userToken } = asUserSession(req.session);
 
     const checkedCheckboxIds = getPremiumPaymentsCheckboxIdsFromObjectKeys(req.body);
 
@@ -89,7 +93,7 @@ export const postInitiateRecordCorrectionRequest = (req: PostInitiateRecordCorre
       return res.redirect(axios.getUri({ url: `/utilisation-reports/${reportId}`, params: { premiumPaymentsFacilityId } }));
     }
 
-    // TODO FN-3690: Add in call to delete endpoint here.
+    await api.deleteFeeRecordCorrectionTransientFormData(reportId, selectedFeeRecordId.toString(), user, userToken);
 
     return res.redirect(`/utilisation-reports/${reportId}/create-record-correction-request/${selectedFeeRecordId}`);
   } catch (error) {

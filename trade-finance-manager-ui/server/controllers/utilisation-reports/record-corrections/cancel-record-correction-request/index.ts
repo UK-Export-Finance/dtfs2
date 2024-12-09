@@ -1,6 +1,8 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { getLinkToPremiumPaymentsTab } from '../../helpers';
+import { asUserSession } from '../../../../helpers/express-session';
+import api from '../../../../api';
 
 export type PostCancelRecordCorrectionRequestRequest = CustomExpressRequest<{
   params: {
@@ -15,11 +17,12 @@ export type PostCancelRecordCorrectionRequestRequest = CustomExpressRequest<{
  * @param req - The request object
  * @param res - The response object
  */
-export const postCancelRecordCorrectionRequest = (req: PostCancelRecordCorrectionRequestRequest, res: Response) => {
+export const postCancelRecordCorrectionRequest = async (req: PostCancelRecordCorrectionRequestRequest, res: Response) => {
   try {
     const { reportId, feeRecordId } = req.params;
+    const { user, userToken } = asUserSession(req.session);
 
-    // TODO FN-3690: Call TFM API delete endpoint (to be added under this ticket), passing in the reportId, feeRecordId, user.
+    await api.deleteFeeRecordCorrectionTransientFormData(reportId, feeRecordId, user, userToken);
 
     return res.redirect(getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]));
   } catch (error) {
