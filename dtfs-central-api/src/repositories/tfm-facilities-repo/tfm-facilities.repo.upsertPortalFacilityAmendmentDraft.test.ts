@@ -69,6 +69,7 @@ describe('TfmFacilitiesRepo', () => {
 
       const expectedFirstUpdateFilter = {
         $pull: { amendments: { type: AMENDMENT_TYPES.PORTAL, status: { $ne: AMENDMENT_STATUS.COMPLETED } } },
+        $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
       };
 
       const expectedSecondUpdateFilter = {

@@ -312,7 +312,10 @@ export class TfmFacilitiesRepo {
     };
 
     const removeDraftAmendmentsFilter: UpdateFilter<TfmFacility> = {
-      $pull: { amendments: { type: AMENDMENT_TYPES.PORTAL, status: { $ne: AMENDMENT_STATUS.COMPLETED } } },
+      $pull: {
+        amendments: { type: AMENDMENT_TYPES.PORTAL, status: { $ne: AMENDMENT_STATUS.COMPLETED } },
+      },
+      $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
     };
 
     const pushDraftAmendmentFilter: UpdateFilter<TfmFacility> = {
