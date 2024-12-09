@@ -4,20 +4,17 @@ import { Response } from 'express';
 import { API_ERROR_CODE } from '../../constants';
 import { TestApiError } from '../test-api-error';
 
-export const withApiErrorTests = ({
-  mockAnError,
-  makeRequest,
-  getRes,
-  endpointErrorMessage,
-}: {
+type WithApiErrorTestsParams = {
   mockAnError: (error: unknown) => void;
   makeRequest: () => Promise<unknown>;
   getRes: () => MockResponse<Response>;
   endpointErrorMessage: string;
-}) => {
+};
+
+export const withApiErrorTests = ({ mockAnError, makeRequest, getRes, endpointErrorMessage }: WithApiErrorTestsParams) => {
   describe('with api error tests', () => {
     describe('when an api error is thrown', () => {
-      it('should transform and return the error', async () => {
+      it('should return the errors status code with error details', async () => {
         // Arrange
         const errorStatus = HttpStatusCode.BadRequest;
         const errorMessage = 'a message that should not be exposed';
@@ -41,7 +38,7 @@ export const withApiErrorTests = ({
     });
 
     describe('when a non-api error is thrown', () => {
-      it('should return 500 with a generic error message', async () => {
+      it('should return a 500 with a generic error message', async () => {
         // Arrange
         const errorMessage = 'a message that should not be exposed';
 

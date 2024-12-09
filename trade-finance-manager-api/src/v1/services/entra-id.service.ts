@@ -8,12 +8,13 @@ import { EntraIdApi } from '../third-party-apis/entra-id.api';
 export type GetAuthCodeUrlParams = {
   successRedirect?: string;
 };
+
 type HandleRedirectParams = {
   authCodeResponse: EntraIdAuthCodeRedirectResponseBody;
   originalAuthCodeUrlRequest?: AuthorizationUrlRequest;
 };
 
-type HandleRedirectResponse = {
+export type HandleRedirectResponse = {
   entraIdUser: EntraIdUser;
   successRedirect?: string;
 };

@@ -4,6 +4,7 @@ import { EntraIdAuthCodeRedirectResponseBody } from './entra-id';
 import { TfmSessionUser } from './tfm-session-user';
 import { AuditDetails } from '../audit-details';
 import { CustomExpressRequest } from '../express-custom-request';
+import { ApiErrorResponseBody } from '../api-error-response-body';
 
 export type HandleSsoRedirectFormRequest = {
   authCodeResponse: EntraIdAuthCodeRedirectResponseBody;
@@ -22,4 +23,4 @@ export type HandleSsoRedirectFormUiRequest = CustomExpressRequest<{ reqBody: Ent
 
 export type HandleSsoRedirectFormApiRequest = CustomExpressRequest<{ reqBody: HandleSsoRedirectFormRequest }>;
 
-export type HandleSsoRedirectFormApiResponse = Response<HandleSsoRedirectFormResponse>;
+export type HandleSsoRedirectFormApiResponse = Response<HandleSsoRedirectFormResponse | ApiErrorResponseBody>;
