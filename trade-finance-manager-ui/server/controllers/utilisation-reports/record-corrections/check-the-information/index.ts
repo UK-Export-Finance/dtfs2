@@ -56,6 +56,8 @@ export const postRecordCorrectionRequestInformation = async (req: Request, res: 
 
     await api.createFeeRecordCorrection(reportId, feeRecordId, user, userToken);
 
+    await api.deleteFeeRecordCorrectionTransientFormData(reportId, feeRecordId, user, userToken);
+
     return res.redirect(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}/request-sent`);
   } catch (error) {
     console.error('Failed to create record correction', error);

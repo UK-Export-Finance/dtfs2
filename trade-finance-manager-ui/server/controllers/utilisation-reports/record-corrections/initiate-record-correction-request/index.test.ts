@@ -6,6 +6,9 @@ import { INITIATE_RECORD_CORRECTION_ERROR_KEY } from '../../../../constants/prem
 import { PremiumPaymentsTableCheckboxSelectionsRequestBody } from '../../helpers';
 import { PremiumPaymentsTableCheckboxId } from '../../../../types/premium-payments-table-checkbox-id';
 import { aTfmSessionUser } from '../../../../../test-helpers';
+import api from '../../../../api';
+
+jest.mock('../../../../api');
 
 console.error = jest.fn();
 
@@ -79,9 +82,11 @@ describe('controllers/utilisation-reports/record-corrections/initiate-record-cor
   });
 
   describe('postInitiateRecordCorrectionRequest', () => {
+    const userToken = 'user-token';
+    const user = aTfmSessionUser();
     const aRequestSession = () => ({
-      userToken: 'user-token',
-      user: aTfmSessionUser(),
+      userToken,
+      user,
     });
 
     describe.each`
@@ -89,7 +94,7 @@ describe('controllers/utilisation-reports/record-corrections/initiate-record-cor
       ${'when no checkboxes are selected'}         | ${{}}
       ${'when an invalid checkbox id is provided'} | ${{ 'feeRecordIds--reportedPaymentsCurrency-GBP-status-TO_DO': 'on' }}
     `('$testName', ({ requestBody }: { requestBody: PremiumPaymentsTableCheckboxSelectionsRequestBody }) => {
-      it(`should redirect to premium payments page with '${INITIATE_RECORD_CORRECTION_ERROR_KEY.NO_FEE_RECORDS_SELECTED}' error`, () => {
+      it(`should redirect to premium payments page with '${INITIATE_RECORD_CORRECTION_ERROR_KEY.NO_FEE_RECORDS_SELECTED}' error`, async () => {
         // Arrange
         const reportId = '123';
         const { req, res } = httpMocks.createMocks<PostInitiateRecordCorrectionRequest>({
@@ -99,7 +104,7 @@ describe('controllers/utilisation-reports/record-corrections/initiate-record-cor
         });
 
         // Act
-        postInitiateRecordCorrectionRequest(req, res);
+        await postInitiateRecordCorrectionRequest(req, res);
 
         // Assert
         expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}`);
@@ -119,7 +124,7 @@ describe('controllers/utilisation-reports/record-corrections/initiate-record-cor
         'feeRecordIds-789-reportedPaymentsCurrency-GBP-status-TO_DO': true,
       };
 
-      it(`should redirect to premium payments page with '${INITIATE_RECORD_CORRECTION_ERROR_KEY.MULTIPLE_FEE_RECORDS_SELECTED}' error`, () => {
+      it(`should redirect to premium payments page with '${INITIATE_RECORD_CORRECTION_ERROR_KEY.MULTIPLE_FEE_RECORDS_SELECTED}' error`, async () => {
         // Arrange
         const reportId = '123';
         const { req, res } = httpMocks.createMocks<PostInitiateRecordCorrectionRequest>({
@@ -129,7 +134,7 @@ describe('controllers/utilisation-reports/record-corrections/initiate-record-cor
         });
 
         // Act
-        postInitiateRecordCorrectionRequest(req, res);
+        await postInitiateRecordCorrectionRequest(req, res);
 
         // Assert
         expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}`);
@@ -150,7 +155,7 @@ describe('controllers/utilisation-reports/record-corrections/initiate-record-cor
           [checkboxId]: true,
         };
 
-        it(`should redirect to premium payments page with '${INITIATE_RECORD_CORRECTION_ERROR_KEY.INVALID_STATUS}' error`, () => {
+        it(`should redirect to premium payments page with '${INITIATE_RECORD_CORRECTION_ERROR_KEY.INVALID_STATUS}' error`, async () => {
           // Arrange
           const reportId = '123';
           const { req, res } = httpMocks.createMocks<PostInitiateRecordCorrectionRequest>({
@@ -160,7 +165,7 @@ describe('controllers/utilisation-reports/record-corrections/initiate-record-cor
           });
 
           // Act
-          postInitiateRecordCorrectionRequest(req, res);
+          await postInitiateRecordCorrectionRequest(req, res);
 
           // Assert
           expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}`);
@@ -171,11 +176,12 @@ describe('controllers/utilisation-reports/record-corrections/initiate-record-cor
     );
 
     describe(`when a single checkbox in status ${FEE_RECORD_STATUS.TO_DO} is selected`, () => {
+      const selectedFeeRecordId = '456';
       const requestBody: PremiumPaymentsTableCheckboxSelectionsRequestBody = {
-        'feeRecordIds-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
+        [`feeRecordIds-${selectedFeeRecordId}-reportedPaymentsCurrency-GBP-status-TO_DO`]: 'on',
       };
 
-      it(`should redirect to create record coorection request page`, () => {
+      it('should clear transient form data on success', async () => {
         // Arrange
         const reportId = '123';
         const { req, res } = httpMocks.createMocks<PostInitiateRecordCorrectionRequest>({
@@ -185,7 +191,24 @@ describe('controllers/utilisation-reports/record-corrections/initiate-record-cor
         });
 
         // Act
-        postInitiateRecordCorrectionRequest(req, res);
+        await postInitiateRecordCorrectionRequest(req, res);
+
+        // Assert
+        expect(api.deleteFeeRecordCorrectionTransientFormData).toHaveBeenCalledTimes(1);
+        expect(api.deleteFeeRecordCorrectionTransientFormData).toHaveBeenCalledWith(reportId, selectedFeeRecordId, user, userToken);
+      });
+
+      it(`should redirect to create record correction request page`, async () => {
+        // Arrange
+        const reportId = '123';
+        const { req, res } = httpMocks.createMocks<PostInitiateRecordCorrectionRequest>({
+          params: { reportId },
+          session: aRequestSession(),
+          body: requestBody,
+        });
+
+        // Act
+        await postInitiateRecordCorrectionRequest(req, res);
 
         // Assert
         expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}/create-record-correction-request/456`);
@@ -199,7 +222,7 @@ describe('controllers/utilisation-reports/record-corrections/initiate-record-cor
         'feeRecordIds-456,789-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
       };
 
-      it(`should render problem with service page`, () => {
+      it(`should render problem with service page`, async () => {
         // Arrange
         const requestSession = aRequestSession();
         const reportId = '123';
@@ -210,7 +233,7 @@ describe('controllers/utilisation-reports/record-corrections/initiate-record-cor
         });
 
         // Act
-        postInitiateRecordCorrectionRequest(req, res);
+        await postInitiateRecordCorrectionRequest(req, res);
 
         // Assert
         expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');

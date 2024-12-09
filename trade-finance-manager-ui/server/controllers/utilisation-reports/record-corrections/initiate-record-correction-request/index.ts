@@ -61,7 +61,6 @@ export const validateRecordCorrectionRequestFeeSelections = (checkedCheckboxIds:
   return { selectedFeeRecordId: selectedFeeRecordIds[0], errorKey: null };
 };
 
-// TODO FN-3690: Need to update tests for this controller to ensure the delete endpoint is called.
 /**
  * Controller for the POST initiate record correction request route.
  *

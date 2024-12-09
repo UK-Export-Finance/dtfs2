@@ -1,5 +1,6 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { MockResponse } from 'node-mocks-http';
 import { mapReasonsToDisplayValues, getFormattedReportPeriodWithLongMonth, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
+import { Request, Response } from 'express';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import { getRecordCorrectionRequestInformation, postRecordCorrectionRequestInformation } from '.';
@@ -74,13 +75,17 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
   });
 
   describe('postRecordCorrectionRequestInformation', () => {
-    it('should redirect to request sent page on success', async () => {
-      // Arrange
-      const { req, res } = httpMocks.createMocks({
+    let req: Request;
+    let res: MockResponse<Response>;
+
+    beforeEach(() => {
+      ({ req, res } = httpMocks.createMocks({
         session: requestSession,
         params: { reportId, feeRecordId },
-      });
+      }));
+    });
 
+    it('should redirect to request sent page on success', async () => {
       // Act
       await postRecordCorrectionRequestInformation(req, res);
 
@@ -90,13 +95,19 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
       expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}/request-sent`);
     });
 
+    it('should clear transient form data on success', async () => {
+      // Act
+      await postRecordCorrectionRequestInformation(req, res);
+
+      // Assert
+      expect(api.createFeeRecordCorrection).toHaveBeenCalledTimes(1);
+
+      expect(api.deleteFeeRecordCorrectionTransientFormData).toHaveBeenCalledTimes(1);
+      expect(api.deleteFeeRecordCorrectionTransientFormData).toHaveBeenCalledWith(reportId, feeRecordId, user, userToken);
+    });
+
     it('should render problem with service page on error', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
-        session: requestSession,
-        params: { reportId, feeRecordId },
-      });
-
       jest.mocked(api.createFeeRecordCorrection).mockRejectedValue(new Error('API Error'));
 
       // Act
@@ -105,6 +116,17 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
       // Assert
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
       expect(res._getRenderData()).toEqual({ user });
+    });
+
+    it('should not clear transient form data on record correction creation error', async () => {
+      // Arrange
+      jest.mocked(api.createFeeRecordCorrection).mockRejectedValue(new Error('API Error'));
+
+      // Act
+      await postRecordCorrectionRequestInformation(req, res);
+
+      // Assert
+      expect(api.deleteFeeRecordCorrectionTransientFormData).toHaveBeenCalledTimes(0);
     });
   });
 });

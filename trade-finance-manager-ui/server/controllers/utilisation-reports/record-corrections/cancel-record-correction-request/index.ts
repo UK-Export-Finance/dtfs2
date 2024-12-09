@@ -11,9 +11,11 @@ export type PostCancelRecordCorrectionRequestRequest = CustomExpressRequest<{
   };
 }>;
 
-// TODO FN-3690: Need to add tests for this controller.
 /**
- * Controller for the POST cancel record correction request route
+ * Controller for the POST cancel record correction request route.
+ * Deletes the transient form data for the given report id, fee record id, and
+ * user, then redirects to the premium payments tab with the given fee record
+ * id selected.
  * @param req - The request object
  * @param res - The response object
  */
