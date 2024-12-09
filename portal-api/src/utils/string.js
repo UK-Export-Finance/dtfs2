@@ -7,10 +7,19 @@ const isEmptyString = (str) => {
   return false;
 };
 
+/**
+ * Check if a param has a value, i.e
+ * - the param is defined
+ * - the param is not an empty string
+ * - the param is not a 'Select value' string
+ * @param {unknown}
+ * @returns {boolean}
+ */
 const hasValue = (str) => {
-  if (str && !isEmptyString(str)) {
+  if (str && !isEmptyString(str) && str !== 'Select value') {
     return true;
   }
+
   return false;
 };
 
@@ -38,7 +47,7 @@ Additional aspects:
   The function returns false if the input is not a non-empty string
 
  * @param {string} email Email address as string
- * @returns Boolean
+ * @returns {boolean}
  */
 const isValidEmail = (email) => {
   if (email) {

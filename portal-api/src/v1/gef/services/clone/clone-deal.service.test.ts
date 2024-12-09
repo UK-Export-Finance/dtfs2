@@ -1,4 +1,13 @@
-import { aPortalSessionUser, Bank, Deal, DEAL_STATUS, DealNotFoundError, InvalidDealIdError, InvalidParameterError } from '@ukef/dtfs2-common';
+import {
+  aPortalSessionUser,
+  Bank,
+  Deal,
+  DEAL_STATUS,
+  DealNotFoundError,
+  InvalidDealIdError,
+  InvalidParameterError,
+  PORTAL_ACTIVITY_TYPE,
+} from '@ukef/dtfs2-common';
 import { Collection, ObjectId } from 'mongodb';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { cloneDealToLatestVersion } from './clone-deal.service';
@@ -42,7 +51,18 @@ const existingDeal: Deal = {
   bank: {},
   checkerId: 'checker id',
   editedBy: ['a user id', 'another user id'],
-  portalActivities: ['An activity'],
+  portalActivities: [
+    {
+      type: PORTAL_ACTIVITY_TYPE.NOTICE,
+      timestamp: Date.now(),
+      author: {
+        firstName: 'mock',
+        lastName: 'mock',
+        _id: 'mock-id',
+      },
+      label: 'Mock label',
+    },
+  ],
   supportingInformation: {
     information: 'information',
   },

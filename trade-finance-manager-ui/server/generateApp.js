@@ -86,7 +86,7 @@ const generateApp = () => {
     }),
   );
 
-  app.use('/assets', express.static('node_modules/govuk-frontend/govuk/assets'), express.static(path.join(__dirname, '..', 'public')));
+  app.use('/assets', express.static('node_modules/govuk-frontend/dist/govuk/assets'), express.static(path.join(__dirname, '..', 'public')));
 
   app.use(createRateLimit());
   app.use(healthcheck);
