@@ -11,24 +11,24 @@
 
 {% block content %}
 
-{% if errors %}
-  {{ govukErrorSummary({
+  {% if errors %}
+    {{ govukErrorSummary({
       titleText: "There is a problem",
       errorList: errors.errorSummary,
       attributes: {
         'data-cy': 'error-summary'
       }
     }) }}
-{% endif %}
+  {% endif %}
 
-{% if passwordreset %}
-  {{ govukInsetText({
-    classes: "govuk-!-margin-top-0",
-    html: "<p>We\'ve sent an email to the address you have provided. Please check your inbox and spam folder for a message from us. </p><p>If you require further assistance please contact <a class="govuk-link" href="mailTo:' + CONTACT_US_EMAIL_ADDRESS + '"> ' + CONTACT_US_EMAIL_ADDRESS + '</a>.</p>",
-    attributes: {
-      "data-cy": "password-reset-notification"
-    }
-  }) }}
+  {% if passwordreset %}
+    {{ govukInsetText({
+      classes: "govuk-!-margin-top-0",
+      html: '<p>We\'ve sent an email to the address you have provided. Please check your inbox and spam folder for a message from us. </p><p>If you require further assistance please contact <a class="govuk-link" href="mailTo:' + CONTACT_US_EMAIL_ADDRESS + '"> ' + CONTACT_US_EMAIL_ADDRESS + '</a>.</p>',
+      attributes: {
+        "data-cy": "password-reset-notification"
+      }
+    }) }}
   {% endif %}
 
   {% if passwordupdated %}
