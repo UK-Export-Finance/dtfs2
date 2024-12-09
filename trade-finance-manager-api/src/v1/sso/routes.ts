@@ -8,9 +8,6 @@ import { UserService } from '../services/user.service';
 
 export const ssoOpenRouter = express.Router();
 
-// TODO -- Update this to have passport control
-export const ssoPartialLoginRouter = express.Router();
-
 const entraIdConfig = new EntraIdConfig();
 const entraIdApi = new EntraIdApi({ entraIdConfig });
 const entraIdService = new EntraIdService({ entraIdConfig, entraIdApi });
