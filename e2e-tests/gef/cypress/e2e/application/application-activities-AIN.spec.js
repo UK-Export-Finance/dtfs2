@@ -62,6 +62,8 @@ context('Submit AIN deal and check portalActivities', () => {
       cy.clickSubmitButton();
       submitToUkef.confirmSubmissionCheckbox().click();
       cy.clickSubmitButton();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(15000);
     });
   });
 
