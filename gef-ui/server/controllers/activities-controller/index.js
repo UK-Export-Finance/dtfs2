@@ -14,7 +14,7 @@ const mapPortalActivities = (portalActivities) =>
     const date = fromUnixTime(new Date(timestamp));
 
     const mappedActivity = {
-      heading: label,
+      title: label,
       date: format(date, DATE_FORMATS.D_MMMM_YYYY),
       time: format(date, DATE_FORMATS.H_MMAAA),
       byline,

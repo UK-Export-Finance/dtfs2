@@ -61,7 +61,7 @@ describe('mapPortalActivities', () => {
 
     const expected = [
       {
-        heading: PORTAL_ACTIVITY_LABEL.AIN_SUBMISSION,
+        title: PORTAL_ACTIVITY_LABEL.AIN_SUBMISSION,
         date: format(date, DATE_FORMATS.D_MMMM_YYYY),
         time: format(date, DATE_FORMATS.H_MMAAA),
         byline: `${mockAuthor.firstName} ${mockAuthor.lastName}`,
@@ -81,7 +81,7 @@ describe('mapPortalActivities', () => {
 
     const expected = [
       {
-        heading: PORTAL_ACTIVITY_LABEL.FACILITY_CHANGED_ISSUED,
+        title: PORTAL_ACTIVITY_LABEL.FACILITY_CHANGED_ISSUED,
         date: format(date, DATE_FORMATS.D_MMMM_YYYY),
         time: format(date, DATE_FORMATS.H_MMAAA),
         byline: `${mockAuthor.firstName} ${mockAuthor.lastName}`,
