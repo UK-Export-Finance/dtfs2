@@ -12,6 +12,7 @@ const page = {
     type: (id) => cy.get(`[data-cy="deal__submissionType--${id}"]`),
     updated: (id) => cy.get(`[data-cy="deal__updated--${id}"]`),
   },
+  paginationNav: () => cy.get('[data-cy="pagination"] nav'),
   first: () => cy.get('[data-cy="First"]'),
   previous: () => cy.get('[data-cy="Previous"]'),
   next: () => cy.get('[data-cy="Next"]'),
