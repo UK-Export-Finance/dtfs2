@@ -1,11 +1,12 @@
 import { Request } from 'express';
-import { UserSessionNotDefinedError, UserTokenNotDefinedError } from '@ukef/dtfs2-common';
-import { UserSessionData } from '../types/express-session';
+import { UserPartialLoginDataNotDefinedError, UserSessionNotDefinedError, UserTokenNotDefinedError } from '@ukef/dtfs2-common';
+import { PartiallyLoggedInUserSessionData, UserSessionData } from '../types/express-session';
 
 type Session = Request['session'];
 
-type UserSession = Session & UserSessionData;
+export type UserSession = Session & UserSessionData;
 
+type PartiallyLoggedInUserSession = Session & PartiallyLoggedInUserSessionData;
 /**
  * By default, all session data will be optional
  * (see use of `Partial` {@link https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/express-session/index.d.ts#L17 here})
@@ -29,4 +30,17 @@ export const asUserSession = (session: Session): UserSession => {
   }
 
   return Object.assign(session, { user, userToken });
+};
+
+export const assertPartiallyLoggedInUser: (session: Session) => asserts session is PartiallyLoggedInUserSession = (session: Session) => {
+  const { loginData } = session;
+
+  if (!loginData) {
+    throw new UserPartialLoginDataNotDefinedError();
+  }
+};
+
+export const asPartiallyLoggedInUserSession = (session: Session): PartiallyLoggedInUserSession => {
+  assertPartiallyLoggedInUser(session);
+  return session;
 };
