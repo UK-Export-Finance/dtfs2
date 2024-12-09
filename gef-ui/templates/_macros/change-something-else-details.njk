@@ -2,6 +2,8 @@
 
 {% macro render() %}
 
+{% set AMENDMENT_FORM_EMAIL = "stb.pim@ukexportfinance.gov.uk" %}
+
 {% set bodyHtml %}
   <span class="govuk-body">
     <p>To change something else, for example:</p>
@@ -10,18 +12,16 @@
         <li>UKEF exposure percentage</li>
         <li>UKEF guarantee fee frequency</li>
       </ul>
-    <p>Use the Schedule 8 (Form of Amendment and Notification Request Form) and email the completed form to stb.pim@ukexportfinance.gov.uk</p>
+    <p>Use the Schedule 8 (Form of Amendment and Notification Request Form) and email the completed form to {{ AMENDMENT_FORM_EMAIL }}</p>
   </span>
 {% endset %}
 
-{{
-    govukDetails({
-        summaryText: "I need to change something else",
-        html: bodyHtml,
-        attributes: {
-          'data-cy': 'facility-end-date-details'
-        }
-    })
-}}
+{{ govukDetails({
+  summaryText: "I need to change something else",
+  html: bodyHtml,
+  attributes: {
+    'data-cy': 'facility-end-date-details'
+  }
+}) }}
 
 {% endmacro %}

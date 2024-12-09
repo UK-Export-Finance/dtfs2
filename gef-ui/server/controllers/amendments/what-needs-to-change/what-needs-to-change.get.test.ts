@@ -14,6 +14,7 @@ const dealId = 'dealId';
 const facilityId = 'facilityId';
 const amendmentId = 'amendmentId';
 const exporterName = 'test company name';
+const userToken = 'test token';
 
 const getHttpMocks = (status?: string) =>
   httpMocks.createMocks<GetWhatNeedsToChangeRequest>({
@@ -27,7 +28,7 @@ const getHttpMocks = (status?: string) =>
     },
     session: {
       user: aPortalSessionUser(),
-      userToken: 'testToken',
+      userToken,
       loginStatus: PORTAL_LOGIN_STATUS.VALID_2FA,
     },
   });
@@ -52,6 +53,19 @@ describe('getWhatNeedsToChange', () => {
       exporterName,
       previousPage: `/gef/application-details/${dealId}`,
     });
+  });
+
+  it('calls getApplication with the correct parameters', async () => {
+    // Arrange
+    const { req: mockReq, res: mockRes } = getHttpMocks();
+    getApplicationMock.mockResolvedValueOnce({ exporter: { companyName: exporterName } });
+
+    // Act
+    await getWhatNeedsToChange(mockReq, mockRes);
+
+    // Assert
+    expect(getApplicationMock).toHaveBeenCalledTimes(1);
+    expect(getApplicationMock).toHaveBeenCalledWith({ dealId, userToken });
   });
 
   it('renders problem with the service page when an error is thrown', async () => {

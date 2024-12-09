@@ -39,7 +39,7 @@ describe(`GET ${url}`, () => {
     process.env = originalEnv;
   });
 
-  describe('with portal facility amendments disabled', () => {
+  describe('when portal facility amendments feature flag is disabled', () => {
     beforeEach(() => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'false';
     });
@@ -54,7 +54,7 @@ describe(`GET ${url}`, () => {
     });
   });
 
-  describe('with portal facility amendments enabled', () => {
+  describe('when portal facility amendments feature flag is enabled', () => {
     beforeEach(() => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'true';
     });

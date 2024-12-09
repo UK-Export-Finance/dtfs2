@@ -5,5 +5,5 @@ export type WhatNeedsToChangeViewModel = {
   changeCoverEndDate?: boolean;
   exporterName: string;
   previousPage: string;
-  errors?: ViewModelErrors | null;
+  errors?: ViewModelErrors;
 };

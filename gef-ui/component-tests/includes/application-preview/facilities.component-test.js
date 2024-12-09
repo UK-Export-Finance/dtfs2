@@ -43,34 +43,36 @@ describe(page, () => {
       wrapper.expectElement(makeAChangeButtonSelector(unissuedContingentFacility.facilityId)).notToExist();
     });
 
-    it('should render on the issued facilities with the correct link when showFacilityAmendmentButton is true', () => {
-      const dealId = 'test-deal-id';
+    describe('when showFacilityAmendmentButton is true', () => {
+      it('should render on the issued facilities with the correct link', () => {
+        const dealId = '123';
 
-      wrapper = render({
-        ...params,
-        canIssuedFacilitiesBeAmended: true,
-        dealId,
+        wrapper = render({
+          ...params,
+          canIssuedFacilitiesBeAmended: true,
+          dealId,
+        });
+
+        const expectedButtonText = 'Make a change';
+
+        wrapper
+          .expectLink(makeAChangeButtonSelector(issuedCashFacility.facilityId))
+          .toLinkTo(getButtonLinkUrl(dealId, issuedCashFacility.facilityId), expectedButtonText);
+
+        wrapper
+          .expectLink(makeAChangeButtonSelector(issuedContingentFacility.facilityId))
+          .toLinkTo(getButtonLinkUrl(dealId, issuedContingentFacility.facilityId), expectedButtonText);
       });
 
-      const expectedButtonText = 'Make a change';
+      it('should not render on the unissued facilities', () => {
+        wrapper = render({
+          ...params,
+          canIssuedFacilitiesBeAmended: true,
+        });
 
-      wrapper
-        .expectLink(makeAChangeButtonSelector(issuedCashFacility.facilityId))
-        .toLinkTo(getButtonLinkUrl(dealId, issuedCashFacility.facilityId), expectedButtonText);
-
-      wrapper
-        .expectLink(makeAChangeButtonSelector(issuedContingentFacility.facilityId))
-        .toLinkTo(getButtonLinkUrl(dealId, issuedContingentFacility.facilityId), expectedButtonText);
-    });
-
-    it('should not render on the unissued facilities when showFacilityAmendmentButton is true', () => {
-      wrapper = render({
-        ...params,
-        canIssuedFacilitiesBeAmended: true,
+        wrapper.expectElement(makeAChangeButtonSelector(unissuedCashFacility.facilityId)).notToExist();
+        wrapper.expectElement(makeAChangeButtonSelector(unissuedContingentFacility.facilityId)).notToExist();
       });
-
-      wrapper.expectElement(makeAChangeButtonSelector(unissuedCashFacility.facilityId)).notToExist();
-      wrapper.expectElement(makeAChangeButtonSelector(unissuedContingentFacility.facilityId)).notToExist();
     });
   });
 });
