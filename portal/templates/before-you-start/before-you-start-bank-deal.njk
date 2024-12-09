@@ -34,7 +34,7 @@
   <form method="POST" autocomplete="off">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
-    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="30" id="before-you-start-form">
+    <div class="govuk-form-group govuk-character-count" data-module="govuk-character-count" data-maxlength="30" id="before-you-start-form">
       {{ govukInput({
         label: {
           text: "Bank deal ID"
@@ -42,7 +42,7 @@
         id: "bankInternalRefName",
         name: "bankInternalRefName",
         value: bankInternalRefName,
-        classes: "govuk-!-width-one-third govuk-js-character-count",
+        classes: "govuk-!-width-one-third govuk-!-margin-bottom-1 govuk-js-character-count",
         attributes: {
           "data-cy": "bankInternalRefName",
           "maxlength": "30"
@@ -55,7 +55,7 @@
       </span>
     </div>
 
-    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="100">
+    <div class="govuk-form-group govuk-character-count" data-module="govuk-character-count" data-maxlength="100">
       {{ govukInput({
         label: {
           text: "Bank deal Name"
@@ -63,7 +63,7 @@
         id: "additionalRefName",
         name: "additionalRefName",
         value: additionalRefName,
-        classes: "govuk-!-width-one-third govuk-js-character-count",
+        classes: "govuk-!-width-one-third govuk-!-margin-bottom-1 govuk-js-character-count",
         attributes: {
           "data-cy": "additionalRefName",
           "maxlength": "100"
