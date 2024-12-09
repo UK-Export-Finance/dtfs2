@@ -28,7 +28,7 @@ describe(component, () => {
     { status: KEYING_SHEET_ROW_STATUS.DONE, expectedColourClass: 'govuk-tag--green' },
   ])("adds colour class '$expectedColourClass' when the status code is '$status'", ({ status, expectedColourClass }) => {
     // Arrange
-    const expectedClass = `govuk-tag status-tag${expectedColourClass ? ` ${expectedColourClass}` : ''}`;
+    const expectedClass = `govuk-tag${expectedColourClass ? ` ${expectedColourClass}` : ''}`;
 
     // Act
     const wrapper = render({

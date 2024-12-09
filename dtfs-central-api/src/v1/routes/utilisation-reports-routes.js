@@ -37,6 +37,9 @@ const { postReportDataValidation } = require('../controllers/utilisation-report-
 const { postAddFeesToAnExistingPaymentGroup } = require('../controllers/utilisation-report-service/post-add-fees-to-an-existing-payment-group.controller');
 const { getFeeRecord } = require('../controllers/utilisation-report-service/get-fee-record.controller');
 const {
+  getFeeRecordCorrectionRequestReview,
+} = require('../controllers/utilisation-report-service/fee-record-correction/get-fee-record-correction-request-review.controller');
+const {
   putFeeRecordCorrectionTransientFormData,
 } = require('../controllers/utilisation-report-service/fee-record-correction/put-fee-record-correction-transient-form-data.controller');
 const {
@@ -928,5 +931,51 @@ utilisationReportsRouter
   .route('/:reportId/fee-records/:feeRecordId/corrections')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), handleExpressValidatorResult)
   .post(validatePostFeeRecordCorrectionPayload, postFeeRecordCorrection);
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/fee-records/:feeRecordId/correction-request-review/:userId:
+ *   get:
+ *     summary: Get correction request review information to check before sending
+ *     tags: [Utilisation Report]
+ *     description: Get correction request review information to check before sending
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report
+ *       - in: path
+ *         name: feeRecordId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the fee record
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the user requesting the correction
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/definitions/FeeRecordCorrectionRequestReview'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/:reportId/fee-records/:feeRecordId/correction-request-review/:userId')
+  .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), validation.mongoIdValidation('userId'), handleExpressValidatorResult)
+  .get(getFeeRecordCorrectionRequestReview);
 
 module.exports = utilisationReportsRouter;

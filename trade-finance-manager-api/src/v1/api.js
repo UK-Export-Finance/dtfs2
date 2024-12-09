@@ -1689,6 +1689,24 @@ const getFeeRecord = async (reportId, feeRecordId) => {
 };
 
 /**
+ * Gets the fee record correction request review details
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
+ * @param {string} userId - The id of the user making the correction request
+ * @returns {Promise<import('./api-response-types').FeeRecordCorrectionRequestReviewResponseBody>}
+ */
+const getFeeRecordCorrectionRequestReview = async (reportId, feeRecordId, userId) => {
+  const response = await axios.get(
+    `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-request-review/${userId}`,
+    {
+      headers: headers.central,
+    },
+  );
+
+  return response.data;
+};
+
+/**
  * Updates the fee record correction transient form data associated with the given fee record id and user
  * @param {string} reportId - The report id
  * @param {string} feeRecordId - The fee record id
@@ -1737,6 +1755,23 @@ const deleteFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId,
     url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-transient-form-data/${userId}`,
     method: 'delete',
     headers: headers.central,
+  });
+};
+
+/**
+ * Creates a fee record correction
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
+ * @param {import('../types/tfm-session-user').TfmSessionUser} user - The requesting user
+ */
+const createFeeRecordCorrection = async (reportId, feeRecordId, user) => {
+  await axios({
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/corrections`,
+    method: 'post',
+    headers: headers.central,
+    data: {
+      user,
+    },
   });
 };
 
@@ -1818,7 +1853,9 @@ module.exports = {
   removeFeesFromPayment,
   addFeesToAnExistingPayment,
   getFeeRecord,
+  getFeeRecordCorrectionRequestReview,
   updateFeeRecordCorrectionTransientFormData,
   getFeeRecordCorrectionTransientFormData,
   deleteFeeRecordCorrectionTransientFormData,
+  createFeeRecordCorrection,
 };

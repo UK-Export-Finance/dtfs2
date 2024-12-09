@@ -26,7 +26,10 @@ import {
   getCreateRecordCorrectionRequest,
   postCreateRecordCorrectionRequest,
 } from '../../controllers/utilisation-reports/record-corrections/create-record-correction-request';
-import { getRecordCorrectionRequestInformation } from '../../controllers/utilisation-reports/record-corrections/check-the-information';
+import {
+  getRecordCorrectionRequestInformation,
+  postRecordCorrectionRequestInformation,
+} from '../../controllers/utilisation-reports/record-corrections/check-the-information';
 import { postInitiateRecordCorrectionRequest } from '../../controllers/utilisation-reports/record-corrections/initiate-record-correction-request';
 import { postCancelRecordCorrectionRequest } from '../../controllers/utilisation-reports/record-corrections/cancel-record-correction-request';
 
@@ -181,6 +184,15 @@ utilisationReportsRoutes.get(
   validateSqlId('reportId'),
   validateSqlId('feeRecordId'),
   getRecordCorrectionRequestInformation,
+);
+
+utilisationReportsRoutes.post(
+  '/:reportId/create-record-correction-request/:feeRecordId/check-the-information',
+  validateTfmFeeRecordCorrectionFeatureFlagIsEnabled,
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
+  validateSqlId('reportId'),
+  validateSqlId('feeRecordId'),
+  postRecordCorrectionRequestInformation,
 );
 
 utilisationReportsRoutes.post(
