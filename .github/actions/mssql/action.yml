@@ -1,0 +1,52 @@
+# This GitHub Action is designed to deploy the latest data migration to an MSSQL database on an AMI.
+
+name: 'Deploy MSSQL'
+description: 'Deploy latest data migration to MSSQL on AMI'
+
+# Define the inputs required for this action.
+inputs:
+  host:
+    description: 'MSSQL host address'
+    required: true
+  port:
+    description: 'MSSQL host port address'
+    required: true
+  username:
+    description: 'MSSQL connection username'
+    required: true
+  password:
+    description: 'MSSQL connection password'
+    required: true
+  database:
+    description: 'MSSQL database name'
+    required: true
+  log:
+    description: 'MSSQL logging for debugging'
+    required: false
+    default: 'false'
+
+# Define the steps to run this action.
+runs:
+  using: 'composite'
+  steps:
+    # Step 1: Check out the repository.
+    - name: Repository
+      uses: actions/checkout@v4
+
+    # Step 2: Set up Node.js.
+    - name: Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ vars.NODE_VERSION }}
+
+    # Step 3: Install dependencies.
+    - name: Dependencies
+      working-directory: ./libs/common
+      run: npm ci
+      shell: bash
+
+    # Step 4: Run database migrations.
+    - name: Migrate
+      working-directory: ./libs/common
+      run: npm run db:migrate
+      shell: bash
