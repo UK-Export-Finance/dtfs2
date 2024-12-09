@@ -1,4 +1,4 @@
-import { aPortalSessionUser, Bank, Deal, DEAL_STATUS, getCurrentGefDealVersion } from '@ukef/dtfs2-common';
+import { aPortalSessionUser, Bank, Deal, DEAL_STATUS, getCurrentGefDealVersion, PORTAL_ACTIVITY_TYPE } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { generateAuditDatabaseRecordFromAuditDetails, generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { generateClonedExporter } from './generate-cloned-exporter';
@@ -37,7 +37,18 @@ const existingDeal: Deal = {
   bank: {},
   checkerId: 'checker id',
   editedBy: ['a user id', 'another user id'],
-  portalActivities: ['An activity'],
+  portalActivities: [
+    {
+      type: PORTAL_ACTIVITY_TYPE.NOTICE,
+      timestamp: Date.now(),
+      author: {
+        firstName: 'mock',
+        lastName: 'mock',
+        _id: 'mock-id',
+      },
+      label: 'Mock label',
+    },
+  ],
   supportingInformation: {
     information: 'information',
   },

@@ -1,6 +1,5 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
-{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% import './_macros/summary-table.njk' as summary %}
 
@@ -41,7 +40,7 @@
         {% if amendment.ukefDecision.conditions %}
           {% set ukefConditionsHtml %}
             <div class="ukef-decision-formatted">
-              <p class="govuk-body"> {{ amendment.ukefDecision.conditions | safe }} </p>
+              <p class="govuk-body govuk-!-text-break-word"> {{ amendment.ukefDecision.conditions | safe }} </p>
             <div>
           {% endset %}
 
@@ -71,7 +70,7 @@
         {% if amendment.ukefDecision.declined %}
           {% set ukefDeclinedHtml %}
             <div class="ukef-decision-formatted">
-              <p class="govuk-body"> {{ amendment.ukefDecision.declined | safe }} </p>
+              <p class="govuk-body govuk-!-text-break-word"> {{ amendment.ukefDecision.declined | safe }} </p>
             <div>
           {% endset %}
 
@@ -101,7 +100,7 @@
       {% if amendment.ukefDecision.comments %}
         {% set ukefCommentsHtml %}
           <div class="ukef-decision-formatted">
-            <p class="govuk-body"> {{ amendment.ukefDecision.comments | safe }} </p>
+            <p class="govuk-body govuk-!-text-break-word"> {{ amendment.ukefDecision.comments | safe }} </p>
           <div>
         {% endset %}
 
