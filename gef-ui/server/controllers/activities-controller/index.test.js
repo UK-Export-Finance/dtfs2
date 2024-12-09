@@ -56,12 +56,12 @@ const facilityActivity = [
 ];
 
 describe('mapPortalActivities', () => {
-  it('should return a mapped array for mojTimeline for `AIN deal submission`', () => {
+  it(`should return a mapped array for mojTimeline for ${PORTAL_ACTIVITY_TYPE.NOTICE}`, () => {
     const result = mapPortalActivities(dealSubmissionActivity);
 
     const expected = [
       {
-        title: PORTAL_ACTIVITY_LABEL.AIN_SUBMISSION,
+        heading: PORTAL_ACTIVITY_LABEL.AIN_SUBMISSION,
         date: format(date, DATE_FORMATS.D_MMMM_YYYY),
         time: format(date, DATE_FORMATS.H_MMAAA),
         byline: `${mockAuthor.firstName} ${mockAuthor.lastName}`,
@@ -76,12 +76,12 @@ describe('mapPortalActivities', () => {
     expect(result).toEqual(expected);
   });
 
-  it('should return a mapped array for mojTimeline for `facility stage changed`', () => {
+  it(`should return a mapped array for mojTimeline for ${PORTAL_ACTIVITY_TYPE.FACILITY_STAGE}`, () => {
     const result = mapPortalActivities(facilityActivity);
 
     const expected = [
       {
-        title: PORTAL_ACTIVITY_LABEL.FACILITY_CHANGED_ISSUED,
+        heading: PORTAL_ACTIVITY_LABEL.FACILITY_CHANGED_ISSUED,
         date: format(date, DATE_FORMATS.D_MMMM_YYYY),
         time: format(date, DATE_FORMATS.H_MMAAA),
         byline: `${mockAuthor.firstName} ${mockAuthor.lastName}`,
