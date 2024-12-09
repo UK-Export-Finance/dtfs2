@@ -1,4 +1,5 @@
-import { RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
+import { RECORD_CORRECTION_REASON } from '../../constants';
+import { RecordCorrectionReason } from '../../types';
 
 /**
  * Maps a record correction reason to a display value

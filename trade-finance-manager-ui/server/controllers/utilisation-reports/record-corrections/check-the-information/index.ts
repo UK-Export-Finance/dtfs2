@@ -1,11 +1,10 @@
 import { Response, Request } from 'express';
-import { getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { mapReasonsToDisplayValues, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import { RecordCorrectionRequestInformationViewModel } from '../../../../types/view-models';
 import { asUserSession } from '../../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import { getLinkToPremiumPaymentsTab } from '../../helpers/get-link-to-premium-payments-tab';
 import api from '../../../../api';
-import { mapReasonsToDisplayValues } from '../helpers';
 
 const renderCheckTheInformationPage = (res: Response, viewModel: RecordCorrectionRequestInformationViewModel) =>
   res.render('utilisation-reports/record-corrections/check-the-information.njk', viewModel);
