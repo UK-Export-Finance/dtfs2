@@ -8,29 +8,22 @@ import { multipleMockGefFacilities } from '../../../../e2e-fixtures/mock-gef-fac
 const { unissuedCashFacility, unissuedContingentFacility } = multipleMockGefFacilities();
 
 const deals = [];
-let token;
+
 const mockDeals = [MOCK_APPLICATION_AIN, MOCK_APPLICATION_MIN, MOCK_APPLICATION_MIA];
 
 context('Application preview page', () => {
   before(() => {
-    cy.apiLogin(BANK1_MAKER1)
-      .then((t) => {
-        token = t;
-      })
-      .then(() => {
-        mockDeals.forEach((mockDeal) => {
-          cy.createAndConfigureApplicationStatus(
-            BANK1_MAKER1,
-            token,
-            mockDeal,
-            unissuedCashFacility,
-            unissuedContingentFacility,
-            mockDeal.submissionType === DEAL_SUBMISSION_TYPE.MIA ? DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS : DEAL_STATUS.UKEF_ACKNOWLEDGED,
-          ).then((response) => {
-            deals.push(response.body);
-          });
-        });
+    mockDeals.forEach((mockDeal) => {
+      cy.createAndConfigureApplicationStatus(
+        mockDeal,
+        unissuedCashFacility,
+        unissuedContingentFacility,
+        mockDeal.submissionType === DEAL_SUBMISSION_TYPE.MIA ? DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS : DEAL_STATUS.UKEF_ACKNOWLEDGED,
+      ).then((response) => {
+        // return back the updated deal with cy.wrap
+        deals.push(response.body);
       });
+    });
   });
 
   beforeEach(() => {
@@ -57,6 +50,7 @@ context('Application preview page', () => {
       cy.assertText(applicationPreview.facilityInformationBanner(), 'Check your records for the most up-to-date facility details.');
     });
   });
+
   describe('Application preview page with MIA Deal and status Accepted by UKEF (with conditions)', () => {
     // ensures that banner is not displayed
     it('should not display the information banner', () => {
