@@ -1,44 +1,31 @@
-# Overview
-# ********
-# This workflow automates the deployment of web apps and Azure Functions to Azure upon successful completion of a QAT workflow.
+# Release Workflow
+# ****************
+#
+# This GitHub Actions workflow automates the release process for deploying web apps and Azure Functions to different environments.
+# It is triggered by the completion of the QAT workflow and runs when there is a push to a release branch (matching the pattern `release-*` but excluding `release-please*`).
+# The workflow handles the deployment of SQL migrations, web apps, and Azure functions sequentially.
+#
 # Key Stages:
+# 1. **Setup**: Determines the appropriate environment based on the release branch and configures environment variables (e.g., timezone).
+# 2. **SQL Database Migration**: Deploys SQL migrations to the specified environment.
+# 3. **WebApp Deployment**: Sequentially deploys a list of web apps defined in the matrix (`portal-ui`, `gef-ui`, etc.) to the target environment.
+# 4. **Function Deployment**: Sequentially deploys a list of Azure functions (e.g., `acbs-function`) to the target environment.
 #
-# 1. Setup
-# ********
-# Sets environment variables for product, environment, and timezone.
-# Outputs these variables for use in subsequent jobs.
+# Key Points:
+# - The workflow is triggered by the completion of the QAT workflow.
+# - The deployment environment is determined dynamically based on the release branch (e.g., staging or prod).
+# - Matrix strategies are used for deploying multiple web apps and functions iteratively.
+# - Concurrency control is employed to ensure no simultaneous deployments for the same app/function.
+# - Temporary deployment slots are used to ensure minimal downtime during deployments.
+# - The workflow runs only if the preceding workflow (QAT) concludes successfully.
 #
-# 2. SQL Migrations
-# *****************
-# Runs new SQL migrations on the environment SQL database
+# **Triggers**: This workflow is triggered when the QAT workflow completes successfully for a release branch (`release-*`).
 #
-# 3. WebApp
-# *********
-# Runs sequentially for each web app defined in the matrix.webapp list.
-# Sets the Dockerfile location based on the microservice (using the portal directory for portal-ui and the app's name for others).
-# Builds and pushes Docker images using the root workspace as the context and the Dockerfile location specified for the microservice.
-# Creates a temporary deployment slot using the FROM tag (latest by default).
-# Swaps the slot to make the new image live.
-# Cleans up the temporary slot.
-#
-# 4. Functions
-# ************
-# Runs sequentially for each function defined in the matrix.functions list.
-# Builds and pushes Docker images for each function.
-# Creates a temporary deployment slot using the FROM tag.
-# Swaps the slot to make the new image live.
-# Cleans up the temporary slot.
-#
-# Key Points
-# **********
-# Triggers on Completed QAT Workflow: The workflow only runs if the preceding QAT workflow completes successfully.
-# Environment-Specific: Uses environment variables to tailor deployments for different environments (dev, feature, staging, prod).
-# Matrix Strategies: Employs matrices to iterate through lists of web apps and functions for sequential deployment.
-# Concurrency Control: Uses concurrency groups to prevent multiple deployments of the same web app or function from running concurrently.
-# Fail-Fast Disabled: Allows all matrix jobs to complete even if some fail.
-# Temporary Slots: Utilizes deployment slots to minimize downtime during deployments.
-# Cleanup: Always removes temporary slots to maintain resource hygiene.
-#
+# **Environment Variables**:
+# - `PRODUCT`: The product being deployed (e.g., `dtfs`).
+# - `ENVIRONMENT`: The environment for deployment, dynamically set based on the release branch.
+# - `TIMEZONE`: The timezone for deployment, passed via GitHub actions variables.
+# - `FROM`: The base artifact to use for deployment (default is `latest`).
 
 name: Release
 run-name: 🚀 Deploying to ${{ github.event.workflow_run.head_branch }}
