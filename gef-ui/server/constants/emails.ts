@@ -1,1 +1,1 @@
-export const AMENDMENT_FORM_EMAIL = 'stb.pim@ukexportfinance.gov.uk';
+export const STB_PIM_EMAIL = 'stb.pim@ukexportfinance.gov.uk';

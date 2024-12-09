@@ -4,7 +4,7 @@ const getApplicationMock = jest.fn();
 import httpMocks from 'node-mocks-http';
 import { aPortalSessionUser, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { getWhatNeedsToChange, GetWhatNeedsToChangeRequest } from './what-needs-to-change.ts';
-import { AMENDMENT_FORM_EMAIL } from '../../../constants/emails.ts';
+import { STB_PIM_EMAIL } from '../../../constants/emails.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('../../../services/api', () => ({
@@ -53,7 +53,7 @@ describe('getWhatNeedsToChange', () => {
     expect(mockRes._getRenderData()).toEqual({
       exporterName,
       previousPage: `/gef/application-details/${dealId}`,
-      amendmentFormEmail: AMENDMENT_FORM_EMAIL,
+      amendmentFormEmail: STB_PIM_EMAIL,
     });
   });
 
