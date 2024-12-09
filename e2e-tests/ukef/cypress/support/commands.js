@@ -1,8 +1,8 @@
 import 'cypress-file-upload';
 import './click-events';
 import { submitDealCancellation } from './trade-finance-manager-ui/submit-deal-cancellation';
-import { makerSubmitGefDealForReview } from './portal/makerSubmitGefDealForReview';
-import { checkerSubmitGefDealToUkef } from './portal/checkerSubmitGefDealToUkef';
+import { makerLoginSubmitGefDealForReview } from './portal/makerLoginSubmitGefDealForReview';
+import { checkerLoginSubmitGefDealToUkef } from './portal/checkerLoginSubmitGefDealToUkef';
 import { makerSubmitDealForReview } from './portal/makerSubmitDealForReview';
 import { checkerSubmitDealToUkef } from './portal/checkerSubmitDealToUkef';
 import { getOneDeal } from './portal-api/getOneDeal';
@@ -41,8 +41,8 @@ Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./p
 Cypress.Commands.add('enterUsernameAndPassword', require('./portal/enterUsernameAndPassword'));
 Cypress.Commands.add('completeDateFormFields', require('./portal/completeDateFormFields'));
 
-Cypress.Commands.add('makerSubmitGefDealForReview', makerSubmitGefDealForReview);
-Cypress.Commands.add('checkerSubmitGefDealToUkef', checkerSubmitGefDealToUkef);
+Cypress.Commands.add('makerLoginSubmitGefDealForReview', makerLoginSubmitGefDealForReview);
+Cypress.Commands.add('checkerLoginSubmitGefDealToUkef', checkerLoginSubmitGefDealToUkef);
 Cypress.Commands.add('makerSubmitDealForReview', makerSubmitDealForReview);
 Cypress.Commands.add('checkerSubmitDealToUkef', checkerSubmitDealToUkef);
 

@@ -9,9 +9,9 @@ const { BANK1_MAKER1 } = MOCK_USERS;
  * Login as a maker and submit a gef deal for review
  * @param {Object} deal
  */
-export const makerSubmitGefDealForReview = (deal) => {
+export const makerLoginSubmitGefDealForReview = (deal) => {
   cy.login(BANK1_MAKER1);
-  gefPages.applicationDetails.visit(deal._id);
+  cy.visit(relative(`/gef/application-details/${deal._id}`));
   cy.clickSubmitButton();
   cy.url().should('eq', relative(`/gef/application-details/${deal._id}/submit`));
   cy.keyboardInput(gefPages.applicationSubmission.commentsField(), 'go');

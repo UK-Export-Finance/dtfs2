@@ -221,9 +221,6 @@ const anUnissuedCashFacilityWith20MonthsOfCover = ({ facilityEndDateEnabled = fa
   coverDateConfirmed: false,
   canResubmitIssuedFacilities: null,
 });
-exports.anUnissuedCashFacility = anUnissuedCashFacility;
-exports.anIssuedCashFacility = anIssuedCashFacility;
-exports.anIssuedCashFacilityWithCoverDateConfirmed = anIssuedCashFacilityWithCoverDateConfirmed;
 
 /**
  * @param {{ facilityEndDateEnabled?: boolean}} options
@@ -234,6 +231,9 @@ const anIssuedContingentFacility = ({ facilityEndDateEnabled = false } = {}) => 
   hasBeenIssued: true,
 });
 
+exports.anUnissuedCashFacility = anUnissuedCashFacility;
+exports.anIssuedCashFacility = anIssuedCashFacility;
+exports.anIssuedCashFacilityWithCoverDateConfirmed = anIssuedCashFacilityWithCoverDateConfirmed;
 exports.multipleMockGefFacilities = ({ facilityEndDateEnabled = false } = {}) => ({
   unissuedCashFacility: anUnissuedCashFacility({ facilityEndDateEnabled }),
   issuedCashFacility: anIssuedCashFacility({ facilityEndDateEnabled }),

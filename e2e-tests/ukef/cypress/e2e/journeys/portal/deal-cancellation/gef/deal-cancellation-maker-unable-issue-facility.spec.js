@@ -1,11 +1,12 @@
-import { DEAL_STATUS, DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
+import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, TFM_URL } from '@ukef/dtfs2-common';
+import relative from '../../../../relativeURL';
 import gefPages from '../../../../../../../gef/cypress/e2e/pages';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT, MOCK_APPLICATION_MIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility, anUnissuedCashFacility, multipleMockGefFacilities } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 import { yesterday, tomorrow } from '../../../../../../../e2e-fixtures/dateConstants';
 
-import { TFM_URL, PIM_USER_1 } from '../../../../../../../e2e-fixtures';
+import { PIM_USER_1 } from '../../../../../../../e2e-fixtures';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -36,8 +37,8 @@ context('When a deal has been cancelled on TFM, maker unable to issue facility',
 
         cy.createGefFacilities(gefDeal._id, [facilities[index]], BANK1_MAKER1).then((createdFacilities) => {
           gefDeal.facilities = createdFacilities;
-          cy.makerSubmitGefDealForReview(gefDeal);
-          cy.checkerSubmitGefDealToUkef(gefDeal);
+          cy.makerLoginSubmitGefDealForReview(gefDeal);
+          cy.checkerLoginSubmitGefDealToUkef(gefDeal);
           cy.clearSessionCookies();
 
           cy.forceVisit(TFM_URL);
@@ -67,7 +68,7 @@ context('When a deal has been cancelled on TFM, maker unable to issue facility',
         const ainDealUnissuedFacilitiesPast = deals.find(
           (deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.AIN && deal.status === DEAL_STATUS.CANCELLED && !deal.facilities.details.hasBeenIssued,
         );
-        gefPages.applicationDetails.visit(ainDealUnissuedFacilitiesPast._id);
+        cy.visit(relative(`/gef/application-details/${ainDealUnissuedFacilitiesPast._id}`));
         gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
       });
     });
@@ -76,18 +77,19 @@ context('When a deal has been cancelled on TFM, maker unable to issue facility',
         const minDealUnissuedFacilitiesPast = deals.find(
           (deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.MIN && deal.status === DEAL_STATUS.CANCELLED && !deal.facilities.details.hasBeenIssued,
         );
-        gefPages.applicationDetails.visit(minDealUnissuedFacilitiesPast._id);
+        cy.visit(relative(`/gef/application-details/${minDealUnissuedFacilitiesPast._id}`));
         gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
       });
     });
   });
+
   describe('when a deal has issued facilities submitted to UKEF and the deal has already been cancelled', () => {
     describe('AIN Deal', () => {
       it('should not allow a Maker to issue facilities in portal', () => {
         const ainDealIssuedFacilitiesPast = deals.find(
           (deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.AIN && deal.status === DEAL_STATUS.CANCELLED && deal.facilities.details.hasBeenIssued,
         );
-        gefPages.applicationDetails.visit(ainDealIssuedFacilitiesPast._id);
+        cy.visit(relative(`/gef/application-details/${ainDealIssuedFacilitiesPast._id}`));
         gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
       });
     });
@@ -96,7 +98,7 @@ context('When a deal has been cancelled on TFM, maker unable to issue facility',
         const minDealIssuedFacilitiesPast = deals.find(
           (deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.MIN && deal.status === DEAL_STATUS.CANCELLED && deal.facilities.details.hasBeenIssued,
         );
-        gefPages.applicationDetails.visit(minDealIssuedFacilitiesPast._id);
+        cy.visit(relative(`/gef/application-details/${minDealIssuedFacilitiesPast._id}`));
         gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
       });
     });
@@ -109,7 +111,7 @@ context('When a deal has been cancelled on TFM, maker unable to issue facility',
           (deal) =>
             deal.submissionType === DEAL_SUBMISSION_TYPE.AIN && deal.status === DEAL_STATUS.PENDING_CANCELLATION && !deal.facilities.details.hasBeenIssued,
         );
-        gefPages.applicationDetails.visit(ainDealUnissuedFacilitiesFuture._id);
+        cy.visit(relative(`/gef/application-details/${ainDealUnissuedFacilitiesFuture._id}`));
         gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
       });
     });
@@ -119,7 +121,7 @@ context('When a deal has been cancelled on TFM, maker unable to issue facility',
           (deal) =>
             deal.submissionType === DEAL_SUBMISSION_TYPE.MIN && deal.status === DEAL_STATUS.PENDING_CANCELLATION && !deal.facilities.details.hasBeenIssued,
         );
-        gefPages.applicationDetails.visit(minDealUnissuedFacilitiesFuture._id);
+        cy.visit(relative(`/gef/application-details/${minDealUnissuedFacilitiesFuture._id}`));
         gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
       });
     });
@@ -132,18 +134,17 @@ context('When a deal has been cancelled on TFM, maker unable to issue facility',
           (deal) =>
             deal.submissionType === DEAL_SUBMISSION_TYPE.AIN && deal.status === DEAL_STATUS.PENDING_CANCELLATION && deal.facilities.details.hasBeenIssued,
         );
-        gefPages.applicationDetails.visit(ainDealIssuedFacilitiesFuture._id);
+        cy.visit(relative(`/gef/application-details/${ainDealIssuedFacilitiesFuture._id}`));
         gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
       });
     });
-
     describe('MIN Deal', () => {
       it('should not allow a Maker to issue facilities in portal', () => {
         const minDealIssuedFacilitiesFuture = deals.find(
           (deal) =>
             deal.submissionType === DEAL_SUBMISSION_TYPE.MIN && deal.status === DEAL_STATUS.PENDING_CANCELLATION && deal.facilities.details.hasBeenIssued,
         );
-        gefPages.applicationDetails.visit(minDealIssuedFacilitiesFuture._id);
+        cy.visit(relative(`/gef/application-details/${minDealIssuedFacilitiesFuture._id}`));
         gefPages.applicationPreview.unissuedFacilitiesHeader().should('not.exist');
       });
     });
