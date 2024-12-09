@@ -19,7 +19,7 @@ export type SortedAndFormattedCurrencyAndAmount = {
   dataSortValue: number;
 };
 
-export type FeeRecordDisplayStatus = 'To do' | 'Match' | 'Does not match' | 'Ready to key' | 'Reconciled';
+export type FeeRecordDisplayStatus = 'To do' | 'Match' | 'Does not match' | 'Ready to key' | 'Reconciled' | 'Record correction sent';
 
 export type FeeRecordViewModelItem = {
   id: number;
@@ -145,9 +145,24 @@ export type UtilisationTableRowViewModel = {
   };
 };
 
+export type RecordCorrectionRowViewModel = {
+  facilityId: string;
+  exporter: string;
+  baseCurrency: Currency;
+  reason: string;
+  formattedDateSent: string | undefined;
+  formattedUtilisation: string;
+  requestedBy: string;
+  status: string;
+};
+
 export type UtilisationDetailsViewModel = {
   utilisationTableRows: UtilisationTableRowViewModel[];
   downloadUrl: string;
+};
+
+export type RecordCorrectionsViewModel = {
+  recordCorrectionRows: RecordCorrectionRowViewModel[];
 };
 
 export type PremiumPaymentsViewModel = {
