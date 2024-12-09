@@ -215,6 +215,7 @@ authRouter
 authRouter
   .route('/utilisation-reports/:reportId/fee-records/:feeRecordId/correction-transient-form-data/:user')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), validation.userIdValidation, handleExpressValidatorResult)
-  .get(utilisationReportsController.getFeeRecordCorrectionTransientFormData);
+  .get(utilisationReportsController.getFeeRecordCorrectionTransientFormData)
+  .delete(utilisationReportsController.deleteFeeRecordCorrectionTransientFormData);
 
 module.exports = { authRouter, openRouter };

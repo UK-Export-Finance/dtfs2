@@ -1725,6 +1725,21 @@ const getFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, us
   return response.data;
 };
 
+/**
+ * Deletes fee record correction transient form data by report id, fee record id, and user id
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
+ * @param {string} userId - The user id
+ * @returns {Promise<void>}
+ */
+const deleteFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, userId) => {
+  await axios({
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-transient-form-data/${userId}`,
+    method: 'delete',
+    headers: headers.central,
+  });
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -1805,4 +1820,5 @@ module.exports = {
   getFeeRecord,
   updateFeeRecordCorrectionTransientFormData,
   getFeeRecordCorrectionTransientFormData,
+  deleteFeeRecordCorrectionTransientFormData,
 };
