@@ -549,7 +549,7 @@ portalRouter
 
 /**
  * @openapi
- * /facilities/:facilityId/amendments
+ * /facilities/:facilityId/amendments:
  *   put:
  *     summary: Get a Portal GEF facility amendment
  *     tags: [Portal - Amendments]
