@@ -25,11 +25,11 @@ context('Bond Details', () => {
     cy.deleteDeals(ADMIN);
     cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
       deal = insertedDeal;
+
+      cy.loginGoToDealPage(BANK1_MAKER1, deal);
+
+      cy.clickAddBondButton();
     });
-
-    cy.loginGoToDealPage(BANK1_MAKER1, deal);
-
-    cy.clickAddBondButton();
   });
 
   describe('after submitting one form field and navigating back to `Bond Details` page', () => {
