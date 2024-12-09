@@ -1,0 +1,154 @@
+# Overview
+# ********
+# This workflow automates the deployment of web apps and Azure Functions to Azure upon successful completion of a QAT workflow.
+# Key Stages:
+#
+# 1. Setup
+# ********
+# Sets environment variables for product, environment, and timezone.
+# Outputs these variables for use in subsequent jobs.
+#
+# 2. SQL Migrations
+# *****************
+# Runs new SQL migrations on the environment SQL database
+#
+# 3. WebApp
+# *********
+# Runs sequentially for each web app defined in the matrix.webapp list.
+# Sets the Dockerfile location based on the microservice (using the portal directory for portal-ui and the app's name for others).
+# Builds and pushes Docker images using the root workspace as the context and the Dockerfile location specified for the microservice.
+# Creates a temporary deployment slot using the FROM tag (latest by default).
+# Swaps the slot to make the new image live.
+# Cleans up the temporary slot.
+#
+# 4. Functions
+# ************
+# Runs sequentially for each function defined in the matrix.functions list.
+# Builds and pushes Docker images for each function.
+# Creates a temporary deployment slot using the FROM tag.
+# Swaps the slot to make the new image live.
+# Cleans up the temporary slot.
+#
+# Key Points
+# **********
+# Triggers on Completed QAT Workflow: The workflow only runs if the preceding QAT workflow completes successfully.
+# Environment-Specific: Uses environment variables to tailor deployments for different environments (dev, feature, staging, prod).
+# Matrix Strategies: Employs matrices to iterate through lists of web apps and functions for sequential deployment.
+# Concurrency Control: Uses concurrency groups to prevent multiple deployments of the same web app or function from running concurrently.
+# Fail-Fast Disabled: Allows all matrix jobs to complete even if some fail.
+# Temporary Slots: Utilizes deployment slots to minimize downtime during deployments.
+# Cleanup: Always removes temporary slots to maintain resource hygiene.
+#
+
+name: Deployment
+run-name: 🚀 Deploying to dev
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  PRODUCT: dtfs
+  ENVIRONMENT: dev
+  TIMEZONE: ${{ vars.TIMEZONE }}
+
+jobs:
+  setup:
+    name: Setup 🔧
+    runs-on: [self-hosted, linux, deployment]
+    outputs:
+      product: ${{ env.PRODUCT }}
+      environment: ${{ steps.environment.outputs.environment }}
+      timezone: ${{ env.TIMEZONE }}
+    steps:
+      - name: Environment 🧪
+        id: environment
+        run: |
+          echo "environment=dev" >> "$GITHUB_OUTPUT"
+
+      - name: Timezone 🌐
+        run: echo "Timezone set to ${{ env.TIMEZONE }}"
+
+  database:
+    name: MSSQL 🗄️
+
+    needs: [setup]
+    environment: ${{ needs.setup.outputs.environment }}
+    runs-on: [self-hosted, DTFS, deployment]
+    env:
+      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+
+    steps:
+      - name: Deploy ⚡
+        uses: ./.github/actions/mssql
+        with:
+          host: ${{ secrets.SQL_DB_HOST }}
+          port: ${{ secrets.SQL_DB_PORT }}
+          username: ${{ secrets.SQL_DB_USERNAME }}
+          password: ${{ secrets.SQL_DB_PASSWORD }}
+          databae: ${{ secrets.SQL_DB_NAME }}
+          log: ${{ vars.SQL_DB_LOGGING_ENABLED }}
+
+  webapp:
+    name: WebApp 🌐
+
+    needs: [setup]
+    environment: ${{ needs.setup.outputs.environment }}
+    runs-on: [self-hosted, DTFS, deployment]
+    env:
+      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+
+    strategy:
+      max-parallel: 1
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        webapp: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'dtfs-central-api', 'external-api', 'trade-finance-manager-api']
+
+    concurrency:
+      group: deployment-webapp-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.webapp }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Deploy ⚡
+        uses: ./.github/actions/webapp
+        with:
+          region: ${{ vars.REGION }}
+          group: ${{ secrets.RESOURCE_GROUP }}
+          credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          acr: ${{ secrets.ACR_PASSWORD }}
+          webapp: ${{ matrix.webapp }}
+
+  functions:
+    name: Functions ⚡
+
+    needs: [setup, webapp]
+    environment: ${{ needs.setup.outputs.environment }}
+    runs-on: [self-hosted, DTFS, deployment]
+
+    env:
+      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+
+    strategy:
+      max-parallel: 1
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        functions: ['acbs-function']
+
+    concurrency:
+      group: deployment-functions-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Deploy ⚡
+        uses: ./.github/actions/functions
+        with:
+          region: ${{ vars.REGION }}
+          group: ${{ secrets.RESOURCE_GROUP }}
+          credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          acr: ${{ secrets.ACR_PASSWORD }}
+          webapp: ${{ matrix.functions }}

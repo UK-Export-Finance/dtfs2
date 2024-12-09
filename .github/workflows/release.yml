@@ -49,8 +49,6 @@ on:
     types:
       - completed
     branches:
-      - dev
-      - feature
       - release-*
       - '!release-please*'
 
@@ -93,29 +91,17 @@ jobs:
     runs-on: [self-hosted, DTFS, deployment]
     env:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
-      SQL_DB_HOST: ${{ secrets.SQL_DB_HOST }}
-      SQL_DB_PORT: ${{ secrets.SQL_DB_PORT }}
-      SQL_DB_USERNAME: ${{ secrets.SQL_DB_USERNAME }}
-      SQL_DB_PASSWORD: ${{ secrets.SQL_DB_PASSWORD }}
-      SQL_DB_NAME: ${{ secrets.SQL_DB_NAME }}
-      SQL_DB_LOGGING_ENABLED: ${{ vars.SQL_DB_LOGGING_ENABLED }}
 
     steps:
-      - name: Repository
-        uses: actions/checkout@v4
-
-      - name: Node
-        uses: actions/setup-node@v4
+      - name: Deploy ⚡
+        uses: ./.github/actions/mssql
         with:
-          node-version: ${{ vars.NODE_VERSION }}
-
-      - name: Dependencies
-        working-directory: ./libs/common
-        run: npm ci
-
-      - name: Migrate
-        working-directory: ./libs/common
-        run: npm run db:migrate
+          host: ${{ secrets.SQL_DB_HOST }}
+          port: ${{ secrets.SQL_DB_PORT }}
+          username: ${{ secrets.SQL_DB_USERNAME }}
+          password: ${{ secrets.SQL_DB_PASSWORD }}
+          databae: ${{ secrets.SQL_DB_NAME }}
+          log: ${{ vars.SQL_DB_LOGGING_ENABLED }}
 
   webapp:
     name: WebApp 🌐
@@ -139,86 +125,14 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - name: Repository 🗃️
-        uses: actions/checkout@v4
+      - name: Deploy ⚡
+        uses: ./.github/actions/webapp
         with:
-          ref: ${{ github.event.workflow_run.head_branch }}
-
-      - name: Defaults ✨
-        uses: azure/cli@v2.1.0
-        with:
-          inlineScript: |
-            # Basic
-            az configure --defaults location=${{ vars.REGION }}
-            az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
-
-      - name: Azure 🔐
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: CLI 📝
-        run: |
-          echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
-          echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
-          echo WEBAPP=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ matrix.webapp }}`)].name' -o tsv) >> $GITHUB_ENV
-
-      - name: ACR 🔐
-        uses: azure/docker-login@v2
-        with:
-          login-server: ${{ env.ACR }}
-          username: ${{ env.ACR_USER }}
-          password: ${{ secrets.ACR_PASSWORD }}
-
-      - name: Dockerfile 🐳
-        if: ${{ 'portal-ui' == matrix.webapp }}
-        run: echo "DOCKERFILE=portal/Dockerfile" >> $GITHUB_ENV
-
-      - name: Dockerfile 🐳
-        if: ${{ 'portal-ui' != matrix.webapp }}
-        run: echo "DOCKERFILE=${{ matrix.webapp }}/Dockerfile" >> $GITHUB_ENV
-
-      - name: Artifacts 🗃️
-        working-directory: .
-        run: |
-          # Build images
-          docker build -f ./${{ env.DOCKERFILE }} . \
-          -t ${{ env.ACR }}/${{ matrix.webapp }}:${{ github.sha }} \
-          -t ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }} \
-          --build-arg GITHUB_SHA=${{ github.sha }}
-
-          # Push images
-          docker push ${{ env.ACR }}/${{ matrix.webapp }}:${{ github.sha }}
-          docker push ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }}
-
-      - name: Slot 🔀
-        uses: azure/cli@v2.1.0
-        with:
-          inlineScript: |
-            # Create new temporary slot
-            az webapp deployment slot create \
-            --slot ${{ github.sha }} \
-            --name ${{ env.WEBAPP }} \
-            --configuration-source ${{ env.WEBAPP }} \
-            --deployment-container-image-name ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }} \
-            --docker-registry-server-user ${{ env.ACR_USER }} \
-            --docker-registry-server-password ${{ secrets.ACR_PASSWORD }}
-
-            # Swap slot
-            az webapp deployment slot swap \
-            --slot ${{ github.sha }} \
-            --name ${{ env.WEBAPP }} \
-            --action swap
-
-      - name: Cleanup 🧹
-        if: always()
-        uses: azure/cli@v2.1.0
-        with:
-          inlineScript: |
-            # Delete temporary slot
-            az webapp deployment slot delete \
-            --slot ${{ github.sha }} \
-            --name ${{ env.WEBAPP }}
+          region: ${{ vars.REGION }}
+          group: ${{ secrets.RESOURCE_GROUP }}
+          credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          acr: ${{ secrets.ACR_PASSWORD }}
+          webapp: ${{ matrix.webapp }}
 
   functions:
     name: Functions ⚡
@@ -243,78 +157,11 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - name: Repository 🗃️
-        uses: actions/checkout@v4
+      - name: Deploy ⚡
+        uses: ./.github/actions/functions
         with:
-          ref: ${{ github.event.workflow_run.head_branch }}
-
-      - name: Defaults ✨
-        uses: azure/cli@v2.1.0
-        with:
-          inlineScript: |
-            # Basic
-            az configure --defaults location=${{ vars.REGION }}
-            az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
-
-      - name: Azure 🔐
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Directory 📁
-        if: ${{ 'acbs-function' == matrix.functions }}
-        run: echo "NAME=acbs" >> $GITHUB_ENV
-
-      - name: CLI 📝
-        run: |
-          echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
-          echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
-          echo FUNCTION=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ env.NAME }}`)].name' -o tsv) >> $GITHUB_ENV
-
-      - name: ACR 🔐
-        uses: azure/docker-login@v2
-        with:
-          login-server: ${{ env.ACR }}
-          username: ${{ env.ACR_USER }}
-          password: ${{ secrets.ACR_PASSWORD }}
-
-      - name: Artifacts 🗃️
-        working-directory: .
-        run: |
-          # Build images
-          docker build -f ./azure-functions/${{ matrix.functions }}/Dockerfile . \
-          -t ${{ env.ACR }}/${{ matrix.functions }}:${{ github.sha }} \
-          -t ${{ env.ACR }}/${{ matrix.functions }}:${{ env.FROM }}
-
-          # Push images
-          docker push ${{ env.ACR }}/${{ matrix.functions }}:${{ github.sha }}
-          docker push ${{ env.ACR }}/${{ matrix.functions }}:${{ env.FROM }}
-
-      - name: Slot 🔀
-        uses: azure/cli@v2.1.0
-        with:
-          inlineScript: |
-            # Create new temporary slot
-            az functionapp deployment slot create \
-            --slot ${{ github.sha }} \
-            --name ${{ env.FUNCTION }} \
-            --configuration-source ${{ env.FUNCTION }} \
-            --deployment-container-image-name ${{ env.ACR }}/${{ matrix.functions }}:${{ env.FROM }} \
-            --docker-registry-server-user ${{ env.ACR_USER }} \
-            --docker-registry-server-password ${{ secrets.ACR_PASSWORD }}
-
-            # Swap slot
-            az functionapp deployment slot swap \
-            --slot ${{ github.sha }} \
-            --name ${{ env.FUNCTION }} \
-            --action swap
-
-      - name: Cleanup 🧹
-        if: always()
-        uses: azure/cli@v2.1.0
-        with:
-          inlineScript: |
-            # Delete temporary slot
-            az functionapp deployment slot delete \
-            --slot ${{ github.sha }} \
-            --name ${{ env.FUNCTION }}
+          region: ${{ vars.REGION }}
+          group: ${{ secrets.RESOURCE_GROUP }}
+          credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          acr: ${{ secrets.ACR_PASSWORD }}
+          functions: ${{ matrix.functions }}
