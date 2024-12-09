@@ -15,6 +15,7 @@ module.exports = {
   summaryList: () => cy.get('[data-cy="summary-list"]'),
   backLink: () => cy.get('[data-cy="back-link"]'),
   cancelLink: () => cy.get('[data-cy="cancel-link"]'),
+  cancelButton: () => cy.get('[data-cy="cancel-button"]'),
   continueButton: () => cy.get('[data-cy="continue-button"]'),
   errorSummary: () => cy.get('[data-cy="error-summary"]'),
   errorSummaryItems: () => cy.get('[data-cy="error-summary"] li'),

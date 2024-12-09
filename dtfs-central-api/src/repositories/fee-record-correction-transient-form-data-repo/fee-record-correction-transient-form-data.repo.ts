@@ -21,11 +21,25 @@ export const FeeRecordCorrectionTransientFormDataRepo = SqlDbDataSource.getRepos
     });
   },
 
+  /**
+   * Deletes the transient form data for the given user id and fee record id,
+   * if exists.
+   * @param userId - The user id
+   * @param feeRecordId - The fee record id
+   */
+  async deleteByUserIdAndFeeRecordId(userId: string, feeRecordId: number): Promise<void> {
+    await this.delete({
+      userId,
+      feeRecordId,
+    });
+  },
+
   withTransaction(transactionEntityManager: EntityManager) {
     const transactionRepository = transactionEntityManager.getRepository(FeeRecordCorrectionTransientFormDataEntity);
 
     return {
       findByUserIdAndFeeRecordId: this.findByUserIdAndFeeRecordId.bind(transactionRepository),
+      deleteByUserIdAndFeeRecordId: this.deleteByUserIdAndFeeRecordId.bind(transactionRepository),
     };
   },
 });

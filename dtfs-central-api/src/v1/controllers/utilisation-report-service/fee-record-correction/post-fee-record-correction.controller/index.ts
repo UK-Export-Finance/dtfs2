@@ -27,6 +27,10 @@ export type PostFeeRecordCorrectionRequest = CustomExpressRequest<{
  *
  * Updates the fee record status to PENDING_CORRECTION.
  *
+ * Deletes transient form data for the requesting user and fee record.
+ *
+ * Sends fee record correction request emails
+ *
  * @param req - The request object
  * @param res - The response object
  */
@@ -76,6 +80,8 @@ export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionReques
           },
         },
       });
+
+      await FeeRecordCorrectionTransientFormDataRepo.withTransaction(transactionEntityManager).deleteByUserIdAndFeeRecordId(userId, feeRecordId);
 
       await sendFeeRecordCorrectionRequestEmails(reasons, feeRecord.report.reportPeriod, feeRecord.exporter, feeRecord.report.bankId, user.email);
     });
