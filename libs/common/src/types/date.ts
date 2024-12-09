@@ -1,4 +1,10 @@
+import z from 'zod';
+import { UNIX_TIMESTAMP_MILLISECONDS_SCHEMA, UNIX_TIMESTAMP_SCHEMA, UNIX_TIMESTAMP_SECONDS_SCHEMA } from '../schemas';
+
 /**
+ * @deprecated Prefer either UnixTimestampMilliseconds or UnixTimestampSeconds depending on the unit,
+ * this type is kept to document existing timestamps that are in an unknown unit
+ *
  * Unix timestamp, representing the time that has elapsed since 1st January 1970
  * (UTC).
  *
@@ -11,7 +17,18 @@
  *  * 16 digits - microseconds
  *  * 19 digits - nanoseconds
  */
-export type UnixTimestamp = number;
+export type UnixTimestamp = z.infer<typeof UNIX_TIMESTAMP_SCHEMA>;
+
+export type UnixTimestampMilliseconds = z.infer<typeof UNIX_TIMESTAMP_MILLISECONDS_SCHEMA>;
+/**
+ * Unix timestamp, representing the seconds that have elapsed since 1st January 1970
+ * (UTC).
+ *
+ * e.g. A Unix timestamp of 1702900314 is equivalent to an ISO 8601 date time
+ * stamp of '2023-12-18T11:51:54Z'
+ *
+ */
+export type UnixTimestampSeconds = z.infer<typeof UNIX_TIMESTAMP_SECONDS_SCHEMA>;
 
 /**
  * ISO 8601 date time string in format 'yyyy-MM-ddThh:mm:ssZ'

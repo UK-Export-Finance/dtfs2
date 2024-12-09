@@ -30,6 +30,18 @@ describe(page, () => {
 
   const getDatalistSelectorForBankId = (bankId: string) => `datalist#datalist--bankId-${bankId}`;
 
+  it('should add error prefix to page title when there are errors', () => {
+    const wrapper = getWrapper({ errorSummary: [{ text: 'an error', href: 'error-href' }] });
+
+    wrapper.expectPageTitle().toRead('Error - Find reports by year');
+  });
+
+  it('should not add error prefix to page title when there are no errors', () => {
+    const wrapper = getWrapper({ errorSummary: [] });
+
+    wrapper.expectPageTitle().toRead('Find reports by year');
+  });
+
   it('should render the main heading', () => {
     // Arrange
     const wrapper = getWrapper();

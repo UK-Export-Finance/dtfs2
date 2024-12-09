@@ -1,5 +1,6 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../gef/cypress/fixtures/constants');
-const dateConstants = require('./dateConstants');
+const { tomorrow } = require('./dateConstants');
 
 /**
  * Gets facility end date properties if enabled on default deal version
@@ -39,7 +40,7 @@ const anUnissuedCashFacility = ({ facilityEndDateEnabled = false } = {}) => ({
     'Other',
   ],
   detailsOther: 'Other',
-  currency: { id: 'GBP' },
+  currency: { id: CURRENCY.GBP },
   value: 2000,
   coverPercentage: 80,
   interestPercentage: 1,
@@ -82,7 +83,7 @@ const anIssuedCashFacility = ({ facilityEndDateEnabled = false } = {}) => ({
     'Other',
   ],
   detailsOther: 'Other',
-  currency: { id: 'GBP' },
+  currency: { id: CURRENCY.GBP },
   value: 2000,
   coverPercentage: 80,
   interestPercentage: 1,
@@ -112,7 +113,7 @@ const anIssuedCashFacilityWithCoverDateConfirmed = ({ facilityEndDateEnabled = f
   name: 'Facility two',
   shouldCoverStartOnSubmission: true,
   coverStartDate: 1638403200000,
-  coverEndDate: dateConstants.tomorrow,
+  coverEndDate: tomorrow.date,
   monthsOfCover: null,
   details: [
     'Term basis',
@@ -124,7 +125,7 @@ const anIssuedCashFacilityWithCoverDateConfirmed = ({ facilityEndDateEnabled = f
     'Other',
   ],
   detailsOther: 'Other',
-  currency: { id: 'GBP' },
+  currency: { id: CURRENCY.GBP },
   value: 2000,
   coverPercentage: 80,
   interestPercentage: 1,
@@ -167,7 +168,7 @@ const anUnissuedContingentFacility = ({ facilityEndDateEnabled = false } = {}) =
     'Other',
   ],
   detailsOther: 'Other',
-  currency: { id: 'GBP' },
+  currency: { id: CURRENCY.GBP },
   value: 2000,
   coverPercentage: 80,
   interestPercentage: 1,
@@ -208,7 +209,7 @@ const anUnissuedCashFacilityWith20MonthsOfCover = ({ facilityEndDateEnabled = fa
     'Other',
   ],
   detailsOther: 'Other',
-  currency: { id: 'GBP' },
+  currency: { id: CURRENCY.GBP },
   value: 2000,
   coverPercentage: 80,
   interestPercentage: 1,
@@ -226,9 +227,19 @@ const anUnissuedCashFacilityWith20MonthsOfCover = ({ facilityEndDateEnabled = fa
   canResubmitIssuedFacilities: null,
 });
 
+/**
+ * @param {{ facilityEndDateEnabled?: boolean}} options
+ * @returns {import('@ukef/dtfs2-common').Facility }
+ */
+const anIssuedContingentFacility = ({ facilityEndDateEnabled = false } = {}) => ({
+  ...anUnissuedContingentFacility({ facilityEndDateEnabled }),
+  hasBeenIssued: true,
+});
+
 exports.multipleMockGefFacilities = ({ facilityEndDateEnabled = false } = {}) => ({
   unissuedCashFacility: anUnissuedCashFacility({ facilityEndDateEnabled }),
   issuedCashFacility: anIssuedCashFacility({ facilityEndDateEnabled }),
   unissuedContingentFacility: anUnissuedContingentFacility({ facilityEndDateEnabled }),
   unissuedCashFacilityWith20MonthsOfCover: anUnissuedCashFacilityWith20MonthsOfCover({ facilityEndDateEnabled }),
+  issuedContingentFacility: anIssuedContingentFacility({ facilityEndDateEnabled }),
 });

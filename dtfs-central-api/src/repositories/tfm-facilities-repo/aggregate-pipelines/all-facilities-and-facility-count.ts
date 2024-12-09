@@ -43,6 +43,8 @@ export const allFacilitiesAndFacilityCount = ({
         dealType: '$tfmDeals.dealSnapshot.dealType',
         // create the `type` property
         type: '$facilitySnapshot.type',
+        // create the `tfmFacilityStage` property
+        tfmFacilityStage: '$tfm.facilityStage',
         // create the `value` property - this is the facility value
         value: '$facilitySnapshot.value',
         // create the `currency` property
@@ -63,6 +65,7 @@ export const allFacilitiesAndFacilityCount = ({
                 }, // YYYY-MM-DD
               },
             ],
+            default: null,
           },
         },
         // create the `companyName` property - this is inside the `dealSnapshot.exporter` property, NOT `facilities` array

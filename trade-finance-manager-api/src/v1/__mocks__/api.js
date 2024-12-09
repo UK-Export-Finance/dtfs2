@@ -5,9 +5,7 @@ const MOCK_USERS = require('./mock-users');
 const MOCK_PREMIUM_SCHEDULE_RESPONSE = require('./mock-premium-schedule-response');
 const MOCK_BANK_HOLIDAYS = require('./mock-bank-holidays');
 const { MOCK_UTILISATION_REPORT } = require('./mock-utilisation-report');
-
 const MOCK_CASH_CONTINGENT_FACILITIES = require('./mock-cash-contingent-facilities');
-
 const ALL_MOCK_DEALS = require('./mock-deals');
 
 const ALL_MOCK_FACILITIES = [...MOCK_FACILITIES, ...MOCK_BSS_FACILITIES_USD_CURRENCY, ...MOCK_CASH_CONTINGENT_FACILITIES];
@@ -202,7 +200,7 @@ module.exports = {
     exchangeRate: MOCK_CURRENCY_EXCHANGE_RATE,
   }),
   createACBS: jest.fn(() => ({})),
-  updateACBSfacility: jest.fn(() =>
+  issueACBSfacility: jest.fn(() =>
     Promise.resolve({
       acbsTaskLinks: {
         mockLinkUrl: 'mockLinkUrl',
@@ -253,4 +251,9 @@ module.exports = {
   deleteDealCancellation: jest.fn(),
   getSelectedFeeRecordsDetails: jest.fn(),
   addFeesToAnExistingPayment: jest.fn(),
+  getFeeRecord: jest.fn(),
+  getFeeRecordCorrectionRequestReview: jest.fn(),
+  updateFeeRecordCorrectionTransientFormData: jest.fn(),
+  createFeeRecordCorrection: jest.fn(),
+  getFeeRecordCorrectionTransientFormData: jest.fn(),
 };

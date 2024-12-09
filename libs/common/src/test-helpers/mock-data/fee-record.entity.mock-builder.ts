@@ -1,7 +1,15 @@
-import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity, FacilityUtilisationDataEntity, PaymentEntity } from '../../sql-db-entities';
+import {
+  DbRequestSource,
+  FeeRecordEntity,
+  UtilisationReportEntity,
+  FacilityUtilisationDataEntity,
+  PaymentEntity,
+  FeeRecordCorrectionEntity,
+} from '../../sql-db-entities';
 import { Currency, FeeRecordStatus, ReportPeriod } from '../../types';
 import { FacilityUtilisationDataEntityMockBuilder } from './facility-utilisation-data.entity.mock-builder';
-import { REQUEST_PLATFORM_TYPE } from '../../constants';
+import { FEE_RECORD_STATUS, REQUEST_PLATFORM_TYPE } from '../../constants';
+import { UtilisationReportEntityMockBuilder } from './utilisation-report.entity.mock-builder';
 
 /**
  * Gets the previous report period based on a monthly reporting
@@ -25,8 +33,8 @@ const getPreviousMonthlyReportPeriod = (reportPeriod: ReportPeriod): ReportPerio
 export class FeeRecordEntityMockBuilder {
   private readonly feeRecord: FeeRecordEntity;
 
-  private constructor(feeRecord: FeeRecordEntity) {
-    this.feeRecord = feeRecord;
+  public constructor(feeRecord?: FeeRecordEntity) {
+    this.feeRecord = feeRecord ?? FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).feeRecord;
   }
 
   public static forReport(report: UtilisationReportEntity): FeeRecordEntityMockBuilder {
@@ -53,8 +61,9 @@ export class FeeRecordEntityMockBuilder {
     data.feesPaidToUkefForThePeriodCurrency = 'GBP';
     data.paymentCurrency = 'GBP';
     data.paymentExchangeRate = 1;
-    data.status = 'TO_DO';
+    data.status = FEE_RECORD_STATUS.TO_DO;
     data.payments = [];
+    data.corrections = [];
     data.fixedFeeAdjustment = null;
     data.principalBalanceAdjustment = null;
     data.reconciledByUserId = null;
@@ -137,6 +146,11 @@ export class FeeRecordEntityMockBuilder {
 
   public withPayments(payments: PaymentEntity[]): FeeRecordEntityMockBuilder {
     this.feeRecord.payments = payments;
+    return this;
+  }
+
+  public withCorrections(corrections: FeeRecordCorrectionEntity[]): FeeRecordEntityMockBuilder {
+    this.feeRecord.corrections = corrections;
     return this;
   }
 

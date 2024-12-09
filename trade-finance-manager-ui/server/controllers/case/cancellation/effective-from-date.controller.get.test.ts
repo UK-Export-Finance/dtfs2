@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http';
-import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
+import { DEAL_SUBMISSION_TYPE, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
 import { aRequestSession } from '../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
@@ -108,9 +108,25 @@ describe('getEffectiveFromDate', () => {
       expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
     });
 
+    it('redirects to deal summary page if the deal cancellation is not in draft', async () => {
+      // Arrange
+      jest.mocked(api.getDealCancellation).mockResolvedValue({ status: TFM_DEAL_CANCELLATION_STATUS.COMPLETED });
+
+      const { req, res } = createMocks<GetEffectiveFromDateRequest>({
+        params: { _id: dealId },
+        session: aRequestSession(),
+      });
+
+      // Act
+      await getEffectiveFromDate(req, res);
+
+      // Assert
+      expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
+    });
+
     it('renders the effective from date page without prepopulated data when it does not exist', async () => {
       // Arrange
-      jest.mocked(api.getDealCancellation).mockResolvedValue({ bankRequestDate: new Date().valueOf() });
+      jest.mocked(api.getDealCancellation).mockResolvedValue({ bankRequestDate: new Date().valueOf(), status: TFM_DEAL_CANCELLATION_STATUS.DRAFT });
 
       const session = aRequestSession();
 
@@ -139,7 +155,11 @@ describe('getEffectiveFromDate', () => {
     it('renders the effective from page with prepopulated data when it exists', async () => {
       // Arrange
       const existingEffectiveFromDate = new Date('2024-03-21');
-      jest.mocked(api.getDealCancellation).mockResolvedValue({ bankRequestDate: new Date().valueOf(), effectiveFrom: existingEffectiveFromDate.valueOf() });
+      jest.mocked(api.getDealCancellation).mockResolvedValue({
+        bankRequestDate: new Date().valueOf(),
+        effectiveFrom: existingEffectiveFromDate.valueOf(),
+        status: TFM_DEAL_CANCELLATION_STATUS.DRAFT,
+      });
 
       const session = aRequestSession();
 
@@ -168,7 +188,9 @@ describe('getEffectiveFromDate', () => {
     it('renders the page with the back URL as the check details page when "change" is passed in as a query parameter', async () => {
       // Arrange
       const existingEffectiveFromDate = new Date('2024-03-21');
-      jest.mocked(api.getDealCancellation).mockResolvedValue({ effectiveFrom: existingEffectiveFromDate.valueOf() });
+      jest
+        .mocked(api.getDealCancellation)
+        .mockResolvedValue({ effectiveFrom: existingEffectiveFromDate.valueOf(), status: TFM_DEAL_CANCELLATION_STATUS.DRAFT });
 
       const session = aRequestSession();
 

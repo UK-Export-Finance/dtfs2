@@ -1,8 +1,9 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const { contractAboutBuyer, contractAboutFinancial, contractAboutPreview } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json');
-const DATE_CONSTANTS = require('../../../../../e2e-fixtures/dateConstants');
+const { thirtyFiveDaysAgo } = require('../../../../../e2e-fixtures/dateConstants');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -28,13 +29,17 @@ context('about-buyer', () => {
 
     // prove the errors are on the about-financial page
     contractAboutFinancial.visit(deal);
-    partials.errorSummaryLinks().should('have.length', 2);
+
+    partials.errorSummaryLinks().should('have.length', 4);
+
     contractAboutFinancial.expectError('Supply Contract value is required');
     contractAboutFinancial.expectError('Supply Contract currency is required');
+    contractAboutFinancial.expectError('Supply Contract conversion rate is required for non-GBP currencies');
+    contractAboutFinancial.expectError('Supply Contract conversion date is required for non-GBP currencies');
 
     // fill in value + pick currency=GBP to clear validation warnings
     cy.keyboardInput(contractAboutFinancial.supplyContractValue(), '123.45');
-    contractAboutFinancial.supplyContractCurrency().select('GBP');
+    contractAboutFinancial.supplyContractCurrency().select(CURRENCY.GBP);
     contractAboutFinancial.preview().click();
 
     // check the errors have been cleared..
@@ -104,15 +109,15 @@ context('about-buyer', () => {
 
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion date cannot be in the future');
 
-    const dateTooFarInThePast = DATE_CONSTANTS.thirtyFiveDaysAgo;
+    const dateTooFarInThePast = thirtyFiveDaysAgo;
 
     contractAboutFinancial.visit(deal);
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day(), `{selectall}{backspace}${dateTooFarInThePast.getDate()}`);
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day(), `{selectall}{backspace}${dateTooFarInThePast.day}`);
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().month(), `{selectall}{backspace}${dateTooFarInThePast.getMonth() + 1}`);
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().month(), `{selectall}{backspace}${dateTooFarInThePast.month}`);
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), `{selectall}{backspace}${dateTooFarInThePast.getFullYear()}`);
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), `{selectall}{backspace}${dateTooFarInThePast.year}`);
 
     contractAboutFinancial.preview().click();
 

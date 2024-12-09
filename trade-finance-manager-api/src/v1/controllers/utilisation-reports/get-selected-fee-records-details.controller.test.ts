@@ -1,5 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { AxiosResponse, HttpStatusCode, AxiosError } from 'axios';
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { getSelectedFeeRecordsDetails, GetSelectedFeeRecordsDetailsRequest } from './get-selected-fee-records-details.controller';
 import api from '../../api';
 import { SelectedFeeRecordsDetailsResponseBody } from '../../api-response-types';
@@ -23,7 +24,7 @@ describe('get-selected-fee-records-details.controller', () => {
 
     const aSelectedFeeRecordsDetailsResponseBody = (): SelectedFeeRecordsDetailsResponseBody => ({
       totalReportedPayments: {
-        currency: 'GBP',
+        currency: CURRENCY.GBP,
         amount: 100,
       },
       bank: { name: 'Test bank' },
@@ -34,6 +35,7 @@ describe('get-selected-fee-records-details.controller', () => {
       feeRecords: [],
       payments: [aPayment()],
       canAddToExistingPayment: false,
+      gbpTolerance: 2,
     });
 
     afterEach(() => {

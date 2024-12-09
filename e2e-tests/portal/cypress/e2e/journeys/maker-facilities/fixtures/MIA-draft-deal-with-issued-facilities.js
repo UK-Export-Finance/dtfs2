@@ -1,11 +1,12 @@
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
-const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
+const { oneMonth, today } = require('../../../../../../e2e-fixtures/dateConstants');
 
-const now = new Date().valueOf();
+const now = today.unixMilliseconds;
 
 const deal = {
   submissionType: 'Manual Inclusion Application',
-  updatedAt: Date.now(),
+  updatedAt: now,
   bankInternalRefName: 'TEST-DEAL',
   additionalRefName: 'TEST-DEAL',
   status: 'Draft',
@@ -172,7 +173,7 @@ const deal = {
     'supplyContractConversionDate-year': '',
     supplyContractConversionRateToGBP: '',
     supplyContractCurrency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
       text: 'GBP - UK Sterling',
     },
     supplyContractValue: '1234.00',
@@ -182,15 +183,15 @@ const deal = {
       type: 'Bond',
       createdDate: now,
       bondIssuer: '',
-      bondType: 'Advance payment guarantee',
+      bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': dateConstants.oneMonthDay.toString(),
-      'coverEndDate-month': dateConstants.oneMonthMonth.toString(),
-      'coverEndDate-year': dateConstants.oneMonthYear.toString(),
+      'coverEndDate-day': oneMonth.day,
+      'coverEndDate-month': oneMonth.month,
+      'coverEndDate-year': oneMonth.year,
       name: '1234',
       bondBeneficiary: '',
       guaranteeFeePayableByBank: '10.8000',
@@ -205,7 +206,7 @@ const deal = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
     {
@@ -216,9 +217,9 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': dateConstants.oneMonthDay.toString(),
-      'coverEndDate-month': dateConstants.oneMonthMonth.toString(),
-      'coverEndDate-year': dateConstants.oneMonthYear.toString(),
+      'coverEndDate-day': oneMonth.day,
+      'coverEndDate-month': oneMonth.month,
+      'coverEndDate-year': oneMonth.year,
       name: '1234',
       guaranteeFeePayableByBank: '21.6000',
       updatedAt: Date.now(),
@@ -233,7 +234,7 @@ const deal = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
   ],

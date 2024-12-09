@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import Big from 'big.js';
 import { UtilisationReportEntity } from '../utilisation-report';
 import { Currency, FeeRecordStatus } from '../../types';
@@ -15,6 +15,7 @@ import { MonetaryColumn, ExchangeRateColumn } from '../custom-columns';
 import { PaymentEntity } from '../payment';
 import { FacilityUtilisationDataEntity } from '../facility-utilisation-data';
 import { FEE_RECORD_STATUS } from '../../constants';
+import { FeeRecordCorrectionEntity } from '../fee-record-correction';
 
 @Entity('FeeRecord')
 export class FeeRecordEntity extends AuditableBaseEntity {
@@ -153,6 +154,14 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   dateReconciled!: Date | null;
 
   /**
+   * Corrections requested and made to the fee record
+   */
+  @OneToMany(() => FeeRecordCorrectionEntity, (correction) => correction.feeRecord, {
+    cascade: ['insert', 'update'],
+  })
+  corrections!: FeeRecordCorrectionEntity[];
+
+  /**
    * Creates a fee record
    *
    * TODO FN-1726 - when we have a status on this entity we should make this method name specific to the initial status
@@ -254,7 +263,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
    */
   public removeAllPayments({ requestSource }: RemoveAllPaymentsParams): void {
     this.payments = [];
-    this.status = 'TO_DO';
+    this.status = FEE_RECORD_STATUS.TO_DO;
     this.updateLastUpdatedBy(requestSource);
   }
 

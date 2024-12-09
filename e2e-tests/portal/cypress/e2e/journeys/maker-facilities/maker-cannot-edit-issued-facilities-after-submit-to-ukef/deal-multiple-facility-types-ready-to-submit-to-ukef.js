@@ -1,11 +1,12 @@
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
-const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
+const { oneMonth, twoMonths } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const now = new Date().valueOf();
-const nowPlusOneMonth = `${dateConstants.oneMonthUnix}000`;
-const nowPlusTwoMonthsDay = dateConstants.twoMonthsDay.toString();
-const nowPlusTwoMonthsMonth = dateConstants.twoMonthsMonth.toString();
-const nowPlusTwoMonthsYear = dateConstants.twoMonthsYear.toString();
+const nowPlusOneMonth = oneMonth.unixMillisecondsString;
+const nowPlusTwoMonthsDay = twoMonths.dayLong;
+const nowPlusTwoMonthsMonth = twoMonths.monthLong;
+const nowPlusTwoMonthsYear = twoMonths.year;
 
 const deal = {
   submissionType: 'Automatic Inclusion Notice',
@@ -192,7 +193,7 @@ const deal = {
     'supplyContractConversionDate-year': '',
     supplyContractConversionRateToGBP: '',
     supplyContractCurrency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
       text: 'GBP - UK Sterling',
     },
     supplyContractValue: '1234.00',
@@ -203,7 +204,7 @@ const deal = {
         type: 'Bond',
         createdDate: now,
         bondIssuer: '',
-        bondType: 'Advance payment guarantee',
+        bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
         facilityStage: 'Issued',
         hasBeenIssued: true,
         'requestedCoverStartDate-day': '',
@@ -226,7 +227,7 @@ const deal = {
         dayCountBasis: '365',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
         requestedCoverStartDate: nowPlusOneMonth,
       },
@@ -259,7 +260,7 @@ const deal = {
         dayCountBasis: '365',
         currency: {
           text: 'GBP - UK Sterling',
-          id: 'GBP',
+          id: CURRENCY.GBP,
         },
         requestedCoverStartDate: nowPlusOneMonth,
       },

@@ -1,9 +1,9 @@
-import { ValuesOf } from './types-helper';
+import { Prettify, ValuesOf } from './types-helper';
 import { MonthAndYear } from './date';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS, UTILISATION_REPORT_HEADERS, FEE_RECORD_STATUS } from '../constants';
+import { UTILISATION_REPORT_STATUS, UTILISATION_REPORT_HEADERS, FEE_RECORD_STATUS } from '../constants';
 import { Currency } from './currency';
 
-export type UtilisationReportReconciliationStatus = ValuesOf<typeof UTILISATION_REPORT_RECONCILIATION_STATUS>;
+export type UtilisationReportStatus = ValuesOf<typeof UTILISATION_REPORT_STATUS>;
 
 export type ReportPeriod = {
   start: MonthAndYear;
@@ -11,15 +11,28 @@ export type ReportPeriod = {
 };
 
 export type ReportWithStatus = {
-  status: UtilisationReportReconciliationStatus;
+  status: UtilisationReportStatus;
   reportId: number;
 };
 
 type UtilisationReportHeader = ValuesOf<typeof UTILISATION_REPORT_HEADERS>;
 
-export type UtilisationReportRawCsvData = {
-  [HeaderKey in UtilisationReportHeader]: HeaderKey extends `${string}currency` ? Currency : string;
+type OptionalUtilisationReportHeader = Extract<
+  UtilisationReportHeader,
+  'payment currency' | 'accrual currency' | 'accrual exchange rate' | 'payment exchange rate'
+>;
+
+type RequiredUtilisationReportHeader = Exclude<UtilisationReportHeader, OptionalUtilisationReportHeader>;
+
+type RequiredUtilisationReportRawCsvData = {
+  [HeaderKey in RequiredUtilisationReportHeader]: HeaderKey extends `${string}currency` ? Currency : string;
 };
+
+type OptionalUtilisationReportRawCsvData = {
+  [HeaderKey in OptionalUtilisationReportHeader]?: (HeaderKey extends `${string}currency` ? Currency | '' : string) | null;
+};
+
+export type UtilisationReportRawCsvData = Prettify<RequiredUtilisationReportRawCsvData & OptionalUtilisationReportRawCsvData>;
 
 export type FeeRecordStatus = ValuesOf<typeof FEE_RECORD_STATUS>;
 
@@ -63,7 +76,7 @@ export type UtilisationReportFacilityData = {
 };
 
 export interface CalculateFixedFeeBaseParams {
-  utilisation: number;
+  ukefShareOfUtilisation: number;
   interestPercentage: number;
   dayCountBasis: number;
 }

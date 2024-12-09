@@ -32,7 +32,7 @@ describe(page, () => {
     wrapper.expectLink('[data-cy="return-link"]').toLinkTo(`/case/${dealId}/cancellation/cancel`, 'Return to deal summary');
   });
 
-  it('should render the delete account button', () => {
+  it('should render the cancel deal button', () => {
     // Arrange
     const checkDetailsViewModel: CheckDetailsViewModel = aCheckDetailsViewModel();
 
@@ -41,7 +41,7 @@ describe(page, () => {
 
     // Assert
     wrapper.expectElement('[data-cy="delete-button"]').toExist();
-    wrapper.expectText('[data-cy="delete-button"]').toRead('Delete account');
+    wrapper.expectText('[data-cy="delete-button"]').toRead('Cancel deal');
   });
 
   it('should display a warning message about cancelling the deal', () => {
@@ -71,7 +71,7 @@ describe(page, () => {
 
   it('should display a dash when the reason for cancelling a deal is empty', () => {
     // Arrange
-    const checkDetailsViewModel: CheckDetailsViewModel = aCheckDetailsViewModel();
+    const checkDetailsViewModel: CheckDetailsViewModel = { ...aCheckDetailsViewModel(), cancellation: {} };
 
     // Act
     const wrapper = render(checkDetailsViewModel);
@@ -84,7 +84,7 @@ describe(page, () => {
   it('should display the reason for cancelling text when it exists', () => {
     // Arrange
     const reason = 'test reason';
-    const checkDetailsViewModel: CheckDetailsViewModel = { ...aCheckDetailsViewModel(), reason };
+    const checkDetailsViewModel: CheckDetailsViewModel = { ...aCheckDetailsViewModel(), cancellation: { reason } };
 
     // Act
     const wrapper = render(checkDetailsViewModel);
@@ -96,28 +96,30 @@ describe(page, () => {
 
   it('should display the received bank request date date string', () => {
     // Arrange
-    const receivedDateString = '1 January 2024';
-    const checkDetailsViewModel: CheckDetailsViewModel = { ...aCheckDetailsViewModel(), bankRequestDate: receivedDateString };
+    const bankRequestDate = 1729007392441;
+    const checkDetailsViewModel: CheckDetailsViewModel = { ...aCheckDetailsViewModel(), cancellation: { bankRequestDate } };
 
     // Act
     const wrapper = render(checkDetailsViewModel);
 
     // Assert
+    const expectedBankRequestDateString = '15 October 2024';
     wrapper.expectElement('[data-cy="bank-request-date-response"]').toExist();
-    wrapper.expectText('[data-cy="bank-request-date-response"]').toRead(receivedDateString);
+    wrapper.expectText('[data-cy="bank-request-date-response"]').toRead(expectedBankRequestDateString);
   });
 
   it('should display the received effective from date string', () => {
     // Arrange
-    const receivedDateString = '1 January 2024';
-    const checkDetailsViewModel: CheckDetailsViewModel = { ...aCheckDetailsViewModel(), effectiveFromDate: receivedDateString };
+    const effectiveFrom = 1729007392441;
+    const checkDetailsViewModel: CheckDetailsViewModel = { ...aCheckDetailsViewModel(), cancellation: { effectiveFrom } };
 
     // Act
     const wrapper = render(checkDetailsViewModel);
 
     // Assert
+    const expectedEffectiveFromString = '15 October 2024';
     wrapper.expectElement('[data-cy="effective-from-response"]').toExist();
-    wrapper.expectText('[data-cy="effective-from-response"]').toRead(receivedDateString);
+    wrapper.expectText('[data-cy="effective-from-response"]').toRead(expectedEffectiveFromString);
   });
 
   it('should render the Change links', () => {

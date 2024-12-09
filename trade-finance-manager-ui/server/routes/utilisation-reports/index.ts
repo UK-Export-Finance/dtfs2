@@ -10,6 +10,7 @@ import {
   validatePostAddPaymentRequestBody,
   validateTfmPaymentReconciliationFeatureFlagIsNotEnabled,
   validatePostRemoveFeesFromPaymentRequestBody,
+  validateTfmFeeRecordCorrectionFeatureFlagIsEnabled,
 } from '../../middleware';
 import { getReportDownload } from '../../controllers/utilisation-reports/report-download';
 import { getUtilisationReportReconciliationByReportId } from '../../controllers/utilisation-reports/utilisation-report-reconciliation-for-report';
@@ -21,6 +22,15 @@ import { getEditPayment, postEditPayment } from '../../controllers/utilisation-r
 import { getConfirmDeletePayment, postConfirmDeletePayment } from '../../controllers/utilisation-reports/confirm-delete-payment';
 import { postRemoveFeesFromPayment } from '../../controllers/utilisation-reports/remove-fees-from-payment';
 import { addToAnExistingPayment } from '../../controllers/utilisation-reports/add-to-an-existing-payment';
+import {
+  getCreateRecordCorrectionRequest,
+  postCreateRecordCorrectionRequest,
+} from '../../controllers/utilisation-reports/record-corrections/create-record-correction-request';
+import {
+  getRecordCorrectionRequestInformation,
+  postRecordCorrectionRequestInformation,
+} from '../../controllers/utilisation-reports/record-corrections/check-the-information';
+import { postInitiateRecordCorrectionRequest } from '../../controllers/utilisation-reports/record-corrections/initiate-record-correction-request';
 
 export const utilisationReportsRoutes = express.Router();
 
@@ -138,4 +148,48 @@ utilisationReportsRoutes.post(
   validateSqlId('paymentId'),
   validatePostRemoveFeesFromPaymentRequestBody,
   postRemoveFeesFromPayment,
+);
+
+utilisationReportsRoutes.post(
+  '/:reportId/create-record-correction-request',
+  validateTfmFeeRecordCorrectionFeatureFlagIsEnabled,
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
+  validateSqlId('reportId'),
+  postInitiateRecordCorrectionRequest,
+);
+
+utilisationReportsRoutes.get(
+  '/:reportId/create-record-correction-request/:feeRecordId',
+  validateTfmFeeRecordCorrectionFeatureFlagIsEnabled,
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
+  validateSqlId('reportId'),
+  validateSqlId('feeRecordId'),
+  getCreateRecordCorrectionRequest,
+);
+
+utilisationReportsRoutes.post(
+  '/:reportId/create-record-correction-request/:feeRecordId',
+  validateTfmFeeRecordCorrectionFeatureFlagIsEnabled,
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
+  validateSqlId('reportId'),
+  validateSqlId('feeRecordId'),
+  postCreateRecordCorrectionRequest,
+);
+
+utilisationReportsRoutes.get(
+  '/:reportId/create-record-correction-request/:feeRecordId/check-the-information',
+  validateTfmFeeRecordCorrectionFeatureFlagIsEnabled,
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
+  validateSqlId('reportId'),
+  validateSqlId('feeRecordId'),
+  getRecordCorrectionRequestInformation,
+);
+
+utilisationReportsRoutes.post(
+  '/:reportId/create-record-correction-request/:feeRecordId/check-the-information',
+  validateTfmFeeRecordCorrectionFeatureFlagIsEnabled,
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
+  validateSqlId('reportId'),
+  validateSqlId('feeRecordId'),
+  postRecordCorrectionRequestInformation,
 );

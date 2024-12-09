@@ -22,16 +22,16 @@ export const assertions = <TParams extends object>(wrapper: CheerioAPI, html: st
       expect(wrapper(selector).html()).toBeNull();
     },
     toBeDisabled: () => {
-      expect(wrapper(selector).hasClass('govuk-button--disabled')).toEqual(true);
       expect(wrapper(selector).hasClass('govuk-button--secondary')).toEqual(false);
       expect(wrapper(selector).attr('href')).toBeUndefined();
       expect(wrapper(selector).attr('disabled')).toEqual('disabled');
+      expect(wrapper(selector).attr('aria-disabled')).toEqual('true');
     },
     toLinkTo: (href: string, text: string) => {
-      expect(wrapper(selector).hasClass('govuk-button--disabled')).toEqual(false);
       expect(wrapper(selector).hasClass('govuk-button--secondary')).toEqual(false);
       expect(wrapper(selector).attr('href')).toEqual(href);
       expect(wrapper(selector).attr('disabled')).toBeUndefined();
+      expect(wrapper(selector).attr('aria-disabled')).toBeUndefined();
       expect(wrapper(selector).text().trim()).toEqual(text);
     },
   }),
@@ -40,16 +40,16 @@ export const assertions = <TParams extends object>(wrapper: CheerioAPI, html: st
       expect(wrapper(selector).html()).toBeNull();
     },
     toBeDisabled: () => {
-      expect(wrapper(selector).hasClass('govuk-button--disabled')).toEqual(true);
       expect(wrapper(selector).hasClass('govuk-button--secondary')).toEqual(true);
       expect(wrapper(selector).attr('href')).toBeUndefined();
       expect(wrapper(selector).attr('disabled')).toEqual('disabled');
+      expect(wrapper(selector).attr('aria-disabled')).toEqual('true');
     },
     toLinkTo: (href: string, text: string) => {
-      expect(wrapper(selector).hasClass('govuk-button--disabled')).toEqual(false);
       expect(wrapper(selector).hasClass('govuk-button--secondary')).toEqual(true);
       expect(wrapper(selector).attr('href')).toEqual(href);
       expect(wrapper(selector).attr('disabled')).toBeUndefined();
+      expect(wrapper(selector).attr('aria-disabled')).toBeUndefined();
       expect(wrapper(selector).text().trim()).toEqual(text);
     },
   }),
@@ -107,7 +107,7 @@ export const assertions = <TParams extends object>(wrapper: CheerioAPI, html: st
     },
   }),
   expectInput: (selector: string) => ({
-    toHaveValue: (value: string) => {
+    toHaveValue: (value?: string) => {
       expect(wrapper(selector).attr('value')).toEqual(value);
     },
     toBeChecked: () => {
@@ -130,6 +130,14 @@ export const assertions = <TParams extends object>(wrapper: CheerioAPI, html: st
   expectAriaSort: (selector: string) => ({
     toEqual: (text: string) => {
       expect(wrapper(selector).attr('aria-sort')).toEqual(text);
+    },
+  }),
+  expectPageTitle: () => ({
+    toRead: (text: string) => {
+      const titleText = wrapper('title').text();
+      const result = titleText.replace(', Trade Finance Manager, gov.uk', '').trim();
+
+      expect(result).toEqual(text);
     },
   }),
 });

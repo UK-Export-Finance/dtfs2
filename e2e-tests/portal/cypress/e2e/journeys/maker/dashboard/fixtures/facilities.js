@@ -1,3 +1,4 @@
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../../../../fixtures/constants');
 
 const CASH_FACILITY = {
@@ -5,7 +6,7 @@ const CASH_FACILITY = {
   coverStartDate: '2021-10-08T00:00:00.000Z',
   coverPercentage: 12,
   createdAt: 1628693855675.0,
-  currency: { id: 'GBP' },
+  currency: { id: CURRENCY.GBP },
   details: ['RESOLVING'],
   detailsOther: '',
   interestPercentage: 24,
@@ -28,7 +29,7 @@ const CASH_FACILITY = {
 const BOND_FACILITY = {
   type: CONSTANTS.FACILITY.FACILITY_TYPE.BOND,
   bondIssuer: 'Issuer',
-  bondType: 'Advance payment guarantee',
+  bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
   facilityStage: 'Unissued',
   hasBeenIssued: false,
   ukefGuaranteeInMonths: '10',
@@ -45,7 +46,7 @@ const BOND_FACILITY = {
   dayCountBasis: '365',
   currency: {
     text: 'GBP - UK Sterling',
-    id: 'GBP',
+    id: CURRENCY.GBP,
   },
   'coverEndDate-day': '20',
   'coverEndDate-month': '10',

@@ -1,10 +1,8 @@
 export * from './reconciliation-summary-helper';
 export * from './reconciliation-for-report-helper';
 export * from './get-key-to-currency-and-amount-sort-value-map-helper';
-export * from './get-add-payment-error-helper';
 export * from './get-remove-fees-from-payment-error-helper';
 export * from './find-reports-by-year-helper';
-export * from './get-generate-keying-data-error-helper';
 export * from './get-fee-record-display-status';
 export * from './edit-payment-helper';
 export * from './validate-payment-form-values';
@@ -13,3 +11,5 @@ export * from './payment-form-helpers';
 export * from './selected-reported-fees-details-view-model-mapper';
 export * from './get-reconciliation-for-report-href';
 export * from './is-pdc-reconcile-user';
+export * from './premium-payments-errors';
+export * from './get-link-to-premium-payments-tab';

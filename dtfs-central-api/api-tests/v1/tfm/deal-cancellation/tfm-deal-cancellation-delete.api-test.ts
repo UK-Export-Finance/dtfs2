@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_STAGE } from '@ukef/dtfs2-common';
+import { aTfmUser } from '@ukef/dtfs2-common/mock-data-backend';
 import { generatePortalAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { withMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import wipeDB from '../../../wipeDB';
@@ -8,7 +9,7 @@ import { testApi } from '../../../test-api';
 import { DEALS } from '../../../../src/constants';
 import aDeal from '../../deal-builder';
 import { createDeal } from '../../../helpers/create-deal';
-import { aPortalUser, aTfmUser } from '../../../../test-helpers';
+import { aPortalUser } from '../../../../test-helpers';
 import { MOCK_PORTAL_USER } from '../../../mocks/test-users/mock-portal-user';
 
 const originalProcessEnv = { ...process.env };
@@ -117,7 +118,7 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
         expect(getCancellationResponse.body).toEqual({});
       });
 
-      it('should return 404 if dealId is valid but not associated to a record', async () => {
+      it('should return 404 if dealId is valid but not associated to a deal', async () => {
         const validButNonExistentDealId = new ObjectId().toString();
 
         const deleteCancellationResponse = await testApi.remove({ auditDetails }).to(`/v1/tfm/deals/${validButNonExistentDealId}/cancellation`);

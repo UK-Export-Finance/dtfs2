@@ -1,17 +1,6 @@
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
-const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
-
-const nowDay = dateConstants.todayDay.toString();
-const nowMonth = dateConstants.todayMonth.toString();
-const nowYear = dateConstants.todayYear.toString();
-
-const nowPlusMonthDay = dateConstants.oneMonthDay.toString();
-const nowPlusMonthMonth = dateConstants.oneMonthMonth.toString();
-const nowPlusMonthYear = dateConstants.oneMonthYear.toString();
-
-const nowMinusDayDay = dateConstants.yesterdayDay.toString();
-const nowMinusDayMonth = dateConstants.yesterdayMonth.toString();
-const nowMinusDayYear = dateConstants.yesterdayYear.toString();
+const { today, oneMonth, yesterday } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const deal = {
   submissionType: 'Automatic Inclusion Notice',
@@ -36,28 +25,28 @@ const deal = {
     {
       type: 'Bond',
       bondIssuer: 'my issuer',
-      bondType: 'Retention bond',
+      bondType: BOND_TYPE.RETENTION_BOND,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '12',
-      'requestedCoverStartDate-day': nowDay,
-      'requestedCoverStartDate-month': nowMonth,
-      'requestedCoverStartDate-year': nowYear,
-      'coverEndDate-day': nowPlusMonthDay,
-      'coverEndDate-month': nowPlusMonthMonth,
-      'coverEndDate-year': nowPlusMonthYear,
+      'requestedCoverStartDate-day': today.dayLong,
+      'requestedCoverStartDate-month': today.monthLong,
+      'requestedCoverStartDate-year': today.year,
+      'coverEndDate-day': oneMonth.dayLong,
+      'coverEndDate-month': oneMonth.monthLong,
+      'coverEndDate-year': oneMonth.year,
       name: '1234567890',
       bondBeneficiary: 'test',
       value: '1234',
       currencySameAsSupplyContractCurrency: 'false',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       conversionRate: '100',
-      'conversionRateDate-day': nowMinusDayDay,
-      'conversionRateDate-month': nowMinusDayMonth,
-      'conversionRateDate-year': nowMinusDayYear,
+      'conversionRateDate-day': yesterday.day,
+      'conversionRateDate-month': yesterday.month,
+      'conversionRateDate-year': yesterday.year,
       riskMarginFee: '12',
       coveredPercentage: '24',
       minimumRiskMarginFee: '1',
@@ -70,16 +59,16 @@ const deal = {
     {
       type: 'Bond',
       bondIssuer: 'my issuer',
-      bondType: 'Retention bond',
+      bondType: BOND_TYPE.RETENTION_BOND,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '12',
-      'requestedCoverStartDate-day': nowDay,
-      'requestedCoverStartDate-month': nowMonth,
-      'requestedCoverStartDate-year': nowYear,
-      'coverEndDate-day': nowPlusMonthDay,
-      'coverEndDate-month': nowPlusMonthMonth,
-      'coverEndDate-year': nowPlusMonthYear,
+      'requestedCoverStartDate-day': today.dayLong,
+      'requestedCoverStartDate-month': today.monthLong,
+      'requestedCoverStartDate-year': today.year,
+      'coverEndDate-day': oneMonth.day,
+      'coverEndDate-month': oneMonth.month,
+      'coverEndDate-year': oneMonth.year,
       name: '1234567890',
       bondBeneficiary: 'test',
       value: '5678',
@@ -115,19 +104,19 @@ const deal = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
     {
       type: 'Loan',
       facilityStage: 'Unconditional',
       hasBeenIssued: true,
-      'requestedCoverStartDate-day': nowDay,
-      'requestedCoverStartDate-month': nowMonth,
-      'requestedCoverStartDate-year': nowYear,
-      'coverEndDate-day': nowPlusMonthDay,
-      'coverEndDate-month': nowPlusMonthMonth,
-      'coverEndDate-year': nowPlusMonthYear,
+      'requestedCoverStartDate-day': today.dayLong,
+      'requestedCoverStartDate-month': today.monthLong,
+      'requestedCoverStartDate-year': today.year,
+      'coverEndDate-day': oneMonth.day,
+      'coverEndDate-month': oneMonth.month,
+      'coverEndDate-year': oneMonth.year,
       name: '12345678',
       guaranteeFeePayableByBank: '10.8000',
       ukefExposure: '3,703,703.40',
@@ -138,9 +127,9 @@ const deal = {
         id: 'AUD',
       },
       conversionRate: '80',
-      'conversionRateDate-day': nowMinusDayDay,
-      'conversionRateDate-month': nowMinusDayMonth,
-      'conversionRateDate-year': nowMinusDayYear,
+      'conversionRateDate-day': yesterday.dayLong,
+      'conversionRateDate-month': yesterday.monthLong,
+      'conversionRateDate-year': yesterday.year,
       disbursementAmount: '10',
       interestMarginFee: '12',
       coveredPercentage: '30',
@@ -287,9 +276,9 @@ const deal = {
       id: 'USD',
     },
     supplyContractValue: '10,000',
-    'supplyContractConversionDate-day': nowMinusDayDay,
-    'supplyContractConversionDate-month': nowMinusDayMonth,
-    'supplyContractConversionDate-year': nowMinusDayYear,
+    'supplyContractConversionDate-day': yesterday.dayLong,
+    'supplyContractConversionDate-month': yesterday.monthLong,
+    'supplyContractConversionDate-year': yesterday.year,
   },
   summary: {
     totalValue: {

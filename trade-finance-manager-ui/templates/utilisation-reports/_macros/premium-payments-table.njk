@@ -1,3 +1,4 @@
+{% from "govuk/components/error-message/macro.njk" import govukErrorMessage %}
 {% import "../../_macros/select-all-table-cell-checkbox.njk" as selectAllTableCellCheckbox %}
 {% import "./premium-payments-table-row.njk" as premiumPaymentsTableRow %}
 
@@ -6,6 +7,8 @@
   {% set feeRecordPaymentGroups = params.feeRecordPaymentGroups %}
   {% set enablePaymentsReceivedSorting = params.enablePaymentsReceivedSorting %}
   {% set userCanEdit = params.userCanEdit %}
+  {% set hasSelectableRows = params.hasSelectableRows %}
+  {% set errorMessage = params.errorMessage %}
 
   {% macro tableHeader(params) %}
     {% set headerText = params.headerText %}
@@ -13,6 +16,7 @@
     {% set enableSorting = params.enableSorting %}
     {% set ariaSort = params.ariaSort %}
     {% set dataCy = params.dataCy %}
+    {% set ariaHidden = params.ariaHidden %}
 
     {% set class = 'govuk-table__header' %}
     {% if isNumericColumn %}
@@ -25,6 +29,7 @@
         class="{{ class }}"
         aria-sort="{{ ariaSort }}"
         {% if dataCy %} data-cy="{{ dataCy }}" {% endif %}
+        {% if ariaHidden %} aria-hidden={{ ariaHidden }} {% endif %}
       >
         {{ headerText }}
       </th>
@@ -33,25 +38,92 @@
         scope="col"
         class="{{ class }}"
         {% if dataCy %} data-cy="{{ dataCy }}" {% endif %}
+        {% if ariaHidden %} aria-hidden={{ ariaHidden }} {% endif %}
       >
         {{ headerText }}
       </th>
     {% endif %}
   {% endmacro %}
 
-  <table class="govuk-table premium-payments-table" data-module="moj-sortable-table" data-cy="premium-payments-table" id="premium-payments-table">
+  <table class="govuk-table premium-payments-table" data-module="moj-sortable-table" data-cy="premium-payments-table">
+    {% if errorMessage %}
+      {{ govukErrorMessage({
+        text: errorMessage,
+        id: "premium-payments-table-error",
+        attributes: {
+          "data-cy": "premium-payments-table--error",
+          "tabindex": "-1"
+        }
+      }) }}
+    {% endif %}
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
-        {{ tableHeader({ headerText: 'Facility ID', isNumericColumn: false, enableSorting: false }) }}
-        {{ tableHeader({ headerText: 'Exporter', isNumericColumn: false, enableSorting: false }) }}
-        {{ tableHeader({ headerText: 'Reported fees', isNumericColumn: true, enableSorting: false }) }}
-        {{ tableHeader({ headerText: 'Reported payments', isNumericColumn: true, enableSorting: false }) }}
-        {{ tableHeader({ headerText: 'Total reported payments', isNumericColumn: true, enableSorting: true, ariaSort: 'ascending', dataCy: 'premium-payments-table--total-reported-payments' }) }}
-        {{ tableHeader({ headerText: 'Payments received', isNumericColumn: true, enableSorting: false }) }}
-        {{ tableHeader({ headerText: 'Total payments received', isNumericColumn: true, enableSorting: enablePaymentsReceivedSorting, ariaSort: 'none', dataCy: 'premium-payments-table--total-payments-received' }) }}
-        {{ tableHeader({ headerText: 'Status', isNumericColumn: false, enableSorting: true, ariaSort: 'none', dataCy: 'premium-payments-table--status' }) }}
-        {% if userCanEdit %}
-          <td class="govuk-table__header">
+        <th scope="col" class="govuk-visually-hidden" data-cy="premium-payments-table--hidden-header">Facility ID and Exporter and Reported fees and Reported Payments</th>
+
+        {{ tableHeader({
+          headerText: 'Facility ID',
+          isNumericColumn: false,
+          enableSorting: false,
+          ariaHidden: "true",
+          dataCy: 'premium-payments-table--facility-id-header'
+        }) }}
+
+        {{ tableHeader({
+          headerText: 'Exporter',
+          isNumericColumn: false,
+          enableSorting: false,
+          ariaHidden: "true",
+          dataCy: 'premium-payments-table--exporter-header'
+        }) }}
+
+        {{ tableHeader({
+          headerText: 'Reported fees',
+          isNumericColumn: true,
+          enableSorting: false,
+          ariaHidden: "true",
+          dataCy: 'premium-payments-table--reported-fees-header'
+        }) }}
+
+        {{ tableHeader({
+          headerText: 'Reported payments',
+          isNumericColumn: true,
+          enableSorting: false,
+          ariaHidden: "true",
+          dataCy: 'premium-payments-table--reported-payments-header'
+        }) }}
+        {{ tableHeader({
+          headerText: 'Total reported payments',
+          isNumericColumn: true,
+          enableSorting: true,
+          ariaSort: 'ascending',
+          dataCy: 'premium-payments-table--total-reported-payments-header'
+        }) }}
+
+        {{ tableHeader({
+          headerText: 'Payments received',
+          isNumericColumn: true,
+          enableSorting: false,
+          dataCy: 'premium-payments-table--payments-received-header'
+        }) }}
+
+        {{ tableHeader({
+          headerText: 'Total payments received',
+          isNumericColumn: true,
+          enableSorting: enablePaymentsReceivedSorting,
+          ariaSort: 'none',
+          dataCy: 'premium-payments-table--total-payments-received-header'
+        }) }}
+
+        {{ tableHeader({
+          headerText: 'Status',
+          isNumericColumn: false,
+          enableSorting: true,
+          ariaSort: 'none',
+          dataCy: 'premium-payments-table--status-header'
+        }) }}
+
+        {% if userCanEdit and hasSelectableRows %}
+          <td class="govuk-table__header" data-cy="premium-payments-select-all-checkbox-container">
             {{ selectAllTableCellCheckbox.render() }}
           </td>
         {% endif %}
@@ -60,7 +132,7 @@
 
     <tbody class="govuk-table__body">
     {% for feeRecordPaymentGroup in feeRecordPaymentGroups %}
-      {{ premiumPaymentsTableRow.render({ reportId: reportId, feeRecordPaymentGroup: feeRecordPaymentGroup, userCanEdit: userCanEdit }) }}
+      {{ premiumPaymentsTableRow.render({ reportId: reportId, feeRecordPaymentGroup: feeRecordPaymentGroup, userCanEdit: userCanEdit, showCheckboxColumn: hasSelectableRows }) }}
     {% endfor %}
     </tbody>
   </table>

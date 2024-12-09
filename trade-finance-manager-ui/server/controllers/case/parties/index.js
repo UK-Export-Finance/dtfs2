@@ -1,8 +1,10 @@
+const { FLASH_TYPES } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { userCanEdit, isEmptyString, partyType } = require('./helpers');
 const validatePartyURN = require('./partyUrnValidation.validate');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
 const CONSTANTS = require('../../../constants');
+const { getDealSuccessBannerMessage } = require('../../helpers/get-success-banner-message.helper');
 
 const { DEAL } = CONSTANTS;
 
@@ -33,11 +35,20 @@ const getAllParties = async (req, res) => {
 
     const canEdit = userCanEdit(user);
 
+    const { dealSnapshot } = deal;
+
+    const successMessage = await getDealSuccessBannerMessage({
+      dealSnapshot,
+      userToken,
+      flashedSuccessMessage: req.flash(FLASH_TYPES.SUCCESS_MESSAGE)[0],
+    });
+
     // Render all parties URN page
     return res.render('case/parties/parties.njk', {
       userCanEdit: canEdit,
       renderEditLink: canEdit,
       renderEditForm: false,
+      successMessage,
       deal: deal.dealSnapshot,
       tfm: deal.tfm,
       activePrimaryNavigation: 'manage work',

@@ -38,7 +38,7 @@ const mappings = require('../../mappings');
  * @param {Object} context - The context object provided by Durable Functions.
  * @param {Object} context.df - The Durable Functions context.
  * @param {Object} context.df.input - The input payload containing the facility ID and amendments.
- * @param {string} context.df.input.facilityId - The ID of the facility to be amended.
+ * @param {string} context.df.input.facilityIdentifier - The ID of the facility to be amended.
  * @param {Object} context.df.input.amendments - The amendments to be applied.
  * @param {Object} context.df.input.amendments.amendment - The specific amendment details.
  * @returns {Object} - The result of the facility covenant record amendment.
@@ -52,7 +52,7 @@ df.app.orchestration('acbs-amend-facility-covenant-record', function* amendFacil
       throw new Error('Facility Covenant Record amendment SOF - Invalid payload provided');
     }
 
-    const { facilityId, amendments } = payload;
+    const { facilityIdentifier, amendments } = payload;
     const { amendment } = amendments;
 
     // 3.1. Facility Covenant Record (FCR) amend mapping
@@ -60,7 +60,7 @@ df.app.orchestration('acbs-amend-facility-covenant-record', function* amendFacil
 
     // 3.2. Facility Covenant Record update
     const facilityCovenantRecordAmendment = yield context.df.callActivityWithRetry('update-facility-covenant', retryOptions, {
-      facilityId,
+      facilityIdentifier,
       acbsFacilityCovenantInput,
     });
 

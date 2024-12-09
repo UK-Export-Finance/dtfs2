@@ -1,3 +1,4 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const { componentRenderer } = require('../../../componentRenderer');
 
 const page = '../templates/case/parties/_macros/parties-agent-area.njk';
@@ -27,7 +28,7 @@ describe(page, () => {
         buyerName: 'The Buyer name',
         supplyContractDescription: 'supplyContractDescription',
         destinationCountry: 'United Kingdom',
-        supplyContractCurrency: 'GBP',
+        supplyContractCurrency: CURRENCY.GBP,
         supplyContractValue: '1234.85',
         buyerAddressCountry: 'United Kingdom',
         buyerAddressLine1: 'buyerAddressLine1',

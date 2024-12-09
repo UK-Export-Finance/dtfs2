@@ -1,19 +1,27 @@
-import { Currency, FeeRecordEntity, FeeRecordEntityMockBuilder, PaymentEntity, PaymentEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  Currency,
+  CURRENCY,
+  FEE_RECORD_STATUS,
+  FeeRecordEntity,
+  FeeRecordEntityMockBuilder,
+  PaymentEntity,
+  PaymentEntityMockBuilder,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { KeyingSheetFeePaymentShare, getKeyingSheetFeePaymentSharesForFeeRecords } from './get-keying-sheet-fee-payment-shares-for-fee-records';
-import { aUtilisationReport } from '../../../../../../test-helpers';
 
 describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
   describe('when there is one fee record linked to one payment', () => {
     it('creates one fee payment when the fee record amount exactly matches the payment amount', () => {
       // Arrange
-      const paymentCurrency: Currency = 'GBP';
+      const paymentCurrency: Currency = CURRENCY.GBP;
 
       const paymentId = 123;
       const payment = PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(paymentId).withAmount(1000).build();
 
       const feeRecordId = 456;
-      const matchFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-        .withStatus('MATCH')
+      const matchFeeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withId(feeRecordId)
         .withPaymentCurrency(paymentCurrency)
         .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
@@ -34,14 +42,14 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
       { condition: 'the fee record amount is smaller than the payment amount', feeRecordAmount: 100, paymentAmount: 200 },
     ])('sets the fee payment amount to the payment amount when $condition', ({ paymentAmount, feeRecordAmount }) => {
       // Arrange
-      const paymentCurrency: Currency = 'GBP';
+      const paymentCurrency: Currency = CURRENCY.GBP;
 
       const paymentId = 123;
       const payment = PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(paymentId).withAmount(paymentAmount).build();
 
       const feeRecordId = 456;
-      const matchFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-        .withStatus('MATCH')
+      const matchFeeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withId(feeRecordId)
         .withPaymentCurrency(paymentCurrency)
         .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
@@ -60,14 +68,14 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
   });
 
   describe('when there is a single bulk payment linked to many fee records', () => {
-    const paymentCurrency: Currency = 'GBP';
+    const paymentCurrency: Currency = CURRENCY.GBP;
     const paymentId = 123;
 
     const aBulkPayment = () => PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(paymentId).withAmount(1000).build();
 
     const aMatchFeeRecordWithIdAmountAndPayment = (id: number, amount: number, payment: PaymentEntity) =>
-      FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-        .withStatus('MATCH')
+      FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withId(id)
         .withPaymentCurrency(paymentCurrency)
         .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
@@ -142,11 +150,11 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
   describe('when there are many payments linked to one fee record', () => {
     it('creates a fee payment for each payment linked to the fee record with fee payment amount equal to the payment amount', () => {
       // Arrange
-      const paymentCurrency: Currency = 'GBP';
+      const paymentCurrency: Currency = CURRENCY.GBP;
 
       const feeRecordId = 123;
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-        .withStatus('MATCH')
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withId(feeRecordId)
         .withPaymentCurrency(paymentCurrency)
         .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
@@ -176,11 +184,11 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
     describe('and when the total payment amount is different to the total fee record amount due to tolerance', () => {
       it('creates a fee payment for each payment linked to the fee record when the total payment amount is greater', () => {
         // Arrange
-        const paymentCurrency: Currency = 'GBP';
+        const paymentCurrency: Currency = CURRENCY.GBP;
 
         const feeRecordId = 123;
-        const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-          .withStatus('MATCH')
+        const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+          .withStatus(FEE_RECORD_STATUS.MATCH)
           .withId(feeRecordId)
           .withPaymentCurrency(paymentCurrency)
           .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
@@ -206,11 +214,11 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
 
       it('creates a fee payment for each payment linked to the fee record when the total payment amount is smaller', () => {
         // Arrange
-        const paymentCurrency: Currency = 'GBP';
+        const paymentCurrency: Currency = CURRENCY.GBP;
 
         const feeRecordId = 123;
-        const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-          .withStatus('MATCH')
+        const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+          .withStatus(FEE_RECORD_STATUS.MATCH)
           .withId(feeRecordId)
           .withPaymentCurrency(paymentCurrency)
           .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
@@ -237,11 +245,11 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
   });
 
   describe('when there are many payments linked to many fee records', () => {
-    const paymentCurrency: Currency = 'GBP';
+    const paymentCurrency: Currency = CURRENCY.GBP;
 
     const aFeeRecordWithIdAmountAndPayments = (id: number, amount: number, payments: PaymentEntity[]) =>
-      FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-        .withStatus('MATCH')
+      FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withId(id)
         .withFeesPaidToUkefForThePeriod(amount)
         .withPaymentCurrency(paymentCurrency)
@@ -387,7 +395,10 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
   describe('when the fee records have no attached payments and have been automatically moved to the MATCH status', () => {
     it('does not return any fee payments', () => {
       // Arrange
-      const matchFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('MATCH').withPayments([]).build();
+      const matchFeeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+        .withStatus(FEE_RECORD_STATUS.MATCH)
+        .withPayments([])
+        .build();
 
       // Act
       const result = getKeyingSheetFeePaymentSharesForFeeRecords([matchFeeRecord]);

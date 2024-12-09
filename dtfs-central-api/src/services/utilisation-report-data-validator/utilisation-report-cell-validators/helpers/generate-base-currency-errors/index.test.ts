@@ -1,4 +1,4 @@
-import { generateUtilisationReportMockCSVData, mockCurrencyValue, UtilisationReportFacilityData } from '@ukef/dtfs2-common';
+import { CURRENCY, generateUtilisationReportMockCSVData, mockCurrencyValue, UtilisationReportFacilityData } from '@ukef/dtfs2-common';
 import { generateBaseCurrencyErrors } from '.';
 import { generateErrorsForMismatchedFacilityValues } from '../generate-errors-for-mismatched-facility-values';
 
@@ -7,7 +7,7 @@ describe('services/utilisation-report-data-validator/utilisation-report-cell-val
   const field = 'base currency';
 
   describe('when the base currency does not match', () => {
-    const csvData = generateUtilisationReportMockCSVData('GBP', '100');
+    const csvData = generateUtilisationReportMockCSVData(CURRENCY.GBP, '100');
     const existingData = {
       baseCurrency: 'USD',
       facilityUtilisation: '1',
@@ -23,7 +23,7 @@ describe('services/utilisation-report-data-validator/utilisation-report-cell-val
   });
 
   describe('when the base currency matches', () => {
-    const csvData = generateUtilisationReportMockCSVData('GBP', '100');
+    const csvData = generateUtilisationReportMockCSVData(CURRENCY.GBP, '100');
     const existingData = {
       baseCurrency: csvData[0]['base currency'].value,
       facilityUtilisation: csvData[0]['facility utilisation'].value,

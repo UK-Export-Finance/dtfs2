@@ -1,4 +1,4 @@
-import { In } from 'typeorm';
+import { EntityManager, In } from 'typeorm';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { Currency, FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity } from '@ukef/dtfs2-common';
 
@@ -10,6 +10,22 @@ export const FeeRecordRepo = SqlDbDataSource.getRepository(FeeRecordEntity).exte
    */
   async findByReport(report: UtilisationReportEntity): Promise<FeeRecordEntity[]> {
     return await this.findBy({ report });
+  },
+
+  /**
+   * Finds one fee record with the supplied id and report id with the report attached
+   * @param id - The fee record id
+   * @param reportId - The report id of the report attached to the fee record
+   * @returns The found fee record with the report attached
+   */
+  async findOneByIdAndReportIdWithReport(id: number, reportId: number): Promise<FeeRecordEntity | null> {
+    return await this.findOne({
+      where: {
+        id,
+        report: { id: reportId },
+      },
+      relations: { report: true },
+    });
   },
 
   /**
@@ -65,6 +81,22 @@ export const FeeRecordRepo = SqlDbDataSource.getRepository(FeeRecordEntity).exte
   },
 
   /**
+   * Finds fee record entities with supplied ids, with the payments and their
+   * fee records attached.
+   * @param ids - The fee record ids to search by
+   * @returns The found fee record entities with their associated payments and
+   * their fee records
+   */
+  async findByIdWithPaymentsAndFeeRecords(ids: number[]): Promise<FeeRecordEntity[]> {
+    return await this.find({
+      where: {
+        id: In(ids),
+      },
+      relations: { payments: { feeRecords: true } },
+    });
+  },
+
+  /**
    * Finds fee record entities with status 'DOES_NOT_MATCH' for a given report
    * and payment currency, with the payments attached.
    * @param reportId - The report id of the report attached to the fee records
@@ -80,5 +112,28 @@ export const FeeRecordRepo = SqlDbDataSource.getRepository(FeeRecordEntity).exte
       },
       relations: { payments: true },
     });
+  },
+
+  /**
+   * Checks if a fee record exists with the supplied id and report id
+   * @param id - The fee record id
+   * @param reportId - The report id
+   * @returns True if a matching fee record exists, false otherwise
+   */
+  async existsByIdAndReportId(id: number, reportId: number): Promise<boolean> {
+    return await this.exists({
+      where: {
+        id,
+        report: { id: reportId },
+      },
+    });
+  },
+
+  withTransaction(transactionEntityManager: EntityManager) {
+    const transactionRepository = transactionEntityManager.getRepository(FeeRecordEntity);
+
+    return {
+      findOneByIdAndReportIdWithReport: this.findOneByIdAndReportIdWithReport.bind(transactionRepository),
+    };
   },
 });

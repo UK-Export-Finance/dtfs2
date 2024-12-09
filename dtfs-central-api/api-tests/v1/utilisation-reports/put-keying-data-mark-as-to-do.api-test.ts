@@ -3,6 +3,8 @@ import {
   FEE_RECORD_STATUS,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
+  RECONCILIATION_COMPLETED,
+  RECONCILIATION_IN_PROGRESS,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -77,7 +79,7 @@ describe(`PUT ${BASE_URL}`, () => {
   it('returns a 404 when there is a report but without the requested fee record', async () => {
     // Arrange
     const reportId = 1;
-    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     const requestBody = {
@@ -95,8 +97,8 @@ describe(`PUT ${BASE_URL}`, () => {
   it('returns a 200 if the request body is valid', async () => {
     // Arrange
     const reportId = 1;
-    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('RECONCILED').build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
     report.feeRecords = [feeRecord];
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
@@ -115,7 +117,7 @@ describe(`PUT ${BASE_URL}`, () => {
   it('sets fee record status to READY_TO_KEY, reconciledByUserId to null and dateReconciled to null', async () => {
     // Arrange
     const reportId = 1;
-    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
     const feeRecord = FeeRecordEntityMockBuilder.forReport(report)
       .withId(1)
       .withStatus(FEE_RECORD_STATUS.RECONCILED)
@@ -143,8 +145,8 @@ describe(`PUT ${BASE_URL}`, () => {
   it('sets the report status to RECONCILIATION_IN_PROGRESS if it was RECONCILIATION_COMPLETED', async () => {
     // Arrange
     const reportId = 1;
-    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withId(reportId).build();
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('RECONCILED').build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_COMPLETED).withId(reportId).build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
     report.feeRecords = [feeRecord];
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
@@ -158,6 +160,6 @@ describe(`PUT ${BASE_URL}`, () => {
 
     // Assert
     const updatedReport = await SqlDbHelper.manager.findOneBy(UtilisationReportEntity, { id: reportId });
-    expect(updatedReport?.status).toEqual('RECONCILIATION_IN_PROGRESS');
+    expect(updatedReport?.status).toEqual(RECONCILIATION_IN_PROGRESS);
   });
 });

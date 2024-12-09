@@ -1,8 +1,9 @@
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
-const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
+const { sevenDays, twoMonths, oneMonth } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const now = new Date();
-const nowPlusWeek = `${dateConstants.sevenDaysUnix}000`;
+const nowPlusWeek = sevenDays.unixMillisecondsString;
 
 const deal = {
   submissionType: 'Manual Inclusion Application',
@@ -173,7 +174,7 @@ const deal = {
     'supplyContractConversionDate-year': '',
     supplyContractConversionRateToGBP: '',
     supplyContractCurrency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
       text: 'GBP - UK Sterling',
     },
     supplyContractValue: '1234.00',
@@ -188,7 +189,7 @@ const deal = {
       currencySameAsSupplyContractCurrency: 'true',
       createdDate: 1599048722968.0,
       bondIssuer: '',
-      bondType: 'Bid bond',
+      bondType: BOND_TYPE.BID_BOND,
       bondBeneficiary: '',
       guaranteeFeePayableByBank: '10.8000',
       ukefExposure: '296.16',
@@ -200,7 +201,7 @@ const deal = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       ukefFacilityId: ['12345'],
       'issuedDate-day': now.getDate(),
@@ -209,13 +210,13 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': dateConstants.twoMonthsDay.toString(),
-      'coverEndDate-month': dateConstants.twoMonthsMonth.toString(),
-      'coverEndDate-year': dateConstants.twoMonthsYear.toString(),
+      'coverEndDate-day': twoMonths.dayLong,
+      'coverEndDate-month': twoMonths.monthLong,
+      'coverEndDate-year': twoMonths.year,
       name: '1234',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
-      requestedCoverStartDate: `${dateConstants.oneMonthUnix}000`,
+      requestedCoverStartDate: oneMonth.unixMillisecondsString,
       issuedDate: nowPlusWeek,
       issueFacilityDetailsProvided: true,
       status: "Maker's input required",
@@ -245,9 +246,9 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': dateConstants.twoMonthsDay.toString(),
-      'coverEndDate-month': dateConstants.twoMonthsMonth.toString(),
-      'coverEndDate-year': dateConstants.twoMonthsYear.toString(),
+      'coverEndDate-day': twoMonths.dayLong,
+      'coverEndDate-month': twoMonths.monthLong,
+      'coverEndDate-year': twoMonths.year,
       disbursementAmount: '1,234.00',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
@@ -255,7 +256,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
       status: "Maker's input required",
       previousFacilityStage: 'Conditional',
-      requestedCoverStartDate: `${dateConstants.oneMonthUnix}000`,
+      requestedCoverStartDate: oneMonth.unixMillisecondsString,
     },
   ],
   summary: {},

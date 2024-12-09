@@ -1,6 +1,16 @@
 import { Response } from 'supertest';
 import { HttpStatusCode } from 'axios';
-import { Bank, Currency, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  Bank,
+  Currency,
+  FEE_RECORD_STATUS,
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
+  ReportPeriod,
+  UtilisationReportEntityMockBuilder,
+  CURRENCY,
+} from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
@@ -36,13 +46,13 @@ describe(`GET ${BASE_URL}`, () => {
 
   const reportId = 1;
 
-  const reconciliationInProgressReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
+  const reconciliationInProgressReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS)
     .withId(reportId)
     .withBankId(bankId)
     .withReportPeriod(reportPeriod)
     .build();
 
-  const paymentCurrency: Currency = 'GBP';
+  const paymentCurrency: Currency = CURRENCY.GBP;
 
   const payments = [
     PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(1).withAmount(100).build(),
@@ -54,7 +64,7 @@ describe(`GET ${BASE_URL}`, () => {
       .withId(1)
       .withFacilityId('12345678')
       .withExporter('Test exporter 1')
-      .withStatus('MATCH')
+      .withStatus(FEE_RECORD_STATUS.MATCH)
       .withFeesPaidToUkefForThePeriod(75)
       .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
       .withPaymentCurrency(paymentCurrency)
@@ -64,7 +74,7 @@ describe(`GET ${BASE_URL}`, () => {
       .withId(2)
       .withFacilityId('87654321')
       .withExporter('Test exporter 2')
-      .withStatus('MATCH')
+      .withStatus(FEE_RECORD_STATUS.MATCH)
       .withFeesPaidToUkefForThePeriod(75)
       .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
       .withPaymentCurrency(paymentCurrency)
@@ -112,7 +122,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it('returns a 404 when the bank with the same id as the report cannot be found', async () => {
     // Arrange
-    const reportWithDifferentBankId = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(2).withBankId('456').build();
+    const reportWithDifferentBankId = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(2).withBankId('456').build();
 
     await SqlDbHelper.saveNewEntry('UtilisationReport', reportWithDifferentBankId);
 
@@ -168,7 +178,7 @@ describe(`GET ${BASE_URL}`, () => {
         reportedFees: { currency: paymentCurrency, amount: 75 },
         reportedPayments: { currency: paymentCurrency, amount: 75 },
         paymentsReceived: [{ currency: paymentCurrency, amount: 75 }],
-        status: 'MATCH',
+        status: FEE_RECORD_STATUS.MATCH,
       },
       {
         id: 2,
@@ -177,7 +187,7 @@ describe(`GET ${BASE_URL}`, () => {
         reportedFees: { currency: paymentCurrency, amount: 75 },
         reportedPayments: { currency: paymentCurrency, amount: 75 },
         paymentsReceived: [{ currency: paymentCurrency, amount: 75 }],
-        status: 'MATCH',
+        status: FEE_RECORD_STATUS.MATCH,
       },
     ]);
   });
@@ -186,11 +196,11 @@ describe(`GET ${BASE_URL}`, () => {
     // Arrange
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
 
-    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
 
     const toDoFeeRecords = [
-      FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('TO_DO').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('TO_DO').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.TO_DO).build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus(FEE_RECORD_STATUS.TO_DO).build(),
     ];
     report.feeRecords = toDoFeeRecords;
 

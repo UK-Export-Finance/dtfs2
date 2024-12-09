@@ -1,13 +1,7 @@
-const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
+const { oneMonth, today } = require('../../../../../../e2e-fixtures/dateConstants');
 
-const now = new Date().valueOf();
-const nowFormatted = new Date();
-const nowDay = dateConstants.todayDay.toString();
-const nowMonth = dateConstants.todayMonth.toString();
-const nowYear = dateConstants.todayYear.toString();
-const nowPlusMonthDay = dateConstants.oneMonthDay.toString();
-const nowPlusMonthMonth = dateConstants.oneMonthMonth.toString();
-const nowPlusMonthYear = dateConstants.oneMonthYear.toString();
+const now = today.unixMilliseconds;
 
 const deal = {
   submissionType: 'Automatic Inclusion Notice',
@@ -177,7 +171,7 @@ const deal = {
     'supplyContractConversionDate-year': '',
     supplyContractConversionRateToGBP: '',
     supplyContractCurrency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
       text: 'GBP - UK Sterling',
     },
     supplyContractValue: '12312323.00',
@@ -188,7 +182,7 @@ const deal = {
       type: 'Bond',
       createdDate: now,
       bondIssuer: '',
-      bondType: 'Bid bond',
+      bondType: BOND_TYPE.BID_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -204,23 +198,23 @@ const deal = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
     {
       type: 'Bond',
       createdDate: now,
       bondIssuer: '',
-      bondType: 'Bid bond',
+      bondType: BOND_TYPE.BID_BOND,
       facilityStage: 'Issued',
       hasBeenIssued: true,
-      requestedCoverStartDate: nowFormatted.valueOf().toString(),
-      'requestedCoverStartDate-day': nowDay,
-      'requestedCoverStartDate-month': nowMonth,
-      'requestedCoverStartDate-year': nowYear,
-      'coverEndDate-day': nowPlusMonthDay,
-      'coverEndDate-month': nowPlusMonthMonth,
-      'coverEndDate-year': nowPlusMonthYear,
+      requestedCoverStartDate: today.unixMillisecondsString,
+      'requestedCoverStartDate-day': today.dayLong,
+      'requestedCoverStartDate-month': today.monthLong,
+      'requestedCoverStartDate-year': today.year,
+      'coverEndDate-day': oneMonth.day,
+      'coverEndDate-month': oneMonth.month,
+      'coverEndDate-year': oneMonth.year,
       name: '1234',
       bondBeneficiary: '',
       guaranteeFeePayableByBank: '18.0000',
@@ -257,13 +251,13 @@ const deal = {
       createdDate: now,
       facilityStage: 'Unconditional',
       hasBeenIssued: true,
-      requestedCoverStartDate: nowFormatted.valueOf().toString(),
-      'requestedCoverStartDate-day': nowDay,
-      'requestedCoverStartDate-month': nowMonth,
-      'requestedCoverStartDate-year': nowYear,
-      'coverEndDate-day': nowPlusMonthDay,
-      'coverEndDate-month': nowPlusMonthMonth,
-      'coverEndDate-year': nowPlusMonthYear,
+      requestedCoverStartDate: today.unixMillisecondsString,
+      'requestedCoverStartDate-day': today.dayLong,
+      'requestedCoverStartDate-month': today.monthLong,
+      'requestedCoverStartDate-year': today.year,
+      'coverEndDate-day': oneMonth.day,
+      'coverEndDate-month': oneMonth.month,
+      'coverEndDate-year': oneMonth.year,
       name: '12345678',
       guaranteeFeePayableByBank: '45.0000',
       updatedAt: Date.now(),

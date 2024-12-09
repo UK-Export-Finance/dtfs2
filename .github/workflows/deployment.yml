@@ -51,8 +51,6 @@ on:
     branches:
       - dev
       - feature
-      - staging
-      - prod
       - release-*
       - '!release-please*'
 
@@ -76,7 +74,9 @@ jobs:
       - name: Environment 🧪
         id: environment
         run: |
-          if [[ "${{ env.ENVIRONMENT }}" == *release* ]]; then
+          if [[ "${{ env.ENVIRONMENT }}" =~ ^release-.*-rc$ ]]; then
+            echo "environment=prod" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ env.ENVIRONMENT }}" == *release* ]]; then
             echo "environment=staging" >> "$GITHUB_OUTPUT"
           else
             echo "environment=${{ github.event.workflow_run.head_branch }}" >> "$GITHUB_OUTPUT"
@@ -145,7 +145,7 @@ jobs:
           ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Defaults ✨
-        uses: azure/cli@v2
+        uses: azure/cli@v2.1.0
         with:
           inlineScript: |
             # Basic
@@ -192,7 +192,7 @@ jobs:
           docker push ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }}
 
       - name: Slot 🔀
-        uses: azure/cli@v2
+        uses: azure/cli@v2.1.0
         with:
           inlineScript: |
             # Create new temporary slot
@@ -212,7 +212,7 @@ jobs:
 
       - name: Cleanup 🧹
         if: always()
-        uses: azure/cli@v2
+        uses: azure/cli@v2.1.0
         with:
           inlineScript: |
             # Delete temporary slot
@@ -249,7 +249,7 @@ jobs:
           ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Defaults ✨
-        uses: azure/cli@v2
+        uses: azure/cli@v2.1.0
         with:
           inlineScript: |
             # Basic
@@ -279,10 +279,10 @@ jobs:
           password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Artifacts 🗃️
-        working-directory: ./azure-functions/${{ matrix.functions }}
+        working-directory: .
         run: |
           # Build images
-          docker build . \
+          docker build -f ./azure-functions/${{ matrix.functions }}/Dockerfile . \
           -t ${{ env.ACR }}/${{ matrix.functions }}:${{ github.sha }} \
           -t ${{ env.ACR }}/${{ matrix.functions }}:${{ env.FROM }}
 
@@ -291,7 +291,7 @@ jobs:
           docker push ${{ env.ACR }}/${{ matrix.functions }}:${{ env.FROM }}
 
       - name: Slot 🔀
-        uses: azure/cli@v2
+        uses: azure/cli@v2.1.0
         with:
           inlineScript: |
             # Create new temporary slot
@@ -311,7 +311,7 @@ jobs:
 
       - name: Cleanup 🧹
         if: always()
-        uses: azure/cli@v2
+        uses: azure/cli@v2.1.0
         with:
           inlineScript: |
             # Delete temporary slot

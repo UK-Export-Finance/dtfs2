@@ -1,3 +1,5 @@
+const { LANDING_PAGES } = require('../constants');
+
 const makeApiCall = async (query) => {
   try {
     const result = await query;
@@ -22,7 +24,7 @@ const getApiData = (query, res) =>
         // redirect to login
         // un-authentication handling could be middleware
         console.info(error);
-        return res.redirect('/login');
+        return res.redirect(LANDING_PAGES.LOGIN);
       }),
   );
 

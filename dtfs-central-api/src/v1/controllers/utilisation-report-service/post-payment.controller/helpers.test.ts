@@ -1,6 +1,15 @@
 import { ObjectId } from 'mongodb';
-import { In, EntityManager } from 'typeorm';
-import { Currency, FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { EntityManager, In } from 'typeorm';
+import {
+  CURRENCY,
+  Currency,
+  FEE_RECORD_STATUS,
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
+  REQUEST_PLATFORM_TYPE,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { addPaymentToUtilisationReport } from './helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { InvalidPayloadError, NotFoundError } from '../../../../errors';
@@ -9,6 +18,7 @@ import { aTfmSessionUser } from '../../../../../test-helpers';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { NewPaymentDetails } from '../../../../types/utilisation-reports';
 import { executeWithSqlTransaction } from '../../../../helpers';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 
 jest.mock('../../../../helpers');
 jest.mock('../../../../repositories/fee-record-repo');
@@ -17,7 +27,7 @@ describe('post-add-payment.controller helpers', () => {
   describe('addPaymentToUtilisationReport', () => {
     const reportId = 1;
     const feeRecordIds = [1, 2, 3];
-    const paymentCurrency: Currency = 'GBP';
+    const paymentCurrency: Currency = CURRENCY.GBP;
 
     const tfmUser: TfmSessionUser = {
       ...aTfmSessionUser(),
@@ -32,14 +42,23 @@ describe('post-add-payment.controller helpers', () => {
       reference: 'A payment reference',
     };
 
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
     const utilisationReportStateMachine = UtilisationReportStateMachine.forReport(utilisationReport);
 
     const feeRecordsInPaymentCurrency = feeRecordIds.map((feeRecordId) =>
       FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(feeRecordId).withPaymentCurrency(paymentCurrency).build(),
     );
+    const paymentsWithFeeRecords = [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords(feeRecordsInPaymentCurrency).build()];
+    const feeRecordsWithFeeRecordsAndPayments = feeRecordIds.map((feeRecordId) =>
+      FeeRecordEntityMockBuilder.forReport(utilisationReport)
+        .withId(feeRecordId)
+        .withPaymentCurrency(paymentCurrency)
+        .withPayments(paymentsWithFeeRecords)
+        .build(),
+    );
 
     const feeRecordFindBySpy = jest.spyOn(FeeRecordRepo, 'findBy');
+    const feeRecordFindByIdWithPaymentsAndFeeRecordsSpy = jest.spyOn(FeeRecordRepo, 'findByIdWithPaymentsAndFeeRecords');
 
     const utilisationReportStateMachineConstructorSpy = jest.spyOn(UtilisationReportStateMachine, 'forReportId');
     const handleEventSpy = jest.spyOn(utilisationReportStateMachine, 'handleEvent');
@@ -54,6 +73,7 @@ describe('post-add-payment.controller helpers', () => {
 
     beforeEach(() => {
       feeRecordFindBySpy.mockResolvedValue(feeRecordsInPaymentCurrency);
+      feeRecordFindByIdWithPaymentsAndFeeRecordsSpy.mockResolvedValue(feeRecordsWithFeeRecordsAndPayments);
       utilisationReportStateMachineConstructorSpy.mockResolvedValue(utilisationReportStateMachine);
       handleEventSpy.mockResolvedValue(utilisationReport);
       feeRecordFindOneByOrFailSpy.mockResolvedValue(FeeRecordEntityMockBuilder.forReport(utilisationReport).build());
@@ -72,6 +92,7 @@ describe('post-add-payment.controller helpers', () => {
       await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
 
       // Assert
+      expect(utilisationReportStateMachineConstructorSpy).toHaveBeenCalledTimes(1);
       expect(utilisationReportStateMachineConstructorSpy).toHaveBeenCalledWith(reportId);
     });
 
@@ -80,6 +101,7 @@ describe('post-add-payment.controller helpers', () => {
       await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
 
       // Assert
+      expect(feeRecordFindBySpy).toHaveBeenCalledTimes(1);
       expect(feeRecordFindBySpy).toHaveBeenCalledWith({ id: In(feeRecordIds) });
     });
 
@@ -89,12 +111,13 @@ describe('post-add-payment.controller helpers', () => {
 
       // Act / Assert
       await expect(addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails)).rejects.toThrow(NotFoundError);
+      expect(feeRecordFindBySpy).toHaveBeenCalledTimes(1);
     });
 
     it("throws the 'InvalidPayloadError' if the payment currency does not match the fee record payment currencies", async () => {
       // Arrange
       const feeRecordsWithGBPPaymentCurrency = feeRecordIds.map((feeRecordId) =>
-        FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(feeRecordId).withPaymentCurrency('GBP').build(),
+        FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(feeRecordId).withPaymentCurrency(CURRENCY.GBP).build(),
       );
       feeRecordFindBySpy.mockResolvedValue(feeRecordsWithGBPPaymentCurrency);
 
@@ -105,23 +128,54 @@ describe('post-add-payment.controller helpers', () => {
 
       // Act / Assert
       await expect(addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetailsWithEURCurrency)).rejects.toThrow(InvalidPayloadError);
+      expect(feeRecordFindBySpy).toHaveBeenCalledTimes(1);
     });
 
     it("throws the 'InvalidPayloadError' if the payment currency matches all but one of the fee record payment currencies", async () => {
       // Arrange
       const feeRecordsWithGBPPaymentCurrency = feeRecordIds.map((feeRecordId) =>
-        FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(feeRecordId).withPaymentCurrency('GBP').build(),
+        FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(feeRecordId).withPaymentCurrency(CURRENCY.GBP).build(),
       );
       const feeRecordWithEURPaymentCurrency = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(100).withPaymentCurrency('EUR').build();
       feeRecordFindBySpy.mockResolvedValue([...feeRecordsWithGBPPaymentCurrency, feeRecordWithEURPaymentCurrency]);
 
       const newPaymentDetailsWithGBPCurrency: NewPaymentDetails = {
         ...newPaymentDetails,
-        currency: 'GBP',
+        currency: CURRENCY.GBP,
       };
 
       // Act / Assert
       await expect(addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetailsWithGBPCurrency)).rejects.toThrow(InvalidPayloadError);
+      expect(feeRecordFindBySpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("throws the 'InvalidPayloadError' if the selected fee records have payments and do not match the fee records in the fee record payment group", async () => {
+      // Arrange
+      const selectedFeeRecordIds = [1, 2];
+      const paymentFeeRecordIds = [1, 2, 3];
+
+      const payments = [
+        PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
+          .withFeeRecords(paymentFeeRecordIds.map((feeRecordId) => FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(feeRecordId).build()))
+          .build(),
+      ];
+      const feeRecordsWithGBPPaymentCurrency = paymentFeeRecordIds.map((feeRecordId) =>
+        FeeRecordEntityMockBuilder.forReport(utilisationReport)
+          .withId(feeRecordId)
+          .withPaymentCurrency(CURRENCY.GBP)
+          .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
+          .withPayments(payments)
+          .build(),
+      );
+      feeRecordFindByIdWithPaymentsAndFeeRecordsSpy.mockResolvedValue(feeRecordsWithGBPPaymentCurrency);
+
+      // Act / Assert
+      await expect(addPaymentToUtilisationReport(reportId, selectedFeeRecordIds, tfmUser, newPaymentDetails)).rejects.toThrow(InvalidPayloadError);
+
+      expect(feeRecordFindBySpy).toHaveBeenCalledTimes(1);
+      expect(feeRecordFindBySpy).toHaveBeenCalledWith({ id: In(selectedFeeRecordIds) });
+      expect(feeRecordFindByIdWithPaymentsAndFeeRecordsSpy).toHaveBeenCalledTimes(1);
+      expect(feeRecordFindByIdWithPaymentsAndFeeRecordsSpy).toHaveBeenCalledWith(selectedFeeRecordIds);
     });
 
     it('adds the payment to the utilisation report using the utilisation report state machine', async () => {
@@ -129,14 +183,15 @@ describe('post-add-payment.controller helpers', () => {
       await addPaymentToUtilisationReport(reportId, feeRecordIds, tfmUser, newPaymentDetails);
 
       // Assert
+      expect(handleEventSpy).toHaveBeenCalledTimes(1);
       expect(handleEventSpy).toHaveBeenCalledWith({
-        type: 'ADD_A_PAYMENT',
+        type: UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT,
         payload: {
           transactionEntityManager: mockEntityManager,
           feeRecords: feeRecordsInPaymentCurrency,
           paymentDetails: newPaymentDetails,
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId: tfmUserId,
           },
         },

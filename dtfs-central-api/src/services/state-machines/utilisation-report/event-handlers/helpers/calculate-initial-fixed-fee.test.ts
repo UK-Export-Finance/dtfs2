@@ -18,14 +18,14 @@ describe('helpers/calculate-fixed-fee', () => {
 
   describe('calculateFixedFee', () => {
     it('should return the value of "calculateFixedFeeFromDaysRemaining"', () => {
-      const utilisation = 100000;
+      const ukefShareOfUtilisation = 100000;
       const interestPercentage = 5;
       const dayCountBasis = 365;
       const coverStartDate = new Date();
       const coverEndDate = addDays(coverStartDate, 1);
 
       const result = calculateInitialFixedFee({
-        utilisation,
+        ukefShareOfUtilisation,
         interestPercentage,
         dayCountBasis,
         coverStartDate,
@@ -34,7 +34,7 @@ describe('helpers/calculate-fixed-fee', () => {
 
       const numberOfDaysRemainingInCoverPeriod = getNumberOfDaysInCoverPeriod(coverStartDate, coverEndDate);
 
-      const expected = calculateFixedFeeFromDaysRemaining({ utilisation, numberOfDaysRemainingInCoverPeriod, interestPercentage, dayCountBasis });
+      const expected = calculateFixedFeeFromDaysRemaining({ ukefShareOfUtilisation, numberOfDaysRemainingInCoverPeriod, interestPercentage, dayCountBasis });
 
       expect(result).toEqual(expected);
     });

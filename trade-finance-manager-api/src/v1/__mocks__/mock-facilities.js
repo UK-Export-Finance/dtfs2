@@ -1,10 +1,12 @@
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
+
 const MOCK_FACILITIES = [
   {
     _id: '61f7a4edcf809301e78fbe53',
     dealId: 'AIN_DEAL',
     type: 'Bond',
     bondIssuer: 'Issuer',
-    bondType: 'Advance payment guarantee',
+    bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
     facilityStage: 'Unissued',
     hasBeenIssued: false,
     ukefGuaranteeInMonths: '10',
@@ -21,7 +23,7 @@ const MOCK_FACILITIES = [
     dayCountBasis: '365',
     currency: {
       text: 'GBP - UK Sterling',
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
     'coverEndDate-day': '20',
     'coverEndDate-month': '10',
@@ -66,7 +68,7 @@ const MOCK_FACILITIES = [
     status: 'Acknowledged',
     currency: {
       text: 'GBP - UK Sterling',
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
     feeType: 'At maturity',
     feeFrequency: '12',
@@ -77,7 +79,7 @@ const MOCK_FACILITIES = [
     dealId: 'MOCK_DEAL_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED',
     type: 'Bond',
     bondIssuer: 'Issuer',
-    bondType: 'Advance payment guarantee',
+    bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
     facilityStage: 'Issued',
     hasBeenIssued: true,
     previousFacilityStage: 'Unissued',
@@ -94,7 +96,7 @@ const MOCK_FACILITIES = [
     dayCountBasis: '365',
     currency: {
       text: 'GBP - UK Sterling',
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
     'coverEndDate-day': '20',
     'coverEndDate-month': '10',
@@ -133,7 +135,7 @@ const MOCK_FACILITIES = [
     ukefFacilityId: '1234567890',
     currency: {
       text: 'GBP - UK Sterling',
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
   },
   {
@@ -141,7 +143,7 @@ const MOCK_FACILITIES = [
     dealId: 'MOCK_DEAL_ISSUED_FACILITIES',
     type: 'Bond',
     bondIssuer: 'Issuer',
-    bondType: 'Advance payment guarantee',
+    bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
     facilityStage: 'Issued',
     hasBeenIssued: true,
     previousFacilityStage: 'Unissued',
@@ -158,7 +160,7 @@ const MOCK_FACILITIES = [
     dayCountBasis: '365',
     currency: {
       text: 'GBP - UK Sterling',
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
     requestedCoverStartDate: 1610369832226,
     status: 'Submitted',
@@ -195,7 +197,7 @@ const MOCK_FACILITIES = [
     ukefFacilityId: '1234567890',
     currency: {
       text: 'GBP - UK Sterling',
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
   },
   {
@@ -233,7 +235,7 @@ const MOCK_FACILITIES = [
     status: 'Acknowledged',
     currency: {
       text: 'GBP - UK Sterling',
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
     feeType: 'At maturity',
     feeFrequency: '12',

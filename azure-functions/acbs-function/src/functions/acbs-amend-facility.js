@@ -54,10 +54,10 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
       throw new Error('Invalid amendment payload');
     }
 
-    const { facilityId, amount, coverEndDate } = amendment;
+    const { facilityIdentifier, amount, coverEndDate } = amendment;
 
     // UKEF Facility ID exists in the payload
-    const hasFacilityId = Boolean(facilityId);
+    const hasFacilityId = Boolean(facilityIdentifier);
     // At least one of the amendment exists in the payload
     const hasAmendment = Boolean(amount) || Boolean(coverEndDate);
     // Facility object existence check
@@ -73,12 +73,12 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
     const { facility, deal } = amendment;
     const { facilitySnapshot } = facility;
 
-    if (facilityId.includes(DEAL.UKEF_ID.PENDING) || facilityId.includes(DEAL.UKEF_ID.TEST)) {
-      throw new Error(`Invalid facility ID ${facilityId}`);
+    if (facilityIdentifier.includes(DEAL.UKEF_ID.PENDING) || facilityIdentifier.includes(DEAL.UKEF_ID.TEST)) {
+      throw new Error(`Invalid facility identifier ${facilityIdentifier}`);
     }
 
     // 1. DAF : get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
-    const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry('get-facility-master', retryOptions, facilityId);
+    const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry('get-facility-master', retryOptions, { facilityIdentifier });
 
     /**
      * Check 1 - Facility stage `07` (issued) only
@@ -88,12 +88,12 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
 
     if (!acceptableFacilityStage.includes(facilityStageCode)) {
       // Error upon unacceptable facility stage
-      const incorrectFacilityStageErrorMessage = `Facility ${facilityId} stage is ${facilityStageCode}, amendments are accepted for 07 stage.`;
+      const incorrectFacilityStageErrorMessage = `Facility ${facilityIdentifier} stage is ${facilityStageCode}, amendments are accepted for 07 stage.`;
 
       console.error(incorrectFacilityStageErrorMessage);
 
       return {
-        facilityId,
+        facilityIdentifier,
         facilityMasterRecord: {
           error: incorrectFacilityStageErrorMessage,
         },
@@ -123,7 +123,7 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
 
     // 1. SOF: Facility Loan Record (FLR)
     const facilityLoanRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-loan-record', {
-      facilityId,
+      facilityIdentifier,
       facility,
       amendments,
       fmr,
@@ -132,7 +132,7 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
     // 2. SOF: Facility Master Record (FMR)
     const facilityMasterRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-master-record', {
       deal,
-      facilityId,
+      facilityIdentifier,
       fmr,
       etag,
       amendments,
@@ -140,18 +140,18 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
 
     // 3. SOF: Facility Covenant Record (FCR)
     const facilityCovenantRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-covenant-record', {
-      facilityId,
+      facilityIdentifier,
       amendments,
     });
 
     // 4. SOF: Facility Guarantee Record (FGR)
     const facilityGuaranteeRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-guarantee-record', {
-      facilityId,
+      facilityIdentifier,
       amendments,
     });
 
     return {
-      facilityId,
+      facilityIdentifier,
       facilityMasterRecord: facilityMasterRecord.result,
       facilityCovenantRecord: facilityCovenantRecord.result,
       facilityGuaranteeRecord: facilityGuaranteeRecord.result,

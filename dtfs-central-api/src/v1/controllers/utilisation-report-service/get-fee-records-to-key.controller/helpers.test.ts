@@ -1,7 +1,6 @@
 import { difference } from 'lodash';
-import { CURRENCY, FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder } from '@ukef/dtfs2-common';
+import { CURRENCY, FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { mapToFeeRecordsToKey } from './helpers';
-import { aUtilisationReport } from '../../../../../test-helpers';
 
 describe('get-fee-records-to-key.controller helpers', () => {
   describe('mapToFeeRecordsToKey', () => {
@@ -9,7 +8,7 @@ describe('get-fee-records-to-key.controller helpers', () => {
       "throws an error if at least one of the fee records has the '%s' status",
       (status) => {
         // Arrange
-        const feeRecordEntities = [FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(status).build()];
+        const feeRecordEntities = [FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).withStatus(status).build()];
 
         // Act / Assert
         expect(() => mapToFeeRecordsToKey(feeRecordEntities)).toThrow(Error);
@@ -19,7 +18,10 @@ describe('get-fee-records-to-key.controller helpers', () => {
     it('maps the fee record id to the fee record to key id', () => {
       // Arrange
       const id = 1;
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('MATCH').withId(id).build();
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+        .withStatus(FEE_RECORD_STATUS.MATCH)
+        .withId(id)
+        .build();
 
       // Act
       const feeRecordsToKey = mapToFeeRecordsToKey([feeRecord]);
@@ -31,7 +33,10 @@ describe('get-fee-records-to-key.controller helpers', () => {
     it('maps the fee record facilityId to the fee record to key facilityId', () => {
       // Arrange
       const facilityId = '12345678';
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('MATCH').withFacilityId(facilityId).build();
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+        .withStatus(FEE_RECORD_STATUS.MATCH)
+        .withFacilityId(facilityId)
+        .build();
 
       // Act
       const feeRecordsToKey = mapToFeeRecordsToKey([feeRecord]);
@@ -43,7 +48,10 @@ describe('get-fee-records-to-key.controller helpers', () => {
     it('maps the fee record exporter to the fee record to key exporter', () => {
       // Arrange
       const exporter = 'Test exporter';
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('MATCH').withExporter(exporter).build();
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+        .withStatus(FEE_RECORD_STATUS.MATCH)
+        .withExporter(exporter)
+        .build();
 
       // Act
       const feeRecordsToKey = mapToFeeRecordsToKey([feeRecord]);
@@ -55,7 +63,7 @@ describe('get-fee-records-to-key.controller helpers', () => {
     it('maps the fee record status to the fee record to key status', () => {
       // Arrange
       const status = FEE_RECORD_STATUS.MATCH;
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(status).build();
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).withStatus(status).build();
 
       // Act
       const feeRecordsToKey = mapToFeeRecordsToKey([feeRecord]);
@@ -68,8 +76,8 @@ describe('get-fee-records-to-key.controller helpers', () => {
       // Arrange
       const amount = 123;
       const currency = CURRENCY.GBP;
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-        .withStatus('MATCH')
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withFeesPaidToUkefForThePeriod(amount)
         .withFeesPaidToUkefForThePeriodCurrency(currency)
         .build();
@@ -88,8 +96,8 @@ describe('get-fee-records-to-key.controller helpers', () => {
       // Arrange
       const amount = 123;
       const currency = CURRENCY.GBP;
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-        .withStatus('MATCH')
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withFeesPaidToUkefForThePeriod(amount)
         .withFeesPaidToUkefForThePeriodCurrency(currency)
         .withPaymentCurrency(currency)
@@ -110,8 +118,8 @@ describe('get-fee-records-to-key.controller helpers', () => {
       const amount = 100;
       const paymentCurrency = CURRENCY.GBP;
       const exchangeRate = 1.1;
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-        .withStatus('MATCH')
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+        .withStatus(FEE_RECORD_STATUS.MATCH)
         .withFeesPaidToUkefForThePeriod(amount)
         .withFeesPaidToUkefForThePeriodCurrency('EUR')
         .withPaymentCurrency(paymentCurrency)
@@ -140,20 +148,20 @@ describe('get-fee-records-to-key.controller helpers', () => {
         PaymentEntityMockBuilder.forCurrency(paymentCurrency).build(),
       ];
 
-      const utilisationReport = aUtilisationReport();
+      const utilisationReport = new UtilisationReportEntityMockBuilder().build();
 
       const firstFeesPaid = 100;
       const secondFeesPaid = 200;
       const feeRecords = [
         FeeRecordEntityMockBuilder.forReport(utilisationReport)
-          .withStatus('MATCH')
+          .withStatus(FEE_RECORD_STATUS.MATCH)
           .withFeesPaidToUkefForThePeriod(firstFeesPaid)
           .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
           .withPaymentCurrency(paymentCurrency)
           .withPayments(payments)
           .build(),
         FeeRecordEntityMockBuilder.forReport(utilisationReport)
-          .withStatus('MATCH')
+          .withStatus(FEE_RECORD_STATUS.MATCH)
           .withFeesPaidToUkefForThePeriod(secondFeesPaid)
           .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
           .withPaymentCurrency(paymentCurrency)
@@ -186,20 +194,20 @@ describe('get-fee-records-to-key.controller helpers', () => {
 
       const payments = [PaymentEntityMockBuilder.forCurrency(paymentCurrency).build()];
 
-      const utilisationReport = aUtilisationReport();
+      const utilisationReport = new UtilisationReportEntityMockBuilder().build();
 
       const firstFeesPaid = 100;
       const secondFeesPaid = 200;
       const feeRecords = [
         FeeRecordEntityMockBuilder.forReport(utilisationReport)
-          .withStatus('MATCH')
+          .withStatus(FEE_RECORD_STATUS.MATCH)
           .withFeesPaidToUkefForThePeriod(firstFeesPaid)
           .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
           .withPaymentCurrency(paymentCurrency)
           .withPayments(payments)
           .build(),
         FeeRecordEntityMockBuilder.forReport(utilisationReport)
-          .withStatus('MATCH')
+          .withStatus(FEE_RECORD_STATUS.MATCH)
           .withFeesPaidToUkefForThePeriod(secondFeesPaid)
           .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
           .withPaymentCurrency(paymentCurrency)
@@ -234,8 +242,8 @@ describe('get-fee-records-to-key.controller helpers', () => {
 
       const amount = 100;
       const feeRecords = [
-        FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-          .withStatus('MATCH')
+        FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+          .withStatus(FEE_RECORD_STATUS.MATCH)
           .withFeesPaidToUkefForThePeriod(amount)
           .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
           .withPaymentCurrency(paymentCurrency)
@@ -271,8 +279,8 @@ describe('get-fee-records-to-key.controller helpers', () => {
 
       const amount = 100;
       const feeRecords = [
-        FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-          .withStatus('MATCH')
+        FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+          .withStatus(FEE_RECORD_STATUS.MATCH)
           .withFeesPaidToUkefForThePeriod(amount)
           .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
           .withPaymentCurrency(paymentCurrency)
