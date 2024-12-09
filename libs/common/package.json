@@ -47,12 +47,12 @@
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
-    "axios": "^1.7.8",
+    "axios": "^1.7.9",
     "big.js": "^6.2.2",
     "date-fns": "^3.3.1",
     "date-fns-tz": "^2.0.1",
     "dotenv": "^16.4.5",
-    "express": "^4.21.1",
+    "express": "^4.21.2",
     "lodash.difference": "^4.5.0",
     "mongodb": "^4.17.2",
     "mssql": "^10.0.4",
@@ -75,7 +75,7 @@
     "eslint": "^8.57.1",
     "husky": "^9.1.7",
     "jest": "^29.7.0",
-    "jest-when": "^3.6.0",
+    "jest-when": "^3.7.0",
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",
     "typescript": "^5.7.2"
