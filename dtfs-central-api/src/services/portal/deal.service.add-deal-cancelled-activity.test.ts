@@ -1,4 +1,4 @@
-import { DEAL_TYPE, GefDeal, PortalActivity, PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE, TfmDeal, UKEF } from '@ukef/dtfs2-common';
+import { DEAL_TYPE, GefDeal, PortalActivity, PORTAL_ACTIVITY_LABEL, TfmDeal, UKEF } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { ObjectId } from 'mongodb';
 import { getUnixTime } from 'date-fns';
@@ -63,7 +63,6 @@ describe('PortalDealService - addGefDealCancelledActivity', () => {
         expect(addPortalActivityMock).toHaveBeenCalledTimes(1);
 
         const expectedActivity = {
-          type: PORTAL_ACTIVITY_TYPE.DEAL_CANCELLED,
           label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
           timestamp: getUnixTime(new Date()),
           author: {
@@ -90,7 +89,6 @@ describe('PortalDealService - addGefDealCancelledActivity', () => {
         expect(addPortalActivityMock).toHaveBeenCalledTimes(1);
 
         const expectedActivity = {
-          type: PORTAL_ACTIVITY_TYPE.DEAL_CANCELLATION_PENDING,
           label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLATION_PENDING,
           timestamp: getUnixTime(new Date()),
           author: {
@@ -117,7 +115,6 @@ describe('PortalDealService - addGefDealCancelledActivity', () => {
         expect(addPortalActivityMock).toHaveBeenCalledTimes(1);
 
         const expectedActivity = {
-          type: PORTAL_ACTIVITY_TYPE.DEAL_CANCELLED,
           label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
           timestamp: getUnixTime(new Date()),
           author: {

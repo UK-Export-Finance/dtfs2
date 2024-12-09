@@ -1,4 +1,4 @@
-import { AuditDetails, ActivityAuthor, DEAL_TYPE, DealStatus, DealType, PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE, TfmDeal, UKEF } from '@ukef/dtfs2-common';
+import { AuditDetails, ActivityAuthor, DEAL_TYPE, DealStatus, DealType, PORTAL_ACTIVITY_LABEL, TfmDeal, UKEF } from '@ukef/dtfs2-common';
 import { getUnixTime } from 'date-fns';
 import { ObjectId } from 'mongodb';
 import { updateBssEwcsDealStatus } from '../../v1/controllers/portal/deal/update-deal-status.controller';
@@ -64,12 +64,9 @@ export class PortalDealService {
     if (deal.dealSnapshot.dealType === DEAL_TYPE.GEF) {
       const { _id: dealId } = deal.dealSnapshot;
 
-      const type = cancellationIsInFuture ? PORTAL_ACTIVITY_TYPE.DEAL_CANCELLATION_PENDING : PORTAL_ACTIVITY_TYPE.DEAL_CANCELLED;
-
       const label = cancellationIsInFuture ? PORTAL_ACTIVITY_LABEL.DEAL_CANCELLATION_PENDING : PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED;
 
       const newActivity = {
-        type,
         label,
         timestamp: getUnixTime(new Date()),
         author: {
