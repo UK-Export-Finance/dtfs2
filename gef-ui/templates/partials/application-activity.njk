@@ -36,15 +36,15 @@
       <div class="moj-timeline__item">
 
         <div class="moj-timeline__header">
-          <h2 class="moj-timeline__title">{{ activity.title }}</h2>
+          <h2 class="moj-timeline__title" data-cy="activity-{{ activity.title }}-title">{{ activity.title }}</h2>
 
           {% if activity.byline %}
-            <p class="moj-timeline__byline">by {{ activity.byline }}</p>
+            <p class="moj-timeline__byline" data-cy="activity-{{ activity.title }}-byline">by {{ activity.byline }}</p>
           {% endif %}
         </div>
 
         <p class="moj-timeline__date">
-          <time>{{ activity.date }} {{ activity.time }}</time>
+          <time data-cy="activity-{{ activity.title }}-time">{{ activity.date }} {{ activity.time }}</time>
         </p>
 
         {{ activityHtml.render({

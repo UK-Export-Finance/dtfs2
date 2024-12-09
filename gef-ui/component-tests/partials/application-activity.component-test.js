@@ -7,21 +7,17 @@ const render = pageRenderer(page);
 describe(page, () => {
   let wrapper;
 
+  const mockActivity = {
+    title: 'Mock title',
+    text: '',
+    date: 'Mock data',
+    time: 'Mock time',
+    byline: 'Bob Smith',
+  };
+
   const params = {
     userRoles: [READ_ONLY],
-    portalActivities: [
-      {
-        label: 'Automatic inclusion notice submitted to UKEF',
-        text: '',
-        dateTime: {
-          timestamp: new Date(),
-          format: 'datetime',
-        },
-        byline: {
-          text: 'Bob Smith',
-        },
-      },
-    ],
+    portalActivities: [mockActivity],
   };
 
   beforeEach(() => {
@@ -40,7 +36,19 @@ describe(page, () => {
     wrapper.expectElement('[data-cy="application-banner"]').toExist();
   });
 
-  it('should render timeline', () => {
+  it('should render a timeline', () => {
     wrapper.expectElement('[data-cy="portal-activities-timeline"]').toExist();
+  });
+
+  it('should render an activity title', () => {
+    wrapper.expectText(`[data-cy="activity-${mockActivity.title}-title"]`).toRead(mockActivity.title);
+  });
+
+  it('should render an activity byline', () => {
+    wrapper.expectText(`[data-cy="activity-${mockActivity.title}-byline"]`).toRead(`by ${mockActivity.byline}`);
+  });
+
+  it('should render an activity date', () => {
+    wrapper.expectText(`[data-cy="activity-${mockActivity.title}-time"]`).toRead(`${mockActivity.date} ${mockActivity.time}`);
   });
 });
