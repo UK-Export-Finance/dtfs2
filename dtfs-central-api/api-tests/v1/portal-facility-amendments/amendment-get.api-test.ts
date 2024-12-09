@@ -39,7 +39,6 @@ const newDeal = aDeal({
 
 describe('GET /v1/portal/facilities/:facilityId/amendments/:amendmentId', () => {
   let dealId: string;
-  let amendmentId: string;
   let facilityId: string;
   let portalUserId: string;
 
@@ -87,10 +86,6 @@ describe('GET /v1/portal/facilities/:facilityId/amendments/:amendmentId', () => 
         auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
       })
       .to(`/v1/tfm/deals/${dealId}`);
-
-    const amendment = await createPortalFacilityAmendment({ dealId, facilityId, userId: portalUserId });
-
-    amendmentId = amendment.amendmentId.toString();
   });
 
   afterAll(() => {
@@ -103,13 +98,21 @@ describe('GET /v1/portal/facilities/:facilityId/amendments/:amendmentId', () => 
     });
 
     it('should return 404', async () => {
-      const { status } = (await testApi.get(generateUrl(facilityId, amendmentId))) as FacilityAmendmentResponse;
+      const { status } = (await testApi.get(generateUrl(facilityId, new ObjectId().toString()))) as FacilityAmendmentResponse;
 
       expect(status).toEqual(HttpStatusCode.NotFound);
     });
   });
 
   describe('with FF_PORTAL_FACILITY_AMENDMENTS_ENABLED set to `true`', () => {
+    let amendmentId: string;
+
+    beforeEach(async () => {
+      const amendment = await createPortalFacilityAmendment({ dealId, facilityId, userId: portalUserId });
+
+      amendmentId = amendment.amendmentId.toString();
+    });
+
     beforeAll(() => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'true';
     });
