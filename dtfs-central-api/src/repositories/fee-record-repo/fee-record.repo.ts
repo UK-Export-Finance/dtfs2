@@ -1,4 +1,4 @@
-import { In } from 'typeorm';
+import { EntityManager, In } from 'typeorm';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { Currency, FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity } from '@ukef/dtfs2-common';
 
@@ -112,5 +112,28 @@ export const FeeRecordRepo = SqlDbDataSource.getRepository(FeeRecordEntity).exte
       },
       relations: { payments: true },
     });
+  },
+
+  /**
+   * Checks if a fee record exists with the supplied id and report id
+   * @param id - The fee record id
+   * @param reportId - The report id
+   * @returns True if a matching fee record exists, false otherwise
+   */
+  async existsByIdAndReportId(id: number, reportId: number): Promise<boolean> {
+    return await this.exists({
+      where: {
+        id,
+        report: { id: reportId },
+      },
+    });
+  },
+
+  withTransaction(transactionEntityManager: EntityManager) {
+    const transactionRepository = transactionEntityManager.getRepository(FeeRecordEntity);
+
+    return {
+      findOneByIdAndReportIdWithReport: this.findOneByIdAndReportIdWithReport.bind(transactionRepository),
+    };
   },
 });
