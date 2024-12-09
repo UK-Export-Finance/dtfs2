@@ -1,5 +1,6 @@
 const { HttpStatusCode } = require('axios');
 const express = require('express');
+const { validatePortalFacilityAmendmentsEnabled } = require('@ukef/dtfs2-common');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../roles/roles');
 const { validateUserHasAtLeastOneAllowedRole } = require('../roles/validate-user-has-at-least-one-allowed-role');
 
@@ -13,6 +14,7 @@ const eligibilityCriteria = require('./controllers/eligibilityCriteria.controlle
 const externalApi = require('./controllers/externalApi.controller');
 const files = require('./controllers/files.controller');
 const companies = require('../controllers/companies.controller');
+const { getAmendment } = require('../controllers/amendments/get-amendment.controller');
 
 const router = express.Router();
 
@@ -110,5 +112,9 @@ router.route('/companies/:registrationNumber').get(validateUserHasAtLeastOneAllo
 router
   .route('/address/:postcode') // Geospatial Addresses
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, READ_ONLY, ADMIN] }), externalApi.getAddressesByPostcode);
+
+router
+  .route('/facilities/:facilityId/amendments/:amendmentId')
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), validatePortalFacilityAmendmentsEnabled, getAmendment);
 
 module.exports = router;

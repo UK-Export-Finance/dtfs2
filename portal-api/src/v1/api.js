@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { HEADERS } = require('@ukef/dtfs2-common');
+const { HEADERS, InvalidFacilityIdError } = require('@ukef/dtfs2-common');
 const { isValidMongoId, isValidBankId, isValidReportPeriod } = require('./validation/validateIds');
 
 require('dotenv').config();
@@ -450,6 +450,33 @@ const getNextReportPeriodByBankId = async (bankId) => {
   }
 };
 
+/**
+ * Gets the portal facility amendment
+ * @param {string} facilityId - id of the facility to amend
+ * @param {string} amendmentId - id of the facility amendment
+ * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendment & { ukefFacilityId: string | null })>} - the amendment
+ */
+const getPortalFacilityAmendment = async (facilityId, amendmentId) => {
+  try {
+    const isValidFacilityId = isValidMongoId(facilityId);
+
+    if (!isValidFacilityId) {
+      throw new InvalidFacilityIdError(facilityId);
+    }
+
+    const response = await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}/amendments/${amendmentId}`,
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 module.exports = {
   findOneDeal,
   createDeal,
@@ -470,4 +497,5 @@ module.exports = {
   getBankById,
   getAllBanks,
   getNextReportPeriodByBankId,
+  getPortalFacilityAmendment,
 };
