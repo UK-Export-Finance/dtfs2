@@ -22,9 +22,9 @@ const withRoleValidationApiTests = ({
   makeRequestWithHeaders,
   whitelistedRoles,
   successCode,
-  successHeaders = undefined,
+  successHeaders,
   disableHappyPath = false, // TODO DTFS2-6697: remove and test happy paths.
-  redirectUrlForInvalidRoles = undefined,
+  redirectUrlForInvalidRoles,
 }) => {
   const nonWhitelistedRoles = allRoles.filter((role) => !whitelistedRoles.includes(role));
 
