@@ -1,6 +1,6 @@
 import { AMENDMENT_STATUS, AMENDMENT_TYPES, InvalidAuditDetailsError, PortalAuditDetails, PortalFacilityAmendment } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
-import { getUnixTime } from 'date-fns';
+import { fromUnixTime, getUnixTime } from 'date-fns';
 import { findOneUser } from '../../v1/controllers/user/get-user.controller';
 import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
 import { PutPortalFacilityAmendmentPayload } from '../../v1/routes/middleware/payload-validation/validate-put-portal-facility-amendment-payload';
@@ -47,6 +47,8 @@ export class PortalFacilityAmendmentService {
         email: user.email,
       },
       version: 0,
+      facilityEndDate: amendment.facilityEndDate ? fromUnixTime(amendment.facilityEndDate) : undefined,
+      bankReviewDate: amendment.bankReviewDate ? fromUnixTime(amendment.bankReviewDate) : undefined,
     };
 
     await TfmFacilitiesRepo.upsertPortalFacilityAmendmentDraft(amendmentToInsert, auditDetails);

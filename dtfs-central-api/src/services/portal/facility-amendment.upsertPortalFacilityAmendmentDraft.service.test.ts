@@ -16,15 +16,20 @@ import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
 
 const mockUpsertPortalFacilityAmendmentDraft = jest.fn();
 
+const facilityEndDate = new Date(2030, 1, 1);
+
 const dealId = new ObjectId().toString();
 const facilityId = new ObjectId().toString();
-const amendment = {};
+const amendment = {
+  facilityEndDate: getUnixTime(facilityEndDate),
+};
 const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
 
 describe('PortalFacilityAmendmentService', () => {
   beforeAll(() => {
     jest.useFakeTimers();
   });
+
   beforeEach(() => {
     jest.resetAllMocks();
 
@@ -89,6 +94,7 @@ describe('PortalFacilityAmendmentService', () => {
           email: aPortalUser().email,
         },
         version: 0,
+        facilityEndDate,
       };
 
       expect(mockUpsertPortalFacilityAmendmentDraft).toHaveBeenCalledTimes(1);
@@ -120,6 +126,7 @@ describe('PortalFacilityAmendmentService', () => {
           email: aPortalUser().email,
         },
         version: 0,
+        facilityEndDate,
       };
 
       expect(response).toEqual(expectedAmendment);
