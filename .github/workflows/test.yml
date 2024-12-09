@@ -68,12 +68,14 @@ on:
       - 'e2e-tests/**'
       - 'utils/**'
       - 'libs/**'
+      - 'README.md'
 
   push:
     branches:
       - dev
       - feature
       - release-*
+      - '!release-please*'
 
   create:
     branches:

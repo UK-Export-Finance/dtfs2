@@ -1,10 +1,10 @@
 import { ObjectId } from 'mongodb';
-import { TfmFacility } from '@ukef/dtfs2-common';
+import { FacilityAmendment, TfmFacility } from '@ukef/dtfs2-common';
 import { generateMockPortalUserAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream/test-helpers';
 import { aFacility } from './facility';
 import { KeyingSheetCalculationFacilityValues } from '../../src/types/tfm/tfm-facility';
 
-export const aTfmFacility = (): TfmFacility => {
+export const aTfmFacility = ({ amendments = [] }: { amendments?: FacilityAmendment[] } = {}): TfmFacility => {
   const tfmFacilityId = new ObjectId();
 
   return {
@@ -13,7 +13,7 @@ export const aTfmFacility = (): TfmFacility => {
       ...aFacility(),
       _id: tfmFacilityId,
     },
-    amendments: [],
+    amendments,
     tfm: {},
     auditRecord: generateMockPortalUserAuditDatabaseRecord(new ObjectId()),
   };
