@@ -33,7 +33,7 @@ export const putAmendmentDraft = async (req: PutAmendmentRequest, res: Response)
 
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,
-      message: 'Unknown error occurred when getting amendment',
+      message: 'Unknown error occurred when upserting amendment',
     });
   }
 };
