@@ -879,8 +879,39 @@ utilisationReportsRouter
  *         description: Not Found
  *       500:
  *         description: Internal Server Error
+ *   delete:
+ *     summary: Deletes the fee record correction transient form data stored against a user and fee record
+ *     tags: [Utilisation Report]
+ *     description: Deletes the fee record correction transient form data stored against a user and fee record
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report
+ *       - in: path
+ *         name: feeRecordId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the fee record
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the user
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
  */
-// TODO FN-3690: Add swagger docs above for this delete endpoint
 utilisationReportsRouter
   .route('/:reportId/fee-records/:feeRecordId/correction-transient-form-data/:userId')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), validation.mongoIdValidation('userId'), handleExpressValidatorResult)
