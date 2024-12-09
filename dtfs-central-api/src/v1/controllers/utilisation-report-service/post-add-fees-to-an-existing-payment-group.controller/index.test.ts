@@ -8,10 +8,10 @@ import {
   TestApiError,
   FEE_RECORD_STATUS,
   RECONCILIATION_IN_PROGRESS,
+  TfmSessionUser,
 } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { PostAddFeesToAnExistingPaymentGroupRequest, postAddFeesToAnExistingPaymentGroup } from '.';
-import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
 import { addFeesToAnExistingPaymentGroup } from './helpers';
 import { PostAddFeesToAnExistingPaymentGroupPayload } from '../../../routes/middleware/payload-validation';

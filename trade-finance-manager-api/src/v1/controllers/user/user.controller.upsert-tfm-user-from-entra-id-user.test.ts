@@ -1,10 +1,9 @@
-import { anEntraIdUser, AuditDetails, EntraIdUser } from '@ukef/dtfs2-common';
+import { anEntraIdUser, AuditDetails, EntraIdUser, TfmSessionUser } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mapUserData } from './helpers/mapUserData.helper';
 import { UpsertTfmUserFromEntraIdUserResponse, UserService } from '../../services/user.service';
 import { upsertTfmUserFromEntraIdUser } from './user.controller';
 import { userServiceMockResponses } from '../../../../test-helpers';
-import { TfmSessionUser } from '../../../types/tfm-session-user';
 
 describe('user controller', () => {
   describe('upsertTfmUserFromEntraIdUser', () => {
