@@ -1,6 +1,8 @@
 const relative = require('../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../e2e-fixtures');
-const CONSTANTS = require('../../../../../fixtures/constants');
+const {
+  FACILITY: { FACILITY_STAGE },
+} = require('../../../../../fixtures/constants');
 const { dashboardFacilities } = require('../../../../pages');
 const { dashboardFilters } = require('../../../../partials');
 const { BSS_DEAL_AIN, BSS_FACILITY_BOND_ISSUED, BSS_FACILITY_BOND_UNISSUED } = require('../../fixtures');
@@ -16,7 +18,7 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
-context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued', () => {
+context('Dashboard Facilities filters - filter by facility stage', () => {
   const ALL_FACILITIES = [];
 
   before(() => {
@@ -44,98 +46,78 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
     filters.showHideButton().click();
   });
 
-  describe('Issued', () => {
+  describe(FACILITY_STAGE.ISSUED, () => {
     before(() => {
       cy.login(BANK1_MAKER1);
       dashboardFacilities.visit();
       cy.url().should('eq', relative('/dashboard/facilities/0'));
     });
 
-    it('submits the filter and redirects to the dashboard', () => {
+    beforeEach(() => {
       submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.issued.checkbox());
     });
 
-    it('renders checked checkbox', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.issued.checkbox());
+    it('should render checked checkbox', () => {
       shouldRenderCheckedCheckbox(dashboardFacilities.filters.panel.form.stage.issued.checkbox());
     });
 
-    it('renders the applied filter in the `applied filters` section', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.issued.checkbox());
-
+    it('should render the applied filter in the `applied filters` section', () => {
       filters.showHideButton().click();
 
-      shouldRenderAppliedFilterInPanelSelectedFilters("Bank's facility stage", CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED);
+      shouldRenderAppliedFilterInPanelSelectedFilters("Bank's facility stage", FACILITY_STAGE.ISSUED);
     });
 
-    it('renders the applied filter in the `main container selected filters` section', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.issued.checkbox());
-
+    it('should render the applied filter in the `main container selected filters` section', () => {
       filters.showHideButton().click();
 
-      shouldRenderAppliedFilterInMainContainerSelectedFilters(
-        dashboardFacilities.filters.mainContainer.selectedFilters.typeIssued(),
-        CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED,
-      );
+      shouldRenderAppliedFilterInMainContainerSelectedFilters(dashboardFacilities.filters.mainContainer.selectedFilters.typeIssued(), FACILITY_STAGE.ISSUED);
     });
 
-    it('renders only facilities that are Issued', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.issued.checkbox());
-
+    it('should render only facilities that are Issued', () => {
       filters.showHideButton().click();
 
-      shouldRenderAppliedFilterInMainContainerSelectedFilters(
-        dashboardFacilities.filters.mainContainer.selectedFilters.typeIssued(),
-        CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED,
-      );
+      shouldRenderAppliedFilterInMainContainerSelectedFilters(dashboardFacilities.filters.mainContainer.selectedFilters.typeIssued(), FACILITY_STAGE.ISSUED);
 
       shouldRenderOnlyGivenTypes(ALL_FACILITIES, 'hasBeenIssued', true);
     });
   });
 
-  describe('Unissued', () => {
+  describe(FACILITY_STAGE.UNISSUED, () => {
     before(() => {
       cy.login(BANK1_MAKER1);
       dashboardFacilities.visit();
       cy.url().should('eq', relative('/dashboard/facilities/0'));
     });
 
-    it('submits the filter and redirects to the dashboard', () => {
+    beforeEach(() => {
       submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.unissued.checkbox());
     });
 
-    it('renders checked checkbox', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.unissued.checkbox());
+    it('should render checked checkbox', () => {
       shouldRenderCheckedCheckbox(dashboardFacilities.filters.panel.form.stage.unissued.checkbox());
     });
 
-    it('renders the applied filter in the `applied filters` section', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.unissued.checkbox());
-
+    it('should render the applied filter in the `applied filters` section', () => {
       filters.showHideButton().click();
 
-      shouldRenderAppliedFilterInPanelSelectedFilters("Bank's facility stage", CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED);
+      shouldRenderAppliedFilterInPanelSelectedFilters("Bank's facility stage", FACILITY_STAGE.UNISSUED);
     });
 
-    it('renders the applied filter in the `main container selected filters` section', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.unissued.checkbox());
-
+    it('should render the applied filter in the `main container selected filters` section', () => {
       filters.showHideButton().click();
 
       shouldRenderAppliedFilterInMainContainerSelectedFilters(
         dashboardFacilities.filters.mainContainer.selectedFilters.typeUnissued(),
-        CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED,
+        FACILITY_STAGE.UNISSUED,
       );
     });
 
-    it('renders only facilities that are Unissued', () => {
-      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.stage.unissued.checkbox());
-
+    it('should render only facilities that are Unissued', () => {
       filters.showHideButton().click();
 
       shouldRenderAppliedFilterInMainContainerSelectedFilters(
         dashboardFacilities.filters.mainContainer.selectedFilters.typeUnissued(),
-        CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED,
+        FACILITY_STAGE.UNISSUED,
       );
 
       shouldRenderOnlyGivenTypes(ALL_FACILITIES, 'hasBeenIssued', false);
