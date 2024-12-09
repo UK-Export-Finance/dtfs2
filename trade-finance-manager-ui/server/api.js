@@ -422,29 +422,6 @@ const login = async (username, password) => {
 };
 
 /**
- *
- * @param {import('@ukef/dtfs2-common').HandleSsoRedirectFormRequest} handleSsoRedirectFormRequest
- * @returns {Promise<import('@ukef/dtfs2-common').HandleSsoRedirectFormResponse>}
- */
-const handleSsoRedirectForm = async (handleSsoRedirectFormRequest) => {
-  try {
-    const response = await axios({
-      method: 'post',
-      url: `${TFM_API_URL}/v1/sso/handle-sso-redirect-form`,
-      headers: {
-        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
-      },
-      data: handleSsoRedirectFormRequest,
-    });
-
-    return response.data;
-  } catch (error) {
-    console.error('Unable to log in %o', error?.response?.data);
-    return { status: error?.response?.status || 500, data: 'Failed to login' };
-  }
-};
-
-/**
  * Gets the auth code URL for the SSO login process
  * @param {import('@ukef/dtfs2-common').GetAuthCodeUrlRequest} getAuthCodeUrlParams
  * @returns {Promise<import('@ukef/dtfs2-common').GetAuthCodeUrlResponse>}
@@ -1484,7 +1461,6 @@ module.exports = {
   updateLeadUnderwriter,
   createActivity,
   login,
-  handleSsoRedirectForm,
   getAuthCodeUrl,
   getFacilities,
   createFeedback,
