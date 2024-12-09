@@ -11,7 +11,6 @@ import {
   TFM_FACILITY_STAGE,
   TfmDeal,
   TfmDealCancellation,
-  TfmDealCancellationResponse,
   TfmDealCancellationWithStatus,
   TfmDealWithCancellation,
   TfmFacility,
@@ -19,7 +18,6 @@ import {
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { flatten } from 'mongo-dot-notation';
 import { mongoDbClient } from '../../drivers/db-client';
-import { getUkefFacilityIds } from '../../helpers/get-ukef-facility-ids';
 
 export class TfmDealCancellationRepo {
   private static async getDealCollection(): Promise<Collection<WithoutId<TfmDeal>>> {
@@ -58,17 +56,17 @@ export class TfmDealCancellationRepo {
   }
 
   /**
-   * Find deals with scheduled cancellations
+   * Find deals with pending cancellations
    * @returns the deals
    */
-  public static async findScheduledDealCancellations(): Promise<TfmDealWithCancellation[]> {
+  public static async findPendingDealCancellations(): Promise<TfmDealWithCancellation[]> {
     const dealCollection = await this.getDealCollection();
 
     return await dealCollection
       .find<TfmDealWithCancellation>({
         'dealSnapshot.submissionType': { $in: [DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN] },
         'tfm.stage': { $ne: TFM_DEAL_STAGE.CANCELLED },
-        'tfm.cancellation.status': { $eq: TFM_DEAL_CANCELLATION_STATUS.SCHEDULED },
+        'tfm.cancellation.status': { $eq: TFM_DEAL_CANCELLATION_STATUS.PENDING },
       })
       .toArray();
   }
@@ -156,7 +154,7 @@ export class TfmDealCancellationRepo {
     cancellation: TfmDealCancellation;
     activity?: TfmActivity;
     auditDetails: AuditDetails;
-  }): Promise<TfmDealCancellationResponse> {
+  }): Promise<{ cancelledDeal: TfmDeal; riskExpiredFacilities: TfmFacility[] }> {
     if (!ObjectId.isValid(dealId)) {
       throw new InvalidDealIdError(dealId.toString());
     }
@@ -177,7 +175,7 @@ export class TfmDealCancellationRepo {
       };
     }
 
-    const updateDeal = await dealCollection.updateOne(
+    const { value: deal } = await dealCollection.findOneAndUpdate(
       {
         _id: { $eq: new ObjectId(dealId) },
         'tfm.stage': { $ne: TFM_DEAL_STAGE.CANCELLED },
@@ -189,7 +187,7 @@ export class TfmDealCancellationRepo {
       update,
     );
 
-    if (!updateDeal?.matchedCount) {
+    if (!deal) {
       throw new DealNotFoundError(dealId.toString());
     }
 
@@ -203,10 +201,73 @@ export class TfmDealCancellationRepo {
       }),
     );
 
-    const updatedFacilities = await facilityCollection.find({ 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } }).toArray();
+    const riskExpiredFacilities = await facilityCollection.find({ 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } }).toArray();
 
-    const updatedFacilityUkefIds = getUkefFacilityIds(updatedFacilities);
+    return { cancelledDeal: deal, riskExpiredFacilities };
+  }
 
-    return { cancelledDealUkefId: dealId, riskExpiredFacilityUkefIds: updatedFacilityUkefIds };
+  /**
+   * Schedules a deal cancellation (occurs when a deal cancellation is submitted but the effectiveFrom is in the future).
+   * In this instance, the deal and facility statuses remain the same, but the tfm cancellation object 'status' is updated to 'pending'.
+   * When the effectiveFrom date passes, a separate chron job will run to submit the deal cancellation using submitDealCancellation above,
+   * updating the deal and facility statuses to 'Cancelled' / 'Risk expired' respectively.
+   * We still return the deal ID and corresponding facility IDs in this instance to be used on the cancellation confirmation email.
+   * @param params
+   * @param params.dealId - The deal id
+   * @param params.cancellation - The deal cancellation details to submit
+   * @param params.activity - Object to add to the activities array
+   * @param params.auditDetails - The users audit details
+   */
+  public static async scheduleDealCancellation({
+    dealId,
+    cancellation,
+    activity,
+    auditDetails,
+  }: {
+    dealId: string | ObjectId;
+    cancellation: TfmDealCancellation;
+    activity?: TfmActivity;
+    auditDetails: AuditDetails;
+  }): Promise<{ cancelledDeal: TfmDeal; riskExpiredFacilities: TfmFacility[] }> {
+    if (!ObjectId.isValid(dealId)) {
+      throw new InvalidDealIdError(dealId.toString());
+    }
+
+    const dealCollection = await this.getDealCollection();
+
+    const update: UpdateFilter<WithoutId<TfmDeal>> = {
+      $set: {
+        'tfm.cancellation.status': TFM_DEAL_CANCELLATION_STATUS.PENDING,
+        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+      },
+    };
+
+    if (activity) {
+      update.$push = {
+        'tfm.activities': activity,
+      };
+    }
+
+    const { value: deal } = await dealCollection.findOneAndUpdate(
+      {
+        _id: { $eq: new ObjectId(dealId) },
+        'tfm.stage': { $ne: TFM_DEAL_STAGE.CANCELLED },
+        'dealSnapshot.submissionType': { $in: [DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN] },
+        'tfm.cancellation.reason': { $eq: cancellation.reason },
+        'tfm.cancellation.bankRequestDate': { $eq: cancellation.bankRequestDate },
+        'tfm.cancellation.effectiveFrom': { $eq: cancellation.effectiveFrom },
+      },
+      update,
+    );
+
+    if (!deal) {
+      throw new DealNotFoundError(dealId.toString());
+    }
+
+    const facilityCollection = await this.getFacilityCollection();
+
+    const riskExpiredFacilities = await facilityCollection.find({ 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } }).toArray();
+
+    return { cancelledDeal: deal, riskExpiredFacilities };
   }
 }

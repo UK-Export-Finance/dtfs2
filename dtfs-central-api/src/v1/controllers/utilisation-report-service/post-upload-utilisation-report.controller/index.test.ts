@@ -2,7 +2,7 @@ import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
 import { EntityManager } from 'typeorm';
-import { MOCK_AZURE_FILE_INFO, TestApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { MOCK_AZURE_FILE_INFO, PENDING_RECONCILIATION, TestApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { postUploadUtilisationReport, PostUploadUtilisationReportRequestBody } from '.';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { TransactionFailedError } from '../../../../errors';
@@ -63,7 +63,7 @@ describe('post-upload-utilisation-report controller', () => {
 
       const errorMessage = 'An error message';
       const errorStatus = HttpStatusCode.BadRequest;
-      const testApiError = new TestApiError(errorStatus, errorMessage);
+      const testApiError = new TestApiError({ message: errorMessage, status: errorStatus });
 
       jest.mocked(executeWithSqlTransaction).mockRejectedValue(TransactionFailedError.forApiError(testApiError));
 
@@ -81,7 +81,7 @@ describe('post-upload-utilisation-report controller', () => {
         const { req, res } = getHttpMocks();
 
         const mockDate = new Date('2024-01-01');
-        const updatedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withDateUploaded(mockDate).build();
+        const updatedReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withDateUploaded(mockDate).build();
         jest.mocked(mockEventHandler).mockResolvedValue(updatedReport);
 
         // Act

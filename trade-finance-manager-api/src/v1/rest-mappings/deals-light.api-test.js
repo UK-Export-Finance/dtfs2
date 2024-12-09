@@ -4,7 +4,6 @@ const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
 const mapGefSubmissionDetails = require('./mappings/gef-deal/mapGefSubmissionDetails');
 const mapGefDealDetails = require('./mappings/gef-deal/mapGefDealDetails');
 const mapDeals = require('./mappings/deal/mapDeals');
-
 const MOCK_DEAL = require('../__mocks__/mock-deal-AIN-submitted');
 const MOCK_GEF_DEAL = require('../__mocks__/mock-gef-deal');
 

@@ -1,7 +1,7 @@
 const { HttpStatusCode } = require('axios');
 const httpMocks = require('node-mocks-http');
 const events = require('events');
-const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
+const { PENDING_RECONCILIATION, REPORT_NOT_RECEIVED } = require('@ukef/dtfs2-common');
 const { aUtilisationReportResponse, aNotReceivedUtilisationReportResponse } = require('../../../../test-helpers/test-data/utilisation-report');
 const { saveUtilisationReportFileToAzure } = require('../../services/utilisation-report/azure-file-service');
 const {
@@ -85,7 +85,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
   it('does not upload report and returns a 500 with error message if report has already been received', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
-    jest.mocked(getUtilisationReports).mockResolvedValue([{ ...aUtilisationReportResponse(), status: 'PENDING_RECONCILIATION' }]);
+    jest.mocked(getUtilisationReports).mockResolvedValue([{ ...aUtilisationReportResponse(), status: PENDING_RECONCILIATION }]);
 
     // Act
     await uploadReportAndSendNotification(req, res);
@@ -93,9 +93,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
     // Assert
     expect(saveUtilisationReportFileToAzure).not.toHaveBeenCalled();
     expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
-    expect(res._getData()).toEqual(
-      `Expected report to be in '${UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED}' state (was actually in '${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}' state)`,
-    );
+    expect(res._getData()).toEqual(`Expected report to be in '${REPORT_NOT_RECEIVED}' state (was actually in '${PENDING_RECONCILIATION}' state)`);
   });
 
   it('uploads report and sends notification emails', async () => {

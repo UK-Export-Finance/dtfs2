@@ -1,11 +1,11 @@
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { REQUEST_PLATFORM_TYPE, AzureFileInfo, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { REQUEST_PLATFORM_TYPE, AzureFileInfo, UtilisationReportEntity, UtilisationReportRawCsvData } from '@ukef/dtfs2-common';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
-import { UtilisationReportRawCsvData } from '../../../../types/utilisation-reports';
 import { ApiError } from '../../../../errors';
 import { executeWithSqlTransaction } from '../../../../helpers';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 
 export type PostUploadUtilisationReportRequestBody = {
   reportId: number;
@@ -36,7 +36,7 @@ export const uploadReportInTransaction = async (
   const reportStateMachine = await UtilisationReportStateMachine.forReportId(reportId);
   const updatedReport = await executeWithSqlTransaction(async (transactionEntityManager) => {
     return await reportStateMachine.handleEvent({
-      type: 'REPORT_UPLOADED',
+      type: UTILISATION_REPORT_EVENT_TYPE.REPORT_UPLOADED,
       payload: {
         azureFileInfo: fileInfo,
         reportCsvData: reportData,

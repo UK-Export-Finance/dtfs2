@@ -1,4 +1,5 @@
 const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES_REQUIRING_ID } = require('@ukef/dtfs2-common');
+const { aTfmUser } = require('@ukef/dtfs2-common/mock-data-backend');
 const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common/test-cases-backend');
 const { ObjectId } = require('mongodb');
@@ -8,7 +9,7 @@ const { testApi } = require('../../../test-api');
 const { DEALS } = require('../../../../src/constants');
 const aDeal = require('../../deal-builder');
 const { createDeal } = require('../../../helpers/create-deal');
-const { aPortalUser, aTfmUser } = require('../../../../test-helpers');
+const { aPortalUser } = require('../../../../test-helpers');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 
 console.error = jest.fn();

@@ -1,14 +1,15 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
-import { TestApiError } from '@ukef/dtfs2-common';
+import { REQUEST_PLATFORM_TYPE, TestApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { EntityManager } from 'typeorm';
 import { DeletePaymentRequest, deletePayment } from '.';
-import { aTfmSessionUser, aUtilisationReport } from '../../../../../test-helpers';
+import { aTfmSessionUser } from '../../../../../test-helpers';
 import { DeletePaymentPayload } from '../../../routes/middleware/payload-validation/validate-delete-payment-payload';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 
 jest.mock('../../../../helpers');
 jest.mock('../../../../services/state-machines/utilisation-report/utilisation-report.state-machine');
@@ -42,7 +43,7 @@ describe('delete-payment.controller', () => {
         handleEvent: mockHandleEvent,
       });
       UtilisationReportStateMachine.forReport = mockForReport;
-      utilisationReportRepoFindOneSpy.mockResolvedValue(aUtilisationReport());
+      utilisationReportRepoFindOneSpy.mockResolvedValue(new UtilisationReportEntityMockBuilder().build());
     });
 
     afterEach(() => {
@@ -57,7 +58,7 @@ describe('delete-payment.controller', () => {
       });
       const res = httpMocks.createResponse();
 
-      const utilisationReport = aUtilisationReport();
+      const utilisationReport = new UtilisationReportEntityMockBuilder().build();
       utilisationReportRepoFindOneSpy.mockResolvedValue(utilisationReport);
 
       // Act
@@ -78,12 +79,12 @@ describe('delete-payment.controller', () => {
       expect(mockForReport).toHaveBeenCalledWith(utilisationReport);
       expect(mockHandleEvent).toHaveBeenCalledTimes(1);
       expect(mockHandleEvent).toHaveBeenCalledWith({
-        type: 'DELETE_PAYMENT',
+        type: UTILISATION_REPORT_EVENT_TYPE.DELETE_PAYMENT,
         payload: {
           transactionEntityManager: mockEntityManager,
           paymentId: Number(paymentId),
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId: tfmUserId,
           },
         },
@@ -128,7 +129,7 @@ describe('delete-payment.controller', () => {
       const res = httpMocks.createResponse();
 
       const errorStatus = 404;
-      mockHandleEvent.mockRejectedValue(new TestApiError(errorStatus, undefined));
+      mockHandleEvent.mockRejectedValue(new TestApiError({ status: errorStatus }));
 
       // Act
       await deletePayment(req, res);
@@ -146,7 +147,7 @@ describe('delete-payment.controller', () => {
       const res = httpMocks.createResponse();
 
       const errorMessage = 'Some error message';
-      mockHandleEvent.mockRejectedValue(new TestApiError(undefined, errorMessage));
+      mockHandleEvent.mockRejectedValue(new TestApiError({ message: errorMessage }));
 
       // Act
       await deletePayment(req, res);

@@ -1,6 +1,12 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
-import { FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, TestApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FEE_RECORD_STATUS,
+  FeeRecordEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
+  TestApiError,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { EntityManager } from 'typeorm';
 import { aTfmSessionUser } from '../../../../../test-helpers';
@@ -43,7 +49,7 @@ describe('put-keying-data-mark-as-done.controller', () => {
         handleEvent: mockHandleEvent,
       });
       UtilisationReportStateMachine.forReport = mockForReport;
-      const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+      const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
       const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(feeRecordId).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
       feeRecordRepoFindByIdAndReportIdSpy.mockResolvedValue([feeRecord]);
     });
@@ -61,7 +67,7 @@ describe('put-keying-data-mark-as-done.controller', () => {
       const res = httpMocks.createResponse();
 
       const errorStatus = 404;
-      mockHandleEvent.mockRejectedValue(new TestApiError(errorStatus, undefined));
+      mockHandleEvent.mockRejectedValue(new TestApiError({ status: errorStatus }));
 
       // Act
       await putKeyingDataMarkAsDone(req, res);
@@ -79,7 +85,7 @@ describe('put-keying-data-mark-as-done.controller', () => {
       const res = httpMocks.createResponse();
 
       const errorMessage = 'Some error message';
-      mockHandleEvent.mockRejectedValue(new TestApiError(undefined, errorMessage));
+      mockHandleEvent.mockRejectedValue(new TestApiError({ message: errorMessage }));
 
       // Act
       await putKeyingDataMarkAsDone(req, res);

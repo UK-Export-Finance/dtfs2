@@ -1,6 +1,7 @@
-import { AMENDMENT_STATUS, isValidDate, TfmFacilityAmendment } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, FacilityAmendment, isValidDate } from '@ukef/dtfs2-common';
 import { isBefore } from 'date-fns';
 import { orderBy } from 'lodash';
+import { convertTimestampToDate } from '../convert-timestamp-to-date';
 
 /**
  * Filters amendments to only those which are completed
@@ -14,13 +15,13 @@ import { orderBy } from 'lodash';
  * @param latestEffectiveDate - The latest effective date to consider
  * @returns completed amendments
  */
-export const filterAndSortCompletedEffectiveAmendments = (tfmFacilityAmendments: TfmFacilityAmendment[], latestEffectiveDate: Date): TfmFacilityAmendment[] => {
+export const filterAndSortCompletedEffectiveAmendments = (tfmFacilityAmendments: FacilityAmendment[], latestEffectiveDate: Date): FacilityAmendment[] => {
   const filteredAmendments = tfmFacilityAmendments.filter(({ status, effectiveDate, updatedAt, amendmentId }) => {
     if (status !== AMENDMENT_STATUS.COMPLETED) {
       return false;
     }
 
-    const dateToUse = effectiveDate ? new Date(effectiveDate) : new Date(updatedAt);
+    const dateToUse = effectiveDate ? convertTimestampToDate(effectiveDate) : convertTimestampToDate(updatedAt);
 
     if (!isValidDate(dateToUse)) {
       const invalidField = effectiveDate ? 'effectiveDate' : 'updatedAt';
@@ -32,5 +33,9 @@ export const filterAndSortCompletedEffectiveAmendments = (tfmFacilityAmendments:
     return isBefore(dateToUse, latestEffectiveDate);
   });
 
-  return orderBy(filteredAmendments, [({ effectiveDate, updatedAt }) => effectiveDate ?? updatedAt], ['desc']);
+  return orderBy(
+    filteredAmendments,
+    [({ effectiveDate, updatedAt }) => (effectiveDate ? convertTimestampToDate(effectiveDate) : convertTimestampToDate(updatedAt))],
+    ['desc'],
+  );
 };

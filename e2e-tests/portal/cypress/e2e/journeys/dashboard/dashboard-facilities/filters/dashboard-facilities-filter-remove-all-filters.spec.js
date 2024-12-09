@@ -39,7 +39,7 @@ context('Dashboard Facilities filters - remove all filters', () => {
     filters.showHideButton().click();
 
     // apply filter 1
-    dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().click();
+    dashboardFacilities.filters.panel.form.stage.issued.checkbox().click();
 
     // apply filter 2
     dashboardFacilities.filters.panel.form.type.bond.checkbox().click();
@@ -53,7 +53,7 @@ context('Dashboard Facilities filters - remove all filters', () => {
     filters.showHideButton().click();
 
     // check filters are applied
-    dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().should('be.checked');
+    dashboardFacilities.filters.panel.form.stage.issued.checkbox().should('be.checked');
     dashboardFacilities.filters.panel.form.type.bond.checkbox().should('be.checked');
 
     // click `clear all` button
@@ -75,7 +75,7 @@ context('Dashboard Facilities filters - remove all filters', () => {
     filters.mainContainer.selectedFilters.container().should('not.exist');
 
     // checkbox should be NOT be checked
-    dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().should('not.be.checked');
+    dashboardFacilities.filters.panel.form.stage.issued.checkbox().should('not.be.checked');
     dashboardFacilities.filters.panel.form.type.bond.checkbox().should('not.be.checked');
 
     // should render all facilities

@@ -1048,6 +1048,25 @@ const addPaymentToFeeRecords = async (reportId, parsedAddPaymentFormValues, feeR
 };
 
 /**
+ * Create a record correction
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user
+ * @param {string} userToken - The user token
+ */
+const createFeeRecordCorrection = async (reportId, feeRecordId, user, userToken) => {
+  const response = await axios({
+    method: 'post',
+    url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/corrections`,
+    headers: generateHeaders(userToken),
+    data: {
+      user,
+    },
+  });
+  return response.data;
+};
+
+/**
  * Generates keying data for the utilisation report
  * with the supplied id
  * @param {string} reportId - The report id
@@ -1321,6 +1340,85 @@ const submitDealCancellation = async (dealId, cancellation, userToken) => {
   }
 };
 
+/**
+ * Gets the fee record
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('./api-response-types').GetFeeRecordResponseBody>}
+ */
+const getFeeRecord = async (reportId, feeRecordId, userToken) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}`, {
+    headers: generateHeaders(userToken),
+  });
+  return response.data;
+};
+
+/**
+ * Gets the fee record correction request review
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
+ * @param {string} userId - The id of the user requesting the correction
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('./api-response-types').FeeRecordCorrectionRequestReviewResponseBody>}
+ */
+const getFeeRecordCorrectionRequestReview = async (reportId, feeRecordId, userId, userToken) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-request-review/${userId}`, {
+    headers: generateHeaders(userToken),
+  });
+  return response.data;
+};
+
+/**
+ * Updates the fee record correction transient form data associated with the user
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
+ * @param {import('@ukef/dtfs2-common').RecordCorrectionTransientFormData} formData - The transient form data
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {string} userToken - The user token
+ * @returns {Promise<void>}
+ * @throws {Error} If the API request fails
+ */
+const updateFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, formData, user, userToken) => {
+  try {
+    await axios({
+      method: 'put',
+      url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-transient-form-data`,
+      headers: generateHeaders(userToken),
+      data: {
+        formData,
+        user,
+      },
+    });
+  } catch (error) {
+    console.error('Failed to update fee record correction transient form data', error);
+    throw error;
+  }
+};
+
+/**
+ * Gets the fee record by report id, fee record id and user
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('@ukef/dtfs2-common').RecordCorrectionTransientFormData | {}>}
+ */
+const getFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, user, userToken) => {
+  try {
+    const userId = user._id;
+
+    const { data } = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-transient-form-data/${userId}`, {
+      headers: generateHeaders(userToken),
+    });
+
+    return data;
+  } catch (error) {
+    console.error('Failed to get fee record correction transient form data', error);
+    throw error;
+  }
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -1367,6 +1465,7 @@ module.exports = {
   getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups,
   getReportSummariesByBankAndYear,
   addPaymentToFeeRecords,
+  createFeeRecordCorrection,
   generateKeyingData,
   markKeyingDataAsDone,
   markKeyingDataAsToDo,
@@ -1381,4 +1480,8 @@ module.exports = {
   getDealCancellation,
   deleteDealCancellation,
   submitDealCancellation,
+  getFeeRecord,
+  getFeeRecordCorrectionRequestReview,
+  updateFeeRecordCorrectionTransientFormData,
+  getFeeRecordCorrectionTransientFormData,
 };

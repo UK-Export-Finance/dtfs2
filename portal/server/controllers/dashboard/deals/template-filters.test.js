@@ -1,5 +1,6 @@
+import { DEAL_STATUS } from '@ukef/dtfs2-common';
 import { dealTypeFilters, statusFilters, dealsTemplateFilters, createdByYouFilter } from './template-filters';
-import { FIELD_NAMES, PRODUCT, STATUS } from '../../../constants';
+import { FIELD_NAMES, PRODUCT } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
 import { generateFiltersArray, submissionTypeFilters } from '../filters/generate-template-filters';
 
@@ -37,44 +38,44 @@ describe('controllers/dashboard/deals - template-filters', () => {
           value: CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES,
         },
         {
-          text: STATUS.DEAL.DRAFT,
-          value: STATUS.DEAL.DRAFT,
+          text: DEAL_STATUS.DRAFT,
+          value: DEAL_STATUS.DRAFT,
         },
         {
-          text: STATUS.DEAL.READY_FOR_APPROVAL,
-          value: STATUS.DEAL.READY_FOR_APPROVAL,
+          text: DEAL_STATUS.READY_FOR_APPROVAL,
+          value: DEAL_STATUS.READY_FOR_APPROVAL,
         },
         {
-          text: STATUS.DEAL.CHANGES_REQUIRED,
-          value: STATUS.DEAL.CHANGES_REQUIRED,
+          text: DEAL_STATUS.CHANGES_REQUIRED,
+          value: DEAL_STATUS.CHANGES_REQUIRED,
         },
         {
-          text: STATUS.DEAL.SUBMITTED_TO_UKEF,
-          value: STATUS.DEAL.SUBMITTED_TO_UKEF,
+          text: DEAL_STATUS.SUBMITTED_TO_UKEF,
+          value: DEAL_STATUS.SUBMITTED_TO_UKEF,
         },
         {
-          text: STATUS.DEAL.UKEF_ACKNOWLEDGED,
-          value: STATUS.DEAL.UKEF_ACKNOWLEDGED,
+          text: DEAL_STATUS.UKEF_ACKNOWLEDGED,
+          value: DEAL_STATUS.UKEF_ACKNOWLEDGED,
         },
         {
-          text: STATUS.DEAL.IN_PROGRESS_BY_UKEF,
-          value: STATUS.DEAL.IN_PROGRESS_BY_UKEF,
+          text: DEAL_STATUS.IN_PROGRESS_BY_UKEF,
+          value: DEAL_STATUS.IN_PROGRESS_BY_UKEF,
         },
         {
-          text: STATUS.DEAL.UKEF_APPROVED_WITH_CONDITIONS,
-          value: STATUS.DEAL.UKEF_APPROVED_WITH_CONDITIONS,
+          text: DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
+          value: DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
         },
         {
-          text: STATUS.DEAL.UKEF_APPROVED_WITHOUT_CONDITIONS,
-          value: STATUS.DEAL.UKEF_APPROVED_WITHOUT_CONDITIONS,
+          text: DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
+          value: DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
         },
         {
-          text: STATUS.DEAL.UKEF_REFUSED,
-          value: STATUS.DEAL.UKEF_REFUSED,
+          text: DEAL_STATUS.UKEF_REFUSED,
+          value: DEAL_STATUS.UKEF_REFUSED,
         },
         {
-          text: STATUS.DEAL.ABANDONED,
-          value: STATUS.DEAL.ABANDONED,
+          text: DEAL_STATUS.ABANDONED,
+          value: DEAL_STATUS.ABANDONED,
         },
       ];
 

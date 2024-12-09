@@ -1,4 +1,4 @@
-import { CurrencyAndAmountString } from '@ukef/dtfs2-common';
+import { CURRENCY, CurrencyAndAmountString } from '@ukef/dtfs2-common';
 import { KeyingSheetViewModel } from '../../../server/types/view-models';
 import { componentRenderer } from '../../componentRenderer';
 
@@ -10,11 +10,11 @@ type KeyingSheetTableRow = KeyingSheetViewModel[number];
 describe(component, () => {
   const aKeyingSheetTableRow = (): KeyingSheetTableRow => ({
     status: 'TO_DO',
-    displayStatus: 'TO DO',
+    displayStatus: 'To do',
     feeRecordId: 12,
     facilityId: '12345678',
     exporter: 'Test exporter',
-    baseCurrency: 'GBP',
+    baseCurrency: CURRENCY.GBP,
     feePayments: [
       {
         formattedCurrencyAndAmount: 'GBP 100.00',
@@ -43,7 +43,7 @@ describe(component, () => {
     const keyingSheetRow: KeyingSheetTableRow = {
       ...aKeyingSheetTableRow(),
       status: 'TO_DO',
-      displayStatus: 'TO DO',
+      displayStatus: 'To do',
       facilityId: 'some facility id',
       exporter: 'some exporter',
       baseCurrency: 'EUR',
@@ -56,7 +56,7 @@ describe(component, () => {
     };
     const wrapper = getWrapper({ keyingSheetRow });
 
-    wrapper.expectElement(`tr td:contains("TO DO")`).toExist();
+    wrapper.expectElement(`tr td:contains("To do")`).toExist();
     wrapper.expectElement(`tr td:contains("some facility id")`).toExist();
     wrapper.expectElement(`tr td:contains("some exporter")`).toExist();
     wrapper.expectElement(`tr td:contains("EUR")`).toExist();
@@ -66,7 +66,7 @@ describe(component, () => {
     const keyingSheetRow: KeyingSheetTableRow = {
       ...aKeyingSheetTableRow(),
       status: 'TO_DO',
-      displayStatus: 'TO DO',
+      displayStatus: 'To do',
       facilityId: 'some facility id',
       exporter: 'some exporter',
       baseCurrency: 'EUR',
@@ -74,7 +74,7 @@ describe(component, () => {
     };
     const wrapper = getWrapper({ keyingSheetRow });
 
-    wrapper.expectElement(`tr td:contains("TO DO")`).toExist();
+    wrapper.expectElement(`tr td:contains("To do")`).toExist();
     wrapper.expectElement(`tr td:contains("some facility id")`).toExist();
     wrapper.expectElement(`tr td:contains("some exporter")`).toExist();
     wrapper.expectElement(`tr td:contains("EUR")`).toExist();
@@ -282,7 +282,7 @@ describe(component, () => {
         facilityId: '12345678',
         exporter: 'Test exporter 1',
         status: 'TO_DO',
-        displayStatus: 'TO DO',
+        displayStatus: 'To do',
         baseCurrency: 'EUR',
         checkboxId: 'feeRecordId-123-status-TO_DO',
         fixedFeeAdjustment: { change: 'NONE', amount: '0' },
@@ -293,9 +293,9 @@ describe(component, () => {
 
       wrapper.expectElement('tr').toHaveCount(3);
 
-      wrapper.expectElement('tr:eq(0) td:contains("TO DO")').toExist();
-      wrapper.expectElement('tr:eq(1) td:contains("TO DO")').notToExist();
-      wrapper.expectElement('tr:eq(2) td:contains("TO DO")').notToExist();
+      wrapper.expectElement('tr:eq(0) td:contains("To do")').toExist();
+      wrapper.expectElement('tr:eq(1) td:contains("To do")').notToExist();
+      wrapper.expectElement('tr:eq(2) td:contains("To do")').notToExist();
 
       wrapper.expectElement('tr:eq(0) td:contains("12345678")').toExist();
       wrapper.expectElement('tr:eq(1) td:contains("12345678")').notToExist();
@@ -322,7 +322,7 @@ describe(component, () => {
       const keyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         status: 'TO_DO',
-        displayStatus: 'TO DO',
+        displayStatus: 'To do',
         facilityId: '12345678',
         exporter: 'Test exporter 1',
         feePayments: [aFeePayment(), aFeePayment(), aFeePayment()],
@@ -331,7 +331,7 @@ describe(component, () => {
 
       wrapper.expectElement('tr').toHaveCount(3);
 
-      wrapper.expectElement('tr:eq(0) td:contains("TO DO")').toHaveAttribute('data-sort-value', 'TO_DO');
+      wrapper.expectElement('tr:eq(0) td:contains("To do")').toHaveAttribute('data-sort-value', 'TO_DO');
       wrapper.expectElement('tr:eq(1) td[data-sort-value="TO_DO"]').toExist();
       wrapper.expectElement('tr:eq(2) td[data-sort-value="TO_DO"]').toExist();
 

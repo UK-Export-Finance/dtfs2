@@ -1,10 +1,16 @@
 import { EntityManager } from 'typeorm';
-import { FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FEE_RECORD_STATUS,
+  FeeRecordEntityMockBuilder,
+  PENDING_RECONCILIATION,
+  REQUEST_PLATFORM_TYPE,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { handleFeeRecordPaymentDeletedEvent } from './payment-deleted.event-handler';
 import { aDbRequestSource } from '../../../../../../test-helpers';
 
 describe('handleFeeRecordPaymentDeletedEvent', () => {
-  const PENDING_RECONCILIATION_REPORT = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+  const PENDING_RECONCILIATION_REPORT = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
 
   const mockSave = jest.fn();
   const mockEntityManager = {
@@ -43,36 +49,24 @@ describe('handleFeeRecordPaymentDeletedEvent', () => {
     expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.DOES_NOT_MATCH);
   });
 
-  it(`sets the fee record status to ${FEE_RECORD_STATUS.TO_DO} when the event payload 'feeRecordsAndPaymentsMatch' is false and 'hasAttachedPayments' is false`, async () => {
-    // Arrange
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus(FEE_RECORD_STATUS.MATCH).build();
+  it.each([true, false])(
+    `sets the fee record status to ${FEE_RECORD_STATUS.TO_DO} when the event payload 'hasAttachedPayments' is false and 'feeRecordsAndPaymentsMatch' is %s`,
+    async (feeRecordsAndPaymentsMatch: boolean) => {
+      // Arrange
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus(FEE_RECORD_STATUS.MATCH).build();
 
-    // Act
-    await handleFeeRecordPaymentDeletedEvent(feeRecord, {
-      transactionEntityManager: mockEntityManager,
-      feeRecordsAndPaymentsMatch: false,
-      hasAttachedPayments: false,
-      requestSource: aDbRequestSource(),
-    });
-
-    // Assert
-    expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.TO_DO);
-  });
-
-  it("throws an error when the event payload 'feeRecordsAndPaymentsMatch' is true and 'hasAttachedPayments' is false", async () => {
-    // Arrange
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(PENDING_RECONCILIATION_REPORT).withStatus(FEE_RECORD_STATUS.MATCH).build();
-
-    // Act / Assert
-    await expect(
-      handleFeeRecordPaymentDeletedEvent(feeRecord, {
+      // Act
+      await handleFeeRecordPaymentDeletedEvent(feeRecord, {
         transactionEntityManager: mockEntityManager,
-        feeRecordsAndPaymentsMatch: true,
+        feeRecordsAndPaymentsMatch,
         hasAttachedPayments: false,
         requestSource: aDbRequestSource(),
-      }),
-    ).rejects.toThrow(new Error('Fee records and payments cannot match when there are no attached payments'));
-  });
+      });
+
+      // Assert
+      expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.TO_DO);
+    },
+  );
 
   it('updates the last updated by fields to the request source', async () => {
     // Arrange
@@ -89,7 +83,7 @@ describe('handleFeeRecordPaymentDeletedEvent', () => {
       feeRecordsAndPaymentsMatch: false,
       hasAttachedPayments: false,
       requestSource: {
-        platform: 'TFM',
+        platform: REQUEST_PLATFORM_TYPE.TFM,
         userId: '123',
       },
     });

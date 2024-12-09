@@ -1,6 +1,6 @@
 import { Response } from 'supertest';
 import { ObjectId } from 'mongodb';
-import { IsoDateTimeStamp, PortalUser, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { IsoDateTimeStamp, PENDING_RECONCILIATION, PortalUser, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { GetUtilisationReportResponse } from '../../../src/types/utilisation-reports';
@@ -51,7 +51,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it('gets a utilisation report', async () => {
     // Arrange
-    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withUploadedByUserId(portalUserId).build();
+    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withUploadedByUserId(portalUserId).build();
     const { id } = await SqlDbHelper.saveNewEntry('UtilisationReport', uploadedReport);
 
     // Act

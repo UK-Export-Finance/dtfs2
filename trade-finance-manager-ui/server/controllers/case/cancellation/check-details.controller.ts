@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, FLASH_TYPES } from '@ukef/dtfs2-common';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { asUserSession } from '../../../helpers/express-session';
 import { canSubmissionTypeBeCancelled, isDealCancellationInDraft } from '../../helpers/deal-cancellation-enabled.helper';
@@ -79,8 +79,12 @@ export const postDealCancellationDetails = async (req: PostDealCancellationDetai
     await api.submitDealCancellation(_id, { reason, bankRequestDate, effectiveFrom }, userToken);
 
     const { ukefDealId } = deal.dealSnapshot.details;
+    const now = new Date();
+    const effectiveFromDateIsNowOrInPast = new Date(effectiveFrom) <= now;
 
-    req.flash('successMessage', `Deal ${ukefDealId} cancelled`);
+    if (effectiveFromDateIsNowOrInPast) {
+      req.flash(FLASH_TYPES.SUCCESS_MESSAGE, `Deal ${ukefDealId} cancelled`);
+    }
 
     return res.redirect(`/case/${_id}/deal`);
   } catch (error) {

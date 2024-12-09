@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth, isFeeRecordCorrectionFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
@@ -62,11 +62,12 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       matchSuccess,
     } = req.query;
 
-    const { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds } = req.session;
+    const { addPaymentErrorKey, generateKeyingDataErrorKey, initiateRecordCorrectionRequestErrorKey, checkedCheckboxIds } = req.session;
 
     delete req.session.addPaymentErrorKey;
     delete req.session.checkedCheckboxIds;
     delete req.session.generateKeyingDataErrorKey;
+    delete req.session.initiateRecordCorrectionRequestErrorKey;
 
     const {
       premiumPaymentsFilters,
@@ -78,7 +79,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       isCheckboxChecked,
     } = extractQueryAndSessionData(
       { premiumPaymentsFacilityId, paymentDetailsFacilityId, paymentDetailsPaymentReference, paymentDetailsPaymentCurrency, selectedFeeRecordIdsQuery },
-      { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds },
+      { addPaymentErrorKey, generateKeyingDataErrorKey, initiateRecordCorrectionRequestErrorKey, checkedCheckboxIds },
       req.originalUrl,
     );
 
@@ -129,6 +130,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       paymentDetails: paymentDetailsViewModel,
       utilisationDetails: utilisationDetailsViewModel,
       keyingSheet: keyingSheetViewModel,
+      isFeeRecordCorrectionFeatureFlagEnabled: isFeeRecordCorrectionFeatureFlagEnabled(),
     });
   } catch (error) {
     console.error(`Failed to render utilisation report with id ${reportId}`, error);

@@ -1,10 +1,9 @@
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const pages = require('../../pages');
 const partials = require('../../partials');
 const relative = require('../../relativeURL');
-const MOCK_USERS = require('../../../../../e2e-fixtures');
+const { ADMIN, BANK1_MAKER1 } = require('../../../../../e2e-fixtures');
 const { today } = require('../../../../../e2e-fixtures/dateConstants');
-
-const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 const now = today.unixMilliseconds;
 
@@ -14,7 +13,7 @@ const MOCK_DEAL = {
   status: 'Draft',
   submissionDetails: {
     supplyContractCurrency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
   },
   mockFacilities: [
@@ -22,7 +21,7 @@ const MOCK_DEAL = {
       type: 'Bond',
       createdDate: now,
       bondIssuer: 'test',
-      bondType: 'Bid bond',
+      bondType: BOND_TYPE.BID_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -38,14 +37,14 @@ const MOCK_DEAL = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
     {
       type: 'Bond',
       createdDate: now,
       bondIssuer: 'test',
-      bondType: 'Bid bond',
+      bondType: BOND_TYPE.BID_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -61,14 +60,14 @@ const MOCK_DEAL = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
     {
       type: 'Bond',
       createdDate: now,
       bondIssuer: 'test',
-      bondType: 'Bid bond',
+      bondType: BOND_TYPE.BID_BOND,
       facilityStage: 'Unissued',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -84,7 +83,7 @@ const MOCK_DEAL = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
   ],

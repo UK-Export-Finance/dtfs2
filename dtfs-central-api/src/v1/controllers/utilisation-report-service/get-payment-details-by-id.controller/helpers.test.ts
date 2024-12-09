@@ -1,9 +1,11 @@
 import {
   Currency,
   CurrencyAndAmount,
+  CURRENCY,
   FeeRecordEntityMockBuilder,
   PaymentEntity,
   PaymentEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
   ReportPeriod,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -19,9 +21,9 @@ describe('get-payment.controller helpers', () => {
   describe('mapToPaymentDetails', () => {
     const bankId = '123';
 
-    const paymentCurrency: Currency = 'GBP';
+    const paymentCurrency: Currency = CURRENCY.GBP;
 
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withBankId(bankId).build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withBankId(bankId).build();
     const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).build();
 
     const aPayment = (): PaymentEntity => PaymentEntityMockBuilder.forCurrency(paymentCurrency).withFeeRecords([feeRecord]).build();

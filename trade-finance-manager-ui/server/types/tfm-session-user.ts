@@ -1,4 +1,4 @@
-import { TeamId, UnixTimestamp } from '@ukef/dtfs2-common';
+import { TeamId, UnixTimestampMilliseconds } from '@ukef/dtfs2-common';
 
 export type TfmSessionUser = {
   _id: string;
@@ -9,5 +9,5 @@ export type TfmSessionUser = {
   firstName: string;
   lastName: string;
   status: string;
-  lastLogin: UnixTimestamp;
+  lastLogin: UnixTimestampMilliseconds;
 };

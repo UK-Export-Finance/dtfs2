@@ -1,3 +1,4 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const pages = require('../../pages');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const fillLoanForm = require('./fill-loan-forms');
@@ -10,7 +11,7 @@ const MOCK_DEAL = {
   additionalRefName: 'someDealName',
   submissionDetails: {
     supplyContractCurrency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
     },
   },
 };

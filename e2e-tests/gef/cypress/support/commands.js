@@ -1,4 +1,5 @@
 import * as api from './commands/api';
+import { createApplicationAndSetStatus } from './commands/createApplicationAndSetStatus';
 
 import './commands/click-events';
 
@@ -17,6 +18,7 @@ Cypress.Commands.add(
 Cypress.Commands.add('getUserByUsername', require('./commands/portal/getUserByUsername'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./commands/portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('enterUsernameAndPassword', require('./commands/portal/enterUsernameAndPassword'));
+Cypress.Commands.add('getDealIdFromUrl', require('./commands/portal/getDealIdFromUrl'));
 
 Cypress.Commands.add('uploadFile', require('./commands/uploadFile'));
 Cypress.Commands.add('insertElement', require('./commands/insertElement'));
@@ -31,6 +33,7 @@ Cypress.Commands.add('apiLogin', api.login);
 Cypress.Commands.add('apiFetchAllApplications', api.fetchAllApplications);
 Cypress.Commands.add('apiFetchAllGefApplications', api.fetchAllGefApplications);
 Cypress.Commands.add('apiFetchAllFacilities', api.fetchAllFacilities);
+Cypress.Commands.add('createApplicationAndSetStatus', createApplicationAndSetStatus);
 Cypress.Commands.add('apiUpdateApplication', api.updateApplication);
 Cypress.Commands.add('apiSetApplicationStatus', api.setApplicationStatus);
 Cypress.Commands.add('apiCreateApplication', api.createApplication);

@@ -3,6 +3,7 @@ import { DbRequestSource, FeeRecordEntity, PaymentEntity, UtilisationReportEntit
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { feeRecordsMatchAttachedPayments } from '../helpers';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../event/utilisation-report.event-type';
 
 type EditPayloadEventPayload = {
   transactionEntityManager: EntityManager;
@@ -14,7 +15,7 @@ type EditPayloadEventPayload = {
   requestSource: DbRequestSource;
 };
 
-export type UtilisationReportEditPaymentEvent = BaseUtilisationReportEvent<'EDIT_PAYMENT', EditPayloadEventPayload>;
+export type UtilisationReportEditPaymentEvent = BaseUtilisationReportEvent<typeof UTILISATION_REPORT_EVENT_TYPE.EDIT_PAYMENT, EditPayloadEventPayload>;
 
 /**
  * Handler for the edit payment event

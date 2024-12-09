@@ -1,7 +1,14 @@
 import { difference } from 'lodash';
-import { Currency, FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, KeyingSheetRowStatus, PaymentEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  Currency,
+  CURRENCY,
+  FEE_RECORD_STATUS,
+  FeeRecordEntityMockBuilder,
+  KeyingSheetRowStatus,
+  PaymentEntityMockBuilder,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments, mapPaymentEntityToKeyingSheetFeePayment } from './keying-sheet-mapping';
-import { aUtilisationReport } from '../../test-helpers';
 
 describe('keying sheet mapping', () => {
   describe('mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments', () => {
@@ -9,7 +16,7 @@ describe('keying sheet mapping', () => {
 
     it.each(INVALID_FEE_RECORD_STATUSES)('throws an error when the fee record entity status is %s', (status) => {
       // Arrange
-      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(status).build();
+      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build()).withStatus(status).build();
 
       // Act / Assert
       expect(() => mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments(feeRecordEntity)).toThrow(Error);
@@ -17,7 +24,9 @@ describe('keying sheet mapping', () => {
 
     it('maps the fee record READY_TO_KEY status to the keying sheet TO_DO status', () => {
       // Arrange
-      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
+      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+        .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
+        .build();
 
       // Act
       const keyingSheetRow = mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments(feeRecordEntity);
@@ -28,7 +37,9 @@ describe('keying sheet mapping', () => {
 
     it('maps the fee record RECONCILED status to the keying sheet DONE status', () => {
       // Arrange
-      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(FEE_RECORD_STATUS.RECONCILED).build();
+      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+        .withStatus(FEE_RECORD_STATUS.RECONCILED)
+        .build();
 
       // Act
       const keyingSheetRow = mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments(feeRecordEntity);
@@ -39,7 +50,7 @@ describe('keying sheet mapping', () => {
 
     it('maps the fee record entity id, facility id, exporter and base currency', () => {
       // Arrange
-      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
+      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
         .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
         .withId(123)
         .withFacilityId('12345678')
@@ -66,7 +77,7 @@ describe('keying sheet mapping', () => {
       'sets the keying sheet row fixedFeeAdjustment to $expectedMappedValue when the fee record entity fixedFeeAdjustment $condition',
       ({ value, expectedMappedValue }) => {
         // Arrange
-        const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
+        const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
           .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
           .withFixedFeeAdjustment(value)
           .build();
@@ -88,7 +99,7 @@ describe('keying sheet mapping', () => {
       'sets the keying sheet row principalBalanceAdjustment to $expectedMappedValue when the fee record entity principalBalanceAdjustment $condition',
       ({ value, expectedMappedValue }) => {
         // Arrange
-        const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
+        const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
           .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
           .withPrincipalBalanceAdjustment(value)
           .build();
@@ -103,7 +114,9 @@ describe('keying sheet mapping', () => {
 
     it('does not set the keying sheet row feePayments field', () => {
       // Arrange
-      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
+      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
+        .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
+        .build();
 
       // Act
       const keyingSheetRow = mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments(feeRecordEntity);
@@ -116,13 +129,13 @@ describe('keying sheet mapping', () => {
   describe('mapPaymentEntityToKeyingSheetFeePayment', () => {
     it('maps the payment entity date received, amount and currency', () => {
       // Arrange
-      const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(123.45).withDateReceived(new Date('2024-05-06')).build();
+      const paymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withAmount(123.45).withDateReceived(new Date('2024-05-06')).build();
 
       // Act
       const feePayment = mapPaymentEntityToKeyingSheetFeePayment(paymentEntity);
 
       // Assert
-      expect(feePayment.currency).toBe<Currency>('GBP');
+      expect(feePayment.currency).toBe<Currency>(CURRENCY.GBP);
       expect(feePayment.amount).toEqual(123.45);
       expect(feePayment.dateReceived).toEqual(new Date('2024-05-06'));
     });

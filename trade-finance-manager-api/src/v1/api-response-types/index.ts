@@ -8,3 +8,5 @@ export * from './fee-records-to-key-response-body';
 export * from './selected-reported-fees-details-response';
 export * from './payment-details-response-body';
 export * from './add-payment-response-body';
+export * from './fee-record-response-body';
+export * from './fee-record-correction-request-review-response-body';

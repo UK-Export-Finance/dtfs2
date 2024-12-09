@@ -105,6 +105,7 @@ export const getSelectedFeeRecordsAvailablePaymentGroups = async (
  * @param reportPeriod - The report period
  * @param selectedFeeRecordEntities - The selected fee record entities
  * @param canAddToExistingPayment - Whether fee records can be added to existing payment
+ * @param gbpTolerance - The GBP tolerance
  * @returns The mapped selected fee records details
  */
 export const mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups = async (
@@ -112,6 +113,7 @@ export const mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups = async 
   reportPeriod: ReportPeriod,
   selectedFeeRecordEntities: FeeRecordEntity[],
   canAddToExistingPayment: boolean,
+  gbpTolerance: number,
 ): Promise<SelectedFeeRecordsDetails> => {
   const bankName = await getBankNameById(bankId);
   if (!bankName) {
@@ -130,5 +132,6 @@ export const mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups = async 
     feeRecords: selectedFeeRecordDetails,
     payments: recordedPaymentDetails,
     canAddToExistingPayment,
+    gbpTolerance,
   };
 };

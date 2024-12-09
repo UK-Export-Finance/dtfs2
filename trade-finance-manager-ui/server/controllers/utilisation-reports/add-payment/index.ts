@@ -18,9 +18,9 @@ import {
   extractAddPaymentFormValuesAndValidateIfPresent,
   EMPTY_ADD_PAYMENT_FORM_VALUES,
   mapToSelectedReportedFeesDetailsViewModel,
+  getLinkToPremiumPaymentsTab,
 } from '../helpers';
 import { SelectedFeeRecordsPaymentDetailsResponse } from '../../../api-response-types';
-import { getLinkToPremiumPaymentsTab } from '../add-to-an-existing-payment/get-link-to-premium-payments-tab';
 
 export type AddPaymentRequest = CustomExpressRequest<{
   reqBody: AddPaymentFormRequestBody;
@@ -84,6 +84,7 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
       multipleFeeRecordsSelected: selectedFeeRecordDetails.feeRecords.length > 1,
       canAddToExistingPayment: selectedFeeRecordDetails.canAddToExistingPayment,
       backLinkHref: getLinkToPremiumPaymentsTab(reportId, feeRecordIds),
+      gbpTolerance: selectedFeeRecordDetails.gbpTolerance,
     });
   } catch (error) {
     console.error('Failed to add payment', error);

@@ -4,12 +4,13 @@ import { SelectedFeeRecordsDetails } from '@ukef/dtfs2-common';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { NotFoundError, ApiError, InvalidPayloadError } from '../../../../errors';
-import { validateSelectedFeeRecordsAllHaveSamePaymentCurrency } from '../../../validation/utilisation-report-service/selected-fee-record-validator';
+import { validateFeeRecordsAllHaveSamePaymentCurrency } from '../../../validation/utilisation-report-service/fee-record-validator';
 import {
   canFeeRecordsBeAddedToExistingPayment,
   getSelectedFeeRecordsAvailablePaymentGroups,
   mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups,
 } from './helpers';
+import { PaymentMatchingToleranceService } from '../../../../services/payment-matching-tolerance/payment-matching-tolerance.service';
 
 type GetSelectedFeeRecordDetailsRequestBody = {
   feeRecordIds: number[];
@@ -54,15 +55,18 @@ export const getSelectedFeeRecordDetails = async (req: GetSelectedFeeRecordDetai
       throw new InvalidPayloadError('All selected fee records must belong to the requested report');
     }
 
-    validateSelectedFeeRecordsAllHaveSamePaymentCurrency(selectedFeeRecords);
+    validateFeeRecordsAllHaveSamePaymentCurrency(selectedFeeRecords);
 
     const canAddToExistingPayment = await canFeeRecordsBeAddedToExistingPayment(reportId, selectedFeeRecords);
+
+    const gbpTolerance = await PaymentMatchingToleranceService.getGbpPaymentMatchingTolerance();
 
     const selectedFeeRecordsDetails = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(
       utilisationReport.bankId,
       utilisationReport.reportPeriod,
       selectedFeeRecords,
       canAddToExistingPayment,
+      gbpTolerance,
     );
 
     if (includeAvailablePaymentGroups === 'true') {

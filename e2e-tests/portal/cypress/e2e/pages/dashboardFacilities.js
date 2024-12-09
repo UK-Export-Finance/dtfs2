@@ -57,14 +57,18 @@ const page = {
             checkbox: () => cy.get('[data-cy="filter-input-Manual-Inclusion-Notice"]'),
           },
         },
-        hasBeenIssued: {
+        stage: {
           issued: {
-            label: () => cy.get('[data-cy="filter-label-true"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-true"]'),
+            label: () => cy.get('[data-cy="filter-label-Issued"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Issued"]'),
           },
           unissued: {
-            label: () => cy.get('[data-cy="filter-label-false"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-false"]'),
+            label: () => cy.get('[data-cy="filter-label-Unissued"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Unissued"]'),
+          },
+          riskExpired: {
+            label: () => cy.get('[data-cy="filter-label-Risk-expired"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Risk-expired"]'),
           },
         },
       },
@@ -79,6 +83,7 @@ const page = {
         typeLoan: () => cy.get('[data-cy="main-container-selected-filter-Loan'),
         typeIssued: () => cy.get('[data-cy="main-container-selected-filter-Issued'),
         typeUnissued: () => cy.get('[data-cy="main-container-selected-filter-Unissued'),
+        typeRiskExpired: () => cy.get('[data-cy="main-container-selected-filter-Risk-expired'),
       },
     },
   },

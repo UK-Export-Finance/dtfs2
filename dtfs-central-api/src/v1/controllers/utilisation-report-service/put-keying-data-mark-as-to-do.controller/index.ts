@@ -1,11 +1,12 @@
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { ApiError } from '@ukef/dtfs2-common';
+import { ApiError, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { PutKeyingDataMarkAsPayload } from '../../../routes/middleware/payload-validation';
 import { getSelectedFeeRecordsAndUtilisationReportForKeyingDataMarkAs } from '../helpers';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 
 export type PutKeyingDataMarkToDoRequest = CustomExpressRequest<{
   reqBody: PutKeyingDataMarkAsPayload;
@@ -25,12 +26,12 @@ export const putKeyingDataMarkAsToDo = async (req: PutKeyingDataMarkToDoRequest,
     await executeWithSqlTransaction(
       async (transactionEntityManager) =>
         await utilisationReportStateMachine.handleEvent({
-          type: 'MARK_FEE_RECORDS_AS_READY_TO_KEY',
+          type: UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_READY_TO_KEY,
           payload: {
             transactionEntityManager,
             feeRecordsToMarkAsReadyToKey: selectedFeeRecords,
             requestSource: {
-              platform: 'TFM',
+              platform: REQUEST_PLATFORM_TYPE.TFM,
               userId: user._id.toString(),
             },
           },

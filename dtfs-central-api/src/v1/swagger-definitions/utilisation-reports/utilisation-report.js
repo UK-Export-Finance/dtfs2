@@ -60,7 +60,7 @@
  *           name:
  *             type: string
  *             example: 'UKEF test bank (Delegated)'
- *   UtilisationReportReconciliationStatus:
+ *   UtilisationReportStatus:
  *     type: string
  *     enum:
  *       - REPORT_NOT_RECEIVED
@@ -72,7 +72,7 @@
  *     type: object
  *     properties:
  *       status:
- *         $ref: '#/definitions/UtilisationReportReconciliationStatus'
+ *         $ref: '#/definitions/UtilisationReportStatus'
  *       report:
  *         type: object
  *         properties:

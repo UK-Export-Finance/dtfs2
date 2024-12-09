@@ -4,8 +4,6 @@
 {% import '../../amendments/_macros/amendment-ukef-decision-summary.njk' as summaryDetails %}
 
 {% macro render(params) %}
-  {% set amendmentVersion = params.amendmentVersion %}
-  {% set showContinueAmendmentButton = params.showContinueAmendmentButton %}
   {% set allAmendments = params.allAmendments %}
 
   {% for amendment in allAmendments %}

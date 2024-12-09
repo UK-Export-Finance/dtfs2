@@ -66,17 +66,6 @@ export const FEE_FREQUENCY = {
   ANNUALLY: 'Annually',
 };
 
-export const BSS_FACILITY_TYPE = {
-  ADVANCE_PAYMENT_GUARANTEE: 'Advance payment guarantee',
-  BID_BOND: 'Bid bond',
-  MAINTENANCE_BOND: 'Maintenance bond',
-  PERFORMANCE_BOND: 'Performance bond',
-  PROGRESS_PAYMENT_BOND: 'Progress payment bond',
-  RETENTION_BOND: 'Retention bond',
-  STANDBY_LETTER_OF_CREDIT: 'Standby letter of credit',
-  WARRANTY_LETTER: 'Warranty letter',
-};
-
 export const DAY_COUNT_BASIS = {
   360: '360',
   365: '365',
@@ -134,4 +123,5 @@ export const NODE_TASKS = {
   DELETE_ALL_FROM_SQL_DB: 'deleteAllFromSqlDb',
   INSERT_TFM_FACILITIES_INTO_DB: 'insertManyTfmFacilities',
   DELETE_ALL_TFM_FACILITIES_FROM_DB: 'deleteAllTfmFacilities',
+  REMOVE_ALL_FEE_RECORD_CORRECTION_TRANSIENT_FORM_DATA_FROM_DB: 'removeAllFeeRecordCorrectionTransientFormDataFromDb',
 };

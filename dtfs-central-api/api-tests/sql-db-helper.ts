@@ -1,6 +1,8 @@
 import {
   AzureFileInfoEntity,
   FacilityUtilisationDataEntity,
+  FeeRecordCorrectionEntity,
+  FeeRecordCorrectionTransientFormDataEntity,
   FeeRecordEntity,
   PaymentEntity,
   PaymentMatchingToleranceEntity,
@@ -9,7 +11,15 @@ import {
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { aListOfZeroThresholdActivePaymentMatchingTolerances } from '../test-helpers';
 
-type SqlTableName = 'UtilisationReport' | 'FeeRecord' | 'AzureFileInfo' | 'Payment' | 'FacilityUtilisationData' | 'PaymentMatchingTolerance';
+type SqlTableName =
+  | 'UtilisationReport'
+  | 'FeeRecord'
+  | 'AzureFileInfo'
+  | 'Payment'
+  | 'FacilityUtilisationData'
+  | 'PaymentMatchingTolerance'
+  | 'FeeRecordCorrectionTransientFormData'
+  | 'FeeRecordCorrection';
 
 const deleteAllEntries = async (tableName: SqlTableName): Promise<void> => {
   switch (tableName) {
@@ -31,6 +41,12 @@ const deleteAllEntries = async (tableName: SqlTableName): Promise<void> => {
     case 'PaymentMatchingTolerance':
       await SqlDbDataSource.manager.delete(PaymentMatchingToleranceEntity, {});
       return;
+    case 'FeeRecordCorrection':
+      await SqlDbDataSource.manager.delete(FeeRecordCorrectionEntity, {});
+      return;
+    case 'FeeRecordCorrectionTransientFormData':
+      await SqlDbDataSource.manager.delete(FeeRecordCorrectionTransientFormDataEntity, {});
+      return;
     default:
       throw new Error(`Cannot delete all entries from table: no entity found for table name '${tableName}'`);
   }
@@ -43,6 +59,8 @@ const deleteAll = async (): Promise<void> => {
   await deleteAllEntries('AzureFileInfo');
   await deleteAllEntries('FacilityUtilisationData');
   await deleteAllEntries('PaymentMatchingTolerance');
+  await deleteAllEntries('FeeRecordCorrectionTransientFormData');
+  await deleteAllEntries('FeeRecordCorrection');
 };
 
 type Entity<TableName extends SqlTableName> = TableName extends 'UtilisationReport'
@@ -57,6 +75,10 @@ type Entity<TableName extends SqlTableName> = TableName extends 'UtilisationRepo
   ? FacilityUtilisationDataEntity
   : TableName extends 'PaymentMatchingTolerance'
   ? PaymentMatchingToleranceEntity
+  : TableName extends 'FeeRecordCorrection'
+  ? FeeRecordCorrectionEntity
+  : TableName extends 'FeeRecordCorrectionTransientFormData'
+  ? FeeRecordCorrectionTransientFormDataEntity
   : never;
 
 const saveFacilityUtilisationDataIfNotExists = async (facilityUtilisationData: FacilityUtilisationDataEntity): Promise<void> => {
@@ -82,6 +104,13 @@ const saveNewEntry = async <TableName extends SqlTableName>(tableName: TableName
       return (await SqlDbDataSource.manager.save(FacilityUtilisationDataEntity, entityToInsert as FacilityUtilisationDataEntity)) as Entity<TableName>;
     case 'PaymentMatchingTolerance':
       return (await SqlDbDataSource.manager.save(PaymentMatchingToleranceEntity, entityToInsert as PaymentMatchingToleranceEntity)) as Entity<TableName>;
+    case 'FeeRecordCorrection':
+      return (await SqlDbDataSource.manager.save(FeeRecordCorrectionEntity, entityToInsert as FeeRecordCorrectionEntity)) as Entity<TableName>;
+    case 'FeeRecordCorrectionTransientFormData':
+      return (await SqlDbDataSource.manager.save(
+        FeeRecordCorrectionTransientFormDataEntity,
+        entityToInsert as FeeRecordCorrectionTransientFormDataEntity,
+      )) as Entity<TableName>;
     default:
       throw new Error(`Cannot save new entry to table: no entity found for table name '${tableName}'`);
   }
@@ -104,6 +133,13 @@ const saveNewEntries = async <TableName extends SqlTableName>(tableName: TableNa
       return (await SqlDbDataSource.manager.save(FacilityUtilisationDataEntity, entitiesToInsert as FacilityUtilisationDataEntity[])) as Entity<TableName>[];
     case 'PaymentMatchingTolerance':
       return (await SqlDbDataSource.manager.save(PaymentMatchingToleranceEntity, entitiesToInsert as PaymentMatchingToleranceEntity[])) as Entity<TableName>[];
+    case 'FeeRecordCorrection':
+      return (await SqlDbDataSource.manager.save(FeeRecordCorrectionEntity, entitiesToInsert as FeeRecordCorrectionEntity[])) as Entity<TableName>[];
+    case 'FeeRecordCorrectionTransientFormData':
+      return (await SqlDbDataSource.manager.save(
+        FeeRecordCorrectionTransientFormDataEntity,
+        entitiesToInsert as FeeRecordCorrectionTransientFormDataEntity[],
+      )) as Entity<TableName>[];
     default:
       throw new Error(`Cannot save entries to table: no entity found for table name '${tableName}'`);
   }

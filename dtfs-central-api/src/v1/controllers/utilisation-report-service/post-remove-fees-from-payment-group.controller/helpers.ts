@@ -1,4 +1,5 @@
-import { FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { FeeRecordEntity, REQUEST_PLATFORM_TYPE, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
@@ -13,13 +14,13 @@ export const removeFeesFromPaymentGroup = async (
 
   await executeWithSqlTransaction(async (transactionEntityManager) => {
     await utilisationReportStateMachine.handleEvent({
-      type: 'REMOVE_FEES_FROM_PAYMENT_GROUP',
+      type: UTILISATION_REPORT_EVENT_TYPE.REMOVE_FEES_FROM_PAYMENT_GROUP,
       payload: {
         transactionEntityManager,
         feeRecordsToRemove,
         otherFeeRecordsInGroup,
         requestSource: {
-          platform: 'TFM',
+          platform: REQUEST_PLATFORM_TYPE.TFM,
           userId: user._id.toString(),
         },
       },

@@ -10,6 +10,14 @@ const {
 const { ObjectId } = require('mongodb');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 
+/**
+ *
+ * @param updateFacilityParams
+ * @param {ObjectId | string} updateFacilityParams.facilityId
+ * @param {Partial<import('@ukef/dtfs2-common').Facility} updateFacilityParams.facilityUpdate
+ * @param {import('@ukef/dtfs2-common').AuditDetails} updateFacilityParams.auditDetails
+ * @returns
+ */
 const updateFacility = async ({ facilityId, facilityUpdate, auditDetails }) => {
   if (!ObjectId.isValid(facilityId)) {
     throw new InvalidFacilityIdError(facilityId);

@@ -29,7 +29,7 @@ const configureNunjucks = (opts) => {
   const { CONTACT_US_SELF_SERVICE_PORTAL_URL, CONTACT_US_EMAIL_ADDRESS } = process.env;
 
   const appViews = [
-    path.resolve(__dirname, '../../../node_modules/govuk-frontend'),
+    path.resolve(__dirname, '../../../node_modules/govuk-frontend/dist'),
     path.resolve(__dirname, '../../../node_modules/@ministryofjustice/frontend'),
     path.resolve(__dirname, '../../../node_modules/@ministryofjustice/frontend/filters/all'),
     path.resolve(__dirname, '../../templates'),
@@ -56,6 +56,8 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('sentence', sentenceCase);
   nunjucksEnvironment.addFilter('userIsInTeam', (user, teamIdList) => userIsInTeam(user, teamIdList));
   nunjucksEnvironment.addFilter('userIsOnlyInTeams', (user, teamIdList) => userIsOnlyInTeams(user, teamIdList));
+  nunjucksEnvironment.addFilter('removeCommasAndFloat', (value) => parseFloat(value.replace(/,/g, '')));
+  nunjucksEnvironment.addFilter('formatPageTitle', (title, hasErrors) => (hasErrors ? `Error - ${title}` : title));
 
   mojFilters = Object.assign(mojFilters);
   Object.keys(mojFilters).forEach((filterName) => {

@@ -13,10 +13,10 @@ import {
   extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent,
   mapToSelectedReportedFeesDetailsViewModel,
   PremiumPaymentsTableCheckboxSelectionsRequestBody,
+  getLinkToPremiumPaymentsTab,
 } from '../helpers';
 import { mapToPaymentGroupInputsViewModel } from '../helpers/available-payment-group-view-model-mapper';
 import { getPaymentsHeading } from '../helpers/add-to-an-existing-payment-helper';
-import { getLinkToPremiumPaymentsTab } from './get-link-to-premium-payments-tab';
 
 type AddToAnExistingPaymentRequest = CustomExpressRequest<{
   reqBody: PremiumPaymentsTableCheckboxSelectionsRequestBody;

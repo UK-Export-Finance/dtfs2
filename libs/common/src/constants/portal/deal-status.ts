@@ -15,4 +15,6 @@ export const DEAL_STATUS = {
   COMPLETED: 'Completed',
   EXPIRED: 'Expired',
   WITHDRAWN: 'Withdrawn',
+  CANCELLED: 'Cancelled',
+  PENDING_CANCELLATION: 'Pending cancellation',
 } as const;

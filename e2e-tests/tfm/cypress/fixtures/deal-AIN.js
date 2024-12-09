@@ -1,5 +1,6 @@
+const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('./constants');
-const { BANK1_MAKER1 } = require('../../../e2e-fixtures/portal-users.fixture');
+const { BANK1_MAKER1 } = require('../../../e2e-fixtures');
 const { twoYearsAgo, oneMonth } = require('../../../e2e-fixtures/dateConstants');
 
 const MOCK_DEAL = {
@@ -103,7 +104,7 @@ const MOCK_DEAL = {
     'supplyContractConversionDate-year': '',
     supplyContractConversionRateToGBP: '',
     supplyContractCurrency: {
-      id: 'GBP',
+      id: CURRENCY.GBP,
       text: 'GBP - UK Sterling',
     },
     supplyContractValue: '1234.00',
@@ -180,7 +181,7 @@ const MOCK_DEAL = {
     {
       type: CONSTANTS.FACILITY_TYPE.BOND,
       bondIssuer: 'Issuer',
-      bondType: 'Advance payment guarantee',
+      bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
       facilityStage: 'Issued',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '10',
@@ -197,7 +198,7 @@ const MOCK_DEAL = {
       dayCountBasis: '365',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
       'coverEndDate-day': oneMonth.dayLong,
       'coverEndDate-month': oneMonth.monthLong,
@@ -240,7 +241,7 @@ const MOCK_DEAL = {
       status: 'Acknowledged',
       currency: {
         text: 'GBP - UK Sterling',
-        id: 'GBP',
+        id: CURRENCY.GBP,
       },
     },
   ],

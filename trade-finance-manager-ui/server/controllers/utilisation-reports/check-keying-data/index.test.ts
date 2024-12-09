@@ -1,11 +1,12 @@
 import httpMocks from 'node-mocks-http';
-import { FEE_RECORD_STATUS, SessionBank } from '@ukef/dtfs2-common';
+import { CURRENCY, FEE_RECORD_STATUS, SessionBank } from '@ukef/dtfs2-common';
 import { postCheckKeyingData } from '.';
 import { aTfmSessionUser } from '../../../../test-helpers/test-data/tfm-session-user';
 import api from '../../../api';
 import { CheckKeyingDataViewModel, FeeRecordToKeyViewModelItem } from '../../../types/view-models';
 import { aFeeRecordsToKeyResponseBody } from '../../../../test-helpers';
 import { FeeRecordToKey, FeeRecordsToKeyResponseBody } from '../../../api-response-types';
+import { GENERATE_KEYING_DATA_ERROR_KEY } from '../../../constants/premium-payment-tab-error-keys';
 
 console.error = jest.fn();
 
@@ -59,7 +60,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
         await postCheckKeyingData(req, res);
 
         // Assert
-        expect(req.session.generateKeyingDataErrorKey).toEqual('no-matching-fee-records');
+        expect(req.session.generateKeyingDataErrorKey).toEqual(GENERATE_KEYING_DATA_ERROR_KEY.NO_MATCHING_FEE_RECORDS);
       });
 
       it("redirects to '/utilisation-reports/:reportId'", async () => {
@@ -85,8 +86,8 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
         facilityId: '12345678',
         exporter: 'Test exporter',
         reportedFees: { currency: 'EUR', amount: 100 },
-        reportedPayments: { currency: 'GBP', amount: 90.91 },
-        paymentsReceived: [{ currency: 'GBP', amount: 90.91 }],
+        reportedPayments: { currency: CURRENCY.GBP, amount: 90.91 },
+        paymentsReceived: [{ currency: CURRENCY.GBP, amount: 90.91 }],
         status: FEE_RECORD_STATUS.MATCH,
       });
 
@@ -177,8 +178,8 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
               facilityId: '12345678',
               exporter: 'Test exporter',
               reportedFees: { currency: 'EUR', amount: 100 },
-              reportedPayments: { currency: 'GBP', amount: 90.91 },
-              paymentsReceived: [{ currency: 'GBP', amount: 90.91 }],
+              reportedPayments: { currency: CURRENCY.GBP, amount: 90.91 },
+              paymentsReceived: [{ currency: CURRENCY.GBP, amount: 90.91 }],
               status: FEE_RECORD_STATUS.MATCH,
             },
           ],
@@ -205,7 +206,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
           },
           paymentsReceived: ['GBP 90.91'],
           status: FEE_RECORD_STATUS.MATCH,
-          displayStatus: 'MATCH',
+          displayStatus: 'Match',
         });
       });
 

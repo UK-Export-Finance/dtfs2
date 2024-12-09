@@ -7,3 +7,5 @@ export * from './fee-records-to-key-response-body';
 export * from './get-payment-details-response-body';
 export * from './bank-with-reporting-years-response-body';
 export * from './add-payment-response-body';
+export * from './get-fee-record-response-body';
+export * from './fee-record-correction-request-review-response-body';

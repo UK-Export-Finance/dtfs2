@@ -12,6 +12,7 @@ const page = {
     type: (id) => cy.get(`[data-cy="deal__submissionType--${id}"]`),
     updated: (id) => cy.get(`[data-cy="deal__updated--${id}"]`),
   },
+  paginationNav: () => cy.get('[data-cy="pagination"] nav'),
   first: () => cy.get('[data-cy="First"]'),
   previous: () => cy.get('[data-cy="Previous"]'),
   next: () => cy.get('[data-cy="Next"]'),
@@ -89,6 +90,10 @@ const page = {
             label: () => cy.get('[data-cy="filter-label-Rejected-by-UKEF"]'),
             checkbox: () => cy.get('[data-cy="filter-input-Rejected-by-UKEF"]'),
           },
+          cancelled: {
+            label: () => cy.get('[data-cy="filter-label-Cancelled"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Cancelled"]'),
+          },
           abandoned: {
             label: () => cy.get('[data-cy="filter-label-Abandoned"]'),
             checkbox: () => cy.get('[data-cy="filter-input-Abandoned"]'),
@@ -106,6 +111,7 @@ const page = {
         productGEF: () => cy.get('[data-cy="main-container-selected-filter-GEF'),
 
         statusDraft: () => cy.get('[data-cy="main-container-selected-filter-Draft'),
+        statusCancelled: () => cy.get('[data-cy="main-container-selected-filter-Cancelled'),
         statusReadyForChecker: () => cy.get('[data-cy="main-container-selected-filter-Ready-for-Checkers-approval'),
         statusAll: () => cy.get('[data-cy="main-container-selected-filter-All-statuses'),
       },

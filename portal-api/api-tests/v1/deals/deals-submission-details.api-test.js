@@ -1,3 +1,5 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
+
 const databaseHelper = require('../../database-helper');
 const aDeal = require('./deal-builder');
 
@@ -194,14 +196,14 @@ describe('/v1/deals/:id/submission-details', () => {
         const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
         const createdDeal = postResult.body;
         const submissionDetails = {
-          supplyContractCurrency: { id: 'GBP' },
+          supplyContractCurrency: { id: CURRENCY.GBP },
         };
 
         const { body, status } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
         expect(status).toEqual(200);
         expect(body.data.supplyContractCurrency).toEqual({
           currencyId: 12,
-          id: 'GBP',
+          id: CURRENCY.GBP,
           text: 'GBP - UK Sterling',
         });
 

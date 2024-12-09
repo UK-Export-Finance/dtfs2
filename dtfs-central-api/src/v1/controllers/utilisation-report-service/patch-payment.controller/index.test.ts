@@ -1,13 +1,21 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { EntityManager } from 'typeorm';
-import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  CURRENCY,
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS,
+  REQUEST_PLATFORM_TYPE,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { patchPayment } from '.';
 import { PatchPaymentPayload } from '../../../routes/middleware/payload-validation';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { PaymentRepo } from '../../../../repositories/payment-repo';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 
 jest.mock('../../../../helpers');
 
@@ -24,14 +32,14 @@ describe('patch-payment.controller', () => {
         body: aPatchPaymentRequestBody(),
       });
 
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
 
     const feeRecords = [
       FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build(),
       FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).build(),
     ];
 
-    const payment = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).withFeeRecords(feeRecords).build();
+    const payment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(paymentId).withFeeRecords(feeRecords).build();
 
     const paymentRepoFindSpy = jest.spyOn(PaymentRepo, 'findOneByIdWithFeeRecordsAndReportFilteredById');
     const utilisationReportStateMachineConstructorSpy = jest.spyOn(UtilisationReportStateMachine, 'forReport');
@@ -107,7 +115,7 @@ describe('patch-payment.controller', () => {
       // Assert
       expect(utilisationReportStateMachineConstructorSpy).toHaveBeenCalledWith(utilisationReport);
       expect(mockEventHandler).toHaveBeenCalledWith({
-        type: 'EDIT_PAYMENT',
+        type: UTILISATION_REPORT_EVENT_TYPE.EDIT_PAYMENT,
         payload: {
           transactionEntityManager: mockEntityManager,
           payment,
@@ -116,7 +124,7 @@ describe('patch-payment.controller', () => {
           datePaymentReceived,
           paymentReference,
           requestSource: {
-            platform: 'TFM',
+            platform: REQUEST_PLATFORM_TYPE.TFM,
             userId,
           },
         },

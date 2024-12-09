@@ -5,28 +5,28 @@ import { EntraIdService } from './entra-id.service';
 import { EntraIdApi } from '../third-party-apis/entra-id.api';
 
 jest.mock('@azure/msal-node', () => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return {
     ...jest.requireActual('@azure/msal-node'),
     ConfidentialClientApplication: jest.fn(),
-  };
+  } as unknown as typeof import('@azure/msal-node');
 });
 
 describe('EntraIdService', () => {
   describe('getAuthCodeUrl', () => {
     let entraIdConfig: EntraIdConfig;
     let entraIdApi: EntraIdApi;
+    let base64EncodeSpy: jest.SpyInstance;
 
     const mockScope = ['a-scope'];
     const mockGuid = 'mock-guid';
     const mockBase64EncodedState = 'mock-base64-encoded-state';
     const mockAuthorityMetaDataUrl = 'mock-authority-metadata-url';
-    const authCodeUrlFromMsalApp = 'mocked-auth-code-url-from-msal-app';
-    const mockRedirectUri = 'a-redirect-uri';
+    const authCodeUrlFromMsalApp = 'mock-auth-code-url-from-msal-app';
+    const mockRedirectUri = 'mock-redirect-uri';
 
     beforeEach(() => {
       jest.spyOn(CryptoProvider.prototype, 'createNewGuid').mockReturnValue(mockGuid);
-      jest.spyOn(CryptoProvider.prototype, 'base64Encode').mockReturnValue(mockBase64EncodedState);
+      base64EncodeSpy = jest.spyOn(CryptoProvider.prototype, 'base64Encode').mockReturnValue(mockBase64EncodedState);
 
       jest.mocked(ConfidentialClientApplication).mockImplementation(() => {
         return {
@@ -55,8 +55,7 @@ describe('EntraIdService', () => {
       await service.getAuthCodeUrl({ successRedirect });
 
       // Assert
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(CryptoProvider.prototype.base64Encode).toHaveBeenCalledWith(JSON.stringify({ csrfToken: mockGuid, successRedirect }));
+      expect(base64EncodeSpy).toHaveBeenCalledWith(JSON.stringify({ csrfToken: mockGuid, successRedirect }));
     });
 
     it('returns the auth code url from the msal app', async () => {
@@ -80,7 +79,7 @@ describe('EntraIdService', () => {
       // Assert
       expect(authCodeUrlRequest).toEqual({
         scopes: mockScope,
-        redirectUri: 'a-redirect-uri',
+        redirectUri: mockRedirectUri,
         responseMode: 'form_post',
         state: mockBase64EncodedState,
       });

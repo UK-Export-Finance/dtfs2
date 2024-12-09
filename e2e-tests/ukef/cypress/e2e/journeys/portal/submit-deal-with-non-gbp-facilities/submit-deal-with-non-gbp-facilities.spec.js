@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import relative from '../../../relativeURL';
 import portalPages from '../../../../../../portal/cypress/e2e/pages';
 import tfmPages from '../../../../../../tfm/cypress/e2e/pages';
@@ -83,7 +84,7 @@ context('Portal to TFM deal submission', () => {
     // deal facilities with non-GBP currency display GBP and non-GBP
     // currency values alongside with an Exchange rate
     //---------------------------------------------------------------
-    const facilityWithNonGBPCurrency = dealFacilities.find((facility) => facility.currency.code !== 'GBP');
+    const facilityWithNonGBPCurrency = dealFacilities.find((facility) => facility.currency.code !== CURRENCY.GBP);
     const facilityId = facilityWithNonGBPCurrency._id;
     const facilityRow = tfmPages.caseDealPage.dealFacilitiesTable.row(facilityId);
 
@@ -113,14 +114,14 @@ context('Portal to TFM deal submission', () => {
       .facilityValueGbp()
       .invoke('text')
       .then((text) => {
-        expect(text.trim()).to.contain('GBP');
+        expect(text.trim()).to.contain(CURRENCY.GBP);
       });
 
     tfmPages.facilityPage
       .facilityMaximumUkefExposure()
       .invoke('text')
       .then((text) => {
-        expect(text.trim()).to.contain('GBP');
+        expect(text.trim()).to.contain(CURRENCY.GBP);
       });
   });
 });

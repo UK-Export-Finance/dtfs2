@@ -1,7 +1,7 @@
 import { ReportPeriodPartialEntity } from '../partial-entities';
 import { DbRequestSourceParam } from '../helpers';
 import { AzureFileInfoEntity } from '../azure-file-info';
-import { UtilisationReportReconciliationStatus } from '../../types';
+import { UtilisationReportStatus } from '../../types';
 import { FeeRecordEntity } from '../fee-record';
 
 export type CreateNotReceivedUtilisationReportEntityParams = DbRequestSourceParam & {
@@ -19,5 +19,5 @@ export type UpdateWithFeeRecordsParams = {
 };
 
 export type UpdateWithStatusParams = DbRequestSourceParam & {
-  status: UtilisationReportReconciliationStatus;
+  status: UtilisationReportStatus;
 };

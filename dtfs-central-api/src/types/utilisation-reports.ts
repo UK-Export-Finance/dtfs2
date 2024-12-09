@@ -1,15 +1,13 @@
 import {
-  ValuesOf,
-  UtilisationReportReconciliationStatus,
   Currency,
   ReportPeriod,
   AzureFileInfo,
   UploadedByUserDetails,
-  UTILISATION_REPORT_HEADERS,
   IsoMonthStamp,
   FeeRecordStatus,
   CurrencyAndAmount,
   FeeRecordUtilisation,
+  UtilisationReportStatus,
 } from '@ukef/dtfs2-common';
 import { FeeRecord, KeyingSheet } from './fee-records';
 import { Payment } from './payments';
@@ -17,7 +15,7 @@ import { Payment } from './payments';
 export type GetUtilisationReportResponse = {
   id: number;
   bankId: string;
-  status: UtilisationReportReconciliationStatus;
+  status: UtilisationReportStatus;
   reportPeriod: ReportPeriod;
 } & (
   | {
@@ -39,7 +37,7 @@ export type UtilisationReportReconciliationSummaryItem = {
     id: string;
     name: string;
   };
-  status: UtilisationReportReconciliationStatus;
+  status: UtilisationReportStatus;
   dateUploaded?: Date;
   totalFacilitiesReported?: number;
   totalFeesReported?: number;
@@ -49,12 +47,6 @@ export type UtilisationReportReconciliationSummaryItem = {
 export type UtilisationReportReconciliationSummary = {
   submissionMonth: IsoMonthStamp;
   items: UtilisationReportReconciliationSummaryItem[];
-};
-
-type UtilisationReportHeader = ValuesOf<typeof UTILISATION_REPORT_HEADERS>;
-
-export type UtilisationReportRawCsvData = {
-  [HeaderKey in UtilisationReportHeader]: HeaderKey extends `${string}currency` ? Currency : string;
 };
 
 export type FeeRecordReconciledByUser = {
@@ -84,7 +76,7 @@ export type UtilisationReportReconciliationDetails = {
     id: string;
     name: string;
   };
-  status: UtilisationReportReconciliationStatus;
+  status: UtilisationReportStatus;
   reportPeriod: ReportPeriod;
   dateUploaded: Date;
   premiumPayments: PremiumPaymentsGroup[];
@@ -115,4 +107,16 @@ export type ReportReconciledEmailVariables = {
 export type ReportReconciledEmail = {
   emails: Array<string>;
   variables: ReportReconciledEmailVariables;
+};
+
+type FeeRecordCorrectionRequestEmailVariables = {
+  recipient: string;
+  reportPeriod: string;
+  exporterName: string;
+  reasonsList: string;
+};
+
+export type FeeRecordCorrectionRequestEmails = {
+  emails: Array<string>;
+  variables: FeeRecordCorrectionRequestEmailVariables;
 };
