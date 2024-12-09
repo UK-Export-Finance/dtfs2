@@ -1,4 +1,5 @@
 import { ObjectId, UpdateFilter, WithoutId, FindOneAndUpdateOptions, Collection, Document, UpdateResult, Filter } from 'mongodb';
+import { flatten } from 'mongo-dot-notation';
 import {
   AuditDetails,
   TfmFacility,
@@ -346,6 +347,38 @@ export class TfmFacilitiesRepo {
 
     if (updateResult.modifiedCount === 0) {
       throw new FacilityNotFoundError(amendment.facilityId.toString());
+    }
+
+    return updateResult;
+  }
+
+  public static async updatePortalFacilityAmendmentByAmendmentId({
+    amendmentId,
+    facilityId,
+    update,
+    auditDetails,
+  }: {
+    update: Partial<PortalFacilityAmendment>;
+    amendmentId: string | ObjectId;
+    facilityId: string | ObjectId;
+    auditDetails: AuditDetails;
+  }): Promise<UpdateResult> {
+    const collection = await this.getCollection();
+
+    const findFilter: Filter<TfmFacility> = {
+      _id: { $eq: new ObjectId(facilityId) },
+      amendments: { $elemMatch: { amendmentId: { $eq: new ObjectId(amendmentId) }, type: AMENDMENT_TYPES.PORTAL } },
+    };
+
+    const updateFilter: UpdateFilter<TfmFacility> = flatten({
+      'amendments.$': update,
+      auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+    });
+
+    const updateResult = await collection.updateOne(findFilter, updateFilter);
+
+    if (updateResult.modifiedCount === 0) {
+      throw new FacilityNotFoundError(facilityId.toString());
     }
 
     return updateResult;

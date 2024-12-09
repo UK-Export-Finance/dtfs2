@@ -4,6 +4,7 @@ import { getUnixTime } from 'date-fns';
 import { findOneUser } from '../../v1/controllers/user/get-user.controller';
 import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
 import { PutPortalFacilityAmendmentPayload } from '../../v1/routes/middleware/payload-validation/validate-put-portal-facility-amendment-payload';
+import { PatchPortalFacilityAmendmentPayload } from '../../v1/routes/middleware/payload-validation/validate-patch-portal-facility-amendment-payload';
 
 export class PortalFacilityAmendmentService {
   /**
@@ -51,5 +52,26 @@ export class PortalFacilityAmendmentService {
     await TfmFacilitiesRepo.upsertPortalFacilityAmendmentDraft(amendmentToInsert, auditDetails);
 
     return amendmentToInsert;
+  }
+
+  public static async updatePortalFacilityAmendment({
+    amendmentId,
+    facilityId,
+    update,
+    auditDetails,
+  }: {
+    amendmentId: string;
+    facilityId: string;
+    update: PatchPortalFacilityAmendmentPayload['update'];
+    auditDetails: PortalAuditDetails;
+  }): Promise<void> {
+    const amendmentUpdate: Partial<PortalFacilityAmendment> = {
+      ...update,
+      updatedAt: getUnixTime(new Date()),
+      facilityEndDate: update.facilityEndDate ? fromUnixTime(update.facilityEndDate) : undefined,
+      bankReviewDate: update.bankReviewDate ? fromUnixTime(update.bankReviewDate) : undefined,
+    };
+
+    await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({ amendmentId, facilityId, update: amendmentUpdate, auditDetails });
   }
 }
