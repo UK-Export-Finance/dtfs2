@@ -29,7 +29,7 @@ const configureNunjucks = (opts) => {
   const { CONTACT_US_SELF_SERVICE_PORTAL_URL, CONTACT_US_EMAIL_ADDRESS } = process.env;
 
   const appViews = [
-    path.resolve(__dirname, '../../../node_modules/govuk-frontend'),
+    path.resolve(__dirname, '../../../node_modules/govuk-frontend/dist'),
     path.resolve(__dirname, '../../../node_modules/@ministryofjustice/frontend'),
     path.resolve(__dirname, '../../../node_modules/@ministryofjustice/frontend/filters/all'),
     path.resolve(__dirname, '../../templates'),
