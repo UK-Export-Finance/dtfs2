@@ -135,7 +135,7 @@ describe('post-remove-fees-from-payment-group.controller', () => {
       const res = httpMocks.createResponse();
 
       const errorStatus = 404;
-      jest.mocked(removeFeesFromPaymentGroup).mockRejectedValue(new TestApiError(errorStatus, undefined));
+      jest.mocked(removeFeesFromPaymentGroup).mockRejectedValue(new TestApiError({ status: errorStatus }));
 
       // Act
       await postRemoveFeesFromPaymentGroup(req, res);
@@ -153,7 +153,7 @@ describe('post-remove-fees-from-payment-group.controller', () => {
       const res = httpMocks.createResponse();
 
       const errorMessage = 'Some error message';
-      jest.mocked(removeFeesFromPaymentGroup).mockRejectedValue(new TestApiError(undefined, errorMessage));
+      jest.mocked(removeFeesFromPaymentGroup).mockRejectedValue(new TestApiError({ message: errorMessage }));
 
       // Act
       await postRemoveFeesFromPaymentGroup(req, res);
