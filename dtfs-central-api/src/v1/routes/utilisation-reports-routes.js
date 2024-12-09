@@ -43,6 +43,9 @@ const {
   getFeeRecordCorrectionTransientFormData,
 } = require('../controllers/utilisation-report-service/fee-record-correction/get-fee-record-correction-transient-form-data.controller');
 const { postFeeRecordCorrection } = require('../controllers/utilisation-report-service/fee-record-correction/post-fee-record-correction.controller');
+const {
+  deleteFeeRecordCorrectionTransientFormData,
+} = require('../controllers/utilisation-report-service/fee-record-correction/delete-fee-record-correction-transient-form-data.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -873,11 +876,14 @@ utilisationReportsRouter
  *         description: Not Found
  *       500:
  *         description: Internal Server Error
+ *  delete:
  */
+// TODO: Add swagger docs above for this delete endpoint
 utilisationReportsRouter
   .route('/:reportId/fee-records/:feeRecordId/correction-transient-form-data/:userId')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), validation.mongoIdValidation('userId'), handleExpressValidatorResult)
-  .get(getFeeRecordCorrectionTransientFormData);
+  .get(getFeeRecordCorrectionTransientFormData)
+  .delete(deleteFeeRecordCorrectionTransientFormData);
 
 /**
  * @openapi
