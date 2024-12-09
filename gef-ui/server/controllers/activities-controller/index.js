@@ -1,29 +1,23 @@
-const { fromUnixTime } = require('date-fns');
-const { timeZoneConfig } = require('@ukef/dtfs2-common');
+const { fromUnixTime, format } = require('date-fns');
+const { timeZoneConfig, DATE_FORMATS } = require('@ukef/dtfs2-common');
 const { getApplication, getUserDetails } = require('../../services/api');
 
 // maps portalActivities array to create array in correct format for mojTimeline
 const mapPortalActivities = (portalActivities) =>
-  portalActivities.map(({ label, text, timestamp, author, html, facilityType, ukefFacilityId, facilityId, maker, checker }) => {
-    let bylineText = author.firstName;
+  portalActivities.map(({ label, timestamp, author, facilityType, ukefFacilityId, facilityId, maker, checker }) => {
+    let byline = author.firstName;
 
     if (author.lastName) {
-      bylineText += ` ${author.lastName}`;
+      byline += ` ${author.lastName}`;
     }
 
+    const date = fromUnixTime(new Date(timestamp));
+
     const mappedActivity = {
-      label: {
-        text: label,
-      },
-      text,
-      datetime: {
-        timestamp: fromUnixTime(new Date(timestamp)),
-        type: 'datetime',
-      },
-      byline: {
-        text: bylineText,
-      },
-      html,
+      title: label,
+      date: format(date, DATE_FORMATS.D_MMMM_YYYY),
+      time: format(date, DATE_FORMATS.H_MMAAA),
+      byline,
       facilityType,
       ukefFacilityId,
       facilityId,
@@ -47,11 +41,12 @@ const getPortalActivities = async (req, res) => {
 
   /*
   as activities does not have access to parameters in application-details
-  each has to be obtained and rendered to populate the blue status banner
+  each has to be obtained and rendered to populate the application banner
   */
   return res.render('partials/application-activity.njk', {
     activeSubNavigation: 'activities',
     dealId,
+    previousStatus: deal.previousStatus,
     portalActivities: mappedPortalActivities,
     bankInternalRefName: deal.bankInternalRefName,
     additionalRefName: deal.additionalRefName,

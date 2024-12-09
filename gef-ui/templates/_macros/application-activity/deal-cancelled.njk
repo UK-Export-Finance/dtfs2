@@ -1,0 +1,21 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% import './status-change.njk' as statusChange %}
+
+{% macro render(params) %}
+
+  {% set dealId = params.dealId %}
+  {% set ukefDealId = params.ukefDealId %}
+  {% set previousStatus = params.previousStatus %}
+
+  <p class="govuk-!-margin-bottom-0">
+    <a href="/gef/application-details/{{ dealId }}" class="govuk-link" data-cy="deal-link-{{ dealId }}">Deal ID {{ ukefDealId }}</a>
+
+    {{ statusChange.render({
+      previousStatus: previousStatus,
+      newStatus: "Cancelled",
+      id: dealId,
+      tagColour: "blue"
+    }) }}
+  </p>
+
+{% endmacro %}
