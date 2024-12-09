@@ -136,8 +136,6 @@ context('Clone GEF (AIN) deal', () => {
       cy.clickSubmitButton();
       submitToUkef.confirmSubmissionCheckbox().click();
       cy.clickSubmitButton();
-      // eslint-disable-next-line cypress/no-unnecessary-waiting
-      cy.wait(15000);
 
       cy.login(BANK1_MAKER1);
 
