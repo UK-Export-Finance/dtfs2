@@ -75,6 +75,7 @@ Cypress.Commands.add('renameDeal', require('./portal/renameDeal'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('userSetPassword', require('./portal/userSetPassword'));
 Cypress.Commands.add('disablePortalUserByUsername', require('./portal/disablePortalUserByUsername'));
+Cypress.Commands.add('createGefDeal', require('./portal/createGefDeal'));
 
 // command to assert row contents in the utilisation report upload journey
 Cypress.Commands.add('assertValidationErrorTableRowContains', require('./portal/utilisation-reports/assertUploadReportValidationErrorTableRowContains'));
