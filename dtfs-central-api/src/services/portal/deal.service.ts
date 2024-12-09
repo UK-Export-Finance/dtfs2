@@ -1,4 +1,4 @@
-import { AuditDetails, ActivityAuthor, DEAL_TYPE, DealStatus, DealType, PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE, TfmDeal, UKEF } from '@ukef/dtfs2-common';
+import { AuditDetails, ActivityAuthor, DEAL_TYPE, DealStatus, DealType, PORTAL_ACTIVITY_LABEL, TfmDeal, UKEF } from '@ukef/dtfs2-common';
 import { getUnixTime } from 'date-fns';
 import { ObjectId } from 'mongodb';
 import { updateBssEwcsDealStatus } from '../../v1/controllers/portal/deal/update-deal-status.controller';
@@ -47,28 +47,32 @@ export class PortalDealService {
    * @param addGefDealCancelledActivityParams
    * @param addGefDealCancelledActivityParams.dealId - the deal
    * @param addGefDealCancelledActivityParams.author - the activity's author
+   * @param addGefDealCancelledActivityParams.cancellationIsInFuture - cancellation is in the future
    * @param addGefDealCancelledActivityParams.auditDetails - the users audit details
    */
   public static async addGefDealCancelledActivity({
     deal,
     author,
+    cancellationIsInFuture,
     auditDetails,
   }: {
     deal: TfmDeal;
     author: ActivityAuthor;
+    cancellationIsInFuture?: boolean;
     auditDetails: AuditDetails;
   }): Promise<void> {
     if (deal.dealSnapshot.dealType === DEAL_TYPE.GEF) {
       const { _id: dealId } = deal.dealSnapshot;
 
+      const label = cancellationIsInFuture ? PORTAL_ACTIVITY_LABEL.DEAL_CANCELLATION_PENDING : PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED;
+
       const newActivity = {
-        type: PORTAL_ACTIVITY_TYPE.DEAL_CANCELLED,
+        label,
         timestamp: getUnixTime(new Date()),
         author: {
           _id: author._id,
           firstName: UKEF.ACRONYM,
         },
-        label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
       };
 
       await PortalActivityRepo.addPortalActivity(dealId, newActivity, auditDetails);

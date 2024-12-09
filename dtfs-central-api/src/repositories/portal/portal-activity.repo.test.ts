@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { InvalidDealIdError, MONGO_DB_COLLECTIONS, PortalActivity, PORTAL_ACTIVITY_TYPE, PORTAL_ACTIVITY_LABEL } from '@ukef/dtfs2-common';
+import { InvalidDealIdError, MONGO_DB_COLLECTIONS, PortalActivity, PORTAL_ACTIVITY_LABEL } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { getUnixTime } from 'date-fns';
 import { mongoDbClient } from '../../drivers/db-client';
@@ -21,13 +21,12 @@ describe('PortalActivityRepo', () => {
     const dealId = new ObjectId();
 
     const newActivity: PortalActivity = {
-      type: PORTAL_ACTIVITY_TYPE.DEAL_CANCELLED,
+      label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
       timestamp: getUnixTime(new Date()),
       author: {
         _id: '123',
         firstName: 'First name',
       },
-      label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
     };
 
     const auditDetails = generateSystemAuditDetails();

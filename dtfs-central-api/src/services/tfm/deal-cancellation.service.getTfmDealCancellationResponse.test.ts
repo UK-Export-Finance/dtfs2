@@ -25,6 +25,7 @@ describe('DealCancellationService', () => {
 
       // Assert
       const expected: TfmDealCancellationResponse = { cancelledDealUkefId: getUkefDealId(cancelledDeal.dealSnapshot) as string, riskExpiredFacilityUkefIds };
+
       expect(response).toEqual(expected);
     });
   });

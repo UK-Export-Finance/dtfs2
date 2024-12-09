@@ -22,7 +22,7 @@ describe('PortalDealService - updateStatus', () => {
     jest.clearAllMocks();
   });
 
-  it(`should call updateGefDealStatus when submissionType is ${DEAL_TYPE.GEF}`, async () => {
+  it(`should call updateGefDealStatus when dealType is ${DEAL_TYPE.GEF}`, async () => {
     // Arrange
     const dealType = DEAL_TYPE.GEF;
 
@@ -41,7 +41,7 @@ describe('PortalDealService - updateStatus', () => {
     expect(updateBssEwcsDealStatusMock).toHaveBeenCalledTimes(0);
   });
 
-  it(`should call updateBssEwcsDealStatus when submissionType is ${DEAL_TYPE.BSS_EWCS}`, async () => {
+  it(`should call updateBssEwcsDealStatus when dealType is ${DEAL_TYPE.BSS_EWCS}`, async () => {
     // Arrange
     const dealType = DEAL_TYPE.BSS_EWCS;
 
