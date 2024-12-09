@@ -89,9 +89,10 @@ context('Clone GEF (AIN) deal', () => {
       cy.clickSubmitButton();
 
       cy.get('[data-cy="dashboard-link"]').click();
-      cy.get(`[data-cy="deal__link--${AINdealId}"]`).click();
+      cy.get(`[data-cy="deal__link--index--1 deal__link--${AINdealId}"]`).should('be.visible').click();
 
-      cloneGEFDeal.cloneGefDealLink().click();
+      cy.url().should('eq', relative(`/gef/application-details/${AINdealId}`));
+      cy.get('[data-cy="clone-gef-deal-link"]').should('be.visible').click();
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone`));
       mandatoryCriteria.trueRadio().click();
       form().submit();
@@ -139,7 +140,7 @@ context('Clone GEF (AIN) deal', () => {
 
       cy.login(BANK1_MAKER1);
 
-      cy.get(`[data-cy="deal__link--${AINdealId}"]`).click();
+      cy.get(`[data-cy="deal__link--index--1 deal__link--${AINdealId}"]`).click();
 
       cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone`));
@@ -163,7 +164,7 @@ context('Clone GEF (AIN) deal', () => {
           cy.get('[data-cy="dashboard"]').click();
           // goes to facilities table and makes sure it's issued and no issue date so properly cloned
           cy.get('[data-cy="dashboard-sub-nav-link-facilities"]').click();
-          cy.get(`[data-cy="facility__bankStage--${facilityId}"]`).contains('Issued');
+          cy.get(`[data-cy="facility__bankStage--${facilityId}"]`).should('be.visible');
           cy.get(`[data-cy="facility__issuedDate--${facilityId}"]`).contains('-');
         });
     });

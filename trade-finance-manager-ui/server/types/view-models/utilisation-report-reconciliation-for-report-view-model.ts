@@ -145,24 +145,9 @@ export type UtilisationTableRowViewModel = {
   };
 };
 
-export type RecordCorrectionRowViewModel = {
-  facilityId: string;
-  exporter: string;
-  baseCurrency: Currency;
-  reason: string;
-  formattedDateSent: string | undefined;
-  formattedUtilisation: string;
-  requestedBy: string;
-  status: string;
-};
-
 export type UtilisationDetailsViewModel = {
   utilisationTableRows: UtilisationTableRowViewModel[];
   downloadUrl: string;
-};
-
-export type RecordCorrectionsViewModel = {
-  recordCorrectionRows: RecordCorrectionRowViewModel[];
 };
 
 export type PremiumPaymentsViewModel = {

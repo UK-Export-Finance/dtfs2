@@ -4,7 +4,6 @@ import {
   PENDING_RECONCILIATION,
   UtilisationReportEntityMockBuilder,
   RECORD_CORRECTION_REASON,
-  MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT,
 } from '@ukef/dtfs2-common';
 import pages from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
@@ -62,8 +61,7 @@ context('When fee record correction feature flag is enabled', () => {
   });
 
   context('PDC_RECONCILE users can create record correction requests', () => {
-    const { createFeeRecordCorrectionRequestPage, checkFeeRecordCorrectionRequestPage } = pages;
-    const additionalInfoUserInput = 'Some additional info.';
+    const { createFeeRecordCorrectionRequestPage } = pages;
 
     beforeEach(() => {
       pages.landingPage.visit();
@@ -101,7 +99,7 @@ context('When fee record correction feature flag is enabled', () => {
       it('should be able to fill in the form and get redirected to the check the info page', () => {
         createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT).check();
         createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).check();
-        cy.keyboardInput(createFeeRecordCorrectionRequestPage.additionalInfoInput(), additionalInfoUserInput);
+        cy.keyboardInput(createFeeRecordCorrectionRequestPage.additionalInfoInput(), 'Some additional info.');
 
         cy.clickContinueButton();
 
@@ -112,7 +110,7 @@ context('When fee record correction feature flag is enabled', () => {
         beforeEach(() => {
           createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT).check();
           createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).check();
-          cy.keyboardInput(createFeeRecordCorrectionRequestPage.additionalInfoInput(), additionalInfoUserInput);
+          cy.keyboardInput(createFeeRecordCorrectionRequestPage.additionalInfoInput(), 'Some additional info.');
 
           cy.clickContinueButton();
         });
@@ -124,7 +122,7 @@ context('When fee record correction feature flag is enabled', () => {
           summaryList().should('contain', `${USERS.PDC_RECONCILE.firstName} ${USERS.PDC_RECONCILE.lastName}`);
           // These values are the display values corresponding to the reasons selected in the beforeEach
           summaryList().should('contain', 'Facility ID is incorrect, Other');
-          summaryList().should('contain', additionalInfoUserInput);
+          summaryList().should('contain', 'Some additional info.');
 
           // The contact email addresses are taken from the bank payment officer team
           const expectedEmails = BANKS.find((bank) => bank.id === bankId).paymentOfficerTeam.emails;
@@ -158,23 +156,6 @@ context('When fee record correction feature flag is enabled', () => {
       });
     });
 
-    it('should let the user enter additional info equal to the character limit containing special characters', () => {
-      premiumPaymentsTab.premiumPaymentsTable.checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status).click();
-
-      premiumPaymentsTab.createRecordCorrectionRequestButton().click();
-
-      createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).check();
-
-      const specialCharactersToTest = '&!?$£¥€¢^*()_+=-%:;@~/><,.';
-      const paddingToReachMaxLength = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT - specialCharactersToTest.length);
-      const additionalInfo = `${specialCharactersToTest}${paddingToReachMaxLength}`;
-      cy.keyboardInput(createFeeRecordCorrectionRequestPage.additionalInfoInput(), additionalInfo);
-
-      cy.clickContinueButton();
-
-      cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}/check-the-information`));
-    });
-
     context('when user abandons their journey on the "check the information" screen and then starts again', () => {
       beforeEach(() => {
         premiumPaymentsTab.premiumPaymentsTable
@@ -187,7 +168,7 @@ context('When fee record correction feature flag is enabled', () => {
 
         createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT).check();
         createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).check();
-        cy.keyboardInput(createFeeRecordCorrectionRequestPage.additionalInfoInput(), additionalInfoUserInput);
+        cy.keyboardInput(createFeeRecordCorrectionRequestPage.additionalInfoInput(), 'Some additional info.');
 
         cy.clickContinueButton();
 
@@ -210,12 +191,11 @@ context('When fee record correction feature flag is enabled', () => {
 
         createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT).should('be.checked');
         createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).should('be.checked');
-
         createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT).should('not.be.checked');
         createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT).should('not.be.checked');
         createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.UTILISATION_INCORRECT).should('not.be.checked');
 
-        cy.assertText(createFeeRecordCorrectionRequestPage.additionalInfoInput(), additionalInfoUserInput);
+        cy.assertText(createFeeRecordCorrectionRequestPage.additionalInfoInput(), 'Some additional info.');
       });
     });
 
@@ -231,7 +211,7 @@ context('When fee record correction feature flag is enabled', () => {
 
         createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT).check();
         createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).check();
-        cy.keyboardInput(createFeeRecordCorrectionRequestPage.additionalInfoInput(), additionalInfoUserInput);
+        cy.keyboardInput(createFeeRecordCorrectionRequestPage.additionalInfoInput(), 'Some additional info.');
 
         cy.clickContinueButton();
 
@@ -245,47 +225,11 @@ context('When fee record correction feature flag is enabled', () => {
 
         createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT).should('be.checked');
         createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).should('be.checked');
-
         createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT).should('not.be.checked');
         createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT).should('not.be.checked');
         createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.UTILISATION_INCORRECT).should('not.be.checked');
 
-        cy.assertText(createFeeRecordCorrectionRequestPage.additionalInfoInput(), additionalInfoUserInput);
-      });
-    });
-
-    context('when user clicks change on the "check the information" screen', () => {
-      beforeEach(() => {
-        premiumPaymentsTab.premiumPaymentsTable
-          .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
-          .click();
-
-        premiumPaymentsTab.createRecordCorrectionRequestButton().click();
-
-        cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}`));
-
-        createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT).check();
-        createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).check();
-        cy.keyboardInput(createFeeRecordCorrectionRequestPage.additionalInfoInput(), additionalInfoUserInput);
-
-        cy.clickContinueButton();
-
-        cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}/check-the-information`));
-
-        checkFeeRecordCorrectionRequestPage.reasonsChangeLink().click();
-      });
-
-      it('should return to the "create record correction request" screen with the form populated with the prior form data', () => {
-        cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}`));
-
-        createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT).should('be.checked');
-        createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).should('be.checked');
-
-        createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT).should('not.be.checked');
-        createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT).should('not.be.checked');
-        createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.UTILISATION_INCORRECT).should('not.be.checked');
-
-        cy.assertText(createFeeRecordCorrectionRequestPage.additionalInfoInput(), additionalInfoUserInput);
+        cy.assertText(createFeeRecordCorrectionRequestPage.additionalInfoInput(), 'Some additional info.');
       });
     });
   });

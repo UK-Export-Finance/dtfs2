@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 const xml2js = require('xml2js');
-const { decodeHtmlEntities } = require('@ukef/dtfs2-common');
+const Entities = require('html-entities').AllHtmlEntities;
 const fileshare = require('./helpers/fileshare');
 require('dotenv').config();
 const {
@@ -26,6 +26,8 @@ const shouldMigrateDeal = require('./helpers/should-migrate-deal');
 const log = require('../helpers/logs');
 const { getToken, removeMigrationUser } = require('../temporary-token-handler');
 const api = require('../api');
+
+const entities = new Entities();
 
 let token;
 let logFile;
@@ -55,6 +57,8 @@ const teardown = async (authToken) => {
   consoleLogColor(`Migrated ${successCount} of ${importDealCount}`, successCount === importDealCount ? 'green' : 'red');
   console.info(`Log file: ${logFile}`);
 };
+
+const convertHtmlEntities = (value) => entities.decode(value);
 
 const mapV2 = async (portalDealId, v1Deal) => {
   const [dealRoot, dealRootError] = mapDealRoot(portalDealId, v1Deal, banks);
@@ -121,7 +125,7 @@ const processXml = async (dealId) => {
   const { Deal: workflowDeal } = await xml2js.parseStringPromise(dealXml.toString(), {
     ignoreAttrs: true,
     explicitArray: false,
-    valueProcessors: [decodeHtmlEntities],
+    valueProcessors: [convertHtmlEntities],
   });
   return workflowDeal;
 };

@@ -8,8 +8,6 @@ import { FEE_RECORD_EVENT_TYPE } from '../../../../../services/state-machines/fe
 import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-transient-form-data-repo';
 import { NotFoundError } from '../../../../../errors';
 import { PostFeeRecordCorrectionPayload } from '../../../../routes/middleware/payload-validation';
-import { FeeRecordRepo } from '../../../../../repositories/fee-record-repo';
-import { sendFeeRecordCorrectionRequestEmails } from './helpers';
 
 export type PostFeeRecordCorrectionRequest = CustomExpressRequest<{
   params: {
@@ -51,13 +49,7 @@ export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionReques
 
       const { reasons, additionalInfo } = formDataEntity.formData;
 
-      const feeRecord = await FeeRecordRepo.withTransaction(transactionEntityManager).findOneByIdAndReportIdWithReport(feeRecordId, reportId);
-
-      if (!feeRecord) {
-        throw new NotFoundError(`Failed to find a fee record with id ${feeRecordId} and report id ${reportId}`);
-      }
-
-      const stateMachine = FeeRecordStateMachine.forFeeRecord(feeRecord);
+      const stateMachine = await FeeRecordStateMachine.forFeeRecordIdAndReportId(feeRecordId, reportId);
 
       await stateMachine.handleEvent({
         type: FEE_RECORD_EVENT_TYPE.CORRECTION_REQUESTED,
@@ -76,8 +68,6 @@ export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionReques
           },
         },
       });
-
-      await sendFeeRecordCorrectionRequestEmails(reasons, feeRecord.report.reportPeriod, feeRecord.exporter, feeRecord.report.bankId, user.email);
     });
 
     return res.sendStatus(HttpStatusCode.Ok);

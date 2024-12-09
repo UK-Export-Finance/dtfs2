@@ -5,6 +5,7 @@ const page = {
 
   title: () => cy.get('[data-cy="about"]'),
 
+  taskListLinkBuyer: () => cy.get('[data-cy="task-list-link-buyer"]'),
   supplierType: () => cy.get('[data-cy="supplier-type"]'),
   supplierCompaniesHouseRegistrationNumber: () => cy.get('[data-cy="supplier-companies-house-registration-number"]'),
   supplierSearchCompaniesHouse: () => cy.get('[data-cy="DoSearch-supplier-companies-house-registration-number"]'),
@@ -13,6 +14,7 @@ const page = {
   supplierCorrespondenceAddressSame: () => cy.get('[data-cy="supplier-correspondence-address-is-different-false"]'),
   supplierCorrespondenceAddressDifferent: () => cy.get('[data-cy="supplier-correspondence-address-is-different-true"]'),
   supplierCorrespondenceAddress: () => address('supplier-correspondence-address'),
+  supplierPostCode: () => cy.get('[data-cy="supplier-address-postcode"]'),
   industrySector: () => cy.get('[data-cy="industry-sector"]'),
   industryClass: () => cy.get('[data-cy="industry-class"]'),
   smeTypeMicro: () => cy.get('[data-cy="sme-type-Micro"]'),

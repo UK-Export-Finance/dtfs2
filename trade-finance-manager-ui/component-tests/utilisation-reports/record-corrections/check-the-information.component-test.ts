@@ -9,9 +9,6 @@ const render = pageRenderer<RecordCorrectionRequestInformationViewModel>(page);
 const definitionDescriptionSelector = (definitionTerm: string) => `[data-cy="summary-list"] dt:contains("${definitionTerm}") + dd`;
 
 describe('page', () => {
-  const reportId = '123';
-  const feeRecordId = '456';
-
   it('should render the page heading', () => {
     // Arrange
     const viewModel: RecordCorrectionRequestInformationViewModel = {
@@ -91,23 +88,7 @@ describe('page', () => {
     wrapper.expectText(definitionDescriptionSelector('Reason for record correction')).toRead(reason);
   });
 
-  it('should render the "reason for record correction" change link', () => {
-    // Arrange
-    const viewModel: RecordCorrectionRequestInformationViewModel = {
-      ...aRecordCorrectionRequestInformationViewModel(),
-      reportId,
-      feeRecordId,
-    };
-
-    // Act
-    const wrapper = render(viewModel);
-
-    // Assert
-    const expectedHref = `/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}`;
-    wrapper.expectLink('[data-cy="change-record-correction-reason-link"]').toLinkTo(expectedHref, 'Change reason for record correction');
-  });
-
-  it('should render the "provide more information" text', () => {
+  it('should render the provided more information', () => {
     // Arrange
     const additionalInfo = 'The record needs changing because of the provided reason. Please correct as per the reason.';
     const viewModel: RecordCorrectionRequestInformationViewModel = {
@@ -120,22 +101,6 @@ describe('page', () => {
 
     // Assert
     wrapper.expectText(definitionDescriptionSelector('Provide more information')).toRead(additionalInfo);
-  });
-
-  it('should render the "provide more information" change link', () => {
-    // Arrange
-    const viewModel: RecordCorrectionRequestInformationViewModel = {
-      ...aRecordCorrectionRequestInformationViewModel(),
-      reportId,
-      feeRecordId,
-    };
-
-    // Act
-    const wrapper = render(viewModel);
-
-    // Assert
-    const expectedHref = `/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}`;
-    wrapper.expectLink('[data-cy="change-record-correction-additional-info-link"]').toLinkTo(expectedHref, 'Change more information for record correction');
   });
 
   it('should render the contact email addresses', () => {
@@ -179,6 +144,8 @@ describe('page', () => {
 
   it('should render the back link', () => {
     // Arrange
+    const reportId = '123';
+    const feeRecordId = '456';
     const viewModel: RecordCorrectionRequestInformationViewModel = {
       ...aRecordCorrectionRequestInformationViewModel(),
       reportId,

@@ -1,4 +1,4 @@
-import { EntityManager, In } from 'typeorm';
+import { In } from 'typeorm';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { Currency, FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity } from '@ukef/dtfs2-common';
 
@@ -127,13 +127,5 @@ export const FeeRecordRepo = SqlDbDataSource.getRepository(FeeRecordEntity).exte
         report: { id: reportId },
       },
     });
-  },
-
-  withTransaction(transactionEntityManager: EntityManager) {
-    const transactionRepository = transactionEntityManager.getRepository(FeeRecordEntity);
-
-    return {
-      findOneByIdAndReportIdWithReport: this.findOneByIdAndReportIdWithReport.bind(transactionRepository),
-    };
   },
 });

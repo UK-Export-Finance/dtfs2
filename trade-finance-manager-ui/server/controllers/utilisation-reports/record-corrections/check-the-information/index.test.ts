@@ -1,10 +1,11 @@
 import httpMocks from 'node-mocks-http';
-import { mapReasonsToDisplayValues, getFormattedReportPeriodWithLongMonth, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
+import { getFormattedReportPeriodWithLongMonth, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import { getLinkToPremiumPaymentsTab } from '../../helpers/get-link-to-premium-payments-tab';
 import { getRecordCorrectionRequestInformation, postRecordCorrectionRequestInformation } from '.';
 import api from '../../../../api';
+import { mapReasonsToDisplayValues } from '../helpers';
 
 jest.mock('../../../../api');
 

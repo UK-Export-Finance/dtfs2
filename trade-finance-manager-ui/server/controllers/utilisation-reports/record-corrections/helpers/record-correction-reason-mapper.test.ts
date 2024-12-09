@@ -1,5 +1,4 @@
-import { RECORD_CORRECTION_REASON } from '../../constants';
-import { RecordCorrectionReason } from '../../types';
+import { RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import { mapReasonsToDisplayValues, mapReasonToDisplayValue } from './record-correction-reason-mapper';
 
 describe('record-correction-reason-mapper', () => {
