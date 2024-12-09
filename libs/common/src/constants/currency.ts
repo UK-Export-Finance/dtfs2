@@ -3,8 +3,6 @@ export const CURRENCY = {
   EUR: 'EUR',
   USD: 'USD',
   JPY: 'JPY',
-  AED: 'AED',
-  AED_TEXT: 'AED - U.A.E. Dirham',
 } as const;
 
 /**
