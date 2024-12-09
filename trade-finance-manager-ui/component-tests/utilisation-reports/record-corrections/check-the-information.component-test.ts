@@ -176,7 +176,11 @@ describe('page', () => {
     const wrapper = render(viewModel);
 
     // Assert
-    wrapper.expectSecondaryButton('[data-cy="cancel-button"]').toLinkTo(cancelLink, 'Cancel record correction request');
+    const cancelButtonSelector = '[data-cy="cancel-button"]';
+    wrapper.expectElement(cancelButtonSelector).toExist();
+    wrapper.expectElement(cancelButtonSelector).toHaveAttribute('value', 'Cancel record correction request');
+    wrapper.expectElement(cancelButtonSelector).hasClass('govuk-button--secondary');
+    wrapper.expectElement(cancelButtonSelector).toHaveAttribute('formaction', cancelLink);
   });
 
   it('should render the back link', () => {
