@@ -245,7 +245,7 @@ const tfmDealSubmit = async (dealId, dealType, checker) => {
         dealType,
         checker,
       },
-      timeout: 50000,
+      timeout: 100000,
     });
 
     return response.data;

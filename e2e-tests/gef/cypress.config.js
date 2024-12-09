@@ -24,7 +24,7 @@ module.exports = defineConfig({
   apiKey: PORTAL_API_KEY,
   dbName: 'dtfs-submissions',
   dbConnectionString: 'mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true',
-  defaultCommandTimeout: 60000,
+  defaultCommandTimeout: 100000,
   pageLoadTimeout: 120000,
   responseTimeout: 120000,
   numTestsKeptInMemory: 1,

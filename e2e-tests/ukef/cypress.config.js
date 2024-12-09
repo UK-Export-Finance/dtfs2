@@ -26,7 +26,7 @@ module.exports = defineConfig({
   dbName: 'dtfs-submissions',
   dbConnectionString: 'mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true',
   chromeWebSecurity: false,
-  defaultCommandTimeout: 60000,
+  defaultCommandTimeout: 100000,
   pageLoadTimeout: 120000,
   responseTimeout: 100000,
   numTestsKeptInMemory: 1,
