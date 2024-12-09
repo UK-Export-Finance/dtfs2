@@ -14,7 +14,7 @@ const mockDeals = [MOCK_APPLICATION_AIN, MOCK_APPLICATION_MIN, MOCK_APPLICATION_
 context('Application preview page', () => {
   before(() => {
     mockDeals.forEach((mockDeal) => {
-      cy.createAndConfigureApplicationStatus(
+      cy.createApplicationAndSetStatus(
         mockDeal,
         unissuedCashFacility,
         unissuedContingentFacility,
@@ -32,7 +32,6 @@ context('Application preview page', () => {
   });
 
   describe('Application preview page with AIN Deal and status Acknowledged', () => {
-    // ensures that banner is populated correctly
     it('should display the information banner', () => {
       const ainDeal = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.AIN);
       cy.visit(relative(`/gef/application-details/${ainDeal._id}`));
@@ -42,7 +41,6 @@ context('Application preview page', () => {
   });
 
   describe('Application preview page with MIN Deal and status Acknowledged', () => {
-    // ensures that banner is populated correctly
     it('should display the information banner', () => {
       const minDeal = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.MIN);
       cy.visit(relative(`/gef/application-details/${minDeal._id}`));
@@ -52,7 +50,6 @@ context('Application preview page', () => {
   });
 
   describe('Application preview page with MIA Deal and status Accepted by UKEF (with conditions)', () => {
-    // ensures that banner is not displayed
     it('should not display the information banner', () => {
       const miaDeal = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.MIA);
       cy.visit(relative(`/gef/application-details/${miaDeal._id}`));
