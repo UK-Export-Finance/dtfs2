@@ -1,12 +1,18 @@
 import 'cypress-file-upload';
 import './click-events';
 import { submitDealCancellation } from './trade-finance-manager-ui/submit-deal-cancellation';
+import { makerLoginSubmitGefDealForReview } from './portal/makerLoginSubmitGefDealForReview';
+import { checkerLoginSubmitGefDealToUkef } from './portal/checkerLoginSubmitGefDealToUkef';
 import { makerSubmitDealForReview } from './portal/makerSubmitDealForReview';
 import { checkerSubmitDealToUkef } from './portal/checkerSubmitDealToUkef';
 import { getOneDeal } from './portal-api/getOneDeal';
+import { getOneGefDeal } from './portal-api/getOneGefDeal';
+import { clearSessionCookies } from './utils/clearSessionCookies';
 
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
+// Resets the session
+Cypress.Commands.add('clearSessionCookies', clearSessionCookies);
 
 Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
 
@@ -16,9 +22,13 @@ Cypress.Commands.add('assertText', require('./utils/assertText'));
 // commands used to interact directly with portal-api
 Cypress.Commands.add('insertManyDeals', require('./portal-api/insertManyDeals'));
 Cypress.Commands.add('insertOneDeal', require('./portal-api/insertOneDeal'));
+Cypress.Commands.add('insertManyGefDeals', require('./portal-api/insertManyGefDeals'));
+Cypress.Commands.add('insertOneGefDeal', require('./portal-api/insertOneGefDeal'));
 
 Cypress.Commands.add('createFacilities', require('./portal-api/createFacilities'));
 
+Cypress.Commands.add('createGefFacilities', require('./portal-api/createGefFacilities'));
+Cypress.Commands.add('updateGefDeal', require('./portal-api/updateGefDeal'));
 // commands that abstract common tasks you might perform while clicking round the portal..
 Cypress.Commands.add('login', require('./portal/logIn'));
 Cypress.Commands.add('tfmLogin', require('./trade-finance-manager-ui/login'));
@@ -26,10 +36,13 @@ Cypress.Commands.add('overridePortalUserSignInTokenWithValidTokenByUsername', re
 Cypress.Commands.add('getUserByUsername', require('./portal/getUserByUsername'));
 
 Cypress.Commands.add('getOneDeal', getOneDeal);
+Cypress.Commands.add('getOneGefDeal', getOneGefDeal);
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('enterUsernameAndPassword', require('./portal/enterUsernameAndPassword'));
 Cypress.Commands.add('completeDateFormFields', require('./portal/completeDateFormFields'));
 
+Cypress.Commands.add('makerLoginSubmitGefDealForReview', makerLoginSubmitGefDealForReview);
+Cypress.Commands.add('checkerLoginSubmitGefDealToUkef', checkerLoginSubmitGefDealToUkef);
 Cypress.Commands.add('makerSubmitDealForReview', makerSubmitDealForReview);
 Cypress.Commands.add('checkerSubmitDealToUkef', checkerSubmitDealToUkef);
 

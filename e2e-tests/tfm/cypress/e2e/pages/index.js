@@ -25,6 +25,8 @@ import amendmentsPage from './amendments/amendmentsPage';
 import feedbackPage from './feedbackPage';
 import footer from './footer';
 import activitiesPage from './activities/activitiesPage';
+import reasonForCancellingPage from './deal-cancellation/reason-for-cancelling';
+import checkDetails from './deal-cancellation/check-details';
 import { utilisationReportPages } from './utilisation-reports';
 
 export default {
@@ -55,5 +57,7 @@ export default {
   amendmentsPage,
   footer,
   activitiesPage,
+  reasonForCancellingPage,
+  checkDetails,
   ...utilisationReportPages,
 };
