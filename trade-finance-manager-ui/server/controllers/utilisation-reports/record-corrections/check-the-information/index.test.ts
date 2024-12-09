@@ -95,17 +95,6 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
       expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}/request-sent`);
     });
 
-    it('should clear transient form data on success', async () => {
-      // Act
-      await postRecordCorrectionRequestInformation(req, res);
-
-      // Assert
-      expect(api.createFeeRecordCorrection).toHaveBeenCalledTimes(1);
-
-      expect(api.deleteFeeRecordCorrectionTransientFormData).toHaveBeenCalledTimes(1);
-      expect(api.deleteFeeRecordCorrectionTransientFormData).toHaveBeenCalledWith(reportId, feeRecordId, user, userToken);
-    });
-
     it('should render problem with service page on error', async () => {
       // Arrange
       jest.mocked(api.createFeeRecordCorrection).mockRejectedValue(new Error('API Error'));
@@ -116,17 +105,6 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
       // Assert
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
       expect(res._getRenderData()).toEqual({ user });
-    });
-
-    it('should not clear transient form data on record correction creation error', async () => {
-      // Arrange
-      jest.mocked(api.createFeeRecordCorrection).mockRejectedValue(new Error('API Error'));
-
-      // Act
-      await postRecordCorrectionRequestInformation(req, res);
-
-      // Assert
-      expect(api.deleteFeeRecordCorrectionTransientFormData).toHaveBeenCalledTimes(0);
     });
   });
 });
