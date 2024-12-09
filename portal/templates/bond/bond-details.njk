@@ -50,7 +50,10 @@
                 text: "Bond issuer (optional)"
               },
               hint: {
-                text: "Only enter if Bond issuer differs from the bank"
+                text: "Only enter if Bond issuer differs from the bank",
+                attributes: {
+                  "data-cy": "bond-issuer-hint"
+                }
               },
               errorMessage: validationErrors.errorList.bondIssuer and {
                 text: validationErrors.errorList.bondIssuer.text
