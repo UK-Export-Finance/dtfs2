@@ -879,9 +879,8 @@ utilisationReportsRouter
  *         description: Not Found
  *       500:
  *         description: Internal Server Error
- *  delete:
  */
-// TODO: Add swagger docs above for this delete endpoint
+// TODO FN-3690: Add swagger docs above for this delete endpoint
 utilisationReportsRouter
   .route('/:reportId/fee-records/:feeRecordId/correction-transient-form-data/:userId')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), validation.mongoIdValidation('userId'), handleExpressValidatorResult)

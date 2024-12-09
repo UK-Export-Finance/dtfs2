@@ -3,6 +3,8 @@ import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { CustomExpressRequest } from '../../../../../types/custom-express-request';
 import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-transient-form-data-repo';
+import { NotFoundError } from '../../../../../errors';
+import { FeeRecordRepo } from '../../../../../repositories/fee-record-repo';
 
 export type DeleteFeeRecordCorrectionTransientFormDataRequest = CustomExpressRequest<{
   params: {
@@ -12,19 +14,26 @@ export type DeleteFeeRecordCorrectionTransientFormDataRequest = CustomExpressReq
   };
 }>;
 
-// TODO FN-3690: Need to add tests for this controller.
 /**
  * Controller for the DELETE fee record correction transient form data route.
+ *
  * Deletes a fee record correction transient form data entity with the provided
- * fee record id and user id.
- * Returns {@link HttpStatusCode.NoContent} if there are no errors, even if
+ * fee record id and user id. Checks for existence of the associated fee record
+ * entity before deletion and throws NotFoundError if it does not exist.
+ * Returns a '{@link HttpStatusCode.NoContent}' if there are no errors, even if
  * transient form data doesn't exist.
  * @param req - The request object
  * @param res - The response object
  */
 export const deleteFeeRecordCorrectionTransientFormData = async (req: DeleteFeeRecordCorrectionTransientFormDataRequest, res: Response) => {
   try {
-    const { feeRecordId, userId } = req.params;
+    const { reportId, feeRecordId, userId } = req.params;
+
+    const feeRecordExists = await FeeRecordRepo.existsByIdAndReportId(Number(feeRecordId), Number(reportId));
+
+    if (!feeRecordExists) {
+      throw new NotFoundError(`Failed to find a fee record with id '${feeRecordId}' attached to report with id '${reportId}'`);
+    }
 
     await FeeRecordCorrectionTransientFormDataRepo.deleteByUserIdAndFeeRecordId(userId, Number(feeRecordId));
 
