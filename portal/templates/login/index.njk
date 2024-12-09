@@ -79,7 +79,10 @@
               spellcheck: false
             },
             errorMessage: errors.fieldErrors.password and {
-              text: errors.fieldErrors.password.text
+              text: errors.fieldErrors.password.text,
+              attributes: {
+                "data-cy": "password-error"
+              }
             }
           }) }}
 
