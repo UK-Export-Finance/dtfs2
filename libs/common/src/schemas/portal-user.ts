@@ -1,5 +1,5 @@
 import z from 'zod';
-import { AUDIT_DATABASE_RECORD } from './audit-database-record';
+import { AUDIT_DATABASE_RECORD_SCHEMA } from './audit-database-record.schema';
 import { UNIX_TIMESTAMP_MILLISECONDS_SCHEMA } from './unix-timestamp.schema';
 
 const BASE_PORTAL_USER_SCHEMA = z
@@ -14,7 +14,7 @@ const BASE_PORTAL_USER_SCHEMA = z
     'user-status': z.string(),
     salt: z.string(),
     hash: z.string(),
-    auditRecord: AUDIT_DATABASE_RECORD,
+    auditRecord: AUDIT_DATABASE_RECORD_SCHEMA,
     isTrusted: z.boolean(),
     disabled: z.boolean().optional(),
   })
