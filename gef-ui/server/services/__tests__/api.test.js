@@ -367,3 +367,24 @@ describe('getAddressesByPostcode()', () => {
     await expect(api.getAddressesByPostcode({ postcode: 'invalid', userToken })).rejects.toThrowError('Invalid postcode');
   });
 });
+
+describe('getAmendment()', () => {
+  it('returns the correct response', async () => {
+    Axios.get.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
+    const response = await api.getAmendment({ facilityId: validMongoId, amendmentId: validMongoId, userToken });
+    expect(response).toEqual({ status: HttpStatusCode.Ok });
+  });
+
+  it('throws an error if there is an api error', async () => {
+    Axios.get.mockReturnValue(Promise.reject());
+    await expect(api.getAmendment({ facilityId: validMongoId, amendmentId: validMongoId, userToken })).rejects.toThrowError();
+  });
+
+  test.each(invalidMongoIdTestCases)('throws an error when given an invalid facility Id', async (invalidMongoId) => {
+    await expect(api.getAmendment({ facilityId: invalidMongoId, amendmentId: validMongoId, userToken })).rejects.toThrowError('Invalid facility ID');
+  });
+
+  test.each(invalidMongoIdTestCases)('throws an error when given an invalid amendment Id', async (invalidMongoId) => {
+    await expect(api.getAmendment({ facilityId: validMongoId, amendmentId: invalidMongoId, userToken })).rejects.toThrowError('Invalid facility ID');
+  });
+});

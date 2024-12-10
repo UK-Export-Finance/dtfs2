@@ -341,6 +341,29 @@ const downloadFile = async ({ fileId, userToken }) => {
   }
 };
 
+/**
+ * @param {Object} param
+ * @param {string} param.facilityId
+ * @param {string} param.amendmentId
+ * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendmentWithUkefId)>}>}
+ */
+const getAmendment = async ({ facilityId, amendmentId, userToken }) => {
+  if (!isValidMongoId(facilityId)) {
+    throw new Error('Invalid facility ID');
+  }
+
+  if (!isValidMongoId(amendmentId)) {
+    throw new Error('Invalid amendment ID');
+  }
+
+  try {
+    const { data } = await Axios.get(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, config(userToken));
+    return data;
+  } catch (error) {
+    return apiErrorHandler(error);
+  }
+};
+
 module.exports = {
   validateToken,
   validateBank,
@@ -362,4 +385,5 @@ module.exports = {
   deleteFile,
   downloadFile,
   updateSupportingInformation,
+  getAmendment,
 };
