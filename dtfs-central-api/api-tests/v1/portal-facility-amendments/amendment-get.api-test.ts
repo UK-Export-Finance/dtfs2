@@ -10,13 +10,10 @@ import {
   FACILITY_TYPE,
   MONGO_DB_COLLECTIONS,
   PortalFacilityAmendment,
-  TFM_DEAL_STAGE,
 } from '@ukef/dtfs2-common';
-import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import wipeDB from '../../wipeDB';
 import { testApi } from '../../test-api';
-import { createDeal } from '../../helpers/create-deal';
-import { MOCK_PORTAL_USER } from '../../mocks/test-users/mock-portal-user';
+import { createDeal, submitDealToTfm } from '../../helpers/create-deal';
 import aDeal from '../deal-builder';
 import { aPortalUser } from '../../mocks/test-users/portal-user';
 import { createPortalUser } from '../../helpers/create-portal-user';
@@ -58,34 +55,7 @@ describe('GET /v1/portal/facilities/:facilityId/amendments/:amendmentId', () => 
 
     facilityId = createFacilityResponse.body._id;
 
-    await testApi
-      .put({
-        dealType: DEAL_TYPE.GEF,
-        dealId,
-        submissionType: DEAL_SUBMISSION_TYPE.AIN,
-        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-      })
-      .to('/v1/tfm/deals/submit');
-
-    await testApi
-      .put({
-        dealUpdate: {
-          tfm: {
-            dateReceived: '23-09-2024',
-            dateReceivedTimestamp: 1727085149,
-            parties: {},
-            activities: [],
-            product: DEAL_TYPE.GEF,
-            stage: TFM_DEAL_STAGE.CONFIRMED,
-            exporterCreditRating: 'Acceptable (B+)',
-            lastUpdated: 1727085149571,
-            lossGivenDefault: 50,
-            probabilityOfDefault: 12,
-          },
-        },
-        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-      })
-      .to(`/v1/tfm/deals/${dealId}`);
+    await submitDealToTfm({ dealId, dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, dealType: DEAL_TYPE.GEF });
   });
 
   afterAll(() => {
