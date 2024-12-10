@@ -2,7 +2,7 @@ const relative = require('../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../e2e-fixtures');
 const { dashboardDeals } = require('../../../../pages');
 const { dashboardFilters } = require('../../../../partials');
-const { BSS_DEAL_DRAFT, GEF_DEAL_DRAFT } = require('../../fixtures');
+const { BSS_DEAL_DRAFT } = require('../../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -28,9 +28,7 @@ context('Dashboard Deals filters - filter by keyword', () => {
       ALL_DEALS.push(deal);
     });
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.createGefDeal({});
   });
 
   beforeEach(() => {
