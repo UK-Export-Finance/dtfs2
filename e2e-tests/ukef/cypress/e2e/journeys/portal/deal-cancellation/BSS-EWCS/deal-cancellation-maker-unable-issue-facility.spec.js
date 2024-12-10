@@ -15,28 +15,32 @@ context('When a deal has been cancelled on TFM, maker unable to issue facility',
   const deals = [];
 
   before(() => {
-    cy.insertManyDeals([...ainDealWithUnissuedFacilities, ...minDealWithUnissuedFacilities], BANK1_MAKER1).then((insertedDeals) => {
-      insertedDeals.forEach((insertedDeal, index) => {
-        const deal = { ...insertedDeal };
-        cy.createFacilities(insertedDeal._id, deal.mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          deal.facilities = createdFacilities;
+    cy.insertManyDeals([...ainDealWithUnissuedFacilities, ...minDealWithUnissuedFacilities], BANK1_MAKER1)
+      .then((insertedDeals) => {
+        insertedDeals.forEach((insertedDeal, index) => {
+          const deal = { ...insertedDeal };
+          cy.createFacilities(insertedDeal._id, deal.mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+            deal.facilities = createdFacilities;
 
-          cy.makerSubmitDealForReview(deal);
-          cy.checkerSubmitDealToUkef(deal);
+            cy.makerSubmitDealForReview(deal);
+            cy.checkerSubmitDealToUkef(deal);
 
-          cy.clearCookie('dtfs-session');
-          cy.clearCookie('_csrf');
-          cy.getCookies().should('be.empty');
+            cy.clearCookie('dtfs-session');
+            cy.clearCookie('_csrf');
+            cy.getCookies().should('be.empty');
 
-          cy.forceVisit(TFM_URL);
-          cy.tfmLogin(PIM_USER_1);
-          const effectiveDate = index % 2 === 0 ? tomorrow.date : yesterday.date;
-          cy.submitDealCancellation({ dealId: deal._id, effectiveDate });
-          // get deal with updated status for cancellation in past or in the future
-          cy.getOneDeal(deal._id, BANK1_MAKER1).then((response) => deals.push({ ...response.deal, facilities: createdFacilities }));
+            cy.forceVisit(TFM_URL);
+            cy.tfmLogin(PIM_USER_1);
+            const effectiveDate = index % 2 === 0 ? tomorrow.date : yesterday.date;
+            cy.submitDealCancellation({ dealId: deal._id, effectiveDate });
+            // get deal with updated status for cancellation in past or in the future
+            cy.getOneDeal(deal._id, BANK1_MAKER1).then((response) => deals.push({ ...response.deal, facilities: createdFacilities }));
+          });
         });
+      })
+      .then(() => {
+        cy.wrap(deals).should('not.be.empty');
       });
-    });
   });
 
   beforeEach(() => {

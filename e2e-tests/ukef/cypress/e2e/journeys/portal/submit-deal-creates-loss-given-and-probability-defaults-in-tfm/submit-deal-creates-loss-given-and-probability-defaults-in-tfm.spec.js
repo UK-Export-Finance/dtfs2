@@ -14,14 +14,18 @@ context('Portal to TFM deal submission', () => {
   let dealId;
 
   before(() => {
-    cy.insertManyDeals([MOCK_DEAL_READY_TO_SUBMIT()], BANK1_MAKER1).then((insertedDeals) => {
-      [deal] = insertedDeals;
-      dealId = deal._id;
+    cy.insertManyDeals([MOCK_DEAL_READY_TO_SUBMIT()], BANK1_MAKER1)
+      .then((insertedDeals) => {
+        [deal] = insertedDeals;
+        dealId = deal._id;
 
-      const { mockFacilities } = deal;
+        const { mockFacilities } = deal;
 
-      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1);
-    });
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1);
+      })
+      .then(() => {
+        cy.wrap(deal).should('not.be.empty');
+      });
   });
 
   beforeEach(() => {

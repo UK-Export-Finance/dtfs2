@@ -28,20 +28,28 @@ context('Portal to TFM deal submission', () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.insertManyDeals([MOCK_MIN_UNISSUED_FACILITIES_DEAL_READY_TO_SUBMIT()], BANK1_MAKER1).then((insertedDeals) => {
-      [deal] = insertedDeals;
-      dealId = deal._id;
+    cy.insertManyDeals([MOCK_MIN_UNISSUED_FACILITIES_DEAL_READY_TO_SUBMIT()], BANK1_MAKER1)
+      .then((insertedDeals) => {
+        [deal] = insertedDeals;
+        dealId = deal._id;
 
-      const { mockFacilities } = deal;
+        const { mockFacilities } = deal;
 
-      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-        const bonds = createdFacilities.filter((f) => f.type === 'Bond');
-        const loans = createdFacilities.filter((f) => f.type === 'Loan');
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1)
+          .then((createdFacilities) => {
+            const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+            const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
-        dealFacilities.bonds = bonds;
-        dealFacilities.loans = loans;
+            dealFacilities.bonds = bonds;
+            dealFacilities.loans = loans;
+          })
+          .then(() => {
+            cy.wrap(dealFacilities).should('not.be.empty');
+          });
+      })
+      .then(() => {
+        cy.wrap(deal).should('not.be.empty');
       });
-    });
   });
 
   beforeEach(() => {

@@ -18,16 +18,24 @@ context('Portal to TFM deal submission - MIN changes TFM deal stage to Confirmed
   const dealFacilities = [];
 
   before(() => {
-    cy.insertManyDeals([MOCK_MIN_DEAL_READY_TO_SUBMIT()], BANK1_MAKER1).then((insertedDeals) => {
-      [deal] = insertedDeals;
-      dealId = deal._id;
+    cy.insertManyDeals([MOCK_MIN_DEAL_READY_TO_SUBMIT()], BANK1_MAKER1)
+      .then((insertedDeals) => {
+        [deal] = insertedDeals;
+        dealId = deal._id;
 
-      const { mockFacilities } = deal;
+        const { mockFacilities } = deal;
 
-      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-        dealFacilities.push(...createdFacilities);
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1)
+          .then((createdFacilities) => {
+            dealFacilities.push(...createdFacilities);
+          })
+          .then(() => {
+            cy.wrap(dealFacilities).should('not.be.empty');
+          });
+      })
+      .then(() => {
+        cy.wrap(deal).should('not.be.empty');
       });
-    });
   });
 
   beforeEach(() => {

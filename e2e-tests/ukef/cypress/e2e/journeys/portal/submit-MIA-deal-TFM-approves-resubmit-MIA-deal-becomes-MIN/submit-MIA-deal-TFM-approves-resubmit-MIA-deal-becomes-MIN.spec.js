@@ -17,26 +17,30 @@ context('Portal to TFM deal submission', () => {
   const todayFormatted = new Date().toLocaleString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
 
   before(() => {
-    cy.insertManyDeals([MOCK_MIA_DEAL_READY_TO_SUBMIT()], BANK1_MAKER1).then((insertedDeals) => {
-      [deal] = insertedDeals;
-      dealId = deal._id;
+    cy.insertManyDeals([MOCK_MIA_DEAL_READY_TO_SUBMIT()], BANK1_MAKER1)
+      .then((insertedDeals) => {
+        [deal] = insertedDeals;
+        dealId = deal._id;
 
-      const { mockFacilities } = deal;
+        const { mockFacilities } = deal;
 
-      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-        createdFacilities.forEach((facility) => {
-          const { type } = facility;
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+          createdFacilities.forEach((facility) => {
+            const { type } = facility;
 
-          if (type === 'Bond') {
-            bondId = facility._id;
-          }
+            if (type === 'Bond') {
+              bondId = facility._id;
+            }
 
-          if (type === 'Loan') {
-            loanId = facility._id;
-          }
+            if (type === 'Loan') {
+              loanId = facility._id;
+            }
+          });
         });
+      })
+      .then(() => {
+        cy.wrap(deal).should('not.be.empty');
       });
-    });
   });
 
   beforeEach(() => {
