@@ -93,7 +93,6 @@ describe('PortalFacilityAmendmentService', () => {
           name: `${aPortalUser().firstname} ${aPortalUser().surname}`,
           email: aPortalUser().email,
         },
-        version: 0,
         facilityEndDate,
       };
 
@@ -125,7 +124,6 @@ describe('PortalFacilityAmendmentService', () => {
           name: `${aPortalUser().firstname} ${aPortalUser().surname}`,
           email: aPortalUser().email,
         },
-        version: 0,
         facilityEndDate,
       };
 
