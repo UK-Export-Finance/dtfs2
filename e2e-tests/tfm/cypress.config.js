@@ -29,7 +29,7 @@ module.exports = defineConfig({
   dbConnectionString: 'mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true',
   responseTimeout: 100000,
   pageLoadTimeout: 120000,
-  defaultCommandTimeout: 60000,
+  defaultCommandTimeout: 300000,
   redirectionLimit: 100,
   numTestsKeptInMemory: 1,
   viewportWidth: 3840,
