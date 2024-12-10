@@ -40,6 +40,7 @@ const page = {
     // updated: (index = 1) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(5),
     updated: (dealId) => cy.get(`[data-cy*="deal__updated--${dealId}"]`),
   },
+  paginationNav: () => cy.get('[data-cy="pagination"] nav'),
   first: () => cy.get('[data-cy="First"]'),
   previous: () => cy.get('[data-cy="Previous"]'),
   next: () => cy.get('[data-cy="Next"]'),

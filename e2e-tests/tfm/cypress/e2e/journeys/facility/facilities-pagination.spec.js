@@ -25,6 +25,10 @@ context('User can navigate through a paginated table of facilities using the pag
     cy.deleteAllTfmFacilitiesFromDb();
   });
 
+  it('should render a nav element', () => {
+    pages.facilitiesPage.pagination.nav().should('exist');
+  });
+
   it('should allow the user to navigate to the next page of the facilities table', () => {
     pages.facilitiesPage.pagination.next().click();
 

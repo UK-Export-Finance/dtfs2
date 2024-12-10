@@ -16,10 +16,16 @@ context('Dashboard deals pagination', () => {
     cy.insertManyDeals(twentyOneDeals, BANK1_MAKER1);
   });
 
-  it('displays 20 results per page, total number of items and working First/Previous/Next/Last links', () => {
-    // login and go to the dashboard
+  beforeEach(() => {
     cy.login(BANK1_MAKER1);
+    dashboardDeals.visit();
+  });
 
+  it('should render a nav element', () => {
+    dashboardDeals.paginationNav().should('exist');
+  });
+
+  it('should render 20 results per page, total number of items and working First/Previous/Next/Last links', () => {
     // test amount of rows
     dashboardDeals.rows().should('have.length', 20);
 

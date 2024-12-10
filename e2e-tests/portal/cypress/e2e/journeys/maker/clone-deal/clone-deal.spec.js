@@ -65,6 +65,12 @@ context('Clone a deal', () => {
     });
   });
 
+  it('should display a `bond issuer` hint', () => {
+    goToCloneDealPage(deal);
+
+    cy.assertText(pages.cloneDeal.bankInternalRefNameHint(), "It's not possible to change this later.");
+  });
+
   describe('When a user creates a deal and clicks `clone deal`', () => {
     it('should progress to the clone page with inputs prepopulated', () => {
       goToCloneDealPage(deal);

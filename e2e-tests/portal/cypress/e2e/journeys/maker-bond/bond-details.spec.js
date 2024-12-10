@@ -38,18 +38,14 @@ context('Bond Details', () => {
   });
 
   it('should display the correct title for bond details', () => {
-    cy.loginGoToDealPage(BANK1_MAKER1);
-
-    cy.clickAddBondButton();
-
     pages.bondDetails.title().contains('Bond');
   });
 
+  it('should display a `bond issuer` hint', () => {
+    cy.assertText(pages.bondDetails.bondIssuerHint(), 'Only enter if Bond issuer differs from the bank');
+  });
+
   it('form submit with extra characters in coverStart and coverEnd dates must show a validation error', () => {
-    cy.loginGoToDealPage(BANK1_MAKER1);
-
-    cy.clickAddBondButton();
-
     cy.keyboardInput(pages.bondDetails.bondIssuerInput(), BOND_FORM_VALUES.DETAILS.bondIssuer);
     pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
     pages.bondDetails.facilityStageIssuedInput().click();
@@ -149,10 +145,6 @@ context('Bond Details', () => {
   });
 
   it('form submit of all required fields should display a `completed` status tag only for `Bond Details` in task list header', () => {
-    cy.loginGoToDealPage(BANK1_MAKER1);
-
-    cy.clickAddBondButton();
-
     fillBondForm.details.facilityStageIssued();
 
     cy.clickSubmitButton();
@@ -163,10 +155,13 @@ context('Bond Details', () => {
   });
 
   describe('When a user selects `unissued` facility stage', () => {
-    it('should render additional form fields', () => {
+    beforeEach(() => {
       cy.loginGoToDealPage(BANK1_MAKER1);
 
       cy.clickAddBondButton();
+    });
+
+    it('should render additional form fields', () => {
       pages.bondDetails.facilityStageUnissuedInput().click();
 
       pages.bondDetails.ukefGuaranteeInMonthsInput().should('be.visible');
@@ -174,9 +169,6 @@ context('Bond Details', () => {
 
     describe('after form submit and navigating back to `Bond Details` page', () => {
       it('should display validation errors for required fields and `unissued` required fields', () => {
-        cy.loginGoToDealPage(BANK1_MAKER1);
-
-        cy.clickAddBondButton();
         pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
         pages.bondDetails.facilityStageUnissuedInput().click();
 
@@ -193,10 +185,6 @@ context('Bond Details', () => {
     });
 
     it('form submit should progess to `Bond Financial Details` page', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1);
-
-      cy.clickAddBondButton();
-
       fillBondForm.details.facilityStageUnissued();
 
       cy.clickSubmitButton();
@@ -207,10 +195,6 @@ context('Bond Details', () => {
     });
 
     it('form submit should populate Deal page with `unissued` specific text/values and link to `Bond Details` page', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1);
-
-      cy.clickAddBondButton();
-
       // get bondId, go back to deal page
       // assert uniqueNumber text and link
       partials.taskListHeader.bondId().then((bondIdHiddenInput) => {

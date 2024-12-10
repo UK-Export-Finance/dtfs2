@@ -59,7 +59,7 @@ context('Portal GOVUK header displays correctly', () => {
 
     it('displays the beta banner correctly', () => {
       page.betaBanner().contains('This is a new service – your feedback will help us to improve it.');
-      page.betaBanner().contains('beta');
+      cy.assertText(page.betaBannerTag(), 'Beta');
       page.betaBannerHref().contains('feedback');
       page
         .betaBannerHref()
@@ -111,7 +111,7 @@ context('Portal GOVUK header displays correctly', () => {
 
     it('displays the beta banner correctly', () => {
       page.betaBanner().contains('This is a new service – your feedback will help us to improve it.');
-      page.betaBanner().contains('beta');
+      cy.assertText(page.betaBannerTag(), 'Beta');
       page.betaBannerHref().contains('feedback');
       page
         .betaBannerHref()
