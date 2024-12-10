@@ -102,7 +102,7 @@ describe('getAmendment', () => {
     // Arrange
     const testErrorStatus = HttpStatusCode.Forbidden;
     const testErrorMessage = 'An error';
-    mockFindOneAmendmentByFacilityIdAndAmendmentId.mockRejectedValue(new TestApiError(testErrorStatus, testErrorMessage));
+    mockFindOneAmendmentByFacilityIdAndAmendmentId.mockRejectedValue(new TestApiError({ status: testErrorStatus, message: testErrorMessage }));
 
     const { req, res } = httpMocks.createMocks<GetAmendmentRequest>({ params: { facilityId, amendmentId } });
 

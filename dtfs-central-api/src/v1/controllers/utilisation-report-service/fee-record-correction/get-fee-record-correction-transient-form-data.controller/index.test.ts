@@ -141,7 +141,7 @@ describe('get-fee-record-correction-transient-form-data.controller', () => {
     it("should respond with the specific error status if retrieving the transient form data throws an 'ApiError'", async () => {
       // Arrange
       const errorStatus = HttpStatusCode.NotFound;
-      mockFeeRecordExists.mockRejectedValue(new TestApiError(errorStatus, undefined));
+      mockFeeRecordExists.mockRejectedValue(new TestApiError({ status: errorStatus }));
 
       // Act
       await getFeeRecordCorrectionTransientFormData(req, res);
@@ -153,7 +153,7 @@ describe('get-fee-record-correction-transient-form-data.controller', () => {
     it("should respond with the specific error message if retrieving the transient form data throws an 'ApiError'", async () => {
       // Arrange
       const errorMessage = 'Some error message';
-      mockFeeRecordExists.mockRejectedValue(new TestApiError(undefined, errorMessage));
+      mockFeeRecordExists.mockRejectedValue(new TestApiError({ message: errorMessage }));
 
       // Act
       await getFeeRecordCorrectionTransientFormData(req, res);
