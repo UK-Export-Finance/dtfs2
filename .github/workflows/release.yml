@@ -1,45 +1,55 @@
-# Deployment Workflow
-# *******************
+# Release Workflow
+# ****************
 #
-# This GitHub Actions workflow automates the deployment process for web apps and Azure Functions to Azure.
-# It is triggered when on base default branch i.e. `main` at every day at midnight. The workflow runs after a successful QAT workflow
-# completion and includes the following key steps:
+# This GitHub Actions workflow automates the release process for deploying web apps and Azure Functions to different environments.
+# It is triggered by the completion of the QAT workflow and runs when there is a push to a release branch (matching the pattern `release-*` but excluding `release-please*`).
+# The workflow handles the deployment of SQL migrations, web apps, and Azure functions sequentially.
 #
 # Key Stages:
-# 1. Setup: Configures environment variables for the product, environment, and timezone.
-# 2. SQL Database Migration: Deploys any new SQL migrations to the environment's SQL database.
-# 3. WebApp Deployment: Sequentially deploys a list of web apps defined in the matrix (`portal-ui`, `gef-ui`, etc.) to Azure.
-# 4. Function Deployment: Sequentially deploys a list of functions (e.g., `acbs-function`) to Azure.
+# 1. Setup: Determines the appropriate environment based on the release branch and configures environment variables (e.g., timezone).
+# 2. SQL schema migration: Deploys SQL migrations to the specified environment.
+# 3. WebApp Deployment: Sequentially deploys a list of web apps defined in the matrix (`portal-ui`, `gef-ui`, etc.) to the target environment.
+# 4. Function Deployment: Sequentially deploys a list of Azure functions (e.g., `acbs-function`) to the target environment.
 #
 # Key Points:
-# - The workflow runs only after a successful QAT workflow.
-# - The deployment environment is specified via environment variables (e.g., `dev`, `staging`, `prod`).
-# - Matrix strategies are used for iterative deployment across multiple web apps and functions.
-# - Temporary deployment slots are used to minimize downtime during deployments.
-# - The workflow uses concurrency control to ensure that multiple deployments do not run simultaneously for the same app/function.
+# - The workflow is triggered by the completion of the QAT workflow.
+# - The deployment environment is determined dynamically based on the release branch (e.g. staging or prod).
+# - Matrix strategies are used for deploying multiple web apps and functions iteratively.
+# - Concurrency control is employed to ensure no simultaneous deployments for the same app/function.
+# - Temporary deployment slots are used to ensure minimal downtime during deployments.
+# - The workflow runs only if the preceding workflow (QAT) concludes successfully.
 #
-# Triggers: This workflow is triggered by a push to the `main` branch.
+# Triggers: This workflow is triggered when the QAT workflow completes successfully for a release branch (`release-*`).
 #
 # Environment Variables:
 # - `PRODUCT`: The product being deployed (e.g., `dtfs`).
-# - `ENVIRONMENT`: The environment where the deployment occurs (e.g., `dev`).
-# - `TIMEZONE`: The timezone for deployment logging and scheduling.
+# - `ENVIRONMENT`: The environment for deployment, dynamically set based on the release branch.
+# - `TIMEZONE`: The timezone for deployment, passed via GitHub actions variables.
+# - `FROM`: The base artifact to use for deployment (default is `latest`).
 
-name: Deployment
-run-name: 🚀 Deploying to dev
+name: Release
+run-name: 🚀 Deploying to ${{ github.event.workflow_run.head_branch }}
 
 on:
-  schedule:
-    - cron: '0 0 * * *'
+  workflow_run:
+    workflows: ['QAT']
+    types:
+      - completed
+    branches:
+      - release-*
+      - '!release-please*'
 
 env:
   PRODUCT: dtfs
-  ENVIRONMENT: dev
+  ENVIRONMENT: ${{ github.event.workflow_run.head_branch }}
   TIMEZONE: ${{ vars.TIMEZONE }}
+  # Base artifact
+  FROM: latest
 
 jobs:
   setup:
     name: Setup 🔧
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: [self-hosted, linux, deployment]
     outputs:
       product: ${{ env.PRODUCT }}
@@ -49,14 +59,20 @@ jobs:
       - name: Environment 🧪
         id: environment
         run: |
-          echo "environment=dev" >> "$GITHUB_OUTPUT"
+          if [[ "${{ env.ENVIRONMENT }}" =~ ^release-.*-rc$ ]]; then
+            echo "environment=prod" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ env.ENVIRONMENT }}" == *release* ]]; then
+            echo "environment=staging" >> "$GITHUB_OUTPUT"
+          else
+            echo "environment=${{ github.event.workflow_run.head_branch }}" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.TIMEZONE }}"
 
   database:
     name: MSSQL 🗄️
-
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     needs: [setup]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
@@ -75,7 +91,7 @@ jobs:
 
   webapp:
     name: WebApp 🌐
-
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     needs: [setup]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
@@ -106,7 +122,7 @@ jobs:
 
   functions:
     name: Functions ⚡
-
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     needs: [setup, webapp]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
