@@ -37,16 +37,6 @@ on:
     # Manual deployment
       - dev
 
-  push:
-    branches:
-      # Manual deployment
-      - dev
-
-  push:
-    branches:
-      # Manual deployment
-      - dev
-
 env:
   PRODUCT: dtfs
   ENVIRONMENT: dev
@@ -90,6 +80,7 @@ jobs:
           username: ${{ secrets.SQL_DB_USERNAME }}
           password: ${{ secrets.SQL_DB_PASSWORD }}
           databae: ${{ secrets.SQL_DB_NAME }}
+          node: ${{ vars.NODE_VERSION }}
 
   webapp:
     name: WebApp 🌐
