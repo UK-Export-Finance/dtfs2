@@ -9,3 +9,4 @@ export * from './bank-with-reporting-years-response-body';
 export * from './add-payment-response-body';
 export * from './get-fee-record-response-body';
 export * from './fee-record-correction-request-review-response-body';
+export * from './fee-record-correction-response-body';
