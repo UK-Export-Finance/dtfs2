@@ -1,0 +1,43 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% extends "index.njk" %}
+
+{% block pageTitle %}Record correction request sent{% endblock %}
+
+{# TODO FN-3581: Add component tests for this new template. #}
+{% block content %}
+  <div class="govuk-grid-row govuk-!-padding-top-3">
+    <div class="govuk-grid-column-one-half-from-desktop">
+      <div class="govuk-!-padding-top-7">
+          <span class="govuk-caption-l" data-cy="heading-caption">{{ bank.name }}, {{ formattedReportPeriod }}</span>
+          <h1 class="govuk-heading-l" data-cy="main-heading">Record correction request</h1>
+      </div>
+
+      {{ govukPanel({
+        titleText: "Request sent",
+        text: "Your record correction request has been sent"
+      }) }}
+
+      <p class="govuk-body">This request has been sent to:</p>
+
+      <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-5">
+        {% for email in emailsWithoutRequestedByUserEmail %}
+          <li data-cy="other-email-address-{{ loop.index }}">{{ email }}</li>
+        {% endfor %}
+      </ul>
+
+      <p class="govuk-body govuk-!-margin-bottom-9" data-cy="user-email-address-copy">A copy of the email has also been sent to {{ requestedByUserEmail }}.</p>
+
+      {{ govukButton({
+        text: "Back to premium payments",
+        classes: "govuk-button--secondary",
+        href: "/utilisation-reports/" + reportId,
+        attributes: {
+          'data-cy': 'back-to-premium-payments-button'
+        }
+      }) }}
+    </div>
+  </div>
+{% endblock %}
+{% block sub_content %}{% endblock %}
