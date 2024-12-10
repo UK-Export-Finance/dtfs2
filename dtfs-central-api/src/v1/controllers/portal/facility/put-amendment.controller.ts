@@ -9,7 +9,7 @@ type PutAmendmentRequestParams = { facilityId: string };
 export type PutAmendmentRequest = CustomExpressRequest<{ params: PutAmendmentRequestParams; reqBody: PutPortalFacilityAmendmentPayload }>;
 
 /**
- * get portal facility amendment
+ * put portal facility amendment
  * @param req - request
  * @param res - response
  */

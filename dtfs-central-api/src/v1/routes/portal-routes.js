@@ -551,9 +551,9 @@ portalRouter
  * @openapi
  * /facilities/:facilityId/amendments:
  *   put:
- *     summary: Get a Portal GEF facility amendment
+ *     summary: update a Portal GEF facility amendment
  *     tags: [Portal - Amendments]
- *     description: Get a Portal GEF facility amendment
+ *     description: Update a Portal GEF facility amendment
  *     parameters:
  *       - in: path
  *         name: facilityId
