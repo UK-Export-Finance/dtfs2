@@ -31,9 +31,10 @@ context('When a deal has been cancelled on TFM, maker unable to issue facility',
     cy.insertManyGefDeals(gefDeals, BANK1_MAKER1).then((insertedDeals) => {
       insertedDeals.forEach((insertedDeal, index) => {
         const gefDeal = { ...insertedDeal };
+        const mockDeal = index < 4 ? MOCK_APPLICATION_AIN_DRAFT : MOCK_APPLICATION_MIN_DRAFT;
 
         // updates a gef deal so has relevant fields
-        cy.updateGefDeal(gefDeal._id, index < 4 ? MOCK_APPLICATION_AIN_DRAFT : MOCK_APPLICATION_MIN_DRAFT, BANK1_MAKER1);
+        cy.updateGefDeal(gefDeal._id, mockDeal, BANK1_MAKER1);
 
         cy.createGefFacilities(gefDeal._id, [facilities[index]], BANK1_MAKER1).then((createdFacilities) => {
           gefDeal.facilities = createdFacilities;
