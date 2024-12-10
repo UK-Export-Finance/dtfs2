@@ -2,6 +2,7 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "moj/components/banner/macro.njk" import mojBanner %}
 
 {% import '../../_macros/facility-guidance.njk' as facilityGuidance %}
 
@@ -21,6 +22,17 @@
   }
 }) }}
 
+{% if applicationStatus === 'Acknowledged' %}
+  {{ mojBanner({
+  type: 'information',
+  text: 'Check your records for the most up-to-date facility details.',
+  iconFallbackText: 'information',
+  attributes: {
+    'data-cy': 'facility-information-banner'
+  }
+}) }}
+{% endif %}
+
 {% if facilities.data.length > 0 %}
   {% for item in facilities.data %}
     <header class="is-flex">
@@ -32,9 +44,10 @@
           text: "Make a change",
           attributes: {
             'data-cy': "facility-" + item.facilityId + "-make-change-button"
-          }
+          },
+          href: "/gef/application-details/"+dealId+"/facilities/"+item.facilityId+"/amendments/what-needs-to-change"
         }) }}
-     {% endif %}
+      {% endif %}
     </header>
     {{ govukSummaryList({
       rows: item.rows,
