@@ -76,7 +76,7 @@ describe('patchAmendment', () => {
     // Arrange
     const status = HttpStatusCode.Forbidden;
     const message = 'Test error message';
-    mockUpdatePortalFacilityAmendment.mockRejectedValue(new TestApiError(status, message));
+    mockUpdatePortalFacilityAmendment.mockRejectedValue(new TestApiError({ status, message }));
 
     const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
     const { req, res } = generateHttpMocks({ auditDetails });
