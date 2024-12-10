@@ -454,7 +454,7 @@ const getNextReportPeriodByBankId = async (bankId) => {
  * Gets the portal facility amendment
  * @param {string} facilityId - id of the facility to amend
  * @param {string} amendmentId - id of the facility amendment
- * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendment & { ukefFacilityId: string | null })>} - the amendment
+ * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendmentWithUkefId)>} - the amendment
  */
 const getPortalFacilityAmendment = async (facilityId, amendmentId) => {
   try {

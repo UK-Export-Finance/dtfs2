@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { AMENDMENT_STATUS, AMENDMENT_TYPES, FacilityAmendment, TestApiError } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, AMENDMENT_TYPES, FacilityAmendmentWithUkefId, TestApiError } from '@ukef/dtfs2-common';
 import api from '../../api';
 import { getAmendment, GetAmendmentRequest } from './get-amendment.controller';
 
@@ -32,7 +32,7 @@ describe('controllers - facility amendment', () => {
 
     it('should return the amendment', async () => {
       // Arrange
-      const mockPortalAmendmentResponse: FacilityAmendment & { ukefFacilityId: string | null } = {
+      const mockPortalAmendmentResponse: FacilityAmendmentWithUkefId = {
         amendmentId,
         facilityId,
         type: AMENDMENT_TYPES.PORTAL,
