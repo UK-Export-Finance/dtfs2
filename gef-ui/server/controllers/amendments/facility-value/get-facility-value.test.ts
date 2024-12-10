@@ -49,6 +49,28 @@ describe('getFacilityValue', () => {
     getFacilityMock.mockResolvedValue({ details: mockFacility });
   });
 
+  it('should call getApplication with the correct dealId and userToken', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+
+    // Act
+    await getFacilityValue(req, res);
+
+    // Assert
+    expect(getApplicationMock).toHaveBeenCalledWith({ dealId, userToken: req.session.userToken });
+  });
+
+  it('should call getFacility with the correct dealId and userToken', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+
+    // Act
+    await getFacilityValue(req, res);
+
+    // Assert
+    expect(getFacilityMock).toHaveBeenCalledWith({ facilityId, userToken: req.session.userToken });
+  });
+
   it('should render the facility value template if the facility is valid', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
