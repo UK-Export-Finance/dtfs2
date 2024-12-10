@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { Headers } from 'node-mocks-http';
 import { NextFunction, Request, Response } from 'express';
 import { CURRENCY, DEAL_STATUS, DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
@@ -53,7 +52,7 @@ describe(`GET ${url}`, () => {
     process.env = originalEnv;
   });
 
-  describe('with portal facility amendments disabled', () => {
+  describe('when portal facility amendments feature flag is disabled', () => {
     beforeEach(() => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'false';
     });
@@ -68,7 +67,7 @@ describe(`GET ${url}`, () => {
     });
   });
 
-  describe('with portal facility amendments enabled', () => {
+  describe('when portal facility amendments feature flag is enabled', () => {
     beforeEach(() => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'true';
     });
