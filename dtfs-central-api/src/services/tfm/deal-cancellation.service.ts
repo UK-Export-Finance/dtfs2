@@ -80,11 +80,11 @@ export class DealCancellationService {
         dealType,
       });
 
-      await PortalDealService.addGefDealCancelledActivity({
-        deal: cancelledDeal,
+      await PortalDealService.addGefDealCancellationPendingActivity({
+        dealId,
+        dealType,
         author,
         auditDetails,
-        cancellationIsInFuture,
       });
 
       return this.getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities });
@@ -106,10 +106,10 @@ export class DealCancellationService {
     await PortalFacilityRepo.updateManyByDealId(dealId, { facilityStage: FACILITY_STAGE.RISK_EXPIRED }, auditDetails);
 
     await PortalDealService.addGefDealCancelledActivity({
-      deal: cancelledDeal,
+      dealId,
+      dealType,
       author,
       auditDetails,
-      cancellationIsInFuture,
     });
 
     return this.getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities });
@@ -155,7 +155,8 @@ export class DealCancellationService {
     };
 
     await PortalDealService.addGefDealCancelledActivity({
-      deal: cancelledDeal,
+      dealId,
+      dealType,
       author,
       auditDetails,
     });

@@ -50,6 +50,7 @@ const findOneUserByIdMock = jest.fn() as jest.Mock<Promise<TfmUser | null>>;
 const updatePortalDealStatusMock = jest.fn() as jest.Mock<Promise<void>>;
 const updatePortalFacilitiesMock = jest.fn() as jest.Mock<Promise<void>>;
 const addGefDealCancelledActivityMock = jest.fn() as jest.Mock<Promise<void>>;
+const addGefDealCancellationPendingActivityMock = jest.fn() as jest.Mock<Promise<void>>;
 
 jest.mock('../../repositories/tfm-deals-repo/tfm-deal-cancellation.repo', () => ({
   TfmDealCancellationRepo: {
@@ -68,7 +69,7 @@ jest.mock('../../repositories/tfm-users-repo', () => ({
 
 const mockUser = aTfmUser();
 
-const dealId = 'dealId';
+const dealId = new ObjectId();
 
 const effectiveFromPresentAndPastTestCases = [
   {
@@ -133,6 +134,7 @@ describe('DealCancellationService', () => {
       jest.spyOn(PortalDealService, 'updateStatus').mockImplementation(updatePortalDealStatusMock);
       jest.spyOn(PortalFacilityRepo, 'updateManyByDealId').mockImplementation(updatePortalFacilitiesMock);
       jest.spyOn(PortalDealService, 'addGefDealCancelledActivity').mockImplementation(addGefDealCancelledActivityMock);
+      jest.spyOn(PortalDealService, 'addGefDealCancellationPendingActivity').mockImplementation(addGefDealCancellationPendingActivityMock);
     });
 
     const aDealCancellation = (): TfmDealCancellation => ({
@@ -208,6 +210,14 @@ describe('DealCancellationService', () => {
           expect(updatePortalFacilitiesMock).toHaveBeenCalledWith(dealId, { facilityStage: FACILITY_STAGE.RISK_EXPIRED }, auditDetails);
         });
 
+        it('should not call PortalDealService.addGefDealCancellationPendingActivity', async () => {
+          // Act
+          await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
+
+          // Assert
+          expect(addGefDealCancellationPendingActivityMock).toHaveBeenCalledTimes(0);
+        });
+
         it('should call PortalDealService.addGefDealCancelledActivity with relevant params', async () => {
           // Act
           await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
@@ -221,10 +231,10 @@ describe('DealCancellationService', () => {
 
           expect(addGefDealCancelledActivityMock).toHaveBeenCalledTimes(1);
           expect(addGefDealCancelledActivityMock).toHaveBeenCalledWith({
-            deal: mockRepositoryResponse.cancelledDeal,
+            dealId,
+            dealType,
             author: expectedAuthor,
             auditDetails,
-            cancellationIsInFuture: false,
           });
         });
 
@@ -300,7 +310,15 @@ describe('DealCancellationService', () => {
           expect(updatePortalFacilitiesMock).toHaveBeenCalledTimes(0);
         });
 
-        it('should call PortalDealService.addGefDealCancelledActivity with the correct params', async () => {
+        it('should not call PortalDealService.addGefDealCancelledActivity', async () => {
+          // Act
+          await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
+
+          // Assert
+          expect(addGefDealCancelledActivityMock).toHaveBeenCalledTimes(0);
+        });
+
+        it('should call PortalDealService.addGefDealCancellationPendingActivity with the correct params', async () => {
           // Act
           await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 
@@ -311,12 +329,12 @@ describe('DealCancellationService', () => {
             _id: mockUser._id.toString(),
           };
 
-          expect(addGefDealCancelledActivityMock).toHaveBeenCalledTimes(1);
-          expect(addGefDealCancelledActivityMock).toHaveBeenCalledWith({
-            deal: mockRepositoryResponse.cancelledDeal,
+          expect(addGefDealCancellationPendingActivityMock).toHaveBeenCalledTimes(1);
+          expect(addGefDealCancellationPendingActivityMock).toHaveBeenCalledWith({
+            dealId,
+            dealType,
             author: expectedAuthor,
             auditDetails,
-            cancellationIsInFuture: true,
           });
         });
 
