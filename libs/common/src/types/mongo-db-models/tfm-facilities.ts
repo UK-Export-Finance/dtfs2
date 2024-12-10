@@ -46,8 +46,8 @@ interface BaseAmendment {
   dealId: ObjectId;
   createdAt: UnixTimestamp;
   updatedAt: UnixTimestamp;
-  version?: number;
   status: AmendmentStatus;
+  version?: number;
   changeCoverEndDate?: boolean;
   coverEndDate?: UnixTimestamp | null;
   currentCoverEndDate?: UnixTimestamp | null;
