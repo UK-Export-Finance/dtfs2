@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { HEADERS, InvalidFacilityIdError, InvalidAmendmentIdError } = require('@ukef/dtfs2-common');
+const { HEADERS } = require('@ukef/dtfs2-common');
 const { isValidMongoId, isValidBankId, isValidReportPeriod } = require('./validation/validateIds');
 
 require('dotenv').config();
@@ -458,17 +458,6 @@ const getNextReportPeriodByBankId = async (bankId) => {
  */
 const getPortalFacilityAmendment = async (facilityId, amendmentId) => {
   try {
-    const isValidFacilityId = isValidMongoId(facilityId);
-    const isValidAmendmentId = isValidMongoId(amendmentId);
-
-    if (!isValidFacilityId) {
-      throw new InvalidFacilityIdError(facilityId);
-    }
-
-    if (!isValidAmendmentId) {
-      throw new InvalidAmendmentIdError(amendmentId);
-    }
-
     const response = await axios({
       method: 'get',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}/amendments/${amendmentId}`,

@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { AMENDMENT_STATUS, AMENDMENT_TYPES, AnyObject, FacilityAmendmentWithUkefId, InvalidAmendmentIdError, InvalidFacilityIdError } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, AMENDMENT_TYPES, AnyObject, FacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import app from '../../../../src/createApp';
 import testUserCache from '../../../api-test-users';
 
@@ -86,8 +86,6 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
 
       it('returns a 400 response when the facility id path param is invalid', async () => {
         // Arrange
-        jest.mocked(getPortalFacilityAmendmentMock).mockRejectedValueOnce(new InvalidFacilityIdError(invalidId));
-
         const url = getAmendmentUrl({ facilityId: invalidId, amendmentId: validAmendmentId });
 
         // Act
@@ -99,8 +97,6 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
 
       it('returns a 400 response when the amendment id path param is invalid', async () => {
         // Arrange
-        jest.mocked(getPortalFacilityAmendmentMock).mockRejectedValueOnce(new InvalidAmendmentIdError(invalidId));
-
         const url = getAmendmentUrl({ facilityId: validFacilityId, amendmentId: invalidId });
 
         // Act

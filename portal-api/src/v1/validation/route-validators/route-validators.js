@@ -1,4 +1,7 @@
 const { param } = require('express-validator');
+const { ObjectId } = require('mongodb');
+const { HttpStatusCode } = require('axios');
+const { API_ERROR_CODE } = require('@ukef/dtfs2-common');
 
 const bankIdValidation = param('bankId')
   .exists()
@@ -8,7 +11,21 @@ const bankIdValidation = param('bankId')
   .matches(/^\d+$/)
   .withMessage('The bank id provided should be a string of numbers');
 
-const mongoIdValidation = param('_id').isMongoId().withMessage("Invalid MongoDB '_id' path param provided");
+/**
+ * Validator for a path parameter which is a mongo id
+ * @param {string} paramName
+ * @returns {import('express').RequestHandler}
+ */
+const mongoIdValidation = (paramName) => (req, res, next) => {
+  const pathParam = req.params[paramName];
+  if (ObjectId.isValid(pathParam)) {
+    return next();
+  }
+  return res.status(HttpStatusCode.BadRequest).send({
+    message: `Expected path parameter '${paramName}' to be a valid mongo id`,
+    code: API_ERROR_CODE.INVALID_MONGO_ID_PATH_PARAMETER,
+  });
+};
 
 /**
  * Validator for a path parameter which is an sql integer id

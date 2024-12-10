@@ -3,6 +3,7 @@ const express = require('express');
 const { validatePortalFacilityAmendmentsEnabled } = require('@ukef/dtfs2-common');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../roles/roles');
 const { validateUserHasAtLeastOneAllowedRole } = require('../roles/validate-user-has-at-least-one-allowed-role');
+const { mongoIdValidation } = require('../validation/route-validators/route-validators');
 
 const { fileUpload } = require('../middleware/file-upload');
 
@@ -15,6 +16,7 @@ const externalApi = require('./controllers/externalApi.controller');
 const files = require('./controllers/files.controller');
 const companies = require('../controllers/companies.controller');
 const { getAmendment } = require('../controllers/amendments/get-amendment.controller');
+const { handleExpressValidatorResult } = require('../validation/route-validators/express-validator-result-handler');
 
 const router = express.Router();
 
@@ -115,6 +117,13 @@ router
 
 router
   .route('/facilities/:facilityId/amendments/:amendmentId')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), validatePortalFacilityAmendmentsEnabled, getAmendment);
+  .get(
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }),
+    mongoIdValidation('facilityId'),
+    mongoIdValidation('amendmentId'),
+    handleExpressValidatorResult,
+    validatePortalFacilityAmendmentsEnabled,
+    getAmendment,
+  );
 
 module.exports = router;
