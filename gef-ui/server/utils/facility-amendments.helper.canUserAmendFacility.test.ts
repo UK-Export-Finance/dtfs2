@@ -1,6 +1,6 @@
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, ROLES } from '@ukef/dtfs2-common';
-import { canUserAmendFacility } from './facility-amendments.helper';
+import { userCanAmendFacility } from './facility-amendments.helper';
 import { Deal } from '../types/deal';
 import { Facility } from '../types/facility';
 
@@ -19,7 +19,7 @@ const generateIssuedFacility = () =>
     hasBeenIssued: true,
   }) as Facility;
 
-describe('canUserAmendFacility', () => {
+describe('userCanAmendFacility', () => {
   describe('when `FF_PORTAL_FACILITY_AMENDMENTS_ENABLED` is set to false', () => {
     beforeEach(() => {
       jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValue(false);
@@ -30,7 +30,7 @@ describe('canUserAmendFacility', () => {
       const facility = generateIssuedFacility();
       const userRoles = [MAKER];
 
-      const result = canUserAmendFacility(facility, deal, userRoles);
+      const result = userCanAmendFacility(facility, deal, userRoles);
 
       expect(result).toEqual(false);
     });
@@ -46,7 +46,7 @@ describe('canUserAmendFacility', () => {
       const facility = generateIssuedFacility();
       const userRoles = [MAKER];
 
-      const result = canUserAmendFacility(facility, deal, userRoles);
+      const result = userCanAmendFacility(facility, deal, userRoles);
 
       expect(result).toEqual(false);
     });
@@ -56,7 +56,7 @@ describe('canUserAmendFacility', () => {
       const facility = generateIssuedFacility();
       const userRoles = [MAKER];
 
-      const result = canUserAmendFacility(facility, deal, userRoles);
+      const result = userCanAmendFacility(facility, deal, userRoles);
 
       expect(result).toEqual(false);
     });
@@ -66,7 +66,7 @@ describe('canUserAmendFacility', () => {
       const facility = generateIssuedFacility();
       const userRoles = [ADMIN, CHECKER];
 
-      const result = canUserAmendFacility(facility, deal, userRoles);
+      const result = userCanAmendFacility(facility, deal, userRoles);
 
       expect(result).toEqual(false);
     });
@@ -76,7 +76,7 @@ describe('canUserAmendFacility', () => {
       const facility = { ...generateIssuedFacility(), hasBeenIssued: false };
       const userRoles = [MAKER];
 
-      const result = canUserAmendFacility(facility, deal, userRoles);
+      const result = userCanAmendFacility(facility, deal, userRoles);
 
       expect(result).toEqual(false);
     });
@@ -86,7 +86,7 @@ describe('canUserAmendFacility', () => {
       const facility = generateIssuedFacility();
       const userRoles = [MAKER, CHECKER, ADMIN];
 
-      const result = canUserAmendFacility(facility, deal, userRoles);
+      const result = userCanAmendFacility(facility, deal, userRoles);
 
       expect(result).toEqual(true);
     });
@@ -96,7 +96,7 @@ describe('canUserAmendFacility', () => {
       const facility = generateIssuedFacility();
       const userRoles = [MAKER];
 
-      const result = canUserAmendFacility(facility, deal, userRoles);
+      const result = userCanAmendFacility(facility, deal, userRoles);
 
       expect(result).toEqual(true);
     });

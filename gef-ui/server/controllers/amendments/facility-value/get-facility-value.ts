@@ -4,7 +4,7 @@ import * as api from '../../../services/api';
 import { FacilityValueViewModel } from '../../../types/view-models/amendments/facility-value-view-model';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { getCurrencySymbol } from './getCurrencySymbol';
-import { canUserAmendFacility } from '../../../utils/facility-amendments.helper';
+import { userCanAmendFacility } from '../../../utils/facility-amendments.helper';
 
 export type GetFacilityValueRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
@@ -22,7 +22,7 @@ export const getFacilityValue = async (req: GetFacilityValueRequest, res: Respon
       return res.redirect('/not-found');
     }
 
-    if (!canUserAmendFacility(facility, deal, user.roles)) {
+    if (!userCanAmendFacility(facility, deal, user.roles)) {
       return res.redirect(`/case/${dealId}`);
     }
 

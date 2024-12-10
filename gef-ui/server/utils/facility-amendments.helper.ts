@@ -34,7 +34,7 @@ export const canUserAmendIssuedFacilities = (submissionType: DealSubmissionType,
  * @param userRoles - The roles of the user.
  * @returns - Returns true if the user can amend the facility, otherwise false.
  */
-export const canUserAmendFacility = (facility: Facility, deal: Deal, userRoles: Role[]) => {
+export const userCanAmendFacility = (facility: Facility, deal: Deal, userRoles: Role[]) => {
   const userCanAmendIssuedFacilities = canUserAmendIssuedFacilities(deal.submissionType, deal.status, userRoles);
   const isFacilityIssued = facility.hasBeenIssued === true;
 
