@@ -48,7 +48,7 @@
     "date-fns-tz": "^2.0.1",
     "dotenv": "16.0.3",
     "exceljs": "^4.4.0",
-    "express": "^4.21.1",
+    "express": "^4.21.2",
     "express-rate-limit": "^6.11.2",
     "express-session": "1.17.3",
     "form-data": "4.0.0",

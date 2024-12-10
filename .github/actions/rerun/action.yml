@@ -7,6 +7,8 @@
 
 name: 'Rerun command'
 description: 'This custom GitHub Actions module re-runs a command with specified environment variables for a maximum of two times. This is specially useful for re-running flakey tests and public runners abrupt connections.'
+
+# Define the inputs required for this action.
 inputs:
   command:
     description: 'The command required to be executed'
@@ -23,6 +25,8 @@ inputs:
     description: 'Maximum number of retries upon command failure'
     required: false
     default: '3'
+
+# Define the steps to run this action.
 runs:
   using: 'composite'
   steps:
@@ -31,7 +35,7 @@ runs:
         cd ${{ inputs.working-directory }} || exit 1
 
         # Loop execution
-         for((run=0; run<${{ inputs.retries }}; run++)); do
+        for((run=0; run<${{ inputs.retries }}; run++)); do
             echo "Running #$run"
             eval "${{ inputs.env }}" && bash -c "${{ inputs.command }}" && break
         done
