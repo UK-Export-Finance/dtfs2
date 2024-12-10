@@ -16,7 +16,10 @@
 
       {{ govukPanel({
         titleText: "Request sent",
-        text: "Your record correction request has been sent"
+        text: "Your record correction request has been sent",
+        attributes: {
+          'data-cy': 'request-sent-panel'
+        }
       }) }}
 
       <p class="govuk-body">This request has been sent to:</p>
