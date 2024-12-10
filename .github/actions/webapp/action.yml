@@ -1,5 +1,7 @@
-name: 'Deploy Azure Functions'
-description: 'This custom GitHub Actions module deploys from defined source to defined Azure Functions microservice'
+# This GitHub Action is designed to deploy the code bases from specified branch to an Azure WebApp
+
+name: 'Deploy Azure WebApp'
+description: 'This custom GitHub Actions module deploys from defined source to defined Azure WebApp microservice'
 
 # Define the inputs required for this action.
 inputs:
@@ -19,8 +21,8 @@ inputs:
     description: 'Source Git branch, main if none specified'
     required: false
     default: 'main'
-  functions:
-    description: 'Azure Functions name'
+  webapp:
+    description: 'Azure WebApp name'
     required: true
 
 # Define the steps to run this action.
@@ -48,21 +50,15 @@ runs:
       with:
         creds: ${{ inputs.credentials }}
 
-    # Step 4: Set environment variable for function name.
-    - name: Directory 📁
-      if: ${{ 'acbs-function' == inputs.functions }}
-      run: echo "NAME=acbs" >> $GITHUB_ENV
-      shell: bash
-
-    # Step 5: Set environment variables for ACR and function.
+    # Step 4: Set environment variables for ACR and WebApp.
     - name: CLI 📝
       run: |
         echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
         echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
-        echo FUNCTION=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ env.NAME }}`)].name' -o tsv) >> $GITHUB_ENV
+        echo WEBAPP=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ inputs.webapp }}`)].name' -o tsv) >> $GITHUB_ENV
       shell: bash
 
-    # Step 6: Log in to Azure Container Registry.
+    # Step 5: Log in to Azure Container Registry.
     - name: ACR 🔐
       uses: azure/docker-login@v2
       with:
@@ -70,18 +66,29 @@ runs:
         username: ${{ env.ACR_USER }}
         password: ${{ inputs.acr }}
 
+    # Step 6: Set Dockerfile path based on WebApp name.
+    - name: Dockerfile 🐳
+      if: ${{ 'portal-ui' == inputs.webapp }}
+      run: echo "DOCKERFILE=portal/Dockerfile" >> $GITHUB_ENV
+      shell: bash
+
+    - name: Dockerfile 🐳
+      if: ${{ 'portal-ui' != inputs.webapp }}
+      run: echo "DOCKERFILE=${{ inputs.webapp }}/Dockerfile" >> $GITHUB_ENV
+      shell: bash
+
     # Step 7: Build and push Docker images.
     - name: Artifacts 🗃️
       working-directory: .
       run: |
         # Build images
-        docker build -f ./azure-functions/${{ inputs.functions }}/Dockerfile . \
-        -t ${{ env.ACR }}/${{ inputs.functions }}:${{ github.sha }} \
-        -t ${{ env.ACR }}/${{ inputs.functions }}:latest
-
+        docker build -f ./${{ env.DOCKERFILE }} . \
+        -t ${{ env.ACR }}/${{ inputs.webapp }}:${{ github.sha }} \
+        -t ${{ env.ACR }}/${{ inputs.webapp }}:latest \
+        --build-arg GITHUB_SHA=${{ github.sha }}
         # Push images
-        docker push ${{ env.ACR }}/${{ inputs.functions }}:${{ github.sha }}
-        docker push ${{ env.ACR }}/${{ inputs.functions }}:latest
+        docker push ${{ env.ACR }}/${{ inputs.webapp }}:${{ github.sha }}
+        docker push ${{ env.ACR }}/${{ inputs.webapp }}:latest
       shell: bash
 
     # Step 8: Create and swap deployment slot.
@@ -90,18 +97,17 @@ runs:
       with:
         inlineScript: |
           # Create new temporary slot
-          az functionapp deployment slot create \
+          az webapp deployment slot create \
           --slot ${{ github.sha }} \
-          --name ${{ env.FUNCTION }} \
-          --configuration-source ${{ env.FUNCTION }} \
-          --deployment-container-image-name ${{ env.ACR }}/${{ inputs.functions }}:latest \
+          --name ${{ env.WEBAPP }} \
+          --configuration-source ${{ env.WEBAPP }} \
+          --deployment-container-image-name ${{ env.ACR }}/${{ inputs.webapp }}:latest \
           --docker-registry-server-user ${{ env.ACR_USER }} \
           --docker-registry-server-password ${{ inputs.acr }}
-
           # Swap slot
-          az functionapp deployment slot swap \
+          az webapp deployment slot swap \
           --slot ${{ github.sha }} \
-          --name ${{ env.FUNCTION }} \
+          --name ${{ env.WEBAPP }} \
           --action swap
 
     # Step 9: Cleanup temporary slot.
@@ -111,6 +117,6 @@ runs:
       with:
         inlineScript: |
           # Delete temporary slot
-          az functionapp deployment slot delete \
+          az webapp deployment slot delete \
           --slot ${{ github.sha }} \
-          --name ${{ env.FUNCTION }}
+          --name ${{ env.WEBAPP }}

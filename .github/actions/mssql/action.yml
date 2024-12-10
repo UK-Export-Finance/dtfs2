@@ -1,7 +1,7 @@
-# This GitHub Action is designed to deploy the latest data migration to an MSSQL database on an AMI.
+# This GitHub Action is designed to deploy the latest schema migration to a MSSQL database on an AMI.
 
-name: 'Deploy MSSQL'
-description: 'Deploy latest data migration to MSSQL on AMI'
+name: 'MSSQL migration'
+description: 'Deploy latest schema migration to MSSQL on an AMI'
 
 # Define the inputs required for this action.
 inputs:
@@ -20,10 +20,6 @@ inputs:
   database:
     description: 'MSSQL database name'
     required: true
-  log:
-    description: 'MSSQL logging for debugging'
-    required: false
-    default: 'false'
 
 # Define the steps to run this action.
 runs:

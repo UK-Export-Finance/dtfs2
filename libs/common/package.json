@@ -61,7 +61,7 @@
     "node-mocks-http": "^1.16.1",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.20",
-    "zod": "^3.23.8"
+    "zod": "^3.24.0"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",

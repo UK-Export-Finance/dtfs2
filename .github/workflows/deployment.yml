@@ -6,10 +6,10 @@
 # completion and includes the following key steps:
 #
 # Key Stages:
-# 1. **Setup**: Configures environment variables for the product, environment, and timezone.
-# 2. **SQL Database Migration**: Deploys any new SQL migrations to the environment's SQL database.
-# 3. **WebApp Deployment**: Sequentially deploys a list of web apps defined in the matrix (`portal-ui`, `gef-ui`, etc.) to Azure.
-# 4. **Function Deployment**: Sequentially deploys a list of functions (e.g., `acbs-function`) to Azure.
+# 1. Setup: Configures environment variables for the product, environment, and timezone.
+# 2. SQL Database Migration: Deploys any new SQL migrations to the environment's SQL database.
+# 3. WebApp Deployment: Sequentially deploys a list of web apps defined in the matrix (`portal-ui`, `gef-ui`, etc.) to Azure.
+# 4. Function Deployment: Sequentially deploys a list of functions (e.g., `acbs-function`) to Azure.
 #
 # Key Points:
 # - The workflow runs only after a successful QAT workflow.
@@ -18,9 +18,9 @@
 # - Temporary deployment slots are used to minimize downtime during deployments.
 # - The workflow uses concurrency control to ensure that multiple deployments do not run simultaneously for the same app/function.
 #
-# **Triggers**: This workflow is triggered by a push to the `main` branch.
+# Triggers: This workflow is triggered by a push to the `main` branch.
 #
-# **Environment Variables**:
+# Environment Variables:
 # - `PRODUCT`: The product being deployed (e.g., `dtfs`).
 # - `ENVIRONMENT`: The environment where the deployment occurs (e.g., `dev`).
 # - `TIMEZONE`: The timezone for deployment logging and scheduling.
@@ -72,7 +72,6 @@ jobs:
           username: ${{ secrets.SQL_DB_USERNAME }}
           password: ${{ secrets.SQL_DB_PASSWORD }}
           databae: ${{ secrets.SQL_DB_NAME }}
-          log: ${{ vars.SQL_DB_LOGGING_ENABLED }}
 
   webapp:
     name: WebApp 🌐
@@ -135,4 +134,4 @@ jobs:
           group: ${{ secrets.RESOURCE_GROUP }}
           credentials: ${{ secrets.AZURE_CREDENTIALS }}
           acr: ${{ secrets.ACR_PASSWORD }}
-          webapp: ${{ matrix.functions }}
+          functions: ${{ matrix.functions }}

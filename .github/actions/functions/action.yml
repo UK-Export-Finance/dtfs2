@@ -1,3 +1,5 @@
+# This GitHub Action is designed to deploy the code bases from specified branch to an Azure Functions
+
 name: 'Deploy Azure Functions'
 description: 'This custom GitHub Actions module deploys from defined source to defined Azure Functions microservice'
 

@@ -6,22 +6,22 @@
 # The workflow handles the deployment of SQL migrations, web apps, and Azure functions sequentially.
 #
 # Key Stages:
-# 1. **Setup**: Determines the appropriate environment based on the release branch and configures environment variables (e.g., timezone).
-# 2. **SQL Database Migration**: Deploys SQL migrations to the specified environment.
-# 3. **WebApp Deployment**: Sequentially deploys a list of web apps defined in the matrix (`portal-ui`, `gef-ui`, etc.) to the target environment.
-# 4. **Function Deployment**: Sequentially deploys a list of Azure functions (e.g., `acbs-function`) to the target environment.
+# 1. Setup: Determines the appropriate environment based on the release branch and configures environment variables (e.g., timezone).
+# 2. SQL schema migration: Deploys SQL migrations to the specified environment.
+# 3. WebApp Deployment: Sequentially deploys a list of web apps defined in the matrix (`portal-ui`, `gef-ui`, etc.) to the target environment.
+# 4. Function Deployment: Sequentially deploys a list of Azure functions (e.g., `acbs-function`) to the target environment.
 #
 # Key Points:
 # - The workflow is triggered by the completion of the QAT workflow.
-# - The deployment environment is determined dynamically based on the release branch (e.g., staging or prod).
+# - The deployment environment is determined dynamically based on the release branch (e.g. staging or prod).
 # - Matrix strategies are used for deploying multiple web apps and functions iteratively.
 # - Concurrency control is employed to ensure no simultaneous deployments for the same app/function.
 # - Temporary deployment slots are used to ensure minimal downtime during deployments.
 # - The workflow runs only if the preceding workflow (QAT) concludes successfully.
 #
-# **Triggers**: This workflow is triggered when the QAT workflow completes successfully for a release branch (`release-*`).
+# Triggers: This workflow is triggered when the QAT workflow completes successfully for a release branch (`release-*`).
 #
-# **Environment Variables**:
+# Environment Variables:
 # - `PRODUCT`: The product being deployed (e.g., `dtfs`).
 # - `ENVIRONMENT`: The environment for deployment, dynamically set based on the release branch.
 # - `TIMEZONE`: The timezone for deployment, passed via GitHub actions variables.
@@ -88,7 +88,6 @@ jobs:
           username: ${{ secrets.SQL_DB_USERNAME }}
           password: ${{ secrets.SQL_DB_PASSWORD }}
           databae: ${{ secrets.SQL_DB_NAME }}
-          log: ${{ vars.SQL_DB_LOGGING_ENABLED }}
 
   webapp:
     name: WebApp 🌐
