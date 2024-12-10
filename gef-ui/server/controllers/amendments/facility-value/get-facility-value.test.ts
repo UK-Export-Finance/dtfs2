@@ -62,7 +62,6 @@ describe('getFacilityValue', () => {
       dealId,
       facilityId,
       exporterName: companyName,
-      facilityValue: 0,
       previousPage: `/case/${dealId}/facility/${facilityId}/amendments/${amendmentId}/bank-review-date`,
       currencySymbol: getCurrencySymbol(mockFacility.currency.id),
     };
