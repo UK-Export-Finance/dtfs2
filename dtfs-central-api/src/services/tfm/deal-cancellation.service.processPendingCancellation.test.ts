@@ -67,17 +67,11 @@ describe('DealCancellationService', () => {
   });
 
   describe('processPendingCancellation', () => {
-    let cancellation: TfmDealCancellation = {
+    const cancellation: TfmDealCancellation = {
       reason: 'a reason',
       bankRequestDate: 0,
       effectiveFrom: 0,
     };
-
-    const aDealCancellation = (): TfmDealCancellation => ({
-      ...cancellation,
-      bankRequestDate: new Date().valueOf(),
-      effectiveFrom: new Date().valueOf(),
-    });
 
     beforeEach(() => {
       jest.clearAllMocks();
@@ -88,7 +82,8 @@ describe('DealCancellationService', () => {
       jest.spyOn(PortalFacilityRepo, 'updateManyByDealId').mockImplementation(updatePortalFacilitiesMock);
       jest.spyOn(PortalDealService, 'addGefDealCancelledActivity').mockImplementation(addGefDealCancelledActivityMock);
 
-      cancellation = aDealCancellation();
+      cancellation.bankRequestDate = new Date().valueOf();
+      cancellation.effectiveFrom = new Date().valueOf();
     });
 
     const auditDetails = generateTfmAuditDetails(aTfmUser()._id);
@@ -102,7 +97,7 @@ describe('DealCancellationService', () => {
       expect(submitDealCancellationMock).toHaveBeenCalledWith({ dealId, cancellation, auditDetails });
     });
 
-    it.skip(`should call PortalDealService.updateStatus with ${DEAL_STATUS.CANCELLED} status`, async () => {
+    it(`should call PortalDealService.updateStatus with ${DEAL_STATUS.CANCELLED} status`, async () => {
       // Act
       await DealCancellationService.processPendingCancellation(dealId, cancellation, auditDetails);
 
@@ -111,7 +106,7 @@ describe('DealCancellationService', () => {
       expect(updatePortalDealStatusMock).toHaveBeenCalledWith({ dealId, dealType, auditDetails, newStatus: DEAL_STATUS.CANCELLED });
     });
 
-    it.skip(`should call PortalFacilityRepo.updateManyByDealId with facilityStage ${DEAL_STATUS.CANCELLED} status for each facility`, async () => {
+    it(`should call PortalFacilityRepo.updateManyByDealId with facilityStage ${DEAL_STATUS.CANCELLED} status for each facility`, async () => {
       // Act
       await DealCancellationService.processPendingCancellation(dealId, cancellation, auditDetails);
 
@@ -120,7 +115,7 @@ describe('DealCancellationService', () => {
       expect(updatePortalFacilitiesMock).toHaveBeenCalledWith(dealId, { facilityStage: FACILITY_STAGE.RISK_EXPIRED }, auditDetails);
     });
 
-    it.skip('should call PortalDealService.addGefDealCancellationPendingActivity with the correct params', async () => {
+    it('should call PortalDealService.addGefDealCancellationPendingActivity with the correct params', async () => {
       // Act
       await DealCancellationService.processPendingCancellation(dealId, cancellation, auditDetails);
 
@@ -137,7 +132,7 @@ describe('DealCancellationService', () => {
       });
     });
 
-    it.skip('should return the deal cancellation response object', async () => {
+    it('should return the deal cancellation response object', async () => {
       // Act
       const dealCancellationResponse = await DealCancellationService.processPendingCancellation(dealId, cancellation, auditDetails);
 
