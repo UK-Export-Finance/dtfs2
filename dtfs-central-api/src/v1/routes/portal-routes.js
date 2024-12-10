@@ -570,10 +570,10 @@ portalRouter
  *             properties:
  *               amendment:
  *                 type: object
- *                 $ref: '#/definitions/PortalAmendment'
+ *                 $ref: '#/definitions/PortalAmendmentUserInput'
  *               auditDetails:
  *                 type: object
- *                 $ref: '#/definitions/portalAuditDetails'
+ *                 $ref: '#/definitions/PortalAuditDetails'
  *     responses:
  *       200:
  *         description: OK

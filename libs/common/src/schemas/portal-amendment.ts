@@ -5,6 +5,8 @@ import { UNIX_TIMESTAMP_SECONDS_SCHEMA } from './unix-timestamp.schema';
 
 /**
  * Portal Amendment schema to validate an object contains only user provided values on `PortalFacilityAmendment`
+ *
+ * If this schema is changed the Open Api docs should be updated too
  */
 export const PORTAL_FACILITY_AMENDMENT = z
   .object({
