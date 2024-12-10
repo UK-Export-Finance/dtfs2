@@ -10,6 +10,7 @@ import { NotFoundError } from '../../../../../errors';
 import { PostFeeRecordCorrectionPayload } from '../../../../routes/middleware/payload-validation';
 import { FeeRecordRepo } from '../../../../../repositories/fee-record-repo';
 import { sendFeeRecordCorrectionRequestEmails } from './helpers';
+import { FeeRecordCorrectionRequestEmailAddresses } from '../../../../../types/utilisation-reports';
 
 export type PostFeeRecordCorrectionRequest = CustomExpressRequest<{
   params: {
@@ -18,6 +19,8 @@ export type PostFeeRecordCorrectionRequest = CustomExpressRequest<{
   };
   reqBody: PostFeeRecordCorrectionPayload;
 }>;
+
+type PostFeeRecordCorrectionResponse = Response<FeeRecordCorrectionRequestEmailAddresses | string>;
 
 /**
  * Controller for the POST fee record correction endpoint
@@ -30,7 +33,8 @@ export type PostFeeRecordCorrectionRequest = CustomExpressRequest<{
  * @param req - The request object
  * @param res - The response object
  */
-export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionRequest, res: Response) => {
+// TODO FN-3581: Update tests now we're returning a response body.
+export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionRequest, res: PostFeeRecordCorrectionResponse) => {
   const { reportId: reportIdString, feeRecordId: feeRecordIdString } = req.params;
   const { user } = req.body;
 
@@ -39,7 +43,7 @@ export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionReques
     const feeRecordId = Number(feeRecordIdString);
     const userId = user._id.toString();
 
-    await executeWithSqlTransaction(async (transactionEntityManager) => {
+    const responseBody = await executeWithSqlTransaction(async (transactionEntityManager) => {
       const formDataEntity = await FeeRecordCorrectionTransientFormDataRepo.withTransaction(transactionEntityManager).findByUserIdAndFeeRecordId(
         userId,
         feeRecordId,
@@ -77,10 +81,10 @@ export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionReques
         },
       });
 
-      await sendFeeRecordCorrectionRequestEmails(reasons, feeRecord.report.reportPeriod, feeRecord.exporter, feeRecord.report.bankId, user.email);
+      return await sendFeeRecordCorrectionRequestEmails(reasons, feeRecord.report.reportPeriod, feeRecord.exporter, feeRecord.report.bankId, user.email);
     });
 
-    return res.sendStatus(HttpStatusCode.Ok);
+    return res.status(HttpStatusCode.Ok).send(responseBody);
   } catch (error) {
     const errorMessage = 'Failed to create record correction';
     console.error(errorMessage, error);

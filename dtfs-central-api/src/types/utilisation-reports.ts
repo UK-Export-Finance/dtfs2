@@ -116,7 +116,10 @@ type FeeRecordCorrectionRequestEmailVariables = {
   reasonsList: string;
 };
 
-export type FeeRecordCorrectionRequestEmails = {
+export type FeeRecordCorrectionRequestEmailAddresses = {
   emails: Array<string>;
+};
+
+export type FeeRecordCorrectionRequestEmails = FeeRecordCorrectionRequestEmailAddresses & {
   variables: FeeRecordCorrectionRequestEmailVariables;
 };
