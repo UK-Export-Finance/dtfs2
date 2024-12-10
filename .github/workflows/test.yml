@@ -545,12 +545,6 @@ jobs:
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
           retries: ${{ vars.RETRY_LIMIT }}
 
-      # - name: SQL
-      #   working-directory: ./libs/common
-      #   env:
-      #     SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-      #   run: sleep 30s && npm run db:migrate && sleep 30s
-
       - name: Execute
         uses: ./.github/modules/rerun
         with:
@@ -639,12 +633,6 @@ jobs:
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
           retries: ${{ vars.RETRY_LIMIT }}
-
-      # - name: SQL
-      #   working-directory: ./libs/common
-      #   env:
-      #     SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-      #   run: sleep 30s && npm run db:migrate && sleep 30s
 
       - name: Execute
         uses: ./.github/modules/rerun
@@ -753,12 +741,6 @@ jobs:
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
           retries: ${{ vars.RETRY_LIMIT }}
 
-      # - name: SQL
-      #   working-directory: ./libs/common
-      #   env:
-      #     SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-      #   run: sleep 30s && npm run db:migrate && sleep 30s
-
       - name: Execute
         uses: ./.github/modules/rerun
         with:
@@ -847,12 +829,6 @@ jobs:
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
           retries: ${{ vars.RETRY_LIMIT }}
-
-      # - name: SQL
-      #   working-directory: ./libs/common
-      #   env:
-      #     SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-      #   run: sleep 30s && npm run db:migrate && sleep 30s
 
       - name: Execute
         uses: ./.github/modules/rerun
@@ -1025,12 +1001,6 @@ jobs:
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
           retries: ${{ vars.RETRY_LIMIT }}
-
-      # - name: SQL
-      #   working-directory: ./libs/common
-      #   env:
-      #     SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-      #   run: sleep 30s && npm run db:migrate && sleep 30s
 
       - name: Project
         id: project
