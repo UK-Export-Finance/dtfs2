@@ -7,13 +7,13 @@ import { PutPortalFacilityAmendmentPayload } from '../../v1/routes/middleware/pa
 
 export class PortalFacilityAmendmentService {
   /**
-   * Updates the deal status
+   * Upserts the portal amendment draft on a facility
    *
    * @param updateStatusParams
-   * @param updateStatusParams.dealId - the deal Id to update
-   * @param updateStatusParams.newStatus - the status change to make
+   * @param updateStatusParams.dealId - the deal Id the facility exists on
+   * @param updateStatusParams.facilityId - the facility Id the amendment is for
+   * @param updateStatusParams.amendment - the amendment to upsert
    * @param updateStatusParams.auditDetails - the users audit details
-   * @param updateStatusParams.dealType - the deal type
    */
   public static async upsertPortalFacilityAmendmentDraft({
     dealId,

@@ -8,6 +8,13 @@ interface CreateDealResponse extends Response {
   body: { _id: string };
 }
 
+/**
+ * Create a deal
+ * @param createDealParams
+ * @param createDealParams.deal - the deal to create
+ * @param createDealParams.user - the user creating the deal
+ * @returns the audit details, response body and response status
+ */
 export const createDeal = async ({ deal, user }: { deal: AnyObject; user: PortalUser }) => {
   const auditDetails = generatePortalAuditDetails(user._id);
   const { body, status } = (await testApi.post({ deal, user, auditDetails }).to('/v1/portal/deals')) as CreateDealResponse;
@@ -15,6 +22,13 @@ export const createDeal = async ({ deal, user }: { deal: AnyObject; user: Portal
   return { auditDetails, body, status };
 };
 
+/**
+ * Submit a deal to TFM
+ * @param submitDealToTfmParams
+ * @param submitDealToTfmParams.dealId - the deal to create
+ * @param submitDealToTfmParams.dealSubmissionType - the deal submission type
+ * @param submitDealToTfmParams.dealType - the deal type
+ */
 export const submitDealToTfm = async ({
   dealId,
   dealSubmissionType,
@@ -23,7 +37,7 @@ export const submitDealToTfm = async ({
   dealId: string;
   dealSubmissionType: DealSubmissionType;
   dealType: DealType;
-}) => {
+}): Promise<void> => {
   await testApi
     .put({
       dealType,
