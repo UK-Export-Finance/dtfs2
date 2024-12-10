@@ -51,12 +51,17 @@ export const getRecordCorrectionRequestInformation = async (req: Request, res: R
  * @param req - The request object
  * @param res - The response object
  */
+// TODO FN-3581: Update tests now we're storing emails in the session.
 export const postRecordCorrectionRequestInformation = async (req: Request, res: Response) => {
   try {
     const { reportId, feeRecordId } = req.params;
     const { user, userToken } = asUserSession(req.session);
 
-    await api.createFeeRecordCorrection(reportId, feeRecordId, user, userToken);
+    const { emails } = await api.createFeeRecordCorrection(reportId, feeRecordId, user, userToken);
+
+    // TODO FN-3581: Ensure there are emails?
+
+    req.session.recordCorrectionRequestEmails = emails;
 
     return res.redirect(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}/request-sent`);
   } catch (error) {
