@@ -60,7 +60,7 @@ describe('controllers - facility amendment', () => {
     it('should return an error when there is an API error', async () => {
       const testErrorStatus = 418;
       const testApiErrorMessage = 'test api error message';
-      jest.mocked(api.getPortalFacilityAmendment).mockRejectedValue(new TestApiError(testErrorStatus, testApiErrorMessage));
+      jest.mocked(api.getPortalFacilityAmendment).mockRejectedValue(new TestApiError({ status: testErrorStatus, message: testApiErrorMessage }));
 
       // Arrange
       const { req, res } = httpMocks.createMocks<GetAmendmentRequest>({
