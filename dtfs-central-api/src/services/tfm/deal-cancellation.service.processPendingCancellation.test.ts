@@ -126,7 +126,8 @@ describe('DealCancellationService', () => {
 
       expect(addGefDealCancelledActivityMock).toHaveBeenCalledTimes(1);
       expect(addGefDealCancelledActivityMock).toHaveBeenCalledWith({
-        deal: mockRepositoryResponse.cancelledDeal,
+        dealId,
+        dealType,
         author: expectedAuthor,
         auditDetails,
       });
