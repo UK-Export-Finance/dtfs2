@@ -31,10 +31,10 @@ run-name: 🚀 Deploying to dev
 on:
   schedule:
     - cron: '0 0 * * *'
-  
+
   push:
     branches:
-    # Manual deployment
+      # Manual deployment
       - dev
 
 env:
@@ -69,6 +69,9 @@ jobs:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
 
     steps:
+      - name: Repository 🗂️
+        uses: actions/checkout@v4
+
       - name: Deploy ⚡
         uses: ./.github/actions/mssql
         with:
@@ -100,6 +103,9 @@ jobs:
       cancel-in-progress: true
 
     steps:
+      - name: Repository 🗂️
+        uses: actions/checkout@v4
+
       - name: Deploy ⚡
         uses: ./.github/actions/webapp
         with:
@@ -132,6 +138,9 @@ jobs:
       cancel-in-progress: true
 
     steps:
+      - name: Repository 🗂️
+        uses: actions/checkout@v4
+
       - name: Deploy ⚡
         uses: ./.github/actions/functions
         with:
