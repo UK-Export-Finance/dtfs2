@@ -46,7 +46,6 @@ export class PortalFacilityAmendmentService {
         name: `${user.firstname} ${user.surname}`,
         email: user.email,
       },
-      version: 0,
       facilityEndDate: amendment.facilityEndDate ? fromUnixTime(amendment.facilityEndDate) : undefined,
       bankReviewDate: amendment.bankReviewDate ? fromUnixTime(amendment.bankReviewDate) : undefined,
     };
