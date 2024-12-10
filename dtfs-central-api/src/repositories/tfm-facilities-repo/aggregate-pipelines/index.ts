@@ -1,6 +1,5 @@
 import { amendmentsByStatus } from './amendments-by-status';
 import { amendmentsByFacilityId } from './amendments-by-facility-id';
-import { amendmentsByFacilityIdAndAmendmentId } from './amendments-by-facility-id-and-amendment-id';
 import { amendmentsByDealId } from './amendments-by-deal-id';
 import { amendmentsByFacilityIdAndStatus } from './amendments-by-facility-id-and-status';
 import { amendmentsByDealIdAndStatus } from './amendments-by-deal-id-and-status';
@@ -13,7 +12,6 @@ export { AllFacilitiesAndFacilityCountAggregatePipelineOptions } from './all-fac
 export const aggregatePipelines = {
   amendmentsByStatus,
   amendmentsByFacilityId,
-  amendmentsByFacilityIdAndAmendmentId,
   amendmentsByDealId,
   amendmentsByFacilityIdAndStatus,
   amendmentsByDealIdAndStatus,
