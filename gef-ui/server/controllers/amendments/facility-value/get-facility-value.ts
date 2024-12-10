@@ -33,7 +33,6 @@ export const getFacilityValue = async (req: GetFacilityValueRequest, res: Respon
       facilityId,
       amendmentId,
       exporterName: deal.exporter.companyName,
-      facilityValue: 0,
       previousPage: `/case/${dealId}/facility/${facilityId}/amendments/${amendmentId}/bank-review-date`,
       currencySymbol,
     };

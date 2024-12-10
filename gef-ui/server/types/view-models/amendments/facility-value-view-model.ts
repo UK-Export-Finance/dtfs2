@@ -4,7 +4,7 @@ export type FacilityValueViewModel = {
   dealId: string;
   facilityId: string;
   amendmentId: string;
-  facilityValue: number | undefined;
+  facilityValue?: number;
   currencySymbol: string;
   exporterName: string;
   previousPage: string;
