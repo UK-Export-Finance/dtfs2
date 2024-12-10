@@ -22,6 +22,10 @@ context('User can navigate through a paginated table of deals using the paginati
     cy.deleteAllTfmDealsFromDb();
   });
 
+  it('should render a nav element', () => {
+    pages.dealsPage.pagination.nav().should('exist');
+  });
+
   it('should allow the user to navigate to the next page of the deals table', () => {
     pages.dealsPage.pagination.next().click();
 
