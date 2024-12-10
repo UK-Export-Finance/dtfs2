@@ -80,7 +80,7 @@ describe('putAmendmentDraft', () => {
     // Arrange
     const status = HttpStatusCode.Forbidden;
     const message = 'Test error message';
-    mockUpsertPortalFacilityAmendmentDraft.mockRejectedValue(new TestApiError(status, message));
+    mockUpsertPortalFacilityAmendmentDraft.mockRejectedValue(new TestApiError({ status, message }));
 
     const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
     const { req, res } = generateHttpMocks({ auditDetails });
