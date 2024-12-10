@@ -42,6 +42,6 @@
 *.xlsx          binary
 *.pdf           binary
 *.doc           binary
-*.docx           binary
+*.docx          binary
 *.xls           binary
-*.xlsx           binary
+*.xlsx          binary
