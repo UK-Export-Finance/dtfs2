@@ -47,12 +47,12 @@
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
-    "axios": "^1.7.9",
+    "axios": "^1.7.8",
     "big.js": "^6.2.2",
     "date-fns": "^3.3.1",
     "date-fns-tz": "^2.0.1",
     "dotenv": "^16.4.5",
-    "express": "^4.21.2",
+    "express": "^4.21.1",
     "html-entities": "^2.5.2",
     "lodash.difference": "^4.5.0",
     "mongodb": "^4.17.2",
