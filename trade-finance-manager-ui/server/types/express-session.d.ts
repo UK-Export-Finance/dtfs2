@@ -4,12 +4,19 @@ import { RemoveFeesFromPaymentErrorKey } from '../controllers/utilisation-report
 import { EditPaymentFormValues } from './edit-payment-form-values';
 import { AddPaymentErrorKey, InitiateRecordCorrectionRequestErrorKey, GenerateKeyingDataErrorKey } from './premium-payments-tab-error-keys';
 
-export type UserSessionLoginData = {
+/**
+ * A wrapper for a partially logged in users session data
+ */
+type PartiallyLoggedInUserSessionLoginData = {
   authCodeUrlRequest: AuthorizationUrlRequest;
 };
 
+/**
+ * We keep the partially logged in user session data on a
+ * separate isolated parameter to allow for easy management
+ */
 export type PartiallyLoggedInUserSessionData = {
-  loginData: UserSessionLoginData;
+  loginData: PartiallyLoggedInUserSessionLoginData;
 };
 
 export type UserSessionData = {
