@@ -72,8 +72,6 @@ on:
 
   push:
     branches:
-      - dev
-      - feature
       - release-*
       - '!release-please*'
 
