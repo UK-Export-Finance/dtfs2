@@ -1,0 +1,19 @@
+import { IsoDateTimeStamp, ReportPeriod } from '@ukef/dtfs2-common';
+
+export type PendingCorrection = {
+  feeRecordId: number;
+  facilityId: string;
+  exporter: string;
+  additionalInfo: string;
+};
+
+export type UtilisationReportPendingCorrectionsResponseBody =
+  | {
+      reportPeriod: ReportPeriod;
+      uploadedByUserName: string;
+      dateUploaded: IsoDateTimeStamp;
+      reportId: number;
+      corrections: PendingCorrection[];
+      nextDueReportPeriod: ReportPeriod;
+    }
+  | Record<string, never>;
