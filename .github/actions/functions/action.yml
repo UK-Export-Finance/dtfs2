@@ -5,6 +5,10 @@ description: 'This custom GitHub Actions module deploys from defined source to d
 
 # Define the inputs required for this action.
 inputs:
+  branch:
+    description: 'Source Git branch, main if none specified'
+    required: false
+    default: 'main'
   region:
     description: 'Azure region'
     required: true
@@ -17,10 +21,6 @@ inputs:
   acr:
     description: 'Azure container registry password'
     required: true
-  branch:
-    description: 'Source Git branch, main if none specified'
-    required: false
-    default: 'main'
   functions:
     description: 'Azure Functions name'
     required: true
