@@ -38,9 +38,8 @@ describe('SsoController', () => {
 
     beforeEach(() => {
       jest.resetAllMocks();
-      entraIdService = new EntraIdServiceMockBuilder().withDefaults().with({ handleRedirect: handleRedirectMock }).build();
+      entraIdService = new EntraIdServiceMockBuilder().with({ handleRedirect: handleRedirectMock }).build();
       userService = new UserServiceMockBuilder()
-        .withDefaults()
         .with({ upsertTfmUserFromEntraIdUser: upsertTfmUserFromEntraIdUserMock, saveUserLoginInformation: saveUserLoginInformationMock })
         .build();
       ssoController = new SsoController({ entraIdService, userService });
