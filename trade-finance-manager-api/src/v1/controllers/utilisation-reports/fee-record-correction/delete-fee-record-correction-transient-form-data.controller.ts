@@ -12,7 +12,8 @@ export type DeleteFeeRecordCorrectionTransientFormDataRequest = CustomExpressReq
 }>;
 
 /**
- * Deletes the users fee record correction transient form data for the given fee record id
+ * Deletes the users fee record correction transient form data for the given
+ * fee record id.
  * @param req - The request object
  * @param res - The response object
  */

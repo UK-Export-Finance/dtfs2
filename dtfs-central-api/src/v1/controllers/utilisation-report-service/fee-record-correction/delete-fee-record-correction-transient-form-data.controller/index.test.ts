@@ -103,50 +103,51 @@ describe('delete-fee-record-correction-transient-form-data.controller', () => {
       expect(mockTransientFormDataDelete).not.toHaveBeenCalled();
     });
 
-    it("should respond with the specific error status if deleting the transient form data throws an 'ApiError'", async () => {
-      // Arrange
+    describe("when deleting the transient form data throws an 'ApiError'", () => {
       const errorStatus = HttpStatusCode.NotFound;
-      mockFeeRecordExists.mockRejectedValue(new TestApiError({ status: errorStatus }));
-
-      // Act
-      await deleteFeeRecordCorrectionTransientFormData(req, res);
-
-      // Assert
-      expect(res._getStatusCode()).toEqual(errorStatus);
-    });
-
-    it("should respond with the specific error message if deleting the transient form data throws an 'ApiError'", async () => {
-      // Arrange
       const errorMessage = 'Some error message';
-      mockFeeRecordExists.mockRejectedValue(new TestApiError({ message: errorMessage }));
 
-      // Act
-      await deleteFeeRecordCorrectionTransientFormData(req, res);
+      beforeEach(() => {
+        mockFeeRecordExists.mockRejectedValue(new TestApiError({ status: errorStatus, message: errorMessage }));
+      });
 
-      // Assert
-      expect(res._getData()).toEqual(`Failed to delete fee record correction transient form data: ${errorMessage}`);
+      it('should respond with the specific error status', async () => {
+        // Act
+        await deleteFeeRecordCorrectionTransientFormData(req, res);
+
+        // Assert
+        expect(res._getStatusCode()).toEqual(errorStatus);
+      });
+
+      it('should respond with the specific error message', async () => {
+        // Act
+        await deleteFeeRecordCorrectionTransientFormData(req, res);
+
+        // Assert
+        expect(res._getData()).toEqual(`Failed to delete fee record correction transient form data: ${errorMessage}`);
+      });
     });
 
-    it(`should respond with a '${HttpStatusCode.InternalServerError}' if an unknown error occurs`, async () => {
-      // Arrange
-      mockFeeRecordExists.mockRejectedValue(new Error('Some error'));
+    describe('when an unknown error occurs', () => {
+      beforeEach(() => {
+        mockFeeRecordExists.mockRejectedValue(new Error('Some error'));
+      });
 
-      // Act
-      await deleteFeeRecordCorrectionTransientFormData(req, res);
+      it(`should respond with a '${HttpStatusCode.InternalServerError}'`, async () => {
+        // Act
+        await deleteFeeRecordCorrectionTransientFormData(req, res);
 
-      // Assert
-      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
-    });
+        // Assert
+        expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+      });
 
-    it('should respond with a generic error message if an unknown error occurs', async () => {
-      // Arrange
-      mockFeeRecordExists.mockRejectedValue(new Error('Some error'));
+      it('should respond with a generic error message', async () => {
+        // Act
+        await deleteFeeRecordCorrectionTransientFormData(req, res);
 
-      // Act
-      await deleteFeeRecordCorrectionTransientFormData(req, res);
-
-      // Assert
-      expect(res._getData()).toEqual(`Failed to delete fee record correction transient form data`);
+        // Assert
+        expect(res._getData()).toEqual(`Failed to delete fee record correction transient form data`);
+      });
     });
   });
 });

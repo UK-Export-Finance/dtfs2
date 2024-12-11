@@ -37,7 +37,7 @@ export const getRecordCorrectionRequestInformation = async (req: Request, res: R
       contactEmailAddresses: contactEmailAddresses.join(', '),
     });
   } catch (error) {
-    console.error('Failed to render create record correction request - "check the information" page', error);
+    console.error('Failed to render create record correction request - "check the information" page %o', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };

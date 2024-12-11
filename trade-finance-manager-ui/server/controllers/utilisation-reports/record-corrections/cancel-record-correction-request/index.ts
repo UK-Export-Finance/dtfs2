@@ -28,7 +28,7 @@ export const postCancelRecordCorrectionRequest = async (req: PostCancelRecordCor
 
     return res.redirect(getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]));
   } catch (error) {
-    console.error('Failed to post cancel record correction request', error);
+    console.error('Failed to post cancel record correction request %o', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };

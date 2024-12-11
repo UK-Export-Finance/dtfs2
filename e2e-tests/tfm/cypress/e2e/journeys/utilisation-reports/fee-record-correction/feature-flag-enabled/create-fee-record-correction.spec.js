@@ -266,7 +266,6 @@ context('When fee record correction feature flag is enabled', () => {
       context('and clicks the "create record correction request" button again', () => {
         beforeEach(() => {
           // Note that the same fee record is already checked due to the 'selectedFeeRecordIds' query parameter.
-
           premiumPaymentsTab.createRecordCorrectionRequestButton().click();
         });
 

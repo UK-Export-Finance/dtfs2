@@ -1437,7 +1437,7 @@ const deleteFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId,
       headers: generateHeaders(userToken),
     });
   } catch (error) {
-    console.error('Failed to delete fee record correction transient form data', error);
+    console.error('Failed to delete fee record correction transient form data %o', error);
     throw error;
   }
 };

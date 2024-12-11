@@ -96,7 +96,7 @@ export const postInitiateRecordCorrectionRequest = async (req: PostInitiateRecor
 
     return res.redirect(`/utilisation-reports/${reportId}/create-record-correction-request/${selectedFeeRecordId}`);
   } catch (error) {
-    console.error('Failed to initiate record correction request', error);
+    console.error('Failed to initiate record correction request %o', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };

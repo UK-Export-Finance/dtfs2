@@ -20,10 +20,10 @@ export type DeleteFeeRecordCorrectionTransientFormDataRequest = CustomExpressReq
  * Deletes a fee record correction transient form data entity with the provided
  * fee record id and user id. Checks for existence of the associated fee record
  * entity before deletion and throws NotFoundError if it does not exist.
- * Returns a '{@link HttpStatusCode.NoContent}' if there are no errors, even if
- * transient form data doesn't exist.
  * @param req - The request object
  * @param res - The response object
+ * @returns A '{@link HttpStatusCode.NoContent}' if there are no errors, even
+ * if transient form data doesn't exist.
  */
 export const deleteFeeRecordCorrectionTransientFormData = async (req: DeleteFeeRecordCorrectionTransientFormDataRequest, res: Response) => {
   try {
