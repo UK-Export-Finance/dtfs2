@@ -385,6 +385,6 @@ describe('getAmendment()', () => {
   });
 
   test.each(invalidMongoIdTestCases)('throws an error when given an invalid amendment Id', async (invalidMongoId) => {
-    await expect(api.getAmendment({ facilityId: validMongoId, amendmentId: invalidMongoId, userToken })).rejects.toThrowError('Invalid facility ID');
+    await expect(api.getAmendment({ facilityId: validMongoId, amendmentId: invalidMongoId, userToken })).rejects.toThrowError('Invalid amendment ID');
   });
 });
