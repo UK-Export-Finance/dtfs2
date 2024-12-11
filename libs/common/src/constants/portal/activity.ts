@@ -4,10 +4,10 @@ export const PORTAL_ACTIVITY_LABEL = {
   AIN_SUBMISSION: 'Automatic inclusion notice submitted to UKEF',
   FACILITY_CHANGED_ISSUED: 'Bank facility stage changed',
   DEAL_CANCELLED: 'Deal cancelled',
+  DEAL_CANCELLATION_PENDING: 'Pending cancellation',
 } as const;
 
 export const PORTAL_ACTIVITY_TYPE = {
-  DEAL_CANCELLED: 'DEAL_CANCELLED',
   FACILITY_STAGE: 'FACILITY_STAGE',
   NOTICE: 'NOTICE',
 } as const;

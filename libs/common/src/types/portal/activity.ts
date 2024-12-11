@@ -14,7 +14,7 @@ export type PortalActivityLabel = ValuesOf<typeof PORTAL_ACTIVITY_LABEL>;
  * Ideally, we would run some data migration to rename one or both of these fields.
  */
 export type PortalActivity = {
-  type: PortalActivityType;
+  type?: PortalActivityType;
   activityType?: PortalActivityLabel;
   author: ActivityAuthor;
   timestamp: number;
