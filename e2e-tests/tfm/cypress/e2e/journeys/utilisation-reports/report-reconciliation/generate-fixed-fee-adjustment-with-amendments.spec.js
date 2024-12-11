@@ -14,7 +14,12 @@ import USERS from '../../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../../e2e-fixtures';
 import relative from '../../../relativeURL';
 
-context('Fixed fee calculation uses effective amendment to cover end date at report period end', () => {
+/**
+ * This test is skipped because fixed fee adjustments are temporarily turned off.
+ *
+ * TODO FN-3639: Remove this skip and update with new calculation requirements.
+ */
+context.skip('Fixed fee calculation uses effective amendment to cover end date at report period end', () => {
   const bankId = '961';
   const reportId = 1;
   const facilityId = '12345678';
