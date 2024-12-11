@@ -3,21 +3,21 @@ import { HttpStatusCode } from 'axios';
 import {
   MONGO_DB_COLLECTIONS,
   AnyObject,
-  TFM_DEAL_STAGE,
   API_ERROR_CODE,
   TfmAuditDetails,
   TfmDealCancellationResponse,
   FACILITY_TYPE,
+  DealSubmissionType,
+  DealType,
 } from '@ukef/dtfs2-common';
-import { generatePortalAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { withMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import wipeDB from '../../../wipeDB';
 import { testApi } from '../../../test-api';
 import { DEALS } from '../../../../src/constants';
 import aDeal from '../../deal-builder';
-import { createDeal } from '../../../helpers/create-deal';
+import { createDeal, submitDealToTfm } from '../../../helpers/create-deal';
 import { aPortalUser } from '../../../../test-helpers';
-import { MOCK_PORTAL_USER } from '../../../mocks/test-users/mock-portal-user';
 import { createFacility } from '../../../helpers/create-facility';
 import { createTfmUser } from '../../../helpers/create-tfm-user';
 
@@ -67,33 +67,16 @@ describe('/v1/tfm/deals/:dealId/cancellation/submit', () => {
     auditDetails = generateTfmAuditDetails(tfmUserId);
     submitDealCancellationUrl = `/v1/tfm/deals/${dealId}/cancellation/submit`;
 
-    await testApi
-      .put({
-        dealType: DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-        submissionType: DEALS.SUBMISSION_TYPE.AIN,
-        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-      })
-      .to('/v1/tfm/deals/submit');
+    await submitDealToTfm({ dealId, dealSubmissionType: newDeal.submissionType as DealSubmissionType, dealType: newDeal.dealType as DealType });
 
     await testApi
       .put({
         dealUpdate: {
           tfm: {
-            dateReceived: '23-09-2024',
-            dateReceivedTimestamp: 1727085149,
-            parties: {},
-            activities: [],
-            product: DEALS.DEAL_TYPE.BSS_EWCS,
-            stage: TFM_DEAL_STAGE.CONFIRMED,
-            exporterCreditRating: 'Acceptable (B+)',
-            lastUpdated: 1727085149571,
             cancellation,
-            lossGivenDefault: 50,
-            probabilityOfDefault: 12,
           },
         },
-        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+        auditDetails,
       })
       .to(`/v1/tfm/deals/${dealId}`);
   });

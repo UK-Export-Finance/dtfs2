@@ -1,16 +1,8 @@
 import { Response } from 'supertest';
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import {
-  AMENDMENT_TYPES,
-  AnyObject,
-  API_ERROR_CODE,
-  DEAL_SUBMISSION_TYPE,
-  DEAL_TYPE,
-  FACILITY_TYPE,
-  MONGO_DB_COLLECTIONS,
-  PortalFacilityAmendment,
-} from '@ukef/dtfs2-common';
+import { AnyObject, API_ERROR_CODE, DEAL_SUBMISSION_TYPE, DEAL_TYPE, FACILITY_TYPE, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import wipeDB from '../../wipeDB';
 import { testApi } from '../../test-api';
 import { createDeal, submitDealToTfm } from '../../helpers/create-deal';
@@ -18,11 +10,12 @@ import aDeal from '../deal-builder';
 import { aPortalUser } from '../../mocks/test-users/portal-user';
 import { createPortalUser } from '../../helpers/create-portal-user';
 import { createPortalFacilityAmendment } from '../../helpers/create-portal-facility-amendment';
+import { PatchPortalFacilityAmendmentPayload } from '../../../src/v1/routes/middleware/payload-validation/validate-patch-portal-facility-amendment-payload';
 
 const originalEnv = { ...process.env };
 
-interface FacilityAmendmentResponse extends Response {
-  body: PortalFacilityAmendment;
+interface ErrorResponse extends Response {
+  body: { status?: number; message: string; code?: string };
 }
 
 const generateUrl = (facilityId: string, amendmentId: string): string => {
@@ -34,7 +27,11 @@ const newDeal = aDeal({
   submissionType: DEAL_SUBMISSION_TYPE.AIN,
 }) as AnyObject;
 
-describe('GET /v1/portal/facilities/:facilityId/amendments/:amendmentId', () => {
+const anAmendmentUpdate = (): PatchPortalFacilityAmendmentPayload['update'] => ({
+  changeFacilityValue: true,
+});
+
+describe('PATCH /v1/portal/facilities/:facilityId/amendments/', () => {
   let dealId: string;
   let facilityId: string;
   let portalUserId: string;
@@ -68,7 +65,11 @@ describe('GET /v1/portal/facilities/:facilityId/amendments/:amendmentId', () => 
     });
 
     it('should return 404', async () => {
-      const { status } = (await testApi.get(generateUrl(facilityId, new ObjectId().toString()))) as FacilityAmendmentResponse;
+      const amendmentId = new ObjectId().toString();
+
+      const { status } = await testApi
+        .patch({ update: anAmendmentUpdate(), auditDetails: generatePortalAuditDetails(portalUserId) })
+        .to(generateUrl(facilityId, amendmentId));
 
       expect(status).toEqual(HttpStatusCode.NotFound);
     });
@@ -77,20 +78,22 @@ describe('GET /v1/portal/facilities/:facilityId/amendments/:amendmentId', () => 
   describe('with FF_PORTAL_FACILITY_AMENDMENTS_ENABLED set to `true`', () => {
     let amendmentId: string;
 
-    beforeEach(async () => {
-      const amendment = await createPortalFacilityAmendment({ dealId, facilityId, userId: portalUserId });
-
-      amendmentId = amendment.amendmentId.toString();
-    });
-
     beforeAll(() => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'true';
     });
 
-    it('should return 400 when the facility id is invalid', async () => {
+    beforeEach(async () => {
+      const existingAmendment = await createPortalFacilityAmendment({ facilityId, dealId, userId: portalUserId });
+
+      amendmentId = existingAmendment.amendmentId.toString();
+    });
+
+    it('should return 400 when the amendment id is invalid', async () => {
       const anInvalidFacilityId = 'InvalidId';
 
-      const { status, body } = (await testApi.get(generateUrl(anInvalidFacilityId, amendmentId))) as FacilityAmendmentResponse;
+      const { body, status } = (await testApi
+        .patch({ update: anAmendmentUpdate(), auditDetails: generatePortalAuditDetails(portalUserId) })
+        .to(generateUrl(anInvalidFacilityId, amendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
 
@@ -100,10 +103,12 @@ describe('GET /v1/portal/facilities/:facilityId/amendments/:amendmentId', () => 
       });
     });
 
-    it('should return 400 when the amendment id is invalid', async () => {
+    it('should return 400 when the facility id is invalid', async () => {
       const anInvalidAmendmentId = 'InvalidId';
 
-      const { status, body } = (await testApi.get(generateUrl(facilityId, anInvalidAmendmentId))) as FacilityAmendmentResponse;
+      const { body, status } = (await testApi
+        .patch({ update: anAmendmentUpdate(), auditDetails: generatePortalAuditDetails(portalUserId) })
+        .to(generateUrl(facilityId, anInvalidAmendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
 
@@ -113,10 +118,25 @@ describe('GET /v1/portal/facilities/:facilityId/amendments/:amendmentId', () => 
       });
     });
 
+    it('should return 400 when the update has extra fields', async () => {
+      const { body, status } = (await testApi
+        .patch({ update: { ...anAmendmentUpdate(), additional: 'property' }, auditDetails: generatePortalAuditDetails(portalUserId) })
+        .to(generateUrl(facilityId, amendmentId))) as ErrorResponse;
+
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+      expect(body).toEqual({
+        status: HttpStatusCode.BadRequest,
+        message: ["update: Unrecognized key(s) in object: 'additional' (unrecognized_keys)"],
+        code: API_ERROR_CODE.INVALID_PAYLOAD,
+      });
+    });
+
     it('should return 404 when the facility does not exist', async () => {
       const aValidButNonExistentFacilityId = new ObjectId().toString();
 
-      const { status, body } = (await testApi.get(generateUrl(aValidButNonExistentFacilityId, amendmentId))) as FacilityAmendmentResponse;
+      const { body, status } = (await testApi
+        .patch({ update: anAmendmentUpdate(), auditDetails: generatePortalAuditDetails(portalUserId) })
+        .to(generateUrl(aValidButNonExistentFacilityId, amendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.NotFound);
       expect(body).toEqual({
@@ -128,27 +148,23 @@ describe('GET /v1/portal/facilities/:facilityId/amendments/:amendmentId', () => 
     it('should return 404 when the amendment does not exist', async () => {
       const aValidButNonExistentAmendmentId = new ObjectId().toString();
 
-      const { status, body } = (await testApi.get(generateUrl(facilityId, aValidButNonExistentAmendmentId))) as FacilityAmendmentResponse;
+      const { body, status } = (await testApi
+        .patch({ update: anAmendmentUpdate(), auditDetails: generatePortalAuditDetails(portalUserId) })
+        .to(generateUrl(facilityId, aValidButNonExistentAmendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.NotFound);
       expect(body).toEqual({
         status: HttpStatusCode.NotFound,
-        message: `Amendment not found: ${aValidButNonExistentAmendmentId}`,
+        message: `Facility not found: ${facilityId}`,
       });
     });
 
-    it('should return the amendment when it exists', async () => {
-      const { status, body } = (await testApi.get(generateUrl(facilityId, amendmentId))) as FacilityAmendmentResponse;
+    it('should return 200 when the payload is valid & the amendment exists', async () => {
+      const { status } = (await testApi
+        .patch({ update: anAmendmentUpdate(), auditDetails: generatePortalAuditDetails(portalUserId) })
+        .to(generateUrl(facilityId, amendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.Ok);
-      expect(body).toEqual(
-        expect.objectContaining({
-          amendmentId,
-          dealId,
-          facilityId,
-          type: AMENDMENT_TYPES.PORTAL,
-        } as AnyObject),
-      );
     });
   });
 });
