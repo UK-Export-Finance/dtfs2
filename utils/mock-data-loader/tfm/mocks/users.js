@@ -175,7 +175,7 @@ module.exports = {
   PDC_READ: {
     username: 'PDC_READ',
     password: 'AbC!2345',
-    email: 'test@testing.com',
+    email: 'payment-officer4@ukexportfinance.gov.uk',
     teams: [TEAMS.PDC_READ.id],
     timezone: 'Europe/London',
     firstName: 'PDC',
@@ -184,7 +184,7 @@ module.exports = {
   PDC_RECONCILE: {
     username: 'PDC_RECONCILE',
     password: 'AbC!2345',
-    email: 'test@testing.com',
+    email: 'payment-officer1@ukexportfinance.gov.uk',
     teams: [TEAMS.PDC_RECONCILE.id],
     timezone: 'Europe/London',
     firstName: 'PDC',
@@ -193,7 +193,7 @@ module.exports = {
   PIM_PDC_RECONCILE: {
     username: 'PIM_PDC_RECONCILE',
     password: 'AbC!2345',
-    email: 'test@testing.com',
+    email: 'payment-officer2@ukexportfinance.gov.uk',
     teams: [TEAMS.PIM.id, TEAMS.PDC_RECONCILE.id],
     timezone: 'Europe/London',
     firstName: 'PIM and',
