@@ -5,3 +5,4 @@ export * from './fee-record-utilisation';
 export * from './utilisation-table-row-view-model';
 export * from './a-request-session';
 export * from './handle-sso-redirect-form-response';
+export * from './handle-sso-redirect-form-request';
