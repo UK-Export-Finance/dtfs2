@@ -86,12 +86,12 @@ jobs:
       - name: Repository 🗂️
         uses: actions/checkout@v4
         with:
-          ref: ${{ env.ENVIRONMENT }}
+          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Deploy ⚡
         uses: ./.github/actions/mssql
         with:
-          branch: ${{ env.ENVIRONMENT }}
+          branch: ${{ github.event.workflow_run.head_branch }}
           host: ${{ secrets.SQL_DB_HOST }}
           port: ${{ secrets.SQL_DB_PORT }}
           username: ${{ secrets.SQL_DB_USERNAME }}
@@ -124,12 +124,12 @@ jobs:
       - name: Repository 🗂️
         uses: actions/checkout@v4
         with:
-          ref: ${{ env.ENVIRONMENT }}
+          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Deploy ⚡
         uses: ./.github/actions/webapp
         with:
-          branch: ${{ env.ENVIRONMENT }}
+          branch: ${{ github.event.workflow_run.head_branch }}
           region: ${{ vars.REGION }}
           group: ${{ secrets.RESOURCE_GROUP }}
           credentials: ${{ secrets.AZURE_CREDENTIALS }}
@@ -162,12 +162,12 @@ jobs:
       - name: Repository 🗂️
         uses: actions/checkout@v4
         with:
-          ref: ${{ env.ENVIRONMENT }}
+          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Deploy ⚡
         uses: ./.github/actions/functions
         with:
-          branch: ${{ env.ENVIRONMENT }}
+          branch: ${{ github.event.workflow_run.head_branch }}
           region: ${{ vars.REGION }}
           group: ${{ secrets.RESOURCE_GROUP }}
           credentials: ${{ secrets.AZURE_CREDENTIALS }}
