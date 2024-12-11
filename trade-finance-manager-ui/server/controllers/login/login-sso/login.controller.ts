@@ -5,12 +5,15 @@ import { ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA } from '@ukef/dtfs2-co
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { asPartiallyLoggedInUserSession } from '../../../helpers/express-session';
 import { LoginService } from '../../../services/login.service';
+import { UserSessionService } from '../../../services/user-session.service';
 
 export class LoginController {
   private readonly loginService: LoginService;
+  private readonly userSessionService: UserSessionService;
 
-  constructor({ loginService }: { loginService: LoginService }) {
+  constructor({ loginService, userSessionService }: { loginService: LoginService; userSessionService: UserSessionService }) {
     this.loginService = loginService;
+    this.userSessionService = userSessionService;
   }
 
   public async getLogin(req: Request, res: Response, next: NextFunction) {
@@ -23,9 +26,7 @@ export class LoginController {
 
       const { authCodeUrl, authCodeUrlRequest } = await this.loginService.getAuthCodeUrl({ successRedirect: '/' });
 
-      // As this is the user logging in, there should be no existing login data in the session.
-      // if there is, it should be cleared and set to the authCodeUrlRequest.
-      req.session.loginData = { authCodeUrlRequest };
+      this.userSessionService.createPartiallyLoggedInSession({ session: req.session, authCodeUrlRequest });
 
       return res.redirect(authCodeUrl);
     } catch (error) {
@@ -35,20 +36,21 @@ export class LoginController {
 
   async handleSsoRedirectForm(req: HandleSsoRedirectFormUiRequest, res: Response, next: NextFunction) {
     try {
-      const { body, session: partiallyLoggedInSession } = req;
-      const session = asPartiallyLoggedInUserSession(partiallyLoggedInSession);
+      const { body, session } = req;
+      const partiallyLoggedInSession = asPartiallyLoggedInUserSession(session);
       const auditDetails = generateSystemAuditDetails();
 
       if (!isVerifiedPayload({ payload: body, template: ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA })) {
         throw new InvalidPayloadError('Invalid payload from SSO redirect');
       }
 
-      const { successRedirect } = await this.loginService.handleSsoRedirectFormAndCreateToken({
+      const { successRedirect, user, token } = await this.loginService.handleSsoRedirectForm({
         authCodeResponse: body,
-        originalAuthCodeUrlRequest: session.loginData.authCodeUrlRequest,
-        session,
+        originalAuthCodeUrlRequest: partiallyLoggedInSession.loginData.authCodeUrlRequest,
         auditDetails,
       });
+
+      this.userSessionService.createLoggedInSession({ session, user, userToken: token });
 
       return res.redirect(successRedirect ?? '/');
     } catch (error) {
