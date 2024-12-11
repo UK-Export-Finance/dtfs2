@@ -31,10 +31,10 @@ run-name: 🚀 Deploying to dev
 on:
   schedule:
     - cron: '0 0 * * *'
-  
+
   push:
     branches:
-    # Manual deployment
+      # Manual deployment
       - dev
 
 env:

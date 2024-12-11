@@ -86,6 +86,7 @@ jobs:
       - name: Deploy ⚡
         uses: ./.github/actions/mssql
         with:
+          branch: ${{ env.ENVIRONMENT }}
           host: ${{ secrets.SQL_DB_HOST }}
           port: ${{ secrets.SQL_DB_PORT }}
           username: ${{ secrets.SQL_DB_USERNAME }}
@@ -121,6 +122,7 @@ jobs:
       - name: Deploy ⚡
         uses: ./.github/actions/webapp
         with:
+          branch: ${{ env.ENVIRONMENT }}
           region: ${{ vars.REGION }}
           group: ${{ secrets.RESOURCE_GROUP }}
           credentials: ${{ secrets.AZURE_CREDENTIALS }}
@@ -156,6 +158,7 @@ jobs:
       - name: Deploy ⚡
         uses: ./.github/actions/functions
         with:
+          branch: ${{ env.ENVIRONMENT }}
           region: ${{ vars.REGION }}
           group: ${{ secrets.RESOURCE_GROUP }}
           credentials: ${{ secrets.AZURE_CREDENTIALS }}
