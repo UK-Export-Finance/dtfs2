@@ -3,23 +3,18 @@ import { timeZoneConfig, DATE_FORMATS, MAPPED_FACILITY_TYPE, PORTAL_ACTIVITY_TYP
 import { mapPortalActivities, getPortalActivities } from '.';
 import api from '../../services/api';
 import mocks from '../mocks';
+import MOCK_AUTHOR from '../../utils/mocks/mock-author';
 
 jest.mock('../../services/api');
 
 const timestamp = 1733311320;
 const date = fromUnixTime(timestamp);
 
-const mockAuthor = {
-  firstName: 'Bob',
-  lastName: 'Smith',
-  _id: 12345,
-};
-
 const dealSubmissionActivity = [
   {
     type: PORTAL_ACTIVITY_TYPE.NOTICE,
     timestamp,
-    author: mockAuthor,
+    author: MOCK_AUTHOR,
     text: '',
     label: PORTAL_ACTIVITY_LABEL.AIN_SUBMISSION,
     html: '',
@@ -35,7 +30,7 @@ const facilityActivity = [
   {
     type: PORTAL_ACTIVITY_TYPE.FACILITY_STAGE,
     timestamp,
-    author: mockAuthor,
+    author: MOCK_AUTHOR,
     text: '',
     label: PORTAL_ACTIVITY_LABEL.FACILITY_CHANGED_ISSUED,
     html: 'facility',
@@ -64,7 +59,7 @@ describe('mapPortalActivities', () => {
         title: PORTAL_ACTIVITY_LABEL.AIN_SUBMISSION,
         date: format(date, DATE_FORMATS.D_MMMM_YYYY),
         time: format(date, DATE_FORMATS.H_MMAAA),
-        byline: `${mockAuthor.firstName} ${mockAuthor.lastName}`,
+        byline: `${MOCK_AUTHOR.firstName} ${MOCK_AUTHOR.lastName}`,
         facilityType: '',
         ukefFacilityId: '',
         facilityId: '',
@@ -84,7 +79,7 @@ describe('mapPortalActivities', () => {
         title: PORTAL_ACTIVITY_LABEL.FACILITY_CHANGED_ISSUED,
         date: format(date, DATE_FORMATS.D_MMMM_YYYY),
         time: format(date, DATE_FORMATS.H_MMAAA),
-        byline: `${mockAuthor.firstName} ${mockAuthor.lastName}`,
+        byline: `${MOCK_AUTHOR.firstName} ${MOCK_AUTHOR.lastName}`,
         facilityType: MAPPED_FACILITY_TYPE.CASH,
         ukefFacilityId: '12345',
         facilityId: '123456',
