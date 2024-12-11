@@ -47,6 +47,7 @@ env:
   FROM: latest
 
 jobs:
+  # 1. Base actions configrations
   setup:
     name: Setup 🔧
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -55,6 +56,7 @@ jobs:
       product: ${{ env.PRODUCT }}
       environment: ${{ steps.environment.outputs.environment }}
       timezone: ${{ env.TIMEZONE }}
+
     steps:
       - name: Environment 🧪
         id: environment
@@ -70,6 +72,7 @@ jobs:
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.TIMEZONE }}"
 
+  # 2. Database schema migration
   database:
     name: MSSQL 🗄️
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -82,6 +85,8 @@ jobs:
     steps:
       - name: Repository 🗂️
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.ENVIRONMENT }}
 
       - name: Deploy ⚡
         uses: ./.github/actions/mssql
@@ -93,7 +98,7 @@ jobs:
           password: ${{ secrets.SQL_DB_PASSWORD }}
           databae: ${{ secrets.SQL_DB_NAME }}
           node: ${{ vars.NODE_VERSION }}
-
+  # 3. micro-serices WebApp deployments
   webapp:
     name: WebApp 🌐
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -118,6 +123,8 @@ jobs:
     steps:
       - name: Repository 🗂️
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.ENVIRONMENT }}
 
       - name: Deploy ⚡
         uses: ./.github/actions/webapp
@@ -129,13 +136,13 @@ jobs:
           acr: ${{ secrets.ACR_PASSWORD }}
           webapp: ${{ matrix.webapp }}
 
+  # 4. micro-serices Functions deployments
   functions:
     name: Functions ⚡
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     needs: [setup, webapp]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
-
     env:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
 
@@ -154,6 +161,8 @@ jobs:
     steps:
       - name: Repository 🗂️
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.ENVIRONMENT }}
 
       - name: Deploy ⚡
         uses: ./.github/actions/functions

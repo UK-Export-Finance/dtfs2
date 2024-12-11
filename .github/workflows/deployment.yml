@@ -43,6 +43,7 @@ env:
   TIMEZONE: ${{ vars.TIMEZONE }}
 
 jobs:
+  # 1. Base actions configrations
   setup:
     name: Setup 🔧
     runs-on: [self-hosted, linux, deployment]
@@ -50,6 +51,7 @@ jobs:
       product: ${{ env.PRODUCT }}
       environment: ${{ steps.environment.outputs.environment }}
       timezone: ${{ env.TIMEZONE }}
+
     steps:
       - name: Environment 🧪
         id: environment
@@ -59,6 +61,7 @@ jobs:
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.TIMEZONE }}"
 
+  # 2. Database schema migration
   database:
     name: MSSQL 🗄️
 
@@ -82,6 +85,7 @@ jobs:
           databae: ${{ secrets.SQL_DB_NAME }}
           node: ${{ vars.NODE_VERSION }}
 
+  # 3. micro-serices WebApp deployments
   webapp:
     name: WebApp 🌐
 
@@ -116,6 +120,7 @@ jobs:
           acr: ${{ secrets.ACR_PASSWORD }}
           webapp: ${{ matrix.webapp }}
 
+  # 4. micro-serices Functions deployments
   functions:
     name: Functions ⚡
 
