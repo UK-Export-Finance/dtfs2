@@ -16,6 +16,10 @@ export type DeleteFeeRecordCorrectionTransientFormDataRequest = CustomExpressReq
  * fee record id.
  * @param req - The request object
  * @param res - The response object
+ * @returns A '{@link HttpStatusCode.NoContent}' if there are no errors, else
+ * an error status code. If an Axios error occurs, the specific status code
+ * from the error response is returned, otherwise returns a
+ * {@link HttpStatusCode.InternalServerError}.
  */
 export const deleteFeeRecordCorrectionTransientFormData = async (req: DeleteFeeRecordCorrectionTransientFormDataRequest, res: Response) => {
   try {
