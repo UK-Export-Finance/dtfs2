@@ -72,6 +72,7 @@ on:
 
   push:
     branches:
+      # Staging ready release
       - release-*
       - '!release-please*'
 
