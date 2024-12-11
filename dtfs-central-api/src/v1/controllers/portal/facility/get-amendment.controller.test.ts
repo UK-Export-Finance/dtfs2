@@ -1,11 +1,11 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { AMENDMENT_TYPES, FacilityAmendment, TestApiError } from '@ukef/dtfs2-common';
+import { AMENDMENT_TYPES, FacilityAmendmentWithUkefId, TestApiError } from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 import { getAmendment, GetAmendmentRequest } from './get-amendment.controller';
 
-const mockFindOneAmendmentByFacilityIdAndAmendmentId = jest.fn() as jest.Mock<Promise<(FacilityAmendment & { ukefFacilityId: string }) | undefined>>;
+const mockFindOneAmendmentByFacilityIdAndAmendmentId = jest.fn() as jest.Mock<Promise<FacilityAmendmentWithUkefId | undefined>>;
 
 const facilityId = new ObjectId().toString();
 const amendmentId = new ObjectId().toString();
@@ -44,9 +44,7 @@ describe('getAmendment', () => {
 
   it(`should set the status to ${HttpStatusCode.NotFound} if the amendment is of type ${AMENDMENT_TYPES.TFM}`, async () => {
     // Arrange
-    const amendment = { amendmentId: new ObjectId(), type: AMENDMENT_TYPES.TFM, ukefFacilityId: 'ukefFacilityId' } as FacilityAmendment & {
-      ukefFacilityId: string;
-    };
+    const amendment = { amendmentId: new ObjectId(), type: AMENDMENT_TYPES.TFM, ukefFacilityId: 'ukefFacilityId' } as FacilityAmendmentWithUkefId;
     mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValue(amendment);
 
     const { req, res } = httpMocks.createMocks<GetAmendmentRequest>({ params: { facilityId, amendmentId } });
@@ -60,7 +58,7 @@ describe('getAmendment', () => {
 
   it(`should set the status to ${HttpStatusCode.NotFound} if the amendment type is undefined`, async () => {
     // Arrange
-    const amendment = { amendmentId: new ObjectId(), ukefFacilityId: 'ukefFacilityId' } as FacilityAmendment & { ukefFacilityId: string };
+    const amendment = { amendmentId: new ObjectId(), ukefFacilityId: 'ukefFacilityId' } as FacilityAmendmentWithUkefId;
     mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValue(amendment);
 
     const { req, res } = httpMocks.createMocks<GetAmendmentRequest>({ params: { facilityId, amendmentId } });
@@ -74,9 +72,7 @@ describe('getAmendment', () => {
 
   it(`should set the status to ${HttpStatusCode.Ok} if the amendment is of type ${AMENDMENT_TYPES.PORTAL}`, async () => {
     // Arrange
-    const amendment = { amendmentId: new ObjectId(), type: AMENDMENT_TYPES.PORTAL, ukefFacilityId: 'ukefFacilityId' } as FacilityAmendment & {
-      ukefFacilityId: string;
-    };
+    const amendment = { amendmentId: new ObjectId(), type: AMENDMENT_TYPES.PORTAL, ukefFacilityId: 'ukefFacilityId' } as FacilityAmendmentWithUkefId;
     mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValue(amendment);
 
     const { req, res } = httpMocks.createMocks<GetAmendmentRequest>({ params: { facilityId, amendmentId } });
@@ -90,9 +86,7 @@ describe('getAmendment', () => {
 
   it(`should return the amendment if the amendment is of type ${AMENDMENT_TYPES.PORTAL}`, async () => {
     // Arrange
-    const amendment = { amendmentId: new ObjectId(), type: AMENDMENT_TYPES.PORTAL, ukefFacilityId: 'ukefFacilityId' } as FacilityAmendment & {
-      ukefFacilityId: string;
-    };
+    const amendment = { amendmentId: new ObjectId(), type: AMENDMENT_TYPES.PORTAL, ukefFacilityId: 'ukefFacilityId' } as FacilityAmendmentWithUkefId;
     mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValue(amendment);
 
     const { req, res } = httpMocks.createMocks<GetAmendmentRequest>({ params: { facilityId, amendmentId } });
