@@ -10,7 +10,7 @@ import { UNIX_TIMESTAMP_SECONDS_SCHEMA } from './unix-timestamp.schema';
  */
 export const PORTAL_FACILITY_AMENDMENT = z
   .object({
-    changeCoverEndDate: z.boolean(),
+    changeCoverEndDate: z.boolean().optional(),
     coverEndDate: UNIX_TIMESTAMP_SECONDS_SCHEMA.optional(),
     currentCoverEndDate: UNIX_TIMESTAMP_SECONDS_SCHEMA.optional(),
     isUsingFacilityEndDate: z.boolean().optional(),
