@@ -140,8 +140,8 @@ const updateDealAcbs = async (taskOutput) => {
  * @param {Object} FFR Facility fixed fee record
  * @returns {Object} ACBS returned response
  */
-const updateIssuedFacilityAcbs = ({ facilityId, issuedFacilityMaster, facilityLoan, facilityFee }) =>
-  tfmController.updateFacilityAcbs(facilityId, {
+const updateIssuedFacilityAcbs = ({ facilityIdentifier, issuedFacilityMaster, facilityLoan, facilityFee }) =>
+  tfmController.updateFacilityAcbs(facilityIdentifier, {
     facilityStage: CONSTANTS.FACILITIES.ACBS_FACILITY_STAGE.ISSUED,
     issuedFacilityMaster,
     facilityLoan,
