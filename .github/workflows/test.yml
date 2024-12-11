@@ -68,12 +68,13 @@ on:
       - 'e2e-tests/**'
       - 'utils/**'
       - 'libs/**'
+      - 'README.md'
 
   push:
     branches:
-      - dev
-      - feature
+      # Staging ready release
       - release-*
+      - '!release-please*'
 
   create:
     branches:
@@ -143,6 +144,7 @@ env:
   AUDIT_API_USERNAME: ${{ secrets.AUDIT_API_USERNAME }}
   AUDIT_API_PASSWORD: ${{ secrets.AUDIT_API_PASSWORD }}
   UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: ${{ vars.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }}
+  UTILISATION_REPORT_CREATION_FAILURE_EMAIL_ADDRESS: ${{ secrets. UTILISATION_REPORT_CREATION_FAILURE_EMAIL_ADDRESS }}
   ACCEPT_EULA: ${{ vars.ACCEPT_EULA }}
   MSSQL_SA_PASSWORD: ${{ secrets.MSSQL_SA_PASSWORD }}
   SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_QA }}
@@ -157,6 +159,7 @@ env:
   FF_FEE_RECORD_CORRECTION_ENABLED: ${{ vars.FF_FEE_RECORD_CORRECTION_ENABLED }}
   FF_TFM_FACILITY_END_DATE_ENABLED: ${{ vars.FF_TFM_FACILITY_END_DATE_ENABLED }}
   FF_TFM_DEAL_CANCELLATION_ENABLED: ${{ vars.FF_TFM_DEAL_CANCELLATION_ENABLED }}
+  FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: ${{ vars.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED }}
   FF_TFM_SSO_ENABLED: ${{ vars.FF_TFM_SSO_ENABLED }}
   GEF_DEAL_VERSION: ${{ vars.GEF_DEAL_VERSION }}
   ENTRA_ID_CLIENT_ID: ${{ vars.ENTRA_ID_CLIENT_ID }}
@@ -215,20 +218,25 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Dependencies
-        working-directory: ./
-        run: npm ci
+        uses: ./.github/actions/rerun
+        with:
+          command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Start
-        working-directory: ./
-        run: docker compose up --build -d
+        uses: ./.github/actions/rerun
+        with:
+          command: docker compose up --build -d
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Initialise
-        working-directory: ./utils
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-        run: |
-          sleep 100s
-          npm run load
+        uses: ./.github/actions/rerun
+        with:
+          command: sleep 100s && npm run load
+          working-directory: ./utils
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
         working-directory: ./libs/common
@@ -237,9 +245,12 @@ jobs:
         run: npm run db:migrate
 
       - name: Execute
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-        run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
+        uses: ./.github/actions/rerun
+        with:
+          command: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Stop
         working-directory: ./
@@ -286,12 +297,17 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Dependencies
-        working-directory: ./
-        run: npm ci
+        uses: ./.github/actions/rerun
+        with:
+          command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: ${{ matrix.functions }}
-        working-directory: ./azure-functions/${{ matrix.functions }}
-        run: npm run api-test
+        uses: ./.github/actions/rerun
+        with:
+          command: npm run api-test
+          working-directory: ./azure-functions/${{ matrix.functions }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Coverage
         uses: codecov/codecov-action@v4
@@ -345,12 +361,17 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Dependencies
-        working-directory: ./
-        run: npm ci
+        uses: ./.github/actions/rerun
+        with:
+          command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Execute
-        working-directory: ${{ matrix.services }}
-        run: npm run unit-test
+        uses: ./.github/actions/rerun
+        with:
+          command: npm run unit-test
+          working-directory: ${{ matrix.services }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Coverage
         uses: codecov/codecov-action@v4
@@ -368,6 +389,7 @@ jobs:
       FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
       FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
       FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
+      FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
       FF_TFM_SSO_ENABLED: 'true'
       GEF_DEAL_VERSION: 1
     environment:
@@ -411,12 +433,17 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Dependencies
-        working-directory: ./
-        run: npm ci
+        uses: ./.github/actions/rerun
+        with:
+          command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Execute
-        working-directory: ${{ matrix.services }}
-        run: npm run unit-test-ff
+        uses: ./.github/actions/rerun
+        with:
+          command: npm run unit-test-ff
+          working-directory: ${{ matrix.services }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Coverage
         uses: codecov/codecov-action@v4
@@ -444,6 +471,7 @@ jobs:
             'homepage/**/*.spec.js',
             'admin/**/*.spec.js',
             'checker/**/*.spec.js',
+            'dashboard/dashboard-deals/deal-cancellation-disabled/*.spec.js',
             'dashboard/dashboard-deals/filter-by/*.spec.js',
             'dashboard/dashboard-deals/filters/*.spec.js',
             'dashboard/dashboard-deals/sort/*.spec.js',
@@ -471,7 +499,6 @@ jobs:
             'maker-bond/**/*.spec.js',
             'maker-facilities/**/*.spec.js',
             'maker-loan/**/*.spec.js',
-            'number-generator/**/*.spec.js',
             'read-only/**/*.spec.js',
             'reports/**/*.spec.js',
             'payment-report-officer/**/*.spec.js',
@@ -496,19 +523,25 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
       - name: Dependencies
-        working-directory: ./
-        run: npm ci
+        uses: ./.github/actions/rerun
+        with:
+          command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Docker
-        run: docker compose up --build -d
+        uses: ./.github/actions/rerun
+        with:
+          command: docker compose up --build -d
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Initialise
-        working-directory: ./utils
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-        run: |
-          sleep 100s
-          npm run load
+        uses: ./.github/actions/rerun
+        with:
+          command: sleep 100s && npm run load
+          working-directory: ./utils
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
         working-directory: ./libs/common
@@ -517,12 +550,15 @@ jobs:
         run: npm run db:migrate
 
       - name: Execute
-        working-directory: ./e2e-tests
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-          TZ: ${{ vars.TIMEZONE }}
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./portal --record false --spec "./portal/cypress/e2e/journeys/${{ matrix.spec }}"
+        uses: ./.github/actions/rerun
+        with:
+          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./portal --record false --spec './portal/cypress/e2e/journeys/${{ matrix.spec }}'
+          working-directory: ./e2e-tests
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            TZ=${{ vars.TIMEZONE }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
   # 5. E2E - GEF
   e2e-tests-gef:
@@ -540,6 +576,7 @@ jobs:
         spec:
           [
             '*.spec.js',
+            'amendments/portal-amendments-disabled/**/*.spec.js',
             'application/**/*.spec.js',
             'checker/**/*.spec.js',
             'clone/*.spec.js',
@@ -580,19 +617,25 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
       - name: Dependencies
-        working-directory: ./
-        run: npm ci
+        uses: ./.github/actions/rerun
+        with:
+          command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Docker
-        run: docker compose up --build -d
+        uses: ./.github/actions/rerun
+        with:
+          command: docker compose up --build -d
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Initialise
-        working-directory: ./utils
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-        run: |
-          sleep 100s
-          npm run load
+        uses: ./.github/actions/rerun
+        with:
+          command: sleep 100s && npm run load
+          working-directory: ./utils
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
         working-directory: ./libs/common
@@ -601,12 +644,15 @@ jobs:
         run: npm run db:migrate
 
       - name: Execute
-        working-directory: ./e2e-tests
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-          TZ: ${{ vars.TIMEZONE }}
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./gef --record false --spec "./gef/cypress/e2e/${{ matrix.spec }}"
+        uses: ./.github/actions/rerun
+        with:
+          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./gef --record false --spec './gef/cypress/e2e/${{ matrix.spec }}'
+          working-directory: ./e2e-tests
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            TZ=${{ vars.TIMEZONE }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
   #6. E2E - TFM
   e2e-tests-tfm:
@@ -683,19 +729,25 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
       - name: Dependencies
-        working-directory: ./
-        run: npm ci
+        uses: ./.github/actions/rerun
+        with:
+          command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Docker
-        run: docker compose up --build -d
+        uses: ./.github/actions/rerun
+        with:
+          command: docker compose up --build -d
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Initialise
-        working-directory: ./utils
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-        run: |
-          sleep 100s
-          npm run load
+        uses: ./.github/actions/rerun
+        with:
+          command: sleep 100s && npm run load
+          working-directory: ./utils
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
         working-directory: ./libs/common
@@ -704,12 +756,15 @@ jobs:
         run: npm run db:migrate
 
       - name: Execute
-        working-directory: ./e2e-tests
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-          TZ: ${{ vars.TIMEZONE }}
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./tfm --record false --spec "./tfm/cypress/e2e/journeys/${{ matrix.spec }}"
+        uses: ./.github/actions/rerun
+        with:
+          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./tfm --record false --spec './tfm/cypress/e2e/journeys/${{ matrix.spec }}'
+          working-directory: ./e2e-tests
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            TZ=${{ vars.TIMEZONE }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
   #7. E2E - UKEF
   e2e-tests-ukef:
@@ -768,19 +823,25 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
       - name: Dependencies
-        working-directory: ./
-        run: npm ci
+        uses: ./.github/actions/rerun
+        with:
+          command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Docker
-        run: docker compose up --build -d
+        uses: ./.github/actions/rerun
+        with:
+          command: docker compose up --build -d
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Initialise
-        working-directory: ./utils
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-        run: |
-          sleep 100s
-          npm run load
+        uses: ./.github/actions/rerun
+        with:
+          command: sleep 100s && npm run load
+          working-directory: ./utils
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
         working-directory: ./libs/common
@@ -789,12 +850,15 @@ jobs:
         run: npm run db:migrate
 
       - name: Execute
-        working-directory: ./e2e-tests
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-          TZ: ${{ vars.TIMEZONE }}
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ukef --record false --spec "./ukef/cypress/e2e/journeys/${{ matrix.spec }}"
+        uses: ./.github/actions/rerun
+        with:
+          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ukef --record false --spec './ukef/cypress/e2e/journeys/${{ matrix.spec }}'
+          working-directory: ./e2e-tests
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            TZ=${{ vars.TIMEZONE }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
   #8. E2E - FF
   e2e-tests-ff:
@@ -805,7 +869,7 @@ jobs:
       FF_FEE_RECORD_CORRECTION_ENABLED: 'true'
       FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
       FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
-      # TODO DTFS2-6892: add FF_TFM_SSO_ENABLED feature flag here when e2e tests implemented
+      FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
       GEF_DEAL_VERSION: 1
     environment:
       name: ${{ needs.setup.outputs.environment }}
@@ -818,6 +882,41 @@ jobs:
       matrix:
         spec:
           [
+            './portal/cypress/e2e/journeys/*.spec.js',
+            './portal/cypress/e2e/journeys/homepage/**/*.spec.js',
+            './portal/cypress/e2e/journeys/admin/**/*.spec.js',
+            './portal/cypress/e2e/journeys/checker/**/*.spec.js',
+            './portal/cypress/e2e/journeys/dashboard/dashboard-deals/filter-by/*.spec.js',
+            './portal/cypress/e2e/journeys/dashboard/dashboard-deals/filters/*.spec.js',
+            './portal/cypress/e2e/journeys/dashboard/dashboard-deals/sort/*.spec.js',
+            './portal/cypress/e2e/journeys/dashboard/dashboard-deals/deal-cancellation-enabled/*.spec.js',
+            './portal/cypress/e2e/journeys/dashboard/dashboard-facilities/filter-by/*.spec.js',
+            './portal/cypress/e2e/journeys/dashboard/dashboard-facilities/filters/*.spec.js',
+            './portal/cypress/e2e/journeys/dashboard/dashboard-facilities/sort/*.spec.js',
+            './portal/cypress/e2e/journeys/feedback/**/*.spec.js',
+            './portal/cypress/e2e/journeys/login/**/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/check-deal-details/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/clone-deal/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/dashboard/**/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/submit-a-deal-for-review/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/submit-a-deal-for-review-with-issued-and-unissued-facilities-and-resubmit-after-checker-returns/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/submit-issued-facilities-for-review/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/bank-details/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/eligibility/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/abandon-a-deal/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/before-you-start/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/bss-mandatory-criteria/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/edit-deal-name/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/proceed-to-review/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/select-scheme/*.spec.js',
+            './portal/cypress/e2e/journeys/maker/xss/*.spec.js',
+            './portal/cypress/e2e/journeys/maker-about-supply-contract/**/*.spec.js',
+            './portal/cypress/e2e/journeys/maker-bond/**/*.spec.js',
+            './portal/cypress/e2e/journeys/maker-facilities/**/*.spec.js',
+            './portal/cypress/e2e/journeys/maker-loan/**/*.spec.js',
+            './portal/cypress/e2e/journeys/read-only/**/*.spec.js',
+            './portal/cypress/e2e/journeys/reports/**/*.spec.js',
+            './portal/cypress/e2e/journeys/payment-report-officer/**/*.spec.js',
             './gef/cypress/e2e/*.spec.js',
             './gef/cypress/e2e/application/**/*.spec.js',
             './gef/cypress/e2e/checker/**/*.spec.js',
@@ -839,6 +938,7 @@ jobs:
             './gef/cypress/e2e/security/**/*.spec.js',
             './gef/cypress/e2e/ukef/**/*.spec.js',
             './gef/cypress/e2e/upload/**/*.spec.js',
+            './gef/cypress/e2e/amendments/portal-amendments-enabled/**/*.spec.js',
             './tfm/cypress/e2e/journeys/case/activities/*.spec.js',
             './tfm/cypress/e2e/journeys/case/AIN/*.spec.js',
             './tfm/cypress/e2e/journeys/case/deal-cancellation-enabled/*.spec.js',
@@ -864,7 +964,7 @@ jobs:
             './tfm/cypress/e2e/journeys/case-amendments/facility-end-date/feature-flag-enabled/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/in-progress/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/request-when-previously-submitted/*.spec.js',
-            './tfm/cypress/e2e/journeys/case-amendments/show-amendment-button/*.spec.js',
+            './tfm/cypress/e2e/journeys/case-amendments/show-amendment-button/**/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/tasks/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/underwriting-page-unassigned/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/user-flow/*.spec.js',
@@ -878,6 +978,7 @@ jobs:
             './tfm/cypress/e2e/journeys/login/**/*.spec.js',
             './tfm/cypress/e2e/journeys/users/**/*.spec.js',
             './tfm/cypress/e2e/journeys/utilisation-reports/fee-record-correction/feature-flag-enabled/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/deal-cancellation/**/*.spec.js',
           ]
 
     concurrency:
@@ -899,19 +1000,25 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
       - name: Dependencies
-        working-directory: ./
-        run: npm ci
+        uses: ./.github/actions/rerun
+        with:
+          command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Docker
-        run: docker compose up --build -d
+        uses: ./.github/actions/rerun
+        with:
+          command: docker compose up --build -d
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Initialise
-        working-directory: ./utils
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-        run: |
-          sleep 100s
-          npm run load
+        uses: ./.github/actions/rerun
+        with:
+          command: sleep 100s && npm run load
+          working-directory: ./utils
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
         working-directory: ./libs/common
@@ -926,12 +1033,15 @@ jobs:
           echo "::set-output name=directory::$directory"
 
       - name: Execute
-        working-directory: ./e2e-tests
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-          TZ: ${{ vars.TIMEZONE }}
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./${{ steps.project.outputs.directory }} --record false --spec "${{ matrix.spec }}"
+        uses: ./.github/actions/rerun
+        with:
+          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./${{ steps.project.outputs.directory }} --record false --spec '${{ matrix.spec }}'
+          working-directory: ./e2e-tests
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            TZ=${{ vars.TIMEZONE }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
   #9. Docker build
   build:
@@ -967,8 +1077,10 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
       - name: Dependencies
-        working-directory: ./
-        run: npm ci
+        uses: ./.github/actions/rerun
+        with:
+          command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Build
         run: docker build -f ./azure-functions/${{ matrix.functions }}/Dockerfile .
