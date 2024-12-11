@@ -6,10 +6,10 @@ import {
   UtilisationReportEntityMockBuilder,
   MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT,
 } from '@ukef/dtfs2-common';
-import pages from '../../../../../pages';
-import USERS from '../../../../../../fixtures/users';
-import { NODE_TASKS } from '../../../../../../../../e2e-fixtures';
-import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
+import pages from '../../../../pages';
+import USERS from '../../../../../fixtures/users';
+import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context('When fee record correction feature flag is enabled', () => {
   const bankId = '961';

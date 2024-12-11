@@ -63,7 +63,7 @@
           text: "Provide more information"
         },
         value: {
-          text: additionalInfo
+          html: (additionalInfo | replace('\n', '<br>'))
         },
         actions: {
           items: [
@@ -107,7 +107,7 @@
         href: cancelLink,
         classes: "govuk-button--secondary",
         attributes: {
-          'data-cy': 'cancel-button'
+          'data-cy': 'cancel-link'
         }
       }) }}
     </div>
