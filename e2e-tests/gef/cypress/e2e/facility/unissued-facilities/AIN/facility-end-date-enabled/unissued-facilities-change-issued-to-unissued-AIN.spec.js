@@ -9,7 +9,7 @@ import aboutFacilityUnissued from '../../../../pages/unissued-facilities-about-f
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import statusBanner from '../../../../pages/application-status-banner';
 import facilities from '../../../../pages/facilities';
-import { threeDaysAgo, threeMonthsMinusThreeDays, threeMonths, threeMonthsOneDay, today, twoMonths } from '../../../../../../../e2e-fixtures/dateConstants';
+import { threeDaysAgo, threeDaysAgoPlusThreeMonths, threeMonths, threeMonthsOneDay, today, twoMonths } from '../../../../../../../e2e-fixtures/dateConstants';
 
 let dealId;
 let token;
@@ -82,7 +82,10 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.rows().contains(threeMonthsMinusThreeDays.dd_MMM_yyyy);
+
+      const deadlineForIssuing = threeDaysAgoPlusThreeMonths.dd_MMM_yyyy;
+      unissuedFacilityTable.rows().contains(deadlineForIssuing);
+
       statusBanner.applicationBanner().should('exist');
     });
 

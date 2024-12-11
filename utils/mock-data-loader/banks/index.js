@@ -174,6 +174,21 @@ const MOCK_BANKS = [
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
     isVisibleInTfmUtilisationReports: true,
   },
+  {
+    id: '13',
+    name: 'ABC Bank',
+    mga: ['Test.pdf'],
+    emails: ['maker1@ukexportfinance.gov.uk'],
+    companiesHouseNo: '02564490',
+    partyUrn: '00313709',
+    hasGefAccessOnly: false,
+    paymentOfficerTeam: {
+      teamName: 'Payment Reporting Team',
+      emails: ['payment-officer4@ukexportfinance.gov.uk'],
+    },
+    utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
+    isVisibleInTfmUtilisationReports: true,
+  },
 ];
 
 module.exports = MOCK_BANKS;
