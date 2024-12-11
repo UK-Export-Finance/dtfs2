@@ -1,6 +1,17 @@
 import { ObjectId, UpdateFilter, WithoutId, FindOneAndUpdateOptions, Collection, Document, UpdateResult, Filter } from 'mongodb';
-import { AuditDetails, TfmFacility, FacilityAmendment, AmendmentStatus, FacilityNotFoundError, GEF_FACILITY_TYPE } from '@ukef/dtfs2-common';
-import { deleteMany } from '@ukef/dtfs2-common/change-stream';
+import {
+  AuditDetails,
+  TfmFacility,
+  FacilityAmendment,
+  AmendmentStatus,
+  FacilityNotFoundError,
+  AMENDMENT_TYPES,
+  AMENDMENT_STATUS,
+  PortalFacilityAmendment,
+  GEF_FACILITY_TYPE,
+} from '@ukef/dtfs2-common';
+import { deleteMany, generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
+
 import { mongoDbClient } from '../../drivers/db-client';
 import { aggregatePipelines, AllFacilitiesAndFacilityCountAggregatePipelineOptions } from './aggregate-pipelines';
 
@@ -295,5 +306,36 @@ export class TfmFacilitiesRepo {
       'facilitySnapshot.type': { $in: Object.values(GEF_FACILITY_TYPE) },
     });
     return numberOfFoundDocuments > 0;
+  }
+
+  public static async upsertPortalFacilityAmendmentDraft(amendment: PortalFacilityAmendment, auditDetails: AuditDetails): Promise<UpdateResult> {
+    const collection = await this.getCollection();
+
+    const findFilter: Filter<TfmFacility> = {
+      _id: { $eq: new ObjectId(amendment.facilityId) },
+      'facilitySnapshot.dealId': { $eq: new ObjectId(amendment.dealId) },
+    };
+
+    const removeDraftAmendmentsFilter: UpdateFilter<TfmFacility> = {
+      $pull: {
+        amendments: { type: AMENDMENT_TYPES.PORTAL, status: { $ne: AMENDMENT_STATUS.COMPLETED } },
+      },
+      $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
+    };
+
+    const pushDraftAmendmentFilter: UpdateFilter<TfmFacility> = {
+      $push: { amendments: amendment },
+      $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
+    };
+
+    await collection.updateOne(findFilter, removeDraftAmendmentsFilter);
+
+    const updateResult = await collection.updateOne(findFilter, pushDraftAmendmentFilter);
+
+    if (updateResult.modifiedCount === 0) {
+      throw new FacilityNotFoundError(amendment.facilityId.toString());
+    }
+
+    return updateResult;
   }
 }

@@ -47,7 +47,7 @@ interface BaseAmendment {
   createdAt: UnixTimestamp;
   updatedAt: UnixTimestamp;
   status: AmendmentStatus;
-  version: number;
+  version?: number;
   changeCoverEndDate?: boolean;
   coverEndDate?: UnixTimestamp | null;
   currentCoverEndDate?: UnixTimestamp | null;
