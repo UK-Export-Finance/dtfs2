@@ -63,8 +63,6 @@ describe(`GET ${url}`, () => {
       makeRequestWithHeaders: (headers: Headers) => get(url, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      successHeaders: null,
-      redirectUrlForInvalidRoles: null,
     });
 
     it('should return status 200 when user logged in as maker', async () => {

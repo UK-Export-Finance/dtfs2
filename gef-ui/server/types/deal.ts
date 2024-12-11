@@ -1,4 +1,4 @@
-import { DealStatus, DealType, IsoDateTimeStamp, AnyObject, UnixTimestampMilliseconds } from '@ukef/dtfs2-common';
+import { DealStatus, DealType, IsoDateTimeStamp, AnyObject, UnixTimestampMilliseconds, DealSubmissionType } from '@ukef/dtfs2-common';
 
 /**
  * Deal object received from portal-api
@@ -27,4 +27,5 @@ export type Deal = {
   supportingInformation: AnyObject;
   editedBy: string[];
   additionalRefName: string | null;
+  submissionType: DealSubmissionType;
 };

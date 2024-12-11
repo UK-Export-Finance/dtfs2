@@ -1,4 +1,4 @@
-import { GefFacilityType, IsoDateTimeStamp, AnyObject } from '@ukef/dtfs2-common';
+import { GefFacilityType, IsoDateTimeStamp, AnyObject, Currency } from '@ukef/dtfs2-common';
 
 /**
  * Facility object received from portal-api
@@ -18,7 +18,9 @@ export type Facility = {
   monthsOfCover?: number | null;
   details?: AnyObject | null;
   detailsOther?: string | null;
-  currency?: AnyObject | null;
+  currency?: {
+    id: Currency;
+  } | null;
   value?: number | null;
   coverPercentage?: number | null;
   interestPercentage?: number | null;

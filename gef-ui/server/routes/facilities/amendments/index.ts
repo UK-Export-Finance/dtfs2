@@ -4,6 +4,7 @@ import { validatePortalFacilityAmendmentsEnabled } from '../../../middleware/fea
 import { validateRole, validateToken, validateBank } from '../../../middleware';
 import { MAKER } from '../../../constants/roles';
 import { getWhatNeedsToChange } from '../../../controllers/amendments/what-needs-to-change/what-needs-to-change';
+import { getFacilityValue } from '../../../controllers/amendments/facility-value/get-facility-value';
 
 const router = express.Router();
 
@@ -13,5 +14,10 @@ router
   .route('/application-details/:dealId/facilities/:facilityId/amendments/what-needs-to-change')
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
   .get(getWhatNeedsToChange);
+
+router
+  .route('/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/facility-value')
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .get(getFacilityValue);
 
 export default router;
