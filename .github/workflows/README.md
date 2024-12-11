@@ -50,3 +50,4 @@ To run Azure CLI commands locally, you'll need to install the `az` CLI. Addition
 - The Front Door extension: `az extension add --name front-door`
 
 ---
+
