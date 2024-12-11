@@ -1,125 +1,94 @@
-# Overview
-# ********
-# This workflow automates the deployment of web apps and Azure Functions to Azure upon successful completion of a QAT workflow.
+# Deployment Workflow
+# *******************
+#
+# This GitHub Actions workflow automates the deployment process for web apps and Azure Functions to Azure.
+# It is triggered when on base default branch i.e. `main` at every day at midnight. The workflow runs after a successful QAT workflow
+# completion and includes the following key steps:
+#
 # Key Stages:
+# 1. Setup: Configures environment variables for the product, environment, and timezone.
+# 2. SQL Database Migration: Deploys any new SQL migrations to the environment's SQL database.
+# 3. WebApp Deployment: Sequentially deploys a list of web apps defined in the matrix (`portal-ui`, `gef-ui`, etc.) to Azure.
+# 4. Function Deployment: Sequentially deploys a list of functions (e.g., `acbs-function`) to Azure.
 #
-# 1. Setup
-# ********
-# Sets environment variables for product, environment, and timezone.
-# Outputs these variables for use in subsequent jobs.
+# Key Points:
+# - The workflow runs only after a successful QAT workflow.
+# - The deployment environment is specified via environment variables (e.g., `dev`, `staging`, `prod`).
+# - Matrix strategies are used for iterative deployment across multiple web apps and functions.
+# - Temporary deployment slots are used to minimize downtime during deployments.
+# - The workflow uses concurrency control to ensure that multiple deployments do not run simultaneously for the same app/function.
 #
-# 2. SQL Migrations
-# *****************
-# Runs new SQL migrations on the environment SQL database
+# Triggers: This workflow is triggered by a push to the `main` branch.
 #
-# 3. WebApp
-# *********
-# Runs sequentially for each web app defined in the matrix.webapp list.
-# Sets the Dockerfile location based on the microservice (using the portal directory for portal-ui and the app's name for others).
-# Builds and pushes Docker images using the root workspace as the context and the Dockerfile location specified for the microservice.
-# Creates a temporary deployment slot using the FROM tag (latest by default).
-# Swaps the slot to make the new image live.
-# Cleans up the temporary slot.
-#
-# 4. Functions
-# ************
-# Runs sequentially for each function defined in the matrix.functions list.
-# Builds and pushes Docker images for each function.
-# Creates a temporary deployment slot using the FROM tag.
-# Swaps the slot to make the new image live.
-# Cleans up the temporary slot.
-#
-# Key Points
-# **********
-# Triggers on Completed QAT Workflow: The workflow only runs if the preceding QAT workflow completes successfully.
-# Environment-Specific: Uses environment variables to tailor deployments for different environments (dev, feature, staging, prod).
-# Matrix Strategies: Employs matrices to iterate through lists of web apps and functions for sequential deployment.
-# Concurrency Control: Uses concurrency groups to prevent multiple deployments of the same web app or function from running concurrently.
-# Fail-Fast Disabled: Allows all matrix jobs to complete even if some fail.
-# Temporary Slots: Utilizes deployment slots to minimize downtime during deployments.
-# Cleanup: Always removes temporary slots to maintain resource hygiene.
-#
+# Environment Variables:
+# - `PRODUCT`: The product being deployed (e.g., `dtfs`).
+# - `ENVIRONMENT`: The environment where the deployment occurs (e.g., `dev`).
+# - `TIMEZONE`: The timezone for deployment logging and scheduling.
 
 name: Deployment
-run-name: 🚀 Deploying to ${{ github.event.workflow_run.head_branch }}
+run-name: 🚀 Deploying to dev
 
 on:
-  workflow_run:
-    workflows: ['QAT']
-    types:
-      - completed
+  schedule:
+    - cron: '0 0 * * *'
+
+  push:
     branches:
+      # Manual deployment
       - dev
-      - feature
-      - release-*
-      - '!release-please*'
 
 env:
   PRODUCT: dtfs
-  ENVIRONMENT: ${{ github.event.workflow_run.head_branch }}
+  ENVIRONMENT: dev
   TIMEZONE: ${{ vars.TIMEZONE }}
-  # Base artifact
-  FROM: latest
 
 jobs:
+  # 1. Base actions configrations
   setup:
     name: Setup 🔧
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: [self-hosted, linux, deployment]
     outputs:
       product: ${{ env.PRODUCT }}
       environment: ${{ steps.environment.outputs.environment }}
       timezone: ${{ env.TIMEZONE }}
+
     steps:
       - name: Environment 🧪
         id: environment
         run: |
-          if [[ "${{ env.ENVIRONMENT }}" =~ ^release-.*-rc$ ]]; then
-            echo "environment=prod" >> "$GITHUB_OUTPUT"
-          elif [[ "${{ env.ENVIRONMENT }}" == *release* ]]; then
-            echo "environment=staging" >> "$GITHUB_OUTPUT"
-          else
-            echo "environment=${{ github.event.workflow_run.head_branch }}" >> "$GITHUB_OUTPUT"
-          fi
+          echo "environment=dev" >> "$GITHUB_OUTPUT"
 
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.TIMEZONE }}"
 
+  # 2. Database schema migration
   database:
     name: MSSQL 🗄️
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
     needs: [setup]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
     env:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
-      SQL_DB_HOST: ${{ secrets.SQL_DB_HOST }}
-      SQL_DB_PORT: ${{ secrets.SQL_DB_PORT }}
-      SQL_DB_USERNAME: ${{ secrets.SQL_DB_USERNAME }}
-      SQL_DB_PASSWORD: ${{ secrets.SQL_DB_PASSWORD }}
-      SQL_DB_NAME: ${{ secrets.SQL_DB_NAME }}
-      SQL_DB_LOGGING_ENABLED: ${{ vars.SQL_DB_LOGGING_ENABLED }}
 
     steps:
-      - name: Repository
+      - name: Repository 🗂️
         uses: actions/checkout@v4
 
-      - name: Node
-        uses: actions/setup-node@v4
+      - name: Deploy ⚡
+        uses: ./.github/actions/mssql
         with:
-          node-version: ${{ vars.NODE_VERSION }}
+          host: ${{ secrets.SQL_DB_HOST }}
+          port: ${{ secrets.SQL_DB_PORT }}
+          username: ${{ secrets.SQL_DB_USERNAME }}
+          password: ${{ secrets.SQL_DB_PASSWORD }}
+          databae: ${{ secrets.SQL_DB_NAME }}
+          node: ${{ vars.NODE_VERSION }}
 
-      - name: Dependencies
-        working-directory: ./libs/common
-        run: npm ci
-
-      - name: Migrate
-        working-directory: ./libs/common
-        run: npm run db:migrate
-
+  # 3. micro-serices WebApp deployments
   webapp:
     name: WebApp 🌐
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
     needs: [setup]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
@@ -139,90 +108,22 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - name: Repository 🗃️
+      - name: Repository 🗂️
         uses: actions/checkout@v4
+
+      - name: Deploy ⚡
+        uses: ./.github/actions/webapp
         with:
-          ref: ${{ github.event.workflow_run.head_branch }}
+          region: ${{ vars.REGION }}
+          group: ${{ secrets.RESOURCE_GROUP }}
+          credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          acr: ${{ secrets.ACR_PASSWORD }}
+          webapp: ${{ matrix.webapp }}
 
-      - name: Defaults ✨
-        uses: azure/cli@v2.1.0
-        with:
-          inlineScript: |
-            # Basic
-            az configure --defaults location=${{ vars.REGION }}
-            az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
-
-      - name: Azure 🔐
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: CLI 📝
-        run: |
-          echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
-          echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
-          echo WEBAPP=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ matrix.webapp }}`)].name' -o tsv) >> $GITHUB_ENV
-
-      - name: ACR 🔐
-        uses: azure/docker-login@v2
-        with:
-          login-server: ${{ env.ACR }}
-          username: ${{ env.ACR_USER }}
-          password: ${{ secrets.ACR_PASSWORD }}
-
-      - name: Dockerfile 🐳
-        if: ${{ 'portal-ui' == matrix.webapp }}
-        run: echo "DOCKERFILE=portal/Dockerfile" >> $GITHUB_ENV
-
-      - name: Dockerfile 🐳
-        if: ${{ 'portal-ui' != matrix.webapp }}
-        run: echo "DOCKERFILE=${{ matrix.webapp }}/Dockerfile" >> $GITHUB_ENV
-
-      - name: Artifacts 🗃️
-        working-directory: .
-        run: |
-          # Build images
-          docker build -f ./${{ env.DOCKERFILE }} . \
-          -t ${{ env.ACR }}/${{ matrix.webapp }}:${{ github.sha }} \
-          -t ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }} \
-          --build-arg GITHUB_SHA=${{ github.sha }}
-
-          # Push images
-          docker push ${{ env.ACR }}/${{ matrix.webapp }}:${{ github.sha }}
-          docker push ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }}
-
-      - name: Slot 🔀
-        uses: azure/cli@v2.1.0
-        with:
-          inlineScript: |
-            # Create new temporary slot
-            az webapp deployment slot create \
-            --slot ${{ github.sha }} \
-            --name ${{ env.WEBAPP }} \
-            --configuration-source ${{ env.WEBAPP }} \
-            --deployment-container-image-name ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }} \
-            --docker-registry-server-user ${{ env.ACR_USER }} \
-            --docker-registry-server-password ${{ secrets.ACR_PASSWORD }}
-
-            # Swap slot
-            az webapp deployment slot swap \
-            --slot ${{ github.sha }} \
-            --name ${{ env.WEBAPP }} \
-            --action swap
-
-      - name: Cleanup 🧹
-        if: always()
-        uses: azure/cli@v2.1.0
-        with:
-          inlineScript: |
-            # Delete temporary slot
-            az webapp deployment slot delete \
-            --slot ${{ github.sha }} \
-            --name ${{ env.WEBAPP }}
-
+  # 4. micro-serices Functions deployments
   functions:
     name: Functions ⚡
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
     needs: [setup, webapp]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
@@ -243,78 +144,14 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - name: Repository 🗃️
+      - name: Repository 🗂️
         uses: actions/checkout@v4
+
+      - name: Deploy ⚡
+        uses: ./.github/actions/functions
         with:
-          ref: ${{ github.event.workflow_run.head_branch }}
-
-      - name: Defaults ✨
-        uses: azure/cli@v2.1.0
-        with:
-          inlineScript: |
-            # Basic
-            az configure --defaults location=${{ vars.REGION }}
-            az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
-
-      - name: Azure 🔐
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Directory 📁
-        if: ${{ 'acbs-function' == matrix.functions }}
-        run: echo "NAME=acbs" >> $GITHUB_ENV
-
-      - name: CLI 📝
-        run: |
-          echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
-          echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
-          echo FUNCTION=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ env.NAME }}`)].name' -o tsv) >> $GITHUB_ENV
-
-      - name: ACR 🔐
-        uses: azure/docker-login@v2
-        with:
-          login-server: ${{ env.ACR }}
-          username: ${{ env.ACR_USER }}
-          password: ${{ secrets.ACR_PASSWORD }}
-
-      - name: Artifacts 🗃️
-        working-directory: .
-        run: |
-          # Build images
-          docker build -f ./azure-functions/${{ matrix.functions }}/Dockerfile . \
-          -t ${{ env.ACR }}/${{ matrix.functions }}:${{ github.sha }} \
-          -t ${{ env.ACR }}/${{ matrix.functions }}:${{ env.FROM }}
-
-          # Push images
-          docker push ${{ env.ACR }}/${{ matrix.functions }}:${{ github.sha }}
-          docker push ${{ env.ACR }}/${{ matrix.functions }}:${{ env.FROM }}
-
-      - name: Slot 🔀
-        uses: azure/cli@v2.1.0
-        with:
-          inlineScript: |
-            # Create new temporary slot
-            az functionapp deployment slot create \
-            --slot ${{ github.sha }} \
-            --name ${{ env.FUNCTION }} \
-            --configuration-source ${{ env.FUNCTION }} \
-            --deployment-container-image-name ${{ env.ACR }}/${{ matrix.functions }}:${{ env.FROM }} \
-            --docker-registry-server-user ${{ env.ACR_USER }} \
-            --docker-registry-server-password ${{ secrets.ACR_PASSWORD }}
-
-            # Swap slot
-            az functionapp deployment slot swap \
-            --slot ${{ github.sha }} \
-            --name ${{ env.FUNCTION }} \
-            --action swap
-
-      - name: Cleanup 🧹
-        if: always()
-        uses: azure/cli@v2.1.0
-        with:
-          inlineScript: |
-            # Delete temporary slot
-            az functionapp deployment slot delete \
-            --slot ${{ github.sha }} \
-            --name ${{ env.FUNCTION }}
+          region: ${{ vars.REGION }}
+          group: ${{ secrets.RESOURCE_GROUP }}
+          credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          acr: ${{ secrets.ACR_PASSWORD }}
+          functions: ${{ matrix.functions }}
