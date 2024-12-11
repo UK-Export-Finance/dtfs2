@@ -1,21 +1,22 @@
-import { fromUnixTime } from 'date-fns';
+import { fromUnixTime, format } from 'date-fns';
+import { timeZoneConfig, DATE_FORMATS, MAPPED_FACILITY_TYPE, PORTAL_ACTIVITY_TYPE, PORTAL_ACTIVITY_LABEL } from '@ukef/dtfs2-common';
 import { mapPortalActivities, getPortalActivities } from '.';
 import api from '../../services/api';
 import mocks from '../mocks';
+import MOCK_AUTHOR from '../../utils/mocks/mock-author';
 
 jest.mock('../../services/api');
 
+const timestamp = 1733311320;
+const date = fromUnixTime(timestamp);
+
 const dealSubmissionActivity = [
   {
-    type: 'NOTICE',
-    timestamp: 1638458265,
-    author: {
-      firstName: 'Bob',
-      lastName: 'Smith',
-      _id: 12345,
-    },
+    type: PORTAL_ACTIVITY_TYPE.NOTICE,
+    timestamp,
+    author: MOCK_AUTHOR,
     text: '',
-    label: 'Automatic inclusion notice submitted to UKEF',
+    label: PORTAL_ACTIVITY_LABEL.AIN_SUBMISSION,
     html: '',
     facilityType: '',
     ukefFacilityId: '',
@@ -27,17 +28,13 @@ const dealSubmissionActivity = [
 
 const facilityActivity = [
   {
-    type: 'FACILITY_STAGE',
-    timestamp: 1638458265,
-    author: {
-      firstName: 'Bob',
-      lastName: 'Smith',
-      _id: 12345,
-    },
+    type: PORTAL_ACTIVITY_TYPE.FACILITY_STAGE,
+    timestamp,
+    author: MOCK_AUTHOR,
     text: '',
-    label: 'Bank facility stage changed',
+    label: PORTAL_ACTIVITY_LABEL.FACILITY_CHANGED_ISSUED,
     html: 'facility',
-    facilityType: 'Cash facility',
+    facilityType: MAPPED_FACILITY_TYPE.CASH,
     ukefFacilityId: '12345',
     facilityId: '123456',
     maker: {
@@ -54,16 +51,15 @@ const facilityActivity = [
 ];
 
 describe('mapPortalActivities', () => {
-  it('should return a mapped array for mojTimeline for `AIN deal submission`', () => {
+  it(`should return a mapped array for mojTimeline for ${PORTAL_ACTIVITY_TYPE.NOTICE}`, () => {
     const result = mapPortalActivities(dealSubmissionActivity);
 
     const expected = [
       {
-        label: { text: 'Automatic inclusion notice submitted to UKEF' },
-        text: '',
-        datetime: { timestamp: fromUnixTime(1638458265), type: 'datetime' },
-        byline: { text: 'Bob Smith' },
-        html: '',
+        title: PORTAL_ACTIVITY_LABEL.AIN_SUBMISSION,
+        date: format(date, DATE_FORMATS.D_MMMM_YYYY),
+        time: format(date, DATE_FORMATS.H_MMAAA),
+        byline: `${MOCK_AUTHOR.firstName} ${MOCK_AUTHOR.lastName}`,
         facilityType: '',
         ukefFacilityId: '',
         facilityId: '',
@@ -75,17 +71,16 @@ describe('mapPortalActivities', () => {
     expect(result).toEqual(expected);
   });
 
-  it('should return a mapped array for mojTimeline for `facility stage changed`', () => {
+  it(`should return a mapped array for mojTimeline for ${PORTAL_ACTIVITY_TYPE.FACILITY_STAGE}`, () => {
     const result = mapPortalActivities(facilityActivity);
 
     const expected = [
       {
-        label: { text: 'Bank facility stage changed' },
-        text: '',
-        datetime: { timestamp: fromUnixTime(1638458265), type: 'datetime' },
-        byline: { text: 'Bob Smith' },
-        html: 'facility',
-        facilityType: 'Cash facility',
+        title: PORTAL_ACTIVITY_LABEL.FACILITY_CHANGED_ISSUED,
+        date: format(date, DATE_FORMATS.D_MMMM_YYYY),
+        time: format(date, DATE_FORMATS.H_MMAAA),
+        byline: `${MOCK_AUTHOR.firstName} ${MOCK_AUTHOR.lastName}`,
+        facilityType: MAPPED_FACILITY_TYPE.CASH,
         ukefFacilityId: '12345',
         facilityId: '123456',
         maker: {
@@ -107,9 +102,9 @@ describe('mapPortalActivities', () => {
   describe('when author.lastName does not exist', () => {
     it('should return a mapped array for mojTimeline without lastName in byline.text`', () => {
       const mockActivity = {
-        ...dealSubmissionActivity,
+        ...dealSubmissionActivity[0],
         author: {
-          ...dealSubmissionActivity,
+          ...dealSubmissionActivity[0].author,
           lastName: '',
         },
       };
@@ -120,15 +115,11 @@ describe('mapPortalActivities', () => {
 
       const expected = mockActivity.author.firstName;
 
-      expect(result[0].byline.text).toEqual(expected);
+      expect(result[0].byline).toEqual(expected);
     });
   });
 });
 
-/*
-   tests that getPortalActivities makes the required API calls
-   and that the correct template is rendered with the required fields
-*/
 describe('getPortalActivities()', () => {
   let mockResponse;
   let mockRequest;
@@ -174,6 +165,7 @@ describe('getPortalActivities()', () => {
     expect(mockResponse.render).toHaveBeenCalledWith('partials/application-activity.njk', {
       activeSubNavigation: 'activities',
       dealId: '1234567890abcdf123456789',
+      previousStatus: mockApplicationResponse.previousStatus,
       portalActivities: mappedPortalActivities,
       bankInternalRefName: mockApplicationResponse.bankInternalRefName,
       additionalRefName: mockApplicationResponse.additionalRefName,
@@ -185,7 +177,7 @@ describe('getPortalActivities()', () => {
       createdBy: `${mockApplicationResponse.maker.firstname} ${mockApplicationResponse.maker.surname}`,
       companyName: mockApplicationResponse.exporter.companyName,
       dateCreated: mockApplicationResponse.createdAt,
-      timezone: mockApplicationResponse.maker.timezone || 'Europe/London',
+      timezone: mockApplicationResponse.maker.timezone || timeZoneConfig.DEFAULT,
       submissionDate: mockApplicationResponse.submissionDate,
       manualInclusionNoticeSubmissionDate: mockApplicationResponse.manualInclusionNoticeSubmissionDate,
     });
