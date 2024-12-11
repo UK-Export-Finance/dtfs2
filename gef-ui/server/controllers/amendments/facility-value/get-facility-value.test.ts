@@ -43,10 +43,15 @@ const mockFacility = {
 
 describe('getFacilityValue', () => {
   beforeEach(() => {
+    jest.resetAllMocks();
     jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValue(true);
 
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue({ details: mockFacility });
+  });
+
+  afterAll(() => {
+    jest.resetAllMocks();
   });
 
   it('should call getApplication with the correct dealId and userToken', async () => {
@@ -57,6 +62,7 @@ describe('getFacilityValue', () => {
     await getFacilityValue(req, res);
 
     // Assert
+    expect(getApplicationMock).toHaveBeenCalledTimes(1);
     expect(getApplicationMock).toHaveBeenCalledWith({ dealId, userToken: req.session.userToken });
   });
 
@@ -68,6 +74,7 @@ describe('getFacilityValue', () => {
     await getFacilityValue(req, res);
 
     // Assert
+    expect(getFacilityMock).toHaveBeenCalledTimes(1);
     expect(getFacilityMock).toHaveBeenCalledWith({ facilityId, userToken: req.session.userToken });
   });
 
