@@ -16,6 +16,4 @@ export class LoginService {
   }: HandleSsoRedirectFormRequest): Promise<HandleSsoRedirectFormResponse> => {
     return api.handleSsoRedirectForm({ authCodeResponse, originalAuthCodeUrlRequest, auditDetails });
   };
-
-  public getSuccessRedirect = () => {};
 }

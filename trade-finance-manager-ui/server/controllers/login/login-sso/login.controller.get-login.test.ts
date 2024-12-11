@@ -68,7 +68,7 @@ describe('controllers - login (sso)', () => {
           expect(res._getRedirectUrl()).toEqual(mockAuthCodeUrl);
         });
 
-        it.only('overrides session login data if present', async () => {
+        it('overrides session login data if present', async () => {
           // Arrange
           const { req, res } = httpMocks.createMocks({
             session: { loginData: { authCodeUrlRequest: 'an old auth code url request', aField: 'another field' } },
