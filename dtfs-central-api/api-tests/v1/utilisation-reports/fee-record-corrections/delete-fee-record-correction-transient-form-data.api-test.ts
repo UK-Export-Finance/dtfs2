@@ -11,15 +11,13 @@ import {
 import { withSqlAndMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../../test-api';
 import { SqlDbHelper } from '../../../sql-db-helper';
+import { getFeeRecordCorrectionUrl } from '../../../../test-helpers/get-fee-record-correction-url';
 
 console.error = jest.fn();
 
 const BASE_URL = '/v1/utilisation-reports/:reportId/fee-records/:feeRecordId/correction-transient-form-data/:userId';
 
 describe(`DELETE ${BASE_URL}`, () => {
-  const getUrl = (reportId: number | string, feeRecordId: number | string, userId: string) =>
-    BASE_URL.replace(':reportId', reportId.toString()).replace(':feeRecordId', feeRecordId.toString()).replace(':userId', userId);
-
   const reportId = 1;
   const feeRecordId = 2;
   const userId = '5c0a7922c9d89830f4911426';
@@ -64,7 +62,7 @@ describe(`DELETE ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('FeeRecordCorrectionTransientFormData', transientFormDataEntity);
 
     // Act
-    const response = await testApi.remove({}).to(getUrl(reportId, feeRecordId, userId));
+    const response = await testApi.remove({}).to(getFeeRecordCorrectionUrl(BASE_URL, { reportId, feeRecordId, userId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NoContent);
@@ -72,7 +70,7 @@ describe(`DELETE ${BASE_URL}`, () => {
 
   it(`should return '${HttpStatusCode.NoContent}' if the request is valid but transient form data does not exist`, async () => {
     // Act
-    const response = await testApi.remove({}).to(getUrl(reportId, feeRecordId, userId));
+    const response = await testApi.remove({}).to(getFeeRecordCorrectionUrl(BASE_URL, { reportId, feeRecordId, userId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NoContent);
@@ -80,7 +78,7 @@ describe(`DELETE ${BASE_URL}`, () => {
 
   it(`should return '${HttpStatusCode.NotFound}' when no fee record with the supplied id can be found`, async () => {
     // Act
-    const response = await testApi.remove({}).to(getUrl(reportId, feeRecordId + 1, userId));
+    const response = await testApi.remove({}).to(getFeeRecordCorrectionUrl(BASE_URL, { reportId, feeRecordId: feeRecordId + 1, userId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
