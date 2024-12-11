@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { HandleSsoRedirectFormUiRequest, InvalidPayloadError } from '@ukef/dtfs2-common';
 import { isVerifiedPayload } from '@ukef/dtfs2-common/payload-verification';
 import { ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA } from '@ukef/dtfs2-common/schemas';
@@ -16,7 +16,7 @@ export class LoginController {
     this.userSessionService = userSessionService;
   }
 
-  public async getLogin(req: Request, res: Response, next: NextFunction) {
+  public async getLogin(req: Request, res: Response) {
     try {
       // TODO: This validation is legacy code, and can be improved
       if (req.session.user) {
@@ -30,11 +30,12 @@ export class LoginController {
 
       return res.redirect(authCodeUrl);
     } catch (error) {
-      return next(error);
+      console.error('Unable to log in user: %O', error);
+      return res.render('_partials/problem-with-service.njk');
     }
   }
 
-  async handleSsoRedirectForm(req: HandleSsoRedirectFormUiRequest, res: Response, next: NextFunction) {
+  async handleSsoRedirectForm(req: HandleSsoRedirectFormUiRequest, res: Response) {
     try {
       const { body, session } = req;
       const partiallyLoggedInSession = asPartiallyLoggedInUserSession(session);
@@ -54,7 +55,8 @@ export class LoginController {
 
       return res.redirect(successRedirect ?? '/');
     } catch (error) {
-      return next(error);
+      console.error('Unable to redirect user after login: %O', error);
+      return res.render('_partials/problem-with-service.njk');
     }
   }
 
