@@ -31,6 +31,7 @@ import {
   postRecordCorrectionRequestInformation,
 } from '../../controllers/utilisation-reports/record-corrections/check-the-information';
 import { postInitiateRecordCorrectionRequest } from '../../controllers/utilisation-reports/record-corrections/initiate-record-correction-request';
+import { postCancelRecordCorrectionRequest } from '../../controllers/utilisation-reports/record-corrections/cancel-record-correction-request';
 
 export const utilisationReportsRoutes = express.Router();
 
@@ -192,4 +193,13 @@ utilisationReportsRoutes.post(
   validateSqlId('reportId'),
   validateSqlId('feeRecordId'),
   postRecordCorrectionRequestInformation,
+);
+
+utilisationReportsRoutes.post(
+  '/:reportId/create-record-correction-request/:feeRecordId/cancel',
+  validateTfmFeeRecordCorrectionFeatureFlagIsEnabled,
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
+  validateSqlId('reportId'),
+  validateSqlId('feeRecordId'),
+  postCancelRecordCorrectionRequest,
 );

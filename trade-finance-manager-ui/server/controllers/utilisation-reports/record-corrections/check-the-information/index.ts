@@ -3,7 +3,6 @@ import { mapReasonsToDisplayValues, getFormattedReportPeriodWithLongMonth } from
 import { RecordCorrectionRequestInformationViewModel } from '../../../../types/view-models';
 import { asUserSession } from '../../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
-import { getLinkToPremiumPaymentsTab } from '../../helpers/get-link-to-premium-payments-tab';
 import api from '../../../../api';
 
 const renderCheckTheInformationPage = (res: Response, viewModel: RecordCorrectionRequestInformationViewModel) =>
@@ -36,10 +35,9 @@ export const getRecordCorrectionRequestInformation = async (req: Request, res: R
       reasonForRecordCorrection: mapReasonsToDisplayValues(reasons).join(', '),
       additionalInfo,
       contactEmailAddresses: contactEmailAddresses.join(', '),
-      cancelLink: getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]),
     });
   } catch (error) {
-    console.error('Failed to render create record correction request - "check the information" page', error);
+    console.error('Failed to render create record correction request - "check the information" page %o', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };
