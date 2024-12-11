@@ -1,5 +1,5 @@
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { UtilisationReportEntity, ReportPeriod, FeeRecordStatus, REPORT_NOT_RECEIVED, RECONCILIATION_COMPLETED } from '@ukef/dtfs2-common';
+import { UtilisationReportEntity, ReportPeriod, FeeRecordStatus, REPORT_NOT_RECEIVED, RECONCILIATION_COMPLETED, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
 import { Not, Equal, FindOptionsWhere, LessThan, In } from 'typeorm';
 import { FeeRecordRepo } from '../fee-record-repo';
 
@@ -20,6 +20,35 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
       where: { bankId, reportPeriod },
       relations: {
         feeRecords: includeFeeRecords,
+      },
+    });
+  },
+
+  async findOldestReportWithPendingCorrectionsByBankId(bankId: string): Promise<UtilisationReportEntity | null> {
+    return await this.findOne({
+      where: {
+        bankId,
+        status: Not(RECONCILIATION_COMPLETED),
+        feeRecords: {
+          status: In([FEE_RECORD_STATUS.PENDING_CORRECTION]),
+        },
+      },
+      order: {
+        reportPeriod: {
+          start: {
+            year: 'ASC',
+            month: 'ASC',
+          },
+          end: {
+            year: 'ASC',
+            month: 'ASC',
+          },
+        },
+      },
+      relations: {
+        feeRecords: {
+          corrections: true,
+        },
       },
     });
   },

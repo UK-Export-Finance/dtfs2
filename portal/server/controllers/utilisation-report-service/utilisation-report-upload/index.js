@@ -57,6 +57,12 @@ const getUtilisationReportUpload = async (req, res) => {
   const { user, userToken } = req.session;
   const bankId = user.bank.id;
   try {
+    const pendingCorrections = await api.getUtilisationReportPendingCorrectionsByBankId(userToken, bankId);
+
+    if (pendingCorrections) {
+      console.info(pendingCorrections);
+    }
+
     const dueReportPeriods = await getDueReportPeriodsByBankId(userToken, bankId);
     if (dueReportPeriods.length > 0) {
       const nextDueReportPeriod = dueReportPeriods[0];
