@@ -23,6 +23,8 @@ describe('express-session helper', () => {
 
       // Act
       assertPartiallyLoggedInUser(req.session);
+
+      // There is no assertions. If the function does not throw, it is considered a pass.
     });
   });
 });
