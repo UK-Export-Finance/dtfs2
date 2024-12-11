@@ -60,7 +60,7 @@ df.app.orchestration('acbs-amend-facility-master-record', function* amendFacilit
     // 2.2.2 - Cover end date
     if (amendment.coverEndDate) {
       // 2.2.3. DAF : get-facility-master: Retrieve ACBS `Facility Master Record` with new eTag
-      const updatedFmr = yield context.df.callActivityWithRetry('get-facility-master', retryOptions, facilityIdentifier);
+      const updatedFmr = yield context.df.callActivityWithRetry('get-facility-master', retryOptions, { facilityIdentifier });
 
       if (updatedFmr.etag) {
         const coverEndDate = yield context.df.callActivityWithRetry('update-facility-master', retryOptions, {

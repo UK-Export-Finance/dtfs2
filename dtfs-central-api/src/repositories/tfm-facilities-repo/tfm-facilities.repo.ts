@@ -8,8 +8,10 @@ import {
   AMENDMENT_TYPES,
   AMENDMENT_STATUS,
   PortalFacilityAmendment,
+  GEF_FACILITY_TYPE,
 } from '@ukef/dtfs2-common';
 import { deleteMany, generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
+
 import { mongoDbClient } from '../../drivers/db-client';
 import { aggregatePipelines, AllFacilitiesAndFacilityCountAggregatePipelineOptions } from './aggregate-pipelines';
 
@@ -293,13 +295,16 @@ export class TfmFacilitiesRepo {
   }
 
   /**
-   * Checks whether or not a facility exists which has a matching UKEF facility ID
+   * Checks whether or not a GEF facility exists which has a matching UKEF facility ID
    * @param ukefFacilityId - The UKEF facility ID
-   * @returns Whether a not a facility with that UKEF facility ID exists
+   * @returns Whether a not a GEF facility with that UKEF facility ID exists
    */
-  public static async ukefFacilityIdExists(ukefFacilityId: string): Promise<boolean> {
+  public static async ukefGefFacilityExists(ukefFacilityId: string): Promise<boolean> {
     const collection = await this.getCollection();
-    const numberOfFoundDocuments = await collection.count({ 'facilitySnapshot.ukefFacilityId': { $eq: ukefFacilityId } });
+    const numberOfFoundDocuments = await collection.count({
+      'facilitySnapshot.ukefFacilityId': { $eq: ukefFacilityId },
+      'facilitySnapshot.type': { $in: Object.values(GEF_FACILITY_TYPE) },
+    });
     return numberOfFoundDocuments > 0;
   }
 

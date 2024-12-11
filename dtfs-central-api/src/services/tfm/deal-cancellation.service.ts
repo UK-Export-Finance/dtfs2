@@ -11,6 +11,7 @@ import {
   TfmDealCancellation,
   TfmDealCancellationResponse,
   TfmFacility,
+  UKEF,
 } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { endOfDay, getUnixTime, isAfter, toDate } from 'date-fns';
@@ -34,10 +35,12 @@ export class DealCancellationService {
     cancellation: TfmDealCancellation,
     auditDetails: TfmAuditDetails,
   ): Promise<TfmDealCancellationResponse> {
+    console.info('Submitting deal cancellation for dealId %s', dealId);
+
     const effectiveFromDate = toDate(cancellation.effectiveFrom);
     const endOfToday = endOfDay(new Date());
 
-    const dealCancellationIsInFuture = isAfter(effectiveFromDate, endOfToday);
+    const cancellationIsInFuture = isAfter(effectiveFromDate, endOfToday);
 
     const user = await TfmUsersRepo.findOneUserById(auditDetails.id);
 
@@ -58,7 +61,7 @@ export class DealCancellationService {
       ...cancellation,
     };
 
-    if (dealCancellationIsInFuture) {
+    if (cancellationIsInFuture) {
       const { cancelledDeal, riskExpiredFacilities } = await TfmDealCancellationRepo.scheduleDealCancellation({
         dealId,
         cancellation,
@@ -75,6 +78,13 @@ export class DealCancellationService {
         newStatus: DEAL_STATUS.PENDING_CANCELLATION,
         auditDetails,
         dealType,
+      });
+
+      await PortalDealService.addGefDealCancellationPendingActivity({
+        dealId,
+        dealType,
+        author,
+        auditDetails,
       });
 
       return this.getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities });
@@ -95,13 +105,19 @@ export class DealCancellationService {
 
     await PortalFacilityRepo.updateManyByDealId(dealId, { facilityStage: FACILITY_STAGE.RISK_EXPIRED }, auditDetails);
 
-    await PortalDealService.addGefDealCancelledActivity({ deal: cancelledDeal, author, auditDetails });
+    await PortalDealService.addGefDealCancelledActivity({
+      dealId,
+      dealType,
+      author,
+      auditDetails,
+    });
 
     return this.getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities });
   }
 
   /**
    * Process a pending deal cancellation
+   * This is executed in a CRON job.
    * @param dealId The deal id to be cancelled
    * @param cancellation - the cancellation
    * @param auditDetails - the users audit details
@@ -112,6 +128,8 @@ export class DealCancellationService {
     cancellation: TfmDealCancellation,
     auditDetails: AuditDetails,
   ): Promise<TfmDealCancellationResponse> {
+    console.info('Processing pending deal cancellation for dealId %s', dealId);
+
     const { cancelledDeal, riskExpiredFacilities } = await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation, auditDetails });
 
     const {
@@ -126,6 +144,22 @@ export class DealCancellationService {
     });
 
     await PortalFacilityRepo.updateManyByDealId(dealId, { facilityStage: FACILITY_STAGE.RISK_EXPIRED }, auditDetails);
+
+    /**
+     * NOTE: Because this is executed during a CRON job,
+     * there is no user data.
+     * Therefore, we set the author with a simple UKEF name.
+     */
+    const author = {
+      firstName: UKEF.ACRONYM,
+    };
+
+    await PortalDealService.addGefDealCancelledActivity({
+      dealId,
+      dealType,
+      author,
+      auditDetails,
+    });
 
     return this.getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities });
   }
