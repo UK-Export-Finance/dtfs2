@@ -831,9 +831,10 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
  * Calls getOrCreatePartyDbInfo in external-api to get a customer in Salesforce, and create it if it doesn't exist
  * @param {number} companyRegNo Party URN
  * @param {number} companyName Company name
+ * @param {number} probabilityOfDefault Probability of default
  * @returns {Promise<Object>} Company information
  */
-const getOrCreatePartyDbInfo = async ({ companyRegNo, companyName }) => {
+const getOrCreatePartyDbInfo = async ({ companyRegNo, companyName, probabilityOfDefault }) => {
   try {
     const response = await axios({
       method: 'post',
@@ -842,6 +843,7 @@ const getOrCreatePartyDbInfo = async ({ companyRegNo, companyName }) => {
       data: {
         companyRegNo,
         companyName,
+        probabilityOfDefault,
       },
     });
     return response.data;
