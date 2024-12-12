@@ -85,8 +85,6 @@ jobs:
     steps:
       - name: Repository 🗂️
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Deploy ⚡
         uses: ./.github/actions/mssql
@@ -123,8 +121,6 @@ jobs:
     steps:
       - name: Repository 🗂️
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Deploy ⚡
         uses: ./.github/actions/webapp
@@ -161,8 +157,6 @@ jobs:
     steps:
       - name: Repository 🗂️
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Deploy ⚡
         uses: ./.github/actions/functions

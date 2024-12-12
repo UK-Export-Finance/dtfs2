@@ -1,11 +1,8 @@
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { calculateInitialUtilisationAndFixedFee, parseDate, hasRequiredValues, RequiredParams } from './calculate-initial-utilisation-and-fixed-fee';
-import { NotFoundError } from '../../../../../errors';
-import { aTfmFacility } from '../../../../../../test-helpers';
-import * as fixedFeeHelpers from './calculate-initial-fixed-fee';
-import * as helpers from '../../../../../helpers';
-
-jest.mock('./calculate-initial-fixed-fee');
+import { NotFoundError } from '../../../errors';
+import { aTfmFacility } from '../../../../test-helpers';
+import * as helpers from '../../../helpers';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('@ukef/dtfs2-common', () => ({
@@ -57,10 +54,6 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
   describe('hasRequiredValues', () => {
     const baseParams = {
       value: 1,
-      interestPercentage: 2,
-      dayCountBasis: 3,
-      coverStartDate: new Date(),
-      coverEndDate: new Date(),
       coverPercentage: 4,
     } as RequiredParams;
 
@@ -74,38 +67,8 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
       expect(result).toEqual(false);
     });
 
-    it('should return false if the interestPercentage is not provided', () => {
-      const result = hasRequiredValues({ ...baseParams, interestPercentage: null });
-      expect(result).toEqual(false);
-    });
-
-    it('should return false if the dayCountBasis is not provided', () => {
-      const result = hasRequiredValues({ ...baseParams, dayCountBasis: null });
-      expect(result).toEqual(false);
-    });
-
     it('should return false if the coverPercentage is not provided', () => {
       const result = hasRequiredValues({ ...baseParams, coverPercentage: null });
-      expect(result).toEqual(false);
-    });
-
-    it('should return false if the coverEndDate is not provided', () => {
-      const result = hasRequiredValues({ ...baseParams, coverEndDate: null });
-      expect(result).toEqual(false);
-    });
-
-    it('should return false if the coverStartDate is not provided', () => {
-      const result = hasRequiredValues({ ...baseParams, coverStartDate: null });
-      expect(result).toEqual(false);
-    });
-
-    it('should return false if the coverStartDate is the wrong format', () => {
-      const result = hasRequiredValues({ ...baseParams, coverStartDate: 'a' });
-      expect(result).toEqual(false);
-    });
-
-    it('should return false if the coverEndDate is the wrong format', () => {
-      const result = hasRequiredValues({ ...baseParams, coverEndDate: 'a' });
       expect(result).toEqual(false);
     });
   });
@@ -116,10 +79,6 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
     const { facilitySnapshot } = aTfmFacility();
 
     const keyingSheetCalculationFacilityValues = {
-      coverEndDate: new Date(),
-      coverStartDate: new Date(),
-      dayCountBasis: facilitySnapshot.dayCountBasis,
-      interestPercentage: facilitySnapshot.interestPercentage,
       coverPercentage: facilitySnapshot.coverPercentage,
       value: facilitySnapshot.value,
     };
@@ -159,7 +118,6 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
 
       beforeEach(() => {
         getKeyingSheetCalculationFacilityValuesSpy.mockResolvedValue(keyingSheetCalculationFacilityValues);
-        jest.mocked(fixedFeeHelpers.calculateInitialFixedFee).mockReturnValue(999.99);
         jest.mocked(dtfsCommon.calculateDrawnAmount).mockReturnValue(drawnAmount);
       });
 
@@ -183,23 +141,12 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
         expect(result.utilisation).toEqual(drawnAmountRoundedToTwoDecimalPlaces);
       });
 
-      it('should calculate and return the initial fixed fee', async () => {
-        // Arrange
-        const drawnAmountRoundedToTwoDecimalPlaces = 12345.68;
-        const calculateInitialFixedFeeSpy = jest.spyOn(fixedFeeHelpers, 'calculateInitialFixedFee').mockReturnValue(999.99);
-
+      it('should return the initial fixed fee as 0', async () => {
         // Act
         const result = await calculateInitialUtilisationAndFixedFee(facilityId);
 
         // Assert
-        expect(calculateInitialFixedFeeSpy).toHaveBeenCalledWith({
-          ukefShareOfUtilisation: drawnAmountRoundedToTwoDecimalPlaces,
-          coverStartDate: keyingSheetCalculationFacilityValues.coverStartDate,
-          coverEndDate: keyingSheetCalculationFacilityValues.coverEndDate,
-          interestPercentage: keyingSheetCalculationFacilityValues.interestPercentage,
-          dayCountBasis: keyingSheetCalculationFacilityValues.dayCountBasis,
-        });
-        expect(result.fixedFee).toEqual(999.99);
+        expect(result.fixedFee).toEqual(0);
       });
     });
   });
