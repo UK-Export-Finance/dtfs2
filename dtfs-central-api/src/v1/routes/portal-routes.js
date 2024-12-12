@@ -516,9 +516,9 @@ portalRouter.route('/facilities/:id/status').put(updateFacilityStatusController.
  * @openapi
  * /facilities/:facilityId/amendments/:amendmentId:
  *   get:
- *     summary: Get a Portal GEF facility amendment
+ *     summary: Get a Portal facility amendment
  *     tags: [Portal - Amendments]
- *     description: Get a Portal GEF facility amendment
+ *     description: Get a Portal facility amendment
  *     parameters:
  *       - in: path
  *         name: facilityId
@@ -551,9 +551,9 @@ portalRouter
  * @openapi
  * /facilities/:facilityId/amendments:
  *   put:
- *     summary: update a Portal GEF facility amendment
+ *     summary: update a Portal facility amendment
  *     tags: [Portal - Amendments]
- *     description: Update a Portal GEF facility amendment
+ *     description: Update a Portal facility amendment
  *     parameters:
  *       - in: path
  *         name: facilityId
