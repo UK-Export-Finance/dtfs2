@@ -24,6 +24,7 @@ const mongoIdValidation = (paramName) => (req, res, next) => {
   return res.status(HttpStatusCode.BadRequest).send({
     message: `Expected path parameter '${paramName}' to be a valid mongo id`,
     code: API_ERROR_CODE.INVALID_MONGO_ID_PATH_PARAMETER,
+    status: HttpStatusCode.BadRequest,
   });
 };
 

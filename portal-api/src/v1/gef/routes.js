@@ -117,12 +117,12 @@ router
 
 router
   .route('/facilities/:facilityId/amendments/:amendmentId')
-  .get(
+  .all(
+    validatePortalFacilityAmendmentsEnabled,
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }),
     mongoIdValidation('facilityId'),
     mongoIdValidation('amendmentId'),
     handleExpressValidatorResult,
-    validatePortalFacilityAmendmentsEnabled,
     getAmendment,
   );
 
