@@ -23,37 +23,37 @@ describe(page, () => {
     currencySymbol,
   };
 
-  it(`renders the 'Back' link`, () => {
+  it(`should render the 'Back' link`, () => {
     const wrapper = render(params);
 
     wrapper.expectLink('[data-cy="back-link"]').toLinkTo(previousPage, 'Back');
   });
 
-  it(`renders the facility value input`, () => {
+  it(`should render the facility value input`, () => {
     const wrapper = render(params);
 
     wrapper.expectElement('[data-cy="facility-value"]').toExist();
   });
 
-  it(`renders the continue button`, () => {
+  it(`should render the continue button`, () => {
     const wrapper = render(params);
 
     wrapper.expectPrimaryButton('[data-cy="continue-button"]').toLinkTo(undefined, 'Continue');
   });
 
-  it(`renders the cancel link`, () => {
+  it(`should render the cancel link`, () => {
     const wrapper = render(params);
 
     wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo(`/case/${dealId}/facilities/${facilityId}/amendment/${amendmentId}/cancel`, 'Cancel');
   });
 
-  it('renders the exporter name in the heading caption', () => {
+  it('should render the exporter name in the heading caption', () => {
     const wrapper = render(params);
 
     wrapper.expectText('[data-cy="heading-caption"]').toRead(exporterName);
   });
 
-  it('should render the curency symbol', () => {
+  it('should render the currency symbol', () => {
     const wrapper = render(params);
 
     wrapper.expectText('[data-cy="facility-value-prefix"]').toRead(currencySymbol);
