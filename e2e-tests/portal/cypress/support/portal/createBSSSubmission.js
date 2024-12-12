@@ -6,5 +6,5 @@ module.exports = (opts) => {
   pages.dashboard.createNewSubmission().click();
 
   pages.selectScheme.bss().click();
-  pages.selectScheme.continue().click();
+  cy.clickContinueButton();
 };

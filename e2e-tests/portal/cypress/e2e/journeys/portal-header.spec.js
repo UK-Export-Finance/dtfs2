@@ -9,7 +9,6 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 context('Portal GOVUK header displays correctly', () => {
   before(() => {
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 

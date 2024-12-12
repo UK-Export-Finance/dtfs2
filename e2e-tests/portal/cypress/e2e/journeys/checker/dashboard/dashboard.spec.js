@@ -72,7 +72,6 @@ context('View dashboard deals as a checker', () => {
   it("Only deals with checker status that belong to the checker's bank appear on the dashboard. Each deal goes to correct deal URL", () => {
     // login, go to dashboard
     cy.login(BANK1_CHECKER1);
-    dashboardDeals.visit();
 
     const gefDeal = BANK1_DEALS.find(
       ({ dealType, status }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF && status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL,
@@ -95,7 +94,7 @@ context('View dashboard deals as a checker', () => {
     cy.get('table tr').eq(1).as('firstRow');
     const gefDealId = gefDeal._id;
 
-    cy.get('table tr').eq(1).find(`[data-cy="deal__status--${gefDeal._id}"]`).should('exist');
+    dashboardDeals.row.status(gefDealId).should('exist');
 
     cy.assertText(exporter(gefDealId), gefDeal.exporter.companyName);
 
@@ -124,7 +123,7 @@ context('View dashboard deals as a checker', () => {
     cy.get('table tr').eq(2).as('secondRow');
     const bssDealId = bssDeal._id;
 
-    cy.get('@secondRow').find(`[data-cy="deal__status--${bssDealId}"]`).should('exist');
+    dashboardDeals.rowIndex.status(2).should('exist');
 
     cy.assertText(exporter(bssDealId), bssDeal.exporter.companyName);
 

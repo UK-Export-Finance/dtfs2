@@ -1,4 +1,3 @@
-const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
 const { BANK1_MAKER1, BANK1_CHECKER1 } = require('../../../../../../e2e-fixtures/portal-users.fixture');
 
@@ -252,7 +251,7 @@ const deal = {
     supplyContractValue: '9000000.00',
     supplyContractCurrency: {
       text: 'GBP - UK Sterling',
-      id: CURRENCY.GBP,
+      id: 'GBP',
     },
     supplyContractConversionRateToGBP: '',
     'supplyContractConversionDate-day': '',
@@ -270,7 +269,7 @@ const deal = {
         currencySameAsSupplyContractCurrency: 'true',
         createdDate: '1606900240957',
         bondIssuer: '',
-        bondType: BOND_TYPE.PERFORMANCE_BOND,
+        bondType: 'Performance bond',
         bondBeneficiary: '',
         guaranteeFeePayableByBank: '1.8000',
         ukefExposure: '80,000.00',
@@ -283,7 +282,7 @@ const deal = {
         dayCountBasis: '365',
         currency: {
           text: 'GBP - UK Sterling',
-          id: CURRENCY.GBP,
+          id: 'GBP',
         },
         requestedCoverStartDate: '1603292441000',
         ukefFacilityId: '0040004839',
@@ -313,7 +312,7 @@ const deal = {
         currencySameAsSupplyContractCurrency: 'true',
         createdDate: '1606900240907',
         bondIssuer: '',
-        bondType: BOND_TYPE.MAINTENANCE_BOND,
+        bondType: 'Maintenance bond',
         bondBeneficiary: '',
         guaranteeFeePayableByBank: '1.8000',
         ukefExposure: '80,000.00',
@@ -325,7 +324,7 @@ const deal = {
         dayCountBasis: '360',
         currency: {
           text: 'GBP - UK Sterling',
-          id: CURRENCY.GBP,
+          id: 'GBP',
         },
         ukefFacilityId: '0040004846',
         'issuedDate-day': '02',
@@ -369,7 +368,7 @@ const deal = {
         dayCountBasis: '365',
         currency: {
           text: 'GBP - UK Sterling',
-          id: CURRENCY.GBP,
+          id: 'GBP',
         },
         requestedCoverStartDate: '1606914111885',
         ukefFacilityId: '0040004833',
@@ -410,7 +409,7 @@ const deal = {
         dayCountBasis: '365',
         currency: {
           text: 'GBP - UK Sterling',
-          id: CURRENCY.GBP,
+          id: 'GBP',
         },
         ukefFacilityId: '0040004838',
         'issuedDate-day': '02',

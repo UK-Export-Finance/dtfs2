@@ -1,6 +1,11 @@
-const pages = require('../../e2e/pages');
-
-module.exports = (user, deal) => {
+/**
+ * loginGoToDealPage
+ * Login and go to the deal page
+ * @param {Object} user
+ */
+const loginGoToDealPage = (user) => {
   cy.login(user);
-  pages.contract.visit(deal);
+  cy.clickDashboardDealLink();
 };
+
+export default loginGoToDealPage;
