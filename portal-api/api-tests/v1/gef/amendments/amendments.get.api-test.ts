@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { AMENDMENT_STATUS, AMENDMENT_TYPES, AnyObject, FacilityAmendmentWithUkefId, Role } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, AMENDMENT_TYPES, AnyObject, PortalAmendmentWithUkefId, Role } from '@ukef/dtfs2-common';
 import app from '../../../../src/createApp';
 import testUserCache from '../../../api-test-users';
 
@@ -12,7 +12,7 @@ import { withClientAuthenticationTests } from '../../../common-tests/client-auth
 
 const { as, get } = createApi(app);
 
-const getPortalFacilityAmendmentMock = jest.fn() as jest.Mock<Promise<FacilityAmendmentWithUkefId>>;
+const getPortalFacilityAmendmentMock = jest.fn() as jest.Mock<Promise<PortalAmendmentWithUkefId>>;
 
 jest.mock('../../../../src/v1/api', () => ({
   ...jest.requireActual<AnyObject>('../../../../src/v1/api'),
@@ -112,7 +112,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         const dealId = new ObjectId().toString();
 
         // Arrange
-        const amendment: FacilityAmendmentWithUkefId = {
+        const amendment: PortalAmendmentWithUkefId = {
           amendmentId: new ObjectId(amendmentId),
           facilityId: new ObjectId(facilityId),
           dealId: new ObjectId(dealId),
