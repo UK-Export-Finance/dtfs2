@@ -1420,6 +1420,29 @@ const getFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, us
   }
 };
 
+/**
+ * Deletes the fee record by report id, fee record id and user
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {string} userToken - The user token
+ * @returns {Promise<void>}
+ */
+const deleteFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, user, userToken) => {
+  try {
+    const userId = user._id;
+
+    await axios({
+      method: 'delete',
+      url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-transient-form-data/${userId}`,
+      headers: generateHeaders(userToken),
+    });
+  } catch (error) {
+    console.error('Failed to delete fee record correction transient form data %o', error);
+    throw error;
+  }
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -1485,4 +1508,5 @@ module.exports = {
   getFeeRecordCorrectionRequestReview,
   updateFeeRecordCorrectionTransientFormData,
   getFeeRecordCorrectionTransientFormData,
+  deleteFeeRecordCorrectionTransientFormData,
 };

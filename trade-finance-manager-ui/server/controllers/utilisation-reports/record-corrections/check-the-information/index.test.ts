@@ -1,8 +1,8 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { MockResponse } from 'node-mocks-http';
 import { mapReasonsToDisplayValues, getFormattedReportPeriodWithLongMonth, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
+import { Request, Response } from 'express';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
-import { getLinkToPremiumPaymentsTab } from '../../helpers/get-link-to-premium-payments-tab';
 import { getRecordCorrectionRequestInformation, postRecordCorrectionRequestInformation } from '.';
 import api from '../../../../api';
 
@@ -70,7 +70,6 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
         reasonForRecordCorrection: expectedReasons,
         additionalInfo: correctionRequestDetails.additionalInfo,
         contactEmailAddresses: expectedContactEmailAddresses,
-        cancelLink: getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]),
       });
     });
   });
@@ -78,13 +77,18 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
   describe('postRecordCorrectionRequestInformation', () => {
     const emails = ['test1@ukexportfinance.gov.uk', 'test2@ukexportfinance.gov.uk'];
 
-    it('should redirect to request sent page on success', async () => {
-      // Arrange
-      const { req, res } = httpMocks.createMocks({
+    let req: Request;
+    let res: MockResponse<Response>;
+
+    beforeEach(() => {
+      ({ req, res } = httpMocks.createMocks({
         session: requestSession,
         params: { reportId, feeRecordId },
-      });
+      }));
+    });
 
+    it('should redirect to request sent page on success', async () => {
+      // Arrange
       jest.mocked(api.createFeeRecordCorrection).mockResolvedValue({ emails });
 
       // Act
@@ -97,12 +101,7 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
     });
 
     it(`should populate the session with the record correction request emails`, async () => {
-      // Act
-      const { req, res } = httpMocks.createMocks({
-        session: requestSession,
-        params: { reportId, feeRecordId },
-      });
-
+      // Arrange
       jest.mocked(api.createFeeRecordCorrection).mockResolvedValue({ emails });
 
       // Act
@@ -114,11 +113,6 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
 
     it('should render problem with service page on error', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
-        session: requestSession,
-        params: { reportId, feeRecordId },
-      });
-
       jest.mocked(api.createFeeRecordCorrection).mockRejectedValue(new Error('API Error'));
 
       // Act
