@@ -41,7 +41,7 @@ describe('controllers/utilisation-reports/record-corrections/cancel-record-corre
       expect(res._getRedirectUrl()).toEqual(getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]));
     });
 
-    it('should clear transient form data on success', async () => {
+    it('should clear transient form data', async () => {
       // Act
       await postCancelRecordCorrectionRequest(req, res);
 

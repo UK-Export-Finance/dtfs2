@@ -41,7 +41,7 @@ describe('delete-fee-record-correction-transient-form-data.controller', () => {
       jest.resetAllMocks();
     });
 
-    it(`should respond with a '${HttpStatusCode.NoContent}' if the associated fee record entity exists`, async () => {
+    it(`should respond with a '${HttpStatusCode.NoContent}' on success`, async () => {
       // Arrange
       mockFeeRecordExists.mockReturnValue(true);
       mockTransientFormDataDelete.mockResolvedValue(null);

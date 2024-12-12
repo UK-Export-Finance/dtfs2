@@ -181,7 +181,7 @@ describe('controllers/utilisation-reports/record-corrections/initiate-record-cor
         [`feeRecordIds-${selectedFeeRecordId}-reportedPaymentsCurrency-GBP-status-TO_DO`]: 'on',
       };
 
-      it('should clear transient form data on success', async () => {
+      it('should clear transient form data', async () => {
         // Arrange
         const reportId = '123';
         const { req, res } = httpMocks.createMocks<PostInitiateRecordCorrectionRequest>({
