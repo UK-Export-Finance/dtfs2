@@ -236,7 +236,7 @@ describe('deleteFacility()', () => {
     await expect(api.deleteFacility({ facilityId: validMongoId, userToken })).rejects.toThrowError();
   });
 
-  it.each(invalidMongoIdTestCases)('returns false when given an invalid facilityId', async (invalidMongoId) => {
+  it.each(invalidMongoIdTestCases)('should return false when given an invalid facilityId', async (invalidMongoId) => {
     const response = await api.deleteFacility({ facilityId: invalidMongoId, userToken });
     expect(response).toEqual(false);
   });
