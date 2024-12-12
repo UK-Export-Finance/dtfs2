@@ -7,7 +7,7 @@ type UrlPathParameters = Record<string, number | string>;
  * @param urlWithParamPlaceholders - The URL containing path parameter placeholders
  * @param paramValues - Object containing values for the path parameters
  * @returns The constructed URL with path parameters replaced
- * @throws Error if any required path parameter is missing or undefined
+ * @throws Error if any required path parameter is missing
  */
 export const replaceUrlParameterPlaceholders = (urlWithParamPlaceholders: string, paramValues: UrlPathParameters) => {
   const paramNames = extractPathParameterPlaceholders(urlWithParamPlaceholders);
