@@ -25,7 +25,8 @@ context('Users can create and submit comments', () => {
       });
 
       cy.submitDeal(dealId, dealType, BUSINESS_SUPPORT_USER_1);
-      // adds a non-comment type
+
+      // add a "non-comment" activity to the deal
       const otherActivity = {
         tfm: {
           activities: {
@@ -41,7 +42,9 @@ context('Users can create and submit comments', () => {
           },
         },
       };
+
       cy.updateTFMDeal(dealId, otherActivity);
+
       cy.login(BUSINESS_SUPPORT_USER_1);
     });
   });
@@ -65,8 +68,11 @@ context('Users can create and submit comments', () => {
 
     it('should go to add a comment page if add comment button clicked', () => {
       activitiesPage.addACommentButton().click();
+
       cy.url().should('eq', relative(`/case/${dealId}/activity/post-comment`));
-      activitiesPage.addACommentHeading().contains('Add a comment');
+
+      cy.assertText(activitiesPage.addACommentHeading(), 'Add a comment');
+
       activitiesPage
         .addACommentHeading()
         .invoke('attr', 'aria-label')
@@ -78,6 +84,7 @@ context('Users can create and submit comments', () => {
     it('entering no comment should take you back to activity page and no comment in timeline', () => {
       activitiesPage.addACommentButton().click();
       activityCommentBoxPage.addCommentButton().click();
+
       activitiesPage.activitiesTimeline().contains(userFullName).should('not.exist');
     });
 
@@ -98,6 +105,7 @@ context('Users can create and submit comments', () => {
       activitiesPage.addACommentButton().click();
       cy.keyboardInput(activityCommentBoxPage.activityCommentBox(), 'should cancel');
       cy.clickCancelLink();
+
       activitiesPage.activitiesTimeline().contains('should cancel').should('not.exist');
     });
 
@@ -105,17 +113,21 @@ context('Users can create and submit comments', () => {
       activitiesPage.activitiesTimeline().contains('Not a comment');
       activitiesPage.filterCommentsOnly().click();
       cy.clickSubmitButton();
+
       activitiesPage.activitiesTimeline().contains('test');
       activitiesPage.activitiesTimeline().contains(userFullName);
-      // ensures that is filtered out
+
+      // ensures the activity is filtered out
       activitiesPage.activitiesTimeline().contains('Not a comment').should('not.exist');
     });
 
     it('should not be allowed to add comment over 1000 characters', () => {
-      const longComment = 'aaaaaaaaaa'.repeat(101);
+      const longComment = 'a'.repeat(1001);
       activitiesPage.addACommentButton().click();
+
       cy.keyboardInput(activityCommentBoxPage.activityCommentBox(), longComment);
       activityCommentBoxPage.addCommentButton().click();
+
       errorSummary().contains('Comments must be 1000 characters or fewer');
       activityCommentBoxPage.commentErrorMessage().contains('Comments must be 1000 characters or fewer');
     });

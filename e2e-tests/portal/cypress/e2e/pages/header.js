@@ -18,6 +18,7 @@ const page = {
   logoutLink: () => cy.get('[data-cy="logout-header"]'),
 
   betaBanner: () => cy.get('[data-cy="beta-banner"]'),
+  betaBannerTag: () => cy.get('[data-cy="beta-banner"] strong'),
   betaBannerHref: () => cy.get('[data-cy="beta-feedback-link"]'),
 };
 

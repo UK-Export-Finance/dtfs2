@@ -5,7 +5,6 @@ import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-us
 import applicationDetails from '../pages/application-details';
 import statusBanner from '../pages/application-status-banner';
 import submitToUkef from '../pages/submit-to-ukef';
-
 import CONSTANTS from '../../fixtures/constants';
 import { toTitleCase } from '../../fixtures/helpers';
 import { today } from '../../../../e2e-fixtures/dateConstants';
@@ -65,7 +64,7 @@ context('Submit AIN deal and check portalActivities', () => {
     });
   });
 
-  describe('check portalActivity Page', () => {
+  describe('check "activity" Page', () => {
     beforeEach(() => {
       cy.saveSession();
       cy.login(BANK1_MAKER1);
@@ -76,34 +75,45 @@ context('Submit AIN deal and check portalActivities', () => {
     it('check that subnavigation banner exists and that links work', () => {
       applicationActivities.subNavigationBar().should('exist');
       applicationActivities.subNavigationBarApplication().click();
+
       mainHeading().should('exist');
+
       applicationActivities.activityTimeline().should('not.exist');
+
       applicationActivities.subNavigationBarActivities().click();
+
       mainHeading().should('not.exist');
+
       applicationActivities.activityTimeline().should('exist');
     });
 
-    // ensures that timeline has relevant information
     it('should display the activity timeline with submission information', () => {
       applicationActivities.subNavigationBarActivities().click();
+
       applicationActivities.activityTimeline().should('exist');
+
       applicationActivities.activityTimeline().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)}`);
+
       applicationActivities
         .activityTimeline()
         .contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)}`)
         .should('not.exist');
+
       applicationActivities.activityTimeline().contains(today.d_MMMM_yyyy);
       applicationActivities.activityTimeline().contains(BANK1_CHECKER1.firstname);
     });
 
-    // ensures that banner is populated correctly
-    it('should display the blue status banner', () => {
+    it('should display the application banner', () => {
       applicationActivities.subNavigationBarActivities().click();
+
       statusBanner.applicationBanner().should('exist');
+
       statusBanner.bannerDateCreated().contains(today.dd_MMM_yyyy);
       statusBanner.bannerDateSubmitted().contains(today.dd_MMM_yyyy);
+
       statusBanner.bannerCreatedBy().contains(deal.maker.firstname);
       statusBanner.bannerCheckedBy().contains(BANK1_CHECKER1.firstname);
+
       statusBanner.bannerSubmissionType().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
     });
   });
