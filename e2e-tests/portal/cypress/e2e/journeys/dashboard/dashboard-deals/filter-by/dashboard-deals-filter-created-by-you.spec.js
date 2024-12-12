@@ -117,7 +117,6 @@ context('Dashboard Deals filters - Created by you', () => {
 
   it('should be able to remove filter from filter container and see all deals again', () => {
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
     filters.showHideButton().click();
     // apply created by you filter
     dashboardDeals.filters.panel.form.createdByYou.checkbox().click();
@@ -169,7 +168,6 @@ context('Dashboard Deals filters - Created by you', () => {
 
   it('should be able to select multiple filters and remove created by you filter and list relevant deals', () => {
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
     filters.showHideButton().click();
     // apply created by you filter
     dashboardDeals.filters.panel.form.createdByYou.checkbox().click();

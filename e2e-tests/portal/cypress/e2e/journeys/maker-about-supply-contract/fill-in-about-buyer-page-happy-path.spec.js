@@ -9,7 +9,7 @@ context('about-supply-contract', () => {
     cy.createBssEwcsDeal({});
   });
 
-  it('A maker picks up a deal with the supplier details completed, and fills in the about-buyer-contract section, using the companies house search.', () => {
+  it('A maker picks up a deal and fills in the about-buyer-contract section, using the companies house search.', () => {
     cy.loginGoToDealPage(BANK1_MAKER1);
 
     contract.aboutSupplierDetailsLink().click();

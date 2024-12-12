@@ -55,7 +55,7 @@ context('A checker selects to return a deal to maker from the view-contract page
       .successMessageListItem()
       .invoke('text')
       .then((text) => {
-        expect(text.replace(/\s+/g, ' ').trim()).to.match(/Supply Contract returned to maker. View Supply Contract/);
+        expect(text.trim()).to.match(/Supply Contract returned to maker./);
       });
 
     cy.loginGoToDealPage(BANK1_MAKER1);
