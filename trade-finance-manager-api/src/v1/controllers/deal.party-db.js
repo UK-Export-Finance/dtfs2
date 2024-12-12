@@ -34,20 +34,21 @@ const getCompany = async (req, res) => {
  * Gets a PartyURN
  * @param {string} companyRegNo The company registration number
  * @param {string} companyName The company name
+ * @param {number} probabilityOfDefault The probability of default
  * @returns {Promise<string>} PartyURN or '' if there is an error
  */
-const getPartyUrn = async ({ companyRegNo, companyName }) => {
+const getPartyUrn = async ({ companyRegNo, companyName, probabilityOfDefault }) => {
   if (!companyRegNo) {
     return '';
   }
 
   let partyDbInfo = null;
   if (isAutomaticSalesforceCustomerCreationFeatureFlagEnabled()) {
-    if (!companyName) {
+    if (!companyName || !probabilityOfDefault) {
       return '';
     }
 
-    partyDbInfo = await api.getOrCreatePartyDbInfo({ companyRegNo, companyName });
+    partyDbInfo = await api.getOrCreatePartyDbInfo({ companyRegNo, companyName, probabilityOfDefault });
   } else {
     partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
   }
@@ -77,7 +78,11 @@ const addPartyUrns = async (deal, auditDetails) => {
       ...deal.tfm,
       parties: {
         exporter: {
-          partyUrn: await getPartyUrn({ companyRegNo: deal.exporter.companiesHouseRegistrationNumber, companyName: deal.exporter.companyName }),
+          partyUrn: await getPartyUrn({
+            companyRegNo: deal.exporter.companiesHouseRegistrationNumber,
+            companyName: deal.exporter.companyName,
+            probabilityOfDefault: deal.exporter.probabilityOfDefault,
+          }),
           partyUrnRequired: hasExporter,
         },
         buyer: {

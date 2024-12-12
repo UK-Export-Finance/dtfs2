@@ -145,12 +145,17 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
   });
 
   it('should return an empty string if no companyRegNo is provided', async () => {
-    const result = await api.getPartyUrn({ companyName: 'TEST NAME' });
+    const result = await api.getPartyUrn({ companyName: 'TEST NAME', probabilityOfDefault: 14 });
     expect(result).toBe('');
   });
 
   it('should return an empty string if no companyName is provided', async () => {
-    const result = await api.getPartyUrn({ companyRegNo: '12345678' });
+    const result = await api.getPartyUrn({ companyRegNo: '12345678', probabilityOfDefault: 14 });
+    expect(result).toBe('');
+  });
+
+  it('should return an empty string if no probabilityOfDefault is provided', async () => {
+    const result = await api.getPartyUrn({ companyRegNo: '12345678', companyName: 'TEST NAME' });
     expect(result).toBe('');
   });
 
@@ -162,7 +167,7 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
   it('should call getOrCreatePartyDbInfo for a company that exists, and return urn', async () => {
     getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
 
-    const companyData = { companyRegNo: '12345678', companyName: 'name' };
+    const companyData = { companyRegNo: '12345678', companyName: 'name', probabilityOfDefault: 14 };
 
     const result = await api.getPartyUrn(companyData);
 
@@ -175,7 +180,7 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
   it('should not call getPartyDbInfo', async () => {
     getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
 
-    const companyData = { companyRegNo: '12345678', companyName: 'name' };
+    const companyData = { companyRegNo: '12345678', companyName: 'name', probabilityOfDefault: 14 };
 
     await api.getPartyUrn(companyData);
 
@@ -185,7 +190,7 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
   it('should return an empty string if getOrCreatePartyDbInfo returns false', async () => {
     getOrCreatePartyDbInfo.mockResolvedValue(false);
 
-    const companyData = { companyRegNo: '12345678', companyName: 'TEST NAME' };
+    const companyData = { companyRegNo: '12345678', companyName: 'TEST NAME', probabilityOfDefault: 14 };
 
     const result = await api.getPartyUrn(companyData);
 
@@ -195,7 +200,7 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
   it('should handle null partyUrn in creation response gracefully', async () => {
     getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: null }]);
 
-    const companyData = { companyRegNo: '12345678', companyName: 'name' };
+    const companyData = { companyRegNo: '12345678', companyName: 'name', probabilityOfDefault: 14 };
 
     const result = await api.getPartyUrn(companyData);
 
@@ -208,7 +213,7 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
   it('should handle null data in getOrCreatePartyDbInfo response gracefully', async () => {
     getOrCreatePartyDbInfo.mockResolvedValue({});
 
-    const companyData = { companyRegNo: '12345678', companyName: 'name' };
+    const companyData = { companyRegNo: '12345678', companyName: 'name', probabilityOfDefault: 14 };
 
     const result = await api.getPartyUrn(companyData);
 
