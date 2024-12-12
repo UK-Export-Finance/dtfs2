@@ -107,12 +107,14 @@ describe(`POST ${BASE_URL}`, () => {
 
     const requestBody = aValidRequestBody();
 
+    const expectedEmails = [...bankEmails, requestBody.user.email];
+
     // Act
     const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.Ok);
-    expect(response.body).toEqual({ emails: bankEmails });
+    expect(response.body).toEqual({ emails: expectedEmails });
   });
 
   it(`should respond with a ${HttpStatusCode.BadRequest} when payload is invalid`, async () => {
