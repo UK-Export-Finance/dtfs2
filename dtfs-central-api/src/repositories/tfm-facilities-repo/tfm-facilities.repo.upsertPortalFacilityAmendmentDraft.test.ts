@@ -27,6 +27,7 @@ const amendment = {
   },
   version: 0,
 };
+
 const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
 
 const mockUpdateResult = {
