@@ -21,10 +21,10 @@ export type PendingCorrection = {
 };
 
 export type PendingCorrectionsResponseBody = {
+  reportId: number;
   reportPeriod: ReportPeriod;
   uploadedByUserName: string;
   dateUploaded: Date;
-  reportId: number;
   corrections: PendingCorrection[];
   nextDueReportPeriod: ReportPeriod;
 };
