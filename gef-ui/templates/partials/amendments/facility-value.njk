@@ -13,7 +13,7 @@
     <span class="govuk-caption-l" data-cy="heading-caption">
       {{ exporterName }}
     </span>
-    <h1 class="govuk-label-wrapper">
+    <h1 class="govuk-label-wrapper" data-cy="page-heading">
       <label class="govuk-label govuk-label--xl govuk-!-padding-bottom-3" for="facility-value">
         New facility value
       </label>
@@ -74,7 +74,7 @@
             }
           }) }}
 
-          <a href= {{"/case/" + dealId + "/facilities/" + facilityId + "/amendment/" + amendmentId + "/cancel"}} data-cy="cancel-link" class="govuk-link">Cancel</a>
+          <a href= {{"/gef/application-details/" + dealId + "/facilities/" + facilityId + "/amendment/" + amendmentId + "/cancel"}} data-cy="cancel-link" class="govuk-link">Cancel</a>
         </div>
       </form>
     </div>
