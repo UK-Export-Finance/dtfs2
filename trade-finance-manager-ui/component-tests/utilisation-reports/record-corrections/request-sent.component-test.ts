@@ -47,8 +47,8 @@ describe('page', () => {
     const wrapper = render(viewModel);
 
     // Assert
-    wrapper.expectText('p[data-cy="other-email-address-0"]').toRead(emails[0]);
-    wrapper.expectText('p[data-cy="other-email-address-1"]').toRead(emails[1]);
+    wrapper.expectText('[data-cy="other-email-address-1"]').toRead(emails[0]);
+    wrapper.expectText('[data-cy="other-email-address-2"]').toRead(emails[1]);
   });
 
   it('should render the requesting users email address', () => {

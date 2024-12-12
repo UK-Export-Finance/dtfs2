@@ -23,7 +23,7 @@
 
       <p class="govuk-body">This request has been sent to:</p>
 
-      <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-5" data-cy="other-email-addresses">
+      <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-5">
         {% for email in emailsWithoutRequestedByUserEmail %}
           <li data-cy="other-email-address-{{ loop.index }}">{{ email }}</li>
         {% endfor %}
