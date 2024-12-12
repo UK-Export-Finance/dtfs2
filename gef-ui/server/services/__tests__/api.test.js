@@ -375,16 +375,16 @@ describe('getAmendment()', () => {
     expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
-  it.only('throws an error if there is an api error', async () => {
+  it('throws an error if there is an api error', async () => {
     Axios.get.mockReturnValue(Promise.reject(new AxiosError()));
     await expect(api.getAmendment({ facilityId: validMongoId, amendmentId: validMongoId, userToken })).rejects.toThrowError(AxiosError);
   });
 
-  test.each(invalidMongoIdTestCases)('throws an error when given an invalid facility Id', async (invalidMongoId) => {
+  it.each(invalidMongoIdTestCases)('throws an error when given an invalid facility Id', async (invalidMongoId) => {
     await expect(api.getAmendment({ facilityId: invalidMongoId, amendmentId: validMongoId, userToken })).rejects.toThrowError('Invalid facility ID');
   });
 
-  test.each(invalidMongoIdTestCases)('throws an error when given an invalid amendment Id', async (invalidMongoId) => {
+  it.each(invalidMongoIdTestCases)('throws an error when given an invalid amendment Id', async (invalidMongoId) => {
     await expect(api.getAmendment({ facilityId: validMongoId, amendmentId: invalidMongoId, userToken })).rejects.toThrowError('Invalid amendment ID');
   });
 });
