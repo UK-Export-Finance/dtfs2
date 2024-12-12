@@ -54,7 +54,7 @@ describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
     process.env = originalEnv;
   });
 
-  describe('with FF_PORTAL_FACILITY_AMENDMENTS_ENABLED set to `false`', () => {
+  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is set to `false`', () => {
     beforeAll(() => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'false';
     });
@@ -68,7 +68,7 @@ describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
     });
   });
 
-  describe('with FF_PORTAL_FACILITY_AMENDMENTS_ENABLED set to `true`', () => {
+  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is set to `true`', () => {
     beforeAll(() => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'true';
     });
