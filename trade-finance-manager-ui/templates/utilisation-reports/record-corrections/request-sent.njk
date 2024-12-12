@@ -5,7 +5,6 @@
 
 {% block pageTitle %}Record correction request sent{% endblock %}
 
-{# TODO FN-3581: Add component tests for this new template. #}
 {% block content %}
   <div class="govuk-grid-row govuk-!-padding-top-3">
     <div class="govuk-grid-column-one-half-from-desktop">
@@ -24,7 +23,7 @@
 
       <p class="govuk-body">This request has been sent to:</p>
 
-      <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-5">
+      <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-5" data-cy="other-email-addresses">
         {% for email in emailsWithoutRequestedByUserEmail %}
           <li data-cy="other-email-address-{{ loop.index }}">{{ email }}</li>
         {% endfor %}
