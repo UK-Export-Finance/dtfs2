@@ -23,7 +23,7 @@ export const getFacilityValue = async (req: GetFacilityValueRequest, res: Respon
     }
 
     if (!userCanAmendFacility(facility, deal, user.roles)) {
-      return res.redirect(`/case/${dealId}`);
+      return res.redirect(`/gef/application-details/${dealId}`);
     }
 
     const currencySymbol = getCurrencySymbol(facility.currency?.id ?? CURRENCY.GBP);
@@ -33,7 +33,7 @@ export const getFacilityValue = async (req: GetFacilityValueRequest, res: Respon
       facilityId,
       amendmentId,
       exporterName: deal.exporter.companyName,
-      previousPage: `/case/${dealId}/facility/${facilityId}/amendments/${amendmentId}/bank-review-date`,
+      previousPage: `/gef/application-details/${dealId}/facility/${facilityId}/amendments/${amendmentId}/bank-review-date`,
       currencySymbol,
     };
 
