@@ -9,20 +9,16 @@ import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import { getUnixTime } from 'date-fns';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import { AMENDMENT_STATUS, AMENDMENT_TYPES, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, AMENDMENT_TYPES, aPortalFacilityAmendmentUserValues, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
 import { PortalFacilityAmendmentService } from './facility-amendment.service';
 import { aPortalUser } from '../../../test-helpers';
 import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
 
 const mockUpsertPortalFacilityAmendmentDraft = jest.fn();
 
-const facilityEndDate = new Date();
-
 const dealId = new ObjectId().toString();
 const facilityId = new ObjectId().toString();
-const amendment = {
-  facilityEndDate,
-};
+const amendment = aPortalFacilityAmendmentUserValues();
 const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
 
 describe('PortalFacilityAmendmentService', () => {

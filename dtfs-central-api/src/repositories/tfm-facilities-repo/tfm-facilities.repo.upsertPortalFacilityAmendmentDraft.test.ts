@@ -1,6 +1,5 @@
 import { ObjectId, UpdateResult } from 'mongodb';
-import { getUnixTime } from 'date-fns';
-import { AMENDMENT_TYPES, MONGO_DB_COLLECTIONS, AMENDMENT_STATUS, FacilityNotFoundError } from '@ukef/dtfs2-common';
+import { AMENDMENT_TYPES, MONGO_DB_COLLECTIONS, AMENDMENT_STATUS, FacilityNotFoundError, aPortalFacilityAmendment } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { TfmFacilitiesRepo } from './tfm-facilities.repo';
 import { mongoDbClient } from '../../drivers/db-client';
@@ -13,21 +12,11 @@ const facilityId = new ObjectId();
 const dealId = new ObjectId();
 
 const amendment = {
+  ...aPortalFacilityAmendment(),
   dealId,
   facilityId,
   amendmentId: new ObjectId(),
-  type: AMENDMENT_TYPES.PORTAL,
-  status: AMENDMENT_STATUS.IN_PROGRESS,
-  createdAt: getUnixTime(new Date()),
-  updatedAt: getUnixTime(new Date()),
-  createdBy: {
-    username: aPortalUser().username,
-    name: `A name`,
-    email: aPortalUser().email,
-  },
-  version: 0,
 };
-
 const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
 
 const mockUpdateResult = {

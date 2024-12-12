@@ -1,28 +1,14 @@
 import { ObjectId } from 'mongodb';
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { getUnixTime } from 'date-fns';
-import { AUDIT_USER_TYPES, CURRENCY } from '@ukef/dtfs2-common';
+import { AnyObject, aPortalFacilityAmendmentUserValues, AUDIT_USER_TYPES } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalUser } from '../../../../../test-helpers';
 import { validatePutPortalFacilityAmendmentPayload } from './validate-put-portal-facility-amendment-payload';
 
 const validDealId = new ObjectId().toString();
 const validAuditDetails = generatePortalAuditDetails(aPortalUser()._id);
-const validAmendment = {
-  changeCoverEndDate: true,
-  coverEndDate: getUnixTime(new Date()),
-  currentCoverEndDate: getUnixTime(new Date()),
-  isUsingFacilityEndDate: true,
-  facilityEndDate: getUnixTime(new Date()),
-  bankReviewDate: getUnixTime(new Date()),
-  changeFacilityValue: true,
-  value: 1800,
-  currentValue: 1500,
-  currency: CURRENCY.GBP,
-  ukefExposure: 10,
-  coveredPercentage: 23,
-};
+const validAmendment = JSON.parse(JSON.stringify(aPortalFacilityAmendmentUserValues())) as AnyObject;
 
 describe('validatePutPortalFacilityAmendmentPayload', () => {
   const invalidPayloads = [

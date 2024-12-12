@@ -1,7 +1,16 @@
 import { Response } from 'supertest';
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { AnyObject, API_ERROR_CODE, DEAL_SUBMISSION_TYPE, DEAL_TYPE, FACILITY_TYPE, MONGO_DB_COLLECTIONS, PortalFacilityAmendment } from '@ukef/dtfs2-common';
+import {
+  AnyObject,
+  API_ERROR_CODE,
+  aPortalFacilityAmendmentUserValues,
+  DEAL_SUBMISSION_TYPE,
+  DEAL_TYPE,
+  FACILITY_TYPE,
+  MONGO_DB_COLLECTIONS,
+  PortalFacilityAmendment,
+} from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import wipeDB from '../../wipeDB';
 import { testApi } from '../../test-api';
@@ -61,7 +70,7 @@ describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
 
     it('should return 404', async () => {
       const { status } = (await testApi
-        .put({ dealId, amendment: {}, auditDetails: generatePortalAuditDetails(portalUserId) })
+        .put({ dealId, amendment: aPortalFacilityAmendmentUserValues(), auditDetails: generatePortalAuditDetails(portalUserId) })
         .to(generateUrl(facilityId))) as FacilityAmendmentResponse;
 
       expect(status).toEqual(HttpStatusCode.NotFound);
@@ -77,7 +86,7 @@ describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
       const anInvalidFacilityId = 'InvalidId';
 
       const { body, status } = (await testApi
-        .put({ dealId, amendment: {}, auditDetails: generatePortalAuditDetails(portalUserId) })
+        .put({ dealId, amendment: aPortalFacilityAmendmentUserValues(), auditDetails: generatePortalAuditDetails(portalUserId) })
         .to(generateUrl(anInvalidFacilityId))) as FacilityAmendmentResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
@@ -92,7 +101,7 @@ describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
       const aValidButNonExistentFacilityId = new ObjectId().toString();
 
       const { body, status } = (await testApi
-        .put({ dealId, amendment: {}, auditDetails: generatePortalAuditDetails(portalUserId) })
+        .put({ dealId, amendment: aPortalFacilityAmendmentUserValues(), auditDetails: generatePortalAuditDetails(portalUserId) })
         .to(generateUrl(aValidButNonExistentFacilityId))) as FacilityAmendmentResponse;
 
       expect(status).toEqual(HttpStatusCode.NotFound);
@@ -118,7 +127,7 @@ describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
     it('should return the new amendment', async () => {
       // Act
       const { body, status } = (await testApi
-        .put({ dealId, amendment: {}, auditDetails: generatePortalAuditDetails(portalUserId) })
+        .put({ dealId, amendment: aPortalFacilityAmendmentUserValues(), auditDetails: generatePortalAuditDetails(portalUserId) })
         .to(generateUrl(facilityId))) as FacilityAmendmentResponse;
 
       // Assert
@@ -133,7 +142,7 @@ describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
 
       // Act
       const { status } = (await testApi
-        .put({ dealId, amendment: {}, auditDetails: generatePortalAuditDetails(portalUserId) })
+        .put({ dealId, amendment: aPortalFacilityAmendmentUserValues(), auditDetails: generatePortalAuditDetails(portalUserId) })
         .to(generateUrl(facilityId))) as FacilityAmendmentResponse;
 
       expect(status).toEqual(HttpStatusCode.Ok);

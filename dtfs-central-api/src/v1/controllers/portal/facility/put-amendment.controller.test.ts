@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http';
-import { AMENDMENT_STATUS, AMENDMENT_TYPES, API_ERROR_CODE, TestApiError } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, AMENDMENT_TYPES, API_ERROR_CODE, aPortalFacilityAmendmentUserValues, TestApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { putAmendmentDraft, PutAmendmentRequest } from './put-amendment.controller';
@@ -8,9 +8,7 @@ import { PortalFacilityAmendmentService } from '../../../../services/portal/faci
 
 const facilityId = 'facilityId';
 const dealId = 'dealId';
-const amendment = {
-  changeFacilityValue: true,
-};
+const amendment = aPortalFacilityAmendmentUserValues();
 
 const mockUpsertedAmendment = { facilityId, dealId, amendment, type: AMENDMENT_TYPES.PORTAL, status: AMENDMENT_STATUS.IN_PROGRESS };
 

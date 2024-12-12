@@ -1,22 +1,8 @@
-import { formatISO, getUnixTime } from 'date-fns';
 import { PORTAL_FACILITY_AMENDMENT_USER_VALUES } from './portal-amendment';
-import { withSchemaTests } from '../test-helpers';
-import { CURRENCY } from '../constants';
+import { aPortalFacilityAmendmentUserValues, withSchemaTests } from '../test-helpers';
+import { AnyObject } from '../types';
 
-const aValidPayload = () => ({
-  changeCoverEndDate: true,
-  coverEndDate: getUnixTime(new Date()),
-  currentCoverEndDate: getUnixTime(new Date()),
-  isUsingFacilityEndDate: true,
-  facilityEndDate: formatISO(new Date()),
-  bankReviewDate: formatISO(new Date()),
-  changeFacilityValue: true,
-  value: 1800,
-  currentValue: 1500,
-  currency: CURRENCY.GBP,
-  ukefExposure: 10,
-  coveredPercentage: 23,
-});
+const aValidPayload = () => JSON.parse(JSON.stringify(aPortalFacilityAmendmentUserValues())) as AnyObject;
 
 describe('PORTAL_FACILITY_AMENDMENT_USER_VALUES', () => {
   withSchemaTests({
