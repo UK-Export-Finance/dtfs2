@@ -44,7 +44,7 @@ const getPartyUrn = async ({ companyRegNo, companyName, probabilityOfDefault }) 
 
   let partyDbInfo = null;
   if (isAutomaticSalesforceCustomerCreationFeatureFlagEnabled()) {
-    if (!companyName) {
+    if (!companyName || !probabilityOfDefault) {
       return '';
     }
 
