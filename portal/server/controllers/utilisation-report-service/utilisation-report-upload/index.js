@@ -6,6 +6,7 @@ const { getDueReportPeriodsByBankId, getReportDueDate } = require('./utilisation
 const api = require('../../../api');
 const { getReportAndUserDetails } = require('./utilisation-report-details');
 const { PRIMARY_NAV_KEY } = require('../../../constants');
+const { filterReportJsonToRelevantKeys } = require('../../../helpers/filterReportJsonToRelevantKeys');
 
 const setSessionUtilisationReport = (req, nextDueReportPeriod) => {
   req.session.utilisationReport = {
@@ -137,7 +138,15 @@ const postUtilisationReportUpload = async (req, res) => {
       return renderPageWithError(req, res, extractDataErrorSummary, extractDataError, dueReportPeriods);
     }
 
-    const { csvValidationErrors } = await api.generateValidationErrorsForUtilisationReportData(csvJson, bankId, userToken);
+    if (!csvJson.length) {
+      throw new Error('Report data is empty');
+    }
+
+    // We filter down the JSON to only send the necessary data to the API for validation
+    // An array of empty objects is a valid payload to send to the API to get missing headers errors
+    const filteredCsvJson = filterReportJsonToRelevantKeys(csvJson);
+
+    const { csvValidationErrors } = await api.generateValidationErrorsForUtilisationReportData(filteredCsvJson, bankId, userToken);
 
     if (csvValidationErrors.length > 0) {
       const errorSummary = [
@@ -159,7 +168,7 @@ const postUtilisationReportUpload = async (req, res) => {
       ...req.session.utilisationReport,
       fileBuffer,
       filename: req.file.originalname,
-      reportData: csvJson,
+      reportData: filteredCsvJson,
       bankName: req.session.user.bank.name,
       submittedBy: `${user.firstname} ${user.surname}`,
     };

@@ -7,19 +7,14 @@ import {
   UtilisationReportEntity,
   FeeRecordEntity,
   AzureFileInfoEntity,
-  FacilityUtilisationDataEntity,
-  ReportPeriod,
   UtilisationReportRawCsvData,
   REPORT_NOT_RECEIVED,
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportReportUploadedEvent } from './report-uploaded.event-handler';
-import { calculateInitialUtilisationAndFixedFee } from '../helpers';
-import { getPreviousReportPeriod } from '../../../../../helpers';
-import { aUtilisationReportRawCsvData, aTfmFacility, aBank } from '../../../../../../test-helpers';
-import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
-import { getBankById } from '../../../../../repositories/banks-repo';
+import { aUtilisationReportRawCsvData, aReportPeriod } from '../../../../../../test-helpers';
+import { FacilityUtilisationDataService } from '../../../../facility-utilisation-data/facility-utilisation-data.service';
 
-jest.mock('../../../../../repositories/banks-repo');
+jest.mock('../../../../facility-utilisation-data/facility-utilisation-data.service');
 
 describe('handleUtilisationReportReportUploadedEvent', () => {
   const mockSave = jest.fn();
@@ -30,14 +25,8 @@ describe('handleUtilisationReportReportUploadedEvent', () => {
     existsBy: mockExistsBy,
   } as unknown as EntityManager;
 
-  const mockGetBankByIdResponse = aBank();
-
   afterEach(() => {
     jest.resetAllMocks();
-  });
-
-  beforeEach(() => {
-    jest.mocked(getBankById).mockImplementation(jest.fn().mockResolvedValue(mockGetBankByIdResponse));
   });
 
   it('calls the repo method to update the report', async () => {
@@ -76,68 +65,39 @@ describe('handleUtilisationReportReportUploadedEvent', () => {
     expect(mockSave).toHaveBeenCalledWith(FeeRecordEntity, [], { chunk: 100 });
   });
 
-  it('creates and saves new FacilityUtilisationData entities using the report reportPeriod for the supplied facility ids which do not have existing entries', async () => {
-    const findOneByUkefFacilityIdSpy = jest.spyOn(TfmFacilitiesRepo, 'findOneByUkefFacilityId');
-    const facility = aTfmFacility();
-    findOneByUkefFacilityIdSpy.mockResolvedValue(facility);
-
+  it('initialises FacilityUtilisationData for all facility ids in the report', async () => {
     // Arrange
-    const reportReportPeriod: ReportPeriod = {
-      start: { month: 5, year: 2024 },
-      end: { month: 6, year: 2024 },
-    };
-    const report = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED).withReportPeriod(reportReportPeriod).build();
+    const initialiseFacilityUtilisationDataSpy = jest.spyOn(FacilityUtilisationDataService, 'initialiseFacilityUtilisationData');
+    const bankId = '10';
+    const reportPeriod = aReportPeriod();
+    const report = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED).withReportPeriod(reportPeriod).withBankId(bankId).build();
 
-    const reportCsvDataWithExistingFacilityUtilisationData: UtilisationReportRawCsvData = { ...aUtilisationReportRawCsvData(), 'ukef facility id': '11111111' };
-    const reportCsvDataWithoutExistingFacilityUtilisationData: UtilisationReportRawCsvData[] = [
-      { ...aUtilisationReportRawCsvData(), 'ukef facility id': '22222222' },
-      { ...aUtilisationReportRawCsvData(), 'ukef facility id': '33333333' },
+    const allFacilityIds = ['11111111', '22222222', '33333333'];
+    const reportCsvData: UtilisationReportRawCsvData[] = [
+      { ...aUtilisationReportRawCsvData(), 'ukef facility id': allFacilityIds[0] },
+      { ...aUtilisationReportRawCsvData(), 'ukef facility id': allFacilityIds[1] },
+      { ...aUtilisationReportRawCsvData(), 'ukef facility id': allFacilityIds[2] },
+      { ...aUtilisationReportRawCsvData(), 'ukef facility id': allFacilityIds[2] },
     ];
+
     const uploadedByUserId = 'abc123';
     const requestSource: DbRequestSource = {
       platform: REQUEST_PLATFORM_TYPE.PORTAL,
       userId: uploadedByUserId,
     };
 
-    mockExistsBy.mockImplementation((_entity: unknown, { id }: { id: string }) => {
-      switch (id) {
-        case '11111111':
-          return Promise.resolve(true);
-        default:
-          return Promise.resolve(false);
-      }
-    });
-
     // Act
     await handleUtilisationReportReportUploadedEvent(report, {
       azureFileInfo: MOCK_AZURE_FILE_INFO,
-      reportCsvData: [reportCsvDataWithExistingFacilityUtilisationData, ...reportCsvDataWithoutExistingFacilityUtilisationData],
+      reportCsvData,
       uploadedByUserId,
       requestSource,
       transactionEntityManager: mockEntityManager,
     });
 
     // Assert
-    expect(mockExistsBy).toHaveBeenCalledWith(FacilityUtilisationDataEntity, { id: reportCsvDataWithExistingFacilityUtilisationData['ukef facility id'] });
-
-    const createdFacilityUtilisationDataEntities = reportCsvDataWithoutExistingFacilityUtilisationData.map(async ({ 'ukef facility id': facilityId }) => {
-      expect(mockExistsBy).toHaveBeenCalledWith(FacilityUtilisationDataEntity, { id: facilityId });
-
-      const previousReportPeriod = await getPreviousReportPeriod(report.bankId, report);
-
-      const { utilisation, fixedFee } = await calculateInitialUtilisationAndFixedFee(facilityId);
-
-      return FacilityUtilisationDataEntity.create({
-        id: facilityId,
-        reportPeriod: previousReportPeriod,
-        requestSource,
-        utilisation,
-        fixedFee,
-      });
-    });
-
-    const expectedEntities = await Promise.all(createdFacilityUtilisationDataEntities);
-
-    expect(mockSave).toHaveBeenCalledWith(FacilityUtilisationDataEntity, expectedEntities, { chunk: 100 });
+    const expectedFacilityIds = new Set(allFacilityIds);
+    expect(initialiseFacilityUtilisationDataSpy).toHaveBeenCalledTimes(1);
+    expect(initialiseFacilityUtilisationDataSpy).toHaveBeenCalledWith(expectedFacilityIds, bankId, reportPeriod, requestSource, mockEntityManager);
   });
 });

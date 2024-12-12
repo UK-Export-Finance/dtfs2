@@ -1,4 +1,5 @@
 const { addMonths } = require('date-fns');
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 
 /**
  * There are utilisation reports in the fixtures which require an existing facility with matching
@@ -9,6 +10,7 @@ const { addMonths } = require('date-fns');
  */
 export const tfmFacilityForReport = {
   facilitySnapshot: {
+    type: FACILITY_TYPE.CASH,
     ukefFacilityId: '20001371',
     value: 1000,
     coverStartDate: new Date().getTime(),
