@@ -1,5 +1,5 @@
 import { ObjectId, UpdateFilter, WithoutId, FindOneAndUpdateOptions, Collection, Document, UpdateResult, Filter } from 'mongodb';
-import { AuditDetails, TfmFacility, FacilityAmendment, AmendmentStatus, FacilityNotFoundError } from '@ukef/dtfs2-common';
+import { AuditDetails, TfmFacility, FacilityAmendment, AmendmentStatus, FacilityNotFoundError, FacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import { deleteMany } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../drivers/db-client';
 import { aggregatePipelines, AllFacilitiesAndFacilityCountAggregatePipelineOptions } from './aggregate-pipelines';
@@ -162,7 +162,7 @@ export class TfmFacilitiesRepo {
   public static async findOneAmendmentByFacilityIdAndAmendmentId(
     facilityId: string | ObjectId,
     amendmentId: string | ObjectId,
-  ): Promise<(FacilityAmendment & { ukefFacilityId: string | null }) | undefined> {
+  ): Promise<FacilityAmendmentWithUkefId | undefined> {
     const collection = await this.getCollection();
     const facility = await collection.findOne({ _id: { $eq: new ObjectId(facilityId) } });
 

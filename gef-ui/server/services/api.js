@@ -345,6 +345,7 @@ const downloadFile = async ({ fileId, userToken }) => {
  * @param {Object} param
  * @param {string} param.facilityId
  * @param {string} param.amendmentId
+ * @param {string} param.userToken
  * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendmentWithUkefId)>}>}
  */
 const getAmendment = async ({ facilityId, amendmentId, userToken }) => {
@@ -360,7 +361,8 @@ const getAmendment = async ({ facilityId, amendmentId, userToken }) => {
     const { data } = await Axios.get(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, config(userToken));
     return data;
   } catch (error) {
-    return apiErrorHandler(error);
+    console.error('Failed to get the amendment', error);
+    throw error;
   }
 };
 
