@@ -13,15 +13,13 @@ import { SqlDbHelper } from '../../../sql-db-helper';
 import { mongoDbClient } from '../../../../src/drivers/db-client';
 import { wipe } from '../../../wipeDB';
 import { aBank, aPortalUser, aTfmSessionUser } from '../../../../test-helpers';
+import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replace-url-parameter-placeholders';
 
 console.error = jest.fn();
 
 const BASE_URL = '/v1/utilisation-reports/:reportId/fee-records/:feeRecordId/corrections';
 
 describe(`POST ${BASE_URL}`, () => {
-  const getUrl = (reportId: number | string, feeRecordId: number | string) =>
-    BASE_URL.replace(':reportId', reportId.toString()).replace(':feeRecordId', feeRecordId.toString());
-
   const reportId = 1;
   const feeRecordId = 11;
   const nonExistentFeeRecordId = 12;
@@ -105,7 +103,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId, feeRecordId));
+    const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.Ok);
@@ -120,7 +118,7 @@ describe(`POST ${BASE_URL}`, () => {
     };
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId, feeRecordId));
+    const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -133,7 +131,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId, nonExistentFeeRecordId));
+    const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId: nonExistentFeeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -153,7 +151,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(otherReportId, feeRecordId));
+    const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId: otherReportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -164,7 +162,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId, feeRecordId));
+    const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -178,7 +176,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId, feeRecordId));
+    const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -192,7 +190,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId, feeRecordId));
+    const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -218,7 +216,9 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportWithNonExistentBank.id, reportFeeRecordId));
+    const response = await testApi
+      .post(requestBody)
+      .to(replaceUrlParameterPlaceholders(BASE_URL, { reportId: reportWithNonExistentBank.id, feeRecordId: reportFeeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
