@@ -66,8 +66,9 @@ export const generateFeeRecordCorrectionRequestEmailParameters = async (
  * @param bankId - The id of the bank
  * @param requestedByUserEmail - The email of the TFM user who is
  *    requesting the correction
+ * @returns A promise that resolves to an object containing the email addresses
+ * that were notified.
  */
-// TODO FN-3581: Update tests now we're returning emails.
 export const sendFeeRecordCorrectionRequestEmails = async (
   reasons: RecordCorrectionReason[],
   reportPeriod: ReportPeriod,

@@ -33,7 +33,6 @@ type PostFeeRecordCorrectionResponse = Response<FeeRecordCorrectionRequestEmailA
  * @param req - The request object
  * @param res - The response object
  */
-// TODO FN-3581: Update tests now we're returning a response body.
 export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionRequest, res: PostFeeRecordCorrectionResponse) => {
   const { reportId: reportIdString, feeRecordId: feeRecordIdString } = req.params;
   const { user } = req.body;

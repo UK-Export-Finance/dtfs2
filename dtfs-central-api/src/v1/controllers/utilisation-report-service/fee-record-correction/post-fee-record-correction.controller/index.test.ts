@@ -18,6 +18,7 @@ import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../reposit
 import { FEE_RECORD_EVENT_TYPE } from '../../../../../services/state-machines/fee-record/event/fee-record.event-type';
 import { FeeRecordRepo } from '../../../../../repositories/fee-record-repo';
 import { sendFeeRecordCorrectionRequestEmails } from './helpers';
+import { FeeRecordCorrectionRequestEmailAddresses } from '../../../../../types/utilisation-reports';
 
 jest.mock('../../../../../helpers');
 jest.mock('../../../../../services/state-machines/fee-record/fee-record.state-machine');
@@ -169,8 +170,11 @@ describe('post-fee-record-correction.controller', () => {
         });
       });
 
-      it(`should respond with a '${HttpStatusCode.Ok}'`, async () => {
+      it(`should respond with a '${HttpStatusCode.Ok}' and the notified emails`, async () => {
         // Arrange
+        const emails = ['test1@ukexportfinance.gov.uk', 'test2@ukexportfinance.gov.uk'];
+        jest.mocked(executeWithSqlTransaction).mockResolvedValue({ emails });
+
         const { req, res } = getHttpMocks();
 
         // Act
@@ -178,6 +182,9 @@ describe('post-fee-record-correction.controller', () => {
 
         // Assert
         expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+
+        const responseBody = res._getData() as FeeRecordCorrectionRequestEmailAddresses;
+        expect(responseBody).toEqual({ emails });
       });
     });
 

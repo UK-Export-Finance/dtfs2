@@ -18,7 +18,6 @@ console.error = jest.fn();
 
 const BASE_URL = '/v1/utilisation-reports/:reportId/fee-records/:feeRecordId/corrections';
 
-// TODO FN-3581: Update tests now we're returning a response body.
 describe(`POST ${BASE_URL}`, () => {
   const getUrl = (reportId: number | string, feeRecordId: number | string) =>
     BASE_URL.replace(':reportId', reportId.toString()).replace(':feeRecordId', feeRecordId.toString());
@@ -35,10 +34,15 @@ describe(`POST ${BASE_URL}`, () => {
 
   const bankId = '123';
   const bankName = 'Test bank';
+  const bankEmails = ['test1@ukexportfinance.gov.uk', 'test2@ukexportfinance.gov.uk'];
   const bank: Bank = {
     ...aBank(),
     id: bankId,
     name: bankName,
+    paymentOfficerTeam: {
+      teamName: 'Payment Reporting Team',
+      emails: bankEmails,
+    },
   };
 
   const uploadedUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
@@ -99,7 +103,7 @@ describe(`POST ${BASE_URL}`, () => {
     makeRequest: (url) => testApi.post(aValidRequestBody()).to(url),
   });
 
-  it(`should respond with a ${HttpStatusCode.Ok} with a valid request body`, async () => {
+  it(`should respond with a ${HttpStatusCode.Ok} with the notified emails if the request is valid`, async () => {
     // Arrange
     await SqlDbHelper.saveNewEntry('FeeRecordCorrectionTransientFormData', transientFormDataForUserAndFeeRecord);
 
@@ -110,6 +114,7 @@ describe(`POST ${BASE_URL}`, () => {
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.Ok);
+    expect(response.body).toEqual({ emails: bankEmails });
   });
 
   it(`should respond with a ${HttpStatusCode.BadRequest} when payload is invalid`, async () => {
