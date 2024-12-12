@@ -1,19 +1,6 @@
-import { ObjectId } from 'mongodb';
+import { PortalSessionUser } from '@ukef/dtfs2-common';
 
-export type TestUser = {
-  username: string;
-  password: string;
-  firstname: string;
-  surname: string;
-  email: string;
-  timezone: string;
-  roles: string[];
-  bank: {
-    id: string;
-    name: string;
-    emails?: string[];
-  };
-  isTrusted: boolean;
-  _id?: ObjectId;
+export interface TestUser extends PortalSessionUser {
   token?: string;
-};
+  password: string;
+}

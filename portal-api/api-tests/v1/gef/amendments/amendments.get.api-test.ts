@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { AMENDMENT_STATUS, AMENDMENT_TYPES, AnyObject, FacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, AMENDMENT_TYPES, AnyObject, FacilityAmendmentWithUkefId, Role } from '@ukef/dtfs2-common';
 import app from '../../../../src/createApp';
 import testUserCache from '../../../api-test-users';
 
@@ -7,6 +7,8 @@ import { MAKER } from '../../../../src/v1/roles/roles';
 import { getAmendmentUrl } from './get-amendment-url';
 import createApi from '../../../api';
 import { TestUser } from '../../../types/test-user';
+import { withRoleAuthorisationTests } from '../../../common-tests/role-authorisation-tests';
+import { withClientAuthenticationTests } from '../../../common-tests/client-authentication-tests';
 
 const { as, get } = createApi(app);
 
@@ -39,17 +41,13 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
     });
 
     afterAll(() => {
-      jest.restoreAllMocks();
+      jest.resetAllMocks();
       process.env = originalProcessEnv;
     });
 
     describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is disabled', () => {
       beforeEach(() => {
         process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'false';
-      });
-
-      afterAll(() => {
-        jest.resetAllMocks();
       });
 
       it('returns a 404 response', async () => {
@@ -73,15 +71,17 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         jest.resetAllMocks();
       });
 
-      it('returns a 401 response when user is not authenticated', async () => {
-        // Arrange
-        const url = getAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId });
+      withClientAuthenticationTests({
+        makeRequestWithoutAuthHeader: () => get(getAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId })),
+        makeRequestWithAuthHeader: (authHeader: string) =>
+          get(getAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId }), { headers: { Authorization: authHeader } }),
+      });
 
-        // Act
-        const response = await get(url);
-
-        // Assert
-        expect(response.status).toEqual(401);
+      withRoleAuthorisationTests({
+        allowedRoles: [MAKER],
+        getUserWithRole: (role: Role) => testUsers().withRole(role).one() as TestUser,
+        makeRequestAsUser: (user: TestUser) => as(user).get(getAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId })),
+        successStatusCode: 200,
       });
 
       it('returns a 400 response when the facility id path param is invalid', async () => {
