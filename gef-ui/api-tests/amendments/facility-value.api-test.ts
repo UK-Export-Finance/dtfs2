@@ -1,6 +1,7 @@
 import { Headers } from 'node-mocks-http';
 import { NextFunction, Request, Response } from 'express';
 import { CURRENCY, DEAL_STATUS, DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
+import { HttpStatusCode } from 'axios';
 import { MAKER } from '../../server/constants/roles';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
 import app from '../../server/createApp';
@@ -62,7 +63,7 @@ describe(`GET ${url}`, () => {
       const response = await getWithSessionCookie(sessionCookie);
 
       // Assert
-      expect(response.status).toEqual(302);
+      expect(response.status).toEqual(HttpStatusCode.Found);
       expect(response.headers.location).toEqual('/not-found');
     });
   });
@@ -75,7 +76,7 @@ describe(`GET ${url}`, () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers: Headers) => get(url, {}, headers),
       whitelistedRoles: [MAKER],
-      successCode: 200,
+      successCode: HttpStatusCode.Ok,
     });
 
     it('should render `New facility value` page', async () => {
@@ -83,7 +84,7 @@ describe(`GET ${url}`, () => {
       const response = await getWithSessionCookie(sessionCookie);
 
       // Assert
-      expect(response.status).toEqual(200);
+      expect(response.status).toEqual(HttpStatusCode.Ok);
       expect(response.text).toContain('New facility value');
     });
 
@@ -95,7 +96,7 @@ describe(`GET ${url}`, () => {
       const response = await getWithSessionCookie(sessionCookie);
 
       // Assert
-      expect(response.status).toEqual(302);
+      expect(response.status).toEqual(HttpStatusCode.Found);
       expect(response.headers.location).toEqual('/not-found');
     });
 
@@ -107,7 +108,7 @@ describe(`GET ${url}`, () => {
       const response = await getWithSessionCookie(sessionCookie);
 
       // Assert
-      expect(response.status).toEqual(302);
+      expect(response.status).toEqual(HttpStatusCode.Found);
       expect(response.headers.location).toEqual('/not-found');
     });
 
@@ -119,8 +120,8 @@ describe(`GET ${url}`, () => {
       const response = await getWithSessionCookie(sessionCookie);
 
       // Assert
-      expect(response.status).toEqual(302);
-      expect(response.headers.location).toEqual(`/case/${dealId}`);
+      expect(response.status).toEqual(HttpStatusCode.Found);
+      expect(response.headers.location).toEqual(`/gef/application-details/${dealId}`);
     });
 
     it('should render `problem with service` if getApplication throws an error', async () => {
@@ -131,7 +132,7 @@ describe(`GET ${url}`, () => {
       const response = await getWithSessionCookie(sessionCookie);
 
       // Assert
-      expect(response.status).toEqual(200);
+      expect(response.status).toEqual(HttpStatusCode.Ok);
       expect(response.text).toContain('Problem with the service');
     });
 
@@ -143,7 +144,7 @@ describe(`GET ${url}`, () => {
       const response = await getWithSessionCookie(sessionCookie);
 
       // Assert
-      expect(response.status).toEqual(200);
+      expect(response.status).toEqual(HttpStatusCode.Ok);
       expect(response.text).toContain('Problem with the service');
     });
   });

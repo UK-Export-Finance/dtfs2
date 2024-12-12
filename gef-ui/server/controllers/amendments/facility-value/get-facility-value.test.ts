@@ -91,11 +91,11 @@ describe('getFacilityValue', () => {
       dealId,
       facilityId,
       exporterName: companyName,
-      previousPage: `/case/${dealId}/facility/${facilityId}/amendments/${amendmentId}/bank-review-date`,
+      previousPage: `/gef/application-details/${dealId}/facility/${facilityId}/amendments/${amendmentId}/bank-review-date`,
       currencySymbol: getCurrencySymbol(mockFacility.currency.id),
     };
 
-    expect(res._getStatusCode()).toEqual(200);
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
     expect(res._getRenderView()).toEqual('partials/amendments/facility-value.njk');
     expect(res._getRenderData()).toEqual(expectedRenderData);
   });
