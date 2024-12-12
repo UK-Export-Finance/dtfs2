@@ -9,6 +9,7 @@ import {
   AMENDMENT_STATUS,
   PortalFacilityAmendment,
   GEF_FACILITY_TYPE,
+  TfmFacilityAmendment,
 } from '@ukef/dtfs2-common';
 import { deleteMany, generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 
@@ -229,11 +230,11 @@ export class TfmFacilitiesRepo {
    * @param facilityId - The facility id
    * @returns The latest completed amendment
    */
-  public static async findLatestCompletedAmendmentByFacilityId(facilityId: string | ObjectId): Promise<FacilityAmendment | null> {
+  public static async findLatestCompletedAmendmentByFacilityId(facilityId: string | ObjectId): Promise<TfmFacilityAmendment | null> {
     const collection = await this.getCollection();
     const amendments = await collection
-      .aggregate(aggregatePipelines.latestCompletedAmendmentByFacilityId(facilityId))
-      .map<FacilityAmendment>((doc) => doc.amendments as FacilityAmendment)
+      .aggregate(aggregatePipelines.latestCompletedTfmAmendmentByFacilityId(facilityId))
+      .map<TfmFacilityAmendment>((doc) => doc.amendments as TfmFacilityAmendment)
       .toArray();
     return amendments.at(0) ?? null;
   }

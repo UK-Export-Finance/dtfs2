@@ -47,7 +47,6 @@ interface BaseAmendment {
   createdAt: UnixTimestamp;
   updatedAt: UnixTimestamp;
   status: AmendmentStatus;
-  version?: number;
   changeCoverEndDate?: boolean;
   coverEndDate?: UnixTimestamp | null;
   currentCoverEndDate?: UnixTimestamp | null;
@@ -81,6 +80,7 @@ interface BaseAmendment {
  */
 export interface TfmFacilityAmendment extends BaseAmendment {
   type?: typeof AMENDMENT_TYPES.TFM;
+  version: number;
   submittedByPim?: boolean;
   sendFirstTaskEmail?: boolean;
   firstTaskEmailSent?: boolean;
