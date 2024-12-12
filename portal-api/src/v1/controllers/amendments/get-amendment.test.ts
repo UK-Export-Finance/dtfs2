@@ -30,7 +30,7 @@ describe('controllers - facility amendment', () => {
       expect(api.getPortalFacilityAmendment).toHaveBeenCalledWith(facilityId, amendmentId);
     });
 
-    it('should return the amendment', async () => {
+    it(`should respond with ${HttpStatusCode.Ok} and return the amendment`, async () => {
       // Arrange
       const mockPortalAmendmentResponse: PortalAmendmentWithUkefId = {
         amendmentId,
@@ -58,7 +58,7 @@ describe('controllers - facility amendment', () => {
     });
 
     it('should return an error when there is an API error', async () => {
-      const testErrorStatus = 418;
+      const testErrorStatus = HttpStatusCode.ExpectationFailed;
       const testApiErrorMessage = 'test api error message';
       jest.mocked(api.getPortalFacilityAmendment).mockRejectedValue(new TestApiError({ status: testErrorStatus, message: testApiErrorMessage }));
 
@@ -88,7 +88,7 @@ describe('controllers - facility amendment', () => {
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
-      expect(res._getData()).toEqual({ message: 'Failed to get the amendment', status: 500 });
+      expect(res._getData()).toEqual({ message: 'Failed to get the amendment', status: HttpStatusCode.InternalServerError });
     });
   });
 });

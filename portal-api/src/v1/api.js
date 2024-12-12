@@ -466,7 +466,7 @@ const getPortalFacilityAmendment = async (facilityId, amendmentId) => {
 
     return response.data;
   } catch (error) {
-    console.error(error);
+    console.error('Error getting portal facility amendment with facility id %s and amendment id %s: %o', facilityId, amendmentId, error);
     throw error;
   }
 };

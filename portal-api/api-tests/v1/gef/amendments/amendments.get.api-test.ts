@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { AMENDMENT_STATUS, AMENDMENT_TYPES, AnyObject, PortalAmendmentWithUkefId, Role } from '@ukef/dtfs2-common';
+import { HttpStatusCode } from 'axios';
 import app from '../../../../src/createApp';
 import testUserCache from '../../../api-test-users';
 
@@ -50,7 +51,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'false';
       });
 
-      it('returns a 404 response', async () => {
+      it(`should return a ${HttpStatusCode.NotFound} response`, async () => {
         // Arrange
         const url = getAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId });
 
@@ -58,7 +59,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         const response = await as(aMaker).get(url);
 
         // Assert
-        expect(response.status).toEqual(404);
+        expect(response.status).toEqual(HttpStatusCode.NotFound);
       });
     });
 
@@ -81,10 +82,10 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         allowedRoles: [MAKER],
         getUserWithRole: (role: Role) => testUsers().withRole(role).one() as TestUser,
         makeRequestAsUser: (user: TestUser) => as(user).get(getAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId })),
-        successStatusCode: 200,
+        successStatusCode: HttpStatusCode.Ok,
       });
 
-      it('returns a 400 response when the facility id path param is invalid', async () => {
+      it(`should return a ${HttpStatusCode.BadRequest} response when the facility id path param is invalid`, async () => {
         // Arrange
         const url = getAmendmentUrl({ facilityId: invalidId, amendmentId: validAmendmentId });
 
@@ -92,10 +93,10 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         const response = await as(aMaker).get(url);
 
         // Assert
-        expect(response.status).toEqual(400);
+        expect(response.status).toEqual(HttpStatusCode.BadRequest);
       });
 
-      it('returns a 400 response when the amendment id path param is invalid', async () => {
+      it(`should return a  ${HttpStatusCode.BadRequest} response when the amendment id path param is invalid`, async () => {
         // Arrange
         const url = getAmendmentUrl({ facilityId: validFacilityId, amendmentId: invalidId });
 
@@ -103,10 +104,10 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         const response = await as(aMaker).get(url);
 
         // Assert
-        expect(response.status).toEqual(400);
+        expect(response.status).toEqual(HttpStatusCode.BadRequest);
       });
 
-      it('returns the amendment for an authenticated user', async () => {
+      it(`should return a ${HttpStatusCode.Ok} response and the amendment for an authenticated user`, async () => {
         const amendmentId = new ObjectId().toString();
         const facilityId = new ObjectId().toString();
         const dealId = new ObjectId().toString();
@@ -131,7 +132,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         const response = await as(aMaker).get(url);
 
         // Assert
-        expect(response.status).toEqual(200);
+        expect(response.status).toEqual(HttpStatusCode.Ok);
         expect(response.body).toEqual({ ...amendment, amendmentId, facilityId, dealId });
       });
     });

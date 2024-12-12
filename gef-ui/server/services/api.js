@@ -361,7 +361,7 @@ const getAmendment = async ({ facilityId, amendmentId, userToken }) => {
     const { data } = await Axios.get(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, config(userToken));
     return data;
   } catch (error) {
-    console.error('Failed to get the amendment', error);
+    console.error('Failed to get the amendment with facility id %s and amendment id %s: %o', facilityId, amendmentId, error);
     throw error;
   }
 };
