@@ -76,12 +76,16 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
   });
 
   describe('postRecordCorrectionRequestInformation', () => {
+    const emails = ['test1@ukexportfinance.gov.uk', 'test2@ukexportfinance.gov.uk'];
+
     it('should redirect to request sent page on success', async () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
         params: { reportId, feeRecordId },
       });
+
+      jest.mocked(api.createFeeRecordCorrection).mockResolvedValue({ emails });
 
       // Act
       await postRecordCorrectionRequestInformation(req, res);
@@ -90,6 +94,22 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
       expect(api.createFeeRecordCorrection).toHaveBeenCalledTimes(1);
       expect(api.createFeeRecordCorrection).toHaveBeenCalledWith(reportId, feeRecordId, user, userToken);
       expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}/request-sent`);
+    });
+
+    it(`should populate the session with the record correction request emails`, async () => {
+      // Act
+      const { req, res } = httpMocks.createMocks({
+        session: requestSession,
+        params: { reportId, feeRecordId },
+      });
+
+      jest.mocked(api.createFeeRecordCorrection).mockResolvedValue({ emails });
+
+      // Act
+      await postRecordCorrectionRequestInformation(req, res);
+
+      // Assert
+      expect(req.session.recordCorrectionRequestEmails).toEqual(emails);
     });
 
     it('should render problem with service page on error', async () => {
