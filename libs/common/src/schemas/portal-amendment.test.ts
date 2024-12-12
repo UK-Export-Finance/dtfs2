@@ -1,5 +1,5 @@
-import { getUnixTime } from 'date-fns';
-import { PORTAL_FACILITY_AMENDMENT } from './portal-amendment';
+import { formatISO, getUnixTime } from 'date-fns';
+import { PORTAL_FACILITY_AMENDMENT_USER_VALUES } from './portal-amendment';
 import { withSchemaTests } from '../test-helpers';
 import { CURRENCY } from '../constants';
 
@@ -8,8 +8,8 @@ const aValidPayload = () => ({
   coverEndDate: getUnixTime(new Date()),
   currentCoverEndDate: getUnixTime(new Date()),
   isUsingFacilityEndDate: true,
-  facilityEndDate: getUnixTime(new Date()),
-  bankReviewDate: getUnixTime(new Date()),
+  facilityEndDate: formatISO(new Date()),
+  bankReviewDate: formatISO(new Date()),
   changeFacilityValue: true,
   value: 1800,
   currentValue: 1500,
@@ -18,11 +18,11 @@ const aValidPayload = () => ({
   coveredPercentage: 23,
 });
 
-describe('PORTAL_FACILITY_AMENDMENT', () => {
+describe('PORTAL_FACILITY_AMENDMENT_USER_VALUES', () => {
   withSchemaTests({
     successTestCases: getSuccessTestCases(),
     failureTestCases: getFailureTestCases(),
-    schema: PORTAL_FACILITY_AMENDMENT,
+    schema: PORTAL_FACILITY_AMENDMENT_USER_VALUES,
   });
 
   function getSuccessTestCases() {
@@ -173,4 +173,32 @@ describe('PORTAL_FACILITY_AMENDMENT', () => {
       },
     ];
   }
+
+  it('should parse `facilityEndDate` from ISO-8601 into a Date', () => {
+    const facilityEndDate = new Date();
+    const amendment = {
+      facilityEndDate: JSON.parse(JSON.stringify(facilityEndDate)) as string,
+    };
+
+    // Act
+    const { success, data } = PORTAL_FACILITY_AMENDMENT_USER_VALUES.safeParse(amendment);
+
+    // Assert
+    expect(success).toEqual(true);
+    expect(data).toEqual({ facilityEndDate });
+  });
+
+  it('should parse `bankReviewDate` from ISO-8601 into a Date', () => {
+    const bankReviewDate = new Date();
+    const amendment = {
+      bankReviewDate: JSON.parse(JSON.stringify(bankReviewDate)) as string,
+    };
+
+    // Act
+    const { success, data } = PORTAL_FACILITY_AMENDMENT_USER_VALUES.safeParse(amendment);
+
+    // Assert
+    expect(success).toEqual(true);
+    expect(data).toEqual({ bankReviewDate });
+  });
 });

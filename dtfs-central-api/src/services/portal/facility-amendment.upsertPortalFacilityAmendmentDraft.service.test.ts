@@ -16,12 +16,12 @@ import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
 
 const mockUpsertPortalFacilityAmendmentDraft = jest.fn();
 
-const facilityEndDate = new Date(2030, 1, 1);
+const facilityEndDate = new Date();
 
 const dealId = new ObjectId().toString();
 const facilityId = new ObjectId().toString();
 const amendment = {
-  facilityEndDate: getUnixTime(facilityEndDate),
+  facilityEndDate,
 };
 const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
 
@@ -93,7 +93,6 @@ describe('PortalFacilityAmendmentService', () => {
           name: `${aPortalUser().firstname} ${aPortalUser().surname}`,
           email: aPortalUser().email,
         },
-        facilityEndDate,
       };
 
       expect(mockUpsertPortalFacilityAmendmentDraft).toHaveBeenCalledTimes(1);
@@ -124,7 +123,6 @@ describe('PortalFacilityAmendmentService', () => {
           name: `${aPortalUser().firstname} ${aPortalUser().surname}`,
           email: aPortalUser().email,
         },
-        facilityEndDate,
       };
 
       expect(response).toEqual(expectedAmendment);
