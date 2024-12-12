@@ -13,7 +13,7 @@ import { testApi } from '../../../test-api';
 import { SqlDbHelper } from '../../../sql-db-helper';
 import { aTfmSessionUser } from '../../../../test-helpers';
 import { PutFeeRecordCorrectionTransientFormDataPayload } from '../../../../src/v1/routes/middleware/payload-validation';
-import { getFeeRecordCorrectionUrl } from '../../../../test-helpers/get-fee-record-correction-url';
+import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replace-url-parameter-placeholders';
 
 console.error = jest.fn();
 
@@ -66,7 +66,7 @@ describe(`PUT ${BASE_URL}`, () => {
     };
 
     // Act
-    const response = await testApi.put(requestBody).to(getFeeRecordCorrectionUrl(BASE_URL, { reportId, feeRecordId }));
+    const response = await testApi.put(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -86,7 +86,7 @@ describe(`PUT ${BASE_URL}`, () => {
       };
 
       // Act
-      const response = await testApi.put(requestBody).to(getFeeRecordCorrectionUrl(BASE_URL, { reportId, feeRecordId }));
+      const response = await testApi.put(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
       // Assert
       expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -105,7 +105,7 @@ describe(`PUT ${BASE_URL}`, () => {
     };
 
     // Act
-    const response = await testApi.put(requestBody).to(getFeeRecordCorrectionUrl(BASE_URL, { reportId, feeRecordId }));
+    const response = await testApi.put(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -123,7 +123,7 @@ describe(`PUT ${BASE_URL}`, () => {
     };
 
     // Act
-    const response = await testApi.put(requestBody).to(getFeeRecordCorrectionUrl(BASE_URL, { reportId, feeRecordId }));
+    const response = await testApi.put(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -141,7 +141,7 @@ describe(`PUT ${BASE_URL}`, () => {
     };
 
     // Act
-    const response = await testApi.put(requestBody).to(getFeeRecordCorrectionUrl(BASE_URL, { reportId, feeRecordId }));
+    const response = await testApi.put(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -159,7 +159,7 @@ describe(`PUT ${BASE_URL}`, () => {
     };
 
     // Act
-    const response = await testApi.put(requestBody).to(getFeeRecordCorrectionUrl(BASE_URL, { reportId, feeRecordId }));
+    const response = await testApi.put(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -170,7 +170,7 @@ describe(`PUT ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.put(requestBody).to(getFeeRecordCorrectionUrl(BASE_URL, { reportId, feeRecordId: feeRecordId + 1 }));
+    const response = await testApi.put(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId: feeRecordId + 1 }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -181,7 +181,7 @@ describe(`PUT ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const { status } = await testApi.put(requestBody).to(getFeeRecordCorrectionUrl(BASE_URL, { reportId, feeRecordId }));
+    const { status } = await testApi.put(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(status).toEqual(HttpStatusCode.Ok);

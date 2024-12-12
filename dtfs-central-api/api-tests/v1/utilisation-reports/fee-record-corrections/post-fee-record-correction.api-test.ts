@@ -13,7 +13,7 @@ import { SqlDbHelper } from '../../../sql-db-helper';
 import { mongoDbClient } from '../../../../src/drivers/db-client';
 import { wipe } from '../../../wipeDB';
 import { aBank, aPortalUser, aTfmSessionUser } from '../../../../test-helpers';
-import { getFeeRecordCorrectionUrl } from '../../../../test-helpers/get-fee-record-correction-url';
+import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replace-url-parameter-placeholders';
 
 console.error = jest.fn();
 
@@ -103,7 +103,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getFeeRecordCorrectionUrl(BASE_URL, { reportId, feeRecordId }));
+    const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.Ok);
@@ -118,7 +118,7 @@ describe(`POST ${BASE_URL}`, () => {
     };
 
     // Act
-    const response = await testApi.post(requestBody).to(getFeeRecordCorrectionUrl(BASE_URL, { reportId, feeRecordId }));
+    const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -131,7 +131,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getFeeRecordCorrectionUrl(BASE_URL, { reportId, feeRecordId: nonExistentFeeRecordId }));
+    const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId: nonExistentFeeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -151,7 +151,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getFeeRecordCorrectionUrl(BASE_URL, { reportId: otherReportId, feeRecordId }));
+    const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId: otherReportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -162,7 +162,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getFeeRecordCorrectionUrl(BASE_URL, { reportId, feeRecordId }));
+    const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -176,7 +176,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getFeeRecordCorrectionUrl(BASE_URL, { reportId, feeRecordId }));
+    const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -190,7 +190,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getFeeRecordCorrectionUrl(BASE_URL, { reportId, feeRecordId }));
+    const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -218,7 +218,7 @@ describe(`POST ${BASE_URL}`, () => {
     // Act
     const response = await testApi
       .post(requestBody)
-      .to(getFeeRecordCorrectionUrl(BASE_URL, { reportId: reportWithNonExistentBank.id, feeRecordId: reportFeeRecordId }));
+      .to(replaceUrlParameterPlaceholders(BASE_URL, { reportId: reportWithNonExistentBank.id, feeRecordId: reportFeeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);

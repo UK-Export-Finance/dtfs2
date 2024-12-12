@@ -11,7 +11,7 @@ import {
 import { withSqlAndMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../../test-api';
 import { SqlDbHelper } from '../../../sql-db-helper';
-import { getFeeRecordCorrectionUrl } from '../../../../test-helpers/get-fee-record-correction-url';
+import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replace-url-parameter-placeholders';
 
 console.error = jest.fn();
 
@@ -50,7 +50,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it(`should return '${HttpStatusCode.NotFound}' when no fee record with the supplied id can be found`, async () => {
     // Act
-    const response = await testApi.get(getFeeRecordCorrectionUrl(BASE_URL, { reportId, feeRecordId: feeRecordId + 1, userId }));
+    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId: feeRecordId + 1, userId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -70,7 +70,7 @@ describe(`GET ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('FeeRecordCorrectionTransientFormData', transientFormDataEntity);
 
     // Act
-    const response = await testApi.get(getFeeRecordCorrectionUrl(BASE_URL, { reportId, feeRecordId, userId }));
+    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId, userId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.Ok);
@@ -79,7 +79,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it(`should return '${HttpStatusCode.Ok}' with empty form data if the request is valid but transient form data does not exist`, async () => {
     // Act
-    const response = await testApi.get(getFeeRecordCorrectionUrl(BASE_URL, { reportId, feeRecordId, userId }));
+    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId, userId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.Ok);
