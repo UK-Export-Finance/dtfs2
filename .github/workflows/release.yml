@@ -94,7 +94,7 @@ jobs:
           port: ${{ secrets.SQL_DB_PORT }}
           username: ${{ secrets.SQL_DB_USERNAME }}
           password: ${{ secrets.SQL_DB_PASSWORD }}
-          databae: ${{ secrets.SQL_DB_NAME }}
+          database: ${{ secrets.SQL_DB_NAME }}
           node: ${{ vars.NODE_VERSION }}
           log: ${{ vars.SQL_DB_LOGGING_ENABLED }}
 
