@@ -4,3 +4,4 @@ export * from './routes';
 export * from './amendments';
 export * as REGEX from './regex';
 export * from './csv';
+export * from './batch-saving';

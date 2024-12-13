@@ -171,12 +171,7 @@ describe(`POST ${getUrl()}`, () => {
         ...aTfmFacility().facilitySnapshot,
         ukefFacilityId,
         coverPercentage: 80,
-        coverStartDate: new Date('2024-01-01'),
-        // 366 days after cover start date because 2024 is a leap year
-        coverEndDate: new Date('2025-01-01'),
         value: 500000,
-        interestPercentage: 5,
-        dayCountBasis: 360,
       },
     };
 
@@ -199,12 +194,7 @@ describe(`POST ${getUrl()}`, () => {
      *             = 40000
      */
     expect(facilityUtilisationData?.utilisation).toEqual(40000);
-    /**
-     * Initial fixed fee = initial utilisation * bank margin rate * interest * days in cover period / day count basis
-     *                   = 40000 * 0.9 * (5 / 100) * 366 / 360
-     *                   = 1830
-     */
-    expect(facilityUtilisationData?.fixedFee).toEqual(1830);
+    expect(facilityUtilisationData?.fixedFee).toEqual(0);
   });
 
   it('creates an entry in the AzureFileInfo table', async () => {

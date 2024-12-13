@@ -32,12 +32,18 @@ on:
   schedule:
     - cron: '0 0 * * *'
 
+  push:
+    branches:
+      # Manual deployment
+      - dev
+
 env:
   PRODUCT: dtfs
   ENVIRONMENT: dev
   TIMEZONE: ${{ vars.TIMEZONE }}
 
 jobs:
+  # 1. Base actions configrations
   setup:
     name: Setup 🔧
     runs-on: [self-hosted, linux, deployment]
@@ -45,6 +51,7 @@ jobs:
       product: ${{ env.PRODUCT }}
       environment: ${{ steps.environment.outputs.environment }}
       timezone: ${{ env.TIMEZONE }}
+
     steps:
       - name: Environment 🧪
         id: environment
@@ -54,6 +61,7 @@ jobs:
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.TIMEZONE }}"
 
+  # 2. Database schema migration
   database:
     name: MSSQL 🗄️
 
@@ -64,6 +72,9 @@ jobs:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
 
     steps:
+      - name: Repository 🗂️
+        uses: actions/checkout@v4
+
       - name: Deploy ⚡
         uses: ./.github/actions/mssql
         with:
@@ -71,12 +82,15 @@ jobs:
           port: ${{ secrets.SQL_DB_PORT }}
           username: ${{ secrets.SQL_DB_USERNAME }}
           password: ${{ secrets.SQL_DB_PASSWORD }}
-          databae: ${{ secrets.SQL_DB_NAME }}
+          database: ${{ secrets.SQL_DB_NAME }}
+          node: ${{ vars.NODE_VERSION }}
+          log: ${{ vars.SQL_DB_LOGGING_ENABLED }}
 
+  # 3. micro-serices WebApp deployments
   webapp:
     name: WebApp 🌐
 
-    needs: [setup]
+    needs: [setup, database]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
     env:
@@ -95,6 +109,9 @@ jobs:
       cancel-in-progress: true
 
     steps:
+      - name: Repository 🗂️
+        uses: actions/checkout@v4
+
       - name: Deploy ⚡
         uses: ./.github/actions/webapp
         with:
@@ -104,10 +121,11 @@ jobs:
           acr: ${{ secrets.ACR_PASSWORD }}
           webapp: ${{ matrix.webapp }}
 
+  # 4. micro-serices Functions deployments
   functions:
     name: Functions ⚡
 
-    needs: [setup, webapp]
+    needs: [setup, database, webapp]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
 
@@ -127,6 +145,9 @@ jobs:
       cancel-in-progress: true
 
     steps:
+      - name: Repository 🗂️
+        uses: actions/checkout@v4
+
       - name: Deploy ⚡
         uses: ./.github/actions/functions
         with:

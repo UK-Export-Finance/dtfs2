@@ -12,12 +12,11 @@ import {
 } from '@ukef/dtfs2-common';
 import { handleFeeRecordGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
 import { aReportPeriod, keyingSheetCalculationFacilityValues, aFacility } from '../../../../../../test-helpers';
-import { calculateFixedFeeAdjustment, calculatePrincipalBalanceAdjustment, updateFacilityUtilisationData, calculateFixedFee } from '../helpers';
+import { calculatePrincipalBalanceAdjustment, updateFacilityUtilisationData } from '../helpers';
 import { calculateUkefShareOfUtilisation, getKeyingSheetCalculationFacilityValues } from '../../../../../helpers';
 
 jest.mock<unknown>('../helpers', () => ({
   ...jest.requireActual('../helpers'),
-  calculateFixedFeeAdjustment: jest.fn(),
   calculatePrincipalBalanceAdjustment: jest.fn(),
   updateFacilityUtilisationData: jest.fn(),
 }));
@@ -42,15 +41,10 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
   const facility = aFacility();
 
   const tfmFacilityReturnedValues = {
-    coverEndDate: new Date(),
-    coverStartDate: new Date(),
-    dayCountBasis: facility.dayCountBasis,
-    interestPercentage: facility.interestPercentage,
     coverPercentage: facility.coverPercentage,
   };
 
   beforeEach(() => {
-    jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(10);
     jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(20);
     jest.mocked(updateFacilityUtilisationData).mockResolvedValue(aFacilityUtilisationDataEntity());
     jest.mocked(getKeyingSheetCalculationFacilityValues).mockResolvedValue(keyingSheetCalculationFacilityValues);
@@ -64,7 +58,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
   describe('when isFinalFeeRecordForFacility is set to true', () => {
     const isFinalFeeRecordForFacility = true;
 
-    it('sets the fee record fixedFeeAdjustment to fixed fee adjustment', async () => {
+    it('sets the fee record fixedFeeAdjustment to 0', async () => {
       // Arrange
       const feeRecord = aMatchingFeeRecord();
       const reportPeriod: ReportPeriod = {
@@ -72,18 +66,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
         end: { month: 1, year: 2024 },
       };
 
-      const ukefShareOfUtilisation = 1500;
-      jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(999.99);
       jest.mocked(calculateUkefShareOfUtilisation).mockReturnValue(1500);
-
-      const { coverEndDate, interestPercentage, dayCountBasis } = keyingSheetCalculationFacilityValues;
-      const fixedFee = calculateFixedFee({
-        ukefShareOfUtilisation,
-        reportPeriod,
-        coverEndDate,
-        interestPercentage,
-        dayCountBasis,
-      });
 
       // Act
       await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
@@ -94,8 +77,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.fixedFeeAdjustment).toEqual(999.99);
-      expect(calculateFixedFeeAdjustment).toHaveBeenCalledWith(feeRecord, feeRecord.facilityUtilisationData, reportPeriod, fixedFee);
+      expect(feeRecord.fixedFeeAdjustment).toEqual(0);
     });
 
     it('sets the fee record principalBalanceAdjustment to principal balance adjustment', async () => {
@@ -144,7 +126,6 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
         .withFeesPaidToUkefForThePeriod(0.01)
         .build();
       jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(0);
-      jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(0);
 
       // Act
       await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
@@ -158,14 +139,19 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.READY_TO_KEY);
     });
 
-    it(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the fixed fee adjustment is greater than zero`, async () => {
+    /**
+     * This test is skipped because fixed fee adjustments are temporarily turned off.
+     *
+     * TODO FN-3639: Remove this skip and reenable mocks.
+     */
+    it.skip(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the fixed fee adjustment is greater than zero`, async () => {
       // Arrange
       const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport())
         .withStatus(FEE_RECORD_STATUS.MATCH)
         .withFeesPaidToUkefForThePeriod(0)
         .build();
       jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(0);
-      jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(0.01);
+      // jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(0.01);
 
       // Act
       await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
@@ -179,14 +165,19 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.READY_TO_KEY);
     });
 
-    it(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the fixed fee adjustment is less than zero`, async () => {
+    /**
+     * This test is skipped because fixed fee adjustments are temporarily turned off.
+     *
+     * TODO FN-3639: Remove this skip and reenable mocks.
+     */
+    it.skip(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the fixed fee adjustment is less than zero`, async () => {
       // Arrange
       const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport())
         .withStatus(FEE_RECORD_STATUS.MATCH)
         .withFeesPaidToUkefForThePeriod(0)
         .build();
       jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(0);
-      jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(-0.01);
+      // jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(-0.01);
 
       // Act
       await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
@@ -207,7 +198,6 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
         .withFeesPaidToUkefForThePeriod(0)
         .build();
       jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(0.01);
-      jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(0);
 
       // Act
       await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
@@ -228,7 +218,6 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
         .withFeesPaidToUkefForThePeriod(0)
         .build();
       jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(-0.01);
-      jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(0);
 
       // Act
       await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
@@ -249,7 +238,6 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
         .withFeesPaidToUkefForThePeriod(0)
         .build();
       jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(0);
-      jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(0);
 
       // Act
       await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
@@ -323,18 +311,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
         end: { month: 5, year: 2025 },
       };
 
-      const ukefShareOfUtilisation = 78787.87;
       jest.mocked(calculateUkefShareOfUtilisation).mockReturnValue(78787.87);
-
-      const { coverEndDate, interestPercentage, dayCountBasis } = keyingSheetCalculationFacilityValues;
-
-      const fixedFee = calculateFixedFee({
-        ukefShareOfUtilisation,
-        reportPeriod,
-        coverEndDate,
-        interestPercentage,
-        dayCountBasis,
-      });
 
       // Act
       await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
@@ -347,7 +324,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       // Assert
       expect(calculateUkefShareOfUtilisation).toHaveBeenCalledWith(feeRecord.facilityUtilisation, tfmFacilityReturnedValues.coverPercentage);
       expect(updateFacilityUtilisationData).toHaveBeenCalledWith(facilityUtilisationDataEntity, {
-        fixedFee,
+        fixedFee: 0,
         reportPeriod,
         requestSource,
         ukefShareOfUtilisation: 78787.87,

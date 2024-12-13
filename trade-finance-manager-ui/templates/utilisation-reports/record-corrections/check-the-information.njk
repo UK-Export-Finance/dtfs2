@@ -63,7 +63,7 @@
           text: "Provide more information"
         },
         value: {
-          text: additionalInfo
+          html: (additionalInfo | replaceNewLinesWithBrTags)
         },
         actions: {
           items: [
@@ -92,26 +92,27 @@
     }
   }) }}
 
-  <form method="post">
-    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-    <div class="govuk-button-group">
+  <div class="govuk-button-group">
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
       {{ govukButton({
         text: "Send record correction request",
         attributes: {
           'data-cy': 'continue-button'
         }
       }) }}
-
-      {{ govukButton({
-        text: "Cancel record correction request",
-        href: cancelLink,
-        classes: "govuk-button--secondary",
-        attributes: {
-          'data-cy': 'cancel-button'
-        }
-      }) }}
-    </div>
-  </form>
+    </form>
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+      <input
+        class="govuk-button govuk-button--secondary"
+        formaction="/utilisation-reports/{{ reportId }}/create-record-correction-request/{{ feeRecordId }}/cancel"
+        value="Cancel record correction request"
+        data-module="govuk-button"
+        type="submit"
+        data-cy="cancel-button"/>
+    </form>
+  </div>
 
 {% endblock %}
 {% block sub_content %}{% endblock %}

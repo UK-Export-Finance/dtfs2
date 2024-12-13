@@ -5,10 +5,10 @@ import { TfmFacilitiesRepo } from '../../../repositories/tfm-facilities-repo';
 describe('generateUkefFacilityIdError', () => {
   const testExporterName = 'test exporter';
 
-  const facilityIdExistsSpy = jest.spyOn(TfmFacilitiesRepo, 'ukefFacilityIdExists');
+  const gefFacilityExistsSpy = jest.spyOn(TfmFacilitiesRepo, 'ukefGefFacilityExists');
 
   beforeEach(() => {
-    facilityIdExistsSpy.mockResolvedValue(true);
+    gefFacilityExistsSpy.mockResolvedValue(true);
   });
 
   afterEach(() => {
@@ -35,6 +35,7 @@ describe('generateUkefFacilityIdError', () => {
 
     // Assert
     expect(ukefFacilityIdError).toEqual(expectedError);
+    expect(gefFacilityExistsSpy).not.toHaveBeenCalled();
   });
 
   it('returns an error when the value is not an 8 to 10 digit string', async () => {
@@ -57,36 +58,43 @@ describe('generateUkefFacilityIdError', () => {
 
     // Assert
     expect(ukefFacilityIdError).toEqual(expectedError);
+    expect(gefFacilityExistsSpy).not.toHaveBeenCalled();
   });
 
   it('returns an error when the value could not be found in the TFM facilities collection', async () => {
     // Arrange
+    const facilityIdValue = '12345678';
+
     const validFacilityId = {
-      value: '12345678',
+      value: facilityIdValue,
       column: 'Z',
       row: 1,
     };
     const expectedError = {
-      errorMessage: 'The Facility ID has not been recognised. Enter a valid Facility ID between 8 and 10 characters.',
+      errorMessage: 'The facility ID has not been recognised. Enter a facility ID for a general export facility.',
       column: 'Z',
       row: 1,
-      value: '12345678',
+      value: facilityIdValue,
       exporter: testExporterName,
     };
 
-    when(facilityIdExistsSpy).calledWith('12345678').mockResolvedValue(false);
+    when(gefFacilityExistsSpy).calledWith(facilityIdValue).mockResolvedValue(false);
 
     // Act
     const ukefFacilityIdError = await generateUkefFacilityIdError(validFacilityId, testExporterName);
 
     // Assert
     expect(ukefFacilityIdError).toEqual(expectedError);
+    expect(gefFacilityExistsSpy).toHaveBeenCalledTimes(1);
+    expect(gefFacilityExistsSpy).toHaveBeenCalledWith(facilityIdValue);
   });
 
-  it('returns null if the value is a valid UKEF Facility ID', async () => {
+  it('returns null if the value is a valid UKEF GEF Facility ID', async () => {
     // Arrange
+    const facilityIdValue = '12345678';
+
     const validFacilityId = {
-      value: '12345678',
+      value: facilityIdValue,
       column: 'Z',
       row: 1,
     };
@@ -96,6 +104,8 @@ describe('generateUkefFacilityIdError', () => {
 
     // Assert
     expect(ukefFacilityIdError).toBeNull();
+    expect(gefFacilityExistsSpy).toHaveBeenCalledTimes(1);
+    expect(gefFacilityExistsSpy).toHaveBeenCalledWith(facilityIdValue);
   });
 
   it('returns the correct column and row when an error is found', async () => {
@@ -118,5 +128,6 @@ describe('generateUkefFacilityIdError', () => {
 
     // Assert
     expect(ukefFacilityIdError).toEqual(expectedError);
+    expect(gefFacilityExistsSpy).not.toHaveBeenCalled();
   });
 });

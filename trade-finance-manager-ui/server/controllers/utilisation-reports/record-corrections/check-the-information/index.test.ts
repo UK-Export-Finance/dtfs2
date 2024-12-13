@@ -1,8 +1,8 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { MockResponse } from 'node-mocks-http';
 import { mapReasonsToDisplayValues, getFormattedReportPeriodWithLongMonth, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
+import { Request, Response } from 'express';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
-import { getLinkToPremiumPaymentsTab } from '../../helpers/get-link-to-premium-payments-tab';
 import { getRecordCorrectionRequestInformation, postRecordCorrectionRequestInformation } from '.';
 import api from '../../../../api';
 
@@ -70,19 +70,22 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
         reasonForRecordCorrection: expectedReasons,
         additionalInfo: correctionRequestDetails.additionalInfo,
         contactEmailAddresses: expectedContactEmailAddresses,
-        cancelLink: getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]),
       });
     });
   });
 
   describe('postRecordCorrectionRequestInformation', () => {
-    it('should redirect to request sent page on success', async () => {
-      // Arrange
-      const { req, res } = httpMocks.createMocks({
+    let req: Request;
+    let res: MockResponse<Response>;
+
+    beforeEach(() => {
+      ({ req, res } = httpMocks.createMocks({
         session: requestSession,
         params: { reportId, feeRecordId },
-      });
+      }));
+    });
 
+    it('should redirect to request sent page on success', async () => {
       // Act
       await postRecordCorrectionRequestInformation(req, res);
 
@@ -94,11 +97,6 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
 
     it('should render problem with service page on error', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
-        session: requestSession,
-        params: { reportId, feeRecordId },
-      });
-
       jest.mocked(api.createFeeRecordCorrection).mockRejectedValue(new Error('API Error'));
 
       // Act

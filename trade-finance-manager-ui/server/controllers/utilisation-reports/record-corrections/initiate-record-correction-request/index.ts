@@ -12,6 +12,8 @@ import { INITIATE_RECORD_CORRECTION_ERROR_KEY } from '../../../../constants/prem
 import { mapCheckedCheckboxesToRecord } from '../../../../helpers/map-checked-checkboxes-to-record';
 import { InitiateRecordCorrectionRequestErrorKey } from '../../../../types/premium-payments-tab-error-keys';
 import { PremiumPaymentsTableCheckboxId } from '../../../../types/premium-payments-table-checkbox-id';
+import { asUserSession } from '../../../../helpers/express-session';
+import api from '../../../../api';
 
 export type PostInitiateRecordCorrectionRequest = CustomExpressRequest<{
   reqBody: PremiumPaymentsTableCheckboxSelectionsRequestBody;
@@ -73,9 +75,10 @@ export const validateRecordCorrectionRequestFeeSelections = (checkedCheckboxIds:
  * @param req - The request object
  * @param res - The response object
  */
-export const postInitiateRecordCorrectionRequest = (req: PostInitiateRecordCorrectionRequest, res: Response) => {
+export const postInitiateRecordCorrectionRequest = async (req: PostInitiateRecordCorrectionRequest, res: Response) => {
   try {
     const { reportId } = req.params;
+    const { user, userToken } = asUserSession(req.session);
 
     const checkedCheckboxIds = getPremiumPaymentsCheckboxIdsFromObjectKeys(req.body);
 
@@ -89,9 +92,11 @@ export const postInitiateRecordCorrectionRequest = (req: PostInitiateRecordCorre
       return res.redirect(axios.getUri({ url: `/utilisation-reports/${reportId}`, params: { premiumPaymentsFacilityId } }));
     }
 
+    await api.deleteFeeRecordCorrectionTransientFormData(reportId, selectedFeeRecordId.toString(), user, userToken);
+
     return res.redirect(`/utilisation-reports/${reportId}/create-record-correction-request/${selectedFeeRecordId}`);
   } catch (error) {
-    console.error('Failed to initiate record correction request', error);
+    console.error('Failed to initiate record correction request %o', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };

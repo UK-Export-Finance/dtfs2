@@ -5,6 +5,10 @@ description: 'Deploy latest schema migration to MSSQL on an AMI'
 
 # Define the inputs required for this action.
 inputs:
+  branch:
+    description: 'Source Git branch, main if none specified'
+    required: false
+    default: 'main'
   host:
     description: 'MSSQL host address'
     required: true
@@ -20,6 +24,13 @@ inputs:
   database:
     description: 'MSSQL database name'
     required: true
+  log:
+    description: 'Enable MSSQL database logging'
+    required: false
+    default: false
+  node:
+    description: 'Node.js setup version'
+    required: true
 
 # Define the steps to run this action.
 runs:
@@ -28,12 +39,14 @@ runs:
     # Step 1: Check out the repository.
     - name: Repository
       uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.branch }}
 
     # Step 2: Set up Node.js.
     - name: Node
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ vars.NODE_VERSION }}
+        node-version: ${{ inputs.node }}
 
     # Step 3: Install dependencies.
     - name: Dependencies
@@ -44,5 +57,12 @@ runs:
     # Step 4: Run database migrations.
     - name: Migrate
       working-directory: ./libs/common
+      env:
+        SQL_DB_HOST: ${{ inputs.host }}
+        SQL_DB_PORT: ${{ inputs.port }}
+        SQL_DB_USERNAME: ${{ inputs.username }}
+        SQL_DB_PASSWORD: ${{ inputs.password }}
+        SQL_DB_NAME: ${{ inputs.database }}
+        SQL_DB_LOGGING_ENABLED: ${{ inputs.log }}
       run: npm run db:migrate
       shell: bash

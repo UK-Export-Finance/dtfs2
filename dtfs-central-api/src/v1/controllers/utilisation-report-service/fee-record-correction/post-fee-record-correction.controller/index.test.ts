@@ -33,6 +33,7 @@ describe('post-fee-record-correction.controller', () => {
     const feeRecordId = 1;
 
     const mockFindTransientFormData = jest.fn();
+    const mockDeleteTransientFormData = jest.fn();
     const mockFindFeeRecordWithReport = jest.fn();
     const mockEntityManager = {} as EntityManager;
     const mockHandleEvent = jest.fn();
@@ -47,7 +48,10 @@ describe('post-fee-record-correction.controller', () => {
       });
       FeeRecordStateMachine.forFeeRecord = mockForFeeRecordStateMachineConstructor;
 
-      jest.spyOn(FeeRecordCorrectionTransientFormDataRepo, 'withTransaction').mockReturnValue({ findByUserIdAndFeeRecordId: mockFindTransientFormData });
+      jest.spyOn(FeeRecordCorrectionTransientFormDataRepo, 'withTransaction').mockReturnValue({
+        findByUserIdAndFeeRecordId: mockFindTransientFormData,
+        deleteByUserIdAndFeeRecordId: mockDeleteTransientFormData,
+      });
       jest.spyOn(FeeRecordRepo, 'withTransaction').mockReturnValue({ findOneByIdAndReportIdWithReport: mockFindFeeRecordWithReport });
     });
 
@@ -117,6 +121,18 @@ describe('post-fee-record-correction.controller', () => {
         // Assert
         expect(mockFindFeeRecordWithReport).toHaveBeenCalledTimes(1);
         expect(mockFindFeeRecordWithReport).toHaveBeenCalledWith(feeRecordId, reportId);
+      });
+
+      it('should delete the transient form data using the fee record id and user id', async () => {
+        // Arrange
+        const { req, res } = getHttpMocks();
+
+        // Act
+        await postFeeRecordCorrection(req, res);
+
+        // Assert
+        expect(mockDeleteTransientFormData).toHaveBeenCalledTimes(1);
+        expect(mockDeleteTransientFormData).toHaveBeenCalledWith(userId, feeRecordId);
       });
 
       it('should send the correction request emails', async () => {
