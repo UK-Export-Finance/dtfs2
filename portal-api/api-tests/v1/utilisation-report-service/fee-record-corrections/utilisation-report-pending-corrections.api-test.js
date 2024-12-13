@@ -1,11 +1,11 @@
 const { HttpStatusCode } = require('axios');
-const { SqlDbHelper } = require('../../sql-db-helper.ts');
-const app = require('../../../src/createApp');
-const { as, get } = require('../../api')(app);
-const testUserCache = require('../../api-test-users');
-const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
+const { SqlDbHelper } = require('../../../sql-db-helper.ts');
+const app = require('../../../../src/createApp.js');
+const { as, get } = require('../../../api.js')(app);
+const testUserCache = require('../../../api-test-users.js');
+const { withClientAuthenticationTests } = require('../../../common-tests/client-authentication-tests.js');
+const { withRoleAuthorisationTests } = require('../../../common-tests/role-authorisation-tests.js');
+const { PAYMENT_REPORT_OFFICER } = require('../../../../src/v1/roles/roles.js');
 
 describe('GET /v1/banks/:bankId/utilisation-reports/pending-corrections', () => {
   const pendingCorrectionsUrl = (bankId) => `/v1/banks/${bankId}/utilisation-reports/pending-corrections`;

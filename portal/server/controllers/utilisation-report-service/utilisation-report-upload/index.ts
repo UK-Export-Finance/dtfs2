@@ -1,15 +1,19 @@
-const { format, startOfMonth, addMonths } = require('date-fns');
-const { getFormattedReportPeriodWithLongMonth } = require('@ukef/dtfs2-common');
-const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
-const { getUploadErrors } = require('./utilisation-report-upload-errors');
-const { getDueReportPeriodsByBankId, getReportDueDate } = require('./utilisation-report-status');
-const api = require('../../../api');
-const { getReportAndUserDetails } = require('./utilisation-report-details');
-const { PRIMARY_NAV_KEY } = require('../../../constants');
-const { filterReportJsonToRelevantKeys } = require('../../../helpers/filterReportJsonToRelevantKeys');
+import { Request, Response } from 'express';
+import { format, startOfMonth, addMonths } from 'date-fns';
+import { getFormattedReportPeriodWithLongMonth, isFeeRecordCorrectionFeatureFlagEnabled, ReportPeriod } from '@ukef/dtfs2-common';
+import { extractCsvData, removeCellAddressesFromArray } from '../../../utils/csv-utils';
+import { getUploadErrors, UtilisationReportUploadErrors } from './utilisation-report-upload-errors';
+import { getDueReportPeriodsByBankId, getReportDueDate } from './utilisation-report-status';
+import api from '../../../api';
+import { getReportAndUserDetails, ReportAndUserDetails } from './utilisation-report-details';
+import { PRIMARY_NAV_KEY } from '../../../constants';
+import { filterReportJsonToRelevantKeys } from '../../../helpers/filterReportJsonToRelevantKeys';
+import { asLoggedInUserSession, LoggedInUserSession } from '../../../helpers/express-session';
+import { mapToPendingCorrectionsViewModel } from './pending-corrections-helper';
+import { UtilisationReportPendingCorrectionsResponseBody } from '../../../api-response-types';
 
-const setSessionUtilisationReport = (req, nextDueReportPeriod) => {
-  req.session.utilisationReport = {
+const setSessionUtilisationReport = (req: Request, nextDueReportPeriod: ReportPeriod & { formattedReportPeriod: string }) => {
+  (req.session as LoggedInUserSession).utilisationReport = {
     reportPeriod: {
       start: {
         month: nextDueReportPeriod.start.month,
@@ -24,24 +28,27 @@ const setSessionUtilisationReport = (req, nextDueReportPeriod) => {
   };
 };
 
-/**
- * @typedef {import('./utilisation-report-details').ReportAndUserDetails} ReportAndUserDetails
- *
- * @typedef {Object} NextReportPeriodDetails
- * @property {string} nextReportPeriod - The upcoming report period (the current month) with format 'MMMM yyyy'
- * @property {string} nextReportPeriodSubmissionStart - The start of the month when the next report period report can be submitted with format 'd MMMM yyyy'
- *
- * @typedef {NextReportPeriodDetails & ReportAndUserDetails} ReportDetails
- */
+type NextReportPeriodDetails = {
+  /**
+   * The upcoming report period (the current month) with format 'MMMM yyyy'
+   */
+  formattedNextReportPeriod: string;
+  /**
+   * The start of the month when the next report period report can be submitted with format 'd MMMM yyyy'
+   */
+  nextReportPeriodSubmissionStart: string;
+};
+
+type ReportDetails = ReportAndUserDetails & NextReportPeriodDetails;
 
 /**
  * Gets details about the utilisation report which was most
  * recently uploaded to the bank with the bank ID provided
- * @param {string} userToken - Token to validate session
- * @param {string} bankId - ID of the bank
- * @returns {Promise<ReportDetails>}
+ * @param userToken - Token to validate session
+ * @param bankId - ID of the bank
+ * @returns the details of the last uploaded report
  */
-const getLastUploadedReportDetails = async (userToken, bankId) => {
+const getLastUploadedReportDetails = async (userToken: string, bankId: string): Promise<ReportDetails> => {
   const lastUploadedReport = await api.getLastUploadedReportByBankId(userToken, bankId);
   const reportAndUserDetails = getReportAndUserDetails(lastUploadedReport);
 
@@ -54,14 +61,30 @@ const getLastUploadedReportDetails = async (userToken, bankId) => {
   return { ...reportAndUserDetails, formattedNextReportPeriod, nextReportPeriodSubmissionStart };
 };
 
-const getUtilisationReportUpload = async (req, res) => {
-  const { user, userToken } = req.session;
+/**
+ * Controller for the GET utilisation-report-upload route.
+ *
+ * If there are pending corrections for a previously uploaded report renders
+ * the pending corrections page, otherwise renders the utilisation report upload page.
+ *
+ * @param req - The request object
+ * @param res - The response object
+ */
+export const getUtilisationReportUpload = async (req: Request, res: Response) => {
+  const { user, userToken } = asLoggedInUserSession(req.session);
   const bankId = user.bank.id;
-  try {
-    // QQ put this behind the feature flag
-    const pendingCorrections = await api.getUtilisationReportPendingCorrectionsByBankId(userToken, bankId);
 
-    console.info(pendingCorrections);
+  try {
+    if (isFeeRecordCorrectionFeatureFlagEnabled()) {
+      const pendingCorrections = await api.getUtilisationReportPendingCorrectionsByBankId(userToken, bankId);
+
+      if (Object.keys(pendingCorrections).length > 0) {
+        const viewModel = mapToPendingCorrectionsViewModel(pendingCorrections as UtilisationReportPendingCorrectionsResponseBody, user);
+        return res.render('utilisation-report-service/utilisation-report-upload/pending-corrections.njk', {
+          viewModel,
+        });
+      }
+    }
 
     const dueReportPeriods = await getDueReportPeriodsByBankId(userToken, bankId);
     if (dueReportPeriods.length > 0) {
@@ -90,29 +113,41 @@ const getUtilisationReportUpload = async (req, res) => {
   }
 };
 
-const renderPageWithError = (req, res, errorSummary, validationError, dueReportPeriods) => {
+const renderPageWithError = (
+  req: Request,
+  res: Response,
+  errorSummary: UtilisationReportUploadErrors['uploadErrorSummary'],
+  validationError: UtilisationReportUploadErrors['uploadValidationError'],
+  dueReportPeriods: (ReportPeriod & { formattedReportPeriod: string })[],
+) => {
+  const { user } = asLoggedInUserSession(req.session);
+
   if (req.query?.check_the_report) {
     return res.render('utilisation-report-service/utilisation-report-upload/check-the-report.njk', {
       fileUploadError: validationError,
       errorSummary,
-      user: req.session.user,
+      user,
       primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
     });
   }
   return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
     validationError,
     errorSummary,
-    user: req.session.user,
+    user,
     primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
     dueReportPeriods,
   });
 };
 
-const postUtilisationReportUpload = async (req, res) => {
-  const { user, userToken } = req.session;
+export const postUtilisationReportUpload = async (req: Request, res: Response) => {
+  const { user, userToken, utilisationReport } = asLoggedInUserSession(req.session);
   const bankId = user.bank.id;
 
   try {
+    if (!utilisationReport) {
+      throw new Error('No utilisation report data found in session');
+    }
+
     const uploadErrors = getUploadErrors(req, res);
     if (uploadErrors) {
       const { uploadErrorSummary, uploadValidationError } = uploadErrors;
@@ -122,7 +157,8 @@ const postUtilisationReportUpload = async (req, res) => {
     }
 
     // File is valid so we can start processing and validating its data
-    const { csvJson, fileBuffer, error } = await extractCsvData(req.file);
+    const file = req.file as Express.Multer.File;
+    const { csvJson, fileBuffer, error } = await extractCsvData(file);
     if (error) {
       const extractDataErrorSummary = [
         {
@@ -157,18 +193,18 @@ const postUtilisationReportUpload = async (req, res) => {
       return res.render('utilisation-report-service/utilisation-report-upload/check-the-report.njk', {
         validationErrors: csvValidationErrors,
         errorSummary,
-        filename: req.file.originalname,
+        filename: file.originalname,
         user,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
       });
     }
 
-    req.session.utilisationReport = {
-      ...req.session.utilisationReport,
+    (req.session as LoggedInUserSession).utilisationReport = {
+      ...utilisationReport,
       fileBuffer,
-      filename: req.file.originalname,
+      filename: file.originalname,
       reportData: filteredCsvJson,
-      bankName: req.session.user.bank.name,
+      bankName: user.bank.name,
       submittedBy: `${user.firstname} ${user.surname}`,
     };
 
@@ -179,70 +215,94 @@ const postUtilisationReportUpload = async (req, res) => {
   }
 };
 
-const getReportConfirmAndSend = async (req, res) => {
+/**
+ * Controller for the GET utilisation-report-upload/confirm-and-send route.
+ * @param req - The request object
+ * @param res - The response object
+ */
+export const getReportConfirmAndSend = (req: Request, res: Response) => {
+  const { user, utilisationReport } = asLoggedInUserSession(req.session);
+
   try {
-    if (!req.session.utilisationReport) {
+    if (!utilisationReport) {
       return res.redirect('/utilisation-report-upload');
     }
 
     return res.render('utilisation-report-service/utilisation-report-upload/confirm-and-send.njk', {
-      user: req.session.user,
+      user,
       primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
-      filename: req.session.utilisationReport.filename,
+      filename: utilisationReport.filename,
     });
   } catch (error) {
-    return res.render('_partials/problem-with-service.njk', { user: req.session.user });
+    return res.render('_partials/problem-with-service.njk', { user });
   }
 };
 
-const postReportConfirmAndSend = async (req, res) => {
+/**
+ * Controller for the POST utilisation-report-upload/confirm-and-send route.
+ *
+ * Redirects to the confirmation page if the report is successfully uploaded,
+ * otherwise renders the problem with service page
+ *
+ * @param req - The request object
+ * @param res - The response object
+ */
+export const postReportConfirmAndSend = async (req: Request, res: Response) => {
+  const { user, userToken, utilisationReport } = asLoggedInUserSession(req.session);
+
   try {
-    const { user, userToken, utilisationReport } = req.session;
+    if (!utilisationReport) {
+      throw new Error('No utilisation report data found in session');
+    }
+
     const { fileBuffer, reportPeriod, reportData, formattedReportPeriod } = utilisationReport;
+
+    if (!reportData || !fileBuffer) {
+      throw new Error('No report data or file buffer found in session');
+    }
 
     const mappedReportData = removeCellAddressesFromArray(reportData);
 
     const response = await api.uploadUtilisationReportData(user, reportPeriod, mappedReportData, fileBuffer, formattedReportPeriod, userToken);
 
     if (response?.status === 200 || response?.status === 201) {
-      const { paymentOfficerEmails } = response.data;
-      req.session.utilisationReport = {
-        ...req.session.utilisationReport,
+      const { paymentOfficerEmails } = response.data as { paymentOfficerEmails: string[] };
+      (req.session as LoggedInUserSession).utilisationReport = {
+        ...(req.session as LoggedInUserSession).utilisationReport!,
         paymentOfficerEmails,
       };
       return res.redirect('/utilisation-report-upload/confirmation');
     }
     console.error('Error saving utilisation report %o', response);
-    return res.render('_partials/problem-with-service.njk', { user: req.session.user });
+    return res.render('_partials/problem-with-service.njk', { user });
   } catch (error) {
     console.error('Error saving utilisation report %o', error);
-    return res.render('_partials/problem-with-service.njk', { user: req.session.user });
+    return res.render('_partials/problem-with-service.njk', { user });
   }
 };
 
-const getReportConfirmation = async (req, res) => {
+/**
+ * Controller for the GET utilisation-report-upload/confirmation route.
+ * @param req - The request object
+ * @param res - The response object
+ */
+export const getReportConfirmation = (req: Request, res: Response) => {
+  const { user, utilisationReport } = asLoggedInUserSession(req.session);
+
   try {
-    if (!req.session.utilisationReport) {
+    if (!utilisationReport) {
       return res.redirect('/utilisation-report-upload');
     }
-    const { formattedReportPeriod, paymentOfficerEmails } = req.session.utilisationReport;
-    delete req.session.utilisationReport;
+    const { formattedReportPeriod, paymentOfficerEmails } = utilisationReport;
+    delete (req.session as LoggedInUserSession).utilisationReport;
     return res.render('utilisation-report-service/utilisation-report-upload/confirmation.njk', {
-      user: req.session.user,
+      user,
       primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
       reportPeriod: formattedReportPeriod,
       paymentOfficerEmails,
     });
   } catch (error) {
     console.error(error);
-    return res.render('_partials/problem-with-service.njk', { user: req.session.user });
+    return res.render('_partials/problem-with-service.njk', { user });
   }
-};
-
-module.exports = {
-  getUtilisationReportUpload,
-  postUtilisationReportUpload,
-  getReportConfirmAndSend,
-  postReportConfirmAndSend,
-  getReportConfirmation,
 };

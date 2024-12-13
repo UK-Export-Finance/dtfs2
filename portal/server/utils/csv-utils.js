@@ -6,9 +6,15 @@ const { CELL_ADDRESS_REGEX } = require('../constants/regex');
 
 /**
  * @typedef {import('exceljs').Worksheet} Worksheet
+ *
  * @typedef {Object} ParsedXlsxDataResponse
  * @property {Object} csvData - array representing csv data from the worksheet
  * @property {Object} csvDataWithCellAddresses - array representing csv data from the worksheet with cell addresses included
+ *
+ * @typedef {Object} ExtractCsvDataResponse
+ * @property {import('@ukef/dtfs2-common').UtilisationReportCsvRowData[]} csvJson - The JSON representing the csv data
+ * @property {Buffer} fileBuffer - The file buffer of the csv data
+ * @property {boolean} error - An error flag
  */
 
 /**
@@ -223,10 +229,15 @@ const csvBasedCsvToJsonPromise = async (csvBuffer) => {
   });
 };
 
-// This function processes the file from the request of an upload. If it is an xlsx file it converts the data to an array of csv data
-// It will then use the csv parser library to convert this csv data to an array of JSON objects representing the data
-// The function returns both the JSON representing the csv data and a file buffer of the csv data to be used to save and persist the data
-// It can also do the same for .csv data where the first step of converting .xlsx to .csv can be skipped
+/**
+ * This function processes the file from the request of an upload. If it is an xlsx file it converts the data to an array of csv data.
+ * It will then use the csv parser library to convert this csv data to an array of JSON objects representing the data.
+ * The function returns both the JSON representing the csv data and a file buffer of the csv data to be used to save and persist the data.
+ * It can also do the same for .csv data where the first step of converting .xlsx to .csv can be skipped.
+ *
+ * @param {Express.Multer.File} file - The file
+ * @returns {Promise<ExtractCsvDataResponse>} - The JSON representing the csv data, the file buffer of the csv data and an error flag.
+ */
 const extractCsvData = async (file) => {
   let csvJson;
   let fileBuffer;
@@ -265,6 +276,11 @@ const extractCsvData = async (file) => {
   }
 };
 
+/**
+ * Removes cell addresses from the array of JSON objects representing the csv data.
+ * @param {import('@ukef/dtfs2-common').UtilisationReportCsvRowData[]} csvJsonArray - Array of JSON objects representing the csv data.
+ * @returns {Record<string, string | number>[]} - Array of JSON objects representing the csv data without cell addresses.
+ */
 const removeCellAddressesFromArray = (csvJsonArray) =>
   csvJsonArray.map((rowDataWithCellAddresses) => {
     const rowDataWithoutCellAddresses = {};

@@ -1,4 +1,4 @@
-import { ReportPeriod } from '../utilisation-reports';
+import { ReportPeriod, UtilisationReportCsvRowData } from '../utilisation-reports';
 import { PortalSessionUser } from './portal-session-user';
 
 /**
@@ -23,5 +23,11 @@ export type LoggedInPortalSessionData = {
   utilisationReport?: {
     formattedReportPeriod: string;
     reportPeriod: ReportPeriod;
+    fileBuffer?: Buffer;
+    reportData?: UtilisationReportCsvRowData[];
+    filename?: string;
+    bankName?: string;
+    submittedBy?: string;
+    paymentOfficerEmails?: string[];
   };
 };

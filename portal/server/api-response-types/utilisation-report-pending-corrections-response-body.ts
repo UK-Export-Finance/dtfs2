@@ -7,13 +7,11 @@ type PendingCorrection = {
   additionalInfo: string;
 };
 
-export type UtilisationReportPendingCorrectionsResponseBody =
-  | {
-      reportPeriod: ReportPeriod;
-      uploadedByUserName: string;
-      dateUploaded: IsoDateTimeStamp;
-      reportId: number;
-      corrections: PendingCorrection[];
-      nextDueReportPeriod: ReportPeriod;
-    }
-  | Record<string, never>;
+export type UtilisationReportPendingCorrectionsResponseBody = {
+  reportPeriod: ReportPeriod;
+  uploadedByUserName: string;
+  dateUploaded: IsoDateTimeStamp;
+  reportId: number;
+  corrections: PendingCorrection[];
+  nextDueReportPeriod: ReportPeriod;
+};
