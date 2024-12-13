@@ -94,9 +94,11 @@ context('When fee record correction feature flag is enabled', () => {
     });
 
     context('when the user clicks the "continue" button', () => {
-      it('should be able to send the record correction request', () => {
+      beforeEach(() => {
         cy.clickContinueButton();
+      });
 
+      it('should be able to send the record correction request', () => {
         cy.assertText(mainHeading(), 'Record correction request');
         feeRecordCorrectionRequestSentPage.requestSentPanel().should('exist');
         feeRecordCorrectionRequestSentPage.requestSentPanel().should('contain', 'Request sent');
