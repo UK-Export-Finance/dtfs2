@@ -25,7 +25,7 @@ inputs:
     description: 'MSSQL database name'
     required: true
   log:
-    description: 'Enable MSSQL datbase logging'
+    description: 'Enable MSSQL database logging'
     required: false
     default: false
   node:
