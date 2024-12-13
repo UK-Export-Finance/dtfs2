@@ -87,9 +87,6 @@ describe('getFacilityValue', () => {
 
     // Assert
     const expectedRenderData: FacilityValueViewModel = {
-      amendmentId,
-      dealId,
-      facilityId,
       exporterName: companyName,
       cancelUrl: `/gef/application-details/${dealId}/facility/${facilityId}/amendments/${amendmentId}/cancel`,
       previousPage: `/gef/application-details/${dealId}/facility/${facilityId}/amendments/${amendmentId}/bank-review-date`,

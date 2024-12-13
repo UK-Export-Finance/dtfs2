@@ -5,9 +5,6 @@ const page = 'partials/amendments/facility-value.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
-  const dealId = 'dealId';
-  const facilityId = 'facilityId';
-  const amendmentId = 'amendmentId';
   const previousPage = 'previousPage';
   const cancelUrl = 'cancelUrl';
   const facilityValue = 7000;
@@ -15,9 +12,6 @@ describe(page, () => {
   const currencySymbol = '£';
 
   const params: FacilityValueViewModel = {
-    dealId,
-    facilityId,
-    amendmentId,
     previousPage,
     cancelUrl,
     facilityValue,
