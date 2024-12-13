@@ -36,6 +36,7 @@ on:
     branches:
       # Manual deployment
       - dev
+      - fix/DTFS2-7616-efficient-deployment
 
 env:
   PRODUCT: dtfs
@@ -84,12 +85,13 @@ jobs:
           password: ${{ secrets.SQL_DB_PASSWORD }}
           databae: ${{ secrets.SQL_DB_NAME }}
           node: ${{ vars.NODE_VERSION }}
+          log: ${{ vars.SQL_DB_LOGGING_ENABLED }}
 
   # 3. micro-serices WebApp deployments
   webapp:
     name: WebApp 🌐
 
-    needs: [setup]
+    needs: [setup, database]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
     env:
@@ -124,7 +126,7 @@ jobs:
   functions:
     name: Functions ⚡
 
-    needs: [setup, webapp]
+    needs: [setup, database, webapp]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
 

@@ -24,6 +24,10 @@ inputs:
   database:
     description: 'MSSQL database name'
     required: true
+  log:
+    description: 'Enable MSSQL datbase logging'
+    required: false
+    default: false
   node:
     description: 'Node.js setup version'
     required: true
@@ -53,5 +57,12 @@ runs:
     # Step 4: Run database migrations.
     - name: Migrate
       working-directory: ./libs/common
+      env:
+        SQL_DB_HOST: ${{ inputs.host }}
+        SQL_DB_PORT: ${{ inputs.port }}
+        SQL_DB_USERNAME: ${{ inputs.username }}
+        SQL_DB_PASSWORD: ${{ inputs.password }}
+        SQL_DB_NAME: ${{ inputs.datbase }}
+        SQL_DB_LOGGING_ENABLED: ${{ vars.log }}
       run: npm run db:migrate
       shell: bash
