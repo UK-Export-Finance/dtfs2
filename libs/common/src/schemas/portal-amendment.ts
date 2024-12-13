@@ -1,6 +1,6 @@
 import z from 'zod';
 import { parseISO } from 'date-fns';
-import { CURRENCY } from '../constants';
+import { AMENDMENT_TYPES, CURRENCY } from '../constants';
 import { Currency, IsoDateTimeStamp } from '../types';
 import { UNIX_TIMESTAMP_SECONDS_SCHEMA } from './unix-timestamp.schema';
 /**
@@ -32,3 +32,22 @@ export const PORTAL_FACILITY_AMENDMENT_USER_VALUES = z
     coveredPercentage: z.number().optional(),
   })
   .strict();
+
+/**
+ * Portal Amendment schema to validate an object contains the correct values for the type `PortalFacilityAmendment`
+ *
+ * If this schema is changed the Open Api docs should be updated too
+ */
+export const PORTAL_FACILITY_AMENDMENT = z.union([
+  PORTAL_FACILITY_AMENDMENT_USER_VALUES,
+  z.object({
+    amendmentId: z.string(),
+    facilityId: z.string(),
+    dealId: z.string(),
+    type: z.literal(AMENDMENT_TYPES.PORTAL),
+    createdAt: z.number(),
+    updatedAt: z.number(),
+    status: z.string(),
+    requestDate: z.number(),
+  }),
+]);

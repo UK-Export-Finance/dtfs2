@@ -114,15 +114,14 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
 
         // Arrange
         const amendment: PortalAmendmentWithUkefId = {
-          amendmentId: new ObjectId(amendmentId),
-          facilityId: new ObjectId(facilityId),
-          dealId: new ObjectId(dealId),
+          amendmentId,
+          facilityId,
+          dealId,
           type: AMENDMENT_TYPES.PORTAL,
           ukefFacilityId: '123',
           createdAt: 1702061978881,
           updatedAt: 1702061978881,
           status: AMENDMENT_STATUS.IN_PROGRESS,
-          version: 1,
         };
 
         jest.mocked(getPortalFacilityAmendmentMock).mockResolvedValue(amendment);
