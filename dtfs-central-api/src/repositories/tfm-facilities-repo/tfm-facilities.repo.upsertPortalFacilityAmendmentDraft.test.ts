@@ -17,6 +17,7 @@ const amendment = {
   facilityId,
   amendmentId: new ObjectId(),
 };
+
 const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
 
 const mockUpdateResult = {
