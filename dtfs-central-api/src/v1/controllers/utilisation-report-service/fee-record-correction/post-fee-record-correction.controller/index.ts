@@ -46,7 +46,7 @@ export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionReques
     const feeRecordId = Number(feeRecordIdString);
     const userId = user._id.toString();
 
-    const responseBody = await executeWithSqlTransaction(async (transactionEntityManager) => {
+    const recipientEmailAddresses = await executeWithSqlTransaction<FeeRecordCorrectionRequestEmailAddresses>(async (transactionEntityManager) => {
       const formDataEntity = await FeeRecordCorrectionTransientFormDataRepo.withTransaction(transactionEntityManager).findByUserIdAndFeeRecordId(
         userId,
         feeRecordId,
@@ -86,10 +86,18 @@ export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionReques
 
       await FeeRecordCorrectionTransientFormDataRepo.withTransaction(transactionEntityManager).deleteByUserIdAndFeeRecordId(userId, feeRecordId);
 
-      return await sendFeeRecordCorrectionRequestEmails(reasons, feeRecord.report.reportPeriod, feeRecord.exporter, feeRecord.report.bankId, user.email);
+      const notifiedEmails = await sendFeeRecordCorrectionRequestEmails(
+        reasons,
+        feeRecord.report.reportPeriod,
+        feeRecord.exporter,
+        feeRecord.report.bankId,
+        user.email,
+      );
+
+      return notifiedEmails;
     });
 
-    return res.status(HttpStatusCode.Ok).send(responseBody);
+    return res.status(HttpStatusCode.Ok).send(recipientEmailAddresses);
   } catch (error) {
     const errorMessage = 'Failed to create record correction';
     console.error(errorMessage, error);

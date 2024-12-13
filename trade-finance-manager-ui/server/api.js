@@ -1053,7 +1053,7 @@ const addPaymentToFeeRecords = async (reportId, parsedAddPaymentFormValues, feeR
  * @param {string} feeRecordId - The fee record id
  * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user
  * @param {string} userToken - The user token
- * @returns {Promise<import('./api-response-types').FeeRecordCorrectionResponseBody>}
+ * @returns {Promise<import('./api-response-types').PostFeeRecordCorrectionResponseBody>}
  */
 const createFeeRecordCorrection = async (reportId, feeRecordId, user, userToken) => {
   const response = await axios({

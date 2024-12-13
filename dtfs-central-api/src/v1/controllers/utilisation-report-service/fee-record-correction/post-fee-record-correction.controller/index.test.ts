@@ -42,7 +42,7 @@ describe('post-fee-record-correction.controller', () => {
 
     beforeEach(() => {
       jest.mocked(executeWithSqlTransaction).mockImplementation(async (functionToExecute) => {
-        await functionToExecute(mockEntityManager);
+        return await functionToExecute(mockEntityManager);
       });
       mockForFeeRecordStateMachineConstructor.mockReturnValue({
         handleEvent: mockHandleEvent,
@@ -189,7 +189,7 @@ describe('post-fee-record-correction.controller', () => {
       it(`should respond with a '${HttpStatusCode.Ok}' and the notified emails`, async () => {
         // Arrange
         const emails = ['test1@ukexportfinance.gov.uk', 'test2@ukexportfinance.gov.uk'];
-        jest.mocked(executeWithSqlTransaction).mockResolvedValue({ emails });
+        jest.mocked(sendFeeRecordCorrectionRequestEmails).mockResolvedValue({ emails });
 
         const { req, res } = getHttpMocks();
 

@@ -959,6 +959,8 @@ utilisationReportsRouter
  *                    type: array
  *                    items:
  *                      type: string
+ *                      format: email
+ *                      example: 'test-user@test.com'
  *       400:
  *         description: Bad request
  *       404:
