@@ -30,6 +30,14 @@ const mockUpdateResult = {
 };
 
 describe('TfmFacilitiesRepo', () => {
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   describe('upsertPortalFacilityAmendmentDraft', () => {
     beforeEach(() => {
       jest.resetAllMocks();
