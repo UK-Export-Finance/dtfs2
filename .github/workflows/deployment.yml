@@ -36,7 +36,6 @@ on:
     branches:
       # Manual deployment
       - dev
-      - fix/DTFS2-7616-efficient-deployment
 
 env:
   PRODUCT: dtfs
