@@ -346,7 +346,7 @@ const downloadFile = async ({ fileId, userToken }) => {
  * @param {string} param.facilityId
  * @param {string} param.amendmentId
  * @param {string} param.userToken
- * @returns {Promise<(import('@ukef/dtfs2-common').PortalAmendmentWithUkefId)>}>}
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}>}
  */
 const getAmendment = async ({ facilityId, amendmentId, userToken }) => {
   if (!isValidMongoId(facilityId)) {

@@ -1,14 +1,15 @@
 import { ObjectId } from 'mongodb';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { AMENDMENT_STATUS, AMENDMENT_TYPES, PortalAmendmentWithUkefId, TestApiError } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, AMENDMENT_TYPES, PortalFacilityAmendmentWithUkefId, TestApiError } from '@ukef/dtfs2-common';
 import api from '../../api';
 import { getAmendment, GetAmendmentRequest } from './get-amendment.controller';
 
 jest.mock('../../api');
 
-const facilityId = new ObjectId();
-const amendmentId = new ObjectId();
+const facilityId = new ObjectId().toString();
+const amendmentId = new ObjectId().toString();
+const dealId = new ObjectId().toString();
 
 describe('controllers - facility amendment', () => {
   beforeEach(() => {
@@ -32,16 +33,15 @@ describe('controllers - facility amendment', () => {
 
     it(`should respond with ${HttpStatusCode.Ok} and return the amendment`, async () => {
       // Arrange
-      const mockPortalAmendmentResponse: PortalAmendmentWithUkefId = {
+      const mockPortalAmendmentResponse: PortalFacilityAmendmentWithUkefId = {
         amendmentId,
         facilityId,
         type: AMENDMENT_TYPES.PORTAL,
         ukefFacilityId: '123',
-        dealId: new ObjectId(),
+        dealId,
         createdAt: 1702061978881,
         updatedAt: 1702061978881,
         status: AMENDMENT_STATUS.IN_PROGRESS,
-        version: 1,
       };
 
       jest.mocked(api.getPortalFacilityAmendment).mockResolvedValue(mockPortalAmendmentResponse);
