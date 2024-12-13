@@ -309,6 +309,17 @@ export class TfmFacilitiesRepo {
     return numberOfFoundDocuments > 0;
   }
 
+  /**
+   * Upserts a draft amendment for a portal facility in the database.
+   *
+   * This function first removes any existing portal amendments for the specified facility
+   * that are not completed, and then inserts the new amendment.
+   *
+   * @param amendment - The draft amendment to be upserted.
+   * @param auditDetails - The audit details for the operation.
+   *
+   * @returns The update result.
+   */
   public static async upsertPortalFacilityAmendmentDraft(amendment: PortalFacilityAmendment, auditDetails: AuditDetails): Promise<UpdateResult> {
     const collection = await this.getCollection();
 
