@@ -113,6 +113,20 @@ const createACBS = async (dealId) => {
   return false;
 };
 
+/**
+ * Updates the ACBS information for a deal and its facilities.
+ *
+ * This function performs the following steps:
+ * 1. Adds an `acbs` object to the TFM deal.
+ * 2. Adds ACBS records to the TFM activities.
+ * 3. Adds an `acbs` object to each TFM facility.
+ *
+ * @param {Object} taskOutput - The task output containing deal and facilities information.
+ * @param {Array} taskOutput.facilities - The list of facilities associated with the deal.
+ * @param {string} taskOutput.facilities[].facilityId - The unique identifier for the facility.
+ * @param {Object} taskOutput.facilities[].acbsFacility - The ACBS information for the facility.
+ * @returns {Promise<void>} A promise that resolves when the ACBS information has been updated.
+ */
 const updateDealAcbs = async (taskOutput) => {
   const { facilities } = taskOutput;
   /**
@@ -128,6 +142,7 @@ const updateDealAcbs = async (taskOutput) => {
       // Add `acbs` object to tfm-facilities
       return tfmController.updateFacilityAcbs(facilityId, acbsFacility);
     });
+
   await Promise.all(facilitiesUpdates);
 };
 
@@ -140,15 +155,29 @@ const updateDealAcbs = async (taskOutput) => {
  * @param {Object} FFR Facility fixed fee record
  * @returns {Object} ACBS returned response
  */
-const updateIssuedFacilityAcbs = ({ facilityId, issuedFacilityMaster, facilityLoan, facilityFee }) =>
-  tfmController.updateFacilityAcbs(facilityId, {
+const updateIssuedFacilityAcbs = async ({ facilityIdentifier, issuedFacilityMaster, facilityLoan, facilityFee }) =>
+  await tfmController.updateFacilityAcbs(facilityIdentifier, {
     facilityStage: CONSTANTS.FACILITIES.ACBS_FACILITY_STAGE.ISSUED,
     issuedFacilityMaster,
     facilityLoan,
     facilityFee,
   });
 
-const updateAmendedFacilityAcbs = (taskResult) => {
+/**
+ * Updates the ACBS amendments for a facility in the TFM system.
+ *
+ * @param {Object} taskResult - The result of the task containing the necessary data.
+ * @param {string} taskResult.instanceId - The instance ID of the task.
+ * @param {Object} taskResult.output - The output data of the task.
+ * @param {Object} taskResult.output.facilityMasterRecord - The master record of the facility.
+ * @param {Object} taskResult.output.facilityLoanRecord - The loan record of the facility.
+ * @param {Object} taskResult.input - The input data of the task.
+ * @param {Object} taskResult.input.amendment - The amendment data.
+ * @param {Object} taskResult.input.amendment.facility - The facility data.
+ * @param {string} taskResult.input.amendment.facility._id - The ID of the facility.
+ * @returns {Promise<void>} - A promise that resolves when the update is complete.
+ */
+const updateAmendedFacilityAcbs = async (taskResult) => {
   if (taskResult.instanceId && taskResult.output) {
     const { instanceId } = taskResult;
     const { facilityMasterRecord, facilityLoanRecord } = taskResult.output;
@@ -161,7 +190,7 @@ const updateAmendedFacilityAcbs = (taskResult) => {
     };
 
     // Update tfm-facilities `acbs` object with ACBS amendments response
-    tfmController.updateFacilityAcbs(_id, acbsUpdate);
+    await tfmController.updateFacilityAcbs(_id, acbsUpdate);
   }
 };
 
@@ -301,4 +330,6 @@ module.exports = {
   checkAzureAcbsFunction,
   issueAcbsFacilities,
   amendAcbsFacility,
+  updateIssuedFacilityAcbs,
+  updateAmendedFacilityAcbs,
 };
