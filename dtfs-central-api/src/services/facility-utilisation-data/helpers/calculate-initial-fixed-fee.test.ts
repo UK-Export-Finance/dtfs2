@@ -1,6 +1,6 @@
 import { addDays } from 'date-fns';
 import { calculateInitialFixedFee, getNumberOfDaysInCoverPeriod } from './calculate-initial-fixed-fee';
-import { calculateFixedFeeFromDaysRemaining } from '../../../../../helpers/calculate-fixed-fee-from-days-remaining';
+import { calculateFixedFeeFromDaysRemaining } from '../../../helpers/calculate-fixed-fee-from-days-remaining';
 
 describe('helpers/calculate-fixed-fee', () => {
   describe('getNumberOfDaysInCoverPeriod', () => {

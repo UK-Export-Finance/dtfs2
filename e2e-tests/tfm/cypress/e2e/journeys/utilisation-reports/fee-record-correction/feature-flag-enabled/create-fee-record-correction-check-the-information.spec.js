@@ -60,7 +60,7 @@ context('When fee record correction feature flag is enabled', () => {
 
   context('PDC_RECONCILE users can send record correction requests', () => {
     const { createFeeRecordCorrectionRequestPage, checkFeeRecordCorrectionRequestPage } = pages;
-    const additionalInfoUserInput = 'Some additional info.\nSome more additional info.';
+    const additionalInfoUserInput = 'Some additional info.\nSome special characters &$%!<>?@*()_+={}[];:~`\'"';
 
     beforeEach(() => {
       pages.landingPage.visit();
@@ -79,7 +79,7 @@ context('When fee record correction feature flag is enabled', () => {
       cy.clickContinueButton();
     });
 
-    it('should be able to view the form values and other details of correction request before sending', () => {
+    it('should be able to view the form values and other details of correction request', () => {
       summaryList().should('exist');
       summaryList().should('contain', feeRecordAtToDoStatus.facilityId);
       summaryList().should('contain', feeRecordAtToDoStatus.exporter);
@@ -100,30 +100,97 @@ context('When fee record correction feature flag is enabled', () => {
       cy.assertText(premiumPaymentsTab.premiumPaymentsTable.status(feeRecordAtToDoStatus.id), 'Record correction sent');
     });
 
-    context('when user abandons their journey and then starts again', () => {
+    context('when user abandons their journey, without cancelling', () => {
       beforeEach(() => {
         // Abandon the journey by navigating to the report page.
         cy.visit(`utilisation-reports/${reportId}`);
-
-        // Restart the journey using the same fee record.
-        premiumPaymentsTab.premiumPaymentsTable
-          .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
-          .click();
-
-        premiumPaymentsTab.createRecordCorrectionRequestButton().click();
       });
 
-      it('should populate the "create record correction request" form with the prior form data', () => {
-        cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}`));
+      context('and clicks the "create record correction request" button again', () => {
+        beforeEach(() => {
+          // Restart the journey using the same fee record.
+          premiumPaymentsTab.premiumPaymentsTable
+            .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
+            .click();
 
-        createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT).should('be.checked');
-        createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).should('be.checked');
+          premiumPaymentsTab.createRecordCorrectionRequestButton().click();
+        });
 
-        createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT).should('not.be.checked');
-        createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT).should('not.be.checked');
-        createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.UTILISATION_INCORRECT).should('not.be.checked');
+        it('should not populate the "create record correction request" form with any form data', () => {
+          cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}`));
 
-        cy.assertText(createFeeRecordCorrectionRequestPage.additionalInfoInput(), additionalInfoUserInput);
+          Object.values(RECORD_CORRECTION_REASON).forEach((reason) => {
+            createFeeRecordCorrectionRequestPage.reasonCheckbox(reason).should('not.be.checked');
+          });
+
+          cy.assertText(createFeeRecordCorrectionRequestPage.additionalInfoInput(), '');
+        });
+      });
+
+      context('and navigates directly to the "create record correction request" page', () => {
+        beforeEach(() => {
+          cy.visit(`utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}`);
+        });
+
+        it('should populate the "create record correction request" form with the prior form data', () => {
+          cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}`));
+
+          createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT).should('be.checked');
+          createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).should('be.checked');
+
+          createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT).should('not.be.checked');
+          createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT).should('not.be.checked');
+          createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.UTILISATION_INCORRECT).should('not.be.checked');
+
+          cy.assertText(createFeeRecordCorrectionRequestPage.additionalInfoInput(), additionalInfoUserInput);
+        });
+      });
+    });
+
+    context('when user abandons their journey by clicking the cancel button', () => {
+      beforeEach(() => {
+        cy.clickCancelButton();
+      });
+
+      it('should redirect to the utilisation report page with the fee record still checked', () => {
+        cy.url().should('eq', relative(`/utilisation-reports/${reportId}?selectedFeeRecordIds=${feeRecordAtToDoStatus.id}`));
+
+        premiumPaymentsTab.premiumPaymentsTable
+          .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
+          .should('be.checked');
+      });
+
+      context('and clicks the "create record correction request" button again', () => {
+        beforeEach(() => {
+          // Note that the same fee record is already checked due to the 'selectedFeeRecordIds' query parameter.
+          premiumPaymentsTab.createRecordCorrectionRequestButton().click();
+        });
+
+        it('should not populate the "create record correction request" form with any form data', () => {
+          cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}`));
+
+          Object.values(RECORD_CORRECTION_REASON).forEach((reason) => {
+            createFeeRecordCorrectionRequestPage.reasonCheckbox(reason).should('not.be.checked');
+          });
+
+          cy.assertText(createFeeRecordCorrectionRequestPage.additionalInfoInput(), '');
+        });
+      });
+
+      context('and navigates directly to the "create record correction request" page', () => {
+        beforeEach(() => {
+          cy.visit(`utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}`);
+        });
+
+        it('should not populate the "create record correction request" form with any form data', () => {
+          cy.url().should('eq', relative(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}`));
+
+          Object.values(RECORD_CORRECTION_REASON).forEach((reason) => {
+            createFeeRecordCorrectionRequestPage.reasonCheckbox(reason).should('not.be.checked');
+          });
+
+          cy.assertText(createFeeRecordCorrectionRequestPage.additionalInfoInput(), '');
+        });
       });
     });
 
@@ -143,20 +210,6 @@ context('When fee record correction feature flag is enabled', () => {
         createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.UTILISATION_INCORRECT).should('not.be.checked');
 
         cy.assertText(createFeeRecordCorrectionRequestPage.additionalInfoInput(), additionalInfoUserInput);
-      });
-    });
-
-    context('when user clicks cancel', () => {
-      beforeEach(() => {
-        cy.clickCancelLink();
-      });
-
-      it('should return to the "premium payments" screen with the checkbox selected', () => {
-        cy.url().should('eq', relative(`/utilisation-reports/${reportId}?selectedFeeRecordIds=${feeRecordAtToDoStatus.id}`));
-
-        premiumPaymentsTab.premiumPaymentsTable
-          .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
-          .should('be.checked');
       });
     });
 
