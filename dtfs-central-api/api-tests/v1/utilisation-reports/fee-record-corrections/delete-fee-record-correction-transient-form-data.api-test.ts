@@ -17,7 +17,7 @@ console.error = jest.fn();
 
 const BASE_URL = '/v1/utilisation-reports/:reportId/fee-records/:feeRecordId/correction-transient-form-data/:userId';
 
-describe(`GET ${BASE_URL}`, () => {
+describe(`DELETE ${BASE_URL}`, () => {
   const reportId = 1;
   const feeRecordId = 2;
   const userId = '5c0a7922c9d89830f4911426';
@@ -43,20 +43,12 @@ describe(`GET ${BASE_URL}`, () => {
 
   withSqlAndMongoIdPathParameterValidationTests({
     baseUrl: BASE_URL,
-    makeRequest: (url) => testApi.get(url),
+    makeRequest: (url) => testApi.remove({}).to(url),
     sqlPathParameters: ['reportId', 'feeRecordId'],
     mongoPathParameters: ['userId'],
   });
 
-  it(`should return '${HttpStatusCode.NotFound}' when no fee record with the supplied id can be found`, async () => {
-    // Act
-    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId: feeRecordId + 1, userId }));
-
-    // Assert
-    expect(response.status).toEqual(HttpStatusCode.NotFound);
-  });
-
-  it(`should return '${HttpStatusCode.Ok}' with the form data if the request is valid and transient form data exists`, async () => {
+  it(`should return '${HttpStatusCode.NoContent}' if the request is valid and transient form data exists`, async () => {
     // Arrange
     const formData: RecordCorrectionTransientFormData = {
       reasons: [RECORD_CORRECTION_REASON.OTHER],
@@ -70,19 +62,25 @@ describe(`GET ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('FeeRecordCorrectionTransientFormData', transientFormDataEntity);
 
     // Act
-    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId, userId }));
+    const response = await testApi.remove({}).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId, userId }));
 
     // Assert
-    expect(response.status).toEqual(HttpStatusCode.Ok);
-    expect(response.body).toEqual(formData);
+    expect(response.status).toEqual(HttpStatusCode.NoContent);
   });
 
-  it(`should return '${HttpStatusCode.Ok}' with empty form data if the request is valid but transient form data does not exist`, async () => {
+  it(`should return '${HttpStatusCode.NoContent}' if the request is valid but transient form data does not exist`, async () => {
     // Act
-    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId, userId }));
+    const response = await testApi.remove({}).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId, userId }));
 
     // Assert
-    expect(response.status).toEqual(HttpStatusCode.Ok);
-    expect(response.body).toEqual({});
+    expect(response.status).toEqual(HttpStatusCode.NoContent);
+  });
+
+  it(`should return '${HttpStatusCode.NotFound}' when no fee record with the supplied id can be found`, async () => {
+    // Act
+    const response = await testApi.remove({}).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId: feeRecordId + 1, userId }));
+
+    // Assert
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 });
