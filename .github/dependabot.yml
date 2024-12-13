@@ -10,111 +10,16 @@ version: 2
 updates:
   # NPM
   - package-ecosystem: 'npm'
-    directory: '/'
-    schedule:
-      interval: 'monthly'
-      time: '00:00'
-    labels:
-      - 'chore'
-    groups:
-      npm-packages:
-        patterns:
-          - '*'  
-
-  # NPM
-  - package-ecosystem: 'npm'
-    directory: '/external-api'
-    schedule:
-      interval: 'monthly'
-      time: '00:00'
-    labels:
-      - 'chore'
-    groups:
-      npm-packages:
-        patterns:
-          - '*'  
-
-  # NPM
-  - package-ecosystem: 'npm'
-    directory: '/portal-api'
-    schedule:
-      interval: 'monthly'
-      time: '00:00'
-    labels:
-      - 'chore'
-    groups:
-      npm-packages:
-        patterns:
-          - '*'  
-
-  # NPM
-  - package-ecosystem: 'npm'
-    directory: '/trade-finance-manager-api'
-    schedule:
-      interval: 'monthly'
-      time: '00:00'
-    labels:
-      - 'chore'
-    groups:
-      npm-packages:
-        patterns:
-          - '*'  
-
-  # NPM
-  - package-ecosystem: 'npm'
-    directory: '/gef-ui'
-    schedule:
-      interval: 'monthly'
-      time: '00:00'
-    labels:
-      - 'chore'
-    groups:
-      npm-packages:
-        patterns:
-          - '*'  
-
-  # NPM
-  - package-ecosystem: 'npm'
-    directory: '/portal'
-    schedule:
-      interval: 'monthly'
-      time: '00:00'
-    labels:
-      - 'chore'
-    groups:
-      npm-packages:
-        patterns:
-          - '*'  
-
-  # NPM
-  - package-ecosystem: 'npm'
-    directory: '/trade-finance-manager-ui'
-    schedule:
-      interval: 'monthly'
-      time: '00:00'
-    labels:
-      - 'chore'
-    groups:
-      npm-packages:
-        patterns:
-          - '*'  
-
-  # NPM
-  - package-ecosystem: 'npm'
-    directory: '/azure-functions/acbs-function'
-    schedule:
-      interval: 'monthly'
-      time: '00:00'
-    labels:
-      - 'chore'
-    groups:
-      npm-packages:
-        patterns:
-          - '*'  
-
-  # NPM
-  - package-ecosystem: 'npm'
-    directory: '/dtfs-central-api'
+    directory: 
+      - '/'
+      - '/external-api'
+      - '/portal-api'
+      - '/trade-finance-manager-api'
+      - '/gef-ui'
+      - '/portal'
+      - '/trade-finance-manager-ui'
+      - '/azure-functions/acbs-function'
+      - '/dtfs-central-api'
     schedule:
       interval: 'monthly'
       time: '00:00'
