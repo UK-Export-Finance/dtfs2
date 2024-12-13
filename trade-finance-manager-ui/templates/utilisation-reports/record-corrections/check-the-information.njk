@@ -63,7 +63,7 @@
           text: "Provide more information"
         },
         value: {
-          html: (additionalInfo | replace('\n', '<br>'))
+          html: (additionalInfo | replaceNewLinesWithBrTags)
         },
         actions: {
           items: [
