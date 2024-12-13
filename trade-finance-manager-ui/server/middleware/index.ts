@@ -6,4 +6,4 @@ export { validateTfmPaymentReconciliationFeatureFlagIsEnabled } from './validate
 export { validateTfmPaymentReconciliationFeatureFlagIsNotEnabled } from './validateTfmPaymentReconciliationFeatureFlagIsNotEnabled';
 export { validatePostAddPaymentRequestBody } from './validatePostAddPaymentRequestBody';
 export { validatePostRemoveFeesFromPaymentRequestBody } from './validatePostRemoveFeesFromPaymentRequestBody';
-export { validateTfmFeeRecordCorrectionFeatureFlagIsEnabled } from './validateTfmFeeRecordCorrectionFeatureFlagIsEnabled';
+export { validateFeeRecordCorrectionFeatureFlagIsEnabled } from './validateFeeRecordCorrectionFeatureFlagIsEnabled';

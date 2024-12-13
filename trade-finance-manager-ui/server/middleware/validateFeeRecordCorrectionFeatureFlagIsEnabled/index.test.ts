@@ -1,8 +1,8 @@
 import httpMocks from 'node-mocks-http';
 import * as ukefCommon from '@ukef/dtfs2-common';
-import { validateTfmFeeRecordCorrectionFeatureFlagIsEnabled } from '.';
+import { validateFeeRecordCorrectionFeatureFlagIsEnabled } from '.';
 
-describe('validateTfmFeeRecordCorrectionFeatureFlagIsEnabled', () => {
+describe('validateFeeRecordCorrectionFeatureFlagIsEnabled', () => {
   const getHttpMocks = () => httpMocks.createMocks();
 
   const isFeeRecordCorrectionFeatureFlagEnabledSpy = jest.spyOn(ukefCommon, 'isFeeRecordCorrectionFeatureFlagEnabled');
@@ -19,7 +19,7 @@ describe('validateTfmFeeRecordCorrectionFeatureFlagIsEnabled', () => {
     isFeeRecordCorrectionFeatureFlagEnabledSpy.mockReturnValue(false);
 
     // Act
-    validateTfmFeeRecordCorrectionFeatureFlagIsEnabled(req, res, next);
+    validateFeeRecordCorrectionFeatureFlagIsEnabled(req, res, next);
 
     // Assert
     expect(res._getRedirectUrl()).toEqual('/not-found');
@@ -34,7 +34,7 @@ describe('validateTfmFeeRecordCorrectionFeatureFlagIsEnabled', () => {
     isFeeRecordCorrectionFeatureFlagEnabledSpy.mockReturnValue(true);
 
     // Act
-    validateTfmFeeRecordCorrectionFeatureFlagIsEnabled(req, res, next);
+    validateFeeRecordCorrectionFeatureFlagIsEnabled(req, res, next);
 
     // Assert
     expect(res._isEndCalled()).toEqual(false);
