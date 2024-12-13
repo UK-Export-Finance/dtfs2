@@ -62,7 +62,7 @@ runs:
         SQL_DB_PORT: ${{ inputs.port }}
         SQL_DB_USERNAME: ${{ inputs.username }}
         SQL_DB_PASSWORD: ${{ inputs.password }}
-        SQL_DB_NAME: ${{ inputs.datbase }}
+        SQL_DB_NAME: ${{ inputs.database }}
         SQL_DB_LOGGING_ENABLED: ${{ inputs.log }}
       run: npm run db:migrate
       shell: bash
