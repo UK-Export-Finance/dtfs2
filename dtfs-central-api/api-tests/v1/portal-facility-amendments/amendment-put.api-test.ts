@@ -1,17 +1,9 @@
 import { Response } from 'supertest';
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import {
-  AnyObject,
-  API_ERROR_CODE,
-  aPortalFacilityAmendmentUserValues,
-  DEAL_SUBMISSION_TYPE,
-  DEAL_TYPE,
-  FACILITY_TYPE,
-  MONGO_DB_COLLECTIONS,
-  PortalFacilityAmendment,
-} from '@ukef/dtfs2-common';
+import { AnyObject, API_ERROR_CODE, DEAL_SUBMISSION_TYPE, DEAL_TYPE, FACILITY_TYPE, MONGO_DB_COLLECTIONS, PortalFacilityAmendment } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';
 import wipeDB from '../../wipeDB';
 import { testApi } from '../../test-api';
 import { createDeal, submitDealToTfm } from '../../helpers/create-deal';

@@ -1,5 +1,6 @@
 import { createMocks } from 'node-mocks-http';
-import { AMENDMENT_STATUS, AMENDMENT_TYPES, API_ERROR_CODE, aPortalFacilityAmendmentUserValues, TestApiError } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, AMENDMENT_TYPES, API_ERROR_CODE, TestApiError } from '@ukef/dtfs2-common';
+import { aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';
 import { HttpStatusCode } from 'axios';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { putAmendmentDraft, PutAmendmentRequest } from './put-amendment.controller';

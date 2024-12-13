@@ -1,5 +1,6 @@
 import { PORTAL_FACILITY_AMENDMENT_USER_VALUES } from './portal-amendment';
-import { aPortalFacilityAmendmentUserValues, withSchemaTests } from '../test-helpers';
+import { withSchemaTests } from '../test-helpers';
+import { aPortalFacilityAmendmentUserValues } from '../test-helpers/mock-data-backend';
 import { AnyObject } from '../types';
 
 const aValidPayload = () => JSON.parse(JSON.stringify(aPortalFacilityAmendmentUserValues())) as AnyObject;

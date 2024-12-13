@@ -1,5 +1,6 @@
 import { ObjectId, UpdateResult } from 'mongodb';
-import { AMENDMENT_TYPES, MONGO_DB_COLLECTIONS, AMENDMENT_STATUS, FacilityNotFoundError, aPortalFacilityAmendment } from '@ukef/dtfs2-common';
+import { AMENDMENT_TYPES, MONGO_DB_COLLECTIONS, AMENDMENT_STATUS, FacilityNotFoundError } from '@ukef/dtfs2-common';
+import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
 import { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { TfmFacilitiesRepo } from './tfm-facilities.repo';
 import { mongoDbClient } from '../../drivers/db-client';

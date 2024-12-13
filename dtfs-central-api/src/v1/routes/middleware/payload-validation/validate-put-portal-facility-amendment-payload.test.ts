@@ -1,7 +1,8 @@
 import { ObjectId } from 'mongodb';
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { AnyObject, aPortalFacilityAmendmentUserValues, AUDIT_USER_TYPES } from '@ukef/dtfs2-common';
+import { AnyObject, AUDIT_USER_TYPES } from '@ukef/dtfs2-common';
+import { aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalUser } from '../../../../../test-helpers';
 import { validatePutPortalFacilityAmendmentPayload } from './validate-put-portal-facility-amendment-payload';
