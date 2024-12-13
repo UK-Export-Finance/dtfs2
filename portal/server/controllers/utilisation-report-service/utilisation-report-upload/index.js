@@ -58,11 +58,10 @@ const getUtilisationReportUpload = async (req, res) => {
   const { user, userToken } = req.session;
   const bankId = user.bank.id;
   try {
+    // QQ put this behind the feature flag
     const pendingCorrections = await api.getUtilisationReportPendingCorrectionsByBankId(userToken, bankId);
 
-    if (pendingCorrections) {
-      console.info(pendingCorrections);
-    }
+    console.info(pendingCorrections);
 
     const dueReportPeriods = await getDueReportPeriodsByBankId(userToken, bankId);
     if (dueReportPeriods.length > 0) {

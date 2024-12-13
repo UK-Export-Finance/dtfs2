@@ -976,6 +976,12 @@ const getNextReportPeriodByBankId = async (token, bankId) => {
   return response.data;
 };
 
+/**
+ * Gets all pending corrections for earliest report with corrections for the supplied bank
+ * @param {string} token - The user token
+ * @param {string} bankId - The bank id
+ * @returns {Promise<import('./api-response-types').UtilisationReportPendingCorrectionsResponseBody>} The pending corrections
+ */
 const getUtilisationReportPendingCorrectionsByBankId = async (token, bankId) => {
   if (!isValidBankId(bankId)) {
     throw new Error(`Getting next report period failed for id ${bankId}`);
