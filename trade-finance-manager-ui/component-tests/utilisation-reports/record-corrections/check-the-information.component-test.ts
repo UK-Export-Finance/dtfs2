@@ -107,7 +107,7 @@ describe('page', () => {
     wrapper.expectLink('[data-cy="change-record-correction-reason-link"]').toLinkTo(expectedHref, 'Change reason for record correction');
   });
 
-  it('should render the "provide more information" text', () => {
+  it('should render the "provide more information" text without line breaks', () => {
     // Arrange
     const additionalInfo = 'The record needs changing because of the provided reason. Please correct as per the reason.';
     const viewModel: RecordCorrectionRequestInformationViewModel = {
@@ -120,6 +120,22 @@ describe('page', () => {
 
     // Assert
     wrapper.expectText(definitionDescriptionSelector('Provide more information')).toRead(additionalInfo);
+  });
+
+  it('should render the "provide more information" text with line breaks', () => {
+    // Arrange
+    const additionalInfo = 'First line\n\nAnother line after some spacing';
+    const viewModel: RecordCorrectionRequestInformationViewModel = {
+      ...aRecordCorrectionRequestInformationViewModel(),
+      additionalInfo,
+    };
+
+    // Act
+    const wrapper = render(viewModel);
+
+    // Assert
+    const expectedContent = 'First line<br><br>Another line after some spacing';
+    wrapper.expectElement(definitionDescriptionSelector('Provide more information')).toHaveHtmlContent(expectedContent);
   });
 
   it('should render the "provide more information" change link', () => {
