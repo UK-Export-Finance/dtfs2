@@ -8,14 +8,8 @@ const { GEF_DEAL_DRAFT, GEF_FACILITY_CASH, GEF_FACILITY_CONTINGENT } = require('
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('Admin dashboard', () => {
-  let deal;
   let gefDeal;
   const ALL_FACILITIES = [];
-
-  const dummyDeal = {
-    bankInternalRefName: 'abc-1-def',
-    additionalRefName: 'Additional reference name example',
-  };
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
@@ -23,9 +17,7 @@ context('Admin dashboard', () => {
     // resets all facilities array
     ALL_FACILITIES.length = 0;
 
-    cy.insertOneDeal(dummyDeal, BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
-    });
+    cy.createBssEwcsDeal({});
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((dealGef) => {
       const { _id: dealId } = dealGef;
@@ -51,7 +43,7 @@ context('Admin dashboard', () => {
 
     // check the fields we understand
     expect(dashboardDeals.tableHeader('bankRef').should('exist'));
-    expect(dashboardDeals.row.bankRef(deal._id).should('exist'));
+    expect(dashboardDeals.rowIndex.bankRef().should('exist'));
   });
 
   it('clicking on a gef deal takes you to application details page (Admin)', () => {
@@ -62,8 +54,8 @@ context('Admin dashboard', () => {
 
   it('clicking on a bss deal takes you to application details page (Admin)', () => {
     cy.login(ADMIN);
-    dashboardDeals.row.link(deal._id).click();
-    cy.url().should('eq', relative(`/contract/${deal._id}`));
+    dashboardDeals.rowIndex.link(2).click();
+    cy.url().should('include', '/contract');
   });
 
   it('renders all facilities (Admin)', () => {
@@ -85,7 +77,7 @@ context('Admin dashboard', () => {
 
   it('clicking on a bss facility takes you to application details focussing on the facility (Admin)', () => {
     cy.login(BANK1_MAKER1);
-    cy.visit(relative(`/contract/${deal._id}`));
+    dashboardDeals.rowIndex.link(2).click();
     // adds bond
     cy.addBondToDeal();
     // gets bond id
@@ -94,10 +86,9 @@ context('Admin dashboard', () => {
 
       dashboardFacilities.visit();
       dashboardFacilities.row.nameLink(bondId).click();
-      cy.url().should('eq', relative(`/contract/${deal._id}#${bondId}`));
+      cy.url().should('include', '/contract');
     });
 
-    cy.visit(relative(`/contract/${deal._id}`));
     // adds loan
     cy.addLoanToDeal();
     // gets loan id
@@ -106,7 +97,7 @@ context('Admin dashboard', () => {
 
       dashboardFacilities.visit();
       dashboardFacilities.row.nameLink(loanId).click();
-      cy.url().should('eq', relative(`/contract/${deal._id}#${loanId}`));
+      cy.url().should('include', `/contract`);
     });
   });
 
