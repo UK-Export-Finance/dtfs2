@@ -1,8 +1,7 @@
 import { Headers } from 'node-mocks-http';
 import { NextFunction, Request, Response } from 'express';
-import { CURRENCY, DEAL_STATUS, DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
+import { CURRENCY, DEAL_STATUS, DEAL_SUBMISSION_TYPE, ROLES } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
-import { MAKER } from '../../server/constants/roles';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
 import app from '../../server/createApp';
 import { createApi } from '../create-api';
@@ -39,7 +38,7 @@ describe(`GET ${url}`, () => {
     await storage.flush();
     jest.resetAllMocks();
 
-    ({ sessionCookie } = await storage.saveUserSession([MAKER]));
+    ({ sessionCookie } = await storage.saveUserSession([ROLES.MAKER]));
     jest.spyOn(api, 'getFacility').mockImplementation(mockGetFacility);
     jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
 
@@ -75,7 +74,7 @@ describe(`GET ${url}`, () => {
 
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers: Headers) => get(url, {}, headers),
-      whitelistedRoles: [MAKER],
+      whitelistedRoles: [ROLES.MAKER],
       successCode: HttpStatusCode.Ok,
     });
 
