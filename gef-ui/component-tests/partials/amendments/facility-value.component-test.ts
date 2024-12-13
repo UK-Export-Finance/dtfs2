@@ -9,6 +9,7 @@ describe(page, () => {
   const facilityId = 'facilityId';
   const amendmentId = 'amendmentId';
   const previousPage = 'previousPage';
+  const cancelUrl = 'cancelUrl';
   const facilityValue = 7000;
   const exporterName = 'exporterName';
   const currencySymbol = '£';
@@ -18,6 +19,7 @@ describe(page, () => {
     facilityId,
     amendmentId,
     previousPage,
+    cancelUrl,
     facilityValue,
     exporterName,
     currencySymbol,
@@ -44,7 +46,7 @@ describe(page, () => {
   it(`should render the cancel link`, () => {
     const wrapper = render(params);
 
-    wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo(`/case/${dealId}/facilities/${facilityId}/amendment/${amendmentId}/cancel`, 'Cancel');
+    wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo(cancelUrl, 'Cancel');
   });
 
   it('should render the exporter name in the heading caption', () => {

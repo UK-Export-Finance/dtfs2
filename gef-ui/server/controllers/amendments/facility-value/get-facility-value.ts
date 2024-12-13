@@ -33,6 +33,7 @@ export const getFacilityValue = async (req: GetFacilityValueRequest, res: Respon
       facilityId,
       amendmentId,
       exporterName: deal.exporter.companyName,
+      cancelUrl: `/gef/application-details/${dealId}/facility/${facilityId}/amendments/${amendmentId}/cancel`,
       previousPage: `/gef/application-details/${dealId}/facility/${facilityId}/amendments/${amendmentId}/bank-review-date`,
       currencySymbol,
     };
