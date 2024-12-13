@@ -16,6 +16,10 @@ updates:
       time: '00:00'
     labels:
       - 'chore'
+    groups:
+      npm-packages:
+        patterns:
+          - '*'  
 
   # NPM
   - package-ecosystem: 'npm'
@@ -25,6 +29,10 @@ updates:
       time: '00:00'
     labels:
       - 'chore'
+    groups:
+      npm-packages:
+        patterns:
+          - '*'  
 
   # NPM
   - package-ecosystem: 'npm'
@@ -34,6 +42,10 @@ updates:
       time: '00:00'
     labels:
       - 'chore'
+    groups:
+      npm-packages:
+        patterns:
+          - '*'  
 
   # NPM
   - package-ecosystem: 'npm'
@@ -43,6 +55,10 @@ updates:
       time: '00:00'
     labels:
       - 'chore'
+    groups:
+      npm-packages:
+        patterns:
+          - '*'  
 
   # NPM
   - package-ecosystem: 'npm'
@@ -52,6 +68,10 @@ updates:
       time: '00:00'
     labels:
       - 'chore'
+    groups:
+      npm-packages:
+        patterns:
+          - '*'  
 
   # NPM
   - package-ecosystem: 'npm'
@@ -61,6 +81,10 @@ updates:
       time: '00:00'
     labels:
       - 'chore'
+    groups:
+      npm-packages:
+        patterns:
+          - '*'  
 
   # NPM
   - package-ecosystem: 'npm'
@@ -70,6 +94,10 @@ updates:
       time: '00:00'
     labels:
       - 'chore'
+    groups:
+      npm-packages:
+        patterns:
+          - '*'  
 
   # NPM
   - package-ecosystem: 'npm'
@@ -79,6 +107,10 @@ updates:
       time: '00:00'
     labels:
       - 'chore'
+    groups:
+      npm-packages:
+        patterns:
+          - '*'  
 
   # NPM
   - package-ecosystem: 'npm'
@@ -88,87 +120,32 @@ updates:
       time: '00:00'
     labels:
       - 'chore'
+    groups:
+      npm-packages:
+        patterns:
+          - '*'  
 
-  # Dockerfile
+  # Dockerfiles
   - package-ecosystem: 'docker'
-    directory: '/external-api'
+    directories:
+      - '/external-api'
+      - '/portal-api'
+      - '/trade-finance-manager-api'
+      - '/gef-ui'
+      - '/portal'
+      - '/trade-finance-manager-ui'
+      - '/azure-functions/acbs-function'
+      - '/dtfs-central-api'
+      - '/reverse-proxy'
     schedule:
       interval: 'monthly'
       time: '00:00'
     labels:
       - 'chore'
-
-  # Dockerfile
-  - package-ecosystem: 'docker'
-    directory: '/portal-api'
-    schedule:
-      interval: 'monthly'
-      time: '00:00'
-    labels:
-      - 'chore'
-
-  # Dockerfile
-  - package-ecosystem: 'docker'
-    directory: '/trade-finance-manager-api'
-    schedule:
-      interval: 'monthly'
-      time: '00:00'
-    labels:
-      - 'chore'
-
-  # Dockerfile
-  - package-ecosystem: 'docker'
-    directory: '/gef-ui'
-    schedule:
-      interval: 'monthly'
-      time: '00:00'
-    labels:
-      - 'chore'
-
-  # Dockerfile
-  - package-ecosystem: 'docker'
-    directory: '/portal'
-    schedule:
-      interval: 'monthly'
-      time: '00:00'
-    labels:
-      - 'chore'
-
-  # Dockerfile
-  - package-ecosystem: 'docker'
-    directory: '/trade-finance-manager-ui'
-    schedule:
-      interval: 'monthly'
-      time: '00:00'
-    labels:
-      - 'chore'
-
-  # Dockerfile
-  - package-ecosystem: 'docker'
-    directory: '/azure-functions/acbs-function'
-    schedule:
-      interval: 'monthly'
-      time: '00:00'
-    labels:
-      - 'chore'
-
-  # Dockerfile
-  - package-ecosystem: 'docker'
-    directory: '/dtfs-central-api'
-    schedule:
-      interval: 'monthly'
-      time: '00:00'
-    labels:
-      - 'chore'
-
-  # Dockerfile
-  - package-ecosystem: 'docker'
-    directory: '/reverse-proxy'
-    schedule:
-      interval: 'monthly'
-      time: '00:00'
-    labels:
-      - 'chore'
+    groups:
+      docker-packages:
+        patterns:
+          - '*'
 
   # Git Hub Actions
   #  Set the directory to `/` for
@@ -180,3 +157,7 @@ updates:
       time: '00:00'
     labels:
       - 'chore'
+    groups:
+      github-actions:
+        patterns:
+          - '*'
