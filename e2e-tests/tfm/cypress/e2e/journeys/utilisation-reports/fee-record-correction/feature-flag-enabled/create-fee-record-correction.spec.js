@@ -132,19 +132,33 @@ context('When fee record correction feature flag is enabled', () => {
           summaryList().should('contain', expectedBankEmails.join(', '));
         });
 
-        it('should be able to send the record correction request', () => {
-          cy.clickContinueButton();
+        context('and when user clicks the "continue" button', () => {
+          beforeEach(() => {
+            cy.clickContinueButton();
+          });
 
-          cy.assertText(mainHeading(), 'Record correction request');
-          feeRecordCorrectionRequestSentPage.requestSentPanel().should('exist');
-          feeRecordCorrectionRequestSentPage.requestSentPanel().should('contain', 'Request sent');
-          feeRecordCorrectionRequestSentPage.requestSentPanel().should('contain', 'Your record correction request has been sent');
-          cy.assertText(feeRecordCorrectionRequestSentPage.otherEmailAddress(1), expectedBankEmails[0]);
-          cy.assertText(feeRecordCorrectionRequestSentPage.otherEmailAddress(2), expectedBankEmails[1]);
-          cy.assertText(feeRecordCorrectionRequestSentPage.userEmailAddressCopy(), `A copy of the email has also been sent to ${USERS.PDC_RECONCILE.email}.`);
+          it('should be able to send the record correction request', () => {
+            cy.assertText(mainHeading(), 'Record correction request');
+            feeRecordCorrectionRequestSentPage.requestSentPanel().should('exist');
+            feeRecordCorrectionRequestSentPage.requestSentPanel().should('contain', 'Request sent');
+            feeRecordCorrectionRequestSentPage.requestSentPanel().should('contain', 'Your record correction request has been sent');
+            cy.assertText(feeRecordCorrectionRequestSentPage.otherEmailAddress(1), expectedBankEmails[0]);
+            cy.assertText(feeRecordCorrectionRequestSentPage.otherEmailAddress(2), expectedBankEmails[1]);
+            cy.assertText(feeRecordCorrectionRequestSentPage.userEmailAddressCopy(), `A copy of the email has also been sent to ${USERS.PDC_RECONCILE.email}.`);
 
-          cy.visit(`utilisation-reports/${reportId}`);
-          cy.assertText(premiumPaymentsTab.premiumPaymentsTable.status(feeRecordAtToDoStatus.id), 'Record correction sent');
+            cy.visit(`utilisation-reports/${reportId}`);
+            cy.assertText(premiumPaymentsTab.premiumPaymentsTable.status(feeRecordAtToDoStatus.id), 'Record correction sent');
+          });
+
+          context('and then user clicks the "back to premium payments" button', () => {
+            beforeEach(() => {
+              feeRecordCorrectionRequestSentPage.backToPremiumPaymentsButton().click();
+            });
+
+            it('should return to premium payments tab', () => {
+              cy.url().should('eq', relative(`/utilisation-reports/${reportId}`));
+            });
+          });
         });
       });
     });
