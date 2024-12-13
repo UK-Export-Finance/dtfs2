@@ -14,5 +14,4 @@ export const aRecordCorrectionRequestInformationViewModel = (): RecordCorrection
   reasonForRecordCorrection: 'not valid',
   additionalInfo: 'this is some more information',
   contactEmailAddresses: 'test@testing.com, email@email.com',
-  cancelLink: 'a cancel link',
 });

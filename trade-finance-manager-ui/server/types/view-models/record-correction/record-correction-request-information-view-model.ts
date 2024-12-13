@@ -10,5 +10,4 @@ export type RecordCorrectionRequestInformationViewModel = BaseViewModel & {
   reasonForRecordCorrection: string;
   additionalInfo: string;
   contactEmailAddresses: string;
-  cancelLink: string;
 };
