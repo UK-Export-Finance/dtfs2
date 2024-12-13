@@ -62,7 +62,7 @@ context('When fee record correction feature flag is enabled', () => {
   });
 
   context('PDC_RECONCILE users can create record correction requests', () => {
-    const { createFeeRecordCorrectionRequestPage, checkFeeRecordCorrectionRequestPage } = pages;
+    const { createFeeRecordCorrectionRequestPage, checkFeeRecordCorrectionRequestPage, feeRecordCorrectionRequestSentPage } = pages;
     const additionalInfoUserInput = 'Some additional info.';
 
     beforeEach(() => {
@@ -109,6 +109,8 @@ context('When fee record correction feature flag is enabled', () => {
       });
 
       context('and when they have filled in the record correction reasons form', () => {
+        const expectedBankEmails = BANKS.find((bank) => bank.id === bankId).paymentOfficerTeam.emails;
+
         beforeEach(() => {
           createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT).check();
           createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).check();
@@ -127,12 +129,19 @@ context('When fee record correction feature flag is enabled', () => {
           summaryList().should('contain', additionalInfoUserInput);
 
           // The contact email addresses are taken from the bank payment officer team
-          const expectedEmails = BANKS.find((bank) => bank.id === bankId).paymentOfficerTeam.emails;
-          summaryList().should('contain', expectedEmails.join(', '));
+          summaryList().should('contain', expectedBankEmails.join(', '));
         });
 
         it('should be able to send the record correction request', () => {
           cy.clickContinueButton();
+
+          cy.assertText(mainHeading(), 'Record correction request');
+          feeRecordCorrectionRequestSentPage.requestSentPanel().should('exist');
+          feeRecordCorrectionRequestSentPage.requestSentPanel().should('contain', 'Request sent');
+          feeRecordCorrectionRequestSentPage.requestSentPanel().should('contain', 'Your record correction request has been sent');
+          cy.assertText(feeRecordCorrectionRequestSentPage.otherEmailAddress(1), expectedBankEmails[0]);
+          cy.assertText(feeRecordCorrectionRequestSentPage.otherEmailAddress(2), expectedBankEmails[1]);
+          cy.assertText(feeRecordCorrectionRequestSentPage.userEmailAddressCopy(), `A copy of the email has also been sent to ${USERS.PDC_RECONCILE.email}.`);
 
           cy.visit(`utilisation-reports/${reportId}`);
           cy.assertText(premiumPaymentsTab.premiumPaymentsTable.status(feeRecordAtToDoStatus.id), 'Record correction sent');
