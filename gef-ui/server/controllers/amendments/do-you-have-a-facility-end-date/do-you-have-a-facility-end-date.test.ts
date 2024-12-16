@@ -106,7 +106,6 @@ describe('getDoYouHaveAFacilityEndDate', () => {
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
-    // TODO: assert redirect URL, /-notfound?
   });
 
   it('should redirect if the deal is not found', async () => {
