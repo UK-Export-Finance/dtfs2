@@ -31,7 +31,7 @@ context('When fee record correction feature flag is disabled', () => {
       cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
     });
 
-    it('should NOT display create record correction request button', () => {
+    it('should NOT display the record correction history tab', () => {
       utilisationReportPage.recordCorrectionHistoryTabLink().should('not.exist');
     });
   });
