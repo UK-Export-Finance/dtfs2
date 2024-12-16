@@ -82,7 +82,7 @@ describe(page, () => {
     });
 
     it('should render an activity date', () => {
-      wrapper.expectText(`[data-cy="activity-${mockActivity.title}-date-time"]`).toRead(`${mockActivity.date} ${mockActivity.time}`);
+      wrapper.expectText(`[data-cy="activity-${mockActivity.title}-date"]`).toRead(`${mockActivity.date} ${mockActivity.time}`);
     });
 
     it('should render `changed by` copy', () => {
@@ -140,7 +140,7 @@ describe(page, () => {
     });
 
     it('should render an activity date', () => {
-      wrapper.expectText(`[data-cy="activity-${mockActivity.title}-date-time"]`).toRead(`${mockActivity.date} ${mockActivity.time}`);
+      wrapper.expectText(`[data-cy="activity-${mockActivity.title}-date"]`).toRead(`${mockActivity.date} ${mockActivity.time}`);
     });
 
     it('should render a deal link', () => {
