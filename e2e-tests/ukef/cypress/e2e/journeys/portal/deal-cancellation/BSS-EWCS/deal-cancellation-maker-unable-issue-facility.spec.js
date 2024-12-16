@@ -9,7 +9,7 @@ import { yesterday, tomorrow } from '../../../../../../../e2e-fixtures/dateConst
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('When a BSS/EWCS deal has been cancelled in TFM, maker should be unable to issue a facility', () => {
+context('BSS/EWCS deals - When TFM submits a deal cancellation - Portal maker should not be able to issue a facility', () => {
   const ainDealWithUnissuedFacilities = Array(2).fill(generateAinDealUnissuedFacilitiesWithDates());
   const minDealWithUnissuedFacilities = Array(2).fill(generateMinDealUnissuedFacilitiesWithDates());
   const deals = [];

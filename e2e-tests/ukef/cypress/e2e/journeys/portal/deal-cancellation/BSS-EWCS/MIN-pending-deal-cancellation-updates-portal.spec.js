@@ -7,7 +7,7 @@ import { tomorrow } from '../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
-describe('MIN deal cancellation in the future - status updates', () => {
+context('BSS/EWCS MIN deal - When TFM submits a pending deal cancellation - Portal statuses should be updated', () => {
   let deal;
   let dealId;
   const dealFacilities = [];

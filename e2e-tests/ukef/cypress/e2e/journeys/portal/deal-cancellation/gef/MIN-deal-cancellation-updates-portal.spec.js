@@ -1,33 +1,28 @@
 import { DEAL_STATUS, PORTAL_ACTIVITY_LABEL, TFM_URL, UKEF } from '@ukef/dtfs2-common';
 import relative from '../../../../relativeURL';
-import statusBanner from '../../../../../../../gef/cypress/e2e/pages/application-status-banner';
 import applicationActivities from '../../../../../../../gef/cypress/e2e/pages/application-activities';
+import statusBanner from '../../../../../../../gef/cypress/e2e/pages/application-status-banner';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
+import { MOCK_APPLICATION_MIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
-import { today, tomorrow } from '../../../../../../../e2e-fixtures/dateConstants';
+import { yesterday, today } from '../../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1 } from '../../../../../../../e2e-fixtures';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-// TODO: check, align other BSS-EWCS test descriptions
-// TODO: remove "future" from cancellation tests - it's not the future, it's "now"
-
-// TODO - add cancellation status checks? don't seem to have tests for this.
-
-context('When an AIN GEF deal is pending cancellation in TFM - GEF activity feed should be updated', () => {
+context('GEF MIN deal - When TFM submits a deal cancellation - Portal status and activity feed should be updated', () => {
   let gefDeal;
   let dealId;
 
   const mockFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
 
   before(() => {
-    cy.insertOneGefDeal(MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1).then((insertedDeal) => {
+    cy.insertOneGefDeal(MOCK_APPLICATION_MIN_DRAFT, BANK1_MAKER1).then((insertedDeal) => {
       gefDeal = insertedDeal;
       dealId = gefDeal._id;
 
       // updates a gef deal to have relevant fields
-      cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1);
+      cy.updateGefDeal(dealId, MOCK_APPLICATION_MIN_DRAFT, BANK1_MAKER1);
 
       cy.createGefFacilities(dealId, [mockFacility], BANK1_MAKER1).then((createdFacilities) => {
         gefDeal.facilities = createdFacilities;
@@ -38,7 +33,7 @@ context('When an AIN GEF deal is pending cancellation in TFM - GEF activity feed
         cy.forceVisit(TFM_URL);
         cy.tfmLogin(PIM_USER_1);
 
-        const effectiveDate = tomorrow.date;
+        const effectiveDate = yesterday.date;
 
         cy.submitDealCancellation({ dealId, effectiveDate });
 
@@ -64,12 +59,12 @@ context('When an AIN GEF deal is pending cancellation in TFM - GEF activity feed
   });
 
   it('should update the deal status', () => {
-    cy.assertText(statusBanner.bannerStatus(), DEAL_STATUS.PENDING_CANCELLATION);
+    cy.assertText(statusBanner.bannerStatus(), DEAL_STATUS.DEAL_CANCELLED);
   });
 
   describe('activity feed', () => {
-    describe(PORTAL_ACTIVITY_LABEL.DEAL_CANCELLATION_PENDING, () => {
-      const activity = PORTAL_ACTIVITY_LABEL.DEAL_CANCELLATION_PENDING;
+    describe(PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED, () => {
+      const activity = PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED;
 
       it('should render an activity title', () => {
         const expected = activity;
@@ -88,10 +83,32 @@ context('When an AIN GEF deal is pending cancellation in TFM - GEF activity feed
         // Otherwise, tests could often fail if the test is run e.g 10 seconds before a new minute.
         applicationActivities.date(activity).contains(today.d_MMMM_yyyy);
       });
+
+      it('should render a deal link', () => {
+        const expectedText = `Deal ID ${gefDeal.ukefDealId}`;
+
+        cy.assertText(applicationActivities.dealLink(dealId), expectedText);
+
+        const expectedHref = `/gef/application-details/${dealId}`;
+
+        applicationActivities.dealLink(dealId).should('have.attr', 'href', expectedHref);
+      });
+
+      it('should render a previous status tag', () => {
+        const expected = DEAL_STATUS.UKEF_ACKNOWLEDGED;
+
+        cy.assertText(applicationActivities.previousStatusTag(dealId), expected);
+      });
+
+      it('should render a new status tag', () => {
+        const expected = DEAL_STATUS.CANCELLED;
+
+        cy.assertText(applicationActivities.newStatusTag(dealId), expected);
+      });
     });
 
-    describe(PORTAL_ACTIVITY_LABEL.AIN_SUBMISSION, () => {
-      const activity = PORTAL_ACTIVITY_LABEL.AIN_SUBMISSION;
+    describe(PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION, () => {
+      const activity = PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION;
 
       it('should render an activity title', () => {
         const expected = activity;

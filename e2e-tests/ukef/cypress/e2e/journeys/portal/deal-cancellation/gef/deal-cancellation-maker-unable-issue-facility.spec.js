@@ -10,7 +10,7 @@ import { PIM_USER_1 } from '../../../../../../../e2e-fixtures';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('When a GEF deal has been cancelled in TFM, maker should be unable to issue a facility', () => {
+context('GEF deals - When TFM submits a deal cancellation - Portal maker should not be able to issue a facility', () => {
   const ainDeals = Array(4).fill(MOCK_APPLICATION_AIN_DRAFT);
   const minDeals = Array(4).fill(MOCK_APPLICATION_MIN_DRAFT);
   const gefDeals = [...ainDeals, ...minDeals];
