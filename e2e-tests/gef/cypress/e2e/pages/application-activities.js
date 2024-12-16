@@ -2,7 +2,7 @@ const applicationActivities = {
   activityTimeline: () => cy.get('[data-cy="portal-activities-timeline"]'),
   byline: (activityTitle) => cy.get(`[data-cy="activity-${activityTitle}-byline"]`),
   dealLink: (id) => cy.get(`[data-cy="deal-link-${id}"]`),
-  dateTime: (activityTitle) => cy.get(`[data-cy="activity-${activityTitle}-date-time"]`),
+  date: (activityTitle) => cy.get(`[data-cy="activity-${activityTitle}-date"]`),
   facilityActivityChangedBy: (id) => cy.get(`[data-cy="facility-changed-by-${id}"]`),
   facilityActivityCheckedBy: (id) => cy.get(`[data-cy="facility-checked-by-${id}"]`),
   facilityActivityLink: (id) => cy.get(`[data-cy="facility-link-${id}"]`),

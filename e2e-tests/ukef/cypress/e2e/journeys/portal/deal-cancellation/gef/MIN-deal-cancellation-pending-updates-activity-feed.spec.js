@@ -1,6 +1,7 @@
-import { PORTAL_ACTIVITY_LABEL, TFM_URL, UKEF } from '@ukef/dtfs2-common';
+import { DEAL_STATUS, PORTAL_ACTIVITY_LABEL, TFM_URL, UKEF } from '@ukef/dtfs2-common';
 import relative from '../../../../relativeURL';
 import applicationActivities from '../../../../../../../gef/cypress/e2e/pages/application-activities';
+import statusBanner from '../../../../../../../gef/cypress/e2e/pages/application-status-banner';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_MIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
@@ -58,37 +59,41 @@ context('When a MIN GEF deal is pending cancellation in TFM - GEF activity feed 
     cy.clearSessionCookies();
   });
 
-  describe(PORTAL_ACTIVITY_LABEL.DEAL_CANCELLATION_PENDING, () => {
-    it('should render an activity title', () => {
-      const activity = PORTAL_ACTIVITY_LABEL.DEAL_CANCELLATION_PENDING;
-
-      const expected = activity;
-
-      cy.assertText(applicationActivities.title(activity), expected);
-    });
-
-    it('should render an activity byline', () => {
-      const activity = PORTAL_ACTIVITY_LABEL.DEAL_CANCELLATION_PENDING;
-
-      const expected = `by ${UKEF.ACRONYM}`;
-
-      cy.assertText(applicationActivities.byline(activity), expected);
-    });
-
-    it('should render a date and time', () => {
-      const expected = `${today.d_MMMM_yyyy} ${today.h_MMAAA}`;
-
-      cy.assertText(applicationActivities.dateTime(PORTAL_ACTIVITY_LABEL.DEAL_CANCELLATION_PENDING), expected);
-    });
+  it('should update the deal status', () => {
+    cy.assertText(statusBanner.bannerStatus(), DEAL_STATUS.DEAL_CANCELLATION_PENDING);
   });
 
-  describe(PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION, () => {
-    it('should render an activity title', () => {
+  describe('activity feed', () => {
+    describe(PORTAL_ACTIVITY_LABEL.DEAL_CANCELLATION_PENDING, () => {
+      const activity = PORTAL_ACTIVITY_LABEL.DEAL_CANCELLATION_PENDING;
+
+      it('should render an activity title', () => {
+        const expected = activity;
+
+        cy.assertText(applicationActivities.title(activity), expected);
+      });
+
+      it('should render an activity byline', () => {
+        const expected = `by ${UKEF.ACRONYM}`;
+
+        cy.assertText(applicationActivities.byline(activity), expected);
+      });
+
+      it('should render a date', () => {
+        // NOTE: we cannot reliably assert the time - only the date.
+        // Otherwise, tests could often fail if the test is run e.g 10 seconds before a new minute.
+        applicationActivities.date(activity).contains(today.d_MMMM_yyyy);
+      });
+    });
+
+    describe(PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION, () => {
       const activity = PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION;
 
-      const expected = activity;
+      it('should render an activity title', () => {
+        const expected = activity;
 
-      cy.assertText(applicationActivities.title(activity), expected);
+        cy.assertText(applicationActivities.title(activity), expected);
+      });
     });
   });
 });
