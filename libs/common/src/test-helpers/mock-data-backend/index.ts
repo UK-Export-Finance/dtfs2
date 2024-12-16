@@ -3,3 +3,4 @@
  * This is due to reliance on backend only specific packages -- predominantly Mongo
  */
 export * from './tfm-user';
+export * from './portal-facility-amendment';
