@@ -9,7 +9,7 @@ import { yesterday, tomorrow } from '../../../../../../../e2e-fixtures/dateConst
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('When a deal has been cancelled on TFM, maker unable to issue facility', () => {
+context('When a BSS/EWCS deal has been cancelled in TFM, maker should be unable to issue a facility', () => {
   const ainDealWithUnissuedFacilities = Array(2).fill(generateAinDealUnissuedFacilitiesWithDates());
   const minDealWithUnissuedFacilities = Array(2).fill(generateMinDealUnissuedFacilitiesWithDates());
   const deals = [];
@@ -57,8 +57,11 @@ context('When a deal has been cancelled on TFM, maker unable to issue facility',
     describe('AIN deal', () => {
       it('should not allow a Maker to issue facilities in portal', () => {
         const ainDealPast = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.AIN && deal.status === DEAL_STATUS.CANCELLED);
+
         const ainDealfacilityPast = ainDealPast.facilities.find((facility) => facility.type === FACILITY_TYPE.BOND)._id;
+
         portalPages.contract.visit(ainDealPast);
+
         portalPages.contract.bondTransactionsTable.row(ainDealfacilityPast).issueFacilityLink().should('not.exist');
       });
     });
@@ -66,8 +69,11 @@ context('When a deal has been cancelled on TFM, maker unable to issue facility',
     describe('MIN deal', () => {
       it('should not allow a Maker to issue facilities in portal', () => {
         const minDealPast = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.MIN && deal.status === DEAL_STATUS.CANCELLED);
+
         const minDealfacilityPast = minDealPast.facilities.find((facility) => facility.type === FACILITY_TYPE.BOND)._id;
+
         portalPages.contract.visit(minDealPast);
+
         portalPages.contract.bondTransactionsTable.row(minDealfacilityPast).issueFacilityLink().should('not.exist');
       });
     });
@@ -77,8 +83,11 @@ context('When a deal has been cancelled on TFM, maker unable to issue facility',
     describe('AIN deal', () => {
       it('should not allow a Maker to issue facilities in portal', () => {
         const ainDealFuture = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.AIN && deal.status === DEAL_STATUS.PENDING_CANCELLATION);
+
         const ainDealFacilityFuture = ainDealFuture.facilities.find((facility) => facility.type === FACILITY_TYPE.BOND)._id;
+
         portalPages.contract.visit(ainDealFuture);
+
         portalPages.contract.bondTransactionsTable.row(ainDealFacilityFuture).issueFacilityLink().should('not.exist');
       });
     });
@@ -86,8 +95,11 @@ context('When a deal has been cancelled on TFM, maker unable to issue facility',
     describe('MIN deal', () => {
       it('should not allow a Maker to issue facilities in portal', () => {
         const minDealFuture = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.MIN && deal.status === DEAL_STATUS.PENDING_CANCELLATION);
+
         const minDealFacilityFuture = minDealFuture.facilities.find((facility) => facility.type === FACILITY_TYPE.BOND)._id;
+
         portalPages.contract.visit(minDealFuture);
+
         portalPages.contract.bondTransactionsTable.row(minDealFacilityFuture).issueFacilityLink().should('not.exist');
       });
     });

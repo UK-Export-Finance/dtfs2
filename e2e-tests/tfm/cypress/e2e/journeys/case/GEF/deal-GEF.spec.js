@@ -15,7 +15,7 @@ context('User can view a GEF MIA case deal', () => {
     // inserts a gef deal
     cy.insertOneGefDeal(MOCK_APPLICATION_MIA, BANK1_MAKER1).then((insertedDeal) => {
       dealId = insertedDeal._id;
-      // updates a gef deal so has relevant fields
+      // updates a gef deal to have relevant fields
       cy.updateGefDeal(dealId, MOCK_APPLICATION_MIA, BANK1_MAKER1);
 
       cy.createGefFacilities(dealId, [anUnissuedCashFacility()], BANK1_MAKER1).then((createdFacilities) => {
@@ -114,7 +114,7 @@ context('User can view a GEF AIN case deal', () => {
     // inserts a gef deal
     cy.insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1).then((insertedDeal) => {
       dealId = insertedDeal._id;
-      // updates a gef deal so has relevant fields
+      // updates a gef deal to have relevant fields
       cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
 
       cy.createGefFacilities(dealId, [anUnissuedCashFacility()], BANK1_MAKER1).then((createdFacilities) => {

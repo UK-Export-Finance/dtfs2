@@ -7,7 +7,7 @@ import { tomorrow } from '../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
-describe('Deal Cancellation status updates', () => {
+describe('MIN deal cancellation in the future - status updates', () => {
   let deal;
   let dealId;
   const dealFacilities = [];

@@ -57,7 +57,7 @@ describe('PortalActivityRepo', () => {
       // Assert
       const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
-      const expectedIdFilter = { _id: { $eq: dealId } };
+      const expectedIdFilter = { _id: { $eq: new ObjectId(dealId) } };
 
       const expectedUpdate = {
         $push: {

@@ -10,6 +10,7 @@ export const D_MMMM_YYYY_FORMAT = 'd MMMM yyyy';
 export const DD_MMMM_YYYY_FORMAT = 'dd MMMM yyyy';
 export const TIME_HOURS_FORMAT = 'h';
 export const TIME_AM_PM_FORMAT = 'aaa';
+export const TIME_H_MMAAA = 'H:mmaaa';
 
 const getFormattedValues = (date) => ({
   date,
@@ -21,6 +22,7 @@ const getFormattedValues = (date) => ({
   dd_MMM_yyyy: format(date, DD_MMM_YYYY_FORMAT),
   d_MMMM_yyyy: format(date, D_MMMM_YYYY_FORMAT),
   dd_MMMM_yyyy: format(date, DD_MMMM_YYYY_FORMAT),
+  h_MMAAA: format(date, TIME_H_MMAAA),
   unixSecondsString: getUnixTime(date).toString(),
   unixMillisecondsString: date.valueOf().toString(),
   unixMilliseconds: date.valueOf(),

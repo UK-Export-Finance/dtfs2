@@ -14,7 +14,7 @@ context('Amendments - GEF deal does not display any Facility end date pages or f
     // inserts a gef deal
     cy.insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1).then((insertedDeal) => {
       dealId = insertedDeal._id;
-      // updates a gef deal so has relevant fields
+      // updates a gef deal to have relevant fields
       cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
 
       cy.createGefFacilities(dealId, [anIssuedCashFacility()], BANK1_MAKER1).then((createdFacility) => {
