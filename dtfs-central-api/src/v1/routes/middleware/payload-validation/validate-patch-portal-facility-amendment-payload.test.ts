@@ -1,26 +1,12 @@
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { getUnixTime } from 'date-fns';
-import { AUDIT_USER_TYPES, CURRENCY } from '@ukef/dtfs2-common';
+import { AUDIT_USER_TYPES } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';
 import { aPortalUser } from '../../../../../test-helpers';
 import { validatePatchPortalFacilityAmendmentPayload } from './validate-patch-portal-facility-amendment-payload';
 
 const validAuditDetails = generatePortalAuditDetails(aPortalUser()._id);
-const validUpdate = {
-  changeCoverEndDate: true,
-  coverEndDate: getUnixTime(new Date()),
-  currentCoverEndDate: getUnixTime(new Date()),
-  isUsingFacilityEndDate: true,
-  facilityEndDate: getUnixTime(new Date()),
-  bankReviewDate: getUnixTime(new Date()),
-  changeFacilityValue: true,
-  value: 1800,
-  currentValue: 1500,
-  currency: CURRENCY.GBP,
-  ukefExposure: 10,
-  coveredPercentage: 23,
-};
 
 describe('validatePatchPortalFacilityAmendmentPayload', () => {
   const invalidPayloads = [
@@ -175,21 +161,21 @@ describe('validatePatchPortalFacilityAmendmentPayload', () => {
     {
       description: 'auditDetails is undefined',
       payload: {
-        update: validUpdate,
+        update: aPortalFacilityAmendmentUserValues(),
         auditDetails: undefined,
       },
     },
     {
       description: 'auditDetails is an empty object',
       payload: {
-        update: validUpdate,
+        update: aPortalFacilityAmendmentUserValues(),
         auditDetails: {},
       },
     },
     {
       description: 'auditDetails.userType is undefined',
       payload: {
-        update: validUpdate,
+        update: aPortalFacilityAmendmentUserValues(),
 
         auditDetails: {
           userType: undefined,
@@ -199,7 +185,7 @@ describe('validatePatchPortalFacilityAmendmentPayload', () => {
     {
       description: 'auditDetails.id is invalid and type is portal',
       payload: {
-        update: validUpdate,
+        update: aPortalFacilityAmendmentUserValues(),
 
         auditDetails: {
           userType: AUDIT_USER_TYPES.PORTAL,
@@ -227,7 +213,7 @@ describe('validatePatchPortalFacilityAmendmentPayload', () => {
     {
       description: 'the payload is valid',
       payload: {
-        update: validUpdate,
+        update: aPortalFacilityAmendmentUserValues(),
         auditDetails: validAuditDetails,
       },
     },
