@@ -39,6 +39,64 @@
   {% include "./partials/record-correction-history-html.njk" %}
 {% endset %}
 
+{% set itemsArray = 
+  [
+    {
+      label: "Premium payments",
+      id: "premium-payments",
+      panel: {
+        html: premiumPaymentsHtml | safe
+      },
+      attributes: {
+        'data-cy': 'bank-report-tab-premium-payments'
+      }
+    },
+    {
+      label: "Keying sheet",
+      id: "keying-sheet",
+      panel: {
+        html: keyingSheetHtml | safe
+      },
+      attributes: {
+        'data-cy': 'bank-report-tab-keying-sheet'
+      }
+    },
+    {
+      label: "Payment details",
+      id: "payment-details",
+      panel: {
+        html: paymentDetailsHtml | safe
+      },
+      attributes: {
+        'data-cy': 'bank-report-tab-payment-details'
+      }
+    },
+    {
+      label: "Utilisation",
+      id: "utilisation",
+      panel: {
+        html: utilisationHtml | safe
+      },
+      attributes: {
+        'data-cy': 'bank-report-tab-utilisation'
+      }
+    }
+  ]
+%}
+
+  {% if isFeeRecordCorrectionFeatureFlagEnabled %}
+    {% set itemsArray = (itemsArray.push({
+      label: "Record correction history",
+      id: "record-correction-history",
+      panel: {
+        html: recordCorrectionHistoryHtml | safe
+      },
+      attributes: {
+        'data-cy': 'bank-report-tab-record-correction-history'
+      }
+    }), itemsArray) %}
+  {% endif %}
+
 {% block content %}
   <div class="govuk-grid-row govuk-!-padding-top-7">
     <div class="govuk-grid-column-full">
@@ -49,58 +107,7 @@
 
       <div class="ukef-tabs--no-border">
         {{ govukTabs({
-          items: [
-            {
-              label: "Premium payments",
-              id: "premium-payments",
-              panel: {
-                html: premiumPaymentsHtml | safe
-              },
-              attributes: {
-                'data-cy': 'bank-report-tab-premium-payments'
-              }
-            },
-            {
-              label: "Keying sheet",
-              id: "keying-sheet",
-              panel: {
-                html: keyingSheetHtml | safe
-              },
-              attributes: {
-                'data-cy': 'bank-report-tab-keying-sheet'
-              }
-            },
-            {
-              label: "Payment details",
-              id: "payment-details",
-              panel: {
-                html: paymentDetailsHtml | safe
-              },
-              attributes: {
-                'data-cy': 'bank-report-tab-payment-details'
-              }
-            },
-            {
-              label: "Utilisation",
-              id: "utilisation",
-              panel: {
-                html: utilisationHtml | safe
-              },
-              attributes: {
-                'data-cy': 'bank-report-tab-utilisation'
-              }
-            },
-            {
-              label: "Record correction history",
-              id: "record-correction-history",
-              panel: {
-                html: recordCorrectionHistoryHtml | safe
-              },
-              attributes: {
-                'data-cy': 'bank-report-tab-record-correction-history'
-              }
-            }
-          ]
+          items: itemsArray
         }) }}
       </div>
     </div>

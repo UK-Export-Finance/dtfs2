@@ -1,8 +1,8 @@
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, FEE_RECORD_STATUS, PENDING_RECONCILIATION } from '@ukef/dtfs2-common';
-import pages from '../../../pages';
-import USERS from '../../../../fixtures/users';
-import { NODE_TASKS } from '../../../../../../e2e-fixtures';
-import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
+import pages from '../../../../pages';
+import USERS from '../../../../../fixtures/users';
+import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
+import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 const { utilisationReportPage } = pages;
 const { recordCorrectionHistoryTab } = utilisationReportPage;
@@ -41,6 +41,8 @@ context('Record correction history page - no corrections', () => {
   describe('when navigating to the page', () => {
     it('should display the tab heading and text', () => {
       cy.assertText(recordCorrectionHistoryTab.heading(), 'Record correction history');
+
+      cy.assertText(utilisationReportPage.recordCorrectionHistoryTabLink(), 'Record correction history');
 
       cy.assertText(
         recordCorrectionHistoryTab.recordCorrectionAutomaticallyNotifiedText(),
