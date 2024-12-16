@@ -2,7 +2,7 @@ import { DEAL_STATUS } from '@ukef/dtfs2-common';
 import portalPages from '../../../../../../../portal/cypress/e2e/pages';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import generateMinReadyToSubmit from '../../test-data/MIN-deal/dealReadyToSubmit';
-import { TFM_URL, PIM_USER_1 } from '../../../../../../../e2e-fixtures';
+import { PIM_USER_1 } from '../../../../../../../e2e-fixtures';
 import { tomorrow } from '../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
@@ -62,7 +62,7 @@ context('BSS/EWCS MIN deal - When TFM submits a pending deal cancellation - Port
       cy.clearCookie('dtfs-session');
       cy.clearCookie('_csrf');
       cy.getCookies().should('be.empty');
-      cy.forceVisit(TFM_URL);
+
       cy.tfmLogin(PIM_USER_1);
 
       cy.submitDealCancellation({ dealId, effectiveDate: tomorrow.date });

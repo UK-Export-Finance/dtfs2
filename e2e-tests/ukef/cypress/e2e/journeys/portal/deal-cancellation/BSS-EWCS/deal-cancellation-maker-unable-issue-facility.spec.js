@@ -4,7 +4,7 @@ import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { generateAinDealUnissuedFacilitiesWithDates } from '../../test-data/AIN-deal-unissued-facilities/dealReadyToSubmit';
 import generateMinDealUnissuedFacilitiesWithDates from '../../test-data/MIN-deal-unissued-facilities/dealReadyToSubmit';
 
-import { TFM_URL, PIM_USER_1 } from '../../../../../../../e2e-fixtures';
+import { PIM_USER_1 } from '../../../../../../../e2e-fixtures';
 import { yesterday, tomorrow } from '../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
@@ -28,7 +28,6 @@ context('BSS/EWCS deals - When TFM submits a deal cancellation - Portal maker sh
           cy.clearCookie('_csrf');
           cy.getCookies().should('be.empty');
 
-          cy.forceVisit(TFM_URL);
           cy.tfmLogin(PIM_USER_1);
           const effectiveDate = index % 2 === 0 ? tomorrow.date : yesterday.date;
           cy.submitDealCancellation({ dealId: deal._id, effectiveDate });

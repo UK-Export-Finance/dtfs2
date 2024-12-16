@@ -1,4 +1,4 @@
-import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, TFM_URL } from '@ukef/dtfs2-common';
+import { DEAL_STATUS, DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
 import relative from '../../../../relativeURL';
 import gefPages from '../../../../../../../gef/cypress/e2e/pages';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
@@ -33,7 +33,6 @@ context('GEF deals - When TFM submits a deal cancellation - Portal maker should 
         const gefDeal = { ...insertedDeal };
         const mockDeal = index < 4 ? MOCK_APPLICATION_AIN_DRAFT : MOCK_APPLICATION_MIN_DRAFT;
 
-        // updates a gef deal to have relevant fields
         cy.updateGefDeal(gefDeal._id, mockDeal, BANK1_MAKER1);
 
         cy.createGefFacilities(gefDeal._id, [facilities[index]], BANK1_MAKER1).then((createdFacilities) => {
@@ -42,7 +41,6 @@ context('GEF deals - When TFM submits a deal cancellation - Portal maker should 
           cy.checkerLoginSubmitGefDealToUkef(gefDeal);
           cy.clearSessionCookies();
 
-          cy.forceVisit(TFM_URL);
           cy.tfmLogin(PIM_USER_1);
           const effectiveDate = index % 2 === 0 ? tomorrow.date : yesterday.date;
           cy.submitDealCancellation({ dealId: gefDeal._id, effectiveDate });

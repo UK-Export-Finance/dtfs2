@@ -107,7 +107,7 @@ context('Amendments page', () => {
       // inserts a gef deal
       cy.insertOneGefDeal(MOCK_APPLICATION_MIA, BANK1_MAKER1).then((insertedDeal) => {
         dealId = insertedDeal._id;
-        // updates a gef deal to have relevant fields
+
         cy.updateGefDeal(dealId, MOCK_APPLICATION_MIN, BANK1_MAKER1);
 
         cy.createGefFacilities(dealId, [anUnissuedCashFacility()], BANK1_MAKER1).then((createdFacilities) => {

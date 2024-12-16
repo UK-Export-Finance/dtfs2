@@ -1,4 +1,4 @@
-import { DEAL_STATUS, PORTAL_ACTIVITY_LABEL, TFM_URL, UKEF } from '@ukef/dtfs2-common';
+import { DEAL_STATUS, PORTAL_ACTIVITY_LABEL, UKEF } from '@ukef/dtfs2-common';
 import relative from '../../../../relativeURL';
 import applicationActivities from '../../../../../../../gef/cypress/e2e/pages/application-activities';
 import statusBanner from '../../../../../../../gef/cypress/e2e/pages/application-status-banner';
@@ -21,7 +21,6 @@ context('GEF AIN deal - When TFM submits a deal cancellation - Portal status and
       gefDeal = insertedDeal;
       dealId = gefDeal._id;
 
-      // updates a gef deal to have relevant fields
       cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1);
 
       cy.createGefFacilities(dealId, [mockFacility], BANK1_MAKER1).then((createdFacilities) => {
@@ -30,7 +29,6 @@ context('GEF AIN deal - When TFM submits a deal cancellation - Portal status and
         cy.checkerLoginSubmitGefDealToUkef(gefDeal);
         cy.clearSessionCookies();
 
-        cy.forceVisit(TFM_URL);
         cy.tfmLogin(PIM_USER_1);
 
         const effectiveDate = yesterday.date;
