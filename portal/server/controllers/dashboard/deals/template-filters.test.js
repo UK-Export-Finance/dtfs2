@@ -25,7 +25,7 @@ describe('controllers/dashboard/deals - template-filters', () => {
   });
 
   describe('statusFilters', () => {
-    it('should return generateFiltersArray with all possible `product` field inputs', () => {
+    it('should return generateFiltersArray with all possible `deal status` field inputs', () => {
       const mockSubmittedFilters = {};
 
       const result = statusFilters(mockSubmittedFilters);
@@ -76,6 +76,10 @@ describe('controllers/dashboard/deals - template-filters', () => {
         {
           text: DEAL_STATUS.ABANDONED,
           value: DEAL_STATUS.ABANDONED,
+        },
+        {
+          text: DEAL_STATUS.CANCELLED,
+          value: DEAL_STATUS.CANCELLED,
         },
       ];
 
