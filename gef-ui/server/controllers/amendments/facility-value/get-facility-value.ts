@@ -37,7 +37,7 @@ export const getFacilityValue = async (req: GetFacilityValueRequest, res: Respon
 
     return res.render('partials/amendments/facility-value.njk', viewModel);
   } catch (error) {
-    console.error('Error getting amendments facility value page', error);
+    console.error('Error getting amendments facility value page %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
