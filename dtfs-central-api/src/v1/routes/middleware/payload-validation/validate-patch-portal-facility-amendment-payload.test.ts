@@ -1,12 +1,13 @@
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { AUDIT_USER_TYPES } from '@ukef/dtfs2-common';
+import { AUDIT_USER_TYPES, AnyObject } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';
 import { aPortalUser } from '../../../../../test-helpers';
 import { validatePatchPortalFacilityAmendmentPayload } from './validate-patch-portal-facility-amendment-payload';
 
 const validAuditDetails = generatePortalAuditDetails(aPortalUser()._id);
+const validAmendment = JSON.parse(JSON.stringify(aPortalFacilityAmendmentUserValues())) as AnyObject;
 
 describe('validatePatchPortalFacilityAmendmentPayload', () => {
   const invalidPayloads = [
@@ -161,21 +162,21 @@ describe('validatePatchPortalFacilityAmendmentPayload', () => {
     {
       description: 'auditDetails is undefined',
       payload: {
-        update: aPortalFacilityAmendmentUserValues(),
+        update: validAmendment,
         auditDetails: undefined,
       },
     },
     {
       description: 'auditDetails is an empty object',
       payload: {
-        update: aPortalFacilityAmendmentUserValues(),
+        update: validAmendment,
         auditDetails: {},
       },
     },
     {
       description: 'auditDetails.userType is undefined',
       payload: {
-        update: aPortalFacilityAmendmentUserValues(),
+        update: validAmendment,
 
         auditDetails: {
           userType: undefined,
@@ -185,7 +186,7 @@ describe('validatePatchPortalFacilityAmendmentPayload', () => {
     {
       description: 'auditDetails.id is invalid and type is portal',
       payload: {
-        update: aPortalFacilityAmendmentUserValues(),
+        update: validAmendment,
 
         auditDetails: {
           userType: AUDIT_USER_TYPES.PORTAL,
@@ -213,7 +214,7 @@ describe('validatePatchPortalFacilityAmendmentPayload', () => {
     {
       description: 'the payload is valid',
       payload: {
-        update: aPortalFacilityAmendmentUserValues(),
+        update: validAmendment,
         auditDetails: validAuditDetails,
       },
     },
