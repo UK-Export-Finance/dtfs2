@@ -29,15 +29,15 @@
     {% set row = [
       {
         html: facilityIdHtml,
-        attributes: { "data-cy": "pending-correction-row--facilityId" }
+        attributes: { "data-cy": "pending-corrections-row--facility-id" }
       },
       {
         text: correction.exporter,
-        attributes: { "data-cy": "pending-correction-row--exporter" }
+        attributes: { "data-cy": "pending-corrections-row--exporter" }
       },
       {
         html: (correction.additionalInfo | replaceNewLinesWithBrTags),
-        attributes: { "data-cy": "pending-correction-row--errorSummary" }
+        attributes: { "data-cy": "pending-corrections-row--error-summary" }
       }
     ] %}
     {% set rows = (rows.push(row), rows) %}
@@ -58,16 +58,15 @@
     ],
     rows: rows,
     attributes: {
-      "data-cy": "pending-correction-table"
+      "data-cy": "pending-corrections-table"
     }
   }) }}
 
   {% if nextAction.reportCurrentlyDueForUpload %}
     {% set nextReportPeriod = nextAction.reportCurrentlyDueForUpload.formattedReportPeriod %}
-    <h2 class="govuk-heading-m">{{ nextReportPeriod }} report</h2>
-    <p class="govuk-body">
-      The {{ nextReportPeriod }} report is due, but cannot be uploaded until the record
-      corrections for the {{ formattedReportPeriod }} have been completed.
+    <h2 class="govuk-heading-m" data-cy="next-report-due-heading">{{ nextReportPeriod }} report</h2>
+    <p class="govuk-body" data-cy="next-report-due-text">
+      The {{ nextReportPeriod }} report is due, but cannot be uploaded until the record corrections for the {{ formattedReportPeriod }} have been completed.
     </p>
   {% endif %}
 
@@ -75,9 +74,9 @@
     {% set nextReportPeriod = nextAction.reportSoonToBeDueForUpload.formattedReportPeriod %}
     {% set nextReportUploadFromDate = nextAction.reportSoonToBeDueForUpload.formattedUploadFromDate %}
 
-    <h2 class="govuk-heading-m">Report not currently due for upload</h2>
-    <p class="govuk-body">
-      The {{ nextReportPeriod }} report can be uploaded from {{ nextReportUploadFromDate }}.
+    <h2 class="govuk-heading-m" data-cy="no-report-due-heading">Report not currently due for upload</h2>
+    <p class="govuk-body" data-cy="no-report-due-text">
+      The {{ nextReportPeriod }} report can be uploaded from {{ nextReportUploadFromDate }}
     </p>
   {% endif %}
 {% endblock %}

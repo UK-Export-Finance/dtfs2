@@ -1,0 +1,189 @@
+const {
+  UtilisationReportEntityMockBuilder,
+  PENDING_RECONCILIATION,
+  FeeRecordCorrectionEntityMockBuilder,
+  FeeRecordEntityMockBuilder,
+  FEE_RECORD_STATUS,
+  REPORT_NOT_RECEIVED,
+  getFormattedReportPeriodWithLongMonth,
+  getNextReportPeriodForBankSchedule,
+} = require('@ukef/dtfs2-common');
+const { addMonths, format } = require('date-fns');
+const { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../../e2e-fixtures');
+const relativeURL = require('../../../../relativeURL');
+const { pendingCorrections, utilisationReportUpload } = require('../../../../pages');
+const { mainHeading } = require('../../../../partials');
+const { aliasSelector } = require('../../../../../../../support/alias-selector');
+
+context('Pending corrections - Fee record correction feature flag enabled', () => {
+  context('Report GEF Utilisation and fees page', () => {
+    before(() => {
+      cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
+    });
+
+    after(() => {
+      cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
+    });
+
+    context('When there are pending corrections', () => {
+      const pendingCorrectionDetails = {
+        facilityId: '1234',
+        exporter: 'test exporter',
+        additionalInfo: 'Lots of additional info %$£%&^@&^',
+      };
+
+      const pendingCorrectionReportPeriod = { start: { month: 1, year: 2021 }, end: { month: 1, year: 2021 } };
+      const formattedPendingCorrectionReportPeriod = getFormattedReportPeriodWithLongMonth(pendingCorrectionReportPeriod);
+
+      beforeEach(() => {
+        cy.task('getUserFromDbByEmail', BANK1_PAYMENT_REPORT_OFFICER1.email).then((user) => {
+          const { _id, bank } = user;
+          const bankId = bank.id;
+
+          const report = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
+            .withUploadedByUserId(_id.toString())
+            .withBankId(bankId)
+            .withReportPeriod(pendingCorrectionReportPeriod)
+            .build();
+          const feeRecord = FeeRecordEntityMockBuilder.forReport(report)
+            .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
+            .withFacilityId(pendingCorrectionDetails.facilityId)
+            .withExporter(pendingCorrectionDetails.exporter)
+            .build();
+          const pendingCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
+            .withId(1)
+            .withIsCompleted(false)
+            .withAdditionalInfo(pendingCorrectionDetails.additionalInfo)
+            .build();
+          const completedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
+            .withId(2)
+            .withIsCompleted(true)
+            .withAdditionalInfo('This should not be displayed because this correction has been completed')
+            .build();
+
+          cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
+          cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
+          cy.task(NODE_TASKS.INSERT_FEE_RECORD_CORRECTIONS_INTO_DB, [pendingCorrection, completedCorrection]);
+        });
+      });
+
+      context('and when another report is due for upload', () => {
+        const nextDueReportPeriod = { start: { month: 1, year: 2022 }, end: { month: 2, year: 2022 } };
+        const formattedNextDueReportPeriod = getFormattedReportPeriodWithLongMonth(nextDueReportPeriod);
+
+        beforeEach(() => {
+          cy.task('getUserFromDbByEmail', BANK1_PAYMENT_REPORT_OFFICER1.email).then((user) => {
+            const { bank } = user;
+            const bankId = bank.id;
+
+            const report = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED).withReportPeriod(nextDueReportPeriod).withBankId(bankId).build();
+
+            cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
+          });
+
+          cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
+          cy.visit(relativeURL('/utilisation-report-upload'));
+        });
+
+        afterEach(() => {
+          cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
+        });
+
+        it('should display pending corrections', () => {
+          cy.assertText(mainHeading(), 'Report GEF utilisation and fees');
+
+          cy.assertText(pendingCorrections.correctionsHeading(), 'Record correction');
+          pendingCorrections.table().should('exist');
+
+          // Number of rows is number of corrections + 1 for the header
+          pendingCorrections.rows().should('have.length', 2);
+
+          cy.assertText(pendingCorrections.row(1).facilityId(), pendingCorrectionDetails.facilityId);
+          cy.assertText(pendingCorrections.row(1).exporter(), pendingCorrectionDetails.exporter);
+          cy.assertText(pendingCorrections.row(1).errorSummary(), pendingCorrectionDetails.additionalInfo);
+        });
+
+        it('should not display utilisation report file upload', () => {
+          utilisationReportUpload.utilisationReportFileInput().should('not.exist');
+        });
+
+        it('should display a message explaining when the next report can be uploaded to the user', () => {
+          pendingCorrections.nextReportDueHeading().should('exist');
+          cy.assertText(pendingCorrections.nextReportDueHeading(), `${formattedNextDueReportPeriod} report`);
+
+          pendingCorrections.nextReportDueText().should('exist');
+          cy.assertText(
+            pendingCorrections.nextReportDueText(),
+            `The ${formattedNextDueReportPeriod} report is due, but cannot be uploaded until the record corrections for the ${formattedPendingCorrectionReportPeriod} have been completed.`,
+          );
+
+          pendingCorrections.noReportDueHeading().should('not.exist');
+          pendingCorrections.noReportDueText().should('not.exist');
+        });
+      });
+
+      context('and when there are no reports due for upload', () => {
+        const formattedNextDueReportPeriodAlias = 'formattedNextDueReportPeriod';
+        const formattedUploadFromDateAlias = 'formattedUploadFromDate';
+
+        beforeEach(() => {
+          cy.task('getUserFromDbByEmail', BANK1_PAYMENT_REPORT_OFFICER1.email).then((user) => {
+            const { bank } = user;
+            const reportSchedule = bank.utilisationReportPeriodSchedule;
+
+            const nextReportPeriod = getNextReportPeriodForBankSchedule(reportSchedule, new Date());
+            const formattedNextDueReportPeriod = getFormattedReportPeriodWithLongMonth(nextReportPeriod);
+
+            cy.wrap(formattedNextDueReportPeriod).as(formattedNextDueReportPeriodAlias);
+
+            const startOfEndMonthOfReportPeriod = new Date(nextReportPeriod.end.year, nextReportPeriod.end.month - 1, 1);
+            const submissionPeriodStartDate = addMonths(startOfEndMonthOfReportPeriod, 1);
+            const formattedUploadFromDate = format(submissionPeriodStartDate, 'd MMMM yyyy');
+
+            cy.wrap(formattedUploadFromDate).as(formattedUploadFromDateAlias);
+
+            cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
+            cy.visit(relativeURL('/utilisation-report-upload'));
+          });
+        });
+
+        afterEach(() => {
+          cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
+        });
+
+        it('should display pending corrections', () => {
+          cy.assertText(mainHeading(), 'Report GEF utilisation and fees');
+
+          cy.assertText(pendingCorrections.correctionsHeading(), 'Record correction');
+          pendingCorrections.table().should('exist');
+
+          // Number of rows is number of corrections + 1 for the header
+          pendingCorrections.rows().should('have.length', 2);
+
+          cy.assertText(pendingCorrections.row(1).facilityId(), pendingCorrectionDetails.facilityId);
+          cy.assertText(pendingCorrections.row(1).exporter(), pendingCorrectionDetails.exporter);
+          cy.assertText(pendingCorrections.row(1).errorSummary(), pendingCorrectionDetails.additionalInfo);
+        });
+
+        it('should not display utilisation report file upload', () => {
+          utilisationReportUpload.utilisationReportFileInput().should('not.exist');
+        });
+
+        it('should display a message explaining when the next report can be uploaded to the user', () => {
+          pendingCorrections.noReportDueHeading().should('exist');
+          cy.assertText(pendingCorrections.noReportDueHeading(), 'Report not currently due for upload');
+
+          pendingCorrections.noReportDueText().should('exist');
+          cy.get(aliasSelector(formattedNextDueReportPeriodAlias)).then((formattedNextDueReportPeriod) => {
+            cy.get(aliasSelector(formattedUploadFromDateAlias)).then((formattedUploadFromDate) => {
+              cy.assertText(pendingCorrections.noReportDueText(), `The ${formattedNextDueReportPeriod} report can be uploaded from ${formattedUploadFromDate}`);
+            });
+          });
+
+          pendingCorrections.nextReportDueHeading().should('not.exist');
+          pendingCorrections.nextReportDueText().should('not.exist');
+        });
+      });
+    });
+  });
+});
