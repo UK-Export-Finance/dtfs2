@@ -40,6 +40,8 @@ context('Record correction history page - no corrections', () => {
 
   describe('when navigating to the page', () => {
     it('should display the tab heading and text', () => {
+      cy.assertText(utilisationReportPage.recordCorrectionHistoryTabLink(), 'Record correction history');
+
       cy.assertText(recordCorrectionHistoryTab.heading(), 'Record correction history');
 
       cy.assertText(
