@@ -66,20 +66,26 @@
           },
           errorMessage: errors and errors.fieldErrors.amendmentSelection and {
             text: errors.fieldErrors.amendmentSelection.text,
-            attributes: { "data-cy": "selection-error-message" }
+            attributes: {
+              "data-cy": "selection-error-message"
+            }
           },
           items: [
             {
               value: "coverEndDate",
               text: "Cover end date",
               checked: changeCoverEndDate,
-              attributes: {"data-cy": "cover-end-date-checkbox"}
+              attributes: {
+                "data-cy": "cover-end-date-checkbox"
+              }
             },
             {
               value: "facilityValue",
               text: "Facility value",
               checked: changeFacilityValue,
-              attributes: {"data-cy": "facility-value-checkbox"}
+              attributes: {
+                "data-cy": "facility-value-checkbox"
+              }
             }
           ]
         }) }}
@@ -87,14 +93,16 @@
         {{ govukWarningText({
           text: "Check your records for the most up-to-date values",
           iconFallbackText: "Warning",
-          attributes: { 'data-cy': 'warning' }
+          attributes: {
+            "data-cy": "warning"
+          }
         }) }}
 
         <div class="govuk-button-group">
           {{ govukButton({
             text: "Continue",
             attributes: {
-              'data-cy': 'continue-button'
+              "data-cy": "continue-button"
             }
           }) }}
 

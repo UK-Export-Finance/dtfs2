@@ -13,10 +13,11 @@
   <span class="govuk-caption-l" data-cy="heading-caption">
     {{ exporterName }}
   </span>
+
   <h1 class="govuk-label-wrapper" data-cy="page-heading">
     <label class="govuk-label govuk-label--xl govuk-!-padding-bottom-3" for="facility-value">
-        New facility value
-      </label>
+      New facility value
+    </label>
   </h1>
 </header>
 {% endset %}
@@ -27,7 +28,7 @@
       titleText: "There is a problem",
       errorList: errors.errorSummary,
       attributes: {
-        'data-cy': 'error-summary'
+        "data-cy": "error-summary"
       },
       classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
     }) }}
@@ -37,7 +38,7 @@
     text: "Back",
     href: previousPage,
     attributes: {
-      'data-cy': 'back-link'
+      "data-cy": "back-link"
     }
   }) }}
 
@@ -57,12 +58,12 @@
           prefix: {
             text: currencySymbol,
             attributes: {
-            'data-cy': 'facility-value-prefix'
-          }
+              "data-cy": "facility-value-prefix"
+            }
           },
           spellcheck: false,
           attributes: {
-            'data-cy': 'facility-value'
+            "data-cy": "facility-value"
           }
         }) }}
 
@@ -70,11 +71,11 @@
           {{ govukButton({
             text: "Continue",
             attributes: {
-              'data-cy': 'continue-button'
+              "data-cy": "continue-button"
             }
           }) }}
 
-          <a href={{cancelUrl}}  data-cy="cancel-link" class="govuk-link">Cancel</a>
+          <a href="{{ cancelUrl }}"  data-cy="cancel-link" class="govuk-link">Cancel</a>
         </div>
       </form>
     </div>

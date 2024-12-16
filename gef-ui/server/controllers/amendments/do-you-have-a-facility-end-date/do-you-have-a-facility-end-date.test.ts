@@ -6,10 +6,9 @@ import * as dtfsCommon from '@ukef/dtfs2-common';
 import { aPortalSessionUser, CURRENCY, DEAL_STATUS, DEAL_SUBMISSION_TYPE, Facility, PORTAL_LOGIN_STATUS, ROLES } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
-import { getFacilityValue, GetFacilityValueRequest } from './get-facility-value';
+import { getDoYouHaveAFacilityEndDate, GetDoYouHaveAFacilityEndDateRequest } from './do-you-have-a-facility-end-date';
 import { Deal } from '../../../types/deal';
-import { FacilityValueViewModel } from '../../../types/view-models/amendments/facility-value-view-model';
-import { getCurrencySymbol } from './getCurrencySymbol';
+import { DoYouHaveAFacilityEndDateViewModel } from '../../../types/view-models/amendments/do-you-have-a-facility-end-date-view-model';
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
@@ -23,7 +22,7 @@ const amendmentId = 'amendmentId';
 const companyName = 'company name ltd';
 
 const getHttpMocks = () =>
-  createMocks<GetFacilityValueRequest>({
+  createMocks<GetDoYouHaveAFacilityEndDateRequest>({
     params: { dealId, facilityId, amendmentId },
     session: {
       user: { ...aPortalSessionUser(), roles: [ROLES.MAKER] },
@@ -41,7 +40,7 @@ const mockFacility = {
   hasBeenIssued: true,
 } as Facility;
 
-describe('getFacilityValue', () => {
+describe('getDoYouHaveAFacilityEndDate', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValue(true);
@@ -59,7 +58,7 @@ describe('getFacilityValue', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await getFacilityValue(req, res);
+    await getDoYouHaveAFacilityEndDate(req, res);
 
     // Assert
     expect(getApplicationMock).toHaveBeenCalledTimes(1);
@@ -71,7 +70,7 @@ describe('getFacilityValue', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await getFacilityValue(req, res);
+    await getDoYouHaveAFacilityEndDate(req, res);
 
     // Assert
     expect(getFacilityMock).toHaveBeenCalledTimes(1);
@@ -83,18 +82,17 @@ describe('getFacilityValue', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await getFacilityValue(req, res);
+    await getDoYouHaveAFacilityEndDate(req, res);
 
     // Assert
-    const expectedRenderData: FacilityValueViewModel = {
+    const expectedRenderData: DoYouHaveAFacilityEndDateViewModel = {
       exporterName: companyName,
       cancelUrl: `/gef/application-details/${dealId}/facility/${facilityId}/amendments/${amendmentId}/cancel`,
-      previousPage: `/gef/application-details/${dealId}/facility/${facilityId}/amendments/${amendmentId}/bank-review-date`,
-      currencySymbol: getCurrencySymbol(mockFacility.currency.id),
+      previousPage: `/gef/application-details/${dealId}/facility/${facilityId}/amendments/${amendmentId}/new-cover-end-date`,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
-    expect(res._getRenderView()).toEqual('partials/amendments/facility-value.njk');
+    expect(res._getRenderView()).toEqual('partials/amendments/do-you-have-a-facility-end-date.njk');
     expect(res._getRenderData()).toEqual(expectedRenderData);
   });
 
@@ -104,10 +102,11 @@ describe('getFacilityValue', () => {
     getFacilityMock.mockResolvedValue({ details: undefined });
 
     // Act
-    await getFacilityValue(req, res);
+    await getDoYouHaveAFacilityEndDate(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+    // TODO: assert redirect URL, /-notfound?
   });
 
   it('should redirect if the deal is not found', async () => {
@@ -116,7 +115,7 @@ describe('getFacilityValue', () => {
     getApplicationMock.mockResolvedValue(undefined);
 
     // Act
-    await getFacilityValue(req, res);
+    await getDoYouHaveAFacilityEndDate(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
@@ -128,7 +127,7 @@ describe('getFacilityValue', () => {
     getFacilityMock.mockResolvedValue({ details: { ...mockFacility, hasBeenIssued: false } });
 
     // Act
-    await getFacilityValue(req, res);
+    await getDoYouHaveAFacilityEndDate(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
@@ -140,7 +139,7 @@ describe('getFacilityValue', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await getFacilityValue(req, res);
+    await getDoYouHaveAFacilityEndDate(req, res);
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
@@ -152,7 +151,7 @@ describe('getFacilityValue', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await getFacilityValue(req, res);
+    await getDoYouHaveAFacilityEndDate(req, res);
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
