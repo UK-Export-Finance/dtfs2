@@ -68,8 +68,6 @@ export class PortalFacilityAmendmentService {
     const amendmentUpdate: Partial<PortalFacilityAmendment> = {
       ...update,
       updatedAt: getUnixTime(new Date()),
-      facilityEndDate: update.facilityEndDate ? fromUnixTime(update.facilityEndDate) : undefined,
-      bankReviewDate: update.bankReviewDate ? fromUnixTime(update.bankReviewDate) : undefined,
     };
 
     await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({ amendmentId, facilityId, update: amendmentUpdate, auditDetails });

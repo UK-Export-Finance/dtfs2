@@ -14,12 +14,12 @@ import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
 
 const mockUpdatePortalFacilityAmendmentByAmendmentId = jest.fn();
 
-const facilityEndDate = new Date(2030, 1, 1);
-
 const amendmentId = new ObjectId().toString();
 const facilityId = new ObjectId().toString();
 const update = {
-  facilityEndDate: getUnixTime(facilityEndDate),
+  changeCoverStartDate: true,
+  isUsingFacilityEndDate: true,
+  facilityEndDate: new Date(),
 };
 const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
 
@@ -53,7 +53,7 @@ describe('PortalFacilityAmendmentService', () => {
 
       // Assert
       const expectedUpdate = {
-        facilityEndDate,
+        ...update,
         updatedAt: getUnixTime(new Date()),
       };
 

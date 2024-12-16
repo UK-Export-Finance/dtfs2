@@ -59,7 +59,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/', () => {
     process.env = originalEnv;
   });
 
-  describe('with FF_PORTAL_FACILITY_AMENDMENTS_ENABLED set to `false`', () => {
+  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is set to `false`', () => {
     beforeAll(() => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'false';
     });
@@ -75,7 +75,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/', () => {
     });
   });
 
-  describe('with FF_PORTAL_FACILITY_AMENDMENTS_ENABLED set to `true`', () => {
+  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is set to `true`', () => {
     let amendmentId: string;
 
     beforeAll(() => {
@@ -120,7 +120,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/', () => {
 
     it('should return 400 when the update has extra fields', async () => {
       const { body, status } = (await testApi
-        .patch({ update: { ...anAmendmentUpdate(), additional: 'property' }, auditDetails: generatePortalAuditDetails(portalUserId) })
+        .patch({ update: { ...(anAmendmentUpdate() as AnyObject), additional: 'property' }, auditDetails: generatePortalAuditDetails(portalUserId) })
         .to(generateUrl(facilityId, amendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
