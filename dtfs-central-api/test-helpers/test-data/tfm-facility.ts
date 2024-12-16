@@ -19,13 +19,7 @@ export const aTfmFacility = ({ amendments = [] }: { amendments?: FacilityAmendme
   };
 };
 
-const { dayCountBasis, interestPercentage, coverPercentage, value } = aFacility();
-
 export const keyingSheetCalculationFacilityValues: KeyingSheetCalculationFacilityValues = {
-  coverEndDate: new Date(),
-  coverStartDate: new Date(),
-  dayCountBasis,
-  interestPercentage,
-  coverPercentage,
-  value,
+  coverPercentage: 80,
+  value: 500000,
 };

@@ -4,9 +4,6 @@
  *   PortalAmendment:
  *     type: object
  *     properties:
- *       _id:
- *         type: string
- *         example: abcdef123456abcdef123456
  *       type:
  *         type: string
  *         enum:
@@ -121,4 +118,58 @@
  *           email:
  *             type: string
  *             description: The email of the creator.
+ *   PortalAmendmentUserInput:
+ *     type: object
+ *     properties:
+ *       changeCoverEndDate:
+ *         type: boolean
+ *         description: Indicates if the cover end date is changed.
+ *       coverEndDate:
+ *         type: integer
+ *         format: int64
+ *         nullable: true
+ *         description: The new cover end date in seconds.
+ *       currentCoverEndDate:
+ *         type: integer
+ *         format: int64
+ *         nullable: true
+ *         description: The current cover end date in seconds.
+ *       isUsingFacilityEndDate:
+ *         type: boolean
+ *         description: Indicates if the facility end date is being used.
+ *       facilityEndDate:
+ *         type: string
+ *         format: date
+ *         description: The end date of the facility.
+ *       bankReviewDate:
+ *         type: string
+ *         format: date
+ *         description: The date when the bank reviewed the amendment.
+ *       changeFacilityValue:
+ *         type: boolean
+ *         description: Indicates if the facility value is changed.
+ *       value:
+ *         type: number
+ *         nullable: true
+ *         description: The new value of the facility.
+ *       currentValue:
+ *         type: number
+ *         nullable: true
+ *         description: The current value of the facility.
+ *       currency:
+ *         type: string
+ *         enum:
+ *           - USD
+ *           - EUR
+ *           - GBP
+ *           - JPY
+ *         nullable: true
+ *         description: The currency of the facility value.
+ *       ukefExposure:
+ *         type: number
+ *         nullable: true
+ *         description: The UKEF exposure amount.
+ *       coveredPercentage:
+ *         type: number
+ *         description: The percentage of the facility covered.
  */
