@@ -1,4 +1,4 @@
-import { AMENDMENT_TYPES, ApiError, CustomExpressRequest } from '@ukef/dtfs2-common';
+import { AMENDMENT_TYPES, AmendmentNotFoundError, ApiError, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
@@ -18,7 +18,7 @@ export const getAmendment = async (req: GetAmendmentRequest, res: Response) => {
     const amendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
 
     if (!amendment || amendment.type !== AMENDMENT_TYPES.PORTAL) {
-      return res.status(HttpStatusCode.NotFound).send({ status: HttpStatusCode.NotFound, message: `Amendment not found: ${amendmentId}` });
+      throw new AmendmentNotFoundError(amendmentId, facilityId);
     }
 
     return res.status(HttpStatusCode.Ok).send(amendment);

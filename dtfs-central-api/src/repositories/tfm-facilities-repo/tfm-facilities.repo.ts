@@ -6,6 +6,7 @@ import {
   FacilityAmendment,
   AmendmentStatus,
   FacilityNotFoundError,
+  AmendmentNotFoundError,
   AMENDMENT_TYPES,
   AMENDMENT_STATUS,
   PortalFacilityAmendment,
@@ -391,7 +392,7 @@ export class TfmFacilitiesRepo {
     const updateResult = await collection.updateOne(findFilter, updateFilter);
 
     if (updateResult.modifiedCount === 0) {
-      throw new FacilityNotFoundError(facilityId.toString());
+      throw new AmendmentNotFoundError(amendmentId.toString(), facilityId.toString());
     }
 
     return updateResult;
