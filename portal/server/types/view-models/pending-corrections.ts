@@ -1,7 +1,7 @@
 import { BaseViewModel } from './base-view-model';
 
 export type PendingCorrectionViewModel = {
-  feeRecordId: number;
+  correctionId: number;
   facilityId: string;
   exporter: string;
   additionalInfo: string;
@@ -22,7 +22,7 @@ export type NextActionViewModel =
 
 export type PendingCorrectionsViewModel = BaseViewModel & {
   formattedReportPeriod: string;
-  uploadedByUserName: string;
+  uploadedByFullName: string;
   formattedDateUploaded: string;
   corrections: PendingCorrectionViewModel[];
   nextAction: NextActionViewModel;

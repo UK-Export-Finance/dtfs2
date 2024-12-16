@@ -1,0 +1,61 @@
+{% extends "index.njk" %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% block pageTitle %}Report GEF utilisation and fees - Record correction{% endblock %}
+{% block content %}
+    <h1 class="govuk-heading-l" data-cy="main-heading">
+      Report GEF utilisation and fees
+    </h1>
+    <p class="govuk-body" data-cy="next-due-report-text">
+      The following errors in the file {{ formattedReportPeriod }} uploaded by {{ uploadedByFullName }} on {{ formattedDateUploaded }} have been identified by UKEF:
+    </p>
+    <h2 class="govuk-heading-m">Record correction</h2>
+    <p class="govuk-body">
+      Select the record you would like to amend from the list below
+    </p>
+
+    {% set rows = [] %}
+    {% for correction in corrections %}
+      {% set facilityIdHtml %}
+        <a
+          class="govuk-link"
+          href="/utilisation-reports/provide-correction/{{ correction.correctionId }}"
+          aria-label="Amend record"
+          data-cy="correction-link">
+          {{ correction.facilityId }}
+        </a>
+      {% endset %}
+
+      {% set row = [
+        {
+          html: facilityIdHtml,
+          attributes: { "data-cy": "correction__row--facilityId" }
+        },
+        {
+          text: correction.exporter,
+          attributes: { "data-cy": "correction__row--exporter" }
+        },
+        {
+          text: correction.additionalInfo,
+          attributes: { "data-cy": "correction__row--errorSummary" }
+        }
+      ] %}
+      {% set rows = (rows.push(row), rows) %}
+    {% endfor %}
+
+    {{ govukTable({
+      firstCellIsHeader: false,
+      head: [
+        {
+          text: "Facility ID"
+        },
+        {
+          text: "Exporter"
+        },
+        {
+          text: "Error summary"
+        }
+      ],
+      rows: rows
+    }) }}
+{% endblock %}

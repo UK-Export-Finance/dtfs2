@@ -112,7 +112,7 @@ describe('get-utilisation-report-pending-corrections.controller', () => {
       describe('and when there is a report with pending corrections for the bank', () => {
         const mockMappedResponseBody: PendingCorrectionsResponseBody = {
           reportPeriod: aReportPeriod(),
-          uploadedByUserName: 'John Doe',
+          uploadedByFullName: 'John Doe',
           dateUploaded: new Date(),
           reportId: 1,
           corrections: [

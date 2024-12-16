@@ -14,7 +14,7 @@ export type GetUtilisationReportPendingCorrectionsRequest = CustomExpressRequest
 }>;
 
 export type PendingCorrection = {
-  feeRecordId: number;
+  correctionId: number;
   facilityId: string;
   exporter: string;
   additionalInfo: string;
@@ -23,7 +23,7 @@ export type PendingCorrection = {
 export type PendingCorrectionsResponseBody = {
   reportId: number;
   reportPeriod: ReportPeriod;
-  uploadedByUserName: string;
+  uploadedByFullName: string;
   dateUploaded: Date;
   corrections: PendingCorrection[];
   nextDueReportPeriod: ReportPeriod;

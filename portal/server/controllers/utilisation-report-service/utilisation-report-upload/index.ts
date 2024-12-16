@@ -80,9 +80,7 @@ export const getUtilisationReportUpload = async (req: Request, res: Response) =>
 
       if (Object.keys(pendingCorrections).length > 0) {
         const viewModel = mapToPendingCorrectionsViewModel(pendingCorrections as UtilisationReportPendingCorrectionsResponseBody, user);
-        return res.render('utilisation-report-service/utilisation-report-upload/pending-corrections.njk', {
-          viewModel,
-        });
+        return res.render('utilisation-report-service/record-corrections/pending-corrections.njk', viewModel);
       }
     }
 

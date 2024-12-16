@@ -151,7 +151,7 @@ describe(`GET ${BASE_URL}`, () => {
       expect(response.body).toEqual({
         reportId: report.id,
         reportPeriod: report.reportPeriod,
-        uploadedByUserName: `${portalUser.firstname} ${portalUser.surname}`,
+        uploadedByFullName: `${portalUser.firstname} ${portalUser.surname}`,
         dateUploaded: report.dateUploaded?.toISOString(),
         corrections: [
           {
@@ -268,7 +268,7 @@ describe(`GET ${BASE_URL}`, () => {
       expect(response.body).toEqual({
         reportId: oldestReportWithPendingCorrections.id,
         reportPeriod: oldestReportWithPendingCorrections.reportPeriod,
-        uploadedByUserName: `${portalUser.firstname} ${portalUser.surname}`,
+        uploadedByFullName: `${portalUser.firstname} ${portalUser.surname}`,
         dateUploaded: oldestReportWithPendingCorrections.dateUploaded?.toISOString(),
         corrections: [
           {

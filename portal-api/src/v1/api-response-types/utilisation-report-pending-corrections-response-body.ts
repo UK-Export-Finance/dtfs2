@@ -1,7 +1,7 @@
 import { IsoDateTimeStamp, ReportPeriod } from '@ukef/dtfs2-common';
 
 type PendingCorrection = {
-  feeRecordId: number;
+  correctionId: number;
   facilityId: string;
   exporter: string;
   additionalInfo: string;
@@ -10,7 +10,7 @@ type PendingCorrection = {
 export type UtilisationReportPendingCorrectionsResponseBody =
   | {
       reportPeriod: ReportPeriod;
-      uploadedByUserName: string;
+      uploadedByFullName: string;
       dateUploaded: IsoDateTimeStamp;
       reportId: number;
       corrections: PendingCorrection[];

@@ -16,7 +16,7 @@ export const mapFeeRecordToPendingCorrectionsArray = (feeRecord: FeeRecordEntity
     }
 
     return {
-      feeRecordId: feeRecord.id,
+      correctionId: correction.id,
       facilityId: feeRecord.facilityId,
       exporter: feeRecord.exporter,
       additionalInfo: correction.additionalInfo,
@@ -72,7 +72,7 @@ export const mapReportToPendingCorrectionsResponseBody = async (report: Utilisat
 
   return {
     reportPeriod: report.reportPeriod,
-    uploadedByUserName: `${uploadedByUser.firstname} ${uploadedByUser.surname}`,
+    uploadedByFullName: `${uploadedByUser.firstname} ${uploadedByUser.surname}`,
     dateUploaded: report.dateUploaded,
     reportId: report.id,
     corrections: mapFeeRecordsToPendingCorrections(report.feeRecords),

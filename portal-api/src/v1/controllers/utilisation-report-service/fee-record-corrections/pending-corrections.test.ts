@@ -18,7 +18,7 @@ describe('getUtilisationReportPendingCorrectionsByBankId', () => {
 
   const aUtilisationReportPendingCorrectionsResponseBody = (): UtilisationReportPendingCorrectionsResponseBody => ({
     reportPeriod: aReportPeriod(),
-    uploadedByUserName: 'John Doe',
+    uploadedByFullName: 'John Doe',
     dateUploaded: '2023-02-01T12:00:00Z',
     reportId: 123,
     corrections: [

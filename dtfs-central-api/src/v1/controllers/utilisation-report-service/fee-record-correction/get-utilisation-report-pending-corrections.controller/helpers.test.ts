@@ -58,9 +58,9 @@ describe('get-utilisation-report-pending-corrections.controller helpers', () => 
         .withFacilityId('FAC123')
         .withExporter('Test Exporter')
         .withCorrections([
-          new FeeRecordCorrectionEntityMockBuilder().withIsCompleted(false).withAdditionalInfo('Pending correction 1').build(),
-          new FeeRecordCorrectionEntityMockBuilder().withIsCompleted(true).withAdditionalInfo('Completed correction').build(),
-          new FeeRecordCorrectionEntityMockBuilder().withIsCompleted(false).withAdditionalInfo('Pending correction 2').build(),
+          new FeeRecordCorrectionEntityMockBuilder().withId(1).withIsCompleted(false).withAdditionalInfo('Pending correction 1').build(),
+          new FeeRecordCorrectionEntityMockBuilder().withId(2).withIsCompleted(true).withAdditionalInfo('Completed correction').build(),
+          new FeeRecordCorrectionEntityMockBuilder().withId(3).withIsCompleted(false).withAdditionalInfo('Pending correction 2').build(),
         ])
         .build();
 
@@ -70,13 +70,13 @@ describe('get-utilisation-report-pending-corrections.controller helpers', () => 
       // Assert
       expect(result).toEqual<PendingCorrection[]>([
         {
-          feeRecordId: 1,
+          correctionId: 1,
           facilityId: 'FAC123',
           exporter: 'Test Exporter',
           additionalInfo: 'Pending correction 1',
         },
         {
-          feeRecordId: 1,
+          correctionId: 3,
           facilityId: 'FAC123',
           exporter: 'Test Exporter',
           additionalInfo: 'Pending correction 2',
@@ -316,7 +316,7 @@ describe('get-utilisation-report-pending-corrections.controller helpers', () => 
           // Assert
           expect(result).toEqual({
             reportPeriod: report.reportPeriod,
-            uploadedByUserName: `${user.firstname} ${user.surname}`,
+            uploadedByFullName: `${user.firstname} ${user.surname}`,
             dateUploaded: report.dateUploaded,
             reportId: report.id,
             corrections: mapFeeRecordsToPendingCorrections(report.feeRecords),

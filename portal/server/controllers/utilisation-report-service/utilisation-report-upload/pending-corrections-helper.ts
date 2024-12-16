@@ -31,13 +31,13 @@ export const mapToPendingCorrectionsViewModel = (
   pendingCorrectionsResponse: UtilisationReportPendingCorrectionsResponseBody,
   user: PortalSessionUser,
 ): PendingCorrectionsViewModel => {
-  const { reportPeriod, uploadedByUserName, dateUploaded, corrections, nextDueReportPeriod } = pendingCorrectionsResponse;
+  const { reportPeriod, uploadedByFullName, dateUploaded, corrections, nextDueReportPeriod } = pendingCorrectionsResponse;
 
   return {
     user,
     primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
     formattedReportPeriod: getFormattedReportPeriodWithLongMonth(reportPeriod),
-    uploadedByUserName,
+    uploadedByFullName,
     formattedDateUploaded: format(new Date(dateUploaded), 'd MMMM yyyy'),
     corrections,
     nextAction: mapNextDueReportPeriodToNextActionViewModel(nextDueReportPeriod),

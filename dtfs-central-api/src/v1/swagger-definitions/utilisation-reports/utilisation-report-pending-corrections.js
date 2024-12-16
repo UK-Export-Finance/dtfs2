@@ -7,7 +7,7 @@
  *       reportPeriod:
  *         type: object
  *         $ref: '#/definitions/ReportPeriod'
- *       uploadedByUserName:
+ *       uploadedByFullName:
  *         type: string
  *       dateUploaded:
  *         type: string
