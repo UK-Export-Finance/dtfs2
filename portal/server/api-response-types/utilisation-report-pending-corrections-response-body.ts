@@ -7,7 +7,7 @@ type PendingCorrection = {
   additionalInfo: string;
 };
 
-export type UtilisationReportPendingCorrectionsResponseBody = {
+export type NonEmptyPendingCorrectionsResponseBody = {
   reportPeriod: ReportPeriod;
   uploadedByFullName: string;
   dateUploaded: IsoDateTimeStamp;
@@ -15,3 +15,5 @@ export type UtilisationReportPendingCorrectionsResponseBody = {
   corrections: PendingCorrection[];
   nextDueReportPeriod: ReportPeriod;
 };
+
+export type UtilisationReportPendingCorrectionsResponseBody = NonEmptyPendingCorrectionsResponseBody | Record<string, never>;

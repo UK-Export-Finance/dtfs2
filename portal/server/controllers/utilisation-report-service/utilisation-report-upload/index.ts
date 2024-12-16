@@ -9,9 +9,13 @@ import { getReportAndUserDetails, ReportAndUserDetails } from './utilisation-rep
 import { PRIMARY_NAV_KEY } from '../../../constants';
 import { filterReportJsonToRelevantKeys } from '../../../helpers/filterReportJsonToRelevantKeys';
 import { asLoggedInUserSession, LoggedInUserSession } from '../../../helpers/express-session';
-import { mapToPendingCorrectionsViewModel } from './pending-corrections-helper';
-import { UtilisationReportPendingCorrectionsResponseBody } from '../../../api-response-types';
+import { isNonEmptyPendingCorrectionsResponseBody, mapToPendingCorrectionsViewModel } from './pending-corrections-helper';
 
+/**
+ * Sets the utilisation report session data for the report upload journey
+ * @param req - The request object
+ * @param nextDueReportPeriod - The next due report period
+ */
 const setSessionUtilisationReport = (req: Request, nextDueReportPeriod: ReportPeriod & { formattedReportPeriod: string }) => {
   (req.session as LoggedInUserSession).utilisationReport = {
     reportPeriod: {
@@ -64,8 +68,10 @@ const getLastUploadedReportDetails = async (userToken: string, bankId: string): 
 /**
  * Controller for the GET utilisation-report-upload route.
  *
- * If there are pending corrections for a previously uploaded report renders
- * the pending corrections page, otherwise renders the utilisation report upload page.
+ * If there are pending corrections for a previously uploaded report,
+ * renders the pending corrections page.
+ *
+ * Otherwise, renders the utilisation report upload page.
  *
  * @param req - The request object
  * @param res - The response object
@@ -78,13 +84,14 @@ export const getUtilisationReportUpload = async (req: Request, res: Response) =>
     if (isFeeRecordCorrectionFeatureFlagEnabled()) {
       const pendingCorrections = await api.getUtilisationReportPendingCorrectionsByBankId(userToken, bankId);
 
-      if (Object.keys(pendingCorrections).length > 0) {
-        const viewModel = mapToPendingCorrectionsViewModel(pendingCorrections as UtilisationReportPendingCorrectionsResponseBody, user);
+      if (isNonEmptyPendingCorrectionsResponseBody(pendingCorrections)) {
+        const viewModel = mapToPendingCorrectionsViewModel(pendingCorrections, user);
         return res.render('utilisation-report-service/record-corrections/pending-corrections.njk', viewModel);
       }
     }
 
     const dueReportPeriods = await getDueReportPeriodsByBankId(userToken, bankId);
+
     if (dueReportPeriods.length > 0) {
       const nextDueReportPeriod = dueReportPeriods[0];
       setSessionUtilisationReport(req, nextDueReportPeriod);
@@ -171,7 +178,7 @@ export const postUtilisationReportUpload = async (req: Request, res: Response) =
       return renderPageWithError(req, res, extractDataErrorSummary, extractDataError, dueReportPeriods);
     }
 
-    if (!csvJson.length) {
+    if (!csvJson || !csvJson.length) {
       throw new Error('Report data is empty');
     }
 

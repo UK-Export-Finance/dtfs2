@@ -12,8 +12,8 @@ const { CELL_ADDRESS_REGEX } = require('../constants/regex');
  * @property {Object} csvDataWithCellAddresses - array representing csv data from the worksheet with cell addresses included
  *
  * @typedef {Object} ExtractCsvDataResponse
- * @property {import('@ukef/dtfs2-common').UtilisationReportCsvRowData[]} csvJson - The JSON representing the csv data
- * @property {Buffer} fileBuffer - The file buffer of the csv data
+ * @property {import('@ukef/dtfs2-common').UtilisationReportCsvRowData[] | null} csvJson - The JSON representing the csv data
+ * @property {Buffer | null} fileBuffer - The file buffer of the csv data
  * @property {boolean} error - An error flag
  */
 
@@ -279,7 +279,7 @@ const extractCsvData = async (file) => {
 /**
  * Removes cell addresses from the array of JSON objects representing the csv data.
  * @param {import('@ukef/dtfs2-common').UtilisationReportCsvRowData[]} csvJsonArray - Array of JSON objects representing the csv data.
- * @returns {Record<string, string | number>[]} - Array of JSON objects representing the csv data without cell addresses.
+ * @returns {Record<string, string | null>[]} - Array of JSON objects representing the csv data without cell addresses.
  */
 const removeCellAddressesFromArray = (csvJsonArray) =>
   csvJsonArray.map((rowDataWithCellAddresses) => {

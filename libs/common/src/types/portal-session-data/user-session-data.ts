@@ -23,7 +23,7 @@ export type LoggedInPortalSessionData = {
   utilisationReport?: {
     formattedReportPeriod: string;
     reportPeriod: ReportPeriod;
-    fileBuffer?: Buffer;
+    fileBuffer?: Buffer | null;
     reportData?: UtilisationReportCsvRowData[];
     filename?: string;
     bankName?: string;

@@ -853,8 +853,8 @@ const getUkefDecisionReport = async (token, payload) => {
  * Uploads the utilisation report data
  * @param {import('@ukef/dtfs2-common').PortalSessionUser} uploadingUser - The user uploading the report
  * @param {import('@ukef/dtfs2-common').ReportPeriod} reportPeriod - The report period
- * @param {*} csvData
- * @param {*} csvFileBuffer
+ * @param {Record<string, string | null>[]} csvData
+ * @param {Buffer} csvFileBuffer
  * @param {string} formattedReportPeriod - The formatted report period
  * @param {string} token - The user token
  * @returns {Promise<import('axios').AxiosResponse>} The response from the API
@@ -996,7 +996,7 @@ const getNextReportPeriodByBankId = async (token, bankId) => {
  * Gets all pending corrections for earliest report with corrections for the supplied bank
  * @param {string} token - The user token
  * @param {string} bankId - The bank id
- * @returns {Promise<import('./api-response-types').UtilisationReportPendingCorrectionsResponseBody | Record<string, never>>} The pending corrections
+ * @returns {Promise<import('./api-response-types').UtilisationReportPendingCorrectionsResponseBody>} The pending corrections
  */
 const getUtilisationReportPendingCorrectionsByBankId = async (token, bankId) => {
   if (!isValidBankId(bankId)) {

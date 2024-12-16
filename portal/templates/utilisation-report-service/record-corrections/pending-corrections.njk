@@ -3,59 +3,81 @@
 
 {% block pageTitle %}Report GEF utilisation and fees - Record correction{% endblock %}
 {% block content %}
-    <h1 class="govuk-heading-l" data-cy="main-heading">
-      Report GEF utilisation and fees
-    </h1>
-    <p class="govuk-body" data-cy="next-due-report-text">
-      The following errors in the file {{ formattedReportPeriod }} uploaded by {{ uploadedByFullName }} on {{ formattedDateUploaded }} have been identified by UKEF:
-    </p>
-    <h2 class="govuk-heading-m">Record correction</h2>
+  <h1 class="govuk-heading-l" data-cy="main-heading">
+    Report GEF utilisation and fees
+  </h1>
+  <p class="govuk-body">
+    The following errors in the {{ formattedReportPeriod }} report uploaded by {{ uploadedByFullName }} on {{ formattedDateUploaded }} have been identified by UKEF:
+  </p>
+  <h2 class="govuk-heading-m" data-cy="pending-corrections-heading">Record correction</h2>
+  <p class="govuk-body">
+    Select the record you would like to amend from the list below
+  </p>
+
+  {% set rows = [] %}
+  {% for correction in corrections %}
+    {% set facilityIdHtml %}
+      <a
+        class="govuk-link"
+        href="/utilisation-reports/provide-correction/{{ correction.correctionId }}"
+        aria-label="Amend record"
+        data-cy="correction-link">
+        {{ correction.facilityId }}
+      </a>
+    {% endset %}
+
+    {% set row = [
+      {
+        html: facilityIdHtml,
+        attributes: { "data-cy": "pending-correction-row--facilityId" }
+      },
+      {
+        text: correction.exporter,
+        attributes: { "data-cy": "pending-correction-row--exporter" }
+      },
+      {
+        html: (correction.additionalInfo | replaceNewLinesWithBrTags),
+        attributes: { "data-cy": "pending-correction-row--errorSummary" }
+      }
+    ] %}
+    {% set rows = (rows.push(row), rows) %}
+  {% endfor %}
+
+  {{ govukTable({
+    firstCellIsHeader: false,
+    head: [
+      {
+        text: "Facility ID"
+      },
+      {
+        text: "Exporter"
+      },
+      {
+        text: "Error summary"
+      }
+    ],
+    rows: rows,
+    attributes: {
+      "data-cy": "pending-correction-table"
+    }
+  }) }}
+
+  {% if nextAction.reportCurrentlyDueForUpload %}
+    {% set nextReportPeriod = nextAction.reportCurrentlyDueForUpload.formattedReportPeriod %}
+    <h2 class="govuk-heading-m">{{ nextReportPeriod }} report</h2>
     <p class="govuk-body">
-      Select the record you would like to amend from the list below
+      The {{ nextReportPeriod }} report is due, but cannot be uploaded until the record
+      corrections for the {{ formattedReportPeriod }} have been completed.
     </p>
+  {% endif %}
 
-    {% set rows = [] %}
-    {% for correction in corrections %}
-      {% set facilityIdHtml %}
-        <a
-          class="govuk-link"
-          href="/utilisation-reports/provide-correction/{{ correction.correctionId }}"
-          aria-label="Amend record"
-          data-cy="correction-link">
-          {{ correction.facilityId }}
-        </a>
-      {% endset %}
+  {% if nextAction.reportSoonToBeDueForUpload %}
+    {% set nextReportPeriod = nextAction.reportSoonToBeDueForUpload.formattedReportPeriod %}
+    {% set nextReportUploadFromDate = nextAction.reportSoonToBeDueForUpload.formattedUploadFromDate %}
 
-      {% set row = [
-        {
-          html: facilityIdHtml,
-          attributes: { "data-cy": "correction__row--facilityId" }
-        },
-        {
-          text: correction.exporter,
-          attributes: { "data-cy": "correction__row--exporter" }
-        },
-        {
-          text: correction.additionalInfo,
-          attributes: { "data-cy": "correction__row--errorSummary" }
-        }
-      ] %}
-      {% set rows = (rows.push(row), rows) %}
-    {% endfor %}
-
-    {{ govukTable({
-      firstCellIsHeader: false,
-      head: [
-        {
-          text: "Facility ID"
-        },
-        {
-          text: "Exporter"
-        },
-        {
-          text: "Error summary"
-        }
-      ],
-      rows: rows
-    }) }}
+    <h2 class="govuk-heading-m">Report not currently due for upload</h2>
+    <p class="govuk-body">
+      The {{ nextReportPeriod }} report can be uploaded from {{ nextReportUploadFromDate }}.
+    </p>
+  {% endif %}
 {% endblock %}
