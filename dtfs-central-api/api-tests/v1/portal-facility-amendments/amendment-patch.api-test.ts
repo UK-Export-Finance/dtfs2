@@ -140,7 +140,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/', () => {
       expect(status).toEqual(HttpStatusCode.NotFound);
       expect(body).toEqual({
         status: HttpStatusCode.NotFound,
-        message: `Facility not found: ${aValidButNonExistentFacilityId}`,
+        message: `Amendment not found: ${amendmentId} on facility: ${aValidButNonExistentFacilityId}`,
       });
     });
 
