@@ -311,7 +311,7 @@ export class TfmFacilitiesRepo {
   }
 
   /**
-   * Upserts a draft amendment for a portal facility in the database.
+   * Upserts a portal draft amendment for a facility in the database.
    *
    * This function first removes any existing portal amendments for the specified facility
    * that are not completed, and then inserts the new amendment.
@@ -352,6 +352,19 @@ export class TfmFacilitiesRepo {
     return updateResult;
   }
 
+  /**
+   * Updates a portal amendment for a facility in the database.
+   *
+   * This function finds the facility and portal amendment matching the ids & updates it.
+   *
+   * @param updatePortalFacilityAmendmentByAmendmentIdParams
+   * @param updatePortalFacilityAmendmentByAmendmentIdParams.amendmentId - the amendment id
+   * @param updatePortalFacilityAmendmentByAmendmentIdParams.facilityId - the facility id
+   * @param updatePortalFacilityAmendmentByAmendmentIdParams.update - the update to apply
+   * @param updatePortalFacilityAmendmentByAmendmentIdParams.auditDetails - the users audit details
+   *
+   * @returns The update result.
+   */
   public static async updatePortalFacilityAmendmentByAmendmentId({
     amendmentId,
     facilityId,

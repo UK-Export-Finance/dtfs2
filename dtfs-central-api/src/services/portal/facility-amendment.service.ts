@@ -1,10 +1,15 @@
-import { AMENDMENT_STATUS, AMENDMENT_TYPES, InvalidAuditDetailsError, PortalAuditDetails, PortalFacilityAmendment } from '@ukef/dtfs2-common';
+import {
+  AMENDMENT_STATUS,
+  AMENDMENT_TYPES,
+  InvalidAuditDetailsError,
+  PortalAuditDetails,
+  PortalFacilityAmendment,
+  PortalFacilityAmendmentUserValues,
+} from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { getUnixTime } from 'date-fns';
 import { findOneUser } from '../../v1/controllers/user/get-user.controller';
 import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
-import { PutPortalFacilityAmendmentPayload } from '../../v1/routes/middleware/payload-validation/validate-put-portal-facility-amendment-payload';
-import { PatchPortalFacilityAmendmentPayload } from '../../v1/routes/middleware/payload-validation/validate-patch-portal-facility-amendment-payload';
 
 export class PortalFacilityAmendmentService {
   /**
@@ -24,7 +29,7 @@ export class PortalFacilityAmendmentService {
   }: {
     dealId: string;
     facilityId: string;
-    amendment: PutPortalFacilityAmendmentPayload['amendment'];
+    amendment: PortalFacilityAmendmentUserValues;
     auditDetails: PortalAuditDetails;
   }): Promise<PortalFacilityAmendment> {
     const user = await findOneUser(auditDetails.id);
@@ -54,6 +59,16 @@ export class PortalFacilityAmendmentService {
     return amendmentToInsert;
   }
 
+  /**
+   * Updates a portal facility amendment with the provided details.
+   *
+   * @param params
+   * @param params.amendmentId - The amendment id
+   * @param params.facilityId - The facility id
+   * @param params.update - The update payload for the amendment.
+   * @param params.auditDetails - The audit details for the update operation.
+   * @returns A promise that resolves when the update operation is complete.
+   */
   public static async updatePortalFacilityAmendment({
     amendmentId,
     facilityId,
@@ -62,7 +77,7 @@ export class PortalFacilityAmendmentService {
   }: {
     amendmentId: string;
     facilityId: string;
-    update: PatchPortalFacilityAmendmentPayload['update'];
+    update: PortalFacilityAmendmentUserValues;
     auditDetails: PortalAuditDetails;
   }): Promise<void> {
     const amendmentUpdate: Partial<PortalFacilityAmendment> = {

@@ -84,7 +84,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/', () => {
       amendmentId = existingAmendment.amendmentId.toString();
     });
 
-    it('should return 400 when the amendment id is invalid', async () => {
+    it('should return 400 when the facility id is invalid', async () => {
       const anInvalidFacilityId = 'InvalidId';
 
       const { body, status } = (await testApi
@@ -99,7 +99,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/', () => {
       });
     });
 
-    it('should return 400 when the facility id is invalid', async () => {
+    it('should return 400 when the amendment id is invalid', async () => {
       const anInvalidAmendmentId = 'InvalidId';
 
       const { body, status } = (await testApi
