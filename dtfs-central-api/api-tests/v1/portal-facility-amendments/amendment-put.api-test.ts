@@ -147,7 +147,7 @@ describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
       expect(getExistingAmendmentResponse.status).toEqual(HttpStatusCode.NotFound);
       expect(getExistingAmendmentResponse.body).toEqual({
         status: HttpStatusCode.NotFound,
-        message: `Amendment not found: ${existingAmendmentId}`,
+        message: `Amendment not found: ${existingAmendmentId} on facility: ${facilityId}`,
       });
     });
   });
