@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash';
 import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE, FACILITY_TYPE, isPortalFacilityAmendmentsFeatureFlagEnabled, ROLES } from '@ukef/dtfs2-common';
 import { applicationDetails, postApplicationDetails } from '.';
 import api from '../../services/api';
@@ -6,8 +7,7 @@ import { NON_MAKER_ROLES } from '../../../test-helpers/common-role-lists';
 import MOCKS from '../mocks';
 import CONSTANTS from '../../constants';
 import { ALL_DEAL_STATUSES } from '../../../test-helpers/common-deal-status-lists';
-
-const { cloneDeep } = require('lodash');
+import { canUserAmendIssuedFacilities } from '../../utils/facility-amendments.helper';
 
 jest.mock('../../services/api');
 
@@ -160,6 +160,12 @@ describe('controllers/application-details', () => {
           // user in session
           user: mockRequest.session.user,
           userRoles: mockRequest.session.user.roles,
+
+          canIssuedFacilitiesBeAmended: canUserAmendIssuedFacilities(
+            mockApplicationResponse.submissionType,
+            mockApplicationResponse.status,
+            mockRequest.session.user.roles,
+          ),
         }),
       );
     });
