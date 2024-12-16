@@ -1,21 +1,19 @@
 import { createMocks } from 'node-mocks-http';
-import { API_ERROR_CODE, TestApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
+import { API_ERROR_CODE, TestApiError } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';
 import { aPortalUser } from '../../../../../test-helpers';
 import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
 import { patchAmendment, PatchAmendmentRequest } from './patch-amendment.controller';
 
 const facilityId = 'facilityId';
 const amendmentId = 'amendmentId';
-const update = {
-  changeFacilityValue: true,
-};
 
 const mockUpdatePortalFacilityAmendment = jest.fn();
 
 const generateHttpMocks = ({ auditDetails }: { auditDetails: unknown }) =>
-  createMocks<PatchAmendmentRequest>({ params: { facilityId, amendmentId }, body: { auditDetails, update } });
+  createMocks<PatchAmendmentRequest>({ params: { facilityId, amendmentId }, body: { auditDetails, update: aPortalFacilityAmendmentUserValues() } });
 
 describe('patchAmendment', () => {
   beforeEach(() => {
@@ -55,7 +53,7 @@ describe('patchAmendment', () => {
     expect(mockUpdatePortalFacilityAmendment).toHaveBeenCalledWith({
       amendmentId,
       facilityId,
-      update,
+      update: req.body.update,
       auditDetails,
     });
   });
