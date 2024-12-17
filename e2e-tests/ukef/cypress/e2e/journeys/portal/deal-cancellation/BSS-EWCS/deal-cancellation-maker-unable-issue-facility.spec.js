@@ -4,12 +4,12 @@ import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { generateAinDealUnissuedFacilitiesWithDates } from '../../test-data/AIN-deal-unissued-facilities/dealReadyToSubmit';
 import generateMinDealUnissuedFacilitiesWithDates from '../../test-data/MIN-deal-unissued-facilities/dealReadyToSubmit';
 
-import { TFM_URL, PIM_USER_1 } from '../../../../../../../e2e-fixtures';
+import { PIM_USER_1 } from '../../../../../../../e2e-fixtures';
 import { yesterday, tomorrow } from '../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('When a deal has been cancelled on TFM, maker unable to issue facility', () => {
+context('BSS/EWCS deals - When TFM submits a deal cancellation - Portal maker should not be able to issue a facility', () => {
   const ainDealWithUnissuedFacilities = Array(2).fill(generateAinDealUnissuedFacilitiesWithDates());
   const minDealWithUnissuedFacilities = Array(2).fill(generateMinDealUnissuedFacilitiesWithDates());
   const deals = [];
@@ -28,7 +28,6 @@ context('When a deal has been cancelled on TFM, maker unable to issue facility',
           cy.clearCookie('_csrf');
           cy.getCookies().should('be.empty');
 
-          cy.forceVisit(TFM_URL);
           cy.tfmLogin(PIM_USER_1);
           const effectiveDate = index % 2 === 0 ? tomorrow.date : yesterday.date;
           cy.submitDealCancellation({ dealId: deal._id, effectiveDate });
@@ -57,8 +56,11 @@ context('When a deal has been cancelled on TFM, maker unable to issue facility',
     describe('AIN deal', () => {
       it('should not allow a Maker to issue facilities in portal', () => {
         const ainDealPast = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.AIN && deal.status === DEAL_STATUS.CANCELLED);
+
         const ainDealfacilityPast = ainDealPast.facilities.find((facility) => facility.type === FACILITY_TYPE.BOND)._id;
+
         portalPages.contract.visit(ainDealPast);
+
         portalPages.contract.bondTransactionsTable.row(ainDealfacilityPast).issueFacilityLink().should('not.exist');
       });
     });
@@ -66,8 +68,11 @@ context('When a deal has been cancelled on TFM, maker unable to issue facility',
     describe('MIN deal', () => {
       it('should not allow a Maker to issue facilities in portal', () => {
         const minDealPast = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.MIN && deal.status === DEAL_STATUS.CANCELLED);
+
         const minDealfacilityPast = minDealPast.facilities.find((facility) => facility.type === FACILITY_TYPE.BOND)._id;
+
         portalPages.contract.visit(minDealPast);
+
         portalPages.contract.bondTransactionsTable.row(minDealfacilityPast).issueFacilityLink().should('not.exist');
       });
     });
@@ -77,8 +82,11 @@ context('When a deal has been cancelled on TFM, maker unable to issue facility',
     describe('AIN deal', () => {
       it('should not allow a Maker to issue facilities in portal', () => {
         const ainDealFuture = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.AIN && deal.status === DEAL_STATUS.PENDING_CANCELLATION);
+
         const ainDealFacilityFuture = ainDealFuture.facilities.find((facility) => facility.type === FACILITY_TYPE.BOND)._id;
+
         portalPages.contract.visit(ainDealFuture);
+
         portalPages.contract.bondTransactionsTable.row(ainDealFacilityFuture).issueFacilityLink().should('not.exist');
       });
     });
@@ -86,8 +94,11 @@ context('When a deal has been cancelled on TFM, maker unable to issue facility',
     describe('MIN deal', () => {
       it('should not allow a Maker to issue facilities in portal', () => {
         const minDealFuture = deals.find((deal) => deal.submissionType === DEAL_SUBMISSION_TYPE.MIN && deal.status === DEAL_STATUS.PENDING_CANCELLATION);
+
         const minDealFacilityFuture = minDealFuture.facilities.find((facility) => facility.type === FACILITY_TYPE.BOND)._id;
+
         portalPages.contract.visit(minDealFuture);
+
         portalPages.contract.bondTransactionsTable.row(minDealFacilityFuture).issueFacilityLink().should('not.exist');
       });
     });

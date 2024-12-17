@@ -1,19 +1,19 @@
-import { DEAL_STATUS, FACILITY_STAGE } from '@ukef/dtfs2-common';
+import { DEAL_STATUS } from '@ukef/dtfs2-common';
 import portalPages from '../../../../../../../portal/cypress/e2e/pages';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
-import generateMinReadyToSubmit from '../../test-data/MIN-deal/dealReadyToSubmit';
-import { TFM_URL, PIM_USER_1 } from '../../../../../../../e2e-fixtures';
-import { yesterday } from '../../../../../../../e2e-fixtures/dateConstants';
+import generateAinReadyToSubmit from '../../test-data/AIN-deal/dealReadyToSubmit';
+import { PIM_USER_1 } from '../../../../../../../e2e-fixtures';
+import { tomorrow } from '../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
-describe('Deal Cancellation status updates', () => {
+context('BSS/EWCS AIN deal - When TFM submits a pending deal cancellation - Portal statuses should be updated', () => {
   let deal;
   let dealId;
   const dealFacilities = [];
 
   before(() => {
-    cy.insertOneDeal(generateMinReadyToSubmit(), BANK1_MAKER1).then((insertedDeal) => {
+    cy.insertOneDeal(generateAinReadyToSubmit(), BANK1_MAKER1).then((insertedDeal) => {
       deal = insertedDeal;
       dealId = deal._id;
 
@@ -40,7 +40,7 @@ describe('Deal Cancellation status updates', () => {
     cy.getCookies().should('be.empty');
   });
 
-  describe('effective date in the past', () => {
+  describe('effective date in the future', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
       portalPages.contract.visit(deal);
@@ -51,9 +51,6 @@ describe('Deal Cancellation status updates', () => {
 
       cy.login(BANK1_CHECKER1);
       portalPages.contract.visit(deal);
-
-      cy.assertText(portalPages.contract.status(), "Ready for Checker's approval");
-
       portalPages.contract.proceedToSubmit().click();
 
       portalPages.contractConfirmSubmission.confirmSubmit().check();
@@ -62,31 +59,24 @@ describe('Deal Cancellation status updates', () => {
       cy.clearCookie('dtfs-session');
       cy.clearCookie('_csrf');
       cy.getCookies().should('be.empty');
-      cy.forceVisit(TFM_URL);
+
       cy.tfmLogin(PIM_USER_1);
 
-      cy.submitDealCancellation({ dealId, effectiveDate: yesterday.date });
+      cy.submitDealCancellation({ dealId, effectiveDate: tomorrow.date });
     });
 
-    it(`displays deal status ${DEAL_STATUS.CANCELLED} on deal summary page`, () => {
+    it(`should render deal status ${DEAL_STATUS.PENDING_CANCELLATION} on deal summary page`, () => {
       portalPages.contract.visit(deal);
 
-      cy.assertText(portalPages.contract.status(), DEAL_STATUS.CANCELLED);
+      cy.assertText(portalPages.contract.status(), DEAL_STATUS.PENDING_CANCELLATION);
     });
 
-    it(`displays deal status ${DEAL_STATUS.CANCELLED} on check details tab`, () => {
+    it(`should render deal status ${DEAL_STATUS.PENDING_CANCELLATION} on check details tab`, () => {
       portalPages.contract.visit(deal);
 
       portalPages.contract.checkDealDetailsTab().click();
 
-      cy.assertText(portalPages.contract.status(), DEAL_STATUS.CANCELLED);
-    });
-
-    it(`displays facility stage ${FACILITY_STAGE.RISK_EXPIRED} on deal summary page`, () => {
-      portalPages.contract.visit(deal);
-
-      cy.assertText(portalPages.contract.bondTransactionsTable.row(dealFacilities[1]._id).facilityStage(), FACILITY_STAGE.RISK_EXPIRED);
-      cy.assertText(portalPages.contract.loansTransactionsTable.row(dealFacilities[0]._id).facilityStage(), FACILITY_STAGE.RISK_EXPIRED);
+      cy.assertText(portalPages.contract.status(), DEAL_STATUS.PENDING_CANCELLATION);
     });
   });
 });

@@ -1,6 +1,6 @@
 import { Headers } from 'node-mocks-http';
 import { NextFunction, Request, Response } from 'express';
-import { MAKER } from '../../server/constants/roles';
+import { ROLES } from '@ukef/dtfs2-common';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
 import app from '../../server/createApp';
 import { createApi } from '../create-api';
@@ -29,7 +29,7 @@ describe(`GET ${url}`, () => {
     await storage.flush();
     jest.resetAllMocks();
 
-    ({ sessionCookie } = await storage.saveUserSession([MAKER]));
+    ({ sessionCookie } = await storage.saveUserSession([ROLES.MAKER]));
     jest.spyOn(api, 'getApplication').mockResolvedValue({ exporter: { companyName: 'test exporter' } } as Deal);
   });
 
@@ -61,10 +61,8 @@ describe(`GET ${url}`, () => {
 
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers: Headers) => get(url, {}, headers),
-      whitelistedRoles: [MAKER],
+      whitelistedRoles: [ROLES.MAKER],
       successCode: 200,
-      successHeaders: null,
-      redirectUrlForInvalidRoles: null,
     });
 
     it('should return status 200 when user logged in as maker', async () => {
