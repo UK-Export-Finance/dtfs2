@@ -58,7 +58,7 @@ context('GEF MIN deal - When TFM submits a pending deal cancellation - Portal st
   });
 
   it('should update the deal status', () => {
-    cy.assertText(statusBanner.bannerStatus(), DEAL_STATUS.DEAL_CANCELLATION_PENDING);
+    cy.assertText(statusBanner.bannerStatus(), DEAL_STATUS.PENDING_CANCELLATION);
   });
 
   describe('activity feed', () => {

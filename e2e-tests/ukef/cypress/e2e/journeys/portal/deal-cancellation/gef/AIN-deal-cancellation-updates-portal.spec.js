@@ -58,7 +58,7 @@ context('GEF AIN deal - When TFM submits a deal cancellation - Portal status and
   });
 
   it('should update the deal status', () => {
-    cy.assertText(statusBanner.bannerStatus(), DEAL_STATUS.DEAL_CANCELLED);
+    cy.assertText(statusBanner.bannerStatus(), DEAL_STATUS.CANCELLED);
   });
 
   describe('activity feed', () => {
