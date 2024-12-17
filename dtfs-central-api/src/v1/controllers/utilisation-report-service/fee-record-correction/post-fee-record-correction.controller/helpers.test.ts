@@ -95,7 +95,7 @@ describe('post-fee-record-correction.controller helpers', () => {
     });
   });
 
-  describe('sendFeeRecordCorrectionRequestEmail', () => {
+  describe('sendFeeRecordCorrectionRequestEmails', () => {
     it('should send the fee record correction request emails to bank payment officers and requested by user', async () => {
       // Arrange
       const reasons: RecordCorrectionReason[] = [RECORD_CORRECTION_REASON.UTILISATION_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT];
@@ -115,6 +115,25 @@ describe('post-fee-record-correction.controller helpers', () => {
       expect(externalApi.sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.FEE_RECORD_CORRECTION_REQUEST, firstPaymentOfficerEmail, variables);
       expect(externalApi.sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.FEE_RECORD_CORRECTION_REQUEST, secondPaymentOfficerEmail, variables);
       expect(externalApi.sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.FEE_RECORD_CORRECTION_REQUEST, requestedByUserEmail, variables);
+    });
+
+    it('should return the notified email addresses', async () => {
+      // Arrange
+      const reasons: RecordCorrectionReason[] = [RECORD_CORRECTION_REASON.UTILISATION_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT];
+      const reportPeriod = aReportPeriod();
+      const exporter = 'Potato exporter';
+      const bankId = '567';
+      const requestedByUserEmail = 'tfm-user@email.com';
+
+      jest.mocked(getBankById).mockResolvedValue(bank);
+
+      // Act
+      const response = await sendFeeRecordCorrectionRequestEmails(reasons, reportPeriod, exporter, bankId, requestedByUserEmail);
+
+      // Assert
+      const { emails } = await generateFeeRecordCorrectionRequestEmailParameters(reasons, reportPeriod, exporter, bankId, requestedByUserEmail);
+
+      expect(response).toEqual({ emails });
     });
 
     it('should throw NotFoundError error if the bank cannot be found', async () => {

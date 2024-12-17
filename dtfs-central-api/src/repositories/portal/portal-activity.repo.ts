@@ -24,7 +24,7 @@ export class PortalActivityRepo {
     const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
     return await collection.updateOne(
-      { _id: { $eq: dealId } },
+      { _id: { $eq: new ObjectId(dealId) } },
       {
         $push: {
           portalActivities: { $each: [newActivity], $position: 0 },
