@@ -47,6 +47,5 @@ export const PORTAL_FACILITY_AMENDMENT = PORTAL_FACILITY_AMENDMENT_USER_VALUES.a
     createdAt: z.number(),
     updatedAt: z.number(),
     status: z.string(),
-    requestDate: z.number().optional(),
   }),
 );
