@@ -8,7 +8,7 @@ import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import { DATE_FORMATS } from '../../../../fixtures/constants';
 import { anIssuedCashFacility } from '../../../../../../e2e-fixtures/mock-gef-facilities';
 
-context('Amendments - GEF deal add multiple consecutive amendments impacting facility end date values - feature flag enabled', () => {
+context('Amendments - GEF deal add multiple consecutive amendments impacting facility end date values', () => {
   let dealId;
   let facility;
 
