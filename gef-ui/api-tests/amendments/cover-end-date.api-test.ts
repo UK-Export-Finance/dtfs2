@@ -27,7 +27,7 @@ const facilityId = '111';
 const amendmentId = '111';
 
 const mockDeal = { exporter: { companyName: 'test exporter' }, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as Deal;
-const mockFacility = { hasBeenIssued: true, coverEndDate: '2030-01-01T00:00:00.000Z' } as Facility;
+const mockFacility = { hasBeenIssued: true } as Facility;
 
 const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`;
 
