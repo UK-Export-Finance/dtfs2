@@ -950,6 +950,17 @@ utilisationReportsRouter
  *     responses:
  *       200:
  *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                type: object
+ *                properties:
+ *                  emails:
+ *                    type: array
+ *                    items:
+ *                      type: string
+ *                      format: email
+ *                      example: 'test-user@test.com'
  *       400:
  *         description: Bad request
  *       404:
