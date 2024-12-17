@@ -22,7 +22,7 @@ describe('patchAmendment', () => {
     jest.spyOn(PortalFacilityAmendmentService, 'updatePortalFacilityAmendment').mockImplementation(mockUpdatePortalFacilityAmendment);
   });
 
-  it('should return 400 if the audit details are invalid', async () => {
+  it(`should return ${HttpStatusCode.BadRequest} if the audit details are invalid`, async () => {
     // Arrange
     const auditDetails = { type: 'not a type' };
     const { req, res } = generateHttpMocks({ auditDetails });
@@ -58,7 +58,7 @@ describe('patchAmendment', () => {
     });
   });
 
-  it('should return 200', async () => {
+  it(`should return ${HttpStatusCode.Ok}`, async () => {
     // Arrange
     const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
     const { req, res } = generateHttpMocks({ auditDetails });
@@ -90,7 +90,7 @@ describe('patchAmendment', () => {
     });
   });
 
-  it('should return 500 if PortalFacilityAmendmentService.updatePortalFacilityAmendment throws an unknown error', async () => {
+  it(`should return ${HttpStatusCode.InternalServerError} if PortalFacilityAmendmentService.updatePortalFacilityAmendment throws an unknown error`, async () => {
     // Arrange
     const message = 'Test error message';
     mockUpdatePortalFacilityAmendment.mockRejectedValue(new Error(message));

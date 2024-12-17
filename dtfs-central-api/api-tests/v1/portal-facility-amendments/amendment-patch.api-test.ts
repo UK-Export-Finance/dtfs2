@@ -60,7 +60,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/', () => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'false';
     });
 
-    it('should return 404', async () => {
+    it(`should return ${HttpStatusCode.NotFound}`, async () => {
       const amendmentId = new ObjectId().toString();
 
       const { status } = await testApi
@@ -84,7 +84,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/', () => {
       amendmentId = existingAmendment.amendmentId.toString();
     });
 
-    it('should return 400 when the facility id is invalid', async () => {
+    it(`should return ${HttpStatusCode.BadRequest} when the facility id is invalid`, async () => {
       const anInvalidFacilityId = 'InvalidId';
 
       const { body, status } = (await testApi
@@ -99,7 +99,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/', () => {
       });
     });
 
-    it('should return 400 when the amendment id is invalid', async () => {
+    it(`should return ${HttpStatusCode.BadRequest} when the amendment id is invalid`, async () => {
       const anInvalidAmendmentId = 'InvalidId';
 
       const { body, status } = (await testApi
@@ -114,7 +114,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/', () => {
       });
     });
 
-    it('should return 400 when the update has extra fields', async () => {
+    it(`should return ${HttpStatusCode.BadRequest} when the update has extra fields`, async () => {
       const { body, status } = (await testApi
         .patch({
           update: { ...(aPortalFacilityAmendmentUserValues() as AnyObject), additional: 'property' },
@@ -130,7 +130,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/', () => {
       });
     });
 
-    it('should return 404 when the facility does not exist', async () => {
+    it(`should return ${HttpStatusCode.NotFound} when the facility does not exist`, async () => {
       const aValidButNonExistentFacilityId = new ObjectId().toString();
 
       const { body, status } = (await testApi
@@ -144,7 +144,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/', () => {
       });
     });
 
-    it('should return 404 when the amendment does not exist', async () => {
+    it(`should return ${HttpStatusCode.NotFound} when the amendment does not exist`, async () => {
       const aValidButNonExistentAmendmentId = new ObjectId().toString();
 
       const { body, status } = (await testApi
@@ -158,7 +158,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/', () => {
       });
     });
 
-    it('should return 200 when the payload is valid & the amendment exists', async () => {
+    it(`should return ${HttpStatusCode.Ok} when the payload is valid & the amendment exists`, async () => {
       const { status } = (await testApi
         .patch({ update: aPortalFacilityAmendmentUserValues(), auditDetails: generatePortalAuditDetails(portalUserId) })
         .to(generateUrl(facilityId, amendmentId))) as ErrorResponse;

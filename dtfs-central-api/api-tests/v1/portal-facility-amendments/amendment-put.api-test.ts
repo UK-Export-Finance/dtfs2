@@ -60,7 +60,7 @@ describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'false';
     });
 
-    it('should return 404', async () => {
+    it(`should return ${HttpStatusCode.NotFound}`, async () => {
       const { status } = (await testApi
         .put({ dealId, amendment: aPortalFacilityAmendmentUserValues(), auditDetails: generatePortalAuditDetails(portalUserId) })
         .to(generateUrl(facilityId))) as FacilityAmendmentResponse;
@@ -74,7 +74,7 @@ describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'true';
     });
 
-    it('should return 400 when the facility id is invalid', async () => {
+    it(`should return ${HttpStatusCode.BadRequest} when the facility id is invalid`, async () => {
       const anInvalidFacilityId = 'InvalidId';
 
       const { body, status } = (await testApi
@@ -89,7 +89,7 @@ describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
       });
     });
 
-    it('should return 404 when the facility does not exist', async () => {
+    it(`should return ${HttpStatusCode.NotFound} when the facility does not exist`, async () => {
       const aValidButNonExistentFacilityId = new ObjectId().toString();
 
       const { body, status } = (await testApi
@@ -103,7 +103,7 @@ describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
       });
     });
 
-    it('should return 400 when the payload has extra fields', async () => {
+    it(`should return ${HttpStatusCode.BadRequest} when the payload has extra fields`, async () => {
       const { body, status } = (await testApi
         .put({ dealId, amendment: { extraField: 'This field should not exist' }, auditDetails: generatePortalAuditDetails(portalUserId) })
         .to(generateUrl(facilityId))) as FacilityAmendmentResponse;

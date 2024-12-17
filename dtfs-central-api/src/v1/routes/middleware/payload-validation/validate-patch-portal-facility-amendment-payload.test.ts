@@ -196,7 +196,7 @@ describe('validatePatchPortalFacilityAmendmentPayload', () => {
     },
   ];
 
-  it.each(invalidPayloads)('should return 400 when $description', ({ payload }) => {
+  it.each(invalidPayloads)(`should return ${HttpStatusCode.BadRequest} when $description`, ({ payload }) => {
     // Arrange
     const { req, res } = createMocks({ body: payload });
     const next = jest.fn();
@@ -237,7 +237,7 @@ describe('validatePatchPortalFacilityAmendmentPayload', () => {
     validatePatchPortalFacilityAmendmentPayload(req, res, next);
 
     // Assert
-    expect(next).toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(1);
     expect(res._isEndCalled()).toEqual(false);
   });
 });
