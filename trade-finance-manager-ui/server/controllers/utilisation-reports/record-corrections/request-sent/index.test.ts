@@ -4,6 +4,7 @@ import { aGetFeeRecordResponseBody, aTfmSessionUser } from '../../../../../test-
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import { getRecordCorrectionRequestSent } from '.';
 import api from '../../../../api';
+import { RecordCorrectionRequestSentViewModel } from '../../../../types/view-models';
 
 jest.mock('../../../../api');
 
@@ -41,13 +42,7 @@ describe('controllers/utilisation-reports/record-corrections/request-sent', () =
       // Arrange
       req.session.recordCorrectionRequestEmails = emails;
       const expectedRequestedByUserEmail = user.email;
-
-      // Act
-      await getRecordCorrectionRequestSent(req, res);
-
-      // Assert
-      expect(res._getRenderView()).toEqual('utilisation-reports/record-corrections/request-sent.njk');
-      expect(res._getRenderData()).toEqual({
+      const expectedViewModel: RecordCorrectionRequestSentViewModel = {
         user,
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
         bank: { name: feeRecordResponse.bank.name },
@@ -55,7 +50,14 @@ describe('controllers/utilisation-reports/record-corrections/request-sent', () =
         formattedReportPeriod: getFormattedReportPeriodWithLongMonth(feeRecordResponse.reportPeriod),
         requestedByUserEmail: expectedRequestedByUserEmail,
         emailsWithoutRequestedByUserEmail,
-      });
+      };
+
+      // Act
+      await getRecordCorrectionRequestSent(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('utilisation-reports/record-corrections/request-sent.njk');
+      expect(res._getRenderData()).toEqual(expectedViewModel);
     });
 
     it('should render the problem with service page if the record correction request emails are not set in the session', async () => {

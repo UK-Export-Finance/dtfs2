@@ -45,7 +45,7 @@ export const getRecordCorrectionRequestSent = async (req: Request, res: Response
       emailsWithoutRequestedByUserEmail,
     });
   } catch (error) {
-    console.error('Failed to render create record correction request - "request sent" page', error);
+    console.error('Failed to render create record correction request - "request sent" page %o', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };

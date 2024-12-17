@@ -98,7 +98,7 @@ context('When fee record correction feature flag is enabled', () => {
         cy.clickContinueButton();
       });
 
-      it('should be able to send the record correction request', () => {
+      it('should be able to send the record correction request and display the request sent screen with the expected emails', () => {
         cy.assertText(mainHeading(), 'Record correction request');
         feeRecordCorrectionRequestSentPage.requestSentPanel().should('exist');
         feeRecordCorrectionRequestSentPage.requestSentPanel().should('contain', 'Request sent');
