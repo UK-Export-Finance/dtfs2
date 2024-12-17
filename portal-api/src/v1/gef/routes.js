@@ -123,7 +123,7 @@ router
     mongoIdValidation('facilityId'),
     mongoIdValidation('amendmentId'),
     handleExpressValidatorResult,
-    getAmendment,
-  );
+  )
+  .get(getAmendment);
 
 module.exports = router;

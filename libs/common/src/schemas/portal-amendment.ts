@@ -38,8 +38,7 @@ export const PORTAL_FACILITY_AMENDMENT_USER_VALUES = z
  *
  * If this schema is changed the Open Api docs should be updated too
  */
-export const PORTAL_FACILITY_AMENDMENT = z.union([
-  PORTAL_FACILITY_AMENDMENT_USER_VALUES,
+export const PORTAL_FACILITY_AMENDMENT = PORTAL_FACILITY_AMENDMENT_USER_VALUES.and(
   z.object({
     amendmentId: z.string(),
     facilityId: z.string(),
@@ -48,6 +47,6 @@ export const PORTAL_FACILITY_AMENDMENT = z.union([
     createdAt: z.number(),
     updatedAt: z.number(),
     status: z.string(),
-    requestDate: z.number(),
+    requestDate: z.number().optional(),
   }),
-]);
+);
