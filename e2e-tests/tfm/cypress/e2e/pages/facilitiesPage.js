@@ -42,6 +42,7 @@ const facilitiesPage = {
     },
   },
   pagination: {
+    nav: () => cy.get('[data-cy="pagination"] nav'),
     next: () => cy.get('[data-cy="Next"]'),
     last: () => cy.get('[data-cy="Last"]'),
     previous: () => cy.get('[data-cy="Previous"]'),

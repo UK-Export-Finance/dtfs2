@@ -41,7 +41,7 @@ describe('validateDealCancellationEnabled', () => {
       jest.spyOn(dtfsCommon, 'isTfmDealCancellationFeatureFlagEnabled').mockReturnValueOnce(false);
     });
 
-    it('does not call next when deal cancellation is enabled', () => {
+    it('does not call next', () => {
       // Arrange
 
       const { req, res } = createMocks();

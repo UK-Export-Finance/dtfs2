@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb';
 import { DEAL_TYPE } from '../../constants';
 import { AnyObject } from '../any-object';
 import { AuditDatabaseRecord, DealStatus, DealSubmissionType } from '..';
+import { PortalActivity } from '../portal';
 
 type BaseDeal = AnyObject & {
   _id: ObjectId;
@@ -39,6 +40,7 @@ export interface GefDeal extends BaseDeal {
     status: string;
   };
   createdAt: number;
+  portalActivities: PortalActivity[];
 }
 
 /**

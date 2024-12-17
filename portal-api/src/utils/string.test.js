@@ -8,13 +8,17 @@ describe('utils string', () => {
       expect(isEmptyString('   ')).toEqual(true);
     });
 
-    it('should return false when param is a string', () => {
+    it('should return false when string is valid', () => {
+      expect(isEmptyString('a')).toEqual(false);
+    });
+
+    it('should return false when string is valid', () => {
       expect(isEmptyString('a')).toEqual(false);
     });
   });
 
   describe('hasValue', () => {
-    it('should return true when a string is passed', () => {
+    it('should return true when string is valid', () => {
       expect(hasValue('test')).toEqual(true);
     });
 
@@ -23,6 +27,10 @@ describe('utils string', () => {
       expect(hasValue(null)).toEqual(false);
       expect(hasValue('')).toEqual(false);
       expect(hasValue(' ')).toEqual(false);
+    });
+
+    it('should return false when string is `Select value`', () => {
+      expect(hasValue('Select value')).toEqual(false);
     });
   });
 });

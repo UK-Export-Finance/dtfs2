@@ -23,10 +23,10 @@ describe(component, () => {
 
   it.each([
     { status: REPORT_NOT_RECEIVED, expectedColourClass: 'govuk-tag--red' },
-    { status: PENDING_RECONCILIATION, expectedColourClass: undefined },
+    { status: PENDING_RECONCILIATION, expectedColourClass: 'govuk-tag--blue' },
     {
       status: RECONCILIATION_IN_PROGRESS,
-      expectedColourClass: 'govuk-tag--blue',
+      expectedColourClass: 'govuk-tag--light-blue',
     },
     {
       status: RECONCILIATION_COMPLETED,

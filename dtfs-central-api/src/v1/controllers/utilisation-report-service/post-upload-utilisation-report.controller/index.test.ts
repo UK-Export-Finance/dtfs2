@@ -63,7 +63,7 @@ describe('post-upload-utilisation-report controller', () => {
 
       const errorMessage = 'An error message';
       const errorStatus = HttpStatusCode.BadRequest;
-      const testApiError = new TestApiError(errorStatus, errorMessage);
+      const testApiError = new TestApiError({ message: errorMessage, status: errorStatus });
 
       jest.mocked(executeWithSqlTransaction).mockRejectedValue(TransactionFailedError.forApiError(testApiError));
 

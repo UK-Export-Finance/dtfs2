@@ -1,0 +1,25 @@
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% macro render(amendmentFormEmail) %}
+
+{% set bodyHtml %}
+  <span class="govuk-body">
+    <p>To change something else, for example:</p>
+      <ul>
+        <li>bank’s interest margin percentage</li>
+        <li>UKEF exposure percentage</li>
+        <li>UKEF guarantee fee frequency</li>
+      </ul>
+    <p>Use the Schedule 8 (Form of Amendment and Notification Request Form) and email the completed form to {{ amendmentFormEmail }}</p>
+  </span>
+{% endset %}
+
+{{ govukDetails({
+  summaryText: "I need to change something else",
+  html: bodyHtml,
+  attributes: {
+    'data-cy': 'facility-end-date-details'
+  }
+}) }}
+
+{% endmacro %}

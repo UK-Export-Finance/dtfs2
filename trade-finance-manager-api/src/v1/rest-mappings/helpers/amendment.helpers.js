@@ -76,7 +76,7 @@ const calculateUkefExposure = (facilityValueInGBP, coverPercentage) => {
 
 /**
  * Get the latest completed amendment values
- * @param {import('@ukef/dtfs2-common').TfmFacilityAmendment[]} amendments
+ * @param {import('@ukef/dtfs2-common').FacilityAmendment[]} amendments
  * @returns {LatestCompletedAmendment}
  */
 const findLatestCompletedAmendment = (amendments) => {

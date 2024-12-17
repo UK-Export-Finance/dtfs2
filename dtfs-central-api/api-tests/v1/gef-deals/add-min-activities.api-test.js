@@ -1,5 +1,5 @@
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS, ROLES, FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, ROLES, FACILITY_TYPE, PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('@ukef/dtfs2-common');
 const { format, fromUnixTime } = require('date-fns');
 const { ObjectId } = require('mongodb');
 
@@ -16,7 +16,6 @@ const { mongoDbClient: db } = require('../../../src/drivers/db-client');
 const { APPLICATION } = require('../../mocks/gef/gef-applications');
 const { mockFacilities } = require('../../mocks/gef/gef-facilities');
 const { DEALS } = require('../../../src/constants');
-const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../src/constants');
 
 const MOCK_APPLICATION = APPLICATION[0];
 const MOCK_APPLICATION_FACILITIES = APPLICATION[1];

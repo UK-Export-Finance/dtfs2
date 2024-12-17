@@ -19,8 +19,6 @@ const bankIdValidation = param('bankId')
   .matches(/^\d+$/)
   .withMessage('The bank id provided should be a string of numbers');
 
-const mongoIdValidation = param('_id').isMongoId().withMessage("Invalid MongoDB '_id' path param provided");
-
 /**
  * Validator for a path parameter which is an sql integer id
  * @param {string} paramName - The parameter name
@@ -55,8 +53,6 @@ exports.taskIdValidation = [taskIdValidation];
 exports.partyUrnValidation = [partyURNValidation];
 
 exports.bankIdValidation = [bankIdValidation];
-
-exports.mongoIdValidation = [mongoIdValidation];
 
 exports.sqlIdValidation = sqlIdValidation;
 

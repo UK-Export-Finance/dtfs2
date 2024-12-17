@@ -2,6 +2,7 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "moj/components/banner/macro.njk" import mojBanner %}
 
 {% import '../../_macros/facility-guidance.njk' as facilityGuidance %}
 
@@ -21,12 +22,32 @@
   }
 }) }}
 
+{% if applicationStatus === 'Acknowledged' %}
+  {{ mojBanner({
+  type: 'information',
+  text: 'Check your records for the most up-to-date facility details.',
+  iconFallbackText: 'information',
+  attributes: {
+    'data-cy': 'facility-information-banner'
+  }
+}) }}
+{% endif %}
+
 {% if facilities.data.length > 0 %}
   {% for item in facilities.data %}
-    <header class="is-flex is-justify-content-space-between">
-      <h3 class="govuk-heading-m" data-cy="facility-type-heading">
+    <header class="is-flex">
+      <h3 class="govuk-heading-m govuk-grid-column-one-half govuk-!-padding-left-0" data-cy="facility-type-heading">
         {{item.heading}} facility
       </h3>
+      {% if canIssuedFacilitiesBeAmended and item.stage === "Issued" %}
+        {{ govukButton({
+          text: "Make a change",
+          attributes: {
+            'data-cy': "facility-" + item.facilityId + "-make-change-button"
+          },
+          href: "/gef/application-details/"+dealId+"/facilities/"+item.facilityId+"/amendments/what-needs-to-change"
+        }) }}
+      {% endif %}
     </header>
     {{ govukSummaryList({
       rows: item.rows,

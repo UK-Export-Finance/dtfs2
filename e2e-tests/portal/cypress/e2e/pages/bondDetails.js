@@ -4,6 +4,7 @@ const page = {
   bondDetails: () => cy.get('[data-cy="task-list-link-bond-details"]'),
 
   bondIssuerInput: () => cy.get('[data-cy="bond-issuer"]'),
+  bondIssuerHint: () => cy.get('[data-cy="bond-issuer-hint"]'),
 
   bondTypeInput: () => cy.get('[data-cy="bond-type"]'),
   bondTypeInputErrorMessage: () => cy.get('[data-cy="bond-type-error-message"]'),

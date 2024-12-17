@@ -1,6 +1,6 @@
 $govuk-new-link-styles: true;
 
-@import "node_modules/govuk-frontend/govuk/all";
+@import "node_modules/govuk-frontend/dist/govuk/all";
 @import "node_modules/@ministryofjustice/frontend/moj/all";
 @import "./helpers.scss";
 @import "./footer.scss";
@@ -90,7 +90,6 @@ $govuk-new-link-styles: true;
 .ukef-decision-formatted {
   p {
     white-space: pre-line;
-    word-break: break-word;
   }
 }
 
@@ -101,7 +100,8 @@ $govuk-new-link-styles: true;
         margin-top: 0;
       }
       white-space: pre-line;
-      word-break: break-word;
+
+      @include govuk-text-break-word();
     }
     > h2 {
       margin-top: 0;

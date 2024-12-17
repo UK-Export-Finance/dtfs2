@@ -21,7 +21,7 @@ export const aPremiumPaymentsViewModelItem = (): PremiumPaymentsViewModelItem =>
     dataSortValue: 0,
   },
   status: FEE_RECORD_STATUS.TO_DO,
-  displayStatus: 'TO DO',
+  displayStatus: 'To do',
   isSelectable: true,
   checkboxId: `feeRecordIds-1-reportedPaymentsCurrency-${CURRENCY.GBP}-status-${FEE_RECORD_STATUS.TO_DO}`,
   isChecked: false,

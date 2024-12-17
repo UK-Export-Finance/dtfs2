@@ -1,16 +1,15 @@
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_STAGE, TFM_DEAL_CANCELLATION_STATUS, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_CANCELLATION_STATUS, TfmDealCancellation, DealSubmissionType, DealType } from '@ukef/dtfs2-common';
 import { aTfmUser } from '@ukef/dtfs2-common/mock-data-backend';
-import { generatePortalAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { withMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import wipeDB from '../../../wipeDB';
 import { testApi } from '../../../test-api';
 import { DEALS } from '../../../../src/constants';
 import aDeal from '../../deal-builder';
-import { createDeal } from '../../../helpers/create-deal';
+import { createDeal, submitDealToTfm } from '../../../helpers/create-deal';
 import { aPortalUser } from '../../../../test-helpers';
-import { MOCK_PORTAL_USER } from '../../../mocks/test-users/mock-portal-user';
 
 const originalProcessEnv = { ...process.env };
 
@@ -32,34 +31,7 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
     dealId = createDealResponse.body._id;
     dealCancellationUrl = `/v1/tfm/deals/${dealId}/cancellation`;
 
-    await testApi
-      .put({
-        dealType: DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-        submissionType: DEALS.SUBMISSION_TYPE.AIN,
-        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-      })
-      .to('/v1/tfm/deals/submit');
-
-    await testApi
-      .put({
-        dealUpdate: {
-          tfm: {
-            dateReceived: '23-09-2024',
-            dateReceivedTimestamp: 1727085149,
-            parties: {},
-            activities: [],
-            product: DEALS.DEAL_TYPE.BSS_EWCS,
-            stage: TFM_DEAL_STAGE.CONFIRMED,
-            exporterCreditRating: 'Acceptable (B+)',
-            lastUpdated: 1727085149571,
-            lossGivenDefault: 50,
-            probabilityOfDefault: 12,
-          },
-        },
-        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-      })
-      .to(`/v1/tfm/deals/${dealId}`);
+    await submitDealToTfm({ dealId, dealSubmissionType: newDeal.submissionType as DealSubmissionType, dealType: newDeal.dealType as DealType });
   });
 
   afterEach(async () => {

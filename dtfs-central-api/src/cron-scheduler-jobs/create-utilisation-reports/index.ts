@@ -2,8 +2,10 @@ import { asString, CronSchedulerJob, getCurrentReportPeriodForBankSchedule, Bank
 import { validateUtilisationReportPeriodSchedule } from './utilisation-report-period-schedule-validator';
 import { UtilisationReportRepo } from '../../repositories/utilisation-reports-repo';
 import { getAllBanks } from '../../repositories/banks-repo';
+import externalApi from '../../external-api/api';
+import EMAIL_TEMPLATE_IDS from '../../constants/email-template-ids';
 
-const { UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE } = process.env;
+const { UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE, UTILISATION_REPORT_CREATION_FAILURE_EMAIL_ADDRESS } = process.env;
 
 /**
  * Checks if the current bank report is missing
@@ -56,18 +58,27 @@ const createUtilisationReportForBanks = async (): Promise<void> => {
 
   await Promise.all(
     banksWithMissingReports.map(async ({ id, utilisationReportPeriodSchedule }) => {
-      console.info('Attempting to insert report for bank with id %s', id);
-      const reportPeriod = getCurrentReportPeriodForBankSchedule(utilisationReportPeriodSchedule);
+      try {
+        console.info('Attempting to insert report for bank with id %s', id);
+        const reportPeriod = getCurrentReportPeriodForBankSchedule(utilisationReportPeriodSchedule);
 
-      const newUtilisationReport = UtilisationReportEntity.createNotReceived({
-        bankId: id,
-        reportPeriod,
-        requestSource: {
-          platform: REQUEST_PLATFORM_TYPE.SYSTEM,
-        },
-      });
-      await UtilisationReportRepo.save(newUtilisationReport);
-      console.info('Successfully inserted report for bank with id %s', id);
+        const newUtilisationReport = UtilisationReportEntity.createNotReceived({
+          bankId: id,
+          reportPeriod,
+          requestSource: {
+            platform: REQUEST_PLATFORM_TYPE.SYSTEM,
+          },
+        });
+
+        await UtilisationReportRepo.save(newUtilisationReport);
+        console.info('Successfully inserted report for bank with id %s', id);
+      } catch (error) {
+        console.error('Error inserting report for bank with id %s. %o', id, error);
+
+        await externalApi.sendEmail(EMAIL_TEMPLATE_IDS.REPORT_INSERTION_CRON_FAILURE, UTILISATION_REPORT_CREATION_FAILURE_EMAIL_ADDRESS as string, {
+          bank_id: id,
+        });
+      }
     }),
   );
 };

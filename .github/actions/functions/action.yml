@@ -1,0 +1,118 @@
+# This GitHub Action is designed to deploy the code bases from specified branch to an Azure Functions
+
+name: 'Deploy Azure Functions'
+description: 'This custom GitHub Actions module deploys from defined source to defined Azure Functions microservice'
+
+# Define the inputs required for this action.
+inputs:
+  branch:
+    description: 'Source Git branch, main if none specified'
+    required: false
+    default: 'main'
+  region:
+    description: 'Azure region'
+    required: true
+  group:
+    description: 'Azure resource group'
+    required: true
+  credentials:
+    description: 'Azure subscription and resource group service principal'
+    required: true
+  acr:
+    description: 'Azure container registry password'
+    required: true
+  functions:
+    description: 'Azure Functions name'
+    required: true
+
+# Define the steps to run this action.
+runs:
+  using: 'composite'
+  steps:
+    # Step 1: Check out the repository.
+    - name: Repository 🗃️
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.branch }}
+
+    # Step 2: Set up Azure CLI defaults.
+    - name: Defaults ✨
+      uses: azure/cli@v2.1.0
+      with:
+        inlineScript: |
+          # Basic
+          az configure --defaults location=${{ inputs.region }}
+          az configure --defaults group=${{ inputs.group }}
+
+    # Step 3: Log in to Azure.
+    - name: Azure 🔐
+      uses: azure/login@v2
+      with:
+        creds: ${{ inputs.credentials }}
+
+    # Step 4: Set environment variable for function name.
+    - name: Directory 📁
+      if: ${{ 'acbs-function' == inputs.functions }}
+      run: echo "NAME=acbs" >> $GITHUB_ENV
+      shell: bash
+
+    # Step 5: Set environment variables for ACR and function.
+    - name: CLI 📝
+      run: |
+        echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
+        echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
+        echo FUNCTION=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ env.NAME }}`)].name' -o tsv) >> $GITHUB_ENV
+      shell: bash
+
+    # Step 6: Log in to Azure Container Registry.
+    - name: ACR 🔐
+      uses: azure/docker-login@v2
+      with:
+        login-server: ${{ env.ACR }}
+        username: ${{ env.ACR_USER }}
+        password: ${{ inputs.acr }}
+
+    # Step 7: Build and push Docker images.
+    - name: Artifacts 🗃️
+      working-directory: .
+      run: |
+        # Build images
+        docker build -f ./azure-functions/${{ inputs.functions }}/Dockerfile . \
+        -t ${{ env.ACR }}/${{ inputs.functions }}:${{ github.sha }} \
+        -t ${{ env.ACR }}/${{ inputs.functions }}:latest
+
+        # Push images
+        docker push ${{ env.ACR }}/${{ inputs.functions }}:${{ github.sha }}
+        docker push ${{ env.ACR }}/${{ inputs.functions }}:latest
+      shell: bash
+
+    # Step 8: Create and swap deployment slot.
+    - name: Slot 🔀
+      uses: azure/cli@v2.1.0
+      with:
+        inlineScript: |
+          # Create new temporary slot
+          az functionapp deployment slot create \
+          --slot ${{ github.sha }} \
+          --name ${{ env.FUNCTION }} \
+          --configuration-source ${{ env.FUNCTION }} \
+          --deployment-container-image-name ${{ env.ACR }}/${{ inputs.functions }}:latest \
+          --docker-registry-server-user ${{ env.ACR_USER }} \
+          --docker-registry-server-password ${{ inputs.acr }}
+
+          # Swap slot
+          az functionapp deployment slot swap \
+          --slot ${{ github.sha }} \
+          --name ${{ env.FUNCTION }} \
+          --action swap
+
+    # Step 9: Cleanup temporary slot.
+    - name: Cleanup 🧹
+      if: always()
+      uses: azure/cli@v2.1.0
+      with:
+        inlineScript: |
+          # Delete temporary slot
+          az functionapp deployment slot delete \
+          --slot ${{ github.sha }} \
+          --name ${{ env.FUNCTION }}

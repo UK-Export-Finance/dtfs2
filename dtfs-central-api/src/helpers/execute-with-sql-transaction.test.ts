@@ -136,12 +136,26 @@ describe('executeWithSqlTransaction', () => {
 
   it("throws a specific 'TransactionFailedError' if the supplied function throws an 'ApiError'", async () => {
     // Arrange
-    const customError = new TestApiError(HttpStatusCode.BadRequest);
+    const customError = new TestApiError({ status: HttpStatusCode.BadRequest });
 
     const functionToExecute = jest.fn().mockRejectedValue(customError);
 
     // Act / Assert
     await expect(executeWithSqlTransaction(functionToExecute)).rejects.toThrow(TransactionFailedError.forApiError(customError));
+  });
+
+  it('logs error if rolling back the transaction fails', async () => {
+    // Arrange
+    const originalError = new Error('Some error');
+    const functionToExecute = jest.fn().mockRejectedValue(originalError);
+    const consoleErrorSpy = jest.spyOn(console, 'error');
+    const secondaryError = new Error('Cannot rollback transaction');
+    mockRollbackTransaction.mockRejectedValueOnce(secondaryError);
+
+    // Act / Assert
+    await expect(executeWithSqlTransaction(functionToExecute)).rejects.toThrow(secondaryError);
+    expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+    expect(consoleErrorSpy).toHaveBeenCalledWith('Error thrown within SQL transaction: %o', originalError);
   });
 
   it('returns the return value of the supplied function', async () => {

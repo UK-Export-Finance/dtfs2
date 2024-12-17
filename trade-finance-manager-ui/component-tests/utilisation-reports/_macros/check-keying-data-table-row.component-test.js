@@ -21,7 +21,7 @@ describe(component, () => {
     },
     paymentsReceived: ['GBP 90.91'],
     status: FEE_RECORD_STATUS.MATCH,
-    displayStatus: 'MATCH',
+    displayStatus: 'Match',
   });
 
   const getRowSelector = (feeRecordId) => `tr[data-cy="check-keying-data-table-row--feeRecordId-${feeRecordId}"]`;
@@ -148,13 +148,13 @@ describe(component, () => {
     const feeRecord = {
       ...aFeeRecordToKey(),
       id: 1,
-      displayStatus: 'MATCH',
+      displayStatus: 'Match',
     };
 
     // Act
     const wrapper = render({ feeRecord });
 
     // Assert
-    wrapper.expectElement(`${getRowSelector(1)} td:contains("MATCH")`).toExist();
+    wrapper.expectElement(`${getRowSelector(1)} td:contains("Match")`).toExist();
   });
 });

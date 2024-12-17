@@ -206,7 +206,7 @@ describe('controllers/utilisation-reports/check-keying-data', () => {
           },
           paymentsReceived: ['GBP 90.91'],
           status: FEE_RECORD_STATUS.MATCH,
-          displayStatus: 'MATCH',
+          displayStatus: 'Match',
         });
       });
 

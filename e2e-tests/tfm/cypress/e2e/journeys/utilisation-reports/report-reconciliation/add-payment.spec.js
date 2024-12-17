@@ -155,7 +155,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
     cy.contains('Premium payments').should('exist');
 
-    cy.assertText(premiumPaymentsTable.status(FEE_RECORD_ID_ONE), FEE_RECORD_STATUS.MATCH);
+    cy.assertText(premiumPaymentsTable.status(FEE_RECORD_ID_ONE), 'Match');
   });
 
   it('redirects user to premium payments tab with match success notification when taken to match whilst trying to add another payment', () => {
@@ -172,7 +172,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
     cy.contains('Premium payments').should('exist');
 
-    cy.assertText(premiumPaymentsTable.status(FEE_RECORD_ID_ONE), FEE_RECORD_STATUS.MATCH);
+    cy.assertText(premiumPaymentsTable.status(FEE_RECORD_ID_ONE), 'Match');
 
     cy.assertText(premiumPaymentsTab.matchSuccessNotificationHeading(), 'Match payment recorded');
 

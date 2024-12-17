@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { flatten } from 'mongo-dot-notation';
 import { getUnixTime } from 'date-fns';
 import { HttpStatusCode } from 'axios';
-import { ApiError, ApiErrorResponseBody, AUDIT_USER_TYPES, CustomExpressRequest } from '@ukef/dtfs2-common';
+import { ApiError, ApiErrorResponseBody, AUDIT_USER_TYPES, CustomExpressRequest, FacilityAmendment } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
 import { NotFoundError } from '../../../../errors';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
@@ -12,7 +12,7 @@ type UpdateTfmAmendmentRequest = CustomExpressRequest<{
   reqBody: PutFacilityAmendmentPayload;
 }>;
 
-type UpdateTfmAmendmentResponse = Response<ApiErrorResponseBody | Document | null>;
+type UpdateTfmAmendmentResponse = Response<ApiErrorResponseBody | FacilityAmendment | null>;
 
 export const updateTfmAmendment = async (req: UpdateTfmAmendmentRequest, res: UpdateTfmAmendmentResponse) => {
   const { payload, auditDetails } = req.body;
@@ -21,7 +21,7 @@ export const updateTfmAmendment = async (req: UpdateTfmAmendmentRequest, res: Up
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.TFM);
 
-    const foundAmendment = await TfmFacilitiesRepo.findAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
+    const foundAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
     if (!foundAmendment) {
       throw new NotFoundError('The amendment does not exist');
     }
@@ -37,7 +37,7 @@ export const updateTfmAmendment = async (req: UpdateTfmAmendmentRequest, res: Up
       }),
     );
 
-    const updatedAmendment = await TfmFacilitiesRepo.findAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
+    const updatedAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
     return res.status(HttpStatusCode.Ok).json(updatedAmendment);
   } catch (error) {
     console.error('Error updating amendment:', error);

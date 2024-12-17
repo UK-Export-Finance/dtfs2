@@ -39,6 +39,7 @@ const applicationPreview = {
   facilityHeading: () => cy.get('[data-cy="facility-heading"]'),
   facilityGuidance: () => cy.get('[data-cy="facility-guidance"]'),
   facilitySummaryList: () => cy.get('[data-cy="facility-summary-list"]'),
+  facilityInformationBanner: () => cy.get('[data-cy="facility-information-banner"]'),
 
   facilitySummaryListTable: (tableNum) => ({
     nameAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="name-action"]'),
@@ -87,6 +88,8 @@ const applicationPreview = {
   submitHeading: () => cy.get('[data-cy="submit-heading"]'),
   submitButtonPostApproval: () => cy.get('[data-cy="submit-ukef-approved-application-to-checker"]'),
   returnButton: () => cy.get('[data-cy="return-button"]'),
+
+  makeAChangeButton: (facilityId) => cy.get(`[data-cy="facility-${facilityId}-make-change-button"]`),
 };
 
 export default applicationPreview;

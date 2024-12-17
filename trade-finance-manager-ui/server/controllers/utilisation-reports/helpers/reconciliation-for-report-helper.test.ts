@@ -377,11 +377,11 @@ describe('reconciliation-for-report-helper', () => {
     );
 
     it.each([
-      { feeRecordStatus: FEE_RECORD_STATUS.TO_DO, feeRecordDisplayStatus: 'TO DO' },
-      { feeRecordStatus: FEE_RECORD_STATUS.MATCH, feeRecordDisplayStatus: 'MATCH' },
-      { feeRecordStatus: FEE_RECORD_STATUS.DOES_NOT_MATCH, feeRecordDisplayStatus: 'DOES NOT MATCH' },
-      { feeRecordStatus: FEE_RECORD_STATUS.READY_TO_KEY, feeRecordDisplayStatus: 'READY TO KEY' },
-      { feeRecordStatus: FEE_RECORD_STATUS.RECONCILED, feeRecordDisplayStatus: 'RECONCILED' },
+      { feeRecordStatus: FEE_RECORD_STATUS.TO_DO, feeRecordDisplayStatus: 'To do' },
+      { feeRecordStatus: FEE_RECORD_STATUS.MATCH, feeRecordDisplayStatus: 'Match' },
+      { feeRecordStatus: FEE_RECORD_STATUS.DOES_NOT_MATCH, feeRecordDisplayStatus: 'Does not match' },
+      { feeRecordStatus: FEE_RECORD_STATUS.READY_TO_KEY, feeRecordDisplayStatus: 'Ready to key' },
+      { feeRecordStatus: FEE_RECORD_STATUS.RECONCILED, feeRecordDisplayStatus: 'Reconciled' },
     ] as const)(
       "maps the fee record status '$feeRecordStatus' to the view model display status '$feeRecordDisplayStatus'",
       ({ feeRecordStatus, feeRecordDisplayStatus }) => {
@@ -551,8 +551,8 @@ describe('reconciliation-for-report-helper', () => {
     });
 
     it.each([
-      { status: 'TO_DO', displayStatus: 'TO DO' },
-      { status: 'DONE', displayStatus: 'DONE' },
+      { status: 'TO_DO', displayStatus: 'To do' },
+      { status: 'DONE', displayStatus: 'Done' },
     ] as const)(
       "sets the keying sheet view model display status to '$displayStatus' when the keying sheet status is '$status'",
       ({ status, displayStatus }) => {

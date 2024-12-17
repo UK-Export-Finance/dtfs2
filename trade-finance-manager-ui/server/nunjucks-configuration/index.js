@@ -12,6 +12,7 @@ const displayName = require('./filter-displayName');
 const formatAsCurrency = require('./filter-formatAsCurrency');
 const countriesWithEmptyInitialOption = require('./filter-countriesWithEmptyInitialOption');
 const replaceWhiteSpaceWithDash = require('./filter-replaceWhiteSpaceWithDash');
+const { replaceNewLinesWithBrTags } = require('./filter-replaceNewLinesWithBrTags');
 const bondBeneficiaryFacilities = require('./filter-bondBeneficiaryFacilities');
 const bondIssuerFacilities = require('./filter-bondIssuerFacilities');
 const formatAsDecimal = require('./filter-formatAsDecimal');
@@ -29,7 +30,7 @@ const configureNunjucks = (opts) => {
   const { CONTACT_US_SELF_SERVICE_PORTAL_URL, CONTACT_US_EMAIL_ADDRESS } = process.env;
 
   const appViews = [
-    path.resolve(__dirname, '../../../node_modules/govuk-frontend'),
+    path.resolve(__dirname, '../../../node_modules/govuk-frontend/dist'),
     path.resolve(__dirname, '../../../node_modules/@ministryofjustice/frontend'),
     path.resolve(__dirname, '../../../node_modules/@ministryofjustice/frontend/filters/all'),
     path.resolve(__dirname, '../../templates'),
@@ -50,6 +51,7 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('formatAsCurrency', formatAsCurrency);
   nunjucksEnvironment.addFilter('countriesWithEmptyInitialOption', countriesWithEmptyInitialOption);
   nunjucksEnvironment.addFilter('replaceWhiteSpaceWithDash', replaceWhiteSpaceWithDash);
+  nunjucksEnvironment.addFilter('replaceNewLinesWithBrTags', replaceNewLinesWithBrTags);
   nunjucksEnvironment.addFilter('bondBeneficiaryFacilities', bondBeneficiaryFacilities);
   nunjucksEnvironment.addFilter('bondIssuerFacilities', bondIssuerFacilities);
   nunjucksEnvironment.addFilter('formatAsDecimal', formatAsDecimal);

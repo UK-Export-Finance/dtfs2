@@ -4,8 +4,8 @@
   {% set displayStatus = params.displayStatus %}
   {% set tagColourClassForStatus = {
     "REPORT_NOT_RECEIVED": "govuk-tag--red",
-    "PENDING_RECONCILIATION": "",
-    "RECONCILIATION_IN_PROGRESS": "govuk-tag--blue",
+    "PENDING_RECONCILIATION": "govuk-tag--blue",
+    "RECONCILIATION_IN_PROGRESS": "govuk-tag--light-blue",
     "RECONCILIATION_COMPLETED": "govuk-tag--green"
   } %}
   {{ govukTag({

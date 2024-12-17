@@ -108,3 +108,18 @@ export type ReportReconciledEmail = {
   emails: Array<string>;
   variables: ReportReconciledEmailVariables;
 };
+
+type FeeRecordCorrectionRequestEmailVariables = {
+  recipient: string;
+  reportPeriod: string;
+  exporterName: string;
+  reasonsList: string;
+};
+
+export type FeeRecordCorrectionRequestEmailAddresses = {
+  emails: Array<string>;
+};
+
+export type FeeRecordCorrectionRequestEmails = FeeRecordCorrectionRequestEmailAddresses & {
+  variables: FeeRecordCorrectionRequestEmailVariables;
+};

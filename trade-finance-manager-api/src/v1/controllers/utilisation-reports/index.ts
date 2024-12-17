@@ -15,3 +15,4 @@ export { putKeyingDataMarkAsDone } from './put-keying-data-mark-as-done.controll
 export { putKeyingDataMarkAsToDo } from './put-keying-data-mark-as-to-do.controller';
 export { postFeesToAnExistingPayment } from './post-fees-to-an-existing-payment.controller';
 export { getFeeRecord } from './get-fee-record.controller';
+export * from './fee-record-correction';

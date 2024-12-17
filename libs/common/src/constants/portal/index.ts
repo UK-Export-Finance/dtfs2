@@ -1,3 +1,4 @@
+export * from './activity';
 export * from './roles';
 export * from './facility-end-date';
 export * from './login-status';

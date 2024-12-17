@@ -26,8 +26,13 @@ import {
   getCreateRecordCorrectionRequest,
   postCreateRecordCorrectionRequest,
 } from '../../controllers/utilisation-reports/record-corrections/create-record-correction-request';
-import { getRecordCorrectionRequestInformation } from '../../controllers/utilisation-reports/record-corrections/check-the-information';
+import {
+  getRecordCorrectionRequestInformation,
+  postRecordCorrectionRequestInformation,
+} from '../../controllers/utilisation-reports/record-corrections/check-the-information';
 import { postInitiateRecordCorrectionRequest } from '../../controllers/utilisation-reports/record-corrections/initiate-record-correction-request';
+import { getRecordCorrectionRequestSent } from '../../controllers/utilisation-reports/record-corrections/request-sent';
+import { postCancelRecordCorrectionRequest } from '../../controllers/utilisation-reports/record-corrections/cancel-record-correction-request';
 
 export const utilisationReportsRoutes = express.Router();
 
@@ -180,4 +185,31 @@ utilisationReportsRoutes.get(
   validateSqlId('reportId'),
   validateSqlId('feeRecordId'),
   getRecordCorrectionRequestInformation,
+);
+
+utilisationReportsRoutes.post(
+  '/:reportId/create-record-correction-request/:feeRecordId/check-the-information',
+  validateTfmFeeRecordCorrectionFeatureFlagIsEnabled,
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
+  validateSqlId('reportId'),
+  validateSqlId('feeRecordId'),
+  postRecordCorrectionRequestInformation,
+);
+
+utilisationReportsRoutes.get(
+  '/:reportId/create-record-correction-request/:feeRecordId/request-sent',
+  validateTfmFeeRecordCorrectionFeatureFlagIsEnabled,
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
+  validateSqlId('reportId'),
+  validateSqlId('feeRecordId'),
+  getRecordCorrectionRequestSent,
+);
+
+utilisationReportsRoutes.post(
+  '/:reportId/create-record-correction-request/:feeRecordId/cancel',
+  validateTfmFeeRecordCorrectionFeatureFlagIsEnabled,
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
+  validateSqlId('reportId'),
+  validateSqlId('feeRecordId'),
+  postCancelRecordCorrectionRequest,
 );

@@ -1,3 +1,4 @@
+import { PORTAL_ACTIVITY_LABEL } from '@ukef/dtfs2-common';
 import relative from '../../../relativeURL';
 import CONSTANTS from '../../../../fixtures/constants';
 import { tomorrow, threeDaysAgo, threeMonthsOneDay } from '../../../../../../e2e-fixtures/dateConstants';
@@ -469,9 +470,7 @@ context('Check activity feed', () => {
       applicationActivities.subNavigationBarActivities().click();
 
       // contains submission message
-      applicationActivities
-        .activityTimeline()
-        .contains(`${CONSTANTS.PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION} by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
+      applicationActivities.activityTimeline().contains(`${PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION} by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
 
       applicationActivities.subNavigationBarActivities().click();
     });
@@ -484,22 +483,22 @@ context('Check activity feed', () => {
       // already issued facility should not appear in the activity list
       applicationActivities.facilityActivityChangedBy(issuedCashFacilityWithCoverDateConfirmed.ukefFacilityId).should('not.exist');
       applicationActivities.facilityActivityCheckedBy(issuedCashFacilityWithCoverDateConfirmed.ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityUnissuedTag(issuedCashFacilityWithCoverDateConfirmed.ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityIssuedTag(issuedCashFacilityWithCoverDateConfirmed.ukefFacilityId).should('not.exist');
+      applicationActivities.previousStatusTag(issuedCashFacilityWithCoverDateConfirmed.ukefFacilityId).should('not.exist');
+      applicationActivities.newStatusTag(issuedCashFacilityWithCoverDateConfirmed.ukefFacilityId).should('not.exist');
       applicationActivities.facilityActivityLink(issuedCashFacilityWithCoverDateConfirmed.ukefFacilityId).should('not.exist');
 
       // 1st facility unissued so should not show up
       applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[0].ukefFacilityId).should('not.exist');
       applicationActivities.facilityActivityCheckedBy(unissuedFacilitiesArray[0].ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityUnissuedTag(unissuedFacilitiesArray[0].ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityIssuedTag(unissuedFacilitiesArray[0].ukefFacilityId).should('not.exist');
+      applicationActivities.previousStatusTag(unissuedFacilitiesArray[0].ukefFacilityId).should('not.exist');
+      applicationActivities.newStatusTag(unissuedFacilitiesArray[0].ukefFacilityId).should('not.exist');
       applicationActivities.facilityActivityLink(unissuedFacilitiesArray[0].ukefFacilityId).should('not.exist');
 
       // 2nd facility unissued so should not show up
       applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[1].ukefFacilityId).should('not.exist');
       applicationActivities.facilityActivityCheckedBy(unissuedFacilitiesArray[1].ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityUnissuedTag(unissuedFacilitiesArray[1].ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityIssuedTag(unissuedFacilitiesArray[1].ukefFacilityId).should('not.exist');
+      applicationActivities.previousStatusTag(unissuedFacilitiesArray[1].ukefFacilityId).should('not.exist');
+      applicationActivities.newStatusTag(unissuedFacilitiesArray[1].ukefFacilityId).should('not.exist');
       applicationActivities.facilityActivityLink(unissuedFacilitiesArray[1].ukefFacilityId).should('not.exist');
 
       applicationActivities.subNavigationBarActivities().click();
@@ -507,8 +506,8 @@ context('Check activity feed', () => {
       // 3rd facility unissued so should not show up
       applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[2].ukefFacilityId).should('not.exist');
       applicationActivities.facilityActivityCheckedBy(unissuedFacilitiesArray[2].ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityUnissuedTag(unissuedFacilitiesArray[2].ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityIssuedTag(unissuedFacilitiesArray[2].ukefFacilityId).should('not.exist');
+      applicationActivities.previousStatusTag(unissuedFacilitiesArray[2].ukefFacilityId).should('not.exist');
+      applicationActivities.newStatusTag(unissuedFacilitiesArray[2].ukefFacilityId).should('not.exist');
       applicationActivities.facilityActivityLink(unissuedFacilitiesArray[2].ukefFacilityId).should('not.exist');
     });
   });

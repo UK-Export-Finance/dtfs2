@@ -1,1 +1,1 @@
-document.body.className = document.body.className ? `${document.body.className} js-enabled` : 'js-enabled';
+document.body.className += ` js-enabled${'noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : ''}`;

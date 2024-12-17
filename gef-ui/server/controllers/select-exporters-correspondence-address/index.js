@@ -27,7 +27,7 @@ const validateSelectExportersCorrespondenceAddress = (req, res) => {
   const parseAddresses = JSON.parse(addresses);
   let selectedAddressError;
 
-  if (isEmpty(selectedAddress)) {
+  if (isEmpty(selectedAddress) || selectedAddress.includes('Addresses Found')) {
     selectedAddressError = {
       errRef: 'selectedAddress',
       errMsg: 'Select an address',

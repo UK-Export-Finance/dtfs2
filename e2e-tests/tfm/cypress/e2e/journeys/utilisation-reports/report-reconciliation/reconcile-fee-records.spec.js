@@ -149,16 +149,16 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
   });
 
   it('can mark keying sheet rows as done and to do', () => {
-    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FEE_RECORD_ID_ONE).should('contain', 'TO DO');
+    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FEE_RECORD_ID_ONE).should('contain', 'To do');
 
     pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FEE_RECORD_ID_ONE).within(() => cy.get('input[type="checkbox"]').click());
     pages.utilisationReportPage.keyingSheetTab.markAsDoneButton().click();
-    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FEE_RECORD_ID_ONE).should('contain', 'DONE');
+    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FEE_RECORD_ID_ONE).should('contain', 'Done');
 
     pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FEE_RECORD_ID_ONE).within(() => cy.get('input[type="checkbox"]').click());
     pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FEE_RECORD_ID_TWO).within(() => cy.get('input[type="checkbox"]').click());
     pages.utilisationReportPage.keyingSheetTab.markAsToDoButton().click();
-    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FEE_RECORD_ID_ONE).should('contain', 'TO DO');
+    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FEE_RECORD_ID_ONE).should('contain', 'To do');
   });
 
   it('updates report status when all fee records are reconciled and when some are unreconciled', () => {

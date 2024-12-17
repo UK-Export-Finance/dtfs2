@@ -129,7 +129,7 @@ describe('delete-payment.controller', () => {
       const res = httpMocks.createResponse();
 
       const errorStatus = 404;
-      mockHandleEvent.mockRejectedValue(new TestApiError(errorStatus, undefined));
+      mockHandleEvent.mockRejectedValue(new TestApiError({ status: errorStatus }));
 
       // Act
       await deletePayment(req, res);
@@ -147,7 +147,7 @@ describe('delete-payment.controller', () => {
       const res = httpMocks.createResponse();
 
       const errorMessage = 'Some error message';
-      mockHandleEvent.mockRejectedValue(new TestApiError(undefined, errorMessage));
+      mockHandleEvent.mockRejectedValue(new TestApiError({ message: errorMessage }));
 
       // Act
       await deletePayment(req, res);

@@ -1,0 +1,110 @@
+{% extends "index.njk" %}
+{% extends "index.njk" %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% import '../../_macros/change-something-else-details.njk' as changeSomethingElseDetails %}
+
+{% block pageTitle -%}
+  What do you need to change?
+{%- endblock %}
+
+{% set headingHtml %}
+  <header>
+    <span class="govuk-caption-l" data-cy="heading-caption">
+      {{ exporterName }}
+    </span>
+    <h1 class="govuk-label-wrapper" data-cy="page-title">
+      <label class="govuk-label govuk-label--xl" for="what-needs-to-change">
+        What do you need to change?
+      </label>
+    </h1>
+  </header>
+{% endset %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      },
+      classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+    }) }}
+  {% endif %}
+
+  {{ govukBackLink({
+    text: "Back",
+    href: previousPage,
+    attributes: {
+      'data-cy': 'back-link'
+    }
+  }) }}
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <div class="govuk-grid-column-three-quarters">
+      <form method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukCheckboxes({
+          fieldset: {
+            legend: {
+              html: headingHtml
+            }
+          },
+          id: "amendmentSelection",
+          attributes: {
+            "data-cy": "change-checkbox-selection"
+          },
+          hint: {
+            text: "This change will only affect this facility"
+          },
+          errorMessage: errors and errors.fieldErrors.amendmentSelection and {
+            text: errors.fieldErrors.amendmentSelection.text,
+            attributes: { "data-cy": "selection-error-message" }
+          },
+          items: [
+            {
+              value: "coverEndDate",
+              text: "Cover end date",
+              checked: changeCoverEndDate,
+              attributes: {"data-cy": "cover-end-date-checkbox"}
+            },
+            {
+              value: "facilityValue",
+              text: "Facility value",
+              checked: changeFacilityValue,
+              attributes: {"data-cy": "facility-value-checkbox"}
+            }
+          ]
+        }) }}
+
+        {{ govukWarningText({
+          text: "Check your records for the most up-to-date values",
+          iconFallbackText: "Warning",
+          attributes: { 'data-cy': 'warning' }
+        }) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            attributes: {
+              'data-cy': 'continue-button'
+            }
+          }) }}
+
+          <a href="{{ previousPage }}" data-cy="cancel-link" class="govuk-link">Cancel</a>
+        </div>
+
+        {{ changeSomethingElseDetails.render(amendmentFormEmail) }}
+
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

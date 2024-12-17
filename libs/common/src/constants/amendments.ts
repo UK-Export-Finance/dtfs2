@@ -10,3 +10,8 @@ export const AMENDMENT_QUERIES = {
   LATEST_FACILITY_END_DATE: 'latest-facility-end-date',
   LATEST: 'latest',
 } as const;
+
+export const AMENDMENT_TYPES = {
+  PORTAL: 'PORTAL',
+  TFM: 'TFM',
+} as const;

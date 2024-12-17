@@ -1,36 +1,25 @@
 const { format, fromUnixTime } = require('date-fns');
-const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, FACILITY_TYPE, PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-
 const {
   submissionPortalActivity,
   updateChangedToIssued,
   checkCoverDateConfirmed,
   addSubmissionDateToIssuedFacilities,
 } = require('../../../src/v1/gef/controllers/application-submit');
-
 const { update: updateFacility, getAllFacilitiesByDealId } = require('../../../src/v1/gef/controllers/facilities.controller');
-
 const convertToTimestamp = require('../../../src/v1/helpers/convertToTimestamp');
-
 const mockApplications = require('../../fixtures/gef/application');
-
 const databaseHelper = require('../../database-helper');
-
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
-
 const { as } = require('../../api')(app);
+const CONSTANTS = require('../../../src/constants');
+const mockFacilities = require('../../fixtures/gef/facilities');
+const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 
 const baseUrl = '/v1/gef/facilities';
 const applicationBaseUrl = '/v1/gef/application';
-
-const CONSTANTS = require('../../../src/constants');
-
-const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../src/v1/portalActivity-object-generator/activityConstants');
-
-const mockFacilities = require('../../fixtures/gef/facilities');
-const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 
 describe('submissionPortalActivity()', () => {
   let MOCK_APPLICATION;

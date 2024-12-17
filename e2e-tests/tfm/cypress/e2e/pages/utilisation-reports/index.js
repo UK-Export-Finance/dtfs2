@@ -7,6 +7,8 @@ import { utilisationReportEditPaymentPage } from './utilisationReportEditPayment
 import { checkKeyingDataPage } from './checkKeyingDataPage';
 import { utilisationReportAddToAnExistingPaymentPage } from './utilisationReportAddToAnExistingPaymentPage';
 import { createFeeRecordCorrectionRequestPage } from './fee-record-correction/createFeeRecordCorrectionRequestPage';
+import { checkFeeRecordCorrectionRequestPage } from './fee-record-correction/checkFeeRecordCorrectionRequestPage';
+import { feeRecordCorrectionRequestSentPage } from './fee-record-correction/feeRecordCorrectionRequestSentPage';
 
 export const utilisationReportPages = {
   utilisationReportsSummaryPage,
@@ -19,4 +21,6 @@ export const utilisationReportPages = {
   checkKeyingDataPage,
   utilisationReportAddToAnExistingPaymentPage,
   createFeeRecordCorrectionRequestPage,
+  checkFeeRecordCorrectionRequestPage,
+  feeRecordCorrectionRequestSentPage,
 };

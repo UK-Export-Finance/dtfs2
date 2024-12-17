@@ -1,4 +1,4 @@
-import { DealStatus, DealType, IsoDateTimeStamp, AnyObject } from '@ukef/dtfs2-common';
+import { DealStatus, DealType, IsoDateTimeStamp, AnyObject, UnixTimestampMilliseconds, DealSubmissionType } from '@ukef/dtfs2-common';
 
 /**
  * Deal object received from portal-api
@@ -12,7 +12,14 @@ export type Deal = {
   maker: AnyObject;
   status: DealStatus;
   bank: AnyObject;
-  exporter: AnyObject;
+  exporter: {
+    companiesHouseRegistrationNumber: string;
+    companyName: string;
+    industries: AnyObject[];
+    probabilityOfDefault: number;
+    isFinanceIncreasing: boolean;
+    updatedAt: UnixTimestampMilliseconds;
+  };
   bankInternalRefName: string | null;
   createdAt: IsoDateTimeStamp;
   updatedAt: IsoDateTimeStamp;
@@ -20,4 +27,5 @@ export type Deal = {
   supportingInformation: AnyObject;
   editedBy: string[];
   additionalRefName: string | null;
+  submissionType: DealSubmissionType;
 };

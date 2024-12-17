@@ -91,7 +91,7 @@ describe('post-payment.controller', () => {
       const res = httpMocks.createResponse();
 
       const errorStatus = HttpStatusCode.NotFound;
-      jest.mocked(addPaymentToUtilisationReport).mockRejectedValue(new TestApiError(errorStatus, undefined));
+      jest.mocked(addPaymentToUtilisationReport).mockRejectedValue(new TestApiError({ status: errorStatus }));
 
       // Act
       await postPayment(req, res);
@@ -109,7 +109,7 @@ describe('post-payment.controller', () => {
       const res = httpMocks.createResponse();
 
       const errorMessage = 'Some error message';
-      jest.mocked(addPaymentToUtilisationReport).mockRejectedValue(new TestApiError(undefined, errorMessage));
+      jest.mocked(addPaymentToUtilisationReport).mockRejectedValue(new TestApiError({ message: errorMessage }));
 
       // Act
       await postPayment(req, res);

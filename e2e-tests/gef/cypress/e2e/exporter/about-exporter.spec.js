@@ -39,7 +39,7 @@ context('About Exporter Page', () => {
     cy.saveSession();
   });
 
-  describe('With no exporter fields provided', () => {
+  describe('with no exporter fields provided', () => {
     it('should render `Not started` status in the main deal page', () => {
       cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
       applicationDetails.exporterStatus().should('contain', 'Not started');

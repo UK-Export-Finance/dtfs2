@@ -1,10 +1,10 @@
 {% extends "index.njk" %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
-{% import 'contract/components/task-list-header.njk' as taskListHeader %}
-{% import './components/address-fields.njk' as address %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
+{% import 'contract/components/task-list-header.njk' as taskListHeader %}
+{% import './components/address-fields.njk' as address %}
 
 {% block pageTitle -%}
   Buyer information - {{ deal.additionalRefName }}
@@ -30,12 +30,13 @@
 
   <form method="POST" autocomplete="off">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150" id="buyer-name-div">
+
+    <div class="govuk-form-group govuk-character-count" data-module="govuk-character-count" data-maxlength="150" id="buyer-name-div">
       {{ govukInput({
         label: {
           html: 'Buyer name <span id="buyerName-info" class="govuk-hint govuk-character-count__message" aria-live="polite">You can enter up to 150 characters</span>'
         },
-        classes: "govuk-!-width-one-half",
+        classes: "govuk-!-width-one-half govuk-!-margin-bottom-1 govuk-js-character-count",
         id: 'buyer-name',
         name: 'buyer-name',
         value: deal.submissionDetails["buyer-name"],

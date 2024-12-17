@@ -1,204 +1,246 @@
-import { RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
+import { MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import { CreateRecordCorrectionRequestFormValues } from '../../../../types/view-models';
-import {
-  getAdditionalInfoValidationError,
-  getRecordCorrectionReasonsValidationError,
-  MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH,
-  validateCreateRecordCorrectionRequestFormValues,
-} from './validate-form-values';
+import * as validateFormValues from './validate-form-values';
+
+const { getAdditionalInfoValidationError, getCreateRecordCorrectionRequestFormErrors, validateCreateRecordCorrectionRequestFormValues } = validateFormValues;
 
 console.error = jest.fn();
 
 describe('controllers/utilisation-reports/record-corrections/create-record-correction-request/validate-form-values', () => {
   describe('validateCreateRecordCorrectionRequestFormValues', () => {
-    describe('reasons', () => {
-      const expectedErrorMessage = 'You must select a reason for the record correction request';
-
-      describe('when reasons is undefined', () => {
-        it('should set reasons error', () => {
-          // Arrange
-          const formValues: CreateRecordCorrectionRequestFormValues = {
-            ...aValidSetOfFormValues(),
-            reasons: undefined,
-          };
-
-          // Act
-          const errors = validateCreateRecordCorrectionRequestFormValues(formValues);
-
-          // Assert
-          expect(errors.errorSummary).toEqual([{ text: expectedErrorMessage, href: '#reasons' }]);
-          expect(errors.reasonsErrorMessage).toEqual(expectedErrorMessage);
-        });
-      });
-
-      describe('when reasons is an empty array', () => {
-        it('should set reasons error', () => {
-          // Arrange
-          const formValues: CreateRecordCorrectionRequestFormValues = {
-            ...aValidSetOfFormValues(),
-            reasons: [],
-          };
-
-          // Act
-          const errors = validateCreateRecordCorrectionRequestFormValues(formValues);
-
-          // Assert
-          expect(errors.errorSummary).toEqual([{ text: expectedErrorMessage, href: '#reasons' }]);
-          expect(errors.reasonsErrorMessage).toEqual(expectedErrorMessage);
-        });
-      });
-
-      describe('when reasons is an array of a single valid reason', () => {
-        it.each(Object.values(RECORD_CORRECTION_REASON))('should not set reasons error for "%s"', (reason) => {
-          // Arrange
-          const formValues: CreateRecordCorrectionRequestFormValues = {
-            ...aValidSetOfFormValues(),
-            reasons: [reason],
-          };
-
-          // Act
-          const errors = validateCreateRecordCorrectionRequestFormValues(formValues);
-
-          // Assert
-          expect(errors.errorSummary).toHaveLength(0);
-          expect(errors.reasonsErrorMessage).toBeUndefined();
-        });
-      });
-
-      describe('when reasons is an array of multiple valid reasons', () => {
-        it('should not set reasons error', () => {
-          // Arrange
-          const formValues: CreateRecordCorrectionRequestFormValues = {
-            ...aValidSetOfFormValues(),
-            reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER],
-          };
-
-          // Act
-          const errors = validateCreateRecordCorrectionRequestFormValues(formValues);
-
-          // Assert
-          expect(errors.errorSummary).toHaveLength(0);
-          expect(errors.reasonsErrorMessage).toBeUndefined();
-        });
-      });
-    });
-
-    describe('additional info', () => {
-      describe('when additional info is undefined', () => {
-        it('should set additional info error', () => {
-          // Arrange
-          const formValues: CreateRecordCorrectionRequestFormValues = {
-            ...aValidSetOfFormValues(),
-            additionalInfo: undefined,
-          };
-          const expectedErrorMessage = 'You must provide more information for the record correction request';
-
-          // Act
-          const errors = validateCreateRecordCorrectionRequestFormValues(formValues);
-
-          // Assert
-          expect(errors.errorSummary).toEqual([{ text: expectedErrorMessage, href: '#additionalInfo' }]);
-          expect(errors.additionalInfoErrorMessage).toEqual(expectedErrorMessage);
-        });
-      });
-
-      describe(`when additional info is more than 0 and less than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH} characters`, () => {
-        it('should not set additional info error', () => {
-          // Arrange
-          const formValues: CreateRecordCorrectionRequestFormValues = {
-            ...aValidSetOfFormValues(),
-            additionalInfo: 'a'.repeat(450),
-          };
-
-          // Act
-          const errors = validateCreateRecordCorrectionRequestFormValues(formValues);
-
-          // Assert
-          expect(errors.errorSummary).toHaveLength(0);
-          expect(errors.additionalInfoErrorMessage).toBeUndefined();
-        });
-      });
-
-      describe(`when additional info is more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH} characters`, () => {
-        it('should set additional info error ', () => {
-          // Arrange
-          const formValues: CreateRecordCorrectionRequestFormValues = {
-            ...aValidSetOfFormValues(),
-            additionalInfo: 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH + 1),
-          };
-          const expectedErrorMessage = `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH} characters in the provide more information box`;
-
-          // Act
-          const errors = validateCreateRecordCorrectionRequestFormValues(formValues);
-
-          // Assert
-          expect(errors.errorSummary).toEqual([{ text: expectedErrorMessage, href: '#additionalInfo' }]);
-          expect(errors.additionalInfoErrorMessage).toEqual(expectedErrorMessage);
-        });
-      });
-    });
-
-    it('when there are multiple errors should include all errors in error summary', () => {
-      // Arrange
-      const formValues: CreateRecordCorrectionRequestFormValues = {};
-
-      // Act
-      const errors = validateCreateRecordCorrectionRequestFormValues(formValues);
-
-      // Assert
-      expect(errors.errorSummary).toEqual(
-        expect.arrayContaining([
-          { text: 'You must select a reason for the record correction request', href: '#reasons' },
-          { text: 'You must provide more information for the record correction request', href: '#additionalInfo' },
-        ]),
-      );
-    });
-
-    function aValidSetOfFormValues(): CreateRecordCorrectionRequestFormValues {
-      return {
-        reasons: [RECORD_CORRECTION_REASON.OTHER],
-        additionalInfo: 'Some additional info',
-      };
-    }
-  });
-
-  describe('getRecordCorrectionReasonsValidationError', () => {
-    describe('when reasons is undefined', () => {
-      it('should return "select a reason" error message', () => {
+    describe('when there are errors with the form values', () => {
+      it('should return the errors', () => {
         // Arrange
-        const reasons = undefined;
+        const formValues: CreateRecordCorrectionRequestFormValues = {};
+        const expectedReasonsErrorMessage = 'You must select a reason for the record correction request';
+        const expectedAdditionalInfoErrorMessage = 'You must provide more information for the record correction request';
 
         // Act
-        const errorMessage = getRecordCorrectionReasonsValidationError(reasons);
+        const { errors } = validateCreateRecordCorrectionRequestFormValues(formValues);
 
         // Assert
-        expect(errorMessage).toEqual('You must select a reason for the record correction request');
+        expect(errors).toEqual({
+          errorSummary: [
+            { text: expectedReasonsErrorMessage, href: '#reasons' },
+            { text: expectedAdditionalInfoErrorMessage, href: '#additionalInfo' },
+          ],
+          additionalInfoErrorMessage: expectedAdditionalInfoErrorMessage,
+          reasonsErrorMessage: expectedReasonsErrorMessage,
+        });
+      });
+
+      it('should not return any validated form values', () => {
+        // Arrange
+        const formValues: CreateRecordCorrectionRequestFormValues = {};
+
+        // Act
+        const { validatedFormValues } = validateCreateRecordCorrectionRequestFormValues(formValues);
+
+        // Assert
+        expect(validatedFormValues).toBeNull();
+      });
+    });
+
+    describe('when there are no errors with the form values and all expected form values are present', () => {
+      it('should return the validated form values', () => {
+        // Arrange
+        const formValues = aValidSetOfFormValues();
+
+        // Act
+        const { validatedFormValues } = validateCreateRecordCorrectionRequestFormValues(formValues);
+
+        // Assert
+        expect(validatedFormValues).toEqual({
+          additionalInfo: formValues.additionalInfo,
+          reasons: formValues.reasons,
+        });
+      });
+
+      it('should not return any errors', () => {
+        // Arrange
+        const formValues = aValidSetOfFormValues();
+
+        // Act
+        const { errors } = validateCreateRecordCorrectionRequestFormValues(formValues);
+
+        // Assert
+        expect(errors).toBeNull();
+      });
+    });
+
+    describe('when there are no errors with the form values but not all expected form values are present', () => {
+      it('should throw an error', () => {
+        // Arrange
+        const getFormErrorsSpy = jest.spyOn(validateFormValues, 'getCreateRecordCorrectionRequestFormErrors');
+        getFormErrorsSpy.mockReturnValue({
+          errorSummary: [],
+        });
+
+        const formValues: CreateRecordCorrectionRequestFormValues = {
+          reasons: undefined,
+          additionalInfo: undefined,
+        };
+
+        // Act and Assert
+        expect(() => validateCreateRecordCorrectionRequestFormValues(formValues)).toThrow(
+          'Unexpected error: validation passed but required form values are missing',
+        );
+      });
+    });
+  });
+
+  describe('getCreateRecordCorrectionRequestFormErrors', () => {
+    describe('when reasons is undefined', () => {
+      it('should set reasons error', () => {
+        // Arrange
+        const expectedErrorMessage = 'You must select a reason for the record correction request';
+        const formValues: CreateRecordCorrectionRequestFormValues = {
+          ...aValidSetOfFormValues(),
+          reasons: undefined,
+        };
+
+        // Act
+        const errors = getCreateRecordCorrectionRequestFormErrors(formValues);
+
+        // Assert
+        expect(errors).toEqual({
+          errorSummary: [{ text: expectedErrorMessage, href: '#reasons' }],
+          reasonsErrorMessage: expectedErrorMessage,
+        });
       });
     });
 
     describe('when reasons is an empty array', () => {
-      it('should return "select a reason" error message', () => {
+      it('should set reasons error', () => {
         // Arrange
-        const reasons: RecordCorrectionReason[] = [];
+        const expectedErrorMessage = 'You must select a reason for the record correction request';
+        const formValues: CreateRecordCorrectionRequestFormValues = {
+          ...aValidSetOfFormValues(),
+          reasons: [],
+        };
 
         // Act
-        const errorMessage = getRecordCorrectionReasonsValidationError(reasons);
+        const errors = getCreateRecordCorrectionRequestFormErrors(formValues);
 
         // Assert
-        expect(errorMessage).toEqual('You must select a reason for the record correction request');
+        expect(errors).toEqual({
+          errorSummary: [{ text: expectedErrorMessage, href: '#reasons' }],
+          reasonsErrorMessage: expectedErrorMessage,
+        });
       });
     });
 
-    describe(`when reasons is a non-empty array`, () => {
-      it('should return undefined', () => {
+    describe('when reasons is an array of a single valid reason', () => {
+      it.each(Object.values(RECORD_CORRECTION_REASON))('should not set any errors for reason "%s"', (reason) => {
         // Arrange
-        const reasons = [RECORD_CORRECTION_REASON.OTHER];
+        const formValues: CreateRecordCorrectionRequestFormValues = {
+          ...aValidSetOfFormValues(),
+          reasons: [reason],
+        };
 
         // Act
-        const errorMessage = getRecordCorrectionReasonsValidationError(reasons);
+        const errors = getCreateRecordCorrectionRequestFormErrors(formValues);
 
         // Assert
-        expect(errorMessage).toBeUndefined();
+        expect(errors).toEqual({
+          errorSummary: [],
+        });
+      });
+    });
+
+    describe('when reasons is an array of multiple valid reasons', () => {
+      it('should not set reasons error', () => {
+        // Arrange
+        const formValues: CreateRecordCorrectionRequestFormValues = {
+          ...aValidSetOfFormValues(),
+          reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER],
+        };
+
+        // Act
+        const errors = getCreateRecordCorrectionRequestFormErrors(formValues);
+
+        // Assert
+        expect(errors).toEqual({
+          errorSummary: [],
+        });
+      });
+    });
+
+    describe('when additional info is undefined', () => {
+      it('should set additional info error', () => {
+        // Arrange
+        const expectedErrorMessage = 'You must provide more information for the record correction request';
+        const formValues: CreateRecordCorrectionRequestFormValues = {
+          ...aValidSetOfFormValues(),
+          additionalInfo: undefined,
+        };
+
+        // Act
+        const errors = getCreateRecordCorrectionRequestFormErrors(formValues);
+
+        // Assert
+        expect(errors).toEqual({
+          errorSummary: [{ text: expectedErrorMessage, href: '#additionalInfo' }],
+          additionalInfoErrorMessage: expectedErrorMessage,
+        });
+      });
+    });
+
+    describe(`when additional info is more than 0 and less than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters`, () => {
+      it('should not set additional info error', () => {
+        // Arrange
+        const formValues: CreateRecordCorrectionRequestFormValues = {
+          ...aValidSetOfFormValues(),
+          additionalInfo: 'a'.repeat(450),
+        };
+
+        // Act
+        const errors = getCreateRecordCorrectionRequestFormErrors(formValues);
+
+        // Assert
+        expect(errors).toEqual({
+          errorSummary: [],
+        });
+      });
+    });
+
+    describe(`when additional info is more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters`, () => {
+      it('should set additional info error ', () => {
+        // Arrange
+        const expectedErrorMessage = `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters in the provide more information box`;
+        const formValues: CreateRecordCorrectionRequestFormValues = {
+          ...aValidSetOfFormValues(),
+          additionalInfo: 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT + 1),
+        };
+
+        // Act
+        const errors = getCreateRecordCorrectionRequestFormErrors(formValues);
+
+        // Assert
+        expect(errors).toEqual({
+          errorSummary: [{ text: expectedErrorMessage, href: '#additionalInfo' }],
+          additionalInfoErrorMessage: expectedErrorMessage,
+        });
+      });
+    });
+
+    it('when there are multiple errors should include all errors in the error response', () => {
+      // Arrange
+      const formValues: CreateRecordCorrectionRequestFormValues = {};
+      const expectedReasonsErrorMessage = 'You must select a reason for the record correction request';
+      const expectedAdditionalInfoErrorMessage = 'You must provide more information for the record correction request';
+
+      // Act
+      const errors = getCreateRecordCorrectionRequestFormErrors(formValues);
+
+      // Assert
+      expect(errors).toEqual({
+        errorSummary: [
+          { text: expectedReasonsErrorMessage, href: '#reasons' },
+          { text: expectedAdditionalInfoErrorMessage, href: '#additionalInfo' },
+        ],
+        additionalInfoErrorMessage: expectedAdditionalInfoErrorMessage,
+        reasonsErrorMessage: expectedReasonsErrorMessage,
       });
     });
   });
@@ -230,10 +272,10 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       });
     });
 
-    describe(`when the additional info input is exactly ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH} characters`, () => {
+    describe(`when the additional info input is exactly ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters`, () => {
       it('should return undefined', () => {
         // Arrange
-        const additionalInfo = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH);
+        const additionalInfo = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT);
 
         // Act
         const errorMessage = getAdditionalInfoValidationError(additionalInfo);
@@ -243,19 +285,26 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       });
     });
 
-    describe(`when the additional info input is more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH} characters`, () => {
+    describe(`when the additional info input is more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters`, () => {
       it('should return "character limit" error message', () => {
         // Arrange
-        const additionalInfo = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH + 1);
+        const additionalInfo = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT + 1);
 
         // Act
         const errorMessage = getAdditionalInfoValidationError(additionalInfo);
 
         // Assert
         expect(errorMessage).toEqual(
-          `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_LENGTH} characters in the provide more information box`,
+          `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters in the provide more information box`,
         );
       });
     });
   });
+
+  function aValidSetOfFormValues(): CreateRecordCorrectionRequestFormValues {
+    return {
+      reasons: [RECORD_CORRECTION_REASON.OTHER],
+      additionalInfo: 'Some additional info',
+    };
+  }
 });

@@ -5,6 +5,7 @@ import { Currency } from '../currency';
 import { Facility } from './facility';
 import { AnyObject } from '../any-object';
 import { AuditDatabaseRecord } from '../audit-database-record';
+import { AMENDMENT_TYPES } from '../../constants';
 import { TfmFacilityStage } from '../tfm';
 
 type SubmittedByUser = {
@@ -37,21 +38,16 @@ export type FacilityAmendmentTfmObject = {
   isUsingFacilityEndDate?: boolean;
 };
 
-/**
- * Type of the mongo db "tfm-facilities" collection
- * "amendments" property
- *
- * This type is likely incomplete and should be added
- * to as and when new properties are discovered
+/*
+ * Properties common to all amendments
  */
-export type TfmFacilityAmendment = {
+interface BaseAmendment {
   amendmentId: ObjectId;
   facilityId: ObjectId;
   dealId: ObjectId;
   createdAt: UnixTimestamp;
   updatedAt: UnixTimestamp;
   status: AmendmentStatus;
-  version: number;
   changeCoverEndDate?: boolean;
   coverEndDate?: UnixTimestamp | null;
   currentCoverEndDate?: UnixTimestamp | null;
@@ -67,12 +63,28 @@ export type TfmFacilityAmendment = {
   coveredPercentage?: number;
   requireUkefApproval?: boolean;
   submissionType?: string;
-  submittedByPim?: boolean;
   submittedAt?: UnixTimestamp;
   submissionDate?: UnixTimestamp;
+  effectiveDate?: number;
+  createdBy?: {
+    username: string;
+    name: string;
+    email: string;
+  };
+}
+
+/**
+ * Amendments created in TFM
+ *
+ * This type is likely incomplete and should be added
+ * to as and when new properties are discovered
+ */
+export interface TfmFacilityAmendment extends BaseAmendment {
+  type?: typeof AMENDMENT_TYPES.TFM;
+  version: number;
+  submittedByPim?: boolean;
   sendFirstTaskEmail?: boolean;
   firstTaskEmailSent?: boolean;
-  effectiveDate?: number;
   automaticApprovalEmail?: boolean;
   ukefDecision?: {
     coverEndDate?: string;
@@ -96,11 +108,6 @@ export type TfmFacilityAmendment = {
     submittedAt?: UnixTimestamp;
     submittedBy?: SubmittedByUser;
   };
-  createdBy?: {
-    username: string;
-    name: string;
-    email: string;
-  };
   tfm?: FacilityAmendmentTfmObject;
   tasks?: {
     groupTitle: string;
@@ -112,7 +119,20 @@ export type TfmFacilityAmendment = {
     firstName: string;
     lastName: string;
   };
-};
+}
+
+/**
+ * Amendments created in Portal
+ */
+export interface PortalFacilityAmendment extends BaseAmendment {
+  type: typeof AMENDMENT_TYPES.PORTAL;
+}
+
+/**
+ * Type of the mongo db "tfm-facilities" collection
+ * "amendments" property
+ */
+export type FacilityAmendment = TfmFacilityAmendment | PortalFacilityAmendment;
 
 export type FacilityTfmObject = {
   hasBeenIssuedAndAcknowledged: boolean;
@@ -139,7 +159,7 @@ export type FacilityTfmObject = {
 export type TfmFacility = {
   _id: ObjectId;
   facilitySnapshot: Facility;
-  amendments?: TfmFacilityAmendment[];
+  amendments?: FacilityAmendment[];
   tfm: FacilityTfmObject;
   auditRecord?: AuditDatabaseRecord;
 };
