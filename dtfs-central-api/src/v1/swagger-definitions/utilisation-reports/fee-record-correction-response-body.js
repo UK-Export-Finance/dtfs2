@@ -6,6 +6,8 @@
  *     properties:
  *       id:
  *         type: number
+ *       bankId:
+ *         type: string
  *       facilityId:
  *         type: string
  *       exporter:

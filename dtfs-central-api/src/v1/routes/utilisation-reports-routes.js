@@ -963,27 +963,14 @@ utilisationReportsRouter
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), handleExpressValidatorResult)
   .post(validatePostFeeRecordCorrectionPayload, postFeeRecordCorrection);
 
-// TODO FN-3668: Should we change this route to /fee-record-corrections/:correctionId: ?
 /**
  * @openapi
- * /fee-record-corrections/:correctionId:
+ * /utilisation-reports/fee-record-corrections/:correctionId:
  *   get:
  *     summary: Get a fee record correction
  *     tags: [Utilisation Report]
  *     description: Get a fee record correction
  *     parameters:
- *       - in: path
- *         name: reportId
- *         schema:
- *           type: string
- *         required: true
- *         description: the id for the report
- *       - in: path
- *         name: feeRecordId
- *         schema:
- *           type: string
- *         required: true
- *         description: the id for the fee record
  *       - in: path
  *         name: correctionId
  *         schema:
@@ -1006,13 +993,8 @@ utilisationReportsRouter
  *         description: Internal Server Error
  */
 utilisationReportsRouter
-  .route('/:reportId/fee-records/:feeRecordId/corrections/:correctionId')
-  .all(
-    validation.sqlIdValidation('reportId'),
-    validation.sqlIdValidation('feeRecordId'),
-    validation.sqlIdValidation('correctionId'),
-    handleExpressValidatorResult,
-  )
+  .route('/fee-record-corrections/:correctionId')
+  .all(validation.sqlIdValidation('correctionId'), handleExpressValidatorResult)
   .get(getFeeRecordCorrection);
 
 /**

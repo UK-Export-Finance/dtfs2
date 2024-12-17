@@ -11,8 +11,6 @@ import { mapFeeRecordCorrectionEntityToResponse } from './helpers';
  */
 export type GetFeeRecordCorrectionRequest = CustomExpressRequest<{
   params: {
-    reportId: string;
-    feeRecordId: string;
     correctionId: string;
   };
 }>;
@@ -22,6 +20,7 @@ export type GetFeeRecordCorrectionRequest = CustomExpressRequest<{
  */
 export type GetFeeRecordCorrectionBody = {
   id: number;
+  bankId: string;
   facilityId: string;
   exporter: string;
   reportedFees: CurrencyAndAmount;
@@ -40,21 +39,13 @@ type GetFeeRecordCorrection = Response<GetFeeRecordCorrectionBody | string>;
 // TODO FN-3668: Add unit tests.
 // TODO FN-3668: Add API tests?
 export const getFeeRecordCorrection = async (req: GetFeeRecordCorrectionRequest, res: GetFeeRecordCorrection) => {
-  const { reportId, feeRecordId, correctionId: correctionIdString } = req.params;
+  const { correctionId } = req.params;
 
   try {
-    const correctionId = Number(correctionIdString);
-
-    const feeRecordCorrectionEntity = await FeeRecordCorrectionRepo.findOneByIdAndReportIdAndFeeRecordIdWithFeeRecord(
-      correctionId,
-      Number(feeRecordId),
-      Number(reportId),
-    );
+    const feeRecordCorrectionEntity = await FeeRecordCorrectionRepo.findOneByIdWithFeeRecordAndReport(Number(correctionId));
 
     if (!feeRecordCorrectionEntity) {
-      throw new NotFoundError(
-        `Failed to find a fee record correction with id '${correctionId}' with an attached fee record with id '${feeRecordId}' attached to report with id '${reportId}'`,
-      );
+      throw new NotFoundError(`Failed to find a fee record correction with id '${correctionId}'`);
     }
 
     const feeRecordCorrectionDetails = mapFeeRecordCorrectionEntityToResponse(feeRecordCorrectionEntity);

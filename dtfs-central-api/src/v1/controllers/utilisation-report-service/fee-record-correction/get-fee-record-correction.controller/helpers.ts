@@ -10,10 +10,12 @@ import { mapFeeRecordEntityToReportedFees } from '../../../../../mapping/fee-rec
 // TODO FN-3668: Add unit tests
 export const mapFeeRecordCorrectionEntityToResponse = (feeRecordCorrectionEntity: FeeRecordCorrectionEntity): GetFeeRecordCorrectionBody => {
   const { id, feeRecord: feeRecordEntity, reasons, additionalInfo } = feeRecordCorrectionEntity;
-  const { facilityId, exporter } = feeRecordEntity;
+  const { facilityId, exporter, report } = feeRecordEntity;
+  const { bankId } = report;
 
   return {
     id,
+    bankId,
     facilityId,
     exporter,
     reportedFees: mapFeeRecordEntityToReportedFees(feeRecordEntity),

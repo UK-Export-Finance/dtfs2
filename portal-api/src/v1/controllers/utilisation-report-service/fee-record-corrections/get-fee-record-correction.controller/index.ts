@@ -8,26 +8,31 @@ import api from '../../../../api';
  */
 export type GetFeeRecordCorrectionRequest = CustomExpressRequest<{
   params: {
-    reportId: string;
-    feeRecordId: string;
+    bankId: string;
     correctionId: string;
   };
 }>;
 
 /**
  * Calls the DTFS Central API to get a fee record correction.
+ *
+ * Ensures that bank of the report attached to the correction matches the bank
+ * of the requesting user.
  * @param req - The request object containing information about the HTTP request.
  * @param res - The response object used to send the HTTP response.
  */
 // TODO FN-3668: Add unit tests.
-// TODO FN-3668: In the call to this, want to call validateUserAndBankIdMatch validation middleware.
 export const getFeeRecordCorrection = async (req: GetFeeRecordCorrectionRequest, res: Response) => {
   try {
-    const { reportId, feeRecordId, correctionId } = req.params;
+    const { bankId: requestingUserBankId, correctionId } = req.params;
 
-    // TODO FN-3668: Need to add validation to check that the bank can access the correction (check id of bank in the response against the users bank id).
+    const feeRecordCorrection = await api.getFeeRecordCorrectionById(Number(correctionId));
 
-    const feeRecordCorrection = await api.getFeeRecordCorrectionById(Number(correctionId), Number(reportId), Number(feeRecordId));
+    const { bankId: correctionBankId } = feeRecordCorrection;
+
+    if (correctionBankId !== requestingUserBankId) {
+      return res.status(HttpStatusCode.NotFound).send(`Failed to find a fee record correction with id '${correctionId}'`);
+    }
 
     return res.status(HttpStatusCode.Ok).send(feeRecordCorrection);
   } catch (error) {
