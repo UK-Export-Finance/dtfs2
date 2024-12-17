@@ -236,7 +236,7 @@ describe('deleteFacility()', () => {
     await expect(api.deleteFacility({ facilityId: validMongoId, userToken })).rejects.toThrowError();
   });
 
-  test.each(invalidMongoIdTestCases)('returns false when given an invalid facilityId', async (invalidMongoId) => {
+  it.each(invalidMongoIdTestCases)('should return false when given an invalid facilityId', async (invalidMongoId) => {
     const response = await api.deleteFacility({ facilityId: invalidMongoId, userToken });
     expect(response).toEqual(false);
   });
@@ -365,5 +365,26 @@ describe('getAddressesByPostcode()', () => {
 
   it('throws an appropriate error when given an invalid postcode', async () => {
     await expect(api.getAddressesByPostcode({ postcode: 'invalid', userToken })).rejects.toThrowError('Invalid postcode');
+  });
+});
+
+describe('getAmendment()', () => {
+  it(`should return ${HttpStatusCode.Ok} when a facility can be found`, async () => {
+    Axios.get.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
+    const response = await api.getAmendment({ facilityId: validMongoId, amendmentId: validMongoId, userToken });
+    expect(response).toEqual({ status: HttpStatusCode.Ok });
+  });
+
+  it('should throw an error if there is an api error', async () => {
+    Axios.get.mockReturnValue(Promise.reject(new AxiosError()));
+    await expect(api.getAmendment({ facilityId: validMongoId, amendmentId: validMongoId, userToken })).rejects.toThrow(AxiosError);
+  });
+
+  it.each(invalidMongoIdTestCases)('should throw an error when given an invalid facility Id', async (invalidMongoId) => {
+    await expect(api.getAmendment({ facilityId: invalidMongoId, amendmentId: validMongoId, userToken })).rejects.toThrow('Invalid facility ID');
+  });
+
+  it.each(invalidMongoIdTestCases)('should throw an error when given an invalid amendment Id', async (invalidMongoId) => {
+    await expect(api.getAmendment({ facilityId: validMongoId, amendmentId: invalidMongoId, userToken })).rejects.toThrow('Invalid amendment ID');
   });
 });
