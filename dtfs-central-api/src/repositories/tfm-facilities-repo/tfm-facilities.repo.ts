@@ -12,9 +12,9 @@ import {
   PortalFacilityAmendment,
   GEF_FACILITY_TYPE,
   TfmFacilityAmendment,
+  FacilityAmendmentWithUkefId,
 } from '@ukef/dtfs2-common';
 import { deleteMany, generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
-
 import { mongoDbClient } from '../../drivers/db-client';
 import { aggregatePipelines, AllFacilitiesAndFacilityCountAggregatePipelineOptions } from './aggregate-pipelines';
 
@@ -176,7 +176,7 @@ export class TfmFacilitiesRepo {
   public static async findOneAmendmentByFacilityIdAndAmendmentId(
     facilityId: string | ObjectId,
     amendmentId: string | ObjectId,
-  ): Promise<(FacilityAmendment & { ukefFacilityId: string | null }) | undefined> {
+  ): Promise<FacilityAmendmentWithUkefId | undefined> {
     const collection = await this.getCollection();
     const facility = await collection.findOne({ _id: { $eq: new ObjectId(facilityId) } });
 

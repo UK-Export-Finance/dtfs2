@@ -1,7 +1,7 @@
 import { getFormattedReportPeriodWithLongMonth, mapReasonToDisplayValue, RecordCorrectionReason, ReportPeriod } from '@ukef/dtfs2-common';
 import externalApi from '../../../../../external-api/api';
 import EMAIL_TEMPLATE_IDS from '../../../../../constants/email-template-ids';
-import { FeeRecordCorrectionRequestEmails } from '../../../../../types/utilisation-reports';
+import { FeeRecordCorrectionRequestEmails, FeeRecordCorrectionRequestEmailAddresses } from '../../../../../types/utilisation-reports';
 import { getBankById } from '../../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../../errors';
 
@@ -66,6 +66,8 @@ export const generateFeeRecordCorrectionRequestEmailParameters = async (
  * @param bankId - The id of the bank
  * @param requestedByUserEmail - The email of the TFM user who is
  *    requesting the correction
+ * @returns A promise that resolves to an object containing the email addresses
+ * that were notified.
  */
 export const sendFeeRecordCorrectionRequestEmails = async (
   reasons: RecordCorrectionReason[],
@@ -73,11 +75,13 @@ export const sendFeeRecordCorrectionRequestEmails = async (
   exporter: string,
   bankId: string,
   requestedByUserEmail: string,
-): Promise<void> => {
+): Promise<FeeRecordCorrectionRequestEmailAddresses> => {
   const { emails, variables } = await generateFeeRecordCorrectionRequestEmailParameters(reasons, reportPeriod, exporter, bankId, requestedByUserEmail);
 
   try {
     await Promise.all(emails.map((email) => externalApi.sendEmail(EMAIL_TEMPLATE_IDS.FEE_RECORD_CORRECTION_REQUEST, email, variables)));
+
+    return { emails };
   } catch (error) {
     console.error('Error sending fee record correction request email: %o', error);
 
