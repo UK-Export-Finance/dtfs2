@@ -92,7 +92,7 @@ context('Clone GEF (AIN) deal', () => {
       cy.get(`[data-cy="deal__link--index--1 deal__link--${AINdealId}"]`).should('be.visible').click();
 
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}`));
-      cy.get('[data-cy="clone-gef-deal-link"]').should('be.visible').click();
+      cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone`));
       mandatoryCriteria.trueRadio().click();
       form().submit();

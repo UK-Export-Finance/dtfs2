@@ -1,3 +1,5 @@
+import { DEAL_SUBMISSION_TYPE, FACILITY_STAGE } from '@ukef/dtfs2-common';
+
 const relative = require('../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../../fixtures/constants');
@@ -86,7 +88,7 @@ context('Dashboard Deals filters - filter by status', () => {
   describe('Ready for checker', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
-      cy.createBssEwcsDeal({ readyForCheck: true, dealType: 'AIN', facilityStage: 'Unissued' });
+      cy.createBssEwcsDeal({ readyForCheck: true, dealType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 

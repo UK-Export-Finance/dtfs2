@@ -64,8 +64,8 @@ const createBssEwcsDeal = ({ readyForCheck = false, dealType, facilityStage, exp
       contractAboutSupplier.supplierType().select('Exporter');
       cy.keyboardInput(contractAboutSupplier.supplierName(), exporterCompanyName);
       contractAboutSupplier.supplierAddress().country().select('United Kingdom');
-      contractAboutSupplier.supplierAddress().line1().type('Test');
-      contractAboutSupplier.supplierPostCode().type('AB1 2CD');
+      cy.keyboardInput(contractAboutSupplier.supplierAddress().line1(), 'Test');
+      cy.keyboardInput(contractAboutSupplier.supplierPostCode(), 'AB1 2CD');
       contractAboutSupplier.supplierCorrespondenceAddressSame().click();
       contractAboutSupplier.industrySector().select('Accommodation and food service activities');
       contractAboutSupplier.industryClass().select('Event catering activities');
@@ -116,7 +116,7 @@ const createBssEwcsDeal = ({ readyForCheck = false, dealType, facilityStage, exp
       eligibilityCriteria.eligibilityCriteriaTrue(18).click();
       eligibilityCriteria.nextPageButton().click();
       eligibilityDocumentation.questionnaireFileInputUpload().attachFile('test-upload.txt');
-    } else if (dealType === 'AIN') {
+    } else if (dealType === 'Automatic Inclusion Notice') {
       // complete "eligibility criteria"
       eligibilityCriteria.eligibilityCriteriaTrue(11).click();
       eligibilityCriteria.eligibilityCriteriaTrue(12).click();
@@ -143,9 +143,9 @@ const createBssEwcsDeal = ({ readyForCheck = false, dealType, facilityStage, exp
       // complete "bond details"
       bondDetails.bondTypeInput().select('Advance payment guarantee');
       bondDetails.facilityStageIssuedInput().click();
-      bondDetails.requestedCoverStartDateDayInput().type(startDate.day);
-      bondDetails.requestedCoverStartDateMonthInput().type(startDate.month + 1);
-      bondDetails.requestedCoverStartDateYearInput().type(startDate.year);
+      cy.keyboardInput(bondDetails.requestedCoverStartDateDayInput(), startDate.day);
+      cy.keyboardInput(bondDetails.requestedCoverStartDateMonthInput(), startDate.month + 1);
+      cy.keyboardInput(bondDetails.requestedCoverStartDateYearInput(), startDate.year);
       bondDetails.coverEndDateDayInput().type(endDate.day);
       bondDetails.coverEndDateMonthInput().type(endDate.month);
       bondDetails.coverEndDateYearInput().type(endDate.year);

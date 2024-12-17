@@ -1,3 +1,5 @@
+import { DEAL_SUBMISSION_TYPE, FACILITY_STAGE } from '@ukef/dtfs2-common';
+
 const { contract, contractReturnToMaker, contractComments } = require('../../../pages');
 const { successMessage } = require('../../../partials');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
@@ -7,7 +9,7 @@ const { ADMIN, BANK1_CHECKER1, BANK1_MAKER1 } = MOCK_USERS;
 context('A checker selects to return a deal to maker from the view-contract page', () => {
   before(() => {
     cy.deleteDeals(ADMIN);
-    cy.createBssEwcsDeal({ readyForCheck: true, dealType: 'AIN', facilityStage: 'Unissued' });
+    cy.createBssEwcsDeal({ readyForCheck: true, dealType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
   });
 
   it('The cancel button returns the user to the view-contract page.', () => {

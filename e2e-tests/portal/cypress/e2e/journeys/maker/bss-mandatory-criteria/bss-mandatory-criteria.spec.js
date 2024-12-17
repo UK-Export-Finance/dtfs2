@@ -1,3 +1,5 @@
+import { DEAL_SUBMISSION_TYPE, FACILITY_STAGE } from '@ukef/dtfs2-common';
+
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
@@ -7,7 +9,7 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('BSS Mandatory criteria: Check deal details page', () => {
   before(() => {
-    cy.createBssEwcsDeal({ readyForCheck: true, dealType: 'AIN', facilityStage: 'Unissued' });
+    cy.createBssEwcsDeal({ readyForCheck: true, dealType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
   });
 
   after(() => {

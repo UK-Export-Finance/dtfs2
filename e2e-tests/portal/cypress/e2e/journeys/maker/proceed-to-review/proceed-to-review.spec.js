@@ -73,28 +73,28 @@ context('Ensure proceed to review button is only visible once facilities are in 
 
     // Fill in details about supplier
     contractAboutSupplier.supplierType().select('Exporter');
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type('12345678', { delay: 0 });
+    cy.keyboardInput(contractAboutSupplier.supplierCompaniesHouseRegistrationNumber(), '12345678');
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
     contractAboutSupplier.supplierAddress().country().select('United Kingdom');
     contractAboutSupplier.supplierCorrespondenceAddressSame().click();
     contractAboutSupplier.smeTypeSmall().click();
-    contractAboutSupplier.supplyContractDescription().type('Supply Contract Description', { delay: 0 });
+    cy.keyboardInput(contractAboutSupplier.supplyContractDescription(), 'Supply Contract Description');
     contractAboutSupplier.notLegallyDistinct().click();
     contractAboutSupplier.nextPage().click();
 
     // Fill in details about buyer
     contractAboutBuyer.buyerName().type('Buyer Name', { delay: 0 });
     contractAboutBuyer.buyerAddress().country().select('United Kingdom');
-    contractAboutBuyer.buyerAddress().line1().type('Line 1', { delay: 0 });
-    contractAboutBuyer.buyerAddress().line2().type('Line 2', { delay: 0 });
-    contractAboutBuyer.buyerAddress().line3().type('Line 3', { delay: 0 });
-    contractAboutBuyer.buyerAddress().town().type('Town', { delay: 0 });
-    contractAboutBuyer.buyerAddress().postcode().type('AB1 2CD', { delay: 0 });
+    cy.keyboardInput(contractAboutBuyer.buyerAddress().line1(), 'Line 1');
+    cy.keyboardInput(contractAboutBuyer.buyerAddress().line2(), 'Line 2');
+    cy.keyboardInput(contractAboutBuyer.buyerAddress().line3(), 'Line 3');
+    cy.keyboardInput(contractAboutBuyer.buyerAddress().town(), 'Town');
+    cy.keyboardInput(contractAboutBuyer.buyerAddress().postcode(), 'AB1 2CD');
     contractAboutBuyer.destinationOfGoodsAndServices().select('United Kingdom');
     contractAboutBuyer.nextPage().click();
 
     // Fill in financial details
-    contractAboutFinancial.supplyContractValue().type('12000', { delay: 0 });
+    cy.keyboardInput(contractAboutFinancial.supplyContractValue(), '12000');
     contractAboutFinancial.supplyContractCurrency().select('GBP - UK Sterling');
     contractAboutFinancial.saveAndGoBack().click();
 
@@ -118,14 +118,14 @@ context('Ensure proceed to review button is only visible once facilities are in 
     // Fill in bond details
     bondDetails.bondTypeInput().select('Advance payment guarantee');
     bondDetails.facilityStageUnissuedInput().click();
-    bondDetails.ukefGuaranteeInMonthsInput().type('12', { delay: 0 });
+    cy.keyboardInput(bondDetails.ukefGuaranteeInMonthsInput(), '12');
     cy.clickSubmitButton();
 
     // Fill in bond financial details
-    bondFinancialDetails.facilityValueInput().type('100000', { delay: 0 });
+    cy.keyboardInput(bondFinancialDetails.facilityValueInput(), '100000');
     bondFinancialDetails.currencySameAsSupplyContractCurrencyYesInput().click();
-    bondFinancialDetails.riskMarginFeeInput().type('10', { delay: 0 });
-    bondFinancialDetails.coveredPercentageInput().type('80', { delay: 0 });
+    cy.keyboardInput(bondFinancialDetails.riskMarginFeeInput(), '10');
+    cy.keyboardInput(bondFinancialDetails.coveredPercentageInput(), '80');
     cy.clickSubmitButton();
 
     // Fill in bond fee details
@@ -182,28 +182,28 @@ context('Ensure proceed to review button is only visible once facilities are in 
 
     // Fill in details about supplier
     contractAboutSupplier.supplierType().select('Exporter');
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().clear().type('04301762', { delay: 0 });
+    cy.keyboardInput(contractAboutSupplier.supplierCompaniesHouseRegistrationNumber(), '04301762');
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
     contractAboutSupplier.supplierAddress().country().select('United Kingdom');
     contractAboutSupplier.supplierCorrespondenceAddressSame().click();
     contractAboutSupplier.smeTypeSmall().click();
-    contractAboutSupplier.supplyContractDescription().type('Supply Contract Description', { delay: 0 });
+    cy.keyboardInput(contractAboutSupplier.supplyContractDescription(), 'Supply Contract Description');
     contractAboutSupplier.notLegallyDistinct().click();
     contractAboutSupplier.nextPage().click();
 
     // Fill in details about buyer
-    contractAboutBuyer.buyerName().type('Buyer Name', { delay: 0 });
+    cy.keyboardInput(contractAboutBuyer.buyerName(), 'Buyer Name');
     contractAboutBuyer.buyerAddress().country().select('United Kingdom');
-    contractAboutBuyer.buyerAddress().line1().type('Line 1', { delay: 0 });
-    contractAboutBuyer.buyerAddress().line2().type('Line 2', { delay: 0 });
-    contractAboutBuyer.buyerAddress().line3().type('Line 3', { delay: 0 });
-    contractAboutBuyer.buyerAddress().town().type('Town', { delay: 0 });
-    contractAboutBuyer.buyerAddress().postcode().type('AB1 2CD', { delay: 0 });
+    cy.keyboardInput(contractAboutBuyer.buyerAddress().line1(), 'Line 1');
+    cy.keyboardInput(contractAboutBuyer.buyerAddress().line2(), 'Line 2');
+    cy.keyboardInput(contractAboutBuyer.buyerAddress().line3(), 'Line 3');
+    cy.keyboardInput(contractAboutBuyer.buyerAddress().town(), 'Town');
+    cy.keyboardInput(contractAboutBuyer.buyerAddress().postcode(), 'AB1 2CD');
     contractAboutBuyer.destinationOfGoodsAndServices().select('United Kingdom');
     contractAboutBuyer.nextPage().click();
 
     // Fill in financial details
-    contractAboutFinancial.supplyContractValue().type('12000', { delay: 0 });
+    cy.keyboardInput(contractAboutFinancial.supplyContractValue(), '12000');
     contractAboutFinancial.supplyContractCurrency().select('GBP - UK Sterling');
     contractAboutFinancial.saveAndGoBack().click();
 
@@ -227,14 +227,14 @@ context('Ensure proceed to review button is only visible once facilities are in 
     // Fill in bond details
     bondDetails.bondTypeInput().select('Advance payment guarantee');
     bondDetails.facilityStageUnissuedInput().click();
-    bondDetails.ukefGuaranteeInMonthsInput().type('12', { delay: 0 });
+    cy.keyboardInput(bondDetails.ukefGuaranteeInMonthsInput(), '12');
     cy.clickSubmitButton();
 
     // Fill in bond financial details
-    bondFinancialDetails.facilityValueInput().type('100000', { delay: 0 });
+    cy.keyboardInput(bondFinancialDetails.facilityValueInput(), '100000');
     bondFinancialDetails.currencySameAsSupplyContractCurrencyYesInput().click();
-    bondFinancialDetails.riskMarginFeeInput().type('10', { delay: 0 });
-    bondFinancialDetails.coveredPercentageInput().type('80', { delay: 0 });
+    cy.keyboardInput(bondFinancialDetails.riskMarginFeeInput(), '10');
+    cy.keyboardInput(bondFinancialDetails.coveredPercentageInput(), '80');
     cy.clickSubmitButton();
 
     // Fill in bond fee details
