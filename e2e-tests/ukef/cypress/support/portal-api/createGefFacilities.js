@@ -12,6 +12,7 @@ module.exports = (dealId, facilities, user) => {
 
       createGefFacilities(dealId, facilityWithId, facilityWithId.type, user, token).then((createdFacilities) => {
         const facilityId = createdFacilities.details._id;
+
         updateGefFacilities(facilityId, facilityToInsert, token).then((updated) => updated);
       });
     });

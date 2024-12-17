@@ -7,6 +7,8 @@ import {
   Role,
   ROLES,
 } from '@ukef/dtfs2-common';
+import { Deal } from '../types/deal';
+import { Facility } from '../types/facility';
 
 /**
  * returns a boolean indicating whether the user can amend issued facilities based on the submission type, deal status and user roles.
@@ -22,4 +24,19 @@ export const canUserAmendIssuedFacilities = (submissionType: DealSubmissionType,
   const isValidDealStatus = dealStatus === DEAL_STATUS.UKEF_ACKNOWLEDGED;
 
   return isPortalAmendmentsEnabled && userHasMakerRole && isValidSubmissionType && isValidDealStatus;
+};
+
+/**
+ * Determines if a user can amend a facility.
+ *
+ * @param facility - The facility to check.
+ * @param deal - The deal associated with the facility.
+ * @param userRoles - The roles of the user.
+ * @returns - Returns true if the user can amend the facility, otherwise false.
+ */
+export const userCanAmendFacility = (facility: Facility, deal: Deal, userRoles: Role[]) => {
+  const userCanAmendIssuedFacilities = canUserAmendIssuedFacilities(deal.submissionType, deal.status, userRoles);
+  const facilityIsIssued = facility.hasBeenIssued === true;
+
+  return userCanAmendIssuedFacilities && facilityIsIssued;
 };
