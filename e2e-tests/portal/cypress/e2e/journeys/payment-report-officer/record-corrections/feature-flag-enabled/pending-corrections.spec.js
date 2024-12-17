@@ -128,19 +128,24 @@ context('Pending corrections - Fee record correction feature flag enabled', () =
 
         beforeEach(() => {
           cy.task('getUserFromDbByEmail', BANK1_PAYMENT_REPORT_OFFICER1.email).then((user) => {
-            const { bank } = user;
-            const reportSchedule = bank.utilisationReportPeriodSchedule;
+            const { id } = user.bank;
 
-            const nextReportPeriod = getNextReportPeriodForBankSchedule(reportSchedule, new Date());
-            const formattedNextDueReportPeriod = getFormattedReportPeriodWithLongMonth(nextReportPeriod);
+            cy.task(NODE_TASKS.GET_ALL_BANKS).then((banks) => {
+              const bank = banks.find((b) => b.id === id);
 
-            cy.wrap(formattedNextDueReportPeriod).as(formattedNextDueReportPeriodAlias);
+              const reportSchedule = bank.utilisationReportPeriodSchedule;
 
-            const startOfEndMonthOfReportPeriod = new Date(nextReportPeriod.end.year, nextReportPeriod.end.month - 1, 1);
-            const submissionPeriodStartDate = addMonths(startOfEndMonthOfReportPeriod, 1);
-            const formattedUploadFromDate = format(submissionPeriodStartDate, 'd MMMM yyyy');
+              const nextReportPeriod = getNextReportPeriodForBankSchedule(reportSchedule, new Date());
+              const formattedNextDueReportPeriod = getFormattedReportPeriodWithLongMonth(nextReportPeriod);
 
-            cy.wrap(formattedUploadFromDate).as(formattedUploadFromDateAlias);
+              cy.wrap(formattedNextDueReportPeriod).as(formattedNextDueReportPeriodAlias);
+
+              const startOfEndMonthOfReportPeriod = new Date(nextReportPeriod.end.year, nextReportPeriod.end.month - 1, 1);
+              const submissionPeriodStartDate = addMonths(startOfEndMonthOfReportPeriod, 1);
+              const formattedUploadFromDate = format(submissionPeriodStartDate, 'd MMMM yyyy');
+
+              cy.wrap(formattedUploadFromDate).as(formattedUploadFromDateAlias);
+            });
 
             cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
             cy.visit(relativeURL('/utilisation-report-upload'));
