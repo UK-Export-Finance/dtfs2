@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { DEAL_TYPE } from '../../constants';
 import { AnyObject } from '../any-object';
-import { DealSubmissionType, DealType, TfmActivity, TfmDealCancellationWithStatus } from '..';
+import { DealSubmissionType, DealType, MappedBssEwcsFacility, MappedGefFacility, TfmActivity, TfmDealCancellationWithStatus } from '..';
 import { TfmDealStage } from './deal-stage';
 
 /**
@@ -16,7 +16,6 @@ type MappedBaseDealSnapshot = AnyObject & {
   details: {
     ukefDealId: string;
   };
-  facilities: AnyObject;
   totals: AnyObject;
   submissionDetails: AnyObject;
   eligibility: AnyObject;
@@ -24,10 +23,12 @@ type MappedBaseDealSnapshot = AnyObject & {
 
 export interface MappedBssEwcsDealSnapshot extends MappedBaseDealSnapshot {
   dealType: typeof DEAL_TYPE.BSS_EWCS;
+  facilities: MappedBssEwcsFacility[];
 }
 
 export interface MappedGefDealSnapshot extends MappedBaseDealSnapshot {
   dealType: typeof DEAL_TYPE.GEF;
+  facilities: MappedGefFacility[];
   status: string;
   updatedAt: number;
   maker: AnyObject;

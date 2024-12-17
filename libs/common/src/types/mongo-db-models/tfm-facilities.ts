@@ -6,6 +6,7 @@ import { Facility } from './facility';
 import { AnyObject } from '../any-object';
 import { AuditDatabaseRecord } from '../audit-database-record';
 import { AMENDMENT_TYPES } from '../../constants';
+import { TfmFacilityStage } from '../tfm';
 
 type SubmittedByUser = {
   _id: ObjectId;
@@ -133,6 +134,22 @@ export interface PortalFacilityAmendment extends BaseAmendment {
  */
 export type FacilityAmendment = TfmFacilityAmendment | PortalFacilityAmendment;
 
+export type FacilityTfmObject = {
+  hasBeenIssuedAndAcknowledged: boolean;
+  feeRecord: number;
+  ukefExposure: number;
+  ukefExposureCalculationTimestamp: string;
+  exposurePeriodInMonths: number;
+  facilityGuaranteeDates: {
+    guaranteeCommencementDate: string;
+    guaranteeExpiryDate: string;
+    effectiveDate: string;
+  };
+  riskProfile: string;
+  premiumSchedule?: Array<AnyObject>;
+  facilityStage?: TfmFacilityStage;
+};
+
 /**
  * Type of the mongo db "tfm-facilities" collection
  *
@@ -143,6 +160,6 @@ export type TfmFacility = {
   _id: ObjectId;
   facilitySnapshot: Facility;
   amendments?: FacilityAmendment[];
-  tfm: object;
+  tfm: FacilityTfmObject;
   auditRecord?: AuditDatabaseRecord;
 };

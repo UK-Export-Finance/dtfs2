@@ -1,4 +1,4 @@
-import { Facility, FacilityType, FACILITY_TYPE, MAPPED_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { Facility, FacilityType, FACILITY_TYPE, MAPPED_FACILITY_TYPE, GefFacilityType, MappedGefFacilityType } from '@ukef/dtfs2-common';
 
 const { BOND, LOAN, CASH, CONTINGENT } = FACILITY_TYPE;
 
@@ -18,7 +18,7 @@ const { BOND, LOAN, CASH, CONTINGENT } = FACILITY_TYPE;
  */
 export const mapBssEwcsFacilityType = (type: FacilityType, facilitySnapshot: Facility): string | null => {
   if (type === BOND) {
-    return facilitySnapshot.bondType ?? null;
+    return typeof facilitySnapshot.bondType === 'string' ? facilitySnapshot.bondType : null;
   }
 
   if (type === LOAN) {
@@ -41,7 +41,7 @@ export const mapBssEwcsFacilityType = (type: FacilityType, facilitySnapshot: Fac
  * // returns 'Contingent Facility'
  * mapGefFacilityType('Contingent')
  */
-export const mapGefFacilityType = (type: FacilityType): string | null => {
+export const mapGefFacilityType = (type: GefFacilityType): MappedGefFacilityType | null => {
   if (type === CASH) {
     return MAPPED_FACILITY_TYPE.CASH;
   }
