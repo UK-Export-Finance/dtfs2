@@ -450,6 +450,32 @@ const getNextReportPeriodByBankId = async (bankId) => {
   }
 };
 
+/**
+ * Gets fee record correction by id
+ * @param {number} correctionId - The ID of the correction
+ * @param {number} reportId - The ID of the utilisation report
+ * @param {number} feeRecordId - The ID of the fee record
+ * @returns {Promise<import('./api-response-types').GetFeeRecordCorrectionResponseBody>} response of API call or wrapped error response
+ */
+const getFeeRecordCorrectionById = async (correctionId, reportId, feeRecordId) => {
+  try {
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/corrections/${correctionId}`, {
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Unable to get fee record correction with id %s with an attached fee record with id %s attached to report with id %s: %o',
+      correctionId,
+      feeRecordId,
+      reportId,
+      error,
+    );
+    throw error;
+  }
+};
+
 module.exports = {
   findOneDeal,
   createDeal,
@@ -470,4 +496,5 @@ module.exports = {
   getBankById,
   getAllBanks,
   getNextReportPeriodByBankId,
+  getFeeRecordCorrectionById,
 };

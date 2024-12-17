@@ -49,6 +49,7 @@ const { postFeeRecordCorrection } = require('../controllers/utilisation-report-s
 const {
   deleteFeeRecordCorrectionTransientFormData,
 } = require('../controllers/utilisation-report-service/fee-record-correction/delete-fee-record-correction-transient-form-data.controller');
+const { getFeeRecordCorrection } = require('../controllers/utilisation-report-service/fee-record-correction/get-fee-record-correction.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -961,6 +962,58 @@ utilisationReportsRouter
   .route('/:reportId/fee-records/:feeRecordId/corrections')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), handleExpressValidatorResult)
   .post(validatePostFeeRecordCorrectionPayload, postFeeRecordCorrection);
+
+// TODO FN-3668: Should we change this route to /fee-record-corrections/:correctionId: ?
+/**
+ * @openapi
+ * /fee-record-corrections/:correctionId:
+ *   get:
+ *     summary: Get a fee record correction
+ *     tags: [Utilisation Report]
+ *     description: Get a fee record correction
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report
+ *       - in: path
+ *         name: feeRecordId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the fee record
+ *       - in: path
+ *         name: correctionId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the correction
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/definitions/FeeRecordCorrectionResponse'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/:reportId/fee-records/:feeRecordId/corrections/:correctionId')
+  .all(
+    validation.sqlIdValidation('reportId'),
+    validation.sqlIdValidation('feeRecordId'),
+    validation.sqlIdValidation('correctionId'),
+    handleExpressValidatorResult,
+  )
+  .get(getFeeRecordCorrection);
 
 /**
  * @openapi
