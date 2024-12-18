@@ -470,6 +470,27 @@ const getUtilisationReportPendingCorrectionsByBankId = async (bankId) => {
   }
 };
 
+/**
+ * Gets the portal facility amendment
+ * @param {string} facilityId - id of the facility to amend
+ * @param {string} amendmentId - id of the facility amendment
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>} - the amendment
+ */
+const getPortalFacilityAmendment = async (facilityId, amendmentId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}/amendments/${amendmentId}`,
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error getting portal facility amendment with facility id %s and amendment id %s: %o', facilityId, amendmentId, error);
+    throw error;
+  }
+};
+
 module.exports = {
   findOneDeal,
   createDeal,
@@ -491,4 +512,5 @@ module.exports = {
   getAllBanks,
   getNextReportPeriodByBankId,
   getUtilisationReportPendingCorrectionsByBankId,
+  getPortalFacilityAmendment,
 };

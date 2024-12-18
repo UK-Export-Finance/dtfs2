@@ -10,3 +10,4 @@ export * from './edit-payment-view-model';
 export * from './fee-record-payment-group-view-model-item';
 export * from './payment-details-item';
 export * from './with-schema.tests';
+export * from './get-fee-record-response-body';
