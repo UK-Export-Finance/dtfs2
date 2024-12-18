@@ -19,11 +19,6 @@
 
     {{ correctionRequestDetailsTable.render({ details: correctionRequestDetails }) }}
 
-    {# TODO FN-3668: Add in selectively rendered form fields based on the reasons. #}
-
-    {# TODO FN-3668: Textarea prompt text should change based on whether other reasons have been selected, apart from 'Other' - see designs in body of ticket. #}
-    {# TODO FN-3668: We want the textarea to have an upper character limit of 500 chars, update to use the same component as TFM UI. #}
-
     <div class="govuk-button-group">
       <form method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
