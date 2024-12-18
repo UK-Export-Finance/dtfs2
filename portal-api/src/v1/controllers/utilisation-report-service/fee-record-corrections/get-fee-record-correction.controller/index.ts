@@ -31,6 +31,9 @@ export const getFeeRecordCorrection = async (req: GetFeeRecordCorrectionRequest,
     const { bankId: correctionBankId } = feeRecordCorrection;
 
     if (correctionBankId !== requestingUserBankId) {
+      console.error(
+        `Failed to get fee record correction with id '${correctionId}' as the bank id '${correctionBankId}' does not match the requesting user's bank id '${requestingUserBankId}'`,
+      );
       return res.status(HttpStatusCode.NotFound).send(`Failed to find a fee record correction with id '${correctionId}'`);
     }
 

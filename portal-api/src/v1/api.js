@@ -451,7 +451,7 @@ const getNextReportPeriodByBankId = async (bankId) => {
 };
 
 /**
- * Gets fee record correction by id
+ * Gets fee record correction by id.
  * @param {number} correctionId - The ID of the correction
  * @returns {Promise<import('./api-response-types').GetFeeRecordCorrectionResponseBody>} response of API call or wrapped error response
  */
