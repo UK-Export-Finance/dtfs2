@@ -1,0 +1,1 @@
+export const CHUNK_SIZE_FOR_SQL_BATCH_SAVING = 100;

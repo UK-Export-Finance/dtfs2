@@ -145,6 +145,7 @@ const commonApplicationDetails = {
     _id: '619bae3467cc7c002069fc1e',
   },
 };
+
 export const MOCK_APPLICATION_AIN_DRAFT = {
   submissionType: DEAL_SUBMISSION_TYPE.AIN,
   eligibility: eligibilityCriteria(true),

@@ -13,15 +13,13 @@ import { SqlDbHelper } from '../../../sql-db-helper';
 import { mongoDbClient } from '../../../../src/drivers/db-client';
 import { wipe } from '../../../wipeDB';
 import { aBank, aPortalUser, aTfmSessionUser } from '../../../../test-helpers';
+import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replace-url-parameter-placeholders';
 
 console.error = jest.fn();
 
 const BASE_URL = '/v1/utilisation-reports/:reportId/fee-records/:feeRecordId/corrections';
 
 describe(`POST ${BASE_URL}`, () => {
-  const getUrl = (reportId: number | string, feeRecordId: number | string) =>
-    BASE_URL.replace(':reportId', reportId.toString()).replace(':feeRecordId', feeRecordId.toString());
-
   const reportId = 1;
   const feeRecordId = 11;
   const nonExistentFeeRecordId = 12;
@@ -34,10 +32,15 @@ describe(`POST ${BASE_URL}`, () => {
 
   const bankId = '123';
   const bankName = 'Test bank';
+  const bankEmails = ['test1@ukexportfinance.gov.uk', 'test2@ukexportfinance.gov.uk'];
   const bank: Bank = {
     ...aBank(),
     id: bankId,
     name: bankName,
+    paymentOfficerTeam: {
+      teamName: 'Payment Reporting Team',
+      emails: bankEmails,
+    },
   };
 
   const uploadedUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
@@ -98,17 +101,20 @@ describe(`POST ${BASE_URL}`, () => {
     makeRequest: (url) => testApi.post(aValidRequestBody()).to(url),
   });
 
-  it(`should respond with a ${HttpStatusCode.Ok} with a valid request body`, async () => {
+  it(`should respond with a ${HttpStatusCode.Ok} with the notified emails if the request is valid`, async () => {
     // Arrange
     await SqlDbHelper.saveNewEntry('FeeRecordCorrectionTransientFormData', transientFormDataForUserAndFeeRecord);
 
     const requestBody = aValidRequestBody();
 
+    const expectedEmails = [...bankEmails, requestBody.user.email];
+
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId, feeRecordId));
+    const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.Ok);
+    expect(response.body).toEqual({ emails: expectedEmails });
   });
 
   it(`should respond with a ${HttpStatusCode.BadRequest} when payload is invalid`, async () => {
@@ -120,7 +126,7 @@ describe(`POST ${BASE_URL}`, () => {
     };
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId, feeRecordId));
+    const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -133,7 +139,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId, nonExistentFeeRecordId));
+    const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId: nonExistentFeeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -153,7 +159,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(otherReportId, feeRecordId));
+    const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId: otherReportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -164,7 +170,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId, feeRecordId));
+    const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -178,7 +184,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId, feeRecordId));
+    const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -192,7 +198,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId, feeRecordId));
+    const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -218,7 +224,9 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportWithNonExistentBank.id, reportFeeRecordId));
+    const response = await testApi
+      .post(requestBody)
+      .to(replaceUrlParameterPlaceholders(BASE_URL, { reportId: reportWithNonExistentBank.id, feeRecordId: reportFeeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);

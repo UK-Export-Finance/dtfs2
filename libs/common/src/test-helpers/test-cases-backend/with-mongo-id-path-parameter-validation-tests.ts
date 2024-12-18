@@ -1,6 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import { API_ERROR_CODE } from '../../constants';
 import { ErrorResponse } from './types';
+import { extractPathParameterPlaceholders } from './extract-path-parameter-placeholders';
 
 type WithMongoIdPathParameterValidationTestsParams = {
   baseUrl: string;
@@ -8,12 +9,6 @@ type WithMongoIdPathParameterValidationTestsParams = {
 };
 
 const VALID_OBJECT_ID = '5c0a7922c9d89830f4911426';
-
-const extractParameters = (url: string): string[] =>
-  url
-    .split('/')
-    .filter((pathStr) => pathStr.startsWith(':'))
-    .map((pathParam) => pathParam.replace(':', ''));
 
 /**
  * Test helper to test the mongo id validation middleware being used for a specific route
@@ -23,7 +18,7 @@ const extractParameters = (url: string): string[] =>
  * @param params.makeRequest - The function to make the request with
  */
 export const withMongoIdPathParameterValidationTests = ({ baseUrl, makeRequest }: WithMongoIdPathParameterValidationTestsParams): void => {
-  const parameters = extractParameters(baseUrl);
+  const parameters = extractPathParameterPlaceholders(baseUrl);
 
   describe.each(parameters)("when the ':%s' path parameter is not a valid mongo id", (parameter) => {
     const baseUrlWithTestParameter = baseUrl.replace(`:${parameter}`, 'invalid-id');

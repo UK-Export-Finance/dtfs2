@@ -469,8 +469,8 @@ context('Submit to UKEF with unissued to issued facilities - feature flag disabl
       applicationActivities
         .facilityActivityCheckedBy(unissuedFacilitiesArray[0].ukefFacilityId)
         .contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
-      applicationActivities.facilityActivityUnissuedTag(unissuedFacilitiesArray[0].ukefFacilityId).contains('Unissued');
-      applicationActivities.facilityActivityIssuedTag(unissuedFacilitiesArray[0].ukefFacilityId).contains('Issued');
+      applicationActivities.previousStatusTag(unissuedFacilitiesArray[0].ukefFacilityId).contains('Unissued');
+      applicationActivities.newStatusTag(unissuedFacilitiesArray[0].ukefFacilityId).contains('Issued');
       applicationActivities
         .facilityActivityLink(unissuedFacilitiesArray[0].ukefFacilityId)
         .contains(`${unissuedFacilitiesArray[0].type} facility ${unissuedFacilitiesArray[0].ukefFacilityId}`);
@@ -486,8 +486,8 @@ context('Submit to UKEF with unissued to issued facilities - feature flag disabl
       applicationActivities
         .facilityActivityCheckedBy(unissuedFacilitiesArray[1].ukefFacilityId)
         .contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
-      applicationActivities.facilityActivityUnissuedTag(unissuedFacilitiesArray[1].ukefFacilityId).contains('Unissued');
-      applicationActivities.facilityActivityIssuedTag(unissuedFacilitiesArray[1].ukefFacilityId).contains('Issued');
+      applicationActivities.previousStatusTag(unissuedFacilitiesArray[1].ukefFacilityId).contains('Unissued');
+      applicationActivities.newStatusTag(unissuedFacilitiesArray[1].ukefFacilityId).contains('Issued');
       applicationActivities
         .facilityActivityLink(unissuedFacilitiesArray[1].ukefFacilityId)
         .contains(`${unissuedFacilitiesArray[1].type} facility ${unissuedFacilitiesArray[1].ukefFacilityId}`);
@@ -503,8 +503,8 @@ context('Submit to UKEF with unissued to issued facilities - feature flag disabl
       applicationActivities
         .facilityActivityCheckedBy(unissuedFacilitiesArray[2].ukefFacilityId)
         .contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
-      applicationActivities.facilityActivityUnissuedTag(unissuedFacilitiesArray[2].ukefFacilityId).contains('Unissued');
-      applicationActivities.facilityActivityIssuedTag(unissuedFacilitiesArray[2].ukefFacilityId).contains('Issued');
+      applicationActivities.previousStatusTag(unissuedFacilitiesArray[2].ukefFacilityId).contains('Unissued');
+      applicationActivities.newStatusTag(unissuedFacilitiesArray[2].ukefFacilityId).contains('Issued');
       applicationActivities
         .facilityActivityLink(unissuedFacilitiesArray[2].ukefFacilityId)
         .contains(`${unissuedFacilitiesArray[2].type} facility ${unissuedFacilitiesArray[2].ukefFacilityId}`);
@@ -522,8 +522,8 @@ context('Submit to UKEF with unissued to issued facilities - feature flag disabl
       // already issued facility should not appear in the activity list
       applicationActivities.facilityActivityChangedBy(issuedCashFacility.ukefFacilityId).should('not.exist');
       applicationActivities.facilityActivityCheckedBy(issuedCashFacility.ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityUnissuedTag(issuedCashFacility.ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityIssuedTag(issuedCashFacility.ukefFacilityId).should('not.exist');
+      applicationActivities.previousStatusTag(issuedCashFacility.ukefFacilityId).should('not.exist');
+      applicationActivities.newStatusTag(issuedCashFacility.ukefFacilityId).should('not.exist');
       applicationActivities.facilityActivityLink(issuedCashFacility.ukefFacilityId).should('not.exist');
     });
   });
