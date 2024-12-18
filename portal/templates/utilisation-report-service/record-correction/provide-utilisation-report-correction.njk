@@ -3,6 +3,8 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 
+{% import "./_macros/correction-request-details-table.njk" as correctionRequestDetailsTable %}
+
 {% block pageTitle %}Record correction{% endblock %}
 
 {% block content %}
@@ -15,28 +17,12 @@
       Record correction
     </h2>
 
-    <h3 class="govuk-heading-m">
-      Current record
-    </h3>
-
-    {# TODO FN-3668: Add a template macro for the current record table - pass in the CorrectionRecordViewModel obj. #}
+    {{ correctionRequestDetailsTable.render({ details: correctionRequestDetails }) }}
 
     {# TODO FN-3668: Add in selectively rendered form fields based on the reasons. #}
 
     {# TODO FN-3668: Textarea prompt text should change based on whether other reasons have been selected, apart from 'Other' - see designs in body of ticket. #}
-
-    {{ govukTextarea({
-      name: "moreDetail",
-      id: "more-detail",
-      label: {
-        text: "Additional comments (TODO FN-3668: Use dynamic copy)",
-        classes: "govuk-label--l",
-        isPageHeading: true
-      },
-      hint: {
-        text: "TODO FN-3668: Use dynamic copy"
-      }
-    }) }}
+    {# TODO FN-3668: We want the textarea to have an upper character limit of 500 chars, update to use the same component as TFM UI. #}
 
     <div class="govuk-button-group">
       <form method="post">
