@@ -14,6 +14,8 @@ import { anUnissuedCashFacility } from '../../../../e2e-fixtures/mock-gef-facili
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_MIN } from '../../fixtures/mocks/mock-deals';
 import { today } from '../../../../e2e-fixtures/dateConstants';
+import dashboardPage from '../pages/dashboard-page';
+import submitToUkefConfirmation from '../pages/submit-to-ukef-confirmation';
 
 context('Clone GEF (AIN) deal', () => {
   let AINdealId;
@@ -88,8 +90,8 @@ context('Clone GEF (AIN) deal', () => {
       cy.clickSubmitButton();
       cy.clickSubmitButton();
 
-      cy.get('[data-cy="dashboard-link"]').click();
-      cy.get(`[data-cy="deal__link--index--1 deal__link--${AINdealId}"]`).should('be.visible').click();
+      submitToUkefConfirmation.dashboardLink().click();
+      dashboardPage.rowIndex.link(AINdealId).click();
 
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}`));
       cloneGEFDeal.cloneGefDealLink().click();
@@ -140,7 +142,7 @@ context('Clone GEF (AIN) deal', () => {
 
       cy.login(BANK1_MAKER1);
 
-      cy.get(`[data-cy="deal__link--index--1 deal__link--${AINdealId}"]`).click();
+      dashboardPage.rowIndex.link(AINdealId).click();
 
       cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone`));

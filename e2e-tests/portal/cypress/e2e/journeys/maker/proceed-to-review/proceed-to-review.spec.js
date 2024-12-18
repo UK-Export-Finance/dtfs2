@@ -182,7 +182,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
 
     // Fill in details about supplier
     contractAboutSupplier.supplierType().select('Exporter');
-    cy.keyboardInput(contractAboutSupplier.supplierCompaniesHouseRegistrationNumber(), '04301762');
+    cy.keyboardInput(contractAboutSupplier.supplierCompaniesHouseRegistrationNumber(), '12345678');
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
     contractAboutSupplier.supplierAddress().country().select('United Kingdom');
     contractAboutSupplier.supplierCorrespondenceAddressSame().click();
