@@ -103,7 +103,7 @@ describe('getUtilisationReportPendingCorrectionsByBankId', () => {
         .mockRejectedValue(new AxiosError(errorMessage, undefined, undefined, undefined, { status: errorStatus } as AxiosResponse));
     });
 
-    it('responds with the specific error status', async () => {
+    it('should respond with the specific error status', async () => {
       // Act
       await getUtilisationReportPendingCorrectionsByBankId(req, res);
 
@@ -111,12 +111,12 @@ describe('getUtilisationReportPendingCorrectionsByBankId', () => {
       expect(res._getStatusCode()).toEqual(errorStatus);
     });
 
-    it('responds with the specific error message', async () => {
+    it('should respond with generic error message', async () => {
       // Act
       await getUtilisationReportPendingCorrectionsByBankId(req, res);
 
       // Assert
-      expect(res._getData()).toEqual(`Failed to get pending corrections ${errorMessage}`);
+      expect(res._getData()).toEqual('Failed to get pending corrections');
     });
   });
 

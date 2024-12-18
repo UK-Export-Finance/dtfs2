@@ -14,5 +14,4 @@ export const aNonEmptyPendingCorrectionsResponseBody = (): NonEmptyPendingCorrec
     },
   ],
   nextDueReportPeriod: aReportPeriod(),
-  reportId: 1,
 });

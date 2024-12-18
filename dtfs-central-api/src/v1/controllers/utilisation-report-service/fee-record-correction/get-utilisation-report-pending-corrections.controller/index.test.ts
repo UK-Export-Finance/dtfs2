@@ -114,10 +114,9 @@ describe('get-utilisation-report-pending-corrections.controller', () => {
           reportPeriod: aReportPeriod(),
           uploadedByFullName: 'John Doe',
           dateUploaded: new Date(),
-          reportId: 1,
           corrections: [
-            { feeRecordId: 1, facilityId: '123', exporter: 'Company Name', additionalInfo: 'Additional Info' },
-            { feeRecordId: 4, facilityId: '456', exporter: 'Company Name', additionalInfo: 'Additional Info 2' },
+            { correctionId: 1, facilityId: '123', exporter: 'Company Name', additionalInfo: 'Additional Info' },
+            { correctionId: 4, facilityId: '456', exporter: 'Company Name', additionalInfo: 'Additional Info 2' },
           ],
           nextDueReportPeriod: aReportPeriod(),
         };
