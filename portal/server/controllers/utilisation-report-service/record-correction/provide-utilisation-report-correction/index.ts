@@ -3,7 +3,7 @@ import api from '../../../../api';
 import { asLoggedInUserSession } from '../../../../helpers/express-session';
 import { ProvideUtilisationReportCorrectionViewModel } from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
-import { mapToCorrectionRecordViewModel } from './helpers';
+import { mapToCorrectionRequestDetailsViewModel } from './helpers';
 
 export type GetProvideUtilisationReportCorrectionRequest = Request & {
   params: {
@@ -31,7 +31,7 @@ export const getProvideUtilisationReportCorrection = async (req: GetProvideUtili
 
     return renderProvideUtilisationReportCorrectionRequestPage(res, {
       primaryNav: PRIMARY_NAV_KEY.REPORTS,
-      correctionRecord: mapToCorrectionRecordViewModel(feeRecordCorrection),
+      correctionRequestDetails: mapToCorrectionRequestDetailsViewModel(feeRecordCorrection),
     });
   } catch (error) {
     console.error('Failed to get provide utilisation report correction', error);

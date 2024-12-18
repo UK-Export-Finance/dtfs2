@@ -41,4 +41,22 @@ describe('utilisation-report routes', () => {
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
+
+  describe('GET /provide-utilisation-report-correction/:correctionId', () => {
+    const getUrl = ({ correctionId }) => `/provide-utilisation-report-correction/${correctionId}`;
+
+    withRoleValidationApiTests({
+      makeRequestWithHeaders: (headers) =>
+        get(
+          getUrl({
+            correctionId: 1,
+          }),
+          {},
+          headers,
+        ),
+      whitelistedRoles: [ROLES.PAYMENT_REPORT_OFFICER],
+      successCode: 200,
+      disableHappyPath: true,
+    });
+  });
 });

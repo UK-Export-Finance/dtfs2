@@ -1,7 +1,7 @@
 import { CurrencyAndAmountString, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import { PrimaryNavKey } from '../../primary-nav-key';
 
-export type CorrectionRecordViewModel = {
+export type CorrectionRequestDetailsViewModel = {
   facilityId: string;
   exporter: string;
   reportedFees: CurrencyAndAmountString;
@@ -12,5 +12,5 @@ export type CorrectionRecordViewModel = {
 
 export type ProvideUtilisationReportCorrectionViewModel = {
   primaryNav: PrimaryNavKey;
-  correctionRecord: CorrectionRecordViewModel;
+  correctionRequestDetails: CorrectionRequestDetailsViewModel;
 };
