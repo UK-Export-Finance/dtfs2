@@ -7,8 +7,8 @@ import app from '../../server/createApp';
 import { createApi } from '../create-api';
 import api from '../../server/services/api';
 import * as storage from '../test-helpers/storage/storage';
-import { Deal } from '../../server/types/deal';
-import { Facility } from '../../server/types/facility';
+import { MOCK_BASIC_DEAL } from '../../server/utils/mocks/mock-applications';
+import { MOCK_UNISSUED_FACILITY, MOCK_ISSUED_FACILITY } from '../../server/utils/mocks/mock-facilities';
 
 const originalEnv = { ...process.env };
 
@@ -26,8 +26,7 @@ const dealId = '123';
 const facilityId = '111';
 const amendmentId = '111';
 
-const mockDeal = { exporter: { companyName: 'test exporter' }, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as Deal;
-const mockFacility = { hasBeenIssued: true } as Facility;
+const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 
 const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`;
 
@@ -42,7 +41,7 @@ describe(`GET ${url}`, () => {
     jest.spyOn(api, 'getFacility').mockImplementation(mockGetFacility);
     jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
 
-    mockGetFacility.mockResolvedValue({ details: mockFacility });
+    mockGetFacility.mockResolvedValue(MOCK_ISSUED_FACILITY);
     mockGetApplication.mockResolvedValue(mockDeal);
   });
 
@@ -113,7 +112,7 @@ describe(`GET ${url}`, () => {
 
     it('should redirect to deal summary page when facility cannot be amended', async () => {
       // Arrange
-      mockGetApplication.mockResolvedValue({ details: { ...mockFacility, hasBeenIssued: false } });
+      mockGetApplication.mockResolvedValue(MOCK_UNISSUED_FACILITY.details);
 
       // Act
       const response = await getWithSessionCookie(sessionCookie);

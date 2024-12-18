@@ -33,7 +33,7 @@ export const getCoverEndDate = async (req: GetCoverEndDateRequest, res: Response
 
     return res.render('partials/amendments/cover-end-date.njk', viewModel);
   } catch (error) {
-    console.error('Error getting amendments cover end date page', error);
+    console.error('Error getting amendments cover end date page %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
