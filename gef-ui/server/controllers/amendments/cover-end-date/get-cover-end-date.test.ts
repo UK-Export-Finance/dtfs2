@@ -3,13 +3,14 @@ import { aPortalSessionUser, DEAL_STATUS, PORTAL_LOGIN_STATUS, DEAL_SUBMISSION_T
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
 
+const getApplicationMock = jest.fn();
+const getFacilityMock = jest.fn();
+
 import { getCoverEndDate, GetCoverEndDateRequest } from './get-cover-end-date';
 import { CoverEndDateViewModel } from '../../../types/view-models/amendments/cover-end-date-view-model';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_UNISSUED_FACILITY, MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 
-const getApplicationMock = jest.fn();
-const getFacilityMock = jest.fn();
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
