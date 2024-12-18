@@ -18,7 +18,7 @@ export type GetFeeRecordCorrectionRequest = CustomExpressRequest<{
 /**
  * Response body type for the GET fee record correction endpoint.
  */
-export type GetFeeRecordCorrectionBody = {
+export type GetFeeRecordCorrectionResponseBody = {
   id: number;
   bankId: string;
   facilityId: string;
@@ -28,7 +28,7 @@ export type GetFeeRecordCorrectionBody = {
   additionalInfo: string;
 };
 
-export type GetFeeRecordCorrectionResponse = Response<GetFeeRecordCorrectionBody | string>;
+export type GetFeeRecordCorrectionResponse = Response<GetFeeRecordCorrectionResponseBody | string>;
 
 /**
  * Controller for the GET fee record correction endpoint

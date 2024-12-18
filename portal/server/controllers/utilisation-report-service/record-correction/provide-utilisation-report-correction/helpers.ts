@@ -3,9 +3,9 @@ import { GetFeeRecordCorrectionResponseBody } from '../../../../api-response-typ
 import { CorrectionRequestDetailsViewModel } from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
 
 /**
- * Maps the correction response to a correction record view model.
+ * Maps the correction response to a correction request view model.
  * @param correctionResponse - The response body containing the correction details.
- * @returns The view model representing the correction record.
+ * @returns The view model representing the correction request.
  */
 export const mapToCorrectionRequestDetailsViewModel = (correctionResponse: GetFeeRecordCorrectionResponseBody): CorrectionRequestDetailsViewModel => ({
   facilityId: correctionResponse.facilityId,

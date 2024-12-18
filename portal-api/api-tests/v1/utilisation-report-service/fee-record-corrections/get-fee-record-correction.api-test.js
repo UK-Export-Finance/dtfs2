@@ -30,7 +30,7 @@ describe('GET /v1/banks/:bankId/fee-record-correction/:correctionId', () => {
   const exporter = 'An exporter';
   const reportedFees = {
     currency: CURRENCY.GBP,
-    amount: 123,
+    amount: 77,
   };
   const reasons = [RECORD_CORRECTION_REASON.OTHER];
   const additionalInfo = 'Some additional info';

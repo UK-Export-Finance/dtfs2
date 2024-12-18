@@ -1,5 +1,4 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
-import { ObjectId } from 'mongodb';
 import { FeeRecordCorrectionEntityMockBuilder, TestApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { FeeRecordCorrectionRepo } from '../../../../../repositories/fee-record-correction-repo';
@@ -14,9 +13,7 @@ describe('get-fee-record-correction.controller', () => {
   describe('getFeeRecordCorrection', () => {
     const correctionId = 7;
 
-    const tfmUserId = new ObjectId().toString();
-
-    const aValidRequestQuery = () => ({ correctionId: correctionId.toString(), userId: tfmUserId });
+    const aValidRequestQuery = () => ({ correctionId: correctionId.toString() });
 
     const mockFeeRecordCorrectionFind = jest.fn();
 
@@ -52,9 +49,6 @@ describe('get-fee-record-correction.controller', () => {
 
       const responseBody = res._getData() as GetFeeRecordCorrectionResponse;
       expect(responseBody).toEqual(expectedMappedFeeRecordCorrection);
-
-      expect(mockFeeRecordCorrectionFind).toHaveBeenCalledTimes(1);
-      expect(mockFeeRecordCorrectionFind).toHaveBeenCalledWith(correctionId);
     });
 
     it('should call fee record correction find once', async () => {

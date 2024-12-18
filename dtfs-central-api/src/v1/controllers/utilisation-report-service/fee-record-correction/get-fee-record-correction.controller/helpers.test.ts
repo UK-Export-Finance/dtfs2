@@ -67,13 +67,7 @@ describe('get-fee-record-correction.controller helpers', () => {
 
     it('should return an object containing the fee record correction reported fees', () => {
       // Arrange
-      const reportedFeesCurrency = CURRENCY.GBP;
-      const reportedFeesAmount = 7;
-
-      const feeRecordEntity = new FeeRecordEntityMockBuilder()
-        .withFeesPaidToUkefForThePeriodCurrency(reportedFeesCurrency)
-        .withFeesPaidToUkefForThePeriod(reportedFeesAmount)
-        .build();
+      const feeRecordEntity = new FeeRecordEntityMockBuilder().withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP).withFeesPaidToUkefForThePeriod(7).build();
       const feeRecordCorrectionEntity = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecordEntity).build();
 
       const expectedReportedFees = mapFeeRecordEntityToReportedFees(feeRecordEntity);

@@ -83,11 +83,11 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       await getProvideUtilisationReportCorrection(req, res);
 
       // Assert
-      expect(api.getFeeRecordCorrection).toHaveBeenCalledTimes(1);
-      expect(api.getFeeRecordCorrection).toHaveBeenCalledWith(userToken, bankId, correctionId);
-
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
       expect(res._getRenderData()).toEqual({ user: mockUser });
+
+      expect(api.getFeeRecordCorrection).toHaveBeenCalledTimes(1);
+      expect(api.getFeeRecordCorrection).toHaveBeenCalledWith(userToken, bankId, correctionId);
     });
   });
 });

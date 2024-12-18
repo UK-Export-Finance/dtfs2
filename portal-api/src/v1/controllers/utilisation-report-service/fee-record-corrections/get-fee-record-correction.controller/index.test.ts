@@ -73,12 +73,12 @@ describe('get-fee-record-correction.controller', () => {
       // Arrange
       const correctionBankId = 'different-bank-id';
 
-      const expectedResponse = {
+      const mockedResponse = {
         ...aGetFeeRecordCorrectionResponseBody(),
         bankId: correctionBankId,
       };
 
-      jest.mocked(api.getFeeRecordCorrectionById).mockResolvedValue(expectedResponse);
+      jest.mocked(api.getFeeRecordCorrectionById).mockResolvedValue(mockedResponse);
 
       // Act
       await getFeeRecordCorrection(req, res);

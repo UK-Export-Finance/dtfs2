@@ -10,9 +10,9 @@ describe(component, () => {
   const formattedReasons = 'Reason 1, Reason 2';
   const additionalInfo = 'Some additional info';
 
-  let wrapper;
-  beforeEach(() => {
-    wrapper = render({
+  it('should render the current record details table', () => {
+    // Arrange
+    const viewModel = {
       details: {
         facilityId,
         exporter,
@@ -20,10 +20,12 @@ describe(component, () => {
         formattedReasons,
         additionalInfo,
       },
-    });
-  });
+    };
 
-  it('should render the current record details table', () => {
+    // Act
+    const wrapper = render(viewModel);
+
+    // Assert
     wrapper.expectElement('[data-cy="correction-request-details-table"]').toExist();
 
     wrapper.expectText('[data-cy="correction-request-details-table--facility-id"]').toRead(facilityId);
@@ -34,7 +36,8 @@ describe(component, () => {
   });
 
   it('should render singular "Error type" table header when there is only one error reason', () => {
-    wrapper = render({
+    // Arrange
+    const viewModel = {
       details: {
         facilityId,
         exporter,
@@ -43,13 +46,18 @@ describe(component, () => {
         formattedReasons: 'Reason 1',
         additionalInfo,
       },
-    });
+    };
 
+    // Act
+    const wrapper = render(viewModel);
+
+    // Assert
     wrapper.expectText('[data-cy="correction-request-details-table-header--error-type"]').toRead('Error type');
   });
 
   it('should render plural "Error types" table header when there is more than one error reason', () => {
-    wrapper = render({
+    // Arrange
+    const viewModel = {
       details: {
         facilityId,
         exporter,
@@ -58,8 +66,12 @@ describe(component, () => {
         formattedReasons: 'Reason 1, Reason 2',
         additionalInfo,
       },
-    });
+    };
 
+    // Act
+    const wrapper = render(viewModel);
+
+    // Assert
     wrapper.expectText('[data-cy="correction-request-details-table-header--error-type"]').toRead('Error types');
   });
 });

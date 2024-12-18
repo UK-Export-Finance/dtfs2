@@ -6,6 +6,7 @@ const render = pageRenderer(page);
 
 describe(page, () => {
   let wrapper;
+
   beforeEach(() => {
     wrapper = render({
       primaryNav: PRIMARY_NAV_KEY.REPORTS,

@@ -17,6 +17,7 @@ jest.mock('../server/api', () => ({
 }));
 
 const { ROLES } = require('@ukef/dtfs2-common');
+const { HttpStatusCode } = require('axios');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
 const { get } = require('./create-api').createApi(app);
@@ -37,7 +38,7 @@ describe('utilisation-report routes', () => {
           headers,
         ),
       whitelistedRoles: [ROLES.PAYMENT_REPORT_OFFICER],
-      successCode: 200,
+      successCode: HttpStatusCode.Ok,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
@@ -46,16 +47,9 @@ describe('utilisation-report routes', () => {
     const getUrl = ({ correctionId }) => `/provide-utilisation-report-correction/${correctionId}`;
 
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) =>
-        get(
-          getUrl({
-            correctionId: 1,
-          }),
-          {},
-          headers,
-        ),
+      makeRequestWithHeaders: (headers) => get(getUrl({ correctionId: 1 }), {}, headers),
       whitelistedRoles: [ROLES.PAYMENT_REPORT_OFFICER],
-      successCode: 200,
+      successCode: HttpStatusCode.Ok,
       disableHappyPath: true,
     });
   });
