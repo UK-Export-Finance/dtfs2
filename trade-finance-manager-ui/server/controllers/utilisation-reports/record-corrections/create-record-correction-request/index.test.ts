@@ -1,7 +1,7 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { RECORD_CORRECTION_REASON, RecordCorrectionTransientFormData } from '@ukef/dtfs2-common';
 import { Response } from 'express';
-import { aTfmSessionUser } from '../../../../../test-helpers';
+import { aGetFeeRecordResponseBody, aTfmSessionUser } from '../../../../../test-helpers';
 import {
   getCreateRecordCorrectionRequest,
   GetCreateRecordCorrectionRequestRequest,
@@ -13,7 +13,6 @@ import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import { CreateRecordCorrectionRequestFormRequestBody } from './form-helpers';
 import { validateCreateRecordCorrectionRequestFormValues } from './validate-form-values';
 import api from '../../../../api';
-import { GetFeeRecordResponseBody } from '../../../../api-response-types';
 import { getLinkToPremiumPaymentsTab } from '../../helpers';
 
 jest.mock('../../../../api');
@@ -32,19 +31,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
   const feeRecordId = '456';
 
   beforeEach(() => {
-    const feeRecordResponse: GetFeeRecordResponseBody = {
-      id: 456,
-      bank: {
-        id: '789',
-        name: 'Test Bank',
-      },
-      reportPeriod: {
-        start: { month: 1, year: 2024 },
-        end: { month: 1, year: 2024 },
-      },
-      facilityId: '0012345678',
-      exporter: 'Sample Company Ltd',
-    };
+    const feeRecordResponse = aGetFeeRecordResponseBody();
     jest.mocked(api.getFeeRecord).mockResolvedValue(feeRecordResponse);
   });
 

@@ -12,6 +12,7 @@ const displayName = require('./filter-displayName');
 const formatAsCurrency = require('./filter-formatAsCurrency');
 const countriesWithEmptyInitialOption = require('./filter-countriesWithEmptyInitialOption');
 const replaceWhiteSpaceWithDash = require('./filter-replaceWhiteSpaceWithDash');
+const { replaceNewLinesWithBrTags } = require('./filter-replaceNewLinesWithBrTags');
 const bondBeneficiaryFacilities = require('./filter-bondBeneficiaryFacilities');
 const bondIssuerFacilities = require('./filter-bondIssuerFacilities');
 const formatAsDecimal = require('./filter-formatAsDecimal');
@@ -50,6 +51,7 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('formatAsCurrency', formatAsCurrency);
   nunjucksEnvironment.addFilter('countriesWithEmptyInitialOption', countriesWithEmptyInitialOption);
   nunjucksEnvironment.addFilter('replaceWhiteSpaceWithDash', replaceWhiteSpaceWithDash);
+  nunjucksEnvironment.addFilter('replaceNewLinesWithBrTags', replaceNewLinesWithBrTags);
   nunjucksEnvironment.addFilter('bondBeneficiaryFacilities', bondBeneficiaryFacilities);
   nunjucksEnvironment.addFilter('bondIssuerFacilities', bondIssuerFacilities);
   nunjucksEnvironment.addFilter('formatAsDecimal', formatAsDecimal);
