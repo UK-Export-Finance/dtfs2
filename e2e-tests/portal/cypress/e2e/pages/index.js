@@ -56,4 +56,5 @@ module.exports = {
   confirmAndSend: require('./utilisation-report-service/confirmAndSend'),
   confirmation: require('./utilisation-report-service/confirmation'),
   problemWithService: require('./problem-with-service'),
+  pendingCorrections: require('./utilisation-report-service/record-corrections/pendingCorrections'),
 };
