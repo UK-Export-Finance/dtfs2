@@ -32,4 +32,34 @@ describe(component, () => {
     wrapper.expectText('[data-cy="correction-request-details-table--formatted-reasons"]').toRead(formattedReasons);
     wrapper.expectText('[data-cy="correction-request-details-table--additional-info"]').toRead(additionalInfo);
   });
+
+  it('should render singular "Error type" table header when there is only one error reason', () => {
+    wrapper = render({
+      details: {
+        facilityId,
+        exporter,
+        reportedFees,
+        reasons: ['Reason 1'],
+        formattedReasons: 'Reason 1',
+        additionalInfo,
+      },
+    });
+
+    wrapper.expectText('[data-cy="correction-request-details-table-header--error-type"]').toRead('Error type');
+  });
+
+  it('should render plural "Error types" table header when there is more than one error reason', () => {
+    wrapper = render({
+      details: {
+        facilityId,
+        exporter,
+        reportedFees,
+        reasons: ['Reason 1', 'Reason 2'],
+        formattedReasons: 'Reason 1, Reason 2',
+        additionalInfo,
+      },
+    });
+
+    wrapper.expectText('[data-cy="correction-request-details-table-header--error-type"]').toRead('Error types');
+  });
 });

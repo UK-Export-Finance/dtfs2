@@ -8,7 +8,13 @@
         <th scope="col" class="govuk-table__header">Facility ID</th>
         <th scope="col" class="govuk-table__header">Exporter</th>
         <th scope="col" class="govuk-table__header">Reported fees</th>
-        <th scope="col" class="govuk-table__header">Error type</th>
+        <th scope="col" class="govuk-table__header" data-cy="correction-request-details-table-header--error-type">
+          {% if details.reasons.length > 1 %}
+            Error types
+          {% else %}
+            Error type
+          {% endif %}
+        </th>
         <th scope="col" class="govuk-table__header">Error summary</th>
       </tr>
     </thead>
