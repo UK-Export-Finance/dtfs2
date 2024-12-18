@@ -28,7 +28,7 @@ export type GetFeeRecordCorrectionBody = {
   additionalInfo: string;
 };
 
-type GetFeeRecordCorrection = Response<GetFeeRecordCorrectionBody | string>;
+export type GetFeeRecordCorrectionResponse = Response<GetFeeRecordCorrectionBody | string>;
 
 /**
  * Controller for the GET fee record correction endpoint
@@ -36,9 +36,7 @@ type GetFeeRecordCorrection = Response<GetFeeRecordCorrectionBody | string>;
  * @param res - The response object
  * @returns The response object with a response status code and body
  */
-// TODO FN-3668: Add unit tests.
-// TODO FN-3668: Add API tests?
-export const getFeeRecordCorrection = async (req: GetFeeRecordCorrectionRequest, res: GetFeeRecordCorrection) => {
+export const getFeeRecordCorrection = async (req: GetFeeRecordCorrectionRequest, res: GetFeeRecordCorrectionResponse) => {
   const { correctionId } = req.params;
 
   try {
@@ -52,7 +50,7 @@ export const getFeeRecordCorrection = async (req: GetFeeRecordCorrectionRequest,
 
     return res.status(HttpStatusCode.Ok).send(feeRecordCorrectionDetails);
   } catch (error) {
-    const errorMessage = 'Failed to get record correction';
+    const errorMessage = 'Failed to get fee record correction';
     console.error(errorMessage, error);
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
