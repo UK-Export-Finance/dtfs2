@@ -21,7 +21,6 @@ export type GetFeeRecordCorrectionRequest = CustomExpressRequest<{
  * @param req - The request object containing information about the HTTP request.
  * @param res - The response object used to send the HTTP response.
  */
-// TODO FN-3668: Add unit tests.
 export const getFeeRecordCorrection = async (req: GetFeeRecordCorrectionRequest, res: Response) => {
   try {
     const { bankId: requestingUserBankId, correctionId } = req.params;
