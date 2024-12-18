@@ -1,5 +1,5 @@
 const FormData = require('form-data');
-const { isValidCompanyRegistrationNumber } = require('@ukef/dtfs2-common');
+const { isValidCompanyRegistrationNumber, InvalidFacilityIdError } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
 const Axios = require('./axios');
 const { apiErrorHandler } = require('../utils/helpers');
@@ -366,6 +366,28 @@ const getAmendment = async ({ facilityId, amendmentId, userToken }) => {
   }
 };
 
+/**
+ * @param {Object} param
+ * @param {string} param.facilityId
+ * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} param.payload
+ * @param {string} param.userToken
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}>}
+ */
+const upsertAmendment = async ({ facilityId, payload, userToken }) => {
+  if (!isValidMongoId(facilityId)) {
+    throw new InvalidFacilityIdError(facilityId);
+  }
+
+  try {
+    const { data } = await Axios.put(`/gef/facilities/${facilityId}/amendments`, payload, config(userToken));
+
+    return data;
+  } catch (error) {
+    console.error('Failed to upsert the amendment to facility with id: %s and amendment details: %o: %o', facilityId, payload, error);
+    throw error;
+  }
+};
+
 module.exports = {
   validateToken,
   validateBank,
@@ -388,4 +410,5 @@ module.exports = {
   downloadFile,
   updateSupportingInformation,
   getAmendment,
+  upsertAmendment,
 };

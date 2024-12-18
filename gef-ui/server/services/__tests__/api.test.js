@@ -1,5 +1,5 @@
 import { AxiosError, HttpStatusCode } from 'axios';
-import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
+import { InvalidFacilityIdError, MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
 import Axios from '../axios';
 import api from '../api';
 import CONSTANTS from '../../constants';
@@ -386,5 +386,22 @@ describe('getAmendment()', () => {
 
   it.each(invalidMongoIdTestCases)('should throw an error when given an invalid amendment Id', async (invalidMongoId) => {
     await expect(api.getAmendment({ facilityId: validMongoId, amendmentId: invalidMongoId, userToken })).rejects.toThrow('Invalid amendment ID');
+  });
+});
+
+describe('upsertAmendment()', () => {
+  it(`should return ${HttpStatusCode.Ok} when a facility can be found`, async () => {
+    Axios.put.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
+    const response = await api.upsertAmendment({ facilityId: validMongoId, payload: {}, userToken });
+    expect(response).toEqual({ status: HttpStatusCode.Ok });
+  });
+
+  it('should throw an error if there is an api error', async () => {
+    Axios.put.mockReturnValue(Promise.reject(new AxiosError()));
+    await expect(api.upsertAmendment({ facilityId: validMongoId, payload: {}, userToken })).rejects.toThrow(AxiosError);
+  });
+
+  it.each(invalidMongoIdTestCases)('should throw an error when given an invalid facility Id', async (invalidMongoId) => {
+    await expect(api.upsertAmendment({ facilityId: invalidMongoId, payload: {}, userToken })).rejects.toThrow(InvalidFacilityIdError);
   });
 });
