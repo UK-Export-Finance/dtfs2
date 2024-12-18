@@ -1,6 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { ApiError, CustomExpressRequest, PortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common';
+import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import api from '../../api';
 
 export type PutAmendmentRequest = CustomExpressRequest<{
@@ -8,6 +9,7 @@ export type PutAmendmentRequest = CustomExpressRequest<{
     facilityId: string;
   };
   reqBody: PortalFacilityAmendmentUserValues;
+  query: { dealId: string };
 }>;
 
 /**
@@ -17,9 +19,15 @@ export type PutAmendmentRequest = CustomExpressRequest<{
  */
 export const putAmendment = async (req: PutAmendmentRequest, res: Response) => {
   const { facilityId } = req.params;
+  const { dealId } = req.query;
 
   try {
-    const amendmentResponse = await api.putPortalFacilityAmendment({ facilityId, amendmentUpdate: req.body });
+    const amendmentResponse = await api.putPortalFacilityAmendment({
+      dealId,
+      facilityId,
+      amendmentUpdate: req.body,
+      auditDetails: generatePortalAuditDetails(req.user._id),
+    });
 
     return res.status(HttpStatusCode.Ok).send(amendmentResponse);
   } catch (error) {

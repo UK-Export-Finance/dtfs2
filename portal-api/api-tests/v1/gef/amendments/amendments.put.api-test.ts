@@ -127,7 +127,7 @@ describe('/v1/gef/facilities/:facilityId/amendments', () => {
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.Ok);
-        expect(response.body).toEqual({ ...amendment, amendmentId, facilityId, dealId });
+        expect(response.body).toEqual(amendment);
       });
     });
   });

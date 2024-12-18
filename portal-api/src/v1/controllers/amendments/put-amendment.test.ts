@@ -1,7 +1,8 @@
 import { ObjectId } from 'mongodb';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { AMENDMENT_STATUS, AMENDMENT_TYPES, PortalFacilityAmendmentWithUkefId, TestApiError } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, AMENDMENT_TYPES, aPortalSessionUser, PortalFacilityAmendmentWithUkefId, TestApiError } from '@ukef/dtfs2-common';
+import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import api from '../../api';
 import { putAmendment, PutAmendmentRequest } from './put-amendment.controller';
 
@@ -11,7 +12,8 @@ const facilityId = new ObjectId().toString();
 const amendmentId = new ObjectId().toString();
 const dealId = new ObjectId().toString();
 
-const update = { changeCoverEndDate: true };
+const amendmentUpdate = { changeCoverEndDate: true };
+const user = aPortalSessionUser();
 
 describe('controllers - facility amendment', () => {
   beforeEach(() => {
@@ -19,11 +21,13 @@ describe('controllers - facility amendment', () => {
   });
 
   describe('PUT - putAmendment', () => {
-    it('should call api.putPortalFacilityAmendment with the facility Id and update', async () => {
+    it('should call api.putPortalFacilityAmendment with the correct parameters', async () => {
       // Arrange
       const { req, res } = httpMocks.createMocks<PutAmendmentRequest>({
         params: { facilityId },
-        body: update,
+        body: amendmentUpdate,
+        query: { dealId },
+        user,
       });
 
       // Act
@@ -31,7 +35,12 @@ describe('controllers - facility amendment', () => {
 
       // Assert
       expect(api.putPortalFacilityAmendment).toHaveBeenCalledTimes(1);
-      expect(api.putPortalFacilityAmendment).toHaveBeenCalledWith({ facilityId, amendmentUpdate: update });
+      expect(api.putPortalFacilityAmendment).toHaveBeenCalledWith({
+        dealId,
+        facilityId,
+        amendmentUpdate,
+        auditDetails: generatePortalAuditDetails(user._id),
+      });
     });
 
     it(`should respond with ${HttpStatusCode.Ok} and return the amendment`, async () => {
@@ -50,7 +59,9 @@ describe('controllers - facility amendment', () => {
       jest.mocked(api.putPortalFacilityAmendment).mockResolvedValue(mockPortalAmendmentResponse);
       const { req, res } = httpMocks.createMocks<PutAmendmentRequest>({
         params: { facilityId },
-        body: update,
+        body: amendmentUpdate,
+        query: { dealId },
+        user,
       });
 
       // Act
@@ -69,7 +80,9 @@ describe('controllers - facility amendment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks<PutAmendmentRequest>({
         params: { facilityId },
-        body: update,
+        body: amendmentUpdate,
+        query: { dealId },
+        user,
       });
 
       // Act
@@ -86,7 +99,9 @@ describe('controllers - facility amendment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks<PutAmendmentRequest>({
         params: { facilityId },
-        body: update,
+        body: amendmentUpdate,
+        query: { dealId },
+        user,
       });
 
       // Act
