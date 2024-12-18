@@ -471,6 +471,31 @@ const getPortalFacilityAmendment = async (facilityId, amendmentId) => {
   }
 };
 
+/**
+ * Upserts a draft amendment for a portal facility in the database.
+ * @param {Object} params
+ * @param {string} params.facilityId - id of the facility to amend.
+ * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} params.amendmentUpdate - the draft amendment to be upserted.
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>} - the amendment
+ */
+const putPortalFacilityAmendment = async ({ facilityId, amendmentUpdate }) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}/amendments`,
+      headers: headers.central,
+      data: {
+        amendmentUpdate,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error upserting portal facility amendment for facility with id %s: with amendment details: %o, %o', facilityId, amendmentUpdate, error);
+    throw error;
+  }
+};
+
 module.exports = {
   findOneDeal,
   createDeal,
@@ -492,4 +517,5 @@ module.exports = {
   getAllBanks,
   getNextReportPeriodByBankId,
   getPortalFacilityAmendment,
+  putPortalFacilityAmendment,
 };

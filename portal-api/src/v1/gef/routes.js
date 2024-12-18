@@ -16,6 +16,7 @@ const externalApi = require('./controllers/externalApi.controller');
 const files = require('./controllers/files.controller');
 const companies = require('../controllers/companies.controller');
 const { getAmendment } = require('../controllers/amendments/get-amendment.controller');
+const { putAmendment } = require('../controllers/amendments/put-amendment.controller');
 const { handleExpressValidatorResult } = require('../validation/route-validators/express-validator-result-handler');
 
 const router = express.Router();
@@ -125,5 +126,15 @@ router
     handleExpressValidatorResult,
   )
   .get(getAmendment);
+
+router
+  .route('/facilities/:facilityId/amendments')
+  .put(
+    validatePortalFacilityAmendmentsEnabled,
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }),
+    mongoIdValidation('facilityId'),
+    handleExpressValidatorResult,
+    putAmendment,
+  );
 
 module.exports = router;
