@@ -21,7 +21,7 @@ const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility } =
 
 const unissuedFacilitiesArray = [unissuedCashFacility, unissuedContingentFacility];
 
-context('Change issued facilities back to unissued AIN (changed to issued facilities post submission) - feature flag enabled', () => {
+context('Change issued facilities back to unissued AIN (changed to issued facilities post submission)', () => {
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
       .then((t) => {

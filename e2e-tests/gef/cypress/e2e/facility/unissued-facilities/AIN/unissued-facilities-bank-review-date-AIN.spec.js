@@ -14,7 +14,7 @@ const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, un
   facilityEndDateEnabled: true,
 });
 
-context('Unissued Facilities AIN - bank review date page - feature flag enabled', () => {
+context('Unissued Facilities AIN - bank review date page', () => {
   let dealId;
   let token;
   let facilityOneId;

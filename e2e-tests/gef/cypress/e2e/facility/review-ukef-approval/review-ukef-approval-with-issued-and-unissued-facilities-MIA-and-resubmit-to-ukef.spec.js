@@ -29,7 +29,7 @@ const unissuedFacilitiesArray = [unissuedCashFacility, unissuedContingentFacilit
 
 const issuedFacilities = [issuedCashFacilityWithCoverDateConfirmed];
 
-context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued facility - feature flag enabled', () => {
+context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued facility', () => {
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
       .then((t) => {

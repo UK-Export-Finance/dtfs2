@@ -8,7 +8,7 @@ import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 const applications = [];
 let token;
 
-context('Facility End Date Page - feature flag enabled', () => {
+context('Facility End Date Page', () => {
   let application;
   let facilityId;
 

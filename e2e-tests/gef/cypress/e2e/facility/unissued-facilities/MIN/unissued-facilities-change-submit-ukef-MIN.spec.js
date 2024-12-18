@@ -24,7 +24,7 @@ const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, un
 
 const unissuedFacilitiesArray = [unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover];
 
-context('Unissued Facilities MIN - change all to issued from unissued table - feature flag enabled', () => {
+context('Unissued Facilities MIN - change all to issued from unissued table', () => {
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
       .then((t) => {
@@ -130,7 +130,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table - fe
  * checking all fields are blocked for facilities
  * return to maker
  */
-context('Return to maker for unissued to issued facilities - feature flag enabled', () => {
+context('Return to maker for unissued to issued facilities', () => {
   describe('Check all fields are populated and return to maker', () => {
     beforeEach(() => {
       cy.saveSession();
@@ -393,7 +393,7 @@ context('Return to maker for unissued to issued facilities - feature flag enable
  * submit to UKEF
  * ensure correct success message and text are shown
  */
-context('Submit to UKEF with unissued to issued facilities - feature flag enabled', () => {
+context('Submit to UKEF with unissued to issued facilities', () => {
   describe('Check all fields are populated and return to maker', () => {
     beforeEach(() => {
       cy.saveSession();

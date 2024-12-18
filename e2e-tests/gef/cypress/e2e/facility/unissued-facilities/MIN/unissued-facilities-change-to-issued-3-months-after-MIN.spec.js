@@ -20,7 +20,7 @@ const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, un
 const FACILITY_THREE_SPECIAL = { ...unissuedContingentFacility };
 FACILITY_THREE_SPECIAL.specialIssuePermission = true;
 
-context('Unissued Facilities MIN - change to issued more than 3 months after MIN submission date - feature flag enabled', () => {
+context('Unissued Facilities MIN - change to issued more than 3 months after MIN submission date', () => {
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
       .then((t) => {

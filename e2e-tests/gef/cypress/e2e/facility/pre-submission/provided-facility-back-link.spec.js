@@ -6,7 +6,7 @@ import aboutFacility from '../../pages/about-facility';
 const applications = [];
 let token;
 
-context('Provided Facility Page - feature flag enabled', () => {
+context('Provided Facility Page', () => {
   before(() => {
     cy.loadData();
     cy.apiLogin(BANK1_MAKER1)

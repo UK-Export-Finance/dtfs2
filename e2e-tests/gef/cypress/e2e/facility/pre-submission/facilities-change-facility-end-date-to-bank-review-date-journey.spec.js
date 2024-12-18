@@ -10,7 +10,7 @@ let token;
 
 const nextYear = oneYear.year;
 
-context('Changing between facility end date and bank review date - feature flag enabled', () => {
+context('Changing between facility end date and bank review date', () => {
   let application;
   let facilityId;
 

@@ -23,7 +23,7 @@ const unissuedFacilitiesArray = [unissuedCashFacility, unissuedContingentFacilit
   for changing facilities to issued from preview page.
   To unlock functionality, need to first issue one facility from unissued-facility table
 */
-context('Unissued Facilities MIN - change to issued from preview page - feature flag enabled', () => {
+context('Unissued Facilities MIN - change to issued from preview page', () => {
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
       .then((t) => {
