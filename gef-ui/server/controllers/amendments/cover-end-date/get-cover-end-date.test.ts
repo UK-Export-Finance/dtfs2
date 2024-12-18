@@ -11,7 +11,6 @@ import { CoverEndDateViewModel } from '../../../types/view-models/amendments/cov
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_UNISSUED_FACILITY, MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 
-
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
   getFacility: getFacilityMock,
