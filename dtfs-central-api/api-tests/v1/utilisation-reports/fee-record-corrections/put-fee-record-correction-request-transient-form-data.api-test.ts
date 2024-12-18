@@ -5,14 +5,14 @@ import {
   MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT,
   RECONCILIATION_IN_PROGRESS,
   RECORD_CORRECTION_REASON,
-  RecordCorrectionTransientFormData,
+  RecordCorrectionRequestTransientFormData,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../../test-api';
 import { SqlDbHelper } from '../../../sql-db-helper';
 import { aTfmSessionUser } from '../../../../test-helpers';
-import { PutFeeRecordCorrectionTransientFormDataPayload } from '../../../../src/v1/routes/middleware/payload-validation';
+import { PutFeeRecordCorrectionRequestTransientFormDataPayload } from '../../../../src/v1/routes/middleware/payload-validation';
 import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replace-url-parameter-placeholders';
 
 console.error = jest.fn();
@@ -46,7 +46,7 @@ describe(`PUT ${BASE_URL}`, () => {
   });
 
   afterEach(async () => {
-    await SqlDbHelper.deleteAllEntries('FeeRecordCorrectionTransientFormData');
+    await SqlDbHelper.deleteAllEntries('FeeRecordCorrectionRequestTransientFormData');
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
   });
 
@@ -55,8 +55,8 @@ describe(`PUT ${BASE_URL}`, () => {
     makeRequest: (url) => testApi.put({}).to(url),
   });
 
-  const requiredPayloadKeys: (keyof PutFeeRecordCorrectionTransientFormDataPayload)[] = ['formData', 'user'];
-  const requiredFormDataPayloadKeys: (keyof RecordCorrectionTransientFormData)[] = ['reasons', 'additionalInfo'];
+  const requiredPayloadKeys: (keyof PutFeeRecordCorrectionRequestTransientFormDataPayload)[] = ['formData', 'user'];
+  const requiredFormDataPayloadKeys: (keyof RecordCorrectionRequestTransientFormData)[] = ['reasons', 'additionalInfo'];
 
   it.each([requiredPayloadKeys])(`should return '${HttpStatusCode.BadRequest}' when the '%s' field is missing`, async (payloadKey) => {
     // Arrange

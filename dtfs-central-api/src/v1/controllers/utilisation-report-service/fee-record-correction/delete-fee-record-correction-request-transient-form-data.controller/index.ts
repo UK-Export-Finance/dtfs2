@@ -2,11 +2,11 @@ import { ApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { CustomExpressRequest } from '../../../../../types/custom-express-request';
-import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-transient-form-data-repo';
+import { FeeRecordCorrectionRequestTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-request-transient-form-data-repo';
 import { NotFoundError } from '../../../../../errors';
 import { FeeRecordRepo } from '../../../../../repositories/fee-record-repo';
 
-export type DeleteFeeRecordCorrectionTransientFormDataRequest = CustomExpressRequest<{
+export type DeleteFeeRecordCorrectionRequestTransientFormDataRequest = CustomExpressRequest<{
   params: {
     reportId: string;
     feeRecordId: string;
@@ -15,9 +15,9 @@ export type DeleteFeeRecordCorrectionTransientFormDataRequest = CustomExpressReq
 }>;
 
 /**
- * Controller for the DELETE fee record correction transient form data route.
+ * Controller for the DELETE fee record correction request transient form data route.
  *
- * Deletes a fee record correction transient form data entity with the provided
+ * Deletes a fee record correction request transient form data entity with the provided
  * fee record id and user id. Checks for existence of the associated fee record
  * entity before deletion and throws NotFoundError if it does not exist.
  * @param req - The request object
@@ -25,7 +25,7 @@ export type DeleteFeeRecordCorrectionTransientFormDataRequest = CustomExpressReq
  * @returns A '{@link HttpStatusCode.NoContent}' if there are no errors, even
  * if transient form data doesn't exist.
  */
-export const deleteFeeRecordCorrectionTransientFormData = async (req: DeleteFeeRecordCorrectionTransientFormDataRequest, res: Response) => {
+export const deleteFeeRecordCorrectionRequestTransientFormData = async (req: DeleteFeeRecordCorrectionRequestTransientFormDataRequest, res: Response) => {
   try {
     const { reportId, feeRecordId, userId } = req.params;
 
@@ -35,11 +35,11 @@ export const deleteFeeRecordCorrectionTransientFormData = async (req: DeleteFeeR
       throw new NotFoundError(`Failed to find a fee record with id '${feeRecordId}' attached to report with id '${reportId}'`);
     }
 
-    await FeeRecordCorrectionTransientFormDataRepo.deleteByUserIdAndFeeRecordId(userId, Number(feeRecordId));
+    await FeeRecordCorrectionRequestTransientFormDataRepo.deleteByUserIdAndFeeRecordId(userId, Number(feeRecordId));
 
     return res.sendStatus(HttpStatusCode.NoContent);
   } catch (error) {
-    const errorMessage = 'Failed to delete fee record correction transient form data';
+    const errorMessage = 'Failed to delete fee record correction request transient form data';
     console.error(errorMessage, error);
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);

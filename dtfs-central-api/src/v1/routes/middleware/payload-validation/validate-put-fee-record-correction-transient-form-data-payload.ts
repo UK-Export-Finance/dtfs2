@@ -14,10 +14,10 @@ import { TfmSessionUserSchema } from './schemas';
 const RecordCorrectionReasonSchema = z.enum(Object.values(RECORD_CORRECTION_REASON) as [RecordCorrectionReason, ...RecordCorrectionReason[]]);
 
 /**
- * Schema for validating fee record correction transient form data payload.
+ * Schema for validating fee record correction request transient form data payload.
  * Includes user information and form data with reasons and additional info.
  */
-const PutFeeRecordCorrectionTransientFormDataPayload = z.object({
+const PutFeeRecordCorrectionRequestTransientFormDataPayload = z.object({
   user: TfmSessionUserSchema,
   formData: z.object({
     reasons: z.array(RecordCorrectionReasonSchema).min(1),
@@ -26,11 +26,13 @@ const PutFeeRecordCorrectionTransientFormDataPayload = z.object({
 });
 
 /**
- * Type definition for fee record correction transient form data payload.
+ * Type definition for fee record correction request transient form data payload.
  */
-export type PutFeeRecordCorrectionTransientFormDataPayload = z.infer<typeof PutFeeRecordCorrectionTransientFormDataPayload>;
+export type PutFeeRecordCorrectionRequestTransientFormDataPayload = z.infer<typeof PutFeeRecordCorrectionRequestTransientFormDataPayload>;
 
 /**
- * Middleware function to validate fee record correction transient form data payload.
+ * Middleware function to validate fee record correction request transient form data payload.
  */
-export const validatePutFeeRecordCorrectionTransientFormDataPayload = createValidationMiddlewareForSchema(PutFeeRecordCorrectionTransientFormDataPayload);
+export const validatePutFeeRecordCorrectionRequestTransientFormDataPayload = createValidationMiddlewareForSchema(
+  PutFeeRecordCorrectionRequestTransientFormDataPayload,
+);

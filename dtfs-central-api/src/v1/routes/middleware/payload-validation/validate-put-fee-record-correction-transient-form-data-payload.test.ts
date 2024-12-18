@@ -1,19 +1,19 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, RECORD_CORRECTION_REASON, RecordCorrectionTransientFormData } from '@ukef/dtfs2-common';
+import { MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, RECORD_CORRECTION_REASON, RecordCorrectionRequestTransientFormData } from '@ukef/dtfs2-common';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import {
-  PutFeeRecordCorrectionTransientFormDataPayload,
-  validatePutFeeRecordCorrectionTransientFormDataPayload,
+  PutFeeRecordCorrectionRequestTransientFormDataPayload,
+  validatePutFeeRecordCorrectionRequestTransientFormDataPayload,
 } from './validate-put-fee-record-correction-transient-form-data-payload';
 
-describe('validatePutFeeRecordCorrectionTransientFormDataPayload', () => {
+describe('validatePutFeeRecordCorrectionRequestTransientFormDataPayload', () => {
   const getHttpMocks = () => httpMocks.createMocks();
 
-  const requiredPayloadKeys: (keyof PutFeeRecordCorrectionTransientFormDataPayload)[] = ['formData', 'user'];
-  const requiredFormDataPayloadKeys: (keyof RecordCorrectionTransientFormData)[] = ['reasons', 'additionalInfo'];
+  const requiredPayloadKeys: (keyof PutFeeRecordCorrectionRequestTransientFormDataPayload)[] = ['formData', 'user'];
+  const requiredFormDataPayloadKeys: (keyof RecordCorrectionRequestTransientFormData)[] = ['reasons', 'additionalInfo'];
 
-  const aValidPayload = (): PutFeeRecordCorrectionTransientFormDataPayload => ({
+  const aValidPayload = (): PutFeeRecordCorrectionRequestTransientFormDataPayload => ({
     formData: {
       reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER],
       additionalInfo: 'Some additional info',
@@ -33,7 +33,7 @@ describe('validatePutFeeRecordCorrectionTransientFormDataPayload', () => {
     req.body = invalidPayload;
 
     // Act
-    validatePutFeeRecordCorrectionTransientFormDataPayload(req, res, next);
+    validatePutFeeRecordCorrectionRequestTransientFormDataPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
@@ -60,7 +60,7 @@ describe('validatePutFeeRecordCorrectionTransientFormDataPayload', () => {
       req.body = invalidPayload;
 
       // Act
-      validatePutFeeRecordCorrectionTransientFormDataPayload(req, res, next);
+      validatePutFeeRecordCorrectionRequestTransientFormDataPayload(req, res, next);
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
@@ -86,7 +86,7 @@ describe('validatePutFeeRecordCorrectionTransientFormDataPayload', () => {
     req.body = invalidPayload;
 
     // Act
-    validatePutFeeRecordCorrectionTransientFormDataPayload(req, res, next);
+    validatePutFeeRecordCorrectionRequestTransientFormDataPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
@@ -105,7 +105,7 @@ describe('validatePutFeeRecordCorrectionTransientFormDataPayload', () => {
     req.body = invalidPayload;
 
     // Act
-    validatePutFeeRecordCorrectionTransientFormDataPayload(req, res, next);
+    validatePutFeeRecordCorrectionRequestTransientFormDataPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
@@ -124,7 +124,7 @@ describe('validatePutFeeRecordCorrectionTransientFormDataPayload', () => {
     req.body = invalidPayload;
 
     // Act
-    validatePutFeeRecordCorrectionTransientFormDataPayload(req, res, next);
+    validatePutFeeRecordCorrectionRequestTransientFormDataPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
@@ -143,7 +143,7 @@ describe('validatePutFeeRecordCorrectionTransientFormDataPayload', () => {
     req.body = invalidPayload;
 
     // Act
-    validatePutFeeRecordCorrectionTransientFormDataPayload(req, res, next);
+    validatePutFeeRecordCorrectionRequestTransientFormDataPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);

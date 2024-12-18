@@ -1,12 +1,12 @@
 import { isAxiosError, HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { RecordCorrectionTransientFormData } from '@ukef/dtfs2-common';
+import { RecordCorrectionRequestTransientFormData } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { TfmSessionUser } from '../../../../types/tfm-session-user';
 
 export type PutFeeRecordCorrectionTransientFormDataRequestBody = {
-  formData: RecordCorrectionTransientFormData;
+  formData: RecordCorrectionRequestTransientFormData;
   user: TfmSessionUser;
 };
 

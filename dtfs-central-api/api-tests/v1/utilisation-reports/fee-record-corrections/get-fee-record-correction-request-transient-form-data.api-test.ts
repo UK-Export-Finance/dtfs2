@@ -1,11 +1,11 @@
 import { HttpStatusCode } from 'axios';
 import {
   FEE_RECORD_STATUS,
-  FeeRecordCorrectionTransientFormDataEntityMockBuilder,
+  FeeRecordCorrectionRequestTransientFormDataEntityMockBuilder,
   FeeRecordEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
   RECORD_CORRECTION_REASON,
-  RecordCorrectionTransientFormData,
+  RecordCorrectionRequestTransientFormData,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { withSqlAndMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
@@ -17,7 +17,7 @@ console.error = jest.fn();
 
 const BASE_URL = '/v1/utilisation-reports/:reportId/fee-records/:feeRecordId/correction-transient-form-data/:userId';
 
-describe(`DELETE ${BASE_URL}`, () => {
+describe(`GET ${BASE_URL}`, () => {
   const reportId = 1;
   const feeRecordId = 2;
   const userId = '5c0a7922c9d89830f4911426';
@@ -37,50 +37,52 @@ describe(`DELETE ${BASE_URL}`, () => {
   });
 
   afterEach(async () => {
-    await SqlDbHelper.deleteAllEntries('FeeRecordCorrectionTransientFormData');
+    await SqlDbHelper.deleteAllEntries('FeeRecordCorrectionRequestTransientFormData');
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
   });
 
   withSqlAndMongoIdPathParameterValidationTests({
     baseUrl: BASE_URL,
-    makeRequest: (url) => testApi.remove({}).to(url),
+    makeRequest: (url) => testApi.get(url),
     sqlPathParameters: ['reportId', 'feeRecordId'],
     mongoPathParameters: ['userId'],
   });
 
-  it(`should return '${HttpStatusCode.NoContent}' if the request is valid and transient form data exists`, async () => {
+  it(`should return '${HttpStatusCode.NotFound}' when no fee record with the supplied id can be found`, async () => {
+    // Act
+    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId: feeRecordId + 1, userId }));
+
+    // Assert
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
+  });
+
+  it(`should return '${HttpStatusCode.Ok}' with the form data if the request is valid and transient form data exists`, async () => {
     // Arrange
-    const formData: RecordCorrectionTransientFormData = {
+    const formData: RecordCorrectionRequestTransientFormData = {
       reasons: [RECORD_CORRECTION_REASON.OTHER],
       additionalInfo: 'Some additional information',
     };
-    const transientFormDataEntity = new FeeRecordCorrectionTransientFormDataEntityMockBuilder()
+    const transientFormDataEntity = new FeeRecordCorrectionRequestTransientFormDataEntityMockBuilder()
       .withFeeRecordId(feeRecordId)
       .withUserId(userId)
       .withFormData(formData)
       .build();
-    await SqlDbHelper.saveNewEntry('FeeRecordCorrectionTransientFormData', transientFormDataEntity);
+    await SqlDbHelper.saveNewEntry('FeeRecordCorrectionRequestTransientFormData', transientFormDataEntity);
 
     // Act
-    const response = await testApi.remove({}).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId, userId }));
+    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId, userId }));
 
     // Assert
-    expect(response.status).toEqual(HttpStatusCode.NoContent);
+    expect(response.status).toEqual(HttpStatusCode.Ok);
+    expect(response.body).toEqual(formData);
   });
 
-  it(`should return '${HttpStatusCode.NoContent}' if the request is valid but transient form data does not exist`, async () => {
+  it(`should return '${HttpStatusCode.Ok}' with empty form data if the request is valid but transient form data does not exist`, async () => {
     // Act
-    const response = await testApi.remove({}).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId, userId }));
+    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId, userId }));
 
     // Assert
-    expect(response.status).toEqual(HttpStatusCode.NoContent);
-  });
-
-  it(`should return '${HttpStatusCode.NotFound}' when no fee record with the supplied id can be found`, async () => {
-    // Act
-    const response = await testApi.remove({}).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId: feeRecordId + 1, userId }));
-
-    // Assert
-    expect(response.status).toEqual(HttpStatusCode.NotFound);
+    expect(response.status).toEqual(HttpStatusCode.Ok);
+    expect(response.body).toEqual({});
   });
 });
