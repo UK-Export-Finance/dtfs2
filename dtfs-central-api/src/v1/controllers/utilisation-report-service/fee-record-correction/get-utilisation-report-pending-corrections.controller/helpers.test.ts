@@ -318,7 +318,6 @@ describe('get-utilisation-report-pending-corrections.controller helpers', () => 
             reportPeriod: report.reportPeriod,
             uploadedByFullName: `${user.firstname} ${user.surname}`,
             dateUploaded: report.dateUploaded,
-            reportId: report.id,
             corrections: mapFeeRecordsToPendingCorrections(report.feeRecords),
             nextDueReportPeriod: await getNextDueReportPeriod(bank),
           });

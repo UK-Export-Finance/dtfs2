@@ -21,7 +21,6 @@ export type PendingCorrection = {
 };
 
 export type PendingCorrectionsResponseBody = {
-  reportId: number;
   reportPeriod: ReportPeriod;
   uploadedByFullName: string;
   dateUploaded: Date;

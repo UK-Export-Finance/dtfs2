@@ -41,11 +41,13 @@ context('Pending corrections - Fee record correction feature flag enabled', () =
           const bankId = bank.id;
 
           const report = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
+            .withId(1)
             .withUploadedByUserId(_id.toString())
             .withBankId(bankId)
             .withReportPeriod(pendingCorrectionReportPeriod)
             .build();
           const feeRecord = FeeRecordEntityMockBuilder.forReport(report)
+            .withId(1)
             .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
             .withFacilityId(pendingCorrectionDetails.facilityId)
             .withExporter(pendingCorrectionDetails.exporter)
@@ -67,6 +69,10 @@ context('Pending corrections - Fee record correction feature flag enabled', () =
         });
       });
 
+      afterEach(() => {
+        cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
+      });
+
       context('and when another report is due for upload', () => {
         const nextDueReportPeriod = { start: { month: 1, year: 2022 }, end: { month: 2, year: 2022 } };
         const formattedNextDueReportPeriod = getFormattedReportPeriodWithLongMonth(nextDueReportPeriod);
@@ -76,17 +82,17 @@ context('Pending corrections - Fee record correction feature flag enabled', () =
             const { bank } = user;
             const bankId = bank.id;
 
-            const report = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED).withReportPeriod(nextDueReportPeriod).withBankId(bankId).build();
+            const report = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED)
+              .withId(2)
+              .withReportPeriod(nextDueReportPeriod)
+              .withBankId(bankId)
+              .build();
 
             cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
           });
 
           cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
           cy.visit(relativeURL('/utilisation-report-upload'));
-        });
-
-        afterEach(() => {
-          cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
         });
 
         it('should display pending corrections', () => {
@@ -150,10 +156,6 @@ context('Pending corrections - Fee record correction feature flag enabled', () =
             cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
             cy.visit(relativeURL('/utilisation-report-upload'));
           });
-        });
-
-        afterEach(() => {
-          cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
         });
 
         it('should display pending corrections', () => {

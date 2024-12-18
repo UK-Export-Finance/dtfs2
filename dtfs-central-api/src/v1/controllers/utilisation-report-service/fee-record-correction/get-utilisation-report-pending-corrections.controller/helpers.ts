@@ -74,7 +74,6 @@ export const mapReportToPendingCorrectionsResponseBody = async (report: Utilisat
     reportPeriod: report.reportPeriod,
     uploadedByFullName: `${uploadedByUser.firstname} ${uploadedByUser.surname}`,
     dateUploaded: report.dateUploaded,
-    reportId: report.id,
     corrections: mapFeeRecordsToPendingCorrections(report.feeRecords),
     nextDueReportPeriod,
   };

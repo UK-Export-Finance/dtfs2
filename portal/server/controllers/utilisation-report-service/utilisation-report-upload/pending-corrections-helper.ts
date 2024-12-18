@@ -60,7 +60,7 @@ export const mapToPendingCorrectionsViewModel = (
 };
 
 /**
- * Type guard for UtilisationReportPendingCorrectionsResponseBody
+ * Type guard for narrowing down UtilisationReportPendingCorrectionsResponseBody type
  * @param responseBody - The response from the api
  * @returns true if the response body contains pending corrections and false otherwise
  */

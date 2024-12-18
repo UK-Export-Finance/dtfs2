@@ -149,13 +149,12 @@ describe(`GET ${BASE_URL}`, () => {
 
       // Assert
       expect(response.body).toEqual({
-        reportId: report.id,
         reportPeriod: report.reportPeriod,
         uploadedByFullName: `${portalUser.firstname} ${portalUser.surname}`,
         dateUploaded: report.dateUploaded?.toISOString(),
         corrections: [
           {
-            feeRecordId: feeRecord.id,
+            correctionId: pendingCorrection.id,
             facilityId: feeRecord.facilityId,
             exporter: feeRecord.exporter,
             additionalInfo: pendingCorrection.additionalInfo,
@@ -266,13 +265,12 @@ describe(`GET ${BASE_URL}`, () => {
 
       // Assert
       expect(response.body).toEqual({
-        reportId: oldestReportWithPendingCorrections.id,
         reportPeriod: oldestReportWithPendingCorrections.reportPeriod,
         uploadedByFullName: `${portalUser.firstname} ${portalUser.surname}`,
         dateUploaded: oldestReportWithPendingCorrections.dateUploaded?.toISOString(),
         corrections: [
           {
-            feeRecordId: feeRecord.id,
+            correctionId: pendingCorrection.id,
             facilityId: feeRecord.facilityId,
             exporter: feeRecord.exporter,
             additionalInfo: pendingCorrection.additionalInfo,

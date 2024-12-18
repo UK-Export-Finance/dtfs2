@@ -20,16 +20,15 @@ describe('getUtilisationReportPendingCorrectionsByBankId', () => {
     reportPeriod: aReportPeriod(),
     uploadedByFullName: 'John Doe',
     dateUploaded: '2023-02-01T12:00:00Z',
-    reportId: 123,
     corrections: [
       {
-        feeRecordId: 1,
+        correctionId: 1,
         facilityId: 'FAC123',
         exporter: 'Exporter A',
         additionalInfo: 'Correction details A',
       },
       {
-        feeRecordId: 2,
+        correctionId: 2,
         facilityId: 'FAC456',
         exporter: 'Exporter B',
         additionalInfo: 'Correction details B',

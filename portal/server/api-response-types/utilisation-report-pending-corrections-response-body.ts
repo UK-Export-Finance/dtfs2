@@ -11,7 +11,6 @@ export type NonEmptyPendingCorrectionsResponseBody = {
   reportPeriod: ReportPeriod;
   uploadedByFullName: string;
   dateUploaded: IsoDateTimeStamp;
-  reportId: number;
   corrections: PendingCorrection[];
   nextDueReportPeriod: ReportPeriod;
 };
