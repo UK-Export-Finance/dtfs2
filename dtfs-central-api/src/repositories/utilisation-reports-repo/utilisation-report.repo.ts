@@ -232,6 +232,7 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
       relations: {
         feeRecords: {
           payments: true,
+          corrections: true,
         },
       },
     });

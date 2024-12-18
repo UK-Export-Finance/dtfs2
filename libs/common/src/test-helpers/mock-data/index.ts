@@ -12,3 +12,5 @@ export * from './entra-id-user';
 export * from './create-tfm-user-request';
 export * from './upsert-tfm-user-request';
 export * from './fee-record-correction-transient-form-data.entity.mock-builder';
+export * from './record-correction-mock';
+export * from './uploaded-utilisation-report-mock';
