@@ -64,6 +64,7 @@ describe('page', () => {
 
     // Assert
     wrapper.expectText('p[data-cy="user-email-address-copy"]').toRead(`A copy of the email has also been sent to ${email}.`);
+    wrapper.expectElement('span[data-cy="user-email-address"]').hasClass('ukef-collapse-white-space');
   });
 
   it('should render "back to premium payments" button', () => {
