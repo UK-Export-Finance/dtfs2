@@ -549,9 +549,6 @@ jobs:
           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
         run: npm run db:migrate
 
-      - name: Check Docker Containers
-        run: docker ps -a
-
       - name: Execute
         uses: ./.github/actions/rerun
         with:
@@ -562,9 +559,6 @@ jobs:
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             TZ=${{ vars.TIMEZONE }}
           retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Check Docker Containers
-        run: docker ps -a
 
   # 5. E2E - GEF
   e2e-tests-gef:
@@ -649,9 +643,6 @@ jobs:
           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
         run: npm run db:migrate
 
-      - name: Check Docker Containers
-        run: docker ps -a
-
       - name: Execute
         uses: ./.github/actions/rerun
         with:
@@ -662,9 +653,6 @@ jobs:
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             TZ=${{ vars.TIMEZONE }}
           retries: ${{ vars.RETRY_LIMIT }}
-      
-      - name: Check Docker Containers
-        run: docker ps -a
 
   #6. E2E - TFM
   e2e-tests-tfm:
@@ -767,9 +755,6 @@ jobs:
           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
         run: npm run db:migrate
 
-      - name: Check Docker Containers
-        run: docker ps -a
-
       - name: Execute
         uses: ./.github/actions/rerun
         with:
@@ -780,9 +765,6 @@ jobs:
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             TZ=${{ vars.TIMEZONE }}
           retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Check Docker Containers
-        run: docker ps -a
 
   #7. E2E - UKEF
   e2e-tests-ukef:
@@ -852,18 +834,6 @@ jobs:
           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
         run: npm run db:migrate
 
-      - name: Check Docker Containers
-        run: | 
-          # Print logs for the dtfs-sql container
-          container_name=$(docker ps -a --format '{{.Names}}' | grep -i 'dtfs-sql')
-          if [ -n "$container_name" ]; then
-            echo "Printing logs for dtfs-sql container:"
-            docker logs "$container_name"
-          else
-            echo "dtfs-sql container not found."
-            exit 1
-          fi
-
       - name: Execute
         uses: ./.github/actions/rerun
         with:
@@ -874,9 +844,6 @@ jobs:
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             TZ=${{ vars.TIMEZONE }}
           retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Check Docker Containers
-        run: docker ps -a
 
   #8. E2E - FF
   e2e-tests-ff:
@@ -1044,9 +1011,6 @@ jobs:
           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
         run: npm run db:migrate
 
-      - name: Check Docker Containers
-        run: docker ps -a
-
       - name: Project
         id: project
         run: |
@@ -1063,9 +1027,6 @@ jobs:
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             TZ=${{ vars.TIMEZONE }}
           retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Check Docker Containers
-        run: docker ps -a
 
   #9. Docker build
   build:
