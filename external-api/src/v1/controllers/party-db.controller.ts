@@ -12,24 +12,29 @@ const headers = {
 };
 
 export const lookup = async (req: Request, res: Response) => {
-  const { partyDbCompanyRegistrationNumber: companyReg } = req.params;
+  try {
+    const { partyDbCompanyRegistrationNumber: companyReg } = req.params;
 
-  if (!isValidCompanyRegistrationNumber(companyReg)) {
-    console.error('Invalid company registration number provided %s', companyReg);
-    return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company registration number' });
-  }
+    if (!isValidCompanyRegistrationNumber(companyReg)) {
+      console.error('Invalid company registration number provided %s', companyReg);
+      return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company registration number' });
+    }
 
-  const response: { status: number; data: unknown } = await axios({
-    method: 'get',
-    url: `${APIM_MDM_URL}customers?companyReg=${companyReg}`,
-    headers,
-  }).catch((error: AxiosError) => {
+    const response: { status: number; data: unknown } = await axios({
+      method: 'get',
+      url: `${APIM_MDM_URL}customers?companyReg=${companyReg}`,
+      headers,
+    });
+
+    const { status, data } = response;
+    return res.status(status).send(data);
+  } catch (error) {
     console.error('Error calling Party DB API %o', error);
-    return { data: 'Error calling Party DB API', status: error?.response?.status || HttpStatusCode.InternalServerError };
-  });
-
-  const { status, data } = response;
-  return res.status(status).send(data);
+    if (error instanceof AxiosError) {
+      return res.status(error?.response?.status || HttpStatusCode.InternalServerError).send('Error calling Party DB API');
+    }
+    return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, message: 'An unknown error occurred' });
+  }
 };
 
 /**
@@ -53,32 +58,35 @@ export const lookup = async (req: Request, res: Response) => {
  * await getOrCreateParty(req, res);
  */
 export const getOrCreateParty = async (req: CustomExpressRequest<{ reqBody: { companyRegNo: string; companyName: string } }>, res: Response) => {
-  const { companyRegNo, companyName } = req.body;
+  try {
+    const { companyRegNo, companyName } = req.body;
 
-  if (!isValidCompanyRegistrationNumber(companyRegNo)) {
-    console.error('Invalid company registration number provided %s', companyRegNo);
-    return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company registration number' });
-  }
+    if (!isValidCompanyRegistrationNumber(companyRegNo)) {
+      console.error('Invalid company registration number provided %s', companyRegNo);
+      return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company registration number' });
+    }
 
-  if (!companyName) {
-    console.error('No company name provided');
-    return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company name' });
-  }
+    if (!companyName) {
+      console.error('No company name provided');
+      return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company name' });
+    }
 
-  const response: { status: number; data: unknown } = await axios({
-    method: 'post',
-    url: `${APIM_MDM_URL}customers`,
-    headers,
-    data: {
-      companyRegistrationNumber: companyRegNo,
-      companyName,
-    },
-  }).catch((error: AxiosError) => {
+    const response: { status: number; data: unknown } = await axios({
+      method: 'post',
+      url: `${APIM_MDM_URL}customers`,
+      headers,
+      data: {
+        companyRegistrationNumber: companyRegNo,
+        companyName,
+      },
+    });
+    const { status, data } = response;
+    return res.status(status).send(data);
+  } catch (error) {
     console.error('Error calling Party DB API %o', error);
-    return { data: 'Error calling Party DB API', status: error?.response?.status || HttpStatusCode.InternalServerError };
-  });
-
-  const { status, data } = response;
-
-  return res.status(status).send(data);
+    if (error instanceof AxiosError) {
+      return res.status(error?.response?.status || HttpStatusCode.InternalServerError).send('Error calling Party DB API');
+    }
+    return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, message: 'An unknown error occurred' });
+  }
 };
