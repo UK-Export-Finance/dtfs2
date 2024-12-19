@@ -12,7 +12,6 @@ const featureFlagsSchema = z.object({
    */
   FF_TFM_PAYMENT_RECONCILIATION_ENABLED: featureFlagOptions,
   FF_FEE_RECORD_CORRECTION_ENABLED: featureFlagOptions,
-  FF_TFM_FACILITY_END_DATE_ENABLED: featureFlagOptions,
   FF_TFM_DEAL_CANCELLATION_ENABLED: featureFlagOptions,
   FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: featureFlagOptions,
   FF_TFM_SSO_ENABLED: featureFlagOptions,
@@ -28,8 +27,6 @@ const isFeatureFlagEnabled = (featureFlag: FeatureFlag) => (): boolean => {
 export const isTfmPaymentReconciliationFeatureFlagEnabled = isFeatureFlagEnabled('FF_TFM_PAYMENT_RECONCILIATION_ENABLED');
 
 export const isFeeRecordCorrectionFeatureFlagEnabled = isFeatureFlagEnabled('FF_FEE_RECORD_CORRECTION_ENABLED');
-
-export const isTfmFacilityEndDateFeatureFlagEnabled = isFeatureFlagEnabled('FF_TFM_FACILITY_END_DATE_ENABLED');
 
 export const isTfmDealCancellationFeatureFlagEnabled = isFeatureFlagEnabled('FF_TFM_DEAL_CANCELLATION_ENABLED');
 

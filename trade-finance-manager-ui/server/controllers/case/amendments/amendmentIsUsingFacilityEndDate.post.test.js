@@ -1,4 +1,4 @@
-import { isTfmFacilityEndDateFeatureFlagEnabled, MAPPED_FACILITY_TYPE, TEAM_IDS } from '@ukef/dtfs2-common';
+import { MAPPED_FACILITY_TYPE, TEAM_IDS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 import { MOCK_AMENDMENT_COVERENDDATE_CHANGE, MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE } from '../../../test-mocks/amendment-test-mocks';
@@ -27,11 +27,6 @@ const session = { user, userToken: 'mockToken' };
 
 const { dealId, facilityId, amendmentId } = MOCK_AMENDMENT_COVERENDDATE_CHANGE;
 
-jest.mock('@ukef/dtfs2-common', () => ({
-  ...jest.requireActual('@ukef/dtfs2-common'),
-  isTfmFacilityEndDateFeatureFlagEnabled: jest.fn(),
-}));
-
 describe('amendmentIsUsingFacilityEndDate routes', () => {
   beforeEach(() => {
     jest.resetAllMocks();
@@ -40,7 +35,6 @@ describe('amendmentIsUsingFacilityEndDate routes', () => {
   describe('POST getAmendmentIsUsingFacilityEndDate', () => {
     beforeEach(() => {
       jest.resetAllMocks();
-      jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(true);
     });
 
     it('should render the template with errors if no value is provided', async () => {

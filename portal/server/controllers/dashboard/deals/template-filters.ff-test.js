@@ -5,7 +5,7 @@ import CONTENT_STRINGS from '../../../content-strings';
 import { generateFiltersArray } from '../filters/generate-template-filters';
 
 describe('controllers/dashboard/deals - template-filters', () => {
-  describe('deal status filters - FF_TFM_FACILITY_END_DATE_ENABLED enabled', () => {
+  describe('deal status filters - FF_TFM_DEAL_CANCELLATION_ENABLED enabled', () => {
     it('should return generateFiltersArray with all possible `deal status` field inputs', () => {
       const mockSubmittedFilters = {};
 

@@ -1,4 +1,4 @@
-const { CURRENCY, AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { CURRENCY, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { orderBy, cloneDeep } = require('lodash');
 const { formattedNumber } = require('../../../utils/number');
 const { decimalsCount, roundNumber } = require('../../helpers/number');
@@ -115,12 +115,10 @@ const findLatestCompletedAmendment = (amendments) => {
       existingUpdatedFields.exposure = amendment.tfm.exposure;
     }
 
-    if (isTfmFacilityEndDateFeatureFlagEnabled()) {
-      if (updatedFields?.isUsingFacilityEndDate === null || updatedFields?.isUsingFacilityEndDate === undefined) {
-        existingUpdatedFields.isUsingFacilityEndDate = amendment.tfm.isUsingFacilityEndDate;
-        existingUpdatedFields.facilityEndDate = amendment.tfm.facilityEndDate;
-        existingUpdatedFields.bankReviewDate = amendment.tfm.bankReviewDate;
-      }
+    if (updatedFields?.isUsingFacilityEndDate === null || updatedFields?.isUsingFacilityEndDate === undefined) {
+      existingUpdatedFields.isUsingFacilityEndDate = amendment.tfm.isUsingFacilityEndDate;
+      existingUpdatedFields.facilityEndDate = amendment.tfm.facilityEndDate;
+      existingUpdatedFields.bankReviewDate = amendment.tfm.bankReviewDate;
     }
 
     if (!amendmentTfmCoverEndDate) {
