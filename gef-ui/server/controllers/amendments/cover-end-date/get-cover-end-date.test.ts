@@ -33,8 +33,6 @@ const getHttpMocks = () =>
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 
-const { req, res } = getHttpMocks();
-
 describe('getCoverEndDate', () => {
   beforeEach(() => {
     jest.resetAllMocks();
@@ -49,6 +47,9 @@ describe('getCoverEndDate', () => {
   });
 
   it('should call getApplication with the correct dealId and userToken', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+
     // Act
     await getCoverEndDate(req, res);
 
@@ -58,6 +59,9 @@ describe('getCoverEndDate', () => {
   });
 
   it('should call getFacility with the correct dealId and userToken', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+
     // Act
     await getCoverEndDate(req, res);
 
@@ -67,6 +71,9 @@ describe('getCoverEndDate', () => {
   });
 
   it('should render the cover end date template if the facility is valid', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+
     // Act
     await getCoverEndDate(req, res);
 
@@ -83,6 +90,8 @@ describe('getCoverEndDate', () => {
   });
 
   it('should redirect if the facility is not found', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
     getFacilityMock.mockResolvedValue({ details: undefined });
 
     // Act
@@ -94,6 +103,8 @@ describe('getCoverEndDate', () => {
   });
 
   it('should redirect if the deal is not found', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
     getApplicationMock.mockResolvedValue(undefined);
 
     // Act
@@ -104,6 +115,8 @@ describe('getCoverEndDate', () => {
   });
 
   it('should redirect if the facility cannot be amended', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
     getFacilityMock.mockResolvedValue(MOCK_UNISSUED_FACILITY);
 
     // Act
@@ -114,7 +127,9 @@ describe('getCoverEndDate', () => {
   });
 
   it('should render `problem with service` if getApplication throws an error', async () => {
+    // Arrange
     getApplicationMock.mockRejectedValue(new Error('test error'));
+    const { req, res } = getHttpMocks();
 
     // Act
     await getCoverEndDate(req, res);
@@ -124,7 +139,9 @@ describe('getCoverEndDate', () => {
   });
 
   it('should render `problem with service` if getFacility throws an error', async () => {
+    // Arrange
     getFacilityMock.mockRejectedValue(new Error('test error'));
+    const { req, res } = getHttpMocks();
 
     // Act
     await getCoverEndDate(req, res);
