@@ -1,4 +1,4 @@
-import { AMENDMENT_TYPES, ApiError, CustomExpressRequest } from '@ukef/dtfs2-common';
+import { AMENDMENT_TYPES, AmendmentNotFoundError, ApiError, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
@@ -17,18 +17,18 @@ export const getAmendment = async (req: GetAmendmentRequest, res: Response) => {
   try {
     const amendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
 
-    if (!amendment || amendment.type !== AMENDMENT_TYPES.PORTAL) {
-      return res.status(HttpStatusCode.NotFound).send({ status: HttpStatusCode.NotFound, message: `Amendment not found: ${amendmentId}` });
+    if (amendment?.type !== AMENDMENT_TYPES.PORTAL) {
+      throw new AmendmentNotFoundError(amendmentId, facilityId);
     }
 
     return res.status(HttpStatusCode.Ok).send(amendment);
   } catch (error) {
+    console.error(`Error getting amendment with facilityId ${facilityId} and amendment id ${amendmentId}: %o`, error);
+
     if (error instanceof ApiError) {
       const { status, message, code } = error;
       return res.status(status).send({ status, message, code });
     }
-
-    console.error(`Error getting amendment with facilityId ${facilityId} and amendment id ${amendmentId}: %o`, error);
 
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,
