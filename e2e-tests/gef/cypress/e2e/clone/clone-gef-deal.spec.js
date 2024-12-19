@@ -166,7 +166,7 @@ context('Clone GEF (AIN) deal', () => {
           cy.get('[data-cy="dashboard"]').click();
           // goes to facilities table and makes sure it's issued and no issue date so properly cloned
           cy.get('[data-cy="dashboard-sub-nav-link-facilities"]').click();
-          cy.get(`[data-cy="facility__bankStage--${facilityId}"]`).should('be.visible');
+          cy.get(`[data-cy="facility__bankStage--${facilityId}"]`).contains('Issued');
           cy.get(`[data-cy="facility__issuedDate--${facilityId}"]`).contains('-');
         });
     });
