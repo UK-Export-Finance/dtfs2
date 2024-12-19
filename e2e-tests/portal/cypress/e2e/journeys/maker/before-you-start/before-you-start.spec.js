@@ -3,9 +3,13 @@ const partials = require('../../../partials');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
-const { BANK1_MAKER1 } = MOCK_USERS;
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('Red Line eligibility checking (`before you start` page)', () => {
+  afterEach(() => {
+    cy.deleteDeals(ADMIN);
+  });
+
   it('should render headings, intro and mandatory criteria', () => {
     cy.createBSSSubmission(BANK1_MAKER1);
     cy.url().should('eq', relative('/before-you-start'));

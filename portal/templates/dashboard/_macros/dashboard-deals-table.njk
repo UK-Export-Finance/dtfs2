@@ -27,7 +27,7 @@
         <a
           href="{{ url }}{{ deal._id }}"
           class="govuk-link"
-          data-cy="deal__link--{{ deal._id }}"
+          data-cy="deal__link--index--{{ loop.index }} deal__link--{{ deal._id }}"
         >
           {{ deal.bankInternalRefName }}
         </a>
@@ -36,28 +36,39 @@
       {% set dealRow = [
         {
           text: deal.exporter or "-",
-          attributes: { "data-cy": "deal__exporter--" + deal._id  }
+          attributes: {
+            "data-cy": "deal__exporter--index--" + loop.index + " deal__exporter--" + deal._id
+          }
         },
         {
           html: linkHtml,
-          attributes: { "data-cy": "deal__bankRef--bankInternalRefName" + deal._id }
+          attributes: {
+            "data-cy": "deal__bankRef--index--" + loop.index + " deal__bankRef--" + deal._id
+          }
         },
         {
           text: deal.product or "-",
-          attributes: { "data-cy": "deal__product--" + deal._id }
+          attributes: {
+            "data-cy": "deal__product--index--" + loop.index + " deal__product--" + deal._id
+          }
         },
         {
           text: deal.submissionType or "-",
-          attributes: { "data-cy": "deal__submissionType--" + deal._id }
+          attributes: {
+            "data-cy": "deal__submissionType--index--" + loop.index + " deal__submissionType--" + deal._id
+          }
         },
         {
           text: deal.status or "-",
-          attributes: { "data-cy": "deal__status--" + deal._id }
+          attributes: {
+            "data-cy": "deal__status--index--" + loop.index + " deal__status--" + deal._id
+          }
         },
         {
           text: deal.updatedAt | localiseTimestamp("d MMM yyyy", userTimezone) or "-",
           attributes: {
-          'data-cy': 'deal__updated--' + deal._id }
+            'data-cy': "deal__updated--index--" + loop.index + " deal__updated--" + deal._id
+          }
         }
       ] %}
 
@@ -89,39 +100,39 @@
           html: exporterHTML,
           value: buttonValue,
           attributes: {
-          "data-cy": "deal__header--exporter",
-          "aria-sort": activeSortByOrder or defaultSortByOrder
+            "data-cy": "deal__header--exporter",
+            "aria-sort": activeSortByOrder or defaultSortByOrder
           }
         },
         {
           text: "Bank ref",
           attributes: {
-          "data-cy": "deal__header--bankRef"
-        }
+            "data-cy": "deal__header--bankRef"
+          }
         },
         {
           text: "Product",
           attributes: {
-          "data-cy": "deal__header--product"
-        }
+            "data-cy": "deal__header--product"
+          }
         },
         {
           text: "Type",
           attributes: {
-          "data-cy": "deal__header--type"
-        }
+            "data-cy": "deal__header--type"
+          }
         },
         {
           text: "Status",
           attributes: {
-          "data-cy": "deal__header--status"
-        }
+            "data-cy": "deal__header--status"
+          }
         },
         {
           text: "Last updated",
           attributes: {
-          "data-cy": "deal__header--updated"
-        }
+            "data-cy": "deal__header--updated"
+          }
         }
       ],
       rows: rows
