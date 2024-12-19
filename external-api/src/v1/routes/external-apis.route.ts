@@ -390,6 +390,8 @@ apiRoutes.get('/party-db/:partyDbCompanyRegistrationNumber', partyDb.lookup);
  *           application/json:
  *             schema:
  *               $ref: '#/definitions/PartyDB'
+ *       400:
+ *         description: Bad request. Invalid Companies House registration number
  *       500:
  *         description: Error getting or creating the party
  */
@@ -417,6 +419,8 @@ apiRoutes.post('/party-db', partyDb.getOrCreateParty);
  *           application/json:
  *             schema:
  *               $ref: '#/definitions/PartyDB'
+ *       400:
+ *         description: Bad request. Invalid Companies House registration number
  *       404:
  *         description: Not found
  */
