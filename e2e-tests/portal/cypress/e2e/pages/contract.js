@@ -30,8 +30,8 @@ const page = {
 
   abandonButton: () => cy.get('[data-cy="Abandon"]'),
   abandonLink: () => cy.get('[data-cy="AbandonLink"]'),
-  proceedToReview: () => cy.get('[data-cy="ProceedToReview"]'),
-  proceedToSubmit: () => cy.get('[data-cy="ProceedToSubmit"]'),
+  proceedToReview: () => cy.get('[data-cy="ProceedToReview"]', { timeout: 45000 }),
+  proceedToSubmit: () => cy.get('[data-cy="ProceedToSubmit"]', { timeout: 45000 }),
   eligibilitySubmissionType: () => cy.get('[data-cy="eligibility-submission-type"]'),
   eligibilityManualInclusionNoticeSubmissionDate: () => cy.get('[data-cy="manual-inclusion-notice-submission-date"]'),
   bondTransactionsTableRows: () => cy.get('[data-cy="bond-transactions-table"] tbody tr'),

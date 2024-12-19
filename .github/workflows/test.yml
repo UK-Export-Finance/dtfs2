@@ -777,26 +777,11 @@ jobs:
       matrix:
         spec:
           [
-            'portal/MIA-underwriter-managers-approved-decision-updates-portal-deal-and-submission-type-to-MIN/**/*.spec.js',
-            'portal/MIA-underwriter-managers-decision-updates-portal-deal/**/*.spec.js',
-            'portal/submit-AIN-deal-creates-default-credit-rating-in-tfm/**/*.spec.js',
-            'portal/submit-AIN-deal-creates-tasks-in-tfm/**/*.spec.js',
-            'portal/submit-AIN-deal-creates-tfm-deal-stage-and-product/**/*.spec.js',
-            'portal/submit-AIN-deal-updates-portal-deal-status/**/*.spec.js',
-            'portal/submit-MIA-deal-TFM-approves-resubmit-MIA-deal-becomes-MIN/**/*.spec.js',
-            'portal/submit-MIA-deal-creates-tasks-in-tfm/**/*.spec.js',
-            'portal/submit-MIA-deal-creates-tfm-deal-stage-and-product/**/*.spec.js',
-            'portal/submit-MIA-deal-updates-portal-deal-status/**/*.spec.js',
-            'portal/submit-MIN-changes-tfm-stage-to-confirmed/**/*.spec.js',
-            'portal/submit-MIN-deal-does-not-create-credit-rating-in-tfm/**/*.spec.js',
-            'portal/submit-MIN-deal-updates-portal-deal-status/**/*.spec.js',
-            'portal/submit-MIN-with-unissued-facilities-and-resubmit-issued-facilities-updates-facilities-in-tfm/**/*.spec.js',
-            'portal/submit-deal-adds-risk-profile-to-facilities/**/*.spec.js',
-            'portal/submit-deal-converts-contract-value-to-gbp/**/*.spec.js',
-            'portal/submit-deal-creates-loss-given-and-probability-defaults-in-tfm/**/*.spec.js',
-            'portal/submit-deal-with-issued-facilities/**/*.spec.js',
-            'portal/submit-deal-with-non-gbp-facilities/**/*.spec.js',
-            'portal/submit-deal-with-unissued-facilities-and-resubmit-as-issued/**/*.spec.js',
+            'portal/MIA-underwriter/**/*.spec.js',
+            'portal/submit-AIN/**/*.spec.js',
+            'portal/submit-MIA/**/*.spec.js',
+            'portal/submit-MIN/**/*.spec.js',
+            'portal/submit-deal/**/*.spec.js',
             'utilisation-reports/**/*.spec.js',
           ]
 
@@ -844,7 +829,7 @@ jobs:
         env:
           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
         run: npm run db:migrate
-
+  
       - name: Execute
         uses: ./.github/actions/rerun
         with:
