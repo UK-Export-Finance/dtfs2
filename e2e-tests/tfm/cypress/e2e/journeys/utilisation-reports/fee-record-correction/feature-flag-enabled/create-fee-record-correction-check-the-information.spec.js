@@ -32,7 +32,7 @@ context('When fee record correction feature flag is enabled', () => {
 
   beforeEach(() => {
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
-    cy.task(NODE_TASKS.REMOVE_ALL_FEE_RECORD_CORRECTION_TRANSIENT_FORM_DATA_FROM_DB);
+    cy.task(NODE_TASKS.REMOVE_ALL_FEE_RECORD_CORRECTION_REQUEST_TRANSIENT_FORM_DATA_FROM_DB);
 
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecordAtToDoStatus]);
