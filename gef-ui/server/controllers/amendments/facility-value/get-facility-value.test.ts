@@ -1,6 +1,6 @@
 /* eslint-disable import/first */
-const getFacilityMock = jest.fn();
 const getApplicationMock = jest.fn();
+const getFacilityMock = jest.fn();
 
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { aPortalSessionUser, CURRENCY, DEAL_STATUS, DEAL_SUBMISSION_TYPE, Facility, PORTAL_LOGIN_STATUS, ROLES } from '@ukef/dtfs2-common';
