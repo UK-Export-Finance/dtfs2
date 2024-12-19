@@ -1,3 +1,4 @@
+import { API_ERROR_CODE } from '../constants';
 import { ApiError } from './api.error';
 
 export class InvalidAuditDetailsError extends ApiError {
@@ -5,7 +6,7 @@ export class InvalidAuditDetailsError extends ApiError {
     super({
       status: 400,
       message,
-      code: 'INVALID_AUDIT_DETAILS',
+      code: API_ERROR_CODE.INVALID_AUDIT_DETAILS,
     });
 
     this.name = this.constructor.name;

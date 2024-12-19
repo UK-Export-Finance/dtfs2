@@ -18,3 +18,4 @@ export * from './user-session.error';
 export * from './user-session-not-defined.error';
 export * from './user-token-not-defined.error';
 export * from './multiple-users-found.error';
+export * from './amendment-not-found.error';
