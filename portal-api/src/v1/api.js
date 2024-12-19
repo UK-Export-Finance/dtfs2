@@ -1,5 +1,6 @@
 const axios = require('axios');
-const { HEADERS } = require('@ukef/dtfs2-common');
+const { HEADERS, getFormattedZodErrors } = require('@ukef/dtfs2-common');
+const { PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID } = require('@ukef/dtfs2-common/schemas');
 const { isValidMongoId, isValidBankId, isValidReportPeriod } = require('./validation/validateIds');
 
 require('dotenv').config();
@@ -494,7 +495,16 @@ const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, audit
       },
     });
 
-    return response.data;
+    const { success, error, data } = PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID.safeParse(response.data);
+
+    if (success) {
+      return data;
+    }
+
+    const formattedErrors = getFormattedZodErrors(error);
+    console.error('Type validation error occurred when receiving portal amendment from dtfs-central:', formattedErrors);
+
+    throw new Error('Type validation error occurred');
   } catch (error) {
     console.error('Error upserting portal facility amendment for facility with id %s: with amendment details: %o, %o', facilityId, amendment, error);
     throw error;
