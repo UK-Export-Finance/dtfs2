@@ -1,3 +1,7 @@
+/* eslint-disable import/first */
+const getFacilityMock = jest.fn();
+const getApplicationMock = jest.fn();
+
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { aPortalSessionUser, CURRENCY, DEAL_STATUS, DEAL_SUBMISSION_TYPE, Facility, PORTAL_LOGIN_STATUS, ROLES } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
@@ -6,9 +10,6 @@ import { getFacilityValue, GetFacilityValueRequest } from './get-facility-value'
 import { Deal } from '../../../types/deal';
 import { FacilityValueViewModel } from '../../../types/view-models/amendments/facility-value-view-model';
 import { getCurrencySymbol } from './getCurrencySymbol';
-
-const getApplicationMock = jest.fn();
-const getFacilityMock = jest.fn();
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
