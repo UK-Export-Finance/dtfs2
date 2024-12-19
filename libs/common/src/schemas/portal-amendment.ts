@@ -38,7 +38,7 @@ export const PORTAL_FACILITY_AMENDMENT_USER_VALUES = z
  *
  * If this schema is changed the Open Api docs should be updated too
  */
-export const PORTAL_FACILITY_AMENDMENT = PORTAL_FACILITY_AMENDMENT_USER_VALUES.and(
+export const PORTAL_FACILITY_AMENDMENT = PORTAL_FACILITY_AMENDMENT_USER_VALUES.merge(
   z.object({
     amendmentId: z.string(),
     facilityId: z.string(),
@@ -47,5 +47,16 @@ export const PORTAL_FACILITY_AMENDMENT = PORTAL_FACILITY_AMENDMENT_USER_VALUES.a
     createdAt: z.number(),
     updatedAt: z.number(),
     status: z.string(),
+    createdBy: z.object({
+      username: z.string(),
+      name: z.string(),
+      email: z.string().email(),
+    }),
+  }),
+);
+
+export const PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID = PORTAL_FACILITY_AMENDMENT.merge(
+  z.object({
+    ukefId: z.string().optional(),
   }),
 );

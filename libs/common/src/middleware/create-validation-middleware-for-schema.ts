@@ -4,7 +4,7 @@ import { HttpStatusCode } from 'axios';
 import { AnyObject, ApiErrorCode, ApiErrorResponseBody } from '../types';
 import { API_ERROR_CODE } from '../constants';
 
-const getFormattedZodErrors = (error: ZodError): string[] => error.issues.map(({ path, message, code }) => `${path.join('.')}: ${message} (${code})`);
+export const getFormattedZodErrors = (error: ZodError): string[] => error.issues.map(({ path, message, code }) => `${path.join('.')}: ${message} (${code})`);
 
 const getErrorCode = (error: ZodError): ApiErrorCode => {
   const foundErrorCode: ApiErrorCode | undefined = error.issues.reduce(
