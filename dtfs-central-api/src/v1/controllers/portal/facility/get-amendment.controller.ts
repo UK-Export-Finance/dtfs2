@@ -17,7 +17,7 @@ export const getAmendment = async (req: GetAmendmentRequest, res: Response) => {
   try {
     const amendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
 
-    if (!amendment || amendment.type !== AMENDMENT_TYPES.PORTAL) {
+    if (amendment?.type !== AMENDMENT_TYPES.PORTAL) {
       throw new AmendmentNotFoundError(amendmentId, facilityId);
     }
 
