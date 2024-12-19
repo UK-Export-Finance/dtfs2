@@ -58,7 +58,12 @@ describe('PortalFacilityAmendmentService', () => {
       };
 
       expect(mockUpdatePortalFacilityAmendmentByAmendmentId).toHaveBeenCalledTimes(1);
-      expect(mockUpdatePortalFacilityAmendmentByAmendmentId).toHaveBeenCalledWith({ update: expectedUpdate, facilityId, amendmentId, auditDetails });
+      expect(mockUpdatePortalFacilityAmendmentByAmendmentId).toHaveBeenCalledWith({
+        update: expectedUpdate,
+        facilityId: new ObjectId(facilityId),
+        amendmentId: new ObjectId(amendmentId),
+        auditDetails,
+      });
     });
   });
 });

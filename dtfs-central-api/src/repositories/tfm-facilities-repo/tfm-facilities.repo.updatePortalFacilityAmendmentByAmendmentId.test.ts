@@ -14,7 +14,7 @@ const facilityId = new ObjectId();
 const update = {
   changeFacilityValue: true,
 };
-const amendmentId = new ObjectId().toString();
+const amendmentId = new ObjectId();
 const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
 
 const mockUpdateResult = {
