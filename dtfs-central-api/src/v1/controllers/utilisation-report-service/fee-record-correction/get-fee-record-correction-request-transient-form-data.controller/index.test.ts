@@ -21,7 +21,7 @@ jest.mock('../../../../../repositories/fee-record-correction-request-transient-f
 
 console.error = jest.fn();
 
-describe('get-fee-record-correction-transient-form-data.controller', () => {
+describe('get-fee-record-correction-request-transient-form-data.controller', () => {
   describe('getFeeRecordCorrectionRequestTransientFormData', () => {
     const reportId = 1;
     const feeRecordId = 2;

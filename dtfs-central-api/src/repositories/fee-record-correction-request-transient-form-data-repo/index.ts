@@ -1,1 +1,1 @@
-export * from './fee-record-correction-transient-form-data.repo';
+export * from './fee-record-correction-request-transient-form-data.repo';

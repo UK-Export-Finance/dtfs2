@@ -5,7 +5,7 @@ import { aTfmSessionUser } from '../../../../../test-helpers';
 import {
   PutFeeRecordCorrectionRequestTransientFormDataPayload,
   validatePutFeeRecordCorrectionRequestTransientFormDataPayload,
-} from './validate-put-fee-record-correction-transient-form-data-payload';
+} from './validate-put-fee-record-correction-request-transient-form-data-payload';
 
 describe('validatePutFeeRecordCorrectionRequestTransientFormDataPayload', () => {
   const getHttpMocks = () => httpMocks.createMocks();

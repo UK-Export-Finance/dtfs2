@@ -17,7 +17,7 @@ import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replac
 
 console.error = jest.fn();
 
-const BASE_URL = '/v1/utilisation-reports/:reportId/fee-records/:feeRecordId/correction-transient-form-data';
+const BASE_URL = '/v1/utilisation-reports/:reportId/fee-records/:feeRecordId/correction-request-transient-form-data';
 
 describe(`PUT ${BASE_URL}`, () => {
   const reportId = 1;
