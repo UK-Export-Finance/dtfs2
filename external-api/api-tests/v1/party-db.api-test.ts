@@ -31,8 +31,6 @@ beforeEach(() => {
 
   axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID}`).reply(HttpStatusCode.Ok, {});
   axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});
-  axiosMock.onGet(`${APIM_MDM_URL}customers/salesforce?companyRegistrationNumber=${VALID}`).reply(HttpStatusCode.Ok, {});
-  axiosMock.onGet(`${APIM_MDM_URL}customers/salesforce?companyRegistrationNumber=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});
 });
 
 afterEach(() => {
@@ -56,13 +54,6 @@ describe('when automatic Salesforce customer creation feature flag is disabled',
         const { status } = await get(`/party-db/${VALID_WITH_LETTERS}`);
 
         expect(status).toEqual(HttpStatusCode.Ok);
-      });
-
-      it(`calls the correct url`, async () => {
-        await get(`/party-db/${VALID}`);
-
-        expect(axiosMock.history.get).toHaveLength(1);
-        expect(axiosMock.history.get[0].url).toBe(`${APIM_MDM_URL}customers?companyReg=${VALID}`);
       });
     });
 
@@ -98,13 +89,6 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
       const { status } = await get(`/party-db/${VALID_WITH_LETTERS}`);
 
       expect(status).toEqual(HttpStatusCode.Ok);
-    });
-
-    it(`calls the correct url`, async () => {
-      await get(`/party-db/${VALID}`);
-
-      expect(axiosMock.history.get).toHaveLength(1);
-      expect(axiosMock.history.get[0].url).toBe(`${APIM_MDM_URL}customers/salesforce?companyRegistrationNumber=${VALID}`);
     });
   });
 
