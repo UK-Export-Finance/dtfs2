@@ -1,12 +1,10 @@
-/* eslint-disable import/first */
-const getFacilityMock = jest.fn();
-const getApplicationMock = jest.fn();
-
 import httpMocks from 'node-mocks-http';
 import { aPortalSessionUser, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { getBankReviewDate, GetBankReviewDateRequest } from './get-bank-review-date';
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+const getFacilityMock = jest.fn();
+const getApplicationMock = jest.fn();
+
 jest.mock('../../services/api', () => ({
   getFacility: getFacilityMock,
   getApplication: getApplicationMock,
