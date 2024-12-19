@@ -476,11 +476,11 @@ const getPortalFacilityAmendment = async (facilityId, amendmentId) => {
  * @param {Object} params
  * @param {string} params.dealId - id of the deal with the relevant facility.
  * @param {string} params.facilityId - id of the facility to amend.
- * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} params.amendmentUpdate - the draft amendment to be upserted.
+ * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} params.amendment - the draft amendment to be upserted.
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - The audit details for the update.
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>} - the amendment
  */
-const putPortalFacilityAmendment = async ({ dealId, facilityId, amendmentUpdate, auditDetails }) => {
+const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, auditDetails }) => {
   try {
     const response = await axios({
       method: 'put',
@@ -489,14 +489,14 @@ const putPortalFacilityAmendment = async ({ dealId, facilityId, amendmentUpdate,
       data: {
         dealId,
         facilityId,
-        amendment: amendmentUpdate,
+        amendment,
         auditDetails,
       },
     });
 
     return response.data;
   } catch (error) {
-    console.error('Error upserting portal facility amendment for facility with id %s: with amendment details: %o, %o', facilityId, amendmentUpdate, error);
+    console.error('Error upserting portal facility amendment for facility with id %s: with amendment details: %o, %o', facilityId, amendment, error);
     throw error;
   }
 };

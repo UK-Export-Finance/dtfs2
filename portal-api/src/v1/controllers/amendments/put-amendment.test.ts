@@ -12,7 +12,7 @@ const facilityId = new ObjectId().toString();
 const amendmentId = new ObjectId().toString();
 const dealId = new ObjectId().toString();
 
-const amendmentUpdate = { changeCoverEndDate: true };
+const amendment = { changeCoverEndDate: true };
 const user = aPortalSessionUser();
 
 describe('controllers - facility amendment', () => {
@@ -25,7 +25,7 @@ describe('controllers - facility amendment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks<PutAmendmentRequest>({
         params: { facilityId },
-        body: amendmentUpdate,
+        body: amendment,
         query: { dealId },
         user,
       });
@@ -38,7 +38,7 @@ describe('controllers - facility amendment', () => {
       expect(api.putPortalFacilityAmendment).toHaveBeenCalledWith({
         dealId,
         facilityId,
-        amendmentUpdate,
+        amendment,
         auditDetails: generatePortalAuditDetails(user._id),
       });
     });
@@ -59,7 +59,7 @@ describe('controllers - facility amendment', () => {
       jest.mocked(api.putPortalFacilityAmendment).mockResolvedValue(mockPortalAmendmentResponse);
       const { req, res } = httpMocks.createMocks<PutAmendmentRequest>({
         params: { facilityId },
-        body: amendmentUpdate,
+        body: amendment,
         query: { dealId },
         user,
       });
@@ -80,7 +80,7 @@ describe('controllers - facility amendment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks<PutAmendmentRequest>({
         params: { facilityId },
-        body: amendmentUpdate,
+        body: amendment,
         query: { dealId },
         user,
       });
@@ -99,7 +99,7 @@ describe('controllers - facility amendment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks<PutAmendmentRequest>({
         params: { facilityId },
-        body: amendmentUpdate,
+        body: amendment,
         query: { dealId },
         user,
       });

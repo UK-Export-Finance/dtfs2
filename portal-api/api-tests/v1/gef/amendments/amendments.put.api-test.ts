@@ -9,7 +9,7 @@ import createApi from '../../../api';
 import { TestUser } from '../../../types/test-user';
 import { withRoleAuthorisationTests } from '../../../common-tests/role-authorisation-tests';
 import { withClientAuthenticationTests } from '../../../common-tests/client-authentication-tests';
-import { putAmendmentUrl } from './get-amendment-url';
+import { putAmendmentUrl } from './amendment-urls';
 
 const { as, put } = createApi(app);
 

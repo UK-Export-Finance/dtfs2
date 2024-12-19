@@ -376,10 +376,12 @@ const getAmendment = async ({ facilityId, amendmentId, userToken }) => {
  */
 const upsertAmendment = async ({ facilityId, dealId, payload, userToken }) => {
   if (!isValidMongoId(facilityId)) {
+    console.error('Invalid facility ID %s', facilityId);
     throw new InvalidFacilityIdError(facilityId);
   }
 
   if (!isValidMongoId(dealId)) {
+    console.error('Invalid deal ID %s', dealId);
     throw new InvalidDealIdError(dealId);
   }
 

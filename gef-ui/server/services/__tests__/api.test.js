@@ -390,10 +390,11 @@ describe('getAmendment()', () => {
 });
 
 describe('upsertAmendment()', () => {
-  it(`should return ${HttpStatusCode.Ok} when a the amendment can be upserted`, async () => {
-    Axios.put.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
+  it(`should return the response body when the amendment can be upserted`, async () => {
+    const mockAmendment = { facilityId: validMongoId, amendmentId: validMongoId, dealId: validMongoId, changeCoverEndDate: true };
+    Axios.put.mockReturnValue(Promise.resolve({ data: mockAmendment }));
     const response = await api.upsertAmendment({ facilityId: validMongoId, dealId: validMongoId, payload: {}, userToken });
-    expect(response).toEqual({ status: HttpStatusCode.Ok });
+    expect(response).toEqual(mockAmendment);
   });
 
   it('should throw an error if there is an api error', async () => {

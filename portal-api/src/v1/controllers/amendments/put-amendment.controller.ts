@@ -25,7 +25,7 @@ export const putAmendment = async (req: PutAmendmentRequest, res: Response) => {
     const amendmentResponse = await api.putPortalFacilityAmendment({
       dealId,
       facilityId,
-      amendmentUpdate: req.body,
+      amendment: req.body,
       auditDetails: generatePortalAuditDetails(req.user._id),
     });
 
