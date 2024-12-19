@@ -1,5 +1,5 @@
 import { AxiosError, HttpStatusCode } from 'axios';
-import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
+import { InvalidDealIdError, InvalidFacilityIdError, MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
 import Axios from '../axios';
 import api from '../api';
 import CONSTANTS from '../../constants';
@@ -369,10 +369,11 @@ describe('getAddressesByPostcode()', () => {
 });
 
 describe('getAmendment()', () => {
-  it(`should return ${HttpStatusCode.Ok} when a facility can be found`, async () => {
-    Axios.get.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
+  it(`should return the response body when the amendment can be found`, async () => {
+    const mockAmendment = { facilityId: validMongoId, amendmentId: validMongoId, dealId: validMongoId, changeCoverEndDate: true };
+    Axios.get.mockReturnValue(Promise.resolve({ data: mockAmendment }));
     const response = await api.getAmendment({ facilityId: validMongoId, amendmentId: validMongoId, userToken });
-    expect(response).toEqual({ status: HttpStatusCode.Ok });
+    expect(response).toEqual(mockAmendment);
   });
 
   it('should throw an error if there is an api error', async () => {
@@ -386,5 +387,27 @@ describe('getAmendment()', () => {
 
   it.each(invalidMongoIdTestCases)('should throw an error when given an invalid amendment Id', async (invalidMongoId) => {
     await expect(api.getAmendment({ facilityId: validMongoId, amendmentId: invalidMongoId, userToken })).rejects.toThrow('Invalid amendment ID');
+  });
+});
+
+describe('upsertAmendment()', () => {
+  it(`should return the response body when the amendment can be upserted`, async () => {
+    const mockAmendment = { facilityId: validMongoId, amendmentId: validMongoId, dealId: validMongoId, changeCoverEndDate: true };
+    Axios.put.mockReturnValue(Promise.resolve({ data: mockAmendment }));
+    const response = await api.upsertAmendment({ facilityId: validMongoId, dealId: validMongoId, payload: {}, userToken });
+    expect(response).toEqual(mockAmendment);
+  });
+
+  it('should throw an error if there is an api error', async () => {
+    Axios.put.mockReturnValue(Promise.reject(new AxiosError()));
+    await expect(api.upsertAmendment({ facilityId: validMongoId, dealId: validMongoId, payload: {}, userToken })).rejects.toThrow(AxiosError);
+  });
+
+  it.each(invalidMongoIdTestCases)('should throw an error when given an invalid deal Id', async (invalidMongoId) => {
+    await expect(api.upsertAmendment({ facilityId: validMongoId, dealId: invalidMongoId, payload: {}, userToken })).rejects.toThrow(InvalidDealIdError);
+  });
+
+  it.each(invalidMongoIdTestCases)('should throw an error when given an invalid facility Id', async (invalidMongoId) => {
+    await expect(api.upsertAmendment({ facilityId: invalidMongoId, dealId: validMongoId, payload: {}, userToken })).rejects.toThrow(InvalidFacilityIdError);
   });
 });
