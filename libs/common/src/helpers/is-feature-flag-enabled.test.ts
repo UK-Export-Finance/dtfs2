@@ -5,7 +5,7 @@ import {
   isTfmFacilityEndDateFeatureFlagEnabled,
   isTfmPaymentReconciliationFeatureFlagEnabled,
   isTfmSsoFeatureFlagEnabled,
-  isAutomaticSalesforceCustomerCreationFeatureFlagEnabled,
+  isSalesforceCustomerCreationEnabled,
 } from './is-feature-flag-enabled';
 import { withBooleanFeatureFlagTests } from './with-boolean-feature-flag.tests';
 
@@ -18,6 +18,6 @@ describe('is-feature-flag-enabled helpers', () => {
   withBooleanFeatureFlagTests({ featureFlagName: 'FF_TFM_SSO_ENABLED', getFeatureFlagValue: isTfmSsoFeatureFlagEnabled });
   withBooleanFeatureFlagTests({
     featureFlagName: 'AUTOMATIC_SALESFORCE_CUSTOMER_CREATION_ENABLED',
-    getFeatureFlagValue: isAutomaticSalesforceCustomerCreationFeatureFlagEnabled,
+    getFeatureFlagValue: isSalesforceCustomerCreationEnabled,
   });
 });

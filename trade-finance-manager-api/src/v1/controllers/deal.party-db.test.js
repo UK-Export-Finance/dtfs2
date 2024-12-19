@@ -1,4 +1,4 @@
-const { isAutomaticSalesforceCustomerCreationFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { isSalesforceCustomerCreationEnabled } = require('@ukef/dtfs2-common');
 const { getPartyDbInfo, getOrCreatePartyDbInfo } = require('../api.js');
 
 const api = require('./deal.party-db');
@@ -64,13 +64,13 @@ jest.mock('../api.js', () => ({
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
-  isAutomaticSalesforceCustomerCreationFeatureFlagEnabled: jest.fn(),
+  isSalesforceCustomerCreationEnabled: jest.fn(),
 }));
 
 describe('when automatic Salesforce customer creation feature flag is disabled', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.mocked(isAutomaticSalesforceCustomerCreationFeatureFlagEnabled).mockReturnValue(false);
+    jest.mocked(isSalesforceCustomerCreationEnabled).mockReturnValue(false);
   });
 
   describe('getPartyUrn', () => {
@@ -120,7 +120,7 @@ describe('when automatic Salesforce customer creation feature flag is disabled',
 describe('when automatic Salesforce customer creation feature flag is enabled', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.mocked(isAutomaticSalesforceCustomerCreationFeatureFlagEnabled).mockReturnValue(true);
+    jest.mocked(isSalesforceCustomerCreationEnabled).mockReturnValue(true);
   });
 
   it.each([

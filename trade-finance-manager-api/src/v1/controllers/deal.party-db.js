@@ -1,4 +1,4 @@
-const { isAutomaticSalesforceCustomerCreationFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { isSalesforceCustomerCreationEnabled } = require('@ukef/dtfs2-common');
 
 const api = require('../api');
 
@@ -42,7 +42,7 @@ const getPartyUrn = async ({ companyRegNo, companyName }) => {
   }
 
   let partyDbInfo = null;
-  if (isAutomaticSalesforceCustomerCreationFeatureFlagEnabled()) {
+  if (isSalesforceCustomerCreationEnabled()) {
     if (!companyName) {
       return '';
     }

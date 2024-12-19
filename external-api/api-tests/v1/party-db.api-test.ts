@@ -12,7 +12,7 @@
 
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
-import { MOCK_COMPANY_REGISTRATION_NUMBERS, isAutomaticSalesforceCustomerCreationFeatureFlagEnabled } from '@ukef/dtfs2-common';
+import { MOCK_COMPANY_REGISTRATION_NUMBERS, isSalesforceCustomerCreationEnabled } from '@ukef/dtfs2-common';
 import { app } from '../../src/createApp';
 import { api } from '../api';
 
@@ -23,7 +23,7 @@ let axiosMock: MockAdapter;
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
-  isAutomaticSalesforceCustomerCreationFeatureFlagEnabled: jest.fn(),
+  isSalesforceCustomerCreationEnabled: jest.fn(),
 }));
 
 beforeEach(() => {
@@ -41,7 +41,7 @@ afterEach(() => {
 
 describe('when automatic Salesforce customer creation feature flag is disabled', () => {
   beforeEach(() => {
-    jest.mocked(isAutomaticSalesforceCustomerCreationFeatureFlagEnabled).mockReturnValue(false);
+    jest.mocked(isSalesforceCustomerCreationEnabled).mockReturnValue(false);
   });
 
   describe('/party-db', () => {
@@ -84,7 +84,7 @@ describe('when automatic Salesforce customer creation feature flag is disabled',
 
 describe('when automatic Salesforce customer creation feature flag is enabled', () => {
   beforeEach(() => {
-    jest.mocked(isAutomaticSalesforceCustomerCreationFeatureFlagEnabled).mockReturnValue(true);
+    jest.mocked(isSalesforceCustomerCreationEnabled).mockReturnValue(true);
   });
 
   describe('GET /party-db', () => {
