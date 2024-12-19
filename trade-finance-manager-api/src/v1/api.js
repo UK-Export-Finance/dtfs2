@@ -845,9 +845,7 @@ const getOrCreatePartyDbInfo = async ({ companyRegNo, companyName }) => {
       },
     });
 
-    if (response?.data) {
-      return response.data;
-    }
+    return response.data;
   } catch (error) {
     console.error('Unable to get or create party %o', error);
     return false;

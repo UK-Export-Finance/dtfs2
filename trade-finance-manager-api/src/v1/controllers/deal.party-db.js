@@ -56,7 +56,12 @@ const getPartyUrn = async ({ companyRegNo, companyName }) => {
     return '';
   }
 
-  return partyDbInfo?.[0]?.partyUrn || '';
+  const partyUrn = partyDbInfo?.[0]?.partyUrn;
+  if (partyUrn) {
+    return partyUrn;
+  }
+  console.error('No PartyURN in response');
+  return '';
 };
 
 const identifyDealParties = (deal) => ({

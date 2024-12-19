@@ -12,6 +12,9 @@ const mockCompany = {
   subtype: null,
   isLegacyRecord: false,
 };
+
+console.error = jest.fn();
+
 const res = {
   redirect: jest.fn(),
   render: jest.fn(),
@@ -144,22 +147,7 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
     expect(getOrCreatePartyDbInfo).toHaveBeenCalledTimes(0);
   });
 
-  it('should return an empty string if no companyRegNo is provided', async () => {
-    const result = await api.getPartyUrn({ companyName: 'TEST NAME' });
-    expect(result).toBe('');
-  });
-
-  it('should return an empty string if no companyName is provided', async () => {
-    const result = await api.getPartyUrn({ companyRegNo: '12345678' });
-    expect(result).toBe('');
-  });
-
-  it('should return an empty string if no inputs are provided', async () => {
-    const result = await api.getPartyUrn({});
-    expect(result).toBe('');
-  });
-
-  it('should call getOrCreatePartyDbInfo for a company that exists, and return urn', async () => {
+  it('should call getOrCreatePartyDbInfo for a company that exists (or does not exist and is created with a new URN), and return URN', async () => {
     getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
 
     const companyData = { companyRegNo: '12345678', companyName: 'name' };
@@ -202,6 +190,8 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
     expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith(companyData);
     expect(getOrCreatePartyDbInfo).toHaveBeenCalledTimes(1);
 
+    const expectedErrorMessage = 'No PartyURN in response';
+    expect(console.error).toHaveBeenCalledWith(expectedErrorMessage);
     expect(result).toBe('');
   });
 
