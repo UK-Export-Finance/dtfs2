@@ -1,5 +1,5 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
-const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
 const api = require('../../../api');
 const { formattedNumber } = require('../../../helpers/number');
@@ -25,7 +25,7 @@ const getAmendmentAnswers = async (req, res) => {
     amendment?.bankReviewDate && amendment?.isUsingFacilityEndDate === false ? format(new Date(amendment.bankReviewDate), 'dd MMM yyyy') : '';
   const effectiveDate = amendment?.effectiveDate ? format(fromUnixTime(amendment.effectiveDate), 'dd MMM yyyy') : '';
   const value = amendment.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : '';
-  const isFacilityEndDateEnabled = isTfmFacilityEndDateFeatureFlagEnabled() && facility.facilitySnapshot.isGef;
+  const isFacilityEndDateEnabled = facility.facilitySnapshot.isGef;
 
   return res.render('case/amendments/amendment-answers.njk', {
     dealId,
@@ -67,7 +67,7 @@ const postAmendmentAnswers = async (req, res) => {
       sendFirstTaskEmail: true,
     };
 
-    const isFacilityEndDateEnabled = isTfmFacilityEndDateFeatureFlagEnabled() && facility.facilitySnapshot.isGef;
+    const isFacilityEndDateEnabled = facility.facilitySnapshot.isGef;
 
     if (isFacilityEndDateEnabled) {
       payload.isUsingFacilityEndDate = amendment.isUsingFacilityEndDate;
