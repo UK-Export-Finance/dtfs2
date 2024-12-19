@@ -1,0 +1,109 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% block pageTitle -%}
+  New facility value
+{%- endblock %}
+
+{% set legendHtml %}
+  <span class="govuk-caption-l" data-cy="heading-caption">
+    {{ exporterName }}
+  </span>
+
+  <h1 class="govuk-label-wrapper" data-cy="page-heading">
+    <label class="govuk-label govuk-label--xl govuk-!-padding-bottom-3" for="facility-value">
+        Do you have a facility end date?
+    </label>
+  </h1>
+{% endset %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        "data-cy": "error-summary"
+      },
+      classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+    }) }}
+  {% endif %}
+
+  {{ govukBackLink({
+    text: "Back",
+    href: previousPage,
+    attributes: {
+      "data-cy": "back-link"
+    }
+  }) }}
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <div class="govuk-grid-column-three-quarters">
+      <form method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukRadios({
+          idPrefix: "hasFacilityEndDate",
+          name: "hasFacilityEndDate",
+          classes: "govuk-radios--inline",
+          fieldset: {
+            legend: {
+              html: legendHtml
+            }
+          },
+          hint: {
+            text: "You have to provide UKEF either a facility end date or a bank review date for this GEF cash facility as per an updated version of the GEF user guide."
+          },
+          errorMessage: errors and errors.fieldErrors.hasFacilityEndDate and {
+            text: errors.fieldErrors.hasFacilityEndDate.text,
+            attributes: {
+              "data-cy": "has-facility-end-date-error"
+            }
+          },
+          items: [
+            {
+              value: "true",
+              text: "Yes",
+              attributes: {
+                "data-cy": "has-facility-end-date-yes"
+              }
+            },
+            {
+              value: "false",
+              text: "No",
+              attributes: {
+                "data-cy": "has-facility-end-date-no"
+              }
+            }
+          ]
+        }) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            attributes: {
+              "data-cy": "continue-button"
+            }
+          }) }}
+
+          <a href="{{ cancelUrl }}"  data-cy="cancel-link" class="govuk-link">Cancel</a>
+        </div>
+      </form>
+
+      {{ govukDetails({
+        summaryText: "What is a facility end date",
+        text: "The facility end date is the deadline for a committed loan to be repaid at which point the contract will be terminated."
+      }) }}
+
+      {{ govukDetails({
+        summaryText: "What is a bank review date",
+        text: "The bank review date is when you decide in accordance with your usual policies and procedures for such facilities whether to continue or terminate the facility based on the borrower's needs and circumstances."
+      }) }}
+    </div>
+  </div>
+
+{% endblock %}
