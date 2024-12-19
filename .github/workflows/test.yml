@@ -786,11 +786,78 @@ jobs:
             'portal/submit-MIA/**/*.spec.js',
             'portal/submit-MIN/**/*.spec.js',
             'portal/submit-deal/**/*.spec.js',
-            'utilisation-reports/**/*.spec.js',
           ]
 
     concurrency:
       group: e2e-tests-ukef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+      - name: Dependencies
+        uses: ./.github/actions/rerun
+        with:
+          command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: Docker
+        uses: ./.github/actions/rerun
+        with:
+          command: docker compose up --build -d
+          retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: Initialise
+        uses: ./.github/actions/rerun
+        with:
+          command: sleep 100s && npm run load
+          working-directory: ./utils
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: Execute
+        uses: ./.github/actions/rerun
+        with:
+          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ukef --record false --spec './ukef/cypress/e2e/journeys/${{ matrix.spec }}'
+          working-directory: ./e2e-tests
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            TZ=${{ vars.TIMEZONE }}
+          retries: ${{ vars.RETRY_LIMIT }}
+
+   #7. E2E - UKEF
+  e2e-tests-ukef-utilisation-report:
+    name: E2E UKEF Utilisation Reports 👷
+    needs: [setup]
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        spec:
+          [
+            'utilisation-reports/**/*.spec.js',
+          ]
+
+    concurrency:
+      group: e2e-tests-ukef-utilisation-report-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
       cancel-in-progress: true
 
     steps:
