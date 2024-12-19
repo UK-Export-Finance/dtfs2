@@ -38,7 +38,7 @@ const commonDealItems = {
   comments: [],
   ukefDecision: [],
   ukefDecisionAccepted: false,
-  exporter: { status: CONSTANTS.DEAL_STATUS.COMPLETED, details: [], validation: [] },
+  exporter: { status: CONSTANTS.DEAL_STATUS.COMPLETED, details: [], validation: [], companyName: 'test company' },
   exporterStatus: { text: CONSTANTS.DEAL_STATUS.COMPLETED, class: 'govuk-tag--green', code: CONSTANTS.DEAL_STATUS.COMPLETED },
   eligibilityCriteriaStatus: { text: CONSTANTS.DEAL_STATUS.COMPLETED, class: 'govuk-tag--green', code: CONSTANTS.DEAL_STATUS.COMPLETED },
   facilitiesStatus: { text: CONSTANTS.DEAL_STATUS.COMPLETED, class: 'govuk-tag--green', code: CONSTANTS.DEAL_STATUS.COMPLETED },
