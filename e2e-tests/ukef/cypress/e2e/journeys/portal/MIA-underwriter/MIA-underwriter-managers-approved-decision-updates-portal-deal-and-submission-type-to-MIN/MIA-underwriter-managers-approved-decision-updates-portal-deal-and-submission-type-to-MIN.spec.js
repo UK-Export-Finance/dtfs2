@@ -69,6 +69,7 @@ context('Portal to TFM deal submission', () => {
     cy.document().then((doc) => {
       cy.task('htmlLog', doc.documentElement.outerHTML);
     });
+
     portalPages.contract.proceedToSubmit().click();
 
     portalPages.contractConfirmSubmission.confirmSubmit().check();
