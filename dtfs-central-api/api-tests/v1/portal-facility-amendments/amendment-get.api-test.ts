@@ -1,14 +1,23 @@
 import { Response } from 'supertest';
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { AnyObject, API_ERROR_CODE, DEAL_SUBMISSION_TYPE, DEAL_TYPE, FACILITY_TYPE, MONGO_DB_COLLECTIONS, PortalFacilityAmendment } from '@ukef/dtfs2-common';
-import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import {
+  AMENDMENT_TYPES,
+  AnyObject,
+  API_ERROR_CODE,
+  DEAL_SUBMISSION_TYPE,
+  DEAL_TYPE,
+  FACILITY_TYPE,
+  MONGO_DB_COLLECTIONS,
+  PortalFacilityAmendment,
+} from '@ukef/dtfs2-common';
 import wipeDB from '../../wipeDB';
 import { testApi } from '../../test-api';
-import { createDeal } from '../../helpers/create-deal';
-import { MOCK_PORTAL_USER } from '../../mocks/test-users/mock-portal-user';
+import { createDeal, submitDealToTfm } from '../../helpers/create-deal';
 import aDeal from '../deal-builder';
 import { aPortalUser } from '../../mocks/test-users/portal-user';
+import { createPortalUser } from '../../helpers/create-portal-user';
+import { createPortalFacilityAmendment } from '../../helpers/create-portal-facility-amendment';
 
 const originalEnv = { ...process.env };
 
@@ -25,10 +34,16 @@ const newDeal = aDeal({
   submissionType: DEAL_SUBMISSION_TYPE.AIN,
 }) as AnyObject;
 
-describe('/v1/portal/facilities/:facilityId/amendments/:amendmentId', () => {
-  let dealId;
-  let amendmentId: string;
+describe('GET /v1/portal/facilities/:facilityId/amendments/:amendmentId', () => {
+  let dealId: string;
   let facilityId: string;
+  let portalUserId: string;
+
+  beforeAll(async () => {
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
+
+    portalUserId = (await createPortalUser())._id;
+  });
 
   beforeEach(async () => {
     const createDealResponse: { body: { _id: string } } = await createDeal({ deal: newDeal, user: aPortalUser() });
@@ -40,21 +55,7 @@ describe('/v1/portal/facilities/:facilityId/amendments/:amendmentId', () => {
 
     facilityId = createFacilityResponse.body._id;
 
-    await testApi
-      .put({
-        dealType: DEAL_TYPE.GEF,
-        dealId,
-        submissionType: DEAL_SUBMISSION_TYPE.AIN,
-        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-      })
-      .to('/v1/tfm/deals/submit');
-
-    // TODO: DTFS2-7674 - use PUT to insert an amendment
-    amendmentId = new ObjectId().toString();
-  });
-
-  beforeAll(async () => {
-    await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
+    await submitDealToTfm({ dealId, dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, dealType: DEAL_TYPE.GEF });
   });
 
   afterAll(() => {
@@ -66,70 +67,88 @@ describe('/v1/portal/facilities/:facilityId/amendments/:amendmentId', () => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'false';
     });
 
-    it('returns 404 when the amendment does not exist', async () => {
-      const { status } = (await testApi.get(generateUrl(facilityId, amendmentId))) as FacilityAmendmentResponse;
+    it('should return 404', async () => {
+      const { status } = (await testApi.get(generateUrl(facilityId, new ObjectId().toString()))) as FacilityAmendmentResponse;
 
       expect(status).toEqual(HttpStatusCode.NotFound);
     });
   });
 
-  describe('GET /v1/portal/facilities/:facilityId/amendments/:amendmentId', () => {
-    describe('with FF_PORTAL_FACILITY_AMENDMENTS_ENABLED set to `true`', () => {
-      beforeAll(() => {
-        process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'true';
+  describe('with FF_PORTAL_FACILITY_AMENDMENTS_ENABLED set to `true`', () => {
+    let amendmentId: string;
+
+    beforeEach(async () => {
+      const amendment = await createPortalFacilityAmendment({ dealId, facilityId, userId: portalUserId });
+
+      amendmentId = amendment.amendmentId.toString();
+    });
+
+    beforeAll(() => {
+      process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'true';
+    });
+
+    it('should return 400 when the facility id is invalid', async () => {
+      const anInvalidFacilityId = 'InvalidId';
+
+      const { status, body } = (await testApi.get(generateUrl(anInvalidFacilityId, amendmentId))) as FacilityAmendmentResponse;
+
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+
+      expect(body).toEqual({
+        message: "Expected path parameter 'facilityId' to be a valid mongo id",
+        code: API_ERROR_CODE.INVALID_MONGO_ID_PATH_PARAMETER,
       });
+    });
 
-      it('returns 400 when the facility id is invalid', async () => {
-        const anInvalidFacilityId = 'InvalidId';
+    it('should return 400 when the amendment id is invalid', async () => {
+      const anInvalidAmendmentId = 'InvalidId';
 
-        const { status, body } = (await testApi.get(generateUrl(anInvalidFacilityId, amendmentId))) as FacilityAmendmentResponse;
+      const { status, body } = (await testApi.get(generateUrl(facilityId, anInvalidAmendmentId))) as FacilityAmendmentResponse;
 
-        expect(status).toEqual(HttpStatusCode.BadRequest);
+      expect(status).toEqual(HttpStatusCode.BadRequest);
 
-        expect(body).toEqual({
-          message: "Expected path parameter 'facilityId' to be a valid mongo id",
-          code: API_ERROR_CODE.INVALID_MONGO_ID_PATH_PARAMETER,
-        });
+      expect(body).toEqual({
+        message: "Expected path parameter 'amendmentId' to be a valid mongo id",
+        code: API_ERROR_CODE.INVALID_MONGO_ID_PATH_PARAMETER,
       });
+    });
 
-      it('returns 400 when the amendment id is invalid', async () => {
-        const anInvalidAmendmentId = 'InvalidId';
+    it('should return 404 when the facility does not exist', async () => {
+      const aValidButNonExistentFacilityId = new ObjectId().toString();
 
-        const { status, body } = (await testApi.get(generateUrl(facilityId, anInvalidAmendmentId))) as FacilityAmendmentResponse;
+      const { status, body } = (await testApi.get(generateUrl(aValidButNonExistentFacilityId, amendmentId))) as FacilityAmendmentResponse;
 
-        expect(status).toEqual(HttpStatusCode.BadRequest);
-
-        expect(body).toEqual({
-          message: "Expected path parameter 'amendmentId' to be a valid mongo id",
-          code: API_ERROR_CODE.INVALID_MONGO_ID_PATH_PARAMETER,
-        });
+      expect(status).toEqual(HttpStatusCode.NotFound);
+      expect(body).toEqual({
+        status: HttpStatusCode.NotFound,
+        message: `Facility not found: ${aValidButNonExistentFacilityId}`,
       });
+    });
 
-      it('returns 404 when the facility does not exist', async () => {
-        const aValidButNonExistentFacilityId = new ObjectId().toString();
+    it('should return 404 when the amendment does not exist', async () => {
+      const aValidButNonExistentAmendmentId = new ObjectId().toString();
 
-        const { status, body } = (await testApi.get(generateUrl(aValidButNonExistentFacilityId, amendmentId))) as FacilityAmendmentResponse;
+      const { status, body } = (await testApi.get(generateUrl(facilityId, aValidButNonExistentAmendmentId))) as FacilityAmendmentResponse;
 
-        expect(status).toEqual(HttpStatusCode.NotFound);
-        expect(body).toEqual({
-          status: HttpStatusCode.NotFound,
-          message: `Facility not found: ${aValidButNonExistentFacilityId}`,
-        });
+      expect(status).toEqual(HttpStatusCode.NotFound);
+      expect(body).toEqual({
+        status: HttpStatusCode.NotFound,
+        message: `Amendment not found: ${aValidButNonExistentAmendmentId}`,
       });
+    });
 
-      it('returns 404 when the amendment does not exist', async () => {
-        const aValidButNonExistentAmendmentId = new ObjectId().toString();
+    it('should return the amendment when it exists', async () => {
+      const { status, body } = (await testApi.get(generateUrl(facilityId, amendmentId))) as FacilityAmendmentResponse;
 
-        const { status, body } = (await testApi.get(generateUrl(facilityId, aValidButNonExistentAmendmentId))) as FacilityAmendmentResponse;
-
-        expect(status).toEqual(HttpStatusCode.NotFound);
-        expect(body).toEqual({
-          status: HttpStatusCode.NotFound,
-          message: `Amendment not found: ${aValidButNonExistentAmendmentId}`,
-        });
-      });
-
-      // TODO: DTFS2-7674 - add success tests after making a PUT request
+      expect(status).toEqual(HttpStatusCode.Ok);
+      expect(body).toEqual(
+        expect.objectContaining({
+          amendmentId,
+          dealId,
+          facilityId,
+          type: AMENDMENT_TYPES.PORTAL,
+        } as AnyObject),
+      );
     });
   });
 });
