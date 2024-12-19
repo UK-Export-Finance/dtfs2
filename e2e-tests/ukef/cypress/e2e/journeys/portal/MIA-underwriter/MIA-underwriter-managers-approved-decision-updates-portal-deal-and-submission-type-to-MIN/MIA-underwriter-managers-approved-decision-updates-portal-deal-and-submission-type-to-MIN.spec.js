@@ -65,10 +65,8 @@ context('Portal to TFM deal submission', () => {
     cy.forceVisit(TFM_URL);
 
     cy.login(BANK1_CHECKER1);
+
     portalPages.contract.visit(deal);
-    cy.document().then((doc) => {
-      cy.task('htmlLog', doc.documentElement.outerHTML);
-    });
 
     portalPages.contract.proceedToSubmit().click();
 

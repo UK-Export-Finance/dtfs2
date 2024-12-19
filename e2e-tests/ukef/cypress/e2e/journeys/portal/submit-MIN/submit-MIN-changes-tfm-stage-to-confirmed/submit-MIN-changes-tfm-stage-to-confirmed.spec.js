@@ -48,10 +48,9 @@ context('Portal to TFM deal submission - MIN changes TFM deal stage to Confirmed
     // portal maker submits deal for review
     //---------------------------------------------------------------
     cy.login(BANK1_MAKER1);
+
     portalPages.contract.visit(deal);
-    cy.document().then((doc) => {
-      cy.task('htmlLog', doc.documentElement.outerHTML);
-    });
+
     portalPages.contract.proceedToReview().click();
     cy.url().should('eq', relative(`/contract/${dealId}/ready-for-review`));
 
