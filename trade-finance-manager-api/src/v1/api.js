@@ -1710,12 +1710,12 @@ const getFeeRecordCorrectionRequestReview = async (reportId, feeRecordId, userId
  * Updates the fee record correction transient form data associated with the given fee record id and user
  * @param {string} reportId - The report id
  * @param {string} feeRecordId - The fee record id
- * @param {import('@ukef/dtfs2-common').RecordCorrectionTransientFormData} formData
+ * @param {import('@ukef/dtfs2-common').RecordCorrectionRequestTransientFormData} formData
  * @param {import('../types/tfm-session-user').TfmSessionUser} user - The current user stored in the session
  */
 const updateFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, formData, user) => {
   await axios({
-    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-transient-form-data`,
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-request-transient-form-data`,
     method: 'put',
     headers: headers.central,
     data: {
@@ -1730,11 +1730,11 @@ const updateFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId,
  * @param {string} reportId - The report id
  * @param {string} feeRecordId - The fee record id
  * @param {string} userId - The user id
- * @returns {Promise<import('@ukef/dtfs2-common').RecordCorrectionTransientFormData | {}>}
+ * @returns {Promise<import('@ukef/dtfs2-common').RecordCorrectionRequestTransientFormData | {}>}
  */
 const getFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, userId) => {
   const response = await axios.get(
-    `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-transient-form-data/${userId}`,
+    `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-request-transient-form-data/${userId}`,
     {
       headers: headers.central,
     },
@@ -1752,7 +1752,7 @@ const getFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, us
  */
 const deleteFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, userId) => {
   await axios({
-    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-transient-form-data/${userId}`,
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-request-transient-form-data/${userId}`,
     method: 'delete',
     headers: headers.central,
   });

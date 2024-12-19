@@ -1,29 +1,29 @@
-import { ApiError, FeeRecordCorrectionTransientFormDataEntity, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
+import { ApiError, FeeRecordCorrectionRequestTransientFormDataEntity, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { CustomExpressRequest } from '../../../../../types/custom-express-request';
-import { PutFeeRecordCorrectionTransientFormDataPayload } from '../../../../routes/middleware/payload-validation';
-import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-transient-form-data-repo';
+import { PutFeeRecordCorrectionRequestTransientFormDataPayload } from '../../../../routes/middleware/payload-validation';
+import { FeeRecordCorrectionRequestTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-request-transient-form-data-repo';
 import { FeeRecordRepo } from '../../../../../repositories/fee-record-repo';
 import { NotFoundError } from '../../../../../errors';
 
-export type PutFeeRecordCorrectionTransientFormDataRequest = CustomExpressRequest<{
+export type PutFeeRecordCorrectionRequestTransientFormDataRequest = CustomExpressRequest<{
   params: {
     reportId: string;
     feeRecordId: string;
   };
-  reqBody: PutFeeRecordCorrectionTransientFormDataPayload;
+  reqBody: PutFeeRecordCorrectionRequestTransientFormDataPayload;
 }>;
 
 /**
- * Controller for the PUT fee record correction transient form data route.
+ * Controller for the PUT fee record correction request transient form data route.
  * Validates the fee record exists, then creates a new fee record correction
  * transient form data entity with the fee record id, user id and form data,
  * and saves it.
- * @param req - The {@link PutFeeRecordCorrectionTransientFormDataRequest} request object
+ * @param req - The {@link PutFeeRecordCorrectionRequestTransientFormDataRequest} request object
  * @param res - The response object
  */
-export const putFeeRecordCorrectionTransientFormData = async (req: PutFeeRecordCorrectionTransientFormDataRequest, res: Response) => {
+export const putFeeRecordCorrectionRequestTransientFormData = async (req: PutFeeRecordCorrectionRequestTransientFormDataRequest, res: Response) => {
   try {
     const { reportId, feeRecordId } = req.params;
     const { user, formData } = req.body;
@@ -35,7 +35,7 @@ export const putFeeRecordCorrectionTransientFormData = async (req: PutFeeRecordC
       throw new NotFoundError(`Failed to find a fee record with id '${feeRecordId}' attached to report with id '${reportId}'`);
     }
 
-    const newTransientFormData = FeeRecordCorrectionTransientFormDataEntity.create({
+    const newTransientFormData = FeeRecordCorrectionRequestTransientFormDataEntity.create({
       userId,
       feeRecordId: Number(feeRecordId),
       formData,
@@ -45,11 +45,11 @@ export const putFeeRecordCorrectionTransientFormData = async (req: PutFeeRecordC
       },
     });
 
-    await FeeRecordCorrectionTransientFormDataRepo.save(newTransientFormData);
+    await FeeRecordCorrectionRequestTransientFormDataRepo.save(newTransientFormData);
 
     return res.sendStatus(HttpStatusCode.Ok);
   } catch (error) {
-    const errorMessage = `Failed to put fee record correction transient form data`;
+    const errorMessage = `Failed to put fee record correction request transient form data`;
     console.error(errorMessage, error);
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);

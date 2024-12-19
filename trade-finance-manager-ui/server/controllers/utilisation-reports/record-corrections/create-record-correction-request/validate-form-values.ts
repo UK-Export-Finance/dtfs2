@@ -1,4 +1,4 @@
-import { MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, RecordCorrectionTransientFormData, RecordCorrectionReason } from '@ukef/dtfs2-common';
+import { MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, RecordCorrectionRequestTransientFormData, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import { CreateRecordCorrectionRequestFormValues, CreateRecordCorrectionRequestErrorsViewModel, ErrorSummaryViewModel } from '../../../../types/view-models';
 
 /** Represents validation response with either errors or validated form values */
@@ -9,7 +9,7 @@ type ValidationResponse =
     }
   | {
       errors: null;
-      validatedFormValues: RecordCorrectionTransientFormData;
+      validatedFormValues: RecordCorrectionRequestTransientFormData;
     };
 
 /**
