@@ -8,6 +8,7 @@ import {
 
 describe('validatePutFeeRecordCorrectionTransientFormDataPayload', () => {
   const getHttpMocks = () => httpMocks.createMocks();
+  const userId = new ObjectId().toString();
 
   const requiredPayloadKeys: (keyof PutFeeRecordCorrectionTransientFormDataPayload)[] = ['formData', 'user'];
   const formDataKeys: (keyof PutFeeRecordCorrectionTransientFormDataPayload['formData'])[] = [
@@ -20,7 +21,7 @@ describe('validatePutFeeRecordCorrectionTransientFormDataPayload', () => {
 
   const aValidPayload = (): PutFeeRecordCorrectionTransientFormDataPayload => ({
     formData: {},
-    user: { id: new ObjectId().toString() },
+    user: { id: userId },
   });
 
   it.each(requiredPayloadKeys)(`should respond with a '${HttpStatusCode.BadRequest}' if the '%s' field is missing`, (payloadKey) => {
