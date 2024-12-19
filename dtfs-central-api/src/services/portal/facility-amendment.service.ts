@@ -1,13 +1,13 @@
 import {
   AMENDMENT_STATUS,
   AMENDMENT_TYPES,
+  getUnixTimestampSeconds,
   InvalidAuditDetailsError,
   PortalAuditDetails,
   PortalFacilityAmendment,
   PortalFacilityAmendmentUserValues,
 } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
-import { getUnixTime } from 'date-fns';
 import { findOneUser } from '../../v1/controllers/user/get-user.controller';
 import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
 
@@ -45,8 +45,8 @@ export class PortalFacilityAmendmentService {
       amendmentId: new ObjectId(),
       type: AMENDMENT_TYPES.PORTAL,
       status: AMENDMENT_STATUS.IN_PROGRESS,
-      createdAt: getUnixTime(new Date()),
-      updatedAt: getUnixTime(new Date()),
+      createdAt: getUnixTimestampSeconds(new Date()),
+      updatedAt: getUnixTimestampSeconds(new Date()),
       createdBy: {
         username: user.username,
         name: `${user.firstname} ${user.surname}`,
@@ -82,7 +82,7 @@ export class PortalFacilityAmendmentService {
   }): Promise<void> {
     const amendmentUpdate: Partial<PortalFacilityAmendment> = {
       ...update,
-      updatedAt: getUnixTime(new Date()),
+      updatedAt: getUnixTimestampSeconds(new Date()),
     };
 
     await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({
