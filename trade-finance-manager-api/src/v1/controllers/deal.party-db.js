@@ -44,6 +44,7 @@ const getPartyUrn = async ({ companyRegNo, companyName }) => {
   let partyDbInfo = null;
   if (isSalesforceCustomerCreationEnabled()) {
     if (!companyName) {
+      console.error('No company name provided');
       return '';
     }
 
@@ -71,13 +72,15 @@ const addPartyUrns = async (deal, auditDetails) => {
   }
 
   const { hasExporter, hasIndemnifier, hasAgent, hasBuyer } = identifyDealParties(deal);
+  const { companyRegNo } = deal.exporter.companiesHouseRegistrationNumber;
+  const { companyName } = deal.exporter.companyName;
 
   const dealUpdate = {
     tfm: {
       ...deal.tfm,
       parties: {
         exporter: {
-          partyUrn: await getPartyUrn({ companyRegNo: deal.exporter.companiesHouseRegistrationNumber, companyName: deal.exporter.companyName }),
+          partyUrn: await getPartyUrn({ companyRegNo, companyName }),
           partyUrnRequired: hasExporter,
         },
         buyer: {
