@@ -7,6 +7,7 @@ const { getBanks } = require('../controllers/bank/get-banks.controller');
 const createBankController = require('../controllers/bank/create-bank.controller');
 const getNextReportPeriodController = require('../controllers/bank/get-next-report-period-by-bank.controller');
 const { getUtilisationReportsByBankIdAndOptions } = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
+const { validatePutFeeRecordCorrectionTransientFormDataPayload } = require('./middleware/payload-validation');
 const {
   putFeeRecordCorrectionTransientFormData,
 } = require('../controllers/utilisation-report-service/fee-record-correction/put-fee-record-correction-transient-form-data.controller');
@@ -256,6 +257,12 @@ bankRouter
  */
 bankRouter
   .route('/:bankId/fee-record-corrections/:correctionId/transient-form-data')
-  .get(validation.bankIdValidation, validation.sqlIdValidation('correctionId'), handleExpressValidatorResult, putFeeRecordCorrectionTransientFormData);
+  .get(
+    validation.bankIdValidation,
+    validation.sqlIdValidation('correctionId'),
+    handleExpressValidatorResult,
+    validatePutFeeRecordCorrectionTransientFormDataPayload,
+    putFeeRecordCorrectionTransientFormData,
+  );
 
 module.exports = bankRouter;

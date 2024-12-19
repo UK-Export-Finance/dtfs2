@@ -1,17 +1,18 @@
-import { AnyObject, ApiError, FeeRecordCorrectionTransientFormDataEntity, RecordCorrectionTransientFormData, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
+import { ApiError, FeeRecordCorrectionTransientFormDataEntity, RecordCorrectionTransientFormData, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { CustomExpressRequest } from '../../../../../types/custom-express-request';
 import { NotFoundError } from '../../../../../errors';
 import { FeeRecordCorrectionRepo } from '../../../../../repositories/fee-record-correction-repo';
 import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-transient-form-data-repo';
+import { PutFeeRecordCorrectionTransientFormDataPayload } from '../../../../routes/middleware/payload-validation';
 
 export type PutFeeRecordCorrectionTransientFormDataRequest = CustomExpressRequest<{
   params: {
     bankId: string;
     correctionId: string;
   };
-  reqBody: AnyObject;
+  reqBody: PutFeeRecordCorrectionTransientFormDataPayload;
 }>;
 
 /**
@@ -30,7 +31,7 @@ export const putFeeRecordCorrectionTransientFormData = async (req: PutFeeRecordC
     const { user, formData } = req.body;
 
     const correctionId = Number(correctionIdString);
-    const userId = (user as { id: string }).id;
+    const userId = user.id;
 
     const correction = await FeeRecordCorrectionRepo.findByIdAndBankId(correctionId, bankId);
 
@@ -39,7 +40,7 @@ export const putFeeRecordCorrectionTransientFormData = async (req: PutFeeRecordC
     }
 
     // TODO: FN-3688 - validate the form data has the fields expected for the given reasons
-    const validatedFormData = formData as RecordCorrectionTransientFormData;
+    const validatedFormData = formData as unknown as RecordCorrectionTransientFormData;
 
     const newTransientFormData = FeeRecordCorrectionTransientFormDataEntity.create({
       userId,
