@@ -377,24 +377,29 @@ export class TfmFacilitiesRepo {
     facilityId: ObjectId;
     auditDetails: AuditDetails;
   }): Promise<UpdateResult> {
-    const collection = await this.getCollection();
+    try {
+      const collection = await this.getCollection();
 
-    const findFilter: Filter<TfmFacility> = {
-      _id: { $eq: new ObjectId(facilityId) },
-      amendments: { $elemMatch: { amendmentId: { $eq: new ObjectId(amendmentId) }, type: AMENDMENT_TYPES.PORTAL } },
-    };
+      const findFilter: Filter<TfmFacility> = {
+        _id: { $eq: new ObjectId(facilityId) },
+        amendments: { $elemMatch: { amendmentId: { $eq: new ObjectId(amendmentId) }, type: AMENDMENT_TYPES.PORTAL } },
+      };
 
-    const updateFilter: UpdateFilter<TfmFacility> = flatten({
-      'amendments.$': update,
-      auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-    });
+      const updateFilter: UpdateFilter<TfmFacility> = flatten({
+        'amendments.$': update,
+        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+      });
 
-    const updateResult = await collection.updateOne(findFilter, updateFilter);
+      const updateResult = await collection.updateOne(findFilter, updateFilter);
 
-    if (updateResult.modifiedCount === 0) {
-      throw new AmendmentNotFoundError(amendmentId.toString(), facilityId.toString());
+      if (!updateResult.modifiedCount) {
+        throw new AmendmentNotFoundError(amendmentId.toString(), facilityId.toString());
+      }
+
+      return updateResult;
+    } catch (error) {
+      console.error('Error updating portal facility amendment %o', error);
+      throw error;
     }
-
-    return updateResult;
   }
 }
