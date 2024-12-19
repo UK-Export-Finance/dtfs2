@@ -8,6 +8,9 @@ const createBankController = require('../controllers/bank/create-bank.controller
 const getNextReportPeriodController = require('../controllers/bank/get-next-report-period-by-bank.controller');
 const { getUtilisationReportsByBankIdAndOptions } = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
 const {
+  putFeeRecordCorrectionTransientFormData,
+} = require('../controllers/utilisation-report-service/fee-record-correction/put-fee-record-correction-transient-form-data.controller');
+const {
   getUtilisationReportSummariesByBankIdAndYear,
 } = require('../controllers/utilisation-report-service/get-utilisation-reports-reconciliation-summary.controller');
 
@@ -200,5 +203,59 @@ bankRouter
 bankRouter
   .route('/:bankId/utilisation-reports/reconciliation-summary-by-year/:year')
   .get(validation.bankIdValidation, validation.yearValidation('year'), handleExpressValidatorResult, getUtilisationReportSummariesByBankIdAndYear);
+
+/**
+ * @openapi
+ * /bank/:bankId/fee-record-corrections/:correctionId/transient-form-data:
+ *   put:
+ *     summary: |
+ *       Validate fee record correction form values and save
+ *       fee record correction transient form data against a user
+ *       and fee record correction
+ *     tags: [Utilisation Report]
+ *     description: |
+ *       Validate fee record correction form values and save
+ *       fee record correction transient form data against a user
+ *       and fee record correction
+ *     parameters:
+ *       - in: path
+ *         name: bankId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the bank
+ *       - in: path
+ *         name: correctionId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the fee record correction
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               formData:
+ *                 type: object
+ *                 $ref: '#/definitions/FeeRecordCorrectionTransientFormData'
+ *               user:
+ *                 type: object
+ *                 properties:
+ *                   id: string
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal Server Error
+ */
+bankRouter
+  .route('/:bankId/fee-record-corrections/:correctionId/transient-form-data')
+  .get(validation.bankIdValidation, validation.sqlIdValidation('correctionId'), handleExpressValidatorResult, putFeeRecordCorrectionTransientFormData);
 
 module.exports = bankRouter;
