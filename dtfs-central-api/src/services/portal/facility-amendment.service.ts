@@ -85,6 +85,11 @@ export class PortalFacilityAmendmentService {
       updatedAt: getUnixTime(new Date()),
     };
 
-    await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({ amendmentId, facilityId, update: amendmentUpdate, auditDetails });
+    await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({
+      amendmentId: new ObjectId(amendmentId),
+      facilityId: new ObjectId(facilityId),
+      update: amendmentUpdate,
+      auditDetails,
+    });
   }
 }

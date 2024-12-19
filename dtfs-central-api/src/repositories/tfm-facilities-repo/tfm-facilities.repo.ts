@@ -373,8 +373,8 @@ export class TfmFacilitiesRepo {
     auditDetails,
   }: {
     update: Partial<PortalFacilityAmendment>;
-    amendmentId: string | ObjectId;
-    facilityId: string | ObjectId;
+    amendmentId: ObjectId;
+    facilityId: ObjectId;
     auditDetails: AuditDetails;
   }): Promise<UpdateResult> {
     const collection = await this.getCollection();

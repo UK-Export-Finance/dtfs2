@@ -23,12 +23,12 @@ export const getAmendment = async (req: GetAmendmentRequest, res: Response) => {
 
     return res.status(HttpStatusCode.Ok).send(amendment);
   } catch (error) {
+    console.error(`Error getting amendment with facilityId ${facilityId} and amendment id ${amendmentId}: %o`, error);
+
     if (error instanceof ApiError) {
       const { status, message, code } = error;
       return res.status(status).send({ status, message, code });
     }
-
-    console.error(`Error getting amendment with facilityId ${facilityId} and amendment id ${amendmentId}: %o`, error);
 
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,
