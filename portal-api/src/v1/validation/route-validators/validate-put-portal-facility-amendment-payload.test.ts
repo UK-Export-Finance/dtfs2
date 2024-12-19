@@ -1,169 +1,102 @@
-import { ObjectId } from 'mongodb';
 import { createMocks } from 'node-mocks-http';
-import { HttpStatusCode } from 'axios';
 import { AnyObject } from '@ukef/dtfs2-common';
-import { aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';
 
+import { aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';
+import { HttpStatusCode } from 'axios';
 import { validatePutPortalFacilityAmendmentPayload } from './validate-put-portal-facility-amendment-payload';
 
-const validDealId = new ObjectId().toString();
 const validAmendment = JSON.parse(JSON.stringify(aPortalFacilityAmendmentUserValues())) as AnyObject;
 
 describe('validatePutPortalFacilityAmendmentPayload', () => {
   const invalidPayloads = [
     {
-      description: 'no amendment is provided',
-      payload: {
-        dealId: validDealId,
-      },
-    },
-    {
-      description: 'amendment is not an object',
-      payload: {
-        amendment: 'not an object',
-        dealId: validDealId,
-      },
-    },
-    {
       description: 'amendment has additional properties',
       payload: {
-        amendment: {
-          extra: 'property',
-        },
-        dealId: validDealId,
+        extra: 'property',
       },
     },
     {
-      description: 'amendment.changeCoverEndDate is not a boolean',
+      description: 'changeCoverEndDate is not a boolean',
       payload: {
-        amendment: {
-          changeCoverEndDate: 'true',
-        },
-        dealId: validDealId,
+        changeCoverEndDate: 'true',
       },
     },
     {
-      description: 'amendment.coverEndDate is not an integer',
+      description: 'coverEndDate is not an integer',
       payload: {
-        amendment: {
-          coverEndDate: 'not an integer',
-        },
-        dealId: validDealId,
+        coverEndDate: 'not an integer',
       },
     },
     {
-      description: 'amendment.currentCoverEndDate is not an integer',
+      description: 'currentCoverEndDate is not an integer',
       payload: {
-        amendment: {
-          currentCoverEndDate: 'not an integer',
-        },
-        dealId: validDealId,
+        currentCoverEndDate: 'not an integer',
       },
     },
     {
-      description: 'amendment.isUsingFacilityEndDate is not a boolean',
+      description: 'isUsingFacilityEndDate is not a boolean',
       payload: {
-        amendment: {
-          isUsingFacilityEndDate: 'not a boolean',
-        },
-        dealId: validDealId,
+        isUsingFacilityEndDate: 'not a boolean',
       },
     },
     {
-      description: 'amendment.facilityEndDate is not a number',
+      description: 'facilityEndDate is not a number',
       payload: {
-        amendment: {
-          facilityEndDate: 'not a number',
-        },
-        dealId: validDealId,
+        facilityEndDate: 'not a number',
       },
     },
     {
-      description: 'amendment.facilityEndDate is negative',
+      description: 'facilityEndDate is negative',
       payload: {
-        amendment: {
-          facilityEndDate: -23,
-        },
-        dealId: validDealId,
+        facilityEndDate: -23,
       },
     },
     {
-      description: 'amendment.bankReviewDate is not a number',
+      description: 'bankReviewDate is not a number',
       payload: {
-        amendment: {
-          bankReviewDate: 'not a number',
-        },
-        dealId: validDealId,
+        bankReviewDate: 'not a number',
       },
     },
     {
-      description: 'amendment.bankReviewDate is negative',
+      description: 'bankReviewDate is negative',
       payload: {
-        amendment: {
-          bankReviewDate: -23,
-        },
-        dealId: validDealId,
+        bankReviewDate: -23,
       },
     },
     {
-      description: 'amendment.changeFacilityValue is not a boolean',
+      description: 'changeFacilityValue is not a boolean',
       payload: {
-        amendment: {
-          changeFacilityValue: 'not a boolean',
-        },
-        dealId: validDealId,
+        changeFacilityValue: 'not a boolean',
       },
     },
     {
-      description: 'amendment.value is not a number',
+      description: 'value is not a number',
       payload: {
-        amendment: {
-          value: 'not a number',
-        },
-        dealId: validDealId,
+        value: 'not a number',
       },
     },
     {
-      description: 'amendment.currentValue is not a number',
+      description: 'currentValue is not a number',
       payload: {
-        amendment: {
-          currentValue: 'not a number',
-        },
-        dealId: validDealId,
+        currentValue: 'not a number',
       },
     },
     {
-      description: 'amendment.currency is not a valid enum value',
+      description: 'currency is not a valid enum value',
       payload: {
-        amendment: {
-          currency: 'invalid currency',
-        },
-        dealId: validDealId,
+        currency: 'invalid currency',
       },
     },
     {
-      description: 'amendment.ukefExposure is not a number',
+      description: 'ukefExposure is not a number',
       payload: {
-        amendment: {
-          ukefExposure: 'not a number',
-        },
-        dealId: validDealId,
+        ukefExposure: 'not a number',
       },
     },
     {
-      description: 'amendment.coveredPercentage is not a number',
+      description: 'coveredPercentage is not a number',
       payload: {
-        amendment: {
-          coveredPercentage: 'not a number',
-        },
-        dealId: validDealId,
-      },
-    },
-    {
-      description: 'dealId is not a string',
-      payload: {
-        amendment: validAmendment,
-        dealId: 123456123456123456,
+        coveredPercentage: 'not a number',
       },
     },
   ];
@@ -185,18 +118,12 @@ describe('validatePutPortalFacilityAmendmentPayload', () => {
   const validPayloads = [
     {
       description: 'the payload is valid',
-      payload: {
-        amendment: validAmendment,
-        dealId: validDealId,
-      },
+      payload: validAmendment,
     },
 
     {
       description: 'the amendment is an empty object',
-      payload: {
-        amendment: {},
-        dealId: validDealId,
-      },
+      payload: {},
     },
   ];
 

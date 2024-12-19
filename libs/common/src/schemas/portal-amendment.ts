@@ -47,16 +47,18 @@ export const PORTAL_FACILITY_AMENDMENT = PORTAL_FACILITY_AMENDMENT_USER_VALUES.m
     createdAt: z.number(),
     updatedAt: z.number(),
     status: z.string(),
-    createdBy: z.object({
-      username: z.string(),
-      name: z.string(),
-      email: z.string().email(),
-    }),
+    createdBy: z
+      .object({
+        username: z.string(),
+        name: z.string(),
+        email: z.string().email(),
+      })
+      .optional(),
   }),
 );
 
 export const PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID = PORTAL_FACILITY_AMENDMENT.merge(
   z.object({
-    ukefId: z.string().optional(),
+    ukefFacilityId: z.string().optional(),
   }),
 );

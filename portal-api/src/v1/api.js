@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { HEADERS, getFormattedZodErrors } = require('@ukef/dtfs2-common');
+const { HEADERS } = require('@ukef/dtfs2-common');
 const { PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID } = require('@ukef/dtfs2-common/schemas');
 const { isValidMongoId, isValidBankId, isValidReportPeriod } = require('./validation/validateIds');
 
@@ -501,8 +501,7 @@ const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, audit
       return data;
     }
 
-    const formattedErrors = getFormattedZodErrors(error);
-    console.error('Type validation error occurred when receiving portal amendment from dtfs-central:', formattedErrors);
+    console.error('Type validation error occurred when receiving portal amendment from dtfs-central %o', error);
 
     throw new Error('Type validation error occurred');
   } catch (error) {
