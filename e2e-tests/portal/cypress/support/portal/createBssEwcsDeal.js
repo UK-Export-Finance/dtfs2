@@ -165,6 +165,8 @@ const createBssEwcsDeal = ({ readyForCheck = false, dealType, facilityStage, exp
     bondFeeDetails.dayCountBasis365Input().click();
     cy.clickSaveGoBackButton();
 
+    // Proceed to review button
+    contract.proceedToReview().should('exist');
     contract.proceedToReview().click();
 
     // submit to checker
