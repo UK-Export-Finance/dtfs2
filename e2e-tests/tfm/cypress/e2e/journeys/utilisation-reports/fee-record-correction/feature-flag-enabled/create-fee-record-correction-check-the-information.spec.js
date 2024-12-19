@@ -65,19 +65,8 @@ context('When fee record correction feature flag is enabled', () => {
 
     beforeEach(() => {
       pages.landingPage.visit();
-      cy.login(USERS.PDC_RECONCILE);
 
-      cy.visit(`utilisation-reports/${reportId}`);
-
-      premiumPaymentsTab.premiumPaymentsTable.checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status).click();
-
-      premiumPaymentsTab.createRecordCorrectionRequestButton().click();
-
-      createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT).check();
-      createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).check();
-      cy.keyboardInput(createFeeRecordCorrectionRequestPage.additionalInfoInput(), additionalInfoUserInput);
-
-      cy.clickContinueButton();
+      cy.createFeeRecordCorrection({ shouldSubmitFeeRecordCorrectionRequest: false, feeRecord: feeRecordAtToDoStatus, reportId, additionalInfoUserInput });
     });
 
     it('should be able to view the form values and other details of correction request', () => {
