@@ -6,7 +6,6 @@ import { aPortalSessionUser, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { getWhatNeedsToChange, GetWhatNeedsToChangeRequest } from './what-needs-to-change.ts';
 import { STB_PIM_EMAIL } from '../../../constants/emails.ts';
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
 }));

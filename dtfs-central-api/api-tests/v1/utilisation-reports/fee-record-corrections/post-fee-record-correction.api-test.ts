@@ -32,10 +32,15 @@ describe(`POST ${BASE_URL}`, () => {
 
   const bankId = '123';
   const bankName = 'Test bank';
+  const bankEmails = ['test1@ukexportfinance.gov.uk', 'test2@ukexportfinance.gov.uk'];
   const bank: Bank = {
     ...aBank(),
     id: bankId,
     name: bankName,
+    paymentOfficerTeam: {
+      teamName: 'Payment Reporting Team',
+      emails: bankEmails,
+    },
   };
 
   const uploadedUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
@@ -96,17 +101,20 @@ describe(`POST ${BASE_URL}`, () => {
     makeRequest: (url) => testApi.post(aValidRequestBody()).to(url),
   });
 
-  it(`should respond with a ${HttpStatusCode.Ok} with a valid request body`, async () => {
+  it(`should respond with a ${HttpStatusCode.Ok} with the notified emails if the request is valid`, async () => {
     // Arrange
     await SqlDbHelper.saveNewEntry('FeeRecordCorrectionTransientFormData', transientFormDataForUserAndFeeRecord);
 
     const requestBody = aValidRequestBody();
+
+    const expectedEmails = [...bankEmails, requestBody.user.email];
 
     // Act
     const response = await testApi.post(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.Ok);
+    expect(response.body).toEqual({ emails: expectedEmails });
   });
 
   it(`should respond with a ${HttpStatusCode.BadRequest} when payload is invalid`, async () => {

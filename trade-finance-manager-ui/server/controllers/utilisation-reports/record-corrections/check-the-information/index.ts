@@ -54,7 +54,13 @@ export const postRecordCorrectionRequestInformation = async (req: Request, res: 
     const { reportId, feeRecordId } = req.params;
     const { user, userToken } = asUserSession(req.session);
 
-    await api.createFeeRecordCorrection(reportId, feeRecordId, user, userToken);
+    const { emails } = await api.createFeeRecordCorrection(reportId, feeRecordId, user, userToken);
+
+    if (!emails) {
+      throw new Error('No record correction request emails returned from the API.');
+    }
+
+    req.session.recordCorrectionRequestEmails = emails;
 
     return res.redirect(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}/request-sent`);
   } catch (error) {

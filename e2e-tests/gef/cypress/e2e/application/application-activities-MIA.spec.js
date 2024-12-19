@@ -1,3 +1,4 @@
+import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
 import relative from '../relativeURL';
 import applicationActivities from '../pages/application-activities';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
@@ -9,7 +10,6 @@ import securityDetails from '../pages/security-details';
 import applicationSubmission from '../pages/application-submission';
 import submitToUkef from '../pages/submit-to-ukef';
 import statusBanner from '../pages/application-status-banner';
-import CONSTANTS from '../../fixtures/constants';
 import { toTitleCase } from '../../fixtures/helpers';
 import { today } from '../../../../e2e-fixtures/dateConstants';
 
@@ -113,11 +113,11 @@ context('Submit AIN deal and check portalActivities', () => {
 
       applicationActivities.activityTimeline().should('exist');
 
-      applicationActivities.activityTimeline().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)}`);
+      applicationActivities.activityTimeline().contains(`${toTitleCase(DEAL_SUBMISSION_TYPE.MIA)}`);
 
       applicationActivities
         .activityTimeline()
-        .contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)}`)
+        .contains(`${toTitleCase(DEAL_SUBMISSION_TYPE.AIN)}`)
         .should('not.exist');
 
       applicationActivities.activityTimeline().contains(today.d_MMMM_yyyy);
@@ -137,7 +137,7 @@ context('Submit AIN deal and check portalActivities', () => {
       statusBanner.bannerCreatedBy().contains(deal.maker.firstname);
       statusBanner.bannerCheckedBy().contains(BANK1_CHECKER1.firstname);
 
-      statusBanner.bannerSubmissionType().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA);
+      statusBanner.bannerSubmissionType().contains(DEAL_SUBMISSION_TYPE.MIA);
     });
   });
 });

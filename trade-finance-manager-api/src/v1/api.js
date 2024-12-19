@@ -1763,9 +1763,10 @@ const deleteFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId,
  * @param {string} reportId - The report id
  * @param {string} feeRecordId - The fee record id
  * @param {import('../types/tfm-session-user').TfmSessionUser} user - The requesting user
+ * @returns {Promise<import('./api-response-types').FeeRecordCorrectionResponseBody>}
  */
 const createFeeRecordCorrection = async (reportId, feeRecordId, user) => {
-  await axios({
+  const response = await axios({
     url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/corrections`,
     method: 'post',
     headers: headers.central,
@@ -1773,6 +1774,8 @@ const createFeeRecordCorrection = async (reportId, feeRecordId, user) => {
       user,
     },
   });
+
+  return response.data;
 };
 
 module.exports = {
