@@ -18,6 +18,7 @@ const companies = require('../controllers/companies.controller');
 const { getAmendment } = require('../controllers/amendments/get-amendment.controller');
 const { putAmendment } = require('../controllers/amendments/put-amendment.controller');
 const { handleExpressValidatorResult } = require('../validation/route-validators/express-validator-result-handler');
+const { validatePutPortalFacilityAmendmentPayload } = require('../validation/route-validators/validate-put-portal-facility-amendment-payload');
 
 const router = express.Router();
 
@@ -134,6 +135,7 @@ router
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }),
     mongoIdValidation('facilityId'),
     handleExpressValidatorResult,
+    validatePutPortalFacilityAmendmentPayload,
     putAmendment,
   );
 
