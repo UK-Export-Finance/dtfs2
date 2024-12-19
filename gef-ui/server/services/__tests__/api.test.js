@@ -369,10 +369,11 @@ describe('getAddressesByPostcode()', () => {
 });
 
 describe('getAmendment()', () => {
-  it(`should return ${HttpStatusCode.Ok} when a facility can be found`, async () => {
-    Axios.get.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
+  it(`should return the response body when the amendment can be found`, async () => {
+    const mockAmendment = { facilityId: validMongoId, amendmentId: validMongoId, dealId: validMongoId, changeCoverEndDate: true };
+    Axios.get.mockReturnValue(Promise.resolve({ data: mockAmendment }));
     const response = await api.getAmendment({ facilityId: validMongoId, amendmentId: validMongoId, userToken });
-    expect(response).toEqual({ status: HttpStatusCode.Ok });
+    expect(response).toEqual(mockAmendment);
   });
 
   it('should throw an error if there is an api error', async () => {
