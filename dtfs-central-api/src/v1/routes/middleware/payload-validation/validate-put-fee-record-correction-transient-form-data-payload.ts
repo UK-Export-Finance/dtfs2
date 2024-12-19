@@ -10,11 +10,11 @@ import { MongoObjectIdSchema } from './schemas';
 const PutFeeRecordCorrectionTransientFormDataPayload = z.object({
   user: z.object({ id: MongoObjectIdSchema }),
   formData: z.object({
-    utilisation: z.string().nullable(),
-    facilityId: z.string().nullable(),
-    reportedCurrency: z.string().nullable(),
-    reportedFee: z.string().nullable(),
-    additionalComments: z.string().nullable(),
+    utilisation: z.string().optional(),
+    facilityId: z.string().optional(),
+    reportedCurrency: z.string().optional(),
+    reportedFee: z.string().optional(),
+    additionalComments: z.string().optional(),
   }),
 });
 
