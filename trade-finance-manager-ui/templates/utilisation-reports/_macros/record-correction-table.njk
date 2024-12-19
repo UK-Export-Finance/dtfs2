@@ -1,0 +1,38 @@
+{% import "./fee-record-status.njk" as feeRecordStatus %}
+
+{% macro render(params) %}
+  {% set recordCorrectionRows = params.recordCorrectionRows %}
+
+  <table class="govuk-table" data-module="moj-sortable-table" data-cy="record-correction-history-table">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header" aria-sort="ascending" data-cy="record-correction-history-table-facility-id-header">Facility ID</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none" data-cy="record-correction-history-table-exporter-header">Exporter</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none" data-cy="record-correction-history-table-reasons-header">Reason for record correction</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric" aria-sort="none" data-cy="record-correction-history-table-date-sent-header">Date sent</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric" aria-sort="none" data-cy="record-correction-history-table-requested-by-header">Requested by</th>
+        <th scope="colgroup" class="govuk-table__header govuk-table__header--numeric" aria-sort="none" data-cy="record-correction-history-table-status-header">Status</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+      {% for recordCorrectionRow in recordCorrectionRows %}
+
+        <tr class="govuk-table__row" data-cy="record-correction-history-table-row-{{ recordCorrectionRow.feeRecordId }}">
+          <td class="govuk-table__cell" data-cy="record-correction-history-table-row-{{ recordCorrectionRow.feeRecordId }}-facility-id">{{ recordCorrectionRow.facilityId }}</td>
+          <td class="govuk-table__cell" data-cy="record-correction-history-table-row-{{ recordCorrectionRow.feeRecordId }}-exporter">{{ recordCorrectionRow.exporter }}</td>
+          <td class="govuk-table__cell" data-cy="record-correction-history-table-row-{{ recordCorrectionRow.feeRecordId }}-reasons">{{ recordCorrectionRow.reasons }}</td>
+          <td class="govuk-table__cell" data-cy="record-correction-history-table-row-{{ recordCorrectionRow.feeRecordId }}-date-sent">{{ recordCorrectionRow.dateSent }}</td>
+          <td class="govuk-table__cell" data-cy="record-correction-history-table-row-{{ recordCorrectionRow.feeRecordId }}-requested-by">{{ recordCorrectionRow.requestedBy }}</td>
+          <td class="govuk-table__cell" data-cy="record-correction-history-table-row-{{ recordCorrectionRow.feeRecordId }}-status">
+           {{ feeRecordStatus.render({
+              status: recordCorrectionRow.status,
+              displayStatus: recordCorrectionRow.displayStatus
+            }) }}
+          </td>
+        </tr>
+  
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endmacro %}

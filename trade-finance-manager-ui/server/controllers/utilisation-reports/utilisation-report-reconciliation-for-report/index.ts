@@ -14,6 +14,7 @@ import { PaymentDetailsViewModel, UtilisationReportReconciliationForReportViewMo
 import { PremiumPaymentsGroup } from '../../../api-response-types';
 import { extractQueryAndSessionData } from './extract-query-and-session-data';
 import { mapToUtilisationDetailsViewModel } from '../helpers/utilisation-details-helper';
+import { mapToRecordCorrectionViewModel } from '../helpers/record-correction-helpers';
 import { mapToSelectedPaymentDetailsFiltersViewModel } from './map-to-selected-payment-details-filters-view-model';
 
 export type GetUtilisationReportReconciliationRequest = CustomExpressRequest<{
@@ -83,12 +84,8 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       req.originalUrl,
     );
 
-    const { premiumPayments, paymentDetails, reportPeriod, bank, keyingSheet, utilisationDetails } = await api.getUtilisationReportReconciliationDetailsById(
-      reportId,
-      premiumPaymentsFilters,
-      paymentDetailsFilters,
-      userToken,
-    );
+    const { premiumPayments, paymentDetails, reportPeriod, bank, keyingSheet, utilisationDetails, recordCorrectionDetails } =
+      await api.getUtilisationReportReconciliationDetailsById(reportId, premiumPaymentsFilters, paymentDetailsFilters, userToken);
 
     const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(reportPeriod);
 
@@ -120,6 +117,8 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
 
     const utilisationDetailsViewModel = mapToUtilisationDetailsViewModel(utilisationDetails, reportId);
 
+    const recordCorrectionViewModel = mapToRecordCorrectionViewModel(recordCorrectionDetails);
+
     return renderUtilisationReportReconciliationForReport(res, {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
@@ -129,6 +128,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       premiumPayments: premiumPaymentsViewModel,
       paymentDetails: paymentDetailsViewModel,
       utilisationDetails: utilisationDetailsViewModel,
+      recordCorrectionDetails: recordCorrectionViewModel,
       keyingSheet: keyingSheetViewModel,
       isFeeRecordCorrectionFeatureFlagEnabled: isFeeRecordCorrectionFeatureFlagEnabled(),
     });

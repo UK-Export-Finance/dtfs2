@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { SessionData } from 'express-session';
-import { CURRENCY, FEE_RECORD_STATUS, FeeRecordUtilisation, isFeeRecordCorrectionFeatureFlagEnabled } from '@ukef/dtfs2-common';
+import { CURRENCY, FEE_RECORD_STATUS, FeeRecordUtilisation, isFeeRecordCorrectionFeatureFlagEnabled, mockRecordCorrectionDetails } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { getUtilisationReportReconciliationByReportId } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
@@ -18,11 +18,12 @@ import { mapPaymentDetailsFiltersToViewModel } from '../helpers';
 import { mapToSelectedPaymentDetailsFiltersViewModel } from './map-to-selected-payment-details-filters-view-model';
 import { ADD_PAYMENT_ERROR_KEY, GENERATE_KEYING_DATA_ERROR_KEY } from '../../../constants/premium-payment-tab-error-keys';
 import { PREMIUM_PAYMENTS_TABLE_ERROR_HREF } from '../../../constants/premium-payments-table-error-href';
+import { mapToRecordCorrectionViewModel } from '../helpers/record-correction-helpers';
 
 jest.mock('../../../api');
 jest.mock('../../../helpers/date');
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+// eslint-disable-next-line
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
   isFeeRecordCorrectionFeatureFlagEnabled: jest.fn().mockReturnValue(true),
@@ -155,6 +156,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         premiumPayments: premiumPaymentsGroups,
         paymentDetails: paymentDetailsGroups,
         utilisationDetails,
+        recordCorrectionDetails: mockRecordCorrectionDetails,
       };
       const formattedReportPeriod = 'January 2024';
 
@@ -217,6 +219,8 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         downloadUrl: `/utilisation-reports/${reportId}/download`,
       };
 
+      const expectedRecordCorrectionDetails = mapToRecordCorrectionViewModel(mockRecordCorrectionDetails);
+
       const paymentDetailsFilters = {
         facilityId: paymentDetailsFacilityId,
         paymentCurrency: paymentDetailsPaymentCurrency,
@@ -264,6 +268,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         paymentDetails: expectedPaymentDetailsViewModel,
         keyingSheet: [],
         utilisationDetails: expectedUtilisationDetails,
+        recordCorrectionDetails: expectedRecordCorrectionDetails,
         isFeeRecordCorrectionFeatureFlagEnabled: true,
       });
     });
