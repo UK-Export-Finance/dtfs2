@@ -29,7 +29,7 @@ export const patchAmendment = async (req: PatchAmendmentRequest, res: Response) 
       return res.status(status).send({ status, message, code });
     }
 
-    console.error(`Error updating amendment with id ${amendmentId} on facilityId ${facilityId}: %o`, error);
+    console.error(`Error updating amendment with id %s on facilityId %s: %o`, amendmentId, facilityId, error);
 
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,
