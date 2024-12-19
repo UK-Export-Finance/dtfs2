@@ -59,10 +59,10 @@ export const lookup = async (req: Request, res: Response) => {
  */
 export const getOrCreateParty = async (req: CustomExpressRequest<{ reqBody: { companyRegNo: string; companyName: string } }>, res: Response) => {
   try {
-    const { companyRegNo, companyName } = req.body;
+    const { companyRegNo: companyRegistrationNumber, companyName } = req.body;
 
-    if (!isValidCompanyRegistrationNumber(companyRegNo)) {
-      console.error('Invalid company registration number provided %s', companyRegNo);
+    if (!isValidCompanyRegistrationNumber(companyRegistrationNumber)) {
+      console.error('Invalid company registration number provided %s', companyRegistrationNumber);
       return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company registration number' });
     }
 
@@ -76,7 +76,7 @@ export const getOrCreateParty = async (req: CustomExpressRequest<{ reqBody: { co
       url: `${APIM_MDM_URL}customers`,
       headers,
       data: {
-        companyRegistrationNumber: companyRegNo,
+        companyRegistrationNumber,
         companyName,
       },
     });
