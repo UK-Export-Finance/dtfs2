@@ -18,7 +18,7 @@ export type PutFeeRecordCorrectionRequestTransientFormDataRequest = CustomExpres
 /**
  * Controller for the PUT fee record correction request transient form data route.
  * Validates the fee record exists, then creates a new fee record correction
- * transient form data entity with the fee record id, user id and form data,
+ * request transient form data entity with the fee record id, user id and form data,
  * and saves it.
  * @param req - The {@link PutFeeRecordCorrectionRequestTransientFormDataRequest} request object
  * @param res - The response object
