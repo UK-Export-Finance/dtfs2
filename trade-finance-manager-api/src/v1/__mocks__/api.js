@@ -1,3 +1,5 @@
+const { isSalesforceCustomerCreationEnabled } = require('@ukef/dtfs2-common');
+const { HttpStatusCode } = require('axios');
 const { MOCK_FACILITIES } = require('./mock-facilities');
 const MOCK_BSS_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('./mock-currency-exchange-rate');
@@ -178,14 +180,31 @@ module.exports = {
   getFacilityExposurePeriod: jest.fn(() => ({
     exposurePeriodInMonths: 12,
   })),
-  getPartyDbInfo: ({ companyRegNo }) =>
-    companyRegNo === 'NO_MATCH'
-      ? false
-      : [
+  getPartyDbInfo: ({ companyRegNo }) => {
+    const noCompanyMatch = companyRegNo === 'NO_MATCH';
+
+    if (isSalesforceCustomerCreationEnabled()) {
+      if (noCompanyMatch) {
+        return { status: HttpStatusCode.NotFound, data: 'Party not found' };
+      }
+
+      return {
+        status: HttpStatusCode.Ok,
+        data: [
           {
             partyUrn: 'testPartyUrn',
           },
         ],
+      };
+    }
+    if (noCompanyMatch) {
+      return false;
+    }
+
+    return {
+      partyUrn: 'testPartyUrn',
+    };
+  },
   findUser: (username) => {
     if (username === 'invalidUser') {
       return false;
