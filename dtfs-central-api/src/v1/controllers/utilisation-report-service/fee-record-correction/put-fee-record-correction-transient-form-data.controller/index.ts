@@ -1,11 +1,4 @@
-import {
-  AnyObject,
-  ApiError,
-  FeeRecordCorrectionTransientFormDataEntity,
-  PortalSessionUser,
-  RecordCorrectionTransientFormData,
-  REQUEST_PLATFORM_TYPE,
-} from '@ukef/dtfs2-common';
+import { AnyObject, ApiError, FeeRecordCorrectionTransientFormDataEntity, RecordCorrectionTransientFormData, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { CustomExpressRequest } from '../../../../../types/custom-express-request';
@@ -37,7 +30,7 @@ export const putFeeRecordCorrectionTransientFormData = async (req: PutFeeRecordC
     const { user, formData } = req.body;
 
     const correctionId = Number(correctionIdString);
-    const userId = (user as PortalSessionUser)._id.toString();
+    const userId = (user as { id: string }).id;
 
     const correction = await FeeRecordCorrectionRepo.findByIdAndBankId(correctionId, bankId);
 
