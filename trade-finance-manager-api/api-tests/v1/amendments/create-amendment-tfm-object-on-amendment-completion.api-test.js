@@ -67,7 +67,7 @@ describe('update amendment-tfm on amendment completion', () => {
   });
 
   describe('createAmendmentTFMObject', () => {
-    it('should not create tfm object when no getLatestCompletedAmendmentValue, getLatestCompletedAmendmentDate or getLatestFacilityEndDate', async () => {
+    it('should not create tfm object when getLatestCompletedAmendmentValue, getLatestCompletedAmendmentDate and getLatestFacilityEndDate return an empty object', async () => {
       externalApis.getLatestCompletedAmendmentValue = jest.fn().mockResolvedValue({});
       externalApis.getLatestCompletedAmendmentDate = jest.fn().mockResolvedValue({});
       externalApis.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValue({});
@@ -77,7 +77,7 @@ describe('update amendment-tfm on amendment completion', () => {
       expect(result).toEqual({});
     });
 
-    it('should create tfm object when getLatestCompletedAmendmentValue, getLatestCompletedAmendmentDate and getLatestFacilityEndDate with a facility end date change', async () => {
+    it('should create tfm object when getLatestCompletedAmendmentFacilityEndDate returns a facility end date change', async () => {
       externalApis.getFacilityExposurePeriod = jest.fn().mockResolvedValue({ exposurePeriodInMonths: 5 });
       externalApis.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValue(facilityEndDateChange);
 
@@ -103,7 +103,7 @@ describe('update amendment-tfm on amendment completion', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should create tfm object when getLatestCompletedAmendmentValue, getLatestCompletedAmendmentDate and getLatestFacilityEndDate with a bank review date change', async () => {
+    it('should create tfm object when getLatestCompletedAmendmentFacilityEndDate returns a bank review date change', async () => {
       externalApis.getFacilityExposurePeriod = jest.fn().mockResolvedValue({ exposurePeriodInMonths: 5 });
       externalApis.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValue(bankReviewDateChange);
 
