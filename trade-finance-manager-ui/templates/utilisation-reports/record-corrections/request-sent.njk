@@ -20,17 +20,20 @@
           'data-cy': 'request-sent-panel'
         }
       }) }}
-
+    </div>
+  </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
       <p class="govuk-body">This request has been sent to:</p>
 
       <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-5">
         {% for email in emailsWithoutRequestedByUserEmail %}
-          <li data-cy="other-email-address-{{ loop.index }}">{{ email }}</li>
+          <li class="ukef-word-break-break-all" data-cy="other-email-address-{{ loop.index }}">{{ email }}</li>
         {% endfor %}
       </ul>
 
-      <p class="govuk-body govuk-!-margin-bottom-9 ukef-collapse-white-space" data-cy="user-email-address-copy">
-        A copy of the email has also been sent to {{ requestedByUserEmail }}.
+      <p class="govuk-body govuk-!-margin-bottom-9" data-cy="user-email-address-copy">
+        A copy of the email has also been sent to <span class="ukef-word-break-break-all" data-cy="user-email-address">{{ requestedByUserEmail }}</span>.
       </p>
 
       {{ govukButton({
