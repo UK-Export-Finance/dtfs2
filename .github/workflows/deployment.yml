@@ -36,6 +36,7 @@ on:
     branches:
       # Manual deployment
       - dev
+      - fix/DTFS2-7616-efficient-deployment
 
 env:
   PRODUCT: dtfs
@@ -64,7 +65,6 @@ jobs:
   # 2. Database schema migration
   database:
     name: MSSQL 🗄️
-
     needs: [setup]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
@@ -89,7 +89,6 @@ jobs:
   # 3. micro-serices WebApp deployments
   webapp:
     name: WebApp 🌐
-
     needs: [setup, database]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
@@ -124,7 +123,6 @@ jobs:
   # 4. micro-serices Functions deployments
   functions:
     name: Functions ⚡
-
     needs: [setup, database, webapp]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
@@ -156,3 +154,66 @@ jobs:
           credentials: ${{ secrets.AZURE_CREDENTIALS }}
           acr: ${{ secrets.ACR_PASSWORD }}
           functions: ${{ matrix.functions }}
+
+  # 5. Notification
+  notify:
+    name: Notification 🔔
+    # needs: [setup, database, webapp, functions]
+    environment: ${{ needs.setup.outputs.environment }}
+    runs-on: [self-hosted, DTFS, deployment]
+
+    env:
+      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+      WEBHOOK: ${{ secrets.MSTEAMS_WEBHOOK_TEST }}
+
+    steps:
+      - name: Facts
+        run: |
+
+      - name: MS Teams
+        run: |
+          curl --location '${{ env.WEBHOOK }}' \
+          --header 'Content-Type: application/json' \
+          --data-raw '{
+          "@type": "MessageCard",
+          "@context": "http://schema.org/extensions",
+          "themeColor": "00703c",
+          "title": "🚀 main : dev",
+          "summary": "Deploying '\''main'\'' branch to '\''${{ env.ENVIRONMENT }}'\'' DTFS environment",
+          "sections": [
+          {
+            "activityTitle": "Branch deployment",
+            "activitySubtitle": "Deploying **main** branch to **${{ env.ENVIRONMENT }}** DTFS environment.",
+            "facts": [
+                {
+                    "name": "Branch",
+                    "value": "main"
+                },
+                {
+                    "name": "Environment",
+                    "value": "${{ env.ENVIRONMENT }}"
+                },
+                {
+                    "name": "Commit",
+                    "value": "${{ github.sha }}"
+                },
+                {
+                    "name": "Status",
+                    "value": "Successfull"
+                }
+            ],
+            "markdown": true
+                  }
+              ],
+            "potentialAction": [
+              {
+                "actions": [
+                    {
+                        "@type": "HttpPOST",
+                        "name": "Workflow",
+                        "target": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    }
+                ]
+              }
+            ]
+          }'
