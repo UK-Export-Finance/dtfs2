@@ -48,7 +48,10 @@ describe('page', () => {
 
     // Assert
     wrapper.expectText('[data-cy="other-email-address-1"]').toRead(emails[0]);
+    wrapper.expectElement('[data-cy="other-email-address-1"]').hasClass('ukef-word-break-break-all');
+
     wrapper.expectText('[data-cy="other-email-address-2"]').toRead(emails[1]);
+    wrapper.expectElement('[data-cy="other-email-address-2"]').hasClass('ukef-word-break-break-all');
   });
 
   it('should render the requesting users email address', () => {
@@ -64,7 +67,8 @@ describe('page', () => {
 
     // Assert
     wrapper.expectText('p[data-cy="user-email-address-copy"]').toRead(`A copy of the email has also been sent to ${email}.`);
-    wrapper.expectElement('p[data-cy="user-email-address-copy"]').hasClass('ukef-collapse-white-space');
+    wrapper.expectText('span[data-cy="user-email-address"]').toRead(email);
+    wrapper.expectElement('span[data-cy="user-email-address"]').hasClass('ukef-word-break-break-all');
   });
 
   it('should render "back to premium payments" button', () => {
