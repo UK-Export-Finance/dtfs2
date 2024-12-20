@@ -8,7 +8,10 @@ export type PutAmendmentRequest = CustomExpressRequest<{
   params: {
     facilityId: string;
   };
-  reqBody: PortalFacilityAmendmentUserValues;
+  reqBody: {
+    amendment: PortalFacilityAmendmentUserValues;
+    dealId: string;
+  };
   query: { dealId: string };
 }>;
 
@@ -19,13 +22,13 @@ export type PutAmendmentRequest = CustomExpressRequest<{
  */
 export const putAmendment = async (req: PutAmendmentRequest, res: Response) => {
   const { facilityId } = req.params;
-  const { dealId } = req.query;
+  const { dealId, amendment } = req.body;
 
   try {
     const amendmentResponse = await api.putPortalFacilityAmendment({
       dealId,
       facilityId,
-      amendment: req.body,
+      amendment,
       auditDetails: generatePortalAuditDetails(req.user._id),
     });
 

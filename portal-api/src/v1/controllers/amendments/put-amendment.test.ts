@@ -25,8 +25,7 @@ describe('controllers - facility amendment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks<PutAmendmentRequest>({
         params: { facilityId },
-        body: amendment,
-        query: { dealId },
+        body: { amendment, dealId },
         user,
       });
 
@@ -59,8 +58,7 @@ describe('controllers - facility amendment', () => {
       jest.mocked(api.putPortalFacilityAmendment).mockResolvedValue(mockPortalAmendmentResponse);
       const { req, res } = httpMocks.createMocks<PutAmendmentRequest>({
         params: { facilityId },
-        body: amendment,
-        query: { dealId },
+        body: { amendment, dealId },
         user,
       });
 
@@ -80,8 +78,7 @@ describe('controllers - facility amendment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks<PutAmendmentRequest>({
         params: { facilityId },
-        body: amendment,
-        query: { dealId },
+        body: { amendment, dealId },
         user,
       });
 
@@ -99,8 +96,7 @@ describe('controllers - facility amendment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks<PutAmendmentRequest>({
         params: { facilityId },
-        body: amendment,
-        query: { dealId },
+        body: { amendment, dealId },
         user,
       });
 

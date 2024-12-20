@@ -370,11 +370,11 @@ const getAmendment = async ({ facilityId, amendmentId, userToken }) => {
  * @param {Object} param
  * @param {string} param.facilityId
  * @param {string} param.dealId
- * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} param.payload
+ * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} param.amendment
  * @param {string} param.userToken
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}>}
  */
-const upsertAmendment = async ({ facilityId, dealId, payload, userToken }) => {
+const upsertAmendment = async ({ facilityId, dealId, amendment, userToken }) => {
   if (!isValidMongoId(facilityId)) {
     console.error('Invalid facility ID %s', facilityId);
     throw new InvalidFacilityIdError(facilityId);
@@ -385,8 +385,13 @@ const upsertAmendment = async ({ facilityId, dealId, payload, userToken }) => {
     throw new InvalidDealIdError(dealId);
   }
 
+  const payload = {
+    amendment,
+    dealId,
+  };
+
   try {
-    const { data } = await Axios.put(`/gef/facilities/${facilityId}/amendments`, payload, { ...config(userToken), params: { dealId } });
+    const { data } = await Axios.put(`/gef/facilities/${facilityId}/amendments`, payload, { ...config(userToken) });
 
     return data;
   } catch (error) {

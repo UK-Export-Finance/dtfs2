@@ -26,9 +26,14 @@ const validFacilityId = new ObjectId().toString();
 
 const invalidId = 'invalid-id';
 
-const validPayload: PortalFacilityAmendmentUserValues = {
-  changeCoverEndDate: true,
-  changeFacilityValue: false,
+const dealId = new ObjectId().toString();
+
+const validPayload: { dealId: string; amendment: PortalFacilityAmendmentUserValues } = {
+  dealId,
+  amendment: {
+    changeCoverEndDate: true,
+    changeFacilityValue: false,
+  },
 };
 
 describe('/v1/gef/facilities/:facilityId/amendments', () => {
@@ -105,7 +110,6 @@ describe('/v1/gef/facilities/:facilityId/amendments', () => {
       it(`should return a ${HttpStatusCode.Ok} response and the amendment for an authenticated user`, async () => {
         const amendmentId = new ObjectId().toString();
         const facilityId = new ObjectId().toString();
-        const dealId = new ObjectId().toString();
 
         // Arrange
         const amendment: PortalFacilityAmendmentWithUkefId = {
