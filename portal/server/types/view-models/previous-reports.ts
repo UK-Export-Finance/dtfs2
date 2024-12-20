@@ -1,4 +1,5 @@
 import { PortalSessionUser, UtilisationReportStatus } from '@ukef/dtfs2-common';
+import { PrimaryNavKey } from '../primary-nav-key';
 
 export type PreviousReportNavItemViewModel = {
   text: string | number;
@@ -18,7 +19,7 @@ export type PreviousReportViewModel = {
 export type PreviousReportsViewModel = {
   year: string | number | undefined;
   user: PortalSessionUser;
-  primaryNav: string;
+  primaryNav: PrimaryNavKey;
   navItems: PreviousReportNavItemViewModel[];
   reports: PreviousReportViewModel[];
 };

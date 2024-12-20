@@ -997,6 +997,24 @@ const getUkBankHolidays = async (token) => {
   }
 };
 
+/**
+ * Gets a fee record correction by id.
+ * @param {string} token - The user token
+ * @param {string} bankId - The bank id
+ * @param {string} id - The correction id
+ * @returns {Promise<import('./api-response-types').GetFeeRecordCorrectionResponseBody>} Returns a promise that resolves to the fee record correction data
+ */
+const getFeeRecordCorrection = async (token, bankId, id) => {
+  const { data } = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/fee-record-correction/${id}`, {
+    headers: {
+      Authorization: token,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+    },
+  });
+
+  return data;
+};
+
 module.exports = {
   allDeals,
   allFacilities,
@@ -1050,4 +1068,5 @@ module.exports = {
   getDueReportPeriodsByBankId,
   getNextReportPeriodByBankId,
   getUkBankHolidays,
+  getFeeRecordCorrection,
 };
