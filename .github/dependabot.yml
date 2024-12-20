@@ -10,7 +10,7 @@ version: 2
 updates:
   # NPM
   - package-ecosystem: 'npm'
-    directory: 
+    directories: 
       - '/'
       - '/external-api'
       - '/portal-api'
