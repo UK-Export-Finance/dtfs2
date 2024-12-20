@@ -29,8 +29,8 @@
         {% endfor %}
       </ul>
 
-      <p class="govuk-body govuk-!-margin-bottom-9" data-cy="user-email-address-copy">
-        A copy of the email has also been sent to <span class="ukef-collapse-white-space" data-cy="user-email-address">{{ requestedByUserEmail }}</span>.
+      <p class="govuk-body govuk-!-margin-bottom-9 ukef-collapse-white-space" data-cy="user-email-address-copy">
+        A copy of the email has also been sent to {{ requestedByUserEmail }}.
       </p>
 
       {{ govukButton({
