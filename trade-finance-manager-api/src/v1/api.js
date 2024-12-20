@@ -828,6 +828,31 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
 };
 
 /**
+ * Calls getOrCreatePartyDbInfo in external-api to get a customer in Salesforce, and create it if it doesn't exist
+ * @param {number} companyRegNo Party URN
+ * @param {number} companyName Company name
+ * @returns {Promise<Object>} Company information
+ */
+const getOrCreatePartyDbInfo = async ({ companyRegNo, companyName }) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${EXTERNAL_API_URL}/party-db`,
+      headers: headers.external,
+      data: {
+        companyRegNo,
+        companyName,
+      },
+    });
+
+    return response?.data;
+  } catch (error) {
+    console.error('Unable to get or create party %o', error);
+    return false;
+  }
+};
+
+/**
  * Get company information from Party URN
  * @param {number} partyUrn Party URN
  * @returns {Promise<Object>} Company information
@@ -847,7 +872,7 @@ const getCompanyInfo = async (partyUrn) => {
       headers: headers.external,
     });
 
-    return response.data;
+    return response?.data;
   } catch (error) {
     console.error('Unable to get company information from PartyURN %o', error);
     return false;
@@ -1741,6 +1766,7 @@ module.exports = {
   updateGefFacility,
   queryDeals,
   getPartyDbInfo,
+  getOrCreatePartyDbInfo,
   getCompanyInfo,
   findUser,
   findUserById,
