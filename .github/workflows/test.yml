@@ -257,7 +257,7 @@ jobs:
         run: docker compose down
 
       - name: Coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: api-test
@@ -310,7 +310,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: api-test
@@ -374,7 +374,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: unit-test
@@ -445,7 +445,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: unit-test

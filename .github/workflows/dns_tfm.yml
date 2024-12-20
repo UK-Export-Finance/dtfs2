@@ -24,7 +24,7 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v2
+        uses: azure/cli@v2.1.0
         with:
           inlineScript: |
             az configure --defaults location=uksouth

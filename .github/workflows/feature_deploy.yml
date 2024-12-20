@@ -98,7 +98,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 2. Build and push
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v6
         with:
           registry: ${{ env.acr }}
           username: ${{ env.acr_username }}
@@ -175,7 +175,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 2. Build and push
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v6
         with:
           registry: ${{ env.acr }}
           username: ${{ env.acr_username }}
@@ -207,7 +207,7 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: 6. Slot
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v2.1.0
         with:
           inlineScript: |
             az config get defaults
