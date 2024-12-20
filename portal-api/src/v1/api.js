@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { HEADERS } = require('@ukef/dtfs2-common');
+const { PORTAL_FACILITY_AMENDMENT } = require('@ukef/dtfs2-common/schemas');
 const { isValidMongoId, isValidBankId, isValidReportPeriod } = require('./validation/validateIds');
 
 require('dotenv').config();
@@ -471,6 +472,44 @@ const getPortalFacilityAmendment = async (facilityId, amendmentId) => {
   }
 };
 
+/**
+ * Upserts a draft amendment for a portal facility in the database.
+ * @param {Object} params
+ * @param {string} params.dealId - id of the deal with the relevant facility.
+ * @param {string} params.facilityId - id of the facility to amend.
+ * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} params.amendment - the draft amendment to be upserted.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - The audit details for the update.
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>} - the amendment
+ */
+const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, auditDetails }) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}/amendments`,
+      headers: headers.central,
+      data: {
+        dealId,
+        facilityId,
+        amendment,
+        auditDetails,
+      },
+    });
+
+    const { success, error, data } = PORTAL_FACILITY_AMENDMENT.safeParse(response.data);
+
+    if (success) {
+      return data;
+    }
+
+    console.error('Type validation error occurred when receiving portal amendment from dtfs-central %o', error);
+
+    throw new Error('Type validation error occurred');
+  } catch (error) {
+    console.error('Error upserting portal facility amendment for facility with id %s: with amendment details: %o, %o', facilityId, amendment, error);
+    throw error;
+  }
+};
+
 module.exports = {
   findOneDeal,
   createDeal,
@@ -492,4 +531,5 @@ module.exports = {
   getAllBanks,
   getNextReportPeriodByBankId,
   getPortalFacilityAmendment,
+  putPortalFacilityAmendment,
 };
