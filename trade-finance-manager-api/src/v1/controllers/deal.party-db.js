@@ -53,6 +53,7 @@ const getPartyUrn = async ({ companyRegNo, companyName }) => {
     partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
   }
   if (!partyDbInfo) {
+    console.error('No partyDbInfo returned');
     return '';
   }
 

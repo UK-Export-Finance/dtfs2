@@ -126,7 +126,7 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
     jest.mocked(isSalesforceCustomerCreationEnabled).mockReturnValue(true);
   });
 
-  it.each([
+  const invalidQueryParameters = [
     {
       query: {
         companyName: 'TEST NAME',
@@ -140,7 +140,9 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
     {
       query: {},
     },
-  ])('should not call apim, and return an empty string if inputs are missing', async ({ query }) => {
+  ];
+
+  it.each(invalidQueryParameters)('should not call apim, and return an empty string if inputs are missing', async ({ query }) => {
     const result = await api.getPartyUrn(query);
     expect(result).toBe('');
 
@@ -177,6 +179,8 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
 
     const result = await api.getPartyUrn(companyData);
 
+    const expectedErrorMessage = 'No partyDbInfo returned';
+    expect(console.error).toHaveBeenCalledWith(expectedErrorMessage);
     expect(result).toBe('');
   });
 
@@ -205,6 +209,8 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
     expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith(companyData);
     expect(getOrCreatePartyDbInfo).toHaveBeenCalledTimes(1);
 
+    const expectedErrorMessage = 'No PartyURN in response';
+    expect(console.error).toHaveBeenCalledWith(expectedErrorMessage);
     expect(result).toBe('');
   });
 });
