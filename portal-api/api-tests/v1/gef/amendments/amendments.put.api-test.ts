@@ -1,37 +1,46 @@
 import { ObjectId } from 'mongodb';
-import { AMENDMENT_STATUS, AMENDMENT_TYPES, AnyObject, PortalFacilityAmendmentWithUkefId, Role } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, AMENDMENT_TYPES, AnyObject, PortalFacilityAmendmentUserValues, PortalFacilityAmendmentWithUkefId, Role } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import app from '../../../../src/createApp';
 import testUserCache from '../../../api-test-users';
 
 import { MAKER } from '../../../../src/v1/roles/roles';
-import { getAmendmentUrl } from './amendment-urls';
 import createApi from '../../../api';
 import { TestUser } from '../../../types/test-user';
 import { withRoleAuthorisationTests } from '../../../common-tests/role-authorisation-tests';
 import { withClientAuthenticationTests } from '../../../common-tests/client-authentication-tests';
+import { putAmendmentUrl } from './amendment-urls';
 
-const { as, get } = createApi(app);
+const { as, put } = createApi(app);
 
-const getPortalFacilityAmendmentMock = jest.fn() as jest.Mock<Promise<PortalFacilityAmendmentWithUkefId>>;
+const putPortalFacilityAmendmentMock = jest.fn() as jest.Mock<Promise<PortalFacilityAmendmentWithUkefId>>;
 
 jest.mock('../../../../src/v1/api', () => ({
   ...jest.requireActual<AnyObject>('../../../../src/v1/api'),
-  getPortalFacilityAmendment: () => getPortalFacilityAmendmentMock(),
+  putPortalFacilityAmendment: () => putPortalFacilityAmendmentMock(),
 }));
 
 const originalProcessEnv = { ...process.env };
 
 const validFacilityId = new ObjectId().toString();
-const validAmendmentId = new ObjectId().toString();
 
 const invalidId = 'invalid-id';
 
-describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
+const dealId = new ObjectId().toString();
+
+const validPayload: { dealId: string; amendment: PortalFacilityAmendmentUserValues } = {
+  dealId,
+  amendment: {
+    changeCoverEndDate: true,
+    changeFacilityValue: false,
+  },
+};
+
+describe('/v1/gef/facilities/:facilityId/amendments', () => {
   let testUsers: Awaited<ReturnType<typeof testUserCache.initialise>>;
   let aMaker: TestUser;
 
-  describe('GET /v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
+  describe('PUT /v1/gef/facilities/:facilityId/amendments', () => {
     beforeEach(() => {
       jest.resetAllMocks();
     });
@@ -53,10 +62,10 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
 
       it(`should return a ${HttpStatusCode.NotFound} response`, async () => {
         // Arrange
-        const url = getAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId });
+        const url = putAmendmentUrl({ facilityId: validFacilityId });
 
         // Act
-        const response = await as(aMaker).get(url);
+        const response = await as(aMaker).put(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -73,35 +82,26 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
       });
 
       withClientAuthenticationTests({
-        makeRequestWithoutAuthHeader: () => get(getAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId })),
-        makeRequestWithAuthHeader: (authHeader: string) =>
-          get(getAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId }), { headers: { Authorization: authHeader } }),
+        makeRequestWithoutAuthHeader: () => put(putAmendmentUrl({ facilityId: validFacilityId })),
+        makeRequestWithAuthHeader: (authHeader: string) => put(putAmendmentUrl({ facilityId: validFacilityId }), { headers: { Authorization: authHeader } }),
       });
 
       withRoleAuthorisationTests({
         allowedRoles: [MAKER],
         getUserWithRole: (role: Role) => testUsers().withRole(role).one() as TestUser,
-        makeRequestAsUser: (user: TestUser) => as(user).get(getAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId })),
+        makeRequestAsUser: (user: TestUser) =>
+          as(user)
+            .put(validPayload)
+            .to(putAmendmentUrl({ facilityId: validFacilityId })),
         successStatusCode: HttpStatusCode.Ok,
       });
 
       it(`should return a ${HttpStatusCode.BadRequest} response when the facility id path param is invalid`, async () => {
         // Arrange
-        const url = getAmendmentUrl({ facilityId: invalidId, amendmentId: validAmendmentId });
+        const url = putAmendmentUrl({ facilityId: invalidId });
 
         // Act
-        const response = await as(aMaker).get(url);
-
-        // Assert
-        expect(response.status).toEqual(HttpStatusCode.BadRequest);
-      });
-
-      it(`should return a  ${HttpStatusCode.BadRequest} response when the amendment id path param is invalid`, async () => {
-        // Arrange
-        const url = getAmendmentUrl({ facilityId: validFacilityId, amendmentId: invalidId });
-
-        // Act
-        const response = await as(aMaker).get(url);
+        const response = await as(aMaker).put(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -110,7 +110,6 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
       it(`should return a ${HttpStatusCode.Ok} response and the amendment for an authenticated user`, async () => {
         const amendmentId = new ObjectId().toString();
         const facilityId = new ObjectId().toString();
-        const dealId = new ObjectId().toString();
 
         // Arrange
         const amendment: PortalFacilityAmendmentWithUkefId = {
@@ -124,15 +123,15 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
           status: AMENDMENT_STATUS.IN_PROGRESS,
         };
 
-        jest.mocked(getPortalFacilityAmendmentMock).mockResolvedValue(amendment);
-        const url = getAmendmentUrl({ facilityId, amendmentId });
+        jest.mocked(putPortalFacilityAmendmentMock).mockResolvedValue(amendment);
+        const url = putAmendmentUrl({ facilityId });
 
         // Act
-        const response = await as(aMaker).get(url);
+        const response = await as(aMaker).put(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.Ok);
-        expect(response.body).toEqual({ ...amendment, amendmentId, facilityId, dealId });
+        expect(response.body).toEqual(amendment);
       });
     });
   });
