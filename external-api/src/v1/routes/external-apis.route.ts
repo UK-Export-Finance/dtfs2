@@ -360,6 +360,45 @@ apiRoutes.get('/party-db/:partyDbCompanyRegistrationNumber', partyDb.lookup);
 
 /**
  * @openapi
+ * /party-db/:partyDbCompanyRegistrationNumber:
+ *   post:
+ *     summary: Get a UKEF party from Salesforce, or create it if it doesn't exist
+ *     tags: [APIM, Salesforce]
+ *     description: We only consume the Companies House number and company name. Not all fields are in the response example.
+ *     parameters:
+ *       - in: path
+ *         name: partyDbCompanyRegistrationNumber
+ *         schema:
+ *           type: string
+ *           example: '12341234'
+ *         required: true
+ *         description: Companies House Registration Number for UKEF Party creation
+ *     requestBody:
+ *       required: true
+ *       description: Company fields
+ *       content:
+ *         application/json:
+ *           schema:
+ *             name: companyName
+ *              schema:
+ *               type: string
+ *               example: 'Some Name'
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/PartyDB'
+ *       400:
+ *         description: Bad request. Invalid Companies House registration number
+ *       500:
+ *         description: Error getting or creating the party
+ */
+apiRoutes.post('/party-db', partyDb.getOrCreateParty);
+
+/**
+ * @openapi
  * /party-db/urn/:urn:
  *   get:
  *     summary: Get a UKEF company
@@ -380,6 +419,8 @@ apiRoutes.get('/party-db/:partyDbCompanyRegistrationNumber', partyDb.lookup);
  *           application/json:
  *             schema:
  *               $ref: '#/definitions/PartyDB'
+ *       400:
+ *         description: Bad request. Invalid Companies House registration number
  *       404:
  *         description: Not found
  */
