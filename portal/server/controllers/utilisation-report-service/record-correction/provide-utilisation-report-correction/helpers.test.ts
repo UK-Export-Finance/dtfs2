@@ -49,13 +49,13 @@ describe('provide-utilisation-report-correction helpers', () => {
         reportedFees,
       };
 
-      const expectedReportedFees = getFormattedCurrencyAndAmount(reportedFees);
+      const expectedFormattedReportedFees = getFormattedCurrencyAndAmount(reportedFees);
 
       // Act
       const response = mapToCorrectionRequestDetailsViewModel(correctionResponse);
 
       // Assert
-      expect(response.reportedFees).toEqual(expectedReportedFees);
+      expect(response.formattedReportedFees).toEqual(expectedFormattedReportedFees);
     });
 
     it('should return an object containing the fee record correction reasons', () => {

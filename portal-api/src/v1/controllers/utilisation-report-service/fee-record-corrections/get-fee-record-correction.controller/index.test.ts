@@ -33,6 +33,14 @@ describe('get-fee-record-correction.controller', () => {
     });
 
     it(`should return a ${HttpStatusCode.Ok} status code if the api request is successful`, async () => {
+      // Arrange
+      const mockedResponse = {
+        ...aGetFeeRecordCorrectionResponseBody(),
+        bankId,
+      };
+
+      jest.mocked(api.getFeeRecordCorrectionById).mockResolvedValue(mockedResponse);
+
       // Act
       await getFeeRecordCorrection(req, res);
 
@@ -42,7 +50,10 @@ describe('get-fee-record-correction.controller', () => {
 
     it(`should return the fee record correction in the response body if the api request is successful`, async () => {
       // Arrange
-      const expectedResponse = aGetFeeRecordCorrectionResponseBody();
+      const expectedResponse = {
+        ...aGetFeeRecordCorrectionResponseBody(),
+        bankId,
+      };
 
       jest.mocked(api.getFeeRecordCorrectionById).mockResolvedValue(expectedResponse);
 

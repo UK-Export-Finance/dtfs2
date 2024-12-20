@@ -6,7 +6,7 @@ const render = componentRenderer(component);
 describe(component, () => {
   const facilityId = '12345678';
   const exporter = 'An exporter';
-  const reportedFees = 'GBP 77';
+  const formattedReportedFees = 'GBP 77';
   const formattedReasons = 'Reason 1, Reason 2';
   const additionalInfo = 'Some additional info';
 
@@ -16,7 +16,7 @@ describe(component, () => {
       details: {
         facilityId,
         exporter,
-        reportedFees,
+        formattedReportedFees,
         formattedReasons,
         additionalInfo,
       },
@@ -30,7 +30,7 @@ describe(component, () => {
 
     wrapper.expectText('[data-cy="correction-request-details-table--facility-id"]').toRead(facilityId);
     wrapper.expectText('[data-cy="correction-request-details-table--exporter"]').toRead(exporter);
-    wrapper.expectText('[data-cy="correction-request-details-table--reported-fees"]').toRead(reportedFees);
+    wrapper.expectText('[data-cy="correction-request-details-table--reported-fees"]').toRead(formattedReportedFees);
     wrapper.expectText('[data-cy="correction-request-details-table--formatted-reasons"]').toRead(formattedReasons);
     wrapper.expectText('[data-cy="correction-request-details-table--additional-info"]').toRead(additionalInfo);
   });
@@ -41,7 +41,7 @@ describe(component, () => {
       details: {
         facilityId,
         exporter,
-        reportedFees,
+        formattedReportedFees,
         reasons: ['Reason 1'],
         formattedReasons: 'Reason 1',
         additionalInfo,
@@ -61,7 +61,7 @@ describe(component, () => {
       details: {
         facilityId,
         exporter,
-        reportedFees,
+        formattedReportedFees,
         reasons: ['Reason 1', 'Reason 2'],
         formattedReasons: 'Reason 1, Reason 2',
         additionalInfo,

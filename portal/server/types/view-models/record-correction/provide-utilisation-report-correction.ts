@@ -4,7 +4,7 @@ import { PrimaryNavKey } from '../../primary-nav-key';
 export type CorrectionRequestDetailsViewModel = {
   facilityId: string;
   exporter: string;
-  reportedFees: CurrencyAndAmountString;
+  formattedReportedFees: CurrencyAndAmountString;
   reasons: RecordCorrectionReason[];
   formattedReasons: string;
   additionalInfo: string;

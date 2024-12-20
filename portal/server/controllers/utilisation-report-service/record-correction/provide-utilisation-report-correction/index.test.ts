@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import api from '../../../../api';
-import { getProvideUtilisationReportCorrection, GetProvideUtilisationReportCorrectionRequest } from '.';
+import { getProvideUtilisationReportCorrection, GetProvideUtilisationReportCorrection } from '.';
 import { mapToCorrectionRequestDetailsViewModel } from './helpers';
 import { ProvideUtilisationReportCorrectionViewModel } from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
 import { aGetFeeRecordCorrectionResponseBody } from '../../../../../test-helpers/test-data/get-fee-record-correction-response';
@@ -31,14 +31,14 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
 
   describe('getProvideUtilisationReportCorrection', () => {
     const getHttpMocks = () =>
-      httpMocks.createMocks<GetProvideUtilisationReportCorrectionRequest>({
+      httpMocks.createMocks<GetProvideUtilisationReportCorrection>({
         params: { correctionId },
         session: requestSession,
       });
 
     const feeRecordCorrectionResponse = aGetFeeRecordCorrectionResponseBody();
 
-    let req: GetProvideUtilisationReportCorrectionRequest;
+    let req: GetProvideUtilisationReportCorrection;
     let res: MockResponse<Response>;
 
     beforeEach(() => {
@@ -61,7 +61,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-report-service/record-correction/provide-utilisation-report-correction.njk');
       expect(res._getRenderData() as ProvideUtilisationReportCorrectionViewModel).toEqual<ProvideUtilisationReportCorrectionViewModel>({
-        primaryNav: PRIMARY_NAV_KEY.REPORTS,
+        primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
         correctionRequestDetails: expectedCorrectionRequestDetails,
       });
     });

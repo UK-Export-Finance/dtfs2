@@ -10,7 +10,7 @@ import { CorrectionRequestDetailsViewModel } from '../../../../types/view-models
 export const mapToCorrectionRequestDetailsViewModel = (correctionResponse: GetFeeRecordCorrectionResponseBody): CorrectionRequestDetailsViewModel => ({
   facilityId: correctionResponse.facilityId,
   exporter: correctionResponse.exporter,
-  reportedFees: getFormattedCurrencyAndAmount(correctionResponse.reportedFees),
+  formattedReportedFees: getFormattedCurrencyAndAmount(correctionResponse.reportedFees),
   reasons: correctionResponse.reasons,
   formattedReasons: mapReasonsToDisplayValues(correctionResponse.reasons).join(', '),
   additionalInfo: correctionResponse.additionalInfo,

@@ -5,13 +5,13 @@ import { ProvideUtilisationReportCorrectionViewModel } from '../../../../types/v
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import { mapToCorrectionRequestDetailsViewModel } from './helpers';
 
-export type GetProvideUtilisationReportCorrectionRequest = Request & {
+export type GetProvideUtilisationReportCorrection = Request & {
   params: {
     correctionId: string;
   };
 };
 
-const renderProvideUtilisationReportCorrectionRequestPage = (res: Response, viewModel: ProvideUtilisationReportCorrectionViewModel) =>
+const renderProvideUtilisationReportCorrectionPage = (res: Response, viewModel: ProvideUtilisationReportCorrectionViewModel) =>
   res.render('utilisation-report-service/record-correction/provide-utilisation-report-correction.njk', viewModel);
 
 /**
@@ -19,7 +19,7 @@ const renderProvideUtilisationReportCorrectionRequestPage = (res: Response, view
  * @param req - The request object
  * @param res - The response object
  */
-export const getProvideUtilisationReportCorrection = async (req: GetProvideUtilisationReportCorrectionRequest, res: Response) => {
+export const getProvideUtilisationReportCorrection = async (req: GetProvideUtilisationReportCorrection, res: Response) => {
   const { user, userToken } = asLoggedInUserSession(req.session);
 
   try {
@@ -29,8 +29,8 @@ export const getProvideUtilisationReportCorrection = async (req: GetProvideUtili
 
     const feeRecordCorrection = await api.getFeeRecordCorrection(userToken, bankId, correctionId);
 
-    return renderProvideUtilisationReportCorrectionRequestPage(res, {
-      primaryNav: PRIMARY_NAV_KEY.REPORTS,
+    return renderProvideUtilisationReportCorrectionPage(res, {
+      primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
       correctionRequestDetails: mapToCorrectionRequestDetailsViewModel(feeRecordCorrection),
     });
   } catch (error) {
