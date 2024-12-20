@@ -50,15 +50,10 @@ jobs:
     runs-on: [self-hosted, linux, deployment]
     outputs:
       product: ${{ env.PRODUCT }}
-      environment: ${{ steps.environment.outputs.environment }}
+      environment: ${{ env.ENVIRONMENT }}
       timezone: ${{ env.TIMEZONE }}
 
     steps:
-      - name: Environment 🧪
-        id: environment
-        run: |
-          echo "environment=dev" >> "$GITHUB_OUTPUT"
-
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.TIMEZONE }}"
 
