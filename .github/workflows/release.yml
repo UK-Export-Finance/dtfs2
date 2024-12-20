@@ -214,7 +214,7 @@ jobs:
                 },
                 {
                     "name": "Status",
-                    "value": "Successfull"
+                    "value": "Pending approval"
                 }
             ],
             "markdown": true
