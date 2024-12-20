@@ -25,7 +25,7 @@ export const getCoverEndDate = async (req: GetCoverEndDateRequest, res: Response
     const { details: facility } = await api.getFacility({ facilityId, userToken });
 
     if (!deal || !facility) {
-      console.error('Get cover end date failed, due to missing data %o', deal, facility);
+      console.error('Get cover end date failed, due to missing data');
       return res.redirect('/not-found');
     }
 
