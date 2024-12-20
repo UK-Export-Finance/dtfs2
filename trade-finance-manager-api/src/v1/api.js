@@ -845,7 +845,7 @@ const getOrCreatePartyDbInfo = async ({ companyRegNo, companyName }) => {
       },
     });
 
-    return response.data;
+    return response?.data;
   } catch (error) {
     console.error('Unable to get or create party %o', error);
     return false;
@@ -872,7 +872,7 @@ const getCompanyInfo = async (partyUrn) => {
       headers: headers.external,
     });
 
-    return response.data;
+    return response?.data;
   } catch (error) {
     console.error('Unable to get company information from PartyURN %o', error);
     return false;
