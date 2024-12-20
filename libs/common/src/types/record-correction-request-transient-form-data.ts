@@ -1,6 +1,6 @@
 import { RecordCorrectionReason } from './record-correction-reason';
 
-export type RecordCorrectionTransientFormData = {
+export type RecordCorrectionRequestTransientFormData = {
   reasons: RecordCorrectionReason[];
   additionalInfo: string;
 };

@@ -1,18 +1,18 @@
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { FeeRecordCorrectionTransientFormDataEntity } from '@ukef/dtfs2-common';
+import { FeeRecordCorrectionRequestTransientFormDataEntity } from '@ukef/dtfs2-common';
 import { EntityManager } from 'typeorm';
 
 /**
- * Repository for managing fee record correction transient form data.
+ * Repository for managing fee record correction request transient form data.
  */
-export const FeeRecordCorrectionTransientFormDataRepo = SqlDbDataSource.getRepository(FeeRecordCorrectionTransientFormDataEntity).extend({
+export const FeeRecordCorrectionRequestTransientFormDataRepo = SqlDbDataSource.getRepository(FeeRecordCorrectionRequestTransientFormDataEntity).extend({
   /**
    * Finds the transient form data for the given user id and fee record id
    * @param userId - The user id
    * @param feeRecordId - The fee record id
-   * @returns The fee record correction transient form data
+   * @returns The fee record correction request transient form data
    */
-  async findByUserIdAndFeeRecordId(userId: string, feeRecordId: number): Promise<FeeRecordCorrectionTransientFormDataEntity | null> {
+  async findByUserIdAndFeeRecordId(userId: string, feeRecordId: number): Promise<FeeRecordCorrectionRequestTransientFormDataEntity | null> {
     return await this.findOne({
       where: {
         userId,
@@ -35,7 +35,7 @@ export const FeeRecordCorrectionTransientFormDataRepo = SqlDbDataSource.getRepos
   },
 
   withTransaction(transactionEntityManager: EntityManager) {
-    const transactionRepository = transactionEntityManager.getRepository(FeeRecordCorrectionTransientFormDataEntity);
+    const transactionRepository = transactionEntityManager.getRepository(FeeRecordCorrectionRequestTransientFormDataEntity);
 
     return {
       findByUserIdAndFeeRecordId: this.findByUserIdAndFeeRecordId.bind(transactionRepository),
