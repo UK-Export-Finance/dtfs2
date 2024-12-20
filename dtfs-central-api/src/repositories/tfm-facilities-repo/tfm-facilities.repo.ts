@@ -1,10 +1,12 @@
 import { ObjectId, UpdateFilter, WithoutId, FindOneAndUpdateOptions, Collection, Document, UpdateResult, Filter } from 'mongodb';
+import { flatten } from 'mongo-dot-notation';
 import {
   AuditDetails,
   TfmFacility,
   FacilityAmendment,
   AmendmentStatus,
   FacilityNotFoundError,
+  AmendmentNotFoundError,
   AMENDMENT_TYPES,
   AMENDMENT_STATUS,
   PortalFacilityAmendment,
@@ -310,7 +312,7 @@ export class TfmFacilitiesRepo {
   }
 
   /**
-   * Upserts a draft amendment for a portal facility in the database.
+   * Upserts a portal draft amendment for a facility in the database.
    *
    * This function first removes any existing portal amendments for the specified facility
    * that are not completed, and then inserts the new amendment.
@@ -349,5 +351,55 @@ export class TfmFacilitiesRepo {
     }
 
     return updateResult;
+  }
+
+  /**
+   * Updates a portal amendment for a facility in the database.
+   *
+   * This function finds the facility and portal amendment matching the ids & updates it.
+   *
+   * @param updatePortalFacilityAmendmentByAmendmentIdParams
+   * @param updatePortalFacilityAmendmentByAmendmentIdParams.amendmentId - the amendment id
+   * @param updatePortalFacilityAmendmentByAmendmentIdParams.facilityId - the facility id
+   * @param updatePortalFacilityAmendmentByAmendmentIdParams.update - the update to apply
+   * @param updatePortalFacilityAmendmentByAmendmentIdParams.auditDetails - the users audit details
+   *
+   * @returns The update result.
+   */
+  public static async updatePortalFacilityAmendmentByAmendmentId({
+    amendmentId,
+    facilityId,
+    update,
+    auditDetails,
+  }: {
+    update: Partial<PortalFacilityAmendment>;
+    amendmentId: ObjectId;
+    facilityId: ObjectId;
+    auditDetails: AuditDetails;
+  }): Promise<UpdateResult> {
+    try {
+      const collection = await this.getCollection();
+
+      const findFilter: Filter<TfmFacility> = {
+        _id: { $eq: new ObjectId(facilityId) },
+        amendments: { $elemMatch: { amendmentId: { $eq: new ObjectId(amendmentId) }, type: AMENDMENT_TYPES.PORTAL } },
+      };
+
+      const updateFilter: UpdateFilter<TfmFacility> = flatten({
+        'amendments.$': update,
+        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+      });
+
+      const updateResult = await collection.updateOne(findFilter, updateFilter);
+
+      if (!updateResult.modifiedCount) {
+        throw new AmendmentNotFoundError(amendmentId.toString(), facilityId.toString());
+      }
+
+      return updateResult;
+    } catch (error) {
+      console.error('Error updating portal facility amendment %o', error);
+      throw error;
+    }
   }
 }

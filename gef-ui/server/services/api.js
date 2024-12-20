@@ -1,5 +1,5 @@
 const FormData = require('form-data');
-const { isValidCompanyRegistrationNumber } = require('@ukef/dtfs2-common');
+const { isValidCompanyRegistrationNumber, InvalidFacilityIdError, InvalidDealIdError } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
 const Axios = require('./axios');
 const { apiErrorHandler } = require('../utils/helpers');
@@ -366,6 +366,40 @@ const getAmendment = async ({ facilityId, amendmentId, userToken }) => {
   }
 };
 
+/**
+ * @param {Object} param
+ * @param {string} param.facilityId
+ * @param {string} param.dealId
+ * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} param.amendment
+ * @param {string} param.userToken
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}>}
+ */
+const upsertAmendment = async ({ facilityId, dealId, amendment, userToken }) => {
+  if (!isValidMongoId(facilityId)) {
+    console.error('Invalid facility ID %s', facilityId);
+    throw new InvalidFacilityIdError(facilityId);
+  }
+
+  if (!isValidMongoId(dealId)) {
+    console.error('Invalid deal ID %s', dealId);
+    throw new InvalidDealIdError(dealId);
+  }
+
+  const payload = {
+    amendment,
+    dealId,
+  };
+
+  try {
+    const { data } = await Axios.put(`/gef/facilities/${facilityId}/amendments`, payload, { ...config(userToken) });
+
+    return data;
+  } catch (error) {
+    console.error('Failed to upsert the amendment to facility with id: %s and amendment details: %o: %o', facilityId, payload, error);
+    throw error;
+  }
+};
+
 module.exports = {
   validateToken,
   validateBank,
@@ -388,4 +422,5 @@ module.exports = {
   downloadFile,
   updateSupportingInformation,
   getAmendment,
+  upsertAmendment,
 };
