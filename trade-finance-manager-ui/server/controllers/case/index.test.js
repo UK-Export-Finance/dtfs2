@@ -1,4 +1,4 @@
-import { AMENDMENT_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE, isTfmFacilityEndDateFeatureFlagEnabled, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
@@ -10,11 +10,6 @@ const mockGetDealSuccessBannerMessage = jest.fn();
 
 jest.mock('../helpers/get-success-banner-message.helper', () => ({
   getDealSuccessBannerMessage: (params) => mockGetDealSuccessBannerMessage(params),
-}));
-
-jest.mock('@ukef/dtfs2-common', () => ({
-  ...jest.requireActual('@ukef/dtfs2-common'),
-  isTfmFacilityEndDateFeatureFlagEnabled: jest.fn(),
 }));
 
 jest.mock('../helpers/deal-cancellation-enabled.helper', () => ({
@@ -46,7 +41,6 @@ const session = {
 describe('controllers - case', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(false);
   });
 
   describe('GET case deal', () => {
@@ -805,52 +799,34 @@ describe('controllers - case', () => {
       describe('showFacilityEndDate', () => {
         describe.each([
           {
-            facilityFeatureFlagValue: true,
             isGefValue: true,
             expectedValue: true,
           },
           {
-            facilityFeatureFlagValue: true,
             isGefValue: false,
             expectedValue: false,
           },
-          {
-            facilityFeatureFlagValue: false,
-            isGefValue: true,
-            expectedValue: false,
-          },
-          {
-            facilityFeatureFlagValue: false,
-            isGefValue: false,
-            expectedValue: false,
-          },
-        ])('when the facility end date feature flag is $facilityFeatureFlagValue', ({ facilityFeatureFlagValue, isGefValue, expectedValue }) => {
+        ])('when isGef is $isGefValue', ({ isGefValue, expectedValue }) => {
           beforeEach(() => {
-            jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(facilityFeatureFlagValue);
+            api.getFacility = () => Promise.resolve({ ...mockFacility, facilitySnapshot: { ...mockFacility.facilitySnapshot, isGef: isGefValue } });
           });
 
-          describe(`when the facility is ${isGefValue}`, () => {
-            beforeEach(() => {
-              api.getFacility = () => Promise.resolve({ ...mockFacility, facilitySnapshot: { ...mockFacility.facilitySnapshot, isGef: isGefValue } });
-            });
+          it(`should render with the showFacilityEndDate parameter as ${expectedValue}`, async () => {
+            const req = {
+              params: {
+                facilityId: mockFacility._id,
+              },
+              session,
+            };
 
-            it(`should render with the showFacilityEndDate parameter as ${expectedValue}`, async () => {
-              const req = {
-                params: {
-                  facilityId: mockFacility._id,
-                },
-                session,
-              };
+            await caseController.getCaseFacility(req, res);
 
-              await caseController.getCaseFacility(req, res);
-
-              expect(res.render).toHaveBeenCalledWith(
-                'case/facility/facility.njk',
-                expect.objectContaining({
-                  showFacilityEndDate: expectedValue,
-                }),
-              );
-            });
+            expect(res.render).toHaveBeenCalledWith(
+              'case/facility/facility.njk',
+              expect.objectContaining({
+                showFacilityEndDate: expectedValue,
+              }),
+            );
           });
         });
       });
