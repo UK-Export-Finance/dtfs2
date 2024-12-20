@@ -36,7 +36,6 @@ on:
     branches:
       # Manual deployment
       - dev
-      - fix/DTFS2-7616-efficient-deployment
 
 env:
   PRODUCT: dtfs
@@ -158,14 +157,13 @@ jobs:
   # 5. Notification
   notify:
     name: Notification 🔔
-    needs: [setup]
-    # needs: [setup, database, webapp, functions]
+    needs: [setup, database, webapp, functions]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
 
     env:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
-      WEBHOOK: ${{ secrets.MSTEAMS_WEBHOOK_TEST }}
+      WEBHOOK: ${{ secrets.MSTEAMS_WEBHOOK }}
 
     steps:
       - name: Facts
@@ -179,12 +177,12 @@ jobs:
           "@type": "MessageCard",
           "@context": "http://schema.org/extensions",
           "themeColor": "00703c",
-          "title": "🚀 main : dev",
-          "summary": "Deploying '\''main'\'' branch to '\''${{ env.ENVIRONMENT }}'\'' DTFS environment",
+          "title": "🚀 main : ${{ env.ENVIRONMENT }}",
+          "summary": "Deployed '\''main'\'' branch to '\''${{ env.ENVIRONMENT }}'\'' DTFS environment",
           "sections": [
           {
             "activityTitle": "Branch deployment",
-            "activitySubtitle": "Deploying **main** branch to **${{ env.ENVIRONMENT }}** DTFS environment.",
+            "activitySubtitle": "Deployed **main** branch to **${{ env.ENVIRONMENT }}** DTFS environment.",
             "facts": [
                 {
                     "name": "Branch",
@@ -209,7 +207,7 @@ jobs:
             "potentialAction": [
               {
               "@type": "OpenUri",
-              "name": "Workflow",
+              "name": "Deployment",
                 "targets": [
                   {
                       "os": "default",
