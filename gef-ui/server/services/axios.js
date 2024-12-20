@@ -7,7 +7,7 @@ const VERSION = 'v1';
 
 module.exports = axios.create({
   baseURL: `${PORTAL_API_URL}/${VERSION}`,
-  timeout: 15 * 1000, // timeout after max 15 seconds
+  timeout: 60 * 1000, // timeout after max 60 seconds
   headers: {
     Accept: 'application/json',
     [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
