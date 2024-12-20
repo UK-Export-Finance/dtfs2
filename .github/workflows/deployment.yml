@@ -208,12 +208,13 @@ jobs:
               ],
             "potentialAction": [
               {
-                "actions": [
-                    {
-                        "@type": "HttpPOST",
-                        "name": "Workflow",
-                        "target": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                    }
+              "@type": "OpenUri",
+              "name": "Workflow",
+                "targets": [
+                  {
+                      "os": "default",
+                      "uri": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                  }
                 ]
               }
             ]
