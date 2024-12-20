@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { HEADERS } = require('@ukef/dtfs2-common');
-const { PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID } = require('@ukef/dtfs2-common/schemas');
+const { PORTAL_FACILITY_AMENDMENT } = require('@ukef/dtfs2-common/schemas');
 const { isValidMongoId, isValidBankId, isValidReportPeriod } = require('./validation/validateIds');
 
 require('dotenv').config();
@@ -495,7 +495,7 @@ const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, audit
       },
     });
 
-    const { success, error, data } = PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID.safeParse(response.data);
+    const { success, error, data } = PORTAL_FACILITY_AMENDMENT.safeParse(response.data);
 
     if (success) {
       return data;
