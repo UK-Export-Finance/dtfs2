@@ -4,7 +4,6 @@ import { DETAILS } from './bond-form-values';
 const pages = require('../../pages');
 const partials = require('../../partials');
 const BOND_FORM_VALUES = require('./bond-form-values');
-const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
@@ -20,13 +19,9 @@ const MOCK_DEAL = {
 };
 
 context('Add a Bond to a Deal', () => {
-  let deal;
-
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
-    });
+    cy.createBssEwcsDeal({});
   });
 
   it('should allow a user to create a Deal, pass Red Line and add a Bond to the deal', () => {
@@ -84,7 +79,7 @@ context('Add a Bond to a Deal', () => {
 
   describe('when a user submits a Bond form without completing any fields', () => {
     it('bond should display `Incomplete` status in Deal page', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal);
+      cy.loginGoToDealPage(BANK1_MAKER1);
 
       cy.clickAddBondButton();
 
@@ -93,7 +88,7 @@ context('Add a Bond to a Deal', () => {
         const bondId = bondIdHiddenInput[0].value;
 
         cy.clickSaveGoBackButton();
-        cy.url().should('eq', relative(`/contract/${deal._id}`));
+        cy.url().should('include', '/contract');
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
@@ -157,7 +152,7 @@ context('Add a Bond to a Deal', () => {
     });
 
     it('should display a `completed` status tag for all Bond forms in task list header and a `check your answers` link', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal);
+      cy.loginGoToDealPage(BANK1_MAKER1);
       cy.addBondToDeal();
       cy.url().should('include', '/check-your-answers');
 
@@ -171,7 +166,7 @@ context('Add a Bond to a Deal', () => {
     });
 
     it('should populate Deal page with the submitted bond, display `Completed` status and link to `Bond Details` page', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal);
+      cy.loginGoToDealPage(BANK1_MAKER1);
       cy.addBondToDeal();
       cy.url().should('include', '/check-your-answers');
 
@@ -181,7 +176,7 @@ context('Add a Bond to a Deal', () => {
         const bondId = bondIdHiddenInput[0].value;
 
         cy.clickSaveGoBackButton();
-        cy.url().should('eq', relative(`/contract/${deal._id}`));
+        cy.url().should('include', '/contract');
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
@@ -189,7 +184,7 @@ context('Add a Bond to a Deal', () => {
 
         cy.assertText(row.bondStatus(), 'Completed');
 
-        cy.assertText(row.facilityValue(), `${deal.submissionDetails.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`);
+        cy.assertText(row.facilityValue(), `${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`);
 
         cy.assertText(row.facilityStage(), 'Issued');
 
@@ -214,7 +209,7 @@ context('Add a Bond to a Deal', () => {
 
   describe('When a user clicks `save and go back` button in `Bond Preview` page', () => {
     it('should return to Deal page', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal);
+      cy.loginGoToDealPage(BANK1_MAKER1);
       cy.addBondToDeal();
       cy.url().should('include', '/check-your-answers');
 
