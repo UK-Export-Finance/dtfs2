@@ -74,4 +74,22 @@ describe(component, () => {
     // Assert
     wrapper.expectText('[data-cy="correction-request-details-table-header--error-type"]').toRead('Error types');
   });
+
+  it('should render the "error summary" text with line breaks', () => {
+    // Arrange
+    const additionalInfoWithLineBreaks = 'First line\n\nAnother line after some spacing';
+    const viewModel = {
+      details: {
+        additionalInfo: additionalInfoWithLineBreaks,
+      },
+    };
+
+    const expectedContent = 'First line<br><br>Another line after some spacing';
+
+    // Act
+    const wrapper = render(viewModel);
+
+    // Assert
+    wrapper.expectElement('[data-cy="correction-request-details-table--additional-info"]').toHaveHtmlContent(expectedContent);
+  });
 });

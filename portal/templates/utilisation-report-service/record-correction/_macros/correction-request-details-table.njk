@@ -54,7 +54,7 @@
           }
         },
         {
-          text: details.additionalInfo,
+          html: (details.additionalInfo | replaceNewLinesWithBrTags),
           attributes: {
             "data-cy": "correction-request-details-table--additional-info"
           }
