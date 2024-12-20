@@ -10,7 +10,9 @@ describe(page, () => {
   beforeEach(() => {
     wrapper = render({
       primaryNav: PRIMARY_NAV_KEY.REPORTS,
-      correctionRequestDetails: {},
+      correctionRequestDetails: {
+        additionalInfo: 'Some additional info',
+      },
     });
   });
 
