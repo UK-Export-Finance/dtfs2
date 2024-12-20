@@ -91,7 +91,7 @@ context('Clone GEF (AIN) deal', () => {
       cy.clickSubmitButton();
 
       submitToUkefConfirmation.dashboardLink().click();
-      dashboardPage.rowIndex.link(AINdealId).click();
+      dashboardPage.row(1, AINdealId).link().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}`));
       cloneGEFDeal.cloneGefDealLink().click();
@@ -142,7 +142,7 @@ context('Clone GEF (AIN) deal', () => {
 
       cy.login(BANK1_MAKER1);
 
-      dashboardPage.rowIndex.link(AINdealId).click();
+      dashboardPage.row(1, AINdealId).link().click();
 
       cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone`));
@@ -163,7 +163,7 @@ context('Clone GEF (AIN) deal', () => {
           const hrefSplit = href.split('/');
           const facilityId = hrefSplit[5];
 
-          cy.get('[data-cy="dashboard"]').click();
+          dashboardPage.dashboardHome().click();
           // goes to facilities table and makes sure it's issued and no issue date so properly cloned
           cy.get('[data-cy="dashboard-sub-nav-link-facilities"]').click();
           cy.get(`[data-cy="facility__bankStage--${facilityId}"]`).contains('Issued');
