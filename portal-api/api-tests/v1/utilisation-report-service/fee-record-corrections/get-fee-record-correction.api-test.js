@@ -45,20 +45,23 @@ describe('GET /v1/banks/:bankId/fee-record-correction/:correctionId', () => {
     barclaysBank = aBarclaysPaymentReportOfficer.bank;
     hsbcBank = aHsbcPaymentReportOfficer.bank;
 
-    const aFeeRecord = new FeeRecordEntityMockBuilder()
+    const utilisationReport = new UtilisationReportEntityMockBuilder().withBankId(barclaysBank.id).build();
+
+    const aFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
       .withFacilityId(facilityId)
       .withExporter(exporter)
       .withFeesPaidToUkefForThePeriodCurrency(reportedFees.currency)
       .withFeesPaidToUkefForThePeriod(reportedFees.amount)
       .build();
-    const aUtilisationReport = new UtilisationReportEntityMockBuilder().withBankId(barclaysBank.id).withFeeRecords([aFeeRecord]).build();
-    const aFeeRecordCorrection = new FeeRecordCorrectionEntityMockBuilder()
+    utilisationReport.feeRecords = [aFeeRecord];
+
+    const aFeeRecordCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(aFeeRecord)
       .withId(correctionId)
       .withReasons(reasons)
       .withAdditionalInfo(additionalInfo)
       .build();
 
-    await SqlDbHelper.saveNewEntries('UtilisationReport', [aUtilisationReport]);
+    await SqlDbHelper.saveNewEntries('UtilisationReport', [utilisationReport]);
     await SqlDbHelper.saveNewEntries('FeeRecordCorrection', [aFeeRecordCorrection]);
   });
 
