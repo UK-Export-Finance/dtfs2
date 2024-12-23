@@ -6,7 +6,7 @@ const { validateRole, validateToken, validateSqlId } = require('../../middleware
 const router = express.Router();
 
 router.get(
-  '/provide-utilisation-report-correction/:correctionId',
+  '/utilisation-report/provide-correction/:correctionId',
   [validateToken, validateRole({ role: [ROLES.PAYMENT_REPORT_OFFICER] })],
   validateSqlId('correctionId'),
   (req, res) => getProvideUtilisationReportCorrection(req, res),

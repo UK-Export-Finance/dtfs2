@@ -43,8 +43,8 @@ describe('utilisation-report routes', () => {
     });
   });
 
-  describe('GET /provide-utilisation-report-correction/:correctionId', () => {
-    const getUrl = ({ correctionId }) => `/provide-utilisation-report-correction/${correctionId}`;
+  describe('GET /utilisation-report/provide-correction/:correctionId', () => {
+    const getUrl = ({ correctionId }) => `/utilisation-report/provide-correction/${correctionId}`;
 
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(getUrl({ correctionId: 1 }), {}, headers),
