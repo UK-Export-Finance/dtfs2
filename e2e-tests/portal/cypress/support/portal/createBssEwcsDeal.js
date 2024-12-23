@@ -36,7 +36,9 @@ const endDate = {
 
 /**
  * Create a BSS/EWCS deal via the UI.
+ * * @param {Object} createBssEwcsDealParams
  * @param {Boolean} readyForCheck: Conditionally complete all "maker" required forms
+ * * @param {import('@ukef/dtfs2-common').DealType} createBssEwcsDealParams.dealType - ....
  */
 const createBssEwcsDeal = ({ readyForCheck = false, dealType, facilityStage, exporterCompanyName }) => {
   cy.login(BANK1_MAKER1);

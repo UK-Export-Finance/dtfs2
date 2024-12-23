@@ -12,7 +12,7 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
-const EXPECTED_DEALS_LENGTH = {
+const EXPECTED_DEALS_LENGTH_BY_STATUS = {
   DRAFT: 2,
   READY_FOR_CHECK: 1,
   ALL_STATUSES: 3,
@@ -79,9 +79,9 @@ context('Dashboard Deals filters - filter by status', () => {
     });
 
     it('renders only draft deals', () => {
-      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.DRAFT);
+      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH_BY_STATUS.DRAFT);
 
-      dashboardDeals.rowIndex.status().should('have.text', CONSTANTS.DEALS.DEAL_STATUS.DRAFT);
+      dashboardDeals.rowIndex.status(2).should('have.text', CONSTANTS.DEALS.DEAL_STATUS.DRAFT);
     });
   });
 
@@ -137,7 +137,7 @@ context('Dashboard Deals filters - filter by status', () => {
     });
 
     it('renders only Ready for Check deals', () => {
-      dashboardDeals.rowIndex.status().should('have.length', EXPECTED_DEALS_LENGTH.READY_FOR_CHECK);
+      dashboardDeals.rowIndex.status().should('have.length', EXPECTED_DEALS_LENGTH_BY_STATUS.READY_FOR_CHECK);
 
       cy.assertText(dashboardDeals.rowIndex.status(), CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
     });
@@ -194,7 +194,7 @@ context('Dashboard Deals filters - filter by status', () => {
     });
 
     it('renders all deals regardless of status', () => {
-      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.ALL_STATUSES);
+      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH_BY_STATUS.ALL_STATUSES);
     });
   });
 });

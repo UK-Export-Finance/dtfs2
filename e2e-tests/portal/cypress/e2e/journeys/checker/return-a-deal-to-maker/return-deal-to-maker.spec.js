@@ -34,8 +34,7 @@ context('A checker selects to return a deal to maker from the view-contract page
     cy.clickReturnToMakerButton();
 
     // expect to stay on the abandon page, and see an error
-    cy.url().should('include', '/contract');
-    cy.url().should('include', '/return-to-maker');
+    cy.url().should('match', /\/contract\/[a-f\d]{24}\/return-to-maker/);
 
     contractReturnToMaker.expectError('Comment is required when returning a deal to maker.');
   });

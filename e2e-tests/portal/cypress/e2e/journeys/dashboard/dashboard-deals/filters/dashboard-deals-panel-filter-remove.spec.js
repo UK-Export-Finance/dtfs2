@@ -15,9 +15,7 @@ context('Dashboard Deals - panel selected filters - remove a filter', () => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.createBssEwcsDeal({}).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.createBssEwcsDeal({});
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       ALL_DEALS.push(deal);
@@ -62,6 +60,6 @@ context('Dashboard Deals - panel selected filters - remove a filter', () => {
     dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
 
     // should render all deals
-    dashboardDeals.rows().should('have.length', ALL_DEALS.length);
+    dashboardDeals.rows().should('have.length', 2);
   });
 });

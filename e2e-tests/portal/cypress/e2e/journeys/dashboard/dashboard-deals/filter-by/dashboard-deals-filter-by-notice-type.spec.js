@@ -1,4 +1,4 @@
-import { DEAL_TYPE, FACILITY_STAGE } from '@ukef/dtfs2-common';
+const { DEAL_TYPE, FACILITY_STAGE } = require('@ukef/dtfs2-common');
 
 const relative = require('../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../e2e-fixtures');
@@ -82,9 +82,9 @@ context('Dashboard Deals filters - filter by submissionType/noticeType', () => {
       dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
       filters.panel.form.applyFiltersButton().click();
 
-      const expectedDeals = 1;
-
-      dashboardDeals.rows().should('have.length', expectedDeals);
+      dashboardDeals.rows().each((row) => {
+        cy.wrap(row).contains(CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
+      });
     });
   });
 });
