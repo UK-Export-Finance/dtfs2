@@ -1,5 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
-const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled, FLASH_TYPES } = require('@ukef/dtfs2-common');
+const { AMENDMENT_STATUS, FLASH_TYPES } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const {
   getTask,
@@ -373,7 +373,7 @@ const getCaseFacility = async (req, res) => {
     allAmendments,
     amendments,
     amendmentsInProgress,
-    showFacilityEndDate: isTfmFacilityEndDateFeatureFlagEnabled() && facility.facilitySnapshot.isGef,
+    showFacilityEndDate: facility.facilitySnapshot.isGef,
   });
 };
 

@@ -1,14 +1,14 @@
 import { format } from 'date-fns';
-import relative from '../../../../relativeURL';
-import facilityPage from '../../../../pages/facilityPage';
-import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../../e2e-fixtures';
-import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mock-gef-deals';
-import { DEAL_TYPE } from '../../../../../../../gef/cypress/fixtures/constants';
-import amendmentsPage from '../../../../pages/amendments/amendmentsPage';
-import { DATE_FORMATS } from '../../../../../fixtures/constants';
-import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
+import relative from '../../../relativeURL';
+import facilityPage from '../../../pages/facilityPage';
+import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../e2e-fixtures';
+import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mock-gef-deals';
+import { DEAL_TYPE } from '../../../../../../gef/cypress/fixtures/constants';
+import amendmentsPage from '../../../pages/amendments/amendmentsPage';
+import { DATE_FORMATS } from '../../../../fixtures/constants';
+import { anIssuedCashFacility } from '../../../../../../e2e-fixtures/mock-gef-facilities';
 
-context('Amendments - GEF deal add multiple consecutive amendments impacting facility end date values - feature flag enabled', () => {
+context('Amendments - GEF deal add multiple consecutive amendments impacting facility end date values', () => {
   let dealId;
   let facility;
 
