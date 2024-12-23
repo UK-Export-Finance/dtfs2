@@ -74,6 +74,7 @@ describe(`GET ${BASE_URL}`, () => {
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.Ok);
+
     expect(response.body).toEqual({
       id: correctionId,
       bankId,

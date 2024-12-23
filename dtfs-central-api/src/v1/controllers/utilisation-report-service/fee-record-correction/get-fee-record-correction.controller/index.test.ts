@@ -67,7 +67,7 @@ describe('get-fee-record-correction.controller', () => {
       expect(mockFeeRecordCorrectionFind).toHaveBeenCalledWith(correctionId);
     });
 
-    it(`should respond with a '${HttpStatusCode.NotFound}' if no fee record correction with the provided fee record correction id is found`, async () => {
+    it(`should respond with a '${HttpStatusCode.NotFound}' if fee record correction with the provided fee record correction id is not found`, async () => {
       // Arrange
       mockFeeRecordCorrectionFind.mockResolvedValue(null);
 

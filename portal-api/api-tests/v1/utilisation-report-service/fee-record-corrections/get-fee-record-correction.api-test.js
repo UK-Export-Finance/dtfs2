@@ -99,6 +99,7 @@ describe('GET /v1/banks/:bankId/fee-record-correction/:correctionId', () => {
     const response = await as(aBarclaysPaymentReportOfficer).get(getUrl({ bankId: barclaysBank.id, correctionId }));
 
     expect(response.status).toEqual(HttpStatusCode.Ok);
+
     expect(response.body).toEqual({
       id: correctionId,
       bankId: barclaysBank.id,

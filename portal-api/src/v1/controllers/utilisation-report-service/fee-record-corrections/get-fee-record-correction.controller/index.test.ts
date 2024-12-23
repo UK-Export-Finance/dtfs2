@@ -64,19 +64,12 @@ describe('get-fee-record-correction.controller', () => {
       expect(res._getData()).toEqual(expectedResponse);
     });
 
-    it('should call the get fee record correction api endpoint once', async () => {
+    it('should call the get fee record correction api endpoint once with the correct parameters', async () => {
       // Act
       await getFeeRecordCorrection(req, res);
 
       // Assert
       expect(api.getFeeRecordCorrectionById).toHaveBeenCalledTimes(1);
-    });
-
-    it('should call the get fee record correction api endpoint with the correct parameters', async () => {
-      // Act
-      await getFeeRecordCorrection(req, res);
-
-      // Assert
       expect(api.getFeeRecordCorrectionById).toHaveBeenCalledWith(correctionId);
     });
 

@@ -43,6 +43,7 @@ export const getFeeRecordCorrection = async (req: GetFeeRecordCorrectionRequest,
     const feeRecordCorrectionEntity = await FeeRecordCorrectionRepo.findOneByIdWithFeeRecordAndReport(Number(correctionId));
 
     if (!feeRecordCorrectionEntity) {
+      console.error(`Failed to find a fee record correction with id '${correctionId}'`);
       throw new NotFoundError(`Failed to find a fee record correction with id '${correctionId}'`);
     }
 

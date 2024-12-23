@@ -34,7 +34,7 @@ export const getProvideUtilisationReportCorrection = async (req: GetProvideUtili
       correctionRequestDetails: mapToCorrectionRequestDetailsViewModel(feeRecordCorrection),
     });
   } catch (error) {
-    console.error('Failed to get provide utilisation report correction', error);
+    console.error('Failed to get provide utilisation report correction %o', error);
     return res.render('_partials/problem-with-service.njk', { user });
   }
 };
