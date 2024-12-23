@@ -2,6 +2,7 @@
 
 {% macro render(params) %}
   {% set details = params.details %}
+  {% set errorTypeHeader = params.errorTypeHeader %}
  
   {{ govukTable({
     caption: "Current record",
@@ -18,7 +19,7 @@
         text: "Reported fees"
       },
       {
-        text: "Error type" + ("s" if details.reasons | length > 1 else ""),
+        text: errorTypeHeader,
         attributes: {
           "data-cy": "correction-request-details-table-header--error-type"
         }

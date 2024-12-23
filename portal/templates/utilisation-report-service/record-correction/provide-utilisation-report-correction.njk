@@ -17,7 +17,10 @@
       Record correction
     </h2>
 
-    {{ correctionRequestDetailsTable.render({ details: correctionRequestDetails }) }}
+    {{ correctionRequestDetailsTable.render({
+      details: correctionRequestDetails,
+      errorTypeHeader: errorTypeHeader
+    }) }}
 
     <div class="govuk-button-group">
       <form method="post">

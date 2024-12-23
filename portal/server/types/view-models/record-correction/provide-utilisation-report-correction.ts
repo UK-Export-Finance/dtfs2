@@ -8,6 +8,7 @@ export type CorrectionRequestDetailsViewModel = {
   reasons: RecordCorrectionReason[];
   formattedReasons: string;
   additionalInfo: string;
+  errorTypeHeader: string;
 };
 
 export type ProvideUtilisationReportCorrectionViewModel = {
